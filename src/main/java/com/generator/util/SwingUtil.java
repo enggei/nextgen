@@ -23,16 +23,15 @@ import java.io.File;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Collection;
-import java.util.Enumeration;
+import java.util.*;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static javax.swing.JOptionPane.*;
 
 public class SwingUtil {
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(SwingUtil.class);
 
    public static JTextArea newTextArea() {
       final JTextArea txtEditor = new JTextArea(30, 30);
@@ -102,7 +101,7 @@ public class SwingUtil {
       txtEditor.setFont(com.generator.app.AppMotif.getDefaultFont());
       txtEditor.setTabSize(3);
       txtEditor.setCaretPosition(0);
-      txtEditor.setEditable(false);
+//      txtEditor.setEditable(false);
 
       final JScrollPane content = new JScrollPane(txtEditor);
       if (defaultSize != null) {
@@ -147,7 +146,7 @@ public class SwingUtil {
          panel.add(content, BorderLayout.CENTER);
          JOptionPane.showMessageDialog(component, panel, "Exception", JOptionPane.ERROR_MESSAGE);
       } else {
-         System.out.println(stacktrace);
+         log.info(stacktrace);
       }
    }
 
@@ -195,7 +194,7 @@ public class SwingUtil {
                   onSave.verifyAndCommit();
                   dialog.dispose();
                } catch (Exception e1) {
-                  SwingUtil.showException(e1, content);
+                  SwingUtil.showExceptionNoStack(content, e1);
                }
             }
          }));
@@ -300,7 +299,7 @@ public class SwingUtil {
       UIManager.put("OptionPane.okButtonText", "Confirm");
       UIManager.put("OptionPane.yesButtonText", "Yes");
 
-      System.out.println(UIManager.getString("OptionPane.yesButtonTest"));
+      log.info(UIManager.getString("OptionPane.yesButtonTest"));
       JOptionPane.showConfirmDialog(new JFrame(), "Message", "Test", OK_CANCEL_OPTION);
    }
 
@@ -402,6 +401,20 @@ public class SwingUtil {
       final JPasswordField txtPassword = new JPasswordField();
       int okCxl = JOptionPane.showConfirmDialog(parentComponent, txtPassword, "Password", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
       return okCxl == JOptionPane.OK_OPTION ? txtPassword.getPassword() : null;
+   }
+
+   public static <T extends Object> JComboBox<T> newComboBox(Set<T> enumValues) {
+      return newComboBox(enumValues, null);
+   }
+
+   public static <T extends Object> JComboBox<T> newComboBox(Set<T> enumValues, T selected) {
+      final T[] values = (T[]) new Object[enumValues.size()];
+      int index = 0;
+      for (T enumValue : enumValues)
+         values[index++] = enumValue;
+      final JComboBox<T> comboBox = new JComboBox<>(values);
+      if(selected!=null) comboBox.setSelectedItem(selected);
+      return comboBox;
    }
 
    public static abstract class ConfirmAction {

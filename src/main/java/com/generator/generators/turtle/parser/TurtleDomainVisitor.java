@@ -7,46 +7,46 @@ public abstract class TurtleDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "ObjectList")) visitObjectList(node);
-		else if(hasLabel(node, "Verb")) visitVerb(node);
-		else if(hasLabel(node, "Subject")) visitSubject(node);
-		else if(hasLabel(node, "Predicate")) visitPredicate(node);
-		else if(hasLabel(node, "Object")) visitObject(node);
+		if(hasLabel(node, "Statement")) visitStatement(node);
 		else if(hasLabel(node, "Literal")) visitLiteral(node);
+		else if(hasLabel(node, "Directive")) visitDirective(node);
+		else if(hasLabel(node, "ObjectList")) visitObjectList(node);
+		else if(hasLabel(node, "Object")) visitObject(node);
+		else if(hasLabel(node, "Verb")) visitVerb(node);
 		else if(hasLabel(node, "BlankNodePropertyList")) visitBlankNodePropertyList(node);
 		else if(hasLabel(node, "Collection")) visitCollection(node);
 		else if(hasLabel(node, "RdfLiteral")) visitRdfLiteral(node);
+		else if(hasLabel(node, "Subject")) visitSubject(node);
+		else if(hasLabel(node, "Predicate")) visitPredicate(node);
 		else if(hasLabel(node, "Iri")) visitIri(node);
 		else if(hasLabel(node, "TurtleDoc")) visitTurtleDoc(node);
-		else if(hasLabel(node, "Statement")) visitStatement(node);
+		else if(hasLabel(node, "PrefixID")) visitPrefixID(node);
+		else if(hasLabel(node, "Base")) visitBase(node);
 		else if(hasLabel(node, "SparqlBase")) visitSparqlBase(node);
 		else if(hasLabel(node, "SparqlPrefix")) visitSparqlPrefix(node);
 		else if(hasLabel(node, "Triples")) visitTriples(node);
 		else if(hasLabel(node, "PredicateObjectList")) visitPredicateObjectList(node);
-		else if(hasLabel(node, "Directive")) visitDirective(node);
-		else if(hasLabel(node, "PrefixID")) visitPrefixID(node);
-		else if(hasLabel(node, "Base")) visitBase(node);
    }
 
+	public void visitStatement(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitLiteral(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitDirective(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
 	public void visitObjectList(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitVerb(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitSubject(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitPredicate(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -58,7 +58,7 @@ public abstract class TurtleDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitLiteral(Node node) {
+	public void visitVerb(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -82,6 +82,18 @@ public abstract class TurtleDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
+	public void visitSubject(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitPredicate(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
 	public void visitIri(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
@@ -94,7 +106,13 @@ public abstract class TurtleDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitStatement(Node node) {
+	public void visitPrefixID(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitBase(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -119,24 +137,6 @@ public abstract class TurtleDomainVisitor {
 	}
 
 	public void visitPredicateObjectList(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitDirective(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitPrefixID(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitBase(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

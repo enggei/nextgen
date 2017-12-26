@@ -8,7 +8,7 @@ import java.util.UUID;
  * Created by Ernst Sognnes on 16.07.17.
  */
 public class NeoCache {
-
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(NeoCache.class);
    private static final Map<UUID, RemoteNode> nodeCache = new HashMap<>();
    private static final Map<UUID, RemoteRelationship> relationshipCache = new HashMap<>();
 
@@ -34,17 +34,17 @@ public class NeoCache {
    }
 
    public static RemoteNode getCachedNode(final UUID uuid) {
-      System.out.println("getCachedNode: " + uuid);
+      log.info("getCachedNode: " + uuid);
       return nodeCache.get(uuid);
    }
 
    public static RemoteRelationship getCachedRelationship(final UUID uuid) {
-      System.out.println("getCachedRelationship: " + uuid);
+      log.info("getCachedRelationship: " + uuid);
       return relationshipCache.get(uuid);
    }
 
    static RemoteNode updateCache(final RemoteNode neoNode) {
-      System.out.println("updateCache: " + (neoNode != null ? neoNode.toString() : "NULL"));
+      log.info("updateCache: " + (neoNode != null ? neoNode.toString() : "NULL"));
       if (neoNode == null) return null;
 
       final UUID uuid = neoNode.getUUID();
@@ -61,7 +61,7 @@ public class NeoCache {
    }
 
    static RemoteRelationship updateCache(final RemoteRelationship neoRelationship) {
-      System.out.println("updateCache: " + (neoRelationship != null ? neoRelationship.toString() : "NULL"));
+      log.info("updateCache: " + (neoRelationship != null ? neoRelationship.toString() : "NULL"));
       if (neoRelationship == null) return null;
 
       final UUID uuid = neoRelationship.getUUID();
@@ -78,14 +78,14 @@ public class NeoCache {
    }
 
    static RemoteNode removeCache(final RemoteNode neoNode) {
-      System.out.println("removeCache: " + (neoNode != null ? neoNode.toString() : "NULL"));
+      log.info("removeCache: " + (neoNode != null ? neoNode.toString() : "NULL"));
       if (neoNode == null) return null;
 
       return nodeCache.remove(neoNode.getUUID());
    }
 
    static RemoteRelationship removeCache(final RemoteRelationship neoRelationship) {
-      System.out.println("removeCache: " + (neoRelationship != null ? neoRelationship.toString() : "NULL"));
+      log.info("removeCache: " + (neoRelationship != null ? neoRelationship.toString() : "NULL"));
       if (neoRelationship == null) return null;
 
       return relationshipCache.remove(neoRelationship.getUUID());

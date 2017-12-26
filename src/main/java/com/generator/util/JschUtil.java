@@ -2,12 +2,19 @@ package com.generator.util;
 
 import com.jcraft.jsch.*;
 
+import javax.swing.text.BadLocationException;
 import java.io.*;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static com.generator.util.FormatUtil.formatBytes;
+import static com.generator.util.FormatUtil.formatTime;
 
 /**
  * Created 18.10.17.
  */
 public class JschUtil {
+
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(JschUtil.class);
 
    public interface IOListener {
 
@@ -25,7 +32,7 @@ public class JschUtil {
 
          @Override
          public void update(long total) {
-            System.out.println("io update " + formatBytes(total, true));
+            log.info("io update " + formatBytes(total, true));
          }
 
          @Override
@@ -35,7 +42,7 @@ public class JschUtil {
 
          @Override
          public void completed(Session session, long total) {
-            System.out.println("io update " + formatBytes(total, true) + " in " + formatTime(System.currentTimeMillis() - startTime));
+            log.info("io update " + formatBytes(total, true) + " in " + formatTime(System.currentTimeMillis() - startTime));
             if (disconnectAfter) session.disconnect();
          }
       };
@@ -60,13 +67,139 @@ public class JschUtil {
       return connect(session);
    }
 
-   public static void upload(Session session, String lfile, String rfile, IOListener ioListener) throws Exception {
+   public static abstract class SSHHandler implements Runnable {
+
+      private final DataInputStream dataIn;
+      private final DataOutputStream dataOut;
+      private final StringBuilder cache = new StringBuilder();
+      private final Thread thread;
+      private final String installText = "You can install it by typing:\r\n";
+
+      protected boolean isActive = true;
+
+      private final AtomicInteger textBufferLength = new AtomicInteger(5000);
+      private String sudoPassword = null;
+
+      public SSHHandler(DataInputStream dataIn, DataOutputStream dataOut) {
+         this.dataIn = dataIn;
+         this.dataOut = dataOut;
+         this.thread = new Thread(this);
+         this.thread.start();
+      }
+
+      public SSHHandler(Channel channel) throws IOException {
+
+         ((ChannelShell) channel).setPtyType("dumb");
+         try {
+            channel.connect();
+         } catch (JSchException e) {
+            throw new IOException("Could not connect to channel");
+         }
+
+         this.dataIn = new DataInputStream(channel.getInputStream());
+         this.dataOut = new DataOutputStream(channel.getOutputStream());
+         this.thread = new Thread(this);
+         this.thread.start();
+      }
+
+      @Override
+      public void run() {
+         try {
+
+            byte[] bytes = new byte[1024];
+            while (isActive) {
+
+               if (dataIn.available() > 0) {
+                  final int read = dataIn.read(bytes);
+                  cache.append(new String(bytes, 0, read, "UTF-8"));
+
+                  final String s = cache.toString();
+                  if (s.contains("[sudo] password for ") && sudoPassword == null) {
+                     checkCache();
+
+                     // todo check for erroneous-password (retry-password)
+                     sudoPassword = getSudoPassword();
+                     runCommand(dataOut, sudoPassword, false);
+
+                  } else if (s.endsWith("Do you want to continue? [Y/n] ")) {
+
+                     checkCache();
+
+                     runCommand(dataOut, handleContinue(s) + "\n", false);
+
+                  } else if (s.contains(installText)) {
+                     checkCache();
+
+                     final int beginIndex = s.indexOf(installText) + installText.length();
+                     handleInstall(s.substring(beginIndex, s.indexOf("\r\n", beginIndex)));
+
+                  } else {
+                     checkCache();
+                     handle(s);
+                  }
+
+               } else {
+
+                  onPromptReady();
+               }
+
+               Thread.sleep(100L);
+            }
+         } catch (Throwable t) {
+            handleException(cache.toString(), t);
+         }
+      }
+
+      public void checkCache() {
+         if (cache.length() > textBufferLength.get())
+            cache.delete(0, cache.length() - textBufferLength.get());
+      }
+
+      protected abstract void onPromptReady();
+
+      protected abstract void handleInstall(String installCommand);
+
+      protected abstract String getSudoPassword();
+
+      protected abstract void handle(String cache);
+
+      protected abstract void handleException(String cache, Throwable t);
+
+      protected abstract String handleContinue(String cache);
+
+      protected void write(String command) {
+         write(command, false);
+      }
+
+      protected void write(String command, boolean asSudeo) {
+         runCommand(dataOut, command.endsWith("\n") ? command : (command + "\n"), asSudeo);
+      }
+
+      protected void runCommand(DataOutputStream dataOut, String command, boolean asSudo) {
+         try {
+            dataOut.writeBytes((asSudo ? "sudo " : "") + command + "\n");
+            dataOut.flush();
+         } catch (Exception e1) {
+            e1.printStackTrace();
+         }
+      }
+
+      public void clearCache() {
+         cache.delete(0, cache.length());
+      }
+
+      public void close() {
+         isActive = false;
+      }
+   }
+
+   public static void upload(Session session, String localFile, String remoteFile, IOListener ioListener) throws Exception {
 
       new Thread(() -> {
 
          try {
             final ChannelExec channel = (ChannelExec) session.openChannel("exec");
-            channel.setCommand("scp -t " + rfile);
+            channel.setCommand("scp -t " + remoteFile);
 
             final OutputStream out = channel.getOutputStream();
             final InputStream in = channel.getInputStream();
@@ -74,13 +207,13 @@ public class JschUtil {
             channel.connect();
             if (checkAck(in) != 0) throw new Exception("Connect Ack error");
 
-            final File _lfile = new File(lfile);
-            out.write(("C0644 " + _lfile.length() + " " + (lfile.lastIndexOf('/') > 0 ? lfile.substring(lfile.lastIndexOf('/') + 1) : lfile) + "\n").getBytes("UTF-8"));
+            final File _lfile = new File(localFile);
+            out.write(("C0644 " + _lfile.length() + " " + (localFile.lastIndexOf('/') > 0 ? localFile.substring(localFile.lastIndexOf('/') + 1) : localFile) + "\n").getBytes("UTF-8"));
             out.flush();
             if (checkAck(in) != 0) throw new Exception("Scp Ack error");
 
-            // send a content of lfile
-            final FileInputStream fis = new FileInputStream(lfile);
+            // send a content of localFile
+            final FileInputStream fis = new FileInputStream(localFile);
             long total = 0L;
             byte[] buf = new byte[1024];
             while (true) {
@@ -92,7 +225,7 @@ public class JschUtil {
 
                if (total % (1024 * 1024) == 0) {
                   ioListener.update(total);
-                  System.out.println("Uploaded " + total + "B");
+                  log.info("Uploaded " + total + "B");
                   if (ioListener.cancel()) break;
                }
             }
@@ -117,14 +250,14 @@ public class JschUtil {
       }).start();
    }
 
-   public static void download(Session session, String lfile, String rfile, IOListener ioListener) throws Exception {
+   public static void download(Session session, String localFile, String remoteFile, IOListener ioListener) throws Exception {
       new Thread(() -> {
 
          try {
-            final String prefix = new File(lfile).isDirectory() ? (lfile + File.separator) : null;
+            final String prefix = new File(localFile).isDirectory() ? (localFile + File.separator) : null;
 
             final ChannelExec channel = (ChannelExec) session.openChannel("exec");
-            channel.setCommand("scp -f " + rfile);
+            channel.setCommand("scp -f " + remoteFile);
 
             final OutputStream out = channel.getOutputStream();
             final InputStream in = channel.getInputStream();
@@ -167,8 +300,8 @@ public class JschUtil {
                out.write(buf, 0, 1);
                out.flush();
 
-               // read content of lfile
-               final FileOutputStream fos = new FileOutputStream(prefix == null ? lfile : prefix + file);
+               // read content of localFile
+               final FileOutputStream fos = new FileOutputStream(prefix == null ? localFile : prefix + file);
                int foo;
                while (true) {
 
@@ -282,50 +415,5 @@ public class JschUtil {
       @Override
       public void showMessage(String message) {
       }
-   }
-
-   private static String formatBytes(long bytes, boolean si) {
-      int unit = si ? 1000 : 1024;
-      if (bytes < unit) return bytes + " B";
-      int exp = (int) (Math.log(bytes) / Math.log(unit));
-      String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
-      return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
-   }
-
-   private static final long SECONDms = 1000;
-   private static final long MINUTEms = SECONDms * 60L;
-   private static final long HOURms = MINUTEms * 60L;
-   private static final long DAYms = HOURms * 24L;
-
-   private static String formatTime(long runningTime) {
-
-      final boolean negative = runningTime < 0;
-
-      runningTime = Math.abs(runningTime);
-
-      final StringBuilder t = new StringBuilder();
-      final long d = runningTime / DAYms;
-      if (d > 0L) {
-         t.append(" ").append(d).append(" day").append(d == 1 ? "" : "s");
-         runningTime %= DAYms;
-      }
-      final long h = runningTime / HOURms;
-      if (h > 0L) {
-         t.append(" ").append(h).append(" hour").append(h == 1 ? "" : "s");
-         runningTime %= HOURms;
-      }
-      final long m = runningTime / MINUTEms;
-      if (m > 0L) {
-         t.append(" ").append(m).append(" minute").append(m == 1 ? "" : "s");
-         runningTime %= MINUTEms;
-      }
-      final long s = runningTime / SECONDms;
-      if (s > 0L) {
-         t.append(" ").append(s).append(" second").append(s == 1 ? "" : "s");
-         runningTime %= SECONDms;
-      }
-
-      final String x = t.toString().trim();
-      return (negative ? "-" : "") + (x.length() == 0 ? (runningTime + " ms") : x);
    }
 }

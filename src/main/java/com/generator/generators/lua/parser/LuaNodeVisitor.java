@@ -2,6 +2,8 @@ package com.generator.generators.lua.parser;
 
 public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(LuaNodeVisitor.class);
+
    public static class Node {
 
       public final String name;
@@ -33,7 +35,7 @@ public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-				if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
+				if (debug) log.debug(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -49,69 +51,6 @@ public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
    }
 
 	@Override
-	public Node visitBlock(com.generator.generators.lua.parser.LuaParser.BlockContext arg) {
-		final Node node = new Node("Block", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitString(com.generator.generators.lua.parser.LuaParser.StringContext arg) {
-		final Node node = new Node("String", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitNumber(com.generator.generators.lua.parser.LuaParser.NumberContext arg) {
-		final Node node = new Node("Number", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitVar(com.generator.generators.lua.parser.LuaParser.VarContext arg) {
-		final Node node = new Node("Var", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitField(com.generator.generators.lua.parser.LuaParser.FieldContext arg) {
-		final Node node = new Node("Field", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitOperatorAddSub(com.generator.generators.lua.parser.LuaParser.OperatorAddSubContext arg) {
-		final Node node = new Node("OperatorAddSub", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitChunk(com.generator.generators.lua.parser.LuaParser.ChunkContext arg) {
-		final Node node = new Node("Chunk", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitStat(com.generator.generators.lua.parser.LuaParser.StatContext arg) {
 		final Node node = new Node("Stat", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
@@ -123,15 +62,6 @@ public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
 	@Override
 	public Node visitRetstat(com.generator.generators.lua.parser.LuaParser.RetstatContext arg) {
 		final Node node = new Node("Retstat", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitFunctioncall(com.generator.generators.lua.parser.LuaParser.FunctioncallContext arg) {
-		final Node node = new Node("Functioncall", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -184,8 +114,8 @@ public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitExp(com.generator.generators.lua.parser.LuaParser.ExpContext arg) {
-		final Node node = new Node("Exp", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitPrefixexp(com.generator.generators.lua.parser.LuaParser.PrefixexpContext arg) {
+		final Node node = new Node("Prefixexp", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -193,8 +123,17 @@ public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitPrefixexp(com.generator.generators.lua.parser.LuaParser.PrefixexpContext arg) {
-		final Node node = new Node("Prefixexp", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitChunk(com.generator.generators.lua.parser.LuaParser.ChunkContext arg) {
+		final Node node = new Node("Chunk", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitFunctioncall(com.generator.generators.lua.parser.LuaParser.FunctioncallContext arg) {
+		final Node node = new Node("Functioncall", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -328,6 +267,15 @@ public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
 	}
 
 	@Override
+	public Node visitOperatorAddSub(com.generator.generators.lua.parser.LuaParser.OperatorAddSubContext arg) {
+		final Node node = new Node("OperatorAddSub", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitOperatorMulDivMod(com.generator.generators.lua.parser.LuaParser.OperatorMulDivModContext arg) {
 		final Node node = new Node("OperatorMulDivMod", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
@@ -357,6 +305,60 @@ public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
 	@Override
 	public Node visitOperatorPower(com.generator.generators.lua.parser.LuaParser.OperatorPowerContext arg) {
 		final Node node = new Node("OperatorPower", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitBlock(com.generator.generators.lua.parser.LuaParser.BlockContext arg) {
+		final Node node = new Node("Block", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitString(com.generator.generators.lua.parser.LuaParser.StringContext arg) {
+		final Node node = new Node("String", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitNumber(com.generator.generators.lua.parser.LuaParser.NumberContext arg) {
+		final Node node = new Node("Number", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitVar(com.generator.generators.lua.parser.LuaParser.VarContext arg) {
+		final Node node = new Node("Var", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitField(com.generator.generators.lua.parser.LuaParser.FieldContext arg) {
+		final Node node = new Node("Field", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitExp(com.generator.generators.lua.parser.LuaParser.ExpContext arg) {
+		final Node node = new Node("Exp", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

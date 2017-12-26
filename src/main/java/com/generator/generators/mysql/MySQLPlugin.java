@@ -3,35 +3,40 @@ package com.generator.generators.mysql;
 import com.generator.app.App;
 import com.generator.app.AppMotif;
 import com.generator.app.nodes.NeoNode;
+import com.generator.generators.domain.DomainPlugin;
+import com.generator.generators.java.JavaGroup;
 import com.generator.generators.mysql.parser.MySqlLexer;
 import com.generator.generators.mysql.parser.MySqlParser;
 import com.generator.generators.mysql.parser.MySqlParserNeoVisitor;
 import com.generator.generators.mysql.parser.MySqlParserNodeListener;
+import com.generator.generators.project.ProjectPlugin;
 import com.generator.generators.spring.SpringGroup;
 import com.generator.generators.stringtemplate.GeneratedFile;
 import com.generator.neo.NeoModel;
-import com.generator.util.MySQLUtil;
-import com.generator.util.StringUtil;
-import com.generator.util.SwingUtil;
+import com.generator.util.*;
+import com.test.DaoGenerator;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.jetbrains.annotations.NotNull;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.PropertyContainer;
-import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.Transaction;
+import org.neo4j.graphdb.*;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.generator.util.NeoUtil.*;
@@ -42,6 +47,8 @@ import static com.generator.util.NeoUtil.*;
  */
 public class MySQLPlugin extends MySQLDomainPlugin {
 
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(MySQLPlugin.class);
+
    private final SpringGroup springGroup = new SpringGroup();
    private final Map<Node, MySQLSession> sessions = new LinkedHashMap<>();
 
@@ -50,17 +57,13 @@ public class MySQLPlugin extends MySQLDomainPlugin {
 
       Runtime.getRuntime().addShutdownHook(new Thread(() -> {
          for (MySQLSession mySQLSession : sessions.values()) {
-            try {
-               mySQLSession.close();
-            } catch (SQLException e) {
-               System.out.println("Could not close mysql-session: " + e.getMessage());
-            }
+            mySQLSession.close();
          }
       }));
    }
 
    @Override
-   protected void handleDatabase(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
+   protected void handleDatabase(JPopupMenu pop, NeoNode databaseNeoNode, Set<NeoNode> selectedNodes) {
 
       pop.add(new App.TransactionAction("New Query", app) {
          @Override
@@ -70,7 +73,7 @@ public class MySQLPlugin extends MySQLDomainPlugin {
             if (name == null || name.length() == 0) return;
 
             final Node newNode = newQuery(name);
-            relateQUERY(neoNode.getNode(), newNode);
+            relateQUERY(databaseNeoNode.getNode(), newNode);
             fireNodesLoaded(newNode);
          }
       });
@@ -80,7 +83,7 @@ public class MySQLPlugin extends MySQLDomainPlugin {
          protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
             final String sql = SwingUtil.showInputDialog("sql", app);
-            if (name == null || name.length() == 0) return;
+            if (sql == null || sql.length() == 0) return;
 
             new ParseTreeWalker().walk(new MySqlParserNodeListener(true) {
 
@@ -88,45 +91,55 @@ public class MySQLPlugin extends MySQLDomainPlugin {
 
 
             final Node newNode = newQuery(name);
-            relateQUERY(neoNode.getNode(), newNode);
+            relateQUERY(databaseNeoNode.getNode(), newNode);
             fireNodesLoaded(newNode);
          }
       });
 
-      final Set<Node> queryNodes = new LinkedHashSet<>();
-      outgoingQUERY(neoNode.getNode(), (relationship, queryNode) -> queryNodes.add(queryNode));
+      ProjectPlugin.incomingRENDERER(databaseNeoNode.getNode(), (rendererRelationship, directory) -> pop.add(new App.TransactionAction("Write to " + ProjectPlugin.getPathProperty(directory), app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+            final Object packageNameProperty = ProjectPlugin.getPackageNameProperty(rendererRelationship, "");
+            final Object className = ProjectPlugin.getClassNameProperty(rendererRelationship, "");
 
-      if (!queryNodes.isEmpty()) {
-         pop.add(new App.TransactionAction("Create DAO for queries", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+            final SpringGroup.DAOST daost = springGroup.newDAO().
+                  setPackage(packageNameProperty).
+                  setName(className).
+                  setDatabase(getNameProperty(databaseNeoNode.getNode())).
+                  setHost(getHostProperty(databaseNeoNode.getNode())).
+                  setUsername(getUsernameProperty(databaseNeoNode.getNode())).
+                  setPort(3306);
 
-               final SpringGroup.DAOST daost = springGroup.newDAO().
-                     setPackage("com.ud.tr.dao").
-                     setName("TestDAO").
-                     setDatabase(getNameProperty(neoNode.getNode())).
-                     setHost(getHostProperty(neoNode.getNode())).
-                     setUsername(getUsernameProperty(neoNode.getNode())).
-                     setPort(3306);
+            final Set<Node> queryNodes = new LinkedHashSet<>();
+            outgoingQUERY(databaseNeoNode.getNode(), (relationship, queryNode) -> queryNodes.add(queryNode));
 
-               for (Node queryNode : queryNodes) {
-                  daost.addQueriesValue(createDao(queryNode));
-               }
+            for (Node queryNode : queryNodes)
+               daost.addQueriesValue(createQueryDaoMethod(queryNode));
 
-               GeneratedFile.newJavaFile("/home/goe/udc/trailer-report/src/main/java", "com.ud.tr.dao", "TestDAO").write(daost);
-            }
-         });
-      }
+            outgoingTABLE(databaseNeoNode.getNode(), (relationship, tableNode) -> daost.addQueriesValue(createTableQuery(tableNode)));
+
+            GeneratedFile.newJavaFile(ProjectPlugin.getFile(directory).getPath(), packageNameProperty.toString(), className.toString()).write(daost);
+         }
+      }));
+   }
+
+   @Override
+   protected void handleSql_statements(JPopupMenu pop, NeoNode sql_statementsNode, Set<NeoNode> selectedNodes) {
+      pop.add(new App.TransactionAction("Test", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+            new DaoGenerator().visit(sql_statementsNode.getNode());
+         }
+      });
    }
 
    @Override
    protected void handleQuery(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
 
-      pop.add(new App.TransactionAction("Create DaoAccessor", app) {
+      pop.add(new App.TransactionAction("Show DaoAccessor", app) {
          @Override
          protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-            final SpringGroup.queryMethodST queryMethodST = createDao(neoNode.getNode());
-            System.out.println(queryMethodST);
+            SwingUtil.showTextResult("DAOAccessor", createQueryDaoMethod(neoNode.getNode()).toString(), app);
          }
       });
 
@@ -179,18 +192,35 @@ public class MySQLPlugin extends MySQLDomainPlugin {
       });
    }
 
-   private SpringGroup.queryMethodST createDao(Node queryNode) {
+   private SpringGroup.queryMethodST createQueryDaoMethod(Node queryNode) {
       final String name = getNameProperty(queryNode);
 
+      final String entity = name + "Result";
+      final JavaGroup javaGroup = new JavaGroup();
+      final JavaGroup.ClassST entityDeclaration = javaGroup.newClass().
+            setName(entity).
+            setIsStatic(true).
+            setIsFinal(true).
+            addMethodsValue(javaGroup.newconstructor().
+                  setName(entity));
+
       final SpringGroup.queryMethodST queryMethodST = springGroup.newqueryMethod().
-            setEntity(name + "Result").
             setName("get" + name).
+            setEntity(entity).
             setSql(queryNodeToSQL(queryNode));
 
-      for (Node column : getSelectColumns(queryNode)) {
-         final String columnName = getNameProperty(column);
-         final String columnType = getColumnTypeProperty(column, "");
-         queryMethodST.addColumnsValue(columnName, MySQLUtil.columnMapping(columnType));
+      final JavaGroup.toStringST toStringST = javaGroup.newtoString();
+
+      for (Node columnNode : getSelectColumns(queryNode)) {
+         final Node tableNode = other(columnNode, singleIncoming(columnNode, Relations.COLUMN));
+         final String columnName = getNameProperty(columnNode);
+         final String columnType = getColumnTypeProperty(columnNode, "");
+         queryMethodST.addColumnsValue(columnName, getQualifiedColumnName(columnNode, tableNode), MySQLUtil.resultSetGetter(columnType));
+
+         entityDeclaration.addFieldsValue(null, columnName, MySQLUtil.columnMapping(columnType), "private", false, false);
+         entityDeclaration.addMethodsValue(javaGroup.newget().setName(columnName).setType(MySQLUtil.columnMapping(columnType)));
+         entityDeclaration.addMethodsValue(javaGroup.newset().setName(columnName).setType(MySQLUtil.columnMapping(columnType)));
+         toStringST.addValuesValue(columnName);
       }
 
       for (WhereParam queryColumn : getWhereColumnsForQuery(queryNode)) {
@@ -198,25 +228,49 @@ public class MySQLPlugin extends MySQLDomainPlugin {
          final String columnType = getColumnTypeProperty(queryColumn.propertyContainer, "");
          queryMethodST.addParamsValue(columnName, MySQLUtil.columnMapping(columnType));
       }
+
+      entityDeclaration.addMethodsValue(toStringST);
+
+      queryMethodST.setEntityDeclaration(entityDeclaration);
+
       return queryMethodST;
    }
 
-   @Override
-   protected void handleTable(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
+   private SpringGroup.queryMethodST createTableQuery(Node tableNode) {
 
-      pop.add(new App.TransactionAction("Show queries", app) {
-         @Override
-         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+      final String entity = StringUtil.capitalize(getNameProperty(tableNode));
 
-         }
+      final JavaGroup javaGroup = new JavaGroup();
+      final JavaGroup.ClassST entityDeclaration = javaGroup.newClass().
+            setName(entity).
+            setIsStatic(true).
+            setIsFinal(true).
+            addMethodsValue(javaGroup.newconstructor().
+                  setName(entity));
+
+      final SpringGroup.queryMethodST queryMethodST = springGroup.newqueryMethod().
+            setName("get" + entity).
+            setEntity(entity).
+            setSql(tableNodeToSQL(tableNode));
+
+      final JavaGroup.toStringST toStringST = javaGroup.newtoString();
+
+      outgoingCOLUMN(tableNode, (relationship, columnNode) -> {
+         final String columnName = getNameProperty(columnNode);
+         final String columnType = getColumnTypeProperty(columnNode, "");
+         queryMethodST.addColumnsValue(columnName, getQualifiedColumnName(columnNode, tableNode), MySQLUtil.resultSetGetter(columnType));
+
+         entityDeclaration.addFieldsValue(null, columnName, MySQLUtil.columnMapping(columnType), "private", false, false);
+         entityDeclaration.addMethodsValue(javaGroup.newget().setName(columnName).setType(MySQLUtil.columnMapping(columnType)));
+         entityDeclaration.addMethodsValue(javaGroup.newset().setName(columnName).setType(MySQLUtil.columnMapping(columnType)));
+         toStringST.addValuesValue(columnName);
       });
 
-      pop.add(new App.TransactionAction("Make Spring accessor", app) {
-         @Override
-         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+      entityDeclaration.addMethodsValue(toStringST);
 
-         }
-      });
+      queryMethodST.setEntityDeclaration(entityDeclaration);
+
+      return queryMethodST;
    }
 
    @Override
@@ -254,6 +308,8 @@ public class MySQLPlugin extends MySQLDomainPlugin {
             });
          }
       });
+
+      // SELECT table_schema AS "Database name", SUM(data_length + index_length) / 1024 / 1024 AS "Size (MB)" FROM information_schema.TABLES GROUP BY table_schema;
 
       menu.add(new App.TransactionAction("Get tables from Database", app) {
          @Override
@@ -293,9 +349,9 @@ public class MySQLPlugin extends MySQLDomainPlugin {
 
                         final Node databaseNode = getGraph().findOrCreate(Entities.Database, AppMotif.Properties.name.name(), db.getDatabase(), Properties.host.name(), txtHost.getText(), Properties.username.name(), txtUsername.getText());
 
-                        final DatabaseToDomain neoListener = new DatabaseToDomain(true, getGraph());
+                        final DatabaseToDomain neoListener = new DatabaseToDomain(true, MySQLPlugin.this);
                         for (String table : db.getTables()) {
-                           new ParseTreeWalker().walk(neoListener, new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(table)))).root());
+                           new ParseTreeWalker().walk(neoListener, new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(table.replaceAll(" DEFAULT `0`", ""))))).root());
                            relate(databaseNode, neoListener.done(), Relations.TABLE);
                         }
                         neoListener.assignForeignKeys();
@@ -314,6 +370,151 @@ public class MySQLPlugin extends MySQLDomainPlugin {
             });
          }
       });
+
+      menu.add(new App.TransactionAction("Import MySQL Database", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final JTextField txtHost = new JTextField("127.0.0.1");
+            final JTextField txtDatabase = new JTextField("tr");
+            final JTextField txtUsername = new JTextField("root");
+            final JPasswordField txtPassword = new JPasswordField("");
+
+            SwingUtil.FormPanel login = new SwingUtil.FormPanel("pref, 4dlu, 75dlu:grow", "pref, 4dlu, pref, 4dlu, pref, 4dlu, pref");
+            login.addLabel("Host", 1, 1);
+            login.add(txtHost, 3, 1);
+            login.addLabel("Database", 1, 3);
+            login.add(txtDatabase, 3, 3);
+            login.addLabel("Username", 1, 5);
+            login.add(txtUsername, 3, 5);
+            login.addLabel("Password", 1, 7);
+            login.add(txtPassword, 3, 7);
+
+
+            SwingUtil.showDialog(login, app, "Database", new SwingUtil.ConfirmAction() {
+               @Override
+               public void verifyAndCommit() throws Exception {
+
+                  if (txtHost.getText().length() == 0) throw new IllegalArgumentException("host must be set");
+                  if (txtDatabase.getText().length() == 0)
+                     throw new IllegalArgumentException("database must be set");
+                  if (txtUsername.getText().length() == 0)
+                     throw new IllegalArgumentException("username must be set");
+                  if (txtPassword.getPassword().length == 0)
+                     throw new IllegalArgumentException("password must be set");
+
+
+                  final Set<Node> tableNodes = new LinkedHashSet<>();
+
+                  getGraph().doInTransaction(new NeoModel.Committer() {
+                     @Override
+                     public void doAction(Transaction tx12) throws Throwable {
+                        final MySQLSession db = new MySQLSession(txtHost.getText(), txtDatabase.getText(), txtUsername.getText(), txtPassword.getPassword());
+
+                        final Node databaseNode = getGraph().findOrCreate(Entities.Database, AppMotif.Properties.name.name(), db.getDatabase(), Properties.host.name(), txtHost.getText(), Properties.username.name(), txtUsername.getText());
+
+                        final DatabaseToDomain neoListener = new DatabaseToDomain(false, MySQLPlugin.this);
+                        for (String table : db.getTables()) {
+                           log.info("processing " + table);
+                           new ParseTreeWalker().walk(neoListener, new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(table.replaceAll(" DEFAULT `0`", ""))))).root());
+                           final Node tableNode = neoListener.done();
+                           relate(databaseNode, tableNode, Relations.TABLE);
+                           tableNodes.add(tableNode);
+                        }
+                        neoListener.assignForeignKeys();
+
+                        fireNodesLoaded(databaseNode);
+                        db.close();
+
+                     }
+
+                     @Override
+                     public void exception(Throwable throwable) {
+                        SwingUtil.showExceptionNoStack(app, throwable);
+                     }
+                  });
+
+                  new Thread(() -> {
+
+                     ExecutorService executorService = Executors.newFixedThreadPool(4);
+                     app.model.ignoreTransactions.set(true);
+
+                     for (Node tableNode : tableNodes) {
+
+                        executorService.submit(() -> {
+
+                           final MySQLSession db = new MySQLSession(txtHost.getText(), txtDatabase.getText(), txtUsername.getText(), txtPassword.getPassword());
+
+                           Transaction tx = getGraph().beginTx();
+
+                           // insert data:
+                           final String query = tableNodeToSQL(tableNode) + " limit 1000";
+                           log.info("NB: limit 1000 for imports - for testing querying " + query);
+                           final String tableName = getNameProperty(tableNode);
+                           final org.neo4j.graphdb.Label label = org.neo4j.graphdb.Label.label(tableName);
+
+                           final AtomicInteger rowCounter = new AtomicInteger(0);
+                           final AtomicInteger batchCount = new AtomicInteger(10000);
+
+                           try {
+                              final Statement statement = db.createStatement();
+                              final ResultSet resultSet = statement.executeQuery(query);
+                              final Map<String, String> columns = new LinkedHashMap<>();
+
+                              while (resultSet.next()) {
+
+                                 if (columns.isEmpty()) {
+                                    final ResultSetMetaData metaData = resultSet.getMetaData();
+                                    for (int i = 1; i <= metaData.getColumnCount(); i++)
+                                       columns.put(metaData.getColumnLabel(i), metaData.getColumnTypeName(i));
+                                 }
+
+                                 final Node rowNode = getGraph().newNode(label);
+                                 relate(rowNode, tableNode, RelationshipType.withName("ROW"));
+
+                                 for (String columnName : columns.keySet()) {
+                                    final Object value = MySQLUtil.valueMapping(resultSet.getObject(columnName));
+                                    if (value == null) continue;
+                                    rowNode.setProperty(columnName, value);
+                                 }
+
+                                 if (rowCounter.incrementAndGet() % batchCount.get() == 0) {
+                                    tx.success();
+                                    tx.close();
+                                    log.info("inserted " + rowCounter.get() + " rows from " + tableName);
+                                    tx = getGraph().beginTx();
+                                 }
+                              }
+                              tx.success();
+                              tx.close();
+
+                              resultSet.close();
+                              statement.close();
+
+                              log.info("\t" + tableName + " COMPLETED");
+                              db.close();
+                           } catch (Throwable e1) {
+                              log.error("import error", e1);
+                           }
+                        });
+                     }
+
+                     // shuts down executor-service after 1 day, if not completed...
+                     ThreadUtil.shutdown(executorService, FormatUtil.DAYms);
+
+                     // relate foreign-keys to nodes
+                     executorService = Executors.newFixedThreadPool(1);
+
+
+
+
+
+                     app.model.ignoreTransactions.set(false);
+                  }).start();
+               }
+            });
+         }
+      });
    }
 
    @Override
@@ -324,6 +525,25 @@ public class MySQLPlugin extends MySQLDomainPlugin {
    @Override
    protected JComponent newQueryEditor(NeoNode neoNode) {
       return new QueryEditor(neoNode);
+   }
+
+   public static void showAddDAORenderer(NeoNode directoryNode, NeoNode databaseNode, JPopupMenu pop, App app) {
+
+      pop.add(new App.TransactionAction("Add DAO Renderer for " + getNameProperty(databaseNode.getNode()), app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final String packageName = SwingUtil.showInputDialog("Package", app);
+            if (packageName == null) return;
+
+            final String className = getNameProperty(databaseNode.getNode()) + "DaoUtil";
+
+            final Relationship rendererRelationship = ProjectPlugin.relateRENDERER(directoryNode.getNode(), databaseNode.getNode());
+            ProjectPlugin.setFileTypeProperty(app.model.graph(), rendererRelationship, ProjectPlugin.Filetype.java.name());
+            ProjectPlugin.setPackageNameProperty(app.model.graph(), rendererRelationship, packageName);
+            ProjectPlugin.setClassNameProperty(app.model.graph(), rendererRelationship, className);
+         }
+      });
    }
 
    private final class TableEditor extends JPanel {
@@ -375,7 +595,7 @@ public class MySQLPlugin extends MySQLDomainPlugin {
 
             @Override
             public void exception(Throwable throwable) {
-               System.out.println("Could not update columns");
+               log.info("Could not update columns");
             }
          }));
 
@@ -422,7 +642,7 @@ public class MySQLPlugin extends MySQLDomainPlugin {
 
             SwingUtilities.invokeLater(() -> {
 
-               final JTextField txtValue = new JTextField(value==null ? "" : value.toString());
+               final JTextField txtValue = new JTextField(value == null ? "" : value.toString());
 
                final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu, 4dlu, 100dlu, 4dlu, pref", "pref");
 
@@ -446,7 +666,7 @@ public class MySQLPlugin extends MySQLDomainPlugin {
                      }
 
                      final Object selectedValue = SwingUtil.showSelectDialog(editor, values, value);
-                     if(selectedValue==null) return;
+                     if (selectedValue == null) return;
                      txtValue.setText(selectedValue.toString());
                   }
                });
@@ -803,7 +1023,8 @@ public class MySQLPlugin extends MySQLDomainPlugin {
    private static Set<WhereParam> getWhereColumnsForQuery(Node queryNode) {
       final Set<WhereParam> columns = new LinkedHashSet<>();
       outgoingQUERY_COLUMN(queryNode, (queryColumnRelation, other) -> {
-         if (getWhereOperatorProperty(queryColumnRelation, "").length() > 0) columns.add(new WhereParam(queryColumnRelation));
+         if (getWhereOperatorProperty(queryColumnRelation, "").length() > 0)
+            columns.add(new WhereParam(queryColumnRelation));
       });
       return columns;
    }

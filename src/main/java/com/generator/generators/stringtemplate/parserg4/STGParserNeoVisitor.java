@@ -6,6 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(STGParserNeoVisitor.class);
+
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final com.generator.neo.NeoModel model;
 
@@ -29,7 +31,7 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitImports(com.generator.generators.stringtemplate.parserg4.STGParser.ImportsContext arg) {
-		System.out.println("Imports");
+		log.info("Imports");
 		final Node node = model.newNode(Label.label("Imports"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -38,8 +40,18 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
+		log.info("Template");
+		final Node node = model.newNode(Label.label("Template"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitGroup(com.generator.generators.stringtemplate.parserg4.STGParser.GroupContext arg) {
-		System.out.println("Group");
+		log.info("Group");
 		final Node node = model.newNode(Label.label("Group"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -49,7 +61,7 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitDelimiters(com.generator.generators.stringtemplate.parserg4.STGParser.DelimitersContext arg) {
-		System.out.println("Delimiters");
+		log.info("Delimiters");
 		final Node node = model.newNode(Label.label("Delimiters"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -59,7 +71,7 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitFormalArgs(com.generator.generators.stringtemplate.parserg4.STGParser.FormalArgsContext arg) {
-		System.out.println("FormalArgs");
+		log.info("FormalArgs");
 		final Node node = model.newNode(Label.label("FormalArgs"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -69,7 +81,7 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitFormalArg(com.generator.generators.stringtemplate.parserg4.STGParser.FormalArgContext arg) {
-		System.out.println("FormalArg");
+		log.info("FormalArg");
 		final Node node = model.newNode(Label.label("FormalArg"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -79,7 +91,7 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitDict(com.generator.generators.stringtemplate.parserg4.STGParser.DictContext arg) {
-		System.out.println("Dict");
+		log.info("Dict");
 		final Node node = model.newNode(Label.label("Dict"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -89,7 +101,7 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitDictPairs(com.generator.generators.stringtemplate.parserg4.STGParser.DictPairsContext arg) {
-		System.out.println("DictPairs");
+		log.info("DictPairs");
 		final Node node = model.newNode(Label.label("DictPairs"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -99,7 +111,7 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitKeyValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValuePairContext arg) {
-		System.out.println("KeyValuePair");
+		log.info("KeyValuePair");
 		final Node node = model.newNode(Label.label("KeyValuePair"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -109,7 +121,7 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitDefaultValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.DefaultValuePairContext arg) {
-		System.out.println("DefaultValuePair");
+		log.info("DefaultValuePair");
 		final Node node = model.newNode(Label.label("DefaultValuePair"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -119,18 +131,8 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitKeyValue(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValueContext arg) {
-		System.out.println("KeyValue");
+		log.info("KeyValue");
 		final Node node = model.newNode(Label.label("KeyValue"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
-		System.out.println("Template");
-		final Node node = model.newNode(Label.label("Template"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

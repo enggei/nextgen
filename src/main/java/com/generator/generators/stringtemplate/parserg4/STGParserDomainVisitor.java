@@ -8,12 +8,12 @@ public abstract class STGParserDomainVisitor {
 
    public void visit(Node node) {
 		if(hasLabel(node, "Imports")) visitImports(node);
+		else if(hasLabel(node, "Template")) visitTemplate(node);
+		else if(hasLabel(node, "Group")) visitGroup(node);
 		else if(hasLabel(node, "Delimiters")) visitDelimiters(node);
 		else if(hasLabel(node, "FormalArgs")) visitFormalArgs(node);
 		else if(hasLabel(node, "FormalArg")) visitFormalArg(node);
 		else if(hasLabel(node, "Dict")) visitDict(node);
-		else if(hasLabel(node, "Group")) visitGroup(node);
-		else if(hasLabel(node, "Template")) visitTemplate(node);
 		else if(hasLabel(node, "DictPairs")) visitDictPairs(node);
 		else if(hasLabel(node, "KeyValuePair")) visitKeyValuePair(node);
 		else if(hasLabel(node, "DefaultValuePair")) visitDefaultValuePair(node);
@@ -21,6 +21,18 @@ public abstract class STGParserDomainVisitor {
    }
 
 	public void visitImports(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitTemplate(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitGroup(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -45,18 +57,6 @@ public abstract class STGParserDomainVisitor {
 	}
 
 	public void visitDict(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitGroup(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitTemplate(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

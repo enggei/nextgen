@@ -12,8 +12,8 @@ import org.junit.Test;
  * Created 10.09.17.
  */
 public class Tests {
-
-   @Test
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   //@Test
    public void testParser() {
 
       final String[] urls = new String[]{
@@ -29,7 +29,7 @@ public class Tests {
             @Override
             public void enterUser(urlParser.UserContext arg) {
                super.enterUser(arg);
-               System.out.println(delim + arg.getText());
+               log.info(delim + arg.getText());
             }
          };
          new ParseTreeWalker().walk(listener, new urlParser(new CommonTokenStream(new urlLexer(CharStreams.fromString(url)))).url());

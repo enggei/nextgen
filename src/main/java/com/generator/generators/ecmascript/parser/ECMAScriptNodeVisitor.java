@@ -2,6 +2,8 @@ package com.generator.generators.ecmascript.parser;
 
 public class ECMAScriptNodeVisitor extends ECMAScriptBaseVisitor<ECMAScriptNodeVisitor.Node> {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ECMAScriptNodeVisitor.class);
+
    public static class Node {
 
       public final String name;
@@ -33,7 +35,7 @@ public class ECMAScriptNodeVisitor extends ECMAScriptBaseVisitor<ECMAScriptNodeV
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-				if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
+				if (debug) log.debug(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -67,6 +69,15 @@ public class ECMAScriptNodeVisitor extends ECMAScriptBaseVisitor<ECMAScriptNodeV
 	}
 
 	@Override
+	public Node visitKeyword(com.generator.generators.ecmascript.parser.ECMAScriptParser.KeywordContext arg) {
+		final Node node = new Node("Keyword", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
 		final Node node = new Node("Statement", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
@@ -76,8 +87,35 @@ public class ECMAScriptNodeVisitor extends ECMAScriptBaseVisitor<ECMAScriptNodeV
 	}
 
 	@Override
-	public Node visitKeyword(com.generator.generators.ecmascript.parser.ECMAScriptParser.KeywordContext arg) {
-		final Node node = new Node("Keyword", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
+		final Node node = new Node("Program", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSourceElements(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementsContext arg) {
+		final Node node = new Node("SourceElements", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSourceElement(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementContext arg) {
+		final Node node = new Node("SourceElement", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitStatementList(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementListContext arg) {
+		final Node node = new Node("StatementList", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -105,42 +143,6 @@ public class ECMAScriptNodeVisitor extends ECMAScriptBaseVisitor<ECMAScriptNodeV
 	@Override
 	public Node visitReservedWord(com.generator.generators.ecmascript.parser.ECMAScriptParser.ReservedWordContext arg) {
 		final Node node = new Node("ReservedWord", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSourceElements(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementsContext arg) {
-		final Node node = new Node("SourceElements", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
-		final Node node = new Node("Program", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSourceElement(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementContext arg) {
-		final Node node = new Node("SourceElement", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitStatementList(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementListContext arg) {
-		final Node node = new Node("StatementList", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

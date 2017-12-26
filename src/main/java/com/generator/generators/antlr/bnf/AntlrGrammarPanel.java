@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created 09.10.17.
  */
 public class AntlrGrammarPanel extends JPanel {
-
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(AntlrGrammarPanel.class);
    private AntlrGrammarModel model;
 
    private final Map<String, AntlrGrammarSymbol> ruleSpecs = new ConcurrentHashMap<>();
@@ -116,7 +116,7 @@ public class AntlrGrammarPanel extends JPanel {
                   pop.add(new AbstractAction("Show Grammar") {
                      @Override
                      public void actionPerformed(ActionEvent e) {
-                        System.out.println(model.getGrammarSpec().toString());
+                        log.info(model.getGrammarSpec().toString());
                      }
                   });
                }
@@ -959,7 +959,7 @@ public class AntlrGrammarPanel extends JPanel {
                   currentNode.visit(new TreeNodeVisitor() {
                      @Override
                      public void visitNode(InformationNode node) {
-                        System.out.println(node == null ? "null" : node.label);
+                        log.info(node == null ? "null" : node.label);
                         super.visitNode(node);
                      }
                   });

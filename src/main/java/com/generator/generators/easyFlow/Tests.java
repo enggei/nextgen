@@ -8,12 +8,12 @@ import org.junit.Test;
  * Created 08.09.17.
  */
 public class Tests {
-
-   @Test
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   //@Test
    public void testEasyFlowGroup() {
       final EasyFlowGroup easyFlowGroup = new EasyFlowGroup();
 
-      System.out.println(easyFlowGroup.neweasyFlow().
+      log.info(easyFlowGroup.neweasyFlow().
             setPackage(ProjectConstants.TEST_PACKAGE+".easyFlow").
             setName("TestFSM"));
 

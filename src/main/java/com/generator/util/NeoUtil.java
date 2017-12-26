@@ -3,6 +3,7 @@ package com.generator.util;
 import org.neo4j.graphdb.*;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 import static java.util.Comparator.comparingLong;
 import static org.neo4j.graphdb.Direction.INCOMING;
@@ -12,6 +13,7 @@ import static org.neo4j.graphdb.Direction.OUTGOING;
  * goe on 4/23/15.
  */
 public abstract class NeoUtil {
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(NeoUtil.class);
 
    public static final String TAG_UUID = "_uuid";
 
@@ -50,8 +52,12 @@ public abstract class NeoUtil {
    }
 
    public static String labelsFor(Node node) {
+      return labelsFor(node, " ");
+   }
+
+   public static String labelsFor(Node node, String delimiter) {
       final StringBuilder lbl = new StringBuilder();
-      for (org.neo4j.graphdb.Label label : node.getLabels()) lbl.append(label).append(" ");
+      for (org.neo4j.graphdb.Label label : node.getLabels()) lbl.append(label).append(delimiter);
       return lbl.toString().trim();
    }
 
@@ -64,19 +70,35 @@ public abstract class NeoUtil {
    }
 
    public static Relationship singleOutgoing(Node node, RelationshipType type) {
-      return node == null ? null : node.hasRelationship(type) ? node.getSingleRelationship(type, OUTGOING) : null;
+      try {
+         return node == null ? null : node.hasRelationship(type) ? node.getSingleRelationship(type, OUTGOING) : null;
+      } catch (Throwable t) {
+         if (t instanceof org.neo4j.graphdb.NotFoundException) {
+            log.warn("node " + node.getId() + "(" + NeoUtil.labelsFor(node) + ") has more outgoing nodes of type " + type.name() + ". Returning first");
+            return outgoing(node, type).iterator().next();
+         }
+      }
+      return null;
    }
 
    public static Iterable<Relationship> incoming(Node node, RelationshipType type) {
-      return node==null ? Collections.emptySet() : sort(node.getRelationships(INCOMING, type));
+      return node == null ? Collections.emptySet() : sort(node.getRelationships(INCOMING, type));
    }
 
    public static Iterable<Relationship> incoming(Node node) {
-      return node==null ? Collections.emptySet() : sort(node.getRelationships(INCOMING));
+      return node == null ? Collections.emptySet() : sort(node.getRelationships(INCOMING));
    }
 
    public static Relationship singleIncoming(Node node, RelationshipType type) {
-      return node == null ? null : (node.hasRelationship(type) ? node.getSingleRelationship(type, INCOMING) : null);
+      try {
+         return node == null ? null : (node.hasRelationship(type) ? node.getSingleRelationship(type, INCOMING) : null);
+      } catch (Throwable t) {
+         if (t instanceof org.neo4j.graphdb.NotFoundException) {
+            log.warn("node " + node.getId() + "(" + NeoUtil.labelsFor(node) + ") has more incoming nodes of type " + type.name() + ". Returning first");
+            return incoming(node, type).iterator().next();
+         }
+      }
+      return null;
    }
 
    public static Iterable<Relationship> all(Node node, RelationshipType type) {
@@ -109,7 +131,13 @@ public abstract class NeoUtil {
    }
 
    public static <T> T get(PropertyContainer nodePropertyNode, String property, T defaultValue) {
+      if (defaultValue instanceof Boolean)
+         return (T) getBoolean(nodePropertyNode, property, (Boolean) defaultValue);
       return has(nodePropertyNode, property) ? (T) nodePropertyNode.getProperty(property) : defaultValue;
+   }
+
+   private static Boolean getBoolean(PropertyContainer nodePropertyNode, String property, Boolean defaultValue) {
+      return nodePropertyNode.hasProperty(property) ? Boolean.valueOf(nodePropertyNode.getProperty(property).toString()) : defaultValue;
    }
 
    public static boolean has(PropertyContainer node, String property) {
@@ -165,10 +193,10 @@ public abstract class NeoUtil {
             name = nameNode == null ? "" : getString(nameNode, "name");
 
          } else {
-            name = name.length()> 20 ? (name.substring(0,20) + "...") : name;
+            name = name.length() > 20 ? (name.substring(0, 20) + "...") : name;
          }
          lbl.append(name);
-         lbl.append(name.length() == 0 ? "(" : " (");
+         lbl.append(name==null ||name.length() == 0 ? "(" : " (");
          for (Label label : node.getLabels()) lbl.append(label).append(" ");
          lbl.append(")");
       }
@@ -188,19 +216,19 @@ public abstract class NeoUtil {
       return node.hasProperty(name) ? node.getProperty(name) : defaultValue;
    }
 
-   public static Relationship relate(Node source, Node target, RelationshipType relationshipType, Object ... properties) {
+   public static Relationship relate(Node source, Node target, RelationshipType relationshipType, Object... properties) {
 
       // if already related, merge properties:
       for (Relationship relationship : outgoing(source, relationshipType))
          if (target.equals(other(source, relationship))) {
-            for (int i = 0; i < properties.length; i+=2)
-               relationship.setProperty(properties[i].toString(), properties[i+1]);
+            for (int i = 0; i < properties.length; i += 2)
+               relationship.setProperty(properties[i].toString(), properties[i + 1]);
             return relationship;
          }
 
       final Relationship relationship = source.createRelationshipTo(target, relationshipType);
-      for (int i = 0; i < properties.length; i+=2)
-         relationship.setProperty(properties[i].toString(), properties[i+1]);
+      for (int i = 0; i < properties.length; i += 2)
+         relationship.setProperty(properties[i].toString(), properties[i + 1]);
 
       return relationship;
    }

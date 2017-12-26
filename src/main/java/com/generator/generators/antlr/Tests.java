@@ -4,9 +4,11 @@ import com.generator.ProjectConstants;
 import com.generator.generators.antlr.parser.ANTLRv4Lexer;
 import com.generator.generators.antlr.parser.ANTLRv4Parser;
 import com.generator.generators.antlr.parser.ANTLRv4ParserNodeListener;
+import com.generator.generators.domain.DomainPluginGroup;
 import com.generator.generators.stringtemplate.TemplateGroupGroup;
 import com.generator.generators.stringtemplate.GeneratedFile;
 import com.generator.util.StringUtil;
+import com.generator.util.Tuple;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -14,13 +16,96 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * Created 25.08.17.
  */
 public class Tests {
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   //@Test
+   public void createAntlrDomainPluginFromAntlrGrammar() throws IOException {
 
-   @Test
+      final String[] grammarFiles = new String[]{
+            "antlr/parser/ANTLRv4Lexer.g4",
+            "antlr/parser/ANTLRv4Parser.g4",
+            "antlr/parser/LexBasic.g4",
+      };
+
+      final Set<String> distinctNodes = new LinkedHashSet<>();
+      final Map<String, Set<Tuple<String,String>>> relationships = new LinkedHashMap<>();
+
+      for (String fileName : grammarFiles) {
+         final ANTLRv4Parser parser = new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + fileName))));
+         final ANTLRv4ParserNodeListener listener = new ANTLRv4ParserNodeListener(true) {
+            @Override
+            protected void onEnter(Node node) {
+
+               distinctNodes.add(node.name);
+
+               final Node parent = nodeStack.isEmpty() ? null : nodeStack.peek();
+
+               if (parent != null) {
+                  final Set<Tuple<String,String>> childrenOfParents = relationships.computeIfAbsent(parent.name, s -> new LinkedHashSet<>());
+                  childrenOfParents.add(new Tuple<>(node.name, "SINGLE"));
+               }
+
+               super.onEnter(node);
+            }
+
+            @Override
+            public void enterEbnfSuffix(ANTLRv4Parser.EbnfSuffixContext arg) {
+
+               log.info("parent " + nodeStack.peek().name + "" + arg.getText());
+
+               final Node parent = nodeStack.pop();
+               final Node parentParent = nodeStack.peek();
+               final Set<Tuple<String, String>> tuples = relationships.get(parentParent.name);
+               
+               super.enterEbnfSuffix(arg);
+            }
+         };
+         new ParseTreeWalker().walk(listener, parser.grammarSpec());
+      }
+
+      final DomainPluginGroup domainPluginGroup = new DomainPluginGroup();
+      final DomainPluginGroup.DomainPluginST domainPluginST = domainPluginGroup.newDomainPlugin().
+            setPackageName("com.generator.generators.antlr").
+            setName("ANTLRV4DomainPlugin").
+            setTitle("ANTLR");
+
+      final Set<String> distinctRelations = new LinkedHashSet<>();
+
+      for (String node : distinctNodes) {
+         log.info("Node " + node);
+
+         final Set<Tuple<String,String>> children = relationships.get(node);
+         if (children != null) {
+            for (Tuple<String,String> tuple : children) {
+               final String child = tuple.getFirst();
+               log.info("\t" + child);
+               distinctRelations.add(child.toUpperCase());
+               domainPluginST.addEntityRelationsValue(tuple.getSecond(), child, child.toUpperCase(), node);
+            }
+         }
+
+         final DomainPluginGroup.EntityMethodsST entityMethodsST = domainPluginGroup.newEntityMethods().
+               setName(node);
+
+         domainPluginST.addEntitiesValue(entityMethodsST, node);
+      }
+
+      for (String distinctRelation : distinctRelations) {
+         domainPluginST.addRelationsValue(distinctRelation);
+      }
+
+      domainPluginST.addRootRelationsValue("GrammarSpec");
+
+
+      GeneratedFile.newJavaFile(ProjectConstants.MAIN_ROOT, "com.generator.generators.antlr", "ANTLRV4DomainPlugin").write(domainPluginST);
+   }
+
+   //@Test
    public void testG4ToStringTemplate() throws IOException {
 
       final TemplateGroupGroup group = new TemplateGroupGroup();
@@ -81,7 +166,7 @@ public class Tests {
 
       new ParseTreeWalker().walk(listener, new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "csv/parser/CSV.g4")))).grammarSpec());
 
-      System.out.println(stgST);
+      log.info(stgST);
    }
 
    private class GrammarSymbol {
@@ -135,7 +220,7 @@ public class Tests {
       }
    }
 
-   @Test
+   //@Test
    public void createSymbolGrammar() throws Exception {
 
       final Map<String, GrammarSymbol> symbolMap = new LinkedHashMap<>();
@@ -185,7 +270,7 @@ public class Tests {
             setPackage("com.generator.generators.antlr.bnf");
 
       for (GrammarSymbol grammarSymbol : symbolMap.values()) {
-         System.out.println(grammarSymbol.toString(symbolMap));
+         log.info(grammarSymbol.toString(symbolMap));
 
          final AntlrGroup.AntlrGrammarNodeST antlrGrammarNodeST = antlrGroup.newAntlrGrammarNode().setName(grammarSymbol.name);
 
@@ -316,7 +401,7 @@ public class Tests {
       }
    }
 
-   @Test
+   //@Test
    public void testAntlrGrammar() {
 
       final AntlrGroup group = new AntlrGroup();
@@ -343,10 +428,10 @@ public class Tests {
             addAlternativesValue("tokensSpec").
             addAlternativesValue("channelsSpec").
             addAlternativesValue("action"));
-      System.out.println(grammarST);
+      log.info(grammarST);
    }
 
-   @Test
+   //@Test
    public void testParser() throws IOException {
 
       final String[] grammarFiles = new String[]{

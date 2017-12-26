@@ -30,6 +30,23 @@ public class Tuple<F, S> {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Tuple<?, ?> tuple = (Tuple<?, ?>) o;
+
+		return first.equals(tuple.first) && second.equals(tuple.second);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = first.hashCode();
+		result = 31 * result + second.hashCode();
+		return result;
+	}
+
+	@Override
 	public String toString() {
 		return "[" + first + "," + second + "]";
 	}

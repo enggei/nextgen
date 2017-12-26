@@ -23,7 +23,7 @@ import static org.neo4j.driver.v1.Values.parameters;
  * Created by Ernst Sognnes on 08.07.17.
  */
 public class NeoDriver implements AutoCloseable {
-
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(NeoDriver.class);
    public static final String CYPHER_DROP_ALL = "MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n, r";
 
    private static void ignoreUpdate(NeoTransactionContext context, StatementResult data) {
@@ -58,7 +58,7 @@ public class NeoDriver implements AutoCloseable {
 
    @Override
    public void close() {
-      System.out.println("closing database connection " + uri);
+      log.info("closing database connection " + uri);
       driver.close();
    }
 
@@ -100,7 +100,7 @@ public class NeoDriver implements AutoCloseable {
 
    NeoTransaction beginTransaction() {
       if (inTransaction()) {
-         System.out.println("beginTransaction: closing current open tx");
+         log.info("beginTransaction: closing current open tx");
          transaction.close();   // Close if open
       }
 
@@ -108,7 +108,7 @@ public class NeoDriver implements AutoCloseable {
    }
 
    protected boolean inTransaction() {
-      System.out.println("inTransaction: " + (transaction != null && transaction.isOpen() ? "YES" : "NO"));
+      log.info("inTransaction: " + (transaction != null && transaction.isOpen() ? "YES" : "NO"));
       return transaction != null && transaction.isOpen();
    }
 
@@ -121,11 +121,11 @@ public class NeoDriver implements AutoCloseable {
    private NeoTransaction getTransaction() {
       if (!inTransaction()) {
          transaction = new NeoTransaction(this, driver.session().beginTransaction());
-         System.out.println("getTransaction: new tx");
+         log.info("getTransaction: new tx");
          return transaction;
       }
 
-      System.out.println("getTransaction: continue current tx");
+      log.info("getTransaction: continue current tx");
       return transaction;	// Continue using open transaction
    }
 
@@ -135,7 +135,7 @@ public class NeoDriver implements AutoCloseable {
 
    protected StatementResult executeCypher(final Statement statement) {
       return writeTransaction(tx -> {
-         System.out.println("executeCypher: " + statement.toString());
+         log.info("executeCypher: " + statement.toString());
          try ( Session session = driver.session() ) {
             return session.run(statement);
          }
@@ -156,9 +156,9 @@ public class NeoDriver implements AutoCloseable {
    }
 
    static Node readSingleNode(Transaction tx, final Statement statement) {
-      System.out.println("readSingleNode: " + statement.toString());
+      log.info("readSingleNode: " + statement.toString());
       StatementResult result = tx.run(statement);
-//		System.out.println("readSingleNode summary: " + debugSummary(result.summary()));
+//		log.info("readSingleNode summary: " + debugSummary(result.summary()));
       if (!result.hasNext()) return null;
 
       return result.single().get(0).asNode();
@@ -173,9 +173,9 @@ public class NeoDriver implements AutoCloseable {
    }
 
    static NodeWithRelationships readSingleNodeWithRelationships(Transaction tx, final Statement statement) {
-      System.out.println("readSingleNodeWithRelationships: " + statement.toString());
+      log.info("readSingleNodeWithRelationships: " + statement.toString());
       StatementResult result = tx.run(statement);
-//		System.out.println("readSingleNodeWithRelationships summary: " + debugSummary(result.summary()));
+//		log.info("readSingleNodeWithRelationships summary: " + debugSummary(result.summary()));
       if (!result.hasNext()) return null;
 
       final Record first = result.next();
@@ -213,9 +213,9 @@ public class NeoDriver implements AutoCloseable {
    static Collection<Node> readNodes(Transaction tx, final Statement statement) {
       Collection<Node> nodes = new LinkedHashSet<>();
 
-      System.out.println("readNodes: " + statement.toString());
+      log.info("readNodes: " + statement.toString());
       StatementResult result = tx.run(statement);
-//		System.out.println("readNodes summary: " + debugSummary(result.summary()));
+//		log.info("readNodes summary: " + debugSummary(result.summary()));
 
       nodes.addAll(result.list(record -> record.get(0).asNode()));
 
@@ -233,9 +233,9 @@ public class NeoDriver implements AutoCloseable {
    static Collection<NodeWithRelationships> readNodesWithRelationships(Transaction tx, final Statement statement) {
       Collection<NodeWithRelationships> nodesWithRelationships = new LinkedHashSet<>();
 
-      System.out.println("readNodesWithRelationships: " + statement.toString());
+      log.info("readNodesWithRelationships: " + statement.toString());
       StatementResult result = tx.run(statement);
-//		System.out.println("readNodesWithRelationships summary: " + debugSummary(result.summary()));
+//		log.info("readNodesWithRelationships summary: " + debugSummary(result.summary()));
 
       if (!result.hasNext()) return nodesWithRelationships;
 
@@ -274,9 +274,9 @@ public class NeoDriver implements AutoCloseable {
    }
 
    static Relationship readSingleRelationship(Transaction tx, final Statement statement) {
-      System.out.println("readSingleRelationship: " + statement.toString());
+      log.info("readSingleRelationship: " + statement.toString());
       StatementResult result = tx.run(statement);
-//		System.out.println("readSingleRelationship summary: " + debugSummary(result.summary()));
+//		log.info("readSingleRelationship summary: " + debugSummary(result.summary()));
       if (!result.hasNext()) return null;
 
       return result.single().get(0).asRelationship();
@@ -293,9 +293,9 @@ public class NeoDriver implements AutoCloseable {
    static Collection<Relationship> readRelationships(Transaction tx, final Statement statement) {
       Collection<Relationship> relationships = new LinkedHashSet<>();
 
-      System.out.println("readRelationships: " + statement.toString());
+      log.info("readRelationships: " + statement.toString());
       StatementResult result = tx.run(statement);
-//		System.out.println("readRelationships summary: " + debugSummary(result.summary()));
+//		log.info("readRelationships summary: " + debugSummary(result.summary()));
 
       relationships.addAll(result.list(record -> record.get(0).asRelationship()));
 
@@ -313,9 +313,9 @@ public class NeoDriver implements AutoCloseable {
    static Collection<String> readSingleStringColumn(Transaction tx, final Statement statement) {
       Collection<String> data = new LinkedHashSet<>();
 
-      System.out.println("readSingleStringColumn: " + statement.toString());
+      log.info("readSingleStringColumn: " + statement.toString());
       StatementResult result = tx.run(statement);
-//		System.out.println("readSingleStringColumn summary: " + debugSummary(result.summary()));
+//		log.info("readSingleStringColumn summary: " + debugSummary(result.summary()));
 
       data.addAll(result.list(record -> record.get(0).asString()));
 
@@ -512,9 +512,9 @@ public class NeoDriver implements AutoCloseable {
          Statement statement = new Statement("CREATE (n:" + TAG_NODE + (label.isEmpty() ? "" : ":" + label) + " $props) return n",
                parameters("props", props));
 
-         System.out.println("createNode: " + statement.toString());
+         log.info("createNode: " + statement.toString());
          final StatementResult result = tx.run(statement);
-//			System.out.println("createNode summary: " + debugSummary(result.summary()));
+//			log.info("createNode summary: " + debugSummary(result.summary()));
 
          if (!result.hasNext()) return null;
 
@@ -529,9 +529,9 @@ public class NeoDriver implements AutoCloseable {
          Statement statement = new Statement("MATCH (n) WHERE ID(n) = $id DELETE n",
                parameters("id", id));
 
-         System.out.println("deleteNode: " + statement.toString());
+         log.info("deleteNode: " + statement.toString());
          final StatementResult result = tx.run(statement);
-//			System.out.println("deleteNode summary: " + debugSummary(result.summary()));
+//			log.info("deleteNode summary: " + debugSummary(result.summary()));
 
          if (result.summary().counters().nodesDeleted() > 0)
             return RemoteNode.deletedNode(id);
@@ -550,9 +550,9 @@ public class NeoDriver implements AutoCloseable {
          Statement statement = new Statement("MATCH (n:" + label + " {" + TAG_UUID + ": $uuid}) DELETE n RETURN ID(n)",
                parameters("uuid", uuid.toString()));
 
-         System.out.println("deleteNode: " + statement.toString());
+         log.info("deleteNode: " + statement.toString());
          final StatementResult result = tx.run(statement);
-//			System.out.println("deleteNode summary: " + debugSummary(result.summary()));
+//			log.info("deleteNode summary: " + debugSummary(result.summary()));
 
          if (result.summary().counters().nodesDeleted() > 0)
             return RemoteNode.deletedNode(result.single().get(0).asInt());
@@ -571,9 +571,9 @@ public class NeoDriver implements AutoCloseable {
          Statement statement = new Statement("MATCH (n:" + label + " {" + TAG_UUID + ": $uuid}) SET n:" + additional + " return n",
                parameters("uuid", uuid.toString()));
 
-         System.out.println("addLabel: " + statement.toString());
+         log.info("addLabel: " + statement.toString());
          final StatementResult result = tx.run(statement);
-//			System.out.println("addLabel summary: " + debugSummary(result.summary()));
+//			log.info("addLabel summary: " + debugSummary(result.summary()));
 
          if (!result.hasNext()) return null;
 
@@ -591,9 +591,9 @@ public class NeoDriver implements AutoCloseable {
          Statement statement = new Statement("MATCH (n:" + label + " {" + TAG_UUID + ": $uuid}) REMOVE n:" + labelToRemove + " return n",
                parameters("uuid", uuid.toString()));
 
-         System.out.println("removeLabel: " + statement.toString());
+         log.info("removeLabel: " + statement.toString());
          final StatementResult result = tx.run(statement);
-//			System.out.println("removeLabel summary: " + debugSummary(result.summary()));
+//			log.info("removeLabel summary: " + debugSummary(result.summary()));
 
          if (!result.hasNext()) return null;
 
@@ -702,12 +702,12 @@ public class NeoDriver implements AutoCloseable {
                + "RETURN rel",
                parameters("lhs", uuidLhs.toString(), "rhs", uuidRhs.toString(), "props", props));
 
-         System.out.println("createRelationship: " + statement.toString());
+         log.info("createRelationship: " + statement.toString());
          StatementResult result = tx.run(statement);
-//			System.out.println("createRelationship summary:" + debugSummary(result.summary()));
+//			log.info("createRelationship summary:" + debugSummary(result.summary()));
 
          if (!result.hasNext()) {
-            System.out.println("Relationship " + direction.name() + " " + type + " between nodes " + lhsLabel + ":" + uuidLhs + " and " + rhsLabel + ":" + uuidRhs + " was not created");
+            log.info("Relationship " + direction.name() + " " + type + " between nodes " + lhsLabel + ":" + uuidLhs + " and " + rhsLabel + ":" + uuidRhs + " was not created");
             return null;
          }
 
@@ -745,12 +745,12 @@ public class NeoDriver implements AutoCloseable {
                + "RETURN rel",
                parameters("lhs", lhs, "rhs", rhs, "props", props));
 
-         System.out.println("createRelationship: " + statement.toString());
+         log.info("createRelationship: " + statement.toString());
          StatementResult result = tx.run(statement);
-//			System.out.println("createRelationship summary:" + debugSummary(result.summary()));
+//			log.info("createRelationship summary:" + debugSummary(result.summary()));
 
          if (!result.hasNext()) {
-            System.out.println("Relationship " + direction.name() + " " + type + " between nodes with ID " + lhs + " and " + rhs + " was not created");
+            log.info("Relationship " + direction.name() + " " + type + " between nodes with ID " + lhs + " and " + rhs + " was not created");
             return null;
          }
 
@@ -765,9 +765,9 @@ public class NeoDriver implements AutoCloseable {
          Statement statement = new Statement("MATCH ()-[rel]-() WHERE ID(rel) = $id DELETE rel",
                parameters("id", id));
 
-         System.out.println("deleteRelationship: " + statement.toString());
+         log.info("deleteRelationship: " + statement.toString());
          StatementResult result = tx.run(statement);
-//			System.out.println("createRelationship summary:" + debugSummary(result.summary()));
+//			log.info("createRelationship summary:" + debugSummary(result.summary()));
          if (result.summary().counters().relationshipsDeleted() > 0)
             return RemoteRelationship.deletedRelationship(id, "");
 
@@ -781,9 +781,9 @@ public class NeoDriver implements AutoCloseable {
          Statement statement = new Statement("MATCH ()-[rel:" + type + " {" + TAG_UUID + ": $uuid}]-() DELETE rel RETURN ID(rel)",
                parameters("uuid", uuid.toString()));
 
-         System.out.println("deleteRelationship: " + statement.toString());
+         log.info("deleteRelationship: " + statement.toString());
          StatementResult result = tx.run(statement);
-//			System.out.println("deleteRelationship summary:" + debugSummary(result.summary()));
+//			log.info("deleteRelationship summary:" + debugSummary(result.summary()));
          if (result.summary().counters().relationshipsDeleted() > 0) {
             // TODO: Investigate why this query returns >1 identical records. I.e. When deleting a _LAYOUT_MEMBER relationship, the same ID is returned > 1 times. Thus cannot call result.single()
             return RemoteRelationship.deletedRelationship(result.peek().get(0).asLong(), type);
@@ -831,12 +831,12 @@ public class NeoDriver implements AutoCloseable {
          Statement statement = new Statement("MATCH (n) WHERE ID(n) = $id SET n " + (replace ? "" : "+") + "= $props RETURN n",
             parameters("id", id, "props", propertyMap(kv)));
 
-         System.out.println("setNodeProperties: " + statement.toString());
+         log.info("setNodeProperties: " + statement.toString());
          StatementResult result = tx.run(statement);
-//			System.out.println("setNodeProperties summary: " + debugSummary(result.summary()));
+//			log.info("setNodeProperties summary: " + debugSummary(result.summary()));
 
          if (!result.hasNext()) {
-            System.out.println("Node " + id + " does not exist");
+            log.info("Node " + id + " does not exist");
             return null;
          }
 
@@ -873,12 +873,12 @@ public class NeoDriver implements AutoCloseable {
          Statement statement = new Statement("MATCH (n:" + label + " {" + TAG_UUID + ": $uuid}) SET n " + (replace ? "" : "+") + "= $props RETURN n",
             parameters("uuid", uuid.toString(), "props", propertyMap(kv)));
 
-         System.out.println("setNodeProperties: " + statement.toString());
+         log.info("setNodeProperties: " + statement.toString());
          StatementResult result = tx.run(statement);
-//			System.out.println("setNodeProperties summary: " + debugSummary(result.summary()));
+//			log.info("setNodeProperties summary: " + debugSummary(result.summary()));
 
          if (!result.hasNext()) {
-            System.out.println("Node " + label + "{" + uuid + "} does not exist");
+            log.info("Node " + label + "{" + uuid + "} does not exist");
             return null;
          }
 
@@ -907,12 +907,12 @@ public class NeoDriver implements AutoCloseable {
          Statement statement = new Statement(sb.toString(),
                parameters("uuid", uuid.toString()));
 
-         System.out.println("removeRelationshipProperties: " + statement.toString());
+         log.info("removeRelationshipProperties: " + statement.toString());
          StatementResult result = tx.run(statement);
-//			System.out.println("removeRelationshipProperties summary: " + debugSummary(result.summary()));
+//			log.info("removeRelationshipProperties summary: " + debugSummary(result.summary()));
 
          if (!result.hasNext()) {
-            System.out.println("Node " + label + "{" + uuid + "} does not exist");
+            log.info("Node " + label + "{" + uuid + "} does not exist");
             return null;
          }
 
@@ -956,12 +956,12 @@ public class NeoDriver implements AutoCloseable {
          Statement statement = new Statement("MATCH ()-[rel]->() WHERE ID(rel) = $id SET rel " + (replace ? "" : "+") + "= $props RETURN rel",
                parameters("id", id, "props", propertyMap(kv)));
 
-         System.out.println("setRelationshipProperties: " + statement.toString());
+         log.info("setRelationshipProperties: " + statement.toString());
          StatementResult result = tx.run(statement);
-//			System.out.println("setRelationshipProperties summary: " + debugSummary(result.summary()));
+//			log.info("setRelationshipProperties summary: " + debugSummary(result.summary()));
 
          if (!result.hasNext()) {
-            System.out.println("Relationship " + id + " does not exist");
+            log.info("Relationship " + id + " does not exist");
             return null;
          }
 
@@ -990,12 +990,12 @@ public class NeoDriver implements AutoCloseable {
          Statement statement = new Statement("MATCH ()-[rel:" + type + " {" + TAG_UUID + ": $uuid}]->() SET rel " + (replace ? "" : "+") + "= $props RETURN rel",
                parameters("uuid", uuid.toString(), "props", propertyMap(kv)));
 
-         System.out.println("setRelationshipProperties: " + statement.toString());
+         log.info("setRelationshipProperties: " + statement.toString());
          StatementResult result = tx.run(statement);
-//			System.out.println("setRelationshipProperties summary: " + debugSummary(result.summary()));
+//			log.info("setRelationshipProperties summary: " + debugSummary(result.summary()));
 
          if (!result.hasNext()) {
-            System.out.println("Relationship " + type + ":" + uuid + " does not exist");
+            log.info("Relationship " + type + ":" + uuid + " does not exist");
             return null;
          }
 
@@ -1020,12 +1020,12 @@ public class NeoDriver implements AutoCloseable {
          Statement statement = new Statement(sb.toString(),
                parameters("uuid", uuid.toString()));
 
-         System.out.println("removeRelationshipProperties: " + statement.toString());
+         log.info("removeRelationshipProperties: " + statement.toString());
          StatementResult result = tx.run(statement);
-//			System.out.println("removeRelationshipProperties summary: " + debugSummary(result.summary()));
+//			log.info("removeRelationshipProperties summary: " + debugSummary(result.summary()));
 
          if (!result.hasNext()) {
-            System.out.println("Relationship " + type + ":" + uuid + " does not exist");
+            log.info("Relationship " + type + ":" + uuid + " does not exist");
             return null;
          }
 

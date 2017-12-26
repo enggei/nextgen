@@ -8,7 +8,7 @@ import org.neo4j.graphdb.Transaction;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class NeoTransaction implements Transaction {
-
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(NeoTransaction.class);
 	private final org.neo4j.driver.v1.Transaction tx;
 	private final NeoTransactionContext context;
 
@@ -22,20 +22,20 @@ public class NeoTransaction implements Transaction {
 
 	@Override
 	public void terminate() {
-		System.out.println("tx terminate");
+		log.info("tx terminate");
 		terminateCalled.set(true);
 	}
 
 	@Override
 	public void failure() {
-		System.out.println("tx failure");
+		log.info("tx failure");
 		failureCalled.set(true);
 		tx.failure();
 	}
 
 	@Override
 	public void success() {
-		System.out.println("tx success");
+		log.info("tx success");
 
 		if (failureCalled.get() || terminateCalled.get()) return;
 
@@ -51,7 +51,7 @@ public class NeoTransaction implements Transaction {
 
 	@Override
 	public void close() {
-		System.out.println("tx close");
+		log.info("tx close");
 		tx.close();
 
 		if (failureCalled.get() || terminateCalled.get())

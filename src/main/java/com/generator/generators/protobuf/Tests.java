@@ -15,14 +15,14 @@ import java.io.IOException;
 
 public class Tests {
 
-   @Test
+   //@Test
    public void testProtobufParser() throws IOException {
       final ProtobufParser parser = new ProtobufParser(new CommonTokenStream(new ProtobufLexer(CharStreams.fromFileName(ProjectConstants.MAIN_ROOT + "/com/generator/generators/protobuf/test.proto"))));
       final ProtobufNodeListener listener = new ProtobufNodeListener(true);
       new ParseTreeWalker().walk(listener, parser.file());
    }
 
-   @Test
+   //@Test
    public void testProtobufGroup() {
       final ProtobufGroup protobufGroup = new ProtobufGroup();
 

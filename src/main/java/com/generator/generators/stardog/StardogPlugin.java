@@ -12,27 +12,10 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Set;
 
-public class StardogPlugin extends Plugin {
-
-	public enum Entities implements Label {
-		Database, Namespace, Graph
-	}
-
-	public enum Relations implements RelationshipType {
-		GRAPH, NAMESPACE
-	}
-
-	public enum Properties {
-
-	}
+public class StardogPlugin extends StardogDomainPlugin {
 
 	public StardogPlugin(App app) {
-		super(app, "Stardog");
-	}
-
-	@Override
-	protected Label[] getLabels() {
-		return new Label[0];
+		super(app);
 	}
 
 	@Override
@@ -74,10 +57,5 @@ public class StardogPlugin extends Plugin {
 	@Override
 	public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
 
-	}
-
-	@Override
-	public JComponent getEditorFor(NeoNode neoNode) {
-		return null;
 	}
 }

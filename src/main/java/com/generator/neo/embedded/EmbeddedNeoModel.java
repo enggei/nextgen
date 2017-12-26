@@ -1,6 +1,7 @@
 package com.generator.neo.embedded;
 
 import com.generator.neo.NeoModel;
+import org.apache.log4j.Logger;
 import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.event.TransactionEventHandler;
 import org.neo4j.graphdb.index.Index;
@@ -8,10 +9,7 @@ import org.neo4j.graphdb.index.IndexHits;
 import org.neo4j.helpers.collection.Iterators;
 import org.stringtemplate.v4.ST;
 
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.generator.util.NeoUtil.TAG_UUID;
@@ -22,6 +20,8 @@ import static com.generator.util.NeoUtil.TAG_UUID;
  * todo cleanup methods, add Override etc
  */
 public class EmbeddedNeoModel implements NeoModel {
+
+   private final static Logger log = Logger.getLogger(EmbeddedNeoModel.class);
 
    private final GraphDatabaseService graphDb;
    private final Index<Node> uuids;
@@ -38,6 +38,8 @@ public class EmbeddedNeoModel implements NeoModel {
 
       this.graphDb = graphDb;
 
+      log.info("new EmbeddedNeoModel");
+
 
       try (Transaction tx = graphDb.beginTx()) {
          this.uuids = graphDb.index().forNodes(TAG_UUID);
@@ -46,6 +48,7 @@ public class EmbeddedNeoModel implements NeoModel {
 
       this.listener = listener;
       Runtime.getRuntime().addShutdownHook(new Thread(this::close));
+      log.info("new EmbeddedNeoModel complete");
    }
 
    @Override
@@ -90,8 +93,12 @@ public class EmbeddedNeoModel implements NeoModel {
       isShutdown.set(true);
    }
 
-   private Result query(String query) {
+   public Result query(String query) {
       return graphDb.execute(query);
+   }
+
+   public Result query(String query, Map<String, Object> params) {
+      return graphDb.execute(query, params);
    }
 
    public Transaction beginTx() {
@@ -99,15 +106,15 @@ public class EmbeddedNeoModel implements NeoModel {
    }
 
    public Node createNode(Label label) {
-      return newNode(label.name(), UUID.randomUUID());
+      return newNode(label.name(), null);
    }
 
    public Node newNode(Label label, Object... kv) {
-      return newNode(label.name(), UUID.randomUUID(), kv);
+      return newNode(label.name(), null, kv);
    }
 
    public Node newNode(String label, Object... kv) {
-      return newNode(label, UUID.randomUUID(), kv);
+      return newNode(label, null, kv);
    }
 
    public Node newNode(final UUID uuid, Object... kv) {
@@ -116,12 +123,23 @@ public class EmbeddedNeoModel implements NeoModel {
 
    public Node newNode(final String label, final UUID uuid, Object... kv) {
 
-      Node node = getNode(uuid);
-      if (node == null) {
-         //System.out.println("newNode " + uuid + " (" + label + ")");
+      Node node;
+      if (uuid == null) {
+
+         final UUID newUUID = UUID.randomUUID();
          node = label == null ? graphDb.createNode() : graphDb.createNode(() -> label);
-         node.setProperty(TAG_UUID, uuid.toString());
-         uuids.add(node, TAG_UUID, uuid.toString());
+         node.setProperty(TAG_UUID, newUUID.toString());
+         uuids.add(node, TAG_UUID, newUUID.toString());
+
+      } else {
+
+         node = getNode(uuid);
+         if (node == null) {
+            //log.info("newNode " + uuid + " (" + label + ")");
+            node = label == null ? graphDb.createNode() : graphDb.createNode(() -> label);
+            node.setProperty(TAG_UUID, uuid.toString());
+            uuids.add(node, TAG_UUID, uuid.toString());
+         }
       }
 
       for (int i = 0; i < kv.length; i += 2)
@@ -137,6 +155,7 @@ public class EmbeddedNeoModel implements NeoModel {
       if (indexHits.size() == 0) {
          final Iterator<Node> it = getAll(TAG_UUID, uuid.toString()).iterator();
          if (it.hasNext()) return it.next();
+         return null;
       }
       return indexHits.getSingle();
    }
@@ -199,7 +218,7 @@ public class EmbeddedNeoModel implements NeoModel {
       return iterator.hasNext() ? iterator.next() : null;
    }
 
-   public Node findOrCreate(Label label, String key, Object value, Object ... properties) {
+   public Node findOrCreate(Label label, String key, Object value, Object... properties) {
 
       if (properties.length % 2 != 0)
          throw new IllegalArgumentException("Properties in findOrCreate must be key-value pairs");

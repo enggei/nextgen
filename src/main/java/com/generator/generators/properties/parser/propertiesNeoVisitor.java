@@ -6,6 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class propertiesNeoVisitor extends propertiesBaseVisitor<Node> {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(propertiesNeoVisitor.class);
+
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final com.generator.neo.NeoModel model;
 
@@ -29,7 +31,7 @@ public class propertiesNeoVisitor extends propertiesBaseVisitor<Node> {
 
 	@Override
 	public Node visitDecl(com.generator.generators.properties.parser.propertiesParser.DeclContext arg) {
-		System.out.println("Decl");
+		log.info("Decl");
 		final Node node = model.newNode(Label.label("Decl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -39,7 +41,7 @@ public class propertiesNeoVisitor extends propertiesBaseVisitor<Node> {
 
 	@Override
 	public Node visitComment(com.generator.generators.properties.parser.propertiesParser.CommentContext arg) {
-		System.out.println("Comment");
+		log.info("Comment");
 		final Node node = model.newNode(Label.label("Comment"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -48,18 +50,8 @@ public class propertiesNeoVisitor extends propertiesBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitRow(com.generator.generators.properties.parser.propertiesParser.RowContext arg) {
-		System.out.println("Row");
-		final Node node = model.newNode(Label.label("Row"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
-		System.out.println("PropertiesFile");
+		log.info("PropertiesFile");
 		final Node node = model.newNode(Label.label("PropertiesFile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -69,7 +61,7 @@ public class propertiesNeoVisitor extends propertiesBaseVisitor<Node> {
 
 	@Override
 	public Node visitValue(com.generator.generators.properties.parser.propertiesParser.ValueContext arg) {
-		System.out.println("Value");
+		log.info("Value");
 		final Node node = model.newNode(Label.label("Value"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -78,8 +70,18 @@ public class propertiesNeoVisitor extends propertiesBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitRow(com.generator.generators.properties.parser.propertiesParser.RowContext arg) {
+		log.info("Row");
+		final Node node = model.newNode(Label.label("Row"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitKey(com.generator.generators.properties.parser.propertiesParser.KeyContext arg) {
-		System.out.println("Key");
+		log.info("Key");
 		final Node node = model.newNode(Label.label("Key"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);

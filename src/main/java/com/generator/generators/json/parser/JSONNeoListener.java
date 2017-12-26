@@ -6,6 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class JSONNeoListener extends JSONBaseListener {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(JSONNeoListener.class);
+
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
@@ -24,7 +26,7 @@ public class JSONNeoListener extends JSONBaseListener {
 		if (!nodeStack.isEmpty())
       	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.getProperty("text"));
+		if (debug) log.debug(delim.toString() + node.getProperty("text"));
 		delim.append("\t");
    }
 
@@ -43,7 +45,7 @@ public class JSONNeoListener extends JSONBaseListener {
 
 	@Override
 	public void enterValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
-		final Node node = model.findOrCreate(Label.label("Value"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Value"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inValue.push(true);
 	}
@@ -57,11 +59,29 @@ public class JSONNeoListener extends JSONBaseListener {
       return !inValue.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inArray = new java.util.Stack<>();
+
+	@Override
+	public void enterArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
+		final Node node = model.newNode(Label.label("Array"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inArray.push(true);
+	}
+
+	public void exitArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
+		onExit();
+		this.inArray.pop();
+	}
+
+	public boolean inArray() {
+      return !inArray.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inJson = new java.util.Stack<>();
 
 	@Override
 	public void enterJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
-		final Node node = model.findOrCreate(Label.label("Json"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Json"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inJson.push(true);
 	}
@@ -79,7 +99,7 @@ public class JSONNeoListener extends JSONBaseListener {
 
 	@Override
 	public void enterObj(com.generator.generators.json.parser.JSONParser.ObjContext arg) {
-		final Node node = model.findOrCreate(Label.label("Obj"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Obj"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inObj.push(true);
 	}
@@ -97,7 +117,7 @@ public class JSONNeoListener extends JSONBaseListener {
 
 	@Override
 	public void enterPair(com.generator.generators.json.parser.JSONParser.PairContext arg) {
-		final Node node = model.findOrCreate(Label.label("Pair"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Pair"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPair.push(true);
 	}
@@ -109,24 +129,6 @@ public class JSONNeoListener extends JSONBaseListener {
 
 	public boolean inPair() {
       return !inPair.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inArray = new java.util.Stack<>();
-
-	@Override
-	public void enterArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
-		final Node node = model.findOrCreate(Label.label("Array"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inArray.push(true);
-	}
-
-	public void exitArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
-		onExit();
-		this.inArray.pop();
-	}
-
-	public boolean inArray() {
-      return !inArray.isEmpty(); 
    }
 
 }

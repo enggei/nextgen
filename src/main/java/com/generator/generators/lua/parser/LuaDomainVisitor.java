@@ -7,12 +7,7 @@ public abstract class LuaDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "Block")) visitBlock(node);
-		else if(hasLabel(node, "String")) visitString(node);
-		else if(hasLabel(node, "Number")) visitNumber(node);
-		else if(hasLabel(node, "Var")) visitVar(node);
-		else if(hasLabel(node, "Field")) visitField(node);
-		else if(hasLabel(node, "Chunk")) visitChunk(node);
+		if(hasLabel(node, "Chunk")) visitChunk(node);
 		else if(hasLabel(node, "Stat")) visitStat(node);
 		else if(hasLabel(node, "Retstat")) visitRetstat(node);
 		else if(hasLabel(node, "Label")) visitLabel(node);
@@ -42,37 +37,12 @@ public abstract class LuaDomainVisitor {
 		else if(hasLabel(node, "OperatorBitwise")) visitOperatorBitwise(node);
 		else if(hasLabel(node, "OperatorUnary")) visitOperatorUnary(node);
 		else if(hasLabel(node, "OperatorPower")) visitOperatorPower(node);
+		else if(hasLabel(node, "Block")) visitBlock(node);
+		else if(hasLabel(node, "String")) visitString(node);
+		else if(hasLabel(node, "Number")) visitNumber(node);
+		else if(hasLabel(node, "Var")) visitVar(node);
+		else if(hasLabel(node, "Field")) visitField(node);
    }
-
-	public void visitBlock(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitString(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitNumber(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitVar(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitField(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
 
 	public void visitChunk(Node node) {
 		if (visited.contains(node)) return;
@@ -249,6 +219,36 @@ public abstract class LuaDomainVisitor {
 	}
 
 	public void visitOperatorPower(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitBlock(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitString(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitNumber(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitVar(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitField(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

@@ -42,212 +42,16 @@ public final class SpringGroup {
 
 	}
 
-   public queryMethodST newqueryMethod() {
-      return new queryMethodST(stGroup);
+   public DAOST newDAO() {
+      return new DAOST(stGroup);
    }
 
    public createJdbcTemplateST newcreateJdbcTemplate() {
       return new createJdbcTemplateST(stGroup);
    }
 
-   public DAOST newDAO() {
-      return new DAOST(stGroup);
-   }
-
-   public final class queryMethodST implements SpringGroupTemplate {
-
-      private Object _logger;
-      private Object _entity;
-      private Object _sql;
-      private java.util.Set<java.util.Map<String, Object>> _columns = new java.util.LinkedHashSet<>();
-      private Object _name;
-      private java.util.Set<java.util.Map<String, Object>> _params = new java.util.LinkedHashSet<>();
-
-      private final ST template;
-
-      private queryMethodST(STGroup group) {
-   		template = group.getInstanceOf("queryMethod");
-   	}
-
-      public queryMethodST setLogger(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._logger == null) {
-            this._logger = value;
-         	template.add("logger", value);
-         }
-
-      	return this;
-      }
-
-      public String getLogger() {
-      	return (String) this._logger;
-      }
-
-      public queryMethodST setEntity(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._entity == null) {
-            this._entity = value;
-         	template.add("entity", value);
-         }
-
-      	return this;
-      }
-
-      public String getEntity() {
-      	return (String) this._entity;
-      }
-
-      public queryMethodST setSql(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._sql == null) {
-            this._sql = value;
-         	template.add("sql", value);
-         }
-
-      	return this;
-      }
-
-      public String getSql() {
-      	return (String) this._sql;
-      }
-
-      public queryMethodST addColumnsValue(Object name_, Object type_) {
-      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
-      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
-      	map.put("type", (type_ == null || type_.toString().length() == 0) ? null : type_);
-      	this._columns.add(map);
-
-         template.addAggr("columns.{name, type}", map.get("name"), map.get("type"));
-         return this;
-      }
-
-      public java.util.Set<java.util.Map<String, Object>> getColumns() {
-      	return this._columns;
-      }
-
-      public queryMethodST setName(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._name == null) {
-            this._name = value;
-         	template.add("name", value);
-         }
-
-      	return this;
-      }
-
-      public String getName() {
-      	return (String) this._name;
-      }
-
-      public queryMethodST addParamsValue(Object name_, Object type_) {
-      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
-      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
-      	map.put("type", (type_ == null || type_.toString().length() == 0) ? null : type_);
-      	this._params.add(map);
-
-         template.addAggr("params.{name, type}", map.get("name"), map.get("type"));
-         return this;
-      }
-
-      public java.util.Set<java.util.Map<String, Object>> getParams() {
-      	return this._params;
-      }
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   }
-
-   public final class createJdbcTemplateST implements SpringGroupTemplate {
-
-      private Object _database;
-      private Object _host;
-      private Object _port;
-      private Object _username;
-
-      private final ST template;
-
-      private createJdbcTemplateST(STGroup group) {
-   		template = group.getInstanceOf("createJdbcTemplate");
-   	}
-
-      public createJdbcTemplateST setDatabase(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._database == null) {
-            this._database = value;
-         	template.add("database", value);
-         }
-
-      	return this;
-      }
-
-      public String getDatabase() {
-      	return (String) this._database;
-      }
-
-      public createJdbcTemplateST setHost(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._host == null) {
-            this._host = value;
-         	template.add("host", value);
-         }
-
-      	return this;
-      }
-
-      public String getHost() {
-      	return (String) this._host;
-      }
-
-      public createJdbcTemplateST setPort(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._port == null) {
-            this._port = value;
-         	template.add("port", value);
-         }
-
-      	return this;
-      }
-
-      public String getPort() {
-      	return (String) this._port;
-      }
-
-      public createJdbcTemplateST setUsername(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._username == null) {
-            this._username = value;
-         	template.add("username", value);
-         }
-
-      	return this;
-      }
-
-      public String getUsername() {
-      	return (String) this._username;
-      }
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
+   public queryMethodST newqueryMethod() {
+      return new queryMethodST(stGroup);
    }
 
    public final class DAOST implements SpringGroupTemplate {
@@ -374,6 +178,220 @@ public final class SpringGroup {
 
       public String getUsername() {
       	return (String) this._username;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class createJdbcTemplateST implements SpringGroupTemplate {
+
+      private Object _database;
+      private Object _host;
+      private Object _port;
+      private Object _username;
+
+      private final ST template;
+
+      private createJdbcTemplateST(STGroup group) {
+   		template = group.getInstanceOf("createJdbcTemplate");
+   	}
+
+      public createJdbcTemplateST setDatabase(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._database == null) {
+            this._database = value;
+         	template.add("database", value);
+         }
+
+      	return this;
+      }
+
+      public String getDatabase() {
+      	return (String) this._database;
+      }
+
+      public createJdbcTemplateST setHost(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._host == null) {
+            this._host = value;
+         	template.add("host", value);
+         }
+
+      	return this;
+      }
+
+      public String getHost() {
+      	return (String) this._host;
+      }
+
+      public createJdbcTemplateST setPort(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._port == null) {
+            this._port = value;
+         	template.add("port", value);
+         }
+
+      	return this;
+      }
+
+      public String getPort() {
+      	return (String) this._port;
+      }
+
+      public createJdbcTemplateST setUsername(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._username == null) {
+            this._username = value;
+         	template.add("username", value);
+         }
+
+      	return this;
+      }
+
+      public String getUsername() {
+      	return (String) this._username;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class queryMethodST implements SpringGroupTemplate {
+
+      private Object _entityDeclaration;
+      private Object _logger;
+      private Object _entity;
+      private java.util.Set<java.util.Map<String, Object>> _columns = new java.util.LinkedHashSet<>();
+      private Object _name;
+      private java.util.Set<java.util.Map<String, Object>> _params = new java.util.LinkedHashSet<>();
+      private Object _sql;
+
+      private final ST template;
+
+      private queryMethodST(STGroup group) {
+   		template = group.getInstanceOf("queryMethod");
+   	}
+
+      public queryMethodST setEntityDeclaration(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._entityDeclaration == null) {
+            this._entityDeclaration = value;
+         	template.add("entityDeclaration", value);
+         }
+
+      	return this;
+      }
+
+      public String getEntityDeclaration() {
+      	return (String) this._entityDeclaration;
+      }
+
+      public queryMethodST setLogger(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._logger == null) {
+            this._logger = value;
+         	template.add("logger", value);
+         }
+
+      	return this;
+      }
+
+      public String getLogger() {
+      	return (String) this._logger;
+      }
+
+      public queryMethodST setEntity(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._entity == null) {
+            this._entity = value;
+         	template.add("entity", value);
+         }
+
+      	return this;
+      }
+
+      public String getEntity() {
+      	return (String) this._entity;
+      }
+
+      public queryMethodST addColumnsValue(Object name_, Object queryName_, Object resultSetGetter_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	map.put("queryName", (queryName_ == null || queryName_.toString().length() == 0) ? null : queryName_);
+      	map.put("resultSetGetter", (resultSetGetter_ == null || resultSetGetter_.toString().length() == 0) ? null : resultSetGetter_);
+      	this._columns.add(map);
+
+         template.addAggr("columns.{name, queryName, resultSetGetter}", map.get("name"), map.get("queryName"), map.get("resultSetGetter"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getColumns() {
+      	return this._columns;
+      }
+
+      public queryMethodST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      public queryMethodST addParamsValue(Object name_, Object type_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	map.put("type", (type_ == null || type_.toString().length() == 0) ? null : type_);
+      	this._params.add(map);
+
+         template.addAggr("params.{name, type}", map.get("name"), map.get("type"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getParams() {
+      	return this._params;
+      }
+
+      public queryMethodST setSql(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._sql == null) {
+            this._sql = value;
+         	template.add("sql", value);
+         }
+
+      	return this;
+      }
+
+      public String getSql() {
+      	return (String) this._sql;
       }
 
       @Override
@@ -512,40 +530,6 @@ public final class SpringGroup {
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 		.append("eom() ::= <<}>>\n")
 		.append("gt() ::= \">\"\n")
-			.append("queryMethod(logger,entity,sql,columns,name,params) ::= <<public static java.util.List<~entity~> ~name~(JdbcTemplate jdbcTemplate~if(params)~, ~params:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n" + 
-		"\n" + 
-		"	~if(logger)~\n" + 
-		"	~logger~.info(\"query ~name~~if(params)~ with ~params:{it|~it.name~=\" + ~it.name~};separator=\" + \\\" \"~~else~\"~endif~);~endif~\n" + 
-		"\n" + 
-		"   final java.util.List<~entity~> result = jdbcTemplate.query(\"~sql~\", new RowMapper<~entity~>() {\n" + 
-		"   	@Override\n" + 
-		"	   public ~entity~ mapRow(ResultSet resultSet, int i) throws SQLException {\n" + 
-		"	   		final ~entity~ admissions = new ~entity~();\n" + 
-		"			~columns:{it|admissions.set~it.name;format=\"capitalize\"~(resultSet.get~it.type~(~i~));};separator=\"\\n\"~\n" + 
-		"	      return admissions;\n" + 
-		"		}\n" + 
-		"   }~if(params)~, ~params:{it|~it.name~};separator=\", \"~~endif~);\n" + 
-		"\n" + 
-		"	return result;\n" + 
-		"}\n" + 
-		"\n" + 
-		"public static class ~entity~ {\n" + 
-		"\n" + 
-		"	~columns:{it|private ~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
-		"\n" + 
-		"	~columns:{it|public ~it.type~ get~it.name;format=\"capitalize\"~() { return this.~it.name~; ~eom()~ };separator=\"\\n\"~\n" + 
-		"\n" + 
-		"	~columns:{it|public void set~it.name;format=\"capitalize\"~(~it.type~ ~it.name~) { this.~it.name~ = ~it.name~; ~eom()~ };separator=\"\\n\"~\n" + 
-		"}>>\n")
-			.append("createJdbcTemplate(database,host,port,username) ::= <<public static org.springframework.jdbc.core.JdbcTemplate getJdbcTemplate(String password) {\n" + 
-		"   final com.mysql.jdbc.jdbc2.optional.MysqlDataSource dataSource = new com.mysql.jdbc.jdbc2.optional.MysqlDataSource();\n" + 
-		"   dataSource.setDatabaseName(\"~database~\");\n" + 
-		"   dataSource.setUser(\"~username~\");\n" + 
-		"   dataSource.setPassword(password);\n" + 
-		"   dataSource.setServerName(\"~host~\");\n" + 
-		"   dataSource.setPort(~port~);\n" + 
-		"	return new org.springframework.jdbc.core.JdbcTemplate(dataSource);\n" + 
-		"}>>\n")
 			.append("DAO(name,package,queries,database,host,port,username) ::= <<package ~package~;\n" + 
 		"\n" + 
 		"import org.springframework.jdbc.core.JdbcTemplate;\n" + 
@@ -573,5 +557,30 @@ public final class SpringGroup {
 		"      return new org.springframework.jdbc.core.JdbcTemplate(dataSource);\n" + 
 		"   }\n" + 
 		"}>>\n")
+			.append("createJdbcTemplate(database,host,port,username) ::= <<public static org.springframework.jdbc.core.JdbcTemplate getJdbcTemplate(String password) {\n" + 
+		"   final com.mysql.jdbc.jdbc2.optional.MysqlDataSource dataSource = new com.mysql.jdbc.jdbc2.optional.MysqlDataSource();\n" + 
+		"   dataSource.setDatabaseName(\"~database~\");\n" + 
+		"   dataSource.setUser(\"~username~\");\n" + 
+		"   dataSource.setPassword(password);\n" + 
+		"   dataSource.setServerName(\"~host~\");\n" + 
+		"   dataSource.setPort(~port~);\n" + 
+		"	return new org.springframework.jdbc.core.JdbcTemplate(dataSource);\n" + 
+		"}>>\n")
+			.append("queryMethod(entityDeclaration,logger,entity,columns,name,params,sql) ::= <<public static java.util.List<~entity~> ~name~(JdbcTemplate jdbcTemplate~if(params)~, ~params:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n" + 
+		"\n" + 
+		"	~if(logger)~\n" + 
+		"	~logger~.info(\"query ~name~~if(params)~ with ~params:{it|~it.type~ ~it.name~};separator=\" + \\\" \"~~else~\"~endif~);~endif~\n" + 
+		"   return jdbcTemplate.query(\"~sql~\", new RowMapper<~entity~>() {\n" + 
+		"   	@Override\n" + 
+		"	   public ~entity~ mapRow(ResultSet resultSet, int i) throws SQLException {\n" + 
+		"	   	final ~entity~ entity = new ~entity~();\n" + 
+		"			~columns:{it|entity.set~it.name;format=\"capitalize\"~(resultSet.get~it.resultSetGetter~(\"~it.queryName~\"));};separator=\"\\n\"~\n" + 
+		"	      return entity;\n" + 
+		"		}\n" + 
+		"   }~if(params)~, ~params:{it|~it.name~};separator=\", \"~~endif~);\n" + 
+		"} ~if(entityDeclaration)~\n" + 
+		"\n" + 
+		"~entityDeclaration~\n" + 
+		"~endif~>>\n")
 		.toString();
 }

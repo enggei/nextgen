@@ -2,7 +2,6 @@ package com.generator.generators.rivescript;
 
 import com.generator.app.App;
 import com.generator.app.AppMotif;
-import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
 import com.generator.neo.NeoModel;
 import com.generator.util.NeoUtil;
@@ -14,7 +13,6 @@ import com.rivescript.session.ConcurrentHashMapSessionManager;
 import com.rivescript.session.SessionManager;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 
 import javax.swing.*;
@@ -34,32 +32,13 @@ import static com.generator.util.NeoUtil.*;
 /**
  * Created 21.10.17.
  */
-public class RivescriptPlugin extends Plugin {
-
-   public enum Entities implements Label {
-      Bot, Script
-   }
-
-   public enum Relations implements RelationshipType {
-      SCRIPTS
-   }
-
-   public enum Properties {
-      script
-   }
+public class RivescriptPlugin extends RivescriptDomainPlugin {
 
    private final Map<UUID, Bot> sessions = new LinkedHashMap<>();
    private PropertyChangeSupport botListener = new PropertyChangeSupport(this);
 
    public RivescriptPlugin(App app) {
-      super(app, "Rivescript");
-
-      final Node generatorBot = getGraph().findOrCreate(Entities.Bot, AppMotif.Properties.name.name(), "GeneratorBot");
-      final Node generatorScript = getGraph().findOrCreate(Entities.Script, AppMotif.Properties.name.name(), "GeneratorScript");
-
-//      getGraph().newNode(Label.label(""));
-
-
+      super(app);
    }
 
    @Override
@@ -75,11 +54,11 @@ public class RivescriptPlugin extends Plugin {
       menu.add(new App.TransactionAction("New Bot", app) {
          @Override
          protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
             final String name = SwingUtil.showInputDialog("Name", app);
             if (name == null || name.length() == 0) return;
 
-            final Node scriptNode = getGraph().newNode(Entities.Bot, AppMotif.Properties.name.name(), name);
-            fireNodesLoaded(scriptNode);
+            fireNodesLoaded(newBot(name));
          }
       });
 
@@ -90,8 +69,7 @@ public class RivescriptPlugin extends Plugin {
             final String name = SwingUtil.showInputDialog("Name", app);
             if (name == null || name.length() == 0) return;
 
-            final Node scriptNode = getGraph().newNode(Entities.Script, AppMotif.Properties.name.name(), name);
-            fireNodesLoaded(scriptNode);
+            fireNodesLoaded(newScript(name, ""));
          }
       });
    }

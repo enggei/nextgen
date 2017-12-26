@@ -2,6 +2,8 @@ package com.generator.generators.stacktrace.parser;
 
 public class StackTraceNodeListener extends StackTraceBaseListener {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(StackTraceNodeListener.class);
+
    public static class Node {
 
       public final String name;
@@ -33,7 +35,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
+		if (debug) log.debug(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -46,23 +48,6 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 
    public Node getRoot() {
       return nodeStack.peek();
-   }
-
-	protected java.util.Stack<Boolean> inIdentifier = new java.util.Stack<>();
-
-	@Override
-	public void enterIdentifier(com.generator.generators.stacktrace.parser.StackTraceParser.IdentifierContext arg) {
-		onEnter(new Node("Identifier", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inIdentifier.push(true);
-	}
-
-	public void exitIdentifier(com.generator.generators.stacktrace.parser.StackTraceParser.IdentifierContext arg) {
-		onExit();
-		this.inIdentifier.pop();
-	}
-
-	public boolean inIdentifier() {
-      return !inIdentifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMessage = new java.util.Stack<>();
@@ -80,6 +65,23 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 
 	public boolean inMessage() {
       return !inMessage.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inIdentifier = new java.util.Stack<>();
+
+	@Override
+	public void enterIdentifier(com.generator.generators.stacktrace.parser.StackTraceParser.IdentifierContext arg) {
+		onEnter(new Node("Identifier", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inIdentifier.push(true);
+	}
+
+	public void exitIdentifier(com.generator.generators.stacktrace.parser.StackTraceParser.IdentifierContext arg) {
+		onExit();
+		this.inIdentifier.pop();
+	}
+
+	public boolean inIdentifier() {
+      return !inIdentifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inClassName = new java.util.Stack<>();

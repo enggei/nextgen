@@ -11,7 +11,7 @@ import java.util.List;
  * Created 19.10.17.
  */
 public class DiffUtil {
-
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(DiffUtil.class);
    public static void main(String[] args) {
       List<String> original = Arrays.asList("one", "two", "three");
       List<String> revised  = Arrays.asList("one", "two", "thr5e");
@@ -20,7 +20,7 @@ public class DiffUtil {
       Patch<String> patch = DiffUtils.diff(original, revised);
 
       for (Delta<String> delta: patch.getDeltas()) {
-         System.out.println(delta);
+         log.info(delta);
       }
    }
 }

@@ -2,6 +2,8 @@ package com.generator.generators.turtle.parser;
 
 public class TurtleNodeListener extends TurtleBaseListener {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(TurtleNodeListener.class);
+
    public static class Node {
 
       public final String name;
@@ -33,7 +35,7 @@ public class TurtleNodeListener extends TurtleBaseListener {
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
+		if (debug) log.debug(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -46,6 +48,57 @@ public class TurtleNodeListener extends TurtleBaseListener {
 
    public Node getRoot() {
       return nodeStack.peek();
+   }
+
+	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterStatement(com.generator.generators.turtle.parser.TurtleParser.StatementContext arg) {
+		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inStatement.push(true);
+	}
+
+	public void exitStatement(com.generator.generators.turtle.parser.TurtleParser.StatementContext arg) {
+		onExit();
+		this.inStatement.pop();
+	}
+
+	public boolean inStatement() {
+      return !inStatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
+
+	@Override
+	public void enterLiteral(com.generator.generators.turtle.parser.TurtleParser.LiteralContext arg) {
+		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inLiteral.push(true);
+	}
+
+	public void exitLiteral(com.generator.generators.turtle.parser.TurtleParser.LiteralContext arg) {
+		onExit();
+		this.inLiteral.pop();
+	}
+
+	public boolean inLiteral() {
+      return !inLiteral.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDirective = new java.util.Stack<>();
+
+	@Override
+	public void enterDirective(com.generator.generators.turtle.parser.TurtleParser.DirectiveContext arg) {
+		onEnter(new Node("Directive", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inDirective.push(true);
+	}
+
+	public void exitDirective(com.generator.generators.turtle.parser.TurtleParser.DirectiveContext arg) {
+		onExit();
+		this.inDirective.pop();
+	}
+
+	public boolean inDirective() {
+      return !inDirective.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inObjectList = new java.util.Stack<>();
@@ -65,57 +118,6 @@ public class TurtleNodeListener extends TurtleBaseListener {
       return !inObjectList.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inVerb = new java.util.Stack<>();
-
-	@Override
-	public void enterVerb(com.generator.generators.turtle.parser.TurtleParser.VerbContext arg) {
-		onEnter(new Node("Verb", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inVerb.push(true);
-	}
-
-	public void exitVerb(com.generator.generators.turtle.parser.TurtleParser.VerbContext arg) {
-		onExit();
-		this.inVerb.pop();
-	}
-
-	public boolean inVerb() {
-      return !inVerb.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSubject = new java.util.Stack<>();
-
-	@Override
-	public void enterSubject(com.generator.generators.turtle.parser.TurtleParser.SubjectContext arg) {
-		onEnter(new Node("Subject", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inSubject.push(true);
-	}
-
-	public void exitSubject(com.generator.generators.turtle.parser.TurtleParser.SubjectContext arg) {
-		onExit();
-		this.inSubject.pop();
-	}
-
-	public boolean inSubject() {
-      return !inSubject.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPredicate = new java.util.Stack<>();
-
-	@Override
-	public void enterPredicate(com.generator.generators.turtle.parser.TurtleParser.PredicateContext arg) {
-		onEnter(new Node("Predicate", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inPredicate.push(true);
-	}
-
-	public void exitPredicate(com.generator.generators.turtle.parser.TurtleParser.PredicateContext arg) {
-		onExit();
-		this.inPredicate.pop();
-	}
-
-	public boolean inPredicate() {
-      return !inPredicate.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inObject = new java.util.Stack<>();
 
 	@Override
@@ -133,21 +135,21 @@ public class TurtleNodeListener extends TurtleBaseListener {
       return !inObject.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inVerb = new java.util.Stack<>();
 
 	@Override
-	public void enterLiteral(com.generator.generators.turtle.parser.TurtleParser.LiteralContext arg) {
-		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inLiteral.push(true);
+	public void enterVerb(com.generator.generators.turtle.parser.TurtleParser.VerbContext arg) {
+		onEnter(new Node("Verb", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inVerb.push(true);
 	}
 
-	public void exitLiteral(com.generator.generators.turtle.parser.TurtleParser.LiteralContext arg) {
+	public void exitVerb(com.generator.generators.turtle.parser.TurtleParser.VerbContext arg) {
 		onExit();
-		this.inLiteral.pop();
+		this.inVerb.pop();
 	}
 
-	public boolean inLiteral() {
-      return !inLiteral.isEmpty(); 
+	public boolean inVerb() {
+      return !inVerb.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBlankNodePropertyList = new java.util.Stack<>();
@@ -201,6 +203,40 @@ public class TurtleNodeListener extends TurtleBaseListener {
       return !inRdfLiteral.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inSubject = new java.util.Stack<>();
+
+	@Override
+	public void enterSubject(com.generator.generators.turtle.parser.TurtleParser.SubjectContext arg) {
+		onEnter(new Node("Subject", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inSubject.push(true);
+	}
+
+	public void exitSubject(com.generator.generators.turtle.parser.TurtleParser.SubjectContext arg) {
+		onExit();
+		this.inSubject.pop();
+	}
+
+	public boolean inSubject() {
+      return !inSubject.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPredicate = new java.util.Stack<>();
+
+	@Override
+	public void enterPredicate(com.generator.generators.turtle.parser.TurtleParser.PredicateContext arg) {
+		onEnter(new Node("Predicate", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inPredicate.push(true);
+	}
+
+	public void exitPredicate(com.generator.generators.turtle.parser.TurtleParser.PredicateContext arg) {
+		onExit();
+		this.inPredicate.pop();
+	}
+
+	public boolean inPredicate() {
+      return !inPredicate.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inIri = new java.util.Stack<>();
 
 	@Override
@@ -235,21 +271,38 @@ public class TurtleNodeListener extends TurtleBaseListener {
       return !inTurtleDoc.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inPrefixID = new java.util.Stack<>();
 
 	@Override
-	public void enterStatement(com.generator.generators.turtle.parser.TurtleParser.StatementContext arg) {
-		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inStatement.push(true);
+	public void enterPrefixID(com.generator.generators.turtle.parser.TurtleParser.PrefixIDContext arg) {
+		onEnter(new Node("PrefixID", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inPrefixID.push(true);
 	}
 
-	public void exitStatement(com.generator.generators.turtle.parser.TurtleParser.StatementContext arg) {
+	public void exitPrefixID(com.generator.generators.turtle.parser.TurtleParser.PrefixIDContext arg) {
 		onExit();
-		this.inStatement.pop();
+		this.inPrefixID.pop();
 	}
 
-	public boolean inStatement() {
-      return !inStatement.isEmpty(); 
+	public boolean inPrefixID() {
+      return !inPrefixID.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inBase = new java.util.Stack<>();
+
+	@Override
+	public void enterBase(com.generator.generators.turtle.parser.TurtleParser.BaseContext arg) {
+		onEnter(new Node("Base", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inBase.push(true);
+	}
+
+	public void exitBase(com.generator.generators.turtle.parser.TurtleParser.BaseContext arg) {
+		onExit();
+		this.inBase.pop();
+	}
+
+	public boolean inBase() {
+      return !inBase.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSparqlBase = new java.util.Stack<>();
@@ -318,57 +371,6 @@ public class TurtleNodeListener extends TurtleBaseListener {
 
 	public boolean inPredicateObjectList() {
       return !inPredicateObjectList.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDirective = new java.util.Stack<>();
-
-	@Override
-	public void enterDirective(com.generator.generators.turtle.parser.TurtleParser.DirectiveContext arg) {
-		onEnter(new Node("Directive", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inDirective.push(true);
-	}
-
-	public void exitDirective(com.generator.generators.turtle.parser.TurtleParser.DirectiveContext arg) {
-		onExit();
-		this.inDirective.pop();
-	}
-
-	public boolean inDirective() {
-      return !inDirective.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPrefixID = new java.util.Stack<>();
-
-	@Override
-	public void enterPrefixID(com.generator.generators.turtle.parser.TurtleParser.PrefixIDContext arg) {
-		onEnter(new Node("PrefixID", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inPrefixID.push(true);
-	}
-
-	public void exitPrefixID(com.generator.generators.turtle.parser.TurtleParser.PrefixIDContext arg) {
-		onExit();
-		this.inPrefixID.pop();
-	}
-
-	public boolean inPrefixID() {
-      return !inPrefixID.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inBase = new java.util.Stack<>();
-
-	@Override
-	public void enterBase(com.generator.generators.turtle.parser.TurtleParser.BaseContext arg) {
-		onEnter(new Node("Base", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inBase.push(true);
-	}
-
-	public void exitBase(com.generator.generators.turtle.parser.TurtleParser.BaseContext arg) {
-		onExit();
-		this.inBase.pop();
-	}
-
-	public boolean inBase() {
-      return !inBase.isEmpty(); 
    }
 
 }

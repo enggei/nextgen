@@ -6,6 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(CypherNeoVisitor.class);
+
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final com.generator.neo.NeoModel model;
 
@@ -29,7 +31,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitAtom(com.generator.generators.cypher.parser.CypherParser.AtomContext arg) {
-		System.out.println("Atom");
+		log.info("Atom");
 		final Node node = model.newNode(Label.label("Atom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -39,7 +41,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitParameter(com.generator.generators.cypher.parser.CypherParser.ParameterContext arg) {
-		System.out.println("Parameter");
+		log.info("Parameter");
 		final Node node = model.newNode(Label.label("Parameter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -49,7 +51,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitLiteral(com.generator.generators.cypher.parser.CypherParser.LiteralContext arg) {
-		System.out.println("Literal");
+		log.info("Literal");
 		final Node node = model.newNode(Label.label("Literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -58,28 +60,8 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitStatement(com.generator.generators.cypher.parser.CypherParser.StatementContext arg) {
-		System.out.println("Statement");
-		final Node node = model.newNode(Label.label("Statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExpression(com.generator.generators.cypher.parser.CypherParser.ExpressionContext arg) {
-		System.out.println("Expression");
-		final Node node = model.newNode(Label.label("Expression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitSet(com.generator.generators.cypher.parser.CypherParser.SetContext arg) {
-		System.out.println("Set");
+		log.info("Set");
 		final Node node = model.newNode(Label.label("Set"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -88,8 +70,28 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitExpression(com.generator.generators.cypher.parser.CypherParser.ExpressionContext arg) {
+		log.info("Expression");
+		final Node node = model.newNode(Label.label("Expression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitStatement(com.generator.generators.cypher.parser.CypherParser.StatementContext arg) {
+		log.info("Statement");
+		final Node node = model.newNode(Label.label("Statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitCypher(com.generator.generators.cypher.parser.CypherParser.CypherContext arg) {
-		System.out.println("Cypher");
+		log.info("Cypher");
 		final Node node = model.newNode(Label.label("Cypher"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -99,7 +101,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitQuery(com.generator.generators.cypher.parser.CypherParser.QueryContext arg) {
-		System.out.println("Query");
+		log.info("Query");
 		final Node node = model.newNode(Label.label("Query"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -109,7 +111,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
-		System.out.println("RegularQuery");
+		log.info("RegularQuery");
 		final Node node = model.newNode(Label.label("RegularQuery"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -119,7 +121,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitUnion(com.generator.generators.cypher.parser.CypherParser.UnionContext arg) {
-		System.out.println("Union");
+		log.info("Union");
 		final Node node = model.newNode(Label.label("Union"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -129,7 +131,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitSingleQuery(com.generator.generators.cypher.parser.CypherParser.SingleQueryContext arg) {
-		System.out.println("SingleQuery");
+		log.info("SingleQuery");
 		final Node node = model.newNode(Label.label("SingleQuery"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -139,7 +141,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitSinglePartQuery(com.generator.generators.cypher.parser.CypherParser.SinglePartQueryContext arg) {
-		System.out.println("SinglePartQuery");
+		log.info("SinglePartQuery");
 		final Node node = model.newNode(Label.label("SinglePartQuery"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -149,7 +151,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitReadOnlyEnd(com.generator.generators.cypher.parser.CypherParser.ReadOnlyEndContext arg) {
-		System.out.println("ReadOnlyEnd");
+		log.info("ReadOnlyEnd");
 		final Node node = model.newNode(Label.label("ReadOnlyEnd"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -159,7 +161,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitReadUpdateEnd(com.generator.generators.cypher.parser.CypherParser.ReadUpdateEndContext arg) {
-		System.out.println("ReadUpdateEnd");
+		log.info("ReadUpdateEnd");
 		final Node node = model.newNode(Label.label("ReadUpdateEnd"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -169,7 +171,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitUpdatingEnd(com.generator.generators.cypher.parser.CypherParser.UpdatingEndContext arg) {
-		System.out.println("UpdatingEnd");
+		log.info("UpdatingEnd");
 		final Node node = model.newNode(Label.label("UpdatingEnd"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -179,7 +181,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitMultiPartQuery(com.generator.generators.cypher.parser.CypherParser.MultiPartQueryContext arg) {
-		System.out.println("MultiPartQuery");
+		log.info("MultiPartQuery");
 		final Node node = model.newNode(Label.label("MultiPartQuery"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -189,7 +191,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitReadPart(com.generator.generators.cypher.parser.CypherParser.ReadPartContext arg) {
-		System.out.println("ReadPart");
+		log.info("ReadPart");
 		final Node node = model.newNode(Label.label("ReadPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -199,7 +201,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitUpdatingPart(com.generator.generators.cypher.parser.CypherParser.UpdatingPartContext arg) {
-		System.out.println("UpdatingPart");
+		log.info("UpdatingPart");
 		final Node node = model.newNode(Label.label("UpdatingPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -209,7 +211,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitUpdatingStartClause(com.generator.generators.cypher.parser.CypherParser.UpdatingStartClauseContext arg) {
-		System.out.println("UpdatingStartClause");
+		log.info("UpdatingStartClause");
 		final Node node = model.newNode(Label.label("UpdatingStartClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -219,7 +221,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitUpdatingClause(com.generator.generators.cypher.parser.CypherParser.UpdatingClauseContext arg) {
-		System.out.println("UpdatingClause");
+		log.info("UpdatingClause");
 		final Node node = model.newNode(Label.label("UpdatingClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -229,7 +231,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitReadingClause(com.generator.generators.cypher.parser.CypherParser.ReadingClauseContext arg) {
-		System.out.println("ReadingClause");
+		log.info("ReadingClause");
 		final Node node = model.newNode(Label.label("ReadingClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -239,7 +241,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitCyper_match(com.generator.generators.cypher.parser.CypherParser.Cyper_matchContext arg) {
-		System.out.println("Cyper_match");
+		log.info("Cyper_match");
 		final Node node = model.newNode(Label.label("Cyper_match"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -249,7 +251,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitUnwind(com.generator.generators.cypher.parser.CypherParser.UnwindContext arg) {
-		System.out.println("Unwind");
+		log.info("Unwind");
 		final Node node = model.newNode(Label.label("Unwind"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -259,7 +261,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitMerge(com.generator.generators.cypher.parser.CypherParser.MergeContext arg) {
-		System.out.println("Merge");
+		log.info("Merge");
 		final Node node = model.newNode(Label.label("Merge"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -269,7 +271,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitMergeAction(com.generator.generators.cypher.parser.CypherParser.MergeActionContext arg) {
-		System.out.println("MergeAction");
+		log.info("MergeAction");
 		final Node node = model.newNode(Label.label("MergeAction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -279,7 +281,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitCreate(com.generator.generators.cypher.parser.CypherParser.CreateContext arg) {
-		System.out.println("Create");
+		log.info("Create");
 		final Node node = model.newNode(Label.label("Create"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -289,7 +291,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitSetItem(com.generator.generators.cypher.parser.CypherParser.SetItemContext arg) {
-		System.out.println("SetItem");
+		log.info("SetItem");
 		final Node node = model.newNode(Label.label("SetItem"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -299,7 +301,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitDelete(com.generator.generators.cypher.parser.CypherParser.DeleteContext arg) {
-		System.out.println("Delete");
+		log.info("Delete");
 		final Node node = model.newNode(Label.label("Delete"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -309,7 +311,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitRemove(com.generator.generators.cypher.parser.CypherParser.RemoveContext arg) {
-		System.out.println("Remove");
+		log.info("Remove");
 		final Node node = model.newNode(Label.label("Remove"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -319,7 +321,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitRemoveItem(com.generator.generators.cypher.parser.CypherParser.RemoveItemContext arg) {
-		System.out.println("RemoveItem");
+		log.info("RemoveItem");
 		final Node node = model.newNode(Label.label("RemoveItem"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -329,7 +331,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitInQueryCall(com.generator.generators.cypher.parser.CypherParser.InQueryCallContext arg) {
-		System.out.println("InQueryCall");
+		log.info("InQueryCall");
 		final Node node = model.newNode(Label.label("InQueryCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -339,7 +341,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitStandaloneCall(com.generator.generators.cypher.parser.CypherParser.StandaloneCallContext arg) {
-		System.out.println("StandaloneCall");
+		log.info("StandaloneCall");
 		final Node node = model.newNode(Label.label("StandaloneCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -349,7 +351,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitYieldItems(com.generator.generators.cypher.parser.CypherParser.YieldItemsContext arg) {
-		System.out.println("YieldItems");
+		log.info("YieldItems");
 		final Node node = model.newNode(Label.label("YieldItems"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -359,7 +361,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitYieldItem(com.generator.generators.cypher.parser.CypherParser.YieldItemContext arg) {
-		System.out.println("YieldItem");
+		log.info("YieldItem");
 		final Node node = model.newNode(Label.label("YieldItem"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -369,7 +371,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitWith(com.generator.generators.cypher.parser.CypherParser.WithContext arg) {
-		System.out.println("With");
+		log.info("With");
 		final Node node = model.newNode(Label.label("With"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -379,7 +381,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitCypher_return(com.generator.generators.cypher.parser.CypherParser.Cypher_returnContext arg) {
-		System.out.println("Cypher_return");
+		log.info("Cypher_return");
 		final Node node = model.newNode(Label.label("Cypher_return"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -389,7 +391,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitReturnBody(com.generator.generators.cypher.parser.CypherParser.ReturnBodyContext arg) {
-		System.out.println("ReturnBody");
+		log.info("ReturnBody");
 		final Node node = model.newNode(Label.label("ReturnBody"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -399,7 +401,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitReturnItems(com.generator.generators.cypher.parser.CypherParser.ReturnItemsContext arg) {
-		System.out.println("ReturnItems");
+		log.info("ReturnItems");
 		final Node node = model.newNode(Label.label("ReturnItems"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -409,7 +411,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitReturnItem(com.generator.generators.cypher.parser.CypherParser.ReturnItemContext arg) {
-		System.out.println("ReturnItem");
+		log.info("ReturnItem");
 		final Node node = model.newNode(Label.label("ReturnItem"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -419,7 +421,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitOrder(com.generator.generators.cypher.parser.CypherParser.OrderContext arg) {
-		System.out.println("Order");
+		log.info("Order");
 		final Node node = model.newNode(Label.label("Order"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -429,7 +431,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitSkip(com.generator.generators.cypher.parser.CypherParser.SkipContext arg) {
-		System.out.println("Skip");
+		log.info("Skip");
 		final Node node = model.newNode(Label.label("Skip"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -439,7 +441,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitLimit(com.generator.generators.cypher.parser.CypherParser.LimitContext arg) {
-		System.out.println("Limit");
+		log.info("Limit");
 		final Node node = model.newNode(Label.label("Limit"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -449,7 +451,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitSortItem(com.generator.generators.cypher.parser.CypherParser.SortItemContext arg) {
-		System.out.println("SortItem");
+		log.info("SortItem");
 		final Node node = model.newNode(Label.label("SortItem"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -459,7 +461,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitWhere(com.generator.generators.cypher.parser.CypherParser.WhereContext arg) {
-		System.out.println("Where");
+		log.info("Where");
 		final Node node = model.newNode(Label.label("Where"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -469,7 +471,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitPattern(com.generator.generators.cypher.parser.CypherParser.PatternContext arg) {
-		System.out.println("Pattern");
+		log.info("Pattern");
 		final Node node = model.newNode(Label.label("Pattern"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -479,7 +481,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitPatternPart(com.generator.generators.cypher.parser.CypherParser.PatternPartContext arg) {
-		System.out.println("PatternPart");
+		log.info("PatternPart");
 		final Node node = model.newNode(Label.label("PatternPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -489,7 +491,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitAnonymousPatternPart(com.generator.generators.cypher.parser.CypherParser.AnonymousPatternPartContext arg) {
-		System.out.println("AnonymousPatternPart");
+		log.info("AnonymousPatternPart");
 		final Node node = model.newNode(Label.label("AnonymousPatternPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -499,7 +501,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitPatternElement(com.generator.generators.cypher.parser.CypherParser.PatternElementContext arg) {
-		System.out.println("PatternElement");
+		log.info("PatternElement");
 		final Node node = model.newNode(Label.label("PatternElement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -509,7 +511,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitNodePattern(com.generator.generators.cypher.parser.CypherParser.NodePatternContext arg) {
-		System.out.println("NodePattern");
+		log.info("NodePattern");
 		final Node node = model.newNode(Label.label("NodePattern"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -519,7 +521,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitPatternElementChain(com.generator.generators.cypher.parser.CypherParser.PatternElementChainContext arg) {
-		System.out.println("PatternElementChain");
+		log.info("PatternElementChain");
 		final Node node = model.newNode(Label.label("PatternElementChain"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -529,7 +531,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitRelationshipPattern(com.generator.generators.cypher.parser.CypherParser.RelationshipPatternContext arg) {
-		System.out.println("RelationshipPattern");
+		log.info("RelationshipPattern");
 		final Node node = model.newNode(Label.label("RelationshipPattern"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -539,7 +541,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitRelationshipDetail(com.generator.generators.cypher.parser.CypherParser.RelationshipDetailContext arg) {
-		System.out.println("RelationshipDetail");
+		log.info("RelationshipDetail");
 		final Node node = model.newNode(Label.label("RelationshipDetail"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -549,7 +551,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitProperties(com.generator.generators.cypher.parser.CypherParser.PropertiesContext arg) {
-		System.out.println("Properties");
+		log.info("Properties");
 		final Node node = model.newNode(Label.label("Properties"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -559,7 +561,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitRelationshipTypes(com.generator.generators.cypher.parser.CypherParser.RelationshipTypesContext arg) {
-		System.out.println("RelationshipTypes");
+		log.info("RelationshipTypes");
 		final Node node = model.newNode(Label.label("RelationshipTypes"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -569,7 +571,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitNodeLabels(com.generator.generators.cypher.parser.CypherParser.NodeLabelsContext arg) {
-		System.out.println("NodeLabels");
+		log.info("NodeLabels");
 		final Node node = model.newNode(Label.label("NodeLabels"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -579,7 +581,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitNodeLabel(com.generator.generators.cypher.parser.CypherParser.NodeLabelContext arg) {
-		System.out.println("NodeLabel");
+		log.info("NodeLabel");
 		final Node node = model.newNode(Label.label("NodeLabel"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -589,7 +591,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitRangeLiteral(com.generator.generators.cypher.parser.CypherParser.RangeLiteralContext arg) {
-		System.out.println("RangeLiteral");
+		log.info("RangeLiteral");
 		final Node node = model.newNode(Label.label("RangeLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -599,7 +601,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitLabelName(com.generator.generators.cypher.parser.CypherParser.LabelNameContext arg) {
-		System.out.println("LabelName");
+		log.info("LabelName");
 		final Node node = model.newNode(Label.label("LabelName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -609,7 +611,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitRelTypeName(com.generator.generators.cypher.parser.CypherParser.RelTypeNameContext arg) {
-		System.out.println("RelTypeName");
+		log.info("RelTypeName");
 		final Node node = model.newNode(Label.label("RelTypeName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -619,7 +621,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitOrExpression(com.generator.generators.cypher.parser.CypherParser.OrExpressionContext arg) {
-		System.out.println("OrExpression");
+		log.info("OrExpression");
 		final Node node = model.newNode(Label.label("OrExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -629,7 +631,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitXorExpression(com.generator.generators.cypher.parser.CypherParser.XorExpressionContext arg) {
-		System.out.println("XorExpression");
+		log.info("XorExpression");
 		final Node node = model.newNode(Label.label("XorExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -639,7 +641,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitAndExpression(com.generator.generators.cypher.parser.CypherParser.AndExpressionContext arg) {
-		System.out.println("AndExpression");
+		log.info("AndExpression");
 		final Node node = model.newNode(Label.label("AndExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -649,7 +651,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitNotExpression(com.generator.generators.cypher.parser.CypherParser.NotExpressionContext arg) {
-		System.out.println("NotExpression");
+		log.info("NotExpression");
 		final Node node = model.newNode(Label.label("NotExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -659,7 +661,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitComparisonExpression(com.generator.generators.cypher.parser.CypherParser.ComparisonExpressionContext arg) {
-		System.out.println("ComparisonExpression");
+		log.info("ComparisonExpression");
 		final Node node = model.newNode(Label.label("ComparisonExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -669,7 +671,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitAddOrSubtractExpression(com.generator.generators.cypher.parser.CypherParser.AddOrSubtractExpressionContext arg) {
-		System.out.println("AddOrSubtractExpression");
+		log.info("AddOrSubtractExpression");
 		final Node node = model.newNode(Label.label("AddOrSubtractExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -679,7 +681,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitMultiplyDivideModuloExpression(com.generator.generators.cypher.parser.CypherParser.MultiplyDivideModuloExpressionContext arg) {
-		System.out.println("MultiplyDivideModuloExpression");
+		log.info("MultiplyDivideModuloExpression");
 		final Node node = model.newNode(Label.label("MultiplyDivideModuloExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -689,7 +691,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitPowerOfExpression(com.generator.generators.cypher.parser.CypherParser.PowerOfExpressionContext arg) {
-		System.out.println("PowerOfExpression");
+		log.info("PowerOfExpression");
 		final Node node = model.newNode(Label.label("PowerOfExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -699,7 +701,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitUnaryAddOrSubtractExpression(com.generator.generators.cypher.parser.CypherParser.UnaryAddOrSubtractExpressionContext arg) {
-		System.out.println("UnaryAddOrSubtractExpression");
+		log.info("UnaryAddOrSubtractExpression");
 		final Node node = model.newNode(Label.label("UnaryAddOrSubtractExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -709,7 +711,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitStringListNullOperatorExpression(com.generator.generators.cypher.parser.CypherParser.StringListNullOperatorExpressionContext arg) {
-		System.out.println("StringListNullOperatorExpression");
+		log.info("StringListNullOperatorExpression");
 		final Node node = model.newNode(Label.label("StringListNullOperatorExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -719,7 +721,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitPropertyOrLabelsExpression(com.generator.generators.cypher.parser.CypherParser.PropertyOrLabelsExpressionContext arg) {
-		System.out.println("PropertyOrLabelsExpression");
+		log.info("PropertyOrLabelsExpression");
 		final Node node = model.newNode(Label.label("PropertyOrLabelsExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -729,7 +731,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitBooleanLiteral(com.generator.generators.cypher.parser.CypherParser.BooleanLiteralContext arg) {
-		System.out.println("BooleanLiteral");
+		log.info("BooleanLiteral");
 		final Node node = model.newNode(Label.label("BooleanLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -739,7 +741,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitListLiteral(com.generator.generators.cypher.parser.CypherParser.ListLiteralContext arg) {
-		System.out.println("ListLiteral");
+		log.info("ListLiteral");
 		final Node node = model.newNode(Label.label("ListLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -749,7 +751,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitPartialComparisonExpression(com.generator.generators.cypher.parser.CypherParser.PartialComparisonExpressionContext arg) {
-		System.out.println("PartialComparisonExpression");
+		log.info("PartialComparisonExpression");
 		final Node node = model.newNode(Label.label("PartialComparisonExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -759,7 +761,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitParenthesizedExpression(com.generator.generators.cypher.parser.CypherParser.ParenthesizedExpressionContext arg) {
-		System.out.println("ParenthesizedExpression");
+		log.info("ParenthesizedExpression");
 		final Node node = model.newNode(Label.label("ParenthesizedExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -769,7 +771,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitRelationshipsPattern(com.generator.generators.cypher.parser.CypherParser.RelationshipsPatternContext arg) {
-		System.out.println("RelationshipsPattern");
+		log.info("RelationshipsPattern");
 		final Node node = model.newNode(Label.label("RelationshipsPattern"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -779,7 +781,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitFilterExpression(com.generator.generators.cypher.parser.CypherParser.FilterExpressionContext arg) {
-		System.out.println("FilterExpression");
+		log.info("FilterExpression");
 		final Node node = model.newNode(Label.label("FilterExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -789,7 +791,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitIdInColl(com.generator.generators.cypher.parser.CypherParser.IdInCollContext arg) {
-		System.out.println("IdInColl");
+		log.info("IdInColl");
 		final Node node = model.newNode(Label.label("IdInColl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -799,7 +801,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitFunctionInvocation(com.generator.generators.cypher.parser.CypherParser.FunctionInvocationContext arg) {
-		System.out.println("FunctionInvocation");
+		log.info("FunctionInvocation");
 		final Node node = model.newNode(Label.label("FunctionInvocation"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -809,7 +811,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitFunctionName(com.generator.generators.cypher.parser.CypherParser.FunctionNameContext arg) {
-		System.out.println("FunctionName");
+		log.info("FunctionName");
 		final Node node = model.newNode(Label.label("FunctionName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -819,7 +821,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitExplicitProcedureInvocation(com.generator.generators.cypher.parser.CypherParser.ExplicitProcedureInvocationContext arg) {
-		System.out.println("ExplicitProcedureInvocation");
+		log.info("ExplicitProcedureInvocation");
 		final Node node = model.newNode(Label.label("ExplicitProcedureInvocation"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -829,7 +831,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitImplicitProcedureInvocation(com.generator.generators.cypher.parser.CypherParser.ImplicitProcedureInvocationContext arg) {
-		System.out.println("ImplicitProcedureInvocation");
+		log.info("ImplicitProcedureInvocation");
 		final Node node = model.newNode(Label.label("ImplicitProcedureInvocation"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -839,7 +841,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitProcedureResultField(com.generator.generators.cypher.parser.CypherParser.ProcedureResultFieldContext arg) {
-		System.out.println("ProcedureResultField");
+		log.info("ProcedureResultField");
 		final Node node = model.newNode(Label.label("ProcedureResultField"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -849,7 +851,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitProcedureName(com.generator.generators.cypher.parser.CypherParser.ProcedureNameContext arg) {
-		System.out.println("ProcedureName");
+		log.info("ProcedureName");
 		final Node node = model.newNode(Label.label("ProcedureName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -859,7 +861,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitNamespace(com.generator.generators.cypher.parser.CypherParser.NamespaceContext arg) {
-		System.out.println("Namespace");
+		log.info("Namespace");
 		final Node node = model.newNode(Label.label("Namespace"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -869,7 +871,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitListComprehension(com.generator.generators.cypher.parser.CypherParser.ListComprehensionContext arg) {
-		System.out.println("ListComprehension");
+		log.info("ListComprehension");
 		final Node node = model.newNode(Label.label("ListComprehension"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -879,7 +881,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitPatternComprehension(com.generator.generators.cypher.parser.CypherParser.PatternComprehensionContext arg) {
-		System.out.println("PatternComprehension");
+		log.info("PatternComprehension");
 		final Node node = model.newNode(Label.label("PatternComprehension"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -889,7 +891,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitPropertyLookup(com.generator.generators.cypher.parser.CypherParser.PropertyLookupContext arg) {
-		System.out.println("PropertyLookup");
+		log.info("PropertyLookup");
 		final Node node = model.newNode(Label.label("PropertyLookup"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -899,7 +901,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitCaseExpression(com.generator.generators.cypher.parser.CypherParser.CaseExpressionContext arg) {
-		System.out.println("CaseExpression");
+		log.info("CaseExpression");
 		final Node node = model.newNode(Label.label("CaseExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -909,7 +911,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitCaseAlternatives(com.generator.generators.cypher.parser.CypherParser.CaseAlternativesContext arg) {
-		System.out.println("CaseAlternatives");
+		log.info("CaseAlternatives");
 		final Node node = model.newNode(Label.label("CaseAlternatives"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -919,7 +921,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitVariable(com.generator.generators.cypher.parser.CypherParser.VariableContext arg) {
-		System.out.println("Variable");
+		log.info("Variable");
 		final Node node = model.newNode(Label.label("Variable"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -929,7 +931,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitNumberLiteral(com.generator.generators.cypher.parser.CypherParser.NumberLiteralContext arg) {
-		System.out.println("NumberLiteral");
+		log.info("NumberLiteral");
 		final Node node = model.newNode(Label.label("NumberLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -939,7 +941,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitMapLiteral(com.generator.generators.cypher.parser.CypherParser.MapLiteralContext arg) {
-		System.out.println("MapLiteral");
+		log.info("MapLiteral");
 		final Node node = model.newNode(Label.label("MapLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -949,7 +951,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitPropertyExpression(com.generator.generators.cypher.parser.CypherParser.PropertyExpressionContext arg) {
-		System.out.println("PropertyExpression");
+		log.info("PropertyExpression");
 		final Node node = model.newNode(Label.label("PropertyExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -959,7 +961,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitPropertyKeyName(com.generator.generators.cypher.parser.CypherParser.PropertyKeyNameContext arg) {
-		System.out.println("PropertyKeyName");
+		log.info("PropertyKeyName");
 		final Node node = model.newNode(Label.label("PropertyKeyName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -969,7 +971,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitIntegerLiteral(com.generator.generators.cypher.parser.CypherParser.IntegerLiteralContext arg) {
-		System.out.println("IntegerLiteral");
+		log.info("IntegerLiteral");
 		final Node node = model.newNode(Label.label("IntegerLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -979,7 +981,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitDoubleLiteral(com.generator.generators.cypher.parser.CypherParser.DoubleLiteralContext arg) {
-		System.out.println("DoubleLiteral");
+		log.info("DoubleLiteral");
 		final Node node = model.newNode(Label.label("DoubleLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -989,7 +991,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitSchemaName(com.generator.generators.cypher.parser.CypherParser.SchemaNameContext arg) {
-		System.out.println("SchemaName");
+		log.info("SchemaName");
 		final Node node = model.newNode(Label.label("SchemaName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -999,7 +1001,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitReservedWord(com.generator.generators.cypher.parser.CypherParser.ReservedWordContext arg) {
-		System.out.println("ReservedWord");
+		log.info("ReservedWord");
 		final Node node = model.newNode(Label.label("ReservedWord"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -1009,7 +1011,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitSymbolicName(com.generator.generators.cypher.parser.CypherParser.SymbolicNameContext arg) {
-		System.out.println("SymbolicName");
+		log.info("SymbolicName");
 		final Node node = model.newNode(Label.label("SymbolicName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -1019,7 +1021,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitLeftArrowHead(com.generator.generators.cypher.parser.CypherParser.LeftArrowHeadContext arg) {
-		System.out.println("LeftArrowHead");
+		log.info("LeftArrowHead");
 		final Node node = model.newNode(Label.label("LeftArrowHead"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -1029,7 +1031,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitRightArrowHead(com.generator.generators.cypher.parser.CypherParser.RightArrowHeadContext arg) {
-		System.out.println("RightArrowHead");
+		log.info("RightArrowHead");
 		final Node node = model.newNode(Label.label("RightArrowHead"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -1039,7 +1041,7 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 
 	@Override
 	public Node visitDash(com.generator.generators.cypher.parser.CypherParser.DashContext arg) {
-		System.out.println("Dash");
+		log.info("Dash");
 		final Node node = model.newNode(Label.label("Dash"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);

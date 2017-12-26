@@ -6,6 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class ClojureNeoListener extends ClojureBaseListener {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ClojureNeoListener.class);
+
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
@@ -24,7 +26,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 		if (!nodeStack.isEmpty())
       	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.getProperty("text"));
+		if (debug) log.debug(delim.toString() + node.getProperty("text"));
 		delim.append("\t");
    }
 
@@ -43,7 +45,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterFile(com.generator.generators.clojure.parser.ClojureParser.FileContext arg) {
-		final Node node = model.findOrCreate(Label.label("File"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("File"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFile.push(true);
 	}
@@ -61,7 +63,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterForm(com.generator.generators.clojure.parser.ClojureParser.FormContext arg) {
-		final Node node = model.findOrCreate(Label.label("Form"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Form"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inForm.push(true);
 	}
@@ -79,7 +81,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterForms(com.generator.generators.clojure.parser.ClojureParser.FormsContext arg) {
-		final Node node = model.findOrCreate(Label.label("Forms"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Forms"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inForms.push(true);
 	}
@@ -97,7 +99,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterList(com.generator.generators.clojure.parser.ClojureParser.ListContext arg) {
-		final Node node = model.findOrCreate(Label.label("List"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("List"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inList.push(true);
 	}
@@ -115,7 +117,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterVector(com.generator.generators.clojure.parser.ClojureParser.VectorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Vector"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Vector"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inVector.push(true);
 	}
@@ -133,7 +135,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterMap(com.generator.generators.clojure.parser.ClojureParser.MapContext arg) {
-		final Node node = model.findOrCreate(Label.label("Map"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Map"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMap.push(true);
 	}
@@ -151,7 +153,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterSet(com.generator.generators.clojure.parser.ClojureParser.SetContext arg) {
-		final Node node = model.findOrCreate(Label.label("Set"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Set"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSet.push(true);
 	}
@@ -169,7 +171,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterReader_macro(com.generator.generators.clojure.parser.ClojureParser.Reader_macroContext arg) {
-		final Node node = model.findOrCreate(Label.label("Reader_macro"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Reader_macro"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inReader_macro.push(true);
 	}
@@ -187,7 +189,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterQuote(com.generator.generators.clojure.parser.ClojureParser.QuoteContext arg) {
-		final Node node = model.findOrCreate(Label.label("Quote"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Quote"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inQuote.push(true);
 	}
@@ -205,7 +207,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterBacktick(com.generator.generators.clojure.parser.ClojureParser.BacktickContext arg) {
-		final Node node = model.findOrCreate(Label.label("Backtick"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Backtick"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBacktick.push(true);
 	}
@@ -223,7 +225,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterUnquote(com.generator.generators.clojure.parser.ClojureParser.UnquoteContext arg) {
-		final Node node = model.findOrCreate(Label.label("Unquote"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Unquote"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUnquote.push(true);
 	}
@@ -241,7 +243,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterUnquote_splicing(com.generator.generators.clojure.parser.ClojureParser.Unquote_splicingContext arg) {
-		final Node node = model.findOrCreate(Label.label("Unquote_splicing"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Unquote_splicing"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUnquote_splicing.push(true);
 	}
@@ -259,7 +261,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterTag(com.generator.generators.clojure.parser.ClojureParser.TagContext arg) {
-		final Node node = model.findOrCreate(Label.label("Tag"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Tag"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTag.push(true);
 	}
@@ -277,7 +279,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterDeref(com.generator.generators.clojure.parser.ClojureParser.DerefContext arg) {
-		final Node node = model.findOrCreate(Label.label("Deref"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Deref"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDeref.push(true);
 	}
@@ -295,7 +297,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterGensym(com.generator.generators.clojure.parser.ClojureParser.GensymContext arg) {
-		final Node node = model.findOrCreate(Label.label("Gensym"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Gensym"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inGensym.push(true);
 	}
@@ -313,7 +315,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterLambda(com.generator.generators.clojure.parser.ClojureParser.LambdaContext arg) {
-		final Node node = model.findOrCreate(Label.label("Lambda"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Lambda"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLambda.push(true);
 	}
@@ -331,7 +333,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterMeta_data(com.generator.generators.clojure.parser.ClojureParser.Meta_dataContext arg) {
-		final Node node = model.findOrCreate(Label.label("Meta_data"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Meta_data"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMeta_data.push(true);
 	}
@@ -349,7 +351,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterVar_quote(com.generator.generators.clojure.parser.ClojureParser.Var_quoteContext arg) {
-		final Node node = model.findOrCreate(Label.label("Var_quote"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Var_quote"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inVar_quote.push(true);
 	}
@@ -367,7 +369,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterHost_expr(com.generator.generators.clojure.parser.ClojureParser.Host_exprContext arg) {
-		final Node node = model.findOrCreate(Label.label("Host_expr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Host_expr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHost_expr.push(true);
 	}
@@ -385,7 +387,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterDiscard(com.generator.generators.clojure.parser.ClojureParser.DiscardContext arg) {
-		final Node node = model.findOrCreate(Label.label("Discard"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Discard"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDiscard.push(true);
 	}
@@ -403,7 +405,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterDispatch(com.generator.generators.clojure.parser.ClojureParser.DispatchContext arg) {
-		final Node node = model.findOrCreate(Label.label("Dispatch"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Dispatch"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDispatch.push(true);
 	}
@@ -421,7 +423,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterRegex(com.generator.generators.clojure.parser.ClojureParser.RegexContext arg) {
-		final Node node = model.findOrCreate(Label.label("Regex"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Regex"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRegex.push(true);
 	}
@@ -439,7 +441,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterLiteral(com.generator.generators.clojure.parser.ClojureParser.LiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLiteral.push(true);
 	}
@@ -457,7 +459,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterString(com.generator.generators.clojure.parser.ClojureParser.StringContext arg) {
-		final Node node = model.findOrCreate(Label.label("String"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("String"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inString.push(true);
 	}
@@ -475,7 +477,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterHex(com.generator.generators.clojure.parser.ClojureParser.HexContext arg) {
-		final Node node = model.findOrCreate(Label.label("Hex"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Hex"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHex.push(true);
 	}
@@ -493,7 +495,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterBin(com.generator.generators.clojure.parser.ClojureParser.BinContext arg) {
-		final Node node = model.findOrCreate(Label.label("Bin"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Bin"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBin.push(true);
 	}
@@ -511,7 +513,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterBign(com.generator.generators.clojure.parser.ClojureParser.BignContext arg) {
-		final Node node = model.findOrCreate(Label.label("Bign"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Bign"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBign.push(true);
 	}
@@ -529,7 +531,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterNumber(com.generator.generators.clojure.parser.ClojureParser.NumberContext arg) {
-		final Node node = model.findOrCreate(Label.label("Number"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Number"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNumber.push(true);
 	}
@@ -547,7 +549,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterCharacter(com.generator.generators.clojure.parser.ClojureParser.CharacterContext arg) {
-		final Node node = model.findOrCreate(Label.label("Character"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Character"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCharacter.push(true);
 	}
@@ -565,7 +567,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterNamed_char(com.generator.generators.clojure.parser.ClojureParser.Named_charContext arg) {
-		final Node node = model.findOrCreate(Label.label("Named_char"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Named_char"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNamed_char.push(true);
 	}
@@ -583,7 +585,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterAny_char(com.generator.generators.clojure.parser.ClojureParser.Any_charContext arg) {
-		final Node node = model.findOrCreate(Label.label("Any_char"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Any_char"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAny_char.push(true);
 	}
@@ -601,7 +603,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterU_hex_quad(com.generator.generators.clojure.parser.ClojureParser.U_hex_quadContext arg) {
-		final Node node = model.findOrCreate(Label.label("U_hex_quad"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("U_hex_quad"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inU_hex_quad.push(true);
 	}
@@ -619,7 +621,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterNil(com.generator.generators.clojure.parser.ClojureParser.NilContext arg) {
-		final Node node = model.findOrCreate(Label.label("Nil"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Nil"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNil.push(true);
 	}
@@ -637,7 +639,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterKeyword(com.generator.generators.clojure.parser.ClojureParser.KeywordContext arg) {
-		final Node node = model.findOrCreate(Label.label("Keyword"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Keyword"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inKeyword.push(true);
 	}
@@ -655,7 +657,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterSimple_keyword(com.generator.generators.clojure.parser.ClojureParser.Simple_keywordContext arg) {
-		final Node node = model.findOrCreate(Label.label("Simple_keyword"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Simple_keyword"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSimple_keyword.push(true);
 	}
@@ -673,7 +675,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterMacro_keyword(com.generator.generators.clojure.parser.ClojureParser.Macro_keywordContext arg) {
-		final Node node = model.findOrCreate(Label.label("Macro_keyword"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Macro_keyword"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMacro_keyword.push(true);
 	}
@@ -691,7 +693,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterSymbol(com.generator.generators.clojure.parser.ClojureParser.SymbolContext arg) {
-		final Node node = model.findOrCreate(Label.label("Symbol"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Symbol"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSymbol.push(true);
 	}
@@ -709,7 +711,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterSimple_sym(com.generator.generators.clojure.parser.ClojureParser.Simple_symContext arg) {
-		final Node node = model.findOrCreate(Label.label("Simple_sym"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Simple_sym"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSimple_sym.push(true);
 	}
@@ -727,7 +729,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterNs_symbol(com.generator.generators.clojure.parser.ClojureParser.Ns_symbolContext arg) {
-		final Node node = model.findOrCreate(Label.label("Ns_symbol"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Ns_symbol"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNs_symbol.push(true);
 	}
@@ -745,7 +747,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	@Override
 	public void enterParam_name(com.generator.generators.clojure.parser.ClojureParser.Param_nameContext arg) {
-		final Node node = model.findOrCreate(Label.label("Param_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Param_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inParam_name.push(true);
 	}

@@ -3,9 +3,12 @@ package com.generator.app.nodes;
 import com.generator.app.*;
 import com.generator.generators.cypher.CypherGroup;
 import com.generator.generators.domain.DomainPlugin;
+import com.generator.generators.domain.DomainPluginGroup;
+import com.generator.generators.stringtemplate.GeneratedFile;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.neo.NeoModel;
 import com.generator.util.NeoUtil;
+import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
 import org.abego.treelayout.Configuration;
 import org.abego.treelayout.NodeExtentProvider;
@@ -14,6 +17,7 @@ import org.abego.treelayout.TreeLayout;
 import org.abego.treelayout.util.AbstractTreeForTreeLayout;
 import org.abego.treelayout.util.DefaultConfiguration;
 import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.Label;
 import org.piccolo2d.PLayer;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PBasicInputEventHandler;
@@ -29,6 +33,7 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
@@ -39,6 +44,8 @@ import static com.generator.util.NeoUtil.*;
  * Created 01.10.17.
  */
 public class NeoNode extends PNode {
+
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(NeoNode.class);
 
    private Workspace workspace;
    private Workspace.NodeCanvas nodeCanvas;
@@ -128,25 +135,25 @@ public class NeoNode extends PNode {
 
                case KeyEvent.VK_1:
                   SwingUtilities.invokeLater(() -> {
-                     layoutTree(new DefaultConfiguration<>(50, 15, Configuration.Location.Left), !event.isControlDown());
+                     layoutTree(new DefaultConfiguration<>(150, 15, Configuration.Location.Left), !event.isControlDown(), NeoNode.this, workspace.app);
                   });
                   break;
 
                case KeyEvent.VK_2:
                   SwingUtilities.invokeLater(() -> {
-                     layoutTree(new DefaultConfiguration<>(50, 15, Configuration.Location.Right), !event.isControlDown());
+                     layoutTree(new DefaultConfiguration<>(150, 15, Configuration.Location.Right), !event.isControlDown(), NeoNode.this, workspace.app);
                   });
                   break;
 
                case KeyEvent.VK_3:
                   SwingUtilities.invokeLater(() -> {
-                     layoutTree(new DefaultConfiguration<>(50, 15, Configuration.Location.Bottom), !event.isControlDown());
+                     layoutTree(new DefaultConfiguration<>(150, 15, Configuration.Location.Bottom), !event.isControlDown(), NeoNode.this, workspace.app);
                   });
                   break;
 
                case KeyEvent.VK_4:
                   SwingUtilities.invokeLater(() -> {
-                     layoutTree(new DefaultConfiguration<>(50, 15, Configuration.Location.Top), !event.isControlDown());
+                     layoutTree(new DefaultConfiguration<>(150, 15, Configuration.Location.Top), !event.isControlDown(), NeoNode.this, workspace.app);
                   });
                   break;
 
@@ -308,103 +315,7 @@ public class NeoNode extends PNode {
             }
          }
 
-         private void layoutTree(Configuration<NeoNode> configuration, boolean outgoing) {
 
-            final Map<Long, NeoNode> nodesAndIds = new LinkedHashMap<>();
-            for (NeoNode visibleNode : nodeCanvas.getAllNodes())
-               nodesAndIds.put(visibleNode.id(), visibleNode);
-
-            final Map<Long, NeoNode> parentsMap = new LinkedHashMap<>();
-            final Map<Long, java.util.List<NeoNode>> childrensMap = new LinkedHashMap<>();
-
-            workspace.app.model.graph().doInTransaction(new NeoModel.Committer() {
-               @Override
-               public void doAction(Transaction tx) throws Throwable {
-
-                  // recursively traverse from root, finding all visible-children and populate parentsMap and childrensMap:
-                  visit(new LinkedHashSet<>(), NeoNode.this, outgoing);
-
-                  final TreeForTreeLayout<NeoNode> tree = new AbstractTreeForTreeLayout<NeoNode>(NeoNode.this) {
-                     @Override
-                     public NeoNode getParent(NeoNode neoNode) {
-                        return parentsMap.get(neoNode.id());
-                     }
-
-                     @Override
-                     public java.util.List<NeoNode> getChildrenList(NeoNode neoNode) {
-                        return childrensMap.get(neoNode.id());
-                     }
-                  };
-
-                  final NodeExtentProvider<NeoNode> nodeExtendProvider = new NodeExtentProvider<NeoNode>() {
-                     @Override
-                     public double getWidth(NeoNode neoNode) {
-                        return neoNode.getFullBounds().getWidth();
-                     }
-
-                     @Override
-                     public double getHeight(NeoNode neoNode) {
-                        return neoNode.getFullBounds().getHeight();
-                     }
-                  };
-
-
-                  final TreeLayout<NeoNode> layout = new TreeLayout<>(tree, nodeExtendProvider, configuration);
-
-                  // apply coordination-translation
-                  final Point2D rootLocation = getOffset();
-                  final Map<NeoNode, Rectangle2D.Double> nodeBounds = layout.getNodeBounds();
-                  final Rectangle2D.Double rootBounds = nodeBounds.get(NeoNode.this);
-                  final double dX = rootLocation.getX() - rootBounds.getCenterX();
-                  final double dY = rootLocation.getY() - rootBounds.getCenterY();
-                  for (Map.Entry<NeoNode, Rectangle2D.Double> nodeBound : nodeBounds.entrySet()) {
-                     final double centerX = nodeBound.getValue().getCenterX() + dX;
-                     final double centerY = nodeBound.getValue().getCenterY() + dY;
-                     nodeBound.getKey().setOffset(centerX, centerY);
-                  }
-               }
-
-               private void visit(Set<NeoNode> visitedChildren, NeoNode root, boolean outgoing) {
-                  childrensMap.put(root.id(), new ArrayList<>());
-
-                  final Set<Long> childrenToVisit = new LinkedHashSet<>();
-                  if (outgoing) {
-                     outgoing(root.getNode()).forEach(relationship -> {
-                        final Node childNode = other(root.getNode(), relationship);
-                        final long childId = childNode.getId();
-                        // if child is visible, and not already visited, add to root
-                        if (nodesAndIds.containsKey(childId) && !visitedChildren.contains(nodesAndIds.get(childId))) {
-                           visitedChildren.add(nodesAndIds.get(childId));
-                           parentsMap.put(childId, root);
-                           childrensMap.get(root.id()).add(nodesAndIds.get(childId));
-                           childrenToVisit.add(childId);
-                        }
-                     });
-                  } else {
-                     incoming(root.getNode()).forEach(relationship -> {
-                        final Node childNode = other(root.getNode(), relationship);
-                        final long childId = childNode.getId();
-                        // if child is visible, and not already visited, add to root
-                        if (nodesAndIds.containsKey(childId) && !visitedChildren.contains(nodesAndIds.get(childId))) {
-                           visitedChildren.add(nodesAndIds.get(childId));
-                           parentsMap.put(childId, root);
-                           childrensMap.get(root.id()).add(nodesAndIds.get(childId));
-                           childrenToVisit.add(childId);
-                        }
-                     });
-                  }
-
-                  // recursively visit added children:
-                  for (Long childNode : childrenToVisit)
-                     visit(visitedChildren, nodesAndIds.get(childNode), outgoing);
-               }
-
-               @Override
-               public void exception(Throwable throwable) {
-                  SwingUtil.showExceptionNoStack(workspace.app, throwable);
-               }
-            });
-         }
       };
 
       nodeEventListener.getEventFilter().setMarksAcceptedEventsAsHandled(true);
@@ -432,6 +343,42 @@ public class NeoNode extends PNode {
                plugin.handleNodeRightClick(pop, NeoNode.this, selectedNodes);
 
             // Basic graph-operations:
+            pop.add(new JSeparator());
+            final JMenu layoutMenu = new JMenu("Layout");
+            layoutMenu.add(new App.TransactionAction("Layout Right", workspace.app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  SwingUtilities.invokeLater(() -> {
+                     layoutTree(new DefaultConfiguration<>(50, 15, Configuration.Location.Left), true, NeoNode.this, workspace.app);
+                  });
+               }
+            });
+            layoutMenu.add(new App.TransactionAction("Layout Left", workspace.app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  SwingUtilities.invokeLater(() -> {
+                     layoutTree(new DefaultConfiguration<>(50, 15, Configuration.Location.Right), true, NeoNode.this, workspace.app);
+                  });
+               }
+            });
+            layoutMenu.add(new App.TransactionAction("Layout Top", workspace.app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  SwingUtilities.invokeLater(() -> {
+                     layoutTree(new DefaultConfiguration<>(50, 15, Configuration.Location.Top), true, NeoNode.this, workspace.app);
+                  });
+               }
+            });
+            layoutMenu.add(new App.TransactionAction("Layout Bottom", workspace.app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  SwingUtilities.invokeLater(() -> {
+                     layoutTree(new DefaultConfiguration<>(50, 15, Configuration.Location.Bottom), true, NeoNode.this, workspace.app);
+                  });
+               }
+            });
+            pop.add(layoutMenu);
+
             pop.add(new JSeparator());
             final JMenu relationsMenu = new JMenu("Relations");
             final JMenu showAllRelationMenu = new JMenu("Show all ");
@@ -469,12 +416,16 @@ public class NeoNode extends PNode {
                      final Set<NeoNode> neoNodes = new LinkedHashSet<>();
                      outgoing(getNode(), RelationshipType.withName(relation)).forEach(relationship -> {
                         if (!workspace.app.workspace.layerNodes.containsKey(relationship.getEndNode().getId())) return;
-                        final NeoNode node = workspace.app.workspace.layerNodes.get(relationship.getEndNode().getId());
-                        node.select();
-                        neoNodes.add(node);
+
+                        final NeoRelationship neoRelationship = workspace.app.workspace.layerRelations.get(relationship.getId());
+                        neoRelationship.select();
+
+//                        final NeoNode node = workspace.app.workspace.layerNodes.get(relationship.getEndNode().getId());
+//                        node.select();
+//                        neoNodes.add(node);
                      });
 
-                     workspace.app.events.firePropertyChange(NODES_SELECTED, neoNodes);
+//                     workspace.app.events.firePropertyChange(NODES_SELECTED, neoNodes);
                   }
                });
             }
@@ -484,6 +435,40 @@ public class NeoNode extends PNode {
                relationsMenu.add(closeAll);
             }
             if (relationsMenu.getMenuComponents().length > 0) pop.add(relationsMenu);
+
+            pop.add(new JSeparator());
+
+            pop.add(new App.TransactionAction("Create Visitor", workspace.app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                  final String visitorName = "TEST";
+                  final String packageName = "com.test";
+
+                  final PathBuilder pathBuilder = new PathBuilder(getNode());
+                  final Path path = pathBuilder.getPath();
+
+                  final Set<Label> distinctLabels = new LinkedHashSet<>();
+                  for (Node node : path.nodes())
+                     for (Label label : node.getLabels())
+                        distinctLabels.add(label);
+
+                  final DomainPluginGroup pluginGroup = new DomainPluginGroup();
+                  final DomainPluginGroup.VisitorST visitorST = pluginGroup.newVisitor().
+                        setName(visitorName).
+                        setPackage(packageName);
+
+                  for (Label distinctLabel : distinctLabels) {
+                     visitorST.addLabelsValue(distinctLabel.name());
+                  }
+
+                  for (String distinctPath : pathBuilder.getDistinctPaths()) {
+                     visitorST.addPathsValue(distinctPath);
+                  }
+
+                  GeneratedFile.newJavaFile("/home/goe/projects/nextgen/src/main/java", packageName, visitorName).write(visitorST);
+               }
+            });
 
             pop.add(new JSeparator());
             if (!selectedNodes.isEmpty()) {
@@ -617,6 +602,37 @@ public class NeoNode extends PNode {
                   }
                }
             });
+
+            pop.add(new App.TransactionAction("Expand Full Tree", workspace.app) {
+
+               final AtomicBoolean continueExpanding = new AtomicBoolean(true);
+
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  // todo expand all outgoing nodes from this node. Could be large amount.
+
+                  final Set<Node> nodes = new LinkedHashSet<>();
+                  expandNode(nodes, getNode());
+                  fireNodesLoaded(nodes);
+               }
+
+               private void expandNode(Set<Node> nodes, Node node) {
+
+                  if (continueExpanding.get() && nodes.size() > 1000)
+                     continueExpanding.set(SwingUtil.showConfirmDialog(workspace.app, "There are more than 1000 nodes loaded. Do you want to continue ?"));
+
+                  if (!continueExpanding.get()) return;
+
+                  outgoing(node).forEach(relationship -> {
+                     final Node other = other(node, relationship);
+                     if (nodes.contains(other))
+                        return;
+                     nodes.add(other);
+                     expandNode(nodes, other);
+                  });
+               }
+            });
+
             pop.add(new App.TransactionAction("Export Branch", workspace.app) {
 
                // to avoid escaping etc in cypher, just use parameters from
@@ -721,13 +737,6 @@ public class NeoNode extends PNode {
                   fireNodesLoaded(parents.toArray(new Node[parents.size()]));
                }
 
-               private void fireNodesLoaded(Node... nodes) {
-                  final Set<AppEvents.NodeLoadEvent> nodeEvents = new LinkedHashSet<>();
-                  for (Node node : nodes) {
-                     nodeEvents.add(new AppEvents.NodeLoadEvent(node, false));
-                  }
-                  workspace.app.events.firePropertyChange(NODE_LOAD, nodeEvents);
-               }
 
                private void visitIncoming(Node node, Set<Node> visited, Set<Node> parents) {
 
@@ -742,8 +751,8 @@ public class NeoNode extends PNode {
                   });
 
 //                  if (!hasParents.get()) {
-                     if (hasLabel(node, AppMotif.Entities._Layout)) return;
-                     parents.add(node);
+                  if (hasLabel(node, AppMotif.Entities._Layout)) return;
+                  parents.add(node);
 //                  }
                }
             });
@@ -818,11 +827,11 @@ public class NeoNode extends PNode {
    public static String getNodeText(AppMotif.NodePaintStrategy nodePaintStrategy, Node node) {
       switch (nodePaintStrategy) {
          case showNameAndLabels:
-            return getNameAndLabelsFrom(node);
+            return getNameAndLabelsFrom(node) + " " + node.getId();
          case showName:
-            return getString(node, AppMotif.Properties.name.name(), "()");
+            return getString(node, AppMotif.Properties.name.name(), "()") + " " + node.getId();
          case showLabels:
-            return labelsFor(node);
+            return labelsFor(node) + " " + node.getId();
          case showProperties:
             final StringBuilder out = new StringBuilder();
             boolean first = true;
@@ -854,5 +863,263 @@ public class NeoNode extends PNode {
       }
 
       return "?";
+   }
+
+   private static final class PathBuilder {
+
+      private Node startNode;
+      private Node endNode;
+      private Relationship lastRelationship;
+      private List<Relationship> relationships = new LinkedList<>();
+      private List<Relationship> reverseRelationships = new LinkedList<>();
+      private List<Node> nodes = new LinkedList<>();
+      private List<Node> reverseNodes = new LinkedList<>();
+      private int length = 0;
+      private List<PropertyContainer> propertyContainers = new LinkedList<>();
+
+      private final Set<Node> visitedNodes = new LinkedHashSet<>();
+      private final Stack<PathElement> pathElements = new Stack<>();
+      private final Set<String> distinctPaths = new LinkedHashSet<>();
+
+      PathBuilder(Node node) {
+         visit(node);
+
+         final int relationshipsSize = relationships.size();
+         for (int i = 0; i < relationshipsSize; i++)
+            reverseRelationships.add(relationships.get(relationshipsSize - i - 1));
+
+         final int nodesSize = nodes.size();
+         for (int i = 0; i < nodesSize; i++)
+            reverseNodes.add(nodes.get(nodesSize - i - 1));
+
+         pathElements.peek().createPaths("", distinctPaths);
+      }
+
+      public Set<String> getDistinctPaths() {
+         return distinctPaths;
+      }
+
+      public void visit(Node node) {
+
+         if (visitedNodes.contains(node)) return;
+         visitedNodes.add(node);
+
+         if (startNode == null) startNode = node;
+         endNode = node;
+
+         propertyContainers.add(node);
+         nodes.add(node);
+
+         final PathElement pathElement = new PathElement(node);
+         if (!pathElements.isEmpty())
+            pathElements.peek().outgoing.put(node, pathElement);
+         pathElements.push(pathElement);
+
+         NeoUtil.outgoing(node).forEach(relationship -> {
+            propertyContainers.add(relationship);
+            relationships.add(relationship);
+
+            lastRelationship = relationship;
+
+            visit(other(node, relationship));
+         });
+
+         if (pathElements.size() > 1) pathElements.pop();
+      }
+
+      public Path getPath() {
+         return new Path() {
+            @Override
+            public Node startNode() {
+               return startNode;
+            }
+
+            @Override
+            public Node endNode() {
+               return endNode;
+            }
+
+            @Override
+            public Relationship lastRelationship() {
+               return lastRelationship;
+            }
+
+            @Override
+            public Iterable<Relationship> relationships() {
+               return relationships;
+            }
+
+            @Override
+            public Iterable<Relationship> reverseRelationships() {
+               return reverseRelationships;
+            }
+
+            @Override
+            public Iterable<Node> nodes() {
+               return nodes;
+            }
+
+            @Override
+            public Iterable<Node> reverseNodes() {
+               return reverseNodes;
+            }
+
+            @Override
+            public int length() {
+               return length;
+            }
+
+            @Override
+            public Iterator<PropertyContainer> iterator() {
+               return propertyContainers.iterator();
+            }
+         };
+      }
+
+      private final class PathElement {
+
+         final Node node;
+         final Map<Node, PathElement> outgoing = new LinkedHashMap<>();
+
+         PathElement(Node node) {
+            this.node = node;
+         }
+
+         void createPaths(String currentPath, Set<String> distinctPaths) {
+            for (Label label : node.getLabels()) {
+               final String newPath = currentPath.length() == 0 ? label.name() : (currentPath + "_" + label);
+               distinctPaths.add(newPath);
+               for (PathElement pathElement : outgoing.values())
+                  pathElement.createPaths(newPath, distinctPaths);
+            }
+         }
+
+         @Override
+         public String toString() {
+            final StringBuilder out = new StringBuilder("(" + NeoUtil.labelsFor(node) + ")");
+            for (PathElement pathElement : outgoing.values())
+               out.append("\n\t").append(pathElement);
+            return out.toString();
+         }
+      }
+   }
+
+   public static void layoutTree(Configuration<NeoNode> configuration, boolean outgoing, NeoNode root, App app) {
+
+      final Map<Long, NeoNode> nodesAndIds = new LinkedHashMap<>();
+      for (NeoNode visibleNode : app.workspace.nodeCanvas.getAllNodes())
+         nodesAndIds.put(visibleNode.id(), visibleNode);
+
+      final Map<Long, NeoNode> parentsMap = new LinkedHashMap<>();
+      final Map<Long, java.util.List<NeoNode>> childrensMap = new LinkedHashMap<>();
+
+      app.model.graph().doInTransaction(new NeoModel.Committer() {
+         @Override
+         public void doAction(Transaction tx) throws Throwable {
+
+            // recursively traverse from root, finding all visible-children and populate parentsMap and childrensMap:
+            visit(new LinkedHashSet<>(), root, outgoing);
+
+            final TreeForTreeLayout<NeoNode> tree = new AbstractTreeForTreeLayout<NeoNode>(root) {
+               @Override
+               public NeoNode getParent(NeoNode neoNode) {
+                  final NeoNode parent = parentsMap.get(neoNode.id());
+                  if (parent == null)
+                     log.info("no parent for " + getNameAndLabelsFrom(neoNode.getNode()));
+                  return parent;
+               }
+
+               @Override
+               public java.util.List<NeoNode> getChildrenList(NeoNode neoNode) {
+                  if (neoNode == null) return Collections.emptyList();
+                  final List<NeoNode> children = childrensMap.get(neoNode.id());
+                  if (children == null)
+                     log.info("no children for " + getNameAndLabelsFrom(neoNode.getNode()));
+                  return children == null ? Collections.emptyList() : children;
+               }
+            };
+
+            final NodeExtentProvider<NeoNode> nodeExtendProvider = new NodeExtentProvider<NeoNode>() {
+               @Override
+               public double getWidth(NeoNode neoNode) {
+                  return neoNode.getFullBounds().getWidth();
+               }
+
+               @Override
+               public double getHeight(NeoNode neoNode) {
+                  return neoNode.getFullBounds().getHeight();
+               }
+            };
+
+
+            final TreeLayout<NeoNode> layout = new TreeLayout<>(tree, nodeExtendProvider, configuration);
+
+            // apply coordination-translation
+            final Point2D rootLocation = root.getOffset();
+            final Map<NeoNode, Rectangle2D.Double> nodeBounds = layout.getNodeBounds();
+            final Rectangle2D.Double rootBounds = nodeBounds.get(root);
+            final double dX = rootLocation.getX() - rootBounds.getCenterX();
+            final double dY = rootLocation.getY() - rootBounds.getCenterY();
+            for (Map.Entry<NeoNode, Rectangle2D.Double> nodeBound : nodeBounds.entrySet()) {
+               final double centerX = nodeBound.getValue().getCenterX() + dX;
+               final double centerY = nodeBound.getValue().getCenterY() + dY;
+               nodeBound.getKey().setOffset(centerX, centerY);
+            }
+         }
+
+         private void visit(Set<NeoNode> visitedNodes, NeoNode root, boolean outgoing) {
+
+            visitedNodes.add(root);
+            childrensMap.put(root.id(), new ArrayList<>());
+
+            final Set<Long> childrenToVisit = new LinkedHashSet<>();
+            if (outgoing) {
+               outgoing(root.getNode()).forEach(relationship -> {
+                  final Node childNode = other(root.getNode(), relationship);
+                  final long childId = childNode.getId();
+                  // if child is visible, and not already visited, add to root
+                  if (nodesAndIds.containsKey(childId) && !visitedNodes.contains(nodesAndIds.get(childId))) {
+                     parentsMap.put(childId, root);
+                     childrensMap.get(root.id()).add(nodesAndIds.get(childId));
+                     childrenToVisit.add(childId);
+                  }
+               });
+            } else {
+               incoming(root.getNode()).forEach(relationship -> {
+                  final Node childNode = other(root.getNode(), relationship);
+                  final long childId = childNode.getId();
+                  // if child is visible, and not already visited, add to root
+                  if (nodesAndIds.containsKey(childId) && !visitedNodes.contains(nodesAndIds.get(childId))) {
+                     parentsMap.put(childId, root);
+                     childrensMap.get(root.id()).add(nodesAndIds.get(childId));
+                     childrenToVisit.add(childId);
+                  }
+               });
+            }
+
+            // recursively visit added children:
+            for (Long childNode : childrenToVisit)
+               visit(visitedNodes, nodesAndIds.get(childNode), outgoing);
+         }
+
+         @Override
+         public void exception(Throwable throwable) {
+            SwingUtil.showException(app, throwable);
+         }
+      });
+   }
+
+   private void fireNodesLoaded(Node... nodes) {
+      final Set<AppEvents.NodeLoadEvent> nodeEvents = new LinkedHashSet<>();
+      for (Node node : nodes)
+         nodeEvents.add(new AppEvents.NodeLoadEvent(node, false));
+      workspace.app.events.firePropertyChange(NODE_LOAD, nodeEvents);
+   }
+
+   private void fireNodesLoaded(Set<Node> nodes) {
+      final Set<AppEvents.NodeLoadEvent> nodeEvents = new LinkedHashSet<>();
+      for (Node node : nodes)
+         nodeEvents.add(new AppEvents.NodeLoadEvent(node, false));
+      workspace.app.events.firePropertyChange(NODE_LOAD, nodeEvents);
    }
 }

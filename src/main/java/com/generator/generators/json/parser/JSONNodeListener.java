@@ -2,6 +2,8 @@ package com.generator.generators.json.parser;
 
 public class JSONNodeListener extends JSONBaseListener {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(JSONNodeListener.class);
+
    public static class Node {
 
       public final String name;
@@ -33,7 +35,7 @@ public class JSONNodeListener extends JSONBaseListener {
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
+		if (debug) log.debug(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -63,6 +65,23 @@ public class JSONNodeListener extends JSONBaseListener {
 
 	public boolean inValue() {
       return !inValue.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inArray = new java.util.Stack<>();
+
+	@Override
+	public void enterArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
+		onEnter(new Node("Array", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inArray.push(true);
+	}
+
+	public void exitArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
+		onExit();
+		this.inArray.pop();
+	}
+
+	public boolean inArray() {
+      return !inArray.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inJson = new java.util.Stack<>();
@@ -114,23 +133,6 @@ public class JSONNodeListener extends JSONBaseListener {
 
 	public boolean inPair() {
       return !inPair.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inArray = new java.util.Stack<>();
-
-	@Override
-	public void enterArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
-		onEnter(new Node("Array", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inArray.push(true);
-	}
-
-	public void exitArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
-		onExit();
-		this.inArray.pop();
-	}
-
-	public boolean inArray() {
-      return !inArray.isEmpty(); 
    }
 
 }

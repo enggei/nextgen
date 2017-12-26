@@ -36,7 +36,7 @@ import static org.junit.Assert.assertTrue;
  * Created by Ernst Sognnes on 08.07.17.
  */
 public class Tests {
-
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
 	/*
 
 	CALL db.constraints();
@@ -64,10 +64,10 @@ public class Tests {
       NEO4J_URI = "bolt://localhost:7687";
    }
 
-   @Test
+   //@Test
    public void basicFunctionality() {
       RemoteNeoModel remote = new RemoteNeoModel(NEO4J_URI, USERNAME, PASSWORD,
-         model -> System.out.println("closed"));
+         model -> log.info("closed"));
 
       UUID uuid = TEST_NODE_UUID[0];
 
@@ -138,37 +138,37 @@ public class Tests {
 
       assertTrue("node4 does not contain property \"int\"", node4.hasProperty("int"));
 
-      System.out.println(node4);
+      log.info(node4);
 
       node4 = remote.findOrCreate(Label.label("Blah"), "nisse", "fant",
          "dings", "boms");
 
       assertTrue("node4 does not contain property \"dings\"", node4.hasProperty("dings"));
 
-      System.out.println(node4);
+      log.info(node4);
    }
 
-   @Test
+   //@Test
    public void iterators() {
       RemoteNeoModel remote = new RemoteNeoModel(NEO4J_URI, USERNAME, PASSWORD,
-         model -> System.out.println("closed"));
+         model -> log.info("closed"));
 
       ResourceIterable<org.neo4j.graphdb.Relationship> allRelationships = remote.getAllRelationships();
 
-      System.out.println("Iterator:");
+      log.info("Iterator:");
       ResourceIterator<org.neo4j.graphdb.Relationship> iterator = allRelationships.iterator();
       while (iterator.hasNext()) {
-         System.out.println(iterator.next());
+         log.info(iterator.next());
       }
 
-      System.out.println("Stream:");
+      log.info("Stream:");
       allRelationships.stream().forEach(System.out::println);
    }
 
-   @Test
+   //@Test
    public void modelInterface() {
       NeoModel neoModel = new RemoteNeoModel(NEO4J_URI, USERNAME, PASSWORD,
-            model -> System.out.println("closed"));
+            model -> log.info("closed"));
 
       // todo perhaps use a cypher-query for this
 //      neoModel.dropAll();
@@ -177,7 +177,7 @@ public class Tests {
 
       final org.neo4j.graphdb.Node node1 = neoModel.newNode(uuid1, "key", "value", "number", 83);
 
-      System.out.println(node1);
+      log.info(node1);
 
       Label kookoo = newLabel("Gjøkur");
 
@@ -185,13 +185,13 @@ public class Tests {
 
       assertTrue(node1.hasLabel(kookoo));
 
-      System.out.println(node1);
+      log.info(node1);
 
       final org.neo4j.graphdb.Node node2 = neoModel.createNode(kookoo);
 
       assertTrue(node2.hasLabel(kookoo));
 
-      System.out.println(node2);
+      log.info(node2);
 
       RelationshipType bird = newRelationshipType("Undulat");
 
@@ -205,12 +205,12 @@ public class Tests {
       assertTrue(node1.hasRelationship(bird));
       assertTrue(node2.hasRelationship(bird));
 
-      System.out.println(relationship);
+      log.info(relationship);
 
 
    }
 
-   @Test
+   //@Test
    public void cache() {
       NeoDriver neoDriver = new NeoDriver(NEO4J_URI, USERNAME, PASSWORD);
 
@@ -239,7 +239,7 @@ public class Tests {
       assertTrue(node1cached.hasProperty("jalla"));
 //		assertEquals(node1, updated1);
 
-      System.out.println(node1);
+      log.info(node1);
 
       RemoteRelationship rel1 = (RemoteRelationship)node2.createRelationshipTo(node1cached, newRelationshipType("TJA"));
       RemoteRelationship rel1cached = getCachedRelationship(rel1.getUUID());
@@ -248,12 +248,12 @@ public class Tests {
 
       rel1cached.setProperty("something", true);
 
-      System.out.println(rel1);
+      log.info(rel1);
 
       assertTrue(rel1.hasProperty("something"));
    }
 
-   @Test
+   //@Test
    public void transactions() {
       NeoModel neoModel = new RemoteNeoModel(NEO4J_URI, USERNAME, PASSWORD);
 
@@ -267,7 +267,7 @@ public class Tests {
 
          @Override
          public Object beforeCommit(TransactionData transactionData) throws Exception {
-            System.out.println("before commit");
+            log.info("before commit");
             transactionData.deletedNodes().forEach(node -> deletedNodes.add(node.getId()));
             transactionData.deletedRelationships().forEach(relationship -> deletedRelations.add(relationship.getId()));
             transactionData.createdNodes().forEach(addedNodes::add);
@@ -278,36 +278,36 @@ public class Tests {
 
          @Override
          public void afterCommit(TransactionData data, Object state) {
-            System.out.println("after commit");
+            log.info("after commit");
             if (!deletedNodes.isEmpty()) {
-               System.out.println("deletedNodes: " + deletedNodes.size());
+               log.info("deletedNodes: " + deletedNodes.size());
                deletedNodes.clear();
             }
 
             if (!deletedRelations.isEmpty()) {
-               System.out.println("deletedRelations: " + deletedRelations.size());
+               log.info("deletedRelations: " + deletedRelations.size());
                deletedRelations.clear();
             }
 
             if (!addedNodes.isEmpty()) {
-               System.out.println("addedNodes: " + addedNodes.size());
+               log.info("addedNodes: " + addedNodes.size());
                addedNodes.clear();
             }
 
             if (!addedRelations.isEmpty()) {
-               System.out.println("addedRelations: " + addedRelations.size());
+               log.info("addedRelations: " + addedRelations.size());
                addedRelations.clear();
             }
 
             if (!assignedLabels.isEmpty()) {
-               System.out.println("assignedLabels: " + assignedLabels.size());
+               log.info("assignedLabels: " + assignedLabels.size());
                assignedLabels.clear();
             }
          }
 
          @Override
          public void afterRollback(TransactionData data, Object state) {
-            System.out.println("rollback");
+            log.info("rollback");
          }
       });
 
@@ -316,20 +316,20 @@ public class Tests {
 
          @Override
          public Object beforeCommit(TransactionData data) throws Exception {
-            System.out.println("before commit");
+            log.info("before commit");
             return "Supperådet";
          }
 
          @Override
          public void afterCommit(TransactionData data, Object state) {
             assertEquals("State object does not match!", "Supperådet", state);
-            System.out.println("after commit: " + state);
+            log.info("after commit: " + state);
          }
 
          @Override
          public void afterRollback(TransactionData data, Object state) {
             assertEquals("State object does not match!", "Supperådet", state);
-            System.out.println("after rollback: " + state);
+            log.info("after rollback: " + state);
          }
       });
 
@@ -358,7 +358,7 @@ public class Tests {
 
          throw new Exception("TEST EXCEPTION DURING TRANSACTION");
 
-      }, throwable -> System.out.println(throwable.getMessage()));
+      }, throwable -> log.info(throwable.getMessage()));
 
       // Terminate
       neoModel.doInTransaction(tx -> {

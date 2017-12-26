@@ -2,6 +2,8 @@ package com.generator.generators.stringtemplate.parserg4;
 
 public class STParserNodeVisitor extends STParserBaseVisitor<STParserNodeVisitor.Node> {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(STParserNodeVisitor.class);
+
    public static class Node {
 
       public final String name;
@@ -33,7 +35,7 @@ public class STParserNodeVisitor extends STParserBaseVisitor<STParserNodeVisitor
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-				if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
+				if (debug) log.debug(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -47,6 +49,15 @@ public class STParserNodeVisitor extends STParserBaseVisitor<STParserNodeVisitor
    public Node getRoot() {
       return nodeStack.peek();
    }
+
+	@Override
+	public Node visitArgs(com.generator.generators.stringtemplate.parserg4.STParser.ArgsContext arg) {
+		final Node node = new Node("Args", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
 
 	@Override
 	public Node visitOption(com.generator.generators.stringtemplate.parserg4.STParser.OptionContext arg) {
@@ -87,15 +98,6 @@ public class STParserNodeVisitor extends STParserBaseVisitor<STParserNodeVisitor
 	@Override
 	public Node visitPrimary(com.generator.generators.stringtemplate.parserg4.STParser.PrimaryContext arg) {
 		final Node node = new Node("Primary", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitArgs(com.generator.generators.stringtemplate.parserg4.STParser.ArgsContext arg) {
-		final Node node = new Node("Args", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

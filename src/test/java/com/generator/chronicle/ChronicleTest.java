@@ -4,12 +4,12 @@ import io.vertx.ext.unit.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//@RunWith(VertxUnitRunner.class)
+////@RunWith(VertxUnitRunner.class)
 public class ChronicleTest extends ChronicleTestSession {
 
 	private static final Logger log = LoggerFactory.getLogger(ChronicleTest.class);
 
-//	@Test
+//	//@Test
 	public void testWire(TestContext context) {
 
 		final TestSession session = new TestSession(context);
@@ -20,7 +20,7 @@ public class ChronicleTest extends ChronicleTestSession {
 		});
 	}
 
-//	@Test
+//	//@Test
 	public void testSequentialSearch(TestContext context) {
 
 		final TestSession session = new TestSession(context);
@@ -31,7 +31,7 @@ public class ChronicleTest extends ChronicleTestSession {
 		});
 	}
 
-//	@Test
+//	//@Test
 	public void testBinarySearch(TestContext context) {
 
 		final TestSession session = new TestSession(context);
@@ -42,7 +42,7 @@ public class ChronicleTest extends ChronicleTestSession {
 		});
 	}
 
-//	@Test
+//	//@Test
 	public void testBinarySearchForTimestamp(TestContext context) {
 
 		final TestSession session = new TestSession(context);

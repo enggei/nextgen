@@ -10,7 +10,7 @@ import java.util.List;
  * Created 18.09.17.
  */
 public class ColorBrewerSelector extends JPanel {
-
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ColorBrewerSelector.class);
    private final JTextField txtColor = new JTextField(30);
    private Color selectedColor;
 
@@ -93,7 +93,7 @@ public class ColorBrewerSelector extends JPanel {
          @Override
          public void verifyAndCommit() throws Exception {
             final Color color = editor.getSelectedColor();
-            System.out.println("color " + color);
+            log.info("color " + color);
          }
       });
    }
@@ -602,7 +602,7 @@ public class ColorBrewerSelector extends JPanel {
          Color[] colors = new Color[colorCount];
          int maxIndex = getMaximumColorCount() - 1;
          float scale = maxIndex / (float) (colorCount - 1);
-         //	 System.out.println("scale: " + scale);
+         //	 log.info("scale: " + scale);
 
          for (int i = 0; i < colorCount; i++) {
             float value = scale * i;
@@ -617,7 +617,7 @@ public class ColorBrewerSelector extends JPanel {
             } else {
                c2 = new Color(hexColors[maxIndex][index]);
             }
-            //		 System.out.println("value: " + value + " index: " + index + " remainder: " + remainder);
+            //		 log.info("value: " + value + " index: " + index + " remainder: " + remainder);
             int red = Math.round((1 - remainder) * c1.getRed() + (remainder) * c2.getRed());
             int green = Math.round((1 - remainder) * c1.getGreen() + (remainder) * c2.getGreen());
             int blue = Math.round((1 - remainder) * c1.getBlue() + (remainder) * c2.getBlue());

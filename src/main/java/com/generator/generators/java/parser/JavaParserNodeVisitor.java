@@ -2,6 +2,8 @@ package com.generator.generators.java.parser;
 
 public class JavaParserNodeVisitor extends JavaParserBaseVisitor<JavaParserNodeVisitor.Node> {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(JavaParserNodeVisitor.class);
+
    public static class Node {
 
       public final String name;
@@ -33,7 +35,7 @@ public class JavaParserNodeVisitor extends JavaParserBaseVisitor<JavaParserNodeV
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-				if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
+				if (debug) log.debug(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -67,8 +69,8 @@ public class JavaParserNodeVisitor extends JavaParserBaseVisitor<JavaParserNodeV
 	}
 
 	@Override
-	public Node visitStatement(com.generator.generators.java.parser.JavaParser.StatementContext arg) {
-		final Node node = new Node("Statement", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitExpression(com.generator.generators.java.parser.JavaParser.ExpressionContext arg) {
+		final Node node = new Node("Expression", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -76,8 +78,8 @@ public class JavaParserNodeVisitor extends JavaParserBaseVisitor<JavaParserNodeV
 	}
 
 	@Override
-	public Node visitExpression(com.generator.generators.java.parser.JavaParser.ExpressionContext arg) {
-		final Node node = new Node("Expression", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitStatement(com.generator.generators.java.parser.JavaParser.StatementContext arg) {
+		final Node node = new Node("Statement", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -130,8 +132,8 @@ public class JavaParserNodeVisitor extends JavaParserBaseVisitor<JavaParserNodeV
 	}
 
 	@Override
-	public Node visitModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
-		final Node node = new Node("Modifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitDefaultValue(com.generator.generators.java.parser.JavaParser.DefaultValueContext arg) {
+		final Node node = new Node("DefaultValue", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -139,26 +141,8 @@ public class JavaParserNodeVisitor extends JavaParserBaseVisitor<JavaParserNodeV
 	}
 
 	@Override
-	public Node visitCompilationUnit(com.generator.generators.java.parser.JavaParser.CompilationUnitContext arg) {
-		final Node node = new Node("CompilationUnit", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPackageDeclaration(com.generator.generators.java.parser.JavaParser.PackageDeclarationContext arg) {
-		final Node node = new Node("PackageDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitImportDeclaration(com.generator.generators.java.parser.JavaParser.ImportDeclarationContext arg) {
-		final Node node = new Node("ImportDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitConstructorDeclaration(com.generator.generators.java.parser.JavaParser.ConstructorDeclarationContext arg) {
+		final Node node = new Node("ConstructorDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -346,6 +330,15 @@ public class JavaParserNodeVisitor extends JavaParserBaseVisitor<JavaParserNodeV
 	}
 
 	@Override
+	public Node visitAnnotation(com.generator.generators.java.parser.JavaParser.AnnotationContext arg) {
+		final Node node = new Node("Annotation", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitElementValuePairs(com.generator.generators.java.parser.JavaParser.ElementValuePairsContext arg) {
 		final Node node = new Node("ElementValuePairs", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
@@ -445,15 +438,6 @@ public class JavaParserNodeVisitor extends JavaParserBaseVisitor<JavaParserNodeV
 	}
 
 	@Override
-	public Node visitDefaultValue(com.generator.generators.java.parser.JavaParser.DefaultValueContext arg) {
-		final Node node = new Node("DefaultValue", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitBlockStatement(com.generator.generators.java.parser.JavaParser.BlockStatementContext arg) {
 		final Node node = new Node("BlockStatement", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
@@ -490,8 +474,53 @@ public class JavaParserNodeVisitor extends JavaParserBaseVisitor<JavaParserNodeV
 	}
 
 	@Override
+	public Node visitResources(com.generator.generators.java.parser.JavaParser.ResourcesContext arg) {
+		final Node node = new Node("Resources", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCompilationUnit(com.generator.generators.java.parser.JavaParser.CompilationUnitContext arg) {
+		final Node node = new Node("CompilationUnit", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPackageDeclaration(com.generator.generators.java.parser.JavaParser.PackageDeclarationContext arg) {
+		final Node node = new Node("PackageDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitImportDeclaration(com.generator.generators.java.parser.JavaParser.ImportDeclarationContext arg) {
+		final Node node = new Node("ImportDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitTypeDeclaration(com.generator.generators.java.parser.JavaParser.TypeDeclarationContext arg) {
 		final Node node = new Node("TypeDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
+		final Node node = new Node("Modifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -679,24 +708,6 @@ public class JavaParserNodeVisitor extends JavaParserBaseVisitor<JavaParserNodeV
 	}
 
 	@Override
-	public Node visitConstructorDeclaration(com.generator.generators.java.parser.JavaParser.ConstructorDeclarationContext arg) {
-		final Node node = new Node("ConstructorDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitAnnotation(com.generator.generators.java.parser.JavaParser.AnnotationContext arg) {
-		final Node node = new Node("Annotation", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitFinallyBlock(com.generator.generators.java.parser.JavaParser.FinallyBlockContext arg) {
 		final Node node = new Node("FinallyBlock", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
@@ -708,15 +719,6 @@ public class JavaParserNodeVisitor extends JavaParserBaseVisitor<JavaParserNodeV
 	@Override
 	public Node visitResourceSpecification(com.generator.generators.java.parser.JavaParser.ResourceSpecificationContext arg) {
 		final Node node = new Node("ResourceSpecification", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitResources(com.generator.generators.java.parser.JavaParser.ResourcesContext arg) {
-		final Node node = new Node("Resources", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

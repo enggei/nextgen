@@ -22,10 +22,13 @@ import static com.generator.util.NeoUtil.getNameAndLabelsFrom;
  */
 public abstract class Plugin {
 
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Plugin.class);
+
    protected final App app;
    protected final String name;
 
    public Plugin(App app, String name) {
+      log.info("Plugin " + name);
       this.app = app;
       this.name = name;
    }
@@ -86,7 +89,7 @@ public abstract class Plugin {
    }
 
    protected void addNodeChangedListener(NeoNode neoNode, AppEvents.TransactionalPropertyChangeListener transactionHandler) {
-      System.out.println("added nodeChange listener " + transactionHandler.parent.getClass());
+      log.info("added nodeChange listener " + transactionHandler.parent.getClass());
       app.events.addPropertyChangeListener(NODE_CHANGED + neoNode.id(), transactionHandler);
    }
 }

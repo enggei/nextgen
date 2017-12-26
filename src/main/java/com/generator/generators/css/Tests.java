@@ -16,7 +16,7 @@ import java.io.IOException;
  */
 public class Tests {
 
-   @Test
+   //@Test
    public void testCss() throws IOException {
       final css3NodeListener listener = new css3NodeListener(true);
       new ParseTreeWalker().walk(listener, new css3Parser(new CommonTokenStream(new css3Lexer(CharStreams.fromFileName(ProjectConstants.MAIN_ROOT + "/com/generator/generators/css/test.css")))).stylesheet());

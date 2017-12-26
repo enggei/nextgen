@@ -6,6 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class GolangNeoListener extends GolangBaseListener {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(GolangNeoListener.class);
+
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
@@ -24,7 +26,7 @@ public class GolangNeoListener extends GolangBaseListener {
 		if (!nodeStack.isEmpty())
       	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.getProperty("text"));
+		if (debug) log.debug(delim.toString() + node.getProperty("text"));
 		delim.append("\t");
    }
 
@@ -43,7 +45,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterElement(com.generator.generators.go.parser.GolangParser.ElementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Element"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Element"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inElement.push(true);
 	}
@@ -61,7 +63,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterBlock(com.generator.generators.go.parser.GolangParser.BlockContext arg) {
-		final Node node = model.findOrCreate(Label.label("Block"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Block"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBlock.push(true);
 	}
@@ -79,7 +81,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterExpression(com.generator.generators.go.parser.GolangParser.ExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Expression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExpression.push(true);
 	}
@@ -97,7 +99,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterStatement(com.generator.generators.go.parser.GolangParser.StatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inStatement.push(true);
 	}
@@ -115,7 +117,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterDeclaration(com.generator.generators.go.parser.GolangParser.DeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Declaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Declaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDeclaration.push(true);
 	}
@@ -133,7 +135,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterLiteral(com.generator.generators.go.parser.GolangParser.LiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLiteral.push(true);
 	}
@@ -151,7 +153,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterSelector(com.generator.generators.go.parser.GolangParser.SelectorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Selector"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Selector"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSelector.push(true);
 	}
@@ -169,7 +171,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterFunction(com.generator.generators.go.parser.GolangParser.FunctionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Function"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Function"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFunction.push(true);
 	}
@@ -183,11 +185,29 @@ public class GolangNeoListener extends GolangBaseListener {
       return !inFunction.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inStatementList = new java.util.Stack<>();
+
+	@Override
+	public void enterStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
+		final Node node = model.newNode(Label.label("StatementList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inStatementList.push(true);
+	}
+
+	public void exitStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
+		onExit();
+		this.inStatementList.pop();
+	}
+
+	public boolean inStatementList() {
+      return !inStatementList.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inElementList = new java.util.Stack<>();
 
 	@Override
 	public void enterElementList(com.generator.generators.go.parser.GolangParser.ElementListContext arg) {
-		final Node node = model.findOrCreate(Label.label("ElementList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ElementList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inElementList.push(true);
 	}
@@ -205,7 +225,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterArguments(com.generator.generators.go.parser.GolangParser.ArgumentsContext arg) {
-		final Node node = model.findOrCreate(Label.label("Arguments"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Arguments"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inArguments.push(true);
 	}
@@ -223,7 +243,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterEos(com.generator.generators.go.parser.GolangParser.EosContext arg) {
-		final Node node = model.findOrCreate(Label.label("Eos"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Eos"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inEos.push(true);
 	}
@@ -237,29 +257,11 @@ public class GolangNeoListener extends GolangBaseListener {
       return !inEos.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inStatementList = new java.util.Stack<>();
-
-	@Override
-	public void enterStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
-		final Node node = model.findOrCreate(Label.label("StatementList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inStatementList.push(true);
-	}
-
-	public void exitStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
-		onExit();
-		this.inStatementList.pop();
-	}
-
-	public boolean inStatementList() {
-      return !inStatementList.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inSourceFile = new java.util.Stack<>();
 
 	@Override
 	public void enterSourceFile(com.generator.generators.go.parser.GolangParser.SourceFileContext arg) {
-		final Node node = model.findOrCreate(Label.label("SourceFile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("SourceFile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSourceFile.push(true);
 	}
@@ -277,7 +279,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterPackageClause(com.generator.generators.go.parser.GolangParser.PackageClauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("PackageClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("PackageClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPackageClause.push(true);
 	}
@@ -295,7 +297,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterImportDecl(com.generator.generators.go.parser.GolangParser.ImportDeclContext arg) {
-		final Node node = model.findOrCreate(Label.label("ImportDecl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ImportDecl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inImportDecl.push(true);
 	}
@@ -313,7 +315,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterImportSpec(com.generator.generators.go.parser.GolangParser.ImportSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("ImportSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ImportSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inImportSpec.push(true);
 	}
@@ -331,7 +333,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterImportPath(com.generator.generators.go.parser.GolangParser.ImportPathContext arg) {
-		final Node node = model.findOrCreate(Label.label("ImportPath"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ImportPath"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inImportPath.push(true);
 	}
@@ -349,7 +351,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterTopLevelDecl(com.generator.generators.go.parser.GolangParser.TopLevelDeclContext arg) {
-		final Node node = model.findOrCreate(Label.label("TopLevelDecl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("TopLevelDecl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTopLevelDecl.push(true);
 	}
@@ -367,7 +369,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterConstDecl(com.generator.generators.go.parser.GolangParser.ConstDeclContext arg) {
-		final Node node = model.findOrCreate(Label.label("ConstDecl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ConstDecl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inConstDecl.push(true);
 	}
@@ -385,7 +387,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterConstSpec(com.generator.generators.go.parser.GolangParser.ConstSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("ConstSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ConstSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inConstSpec.push(true);
 	}
@@ -403,7 +405,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterIdentifierList(com.generator.generators.go.parser.GolangParser.IdentifierListContext arg) {
-		final Node node = model.findOrCreate(Label.label("IdentifierList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("IdentifierList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIdentifierList.push(true);
 	}
@@ -421,7 +423,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterExpressionList(com.generator.generators.go.parser.GolangParser.ExpressionListContext arg) {
-		final Node node = model.findOrCreate(Label.label("ExpressionList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ExpressionList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExpressionList.push(true);
 	}
@@ -439,7 +441,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterTypeDecl(com.generator.generators.go.parser.GolangParser.TypeDeclContext arg) {
-		final Node node = model.findOrCreate(Label.label("TypeDecl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("TypeDecl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypeDecl.push(true);
 	}
@@ -457,7 +459,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterTypeSpec(com.generator.generators.go.parser.GolangParser.TypeSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("TypeSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("TypeSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypeSpec.push(true);
 	}
@@ -475,7 +477,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterFunctionDecl(com.generator.generators.go.parser.GolangParser.FunctionDeclContext arg) {
-		final Node node = model.findOrCreate(Label.label("FunctionDecl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("FunctionDecl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFunctionDecl.push(true);
 	}
@@ -493,7 +495,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterMethodDecl(com.generator.generators.go.parser.GolangParser.MethodDeclContext arg) {
-		final Node node = model.findOrCreate(Label.label("MethodDecl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("MethodDecl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMethodDecl.push(true);
 	}
@@ -511,7 +513,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterReceiver(com.generator.generators.go.parser.GolangParser.ReceiverContext arg) {
-		final Node node = model.findOrCreate(Label.label("Receiver"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Receiver"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inReceiver.push(true);
 	}
@@ -529,7 +531,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterVarDecl(com.generator.generators.go.parser.GolangParser.VarDeclContext arg) {
-		final Node node = model.findOrCreate(Label.label("VarDecl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("VarDecl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inVarDecl.push(true);
 	}
@@ -547,7 +549,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterVarSpec(com.generator.generators.go.parser.GolangParser.VarSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("VarSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("VarSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inVarSpec.push(true);
 	}
@@ -565,7 +567,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterSimpleStmt(com.generator.generators.go.parser.GolangParser.SimpleStmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("SimpleStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("SimpleStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSimpleStmt.push(true);
 	}
@@ -583,7 +585,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterExpressionStmt(com.generator.generators.go.parser.GolangParser.ExpressionStmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("ExpressionStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ExpressionStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExpressionStmt.push(true);
 	}
@@ -601,7 +603,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterSendStmt(com.generator.generators.go.parser.GolangParser.SendStmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("SendStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("SendStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSendStmt.push(true);
 	}
@@ -619,7 +621,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterIncDecStmt(com.generator.generators.go.parser.GolangParser.IncDecStmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("IncDecStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("IncDecStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIncDecStmt.push(true);
 	}
@@ -637,7 +639,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterAssignment(com.generator.generators.go.parser.GolangParser.AssignmentContext arg) {
-		final Node node = model.findOrCreate(Label.label("Assignment"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Assignment"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAssignment.push(true);
 	}
@@ -655,7 +657,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterAssign_op(com.generator.generators.go.parser.GolangParser.Assign_opContext arg) {
-		final Node node = model.findOrCreate(Label.label("Assign_op"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Assign_op"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAssign_op.push(true);
 	}
@@ -673,7 +675,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterShortVarDecl(com.generator.generators.go.parser.GolangParser.ShortVarDeclContext arg) {
-		final Node node = model.findOrCreate(Label.label("ShortVarDecl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ShortVarDecl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inShortVarDecl.push(true);
 	}
@@ -691,7 +693,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterEmptyStmt(com.generator.generators.go.parser.GolangParser.EmptyStmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("EmptyStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("EmptyStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inEmptyStmt.push(true);
 	}
@@ -709,7 +711,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterLabeledStmt(com.generator.generators.go.parser.GolangParser.LabeledStmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("LabeledStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LabeledStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLabeledStmt.push(true);
 	}
@@ -727,7 +729,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterReturnStmt(com.generator.generators.go.parser.GolangParser.ReturnStmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("ReturnStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ReturnStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inReturnStmt.push(true);
 	}
@@ -745,7 +747,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterBreakStmt(com.generator.generators.go.parser.GolangParser.BreakStmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("BreakStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("BreakStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBreakStmt.push(true);
 	}
@@ -763,7 +765,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterContinueStmt(com.generator.generators.go.parser.GolangParser.ContinueStmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("ContinueStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ContinueStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inContinueStmt.push(true);
 	}
@@ -781,7 +783,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterGotoStmt(com.generator.generators.go.parser.GolangParser.GotoStmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("GotoStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("GotoStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inGotoStmt.push(true);
 	}
@@ -799,7 +801,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterFallthroughStmt(com.generator.generators.go.parser.GolangParser.FallthroughStmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("FallthroughStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("FallthroughStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFallthroughStmt.push(true);
 	}
@@ -817,7 +819,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterDeferStmt(com.generator.generators.go.parser.GolangParser.DeferStmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("DeferStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("DeferStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDeferStmt.push(true);
 	}
@@ -835,7 +837,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterIfStmt(com.generator.generators.go.parser.GolangParser.IfStmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("IfStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("IfStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIfStmt.push(true);
 	}
@@ -853,7 +855,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterSwitchStmt(com.generator.generators.go.parser.GolangParser.SwitchStmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("SwitchStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("SwitchStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSwitchStmt.push(true);
 	}
@@ -871,7 +873,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterExprSwitchStmt(com.generator.generators.go.parser.GolangParser.ExprSwitchStmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("ExprSwitchStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ExprSwitchStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExprSwitchStmt.push(true);
 	}
@@ -889,7 +891,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterExprCaseClause(com.generator.generators.go.parser.GolangParser.ExprCaseClauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("ExprCaseClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ExprCaseClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExprCaseClause.push(true);
 	}
@@ -907,7 +909,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterExprSwitchCase(com.generator.generators.go.parser.GolangParser.ExprSwitchCaseContext arg) {
-		final Node node = model.findOrCreate(Label.label("ExprSwitchCase"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ExprSwitchCase"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExprSwitchCase.push(true);
 	}
@@ -925,7 +927,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterTypeSwitchStmt(com.generator.generators.go.parser.GolangParser.TypeSwitchStmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("TypeSwitchStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("TypeSwitchStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypeSwitchStmt.push(true);
 	}
@@ -943,7 +945,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterTypeSwitchGuard(com.generator.generators.go.parser.GolangParser.TypeSwitchGuardContext arg) {
-		final Node node = model.findOrCreate(Label.label("TypeSwitchGuard"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("TypeSwitchGuard"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypeSwitchGuard.push(true);
 	}
@@ -961,7 +963,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterTypeCaseClause(com.generator.generators.go.parser.GolangParser.TypeCaseClauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("TypeCaseClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("TypeCaseClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypeCaseClause.push(true);
 	}
@@ -979,7 +981,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterTypeSwitchCase(com.generator.generators.go.parser.GolangParser.TypeSwitchCaseContext arg) {
-		final Node node = model.findOrCreate(Label.label("TypeSwitchCase"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("TypeSwitchCase"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypeSwitchCase.push(true);
 	}
@@ -997,7 +999,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterTypeList(com.generator.generators.go.parser.GolangParser.TypeListContext arg) {
-		final Node node = model.findOrCreate(Label.label("TypeList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("TypeList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypeList.push(true);
 	}
@@ -1015,7 +1017,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterSelectStmt(com.generator.generators.go.parser.GolangParser.SelectStmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("SelectStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("SelectStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSelectStmt.push(true);
 	}
@@ -1033,7 +1035,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterCommClause(com.generator.generators.go.parser.GolangParser.CommClauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("CommClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("CommClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCommClause.push(true);
 	}
@@ -1051,7 +1053,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterCommCase(com.generator.generators.go.parser.GolangParser.CommCaseContext arg) {
-		final Node node = model.findOrCreate(Label.label("CommCase"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("CommCase"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCommCase.push(true);
 	}
@@ -1069,7 +1071,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterRecvStmt(com.generator.generators.go.parser.GolangParser.RecvStmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("RecvStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("RecvStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRecvStmt.push(true);
 	}
@@ -1087,7 +1089,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterForStmt(com.generator.generators.go.parser.GolangParser.ForStmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("ForStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ForStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inForStmt.push(true);
 	}
@@ -1105,7 +1107,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterForClause(com.generator.generators.go.parser.GolangParser.ForClauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("ForClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ForClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inForClause.push(true);
 	}
@@ -1123,7 +1125,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterRangeClause(com.generator.generators.go.parser.GolangParser.RangeClauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("RangeClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("RangeClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRangeClause.push(true);
 	}
@@ -1141,7 +1143,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterGoStmt(com.generator.generators.go.parser.GolangParser.GoStmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("GoStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("GoStmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inGoStmt.push(true);
 	}
@@ -1159,7 +1161,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterType(com.generator.generators.go.parser.GolangParser.TypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("Type"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Type"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inType.push(true);
 	}
@@ -1177,7 +1179,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterTypeName(com.generator.generators.go.parser.GolangParser.TypeNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("TypeName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("TypeName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypeName.push(true);
 	}
@@ -1195,7 +1197,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterTypeLit(com.generator.generators.go.parser.GolangParser.TypeLitContext arg) {
-		final Node node = model.findOrCreate(Label.label("TypeLit"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("TypeLit"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypeLit.push(true);
 	}
@@ -1213,7 +1215,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterArrayType(com.generator.generators.go.parser.GolangParser.ArrayTypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("ArrayType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ArrayType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inArrayType.push(true);
 	}
@@ -1231,7 +1233,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterArrayLength(com.generator.generators.go.parser.GolangParser.ArrayLengthContext arg) {
-		final Node node = model.findOrCreate(Label.label("ArrayLength"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ArrayLength"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inArrayLength.push(true);
 	}
@@ -1249,7 +1251,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterElementType(com.generator.generators.go.parser.GolangParser.ElementTypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("ElementType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ElementType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inElementType.push(true);
 	}
@@ -1267,7 +1269,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterPointerType(com.generator.generators.go.parser.GolangParser.PointerTypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("PointerType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("PointerType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPointerType.push(true);
 	}
@@ -1285,7 +1287,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterInterfaceType(com.generator.generators.go.parser.GolangParser.InterfaceTypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("InterfaceType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("InterfaceType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInterfaceType.push(true);
 	}
@@ -1303,7 +1305,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterSliceType(com.generator.generators.go.parser.GolangParser.SliceTypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("SliceType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("SliceType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSliceType.push(true);
 	}
@@ -1321,7 +1323,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterMapType(com.generator.generators.go.parser.GolangParser.MapTypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("MapType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("MapType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMapType.push(true);
 	}
@@ -1339,7 +1341,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterChannelType(com.generator.generators.go.parser.GolangParser.ChannelTypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("ChannelType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ChannelType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inChannelType.push(true);
 	}
@@ -1357,7 +1359,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterMethodSpec(com.generator.generators.go.parser.GolangParser.MethodSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("MethodSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("MethodSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMethodSpec.push(true);
 	}
@@ -1375,7 +1377,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterFunctionType(com.generator.generators.go.parser.GolangParser.FunctionTypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("FunctionType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("FunctionType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFunctionType.push(true);
 	}
@@ -1393,7 +1395,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterSignature(com.generator.generators.go.parser.GolangParser.SignatureContext arg) {
-		final Node node = model.findOrCreate(Label.label("Signature"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Signature"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSignature.push(true);
 	}
@@ -1411,7 +1413,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterResult(com.generator.generators.go.parser.GolangParser.ResultContext arg) {
-		final Node node = model.findOrCreate(Label.label("Result"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Result"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inResult.push(true);
 	}
@@ -1429,7 +1431,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterParameters(com.generator.generators.go.parser.GolangParser.ParametersContext arg) {
-		final Node node = model.findOrCreate(Label.label("Parameters"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Parameters"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inParameters.push(true);
 	}
@@ -1447,7 +1449,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterParameterList(com.generator.generators.go.parser.GolangParser.ParameterListContext arg) {
-		final Node node = model.findOrCreate(Label.label("ParameterList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ParameterList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inParameterList.push(true);
 	}
@@ -1465,7 +1467,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterParameterDecl(com.generator.generators.go.parser.GolangParser.ParameterDeclContext arg) {
-		final Node node = model.findOrCreate(Label.label("ParameterDecl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ParameterDecl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inParameterDecl.push(true);
 	}
@@ -1483,7 +1485,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterOperand(com.generator.generators.go.parser.GolangParser.OperandContext arg) {
-		final Node node = model.findOrCreate(Label.label("Operand"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Operand"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOperand.push(true);
 	}
@@ -1501,7 +1503,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterBasicLit(com.generator.generators.go.parser.GolangParser.BasicLitContext arg) {
-		final Node node = model.findOrCreate(Label.label("BasicLit"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("BasicLit"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBasicLit.push(true);
 	}
@@ -1519,7 +1521,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterOperandName(com.generator.generators.go.parser.GolangParser.OperandNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("OperandName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("OperandName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOperandName.push(true);
 	}
@@ -1537,7 +1539,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterQualifiedIdent(com.generator.generators.go.parser.GolangParser.QualifiedIdentContext arg) {
-		final Node node = model.findOrCreate(Label.label("QualifiedIdent"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("QualifiedIdent"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inQualifiedIdent.push(true);
 	}
@@ -1555,7 +1557,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterCompositeLit(com.generator.generators.go.parser.GolangParser.CompositeLitContext arg) {
-		final Node node = model.findOrCreate(Label.label("CompositeLit"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("CompositeLit"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCompositeLit.push(true);
 	}
@@ -1573,7 +1575,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterLiteralType(com.generator.generators.go.parser.GolangParser.LiteralTypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("LiteralType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LiteralType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLiteralType.push(true);
 	}
@@ -1591,7 +1593,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterLiteralValue(com.generator.generators.go.parser.GolangParser.LiteralValueContext arg) {
-		final Node node = model.findOrCreate(Label.label("LiteralValue"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LiteralValue"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLiteralValue.push(true);
 	}
@@ -1609,7 +1611,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterKeyedElement(com.generator.generators.go.parser.GolangParser.KeyedElementContext arg) {
-		final Node node = model.findOrCreate(Label.label("KeyedElement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("KeyedElement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inKeyedElement.push(true);
 	}
@@ -1627,7 +1629,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterKey(com.generator.generators.go.parser.GolangParser.KeyContext arg) {
-		final Node node = model.findOrCreate(Label.label("Key"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Key"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inKey.push(true);
 	}
@@ -1645,7 +1647,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterStructType(com.generator.generators.go.parser.GolangParser.StructTypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("StructType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("StructType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inStructType.push(true);
 	}
@@ -1663,7 +1665,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterFieldDecl(com.generator.generators.go.parser.GolangParser.FieldDeclContext arg) {
-		final Node node = model.findOrCreate(Label.label("FieldDecl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("FieldDecl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFieldDecl.push(true);
 	}
@@ -1681,7 +1683,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterAnonymousField(com.generator.generators.go.parser.GolangParser.AnonymousFieldContext arg) {
-		final Node node = model.findOrCreate(Label.label("AnonymousField"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("AnonymousField"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAnonymousField.push(true);
 	}
@@ -1699,7 +1701,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterFunctionLit(com.generator.generators.go.parser.GolangParser.FunctionLitContext arg) {
-		final Node node = model.findOrCreate(Label.label("FunctionLit"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("FunctionLit"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFunctionLit.push(true);
 	}
@@ -1717,7 +1719,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterPrimaryExpr(com.generator.generators.go.parser.GolangParser.PrimaryExprContext arg) {
-		final Node node = model.findOrCreate(Label.label("PrimaryExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("PrimaryExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPrimaryExpr.push(true);
 	}
@@ -1735,7 +1737,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterIndex(com.generator.generators.go.parser.GolangParser.IndexContext arg) {
-		final Node node = model.findOrCreate(Label.label("Index"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Index"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIndex.push(true);
 	}
@@ -1753,7 +1755,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterSlice(com.generator.generators.go.parser.GolangParser.SliceContext arg) {
-		final Node node = model.findOrCreate(Label.label("Slice"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Slice"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSlice.push(true);
 	}
@@ -1771,7 +1773,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterTypeAssertion(com.generator.generators.go.parser.GolangParser.TypeAssertionContext arg) {
-		final Node node = model.findOrCreate(Label.label("TypeAssertion"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("TypeAssertion"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypeAssertion.push(true);
 	}
@@ -1789,7 +1791,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterMethodExpr(com.generator.generators.go.parser.GolangParser.MethodExprContext arg) {
-		final Node node = model.findOrCreate(Label.label("MethodExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("MethodExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMethodExpr.push(true);
 	}
@@ -1807,7 +1809,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterReceiverType(com.generator.generators.go.parser.GolangParser.ReceiverTypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("ReceiverType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ReceiverType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inReceiverType.push(true);
 	}
@@ -1825,7 +1827,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterUnaryExpr(com.generator.generators.go.parser.GolangParser.UnaryExprContext arg) {
-		final Node node = model.findOrCreate(Label.label("UnaryExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("UnaryExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUnaryExpr.push(true);
 	}
@@ -1843,7 +1845,7 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	@Override
 	public void enterConversion(com.generator.generators.go.parser.GolangParser.ConversionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Conversion"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Conversion"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inConversion.push(true);
 	}

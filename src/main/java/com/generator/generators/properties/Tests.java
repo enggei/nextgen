@@ -18,7 +18,7 @@ import java.io.IOException;
  */
 public class Tests {
 
-   @Test
+   //@Test
    public void testParser() throws IOException {
 
       final File[] properties = FileUtil.list(ProjectConstants.MAIN_ROOT + "/com/generator/generators/properties", "properties");

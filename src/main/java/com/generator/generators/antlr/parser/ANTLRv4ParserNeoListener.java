@@ -6,6 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ANTLRv4ParserNeoListener.class);
+
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
@@ -24,7 +26,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 		if (!nodeStack.isEmpty())
       	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.getProperty("text"));
+		if (debug) log.debug(delim.toString() + node.getProperty("text"));
 		delim.append("\t");
    }
 
@@ -39,47 +41,11 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inOptionsSpec = new java.util.Stack<>();
-
-	@Override
-	public void enterOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("OptionsSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inOptionsSpec.push(true);
-	}
-
-	public void exitOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
-		onExit();
-		this.inOptionsSpec.pop();
-	}
-
-	public boolean inOptionsSpec() {
-      return !inOptionsSpec.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inOption = new java.util.Stack<>();
-
-	@Override
-	public void enterOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inOption.push(true);
-	}
-
-	public void exitOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
-		onExit();
-		this.inOption.pop();
-	}
-
-	public boolean inOption() {
-      return !inOption.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inOptionValue = new java.util.Stack<>();
 
 	@Override
 	public void enterOptionValue(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionValueContext arg) {
-		final Node node = model.findOrCreate(Label.label("OptionValue"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("OptionValue"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOptionValue.push(true);
 	}
@@ -97,7 +63,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterDelegateGrammars(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarsContext arg) {
-		final Node node = model.findOrCreate(Label.label("DelegateGrammars"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("DelegateGrammars"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDelegateGrammars.push(true);
 	}
@@ -115,7 +81,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterDelegateGrammar(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarContext arg) {
-		final Node node = model.findOrCreate(Label.label("DelegateGrammar"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("DelegateGrammar"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDelegateGrammar.push(true);
 	}
@@ -129,11 +95,29 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
       return !inDelegateGrammar.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inTokensSpec = new java.util.Stack<>();
+
+	@Override
+	public void enterTokensSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.TokensSpecContext arg) {
+		final Node node = model.newNode(Label.label("TokensSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inTokensSpec.push(true);
+	}
+
+	public void exitTokensSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.TokensSpecContext arg) {
+		onExit();
+		this.inTokensSpec.pop();
+	}
+
+	public boolean inTokensSpec() {
+      return !inTokensSpec.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inChannelsSpec = new java.util.Stack<>();
 
 	@Override
 	public void enterChannelsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ChannelsSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("ChannelsSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ChannelsSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inChannelsSpec.push(true);
 	}
@@ -151,7 +135,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterIdList(com.generator.generators.antlr.parser.ANTLRv4Parser.IdListContext arg) {
-		final Node node = model.findOrCreate(Label.label("IdList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("IdList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIdList.push(true);
 	}
@@ -169,7 +153,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterAction(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Action"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Action"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAction.push(true);
 	}
@@ -187,7 +171,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterActionScopeName(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionScopeNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("ActionScopeName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ActionScopeName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inActionScopeName.push(true);
 	}
@@ -205,7 +189,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionBlockContext arg) {
-		final Node node = model.findOrCreate(Label.label("ActionBlock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ActionBlock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inActionBlock.push(true);
 	}
@@ -223,7 +207,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterArgActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ArgActionBlockContext arg) {
-		final Node node = model.findOrCreate(Label.label("ArgActionBlock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ArgActionBlock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inArgActionBlock.push(true);
 	}
@@ -241,7 +225,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterModeSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ModeSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("ModeSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ModeSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inModeSpec.push(true);
 	}
@@ -259,7 +243,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterRules(com.generator.generators.antlr.parser.ANTLRv4Parser.RulesContext arg) {
-		final Node node = model.findOrCreate(Label.label("Rules"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Rules"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRules.push(true);
 	}
@@ -277,7 +261,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("RuleSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("RuleSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRuleSpec.push(true);
 	}
@@ -295,7 +279,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterParserRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ParserRuleSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("ParserRuleSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ParserRuleSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inParserRuleSpec.push(true);
 	}
@@ -313,7 +297,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterExceptionGroup(com.generator.generators.antlr.parser.ANTLRv4Parser.ExceptionGroupContext arg) {
-		final Node node = model.findOrCreate(Label.label("ExceptionGroup"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ExceptionGroup"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExceptionGroup.push(true);
 	}
@@ -331,7 +315,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterExceptionHandler(com.generator.generators.antlr.parser.ANTLRv4Parser.ExceptionHandlerContext arg) {
-		final Node node = model.findOrCreate(Label.label("ExceptionHandler"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ExceptionHandler"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExceptionHandler.push(true);
 	}
@@ -349,7 +333,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterFinallyClause(com.generator.generators.antlr.parser.ANTLRv4Parser.FinallyClauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("FinallyClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("FinallyClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFinallyClause.push(true);
 	}
@@ -367,7 +351,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterRulePrequel(com.generator.generators.antlr.parser.ANTLRv4Parser.RulePrequelContext arg) {
-		final Node node = model.findOrCreate(Label.label("RulePrequel"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("RulePrequel"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRulePrequel.push(true);
 	}
@@ -385,7 +369,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterRuleReturns(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleReturnsContext arg) {
-		final Node node = model.findOrCreate(Label.label("RuleReturns"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("RuleReturns"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRuleReturns.push(true);
 	}
@@ -403,7 +387,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterThrowsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ThrowsSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("ThrowsSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ThrowsSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inThrowsSpec.push(true);
 	}
@@ -421,7 +405,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLocalsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.LocalsSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("LocalsSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LocalsSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLocalsSpec.push(true);
 	}
@@ -439,7 +423,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterRuleAction(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleActionContext arg) {
-		final Node node = model.findOrCreate(Label.label("RuleAction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("RuleAction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRuleAction.push(true);
 	}
@@ -457,7 +441,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterRuleModifiers(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleModifiersContext arg) {
-		final Node node = model.findOrCreate(Label.label("RuleModifiers"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("RuleModifiers"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRuleModifiers.push(true);
 	}
@@ -475,7 +459,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterRuleModifier(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleModifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("RuleModifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("RuleModifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRuleModifier.push(true);
 	}
@@ -493,7 +477,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterRuleBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleBlockContext arg) {
-		final Node node = model.findOrCreate(Label.label("RuleBlock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("RuleBlock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRuleBlock.push(true);
 	}
@@ -511,7 +495,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterRuleAltList(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleAltListContext arg) {
-		final Node node = model.findOrCreate(Label.label("RuleAltList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("RuleAltList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRuleAltList.push(true);
 	}
@@ -529,7 +513,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLabeledAlt(com.generator.generators.antlr.parser.ANTLRv4Parser.LabeledAltContext arg) {
-		final Node node = model.findOrCreate(Label.label("LabeledAlt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LabeledAlt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLabeledAlt.push(true);
 	}
@@ -547,7 +531,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLexerRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerRuleSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("LexerRuleSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LexerRuleSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLexerRuleSpec.push(true);
 	}
@@ -561,11 +545,29 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
       return !inLexerRuleSpec.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inLexerRuleBlock = new java.util.Stack<>();
+
+	@Override
+	public void enterLexerRuleBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerRuleBlockContext arg) {
+		final Node node = model.newNode(Label.label("LexerRuleBlock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inLexerRuleBlock.push(true);
+	}
+
+	public void exitLexerRuleBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerRuleBlockContext arg) {
+		onExit();
+		this.inLexerRuleBlock.pop();
+	}
+
+	public boolean inLexerRuleBlock() {
+      return !inLexerRuleBlock.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inGrammarSpec = new java.util.Stack<>();
 
 	@Override
 	public void enterGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("GrammarSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("GrammarSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inGrammarSpec.push(true);
 	}
@@ -583,7 +585,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("GrammarType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("GrammarType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inGrammarType.push(true);
 	}
@@ -601,7 +603,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
-		final Node node = model.findOrCreate(Label.label("PrequelConstruct"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("PrequelConstruct"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPrequelConstruct.push(true);
 	}
@@ -615,47 +617,47 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
       return !inPrequelConstruct.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inTokensSpec = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inOptionsSpec = new java.util.Stack<>();
 
 	@Override
-	public void enterTokensSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.TokensSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("TokensSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+	public void enterOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
+		final Node node = model.newNode(Label.label("OptionsSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
-		this.inTokensSpec.push(true);
+		this.inOptionsSpec.push(true);
 	}
 
-	public void exitTokensSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.TokensSpecContext arg) {
+	public void exitOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
 		onExit();
-		this.inTokensSpec.pop();
+		this.inOptionsSpec.pop();
 	}
 
-	public boolean inTokensSpec() {
-      return !inTokensSpec.isEmpty(); 
+	public boolean inOptionsSpec() {
+      return !inOptionsSpec.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inLexerRuleBlock = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inOption = new java.util.Stack<>();
 
 	@Override
-	public void enterLexerRuleBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerRuleBlockContext arg) {
-		final Node node = model.findOrCreate(Label.label("LexerRuleBlock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+	public void enterOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
+		final Node node = model.newNode(Label.label("Option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
-		this.inLexerRuleBlock.push(true);
+		this.inOption.push(true);
 	}
 
-	public void exitLexerRuleBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerRuleBlockContext arg) {
+	public void exitOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
 		onExit();
-		this.inLexerRuleBlock.pop();
+		this.inOption.pop();
 	}
 
-	public boolean inLexerRuleBlock() {
-      return !inLexerRuleBlock.isEmpty(); 
+	public boolean inOption() {
+      return !inOption.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLexerAltList = new java.util.Stack<>();
 
 	@Override
 	public void enterLexerAltList(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerAltListContext arg) {
-		final Node node = model.findOrCreate(Label.label("LexerAltList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LexerAltList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLexerAltList.push(true);
 	}
@@ -673,7 +675,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLexerAlt(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerAltContext arg) {
-		final Node node = model.findOrCreate(Label.label("LexerAlt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LexerAlt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLexerAlt.push(true);
 	}
@@ -691,7 +693,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLexerElements(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerElementsContext arg) {
-		final Node node = model.findOrCreate(Label.label("LexerElements"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LexerElements"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLexerElements.push(true);
 	}
@@ -709,7 +711,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLexerElement(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerElementContext arg) {
-		final Node node = model.findOrCreate(Label.label("LexerElement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LexerElement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLexerElement.push(true);
 	}
@@ -727,7 +729,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLabeledLexerElement(com.generator.generators.antlr.parser.ANTLRv4Parser.LabeledLexerElementContext arg) {
-		final Node node = model.findOrCreate(Label.label("LabeledLexerElement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LabeledLexerElement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLabeledLexerElement.push(true);
 	}
@@ -745,7 +747,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLexerBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerBlockContext arg) {
-		final Node node = model.findOrCreate(Label.label("LexerBlock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LexerBlock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLexerBlock.push(true);
 	}
@@ -763,7 +765,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLexerCommands(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerCommandsContext arg) {
-		final Node node = model.findOrCreate(Label.label("LexerCommands"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LexerCommands"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLexerCommands.push(true);
 	}
@@ -781,7 +783,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLexerCommand(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerCommandContext arg) {
-		final Node node = model.findOrCreate(Label.label("LexerCommand"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LexerCommand"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLexerCommand.push(true);
 	}
@@ -799,7 +801,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLexerCommandName(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerCommandNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("LexerCommandName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LexerCommandName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLexerCommandName.push(true);
 	}
@@ -817,7 +819,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLexerCommandExpr(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerCommandExprContext arg) {
-		final Node node = model.findOrCreate(Label.label("LexerCommandExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LexerCommandExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLexerCommandExpr.push(true);
 	}
@@ -835,7 +837,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterAltList(com.generator.generators.antlr.parser.ANTLRv4Parser.AltListContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("AltList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltList.push(true);
 	}
@@ -853,7 +855,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterAlternative(com.generator.generators.antlr.parser.ANTLRv4Parser.AlternativeContext arg) {
-		final Node node = model.findOrCreate(Label.label("Alternative"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Alternative"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAlternative.push(true);
 	}
@@ -871,7 +873,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterElement(com.generator.generators.antlr.parser.ANTLRv4Parser.ElementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Element"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Element"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inElement.push(true);
 	}
@@ -889,7 +891,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLabeledElement(com.generator.generators.antlr.parser.ANTLRv4Parser.LabeledElementContext arg) {
-		final Node node = model.findOrCreate(Label.label("LabeledElement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LabeledElement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLabeledElement.push(true);
 	}
@@ -907,7 +909,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterEbnf(com.generator.generators.antlr.parser.ANTLRv4Parser.EbnfContext arg) {
-		final Node node = model.findOrCreate(Label.label("Ebnf"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Ebnf"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inEbnf.push(true);
 	}
@@ -925,7 +927,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterBlockSuffix(com.generator.generators.antlr.parser.ANTLRv4Parser.BlockSuffixContext arg) {
-		final Node node = model.findOrCreate(Label.label("BlockSuffix"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("BlockSuffix"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBlockSuffix.push(true);
 	}
@@ -943,7 +945,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterEbnfSuffix(com.generator.generators.antlr.parser.ANTLRv4Parser.EbnfSuffixContext arg) {
-		final Node node = model.findOrCreate(Label.label("EbnfSuffix"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("EbnfSuffix"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inEbnfSuffix.push(true);
 	}
@@ -961,7 +963,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLexerAtom(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerAtomContext arg) {
-		final Node node = model.findOrCreate(Label.label("LexerAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LexerAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLexerAtom.push(true);
 	}
@@ -979,7 +981,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterAtom(com.generator.generators.antlr.parser.ANTLRv4Parser.AtomContext arg) {
-		final Node node = model.findOrCreate(Label.label("Atom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Atom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAtom.push(true);
 	}
@@ -997,7 +999,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterNotSet(com.generator.generators.antlr.parser.ANTLRv4Parser.NotSetContext arg) {
-		final Node node = model.findOrCreate(Label.label("NotSet"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("NotSet"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNotSet.push(true);
 	}
@@ -1015,7 +1017,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterBlockSet(com.generator.generators.antlr.parser.ANTLRv4Parser.BlockSetContext arg) {
-		final Node node = model.findOrCreate(Label.label("BlockSet"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("BlockSet"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBlockSet.push(true);
 	}
@@ -1033,7 +1035,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterSetElement(com.generator.generators.antlr.parser.ANTLRv4Parser.SetElementContext arg) {
-		final Node node = model.findOrCreate(Label.label("SetElement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("SetElement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSetElement.push(true);
 	}
@@ -1051,7 +1053,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.BlockContext arg) {
-		final Node node = model.findOrCreate(Label.label("Block"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Block"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBlock.push(true);
 	}
@@ -1069,7 +1071,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterRuleref(com.generator.generators.antlr.parser.ANTLRv4Parser.RulerefContext arg) {
-		final Node node = model.findOrCreate(Label.label("Ruleref"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Ruleref"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRuleref.push(true);
 	}
@@ -1087,7 +1089,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterCharacterRange(com.generator.generators.antlr.parser.ANTLRv4Parser.CharacterRangeContext arg) {
-		final Node node = model.findOrCreate(Label.label("CharacterRange"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("CharacterRange"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCharacterRange.push(true);
 	}
@@ -1105,7 +1107,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterTerminal(com.generator.generators.antlr.parser.ANTLRv4Parser.TerminalContext arg) {
-		final Node node = model.findOrCreate(Label.label("Terminal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Terminal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTerminal.push(true);
 	}
@@ -1123,7 +1125,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterElementOptions(com.generator.generators.antlr.parser.ANTLRv4Parser.ElementOptionsContext arg) {
-		final Node node = model.findOrCreate(Label.label("ElementOptions"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ElementOptions"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inElementOptions.push(true);
 	}
@@ -1141,7 +1143,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterElementOption(com.generator.generators.antlr.parser.ANTLRv4Parser.ElementOptionContext arg) {
-		final Node node = model.findOrCreate(Label.label("ElementOption"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ElementOption"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inElementOption.push(true);
 	}
@@ -1159,7 +1161,7 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterIdentifier(com.generator.generators.antlr.parser.ANTLRv4Parser.IdentifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Identifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Identifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIdentifier.push(true);
 	}

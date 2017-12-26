@@ -2,6 +2,8 @@ package com.generator.generators.turtle.parser;
 
 public class TurtleNodeVisitor extends TurtleBaseVisitor<TurtleNodeVisitor.Node> {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(TurtleNodeVisitor.class);
+
    public static class Node {
 
       public final String name;
@@ -33,7 +35,7 @@ public class TurtleNodeVisitor extends TurtleBaseVisitor<TurtleNodeVisitor.Node>
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-				if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
+				if (debug) log.debug(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -49,8 +51,8 @@ public class TurtleNodeVisitor extends TurtleBaseVisitor<TurtleNodeVisitor.Node>
    }
 
 	@Override
-	public Node visitPrefixID(com.generator.generators.turtle.parser.TurtleParser.PrefixIDContext arg) {
-		final Node node = new Node("PrefixID", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitLiteral(com.generator.generators.turtle.parser.TurtleParser.LiteralContext arg) {
+		final Node node = new Node("Literal", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -67,6 +69,78 @@ public class TurtleNodeVisitor extends TurtleBaseVisitor<TurtleNodeVisitor.Node>
 	}
 
 	@Override
+	public Node visitDirective(com.generator.generators.turtle.parser.TurtleParser.DirectiveContext arg) {
+		final Node node = new Node("Directive", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitObjectList(com.generator.generators.turtle.parser.TurtleParser.ObjectListContext arg) {
+		final Node node = new Node("ObjectList", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitObject(com.generator.generators.turtle.parser.TurtleParser.ObjectContext arg) {
+		final Node node = new Node("Object", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitVerb(com.generator.generators.turtle.parser.TurtleParser.VerbContext arg) {
+		final Node node = new Node("Verb", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitBlankNodePropertyList(com.generator.generators.turtle.parser.TurtleParser.BlankNodePropertyListContext arg) {
+		final Node node = new Node("BlankNodePropertyList", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCollection(com.generator.generators.turtle.parser.TurtleParser.CollectionContext arg) {
+		final Node node = new Node("Collection", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitRdfLiteral(com.generator.generators.turtle.parser.TurtleParser.RdfLiteralContext arg) {
+		final Node node = new Node("RdfLiteral", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitIri(com.generator.generators.turtle.parser.TurtleParser.IriContext arg) {
+		final Node node = new Node("Iri", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitTurtleDoc(com.generator.generators.turtle.parser.TurtleParser.TurtleDocContext arg) {
 		final Node node = new Node("TurtleDoc", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
@@ -76,8 +150,8 @@ public class TurtleNodeVisitor extends TurtleBaseVisitor<TurtleNodeVisitor.Node>
 	}
 
 	@Override
-	public Node visitDirective(com.generator.generators.turtle.parser.TurtleParser.DirectiveContext arg) {
-		final Node node = new Node("Directive", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitPrefixID(com.generator.generators.turtle.parser.TurtleParser.PrefixIDContext arg) {
+		final Node node = new Node("PrefixID", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -130,24 +204,6 @@ public class TurtleNodeVisitor extends TurtleBaseVisitor<TurtleNodeVisitor.Node>
 	}
 
 	@Override
-	public Node visitObjectList(com.generator.generators.turtle.parser.TurtleParser.ObjectListContext arg) {
-		final Node node = new Node("ObjectList", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitVerb(com.generator.generators.turtle.parser.TurtleParser.VerbContext arg) {
-		final Node node = new Node("Verb", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitSubject(com.generator.generators.turtle.parser.TurtleParser.SubjectContext arg) {
 		final Node node = new Node("Subject", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
@@ -159,60 +215,6 @@ public class TurtleNodeVisitor extends TurtleBaseVisitor<TurtleNodeVisitor.Node>
 	@Override
 	public Node visitPredicate(com.generator.generators.turtle.parser.TurtleParser.PredicateContext arg) {
 		final Node node = new Node("Predicate", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitObject(com.generator.generators.turtle.parser.TurtleParser.ObjectContext arg) {
-		final Node node = new Node("Object", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitLiteral(com.generator.generators.turtle.parser.TurtleParser.LiteralContext arg) {
-		final Node node = new Node("Literal", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitBlankNodePropertyList(com.generator.generators.turtle.parser.TurtleParser.BlankNodePropertyListContext arg) {
-		final Node node = new Node("BlankNodePropertyList", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCollection(com.generator.generators.turtle.parser.TurtleParser.CollectionContext arg) {
-		final Node node = new Node("Collection", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitRdfLiteral(com.generator.generators.turtle.parser.TurtleParser.RdfLiteralContext arg) {
-		final Node node = new Node("RdfLiteral", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitIri(com.generator.generators.turtle.parser.TurtleParser.IriContext arg) {
-		final Node node = new Node("Iri", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

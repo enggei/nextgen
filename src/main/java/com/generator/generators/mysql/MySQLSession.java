@@ -14,6 +14,8 @@ import static com.generator.util.MySQLUtil.preprocessSQL;
  */
 public class MySQLSession {
 
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(MySQLSession.class);
+
    private final Connection connection;
    private final String database;
 
@@ -23,10 +25,14 @@ public class MySQLSession {
       connection = DriverManager.getConnection("jdbc:mysql://" + host + ":3306/" + database + "?useSSL=false&zeroDateTimeBehavior=convertToNull&useLegacyDatetimeCode=false&serverTimezone=UTC&user=" + username + "&password=" + password + "&autoReconnect=true");
    }
 
-   MySQLSession(String host, String database, String username, char[] password) throws ClassNotFoundException, SQLException {
-      Class.forName("com.mysql.jdbc.Driver");
-      this.database = database;
-      connection = DriverManager.getConnection("jdbc:mysql://" + host + ":3306/" + database + "?useSSL=false&zeroDateTimeBehavior=convertToNull&useLegacyDatetimeCode=false&serverTimezone=UTC&user=" + username + "&password=" + new String(password) + "&autoReconnect=true");
+   MySQLSession(String host, String database, String username, char[] password) {
+      try {
+         Class.forName("com.mysql.jdbc.Driver");
+         this.database = database;
+         connection = DriverManager.getConnection("jdbc:mysql://" + host + ":3306/" + database + "?useSSL=false&zeroDateTimeBehavior=convertToNull&useLegacyDatetimeCode=false&serverTimezone=UTC&user=" + username + "&password=" + new String(password) + "&autoReconnect=true");
+      } catch (Throwable e) {
+         throw new RuntimeException(e);
+      }
    }
 
    public String getDatabase() {
@@ -40,13 +46,17 @@ public class MySQLSession {
       resultSet.close();
    }
 
-   public void executeQuery(String query, ResultSetHandler handler) throws Exception {
-      final Statement statement = connection.createStatement();
-      final ResultSet resultSet = statement.executeQuery(query);
-      while (resultSet.next())
-         handler.handle(resultSet);
-      resultSet.close();
-      statement.close();
+   public void executeQuery(String query, ResultSetHandler handler) {
+      try {
+         final Statement statement = connection.createStatement();
+         final ResultSet resultSet = statement.executeQuery(query);
+         while (resultSet.next())
+            handler.handle(resultSet);
+         resultSet.close();
+         statement.close();
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
    }
 
    public void executeQuery(String query, ResultSetHandler handler, Object... params) throws Exception {
@@ -60,8 +70,12 @@ public class MySQLSession {
       statement.close();
    }
 
-   public void close() throws SQLException {
-      if (connection != null) connection.close();
+   public void close() {
+      if (connection != null) try {
+         connection.close();
+      } catch (SQLException e) {
+         log.error("close database connection error " + e.getMessage(), e);
+      }
    }
 
    public Set<String> getTables() throws Exception {
@@ -79,6 +93,15 @@ public class MySQLSession {
       });
       statement.close();
       return tables;
+   }
+
+   public Statement createStatement() {
+      try {
+         return connection.createStatement();
+      } catch (SQLException e) {
+         log.error("create statement error: " + e.getMessage(), e);
+         return null;
+      }
    }
 
    public interface ResultSetHandler {

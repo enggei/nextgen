@@ -28,8 +28,8 @@ import java.util.*;
 import static org.reflections.ReflectionUtils.*;
 
 public class Tests {
-
-   @Test
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   //@Test
    public void testAnnotations() {
 
 /*
@@ -40,7 +40,7 @@ public class Tests {
          Annotation[] annotation = method.getDeclaredAnnotations();
 
          for (Annotation annotation1 : annotation) {
-            System.out.println("method annotation " + annotation1.toString());
+            log.info("method annotation " + annotation1.toString());
          }
 
       }
@@ -51,18 +51,18 @@ public class Tests {
          Annotation[] annotationsOnFieldClass = field.getClass().getDeclaredAnnotations();
 
          for (Annotation onFieldClass : annotationsOnFieldClass) {
-            System.out.println("Field " + onFieldClass.toString());
+            log.info("Field " + onFieldClass.toString());
          }
 
       }
       final Annotation[] declaredAnnotations = clazz.getDeclaredAnnotations();
       for (Annotation declaredAnnotation : declaredAnnotations) {
-         System.out.println("declaredAnnotation = " + declaredAnnotation);
+         log.info("declaredAnnotation = " + declaredAnnotation);
          final Class<? extends Annotation> annotationType = declaredAnnotation.annotationType();
          final Field[] fields1 = annotationType.getFields();
-         System.out.println(annotationType.getName());
+         log.info(annotationType.getName());
          for (Field field : fields1) {
-            System.out.println(field.getName() + " ");
+            log.info(field.getName() + " ");
          }
 
       }
@@ -70,7 +70,7 @@ public class Tests {
 
    }
 
-   @Test
+   //@Test
    public void testParser() {
 
       final JavaGroup javaGroup = new JavaGroup();
@@ -86,7 +86,7 @@ public class Tests {
             addParametersValue("one", "Integer").
             addParametersValue("two", "Integer").
             addStatementsValue("Integer three = one + two;").
-            addStatementsValue("System.out.println(\"three = \" + three);"));
+            addStatementsValue("log.info(\"three = \" + three);"));
       beanST.addMethodsValue(javaGroup.newBean().
             setName("InnerBean").
             setScope("private").
@@ -142,11 +142,11 @@ public class Tests {
       };
       new ParseTreeWalker().walk(listener, parser.compilationUnit());
 
-      System.out.println(beanST.toString());
-      System.out.println(newBean.toString());
+      log.info(beanST.toString());
+      log.info(newBean.toString());
    }
 
-   @Test
+   //@Test
    public void testCompile() {
 
       final JavaGroup.PojoST pojoST = new JavaGroup().newPojo().
@@ -158,16 +158,16 @@ public class Tests {
             addLexicalValue("yolo");
 
       final Object instance = new CompilerUtil().newInstance("com.test.Hello", pojoST, new DiagnosticCollector<>());
-      System.out.println("instance " + instance.toString());
+      log.info("instance " + instance.toString());
 
       final Reflect pojoInstance = Reflect.on(instance);
       pojoInstance.call("setName", "NICE Gary!");
       pojoInstance.call("setYolo", "DONE");
 
-      System.out.println("instance " + instance.toString());
+      log.info("instance " + instance.toString());
    }
 
-   @Test
+   //@Test
    public void testReflection() throws IOException {
 
       ClasspathUtil.findClasses(s -> {
@@ -176,12 +176,12 @@ public class Tests {
                @Override
                public void onClass(Package classPackage, String className, Class superClass) {
                   if(className.contains("$")) return;
-                  System.out.println(classPackage.getName() + "\n\t" + className);
+                  log.info(classPackage.getName() + "\n\t" + className);
                }
 
                @Override
                public void onPublicMethod(Method method) {
-                  System.out.println("\t\t" + method.getName());
+                  log.info("\t\t" + method.getName());
                }
             }.visit(Class.forName(s));
 
@@ -196,43 +196,43 @@ public class Tests {
 
    }
 
-   @Test
+   //@Test
    public void testReflections() {
 
       Reflections reflections = new Reflections("com.generator");
 
       Set<Class<? extends DomainPlugin>> subTypes = reflections.getSubTypesOf(DomainPlugin.class);
-      System.out.println("classes extending DomainPlugin:");
+      log.info("classes extending DomainPlugin:");
       for (Class<? extends DomainPlugin> subType : subTypes) {
-         System.out.println(subType.getName());
+         log.info(subType.getName());
       }
 
       Set<Method> getters = getAllMethods(DomainPlugin.class, withModifier(Modifier.PUBLIC), withPrefix("get"), withParametersCount(0));
       for (Method getter : getters) {
-         System.out.println(getter.getName());
+         log.info(getter.getName());
       }
       Set<Method> listMethodsFromCollectionToBoolean = getAllMethods(List.class, withParametersAssignableTo(Collection.class), withReturnType(boolean.class));
       for (Method method : listMethodsFromCollectionToBoolean) {
-         System.out.println(method.getName());
+         log.info(method.getName());
       }
 
       final Set<Field> allFields = getAllFields(DomainPlugin.class);
       for (Field allField : allFields) {
-         System.out.println(allField.getName());
+         log.info(allField.getName());
       }
 
    }
 
-   @Test
+   //@Test
    public void writeSTG() throws IOException {
 
       JavaGroup.toSTGFile(new File(ProjectConstants.GENERATORS_ROOT + "java"));
    }
 
-   @Test
+   //@Test
    public void testParseJava() throws IOException {
       for (File file : FileUtil.findAllFilesWhichEndsWith(ProjectConstants.MAIN_ROOT, ".java")) {
-         System.out.println(file.getAbsolutePath());
+         log.info(file.getAbsolutePath());
          parseFile(file);
       }
    }
@@ -244,7 +244,7 @@ public class Tests {
 //         visit("", listener.getRoot());
    }
 
-   @Test
+   //@Test
    public void testJavaGroup() {
       final JavaGroup group = new JavaGroup();
       final JavaGroup.BeanST beanST = group.newBean().
@@ -257,17 +257,17 @@ public class Tests {
             addLexicalValue("lastName").
             addLexicalValue("firstName").
             addEqhaValue("id");
-      System.out.println(beanST);
+      log.info(beanST);
 
-      System.out.println(beanST.getPackage() + " " + beanST.getName());
+      log.info(beanST.getPackage() + " " + beanST.getName());
       for (Object o : beanST.getLexicalValues()) {
-         System.out.println("lexical " + o);
+         log.info("lexical " + o);
       }
 
       for (Map<String, Object> map : beanST.getProperties()) {
-         System.out.println("property ");
+         log.info("property ");
          for (Map.Entry<String, Object> entry : map.entrySet()) {
-            System.out.println("\t" + entry.getKey() + " " + entry.getValue());
+            log.info("\t" + entry.getKey() + " " + entry.getValue());
          }
       }
 

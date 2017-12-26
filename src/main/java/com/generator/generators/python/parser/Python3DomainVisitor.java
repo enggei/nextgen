@@ -7,47 +7,11 @@ public abstract class Python3DomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "For_stmt")) visitFor_stmt(node);
-		else if(hasLabel(node, "Try_stmt")) visitTry_stmt(node);
-		else if(hasLabel(node, "With_stmt")) visitWith_stmt(node);
-		else if(hasLabel(node, "With_item")) visitWith_item(node);
-		else if(hasLabel(node, "Except_clause")) visitExcept_clause(node);
-		else if(hasLabel(node, "Suite")) visitSuite(node);
-		else if(hasLabel(node, "Test")) visitTest(node);
-		else if(hasLabel(node, "Test_nocond")) visitTest_nocond(node);
-		else if(hasLabel(node, "Lambdef")) visitLambdef(node);
-		else if(hasLabel(node, "Lambdef_nocond")) visitLambdef_nocond(node);
-		else if(hasLabel(node, "Or_test")) visitOr_test(node);
-		else if(hasLabel(node, "And_test")) visitAnd_test(node);
-		else if(hasLabel(node, "Not_test")) visitNot_test(node);
-		else if(hasLabel(node, "Comparison")) visitComparison(node);
-		else if(hasLabel(node, "Comp_op")) visitComp_op(node);
-		else if(hasLabel(node, "Star_expr")) visitStar_expr(node);
-		else if(hasLabel(node, "Xor_expr")) visitXor_expr(node);
-		else if(hasLabel(node, "And_expr")) visitAnd_expr(node);
-		else if(hasLabel(node, "Shift_expr")) visitShift_expr(node);
-		else if(hasLabel(node, "Arith_expr")) visitArith_expr(node);
-		else if(hasLabel(node, "Term")) visitTerm(node);
-		else if(hasLabel(node, "Factor")) visitFactor(node);
-		else if(hasLabel(node, "Power")) visitPower(node);
-		else if(hasLabel(node, "Testlist_comp")) visitTestlist_comp(node);
-		else if(hasLabel(node, "Trailer")) visitTrailer(node);
-		else if(hasLabel(node, "Subscriptlist")) visitSubscriptlist(node);
-		else if(hasLabel(node, "Subscript")) visitSubscript(node);
-		else if(hasLabel(node, "Sliceop")) visitSliceop(node);
-		else if(hasLabel(node, "Exprlist")) visitExprlist(node);
-		else if(hasLabel(node, "Testlist")) visitTestlist(node);
-		else if(hasLabel(node, "Dictorsetmaker")) visitDictorsetmaker(node);
-		else if(hasLabel(node, "Classdef")) visitClassdef(node);
-		else if(hasLabel(node, "Arglist")) visitArglist(node);
+		if(hasLabel(node, "Atom")) visitAtom(node);
+		else if(hasLabel(node, "Number")) visitNumber(node);
+		else if(hasLabel(node, "Expr")) visitExpr(node);
+		else if(hasLabel(node, "Parameters")) visitParameters(node);
 		else if(hasLabel(node, "Argument")) visitArgument(node);
-		else if(hasLabel(node, "Comp_iter")) visitComp_iter(node);
-		else if(hasLabel(node, "Comp_for")) visitComp_for(node);
-		else if(hasLabel(node, "Comp_if")) visitComp_if(node);
-		else if(hasLabel(node, "Yield_expr")) visitYield_expr(node);
-		else if(hasLabel(node, "Yield_arg")) visitYield_arg(node);
-		else if(hasLabel(node, "Str")) visitStr(node);
-		else if(hasLabel(node, "Integer")) visitInteger(node);
 		else if(hasLabel(node, "Single_input")) visitSingle_input(node);
 		else if(hasLabel(node, "File_input")) visitFile_input(node);
 		else if(hasLabel(node, "Eval_input")) visitEval_input(node);
@@ -88,253 +52,73 @@ public abstract class Python3DomainVisitor {
 		else if(hasLabel(node, "Compound_stmt")) visitCompound_stmt(node);
 		else if(hasLabel(node, "If_stmt")) visitIf_stmt(node);
 		else if(hasLabel(node, "While_stmt")) visitWhile_stmt(node);
-		else if(hasLabel(node, "Atom")) visitAtom(node);
-		else if(hasLabel(node, "Number")) visitNumber(node);
-		else if(hasLabel(node, "Expr")) visitExpr(node);
-		else if(hasLabel(node, "Parameters")) visitParameters(node);
+		else if(hasLabel(node, "For_stmt")) visitFor_stmt(node);
+		else if(hasLabel(node, "Try_stmt")) visitTry_stmt(node);
+		else if(hasLabel(node, "With_stmt")) visitWith_stmt(node);
+		else if(hasLabel(node, "With_item")) visitWith_item(node);
+		else if(hasLabel(node, "Except_clause")) visitExcept_clause(node);
+		else if(hasLabel(node, "Suite")) visitSuite(node);
+		else if(hasLabel(node, "Test")) visitTest(node);
+		else if(hasLabel(node, "Test_nocond")) visitTest_nocond(node);
+		else if(hasLabel(node, "Lambdef")) visitLambdef(node);
+		else if(hasLabel(node, "Lambdef_nocond")) visitLambdef_nocond(node);
+		else if(hasLabel(node, "Or_test")) visitOr_test(node);
+		else if(hasLabel(node, "And_test")) visitAnd_test(node);
+		else if(hasLabel(node, "Not_test")) visitNot_test(node);
+		else if(hasLabel(node, "Comparison")) visitComparison(node);
+		else if(hasLabel(node, "Comp_op")) visitComp_op(node);
+		else if(hasLabel(node, "Star_expr")) visitStar_expr(node);
+		else if(hasLabel(node, "Xor_expr")) visitXor_expr(node);
+		else if(hasLabel(node, "And_expr")) visitAnd_expr(node);
+		else if(hasLabel(node, "Shift_expr")) visitShift_expr(node);
+		else if(hasLabel(node, "Arith_expr")) visitArith_expr(node);
+		else if(hasLabel(node, "Term")) visitTerm(node);
+		else if(hasLabel(node, "Factor")) visitFactor(node);
+		else if(hasLabel(node, "Power")) visitPower(node);
+		else if(hasLabel(node, "Testlist_comp")) visitTestlist_comp(node);
+		else if(hasLabel(node, "Trailer")) visitTrailer(node);
+		else if(hasLabel(node, "Subscriptlist")) visitSubscriptlist(node);
+		else if(hasLabel(node, "Subscript")) visitSubscript(node);
+		else if(hasLabel(node, "Sliceop")) visitSliceop(node);
+		else if(hasLabel(node, "Exprlist")) visitExprlist(node);
+		else if(hasLabel(node, "Testlist")) visitTestlist(node);
+		else if(hasLabel(node, "Dictorsetmaker")) visitDictorsetmaker(node);
+		else if(hasLabel(node, "Classdef")) visitClassdef(node);
+		else if(hasLabel(node, "Arglist")) visitArglist(node);
+		else if(hasLabel(node, "Comp_iter")) visitComp_iter(node);
+		else if(hasLabel(node, "Comp_for")) visitComp_for(node);
+		else if(hasLabel(node, "Comp_if")) visitComp_if(node);
+		else if(hasLabel(node, "Yield_expr")) visitYield_expr(node);
+		else if(hasLabel(node, "Yield_arg")) visitYield_arg(node);
+		else if(hasLabel(node, "Str")) visitStr(node);
+		else if(hasLabel(node, "Integer")) visitInteger(node);
    }
 
-	public void visitFor_stmt(Node node) {
+	public void visitAtom(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitTry_stmt(Node node) {
+	public void visitNumber(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitWith_stmt(Node node) {
+	public void visitExpr(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitWith_item(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitExcept_clause(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitSuite(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitTest(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitTest_nocond(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitLambdef(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitLambdef_nocond(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitOr_test(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAnd_test(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitNot_test(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitComparison(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitComp_op(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitStar_expr(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitXor_expr(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAnd_expr(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitShift_expr(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitArith_expr(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitTerm(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitFactor(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitPower(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitTestlist_comp(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitTrailer(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitSubscriptlist(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitSubscript(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitSliceop(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitExprlist(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitTestlist(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitDictorsetmaker(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitClassdef(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitArglist(Node node) {
+	public void visitParameters(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
 	public void visitArgument(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitComp_iter(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitComp_for(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitComp_if(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitYield_expr(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitYield_arg(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitStr(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitInteger(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -580,25 +364,241 @@ public abstract class Python3DomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitAtom(Node node) {
+	public void visitFor_stmt(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitNumber(Node node) {
+	public void visitTry_stmt(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitExpr(Node node) {
+	public void visitWith_stmt(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitParameters(Node node) {
+	public void visitWith_item(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitExcept_clause(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitSuite(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitTest(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitTest_nocond(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitLambdef(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitLambdef_nocond(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitOr_test(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAnd_test(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitNot_test(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitComparison(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitComp_op(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitStar_expr(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitXor_expr(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAnd_expr(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitShift_expr(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitArith_expr(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitTerm(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitFactor(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitPower(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitTestlist_comp(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitTrailer(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitSubscriptlist(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitSubscript(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitSliceop(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitExprlist(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitTestlist(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitDictorsetmaker(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitClassdef(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitArglist(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitComp_iter(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitComp_for(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitComp_if(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitYield_expr(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitYield_arg(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitStr(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitInteger(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

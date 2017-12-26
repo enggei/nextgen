@@ -21,12 +21,12 @@ public class Tests {
    private static final FileSystem fileSystem = FileSystems.getDefault();
    private static final String workDir = ProjectConstants.MAIN_ROOT + "/com/generator/generators/go/";
 
-   @Test
+   //@Test
    public void testGoLexer() throws IOException {
       testLexer(GolangLexer.class, fileSystem.getPath(workDir + "Test.go"));
    }
 
-   @Test
+   //@Test
    public void testGoParser() throws IOException {
       testParserRule(GolangNodeListener.class, GolangLexer.class, GolangParser.class,
          parser -> ((GolangParser)parser).sourceFile(),

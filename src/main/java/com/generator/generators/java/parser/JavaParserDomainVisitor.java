@@ -16,6 +16,7 @@ public abstract class JavaParserDomainVisitor {
 		else if(hasLabel(node, "Arguments")) visitArguments(node);
 		else if(hasLabel(node, "ExpressionList")) visitExpressionList(node);
 		else if(hasLabel(node, "TypeList")) visitTypeList(node);
+		else if(hasLabel(node, "DefaultValue")) visitDefaultValue(node);
 		else if(hasLabel(node, "CompilationUnit")) visitCompilationUnit(node);
 		else if(hasLabel(node, "PackageDeclaration")) visitPackageDeclaration(node);
 		else if(hasLabel(node, "ImportDeclaration")) visitImportDeclaration(node);
@@ -74,7 +75,6 @@ public abstract class JavaParserDomainVisitor {
 		else if(hasLabel(node, "AnnotationMethodOrConstantRest")) visitAnnotationMethodOrConstantRest(node);
 		else if(hasLabel(node, "AnnotationMethodRest")) visitAnnotationMethodRest(node);
 		else if(hasLabel(node, "AnnotationConstantRest")) visitAnnotationConstantRest(node);
-		else if(hasLabel(node, "DefaultValue")) visitDefaultValue(node);
 		else if(hasLabel(node, "BlockStatement")) visitBlockStatement(node);
 		else if(hasLabel(node, "LocalVariableDeclaration")) visitLocalVariableDeclaration(node);
 		else if(hasLabel(node, "CatchClause")) visitCatchClause(node);
@@ -160,6 +160,12 @@ public abstract class JavaParserDomainVisitor {
 	}
 
 	public void visitTypeList(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitDefaultValue(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -508,12 +514,6 @@ public abstract class JavaParserDomainVisitor {
 	}
 
 	public void visitAnnotationConstantRest(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitDefaultValue(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

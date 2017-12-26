@@ -2,6 +2,8 @@ package com.generator.generators.cypher.parser;
 
 public class CypherNodeListener extends CypherBaseListener {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(CypherNodeListener.class);
+
    public static class Node {
 
       public final String name;
@@ -33,7 +35,7 @@ public class CypherNodeListener extends CypherBaseListener {
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
+		if (debug) log.debug(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -131,397 +133,6 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	public boolean inLiteral() {
       return !inLiteral.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inCypher = new java.util.Stack<>();
-
-	@Override
-	public void enterCypher(com.generator.generators.cypher.parser.CypherParser.CypherContext arg) {
-		onEnter(new Node("Cypher", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inCypher.push(true);
-	}
-
-	public void exitCypher(com.generator.generators.cypher.parser.CypherParser.CypherContext arg) {
-		onExit();
-		this.inCypher.pop();
-	}
-
-	public boolean inCypher() {
-      return !inCypher.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inQuery = new java.util.Stack<>();
-
-	@Override
-	public void enterQuery(com.generator.generators.cypher.parser.CypherParser.QueryContext arg) {
-		onEnter(new Node("Query", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inQuery.push(true);
-	}
-
-	public void exitQuery(com.generator.generators.cypher.parser.CypherParser.QueryContext arg) {
-		onExit();
-		this.inQuery.pop();
-	}
-
-	public boolean inQuery() {
-      return !inQuery.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inRegularQuery = new java.util.Stack<>();
-
-	@Override
-	public void enterRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
-		onEnter(new Node("RegularQuery", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inRegularQuery.push(true);
-	}
-
-	public void exitRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
-		onExit();
-		this.inRegularQuery.pop();
-	}
-
-	public boolean inRegularQuery() {
-      return !inRegularQuery.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUnion = new java.util.Stack<>();
-
-	@Override
-	public void enterUnion(com.generator.generators.cypher.parser.CypherParser.UnionContext arg) {
-		onEnter(new Node("Union", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inUnion.push(true);
-	}
-
-	public void exitUnion(com.generator.generators.cypher.parser.CypherParser.UnionContext arg) {
-		onExit();
-		this.inUnion.pop();
-	}
-
-	public boolean inUnion() {
-      return !inUnion.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSingleQuery = new java.util.Stack<>();
-
-	@Override
-	public void enterSingleQuery(com.generator.generators.cypher.parser.CypherParser.SingleQueryContext arg) {
-		onEnter(new Node("SingleQuery", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inSingleQuery.push(true);
-	}
-
-	public void exitSingleQuery(com.generator.generators.cypher.parser.CypherParser.SingleQueryContext arg) {
-		onExit();
-		this.inSingleQuery.pop();
-	}
-
-	public boolean inSingleQuery() {
-      return !inSingleQuery.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSinglePartQuery = new java.util.Stack<>();
-
-	@Override
-	public void enterSinglePartQuery(com.generator.generators.cypher.parser.CypherParser.SinglePartQueryContext arg) {
-		onEnter(new Node("SinglePartQuery", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inSinglePartQuery.push(true);
-	}
-
-	public void exitSinglePartQuery(com.generator.generators.cypher.parser.CypherParser.SinglePartQueryContext arg) {
-		onExit();
-		this.inSinglePartQuery.pop();
-	}
-
-	public boolean inSinglePartQuery() {
-      return !inSinglePartQuery.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inReadOnlyEnd = new java.util.Stack<>();
-
-	@Override
-	public void enterReadOnlyEnd(com.generator.generators.cypher.parser.CypherParser.ReadOnlyEndContext arg) {
-		onEnter(new Node("ReadOnlyEnd", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inReadOnlyEnd.push(true);
-	}
-
-	public void exitReadOnlyEnd(com.generator.generators.cypher.parser.CypherParser.ReadOnlyEndContext arg) {
-		onExit();
-		this.inReadOnlyEnd.pop();
-	}
-
-	public boolean inReadOnlyEnd() {
-      return !inReadOnlyEnd.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inReadUpdateEnd = new java.util.Stack<>();
-
-	@Override
-	public void enterReadUpdateEnd(com.generator.generators.cypher.parser.CypherParser.ReadUpdateEndContext arg) {
-		onEnter(new Node("ReadUpdateEnd", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inReadUpdateEnd.push(true);
-	}
-
-	public void exitReadUpdateEnd(com.generator.generators.cypher.parser.CypherParser.ReadUpdateEndContext arg) {
-		onExit();
-		this.inReadUpdateEnd.pop();
-	}
-
-	public boolean inReadUpdateEnd() {
-      return !inReadUpdateEnd.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUpdatingEnd = new java.util.Stack<>();
-
-	@Override
-	public void enterUpdatingEnd(com.generator.generators.cypher.parser.CypherParser.UpdatingEndContext arg) {
-		onEnter(new Node("UpdatingEnd", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inUpdatingEnd.push(true);
-	}
-
-	public void exitUpdatingEnd(com.generator.generators.cypher.parser.CypherParser.UpdatingEndContext arg) {
-		onExit();
-		this.inUpdatingEnd.pop();
-	}
-
-	public boolean inUpdatingEnd() {
-      return !inUpdatingEnd.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inMultiPartQuery = new java.util.Stack<>();
-
-	@Override
-	public void enterMultiPartQuery(com.generator.generators.cypher.parser.CypherParser.MultiPartQueryContext arg) {
-		onEnter(new Node("MultiPartQuery", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inMultiPartQuery.push(true);
-	}
-
-	public void exitMultiPartQuery(com.generator.generators.cypher.parser.CypherParser.MultiPartQueryContext arg) {
-		onExit();
-		this.inMultiPartQuery.pop();
-	}
-
-	public boolean inMultiPartQuery() {
-      return !inMultiPartQuery.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inReadPart = new java.util.Stack<>();
-
-	@Override
-	public void enterReadPart(com.generator.generators.cypher.parser.CypherParser.ReadPartContext arg) {
-		onEnter(new Node("ReadPart", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inReadPart.push(true);
-	}
-
-	public void exitReadPart(com.generator.generators.cypher.parser.CypherParser.ReadPartContext arg) {
-		onExit();
-		this.inReadPart.pop();
-	}
-
-	public boolean inReadPart() {
-      return !inReadPart.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUpdatingPart = new java.util.Stack<>();
-
-	@Override
-	public void enterUpdatingPart(com.generator.generators.cypher.parser.CypherParser.UpdatingPartContext arg) {
-		onEnter(new Node("UpdatingPart", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inUpdatingPart.push(true);
-	}
-
-	public void exitUpdatingPart(com.generator.generators.cypher.parser.CypherParser.UpdatingPartContext arg) {
-		onExit();
-		this.inUpdatingPart.pop();
-	}
-
-	public boolean inUpdatingPart() {
-      return !inUpdatingPart.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUpdatingStartClause = new java.util.Stack<>();
-
-	@Override
-	public void enterUpdatingStartClause(com.generator.generators.cypher.parser.CypherParser.UpdatingStartClauseContext arg) {
-		onEnter(new Node("UpdatingStartClause", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inUpdatingStartClause.push(true);
-	}
-
-	public void exitUpdatingStartClause(com.generator.generators.cypher.parser.CypherParser.UpdatingStartClauseContext arg) {
-		onExit();
-		this.inUpdatingStartClause.pop();
-	}
-
-	public boolean inUpdatingStartClause() {
-      return !inUpdatingStartClause.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUpdatingClause = new java.util.Stack<>();
-
-	@Override
-	public void enterUpdatingClause(com.generator.generators.cypher.parser.CypherParser.UpdatingClauseContext arg) {
-		onEnter(new Node("UpdatingClause", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inUpdatingClause.push(true);
-	}
-
-	public void exitUpdatingClause(com.generator.generators.cypher.parser.CypherParser.UpdatingClauseContext arg) {
-		onExit();
-		this.inUpdatingClause.pop();
-	}
-
-	public boolean inUpdatingClause() {
-      return !inUpdatingClause.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inReadingClause = new java.util.Stack<>();
-
-	@Override
-	public void enterReadingClause(com.generator.generators.cypher.parser.CypherParser.ReadingClauseContext arg) {
-		onEnter(new Node("ReadingClause", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inReadingClause.push(true);
-	}
-
-	public void exitReadingClause(com.generator.generators.cypher.parser.CypherParser.ReadingClauseContext arg) {
-		onExit();
-		this.inReadingClause.pop();
-	}
-
-	public boolean inReadingClause() {
-      return !inReadingClause.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inCyper_match = new java.util.Stack<>();
-
-	@Override
-	public void enterCyper_match(com.generator.generators.cypher.parser.CypherParser.Cyper_matchContext arg) {
-		onEnter(new Node("Cyper_match", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inCyper_match.push(true);
-	}
-
-	public void exitCyper_match(com.generator.generators.cypher.parser.CypherParser.Cyper_matchContext arg) {
-		onExit();
-		this.inCyper_match.pop();
-	}
-
-	public boolean inCyper_match() {
-      return !inCyper_match.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUnwind = new java.util.Stack<>();
-
-	@Override
-	public void enterUnwind(com.generator.generators.cypher.parser.CypherParser.UnwindContext arg) {
-		onEnter(new Node("Unwind", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inUnwind.push(true);
-	}
-
-	public void exitUnwind(com.generator.generators.cypher.parser.CypherParser.UnwindContext arg) {
-		onExit();
-		this.inUnwind.pop();
-	}
-
-	public boolean inUnwind() {
-      return !inUnwind.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inMerge = new java.util.Stack<>();
-
-	@Override
-	public void enterMerge(com.generator.generators.cypher.parser.CypherParser.MergeContext arg) {
-		onEnter(new Node("Merge", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inMerge.push(true);
-	}
-
-	public void exitMerge(com.generator.generators.cypher.parser.CypherParser.MergeContext arg) {
-		onExit();
-		this.inMerge.pop();
-	}
-
-	public boolean inMerge() {
-      return !inMerge.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inMergeAction = new java.util.Stack<>();
-
-	@Override
-	public void enterMergeAction(com.generator.generators.cypher.parser.CypherParser.MergeActionContext arg) {
-		onEnter(new Node("MergeAction", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inMergeAction.push(true);
-	}
-
-	public void exitMergeAction(com.generator.generators.cypher.parser.CypherParser.MergeActionContext arg) {
-		onExit();
-		this.inMergeAction.pop();
-	}
-
-	public boolean inMergeAction() {
-      return !inMergeAction.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inCreate = new java.util.Stack<>();
-
-	@Override
-	public void enterCreate(com.generator.generators.cypher.parser.CypherParser.CreateContext arg) {
-		onEnter(new Node("Create", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inCreate.push(true);
-	}
-
-	public void exitCreate(com.generator.generators.cypher.parser.CypherParser.CreateContext arg) {
-		onExit();
-		this.inCreate.pop();
-	}
-
-	public boolean inCreate() {
-      return !inCreate.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSetItem = new java.util.Stack<>();
-
-	@Override
-	public void enterSetItem(com.generator.generators.cypher.parser.CypherParser.SetItemContext arg) {
-		onEnter(new Node("SetItem", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inSetItem.push(true);
-	}
-
-	public void exitSetItem(com.generator.generators.cypher.parser.CypherParser.SetItemContext arg) {
-		onExit();
-		this.inSetItem.pop();
-	}
-
-	public boolean inSetItem() {
-      return !inSetItem.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDelete = new java.util.Stack<>();
-
-	@Override
-	public void enterDelete(com.generator.generators.cypher.parser.CypherParser.DeleteContext arg) {
-		onEnter(new Node("Delete", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inDelete.push(true);
-	}
-
-	public void exitDelete(com.generator.generators.cypher.parser.CypherParser.DeleteContext arg) {
-		onExit();
-		this.inDelete.pop();
-	}
-
-	public boolean inDelete() {
-      return !inDelete.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inRemove = new java.util.Stack<>();
-
-	@Override
-	public void enterRemove(com.generator.generators.cypher.parser.CypherParser.RemoveContext arg) {
-		onEnter(new Node("Remove", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inRemove.push(true);
-	}
-
-	public void exitRemove(com.generator.generators.cypher.parser.CypherParser.RemoveContext arg) {
-		onExit();
-		this.inRemove.pop();
-	}
-
-	public boolean inRemove() {
-      return !inRemove.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRemoveItem = new java.util.Stack<>();
@@ -1272,6 +883,414 @@ public class CypherNodeListener extends CypherBaseListener {
       return !inPartialComparisonExpression.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inIdInColl = new java.util.Stack<>();
+
+	@Override
+	public void enterIdInColl(com.generator.generators.cypher.parser.CypherParser.IdInCollContext arg) {
+		onEnter(new Node("IdInColl", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inIdInColl.push(true);
+	}
+
+	public void exitIdInColl(com.generator.generators.cypher.parser.CypherParser.IdInCollContext arg) {
+		onExit();
+		this.inIdInColl.pop();
+	}
+
+	public boolean inIdInColl() {
+      return !inIdInColl.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCypher = new java.util.Stack<>();
+
+	@Override
+	public void enterCypher(com.generator.generators.cypher.parser.CypherParser.CypherContext arg) {
+		onEnter(new Node("Cypher", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inCypher.push(true);
+	}
+
+	public void exitCypher(com.generator.generators.cypher.parser.CypherParser.CypherContext arg) {
+		onExit();
+		this.inCypher.pop();
+	}
+
+	public boolean inCypher() {
+      return !inCypher.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inQuery = new java.util.Stack<>();
+
+	@Override
+	public void enterQuery(com.generator.generators.cypher.parser.CypherParser.QueryContext arg) {
+		onEnter(new Node("Query", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inQuery.push(true);
+	}
+
+	public void exitQuery(com.generator.generators.cypher.parser.CypherParser.QueryContext arg) {
+		onExit();
+		this.inQuery.pop();
+	}
+
+	public boolean inQuery() {
+      return !inQuery.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inRegularQuery = new java.util.Stack<>();
+
+	@Override
+	public void enterRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
+		onEnter(new Node("RegularQuery", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inRegularQuery.push(true);
+	}
+
+	public void exitRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
+		onExit();
+		this.inRegularQuery.pop();
+	}
+
+	public boolean inRegularQuery() {
+      return !inRegularQuery.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUnion = new java.util.Stack<>();
+
+	@Override
+	public void enterUnion(com.generator.generators.cypher.parser.CypherParser.UnionContext arg) {
+		onEnter(new Node("Union", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inUnion.push(true);
+	}
+
+	public void exitUnion(com.generator.generators.cypher.parser.CypherParser.UnionContext arg) {
+		onExit();
+		this.inUnion.pop();
+	}
+
+	public boolean inUnion() {
+      return !inUnion.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSingleQuery = new java.util.Stack<>();
+
+	@Override
+	public void enterSingleQuery(com.generator.generators.cypher.parser.CypherParser.SingleQueryContext arg) {
+		onEnter(new Node("SingleQuery", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inSingleQuery.push(true);
+	}
+
+	public void exitSingleQuery(com.generator.generators.cypher.parser.CypherParser.SingleQueryContext arg) {
+		onExit();
+		this.inSingleQuery.pop();
+	}
+
+	public boolean inSingleQuery() {
+      return !inSingleQuery.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSinglePartQuery = new java.util.Stack<>();
+
+	@Override
+	public void enterSinglePartQuery(com.generator.generators.cypher.parser.CypherParser.SinglePartQueryContext arg) {
+		onEnter(new Node("SinglePartQuery", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inSinglePartQuery.push(true);
+	}
+
+	public void exitSinglePartQuery(com.generator.generators.cypher.parser.CypherParser.SinglePartQueryContext arg) {
+		onExit();
+		this.inSinglePartQuery.pop();
+	}
+
+	public boolean inSinglePartQuery() {
+      return !inSinglePartQuery.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inReadOnlyEnd = new java.util.Stack<>();
+
+	@Override
+	public void enterReadOnlyEnd(com.generator.generators.cypher.parser.CypherParser.ReadOnlyEndContext arg) {
+		onEnter(new Node("ReadOnlyEnd", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inReadOnlyEnd.push(true);
+	}
+
+	public void exitReadOnlyEnd(com.generator.generators.cypher.parser.CypherParser.ReadOnlyEndContext arg) {
+		onExit();
+		this.inReadOnlyEnd.pop();
+	}
+
+	public boolean inReadOnlyEnd() {
+      return !inReadOnlyEnd.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inReadUpdateEnd = new java.util.Stack<>();
+
+	@Override
+	public void enterReadUpdateEnd(com.generator.generators.cypher.parser.CypherParser.ReadUpdateEndContext arg) {
+		onEnter(new Node("ReadUpdateEnd", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inReadUpdateEnd.push(true);
+	}
+
+	public void exitReadUpdateEnd(com.generator.generators.cypher.parser.CypherParser.ReadUpdateEndContext arg) {
+		onExit();
+		this.inReadUpdateEnd.pop();
+	}
+
+	public boolean inReadUpdateEnd() {
+      return !inReadUpdateEnd.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUpdatingEnd = new java.util.Stack<>();
+
+	@Override
+	public void enterUpdatingEnd(com.generator.generators.cypher.parser.CypherParser.UpdatingEndContext arg) {
+		onEnter(new Node("UpdatingEnd", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inUpdatingEnd.push(true);
+	}
+
+	public void exitUpdatingEnd(com.generator.generators.cypher.parser.CypherParser.UpdatingEndContext arg) {
+		onExit();
+		this.inUpdatingEnd.pop();
+	}
+
+	public boolean inUpdatingEnd() {
+      return !inUpdatingEnd.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMultiPartQuery = new java.util.Stack<>();
+
+	@Override
+	public void enterMultiPartQuery(com.generator.generators.cypher.parser.CypherParser.MultiPartQueryContext arg) {
+		onEnter(new Node("MultiPartQuery", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inMultiPartQuery.push(true);
+	}
+
+	public void exitMultiPartQuery(com.generator.generators.cypher.parser.CypherParser.MultiPartQueryContext arg) {
+		onExit();
+		this.inMultiPartQuery.pop();
+	}
+
+	public boolean inMultiPartQuery() {
+      return !inMultiPartQuery.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inReadPart = new java.util.Stack<>();
+
+	@Override
+	public void enterReadPart(com.generator.generators.cypher.parser.CypherParser.ReadPartContext arg) {
+		onEnter(new Node("ReadPart", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inReadPart.push(true);
+	}
+
+	public void exitReadPart(com.generator.generators.cypher.parser.CypherParser.ReadPartContext arg) {
+		onExit();
+		this.inReadPart.pop();
+	}
+
+	public boolean inReadPart() {
+      return !inReadPart.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUpdatingPart = new java.util.Stack<>();
+
+	@Override
+	public void enterUpdatingPart(com.generator.generators.cypher.parser.CypherParser.UpdatingPartContext arg) {
+		onEnter(new Node("UpdatingPart", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inUpdatingPart.push(true);
+	}
+
+	public void exitUpdatingPart(com.generator.generators.cypher.parser.CypherParser.UpdatingPartContext arg) {
+		onExit();
+		this.inUpdatingPart.pop();
+	}
+
+	public boolean inUpdatingPart() {
+      return !inUpdatingPart.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUpdatingStartClause = new java.util.Stack<>();
+
+	@Override
+	public void enterUpdatingStartClause(com.generator.generators.cypher.parser.CypherParser.UpdatingStartClauseContext arg) {
+		onEnter(new Node("UpdatingStartClause", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inUpdatingStartClause.push(true);
+	}
+
+	public void exitUpdatingStartClause(com.generator.generators.cypher.parser.CypherParser.UpdatingStartClauseContext arg) {
+		onExit();
+		this.inUpdatingStartClause.pop();
+	}
+
+	public boolean inUpdatingStartClause() {
+      return !inUpdatingStartClause.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUpdatingClause = new java.util.Stack<>();
+
+	@Override
+	public void enterUpdatingClause(com.generator.generators.cypher.parser.CypherParser.UpdatingClauseContext arg) {
+		onEnter(new Node("UpdatingClause", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inUpdatingClause.push(true);
+	}
+
+	public void exitUpdatingClause(com.generator.generators.cypher.parser.CypherParser.UpdatingClauseContext arg) {
+		onExit();
+		this.inUpdatingClause.pop();
+	}
+
+	public boolean inUpdatingClause() {
+      return !inUpdatingClause.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inReadingClause = new java.util.Stack<>();
+
+	@Override
+	public void enterReadingClause(com.generator.generators.cypher.parser.CypherParser.ReadingClauseContext arg) {
+		onEnter(new Node("ReadingClause", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inReadingClause.push(true);
+	}
+
+	public void exitReadingClause(com.generator.generators.cypher.parser.CypherParser.ReadingClauseContext arg) {
+		onExit();
+		this.inReadingClause.pop();
+	}
+
+	public boolean inReadingClause() {
+      return !inReadingClause.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCyper_match = new java.util.Stack<>();
+
+	@Override
+	public void enterCyper_match(com.generator.generators.cypher.parser.CypherParser.Cyper_matchContext arg) {
+		onEnter(new Node("Cyper_match", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inCyper_match.push(true);
+	}
+
+	public void exitCyper_match(com.generator.generators.cypher.parser.CypherParser.Cyper_matchContext arg) {
+		onExit();
+		this.inCyper_match.pop();
+	}
+
+	public boolean inCyper_match() {
+      return !inCyper_match.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUnwind = new java.util.Stack<>();
+
+	@Override
+	public void enterUnwind(com.generator.generators.cypher.parser.CypherParser.UnwindContext arg) {
+		onEnter(new Node("Unwind", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inUnwind.push(true);
+	}
+
+	public void exitUnwind(com.generator.generators.cypher.parser.CypherParser.UnwindContext arg) {
+		onExit();
+		this.inUnwind.pop();
+	}
+
+	public boolean inUnwind() {
+      return !inUnwind.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMerge = new java.util.Stack<>();
+
+	@Override
+	public void enterMerge(com.generator.generators.cypher.parser.CypherParser.MergeContext arg) {
+		onEnter(new Node("Merge", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inMerge.push(true);
+	}
+
+	public void exitMerge(com.generator.generators.cypher.parser.CypherParser.MergeContext arg) {
+		onExit();
+		this.inMerge.pop();
+	}
+
+	public boolean inMerge() {
+      return !inMerge.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMergeAction = new java.util.Stack<>();
+
+	@Override
+	public void enterMergeAction(com.generator.generators.cypher.parser.CypherParser.MergeActionContext arg) {
+		onEnter(new Node("MergeAction", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inMergeAction.push(true);
+	}
+
+	public void exitMergeAction(com.generator.generators.cypher.parser.CypherParser.MergeActionContext arg) {
+		onExit();
+		this.inMergeAction.pop();
+	}
+
+	public boolean inMergeAction() {
+      return !inMergeAction.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCreate = new java.util.Stack<>();
+
+	@Override
+	public void enterCreate(com.generator.generators.cypher.parser.CypherParser.CreateContext arg) {
+		onEnter(new Node("Create", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inCreate.push(true);
+	}
+
+	public void exitCreate(com.generator.generators.cypher.parser.CypherParser.CreateContext arg) {
+		onExit();
+		this.inCreate.pop();
+	}
+
+	public boolean inCreate() {
+      return !inCreate.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSetItem = new java.util.Stack<>();
+
+	@Override
+	public void enterSetItem(com.generator.generators.cypher.parser.CypherParser.SetItemContext arg) {
+		onEnter(new Node("SetItem", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inSetItem.push(true);
+	}
+
+	public void exitSetItem(com.generator.generators.cypher.parser.CypherParser.SetItemContext arg) {
+		onExit();
+		this.inSetItem.pop();
+	}
+
+	public boolean inSetItem() {
+      return !inSetItem.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDelete = new java.util.Stack<>();
+
+	@Override
+	public void enterDelete(com.generator.generators.cypher.parser.CypherParser.DeleteContext arg) {
+		onEnter(new Node("Delete", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inDelete.push(true);
+	}
+
+	public void exitDelete(com.generator.generators.cypher.parser.CypherParser.DeleteContext arg) {
+		onExit();
+		this.inDelete.pop();
+	}
+
+	public boolean inDelete() {
+      return !inDelete.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inRemove = new java.util.Stack<>();
+
+	@Override
+	public void enterRemove(com.generator.generators.cypher.parser.CypherParser.RemoveContext arg) {
+		onEnter(new Node("Remove", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inRemove.push(true);
+	}
+
+	public void exitRemove(com.generator.generators.cypher.parser.CypherParser.RemoveContext arg) {
+		onExit();
+		this.inRemove.pop();
+	}
+
+	public boolean inRemove() {
+      return !inRemove.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inParenthesizedExpression = new java.util.Stack<>();
 
 	@Override
@@ -1321,23 +1340,6 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	public boolean inFilterExpression() {
       return !inFilterExpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inIdInColl = new java.util.Stack<>();
-
-	@Override
-	public void enterIdInColl(com.generator.generators.cypher.parser.CypherParser.IdInCollContext arg) {
-		onEnter(new Node("IdInColl", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inIdInColl.push(true);
-	}
-
-	public void exitIdInColl(com.generator.generators.cypher.parser.CypherParser.IdInCollContext arg) {
-		onExit();
-		this.inIdInColl.pop();
-	}
-
-	public boolean inIdInColl() {
-      return !inIdInColl.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFunctionInvocation = new java.util.Stack<>();

@@ -15,8 +15,9 @@ import java.io.IOException;
 import static com.generator.util.FileUtil.write;
 
 public class Tests {
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
 
-   @Test
+   //@Test
    public void testParser() throws IOException {
       final HTMLParser parser = new HTMLParser(new CommonTokenStream(new HTMLLexer(CharStreams.fromFileName(ProjectConstants.MAIN_ROOT + "/com/generator/generators/html5/example.html"))));
 
@@ -27,14 +28,14 @@ public class Tests {
    }
 
    private void visitAll(String delim, HTMLParserNodeListener.Node node) {
-      System.out.println(delim + node.name + " (" + node.startToken + ")");
+      log.info(delim + node.name + " (" + node.startToken + ")");
       for (HTMLParserNodeListener.Node child : node.children) {
          visitAll(delim + "\t", child);
       }
    }
 
 
-   @Test
+   //@Test
    public void testHtml5Group() {
 
       final Html5Group group = new Html5Group();

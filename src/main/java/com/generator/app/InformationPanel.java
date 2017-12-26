@@ -2,6 +2,8 @@ package com.generator.app;
 
 import com.generator.neo.NeoModel;
 import com.generator.util.ColorBrewerSelector;
+import com.generator.util.FormatUtil;
+import com.generator.util.NeoUtil;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.*;
@@ -15,7 +17,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 
 import static com.generator.app.AppEvents.*;
 import static com.generator.util.NeoUtil.*;
@@ -24,6 +25,9 @@ import static com.generator.util.NeoUtil.*;
  * Created 18.07.17.
  */
 final class InformationPanel extends JPanel {
+
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(InformationPanel.class);
+
 
    private final App app;
    private final JTree informationTree;
@@ -103,7 +107,7 @@ final class InformationPanel extends JPanel {
          @Override
          protected void propertyChange(Object oldValue, Set<Node> nodes) {
             for (Node node : nodes) {
-               if (hasLabel(node, AppMotif.Entities._Layout))
+               if(AppMotif.isLayout(node))
                   layouts.addChildNode(new LayoutNode(node), layouts, informationTree);
             }
          }
@@ -113,6 +117,10 @@ final class InformationPanel extends JPanel {
 
          @Override
          protected void propertyChange(Object oldValue, Set<Relationship> relations) {
+
+            log.info("informationPanel.relations_added");
+            final long start = System.currentTimeMillis();
+
             for (Relationship relationship : relations) {
                final AtomicBoolean found = new AtomicBoolean(false);
                for (int i = 0; i < relationships.getChildCount(); i++) {
@@ -127,6 +135,8 @@ final class InformationPanel extends JPanel {
                if (!found.get())
                   relationships.addChildNode(new RelationshipTypeNode(relationship.getType()), relationships, informationTree);
             }
+
+            log.info("informationPanel.relations_added " + FormatUtil.formatTime(System.currentTimeMillis() - start));
          }
       });
    }
@@ -156,7 +166,7 @@ final class InformationPanel extends JPanel {
             root.add(propertyNodes);
             app.model.graph().getAllPropertyKeys().forEach(propertyKey -> propertyNodes.add(new PropertyNode(propertyKey)));
 
-            System.out.println("TODO Indices not working on RemoteNeo");
+            log.info("TODO Indices not working on RemoteNeo");
 
 //            final InformationNode nodeIndices = new InformationNode("Node Indices");
 //            root.add(nodeIndices);
@@ -473,28 +483,32 @@ final class InformationPanel extends JPanel {
 
       }
 
-//      @Override
-//      void addRightClickActions(JPopupMenu pop, TreePath selectionPath, JTree source) {
-//         pop.add(new App.TransactionAction("Show duplicate relationships", app) {
-//            @Override
-//            protected void actionPerformed(ActionEvent e, Transaction tx) {
-//
-//               app.model.graph().getAllLabelsInUse().forEach(label -> app.model.graph().getAll(label.name()).forEach(node -> {
-//                  final Set<String> relations = new TreeSet<>();
-//                  outgoing(node, RelationshipType.withName("name")).forEach(relationship -> {
-//                     final String key = relationship.getType().name();
-//                     if(relations.contains(key)) {
-//                        System.out.println(relationship.toString());
-//                        relationship.delete();
-////                        System.out.println("\t"+getNameAndLabelsFrom(node) + " -> " + relationship.getType().name() + " -> " + getNameAndLabelsFrom(other(node,relationship)));
-//                        return;
-//                     }
-//                     relations.add(key);
-//                  });
-//               }));
-//            }
-//         });
-//      }
+      @Override
+      void addRightClickActions(JPopupMenu pop, TreePath selectionPath, JTree source) {
+         pop.add(new App.TransactionAction("Remove duplicate relationships", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) {
+
+               final Set<String> relations = new TreeSet<>();
+               app.model.graph().getAllRelationships().forEach(relationship -> {
+
+                  final long src = relationship.getStartNode().getId();
+                  final long dst = relationship.getEndNode().getId();
+                  final String type = relationship.getType().name();
+
+                  final String properties = NeoUtil.propertiesFor(relationship);
+
+                  final String key = src + " -> " + type + " (" + properties + ") -> " + dst;
+
+                  if(relations.contains(key)) {
+                     log.info(key + " already exists. deleting.");
+                     relationship.delete();
+                  }
+                  relations.add(key);
+               });
+            }
+         });
+      }
    }
 
    private class RelationshipTypeNode extends InformationNode {

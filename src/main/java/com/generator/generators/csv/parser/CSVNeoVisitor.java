@@ -6,6 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class CSVNeoVisitor extends CSVBaseVisitor<Node> {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(CSVNeoVisitor.class);
+
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final com.generator.neo.NeoModel model;
 
@@ -28,18 +30,8 @@ public class CSVNeoVisitor extends CSVBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitHdr(com.generator.generators.csv.parser.CSVParser.HdrContext arg) {
-		System.out.println("Hdr");
-		final Node node = model.newNode(Label.label("Hdr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitCsvFile(com.generator.generators.csv.parser.CSVParser.CsvFileContext arg) {
-		System.out.println("CsvFile");
+		log.info("CsvFile");
 		final Node node = model.newNode(Label.label("CsvFile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -48,8 +40,18 @@ public class CSVNeoVisitor extends CSVBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitHdr(com.generator.generators.csv.parser.CSVParser.HdrContext arg) {
+		log.info("Hdr");
+		final Node node = model.newNode(Label.label("Hdr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitRow(com.generator.generators.csv.parser.CSVParser.RowContext arg) {
-		System.out.println("Row");
+		log.info("Row");
 		final Node node = model.newNode(Label.label("Row"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -59,7 +61,7 @@ public class CSVNeoVisitor extends CSVBaseVisitor<Node> {
 
 	@Override
 	public Node visitField(com.generator.generators.csv.parser.CSVParser.FieldContext arg) {
-		System.out.println("Field");
+		log.info("Field");
 		final Node node = model.newNode(Label.label("Field"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);

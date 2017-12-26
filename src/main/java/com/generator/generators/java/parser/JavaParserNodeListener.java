@@ -2,6 +2,8 @@ package com.generator.generators.java.parser;
 
 public class JavaParserNodeListener extends JavaParserBaseListener {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(JavaParserNodeListener.class);
+
    public static class Node {
 
       public final String name;
@@ -33,7 +35,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
+		if (debug) log.debug(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -199,6 +201,23 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	public boolean inTypeList() {
       return !inTypeList.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDefaultValue = new java.util.Stack<>();
+
+	@Override
+	public void enterDefaultValue(com.generator.generators.java.parser.JavaParser.DefaultValueContext arg) {
+		onEnter(new Node("DefaultValue", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inDefaultValue.push(true);
+	}
+
+	public void exitDefaultValue(com.generator.generators.java.parser.JavaParser.DefaultValueContext arg) {
+		onExit();
+		this.inDefaultValue.pop();
+	}
+
+	public boolean inDefaultValue() {
+      return !inDefaultValue.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCompilationUnit = new java.util.Stack<>();
@@ -1185,23 +1204,6 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	public boolean inAnnotationConstantRest() {
       return !inAnnotationConstantRest.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDefaultValue = new java.util.Stack<>();
-
-	@Override
-	public void enterDefaultValue(com.generator.generators.java.parser.JavaParser.DefaultValueContext arg) {
-		onEnter(new Node("DefaultValue", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inDefaultValue.push(true);
-	}
-
-	public void exitDefaultValue(com.generator.generators.java.parser.JavaParser.DefaultValueContext arg) {
-		onExit();
-		this.inDefaultValue.pop();
-	}
-
-	public boolean inDefaultValue() {
-      return !inDefaultValue.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBlockStatement = new java.util.Stack<>();

@@ -6,6 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(HTMLParserNeoVisitor.class);
+
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final com.generator.neo.NeoModel model;
 
@@ -29,7 +31,7 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitHtmlElement(com.generator.generators.html5.parser.HTMLParser.HtmlElementContext arg) {
-		System.out.println("HtmlElement");
+		log.info("HtmlElement");
 		final Node node = model.newNode(Label.label("HtmlElement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -39,7 +41,7 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitHtmlDocument(com.generator.generators.html5.parser.HTMLParser.HtmlDocumentContext arg) {
-		System.out.println("HtmlDocument");
+		log.info("HtmlDocument");
 		final Node node = model.newNode(Label.label("HtmlDocument"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -49,7 +51,7 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitHtmlElements(com.generator.generators.html5.parser.HTMLParser.HtmlElementsContext arg) {
-		System.out.println("HtmlElements");
+		log.info("HtmlElements");
 		final Node node = model.newNode(Label.label("HtmlElements"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -59,7 +61,7 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitHtmlContent(com.generator.generators.html5.parser.HTMLParser.HtmlContentContext arg) {
-		System.out.println("HtmlContent");
+		log.info("HtmlContent");
 		final Node node = model.newNode(Label.label("HtmlContent"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -69,7 +71,7 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitHtmlAttribute(com.generator.generators.html5.parser.HTMLParser.HtmlAttributeContext arg) {
-		System.out.println("HtmlAttribute");
+		log.info("HtmlAttribute");
 		final Node node = model.newNode(Label.label("HtmlAttribute"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -79,7 +81,7 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitHtmlAttributeName(com.generator.generators.html5.parser.HTMLParser.HtmlAttributeNameContext arg) {
-		System.out.println("HtmlAttributeName");
+		log.info("HtmlAttributeName");
 		final Node node = model.newNode(Label.label("HtmlAttributeName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -89,7 +91,7 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitHtmlAttributeValue(com.generator.generators.html5.parser.HTMLParser.HtmlAttributeValueContext arg) {
-		System.out.println("HtmlAttributeValue");
+		log.info("HtmlAttributeValue");
 		final Node node = model.newNode(Label.label("HtmlAttributeValue"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -99,7 +101,7 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitHtmlTagName(com.generator.generators.html5.parser.HTMLParser.HtmlTagNameContext arg) {
-		System.out.println("HtmlTagName");
+		log.info("HtmlTagName");
 		final Node node = model.newNode(Label.label("HtmlTagName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -109,7 +111,7 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitHtmlChardata(com.generator.generators.html5.parser.HTMLParser.HtmlChardataContext arg) {
-		System.out.println("HtmlChardata");
+		log.info("HtmlChardata");
 		final Node node = model.newNode(Label.label("HtmlChardata"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -119,7 +121,7 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitHtmlMisc(com.generator.generators.html5.parser.HTMLParser.HtmlMiscContext arg) {
-		System.out.println("HtmlMisc");
+		log.info("HtmlMisc");
 		final Node node = model.newNode(Label.label("HtmlMisc"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -129,7 +131,7 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitHtmlComment(com.generator.generators.html5.parser.HTMLParser.HtmlCommentContext arg) {
-		System.out.println("HtmlComment");
+		log.info("HtmlComment");
 		final Node node = model.newNode(Label.label("HtmlComment"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -139,7 +141,7 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitXhtmlCDATA(com.generator.generators.html5.parser.HTMLParser.XhtmlCDATAContext arg) {
-		System.out.println("XhtmlCDATA");
+		log.info("XhtmlCDATA");
 		final Node node = model.newNode(Label.label("XhtmlCDATA"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -149,7 +151,7 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitDtd(com.generator.generators.html5.parser.HTMLParser.DtdContext arg) {
-		System.out.println("Dtd");
+		log.info("Dtd");
 		final Node node = model.newNode(Label.label("Dtd"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -159,7 +161,7 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitXml(com.generator.generators.html5.parser.HTMLParser.XmlContext arg) {
-		System.out.println("Xml");
+		log.info("Xml");
 		final Node node = model.newNode(Label.label("Xml"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -169,7 +171,7 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitScriptlet(com.generator.generators.html5.parser.HTMLParser.ScriptletContext arg) {
-		System.out.println("Scriptlet");
+		log.info("Scriptlet");
 		final Node node = model.newNode(Label.label("Scriptlet"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -179,7 +181,7 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitScript(com.generator.generators.html5.parser.HTMLParser.ScriptContext arg) {
-		System.out.println("Script");
+		log.info("Script");
 		final Node node = model.newNode(Label.label("Script"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -189,7 +191,7 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitStyle(com.generator.generators.html5.parser.HTMLParser.StyleContext arg) {
-		System.out.println("Style");
+		log.info("Style");
 		final Node node = model.newNode(Label.label("Style"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);

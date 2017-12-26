@@ -9,9 +9,9 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
 
 public class Tests {
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
 
-
-   @Test
+   //@Test
    public void testParser() {
       final CypherParser parser = new CypherParser(new CommonTokenStream(new CypherLexer(CharStreams.fromString("MATCH (node1:Label1)-->(node2:Label2)\n" +
             "WHERE node1.propertyA = {value}\n" +
@@ -21,16 +21,16 @@ public class Tests {
 
    }
 
-   @Test
+   //@Test
    public void testCypher() {
 
       final CypherGroup group = new CypherGroup();
 
-      System.out.println(group.newcreateNode().
+      log.info(group.newcreateNode().
             setId("ID").
             addLabelsValue("Entities"));
 
-      System.out.println(
+      log.info(
             group.newcreateNodes().
                   addNodesValue(group.newstringProperty().
                         setValue("VALUE").

@@ -17,7 +17,7 @@ import java.util.UUID;
  * Created 13.10.17.
  */
 public class Tests {
-
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
    public static void main(String[] args) {
 
       // https://www.rivescript.com/docs/tutorial
@@ -56,16 +56,16 @@ public class Tests {
 
       // Get a reply.
       String reply = bot.reply("user", "create node Entity");
-      System.out.println(reply);
+      log.info(reply);
    }
 
-   @Test
+   //@Test
    public void testGroup() {
 
       final RivescriptGroup group = new RivescriptGroup();
-      System.out.println(group.newscript().setVersion("1.0").setName("Hello world"));
+      log.info(group.newscript().setVersion("1.0").setName("Hello world"));
 
-      System.out.println(group.newscript().
+      log.info(group.newscript().
             setVersion("2.0").
             setName("begin").
             addGroupsValue(group.newbegin().

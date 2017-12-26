@@ -1,5 +1,6 @@
 package com.generator.util;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -17,6 +18,20 @@ public class FormatUtil {
 	public static final long MINUTEms = SECONDms * 60L;
 	public static final long HOURms = MINUTEms * 60L;
 	public static final long DAYms = HOURms * 24L;
+
+	private static final DecimalFormat percentFormat = new DecimalFormat("##.##%");
+
+	public static String formatPct(double pct) {
+		return percentFormat.format(pct);
+	}
+
+	public static String formatPct(int count, int total) {
+		return percentFormat.format(count / (double)total);
+	}
+
+	public static String formatPct(long count, long total) {
+		return percentFormat.format(count / (double)total);
+	}
 
 	public static String formatTime(long runningTime) {
 

@@ -21,7 +21,7 @@ import static com.generator.neo.remote.RemoteRelationship.fromDriverRelationship
  * Created by Ernst Sognnes on 11.07.17.
  */
 public class RemoteNode implements Node, NeoEntity {
-
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(RemoteNode.class);
    private final NeoDriver driver;
    private org.neo4j.driver.v1.types.Node driverNode;
    private final Collection<org.neo4j.driver.v1.types.Relationship> driverRelationships = new LinkedHashSet<>();
@@ -171,7 +171,7 @@ public class RemoteNode implements Node, NeoEntity {
 
       RemoteNode other = (RemoteNode)otherEntity;
 
-      System.out.println("Merging " + this + " with " + other);
+      log.info("Merging " + this + " with " + other);
 
       this.driverNode = other.driverNode;
       this.driverRelationships.clear();

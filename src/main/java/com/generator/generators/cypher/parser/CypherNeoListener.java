@@ -6,6 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class CypherNeoListener extends CypherBaseListener {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(CypherNeoListener.class);
+
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
@@ -24,7 +26,7 @@ public class CypherNeoListener extends CypherBaseListener {
 		if (!nodeStack.isEmpty())
       	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.getProperty("text"));
+		if (debug) log.debug(delim.toString() + node.getProperty("text"));
 		delim.append("\t");
    }
 
@@ -43,7 +45,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterAtom(com.generator.generators.cypher.parser.CypherParser.AtomContext arg) {
-		final Node node = model.findOrCreate(Label.label("Atom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Atom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAtom.push(true);
 	}
@@ -61,7 +63,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterSet(com.generator.generators.cypher.parser.CypherParser.SetContext arg) {
-		final Node node = model.findOrCreate(Label.label("Set"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Set"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSet.push(true);
 	}
@@ -79,7 +81,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterExpression(com.generator.generators.cypher.parser.CypherParser.ExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Expression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExpression.push(true);
 	}
@@ -97,7 +99,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterStatement(com.generator.generators.cypher.parser.CypherParser.StatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inStatement.push(true);
 	}
@@ -115,7 +117,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterLiteral(com.generator.generators.cypher.parser.CypherParser.LiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLiteral.push(true);
 	}
@@ -129,425 +131,11 @@ public class CypherNeoListener extends CypherBaseListener {
       return !inLiteral.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inCypher = new java.util.Stack<>();
-
-	@Override
-	public void enterCypher(com.generator.generators.cypher.parser.CypherParser.CypherContext arg) {
-		final Node node = model.findOrCreate(Label.label("Cypher"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inCypher.push(true);
-	}
-
-	public void exitCypher(com.generator.generators.cypher.parser.CypherParser.CypherContext arg) {
-		onExit();
-		this.inCypher.pop();
-	}
-
-	public boolean inCypher() {
-      return !inCypher.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inQuery = new java.util.Stack<>();
-
-	@Override
-	public void enterQuery(com.generator.generators.cypher.parser.CypherParser.QueryContext arg) {
-		final Node node = model.findOrCreate(Label.label("Query"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inQuery.push(true);
-	}
-
-	public void exitQuery(com.generator.generators.cypher.parser.CypherParser.QueryContext arg) {
-		onExit();
-		this.inQuery.pop();
-	}
-
-	public boolean inQuery() {
-      return !inQuery.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inRegularQuery = new java.util.Stack<>();
-
-	@Override
-	public void enterRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
-		final Node node = model.findOrCreate(Label.label("RegularQuery"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inRegularQuery.push(true);
-	}
-
-	public void exitRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
-		onExit();
-		this.inRegularQuery.pop();
-	}
-
-	public boolean inRegularQuery() {
-      return !inRegularQuery.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUnion = new java.util.Stack<>();
-
-	@Override
-	public void enterUnion(com.generator.generators.cypher.parser.CypherParser.UnionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Union"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inUnion.push(true);
-	}
-
-	public void exitUnion(com.generator.generators.cypher.parser.CypherParser.UnionContext arg) {
-		onExit();
-		this.inUnion.pop();
-	}
-
-	public boolean inUnion() {
-      return !inUnion.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSingleQuery = new java.util.Stack<>();
-
-	@Override
-	public void enterSingleQuery(com.generator.generators.cypher.parser.CypherParser.SingleQueryContext arg) {
-		final Node node = model.findOrCreate(Label.label("SingleQuery"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inSingleQuery.push(true);
-	}
-
-	public void exitSingleQuery(com.generator.generators.cypher.parser.CypherParser.SingleQueryContext arg) {
-		onExit();
-		this.inSingleQuery.pop();
-	}
-
-	public boolean inSingleQuery() {
-      return !inSingleQuery.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSinglePartQuery = new java.util.Stack<>();
-
-	@Override
-	public void enterSinglePartQuery(com.generator.generators.cypher.parser.CypherParser.SinglePartQueryContext arg) {
-		final Node node = model.findOrCreate(Label.label("SinglePartQuery"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inSinglePartQuery.push(true);
-	}
-
-	public void exitSinglePartQuery(com.generator.generators.cypher.parser.CypherParser.SinglePartQueryContext arg) {
-		onExit();
-		this.inSinglePartQuery.pop();
-	}
-
-	public boolean inSinglePartQuery() {
-      return !inSinglePartQuery.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inReadOnlyEnd = new java.util.Stack<>();
-
-	@Override
-	public void enterReadOnlyEnd(com.generator.generators.cypher.parser.CypherParser.ReadOnlyEndContext arg) {
-		final Node node = model.findOrCreate(Label.label("ReadOnlyEnd"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inReadOnlyEnd.push(true);
-	}
-
-	public void exitReadOnlyEnd(com.generator.generators.cypher.parser.CypherParser.ReadOnlyEndContext arg) {
-		onExit();
-		this.inReadOnlyEnd.pop();
-	}
-
-	public boolean inReadOnlyEnd() {
-      return !inReadOnlyEnd.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inReadUpdateEnd = new java.util.Stack<>();
-
-	@Override
-	public void enterReadUpdateEnd(com.generator.generators.cypher.parser.CypherParser.ReadUpdateEndContext arg) {
-		final Node node = model.findOrCreate(Label.label("ReadUpdateEnd"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inReadUpdateEnd.push(true);
-	}
-
-	public void exitReadUpdateEnd(com.generator.generators.cypher.parser.CypherParser.ReadUpdateEndContext arg) {
-		onExit();
-		this.inReadUpdateEnd.pop();
-	}
-
-	public boolean inReadUpdateEnd() {
-      return !inReadUpdateEnd.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUpdatingEnd = new java.util.Stack<>();
-
-	@Override
-	public void enterUpdatingEnd(com.generator.generators.cypher.parser.CypherParser.UpdatingEndContext arg) {
-		final Node node = model.findOrCreate(Label.label("UpdatingEnd"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inUpdatingEnd.push(true);
-	}
-
-	public void exitUpdatingEnd(com.generator.generators.cypher.parser.CypherParser.UpdatingEndContext arg) {
-		onExit();
-		this.inUpdatingEnd.pop();
-	}
-
-	public boolean inUpdatingEnd() {
-      return !inUpdatingEnd.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inMultiPartQuery = new java.util.Stack<>();
-
-	@Override
-	public void enterMultiPartQuery(com.generator.generators.cypher.parser.CypherParser.MultiPartQueryContext arg) {
-		final Node node = model.findOrCreate(Label.label("MultiPartQuery"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inMultiPartQuery.push(true);
-	}
-
-	public void exitMultiPartQuery(com.generator.generators.cypher.parser.CypherParser.MultiPartQueryContext arg) {
-		onExit();
-		this.inMultiPartQuery.pop();
-	}
-
-	public boolean inMultiPartQuery() {
-      return !inMultiPartQuery.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inReadPart = new java.util.Stack<>();
-
-	@Override
-	public void enterReadPart(com.generator.generators.cypher.parser.CypherParser.ReadPartContext arg) {
-		final Node node = model.findOrCreate(Label.label("ReadPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inReadPart.push(true);
-	}
-
-	public void exitReadPart(com.generator.generators.cypher.parser.CypherParser.ReadPartContext arg) {
-		onExit();
-		this.inReadPart.pop();
-	}
-
-	public boolean inReadPart() {
-      return !inReadPart.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUpdatingPart = new java.util.Stack<>();
-
-	@Override
-	public void enterUpdatingPart(com.generator.generators.cypher.parser.CypherParser.UpdatingPartContext arg) {
-		final Node node = model.findOrCreate(Label.label("UpdatingPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inUpdatingPart.push(true);
-	}
-
-	public void exitUpdatingPart(com.generator.generators.cypher.parser.CypherParser.UpdatingPartContext arg) {
-		onExit();
-		this.inUpdatingPart.pop();
-	}
-
-	public boolean inUpdatingPart() {
-      return !inUpdatingPart.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUpdatingStartClause = new java.util.Stack<>();
-
-	@Override
-	public void enterUpdatingStartClause(com.generator.generators.cypher.parser.CypherParser.UpdatingStartClauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("UpdatingStartClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inUpdatingStartClause.push(true);
-	}
-
-	public void exitUpdatingStartClause(com.generator.generators.cypher.parser.CypherParser.UpdatingStartClauseContext arg) {
-		onExit();
-		this.inUpdatingStartClause.pop();
-	}
-
-	public boolean inUpdatingStartClause() {
-      return !inUpdatingStartClause.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUpdatingClause = new java.util.Stack<>();
-
-	@Override
-	public void enterUpdatingClause(com.generator.generators.cypher.parser.CypherParser.UpdatingClauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("UpdatingClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inUpdatingClause.push(true);
-	}
-
-	public void exitUpdatingClause(com.generator.generators.cypher.parser.CypherParser.UpdatingClauseContext arg) {
-		onExit();
-		this.inUpdatingClause.pop();
-	}
-
-	public boolean inUpdatingClause() {
-      return !inUpdatingClause.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inReadingClause = new java.util.Stack<>();
-
-	@Override
-	public void enterReadingClause(com.generator.generators.cypher.parser.CypherParser.ReadingClauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("ReadingClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inReadingClause.push(true);
-	}
-
-	public void exitReadingClause(com.generator.generators.cypher.parser.CypherParser.ReadingClauseContext arg) {
-		onExit();
-		this.inReadingClause.pop();
-	}
-
-	public boolean inReadingClause() {
-      return !inReadingClause.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inCyper_match = new java.util.Stack<>();
-
-	@Override
-	public void enterCyper_match(com.generator.generators.cypher.parser.CypherParser.Cyper_matchContext arg) {
-		final Node node = model.findOrCreate(Label.label("Cyper_match"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inCyper_match.push(true);
-	}
-
-	public void exitCyper_match(com.generator.generators.cypher.parser.CypherParser.Cyper_matchContext arg) {
-		onExit();
-		this.inCyper_match.pop();
-	}
-
-	public boolean inCyper_match() {
-      return !inCyper_match.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUnwind = new java.util.Stack<>();
-
-	@Override
-	public void enterUnwind(com.generator.generators.cypher.parser.CypherParser.UnwindContext arg) {
-		final Node node = model.findOrCreate(Label.label("Unwind"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inUnwind.push(true);
-	}
-
-	public void exitUnwind(com.generator.generators.cypher.parser.CypherParser.UnwindContext arg) {
-		onExit();
-		this.inUnwind.pop();
-	}
-
-	public boolean inUnwind() {
-      return !inUnwind.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inMerge = new java.util.Stack<>();
-
-	@Override
-	public void enterMerge(com.generator.generators.cypher.parser.CypherParser.MergeContext arg) {
-		final Node node = model.findOrCreate(Label.label("Merge"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inMerge.push(true);
-	}
-
-	public void exitMerge(com.generator.generators.cypher.parser.CypherParser.MergeContext arg) {
-		onExit();
-		this.inMerge.pop();
-	}
-
-	public boolean inMerge() {
-      return !inMerge.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inMergeAction = new java.util.Stack<>();
-
-	@Override
-	public void enterMergeAction(com.generator.generators.cypher.parser.CypherParser.MergeActionContext arg) {
-		final Node node = model.findOrCreate(Label.label("MergeAction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inMergeAction.push(true);
-	}
-
-	public void exitMergeAction(com.generator.generators.cypher.parser.CypherParser.MergeActionContext arg) {
-		onExit();
-		this.inMergeAction.pop();
-	}
-
-	public boolean inMergeAction() {
-      return !inMergeAction.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inCreate = new java.util.Stack<>();
-
-	@Override
-	public void enterCreate(com.generator.generators.cypher.parser.CypherParser.CreateContext arg) {
-		final Node node = model.findOrCreate(Label.label("Create"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inCreate.push(true);
-	}
-
-	public void exitCreate(com.generator.generators.cypher.parser.CypherParser.CreateContext arg) {
-		onExit();
-		this.inCreate.pop();
-	}
-
-	public boolean inCreate() {
-      return !inCreate.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSetItem = new java.util.Stack<>();
-
-	@Override
-	public void enterSetItem(com.generator.generators.cypher.parser.CypherParser.SetItemContext arg) {
-		final Node node = model.findOrCreate(Label.label("SetItem"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inSetItem.push(true);
-	}
-
-	public void exitSetItem(com.generator.generators.cypher.parser.CypherParser.SetItemContext arg) {
-		onExit();
-		this.inSetItem.pop();
-	}
-
-	public boolean inSetItem() {
-      return !inSetItem.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDelete = new java.util.Stack<>();
-
-	@Override
-	public void enterDelete(com.generator.generators.cypher.parser.CypherParser.DeleteContext arg) {
-		final Node node = model.findOrCreate(Label.label("Delete"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inDelete.push(true);
-	}
-
-	public void exitDelete(com.generator.generators.cypher.parser.CypherParser.DeleteContext arg) {
-		onExit();
-		this.inDelete.pop();
-	}
-
-	public boolean inDelete() {
-      return !inDelete.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inRemove = new java.util.Stack<>();
-
-	@Override
-	public void enterRemove(com.generator.generators.cypher.parser.CypherParser.RemoveContext arg) {
-		final Node node = model.findOrCreate(Label.label("Remove"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inRemove.push(true);
-	}
-
-	public void exitRemove(com.generator.generators.cypher.parser.CypherParser.RemoveContext arg) {
-		onExit();
-		this.inRemove.pop();
-	}
-
-	public boolean inRemove() {
-      return !inRemove.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inRemoveItem = new java.util.Stack<>();
 
 	@Override
 	public void enterRemoveItem(com.generator.generators.cypher.parser.CypherParser.RemoveItemContext arg) {
-		final Node node = model.findOrCreate(Label.label("RemoveItem"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("RemoveItem"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRemoveItem.push(true);
 	}
@@ -565,7 +153,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterInQueryCall(com.generator.generators.cypher.parser.CypherParser.InQueryCallContext arg) {
-		final Node node = model.findOrCreate(Label.label("InQueryCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("InQueryCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInQueryCall.push(true);
 	}
@@ -583,7 +171,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterStandaloneCall(com.generator.generators.cypher.parser.CypherParser.StandaloneCallContext arg) {
-		final Node node = model.findOrCreate(Label.label("StandaloneCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("StandaloneCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inStandaloneCall.push(true);
 	}
@@ -601,7 +189,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterYieldItems(com.generator.generators.cypher.parser.CypherParser.YieldItemsContext arg) {
-		final Node node = model.findOrCreate(Label.label("YieldItems"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("YieldItems"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inYieldItems.push(true);
 	}
@@ -619,7 +207,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterYieldItem(com.generator.generators.cypher.parser.CypherParser.YieldItemContext arg) {
-		final Node node = model.findOrCreate(Label.label("YieldItem"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("YieldItem"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inYieldItem.push(true);
 	}
@@ -637,7 +225,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterWith(com.generator.generators.cypher.parser.CypherParser.WithContext arg) {
-		final Node node = model.findOrCreate(Label.label("With"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("With"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inWith.push(true);
 	}
@@ -655,7 +243,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterCypher_return(com.generator.generators.cypher.parser.CypherParser.Cypher_returnContext arg) {
-		final Node node = model.findOrCreate(Label.label("Cypher_return"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Cypher_return"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCypher_return.push(true);
 	}
@@ -673,7 +261,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterReturnBody(com.generator.generators.cypher.parser.CypherParser.ReturnBodyContext arg) {
-		final Node node = model.findOrCreate(Label.label("ReturnBody"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ReturnBody"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inReturnBody.push(true);
 	}
@@ -691,7 +279,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterReturnItems(com.generator.generators.cypher.parser.CypherParser.ReturnItemsContext arg) {
-		final Node node = model.findOrCreate(Label.label("ReturnItems"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ReturnItems"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inReturnItems.push(true);
 	}
@@ -709,7 +297,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterReturnItem(com.generator.generators.cypher.parser.CypherParser.ReturnItemContext arg) {
-		final Node node = model.findOrCreate(Label.label("ReturnItem"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ReturnItem"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inReturnItem.push(true);
 	}
@@ -727,7 +315,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterOrder(com.generator.generators.cypher.parser.CypherParser.OrderContext arg) {
-		final Node node = model.findOrCreate(Label.label("Order"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Order"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOrder.push(true);
 	}
@@ -745,7 +333,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterSkip(com.generator.generators.cypher.parser.CypherParser.SkipContext arg) {
-		final Node node = model.findOrCreate(Label.label("Skip"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Skip"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSkip.push(true);
 	}
@@ -763,7 +351,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterLimit(com.generator.generators.cypher.parser.CypherParser.LimitContext arg) {
-		final Node node = model.findOrCreate(Label.label("Limit"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Limit"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLimit.push(true);
 	}
@@ -781,7 +369,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterSortItem(com.generator.generators.cypher.parser.CypherParser.SortItemContext arg) {
-		final Node node = model.findOrCreate(Label.label("SortItem"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("SortItem"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSortItem.push(true);
 	}
@@ -799,7 +387,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterWhere(com.generator.generators.cypher.parser.CypherParser.WhereContext arg) {
-		final Node node = model.findOrCreate(Label.label("Where"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Where"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inWhere.push(true);
 	}
@@ -817,7 +405,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterPattern(com.generator.generators.cypher.parser.CypherParser.PatternContext arg) {
-		final Node node = model.findOrCreate(Label.label("Pattern"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Pattern"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPattern.push(true);
 	}
@@ -835,7 +423,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterPatternPart(com.generator.generators.cypher.parser.CypherParser.PatternPartContext arg) {
-		final Node node = model.findOrCreate(Label.label("PatternPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("PatternPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPatternPart.push(true);
 	}
@@ -853,7 +441,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterAnonymousPatternPart(com.generator.generators.cypher.parser.CypherParser.AnonymousPatternPartContext arg) {
-		final Node node = model.findOrCreate(Label.label("AnonymousPatternPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("AnonymousPatternPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAnonymousPatternPart.push(true);
 	}
@@ -871,7 +459,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterPatternElement(com.generator.generators.cypher.parser.CypherParser.PatternElementContext arg) {
-		final Node node = model.findOrCreate(Label.label("PatternElement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("PatternElement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPatternElement.push(true);
 	}
@@ -889,7 +477,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterNodePattern(com.generator.generators.cypher.parser.CypherParser.NodePatternContext arg) {
-		final Node node = model.findOrCreate(Label.label("NodePattern"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("NodePattern"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNodePattern.push(true);
 	}
@@ -907,7 +495,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterPatternElementChain(com.generator.generators.cypher.parser.CypherParser.PatternElementChainContext arg) {
-		final Node node = model.findOrCreate(Label.label("PatternElementChain"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("PatternElementChain"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPatternElementChain.push(true);
 	}
@@ -925,7 +513,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterRelationshipPattern(com.generator.generators.cypher.parser.CypherParser.RelationshipPatternContext arg) {
-		final Node node = model.findOrCreate(Label.label("RelationshipPattern"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("RelationshipPattern"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRelationshipPattern.push(true);
 	}
@@ -943,7 +531,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterRelationshipDetail(com.generator.generators.cypher.parser.CypherParser.RelationshipDetailContext arg) {
-		final Node node = model.findOrCreate(Label.label("RelationshipDetail"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("RelationshipDetail"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRelationshipDetail.push(true);
 	}
@@ -961,7 +549,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterProperties(com.generator.generators.cypher.parser.CypherParser.PropertiesContext arg) {
-		final Node node = model.findOrCreate(Label.label("Properties"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Properties"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inProperties.push(true);
 	}
@@ -979,7 +567,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterRelationshipTypes(com.generator.generators.cypher.parser.CypherParser.RelationshipTypesContext arg) {
-		final Node node = model.findOrCreate(Label.label("RelationshipTypes"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("RelationshipTypes"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRelationshipTypes.push(true);
 	}
@@ -997,7 +585,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterNodeLabels(com.generator.generators.cypher.parser.CypherParser.NodeLabelsContext arg) {
-		final Node node = model.findOrCreate(Label.label("NodeLabels"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("NodeLabels"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNodeLabels.push(true);
 	}
@@ -1015,7 +603,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterNodeLabel(com.generator.generators.cypher.parser.CypherParser.NodeLabelContext arg) {
-		final Node node = model.findOrCreate(Label.label("NodeLabel"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("NodeLabel"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNodeLabel.push(true);
 	}
@@ -1033,7 +621,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterRangeLiteral(com.generator.generators.cypher.parser.CypherParser.RangeLiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("RangeLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("RangeLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRangeLiteral.push(true);
 	}
@@ -1051,7 +639,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterLabelName(com.generator.generators.cypher.parser.CypherParser.LabelNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("LabelName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LabelName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLabelName.push(true);
 	}
@@ -1069,7 +657,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterRelTypeName(com.generator.generators.cypher.parser.CypherParser.RelTypeNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("RelTypeName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("RelTypeName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRelTypeName.push(true);
 	}
@@ -1087,7 +675,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterOrExpression(com.generator.generators.cypher.parser.CypherParser.OrExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("OrExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("OrExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOrExpression.push(true);
 	}
@@ -1105,7 +693,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterXorExpression(com.generator.generators.cypher.parser.CypherParser.XorExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("XorExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("XorExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inXorExpression.push(true);
 	}
@@ -1123,7 +711,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterAndExpression(com.generator.generators.cypher.parser.CypherParser.AndExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("AndExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("AndExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAndExpression.push(true);
 	}
@@ -1141,7 +729,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterNotExpression(com.generator.generators.cypher.parser.CypherParser.NotExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("NotExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("NotExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNotExpression.push(true);
 	}
@@ -1159,7 +747,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterComparisonExpression(com.generator.generators.cypher.parser.CypherParser.ComparisonExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("ComparisonExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ComparisonExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inComparisonExpression.push(true);
 	}
@@ -1177,7 +765,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterAddOrSubtractExpression(com.generator.generators.cypher.parser.CypherParser.AddOrSubtractExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("AddOrSubtractExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("AddOrSubtractExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAddOrSubtractExpression.push(true);
 	}
@@ -1195,7 +783,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterMultiplyDivideModuloExpression(com.generator.generators.cypher.parser.CypherParser.MultiplyDivideModuloExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("MultiplyDivideModuloExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("MultiplyDivideModuloExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMultiplyDivideModuloExpression.push(true);
 	}
@@ -1213,7 +801,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterPowerOfExpression(com.generator.generators.cypher.parser.CypherParser.PowerOfExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("PowerOfExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("PowerOfExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPowerOfExpression.push(true);
 	}
@@ -1231,7 +819,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterUnaryAddOrSubtractExpression(com.generator.generators.cypher.parser.CypherParser.UnaryAddOrSubtractExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("UnaryAddOrSubtractExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("UnaryAddOrSubtractExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUnaryAddOrSubtractExpression.push(true);
 	}
@@ -1249,7 +837,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterStringListNullOperatorExpression(com.generator.generators.cypher.parser.CypherParser.StringListNullOperatorExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("StringListNullOperatorExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("StringListNullOperatorExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inStringListNullOperatorExpression.push(true);
 	}
@@ -1267,7 +855,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterPropertyOrLabelsExpression(com.generator.generators.cypher.parser.CypherParser.PropertyOrLabelsExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("PropertyOrLabelsExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("PropertyOrLabelsExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPropertyOrLabelsExpression.push(true);
 	}
@@ -1285,7 +873,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterBooleanLiteral(com.generator.generators.cypher.parser.CypherParser.BooleanLiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("BooleanLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("BooleanLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBooleanLiteral.push(true);
 	}
@@ -1303,7 +891,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterListLiteral(com.generator.generators.cypher.parser.CypherParser.ListLiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("ListLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ListLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inListLiteral.push(true);
 	}
@@ -1321,7 +909,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterPartialComparisonExpression(com.generator.generators.cypher.parser.CypherParser.PartialComparisonExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("PartialComparisonExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("PartialComparisonExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPartialComparisonExpression.push(true);
 	}
@@ -1335,11 +923,443 @@ public class CypherNeoListener extends CypherBaseListener {
       return !inPartialComparisonExpression.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inIdInColl = new java.util.Stack<>();
+
+	@Override
+	public void enterIdInColl(com.generator.generators.cypher.parser.CypherParser.IdInCollContext arg) {
+		final Node node = model.newNode(Label.label("IdInColl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inIdInColl.push(true);
+	}
+
+	public void exitIdInColl(com.generator.generators.cypher.parser.CypherParser.IdInCollContext arg) {
+		onExit();
+		this.inIdInColl.pop();
+	}
+
+	public boolean inIdInColl() {
+      return !inIdInColl.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCypher = new java.util.Stack<>();
+
+	@Override
+	public void enterCypher(com.generator.generators.cypher.parser.CypherParser.CypherContext arg) {
+		final Node node = model.newNode(Label.label("Cypher"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inCypher.push(true);
+	}
+
+	public void exitCypher(com.generator.generators.cypher.parser.CypherParser.CypherContext arg) {
+		onExit();
+		this.inCypher.pop();
+	}
+
+	public boolean inCypher() {
+      return !inCypher.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inQuery = new java.util.Stack<>();
+
+	@Override
+	public void enterQuery(com.generator.generators.cypher.parser.CypherParser.QueryContext arg) {
+		final Node node = model.newNode(Label.label("Query"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inQuery.push(true);
+	}
+
+	public void exitQuery(com.generator.generators.cypher.parser.CypherParser.QueryContext arg) {
+		onExit();
+		this.inQuery.pop();
+	}
+
+	public boolean inQuery() {
+      return !inQuery.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inRegularQuery = new java.util.Stack<>();
+
+	@Override
+	public void enterRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
+		final Node node = model.newNode(Label.label("RegularQuery"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inRegularQuery.push(true);
+	}
+
+	public void exitRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
+		onExit();
+		this.inRegularQuery.pop();
+	}
+
+	public boolean inRegularQuery() {
+      return !inRegularQuery.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUnion = new java.util.Stack<>();
+
+	@Override
+	public void enterUnion(com.generator.generators.cypher.parser.CypherParser.UnionContext arg) {
+		final Node node = model.newNode(Label.label("Union"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inUnion.push(true);
+	}
+
+	public void exitUnion(com.generator.generators.cypher.parser.CypherParser.UnionContext arg) {
+		onExit();
+		this.inUnion.pop();
+	}
+
+	public boolean inUnion() {
+      return !inUnion.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSingleQuery = new java.util.Stack<>();
+
+	@Override
+	public void enterSingleQuery(com.generator.generators.cypher.parser.CypherParser.SingleQueryContext arg) {
+		final Node node = model.newNode(Label.label("SingleQuery"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inSingleQuery.push(true);
+	}
+
+	public void exitSingleQuery(com.generator.generators.cypher.parser.CypherParser.SingleQueryContext arg) {
+		onExit();
+		this.inSingleQuery.pop();
+	}
+
+	public boolean inSingleQuery() {
+      return !inSingleQuery.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSinglePartQuery = new java.util.Stack<>();
+
+	@Override
+	public void enterSinglePartQuery(com.generator.generators.cypher.parser.CypherParser.SinglePartQueryContext arg) {
+		final Node node = model.newNode(Label.label("SinglePartQuery"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inSinglePartQuery.push(true);
+	}
+
+	public void exitSinglePartQuery(com.generator.generators.cypher.parser.CypherParser.SinglePartQueryContext arg) {
+		onExit();
+		this.inSinglePartQuery.pop();
+	}
+
+	public boolean inSinglePartQuery() {
+      return !inSinglePartQuery.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inReadOnlyEnd = new java.util.Stack<>();
+
+	@Override
+	public void enterReadOnlyEnd(com.generator.generators.cypher.parser.CypherParser.ReadOnlyEndContext arg) {
+		final Node node = model.newNode(Label.label("ReadOnlyEnd"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inReadOnlyEnd.push(true);
+	}
+
+	public void exitReadOnlyEnd(com.generator.generators.cypher.parser.CypherParser.ReadOnlyEndContext arg) {
+		onExit();
+		this.inReadOnlyEnd.pop();
+	}
+
+	public boolean inReadOnlyEnd() {
+      return !inReadOnlyEnd.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inReadUpdateEnd = new java.util.Stack<>();
+
+	@Override
+	public void enterReadUpdateEnd(com.generator.generators.cypher.parser.CypherParser.ReadUpdateEndContext arg) {
+		final Node node = model.newNode(Label.label("ReadUpdateEnd"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inReadUpdateEnd.push(true);
+	}
+
+	public void exitReadUpdateEnd(com.generator.generators.cypher.parser.CypherParser.ReadUpdateEndContext arg) {
+		onExit();
+		this.inReadUpdateEnd.pop();
+	}
+
+	public boolean inReadUpdateEnd() {
+      return !inReadUpdateEnd.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUpdatingEnd = new java.util.Stack<>();
+
+	@Override
+	public void enterUpdatingEnd(com.generator.generators.cypher.parser.CypherParser.UpdatingEndContext arg) {
+		final Node node = model.newNode(Label.label("UpdatingEnd"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inUpdatingEnd.push(true);
+	}
+
+	public void exitUpdatingEnd(com.generator.generators.cypher.parser.CypherParser.UpdatingEndContext arg) {
+		onExit();
+		this.inUpdatingEnd.pop();
+	}
+
+	public boolean inUpdatingEnd() {
+      return !inUpdatingEnd.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMultiPartQuery = new java.util.Stack<>();
+
+	@Override
+	public void enterMultiPartQuery(com.generator.generators.cypher.parser.CypherParser.MultiPartQueryContext arg) {
+		final Node node = model.newNode(Label.label("MultiPartQuery"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inMultiPartQuery.push(true);
+	}
+
+	public void exitMultiPartQuery(com.generator.generators.cypher.parser.CypherParser.MultiPartQueryContext arg) {
+		onExit();
+		this.inMultiPartQuery.pop();
+	}
+
+	public boolean inMultiPartQuery() {
+      return !inMultiPartQuery.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inReadPart = new java.util.Stack<>();
+
+	@Override
+	public void enterReadPart(com.generator.generators.cypher.parser.CypherParser.ReadPartContext arg) {
+		final Node node = model.newNode(Label.label("ReadPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inReadPart.push(true);
+	}
+
+	public void exitReadPart(com.generator.generators.cypher.parser.CypherParser.ReadPartContext arg) {
+		onExit();
+		this.inReadPart.pop();
+	}
+
+	public boolean inReadPart() {
+      return !inReadPart.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUpdatingPart = new java.util.Stack<>();
+
+	@Override
+	public void enterUpdatingPart(com.generator.generators.cypher.parser.CypherParser.UpdatingPartContext arg) {
+		final Node node = model.newNode(Label.label("UpdatingPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inUpdatingPart.push(true);
+	}
+
+	public void exitUpdatingPart(com.generator.generators.cypher.parser.CypherParser.UpdatingPartContext arg) {
+		onExit();
+		this.inUpdatingPart.pop();
+	}
+
+	public boolean inUpdatingPart() {
+      return !inUpdatingPart.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUpdatingStartClause = new java.util.Stack<>();
+
+	@Override
+	public void enterUpdatingStartClause(com.generator.generators.cypher.parser.CypherParser.UpdatingStartClauseContext arg) {
+		final Node node = model.newNode(Label.label("UpdatingStartClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inUpdatingStartClause.push(true);
+	}
+
+	public void exitUpdatingStartClause(com.generator.generators.cypher.parser.CypherParser.UpdatingStartClauseContext arg) {
+		onExit();
+		this.inUpdatingStartClause.pop();
+	}
+
+	public boolean inUpdatingStartClause() {
+      return !inUpdatingStartClause.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUpdatingClause = new java.util.Stack<>();
+
+	@Override
+	public void enterUpdatingClause(com.generator.generators.cypher.parser.CypherParser.UpdatingClauseContext arg) {
+		final Node node = model.newNode(Label.label("UpdatingClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inUpdatingClause.push(true);
+	}
+
+	public void exitUpdatingClause(com.generator.generators.cypher.parser.CypherParser.UpdatingClauseContext arg) {
+		onExit();
+		this.inUpdatingClause.pop();
+	}
+
+	public boolean inUpdatingClause() {
+      return !inUpdatingClause.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inReadingClause = new java.util.Stack<>();
+
+	@Override
+	public void enterReadingClause(com.generator.generators.cypher.parser.CypherParser.ReadingClauseContext arg) {
+		final Node node = model.newNode(Label.label("ReadingClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inReadingClause.push(true);
+	}
+
+	public void exitReadingClause(com.generator.generators.cypher.parser.CypherParser.ReadingClauseContext arg) {
+		onExit();
+		this.inReadingClause.pop();
+	}
+
+	public boolean inReadingClause() {
+      return !inReadingClause.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCyper_match = new java.util.Stack<>();
+
+	@Override
+	public void enterCyper_match(com.generator.generators.cypher.parser.CypherParser.Cyper_matchContext arg) {
+		final Node node = model.newNode(Label.label("Cyper_match"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inCyper_match.push(true);
+	}
+
+	public void exitCyper_match(com.generator.generators.cypher.parser.CypherParser.Cyper_matchContext arg) {
+		onExit();
+		this.inCyper_match.pop();
+	}
+
+	public boolean inCyper_match() {
+      return !inCyper_match.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUnwind = new java.util.Stack<>();
+
+	@Override
+	public void enterUnwind(com.generator.generators.cypher.parser.CypherParser.UnwindContext arg) {
+		final Node node = model.newNode(Label.label("Unwind"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inUnwind.push(true);
+	}
+
+	public void exitUnwind(com.generator.generators.cypher.parser.CypherParser.UnwindContext arg) {
+		onExit();
+		this.inUnwind.pop();
+	}
+
+	public boolean inUnwind() {
+      return !inUnwind.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMerge = new java.util.Stack<>();
+
+	@Override
+	public void enterMerge(com.generator.generators.cypher.parser.CypherParser.MergeContext arg) {
+		final Node node = model.newNode(Label.label("Merge"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inMerge.push(true);
+	}
+
+	public void exitMerge(com.generator.generators.cypher.parser.CypherParser.MergeContext arg) {
+		onExit();
+		this.inMerge.pop();
+	}
+
+	public boolean inMerge() {
+      return !inMerge.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMergeAction = new java.util.Stack<>();
+
+	@Override
+	public void enterMergeAction(com.generator.generators.cypher.parser.CypherParser.MergeActionContext arg) {
+		final Node node = model.newNode(Label.label("MergeAction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inMergeAction.push(true);
+	}
+
+	public void exitMergeAction(com.generator.generators.cypher.parser.CypherParser.MergeActionContext arg) {
+		onExit();
+		this.inMergeAction.pop();
+	}
+
+	public boolean inMergeAction() {
+      return !inMergeAction.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCreate = new java.util.Stack<>();
+
+	@Override
+	public void enterCreate(com.generator.generators.cypher.parser.CypherParser.CreateContext arg) {
+		final Node node = model.newNode(Label.label("Create"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inCreate.push(true);
+	}
+
+	public void exitCreate(com.generator.generators.cypher.parser.CypherParser.CreateContext arg) {
+		onExit();
+		this.inCreate.pop();
+	}
+
+	public boolean inCreate() {
+      return !inCreate.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSetItem = new java.util.Stack<>();
+
+	@Override
+	public void enterSetItem(com.generator.generators.cypher.parser.CypherParser.SetItemContext arg) {
+		final Node node = model.newNode(Label.label("SetItem"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inSetItem.push(true);
+	}
+
+	public void exitSetItem(com.generator.generators.cypher.parser.CypherParser.SetItemContext arg) {
+		onExit();
+		this.inSetItem.pop();
+	}
+
+	public boolean inSetItem() {
+      return !inSetItem.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDelete = new java.util.Stack<>();
+
+	@Override
+	public void enterDelete(com.generator.generators.cypher.parser.CypherParser.DeleteContext arg) {
+		final Node node = model.newNode(Label.label("Delete"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inDelete.push(true);
+	}
+
+	public void exitDelete(com.generator.generators.cypher.parser.CypherParser.DeleteContext arg) {
+		onExit();
+		this.inDelete.pop();
+	}
+
+	public boolean inDelete() {
+      return !inDelete.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inRemove = new java.util.Stack<>();
+
+	@Override
+	public void enterRemove(com.generator.generators.cypher.parser.CypherParser.RemoveContext arg) {
+		final Node node = model.newNode(Label.label("Remove"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inRemove.push(true);
+	}
+
+	public void exitRemove(com.generator.generators.cypher.parser.CypherParser.RemoveContext arg) {
+		onExit();
+		this.inRemove.pop();
+	}
+
+	public boolean inRemove() {
+      return !inRemove.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inParenthesizedExpression = new java.util.Stack<>();
 
 	@Override
 	public void enterParenthesizedExpression(com.generator.generators.cypher.parser.CypherParser.ParenthesizedExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("ParenthesizedExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ParenthesizedExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inParenthesizedExpression.push(true);
 	}
@@ -1357,7 +1377,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterRelationshipsPattern(com.generator.generators.cypher.parser.CypherParser.RelationshipsPatternContext arg) {
-		final Node node = model.findOrCreate(Label.label("RelationshipsPattern"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("RelationshipsPattern"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRelationshipsPattern.push(true);
 	}
@@ -1375,7 +1395,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterFilterExpression(com.generator.generators.cypher.parser.CypherParser.FilterExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("FilterExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("FilterExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFilterExpression.push(true);
 	}
@@ -1389,29 +1409,11 @@ public class CypherNeoListener extends CypherBaseListener {
       return !inFilterExpression.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inIdInColl = new java.util.Stack<>();
-
-	@Override
-	public void enterIdInColl(com.generator.generators.cypher.parser.CypherParser.IdInCollContext arg) {
-		final Node node = model.findOrCreate(Label.label("IdInColl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inIdInColl.push(true);
-	}
-
-	public void exitIdInColl(com.generator.generators.cypher.parser.CypherParser.IdInCollContext arg) {
-		onExit();
-		this.inIdInColl.pop();
-	}
-
-	public boolean inIdInColl() {
-      return !inIdInColl.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inFunctionInvocation = new java.util.Stack<>();
 
 	@Override
 	public void enterFunctionInvocation(com.generator.generators.cypher.parser.CypherParser.FunctionInvocationContext arg) {
-		final Node node = model.findOrCreate(Label.label("FunctionInvocation"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("FunctionInvocation"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFunctionInvocation.push(true);
 	}
@@ -1429,7 +1431,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterFunctionName(com.generator.generators.cypher.parser.CypherParser.FunctionNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("FunctionName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("FunctionName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFunctionName.push(true);
 	}
@@ -1447,7 +1449,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterExplicitProcedureInvocation(com.generator.generators.cypher.parser.CypherParser.ExplicitProcedureInvocationContext arg) {
-		final Node node = model.findOrCreate(Label.label("ExplicitProcedureInvocation"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ExplicitProcedureInvocation"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExplicitProcedureInvocation.push(true);
 	}
@@ -1465,7 +1467,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterImplicitProcedureInvocation(com.generator.generators.cypher.parser.CypherParser.ImplicitProcedureInvocationContext arg) {
-		final Node node = model.findOrCreate(Label.label("ImplicitProcedureInvocation"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ImplicitProcedureInvocation"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inImplicitProcedureInvocation.push(true);
 	}
@@ -1483,7 +1485,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterProcedureResultField(com.generator.generators.cypher.parser.CypherParser.ProcedureResultFieldContext arg) {
-		final Node node = model.findOrCreate(Label.label("ProcedureResultField"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ProcedureResultField"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inProcedureResultField.push(true);
 	}
@@ -1501,7 +1503,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterProcedureName(com.generator.generators.cypher.parser.CypherParser.ProcedureNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("ProcedureName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ProcedureName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inProcedureName.push(true);
 	}
@@ -1519,7 +1521,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterNamespace(com.generator.generators.cypher.parser.CypherParser.NamespaceContext arg) {
-		final Node node = model.findOrCreate(Label.label("Namespace"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Namespace"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNamespace.push(true);
 	}
@@ -1537,7 +1539,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterListComprehension(com.generator.generators.cypher.parser.CypherParser.ListComprehensionContext arg) {
-		final Node node = model.findOrCreate(Label.label("ListComprehension"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ListComprehension"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inListComprehension.push(true);
 	}
@@ -1555,7 +1557,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterPatternComprehension(com.generator.generators.cypher.parser.CypherParser.PatternComprehensionContext arg) {
-		final Node node = model.findOrCreate(Label.label("PatternComprehension"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("PatternComprehension"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPatternComprehension.push(true);
 	}
@@ -1573,7 +1575,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterPropertyLookup(com.generator.generators.cypher.parser.CypherParser.PropertyLookupContext arg) {
-		final Node node = model.findOrCreate(Label.label("PropertyLookup"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("PropertyLookup"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPropertyLookup.push(true);
 	}
@@ -1591,7 +1593,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterCaseExpression(com.generator.generators.cypher.parser.CypherParser.CaseExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("CaseExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("CaseExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCaseExpression.push(true);
 	}
@@ -1609,7 +1611,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterCaseAlternatives(com.generator.generators.cypher.parser.CypherParser.CaseAlternativesContext arg) {
-		final Node node = model.findOrCreate(Label.label("CaseAlternatives"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("CaseAlternatives"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCaseAlternatives.push(true);
 	}
@@ -1627,7 +1629,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterVariable(com.generator.generators.cypher.parser.CypherParser.VariableContext arg) {
-		final Node node = model.findOrCreate(Label.label("Variable"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Variable"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inVariable.push(true);
 	}
@@ -1645,7 +1647,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterNumberLiteral(com.generator.generators.cypher.parser.CypherParser.NumberLiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("NumberLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("NumberLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNumberLiteral.push(true);
 	}
@@ -1663,7 +1665,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterMapLiteral(com.generator.generators.cypher.parser.CypherParser.MapLiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("MapLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("MapLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMapLiteral.push(true);
 	}
@@ -1681,7 +1683,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterParameter(com.generator.generators.cypher.parser.CypherParser.ParameterContext arg) {
-		final Node node = model.findOrCreate(Label.label("Parameter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Parameter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inParameter.push(true);
 	}
@@ -1699,7 +1701,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterPropertyExpression(com.generator.generators.cypher.parser.CypherParser.PropertyExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("PropertyExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("PropertyExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPropertyExpression.push(true);
 	}
@@ -1717,7 +1719,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterPropertyKeyName(com.generator.generators.cypher.parser.CypherParser.PropertyKeyNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("PropertyKeyName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("PropertyKeyName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPropertyKeyName.push(true);
 	}
@@ -1735,7 +1737,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterIntegerLiteral(com.generator.generators.cypher.parser.CypherParser.IntegerLiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("IntegerLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("IntegerLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIntegerLiteral.push(true);
 	}
@@ -1753,7 +1755,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterDoubleLiteral(com.generator.generators.cypher.parser.CypherParser.DoubleLiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("DoubleLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("DoubleLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDoubleLiteral.push(true);
 	}
@@ -1771,7 +1773,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterSchemaName(com.generator.generators.cypher.parser.CypherParser.SchemaNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("SchemaName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("SchemaName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSchemaName.push(true);
 	}
@@ -1789,7 +1791,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterReservedWord(com.generator.generators.cypher.parser.CypherParser.ReservedWordContext arg) {
-		final Node node = model.findOrCreate(Label.label("ReservedWord"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ReservedWord"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inReservedWord.push(true);
 	}
@@ -1807,7 +1809,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterSymbolicName(com.generator.generators.cypher.parser.CypherParser.SymbolicNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("SymbolicName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("SymbolicName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSymbolicName.push(true);
 	}
@@ -1825,7 +1827,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterLeftArrowHead(com.generator.generators.cypher.parser.CypherParser.LeftArrowHeadContext arg) {
-		final Node node = model.findOrCreate(Label.label("LeftArrowHead"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LeftArrowHead"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLeftArrowHead.push(true);
 	}
@@ -1843,7 +1845,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterRightArrowHead(com.generator.generators.cypher.parser.CypherParser.RightArrowHeadContext arg) {
-		final Node node = model.findOrCreate(Label.label("RightArrowHead"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("RightArrowHead"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRightArrowHead.push(true);
 	}
@@ -1861,7 +1863,7 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	@Override
 	public void enterDash(com.generator.generators.cypher.parser.CypherParser.DashContext arg) {
-		final Node node = model.findOrCreate(Label.label("Dash"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Dash"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDash.push(true);
 	}

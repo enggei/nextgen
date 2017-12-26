@@ -2,6 +2,8 @@ package com.generator.generators.sparql.parser;
 
 public class SparqlNodeVisitor extends SparqlBaseVisitor<SparqlNodeVisitor.Node> {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(SparqlNodeVisitor.class);
+
    public static class Node {
 
       public final String name;
@@ -33,7 +35,7 @@ public class SparqlNodeVisitor extends SparqlBaseVisitor<SparqlNodeVisitor.Node>
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-				if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
+				if (debug) log.debug(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -47,6 +49,96 @@ public class SparqlNodeVisitor extends SparqlBaseVisitor<SparqlNodeVisitor.Node>
    public Node getRoot() {
       return nodeStack.peek();
    }
+
+	@Override
+	public Node visitString(com.generator.generators.sparql.parser.SparqlParser.StringContext arg) {
+		final Node node = new Node("String", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitExpression(com.generator.generators.sparql.parser.SparqlParser.ExpressionContext arg) {
+		final Node node = new Node("Expression", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitVar(com.generator.generators.sparql.parser.SparqlParser.VarContext arg) {
+		final Node node = new Node("Var", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitQuery(com.generator.generators.sparql.parser.SparqlParser.QueryContext arg) {
+		final Node node = new Node("Query", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitBooleanLiteral(com.generator.generators.sparql.parser.SparqlParser.BooleanLiteralContext arg) {
+		final Node node = new Node("BooleanLiteral", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitMultiplicativeExpression(com.generator.generators.sparql.parser.SparqlParser.MultiplicativeExpressionContext arg) {
+		final Node node = new Node("MultiplicativeExpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitAdditiveExpression(com.generator.generators.sparql.parser.SparqlParser.AdditiveExpressionContext arg) {
+		final Node node = new Node("AdditiveExpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitRelationalExpression(com.generator.generators.sparql.parser.SparqlParser.RelationalExpressionContext arg) {
+		final Node node = new Node("RelationalExpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitNumericLiteral(com.generator.generators.sparql.parser.SparqlParser.NumericLiteralContext arg) {
+		final Node node = new Node("NumericLiteral", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPrologue(com.generator.generators.sparql.parser.SparqlParser.PrologueContext arg) {
+		final Node node = new Node("Prologue", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
 
 	@Override
 	public Node visitBaseDecl(com.generator.generators.sparql.parser.SparqlParser.BaseDeclContext arg) {
@@ -132,51 +224,6 @@ public class SparqlNodeVisitor extends SparqlBaseVisitor<SparqlNodeVisitor.Node>
 	@Override
 	public Node visitSourceSelector(com.generator.generators.sparql.parser.SparqlParser.SourceSelectorContext arg) {
 		final Node node = new Node("SourceSelector", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitString(com.generator.generators.sparql.parser.SparqlParser.StringContext arg) {
-		final Node node = new Node("String", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExpression(com.generator.generators.sparql.parser.SparqlParser.ExpressionContext arg) {
-		final Node node = new Node("Expression", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitVar(com.generator.generators.sparql.parser.SparqlParser.VarContext arg) {
-		final Node node = new Node("Var", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitQuery(com.generator.generators.sparql.parser.SparqlParser.QueryContext arg) {
-		final Node node = new Node("Query", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitBooleanLiteral(com.generator.generators.sparql.parser.SparqlParser.BooleanLiteralContext arg) {
-		final Node node = new Node("BooleanLiteral", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -618,51 +665,6 @@ public class SparqlNodeVisitor extends SparqlBaseVisitor<SparqlNodeVisitor.Node>
 	@Override
 	public Node visitBlankNode(com.generator.generators.sparql.parser.SparqlParser.BlankNodeContext arg) {
 		final Node node = new Node("BlankNode", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitMultiplicativeExpression(com.generator.generators.sparql.parser.SparqlParser.MultiplicativeExpressionContext arg) {
-		final Node node = new Node("MultiplicativeExpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitAdditiveExpression(com.generator.generators.sparql.parser.SparqlParser.AdditiveExpressionContext arg) {
-		final Node node = new Node("AdditiveExpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitRelationalExpression(com.generator.generators.sparql.parser.SparqlParser.RelationalExpressionContext arg) {
-		final Node node = new Node("RelationalExpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitNumericLiteral(com.generator.generators.sparql.parser.SparqlParser.NumericLiteralContext arg) {
-		final Node node = new Node("NumericLiteral", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPrologue(com.generator.generators.sparql.parser.SparqlParser.PrologueContext arg) {
-		final Node node = new Node("Prologue", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

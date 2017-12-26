@@ -14,7 +14,7 @@ import java.nio.file.Path;
  * Created 21.10.17.
  */
 public class AntlrTestUtil {
-
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(AntlrTestUtil.class);
 	@FunctionalInterface
 	public interface RuleTester<P extends Parser, C extends ParserRuleContext> {
 		C apply(P parser);
@@ -126,7 +126,7 @@ public class AntlrTestUtil {
 		Token token = lexer.nextToken();
 
 		while (token != null) {
-			System.out.println(token.getType() + ": " + token.getText());
+			log.info(token.getType() + ": " + token.getText());
 			if (token.getText().equals("<EOF>")) break;
 			token = lexer.nextToken();
 		}

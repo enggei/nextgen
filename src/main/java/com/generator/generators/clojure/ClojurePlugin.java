@@ -14,7 +14,6 @@ import io.vertx.core.net.NetClientOptions;
 import io.vertx.core.net.NetSocket;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
 
 import javax.swing.*;
@@ -32,7 +31,7 @@ import static com.generator.util.NeoUtil.*;
  * https://kimh.github.io/clojure-by-example
  */
 public class ClojurePlugin extends ClojureDomainPlugin {
-
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ClojurePlugin.class);
    private main replHandle = null;
    private NetSocket socket;
    private final Vertx vertx;
@@ -146,7 +145,7 @@ public class ClojurePlugin extends ClojureDomainPlugin {
 
       @Override
       public void handle(String buffer) {
-         System.out.println("Neo handler :" + buffer);
+         log.info("Neo handler :" + buffer);
       }
    }
 
@@ -164,11 +163,11 @@ public class ClojurePlugin extends ClojureDomainPlugin {
          client.connect(5555, "localhost", res -> {
             if (res.succeeded()) {
                socket = res.result();
-               System.out.println("Connected to Repl");
+               log.info("Connected to Repl");
 
                socket.handler(buffer -> {
 
-                  System.out.println(buffer.toString());
+                  log.info(buffer.toString());
 
                   if (!delegates.isEmpty() && !buffer.toString().startsWith("user=>")) {
                      final EvaluationHandler stringHandler = delegates.peek();
@@ -180,7 +179,7 @@ public class ClojurePlugin extends ClojureDomainPlugin {
                evaluate(form, handler);
 
             } else {
-               System.out.println("Failed to connect: " + res.cause().getMessage());
+               log.info("Failed to connect: " + res.cause().getMessage());
             }
          });
       }
@@ -188,7 +187,7 @@ public class ClojurePlugin extends ClojureDomainPlugin {
       void evaluate(String form, EvaluationHandler handler) {
          if (socket == null) throw new IllegalStateException("socket to Repl-server is closed");
          delegates.push(handler);
-         System.out.println("evaluating " + form);
+         log.info("evaluating " + form);
          socket.write(form + "\r\n");
       }
    }

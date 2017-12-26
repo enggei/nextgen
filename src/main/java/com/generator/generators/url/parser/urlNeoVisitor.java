@@ -6,6 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class urlNeoVisitor extends urlBaseVisitor<Node> {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(urlNeoVisitor.class);
+
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final com.generator.neo.NeoModel model;
 
@@ -29,7 +31,7 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 
 	@Override
 	public Node visitString(com.generator.generators.url.parser.urlParser.StringContext arg) {
-		System.out.println("String");
+		log.info("String");
 		final Node node = model.newNode(Label.label("String"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -39,7 +41,7 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 
 	@Override
 	public Node visitQuery(com.generator.generators.url.parser.urlParser.QueryContext arg) {
-		System.out.println("Query");
+		log.info("Query");
 		final Node node = model.newNode(Label.label("Query"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -49,7 +51,7 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 
 	@Override
 	public Node visitUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
-		System.out.println("Url");
+		log.info("Url");
 		final Node node = model.newNode(Label.label("Url"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -59,7 +61,7 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 
 	@Override
 	public Node visitUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
-		System.out.println("Uri");
+		log.info("Uri");
 		final Node node = model.newNode(Label.label("Uri"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -69,7 +71,7 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 
 	@Override
 	public Node visitScheme(com.generator.generators.url.parser.urlParser.SchemeContext arg) {
-		System.out.println("Scheme");
+		log.info("Scheme");
 		final Node node = model.newNode(Label.label("Scheme"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -79,7 +81,7 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 
 	@Override
 	public Node visitHost(com.generator.generators.url.parser.urlParser.HostContext arg) {
-		System.out.println("Host");
+		log.info("Host");
 		final Node node = model.newNode(Label.label("Host"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -89,7 +91,7 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 
 	@Override
 	public Node visitHostname(com.generator.generators.url.parser.urlParser.HostnameContext arg) {
-		System.out.println("Hostname");
+		log.info("Hostname");
 		final Node node = model.newNode(Label.label("Hostname"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -99,7 +101,7 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 
 	@Override
 	public Node visitHostnumber(com.generator.generators.url.parser.urlParser.HostnumberContext arg) {
-		System.out.println("Hostnumber");
+		log.info("Hostnumber");
 		final Node node = model.newNode(Label.label("Hostnumber"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -109,7 +111,7 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 
 	@Override
 	public Node visitPort(com.generator.generators.url.parser.urlParser.PortContext arg) {
-		System.out.println("Port");
+		log.info("Port");
 		final Node node = model.newNode(Label.label("Port"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -119,7 +121,7 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 
 	@Override
 	public Node visitPath(com.generator.generators.url.parser.urlParser.PathContext arg) {
-		System.out.println("Path");
+		log.info("Path");
 		final Node node = model.newNode(Label.label("Path"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -129,7 +131,7 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 
 	@Override
 	public Node visitUser(com.generator.generators.url.parser.urlParser.UserContext arg) {
-		System.out.println("User");
+		log.info("User");
 		final Node node = model.newNode(Label.label("User"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -139,7 +141,7 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 
 	@Override
 	public Node visitLogin(com.generator.generators.url.parser.urlParser.LoginContext arg) {
-		System.out.println("Login");
+		log.info("Login");
 		final Node node = model.newNode(Label.label("Login"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -149,7 +151,7 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 
 	@Override
 	public Node visitPassword(com.generator.generators.url.parser.urlParser.PasswordContext arg) {
-		System.out.println("Password");
+		log.info("Password");
 		final Node node = model.newNode(Label.label("Password"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -159,7 +161,7 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 
 	@Override
 	public Node visitFrag(com.generator.generators.url.parser.urlParser.FragContext arg) {
-		System.out.println("Frag");
+		log.info("Frag");
 		final Node node = model.newNode(Label.label("Frag"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -169,7 +171,7 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 
 	@Override
 	public Node visitSearch(com.generator.generators.url.parser.urlParser.SearchContext arg) {
-		System.out.println("Search");
+		log.info("Search");
 		final Node node = model.newNode(Label.label("Search"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -179,7 +181,7 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 
 	@Override
 	public Node visitSearchparameter(com.generator.generators.url.parser.urlParser.SearchparameterContext arg) {
-		System.out.println("Searchparameter");
+		log.info("Searchparameter");
 		final Node node = model.newNode(Label.label("Searchparameter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);

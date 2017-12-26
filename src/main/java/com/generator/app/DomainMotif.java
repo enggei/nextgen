@@ -1,16 +1,13 @@
 package com.generator.app;
 
-import com.generator.generators.domain.DomainDomainPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.domain.DomainVisitor;
 import com.generator.neo.NeoModel;
 import org.neo4j.graphdb.*;
 
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 
 import static com.generator.util.NeoUtil.*;
 
@@ -19,16 +16,20 @@ import static com.generator.util.NeoUtil.*;
  */
 public class DomainMotif {
 
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(DomainMotif.class);
+
    // Domain utility-methods
 
-   public static Node newDomain(NeoModel graph, String name) {
+   public static Node newDomainNode(NeoModel graph, String name) {
 
       final Set<Node> foundDomain = new LinkedHashSet<>();
       graph.getAll(DomainPlugin.Entities.Domain.name()).forEach(domainNode -> {
-         if(name.equals(getEntityProperty(domainNode, AppMotif.Properties.name.name()))) foundDomain.add(domainNode);
+         if (name.equals(getEntityProperty(domainNode, AppMotif.Properties.name.name())))
+            foundDomain.add(domainNode);
       });
 
-      if(foundDomain.isEmpty()) {
+      if (foundDomain.isEmpty()) {
+         log.info("new DomainNode " + name);
          return graph.newNode(DomainPlugin.Entities.Domain.name(), AppMotif.Properties.name.name(), name);
       }
 
@@ -47,8 +48,10 @@ public class DomainMotif {
          }
       }.visit(domainNode);
 
-      if (foundEntity.isEmpty())
+      if (foundEntity.isEmpty()) {
+         log.info("new EntityNode " + label.name());
          foundEntity.add(graph.newNode(DomainPlugin.Entities.Entity, AppMotif.Properties.name.name(), label.name()));
+      }
 
       return foundEntity.iterator().next();
    }
@@ -61,12 +64,12 @@ public class DomainMotif {
          @Override
          public void visitProperty(Node node) {
             super.visitProperty(node);
-            if(name.equals(getEntityProperty(node, AppMotif.Properties.name.name())))
+            if (name.equals(getEntityProperty(node, AppMotif.Properties.name.name())))
                foundProperty.add(node);
          }
       }.visitDomain(domainNode);
 
-      if(foundProperty.isEmpty()) {
+      if (foundProperty.isEmpty()) {
          newDomainEntityRelation(graph, srcEntity, name, DomainPlugin.RelationCardinality.SINGLE, graph.newNode(DomainPlugin.Entities.Property, AppMotif.Properties.name.name(), name));
       } else {
          newDomainEntityRelation(graph, srcEntity, name, DomainPlugin.RelationCardinality.SINGLE, foundProperty.iterator().next());
@@ -120,27 +123,51 @@ public class DomainMotif {
    // specific domain utilities
 
    public static String getName(Node node) {
-      return getString(node, AppMotif.Properties.name.name());
+      return getEntityProperty(node, AppMotif.Properties.name.name());
    }
 
    public static Node newValueNode(NeoModel graph, Object value) {
       return graph.newNode(DomainPlugin.Entities.Value, AppMotif.Properties.name.name(), value);
    }
 
+   public static Node findOrCreateInstanceNode(NeoModel graph, String name, Node referenceNode) {
+
+      final Set<Node> found = new LinkedHashSet<>();
+      DomainPlugin.outgoingINSTANCE(referenceNode, (relationship, instanceNode) -> {
+         if (name.equals(getName(instanceNode)))
+            found.add(instanceNode);
+      });
+
+      if (found.isEmpty()) {
+         final Node newInstanceNode = newInstanceNode(graph, referenceNode);
+         setEntityProperty(graph, newInstanceNode, AppMotif.Properties.name.name(), name);
+         found.add(newInstanceNode);
+      }
+
+      return found.iterator().next();
+   }
+
+   @Deprecated
    public static Node newInstanceNode(NeoModel graph, String label, Node referenceNode) {
-      final Node newNode = graph.newNode(Label.label(label));
+      final Node newNode = graph.newNode(label);
       referenceNode.createRelationshipTo(newNode, DomainPlugin.Relations.INSTANCE);
       return newNode;
    }
 
+   public static Node newInstanceNode(NeoModel graph, Label label, Node referenceNode) {
+      final Node newNode = graph.newNode(label);
+      referenceNode.createRelationshipTo(newNode, DomainPlugin.Relations.INSTANCE);
+      return newNode;
+   }
+
+   public static Node newInstanceNode(NeoModel graph, Node referenceNode) {
+      final Node newInstanceNode = graph.newNode(Label.label(getName(referenceNode)));
+      referenceNode.createRelationshipTo(newInstanceNode, DomainPlugin.Relations.INSTANCE);
+      return newInstanceNode;
+   }
+
    public static <T> T getEntityProperty(PropertyContainer propertyContainer, String propertyName) {
-
-      if (propertyContainer instanceof Relationship) return get(propertyContainer, propertyName);
-
-      final T entityProperty = getEntityProperty(propertyContainer, propertyName, null);
-      if (entityProperty == null)
-         return get(propertyContainer, propertyName);
-      return entityProperty;
+      return getEntityProperty(propertyContainer, propertyName, null);
    }
 
    public static <T> T getEntityProperty(PropertyContainer propertyContainer, String propertyName, T defaultValue) {
@@ -181,13 +208,45 @@ public class DomainMotif {
       existingRelation.delete();
 
       // if existing property-node has other relations, keep it, if not - delete it
-      final Iterator<Relationship> incoming = incoming(existingProperty).iterator();
-      if (!incoming.hasNext()) existingProperty.delete();
+      tryToDeleteNode(existingProperty, false);
+   }
+
+   public static Set<Node> tryToDeleteNode(Node node, boolean force) {
+
+      final Set<Node> deletedNodes = new LinkedHashSet<>();
+
+      // check node-dependencies (incoming relations)
+      final AtomicBoolean deletable = new AtomicBoolean(true);
+      incoming(node).forEach(relationship -> {
+         if (AppMotif.Relations._LAYOUT_MEMBER.name().equals(relationship.getType().name())) return;
+         if (DomainPlugin.Relations.INSTANCE.name().equals(relationship.getType().name())) return;
+         deletable.set(false);   // has incoming relation which is not system-specific, not deletable (unless force=true)
+      });
+
+      // if existing node has other relations, keep it, if not - delete it (unless force=true)
+      if (force || deletable.get()) {
+         incoming(node).forEach(Relationship::delete);
+
+         // follow all outgoing relations for this node, and try to delete these as well
+         outgoing(node).forEach(relationship -> {
+            deletedNodes.addAll(tryToDeleteNode(other(node, relationship), false));
+            try {
+               relationship.delete();
+            } catch (NotFoundException e) {
+               log.warn("relationship is already deleted.");
+            }
+         });
+
+         deletedNodes.add(node);
+         node.delete();
+      }
+
+      return deletedNodes;
    }
 
    public static void setEntityProperty(NeoModel graph, PropertyContainer propertyContainer, String propertyName, Object value) {
 
-      boolean isNullValue = value == null || value.toString().length() == 0;
+      boolean isNullValue = value == null || value.toString().length() == 0 || "false".equals(value.toString().toLowerCase());
 
       if (propertyContainer instanceof Relationship) {
 
@@ -195,8 +254,9 @@ public class DomainMotif {
             propertyContainer.removeProperty(propertyName);
             return;
          }
+         if (isNullValue) return;
 
-         propertyContainer.setProperty(propertyName, value);
+         propertyContainer.setProperty(propertyName, "true".equals(value.toString().toLowerCase()) ? true : value);
          return;
       }
 
@@ -211,18 +271,7 @@ public class DomainMotif {
 
          if (propertyContainer.hasProperty(propertyName)) propertyContainer.removeProperty(propertyName);
 
-         // if existing property-node has other relations, keep it, if not - delete it
-         final AtomicBoolean deletable = new AtomicBoolean(true);
-         incoming(existingProperty).forEach(relationship -> {
-            if (AppMotif.Relations._LAYOUT_MEMBER.name().equals(relationship.getType().name())) return;
-            deletable.set(false);
-         });
-
-         if(deletable.get()) {
-            incoming(existingProperty).forEach(Relationship::delete);
-            existingProperty.delete();
-         }
-
+         tryToDeleteNode(existingProperty, false);
          return;
       }
 
@@ -234,12 +283,12 @@ public class DomainMotif {
 
          existingRelation.delete();
 
-         // if existing property-node has other relations, keep it, if not - delete it
-         final Iterator<Relationship> incoming = incoming(existingProperty).iterator();
-         if (!incoming.hasNext()) existingProperty.delete();
+         tryToDeleteNode(existingProperty, false);
       }
 
+      if (isNullValue) return;
+
       // create new value-node and relate to entity
-      relate(node, newValueNode(graph, value), RelationshipType.withName(propertyName));
+      relate(node, newValueNode(graph, "true".equals(value.toString().toLowerCase()) ? true : value), RelationshipType.withName(propertyName));
    }
 }

@@ -6,6 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class JSONNeoVisitor extends JSONBaseVisitor<Node> {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(JSONNeoVisitor.class);
+
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final com.generator.neo.NeoModel model;
 
@@ -28,28 +30,8 @@ public class JSONNeoVisitor extends JSONBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
-		System.out.println("Value");
-		final Node node = model.newNode(Label.label("Value"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
-		System.out.println("Json");
-		final Node node = model.newNode(Label.label("Json"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitObj(com.generator.generators.json.parser.JSONParser.ObjContext arg) {
-		System.out.println("Obj");
+		log.info("Obj");
 		final Node node = model.newNode(Label.label("Obj"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -59,7 +41,7 @@ public class JSONNeoVisitor extends JSONBaseVisitor<Node> {
 
 	@Override
 	public Node visitPair(com.generator.generators.json.parser.JSONParser.PairContext arg) {
-		System.out.println("Pair");
+		log.info("Pair");
 		final Node node = model.newNode(Label.label("Pair"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -68,9 +50,29 @@ public class JSONNeoVisitor extends JSONBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
+		log.info("Value");
+		final Node node = model.newNode(Label.label("Value"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
-		System.out.println("Array");
+		log.info("Array");
 		final Node node = model.newNode(Label.label("Array"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
+		log.info("Json");
+		final Node node = model.newNode(Label.label("Json"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

@@ -23,4 +23,11 @@ public class Tests {
       new ParseTreeWalker().walk(listener, parser.file_input());
    }
 
+   @Test
+   public void testCozmo01() throws IOException {
+      final Python3Parser parser = new Python3Parser(new CommonTokenStream(new Python3Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT+"python/01_Basics.py"))));
+      final Python3NodeListener listener = new Python3NodeListener(true);
+      new ParseTreeWalker().walk(listener, parser.file_input());
+   }
+
 }

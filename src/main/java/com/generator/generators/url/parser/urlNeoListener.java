@@ -6,6 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class urlNeoListener extends urlBaseListener {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(urlNeoListener.class);
+
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
@@ -24,7 +26,7 @@ public class urlNeoListener extends urlBaseListener {
 		if (!nodeStack.isEmpty())
       	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.getProperty("text"));
+		if (debug) log.debug(delim.toString() + node.getProperty("text"));
 		delim.append("\t");
    }
 
@@ -43,7 +45,7 @@ public class urlNeoListener extends urlBaseListener {
 
 	@Override
 	public void enterString(com.generator.generators.url.parser.urlParser.StringContext arg) {
-		final Node node = model.findOrCreate(Label.label("String"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("String"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inString.push(true);
 	}
@@ -61,7 +63,7 @@ public class urlNeoListener extends urlBaseListener {
 
 	@Override
 	public void enterQuery(com.generator.generators.url.parser.urlParser.QueryContext arg) {
-		final Node node = model.findOrCreate(Label.label("Query"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Query"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inQuery.push(true);
 	}
@@ -79,7 +81,7 @@ public class urlNeoListener extends urlBaseListener {
 
 	@Override
 	public void enterUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
-		final Node node = model.findOrCreate(Label.label("Url"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Url"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUrl.push(true);
 	}
@@ -97,7 +99,7 @@ public class urlNeoListener extends urlBaseListener {
 
 	@Override
 	public void enterUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
-		final Node node = model.findOrCreate(Label.label("Uri"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Uri"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUri.push(true);
 	}
@@ -115,7 +117,7 @@ public class urlNeoListener extends urlBaseListener {
 
 	@Override
 	public void enterScheme(com.generator.generators.url.parser.urlParser.SchemeContext arg) {
-		final Node node = model.findOrCreate(Label.label("Scheme"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Scheme"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inScheme.push(true);
 	}
@@ -133,7 +135,7 @@ public class urlNeoListener extends urlBaseListener {
 
 	@Override
 	public void enterHost(com.generator.generators.url.parser.urlParser.HostContext arg) {
-		final Node node = model.findOrCreate(Label.label("Host"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Host"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHost.push(true);
 	}
@@ -151,7 +153,7 @@ public class urlNeoListener extends urlBaseListener {
 
 	@Override
 	public void enterHostname(com.generator.generators.url.parser.urlParser.HostnameContext arg) {
-		final Node node = model.findOrCreate(Label.label("Hostname"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Hostname"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHostname.push(true);
 	}
@@ -169,7 +171,7 @@ public class urlNeoListener extends urlBaseListener {
 
 	@Override
 	public void enterHostnumber(com.generator.generators.url.parser.urlParser.HostnumberContext arg) {
-		final Node node = model.findOrCreate(Label.label("Hostnumber"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Hostnumber"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHostnumber.push(true);
 	}
@@ -187,7 +189,7 @@ public class urlNeoListener extends urlBaseListener {
 
 	@Override
 	public void enterPort(com.generator.generators.url.parser.urlParser.PortContext arg) {
-		final Node node = model.findOrCreate(Label.label("Port"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Port"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPort.push(true);
 	}
@@ -205,7 +207,7 @@ public class urlNeoListener extends urlBaseListener {
 
 	@Override
 	public void enterPath(com.generator.generators.url.parser.urlParser.PathContext arg) {
-		final Node node = model.findOrCreate(Label.label("Path"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Path"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPath.push(true);
 	}
@@ -223,7 +225,7 @@ public class urlNeoListener extends urlBaseListener {
 
 	@Override
 	public void enterUser(com.generator.generators.url.parser.urlParser.UserContext arg) {
-		final Node node = model.findOrCreate(Label.label("User"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("User"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUser.push(true);
 	}
@@ -241,7 +243,7 @@ public class urlNeoListener extends urlBaseListener {
 
 	@Override
 	public void enterLogin(com.generator.generators.url.parser.urlParser.LoginContext arg) {
-		final Node node = model.findOrCreate(Label.label("Login"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Login"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLogin.push(true);
 	}
@@ -259,7 +261,7 @@ public class urlNeoListener extends urlBaseListener {
 
 	@Override
 	public void enterPassword(com.generator.generators.url.parser.urlParser.PasswordContext arg) {
-		final Node node = model.findOrCreate(Label.label("Password"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Password"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPassword.push(true);
 	}
@@ -277,7 +279,7 @@ public class urlNeoListener extends urlBaseListener {
 
 	@Override
 	public void enterFrag(com.generator.generators.url.parser.urlParser.FragContext arg) {
-		final Node node = model.findOrCreate(Label.label("Frag"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Frag"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFrag.push(true);
 	}
@@ -295,7 +297,7 @@ public class urlNeoListener extends urlBaseListener {
 
 	@Override
 	public void enterSearch(com.generator.generators.url.parser.urlParser.SearchContext arg) {
-		final Node node = model.findOrCreate(Label.label("Search"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Search"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSearch.push(true);
 	}
@@ -313,7 +315,7 @@ public class urlNeoListener extends urlBaseListener {
 
 	@Override
 	public void enterSearchparameter(com.generator.generators.url.parser.urlParser.SearchparameterContext arg) {
-		final Node node = model.findOrCreate(Label.label("Searchparameter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Searchparameter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSearchparameter.push(true);
 	}

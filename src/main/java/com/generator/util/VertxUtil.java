@@ -8,14 +8,15 @@ import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.file.FileSystem;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.net.NetSocket;
 import io.vertx.core.shareddata.LocalMap;
 import io.vertx.core.shareddata.SharedData;
+import io.vertx.ext.eventbus.bridge.tcp.impl.protocol.FrameHelper;
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 
 /**
@@ -23,315 +24,412 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class VertxUtil {
 
-	public static final String RESULT = "result";
-	public static final String SUCCESS = "success";
-	public static final String FAIL = "fail";
-	public static final String CONTENT = "content";
-	public static final String CAUSE = "cause";
-
-	public static void putInLocalMap(Vertx vertx, Logger log, String mapName, String key, Object value) {
-
-		final SharedData sharedData = vertx.sharedData();
-		final LocalMap<Object, Object> localMap = sharedData.getLocalMap(mapName);
-		log.info("putting '" + key + "' = '" + value + "' in local map '" + mapName + "'");
-		localMap.put(key, value);
-	}
-
-	@SuppressWarnings("unchecked")
-	public static <V> V removeFromLocalMap(Vertx vertx, Logger log, String mapName, String key) {
-		final SharedData sharedData = vertx.sharedData();
-		final LocalMap<Object, Object> localMap = sharedData.getLocalMap(mapName);
-		log.info("removing '" + key + "' = '" + (localMap.get(key)) + "' in local map '" + mapName + "'");
-		return (V) localMap.remove(key);
-	}
-
-	@SuppressWarnings("unchecked")
-	public static <V> V getFromLocalMap(Vertx vertx, Logger log, String mapName, String key) {
-		final SharedData sharedData = vertx.sharedData();
-		final LocalMap<Object, Object> localMap = sharedData.getLocalMap(mapName);
-		log.info("getting '" + key + "' = '" + (localMap.get(key)) + "' from local map '" + mapName + "'");
-		return (V) localMap.get(key);
-	}
-
-	public static void readDir(Vertx vertx, Logger log, File directory, SuccessHandler<List<File>> successHandler) {
-
-		final FileSystem fileSystem = vertx.fileSystem();
-		log.info("readDir " + directory.getAbsolutePath());
-
-		fileSystem.readDir(directory.getAbsolutePath(), result -> {
-
-			if (result.failed()) {
-				successHandler.onFail(result.cause());
-				return;
-			}
+   public static final String BODY = "body";
+   public static final String RESULT = "result";
+   public static final String SUCCESS = "success";
+   public static final String FAIL = "fail";
+   public static final String FAILURE_CODE = "failureCode";
+   public static final String FAILURE_TYPE = "failureType";
+   public static final String MESSAGE = "message";
+   public static final String CONTENT = "content";
+   public static final String CAUSE = "cause";
+   public static final String UNKNOWN = "unknown";
+   public static final String DEPLOYMENT_ID = "deploymentID";
+   public static final String STATUS = "status";
+
+   public static void putInLocalMap(Vertx vertx, Logger log, String mapName, String key, Object value) {
+      final SharedData sharedData = vertx.sharedData();
+      final LocalMap<Object, Object> localMap = sharedData.getLocalMap(mapName);
+      log.info("putInLocalMap " + mapName + " " + key + " = " + value);
+      localMap.put(key, value);
+   }
+
+   @SuppressWarnings("unchecked")
+   public static <V> V removeFromLocalMap(Vertx vertx, Logger log, String mapName, String key) {
+      final SharedData sharedData = vertx.sharedData();
+      final LocalMap<Object, Object> localMap = sharedData.getLocalMap(mapName);
+      log.info("removeFromLocalMap " + mapName + " " + key + " = " + localMap.get(key));
+      return (V) localMap.remove(key);
+   }
+
+   @SuppressWarnings("unchecked")
+   public static <V> V getFromLocalMap(Vertx vertx, Logger log, String mapName, String key) {
+      final SharedData sharedData = vertx.sharedData();
+      final LocalMap<Object, Object> localMap = sharedData.getLocalMap(mapName);
+      log.info("getFromLocalMap " + mapName + " " + key + " = " + localMap.get(key));
+      return (V) localMap.get(key);
+   }
+
+   public static <K, V> LocalMap<K, V> getLocalMap(Vertx vertx, Logger log, String mapName) {
+      final SharedData sharedData = vertx.sharedData();
+      log.info("getLocalMap " + mapName);
+      return sharedData.getLocalMap(mapName);
+   }
+
+   public static void readDir(Vertx vertx, Logger log, File directory, SuccessHandler<List<File>> successHandler) {
+
+      final FileSystem fileSystem = vertx.fileSystem();
+      log.info("readDir " + directory.getAbsolutePath());
+
+      fileSystem.readDir(directory.getAbsolutePath(), result -> {
+
+         if (result.failed()) {
+            log.error("readDir " + directory.getAbsolutePath() + " failed : " + result.cause().getMessage(), result.cause());
+            successHandler.onFail(result.cause());
+            return;
+         }
+
+         final List<File> list = new ArrayList<>(result.result().size());
+         for (String s : result.result())
+            list.add(new File(s));
+
+         successHandler.onSuccess(list);
+      });
+   }
+
+   public static void putInClusterMap(Vertx vertx, Logger log, String mapName, String key, Object value, SuccessHandler<Void> successHandler) {
+
+      vertx.sharedData().getClusterWideMap(mapName, result -> {
+
+         if (result.failed()) {
+            log.error("putInClusterMap " + mapName + " failed : " + result.cause().getMessage(), result.cause());
+            successHandler.onFail(result.cause());
+            return;
+         }
+
+         result.result().put(key, value, resultPut -> {
+            if (resultPut.failed()) {
+               log.error("putInClusterMap " + mapName + " failed to put " + key + " = " + value + " : " + result.cause().getMessage(), result.cause());
+               successHandler.onFail(resultPut.cause());
+               return;
+            }
+
+            log.info("putInClusterMap " + mapName + " " + key + " = " + value + " success");
+            successHandler.onSuccess(null);
+         });
+      });
+   }
+
+   @SuppressWarnings("unchecked")
+   public static <V> void removeFromClusterMap(Vertx vertx, Logger log, String mapName, String key, SuccessHandler<V> successHandler) {
+
+      vertx.sharedData().getClusterWideMap(mapName, result -> {
+
+         if (result.failed()) {
+            log.error("removeFromClusterMap " + mapName + " failed : " + result.cause().getMessage(), result.cause());
+            successHandler.onFail(result.cause());
+            return;
+         }
+
+         result.result().remove(key, resultGet -> {
+
+            if (resultGet.failed()) {
+               log.error("removeFromClusterMap " + mapName + " failed to remove key " + key + " : " + result.cause().getMessage(), result.cause());
+               successHandler.onFail(resultGet.cause());
+               return;
+            }
 
-			final List<File> list = new ArrayList<>(result.result().size());
-			for (String s : result.result())
-				list.add(new File(s));
+            log.info("removeFromClusterMap " + mapName + "." + key + " removed " + resultGet.result());
+            successHandler.onSuccess((V) resultGet);
+         });
+      });
+   }
 
-			successHandler.onSuccess(list);
-		});
-	}
+   @SuppressWarnings("unchecked")
+   public static <V> void getFromClusterMap(Vertx vertx, Logger log, String mapName, String key, SuccessHandler<V> successHandler) {
 
-	public static void putInClusterMap(Vertx vertx, Logger log, String mapName, String key, Object value, SuccessHandler<Void> successHandler) {
+      vertx.sharedData().getClusterWideMap(mapName, result -> {
 
-		vertx.sharedData().getClusterWideMap(mapName, result -> {
+         if (result.failed()) {
+            log.error("getFromClusterMap " + mapName + " failed : " + result.cause().getMessage(), result.cause());
+            successHandler.onFail(result.cause());
+            return;
+         }
+
+         result.result().get(key, resultGet -> {
 
-			if (result.failed()) {
-				log.error("could not get clusterWiteMap '" + mapName + "'");
-				successHandler.onFail(result.cause());
-				return;
-			}
+            if (resultGet.failed()) {
+               log.error("getFromClusterMap " + mapName + "." + key + " failed : " + result.cause().getMessage(), result.cause());
+               successHandler.onFail(resultGet.cause());
+               return;
+            }
 
-			result.result().put(key, value, resultPut -> {
-				if (resultPut.failed()) {
-					log.error("could not store " + key + " (" + value + ") in " + mapName);
-					successHandler.onFail(resultPut.cause());
-					return;
-				}
+            if (resultGet.result() == null) {
+               log.error("getFromClusterMap " + mapName + "." + key + " is null", result.cause());
+               successHandler.onFail(new Throwable(mapName + "." + key + " is null"));
+               return;
+            }
 
-				log.info(key + " stored in sessions");
-				successHandler.onSuccess(null);
-			});
-		});
-	}
+            log.info("getFromClusterMap " + mapName + "." + key + " = " + resultGet.result());
+            successHandler.onSuccess((V) resultGet);
+         });
+      });
+   }
+
+   public static void sendFrame(org.slf4j.Logger log, String address, String replyAddress, JsonObject parameters, NetSocket socket) {
+      log.info("sending frame " + address + " " + replyAddress + " " + parameters);
+      FrameHelper.sendFrame("send", address, replyAddress, parameters, socket);
+   }
+
+   public static void sendFrame(org.apache.log4j.Logger log, String address, String replyAddress, JsonObject parameters, NetSocket socket) {
+      log.info("sending frame " + address + " " + replyAddress + " " + parameters);
+      FrameHelper.sendFrame("send", address, replyAddress, parameters, socket);
+   }
 
-	@SuppressWarnings("unchecked")
-	public static <V> void removeFromClusterMap(Vertx vertx, Logger log, String mapName, String key, SuccessHandler<V> successHandler) {
+   public static void reply(Logger log, String deploymentID, JsonObject result, Message<JsonObject> message) {
+      log.info("reply " + deploymentID + " " + message.replyAddress() + " " + result);
+      message.reply(result);
+   }
 
-		vertx.sharedData().getClusterWideMap(mapName, result -> {
+   public interface SuccessHandler<T> {
 
-			if (result.failed()) {
+      void onSuccess(T result);
 
-				log.error("could not get clusterWideMap '" + mapName + "'");
+      void onFail(Throwable t);
 
-				successHandler.onFail(result.cause());
-				return;
-			}
+   }
 
-			result.result().remove(key, resultGet -> {
+   public interface Executor<R, T> extends SuccessHandler<T> {
 
-				if (resultGet.failed()) {
-					log.error("could not remove '" + key + "' from '" + mapName + "'");
-					successHandler.onFail(resultGet.cause());
-					return;
-				}
+      R execute() throws Throwable;
+   }
 
-				log.info("'" + key + "' removed from '" + mapName + "'");
-				successHandler.onSuccess((V) resultGet);
-			});
-		});
-	}
+   @SuppressWarnings("unchecked")
+   public static <R> void executeBlocking(Vertx vertx, Logger log, Executor<R, R> executor) {
 
-	@SuppressWarnings("unchecked")
-	public static <V> void getFromClusterMap(Vertx vertx, Logger log, String mapName, String key, SuccessHandler<V> successHandler) {
+      vertx.executeBlocking(future -> {
 
-		vertx.sharedData().getClusterWideMap(mapName, result -> {
+         try {
 
-			if (result.failed()) {
-				log.error("could not get clusterWideMap '" + mapName + "'");
-				successHandler.onFail(result.cause());
-				return;
-			}
+            final R result = executor.execute();
 
-			result.result().get(key, resultGet -> {
+            if (result == null) future.complete();
+            else future.complete(result);
 
-				if (resultGet.failed()) {
-					log.error("could not get '" + key + "' from '" + mapName + "'");
-					successHandler.onFail(resultGet.cause());
-					return;
-				}
+         } catch (Throwable throwable) {
+            log.error("executeBlocking exception : " + throwable.getMessage(), throwable);
+            future.fail(throwable);
+         }
 
-				if (resultGet.result() == null) {
-					log.error("could not get '" + key + "' from '" + mapName + "', its null.");
-					successHandler.onFail(new Throwable("'" + key + "'" + " has null-value in '" + mapName + "'"));
-					return;
-				}
+      }, res -> {
 
-				log.info("'" + key + "' found in '" + mapName + "'");
-				successHandler.onSuccess((V) resultGet);
-			});
-		});
-	}
+         if (res.failed())
+            executor.onFail(res.cause());
+         else
+            executor.onSuccess((R) res.result());
+      });
+   }
 
-	public interface SuccessHandler<T> {
+   public static <T> void consume(Vertx vertx, String consumer, String address, Logger log, Handler<Message<T>> messageHandler) {
+      log.info("consume " + consumer + " messages on address " + address);
+      vertx.eventBus().consumer(address, messageHandler);
+   }
 
-		void onSuccess(T result);
+   public static <T, R> void sendMessage(Vertx vertx, String address, T content, Logger log, SuccessHandler<Message<R>> handler) {
+      sendMessage(vertx, address, content, null, log, handler);
+   }
 
-		void onFail(Throwable t);
+   public static <T, R> void sendMessage(Vertx vertx, String address, T content, Logger log) {
+      sendMessage(vertx, address, content, null, log, new SuccessHandler<JsonObject>() {
+         @Override
+         public void onSuccess(JsonObject result) {
+            log.info("sendMessage success " + address + " " + result);
+         }
 
-	}
+         @Override
+         public void onFail(Throwable t) {
+            log.info("sendMessage failed " + address + " " + t.getCause().getMessage(), t.getCause());
+         }
+      });
+   }
 
-	public interface Executor<R, T> extends SuccessHandler<T> {
+   @SuppressWarnings("unchecked")
+   public static <T, R> void sendMessage(Vertx vertx, String address, T content, DeliveryOptions options, Logger log, SuccessHandler<R> handler) {
 
-		R execute() throws Throwable;
-	}
+      log.info("sendingMessage " + address + " " + content.toString());
 
-	@SuppressWarnings("unchecked")
-	public static <R> void executeBlocking(Vertx vertx, Logger log, Executor<R, R> executor) {
+      if (options == null) options = new DeliveryOptions();
 
-		vertx.executeBlocking(future -> {
+      vertx.eventBus().send(address, content, options, result -> {
 
-			try {
+         if (result.failed()) {
+            log.error("sendMessage failed " + address + " " + result.cause().getMessage());
+            handler.onFail(result.cause());
+            return;
+         }
+         log.info("sendMessage success " + address + " " + result.result().body());
+         handler.onSuccess((R) result.result());
+      });
+   }
 
-				final R result = executor.execute();
+   public static void publish(Vertx vertx, String address, Object content, Logger log) {
+      publish(vertx, address, content, null, log);
+   }
 
-				if (result == null) future.complete();
-				else future.complete(result);
+   public static void publish(Vertx vertx, String address, Object content, DeliveryOptions options, Logger log) {
+      if (options == null) options = new DeliveryOptions();
+      log.info("publish to " + address + " : " + content);
+      vertx.eventBus().publish(address, content, options);
+   }
 
-			} catch (Throwable throwable) {
-				log.error("Could not execute blocking : " + throwable.getMessage(), throwable);
-			}
+   public static void undeploy(Vertx vertx, Logger log, String deploymentId, SuccessHandler<Void> handler) {
 
-		}, res -> {
+      log.info("undeploy " + deploymentId);
 
-			if (res.failed()) {
-				executor.onFail(res.cause());
-				return;
-			}
-			if (res.succeeded())
-				executor.onSuccess((R) res);
-		});
-	}
+      vertx.undeploy(deploymentId, result -> {
 
-	public static <T> void consume(Vertx vertx, String consumer, String address, Logger log, Handler<Message<T>> messageHandler) {
-		log.info(consumer + " listening for '" + address + "' messages");
-		vertx.eventBus().consumer(address, messageHandler);
-	}
+         if (result.failed()) {
+            handler.onFail(result.cause());
+            log.error("undeploy failed " + deploymentId + " " + result.cause().getMessage(), result.cause());
+            return;
+         }
 
-	public static <T, R> void sendMessage(Vertx vertx, String address, T content, Logger log, SuccessHandler<Message<R>> handler) {
-		sendMessage(vertx, address, content, null, log, handler);
-	}
+         log.info("undeploy success " + deploymentId);
+         handler.onSuccess(null);
+      });
+   }
 
-	@SuppressWarnings("unchecked")
-	public static <T, R> void sendMessage(Vertx vertx, String address, T content, DeliveryOptions options, Logger log, SuccessHandler<R> handler) {
+   public static void deploy(Vertx vertx, Verticle verticle, Logger log, SuccessHandler<String> handler) {
+      deploy(vertx, verticle, null, log, handler);
+   }
 
-		if (options == null) options = new DeliveryOptions();
+   public static void deploy(Vertx vertx, Verticle verticle, DeploymentOptions deploymentOptions, Logger log, SuccessHandler<String> handler) {
 
-		vertx.eventBus().send(address, content, options, result -> {
+      if (deploymentOptions == null) deploymentOptions = new DeploymentOptions();
 
-			if (result.failed()) {
-				handler.onFail(result.cause());
-				return;
-			}
+      vertx.deployVerticle(verticle, deploymentOptions, result -> {
 
-			log.debug("' sent to " + address);
-			handler.onSuccess((R) result.result());
-		});
-	}
+         if (result.failed()) {
+            handler.onFail(result.cause());
+            log.error("deploy failed " + verticle + " " + result.cause().getMessage(), result.cause());
+            return;
+         }
 
-	public static void publish(Vertx vertx, String address, Object content, Logger log) {
-		publish(vertx, address, content, null, log);
-	}
+         log.info("deploy success " + verticle + " " + result.result());
+         handler.onSuccess(result.result());
+      });
+   }
 
-	public static void publish(Vertx vertx, String address, Object content, DeliveryOptions options, Logger log) {
-		if (options == null) options = new DeliveryOptions();
-		log.info("publish to " + address + " : " + content);
-		vertx.eventBus().publish(address, content, options);
-	}
+   public static void deploy(Vertx vertx, String className, DeploymentOptions deploymentOptions, Logger log, SuccessHandler<String> handler) {
 
-	private static final AtomicLong NO_VERTICLES = new AtomicLong();
+      if (deploymentOptions == null) deploymentOptions = new DeploymentOptions();
 
-	public static void undeploy(Vertx vertx, Logger log, String deploymentId, SuccessHandler<Void> handler) {
+      vertx.deployVerticle(className, deploymentOptions, result -> {
 
-		vertx.undeploy(deploymentId, result -> {
+         if (result.failed()) {
+            handler.onFail(result.cause());
+            log.error("deploy failed " + className + " " + result.cause().getMessage(), result.cause());
+            return;
+         }
 
-			if (result.failed()) {
-				handler.onFail(result.cause());
-				log.error("could not UNDEPLOY '" + deploymentId + "'", result.cause());
-				return;
-			}
+         log.info("deploy success " + className + " " + result.result());
+         handler.onSuccess(result.result());
+      });
+   }
 
-			log.info("Undeployed " + deploymentId + " (" + NO_VERTICLES.decrementAndGet() + ")");
-			handler.onSuccess(null);
-		});
-	}
+   public static void deploy(Vertx vertx, String className, DeploymentOptions deploymentOptions, Logger log) {
 
-	public static void deploy(Vertx vertx, Verticle verticle, Logger log, SuccessHandler<String> handler) {
-		deploy(vertx, verticle, null, log, handler);
-	}
+      if (deploymentOptions == null) deploymentOptions = new DeploymentOptions();
 
-	public static void deploy(Vertx vertx, Verticle verticle, DeploymentOptions deploymentOptions, Logger log, SuccessHandler<String> handler) {
+      vertx.deployVerticle(className, deploymentOptions, result -> {
 
-		if (deploymentOptions == null) deploymentOptions = new DeploymentOptions();
+         if (result.failed()) {
+            log.error("deploy failed " + className + " " + result.cause().getMessage(), result.cause());
+            return;
+         }
 
-		vertx.deployVerticle(verticle, deploymentOptions, result -> {
+         log.info("deploy success " + className + " : " + result.result());
+      });
+   }
 
-			if (result.failed()) {
-				handler.onFail(result.cause());
-				log.error("could not DEPLOY VERTICLE '" + verticle + "'", result.cause());
-				return;
-			}
+   public static void deploy(Vertx vertx, String className, JsonObject config, Logger log, SuccessHandler<String> handler) {
 
-			log.info(verticle + " deployed (" + NO_VERTICLES.incrementAndGet() + ")");
-			handler.onSuccess(result.result());
-		});
-	}
+      final DeploymentOptions deploymentOptions = new DeploymentOptions();
+      if (config != null) deploymentOptions.setConfig(config);
 
-	public static void deploy(Vertx vertx, String className, DeploymentOptions deploymentOptions, Logger log, SuccessHandler<String> handler) {
+      deploy(vertx, className, deploymentOptions, log, handler);
+   }
 
-		if (deploymentOptions == null) deploymentOptions = new DeploymentOptions();
+   public static void deploy(Vertx vertx, String className, Logger log, SuccessHandler<String> handler) {
+      deploy(vertx, className, new DeploymentOptions(), log, handler);
+   }
 
-		vertx.deployVerticle(className, deploymentOptions, result -> {
+   // ENVELOPE-MESSAGES
 
-			if (result.failed()) {
-				handler.onFail(result.cause());
-				log.error("could not DEPLOY VERTICLE '" + className + "'", result.cause());
-				return;
-			}
+   public static JsonObject newStatus(String deploymentId, String status) {
+      final JsonObject msg = new JsonObject();
+      msg.put(DEPLOYMENT_ID, deploymentId);
+      msg.put(STATUS, status);
+      return msg;
+   }
 
-			log.info(className + " deployed (" + NO_VERTICLES.incrementAndGet() + ")");
-			handler.onSuccess(result.result());
-		});
-	}
+   public static JsonObject newSuccess(final Object content) {
+      final JsonObject reply = new JsonObject();
+      reply.put(RESULT, SUCCESS);
+      reply.put(CONTENT, content);
+      return reply;
+   }
 
-	public static void deploy(Vertx vertx, String className, JsonObject config, Logger log, SuccessHandler<String> handler) {
+   public static JsonObject newFail(final Object cause) {
+      final JsonObject reply = new JsonObject();
+      reply.put(RESULT, FAIL);
+      if (cause != null && ((cause instanceof Throwable) && ((Throwable) cause).getMessage() != null))
+         reply.put(CAUSE, ((Throwable) cause).getMessage());
+      return reply;
+   }
 
-		final DeploymentOptions deploymentOptions = new DeploymentOptions();
-		if (config != null) deploymentOptions.setConfig(config);
+   public static boolean isSuccess(Message<JsonObject> message) {
+      return isSuccess(message.body());
+   }
 
-		deploy(vertx, className, deploymentOptions, log, handler);
-	}
+   public static boolean isFail(Message<JsonObject> message) {
+      return isFail(message.body());
+   }
 
-	public static void deploy(Vertx vertx, String className, Logger log, SuccessHandler<String> handler) {
-		deploy(vertx, className, new DeploymentOptions(), log, handler);
-	}
+   public static String getFailCause(Message<JsonObject> message) {
+      return getFailCause(message.body());
+   }
 
-	public static JsonObject newSuccess() {
-		return new JsonObject().
-			put("status", "OK");
-	}
+   public static boolean isSuccess(JsonObject jsonObject) {
 
-	public static JsonObject generateSuccess(final Object content) {
-		final JsonObject reply = new JsonObject();
-		reply.put(RESULT, SUCCESS);
-		reply.put(CONTENT, content);
-		return reply;
-	}
+      final JsonObject body = jsonObject.getJsonObject(BODY);
+      if (body != null) {
+         final String result = body.getString(RESULT);
+         return result != null && SUCCESS.equals(result);
+      }
 
-	public static JsonObject generateFail(final Object cause) {
-		final JsonObject reply = new JsonObject();
-		reply.put(RESULT, FAIL);
-		if (cause != null && ((cause instanceof Throwable) && ((Throwable) cause).getMessage() != null))
-			reply.put(CAUSE, ((Throwable) cause).getMessage());
-		return reply;
-	}
+      final String result = jsonObject.getString(RESULT);
+      return result != null && SUCCESS.equals(result);
+   }
 
-	public static boolean isSuccess(Message<Object> message) {
-		final Object body = message.body();
-		if (body instanceof JsonObject) {
-			final String result = ((JsonObject) body).getString(RESULT);
-			return result != null && SUCCESS.equals(result);
-		}
-		return false;
-	}
+   public static boolean isFail(JsonObject jsonObject) {
 
-	public static boolean isFail(Message<Object> message) {
-		final Object body = message.body();
-		if (body instanceof JsonObject) {
-			final String result = ((JsonObject) body).getString(RESULT);
-			return result != null && FAIL.equals(result);
-		}
-		return false;
-	}
+      final JsonObject body = jsonObject.getJsonObject(BODY);
+      if (body != null) {
+         final String result = body.getString(RESULT);
+         return result != null && FAIL.equals(result);
+      }
+
+      final String result = jsonObject.getString(RESULT);
+      if (result != null)
+         return FAIL.equals(result);
+
+      return jsonObject.getString(FAILURE_CODE) != null;
+   }
+
+   public static String getFailCause(JsonObject jsonObject) {
+
+      final JsonObject body = jsonObject.getJsonObject(BODY);
+      if (body != null)
+         return body.getString(CAUSE);
+
+      final String cause = jsonObject.getString(CAUSE);
+      if (cause != null) return cause;
+
+      final String failureCode = jsonObject.getString(FAILURE_CODE);
+      if (failureCode != null)
+         return failureCode + " : " + jsonObject.getString(FAILURE_TYPE) + " : " + jsonObject.getString(MESSAGE);
+
+      return UNKNOWN + " : " + jsonObject;
+   }
 }

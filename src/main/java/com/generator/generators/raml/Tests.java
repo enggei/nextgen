@@ -3,12 +3,12 @@ package com.generator.generators.raml;
 import org.junit.Test;
 
 public class Tests {
-
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
 	public static void main(String[] args) {
 		new Tests().testRamlGroup();
 	}
 
-	@Test
+	//@Test
 	public void testRamlGroup() {
 
 		final RamlGroup group = new RamlGroup();
@@ -18,6 +18,6 @@ public class Tests {
 			setBaseUri("http://localhost:8080/api").
 			setVersion("v1");
 
-		System.out.println(loopsi);
+		log.info(loopsi);
 	}
 }

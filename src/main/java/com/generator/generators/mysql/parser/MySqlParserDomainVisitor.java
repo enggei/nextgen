@@ -7,21 +7,7 @@ public abstract class MySqlParserDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "Root")) visitRoot(node);
-		else if(hasLabel(node, "Sql_statements")) visitSql_statements(node);
-		else if(hasLabel(node, "Sql_statement")) visitSql_statement(node);
-		else if(hasLabel(node, "Empty_statement")) visitEmpty_statement(node);
-		else if(hasLabel(node, "Ddl_statement")) visitDdl_statement(node);
-		else if(hasLabel(node, "Dml_statement")) visitDml_statement(node);
-		else if(hasLabel(node, "Transaction_statement")) visitTransaction_statement(node);
-		else if(hasLabel(node, "Replication_statement")) visitReplication_statement(node);
-		else if(hasLabel(node, "Prepared_statement")) visitPrepared_statement(node);
-		else if(hasLabel(node, "Compound_statement")) visitCompound_statement(node);
-		else if(hasLabel(node, "Administration_statement")) visitAdministration_statement(node);
-		else if(hasLabel(node, "Utility_statement")) visitUtility_statement(node);
-		else if(hasLabel(node, "Create_database")) visitCreate_database(node);
-		else if(hasLabel(node, "Create_event")) visitCreate_event(node);
-		else if(hasLabel(node, "Create_index")) visitCreate_index(node);
+		if(hasLabel(node, "Create_index")) visitCreate_index(node);
 		else if(hasLabel(node, "Create_logfile_group")) visitCreate_logfile_group(node);
 		else if(hasLabel(node, "Create_procedure")) visitCreate_procedure(node);
 		else if(hasLabel(node, "Create_function")) visitCreate_function(node);
@@ -142,6 +128,7 @@ public abstract class MySqlParserDomainVisitor {
 		else if(hasLabel(node, "AltblImpTblSpace")) visitAltblImpTblSpace(node);
 		else if(hasLabel(node, "AltblForce")) visitAltblForce(node);
 		else if(hasLabel(node, "AltblValid")) visitAltblValid(node);
+		else if(hasLabel(node, "Tls_option")) visitTls_option(node);
 		else if(hasLabel(node, "AltblAddPart")) visitAltblAddPart(node);
 		else if(hasLabel(node, "AltblDropPart")) visitAltblDropPart(node);
 		else if(hasLabel(node, "AltblDiscartPart")) visitAltblDiscartPart(node);
@@ -311,7 +298,6 @@ public abstract class MySqlParserDomainVisitor {
 		else if(hasLabel(node, "AuthByPassword")) visitAuthByPassword(node);
 		else if(hasLabel(node, "AuthByString")) visitAuthByString(node);
 		else if(hasLabel(node, "AuthByHash")) visitAuthByHash(node);
-		else if(hasLabel(node, "Tls_option")) visitTls_option(node);
 		else if(hasLabel(node, "User_resource_option")) visitUser_resource_option(node);
 		else if(hasLabel(node, "User_lock_option")) visitUser_lock_option(node);
 		else if(hasLabel(node, "Privelege_clause")) visitPrivelege_clause(node);
@@ -472,91 +458,21 @@ public abstract class MySqlParserDomainVisitor {
 		else if(hasLabel(node, "Keywords_can_be_id")) visitKeywords_can_be_id(node);
 		else if(hasLabel(node, "Function_name_base")) visitFunction_name_base(node);
 		else if(hasLabel(node, "NotExpression")) visitNotExpression(node);
+		else if(hasLabel(node, "Root")) visitRoot(node);
+		else if(hasLabel(node, "Sql_statements")) visitSql_statements(node);
+		else if(hasLabel(node, "Sql_statement")) visitSql_statement(node);
+		else if(hasLabel(node, "Empty_statement")) visitEmpty_statement(node);
+		else if(hasLabel(node, "Ddl_statement")) visitDdl_statement(node);
+		else if(hasLabel(node, "Dml_statement")) visitDml_statement(node);
+		else if(hasLabel(node, "Transaction_statement")) visitTransaction_statement(node);
+		else if(hasLabel(node, "Replication_statement")) visitReplication_statement(node);
+		else if(hasLabel(node, "Prepared_statement")) visitPrepared_statement(node);
+		else if(hasLabel(node, "Compound_statement")) visitCompound_statement(node);
+		else if(hasLabel(node, "Administration_statement")) visitAdministration_statement(node);
+		else if(hasLabel(node, "Utility_statement")) visitUtility_statement(node);
+		else if(hasLabel(node, "Create_database")) visitCreate_database(node);
+		else if(hasLabel(node, "Create_event")) visitCreate_event(node);
    }
-
-	public void visitRoot(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitSql_statements(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitSql_statement(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitEmpty_statement(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitDdl_statement(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitDml_statement(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitTransaction_statement(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitReplication_statement(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitPrepared_statement(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitCompound_statement(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAdministration_statement(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitUtility_statement(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitCreate_database(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitCreate_event(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
 
 	public void visitCreate_index(Node node) {
 		if (visited.contains(node)) return;
@@ -1279,6 +1195,12 @@ public abstract class MySqlParserDomainVisitor {
 	}
 
 	public void visitAltblValid(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitTls_option(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -2298,12 +2220,6 @@ public abstract class MySqlParserDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitTls_option(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	public void visitUser_resource_option(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
@@ -3259,6 +3175,90 @@ public abstract class MySqlParserDomainVisitor {
 	}
 
 	public void visitNotExpression(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitRoot(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitSql_statements(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitSql_statement(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitEmpty_statement(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitDdl_statement(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitDml_statement(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitTransaction_statement(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitReplication_statement(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitPrepared_statement(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitCompound_statement(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAdministration_statement(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitUtility_statement(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitCreate_database(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitCreate_event(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

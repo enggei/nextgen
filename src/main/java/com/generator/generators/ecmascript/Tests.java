@@ -15,8 +15,8 @@ import java.io.IOException;
  * Created 08.09.17.
  */
 public class Tests {
-
-   @Test
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   //@Test
    public void testParser() throws IOException {
       final ECMAScriptParser parser = new ECMAScriptParser(new CommonTokenStream(new ECMAScriptLexer(CharStreams.fromFileName(ProjectConstants.MAIN_ROOT + "/com/generator/generators/ecmascript/example.js"))));
 
@@ -27,7 +27,7 @@ public class Tests {
    }
 
    private void visitAll(String delim, ECMAScriptNodeListener.Node node) {
-      System.out.println(delim + node.name + " (" + node.startToken + ")");
+      log.info(delim + node.name + " (" + node.startToken + ")");
       for (ECMAScriptNodeListener.Node child : node.children) {
          visitAll(delim + "\t", child);
       }

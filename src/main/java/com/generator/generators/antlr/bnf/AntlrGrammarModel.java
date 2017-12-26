@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
  * BNF model for Antlr-grammar
  */
 public class AntlrGrammarModel extends ANTLRv4ParserDomain {
-
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(AntlrGrammarModel.class);
    // todo testing lexer-token values
    private final Set<String> tokenValues = new LinkedHashSet<>();
    private final Map<String, AntlrGrammarNode> ruleSpecs = new ConcurrentHashMap<>();
@@ -53,18 +53,18 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
    public void showDistinct() {
 
       for (Map.Entry<String, Set<Relation>> entry : relationMap.entrySet()) {
-         System.out.println(entry.getKey());
+         log.info(entry.getKey());
          for (Relation relation : entry.getValue()) {
-            System.out.println("\t" + relation.toString());
+            log.info("\t" + relation.toString());
          }
       }
 
       for (String tokenValue : tokenValues) {
-         System.out.println(tokenValue);
+         log.info(tokenValue);
       }
 
       for (Map.Entry<String, AntlrGrammarNode> entry : ruleSpecs.entrySet()) {
-         System.out.println(entry.getKey() + " -> " + entry.getValue());
+         log.info(entry.getKey() + " -> " + entry.getValue());
       }
    }
 
@@ -118,7 +118,7 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
          @Override
          public String generateOutput(String delim) {
             final String s = children.get(random.nextInt(children.size())).generateOutput(delim + "\t");
-//            System.out.println(type + " " + s);
+//            log.info(type + " " + s);
             return s;
          }
       };
@@ -152,7 +152,7 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
          @Override
          public String generateOutput(String delim) {
             final String s = children.get(random.nextInt(children.size())).generateOutput(delim + "\t");
-//            System.out.println(type + " " + s);
+//            log.info(type + " " + s);
             return s;
          }
       };
@@ -164,7 +164,7 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
       final Map<String, String> ranges = new HashMap<>();
 
       if (text.startsWith("[")) {
-         System.out.println(text);
+         log.info(text);
          final String tmp = StringUtil.trimEnds(1, text);
 
          // look for non-digit-range
@@ -185,7 +185,7 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
                if (ranges.isEmpty()) {
                   final char c = tmp.toCharArray()[random.nextInt(tmp.toCharArray().length)];
 
-                  System.out.println(label + " " + c);
+                  log.info(label + " " + c);
 
                   if (c == '\\') {
                      return "";
@@ -200,7 +200,7 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
                   final String randomValue = (String) ranges.keySet().toArray()[n];
                   final Character c = StringUtil.randomCharacter(Character.codePointAt(randomValue.toCharArray(), 0), Character.codePointAt(ranges.get(randomValue).toCharArray(), 0));
 
-                  System.out.println(label + " " + c);
+                  log.info(label + " " + c);
 
                   return "" + c;
                }
@@ -218,7 +218,7 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
          @Override
          public String generateOutput(String delim) {
             final String s = ruleSpecs.get(text).generateOutput(delim + "\t");
-//            System.out.println(type + " " + s);
+//            log.info(type + " " + s);
             return s;
          }
       };
@@ -293,7 +293,7 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
                   }
                }
             }
-            //System.out.println(label + " " + out.toString());
+            //log.info(label + " " + out.toString());
 
             return out.toString();
          }
@@ -321,7 +321,7 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
          @Override
          public String generateOutput(String delim) {
             final AntlrGrammarNode antlrGrammarNode = ruleSpecs.get(text);
-            if (antlrGrammarNode == null) System.out.println(text);
+            if (antlrGrammarNode == null) log.info(text);
             return antlrGrammarNode.generateOutput(delim + "\t");
          }
       };
@@ -387,13 +387,13 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
    }
 
    public static void parseJSON(String output) {
-      System.out.println("Output " + output);
+      log.info("Output " + output);
       final JSONNodeListener listener = new JSONNodeListener(true);
       new ParseTreeWalker().walk(listener, new JSONParser(new CommonTokenStream(new JSONLexer(CharStreams.fromString(output)))).json());
    }
 
    public static void parseCSV(String output) {
-      System.out.println("Output " + output);
+      log.info("Output " + output);
       final CSVListener listener = new CSVNodeListener(true);
       new ParseTreeWalker().walk(listener, new CSVParser(new CommonTokenStream(new JSONLexer(CharStreams.fromString(output)))).csvFile());
    }

@@ -9,7 +9,7 @@ import java.util.jar.JarFile;
  * Created 05.07.17.
  */
 public class ClasspathUtil {
-
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ClasspathUtil.class);
    public interface Visitor<T> {
 
       boolean visit(T t);
@@ -59,7 +59,7 @@ public class ClasspathUtil {
          }
 
       } catch (Exception ex) {
-         System.out.println("findClasses exception " + ex);
+         log.info("findClasses exception " + ex);
       }
 
       return true;

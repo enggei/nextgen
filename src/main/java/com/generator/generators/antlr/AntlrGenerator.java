@@ -17,6 +17,8 @@ import com.generator.generators.ecmascript.parser.ECMAScriptListener;
 import com.generator.generators.ecmascript.parser.ECMAScriptVisitor;
 import com.generator.generators.go.parser.GolangListener;
 import com.generator.generators.go.parser.GolangVisitor;
+import com.generator.generators.graphQL.parser.GraphQLListener;
+import com.generator.generators.graphQL.parser.GraphQLVisitor;
 import com.generator.generators.html5.parser.HTMLParserListener;
 import com.generator.generators.html5.parser.HTMLParserVisitor;
 import com.generator.generators.java.BaseClassVisitor;
@@ -73,6 +75,7 @@ public class AntlrGenerator {
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".cypher.parser", "Cypher", CypherVisitor.class, CypherListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".ecmascript.parser", "ECMAScript", ECMAScriptVisitor.class, ECMAScriptListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".go.parser", "Golang", GolangVisitor.class, GolangListener.class);
+      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".graphQL.parser", "GraphQL", GraphQLVisitor.class, GraphQLListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".html5.parser", "HTMLParser", HTMLParserVisitor.class, HTMLParserListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".java.parser", "JavaParser", JavaParserVisitor.class, JavaParserListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".json.parser", "JSON", JSONVisitor.class, JSONListener.class);

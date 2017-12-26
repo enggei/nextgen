@@ -1103,6 +1103,8 @@ public final class AntlrGroup {
 		"\n" + 
 		"public class ~name~ extends ~parser~BaseListener {\n" + 
 		"\n" + 
+		"	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(~name~.class);\n" + 
+		"\n" + 
 		"   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();\n" + 
 		"	protected final StringBuilder delim = new StringBuilder(\"\");\n" + 
 		"	protected final boolean debug;\n" + 
@@ -1121,7 +1123,7 @@ public final class AntlrGroup {
 		"		if (!nodeStack.isEmpty())\n" + 
 		"      	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName(\"child\"));\n" + 
 		"      nodeStack.push(node);\n" + 
-		"		if (debug) System.out.println(delim.toString() + node.getProperty(\"text\"));\n" + 
+		"		if (debug) log.debug(delim.toString() + node.getProperty(\"text\"));\n" + 
 		"		delim.append(\"\\t\");\n" + 
 		"   }\n" + 
 		"\n" + 
@@ -1160,6 +1162,8 @@ public final class AntlrGroup {
 		"\n" + 
 		"public class ~name~ extends ~parser~BaseListener {\n" + 
 		"\n" + 
+		"	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(~name~.class);\n" + 
+		"\n" + 
 		"   public static class Node {\n" + 
 		"\n" + 
 		"      public final String name;\n" + 
@@ -1191,7 +1195,7 @@ public final class AntlrGroup {
 		"   protected void onEnter(Node node) {\n" + 
 		"      if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);\n" + 
 		"      nodeStack.push(node);\n" + 
-		"		if (debug) System.out.println(delim.toString() + node.name + \" : (\" + nodeStack.peek().startToken + \") (\" + node.value + \") (\" + nodeStack.peek().endToken + \")\");\n" + 
+		"		if (debug) log.debug(delim.toString() + node.name + \" : (\" + nodeStack.peek().startToken + \") (\" + node.value + \") (\" + nodeStack.peek().endToken + \")\");\n" + 
 		"		delim.append(\"\\t\");\n" + 
 		"   }\n" + 
 		"\n" + 
@@ -1229,6 +1233,8 @@ public final class AntlrGroup {
 		"\n" + 
 		"public class ~name~ extends ~parser~BaseVisitor<~name~.Node> {\n" + 
 		"\n" + 
+		"	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(~name~.class);\n" + 
+		"\n" + 
 		"   public static class Node {\n" + 
 		"\n" + 
 		"      public final String name;\n" + 
@@ -1260,7 +1266,7 @@ public final class AntlrGroup {
 		"   protected void onEnter(Node node) {\n" + 
 		"      if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);\n" + 
 		"      nodeStack.push(node);\n" + 
-		"				if (debug) System.out.println(delim.toString() + node.name + \" : (\" + nodeStack.peek().startToken + \") (\" + node.value + \") (\" + nodeStack.peek().endToken + \")\");\n" + 
+		"				if (debug) log.debug(delim.toString() + node.name + \" : (\" + nodeStack.peek().startToken + \") (\" + node.value + \") (\" + nodeStack.peek().endToken + \")\");\n" + 
 		"		delim.append(\"\\t\");\n" + 
 		"   }\n" + 
 		"\n" + 
@@ -1294,6 +1300,8 @@ public final class AntlrGroup {
 		"\n" + 
 		"public class ~name~ extends ~parser~BaseVisitor<Node> {\n" + 
 		"\n" + 
+		"	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(~name~.class);\n" + 
+		"\n" + 
 		"   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();\n" + 
 		"	protected final com.generator.neo.NeoModel model;\n" + 
 		"\n" + 
@@ -1318,7 +1326,7 @@ public final class AntlrGroup {
 		"~methods:{it|\n" + 
 		"	@Override\n" + 
 		"	public Node visit~it.name~(~it.param~ arg) {\n" + 
-		"		System.out.println(\"~it.name~\");\n" + 
+		"		log.info(\"~it.name~\");\n" + 
 		"		final Node node = model.newNode(Label.label(\"~it.name~\"), \"text\", arg.getText(), \"startToken\", arg.getStart().getText(), \"endToken\", arg.getStop().getText());\n" + 
 		"      onEnter(node);\n" + 
 		"      visitChildren(arg);\n" + 

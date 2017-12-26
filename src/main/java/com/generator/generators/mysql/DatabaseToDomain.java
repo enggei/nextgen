@@ -1,10 +1,8 @@
 package com.generator.generators.mysql;
 
-import com.generator.app.AppMotif;
 import com.generator.generators.mysql.parser.MySqlParser;
 import com.generator.generators.mysql.parser.MySqlParserNodeListener;
 import com.generator.generators.mysql.parser.MySqlParserNodeVisitor;
-import com.generator.neo.NeoModel;
 import com.generator.util.StringUtil;
 
 import java.util.HashMap;
@@ -12,23 +10,25 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static com.generator.util.NeoUtil.relate;
+import static com.generator.generators.mysql.MySQLDomainPlugin.*;
 
 /**
  * Created 10.09.17.
  */
 public class DatabaseToDomain extends MySqlParserNodeListener {
 
-   private final NeoModel model;
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(DatabaseToDomain.class);
+
+   private final MySQLDomainPlugin domain;
    protected final java.util.Stack<org.neo4j.graphdb.Node> nodeStack = new java.util.Stack<>();
 
    private String currentTableName = "";
    private final Map<String, TableReference> tableMap = new HashMap<>();
    private final Set<ForeignKeyVisitor> foreignKeyVisitorSet = new LinkedHashSet<>();
 
-   DatabaseToDomain(boolean debug, NeoModel model) {
+   DatabaseToDomain(boolean debug, MySQLDomainPlugin domain) {
       super(debug);
-      this.model = model;
+      this.domain = domain;
    }
 
    public org.neo4j.graphdb.Node done() {
@@ -41,13 +41,14 @@ public class DatabaseToDomain extends MySqlParserNodeListener {
 
       if (inTable_name() && !inConstraintDefinition()) {
          currentTableName = StringUtil.trimEnds(1, arg.getText());
-         nodeStack.push(model.newNode(MySQLPlugin.Entities.Table, AppMotif.Properties.name.name(), currentTableName));
+         nodeStack.push(domain.newTable(currentTableName));
          tableMap.put(currentTableName, new TableReference(nodeStack.peek()));
 
       } else if (inColumnDefinition()) {
          final String columnName = StringUtil.trimEnds(1, arg.getText());
-         final org.neo4j.graphdb.Node columnNode = model.newNode(MySQLPlugin.Entities.Column, AppMotif.Properties.name.name(), columnName);
-         relate(nodeStack.peek(), columnNode, MySQLPlugin.Relations.COLUMN);
+         final org.neo4j.graphdb.Node columnNode = domain.newColumn();
+         domain.setNameProperty(columnNode, columnName);
+         relateCOLUMN(nodeStack.peek(), columnNode);
          tableMap.get(currentTableName).columnNodes.put(columnName, columnNode);
          nodeStack.push(columnNode);
       }
@@ -56,19 +57,19 @@ public class DatabaseToDomain extends MySqlParserNodeListener {
    @Override
    public void enterDimensionDatatype(MySqlParser.DimensionDatatypeContext arg) {
       super.enterDimensionDatatype(arg);
-      nodeStack.peek().setProperty(MySQLPlugin.Properties.columnType.name(), arg.getText());
+      domain.setColumnTypeProperty(nodeStack.peek(), arg.getText());
    }
 
    @Override
    public void enterCharDatatype(MySqlParser.CharDatatypeContext arg) {
       super.enterCharDatatype(arg);
-      nodeStack.peek().setProperty(MySQLPlugin.Properties.columnType.name(), arg.getText());
+      domain.setColumnTypeProperty(nodeStack.peek(), arg.getText());
    }
 
    @Override
    public void enterSimpleDatatype(MySqlParser.SimpleDatatypeContext arg) {
       super.enterSimpleDatatype(arg);
-      nodeStack.peek().setProperty(MySQLPlugin.Properties.columnType.name(), arg.getText());
+      domain.setColumnTypeProperty(nodeStack.peek(), arg.getText());
    }
 
    @Override
@@ -85,19 +86,26 @@ public class DatabaseToDomain extends MySqlParserNodeListener {
 
    void assignForeignKeys() {
       for (ForeignKeyVisitor foreignKeyVisitor : foreignKeyVisitorSet) {
-         final TableReference tableReference = tableMap.get(foreignKeyVisitor.tableName);
-         final org.neo4j.graphdb.Node fkNode = model.newNode(MySQLPlugin.Entities.ForeignKey, AppMotif.Properties.name.name(), foreignKeyVisitor.id, MySQLPlugin.Properties.onDelete.name(), foreignKeyVisitor.onDeleteAction);
-         for (String colName : foreignKeyVisitor.indexColNames) {
-            final org.neo4j.graphdb.Node columnNode = tableReference.columnNodes.get(colName);
-            relate(columnNode, fkNode, MySQLPlugin.Relations.FK_SRC);
-         }
 
-         final TableReference referenceTableReference = tableMap.get(foreignKeyVisitor.referenceTable);
-         for (String referenceColumn : foreignKeyVisitor.indexReferenceColNames) {
-            final org.neo4j.graphdb.Node referenceColumnNode = referenceTableReference.columnNodes.get(referenceColumn);
-            relate(fkNode, referenceColumnNode, MySQLPlugin.Relations.FK_DST);
-         }
+         try {
+            final TableReference tableReference = tableMap.get(foreignKeyVisitor.tableName);
+            final org.neo4j.graphdb.Node fkNode = domain.newForeignKey(foreignKeyVisitor.onDeleteAction, foreignKeyVisitor.id);
+            for (String colName : foreignKeyVisitor.indexColNames) {
+               final org.neo4j.graphdb.Node columnNode = tableReference.columnNodes.get(colName);
+               relateFK_SRC(columnNode, fkNode);
+            }
 
+            final TableReference referenceTableReference = tableMap.get(foreignKeyVisitor.referenceTable);
+            for (String referenceColumn : foreignKeyVisitor.indexReferenceColNames) {
+               final org.neo4j.graphdb.Node referenceColumnNode = referenceTableReference.columnNodes.get(referenceColumn);
+               if (referenceColumnNode == null) {
+                  log.warn("reference-column not found");
+               }
+               relateFK_DST(fkNode, referenceColumnNode);
+            }
+         } catch (Throwable t) {
+            log.warn("fuck - what now", t);
+         }
       }
    }
 
@@ -158,6 +166,8 @@ public class DatabaseToDomain extends MySqlParserNodeListener {
             } else if ("On_delete_action".equals(child.name)) {
                final Node referenceAction = child.children.iterator().next();
                this.onDeleteAction = referenceAction.value;
+            } else {
+               System.out.println(child.name);
             }
          }
 

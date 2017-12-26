@@ -17,14 +17,17 @@ import java.util.stream.Collectors;
  * Time: 19:29:33
  */
 public final class StringUtil {
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(StringUtil.class);
 
    private static final Random random = new Random(System.currentTimeMillis());
 
    public static void main(String[] args) {
       for (int i = 0; i < 1000; i++) {
-         System.out.println(randomCharacter());
+         log.info(randomCharacter());
       }
    }
+
+
 
    public interface CharacterHandler {
 
@@ -596,6 +599,17 @@ public final class StringUtil {
       final StringBuilder out = new StringBuilder();
       boolean first = true;
       for (String aList : list) {
+         if (!first) out.append(delimiter);
+         out.append(aList);
+         first = false;
+      }
+      return out.toString();
+   }
+
+   public static String toString(Object[] array, String delimiter) {
+      final StringBuilder out = new StringBuilder();
+      boolean first = true;
+      for (Object aList : array) {
          if (!first) out.append(delimiter);
          out.append(aList);
          first = false;

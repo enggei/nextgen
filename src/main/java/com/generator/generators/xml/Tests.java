@@ -11,8 +11,8 @@ import org.junit.Test;
 import java.io.IOException;
 
 public class Tests {
-
-   @Test
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   //@Test
    public void testXMLParser() throws IOException {
       final XMLParser parser = new XMLParser(new CommonTokenStream(new XMLLexer(CharStreams.fromFileName("pom.xml"))));
 
@@ -22,17 +22,17 @@ public class Tests {
    }
 
    private void visit(String delim, XMLParserNodeListener.Node node) {
-      System.out.println(delim + node.name + " (" + node.value + ")");
+      log.info(delim + node.name + " (" + node.value + ")");
       for (XMLParserNodeListener.Node child : node.children) {
          visit(delim + "\t", child);
       }
    }
 
-   @Test
+   //@Test
    public void testXMLGenerator() {
 
       final XMLGroup xmlGroup = new XMLGroup();
-      System.out.println(xmlGroup.newdocument().
+      log.info(xmlGroup.newdocument().
             setContent(xmlGroup.
                   newelement().
                   setName("project").

@@ -18,7 +18,7 @@ public class Tests {
 	private static final FileSystem fileSystem = FileSystems.getDefault();
 	private static final String workDir = ProjectConstants.MAIN_ROOT + "/com/generator/generators/scala/";
 
-	@Test
+	//@Test
 	public void testScalaLexer() throws IOException {
 //		testLexer(ScalaLexer.class, fileSystem.getPath(workDir + "Test.scala"));
 		testLexer(ScalaLexer.class, fileSystem.getPath(workDir + "Source.scala"));
@@ -27,7 +27,7 @@ public class Tests {
 //		testLexer(ScalaLexer.class, "x, Object, maxIndex, p2p, empty_?, `yield`, αρετη, _y, dot_product_*, __system, _MAX_LEN_");
 	}
 
-	@Test
+	//@Test
 	@SuppressWarnings("unchecked")
 	public void testScalaParser() throws IOException {
 

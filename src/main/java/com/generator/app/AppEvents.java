@@ -18,6 +18,8 @@ import java.beans.PropertyChangeSupport;
  */
 public final class AppEvents {
 
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(AppEvents.class);
+   
    public static final String GRAPH_NEW = "graph.new";
 
    public static final String NODE_LOAD = "nodes.load";
@@ -51,22 +53,27 @@ public final class AppEvents {
    }
 
    public void addPropertyChangeListener(String property, PropertyChangeListener listener) {
+      //log.info("addPropertyChangeListener " + property + " " + listener.getClass().getCanonicalName());
       this.appChangeSupport.addPropertyChangeListener(property, listener);
    }
 
    public void removePropertyChangeListener(String property, PropertyChangeListener listener) {
+      //log.info("removePropertyChangeListener " + property + " " + listener.getClass().getCanonicalName());
       this.appChangeSupport.removePropertyChangeListener(property, listener);
    }
 
    public void firePropertyChange(String property) {
+      //log.info("propertyChange " + property);
       this.appChangeSupport.firePropertyChange(property, false, true);
    }
 
    public void firePropertyChange(String property, Object value) {
+      //log.info("propertyChange " + property + " = " + value);
       this.appChangeSupport.firePropertyChange(property, null, value);
    }
 
    public void firePropertyChange(String property, Object oldValue, Object value) {
+      //log.info("propertyChange " + property + " oldValue = " + value + " newValue = ");
       this.appChangeSupport.firePropertyChange(property, oldValue, value);
    }
 
@@ -91,10 +98,16 @@ public final class AppEvents {
          SwingUtilities.invokeLater(() -> {
             app.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             final long start = System.currentTimeMillis();
-//            System.out.println(owner.getSimpleName());
+            //log.info(owner.getSimpleName());
+
+            if("App".equals(owner.getSimpleName())) {
+               //log.info("App." + evt.getPropertyName());
+            }
+
             app.model.graph().doInTransaction(new NeoModel.Committer() {
                @Override
                public void doAction(Transaction tx) throws Throwable {
+                  //log.info(owner.getSimpleName() + "." + evt.getPropertyName()+ "(" + evt.getOldValue() + ") -> (" +evt.getNewValue() + ")");
                   propertyChange((O) evt.getOldValue(), (N) evt.getNewValue());
                }
 
@@ -104,7 +117,7 @@ public final class AppEvents {
                   SwingUtil.showException(parent, throwable);
                }
             });
-//            System.out.println("\t " + (owner == null ? "?" : owner.getSimpleName()) + " " + evt.getPropertyName() + " " + FormatUtil.formatTime(System.currentTimeMillis() - start));
+            //log.info("\t " + (owner == null ? "?" : owner.getSimpleName()) + " " + evt.getPropertyName() + " " + FormatUtil.formatTime(System.currentTimeMillis() - start));
             app.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
          });

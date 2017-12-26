@@ -6,6 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class CSVNeoListener extends CSVBaseListener {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(CSVNeoListener.class);
+
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
@@ -24,7 +26,7 @@ public class CSVNeoListener extends CSVBaseListener {
 		if (!nodeStack.isEmpty())
       	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.getProperty("text"));
+		if (debug) log.debug(delim.toString() + node.getProperty("text"));
 		delim.append("\t");
    }
 
@@ -43,7 +45,7 @@ public class CSVNeoListener extends CSVBaseListener {
 
 	@Override
 	public void enterCsvFile(com.generator.generators.csv.parser.CSVParser.CsvFileContext arg) {
-		final Node node = model.findOrCreate(Label.label("CsvFile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("CsvFile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCsvFile.push(true);
 	}
@@ -61,7 +63,7 @@ public class CSVNeoListener extends CSVBaseListener {
 
 	@Override
 	public void enterHdr(com.generator.generators.csv.parser.CSVParser.HdrContext arg) {
-		final Node node = model.findOrCreate(Label.label("Hdr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Hdr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHdr.push(true);
 	}
@@ -79,7 +81,7 @@ public class CSVNeoListener extends CSVBaseListener {
 
 	@Override
 	public void enterRow(com.generator.generators.csv.parser.CSVParser.RowContext arg) {
-		final Node node = model.findOrCreate(Label.label("Row"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Row"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRow.push(true);
 	}
@@ -97,7 +99,7 @@ public class CSVNeoListener extends CSVBaseListener {
 
 	@Override
 	public void enterField(com.generator.generators.csv.parser.CSVParser.FieldContext arg) {
-		final Node node = model.findOrCreate(Label.label("Field"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Field"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inField.push(true);
 	}

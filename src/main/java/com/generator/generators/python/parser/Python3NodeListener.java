@@ -2,6 +2,8 @@ package com.generator.generators.python.parser;
 
 public class Python3NodeListener extends Python3BaseListener {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Python3NodeListener.class);
+
    public static class Node {
 
       public final String name;
@@ -33,7 +35,7 @@ public class Python3NodeListener extends Python3BaseListener {
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
+		if (debug) log.debug(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -48,565 +50,72 @@ public class Python3NodeListener extends Python3BaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inFor_stmt = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inAtom = new java.util.Stack<>();
 
 	@Override
-	public void enterFor_stmt(com.generator.generators.python.parser.Python3Parser.For_stmtContext arg) {
-		onEnter(new Node("For_stmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inFor_stmt.push(true);
+	public void enterAtom(com.generator.generators.python.parser.Python3Parser.AtomContext arg) {
+		onEnter(new Node("Atom", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inAtom.push(true);
 	}
 
-	public void exitFor_stmt(com.generator.generators.python.parser.Python3Parser.For_stmtContext arg) {
+	public void exitAtom(com.generator.generators.python.parser.Python3Parser.AtomContext arg) {
 		onExit();
-		this.inFor_stmt.pop();
+		this.inAtom.pop();
 	}
 
-	public boolean inFor_stmt() {
-      return !inFor_stmt.isEmpty(); 
+	public boolean inAtom() {
+      return !inAtom.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inTry_stmt = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inNumber = new java.util.Stack<>();
 
 	@Override
-	public void enterTry_stmt(com.generator.generators.python.parser.Python3Parser.Try_stmtContext arg) {
-		onEnter(new Node("Try_stmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inTry_stmt.push(true);
+	public void enterNumber(com.generator.generators.python.parser.Python3Parser.NumberContext arg) {
+		onEnter(new Node("Number", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inNumber.push(true);
 	}
 
-	public void exitTry_stmt(com.generator.generators.python.parser.Python3Parser.Try_stmtContext arg) {
+	public void exitNumber(com.generator.generators.python.parser.Python3Parser.NumberContext arg) {
 		onExit();
-		this.inTry_stmt.pop();
+		this.inNumber.pop();
 	}
 
-	public boolean inTry_stmt() {
-      return !inTry_stmt.isEmpty(); 
+	public boolean inNumber() {
+      return !inNumber.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inWith_stmt = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inExpr = new java.util.Stack<>();
 
 	@Override
-	public void enterWith_stmt(com.generator.generators.python.parser.Python3Parser.With_stmtContext arg) {
-		onEnter(new Node("With_stmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inWith_stmt.push(true);
+	public void enterExpr(com.generator.generators.python.parser.Python3Parser.ExprContext arg) {
+		onEnter(new Node("Expr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inExpr.push(true);
 	}
 
-	public void exitWith_stmt(com.generator.generators.python.parser.Python3Parser.With_stmtContext arg) {
+	public void exitExpr(com.generator.generators.python.parser.Python3Parser.ExprContext arg) {
 		onExit();
-		this.inWith_stmt.pop();
+		this.inExpr.pop();
 	}
 
-	public boolean inWith_stmt() {
-      return !inWith_stmt.isEmpty(); 
+	public boolean inExpr() {
+      return !inExpr.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inWith_item = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inParameters = new java.util.Stack<>();
 
 	@Override
-	public void enterWith_item(com.generator.generators.python.parser.Python3Parser.With_itemContext arg) {
-		onEnter(new Node("With_item", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inWith_item.push(true);
+	public void enterParameters(com.generator.generators.python.parser.Python3Parser.ParametersContext arg) {
+		onEnter(new Node("Parameters", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inParameters.push(true);
 	}
 
-	public void exitWith_item(com.generator.generators.python.parser.Python3Parser.With_itemContext arg) {
+	public void exitParameters(com.generator.generators.python.parser.Python3Parser.ParametersContext arg) {
 		onExit();
-		this.inWith_item.pop();
+		this.inParameters.pop();
 	}
 
-	public boolean inWith_item() {
-      return !inWith_item.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inExcept_clause = new java.util.Stack<>();
-
-	@Override
-	public void enterExcept_clause(com.generator.generators.python.parser.Python3Parser.Except_clauseContext arg) {
-		onEnter(new Node("Except_clause", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inExcept_clause.push(true);
-	}
-
-	public void exitExcept_clause(com.generator.generators.python.parser.Python3Parser.Except_clauseContext arg) {
-		onExit();
-		this.inExcept_clause.pop();
-	}
-
-	public boolean inExcept_clause() {
-      return !inExcept_clause.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSuite = new java.util.Stack<>();
-
-	@Override
-	public void enterSuite(com.generator.generators.python.parser.Python3Parser.SuiteContext arg) {
-		onEnter(new Node("Suite", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inSuite.push(true);
-	}
-
-	public void exitSuite(com.generator.generators.python.parser.Python3Parser.SuiteContext arg) {
-		onExit();
-		this.inSuite.pop();
-	}
-
-	public boolean inSuite() {
-      return !inSuite.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTest = new java.util.Stack<>();
-
-	@Override
-	public void enterTest(com.generator.generators.python.parser.Python3Parser.TestContext arg) {
-		onEnter(new Node("Test", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inTest.push(true);
-	}
-
-	public void exitTest(com.generator.generators.python.parser.Python3Parser.TestContext arg) {
-		onExit();
-		this.inTest.pop();
-	}
-
-	public boolean inTest() {
-      return !inTest.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTest_nocond = new java.util.Stack<>();
-
-	@Override
-	public void enterTest_nocond(com.generator.generators.python.parser.Python3Parser.Test_nocondContext arg) {
-		onEnter(new Node("Test_nocond", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inTest_nocond.push(true);
-	}
-
-	public void exitTest_nocond(com.generator.generators.python.parser.Python3Parser.Test_nocondContext arg) {
-		onExit();
-		this.inTest_nocond.pop();
-	}
-
-	public boolean inTest_nocond() {
-      return !inTest_nocond.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLambdef = new java.util.Stack<>();
-
-	@Override
-	public void enterLambdef(com.generator.generators.python.parser.Python3Parser.LambdefContext arg) {
-		onEnter(new Node("Lambdef", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inLambdef.push(true);
-	}
-
-	public void exitLambdef(com.generator.generators.python.parser.Python3Parser.LambdefContext arg) {
-		onExit();
-		this.inLambdef.pop();
-	}
-
-	public boolean inLambdef() {
-      return !inLambdef.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLambdef_nocond = new java.util.Stack<>();
-
-	@Override
-	public void enterLambdef_nocond(com.generator.generators.python.parser.Python3Parser.Lambdef_nocondContext arg) {
-		onEnter(new Node("Lambdef_nocond", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inLambdef_nocond.push(true);
-	}
-
-	public void exitLambdef_nocond(com.generator.generators.python.parser.Python3Parser.Lambdef_nocondContext arg) {
-		onExit();
-		this.inLambdef_nocond.pop();
-	}
-
-	public boolean inLambdef_nocond() {
-      return !inLambdef_nocond.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inOr_test = new java.util.Stack<>();
-
-	@Override
-	public void enterOr_test(com.generator.generators.python.parser.Python3Parser.Or_testContext arg) {
-		onEnter(new Node("Or_test", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inOr_test.push(true);
-	}
-
-	public void exitOr_test(com.generator.generators.python.parser.Python3Parser.Or_testContext arg) {
-		onExit();
-		this.inOr_test.pop();
-	}
-
-	public boolean inOr_test() {
-      return !inOr_test.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAnd_test = new java.util.Stack<>();
-
-	@Override
-	public void enterAnd_test(com.generator.generators.python.parser.Python3Parser.And_testContext arg) {
-		onEnter(new Node("And_test", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inAnd_test.push(true);
-	}
-
-	public void exitAnd_test(com.generator.generators.python.parser.Python3Parser.And_testContext arg) {
-		onExit();
-		this.inAnd_test.pop();
-	}
-
-	public boolean inAnd_test() {
-      return !inAnd_test.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNot_test = new java.util.Stack<>();
-
-	@Override
-	public void enterNot_test(com.generator.generators.python.parser.Python3Parser.Not_testContext arg) {
-		onEnter(new Node("Not_test", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inNot_test.push(true);
-	}
-
-	public void exitNot_test(com.generator.generators.python.parser.Python3Parser.Not_testContext arg) {
-		onExit();
-		this.inNot_test.pop();
-	}
-
-	public boolean inNot_test() {
-      return !inNot_test.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inComparison = new java.util.Stack<>();
-
-	@Override
-	public void enterComparison(com.generator.generators.python.parser.Python3Parser.ComparisonContext arg) {
-		onEnter(new Node("Comparison", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inComparison.push(true);
-	}
-
-	public void exitComparison(com.generator.generators.python.parser.Python3Parser.ComparisonContext arg) {
-		onExit();
-		this.inComparison.pop();
-	}
-
-	public boolean inComparison() {
-      return !inComparison.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inComp_op = new java.util.Stack<>();
-
-	@Override
-	public void enterComp_op(com.generator.generators.python.parser.Python3Parser.Comp_opContext arg) {
-		onEnter(new Node("Comp_op", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inComp_op.push(true);
-	}
-
-	public void exitComp_op(com.generator.generators.python.parser.Python3Parser.Comp_opContext arg) {
-		onExit();
-		this.inComp_op.pop();
-	}
-
-	public boolean inComp_op() {
-      return !inComp_op.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inStar_expr = new java.util.Stack<>();
-
-	@Override
-	public void enterStar_expr(com.generator.generators.python.parser.Python3Parser.Star_exprContext arg) {
-		onEnter(new Node("Star_expr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inStar_expr.push(true);
-	}
-
-	public void exitStar_expr(com.generator.generators.python.parser.Python3Parser.Star_exprContext arg) {
-		onExit();
-		this.inStar_expr.pop();
-	}
-
-	public boolean inStar_expr() {
-      return !inStar_expr.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inXor_expr = new java.util.Stack<>();
-
-	@Override
-	public void enterXor_expr(com.generator.generators.python.parser.Python3Parser.Xor_exprContext arg) {
-		onEnter(new Node("Xor_expr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inXor_expr.push(true);
-	}
-
-	public void exitXor_expr(com.generator.generators.python.parser.Python3Parser.Xor_exprContext arg) {
-		onExit();
-		this.inXor_expr.pop();
-	}
-
-	public boolean inXor_expr() {
-      return !inXor_expr.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAnd_expr = new java.util.Stack<>();
-
-	@Override
-	public void enterAnd_expr(com.generator.generators.python.parser.Python3Parser.And_exprContext arg) {
-		onEnter(new Node("And_expr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inAnd_expr.push(true);
-	}
-
-	public void exitAnd_expr(com.generator.generators.python.parser.Python3Parser.And_exprContext arg) {
-		onExit();
-		this.inAnd_expr.pop();
-	}
-
-	public boolean inAnd_expr() {
-      return !inAnd_expr.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inShift_expr = new java.util.Stack<>();
-
-	@Override
-	public void enterShift_expr(com.generator.generators.python.parser.Python3Parser.Shift_exprContext arg) {
-		onEnter(new Node("Shift_expr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inShift_expr.push(true);
-	}
-
-	public void exitShift_expr(com.generator.generators.python.parser.Python3Parser.Shift_exprContext arg) {
-		onExit();
-		this.inShift_expr.pop();
-	}
-
-	public boolean inShift_expr() {
-      return !inShift_expr.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inArith_expr = new java.util.Stack<>();
-
-	@Override
-	public void enterArith_expr(com.generator.generators.python.parser.Python3Parser.Arith_exprContext arg) {
-		onEnter(new Node("Arith_expr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inArith_expr.push(true);
-	}
-
-	public void exitArith_expr(com.generator.generators.python.parser.Python3Parser.Arith_exprContext arg) {
-		onExit();
-		this.inArith_expr.pop();
-	}
-
-	public boolean inArith_expr() {
-      return !inArith_expr.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTerm = new java.util.Stack<>();
-
-	@Override
-	public void enterTerm(com.generator.generators.python.parser.Python3Parser.TermContext arg) {
-		onEnter(new Node("Term", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inTerm.push(true);
-	}
-
-	public void exitTerm(com.generator.generators.python.parser.Python3Parser.TermContext arg) {
-		onExit();
-		this.inTerm.pop();
-	}
-
-	public boolean inTerm() {
-      return !inTerm.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inFactor = new java.util.Stack<>();
-
-	@Override
-	public void enterFactor(com.generator.generators.python.parser.Python3Parser.FactorContext arg) {
-		onEnter(new Node("Factor", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inFactor.push(true);
-	}
-
-	public void exitFactor(com.generator.generators.python.parser.Python3Parser.FactorContext arg) {
-		onExit();
-		this.inFactor.pop();
-	}
-
-	public boolean inFactor() {
-      return !inFactor.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPower = new java.util.Stack<>();
-
-	@Override
-	public void enterPower(com.generator.generators.python.parser.Python3Parser.PowerContext arg) {
-		onEnter(new Node("Power", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inPower.push(true);
-	}
-
-	public void exitPower(com.generator.generators.python.parser.Python3Parser.PowerContext arg) {
-		onExit();
-		this.inPower.pop();
-	}
-
-	public boolean inPower() {
-      return !inPower.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTestlist_comp = new java.util.Stack<>();
-
-	@Override
-	public void enterTestlist_comp(com.generator.generators.python.parser.Python3Parser.Testlist_compContext arg) {
-		onEnter(new Node("Testlist_comp", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inTestlist_comp.push(true);
-	}
-
-	public void exitTestlist_comp(com.generator.generators.python.parser.Python3Parser.Testlist_compContext arg) {
-		onExit();
-		this.inTestlist_comp.pop();
-	}
-
-	public boolean inTestlist_comp() {
-      return !inTestlist_comp.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTrailer = new java.util.Stack<>();
-
-	@Override
-	public void enterTrailer(com.generator.generators.python.parser.Python3Parser.TrailerContext arg) {
-		onEnter(new Node("Trailer", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inTrailer.push(true);
-	}
-
-	public void exitTrailer(com.generator.generators.python.parser.Python3Parser.TrailerContext arg) {
-		onExit();
-		this.inTrailer.pop();
-	}
-
-	public boolean inTrailer() {
-      return !inTrailer.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSubscriptlist = new java.util.Stack<>();
-
-	@Override
-	public void enterSubscriptlist(com.generator.generators.python.parser.Python3Parser.SubscriptlistContext arg) {
-		onEnter(new Node("Subscriptlist", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inSubscriptlist.push(true);
-	}
-
-	public void exitSubscriptlist(com.generator.generators.python.parser.Python3Parser.SubscriptlistContext arg) {
-		onExit();
-		this.inSubscriptlist.pop();
-	}
-
-	public boolean inSubscriptlist() {
-      return !inSubscriptlist.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSubscript = new java.util.Stack<>();
-
-	@Override
-	public void enterSubscript(com.generator.generators.python.parser.Python3Parser.SubscriptContext arg) {
-		onEnter(new Node("Subscript", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inSubscript.push(true);
-	}
-
-	public void exitSubscript(com.generator.generators.python.parser.Python3Parser.SubscriptContext arg) {
-		onExit();
-		this.inSubscript.pop();
-	}
-
-	public boolean inSubscript() {
-      return !inSubscript.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSliceop = new java.util.Stack<>();
-
-	@Override
-	public void enterSliceop(com.generator.generators.python.parser.Python3Parser.SliceopContext arg) {
-		onEnter(new Node("Sliceop", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inSliceop.push(true);
-	}
-
-	public void exitSliceop(com.generator.generators.python.parser.Python3Parser.SliceopContext arg) {
-		onExit();
-		this.inSliceop.pop();
-	}
-
-	public boolean inSliceop() {
-      return !inSliceop.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inExprlist = new java.util.Stack<>();
-
-	@Override
-	public void enterExprlist(com.generator.generators.python.parser.Python3Parser.ExprlistContext arg) {
-		onEnter(new Node("Exprlist", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inExprlist.push(true);
-	}
-
-	public void exitExprlist(com.generator.generators.python.parser.Python3Parser.ExprlistContext arg) {
-		onExit();
-		this.inExprlist.pop();
-	}
-
-	public boolean inExprlist() {
-      return !inExprlist.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTestlist = new java.util.Stack<>();
-
-	@Override
-	public void enterTestlist(com.generator.generators.python.parser.Python3Parser.TestlistContext arg) {
-		onEnter(new Node("Testlist", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inTestlist.push(true);
-	}
-
-	public void exitTestlist(com.generator.generators.python.parser.Python3Parser.TestlistContext arg) {
-		onExit();
-		this.inTestlist.pop();
-	}
-
-	public boolean inTestlist() {
-      return !inTestlist.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDictorsetmaker = new java.util.Stack<>();
-
-	@Override
-	public void enterDictorsetmaker(com.generator.generators.python.parser.Python3Parser.DictorsetmakerContext arg) {
-		onEnter(new Node("Dictorsetmaker", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inDictorsetmaker.push(true);
-	}
-
-	public void exitDictorsetmaker(com.generator.generators.python.parser.Python3Parser.DictorsetmakerContext arg) {
-		onExit();
-		this.inDictorsetmaker.pop();
-	}
-
-	public boolean inDictorsetmaker() {
-      return !inDictorsetmaker.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inClassdef = new java.util.Stack<>();
-
-	@Override
-	public void enterClassdef(com.generator.generators.python.parser.Python3Parser.ClassdefContext arg) {
-		onEnter(new Node("Classdef", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inClassdef.push(true);
-	}
-
-	public void exitClassdef(com.generator.generators.python.parser.Python3Parser.ClassdefContext arg) {
-		onExit();
-		this.inClassdef.pop();
-	}
-
-	public boolean inClassdef() {
-      return !inClassdef.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inArglist = new java.util.Stack<>();
-
-	@Override
-	public void enterArglist(com.generator.generators.python.parser.Python3Parser.ArglistContext arg) {
-		onEnter(new Node("Arglist", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inArglist.push(true);
-	}
-
-	public void exitArglist(com.generator.generators.python.parser.Python3Parser.ArglistContext arg) {
-		onExit();
-		this.inArglist.pop();
-	}
-
-	public boolean inArglist() {
-      return !inArglist.isEmpty(); 
+	public boolean inParameters() {
+      return !inParameters.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inArgument = new java.util.Stack<>();
@@ -624,125 +133,6 @@ public class Python3NodeListener extends Python3BaseListener {
 
 	public boolean inArgument() {
       return !inArgument.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inComp_iter = new java.util.Stack<>();
-
-	@Override
-	public void enterComp_iter(com.generator.generators.python.parser.Python3Parser.Comp_iterContext arg) {
-		onEnter(new Node("Comp_iter", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inComp_iter.push(true);
-	}
-
-	public void exitComp_iter(com.generator.generators.python.parser.Python3Parser.Comp_iterContext arg) {
-		onExit();
-		this.inComp_iter.pop();
-	}
-
-	public boolean inComp_iter() {
-      return !inComp_iter.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inComp_for = new java.util.Stack<>();
-
-	@Override
-	public void enterComp_for(com.generator.generators.python.parser.Python3Parser.Comp_forContext arg) {
-		onEnter(new Node("Comp_for", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inComp_for.push(true);
-	}
-
-	public void exitComp_for(com.generator.generators.python.parser.Python3Parser.Comp_forContext arg) {
-		onExit();
-		this.inComp_for.pop();
-	}
-
-	public boolean inComp_for() {
-      return !inComp_for.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inComp_if = new java.util.Stack<>();
-
-	@Override
-	public void enterComp_if(com.generator.generators.python.parser.Python3Parser.Comp_ifContext arg) {
-		onEnter(new Node("Comp_if", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inComp_if.push(true);
-	}
-
-	public void exitComp_if(com.generator.generators.python.parser.Python3Parser.Comp_ifContext arg) {
-		onExit();
-		this.inComp_if.pop();
-	}
-
-	public boolean inComp_if() {
-      return !inComp_if.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inYield_expr = new java.util.Stack<>();
-
-	@Override
-	public void enterYield_expr(com.generator.generators.python.parser.Python3Parser.Yield_exprContext arg) {
-		onEnter(new Node("Yield_expr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inYield_expr.push(true);
-	}
-
-	public void exitYield_expr(com.generator.generators.python.parser.Python3Parser.Yield_exprContext arg) {
-		onExit();
-		this.inYield_expr.pop();
-	}
-
-	public boolean inYield_expr() {
-      return !inYield_expr.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inYield_arg = new java.util.Stack<>();
-
-	@Override
-	public void enterYield_arg(com.generator.generators.python.parser.Python3Parser.Yield_argContext arg) {
-		onEnter(new Node("Yield_arg", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inYield_arg.push(true);
-	}
-
-	public void exitYield_arg(com.generator.generators.python.parser.Python3Parser.Yield_argContext arg) {
-		onExit();
-		this.inYield_arg.pop();
-	}
-
-	public boolean inYield_arg() {
-      return !inYield_arg.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inStr = new java.util.Stack<>();
-
-	@Override
-	public void enterStr(com.generator.generators.python.parser.Python3Parser.StrContext arg) {
-		onEnter(new Node("Str", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inStr.push(true);
-	}
-
-	public void exitStr(com.generator.generators.python.parser.Python3Parser.StrContext arg) {
-		onExit();
-		this.inStr.pop();
-	}
-
-	public boolean inStr() {
-      return !inStr.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inInteger = new java.util.Stack<>();
-
-	@Override
-	public void enterInteger(com.generator.generators.python.parser.Python3Parser.IntegerContext arg) {
-		onEnter(new Node("Integer", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inInteger.push(true);
-	}
-
-	public void exitInteger(com.generator.generators.python.parser.Python3Parser.IntegerContext arg) {
-		onExit();
-		this.inInteger.pop();
-	}
-
-	public boolean inInteger() {
-      return !inInteger.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSingle_input = new java.util.Stack<>();
@@ -1425,72 +815,684 @@ public class Python3NodeListener extends Python3BaseListener {
       return !inWhile_stmt.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inAtom = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inFor_stmt = new java.util.Stack<>();
 
 	@Override
-	public void enterAtom(com.generator.generators.python.parser.Python3Parser.AtomContext arg) {
-		onEnter(new Node("Atom", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inAtom.push(true);
+	public void enterFor_stmt(com.generator.generators.python.parser.Python3Parser.For_stmtContext arg) {
+		onEnter(new Node("For_stmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inFor_stmt.push(true);
 	}
 
-	public void exitAtom(com.generator.generators.python.parser.Python3Parser.AtomContext arg) {
+	public void exitFor_stmt(com.generator.generators.python.parser.Python3Parser.For_stmtContext arg) {
 		onExit();
-		this.inAtom.pop();
+		this.inFor_stmt.pop();
 	}
 
-	public boolean inAtom() {
-      return !inAtom.isEmpty(); 
+	public boolean inFor_stmt() {
+      return !inFor_stmt.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inNumber = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inTry_stmt = new java.util.Stack<>();
 
 	@Override
-	public void enterNumber(com.generator.generators.python.parser.Python3Parser.NumberContext arg) {
-		onEnter(new Node("Number", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inNumber.push(true);
+	public void enterTry_stmt(com.generator.generators.python.parser.Python3Parser.Try_stmtContext arg) {
+		onEnter(new Node("Try_stmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inTry_stmt.push(true);
 	}
 
-	public void exitNumber(com.generator.generators.python.parser.Python3Parser.NumberContext arg) {
+	public void exitTry_stmt(com.generator.generators.python.parser.Python3Parser.Try_stmtContext arg) {
 		onExit();
-		this.inNumber.pop();
+		this.inTry_stmt.pop();
 	}
 
-	public boolean inNumber() {
-      return !inNumber.isEmpty(); 
+	public boolean inTry_stmt() {
+      return !inTry_stmt.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inExpr = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inWith_stmt = new java.util.Stack<>();
 
 	@Override
-	public void enterExpr(com.generator.generators.python.parser.Python3Parser.ExprContext arg) {
-		onEnter(new Node("Expr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inExpr.push(true);
+	public void enterWith_stmt(com.generator.generators.python.parser.Python3Parser.With_stmtContext arg) {
+		onEnter(new Node("With_stmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inWith_stmt.push(true);
 	}
 
-	public void exitExpr(com.generator.generators.python.parser.Python3Parser.ExprContext arg) {
+	public void exitWith_stmt(com.generator.generators.python.parser.Python3Parser.With_stmtContext arg) {
 		onExit();
-		this.inExpr.pop();
+		this.inWith_stmt.pop();
 	}
 
-	public boolean inExpr() {
-      return !inExpr.isEmpty(); 
+	public boolean inWith_stmt() {
+      return !inWith_stmt.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inParameters = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inWith_item = new java.util.Stack<>();
 
 	@Override
-	public void enterParameters(com.generator.generators.python.parser.Python3Parser.ParametersContext arg) {
-		onEnter(new Node("Parameters", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inParameters.push(true);
+	public void enterWith_item(com.generator.generators.python.parser.Python3Parser.With_itemContext arg) {
+		onEnter(new Node("With_item", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inWith_item.push(true);
 	}
 
-	public void exitParameters(com.generator.generators.python.parser.Python3Parser.ParametersContext arg) {
+	public void exitWith_item(com.generator.generators.python.parser.Python3Parser.With_itemContext arg) {
 		onExit();
-		this.inParameters.pop();
+		this.inWith_item.pop();
 	}
 
-	public boolean inParameters() {
-      return !inParameters.isEmpty(); 
+	public boolean inWith_item() {
+      return !inWith_item.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExcept_clause = new java.util.Stack<>();
+
+	@Override
+	public void enterExcept_clause(com.generator.generators.python.parser.Python3Parser.Except_clauseContext arg) {
+		onEnter(new Node("Except_clause", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inExcept_clause.push(true);
+	}
+
+	public void exitExcept_clause(com.generator.generators.python.parser.Python3Parser.Except_clauseContext arg) {
+		onExit();
+		this.inExcept_clause.pop();
+	}
+
+	public boolean inExcept_clause() {
+      return !inExcept_clause.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSuite = new java.util.Stack<>();
+
+	@Override
+	public void enterSuite(com.generator.generators.python.parser.Python3Parser.SuiteContext arg) {
+		onEnter(new Node("Suite", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inSuite.push(true);
+	}
+
+	public void exitSuite(com.generator.generators.python.parser.Python3Parser.SuiteContext arg) {
+		onExit();
+		this.inSuite.pop();
+	}
+
+	public boolean inSuite() {
+      return !inSuite.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTest = new java.util.Stack<>();
+
+	@Override
+	public void enterTest(com.generator.generators.python.parser.Python3Parser.TestContext arg) {
+		onEnter(new Node("Test", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inTest.push(true);
+	}
+
+	public void exitTest(com.generator.generators.python.parser.Python3Parser.TestContext arg) {
+		onExit();
+		this.inTest.pop();
+	}
+
+	public boolean inTest() {
+      return !inTest.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTest_nocond = new java.util.Stack<>();
+
+	@Override
+	public void enterTest_nocond(com.generator.generators.python.parser.Python3Parser.Test_nocondContext arg) {
+		onEnter(new Node("Test_nocond", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inTest_nocond.push(true);
+	}
+
+	public void exitTest_nocond(com.generator.generators.python.parser.Python3Parser.Test_nocondContext arg) {
+		onExit();
+		this.inTest_nocond.pop();
+	}
+
+	public boolean inTest_nocond() {
+      return !inTest_nocond.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLambdef = new java.util.Stack<>();
+
+	@Override
+	public void enterLambdef(com.generator.generators.python.parser.Python3Parser.LambdefContext arg) {
+		onEnter(new Node("Lambdef", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inLambdef.push(true);
+	}
+
+	public void exitLambdef(com.generator.generators.python.parser.Python3Parser.LambdefContext arg) {
+		onExit();
+		this.inLambdef.pop();
+	}
+
+	public boolean inLambdef() {
+      return !inLambdef.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLambdef_nocond = new java.util.Stack<>();
+
+	@Override
+	public void enterLambdef_nocond(com.generator.generators.python.parser.Python3Parser.Lambdef_nocondContext arg) {
+		onEnter(new Node("Lambdef_nocond", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inLambdef_nocond.push(true);
+	}
+
+	public void exitLambdef_nocond(com.generator.generators.python.parser.Python3Parser.Lambdef_nocondContext arg) {
+		onExit();
+		this.inLambdef_nocond.pop();
+	}
+
+	public boolean inLambdef_nocond() {
+      return !inLambdef_nocond.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inOr_test = new java.util.Stack<>();
+
+	@Override
+	public void enterOr_test(com.generator.generators.python.parser.Python3Parser.Or_testContext arg) {
+		onEnter(new Node("Or_test", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inOr_test.push(true);
+	}
+
+	public void exitOr_test(com.generator.generators.python.parser.Python3Parser.Or_testContext arg) {
+		onExit();
+		this.inOr_test.pop();
+	}
+
+	public boolean inOr_test() {
+      return !inOr_test.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAnd_test = new java.util.Stack<>();
+
+	@Override
+	public void enterAnd_test(com.generator.generators.python.parser.Python3Parser.And_testContext arg) {
+		onEnter(new Node("And_test", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inAnd_test.push(true);
+	}
+
+	public void exitAnd_test(com.generator.generators.python.parser.Python3Parser.And_testContext arg) {
+		onExit();
+		this.inAnd_test.pop();
+	}
+
+	public boolean inAnd_test() {
+      return !inAnd_test.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNot_test = new java.util.Stack<>();
+
+	@Override
+	public void enterNot_test(com.generator.generators.python.parser.Python3Parser.Not_testContext arg) {
+		onEnter(new Node("Not_test", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inNot_test.push(true);
+	}
+
+	public void exitNot_test(com.generator.generators.python.parser.Python3Parser.Not_testContext arg) {
+		onExit();
+		this.inNot_test.pop();
+	}
+
+	public boolean inNot_test() {
+      return !inNot_test.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inComparison = new java.util.Stack<>();
+
+	@Override
+	public void enterComparison(com.generator.generators.python.parser.Python3Parser.ComparisonContext arg) {
+		onEnter(new Node("Comparison", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inComparison.push(true);
+	}
+
+	public void exitComparison(com.generator.generators.python.parser.Python3Parser.ComparisonContext arg) {
+		onExit();
+		this.inComparison.pop();
+	}
+
+	public boolean inComparison() {
+      return !inComparison.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inComp_op = new java.util.Stack<>();
+
+	@Override
+	public void enterComp_op(com.generator.generators.python.parser.Python3Parser.Comp_opContext arg) {
+		onEnter(new Node("Comp_op", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inComp_op.push(true);
+	}
+
+	public void exitComp_op(com.generator.generators.python.parser.Python3Parser.Comp_opContext arg) {
+		onExit();
+		this.inComp_op.pop();
+	}
+
+	public boolean inComp_op() {
+      return !inComp_op.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStar_expr = new java.util.Stack<>();
+
+	@Override
+	public void enterStar_expr(com.generator.generators.python.parser.Python3Parser.Star_exprContext arg) {
+		onEnter(new Node("Star_expr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inStar_expr.push(true);
+	}
+
+	public void exitStar_expr(com.generator.generators.python.parser.Python3Parser.Star_exprContext arg) {
+		onExit();
+		this.inStar_expr.pop();
+	}
+
+	public boolean inStar_expr() {
+      return !inStar_expr.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inXor_expr = new java.util.Stack<>();
+
+	@Override
+	public void enterXor_expr(com.generator.generators.python.parser.Python3Parser.Xor_exprContext arg) {
+		onEnter(new Node("Xor_expr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inXor_expr.push(true);
+	}
+
+	public void exitXor_expr(com.generator.generators.python.parser.Python3Parser.Xor_exprContext arg) {
+		onExit();
+		this.inXor_expr.pop();
+	}
+
+	public boolean inXor_expr() {
+      return !inXor_expr.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAnd_expr = new java.util.Stack<>();
+
+	@Override
+	public void enterAnd_expr(com.generator.generators.python.parser.Python3Parser.And_exprContext arg) {
+		onEnter(new Node("And_expr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inAnd_expr.push(true);
+	}
+
+	public void exitAnd_expr(com.generator.generators.python.parser.Python3Parser.And_exprContext arg) {
+		onExit();
+		this.inAnd_expr.pop();
+	}
+
+	public boolean inAnd_expr() {
+      return !inAnd_expr.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inShift_expr = new java.util.Stack<>();
+
+	@Override
+	public void enterShift_expr(com.generator.generators.python.parser.Python3Parser.Shift_exprContext arg) {
+		onEnter(new Node("Shift_expr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inShift_expr.push(true);
+	}
+
+	public void exitShift_expr(com.generator.generators.python.parser.Python3Parser.Shift_exprContext arg) {
+		onExit();
+		this.inShift_expr.pop();
+	}
+
+	public boolean inShift_expr() {
+      return !inShift_expr.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inArith_expr = new java.util.Stack<>();
+
+	@Override
+	public void enterArith_expr(com.generator.generators.python.parser.Python3Parser.Arith_exprContext arg) {
+		onEnter(new Node("Arith_expr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inArith_expr.push(true);
+	}
+
+	public void exitArith_expr(com.generator.generators.python.parser.Python3Parser.Arith_exprContext arg) {
+		onExit();
+		this.inArith_expr.pop();
+	}
+
+	public boolean inArith_expr() {
+      return !inArith_expr.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTerm = new java.util.Stack<>();
+
+	@Override
+	public void enterTerm(com.generator.generators.python.parser.Python3Parser.TermContext arg) {
+		onEnter(new Node("Term", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inTerm.push(true);
+	}
+
+	public void exitTerm(com.generator.generators.python.parser.Python3Parser.TermContext arg) {
+		onExit();
+		this.inTerm.pop();
+	}
+
+	public boolean inTerm() {
+      return !inTerm.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inFactor = new java.util.Stack<>();
+
+	@Override
+	public void enterFactor(com.generator.generators.python.parser.Python3Parser.FactorContext arg) {
+		onEnter(new Node("Factor", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inFactor.push(true);
+	}
+
+	public void exitFactor(com.generator.generators.python.parser.Python3Parser.FactorContext arg) {
+		onExit();
+		this.inFactor.pop();
+	}
+
+	public boolean inFactor() {
+      return !inFactor.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPower = new java.util.Stack<>();
+
+	@Override
+	public void enterPower(com.generator.generators.python.parser.Python3Parser.PowerContext arg) {
+		onEnter(new Node("Power", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inPower.push(true);
+	}
+
+	public void exitPower(com.generator.generators.python.parser.Python3Parser.PowerContext arg) {
+		onExit();
+		this.inPower.pop();
+	}
+
+	public boolean inPower() {
+      return !inPower.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTestlist_comp = new java.util.Stack<>();
+
+	@Override
+	public void enterTestlist_comp(com.generator.generators.python.parser.Python3Parser.Testlist_compContext arg) {
+		onEnter(new Node("Testlist_comp", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inTestlist_comp.push(true);
+	}
+
+	public void exitTestlist_comp(com.generator.generators.python.parser.Python3Parser.Testlist_compContext arg) {
+		onExit();
+		this.inTestlist_comp.pop();
+	}
+
+	public boolean inTestlist_comp() {
+      return !inTestlist_comp.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTrailer = new java.util.Stack<>();
+
+	@Override
+	public void enterTrailer(com.generator.generators.python.parser.Python3Parser.TrailerContext arg) {
+		onEnter(new Node("Trailer", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inTrailer.push(true);
+	}
+
+	public void exitTrailer(com.generator.generators.python.parser.Python3Parser.TrailerContext arg) {
+		onExit();
+		this.inTrailer.pop();
+	}
+
+	public boolean inTrailer() {
+      return !inTrailer.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSubscriptlist = new java.util.Stack<>();
+
+	@Override
+	public void enterSubscriptlist(com.generator.generators.python.parser.Python3Parser.SubscriptlistContext arg) {
+		onEnter(new Node("Subscriptlist", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inSubscriptlist.push(true);
+	}
+
+	public void exitSubscriptlist(com.generator.generators.python.parser.Python3Parser.SubscriptlistContext arg) {
+		onExit();
+		this.inSubscriptlist.pop();
+	}
+
+	public boolean inSubscriptlist() {
+      return !inSubscriptlist.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSubscript = new java.util.Stack<>();
+
+	@Override
+	public void enterSubscript(com.generator.generators.python.parser.Python3Parser.SubscriptContext arg) {
+		onEnter(new Node("Subscript", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inSubscript.push(true);
+	}
+
+	public void exitSubscript(com.generator.generators.python.parser.Python3Parser.SubscriptContext arg) {
+		onExit();
+		this.inSubscript.pop();
+	}
+
+	public boolean inSubscript() {
+      return !inSubscript.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSliceop = new java.util.Stack<>();
+
+	@Override
+	public void enterSliceop(com.generator.generators.python.parser.Python3Parser.SliceopContext arg) {
+		onEnter(new Node("Sliceop", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inSliceop.push(true);
+	}
+
+	public void exitSliceop(com.generator.generators.python.parser.Python3Parser.SliceopContext arg) {
+		onExit();
+		this.inSliceop.pop();
+	}
+
+	public boolean inSliceop() {
+      return !inSliceop.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExprlist = new java.util.Stack<>();
+
+	@Override
+	public void enterExprlist(com.generator.generators.python.parser.Python3Parser.ExprlistContext arg) {
+		onEnter(new Node("Exprlist", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inExprlist.push(true);
+	}
+
+	public void exitExprlist(com.generator.generators.python.parser.Python3Parser.ExprlistContext arg) {
+		onExit();
+		this.inExprlist.pop();
+	}
+
+	public boolean inExprlist() {
+      return !inExprlist.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTestlist = new java.util.Stack<>();
+
+	@Override
+	public void enterTestlist(com.generator.generators.python.parser.Python3Parser.TestlistContext arg) {
+		onEnter(new Node("Testlist", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inTestlist.push(true);
+	}
+
+	public void exitTestlist(com.generator.generators.python.parser.Python3Parser.TestlistContext arg) {
+		onExit();
+		this.inTestlist.pop();
+	}
+
+	public boolean inTestlist() {
+      return !inTestlist.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDictorsetmaker = new java.util.Stack<>();
+
+	@Override
+	public void enterDictorsetmaker(com.generator.generators.python.parser.Python3Parser.DictorsetmakerContext arg) {
+		onEnter(new Node("Dictorsetmaker", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inDictorsetmaker.push(true);
+	}
+
+	public void exitDictorsetmaker(com.generator.generators.python.parser.Python3Parser.DictorsetmakerContext arg) {
+		onExit();
+		this.inDictorsetmaker.pop();
+	}
+
+	public boolean inDictorsetmaker() {
+      return !inDictorsetmaker.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inClassdef = new java.util.Stack<>();
+
+	@Override
+	public void enterClassdef(com.generator.generators.python.parser.Python3Parser.ClassdefContext arg) {
+		onEnter(new Node("Classdef", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inClassdef.push(true);
+	}
+
+	public void exitClassdef(com.generator.generators.python.parser.Python3Parser.ClassdefContext arg) {
+		onExit();
+		this.inClassdef.pop();
+	}
+
+	public boolean inClassdef() {
+      return !inClassdef.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inArglist = new java.util.Stack<>();
+
+	@Override
+	public void enterArglist(com.generator.generators.python.parser.Python3Parser.ArglistContext arg) {
+		onEnter(new Node("Arglist", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inArglist.push(true);
+	}
+
+	public void exitArglist(com.generator.generators.python.parser.Python3Parser.ArglistContext arg) {
+		onExit();
+		this.inArglist.pop();
+	}
+
+	public boolean inArglist() {
+      return !inArglist.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inComp_iter = new java.util.Stack<>();
+
+	@Override
+	public void enterComp_iter(com.generator.generators.python.parser.Python3Parser.Comp_iterContext arg) {
+		onEnter(new Node("Comp_iter", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inComp_iter.push(true);
+	}
+
+	public void exitComp_iter(com.generator.generators.python.parser.Python3Parser.Comp_iterContext arg) {
+		onExit();
+		this.inComp_iter.pop();
+	}
+
+	public boolean inComp_iter() {
+      return !inComp_iter.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inComp_for = new java.util.Stack<>();
+
+	@Override
+	public void enterComp_for(com.generator.generators.python.parser.Python3Parser.Comp_forContext arg) {
+		onEnter(new Node("Comp_for", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inComp_for.push(true);
+	}
+
+	public void exitComp_for(com.generator.generators.python.parser.Python3Parser.Comp_forContext arg) {
+		onExit();
+		this.inComp_for.pop();
+	}
+
+	public boolean inComp_for() {
+      return !inComp_for.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inComp_if = new java.util.Stack<>();
+
+	@Override
+	public void enterComp_if(com.generator.generators.python.parser.Python3Parser.Comp_ifContext arg) {
+		onEnter(new Node("Comp_if", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inComp_if.push(true);
+	}
+
+	public void exitComp_if(com.generator.generators.python.parser.Python3Parser.Comp_ifContext arg) {
+		onExit();
+		this.inComp_if.pop();
+	}
+
+	public boolean inComp_if() {
+      return !inComp_if.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inYield_expr = new java.util.Stack<>();
+
+	@Override
+	public void enterYield_expr(com.generator.generators.python.parser.Python3Parser.Yield_exprContext arg) {
+		onEnter(new Node("Yield_expr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inYield_expr.push(true);
+	}
+
+	public void exitYield_expr(com.generator.generators.python.parser.Python3Parser.Yield_exprContext arg) {
+		onExit();
+		this.inYield_expr.pop();
+	}
+
+	public boolean inYield_expr() {
+      return !inYield_expr.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inYield_arg = new java.util.Stack<>();
+
+	@Override
+	public void enterYield_arg(com.generator.generators.python.parser.Python3Parser.Yield_argContext arg) {
+		onEnter(new Node("Yield_arg", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inYield_arg.push(true);
+	}
+
+	public void exitYield_arg(com.generator.generators.python.parser.Python3Parser.Yield_argContext arg) {
+		onExit();
+		this.inYield_arg.pop();
+	}
+
+	public boolean inYield_arg() {
+      return !inYield_arg.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStr = new java.util.Stack<>();
+
+	@Override
+	public void enterStr(com.generator.generators.python.parser.Python3Parser.StrContext arg) {
+		onEnter(new Node("Str", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inStr.push(true);
+	}
+
+	public void exitStr(com.generator.generators.python.parser.Python3Parser.StrContext arg) {
+		onExit();
+		this.inStr.pop();
+	}
+
+	public boolean inStr() {
+      return !inStr.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inInteger = new java.util.Stack<>();
+
+	@Override
+	public void enterInteger(com.generator.generators.python.parser.Python3Parser.IntegerContext arg) {
+		onEnter(new Node("Integer", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inInteger.push(true);
+	}
+
+	public void exitInteger(com.generator.generators.python.parser.Python3Parser.IntegerContext arg) {
+		onExit();
+		this.inInteger.pop();
+	}
+
+	public boolean inInteger() {
+      return !inInteger.isEmpty(); 
    }
 
 }

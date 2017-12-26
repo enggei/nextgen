@@ -1,7 +1,7 @@
 package com.generator.generators.csv;
 
 import com.generator.app.App;
-import com.generator.app.AppMotif;
+import com.generator.app.DomainMotif;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.domain.DomainPlugin;
@@ -13,8 +13,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static com.generator.app.DomainMotif.*;
-import static com.generator.generators.domain.DomainDomainPlugin.Entities.Domain;
 import static com.generator.util.NeoUtil.*;
 
 /**
@@ -36,27 +34,29 @@ public abstract class CSVDomainPlugin extends Plugin {
 
 	private static final Map<Label,Node> entitiesNodeMap = new LinkedHashMap<>();
 
+	private final Node domainNode;
+
    CSVDomainPlugin(App app) {
       super(app, "CSV");
 
-		final Node domainNode = getGraph().findOrCreate(Domain, AppMotif.Properties.name.name(), "CSV");
-		entitiesNodeMap.put(Entities.CSV, newDomainEntity(getGraph(), Entities.CSV, domainNode));
-		entitiesNodeMap.put(Entities.Header, newDomainEntity(getGraph(), Entities.Header, domainNode));
-		entitiesNodeMap.put(Entities.HeaderColumn, newDomainEntity(getGraph(), Entities.HeaderColumn, domainNode));
-		entitiesNodeMap.put(Entities.Row, newDomainEntity(getGraph(), Entities.Row, domainNode));
-		entitiesNodeMap.put(Entities.Value, newDomainEntity(getGraph(), Entities.Value, domainNode));
+		domainNode = DomainMotif.newDomainNode(getGraph(), "CSV");
+		entitiesNodeMap.put(Entities.CSV, DomainMotif.newDomainEntity(getGraph(), Entities.CSV, domainNode));
+		entitiesNodeMap.put(Entities.Header, DomainMotif.newDomainEntity(getGraph(), Entities.Header, domainNode));
+		entitiesNodeMap.put(Entities.HeaderColumn, DomainMotif.newDomainEntity(getGraph(), Entities.HeaderColumn, domainNode));
+		entitiesNodeMap.put(Entities.Row, DomainMotif.newDomainEntity(getGraph(), Entities.Row, domainNode));
+		entitiesNodeMap.put(Entities.Value, DomainMotif.newDomainEntity(getGraph(), Entities.Value, domainNode));
 
-		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.CSV), Properties.name.name());
-		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.HeaderColumn), Properties.name.name());
-		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Value), Properties.name.name());
-		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Value), Properties.isString.name());
+		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.CSV), Properties.name.name());
+		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.HeaderColumn), Properties.name.name());
+		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Value), Properties.name.name());
+		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Value), Properties.isString.name());
 
 		relate(domainNode, entitiesNodeMap.get(Entities.CSV), DomainPlugin.Relations.ENTITY);
-		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.CSV), Relations.HEADER.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Header));
-		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.CSV), Relations.ROW.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Row));
-		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Header), Relations.COLUMNS.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.HeaderColumn));
-		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Row), Relations.VALUE.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Value));
-		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Value), Relations.HEADER.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.HeaderColumn));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.CSV), Relations.HEADER.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Header));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.CSV), Relations.ROW.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Row));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Header), Relations.COLUMNS.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.HeaderColumn));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Row), Relations.VALUE.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Value));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Value), Relations.HEADER.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.HeaderColumn));
    }
 
    @Override
@@ -83,6 +83,10 @@ public abstract class CSVDomainPlugin extends Plugin {
       return null;
    }
 
+	public Node getDomainNode() { return domainNode; }
+
+	public Node getEntityNode(Label label) { return entitiesNodeMap.get(label); }
+
 	protected void handleCSV(JPopupMenu pop, NeoNode cSVNode, Set<NeoNode> selectedNodes) { }
 	protected void handleHeader(JPopupMenu pop, NeoNode headerNode, Set<NeoNode> selectedNodes) { }
 	protected void handleHeaderColumn(JPopupMenu pop, NeoNode headerColumnNode, Set<NeoNode> selectedNodes) { }
@@ -102,36 +106,39 @@ public abstract class CSVDomainPlugin extends Plugin {
 	public static boolean isValue(Node node) { return hasLabel(node, Entities.Value); }
 
 	protected Node newCSV() { return newCSV(getGraph()); } 
-	public static Node newCSV(NeoModel graph) { return newInstanceNode(graph, Entities.CSV.name(), entitiesNodeMap.get(Entities.CSV)); } 
 	protected Node newCSV(Object name) { return newCSV(getGraph(), name); } 
+
+	public static Node newCSV(NeoModel graph) { return DomainMotif.newInstanceNode(graph, entitiesNodeMap.get(Entities.CSV)); } 
 	public static Node newCSV(NeoModel graph, Object name) {  	
 		final Node newNode = newCSV(graph); 	
-		if (name != null) relate(newNode, newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
+		if (name != null) relate(newNode, DomainMotif.newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
 		return newNode; 
 	}
 
-	protected Node newHeader() { return newHeader(getGraph()); } 
-	public static Node newHeader(NeoModel graph) { return newInstanceNode(graph, Entities.Header.name(), entitiesNodeMap.get(Entities.Header)); }
+	protected Node newHeader() { return newHeader(getGraph()); }
+	public static Node newHeader(NeoModel graph) { return DomainMotif.newInstanceNode(graph, entitiesNodeMap.get(Entities.Header)); }
 
 	protected Node newHeaderColumn() { return newHeaderColumn(getGraph()); } 
-	public static Node newHeaderColumn(NeoModel graph) { return newInstanceNode(graph, Entities.HeaderColumn.name(), entitiesNodeMap.get(Entities.HeaderColumn)); } 
 	protected Node newHeaderColumn(Object name) { return newHeaderColumn(getGraph(), name); } 
+
+	public static Node newHeaderColumn(NeoModel graph) { return DomainMotif.newInstanceNode(graph, entitiesNodeMap.get(Entities.HeaderColumn)); } 
 	public static Node newHeaderColumn(NeoModel graph, Object name) {  	
 		final Node newNode = newHeaderColumn(graph); 	
-		if (name != null) relate(newNode, newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
+		if (name != null) relate(newNode, DomainMotif.newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
 		return newNode; 
 	}
 
-	protected Node newRow() { return newRow(getGraph()); } 
-	public static Node newRow(NeoModel graph) { return newInstanceNode(graph, Entities.Row.name(), entitiesNodeMap.get(Entities.Row)); }
+	protected Node newRow() { return newRow(getGraph()); }
+	public static Node newRow(NeoModel graph) { return DomainMotif.newInstanceNode(graph, entitiesNodeMap.get(Entities.Row)); }
 
 	protected Node newValue() { return newValue(getGraph()); } 
-	public static Node newValue(NeoModel graph) { return newInstanceNode(graph, Entities.Value.name(), entitiesNodeMap.get(Entities.Value)); } 
 	protected Node newValue(Object name, Object isString) { return newValue(getGraph(), name, isString); } 
+
+	public static Node newValue(NeoModel graph) { return DomainMotif.newInstanceNode(graph, entitiesNodeMap.get(Entities.Value)); } 
 	public static Node newValue(NeoModel graph, Object name, Object isString) {  	
 		final Node newNode = newValue(graph); 	
-		if (name != null) relate(newNode, newValueNode(graph, name), RelationshipType.withName(Properties.name.name()));
-		if (isString != null) relate(newNode, newValueNode(graph, isString), RelationshipType.withName(Properties.isString.name())); 	
+		if (name != null) relate(newNode, DomainMotif.newValueNode(graph, name), RelationshipType.withName(Properties.name.name()));
+		if (isString != null) relate(newNode, DomainMotif.newValueNode(graph, isString), RelationshipType.withName(Properties.isString.name())); 	
 		return newNode; 
 	}
 
@@ -169,19 +176,21 @@ public abstract class CSVDomainPlugin extends Plugin {
 	public static Relationship relateVALUE(Node src, Node dst) { return relate(src, dst, Relations.VALUE); }
 
 	// name
-	public static <T> T getNameProperty(PropertyContainer container) { return getEntityProperty(container, Properties.name.name()); }
-	public static <T> T getNameProperty(PropertyContainer container, T defaultValue) { return getEntityProperty(container, Properties.name.name(), defaultValue); }
-	public static boolean hasNameProperty(PropertyContainer container) { return hasEntityProperty(container, Properties.name.name()); }
-	public static <T extends PropertyContainer> T setNameProperty(NeoModel graph, T container, Object value) { setEntityProperty(graph, container, Properties.name.name(), value); return container; }
-	protected <T extends PropertyContainer> T setNameProperty(T container, Object value) { setEntityProperty(getGraph(), container, Properties.name.name(), value); return container; }
-	public static <T extends PropertyContainer> T removeNameProperty(T container) { removeEntityProperty(container, Properties.name.name()); return container; }
+	public static <T> T getNameProperty(PropertyContainer container) { return getNameProperty(container, null); }
+	public static <T> T getNameProperty(PropertyContainer container, T defaultValue) { return DomainMotif.getEntityProperty(container, Properties.name.name(), defaultValue); }
+	public static boolean hasNameProperty(PropertyContainer container) { return DomainMotif.hasEntityProperty(container, Properties.name.name()); }
+	public static <T extends PropertyContainer> T setNameProperty(NeoModel graph, T container, Object value) { DomainMotif.setEntityProperty(graph, container, Properties.name.name(), value); return container; }
+	public static <T extends PropertyContainer> T removeNameProperty(T container) { DomainMotif.removeEntityProperty(container, Properties.name.name()); return container; }
+
+	protected <T extends PropertyContainer> T setNameProperty(T container, Object value) { setNameProperty(getGraph(), container, value); return container; }
 
 	// isString
-	public static <T> T getIsStringProperty(PropertyContainer container) { return getEntityProperty(container, Properties.isString.name()); }
-	public static <T> T getIsStringProperty(PropertyContainer container, T defaultValue) { return getEntityProperty(container, Properties.isString.name(), defaultValue); }
-	public static boolean hasIsStringProperty(PropertyContainer container) { return hasEntityProperty(container, Properties.isString.name()); }
-	public static <T extends PropertyContainer> T setIsStringProperty(NeoModel graph, T container, Object value) { setEntityProperty(graph, container, Properties.isString.name(), value); return container; }
-	protected <T extends PropertyContainer> T setIsStringProperty(T container, Object value) { setEntityProperty(getGraph(), container, Properties.isString.name(), value); return container; }
-	public static <T extends PropertyContainer> T removeIsStringProperty(T container) { removeEntityProperty(container, Properties.isString.name()); return container; }
+	public static <T> T getIsStringProperty(PropertyContainer container) { return getIsStringProperty(container, null); }
+	public static <T> T getIsStringProperty(PropertyContainer container, T defaultValue) { return DomainMotif.getEntityProperty(container, Properties.isString.name(), defaultValue); }
+	public static boolean hasIsStringProperty(PropertyContainer container) { return DomainMotif.hasEntityProperty(container, Properties.isString.name()); }
+	public static <T extends PropertyContainer> T setIsStringProperty(NeoModel graph, T container, Object value) { DomainMotif.setEntityProperty(graph, container, Properties.isString.name(), value); return container; }
+	public static <T extends PropertyContainer> T removeIsStringProperty(T container) { DomainMotif.removeEntityProperty(container, Properties.isString.name()); return container; }
+
+	protected <T extends PropertyContainer> T setIsStringProperty(T container, Object value) { setIsStringProperty(getGraph(), container, value); return container; }
 
 }

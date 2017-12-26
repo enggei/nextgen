@@ -2,6 +2,8 @@ package com.generator.generators.scala.parser;
 
 public class ScalaNodeListener extends ScalaBaseListener {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ScalaNodeListener.class);
+
    public static class Node {
 
       public final String name;
@@ -33,7 +35,7 @@ public class ScalaNodeListener extends ScalaBaseListener {
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
+		if (debug) log.debug(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -46,6 +48,958 @@ public class ScalaNodeListener extends ScalaBaseListener {
 
    public Node getRoot() {
       return nodeStack.peek();
+   }
+
+	protected java.util.Stack<Boolean> inBlock = new java.util.Stack<>();
+
+	@Override
+	public void enterBlock(com.generator.generators.scala.parser.ScalaParser.BlockContext arg) {
+		onEnter(new Node("Block", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inBlock.push(true);
+	}
+
+	public void exitBlock(com.generator.generators.scala.parser.ScalaParser.BlockContext arg) {
+		onExit();
+		this.inBlock.pop();
+	}
+
+	public boolean inBlock() {
+      return !inBlock.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
+
+	@Override
+	public void enterLiteral(com.generator.generators.scala.parser.ScalaParser.LiteralContext arg) {
+		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inLiteral.push(true);
+	}
+
+	public void exitLiteral(com.generator.generators.scala.parser.ScalaParser.LiteralContext arg) {
+		onExit();
+		this.inLiteral.pop();
+	}
+
+	public boolean inLiteral() {
+      return !inLiteral.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExpr = new java.util.Stack<>();
+
+	@Override
+	public void enterExpr(com.generator.generators.scala.parser.ScalaParser.ExprContext arg) {
+		onEnter(new Node("Expr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inExpr.push(true);
+	}
+
+	public void exitExpr(com.generator.generators.scala.parser.ScalaParser.ExprContext arg) {
+		onExit();
+		this.inExpr.pop();
+	}
+
+	public boolean inExpr() {
+      return !inExpr.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPattern = new java.util.Stack<>();
+
+	@Override
+	public void enterPattern(com.generator.generators.scala.parser.ScalaParser.PatternContext arg) {
+		onEnter(new Node("Pattern", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inPattern.push(true);
+	}
+
+	public void exitPattern(com.generator.generators.scala.parser.ScalaParser.PatternContext arg) {
+		onExit();
+		this.inPattern.pop();
+	}
+
+	public boolean inPattern() {
+      return !inPattern.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCaseClauses = new java.util.Stack<>();
+
+	@Override
+	public void enterCaseClauses(com.generator.generators.scala.parser.ScalaParser.CaseClausesContext arg) {
+		onEnter(new Node("CaseClauses", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inCaseClauses.push(true);
+	}
+
+	public void exitCaseClauses(com.generator.generators.scala.parser.ScalaParser.CaseClausesContext arg) {
+		onExit();
+		this.inCaseClauses.pop();
+	}
+
+	public boolean inCaseClauses() {
+      return !inCaseClauses.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCaseClause = new java.util.Stack<>();
+
+	@Override
+	public void enterCaseClause(com.generator.generators.scala.parser.ScalaParser.CaseClauseContext arg) {
+		onEnter(new Node("CaseClause", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inCaseClause.push(true);
+	}
+
+	public void exitCaseClause(com.generator.generators.scala.parser.ScalaParser.CaseClauseContext arg) {
+		onExit();
+		this.inCaseClause.pop();
+	}
+
+	public boolean inCaseClause() {
+      return !inCaseClause.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inType = new java.util.Stack<>();
+
+	@Override
+	public void enterType(com.generator.generators.scala.parser.ScalaParser.TypeContext arg) {
+		onEnter(new Node("Type", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inType.push(true);
+	}
+
+	public void exitType(com.generator.generators.scala.parser.ScalaParser.TypeContext arg) {
+		onExit();
+		this.inType.pop();
+	}
+
+	public boolean inType() {
+      return !inType.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCompilationUnit = new java.util.Stack<>();
+
+	@Override
+	public void enterCompilationUnit(com.generator.generators.scala.parser.ScalaParser.CompilationUnitContext arg) {
+		onEnter(new Node("CompilationUnit", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inCompilationUnit.push(true);
+	}
+
+	public void exitCompilationUnit(com.generator.generators.scala.parser.ScalaParser.CompilationUnitContext arg) {
+		onExit();
+		this.inCompilationUnit.pop();
+	}
+
+	public boolean inCompilationUnit() {
+      return !inCompilationUnit.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inModifier = new java.util.Stack<>();
+
+	@Override
+	public void enterModifier(com.generator.generators.scala.parser.ScalaParser.ModifierContext arg) {
+		onEnter(new Node("Modifier", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inModifier.push(true);
+	}
+
+	public void exitModifier(com.generator.generators.scala.parser.ScalaParser.ModifierContext arg) {
+		onExit();
+		this.inModifier.pop();
+	}
+
+	public boolean inModifier() {
+      return !inModifier.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAnnotation = new java.util.Stack<>();
+
+	@Override
+	public void enterAnnotation(com.generator.generators.scala.parser.ScalaParser.AnnotationContext arg) {
+		onEnter(new Node("Annotation", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inAnnotation.push(true);
+	}
+
+	public void exitAnnotation(com.generator.generators.scala.parser.ScalaParser.AnnotationContext arg) {
+		onExit();
+		this.inAnnotation.pop();
+	}
+
+	public boolean inAnnotation() {
+      return !inAnnotation.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSimpleExpr2 = new java.util.Stack<>();
+
+	@Override
+	public void enterSimpleExpr2(com.generator.generators.scala.parser.ScalaParser.SimpleExpr2Context arg) {
+		onEnter(new Node("SimpleExpr2", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inSimpleExpr2.push(true);
+	}
+
+	public void exitSimpleExpr2(com.generator.generators.scala.parser.ScalaParser.SimpleExpr2Context arg) {
+		onExit();
+		this.inSimpleExpr2.pop();
+	}
+
+	public boolean inSimpleExpr2() {
+      return !inSimpleExpr2.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExprs = new java.util.Stack<>();
+
+	@Override
+	public void enterExprs(com.generator.generators.scala.parser.ScalaParser.ExprsContext arg) {
+		onEnter(new Node("Exprs", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inExprs.push(true);
+	}
+
+	public void exitExprs(com.generator.generators.scala.parser.ScalaParser.ExprsContext arg) {
+		onExit();
+		this.inExprs.pop();
+	}
+
+	public boolean inExprs() {
+      return !inExprs.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inArgumentExprs = new java.util.Stack<>();
+
+	@Override
+	public void enterArgumentExprs(com.generator.generators.scala.parser.ScalaParser.ArgumentExprsContext arg) {
+		onEnter(new Node("ArgumentExprs", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inArgumentExprs.push(true);
+	}
+
+	public void exitArgumentExprs(com.generator.generators.scala.parser.ScalaParser.ArgumentExprsContext arg) {
+		onExit();
+		this.inArgumentExprs.pop();
+	}
+
+	public boolean inArgumentExprs() {
+      return !inArgumentExprs.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inBlockExpr = new java.util.Stack<>();
+
+	@Override
+	public void enterBlockExpr(com.generator.generators.scala.parser.ScalaParser.BlockExprContext arg) {
+		onEnter(new Node("BlockExpr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inBlockExpr.push(true);
+	}
+
+	public void exitBlockExpr(com.generator.generators.scala.parser.ScalaParser.BlockExprContext arg) {
+		onExit();
+		this.inBlockExpr.pop();
+	}
+
+	public boolean inBlockExpr() {
+      return !inBlockExpr.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inBlockStat = new java.util.Stack<>();
+
+	@Override
+	public void enterBlockStat(com.generator.generators.scala.parser.ScalaParser.BlockStatContext arg) {
+		onEnter(new Node("BlockStat", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inBlockStat.push(true);
+	}
+
+	public void exitBlockStat(com.generator.generators.scala.parser.ScalaParser.BlockStatContext arg) {
+		onExit();
+		this.inBlockStat.pop();
+	}
+
+	public boolean inBlockStat() {
+      return !inBlockStat.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inResultExpr = new java.util.Stack<>();
+
+	@Override
+	public void enterResultExpr(com.generator.generators.scala.parser.ScalaParser.ResultExprContext arg) {
+		onEnter(new Node("ResultExpr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inResultExpr.push(true);
+	}
+
+	public void exitResultExpr(com.generator.generators.scala.parser.ScalaParser.ResultExprContext arg) {
+		onExit();
+		this.inResultExpr.pop();
+	}
+
+	public boolean inResultExpr() {
+      return !inResultExpr.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inEnumerators = new java.util.Stack<>();
+
+	@Override
+	public void enterEnumerators(com.generator.generators.scala.parser.ScalaParser.EnumeratorsContext arg) {
+		onEnter(new Node("Enumerators", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inEnumerators.push(true);
+	}
+
+	public void exitEnumerators(com.generator.generators.scala.parser.ScalaParser.EnumeratorsContext arg) {
+		onExit();
+		this.inEnumerators.pop();
+	}
+
+	public boolean inEnumerators() {
+      return !inEnumerators.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inGenerator = new java.util.Stack<>();
+
+	@Override
+	public void enterGenerator(com.generator.generators.scala.parser.ScalaParser.GeneratorContext arg) {
+		onEnter(new Node("Generator", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inGenerator.push(true);
+	}
+
+	public void exitGenerator(com.generator.generators.scala.parser.ScalaParser.GeneratorContext arg) {
+		onExit();
+		this.inGenerator.pop();
+	}
+
+	public boolean inGenerator() {
+      return !inGenerator.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inGuard = new java.util.Stack<>();
+
+	@Override
+	public void enterGuard(com.generator.generators.scala.parser.ScalaParser.GuardContext arg) {
+		onEnter(new Node("Guard", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inGuard.push(true);
+	}
+
+	public void exitGuard(com.generator.generators.scala.parser.ScalaParser.GuardContext arg) {
+		onExit();
+		this.inGuard.pop();
+	}
+
+	public boolean inGuard() {
+      return !inGuard.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPattern1 = new java.util.Stack<>();
+
+	@Override
+	public void enterPattern1(com.generator.generators.scala.parser.ScalaParser.Pattern1Context arg) {
+		onEnter(new Node("Pattern1", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inPattern1.push(true);
+	}
+
+	public void exitPattern1(com.generator.generators.scala.parser.ScalaParser.Pattern1Context arg) {
+		onExit();
+		this.inPattern1.pop();
+	}
+
+	public boolean inPattern1() {
+      return !inPattern1.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPattern2 = new java.util.Stack<>();
+
+	@Override
+	public void enterPattern2(com.generator.generators.scala.parser.ScalaParser.Pattern2Context arg) {
+		onEnter(new Node("Pattern2", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inPattern2.push(true);
+	}
+
+	public void exitPattern2(com.generator.generators.scala.parser.ScalaParser.Pattern2Context arg) {
+		onExit();
+		this.inPattern2.pop();
+	}
+
+	public boolean inPattern2() {
+      return !inPattern2.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPattern3 = new java.util.Stack<>();
+
+	@Override
+	public void enterPattern3(com.generator.generators.scala.parser.ScalaParser.Pattern3Context arg) {
+		onEnter(new Node("Pattern3", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inPattern3.push(true);
+	}
+
+	public void exitPattern3(com.generator.generators.scala.parser.ScalaParser.Pattern3Context arg) {
+		onExit();
+		this.inPattern3.pop();
+	}
+
+	public boolean inPattern3() {
+      return !inPattern3.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSimplePattern = new java.util.Stack<>();
+
+	@Override
+	public void enterSimplePattern(com.generator.generators.scala.parser.ScalaParser.SimplePatternContext arg) {
+		onEnter(new Node("SimplePattern", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inSimplePattern.push(true);
+	}
+
+	public void exitSimplePattern(com.generator.generators.scala.parser.ScalaParser.SimplePatternContext arg) {
+		onExit();
+		this.inSimplePattern.pop();
+	}
+
+	public boolean inSimplePattern() {
+      return !inSimplePattern.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPatterns = new java.util.Stack<>();
+
+	@Override
+	public void enterPatterns(com.generator.generators.scala.parser.ScalaParser.PatternsContext arg) {
+		onEnter(new Node("Patterns", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inPatterns.push(true);
+	}
+
+	public void exitPatterns(com.generator.generators.scala.parser.ScalaParser.PatternsContext arg) {
+		onExit();
+		this.inPatterns.pop();
+	}
+
+	public boolean inPatterns() {
+      return !inPatterns.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTypeParamClause = new java.util.Stack<>();
+
+	@Override
+	public void enterTypeParamClause(com.generator.generators.scala.parser.ScalaParser.TypeParamClauseContext arg) {
+		onEnter(new Node("TypeParamClause", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inTypeParamClause.push(true);
+	}
+
+	public void exitTypeParamClause(com.generator.generators.scala.parser.ScalaParser.TypeParamClauseContext arg) {
+		onExit();
+		this.inTypeParamClause.pop();
+	}
+
+	public boolean inTypeParamClause() {
+      return !inTypeParamClause.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inFunTypeParamClause = new java.util.Stack<>();
+
+	@Override
+	public void enterFunTypeParamClause(com.generator.generators.scala.parser.ScalaParser.FunTypeParamClauseContext arg) {
+		onEnter(new Node("FunTypeParamClause", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inFunTypeParamClause.push(true);
+	}
+
+	public void exitFunTypeParamClause(com.generator.generators.scala.parser.ScalaParser.FunTypeParamClauseContext arg) {
+		onExit();
+		this.inFunTypeParamClause.pop();
+	}
+
+	public boolean inFunTypeParamClause() {
+      return !inFunTypeParamClause.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inVariantTypeParam = new java.util.Stack<>();
+
+	@Override
+	public void enterVariantTypeParam(com.generator.generators.scala.parser.ScalaParser.VariantTypeParamContext arg) {
+		onEnter(new Node("VariantTypeParam", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inVariantTypeParam.push(true);
+	}
+
+	public void exitVariantTypeParam(com.generator.generators.scala.parser.ScalaParser.VariantTypeParamContext arg) {
+		onExit();
+		this.inVariantTypeParam.pop();
+	}
+
+	public boolean inVariantTypeParam() {
+      return !inVariantTypeParam.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTypeParam = new java.util.Stack<>();
+
+	@Override
+	public void enterTypeParam(com.generator.generators.scala.parser.ScalaParser.TypeParamContext arg) {
+		onEnter(new Node("TypeParam", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inTypeParam.push(true);
+	}
+
+	public void exitTypeParam(com.generator.generators.scala.parser.ScalaParser.TypeParamContext arg) {
+		onExit();
+		this.inTypeParam.pop();
+	}
+
+	public boolean inTypeParam() {
+      return !inTypeParam.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inParamClauses = new java.util.Stack<>();
+
+	@Override
+	public void enterParamClauses(com.generator.generators.scala.parser.ScalaParser.ParamClausesContext arg) {
+		onEnter(new Node("ParamClauses", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inParamClauses.push(true);
+	}
+
+	public void exitParamClauses(com.generator.generators.scala.parser.ScalaParser.ParamClausesContext arg) {
+		onExit();
+		this.inParamClauses.pop();
+	}
+
+	public boolean inParamClauses() {
+      return !inParamClauses.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inParamClause = new java.util.Stack<>();
+
+	@Override
+	public void enterParamClause(com.generator.generators.scala.parser.ScalaParser.ParamClauseContext arg) {
+		onEnter(new Node("ParamClause", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inParamClause.push(true);
+	}
+
+	public void exitParamClause(com.generator.generators.scala.parser.ScalaParser.ParamClauseContext arg) {
+		onExit();
+		this.inParamClause.pop();
+	}
+
+	public boolean inParamClause() {
+      return !inParamClause.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inParams = new java.util.Stack<>();
+
+	@Override
+	public void enterParams(com.generator.generators.scala.parser.ScalaParser.ParamsContext arg) {
+		onEnter(new Node("Params", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inParams.push(true);
+	}
+
+	public void exitParams(com.generator.generators.scala.parser.ScalaParser.ParamsContext arg) {
+		onExit();
+		this.inParams.pop();
+	}
+
+	public boolean inParams() {
+      return !inParams.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inParam = new java.util.Stack<>();
+
+	@Override
+	public void enterParam(com.generator.generators.scala.parser.ScalaParser.ParamContext arg) {
+		onEnter(new Node("Param", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inParam.push(true);
+	}
+
+	public void exitParam(com.generator.generators.scala.parser.ScalaParser.ParamContext arg) {
+		onExit();
+		this.inParam.pop();
+	}
+
+	public boolean inParam() {
+      return !inParam.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inParamType = new java.util.Stack<>();
+
+	@Override
+	public void enterParamType(com.generator.generators.scala.parser.ScalaParser.ParamTypeContext arg) {
+		onEnter(new Node("ParamType", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inParamType.push(true);
+	}
+
+	public void exitParamType(com.generator.generators.scala.parser.ScalaParser.ParamTypeContext arg) {
+		onExit();
+		this.inParamType.pop();
+	}
+
+	public boolean inParamType() {
+      return !inParamType.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inClassParamClauses = new java.util.Stack<>();
+
+	@Override
+	public void enterClassParamClauses(com.generator.generators.scala.parser.ScalaParser.ClassParamClausesContext arg) {
+		onEnter(new Node("ClassParamClauses", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inClassParamClauses.push(true);
+	}
+
+	public void exitClassParamClauses(com.generator.generators.scala.parser.ScalaParser.ClassParamClausesContext arg) {
+		onExit();
+		this.inClassParamClauses.pop();
+	}
+
+	public boolean inClassParamClauses() {
+      return !inClassParamClauses.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inClassParamClause = new java.util.Stack<>();
+
+	@Override
+	public void enterClassParamClause(com.generator.generators.scala.parser.ScalaParser.ClassParamClauseContext arg) {
+		onEnter(new Node("ClassParamClause", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inClassParamClause.push(true);
+	}
+
+	public void exitClassParamClause(com.generator.generators.scala.parser.ScalaParser.ClassParamClauseContext arg) {
+		onExit();
+		this.inClassParamClause.pop();
+	}
+
+	public boolean inClassParamClause() {
+      return !inClassParamClause.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inClassParams = new java.util.Stack<>();
+
+	@Override
+	public void enterClassParams(com.generator.generators.scala.parser.ScalaParser.ClassParamsContext arg) {
+		onEnter(new Node("ClassParams", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inClassParams.push(true);
+	}
+
+	public void exitClassParams(com.generator.generators.scala.parser.ScalaParser.ClassParamsContext arg) {
+		onExit();
+		this.inClassParams.pop();
+	}
+
+	public boolean inClassParams() {
+      return !inClassParams.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inClassParam = new java.util.Stack<>();
+
+	@Override
+	public void enterClassParam(com.generator.generators.scala.parser.ScalaParser.ClassParamContext arg) {
+		onEnter(new Node("ClassParam", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inClassParam.push(true);
+	}
+
+	public void exitClassParam(com.generator.generators.scala.parser.ScalaParser.ClassParamContext arg) {
+		onExit();
+		this.inClassParam.pop();
+	}
+
+	public boolean inClassParam() {
+      return !inClassParam.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inBindings = new java.util.Stack<>();
+
+	@Override
+	public void enterBindings(com.generator.generators.scala.parser.ScalaParser.BindingsContext arg) {
+		onEnter(new Node("Bindings", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inBindings.push(true);
+	}
+
+	public void exitBindings(com.generator.generators.scala.parser.ScalaParser.BindingsContext arg) {
+		onExit();
+		this.inBindings.pop();
+	}
+
+	public boolean inBindings() {
+      return !inBindings.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inBinding = new java.util.Stack<>();
+
+	@Override
+	public void enterBinding(com.generator.generators.scala.parser.ScalaParser.BindingContext arg) {
+		onEnter(new Node("Binding", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inBinding.push(true);
+	}
+
+	public void exitBinding(com.generator.generators.scala.parser.ScalaParser.BindingContext arg) {
+		onExit();
+		this.inBinding.pop();
+	}
+
+	public boolean inBinding() {
+      return !inBinding.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLocalModifier = new java.util.Stack<>();
+
+	@Override
+	public void enterLocalModifier(com.generator.generators.scala.parser.ScalaParser.LocalModifierContext arg) {
+		onEnter(new Node("LocalModifier", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inLocalModifier.push(true);
+	}
+
+	public void exitLocalModifier(com.generator.generators.scala.parser.ScalaParser.LocalModifierContext arg) {
+		onExit();
+		this.inLocalModifier.pop();
+	}
+
+	public boolean inLocalModifier() {
+      return !inLocalModifier.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAccessModifier = new java.util.Stack<>();
+
+	@Override
+	public void enterAccessModifier(com.generator.generators.scala.parser.ScalaParser.AccessModifierContext arg) {
+		onEnter(new Node("AccessModifier", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inAccessModifier.push(true);
+	}
+
+	public void exitAccessModifier(com.generator.generators.scala.parser.ScalaParser.AccessModifierContext arg) {
+		onExit();
+		this.inAccessModifier.pop();
+	}
+
+	public boolean inAccessModifier() {
+      return !inAccessModifier.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAccessQualifier = new java.util.Stack<>();
+
+	@Override
+	public void enterAccessQualifier(com.generator.generators.scala.parser.ScalaParser.AccessQualifierContext arg) {
+		onEnter(new Node("AccessQualifier", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inAccessQualifier.push(true);
+	}
+
+	public void exitAccessQualifier(com.generator.generators.scala.parser.ScalaParser.AccessQualifierContext arg) {
+		onExit();
+		this.inAccessQualifier.pop();
+	}
+
+	public boolean inAccessQualifier() {
+      return !inAccessQualifier.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inConstrAnnotation = new java.util.Stack<>();
+
+	@Override
+	public void enterConstrAnnotation(com.generator.generators.scala.parser.ScalaParser.ConstrAnnotationContext arg) {
+		onEnter(new Node("ConstrAnnotation", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inConstrAnnotation.push(true);
+	}
+
+	public void exitConstrAnnotation(com.generator.generators.scala.parser.ScalaParser.ConstrAnnotationContext arg) {
+		onExit();
+		this.inConstrAnnotation.pop();
+	}
+
+	public boolean inConstrAnnotation() {
+      return !inConstrAnnotation.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTemplateBody = new java.util.Stack<>();
+
+	@Override
+	public void enterTemplateBody(com.generator.generators.scala.parser.ScalaParser.TemplateBodyContext arg) {
+		onEnter(new Node("TemplateBody", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inTemplateBody.push(true);
+	}
+
+	public void exitTemplateBody(com.generator.generators.scala.parser.ScalaParser.TemplateBodyContext arg) {
+		onExit();
+		this.inTemplateBody.pop();
+	}
+
+	public boolean inTemplateBody() {
+      return !inTemplateBody.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTemplateStat = new java.util.Stack<>();
+
+	@Override
+	public void enterTemplateStat(com.generator.generators.scala.parser.ScalaParser.TemplateStatContext arg) {
+		onEnter(new Node("TemplateStat", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inTemplateStat.push(true);
+	}
+
+	public void exitTemplateStat(com.generator.generators.scala.parser.ScalaParser.TemplateStatContext arg) {
+		onExit();
+		this.inTemplateStat.pop();
+	}
+
+	public boolean inTemplateStat() {
+      return !inTemplateStat.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSelfType = new java.util.Stack<>();
+
+	@Override
+	public void enterSelfType(com.generator.generators.scala.parser.ScalaParser.SelfTypeContext arg) {
+		onEnter(new Node("SelfType", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inSelfType.push(true);
+	}
+
+	public void exitSelfType(com.generator.generators.scala.parser.ScalaParser.SelfTypeContext arg) {
+		onExit();
+		this.inSelfType.pop();
+	}
+
+	public boolean inSelfType() {
+      return !inSelfType.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inImport_ = new java.util.Stack<>();
+
+	@Override
+	public void enterImport_(com.generator.generators.scala.parser.ScalaParser.Import_Context arg) {
+		onEnter(new Node("Import_", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inImport_.push(true);
+	}
+
+	public void exitImport_(com.generator.generators.scala.parser.ScalaParser.Import_Context arg) {
+		onExit();
+		this.inImport_.pop();
+	}
+
+	public boolean inImport_() {
+      return !inImport_.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inImportExpr = new java.util.Stack<>();
+
+	@Override
+	public void enterImportExpr(com.generator.generators.scala.parser.ScalaParser.ImportExprContext arg) {
+		onEnter(new Node("ImportExpr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inImportExpr.push(true);
+	}
+
+	public void exitImportExpr(com.generator.generators.scala.parser.ScalaParser.ImportExprContext arg) {
+		onExit();
+		this.inImportExpr.pop();
+	}
+
+	public boolean inImportExpr() {
+      return !inImportExpr.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inImportSelectors = new java.util.Stack<>();
+
+	@Override
+	public void enterImportSelectors(com.generator.generators.scala.parser.ScalaParser.ImportSelectorsContext arg) {
+		onEnter(new Node("ImportSelectors", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inImportSelectors.push(true);
+	}
+
+	public void exitImportSelectors(com.generator.generators.scala.parser.ScalaParser.ImportSelectorsContext arg) {
+		onExit();
+		this.inImportSelectors.pop();
+	}
+
+	public boolean inImportSelectors() {
+      return !inImportSelectors.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inImportSelector = new java.util.Stack<>();
+
+	@Override
+	public void enterImportSelector(com.generator.generators.scala.parser.ScalaParser.ImportSelectorContext arg) {
+		onEnter(new Node("ImportSelector", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inImportSelector.push(true);
+	}
+
+	public void exitImportSelector(com.generator.generators.scala.parser.ScalaParser.ImportSelectorContext arg) {
+		onExit();
+		this.inImportSelector.pop();
+	}
+
+	public boolean inImportSelector() {
+      return !inImportSelector.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDcl = new java.util.Stack<>();
+
+	@Override
+	public void enterDcl(com.generator.generators.scala.parser.ScalaParser.DclContext arg) {
+		onEnter(new Node("Dcl", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inDcl.push(true);
+	}
+
+	public void exitDcl(com.generator.generators.scala.parser.ScalaParser.DclContext arg) {
+		onExit();
+		this.inDcl.pop();
+	}
+
+	public boolean inDcl() {
+      return !inDcl.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inValDcl = new java.util.Stack<>();
+
+	@Override
+	public void enterValDcl(com.generator.generators.scala.parser.ScalaParser.ValDclContext arg) {
+		onEnter(new Node("ValDcl", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inValDcl.push(true);
+	}
+
+	public void exitValDcl(com.generator.generators.scala.parser.ScalaParser.ValDclContext arg) {
+		onExit();
+		this.inValDcl.pop();
+	}
+
+	public boolean inValDcl() {
+      return !inValDcl.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inVarDcl = new java.util.Stack<>();
+
+	@Override
+	public void enterVarDcl(com.generator.generators.scala.parser.ScalaParser.VarDclContext arg) {
+		onEnter(new Node("VarDcl", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inVarDcl.push(true);
+	}
+
+	public void exitVarDcl(com.generator.generators.scala.parser.ScalaParser.VarDclContext arg) {
+		onExit();
+		this.inVarDcl.pop();
+	}
+
+	public boolean inVarDcl() {
+      return !inVarDcl.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inFunDcl = new java.util.Stack<>();
+
+	@Override
+	public void enterFunDcl(com.generator.generators.scala.parser.ScalaParser.FunDclContext arg) {
+		onEnter(new Node("FunDcl", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inFunDcl.push(true);
+	}
+
+	public void exitFunDcl(com.generator.generators.scala.parser.ScalaParser.FunDclContext arg) {
+		onExit();
+		this.inFunDcl.pop();
+	}
+
+	public boolean inFunDcl() {
+      return !inFunDcl.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inFunSig = new java.util.Stack<>();
+
+	@Override
+	public void enterFunSig(com.generator.generators.scala.parser.ScalaParser.FunSigContext arg) {
+		onEnter(new Node("FunSig", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inFunSig.push(true);
+	}
+
+	public void exitFunSig(com.generator.generators.scala.parser.ScalaParser.FunSigContext arg) {
+		onExit();
+		this.inFunSig.pop();
+	}
+
+	public boolean inFunSig() {
+      return !inFunSig.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTypeDcl = new java.util.Stack<>();
+
+	@Override
+	public void enterTypeDcl(com.generator.generators.scala.parser.ScalaParser.TypeDclContext arg) {
+		onEnter(new Node("TypeDcl", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inTypeDcl.push(true);
+	}
+
+	public void exitTypeDcl(com.generator.generators.scala.parser.ScalaParser.TypeDclContext arg) {
+		onExit();
+		this.inTypeDcl.pop();
+	}
+
+	public boolean inTypeDcl() {
+      return !inTypeDcl.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPatVarDef = new java.util.Stack<>();
@@ -490,414 +1444,6 @@ public class ScalaNodeListener extends ScalaBaseListener {
       return !inPackageObject.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inParamType = new java.util.Stack<>();
-
-	@Override
-	public void enterParamType(com.generator.generators.scala.parser.ScalaParser.ParamTypeContext arg) {
-		onEnter(new Node("ParamType", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inParamType.push(true);
-	}
-
-	public void exitParamType(com.generator.generators.scala.parser.ScalaParser.ParamTypeContext arg) {
-		onExit();
-		this.inParamType.pop();
-	}
-
-	public boolean inParamType() {
-      return !inParamType.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inClassParamClauses = new java.util.Stack<>();
-
-	@Override
-	public void enterClassParamClauses(com.generator.generators.scala.parser.ScalaParser.ClassParamClausesContext arg) {
-		onEnter(new Node("ClassParamClauses", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inClassParamClauses.push(true);
-	}
-
-	public void exitClassParamClauses(com.generator.generators.scala.parser.ScalaParser.ClassParamClausesContext arg) {
-		onExit();
-		this.inClassParamClauses.pop();
-	}
-
-	public boolean inClassParamClauses() {
-      return !inClassParamClauses.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inClassParamClause = new java.util.Stack<>();
-
-	@Override
-	public void enterClassParamClause(com.generator.generators.scala.parser.ScalaParser.ClassParamClauseContext arg) {
-		onEnter(new Node("ClassParamClause", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inClassParamClause.push(true);
-	}
-
-	public void exitClassParamClause(com.generator.generators.scala.parser.ScalaParser.ClassParamClauseContext arg) {
-		onExit();
-		this.inClassParamClause.pop();
-	}
-
-	public boolean inClassParamClause() {
-      return !inClassParamClause.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inClassParams = new java.util.Stack<>();
-
-	@Override
-	public void enterClassParams(com.generator.generators.scala.parser.ScalaParser.ClassParamsContext arg) {
-		onEnter(new Node("ClassParams", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inClassParams.push(true);
-	}
-
-	public void exitClassParams(com.generator.generators.scala.parser.ScalaParser.ClassParamsContext arg) {
-		onExit();
-		this.inClassParams.pop();
-	}
-
-	public boolean inClassParams() {
-      return !inClassParams.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inClassParam = new java.util.Stack<>();
-
-	@Override
-	public void enterClassParam(com.generator.generators.scala.parser.ScalaParser.ClassParamContext arg) {
-		onEnter(new Node("ClassParam", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inClassParam.push(true);
-	}
-
-	public void exitClassParam(com.generator.generators.scala.parser.ScalaParser.ClassParamContext arg) {
-		onExit();
-		this.inClassParam.pop();
-	}
-
-	public boolean inClassParam() {
-      return !inClassParam.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inBindings = new java.util.Stack<>();
-
-	@Override
-	public void enterBindings(com.generator.generators.scala.parser.ScalaParser.BindingsContext arg) {
-		onEnter(new Node("Bindings", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inBindings.push(true);
-	}
-
-	public void exitBindings(com.generator.generators.scala.parser.ScalaParser.BindingsContext arg) {
-		onExit();
-		this.inBindings.pop();
-	}
-
-	public boolean inBindings() {
-      return !inBindings.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inBinding = new java.util.Stack<>();
-
-	@Override
-	public void enterBinding(com.generator.generators.scala.parser.ScalaParser.BindingContext arg) {
-		onEnter(new Node("Binding", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inBinding.push(true);
-	}
-
-	public void exitBinding(com.generator.generators.scala.parser.ScalaParser.BindingContext arg) {
-		onExit();
-		this.inBinding.pop();
-	}
-
-	public boolean inBinding() {
-      return !inBinding.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLocalModifier = new java.util.Stack<>();
-
-	@Override
-	public void enterLocalModifier(com.generator.generators.scala.parser.ScalaParser.LocalModifierContext arg) {
-		onEnter(new Node("LocalModifier", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inLocalModifier.push(true);
-	}
-
-	public void exitLocalModifier(com.generator.generators.scala.parser.ScalaParser.LocalModifierContext arg) {
-		onExit();
-		this.inLocalModifier.pop();
-	}
-
-	public boolean inLocalModifier() {
-      return !inLocalModifier.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAccessModifier = new java.util.Stack<>();
-
-	@Override
-	public void enterAccessModifier(com.generator.generators.scala.parser.ScalaParser.AccessModifierContext arg) {
-		onEnter(new Node("AccessModifier", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inAccessModifier.push(true);
-	}
-
-	public void exitAccessModifier(com.generator.generators.scala.parser.ScalaParser.AccessModifierContext arg) {
-		onExit();
-		this.inAccessModifier.pop();
-	}
-
-	public boolean inAccessModifier() {
-      return !inAccessModifier.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAccessQualifier = new java.util.Stack<>();
-
-	@Override
-	public void enterAccessQualifier(com.generator.generators.scala.parser.ScalaParser.AccessQualifierContext arg) {
-		onEnter(new Node("AccessQualifier", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inAccessQualifier.push(true);
-	}
-
-	public void exitAccessQualifier(com.generator.generators.scala.parser.ScalaParser.AccessQualifierContext arg) {
-		onExit();
-		this.inAccessQualifier.pop();
-	}
-
-	public boolean inAccessQualifier() {
-      return !inAccessQualifier.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inConstrAnnotation = new java.util.Stack<>();
-
-	@Override
-	public void enterConstrAnnotation(com.generator.generators.scala.parser.ScalaParser.ConstrAnnotationContext arg) {
-		onEnter(new Node("ConstrAnnotation", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inConstrAnnotation.push(true);
-	}
-
-	public void exitConstrAnnotation(com.generator.generators.scala.parser.ScalaParser.ConstrAnnotationContext arg) {
-		onExit();
-		this.inConstrAnnotation.pop();
-	}
-
-	public boolean inConstrAnnotation() {
-      return !inConstrAnnotation.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTemplateBody = new java.util.Stack<>();
-
-	@Override
-	public void enterTemplateBody(com.generator.generators.scala.parser.ScalaParser.TemplateBodyContext arg) {
-		onEnter(new Node("TemplateBody", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inTemplateBody.push(true);
-	}
-
-	public void exitTemplateBody(com.generator.generators.scala.parser.ScalaParser.TemplateBodyContext arg) {
-		onExit();
-		this.inTemplateBody.pop();
-	}
-
-	public boolean inTemplateBody() {
-      return !inTemplateBody.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTemplateStat = new java.util.Stack<>();
-
-	@Override
-	public void enterTemplateStat(com.generator.generators.scala.parser.ScalaParser.TemplateStatContext arg) {
-		onEnter(new Node("TemplateStat", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inTemplateStat.push(true);
-	}
-
-	public void exitTemplateStat(com.generator.generators.scala.parser.ScalaParser.TemplateStatContext arg) {
-		onExit();
-		this.inTemplateStat.pop();
-	}
-
-	public boolean inTemplateStat() {
-      return !inTemplateStat.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSelfType = new java.util.Stack<>();
-
-	@Override
-	public void enterSelfType(com.generator.generators.scala.parser.ScalaParser.SelfTypeContext arg) {
-		onEnter(new Node("SelfType", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inSelfType.push(true);
-	}
-
-	public void exitSelfType(com.generator.generators.scala.parser.ScalaParser.SelfTypeContext arg) {
-		onExit();
-		this.inSelfType.pop();
-	}
-
-	public boolean inSelfType() {
-      return !inSelfType.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inImport_ = new java.util.Stack<>();
-
-	@Override
-	public void enterImport_(com.generator.generators.scala.parser.ScalaParser.Import_Context arg) {
-		onEnter(new Node("Import_", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inImport_.push(true);
-	}
-
-	public void exitImport_(com.generator.generators.scala.parser.ScalaParser.Import_Context arg) {
-		onExit();
-		this.inImport_.pop();
-	}
-
-	public boolean inImport_() {
-      return !inImport_.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inImportExpr = new java.util.Stack<>();
-
-	@Override
-	public void enterImportExpr(com.generator.generators.scala.parser.ScalaParser.ImportExprContext arg) {
-		onEnter(new Node("ImportExpr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inImportExpr.push(true);
-	}
-
-	public void exitImportExpr(com.generator.generators.scala.parser.ScalaParser.ImportExprContext arg) {
-		onExit();
-		this.inImportExpr.pop();
-	}
-
-	public boolean inImportExpr() {
-      return !inImportExpr.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inImportSelectors = new java.util.Stack<>();
-
-	@Override
-	public void enterImportSelectors(com.generator.generators.scala.parser.ScalaParser.ImportSelectorsContext arg) {
-		onEnter(new Node("ImportSelectors", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inImportSelectors.push(true);
-	}
-
-	public void exitImportSelectors(com.generator.generators.scala.parser.ScalaParser.ImportSelectorsContext arg) {
-		onExit();
-		this.inImportSelectors.pop();
-	}
-
-	public boolean inImportSelectors() {
-      return !inImportSelectors.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inImportSelector = new java.util.Stack<>();
-
-	@Override
-	public void enterImportSelector(com.generator.generators.scala.parser.ScalaParser.ImportSelectorContext arg) {
-		onEnter(new Node("ImportSelector", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inImportSelector.push(true);
-	}
-
-	public void exitImportSelector(com.generator.generators.scala.parser.ScalaParser.ImportSelectorContext arg) {
-		onExit();
-		this.inImportSelector.pop();
-	}
-
-	public boolean inImportSelector() {
-      return !inImportSelector.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDcl = new java.util.Stack<>();
-
-	@Override
-	public void enterDcl(com.generator.generators.scala.parser.ScalaParser.DclContext arg) {
-		onEnter(new Node("Dcl", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inDcl.push(true);
-	}
-
-	public void exitDcl(com.generator.generators.scala.parser.ScalaParser.DclContext arg) {
-		onExit();
-		this.inDcl.pop();
-	}
-
-	public boolean inDcl() {
-      return !inDcl.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inValDcl = new java.util.Stack<>();
-
-	@Override
-	public void enterValDcl(com.generator.generators.scala.parser.ScalaParser.ValDclContext arg) {
-		onEnter(new Node("ValDcl", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inValDcl.push(true);
-	}
-
-	public void exitValDcl(com.generator.generators.scala.parser.ScalaParser.ValDclContext arg) {
-		onExit();
-		this.inValDcl.pop();
-	}
-
-	public boolean inValDcl() {
-      return !inValDcl.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inVarDcl = new java.util.Stack<>();
-
-	@Override
-	public void enterVarDcl(com.generator.generators.scala.parser.ScalaParser.VarDclContext arg) {
-		onEnter(new Node("VarDcl", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inVarDcl.push(true);
-	}
-
-	public void exitVarDcl(com.generator.generators.scala.parser.ScalaParser.VarDclContext arg) {
-		onExit();
-		this.inVarDcl.pop();
-	}
-
-	public boolean inVarDcl() {
-      return !inVarDcl.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inFunDcl = new java.util.Stack<>();
-
-	@Override
-	public void enterFunDcl(com.generator.generators.scala.parser.ScalaParser.FunDclContext arg) {
-		onEnter(new Node("FunDcl", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inFunDcl.push(true);
-	}
-
-	public void exitFunDcl(com.generator.generators.scala.parser.ScalaParser.FunDclContext arg) {
-		onExit();
-		this.inFunDcl.pop();
-	}
-
-	public boolean inFunDcl() {
-      return !inFunDcl.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inFunSig = new java.util.Stack<>();
-
-	@Override
-	public void enterFunSig(com.generator.generators.scala.parser.ScalaParser.FunSigContext arg) {
-		onEnter(new Node("FunSig", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inFunSig.push(true);
-	}
-
-	public void exitFunSig(com.generator.generators.scala.parser.ScalaParser.FunSigContext arg) {
-		onExit();
-		this.inFunSig.pop();
-	}
-
-	public boolean inFunSig() {
-      return !inFunSig.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTypeDcl = new java.util.Stack<>();
-
-	@Override
-	public void enterTypeDcl(com.generator.generators.scala.parser.ScalaParser.TypeDclContext arg) {
-		onEnter(new Node("TypeDcl", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inTypeDcl.push(true);
-	}
-
-	public void exitTypeDcl(com.generator.generators.scala.parser.ScalaParser.TypeDclContext arg) {
-		onExit();
-		this.inTypeDcl.pop();
-	}
-
-	public boolean inTypeDcl() {
-      return !inTypeDcl.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inQualId = new java.util.Stack<>();
 
 	@Override
@@ -1287,550 +1833,6 @@ public class ScalaNodeListener extends ScalaBaseListener {
 
 	public boolean inSimpleExpr1() {
       return !inSimpleExpr1.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSimpleExpr2 = new java.util.Stack<>();
-
-	@Override
-	public void enterSimpleExpr2(com.generator.generators.scala.parser.ScalaParser.SimpleExpr2Context arg) {
-		onEnter(new Node("SimpleExpr2", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inSimpleExpr2.push(true);
-	}
-
-	public void exitSimpleExpr2(com.generator.generators.scala.parser.ScalaParser.SimpleExpr2Context arg) {
-		onExit();
-		this.inSimpleExpr2.pop();
-	}
-
-	public boolean inSimpleExpr2() {
-      return !inSimpleExpr2.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inExprs = new java.util.Stack<>();
-
-	@Override
-	public void enterExprs(com.generator.generators.scala.parser.ScalaParser.ExprsContext arg) {
-		onEnter(new Node("Exprs", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inExprs.push(true);
-	}
-
-	public void exitExprs(com.generator.generators.scala.parser.ScalaParser.ExprsContext arg) {
-		onExit();
-		this.inExprs.pop();
-	}
-
-	public boolean inExprs() {
-      return !inExprs.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inArgumentExprs = new java.util.Stack<>();
-
-	@Override
-	public void enterArgumentExprs(com.generator.generators.scala.parser.ScalaParser.ArgumentExprsContext arg) {
-		onEnter(new Node("ArgumentExprs", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inArgumentExprs.push(true);
-	}
-
-	public void exitArgumentExprs(com.generator.generators.scala.parser.ScalaParser.ArgumentExprsContext arg) {
-		onExit();
-		this.inArgumentExprs.pop();
-	}
-
-	public boolean inArgumentExprs() {
-      return !inArgumentExprs.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inBlockExpr = new java.util.Stack<>();
-
-	@Override
-	public void enterBlockExpr(com.generator.generators.scala.parser.ScalaParser.BlockExprContext arg) {
-		onEnter(new Node("BlockExpr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inBlockExpr.push(true);
-	}
-
-	public void exitBlockExpr(com.generator.generators.scala.parser.ScalaParser.BlockExprContext arg) {
-		onExit();
-		this.inBlockExpr.pop();
-	}
-
-	public boolean inBlockExpr() {
-      return !inBlockExpr.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inBlockStat = new java.util.Stack<>();
-
-	@Override
-	public void enterBlockStat(com.generator.generators.scala.parser.ScalaParser.BlockStatContext arg) {
-		onEnter(new Node("BlockStat", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inBlockStat.push(true);
-	}
-
-	public void exitBlockStat(com.generator.generators.scala.parser.ScalaParser.BlockStatContext arg) {
-		onExit();
-		this.inBlockStat.pop();
-	}
-
-	public boolean inBlockStat() {
-      return !inBlockStat.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inResultExpr = new java.util.Stack<>();
-
-	@Override
-	public void enterResultExpr(com.generator.generators.scala.parser.ScalaParser.ResultExprContext arg) {
-		onEnter(new Node("ResultExpr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inResultExpr.push(true);
-	}
-
-	public void exitResultExpr(com.generator.generators.scala.parser.ScalaParser.ResultExprContext arg) {
-		onExit();
-		this.inResultExpr.pop();
-	}
-
-	public boolean inResultExpr() {
-      return !inResultExpr.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inEnumerators = new java.util.Stack<>();
-
-	@Override
-	public void enterEnumerators(com.generator.generators.scala.parser.ScalaParser.EnumeratorsContext arg) {
-		onEnter(new Node("Enumerators", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inEnumerators.push(true);
-	}
-
-	public void exitEnumerators(com.generator.generators.scala.parser.ScalaParser.EnumeratorsContext arg) {
-		onExit();
-		this.inEnumerators.pop();
-	}
-
-	public boolean inEnumerators() {
-      return !inEnumerators.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inGenerator = new java.util.Stack<>();
-
-	@Override
-	public void enterGenerator(com.generator.generators.scala.parser.ScalaParser.GeneratorContext arg) {
-		onEnter(new Node("Generator", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inGenerator.push(true);
-	}
-
-	public void exitGenerator(com.generator.generators.scala.parser.ScalaParser.GeneratorContext arg) {
-		onExit();
-		this.inGenerator.pop();
-	}
-
-	public boolean inGenerator() {
-      return !inGenerator.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inGuard = new java.util.Stack<>();
-
-	@Override
-	public void enterGuard(com.generator.generators.scala.parser.ScalaParser.GuardContext arg) {
-		onEnter(new Node("Guard", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inGuard.push(true);
-	}
-
-	public void exitGuard(com.generator.generators.scala.parser.ScalaParser.GuardContext arg) {
-		onExit();
-		this.inGuard.pop();
-	}
-
-	public boolean inGuard() {
-      return !inGuard.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPattern1 = new java.util.Stack<>();
-
-	@Override
-	public void enterPattern1(com.generator.generators.scala.parser.ScalaParser.Pattern1Context arg) {
-		onEnter(new Node("Pattern1", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inPattern1.push(true);
-	}
-
-	public void exitPattern1(com.generator.generators.scala.parser.ScalaParser.Pattern1Context arg) {
-		onExit();
-		this.inPattern1.pop();
-	}
-
-	public boolean inPattern1() {
-      return !inPattern1.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPattern2 = new java.util.Stack<>();
-
-	@Override
-	public void enterPattern2(com.generator.generators.scala.parser.ScalaParser.Pattern2Context arg) {
-		onEnter(new Node("Pattern2", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inPattern2.push(true);
-	}
-
-	public void exitPattern2(com.generator.generators.scala.parser.ScalaParser.Pattern2Context arg) {
-		onExit();
-		this.inPattern2.pop();
-	}
-
-	public boolean inPattern2() {
-      return !inPattern2.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPattern3 = new java.util.Stack<>();
-
-	@Override
-	public void enterPattern3(com.generator.generators.scala.parser.ScalaParser.Pattern3Context arg) {
-		onEnter(new Node("Pattern3", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inPattern3.push(true);
-	}
-
-	public void exitPattern3(com.generator.generators.scala.parser.ScalaParser.Pattern3Context arg) {
-		onExit();
-		this.inPattern3.pop();
-	}
-
-	public boolean inPattern3() {
-      return !inPattern3.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSimplePattern = new java.util.Stack<>();
-
-	@Override
-	public void enterSimplePattern(com.generator.generators.scala.parser.ScalaParser.SimplePatternContext arg) {
-		onEnter(new Node("SimplePattern", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inSimplePattern.push(true);
-	}
-
-	public void exitSimplePattern(com.generator.generators.scala.parser.ScalaParser.SimplePatternContext arg) {
-		onExit();
-		this.inSimplePattern.pop();
-	}
-
-	public boolean inSimplePattern() {
-      return !inSimplePattern.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPatterns = new java.util.Stack<>();
-
-	@Override
-	public void enterPatterns(com.generator.generators.scala.parser.ScalaParser.PatternsContext arg) {
-		onEnter(new Node("Patterns", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inPatterns.push(true);
-	}
-
-	public void exitPatterns(com.generator.generators.scala.parser.ScalaParser.PatternsContext arg) {
-		onExit();
-		this.inPatterns.pop();
-	}
-
-	public boolean inPatterns() {
-      return !inPatterns.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTypeParamClause = new java.util.Stack<>();
-
-	@Override
-	public void enterTypeParamClause(com.generator.generators.scala.parser.ScalaParser.TypeParamClauseContext arg) {
-		onEnter(new Node("TypeParamClause", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inTypeParamClause.push(true);
-	}
-
-	public void exitTypeParamClause(com.generator.generators.scala.parser.ScalaParser.TypeParamClauseContext arg) {
-		onExit();
-		this.inTypeParamClause.pop();
-	}
-
-	public boolean inTypeParamClause() {
-      return !inTypeParamClause.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inFunTypeParamClause = new java.util.Stack<>();
-
-	@Override
-	public void enterFunTypeParamClause(com.generator.generators.scala.parser.ScalaParser.FunTypeParamClauseContext arg) {
-		onEnter(new Node("FunTypeParamClause", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inFunTypeParamClause.push(true);
-	}
-
-	public void exitFunTypeParamClause(com.generator.generators.scala.parser.ScalaParser.FunTypeParamClauseContext arg) {
-		onExit();
-		this.inFunTypeParamClause.pop();
-	}
-
-	public boolean inFunTypeParamClause() {
-      return !inFunTypeParamClause.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inVariantTypeParam = new java.util.Stack<>();
-
-	@Override
-	public void enterVariantTypeParam(com.generator.generators.scala.parser.ScalaParser.VariantTypeParamContext arg) {
-		onEnter(new Node("VariantTypeParam", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inVariantTypeParam.push(true);
-	}
-
-	public void exitVariantTypeParam(com.generator.generators.scala.parser.ScalaParser.VariantTypeParamContext arg) {
-		onExit();
-		this.inVariantTypeParam.pop();
-	}
-
-	public boolean inVariantTypeParam() {
-      return !inVariantTypeParam.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTypeParam = new java.util.Stack<>();
-
-	@Override
-	public void enterTypeParam(com.generator.generators.scala.parser.ScalaParser.TypeParamContext arg) {
-		onEnter(new Node("TypeParam", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inTypeParam.push(true);
-	}
-
-	public void exitTypeParam(com.generator.generators.scala.parser.ScalaParser.TypeParamContext arg) {
-		onExit();
-		this.inTypeParam.pop();
-	}
-
-	public boolean inTypeParam() {
-      return !inTypeParam.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inParamClauses = new java.util.Stack<>();
-
-	@Override
-	public void enterParamClauses(com.generator.generators.scala.parser.ScalaParser.ParamClausesContext arg) {
-		onEnter(new Node("ParamClauses", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inParamClauses.push(true);
-	}
-
-	public void exitParamClauses(com.generator.generators.scala.parser.ScalaParser.ParamClausesContext arg) {
-		onExit();
-		this.inParamClauses.pop();
-	}
-
-	public boolean inParamClauses() {
-      return !inParamClauses.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inParamClause = new java.util.Stack<>();
-
-	@Override
-	public void enterParamClause(com.generator.generators.scala.parser.ScalaParser.ParamClauseContext arg) {
-		onEnter(new Node("ParamClause", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inParamClause.push(true);
-	}
-
-	public void exitParamClause(com.generator.generators.scala.parser.ScalaParser.ParamClauseContext arg) {
-		onExit();
-		this.inParamClause.pop();
-	}
-
-	public boolean inParamClause() {
-      return !inParamClause.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inParams = new java.util.Stack<>();
-
-	@Override
-	public void enterParams(com.generator.generators.scala.parser.ScalaParser.ParamsContext arg) {
-		onEnter(new Node("Params", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inParams.push(true);
-	}
-
-	public void exitParams(com.generator.generators.scala.parser.ScalaParser.ParamsContext arg) {
-		onExit();
-		this.inParams.pop();
-	}
-
-	public boolean inParams() {
-      return !inParams.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inParam = new java.util.Stack<>();
-
-	@Override
-	public void enterParam(com.generator.generators.scala.parser.ScalaParser.ParamContext arg) {
-		onEnter(new Node("Param", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inParam.push(true);
-	}
-
-	public void exitParam(com.generator.generators.scala.parser.ScalaParser.ParamContext arg) {
-		onExit();
-		this.inParam.pop();
-	}
-
-	public boolean inParam() {
-      return !inParam.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inBlock = new java.util.Stack<>();
-
-	@Override
-	public void enterBlock(com.generator.generators.scala.parser.ScalaParser.BlockContext arg) {
-		onEnter(new Node("Block", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inBlock.push(true);
-	}
-
-	public void exitBlock(com.generator.generators.scala.parser.ScalaParser.BlockContext arg) {
-		onExit();
-		this.inBlock.pop();
-	}
-
-	public boolean inBlock() {
-      return !inBlock.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
-
-	@Override
-	public void enterLiteral(com.generator.generators.scala.parser.ScalaParser.LiteralContext arg) {
-		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inLiteral.push(true);
-	}
-
-	public void exitLiteral(com.generator.generators.scala.parser.ScalaParser.LiteralContext arg) {
-		onExit();
-		this.inLiteral.pop();
-	}
-
-	public boolean inLiteral() {
-      return !inLiteral.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inExpr = new java.util.Stack<>();
-
-	@Override
-	public void enterExpr(com.generator.generators.scala.parser.ScalaParser.ExprContext arg) {
-		onEnter(new Node("Expr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inExpr.push(true);
-	}
-
-	public void exitExpr(com.generator.generators.scala.parser.ScalaParser.ExprContext arg) {
-		onExit();
-		this.inExpr.pop();
-	}
-
-	public boolean inExpr() {
-      return !inExpr.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPattern = new java.util.Stack<>();
-
-	@Override
-	public void enterPattern(com.generator.generators.scala.parser.ScalaParser.PatternContext arg) {
-		onEnter(new Node("Pattern", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inPattern.push(true);
-	}
-
-	public void exitPattern(com.generator.generators.scala.parser.ScalaParser.PatternContext arg) {
-		onExit();
-		this.inPattern.pop();
-	}
-
-	public boolean inPattern() {
-      return !inPattern.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inCaseClauses = new java.util.Stack<>();
-
-	@Override
-	public void enterCaseClauses(com.generator.generators.scala.parser.ScalaParser.CaseClausesContext arg) {
-		onEnter(new Node("CaseClauses", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inCaseClauses.push(true);
-	}
-
-	public void exitCaseClauses(com.generator.generators.scala.parser.ScalaParser.CaseClausesContext arg) {
-		onExit();
-		this.inCaseClauses.pop();
-	}
-
-	public boolean inCaseClauses() {
-      return !inCaseClauses.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inCaseClause = new java.util.Stack<>();
-
-	@Override
-	public void enterCaseClause(com.generator.generators.scala.parser.ScalaParser.CaseClauseContext arg) {
-		onEnter(new Node("CaseClause", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inCaseClause.push(true);
-	}
-
-	public void exitCaseClause(com.generator.generators.scala.parser.ScalaParser.CaseClauseContext arg) {
-		onExit();
-		this.inCaseClause.pop();
-	}
-
-	public boolean inCaseClause() {
-      return !inCaseClause.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inType = new java.util.Stack<>();
-
-	@Override
-	public void enterType(com.generator.generators.scala.parser.ScalaParser.TypeContext arg) {
-		onEnter(new Node("Type", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inType.push(true);
-	}
-
-	public void exitType(com.generator.generators.scala.parser.ScalaParser.TypeContext arg) {
-		onExit();
-		this.inType.pop();
-	}
-
-	public boolean inType() {
-      return !inType.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inCompilationUnit = new java.util.Stack<>();
-
-	@Override
-	public void enterCompilationUnit(com.generator.generators.scala.parser.ScalaParser.CompilationUnitContext arg) {
-		onEnter(new Node("CompilationUnit", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inCompilationUnit.push(true);
-	}
-
-	public void exitCompilationUnit(com.generator.generators.scala.parser.ScalaParser.CompilationUnitContext arg) {
-		onExit();
-		this.inCompilationUnit.pop();
-	}
-
-	public boolean inCompilationUnit() {
-      return !inCompilationUnit.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inModifier = new java.util.Stack<>();
-
-	@Override
-	public void enterModifier(com.generator.generators.scala.parser.ScalaParser.ModifierContext arg) {
-		onEnter(new Node("Modifier", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inModifier.push(true);
-	}
-
-	public void exitModifier(com.generator.generators.scala.parser.ScalaParser.ModifierContext arg) {
-		onExit();
-		this.inModifier.pop();
-	}
-
-	public boolean inModifier() {
-      return !inModifier.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAnnotation = new java.util.Stack<>();
-
-	@Override
-	public void enterAnnotation(com.generator.generators.scala.parser.ScalaParser.AnnotationContext arg) {
-		onEnter(new Node("Annotation", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inAnnotation.push(true);
-	}
-
-	public void exitAnnotation(com.generator.generators.scala.parser.ScalaParser.AnnotationContext arg) {
-		onExit();
-		this.inAnnotation.pop();
-	}
-
-	public boolean inAnnotation() {
-      return !inAnnotation.isEmpty(); 
    }
 
 }

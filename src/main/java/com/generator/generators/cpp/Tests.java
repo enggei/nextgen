@@ -4,6 +4,7 @@ import com.generator.ProjectConstants;
 import com.generator.generators.cpp.parser.CPP14Lexer;
 import com.generator.generators.cpp.parser.CPP14NodeListener;
 import com.generator.generators.cpp.parser.CPP14Parser;
+import com.generator.util.FileUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -16,7 +17,37 @@ import static com.generator.util.FileUtil.write;
 
 public class Tests {
 
-   @Test
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   //@Test
+   public void testTransferService() throws IOException {
+
+      final String root = "/home/goe/udc/transfer-service";
+      traverseFiles(root);
+   }
+
+   public void traverseFiles(String root) throws IOException {
+
+      final File[] list = FileUtil.list(root, true);
+
+      for (File file : list) {
+         log.info(file.getAbsolutePath());
+
+         if (file.isDirectory()) {
+            traverseFiles(file.getAbsolutePath());
+            continue;
+         }
+
+         final String name = file.getName();
+         if (name.toLowerCase().endsWith(".cpp") || name.toLowerCase().endsWith(".hpp") || name.toLowerCase().endsWith(".h")) {
+            final CPP14Parser parser = new CPP14Parser(new CommonTokenStream(new CPP14Lexer(CharStreams.fromFileName(file.getAbsolutePath()))));
+            final CPP14NodeListener listener = new CPP14NodeListener(false);
+            new ParseTreeWalker().walk(listener, parser.translationunit());
+            visitAll("", listener.getRoot());
+         }
+      }
+   }
+
+   //@Test
    public void testCPPParser() throws IOException {
       final CPP14Parser parser = new CPP14Parser(new CommonTokenStream(new CPP14Lexer(CharStreams.fromFileName(ProjectConstants.MAIN_ROOT + "/com/generator/generators/cpp/player.hpp"))));
       final CPP14NodeListener listener = new CPP14NodeListener();
@@ -25,13 +56,13 @@ public class Tests {
    }
 
    private void visitAll(String delim, CPP14NodeListener.Node node) {
-      System.out.println(delim + node.name + " (" + node.startToken + ")");
+      log.info(delim + node.name + " (" + node.startToken + ")");
       for (CPP14NodeListener.Node child : node.children) {
          visitAll(delim + "\t", child);
       }
    }
 
-   @Test
+   //@Test
    public void testCppGroup() {
 
       final CppGroup group = new CppGroup();
@@ -79,7 +110,7 @@ public class Tests {
                         )
             );
 
-//		 System.out.println(headerFileST);
+//		 log.info(headerFileST);
       write(headerFileST, new File(ProjectConstants.MAIN_ROOT + "/com/generator/generators/cpp/" + File.separator + className + ".hpp"));
    }
 }

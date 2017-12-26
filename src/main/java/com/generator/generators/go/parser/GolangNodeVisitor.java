@@ -2,6 +2,8 @@ package com.generator.generators.go.parser;
 
 public class GolangNodeVisitor extends GolangBaseVisitor<GolangNodeVisitor.Node> {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(GolangNodeVisitor.class);
+
    public static class Node {
 
       public final String name;
@@ -33,7 +35,7 @@ public class GolangNodeVisitor extends GolangBaseVisitor<GolangNodeVisitor.Node>
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-				if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
+				if (debug) log.debug(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -76,15 +78,6 @@ public class GolangNodeVisitor extends GolangBaseVisitor<GolangNodeVisitor.Node>
 	}
 
 	@Override
-	public Node visitStatement(com.generator.generators.go.parser.GolangParser.StatementContext arg) {
-		final Node node = new Node("Statement", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitDeclaration(com.generator.generators.go.parser.GolangParser.DeclarationContext arg) {
 		final Node node = new Node("Declaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
@@ -103,26 +96,17 @@ public class GolangNodeVisitor extends GolangBaseVisitor<GolangNodeVisitor.Node>
 	}
 
 	@Override
+	public Node visitStatement(com.generator.generators.go.parser.GolangParser.StatementContext arg) {
+		final Node node = new Node("Statement", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitSelector(com.generator.generators.go.parser.GolangParser.SelectorContext arg) {
 		final Node node = new Node("Selector", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitFunction(com.generator.generators.go.parser.GolangParser.FunctionContext arg) {
-		final Node node = new Node("Function", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSourceFile(com.generator.generators.go.parser.GolangParser.SourceFileContext arg) {
-		final Node node = new Node("SourceFile", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -139,8 +123,53 @@ public class GolangNodeVisitor extends GolangBaseVisitor<GolangNodeVisitor.Node>
 	}
 
 	@Override
-	public Node visitImportDecl(com.generator.generators.go.parser.GolangParser.ImportDeclContext arg) {
-		final Node node = new Node("ImportDecl", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitFunction(com.generator.generators.go.parser.GolangParser.FunctionContext arg) {
+		final Node node = new Node("Function", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitElementList(com.generator.generators.go.parser.GolangParser.ElementListContext arg) {
+		final Node node = new Node("ElementList", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitArguments(com.generator.generators.go.parser.GolangParser.ArgumentsContext arg) {
+		final Node node = new Node("Arguments", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitEos(com.generator.generators.go.parser.GolangParser.EosContext arg) {
+		final Node node = new Node("Eos", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSourceFile(com.generator.generators.go.parser.GolangParser.SourceFileContext arg) {
+		final Node node = new Node("SourceFile", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSignature(com.generator.generators.go.parser.GolangParser.SignatureContext arg) {
+		final Node node = new Node("Signature", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -150,6 +179,15 @@ public class GolangNodeVisitor extends GolangBaseVisitor<GolangNodeVisitor.Node>
 	@Override
 	public Node visitPackageClause(com.generator.generators.go.parser.GolangParser.PackageClauseContext arg) {
 		final Node node = new Node("PackageClause", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitImportDecl(com.generator.generators.go.parser.GolangParser.ImportDeclContext arg) {
+		final Node node = new Node("ImportDecl", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -195,33 +233,6 @@ public class GolangNodeVisitor extends GolangBaseVisitor<GolangNodeVisitor.Node>
 	@Override
 	public Node visitConstSpec(com.generator.generators.go.parser.GolangParser.ConstSpecContext arg) {
 		final Node node = new Node("ConstSpec", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitElementList(com.generator.generators.go.parser.GolangParser.ElementListContext arg) {
-		final Node node = new Node("ElementList", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitArguments(com.generator.generators.go.parser.GolangParser.ArgumentsContext arg) {
-		final Node node = new Node("Arguments", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitEos(com.generator.generators.go.parser.GolangParser.EosContext arg) {
-		final Node node = new Node("Eos", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -364,8 +375,8 @@ public class GolangNodeVisitor extends GolangBaseVisitor<GolangNodeVisitor.Node>
 	}
 
 	@Override
-	public Node visitEmptyStmt(com.generator.generators.go.parser.GolangParser.EmptyStmtContext arg) {
-		final Node node = new Node("EmptyStmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitShortVarDecl(com.generator.generators.go.parser.GolangParser.ShortVarDeclContext arg) {
+		final Node node = new Node("ShortVarDecl", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -373,8 +384,8 @@ public class GolangNodeVisitor extends GolangBaseVisitor<GolangNodeVisitor.Node>
 	}
 
 	@Override
-	public Node visitShortVarDecl(com.generator.generators.go.parser.GolangParser.ShortVarDeclContext arg) {
-		final Node node = new Node("ShortVarDecl", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitEmptyStmt(com.generator.generators.go.parser.GolangParser.EmptyStmtContext arg) {
+		final Node node = new Node("EmptyStmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -717,15 +728,6 @@ public class GolangNodeVisitor extends GolangBaseVisitor<GolangNodeVisitor.Node>
 	@Override
 	public Node visitFunctionType(com.generator.generators.go.parser.GolangParser.FunctionTypeContext arg) {
 		final Node node = new Node("FunctionType", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSignature(com.generator.generators.go.parser.GolangParser.SignatureContext arg) {
-		final Node node = new Node("Signature", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

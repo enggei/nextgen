@@ -2,6 +2,8 @@ package com.generator.generators.json.parser;
 
 public class JSONNodeVisitor extends JSONBaseVisitor<JSONNodeVisitor.Node> {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(JSONNodeVisitor.class);
+
    public static class Node {
 
       public final String name;
@@ -33,7 +35,7 @@ public class JSONNodeVisitor extends JSONBaseVisitor<JSONNodeVisitor.Node> {
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-				if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
+				if (debug) log.debug(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -47,24 +49,6 @@ public class JSONNodeVisitor extends JSONBaseVisitor<JSONNodeVisitor.Node> {
    public Node getRoot() {
       return nodeStack.peek();
    }
-
-	@Override
-	public Node visitValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
-		final Node node = new Node("Value", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
-		final Node node = new Node("Json", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
 
 	@Override
 	public Node visitObj(com.generator.generators.json.parser.JSONParser.ObjContext arg) {
@@ -85,8 +69,26 @@ public class JSONNodeVisitor extends JSONBaseVisitor<JSONNodeVisitor.Node> {
 	}
 
 	@Override
+	public Node visitValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
+		final Node node = new Node("Value", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
 		final Node node = new Node("Array", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
+		final Node node = new Node("Json", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

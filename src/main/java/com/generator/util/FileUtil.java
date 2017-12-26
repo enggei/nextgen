@@ -21,6 +21,7 @@ import java.util.zip.*;
  * Time: 13:52:28
  */
 public final class FileUtil {
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(FileUtil.class);
 
    private static final String LINE_SEPARATOR = System.getProperty("line.separator");
    private static final boolean isWindows;
@@ -41,7 +42,7 @@ public final class FileUtil {
       while (ze != null) {
          String fileName = ze.getName();
          File newFile = new File(root, fileName);
-         System.out.println("file unzip : " + newFile.getAbsoluteFile());
+         log.info("file unzip : " + newFile.getAbsoluteFile());
          if (newFile.isDirectory())
             tryToCreateDirIfNotExists(newFile);
          else {
@@ -91,7 +92,7 @@ public final class FileUtil {
       if (content == null) return;
       tryToCreateFileIfNotExists(file);
       try {
-         System.out.println("writing to file " + file.getAbsolutePath());
+         log.info("writing to file " + file.getAbsolutePath());
          final BufferedWriter out = new BufferedWriter(new FileWriter(file));
          out.write(content.toString());
          out.close();
@@ -303,7 +304,7 @@ public final class FileUtil {
 
          in.close();
          out.close();
-         System.out.println("File copied from " + src + " to " + dest);
+         log.info("File copied from " + src + " to " + dest);
       }
    }
 
@@ -322,7 +323,7 @@ public final class FileUtil {
             InputStreamReader isr = new InputStreamReader(processStream);
             BufferedReader br = new BufferedReader(isr);
             String line;
-            while ((line = br.readLine()) != null) System.out.println(line);
+            while ((line = br.readLine()) != null) log.info(line);
          } catch (IOException e) {
             e.printStackTrace();
          }
@@ -489,7 +490,7 @@ public final class FileUtil {
 
    public static void writeFile(Object string, File file) throws IOException {
       tryToCreateFileIfNotExists(file);
-      System.out.println("writing to file " + file.getAbsolutePath());
+      log.info("writing to file " + file.getAbsolutePath());
       final BufferedWriter out = new BufferedWriter(new FileWriter(file));
       out.write(string == null ? "" : string.toString());
       out.close();
@@ -918,8 +919,8 @@ public final class FileUtil {
                byte streamByte = streamBytes[i];
                System.out.print(streamByte);
             }
-            System.out.println(new String(streamBytes, "UTF-8"));
-            System.out.println(new String(zipByteArray(streamBytes), "ISO-8859-1"));
+            log.info(new String(streamBytes, "UTF-8"));
+            log.info(new String(zipByteArray(streamBytes), "ISO-8859-1"));
          }
 
          s = raf.readLine();
@@ -958,7 +959,7 @@ public final class FileUtil {
          }
 
          if (isStream) {
-            System.out.println("adding " + line);
+            log.info("adding " + line);
             buffer.put(line.getBytes());
          }
 
@@ -1011,7 +1012,7 @@ public final class FileUtil {
       for (File file : files) {
          if (file.isDirectory()) recursiveFileSearch(file.listFiles(pdfFilter()));
          else {
-            System.out.println(file.getAbsolutePath());
+            log.info(file.getAbsolutePath());
          }
       }
    }

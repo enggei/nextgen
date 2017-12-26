@@ -2,6 +2,8 @@ package com.generator.generators.lua.parser;
 
 public class LuaNodeListener extends LuaBaseListener {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(LuaNodeListener.class);
+
    public static class Node {
 
       public final String name;
@@ -33,7 +35,7 @@ public class LuaNodeListener extends LuaBaseListener {
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
+		if (debug) log.debug(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -46,91 +48,6 @@ public class LuaNodeListener extends LuaBaseListener {
 
    public Node getRoot() {
       return nodeStack.peek();
-   }
-
-	protected java.util.Stack<Boolean> inBlock = new java.util.Stack<>();
-
-	@Override
-	public void enterBlock(com.generator.generators.lua.parser.LuaParser.BlockContext arg) {
-		onEnter(new Node("Block", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inBlock.push(true);
-	}
-
-	public void exitBlock(com.generator.generators.lua.parser.LuaParser.BlockContext arg) {
-		onExit();
-		this.inBlock.pop();
-	}
-
-	public boolean inBlock() {
-      return !inBlock.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inString = new java.util.Stack<>();
-
-	@Override
-	public void enterString(com.generator.generators.lua.parser.LuaParser.StringContext arg) {
-		onEnter(new Node("String", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inString.push(true);
-	}
-
-	public void exitString(com.generator.generators.lua.parser.LuaParser.StringContext arg) {
-		onExit();
-		this.inString.pop();
-	}
-
-	public boolean inString() {
-      return !inString.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNumber = new java.util.Stack<>();
-
-	@Override
-	public void enterNumber(com.generator.generators.lua.parser.LuaParser.NumberContext arg) {
-		onEnter(new Node("Number", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inNumber.push(true);
-	}
-
-	public void exitNumber(com.generator.generators.lua.parser.LuaParser.NumberContext arg) {
-		onExit();
-		this.inNumber.pop();
-	}
-
-	public boolean inNumber() {
-      return !inNumber.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inVar = new java.util.Stack<>();
-
-	@Override
-	public void enterVar(com.generator.generators.lua.parser.LuaParser.VarContext arg) {
-		onEnter(new Node("Var", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inVar.push(true);
-	}
-
-	public void exitVar(com.generator.generators.lua.parser.LuaParser.VarContext arg) {
-		onExit();
-		this.inVar.pop();
-	}
-
-	public boolean inVar() {
-      return !inVar.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inField = new java.util.Stack<>();
-
-	@Override
-	public void enterField(com.generator.generators.lua.parser.LuaParser.FieldContext arg) {
-		onEnter(new Node("Field", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inField.push(true);
-	}
-
-	public void exitField(com.generator.generators.lua.parser.LuaParser.FieldContext arg) {
-		onExit();
-		this.inField.pop();
-	}
-
-	public boolean inField() {
-      return !inField.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inChunk = new java.util.Stack<>();
@@ -641,6 +558,91 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	public boolean inOperatorPower() {
       return !inOperatorPower.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inBlock = new java.util.Stack<>();
+
+	@Override
+	public void enterBlock(com.generator.generators.lua.parser.LuaParser.BlockContext arg) {
+		onEnter(new Node("Block", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inBlock.push(true);
+	}
+
+	public void exitBlock(com.generator.generators.lua.parser.LuaParser.BlockContext arg) {
+		onExit();
+		this.inBlock.pop();
+	}
+
+	public boolean inBlock() {
+      return !inBlock.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inString = new java.util.Stack<>();
+
+	@Override
+	public void enterString(com.generator.generators.lua.parser.LuaParser.StringContext arg) {
+		onEnter(new Node("String", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inString.push(true);
+	}
+
+	public void exitString(com.generator.generators.lua.parser.LuaParser.StringContext arg) {
+		onExit();
+		this.inString.pop();
+	}
+
+	public boolean inString() {
+      return !inString.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNumber = new java.util.Stack<>();
+
+	@Override
+	public void enterNumber(com.generator.generators.lua.parser.LuaParser.NumberContext arg) {
+		onEnter(new Node("Number", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inNumber.push(true);
+	}
+
+	public void exitNumber(com.generator.generators.lua.parser.LuaParser.NumberContext arg) {
+		onExit();
+		this.inNumber.pop();
+	}
+
+	public boolean inNumber() {
+      return !inNumber.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inVar = new java.util.Stack<>();
+
+	@Override
+	public void enterVar(com.generator.generators.lua.parser.LuaParser.VarContext arg) {
+		onEnter(new Node("Var", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inVar.push(true);
+	}
+
+	public void exitVar(com.generator.generators.lua.parser.LuaParser.VarContext arg) {
+		onExit();
+		this.inVar.pop();
+	}
+
+	public boolean inVar() {
+      return !inVar.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inField = new java.util.Stack<>();
+
+	@Override
+	public void enterField(com.generator.generators.lua.parser.LuaParser.FieldContext arg) {
+		onEnter(new Node("Field", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inField.push(true);
+	}
+
+	public void exitField(com.generator.generators.lua.parser.LuaParser.FieldContext arg) {
+		onExit();
+		this.inField.pop();
+	}
+
+	public boolean inField() {
+      return !inField.isEmpty(); 
    }
 
 }

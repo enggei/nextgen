@@ -7,7 +7,43 @@ public abstract class CPP14DomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "Translationunit")) visitTranslationunit(node);
+		if(hasLabel(node, "Decltypespecifier")) visitDecltypespecifier(node);
+		else if(hasLabel(node, "Elaboratedtypespecifier")) visitElaboratedtypespecifier(node);
+		else if(hasLabel(node, "Enumname")) visitEnumname(node);
+		else if(hasLabel(node, "Enumspecifier")) visitEnumspecifier(node);
+		else if(hasLabel(node, "Enumhead")) visitEnumhead(node);
+		else if(hasLabel(node, "Opaqueenumdeclaration")) visitOpaqueenumdeclaration(node);
+		else if(hasLabel(node, "Enumkey")) visitEnumkey(node);
+		else if(hasLabel(node, "Enumbase")) visitEnumbase(node);
+		else if(hasLabel(node, "Enumeratorlist")) visitEnumeratorlist(node);
+		else if(hasLabel(node, "Enumeratordefinition")) visitEnumeratordefinition(node);
+		else if(hasLabel(node, "Enumerator")) visitEnumerator(node);
+		else if(hasLabel(node, "Namespacename")) visitNamespacename(node);
+		else if(hasLabel(node, "Originalnamespacename")) visitOriginalnamespacename(node);
+		else if(hasLabel(node, "Namespacedefinition")) visitNamespacedefinition(node);
+		else if(hasLabel(node, "Namednamespacedefinition")) visitNamednamespacedefinition(node);
+		else if(hasLabel(node, "Originalnamespacedefinition")) visitOriginalnamespacedefinition(node);
+		else if(hasLabel(node, "Extensionnamespacedefinition")) visitExtensionnamespacedefinition(node);
+		else if(hasLabel(node, "Unnamednamespacedefinition")) visitUnnamednamespacedefinition(node);
+		else if(hasLabel(node, "Namespacebody")) visitNamespacebody(node);
+		else if(hasLabel(node, "Namespacealias")) visitNamespacealias(node);
+		else if(hasLabel(node, "Namespacealiasdefinition")) visitNamespacealiasdefinition(node);
+		else if(hasLabel(node, "Qualifiednamespacespecifier")) visitQualifiednamespacespecifier(node);
+		else if(hasLabel(node, "Usingdeclaration")) visitUsingdeclaration(node);
+		else if(hasLabel(node, "Usingdirective")) visitUsingdirective(node);
+		else if(hasLabel(node, "Asmdefinition")) visitAsmdefinition(node);
+		else if(hasLabel(node, "Linkagespecification")) visitLinkagespecification(node);
+		else if(hasLabel(node, "Attributespecifierseq")) visitAttributespecifierseq(node);
+		else if(hasLabel(node, "Attributespecifier")) visitAttributespecifier(node);
+		else if(hasLabel(node, "Alignmentspecifier")) visitAlignmentspecifier(node);
+		else if(hasLabel(node, "Attributelist")) visitAttributelist(node);
+		else if(hasLabel(node, "Attribute")) visitAttribute(node);
+		else if(hasLabel(node, "Attributetoken")) visitAttributetoken(node);
+		else if(hasLabel(node, "Attributescopedtoken")) visitAttributescopedtoken(node);
+		else if(hasLabel(node, "Attributenamespace")) visitAttributenamespace(node);
+		else if(hasLabel(node, "Attributeargumentclause")) visitAttributeargumentclause(node);
+		else if(hasLabel(node, "Declarator")) visitDeclarator(node);
+		else if(hasLabel(node, "Translationunit")) visitTranslationunit(node);
 		else if(hasLabel(node, "Primaryexpression")) visitPrimaryexpression(node);
 		else if(hasLabel(node, "Idexpression")) visitIdexpression(node);
 		else if(hasLabel(node, "Unqualifiedid")) visitUnqualifiedid(node);
@@ -84,46 +120,11 @@ public abstract class CPP14DomainVisitor {
 		else if(hasLabel(node, "Trailingtypespecifierseq")) visitTrailingtypespecifierseq(node);
 		else if(hasLabel(node, "Simpletypespecifier")) visitSimpletypespecifier(node);
 		else if(hasLabel(node, "Typename")) visitTypename(node);
-		else if(hasLabel(node, "Decltypespecifier")) visitDecltypespecifier(node);
-		else if(hasLabel(node, "Elaboratedtypespecifier")) visitElaboratedtypespecifier(node);
-		else if(hasLabel(node, "Enumname")) visitEnumname(node);
-		else if(hasLabel(node, "Enumspecifier")) visitEnumspecifier(node);
-		else if(hasLabel(node, "Enumhead")) visitEnumhead(node);
-		else if(hasLabel(node, "Opaqueenumdeclaration")) visitOpaqueenumdeclaration(node);
-		else if(hasLabel(node, "Enumkey")) visitEnumkey(node);
-		else if(hasLabel(node, "Enumbase")) visitEnumbase(node);
-		else if(hasLabel(node, "Enumeratorlist")) visitEnumeratorlist(node);
-		else if(hasLabel(node, "Enumeratordefinition")) visitEnumeratordefinition(node);
-		else if(hasLabel(node, "Enumerator")) visitEnumerator(node);
-		else if(hasLabel(node, "Namespacename")) visitNamespacename(node);
-		else if(hasLabel(node, "Originalnamespacename")) visitOriginalnamespacename(node);
-		else if(hasLabel(node, "Namespacedefinition")) visitNamespacedefinition(node);
-		else if(hasLabel(node, "Namednamespacedefinition")) visitNamednamespacedefinition(node);
-		else if(hasLabel(node, "Originalnamespacedefinition")) visitOriginalnamespacedefinition(node);
-		else if(hasLabel(node, "Extensionnamespacedefinition")) visitExtensionnamespacedefinition(node);
-		else if(hasLabel(node, "Unnamednamespacedefinition")) visitUnnamednamespacedefinition(node);
-		else if(hasLabel(node, "Namespacebody")) visitNamespacebody(node);
-		else if(hasLabel(node, "Namespacealias")) visitNamespacealias(node);
-		else if(hasLabel(node, "Namespacealiasdefinition")) visitNamespacealiasdefinition(node);
-		else if(hasLabel(node, "Qualifiednamespacespecifier")) visitQualifiednamespacespecifier(node);
-		else if(hasLabel(node, "Usingdeclaration")) visitUsingdeclaration(node);
-		else if(hasLabel(node, "Usingdirective")) visitUsingdirective(node);
-		else if(hasLabel(node, "Asmdefinition")) visitAsmdefinition(node);
-		else if(hasLabel(node, "Linkagespecification")) visitLinkagespecification(node);
-		else if(hasLabel(node, "Attributespecifierseq")) visitAttributespecifierseq(node);
-		else if(hasLabel(node, "Attributespecifier")) visitAttributespecifier(node);
-		else if(hasLabel(node, "Alignmentspecifier")) visitAlignmentspecifier(node);
-		else if(hasLabel(node, "Attributelist")) visitAttributelist(node);
-		else if(hasLabel(node, "Attribute")) visitAttribute(node);
-		else if(hasLabel(node, "Attributetoken")) visitAttributetoken(node);
-		else if(hasLabel(node, "Attributescopedtoken")) visitAttributescopedtoken(node);
-		else if(hasLabel(node, "Attributenamespace")) visitAttributenamespace(node);
-		else if(hasLabel(node, "Attributeargumentclause")) visitAttributeargumentclause(node);
+		else if(hasLabel(node, "Literal")) visitLiteral(node);
 		else if(hasLabel(node, "Balancedtokenseq")) visitBalancedtokenseq(node);
 		else if(hasLabel(node, "Balancedtoken")) visitBalancedtoken(node);
 		else if(hasLabel(node, "Initdeclaratorlist")) visitInitdeclaratorlist(node);
 		else if(hasLabel(node, "Initdeclarator")) visitInitdeclarator(node);
-		else if(hasLabel(node, "Declarator")) visitDeclarator(node);
 		else if(hasLabel(node, "Ptrdeclarator")) visitPtrdeclarator(node);
 		else if(hasLabel(node, "Noptrdeclarator")) visitNoptrdeclarator(node);
 		else if(hasLabel(node, "Parametersandqualifiers")) visitParametersandqualifiers(node);
@@ -205,8 +206,223 @@ public abstract class CPP14DomainVisitor {
 		else if(hasLabel(node, "Booleanliteral")) visitBooleanliteral(node);
 		else if(hasLabel(node, "Pointerliteral")) visitPointerliteral(node);
 		else if(hasLabel(node, "Userdefinedliteral")) visitUserdefinedliteral(node);
-		else if(hasLabel(node, "Literal")) visitLiteral(node);
    }
+
+	public void visitDecltypespecifier(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitElaboratedtypespecifier(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitEnumname(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitEnumspecifier(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitEnumhead(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitOpaqueenumdeclaration(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitEnumkey(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitEnumbase(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitEnumeratorlist(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitEnumeratordefinition(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitEnumerator(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitNamespacename(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitOriginalnamespacename(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitNamespacedefinition(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitNamednamespacedefinition(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitOriginalnamespacedefinition(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitExtensionnamespacedefinition(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitUnnamednamespacedefinition(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitNamespacebody(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitNamespacealias(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitNamespacealiasdefinition(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitQualifiednamespacespecifier(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitUsingdeclaration(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitUsingdirective(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAsmdefinition(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitLinkagespecification(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAttributespecifierseq(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAttributespecifier(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAlignmentspecifier(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAttributelist(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAttribute(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAttributetoken(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAttributescopedtoken(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAttributenamespace(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAttributeargumentclause(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitDeclarator(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
 
 	public void visitTranslationunit(Node node) {
 		if (visited.contains(node)) return;
@@ -670,211 +886,7 @@ public abstract class CPP14DomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitDecltypespecifier(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitElaboratedtypespecifier(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitEnumname(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitEnumspecifier(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitEnumhead(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitOpaqueenumdeclaration(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitEnumkey(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitEnumbase(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitEnumeratorlist(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitEnumeratordefinition(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitEnumerator(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitNamespacename(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitOriginalnamespacename(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitNamespacedefinition(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitNamednamespacedefinition(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitOriginalnamespacedefinition(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitExtensionnamespacedefinition(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitUnnamednamespacedefinition(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitNamespacebody(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitNamespacealias(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitNamespacealiasdefinition(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitQualifiednamespacespecifier(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitUsingdeclaration(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitUsingdirective(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAsmdefinition(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitLinkagespecification(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAttributespecifierseq(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAttributespecifier(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAlignmentspecifier(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAttributelist(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAttribute(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAttributetoken(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAttributescopedtoken(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAttributenamespace(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAttributeargumentclause(Node node) {
+	public void visitLiteral(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -899,12 +911,6 @@ public abstract class CPP14DomainVisitor {
 	}
 
 	public void visitInitdeclarator(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitDeclarator(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -1391,12 +1397,6 @@ public abstract class CPP14DomainVisitor {
 	}
 
 	public void visitUserdefinedliteral(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitLiteral(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

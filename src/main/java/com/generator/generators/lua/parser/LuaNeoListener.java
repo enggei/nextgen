@@ -6,6 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class LuaNeoListener extends LuaBaseListener {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(LuaNeoListener.class);
+
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
@@ -24,7 +26,7 @@ public class LuaNeoListener extends LuaBaseListener {
 		if (!nodeStack.isEmpty())
       	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.getProperty("text"));
+		if (debug) log.debug(delim.toString() + node.getProperty("text"));
 		delim.append("\t");
    }
 
@@ -39,101 +41,11 @@ public class LuaNeoListener extends LuaBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inBlock = new java.util.Stack<>();
-
-	@Override
-	public void enterBlock(com.generator.generators.lua.parser.LuaParser.BlockContext arg) {
-		final Node node = model.findOrCreate(Label.label("Block"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inBlock.push(true);
-	}
-
-	public void exitBlock(com.generator.generators.lua.parser.LuaParser.BlockContext arg) {
-		onExit();
-		this.inBlock.pop();
-	}
-
-	public boolean inBlock() {
-      return !inBlock.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inString = new java.util.Stack<>();
-
-	@Override
-	public void enterString(com.generator.generators.lua.parser.LuaParser.StringContext arg) {
-		final Node node = model.findOrCreate(Label.label("String"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inString.push(true);
-	}
-
-	public void exitString(com.generator.generators.lua.parser.LuaParser.StringContext arg) {
-		onExit();
-		this.inString.pop();
-	}
-
-	public boolean inString() {
-      return !inString.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNumber = new java.util.Stack<>();
-
-	@Override
-	public void enterNumber(com.generator.generators.lua.parser.LuaParser.NumberContext arg) {
-		final Node node = model.findOrCreate(Label.label("Number"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inNumber.push(true);
-	}
-
-	public void exitNumber(com.generator.generators.lua.parser.LuaParser.NumberContext arg) {
-		onExit();
-		this.inNumber.pop();
-	}
-
-	public boolean inNumber() {
-      return !inNumber.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inVar = new java.util.Stack<>();
-
-	@Override
-	public void enterVar(com.generator.generators.lua.parser.LuaParser.VarContext arg) {
-		final Node node = model.findOrCreate(Label.label("Var"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inVar.push(true);
-	}
-
-	public void exitVar(com.generator.generators.lua.parser.LuaParser.VarContext arg) {
-		onExit();
-		this.inVar.pop();
-	}
-
-	public boolean inVar() {
-      return !inVar.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inField = new java.util.Stack<>();
-
-	@Override
-	public void enterField(com.generator.generators.lua.parser.LuaParser.FieldContext arg) {
-		final Node node = model.findOrCreate(Label.label("Field"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inField.push(true);
-	}
-
-	public void exitField(com.generator.generators.lua.parser.LuaParser.FieldContext arg) {
-		onExit();
-		this.inField.pop();
-	}
-
-	public boolean inField() {
-      return !inField.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inChunk = new java.util.Stack<>();
 
 	@Override
 	public void enterChunk(com.generator.generators.lua.parser.LuaParser.ChunkContext arg) {
-		final Node node = model.findOrCreate(Label.label("Chunk"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Chunk"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inChunk.push(true);
 	}
@@ -151,7 +63,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterStat(com.generator.generators.lua.parser.LuaParser.StatContext arg) {
-		final Node node = model.findOrCreate(Label.label("Stat"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Stat"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inStat.push(true);
 	}
@@ -169,7 +81,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterRetstat(com.generator.generators.lua.parser.LuaParser.RetstatContext arg) {
-		final Node node = model.findOrCreate(Label.label("Retstat"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Retstat"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRetstat.push(true);
 	}
@@ -187,7 +99,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterLabel(com.generator.generators.lua.parser.LuaParser.LabelContext arg) {
-		final Node node = model.findOrCreate(Label.label("Label"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Label"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLabel.push(true);
 	}
@@ -205,7 +117,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterFuncname(com.generator.generators.lua.parser.LuaParser.FuncnameContext arg) {
-		final Node node = model.findOrCreate(Label.label("Funcname"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Funcname"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFuncname.push(true);
 	}
@@ -223,7 +135,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterVarlist(com.generator.generators.lua.parser.LuaParser.VarlistContext arg) {
-		final Node node = model.findOrCreate(Label.label("Varlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Varlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inVarlist.push(true);
 	}
@@ -241,7 +153,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterNamelist(com.generator.generators.lua.parser.LuaParser.NamelistContext arg) {
-		final Node node = model.findOrCreate(Label.label("Namelist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Namelist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNamelist.push(true);
 	}
@@ -259,7 +171,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterExplist(com.generator.generators.lua.parser.LuaParser.ExplistContext arg) {
-		final Node node = model.findOrCreate(Label.label("Explist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Explist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExplist.push(true);
 	}
@@ -277,7 +189,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterExp(com.generator.generators.lua.parser.LuaParser.ExpContext arg) {
-		final Node node = model.findOrCreate(Label.label("Exp"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Exp"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExp.push(true);
 	}
@@ -295,7 +207,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterPrefixexp(com.generator.generators.lua.parser.LuaParser.PrefixexpContext arg) {
-		final Node node = model.findOrCreate(Label.label("Prefixexp"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Prefixexp"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPrefixexp.push(true);
 	}
@@ -313,7 +225,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterFunctioncall(com.generator.generators.lua.parser.LuaParser.FunctioncallContext arg) {
-		final Node node = model.findOrCreate(Label.label("Functioncall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Functioncall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFunctioncall.push(true);
 	}
@@ -331,7 +243,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterVarOrExp(com.generator.generators.lua.parser.LuaParser.VarOrExpContext arg) {
-		final Node node = model.findOrCreate(Label.label("VarOrExp"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("VarOrExp"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inVarOrExp.push(true);
 	}
@@ -349,7 +261,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterVarSuffix(com.generator.generators.lua.parser.LuaParser.VarSuffixContext arg) {
-		final Node node = model.findOrCreate(Label.label("VarSuffix"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("VarSuffix"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inVarSuffix.push(true);
 	}
@@ -367,7 +279,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterNameAndArgs(com.generator.generators.lua.parser.LuaParser.NameAndArgsContext arg) {
-		final Node node = model.findOrCreate(Label.label("NameAndArgs"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("NameAndArgs"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNameAndArgs.push(true);
 	}
@@ -385,7 +297,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterArgs(com.generator.generators.lua.parser.LuaParser.ArgsContext arg) {
-		final Node node = model.findOrCreate(Label.label("Args"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Args"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inArgs.push(true);
 	}
@@ -403,7 +315,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterFunctiondef(com.generator.generators.lua.parser.LuaParser.FunctiondefContext arg) {
-		final Node node = model.findOrCreate(Label.label("Functiondef"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Functiondef"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFunctiondef.push(true);
 	}
@@ -421,7 +333,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterFuncbody(com.generator.generators.lua.parser.LuaParser.FuncbodyContext arg) {
-		final Node node = model.findOrCreate(Label.label("Funcbody"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Funcbody"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFuncbody.push(true);
 	}
@@ -439,7 +351,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterParlist(com.generator.generators.lua.parser.LuaParser.ParlistContext arg) {
-		final Node node = model.findOrCreate(Label.label("Parlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Parlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inParlist.push(true);
 	}
@@ -457,7 +369,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterTableconstructor(com.generator.generators.lua.parser.LuaParser.TableconstructorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Tableconstructor"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Tableconstructor"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTableconstructor.push(true);
 	}
@@ -475,7 +387,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterFieldlist(com.generator.generators.lua.parser.LuaParser.FieldlistContext arg) {
-		final Node node = model.findOrCreate(Label.label("Fieldlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Fieldlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFieldlist.push(true);
 	}
@@ -493,7 +405,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterFieldsep(com.generator.generators.lua.parser.LuaParser.FieldsepContext arg) {
-		final Node node = model.findOrCreate(Label.label("Fieldsep"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Fieldsep"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFieldsep.push(true);
 	}
@@ -511,7 +423,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterOperatorOr(com.generator.generators.lua.parser.LuaParser.OperatorOrContext arg) {
-		final Node node = model.findOrCreate(Label.label("OperatorOr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("OperatorOr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOperatorOr.push(true);
 	}
@@ -529,7 +441,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterOperatorAnd(com.generator.generators.lua.parser.LuaParser.OperatorAndContext arg) {
-		final Node node = model.findOrCreate(Label.label("OperatorAnd"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("OperatorAnd"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOperatorAnd.push(true);
 	}
@@ -547,7 +459,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterOperatorComparison(com.generator.generators.lua.parser.LuaParser.OperatorComparisonContext arg) {
-		final Node node = model.findOrCreate(Label.label("OperatorComparison"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("OperatorComparison"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOperatorComparison.push(true);
 	}
@@ -565,7 +477,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterOperatorStrcat(com.generator.generators.lua.parser.LuaParser.OperatorStrcatContext arg) {
-		final Node node = model.findOrCreate(Label.label("OperatorStrcat"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("OperatorStrcat"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOperatorStrcat.push(true);
 	}
@@ -583,7 +495,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterOperatorAddSub(com.generator.generators.lua.parser.LuaParser.OperatorAddSubContext arg) {
-		final Node node = model.findOrCreate(Label.label("OperatorAddSub"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("OperatorAddSub"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOperatorAddSub.push(true);
 	}
@@ -601,7 +513,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterOperatorMulDivMod(com.generator.generators.lua.parser.LuaParser.OperatorMulDivModContext arg) {
-		final Node node = model.findOrCreate(Label.label("OperatorMulDivMod"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("OperatorMulDivMod"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOperatorMulDivMod.push(true);
 	}
@@ -619,7 +531,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterOperatorBitwise(com.generator.generators.lua.parser.LuaParser.OperatorBitwiseContext arg) {
-		final Node node = model.findOrCreate(Label.label("OperatorBitwise"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("OperatorBitwise"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOperatorBitwise.push(true);
 	}
@@ -637,7 +549,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterOperatorUnary(com.generator.generators.lua.parser.LuaParser.OperatorUnaryContext arg) {
-		final Node node = model.findOrCreate(Label.label("OperatorUnary"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("OperatorUnary"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOperatorUnary.push(true);
 	}
@@ -655,7 +567,7 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	@Override
 	public void enterOperatorPower(com.generator.generators.lua.parser.LuaParser.OperatorPowerContext arg) {
-		final Node node = model.findOrCreate(Label.label("OperatorPower"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("OperatorPower"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOperatorPower.push(true);
 	}
@@ -667,6 +579,96 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	public boolean inOperatorPower() {
       return !inOperatorPower.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inBlock = new java.util.Stack<>();
+
+	@Override
+	public void enterBlock(com.generator.generators.lua.parser.LuaParser.BlockContext arg) {
+		final Node node = model.newNode(Label.label("Block"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inBlock.push(true);
+	}
+
+	public void exitBlock(com.generator.generators.lua.parser.LuaParser.BlockContext arg) {
+		onExit();
+		this.inBlock.pop();
+	}
+
+	public boolean inBlock() {
+      return !inBlock.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inString = new java.util.Stack<>();
+
+	@Override
+	public void enterString(com.generator.generators.lua.parser.LuaParser.StringContext arg) {
+		final Node node = model.newNode(Label.label("String"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inString.push(true);
+	}
+
+	public void exitString(com.generator.generators.lua.parser.LuaParser.StringContext arg) {
+		onExit();
+		this.inString.pop();
+	}
+
+	public boolean inString() {
+      return !inString.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNumber = new java.util.Stack<>();
+
+	@Override
+	public void enterNumber(com.generator.generators.lua.parser.LuaParser.NumberContext arg) {
+		final Node node = model.newNode(Label.label("Number"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inNumber.push(true);
+	}
+
+	public void exitNumber(com.generator.generators.lua.parser.LuaParser.NumberContext arg) {
+		onExit();
+		this.inNumber.pop();
+	}
+
+	public boolean inNumber() {
+      return !inNumber.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inVar = new java.util.Stack<>();
+
+	@Override
+	public void enterVar(com.generator.generators.lua.parser.LuaParser.VarContext arg) {
+		final Node node = model.newNode(Label.label("Var"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inVar.push(true);
+	}
+
+	public void exitVar(com.generator.generators.lua.parser.LuaParser.VarContext arg) {
+		onExit();
+		this.inVar.pop();
+	}
+
+	public boolean inVar() {
+      return !inVar.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inField = new java.util.Stack<>();
+
+	@Override
+	public void enterField(com.generator.generators.lua.parser.LuaParser.FieldContext arg) {
+		final Node node = model.newNode(Label.label("Field"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inField.push(true);
+	}
+
+	public void exitField(com.generator.generators.lua.parser.LuaParser.FieldContext arg) {
+		onExit();
+		this.inField.pop();
+	}
+
+	public boolean inField() {
+      return !inField.isEmpty(); 
    }
 
 }

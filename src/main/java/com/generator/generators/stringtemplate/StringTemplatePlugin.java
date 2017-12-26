@@ -44,10 +44,9 @@ import static com.generator.util.NeoUtil.*;
  * Created 06.08.17.
  */
 public class StringTemplatePlugin extends StringTemplateDomainPlugin {
-
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(StringTemplatePlugin.class);
    public StringTemplatePlugin(App app) {
       super(app);
-      System.out.println("todo add domain-structure in StringTemplatePlugin. But not use ids.");
    }
 
    @Override
@@ -270,23 +269,23 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
       group.setListener(new STErrorListener() {
          @Override
          public void compileTimeError(STMessage stMessage) {
-            System.out.println(stMessage.toString());
+            log.info(stMessage.toString());
          }
 
          @Override
          public void runTimeError(STMessage msg) {
             if (msg.error == ErrorType.NO_SUCH_ATTRIBUTE) return;
-            System.out.println(msg.toString());
+            log.info(msg.toString());
          }
 
          @Override
          public void IOError(STMessage stMessage) {
-            System.out.println(stMessage.toString());
+            log.info(stMessage.toString());
          }
 
          @Override
          public void internalError(STMessage stMessage) {
-            System.out.println(stMessage.toString());
+            log.info(stMessage.toString());
          }
       });
 
@@ -476,7 +475,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
 
                            @Override
                            public void onList(Node relationNode, Node dstNode) {
-                              System.out.println("should not be here. ignoring " + getNameProperty(relationNode));
+                              log.info("should not be here. ignoring " + getNameProperty(relationNode));
                            }
                         }.visit(dstNode);
 
@@ -744,7 +743,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
                                                 // deprecate all INSTANCES of this property:
                                                 outgoingINSTANCE(keyNode, (instanceRelation, instanceNode) -> {
                                                    final Relationship oldPropertyRelation = singleOutgoing(instanceNode, RelationshipType.withName(oldKey));
-                                                   System.out.println("old key value " + existingName + " -> " + getNameProperty(instanceNode));
+                                                   log.info("old key value " + existingName + " -> " + getNameProperty(instanceNode));
                                                 });
 
                                                 kvRelation.delete();
@@ -828,7 +827,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
             private void makeMethod() {
                final String selected = txtEditor.getSelectedText();
                if (selected == null || selected.length() < 1) return;
-               System.out.println(selected);
+               log.info(selected);
             }
 
             private void replaceAndInsertProperty() {

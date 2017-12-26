@@ -14,7 +14,7 @@ import static java.lang.reflect.Modifier.*;
  * todo: make editor for this:
  */
 public abstract class BaseClassVisitor {
-
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(BaseClassVisitor.class);
 	protected BaseClassVisitor() {
 	}
 
@@ -44,7 +44,7 @@ public abstract class BaseClassVisitor {
 			final String name = constructor.getName();
 			// todo: simplify
 			if (isPublic(constructor.getModifiers()))
-				onPublicConstructor(name);
+				onPublicConstructor(constructor);
 			else if (isPrivate(constructor.getModifiers()))
 				onPrivateConstructor(name);
 			else if (Modifier.isProtected(constructor.getModifiers()))
@@ -102,7 +102,7 @@ public abstract class BaseClassVisitor {
 
 	}
 
-	public void onPublicConstructor(String name) {
+	public void onPublicConstructor(Constructor<?> constructor) {
 
 	}
 
@@ -173,11 +173,11 @@ public abstract class BaseClassVisitor {
 		// todo: update these cases with handlers, on a need-to basis (like default at bottom)
 		if (isParameterized(parameter)) {
 			final ParameterizedType type = asParameterizedType(parameter);
-			System.out.println("\t" + parameter.getName() + " ParameterizedType " + parameter.getType() + " " + ("actualTypeArguments: " + StringUtil.list(Arrays.asList(type.getActualTypeArguments()))));
+			log.info("\t" + parameter.getName() + " ParameterizedType " + parameter.getType() + " " + ("actualTypeArguments: " + StringUtil.list(Arrays.asList(type.getActualTypeArguments()))));
 
 		} else if (isGenericArray(parameter)) {
 			final GenericArrayType type = asGenericArrayType(parameter);
-			System.out.println("\t" + parameter.getName() + " GenericArrayType " + "getGenericComponentType: " + type.getGenericComponentType());
+			log.info("\t" + parameter.getName() + " GenericArrayType " + "getGenericComponentType: " + type.getGenericComponentType());
 
 		} else if (isTypeVariable(parameter)) {
 			final TypeVariable<?> type = asTypeVariableType(parameter);
@@ -185,7 +185,7 @@ public abstract class BaseClassVisitor {
 
 		} else if (isWildcardType(parameter)) {
 			final WildcardType type = asWildcardTypeType(parameter);
-			System.out.println("\t" + parameter.getName() + " WildcardType " + ("lowerBounds: " + StringUtil.list(Arrays.asList(type.getLowerBounds()))) + " uppderBounds: " + StringUtil.list(Arrays.asList(type.getUpperBounds())));
+			log.info("\t" + parameter.getName() + " WildcardType " + ("lowerBounds: " + StringUtil.list(Arrays.asList(type.getLowerBounds()))) + " uppderBounds: " + StringUtil.list(Arrays.asList(type.getUpperBounds())));
 
 		} else {
 

@@ -1,6 +1,13 @@
 package com.generator.util;
 
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreePath;
 import javax.tools.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -17,6 +24,8 @@ import java.util.Locale;
  */
 public class CompilerUtil {
 
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(CompilerUtil.class);
+
    private final JavaCompiler compiler;
 
    public CompilerUtil() {
@@ -27,6 +36,19 @@ public class CompilerUtil {
    @SuppressWarnings("unchecked")
    public <T> T newInstance(String canonicalName, Object content, DiagnosticCollector<JavaFileObject> diagnostics) {
 
+      final Class<?> loadClass = compile(canonicalName, content, diagnostics);
+
+      try {
+         return (T) loadClass.newInstance();
+      } catch (InstantiationException e) {
+         e.printStackTrace();
+      } catch (IllegalAccessException e) {
+         e.printStackTrace();
+      }
+      return null;
+   }
+
+   public Class<?> compile(String canonicalName, Object content, DiagnosticCollector<JavaFileObject> diagnostics) {
       // compilation-units
       final List<JavaFileObject> inMemoryFiles = new ArrayList<>(1);
       inMemoryFiles.add(new CharSequenceJavaFileObject(canonicalName, content.toString()));
@@ -43,25 +65,97 @@ public class CompilerUtil {
       if (!success) return null;
 
       try {
-         final Class<?> loadClass = fileManager.getClassLoader(null).loadClass(canonicalName);
-         final T t = (T) loadClass.newInstance();
+         final Class<?> aClass = fileManager.getClassLoader(null).loadClass(canonicalName);
          fileManager.close();
-         return t;
-      } catch (Exception e) {
-         e.printStackTrace();
+         return aClass;
+      } catch (Throwable t) {
+         t.printStackTrace();
+         return null;
       }
-
-      return null;
    }
 
    public static void printDiagnostics(DiagnosticCollector<JavaFileObject> diagnostics) {
       for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
-         System.out.println("diagnostic.getCode() = " + diagnostic.getCode());
-         System.out.println("diagnostic.getKind().name() = " + diagnostic.getKind().name());
-         System.out.println("diagnostic.getLineNumber() = " + diagnostic.getLineNumber());
+         log.info("diagnostic.getCode() = " + diagnostic.getCode());
+         log.info("diagnostic.getKind().name() = " + diagnostic.getKind().name());
+         log.info("diagnostic.getLineNumber() = " + diagnostic.getLineNumber());
       }
    }
 
+   public static final class DiagnosticPanel extends JPanel {
+
+      private final JTree informationTree;
+
+      private final JTextArea txtSource = SwingUtil.newTextArea();
+
+      public DiagnosticPanel(DiagnosticCollector<JavaFileObject> diagnostics, String source) {
+         super(new BorderLayout());
+
+         final DiagnosticNode root = new DiagnosticNode("");
+         final List<Diagnostic<? extends JavaFileObject>> diagnosticList = diagnostics.getDiagnostics();
+         for (Diagnostic<? extends JavaFileObject> diagnostic : diagnosticList) {
+            root.add(new DiagnosticNode(diagnostic));
+         }
+
+         informationTree = new JTree(root) {{
+
+            setRootVisible(true);
+
+            setCellRenderer(new DefaultTreeCellRenderer() {
+               @Override
+               public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+                  final DiagnosticNode nodeEntry = (DiagnosticNode) value;
+                  return super.getTreeCellRendererComponent(tree, nodeEntry.label(), sel, expanded, leaf, row, hasFocus);
+               }
+            });
+
+            addMouseListener(new MouseAdapter() {
+               @Override
+               public void mouseClicked(MouseEvent e) {
+                  final TreePath selectionPath = ((JTree) e.getSource()).getSelectionPath();
+                  if (selectionPath == null) return;
+                  final DiagnosticNode selectedNode = (DiagnosticNode) selectionPath.getLastPathComponent();
+                  if (selectedNode == null) return;
+                  if (SwingUtilities.isRightMouseButton(e)) {
+                     final JPopupMenu pop = new JPopupMenu();
+                     selectedNode.addRightClickActions(pop, selectionPath, ((JTree) e.getSource()));
+                     if (pop.getComponentCount() == 0) return;
+                     SwingUtil.showPopup(pop, ((JTree) e.getSource()), e);
+                  }
+               }
+            });
+         }};
+         add(new JScrollPane(informationTree), BorderLayout.WEST);
+
+         txtSource.setText(source);
+         txtSource.setCaretPosition(0);
+
+         add(new JScrollPane(txtSource), BorderLayout.CENTER);
+      }
+
+      private class DiagnosticNode extends DefaultMutableTreeNode {
+
+         protected String label = "";
+
+         DiagnosticNode(String label) {
+            this.label = label;
+         }
+
+         DiagnosticNode(Diagnostic<? extends JavaFileObject> diagnostic) {
+            this.label = diagnostic.getCode();
+            setUserObject(diagnostic);
+         }
+
+         public String label() {
+            return label;
+         }
+
+         void addRightClickActions(JPopupMenu pop, TreePath selectionPath, JTree source) {
+
+         }
+      }
+   }
+   
    private static final class CharSequenceJavaFileObject extends SimpleJavaFileObject {
 
       private CharSequence content;

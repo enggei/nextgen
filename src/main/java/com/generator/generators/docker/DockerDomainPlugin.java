@@ -1,7 +1,6 @@
 package com.generator.generators.docker;
 
 import com.generator.app.App;
-import com.generator.app.AppMotif;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.domain.DomainPlugin;
@@ -14,7 +13,6 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.generator.app.DomainMotif.*;
-import static com.generator.generators.domain.DomainDomainPlugin.Entities.Domain;
 import static com.generator.util.NeoUtil.*;
 
 /**
@@ -36,10 +34,12 @@ public abstract class DockerDomainPlugin extends Plugin {
 
 	private static final Map<Label,Node> entitiesNodeMap = new LinkedHashMap<>();
 
+	private final Node domainNode;
+
    DockerDomainPlugin(App app) {
       super(app, "Docker");
 
-		final Node domainNode = getGraph().findOrCreate(Domain, AppMotif.Properties.name.name(), "Docker");
+		domainNode = newDomainNode(getGraph(), "Docker");
 		entitiesNodeMap.put(Entities.DockerFile, newDomainEntity(getGraph(), Entities.DockerFile, domainNode));
 		entitiesNodeMap.put(Entities.Directory, newDomainEntity(getGraph(), Entities.Directory, domainNode));
 		entitiesNodeMap.put(Entities.DockerComposeFile, newDomainEntity(getGraph(), Entities.DockerComposeFile, domainNode));
@@ -74,6 +74,8 @@ public abstract class DockerDomainPlugin extends Plugin {
       return null;
    }
 
+	protected Node getDomainNode() { return domainNode; }
+
 	protected void handleDockerFile(JPopupMenu pop, NeoNode dockerFileNode, Set<NeoNode> selectedNodes) { }
 	protected void handleDirectory(JPopupMenu pop, NeoNode directoryNode, Set<NeoNode> selectedNodes) { }
 	protected void handleDockerComposeFile(JPopupMenu pop, NeoNode dockerComposeFileNode, Set<NeoNode> selectedNodes) { }	
@@ -87,20 +89,22 @@ public abstract class DockerDomainPlugin extends Plugin {
 	public static boolean isDockerComposeFile(Node node) { return hasLabel(node, Entities.DockerComposeFile); }
 
 	protected Node newDockerFile() { return newDockerFile(getGraph()); } 
-	public static Node newDockerFile(NeoModel graph) { return newInstanceNode(graph, Entities.DockerFile.name(), entitiesNodeMap.get(Entities.DockerFile)); } 
 	protected Node newDockerFile(Object name) { return newDockerFile(getGraph(), name); } 
+
+	public static Node newDockerFile(NeoModel graph) { return newInstanceNode(graph, Entities.DockerFile.name(), entitiesNodeMap.get(Entities.DockerFile)); } 
 	public static Node newDockerFile(NeoModel graph, Object name) {  	
 		final Node newNode = newDockerFile(graph); 	
 		if (name != null) relate(newNode, newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
 		return newNode; 
 	}
 
-	protected Node newDirectory() { return newDirectory(getGraph()); } 
+	protected Node newDirectory() { return newDirectory(getGraph()); }
 	public static Node newDirectory(NeoModel graph) { return newInstanceNode(graph, Entities.Directory.name(), entitiesNodeMap.get(Entities.Directory)); }
 
 	protected Node newDockerComposeFile() { return newDockerComposeFile(getGraph()); } 
-	public static Node newDockerComposeFile(NeoModel graph) { return newInstanceNode(graph, Entities.DockerComposeFile.name(), entitiesNodeMap.get(Entities.DockerComposeFile)); } 
 	protected Node newDockerComposeFile(Object name) { return newDockerComposeFile(getGraph(), name); } 
+
+	public static Node newDockerComposeFile(NeoModel graph) { return newInstanceNode(graph, Entities.DockerComposeFile.name(), entitiesNodeMap.get(Entities.DockerComposeFile)); } 
 	public static Node newDockerComposeFile(NeoModel graph, Object name) {  	
 		final Node newNode = newDockerComposeFile(graph); 	
 		if (name != null) relate(newNode, newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
@@ -145,7 +149,8 @@ public abstract class DockerDomainPlugin extends Plugin {
 	public static <T> T getNameProperty(PropertyContainer container, T defaultValue) { return getEntityProperty(container, Properties.name.name(), defaultValue); }
 	public static boolean hasNameProperty(PropertyContainer container) { return hasEntityProperty(container, Properties.name.name()); }
 	public static <T extends PropertyContainer> T setNameProperty(NeoModel graph, T container, Object value) { setEntityProperty(graph, container, Properties.name.name(), value); return container; }
-	protected <T extends PropertyContainer> T setNameProperty(T container, Object value) { setEntityProperty(getGraph(), container, Properties.name.name(), value); return container; }
 	public static <T extends PropertyContainer> T removeNameProperty(T container) { removeEntityProperty(container, Properties.name.name()); return container; }
+
+	protected <T extends PropertyContainer> T setNameProperty(T container, Object value) { setNameProperty(getGraph(), container, value); return container; }
 
 }

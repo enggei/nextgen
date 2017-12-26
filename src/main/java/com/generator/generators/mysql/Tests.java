@@ -24,8 +24,8 @@ import java.util.Stack;
  * Created 24.03.17.
  */
 public class Tests {
-
-   @Test
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   //@Test
    public void testParseSQLQuery() {
 
       String sql = MySQLUtil.preprocessSQL("select * FROM 'filmweb_admissions' whERE 'screenId'=1 AND 'cinemaCompId'=15;");
@@ -38,7 +38,7 @@ public class Tests {
       new ParseTreeWalker().walk(new MySqlParserNodeListener(true) { }, new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(sql)))).root());
    }
 
-   @Test
+   //@Test
    public void testMysqlWithForeignKeys() throws Exception {
       final MySQLSession session = new MySQLSession("127.0.0.1", "tr", "root", "root");
 
@@ -107,10 +107,10 @@ public class Tests {
          new ParseTreeWalker().walk(nodeListener, mySqlParser.root());
       }
 
-      System.out.println(output);
+      log.info(output);
    }
 
-   @Test
+   //@Test
    public void testTablesToJavaPojos() throws Exception {
       final MySQLSession session = new MySQLSession("127.0.0.1", "tr", "root", "root");
       final MySqlToPojoGenerator javaGenerator = new MySqlToPojoGenerator(false);
@@ -119,7 +119,7 @@ public class Tests {
       javaGenerator.done(ProjectConstants.TEST_ROOT, "com.ud.tr");
    }
 
-   @Test
+   //@Test
    public void testTablesToQueries() throws Exception {
       final MySQLSession session = new MySQLSession("127.0.0.1", "tr", "root", "root");
 
@@ -140,12 +140,12 @@ public class Tests {
       sql.close();
    }
 
-   @Test
+   //@Test
    public void testMysqlGroup() {
 
       final MysqlGroup mysqlGroup = new MysqlGroup();
 
-      System.out.println(mysqlGroup.newcreateDatabase().
+      log.info(mysqlGroup.newcreateDatabase().
             setName("TestDB").
             setScript(mysqlGroup.newcreateTable().
                   setName("TableOne").
@@ -165,7 +165,7 @@ public class Tests {
       for (String table : session.getTables()) {
          final MySqlParserNodeListener listener = new MySqlParserNodeListener(true) {
          };
-         new ParseTreeWalker().walk(listener, new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(table)))).root());
+         new ParseTreeWalker().walk(listener, new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(table.replaceAll(" DEFAULT `0`",""))))).root());
       }
    }
 }

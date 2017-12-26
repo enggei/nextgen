@@ -1,7 +1,7 @@
 package com.generator.generators.clojure;
 
 import com.generator.app.App;
-import com.generator.app.AppMotif;
+import com.generator.app.DomainMotif;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.domain.DomainPlugin;
@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.generator.app.DomainMotif.*;
-import static com.generator.generators.domain.DomainDomainPlugin.Entities.Domain;
 import static com.generator.util.NeoUtil.*;
 
 /**
@@ -36,10 +35,12 @@ public abstract class ClojureDomainPlugin extends Plugin {
 
 	private static final Map<Label,Node> entitiesNodeMap = new LinkedHashMap<>();
 
+	private final Node domainNode;
+
    ClojureDomainPlugin(App app) {
       super(app, "Clojure");
 
-		final Node domainNode = getGraph().findOrCreate(Domain, AppMotif.Properties.name.name(), "Clojure");
+		domainNode = DomainMotif.newDomainNode(getGraph(), "Clojure");
 		entitiesNodeMap.put(Entities.Repl, newDomainEntity(getGraph(), Entities.Repl, domainNode));
 		entitiesNodeMap.put(Entities.Form, newDomainEntity(getGraph(), Entities.Form, domainNode));
 		entitiesNodeMap.put(Entities.Result, newDomainEntity(getGraph(), Entities.Result, domainNode));
@@ -77,6 +78,8 @@ public abstract class ClojureDomainPlugin extends Plugin {
       return null;
    }
 
+	protected Node getDomainNode() { return domainNode; }
+
 	protected void handleRepl(JPopupMenu pop, NeoNode replNode, Set<NeoNode> selectedNodes) { }
 	protected void handleForm(JPopupMenu pop, NeoNode formNode, Set<NeoNode> selectedNodes) { }
 	protected void handleResult(JPopupMenu pop, NeoNode resultNode, Set<NeoNode> selectedNodes) { }
@@ -92,12 +95,13 @@ public abstract class ClojureDomainPlugin extends Plugin {
 	public static boolean isResult(Node node) { return hasLabel(node, Entities.Result); }
 	public static boolean isSymbol(Node node) { return hasLabel(node, Entities.Symbol); }
 
-	protected Node newRepl() { return newRepl(getGraph()); } 
+	protected Node newRepl() { return newRepl(getGraph()); }
 	public static Node newRepl(NeoModel graph) { return newInstanceNode(graph, Entities.Repl.name(), entitiesNodeMap.get(Entities.Repl)); }
 
 	protected Node newForm() { return newForm(getGraph()); } 
-	public static Node newForm(NeoModel graph) { return newInstanceNode(graph, Entities.Form.name(), entitiesNodeMap.get(Entities.Form)); } 
 	protected Node newForm(Object name) { return newForm(getGraph(), name); } 
+
+	public static Node newForm(NeoModel graph) { return newInstanceNode(graph, Entities.Form.name(), entitiesNodeMap.get(Entities.Form)); } 
 	public static Node newForm(NeoModel graph, Object name) {  	
 		final Node newNode = newForm(graph); 	
 		if (name != null) relate(newNode, newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
@@ -105,8 +109,9 @@ public abstract class ClojureDomainPlugin extends Plugin {
 	}
 
 	protected Node newResult() { return newResult(getGraph()); } 
-	public static Node newResult(NeoModel graph) { return newInstanceNode(graph, Entities.Result.name(), entitiesNodeMap.get(Entities.Result)); } 
 	protected Node newResult(Object buffer) { return newResult(getGraph(), buffer); } 
+
+	public static Node newResult(NeoModel graph) { return newInstanceNode(graph, Entities.Result.name(), entitiesNodeMap.get(Entities.Result)); } 
 	public static Node newResult(NeoModel graph, Object buffer) {  	
 		final Node newNode = newResult(graph); 	
 		if (buffer != null) relate(newNode, newValueNode(graph, buffer), RelationshipType.withName(Properties.buffer.name())); 	
@@ -114,8 +119,9 @@ public abstract class ClojureDomainPlugin extends Plugin {
 	}
 
 	protected Node newSymbol() { return newSymbol(getGraph()); } 
-	public static Node newSymbol(NeoModel graph) { return newInstanceNode(graph, Entities.Symbol.name(), entitiesNodeMap.get(Entities.Symbol)); } 
 	protected Node newSymbol(Object name) { return newSymbol(getGraph(), name); } 
+
+	public static Node newSymbol(NeoModel graph) { return newInstanceNode(graph, Entities.Symbol.name(), entitiesNodeMap.get(Entities.Symbol)); } 
 	public static Node newSymbol(NeoModel graph, Object name) {  	
 		final Node newNode = newSymbol(graph); 	
 		if (name != null) relate(newNode, newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
@@ -154,15 +160,17 @@ public abstract class ClojureDomainPlugin extends Plugin {
 	public static <T> T getBufferProperty(PropertyContainer container, T defaultValue) { return getEntityProperty(container, Properties.buffer.name(), defaultValue); }
 	public static boolean hasBufferProperty(PropertyContainer container) { return hasEntityProperty(container, Properties.buffer.name()); }
 	public static <T extends PropertyContainer> T setBufferProperty(NeoModel graph, T container, Object value) { setEntityProperty(graph, container, Properties.buffer.name(), value); return container; }
-	protected <T extends PropertyContainer> T setBufferProperty(T container, Object value) { setEntityProperty(getGraph(), container, Properties.buffer.name(), value); return container; }
 	public static <T extends PropertyContainer> T removeBufferProperty(T container) { removeEntityProperty(container, Properties.buffer.name()); return container; }
+
+	protected <T extends PropertyContainer> T setBufferProperty(T container, Object value) { setBufferProperty(getGraph(), container, value); return container; }
 
 	// name
 	public static <T> T getNameProperty(PropertyContainer container) { return getEntityProperty(container, Properties.name.name()); }
 	public static <T> T getNameProperty(PropertyContainer container, T defaultValue) { return getEntityProperty(container, Properties.name.name(), defaultValue); }
 	public static boolean hasNameProperty(PropertyContainer container) { return hasEntityProperty(container, Properties.name.name()); }
 	public static <T extends PropertyContainer> T setNameProperty(NeoModel graph, T container, Object value) { setEntityProperty(graph, container, Properties.name.name(), value); return container; }
-	protected <T extends PropertyContainer> T setNameProperty(T container, Object value) { setEntityProperty(getGraph(), container, Properties.name.name(), value); return container; }
 	public static <T extends PropertyContainer> T removeNameProperty(T container) { removeEntityProperty(container, Properties.name.name()); return container; }
+
+	protected <T extends PropertyContainer> T setNameProperty(T container, Object value) { setNameProperty(getGraph(), container, value); return container; }
 
 }

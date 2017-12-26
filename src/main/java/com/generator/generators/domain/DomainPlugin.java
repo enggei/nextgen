@@ -10,6 +10,7 @@ import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.neo.NeoModel;
 import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
+import com.generator.util.Triple;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.*;
 
@@ -20,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 import static com.generator.app.DomainMotif.*;
 import static com.generator.generators.project.ProjectPlugin.*;
@@ -29,6 +31,7 @@ import static com.generator.util.NeoUtil.*;
  * Created 06.08.17.
  */
 public class DomainPlugin extends DomainDomainPlugin {
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(DomainPlugin.class);
 
    public enum RelationCardinality {
       SINGLE, LIST
@@ -92,6 +95,41 @@ public class DomainPlugin extends DomainDomainPlugin {
          }
       });
 
+      pop.add(new App.TransactionAction("Expand Domain", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final Set<Node> nodes = new LinkedHashSet<>();
+
+            new DomainVisitor<Void>(true) {
+               @Override
+               public void visitDomain(Node node) {
+                  super.visitDomain(node);
+               }
+
+               @Override
+               public void visitEntity(Node node) {
+                  nodes.add(node);
+                  super.visitEntity(node);
+               }
+
+               @Override
+               public void visitRelation(Node node) {
+                  nodes.add(node);
+                  super.visitRelation(node);
+               }
+
+               @Override
+               public void visitProperty(Node node) {
+                  nodes.add(node);
+                  super.visitProperty(node);
+               }
+            }.visit(domainNode.getNode());
+
+            fireNodesLoaded(nodes);
+         }
+      });
+
       pop.add(new App.TransactionAction("Create Plugin", app) {
          @Override
          protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
@@ -110,18 +148,16 @@ public class DomainPlugin extends DomainDomainPlugin {
                   setName(className).
                   setTitle(getNameProperty(domainNode.getNode()));
 
-            // todo: group Entities.properties and Relations.properties, and use these to create default-add/set actions (like StringTemplatePlugin)
-
             final Set<String> domainRelations = new LinkedHashSet<>();
             final Set<String> domainProperties = new LinkedHashSet<>();
             final Map<String, Set<String>> entityProperties = new LinkedHashMap<>();
-            final Map<String, Set<Map<Node, String>>> entityRelations = new LinkedHashMap<>();
+            final Set<Relation> relations = new LinkedHashSet<>();
             new DomainVisitor<Object>(true) {
 
                @Override
                public void visitDomain(Node node) {
                   outgoingENTITY(node, (entityRelation, entity) -> {
-                     domainRelations.add(getNameProperty(entity,"").toUpperCase());
+                     domainRelations.add(getNameProperty(entity, "").toUpperCase());
                      domainPluginST.addRootRelationsValue(getNameProperty(entity));
                   });
                   super.visitDomain(node);
@@ -132,12 +168,13 @@ public class DomainPlugin extends DomainDomainPlugin {
                   if (!entityProperties.containsKey(getNameProperty(node)))
                      entityProperties.put(getNameProperty(node), new LinkedHashSet<>());
 
-                  if (!entityRelations.containsKey(getNameProperty(node)))
-                     entityRelations.put(getNameProperty(node), new LinkedHashSet<>());
-
+                  // get properties and entity-relations
                   outgoingSRC(node, (src, relationNode) -> outgoingDST(relationNode, (dst, dstNode) -> {
-                     if (isProperty(dstNode))
+                     if (isProperty(dstNode)) {
                         entityProperties.get(getNameProperty(node)).add(getNameProperty(dstNode));
+                     } else {
+                        relations.add(new Relation(node, dstNode, getNameProperty(relationNode), getRelationCardinalityProperty(relationNode)));
+                     }
                   }));
 
                   super.visitEntity(node);
@@ -146,22 +183,25 @@ public class DomainPlugin extends DomainDomainPlugin {
                @Override
                public void visitRelation(Node node) {
 
+                  domainRelations.add(getNameProperty(node, "").toUpperCase());
+
                   // relation can be either to a Property or Entity
-                  final AtomicBoolean isProperty = new AtomicBoolean(false);
-                  outgoingDST(node, (relationship, dstNode) -> {
-                     if (isProperty(dstNode)) isProperty.set(true);
-                  });
+//                  final AtomicBoolean isProperty = new AtomicBoolean(false);
+//                  outgoingDST(node, (relationship, dstNode) -> {
+//                     if (isProperty(dstNode)) isProperty.set(true);
+//                  });
 
                   // if Entity (not Property), add relation
-                  if (!isProperty.get()) {
-                     domainRelations.add(getNameProperty(node,"").toUpperCase());
+//                  if (!isProperty.get()) {
+//                     domainRelations.add(getNameProperty(node, "").toUpperCase());
 
-                     // add entity-relations
-                     final LinkedHashMap<Node, String> relation = new LinkedHashMap<>();
-                     relation.put(node, getNameProperty(singleOutgoingDST(node)));
-                     entityRelations.get(getNameProperty(singleIncomingSRC(node))).add(relation);
-                  }
-
+                  // add entity-relations
+//                     final LinkedHashMap<Node, String> relation = new LinkedHashMap<>();
+//                     relation.put(node, getNameProperty(singleOutgoingDST(node)));
+//
+//                     incomingSRC(node, (relationship, srcNode) -> entityRelations.get(getNameProperty(srcNode)).add(relation));
+//                     entityRelations.get(getNameProperty(singleIncomingSRC(node))).add(relation);
+//                  }
                   super.visitRelation(node);
                }
 
@@ -188,15 +228,149 @@ public class DomainPlugin extends DomainDomainPlugin {
                domainPluginST.addEntitiesValue(entityMethodsST, entry.getKey());
             }
 
-            for (Map.Entry<String, Set<Map<Node, String>>> entry : entityRelations.entrySet()) {
-               for (Map<Node, String> map : entry.getValue()) {
-                  for (Map.Entry<Node, String> relationEntry : map.entrySet()) {
-                     domainPluginST.addEntityRelationsValue(getEntityProperty(relationEntry.getKey(), Properties.relationCardinality.name()), relationEntry.getValue(), getNameProperty(relationEntry.getKey()), entry.getKey());
-                  }
-               }
+            for (Relation relation : relations) {
+               domainPluginST.addEntityRelationsValue(relation.cardinality, getNameProperty(relation.dst), relation.name, getNameProperty(relation.src));
             }
 
             GeneratedFile.newJavaFile(ProjectConstants.MAIN_ROOT, domainPluginST.getPackageName(), className).write(domainPluginST);
+         }
+
+         class Relation {
+            private final Node src;
+            private final Node dst;
+            private final String name;
+            private final String cardinality;
+
+            public Relation(Node src, Node dst, String name, String cardinality) {
+               this.src = src;
+               this.dst = dst;
+               this.name = name;
+               this.cardinality = cardinality;
+            }
+
+            @Override
+            public boolean equals(Object o) {
+               if (this == o) return true;
+               if (o == null || getClass() != o.getClass()) return false;
+
+               Relation relation = (Relation) o;
+
+               if (!src.equals(relation.src)) return false;
+               if (!dst.equals(relation.dst)) return false;
+               return name.equals(relation.name);
+            }
+
+            @Override
+            public int hashCode() {
+               int result = src.hashCode();
+               result = 31 * result + dst.hashCode();
+               result = 31 * result + name.hashCode();
+               return result;
+            }
+
+            @Override
+            public String toString() {
+               return src + " " + name + " " + dst + " " + cardinality;
+            }
+         }
+      });
+
+      pop.add(new App.TransactionAction("Create Vertx classes", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            if (!hasPackageNameProperty(domainNode.getNode())) {
+               final String packageName = SwingUtil.showInputDialog("Package", app);
+               if (packageName == null || packageName.length() == 0) return;
+               setPackageNameProperty(domainNode.getNode(), packageName);
+            }
+
+            final String verticleName = getNameProperty(domainNode.getNode()) + "DomainVerticle";
+            final String facadeName = getNameProperty(domainNode.getNode()) + "Facade";
+
+            final DomainPluginGroup domainPluginGroup = new DomainPluginGroup();
+
+            final DomainPluginGroup.DomainVerticleFacadeST domainVerticleFacadeST = domainPluginGroup.newDomainVerticleFacade().
+                  setPackage(getPackageNameProperty(domainNode.getNode())).
+                  setName(facadeName).
+                  setDomain(getNameProperty(domainNode.getNode()));
+
+            final DomainPluginGroup.DomainVerticleST domainVerticleST = domainPluginGroup.newDomainVerticle().
+                  setPackage(getPackageNameProperty(domainNode.getNode())).
+                  setName(verticleName).
+                  setDomain(getNameProperty(domainNode.getNode()));
+
+            final Map<String, Set<String>> entityProperties = new LinkedHashMap<>();
+            final Map<String, Map<String, String>> entityRelations = new LinkedHashMap<>();
+            new DomainVisitor<Object>(true) {
+
+               @Override
+               public void visitEntity(Node node) {
+                  if (!entityProperties.containsKey(getNameProperty(node)))
+                     entityProperties.put(getNameProperty(node), new LinkedHashSet<>());
+
+                  if (!entityRelations.containsKey(getNameProperty(node)))
+                     entityRelations.put(getNameProperty(node), new LinkedHashMap<>());
+
+                  outgoingSRC(node, (src, relationNode) -> outgoingDST(relationNode, (dst, dstNode) -> {
+                     if (isProperty(dstNode))
+                        entityProperties.get(getNameProperty(node)).add(getNameProperty(dstNode));
+                  }));
+
+                  super.visitEntity(node);
+               }
+
+               @Override
+               public void visitRelation(Node node) {
+
+                  // relation can be either to a Property or Entity
+                  final AtomicBoolean isProperty = new AtomicBoolean(false);
+                  outgoingDST(node, (relationship, dstNode) -> {
+                     if (isProperty(dstNode)) isProperty.set(true);
+                  });
+
+                  // if Entity (not Property), add relation
+                  if (!isProperty.get()) {
+                     incomingSRC(node, (relationship, srcNode) -> entityRelations.get(getNameProperty(srcNode)).put(getNameProperty(node), getNameProperty(singleOutgoingDST(node))));
+//                     entityRelations.get(getNameProperty(singleIncomingSRC(node))).put(getNameProperty(node), getNameProperty(singleOutgoingDST(node)));
+                  }
+
+                  super.visitRelation(node);
+               }
+
+               @Override
+               public void visitVisitor(Node node) {
+                  domainVerticleST.addVisitorsValue(getNameProperty(node), getVisitorClassProperty(node));
+                  super.visitVisitor(node);
+               }
+            }.visitDomain(domainNode.getNode());
+
+            for (Map.Entry<String, Set<String>> entry : entityProperties.entrySet()) {
+
+               final DomainPluginGroup.EntityMessageHandlerST entityMessageHandlerST = domainPluginGroup.newEntityMessageHandler().
+                     setLabel(entry.getKey());
+
+               final DomainPluginGroup.DomainFacadeEntityMessagesST domainFacadeEntityMessagesST = domainPluginGroup.newDomainFacadeEntityMessages().
+                     setLabel(entry.getKey());
+
+               for (String propertyName : entry.getValue()) {
+                  entityMessageHandlerST.addPropertiesValue(propertyName, propertyName.startsWith("is") ? "Boolean" : "String");
+                  domainFacadeEntityMessagesST.addPropertiesValue(propertyName, propertyName.startsWith("is") ? "Boolean" : "String");
+               }
+
+               domainVerticleST.addEntitiesValue(entry.getKey(), entityMessageHandlerST);
+               domainVerticleFacadeST.addEntitiesValue(domainFacadeEntityMessagesST);
+            }
+
+            for (Map.Entry<String, Map<String, String>> relationEntry : entityRelations.entrySet()) {
+               for (Map.Entry<String, String> rel : relationEntry.getValue().entrySet()) {
+                  domainVerticleST.addRelateEntitiesValue(rel.getValue(), relationEntry.getKey(), rel.getKey().toUpperCase());
+                  domainVerticleFacadeST.addRelationsValue(rel.getValue(), rel.getKey().toUpperCase(), relationEntry.getKey());
+               }
+            }
+
+            GeneratedFile.newJavaFile(ProjectConstants.MAIN_ROOT, domainVerticleST.getPackage(), verticleName).write(domainVerticleST);
+            GeneratedFile.newJavaFile(ProjectConstants.MAIN_ROOT, domainVerticleFacadeST.getPackage(), facadeName).write(domainVerticleFacadeST);
          }
       });
 
@@ -261,6 +435,38 @@ public class DomainPlugin extends DomainDomainPlugin {
 
             final Node newPropertyNode = newProperty(name);
             fireNodesLoaded(newPropertyNode, newDomainEntityRelation(getGraph(), entityNode.getNode(), name, RelationCardinality.SINGLE, newPropertyNode));
+         }
+      });
+
+      pop.add(new App.TransactionAction("Add Properties", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final String properties = SwingUtil.showInputDialog("Properties", app);
+            if (properties == null || properties.length() == 0) return;
+
+            final String[] names = properties.split(" ");
+            for (String name : names) {
+
+               final AtomicBoolean exists = new AtomicBoolean(false);
+               new EntityRelationVisitor() {
+                  @Override
+                  public void onSingle(Node relationNode, Node dstNode) {
+                     if (name.equals(getNameProperty(relationNode))) exists.set(true);
+                  }
+
+                  @Override
+                  public void onList(Node relationNode, Node dstNode) {
+                     if (name.equals(getNameProperty(relationNode))) exists.set(true);
+                  }
+               }.visit(entityNode.getNode());
+
+               if (exists.get())
+                  continue;
+
+               final Node newPropertyNode = newProperty(name);
+               fireNodesLoaded(newPropertyNode, newDomainEntityRelation(getGraph(), entityNode.getNode(), name, RelationCardinality.SINGLE, newPropertyNode));
+            }
          }
       });
 
@@ -359,7 +565,7 @@ public class DomainPlugin extends DomainDomainPlugin {
                   protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
                      // remove old DST
-                     System.out.println("removing existing DST");
+                     log.info("removing existing DST");
                      outgoingDST(selectedNode.getNode(), (relationship, other) -> relationship.delete());
                      relateDST(selectedNode.getNode(), entityNode.getNode());
                   }
@@ -410,8 +616,8 @@ public class DomainPlugin extends DomainDomainPlugin {
                   protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
                      // remove old SRC
-                     System.out.println("removing existing SRC");
-                     incomingSRC(relationNode.getNode(), (relationship, other) -> relationship.delete());
+                     log.info("testing multiple SRC removing existing SRC");
+                     //incomingSRC(relationNode.getNode(), (relationship, other) -> relationship.delete());
                      relateSRC(selectedNode.getNode(), relationNode.getNode());
                   }
                });
@@ -441,12 +647,12 @@ public class DomainPlugin extends DomainDomainPlugin {
          @Override
          protected void actionPerformed(ActionEvent e, Transaction tx) {
 
-            final String oldValue = getNameProperty(valueNode.getNode());
+            final String oldValue = valueNode.getNode().hasProperty(AppMotif.Properties.name.name()) ? (String) valueNode.getNode().getProperty(AppMotif.Properties.name.name()) : "";
 
             final String newValue = SwingUtil.showInputDialog("New value", app, oldValue);
             if (newValue == null || newValue.equals(oldValue)) return;
 
-            setNameProperty(valueNode.getNode(), newValue);
+            valueNode.getNode().setProperty(AppMotif.Properties.name.name(), newValue);
             fireNodeChanged(valueNode.getNode());
          }
       });
@@ -473,7 +679,7 @@ public class DomainPlugin extends DomainDomainPlugin {
    @Override
    public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
 
-      super.handleNodeRightClick(pop,neoNode, selectedNodes);
+      super.handleNodeRightClick(pop, neoNode, selectedNodes);
 
       if (StringTemplatePlugin.isSTTemplate(neoNode.getNode())) {
 
@@ -649,19 +855,23 @@ public class DomainPlugin extends DomainDomainPlugin {
                referenceMenu.add(new App.TransactionAction("Set Properties", app) {
                   @Override
                   protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                     final Map<String, JTextField> fields = new TreeMap<>();
+                     final Map<String, JComponent> fields = new TreeMap<>();
                      final StringBuilder rows = new StringBuilder();
                      boolean first = true;
                      for (Map.Entry<String, Node> propertyEntry : singlePropertyMap.entrySet()) {
                         if (!first) rows.append(",4dlu,");
                         rows.append("pref");
-                        fields.put(propertyEntry.getKey(), new JTextField());
+
+                        final Set<String> enumValues = new LinkedHashSet<>();
+                        outgoingENUMERATED(propertyEntry.getValue(), (relationship, enumNode) -> enumValues.add(getValueProperty(enumNode)));
+                        final Node existing = other(templateNeoNode.getNode(), singleOutgoing(templateNeoNode.getNode(), RelationshipType.withName(propertyEntry.getKey())));
+                        fields.put(propertyEntry.getKey(), isBooleanProperty(propertyEntry.getValue()) ? new JCheckBox("", "true".equals(getNameProperty(existing, "false"))) : (enumValues.isEmpty() ? new JTextField(getNameProperty(existing, "")) : SwingUtil.newComboBox(enumValues, getNameProperty(existing))));
                         first = false;
                      }
 
                      final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu:grow,4dlu,75dlu:grow", rows.toString().trim());
                      int row = 1;
-                     for (Map.Entry<String, JTextField> fieldEntry : fields.entrySet()) {
+                     for (Map.Entry<String, JComponent> fieldEntry : fields.entrySet()) {
                         editor.addLabel(fieldEntry.getKey(), 1, row);
                         editor.add(fieldEntry.getValue(), 3, row);
                         row += 2;
@@ -675,23 +885,55 @@ public class DomainPlugin extends DomainDomainPlugin {
                               @Override
                               public void doAction(Transaction tx) throws Throwable {
 
-                                 for (Map.Entry<String, JTextField> fieldEntry : fields.entrySet()) {
-                                    final String value = fieldEntry.getValue().getText().trim();
-                                    if (value.trim().length() == 0) continue;
+                                 for (Map.Entry<String, JComponent> fieldEntry : fields.entrySet()) {
 
-                                    // remove any existing one
+                                    final JComponent component = fieldEntry.getValue();
+                                    final String value = getValueFrom(component);
+
+                                    // update existing one, if changed
+                                    final AtomicBoolean foundAndUpdated = new AtomicBoolean(false);
                                     outgoing(templateNeoNode.getNode(), RelationshipType.withName(fieldEntry.getKey())).forEach(oldValueRelation -> {
                                        final Node oldValueNode = other(templateNeoNode.getNode(), oldValueRelation);
-                                       oldValueRelation.delete();
-                                       AppMotif.tryToDeleteValueNode(oldValueNode);
+
+                                       // if value is unchanged
+                                       if (value != null && (has(oldValueNode, AppMotif.Properties.name.name()) && value.equals(getString(oldValueNode, AppMotif.Properties.name.name())))) {
+                                          foundAndUpdated.set(true);
+                                          return;
+                                       }
+
+                                       // if value==null delete existing node
+                                       if (value == null) {
+                                          oldValueRelation.delete();
+                                          tryToDeleteNode(oldValueNode, false);
+                                          foundAndUpdated.set(true);
+                                          return;
+                                       }
+
+                                       // update node with new value
+                                       oldValueNode.setProperty(AppMotif.Properties.name.name(), value);
+                                       fireNodeChanged(oldValueNode);
+                                       foundAndUpdated.set(true);
                                     });
 
-                                    // try to find existing node with same value, and if exists, use this and add link to it
+                                    if (foundAndUpdated.get()) continue;
+
                                     final Node existingNode = getGraph().newNode(Entities.Value, AppMotif.Properties.name.name(), value);
                                     final Node newDstNode = existingNode == null ? newValueNode(getGraph(), value) : existingNode;
                                     relate(templateNeoNode.getNode(), newDstNode, RelationshipType.withName(fieldEntry.getKey()));
                                     fireNodesLoaded(newDstNode);
                                  }
+                              }
+
+                              private String getValueFrom(JComponent component) {
+                                 if (component instanceof JCheckBox)
+                                    return ((JCheckBox) component).isSelected() ? "true" : "false";
+                                 else if (component instanceof JComboBox)
+                                    return ((JComboBox) component).getSelectedItem() == null ? null : ((JComboBox) component).getSelectedItem().toString();
+                                 else if (component instanceof JTextField) {
+                                    final String trim = ((JTextField) component).getText().trim();
+                                    return trim.length() == 0 ? null : trim;
+                                 }
+                                 return null;
                               }
 
                               @Override
@@ -757,27 +999,26 @@ public class DomainPlugin extends DomainDomainPlugin {
       }.visit(instanceNode);
 
 
-      if(entityPropertiesMap.isEmpty()) {
-         final Node newEntityNode = newInstanceNode(getGraph(), getNameProperty(instanceNode), instanceNode);
+      if (entityPropertiesMap.isEmpty()) {
+         final Node newEntityNode = newInstanceNode(getGraph(), instanceNode);
          relate(ownerNode, newEntityNode, RelationshipType.withName(parameterName));
          fireNodesLoaded(newEntityNode);
          return;
       }
 
-
-      final Map<String, JTextField> fields = new TreeMap<>();
+      final Map<String, JComponent> fields = new TreeMap<>();
       final StringBuilder rows = new StringBuilder();
       boolean first = true;
       for (Map.Entry<String, Node> propertyEntry : entityPropertiesMap.entrySet()) {
          if (!first) rows.append(",4dlu,");
          rows.append("pref");
-         fields.put(propertyEntry.getKey(), new JTextField());
+         fields.put(propertyEntry.getKey(), isBooleanProperty(propertyEntry.getValue()) ? new JCheckBox() : new JTextField());
          first = false;
       }
 
       final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu:grow,4dlu,75dlu:grow", rows.toString().trim());
       int row = 1;
-      for (Map.Entry<String, JTextField> fieldEntry : fields.entrySet()) {
+      for (Map.Entry<String, JComponent> fieldEntry : fields.entrySet()) {
          editor.addLabel(fieldEntry.getKey(), 1, row);
          editor.add(fieldEntry.getValue(), 3, row);
          row += 2;
@@ -791,22 +1032,22 @@ public class DomainPlugin extends DomainDomainPlugin {
                @Override
                public void doAction(Transaction tx) throws Throwable {
 
-                  Node newEntityNode = null;
-                  for (Map.Entry<String, JTextField> fieldEntry : fields.entrySet()) {
-                     final String value = fieldEntry.getValue().getText().trim();
-                     if (value.trim().length() == 0) continue;
+                  final Node newEntityNode = newInstanceNode(getGraph(), instanceNode);
+                  ;
+                  relate(ownerNode, newEntityNode, RelationshipType.withName(parameterName));
 
-                     if (newEntityNode == null) {
-                        newEntityNode = newInstanceNode(getGraph(), getNameProperty(instanceNode), instanceNode);
-                        relate(ownerNode, newEntityNode, RelationshipType.withName(parameterName));
-                     }
+                  for (Map.Entry<String, JComponent> fieldEntry : fields.entrySet()) {
+
+                     final String value = isBooleanProperty(entityPropertiesMap.get(fieldEntry.getKey())) ? ((JCheckBox) fieldEntry.getValue()).isSelected() ? "true" : "" : ((JTextField) fieldEntry.getValue()).getText().trim();
+                     if (value.trim().length() == 0) continue;
 
                      // try to find existing node with same value, and if exists, use this and add link to it
                      final Node existingValueNode = getGraph().newNode(Entities.Value, AppMotif.Properties.name.name(), value);
                      final Node newPropertyNode = existingValueNode == null ? newValueNode(getGraph(), value) : existingValueNode;
                      relate(newEntityNode, newPropertyNode, RelationshipType.withName(fieldEntry.getKey()));
                   }
-                  if (newEntityNode != null) fireNodesLoaded(newEntityNode);
+
+                  fireNodesLoaded(newEntityNode);
                }
 
                @Override
@@ -816,6 +1057,11 @@ public class DomainPlugin extends DomainDomainPlugin {
             });
          }
       });
+   }
+
+   private static boolean isBooleanProperty(Node node) {
+      final String propertyName = getNameProperty(node).toString().toLowerCase();
+      return propertyName.startsWith("is") || propertyName.startsWith("has");
    }
 
    @Override

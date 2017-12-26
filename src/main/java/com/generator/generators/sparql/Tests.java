@@ -26,12 +26,12 @@ public class Tests {
 		"Test4.sparql"
 	);
 
-	@Test
+	//@Test
 	public void testSparqlLexer() throws IOException {
 		testLexer(SparqlLexer.class, fileSystem.getPath(workDir + "Test3.sparql"));
 	}
 
-	@Test
+	//@Test
 	@SuppressWarnings("unchecked")
 	public void testSparqlParser() throws IOException {
 

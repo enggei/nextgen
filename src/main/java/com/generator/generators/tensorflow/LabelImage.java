@@ -29,6 +29,9 @@ import java.util.List;
  * Sample use of the TensorFlow Java API to label images using a pre-trained model.
  */
 public class LabelImage {
+
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(LabelImage.class);
+
    private static void printUsage(PrintStream s) {
       final String url =
             "https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip";
@@ -61,7 +64,7 @@ public class LabelImage {
       try (Tensor image = constructAndExecuteGraphToNormalizeImage(imageBytes)) {
          float[] labelProbabilities = executeInceptionGraph(graphDef, image);
          int bestLabelIdx = maxIndex(labelProbabilities);
-         System.out.println(
+         log.info(
                String.format(
                      "BEST MATCH: %s (%.2f%% likely)",
                      labels.get(bestLabelIdx), labelProbabilities[bestLabelIdx] * 100f));

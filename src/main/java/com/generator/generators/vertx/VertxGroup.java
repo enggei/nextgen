@@ -42,20 +42,150 @@ public final class VertxGroup {
 
 	}
 
-   public socksJSBridgeST newsocksJSBridge() {
-      return new socksJSBridgeST(stGroup);
-   }
-
-   public socksJSHandlerST newsocksJSHandler() {
-      return new socksJSHandlerST(stGroup);
+   public VerticleST newVerticle() {
+      return new VerticleST(stGroup);
    }
 
    public APIST newAPI() {
       return new APIST(stGroup);
    }
 
+   public socksJSHandlerST newsocksJSHandler() {
+      return new socksJSHandlerST(stGroup);
+   }
+
+   public socksJSBridgeST newsocksJSBridge() {
+      return new socksJSBridgeST(stGroup);
+   }
+
    public BaseRouterVerticleST newBaseRouterVerticle() {
       return new BaseRouterVerticleST(stGroup);
+   }
+
+   public final class VerticleST implements VertxGroupTemplate {
+
+      private java.util.Set<java.util.Map<String, Object>> _incoming = new java.util.LinkedHashSet<>();
+      private Object _name;
+      private Object _package;
+      private java.util.Set<java.util.Map<String, Object>> _outgoing = new java.util.LinkedHashSet<>();
+
+      private final ST template;
+
+      private VerticleST(STGroup group) {
+   		template = group.getInstanceOf("Verticle");
+   	}
+
+      public VerticleST addIncomingValue(Object address_, Object name_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("address", (address_ == null || address_.toString().length() == 0) ? null : address_);
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	this._incoming.add(map);
+
+         template.addAggr("incoming.{address, name}", map.get("address"), map.get("name"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getIncoming() {
+      	return this._incoming;
+      }
+
+      public VerticleST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      public VerticleST setPackage(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._package == null) {
+            this._package = value;
+         	template.add("package", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackage() {
+      	return (String) this._package;
+      }
+
+      public VerticleST addOutgoingValue(Object name_, Object address_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	map.put("address", (address_ == null || address_.toString().length() == 0) ? null : address_);
+      	this._outgoing.add(map);
+
+         template.addAggr("outgoing.{name, address}", map.get("name"), map.get("address"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getOutgoing() {
+      	return this._outgoing;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class APIST implements VertxGroupTemplate {
+
+
+      private final ST template;
+
+      private APIST(STGroup group) {
+   		template = group.getInstanceOf("API");
+   	}
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class socksJSHandlerST implements VertxGroupTemplate {
+
+      private Object _route;
+
+      private final ST template;
+
+      private socksJSHandlerST(STGroup group) {
+   		template = group.getInstanceOf("socksJSHandler");
+   	}
+
+      public socksJSHandlerST setRoute(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._route == null) {
+            this._route = value;
+         	template.add("route", value);
+         }
+
+      	return this;
+      }
+
+      public String getRoute() {
+      	return (String) this._route;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
    }
 
    public final class socksJSBridgeST implements VertxGroupTemplate {
@@ -112,150 +242,6 @@ public final class VertxGroup {
 
       public String getRoute() {
       	return (String) this._route;
-      }
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   }
-
-   public final class socksJSHandlerST implements VertxGroupTemplate {
-
-      private Object _route;
-
-      private final ST template;
-
-      private socksJSHandlerST(STGroup group) {
-   		template = group.getInstanceOf("socksJSHandler");
-   	}
-
-      public socksJSHandlerST setRoute(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._route == null) {
-            this._route = value;
-         	template.add("route", value);
-         }
-
-      	return this;
-      }
-
-      public String getRoute() {
-      	return (String) this._route;
-      }
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   }
-
-   public final class APIST implements VertxGroupTemplate {
-
-      private Object _comments;
-      private Object _name;
-      private Object _packageName;
-      private java.util.Set<Object> _entities = new java.util.LinkedHashSet<>();
-      private java.util.Set<Object> _properties = new java.util.LinkedHashSet<>();
-      private java.util.Set<java.util.Map<String, Object>> _visitors = new java.util.LinkedHashSet<>();
-
-      private final ST template;
-
-      private APIST(STGroup group) {
-   		template = group.getInstanceOf("API");
-   	}
-
-      public APIST setComments(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._comments == null) {
-            this._comments = value;
-         	template.add("comments", value);
-         }
-
-      	return this;
-      }
-
-      public String getComments() {
-      	return (String) this._comments;
-      }
-
-      public APIST setName(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._name == null) {
-            this._name = value;
-         	template.add("name", value);
-         }
-
-      	return this;
-      }
-
-      public String getName() {
-      	return (String) this._name;
-      }
-
-      public APIST setPackageName(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._packageName == null) {
-            this._packageName = value;
-         	template.add("packageName", value);
-         }
-
-      	return this;
-      }
-
-      public String getPackageName() {
-      	return (String) this._packageName;
-      }
-
-      public APIST addEntitiesValue(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	this._entities.add(value);
-      	template.add("entities", value);
-
-         return this;
-      }
-
-      public java.util.Set<Object> getEntitiesValues() {
-      	return this._entities;
-      }
-
-      public APIST addPropertiesValue(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	this._properties.add(value);
-      	template.add("properties", value);
-
-         return this;
-      }
-
-      public java.util.Set<Object> getPropertiesValues() {
-      	return this._properties;
-      }
-
-      public APIST addVisitorsValue(Object name_, Object route_, Object action_) {
-      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
-      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
-      	map.put("route", (route_ == null || route_.toString().length() == 0) ? null : route_);
-      	map.put("action", (action_ == null || action_.toString().length() == 0) ? null : action_);
-      	this._visitors.add(map);
-
-         template.addAggr("visitors.{name, route, action}", map.get("name"), map.get("route"), map.get("action"));
-         return this;
-      }
-
-      public java.util.Set<java.util.Map<String, Object>> getVisitors() {
-      	return this._visitors;
       }
 
       @Override
@@ -508,35 +494,55 @@ public final class VertxGroup {
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 		.append("eom() ::= <<}>>\n")
 		.append("gt() ::= \">\"\n")
-			.append("socksJSBridge(inbound,outbound,route) ::= <<final BridgeOptions bridgeOptions = new BridgeOptions()\n" + 
-		"    ~outbound:{it|.addOutboundPermitted(new PermittedOptions().setAddress(\"~it~\"))};separator=\"\\n\"~\n" + 
-		"    ~inbound:{it|.addInboundPermitted(new PermittedOptions().setAddress(\"~it~\"))};separator=\"\\n\"~;\n" + 
+			.append("Verticle(incoming,name,package,outgoing) ::= <<package ~package~;\n" + 
 		"\n" + 
-		"router.route(\"~route~\").handler(SockJSHandler.create(vertx).bridge(bridgeOptions, event -> {\n" + 
+		"import com.generator.util.VertxUtil;\n" + 
 		"\n" + 
-		"  // You can also optionally provide a handler like this which will be passed any events that occur on the bridge\n" + 
-		"  // You can use this for monitoring or logging, or to change the raw messages in-flight.\n" + 
-		"  // It can also be used for fine grained access control.\n" + 
+		"import io.vertx.core.AbstractVerticle;\n" + 
+		"import io.vertx.core.Future;\n" + 
+		"import io.vertx.core.Handler;\n" + 
+		"import io.vertx.core.eventbus.Message;\n" + 
+		"import io.vertx.core.json.JsonObject;\n" + 
 		"\n" + 
-		"  if (event.type() == BridgeEvent.Type.SOCKET_CREATED) {\n" + 
-		"    System.out.println(\"A socket was created\");\n" + 
-		"  }\n" + 
+		"public class ~name~ extends AbstractVerticle {\n" + 
 		"\n" + 
-		"  // This signals that it's ok to process the event\n" + 
-		"  event.complete(true);\n" + 
-		"}));>>\n")
-			.append("socksJSHandler(route) ::= <<// options\n" + 
-		"io.vertx.ext.web.handler.sockjs.SockJSHandlerOptions options = new io.vertx.ext.web.handler.sockjs.SockJSHandlerOptions().\n" + 
-		"    setHeartbeatInterval(2000);\n" + 
+		"   protected final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(~name~.class);\n" + 
 		"\n" + 
-		"BridgeOptions bridgeOptions = new BridgeOptions();\n" + 
-		"sockJSHandler.bridge(bridgeOptions);\n" + 
+		"   @Override\n" + 
+		"   public void start(Future<Void> startFuture) throws Exception {\n" + 
+		"      log.info(\"starting ~name~\");\n" + 
 		"\n" + 
-		"io.vertx.ext.web.handler.sockjs.SockJSHandler sockJSHandler = io.vertx.ext.web.handler.sockjs.SockJSHandler.\n" + 
-		"    create(vertx, bridgeOptions);\n" + 
+		"		VertxUtil.executeBlocking(vertx, log, new VertxUtil.Executor<JsonObject, JsonObject>() {\n" + 
+		"			@Override\n" + 
+		"			public JsonObject execute() throws Throwable {\n" + 
+		"				return onStart();\n" + 
+		"			}\n" + 
 		"\n" + 
-		"router.route(\"~route~\").handler(sockJSHandler);>>\n")
-			.append("API(comments,name,packageName,entities,properties,visitors) ::= <<package ~packageName~;\n" + 
+		"			@Override\n" + 
+		"			public void onSuccess(JsonObject result) {\n" + 
+		"				log.info(\"started ~name~ successfully : \" + result.toString());\n" + 
+		"				vertx.eventBus().consumer(deploymentID(), (Handler<Message<JsonObject~gt()~>) message -> handleInstanceMessage(message));\n" + 
+		"				~incoming:{it| vertx.eventBus().consumer(\"~it.address~\", (Handler<Message<JsonObject~gt()~>) message -> handle~it.name~(message)); }~\n" + 
+		"				startFuture.complete();\n" + 
+		"			}\n" + 
+		"\n" + 
+		"			@Override\n" + 
+		"			public void onFail(Throwable t) {\n" + 
+		"				log.error(\"failed to start ~name~ : \", t);\n" + 
+		"				startFuture.fail(t);\n" + 
+		"			}\n" + 
+		"		});\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	protected JsonObject onStart() throws Exception { return new JsonObject(); } \n" + 
+		"	\n" + 
+		"	~outgoing:{it|protected void publishTo~it.name~(JsonObject jsonObject) { log.info(\"publish to ~it.address~ \" + jsonObject.toString()); vertx.eventBus().publish(\"~it.address~\", jsonObject); ~eom()~};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"	~incoming:{it|protected void handle~it.name~(Message<JsonObject> message) { log.info(\"handle message ~it.address~ \" + message.body().toString()); ~eom()~ };separator=\"\\n\"~\n" + 
+		"\n" + 
+		"	protected void handleInstanceMessage(Message<JsonObject> message) { log.info(\"handle instance message \" + deploymentID() + \" \" + message.body().toString()); }\n" + 
+		"}>>\n")
+			.append("API() ::= <<package ~packageName~;\n" + 
 		"\n" + 
 		"import com.ud.vertx.VertxUtil;\n" + 
 		"import com.ud.vertx.VertxWebUtil;\n" + 
@@ -631,6 +637,34 @@ public final class VertxGroup {
 		"};separator=\"\\n\"~\n" + 
 		"	}\n" + 
 		"}>>\n")
+			.append("socksJSHandler(route) ::= <<// options\n" + 
+		"io.vertx.ext.web.handler.sockjs.SockJSHandlerOptions options = new io.vertx.ext.web.handler.sockjs.SockJSHandlerOptions().\n" + 
+		"    setHeartbeatInterval(2000);\n" + 
+		"\n" + 
+		"BridgeOptions bridgeOptions = new BridgeOptions();\n" + 
+		"sockJSHandler.bridge(bridgeOptions);\n" + 
+		"\n" + 
+		"io.vertx.ext.web.handler.sockjs.SockJSHandler sockJSHandler = io.vertx.ext.web.handler.sockjs.SockJSHandler.\n" + 
+		"    create(vertx, bridgeOptions);\n" + 
+		"\n" + 
+		"router.route(\"~route~\").handler(sockJSHandler);>>\n")
+			.append("socksJSBridge(inbound,outbound,route) ::= <<final BridgeOptions bridgeOptions = new BridgeOptions()\n" + 
+		"    ~outbound:{it|.addOutboundPermitted(new PermittedOptions().setAddress(\"~it~\"))};separator=\"\\n\"~\n" + 
+		"    ~inbound:{it|.addInboundPermitted(new PermittedOptions().setAddress(\"~it~\"))};separator=\"\\n\"~;\n" + 
+		"\n" + 
+		"router.route(\"~route~\").handler(SockJSHandler.create(vertx).bridge(bridgeOptions, event -> {\n" + 
+		"\n" + 
+		"  // You can also optionally provide a handler like this which will be passed any events that occur on the bridge\n" + 
+		"  // You can use this for monitoring or logging, or to change the raw messages in-flight.\n" + 
+		"  // It can also be used for fine grained access control.\n" + 
+		"\n" + 
+		"  if (event.type() == BridgeEvent.Type.SOCKET_CREATED) {\n" + 
+		"    System.out.println(\"A socket was created\");\n" + 
+		"  }\n" + 
+		"\n" + 
+		"  // This signals that it's ok to process the event\n" + 
+		"  event.complete(true);\n" + 
+		"}));>>\n")
 			.append("BaseRouterVerticle(endpoints,name,packageName,comments,messageHandlers,publishMessages) ::= <<package ~packageName~;\n" + 
 		"\n" + 
 		"import io.vertx.core.AbstractVerticle;\n" + 

@@ -1,5 +1,6 @@
 package com.generator.app;
 
+import com.generator.generators.Swing.SwingPlugin;
 import com.generator.generators.antlr.ANTLRPlugin;
 import com.generator.generators.chromeBookmarks.ChromeBookmarksPlugin;
 import com.generator.generators.clojure.ClojurePlugin;
@@ -8,7 +9,9 @@ import com.generator.generators.docker.DockerPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.easyFlow.EasyFlowPlugin;
 import com.generator.generators.excel.ExcelPlugin;
+import com.generator.generators.git.GitPlugin;
 import com.generator.generators.java.JavaPlugin;
+import com.generator.generators.javapoet.JavaPoetPlugin;
 import com.generator.generators.json.JsonPlugin;
 import com.generator.generators.math.MathPlugin;
 import com.generator.generators.maven.MavenPlugin;
@@ -17,12 +20,16 @@ import com.generator.generators.project.ProjectPlugin;
 import com.generator.generators.rivescript.RivescriptPlugin;
 import com.generator.generators.ssh.SSHPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
+import com.generator.generators.systemd.SystemdPlugin;
+import com.generator.generators.vertx.VertxPlugin;
 import com.generator.neo.NeoModel;
 import com.generator.neo.embedded.EmbeddedNeoModel;
 import com.generator.neo.remote.RemoteNeoModel;
 import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
+import com.generator.util.TextAreaLogAppender;
 import com.generator.util.TextProcessingPanel;
+import org.apache.log4j.Logger;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.event.LabelEntry;
@@ -47,16 +54,20 @@ import static com.generator.util.NeoUtil.*;
  */
 public class App extends JFrame {
 
+   private final static Logger log = Logger.getLogger(App.class);
 
    public final AppEvents events = new AppEvents(new PropertyChangeSupport(this));
    public final AppModel model = new AppModel();
    public final Workspace workspace = new Workspace(this);
    public final Set<Plugin> plugins = new LinkedHashSet<>();
+   public final LogWindow logWindow = new LogWindow();
 
    private final Stack<AppModel.TransactionHistory> transactionHistory = new Stack<>();
 
-   public App(Splash splash) throws HeadlessException {
+   public App(Splash splash) throws HeadlessException, IOException {
       super("App");
+
+      TextAreaLogAppender.logTextArea = logWindow.txtLog;
 
       addComponentListener(new ComponentAdapter() {
          @Override
@@ -111,6 +122,7 @@ public class App extends JFrame {
       getContentPane().add(splitPane, BorderLayout.CENTER);
       setPreferredSize(model.getAppSize());
       setLocation(model.getAppLocation());
+      getContentPane().add(logWindow, BorderLayout.SOUTH);
 
       addWindowListener(new WindowAdapter() {
          @Override
@@ -123,7 +135,7 @@ public class App extends JFrame {
 
                   final String credentials = model.properties.getProperty("current.database.credentials");
                   final RemoteNeoModel neoModel = new RemoteNeoModel(currentDatabaseDir, credentials.split(" ")[0], credentials.split(" ")[1],
-                        model -> System.out.println("closed"));
+                        model -> log.info("closed"));
 
                   SwingUtilities.invokeLater(() -> {
                      model.setDatabase(neoModel);
@@ -132,11 +144,14 @@ public class App extends JFrame {
 
                } else {
 
+                  log.info("Loading embedded database");
+
                   final NeoModel neoModel = new EmbeddedNeoModel(new GraphDatabaseFactory()
                         .newEmbeddedDatabaseBuilder(new File(currentDatabaseDir))
                         .setConfig(GraphDatabaseSettings.allow_store_upgrade, "true")
                         .newGraphDatabase(),
-                        model -> System.out.println("graph closed"));
+                        model -> log.info("graph closed"));
+                  log.info("Loading embedded database DONE");
 
                   SwingUtilities.invokeLater(() -> {
                      model.setDatabase(neoModel);
@@ -169,7 +184,7 @@ public class App extends JFrame {
                      .newEmbeddedDatabaseBuilder(dir)
                      .setConfig(GraphDatabaseSettings.allow_store_upgrade, "true")
                      .newGraphDatabase(),
-                     model -> System.out.println("graph closed"));
+                     model -> log.info("graph closed"));
 
                SwingUtilities.invokeLater(() -> {
                   model.setDatabase(neoModel);
@@ -203,7 +218,7 @@ public class App extends JFrame {
                      if (txtUsername.getText().length() == 0 || txtPassword.getPassword().length == 0) return;
 
                      final RemoteNeoModel remote = new RemoteNeoModel(uri, txtUsername.getText(), new String(txtPassword.getPassword()),
-                           model -> System.out.println("closed"));
+                           model -> log.info("closed"));
 
                      SwingUtilities.invokeLater(() -> {
                         model.setDatabase(remote);
@@ -241,6 +256,7 @@ public class App extends JFrame {
                   plugins.add(new MavenPlugin(App.this));
                   plugins.add(new ANTLRPlugin(App.this));
                   plugins.add(new SSHPlugin(App.this));
+                  plugins.add(new SystemdPlugin(App.this));
                   plugins.add(new RivescriptPlugin(App.this));
                   plugins.add(new DomainPlugin(App.this));
                   plugins.add(new ProjectPlugin(App.this));
@@ -250,6 +266,10 @@ public class App extends JFrame {
                   plugins.add(new JsonPlugin(App.this));
                   plugins.add(new ExcelPlugin(App.this));
                   plugins.add(new ChromeBookmarksPlugin(App.this));
+                  plugins.add(new SwingPlugin(App.this));
+                  plugins.add(new GitPlugin(App.this));
+                  plugins.add(new VertxPlugin(App.this));
+                  plugins.add(new JavaPoetPlugin(App.this));
                }
             }
          });
@@ -301,6 +321,8 @@ public class App extends JFrame {
       private NeoModel graph;
       private TransactionEventHandler<Object> transactionEventHandler;
 
+      public final AtomicBoolean ignoreTransactions = new AtomicBoolean(false);
+
       private Map<String, String> defaultPropertyValues = new TreeMap<String, String>() {{
          put("generator.path", "src/main/java/com/generator/generators");
       }};
@@ -311,7 +333,7 @@ public class App extends JFrame {
             try {
                this.properties.load(new BufferedReader(new FileReader(propertiesFile)));
             } catch (IOException e) {
-               System.out.println("Could not open properties file " + propertiesFile);
+               log.info("Could not open properties file " + propertiesFile);
             }
          }
 
@@ -447,6 +469,9 @@ public class App extends JFrame {
 
             @Override
             public Object beforeCommit(TransactionData transactionData) throws Exception {
+
+               if (ignoreTransactions.get()) return null;
+
                transactionData.deletedNodes().forEach(node -> deletedNodes.add(node.getId()));
                transactionData.deletedRelationships().forEach(relationship -> deletedRelations.add(relationship.getId()));
                transactionData.createdNodes().forEach(addedNodes::add);
@@ -457,6 +482,8 @@ public class App extends JFrame {
 
             @Override
             public void afterCommit(TransactionData transactionData, Object o) {
+
+               if (ignoreTransactions.get()) return;
 
                if (!deletedNodes.isEmpty()) {
                   events.firePropertyChange(NODES_DELETED, new LinkedHashSet<>(deletedNodes));
@@ -482,11 +509,12 @@ public class App extends JFrame {
                   events.firePropertyChange(LABELS_ASSIGNED, new LinkedHashSet<>(assignedLabels));
                   assignedLabels.clear();
                }
+
             }
 
             @Override
             public void afterRollback(TransactionData transactionData, Object o) {
-               System.out.println("rollback");
+               if (ignoreTransactions.get()) return;
             }
          });
 
@@ -523,15 +551,12 @@ public class App extends JFrame {
 
       public void deleteNodes(Set<Node> nodes) {
 
-         transactionHistory.push(new TransactionHistory().addNodes(nodes));
+         final TransactionHistory deletedNodes = new TransactionHistory();
+         for (Node node : nodes)
+            DomainMotif.tryToDeleteNode(node, true);
 
-         for (Node node : nodes) {
-            incoming(node).forEach(Relationship::delete);
-            outgoing(node).forEach(Relationship::delete);
-            node.delete();
-         }
+         transactionHistory.push(deletedNodes);
       }
-
 
       public class TransactionHistory {
 
@@ -579,7 +604,7 @@ public class App extends JFrame {
                   properties.put(s, node.getProperty(s));
 
                if (labels.isEmpty())
-                  System.out.println("warning unrestorable node (no labels)");
+                  log.info("warning unrestorable node (no labels)");
             }
 
             Node restore() {
@@ -628,7 +653,7 @@ public class App extends JFrame {
                final Node source = graph().getNode(UUID.fromString(this.source));
                final Node dst = graph().getNode(UUID.fromString(this.dst));
                if (source == null || dst == null) {
-                  System.out.println("Cannot restore relation : source " + source + " dst " + dst);
+                  log.info("Cannot restore relation : source " + source + " dst " + dst);
                   return;
                }
 
@@ -688,10 +713,17 @@ public class App extends JFrame {
          final Splash splash = new Splash();
 
          new Thread(() -> {
-            final App frame = new App(splash);
-            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            frame.pack();
-            frame.setVisible(true);
+            final App frame;
+            try {
+               frame = new App(splash);
+               frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+               frame.pack();
+               frame.setVisible(true);
+            } catch (IOException e) {
+               e.printStackTrace();
+               System.exit(-1);
+            }
+
          }).start();
       });
    }
@@ -728,7 +760,7 @@ public class App extends JFrame {
 
          final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
          setLocation(screenSize.width / 2 - (size.width / 2), screenSize.height / 2 - (size.height / 2));
-         setVisible(true);
+//         setVisible(true);
       }
 
       void closeSplash() {

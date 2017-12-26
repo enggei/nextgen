@@ -4,6 +4,7 @@ import com.generator.app.App.TransactionAction;
 import com.generator.app.nodes.NeoNode;
 import com.generator.app.nodes.NeoRelationship;
 import com.generator.neo.NeoModel;
+import com.generator.util.NeoUtil;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
@@ -17,6 +18,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 import static com.generator.app.AppEvents.*;
 import static com.generator.util.NeoUtil.*;
@@ -25,6 +28,8 @@ import static com.generator.util.NeoUtil.*;
  * Created 18.07.17.
  */
 class NodeDetailPanel extends JPanel {
+
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(NodeDetailPanel.class);
 
    private App app;
    private Workspace workspace;
@@ -84,7 +89,7 @@ class NodeDetailPanel extends JPanel {
                SwingUtilities.invokeLater(new Runnable() {
                   @Override
                   public void run() {
-                     System.out.println("removing plugin panel for node " + nodeId);
+                     log.info("removing plugin panel for node " + nodeId);
                      content.remove(pluginPanels.remove(nodeId));
                   }
                });
@@ -143,19 +148,27 @@ class NodeDetailPanel extends JPanel {
 
       if (currentNodes.size() < 20) {
          for (NeoNode currentNode : currentNodes) {
+            final AtomicBoolean editorFound = new AtomicBoolean(false);
             for (Plugin plugin : app.plugins) {
                final JComponent editorComponent = plugin.getEditorFor(currentNode);
                if (editorComponent != null) {
+                  editorFound.set(true);
                   content.add(getNameOrLabelFrom(currentNode.getNode()), editorComponent);
                   pluginPanels.put(currentNode.id(), editorComponent);
                }
+            }
+
+            if (!editorFound.get()) {
+               final JComponent editorComponent = new DefaultNodeEditor(currentNode);
+               content.add(getNameOrLabelFrom(currentNode.getNode()), editorComponent);
+               pluginPanels.put(currentNode.id(), editorComponent);
             }
          }
       }
 
       // try to select the tab that was open,
       // or show the last-tab (usually the single node selected, and therefore the one user wants to see)
-      if (selectedIndex>-1 && content.getTabCount() > selectedIndex) {
+      if (selectedIndex > -1 && content.getTabCount() > selectedIndex) {
          content.setSelectedIndex(selectedIndex);
       } else {
          if (content.getTabCount() > maxIndex)
@@ -166,6 +179,52 @@ class NodeDetailPanel extends JPanel {
          content.revalidate();
          content.repaint();
       });
+   }
+
+   private final class DefaultNodeEditor extends JPanel {
+
+      private final JTextArea txtEditor = SwingUtil.newTextArea();
+
+      DefaultNodeEditor(NeoNode currentNode) {
+         super(new BorderLayout());
+
+         txtEditor.setText(nodeInfo(currentNode.getNode()));
+         txtEditor.setCaretPosition(0);
+
+         add(new JScrollPane(txtEditor), BorderLayout.CENTER);
+      }
+
+      private String nodeInfo(Node node) {
+         final StringBuilder out = new StringBuilder();
+
+         out.append(getNameAndLabelsFrom(node)).append("\n");
+
+         out.append("\nPROPERTIES:");
+         for (String propertyKey : node.getPropertyKeys()) {
+            out.append("\n\t").append(propertyKey).append(" : ").append("password".equals(propertyKey.toLowerCase()) ? "[PASSWORD]" : node.getProperty(propertyKey));
+         }
+
+         out.append("\n\nOUTGOING:");
+         NeoUtil.outgoing(node).forEach(relationship -> out.append("\n\t--> ").append(relationshipInfo(relationship)).append(" --> ").append(getNameAndLabelsFrom(other(node, relationship))));
+
+         out.append("\n\nINCOMING:");
+         NeoUtil.incoming(node).forEach(relationship -> out.append("\n\t <-- ").append(relationshipInfo(relationship)).append(" <-- ").append(getNameAndLabelsFrom(other(node, relationship))));
+
+
+         return out.toString();
+      }
+
+      private String relationshipInfo(Relationship relationship) {
+         final StringBuilder out = new StringBuilder(relationship.getType().name());
+         boolean first = true;
+         for (String propertyKey : relationship.getPropertyKeys()) {
+            if (first) out.append(" [");
+            out.append(" ").append(propertyKey).append(" : ").append(relationship.getProperty(propertyKey));
+            first = false;
+         }
+         if (!first) out.append("]");
+         return out.toString();
+      }
    }
 
    private final class LabelsPanel extends JPanel {

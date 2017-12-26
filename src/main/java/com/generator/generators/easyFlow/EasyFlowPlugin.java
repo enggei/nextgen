@@ -11,7 +11,6 @@ import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 
 import javax.swing.*;
@@ -35,34 +34,10 @@ import static org.neo4j.graphdb.Direction.OUTGOING;
  */
 public class EasyFlowPlugin extends EasyFlowDomainPlugin {
 
-//   private final Node flowNode;
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(EasyFlowPlugin.class);
 
    public EasyFlowPlugin(App app) {
       super(app);
-
-//      final Node domainNode = getGraph().findOrCreate(Domain, AppMotif.Properties.name.name(), "EasyFlow");
-//      flowNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), Flow.name());
-//      DomainMotif.newEntityProperty(getGraph(), flowNode, AppMotif.Properties.name.name());
-//      DomainMotif.newEntityProperty(getGraph(), flowNode, Properties.extending.name());
-//      relate(domainNode, flowNode, DomainPlugin.Relations.ENTITY);
-//
-//      final Node stateNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), State.name());
-//      DomainMotif.newEntityProperty(getGraph(), stateNode, AppMotif.Properties.name.name());
-//
-//      final Node contextPropertyNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), ContextProperty.name());
-//      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, AppMotif.Properties.name.name());
-//      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, Properties.modifier.name());
-//      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, Properties.comment.name());
-//      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, Properties.type.name());
-//      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, Properties.value.name());
-//
-//      final Node eventNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), Event.name());
-//      DomainMotif.newEntityProperty(getGraph(), eventNode, AppMotif.Properties.name.name());
-//
-//      DomainMotif.newEntityRelation(getGraph(), flowNode, Relations.FROM.name(), DomainPlugin.RelationCardinality.SINGLE, stateNode);
-//      DomainMotif.newEntityRelation(getGraph(), flowNode, Relations.CONTEXT_PROPERTY.name(), DomainPlugin.RelationCardinality.LIST, contextPropertyNode);
-//      DomainMotif.newEntityRelation(getGraph(), stateNode, Relations.ON.name(), DomainPlugin.RelationCardinality.LIST, eventNode);
-//      DomainMotif.newEntityRelation(getGraph(), eventNode, Relations.TO.name(), DomainPlugin.RelationCardinality.SINGLE, stateNode);
    }
 
    @Override
@@ -77,41 +52,20 @@ public class EasyFlowPlugin extends EasyFlowDomainPlugin {
             final String name = SwingUtil.showInputDialog("Name", app);
             if (name == null || name.length() == 0) return;
 
-            final Node newNode = newFlow(name,null);
-//            flowNode.createRelationshipTo(newNode, DomainPlugin.Relations.INSTANCE);
-
-            // set name-property = name
-            relate(newNode, DomainMotif.newValueNode(getGraph(), name), RelationshipType.withName(AppMotif.Properties.name.name()));
-            fireNodesLoaded(newNode);
+            fireNodesLoaded(newFlow(name, null, false));
          }
       });
-
-//      menu.add(new App.TransactionAction("Show domain", app) {
-//         @Override
-//         public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-//            fireNodesLoaded(flowNode);
-//         }
-//      });
    }
 
    @Override
-   public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
-
-      final Node node = neoNode.getNode();
-
-      if (isFlow(node)) {
-         incomingRENDERER(neoNode.getNode(), (rendererRelationship, other) -> pop.add(new App.TransactionAction("Render FSM", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-               renderEasyFlow(rendererRelationship, node);
-            }
-         }));
-      }
-   }
-
-   @Override
-   public JComponent getEditorFor(NeoNode neoNode) {
-      return null;
+   protected void handleFlow(JPopupMenu pop, NeoNode flowNode, Set<NeoNode> selectedNodes) {
+      incomingRENDERER(flowNode.getNode(), (rendererRelationship, other) -> pop.add(new App.TransactionAction("Render FSM", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+            renderEasyFlow(rendererRelationship, flowNode.getNode());
+         }
+      }));
+      super.handleFlow(pop, flowNode, selectedNodes);
    }
 
    public static void renderEasyFlow(Relationship rendererRelationship, Node node) {
@@ -202,6 +156,11 @@ public class EasyFlowPlugin extends EasyFlowDomainPlugin {
          final String extendsName = DomainMotif.getEntityProperty(node, Properties.extending.name());
          if (extendsName != null) fsm.setExtends(extendsName);
 
+         // if handling jsonMessages, add methods for this:
+         final Boolean isHandlingJsonMessages = hasIsHandlingJsonMessagesProperty(node);
+         final EasyFlowGroup.jsonMessageHandlerST jsonMessageHandlerST = group.newjsonMessageHandler().
+               setName(name);
+
          for (String state : states) {
             fsm.addBindingsValue(
                   group.newdeclaration().
@@ -210,7 +169,13 @@ public class EasyFlowPlugin extends EasyFlowDomainPlugin {
                   group.newimpl().
                         setName(name).
                         setState(state));
+
+            if (isHandlingJsonMessages)
+               jsonMessageHandlerST.addStatesValue(state);
          }
+
+         if (isHandlingJsonMessages)
+            fsm.setIsHandlingJsonMessages(jsonMessageHandlerST);
 
          result = fsm.toString();
       }
@@ -260,7 +225,7 @@ public class EasyFlowPlugin extends EasyFlowDomainPlugin {
                parent.addTransitsValue(transit);
 
             } catch (Exception e) {
-               System.out.println(eventNode.getProperty(AppMotif.Properties.name.name()) + " " + relation.name() + " x " + types(eventNode.getRelationships(relation, OUTGOING)));
+               log.info(eventNode.getProperty(AppMotif.Properties.name.name()) + " " + relation.name() + " x " + types(eventNode.getRelationships(relation, OUTGOING)));
             }
          }
       }

@@ -6,6 +6,8 @@ import org.tensorflow.Tensor;
 import org.tensorflow.TensorFlow;
 
 public class HelloTF {
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(HelloTF.class);
+
    public static void main(String[] args) throws Exception {
       try (Graph g = new Graph()) {
          final String value = "Hello from " + TensorFlow.version();
@@ -20,7 +22,7 @@ public class HelloTF {
          // Execute the "MyConst" operation in a Session.
          try (Session s = new Session(g);
               Tensor output = s.runner().fetch("MyConst").run().get(0)) {
-            System.out.println(new String(output.bytesValue(), "UTF-8"));
+            log.info(new String(output.bytesValue(), "UTF-8"));
          }
       }
    }

@@ -6,6 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class CPP14NeoListener extends CPP14BaseListener {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(CPP14NeoListener.class);
+
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
@@ -24,7 +26,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 		if (!nodeStack.isEmpty())
       	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.getProperty("text"));
+		if (debug) log.debug(delim.toString() + node.getProperty("text"));
 		delim.append("\t");
    }
 
@@ -39,1397 +41,11 @@ public class CPP14NeoListener extends CPP14BaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inTranslationunit = new java.util.Stack<>();
-
-	@Override
-	public void enterTranslationunit(com.generator.generators.cpp.parser.CPP14Parser.TranslationunitContext arg) {
-		final Node node = model.findOrCreate(Label.label("Translationunit"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inTranslationunit.push(true);
-	}
-
-	public void exitTranslationunit(com.generator.generators.cpp.parser.CPP14Parser.TranslationunitContext arg) {
-		onExit();
-		this.inTranslationunit.pop();
-	}
-
-	public boolean inTranslationunit() {
-      return !inTranslationunit.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPrimaryexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterPrimaryexpression(com.generator.generators.cpp.parser.CPP14Parser.PrimaryexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Primaryexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inPrimaryexpression.push(true);
-	}
-
-	public void exitPrimaryexpression(com.generator.generators.cpp.parser.CPP14Parser.PrimaryexpressionContext arg) {
-		onExit();
-		this.inPrimaryexpression.pop();
-	}
-
-	public boolean inPrimaryexpression() {
-      return !inPrimaryexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inIdexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterIdexpression(com.generator.generators.cpp.parser.CPP14Parser.IdexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Idexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inIdexpression.push(true);
-	}
-
-	public void exitIdexpression(com.generator.generators.cpp.parser.CPP14Parser.IdexpressionContext arg) {
-		onExit();
-		this.inIdexpression.pop();
-	}
-
-	public boolean inIdexpression() {
-      return !inIdexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUnqualifiedid = new java.util.Stack<>();
-
-	@Override
-	public void enterUnqualifiedid(com.generator.generators.cpp.parser.CPP14Parser.UnqualifiedidContext arg) {
-		final Node node = model.findOrCreate(Label.label("Unqualifiedid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inUnqualifiedid.push(true);
-	}
-
-	public void exitUnqualifiedid(com.generator.generators.cpp.parser.CPP14Parser.UnqualifiedidContext arg) {
-		onExit();
-		this.inUnqualifiedid.pop();
-	}
-
-	public boolean inUnqualifiedid() {
-      return !inUnqualifiedid.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inQualifiedid = new java.util.Stack<>();
-
-	@Override
-	public void enterQualifiedid(com.generator.generators.cpp.parser.CPP14Parser.QualifiedidContext arg) {
-		final Node node = model.findOrCreate(Label.label("Qualifiedid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inQualifiedid.push(true);
-	}
-
-	public void exitQualifiedid(com.generator.generators.cpp.parser.CPP14Parser.QualifiedidContext arg) {
-		onExit();
-		this.inQualifiedid.pop();
-	}
-
-	public boolean inQualifiedid() {
-      return !inQualifiedid.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNestednamespecifier = new java.util.Stack<>();
-
-	@Override
-	public void enterNestednamespecifier(com.generator.generators.cpp.parser.CPP14Parser.NestednamespecifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Nestednamespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inNestednamespecifier.push(true);
-	}
-
-	public void exitNestednamespecifier(com.generator.generators.cpp.parser.CPP14Parser.NestednamespecifierContext arg) {
-		onExit();
-		this.inNestednamespecifier.pop();
-	}
-
-	public boolean inNestednamespecifier() {
-      return !inNestednamespecifier.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLambdaexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterLambdaexpression(com.generator.generators.cpp.parser.CPP14Parser.LambdaexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Lambdaexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inLambdaexpression.push(true);
-	}
-
-	public void exitLambdaexpression(com.generator.generators.cpp.parser.CPP14Parser.LambdaexpressionContext arg) {
-		onExit();
-		this.inLambdaexpression.pop();
-	}
-
-	public boolean inLambdaexpression() {
-      return !inLambdaexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLambdaintroducer = new java.util.Stack<>();
-
-	@Override
-	public void enterLambdaintroducer(com.generator.generators.cpp.parser.CPP14Parser.LambdaintroducerContext arg) {
-		final Node node = model.findOrCreate(Label.label("Lambdaintroducer"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inLambdaintroducer.push(true);
-	}
-
-	public void exitLambdaintroducer(com.generator.generators.cpp.parser.CPP14Parser.LambdaintroducerContext arg) {
-		onExit();
-		this.inLambdaintroducer.pop();
-	}
-
-	public boolean inLambdaintroducer() {
-      return !inLambdaintroducer.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLambdacapture = new java.util.Stack<>();
-
-	@Override
-	public void enterLambdacapture(com.generator.generators.cpp.parser.CPP14Parser.LambdacaptureContext arg) {
-		final Node node = model.findOrCreate(Label.label("Lambdacapture"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inLambdacapture.push(true);
-	}
-
-	public void exitLambdacapture(com.generator.generators.cpp.parser.CPP14Parser.LambdacaptureContext arg) {
-		onExit();
-		this.inLambdacapture.pop();
-	}
-
-	public boolean inLambdacapture() {
-      return !inLambdacapture.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inCapturedefault = new java.util.Stack<>();
-
-	@Override
-	public void enterCapturedefault(com.generator.generators.cpp.parser.CPP14Parser.CapturedefaultContext arg) {
-		final Node node = model.findOrCreate(Label.label("Capturedefault"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inCapturedefault.push(true);
-	}
-
-	public void exitCapturedefault(com.generator.generators.cpp.parser.CPP14Parser.CapturedefaultContext arg) {
-		onExit();
-		this.inCapturedefault.pop();
-	}
-
-	public boolean inCapturedefault() {
-      return !inCapturedefault.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inCapturelist = new java.util.Stack<>();
-
-	@Override
-	public void enterCapturelist(com.generator.generators.cpp.parser.CPP14Parser.CapturelistContext arg) {
-		final Node node = model.findOrCreate(Label.label("Capturelist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inCapturelist.push(true);
-	}
-
-	public void exitCapturelist(com.generator.generators.cpp.parser.CPP14Parser.CapturelistContext arg) {
-		onExit();
-		this.inCapturelist.pop();
-	}
-
-	public boolean inCapturelist() {
-      return !inCapturelist.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inCapture = new java.util.Stack<>();
-
-	@Override
-	public void enterCapture(com.generator.generators.cpp.parser.CPP14Parser.CaptureContext arg) {
-		final Node node = model.findOrCreate(Label.label("Capture"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inCapture.push(true);
-	}
-
-	public void exitCapture(com.generator.generators.cpp.parser.CPP14Parser.CaptureContext arg) {
-		onExit();
-		this.inCapture.pop();
-	}
-
-	public boolean inCapture() {
-      return !inCapture.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSimplecapture = new java.util.Stack<>();
-
-	@Override
-	public void enterSimplecapture(com.generator.generators.cpp.parser.CPP14Parser.SimplecaptureContext arg) {
-		final Node node = model.findOrCreate(Label.label("Simplecapture"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inSimplecapture.push(true);
-	}
-
-	public void exitSimplecapture(com.generator.generators.cpp.parser.CPP14Parser.SimplecaptureContext arg) {
-		onExit();
-		this.inSimplecapture.pop();
-	}
-
-	public boolean inSimplecapture() {
-      return !inSimplecapture.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inInitcapture = new java.util.Stack<>();
-
-	@Override
-	public void enterInitcapture(com.generator.generators.cpp.parser.CPP14Parser.InitcaptureContext arg) {
-		final Node node = model.findOrCreate(Label.label("Initcapture"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inInitcapture.push(true);
-	}
-
-	public void exitInitcapture(com.generator.generators.cpp.parser.CPP14Parser.InitcaptureContext arg) {
-		onExit();
-		this.inInitcapture.pop();
-	}
-
-	public boolean inInitcapture() {
-      return !inInitcapture.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLambdadeclarator = new java.util.Stack<>();
-
-	@Override
-	public void enterLambdadeclarator(com.generator.generators.cpp.parser.CPP14Parser.LambdadeclaratorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Lambdadeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inLambdadeclarator.push(true);
-	}
-
-	public void exitLambdadeclarator(com.generator.generators.cpp.parser.CPP14Parser.LambdadeclaratorContext arg) {
-		onExit();
-		this.inLambdadeclarator.pop();
-	}
-
-	public boolean inLambdadeclarator() {
-      return !inLambdadeclarator.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPostfixexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterPostfixexpression(com.generator.generators.cpp.parser.CPP14Parser.PostfixexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Postfixexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inPostfixexpression.push(true);
-	}
-
-	public void exitPostfixexpression(com.generator.generators.cpp.parser.CPP14Parser.PostfixexpressionContext arg) {
-		onExit();
-		this.inPostfixexpression.pop();
-	}
-
-	public boolean inPostfixexpression() {
-      return !inPostfixexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inExpressionlist = new java.util.Stack<>();
-
-	@Override
-	public void enterExpressionlist(com.generator.generators.cpp.parser.CPP14Parser.ExpressionlistContext arg) {
-		final Node node = model.findOrCreate(Label.label("Expressionlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inExpressionlist.push(true);
-	}
-
-	public void exitExpressionlist(com.generator.generators.cpp.parser.CPP14Parser.ExpressionlistContext arg) {
-		onExit();
-		this.inExpressionlist.pop();
-	}
-
-	public boolean inExpressionlist() {
-      return !inExpressionlist.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPseudodestructorname = new java.util.Stack<>();
-
-	@Override
-	public void enterPseudodestructorname(com.generator.generators.cpp.parser.CPP14Parser.PseudodestructornameContext arg) {
-		final Node node = model.findOrCreate(Label.label("Pseudodestructorname"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inPseudodestructorname.push(true);
-	}
-
-	public void exitPseudodestructorname(com.generator.generators.cpp.parser.CPP14Parser.PseudodestructornameContext arg) {
-		onExit();
-		this.inPseudodestructorname.pop();
-	}
-
-	public boolean inPseudodestructorname() {
-      return !inPseudodestructorname.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUnaryexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterUnaryexpression(com.generator.generators.cpp.parser.CPP14Parser.UnaryexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Unaryexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inUnaryexpression.push(true);
-	}
-
-	public void exitUnaryexpression(com.generator.generators.cpp.parser.CPP14Parser.UnaryexpressionContext arg) {
-		onExit();
-		this.inUnaryexpression.pop();
-	}
-
-	public boolean inUnaryexpression() {
-      return !inUnaryexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUnaryoperator = new java.util.Stack<>();
-
-	@Override
-	public void enterUnaryoperator(com.generator.generators.cpp.parser.CPP14Parser.UnaryoperatorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Unaryoperator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inUnaryoperator.push(true);
-	}
-
-	public void exitUnaryoperator(com.generator.generators.cpp.parser.CPP14Parser.UnaryoperatorContext arg) {
-		onExit();
-		this.inUnaryoperator.pop();
-	}
-
-	public boolean inUnaryoperator() {
-      return !inUnaryoperator.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNewexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterNewexpression(com.generator.generators.cpp.parser.CPP14Parser.NewexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Newexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inNewexpression.push(true);
-	}
-
-	public void exitNewexpression(com.generator.generators.cpp.parser.CPP14Parser.NewexpressionContext arg) {
-		onExit();
-		this.inNewexpression.pop();
-	}
-
-	public boolean inNewexpression() {
-      return !inNewexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNewplacement = new java.util.Stack<>();
-
-	@Override
-	public void enterNewplacement(com.generator.generators.cpp.parser.CPP14Parser.NewplacementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Newplacement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inNewplacement.push(true);
-	}
-
-	public void exitNewplacement(com.generator.generators.cpp.parser.CPP14Parser.NewplacementContext arg) {
-		onExit();
-		this.inNewplacement.pop();
-	}
-
-	public boolean inNewplacement() {
-      return !inNewplacement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNewtypeid = new java.util.Stack<>();
-
-	@Override
-	public void enterNewtypeid(com.generator.generators.cpp.parser.CPP14Parser.NewtypeidContext arg) {
-		final Node node = model.findOrCreate(Label.label("Newtypeid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inNewtypeid.push(true);
-	}
-
-	public void exitNewtypeid(com.generator.generators.cpp.parser.CPP14Parser.NewtypeidContext arg) {
-		onExit();
-		this.inNewtypeid.pop();
-	}
-
-	public boolean inNewtypeid() {
-      return !inNewtypeid.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNewdeclarator = new java.util.Stack<>();
-
-	@Override
-	public void enterNewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NewdeclaratorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Newdeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inNewdeclarator.push(true);
-	}
-
-	public void exitNewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NewdeclaratorContext arg) {
-		onExit();
-		this.inNewdeclarator.pop();
-	}
-
-	public boolean inNewdeclarator() {
-      return !inNewdeclarator.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNoptrnewdeclarator = new java.util.Stack<>();
-
-	@Override
-	public void enterNoptrnewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrnewdeclaratorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Noptrnewdeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inNoptrnewdeclarator.push(true);
-	}
-
-	public void exitNoptrnewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrnewdeclaratorContext arg) {
-		onExit();
-		this.inNoptrnewdeclarator.pop();
-	}
-
-	public boolean inNoptrnewdeclarator() {
-      return !inNoptrnewdeclarator.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNewinitializer = new java.util.Stack<>();
-
-	@Override
-	public void enterNewinitializer(com.generator.generators.cpp.parser.CPP14Parser.NewinitializerContext arg) {
-		final Node node = model.findOrCreate(Label.label("Newinitializer"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inNewinitializer.push(true);
-	}
-
-	public void exitNewinitializer(com.generator.generators.cpp.parser.CPP14Parser.NewinitializerContext arg) {
-		onExit();
-		this.inNewinitializer.pop();
-	}
-
-	public boolean inNewinitializer() {
-      return !inNewinitializer.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDeleteexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterDeleteexpression(com.generator.generators.cpp.parser.CPP14Parser.DeleteexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Deleteexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inDeleteexpression.push(true);
-	}
-
-	public void exitDeleteexpression(com.generator.generators.cpp.parser.CPP14Parser.DeleteexpressionContext arg) {
-		onExit();
-		this.inDeleteexpression.pop();
-	}
-
-	public boolean inDeleteexpression() {
-      return !inDeleteexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNoexceptexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterNoexceptexpression(com.generator.generators.cpp.parser.CPP14Parser.NoexceptexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Noexceptexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inNoexceptexpression.push(true);
-	}
-
-	public void exitNoexceptexpression(com.generator.generators.cpp.parser.CPP14Parser.NoexceptexpressionContext arg) {
-		onExit();
-		this.inNoexceptexpression.pop();
-	}
-
-	public boolean inNoexceptexpression() {
-      return !inNoexceptexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inCastexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterCastexpression(com.generator.generators.cpp.parser.CPP14Parser.CastexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Castexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inCastexpression.push(true);
-	}
-
-	public void exitCastexpression(com.generator.generators.cpp.parser.CPP14Parser.CastexpressionContext arg) {
-		onExit();
-		this.inCastexpression.pop();
-	}
-
-	public boolean inCastexpression() {
-      return !inCastexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPmexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterPmexpression(com.generator.generators.cpp.parser.CPP14Parser.PmexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Pmexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inPmexpression.push(true);
-	}
-
-	public void exitPmexpression(com.generator.generators.cpp.parser.CPP14Parser.PmexpressionContext arg) {
-		onExit();
-		this.inPmexpression.pop();
-	}
-
-	public boolean inPmexpression() {
-      return !inPmexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inMultiplicativeexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterMultiplicativeexpression(com.generator.generators.cpp.parser.CPP14Parser.MultiplicativeexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Multiplicativeexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inMultiplicativeexpression.push(true);
-	}
-
-	public void exitMultiplicativeexpression(com.generator.generators.cpp.parser.CPP14Parser.MultiplicativeexpressionContext arg) {
-		onExit();
-		this.inMultiplicativeexpression.pop();
-	}
-
-	public boolean inMultiplicativeexpression() {
-      return !inMultiplicativeexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAdditiveexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterAdditiveexpression(com.generator.generators.cpp.parser.CPP14Parser.AdditiveexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Additiveexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inAdditiveexpression.push(true);
-	}
-
-	public void exitAdditiveexpression(com.generator.generators.cpp.parser.CPP14Parser.AdditiveexpressionContext arg) {
-		onExit();
-		this.inAdditiveexpression.pop();
-	}
-
-	public boolean inAdditiveexpression() {
-      return !inAdditiveexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inShiftexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterShiftexpression(com.generator.generators.cpp.parser.CPP14Parser.ShiftexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Shiftexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inShiftexpression.push(true);
-	}
-
-	public void exitShiftexpression(com.generator.generators.cpp.parser.CPP14Parser.ShiftexpressionContext arg) {
-		onExit();
-		this.inShiftexpression.pop();
-	}
-
-	public boolean inShiftexpression() {
-      return !inShiftexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inRelationalexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterRelationalexpression(com.generator.generators.cpp.parser.CPP14Parser.RelationalexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Relationalexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inRelationalexpression.push(true);
-	}
-
-	public void exitRelationalexpression(com.generator.generators.cpp.parser.CPP14Parser.RelationalexpressionContext arg) {
-		onExit();
-		this.inRelationalexpression.pop();
-	}
-
-	public boolean inRelationalexpression() {
-      return !inRelationalexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inEqualityexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterEqualityexpression(com.generator.generators.cpp.parser.CPP14Parser.EqualityexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Equalityexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inEqualityexpression.push(true);
-	}
-
-	public void exitEqualityexpression(com.generator.generators.cpp.parser.CPP14Parser.EqualityexpressionContext arg) {
-		onExit();
-		this.inEqualityexpression.pop();
-	}
-
-	public boolean inEqualityexpression() {
-      return !inEqualityexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAndexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterAndexpression(com.generator.generators.cpp.parser.CPP14Parser.AndexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Andexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inAndexpression.push(true);
-	}
-
-	public void exitAndexpression(com.generator.generators.cpp.parser.CPP14Parser.AndexpressionContext arg) {
-		onExit();
-		this.inAndexpression.pop();
-	}
-
-	public boolean inAndexpression() {
-      return !inAndexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inExclusiveorexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterExclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.ExclusiveorexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Exclusiveorexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inExclusiveorexpression.push(true);
-	}
-
-	public void exitExclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.ExclusiveorexpressionContext arg) {
-		onExit();
-		this.inExclusiveorexpression.pop();
-	}
-
-	public boolean inExclusiveorexpression() {
-      return !inExclusiveorexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inInclusiveorexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterInclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.InclusiveorexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Inclusiveorexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inInclusiveorexpression.push(true);
-	}
-
-	public void exitInclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.InclusiveorexpressionContext arg) {
-		onExit();
-		this.inInclusiveorexpression.pop();
-	}
-
-	public boolean inInclusiveorexpression() {
-      return !inInclusiveorexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLogicalandexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterLogicalandexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalandexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Logicalandexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inLogicalandexpression.push(true);
-	}
-
-	public void exitLogicalandexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalandexpressionContext arg) {
-		onExit();
-		this.inLogicalandexpression.pop();
-	}
-
-	public boolean inLogicalandexpression() {
-      return !inLogicalandexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLogicalorexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterLogicalorexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalorexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Logicalorexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inLogicalorexpression.push(true);
-	}
-
-	public void exitLogicalorexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalorexpressionContext arg) {
-		onExit();
-		this.inLogicalorexpression.pop();
-	}
-
-	public boolean inLogicalorexpression() {
-      return !inLogicalorexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inConditionalexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterConditionalexpression(com.generator.generators.cpp.parser.CPP14Parser.ConditionalexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Conditionalexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inConditionalexpression.push(true);
-	}
-
-	public void exitConditionalexpression(com.generator.generators.cpp.parser.CPP14Parser.ConditionalexpressionContext arg) {
-		onExit();
-		this.inConditionalexpression.pop();
-	}
-
-	public boolean inConditionalexpression() {
-      return !inConditionalexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAssignmentexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterAssignmentexpression(com.generator.generators.cpp.parser.CPP14Parser.AssignmentexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Assignmentexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inAssignmentexpression.push(true);
-	}
-
-	public void exitAssignmentexpression(com.generator.generators.cpp.parser.CPP14Parser.AssignmentexpressionContext arg) {
-		onExit();
-		this.inAssignmentexpression.pop();
-	}
-
-	public boolean inAssignmentexpression() {
-      return !inAssignmentexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAssignmentoperator = new java.util.Stack<>();
-
-	@Override
-	public void enterAssignmentoperator(com.generator.generators.cpp.parser.CPP14Parser.AssignmentoperatorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Assignmentoperator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inAssignmentoperator.push(true);
-	}
-
-	public void exitAssignmentoperator(com.generator.generators.cpp.parser.CPP14Parser.AssignmentoperatorContext arg) {
-		onExit();
-		this.inAssignmentoperator.pop();
-	}
-
-	public boolean inAssignmentoperator() {
-      return !inAssignmentoperator.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
-
-	@Override
-	public void enterExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inExpression.push(true);
-	}
-
-	public void exitExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
-		onExit();
-		this.inExpression.pop();
-	}
-
-	public boolean inExpression() {
-      return !inExpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inConstantexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterConstantexpression(com.generator.generators.cpp.parser.CPP14Parser.ConstantexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Constantexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inConstantexpression.push(true);
-	}
-
-	public void exitConstantexpression(com.generator.generators.cpp.parser.CPP14Parser.ConstantexpressionContext arg) {
-		onExit();
-		this.inConstantexpression.pop();
-	}
-
-	public boolean inConstantexpression() {
-      return !inConstantexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
-
-	@Override
-	public void enterStatement(com.generator.generators.cpp.parser.CPP14Parser.StatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inStatement.push(true);
-	}
-
-	public void exitStatement(com.generator.generators.cpp.parser.CPP14Parser.StatementContext arg) {
-		onExit();
-		this.inStatement.pop();
-	}
-
-	public boolean inStatement() {
-      return !inStatement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLabeledstatement = new java.util.Stack<>();
-
-	@Override
-	public void enterLabeledstatement(com.generator.generators.cpp.parser.CPP14Parser.LabeledstatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Labeledstatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inLabeledstatement.push(true);
-	}
-
-	public void exitLabeledstatement(com.generator.generators.cpp.parser.CPP14Parser.LabeledstatementContext arg) {
-		onExit();
-		this.inLabeledstatement.pop();
-	}
-
-	public boolean inLabeledstatement() {
-      return !inLabeledstatement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inExpressionstatement = new java.util.Stack<>();
-
-	@Override
-	public void enterExpressionstatement(com.generator.generators.cpp.parser.CPP14Parser.ExpressionstatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Expressionstatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inExpressionstatement.push(true);
-	}
-
-	public void exitExpressionstatement(com.generator.generators.cpp.parser.CPP14Parser.ExpressionstatementContext arg) {
-		onExit();
-		this.inExpressionstatement.pop();
-	}
-
-	public boolean inExpressionstatement() {
-      return !inExpressionstatement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inCompoundstatement = new java.util.Stack<>();
-
-	@Override
-	public void enterCompoundstatement(com.generator.generators.cpp.parser.CPP14Parser.CompoundstatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Compoundstatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inCompoundstatement.push(true);
-	}
-
-	public void exitCompoundstatement(com.generator.generators.cpp.parser.CPP14Parser.CompoundstatementContext arg) {
-		onExit();
-		this.inCompoundstatement.pop();
-	}
-
-	public boolean inCompoundstatement() {
-      return !inCompoundstatement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inStatementseq = new java.util.Stack<>();
-
-	@Override
-	public void enterStatementseq(com.generator.generators.cpp.parser.CPP14Parser.StatementseqContext arg) {
-		final Node node = model.findOrCreate(Label.label("Statementseq"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inStatementseq.push(true);
-	}
-
-	public void exitStatementseq(com.generator.generators.cpp.parser.CPP14Parser.StatementseqContext arg) {
-		onExit();
-		this.inStatementseq.pop();
-	}
-
-	public boolean inStatementseq() {
-      return !inStatementseq.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSelectionstatement = new java.util.Stack<>();
-
-	@Override
-	public void enterSelectionstatement(com.generator.generators.cpp.parser.CPP14Parser.SelectionstatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Selectionstatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inSelectionstatement.push(true);
-	}
-
-	public void exitSelectionstatement(com.generator.generators.cpp.parser.CPP14Parser.SelectionstatementContext arg) {
-		onExit();
-		this.inSelectionstatement.pop();
-	}
-
-	public boolean inSelectionstatement() {
-      return !inSelectionstatement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inCondition = new java.util.Stack<>();
-
-	@Override
-	public void enterCondition(com.generator.generators.cpp.parser.CPP14Parser.ConditionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Condition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inCondition.push(true);
-	}
-
-	public void exitCondition(com.generator.generators.cpp.parser.CPP14Parser.ConditionContext arg) {
-		onExit();
-		this.inCondition.pop();
-	}
-
-	public boolean inCondition() {
-      return !inCondition.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inIterationstatement = new java.util.Stack<>();
-
-	@Override
-	public void enterIterationstatement(com.generator.generators.cpp.parser.CPP14Parser.IterationstatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Iterationstatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inIterationstatement.push(true);
-	}
-
-	public void exitIterationstatement(com.generator.generators.cpp.parser.CPP14Parser.IterationstatementContext arg) {
-		onExit();
-		this.inIterationstatement.pop();
-	}
-
-	public boolean inIterationstatement() {
-      return !inIterationstatement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inForinitstatement = new java.util.Stack<>();
-
-	@Override
-	public void enterForinitstatement(com.generator.generators.cpp.parser.CPP14Parser.ForinitstatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Forinitstatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inForinitstatement.push(true);
-	}
-
-	public void exitForinitstatement(com.generator.generators.cpp.parser.CPP14Parser.ForinitstatementContext arg) {
-		onExit();
-		this.inForinitstatement.pop();
-	}
-
-	public boolean inForinitstatement() {
-      return !inForinitstatement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inForrangedeclaration = new java.util.Stack<>();
-
-	@Override
-	public void enterForrangedeclaration(com.generator.generators.cpp.parser.CPP14Parser.ForrangedeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Forrangedeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inForrangedeclaration.push(true);
-	}
-
-	public void exitForrangedeclaration(com.generator.generators.cpp.parser.CPP14Parser.ForrangedeclarationContext arg) {
-		onExit();
-		this.inForrangedeclaration.pop();
-	}
-
-	public boolean inForrangedeclaration() {
-      return !inForrangedeclaration.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inForrangeinitializer = new java.util.Stack<>();
-
-	@Override
-	public void enterForrangeinitializer(com.generator.generators.cpp.parser.CPP14Parser.ForrangeinitializerContext arg) {
-		final Node node = model.findOrCreate(Label.label("Forrangeinitializer"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inForrangeinitializer.push(true);
-	}
-
-	public void exitForrangeinitializer(com.generator.generators.cpp.parser.CPP14Parser.ForrangeinitializerContext arg) {
-		onExit();
-		this.inForrangeinitializer.pop();
-	}
-
-	public boolean inForrangeinitializer() {
-      return !inForrangeinitializer.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inJumpstatement = new java.util.Stack<>();
-
-	@Override
-	public void enterJumpstatement(com.generator.generators.cpp.parser.CPP14Parser.JumpstatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Jumpstatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inJumpstatement.push(true);
-	}
-
-	public void exitJumpstatement(com.generator.generators.cpp.parser.CPP14Parser.JumpstatementContext arg) {
-		onExit();
-		this.inJumpstatement.pop();
-	}
-
-	public boolean inJumpstatement() {
-      return !inJumpstatement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDeclarationstatement = new java.util.Stack<>();
-
-	@Override
-	public void enterDeclarationstatement(com.generator.generators.cpp.parser.CPP14Parser.DeclarationstatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Declarationstatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inDeclarationstatement.push(true);
-	}
-
-	public void exitDeclarationstatement(com.generator.generators.cpp.parser.CPP14Parser.DeclarationstatementContext arg) {
-		onExit();
-		this.inDeclarationstatement.pop();
-	}
-
-	public boolean inDeclarationstatement() {
-      return !inDeclarationstatement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDeclarationseq = new java.util.Stack<>();
-
-	@Override
-	public void enterDeclarationseq(com.generator.generators.cpp.parser.CPP14Parser.DeclarationseqContext arg) {
-		final Node node = model.findOrCreate(Label.label("Declarationseq"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inDeclarationseq.push(true);
-	}
-
-	public void exitDeclarationseq(com.generator.generators.cpp.parser.CPP14Parser.DeclarationseqContext arg) {
-		onExit();
-		this.inDeclarationseq.pop();
-	}
-
-	public boolean inDeclarationseq() {
-      return !inDeclarationseq.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDeclaration = new java.util.Stack<>();
-
-	@Override
-	public void enterDeclaration(com.generator.generators.cpp.parser.CPP14Parser.DeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Declaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inDeclaration.push(true);
-	}
-
-	public void exitDeclaration(com.generator.generators.cpp.parser.CPP14Parser.DeclarationContext arg) {
-		onExit();
-		this.inDeclaration.pop();
-	}
-
-	public boolean inDeclaration() {
-      return !inDeclaration.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inBlockdeclaration = new java.util.Stack<>();
-
-	@Override
-	public void enterBlockdeclaration(com.generator.generators.cpp.parser.CPP14Parser.BlockdeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Blockdeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inBlockdeclaration.push(true);
-	}
-
-	public void exitBlockdeclaration(com.generator.generators.cpp.parser.CPP14Parser.BlockdeclarationContext arg) {
-		onExit();
-		this.inBlockdeclaration.pop();
-	}
-
-	public boolean inBlockdeclaration() {
-      return !inBlockdeclaration.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAliasdeclaration = new java.util.Stack<>();
-
-	@Override
-	public void enterAliasdeclaration(com.generator.generators.cpp.parser.CPP14Parser.AliasdeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Aliasdeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inAliasdeclaration.push(true);
-	}
-
-	public void exitAliasdeclaration(com.generator.generators.cpp.parser.CPP14Parser.AliasdeclarationContext arg) {
-		onExit();
-		this.inAliasdeclaration.pop();
-	}
-
-	public boolean inAliasdeclaration() {
-      return !inAliasdeclaration.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSimpledeclaration = new java.util.Stack<>();
-
-	@Override
-	public void enterSimpledeclaration(com.generator.generators.cpp.parser.CPP14Parser.SimpledeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Simpledeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inSimpledeclaration.push(true);
-	}
-
-	public void exitSimpledeclaration(com.generator.generators.cpp.parser.CPP14Parser.SimpledeclarationContext arg) {
-		onExit();
-		this.inSimpledeclaration.pop();
-	}
-
-	public boolean inSimpledeclaration() {
-      return !inSimpledeclaration.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inStatic_assertdeclaration = new java.util.Stack<>();
-
-	@Override
-	public void enterStatic_assertdeclaration(com.generator.generators.cpp.parser.CPP14Parser.Static_assertdeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Static_assertdeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inStatic_assertdeclaration.push(true);
-	}
-
-	public void exitStatic_assertdeclaration(com.generator.generators.cpp.parser.CPP14Parser.Static_assertdeclarationContext arg) {
-		onExit();
-		this.inStatic_assertdeclaration.pop();
-	}
-
-	public boolean inStatic_assertdeclaration() {
-      return !inStatic_assertdeclaration.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inEmptydeclaration = new java.util.Stack<>();
-
-	@Override
-	public void enterEmptydeclaration(com.generator.generators.cpp.parser.CPP14Parser.EmptydeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Emptydeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inEmptydeclaration.push(true);
-	}
-
-	public void exitEmptydeclaration(com.generator.generators.cpp.parser.CPP14Parser.EmptydeclarationContext arg) {
-		onExit();
-		this.inEmptydeclaration.pop();
-	}
-
-	public boolean inEmptydeclaration() {
-      return !inEmptydeclaration.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAttributedeclaration = new java.util.Stack<>();
-
-	@Override
-	public void enterAttributedeclaration(com.generator.generators.cpp.parser.CPP14Parser.AttributedeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Attributedeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inAttributedeclaration.push(true);
-	}
-
-	public void exitAttributedeclaration(com.generator.generators.cpp.parser.CPP14Parser.AttributedeclarationContext arg) {
-		onExit();
-		this.inAttributedeclaration.pop();
-	}
-
-	public boolean inAttributedeclaration() {
-      return !inAttributedeclaration.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDeclspecifier = new java.util.Stack<>();
-
-	@Override
-	public void enterDeclspecifier(com.generator.generators.cpp.parser.CPP14Parser.DeclspecifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Declspecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inDeclspecifier.push(true);
-	}
-
-	public void exitDeclspecifier(com.generator.generators.cpp.parser.CPP14Parser.DeclspecifierContext arg) {
-		onExit();
-		this.inDeclspecifier.pop();
-	}
-
-	public boolean inDeclspecifier() {
-      return !inDeclspecifier.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDeclspecifierseq = new java.util.Stack<>();
-
-	@Override
-	public void enterDeclspecifierseq(com.generator.generators.cpp.parser.CPP14Parser.DeclspecifierseqContext arg) {
-		final Node node = model.findOrCreate(Label.label("Declspecifierseq"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inDeclspecifierseq.push(true);
-	}
-
-	public void exitDeclspecifierseq(com.generator.generators.cpp.parser.CPP14Parser.DeclspecifierseqContext arg) {
-		onExit();
-		this.inDeclspecifierseq.pop();
-	}
-
-	public boolean inDeclspecifierseq() {
-      return !inDeclspecifierseq.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inStorageclassspecifier = new java.util.Stack<>();
-
-	@Override
-	public void enterStorageclassspecifier(com.generator.generators.cpp.parser.CPP14Parser.StorageclassspecifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Storageclassspecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inStorageclassspecifier.push(true);
-	}
-
-	public void exitStorageclassspecifier(com.generator.generators.cpp.parser.CPP14Parser.StorageclassspecifierContext arg) {
-		onExit();
-		this.inStorageclassspecifier.pop();
-	}
-
-	public boolean inStorageclassspecifier() {
-      return !inStorageclassspecifier.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inFunctionspecifier = new java.util.Stack<>();
-
-	@Override
-	public void enterFunctionspecifier(com.generator.generators.cpp.parser.CPP14Parser.FunctionspecifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Functionspecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inFunctionspecifier.push(true);
-	}
-
-	public void exitFunctionspecifier(com.generator.generators.cpp.parser.CPP14Parser.FunctionspecifierContext arg) {
-		onExit();
-		this.inFunctionspecifier.pop();
-	}
-
-	public boolean inFunctionspecifier() {
-      return !inFunctionspecifier.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTypedefname = new java.util.Stack<>();
-
-	@Override
-	public void enterTypedefname(com.generator.generators.cpp.parser.CPP14Parser.TypedefnameContext arg) {
-		final Node node = model.findOrCreate(Label.label("Typedefname"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inTypedefname.push(true);
-	}
-
-	public void exitTypedefname(com.generator.generators.cpp.parser.CPP14Parser.TypedefnameContext arg) {
-		onExit();
-		this.inTypedefname.pop();
-	}
-
-	public boolean inTypedefname() {
-      return !inTypedefname.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTypespecifier = new java.util.Stack<>();
-
-	@Override
-	public void enterTypespecifier(com.generator.generators.cpp.parser.CPP14Parser.TypespecifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Typespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inTypespecifier.push(true);
-	}
-
-	public void exitTypespecifier(com.generator.generators.cpp.parser.CPP14Parser.TypespecifierContext arg) {
-		onExit();
-		this.inTypespecifier.pop();
-	}
-
-	public boolean inTypespecifier() {
-      return !inTypespecifier.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTrailingtypespecifier = new java.util.Stack<>();
-
-	@Override
-	public void enterTrailingtypespecifier(com.generator.generators.cpp.parser.CPP14Parser.TrailingtypespecifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Trailingtypespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inTrailingtypespecifier.push(true);
-	}
-
-	public void exitTrailingtypespecifier(com.generator.generators.cpp.parser.CPP14Parser.TrailingtypespecifierContext arg) {
-		onExit();
-		this.inTrailingtypespecifier.pop();
-	}
-
-	public boolean inTrailingtypespecifier() {
-      return !inTrailingtypespecifier.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTypespecifierseq = new java.util.Stack<>();
-
-	@Override
-	public void enterTypespecifierseq(com.generator.generators.cpp.parser.CPP14Parser.TypespecifierseqContext arg) {
-		final Node node = model.findOrCreate(Label.label("Typespecifierseq"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inTypespecifierseq.push(true);
-	}
-
-	public void exitTypespecifierseq(com.generator.generators.cpp.parser.CPP14Parser.TypespecifierseqContext arg) {
-		onExit();
-		this.inTypespecifierseq.pop();
-	}
-
-	public boolean inTypespecifierseq() {
-      return !inTypespecifierseq.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTrailingtypespecifierseq = new java.util.Stack<>();
-
-	@Override
-	public void enterTrailingtypespecifierseq(com.generator.generators.cpp.parser.CPP14Parser.TrailingtypespecifierseqContext arg) {
-		final Node node = model.findOrCreate(Label.label("Trailingtypespecifierseq"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inTrailingtypespecifierseq.push(true);
-	}
-
-	public void exitTrailingtypespecifierseq(com.generator.generators.cpp.parser.CPP14Parser.TrailingtypespecifierseqContext arg) {
-		onExit();
-		this.inTrailingtypespecifierseq.pop();
-	}
-
-	public boolean inTrailingtypespecifierseq() {
-      return !inTrailingtypespecifierseq.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSimpletypespecifier = new java.util.Stack<>();
-
-	@Override
-	public void enterSimpletypespecifier(com.generator.generators.cpp.parser.CPP14Parser.SimpletypespecifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Simpletypespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inSimpletypespecifier.push(true);
-	}
-
-	public void exitSimpletypespecifier(com.generator.generators.cpp.parser.CPP14Parser.SimpletypespecifierContext arg) {
-		onExit();
-		this.inSimpletypespecifier.pop();
-	}
-
-	public boolean inSimpletypespecifier() {
-      return !inSimpletypespecifier.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTypename = new java.util.Stack<>();
-
-	@Override
-	public void enterTypename(com.generator.generators.cpp.parser.CPP14Parser.TypenameContext arg) {
-		final Node node = model.findOrCreate(Label.label("Typename"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inTypename.push(true);
-	}
-
-	public void exitTypename(com.generator.generators.cpp.parser.CPP14Parser.TypenameContext arg) {
-		onExit();
-		this.inTypename.pop();
-	}
-
-	public boolean inTypename() {
-      return !inTypename.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inDecltypespecifier = new java.util.Stack<>();
 
 	@Override
 	public void enterDecltypespecifier(com.generator.generators.cpp.parser.CPP14Parser.DecltypespecifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Decltypespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Decltypespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDecltypespecifier.push(true);
 	}
@@ -1447,7 +63,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterElaboratedtypespecifier(com.generator.generators.cpp.parser.CPP14Parser.ElaboratedtypespecifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Elaboratedtypespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Elaboratedtypespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inElaboratedtypespecifier.push(true);
 	}
@@ -1465,7 +81,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEnumname(com.generator.generators.cpp.parser.CPP14Parser.EnumnameContext arg) {
-		final Node node = model.findOrCreate(Label.label("Enumname"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Enumname"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inEnumname.push(true);
 	}
@@ -1483,7 +99,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEnumspecifier(com.generator.generators.cpp.parser.CPP14Parser.EnumspecifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Enumspecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Enumspecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inEnumspecifier.push(true);
 	}
@@ -1501,7 +117,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEnumhead(com.generator.generators.cpp.parser.CPP14Parser.EnumheadContext arg) {
-		final Node node = model.findOrCreate(Label.label("Enumhead"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Enumhead"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inEnumhead.push(true);
 	}
@@ -1519,7 +135,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterOpaqueenumdeclaration(com.generator.generators.cpp.parser.CPP14Parser.OpaqueenumdeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Opaqueenumdeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Opaqueenumdeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOpaqueenumdeclaration.push(true);
 	}
@@ -1537,7 +153,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEnumkey(com.generator.generators.cpp.parser.CPP14Parser.EnumkeyContext arg) {
-		final Node node = model.findOrCreate(Label.label("Enumkey"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Enumkey"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inEnumkey.push(true);
 	}
@@ -1555,7 +171,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEnumbase(com.generator.generators.cpp.parser.CPP14Parser.EnumbaseContext arg) {
-		final Node node = model.findOrCreate(Label.label("Enumbase"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Enumbase"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inEnumbase.push(true);
 	}
@@ -1573,7 +189,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEnumeratorlist(com.generator.generators.cpp.parser.CPP14Parser.EnumeratorlistContext arg) {
-		final Node node = model.findOrCreate(Label.label("Enumeratorlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Enumeratorlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inEnumeratorlist.push(true);
 	}
@@ -1591,7 +207,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEnumeratordefinition(com.generator.generators.cpp.parser.CPP14Parser.EnumeratordefinitionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Enumeratordefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Enumeratordefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inEnumeratordefinition.push(true);
 	}
@@ -1609,7 +225,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEnumerator(com.generator.generators.cpp.parser.CPP14Parser.EnumeratorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Enumerator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Enumerator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inEnumerator.push(true);
 	}
@@ -1627,7 +243,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNamespacename(com.generator.generators.cpp.parser.CPP14Parser.NamespacenameContext arg) {
-		final Node node = model.findOrCreate(Label.label("Namespacename"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Namespacename"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNamespacename.push(true);
 	}
@@ -1645,7 +261,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterOriginalnamespacename(com.generator.generators.cpp.parser.CPP14Parser.OriginalnamespacenameContext arg) {
-		final Node node = model.findOrCreate(Label.label("Originalnamespacename"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Originalnamespacename"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOriginalnamespacename.push(true);
 	}
@@ -1663,7 +279,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.NamespacedefinitionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Namespacedefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Namespacedefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNamespacedefinition.push(true);
 	}
@@ -1681,7 +297,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNamednamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.NamednamespacedefinitionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Namednamespacedefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Namednamespacedefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNamednamespacedefinition.push(true);
 	}
@@ -1699,7 +315,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterOriginalnamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.OriginalnamespacedefinitionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Originalnamespacedefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Originalnamespacedefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOriginalnamespacedefinition.push(true);
 	}
@@ -1717,7 +333,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterExtensionnamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.ExtensionnamespacedefinitionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Extensionnamespacedefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Extensionnamespacedefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExtensionnamespacedefinition.push(true);
 	}
@@ -1735,7 +351,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterUnnamednamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.UnnamednamespacedefinitionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Unnamednamespacedefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Unnamednamespacedefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUnnamednamespacedefinition.push(true);
 	}
@@ -1753,7 +369,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNamespacebody(com.generator.generators.cpp.parser.CPP14Parser.NamespacebodyContext arg) {
-		final Node node = model.findOrCreate(Label.label("Namespacebody"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Namespacebody"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNamespacebody.push(true);
 	}
@@ -1771,7 +387,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNamespacealias(com.generator.generators.cpp.parser.CPP14Parser.NamespacealiasContext arg) {
-		final Node node = model.findOrCreate(Label.label("Namespacealias"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Namespacealias"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNamespacealias.push(true);
 	}
@@ -1789,7 +405,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNamespacealiasdefinition(com.generator.generators.cpp.parser.CPP14Parser.NamespacealiasdefinitionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Namespacealiasdefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Namespacealiasdefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNamespacealiasdefinition.push(true);
 	}
@@ -1807,7 +423,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterQualifiednamespacespecifier(com.generator.generators.cpp.parser.CPP14Parser.QualifiednamespacespecifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Qualifiednamespacespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Qualifiednamespacespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inQualifiednamespacespecifier.push(true);
 	}
@@ -1825,7 +441,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterUsingdeclaration(com.generator.generators.cpp.parser.CPP14Parser.UsingdeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Usingdeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Usingdeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUsingdeclaration.push(true);
 	}
@@ -1843,7 +459,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterUsingdirective(com.generator.generators.cpp.parser.CPP14Parser.UsingdirectiveContext arg) {
-		final Node node = model.findOrCreate(Label.label("Usingdirective"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Usingdirective"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUsingdirective.push(true);
 	}
@@ -1861,7 +477,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAsmdefinition(com.generator.generators.cpp.parser.CPP14Parser.AsmdefinitionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Asmdefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Asmdefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAsmdefinition.push(true);
 	}
@@ -1879,7 +495,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterLinkagespecification(com.generator.generators.cpp.parser.CPP14Parser.LinkagespecificationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Linkagespecification"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Linkagespecification"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLinkagespecification.push(true);
 	}
@@ -1897,7 +513,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttributespecifierseq(com.generator.generators.cpp.parser.CPP14Parser.AttributespecifierseqContext arg) {
-		final Node node = model.findOrCreate(Label.label("Attributespecifierseq"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Attributespecifierseq"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAttributespecifierseq.push(true);
 	}
@@ -1915,7 +531,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttributespecifier(com.generator.generators.cpp.parser.CPP14Parser.AttributespecifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Attributespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Attributespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAttributespecifier.push(true);
 	}
@@ -1933,7 +549,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAlignmentspecifier(com.generator.generators.cpp.parser.CPP14Parser.AlignmentspecifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Alignmentspecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Alignmentspecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAlignmentspecifier.push(true);
 	}
@@ -1951,7 +567,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttributelist(com.generator.generators.cpp.parser.CPP14Parser.AttributelistContext arg) {
-		final Node node = model.findOrCreate(Label.label("Attributelist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Attributelist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAttributelist.push(true);
 	}
@@ -1969,7 +585,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttribute(com.generator.generators.cpp.parser.CPP14Parser.AttributeContext arg) {
-		final Node node = model.findOrCreate(Label.label("Attribute"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Attribute"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAttribute.push(true);
 	}
@@ -1987,7 +603,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttributetoken(com.generator.generators.cpp.parser.CPP14Parser.AttributetokenContext arg) {
-		final Node node = model.findOrCreate(Label.label("Attributetoken"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Attributetoken"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAttributetoken.push(true);
 	}
@@ -2005,7 +621,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttributescopedtoken(com.generator.generators.cpp.parser.CPP14Parser.AttributescopedtokenContext arg) {
-		final Node node = model.findOrCreate(Label.label("Attributescopedtoken"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Attributescopedtoken"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAttributescopedtoken.push(true);
 	}
@@ -2023,7 +639,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttributenamespace(com.generator.generators.cpp.parser.CPP14Parser.AttributenamespaceContext arg) {
-		final Node node = model.findOrCreate(Label.label("Attributenamespace"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Attributenamespace"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAttributenamespace.push(true);
 	}
@@ -2041,7 +657,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttributeargumentclause(com.generator.generators.cpp.parser.CPP14Parser.AttributeargumentclauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("Attributeargumentclause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Attributeargumentclause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAttributeargumentclause.push(true);
 	}
@@ -2055,11 +671,1433 @@ public class CPP14NeoListener extends CPP14BaseListener {
       return !inAttributeargumentclause.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inDeclarator = new java.util.Stack<>();
+
+	@Override
+	public void enterDeclarator(com.generator.generators.cpp.parser.CPP14Parser.DeclaratorContext arg) {
+		final Node node = model.newNode(Label.label("Declarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inDeclarator.push(true);
+	}
+
+	public void exitDeclarator(com.generator.generators.cpp.parser.CPP14Parser.DeclaratorContext arg) {
+		onExit();
+		this.inDeclarator.pop();
+	}
+
+	public boolean inDeclarator() {
+      return !inDeclarator.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTranslationunit = new java.util.Stack<>();
+
+	@Override
+	public void enterTranslationunit(com.generator.generators.cpp.parser.CPP14Parser.TranslationunitContext arg) {
+		final Node node = model.newNode(Label.label("Translationunit"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inTranslationunit.push(true);
+	}
+
+	public void exitTranslationunit(com.generator.generators.cpp.parser.CPP14Parser.TranslationunitContext arg) {
+		onExit();
+		this.inTranslationunit.pop();
+	}
+
+	public boolean inTranslationunit() {
+      return !inTranslationunit.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPrimaryexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterPrimaryexpression(com.generator.generators.cpp.parser.CPP14Parser.PrimaryexpressionContext arg) {
+		final Node node = model.newNode(Label.label("Primaryexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inPrimaryexpression.push(true);
+	}
+
+	public void exitPrimaryexpression(com.generator.generators.cpp.parser.CPP14Parser.PrimaryexpressionContext arg) {
+		onExit();
+		this.inPrimaryexpression.pop();
+	}
+
+	public boolean inPrimaryexpression() {
+      return !inPrimaryexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inIdexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterIdexpression(com.generator.generators.cpp.parser.CPP14Parser.IdexpressionContext arg) {
+		final Node node = model.newNode(Label.label("Idexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inIdexpression.push(true);
+	}
+
+	public void exitIdexpression(com.generator.generators.cpp.parser.CPP14Parser.IdexpressionContext arg) {
+		onExit();
+		this.inIdexpression.pop();
+	}
+
+	public boolean inIdexpression() {
+      return !inIdexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUnqualifiedid = new java.util.Stack<>();
+
+	@Override
+	public void enterUnqualifiedid(com.generator.generators.cpp.parser.CPP14Parser.UnqualifiedidContext arg) {
+		final Node node = model.newNode(Label.label("Unqualifiedid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inUnqualifiedid.push(true);
+	}
+
+	public void exitUnqualifiedid(com.generator.generators.cpp.parser.CPP14Parser.UnqualifiedidContext arg) {
+		onExit();
+		this.inUnqualifiedid.pop();
+	}
+
+	public boolean inUnqualifiedid() {
+      return !inUnqualifiedid.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inQualifiedid = new java.util.Stack<>();
+
+	@Override
+	public void enterQualifiedid(com.generator.generators.cpp.parser.CPP14Parser.QualifiedidContext arg) {
+		final Node node = model.newNode(Label.label("Qualifiedid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inQualifiedid.push(true);
+	}
+
+	public void exitQualifiedid(com.generator.generators.cpp.parser.CPP14Parser.QualifiedidContext arg) {
+		onExit();
+		this.inQualifiedid.pop();
+	}
+
+	public boolean inQualifiedid() {
+      return !inQualifiedid.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNestednamespecifier = new java.util.Stack<>();
+
+	@Override
+	public void enterNestednamespecifier(com.generator.generators.cpp.parser.CPP14Parser.NestednamespecifierContext arg) {
+		final Node node = model.newNode(Label.label("Nestednamespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inNestednamespecifier.push(true);
+	}
+
+	public void exitNestednamespecifier(com.generator.generators.cpp.parser.CPP14Parser.NestednamespecifierContext arg) {
+		onExit();
+		this.inNestednamespecifier.pop();
+	}
+
+	public boolean inNestednamespecifier() {
+      return !inNestednamespecifier.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLambdaexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterLambdaexpression(com.generator.generators.cpp.parser.CPP14Parser.LambdaexpressionContext arg) {
+		final Node node = model.newNode(Label.label("Lambdaexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inLambdaexpression.push(true);
+	}
+
+	public void exitLambdaexpression(com.generator.generators.cpp.parser.CPP14Parser.LambdaexpressionContext arg) {
+		onExit();
+		this.inLambdaexpression.pop();
+	}
+
+	public boolean inLambdaexpression() {
+      return !inLambdaexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLambdaintroducer = new java.util.Stack<>();
+
+	@Override
+	public void enterLambdaintroducer(com.generator.generators.cpp.parser.CPP14Parser.LambdaintroducerContext arg) {
+		final Node node = model.newNode(Label.label("Lambdaintroducer"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inLambdaintroducer.push(true);
+	}
+
+	public void exitLambdaintroducer(com.generator.generators.cpp.parser.CPP14Parser.LambdaintroducerContext arg) {
+		onExit();
+		this.inLambdaintroducer.pop();
+	}
+
+	public boolean inLambdaintroducer() {
+      return !inLambdaintroducer.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLambdacapture = new java.util.Stack<>();
+
+	@Override
+	public void enterLambdacapture(com.generator.generators.cpp.parser.CPP14Parser.LambdacaptureContext arg) {
+		final Node node = model.newNode(Label.label("Lambdacapture"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inLambdacapture.push(true);
+	}
+
+	public void exitLambdacapture(com.generator.generators.cpp.parser.CPP14Parser.LambdacaptureContext arg) {
+		onExit();
+		this.inLambdacapture.pop();
+	}
+
+	public boolean inLambdacapture() {
+      return !inLambdacapture.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCapturedefault = new java.util.Stack<>();
+
+	@Override
+	public void enterCapturedefault(com.generator.generators.cpp.parser.CPP14Parser.CapturedefaultContext arg) {
+		final Node node = model.newNode(Label.label("Capturedefault"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inCapturedefault.push(true);
+	}
+
+	public void exitCapturedefault(com.generator.generators.cpp.parser.CPP14Parser.CapturedefaultContext arg) {
+		onExit();
+		this.inCapturedefault.pop();
+	}
+
+	public boolean inCapturedefault() {
+      return !inCapturedefault.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCapturelist = new java.util.Stack<>();
+
+	@Override
+	public void enterCapturelist(com.generator.generators.cpp.parser.CPP14Parser.CapturelistContext arg) {
+		final Node node = model.newNode(Label.label("Capturelist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inCapturelist.push(true);
+	}
+
+	public void exitCapturelist(com.generator.generators.cpp.parser.CPP14Parser.CapturelistContext arg) {
+		onExit();
+		this.inCapturelist.pop();
+	}
+
+	public boolean inCapturelist() {
+      return !inCapturelist.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCapture = new java.util.Stack<>();
+
+	@Override
+	public void enterCapture(com.generator.generators.cpp.parser.CPP14Parser.CaptureContext arg) {
+		final Node node = model.newNode(Label.label("Capture"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inCapture.push(true);
+	}
+
+	public void exitCapture(com.generator.generators.cpp.parser.CPP14Parser.CaptureContext arg) {
+		onExit();
+		this.inCapture.pop();
+	}
+
+	public boolean inCapture() {
+      return !inCapture.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSimplecapture = new java.util.Stack<>();
+
+	@Override
+	public void enterSimplecapture(com.generator.generators.cpp.parser.CPP14Parser.SimplecaptureContext arg) {
+		final Node node = model.newNode(Label.label("Simplecapture"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inSimplecapture.push(true);
+	}
+
+	public void exitSimplecapture(com.generator.generators.cpp.parser.CPP14Parser.SimplecaptureContext arg) {
+		onExit();
+		this.inSimplecapture.pop();
+	}
+
+	public boolean inSimplecapture() {
+      return !inSimplecapture.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inInitcapture = new java.util.Stack<>();
+
+	@Override
+	public void enterInitcapture(com.generator.generators.cpp.parser.CPP14Parser.InitcaptureContext arg) {
+		final Node node = model.newNode(Label.label("Initcapture"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inInitcapture.push(true);
+	}
+
+	public void exitInitcapture(com.generator.generators.cpp.parser.CPP14Parser.InitcaptureContext arg) {
+		onExit();
+		this.inInitcapture.pop();
+	}
+
+	public boolean inInitcapture() {
+      return !inInitcapture.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLambdadeclarator = new java.util.Stack<>();
+
+	@Override
+	public void enterLambdadeclarator(com.generator.generators.cpp.parser.CPP14Parser.LambdadeclaratorContext arg) {
+		final Node node = model.newNode(Label.label("Lambdadeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inLambdadeclarator.push(true);
+	}
+
+	public void exitLambdadeclarator(com.generator.generators.cpp.parser.CPP14Parser.LambdadeclaratorContext arg) {
+		onExit();
+		this.inLambdadeclarator.pop();
+	}
+
+	public boolean inLambdadeclarator() {
+      return !inLambdadeclarator.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPostfixexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterPostfixexpression(com.generator.generators.cpp.parser.CPP14Parser.PostfixexpressionContext arg) {
+		final Node node = model.newNode(Label.label("Postfixexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inPostfixexpression.push(true);
+	}
+
+	public void exitPostfixexpression(com.generator.generators.cpp.parser.CPP14Parser.PostfixexpressionContext arg) {
+		onExit();
+		this.inPostfixexpression.pop();
+	}
+
+	public boolean inPostfixexpression() {
+      return !inPostfixexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExpressionlist = new java.util.Stack<>();
+
+	@Override
+	public void enterExpressionlist(com.generator.generators.cpp.parser.CPP14Parser.ExpressionlistContext arg) {
+		final Node node = model.newNode(Label.label("Expressionlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inExpressionlist.push(true);
+	}
+
+	public void exitExpressionlist(com.generator.generators.cpp.parser.CPP14Parser.ExpressionlistContext arg) {
+		onExit();
+		this.inExpressionlist.pop();
+	}
+
+	public boolean inExpressionlist() {
+      return !inExpressionlist.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPseudodestructorname = new java.util.Stack<>();
+
+	@Override
+	public void enterPseudodestructorname(com.generator.generators.cpp.parser.CPP14Parser.PseudodestructornameContext arg) {
+		final Node node = model.newNode(Label.label("Pseudodestructorname"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inPseudodestructorname.push(true);
+	}
+
+	public void exitPseudodestructorname(com.generator.generators.cpp.parser.CPP14Parser.PseudodestructornameContext arg) {
+		onExit();
+		this.inPseudodestructorname.pop();
+	}
+
+	public boolean inPseudodestructorname() {
+      return !inPseudodestructorname.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUnaryexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterUnaryexpression(com.generator.generators.cpp.parser.CPP14Parser.UnaryexpressionContext arg) {
+		final Node node = model.newNode(Label.label("Unaryexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inUnaryexpression.push(true);
+	}
+
+	public void exitUnaryexpression(com.generator.generators.cpp.parser.CPP14Parser.UnaryexpressionContext arg) {
+		onExit();
+		this.inUnaryexpression.pop();
+	}
+
+	public boolean inUnaryexpression() {
+      return !inUnaryexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUnaryoperator = new java.util.Stack<>();
+
+	@Override
+	public void enterUnaryoperator(com.generator.generators.cpp.parser.CPP14Parser.UnaryoperatorContext arg) {
+		final Node node = model.newNode(Label.label("Unaryoperator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inUnaryoperator.push(true);
+	}
+
+	public void exitUnaryoperator(com.generator.generators.cpp.parser.CPP14Parser.UnaryoperatorContext arg) {
+		onExit();
+		this.inUnaryoperator.pop();
+	}
+
+	public boolean inUnaryoperator() {
+      return !inUnaryoperator.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNewexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterNewexpression(com.generator.generators.cpp.parser.CPP14Parser.NewexpressionContext arg) {
+		final Node node = model.newNode(Label.label("Newexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inNewexpression.push(true);
+	}
+
+	public void exitNewexpression(com.generator.generators.cpp.parser.CPP14Parser.NewexpressionContext arg) {
+		onExit();
+		this.inNewexpression.pop();
+	}
+
+	public boolean inNewexpression() {
+      return !inNewexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNewplacement = new java.util.Stack<>();
+
+	@Override
+	public void enterNewplacement(com.generator.generators.cpp.parser.CPP14Parser.NewplacementContext arg) {
+		final Node node = model.newNode(Label.label("Newplacement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inNewplacement.push(true);
+	}
+
+	public void exitNewplacement(com.generator.generators.cpp.parser.CPP14Parser.NewplacementContext arg) {
+		onExit();
+		this.inNewplacement.pop();
+	}
+
+	public boolean inNewplacement() {
+      return !inNewplacement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNewtypeid = new java.util.Stack<>();
+
+	@Override
+	public void enterNewtypeid(com.generator.generators.cpp.parser.CPP14Parser.NewtypeidContext arg) {
+		final Node node = model.newNode(Label.label("Newtypeid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inNewtypeid.push(true);
+	}
+
+	public void exitNewtypeid(com.generator.generators.cpp.parser.CPP14Parser.NewtypeidContext arg) {
+		onExit();
+		this.inNewtypeid.pop();
+	}
+
+	public boolean inNewtypeid() {
+      return !inNewtypeid.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNewdeclarator = new java.util.Stack<>();
+
+	@Override
+	public void enterNewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NewdeclaratorContext arg) {
+		final Node node = model.newNode(Label.label("Newdeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inNewdeclarator.push(true);
+	}
+
+	public void exitNewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NewdeclaratorContext arg) {
+		onExit();
+		this.inNewdeclarator.pop();
+	}
+
+	public boolean inNewdeclarator() {
+      return !inNewdeclarator.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNoptrnewdeclarator = new java.util.Stack<>();
+
+	@Override
+	public void enterNoptrnewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrnewdeclaratorContext arg) {
+		final Node node = model.newNode(Label.label("Noptrnewdeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inNoptrnewdeclarator.push(true);
+	}
+
+	public void exitNoptrnewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrnewdeclaratorContext arg) {
+		onExit();
+		this.inNoptrnewdeclarator.pop();
+	}
+
+	public boolean inNoptrnewdeclarator() {
+      return !inNoptrnewdeclarator.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNewinitializer = new java.util.Stack<>();
+
+	@Override
+	public void enterNewinitializer(com.generator.generators.cpp.parser.CPP14Parser.NewinitializerContext arg) {
+		final Node node = model.newNode(Label.label("Newinitializer"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inNewinitializer.push(true);
+	}
+
+	public void exitNewinitializer(com.generator.generators.cpp.parser.CPP14Parser.NewinitializerContext arg) {
+		onExit();
+		this.inNewinitializer.pop();
+	}
+
+	public boolean inNewinitializer() {
+      return !inNewinitializer.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDeleteexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterDeleteexpression(com.generator.generators.cpp.parser.CPP14Parser.DeleteexpressionContext arg) {
+		final Node node = model.newNode(Label.label("Deleteexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inDeleteexpression.push(true);
+	}
+
+	public void exitDeleteexpression(com.generator.generators.cpp.parser.CPP14Parser.DeleteexpressionContext arg) {
+		onExit();
+		this.inDeleteexpression.pop();
+	}
+
+	public boolean inDeleteexpression() {
+      return !inDeleteexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNoexceptexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterNoexceptexpression(com.generator.generators.cpp.parser.CPP14Parser.NoexceptexpressionContext arg) {
+		final Node node = model.newNode(Label.label("Noexceptexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inNoexceptexpression.push(true);
+	}
+
+	public void exitNoexceptexpression(com.generator.generators.cpp.parser.CPP14Parser.NoexceptexpressionContext arg) {
+		onExit();
+		this.inNoexceptexpression.pop();
+	}
+
+	public boolean inNoexceptexpression() {
+      return !inNoexceptexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCastexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterCastexpression(com.generator.generators.cpp.parser.CPP14Parser.CastexpressionContext arg) {
+		final Node node = model.newNode(Label.label("Castexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inCastexpression.push(true);
+	}
+
+	public void exitCastexpression(com.generator.generators.cpp.parser.CPP14Parser.CastexpressionContext arg) {
+		onExit();
+		this.inCastexpression.pop();
+	}
+
+	public boolean inCastexpression() {
+      return !inCastexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPmexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterPmexpression(com.generator.generators.cpp.parser.CPP14Parser.PmexpressionContext arg) {
+		final Node node = model.newNode(Label.label("Pmexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inPmexpression.push(true);
+	}
+
+	public void exitPmexpression(com.generator.generators.cpp.parser.CPP14Parser.PmexpressionContext arg) {
+		onExit();
+		this.inPmexpression.pop();
+	}
+
+	public boolean inPmexpression() {
+      return !inPmexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMultiplicativeexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterMultiplicativeexpression(com.generator.generators.cpp.parser.CPP14Parser.MultiplicativeexpressionContext arg) {
+		final Node node = model.newNode(Label.label("Multiplicativeexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inMultiplicativeexpression.push(true);
+	}
+
+	public void exitMultiplicativeexpression(com.generator.generators.cpp.parser.CPP14Parser.MultiplicativeexpressionContext arg) {
+		onExit();
+		this.inMultiplicativeexpression.pop();
+	}
+
+	public boolean inMultiplicativeexpression() {
+      return !inMultiplicativeexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAdditiveexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterAdditiveexpression(com.generator.generators.cpp.parser.CPP14Parser.AdditiveexpressionContext arg) {
+		final Node node = model.newNode(Label.label("Additiveexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inAdditiveexpression.push(true);
+	}
+
+	public void exitAdditiveexpression(com.generator.generators.cpp.parser.CPP14Parser.AdditiveexpressionContext arg) {
+		onExit();
+		this.inAdditiveexpression.pop();
+	}
+
+	public boolean inAdditiveexpression() {
+      return !inAdditiveexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inShiftexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterShiftexpression(com.generator.generators.cpp.parser.CPP14Parser.ShiftexpressionContext arg) {
+		final Node node = model.newNode(Label.label("Shiftexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inShiftexpression.push(true);
+	}
+
+	public void exitShiftexpression(com.generator.generators.cpp.parser.CPP14Parser.ShiftexpressionContext arg) {
+		onExit();
+		this.inShiftexpression.pop();
+	}
+
+	public boolean inShiftexpression() {
+      return !inShiftexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inRelationalexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterRelationalexpression(com.generator.generators.cpp.parser.CPP14Parser.RelationalexpressionContext arg) {
+		final Node node = model.newNode(Label.label("Relationalexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inRelationalexpression.push(true);
+	}
+
+	public void exitRelationalexpression(com.generator.generators.cpp.parser.CPP14Parser.RelationalexpressionContext arg) {
+		onExit();
+		this.inRelationalexpression.pop();
+	}
+
+	public boolean inRelationalexpression() {
+      return !inRelationalexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inEqualityexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterEqualityexpression(com.generator.generators.cpp.parser.CPP14Parser.EqualityexpressionContext arg) {
+		final Node node = model.newNode(Label.label("Equalityexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inEqualityexpression.push(true);
+	}
+
+	public void exitEqualityexpression(com.generator.generators.cpp.parser.CPP14Parser.EqualityexpressionContext arg) {
+		onExit();
+		this.inEqualityexpression.pop();
+	}
+
+	public boolean inEqualityexpression() {
+      return !inEqualityexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAndexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterAndexpression(com.generator.generators.cpp.parser.CPP14Parser.AndexpressionContext arg) {
+		final Node node = model.newNode(Label.label("Andexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inAndexpression.push(true);
+	}
+
+	public void exitAndexpression(com.generator.generators.cpp.parser.CPP14Parser.AndexpressionContext arg) {
+		onExit();
+		this.inAndexpression.pop();
+	}
+
+	public boolean inAndexpression() {
+      return !inAndexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExclusiveorexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterExclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.ExclusiveorexpressionContext arg) {
+		final Node node = model.newNode(Label.label("Exclusiveorexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inExclusiveorexpression.push(true);
+	}
+
+	public void exitExclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.ExclusiveorexpressionContext arg) {
+		onExit();
+		this.inExclusiveorexpression.pop();
+	}
+
+	public boolean inExclusiveorexpression() {
+      return !inExclusiveorexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inInclusiveorexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterInclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.InclusiveorexpressionContext arg) {
+		final Node node = model.newNode(Label.label("Inclusiveorexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inInclusiveorexpression.push(true);
+	}
+
+	public void exitInclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.InclusiveorexpressionContext arg) {
+		onExit();
+		this.inInclusiveorexpression.pop();
+	}
+
+	public boolean inInclusiveorexpression() {
+      return !inInclusiveorexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLogicalandexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterLogicalandexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalandexpressionContext arg) {
+		final Node node = model.newNode(Label.label("Logicalandexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inLogicalandexpression.push(true);
+	}
+
+	public void exitLogicalandexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalandexpressionContext arg) {
+		onExit();
+		this.inLogicalandexpression.pop();
+	}
+
+	public boolean inLogicalandexpression() {
+      return !inLogicalandexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLogicalorexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterLogicalorexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalorexpressionContext arg) {
+		final Node node = model.newNode(Label.label("Logicalorexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inLogicalorexpression.push(true);
+	}
+
+	public void exitLogicalorexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalorexpressionContext arg) {
+		onExit();
+		this.inLogicalorexpression.pop();
+	}
+
+	public boolean inLogicalorexpression() {
+      return !inLogicalorexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inConditionalexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterConditionalexpression(com.generator.generators.cpp.parser.CPP14Parser.ConditionalexpressionContext arg) {
+		final Node node = model.newNode(Label.label("Conditionalexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inConditionalexpression.push(true);
+	}
+
+	public void exitConditionalexpression(com.generator.generators.cpp.parser.CPP14Parser.ConditionalexpressionContext arg) {
+		onExit();
+		this.inConditionalexpression.pop();
+	}
+
+	public boolean inConditionalexpression() {
+      return !inConditionalexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAssignmentexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterAssignmentexpression(com.generator.generators.cpp.parser.CPP14Parser.AssignmentexpressionContext arg) {
+		final Node node = model.newNode(Label.label("Assignmentexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inAssignmentexpression.push(true);
+	}
+
+	public void exitAssignmentexpression(com.generator.generators.cpp.parser.CPP14Parser.AssignmentexpressionContext arg) {
+		onExit();
+		this.inAssignmentexpression.pop();
+	}
+
+	public boolean inAssignmentexpression() {
+      return !inAssignmentexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAssignmentoperator = new java.util.Stack<>();
+
+	@Override
+	public void enterAssignmentoperator(com.generator.generators.cpp.parser.CPP14Parser.AssignmentoperatorContext arg) {
+		final Node node = model.newNode(Label.label("Assignmentoperator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inAssignmentoperator.push(true);
+	}
+
+	public void exitAssignmentoperator(com.generator.generators.cpp.parser.CPP14Parser.AssignmentoperatorContext arg) {
+		onExit();
+		this.inAssignmentoperator.pop();
+	}
+
+	public boolean inAssignmentoperator() {
+      return !inAssignmentoperator.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
+
+	@Override
+	public void enterExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
+		final Node node = model.newNode(Label.label("Expression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inExpression.push(true);
+	}
+
+	public void exitExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
+		onExit();
+		this.inExpression.pop();
+	}
+
+	public boolean inExpression() {
+      return !inExpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inConstantexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterConstantexpression(com.generator.generators.cpp.parser.CPP14Parser.ConstantexpressionContext arg) {
+		final Node node = model.newNode(Label.label("Constantexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inConstantexpression.push(true);
+	}
+
+	public void exitConstantexpression(com.generator.generators.cpp.parser.CPP14Parser.ConstantexpressionContext arg) {
+		onExit();
+		this.inConstantexpression.pop();
+	}
+
+	public boolean inConstantexpression() {
+      return !inConstantexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterStatement(com.generator.generators.cpp.parser.CPP14Parser.StatementContext arg) {
+		final Node node = model.newNode(Label.label("Statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inStatement.push(true);
+	}
+
+	public void exitStatement(com.generator.generators.cpp.parser.CPP14Parser.StatementContext arg) {
+		onExit();
+		this.inStatement.pop();
+	}
+
+	public boolean inStatement() {
+      return !inStatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLabeledstatement = new java.util.Stack<>();
+
+	@Override
+	public void enterLabeledstatement(com.generator.generators.cpp.parser.CPP14Parser.LabeledstatementContext arg) {
+		final Node node = model.newNode(Label.label("Labeledstatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inLabeledstatement.push(true);
+	}
+
+	public void exitLabeledstatement(com.generator.generators.cpp.parser.CPP14Parser.LabeledstatementContext arg) {
+		onExit();
+		this.inLabeledstatement.pop();
+	}
+
+	public boolean inLabeledstatement() {
+      return !inLabeledstatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExpressionstatement = new java.util.Stack<>();
+
+	@Override
+	public void enterExpressionstatement(com.generator.generators.cpp.parser.CPP14Parser.ExpressionstatementContext arg) {
+		final Node node = model.newNode(Label.label("Expressionstatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inExpressionstatement.push(true);
+	}
+
+	public void exitExpressionstatement(com.generator.generators.cpp.parser.CPP14Parser.ExpressionstatementContext arg) {
+		onExit();
+		this.inExpressionstatement.pop();
+	}
+
+	public boolean inExpressionstatement() {
+      return !inExpressionstatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCompoundstatement = new java.util.Stack<>();
+
+	@Override
+	public void enterCompoundstatement(com.generator.generators.cpp.parser.CPP14Parser.CompoundstatementContext arg) {
+		final Node node = model.newNode(Label.label("Compoundstatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inCompoundstatement.push(true);
+	}
+
+	public void exitCompoundstatement(com.generator.generators.cpp.parser.CPP14Parser.CompoundstatementContext arg) {
+		onExit();
+		this.inCompoundstatement.pop();
+	}
+
+	public boolean inCompoundstatement() {
+      return !inCompoundstatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStatementseq = new java.util.Stack<>();
+
+	@Override
+	public void enterStatementseq(com.generator.generators.cpp.parser.CPP14Parser.StatementseqContext arg) {
+		final Node node = model.newNode(Label.label("Statementseq"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inStatementseq.push(true);
+	}
+
+	public void exitStatementseq(com.generator.generators.cpp.parser.CPP14Parser.StatementseqContext arg) {
+		onExit();
+		this.inStatementseq.pop();
+	}
+
+	public boolean inStatementseq() {
+      return !inStatementseq.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSelectionstatement = new java.util.Stack<>();
+
+	@Override
+	public void enterSelectionstatement(com.generator.generators.cpp.parser.CPP14Parser.SelectionstatementContext arg) {
+		final Node node = model.newNode(Label.label("Selectionstatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inSelectionstatement.push(true);
+	}
+
+	public void exitSelectionstatement(com.generator.generators.cpp.parser.CPP14Parser.SelectionstatementContext arg) {
+		onExit();
+		this.inSelectionstatement.pop();
+	}
+
+	public boolean inSelectionstatement() {
+      return !inSelectionstatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCondition = new java.util.Stack<>();
+
+	@Override
+	public void enterCondition(com.generator.generators.cpp.parser.CPP14Parser.ConditionContext arg) {
+		final Node node = model.newNode(Label.label("Condition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inCondition.push(true);
+	}
+
+	public void exitCondition(com.generator.generators.cpp.parser.CPP14Parser.ConditionContext arg) {
+		onExit();
+		this.inCondition.pop();
+	}
+
+	public boolean inCondition() {
+      return !inCondition.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inIterationstatement = new java.util.Stack<>();
+
+	@Override
+	public void enterIterationstatement(com.generator.generators.cpp.parser.CPP14Parser.IterationstatementContext arg) {
+		final Node node = model.newNode(Label.label("Iterationstatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inIterationstatement.push(true);
+	}
+
+	public void exitIterationstatement(com.generator.generators.cpp.parser.CPP14Parser.IterationstatementContext arg) {
+		onExit();
+		this.inIterationstatement.pop();
+	}
+
+	public boolean inIterationstatement() {
+      return !inIterationstatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inForinitstatement = new java.util.Stack<>();
+
+	@Override
+	public void enterForinitstatement(com.generator.generators.cpp.parser.CPP14Parser.ForinitstatementContext arg) {
+		final Node node = model.newNode(Label.label("Forinitstatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inForinitstatement.push(true);
+	}
+
+	public void exitForinitstatement(com.generator.generators.cpp.parser.CPP14Parser.ForinitstatementContext arg) {
+		onExit();
+		this.inForinitstatement.pop();
+	}
+
+	public boolean inForinitstatement() {
+      return !inForinitstatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inForrangedeclaration = new java.util.Stack<>();
+
+	@Override
+	public void enterForrangedeclaration(com.generator.generators.cpp.parser.CPP14Parser.ForrangedeclarationContext arg) {
+		final Node node = model.newNode(Label.label("Forrangedeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inForrangedeclaration.push(true);
+	}
+
+	public void exitForrangedeclaration(com.generator.generators.cpp.parser.CPP14Parser.ForrangedeclarationContext arg) {
+		onExit();
+		this.inForrangedeclaration.pop();
+	}
+
+	public boolean inForrangedeclaration() {
+      return !inForrangedeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inForrangeinitializer = new java.util.Stack<>();
+
+	@Override
+	public void enterForrangeinitializer(com.generator.generators.cpp.parser.CPP14Parser.ForrangeinitializerContext arg) {
+		final Node node = model.newNode(Label.label("Forrangeinitializer"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inForrangeinitializer.push(true);
+	}
+
+	public void exitForrangeinitializer(com.generator.generators.cpp.parser.CPP14Parser.ForrangeinitializerContext arg) {
+		onExit();
+		this.inForrangeinitializer.pop();
+	}
+
+	public boolean inForrangeinitializer() {
+      return !inForrangeinitializer.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inJumpstatement = new java.util.Stack<>();
+
+	@Override
+	public void enterJumpstatement(com.generator.generators.cpp.parser.CPP14Parser.JumpstatementContext arg) {
+		final Node node = model.newNode(Label.label("Jumpstatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inJumpstatement.push(true);
+	}
+
+	public void exitJumpstatement(com.generator.generators.cpp.parser.CPP14Parser.JumpstatementContext arg) {
+		onExit();
+		this.inJumpstatement.pop();
+	}
+
+	public boolean inJumpstatement() {
+      return !inJumpstatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDeclarationstatement = new java.util.Stack<>();
+
+	@Override
+	public void enterDeclarationstatement(com.generator.generators.cpp.parser.CPP14Parser.DeclarationstatementContext arg) {
+		final Node node = model.newNode(Label.label("Declarationstatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inDeclarationstatement.push(true);
+	}
+
+	public void exitDeclarationstatement(com.generator.generators.cpp.parser.CPP14Parser.DeclarationstatementContext arg) {
+		onExit();
+		this.inDeclarationstatement.pop();
+	}
+
+	public boolean inDeclarationstatement() {
+      return !inDeclarationstatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDeclarationseq = new java.util.Stack<>();
+
+	@Override
+	public void enterDeclarationseq(com.generator.generators.cpp.parser.CPP14Parser.DeclarationseqContext arg) {
+		final Node node = model.newNode(Label.label("Declarationseq"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inDeclarationseq.push(true);
+	}
+
+	public void exitDeclarationseq(com.generator.generators.cpp.parser.CPP14Parser.DeclarationseqContext arg) {
+		onExit();
+		this.inDeclarationseq.pop();
+	}
+
+	public boolean inDeclarationseq() {
+      return !inDeclarationseq.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDeclaration = new java.util.Stack<>();
+
+	@Override
+	public void enterDeclaration(com.generator.generators.cpp.parser.CPP14Parser.DeclarationContext arg) {
+		final Node node = model.newNode(Label.label("Declaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inDeclaration.push(true);
+	}
+
+	public void exitDeclaration(com.generator.generators.cpp.parser.CPP14Parser.DeclarationContext arg) {
+		onExit();
+		this.inDeclaration.pop();
+	}
+
+	public boolean inDeclaration() {
+      return !inDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inBlockdeclaration = new java.util.Stack<>();
+
+	@Override
+	public void enterBlockdeclaration(com.generator.generators.cpp.parser.CPP14Parser.BlockdeclarationContext arg) {
+		final Node node = model.newNode(Label.label("Blockdeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inBlockdeclaration.push(true);
+	}
+
+	public void exitBlockdeclaration(com.generator.generators.cpp.parser.CPP14Parser.BlockdeclarationContext arg) {
+		onExit();
+		this.inBlockdeclaration.pop();
+	}
+
+	public boolean inBlockdeclaration() {
+      return !inBlockdeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAliasdeclaration = new java.util.Stack<>();
+
+	@Override
+	public void enterAliasdeclaration(com.generator.generators.cpp.parser.CPP14Parser.AliasdeclarationContext arg) {
+		final Node node = model.newNode(Label.label("Aliasdeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inAliasdeclaration.push(true);
+	}
+
+	public void exitAliasdeclaration(com.generator.generators.cpp.parser.CPP14Parser.AliasdeclarationContext arg) {
+		onExit();
+		this.inAliasdeclaration.pop();
+	}
+
+	public boolean inAliasdeclaration() {
+      return !inAliasdeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSimpledeclaration = new java.util.Stack<>();
+
+	@Override
+	public void enterSimpledeclaration(com.generator.generators.cpp.parser.CPP14Parser.SimpledeclarationContext arg) {
+		final Node node = model.newNode(Label.label("Simpledeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inSimpledeclaration.push(true);
+	}
+
+	public void exitSimpledeclaration(com.generator.generators.cpp.parser.CPP14Parser.SimpledeclarationContext arg) {
+		onExit();
+		this.inSimpledeclaration.pop();
+	}
+
+	public boolean inSimpledeclaration() {
+      return !inSimpledeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStatic_assertdeclaration = new java.util.Stack<>();
+
+	@Override
+	public void enterStatic_assertdeclaration(com.generator.generators.cpp.parser.CPP14Parser.Static_assertdeclarationContext arg) {
+		final Node node = model.newNode(Label.label("Static_assertdeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inStatic_assertdeclaration.push(true);
+	}
+
+	public void exitStatic_assertdeclaration(com.generator.generators.cpp.parser.CPP14Parser.Static_assertdeclarationContext arg) {
+		onExit();
+		this.inStatic_assertdeclaration.pop();
+	}
+
+	public boolean inStatic_assertdeclaration() {
+      return !inStatic_assertdeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inEmptydeclaration = new java.util.Stack<>();
+
+	@Override
+	public void enterEmptydeclaration(com.generator.generators.cpp.parser.CPP14Parser.EmptydeclarationContext arg) {
+		final Node node = model.newNode(Label.label("Emptydeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inEmptydeclaration.push(true);
+	}
+
+	public void exitEmptydeclaration(com.generator.generators.cpp.parser.CPP14Parser.EmptydeclarationContext arg) {
+		onExit();
+		this.inEmptydeclaration.pop();
+	}
+
+	public boolean inEmptydeclaration() {
+      return !inEmptydeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAttributedeclaration = new java.util.Stack<>();
+
+	@Override
+	public void enterAttributedeclaration(com.generator.generators.cpp.parser.CPP14Parser.AttributedeclarationContext arg) {
+		final Node node = model.newNode(Label.label("Attributedeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inAttributedeclaration.push(true);
+	}
+
+	public void exitAttributedeclaration(com.generator.generators.cpp.parser.CPP14Parser.AttributedeclarationContext arg) {
+		onExit();
+		this.inAttributedeclaration.pop();
+	}
+
+	public boolean inAttributedeclaration() {
+      return !inAttributedeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDeclspecifier = new java.util.Stack<>();
+
+	@Override
+	public void enterDeclspecifier(com.generator.generators.cpp.parser.CPP14Parser.DeclspecifierContext arg) {
+		final Node node = model.newNode(Label.label("Declspecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inDeclspecifier.push(true);
+	}
+
+	public void exitDeclspecifier(com.generator.generators.cpp.parser.CPP14Parser.DeclspecifierContext arg) {
+		onExit();
+		this.inDeclspecifier.pop();
+	}
+
+	public boolean inDeclspecifier() {
+      return !inDeclspecifier.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDeclspecifierseq = new java.util.Stack<>();
+
+	@Override
+	public void enterDeclspecifierseq(com.generator.generators.cpp.parser.CPP14Parser.DeclspecifierseqContext arg) {
+		final Node node = model.newNode(Label.label("Declspecifierseq"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inDeclspecifierseq.push(true);
+	}
+
+	public void exitDeclspecifierseq(com.generator.generators.cpp.parser.CPP14Parser.DeclspecifierseqContext arg) {
+		onExit();
+		this.inDeclspecifierseq.pop();
+	}
+
+	public boolean inDeclspecifierseq() {
+      return !inDeclspecifierseq.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStorageclassspecifier = new java.util.Stack<>();
+
+	@Override
+	public void enterStorageclassspecifier(com.generator.generators.cpp.parser.CPP14Parser.StorageclassspecifierContext arg) {
+		final Node node = model.newNode(Label.label("Storageclassspecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inStorageclassspecifier.push(true);
+	}
+
+	public void exitStorageclassspecifier(com.generator.generators.cpp.parser.CPP14Parser.StorageclassspecifierContext arg) {
+		onExit();
+		this.inStorageclassspecifier.pop();
+	}
+
+	public boolean inStorageclassspecifier() {
+      return !inStorageclassspecifier.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inFunctionspecifier = new java.util.Stack<>();
+
+	@Override
+	public void enterFunctionspecifier(com.generator.generators.cpp.parser.CPP14Parser.FunctionspecifierContext arg) {
+		final Node node = model.newNode(Label.label("Functionspecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inFunctionspecifier.push(true);
+	}
+
+	public void exitFunctionspecifier(com.generator.generators.cpp.parser.CPP14Parser.FunctionspecifierContext arg) {
+		onExit();
+		this.inFunctionspecifier.pop();
+	}
+
+	public boolean inFunctionspecifier() {
+      return !inFunctionspecifier.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTypedefname = new java.util.Stack<>();
+
+	@Override
+	public void enterTypedefname(com.generator.generators.cpp.parser.CPP14Parser.TypedefnameContext arg) {
+		final Node node = model.newNode(Label.label("Typedefname"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inTypedefname.push(true);
+	}
+
+	public void exitTypedefname(com.generator.generators.cpp.parser.CPP14Parser.TypedefnameContext arg) {
+		onExit();
+		this.inTypedefname.pop();
+	}
+
+	public boolean inTypedefname() {
+      return !inTypedefname.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTypespecifier = new java.util.Stack<>();
+
+	@Override
+	public void enterTypespecifier(com.generator.generators.cpp.parser.CPP14Parser.TypespecifierContext arg) {
+		final Node node = model.newNode(Label.label("Typespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inTypespecifier.push(true);
+	}
+
+	public void exitTypespecifier(com.generator.generators.cpp.parser.CPP14Parser.TypespecifierContext arg) {
+		onExit();
+		this.inTypespecifier.pop();
+	}
+
+	public boolean inTypespecifier() {
+      return !inTypespecifier.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTrailingtypespecifier = new java.util.Stack<>();
+
+	@Override
+	public void enterTrailingtypespecifier(com.generator.generators.cpp.parser.CPP14Parser.TrailingtypespecifierContext arg) {
+		final Node node = model.newNode(Label.label("Trailingtypespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inTrailingtypespecifier.push(true);
+	}
+
+	public void exitTrailingtypespecifier(com.generator.generators.cpp.parser.CPP14Parser.TrailingtypespecifierContext arg) {
+		onExit();
+		this.inTrailingtypespecifier.pop();
+	}
+
+	public boolean inTrailingtypespecifier() {
+      return !inTrailingtypespecifier.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTypespecifierseq = new java.util.Stack<>();
+
+	@Override
+	public void enterTypespecifierseq(com.generator.generators.cpp.parser.CPP14Parser.TypespecifierseqContext arg) {
+		final Node node = model.newNode(Label.label("Typespecifierseq"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inTypespecifierseq.push(true);
+	}
+
+	public void exitTypespecifierseq(com.generator.generators.cpp.parser.CPP14Parser.TypespecifierseqContext arg) {
+		onExit();
+		this.inTypespecifierseq.pop();
+	}
+
+	public boolean inTypespecifierseq() {
+      return !inTypespecifierseq.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTrailingtypespecifierseq = new java.util.Stack<>();
+
+	@Override
+	public void enterTrailingtypespecifierseq(com.generator.generators.cpp.parser.CPP14Parser.TrailingtypespecifierseqContext arg) {
+		final Node node = model.newNode(Label.label("Trailingtypespecifierseq"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inTrailingtypespecifierseq.push(true);
+	}
+
+	public void exitTrailingtypespecifierseq(com.generator.generators.cpp.parser.CPP14Parser.TrailingtypespecifierseqContext arg) {
+		onExit();
+		this.inTrailingtypespecifierseq.pop();
+	}
+
+	public boolean inTrailingtypespecifierseq() {
+      return !inTrailingtypespecifierseq.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSimpletypespecifier = new java.util.Stack<>();
+
+	@Override
+	public void enterSimpletypespecifier(com.generator.generators.cpp.parser.CPP14Parser.SimpletypespecifierContext arg) {
+		final Node node = model.newNode(Label.label("Simpletypespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inSimpletypespecifier.push(true);
+	}
+
+	public void exitSimpletypespecifier(com.generator.generators.cpp.parser.CPP14Parser.SimpletypespecifierContext arg) {
+		onExit();
+		this.inSimpletypespecifier.pop();
+	}
+
+	public boolean inSimpletypespecifier() {
+      return !inSimpletypespecifier.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTypename = new java.util.Stack<>();
+
+	@Override
+	public void enterTypename(com.generator.generators.cpp.parser.CPP14Parser.TypenameContext arg) {
+		final Node node = model.newNode(Label.label("Typename"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inTypename.push(true);
+	}
+
+	public void exitTypename(com.generator.generators.cpp.parser.CPP14Parser.TypenameContext arg) {
+		onExit();
+		this.inTypename.pop();
+	}
+
+	public boolean inTypename() {
+      return !inTypename.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
+
+	@Override
+	public void enterLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
+		final Node node = model.newNode(Label.label("Literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inLiteral.push(true);
+	}
+
+	public void exitLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
+		onExit();
+		this.inLiteral.pop();
+	}
+
+	public boolean inLiteral() {
+      return !inLiteral.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inBalancedtokenseq = new java.util.Stack<>();
 
 	@Override
 	public void enterBalancedtokenseq(com.generator.generators.cpp.parser.CPP14Parser.BalancedtokenseqContext arg) {
-		final Node node = model.findOrCreate(Label.label("Balancedtokenseq"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Balancedtokenseq"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBalancedtokenseq.push(true);
 	}
@@ -2077,7 +2115,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBalancedtoken(com.generator.generators.cpp.parser.CPP14Parser.BalancedtokenContext arg) {
-		final Node node = model.findOrCreate(Label.label("Balancedtoken"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Balancedtoken"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBalancedtoken.push(true);
 	}
@@ -2095,7 +2133,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterInitdeclaratorlist(com.generator.generators.cpp.parser.CPP14Parser.InitdeclaratorlistContext arg) {
-		final Node node = model.findOrCreate(Label.label("Initdeclaratorlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Initdeclaratorlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInitdeclaratorlist.push(true);
 	}
@@ -2113,7 +2151,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterInitdeclarator(com.generator.generators.cpp.parser.CPP14Parser.InitdeclaratorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Initdeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Initdeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInitdeclarator.push(true);
 	}
@@ -2127,29 +2165,11 @@ public class CPP14NeoListener extends CPP14BaseListener {
       return !inInitdeclarator.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inDeclarator = new java.util.Stack<>();
-
-	@Override
-	public void enterDeclarator(com.generator.generators.cpp.parser.CPP14Parser.DeclaratorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Declarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inDeclarator.push(true);
-	}
-
-	public void exitDeclarator(com.generator.generators.cpp.parser.CPP14Parser.DeclaratorContext arg) {
-		onExit();
-		this.inDeclarator.pop();
-	}
-
-	public boolean inDeclarator() {
-      return !inDeclarator.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inPtrdeclarator = new java.util.Stack<>();
 
 	@Override
 	public void enterPtrdeclarator(com.generator.generators.cpp.parser.CPP14Parser.PtrdeclaratorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Ptrdeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Ptrdeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPtrdeclarator.push(true);
 	}
@@ -2167,7 +2187,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNoptrdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrdeclaratorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Noptrdeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Noptrdeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNoptrdeclarator.push(true);
 	}
@@ -2185,7 +2205,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterParametersandqualifiers(com.generator.generators.cpp.parser.CPP14Parser.ParametersandqualifiersContext arg) {
-		final Node node = model.findOrCreate(Label.label("Parametersandqualifiers"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Parametersandqualifiers"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inParametersandqualifiers.push(true);
 	}
@@ -2203,7 +2223,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTrailingreturntype(com.generator.generators.cpp.parser.CPP14Parser.TrailingreturntypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("Trailingreturntype"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Trailingreturntype"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTrailingreturntype.push(true);
 	}
@@ -2221,7 +2241,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterPtroperator(com.generator.generators.cpp.parser.CPP14Parser.PtroperatorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Ptroperator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Ptroperator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPtroperator.push(true);
 	}
@@ -2239,7 +2259,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterCvqualifierseq(com.generator.generators.cpp.parser.CPP14Parser.CvqualifierseqContext arg) {
-		final Node node = model.findOrCreate(Label.label("Cvqualifierseq"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Cvqualifierseq"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCvqualifierseq.push(true);
 	}
@@ -2257,7 +2277,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterCvqualifier(com.generator.generators.cpp.parser.CPP14Parser.CvqualifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Cvqualifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Cvqualifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCvqualifier.push(true);
 	}
@@ -2275,7 +2295,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterRefqualifier(com.generator.generators.cpp.parser.CPP14Parser.RefqualifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Refqualifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Refqualifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRefqualifier.push(true);
 	}
@@ -2293,7 +2313,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterDeclaratorid(com.generator.generators.cpp.parser.CPP14Parser.DeclaratoridContext arg) {
-		final Node node = model.findOrCreate(Label.label("Declaratorid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Declaratorid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDeclaratorid.push(true);
 	}
@@ -2311,7 +2331,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTypeid(com.generator.generators.cpp.parser.CPP14Parser.TypeidContext arg) {
-		final Node node = model.findOrCreate(Label.label("Typeid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Typeid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypeid.push(true);
 	}
@@ -2329,7 +2349,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAbstractdeclarator(com.generator.generators.cpp.parser.CPP14Parser.AbstractdeclaratorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Abstractdeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Abstractdeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAbstractdeclarator.push(true);
 	}
@@ -2347,7 +2367,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterPtrabstractdeclarator(com.generator.generators.cpp.parser.CPP14Parser.PtrabstractdeclaratorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Ptrabstractdeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Ptrabstractdeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPtrabstractdeclarator.push(true);
 	}
@@ -2365,7 +2385,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNoptrabstractdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrabstractdeclaratorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Noptrabstractdeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Noptrabstractdeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNoptrabstractdeclarator.push(true);
 	}
@@ -2383,7 +2403,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAbstractpackdeclarator(com.generator.generators.cpp.parser.CPP14Parser.AbstractpackdeclaratorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Abstractpackdeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Abstractpackdeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAbstractpackdeclarator.push(true);
 	}
@@ -2401,7 +2421,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNoptrabstractpackdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrabstractpackdeclaratorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Noptrabstractpackdeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Noptrabstractpackdeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNoptrabstractpackdeclarator.push(true);
 	}
@@ -2419,7 +2439,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterParameterdeclarationclause(com.generator.generators.cpp.parser.CPP14Parser.ParameterdeclarationclauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("Parameterdeclarationclause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Parameterdeclarationclause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inParameterdeclarationclause.push(true);
 	}
@@ -2437,7 +2457,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterParameterdeclarationlist(com.generator.generators.cpp.parser.CPP14Parser.ParameterdeclarationlistContext arg) {
-		final Node node = model.findOrCreate(Label.label("Parameterdeclarationlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Parameterdeclarationlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inParameterdeclarationlist.push(true);
 	}
@@ -2455,7 +2475,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterParameterdeclaration(com.generator.generators.cpp.parser.CPP14Parser.ParameterdeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Parameterdeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Parameterdeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inParameterdeclaration.push(true);
 	}
@@ -2473,7 +2493,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterFunctiondefinition(com.generator.generators.cpp.parser.CPP14Parser.FunctiondefinitionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Functiondefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Functiondefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFunctiondefinition.push(true);
 	}
@@ -2491,7 +2511,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterFunctionbody(com.generator.generators.cpp.parser.CPP14Parser.FunctionbodyContext arg) {
-		final Node node = model.findOrCreate(Label.label("Functionbody"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Functionbody"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFunctionbody.push(true);
 	}
@@ -2509,7 +2529,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterInitializer(com.generator.generators.cpp.parser.CPP14Parser.InitializerContext arg) {
-		final Node node = model.findOrCreate(Label.label("Initializer"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Initializer"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInitializer.push(true);
 	}
@@ -2527,7 +2547,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBraceorequalinitializer(com.generator.generators.cpp.parser.CPP14Parser.BraceorequalinitializerContext arg) {
-		final Node node = model.findOrCreate(Label.label("Braceorequalinitializer"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Braceorequalinitializer"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBraceorequalinitializer.push(true);
 	}
@@ -2545,7 +2565,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterInitializerclause(com.generator.generators.cpp.parser.CPP14Parser.InitializerclauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("Initializerclause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Initializerclause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInitializerclause.push(true);
 	}
@@ -2563,7 +2583,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterInitializerlist(com.generator.generators.cpp.parser.CPP14Parser.InitializerlistContext arg) {
-		final Node node = model.findOrCreate(Label.label("Initializerlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Initializerlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInitializerlist.push(true);
 	}
@@ -2581,7 +2601,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBracedinitlist(com.generator.generators.cpp.parser.CPP14Parser.BracedinitlistContext arg) {
-		final Node node = model.findOrCreate(Label.label("Bracedinitlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Bracedinitlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBracedinitlist.push(true);
 	}
@@ -2599,7 +2619,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterClassname(com.generator.generators.cpp.parser.CPP14Parser.ClassnameContext arg) {
-		final Node node = model.findOrCreate(Label.label("Classname"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Classname"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inClassname.push(true);
 	}
@@ -2617,7 +2637,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterClassspecifier(com.generator.generators.cpp.parser.CPP14Parser.ClassspecifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Classspecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Classspecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inClassspecifier.push(true);
 	}
@@ -2635,7 +2655,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterClasshead(com.generator.generators.cpp.parser.CPP14Parser.ClassheadContext arg) {
-		final Node node = model.findOrCreate(Label.label("Classhead"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Classhead"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inClasshead.push(true);
 	}
@@ -2653,7 +2673,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterClassheadname(com.generator.generators.cpp.parser.CPP14Parser.ClassheadnameContext arg) {
-		final Node node = model.findOrCreate(Label.label("Classheadname"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Classheadname"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inClassheadname.push(true);
 	}
@@ -2671,7 +2691,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterClassvirtspecifier(com.generator.generators.cpp.parser.CPP14Parser.ClassvirtspecifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Classvirtspecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Classvirtspecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inClassvirtspecifier.push(true);
 	}
@@ -2689,7 +2709,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterClasskey(com.generator.generators.cpp.parser.CPP14Parser.ClasskeyContext arg) {
-		final Node node = model.findOrCreate(Label.label("Classkey"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Classkey"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inClasskey.push(true);
 	}
@@ -2707,7 +2727,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterMemberspecification(com.generator.generators.cpp.parser.CPP14Parser.MemberspecificationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Memberspecification"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Memberspecification"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMemberspecification.push(true);
 	}
@@ -2725,7 +2745,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterMemberdeclaration(com.generator.generators.cpp.parser.CPP14Parser.MemberdeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Memberdeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Memberdeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMemberdeclaration.push(true);
 	}
@@ -2743,7 +2763,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterMemberdeclaratorlist(com.generator.generators.cpp.parser.CPP14Parser.MemberdeclaratorlistContext arg) {
-		final Node node = model.findOrCreate(Label.label("Memberdeclaratorlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Memberdeclaratorlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMemberdeclaratorlist.push(true);
 	}
@@ -2761,7 +2781,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterMemberdeclarator(com.generator.generators.cpp.parser.CPP14Parser.MemberdeclaratorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Memberdeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Memberdeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMemberdeclarator.push(true);
 	}
@@ -2779,7 +2799,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterVirtspecifierseq(com.generator.generators.cpp.parser.CPP14Parser.VirtspecifierseqContext arg) {
-		final Node node = model.findOrCreate(Label.label("Virtspecifierseq"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Virtspecifierseq"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inVirtspecifierseq.push(true);
 	}
@@ -2797,7 +2817,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterVirtspecifier(com.generator.generators.cpp.parser.CPP14Parser.VirtspecifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Virtspecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Virtspecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inVirtspecifier.push(true);
 	}
@@ -2815,7 +2835,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterPurespecifier(com.generator.generators.cpp.parser.CPP14Parser.PurespecifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Purespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Purespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPurespecifier.push(true);
 	}
@@ -2833,7 +2853,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBaseclause(com.generator.generators.cpp.parser.CPP14Parser.BaseclauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("Baseclause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Baseclause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBaseclause.push(true);
 	}
@@ -2851,7 +2871,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBasespecifierlist(com.generator.generators.cpp.parser.CPP14Parser.BasespecifierlistContext arg) {
-		final Node node = model.findOrCreate(Label.label("Basespecifierlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Basespecifierlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBasespecifierlist.push(true);
 	}
@@ -2869,7 +2889,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBasespecifier(com.generator.generators.cpp.parser.CPP14Parser.BasespecifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Basespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Basespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBasespecifier.push(true);
 	}
@@ -2887,7 +2907,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterClassordecltype(com.generator.generators.cpp.parser.CPP14Parser.ClassordecltypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("Classordecltype"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Classordecltype"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inClassordecltype.push(true);
 	}
@@ -2905,7 +2925,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBasetypespecifier(com.generator.generators.cpp.parser.CPP14Parser.BasetypespecifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Basetypespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Basetypespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBasetypespecifier.push(true);
 	}
@@ -2923,7 +2943,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAccessspecifier(com.generator.generators.cpp.parser.CPP14Parser.AccessspecifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Accessspecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Accessspecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAccessspecifier.push(true);
 	}
@@ -2941,7 +2961,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterConversionfunctionid(com.generator.generators.cpp.parser.CPP14Parser.ConversionfunctionidContext arg) {
-		final Node node = model.findOrCreate(Label.label("Conversionfunctionid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Conversionfunctionid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inConversionfunctionid.push(true);
 	}
@@ -2959,7 +2979,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterConversiontypeid(com.generator.generators.cpp.parser.CPP14Parser.ConversiontypeidContext arg) {
-		final Node node = model.findOrCreate(Label.label("Conversiontypeid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Conversiontypeid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inConversiontypeid.push(true);
 	}
@@ -2977,7 +2997,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterConversiondeclarator(com.generator.generators.cpp.parser.CPP14Parser.ConversiondeclaratorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Conversiondeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Conversiondeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inConversiondeclarator.push(true);
 	}
@@ -2995,7 +3015,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterCtorinitializer(com.generator.generators.cpp.parser.CPP14Parser.CtorinitializerContext arg) {
-		final Node node = model.findOrCreate(Label.label("Ctorinitializer"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Ctorinitializer"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCtorinitializer.push(true);
 	}
@@ -3013,7 +3033,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterMeminitializerlist(com.generator.generators.cpp.parser.CPP14Parser.MeminitializerlistContext arg) {
-		final Node node = model.findOrCreate(Label.label("Meminitializerlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Meminitializerlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMeminitializerlist.push(true);
 	}
@@ -3031,7 +3051,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterMeminitializer(com.generator.generators.cpp.parser.CPP14Parser.MeminitializerContext arg) {
-		final Node node = model.findOrCreate(Label.label("Meminitializer"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Meminitializer"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMeminitializer.push(true);
 	}
@@ -3049,7 +3069,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterMeminitializerid(com.generator.generators.cpp.parser.CPP14Parser.MeminitializeridContext arg) {
-		final Node node = model.findOrCreate(Label.label("Meminitializerid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Meminitializerid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMeminitializerid.push(true);
 	}
@@ -3067,7 +3087,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterOperatorfunctionid(com.generator.generators.cpp.parser.CPP14Parser.OperatorfunctionidContext arg) {
-		final Node node = model.findOrCreate(Label.label("Operatorfunctionid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Operatorfunctionid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOperatorfunctionid.push(true);
 	}
@@ -3085,7 +3105,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterLiteraloperatorid(com.generator.generators.cpp.parser.CPP14Parser.LiteraloperatoridContext arg) {
-		final Node node = model.findOrCreate(Label.label("Literaloperatorid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Literaloperatorid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLiteraloperatorid.push(true);
 	}
@@ -3103,7 +3123,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTemplatedeclaration(com.generator.generators.cpp.parser.CPP14Parser.TemplatedeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Templatedeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Templatedeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTemplatedeclaration.push(true);
 	}
@@ -3121,7 +3141,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTemplateparameterlist(com.generator.generators.cpp.parser.CPP14Parser.TemplateparameterlistContext arg) {
-		final Node node = model.findOrCreate(Label.label("Templateparameterlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Templateparameterlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTemplateparameterlist.push(true);
 	}
@@ -3139,7 +3159,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTemplateparameter(com.generator.generators.cpp.parser.CPP14Parser.TemplateparameterContext arg) {
-		final Node node = model.findOrCreate(Label.label("Templateparameter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Templateparameter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTemplateparameter.push(true);
 	}
@@ -3157,7 +3177,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTypeparameter(com.generator.generators.cpp.parser.CPP14Parser.TypeparameterContext arg) {
-		final Node node = model.findOrCreate(Label.label("Typeparameter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Typeparameter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypeparameter.push(true);
 	}
@@ -3175,7 +3195,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterSimpletemplateid(com.generator.generators.cpp.parser.CPP14Parser.SimpletemplateidContext arg) {
-		final Node node = model.findOrCreate(Label.label("Simpletemplateid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Simpletemplateid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSimpletemplateid.push(true);
 	}
@@ -3193,7 +3213,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTemplateid(com.generator.generators.cpp.parser.CPP14Parser.TemplateidContext arg) {
-		final Node node = model.findOrCreate(Label.label("Templateid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Templateid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTemplateid.push(true);
 	}
@@ -3211,7 +3231,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTemplatename(com.generator.generators.cpp.parser.CPP14Parser.TemplatenameContext arg) {
-		final Node node = model.findOrCreate(Label.label("Templatename"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Templatename"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTemplatename.push(true);
 	}
@@ -3229,7 +3249,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTemplateargumentlist(com.generator.generators.cpp.parser.CPP14Parser.TemplateargumentlistContext arg) {
-		final Node node = model.findOrCreate(Label.label("Templateargumentlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Templateargumentlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTemplateargumentlist.push(true);
 	}
@@ -3247,7 +3267,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTemplateargument(com.generator.generators.cpp.parser.CPP14Parser.TemplateargumentContext arg) {
-		final Node node = model.findOrCreate(Label.label("Templateargument"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Templateargument"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTemplateargument.push(true);
 	}
@@ -3265,7 +3285,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTypenamespecifier(com.generator.generators.cpp.parser.CPP14Parser.TypenamespecifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Typenamespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Typenamespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypenamespecifier.push(true);
 	}
@@ -3283,7 +3303,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterExplicitinstantiation(com.generator.generators.cpp.parser.CPP14Parser.ExplicitinstantiationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Explicitinstantiation"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Explicitinstantiation"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExplicitinstantiation.push(true);
 	}
@@ -3301,7 +3321,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterExplicitspecialization(com.generator.generators.cpp.parser.CPP14Parser.ExplicitspecializationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Explicitspecialization"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Explicitspecialization"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExplicitspecialization.push(true);
 	}
@@ -3319,7 +3339,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTryblock(com.generator.generators.cpp.parser.CPP14Parser.TryblockContext arg) {
-		final Node node = model.findOrCreate(Label.label("Tryblock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Tryblock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTryblock.push(true);
 	}
@@ -3337,7 +3357,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterFunctiontryblock(com.generator.generators.cpp.parser.CPP14Parser.FunctiontryblockContext arg) {
-		final Node node = model.findOrCreate(Label.label("Functiontryblock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Functiontryblock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFunctiontryblock.push(true);
 	}
@@ -3355,7 +3375,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterHandlerseq(com.generator.generators.cpp.parser.CPP14Parser.HandlerseqContext arg) {
-		final Node node = model.findOrCreate(Label.label("Handlerseq"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Handlerseq"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHandlerseq.push(true);
 	}
@@ -3373,7 +3393,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterHandler(com.generator.generators.cpp.parser.CPP14Parser.HandlerContext arg) {
-		final Node node = model.findOrCreate(Label.label("Handler"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Handler"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHandler.push(true);
 	}
@@ -3391,7 +3411,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterExceptiondeclaration(com.generator.generators.cpp.parser.CPP14Parser.ExceptiondeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Exceptiondeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Exceptiondeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExceptiondeclaration.push(true);
 	}
@@ -3409,7 +3429,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterThrowexpression(com.generator.generators.cpp.parser.CPP14Parser.ThrowexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Throwexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Throwexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inThrowexpression.push(true);
 	}
@@ -3427,7 +3447,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterExceptionspecification(com.generator.generators.cpp.parser.CPP14Parser.ExceptionspecificationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Exceptionspecification"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Exceptionspecification"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExceptionspecification.push(true);
 	}
@@ -3445,7 +3465,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterDynamicexceptionspecification(com.generator.generators.cpp.parser.CPP14Parser.DynamicexceptionspecificationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Dynamicexceptionspecification"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Dynamicexceptionspecification"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDynamicexceptionspecification.push(true);
 	}
@@ -3463,7 +3483,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTypeidlist(com.generator.generators.cpp.parser.CPP14Parser.TypeidlistContext arg) {
-		final Node node = model.findOrCreate(Label.label("Typeidlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Typeidlist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypeidlist.push(true);
 	}
@@ -3481,7 +3501,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNoexceptspecification(com.generator.generators.cpp.parser.CPP14Parser.NoexceptspecificationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Noexceptspecification"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Noexceptspecification"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNoexceptspecification.push(true);
 	}
@@ -3499,7 +3519,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterRightShift(com.generator.generators.cpp.parser.CPP14Parser.RightShiftContext arg) {
-		final Node node = model.findOrCreate(Label.label("RightShift"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("RightShift"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRightShift.push(true);
 	}
@@ -3517,7 +3537,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterRightShiftAssign(com.generator.generators.cpp.parser.CPP14Parser.RightShiftAssignContext arg) {
-		final Node node = model.findOrCreate(Label.label("RightShiftAssign"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("RightShiftAssign"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRightShiftAssign.push(true);
 	}
@@ -3535,7 +3555,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterOperator(com.generator.generators.cpp.parser.CPP14Parser.OperatorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Operator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Operator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOperator.push(true);
 	}
@@ -3553,7 +3573,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBooleanliteral(com.generator.generators.cpp.parser.CPP14Parser.BooleanliteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("Booleanliteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Booleanliteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBooleanliteral.push(true);
 	}
@@ -3571,7 +3591,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterPointerliteral(com.generator.generators.cpp.parser.CPP14Parser.PointerliteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("Pointerliteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Pointerliteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPointerliteral.push(true);
 	}
@@ -3589,7 +3609,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	@Override
 	public void enterUserdefinedliteral(com.generator.generators.cpp.parser.CPP14Parser.UserdefinedliteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("Userdefinedliteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Userdefinedliteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUserdefinedliteral.push(true);
 	}
@@ -3601,24 +3621,6 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	public boolean inUserdefinedliteral() {
       return !inUserdefinedliteral.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
-
-	@Override
-	public void enterLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inLiteral.push(true);
-	}
-
-	public void exitLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
-		onExit();
-		this.inLiteral.pop();
-	}
-
-	public boolean inLiteral() {
-      return !inLiteral.isEmpty(); 
    }
 
 }

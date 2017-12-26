@@ -24,7 +24,7 @@ import java.util.concurrent.TimeoutException;
  * Created 16.09.17.
  */
 public class DockerPlugin extends DockerDomainPlugin {
-
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(DockerPlugin.class);
    public DockerPlugin(App app) {
       super(app);
    }
@@ -137,7 +137,7 @@ public class DockerPlugin extends DockerDomainPlugin {
                @Override
                protected void processLine(String line) {
                   result.append(line).append("\n");
-                  System.out.println(line);
+                  log.info(line);
                }
             };
 

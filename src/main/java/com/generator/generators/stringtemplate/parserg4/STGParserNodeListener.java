@@ -2,6 +2,8 @@ package com.generator.generators.stringtemplate.parserg4;
 
 public class STGParserNodeListener extends STGParserBaseListener {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(STGParserNodeListener.class);
+
    public static class Node {
 
       public final String name;
@@ -33,7 +35,7 @@ public class STGParserNodeListener extends STGParserBaseListener {
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
+		if (debug) log.debug(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -63,6 +65,40 @@ public class STGParserNodeListener extends STGParserBaseListener {
 
 	public boolean inImports() {
       return !inImports.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTemplate = new java.util.Stack<>();
+
+	@Override
+	public void enterTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
+		onEnter(new Node("Template", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inTemplate.push(true);
+	}
+
+	public void exitTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
+		onExit();
+		this.inTemplate.pop();
+	}
+
+	public boolean inTemplate() {
+      return !inTemplate.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inGroup = new java.util.Stack<>();
+
+	@Override
+	public void enterGroup(com.generator.generators.stringtemplate.parserg4.STGParser.GroupContext arg) {
+		onEnter(new Node("Group", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inGroup.push(true);
+	}
+
+	public void exitGroup(com.generator.generators.stringtemplate.parserg4.STGParser.GroupContext arg) {
+		onExit();
+		this.inGroup.pop();
+	}
+
+	public boolean inGroup() {
+      return !inGroup.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDelimiters = new java.util.Stack<>();
@@ -131,40 +167,6 @@ public class STGParserNodeListener extends STGParserBaseListener {
 
 	public boolean inDict() {
       return !inDict.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inGroup = new java.util.Stack<>();
-
-	@Override
-	public void enterGroup(com.generator.generators.stringtemplate.parserg4.STGParser.GroupContext arg) {
-		onEnter(new Node("Group", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inGroup.push(true);
-	}
-
-	public void exitGroup(com.generator.generators.stringtemplate.parserg4.STGParser.GroupContext arg) {
-		onExit();
-		this.inGroup.pop();
-	}
-
-	public boolean inGroup() {
-      return !inGroup.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTemplate = new java.util.Stack<>();
-
-	@Override
-	public void enterTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
-		onEnter(new Node("Template", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inTemplate.push(true);
-	}
-
-	public void exitTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
-		onExit();
-		this.inTemplate.pop();
-	}
-
-	public boolean inTemplate() {
-      return !inTemplate.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDictPairs = new java.util.Stack<>();

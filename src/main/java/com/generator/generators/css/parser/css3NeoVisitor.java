@@ -6,6 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(css3NeoVisitor.class);
+
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final com.generator.neo.NeoModel model;
 
@@ -29,7 +31,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitBlock(com.generator.generators.css.parser.css3Parser.BlockContext arg) {
-		System.out.println("Block");
+		log.info("Block");
 		final Node node = model.newNode(Label.label("Block"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -38,9 +40,9 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitBadCharset(com.generator.generators.css.parser.css3Parser.BadCharsetContext arg) {
-		System.out.println("BadCharset");
-		final Node node = model.newNode(Label.label("BadCharset"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
+		log.info("Number");
+		final Node node = model.newNode(Label.label("Number"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -49,7 +51,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitStylesheet(com.generator.generators.css.parser.css3Parser.StylesheetContext arg) {
-		System.out.println("Stylesheet");
+		log.info("Stylesheet");
 		final Node node = model.newNode(Label.label("Stylesheet"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -58,9 +60,9 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitTypeSelector(com.generator.generators.css.parser.css3Parser.TypeSelectorContext arg) {
-		System.out.println("TypeSelector");
-		final Node node = model.newNode(Label.label("TypeSelector"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitGoodCharset(com.generator.generators.css.parser.css3Parser.GoodCharsetContext arg) {
+		log.info("GoodCharset");
+		final Node node = model.newNode(Label.label("GoodCharset"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -68,19 +70,9 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitElementName(com.generator.generators.css.parser.css3Parser.ElementNameContext arg) {
-		System.out.println("ElementName");
-		final Node node = model.newNode(Label.label("ElementName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
-		System.out.println("Expression");
-		final Node node = model.newNode(Label.label("Expression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitBadCharset(com.generator.generators.css.parser.css3Parser.BadCharsetContext arg) {
+		log.info("BadCharset");
+		final Node node = model.newNode(Label.label("BadCharset"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -89,7 +81,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitGoodImport(com.generator.generators.css.parser.css3Parser.GoodImportContext arg) {
-		System.out.println("GoodImport");
+		log.info("GoodImport");
 		final Node node = model.newNode(Label.label("GoodImport"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -99,7 +91,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitBadImport(com.generator.generators.css.parser.css3Parser.BadImportContext arg) {
-		System.out.println("BadImport");
+		log.info("BadImport");
 		final Node node = model.newNode(Label.label("BadImport"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -109,7 +101,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitGoodNamespace(com.generator.generators.css.parser.css3Parser.GoodNamespaceContext arg) {
-		System.out.println("GoodNamespace");
+		log.info("GoodNamespace");
 		final Node node = model.newNode(Label.label("GoodNamespace"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -119,7 +111,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitBadNamespace(com.generator.generators.css.parser.css3Parser.BadNamespaceContext arg) {
-		System.out.println("BadNamespace");
+		log.info("BadNamespace");
 		final Node node = model.newNode(Label.label("BadNamespace"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -129,7 +121,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitNamespacePrefix(com.generator.generators.css.parser.css3Parser.NamespacePrefixContext arg) {
-		System.out.println("NamespacePrefix");
+		log.info("NamespacePrefix");
 		final Node node = model.newNode(Label.label("NamespacePrefix"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -139,7 +131,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitMedia(com.generator.generators.css.parser.css3Parser.MediaContext arg) {
-		System.out.println("Media");
+		log.info("Media");
 		final Node node = model.newNode(Label.label("Media"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -149,7 +141,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitMediaQueryList(com.generator.generators.css.parser.css3Parser.MediaQueryListContext arg) {
-		System.out.println("MediaQueryList");
+		log.info("MediaQueryList");
 		final Node node = model.newNode(Label.label("MediaQueryList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -158,8 +150,28 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
+		log.info("Expression");
+		final Node node = model.newNode(Label.label("Expression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSupportsDeclarationCondition(com.generator.generators.css.parser.css3Parser.SupportsDeclarationConditionContext arg) {
+		log.info("SupportsDeclarationCondition");
+		final Node node = model.newNode(Label.label("SupportsDeclarationCondition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitMediaQuery(com.generator.generators.css.parser.css3Parser.MediaQueryContext arg) {
-		System.out.println("MediaQuery");
+		log.info("MediaQuery");
 		final Node node = model.newNode(Label.label("MediaQuery"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -168,28 +180,8 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
-		System.out.println("Number");
-		final Node node = model.newNode(Label.label("Number"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitGoodCharset(com.generator.generators.css.parser.css3Parser.GoodCharsetContext arg) {
-		System.out.println("GoodCharset");
-		final Node node = model.newNode(Label.label("GoodCharset"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitMediaType(com.generator.generators.css.parser.css3Parser.MediaTypeContext arg) {
-		System.out.println("MediaType");
+		log.info("MediaType");
 		final Node node = model.newNode(Label.label("MediaType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -199,7 +191,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitMediaExpression(com.generator.generators.css.parser.css3Parser.MediaExpressionContext arg) {
-		System.out.println("MediaExpression");
+		log.info("MediaExpression");
 		final Node node = model.newNode(Label.label("MediaExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -209,7 +201,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitMediaFeature(com.generator.generators.css.parser.css3Parser.MediaFeatureContext arg) {
-		System.out.println("MediaFeature");
+		log.info("MediaFeature");
 		final Node node = model.newNode(Label.label("MediaFeature"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -219,7 +211,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitPage(com.generator.generators.css.parser.css3Parser.PageContext arg) {
-		System.out.println("Page");
+		log.info("Page");
 		final Node node = model.newNode(Label.label("Page"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -229,7 +221,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitPseudoPage(com.generator.generators.css.parser.css3Parser.PseudoPageContext arg) {
-		System.out.println("PseudoPage");
+		log.info("PseudoPage");
 		final Node node = model.newNode(Label.label("PseudoPage"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -239,7 +231,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitSelectorGroup(com.generator.generators.css.parser.css3Parser.SelectorGroupContext arg) {
-		System.out.println("SelectorGroup");
+		log.info("SelectorGroup");
 		final Node node = model.newNode(Label.label("SelectorGroup"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -249,7 +241,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitSelector(com.generator.generators.css.parser.css3Parser.SelectorContext arg) {
-		System.out.println("Selector");
+		log.info("Selector");
 		final Node node = model.newNode(Label.label("Selector"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -259,7 +251,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitCombinator(com.generator.generators.css.parser.css3Parser.CombinatorContext arg) {
-		System.out.println("Combinator");
+		log.info("Combinator");
 		final Node node = model.newNode(Label.label("Combinator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -269,7 +261,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitSimpleSelectorSequence(com.generator.generators.css.parser.css3Parser.SimpleSelectorSequenceContext arg) {
-		System.out.println("SimpleSelectorSequence");
+		log.info("SimpleSelectorSequence");
 		final Node node = model.newNode(Label.label("SimpleSelectorSequence"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -278,8 +270,18 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitTypeSelector(com.generator.generators.css.parser.css3Parser.TypeSelectorContext arg) {
+		log.info("TypeSelector");
+		final Node node = model.newNode(Label.label("TypeSelector"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitTypeNamespacePrefix(com.generator.generators.css.parser.css3Parser.TypeNamespacePrefixContext arg) {
-		System.out.println("TypeNamespacePrefix");
+		log.info("TypeNamespacePrefix");
 		final Node node = model.newNode(Label.label("TypeNamespacePrefix"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -288,8 +290,18 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitElementName(com.generator.generators.css.parser.css3Parser.ElementNameContext arg) {
+		log.info("ElementName");
+		final Node node = model.newNode(Label.label("ElementName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitUniversal(com.generator.generators.css.parser.css3Parser.UniversalContext arg) {
-		System.out.println("Universal");
+		log.info("Universal");
 		final Node node = model.newNode(Label.label("Universal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -299,7 +311,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitClassName(com.generator.generators.css.parser.css3Parser.ClassNameContext arg) {
-		System.out.println("ClassName");
+		log.info("ClassName");
 		final Node node = model.newNode(Label.label("ClassName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -309,7 +321,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitAttrib(com.generator.generators.css.parser.css3Parser.AttribContext arg) {
-		System.out.println("Attrib");
+		log.info("Attrib");
 		final Node node = model.newNode(Label.label("Attrib"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -319,7 +331,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitPseudo(com.generator.generators.css.parser.css3Parser.PseudoContext arg) {
-		System.out.println("Pseudo");
+		log.info("Pseudo");
 		final Node node = model.newNode(Label.label("Pseudo"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -329,7 +341,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitFunctionalPseudo(com.generator.generators.css.parser.css3Parser.FunctionalPseudoContext arg) {
-		System.out.println("FunctionalPseudo");
+		log.info("FunctionalPseudo");
 		final Node node = model.newNode(Label.label("FunctionalPseudo"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -339,7 +351,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitNegation(com.generator.generators.css.parser.css3Parser.NegationContext arg) {
-		System.out.println("Negation");
+		log.info("Negation");
 		final Node node = model.newNode(Label.label("Negation"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -349,7 +361,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitNegationArg(com.generator.generators.css.parser.css3Parser.NegationArgContext arg) {
-		System.out.println("NegationArg");
+		log.info("NegationArg");
 		final Node node = model.newNode(Label.label("NegationArg"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -359,7 +371,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitGoodOperator(com.generator.generators.css.parser.css3Parser.GoodOperatorContext arg) {
-		System.out.println("GoodOperator");
+		log.info("GoodOperator");
 		final Node node = model.newNode(Label.label("GoodOperator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -369,7 +381,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitBadOperator(com.generator.generators.css.parser.css3Parser.BadOperatorContext arg) {
-		System.out.println("BadOperator");
+		log.info("BadOperator");
 		final Node node = model.newNode(Label.label("BadOperator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -379,7 +391,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitGoodProperty(com.generator.generators.css.parser.css3Parser.GoodPropertyContext arg) {
-		System.out.println("GoodProperty");
+		log.info("GoodProperty");
 		final Node node = model.newNode(Label.label("GoodProperty"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -389,7 +401,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitBadProperty(com.generator.generators.css.parser.css3Parser.BadPropertyContext arg) {
-		System.out.println("BadProperty");
+		log.info("BadProperty");
 		final Node node = model.newNode(Label.label("BadProperty"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -399,7 +411,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitKnownRuleset(com.generator.generators.css.parser.css3Parser.KnownRulesetContext arg) {
-		System.out.println("KnownRuleset");
+		log.info("KnownRuleset");
 		final Node node = model.newNode(Label.label("KnownRuleset"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -409,7 +421,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitUnknownRuleset(com.generator.generators.css.parser.css3Parser.UnknownRulesetContext arg) {
-		System.out.println("UnknownRuleset");
+		log.info("UnknownRuleset");
 		final Node node = model.newNode(Label.label("UnknownRuleset"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -419,7 +431,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitDeclarationList(com.generator.generators.css.parser.css3Parser.DeclarationListContext arg) {
-		System.out.println("DeclarationList");
+		log.info("DeclarationList");
 		final Node node = model.newNode(Label.label("DeclarationList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -429,7 +441,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitKnownDeclaration(com.generator.generators.css.parser.css3Parser.KnownDeclarationContext arg) {
-		System.out.println("KnownDeclaration");
+		log.info("KnownDeclaration");
 		final Node node = model.newNode(Label.label("KnownDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -439,7 +451,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitUnknownDeclaration(com.generator.generators.css.parser.css3Parser.UnknownDeclarationContext arg) {
-		System.out.println("UnknownDeclaration");
+		log.info("UnknownDeclaration");
 		final Node node = model.newNode(Label.label("UnknownDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -449,7 +461,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitPrio(com.generator.generators.css.parser.css3Parser.PrioContext arg) {
-		System.out.println("Prio");
+		log.info("Prio");
 		final Node node = model.newNode(Label.label("Prio"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -459,7 +471,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitValue(com.generator.generators.css.parser.css3Parser.ValueContext arg) {
-		System.out.println("Value");
+		log.info("Value");
 		final Node node = model.newNode(Label.label("Value"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -469,7 +481,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitExpr(com.generator.generators.css.parser.css3Parser.ExprContext arg) {
-		System.out.println("Expr");
+		log.info("Expr");
 		final Node node = model.newNode(Label.label("Expr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -479,7 +491,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitKnownTerm(com.generator.generators.css.parser.css3Parser.KnownTermContext arg) {
-		System.out.println("KnownTerm");
+		log.info("KnownTerm");
 		final Node node = model.newNode(Label.label("KnownTerm"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -489,7 +501,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitUnknownTerm(com.generator.generators.css.parser.css3Parser.UnknownTermContext arg) {
-		System.out.println("UnknownTerm");
+		log.info("UnknownTerm");
 		final Node node = model.newNode(Label.label("UnknownTerm"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -499,7 +511,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitBadTerm(com.generator.generators.css.parser.css3Parser.BadTermContext arg) {
-		System.out.println("BadTerm");
+		log.info("BadTerm");
 		final Node node = model.newNode(Label.label("BadTerm"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -509,7 +521,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitFunction(com.generator.generators.css.parser.css3Parser.FunctionContext arg) {
-		System.out.println("Function");
+		log.info("Function");
 		final Node node = model.newNode(Label.label("Function"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -519,7 +531,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitDxImageTransform(com.generator.generators.css.parser.css3Parser.DxImageTransformContext arg) {
-		System.out.println("DxImageTransform");
+		log.info("DxImageTransform");
 		final Node node = model.newNode(Label.label("DxImageTransform"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -529,7 +541,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitHexcolor(com.generator.generators.css.parser.css3Parser.HexcolorContext arg) {
-		System.out.println("Hexcolor");
+		log.info("Hexcolor");
 		final Node node = model.newNode(Label.label("Hexcolor"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -539,7 +551,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitPercentage(com.generator.generators.css.parser.css3Parser.PercentageContext arg) {
-		System.out.println("Percentage");
+		log.info("Percentage");
 		final Node node = model.newNode(Label.label("Percentage"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -549,7 +561,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitDimension(com.generator.generators.css.parser.css3Parser.DimensionContext arg) {
-		System.out.println("Dimension");
+		log.info("Dimension");
 		final Node node = model.newNode(Label.label("Dimension"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -559,7 +571,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitUnknownDimension(com.generator.generators.css.parser.css3Parser.UnknownDimensionContext arg) {
-		System.out.println("UnknownDimension");
+		log.info("UnknownDimension");
 		final Node node = model.newNode(Label.label("UnknownDimension"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -569,7 +581,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitAny(com.generator.generators.css.parser.css3Parser.AnyContext arg) {
-		System.out.println("Any");
+		log.info("Any");
 		final Node node = model.newNode(Label.label("Any"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -579,7 +591,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitUnknownAtRule(com.generator.generators.css.parser.css3Parser.UnknownAtRuleContext arg) {
-		System.out.println("UnknownAtRule");
+		log.info("UnknownAtRule");
 		final Node node = model.newNode(Label.label("UnknownAtRule"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -589,7 +601,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitAtKeyword(com.generator.generators.css.parser.css3Parser.AtKeywordContext arg) {
-		System.out.println("AtKeyword");
+		log.info("AtKeyword");
 		final Node node = model.newNode(Label.label("AtKeyword"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -599,7 +611,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitUnused(com.generator.generators.css.parser.css3Parser.UnusedContext arg) {
-		System.out.println("Unused");
+		log.info("Unused");
 		final Node node = model.newNode(Label.label("Unused"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -609,7 +621,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitNestedStatement(com.generator.generators.css.parser.css3Parser.NestedStatementContext arg) {
-		System.out.println("NestedStatement");
+		log.info("NestedStatement");
 		final Node node = model.newNode(Label.label("NestedStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -619,7 +631,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitGroupRuleBody(com.generator.generators.css.parser.css3Parser.GroupRuleBodyContext arg) {
-		System.out.println("GroupRuleBody");
+		log.info("GroupRuleBody");
 		final Node node = model.newNode(Label.label("GroupRuleBody"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -629,7 +641,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitSupportsRule(com.generator.generators.css.parser.css3Parser.SupportsRuleContext arg) {
-		System.out.println("SupportsRule");
+		log.info("SupportsRule");
 		final Node node = model.newNode(Label.label("SupportsRule"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -639,7 +651,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitSupportsCondition(com.generator.generators.css.parser.css3Parser.SupportsConditionContext arg) {
-		System.out.println("SupportsCondition");
+		log.info("SupportsCondition");
 		final Node node = model.newNode(Label.label("SupportsCondition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -649,7 +661,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitSupportsConditionInParens(com.generator.generators.css.parser.css3Parser.SupportsConditionInParensContext arg) {
-		System.out.println("SupportsConditionInParens");
+		log.info("SupportsConditionInParens");
 		final Node node = model.newNode(Label.label("SupportsConditionInParens"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -659,7 +671,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitSupportsNegation(com.generator.generators.css.parser.css3Parser.SupportsNegationContext arg) {
-		System.out.println("SupportsNegation");
+		log.info("SupportsNegation");
 		final Node node = model.newNode(Label.label("SupportsNegation"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -669,7 +681,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitSupportsConjunction(com.generator.generators.css.parser.css3Parser.SupportsConjunctionContext arg) {
-		System.out.println("SupportsConjunction");
+		log.info("SupportsConjunction");
 		final Node node = model.newNode(Label.label("SupportsConjunction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -679,7 +691,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitSupportsDisjunction(com.generator.generators.css.parser.css3Parser.SupportsDisjunctionContext arg) {
-		System.out.println("SupportsDisjunction");
+		log.info("SupportsDisjunction");
 		final Node node = model.newNode(Label.label("SupportsDisjunction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -688,18 +700,8 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitSupportsDeclarationCondition(com.generator.generators.css.parser.css3Parser.SupportsDeclarationConditionContext arg) {
-		System.out.println("SupportsDeclarationCondition");
-		final Node node = model.newNode(Label.label("SupportsDeclarationCondition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitGeneralEnclosed(com.generator.generators.css.parser.css3Parser.GeneralEnclosedContext arg) {
-		System.out.println("GeneralEnclosed");
+		log.info("GeneralEnclosed");
 		final Node node = model.newNode(Label.label("GeneralEnclosed"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -709,7 +711,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitVar(com.generator.generators.css.parser.css3Parser.VarContext arg) {
-		System.out.println("Var");
+		log.info("Var");
 		final Node node = model.newNode(Label.label("Var"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -719,7 +721,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitCalc(com.generator.generators.css.parser.css3Parser.CalcContext arg) {
-		System.out.println("Calc");
+		log.info("Calc");
 		final Node node = model.newNode(Label.label("Calc"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -729,7 +731,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitCalcSum(com.generator.generators.css.parser.css3Parser.CalcSumContext arg) {
-		System.out.println("CalcSum");
+		log.info("CalcSum");
 		final Node node = model.newNode(Label.label("CalcSum"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -739,7 +741,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitCalcProduct(com.generator.generators.css.parser.css3Parser.CalcProductContext arg) {
-		System.out.println("CalcProduct");
+		log.info("CalcProduct");
 		final Node node = model.newNode(Label.label("CalcProduct"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -749,7 +751,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitCalcValue(com.generator.generators.css.parser.css3Parser.CalcValueContext arg) {
-		System.out.println("CalcValue");
+		log.info("CalcValue");
 		final Node node = model.newNode(Label.label("CalcValue"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -759,7 +761,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitFontFaceRule(com.generator.generators.css.parser.css3Parser.FontFaceRuleContext arg) {
-		System.out.println("FontFaceRule");
+		log.info("FontFaceRule");
 		final Node node = model.newNode(Label.label("FontFaceRule"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -769,7 +771,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitKnownFontFaceDeclaration(com.generator.generators.css.parser.css3Parser.KnownFontFaceDeclarationContext arg) {
-		System.out.println("KnownFontFaceDeclaration");
+		log.info("KnownFontFaceDeclaration");
 		final Node node = model.newNode(Label.label("KnownFontFaceDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -779,7 +781,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitUnknownFontFaceDeclaration(com.generator.generators.css.parser.css3Parser.UnknownFontFaceDeclarationContext arg) {
-		System.out.println("UnknownFontFaceDeclaration");
+		log.info("UnknownFontFaceDeclaration");
 		final Node node = model.newNode(Label.label("UnknownFontFaceDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -789,7 +791,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitKeyframesRule(com.generator.generators.css.parser.css3Parser.KeyframesRuleContext arg) {
-		System.out.println("KeyframesRule");
+		log.info("KeyframesRule");
 		final Node node = model.newNode(Label.label("KeyframesRule"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -799,7 +801,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitKeyframesBlocks(com.generator.generators.css.parser.css3Parser.KeyframesBlocksContext arg) {
-		System.out.println("KeyframesBlocks");
+		log.info("KeyframesBlocks");
 		final Node node = model.newNode(Label.label("KeyframesBlocks"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -809,7 +811,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitKeyframeSelector(com.generator.generators.css.parser.css3Parser.KeyframeSelectorContext arg) {
-		System.out.println("KeyframeSelector");
+		log.info("KeyframeSelector");
 		final Node node = model.newNode(Label.label("KeyframeSelector"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -819,7 +821,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitViewport(com.generator.generators.css.parser.css3Parser.ViewportContext arg) {
-		System.out.println("Viewport");
+		log.info("Viewport");
 		final Node node = model.newNode(Label.label("Viewport"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -829,7 +831,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitCounterStyle(com.generator.generators.css.parser.css3Parser.CounterStyleContext arg) {
-		System.out.println("CounterStyle");
+		log.info("CounterStyle");
 		final Node node = model.newNode(Label.label("CounterStyle"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -839,7 +841,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitFontFeatureValuesRule(com.generator.generators.css.parser.css3Parser.FontFeatureValuesRuleContext arg) {
-		System.out.println("FontFeatureValuesRule");
+		log.info("FontFeatureValuesRule");
 		final Node node = model.newNode(Label.label("FontFeatureValuesRule"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -849,7 +851,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitFontFamilyNameList(com.generator.generators.css.parser.css3Parser.FontFamilyNameListContext arg) {
-		System.out.println("FontFamilyNameList");
+		log.info("FontFamilyNameList");
 		final Node node = model.newNode(Label.label("FontFamilyNameList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -859,7 +861,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitFontFamilyName(com.generator.generators.css.parser.css3Parser.FontFamilyNameContext arg) {
-		System.out.println("FontFamilyName");
+		log.info("FontFamilyName");
 		final Node node = model.newNode(Label.label("FontFamilyName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -869,7 +871,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitFeatureValueBlock(com.generator.generators.css.parser.css3Parser.FeatureValueBlockContext arg) {
-		System.out.println("FeatureValueBlock");
+		log.info("FeatureValueBlock");
 		final Node node = model.newNode(Label.label("FeatureValueBlock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -879,7 +881,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitFeatureType(com.generator.generators.css.parser.css3Parser.FeatureTypeContext arg) {
-		System.out.println("FeatureType");
+		log.info("FeatureType");
 		final Node node = model.newNode(Label.label("FeatureType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -889,7 +891,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitFeatureValueDefinition(com.generator.generators.css.parser.css3Parser.FeatureValueDefinitionContext arg) {
-		System.out.println("FeatureValueDefinition");
+		log.info("FeatureValueDefinition");
 		final Node node = model.newNode(Label.label("FeatureValueDefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -899,7 +901,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitIdent(com.generator.generators.css.parser.css3Parser.IdentContext arg) {
-		System.out.println("Ident");
+		log.info("Ident");
 		final Node node = model.newNode(Label.label("Ident"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -909,7 +911,7 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 
 	@Override
 	public Node visitWs(com.generator.generators.css.parser.css3Parser.WsContext arg) {
-		System.out.println("Ws");
+		log.info("Ws");
 		final Node node = model.newNode(Label.label("Ws"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);

@@ -2,9 +2,11 @@ package com.generator.app;
 
 import com.generator.app.nodes.NeoNode;
 import com.generator.app.nodes.NeoRelationship;
+import com.generator.generators.domain.DomainDomainPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.neo.NeoModel;
 import com.generator.util.ColorBrewerSelector;
+import com.generator.util.FormatUtil;
 import com.generator.util.NeoUtil;
 import com.generator.util.SwingUtil;
 import org.jetbrains.annotations.NotNull;
@@ -39,11 +41,13 @@ import static com.generator.util.NeoUtil.*;
  */
 public final class Workspace extends JPanel {
 
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Workspace.class);
+
    public final Map<Long, NeoNode> layerNodes = new LinkedHashMap<>();
    public final Map<Long, NeoRelationship> layerRelations = new LinkedHashMap<>();
 
    public final App app;
-   final NodeCanvas nodeCanvas;
+   public final NodeCanvas nodeCanvas;
 
    Workspace(App app) {
       super(new BorderLayout());
@@ -228,6 +232,10 @@ public final class Workspace extends JPanel {
                   case KeyEvent.VK_1:
                      listSelectedNodesAtMousePosition();
                      break;
+
+                  case KeyEvent.VK_D:
+                     showDependentNodes(event);
+                     break;
                }
             }
 
@@ -256,6 +264,11 @@ public final class Workspace extends JPanel {
             protected void propertyChange(Object oldValue, Set<AppEvents.NodeLoadEvent> nodes) {
 
                if (nodes.isEmpty()) return;
+
+               if (layerNodes.size() > 5000 || (layerNodes.size() + nodes.size() > 5000)) {
+                  log.warn("more than 5000 nodes showing. Ignoring loading " + nodes.size() + " nodes");
+                  return;
+               }
 
                for (AppEvents.NodeLoadEvent nodeLoadEvent : nodes) {
                   final Node node = nodeLoadEvent.node;
@@ -315,6 +328,9 @@ public final class Workspace extends JPanel {
 
             @Override
             protected void propertyChange(Object oldValue, Set<Relationship> relations) {
+
+               log.info("workspace.relations_added");
+               final long start = System.currentTimeMillis();
                for (Relationship relationship : relations) {
                   if (layerNodes.containsKey(relationship.getStartNode().getId()) && layerNodes.containsKey(relationship.getEndNode().getId()) && !layerRelations.containsKey(relationship.getId())) {
                      final NeoRelationship nodeRelation = new NeoRelationship(Workspace.this, NodeCanvas.this, relationship, layerNodes.get(relationship.getStartNode().getId()), layerNodes.get(relationship.getEndNode().getId()));
@@ -322,6 +338,9 @@ public final class Workspace extends JPanel {
                      relationLayer.addChild(nodeRelation.path);
                   }
                }
+
+               log.info("workspace.relations_added " + FormatUtil.formatTime(System.currentTimeMillis() - start));
+
             }
          });
 
@@ -422,10 +441,10 @@ public final class Workspace extends JPanel {
                layerNodes.clear();
                layerRelations.clear();
 
-               System.out.println("nodeChange listeners before " + nodeChangeListeners.size());
+               log.info("nodeChange listeners before " + nodeChangeListeners.size());
                for (Map.Entry<Long, PropertyChangeListener> entry : nodeChangeListeners.entrySet())
                   app.events.removePropertyChangeListener(AppEvents.NODE_CHANGED + entry.getKey(), entry.getValue());
-               System.out.println("nodeChange listeners after");
+               log.info("nodeChange listeners after");
                nodeChangeListeners.clear();
 
                final Node layoutNode = AppMotif.getLayoutNode(app, AppMotif.Properties._lastLayout.name());
@@ -478,7 +497,7 @@ public final class Workspace extends JPanel {
                      if (!dependentNodes.isEmpty())
                         for (Node dependentNode : dependentNodes)
                            out.append(NeoUtil.getNameAndLabelsFrom(dependentNode)).append("\n");
-                     System.out.println(out);
+                     log.info(out);
 
                      if (dependentNodes.isEmpty() || SwingUtil.showConfirmDialog(app, "There are " + dependentNodes.size() + " nodes in graph which are dependent on nodes to delete. Are you sure you want to delete ?"))
                         app.model.deleteNodes(nodes);
@@ -624,13 +643,14 @@ public final class Workspace extends JPanel {
                               final Set<Relationship> deleteRelations = new LinkedHashSet<>();
                               for (NeoRelationship selectedRelation : selectedRelations) {
                                  final Relationship oldRelation = selectedRelation.getRelationship();
-                                 if(existingRelationTypeName.equals(oldRelation.getType().name())) {
+                                 if (existingRelationTypeName.equals(oldRelation.getType().name())) {
 
                                     final Node src = oldRelation.getStartNode();
                                     final Node dst = oldRelation.getEndNode();
 
                                     final Relationship newRelation = src.createRelationshipTo(dst, newRelationshipType);
-                                    for (String key : oldRelation.getPropertyKeys()) newRelation.setProperty(key, oldRelation.getProperty(key));
+                                    for (String key : oldRelation.getPropertyKeys())
+                                       newRelation.setProperty(key, oldRelation.getProperty(key));
                                     deleteRelations.add(oldRelation);
                                  }
                               }
@@ -703,7 +723,7 @@ public final class Workspace extends JPanel {
 
                               for (NeoRelationship selectedRelation : selectedRelations) {
                                  final Relationship relationship = selectedRelation.getRelationship();
-                                 if(relationship.hasProperty(existingPropertyName)) {
+                                 if (relationship.hasProperty(existingPropertyName)) {
                                     relationship.setProperty(newPropertyName, relationship.getProperty(existingPropertyName));
                                     relationship.removeProperty(existingPropertyName);
                                  }
@@ -798,17 +818,9 @@ public final class Workspace extends JPanel {
          SwingUtilities.invokeLater(() -> {
             final Point2D startPosition = nodeCanvas.getCamera().localToView(nodeCanvas.getMousePosition());
             final Point2D currentPosition = new Point((int) startPosition.getX(), (int) startPosition.getY());
-            int maxX = -1;
-
             for (NeoNode pNode : getSelectedNodes()) {
                pNode.setOffset(currentPosition);
-
-               final int pNodeMaxX = (int) (pNode.getX() + pNode.getFullBoundsReference().getWidth() + pNode.getOffset().getX());
-               if (maxX < pNodeMaxX) maxX = pNodeMaxX + 30;
-
                currentPosition.setLocation(currentPosition.getX(), currentPosition.getY() + pNode.getFullBoundsReference().getHeight());
-               if (currentPosition.getY() >= getVisibleRect().getHeight() - 20)
-                  currentPosition.setLocation(maxX, startPosition.getY());
             }
          });
       }
@@ -933,7 +945,14 @@ public final class Workspace extends JPanel {
                   final Set<NodeLoadEvent> nodes = new LinkedHashSet<>();
                   for (NeoNode selectedNode : getSelectedNodes()) {
                      final Node node = selectedNode.getNode();
-                     outgoing(node).forEach(relationship -> nodes.add(new NodeLoadEvent(other(node, relationship), null)));
+                     outgoing(node).forEach(relationship -> {
+
+                        // test for not expanding INSTANCES from Entity...
+                        if (DomainPlugin.isEntity(node) && DomainPlugin.Relations.INSTANCE.name().equals(relationship.getType().name()))
+                           return;
+
+                        nodes.add(new NodeLoadEvent(other(node, relationship), null));
+                     });
                   }
                   app.events.firePropertyChange(NODE_LOAD, nodes);
                }
@@ -973,6 +992,58 @@ public final class Workspace extends JPanel {
 
             nodeCanvas.getCamera().animateViewToCenterBounds(nodeToCenter.getGlobalFullBounds(), false, 500);
          });
+      }
+
+      private void showDependentNodes(PInputEvent event) {
+
+         if (!event.isControlDown()) {
+            SwingUtilities.invokeLater(() -> app.model.graph().doInTransaction(new Committer() {
+               @Override
+               public void doAction(Transaction tx) throws Throwable {
+                  final Set<NeoNode> nodes = new LinkedHashSet<>();
+                  for (NeoNode selectedNode : getSelectedNodes()) {
+                     incoming(selectedNode.getNode()).forEach(relationship -> {
+                        if (relationship.getType().name().equals(AppMotif.Relations._LAYOUT_MEMBER.name()))
+                           return;
+                        if (!layerRelations.containsKey(relationship.getId())) return;
+                        final NeoNode target = (NeoNode) layerRelations.get(relationship.getId()).path.getAttribute("target");
+                        target.select();
+                        nodes.add(target);
+                     });
+                  }
+                  app.events.firePropertyChange(NODES_SELECTED, nodes);
+               }
+
+               @Override
+               public void exception(Throwable throwable) {
+                  SwingUtil.showException(NodeCanvas.this, throwable);
+               }
+            }));
+
+
+         } else {
+
+            SwingUtilities.invokeLater(() -> app.model.graph().doInTransaction(new Committer() {
+               @Override
+               public void doAction(Transaction tx) throws Throwable {
+                  final Set<NodeLoadEvent> nodes = new LinkedHashSet<>();
+                  for (NeoNode selectedNode : getSelectedNodes()) {
+                     final Node node = selectedNode.getNode();
+                     incoming(node).forEach(relationship -> {
+                        if (relationship.getType().name().equals(AppMotif.Relations._LAYOUT_MEMBER.name()))
+                           return;
+                        nodes.add(new NodeLoadEvent(other(node, relationship), null));
+                     });
+                  }
+                  app.events.firePropertyChange(NODE_LOAD, nodes);
+               }
+
+               @Override
+               public void exception(Throwable throwable) {
+                  SwingUtil.showException(NodeCanvas.this, throwable);
+               }
+            }));
+         }
       }
 
       private void selectAllNodes() {

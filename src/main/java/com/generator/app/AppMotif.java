@@ -21,6 +21,8 @@ import static com.generator.util.NeoUtil.*;
  */
 public final class AppMotif {
 
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(AppMotif.class);
+
    public static Font getDefaultFont() {
       return new Font("Hack", Font.PLAIN, 10);
    }
@@ -70,17 +72,23 @@ public final class AppMotif {
       saveLayout(existingLayoutNode == null ? app.model.graph().newNode(Entities._Layout, Properties.name.name(), layoutName) : existingLayoutNode, nodes);
    }
 
+   public static boolean isLayout(Node node) {
+      return hasLabel(node, AppMotif.Entities._Layout);
+   }
+
    static Node getLayoutNode(App app, String name) {
       return app.model.graph().findNode(AppMotif.Entities._Layout, Properties.name.name(), name);
    }
 
    static Set<AppEvents.NodeLoadEvent> getLayoutNodes(Node layoutNode) {
+      log.info("getLayoutNodes ");
       final Set<AppEvents.NodeLoadEvent> nodes = new LinkedHashSet<>();
       outgoing(layoutNode, AppMotif.Relations._LAYOUT_MEMBER).forEach(relationship -> {
          final Double x = Double.valueOf(relationship.getProperty(AppMotif.Properties.x.name()).toString());
          final Double y = Double.valueOf(relationship.getProperty(AppMotif.Properties.y.name()).toString());
          nodes.add(new AppEvents.NodeLoadEvent(other(layoutNode, relationship), new Point2D.Double(x, y)));
       });
+      log.info("getLayoutNodes done");
       return nodes;
    }
 

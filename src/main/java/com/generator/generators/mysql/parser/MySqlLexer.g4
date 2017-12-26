@@ -41,7 +41,7 @@ lexer grammar MySqlLexer;
 // Keywords
 // Common Keywords
 
-      ADD:                                 '[Aa] [Dd] [Dd]';
+      ADD:                                 'ADD';
       ALL:                                 'ALL';
       ALTER:                               'ALTER';
       ANALYZE:                             'ANALYZE';

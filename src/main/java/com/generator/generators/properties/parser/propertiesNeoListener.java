@@ -6,6 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class propertiesNeoListener extends propertiesBaseListener {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(propertiesNeoListener.class);
+
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
@@ -24,7 +26,7 @@ public class propertiesNeoListener extends propertiesBaseListener {
 		if (!nodeStack.isEmpty())
       	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.getProperty("text"));
+		if (debug) log.debug(delim.toString() + node.getProperty("text"));
 		delim.append("\t");
    }
 
@@ -43,7 +45,7 @@ public class propertiesNeoListener extends propertiesBaseListener {
 
 	@Override
 	public void enterDecl(com.generator.generators.properties.parser.propertiesParser.DeclContext arg) {
-		final Node node = model.findOrCreate(Label.label("Decl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Decl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDecl.push(true);
 	}
@@ -61,7 +63,7 @@ public class propertiesNeoListener extends propertiesBaseListener {
 
 	@Override
 	public void enterComment(com.generator.generators.properties.parser.propertiesParser.CommentContext arg) {
-		final Node node = model.findOrCreate(Label.label("Comment"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Comment"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inComment.push(true);
 	}
@@ -79,7 +81,7 @@ public class propertiesNeoListener extends propertiesBaseListener {
 
 	@Override
 	public void enterPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
-		final Node node = model.findOrCreate(Label.label("PropertiesFile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("PropertiesFile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPropertiesFile.push(true);
 	}
@@ -97,7 +99,7 @@ public class propertiesNeoListener extends propertiesBaseListener {
 
 	@Override
 	public void enterValue(com.generator.generators.properties.parser.propertiesParser.ValueContext arg) {
-		final Node node = model.findOrCreate(Label.label("Value"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Value"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inValue.push(true);
 	}
@@ -115,7 +117,7 @@ public class propertiesNeoListener extends propertiesBaseListener {
 
 	@Override
 	public void enterRow(com.generator.generators.properties.parser.propertiesParser.RowContext arg) {
-		final Node node = model.findOrCreate(Label.label("Row"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Row"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRow.push(true);
 	}
@@ -133,7 +135,7 @@ public class propertiesNeoListener extends propertiesBaseListener {
 
 	@Override
 	public void enterKey(com.generator.generators.properties.parser.propertiesParser.KeyContext arg) {
-		final Node node = model.findOrCreate(Label.label("Key"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Key"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inKey.push(true);
 	}

@@ -4,11 +4,9 @@ import com.generator.app.App;
 import com.generator.app.nodes.NeoNode;
 import com.generator.neo.NeoModel;
 import com.generator.util.FileUtil;
-import com.generator.util.NeoUtil;
 import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
 
 import javax.swing.*;
@@ -17,9 +15,6 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import static com.generator.util.NeoUtil.other;
-import static com.generator.util.NeoUtil.singleOutgoing;
 
 /**
  * Created 28.10.17.

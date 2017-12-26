@@ -46,8 +46,32 @@ public final class DomainPluginGroup {
       return new EntityMethodsST(stGroup);
    }
 
+   public EntityMessageHandlerST newEntityMessageHandler() {
+      return new EntityMessageHandlerST(stGroup);
+   }
+
+   public DomainVerticleST newDomainVerticle() {
+      return new DomainVerticleST(stGroup);
+   }
+
+   public newEntityNodeParametersST newnewEntityNodeParameters() {
+      return new newEntityNodeParametersST(stGroup);
+   }
+
+   public DomainVerticleFacadeST newDomainVerticleFacade() {
+      return new DomainVerticleFacadeST(stGroup);
+   }
+
+   public DomainFacadeEntityMessagesST newDomainFacadeEntityMessages() {
+      return new DomainFacadeEntityMessagesST(stGroup);
+   }
+
    public DomainPluginST newDomainPlugin() {
       return new DomainPluginST(stGroup);
+   }
+
+   public VisitorST newVisitor() {
+      return new VisitorST(stGroup);
    }
 
    public final class EntityMethodsST implements DomainPluginGroupTemplate {
@@ -83,6 +107,388 @@ public final class DomainPluginGroup {
       	this._properties.add(map);
 
          template.addAggr("properties.{name}", map.get("name"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getProperties() {
+      	return this._properties;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class EntityMessageHandlerST implements DomainPluginGroupTemplate {
+
+      private Object _label;
+      private java.util.Set<java.util.Map<String, Object>> _properties = new java.util.LinkedHashSet<>();
+
+      private final ST template;
+
+      private EntityMessageHandlerST(STGroup group) {
+   		template = group.getInstanceOf("EntityMessageHandler");
+   	}
+
+      public EntityMessageHandlerST setLabel(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._label == null) {
+            this._label = value;
+         	template.add("label", value);
+         }
+
+      	return this;
+      }
+
+      public String getLabel() {
+      	return (String) this._label;
+      }
+
+      public EntityMessageHandlerST addPropertiesValue(Object name_, Object type_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	map.put("type", (type_ == null || type_.toString().length() == 0) ? null : type_);
+      	this._properties.add(map);
+
+         template.addAggr("properties.{name, type}", map.get("name"), map.get("type"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getProperties() {
+      	return this._properties;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class DomainVerticleST implements DomainPluginGroupTemplate {
+
+      private java.util.Set<java.util.Map<String, Object>> _relateEntities = new java.util.LinkedHashSet<>();
+      private java.util.Set<java.util.Map<String, Object>> _entities = new java.util.LinkedHashSet<>();
+      private java.util.Set<java.util.Map<String, Object>> _visitors = new java.util.LinkedHashSet<>();
+      private java.util.Set<java.util.Map<String, Object>> _incoming = new java.util.LinkedHashSet<>();
+      private Object _name;
+      private java.util.Set<java.util.Map<String, Object>> _outgoing = new java.util.LinkedHashSet<>();
+      private Object _package;
+      private Object _domain;
+
+      private final ST template;
+
+      private DomainVerticleST(STGroup group) {
+   		template = group.getInstanceOf("DomainVerticle");
+   	}
+
+      public DomainVerticleST addRelateEntitiesValue(Object dst_, Object src_, Object relationshipType_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("dst", (dst_ == null || dst_.toString().length() == 0) ? null : dst_);
+      	map.put("src", (src_ == null || src_.toString().length() == 0) ? null : src_);
+      	map.put("relationshipType", (relationshipType_ == null || relationshipType_.toString().length() == 0) ? null : relationshipType_);
+      	this._relateEntities.add(map);
+
+         template.addAggr("relateEntities.{dst, src, relationshipType}", map.get("dst"), map.get("src"), map.get("relationshipType"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getRelateEntities() {
+      	return this._relateEntities;
+      }
+
+      public DomainVerticleST addEntitiesValue(Object label_, Object messageHandlers_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("label", (label_ == null || label_.toString().length() == 0) ? null : label_);
+      	map.put("messageHandlers", (messageHandlers_ == null || messageHandlers_.toString().length() == 0) ? null : messageHandlers_);
+      	this._entities.add(map);
+
+         template.addAggr("entities.{label, messageHandlers}", map.get("label"), map.get("messageHandlers"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getEntities() {
+      	return this._entities;
+      }
+
+      public DomainVerticleST addVisitorsValue(Object name_, Object class_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	map.put("class", (class_ == null || class_.toString().length() == 0) ? null : class_);
+      	this._visitors.add(map);
+
+         template.addAggr("visitors.{name, class}", map.get("name"), map.get("class"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getVisitors() {
+      	return this._visitors;
+      }
+
+      public DomainVerticleST addIncomingValue(Object address_, Object name_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("address", (address_ == null || address_.toString().length() == 0) ? null : address_);
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	this._incoming.add(map);
+
+         template.addAggr("incoming.{address, name}", map.get("address"), map.get("name"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getIncoming() {
+      	return this._incoming;
+      }
+
+      public DomainVerticleST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      public DomainVerticleST addOutgoingValue(Object address_, Object name_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("address", (address_ == null || address_.toString().length() == 0) ? null : address_);
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	this._outgoing.add(map);
+
+         template.addAggr("outgoing.{address, name}", map.get("address"), map.get("name"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getOutgoing() {
+      	return this._outgoing;
+      }
+
+      public DomainVerticleST setPackage(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._package == null) {
+            this._package = value;
+         	template.add("package", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackage() {
+      	return (String) this._package;
+      }
+
+      public DomainVerticleST setDomain(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._domain == null) {
+            this._domain = value;
+         	template.add("domain", value);
+         }
+
+      	return this;
+      }
+
+      public String getDomain() {
+      	return (String) this._domain;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class newEntityNodeParametersST implements DomainPluginGroupTemplate {
+
+      private Object _action;
+      private Object _label;
+
+      private final ST template;
+
+      private newEntityNodeParametersST(STGroup group) {
+   		template = group.getInstanceOf("newEntityNodeParameters");
+   	}
+
+      public newEntityNodeParametersST setAction(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._action == null) {
+            this._action = value;
+         	template.add("action", value);
+         }
+
+      	return this;
+      }
+
+      public String getAction() {
+      	return (String) this._action;
+      }
+
+      public newEntityNodeParametersST setLabel(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._label == null) {
+            this._label = value;
+         	template.add("label", value);
+         }
+
+      	return this;
+      }
+
+      public String getLabel() {
+      	return (String) this._label;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class DomainVerticleFacadeST implements DomainPluginGroupTemplate {
+
+      private Object _domain;
+      private java.util.Set<Object> _entities = new java.util.LinkedHashSet<>();
+      private Object _name;
+      private Object _package;
+      private java.util.Set<java.util.Map<String, Object>> _relations = new java.util.LinkedHashSet<>();
+
+      private final ST template;
+
+      private DomainVerticleFacadeST(STGroup group) {
+   		template = group.getInstanceOf("DomainVerticleFacade");
+   	}
+
+      public DomainVerticleFacadeST setDomain(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._domain == null) {
+            this._domain = value;
+         	template.add("domain", value);
+         }
+
+      	return this;
+      }
+
+      public String getDomain() {
+      	return (String) this._domain;
+      }
+
+      public DomainVerticleFacadeST addEntitiesValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._entities.add(value);
+      	template.add("entities", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getEntitiesValues() {
+      	return this._entities;
+      }
+
+      public DomainVerticleFacadeST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      public DomainVerticleFacadeST setPackage(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._package == null) {
+            this._package = value;
+         	template.add("package", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackage() {
+      	return (String) this._package;
+      }
+
+      public DomainVerticleFacadeST addRelationsValue(Object dst_, Object relationshipType_, Object src_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("dst", (dst_ == null || dst_.toString().length() == 0) ? null : dst_);
+      	map.put("relationshipType", (relationshipType_ == null || relationshipType_.toString().length() == 0) ? null : relationshipType_);
+      	map.put("src", (src_ == null || src_.toString().length() == 0) ? null : src_);
+      	this._relations.add(map);
+
+         template.addAggr("relations.{dst, relationshipType, src}", map.get("dst"), map.get("relationshipType"), map.get("src"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getRelations() {
+      	return this._relations;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class DomainFacadeEntityMessagesST implements DomainPluginGroupTemplate {
+
+      private Object _label;
+      private java.util.Set<java.util.Map<String, Object>> _properties = new java.util.LinkedHashSet<>();
+
+      private final ST template;
+
+      private DomainFacadeEntityMessagesST(STGroup group) {
+   		template = group.getInstanceOf("DomainFacadeEntityMessages");
+   	}
+
+      public DomainFacadeEntityMessagesST setLabel(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._label == null) {
+            this._label = value;
+         	template.add("label", value);
+         }
+
+      	return this;
+      }
+
+      public String getLabel() {
+      	return (String) this._label;
+      }
+
+      public DomainFacadeEntityMessagesST addPropertiesValue(Object name_, Object type_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	map.put("type", (type_ == null || type_.toString().length() == 0) ? null : type_);
+      	this._properties.add(map);
+
+         template.addAggr("properties.{name, type}", map.get("name"), map.get("type"));
          return this;
       }
 
@@ -251,6 +657,84 @@ public final class DomainPluginGroup {
    	}
    }
 
+   public final class VisitorST implements DomainPluginGroupTemplate {
+
+      private java.util.Set<Object> _labels = new java.util.LinkedHashSet<>();
+      private java.util.Set<java.util.Map<String, Object>> _paths = new java.util.LinkedHashSet<>();
+      private Object _package;
+      private Object _name;
+
+      private final ST template;
+
+      private VisitorST(STGroup group) {
+   		template = group.getInstanceOf("Visitor");
+   	}
+
+      public VisitorST addLabelsValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._labels.add(value);
+      	template.add("labels", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getLabelsValues() {
+      	return this._labels;
+      }
+
+      public VisitorST addPathsValue(Object path_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("path", (path_ == null || path_.toString().length() == 0) ? null : path_);
+      	this._paths.add(map);
+
+         template.addAggr("paths.{path}", map.get("path"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getPaths() {
+      	return this._paths;
+      }
+
+      public VisitorST setPackage(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._package == null) {
+            this._package = value;
+         	template.add("package", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackage() {
+      	return (String) this._package;
+      }
+
+      public VisitorST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
 	static boolean tryToSetListProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (value == null || value.toString().length() == 0) return true;
 		alreadySet.set(true);
@@ -381,18 +865,297 @@ public final class DomainPluginGroup {
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 		.append("eom() ::= <<}>>\n")
 		.append("gt() ::= \">\"\n")
-			.append("EntityMethods(name,properties) ::= <<protected Node new~name~() { return new~name~(getGraph()); } \n" + 
-		"public static Node new~name~(NeoModel graph) { return newInstanceNode(graph, Entities.~name~.name(), entitiesNodeMap.get(Entities.~name~)); }~if(properties)~ \n" + 
+			.append("EntityMethods(name,properties) ::= <<protected Node new~name~() { return new~name~(getGraph()); }~if(properties)~ \n" + 
 		"protected Node new~name~(~properties:{it|Object ~it.name~};separator=\", \"~) { return new~name~(getGraph(), ~properties:{it|~it.name~};separator=\", \"~); } \n" + 
+		"~endif~\n" + 
+		"\n" + 
+		"public static Node new~name~(NeoModel graph) { return DomainMotif.newInstanceNode(graph, entitiesNodeMap.get(Entities.~name~)); }~if(properties)~ \n" + 
 		"public static Node new~name~(NeoModel graph, ~properties:{it|Object ~it.name~};separator=\", \"~) {  	\n" + 
 		"	final Node newNode = new~name~(graph); 	\n" + 
-		"	~properties:{it|if (~it.name~ != null) relate(newNode, newValueNode(graph, ~it.name~), RelationshipType.withName(Properties.~it.name~.name()));};separator=\"\\n\"~ 	\n" + 
+		"	~properties:{it|if (~it.name~ != null) relate(newNode, DomainMotif.newValueNode(graph, ~it.name~), RelationshipType.withName(Properties.~it.name~.name()));};separator=\"\\n\"~ 	\n" + 
 		"	return newNode; \n" + 
 		"}~endif~>>\n")
+			.append("EntityMessageHandler(label,properties) ::= <<private void new~label~(Message<JsonObject> message) {\n" + 
+		"   log.info(deploymentID() + \".new.~label~ \" + message.body().toString());\n" + 
+		"\n" + 
+		"   final JsonObject request = new JsonObject();\n" + 
+		"   request.put(\"action\", \"createNode\");\n" + 
+		"   request.put(\"label\", \"~label~\");\n" + 
+		"\n" + 
+		"   // todo add constraints - which properties are required for new ~label~\n" + 
+		"\n" + 
+		"   final JsonArray properties = new JsonArray();\n" + 
+		"	~properties:{it|if (message.body().get~it.type~(\"~it.name~\") != null) properties.add(new JsonObject().put(\"name\", \"~it.name~\").put(\"value\", message.body().get~it.type~(\"~it.name~\")));};separator=\"\\n\"~\n" + 
+		"   request.put(\"properties\", properties);\n" + 
+		"\n" + 
+		"   sendNeoMessage(message, request);\n" + 
+		"}\n" + 
+		"\n" + 
+		"private void update~label~(Message<JsonObject> message) {\n" + 
+		"   log.info(deploymentID() + \".update.~label~ \" + message.body().toString());\n" + 
+		"\n" + 
+		"   final JsonObject request = new JsonObject();\n" + 
+		"   request.put(\"action\", \"updateNode\");\n" + 
+		"   request.put(\"uuid\", message.body().getString(\"uuid\"));\n" + 
+		"\n" + 
+		"   final JsonArray properties = new JsonArray();\n" + 
+		"	~properties:{it|if (message.body().get~it.type~(\"~it.name~\") != null) properties.add(new JsonObject().put(\"name\", \"~it.name~\").put(\"value\", message.body().get~it.type~(\"~it.name~\")));};separator=\"\\n\"~\n" + 
+		"   request.put(\"properties\", properties);\n" + 
+		"\n" + 
+		"   sendNeoMessage(message, request);\n" + 
+		"}\n" + 
+		"\n" + 
+		"private void get~label~(Message<JsonObject> message) {\n" + 
+		"   log.info(deploymentID() + \".get.~label~ \" + message.body().toString());\n" + 
+		"\n" + 
+		"   final JsonObject request = new JsonObject();\n" + 
+		"   request.put(\"action\", \"inspectNode\");\n" + 
+		"   request.put(\"uuid\", message.body().getString(\"uuid\"));\n" + 
+		"\n" + 
+		"   sendNeoMessage(message, request);\n" + 
+		"}\n" + 
+		"\n" + 
+		"private void list~label~(Message<JsonObject> message) {\n" + 
+		"   log.info(deploymentID() + \".list.~label~ \" + message.body().toString());\n" + 
+		"\n" + 
+		"   final JsonObject request = new JsonObject();\n" + 
+		"   request.put(\"action\", \"listNodesByLabel\");\n" + 
+		"   request.put(\"label\", \"~label~\");\n" + 
+		"   request.put(\"properties\", message.body().getJsonArray(\"properties\"));\n" + 
+		"\n" + 
+		"   sendNeoMessage(message, request);\n" + 
+		"}\n" + 
+		"\n" + 
+		"private void remove~label~(Message<JsonObject> message) {\n" + 
+		"   log.info(deploymentID() + \".remove.~label~ \" + message.body().toString());\n" + 
+		"\n" + 
+		"   final JsonObject request = new JsonObject();\n" + 
+		"   request.put(\"action\", \"removeNode\");\n" + 
+		"   request.put(\"uuid\", message.body().getString(\"uuid\"));\n" + 
+		"   request.put(\"force\", message.body().getBoolean(\"force\"));\n" + 
+		"   request.put(\"cascade\", message.body().getBoolean(\"cascade\"));\n" + 
+		"\n" + 
+		"   sendNeoMessage(message, request);\n" + 
+		"}>>\n")
+			.append("DomainVerticle(relateEntities,entities,visitors,incoming,name,outgoing,package,domain) ::= <<package ~package~;\n" + 
+		"\n" + 
+		"import com.generator.util.VertxUtil;\n" + 
+		"\n" + 
+		"import io.vertx.core.AbstractVerticle;\n" + 
+		"import io.vertx.core.Future;\n" + 
+		"import io.vertx.core.Handler;\n" + 
+		"import io.vertx.core.eventbus.Message;\n" + 
+		"import io.vertx.core.json.JsonArray;\n" + 
+		"import io.vertx.core.json.JsonObject;\n" + 
+		"\n" + 
+		"// Domain: ~domain~\n" + 
+		"public class ~name~ extends AbstractVerticle {\n" + 
+		"\n" + 
+		"   protected final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(~name~.class);\n" + 
+		"\n" + 
+		"	private String neoAddress;\n" + 
+		"\n" + 
+		"   @Override\n" + 
+		"   public void start(Future<Void> startFuture) throws Exception {\n" + 
+		"      log.info(\"Starting ~name~\");\n" + 
+		"\n" + 
+		"		neoAddress = config().getString(\"neo.instance\");\n" + 
+		"\n" + 
+		"		VertxUtil.executeBlocking(vertx, log, new VertxUtil.Executor<JsonObject, JsonObject>() {\n" + 
+		"			@Override\n" + 
+		"			public JsonObject execute() throws Throwable {\n" + 
+		"				return onStart();\n" + 
+		"			}\n" + 
+		"\n" + 
+		"			@Override\n" + 
+		"			public void onSuccess(JsonObject result) {\n" + 
+		"				log.info(\"~name~ started : \" + result.toString());\n" + 
+		"				vertx.eventBus().consumer(deploymentID(), (Handler<Message<JsonObject~gt()~>) message -> handleInstanceMessage(message));\n" + 
+		"\n" + 
+		"				~entities:{it| vertx.eventBus().consumer(deploymentID() + \".new.~it.label~\", (Handler<Message<JsonObject~gt()~>) message -> new~it.label~(message));\n" + 
+		"vertx.eventBus().consumer(deploymentID() + \".update.~it.label~\", (Handler<Message<JsonObject~gt()~>) message -> update~it.label~(message)); \n" + 
+		"vertx.eventBus().consumer(deploymentID() + \".get.~it.label~\", (Handler<Message<JsonObject~gt()~>) message -> get~it.label~(message)); \n" + 
+		"vertx.eventBus().consumer(deploymentID() + \".list.~it.label~\", (Handler<Message<JsonObject~gt()~>) message -> list~it.label~(message)); \n" + 
+		"vertx.eventBus().consumer(deploymentID() + \".remove.~it.label~\", (Handler<Message<JsonObject~gt()~>) message -> remove~it.label~(message)); };separator=\"\\n\\n\"~\n" + 
+		"\n" + 
+		"				~relateEntities:{it| vertx.eventBus().consumer(deploymentID() + \".relate.~it.src~.~it.relationshipType~.~it.dst~\", (Handler<Message<JsonObject~gt()~>) message -> relate~it.src~_~it.relationshipType~_~it.dst~(message)); \n" + 
+		"vertx.eventBus().consumer(deploymentID() + \".unrelate.~it.src~.~it.relationshipType~.~it.dst~\", (Handler<Message<JsonObject~gt()~>) message -> unrelate~it.src~_~it.relationshipType~_~it.dst~(message));};separator=\"\\n\\n\"~\n" + 
+		"\n" + 
+		"				~visitors:{it| vertx.eventBus().consumer(deploymentID() + \".visitor.~it.name~\", (Handler<Message<JsonObject~gt()~>) message -> visit~it.name~(message));};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"				~incoming:{it| vertx.eventBus().consumer(\"~it.address~\", (Handler<Message<JsonObject~gt()~>) message -> handle~it.name~(message)); }~\n" + 
+		"				startFuture.complete();\n" + 
+		"			}\n" + 
+		"\n" + 
+		"			@Override\n" + 
+		"			public void onFail(Throwable t) {\n" + 
+		"				log.error(\"~name~ failed to start : \", t);\n" + 
+		"				startFuture.fail(t);\n" + 
+		"			}\n" + 
+		"		});\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	protected JsonObject onStart() throws Exception { return new JsonObject(); } \n" + 
+		"\n" + 
+		"	~outgoing:{it|protected void publishTo~it.name~(JsonObject jsonObject) { vertx.eventBus().publish(\"~it.address~\", jsonObject); ~eom()~};separator=\"\\n\"~\n" + 
+		"~entities:{it|\n" + 
+		"	~it.messageHandlers~\n" + 
+		"};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"	~relateEntities:{it|protected void relate~it.src~_~it.relationshipType~_~it.dst~(Message<JsonObject> message) { \n" + 
+		"	log.info(deploymentID() + \" -> relate.~it.src~.~it.relationshipType~.~it.dst~ -> \" + message.body().toString());\n" + 
+		"\n" + 
+		"	final JsonObject request = new JsonObject();\n" + 
+		"   request.put(\"action\", \"relateNodes\");\n" + 
+		"   request.put(\"src\", message.body().getString(\"src\"));\n" + 
+		"   request.put(\"dst\", message.body().getString(\"dst\"));\n" + 
+		"   request.put(\"relationshipType\", \"~it.relationshipType~\");\n" + 
+		"	// todo add properties\n" + 
+		"\n" + 
+		"	sendNeoMessage(message, request);\n" + 
+		"~eom()~\n" + 
+		"\n" + 
+		"protected void unrelate~it.src~_~it.relationshipType~_~it.dst~(Message<JsonObject> message) { \n" + 
+		"	log.info(deploymentID() + \" -> unrelate.~it.src~.~it.relationshipType~.~it.dst~ -> \" + message.body().toString());\n" + 
+		"\n" + 
+		"	final JsonObject request = new JsonObject();\n" + 
+		"   request.put(\"action\", \"unrelateNodes\");\n" + 
+		"   request.put(\"src\", message.body().getString(\"src\"));\n" + 
+		"   request.put(\"dst\", message.body().getString(\"dst\"));\n" + 
+		"   request.put(\"relationshipType\", \"~it.relationshipType~\");\n" + 
+		"\n" + 
+		"	sendNeoMessage(message, request);\n" + 
+		"~eom()~\n" + 
+		"	};separator=\"\\n\"~\n" + 
+		"	\n" + 
+		"~visitors:{it| \n" + 
+		"	private void visit~it.name~(Message<JsonObject> message) {\n" + 
+		"   	log.info(deploymentID() + \" -> visitor.~it.name~ -> \" + message.body().toString());\n" + 
+		"\n" + 
+		"		final JsonObject request = new JsonObject();\n" + 
+		"		request.put(\"action\", \"visitor\");\n" + 
+		"		request.put(\"className\", ~it.class~.class.getCanonicalName());\n" + 
+		"		request.put(\"params\", message.body());\n" + 
+		"\n" + 
+		"		sendNeoMessage(message, request);\n" + 
+		"	~eom()~\n" + 
+		"};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"	protected void handleInstanceMessage(Message<JsonObject> message) { log.info(\"instance message \" + deploymentID() + \" -> \" + message.body().toString()); }\n" + 
+		"\n" + 
+		"	protected void sendNeoMessage(Message<JsonObject> message, JsonObject request) {\n" + 
+		"		VertxUtil.sendMessage(vertx, neoAddress, request, log, new VertxUtil.SuccessHandler<Message<JsonObject>~gt()~() {\n" + 
+		"			@Override\n" + 
+		"			public void onSuccess(Message<JsonObject> result) {\n" + 
+		"				message.reply(result.body());\n" + 
+		"			}\n" + 
+		"\n" + 
+		"			@Override\n" + 
+		"			public void onFail(Throwable t) {\n" + 
+		"				message.reply(VertxUtil.newFail(t.getMessage()));\n" + 
+		"			}\n" + 
+		"		});\n" + 
+		"	}\n" + 
+		"}>>\n")
+			.append("newEntityNodeParameters(action,label) ::= <<request.put(\"action\",\"~action~\");\n" + 
+		"request.put(\"label\", \"~label~\");\n" + 
+		"request.put(\"properties\", message.body().getJsonArray(\"properties\"));>>\n")
+			.append("DomainVerticleFacade(domain,entities,name,package,relations) ::= <<package ~package~;\n" + 
+		"\n" + 
+		"import com.generator.util.VertxUtil;\n" + 
+		"import io.vertx.core.json.JsonArray;\n" + 
+		"import io.vertx.core.json.JsonObject;\n" + 
+		"import io.vertx.core.net.NetSocket;\n" + 
+		"\n" + 
+		"/**\n" + 
+		" * ~domain~- Facade\n" + 
+		" */\n" + 
+		"public class ~name~ {\n" + 
+		"\n" + 
+		"   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(~name~.class);\n" + 
+		"\n" + 
+		"   private final String address;\n" + 
+		"   private final String replyAddress;\n" + 
+		"   private final NetSocket socket;\n" + 
+		"\n" + 
+		"   public ~name~(String address, String replyAddress, NetSocket socket) {\n" + 
+		"      this.address = address;\n" + 
+		"      this.replyAddress = replyAddress;\n" + 
+		"      this.socket = socket;\n" + 
+		"   }\n" + 
+		"\n" + 
+		"~entities:{it|\n" + 
+		"	~it~\n" + 
+		"};separator=\"\\n\"~\n" + 
+		"   \n" + 
+		"~relations:{it|\n" + 
+		"   public void relate~it.src~_~it.relationshipType~_~it.dst~(String src, String dst) {\n" + 
+		"\n" + 
+		"      final JsonObject parameters = new JsonObject().\n" + 
+		"            put(\"src\", src).\n" + 
+		"            put(\"dst\", dst);\n" + 
+		"\n" + 
+		"      VertxUtil.sendFrame(log, address + \".relate.~it.src~.~it.relationshipType~.~it.dst~\", replyAddress, parameters, socket);\n" + 
+		"   ~eom()~\n" + 
+		"\n" + 
+		"   public void unrelate~it.src~_~it.relationshipType~_~it.dst~(String src, String dst) {\n" + 
+		"\n" + 
+		"      final JsonObject parameters = new JsonObject().\n" + 
+		"            put(\"src\", src).\n" + 
+		"            put(\"dst\", dst);\n" + 
+		"\n" + 
+		"      VertxUtil.sendFrame(log, address + \".unrelate.~it.src~.~it.relationshipType~.~it.dst~\", replyAddress, parameters, socket);\n" + 
+		"   ~eom()~\n" + 
+		"};separator=\"\\n\"~\n" + 
+		"}>>\n")
+			.append("DomainFacadeEntityMessages(label,properties) ::= <<public void new~label~(~properties:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
+		"\n" + 
+		"   final JsonObject parameters = new JsonObject()~properties:{it|.\n" + 
+		"			put(\"~it.name~\", ~it.name~)}~;\n" + 
+		"\n" + 
+		"   VertxUtil.sendFrame(log, address + \".new.~label~\", replyAddress, parameters, socket);\n" + 
+		"}\n" + 
+		"\n" + 
+		"public void update~label~(String uuid~if(properties)~, ~properties:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n" + 
+		"\n" + 
+		"   final JsonObject parameters = new JsonObject().\n" + 
+		"         put(\"uuid\", uuid)~properties:{it|.\n" + 
+		"			put(\"~it.name~\", ~it.name~)}~;\n" + 
+		"\n" + 
+		"   VertxUtil.sendFrame(log, address + \".update.~label~\", replyAddress, parameters, socket);\n" + 
+		"}\n" + 
+		"\n" + 
+		"public void get~label~(String uuid) {\n" + 
+		"\n" + 
+		"   final JsonObject parameters = new JsonObject().\n" + 
+		"         put(\"uuid\", uuid);\n" + 
+		"\n" + 
+		"   VertxUtil.sendFrame(log, address + \".get.~label~\", replyAddress, parameters, socket);\n" + 
+		"}\n" + 
+		"\n" + 
+		"public void list~label~s(String... properties) {\n" + 
+		"\n" + 
+		"   final JsonObject parameters = new JsonObject();\n" + 
+		"\n" + 
+		"   final JsonArray propertiesParameter = new JsonArray();\n" + 
+		"   for (String property : properties) propertiesParameter.add(property);\n" + 
+		"   parameters.put(\"properties\", propertiesParameter);\n" + 
+		"\n" + 
+		"   VertxUtil.sendFrame(log, address + \".list.~label~\", replyAddress, parameters, socket);\n" + 
+		"}\n" + 
+		"\n" + 
+		"public void remove~label~(String uuid, boolean force, boolean cascade) {\n" + 
+		"   final JsonObject parameter = new JsonObject().\n" + 
+		"         put(\"uuid\", uuid).\n" + 
+		"         put(\"force\", force).\n" + 
+		"         put(\"cascade\", cascade);\n" + 
+		"\n" + 
+		"   VertxUtil.sendFrame(log, address + \".remove.~label~\", replyAddress, parameter, socket);\n" + 
+		"}>>\n")
 			.append("DomainPlugin(relations,rootRelations,title,entities,entityProperties,entityRelations,name,packageName,properties) ::= <<package ~packageName~;\n" + 
 		"\n" + 
 		"import com.generator.app.App;\n" + 
-		"import com.generator.app.AppMotif;\n" + 
+		"import com.generator.app.DomainMotif;\n" + 
 		"import com.generator.app.Plugin;\n" + 
 		"import com.generator.app.nodes.NeoNode;\n" + 
 		"import com.generator.generators.domain.DomainPlugin;\n" + 
@@ -404,14 +1167,14 @@ public final class DomainPluginGroup {
 		"import java.util.Map;\n" + 
 		"import java.util.Set;\n" + 
 		"\n" + 
-		"import static com.generator.app.DomainMotif.*;\n" + 
-		"import static com.generator.generators.domain.DomainDomainPlugin.Entities.Domain;\n" + 
 		"import static com.generator.util.NeoUtil.*;\n" + 
 		"\n" + 
 		"/**\n" + 
 		" * Auto-generated from domain ~name~\n" + 
 		" */\n" + 
 		"public abstract class ~name~ extends Plugin {\n" + 
+		"\n" + 
+		"	protected final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(~name~.class);\n" + 
 		"\n" + 
 		"	public enum Entities implements Label {\n" + 
 		"      ~entities:{it|~it.name~};separator=\", \"~\n" + 
@@ -432,13 +1195,13 @@ public final class DomainPluginGroup {
 		"   ~name~(App app) {\n" + 
 		"      super(app, \"~title~\");\n" + 
 		"\n" + 
-		"		domainNode = getGraph().findOrCreate(Domain, AppMotif.Properties.name.name(), \"~title~\");\n" + 
-		"		~entities:{it|entitiesNodeMap.put(Entities.~it.name~, newDomainEntity(getGraph(), Entities.~it.name~, domainNode));};separator=\"\\n\"~\n" + 
+		"		domainNode = DomainMotif.newDomainNode(getGraph(), \"~title~\");\n" + 
+		"		~entities:{it|entitiesNodeMap.put(Entities.~it.name~, DomainMotif.newDomainEntity(getGraph(), Entities.~it.name~, domainNode));};separator=\"\\n\"~\n" + 
 		"		\n" + 
-		"		~entityProperties:{it|newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.~it.entityName~), Properties.~it.propertyName~.name());};separator=\"\\n\"~\n" + 
+		"		~entityProperties:{it|DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.~it.entityName~), Properties.~it.propertyName~.name());};separator=\"\\n\"~\n" + 
 		"		\n" + 
 		"		~rootRelations:{it|relate(domainNode, entitiesNodeMap.get(Entities.~it.entity~), DomainPlugin.Relations.ENTITY);};separator=\"\\n\"~\n" + 
-		"		~entityRelations:{it|newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.~it.src~), Relations.~it.relation~.name(), DomainPlugin.RelationCardinality.~it.cardinality~, entitiesNodeMap.get(Entities.~it.dst~));};separator=\"\\n\"~\n" + 
+		"		~entityRelations:{it|DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.~it.src~), Relations.~it.relation~.name(), DomainPlugin.RelationCardinality.~it.cardinality~, entitiesNodeMap.get(Entities.~it.dst~));};separator=\"\\n\"~\n" + 
 		"   }\n" + 
 		"\n" + 
 		"   @Override\n" + 
@@ -457,7 +1220,9 @@ public final class DomainPluginGroup {
 		"      return null;\n" + 
 		"   }\n" + 
 		"\n" + 
-		"	protected Node getDomainNode() { return domainNode; }\n" + 
+		"	public Node getDomainNode() { return domainNode; }\n" + 
+		"\n" + 
+		"	public Node getEntityNode(Label label) { return entitiesNodeMap.get(label); }\n" + 
 		"\n" + 
 		"	~entities:{it|protected void handle~it.name~(JPopupMenu pop, NeoNode ~it.name;format=\"lowFirst\"~Node, Set<NeoNode> selectedNodes) { ~eom()~};separator=\"\\n\"~	\n" + 
 		"\n" + 
@@ -478,13 +1243,80 @@ public final class DomainPluginGroup {
 		"	~relations:{it|public static Relationship relate~it.name~(Node src, Node dst) { return relate(src, dst, Relations.~it.name~); ~eom()~};separator=\"\\n\"~\n" + 
 		"\n" + 
 		"	~properties:{it|// ~it.name~\n" + 
-		"public static <T> T get~it.name;format=\"capitalize\"~Property(PropertyContainer container) { return getEntityProperty(container, Properties.~it.name~.name()); ~eom()~\n" + 
-		"public static <T> T get~it.name;format=\"capitalize\"~Property(PropertyContainer container, T defaultValue) { return getEntityProperty(container, Properties.~it.name~.name(), defaultValue); ~eom()~\n" + 
-		"public static boolean has~it.name;format=\"capitalize\"~Property(PropertyContainer container) { return hasEntityProperty(container, Properties.~it.name~.name()); ~eom()~\n" + 
-		"public static <T extends PropertyContainer> T set~it.name;format=\"capitalize\"~Property(NeoModel graph, T container, Object value) { setEntityProperty(graph, container, Properties.~it.name~.name(), value); return container; ~eom()~\n" + 
-		"protected <T extends PropertyContainer> T set~it.name;format=\"capitalize\"~Property(T container, Object value) { setEntityProperty(getGraph(), container, Properties.~it.name~.name(), value); return container; ~eom()~\n" + 
-		"public static <T extends PropertyContainer> T remove~it.name;format=\"capitalize\"~Property(T container) { removeEntityProperty(container, Properties.~it.name~.name()); return container; ~eom()~\n" + 
+		"public static <T> T get~it.name;format=\"capitalize\"~Property(PropertyContainer container) { return get~it.name;format=\"capitalize\"~Property(container, null); ~eom()~\n" + 
+		"public static <T> T get~it.name;format=\"capitalize\"~Property(PropertyContainer container, T defaultValue) { return DomainMotif.getEntityProperty(container, Properties.~it.name~.name(), defaultValue); ~eom()~\n" + 
+		"public static boolean has~it.name;format=\"capitalize\"~Property(PropertyContainer container) { return DomainMotif.hasEntityProperty(container, Properties.~it.name~.name()); ~eom()~\n" + 
+		"public static <T extends PropertyContainer> T set~it.name;format=\"capitalize\"~Property(NeoModel graph, T container, Object value) { DomainMotif.setEntityProperty(graph, container, Properties.~it.name~.name(), value); return container; ~eom()~\n" + 
+		"public static <T extends PropertyContainer> T remove~it.name;format=\"capitalize\"~Property(T container) { DomainMotif.removeEntityProperty(container, Properties.~it.name~.name()); return container; ~eom()~\n" + 
+		"\n" + 
+		"protected <T extends PropertyContainer> T set~it.name;format=\"capitalize\"~Property(T container, Object value) { set~it.name;format=\"capitalize\"~Property(getGraph(), container, value); return container; ~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
+		"}>>\n")
+			.append("Visitor(labels,paths,package,name) ::= <<package ~package~;\n" + 
+		"\n" + 
+		"import com.generator.generators.domain.Visitor;\n" + 
+		"import com.generator.util.NeoUtil;\n" + 
+		"import org.neo4j.graphdb.Label;\n" + 
+		"import org.neo4j.graphdb.Node;\n" + 
+		"\n" + 
+		"import static com.generator.util.NeoUtil.hasLabel;\n" + 
+		"\n" + 
+		"public class ~name~<T> implements Visitor<T> {\n" + 
+		"\n" + 
+		"   protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();\n" + 
+		"	private final java.util.Stack<String> path = new java.util.Stack<>();\n" + 
+		"\n" + 
+		"	private final java.util.Map<String, PathHandler> pathHandlers = new java.util.LinkedHashMap<>();   \n" + 
+		"	~paths:{it|// ~it.path~};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"	public ~name~() {\n" + 
+		"		~paths:{it|pathHandlers.put(\"~it.path~\", new~it.path~());};separator=\"\\n\"~\n" + 
+		"	}\n" + 
+		"\n" + 
+		"   @Override\n" + 
+		"   public void visit(Node node) {\n" + 
+		"		~labels:{it|if (hasLabel(node,\"~it~\")) visit~it~(node); };separator=\"\\nelse \"~\n" + 
+		"   }\n" + 
+		"\n" + 
+		"~paths:{it|\n" + 
+		"	protected PathHandler new~it.path~() {\n" + 
+		"		return node ->  System.out.println(\"handle ~it.path~\"); \n" + 
+		"	~eom()~\n" + 
+		"};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"~labels:{it|\n" + 
+		"	private void visit~it~(Node node) {\n" + 
+		"   	if (visited.contains(node)) return;\n" + 
+		"      visited.add(node);\n" + 
+		"		path.push(\"~it~\");\n" + 
+		"		final String currentPath = getPath(path);\n" + 
+		"		pathHandlers.get(currentPath).handle(node);\n" + 
+		"      NeoUtil.outgoing(node).forEach(relationship -> visit(NeoUtil.other(node, relationship)));\n" + 
+		"		path.pop();\n" + 
+		"   ~eom()~\n" + 
+		"};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"   @Override\n" + 
+		"   public T getResult() {\n" + 
+		"      return null;\n" + 
+		"   }\n" + 
+		"\n" + 
+		"	public interface PathHandler {\n" + 
+		"		void handle(Node node);\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	private String getPath(java.util.Stack<String> stack) {\n" + 
+		"      if (stack.isEmpty()) return \"\";\n" + 
+		"      final StringBuilder path = new StringBuilder();\n" + 
+		"      boolean first = true;\n" + 
+		"      for (String s : stack) {\n" + 
+		"         if (!first) path.append(\"_\");\n" + 
+		"         path.append(s);\n" + 
+		"         first = false;\n" + 
+		"      }\n" + 
+		"      //System.out.println(path.toString());\n" + 
+		"      return path.toString();\n" + 
+		"   }\n" + 
 		"}>>\n")
 		.toString();
 }

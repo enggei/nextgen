@@ -25,23 +25,12 @@ import static com.generator.util.NeoUtil.hasLabel;
 /**
  * Created 25.08.17.
  */
-public class ANTLRPlugin extends Plugin {
+public class ANTLRPlugin extends ANTLRV4DomainPlugin {
 
-   enum Entities implements Label {
-      GrammarSpec
-   }
-
-   enum Properties {
-      text, startToken
-   }
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ANTLRPlugin.class);
 
    public ANTLRPlugin(App app) {
-      super(app, "ANTLR");
-   }
-
-   @Override
-   protected Label[] getLabels() {
-      return Entities.values();
+      super(app);
    }
 
    @Override
@@ -60,6 +49,14 @@ public class ANTLRPlugin extends Plugin {
             final ANTLRv4ParserNeoVisitor visitor = new ANTLRv4ParserNeoVisitor(getGraph());
             visitor.visit(parser.grammarSpec());
             if (visitor.getRoot() != null) fireNodesLoaded(visitor.getRoot());
+         }
+      });
+
+      menu.add(new App.TransactionAction("New GrammarSpec", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+            final Node grammarSpec = newGrammarSpec();
+            fireNodesLoaded(grammarSpec);
          }
       });
 
@@ -103,7 +100,7 @@ public class ANTLRPlugin extends Plugin {
                SwingUtil.showDialog(antlrGrammarPanel, app, "Grammar Panel", new SwingUtil.ConfirmAction() {
                   @Override
                   public void verifyAndCommit() throws Exception {
-                     System.out.println("save grammar spec, or print (should already be saved)");
+                     log.info("save grammar spec, or print (should already be saved)");
                   }
                });
             }

@@ -7,8 +7,8 @@ public abstract class StackTraceDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "Identifier")) visitIdentifier(node);
-		else if(hasLabel(node, "Message")) visitMessage(node);
+		if(hasLabel(node, "Message")) visitMessage(node);
+		else if(hasLabel(node, "Identifier")) visitIdentifier(node);
 		else if(hasLabel(node, "ClassName")) visitClassName(node);
 		else if(hasLabel(node, "StartRule")) visitStartRule(node);
 		else if(hasLabel(node, "StackTrace")) visitStackTrace(node);
@@ -26,13 +26,13 @@ public abstract class StackTraceDomainVisitor {
 		else if(hasLabel(node, "PackagePath")) visitPackagePath(node);
    }
 
-	public void visitIdentifier(Node node) {
+	public void visitMessage(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitMessage(Node node) {
+	public void visitIdentifier(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

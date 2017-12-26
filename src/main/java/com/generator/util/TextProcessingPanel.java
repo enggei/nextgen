@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  * Created 30.07.17.
  */
 public final class TextProcessingPanel extends JPanel {
-
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(TextProcessingPanel.class);
    private final JTextArea txtInput = SwingUtil.newTextArea();
    private final String lineSeparator = System.getProperty("line.separator");
 
@@ -119,7 +119,7 @@ public final class TextProcessingPanel extends JPanel {
       txtInput.getActionMap().put(im.get(tab), new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent e) {
-            System.out.println("TAB");
+            log.info("TAB");
 
             int startCaret = txtInput.getCaretPosition();
             int caretPosition = txtInput.getCaretPosition();
@@ -158,7 +158,7 @@ public final class TextProcessingPanel extends JPanel {
       txtInput.getActionMap().put(im.get(shiftTab), new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent e) {
-            System.out.println("SHIFT TAB");
+            log.info("SHIFT TAB");
 
 
          }
@@ -315,7 +315,7 @@ public final class TextProcessingPanel extends JPanel {
          try {
             txtInput.getHighlighter().addHighlight(startIndex, endIndex, new DefaultHighlighter.DefaultHighlightPainter(highlightColor));
          } catch (BadLocationException e1) {
-            System.out.println(SwingUtil.printStackTrace(e1));
+            log.info(SwingUtil.printStackTrace(e1));
          }
       }
    }

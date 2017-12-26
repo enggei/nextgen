@@ -12,8 +12,8 @@ import java.io.IOException;
  * Created 07.09.17.
  */
 public class Tests {
-
-//   @Test
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+//   //@Test
 //   public void testStatementAndRender() throws IOException {
 //      final TemplateGroupGroup group = new TemplateGroupGroup();
 //
@@ -35,7 +35,7 @@ public class Tests {
 //         public void compileTimeError(STMessage stMessage) {
 //            if (stMessage instanceof STCompiletimeMessage) {
 //               final Token token = ((STCompiletimeMessage) stMessage).token;
-//               System.out.println(token);
+//               log.info(token);
 //            }
 //         }
 //
@@ -60,7 +60,7 @@ public class Tests {
 //      statement.add(new KeyValueListProperty("elements", kvProperties));
 //
 //      final String render = templateFile.render(statement);
-//      System.out.println(render);
+//      log.info(render);
 //   }
 //
 //   @NotNull
@@ -72,7 +72,7 @@ public class Tests {
 //      return kvProperty;
 //   }
 
-   @Test
+   //@Test
    public void testTemplateGroupGroup() throws IOException {
 
       final TemplateGroupGroup templateGroupGroup = new TemplateGroupGroup();
@@ -92,10 +92,10 @@ public class Tests {
       final TemplateGroupGroup.stgST x = templateGroupGroup.newstg().
             setDelimiter("~").
             addTemplatesValue(templateST);
-      System.out.println(x);
+      log.info(x);
    }
 
-   @Test
+   //@Test
    public void teSTGParser() throws IOException {
 
       // todo STGParser from g4 grammars not working... why ?
@@ -107,14 +107,14 @@ public class Tests {
                   setName("hello").
                   setContent("Hello %name%!").
                   addParamsValue("name"));
-      System.out.println(stgST);
+      log.info(stgST);
 
       final STGParser parser = new STGParser(new CommonTokenStream(new STGLexer(CharStreams.fromString(stgST.toString()))));
       final STGParserBaseListener listener = new STGParserBaseListener();
       new ParseTreeWalker().walk(listener, parser.group());
    }
 
-   @Test
+   //@Test
    public void testSTParser() throws IOException {
 
       final TemplateGroupGroup templateGroupGroup = new TemplateGroupGroup();
@@ -134,6 +134,6 @@ public class Tests {
       };
       new ParseTreeWalker().walk(listener, parser.template());
 
-      System.out.println(templateST.setContent(content));
+      log.info(templateST.setContent(content));
    }
 }

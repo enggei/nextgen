@@ -4,11 +4,13 @@ import com.generator.app.App;
 import com.generator.app.AppEvents;
 import com.generator.app.AppMotif;
 import com.generator.app.nodes.NeoNode;
+import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.project.ProjectPlugin;
 import com.generator.neo.NeoModel;
 import com.generator.util.JschUtil;
 import com.generator.util.SwingUtil;
 import com.generator.util.TextProcessingPanel;
+import com.generator.util.ThreadUtil;
 import com.jcraft.jsch.*;
 import org.jetbrains.annotations.NotNull;
 import org.neo4j.graphdb.Node;
@@ -19,9 +21,7 @@ import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.tree.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -37,6 +37,8 @@ import static com.generator.util.NeoUtil.*;
  */
 public class SSHPlugin extends SSHDomainPlugin {
 
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(SSHPlugin.class);
+
    public static void cleanupPreviousSessions(NeoModel graph) {
       graph.findNodes(Entities.Host).forEachRemaining(hostNode -> outgoing(hostNode, Relations.SESSIONS).forEach(sessionRelation -> {
          final Node sessionNode = other(hostNode, sessionRelation);
@@ -44,10 +46,12 @@ public class SSHPlugin extends SSHDomainPlugin {
             final Node channelNode = other(sessionNode, channelRelation);
             channelRelation.delete();
             incoming(channelNode, AppMotif.Relations._LAYOUT_MEMBER).forEach(Relationship::delete);
+            incoming(channelNode, DomainPlugin.Relations.INSTANCE).forEach(Relationship::delete);
             channelNode.delete();
          });
 
          incoming(sessionNode, AppMotif.Relations._LAYOUT_MEMBER).forEach(Relationship::delete);
+         incoming(sessionNode, DomainPlugin.Relations.INSTANCE).forEach(Relationship::delete);
          sessionRelation.delete();
          sessionNode.delete();
       }));
@@ -119,7 +123,7 @@ public class SSHPlugin extends SSHDomainPlugin {
 
          @Override
          public void log(int i, String s) {
-            System.out.println("SSH " + i + " : " + s);
+            log.info("SSH " + i + " : " + s);
          }
       });
 
@@ -129,12 +133,12 @@ public class SSHPlugin extends SSHDomainPlugin {
    private void close() {
 
       for (Map.Entry<UUID, ActiveChannel> channelEntry : channels.entrySet()) {
-         System.out.println("closing channel " + channelEntry.getKey());
+         log.info("closing channel " + channelEntry.getKey());
          channelEntry.getValue().channel.disconnect();
       }
 
       for (Map.Entry<UUID, Session> sessionEntry : sessions.entrySet()) {
-         System.out.println("disconnecting ssh session " + sessionEntry.getKey());
+         log.info("disconnecting ssh session " + sessionEntry.getKey());
          sessionEntry.getValue().disconnect();
       }
    }
@@ -249,314 +253,344 @@ public class SSHPlugin extends SSHDomainPlugin {
    }
 
    @Override
-   public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
+   protected void handleHost(JPopupMenu pop, NeoNode hostNode, Set<NeoNode> selectedNodes) {
+      pop.add(new App.TransactionAction("Connect", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+            ThreadUtil.runTaskInNeoTransaction(getGraph(), new ThreadUtil.ThreadTask<Node>() {
+               @Override
+               public Node run() {
+                  return connectToHost(hostNode.getNode());
+               }
 
-      if (isHost(neoNode.getNode())) {
+               @Override
+               public void onComplete(Node sessionNode) {
+                  if (sessionNode == null) return;
+                  log.info("Connected to server");
+               }
+            });
+         }
+      });
 
-         pop.add(new App.TransactionAction("Connect", app) {
+      pop.add(new App.TransactionAction("Copy ssh connect to clipboard", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final String username = getUsernameProperty(hostNode.getNode());
+            final String host = getIpProperty(hostNode.getNode());
+            final int port = getPortProperty(hostNode.getNode(), 22);
+            final String keyPath = getPrivateKeyPathProperty(hostNode.getNode());
+
+            String content = "ssh " + (keyPath == null ? "" : (" -i " + keyPath)) + username + "@" + host + " -p " + port;
+            SwingUtil.toClipboard(content);
+         }
+      });
+
+      pop.add(new App.TransactionAction("Open Shell", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+            final Node sessionNode = connectToHost(hostNode.getNode());
+
+            final Session session = sessions.get(uuidOf(sessionNode));
+            if (session == null)
+               throw new IllegalStateException("No session created");
+            final Channel channel = session.openChannel("shell");
+
+            // passing in session-node to retrieve host and host-commands:
+            final ActiveChannel activeChannel = new ActiveChannel(channel, hostNode).connect();
+
+            final Node newNode = getGraph().newNode(Entities.Channel, Properties.ip.name(), "shell");
+            relateCHANNELS(sessionNode, newNode);
+            channels.put(uuidOf(newNode), activeChannel);
+            fireNodesLoaded(newNode);
+         }
+      });
+
+      pop.add(new App.TransactionAction("Upload file to host", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final File file = SwingUtil.showOpenFile(app, System.getProperty("user.home"));
+            if (file == null) return;
+
+            final Set<String> paths = new LinkedHashSet<>();
+            outgoingPATHS(hostNode.getNode(), (relationship, pathNode) -> paths.add(getNameProperty(pathNode)));
+
+            final String target = SwingUtil.showSelectDialog(app, paths);
+            if (target == null || target.length() == 0) return;
+
+            final Session session = getSession(hostNode.getNode());
+            upload(session, file.getAbsolutePath(), target);
+         }
+      });
+
+      pop.add(new App.TransactionAction("Download from host", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final String target = SwingUtil.showInputDialog("Path on host", app);
+            if (target == null || target.length() == 0) return;
+
+            final File file = SwingUtil.showOpenDir(app, System.getProperty("user.home"));
+            if (file == null) return;
+
+            download(getSession(hostNode.getNode()), file.getAbsolutePath(), target);
+         }
+      });
+
+      pop.add(new AbstractAction("Add Command") {
+         @Override
+         public void actionPerformed(ActionEvent e) {
+
+            final JTextField txtName = new JTextField();
+            final JTextField txtCommand = new JTextField();
+
+            final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("10dlu,4dlu,75dlu,4dlu,100dlu", "pref,4dlu,pref");
+            editor.addLabel("Name", 3, 1);
+            editor.add(txtName, 5, 1);
+            editor.addLabel("Command", 3, 3);
+            editor.add(txtCommand, 5, 3);
+
+            SwingUtil.showDialog(editor, app, "Add command", new SwingUtil.ConfirmAction() {
+               @Override
+               public void verifyAndCommit() throws Exception {
+
+                  final String name = txtName.getText();
+                  final String command = txtCommand.getText();
+                  if (name.length() == 0 || command.length() == 0) return;
+
+                  getGraph().doInTransaction(new NeoModel.Committer() {
+                     @Override
+                     public void doAction(Transaction tx) throws Throwable {
+                        final Node newNode = getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), txtName.getText(), Properties.cmdCommand.name(), txtCommand.getText());
+                        relate(hostNode.getNode(), newNode, Relations.COMMANDS);
+                        fireNodesLoaded(newNode);
+                     }
+
+                     @Override
+                     public void exception(Throwable throwable) {
+                        SwingUtil.showExceptionNoStack(app, throwable);
+                     }
+                  });
+               }
+            });
+         }
+      });
+
+      pop.add(new App.TransactionAction("Add Path", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final String path = SwingUtil.showInputDialog("Path", app);
+            if (path == null || path.length() == 0) return;
+
+            final Node pathNode = newPath(path);
+            relatePATHS(hostNode.getNode(), pathNode);
+            fireNodesLoaded(pathNode);
+         }
+      });
+
+      if (!sessions.isEmpty()) {
+         pop.add(new App.TransactionAction("Close all sessions", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-               connectToHost(neoNode.getNode());
+               outgoingSESSIONS(hostNode.getNode(), (relationship, sessionNode) -> closeSession(sessionNode));
             }
          });
+      }
+   }
 
-         pop.add(new App.TransactionAction("Open Shell", app) {
+   @Override
+   protected void handleSession(JPopupMenu pop, NeoNode sessionNode, Set<NeoNode> selectedNodes) {
+      if (sessions.containsKey(uuidOf(sessionNode.getNode()))) {
+
+         pop.add(new App.TransactionAction("Open shell", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-               final Node sessionNode = connectToHost(neoNode.getNode());
 
-               final Session session = sessions.get(uuidOf(sessionNode));
+               final Session session = sessions.get(uuidOf(sessionNode.getNode()));
                final Channel channel = session.openChannel("shell");
 
                // passing in session-node to retrieve host and host-commands:
-               final ActiveChannel activeChannel = new ActiveChannel(channel, neoNode).connect();
+               final ActiveChannel activeChannel = new ActiveChannel(channel, sessionNode).connect();
 
                final Node newNode = getGraph().newNode(Entities.Channel, Properties.ip.name(), "shell");
-               relateCHANNELS(sessionNode, newNode);
+               relateCHANNELS(sessionNode.getNode(), newNode);
                channels.put(uuidOf(newNode), activeChannel);
                fireNodesLoaded(newNode);
             }
          });
 
-         pop.add(new App.TransactionAction("Upload file to host", app) {
+         pop.add(new App.TransactionAction("Close Session", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+               closeSession(sessionNode);
+            }
+         });
+      }
+   }
+
+   @Override
+   protected void handlePath(JPopupMenu pop, NeoNode pathNode, Set<NeoNode> selectedNodes) {
+      final Set<File> fileSet = new LinkedHashSet<>();
+      for (NeoNode selectedNode : selectedNodes) {
+         if (hasLabel(selectedNode.getNode(), ProjectPlugin.Entities.File)) {
+
+            final Node directoryNode = other(selectedNode.getNode(), singleIncoming(selectedNode.getNode(), ProjectPlugin.Relations.FILE));
+            final File getDir = getFile(directoryNode);
+            final File file = new File(getDir, getString(selectedNode.getNode(), AppMotif.Properties.name.name()) + "" + getString(selectedNode.getNode(), ProjectPlugin.Properties.extension.name()));
+            if (!file.exists()) return;
+
+            fileSet.add(file);
+         }
+      }
+
+      if (fileSet.isEmpty()) {
+         pop.add(new App.TransactionAction("Upload file here", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
                final File file = SwingUtil.showOpenFile(app, System.getProperty("user.home"));
                if (file == null) return;
 
-               final String target = SwingUtil.showInputDialog("Target", app);
-               if (target == null || target.length() == 0) return;
-
-               final Session session = getSession(neoNode.getNode());
-               upload(session, file.getAbsolutePath(), target);
-
+               final Node hostNode = other(pathNode.getNode(), singleIncoming(pathNode.getNode(), Relations.PATHS));
+               upload(getSession(hostNode), file.getAbsolutePath(), getPathProperty(pathNode.getNode()));
             }
          });
 
-         pop.add(new App.TransactionAction("Download from host", app) {
+      } else if (fileSet.size() == 1) {
+
+         final File file = fileSet.iterator().next();
+
+         pop.add(new App.TransactionAction("Upload " + file.getName(), app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final String target = SwingUtil.showInputDialog("Path on host", app);
-               if (target == null || target.length() == 0) return;
-
-               final File file = SwingUtil.showOpenDir(app, System.getProperty("user.home"));
-               if (file == null) return;
-
-               download(getSession(neoNode.getNode()), file.getAbsolutePath(), target);
+               final Node hostNode = other(pathNode.getNode(), singleIncoming(pathNode.getNode(), Relations.PATHS));
+               upload(getSession(hostNode), file.getAbsolutePath(), getPathProperty(pathNode.getNode()));
             }
          });
 
-         pop.add(new AbstractAction("Add Command") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+      } else if (fileSet.size() > 1) {
 
-               final JTextField txtName = new JTextField();
-               final JTextField txtCommand = new JTextField();
-
-               final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("10dlu,4dlu,75dlu,4dlu,100dlu", "pref,4dlu,pref");
-               editor.addLabel("Name", 3, 1);
-               editor.add(txtName, 5, 1);
-               editor.addLabel("Command", 3, 3);
-               editor.add(txtCommand, 5, 3);
-
-               SwingUtil.showDialog(editor, app, "Add command", new SwingUtil.ConfirmAction() {
-                  @Override
-                  public void verifyAndCommit() throws Exception {
-
-                     final String name = txtName.getText();
-                     final String command = txtCommand.getText();
-                     if (name.length() == 0 || command.length() == 0) return;
-
-                     getGraph().doInTransaction(new NeoModel.Committer() {
-                        @Override
-                        public void doAction(Transaction tx) throws Throwable {
-                           final Node newNode = getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), txtName.getText(), Properties.cmdCommand.name(), txtCommand.getText());
-                           relate(neoNode.getNode(), newNode, Relations.COMMANDS);
-                           fireNodesLoaded(newNode);
-                        }
-
-                        @Override
-                        public void exception(Throwable throwable) {
-                           SwingUtil.showExceptionNoStack(app, throwable);
-                        }
-                     });
-                  }
-               });
-            }
-         });
-
-         pop.add(new App.TransactionAction("Add Path", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final String path = SwingUtil.showInputDialog("Path", app);
-               if (path == null || path.length() == 0) return;
-
-               final Node pathNode = newPath(path);
-               relatePATHS(neoNode.getNode(), pathNode);
-               fireNodesLoaded(pathNode);
-            }
-         });
-
-         if (!sessions.isEmpty()) {
-            pop.add(new App.TransactionAction("Close all sessions", app) {
+         final JMenu fileuploadMenu = new JMenu("Upload...");
+         for (File file : fileSet) {
+            fileuploadMenu.add(new App.TransactionAction(file.getName(), app) {
                @Override
                protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  outgoingSESSIONS(neoNode.getNode(), (relationship, sessionNode) -> closeSession(sessionNode));
+                  final Node hostNode = other(pathNode.getNode(), singleIncoming(pathNode.getNode(), Relations.PATHS));
+                  upload(getSession(hostNode), file.getAbsolutePath(), getPathProperty(pathNode.getNode()));
                }
             });
          }
-
-      } else if (isSession(neoNode.getNode())) {
-
-         if (sessions.containsKey(uuidOf(neoNode.getNode()))) {
-
-            pop.add(new App.TransactionAction("Open shell", app) {
-               @Override
-               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-                  final Session session = sessions.get(uuidOf(neoNode.getNode()));
-                  final Channel channel = session.openChannel("shell");
-
-                  // passing in session-node to retrieve host and host-commands:
-                  final ActiveChannel activeChannel = new ActiveChannel(channel, neoNode).connect();
-
-                  final Node newNode = getGraph().newNode(Entities.Channel, Properties.ip.name(), "shell");
-                  relateCHANNELS(neoNode.getNode(), newNode);
-                  channels.put(uuidOf(newNode), activeChannel);
-                  fireNodesLoaded(newNode);
-               }
-            });
-
-            pop.add(new App.TransactionAction("Close Session", app) {
-               @Override
-               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  closeSession(neoNode);
-               }
-            });
-         }
-
-      } else if (isChannel(neoNode.getNode())) {
-
-         if (channels.containsKey(uuidOf(neoNode.getNode()))) {
-            pop.add(new App.TransactionAction("Close Channel", app) {
-               @Override
-               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  closeChannel(neoNode.getNode());
-               }
-            });
-         }
-
-      } else if (isPath(neoNode.getNode())) {
-
-         final Set<File> fileSet = new LinkedHashSet<>();
-         for (NeoNode selectedNode : selectedNodes) {
-            if (hasLabel(selectedNode.getNode(), ProjectPlugin.Entities.File)) {
-
-               final Node directoryNode = other(selectedNode.getNode(), singleIncoming(selectedNode.getNode(), ProjectPlugin.Relations.FILE));
-               final File getDir = getFile(directoryNode);
-               final File file = new File(getDir, getString(selectedNode.getNode(), AppMotif.Properties.name.name()) + "" + getString(selectedNode.getNode(), ProjectPlugin.Properties.extension.name()));
-               if (!file.exists()) return;
-
-               fileSet.add(file);
-            }
-         }
-
-         if (fileSet.isEmpty()) {
-            pop.add(new App.TransactionAction("Upload file here", app) {
-               @Override
-               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-                  final File file = SwingUtil.showOpenFile(app, System.getProperty("user.home"));
-                  if (file == null) return;
-
-                  final Node hostNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.PATHS));
-                  upload(getSession(hostNode), file.getAbsolutePath(), getPathProperty(neoNode.getNode()));
-               }
-            });
-
-         } else if (fileSet.size() == 1) {
-
-            final File file = fileSet.iterator().next();
-
-            pop.add(new App.TransactionAction("Upload " + file.getName(), app) {
-               @Override
-               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  final Node hostNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.PATHS));
-                  upload(getSession(hostNode), file.getAbsolutePath(), getPathProperty(neoNode.getNode()));
-               }
-            });
-
-         } else if (fileSet.size() > 1) {
-
-            final JMenu fileuploadMenu = new JMenu("Upload...");
-            for (File file : fileSet) {
-               fileuploadMenu.add(new App.TransactionAction(file.getName(), app) {
-                  @Override
-                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                     final Node hostNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.PATHS));
-                     upload(getSession(hostNode), file.getAbsolutePath(), getPathProperty(neoNode.getNode()));
-                  }
-               });
-            }
-            pop.add(fileuploadMenu);
+         pop.add(fileuploadMenu);
 
 //            pop.add(new App.TransactionAction("Upload " + fileSet.size() + " files", app) {
 //               @Override
 //               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-//                  final Node hostNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.PATHS));
+//                  final Node hostNode = other(pathNode.getNode(), singleIncoming(pathNode.getNode(), Relations.PATHS));
 //
 //                  final Session session = getSession(hostNode);
 //                  for (File file : fileSet)
-//                     upload(session, file.getAbsolutePath(), getName(neoNode));
+//                     upload(session, file.getAbsolutePath(), getName(pathNode));
 //                  session.disconnect();
 //
 //                  SwingUtil.showMessage(fileSet.size() + " files uploaded", app);
 //               }
 //            });
-         }
+      }
+   }
 
-
-      } else if (isCommandRoot(neoNode.getNode())) {
-
-         pop.add(new App.TransactionAction("Add Category", app) {
+   @Override
+   protected void handleChannel(JPopupMenu pop, NeoNode channelNode, Set<NeoNode> selectedNodes) {
+      if (channels.containsKey(uuidOf(channelNode.getNode()))) {
+         pop.add(new App.TransactionAction("Close Channel", app) {
             @Override
-            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final JTextField txtName = new JTextField();
-
-               final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("10dlu,4dlu,75dlu,4dlu,100dlu", "pref");
-               editor.addLabel("Name", 3, 1);
-               editor.add(txtName, 5, 1);
-
-               SwingUtil.showDialog(editor, app, "Add category", new SwingUtil.ConfirmAction() {
-                  @Override
-                  public void verifyAndCommit() throws Exception {
-
-                     final String name = txtName.getText();
-                     if (name.length() == 0) return;
-
-                     getGraph().doInTransaction(new NeoModel.Committer() {
-                        @Override
-                        public void doAction(Transaction tx) throws Throwable {
-                           final Node newNode = getGraph().findOrCreate(Entities.CommandCategory, AppMotif.Properties.name.name(), txtName.getText());
-                           relateCATEGORIES(neoNode.getNode(), newNode);
-                           fireNodesLoaded(newNode);
-                        }
-
-                        @Override
-                        public void exception(Throwable throwable) {
-                           SwingUtil.showExceptionNoStack(app, throwable);
-                        }
-                     });
-                  }
-               });
-            }
-         });
-
-      } else if (isCommandCategory(neoNode.getNode())) {
-
-         pop.add(new AbstractAction("Add Command") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-               final JTextField txtName = new JTextField();
-               final JTextField txtCommand = new JTextField();
-
-               final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("10dlu,4dlu,75dlu,4dlu,100dlu", "pref,4dlu,pref");
-               editor.addLabel("Name", 3, 1);
-               editor.add(txtName, 5, 1);
-               editor.addLabel("Command", 3, 3);
-               editor.add(txtCommand, 5, 3);
-
-               SwingUtil.showDialog(editor, app, "Add command", new SwingUtil.ConfirmAction() {
-                  @Override
-                  public void verifyAndCommit() throws Exception {
-
-                     final String name = txtName.getText();
-                     final String command = txtCommand.getText();
-                     if (name.length() == 0 || command.length() == 0) return;
-
-                     getGraph().doInTransaction(new NeoModel.Committer() {
-                        @Override
-                        public void doAction(Transaction tx) throws Throwable {
-                           final Node newNode = getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), txtName.getText(), Properties.cmdCommand.name(), txtCommand.getText());
-                           relateCOMMANDS(neoNode.getNode(), newNode);
-                           fireNodesLoaded(newNode);
-                        }
-
-                        @Override
-                        public void exception(Throwable throwable) {
-                           SwingUtil.showExceptionNoStack(app, throwable);
-                        }
-                     });
-                  }
-               });
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+               closeChannel(channelNode.getNode());
             }
          });
       }
+   }
+
+   @Override
+   protected void handleCommandRoot(JPopupMenu pop, NeoNode commandRootNode, Set<NeoNode> selectedNodes) {
+      pop.add(new App.TransactionAction("Add Category", app) {
+         @Override
+         public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final JTextField txtName = new JTextField();
+
+            final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("10dlu,4dlu,75dlu,4dlu,100dlu", "pref");
+            editor.addLabel("Name", 3, 1);
+            editor.add(txtName, 5, 1);
+
+            SwingUtil.showDialog(editor, app, "Add category", new SwingUtil.ConfirmAction() {
+               @Override
+               public void verifyAndCommit() throws Exception {
+
+                  final String name = txtName.getText();
+                  if (name.length() == 0) return;
+
+                  getGraph().doInTransaction(new NeoModel.Committer() {
+                     @Override
+                     public void doAction(Transaction tx) throws Throwable {
+                        final Node newNode = getGraph().findOrCreate(Entities.CommandCategory, AppMotif.Properties.name.name(), txtName.getText());
+                        relateCATEGORIES(commandRootNode.getNode(), newNode);
+                        fireNodesLoaded(newNode);
+                     }
+
+                     @Override
+                     public void exception(Throwable throwable) {
+                        SwingUtil.showExceptionNoStack(app, throwable);
+                     }
+                  });
+               }
+            });
+         }
+      });
+
+   }
+
+   @Override
+   protected void handleCommandCategory(JPopupMenu pop, NeoNode commandCategoryNode, Set<NeoNode> selectedNodes) {
+      pop.add(new AbstractAction("Add Command") {
+         @Override
+         public void actionPerformed(ActionEvent e) {
+
+            final JTextField txtName = new JTextField();
+            final JTextField txtCommand = new JTextField();
+
+            final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("10dlu,4dlu,75dlu,4dlu,100dlu", "pref,4dlu,pref");
+            editor.addLabel("Name", 3, 1);
+            editor.add(txtName, 5, 1);
+            editor.addLabel("Command", 3, 3);
+            editor.add(txtCommand, 5, 3);
+
+            SwingUtil.showDialog(editor, app, "Add command", new SwingUtil.ConfirmAction() {
+               @Override
+               public void verifyAndCommit() throws Exception {
+
+                  final String name = txtName.getText();
+                  final String command = txtCommand.getText();
+                  if (name.length() == 0 || command.length() == 0) return;
+
+                  getGraph().doInTransaction(new NeoModel.Committer() {
+                     @Override
+                     public void doAction(Transaction tx) throws Throwable {
+                        final Node newNode = getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), txtName.getText(), Properties.cmdCommand.name(), txtCommand.getText());
+                        relateCOMMANDS(commandCategoryNode.getNode(), newNode);
+                        fireNodesLoaded(newNode);
+                     }
+
+                     @Override
+                     public void exception(Throwable throwable) {
+                        SwingUtil.showExceptionNoStack(app, throwable);
+                     }
+                  });
+               }
+            });
+         }
+      });
    }
 
    @Override
@@ -571,11 +605,11 @@ public class SSHPlugin extends SSHDomainPlugin {
       final JTextField txtTerminal = new JTextField(15);
       final JTextArea txtOutput = new JTextArea();
 
-      final AtomicBoolean active = new AtomicBoolean(true);
-      private final StringBuilder cache = new StringBuilder();
-      private final Stack<CommandNode> commandStack = new Stack<>();
+      //      final AtomicBoolean active = new AtomicBoolean(true);
+      private final CommandHistoryManager commandManager = new CommandHistoryManager();
       private final JTree commandTree;
       private final JList<CommandNode> historyList = new JList<>();
+      private final JschUtil.SSHHandler sshHandler;
 
       private char[] sudoPassword = null;
       private String install = null;
@@ -591,6 +625,70 @@ public class SSHPlugin extends SSHDomainPlugin {
          final DataInputStream dataIn = new DataInputStream(channel.getInputStream());
          final DataOutputStream dataOut = new DataOutputStream(channel.getOutputStream());
 
+         sshHandler = new JschUtil.SSHHandler(dataIn, dataOut) {
+
+            @Override
+            protected String getSudoPassword() {
+
+               if (sudoPassword != null) return new String(sudoPassword);
+
+               final char[] p = SwingUtil.showPasswordDialog(txtOutput);
+               if (p == null) return null;
+               sudoPassword = p;
+
+               return new String(p);
+            }
+
+            @Override
+            protected void handleInstall(String installCommand) {
+               install = installCommand;
+            }
+
+            @Override
+            protected void handle(String cache) {
+               SwingUtilities.invokeLater(() -> {
+                  txtOutput.setText(cache);
+                  try {
+                     txtOutput.setCaretPosition(txtOutput.getLineStartOffset(txtOutput.getLineCount() - 1));
+                  } catch (BadLocationException e) {
+                     log.info("Ignoring caret position because of " + e.getMessage());
+                  }
+               });
+            }
+
+            @Override
+            protected void handleException(String cache, Throwable t) {
+               txtOutput.setText(SwingUtil.printStackTrace(t.getCause()));
+            }
+
+            @Override
+            protected String handleContinue(String cache) {
+               return SwingUtil.showConfirmDialog(app, "Do you want to continue ?") ? "Y\n" : "n\n";
+            }
+
+            @Override
+            protected void onPromptReady() {
+            }
+         };
+
+
+         txtTerminal.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+               switch (e.getKeyCode()) {
+
+                  case KeyEvent.VK_UP:
+                     SwingUtilities.invokeLater(() -> txtTerminal.setText(commandManager.getIndexedCommand()));
+                     break;
+
+                  case KeyEvent.VK_DOWN:
+                     SwingUtilities.invokeLater(() -> txtTerminal.setText(commandManager.getIndexedCommand()));
+                     break;
+               }
+            }
+         });
+
          txtTerminal.addActionListener(e -> {
 
             final String trim = txtTerminal.getText().trim();
@@ -604,24 +702,24 @@ public class SSHPlugin extends SSHDomainPlugin {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-               final String trim = txtTerminal.getText().trim();
+               final String command = txtTerminal.getText().trim();
 
                if (SwingUtilities.isRightMouseButton(e)) {
                   final JPopupMenu pop = new JPopupMenu();
 
-                  if (trim.length() > 0) {
+                  if (command.length() > 0) {
 
-                     pop.add(new AbstractAction("Run " + trim) {
+                     pop.add(new AbstractAction("Run " + command) {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                           runCommand(dataOut, new CommandNode("Run " + trim, trim));
+                           runCommand(dataOut, new CommandNode("Run " + command, command));
                         }
                      });
 
-                     pop.add(new AbstractAction("Run as sudo " + trim) {
+                     pop.add(new AbstractAction("Run as sudo " + command) {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                           runCommand(dataOut, new CommandNode("Run " + trim, trim), true);
+                           runCommand(dataOut, new CommandNode("Run " + command, command), true);
                         }
                      });
 
@@ -691,7 +789,7 @@ public class SSHPlugin extends SSHDomainPlugin {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                            insertInTerminal(SwingUtil.fromClipboard());
-                           runCommand(dataOut, new CommandNode("Run " + trim, trim));
+                           runCommand(dataOut, new CommandNode("Run " + command, command));
                         }
                      });
 
@@ -699,7 +797,7 @@ public class SSHPlugin extends SSHDomainPlugin {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                            insertInTerminal(SwingUtil.fromClipboard());
-                           runCommand(dataOut, new CommandNode("Run " + trim, trim), true);
+                           runCommand(dataOut, new CommandNode("Run " + command, command), true);
                         }
                      });
                   }
@@ -732,48 +830,79 @@ public class SSHPlugin extends SSHDomainPlugin {
                if (SwingUtilities.isRightMouseButton(e)) {
                   final JPopupMenu pop = new JPopupMenu();
 
-                  if (txtOutput.getSelectedText() != null && txtOutput.getSelectedText().length() > 0) {
+                  final String selectedText = txtOutput.getSelectedText();
+
+                  if (selectedText != null && selectedText.length() > 0) {
 
                      pop.add(new AbstractAction("Insert into terminal") {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                           insertInTerminal(txtOutput.getSelectedText());
+                           insertInTerminal(selectedText);
                         }
                      });
 
                      pop.add(new AbstractAction("Insert into terminal and Run") {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                           insertInTerminal(txtOutput.getSelectedText());
+                           insertInTerminal(selectedText);
                            runCommand(dataOut, new CommandNode("Run " + txtTerminal.getText().trim(), txtTerminal.getText().trim()));
                         }
                      });
 
-                     pop.add(new AbstractAction("cd " + txtOutput.getSelectedText()) {
+                     pop.add(new AbstractAction("cd " + selectedText) {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                           runCommand(dataOut, new CommandNode("cd " + txtOutput.getSelectedText(), "cd " + txtOutput.getSelectedText()));
+                           runCommand(dataOut, new CommandNode("cd " + selectedText, "cd " + selectedText));
                         }
                      });
 
-                     pop.add(new AbstractAction("Run " + txtOutput.getSelectedText()) {
+
+                     if (selectedText.endsWith("tar.gz")) {
+                        pop.add(new AbstractAction("Untar " + selectedText) {
+                           @Override
+                           public void actionPerformed(ActionEvent e) {
+                              runCommand(dataOut, new CommandNode("Untar " + selectedText, "tar xvzf " + selectedText));
+                           }
+                        });
+
+                        pop.add(new AbstractAction("Untar " + selectedText + " to..") {
+                           @Override
+                           public void actionPerformed(ActionEvent e) {
+
+                              final String target = SwingUtil.showInputDialog("target", app);
+                              if (target == null || target.length() == 0) return;
+
+                              runCommand(dataOut, new CommandNode("Untar " + selectedText + " to " + target, "tar xvzfC " + target + " " + selectedText));
+                           }
+                        });
+
+                     } else if (selectedText.endsWith("tar.bz2")) {
+                        pop.add(new AbstractAction("Untar " + selectedText) {
+                           @Override
+                           public void actionPerformed(ActionEvent e) {
+                              runCommand(dataOut, new CommandNode("Untar " + selectedText, "tar xvjf " + selectedText));
+                           }
+                        });
+                     }
+
+                     pop.add(new AbstractAction("Run " + selectedText) {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                           runCommand(dataOut, new CommandNode("Run " + txtOutput.getSelectedText(), txtOutput.getSelectedText()));
+                           runCommand(dataOut, new CommandNode("Run " + selectedText, selectedText));
                         }
                      });
 
                      pop.add(new AbstractAction("Copy to clipboard ") {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                           SwingUtil.toClipboard(txtOutput.getSelectedText().trim());
+                           SwingUtil.toClipboard(selectedText.trim());
                         }
                      });
 
                      pop.add(new AbstractAction("Try to download (if file)") {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                           final String filename = txtOutput.getSelectedText().trim();
+                           final String filename = selectedText.trim();
                            runCommand(dataOut, new CommandNode("pwd", "pwd"));
                         }
                      });
@@ -783,7 +912,7 @@ public class SSHPlugin extends SSHDomainPlugin {
                      @Override
                      public void actionPerformed(ActionEvent e) {
                         txtOutput.setText("");
-                        cache.delete(0, cache.length());
+                        sshHandler.clearCache();
                      }
                   });
 
@@ -802,7 +931,7 @@ public class SSHPlugin extends SSHDomainPlugin {
                      }
                   });
 
-                  if (install != null && !commandStack.contains(new CommandNode("Install " + install, install))) {
+                  if (install != null && !commandManager.commandStack.contains(new CommandNode("Install " + install, install))) {
                      pop.add(new AbstractAction("Install " + install) {
                         @Override
                         public void actionPerformed(ActionEvent e) {
@@ -825,53 +954,54 @@ public class SSHPlugin extends SSHDomainPlugin {
 
          });
 
-         new Thread(() -> {
-            try {
 
-               byte[] bytes = new byte[2048];
-               while (active.get()) {
-                  if (dataIn.available() > 0) {
-                     final int read = dataIn.read(bytes);
-                     cache.append(new String(bytes, 0, read, "UTF-8"));
-
-                     final String s = cache.toString();
-                     SwingUtilities.invokeLater(() -> {
-                        txtOutput.setText(s);
-                        try {
-                           txtOutput.setCaretPosition(txtOutput.getLineStartOffset(txtOutput.getLineCount() - 1));
-                        } catch (BadLocationException e) {
-                           System.out.println("Ignoring caret position because of " + e.getMessage());
-                        }
-                     });
-
-                     // todo use ExpectIt here ?
-                     if (s.contains("[sudo] password for ") && sudoPassword == null) {
-
-                        final char[] p = SwingUtil.showPasswordDialog(txtOutput);
-                        if (p == null) return;
-                        this.sudoPassword = p;
-
-                        runCommand(dataOut, new CommandNode("passwd", new String(sudoPassword)));
-
-                     } else if (s.endsWith("Do you want to continue? [Y/n] ")) {
-                        runCommand(dataOut, new CommandNode("continue", (SwingUtil.showConfirmDialog(app, "Do you want to continue ?")) ? "Y\n" : "n\n"));
-
-                     } else {
-
-                        final String installTxt = "You can install it by typing:\r\n";
-                        if (s.contains(installTxt)) {
-                           final int beginIndex = s.indexOf(installTxt) + installTxt.length();
-                           install = s.substring(beginIndex, s.indexOf("\r\n", beginIndex));
-                        }
-                     }
-                  }
-
-                  Thread.sleep(100L);
-               }
-            } catch (Throwable t) {
-               txtOutput.setText(SwingUtil.printStackTrace(t.getCause()));
-            }
-         }).start();
+//         new Thread(() -> {
+//            try {
+//
+//               byte[] bytes = new byte[2048];
+//               while (active.get()) {
+//                  if (dataIn.available() > 0) {
+//                     final int read = dataIn.read(bytes);
+//                     cache.append(new String(bytes, 0, read, "UTF-8"));
+//
+//                     final String s = cache.toString();
+//                     SwingUtilities.invokeLater(() -> {
+//                        txtOutput.setText(s);
+//                        try {
+//                           txtOutput.setCaretPosition(txtOutput.getLineStartOffset(txtOutput.getLineCount() - 1));
+//                        } catch (BadLocationException e) {
+//                           log.info("Ignoring caret position because of " + e.getMessage());
+//                        }
+//                     });
+//
+//                     // todo use ExpectIt here ?
+//                     if (s.contains("[sudo] password for ") && sudoPassword == null) {
+//
+//                        final char[] p = SwingUtil.showPasswordDialog(txtOutput);
+//                        if (p == null) return;
+//                        this.sudoPassword = p;
+//
+//                        runCommand(dataOut, new CommandNode("passwd", new String(sudoPassword)));
+//
+//                     } else if (s.endsWith("Do you want to continue? [Y/n] ")) {
+//                        runCommand(dataOut, new CommandNode("continue", (SwingUtil.showConfirmDialog(app, "Do you want to continue ?")) ? "Y\n" : "n\n"));
+//
+//                     } else {
+//
+//                        final String installTxt = "You can install it by typing:\r\n";
+//                        if (s.contains(installTxt)) {
+//                           final int beginIndex = s.indexOf(installTxt) + installTxt.length();
+//                           install = s.substring(beginIndex, s.indexOf("\r\n", beginIndex));
+//                        }
+//                     }
+//                  }
+//
+//                  Thread.sleep(100L);
+//               }
+//            } catch (Throwable t) {
+//               txtOutput.setText(SwingUtil.printStackTrace(t.getCause()));
+//            }
+//         }).start();
 
          commandTree = new JTree(loadCommandTree(sessionNode)) {{
 
@@ -896,7 +1026,7 @@ public class SSHPlugin extends SSHDomainPlugin {
 
                   if (SwingUtilities.isLeftMouseButton(e) && (selectedNode instanceof CommandNode)) {
                      // do not run last command if same as last
-                     if (commandStack.isEmpty() || !selectedNode.equals(commandStack.peek()))
+                     if (commandManager.commandStack.isEmpty() || !selectedNode.equals(commandManager.commandStack.peek()))
                         runCommand(dataOut, (CommandNode) selectedNode);
 
                   } else if (SwingUtilities.isRightMouseButton(e)) {
@@ -916,7 +1046,7 @@ public class SSHPlugin extends SSHDomainPlugin {
                return super.getListCellRendererComponent(list, node.label, index, isSelected, cellHasFocus);
             }
          });
-         historyList.setModel(new CommandHistorListModel(commandStack));
+         historyList.setModel(new CommandHistorListModel(commandManager.commandStack));
          historyList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -943,6 +1073,32 @@ public class SSHPlugin extends SSHDomainPlugin {
          add(txtTerminal, BorderLayout.NORTH);
       }
 
+      private final class CommandHistoryManager {
+
+         private final Stack<CommandNode> commandStack = new Stack<>();
+         private int index = 0;
+
+         CommandHistoryManager() {
+         }
+
+         String getIndexedCommand() {
+
+            if (commandStack.isEmpty() || (index >= commandStack.size()) || (index < 0))
+               index = 0;
+
+            int currentIndex = 0;
+            for (int i = commandStack.size() - 1; i >= 0; i--) {
+               if (currentIndex == index) {
+                  index = 0;
+                  return commandStack.get(i).command;
+               }
+               currentIndex++;
+            }
+
+            return "";
+         }
+      }
+
       private void insertInTerminal(String str) {
          try {
             final String selectedText = txtTerminal.getSelectedText();
@@ -953,7 +1109,7 @@ public class SSHPlugin extends SSHDomainPlugin {
                txtTerminal.getDocument().insertString(caretPosition, str, null);
             }
          } catch (BadLocationException e1) {
-            System.out.println("Could not insert string at caret position: " + e1.getMessage());
+            log.info("Could not insert string at caret position: " + e1.getMessage());
          }
       }
 
@@ -962,7 +1118,7 @@ public class SSHPlugin extends SSHDomainPlugin {
       }
 
       private void runCommand(DataOutputStream dataOut, CommandNode commandNode, boolean asSudo) {
-         commandStack.push(commandNode.run(dataOut, asSudo));
+         commandManager.commandStack.push(commandNode.run(dataOut, asSudo));
          ((CommandHistorListModel) historyList.getModel()).fireContenChanged();
       }
 
@@ -1026,20 +1182,15 @@ public class SSHPlugin extends SSHDomainPlugin {
          // all general-commands:
          final Node commandRootNode = getGraph().findNode(Entities.CommandRoot, AppMotif.Properties.name.name(), Entities.CommandRoot.name());
          outgoingCATEGORIES(commandRootNode, (categoryRelation, categoryNode) -> {
-            final String categoryName = getString(categoryNode, AppMotif.Properties.name.name());
-            final CommandCategoryNode labelNode = new CommandCategoryNode(categoryName, categoryNode);
+            final CommandCategoryNode labelNode = new CommandCategoryNode(getNameProperty(categoryNode), categoryNode);
             commands.add(labelNode);
             outgoingCOMMANDS(categoryNode, (commandRelation, commandNode) -> labelNode.add(new CommandNode(getNameProperty(commandNode), getCmdCommandProperty(commandNode))));
          });
 
          // paths for host:
          final PathsNode hostPaths = new PathsNode("Paths", hostNode);
-         outgoing(hostNode, Relations.PATHS).forEach(pathRelation -> {
-            final Node pathNode = other(hostNode, pathRelation);
-            hostPaths.add(new PathNode(pathNode));
-         });
+         outgoingPATHS(hostNode, (relationship, pathNode) -> hostPaths.add(new PathNode(pathNode)));
          root.add(hostPaths);
-
 
          return root;
       }
@@ -1269,12 +1420,17 @@ public class SSHPlugin extends SSHDomainPlugin {
          }
 
          CommandNode run(DataOutputStream dataOut, boolean asSudo) {
-            try {
-               dataOut.writeBytes((asSudo ? "sudo " : "") + command + "\n");
-               dataOut.flush();
-            } catch (Exception e1) {
-               e1.printStackTrace();
-            }
+            new Thread(new Runnable() {
+               @Override
+               public void run() {
+                  try {
+                     dataOut.writeBytes((asSudo ? "sudo " : "") + command + "\n");
+                     dataOut.flush();
+                  } catch (Exception e1) {
+                     app.logWindow.logException(e1);
+                  }
+               }
+            }).start();
             return this;
          }
       }
@@ -1328,8 +1484,8 @@ public class SSHPlugin extends SSHDomainPlugin {
          final Session session = getSession(hostNode);
          final Node sessionNode = newSession();
          sessions.put(uuidOf(sessionNode), session);
-         relateSESSIONS(hostNode, sessionNode);
          fireNodesLoaded(sessionNode);
+         relateSESSIONS(hostNode, sessionNode);
 
          return sessionNode;
 
@@ -1377,8 +1533,8 @@ public class SSHPlugin extends SSHDomainPlugin {
 
       if (channels.containsKey(uuidOf(channelNode))) {
          final ActiveChannel channel = channels.remove(uuidOf(channelNode));
+         channel.editor.sshHandler.close();
          if (!channel.channel.isClosed()) channel.channel.disconnect();
-         channel.editor.active.set(false);
       }
 
       incomingCHANNELS(channelNode, (relationship, other) -> relationship.delete());
@@ -1389,16 +1545,16 @@ public class SSHPlugin extends SSHDomainPlugin {
       app.model.deleteNodes(Collections.singleton(channelNode));
    }
 
-   private static void upload(Session session, String lfile, String rfile) throws Exception {
-      upload(session, lfile, rfile, JschUtil.defaultIOListener(true));
+   public static void upload(Session session, String localFile, String remoteFile) throws Exception {
+      upload(session, localFile, remoteFile, JschUtil.defaultIOListener(true));
    }
 
-   private static void upload(Session session, String lfile, String rfile, JschUtil.IOListener uploadListener) throws Exception {
-      JschUtil.upload(session, lfile, rfile, uploadListener);
+   public static void upload(Session session, String localFile, String remoteFile, JschUtil.IOListener uploadListener) throws Exception {
+      JschUtil.upload(session, localFile, remoteFile, uploadListener);
    }
 
-   public static void download(Session session, String lfile, String rfile) throws Exception {
-      JschUtil.download(session, lfile, rfile, JschUtil.defaultIOListener(true));
+   public static void download(Session session, String localFile, String remoteFile) throws Exception {
+      JschUtil.download(session, localFile, remoteFile, JschUtil.defaultIOListener(true));
    }
 
    private final class ActiveChannel {

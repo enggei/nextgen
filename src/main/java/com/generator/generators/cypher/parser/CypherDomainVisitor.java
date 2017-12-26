@@ -12,29 +12,6 @@ public abstract class CypherDomainVisitor {
 		else if(hasLabel(node, "Expression")) visitExpression(node);
 		else if(hasLabel(node, "Statement")) visitStatement(node);
 		else if(hasLabel(node, "Literal")) visitLiteral(node);
-		else if(hasLabel(node, "Cypher")) visitCypher(node);
-		else if(hasLabel(node, "Query")) visitQuery(node);
-		else if(hasLabel(node, "RegularQuery")) visitRegularQuery(node);
-		else if(hasLabel(node, "Union")) visitUnion(node);
-		else if(hasLabel(node, "SingleQuery")) visitSingleQuery(node);
-		else if(hasLabel(node, "SinglePartQuery")) visitSinglePartQuery(node);
-		else if(hasLabel(node, "ReadOnlyEnd")) visitReadOnlyEnd(node);
-		else if(hasLabel(node, "ReadUpdateEnd")) visitReadUpdateEnd(node);
-		else if(hasLabel(node, "UpdatingEnd")) visitUpdatingEnd(node);
-		else if(hasLabel(node, "MultiPartQuery")) visitMultiPartQuery(node);
-		else if(hasLabel(node, "ReadPart")) visitReadPart(node);
-		else if(hasLabel(node, "UpdatingPart")) visitUpdatingPart(node);
-		else if(hasLabel(node, "UpdatingStartClause")) visitUpdatingStartClause(node);
-		else if(hasLabel(node, "UpdatingClause")) visitUpdatingClause(node);
-		else if(hasLabel(node, "ReadingClause")) visitReadingClause(node);
-		else if(hasLabel(node, "Cyper_match")) visitCyper_match(node);
-		else if(hasLabel(node, "Unwind")) visitUnwind(node);
-		else if(hasLabel(node, "Merge")) visitMerge(node);
-		else if(hasLabel(node, "MergeAction")) visitMergeAction(node);
-		else if(hasLabel(node, "Create")) visitCreate(node);
-		else if(hasLabel(node, "SetItem")) visitSetItem(node);
-		else if(hasLabel(node, "Delete")) visitDelete(node);
-		else if(hasLabel(node, "Remove")) visitRemove(node);
 		else if(hasLabel(node, "RemoveItem")) visitRemoveItem(node);
 		else if(hasLabel(node, "InQueryCall")) visitInQueryCall(node);
 		else if(hasLabel(node, "StandaloneCall")) visitStandaloneCall(node);
@@ -79,10 +56,33 @@ public abstract class CypherDomainVisitor {
 		else if(hasLabel(node, "BooleanLiteral")) visitBooleanLiteral(node);
 		else if(hasLabel(node, "ListLiteral")) visitListLiteral(node);
 		else if(hasLabel(node, "PartialComparisonExpression")) visitPartialComparisonExpression(node);
+		else if(hasLabel(node, "IdInColl")) visitIdInColl(node);
+		else if(hasLabel(node, "Cypher")) visitCypher(node);
+		else if(hasLabel(node, "Query")) visitQuery(node);
+		else if(hasLabel(node, "RegularQuery")) visitRegularQuery(node);
+		else if(hasLabel(node, "Union")) visitUnion(node);
+		else if(hasLabel(node, "SingleQuery")) visitSingleQuery(node);
+		else if(hasLabel(node, "SinglePartQuery")) visitSinglePartQuery(node);
+		else if(hasLabel(node, "ReadOnlyEnd")) visitReadOnlyEnd(node);
+		else if(hasLabel(node, "ReadUpdateEnd")) visitReadUpdateEnd(node);
+		else if(hasLabel(node, "UpdatingEnd")) visitUpdatingEnd(node);
+		else if(hasLabel(node, "MultiPartQuery")) visitMultiPartQuery(node);
+		else if(hasLabel(node, "ReadPart")) visitReadPart(node);
+		else if(hasLabel(node, "UpdatingPart")) visitUpdatingPart(node);
+		else if(hasLabel(node, "UpdatingStartClause")) visitUpdatingStartClause(node);
+		else if(hasLabel(node, "UpdatingClause")) visitUpdatingClause(node);
+		else if(hasLabel(node, "ReadingClause")) visitReadingClause(node);
+		else if(hasLabel(node, "Cyper_match")) visitCyper_match(node);
+		else if(hasLabel(node, "Unwind")) visitUnwind(node);
+		else if(hasLabel(node, "Merge")) visitMerge(node);
+		else if(hasLabel(node, "MergeAction")) visitMergeAction(node);
+		else if(hasLabel(node, "Create")) visitCreate(node);
+		else if(hasLabel(node, "SetItem")) visitSetItem(node);
+		else if(hasLabel(node, "Delete")) visitDelete(node);
+		else if(hasLabel(node, "Remove")) visitRemove(node);
 		else if(hasLabel(node, "ParenthesizedExpression")) visitParenthesizedExpression(node);
 		else if(hasLabel(node, "RelationshipsPattern")) visitRelationshipsPattern(node);
 		else if(hasLabel(node, "FilterExpression")) visitFilterExpression(node);
-		else if(hasLabel(node, "IdInColl")) visitIdInColl(node);
 		else if(hasLabel(node, "FunctionInvocation")) visitFunctionInvocation(node);
 		else if(hasLabel(node, "FunctionName")) visitFunctionName(node);
 		else if(hasLabel(node, "ExplicitProcedureInvocation")) visitExplicitProcedureInvocation(node);
@@ -136,144 +136,6 @@ public abstract class CypherDomainVisitor {
 	}
 
 	public void visitLiteral(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitCypher(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitQuery(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitRegularQuery(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitUnion(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitSingleQuery(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitSinglePartQuery(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitReadOnlyEnd(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitReadUpdateEnd(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitUpdatingEnd(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitMultiPartQuery(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitReadPart(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitUpdatingPart(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitUpdatingStartClause(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitUpdatingClause(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitReadingClause(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitCyper_match(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitUnwind(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitMerge(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitMergeAction(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitCreate(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitSetItem(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitDelete(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitRemove(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -543,6 +405,150 @@ public abstract class CypherDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
+	public void visitIdInColl(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitCypher(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitQuery(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitRegularQuery(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitUnion(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitSingleQuery(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitSinglePartQuery(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitReadOnlyEnd(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitReadUpdateEnd(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitUpdatingEnd(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitMultiPartQuery(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitReadPart(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitUpdatingPart(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitUpdatingStartClause(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitUpdatingClause(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitReadingClause(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitCyper_match(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitUnwind(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitMerge(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitMergeAction(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitCreate(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitSetItem(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitDelete(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitRemove(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
 	public void visitParenthesizedExpression(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
@@ -556,12 +562,6 @@ public abstract class CypherDomainVisitor {
 	}
 
 	public void visitFilterExpression(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitIdInColl(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

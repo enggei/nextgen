@@ -6,6 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class XMLParserNeoListener extends XMLParserBaseListener {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(XMLParserNeoListener.class);
+
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
@@ -24,7 +26,7 @@ public class XMLParserNeoListener extends XMLParserBaseListener {
 		if (!nodeStack.isEmpty())
       	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.getProperty("text"));
+		if (debug) log.debug(delim.toString() + node.getProperty("text"));
 		delim.append("\t");
    }
 
@@ -43,7 +45,7 @@ public class XMLParserNeoListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Element"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Element"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inElement.push(true);
 	}
@@ -61,7 +63,7 @@ public class XMLParserNeoListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
-		final Node node = model.findOrCreate(Label.label("Attribute"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Attribute"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAttribute.push(true);
 	}
@@ -79,7 +81,7 @@ public class XMLParserNeoListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
-		final Node node = model.findOrCreate(Label.label("Document"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Document"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDocument.push(true);
 	}
@@ -97,7 +99,7 @@ public class XMLParserNeoListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
-		final Node node = model.findOrCreate(Label.label("Prolog"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Prolog"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inProlog.push(true);
 	}
@@ -115,7 +117,7 @@ public class XMLParserNeoListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterContent(com.generator.generators.xml.parser.XMLParser.ContentContext arg) {
-		final Node node = model.findOrCreate(Label.label("Content"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Content"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inContent.push(true);
 	}
@@ -133,7 +135,7 @@ public class XMLParserNeoListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterReference(com.generator.generators.xml.parser.XMLParser.ReferenceContext arg) {
-		final Node node = model.findOrCreate(Label.label("Reference"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Reference"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inReference.push(true);
 	}
@@ -151,7 +153,7 @@ public class XMLParserNeoListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterChardata(com.generator.generators.xml.parser.XMLParser.ChardataContext arg) {
-		final Node node = model.findOrCreate(Label.label("Chardata"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Chardata"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inChardata.push(true);
 	}
@@ -169,7 +171,7 @@ public class XMLParserNeoListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterMisc(com.generator.generators.xml.parser.XMLParser.MiscContext arg) {
-		final Node node = model.findOrCreate(Label.label("Misc"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Misc"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMisc.push(true);
 	}

@@ -2,6 +2,8 @@ package com.generator.generators.cypher.parser;
 
 public class CypherNodeVisitor extends CypherBaseVisitor<CypherNodeVisitor.Node> {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(CypherNodeVisitor.class);
+
    public static class Node {
 
       public final String name;
@@ -33,7 +35,7 @@ public class CypherNodeVisitor extends CypherBaseVisitor<CypherNodeVisitor.Node>
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-				if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
+				if (debug) log.debug(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -76,8 +78,8 @@ public class CypherNodeVisitor extends CypherBaseVisitor<CypherNodeVisitor.Node>
 	}
 
 	@Override
-	public Node visitStatement(com.generator.generators.cypher.parser.CypherParser.StatementContext arg) {
-		final Node node = new Node("Statement", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitSet(com.generator.generators.cypher.parser.CypherParser.SetContext arg) {
+		final Node node = new Node("Set", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -94,8 +96,8 @@ public class CypherNodeVisitor extends CypherBaseVisitor<CypherNodeVisitor.Node>
 	}
 
 	@Override
-	public Node visitSet(com.generator.generators.cypher.parser.CypherParser.SetContext arg) {
-		final Node node = new Node("Set", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitStatement(com.generator.generators.cypher.parser.CypherParser.StatementContext arg) {
+		final Node node = new Node("Statement", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

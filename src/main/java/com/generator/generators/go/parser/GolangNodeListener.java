@@ -2,6 +2,8 @@ package com.generator.generators.go.parser;
 
 public class GolangNodeListener extends GolangBaseListener {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(GolangNodeListener.class);
+
    public static class Node {
 
       public final String name;
@@ -33,7 +35,7 @@ public class GolangNodeListener extends GolangBaseListener {
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
+		if (debug) log.debug(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -184,6 +186,23 @@ public class GolangNodeListener extends GolangBaseListener {
       return !inFunction.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inStatementList = new java.util.Stack<>();
+
+	@Override
+	public void enterStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
+		onEnter(new Node("StatementList", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inStatementList.push(true);
+	}
+
+	public void exitStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
+		onExit();
+		this.inStatementList.pop();
+	}
+
+	public boolean inStatementList() {
+      return !inStatementList.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inElementList = new java.util.Stack<>();
 
 	@Override
@@ -233,23 +252,6 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	public boolean inEos() {
       return !inEos.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inStatementList = new java.util.Stack<>();
-
-	@Override
-	public void enterStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
-		onEnter(new Node("StatementList", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inStatementList.push(true);
-	}
-
-	public void exitStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
-		onExit();
-		this.inStatementList.pop();
-	}
-
-	public boolean inStatementList() {
-      return !inStatementList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSourceFile = new java.util.Stack<>();

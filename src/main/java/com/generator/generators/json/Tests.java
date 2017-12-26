@@ -19,20 +19,21 @@ import java.util.*;
  * Created 08.09.17.
  */
 public class Tests {
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
 
 
-   @Test
+   //@Test
    public void testJsonGenerator() {
 
       final JsonGroup jsonGroup = new JsonGroup();
 
-      System.out.println(jsonGroup.newdocument().
+      log.info(jsonGroup.newdocument().
             addContentValue(jsonGroup.newobject().
                   addPairsValue("name","value")));
 
    }
 
-   @Test
+   //@Test
    public void testPojoGenerator() throws IOException {
 
       final JavaGroup javaGroup = new JavaGroup();
@@ -114,14 +115,14 @@ public class Tests {
       new ParseTreeWalker().walk(listener, parser.json());
 
       for (String uniquePath : uniquePaths) {
-         System.out.println(uniquePath);
+         log.info(uniquePath);
       }
 
-      System.out.println(pojoST);
+      log.info(pojoST);
 
    }
 
-   @Test
+   //@Test
    public void testParser() throws IOException {
       final JSONParser parser = new JSONParser(new CommonTokenStream(new JSONLexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "json/example.json"))));
       final JSONNodeListener listener = new JSONNodeListener(true);

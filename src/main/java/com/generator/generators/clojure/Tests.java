@@ -16,7 +16,7 @@ import java.io.IOException;
  */
 public class Tests {
 
-   @Test
+   //@Test
    public void testClojure() throws IOException {
       final ClojureNodeListener listener = new ClojureNodeListener(true);
       new ParseTreeWalker().walk(listener, new ClojureParser(new CommonTokenStream(new ClojureLexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "clojure/test.clj")))).file());

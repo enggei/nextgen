@@ -15,7 +15,7 @@ import java.io.IOException;
  */
 public class Tests {
 
-   @Test
+   //@Test
    public void testParser() throws IOException {
 
       String test = "javax.servlet.ServletException: Something bad happened\n" +

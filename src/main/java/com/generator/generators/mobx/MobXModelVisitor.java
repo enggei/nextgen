@@ -13,7 +13,7 @@ import java.util.Stack;
  * Created 20.09.17.
  */
 public class MobXModelVisitor extends DomainVisitor<MobXGroup.ModelST> {
-
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(MobXModelVisitor.class);
    private final MobXGroup mobXGroup = new MobXGroup();
    private final Stack<MobXGroup.ModelST> modelStack = new Stack<>();
 
@@ -30,7 +30,7 @@ public class MobXModelVisitor extends DomainVisitor<MobXGroup.ModelST> {
    public void visitEntity(Node node) {
 
       if(!modelStack.isEmpty()) return;
-      System.out.println("MobX Entity " + NeoUtil.getNameAndLabelsFrom(node));
+      log.info("MobX Entity " + NeoUtil.getNameAndLabelsFrom(node));
 
       final MobXGroup.ModelST modelST = mobXGroup.newModel().
             setName(NeoUtil.get(node, AppMotif.Properties.name.name()));
@@ -42,7 +42,7 @@ public class MobXModelVisitor extends DomainVisitor<MobXGroup.ModelST> {
 
    @Override
    public void visitProperty(Node node) {
-      System.out.println("MobX Property " + NeoUtil.getNameAndLabelsFrom(node));
+      log.info("MobX Property " + NeoUtil.getNameAndLabelsFrom(node));
       super.visitProperty(node);
 
       modelStack.peek().addObservablesValue(null, NeoUtil.get(node, AppMotif.Properties.name.name()));

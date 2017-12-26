@@ -10,7 +10,7 @@ import static com.generator.util.StringUtil.printRest;
  * Created 24.07.17.
  */
 public class TextUtil {
-
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(TextUtil.class);
    static final String text =
          "allRowsSelected\tbool\tfalse\tSet to true to indicate that all rows should be selected.\n" +
                "bodyStyle\tobject\t\tOverride the inline-styles of the body's table element.\n" +
@@ -54,20 +54,20 @@ public class TextUtil {
 
          if (inFunction || "function".equals(tokens[1])) {
             inFunction = true;
-            System.out.println("in function " + tokens[0]);
-            //System.out.println("\t\t" + printRest(0, tokens, " "));
+            log.info("in function " + tokens[0]);
+            //log.info("\t\t" + printRest(0, tokens, " "));
             if (!functionAdded) {
                ST st = new ST("~if($function$)~\n\t $function$={~$function$~}~endif~", '$', '$');
                template.append(st.add("function", tokens[0]).render());
                functionAdded = true;
             }
          } else {
-            System.out.println(String.format("%1$-" + 30 + "s", tokens[0]) + String.format("%1$-" + 30 + "s", tokens[1]) + "|" + printRest(2, tokens, " "));
+            log.info(String.format("%1$-" + 30 + "s", tokens[0]) + String.format("%1$-" + 30 + "s", tokens[1]) + "|" + printRest(2, tokens, " "));
             ST st = new ST("~if($attribute$)~\n\t $attribute$=\"~$attribute$~\"~endif~", '$', '$');
             template.append(st.add("attribute", tokens[0]).render());
          }
       }
 
-      System.out.println(template.append("/>").toString());
+      log.info(template.append("/>").toString());
    }
 }

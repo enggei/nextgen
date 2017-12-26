@@ -6,6 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(STParserNeoVisitor.class);
+
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final com.generator.neo.NeoModel model;
 
@@ -28,8 +30,18 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
    }
 
 	@Override
+	public Node visitArgs(com.generator.generators.stringtemplate.parserg4.STParser.ArgsContext arg) {
+		log.info("Args");
+		final Node node = model.newNode(Label.label("Args"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitOption(com.generator.generators.stringtemplate.parserg4.STParser.OptionContext arg) {
-		System.out.println("Option");
+		log.info("Option");
 		final Node node = model.newNode(Label.label("Option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -39,7 +51,7 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitElement(com.generator.generators.stringtemplate.parserg4.STParser.ElementContext arg) {
-		System.out.println("Element");
+		log.info("Element");
 		final Node node = model.newNode(Label.label("Element"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -49,7 +61,7 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitList(com.generator.generators.stringtemplate.parserg4.STParser.ListContext arg) {
-		System.out.println("List");
+		log.info("List");
 		final Node node = model.newNode(Label.label("List"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -59,7 +71,7 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitExpr(com.generator.generators.stringtemplate.parserg4.STParser.ExprContext arg) {
-		System.out.println("Expr");
+		log.info("Expr");
 		final Node node = model.newNode(Label.label("Expr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -69,7 +81,7 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitPrimary(com.generator.generators.stringtemplate.parserg4.STParser.PrimaryContext arg) {
-		System.out.println("Primary");
+		log.info("Primary");
 		final Node node = model.newNode(Label.label("Primary"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -78,18 +90,8 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitArgs(com.generator.generators.stringtemplate.parserg4.STParser.ArgsContext arg) {
-		System.out.println("Args");
-		final Node node = model.newNode(Label.label("Args"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitTemplate(com.generator.generators.stringtemplate.parserg4.STParser.TemplateContext arg) {
-		System.out.println("Template");
+		log.info("Template");
 		final Node node = model.newNode(Label.label("Template"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -99,7 +101,7 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitElements(com.generator.generators.stringtemplate.parserg4.STParser.ElementsContext arg) {
-		System.out.println("Elements");
+		log.info("Elements");
 		final Node node = model.newNode(Label.label("Elements"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -109,7 +111,7 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitSingleElement(com.generator.generators.stringtemplate.parserg4.STParser.SingleElementContext arg) {
-		System.out.println("SingleElement");
+		log.info("SingleElement");
 		final Node node = model.newNode(Label.label("SingleElement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -119,7 +121,7 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitCompoundElement(com.generator.generators.stringtemplate.parserg4.STParser.CompoundElementContext arg) {
-		System.out.println("CompoundElement");
+		log.info("CompoundElement");
 		final Node node = model.newNode(Label.label("CompoundElement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -129,7 +131,7 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitExprTag(com.generator.generators.stringtemplate.parserg4.STParser.ExprTagContext arg) {
-		System.out.println("ExprTag");
+		log.info("ExprTag");
 		final Node node = model.newNode(Label.label("ExprTag"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -139,7 +141,7 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitRegion(com.generator.generators.stringtemplate.parserg4.STParser.RegionContext arg) {
-		System.out.println("Region");
+		log.info("Region");
 		final Node node = model.newNode(Label.label("Region"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -149,7 +151,7 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitSubtemplate(com.generator.generators.stringtemplate.parserg4.STParser.SubtemplateContext arg) {
-		System.out.println("Subtemplate");
+		log.info("Subtemplate");
 		final Node node = model.newNode(Label.label("Subtemplate"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -159,7 +161,7 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitIfstat(com.generator.generators.stringtemplate.parserg4.STParser.IfstatContext arg) {
-		System.out.println("Ifstat");
+		log.info("Ifstat");
 		final Node node = model.newNode(Label.label("Ifstat"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -169,7 +171,7 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitConditional(com.generator.generators.stringtemplate.parserg4.STParser.ConditionalContext arg) {
-		System.out.println("Conditional");
+		log.info("Conditional");
 		final Node node = model.newNode(Label.label("Conditional"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -179,7 +181,7 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitAndConditional(com.generator.generators.stringtemplate.parserg4.STParser.AndConditionalContext arg) {
-		System.out.println("AndConditional");
+		log.info("AndConditional");
 		final Node node = model.newNode(Label.label("AndConditional"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -189,7 +191,7 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitNotConditional(com.generator.generators.stringtemplate.parserg4.STParser.NotConditionalContext arg) {
-		System.out.println("NotConditional");
+		log.info("NotConditional");
 		final Node node = model.newNode(Label.label("NotConditional"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -199,7 +201,7 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitNotConditionalExpr(com.generator.generators.stringtemplate.parserg4.STParser.NotConditionalExprContext arg) {
-		System.out.println("NotConditionalExpr");
+		log.info("NotConditionalExpr");
 		final Node node = model.newNode(Label.label("NotConditionalExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -209,7 +211,7 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitExprOptions(com.generator.generators.stringtemplate.parserg4.STParser.ExprOptionsContext arg) {
-		System.out.println("ExprOptions");
+		log.info("ExprOptions");
 		final Node node = model.newNode(Label.label("ExprOptions"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -219,7 +221,7 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitMapExpr(com.generator.generators.stringtemplate.parserg4.STParser.MapExprContext arg) {
-		System.out.println("MapExpr");
+		log.info("MapExpr");
 		final Node node = model.newNode(Label.label("MapExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -229,7 +231,7 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitMemberExpr(com.generator.generators.stringtemplate.parserg4.STParser.MemberExprContext arg) {
-		System.out.println("MemberExpr");
+		log.info("MemberExpr");
 		final Node node = model.newNode(Label.label("MemberExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -239,7 +241,7 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitMapTemplateRef(com.generator.generators.stringtemplate.parserg4.STParser.MapTemplateRefContext arg) {
-		System.out.println("MapTemplateRef");
+		log.info("MapTemplateRef");
 		final Node node = model.newNode(Label.label("MapTemplateRef"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -249,7 +251,7 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitIncludeExpr(com.generator.generators.stringtemplate.parserg4.STParser.IncludeExprContext arg) {
-		System.out.println("IncludeExpr");
+		log.info("IncludeExpr");
 		final Node node = model.newNode(Label.label("IncludeExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -259,7 +261,7 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitArgExprList(com.generator.generators.stringtemplate.parserg4.STParser.ArgExprListContext arg) {
-		System.out.println("ArgExprList");
+		log.info("ArgExprList");
 		final Node node = model.newNode(Label.label("ArgExprList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
@@ -269,7 +271,7 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 
 	@Override
 	public Node visitNamedArg(com.generator.generators.stringtemplate.parserg4.STParser.NamedArgContext arg) {
-		System.out.println("NamedArg");
+		log.info("NamedArg");
 		final Node node = model.newNode(Label.label("NamedArg"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);

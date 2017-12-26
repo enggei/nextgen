@@ -1,0 +1,6 @@
+{
+  "secure": false,
+  "host": "127.0.0.1",
+  "vertx.tcp.bridge.port": 7000,
+  "log.port": 7001
+}

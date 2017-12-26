@@ -19,15 +19,15 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created 10.09.17.
  */
 public class Tests {
-
-   @Test
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   //@Test
    public void testParser() throws IOException {
       final CSVParser parser = new CSVParser(new CommonTokenStream(new CSVLexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT+"csv/test.csv"))));
       final CSVNodeListener listener = new CSVNodeListener(true);
       new ParseTreeWalker().walk(listener, parser.csvFile());
    }
 
-   @Test
+   //@Test
    public void testCSVGroup() throws IOException {
 
       final CSVGroup csvGroup = new CSVGroup();
@@ -51,8 +51,8 @@ public class Tests {
       addRow(csvGroup, csv, "Tisvilde Bio", "Tisvilde Bio", 1);
       addRow(csvGroup, csv, "Slangerup Bio", "Slangerup bio", 1);
 
-      System.out.println(csv.toString());
-      System.out.println();
+      log.info(csv.toString());
+      log.info("");
       final CSVParser parser = new CSVParser(new CommonTokenStream(new CSVLexer(CharStreams.fromString(csv.toString()))));
       final CSVNodeListener listener = new CSVNodeListener(true) {
 

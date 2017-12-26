@@ -11,7 +11,9 @@ import java.io.IOException;
  */
 public class Tests {
 
-   @Test
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+
+   //@Test
    public void testBerkeleyDB() throws IOException {
 
       final BerkeleyDBGroup berkeleyDBGroup = new BerkeleyDBGroup();
@@ -19,7 +21,7 @@ public class Tests {
       final BerkeleyDBGroup.BerkeleyDBST berkeleyDBST = berkeleyDBGroup.newBerkeleyDB().
             setPackageName(ProjectConstants.TEST_PACKAGE + ".berkeleyDB").
             setName("TestDB");
-      System.out.println(berkeleyDBST);
+      log.info(berkeleyDBST);
 
       GeneratedFile.newJavaFile(ProjectConstants.TEST_ROOT, ProjectConstants.TEST_PACKAGE+".berkeleyDB","TestDB").write(berkeleyDBST);
    }

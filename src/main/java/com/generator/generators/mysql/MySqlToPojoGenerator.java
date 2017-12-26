@@ -13,7 +13,7 @@ import java.util.Stack;
  * Created 09.09.17.
  */
 public class MySqlToPojoGenerator extends MySqlParserNodeListener {
-
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(MySqlToPojoGenerator.class);
    private final JavaGroup javaGroup = new JavaGroup();
    private final Stack<JavaGroup.PojoST> currentPojos = new Stack<>();
 
@@ -29,7 +29,7 @@ public class MySqlToPojoGenerator extends MySqlParserNodeListener {
          final JavaGroup.PojoST pop = currentPojos.pop();
          pop.setPackage(packageName);
          if (debug)
-            System.out.println(pop);
+            log.info(pop);
          else
             GeneratedFile.newJavaFile(root, packageName, pop.getName()).write(pop);
       }
@@ -66,7 +66,7 @@ public class MySqlToPojoGenerator extends MySqlParserNodeListener {
       else if (type.toUpperCase().startsWith("DATETIME"))
          this.propertyType = "java.util.Date";
       else
-         System.out.println("unsupported DimensionDatatype " + delim + "'" + arg.getText() + "'");
+         log.info("unsupported DimensionDatatype " + delim + "'" + arg.getText() + "'");
    }
 
    @Override
@@ -83,7 +83,7 @@ public class MySqlToPojoGenerator extends MySqlParserNodeListener {
       if (type.toUpperCase().startsWith("DATE")) {
          this.propertyType = "java.util.Date";
       } else
-         System.out.println("unsupported DimensionDatatype " + delim + "'" + arg.getText() + "'");
+         log.info("unsupported DimensionDatatype " + delim + "'" + arg.getText() + "'");
    }
 
    @Override

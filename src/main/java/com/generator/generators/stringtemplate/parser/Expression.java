@@ -11,7 +11,7 @@ import java.util.*;
  * Date: 08.09.13
  */
 public class Expression {
-
+   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Expression.class);
    private final Stack<Integer> expressionStack = new Stack<>();
 
    public Expression(Tree ast, ParameterBuilder parameterBuilder) {
@@ -205,7 +205,7 @@ public class Expression {
                final Parameter myParam = parameterMap.get(methodParam);
                if (myParam == null) continue;
 
-               System.out.println("'" + this.getName() + "' calls method '" + callEntry.getKey() + "' : parameter '" + myParam.name + "(" + myParam.paramType + ")" + "." + methodParam + ("' ->  set to '" + parameter.getSecond().getDomainEntityType() + "'"));
+               log.info("'" + this.getName() + "' calls method '" + callEntry.getKey() + "' : parameter '" + myParam.name + "(" + myParam.paramType + ")" + "." + methodParam + ("' ->  set to '" + parameter.getSecond().getDomainEntityType() + "'"));
                myParam.setParamType(parameter.getSecond().getDomainEntityType());
                parameter.getSecond().getKvNames().forEach(myParam::addKvname);
             }

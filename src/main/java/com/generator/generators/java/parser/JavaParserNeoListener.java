@@ -6,6 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class JavaParserNeoListener extends JavaParserBaseListener {
 
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(JavaParserNeoListener.class);
+
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
@@ -24,7 +26,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 		if (!nodeStack.isEmpty())
       	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.getProperty("text"));
+		if (debug) log.debug(delim.toString() + node.getProperty("text"));
 		delim.append("\t");
    }
 
@@ -43,7 +45,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterBlock(com.generator.generators.java.parser.JavaParser.BlockContext arg) {
-		final Node node = model.findOrCreate(Label.label("Block"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Block"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBlock.push(true);
 	}
@@ -61,7 +63,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterExpression(com.generator.generators.java.parser.JavaParser.ExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Expression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExpression.push(true);
 	}
@@ -79,7 +81,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterStatement(com.generator.generators.java.parser.JavaParser.StatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inStatement.push(true);
 	}
@@ -97,7 +99,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLiteral.push(true);
 	}
@@ -115,7 +117,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterIntegerLiteral(com.generator.generators.java.parser.JavaParser.IntegerLiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("IntegerLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("IntegerLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIntegerLiteral.push(true);
 	}
@@ -133,7 +135,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterFormalParameterList(com.generator.generators.java.parser.JavaParser.FormalParameterListContext arg) {
-		final Node node = model.findOrCreate(Label.label("FormalParameterList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("FormalParameterList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFormalParameterList.push(true);
 	}
@@ -151,7 +153,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterArguments(com.generator.generators.java.parser.JavaParser.ArgumentsContext arg) {
-		final Node node = model.findOrCreate(Label.label("Arguments"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Arguments"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inArguments.push(true);
 	}
@@ -169,7 +171,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterExpressionList(com.generator.generators.java.parser.JavaParser.ExpressionListContext arg) {
-		final Node node = model.findOrCreate(Label.label("ExpressionList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ExpressionList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExpressionList.push(true);
 	}
@@ -187,7 +189,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterTypeList(com.generator.generators.java.parser.JavaParser.TypeListContext arg) {
-		final Node node = model.findOrCreate(Label.label("TypeList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("TypeList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypeList.push(true);
 	}
@@ -201,11 +203,29 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
       return !inTypeList.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inDefaultValue = new java.util.Stack<>();
+
+	@Override
+	public void enterDefaultValue(com.generator.generators.java.parser.JavaParser.DefaultValueContext arg) {
+		final Node node = model.newNode(Label.label("DefaultValue"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inDefaultValue.push(true);
+	}
+
+	public void exitDefaultValue(com.generator.generators.java.parser.JavaParser.DefaultValueContext arg) {
+		onExit();
+		this.inDefaultValue.pop();
+	}
+
+	public boolean inDefaultValue() {
+      return !inDefaultValue.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inCompilationUnit = new java.util.Stack<>();
 
 	@Override
 	public void enterCompilationUnit(com.generator.generators.java.parser.JavaParser.CompilationUnitContext arg) {
-		final Node node = model.findOrCreate(Label.label("CompilationUnit"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("CompilationUnit"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCompilationUnit.push(true);
 	}
@@ -223,7 +243,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterPackageDeclaration(com.generator.generators.java.parser.JavaParser.PackageDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("PackageDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("PackageDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPackageDeclaration.push(true);
 	}
@@ -241,7 +261,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterImportDeclaration(com.generator.generators.java.parser.JavaParser.ImportDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("ImportDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ImportDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inImportDeclaration.push(true);
 	}
@@ -259,7 +279,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterTypeDeclaration(com.generator.generators.java.parser.JavaParser.TypeDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("TypeDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("TypeDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypeDeclaration.push(true);
 	}
@@ -277,7 +297,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Modifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Modifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inModifier.push(true);
 	}
@@ -295,7 +315,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterClassOrInterfaceModifier(com.generator.generators.java.parser.JavaParser.ClassOrInterfaceModifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("ClassOrInterfaceModifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ClassOrInterfaceModifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inClassOrInterfaceModifier.push(true);
 	}
@@ -313,7 +333,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterVariableModifier(com.generator.generators.java.parser.JavaParser.VariableModifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("VariableModifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("VariableModifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inVariableModifier.push(true);
 	}
@@ -331,7 +351,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterClassDeclaration(com.generator.generators.java.parser.JavaParser.ClassDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("ClassDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ClassDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inClassDeclaration.push(true);
 	}
@@ -349,7 +369,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterTypeParameters(com.generator.generators.java.parser.JavaParser.TypeParametersContext arg) {
-		final Node node = model.findOrCreate(Label.label("TypeParameters"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("TypeParameters"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypeParameters.push(true);
 	}
@@ -367,7 +387,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterTypeParameter(com.generator.generators.java.parser.JavaParser.TypeParameterContext arg) {
-		final Node node = model.findOrCreate(Label.label("TypeParameter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("TypeParameter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypeParameter.push(true);
 	}
@@ -385,7 +405,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterTypeBound(com.generator.generators.java.parser.JavaParser.TypeBoundContext arg) {
-		final Node node = model.findOrCreate(Label.label("TypeBound"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("TypeBound"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypeBound.push(true);
 	}
@@ -403,7 +423,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterEnumDeclaration(com.generator.generators.java.parser.JavaParser.EnumDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("EnumDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("EnumDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inEnumDeclaration.push(true);
 	}
@@ -421,7 +441,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterEnumConstants(com.generator.generators.java.parser.JavaParser.EnumConstantsContext arg) {
-		final Node node = model.findOrCreate(Label.label("EnumConstants"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("EnumConstants"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inEnumConstants.push(true);
 	}
@@ -439,7 +459,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterEnumConstant(com.generator.generators.java.parser.JavaParser.EnumConstantContext arg) {
-		final Node node = model.findOrCreate(Label.label("EnumConstant"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("EnumConstant"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inEnumConstant.push(true);
 	}
@@ -457,7 +477,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterEnumBodyDeclarations(com.generator.generators.java.parser.JavaParser.EnumBodyDeclarationsContext arg) {
-		final Node node = model.findOrCreate(Label.label("EnumBodyDeclarations"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("EnumBodyDeclarations"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inEnumBodyDeclarations.push(true);
 	}
@@ -475,7 +495,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterInterfaceDeclaration(com.generator.generators.java.parser.JavaParser.InterfaceDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("InterfaceDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("InterfaceDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInterfaceDeclaration.push(true);
 	}
@@ -493,7 +513,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterClassBody(com.generator.generators.java.parser.JavaParser.ClassBodyContext arg) {
-		final Node node = model.findOrCreate(Label.label("ClassBody"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ClassBody"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inClassBody.push(true);
 	}
@@ -511,7 +531,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterInterfaceBody(com.generator.generators.java.parser.JavaParser.InterfaceBodyContext arg) {
-		final Node node = model.findOrCreate(Label.label("InterfaceBody"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("InterfaceBody"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInterfaceBody.push(true);
 	}
@@ -529,7 +549,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterClassBodyDeclaration(com.generator.generators.java.parser.JavaParser.ClassBodyDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("ClassBodyDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ClassBodyDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inClassBodyDeclaration.push(true);
 	}
@@ -547,7 +567,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterMemberDeclaration(com.generator.generators.java.parser.JavaParser.MemberDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("MemberDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("MemberDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMemberDeclaration.push(true);
 	}
@@ -565,7 +585,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterMethodDeclaration(com.generator.generators.java.parser.JavaParser.MethodDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("MethodDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("MethodDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMethodDeclaration.push(true);
 	}
@@ -583,7 +603,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterMethodBody(com.generator.generators.java.parser.JavaParser.MethodBodyContext arg) {
-		final Node node = model.findOrCreate(Label.label("MethodBody"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("MethodBody"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMethodBody.push(true);
 	}
@@ -601,7 +621,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterTypeTypeOrVoid(com.generator.generators.java.parser.JavaParser.TypeTypeOrVoidContext arg) {
-		final Node node = model.findOrCreate(Label.label("TypeTypeOrVoid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("TypeTypeOrVoid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypeTypeOrVoid.push(true);
 	}
@@ -619,7 +639,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterGenericMethodDeclaration(com.generator.generators.java.parser.JavaParser.GenericMethodDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("GenericMethodDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("GenericMethodDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inGenericMethodDeclaration.push(true);
 	}
@@ -637,7 +657,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterGenericConstructorDeclaration(com.generator.generators.java.parser.JavaParser.GenericConstructorDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("GenericConstructorDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("GenericConstructorDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inGenericConstructorDeclaration.push(true);
 	}
@@ -655,7 +675,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterConstructorDeclaration(com.generator.generators.java.parser.JavaParser.ConstructorDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("ConstructorDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ConstructorDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inConstructorDeclaration.push(true);
 	}
@@ -673,7 +693,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterFieldDeclaration(com.generator.generators.java.parser.JavaParser.FieldDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("FieldDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("FieldDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFieldDeclaration.push(true);
 	}
@@ -691,7 +711,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterInterfaceBodyDeclaration(com.generator.generators.java.parser.JavaParser.InterfaceBodyDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("InterfaceBodyDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("InterfaceBodyDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInterfaceBodyDeclaration.push(true);
 	}
@@ -709,7 +729,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterInterfaceMemberDeclaration(com.generator.generators.java.parser.JavaParser.InterfaceMemberDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("InterfaceMemberDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("InterfaceMemberDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInterfaceMemberDeclaration.push(true);
 	}
@@ -727,7 +747,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterConstDeclaration(com.generator.generators.java.parser.JavaParser.ConstDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("ConstDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ConstDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inConstDeclaration.push(true);
 	}
@@ -745,7 +765,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterConstantDeclarator(com.generator.generators.java.parser.JavaParser.ConstantDeclaratorContext arg) {
-		final Node node = model.findOrCreate(Label.label("ConstantDeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ConstantDeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inConstantDeclarator.push(true);
 	}
@@ -763,7 +783,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterInterfaceMethodDeclaration(com.generator.generators.java.parser.JavaParser.InterfaceMethodDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("InterfaceMethodDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("InterfaceMethodDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInterfaceMethodDeclaration.push(true);
 	}
@@ -781,7 +801,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterInterfaceMethodModifier(com.generator.generators.java.parser.JavaParser.InterfaceMethodModifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("InterfaceMethodModifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("InterfaceMethodModifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInterfaceMethodModifier.push(true);
 	}
@@ -799,7 +819,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterGenericInterfaceMethodDeclaration(com.generator.generators.java.parser.JavaParser.GenericInterfaceMethodDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("GenericInterfaceMethodDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("GenericInterfaceMethodDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inGenericInterfaceMethodDeclaration.push(true);
 	}
@@ -817,7 +837,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterVariableDeclarators(com.generator.generators.java.parser.JavaParser.VariableDeclaratorsContext arg) {
-		final Node node = model.findOrCreate(Label.label("VariableDeclarators"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("VariableDeclarators"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inVariableDeclarators.push(true);
 	}
@@ -835,7 +855,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterVariableDeclarator(com.generator.generators.java.parser.JavaParser.VariableDeclaratorContext arg) {
-		final Node node = model.findOrCreate(Label.label("VariableDeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("VariableDeclarator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inVariableDeclarator.push(true);
 	}
@@ -853,7 +873,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterVariableDeclaratorId(com.generator.generators.java.parser.JavaParser.VariableDeclaratorIdContext arg) {
-		final Node node = model.findOrCreate(Label.label("VariableDeclaratorId"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("VariableDeclaratorId"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inVariableDeclaratorId.push(true);
 	}
@@ -871,7 +891,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterVariableInitializer(com.generator.generators.java.parser.JavaParser.VariableInitializerContext arg) {
-		final Node node = model.findOrCreate(Label.label("VariableInitializer"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("VariableInitializer"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inVariableInitializer.push(true);
 	}
@@ -889,7 +909,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterArrayInitializer(com.generator.generators.java.parser.JavaParser.ArrayInitializerContext arg) {
-		final Node node = model.findOrCreate(Label.label("ArrayInitializer"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ArrayInitializer"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inArrayInitializer.push(true);
 	}
@@ -907,7 +927,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterClassOrInterfaceType(com.generator.generators.java.parser.JavaParser.ClassOrInterfaceTypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("ClassOrInterfaceType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ClassOrInterfaceType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inClassOrInterfaceType.push(true);
 	}
@@ -925,7 +945,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterTypeArgument(com.generator.generators.java.parser.JavaParser.TypeArgumentContext arg) {
-		final Node node = model.findOrCreate(Label.label("TypeArgument"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("TypeArgument"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypeArgument.push(true);
 	}
@@ -943,7 +963,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterQualifiedNameList(com.generator.generators.java.parser.JavaParser.QualifiedNameListContext arg) {
-		final Node node = model.findOrCreate(Label.label("QualifiedNameList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("QualifiedNameList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inQualifiedNameList.push(true);
 	}
@@ -961,7 +981,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterFormalParameters(com.generator.generators.java.parser.JavaParser.FormalParametersContext arg) {
-		final Node node = model.findOrCreate(Label.label("FormalParameters"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("FormalParameters"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFormalParameters.push(true);
 	}
@@ -979,7 +999,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterFormalParameter(com.generator.generators.java.parser.JavaParser.FormalParameterContext arg) {
-		final Node node = model.findOrCreate(Label.label("FormalParameter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("FormalParameter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFormalParameter.push(true);
 	}
@@ -997,7 +1017,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterLastFormalParameter(com.generator.generators.java.parser.JavaParser.LastFormalParameterContext arg) {
-		final Node node = model.findOrCreate(Label.label("LastFormalParameter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LastFormalParameter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLastFormalParameter.push(true);
 	}
@@ -1015,7 +1035,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterQualifiedName(com.generator.generators.java.parser.JavaParser.QualifiedNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("QualifiedName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("QualifiedName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inQualifiedName.push(true);
 	}
@@ -1033,7 +1053,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterAnnotation(com.generator.generators.java.parser.JavaParser.AnnotationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Annotation"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Annotation"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAnnotation.push(true);
 	}
@@ -1051,7 +1071,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterElementValuePairs(com.generator.generators.java.parser.JavaParser.ElementValuePairsContext arg) {
-		final Node node = model.findOrCreate(Label.label("ElementValuePairs"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ElementValuePairs"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inElementValuePairs.push(true);
 	}
@@ -1069,7 +1089,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterElementValuePair(com.generator.generators.java.parser.JavaParser.ElementValuePairContext arg) {
-		final Node node = model.findOrCreate(Label.label("ElementValuePair"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ElementValuePair"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inElementValuePair.push(true);
 	}
@@ -1087,7 +1107,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterElementValue(com.generator.generators.java.parser.JavaParser.ElementValueContext arg) {
-		final Node node = model.findOrCreate(Label.label("ElementValue"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ElementValue"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inElementValue.push(true);
 	}
@@ -1105,7 +1125,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterElementValueArrayInitializer(com.generator.generators.java.parser.JavaParser.ElementValueArrayInitializerContext arg) {
-		final Node node = model.findOrCreate(Label.label("ElementValueArrayInitializer"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ElementValueArrayInitializer"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inElementValueArrayInitializer.push(true);
 	}
@@ -1123,7 +1143,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterAnnotationTypeDeclaration(com.generator.generators.java.parser.JavaParser.AnnotationTypeDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("AnnotationTypeDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("AnnotationTypeDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAnnotationTypeDeclaration.push(true);
 	}
@@ -1141,7 +1161,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterAnnotationTypeBody(com.generator.generators.java.parser.JavaParser.AnnotationTypeBodyContext arg) {
-		final Node node = model.findOrCreate(Label.label("AnnotationTypeBody"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("AnnotationTypeBody"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAnnotationTypeBody.push(true);
 	}
@@ -1159,7 +1179,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterAnnotationTypeElementDeclaration(com.generator.generators.java.parser.JavaParser.AnnotationTypeElementDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("AnnotationTypeElementDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("AnnotationTypeElementDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAnnotationTypeElementDeclaration.push(true);
 	}
@@ -1177,7 +1197,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterAnnotationTypeElementRest(com.generator.generators.java.parser.JavaParser.AnnotationTypeElementRestContext arg) {
-		final Node node = model.findOrCreate(Label.label("AnnotationTypeElementRest"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("AnnotationTypeElementRest"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAnnotationTypeElementRest.push(true);
 	}
@@ -1195,7 +1215,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterAnnotationMethodOrConstantRest(com.generator.generators.java.parser.JavaParser.AnnotationMethodOrConstantRestContext arg) {
-		final Node node = model.findOrCreate(Label.label("AnnotationMethodOrConstantRest"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("AnnotationMethodOrConstantRest"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAnnotationMethodOrConstantRest.push(true);
 	}
@@ -1213,7 +1233,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterAnnotationMethodRest(com.generator.generators.java.parser.JavaParser.AnnotationMethodRestContext arg) {
-		final Node node = model.findOrCreate(Label.label("AnnotationMethodRest"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("AnnotationMethodRest"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAnnotationMethodRest.push(true);
 	}
@@ -1231,7 +1251,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterAnnotationConstantRest(com.generator.generators.java.parser.JavaParser.AnnotationConstantRestContext arg) {
-		final Node node = model.findOrCreate(Label.label("AnnotationConstantRest"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("AnnotationConstantRest"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAnnotationConstantRest.push(true);
 	}
@@ -1245,29 +1265,11 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
       return !inAnnotationConstantRest.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inDefaultValue = new java.util.Stack<>();
-
-	@Override
-	public void enterDefaultValue(com.generator.generators.java.parser.JavaParser.DefaultValueContext arg) {
-		final Node node = model.findOrCreate(Label.label("DefaultValue"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inDefaultValue.push(true);
-	}
-
-	public void exitDefaultValue(com.generator.generators.java.parser.JavaParser.DefaultValueContext arg) {
-		onExit();
-		this.inDefaultValue.pop();
-	}
-
-	public boolean inDefaultValue() {
-      return !inDefaultValue.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inBlockStatement = new java.util.Stack<>();
 
 	@Override
 	public void enterBlockStatement(com.generator.generators.java.parser.JavaParser.BlockStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("BlockStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("BlockStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBlockStatement.push(true);
 	}
@@ -1285,7 +1287,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterLocalVariableDeclaration(com.generator.generators.java.parser.JavaParser.LocalVariableDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("LocalVariableDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LocalVariableDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLocalVariableDeclaration.push(true);
 	}
@@ -1303,7 +1305,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterCatchClause(com.generator.generators.java.parser.JavaParser.CatchClauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("CatchClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("CatchClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCatchClause.push(true);
 	}
@@ -1321,7 +1323,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterCatchType(com.generator.generators.java.parser.JavaParser.CatchTypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("CatchType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("CatchType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCatchType.push(true);
 	}
@@ -1339,7 +1341,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterFinallyBlock(com.generator.generators.java.parser.JavaParser.FinallyBlockContext arg) {
-		final Node node = model.findOrCreate(Label.label("FinallyBlock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("FinallyBlock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFinallyBlock.push(true);
 	}
@@ -1357,7 +1359,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterResourceSpecification(com.generator.generators.java.parser.JavaParser.ResourceSpecificationContext arg) {
-		final Node node = model.findOrCreate(Label.label("ResourceSpecification"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ResourceSpecification"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inResourceSpecification.push(true);
 	}
@@ -1375,7 +1377,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterResources(com.generator.generators.java.parser.JavaParser.ResourcesContext arg) {
-		final Node node = model.findOrCreate(Label.label("Resources"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Resources"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inResources.push(true);
 	}
@@ -1393,7 +1395,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterResource(com.generator.generators.java.parser.JavaParser.ResourceContext arg) {
-		final Node node = model.findOrCreate(Label.label("Resource"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Resource"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inResource.push(true);
 	}
@@ -1411,7 +1413,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterSwitchBlockStatementGroup(com.generator.generators.java.parser.JavaParser.SwitchBlockStatementGroupContext arg) {
-		final Node node = model.findOrCreate(Label.label("SwitchBlockStatementGroup"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("SwitchBlockStatementGroup"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSwitchBlockStatementGroup.push(true);
 	}
@@ -1429,7 +1431,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterSwitchLabel(com.generator.generators.java.parser.JavaParser.SwitchLabelContext arg) {
-		final Node node = model.findOrCreate(Label.label("SwitchLabel"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("SwitchLabel"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSwitchLabel.push(true);
 	}
@@ -1447,7 +1449,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterForControl(com.generator.generators.java.parser.JavaParser.ForControlContext arg) {
-		final Node node = model.findOrCreate(Label.label("ForControl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ForControl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inForControl.push(true);
 	}
@@ -1465,7 +1467,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterForInit(com.generator.generators.java.parser.JavaParser.ForInitContext arg) {
-		final Node node = model.findOrCreate(Label.label("ForInit"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ForInit"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inForInit.push(true);
 	}
@@ -1483,7 +1485,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterEnhancedForControl(com.generator.generators.java.parser.JavaParser.EnhancedForControlContext arg) {
-		final Node node = model.findOrCreate(Label.label("EnhancedForControl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("EnhancedForControl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inEnhancedForControl.push(true);
 	}
@@ -1501,7 +1503,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterParExpression(com.generator.generators.java.parser.JavaParser.ParExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("ParExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ParExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inParExpression.push(true);
 	}
@@ -1519,7 +1521,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterLambdaExpression(com.generator.generators.java.parser.JavaParser.LambdaExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("LambdaExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LambdaExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLambdaExpression.push(true);
 	}
@@ -1537,7 +1539,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterLambdaParameters(com.generator.generators.java.parser.JavaParser.LambdaParametersContext arg) {
-		final Node node = model.findOrCreate(Label.label("LambdaParameters"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LambdaParameters"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLambdaParameters.push(true);
 	}
@@ -1555,7 +1557,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterLambdaBody(com.generator.generators.java.parser.JavaParser.LambdaBodyContext arg) {
-		final Node node = model.findOrCreate(Label.label("LambdaBody"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("LambdaBody"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLambdaBody.push(true);
 	}
@@ -1573,7 +1575,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterPrimary(com.generator.generators.java.parser.JavaParser.PrimaryContext arg) {
-		final Node node = model.findOrCreate(Label.label("Primary"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Primary"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPrimary.push(true);
 	}
@@ -1591,7 +1593,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterMethodReference(com.generator.generators.java.parser.JavaParser.MethodReferenceContext arg) {
-		final Node node = model.findOrCreate(Label.label("MethodReference"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("MethodReference"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMethodReference.push(true);
 	}
@@ -1609,7 +1611,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterClassType(com.generator.generators.java.parser.JavaParser.ClassTypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("ClassType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ClassType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inClassType.push(true);
 	}
@@ -1627,7 +1629,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterCreator(com.generator.generators.java.parser.JavaParser.CreatorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Creator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("Creator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCreator.push(true);
 	}
@@ -1645,7 +1647,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterCreatedName(com.generator.generators.java.parser.JavaParser.CreatedNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("CreatedName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("CreatedName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCreatedName.push(true);
 	}
@@ -1663,7 +1665,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterInnerCreator(com.generator.generators.java.parser.JavaParser.InnerCreatorContext arg) {
-		final Node node = model.findOrCreate(Label.label("InnerCreator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("InnerCreator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInnerCreator.push(true);
 	}
@@ -1681,7 +1683,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterArrayCreatorRest(com.generator.generators.java.parser.JavaParser.ArrayCreatorRestContext arg) {
-		final Node node = model.findOrCreate(Label.label("ArrayCreatorRest"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ArrayCreatorRest"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inArrayCreatorRest.push(true);
 	}
@@ -1699,7 +1701,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterClassCreatorRest(com.generator.generators.java.parser.JavaParser.ClassCreatorRestContext arg) {
-		final Node node = model.findOrCreate(Label.label("ClassCreatorRest"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ClassCreatorRest"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inClassCreatorRest.push(true);
 	}
@@ -1717,7 +1719,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterExplicitGenericInvocation(com.generator.generators.java.parser.JavaParser.ExplicitGenericInvocationContext arg) {
-		final Node node = model.findOrCreate(Label.label("ExplicitGenericInvocation"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ExplicitGenericInvocation"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExplicitGenericInvocation.push(true);
 	}
@@ -1735,7 +1737,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterTypeArgumentsOrDiamond(com.generator.generators.java.parser.JavaParser.TypeArgumentsOrDiamondContext arg) {
-		final Node node = model.findOrCreate(Label.label("TypeArgumentsOrDiamond"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("TypeArgumentsOrDiamond"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypeArgumentsOrDiamond.push(true);
 	}
@@ -1753,7 +1755,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterNonWildcardTypeArgumentsOrDiamond(com.generator.generators.java.parser.JavaParser.NonWildcardTypeArgumentsOrDiamondContext arg) {
-		final Node node = model.findOrCreate(Label.label("NonWildcardTypeArgumentsOrDiamond"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("NonWildcardTypeArgumentsOrDiamond"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNonWildcardTypeArgumentsOrDiamond.push(true);
 	}
@@ -1771,7 +1773,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterNonWildcardTypeArguments(com.generator.generators.java.parser.JavaParser.NonWildcardTypeArgumentsContext arg) {
-		final Node node = model.findOrCreate(Label.label("NonWildcardTypeArguments"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("NonWildcardTypeArguments"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNonWildcardTypeArguments.push(true);
 	}
@@ -1789,7 +1791,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterTypeType(com.generator.generators.java.parser.JavaParser.TypeTypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("TypeType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("TypeType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypeType.push(true);
 	}
@@ -1807,7 +1809,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterPrimitiveType(com.generator.generators.java.parser.JavaParser.PrimitiveTypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("PrimitiveType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("PrimitiveType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPrimitiveType.push(true);
 	}
@@ -1825,7 +1827,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterTypeArguments(com.generator.generators.java.parser.JavaParser.TypeArgumentsContext arg) {
-		final Node node = model.findOrCreate(Label.label("TypeArguments"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("TypeArguments"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypeArguments.push(true);
 	}
@@ -1843,7 +1845,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterSuperSuffix(com.generator.generators.java.parser.JavaParser.SuperSuffixContext arg) {
-		final Node node = model.findOrCreate(Label.label("SuperSuffix"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("SuperSuffix"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSuperSuffix.push(true);
 	}
@@ -1861,7 +1863,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterExplicitGenericInvocationSuffix(com.generator.generators.java.parser.JavaParser.ExplicitGenericInvocationSuffixContext arg) {
-		final Node node = model.findOrCreate(Label.label("ExplicitGenericInvocationSuffix"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		final Node node = model.newNode(Label.label("ExplicitGenericInvocationSuffix"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExplicitGenericInvocationSuffix.push(true);
 	}
