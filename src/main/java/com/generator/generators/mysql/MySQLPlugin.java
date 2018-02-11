@@ -14,7 +14,6 @@ import com.generator.generators.spring.SpringGroup;
 import com.generator.generators.stringtemplate.GeneratedFile;
 import com.generator.neo.NeoModel;
 import com.generator.util.*;
-import com.test.DaoGenerator;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -37,7 +36,6 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
@@ -130,7 +128,7 @@ public class MySQLPlugin extends MySQLDomainPlugin {
       pop.add(new App.TransactionAction("Test", app) {
          @Override
          protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-            new DaoGenerator().visit(sql_statementsNode.getNode());
+//            new DaoGenerator().visit(sql_statementsNode.getNode());
          }
       });
    }
