@@ -20,3 +20,6 @@ services:
 
   nginx:
     build: nginx
+
+  gitserver:
+    build: git-server

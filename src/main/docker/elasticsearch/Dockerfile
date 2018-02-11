@@ -10,8 +10,8 @@ USER elasticsearch
 
 RUN elasticsearch-plugin remove x-pack
 
-COPY ingest-attachment-5.6.3.zip /tmp/ingest-attachment-5.6.3.zip
-COPY analysis-icu-5.6.3.zip /tmp/analysis-icu-5.6.3.zip
+COPY lib/ingest-attachment-5.6.3.zip /tmp/ingest-attachment-5.6.3.zip
+COPY lib/analysis-icu-5.6.3.zip /tmp/analysis-icu-5.6.3.zip
 COPY config/hunspell /usr/share/elasticsearch/config/hunspell
 
 RUN elasticsearch-plugin install file:/tmp/ingest-attachment-5.6.3.zip

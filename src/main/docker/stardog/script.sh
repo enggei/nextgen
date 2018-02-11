@@ -33,4 +33,4 @@ if [ -f /production-license/stardog-license-key.bin ]; then
     cp /${LICENSE} ${STARDOG_HOME}
 fi
 
-/home/stardog/app/stardog-5.0.4/bin/stardog-admin server start --foreground $1
+/home/stardog/app/${STARDOG_VERSION}/bin/stardog-admin server start --foreground $1

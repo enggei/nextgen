@@ -7,7 +7,9 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt-get update && apt-get -y upgrade && apt-get -y install curl bash bash-completion
 
 ##### SET STARDOG VERSION TO DOWNLOADED VERSION ###
-ENV STARDOG_VERSION=stardog-5.0.4
+#ENV STARDOG_VERSION=stardog-5.1.0
+ARG STARDOG_VERSION
+ENV STARDOG_VERSION "stardog-$STARDOG_VERSION"
 
 ENV STARDOG_HOME=/home/stardog/data/
 ENV STARDOG_APP=/home/stardog/app

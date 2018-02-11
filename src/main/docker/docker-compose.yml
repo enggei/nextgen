@@ -4,6 +4,9 @@ services:
   stardog:
     image: ${DOCKER_REGISTRY}/stardog:${TAG}
 #    restart: always
+    build:
+      args:
+        - STARDOG_VERSION=${STARDOG_VERSION}
     environment:
      - STARDOG_JAVA_ARGS=-Xms3g -Xmx3g -XX:MaxDirectMemorySize=8g
 #     - STARDOG_FLAGS=--upgrade
@@ -61,8 +64,8 @@ services:
     image: ${DOCKER_REGISTRY}/fluentd:${TAG}
 #    restart: always
     ports:
-      - "24224:24224"
-      - "24224:24224/udp"
+      - "127.0.0.1:24224:24224"
+      - "127.0.0.1:24224:24224/udp"
     depends_on:
       - elasticsearchlogs
     volumes:
@@ -87,6 +90,30 @@ services:
     networks:
       - platform
       - frontend
+
+  gitserver:
+    image: ${DOCKER_REGISTRY}/git-server:${TAG}
+    restart: always
+    ports:
+      - "127.0.0.1:2222:22"
+    volumes:
+      - ${GIT_SERVER_KEYS}:/git-server/keys
+      - git-server-repos:/git-server/repos
+    networks:
+      - platform
+
+  hazelcast:
+    image: hazelcast/hazelcast
+    restart: always
+    environment:
+      - JAVA_OPTS= -Xms512M -Xmx1024M -Dhazelcast.config=/opt/hazelcast/config_ext/hazelcast.xml
+    volumes:
+      - ${HAZELCAST_CONFIG_FOLDER}:/opt/hazelcast/config_ext
+    networks:
+      - platform
+
+volumes:
+  git-server-repos:
 
 networks:
   efk:

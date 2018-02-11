@@ -1,55 +1,205 @@
 #!/usr/bin/env bash
-set -e
+#set -e
 
-# docker-compose environment variables
-export COMPOSE_PROJECT_NAME=nextgen
-
-# environment variables used in docker-compose*.yml
-export DOCKER_BASE_DIR=/opt/docker
-export DOCKER_REGISTRY=localhost
-export TAG=dev
-export COMPOSE_FILES="-f docker-compose.yml -f docker-compose.override.yml"
+checkPrerequisites() {
+  name=$1[@]
+  prerequisites=("${!name}")
+  for c in "${prerequisites[@]}"; do
+    hash ${c} 2>/dev/null || { echo >&2 "'$c' is not installed.
+Aborting.
+"; exit 1; }
+  done
+}
 
 build() {
-  echo -e "\n### BUILDING $1"
-  docker-compose ${COMPOSE_FILES} build $1
+  echo "### BUILDING $1"
+  docker-compose build $1
+  return $?
 }
 
 buildAndStart() {
   name=$1[@]
   containers=("${!name}")
-  for container in "${containers[@]}"; do
-    build ${container}
-    start ${container}
+  for c in "${containers[@]}"; do
+    build ${c} && start ${c}
   done
 }
 
 start() {
-  echo -e "\n### STARTING $1"
-  docker-compose ${COMPOSE_FILES} up -d $1
+  echo "### STARTING $1"
+  docker-compose up -d $1
+  return $?
 }
+
+sha1check() {
+  if [ "$#" -ne 2 ]; then
+    echo "sha1check(): wrong number of arguments, expecting 2"
+    return 1
+  fi
+
+  echo "### CHECKING $2 in $1"
+  current_dir=$(pwd)
+  cd $1
+#  echo "$current_dir"
+#  pwd
+  sha1sum --quiet -c $2
+  retval=$?
+
+  if [ "$retval" -eq 0 ]; then
+    echo "    OK"
+  fi
+
+  cd ${current_dir}
+  return ${retval}
+}
+
+wgetURL() {
+  if [ "$#" -lt 1 ] || [ "$#" -gt 2 ]; then
+    echo "wgetURL(): wrong number of arguments, expecting 1 or 2"
+    return 1
+  elif [ "$#" -eq 2 ]; then
+    echo "### DOWNLOADING $2 to $1"
+    wget -P $1 $2
+    return $?
+  fi
+
+  echo "### DOWNLOADING $1"
+  wget $1
+  return $?
+}
+
+gitClone() {
+  if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
+    echo "gitClone(): wrong number of arguments, expecting 2 or 3"
+    return 1
+  fi
+
+  echo "### CLONING $1 in $2"
+  git -C $2 clone $1
+
+  if [ "$#" -eq 3 ]; then
+    echo "    SWITCHING TO BRANCH $3"
+    git -C $2 checkout $3
+  fi
+
+  if [ "$?" -ne 0 ]; then
+    echo "    ERROR: $?"
+  fi
+
+  return $?
+}
+
+gitPull() {
+  if [ "$#" -lt 1 ] || [ "$#" -gt 2 ]; then
+    echo "gitPull(): wrong number of arguments, expecting 1 or 2"
+    return 1
+  fi
+
+  echo "### FETCHING $1"
+  git -C $1 fetch
+  if [ "$?" -ne 0 ]; then
+    echo "    ERROR: $?"
+    return $?
+  fi
+
+  if [ "$#" -eq 2 ]; then
+    echo "    SWITCHING TO BRANCH $2"
+    git -C $1 checkout $2
+
+    if [ "$?" -ne 0 ]; then
+      echo "    ERROR: $?"
+      return $?
+    fi
+  fi
+
+  echo "### PULLING $1"
+  git -C $1 pull
+
+  if [ "$?" -ne 0 ]; then
+    echo "    ERROR: $?"
+  fi
+
+  return $?
+}
+
+prepareElasticSearch() {
+  sha1check "$1/lib" "analysis-icu-5.6.3.sha1"
+  if [ "$?" -ne 0 ]; then
+    wgetURL "$1/lib" "https://artifacts.elastic.co/downloads/elasticsearch-plugins/analysis-icu/analysis-icu-5.6.3.zip"
+    sha1check "$1/lib" "analysis-icu-5.6.3.sha1" || exit 1
+  fi
+  sha1check "$1/lib" "ingest-attachment-5.6.3.sha1"
+  if [ "$?" -ne 0 ]; then
+    wgetURL "$1/lib" "https://artifacts.elastic.co/downloads/elasticsearch-plugins/ingest-attachment/ingest-attachment-5.6.3.zip"
+    sha1check "$1/lib" "ingest-attachment-5.6.3.sha1" || exit 1
+  fi
+}
+
+waitForDocker() {
+  # Initial sleep to make sure docker has started
+  sleep 5
+
+  while : ; do
+    # Get cpu % from docker stats, remove '%' and then sum all the values into one number
+    CPU=`docker stats --no-stream --format "{{.CPUPerc}}" | awk '{gsub ( "[%]","" ) ; print $0 }' | awk '{s+=$1} END {print s}'`
+    echo "CPU: $CPU%"
+
+    # Do floating point comparison, if $CPU is bigger than 15, WAIT will be 1
+    WAIT=`echo $CPU'>'15 | bc -l`
+    echo "WAIT (0/1): $WAIT"
+
+    # Break from loop if WAIT is 0, which is when the sum of the cpu usage is smaller than 15%
+    [[ "$WAIT" -eq 0 ]] && break
+
+    # Else sleep and loop
+    echo "Waiting for docker"
+    sleep 5
+    free -m
+  done
+}
+
+# Check prerequisites
+declare -a prerequisites=("bc")
+checkPrerequisites prerequisites
+
+# ASCII art generated with http://patorjk.com/software/taag/
+# "Elite" font
+echo "
+ ▐ ▄ ▄▄▄ .▐▄• ▄ ▄▄▄▄▄ ▄▄ • ▄▄▄ . ▐ ▄
+•█▌▐█▀▄.▀· █▌█▌▪•██  ▐█ ▀ ▪▀▄.▀·•█▌▐█
+▐█▐▐▌▐▀▀▪▄ ·██·  ▐█.▪▄█ ▀█▄▐▀▀▪▄▐█▐▐▌
+██▐█▌▐█▄▄▌▪▐█·█▌ ▐█▌·▐█▄▪▐█▐█▄▄▌██▐█▌
+▀▀ █▪ ▀▀▀ •▀▀ ▀▀ ▀▀▀ ·▀▀▀▀  ▀▀▀ ▀▀ █▪
+"
 
 case $1 in
   all)
-    declare -a containers=("stardog" "elasticsearch" "elasticsearchlogs" "kibana" "fluentd" "web")
-    buildAndStart containers
+#    declare -a containers=("stardog" "elasticsearch" "elasticsearchlogs" "kibana" "fluentd" "web" "gitserver" "hazelcast" "vertx")
+    prepareElasticSearch
+
+    docker-compose build
+    docker-compose up -d elasticsearchlogs
+    sleep 5
+    docker-compose up -d fluentd
+    sleep 5
+    docker-compose up -d hazelcast
+    sleep 5
+    docker-compose up -d vertx
+    sleep 5
+    docker-compose up -d
+    docker-compose restart nginx
+
+    waitForDocker
     ;;
 
-  stardog | elasticsearchlogs | kibana | fluentd | web)
-    build $1
-    start $1
+  stardog | elasticsearchlogs | kibana | fluentd | web | gitserver | hazelcast)
+    build $1 && start $1
     ;;
 
   elasticsearch)
-    if [ ! -f elasticsearch/analysis-icu-5.6.3.zip ]; then
-      wget -P elasticsearch https://artifacts.elastic.co/downloads/elasticsearch-plugins/analysis-icu/analysis-icu-5.6.3.zip
-    fi
-    if [ ! -f elasticsearch/ingest-attachment-5.6.3.zip ]; then
-      wget -P elasticsearch https://artifacts.elastic.co/downloads/elasticsearch-plugins/ingest-attachment/ingest-attachment-5.6.3.zip
-    fi
+    prepareElasticSearch
 
-    build $1
-    start $1
+    build $1 && start $1
     ;;
 
   efk)
@@ -61,15 +211,21 @@ case $1 in
     echo -e "Build options:\n
   - all
   - efk
+  - gitserver
   - elasticsearch
   - elasticsearchlogs
   - kibana
   - fluentd
   - web
   - stardog
+  - hazelcast
 "
     ;;
   *)
-    echo -e "Usage:\n'$0 list' to display available options\n'$0 all' to build everything"
+    echo -e "Usage:\n'$0 list' to display available options
+'$0 all'  to build everything"
     ;;
 esac
+
+# Cleanup dangling images
+docker image prune -f
