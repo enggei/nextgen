@@ -2,7 +2,7 @@ package com.generator.generators.antlr.parser;
 
 public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ANTLRv4ParserNodeListener.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ANTLRv4ParserNodeListener.class);
 
    public static class Node {
 

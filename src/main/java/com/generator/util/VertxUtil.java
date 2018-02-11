@@ -12,7 +12,7 @@ import io.vertx.core.net.NetSocket;
 import io.vertx.core.shareddata.LocalMap;
 import io.vertx.core.shareddata.SharedData;
 import io.vertx.ext.eventbus.bridge.tcp.impl.protocol.FrameHelper;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.util.ArrayList;

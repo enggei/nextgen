@@ -46,6 +46,10 @@ public final class VertxGroup {
       return new VerticleST(stGroup);
    }
 
+   public RESTVerticleST newRESTVerticle() {
+      return new RESTVerticleST(stGroup);
+   }
+
    public APIST newAPI() {
       return new APIST(stGroup);
    }
@@ -133,6 +137,71 @@ public final class VertxGroup {
 
       public java.util.Set<java.util.Map<String, Object>> getOutgoing() {
       	return this._outgoing;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class RESTVerticleST implements VertxGroupTemplate {
+
+      private Object _name;
+      private Object _packageName;
+      private java.util.Set<java.util.Map<String, Object>> _endpoints = new java.util.LinkedHashSet<>();
+
+      private final ST template;
+
+      private RESTVerticleST(STGroup group) {
+   		template = group.getInstanceOf("RESTVerticle");
+   	}
+
+      public RESTVerticleST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      public RESTVerticleST setPackageName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._packageName == null) {
+            this._packageName = value;
+         	template.add("packageName", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackageName() {
+      	return (String) this._packageName;
+      }
+
+      public RESTVerticleST addEndpointsValue(Object name_, Object uri_, Object action_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	map.put("uri", (uri_ == null || uri_.toString().length() == 0) ? null : uri_);
+      	map.put("action", (action_ == null || action_.toString().length() == 0) ? null : action_);
+      	this._endpoints.add(map);
+
+         template.addAggr("endpoints.{name, uri, action}", map.get("name"), map.get("uri"), map.get("action"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getEndpoints() {
+      	return this._endpoints;
       }
 
       @Override
@@ -522,7 +591,7 @@ public final class VertxGroup {
 		"			public void onSuccess(JsonObject result) {\n" + 
 		"				log.info(\"started ~name~ successfully : \" + result.toString());\n" + 
 		"				vertx.eventBus().consumer(deploymentID(), (Handler<Message<JsonObject~gt()~>) message -> handleInstanceMessage(message));\n" + 
-		"				~incoming:{it| vertx.eventBus().consumer(\"~it.address~\", (Handler<Message<JsonObject~gt()~>) message -> handle~it.name~(message)); }~\n" + 
+		"				~incoming:{it| vertx.eventBus().consumer(\"~it.address~\", (Handler<Message<JsonObject~gt()~>) message -> handle~it.name~(message)); };separator=\"\\n\"~\n" + 
 		"				startFuture.complete();\n" + 
 		"			}\n" + 
 		"\n" + 
@@ -541,6 +610,43 @@ public final class VertxGroup {
 		"	~incoming:{it|protected void handle~it.name~(Message<JsonObject> message) { log.info(\"handle message ~it.address~ \" + message.body().toString()); ~eom()~ };separator=\"\\n\"~\n" + 
 		"\n" + 
 		"	protected void handleInstanceMessage(Message<JsonObject> message) { log.info(\"handle instance message \" + deploymentID() + \" \" + message.body().toString()); }\n" + 
+		"}>>\n")
+			.append("RESTVerticle(name,packageName,endpoints) ::= <<package ~packageName~;\n" + 
+		"\n" + 
+		"import io.vertx.core.AbstractVerticle;\n" + 
+		"import io.vertx.core.http.HttpServerResponse;\n" + 
+		"import io.vertx.core.json.JsonArray;\n" + 
+		"import io.vertx.core.json.JsonObject;\n" + 
+		"import io.vertx.ext.web.Router;\n" + 
+		"import io.vertx.ext.web.RoutingContext;\n" + 
+		"import io.vertx.ext.web.handler.BodyHandler;\n" + 
+		"\n" + 
+		"public class ~name~ extends AbstractVerticle {\n" + 
+		"\n" + 
+		"  protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" + 
+		"\n" + 
+		"  @Override\n" + 
+		"  public void start() {\n" + 
+		"\n" + 
+		"    setUpInitialData();\n" + 
+		"\n" + 
+		"    Router router = Router.router(vertx);\n" + 
+		"\n" + 
+		"    router.route().handler(BodyHandler.create());\n" + 
+		"    ~endpoints:{it|router.~it.action;format=\"toLower\"~(\"~it.uri~\").handler(this::handle~it.name;format=\"capitalize\"~);};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"    vertx.createHttpServer().requestHandler(router::accept).listen(8080);\n" + 
+		"  }\n" + 
+		"\n" + 
+		"	~endpoints:{it|\n" + 
+		"	protected void handle~it.name;format=\"capitalize\"~(RoutingContext routingContext) {\n" + 
+		"		log.info(\"handle~it.name~ \" + routingContext.getBodyAsString());\n" + 
+		"		\n" + 
+		"	~eom()~\n" + 
+		"	};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"  protected void setUpInitialData() {\n" + 
+		"  }\n" + 
 		"}>>\n")
 			.append("API() ::= <<package ~packageName~;\n" + 
 		"\n" + 

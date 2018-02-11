@@ -9,7 +9,7 @@ import java.util.jar.JarFile;
  * Created 05.07.17.
  */
 public class ClasspathUtil {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ClasspathUtil.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ClasspathUtil.class);
    public interface Visitor<T> {
 
       boolean visit(T t);

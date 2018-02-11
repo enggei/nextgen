@@ -40,7 +40,7 @@ import static com.generator.util.NeoUtil.relate;
  */
 public class MavenPlugin extends MavenDomainPlugin {
 
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(MavenPlugin.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MavenPlugin.class);
 
    private static final MavenGroup mavenGroup = new MavenGroup();
 

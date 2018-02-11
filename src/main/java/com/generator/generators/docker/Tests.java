@@ -16,7 +16,7 @@ import java.util.concurrent.TimeoutException;
  * Created 15.09.17.
  */
 public class Tests {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Tests.class);
    //@Test
    public void testBuild() throws InterruptedException, TimeoutException, IOException {
 
@@ -70,6 +70,6 @@ public class Tests {
       dockerfileST.
             addCmdValue("java -Dlog4j.configuration=log4j.properties -jar $VERTICLE_FILE -conf docker.json");
 
-      log.info(dockerfileST);
+      log.info(dockerfileST.toString());
    }
 }

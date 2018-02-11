@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  * Created 30.07.17.
  */
 public final class TextProcessingPanel extends JPanel {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(TextProcessingPanel.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TextProcessingPanel.class);
    private final JTextArea txtInput = SwingUtil.newTextArea();
    private final String lineSeparator = System.getProperty("line.separator");
 

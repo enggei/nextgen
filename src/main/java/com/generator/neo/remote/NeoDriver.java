@@ -23,7 +23,7 @@ import static org.neo4j.driver.v1.Values.parameters;
  * Created by Ernst Sognnes on 08.07.17.
  */
 public class NeoDriver implements AutoCloseable {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(NeoDriver.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(NeoDriver.class);
    public static final String CYPHER_DROP_ALL = "MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n, r";
 
    private static void ignoreUpdate(NeoTransactionContext context, StatementResult data) {

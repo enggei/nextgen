@@ -2,7 +2,7 @@ package com.generator.generators.antlr.parser;
 
 public class ANTLRv4ParserNodeVisitor extends ANTLRv4ParserBaseVisitor<ANTLRv4ParserNodeVisitor.Node> {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ANTLRv4ParserNodeVisitor.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ANTLRv4ParserNodeVisitor.class);
 
    public static class Node {
 

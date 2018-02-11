@@ -27,8 +27,13 @@ public class GeneratedFile {
 	}
 
 	public static GeneratedFile newJavaFile(String root, String packageName, String className) {
-		final String javaFile = (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + File.separator)) + className + ".java";
-		return new GeneratedFile(new File(root, javaFile));
+		final String file = (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + File.separator)) + className + ".java";
+		return new GeneratedFile(new File(root, file));
+	}
+
+	public static GeneratedFile newPlainFile(String root, String packageName, String filename) {
+		final String file = (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + File.separator)) + filename;
+		return new GeneratedFile(new File(root, file));
 	}
 
 	public static String packageToPath(String packageName) {

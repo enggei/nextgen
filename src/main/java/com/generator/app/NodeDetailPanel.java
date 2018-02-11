@@ -29,7 +29,7 @@ import static com.generator.util.NeoUtil.*;
  */
 class NodeDetailPanel extends JPanel {
 
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(NodeDetailPanel.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(NodeDetailPanel.class);
 
    private App app;
    private Workspace workspace;

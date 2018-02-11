@@ -2,7 +2,7 @@ package com.generator.generators.url.parser;
 
 public class urlNodeListener extends urlBaseListener {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(urlNodeListener.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(urlNodeListener.class);
 
    public static class Node {
 

@@ -27,7 +27,7 @@ import static com.generator.util.NeoUtil.hasLabel;
  */
 public class ANTLRPlugin extends ANTLRV4DomainPlugin {
 
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ANTLRPlugin.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ANTLRPlugin.class);
 
    public ANTLRPlugin(App app) {
       super(app);

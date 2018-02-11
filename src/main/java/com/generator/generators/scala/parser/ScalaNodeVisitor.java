@@ -2,7 +2,7 @@ package com.generator.generators.scala.parser;
 
 public class ScalaNodeVisitor extends ScalaBaseVisitor<ScalaNodeVisitor.Node> {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ScalaNodeVisitor.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ScalaNodeVisitor.class);
 
    public static class Node {
 

@@ -2,7 +2,7 @@ package com.generator.generators.lua.parser;
 
 public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(LuaNodeVisitor.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LuaNodeVisitor.class);
 
    public static class Node {
 

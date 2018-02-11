@@ -2,7 +2,7 @@ package com.generator.generators.clojure.parser;
 
 public class ClojureNodeVisitor extends ClojureBaseVisitor<ClojureNodeVisitor.Node> {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ClojureNodeVisitor.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ClojureNodeVisitor.class);
 
    public static class Node {
 

@@ -2,7 +2,7 @@ package com.generator.generators.java.parser;
 
 public class JavaParserNodeListener extends JavaParserBaseListener {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(JavaParserNodeListener.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JavaParserNodeListener.class);
 
    public static class Node {
 

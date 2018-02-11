@@ -17,7 +17,7 @@ import java.util.UUID;
  */
 public class Tests {
 
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Tests.class);
 
    //@Test
    public void testBaseVerticle() {
@@ -26,7 +26,7 @@ public class Tests {
       log.info(vertxGroup.newBaseRouterVerticle().
             setPackageName(ProjectConstants.TEST_PACKAGE + ".vertx").
             setName("TestBaseVerticle").
-            addEndpointsValue("get", "getUser", "user"));
+            addEndpointsValue("get", "getUser", "user").toString());
    }
 
    public static void main(String[] args) {

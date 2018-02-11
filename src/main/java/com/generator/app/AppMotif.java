@@ -21,7 +21,7 @@ import static com.generator.util.NeoUtil.*;
  */
 public final class AppMotif {
 
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(AppMotif.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AppMotif.class);
 
    public static Font getDefaultFont() {
       return new Font("Hack", Font.PLAIN, 10);

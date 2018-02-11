@@ -20,6 +20,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.jetbrains.annotations.NotNull;
 import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.Label;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -38,6 +39,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 import static com.generator.util.NeoUtil.*;
 
@@ -47,7 +49,7 @@ import static com.generator.util.NeoUtil.*;
  */
 public class MySQLPlugin extends MySQLDomainPlugin {
 
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(MySQLPlugin.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MySQLPlugin.class);
 
    private final SpringGroup springGroup = new SpringGroup();
    private final Map<Node, MySQLSession> sessions = new LinkedHashMap<>();
@@ -448,10 +450,10 @@ public class MySQLPlugin extends MySQLDomainPlugin {
                            Transaction tx = getGraph().beginTx();
 
                            // insert data:
-                           final String query = tableNodeToSQL(tableNode) + " limit 1000";
+                           final String query = tableNodeToSQL(tableNode) + " limit 100";
                            log.info("NB: limit 1000 for imports - for testing querying " + query);
                            final String tableName = getNameProperty(tableNode);
-                           final org.neo4j.graphdb.Label label = org.neo4j.graphdb.Label.label(tableName);
+                           final Label label = Label.label(tableName);
 
                            final AtomicInteger rowCounter = new AtomicInteger(0);
                            final AtomicInteger batchCount = new AtomicInteger(10000);
@@ -470,12 +472,12 @@ public class MySQLPlugin extends MySQLDomainPlugin {
                                  }
 
                                  final Node rowNode = getGraph().newNode(label);
-                                 relate(rowNode, tableNode, RelationshipType.withName("ROW"));
+                                 relate(tableNode, rowNode, RelationshipType.withName("ROW"));
 
                                  for (String columnName : columns.keySet()) {
                                     final Object value = MySQLUtil.valueMapping(resultSet.getObject(columnName));
                                     if (value == null) continue;
-                                    rowNode.setProperty(columnName, value);
+                                    rowNode.setProperty(columnName,value);
                                  }
 
                                  if (rowCounter.incrementAndGet() % batchCount.get() == 0) {
@@ -504,9 +506,48 @@ public class MySQLPlugin extends MySQLDomainPlugin {
 
                      // relate foreign-keys to nodes
                      executorService = Executors.newFixedThreadPool(1);
+                     getGraph().doInTransaction(new NeoModel.Committer() {
+                        @Override
+                        public void doAction(Transaction tx) throws Throwable {
+
+                           for (Node tableNode : tableNodes) {
+                              outgoingCOLUMN(tableNode, new RelationConsumer() {
+                                 @Override
+                                 public void accept(Relationship relationship, Node srcColumn) {
+
+                                    final String columnName = "" + srcColumn.getProperty("name");
+
+                                    outgoingFK_SRC(srcColumn, new RelationConsumer() {
+                                       @Override
+                                       public void accept(Relationship relationship, Node foreignKeyNode) {
+
+                                          final Node dstColumn = singleOutgoingFK_DST(foreignKeyNode);
+                                          final Node dstTable = singleIncomingTABLE(dstColumn);
+
+                                          NeoUtil.outgoing(tableNode, RelationshipType.withName("ROW")).forEach(new Consumer<Relationship>() {
+                                             @Override
+                                             public void accept(Relationship relationship) {
+                                                final Node rowNode = other(tableNode, relationship);
+
+                                                final Object value = rowNode.getProperty(columnName);
+                                                if (value == null) return;
 
 
 
+                                             }
+                                          });
+                                       }
+                                    });
+                                 }
+                              });
+                           }
+                        }
+
+                        @Override
+                        public void exception(Throwable throwable) {
+
+                        }
+                     });
 
 
                      app.model.ignoreTransactions.set(false);

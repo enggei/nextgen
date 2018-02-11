@@ -40,7 +40,7 @@ import static com.generator.util.NeoUtil.*;
  * Created 12.09.17.
  */
 public class JavaPlugin extends JavaDomainDomainPlugin {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(JavaPlugin.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JavaPlugin.class);
    public static void cleanupPreviousSessions(NeoModel graph) {
       instanceMap.clear();
    }

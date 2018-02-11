@@ -20,7 +20,7 @@ import static com.generator.util.NeoUtil.*;
  */
 public abstract class StardogDomainPlugin extends Plugin {
 
-	protected final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(StardogDomainPlugin.class);
+	protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(StardogDomainPlugin.class);
 
 	public enum Entities implements Label {
       Database, Namespace, Graph

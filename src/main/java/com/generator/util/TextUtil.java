@@ -10,7 +10,7 @@ import static com.generator.util.StringUtil.printRest;
  * Created 24.07.17.
  */
 public class TextUtil {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(TextUtil.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TextUtil.class);
    static final String text =
          "allRowsSelected\tbool\tfalse\tSet to true to indicate that all rows should be selected.\n" +
                "bodyStyle\tobject\t\tOverride the inline-styles of the body's table element.\n" +

@@ -2,7 +2,7 @@ package com.generator.generators.cypher.parser;
 
 public class CypherNodeVisitor extends CypherBaseVisitor<CypherNodeVisitor.Node> {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(CypherNodeVisitor.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CypherNodeVisitor.class);
 
    public static class Node {
 

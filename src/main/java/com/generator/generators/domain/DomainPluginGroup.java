@@ -78,6 +78,7 @@ public final class DomainPluginGroup {
 
       private Object _name;
       private java.util.Set<java.util.Map<String, Object>> _properties = new java.util.LinkedHashSet<>();
+      private Object _entity;
 
       private final ST template;
 
@@ -112,6 +113,22 @@ public final class DomainPluginGroup {
 
       public java.util.Set<java.util.Map<String, Object>> getProperties() {
       	return this._properties;
+      }
+
+      public EntityMethodsST setEntity(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._entity == null) {
+            this._entity = value;
+         	template.add("entity", value);
+         }
+
+      	return this;
+      }
+
+      public String getEntity() {
+      	return (String) this._entity;
       }
 
       @Override
@@ -865,7 +882,7 @@ public final class DomainPluginGroup {
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 		.append("eom() ::= <<}>>\n")
 		.append("gt() ::= \">\"\n")
-			.append("EntityMethods(name,properties) ::= <<protected Node new~name~() { return new~name~(getGraph()); }~if(properties)~ \n" + 
+			.append("EntityMethods(name,properties,entity) ::= <<protected Node new~name~() { return new~name~(getGraph()); }~if(properties)~ \n" + 
 		"protected Node new~name~(~properties:{it|Object ~it.name~};separator=\", \"~) { return new~name~(getGraph(), ~properties:{it|~it.name~};separator=\", \"~); } \n" + 
 		"~endif~\n" + 
 		"\n" + 
@@ -874,7 +891,28 @@ public final class DomainPluginGroup {
 		"	final Node newNode = new~name~(graph); 	\n" + 
 		"	~properties:{it|if (~it.name~ != null) relate(newNode, DomainMotif.newValueNode(graph, ~it.name~), RelationshipType.withName(Properties.~it.name~.name()));};separator=\"\\n\"~ 	\n" + 
 		"	return newNode; \n" + 
-		"}~endif~>>\n")
+		"}~endif~\n" + 
+		"\n" + 
+		"/* todo\n" + 
+		"public Action new~name~Action() {\n" + 
+		"	return new App.TransactionAction(\"New ~name~\", app) {\n" + 
+		"		@Override\n" + 
+		"   	public void actionPerformed(java.awt.event.ActionEvent e, Transaction tx) throws Exception {\n" + 
+		"\n" + 
+		"		final Map<String,String> properties = new java.util.HashMap<>();\n" + 
+		"	~properties:{it|\n" + 
+		"	   final String ~it.name~ = com.generator.util.SwingUtil.showInputDialog(\"~it.name~\", app);\n" + 
+		"		if (~it.name~ != null && ~it.name~.length() > 0)\n" + 
+		"			properties.put(\"~it.name~\", ~it.name~);\n" + 
+		"	};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"		if (properties.isEmpty()) return;\n" + 
+		"\n" + 
+		"	   //fireNodesLoaded(new~entity~());\n" + 
+		"   	}\n" + 
+		"	};\n" + 
+		"}\n" + 
+		"*/>>\n")
 			.append("EntityMessageHandler(label,properties) ::= <<private void new~label~(Message<JsonObject> message) {\n" + 
 		"   log.info(deploymentID() + \".new.~label~ \" + message.body().toString());\n" + 
 		"\n" + 
@@ -1063,6 +1101,8 @@ public final class DomainPluginGroup {
 			.append("DomainVerticleFacade(domain,entities,name,package,relations) ::= <<package ~package~;\n" + 
 		"\n" + 
 		"import com.generator.util.VertxUtil;\n" + 
+		"import io.vertx.core.Vertx;\n" + 
+		"import io.vertx.core.eventbus.Message;\n" + 
 		"import io.vertx.core.json.JsonArray;\n" + 
 		"import io.vertx.core.json.JsonObject;\n" + 
 		"import io.vertx.core.net.NetSocket;\n" + 
@@ -1072,7 +1112,7 @@ public final class DomainPluginGroup {
 		" */\n" + 
 		"public class ~name~ {\n" + 
 		"\n" + 
-		"   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(~name~.class);\n" + 
+		"   protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" + 
 		"\n" + 
 		"   private final String address;\n" + 
 		"   private final String replyAddress;\n" + 
@@ -1108,32 +1148,32 @@ public final class DomainPluginGroup {
 		"   ~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
 		"}>>\n")
-			.append("DomainFacadeEntityMessages(label,properties) ::= <<public void new~label~(~properties:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
+			.append("DomainFacadeEntityMessages(label,properties) ::= <<public JsonObject new~label~(~properties:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
 		"\n" + 
 		"   final JsonObject parameters = new JsonObject()~properties:{it|.\n" + 
 		"			put(\"~it.name~\", ~it.name~)}~;\n" + 
 		"\n" + 
-		"   VertxUtil.sendFrame(log, address + \".new.~label~\", replyAddress, parameters, socket);\n" + 
+		"	return parameters;\n" + 
 		"}\n" + 
 		"\n" + 
-		"public void update~label~(String uuid~if(properties)~, ~properties:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n" + 
+		"public JsonObject update~label~(String uuid~if(properties)~, ~properties:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n" + 
 		"\n" + 
 		"   final JsonObject parameters = new JsonObject().\n" + 
 		"         put(\"uuid\", uuid)~properties:{it|.\n" + 
 		"			put(\"~it.name~\", ~it.name~)}~;\n" + 
 		"\n" + 
-		"   VertxUtil.sendFrame(log, address + \".update.~label~\", replyAddress, parameters, socket);\n" + 
+		"	return parameters;\n" + 
 		"}\n" + 
 		"\n" + 
-		"public void get~label~(String uuid) {\n" + 
+		"public JsonObject get~label~(String uuid) {\n" + 
 		"\n" + 
 		"   final JsonObject parameters = new JsonObject().\n" + 
 		"         put(\"uuid\", uuid);\n" + 
 		"\n" + 
-		"   VertxUtil.sendFrame(log, address + \".get.~label~\", replyAddress, parameters, socket);\n" + 
+		"	return parameters;\n" + 
 		"}\n" + 
 		"\n" + 
-		"public void list~label~s(String... properties) {\n" + 
+		"public JsonObject list~label~s(String... properties) {\n" + 
 		"\n" + 
 		"   final JsonObject parameters = new JsonObject();\n" + 
 		"\n" + 
@@ -1141,16 +1181,57 @@ public final class DomainPluginGroup {
 		"   for (String property : properties) propertiesParameter.add(property);\n" + 
 		"   parameters.put(\"properties\", propertiesParameter);\n" + 
 		"\n" + 
-		"   VertxUtil.sendFrame(log, address + \".list.~label~\", replyAddress, parameters, socket);\n" + 
+		"	return parameters;\n" + 
 		"}\n" + 
 		"\n" + 
-		"public void remove~label~(String uuid, boolean force, boolean cascade) {\n" + 
+		"public JsonObject remove~label~(String uuid, boolean force, boolean cascade) {\n" + 
+		"\n" + 
 		"   final JsonObject parameter = new JsonObject().\n" + 
 		"         put(\"uuid\", uuid).\n" + 
 		"         put(\"force\", force).\n" + 
 		"         put(\"cascade\", cascade);\n" + 
 		"\n" + 
-		"   VertxUtil.sendFrame(log, address + \".remove.~label~\", replyAddress, parameter, socket);\n" + 
+		"   return parameter;\n" + 
+		"}\n" + 
+		"\n" + 
+		"public void sendNew~label~Frame(JsonObject parameters) {\n" + 
+		"	VertxUtil.sendFrame(log, address + \".new.~label~\", replyAddress, parameters, socket);\n" + 
+		"}\n" + 
+		"\n" + 
+		"public void sendNew~label~Message(Vertx vertx, JsonObject parameters, VertxUtil.SuccessHandler<Message<JsonObject~gt()~> handler) {\n" + 
+		"  	VertxUtil.sendMessage(vertx, address + \".new.~label~\", parameters, log, handler);\n" + 
+		"}\n" + 
+		"\n" + 
+		"public void sendUpdate~label~Frame(JsonObject parameters) {\n" + 
+		"	VertxUtil.sendFrame(log, address + \".update.~label~\", replyAddress, parameters, socket);\n" + 
+		"}\n" + 
+		"\n" + 
+		"public void sendUpdate~label~Message(Vertx vertx, JsonObject parameters, VertxUtil.SuccessHandler<Message<JsonObject~gt()~> handler) {\n" + 
+		"  	VertxUtil.sendMessage(vertx, address + \".update.~label~\", parameters, log, handler);\n" + 
+		"}\n" + 
+		"\n" + 
+		"public void sendGet~label~Frame(JsonObject parameters) {\n" + 
+		"	VertxUtil.sendFrame(log, address + \".get.~label~\", replyAddress, parameters, socket);\n" + 
+		"}\n" + 
+		"\n" + 
+		"public void sendGet~label~Message(Vertx vertx, JsonObject parameters, VertxUtil.SuccessHandler<Message<JsonObject~gt()~> handler) {\n" + 
+		"  	VertxUtil.sendMessage(vertx, address + \".get.~label~\", parameters, log, handler);\n" + 
+		"}\n" + 
+		"\n" + 
+		"public void sendList~label~Frame(JsonObject parameters) {\n" + 
+		"   VertxUtil.sendFrame(log, address + \".list.~label~\", replyAddress, parameters, socket);\n" + 
+		"}\n" + 
+		"\n" + 
+		"public void sendList~label~Message(Vertx vertx, JsonObject parameters, VertxUtil.SuccessHandler<Message<JsonObject~gt()~> handler) {\n" + 
+		"  	VertxUtil.sendMessage(vertx, address + \".list.~label~\", parameters, log, handler);\n" + 
+		"}\n" + 
+		"\n" + 
+		"public void sendRemove~label~Frame(JsonObject parameters) {\n" + 
+		"   VertxUtil.sendFrame(log, address + \".remove.~label~\", replyAddress, parameters, socket);\n" + 
+		"}\n" + 
+		"\n" + 
+		"public void sendRemove~label~Message(Vertx vertx, JsonObject parameters, VertxUtil.SuccessHandler<Message<JsonObject~gt()~> handler) {\n" + 
+		"  	VertxUtil.sendMessage(vertx, address + \".remove.~label~\", parameters, log, handler);\n" + 
 		"}>>\n")
 			.append("DomainPlugin(relations,rootRelations,title,entities,entityProperties,entityRelations,name,packageName,properties) ::= <<package ~packageName~;\n" + 
 		"\n" + 

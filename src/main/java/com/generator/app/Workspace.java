@@ -41,7 +41,7 @@ import static com.generator.util.NeoUtil.*;
  */
 public final class Workspace extends JPanel {
 
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Workspace.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Workspace.class);
 
    public final Map<Long, NeoNode> layerNodes = new LinkedHashMap<>();
    public final Map<Long, NeoRelationship> layerRelations = new LinkedHashMap<>();
@@ -497,7 +497,7 @@ public final class Workspace extends JPanel {
                      if (!dependentNodes.isEmpty())
                         for (Node dependentNode : dependentNodes)
                            out.append(NeoUtil.getNameAndLabelsFrom(dependentNode)).append("\n");
-                     log.info(out);
+                     log.info(out.toString());
 
                      if (dependentNodes.isEmpty() || SwingUtil.showConfirmDialog(app, "There are " + dependentNodes.size() + " nodes in graph which are dependent on nodes to delete. Are you sure you want to delete ?"))
                         app.model.deleteNodes(nodes);

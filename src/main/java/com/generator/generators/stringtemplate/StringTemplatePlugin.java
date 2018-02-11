@@ -44,7 +44,7 @@ import static com.generator.util.NeoUtil.*;
  * Created 06.08.17.
  */
 public class StringTemplatePlugin extends StringTemplateDomainPlugin {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(StringTemplatePlugin.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(StringTemplatePlugin.class);
    public StringTemplatePlugin(App app) {
       super(app);
    }

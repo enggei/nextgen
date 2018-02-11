@@ -31,7 +31,7 @@ import static com.generator.util.NeoUtil.*;
  * https://kimh.github.io/clojure-by-example
  */
 public class ClojurePlugin extends ClojureDomainPlugin {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ClojurePlugin.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ClojurePlugin.class);
    private main replHandle = null;
    private NetSocket socket;
    private final Vertx vertx;

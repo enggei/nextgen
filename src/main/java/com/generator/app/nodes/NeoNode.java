@@ -45,7 +45,7 @@ import static com.generator.util.NeoUtil.*;
  */
 public class NeoNode extends PNode {
 
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(NeoNode.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(NeoNode.class);
 
    private Workspace workspace;
    private Workspace.NodeCanvas nodeCanvas;

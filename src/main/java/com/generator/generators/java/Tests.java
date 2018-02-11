@@ -28,7 +28,7 @@ import java.util.*;
 import static org.reflections.ReflectionUtils.*;
 
 public class Tests {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Tests.class);
    //@Test
    public void testAnnotations() {
 
@@ -257,7 +257,7 @@ public class Tests {
             addLexicalValue("lastName").
             addLexicalValue("firstName").
             addEqhaValue("id");
-      log.info(beanST);
+      log.info(beanST.toString());
 
       log.info(beanST.getPackage() + " " + beanST.getName());
       for (Object o : beanST.getLexicalValues()) {

@@ -1103,7 +1103,7 @@ public final class AntlrGroup {
 		"\n" + 
 		"public class ~name~ extends ~parser~BaseListener {\n" + 
 		"\n" + 
-		"	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(~name~.class);\n" + 
+		"	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" +
 		"\n" + 
 		"   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();\n" + 
 		"	protected final StringBuilder delim = new StringBuilder(\"\");\n" + 
@@ -1162,7 +1162,7 @@ public final class AntlrGroup {
 		"\n" + 
 		"public class ~name~ extends ~parser~BaseListener {\n" + 
 		"\n" + 
-		"	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(~name~.class);\n" + 
+		"	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" +
 		"\n" + 
 		"   public static class Node {\n" + 
 		"\n" + 
@@ -1233,7 +1233,7 @@ public final class AntlrGroup {
 		"\n" + 
 		"public class ~name~ extends ~parser~BaseVisitor<~name~.Node> {\n" + 
 		"\n" + 
-		"	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(~name~.class);\n" + 
+		"	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" +
 		"\n" + 
 		"   public static class Node {\n" + 
 		"\n" + 
@@ -1300,7 +1300,7 @@ public final class AntlrGroup {
 		"\n" + 
 		"public class ~name~ extends ~parser~BaseVisitor<Node> {\n" + 
 		"\n" + 
-		"	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(~name~.class);\n" + 
+		"	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" +
 		"\n" + 
 		"   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();\n" + 
 		"	protected final com.generator.neo.NeoModel model;\n" + 

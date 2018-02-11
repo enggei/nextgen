@@ -2,7 +2,7 @@ package com.generator.generators.protobuf.parser;
 
 public class ProtobufNodeVisitor extends ProtobufBaseVisitor<ProtobufNodeVisitor.Node> {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ProtobufNodeVisitor.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ProtobufNodeVisitor.class);
 
    public static class Node {
 

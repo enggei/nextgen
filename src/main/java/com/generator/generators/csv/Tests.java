@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created 10.09.17.
  */
 public class Tests {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Tests.class);
    //@Test
    public void testParser() throws IOException {
       final CSVParser parser = new CSVParser(new CommonTokenStream(new CSVLexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT+"csv/test.csv"))));

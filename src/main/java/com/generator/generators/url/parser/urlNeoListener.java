@@ -6,7 +6,7 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class urlNeoListener extends urlBaseListener {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(urlNeoListener.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(urlNeoListener.class);
 
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");

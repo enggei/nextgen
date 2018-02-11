@@ -46,7 +46,7 @@ import static com.generator.util.NeoUtil.*;
  */
 public class ProjectPlugin extends ProjectDomainPlugin {
 
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ProjectPlugin.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ProjectPlugin.class);
 
    public enum Filetype {
       java, plain, namedFile, groupFile

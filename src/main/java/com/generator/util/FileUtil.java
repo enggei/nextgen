@@ -21,7 +21,7 @@ import java.util.zip.*;
  * Time: 13:52:28
  */
 public final class FileUtil {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(FileUtil.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FileUtil.class);
 
    private static final String LINE_SEPARATOR = System.getProperty("line.separator");
    private static final boolean isWindows;

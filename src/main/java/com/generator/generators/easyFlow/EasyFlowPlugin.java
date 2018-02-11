@@ -34,7 +34,7 @@ import static org.neo4j.graphdb.Direction.OUTGOING;
  */
 public class EasyFlowPlugin extends EasyFlowDomainPlugin {
 
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(EasyFlowPlugin.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(EasyFlowPlugin.class);
 
    public EasyFlowPlugin(App app) {
       super(app);

@@ -11,7 +11,7 @@ import java.util.*;
  * Date: 08.09.13
  */
 public class Expression {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Expression.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Expression.class);
    private final Stack<Integer> expressionStack = new Stack<>();
 
    public Expression(Tree ast, ParameterBuilder parameterBuilder) {

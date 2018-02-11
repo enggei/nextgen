@@ -2,7 +2,7 @@ package com.generator.generators.go.parser;
 
 public class GolangNodeListener extends GolangBaseListener {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(GolangNodeListener.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GolangNodeListener.class);
 
    public static class Node {
 

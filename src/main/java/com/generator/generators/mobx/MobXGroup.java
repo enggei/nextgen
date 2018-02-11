@@ -42,6 +42,14 @@ public final class MobXGroup {
 
 	}
 
+   public getRequestST newgetRequest() {
+      return new getRequestST(stGroup);
+   }
+
+   public postRequestST newpostRequest() {
+      return new postRequestST(stGroup);
+   }
+
    public MobXContainerST newMobXContainer() {
       return new MobXContainerST(stGroup);
    }
@@ -60,6 +68,104 @@ public final class MobXGroup {
 
    public DomainStoreST newDomainStore() {
       return new DomainStoreST(stGroup);
+   }
+
+   public final class getRequestST implements MobXGroupTemplate {
+
+      private Object _entity;
+      private Object _url;
+
+      private final ST template;
+
+      private getRequestST(STGroup group) {
+   		template = group.getInstanceOf("getRequest");
+   	}
+
+      public getRequestST setEntity(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._entity == null) {
+            this._entity = value;
+         	template.add("entity", value);
+         }
+
+      	return this;
+      }
+
+      public String getEntity() {
+      	return (String) this._entity;
+      }
+
+      public getRequestST setUrl(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._url == null) {
+            this._url = value;
+         	template.add("url", value);
+         }
+
+      	return this;
+      }
+
+      public String getUrl() {
+      	return (String) this._url;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class postRequestST implements MobXGroupTemplate {
+
+      private Object _entity;
+      private Object _url;
+
+      private final ST template;
+
+      private postRequestST(STGroup group) {
+   		template = group.getInstanceOf("postRequest");
+   	}
+
+      public postRequestST setEntity(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._entity == null) {
+            this._entity = value;
+         	template.add("entity", value);
+         }
+
+      	return this;
+      }
+
+      public String getEntity() {
+      	return (String) this._entity;
+      }
+
+      public postRequestST setUrl(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._url == null) {
+            this._url = value;
+         	template.add("url", value);
+         }
+
+      	return this;
+      }
+
+      public String getUrl() {
+      	return (String) this._url;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
    }
 
    public final class MobXContainerST implements MobXGroupTemplate {
@@ -557,6 +663,16 @@ public final class MobXGroup {
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 		.append("eom() ::= <<}>>\n")
 		.append("gt() ::= \">\"\n")
+			.append("getRequest(entity,url) ::= <<console.info(\"get~entity~\");\n" + 
+		"request.get('~url~').then(response => {\n" + 
+		"	console.info(\"~url~ : \" + response);\n" + 
+		"	this.~entity~.fromJson(response.data.~entity~);\n" + 
+		"}).catch(error => { console.log(error); });>>\n")
+			.append("postRequest(entity,url) ::= <<console.info(\"save~entity~\");\n" + 
+		"request.post('~url~', this.~entity~.toJson()).then(response => {\n" + 
+		"	console.info(\"~url~ : \" + response);\n" + 
+		"	this.~entity~.fromJson(response.data.~entity~);\n" + 
+		"}).catch(error => { console.log(error); });>>\n")
 			.append("MobXContainer(components,name,store,constructorStatements,methodDeclarations,element) ::= <<import React from 'react';\n" + 
 		"~components:{it|import ~it.name~ from '~it.importPath~';};separator=\"\\n\"~\n" + 
 		"import { inject, observer } from 'mobx-react';\n" + 
@@ -603,7 +719,7 @@ public final class MobXGroup {
 		"	}\n" + 
 		"\n" + 
 		"   toJson() {\n" + 
-		"   	return '{ \"~name~\" : '+ JSON.stringify(toJS(this)) + '}';\n" + 
+		"   	return JSON.stringify(toJS(this));\n" + 
 		"	}\n" + 
 		"}\n" + 
 		"\n" + 

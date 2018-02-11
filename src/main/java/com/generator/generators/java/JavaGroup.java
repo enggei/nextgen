@@ -351,6 +351,8 @@ public final class JavaGroup {
       private Object _name;
       private Object _package;
       private java.util.Set<java.util.Map<String, Object>> _properties = new java.util.LinkedHashSet<>();
+      private Object _neoNode;
+      private Object _json;
 
       private final ST template;
 
@@ -490,6 +492,38 @@ public final class JavaGroup {
 
       public java.util.Set<java.util.Map<String, Object>> getProperties() {
       	return this._properties;
+      }
+
+      public PojoST setNeoNode(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._neoNode == null) {
+            this._neoNode = value;
+         	template.add("neoNode", value);
+         }
+
+      	return this;
+      }
+
+      public String getNeoNode() {
+      	return (String) this._neoNode;
+      }
+
+      public PojoST setJson(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._json == null) {
+            this._json = value;
+         	template.add("json", value);
+         }
+
+      	return this;
+      }
+
+      public String getJson() {
+      	return (String) this._json;
       }
 
       @Override
@@ -1468,25 +1502,43 @@ public final class JavaGroup {
 		"~if(scope)~~scope~ ~else~~endif~~if(returnValue)~~returnValue~ ~else~void ~endif~~name~(~parameters:{it|~it.type~ ~it.name~};separator=\",\"~) {\n" + 
 		"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
 		"}>>\n")
-			.append("Pojo(classProperties,eqha,extends,implement,lexical,methods,name,package,properties) ::= <<package ~package~;\n" + 
+			.append("Pojo(classProperties,eqha,extends,implement,lexical,methods,name,package,properties,neoNode,json) ::= <<package ~package~;\n" + 
 		"\n" + 
 		"public class ~name~~if(extends)~ extends ~extends~~endif~~if(implement)~ implements ~implement:{it|~it~};separator=\", \"~~endif~ {\n" + 
 		"~if(classProperties)~\n" + 
-		"	\n" + 
 		"	~classProperties:{it|private static final ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
 		"~endif~\n" + 
-		"~if(properties)~\n" + 
 		"\n" + 
+		"\n" + 
+		"	private final String uuid;\n" + 
+		"~if(properties)~\n" + 
 		"	~properties:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
 		"~endif~\n" + 
 		"\n" + 
+		"\n" + 
 		"	public ~name~() {\n" + 
+		"		uuid = java.util.UUID.randomUUID().toString();\n" + 
 		"	}\n" + 
 		"~if(properties)~\n" + 
 		"\n" + 
-		"	public ~name~(~properties:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
+		"	public ~name~(String uuid, ~properties:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
+		"		this.uuid = uuid;\n" + 
 		"		~properties:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
 		"	}\n" + 
+		"\n" + 
+		"~endif~\n" + 
+		"~if(json)~\n" + 
+		"	public ~name~(io.vertx.core.json.JsonObject jsonObject) {\n" + 
+		"		this.uuid = jsonObject.getString(\"uuid\");\n" + 
+		"		~properties:{it|this.~it.name~ = jsonObject.get~it.type~(\"~it.name~\");};separator=\"\\n\"~\n" + 
+		"   }\n" + 
+		"~endif~\n" + 
+		"~if(neoNode)~\n" + 
+		"\n" + 
+		"	public ~name~(org.neo4j.graphdb.Node node) {\n" + 
+		"		this.uuid = (String) node.getProperty(\"_uuid\");\n" + 
+		"		~properties:{it|this.~it.name~ = node.hasProperty(\"~it.name~\") ? (~it.type~) node.getProperty(\"~it.name~\") : ~it.init~;};separator=\"\\n\"~\n" + 
+		"   }\n" + 
 		"~endif~\n" + 
 		"\n" + 
 		"~properties:{it|\n" + 
@@ -1525,7 +1577,26 @@ public final class JavaGroup {
 		"       return ~lexical:{it|\"~it~=\" + ~it~ };separator=\" + \\\" \\\" + \"~;\n" + 
 		"   }\n" + 
 		"~endif~\n" + 
+		"~if(json)~\n" + 
 		"\n" + 
+		"	public io.vertx.core.json.JsonObject toJson() {\n" + 
+		"		return new io.vertx.core.json.JsonObject().put(\"uuid\", uuid)~properties:{it|\n" + 
+		"			.put(\"~it.name~\", ~it.name~)};separator=\"\\n\"~;\n" + 
+		"	}\n" + 
+		"~endif~\n" + 
+		"~if(neoNode)~\n" + 
+		"\n" + 
+		"	public org.neo4j.graphdb.Node merge(org.neo4j.graphdb.Node node) {\n" + 
+		"		~properties:{it|node.setProperty(\"~it.name~\", ~it.name~);};separator=\"\\n\"~\n" + 
+		"		return node;\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	public org.neo4j.graphdb.Node newNode(org.neo4j.graphdb.GraphDatabaseService graphDb) {\n" + 
+		"      final org.neo4j.graphdb.Node node = graphDb.createNode(org.neo4j.graphdb.Label.label(\"~name~\"));\n" + 
+		"      node.setProperty(\"_uuid\", this.uuid);\n" + 
+		"      return merge(node);\n" + 
+		"   }\n" + 
+		"~endif~\n" + 
 		"}>>\n")
 			.append("Enum(name,package,values) ::= <<package ~package~;\n" + 
 		"\n" + 

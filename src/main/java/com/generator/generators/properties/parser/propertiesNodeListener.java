@@ -2,7 +2,7 @@ package com.generator.generators.properties.parser;
 
 public class propertiesNodeListener extends propertiesBaseListener {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(propertiesNodeListener.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(propertiesNodeListener.class);
 
    public static class Node {
 

@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Tests {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Tests.class);
    //@Test
    public void testMaven() {
 
@@ -25,7 +25,7 @@ public class Tests {
             setVersion("version").
             setName("MyProject");
 
-      log.info(pomST);
+      log.info(pomST.toString());
    }
 
    ;

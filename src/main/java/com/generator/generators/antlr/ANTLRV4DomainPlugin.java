@@ -20,7 +20,7 @@ import static com.generator.util.NeoUtil.*;
  */
 public abstract class ANTLRV4DomainPlugin extends Plugin {
 
-	protected final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ANTLRV4DomainPlugin.class);
+	protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ANTLRV4DomainPlugin.class);
 
 	public enum Entities implements Label {
       GrammarSpec, GrammarType, Identifier, PrequelConstruct, OptionsSpec, Option, OptionValue, DelegateGrammars, DelegateGrammar, TokensSpec, IdList, ChannelsSpec, Rules, RuleSpec, LexerRuleSpec, LexerRuleBlock, LexerAltList, LexerAlt, LexerElements, LexerElement, LexerAtom, Terminal, LexerCommands, LexerCommand, LexerCommandName, LexerCommandExpr, ActionBlock, EbnfSuffix, ModeSpec, LexerBlock, NotSet, SetElement, ParserRuleSpec, RuleBlock, RuleAltList, LabeledAlt, Alternative, Element, Atom, Ruleref, ExceptionGroup, Ebnf, Block, AltList, BlockSuffix, CharacterRange

@@ -9,7 +9,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
 
 public class Tests {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Tests.class);
 
    //@Test
    public void testParser() {
@@ -28,13 +28,13 @@ public class Tests {
 
       log.info(group.newcreateNode().
             setId("ID").
-            addLabelsValue("Entities"));
+            addLabelsValue("Entities").toString());
 
       log.info(
             group.newcreateNodes().
                   addNodesValue(group.newstringProperty().
                         setValue("VALUE").
-                        setName("NAME")));
+                        setName("NAME")).toString());
 
    }
 }

@@ -2,7 +2,7 @@ package com.generator.generators.url.parser;
 
 public class urlNodeVisitor extends urlBaseVisitor<urlNodeVisitor.Node> {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(urlNodeVisitor.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(urlNodeVisitor.class);
 
    public static class Node {
 

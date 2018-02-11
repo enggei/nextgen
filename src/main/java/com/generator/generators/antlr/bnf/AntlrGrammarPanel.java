@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created 09.10.17.
  */
 public class AntlrGrammarPanel extends JPanel {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(AntlrGrammarPanel.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AntlrGrammarPanel.class);
    private AntlrGrammarModel model;
 
    private final Map<String, AntlrGrammarSymbol> ruleSpecs = new ConcurrentHashMap<>();

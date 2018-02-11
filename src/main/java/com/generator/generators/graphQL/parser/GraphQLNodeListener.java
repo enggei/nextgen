@@ -2,7 +2,7 @@ package com.generator.generators.graphQL.parser;
 
 public class GraphQLNodeListener extends GraphQLBaseListener {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(GraphQLNodeListener.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GraphQLNodeListener.class);
 
    public static class Node {
 

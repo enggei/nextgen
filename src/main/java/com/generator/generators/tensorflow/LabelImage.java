@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class LabelImage {
 
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(LabelImage.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LabelImage.class);
 
    private static void printUsage(PrintStream s) {
       final String url =

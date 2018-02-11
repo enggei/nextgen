@@ -2,7 +2,7 @@ package com.generator.generators.csv.parser;
 
 public class CSVNodeVisitor extends CSVBaseVisitor<CSVNodeVisitor.Node> {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(CSVNodeVisitor.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CSVNodeVisitor.class);
 
    public static class Node {
 

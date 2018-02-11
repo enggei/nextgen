@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 import static javax.swing.JOptionPane.*;
 
 public class SwingUtil {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(SwingUtil.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SwingUtil.class);
 
    public static JTextArea newTextArea() {
       final JTextArea txtEditor = new JTextArea(30, 30);

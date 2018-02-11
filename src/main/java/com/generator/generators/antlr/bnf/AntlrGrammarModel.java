@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
  * BNF model for Antlr-grammar
  */
 public class AntlrGrammarModel extends ANTLRv4ParserDomain {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(AntlrGrammarModel.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AntlrGrammarModel.class);
    // todo testing lexer-token values
    private final Set<String> tokenValues = new LinkedHashSet<>();
    private final Map<String, AntlrGrammarNode> ruleSpecs = new ConcurrentHashMap<>();

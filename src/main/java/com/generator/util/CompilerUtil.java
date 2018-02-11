@@ -24,7 +24,7 @@ import java.util.Locale;
  */
 public class CompilerUtil {
 
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(CompilerUtil.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CompilerUtil.class);
 
    private final JavaCompiler compiler;
 

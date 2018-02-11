@@ -6,7 +6,7 @@ import org.tensorflow.Tensor;
 import org.tensorflow.TensorFlow;
 
 public class HelloTF {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(HelloTF.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(HelloTF.class);
 
    public static void main(String[] args) throws Exception {
       try (Graph g = new Graph()) {

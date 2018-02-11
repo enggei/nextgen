@@ -15,6 +15,7 @@ import com.generator.generators.javapoet.JavaPoetPlugin;
 import com.generator.generators.json.JsonPlugin;
 import com.generator.generators.math.MathPlugin;
 import com.generator.generators.maven.MavenPlugin;
+import com.generator.generators.microservice.MicroservicePlugin;
 import com.generator.generators.mysql.MySQLPlugin;
 import com.generator.generators.project.ProjectPlugin;
 import com.generator.generators.rivescript.RivescriptPlugin;
@@ -270,6 +271,7 @@ public class App extends JFrame {
                   plugins.add(new GitPlugin(App.this));
                   plugins.add(new VertxPlugin(App.this));
                   plugins.add(new JavaPoetPlugin(App.this));
+                  plugins.add(new MicroservicePlugin(App.this));
                }
             }
          });

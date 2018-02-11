@@ -20,7 +20,7 @@ import static com.generator.util.NeoUtil.*;
  */
 public abstract class JsonDomainPlugin extends Plugin {
 
-	protected final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(JsonDomainPlugin.class);
+	protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JsonDomainPlugin.class);
 
 	public enum Entities implements Label {
       Json, Array, Number, String, Object, Pair

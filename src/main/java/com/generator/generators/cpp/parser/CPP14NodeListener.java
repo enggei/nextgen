@@ -2,7 +2,7 @@ package com.generator.generators.cpp.parser;
 
 public class CPP14NodeListener extends CPP14BaseListener {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(CPP14NodeListener.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CPP14NodeListener.class);
 
    public static class Node {
 

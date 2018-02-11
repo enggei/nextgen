@@ -17,7 +17,7 @@ import static com.generator.generators.mysql.MySQLDomainPlugin.*;
  */
 public class DatabaseToDomain extends MySqlParserNodeListener {
 
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(DatabaseToDomain.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DatabaseToDomain.class);
 
    private final MySQLDomainPlugin domain;
    protected final java.util.Stack<org.neo4j.graphdb.Node> nodeStack = new java.util.Stack<>();

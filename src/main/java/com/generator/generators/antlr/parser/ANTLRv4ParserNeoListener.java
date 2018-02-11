@@ -6,7 +6,7 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ANTLRv4ParserNeoListener.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ANTLRv4ParserNeoListener.class);
 
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");

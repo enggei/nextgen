@@ -6,7 +6,7 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class CypherNeoListener extends CypherBaseListener {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(CypherNeoListener.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CypherNeoListener.class);
 
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");

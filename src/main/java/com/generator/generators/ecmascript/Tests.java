@@ -15,7 +15,7 @@ import java.io.IOException;
  * Created 08.09.17.
  */
 public class Tests {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Tests.class);
    //@Test
    public void testParser() throws IOException {
       final ECMAScriptParser parser = new ECMAScriptParser(new CommonTokenStream(new ECMAScriptLexer(CharStreams.fromFileName(ProjectConstants.MAIN_ROOT + "/com/generator/generators/ecmascript/example.js"))));

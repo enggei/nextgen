@@ -269,10 +269,13 @@ public class NeoVerticle extends BaseNeoVerticle {
 
                            // select which node-properties to return, from parameters:
                            final JsonArray returnProperties = new JsonArray();
-                           for (Object tmp : message.body().getJsonArray("properties")) {
-                              String propertyName = (String) tmp;
-                              if (node.hasProperty(propertyName))
-                                 returnProperties.add(new JsonObject().put(propertyName, node.getProperty(propertyName)));
+                           final JsonArray properties = message.body().getJsonArray("properties");
+                           if (properties != null) {
+                              for (Object tmp : properties) {
+                                 String propertyName = (String) tmp;
+                                 if (node.hasProperty(propertyName))
+                                    returnProperties.add(new JsonObject().put(propertyName, node.getProperty(propertyName)));
+                              }
                            }
                            nodeResult.put("properties", returnProperties);
 
@@ -280,6 +283,32 @@ public class NeoVerticle extends BaseNeoVerticle {
                         });
 
                         result = VertxUtil.newSuccess(nodes);
+                        break;
+
+                     case "findNodes":
+
+                        final JsonArray foundNodes = new JsonArray();
+                        model.findNodes(Label.label(message.body().getString("label")), message.body().getString("key"), message.body().getValue("value")).forEachRemaining(node -> {
+
+                           final JsonObject nodeResult = new JsonObject().
+                                 put("uuid", uuidOf(node).toString());
+
+                           // select which node-properties to return, from parameters:
+                           final JsonArray returnProperties = new JsonArray();
+                           final JsonArray properties = message.body().getJsonArray("properties");
+                           if (properties != null) {
+                              for (Object tmp : properties) {
+                                 String propertyName = (String) tmp;
+                                 if (node.hasProperty(propertyName))
+                                    returnProperties.add(new JsonObject().put(propertyName, node.getProperty(propertyName)));
+                              }
+                           }
+                           nodeResult.put("properties", returnProperties);
+
+                           foundNodes.add(nodeResult);
+                        });
+
+                        result = VertxUtil.newSuccess(foundNodes);
                         break;
 
                      case "executeCypher":

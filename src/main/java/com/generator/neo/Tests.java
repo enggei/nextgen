@@ -36,7 +36,7 @@ import static org.junit.Assert.assertTrue;
  * Created by Ernst Sognnes on 08.07.17.
  */
 public class Tests {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Tests.class);
 	/*
 
 	CALL db.constraints();
@@ -138,14 +138,14 @@ public class Tests {
 
       assertTrue("node4 does not contain property \"int\"", node4.hasProperty("int"));
 
-      log.info(node4);
+      log.info(node4.toString());
 
       node4 = remote.findOrCreate(Label.label("Blah"), "nisse", "fant",
          "dings", "boms");
 
       assertTrue("node4 does not contain property \"dings\"", node4.hasProperty("dings"));
 
-      log.info(node4);
+      log.info(node4.toString());
    }
 
    //@Test
@@ -158,7 +158,7 @@ public class Tests {
       log.info("Iterator:");
       ResourceIterator<org.neo4j.graphdb.Relationship> iterator = allRelationships.iterator();
       while (iterator.hasNext()) {
-         log.info(iterator.next());
+         log.info(iterator.next().toString());
       }
 
       log.info("Stream:");
@@ -177,7 +177,7 @@ public class Tests {
 
       final org.neo4j.graphdb.Node node1 = neoModel.newNode(uuid1, "key", "value", "number", 83);
 
-      log.info(node1);
+      log.info(node1.toString());
 
       Label kookoo = newLabel("Gjøkur");
 
@@ -185,13 +185,13 @@ public class Tests {
 
       assertTrue(node1.hasLabel(kookoo));
 
-      log.info(node1);
+      log.info(node1.toString());
 
       final org.neo4j.graphdb.Node node2 = neoModel.createNode(kookoo);
 
       assertTrue(node2.hasLabel(kookoo));
 
-      log.info(node2);
+      log.info(node2.toString());
 
       RelationshipType bird = newRelationshipType("Undulat");
 
@@ -205,7 +205,7 @@ public class Tests {
       assertTrue(node1.hasRelationship(bird));
       assertTrue(node2.hasRelationship(bird));
 
-      log.info(relationship);
+      log.info(relationship.toString());
 
 
    }
@@ -239,7 +239,7 @@ public class Tests {
       assertTrue(node1cached.hasProperty("jalla"));
 //		assertEquals(node1, updated1);
 
-      log.info(node1);
+      log.info(node1.toString());
 
       RemoteRelationship rel1 = (RemoteRelationship)node2.createRelationshipTo(node1cached, newRelationshipType("TJA"));
       RemoteRelationship rel1cached = getCachedRelationship(rel1.getUUID());
@@ -248,7 +248,7 @@ public class Tests {
 
       rel1cached.setProperty("something", true);
 
-      log.info(rel1);
+      log.info(rel1.toString());
 
       assertTrue(rel1.hasProperty("something"));
    }

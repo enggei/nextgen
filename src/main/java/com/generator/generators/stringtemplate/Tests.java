@@ -12,7 +12,7 @@ import java.io.IOException;
  * Created 07.09.17.
  */
 public class Tests {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Tests.class);
 //   //@Test
 //   public void testStatementAndRender() throws IOException {
 //      final TemplateGroupGroup group = new TemplateGroupGroup();
@@ -92,7 +92,7 @@ public class Tests {
       final TemplateGroupGroup.stgST x = templateGroupGroup.newstg().
             setDelimiter("~").
             addTemplatesValue(templateST);
-      log.info(x);
+      log.info(x.toString());
    }
 
    //@Test
@@ -107,7 +107,7 @@ public class Tests {
                   setName("hello").
                   setContent("Hello %name%!").
                   addParamsValue("name"));
-      log.info(stgST);
+      log.info(stgST.toString());
 
       final STGParser parser = new STGParser(new CommonTokenStream(new STGLexer(CharStreams.fromString(stgST.toString()))));
       final STGParserBaseListener listener = new STGParserBaseListener();
@@ -134,6 +134,6 @@ public class Tests {
       };
       new ParseTreeWalker().walk(listener, parser.template());
 
-      log.info(templateST.setContent(content));
+      log.info(templateST.setContent(content).toString());
    }
 }

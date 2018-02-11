@@ -14,7 +14,7 @@ import static com.generator.util.NeoUtil.*;
  * Created 20.09.17.
  */
 public abstract class DomainVisitor<T> implements Visitor<T> {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(DomainVisitor.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DomainVisitor.class);
    private final Set<Relationship> visitedRelations = new LinkedHashSet<>();
 
    protected final Stack<Node> nodeStack = new Stack<>();

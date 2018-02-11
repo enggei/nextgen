@@ -14,7 +14,7 @@ import static com.generator.util.MySQLUtil.preprocessSQL;
  */
 public class MySQLSession {
 
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(MySQLSession.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MySQLSession.class);
 
    private final Connection connection;
    private final String database;

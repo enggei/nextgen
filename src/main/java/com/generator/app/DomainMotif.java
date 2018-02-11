@@ -16,7 +16,7 @@ import static com.generator.util.NeoUtil.*;
  */
 public class DomainMotif {
 
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(DomainMotif.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DomainMotif.class);
 
    // Domain utility-methods
 

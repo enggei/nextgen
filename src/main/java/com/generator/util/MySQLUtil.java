@@ -8,7 +8,7 @@ import java.math.BigInteger;
  */
 public class MySQLUtil {
 
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(MySQLUtil.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MySQLUtil.class);
 
    public static Object valueMapping(Object value) {
 

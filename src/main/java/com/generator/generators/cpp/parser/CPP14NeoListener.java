@@ -6,7 +6,7 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class CPP14NeoListener extends CPP14BaseListener {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(CPP14NeoListener.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CPP14NeoListener.class);
 
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");

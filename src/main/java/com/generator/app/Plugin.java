@@ -22,7 +22,7 @@ import static com.generator.util.NeoUtil.getNameAndLabelsFrom;
  */
 public abstract class Plugin {
 
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Plugin.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Plugin.class);
 
    protected final App app;
    protected final String name;

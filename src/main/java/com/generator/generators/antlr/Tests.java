@@ -22,7 +22,7 @@ import java.util.function.Function;
  * Created 25.08.17.
  */
 public class Tests {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Tests.class);
    //@Test
    public void createAntlrDomainPluginFromAntlrGrammar() throws IOException {
 
@@ -166,7 +166,7 @@ public class Tests {
 
       new ParseTreeWalker().walk(listener, new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "csv/parser/CSV.g4")))).grammarSpec());
 
-      log.info(stgST);
+      log.info(stgST.toString());
    }
 
    private class GrammarSymbol {
@@ -428,7 +428,7 @@ public class Tests {
             addAlternativesValue("tokensSpec").
             addAlternativesValue("channelsSpec").
             addAlternativesValue("action"));
-      log.info(grammarST);
+      log.info(grammarST.toString());
    }
 
    //@Test

@@ -40,25 +40,22 @@ public class Tests {
       handlers.put("com.generator.generators.domain.DomainVisitor", new DomainVisitorClassHandler());
       handlers.put("com.generator.util.FileUtil", new FileUtilClassHandler());
 
-      FileUtil.readString(new File("/home/goe/projects/nextgen/nextgen.log"), new FileUtil.LineHandler() {
-         @Override
-         public boolean handleLine(String line) {
-            final String timestamp = line.substring(0, 23);
-            final int endStatusIndex = line.indexOf(" - ", 25);
-            final String status = line.substring(25, endStatusIndex).trim();
-            final int endClassIndex = line.indexOf(" - ", endStatusIndex + 3);
-            final String className = line.substring(endStatusIndex + 3, endClassIndex);
-            final String content = line.substring(endClassIndex + 3);
-            final JsonObject logEvent = new JsonObject().put("timestamp", timestamp).put("status", status).put("class", className).put("content", content);
+      FileUtil.readString(new File("/home/goe/projects/nextgen/nextgen.log"), line -> {
+         final String timestamp = line.substring(0, 23);
+         final int endStatusIndex = line.indexOf(" - ", 25);
+         final String status = line.substring(25, endStatusIndex).trim();
+         final int endClassIndex = line.indexOf(" - ", endStatusIndex + 3);
+         final String className = line.substring(endStatusIndex + 3, endClassIndex);
+         final String content = line.substring(endClassIndex + 3);
+         final JsonObject logEvent = new JsonObject().put("timestamp", timestamp).put("status", status).put("class", className).put("content", content);
 
-            final LogClassHandler logClassHandler = handlers.get(className);
-            if (logClassHandler == null)
-               logClasses.add(className);
-            else
-               logClassHandler.handle(logEvent);
+         final LogClassHandler logClassHandler = handlers.get(className);
+         if (logClassHandler == null)
+            logClasses.add(className);
+         else
+            logClassHandler.handle(logEvent);
 
-            return false;
-         }
+         return false;
       });
 
       for (LogClassHandler logClassHandler : handlers.values()) {

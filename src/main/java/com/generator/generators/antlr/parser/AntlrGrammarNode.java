@@ -9,7 +9,7 @@ import java.util.UUID;
  * Created 16.10.17.
  */
 public class AntlrGrammarNode {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(AntlrGrammarNode.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AntlrGrammarNode.class);
    private final UUID uuid = UUID.randomUUID();
 
    protected String type;

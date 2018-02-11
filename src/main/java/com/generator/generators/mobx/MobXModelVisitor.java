@@ -13,7 +13,7 @@ import java.util.Stack;
  * Created 20.09.17.
  */
 public class MobXModelVisitor extends DomainVisitor<MobXGroup.ModelST> {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(MobXModelVisitor.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MobXModelVisitor.class);
    private final MobXGroup mobXGroup = new MobXGroup();
    private final Stack<MobXGroup.ModelST> modelStack = new Stack<>();
 

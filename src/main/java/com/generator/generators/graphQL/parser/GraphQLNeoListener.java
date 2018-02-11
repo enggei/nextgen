@@ -6,7 +6,7 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class GraphQLNeoListener extends GraphQLBaseListener {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(GraphQLNeoListener.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GraphQLNeoListener.class);
 
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");

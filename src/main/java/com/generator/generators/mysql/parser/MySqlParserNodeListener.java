@@ -2,7 +2,7 @@ package com.generator.generators.mysql.parser;
 
 public class MySqlParserNodeListener extends MySqlParserBaseListener {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(MySqlParserNodeListener.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MySqlParserNodeListener.class);
 
    public static class Node {
 

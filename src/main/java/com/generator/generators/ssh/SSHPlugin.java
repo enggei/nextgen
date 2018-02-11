@@ -37,7 +37,7 @@ import static com.generator.util.NeoUtil.*;
  */
 public class SSHPlugin extends SSHDomainPlugin {
 
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(SSHPlugin.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SSHPlugin.class);
 
    public static void cleanupPreviousSessions(NeoModel graph) {
       graph.findNodes(Entities.Host).forEachRemaining(hostNode -> outgoing(hostNode, Relations.SESSIONS).forEach(sessionRelation -> {

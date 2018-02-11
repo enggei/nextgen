@@ -8,7 +8,7 @@ import java.io.IOException;
 
 
 public class Tests {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Tests.class);
    //@Test
    public void testProjectGroup() throws IOException {
 
@@ -26,7 +26,7 @@ public class Tests {
             addGeneratorsValue("Maven", ProjectConstants.GENERATORS_PACKAGE + ".maven").
             addGeneratorsValue("BerkeleyDB", ProjectConstants.GENERATORS_PACKAGE + ".berkeleyDB").
             addGeneratorsValue("Html5", ProjectConstants.GENERATORS_PACKAGE + ".html5");
-      log.info(projectST);
+      log.info(projectST.toString());
       GeneratedFile.newJavaFile(ProjectConstants.TEST_ROOT, ProjectConstants.TEST_PACKAGE + ".project", "TestProject").write(projectST);
    }
 }

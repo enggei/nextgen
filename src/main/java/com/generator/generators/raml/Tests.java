@@ -3,7 +3,7 @@ package com.generator.generators.raml;
 import org.junit.Test;
 
 public class Tests {
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Tests.class);
 	public static void main(String[] args) {
 		new Tests().testRamlGroup();
 	}
@@ -18,6 +18,6 @@ public class Tests {
 			setBaseUri("http://localhost:8080/api").
 			setVersion("v1");
 
-		log.info(loopsi);
+		log.info(loopsi.toString());
 	}
 }

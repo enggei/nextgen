@@ -10,7 +10,7 @@ import io.vertx.core.json.JsonObject;
 
 public class BaseServerVerticle extends AbstractVerticle {
 
-   protected final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(BaseServerVerticle.class);
+   protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BaseServerVerticle.class);
 
    @Override
    public void start(Future<Void> startFuture) throws Exception {

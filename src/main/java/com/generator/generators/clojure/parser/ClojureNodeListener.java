@@ -2,7 +2,7 @@ package com.generator.generators.clojure.parser;
 
 public class ClojureNodeListener extends ClojureBaseListener {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ClojureNodeListener.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ClojureNodeListener.class);
 
    public static class Node {
 

@@ -24,7 +24,7 @@ import java.awt.event.ActionEvent;
  */
 public class JsonPlugin extends JsonDomainPlugin {
 
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(JsonPlugin.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JsonPlugin.class);
 
    private static final JsonGroup jsonGroup = new JsonGroup();
 

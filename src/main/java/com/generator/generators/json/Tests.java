@@ -19,7 +19,7 @@ import java.util.*;
  * Created 08.09.17.
  */
 public class Tests {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Tests.class);
 
 
    //@Test
@@ -29,7 +29,7 @@ public class Tests {
 
       log.info(jsonGroup.newdocument().
             addContentValue(jsonGroup.newobject().
-                  addPairsValue("name","value")));
+                  addPairsValue("name","value")).toString());
 
    }
 
@@ -118,7 +118,7 @@ public class Tests {
          log.info(uniquePath);
       }
 
-      log.info(pojoST);
+      log.info(pojoST.toString());
 
    }
 

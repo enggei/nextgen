@@ -2,7 +2,7 @@ package com.generator.generators.stringtemplate.parserg4;
 
 public class STParserNodeListener extends STParserBaseListener {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(STParserNodeListener.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STParserNodeListener.class);
 
    public static class Node {
 

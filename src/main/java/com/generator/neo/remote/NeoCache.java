@@ -8,7 +8,7 @@ import java.util.UUID;
  * Created by Ernst Sognnes on 16.07.17.
  */
 public class NeoCache {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(NeoCache.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(NeoCache.class);
    private static final Map<UUID, RemoteNode> nodeCache = new HashMap<>();
    private static final Map<UUID, RemoteRelationship> relationshipCache = new HashMap<>();
 

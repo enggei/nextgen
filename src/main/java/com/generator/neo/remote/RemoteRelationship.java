@@ -21,7 +21,7 @@ import static com.generator.util.NeoUtil.TAG_UUID;
  * Created by Ernst Sognnes on 11.07.17.
  */
 public class RemoteRelationship implements Relationship, NeoEntity {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(RemoteRelationship.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(RemoteRelationship.class);
    private final NeoDriver driver;
    private org.neo4j.driver.v1.types.Relationship driverRelationship;
 

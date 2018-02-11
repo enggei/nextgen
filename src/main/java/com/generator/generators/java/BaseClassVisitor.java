@@ -14,7 +14,7 @@ import static java.lang.reflect.Modifier.*;
  * todo: make editor for this:
  */
 public abstract class BaseClassVisitor {
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(BaseClassVisitor.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BaseClassVisitor.class);
 	protected BaseClassVisitor() {
 	}
 

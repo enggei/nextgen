@@ -24,7 +24,7 @@ import java.util.Stack;
  * Created 24.03.17.
  */
 public class Tests {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Tests.class);
    //@Test
    public void testParseSQLQuery() {
 
@@ -107,7 +107,7 @@ public class Tests {
          new ParseTreeWalker().walk(nodeListener, mySqlParser.root());
       }
 
-      log.info(output);
+      log.info(output.toString());
    }
 
    //@Test
@@ -154,7 +154,7 @@ public class Tests {
                         setType("bigint(20)")).
                   addColumnsValue(mysqlGroup.newcreateColumn().
                         setName("ColTwo").
-                        setType("varchar(255)"))));
+                        setType("varchar(255)"))).toString());
 
    }
 

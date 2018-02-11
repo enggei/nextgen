@@ -13,7 +13,7 @@ import java.util.Stack;
  * Created 09.09.17.
  */
 public class MySqlToPojoGenerator extends MySqlParserNodeListener {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(MySqlToPojoGenerator.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MySqlToPojoGenerator.class);
    private final JavaGroup javaGroup = new JavaGroup();
    private final Stack<JavaGroup.PojoST> currentPojos = new Stack<>();
 
@@ -29,7 +29,7 @@ public class MySqlToPojoGenerator extends MySqlParserNodeListener {
          final JavaGroup.PojoST pop = currentPojos.pop();
          pop.setPackage(packageName);
          if (debug)
-            log.info(pop);
+            log.info(pop.toString());
          else
             GeneratedFile.newJavaFile(root, packageName, pop.getName()).write(pop);
       }

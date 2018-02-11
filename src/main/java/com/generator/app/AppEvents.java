@@ -18,7 +18,7 @@ import java.beans.PropertyChangeSupport;
  */
 public final class AppEvents {
 
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(AppEvents.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AppEvents.class);
    
    public static final String GRAPH_NEW = "graph.new";
 
@@ -98,7 +98,7 @@ public final class AppEvents {
          SwingUtilities.invokeLater(() -> {
             app.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             final long start = System.currentTimeMillis();
-            //log.info(owner.getSimpleName());
+            log.info(owner.getSimpleName());
 
             if("App".equals(owner.getSimpleName())) {
                //log.info("App." + evt.getPropertyName());

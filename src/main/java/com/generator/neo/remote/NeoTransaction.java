@@ -8,7 +8,7 @@ import org.neo4j.graphdb.Transaction;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class NeoTransaction implements Transaction {
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(NeoTransaction.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(NeoTransaction.class);
 	private final org.neo4j.driver.v1.Transaction tx;
 	private final NeoTransactionContext context;
 

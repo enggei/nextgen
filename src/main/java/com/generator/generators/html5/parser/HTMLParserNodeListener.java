@@ -2,7 +2,7 @@ package com.generator.generators.html5.parser;
 
 public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(HTMLParserNodeListener.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(HTMLParserNodeListener.class);
 
    public static class Node {
 

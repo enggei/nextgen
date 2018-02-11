@@ -17,7 +17,7 @@ import java.util.UUID;
  * Created 13.10.17.
  */
 public class Tests {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Tests.class);
    public static void main(String[] args) {
 
       // https://www.rivescript.com/docs/tutorial
@@ -63,7 +63,7 @@ public class Tests {
    public void testGroup() {
 
       final RivescriptGroup group = new RivescriptGroup();
-      log.info(group.newscript().setVersion("1.0").setName("Hello world"));
+      log.info(group.newscript().setVersion("1.0").setName("Hello world").toString());
 
       log.info(group.newscript().
             setVersion("2.0").
@@ -73,6 +73,6 @@ public class Tests {
                         setName("request").addResponsesValue("{ok}", null, null))).
             addGroupsValue(group.newvariable().
                   setName("master").
-                  setValue("localuser")));
+                  setValue("localuser")).toString());
    }
 }

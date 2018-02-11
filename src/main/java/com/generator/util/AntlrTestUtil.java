@@ -14,7 +14,7 @@ import java.nio.file.Path;
  * Created 21.10.17.
  */
 public class AntlrTestUtil {
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(AntlrTestUtil.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AntlrTestUtil.class);
 	@FunctionalInterface
 	public interface RuleTester<P extends Parser, C extends ParserRuleContext> {
 		C apply(P parser);

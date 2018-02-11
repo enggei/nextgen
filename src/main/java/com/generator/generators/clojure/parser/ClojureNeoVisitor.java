@@ -6,7 +6,7 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class ClojureNeoVisitor extends ClojureBaseVisitor<Node> {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ClojureNeoVisitor.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ClojureNeoVisitor.class);
 
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final com.generator.neo.NeoModel model;

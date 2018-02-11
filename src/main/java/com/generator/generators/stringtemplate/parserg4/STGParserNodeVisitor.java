@@ -2,7 +2,7 @@ package com.generator.generators.stringtemplate.parserg4;
 
 public class STGParserNodeVisitor extends STGParserBaseVisitor<STGParserNodeVisitor.Node> {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(STGParserNodeVisitor.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STGParserNodeVisitor.class);
 
    public static class Node {
 

@@ -17,7 +17,7 @@ import static com.generator.util.FileUtil.write;
 
 public class Tests {
 
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Tests.class);
    //@Test
    public void testTransferService() throws IOException {
 

@@ -11,7 +11,7 @@ import org.junit.Test;
 import java.io.IOException;
 
 public class Tests {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Tests.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Tests.class);
    //@Test
    public void testXMLParser() throws IOException {
       final XMLParser parser = new XMLParser(new CommonTokenStream(new XMLLexer(CharStreams.fromFileName("pom.xml"))));
@@ -44,7 +44,7 @@ public class Tests {
                         addChildrenValue("4.0.0")).
                   addChildrenValue(xmlGroup.newelement().
                         setName("groupId").
-                        addChildrenValue("com.nextgen"))));
+                        addChildrenValue("com.nextgen"))).toString());
 
    }
 }

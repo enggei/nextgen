@@ -2,7 +2,7 @@ package com.generator.generators.json.parser;
 
 public class JSONNodeVisitor extends JSONBaseVisitor<JSONNodeVisitor.Node> {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(JSONNodeVisitor.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JSONNodeVisitor.class);
 
    public static class Node {
 

@@ -2,7 +2,7 @@ package com.generator.generators.css.parser;
 
 public class css3NodeListener extends css3BaseListener {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(css3NodeListener.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(css3NodeListener.class);
 
    public static class Node {
 

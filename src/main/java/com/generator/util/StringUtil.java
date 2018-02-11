@@ -17,13 +17,13 @@ import java.util.stream.Collectors;
  * Time: 19:29:33
  */
 public final class StringUtil {
-   private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(StringUtil.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(StringUtil.class);
 
    private static final Random random = new Random(System.currentTimeMillis());
 
    public static void main(String[] args) {
       for (int i = 0; i < 1000; i++) {
-         log.info(randomCharacter());
+         log.info(randomCharacter()+"");
       }
    }
 
