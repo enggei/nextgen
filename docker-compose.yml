@@ -107,8 +107,24 @@ services:
     restart: always
     environment:
       - JAVA_OPTS= -Xms512M -Xmx1024M -Dhazelcast.config=/opt/hazelcast/config_ext/hazelcast.xml
+    ports:
+      - "127.0.0.1:5701:5701"
     volumes:
       - ${HAZELCAST_CONFIG_FOLDER}:/opt/hazelcast/config_ext
+    networks:
+      - platform
+
+  vertx-test:
+    image: ${DOCKER_REGISTRY}/nextgen/vertx-test:${TAG}
+    ports:
+      - "127.0.0.1:8080:8080"
+    networks:
+      - platform
+
+  vertx-fatjar-test:
+    image: ${DOCKER_REGISTRY}/nextgen/vertx-fatjar-test:${TAG}
+    ports:
+      - "127.0.0.1:8081:8080"
     networks:
       - platform
 

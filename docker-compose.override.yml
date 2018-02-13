@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  stardog:
+    build: docker/stardog
+    environment:
+     - STARDOG_JAVA_ARGS= -Xmx1g -XX:MaxDirectMemorySize=1g
+
+  elasticsearch:
+    build: docker/elasticsearch
+
+  elasticsearchlogs:
+    build: docker/elasticsearch-logs
+
+  kibana:
+    build: docker/kibana
+
+  fluentd:
+    build: docker/fluentd
+
+  nginx:
+    build: docker/nginx
+
+  gitserver:
+    build: docker/git-server
+
+  vertx-test:
+    build: components/vertx-test
+
+  vertx-fatjar-test:
+    build: components/vertx-fatjar-test

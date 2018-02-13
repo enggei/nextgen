@@ -31,6 +31,15 @@ start() {
   return $?
 }
 
+buildComponent () {
+  mvn install -T 2C -pl components/$1 -am -DskipTests -B
+  if [[ "${2}" != "install" ]] ; then
+    docker-compose build $1
+    docker-compose up -d $1
+#    docker-compose restart nginx
+  fi
+}
+
 sha1check() {
   if [ "$#" -ne 2 ]; then
     echo "sha1check(): wrong number of arguments, expecting 2"
@@ -174,7 +183,7 @@ echo "
 
 case $1 in
   all)
-#    declare -a containers=("stardog" "elasticsearch" "elasticsearchlogs" "kibana" "fluentd" "web" "gitserver" "hazelcast" "vertx")
+#    declare -a containers=("stardog" "elasticsearch" "elasticsearchlogs" "kibana" "fluentd" "web" "gitserver" "hazelcast")
     prepareElasticSearch
 
     docker-compose build
@@ -183,8 +192,9 @@ case $1 in
     docker-compose up -d fluentd
     sleep 5
     docker-compose up -d hazelcast
-    sleep 5
-    docker-compose up -d vertx
+    # Vertx components
+    buildComponent vertx-test
+
     sleep 5
     docker-compose up -d
     docker-compose restart nginx
@@ -194,6 +204,10 @@ case $1 in
 
   stardog | elasticsearchlogs | kibana | fluentd | web | gitserver | hazelcast)
     build $1 && start $1
+    ;;
+
+  vertx-test | vertx-fatjar-test)
+    buildComponent $1
     ;;
 
   elasticsearch)
@@ -219,6 +233,8 @@ case $1 in
   - web
   - stardog
   - hazelcast
+  - vertx-test
+  - vertx-fatjar-test
 "
     ;;
   *)

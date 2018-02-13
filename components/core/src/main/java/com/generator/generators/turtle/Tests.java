@@ -34,7 +34,7 @@ public class Tests {
 		Class pc = TurtleParser.class;
 
 		testParserRule(nlc, lc, pc, parser -> ((TurtleParser)parser).turtleDoc(),
-			fileSystem.getPath(workDir + "Test.scala"),
+			fileSystem.getPath(workDir + "Vehicle.ttl"),
 			true);
 	}
 }
