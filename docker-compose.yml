@@ -1,38 +1,38 @@
 version: "3"
 
 services:
-  stardog:
-    image: ${DOCKER_REGISTRY}/stardog:${TAG}
-#    restart: always
-    build:
-      args:
-        - STARDOG_VERSION=${STARDOG_VERSION}
-    environment:
-     - STARDOG_JAVA_ARGS=-Xms3g -Xmx3g -XX:MaxDirectMemorySize=8g
-#     - STARDOG_FLAGS=--upgrade
-    ports:
-      - "127.0.0.1:5820:5820"
-    volumes:
-      - ${DOCKER_BASE_DIR}/stardog:/home/stardog/data
-      - $PWD/stardog/production-license:/production-license
-    networks:
-      - platform
+#  stardog:
+#    image: ${DOCKER_REGISTRY}/stardog:${TAG}
+##    restart: always
+#    build:
+#      args:
+#        - STARDOG_VERSION=${STARDOG_VERSION}
+#    environment:
+#     - STARDOG_JAVA_ARGS=-Xms3g -Xmx3g -XX:MaxDirectMemorySize=8g
+##     - STARDOG_FLAGS=--upgrade
+#    ports:
+#      - "127.0.0.1:5820:5820"
+#    volumes:
+#      - ${DOCKER_BASE_DIR}/stardog:/home/stardog/data
+#      - $PWD/stardog/production-license:/production-license
+#    networks:
+#      - platform
 
-  elasticsearch:
-    image: ${DOCKER_REGISTRY}/elasticsearch:${TAG}
-#    restart: always
-    environment:
-#     - cluster.name=docker-cluster
-#     - bootstrap.memory_lock=true
-     - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
-    ports:
-      - "127.0.0.1:9300:9300"
-      - "127.0.0.1:9200:9200"
-    volumes:
-      - ${DOCKER_BASE_DIR}/elasticsearch:/usr/share/elasticsearch/data
-    networks:
-      - efk
-      - platform
+#  elasticsearch:
+#    image: ${DOCKER_REGISTRY}/elasticsearch:${TAG}
+##    restart: always
+#    environment:
+##     - cluster.name=docker-cluster
+##     - bootstrap.memory_lock=true
+#     - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+#    ports:
+#      - "127.0.0.1:9300:9300"
+#      - "127.0.0.1:9200:9200"
+#    volumes:
+#      - ${DOCKER_BASE_DIR}/elasticsearch:/usr/share/elasticsearch/data
+#    networks:
+#      - efk
+#      - platform
 
   elasticsearchlogs:
     image: ${DOCKER_REGISTRY}/elasticsearch-logs:${TAG}
@@ -53,7 +53,7 @@ services:
     ports:
       - "127.0.0.1:5601:5601"
     volumes:
-      - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+      - ./docker/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
     depends_on:
       - elasticsearchlogs
     networks:
@@ -69,13 +69,13 @@ services:
     depends_on:
       - elasticsearchlogs
     volumes:
-      - ./fluentd/conf:/fluentd/etc
+      - ./docker/fluentd/conf:/fluentd/etc
     networks:
       - efk
       - platform
       - frontend
 
-  web:
+  nginx:
     image: nginx
 #    restart: always
     ports:
@@ -116,15 +116,15 @@ services:
 
   vertx-test:
     image: ${DOCKER_REGISTRY}/nextgen/vertx-test:${TAG}
-    ports:
-      - "127.0.0.1:8080:8080"
+#    ports:
+#      - "127.0.0.1:8080:8080"
     networks:
       - platform
 
   vertx-fatjar-test:
     image: ${DOCKER_REGISTRY}/nextgen/vertx-fatjar-test:${TAG}
-    ports:
-      - "127.0.0.1:8081:8080"
+#    ports:
+#      - "127.0.0.1:8081:8080"
     networks:
       - platform
 

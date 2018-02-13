@@ -184,7 +184,7 @@ echo "
 case $1 in
   all)
 #    declare -a containers=("stardog" "elasticsearch" "elasticsearchlogs" "kibana" "fluentd" "web" "gitserver" "hazelcast")
-    prepareElasticSearch
+    prepareElasticSearch docker/elasticsearch
 
     docker-compose build
     docker-compose up -d elasticsearchlogs
@@ -194,6 +194,7 @@ case $1 in
     docker-compose up -d hazelcast
     # Vertx components
     buildComponent vertx-test
+    buildComponent vertx-fatjar-test
 
     sleep 5
     docker-compose up -d
@@ -202,7 +203,7 @@ case $1 in
     waitForDocker
     ;;
 
-  stardog | elasticsearchlogs | kibana | fluentd | web | gitserver | hazelcast)
+  stardog | elasticsearchlogs | kibana | fluentd | nginx | gitserver | hazelcast)
     build $1 && start $1
     ;;
 
@@ -217,7 +218,7 @@ case $1 in
     ;;
 
   efk)
-    declare -a containers=("elasticsearchlogs" "kibana" "fluentd" "web")
+    declare -a containers=("elasticsearchlogs" "kibana" "fluentd")
     buildAndStart containers
     ;;
 
@@ -230,7 +231,7 @@ case $1 in
   - elasticsearchlogs
   - kibana
   - fluentd
-  - web
+  - nginx
   - stardog
   - hazelcast
   - vertx-test
