@@ -1,5 +1,7 @@
 FROM fluent/fluentd:stable
 
+ADD ./conf/fluent.conf /fluentd/etc/fluent.conf
+
 RUN ["gem", "install", "fluent-plugin-elasticsearch", "--no-rdoc", "--no-ri"]
 #RUN ["gem", "install", "fluent-plugin-rename-key", "--no-rdoc", "--no-ri"]
 #RUN ["gem", "install", "fluent-plugin-rewrite-tag-filter", "--no-rdoc", "--no-ri"]

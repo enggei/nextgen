@@ -68,8 +68,6 @@ services:
       - "127.0.0.1:24224:24224/udp"
     depends_on:
       - elasticsearchlogs
-    volumes:
-      - ./docker/fluentd/conf:/fluentd/etc
     networks:
       - efk
       - platform
@@ -91,16 +89,16 @@ services:
       - platform
       - frontend
 
-  gitserver:
-    image: ${DOCKER_REGISTRY}/git-server:${TAG}
-    restart: always
-    ports:
-      - "127.0.0.1:2222:22"
-    volumes:
-      - ${GIT_SERVER_KEYS}:/git-server/keys
-      - git-server-repos:/git-server/repos
-    networks:
-      - platform
+#  gitserver:
+#    image: ${DOCKER_REGISTRY}/git-server:${TAG}
+#    restart: always
+#    ports:
+#      - "127.0.0.1:2222:22"
+#    volumes:
+#      - ${GIT_SERVER_KEYS}:/git-server/keys
+#      - git-server-repos:/git-server/repos
+#    networks:
+#      - platform
 
   hazelcast:
     image: hazelcast/hazelcast
@@ -128,8 +126,8 @@ services:
     networks:
       - platform
 
-volumes:
-  git-server-repos:
+#volumes:
+#  git-server-repos:
 
 networks:
   efk:
