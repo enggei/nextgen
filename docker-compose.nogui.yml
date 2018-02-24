@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  frontend:
+    build:
+      context: docker/frontend
+      dockerfile: Dockerfile-nogui
+
+  nginx:
+    build:
+      context: docker/nginx
+      dockerfile: Dockerfile-nogui

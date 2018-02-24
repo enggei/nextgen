@@ -29,3 +29,12 @@ services:
 
   vertx-fatjar-test:
     build: components/vertx-fatjar-test
+
+#  api:
+#    build: components/api
+#    environment:
+##      - JAVA_OPTS= -ea -Xmx1024M -Djava.security.egd=file:/dev/./urandom
+#      - JAVA_OPTS= -ea -Djava.security.egd=file:/dev/./urandom
+
+  frontend:
+    build: docker/frontend

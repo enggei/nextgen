@@ -114,17 +114,36 @@ services:
 
   vertx-test:
     image: ${DOCKER_REGISTRY}/nextgen/vertx-test:${TAG}
-#    ports:
-#      - "127.0.0.1:8080:8080"
     networks:
       - platform
 
   vertx-fatjar-test:
     image: ${DOCKER_REGISTRY}/nextgen/vertx-fatjar-test:${TAG}
-#    ports:
-#      - "127.0.0.1:8081:8080"
     networks:
       - platform
+
+#  api:
+#    image: ${DOCKER_REGISTRY}/nextgen/api:${TAG}
+#    restart: always
+#    environment:
+#      - BASE_URL=${BASE_URL}
+#    ports:
+#      - "127.0.0.1:8180:8080"
+#    depends_on:
+#      - elasticsearchlogs
+#      - fluentd
+#    logging:
+#      driver: fluentd
+#      options:
+#        fluentd-address: localhost:24224
+#    networks:
+#      platform:
+
+  frontend:
+    image: ${DOCKER_REGISTRY}/nextgen/frontend:${TAG}
+    restart: always
+    networks:
+      platform:
 
 #volumes:
 #  git-server-repos:

@@ -40,6 +40,29 @@ buildComponent () {
   fi
 }
 
+updateFrontend() {
+  cd docker/frontend
+
+  if [ ! -d "src/nextgen-frontend" ]; then
+    git clone ssh://git@github.com:sogern/nextgen-frontend.git src/nextgen-frontend
+    ./build.sh
+  fi
+
+  cd src/nextgen-frontend
+  git fetch
+
+  if  git status | grep -q "Your branch is up-to-date with 'origin/" && ! $1; then
+    cd ../..
+  else
+    git pull
+    cd ../..
+
+    ./build.sh
+  fi
+
+  cd ../..
+}
+
 sha1check() {
   if [ "$#" -ne 2 ]; then
     echo "sha1check(): wrong number of arguments, expecting 2"
@@ -182,22 +205,32 @@ echo "
 "
 
 case $1 in
-  all)
+  all | all-nogui)
 #    declare -a containers=("stardog" "elasticsearch" "elasticsearchlogs" "kibana" "fluentd" "web" "gitserver" "hazelcast")
 #    prepareElasticSearch docker/elasticsearch
 
+    if [[ "${1}" != "all" ]] ; then
+      # TODO: Find better way
+      export COMPOSE_FILE=docker-compose.yml:docker-compose.override.yml:docker-compose.nogui.yml
+    else
+        updateFrontend false
+    fi
+
+    # EFK
     docker-compose build
     docker-compose up -d elasticsearchlogs
     sleep 5
     docker-compose up -d fluentd
     sleep 5
     docker-compose up -d hazelcast
-    # Vertx components
+
+    # Components
     buildComponent vertx-test
     buildComponent vertx-fatjar-test
 
     docker-compose up -d
 
+    # Wait for everything to calm down
     waitForDocker
     docker-compose restart nginx
     ;;
@@ -221,18 +254,28 @@ case $1 in
     buildAndStart containers
     ;;
 
+  frontend)
+    updateFrontend true
+    docker-compose build frontend
+    docker-compose up -d frontend
+    sleep 2
+    docker-compose restart nginx
+    ;;
+
   list)
     echo -e "Build options:\n
   - all
+  - all-nogui
   - efk
-  - gitserver
   - elasticsearch
   - elasticsearchlogs
-  - kibana
   - fluentd
+  - frontend
+  - gitserver
+  - hazelcast
+  - kibana
   - nginx
   - stardog
-  - hazelcast
   - vertx-test
   - vertx-fatjar-test
 "
