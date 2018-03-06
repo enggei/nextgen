@@ -42,6 +42,14 @@ public final class VertxGroup {
 
 	}
 
+   public NeoVerticleST newNeoVerticle() {
+      return new NeoVerticleST(stGroup);
+   }
+
+   public ServerST newServer() {
+      return new ServerST(stGroup);
+   }
+
    public VerticleST newVerticle() {
       return new VerticleST(stGroup);
    }
@@ -64,6 +72,176 @@ public final class VertxGroup {
 
    public BaseRouterVerticleST newBaseRouterVerticle() {
       return new BaseRouterVerticleST(stGroup);
+   }
+
+   public final class NeoVerticleST implements VertxGroupTemplate {
+
+      private java.util.Set<java.util.Map<String, Object>> _actions = new java.util.LinkedHashSet<>();
+      private Object _name;
+      private Object _packageName;
+
+      private final ST template;
+
+      private NeoVerticleST(STGroup group) {
+   		template = group.getInstanceOf("NeoVerticle");
+   	}
+
+      public NeoVerticleST addActionsValue(Object address_, Object name_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("address", (address_ == null || address_.toString().length() == 0) ? null : address_);
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	this._actions.add(map);
+
+         template.addAggr("actions.{address, name}", map.get("address"), map.get("name"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getActions() {
+      	return this._actions;
+      }
+
+      public NeoVerticleST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      public NeoVerticleST setPackageName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._packageName == null) {
+            this._packageName = value;
+         	template.add("packageName", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackageName() {
+      	return (String) this._packageName;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class ServerST implements VertxGroupTemplate {
+
+      private java.util.Set<java.util.Map<String, Object>> _inbound = new java.util.LinkedHashSet<>();
+      private Object _name;
+      private java.util.Set<java.util.Map<String, Object>> _outbound = new java.util.LinkedHashSet<>();
+      private Object _package;
+      private java.util.Set<java.util.Map<String, Object>> _routes = new java.util.LinkedHashSet<>();
+      private java.util.Set<java.util.Map<String, Object>> _verticles = new java.util.LinkedHashSet<>();
+
+      private final ST template;
+
+      private ServerST(STGroup group) {
+   		template = group.getInstanceOf("Server");
+   	}
+
+      public ServerST addInboundValue(Object address_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("address", (address_ == null || address_.toString().length() == 0) ? null : address_);
+      	this._inbound.add(map);
+
+         template.addAggr("inbound.{address}", map.get("address"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getInbound() {
+      	return this._inbound;
+      }
+
+      public ServerST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      public ServerST addOutboundValue(Object address_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("address", (address_ == null || address_.toString().length() == 0) ? null : address_);
+      	this._outbound.add(map);
+
+         template.addAggr("outbound.{address}", map.get("address"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getOutbound() {
+      	return this._outbound;
+      }
+
+      public ServerST setPackage(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._package == null) {
+            this._package = value;
+         	template.add("package", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackage() {
+      	return (String) this._package;
+      }
+
+      public ServerST addRoutesValue(Object message_, Object url_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("message", (message_ == null || message_.toString().length() == 0) ? null : message_);
+      	map.put("url", (url_ == null || url_.toString().length() == 0) ? null : url_);
+      	this._routes.add(map);
+
+         template.addAggr("routes.{message, url}", map.get("message"), map.get("url"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getRoutes() {
+      	return this._routes;
+      }
+
+      public ServerST addVerticlesValue(Object name_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	this._verticles.add(map);
+
+         template.addAggr("verticles.{name}", map.get("name"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getVerticles() {
+      	return this._verticles;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
    }
 
    public final class VerticleST implements VertxGroupTemplate {
@@ -150,6 +328,7 @@ public final class VertxGroup {
       private Object _name;
       private Object _packageName;
       private java.util.Set<java.util.Map<String, Object>> _endpoints = new java.util.LinkedHashSet<>();
+      private java.util.Set<java.util.Map<String, Object>> _events = new java.util.LinkedHashSet<>();
 
       private final ST template;
 
@@ -202,6 +381,20 @@ public final class VertxGroup {
 
       public java.util.Set<java.util.Map<String, Object>> getEndpoints() {
       	return this._endpoints;
+      }
+
+      public RESTVerticleST addEventsValue(Object address_, Object name_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("address", (address_ == null || address_.toString().length() == 0) ? null : address_);
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	this._events.add(map);
+
+         template.addAggr("events.{address, name}", map.get("address"), map.get("name"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getEvents() {
+      	return this._events;
       }
 
       @Override
@@ -563,6 +756,175 @@ public final class VertxGroup {
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 		.append("eom() ::= <<}>>\n")
 		.append("gt() ::= \">\"\n")
+			.append("NeoVerticle(actions,name,packageName) ::= <<package ~packageName~;\n" + 
+		"\n" + 
+		"import com.ud.bk.database.EmbeddedNeoModel;\n" + 
+		"import com.ud.vertx.VertxUtil;\n" + 
+		"import io.vertx.core.AbstractVerticle;\n" + 
+		"import io.vertx.core.Future;\n" + 
+		"import io.vertx.core.Handler;\n" + 
+		"import io.vertx.core.eventbus.Message;\n" + 
+		"import io.vertx.core.json.JsonObject;\n" + 
+		"import org.neo4j.graphdb.GraphDatabaseService;\n" + 
+		"import org.neo4j.graphdb.Transaction;\n" + 
+		"import org.neo4j.graphdb.factory.GraphDatabaseFactory;\n" + 
+		"import org.neo4j.graphdb.factory.GraphDatabaseSettings;\n" + 
+		"\n" + 
+		"import java.io.File;\n" + 
+		"\n" + 
+		"import static com.ud.vertx.VertxUtil.executeBlocking;\n" + 
+		"\n" + 
+		"public abstract class ~name~ extends AbstractVerticle {\n" + 
+		"\n" + 
+		"  	protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" + 
+		"\n" + 
+		"	EmbeddedNeoModel model;\n" + 
+		"\n" + 
+		"	@Override\n" + 
+		"	public void start(Future<Void> startFuture) {\n" + 
+		"\n" + 
+		"		executeBlocking(vertx, log, new VertxUtil.Executor<JsonObject, JsonObject>() {\n" + 
+		"\n" + 
+		"         @Override\n" + 
+		"         public void onSuccess(JsonObject result) {\n" + 
+		"            log.info(\"~name~ started: \" + result.encode());\n" + 
+		"            startFuture.complete();\n" + 
+		"         }\n" + 
+		"\n" + 
+		"         @Override\n" + 
+		"         public void onFail(Throwable t) {\n" + 
+		"            log.error(\"~name~ failed: \" + t.getMessage());\n" + 
+		"            startFuture.fail(t);\n" + 
+		"         }\n" + 
+		"\n" + 
+		"         @Override\n" + 
+		"         public JsonObject execute() {\n" + 
+		"\n" + 
+		"            final GraphDatabaseService db = new GraphDatabaseFactory().\n" + 
+		"                  newEmbeddedDatabaseBuilder(new File(config().getJsonObject(\"ScanDB\").getString(\"db.path\"))).\n" + 
+		"                  setConfig(GraphDatabaseSettings.allow_store_upgrade, \"true\").\n" + 
+		"                  newGraphDatabase();\n" + 
+		"\n" + 
+		"            model = new EmbeddedNeoModel(db);\n" + 
+		"\n" + 
+		"				try (Transaction tx = model.beginTx()){\n" + 
+		"               setUpInitialData();\n" + 
+		"               tx.success();\n" + 
+		"            }\n" + 
+		"\n" + 
+		"            return new JsonObject();\n" + 
+		"         }\n" + 
+		"      });\n" + 
+		"    	\n" + 
+		"~actions:{it|\n" + 
+		"		VertxUtil.consume(vertx, deploymentID(), \"~it.address~\", log, (Handler<Message<JsonObject>~gt()~) message -> {\n" + 
+		"         log.info(\"on ~it.address~ \" + message.body().encode());\n" + 
+		"\n" + 
+		"         try (Transaction tx = model.beginTx()){\n" + 
+		"            on~it.name;format=\"capitalize\"~(tx, message);\n" + 
+		"            tx.success();\n" + 
+		"         ~eom()~      \n" + 
+		"      ~eom()~);};separator=\"\\n\"~\n" + 
+		"	}\n" + 
+		"\n" + 
+		"~actions:{it|\n" + 
+		"	protected abstract void on~it.name;format=\"capitalize\"~(Transaction tx, Message<JsonObject> message);};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"	protected void setUpInitialData() {\n" + 
+		"  	}\n" + 
+		"}>>\n")
+			.append("Server(inbound,name,outbound,package,routes,verticles) ::= <<package ~package~;\n" + 
+		"\n" + 
+		"import com.ud.vertx.VertxUtil;\n" + 
+		"import com.ud.vertx.VertxWebUtil;\n" + 
+		"import io.netty.handler.codec.http.HttpResponseStatus;\n" + 
+		"import io.vertx.core.AbstractVerticle;\n" + 
+		"import io.vertx.core.DeploymentOptions;\n" + 
+		"import io.vertx.core.Future;\n" + 
+		"import io.vertx.core.Handler;\n" + 
+		"import io.vertx.core.eventbus.Message;\n" + 
+		"import io.vertx.core.http.HttpServerOptions;\n" + 
+		"import io.vertx.core.json.JsonObject;\n" + 
+		"import io.vertx.ext.bridge.BridgeEventType;\n" + 
+		"import io.vertx.ext.web.Router;\n" + 
+		"import io.vertx.ext.web.RoutingContext;\n" + 
+		"import io.vertx.ext.web.handler.BodyHandler;\n" + 
+		"import io.vertx.ext.web.handler.StaticHandler;\n" + 
+		"import io.vertx.ext.web.handler.sockjs.BridgeOptions;\n" + 
+		"import io.vertx.ext.web.handler.sockjs.PermittedOptions;\n" + 
+		"import io.vertx.ext.web.handler.sockjs.SockJSHandler;\n" + 
+		"import org.slf4j.Logger;\n" + 
+		"import org.slf4j.LoggerFactory;\n" + 
+		"\n" + 
+		"import java.util.Map;\n" + 
+		"\n" + 
+		"import static io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST;\n" + 
+		"\n" + 
+		"/**\n" + 
+		" * Generated\n" + 
+		" */\n" + 
+		"public abstract class ~name~ extends AbstractVerticle {\n" + 
+		"\n" + 
+		"   protected static final Logger log = LoggerFactory.getLogger(~name~.class);\n" + 
+		"\n" + 
+		"   @Override\n" + 
+		"   public void start(Future<Void> startFuture) throws Exception {\n" + 
+		"      log.info(\"Starting ~name~ using config \" + config().encode());\n" + 
+		"\n" + 
+		"      VertxUtil.deploySilent(vertx, new Class[] { ~verticles:{it|\n" + 
+		"			~it.name~.class };separator=\",\\n\"~ },\n" + 
+		"            new DeploymentOptions().setConfig(config()), log);\n" + 
+		"\n" + 
+		"      final Router router = Router.router(vertx);\n" + 
+		"      router.route().handler(BodyHandler.create());\n" + 
+		"\n" + 
+		"		~routes:{it|router.get(\"~it.url~\").handler(routingContext -> forward(routingContext, \"~it.message~\"));};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"		final BridgeOptions options = new BridgeOptions()\n" + 
+		"			~outbound:{it|.addOutboundPermitted(new PermittedOptions().setAddress(\"~it.address~\"))};separator=\"\\n\"~\n" + 
+		"			~inbound:{it|.addInboundPermitted(new PermittedOptions().setAddress(\"~it.address~\"))};separator=\"\\n\"~;\n" + 
+		"\n" + 
+		"      router.route(\"/eventbus/*\").handler(SockJSHandler.create(vertx).bridge(options, event -> {\n" + 
+		"         if (event.type() == BridgeEventType.SOCKET_CREATED) \n" + 
+		"            log.info(\"A socket was created\");\n" + 
+		"         event.complete(true);\n" + 
+		"      }));\n" + 
+		"\n" + 
+		"      router.route().handler(StaticHandler.create().\n" + 
+		"            setWebRoot(config().getString(\"web.root\")).\n" + 
+		"            setIndexPage(\"/index.html\"));\n" + 
+		"\n" + 
+		"      // fallback handler (400 - BAD REQUEST)\n" + 
+		"      router.route().last().handler(routingContext -> routingContext.put(BAD_REQUEST.reasonPhrase(), routingContext.request().path()).\n" + 
+		"            fail(BAD_REQUEST.code()));\n" + 
+		"\n" + 
+		"      vertx.createHttpServer(new HttpServerOptions()).\n" + 
+		"            requestHandler(router::accept).\n" + 
+		"            listen(config().getInteger(\"content.port\"));\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	private void forward(RoutingContext routingContext, String address) {\n" + 
+		"      log.info(debug(routingContext) + \" => \" + address);\n" + 
+		"      VertxUtil.sendJsonMessage(vertx, address, new JsonObject(), log, new VertxUtil.SuccessHandler<Message<JsonObject>~gt()~() {\n" + 
+		"         @Override\n" + 
+		"         public void onSuccess(Message<JsonObject> result) {\n" + 
+		"            VertxWebUtil.newJsonResponse(routingContext, HttpResponseStatus.OK, result.body());\n" + 
+		"         }\n" + 
+		"\n" + 
+		"         @Override\n" + 
+		"         public void onFail(Throwable t) {\n" + 
+		"            VertxWebUtil.newErrorResponse(routingContext, HttpResponseStatus.INTERNAL_SERVER_ERROR, t.getMessage());\n" + 
+		"         }\n" + 
+		"      });\n" + 
+		"   }\n" + 
+		"\n" + 
+		"	private static String debug(RoutingContext request) {\n" + 
+		"      final StringBuilder out = new StringBuilder();\n" + 
+		"      for (Map.Entry<String, String> param : request.request().params())\n" + 
+		"         out.append(param.getKey()).append(\"=\").append(param.getValue()).append(\"\\n\");\n" + 
+		"      return request.request().uri() + \" \" + out.toString().trim();\n" + 
+		"   }\n" + 
+		"}>>\n")
 			.append("Verticle(incoming,name,package,outgoing) ::= <<package ~package~;\n" + 
 		"\n" + 
 		"import com.generator.util.VertxUtil;\n" + 
@@ -611,42 +973,56 @@ public final class VertxGroup {
 		"\n" + 
 		"	protected void handleInstanceMessage(Message<JsonObject> message) { log.info(\"handle instance message \" + deploymentID() + \" \" + message.body().toString()); }\n" + 
 		"}>>\n")
-			.append("RESTVerticle(name,packageName,endpoints) ::= <<package ~packageName~;\n" + 
+			.append("RESTVerticle(name,packageName,endpoints,events) ::= <<package ~packageName~;\n" + 
 		"\n" + 
+		"import com.ud.vertx.VertxUtil;\n" + 
 		"import io.vertx.core.AbstractVerticle;\n" + 
-		"import io.vertx.core.http.HttpServerResponse;\n" + 
-		"import io.vertx.core.json.JsonArray;\n" + 
+		"import io.vertx.core.Future;\n" + 
+		"import io.vertx.core.eventbus.Message;\n" + 
 		"import io.vertx.core.json.JsonObject;\n" + 
 		"import io.vertx.ext.web.Router;\n" + 
 		"import io.vertx.ext.web.RoutingContext;\n" + 
 		"import io.vertx.ext.web.handler.BodyHandler;\n" + 
 		"\n" + 
+		"import static com.ud.vertx.VertxWebUtil.logRequest;\n" + 
+		"\n" + 
 		"public class ~name~ extends AbstractVerticle {\n" + 
 		"\n" + 
 		"  protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" + 
 		"\n" + 
-		"  @Override\n" + 
-		"  public void start() {\n" + 
+		"	@Override\n" + 
+		"	public void start(Future<Void> startFuture) {\n" + 
 		"\n" + 
-		"    setUpInitialData();\n" + 
+		"   	setUpInitialData();\n" + 
 		"\n" + 
-		"    Router router = Router.router(vertx);\n" + 
+		"    	Router router = Router.router(vertx);\n" + 
 		"\n" + 
-		"    router.route().handler(BodyHandler.create());\n" + 
-		"    ~endpoints:{it|router.~it.action;format=\"toLower\"~(\"~it.uri~\").handler(this::handle~it.name;format=\"capitalize\"~);};separator=\"\\n\"~\n" + 
+		"	   router.route().handler(BodyHandler.create());\n" + 
+		"~endpoints:{it|\n" + 
+		"		//router.~it.action;format=\"toLower\"~(\"~it.uri~\").handler(this::handle~it.name;format=\"capitalize\"~);};separator=\"\\n\"~\n" + 
 		"\n" + 
-		"    vertx.createHttpServer().requestHandler(router::accept).listen(8080);\n" + 
-		"  }\n" + 
+		"~events:{it|\n" + 
+		"		VertxUtil.consume(vertx, deploymentID(), \"~it.address~\", log, this::on~it.name;format=\"capitalize\"~);};separator=\"\\n\"~\n" + 
 		"\n" + 
-		"	~endpoints:{it|\n" + 
+		"    	//vertx.createHttpServer().requestHandler(router::accept).listen(8080);\n" + 
+		"\n" + 
+		"		startFuture.complete();\n" + 
+		"	}\n" + 
+		"\n" + 
+		"~endpoints:{it|\n" + 
 		"	protected void handle~it.name;format=\"capitalize\"~(RoutingContext routingContext) {\n" + 
-		"		log.info(\"handle~it.name~ \" + routingContext.getBodyAsString());\n" + 
-		"		\n" + 
+		"		logRequest(log, routingContext);\n" + 
 		"	~eom()~\n" + 
-		"	};separator=\"\\n\"~\n" + 
+		"};separator=\"\\n\"~\n" + 
 		"\n" + 
-		"  protected void setUpInitialData() {\n" + 
-		"  }\n" + 
+		"~events:{it|\n" + 
+		"	protected void on~it.name;format=\"capitalize\"~(Message<JsonObject> message) {\n" + 
+		"		log.info(\"on~it.name;format=\"capitalize\"~ \" + message.body().encode());\n" + 
+		"	~eom()~\n" + 
+		"};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"	protected void setUpInitialData() {\n" + 
+		"  	}\n" + 
 		"}>>\n")
 			.append("API() ::= <<package ~packageName~;\n" + 
 		"\n" + 

@@ -104,6 +104,14 @@ public class MicroservicePlugin extends MicroserviceDomainPlugin {
 
                });
 
+               outgoingMESSAGE(serviceNode.getNode(), (relationship, messageNode) -> {
+
+                  final String address = getAddressProperty(messageNode);
+                  final String name = getNameProperty(messageNode);
+
+                  restVerticleST.addEventsValue(address, name);
+               });
+
                try {
                   GeneratedFile.newJavaFile(javaSrc, packageName, serviceName).write(restVerticleST);
                } catch (IOException e1) {
@@ -118,13 +126,33 @@ public class MicroservicePlugin extends MicroserviceDomainPlugin {
                   final MobXGroup.ModelST modelST = mobXGroup.newModel().
                         setName(nameProperty);
 
-                  outgoingPROPERTY(entityNode, (relationship1, propertyNode) -> {
-
-                     modelST.addObservablesValue(getDefaultValueProperty(propertyNode), getNameProperty(propertyNode));
-                  });
+                  outgoingPROPERTY(entityNode, (relationship1, propertyNode) -> modelST.addObservablesValue(getDefaultValueProperty(propertyNode), getNameProperty(propertyNode)));
 
                   try {
                      GeneratedFile.newPlainFile(webSrc, packageName, nameProperty + ".js").write(modelST);
+                  } catch (IOException e1) {
+                     SwingUtil.showException(app, e1);
+                  }
+               });
+
+               // generate Database
+               outgoingPERSISTENCE(serviceNode.getNode(), (databaseRelation, databaseNode) -> {
+
+                  final String dbName = getNameProperty(databaseNode);
+                  final VertxGroup.NeoVerticleST neoVerticleST = vertxGroup.newNeoVerticle().
+                        setName(dbName).
+                        setPackageName(packageName);
+
+                  outgoingACTION(databaseNode, (actionRelation, actionNode) -> neoVerticleST.addActionsValue(getAddressProperty(actionNode), getNameProperty(actionNode)));
+
+                  // linking domain-entities to persist in the database
+                  incomingPERSISTENCE(databaseNode, (persistenceRelation, entityNode) -> {
+                     System.out.println("Entity " + getNameProperty(entityNode) + ":");
+                     outgoingPROPERTY(entityNode, (propertyRelation, propertyNode) -> System.out.println("\t" + getNameProperty(propertyNode)));
+                  });
+
+                  try {
+                     GeneratedFile.newJavaFile(javaSrc, packageName, dbName).write(neoVerticleST);
                   } catch (IOException e1) {
                      SwingUtil.showException(app, e1);
                   }

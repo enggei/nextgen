@@ -1537,7 +1537,7 @@ public final class JavaGroup {
 		"\n" + 
 		"	public ~name~(org.neo4j.graphdb.Node node) {\n" + 
 		"		this.uuid = (String) node.getProperty(\"_uuid\");\n" + 
-		"		~properties:{it|this.~it.name~ = node.hasProperty(\"~it.name~\") ? (~it.type~) node.getProperty(\"~it.name~\") : ~it.init~;};separator=\"\\n\"~\n" + 
+		"		~properties:{it|this.~it.name~ = node.hasProperty(\"~it.name~\") ? (~it.type~) node.getProperty(\"~it.name~\") : ~if(it.init)~~it.init~~else~null~endif~;};separator=\"\\n\"~\n" + 
 		"   }\n" + 
 		"~endif~\n" + 
 		"\n" + 

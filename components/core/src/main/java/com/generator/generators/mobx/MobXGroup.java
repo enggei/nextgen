@@ -712,9 +712,11 @@ public final class MobXGroup {
 		"\n" + 
 		"class ~name~ {\n" + 
 		"\n" + 
+		"	@observable uuid;\n" + 
 		"	~observables:{it|@observable ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
 		"\n" + 
 		"	fromJson(json) {\n" + 
+		"		this.uuid = json.uuid;\n" + 
 		"		~observables:{it|this.~it.name~ = json.~it.name~;};separator=\"\\n\"~\n" + 
 		"	}\n" + 
 		"\n" + 

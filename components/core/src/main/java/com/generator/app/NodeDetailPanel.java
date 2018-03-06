@@ -433,8 +433,10 @@ class NodeDetailPanel extends JPanel {
 
       private Set<NeoNode> getValuesAt(int[] selectedRows) {
          final Set<NeoNode> values = new LinkedHashSet<>();
-         for (int selectedRow : selectedRows)
+         for (int selectedRow : selectedRows) {
+            if (selectedRow == -1) continue;
             values.add(content.get(selectedRow).node);
+         }
          return values;
       }
 

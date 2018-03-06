@@ -59,7 +59,7 @@ public class EasyFlowPlugin extends EasyFlowDomainPlugin {
 
    @Override
    protected void handleFlow(JPopupMenu pop, NeoNode flowNode, Set<NeoNode> selectedNodes) {
-      incomingRENDERER(flowNode.getNode(), (rendererRelationship, other) -> pop.add(new App.TransactionAction("Render FSM", app) {
+      incomingRENDERER(flowNode.getNode(), (rendererRelationship, other) -> pop.add(new App.TransactionAction("Generate FSM", app) {
          @Override
          protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
             renderEasyFlow(rendererRelationship, flowNode.getNode());
