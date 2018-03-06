@@ -21,8 +21,8 @@ services:
   nginx:
     build: docker/nginx
 
-  gitserver:
-    build: docker/git-server
+#  gitserver:
+#    build: docker/git-server
 
   vertx-test:
     build: components/vertx-test
