@@ -72,7 +72,7 @@ public class MicroservicePlugin extends MicroserviceDomainPlugin {
 
                   outgoingPROPERTY(entityNode, (relationship1, propertyNode) -> {
 
-                     currentPojo.addPropertiesValue(getDefaultValueProperty(propertyNode), getTypeProperty(propertyNode), getNameProperty(propertyNode));
+                     currentPojo.addPropertiesValue(getDefaultValueProperty(propertyNode), getTypeProperty(propertyNode), getNameProperty(propertyNode), null,null,null, false);
 
                      if ("true".equals(getIsEqhaProperty(propertyNode)))
                         currentPojo.addEqhaValue(getNameProperty(propertyNode));
@@ -100,8 +100,7 @@ public class MicroservicePlugin extends MicroserviceDomainPlugin {
 
                   final String versionedURI = "/" + getVersionProperty(serviceNode.getNode(), "1") + (uri.startsWith("/") ? uri : ("/" + uri));
 
-                  restVerticleST.addEndpointsValue(endpointName, versionedURI, action);
-
+//                  restVerticleST.addEndpointsValue(endpointName, versionedURI, action);
                });
 
                outgoingMESSAGE(serviceNode.getNode(), (relationship, messageNode) -> {
@@ -109,7 +108,7 @@ public class MicroservicePlugin extends MicroserviceDomainPlugin {
                   final String address = getAddressProperty(messageNode);
                   final String name = getNameProperty(messageNode);
 
-                  restVerticleST.addEventsValue(address, name);
+                  restVerticleST.addEventsValue(null,address, name);
                });
 
                try {

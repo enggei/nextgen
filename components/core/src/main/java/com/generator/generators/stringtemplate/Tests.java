@@ -95,7 +95,7 @@ public class Tests {
       log.info(x.toString());
    }
 
-   //@Test
+   @Test
    public void teSTGParser() throws IOException {
 
       // todo STGParser from g4 grammars not working... why ?
@@ -114,7 +114,7 @@ public class Tests {
       new ParseTreeWalker().walk(listener, parser.group());
    }
 
-   //@Test
+   @Test
    public void testSTParser() throws IOException {
 
       final TemplateGroupGroup templateGroupGroup = new TemplateGroupGroup();

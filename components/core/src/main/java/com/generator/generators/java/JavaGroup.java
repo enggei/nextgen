@@ -479,14 +479,18 @@ public final class JavaGroup {
       	return (String) this._package;
       }
 
-      public PojoST addPropertiesValue(Object init_, Object type_, Object name_) {
+      public PojoST addPropertiesValue(Object init_, Object type_, Object name_, Object enum_, Object collection_, Object element_, Object isPrimitive_) {
       	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
       	map.put("init", (init_ == null || init_.toString().length() == 0) ? null : init_);
       	map.put("type", (type_ == null || type_.toString().length() == 0) ? null : type_);
       	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	map.put("enum", (enum_ == null || enum_.toString().length() == 0) ? null : enum_);
+      	map.put("collection", (collection_ == null || collection_.toString().length() == 0) ? null : collection_);
+      	map.put("element", (element_ == null || element_.toString().length() == 0) ? null : element_);
+      	map.put("isPrimitive", (isPrimitive_ == null || isPrimitive_.toString().length() == 0) ? null : isPrimitive_);
       	this._properties.add(map);
 
-         template.addAggr("properties.{init, type, name}", map.get("init"), map.get("type"), map.get("name"));
+         template.addAggr("properties.{init, type, name, enum, collection, element, isPrimitive}", map.get("init"), map.get("type"), map.get("name"), map.get("enum"), map.get("collection"), map.get("element"), map.get("isPrimitive"));
          return this;
       }
 
@@ -1504,20 +1508,34 @@ public final class JavaGroup {
 		"}>>\n")
 			.append("Pojo(classProperties,eqha,extends,implement,lexical,methods,name,package,properties,neoNode,json) ::= <<package ~package~;\n" + 
 		"\n" + 
+		"~if(neoNode)~\n" + 
+		"import org.neo4j.graphdb.GraphDatabaseService;\n" + 
+		"import org.neo4j.graphdb.Direction;\n" + 
+		"import org.neo4j.graphdb.Relationship;\n" + 
+		"import org.neo4j.graphdb.RelationshipType;\n" + 
+		"import org.neo4j.graphdb.Node;\n" + 
+		"~endif~\n" + 
+		"~if(json)~\n" + 
+		"import io.vertx.core.json.JsonObject;\n" + 
+		"import io.vertx.core.json.JsonArray;\n" + 
+		"~endif~\n" + 
+		"\n" + 
 		"public class ~name~~if(extends)~ extends ~extends~~endif~~if(implement)~ implements ~implement:{it|~it~};separator=\", \"~~endif~ {\n" + 
 		"~if(classProperties)~\n" + 
 		"	~classProperties:{it|private static final ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
 		"~endif~\n" + 
-		"\n" + 
 		"\n" + 
 		"	private final String uuid;\n" + 
 		"~if(properties)~\n" + 
 		"	~properties:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
 		"~endif~\n" + 
 		"\n" + 
-		"\n" + 
 		"	public ~name~() {\n" + 
 		"		uuid = java.util.UUID.randomUUID().toString();\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	public ~name~(String uuid) {\n" + 
+		"		this.uuid = uuid;\n" + 
 		"	}\n" + 
 		"~if(properties)~\n" + 
 		"\n" + 
@@ -1528,28 +1546,50 @@ public final class JavaGroup {
 		"\n" + 
 		"~endif~\n" + 
 		"~if(json)~\n" + 
-		"	public ~name~(io.vertx.core.json.JsonObject jsonObject) {\n" + 
+		"	public ~name~(JsonObject jsonObject) {\n" + 
 		"		this.uuid = jsonObject.getString(\"uuid\");\n" + 
-		"		~properties:{it|this.~it.name~ = jsonObject.get~it.type~(\"~it.name~\");};separator=\"\\n\"~\n" + 
+		"		~properties:{it|~if(it.collection)~for (Object o : jsonObject.getJsonArray(\"~it.name~\"))\n" + 
+		"this.~it.name~.add(~if(it.isPrimitive)~(~it.element~)o~else~new ~it.element~((JsonObject)o)~endif~);~else~this.~it.name~ = ~if(it.enum)~~it.type~.valueOf(jsonObject.getString(\"~it.name~\"))~else~jsonObject.get~it.type~(\"~it.name~\")~endif~;~endif~};separator=\"\\n\"~\n" + 
 		"   }\n" + 
 		"~endif~\n" + 
 		"~if(neoNode)~\n" + 
 		"\n" + 
-		"	public ~name~(org.neo4j.graphdb.Node node) {\n" + 
+		"	public ~name~(Node node) {\n" + 
 		"		this.uuid = (String) node.getProperty(\"_uuid\");\n" + 
-		"		~properties:{it|this.~it.name~ = node.hasProperty(\"~it.name~\") ? (~it.type~) node.getProperty(\"~it.name~\") : ~if(it.init)~~it.init~~else~null~endif~;};separator=\"\\n\"~\n" + 
+		"		~properties:{it|~if(it.collection)~node.getRelationships(Direction.OUTGOING, RelationshipType.withName(\"~it.name~\")).forEach(relationship -> ~it.name~.add(new ~it.element~(relationship.getOtherNode(node))));~else~this.~it.name~ = node.hasProperty(\"~it.name~\") ? (~it.type~) node.getProperty(\"~it.name~\") : ~if(it.init)~~it.init~~else~null~endif~;~endif~};separator=\"\\n\"~\n" + 
 		"   }\n" + 
 		"~endif~\n" + 
 		"\n" + 
+		"	public String getUuid() {\n" + 
+		"		return uuid;\n" + 
+		"	}\n" + 
+		"\n" + 
 		"~properties:{it|\n" + 
+		"~if(it.collection)~\n" + 
+		"	public Iterable<~it.element~> get~it.name;format=\"capitalize\"~() {\n" + 
+		"		return ~it.name~;\n" + 
+		"	~eom()~\n" + 
+		"\n" + 
+		"	public ~name~ addTo~it.name;format=\"capitalize\"~(~it.element~ element) {\n" + 
+		"      this.~it.name~.add(element);\n" + 
+		"		return this;\n" + 
+		"	~eom()~\n" + 
+		"	\n" + 
+		"	public boolean removeFrom~it.name;format=\"capitalize\"~(~it.element~ element) {\n" + 
+		"	   return this.~it.name~.remove(element);\n" + 
+		"   ~eom()~\n" + 
+		"~else~\n" + 
 		"	public ~it.type~ get~it.name;format=\"capitalize\"~() {\n" + 
 		"		return ~it.name~;\n" + 
 		"	~eom()~\n" + 
 		"\n" + 
-		"	public void set~it.name;format=\"capitalize\"~(~it.type~ ~it.name~) {\n" + 
+		"	public ~name~ set~it.name;format=\"capitalize\"~(~it.type~ ~it.name~) {\n" + 
 		"      this.~it.name~ = ~it.name~;\n" + 
+		"		return this;\n" + 
 		"	~eom()~\n" + 
+		"~endif~\n" + 
 		"};separator=\"\\n\"~\n" + 
+		"\n" + 
 		"~if(methods)~\n" + 
 		"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 		"\n" + 
@@ -1576,25 +1616,97 @@ public final class JavaGroup {
 		"   public String toString() {\n" + 
 		"       return ~lexical:{it|\"~it~=\" + ~it~ };separator=\" + \\\" \\\" + \"~;\n" + 
 		"   }\n" + 
+		"\n" + 
 		"~endif~\n" + 
 		"~if(json)~\n" + 
-		"\n" + 
-		"	public io.vertx.core.json.JsonObject toJson() {\n" + 
-		"		return new io.vertx.core.json.JsonObject().put(\"uuid\", uuid)~properties:{it|\n" + 
-		"			.put(\"~it.name~\", ~it.name~)};separator=\"\\n\"~;\n" + 
+		"	public JsonObject toJson() {\n" + 
+		"		final JsonObject jsonObject = new JsonObject().put(\"uuid\", uuid);\n" + 
+		"		~properties:{it|~if(it.collection)~final JsonArray ~it.name~Array = new JsonArray();\n" + 
+		"for (~it.element~ element : ~it.name~) ~it.name~Array.add(~if(it.isPrimitive)~element~else~element.toJson()~endif~);\n" + 
+		"jsonObject.put(\"~it.name~\", ~it.name~Array);~else~jsonObject.put(\"~it.name~\", ~it.name~);~endif~};separator=\"\\n\"~;\n" + 
+		"		return jsonObject;\n" + 
 		"	}\n" + 
+		"\n" + 
 		"~endif~\n" + 
 		"~if(neoNode)~\n" + 
+		"	public Node save(GraphDatabaseService graphDb) {\n" + 
 		"\n" + 
-		"	public org.neo4j.graphdb.Node merge(org.neo4j.graphdb.Node node) {\n" + 
-		"		~properties:{it|node.setProperty(\"~it.name~\", ~it.name~);};separator=\"\\n\"~\n" + 
+		"      final Node node = findOrCreate(graphDb);\n" + 
+		"\n" + 
+		"~properties:{it|\n" + 
+		"~if(it.collection)~~else~\n" + 
+		"      if (~it.name~ != null) node.setProperty(\"~it.name~\", ~it.name~);\n" + 
+		"      else if (node.hasProperty(\"~it.name~\")) node.removeProperty(\"~it.name~\");\n" + 
+		"~endif~\n" + 
+		"};separator=\"\\n\"~\n" + 
+		"\n" + 
 		"		return node;\n" + 
 		"	}\n" + 
 		"\n" + 
-		"	public org.neo4j.graphdb.Node newNode(org.neo4j.graphdb.GraphDatabaseService graphDb) {\n" + 
-		"      final org.neo4j.graphdb.Node node = graphDb.createNode(org.neo4j.graphdb.Label.label(\"~name~\"));\n" + 
-		"      node.setProperty(\"_uuid\", this.uuid);\n" + 
-		"      return merge(node);\n" + 
+		"	private Node findOrCreate(GraphDatabaseService graphDb) {\n" + 
+		"      Node node = graphDb.findNode(org.neo4j.graphdb.Label.label(\"ScanStatus\"), \"_uuid\", uuid);\n" + 
+		"      if (node == null) {\n" + 
+		"         node = graphDb.createNode(org.neo4j.graphdb.Label.label(\"ScanStatus\"));\n" + 
+		"         node.setProperty(\"_uuid\", this.uuid);\n" + 
+		"      }\n" + 
+		"      return node;\n" + 
+		"   }\n" + 
+		"\n" + 
+		"~properties:{it|~if(it.collection)~~if(it.isPrimitive)~~else~\n" + 
+		"	public ~name~ save~it.name;format=\"capitalize\"~(Node node, GraphDatabaseService graphDb) { \n" + 
+		" \n" + 
+		"		final java.util.Map<String, ~it.element~> existing = new java.util.LinkedHashMap<>();\n" + 
+		"      node.getRelationships(Direction.OUTGOING, RelationshipType.withName(\"~it.name~\")).forEach(relationship -> {\n" + 
+		"         final ~it.element~ element = new ~it.element~(relationship.getOtherNode(node));\n" + 
+		"         existing.put(element.getUuid(), element);\n" + 
+		"      ~eom()~);\n" + 
+		"\n" + 
+		"      for (~it.element~ element : ~it.name~) {\n" + 
+		"         final ~it.element~ current = existing.remove(element.getUuid());\n" + 
+		"         if (current == null) {\n" + 
+		"            // new\n" + 
+		"            node.createRelationshipTo(element.save(graphDb), RelationshipType.withName(\"~it.name~\"));\n" + 
+		"         ~eom()~ else {\n" + 
+		"            // merge\n" + 
+		"            element.save(graphDb);\n" + 
+		"         ~eom()~\n" + 
+		"      ~eom()~\n" + 
+		"\n" + 
+		"      // delete\n" + 
+		"      for (~it.element~ old : existing.values())\n" + 
+		"         old.delete(graphDb);\n" + 
+		"\n" + 
+		"      return this;\n" + 
+		"	~eom()~\n" + 
+		"~endif~~endif~\n" + 
+		"};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"	public void delete(GraphDatabaseService graphDb) {\n" + 
+		"		\n" + 
+		"		final Node node = findOrCreate(graphDb);\n" + 
+		"\n" + 
+		"~properties:{it|~if(it.collection)~		\n" + 
+		"		node.getRelationships(Direction.OUTGOING, RelationshipType.withName(\"~it.name~\")).forEach(relationship -> {\n" + 
+		"			final ~it.element~ element = new ~it.element~(relationship.getOtherNode(node));\n" + 
+		"			relationship.delete();\n" + 
+		"			element.delete(graphDb);\n" + 
+		"		~eom()~);\n" + 
+		"		~endif~\n" + 
+		"};separator=\"\\n\"~\n" + 
+		"		node.delete();\n" + 
+		"	}\n" + 
+		"~endif~\n" + 
+		"~if(json)~\n" + 
+		"\n" + 
+		"	public static boolean isValid(JsonObject jsonObject) {\n" + 
+		"		~properties:{it|~if(it.collection)~ ~else~if (jsonObject.get~if(it.enum)~String~else~~it.type~~endif~(\"~it.name~\") == null) return false;~endif~};separator=\"\\n\"~\n" + 
+		"      return true;\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonArray getErrors(JsonObject jsonObject) {\n" + 
+		"		final JsonArray errors = new JsonArray();\n" + 
+		"      ~properties:{it|~if(it.collection)~ ~else~if (jsonObject.get~if(it.enum)~String~else~~it.type~~endif~(\"~it.name~\") == null) errors.add(new JsonObject().put(\"missing\", \"~it.name~\"));~endif~};separator=\"\\n\"~\n" + 
+		"		return errors;\n" + 
 		"   }\n" + 
 		"~endif~\n" + 
 		"}>>\n")

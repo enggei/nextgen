@@ -80,7 +80,7 @@ public class Tests {
             final String value = valueTypeStack.pop();
 
             if(getPath().equals("Json -> Value -> Obj -> Pair"))
-               pojoST.addPropertiesValue(null, value, StringUtil.trimEnds(1, key));
+               pojoST.addPropertiesValue(null, value, StringUtil.trimEnds(1, key), null, null,null, false);
 
             super.exitPair(arg);
          }

@@ -58,6 +58,10 @@ public final class VertxGroup {
       return new RESTVerticleST(stGroup);
    }
 
+   public VerticleTestST newVerticleTest() {
+      return new VerticleTestST(stGroup);
+   }
+
    public APIST newAPI() {
       return new APIST(stGroup);
    }
@@ -211,13 +215,13 @@ public final class VertxGroup {
       	return (String) this._package;
       }
 
-      public ServerST addRoutesValue(Object message_, Object url_) {
+      public ServerST addRoutesValue(Object url_, Object name_) {
       	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
-      	map.put("message", (message_ == null || message_.toString().length() == 0) ? null : message_);
       	map.put("url", (url_ == null || url_.toString().length() == 0) ? null : url_);
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
       	this._routes.add(map);
 
-         template.addAggr("routes.{message, url}", map.get("message"), map.get("url"));
+         template.addAggr("routes.{url, name}", map.get("url"), map.get("name"));
          return this;
       }
 
@@ -368,14 +372,12 @@ public final class VertxGroup {
       	return (String) this._packageName;
       }
 
-      public RESTVerticleST addEndpointsValue(Object name_, Object uri_, Object action_) {
+      public RESTVerticleST addEndpointsValue(Object name_) {
       	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
       	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
-      	map.put("uri", (uri_ == null || uri_.toString().length() == 0) ? null : uri_);
-      	map.put("action", (action_ == null || action_.toString().length() == 0) ? null : action_);
       	this._endpoints.add(map);
 
-         template.addAggr("endpoints.{name, uri, action}", map.get("name"), map.get("uri"), map.get("action"));
+         template.addAggr("endpoints.{name}", map.get("name"));
          return this;
       }
 
@@ -383,18 +385,85 @@ public final class VertxGroup {
       	return this._endpoints;
       }
 
-      public RESTVerticleST addEventsValue(Object address_, Object name_) {
+      public RESTVerticleST addEventsValue(Object comments_, Object address_, Object name_) {
       	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("comments", (comments_ == null || comments_.toString().length() == 0) ? null : comments_);
       	map.put("address", (address_ == null || address_.toString().length() == 0) ? null : address_);
       	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
       	this._events.add(map);
 
-         template.addAggr("events.{address, name}", map.get("address"), map.get("name"));
+         template.addAggr("events.{comments, address, name}", map.get("comments"), map.get("address"), map.get("name"));
          return this;
       }
 
       public java.util.Set<java.util.Map<String, Object>> getEvents() {
       	return this._events;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class VerticleTestST implements VertxGroupTemplate {
+
+      private Object _name;
+      private Object _verticle;
+      private Object _packageName;
+
+      private final ST template;
+
+      private VerticleTestST(STGroup group) {
+   		template = group.getInstanceOf("VerticleTest");
+   	}
+
+      public VerticleTestST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      public VerticleTestST setVerticle(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._verticle == null) {
+            this._verticle = value;
+         	template.add("verticle", value);
+         }
+
+      	return this;
+      }
+
+      public String getVerticle() {
+      	return (String) this._verticle;
+      }
+
+      public VerticleTestST setPackageName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._packageName == null) {
+            this._packageName = value;
+         	template.add("packageName", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackageName() {
+      	return (String) this._packageName;
       }
 
       @Override
@@ -758,7 +827,7 @@ public final class VertxGroup {
 		.append("gt() ::= \">\"\n")
 			.append("NeoVerticle(actions,name,packageName) ::= <<package ~packageName~;\n" + 
 		"\n" + 
-		"import com.ud.bk.database.EmbeddedNeoModel;\n" + 
+		"import com.ud.vertx.JsonUtil;\n" + 
 		"import com.ud.vertx.VertxUtil;\n" + 
 		"import io.vertx.core.AbstractVerticle;\n" + 
 		"import io.vertx.core.Future;\n" + 
@@ -778,7 +847,7 @@ public final class VertxGroup {
 		"\n" + 
 		"  	protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" + 
 		"\n" + 
-		"	EmbeddedNeoModel model;\n" + 
+		"	protected GraphDatabaseService db;\n" + 
 		"\n" + 
 		"	@Override\n" + 
 		"	public void start(Future<Void> startFuture) {\n" + 
@@ -800,16 +869,14 @@ public final class VertxGroup {
 		"         @Override\n" + 
 		"         public JsonObject execute() {\n" + 
 		"\n" + 
-		"            final GraphDatabaseService db = new GraphDatabaseFactory().\n" + 
-		"                  newEmbeddedDatabaseBuilder(new File(config().getJsonObject(\"ScanDB\").getString(\"db.path\"))).\n" + 
+		"            db = new GraphDatabaseFactory().\n" + 
+		"                  newEmbeddedDatabaseBuilder(new File(config().getString(\"db.path\"))).\n" + 
 		"                  setConfig(GraphDatabaseSettings.allow_store_upgrade, \"true\").\n" + 
 		"                  newGraphDatabase();\n" + 
 		"\n" + 
-		"            model = new EmbeddedNeoModel(db);\n" + 
-		"\n" + 
-		"				try (Transaction tx = model.beginTx()){\n" + 
-		"               setUpInitialData();\n" + 
-		"               tx.success();\n" + 
+		"				try (Transaction tx = db.beginTx()){\n" + 
+		"               onStart(startFuture);\n" + 
+		"					tx.success();\n" + 
 		"            }\n" + 
 		"\n" + 
 		"            return new JsonObject();\n" + 
@@ -818,19 +885,32 @@ public final class VertxGroup {
 		"    	\n" + 
 		"~actions:{it|\n" + 
 		"		VertxUtil.consume(vertx, deploymentID(), \"~it.address~\", log, (Handler<Message<JsonObject>~gt()~) message -> {\n" + 
-		"         log.info(\"on ~it.address~ \" + message.body().encode());\n" + 
+		"         log.info(deploymentID() + \" on ~it.address~ \" + message.body().encode());\n" + 
 		"\n" + 
-		"         try (Transaction tx = model.beginTx()){\n" + 
-		"            on~it.name;format=\"capitalize\"~(tx, message);\n" + 
-		"            tx.success();\n" + 
+		"         try (Transaction tx = db.beginTx()) {\n" + 
+		"				try {\n" + 
+		"               on~it.name;format=\"capitalize\"~(tx, message);\n" + 
+		"	            tx.success();\n" + 
+		"            ~eom()~ catch (Exception e) {\n" + 
+		"               log.error(deploymentID() + \" exception on save.scanConfig \" + message.body().encode() + \" \" + e.getMessage(), e);\n" + 
+		"               tx.failure();\n" + 
+		"               message.reply(JsonUtil.newException(e));\n" + 
+		"            ~eom()~\n" + 
 		"         ~eom()~      \n" + 
 		"      ~eom()~);};separator=\"\\n\"~\n" + 
 		"	}\n" + 
 		"\n" + 
-		"~actions:{it|\n" + 
-		"	protected abstract void on~it.name;format=\"capitalize\"~(Transaction tx, Message<JsonObject> message);};separator=\"\\n\"~\n" + 
+		"	@Override\n" + 
+		"   public void stop(Future<Void> stopFuture) throws Exception {\n" + 
+		"      log.info(\"stop ScanDB \" + deploymentID());\n" + 
+		"      db.shutdown();\n" + 
+		"		super.stop(stopFuture);\n" + 
+		"   }\n" + 
 		"\n" + 
-		"	protected void setUpInitialData() {\n" + 
+		"~actions:{it|\n" + 
+		"	protected abstract void on~it.name;format=\"capitalize\"~(Transaction tx, Message<JsonObject> message) throws Exception;};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"	protected void onStart(Future<Void> startFuture) {\n" + 
 		"  	}\n" + 
 		"}>>\n")
 			.append("Server(inbound,name,outbound,package,routes,verticles) ::= <<package ~package~;\n" + 
@@ -878,7 +958,7 @@ public final class VertxGroup {
 		"      final Router router = Router.router(vertx);\n" + 
 		"      router.route().handler(BodyHandler.create());\n" + 
 		"\n" + 
-		"		~routes:{it|router.get(\"~it.url~\").handler(routingContext -> forward(routingContext, \"~it.message~\"));};separator=\"\\n\"~\n" + 
+		"		~routes:{it|router.get(\"~it.url~\").handler(routingContext -> on~it.name;format=\"capitalize\"~(routingContext));};separator=\"\\n\"~\n" + 
 		"\n" + 
 		"		final BridgeOptions options = new BridgeOptions()\n" + 
 		"			~outbound:{it|.addOutboundPermitted(new PermittedOptions().setAddress(\"~it.address~\"))};separator=\"\\n\"~\n" + 
@@ -902,6 +982,11 @@ public final class VertxGroup {
 		"            requestHandler(router::accept).\n" + 
 		"            listen(config().getInteger(\"content.port\"));\n" + 
 		"	}\n" + 
+		"\n" + 
+		"~routes:{it|\n" + 
+		"	protected void on~it.name;format=\"capitalize\"~(RoutingContext routingContext) {\n" + 
+		"      log.info(\"on ~it.name~ \" + debug(routingContext));\n" + 
+		"   ~eom()~};separator=\"\\n\"~\n" + 
 		"\n" + 
 		"	private void forward(RoutingContext routingContext, String address) {\n" + 
 		"      log.info(debug(routingContext) + \" => \" + address);\n" + 
@@ -980,31 +1065,23 @@ public final class VertxGroup {
 		"import io.vertx.core.Future;\n" + 
 		"import io.vertx.core.eventbus.Message;\n" + 
 		"import io.vertx.core.json.JsonObject;\n" + 
-		"import io.vertx.ext.web.Router;\n" + 
-		"import io.vertx.ext.web.RoutingContext;\n" + 
-		"import io.vertx.ext.web.handler.BodyHandler;\n" + 
 		"\n" + 
 		"import static com.ud.vertx.VertxWebUtil.logRequest;\n" + 
 		"\n" + 
 		"public class ~name~ extends AbstractVerticle {\n" + 
 		"\n" + 
-		"  protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" + 
+		"   protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" + 
 		"\n" + 
 		"	@Override\n" + 
 		"	public void start(Future<Void> startFuture) {\n" + 
 		"\n" + 
-		"   	setUpInitialData();\n" + 
+		"   	onStart(startFuture);\n" + 
+		"		if (startFuture.failed()) return;\n" + 
 		"\n" + 
-		"    	Router router = Router.router(vertx);\n" + 
-		"\n" + 
-		"	   router.route().handler(BodyHandler.create());\n" + 
-		"~endpoints:{it|\n" + 
-		"		//router.~it.action;format=\"toLower\"~(\"~it.uri~\").handler(this::handle~it.name;format=\"capitalize\"~);};separator=\"\\n\"~\n" + 
-		"\n" + 
+		"		VertxUtil.consume(vertx, deploymentID(), deploymentID(), log, this::onDirectMessage);\n" + 
 		"~events:{it|\n" + 
+		"		// ~it.comments~\n" + 
 		"		VertxUtil.consume(vertx, deploymentID(), \"~it.address~\", log, this::on~it.name;format=\"capitalize\"~);};separator=\"\\n\"~\n" + 
-		"\n" + 
-		"    	//vertx.createHttpServer().requestHandler(router::accept).listen(8080);\n" + 
 		"\n" + 
 		"		startFuture.complete();\n" + 
 		"	}\n" + 
@@ -1015,14 +1092,75 @@ public final class VertxGroup {
 		"	~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
 		"\n" + 
+		"	protected void onDirectMessage(Message<JsonObject> message) {\n" + 
+		"		log.info(\"onDirect message \" + message.body().encode());\n" + 
+		"	}\n" + 
+		"\n" + 
 		"~events:{it|\n" + 
 		"	protected void on~it.name;format=\"capitalize\"~(Message<JsonObject> message) {\n" + 
 		"		log.info(\"on~it.name;format=\"capitalize\"~ \" + message.body().encode());\n" + 
 		"	~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
 		"\n" + 
-		"	protected void setUpInitialData() {\n" + 
+		"	protected void onStart(Future<Void> startFuture) {\n" + 
 		"  	}\n" + 
+		"}>>\n")
+			.append("VerticleTest(name,verticle,packageName) ::= <<package ~packageName~;\n" + 
+		"\n" + 
+		"import com.ud.vertx.VertxUtil;\n" + 
+		"import io.vertx.core.DeploymentOptions;\n" + 
+		"import io.vertx.core.Vertx;\n" + 
+		"import io.vertx.ext.unit.Async;\n" + 
+		"import io.vertx.ext.unit.TestContext;\n" + 
+		"import io.vertx.ext.unit.junit.VertxUnitRunner;\n" + 
+		"import org.junit.After;\n" + 
+		"import org.junit.Before;\n" + 
+		"import org.junit.runner.RunWith;\n" + 
+		"\n" + 
+		"import java.io.IOException;\n" + 
+		"\n" + 
+		"/**\n" + 
+		" * ~name~ test base class\n" + 
+		" */\n" + 
+		"@RunWith(VertxUnitRunner.class)\n" + 
+		"public class ~name~ {\n" + 
+		"\n" + 
+		"   protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" + 
+		"\n" + 
+		"   protected Vertx vertx;\n" + 
+		"   protected String deploymentID;\n" + 
+		"\n" + 
+		"   @Before\n" + 
+		"   public void before(TestContext context) throws IOException {\n" + 
+		"\n" + 
+		"      final DeploymentOptions options = getDeploymentOptions();\n" + 
+		"\n" + 
+		"      vertx = Vertx.vertx();\n" + 
+		"\n" + 
+		"      Async async = context.async();\n" + 
+		"\n" + 
+		"      VertxUtil.deploy(vertx, ~verticle~.class, options, log, new VertxUtil.SuccessHandler<String>() {\n" + 
+		"         @Override\n" + 
+		"         public void onSuccess(String result) {\n" + 
+		"            deploymentID = result;\n" + 
+		"            async.complete();\n" + 
+		"         }\n" + 
+		"\n" + 
+		"         @Override\n" + 
+		"         public void onFail(Throwable t) {\n" + 
+		"            context.fail(t);\n" + 
+		"         }\n" + 
+		"      });\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   protected DeploymentOptions getDeploymentOptions() {\n" + 
+		"      return new DeploymentOptions();\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   @After\n" + 
+		"   public void after(TestContext context) {\n" + 
+		"      vertx.close(context.asyncAssertSuccess());\n" + 
+		"   }\n" + 
 		"}>>\n")
 			.append("API() ::= <<package ~packageName~;\n" + 
 		"\n" + 

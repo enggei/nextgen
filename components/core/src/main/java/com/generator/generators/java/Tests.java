@@ -152,8 +152,8 @@ public class Tests {
       final JavaGroup.PojoST pojoST = new JavaGroup().newPojo().
             setPackage("com.test").
             setName("Hello").
-            addPropertiesValue(null, "String", "name").
-            addPropertiesValue(null, "String", "yolo").
+            addPropertiesValue(null, "String", "name", null,null,null, true).
+            addPropertiesValue(null, "String", "yolo", null,null,null, true).
             addLexicalValue("name").
             addLexicalValue("yolo");
 

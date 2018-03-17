@@ -186,7 +186,7 @@ public class BaseKeyTest {
             currentPojo.addLexicalValue(getCurrentValue(propertyColumn));
 
          if (hasValue(row, propertyColumn) && hasValue(row, propertyTypeColumn)) {
-            currentPojo.addPropertiesValue(getCurrentValue(defaultPropertyValueColumn), getCurrentValue(propertyTypeColumn), getCurrentValue(propertyColumn));
+            currentPojo.addPropertiesValue(getCurrentValue(defaultPropertyValueColumn), getCurrentValue(propertyTypeColumn), getCurrentValue(propertyColumn), null,null,null, false);
             currentMobXModel.addObservablesValue(getCurrentValue(defaultPropertyValueColumn), getCurrentValue(propertyColumn));
          }
       }

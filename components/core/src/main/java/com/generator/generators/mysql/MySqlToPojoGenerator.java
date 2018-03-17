@@ -89,7 +89,7 @@ public class MySqlToPojoGenerator extends MySqlParserNodeListener {
    @Override
    public void exitColumnDefinition(MySqlParser.ColumnDefinitionContext arg) {
       super.exitColumnDefinition(arg);
-      currentPojos.peek().addPropertiesValue(null, propertyType, propertyName);
+      currentPojos.peek().addPropertiesValue(null, propertyType, propertyName, null,null,null, true);
       this.propertyType = null;
       this.propertyName = null;
    }
