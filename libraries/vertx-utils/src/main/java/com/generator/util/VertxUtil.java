@@ -171,11 +171,6 @@ public class VertxUtil {
       FrameHelper.sendFrame("send", address, replyAddress, parameters, socket);
    }
 
-   public static void sendFrame(org.apache.log4j.Logger log, String address, String replyAddress, JsonObject parameters, NetSocket socket) {
-      log.info("sending frame " + address + " " + replyAddress + " " + parameters);
-      FrameHelper.sendFrame("send", address, replyAddress, parameters, socket);
-   }
-
    public static void reply(Logger log, String deploymentID, JsonObject result, Message<JsonObject> message) {
       log.info("reply " + deploymentID + " " + message.replyAddress() + " " + result);
       message.reply(result);
@@ -203,7 +198,7 @@ public class VertxUtil {
 
             final R result = executor.execute();
 
-            if (result == null) future.complete();
+            if (result == null) future.fail("no result");
             else future.complete(result);
 
          } catch (Throwable throwable) {
@@ -221,11 +216,15 @@ public class VertxUtil {
    }
 
    public static <T> void consume(Vertx vertx, String consumer, String address, Logger log, Handler<Message<T>> messageHandler) {
-      log.info("consume " + consumer + " messages on address " + address);
+      log.info(consumer + " consumes messages on address " + address);
       vertx.eventBus().consumer(address, messageHandler);
    }
 
    public static <T, R> void sendMessage(Vertx vertx, String address, T content, Logger log, SuccessHandler<Message<R>> handler) {
+      sendMessage(vertx, address, content, null, log, handler);
+   }
+
+   public static <T, R> void sendJsonMessage(Vertx vertx, String address, JsonObject content, Logger log, SuccessHandler<Message<JsonObject>> handler) {
       sendMessage(vertx, address, content, null, log, handler);
    }
 
@@ -300,14 +299,57 @@ public class VertxUtil {
       vertx.deployVerticle(verticle, deploymentOptions, result -> {
 
          if (result.failed()) {
-            handler.onFail(result.cause());
             log.error("deploy failed " + verticle + " " + result.cause().getMessage(), result.cause());
+            handler.onFail(result.cause());
             return;
          }
 
          log.info("deploy success " + verticle + " " + result.result());
          handler.onSuccess(result.result());
       });
+   }
+
+   public static void deploySilent(Vertx vertx, Class[] verticleClass, DeploymentOptions deploymentOptions, Logger log) {
+      deploy(vertx, verticleClass, deploymentOptions, log, new SuccessHandler<String>() {
+         @Override
+         public void onSuccess(String result) {
+            log.info("deploying " + verticleClass.length + " verticles " + result);
+         }
+
+         @Override
+         public void onFail(Throwable t) {
+            log.error("failed deploying " + verticleClass.length + " : " + t.getMessage(), t);
+         }
+      });
+   }
+
+   public static void deploy(Vertx vertx, Class[] verticleClass, DeploymentOptions deploymentOptions, Logger log, SuccessHandler<String> handler) {
+
+      VertxUtil.executeBlocking(vertx, log, new Executor<JsonObject, JsonObject>() {
+         @Override
+         public JsonObject execute() throws Throwable {
+
+            for (Class verticleClass : verticleClass)
+               VertxUtil.deploy(vertx, verticleClass, deploymentOptions, log, handler);
+
+            return new JsonObject();
+         }
+
+         @Override
+         public void onSuccess(JsonObject result) {
+            log.info("deploying " + verticleClass.length + " verticles " + result.encode());
+         }
+
+         @Override
+         public void onFail(Throwable t) {
+            log.error("failed deploying " + verticleClass.length + " : " + t.getMessage(), t);
+
+         }
+      });
+   }
+
+   public static void deploy(Vertx vertx, Class verticleClass, DeploymentOptions deploymentOptions, Logger log, SuccessHandler<String> handler) {
+      deploy(vertx, verticleClass.getCanonicalName(), deploymentOptions, log, handler);
    }
 
    public static void deploy(Vertx vertx, String className, DeploymentOptions deploymentOptions, Logger log, SuccessHandler<String> handler) {
@@ -317,28 +359,13 @@ public class VertxUtil {
       vertx.deployVerticle(className, deploymentOptions, result -> {
 
          if (result.failed()) {
-            handler.onFail(result.cause());
             log.error("deploy failed " + className + " " + result.cause().getMessage(), result.cause());
+            handler.onFail(result.cause());
             return;
          }
 
          log.info("deploy success " + className + " " + result.result());
          handler.onSuccess(result.result());
-      });
-   }
-
-   public static void deploy(Vertx vertx, String className, DeploymentOptions deploymentOptions, Logger log) {
-
-      if (deploymentOptions == null) deploymentOptions = new DeploymentOptions();
-
-      vertx.deployVerticle(className, deploymentOptions, result -> {
-
-         if (result.failed()) {
-            log.error("deploy failed " + className + " " + result.cause().getMessage(), result.cause());
-            return;
-         }
-
-         log.info("deploy success " + className + " : " + result.result());
       });
    }
 

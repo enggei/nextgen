@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-#chmod 600 /root/.ssh/id_rsa
+cd nextgen-frontend
 
 npm set prefix=/tmp
 

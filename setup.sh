@@ -225,8 +225,7 @@ case $1 in
     docker-compose up -d hazelcast
 
     # Components
-    buildComponent vertx-test
-    buildComponent vertx-fatjar-test
+    buildComponent api
 
     docker-compose up -d
 
@@ -239,7 +238,7 @@ case $1 in
     build $1 && start $1
     ;;
 
-  vertx-test | vertx-fatjar-test)
+  api)
     buildComponent $1
     ;;
 
@@ -266,6 +265,7 @@ case $1 in
     echo -e "Build options:\n
   - all
   - all-nogui
+  - api
   - efk
   - elasticsearch
   - elasticsearchlogs
@@ -276,8 +276,6 @@ case $1 in
   - kibana
   - nginx
   - stardog
-  - vertx-test
-  - vertx-fatjar-test
 "
     ;;
   *)

@@ -271,6 +271,13 @@
             <version>1.3.0</version>
         </dependency>
 
+        <!-- INTERNAL -->
+        <dependency>
+            <groupId>com.nextgen</groupId>
+            <artifactId>vertx-utils</artifactId>
+            <version>${nextgen.libraries.vertx-utils.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

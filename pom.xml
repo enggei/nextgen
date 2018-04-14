@@ -10,6 +10,7 @@
 
     <modules>
         <module>components</module>
+        <module>libraries</module>
     </modules>
 
     <properties>
@@ -34,12 +35,18 @@
         <jsch.version>0.1.54</jsch.version>
         <vertx.unit.version>3.0.0</vertx.unit.version>
         <junit.version>4.12</junit.version>
-        <slf4j.version>1.7.2</slf4j.version>
+        <slf4j.version>1.7.25</slf4j.version>
+        <logback.version>1.2.3</logback.version>
+        <logstash.logback.version>4.11</logstash.logback.version>
         <apache.poi.version>3.17</apache.poi.version>
         <tensorflow.version>1.3.0</tensorflow.version>
         <java-diff-utils.version>2.2</java-diff-utils.version>
         <clojure.version>1.8.0</clojure.version>
         <guava.version>22.0</guava.version>
+
+        <!-- INTERNAL -->
+        <nextgen.libraries.version>1.0</nextgen.libraries.version>
+        <nextgen.libraries.vertx-utils.version>1.0</nextgen.libraries.vertx-utils.version>
     </properties>
 
 

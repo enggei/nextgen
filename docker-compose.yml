@@ -31,21 +31,18 @@ services:
 #    volumes:
 #      - ${DOCKER_BASE_DIR}/elasticsearch:/usr/share/elasticsearch/data
 #    networks:
-#      - efk
 #      - platform
 
   elasticsearchlogs:
     image: ${DOCKER_REGISTRY}/elasticsearch-logs:${TAG}
-#    restart: always
+    restart: always
     ports:
      - "127.0.0.1:9201:9200"
      - "127.0.0.1:9301:9300"
     volumes:
      - ${DOCKER_BASE_DIR}/elasticsearch-logs:/usr/share/elasticsearch/data
     networks:
-      - efk
       - platform
-      - frontend
 
   kibana:
     image: ${DOCKER_REGISTRY}/kibana:${TAG}
@@ -57,21 +54,21 @@ services:
     depends_on:
       - elasticsearchlogs
     networks:
-      - efk
       - platform
 
   fluentd:
     image: ${DOCKER_REGISTRY}/fluentd:${TAG}
-#    restart: always
+    restart: always
     ports:
       - "127.0.0.1:24224:24224"
       - "127.0.0.1:24224:24224/udp"
     depends_on:
       - elasticsearchlogs
     networks:
-      - efk
       - platform
-      - frontend
+      - client
+    volumes:
+      - ${DOCKER_BASE_DIR}/fluentd:/var/log/fluentd
 
   nginx:
     image: nginx
@@ -87,7 +84,7 @@ services:
       - fluentd
     networks:
       - platform
-      - frontend
+      - client
 
 #  gitserver:
 #    image: ${DOCKER_REGISTRY}/git-server:${TAG}
@@ -102,42 +99,46 @@ services:
 
   hazelcast:
     image: hazelcast/hazelcast
-    restart: always
+#    image: ${DOCKER_REGISTRY}/hazelcast:${TAG}
+#    restart: always
     environment:
+#      - CLASSPATH=lib
       - JAVA_OPTS= -Xms512M -Xmx1024M -Dhazelcast.config=/opt/hazelcast/config_ext/hazelcast.xml
     ports:
       - "127.0.0.1:5701:5701"
     volumes:
-      - ${HAZELCAST_CONFIG_FOLDER}:/opt/hazelcast/config_ext
+      - ./docker/hazelcast/config_ext:/opt/hazelcast/config_ext
+#      - ./docker/hazelcast/lib:/opt/hazelcast/lib
     networks:
       - platform
 
-  vertx-test:
-    image: ${DOCKER_REGISTRY}/nextgen/vertx-test:${TAG}
-    networks:
-      - platform
-
-  vertx-fatjar-test:
-    image: ${DOCKER_REGISTRY}/nextgen/vertx-fatjar-test:${TAG}
-    networks:
-      - platform
-
-#  api:
-#    image: ${DOCKER_REGISTRY}/nextgen/api:${TAG}
-#    restart: always
-#    environment:
-#      - BASE_URL=${BASE_URL}
-#    ports:
-#      - "127.0.0.1:8180:8080"
-#    depends_on:
-#      - elasticsearchlogs
-#      - fluentd
-#    logging:
-#      driver: fluentd
-#      options:
-#        fluentd-address: localhost:24224
+#  vertx-test:
+#    image: ${DOCKER_REGISTRY}/nextgen/vertx-test:${TAG}
 #    networks:
-#      platform:
+#      - platform
+
+#  vertx-fatjar-test:
+#    image: ${DOCKER_REGISTRY}/nextgen/vertx-fatjar-test:${TAG}
+#    networks:
+#      - platform
+
+  api:
+    image: ${DOCKER_REGISTRY}/nextgen/api:${TAG}
+#    restart: always
+    environment:
+      - BASE_URL=${BASE_URL}
+    ports:
+      - "127.0.0.1:8180:8080"
+    depends_on:
+      - elasticsearchlogs
+      - fluentd
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+        tag: component.all
+    networks:
+      platform:
 
   frontend:
     image: ${DOCKER_REGISTRY}/nextgen/frontend:${TAG}
@@ -149,6 +150,5 @@ services:
 #  git-server-repos:
 
 networks:
-  efk:
   platform:
-  frontend:
+  client:
