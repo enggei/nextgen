@@ -40,14 +40,19 @@ import static com.generator.util.NeoUtil.*;
  * Created 12.09.17.
  */
 public class JavaPlugin extends JavaDomainDomainPlugin {
+
    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JavaPlugin.class);
+
    public static void cleanupPreviousSessions(NeoModel graph) {
       instanceMap.clear();
    }
 
    private static final JavaGroup javaGroup = new JavaGroup();
-
    private static final Map<String, Object> instanceMap = new LinkedHashMap<>();
+
+   public enum SCOPE {
+      PUBLIC, PACKAGE, PROTECTED, PRIVATE
+   }
 
    public JavaPlugin(App app) {
       super(app);
@@ -140,8 +145,8 @@ public class JavaPlugin extends JavaDomainDomainPlugin {
    @Override
    protected void handleConstructor(JPopupMenu pop, NeoNode constructorNode, Set<NeoNode> selectedNodes) {
 
-      final Object scope = getScopeProperty(constructorNode.getNode());
-      if (scope!=null &&  "public".equals(scope.toString())) {
+      final SCOPE scope = SCOPE.valueOf(getScopeProperty(constructorNode.getNode(), SCOPE.PACKAGE.name()));
+      if (SCOPE.PUBLIC.equals(scope)) {
 
          final Node classNode = singleIncomingCONSTRUCTOR(constructorNode.getNode());
 
@@ -253,6 +258,31 @@ public class JavaPlugin extends JavaDomainDomainPlugin {
             SwingUtil.showMessage("Compiled OK", app);
          }
       });
+
+
+      outgoingCONSTRUCTOR(classNode.getNode(), new RelationConsumer() {
+         @Override
+         public void accept(Relationship relationship, Node constructorNode) {
+
+            final SCOPE scope = SCOPE.valueOf(getScopeProperty(constructorNode, SCOPE.PACKAGE.name()));
+
+            switch (scope) {
+
+               case PUBLIC:
+                  break;
+
+               case PACKAGE:
+                  break;
+
+               case PROTECTED:
+                  break;
+
+               case PRIVATE:
+                  break;
+            }
+         }
+      });
+
 
       pop.add(new App.TransactionAction("Edit", app) {
          @Override

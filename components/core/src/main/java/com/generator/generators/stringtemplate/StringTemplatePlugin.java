@@ -719,8 +719,8 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
 
                                     if (templateParameter.getDomainEntityType().equals(TemplateEntities.KEYVALUELISTPROPERTY)) {
 
-                                       final Node entityNode = other(existingParameter, singleOutgoing(existingParameter, DomainPlugin.Relations.DST));
                                        final Set<String> newKeys = new LinkedHashSet<>(templateParameter.getKvNames());
+                                       final Node entityNode = other(existingParameter, singleOutgoing(existingParameter, DomainPlugin.Relations.DST));
                                        final Set<String> existingKeys = getKeys(entityNode);
 
                                        final Set<String> oldKeys = new LinkedHashSet<>();

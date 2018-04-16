@@ -187,6 +187,23 @@ public final class Workspace extends JPanel {
                      selectAllNodes();
                      break;
 
+                  case KeyEvent.VK_DELETE:
+                     final Set<NeoNode> selectedNodes = getSelectedNodes();
+                     if (selectedNodes.isEmpty()) break;
+
+                     app.model.graph().doInTransaction(new Committer() {
+                        @Override
+                        public void doAction(Transaction tx) throws Throwable {
+                           deleteNodesDialog(selectedNodes, tx);
+                        }
+
+                        @Override
+                        public void exception(Throwable throwable) {
+                           SwingUtil.showException(app, throwable);
+                        }
+                     });
+                     break;
+
                   case KeyEvent.VK_H:
                      showHelp(NodeCanvas.this);
                      break;
@@ -455,6 +472,43 @@ public final class Workspace extends JPanel {
          });
       }
 
+      void deleteNodesDialog(Set<NeoNode> selectedNodes, Transaction tx) {
+         if (SwingUtil.showConfirmDialog(app, "Delete " + selectedNodes.size() + " node" + (selectedNodes.size() == 1 ? "" : "s") + " and their relations ?")) {
+
+            final Set<Node> nodes = new LinkedHashSet<>();
+            for (NeoNode selectedNode : selectedNodes)
+               nodes.add(selectedNode.getNode());
+
+            final Set<NeoNode> allNodes = nodeCanvas.getAllNodes();
+            final Set<Node> visibleNodes = new LinkedHashSet<>();
+            for (NeoNode neoNode : allNodes)
+               visibleNodes.add(neoNode.getNode());
+
+            // check if there are dependent nodes in graph (which are not currently visible) which are dependent on the nodes to delete:
+            final Set<Node> dependentNodes = new LinkedHashSet<>();
+            for (Node node : nodes) {
+               incoming(node).forEach(relationship -> {
+                  final Node other = NeoUtil.other(node, relationship);
+                  if (visibleNodes.contains(other)) return;
+                  if (hasLabel(other, AppMotif.Entities._Layout))
+                     return; // ignore layout-relations
+                  if (DomainPlugin.Relations.INSTANCE.name().equals(relationship.getType().name()))
+                     return; // ignore INSTANCE-relations
+                  dependentNodes.add(other);
+               });
+            }
+
+            final StringBuilder out = new StringBuilder();
+            if (!dependentNodes.isEmpty())
+               for (Node dependentNode : dependentNodes)
+                  out.append(NeoUtil.getNameAndLabelsFrom(dependentNode)).append("\n");
+            log.info(out.toString());
+
+            if (dependentNodes.isEmpty() || SwingUtil.showConfirmDialog(app, "There are " + dependentNodes.size() + " nodes in graph which are dependent on nodes to delete. Are you sure you want to delete ?"))
+               app.model.deleteNodes(nodes);
+         }
+      }
+
       private void addSelectedNodesActions(JPopupMenu pop) {
          final Set<NeoNode> selectedNodes = getSelectedNodes();
          if (!selectedNodes.isEmpty()) {
@@ -468,40 +522,7 @@ public final class Workspace extends JPanel {
             pop.add(new App.TransactionAction("Delete selected nodes", app) {
                @Override
                protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  if (SwingUtil.showConfirmDialog(app, "Delete " + selectedNodes.size() + " node" + (selectedNodes.size() == 1 ? "" : "s") + " and their relations ?")) {
-
-                     final Set<Node> nodes = new LinkedHashSet<>();
-                     for (NeoNode selectedNode : selectedNodes)
-                        nodes.add(selectedNode.getNode());
-
-                     final Set<NeoNode> allNodes = nodeCanvas.getAllNodes();
-                     final Set<Node> visibleNodes = new LinkedHashSet<>();
-                     for (NeoNode neoNode : allNodes)
-                        visibleNodes.add(neoNode.getNode());
-
-                     // check if there are dependent nodes in graph (which are not currently visible) which are dependent on the nodes to delete:
-                     final Set<Node> dependentNodes = new LinkedHashSet<>();
-                     for (Node node : nodes) {
-                        incoming(node).forEach(relationship -> {
-                           final Node other = NeoUtil.other(node, relationship);
-                           if (visibleNodes.contains(other)) return;
-                           if (hasLabel(other, AppMotif.Entities._Layout))
-                              return; // ignore layout-relations
-                           if (DomainPlugin.Relations.INSTANCE.name().equals(relationship.getType().name()))
-                              return; // ignore INSTANCE-relations
-                           dependentNodes.add(other);
-                        });
-                     }
-
-                     final StringBuilder out = new StringBuilder();
-                     if (!dependentNodes.isEmpty())
-                        for (Node dependentNode : dependentNodes)
-                           out.append(NeoUtil.getNameAndLabelsFrom(dependentNode)).append("\n");
-                     log.info(out.toString());
-
-                     if (dependentNodes.isEmpty() || SwingUtil.showConfirmDialog(app, "There are " + dependentNodes.size() + " nodes in graph which are dependent on nodes to delete. Are you sure you want to delete ?"))
-                        app.model.deleteNodes(nodes);
-                  }
+                  deleteNodesDialog(selectedNodes, tx);
                }
             });
          }

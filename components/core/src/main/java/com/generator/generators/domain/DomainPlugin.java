@@ -8,9 +8,9 @@ import com.generator.generators.project.ProjectPlugin;
 import com.generator.generators.stringtemplate.GeneratedFile;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.neo.NeoModel;
+import com.generator.util.NeoUtil;
 import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
-import com.generator.util.Triple;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.*;
 
@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 
 import static com.generator.app.DomainMotif.*;
 import static com.generator.generators.project.ProjectPlugin.*;
@@ -696,6 +695,16 @@ public class DomainPlugin extends DomainDomainPlugin {
       showEntityActions(pop, neoNode, selectedNodes);
    }
 
+   @Override
+   protected JComponent newDomainEditor(NeoNode domainNode) {
+      return new DomainPanel(domainNode);
+   }
+
+   @Override
+   protected JComponent newEntityEditor(NeoNode entityNode) {
+      return new EntityPanel(entityNode);
+   }
+
    public void showEntityActions(JPopupMenu pop, NeoNode templateNeoNode, Set<NeoNode> selectedNodes) {
 
       incomingINSTANCE(templateNeoNode.getNode(), (instanceRelation, instanceNode) -> {
@@ -708,7 +717,7 @@ public class DomainPlugin extends DomainDomainPlugin {
                   if (directoryNode != null) {
                      final File directory = ProjectPlugin.getFile(directoryNode);
                      if (directory != null && directory.exists()) {
-                        pop.add(new App.TransactionAction("Render to " + getString(directoryNode, ProjectPlugin.Properties.path.name()), app) {
+                        pop.add(new App.TransactionAction("Render to " + getEntityProperty(directoryNode, ProjectPlugin.Properties.path.name()), app) {
                            @Override
                            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                               final String content = StringTemplatePlugin.renderStatement(templateNeoNode.getNode(), other(templateNeoNode.getNode(), singleIncoming(templateNeoNode.getNode(), Relations.INSTANCE)));
@@ -1170,6 +1179,107 @@ public class DomainPlugin extends DomainDomainPlugin {
                   break;
             }
          }));
+      }
+   }
+
+   private class DomainPanel extends JPanel {
+      DomainPanel(NeoNode neoNode) {
+         super(new BorderLayout());
+
+         final JTextArea txtEditor = new JTextArea();
+         txtEditor.setFont(com.generator.app.AppMotif.getDefaultFont());
+         txtEditor.setTabSize(3);
+         txtEditor.setEditable(false);
+         txtEditor.setText(domainToString(neoNode.getNode()));
+         txtEditor.setCaretPosition(0);
+
+         add(new JScrollPane(txtEditor), BorderLayout.CENTER);
+      }
+   }
+
+   private class EntityPanel extends JPanel {
+      EntityPanel(NeoNode neoNode) {
+         super(new BorderLayout());
+
+         final JTextArea txtEditor = new JTextArea();
+         txtEditor.setFont(com.generator.app.AppMotif.getDefaultFont());
+         txtEditor.setTabSize(3);
+         txtEditor.setEditable(false);
+         txtEditor.setText(entityToString(neoNode.getNode()));
+         txtEditor.setCaretPosition(0);
+
+         add(new JScrollPane(txtEditor), BorderLayout.CENTER);
+      }
+   }
+
+   public static String domainToString(Node domainNode) {
+      final StringBuilder out = new StringBuilder();
+
+      out.append("Domain: ").append(getNameProperty(domainNode, "")).append("\n");
+
+      final Set<Node> visitedEntities = new LinkedHashSet<>();
+      outgoingENTITY(domainNode, new RelationConsumer() {
+         @Override
+         public void accept(Relationship relationship, Node entityNode) {
+            visitEntity(entityNode);
+         }
+
+         public void visitEntity(Node entityNode) {
+
+            if (visitedEntities.contains(entityNode)) return;
+            visitedEntities.add(entityNode);
+
+            out.append("\n\n\t").append(getNameProperty(entityNode, ""));
+
+            final Set<Node> dstEntities = new LinkedHashSet<>();
+            outgoingSRC(entityNode, (relationship, relationNode) -> {
+
+               out.append("\n\t\t ").append(getCardinality(relationNode)).append(" ").append(getNameProperty(relationNode, ""));
+
+               outgoingDST(relationNode, (relationship1, dstNode) -> {
+                  if (hasLabel(dstNode, Entities.Entity)) {
+                     out.append(" (").append(getNameProperty(dstNode, "")).append(")");
+                     dstEntities.add(dstNode);
+                  }
+               });
+            });
+
+            for (Node dstEntity : dstEntities) {
+               visitEntity(dstEntity);
+            }
+         }
+      });
+
+      return out.toString();
+   }
+
+   public static String entityToString(Node entityNode) {
+      final StringBuilder out = new StringBuilder();
+
+      out.append("\n\n\t").append(getNameProperty(entityNode, ""));
+
+      outgoingSRC(entityNode, (relationship, relationNode) -> {
+
+         out.append("\n\t\t ").append(getCardinality(relationNode)).append(" ").append(getNameProperty(relationNode, ""));
+
+         outgoingDST(relationNode, (relationship1, dstNode) -> {
+            if (hasLabel(dstNode, Entities.Entity)) {
+               out.append(" (").append(getNameProperty(dstNode, "")).append(")");
+            }
+         });
+      });
+
+      return out.toString();
+   }
+
+   private static String getCardinality(Node relationNode) {
+      switch (RelationCardinality.valueOf(getRelationCardinalityProperty(relationNode))) {
+         case SINGLE:
+            return " -> 1 -> ";
+         case LIST:
+            return " -> [] -> ";
+         default:
+            return "?";
       }
    }
 }

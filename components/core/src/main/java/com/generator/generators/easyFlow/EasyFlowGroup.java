@@ -941,13 +941,12 @@ public final class EasyFlowGroup {
 		"    <groupId>au.com.datasymphony</groupId>\n" + 
 		"    <artifactId>EasyFlow</artifactId>\n" + 
 		"    <version>1.3</version>\n" + 
-		"<!-- test xx-->\n" + 
 		"</dependency> >>\n")
 			.append("events(events) ::= <<enum Events implements EventEnum {\n" + 
 		"    ~events:{it|~it~};separator=\",\\n\"~\n" + 
 		"}>>\n")
 			.append("declaration(name,state) ::= <<.whenEnter(~state~, (ContextHandler<~name~Context>) context -> {\n" + 
-		"	//log.debug(\"~state;format=\"humpToCap\"~\");\n" + 
+		"	log.debug(\"~state;format=\"humpToCap\"~\");\n" + 
 		"   if (listener != null) listener.onEnter(~state~, context);\n" + 
 		"   ~state;format=\"toLower\"~(context);\n" + 
 		"})>>\n")

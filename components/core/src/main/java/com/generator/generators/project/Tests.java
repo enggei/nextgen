@@ -21,7 +21,7 @@ public class Tests {
             setVersion("0.1").
             setComments("Test project").
             setPackageName(ProjectConstants.TEST_PACKAGE + ".project").
-            setRoot(ProjectConstants.TEST_ROOT).
+            //setRoot(ProjectConstants.TEST_ROOT).
             addGeneratorsValue("Java", ProjectConstants.GENERATORS_PACKAGE + ".java").
             addGeneratorsValue("Maven", ProjectConstants.GENERATORS_PACKAGE + ".maven").
             addGeneratorsValue("BerkeleyDB", ProjectConstants.GENERATORS_PACKAGE + ".berkeleyDB").

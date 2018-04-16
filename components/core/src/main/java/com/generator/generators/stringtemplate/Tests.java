@@ -5,6 +5,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
+import org.stringtemplate.v4.ST;
 
 import java.io.IOException;
 
@@ -119,10 +120,14 @@ public class Tests {
 
       final TemplateGroupGroup templateGroupGroup = new TemplateGroupGroup();
 
-      final String content = " Hello ~name~! ~elements:{it|~it.name~};~";
+//      final String content = " Hello ~name~!";
+      final String content = " Hello ~name~! ~elements:{it|~it.name~};format=\"capitalise\"~";
 
       final TemplateGroupGroup.templateST templateST = templateGroupGroup.newtemplate().
             setName("hello");
+
+      final ST st = new ST(content, '~', '~');
+      log.info(st.add("name", "THIS_WORKS").addAggr("elements.{name}", "ONE").render());
 
       final STParser parser = new STParser(new CommonTokenStream(new STLexer(CharStreams.fromString(content))));
       final STParserNodeListener listener = new STParserNodeListener(true) {

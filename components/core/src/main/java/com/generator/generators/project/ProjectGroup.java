@@ -48,35 +48,21 @@ public final class ProjectGroup {
 
    public final class ProjectST implements ProjectGroupTemplate {
 
-      private java.util.Set<java.util.Map<String, Object>> _DIRECTORY = new java.util.LinkedHashSet<>();
       private java.util.Set<java.util.Map<String, Object>> _generators = new java.util.LinkedHashSet<>();
       private Object _version;
       private Object _artifactId;
       private Object _groupId;
-      private Object _root;
       private Object _comments;
       private Object _name;
       private Object _packageName;
+      private Object _configPath;
+      private Object _description;
 
       private final ST template;
 
       private ProjectST(STGroup group) {
    		template = group.getInstanceOf("Project");
    	}
-
-      public ProjectST addDIRECTORYValue(Object name_, Object path_) {
-      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
-      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
-      	map.put("path", (path_ == null || path_.toString().length() == 0) ? null : path_);
-      	this._DIRECTORY.add(map);
-
-         template.addAggr("DIRECTORY.{name, path}", map.get("name"), map.get("path"));
-         return this;
-      }
-
-      public java.util.Set<java.util.Map<String, Object>> getDIRECTORY() {
-      	return this._DIRECTORY;
-      }
 
       public ProjectST addGeneratorsValue(Object name_, Object packageName_) {
       	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
@@ -140,22 +126,6 @@ public final class ProjectGroup {
       	return (String) this._groupId;
       }
 
-      public ProjectST setRoot(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._root == null) {
-            this._root = value;
-         	template.add("root", value);
-         }
-
-      	return this;
-      }
-
-      public String getRoot() {
-      	return (String) this._root;
-      }
-
       public ProjectST setComments(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
@@ -202,6 +172,38 @@ public final class ProjectGroup {
 
       public String getPackageName() {
       	return (String) this._packageName;
+      }
+
+      public ProjectST setConfigPath(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._configPath == null) {
+            this._configPath = value;
+         	template.add("configPath", value);
+         }
+
+      	return this;
+      }
+
+      public String getConfigPath() {
+      	return (String) this._configPath;
+      }
+
+      public ProjectST setDescription(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._description == null) {
+            this._description = value;
+         	template.add("description", value);
+         }
+
+      	return this;
+      }
+
+      public String getDescription() {
+      	return (String) this._description;
       }
 
       @Override
@@ -340,61 +342,47 @@ public final class ProjectGroup {
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 		.append("eom() ::= <<}>>\n")
 		.append("gt() ::= \">\"\n")
-			.append("Project(DIRECTORY,generators,version,artifactId,groupId,root,comments,name,packageName) ::= <<package ~packageName~;\n" + 
+			.append("Project(generators,version,artifactId,groupId,comments,name,packageName,configPath,description) ::= <<package ~packageName~;\n" + 
 		"\n" + 
-		"import java.io.BufferedWriter;\n" + 
+		"import com.generator.util.FileUtil;\n" + 
+		"import org.zeroturnaround.exec.ProcessExecutor;\n" + 
+		"import org.zeroturnaround.exec.stream.slf4j.Slf4jStream;\n" + 
+		"\n" + 
 		"import java.io.File;\n" + 
-		"import java.io.FileWriter;\n" + 
 		"import java.io.IOException;\n" + 
+		"import java.util.concurrent.TimeoutException;\n" + 
 		"\n" + 
 		"/**\n" + 
 		" * ~comments~\n" + 
 		" */\n" + 
 		"public class ~name~ {\n" + 
 		"\n" + 
+		"	protected final String name = \"~name~\";\n" + 
 		"	protected final String version = \"~version~\";\n" + 
 		"   protected final String groupId = \"~groupId~\";\n" + 
 		"   protected final String artifactId = \"~artifactId~\";\n" + 
+		"	protected final String description = \"~description~\";\n" + 
 		"\n" + 
-		"   protected final File root = new File(\"~root~\");\n" + 
-		"   protected final File javaSource = new File(root, \"src/main/java\");\n" + 
-		"   protected final File resources = new File(root, \"src/main/resources\");\n" + 
+		"	~generators:{it|protected static final ~it.packageName~.~it.name~ ~it.name;format=\"lowFirst\"~ = new ~it.packageName~.~it.name~();};separator=\"\\n\"~\n" + 
 		"\n" + 
-		"   protected final File webRoot = new File(root, \"web\");\n" + 
-		"   protected final File webApp = new File(webRoot, \"app\");\n" + 
-		"   protected final File webLib = new File(webRoot, \"lib\");\n" + 
+		"~if(configPath)~\n" + 
+		"	private static final io.vertx.core.json.JsonObject config = new io.vertx.core.json.JsonObject(FileUtil.read(new File(\"~configPath~\")));\n" + 
+		"	\n" + 
+		"	protected static String config(String key) {\n" + 
+		"	   return config.getString(key);\n" + 
+		"   }\n" + 
+		"~endif~\n" + 
 		"\n" + 
-		"	~generators:{it|protected ~it.packageName~.~it.name~Group ~it.name;format=\"lowFirst\"~;};separator=\"\\n\"~\n" + 
-		"\n" + 
-		"	@org.junit.Before\n" + 
-		"   public void setupGenerators() {\n" + 
-		"		~generators:{it|~it.name;format=\"lowFirst\"~ = new ~it.packageName~.~it.name~Group();};separator=\"\\n\"~\n" + 
+		"	protected String asString(String s) {\n" + 
+		"      return \"\\\"\" + s + \"\\\"\";\n" + 
 		"   }\n" + 
 		"\n" + 
-		"	protected void write(Object content, File file) throws IOException {\n" + 
-		"\n" + 
-		"      if (!file.exists()) {\n" + 
-		"\n" + 
-		"         final File dir = file.getParentFile();\n" + 
-		"         if (dir == null) throw new RuntimeException(\"File cannot be null\");\n" + 
-		"\n" + 
-		"         if (!dir.exists()) {\n" + 
-		"            if (dir.getParentFile() != null && !dir.getParentFile().exists() && !dir.getParentFile().mkdirs())\n" + 
-		"               throw new RuntimeException(\"Could not create parent dirs for \" + dir.getAbsolutePath());\n" + 
-		"            if (!dir.mkdir()) throw new RuntimeException(\"Could not create directory \" + dir.getName());\n" + 
-		"         }\n" + 
-		"\n" + 
-		"         try {\n" + 
-		"            if (!file.createNewFile()) throw new RuntimeException(\"Could not create file \" + file.getName());\n" + 
-		"         } catch (IOException e) {\n" + 
-		"            throw new RuntimeException(\"Could not create file \" + file.getName());\n" + 
-		"         }\n" + 
-		"      }\n" + 
-		"\n" + 
-		"      final BufferedWriter out = new BufferedWriter(new FileWriter(file));\n" + 
-		"      out.write(content.toString());\n" + 
-		"      out.close();\n" + 
-		"   }\n" + 
+		"	protected static void execute(String key, String... command) throws InterruptedException, TimeoutException, IOException {\n" + 
+		"		new ProcessExecutor().\n" + 
+		"				directory(new File(config(key))).\n" + 
+		"				command(command).\n" + 
+		"				redirectOutput(Slf4jStream.ofCaller().asInfo()).execute();\n" + 
+		"	}\n" + 
 		"}>>\n")
 		.toString();
 }

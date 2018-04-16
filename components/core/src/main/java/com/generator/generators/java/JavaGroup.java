@@ -102,6 +102,10 @@ public final class JavaGroup {
       return new arrayMethodsST(stGroup);
    }
 
+   public statementsST newstatements() {
+      return new statementsST(stGroup);
+   }
+
    public final class BeanST implements JavaGroupTemplate {
 
       private java.util.Set<Object> _eqha = new java.util.LinkedHashSet<>();
@@ -685,11 +689,13 @@ public final class JavaGroup {
       private Object _package;
       private java.util.Set<Object> _methods = new java.util.LinkedHashSet<>();
       private java.util.Set<Object> _innerClasses = new java.util.LinkedHashSet<>();
+      private java.util.Set<Object> _imports = new java.util.LinkedHashSet<>();
       private java.util.Set<java.util.Map<String, Object>> _fields = new java.util.LinkedHashSet<>();
       private Object _scope;
       private Object _isStatic;
       private Object _isFinal;
       private Object _isAbstract;
+      private Object _extends;
 
       private final ST template;
 
@@ -755,6 +761,20 @@ public final class JavaGroup {
 
       public java.util.Set<Object> getInnerClassesValues() {
       	return this._innerClasses;
+      }
+
+      public ClassST addImportsValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._imports.add(value);
+      	template.add("imports", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getImportsValues() {
+      	return this._imports;
       }
 
       public ClassST addFieldsValue(Object init_, Object name_, Object type_, Object scope_, Object isFinal_, Object isArray_) {
@@ -837,6 +857,22 @@ public final class JavaGroup {
 
       public String getIsAbstract() {
       	return (String) this._isAbstract;
+      }
+
+      public ClassST setExtends(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._extends == null) {
+            this._extends = value;
+         	template.add("extends", value);
+         }
+
+      	return this;
+      }
+
+      public String getExtends() {
+      	return (String) this._extends;
       }
 
       @Override
@@ -1318,6 +1354,36 @@ public final class JavaGroup {
    	}
    }
 
+   public final class statementsST implements JavaGroupTemplate {
+
+      private java.util.Set<Object> _statements = new java.util.LinkedHashSet<>();
+
+      private final ST template;
+
+      private statementsST(STGroup group) {
+   		template = group.getInstanceOf("statements");
+   	}
+
+      public statementsST addStatementsValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._statements.add(value);
+      	template.add("statements", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getStatementsValues() {
+      	return this._statements;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
 	static boolean tryToSetListProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (value == null || value.toString().length() == 0) return true;
 		alreadySet.set(true);
@@ -1531,16 +1597,18 @@ public final class JavaGroup {
 		"~endif~\n" + 
 		"\n" + 
 		"	public ~name~() {\n" + 
-		"		uuid = java.util.UUID.randomUUID().toString();\n" + 
+		"		this.uuid = java.util.UUID.randomUUID().toString();\n" + 
 		"	}\n" + 
 		"\n" + 
-		"	public ~name~(String uuid) {\n" + 
-		"		this.uuid = uuid;\n" + 
-		"	}\n" + 
 		"~if(properties)~\n" + 
 		"\n" + 
 		"	public ~name~(String uuid, ~properties:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
 		"		this.uuid = uuid;\n" + 
+		"		~properties:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	public ~name~(~properties:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
+		"		this.uuid = java.util.UUID.randomUUID().toString();\n" + 
 		"		~properties:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
 		"	}\n" + 
 		"\n" + 
@@ -1722,10 +1790,12 @@ public final class JavaGroup {
 			.append("set(name,type) ::= <<public void set~name;format=\"capitalize\"~(~type~ ~name~) {\n" + 
 		"	this.~name~ = ~name~;\n" + 
 		"}>>\n")
-			.append("Class(name,package,methods,innerClasses,fields,scope,isStatic,isFinal,isAbstract) ::= <<~if(package)~package ~package~;\n" + 
+			.append("Class(name,package,methods,innerClasses,imports,fields,scope,isStatic,isFinal,isAbstract,extends) ::= <<~if(package)~package ~package~;\n" + 
 		"\n" + 
 		"~endif~\n" + 
-		"~if(scope)~~scope~ ~endif~~if(isStatic)~static ~endif~~if(isAbstract)~abstract ~endif~~if(isFinal)~final ~endif~class ~name~ {\n" + 
+		"~imports:{it|import ~it~;};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"~if(scope)~~scope~ ~endif~~if(isStatic)~static ~endif~~if(isAbstract)~abstract ~endif~~if(isFinal)~final ~endif~class ~name~ ~if(extends)~extends ~extends~ ~endif~{\n" + 
 		"\n" + 
 		"	~fields:{it|~if(it.scope)~~it.scope~ ~endif~~if(it.isFinal)~final ~endif~~it.type~~if(it.isArray)~[]~endif~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
 		"\n" + 
@@ -1890,5 +1960,6 @@ public final class JavaGroup {
 		"public ~type~ get~name;format=\"capitalize\"~(~type~ index) {\n" + 
 		"    return this.~name~[index];\n" + 
 		"}>>\n")
+			.append("statements(statements) ::= <<~statements:{it|~it~};separator=\";\\n\"~>>\n")
 		.toString();
 }

@@ -9,7 +9,6 @@ public interface Visitor<T> {
 
    void visit(Node node);
 
-
    T getResult();
 
 }

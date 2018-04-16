@@ -7,12 +7,10 @@ import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class BaseTcpBridgeVerticle extends AbstractVerticle {
 
-   protected final static Logger log = LoggerFactory.getLogger(BaseTcpBridgeVerticle.class);
+   protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BaseTcpBridgeVerticle.class);
 
    @Override
    public void start(Future<Void> startFuture) throws Exception {

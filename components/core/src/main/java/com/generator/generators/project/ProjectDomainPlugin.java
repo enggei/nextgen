@@ -20,18 +20,18 @@ import static com.generator.util.NeoUtil.*;
  */
 public abstract class ProjectDomainPlugin extends Plugin {
 
-	protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ProjectDomainPlugin.class);
+	protected final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ProjectDomainPlugin.class);
 
 	public enum Entities implements Label {
-      Project, Directory, File, Node, Visitor
+      Project, Directory, File, STGroup, STTemplate, Node, Visitor
    }
 
    public enum Relations implements RelationshipType {
-      PROJECT, NODE, NAME, DIRECTORY, PATH, CHILD, FILE, FILETYPE, FILENAME, EXTENSION, RENDERER, CLASSNAME, PACKAGENAME, DIR
+      PROJECT, NODE, NAME, DIRECTORY, PATH, CHILD, FILE, FILETYPE, FILENAME, EXTENSION, GENERATOR, TEMPLATE, TEXT, GENERATOR_ROOT, GROUPID, ARTIFACTID, VERSION, DESCRIPTION, RENDERER, CLASSNAME, PACKAGENAME, DIR
    }
 
    public enum Properties {
-      name, path, fileType, filename, extension, className, packageName, file, dir
+      name, path, fileType, filename, extension, text, groupId, artifactId, version, description, className, packageName, file, dir
    }
 
 	private static final Map<Label,Node> entitiesNodeMap = new LinkedHashMap<>();
@@ -45,21 +45,33 @@ public abstract class ProjectDomainPlugin extends Plugin {
 		entitiesNodeMap.put(Entities.Project, DomainMotif.newDomainEntity(getGraph(), Entities.Project, domainNode));
 		entitiesNodeMap.put(Entities.Directory, DomainMotif.newDomainEntity(getGraph(), Entities.Directory, domainNode));
 		entitiesNodeMap.put(Entities.File, DomainMotif.newDomainEntity(getGraph(), Entities.File, domainNode));
+		entitiesNodeMap.put(Entities.STGroup, DomainMotif.newDomainEntity(getGraph(), Entities.STGroup, domainNode));
+		entitiesNodeMap.put(Entities.STTemplate, DomainMotif.newDomainEntity(getGraph(), Entities.STTemplate, domainNode));
 		entitiesNodeMap.put(Entities.Node, DomainMotif.newDomainEntity(getGraph(), Entities.Node, domainNode));
 		entitiesNodeMap.put(Entities.Visitor, DomainMotif.newDomainEntity(getGraph(), Entities.Visitor, domainNode));
 
 		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Project), Properties.name.name());
+		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Project), Properties.groupId.name());
+		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Project), Properties.artifactId.name());
+		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Project), Properties.version.name());
+		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Project), Properties.description.name());
 		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Directory), Properties.name.name());
 		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Directory), Properties.path.name());
 		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.File), Properties.fileType.name());
 		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.File), Properties.filename.name());
 		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.File), Properties.extension.name());
+		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.STGroup), Properties.name.name());
+		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.STTemplate), Properties.text.name());
+		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.STTemplate), Properties.name.name());
 
 		relate(domainNode, entitiesNodeMap.get(Entities.Project), DomainPlugin.Relations.ENTITY);
 		relate(domainNode, entitiesNodeMap.get(Entities.Node), DomainPlugin.Relations.ENTITY);
 		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Project), Relations.DIRECTORY.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Directory));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Project), Relations.GENERATOR.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.STGroup));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Project), Relations.GENERATOR_ROOT.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Directory));
 		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Directory), Relations.CHILD.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Directory));
 		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Directory), Relations.FILE.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.File));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.STGroup), Relations.TEMPLATE.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.STTemplate));
 		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Node), Relations.RENDERER.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Visitor));
    }
 
@@ -73,6 +85,8 @@ public abstract class ProjectDomainPlugin extends Plugin {
 		if (isProject(neoNode.getNode())) handleProject(pop, neoNode, selectedNodes);
 		if (isDirectory(neoNode.getNode())) handleDirectory(pop, neoNode, selectedNodes);
 		if (isFile(neoNode.getNode())) handleFile(pop, neoNode, selectedNodes);
+		if (isSTGroup(neoNode.getNode())) handleSTGroup(pop, neoNode, selectedNodes);
+		if (isSTTemplate(neoNode.getNode())) handleSTTemplate(pop, neoNode, selectedNodes);
 		if (isNode(neoNode.getNode())) handleNode(pop, neoNode, selectedNodes);
 		if (isVisitor(neoNode.getNode())) handleVisitor(pop, neoNode, selectedNodes);
    }
@@ -82,6 +96,8 @@ public abstract class ProjectDomainPlugin extends Plugin {
 		if (isProject(neoNode.getNode())) return newProjectEditor(neoNode);
 		if (isDirectory(neoNode.getNode())) return newDirectoryEditor(neoNode);
 		if (isFile(neoNode.getNode())) return newFileEditor(neoNode);
+		if (isSTGroup(neoNode.getNode())) return newSTGroupEditor(neoNode);
+		if (isSTTemplate(neoNode.getNode())) return newSTTemplateEditor(neoNode);
 		if (isNode(neoNode.getNode())) return newNodeEditor(neoNode);
 		if (isVisitor(neoNode.getNode())) return newVisitorEditor(neoNode);
       return null;
@@ -94,30 +110,75 @@ public abstract class ProjectDomainPlugin extends Plugin {
 	protected void handleProject(JPopupMenu pop, NeoNode projectNode, Set<NeoNode> selectedNodes) { }
 	protected void handleDirectory(JPopupMenu pop, NeoNode directoryNode, Set<NeoNode> selectedNodes) { }
 	protected void handleFile(JPopupMenu pop, NeoNode fileNode, Set<NeoNode> selectedNodes) { }
+	protected void handleSTGroup(JPopupMenu pop, NeoNode sTGroupNode, Set<NeoNode> selectedNodes) { }
+	protected void handleSTTemplate(JPopupMenu pop, NeoNode sTTemplateNode, Set<NeoNode> selectedNodes) { }
 	protected void handleNode(JPopupMenu pop, NeoNode nodeNode, Set<NeoNode> selectedNodes) { }
 	protected void handleVisitor(JPopupMenu pop, NeoNode visitorNode, Set<NeoNode> selectedNodes) { }	
 
 	protected JComponent newProjectEditor(NeoNode projectNode) { return null; }
 	protected JComponent newDirectoryEditor(NeoNode directoryNode) { return null; }
 	protected JComponent newFileEditor(NeoNode fileNode) { return null; }
+	protected JComponent newSTGroupEditor(NeoNode sTGroupNode) { return null; }
+	protected JComponent newSTTemplateEditor(NeoNode sTTemplateNode) { return null; }
 	protected JComponent newNodeEditor(NeoNode nodeNode) { return null; }
 	protected JComponent newVisitorEditor(NeoNode visitorNode) { return null; }
 
 	public static boolean isProject(Node node) { return hasLabel(node, Entities.Project); }
 	public static boolean isDirectory(Node node) { return hasLabel(node, Entities.Directory); }
 	public static boolean isFile(Node node) { return hasLabel(node, Entities.File); }
+	public static boolean isSTGroup(Node node) { return hasLabel(node, Entities.STGroup); }
+	public static boolean isSTTemplate(Node node) { return hasLabel(node, Entities.STTemplate); }
 	public static boolean isNode(Node node) { return hasLabel(node, Entities.Node); }
 	public static boolean isVisitor(Node node) { return hasLabel(node, Entities.Visitor); }
 
 	protected Node newProject() { return newProject(getGraph()); } 
-	protected Node newProject(Object name) { return newProject(getGraph(), name); } 
+	protected Node newProject(Object name, Object groupId, Object artifactId, Object version, Object description) { return newProject(getGraph(), name, groupId, artifactId, version, description); } 
 
 	public static Node newProject(NeoModel graph) { return DomainMotif.newInstanceNode(graph, entitiesNodeMap.get(Entities.Project)); } 
-	public static Node newProject(NeoModel graph, Object name) {  	
+	public static Node newProject(NeoModel graph, Object name, Object groupId, Object artifactId, Object version, Object description) {  	
 		final Node newNode = newProject(graph); 	
-		if (name != null) relate(newNode, DomainMotif.newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
+		if (name != null) relate(newNode, DomainMotif.newValueNode(graph, name), RelationshipType.withName(Properties.name.name()));
+		if (groupId != null) relate(newNode, DomainMotif.newValueNode(graph, groupId), RelationshipType.withName(Properties.groupId.name()));
+		if (artifactId != null) relate(newNode, DomainMotif.newValueNode(graph, artifactId), RelationshipType.withName(Properties.artifactId.name()));
+		if (version != null) relate(newNode, DomainMotif.newValueNode(graph, version), RelationshipType.withName(Properties.version.name()));
+		if (description != null) relate(newNode, DomainMotif.newValueNode(graph, description), RelationshipType.withName(Properties.description.name())); 	
 		return newNode; 
 	}
+	/* todo
+	public Action newProjectAction() {
+		return new App.TransactionAction("New Project", app) {
+			@Override
+	   	public void actionPerformed(java.awt.event.ActionEvent e, Transaction tx) throws Exception {
+
+			final Map<String,String> properties = new java.util.HashMap<>();
+			   final String name = com.generator.util.SwingUtil.showInputDialog("name", app);
+				if (name != null && name.length() > 0)
+					properties.put("name", name);
+
+			   final String groupId = com.generator.util.SwingUtil.showInputDialog("groupId", app);
+				if (groupId != null && groupId.length() > 0)
+					properties.put("groupId", groupId);
+
+			   final String artifactId = com.generator.util.SwingUtil.showInputDialog("artifactId", app);
+				if (artifactId != null && artifactId.length() > 0)
+					properties.put("artifactId", artifactId);
+
+			   final String version = com.generator.util.SwingUtil.showInputDialog("version", app);
+				if (version != null && version.length() > 0)
+					properties.put("version", version);
+
+			   final String description = com.generator.util.SwingUtil.showInputDialog("description", app);
+				if (description != null && description.length() > 0)
+					properties.put("description", description);
+
+
+			if (properties.isEmpty()) return;
+
+		   //fireNodesLoaded(new());
+	   	}
+		};
+	}
+	*/
 
 	protected Node newDirectory() { return newDirectory(getGraph()); } 
 	protected Node newDirectory(Object name, Object path) { return newDirectory(getGraph(), name, path); } 
@@ -129,6 +190,29 @@ public abstract class ProjectDomainPlugin extends Plugin {
 		if (path != null) relate(newNode, DomainMotif.newValueNode(graph, path), RelationshipType.withName(Properties.path.name())); 	
 		return newNode; 
 	}
+	/* todo
+	public Action newDirectoryAction() {
+		return new App.TransactionAction("New Directory", app) {
+			@Override
+	   	public void actionPerformed(java.awt.event.ActionEvent e, Transaction tx) throws Exception {
+
+			final Map<String,String> properties = new java.util.HashMap<>();
+			   final String name = com.generator.util.SwingUtil.showInputDialog("name", app);
+				if (name != null && name.length() > 0)
+					properties.put("name", name);
+
+			   final String path = com.generator.util.SwingUtil.showInputDialog("path", app);
+				if (path != null && path.length() > 0)
+					properties.put("path", path);
+
+
+			if (properties.isEmpty()) return;
+
+		   //fireNodesLoaded(new());
+	   	}
+		};
+	}
+	*/
 
 	protected Node newFile() { return newFile(getGraph()); } 
 	protected Node newFile(Object fileType, Object filename, Object extension) { return newFile(getGraph(), fileType, filename, extension); } 
@@ -141,12 +225,132 @@ public abstract class ProjectDomainPlugin extends Plugin {
 		if (extension != null) relate(newNode, DomainMotif.newValueNode(graph, extension), RelationshipType.withName(Properties.extension.name())); 	
 		return newNode; 
 	}
+	/* todo
+	public Action newFileAction() {
+		return new App.TransactionAction("New File", app) {
+			@Override
+	   	public void actionPerformed(java.awt.event.ActionEvent e, Transaction tx) throws Exception {
+
+			final Map<String,String> properties = new java.util.HashMap<>();
+			   final String fileType = com.generator.util.SwingUtil.showInputDialog("fileType", app);
+				if (fileType != null && fileType.length() > 0)
+					properties.put("fileType", fileType);
+
+			   final String filename = com.generator.util.SwingUtil.showInputDialog("filename", app);
+				if (filename != null && filename.length() > 0)
+					properties.put("filename", filename);
+
+			   final String extension = com.generator.util.SwingUtil.showInputDialog("extension", app);
+				if (extension != null && extension.length() > 0)
+					properties.put("extension", extension);
+
+
+			if (properties.isEmpty()) return;
+
+		   //fireNodesLoaded(new());
+	   	}
+		};
+	}
+	*/
+
+	protected Node newSTGroup() { return newSTGroup(getGraph()); } 
+	protected Node newSTGroup(Object name) { return newSTGroup(getGraph(), name); } 
+
+	public static Node newSTGroup(NeoModel graph) { return DomainMotif.newInstanceNode(graph, entitiesNodeMap.get(Entities.STGroup)); } 
+	public static Node newSTGroup(NeoModel graph, Object name) {  	
+		final Node newNode = newSTGroup(graph); 	
+		if (name != null) relate(newNode, DomainMotif.newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
+		return newNode; 
+	}
+	/* todo
+	public Action newSTGroupAction() {
+		return new App.TransactionAction("New STGroup", app) {
+			@Override
+	   	public void actionPerformed(java.awt.event.ActionEvent e, Transaction tx) throws Exception {
+
+			final Map<String,String> properties = new java.util.HashMap<>();
+			   final String name = com.generator.util.SwingUtil.showInputDialog("name", app);
+				if (name != null && name.length() > 0)
+					properties.put("name", name);
+
+
+			if (properties.isEmpty()) return;
+
+		   //fireNodesLoaded(new());
+	   	}
+		};
+	}
+	*/
+
+	protected Node newSTTemplate() { return newSTTemplate(getGraph()); } 
+	protected Node newSTTemplate(Object text, Object name) { return newSTTemplate(getGraph(), text, name); } 
+
+	public static Node newSTTemplate(NeoModel graph) { return DomainMotif.newInstanceNode(graph, entitiesNodeMap.get(Entities.STTemplate)); } 
+	public static Node newSTTemplate(NeoModel graph, Object text, Object name) {  	
+		final Node newNode = newSTTemplate(graph); 	
+		if (text != null) relate(newNode, DomainMotif.newValueNode(graph, text), RelationshipType.withName(Properties.text.name()));
+		if (name != null) relate(newNode, DomainMotif.newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
+		return newNode; 
+	}
+	/* todo
+	public Action newSTTemplateAction() {
+		return new App.TransactionAction("New STTemplate", app) {
+			@Override
+	   	public void actionPerformed(java.awt.event.ActionEvent e, Transaction tx) throws Exception {
+
+			final Map<String,String> properties = new java.util.HashMap<>();
+			   final String text = com.generator.util.SwingUtil.showInputDialog("text", app);
+				if (text != null && text.length() > 0)
+					properties.put("text", text);
+
+			   final String name = com.generator.util.SwingUtil.showInputDialog("name", app);
+				if (name != null && name.length() > 0)
+					properties.put("name", name);
+
+
+			if (properties.isEmpty()) return;
+
+		   //fireNodesLoaded(new());
+	   	}
+		};
+	}
+	*/
 
 	protected Node newNode() { return newNode(getGraph()); }
 	public static Node newNode(NeoModel graph) { return DomainMotif.newInstanceNode(graph, entitiesNodeMap.get(Entities.Node)); }
+	/* todo
+	public Action newNodeAction() {
+		return new App.TransactionAction("New Node", app) {
+			@Override
+	   	public void actionPerformed(java.awt.event.ActionEvent e, Transaction tx) throws Exception {
+
+			final Map<String,String> properties = new java.util.HashMap<>();
+
+			if (properties.isEmpty()) return;
+
+		   //fireNodesLoaded(new());
+	   	}
+		};
+	}
+	*/
 
 	protected Node newVisitor() { return newVisitor(getGraph()); }
 	public static Node newVisitor(NeoModel graph) { return DomainMotif.newInstanceNode(graph, entitiesNodeMap.get(Entities.Visitor)); }
+	/* todo
+	public Action newVisitorAction() {
+		return new App.TransactionAction("New Visitor", app) {
+			@Override
+	   	public void actionPerformed(java.awt.event.ActionEvent e, Transaction tx) throws Exception {
+
+			final Map<String,String> properties = new java.util.HashMap<>();
+
+			if (properties.isEmpty()) return;
+
+		   //fireNodesLoaded(new());
+	   	}
+		};
+	}
+	*/
 
 
 	public static void outgoingPROJECT(Node src, RelationConsumer consumer) { outgoing(src, Relations.PROJECT).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
@@ -199,6 +403,46 @@ public abstract class ProjectDomainPlugin extends Plugin {
 	public static void incomingEXTENSION(Node src, RelationConsumer consumer) { incoming(src, Relations.EXTENSION).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
 	public static Node singleIncomingEXTENSION(Node src) { return other(src, singleIncoming(src, Relations.EXTENSION)); }
 
+	public static void outgoingGENERATOR(Node src, RelationConsumer consumer) { outgoing(src, Relations.GENERATOR).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleOutgoingGENERATOR(Node src) { return other(src, singleOutgoing(src, Relations.GENERATOR)); }
+	public static void incomingGENERATOR(Node src, RelationConsumer consumer) { incoming(src, Relations.GENERATOR).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleIncomingGENERATOR(Node src) { return other(src, singleIncoming(src, Relations.GENERATOR)); }
+
+	public static void outgoingTEMPLATE(Node src, RelationConsumer consumer) { outgoing(src, Relations.TEMPLATE).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleOutgoingTEMPLATE(Node src) { return other(src, singleOutgoing(src, Relations.TEMPLATE)); }
+	public static void incomingTEMPLATE(Node src, RelationConsumer consumer) { incoming(src, Relations.TEMPLATE).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleIncomingTEMPLATE(Node src) { return other(src, singleIncoming(src, Relations.TEMPLATE)); }
+
+	public static void outgoingTEXT(Node src, RelationConsumer consumer) { outgoing(src, Relations.TEXT).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleOutgoingTEXT(Node src) { return other(src, singleOutgoing(src, Relations.TEXT)); }
+	public static void incomingTEXT(Node src, RelationConsumer consumer) { incoming(src, Relations.TEXT).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleIncomingTEXT(Node src) { return other(src, singleIncoming(src, Relations.TEXT)); }
+
+	public static void outgoingGENERATOR_ROOT(Node src, RelationConsumer consumer) { outgoing(src, Relations.GENERATOR_ROOT).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleOutgoingGENERATOR_ROOT(Node src) { return other(src, singleOutgoing(src, Relations.GENERATOR_ROOT)); }
+	public static void incomingGENERATOR_ROOT(Node src, RelationConsumer consumer) { incoming(src, Relations.GENERATOR_ROOT).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleIncomingGENERATOR_ROOT(Node src) { return other(src, singleIncoming(src, Relations.GENERATOR_ROOT)); }
+
+	public static void outgoingGROUPID(Node src, RelationConsumer consumer) { outgoing(src, Relations.GROUPID).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleOutgoingGROUPID(Node src) { return other(src, singleOutgoing(src, Relations.GROUPID)); }
+	public static void incomingGROUPID(Node src, RelationConsumer consumer) { incoming(src, Relations.GROUPID).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleIncomingGROUPID(Node src) { return other(src, singleIncoming(src, Relations.GROUPID)); }
+
+	public static void outgoingARTIFACTID(Node src, RelationConsumer consumer) { outgoing(src, Relations.ARTIFACTID).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleOutgoingARTIFACTID(Node src) { return other(src, singleOutgoing(src, Relations.ARTIFACTID)); }
+	public static void incomingARTIFACTID(Node src, RelationConsumer consumer) { incoming(src, Relations.ARTIFACTID).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleIncomingARTIFACTID(Node src) { return other(src, singleIncoming(src, Relations.ARTIFACTID)); }
+
+	public static void outgoingVERSION(Node src, RelationConsumer consumer) { outgoing(src, Relations.VERSION).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleOutgoingVERSION(Node src) { return other(src, singleOutgoing(src, Relations.VERSION)); }
+	public static void incomingVERSION(Node src, RelationConsumer consumer) { incoming(src, Relations.VERSION).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleIncomingVERSION(Node src) { return other(src, singleIncoming(src, Relations.VERSION)); }
+
+	public static void outgoingDESCRIPTION(Node src, RelationConsumer consumer) { outgoing(src, Relations.DESCRIPTION).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleOutgoingDESCRIPTION(Node src) { return other(src, singleOutgoing(src, Relations.DESCRIPTION)); }
+	public static void incomingDESCRIPTION(Node src, RelationConsumer consumer) { incoming(src, Relations.DESCRIPTION).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleIncomingDESCRIPTION(Node src) { return other(src, singleIncoming(src, Relations.DESCRIPTION)); }
+
 	public static void outgoingRENDERER(Node src, RelationConsumer consumer) { outgoing(src, Relations.RENDERER).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
 	public static Node singleOutgoingRENDERER(Node src) { return other(src, singleOutgoing(src, Relations.RENDERER)); }
 	public static void incomingRENDERER(Node src, RelationConsumer consumer) { incoming(src, Relations.RENDERER).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
@@ -230,6 +474,14 @@ public abstract class ProjectDomainPlugin extends Plugin {
 	public static Relationship relateFILETYPE(Node src, Node dst) { return relate(src, dst, Relations.FILETYPE); }
 	public static Relationship relateFILENAME(Node src, Node dst) { return relate(src, dst, Relations.FILENAME); }
 	public static Relationship relateEXTENSION(Node src, Node dst) { return relate(src, dst, Relations.EXTENSION); }
+	public static Relationship relateGENERATOR(Node src, Node dst) { return relate(src, dst, Relations.GENERATOR); }
+	public static Relationship relateTEMPLATE(Node src, Node dst) { return relate(src, dst, Relations.TEMPLATE); }
+	public static Relationship relateTEXT(Node src, Node dst) { return relate(src, dst, Relations.TEXT); }
+	public static Relationship relateGENERATOR_ROOT(Node src, Node dst) { return relate(src, dst, Relations.GENERATOR_ROOT); }
+	public static Relationship relateGROUPID(Node src, Node dst) { return relate(src, dst, Relations.GROUPID); }
+	public static Relationship relateARTIFACTID(Node src, Node dst) { return relate(src, dst, Relations.ARTIFACTID); }
+	public static Relationship relateVERSION(Node src, Node dst) { return relate(src, dst, Relations.VERSION); }
+	public static Relationship relateDESCRIPTION(Node src, Node dst) { return relate(src, dst, Relations.DESCRIPTION); }
 	public static Relationship relateRENDERER(Node src, Node dst) { return relate(src, dst, Relations.RENDERER); }
 	public static Relationship relateCLASSNAME(Node src, Node dst) { return relate(src, dst, Relations.CLASSNAME); }
 	public static Relationship relatePACKAGENAME(Node src, Node dst) { return relate(src, dst, Relations.PACKAGENAME); }
@@ -279,6 +531,51 @@ public abstract class ProjectDomainPlugin extends Plugin {
 	public static <T extends PropertyContainer> T removeExtensionProperty(T container) { DomainMotif.removeEntityProperty(container, Properties.extension.name()); return container; }
 
 	protected <T extends PropertyContainer> T setExtensionProperty(T container, Object value) { setExtensionProperty(getGraph(), container, value); return container; }
+
+	// text
+	public static <T> T getTextProperty(PropertyContainer container) { return getTextProperty(container, null); }
+	public static <T> T getTextProperty(PropertyContainer container, T defaultValue) { return DomainMotif.getEntityProperty(container, Properties.text.name(), defaultValue); }
+	public static boolean hasTextProperty(PropertyContainer container) { return DomainMotif.hasEntityProperty(container, Properties.text.name()); }
+	public static <T extends PropertyContainer> T setTextProperty(NeoModel graph, T container, Object value) { DomainMotif.setEntityProperty(graph, container, Properties.text.name(), value); return container; }
+	public static <T extends PropertyContainer> T removeTextProperty(T container) { DomainMotif.removeEntityProperty(container, Properties.text.name()); return container; }
+
+	protected <T extends PropertyContainer> T setTextProperty(T container, Object value) { setTextProperty(getGraph(), container, value); return container; }
+
+	// groupId
+	public static <T> T getGroupIdProperty(PropertyContainer container) { return getGroupIdProperty(container, null); }
+	public static <T> T getGroupIdProperty(PropertyContainer container, T defaultValue) { return DomainMotif.getEntityProperty(container, Properties.groupId.name(), defaultValue); }
+	public static boolean hasGroupIdProperty(PropertyContainer container) { return DomainMotif.hasEntityProperty(container, Properties.groupId.name()); }
+	public static <T extends PropertyContainer> T setGroupIdProperty(NeoModel graph, T container, Object value) { DomainMotif.setEntityProperty(graph, container, Properties.groupId.name(), value); return container; }
+	public static <T extends PropertyContainer> T removeGroupIdProperty(T container) { DomainMotif.removeEntityProperty(container, Properties.groupId.name()); return container; }
+
+	protected <T extends PropertyContainer> T setGroupIdProperty(T container, Object value) { setGroupIdProperty(getGraph(), container, value); return container; }
+
+	// artifactId
+	public static <T> T getArtifactIdProperty(PropertyContainer container) { return getArtifactIdProperty(container, null); }
+	public static <T> T getArtifactIdProperty(PropertyContainer container, T defaultValue) { return DomainMotif.getEntityProperty(container, Properties.artifactId.name(), defaultValue); }
+	public static boolean hasArtifactIdProperty(PropertyContainer container) { return DomainMotif.hasEntityProperty(container, Properties.artifactId.name()); }
+	public static <T extends PropertyContainer> T setArtifactIdProperty(NeoModel graph, T container, Object value) { DomainMotif.setEntityProperty(graph, container, Properties.artifactId.name(), value); return container; }
+	public static <T extends PropertyContainer> T removeArtifactIdProperty(T container) { DomainMotif.removeEntityProperty(container, Properties.artifactId.name()); return container; }
+
+	protected <T extends PropertyContainer> T setArtifactIdProperty(T container, Object value) { setArtifactIdProperty(getGraph(), container, value); return container; }
+
+	// version
+	public static <T> T getVersionProperty(PropertyContainer container) { return getVersionProperty(container, null); }
+	public static <T> T getVersionProperty(PropertyContainer container, T defaultValue) { return DomainMotif.getEntityProperty(container, Properties.version.name(), defaultValue); }
+	public static boolean hasVersionProperty(PropertyContainer container) { return DomainMotif.hasEntityProperty(container, Properties.version.name()); }
+	public static <T extends PropertyContainer> T setVersionProperty(NeoModel graph, T container, Object value) { DomainMotif.setEntityProperty(graph, container, Properties.version.name(), value); return container; }
+	public static <T extends PropertyContainer> T removeVersionProperty(T container) { DomainMotif.removeEntityProperty(container, Properties.version.name()); return container; }
+
+	protected <T extends PropertyContainer> T setVersionProperty(T container, Object value) { setVersionProperty(getGraph(), container, value); return container; }
+
+	// description
+	public static <T> T getDescriptionProperty(PropertyContainer container) { return getDescriptionProperty(container, null); }
+	public static <T> T getDescriptionProperty(PropertyContainer container, T defaultValue) { return DomainMotif.getEntityProperty(container, Properties.description.name(), defaultValue); }
+	public static boolean hasDescriptionProperty(PropertyContainer container) { return DomainMotif.hasEntityProperty(container, Properties.description.name()); }
+	public static <T extends PropertyContainer> T setDescriptionProperty(NeoModel graph, T container, Object value) { DomainMotif.setEntityProperty(graph, container, Properties.description.name(), value); return container; }
+	public static <T extends PropertyContainer> T removeDescriptionProperty(T container) { DomainMotif.removeEntityProperty(container, Properties.description.name()); return container; }
+
+	protected <T extends PropertyContainer> T setDescriptionProperty(T container, Object value) { setDescriptionProperty(getGraph(), container, value); return container; }
 
 	// className
 	public static <T> T getClassNameProperty(PropertyContainer container) { return getClassNameProperty(container, null); }

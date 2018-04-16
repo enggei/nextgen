@@ -15,12 +15,10 @@ import com.generator.generators.maven.MavenPlugin;
 import com.generator.generators.mysql.MySQLPlugin;
 import com.generator.generators.ssh.SSHPlugin;
 import com.generator.generators.stringtemplate.GeneratedFile;
+import com.generator.generators.stringtemplate.StringTemplateDomainPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.neo.NeoModel;
-import com.generator.util.FileUtil;
-import com.generator.util.NeoUtil;
-import com.generator.util.SwingUtil;
-import com.generator.util.TextProcessingPanel;
+import com.generator.util.*;
 import com.jcraft.jsch.Session;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
@@ -48,6 +46,8 @@ public class ProjectPlugin extends ProjectDomainPlugin {
 
    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ProjectPlugin.class);
 
+   private final ProjectGroup projectGroup = new ProjectGroup();
+
    public enum Filetype {
       java, plain, namedFile, groupFile
    }
@@ -65,10 +65,16 @@ public class ProjectPlugin extends ProjectDomainPlugin {
       menu.add(new App.TransactionAction("New Project", app) {
          @Override
          protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-            final String name = SwingUtil.showInputDialog("Project name", app);
-            if (name == null || name.length() == 0) return;
+            final String input = SwingUtil.showInputDialog("Project name groupId artifactId version", app);
+            if (input == null || input.length() == 0) return;
 
-            fireNodesLoaded(newProject(name));
+            final String[] split = input.split(" ");
+            final String name = split[0];
+            final String groupId = split.length > 1 ? split[1] : null;
+            final String artifactId = split.length > 2 ? split[2] : null;
+            final String version = split.length > 3 ? split[3] : null;
+
+            fireNodesLoaded(newProject(name, groupId, artifactId, version, null));
          }
       });
    }
@@ -98,6 +104,60 @@ public class ProjectPlugin extends ProjectDomainPlugin {
             }
          });
       }
+
+      if (hasOutgoing(neoNode.getNode(), Relations.GENERATOR_ROOT)) {
+
+         final Node directoryNode = singleOutgoingGENERATOR_ROOT(neoNode.getNode());
+
+         pop.add(new App.TransactionAction("Generate generator", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+               app.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+               final Node projectNode = neoNode.getNode();
+
+               final String projectName = getNameProperty(projectNode, "").replaceAll("-", "_");
+               final String packageName = "projects." + projectName.toLowerCase();
+               final File path = getFile(directoryNode);
+               final File configPath = new File(path.getAbsolutePath(), GeneratedFile.packageToPath(packageName, projectName + ".json"));
+
+               if (!configPath.exists())
+                  FileUtil.tryToCreateFileIfNotExists(configPath);
+
+               final ProjectGroup.ProjectST projectST = projectGroup.newProject().
+                     setPackageName(packageName).
+                     setName(projectName).
+                     setConfigPath(configPath).
+                     setDescription(getDescriptionProperty(projectNode)).
+                     setVersion(getVersionProperty(projectNode)).
+                     setGroupId(getGroupIdProperty(projectNode)).
+                     setArtifactId(getArtifactIdProperty(projectNode));
+
+               outgoingGENERATOR(projectNode, (relationship, stGroupNode) -> incomingRENDERER(stGroupNode, (rendererRelation, other) -> {
+                  final String groupPackage = getPackageNameProperty(rendererRelation);
+                  projectST.addGeneratorsValue(StringUtil.capitalize(getNameProperty(stGroupNode)) + "Group", groupPackage);
+               }));
+
+               GeneratedFile.newJavaFile(path, packageName, projectName).write(projectST);
+
+               app.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            }
+         });
+      }
+
+      for (NeoNode selectedNode : selectedNodes) {
+         if (hasLabel(selectedNode.getNode(), StringTemplateDomainPlugin.Entities.STGroup)) {
+
+            pop.add(new App.TransactionAction("Render All directories", app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  app.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                  outgoingDIRECTORY(neoNode.getNode(), (relationship, other) -> renderDirectory(other));
+                  app.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+               }
+            });
+         }
+      }
    }
 
    @Override
@@ -122,7 +182,7 @@ public class ProjectPlugin extends ProjectDomainPlugin {
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                new ProcessExecutor().
                      directory(dir).
-                     command("gnome-terminal","--working-directory=" + dir.getAbsolutePath())
+                     command("gnome-terminal", "--working-directory=" + dir.getAbsolutePath())
                      .redirectOutput(app.logWindow.getLogOutputStream()).execute();
             }
          });
@@ -133,7 +193,7 @@ public class ProjectPlugin extends ProjectDomainPlugin {
             for (File file : files) {
                if ("pom.xml".equals(file.getName()))
                   pop.add(MavenPlugin.createPomLifecycleMenu(file.getParentFile(), app));
-               else if("gradlew".equals(file.getName())) {
+               else if ("gradlew".equals(file.getName())) {
                   pop.add(GradlePlugin.createGradlewBuild(file.getParentFile(), app));
                }
             }
@@ -557,6 +617,11 @@ public class ProjectPlugin extends ProjectDomainPlugin {
    }
 
    @Override
+   protected JComponent newProjectEditor(NeoNode projectNode) {
+      return new ProjectEditor(projectNode);
+   }
+
+   @Override
    protected JComponent newDirectoryEditor(NeoNode neoNode) {
       return new DirectoryEditor(neoNode);
    }
@@ -648,6 +713,44 @@ public class ProjectPlugin extends ProjectDomainPlugin {
             if (file.isFile()) out.append(file.getPath()).append("\n");
             else listDirectory(file, out);
          }
+      }
+   }
+
+   private final class ProjectEditor extends JPanel {
+      ProjectEditor(NeoNode node) {
+         super(new BorderLayout());
+
+         final JTextArea txtEditor = SwingUtil.newTextArea();
+
+         final StringBuilder out = new StringBuilder();
+         listDirectories(node.getNode(), out);
+         txtEditor.setText(out.toString().trim());
+         txtEditor.setCaretPosition(0);
+
+         txtEditor.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+               if (SwingUtilities.isRightMouseButton(e))
+                  SwingUtilities.invokeLater(() -> {
+                     final TextProcessingPanel processingPanel = new TextProcessingPanel(txtEditor.getText(), Collections.emptySet());
+                     SwingUtil.showDialog(processingPanel, app, "Process Text", new SwingUtil.ConfirmAction() {
+                        @Override
+                        public void verifyAndCommit() throws Exception {
+                           final String outputText = processingPanel.getOutputText();
+                           if (outputText.trim().length() == 0) return;
+                           SwingUtil.toClipboard(outputText);
+                        }
+                     });
+                  });
+            }
+         });
+
+         add(new JScrollPane(txtEditor), BorderLayout.CENTER);
+      }
+
+      private void listDirectories(Node projectNode, StringBuilder out) {
+         out.append("Project \"").append(getNameProperty(projectNode, "")).append("\" : \n");
+         outgoingDIRECTORY(projectNode, (relationship, directoryNode) -> out.append("\n\t").append(getNameProperty(directoryNode, "")).append(" : ").append(getPathProperty(directoryNode, "")));
       }
    }
 

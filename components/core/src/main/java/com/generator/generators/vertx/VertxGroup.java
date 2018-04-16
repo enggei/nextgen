@@ -78,11 +78,44 @@ public final class VertxGroup {
       return new BaseRouterVerticleST(stGroup);
    }
 
+   public mvn_coreST newmvn_core() {
+      return new mvn_coreST(stGroup);
+   }
+
+   public VertxUtilST newVertxUtil() {
+      return new VertxUtilST(stGroup);
+   }
+
+   public DockerST newDocker() {
+      return new DockerST(stGroup);
+   }
+
+   public mvn_unitST newmvn_unit() {
+      return new mvn_unitST(stGroup);
+   }
+
+   public JsonUtilST newJsonUtil() {
+      return new JsonUtilST(stGroup);
+   }
+
+   public mvn_fat_jarST newmvn_fat_jar() {
+      return new mvn_fat_jarST(stGroup);
+   }
+
+   public mvn_hazelcastST newmvn_hazelcast() {
+      return new mvn_hazelcastST(stGroup);
+   }
+
+   public hazelcastConfigXMLST newhazelcastConfigXML() {
+      return new hazelcastConfigXMLST(stGroup);
+   }
+
    public final class NeoVerticleST implements VertxGroupTemplate {
 
       private java.util.Set<java.util.Map<String, Object>> _actions = new java.util.LinkedHashSet<>();
       private Object _name;
       private Object _packageName;
+      private Object _vertxUtilPackage;
 
       private final ST template;
 
@@ -134,6 +167,22 @@ public final class VertxGroup {
 
       public String getPackageName() {
       	return (String) this._packageName;
+      }
+
+      public NeoVerticleST setVertxUtilPackage(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._vertxUtilPackage == null) {
+            this._vertxUtilPackage = value;
+         	template.add("vertxUtilPackage", value);
+         }
+
+      	return this;
+      }
+
+      public String getVertxUtilPackage() {
+      	return (String) this._vertxUtilPackage;
       }
 
       @Override
@@ -254,6 +303,9 @@ public final class VertxGroup {
       private Object _name;
       private Object _package;
       private java.util.Set<java.util.Map<String, Object>> _outgoing = new java.util.LinkedHashSet<>();
+      private Object _vertxUtilPackage;
+      private Object _implementation;
+      private Object _hazelcastConfig;
 
       private final ST template;
 
@@ -319,6 +371,54 @@ public final class VertxGroup {
 
       public java.util.Set<java.util.Map<String, Object>> getOutgoing() {
       	return this._outgoing;
+      }
+
+      public VerticleST setVertxUtilPackage(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._vertxUtilPackage == null) {
+            this._vertxUtilPackage = value;
+         	template.add("vertxUtilPackage", value);
+         }
+
+      	return this;
+      }
+
+      public String getVertxUtilPackage() {
+      	return (String) this._vertxUtilPackage;
+      }
+
+      public VerticleST setImplementation(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._implementation == null) {
+            this._implementation = value;
+         	template.add("implementation", value);
+         }
+
+      	return this;
+      }
+
+      public String getImplementation() {
+      	return (String) this._implementation;
+      }
+
+      public VerticleST setHazelcastConfig(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._hazelcastConfig == null) {
+            this._hazelcastConfig = value;
+         	template.add("hazelcastConfig", value);
+         }
+
+      	return this;
+      }
+
+      public String getHazelcastConfig() {
+      	return (String) this._hazelcastConfig;
       }
 
       @Override
@@ -411,6 +511,9 @@ public final class VertxGroup {
       private Object _name;
       private Object _verticle;
       private Object _packageName;
+      private java.util.Set<java.util.Map<String, Object>> _outgoing = new java.util.LinkedHashSet<>();
+      private Object _vertxUtilPackage;
+      private java.util.Set<java.util.Map<String, Object>> _incoming = new java.util.LinkedHashSet<>();
 
       private final ST template;
 
@@ -464,6 +567,50 @@ public final class VertxGroup {
 
       public String getPackageName() {
       	return (String) this._packageName;
+      }
+
+      public VerticleTestST addOutgoingValue(Object address_, Object name_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("address", (address_ == null || address_.toString().length() == 0) ? null : address_);
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	this._outgoing.add(map);
+
+         template.addAggr("outgoing.{address, name}", map.get("address"), map.get("name"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getOutgoing() {
+      	return this._outgoing;
+      }
+
+      public VerticleTestST setVertxUtilPackage(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._vertxUtilPackage == null) {
+            this._vertxUtilPackage = value;
+         	template.add("vertxUtilPackage", value);
+         }
+
+      	return this;
+      }
+
+      public String getVertxUtilPackage() {
+      	return (String) this._vertxUtilPackage;
+      }
+
+      public VerticleTestST addIncomingValue(Object address_, Object name_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("address", (address_ == null || address_.toString().length() == 0) ? null : address_);
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	this._incoming.add(map);
+
+         template.addAggr("incoming.{address, name}", map.get("address"), map.get("name"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getIncoming() {
+      	return this._incoming;
       }
 
       @Override
@@ -695,6 +842,307 @@ public final class VertxGroup {
    	}
    }
 
+   public final class mvn_coreST implements VertxGroupTemplate {
+
+
+      private final ST template;
+
+      private mvn_coreST(STGroup group) {
+   		template = group.getInstanceOf("mvn_core");
+   	}
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class VertxUtilST implements VertxGroupTemplate {
+
+      private Object _packageName;
+      private Object _tcpEventbus;
+
+      private final ST template;
+
+      private VertxUtilST(STGroup group) {
+   		template = group.getInstanceOf("VertxUtil");
+   	}
+
+      public VertxUtilST setPackageName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._packageName == null) {
+            this._packageName = value;
+         	template.add("packageName", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackageName() {
+      	return (String) this._packageName;
+      }
+
+      public VertxUtilST setTcpEventbus(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._tcpEventbus == null) {
+            this._tcpEventbus = value;
+         	template.add("tcpEventbus", value);
+         }
+
+      	return this;
+      }
+
+      public String getTcpEventbus() {
+      	return (String) this._tcpEventbus;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class DockerST implements VertxGroupTemplate {
+
+      private Object _exposePort;
+      private Object _verticleFile;
+      private Object _verticleHome;
+      private Object _verticleName;
+      private java.util.Set<java.util.Map<String, Object>> _vertxOptions = new java.util.LinkedHashSet<>();
+      private java.util.Set<java.util.Map<String, Object>> _javaOptions = new java.util.LinkedHashSet<>();
+      private java.util.Set<java.util.Map<String, Object>> _copies = new java.util.LinkedHashSet<>();
+
+      private final ST template;
+
+      private DockerST(STGroup group) {
+   		template = group.getInstanceOf("Docker");
+   	}
+
+      public DockerST setExposePort(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._exposePort == null) {
+            this._exposePort = value;
+         	template.add("exposePort", value);
+         }
+
+      	return this;
+      }
+
+      public String getExposePort() {
+      	return (String) this._exposePort;
+      }
+
+      public DockerST setVerticleFile(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._verticleFile == null) {
+            this._verticleFile = value;
+         	template.add("verticleFile", value);
+         }
+
+      	return this;
+      }
+
+      public String getVerticleFile() {
+      	return (String) this._verticleFile;
+      }
+
+      public DockerST setVerticleHome(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._verticleHome == null) {
+            this._verticleHome = value;
+         	template.add("verticleHome", value);
+         }
+
+      	return this;
+      }
+
+      public String getVerticleHome() {
+      	return (String) this._verticleHome;
+      }
+
+      public DockerST setVerticleName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._verticleName == null) {
+            this._verticleName = value;
+         	template.add("verticleName", value);
+         }
+
+      	return this;
+      }
+
+      public String getVerticleName() {
+      	return (String) this._verticleName;
+      }
+
+      public DockerST addVertxOptionsValue(Object key_, Object value_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("key", (key_ == null || key_.toString().length() == 0) ? null : key_);
+      	map.put("value", (value_ == null || value_.toString().length() == 0) ? null : value_);
+      	this._vertxOptions.add(map);
+
+         template.addAggr("vertxOptions.{key, value}", map.get("key"), map.get("value"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getVertxOptions() {
+      	return this._vertxOptions;
+      }
+
+      public DockerST addJavaOptionsValue(Object key_, Object value_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("key", (key_ == null || key_.toString().length() == 0) ? null : key_);
+      	map.put("value", (value_ == null || value_.toString().length() == 0) ? null : value_);
+      	this._javaOptions.add(map);
+
+         template.addAggr("javaOptions.{key, value}", map.get("key"), map.get("value"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getJavaOptions() {
+      	return this._javaOptions;
+      }
+
+      public DockerST addCopiesValue(Object filename_, Object src_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("filename", (filename_ == null || filename_.toString().length() == 0) ? null : filename_);
+      	map.put("src", (src_ == null || src_.toString().length() == 0) ? null : src_);
+      	this._copies.add(map);
+
+         template.addAggr("copies.{filename, src}", map.get("filename"), map.get("src"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getCopies() {
+      	return this._copies;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class mvn_unitST implements VertxGroupTemplate {
+
+
+      private final ST template;
+
+      private mvn_unitST(STGroup group) {
+   		template = group.getInstanceOf("mvn_unit");
+   	}
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class JsonUtilST implements VertxGroupTemplate {
+
+      private Object _packageName;
+
+      private final ST template;
+
+      private JsonUtilST(STGroup group) {
+   		template = group.getInstanceOf("JsonUtil");
+   	}
+
+      public JsonUtilST setPackageName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._packageName == null) {
+            this._packageName = value;
+         	template.add("packageName", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackageName() {
+      	return (String) this._packageName;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class mvn_fat_jarST implements VertxGroupTemplate {
+
+      private Object _mainClass;
+
+      private final ST template;
+
+      private mvn_fat_jarST(STGroup group) {
+   		template = group.getInstanceOf("mvn_fat_jar");
+   	}
+
+      public mvn_fat_jarST setMainClass(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._mainClass == null) {
+            this._mainClass = value;
+         	template.add("mainClass", value);
+         }
+
+      	return this;
+      }
+
+      public String getMainClass() {
+      	return (String) this._mainClass;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class mvn_hazelcastST implements VertxGroupTemplate {
+
+
+      private final ST template;
+
+      private mvn_hazelcastST(STGroup group) {
+   		template = group.getInstanceOf("mvn_hazelcast");
+   	}
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class hazelcastConfigXMLST implements VertxGroupTemplate {
+
+
+      private final ST template;
+
+      private hazelcastConfigXMLST(STGroup group) {
+   		template = group.getInstanceOf("hazelcastConfigXML");
+   	}
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
 	static boolean tryToSetListProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (value == null || value.toString().length() == 0) return true;
 		alreadySet.set(true);
@@ -825,10 +1273,11 @@ public final class VertxGroup {
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 		.append("eom() ::= <<}>>\n")
 		.append("gt() ::= \">\"\n")
-			.append("NeoVerticle(actions,name,packageName) ::= <<package ~packageName~;\n" + 
+			.append("NeoVerticle(actions,name,packageName,vertxUtilPackage) ::= <<package ~packageName~;\n" + 
 		"\n" + 
-		"import com.ud.vertx.JsonUtil;\n" + 
-		"import com.ud.vertx.VertxUtil;\n" + 
+		"import ~if(vertxUtilPackage)~~vertxUtilPackage~~else~com.generator.util~endif~.VertxUtil;\n" + 
+		"import ~if(vertxUtilPackage)~~vertxUtilPackage~~else~com.generator.util~endif~.JsonUtil;\n" + 
+		"\n" + 
 		"import io.vertx.core.AbstractVerticle;\n" + 
 		"import io.vertx.core.Future;\n" + 
 		"import io.vertx.core.Handler;\n" + 
@@ -841,7 +1290,7 @@ public final class VertxGroup {
 		"\n" + 
 		"import java.io.File;\n" + 
 		"\n" + 
-		"import static com.ud.vertx.VertxUtil.executeBlocking;\n" + 
+		"import static ~if(vertxUtilPackage)~~vertxUtilPackage~~else~com.generator.util~endif~.VertxUtil.executeBlocking;\n" + 
 		"\n" + 
 		"public abstract class ~name~ extends AbstractVerticle {\n" + 
 		"\n" + 
@@ -870,8 +1319,8 @@ public final class VertxGroup {
 		"         public JsonObject execute() {\n" + 
 		"\n" + 
 		"            db = new GraphDatabaseFactory().\n" + 
-		"                  newEmbeddedDatabaseBuilder(new File(config().getString(\"db.path\"))).\n" + 
-		"                  setConfig(GraphDatabaseSettings.allow_store_upgrade, \"true\").\n" + 
+		"                  newEmbeddedDatabaseBuilder(new File(config().getString(\"path\"))).\n" + 
+		"                  setConfig(GraphDatabaseSettings.allow_upgrade, \"true\").\n" + 
 		"                  newGraphDatabase();\n" + 
 		"\n" + 
 		"				try (Transaction tx = db.beginTx()){\n" + 
@@ -902,7 +1351,7 @@ public final class VertxGroup {
 		"\n" + 
 		"	@Override\n" + 
 		"   public void stop(Future<Void> stopFuture) throws Exception {\n" + 
-		"      log.info(\"stop ScanDB \" + deploymentID());\n" + 
+		"      log.info(\"stop ~name~ \" + deploymentID());\n" + 
 		"      db.shutdown();\n" + 
 		"		super.stop(stopFuture);\n" + 
 		"   }\n" + 
@@ -988,7 +1437,7 @@ public final class VertxGroup {
 		"      log.info(\"on ~it.name~ \" + debug(routingContext));\n" + 
 		"   ~eom()~};separator=\"\\n\"~\n" + 
 		"\n" + 
-		"	private void forward(RoutingContext routingContext, String address) {\n" + 
+		"	protected void forward(RoutingContext routingContext, String address) {\n" + 
 		"      log.info(debug(routingContext) + \" => \" + address);\n" + 
 		"      VertxUtil.sendJsonMessage(vertx, address, new JsonObject(), log, new VertxUtil.SuccessHandler<Message<JsonObject>~gt()~() {\n" + 
 		"         @Override\n" + 
@@ -1010,9 +1459,9 @@ public final class VertxGroup {
 		"      return request.request().uri() + \" \" + out.toString().trim();\n" + 
 		"   }\n" + 
 		"}>>\n")
-			.append("Verticle(incoming,name,package,outgoing) ::= <<package ~package~;\n" + 
+			.append("Verticle(incoming,name,package,outgoing,vertxUtilPackage,implementation,hazelcastConfig) ::= <<package ~package~;\n" + 
 		"\n" + 
-		"import com.generator.util.VertxUtil;\n" + 
+		"import ~if(vertxUtilPackage)~~vertxUtilPackage~~else~com.generator.util~endif~.VertxUtil;\n" + 
 		"\n" + 
 		"import io.vertx.core.AbstractVerticle;\n" + 
 		"import io.vertx.core.Future;\n" + 
@@ -1022,7 +1471,7 @@ public final class VertxGroup {
 		"\n" + 
 		"public class ~name~ extends AbstractVerticle {\n" + 
 		"\n" + 
-		"   protected final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(~name~.class);\n" + 
+		"   protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" + 
 		"\n" + 
 		"   @Override\n" + 
 		"   public void start(Future<Void> startFuture) throws Exception {\n" + 
@@ -1057,6 +1506,23 @@ public final class VertxGroup {
 		"	~incoming:{it|protected void handle~it.name~(Message<JsonObject> message) { log.info(\"handle message ~it.address~ \" + message.body().toString()); ~eom()~ };separator=\"\\n\"~\n" + 
 		"\n" + 
 		"	protected void handleInstanceMessage(Message<JsonObject> message) { log.info(\"handle instance message \" + deploymentID() + \" \" + message.body().toString()); }\n" + 
+		"~if(implementation)~\n" + 
+		"\n" + 
+		"	// to run: java -Dlog4j.configuration=file:./log4j.properties~if(hazelcastConfig)~ -Dvertx.hazelcast.config=~hazelcastConfig~~endif~ -jar [name]-fat.jar\n" + 
+		"   public static void main(String[] args) {\n" + 
+		"		VertxUtil.deploy(io.vertx.core.Vertx.vertx(), ~implementation~.class, new io.vertx.core.DeploymentOptions(), log, new VertxUtil.SuccessHandler<String>() {\n" + 
+		"         @Override\n" + 
+		"         public void onSuccess(String result) {\n" + 
+		"            log.info(\"deploy ~name~ \" + result);\n" + 
+		"         }\n" + 
+		"\n" + 
+		"         @Override\n" + 
+		"         public void onFail(Throwable t) {\n" + 
+		"            log.error(\"deploy ~name~ failed \" + t.getMessage(), t);\n" + 
+		"         }\n" + 
+		"      });\n" + 
+		"   }\n" + 
+		"~endif~\n" + 
 		"}>>\n")
 			.append("RESTVerticle(name,packageName,endpoints,events) ::= <<package ~packageName~;\n" + 
 		"\n" + 
@@ -1105,11 +1571,15 @@ public final class VertxGroup {
 		"	protected void onStart(Future<Void> startFuture) {\n" + 
 		"  	}\n" + 
 		"}>>\n")
-			.append("VerticleTest(name,verticle,packageName) ::= <<package ~packageName~;\n" + 
+			.append("VerticleTest(name,verticle,packageName,outgoing,vertxUtilPackage,incoming) ::= <<package ~packageName~;\n" + 
 		"\n" + 
-		"import com.ud.vertx.VertxUtil;\n" + 
+		"import ~if(vertxUtilPackage)~~vertxUtilPackage~~else~com.generator.util~endif~.VertxUtil;;\n" + 
+		"\n" + 
 		"import io.vertx.core.DeploymentOptions;\n" + 
+		"import io.vertx.core.Handler;\n" + 
 		"import io.vertx.core.Vertx;\n" + 
+		"import io.vertx.core.eventbus.Message;\n" + 
+		"import io.vertx.core.json.JsonObject;\n" + 
 		"import io.vertx.ext.unit.Async;\n" + 
 		"import io.vertx.ext.unit.TestContext;\n" + 
 		"import io.vertx.ext.unit.junit.VertxUnitRunner;\n" + 
@@ -1123,7 +1593,7 @@ public final class VertxGroup {
 		" * ~name~ test base class\n" + 
 		" */\n" + 
 		"@RunWith(VertxUnitRunner.class)\n" + 
-		"public class ~name~ {\n" + 
+		"public abstract class ~name~ {\n" + 
 		"\n" + 
 		"   protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" + 
 		"\n" + 
@@ -1161,6 +1631,18 @@ public final class VertxGroup {
 		"   public void after(TestContext context) {\n" + 
 		"      vertx.close(context.asyncAssertSuccess());\n" + 
 		"   }\n" + 
+		"\n" + 
+		"~outgoing:{it|\n" + 
+		"	protected void send~it.name;format=\"capitalize\"~(JsonObject parameters, VertxUtil.SuccessHandler<Message<JsonObject~gt()~> handler) {\n" + 
+		"      VertxUtil.sendJsonMessage(vertx, \"~it.address~\", parameters, log, handler);\n" + 
+		"   ~eom()~\n" + 
+		"};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"~incoming:{it|\n" + 
+		"	protected void consume~it.name;format=\"capitalize\"~(Handler<Message<JsonObject~gt()~> handler) {\n" + 
+		"      VertxUtil.consume(vertx, \"~name~\", \"~it.address~\", log, handler);\n" + 
+		"   ~eom()~\n" + 
+		"};separator=\"\\n\"~\n" + 
 		"}>>\n")
 			.append("API() ::= <<package ~packageName~;\n" + 
 		"\n" + 
@@ -1363,5 +1845,909 @@ public final class VertxGroup {
 		"      return request.request().uri() + \" \" + out.toString().trim();\n" + 
 		"   }\n" + 
 		"}>>\n")
+			.append("mvn_core() ::= <<<!-- https://mvnrepository.com/artifact/io.vertx/vertx-core -->\n" + 
+		"<dependency>\n" + 
+		"    <groupId>io.vertx</groupId>\n" + 
+		"    <artifactId>vertx-core</artifactId>\n" + 
+		"    <version>3.5.1</version>\n" + 
+		"</dependency> >>\n")
+			.append("VertxUtil(packageName,tcpEventbus) ::= <<package ~packageName~;\n" + 
+		"\n" + 
+		"import io.vertx.core.DeploymentOptions;\n" + 
+		"import io.vertx.core.Handler;\n" + 
+		"import io.vertx.core.Verticle;\n" + 
+		"import io.vertx.core.Vertx;\n" + 
+		"import io.vertx.core.eventbus.DeliveryOptions;\n" + 
+		"import io.vertx.core.eventbus.Message;\n" + 
+		"import io.vertx.core.file.FileSystem;\n" + 
+		"import io.vertx.core.json.JsonObject;\n" + 
+		"import io.vertx.core.net.NetSocket;\n" + 
+		"import io.vertx.core.shareddata.LocalMap;\n" + 
+		"import io.vertx.core.shareddata.SharedData;\n" + 
+		"import org.slf4j.Logger;\n" + 
+		"\n" + 
+		"import java.io.File;\n" + 
+		"import java.util.ArrayList;\n" + 
+		"import java.util.List;\n" + 
+		"\n" + 
+		"public class VertxUtil {\n" + 
+		"\n" + 
+		"   public static final String BODY = \"body\";\n" + 
+		"   public static final String RESULT = \"result\";\n" + 
+		"   public static final String SUCCESS = \"success\";\n" + 
+		"   public static final String FAIL = \"fail\";\n" + 
+		"   public static final String FAILURE_CODE = \"failureCode\";\n" + 
+		"   public static final String FAILURE_TYPE = \"failureType\";\n" + 
+		"   public static final String MESSAGE = \"message\";\n" + 
+		"   public static final String CONTENT = \"content\";\n" + 
+		"   public static final String CAUSE = \"cause\";\n" + 
+		"   public static final String UNKNOWN = \"unknown\";\n" + 
+		"   public static final String DEPLOYMENT_ID = \"deploymentID\";\n" + 
+		"   public static final String STATUS = \"status\";\n" + 
+		"\n" + 
+		"   public static void putInLocalMap(Vertx vertx, Logger log, String mapName, String key, Object value) {\n" + 
+		"      final SharedData sharedData = vertx.sharedData();\n" + 
+		"      final LocalMap<Object, Object> localMap = sharedData.getLocalMap(mapName);\n" + 
+		"      log.info(\"putInLocalMap \" + mapName + \" \" + key + \" = \" + value);\n" + 
+		"      localMap.put(key, value);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   @SuppressWarnings(\"unchecked\")\n" + 
+		"   public static <V> V removeFromLocalMap(Vertx vertx, Logger log, String mapName, String key) {\n" + 
+		"      final SharedData sharedData = vertx.sharedData();\n" + 
+		"      final LocalMap<Object, Object> localMap = sharedData.getLocalMap(mapName);\n" + 
+		"      log.info(\"removeFromLocalMap \" + mapName + \" \" + key + \" = \" + localMap.get(key));\n" + 
+		"      return (V) localMap.remove(key);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   @SuppressWarnings(\"unchecked\")\n" + 
+		"   public static <V> V getFromLocalMap(Vertx vertx, Logger log, String mapName, String key) {\n" + 
+		"      final SharedData sharedData = vertx.sharedData();\n" + 
+		"      final LocalMap<Object, Object> localMap = sharedData.getLocalMap(mapName);\n" + 
+		"      log.info(\"getFromLocalMap \" + mapName + \" \" + key + \" = \" + localMap.get(key));\n" + 
+		"      return (V) localMap.get(key);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static <K, V> LocalMap<K, V> getLocalMap(Vertx vertx, Logger log, String mapName) {\n" + 
+		"      final SharedData sharedData = vertx.sharedData();\n" + 
+		"      log.info(\"getLocalMap \" + mapName);\n" + 
+		"      return sharedData.getLocalMap(mapName);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static void readDir(Vertx vertx, Logger log, File directory, SuccessHandler<List<File~gt()~> successHandler) {\n" + 
+		"\n" + 
+		"      final FileSystem fileSystem = vertx.fileSystem();\n" + 
+		"      log.info(\"readDir \" + directory.getAbsolutePath());\n" + 
+		"\n" + 
+		"      fileSystem.readDir(directory.getAbsolutePath(), result -> {\n" + 
+		"\n" + 
+		"         if (result.failed()) {\n" + 
+		"            log.error(\"readDir \" + directory.getAbsolutePath() + \" failed : \" + result.cause().getMessage(), result.cause());\n" + 
+		"            successHandler.onFail(result.cause());\n" + 
+		"            return;\n" + 
+		"         }\n" + 
+		"\n" + 
+		"         final List<File> list = new ArrayList<>(result.result().size());\n" + 
+		"         for (String s : result.result())\n" + 
+		"            list.add(new File(s));\n" + 
+		"\n" + 
+		"         successHandler.onSuccess(list);\n" + 
+		"      });\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static void putInClusterMap(Vertx vertx, Logger log, String mapName, String key, Object value, SuccessHandler<Void> successHandler) {\n" + 
+		"\n" + 
+		"      vertx.sharedData().getClusterWideMap(mapName, result -> {\n" + 
+		"\n" + 
+		"         if (result.failed()) {\n" + 
+		"            log.error(\"putInClusterMap \" + mapName + \" failed : \" + result.cause().getMessage(), result.cause());\n" + 
+		"            successHandler.onFail(result.cause());\n" + 
+		"            return;\n" + 
+		"         }\n" + 
+		"\n" + 
+		"         result.result().put(key, value, resultPut -> {\n" + 
+		"            if (resultPut.failed()) {\n" + 
+		"               log.error(\"putInClusterMap \" + mapName + \" failed to put \" + key + \" = \" + value + \" : \" + result.cause().getMessage(), result.cause());\n" + 
+		"               successHandler.onFail(resultPut.cause());\n" + 
+		"               return;\n" + 
+		"            }\n" + 
+		"\n" + 
+		"            log.info(\"putInClusterMap \" + mapName + \" \" + key + \" = \" + value + \" success\");\n" + 
+		"            successHandler.onSuccess(null);\n" + 
+		"         });\n" + 
+		"      });\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   @SuppressWarnings(\"unchecked\")\n" + 
+		"   public static <V> void removeFromClusterMap(Vertx vertx, Logger log, String mapName, String key, SuccessHandler<V> successHandler) {\n" + 
+		"\n" + 
+		"      vertx.sharedData().getClusterWideMap(mapName, result -> {\n" + 
+		"\n" + 
+		"         if (result.failed()) {\n" + 
+		"            log.error(\"removeFromClusterMap \" + mapName + \" failed : \" + result.cause().getMessage(), result.cause());\n" + 
+		"            successHandler.onFail(result.cause());\n" + 
+		"            return;\n" + 
+		"         }\n" + 
+		"\n" + 
+		"         result.result().remove(key, resultGet -> {\n" + 
+		"\n" + 
+		"            if (resultGet.failed()) {\n" + 
+		"               log.error(\"removeFromClusterMap \" + mapName + \" failed to remove key \" + key + \" : \" + result.cause().getMessage(), result.cause());\n" + 
+		"               successHandler.onFail(resultGet.cause());\n" + 
+		"               return;\n" + 
+		"            }\n" + 
+		"\n" + 
+		"            log.info(\"removeFromClusterMap \" + mapName + \".\" + key + \" removed \" + resultGet.result());\n" + 
+		"            successHandler.onSuccess((V) resultGet);\n" + 
+		"         });\n" + 
+		"      });\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   @SuppressWarnings(\"unchecked\")\n" + 
+		"   public static <V> void getFromClusterMap(Vertx vertx, Logger log, String mapName, String key, SuccessHandler<V> successHandler) {\n" + 
+		"\n" + 
+		"      vertx.sharedData().getClusterWideMap(mapName, result -> {\n" + 
+		"\n" + 
+		"         if (result.failed()) {\n" + 
+		"            log.error(\"getFromClusterMap \" + mapName + \" failed : \" + result.cause().getMessage(), result.cause());\n" + 
+		"            successHandler.onFail(result.cause());\n" + 
+		"            return;\n" + 
+		"         }\n" + 
+		"\n" + 
+		"         result.result().get(key, resultGet -> {\n" + 
+		"\n" + 
+		"            if (resultGet.failed()) {\n" + 
+		"               log.error(\"getFromClusterMap \" + mapName + \".\" + key + \" failed : \" + result.cause().getMessage(), result.cause());\n" + 
+		"               successHandler.onFail(resultGet.cause());\n" + 
+		"               return;\n" + 
+		"            }\n" + 
+		"\n" + 
+		"            if (resultGet.result() == null) {\n" + 
+		"               log.error(\"getFromClusterMap \" + mapName + \".\" + key + \" is null\", result.cause());\n" + 
+		"               successHandler.onFail(new Throwable(mapName + \".\" + key + \" is null\"));\n" + 
+		"               return;\n" + 
+		"            }\n" + 
+		"\n" + 
+		"            log.info(\"getFromClusterMap \" + mapName + \".\" + key + \" = \" + resultGet.result());\n" + 
+		"            successHandler.onSuccess((V) resultGet);\n" + 
+		"         });\n" + 
+		"      });\n" + 
+		"   }\n" + 
+		"\n" + 
+		"~if(tcpEventbus)~\n" + 
+		"   public static void sendFrame(org.slf4j.Logger log, String address, String replyAddress, JsonObject parameters, NetSocket socket) {\n" + 
+		"      log.info(\"sending frame \" + address + \" \" + replyAddress + \" \" + parameters);\n" + 
+		"      io.vertx.ext.eventbus.bridge.tcp.impl.protocol.FrameHelper.sendFrame(\"send\", address, replyAddress, parameters, socket);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static void sendFrame(org.apache.log4j.Logger log, String address, String replyAddress, JsonObject parameters, NetSocket socket) {\n" + 
+		"      log.info(\"sending frame \" + address + \" \" + replyAddress + \" \" + parameters);\n" + 
+		"      io.vertx.ext.eventbus.bridge.tcp.impl.protocol.FrameHelper.sendFrame(\"send\", address, replyAddress, parameters, socket);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"~endif~\n" + 
+		"   public static void reply(Logger log, String deploymentID, JsonObject result, Message<JsonObject> message) {\n" + 
+		"      log.info(\"reply \" + deploymentID + \" \" + message.replyAddress() + \" \" + result);\n" + 
+		"      message.reply(result);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public interface SuccessHandler<T> {\n" + 
+		"\n" + 
+		"      void onSuccess(T result);\n" + 
+		"\n" + 
+		"      void onFail(Throwable t);\n" + 
+		"\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public interface Executor<R, T> extends SuccessHandler<T> {\n" + 
+		"\n" + 
+		"      R execute() throws Throwable;\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   @SuppressWarnings(\"unchecked\")\n" + 
+		"   public static <R> void executeBlocking(Vertx vertx, Logger log, Executor<R, R> executor) {\n" + 
+		"\n" + 
+		"      vertx.executeBlocking(future -> {\n" + 
+		"\n" + 
+		"         try {\n" + 
+		"\n" + 
+		"            final R result = executor.execute();\n" + 
+		"\n" + 
+		"            if (result == null) future.complete();\n" + 
+		"            else future.complete(result);\n" + 
+		"\n" + 
+		"         } catch (Throwable throwable) {\n" + 
+		"            log.error(\"executeBlocking exception : \" + throwable.getMessage(), throwable);\n" + 
+		"            future.fail(throwable);\n" + 
+		"         }\n" + 
+		"\n" + 
+		"      }, res -> {\n" + 
+		"\n" + 
+		"         if (res.failed())\n" + 
+		"            executor.onFail(res.cause());\n" + 
+		"         else\n" + 
+		"            executor.onSuccess((R) res.result());\n" + 
+		"      });\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static <T> void consume(Vertx vertx, String consumer, String address, Logger log, Handler<Message<T~gt()~> messageHandler) {\n" + 
+		"      log.info(\"consume \" + consumer + \" messages on address \" + address);\n" + 
+		"      vertx.eventBus().consumer(address, messageHandler);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static <T, R> void sendMessage(Vertx vertx, String address, T content, Logger log, SuccessHandler<Message<R~gt()~> handler) {\n" + 
+		"      sendMessage(vertx, address, content, null, log, handler);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"	public static <T, R> void sendJsonMessage(Vertx vertx, String address, JsonObject content, Logger log, SuccessHandler<Message<JsonObject~gt()~> handler) {\n" + 
+		"      sendMessage(vertx, address, content, null, log, handler);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static <T, R> void sendJsonMessageSilent(Vertx vertx, String address, JsonObject content, Logger log) {\n" + 
+		"      sendMessage(vertx, address, content, null, log, new SuccessHandler<Message<JsonObject~gt()~>() {\n" + 
+		"         @Override\n" + 
+		"         public void onSuccess(Message<JsonObject> result) {\n" + 
+		"            // log.info(\"message sent to \" + address + \" \" + content.encode() + \" \" + result.body());\n" + 
+		"         }\n" + 
+		"\n" + 
+		"         @Override\n" + 
+		"         public void onFail(Throwable t) {\n" + 
+		"            // log.warn(\"message failed to \" + address + \" \" + content.encode());\n" + 
+		"         }\n" + 
+		"      });\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static <T, R> void sendMessage(Vertx vertx, String address, T content, Logger log) {\n" + 
+		"      sendMessage(vertx, address, content, null, log, new SuccessHandler<JsonObject>() {\n" + 
+		"         @Override\n" + 
+		"         public void onSuccess(JsonObject result) {\n" + 
+		"            log.info(\"sendMessage success \" + address + \" \" + result);\n" + 
+		"         }\n" + 
+		"\n" + 
+		"         @Override\n" + 
+		"         public void onFail(Throwable t) {\n" + 
+		"            log.info(\"sendMessage failed \" + address + \" \" + t.getCause().getMessage(), t.getCause());\n" + 
+		"         }\n" + 
+		"      });\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   @SuppressWarnings(\"unchecked\")\n" + 
+		"   public static <T, R> void sendMessage(Vertx vertx, String address, T content, DeliveryOptions options, Logger log, SuccessHandler<R> handler) {\n" + 
+		"\n" + 
+		"      log.info(\"sendingMessage \" + address + \" \" + content.toString());\n" + 
+		"\n" + 
+		"      if (options == null) options = new DeliveryOptions();\n" + 
+		"\n" + 
+		"      vertx.eventBus().send(address, content, options, result -> {\n" + 
+		"\n" + 
+		"         if (result.failed()) {\n" + 
+		"            log.error(\"sendMessage failed \" + address + \" \" + result.cause().getMessage());\n" + 
+		"            handler.onFail(result.cause());\n" + 
+		"            return;\n" + 
+		"         }\n" + 
+		"         log.info(\"sendMessage success \" + address + \" \" + result.result().body());\n" + 
+		"         handler.onSuccess((R) result.result());\n" + 
+		"      });\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static void publish(Vertx vertx, String address, Object content, Logger log) {\n" + 
+		"      publish(vertx, address, content, null, log);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static void publish(Vertx vertx, String address, Object content, DeliveryOptions options, Logger log) {\n" + 
+		"      if (options == null) options = new DeliveryOptions();\n" + 
+		"      log.info(\"publish to \" + address + \" : \" + content);\n" + 
+		"      vertx.eventBus().publish(address, content, options);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static void undeploy(Vertx vertx, Logger log, String deploymentId, SuccessHandler<Void> handler) {\n" + 
+		"\n" + 
+		"      log.info(\"undeploy \" + deploymentId);\n" + 
+		"\n" + 
+		"      vertx.undeploy(deploymentId, result -> {\n" + 
+		"\n" + 
+		"         if (result.failed()) {\n" + 
+		"            handler.onFail(result.cause());\n" + 
+		"            log.error(\"undeploy failed \" + deploymentId + \" \" + result.cause().getMessage(), result.cause());\n" + 
+		"            return;\n" + 
+		"         }\n" + 
+		"\n" + 
+		"         log.info(\"undeploy success \" + deploymentId);\n" + 
+		"         handler.onSuccess(null);\n" + 
+		"      });\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static void deploy(Vertx vertx, Class verticleClass, DeploymentOptions deploymentOptions, Logger log, SuccessHandler<String> handler) {\n" + 
+		"      deploy(vertx, verticleClass.getCanonicalName(), deploymentOptions, log, handler);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static void deploy(Vertx vertx, Verticle verticle, Logger log, SuccessHandler<String> handler) {\n" + 
+		"      deploy(vertx, verticle, null, log, handler);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static void deploy(Vertx vertx, Verticle verticle, DeploymentOptions deploymentOptions, Logger log, SuccessHandler<String> handler) {\n" + 
+		"\n" + 
+		"      if (deploymentOptions == null) deploymentOptions = new DeploymentOptions();\n" + 
+		"\n" + 
+		"      vertx.deployVerticle(verticle, deploymentOptions, result -> {\n" + 
+		"\n" + 
+		"         if (result.failed()) {\n" + 
+		"            handler.onFail(result.cause());\n" + 
+		"            log.error(\"deploy failed \" + verticle + \" \" + result.cause().getMessage(), result.cause());\n" + 
+		"            return;\n" + 
+		"         }\n" + 
+		"\n" + 
+		"         log.info(\"deploy success \" + verticle + \" \" + result.result());\n" + 
+		"         handler.onSuccess(result.result());\n" + 
+		"      });\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static void deploy(Vertx vertx, String className, DeploymentOptions deploymentOptions, Logger log, SuccessHandler<String> handler) {\n" + 
+		"\n" + 
+		"      if (deploymentOptions == null) deploymentOptions = new DeploymentOptions();\n" + 
+		"\n" + 
+		"      vertx.deployVerticle(className, deploymentOptions, result -> {\n" + 
+		"\n" + 
+		"         if (result.failed()) {\n" + 
+		"            handler.onFail(result.cause());\n" + 
+		"            log.error(\"deploy failed \" + className + \" \" + result.cause().getMessage(), result.cause());\n" + 
+		"            return;\n" + 
+		"         }\n" + 
+		"\n" + 
+		"         log.info(\"deploy success \" + className + \" \" + result.result());\n" + 
+		"         handler.onSuccess(result.result());\n" + 
+		"      });\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static void deploy(Vertx vertx, String className, DeploymentOptions deploymentOptions, Logger log) {\n" + 
+		"\n" + 
+		"      if (deploymentOptions == null) deploymentOptions = new DeploymentOptions();\n" + 
+		"\n" + 
+		"      vertx.deployVerticle(className, deploymentOptions, result -> {\n" + 
+		"\n" + 
+		"         if (result.failed()) {\n" + 
+		"            log.error(\"deploy failed \" + className + \" \" + result.cause().getMessage(), result.cause());\n" + 
+		"            return;\n" + 
+		"         }\n" + 
+		"\n" + 
+		"         log.info(\"deploy success \" + className + \" : \" + result.result());\n" + 
+		"      });\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static void deploy(Vertx vertx, String className, JsonObject config, Logger log, SuccessHandler<String> handler) {\n" + 
+		"\n" + 
+		"      final DeploymentOptions deploymentOptions = new DeploymentOptions();\n" + 
+		"      if (config != null) deploymentOptions.setConfig(config);\n" + 
+		"\n" + 
+		"      deploy(vertx, className, deploymentOptions, log, handler);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static void deploy(Vertx vertx, String className, Logger log, SuccessHandler<String> handler) {\n" + 
+		"      deploy(vertx, className, new DeploymentOptions(), log, handler);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   // ENVELOPE-MESSAGES\n" + 
+		"\n" + 
+		"   public static JsonObject newStatus(String deploymentId, String status) {\n" + 
+		"      final JsonObject msg = new JsonObject();\n" + 
+		"      msg.put(DEPLOYMENT_ID, deploymentId);\n" + 
+		"      msg.put(STATUS, status);\n" + 
+		"      return msg;\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject newSuccess(final Object content) {\n" + 
+		"      final JsonObject reply = new JsonObject();\n" + 
+		"      reply.put(RESULT, SUCCESS);\n" + 
+		"      reply.put(CONTENT, content);\n" + 
+		"      return reply;\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject newFail(final Object cause) {\n" + 
+		"      final JsonObject reply = new JsonObject();\n" + 
+		"      reply.put(RESULT, FAIL);\n" + 
+		"      if (cause != null && ((cause instanceof Throwable) && ((Throwable) cause).getMessage() != null))\n" + 
+		"         reply.put(CAUSE, ((Throwable) cause).getMessage());\n" + 
+		"      return reply;\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static boolean isSuccess(Message<JsonObject> message) {\n" + 
+		"      return isSuccess(message.body());\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static boolean isFail(Message<JsonObject> message) {\n" + 
+		"      return isFail(message.body());\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static String getFailCause(Message<JsonObject> message) {\n" + 
+		"      return getFailCause(message.body());\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static boolean isSuccess(JsonObject jsonObject) {\n" + 
+		"\n" + 
+		"      final JsonObject body = jsonObject.getJsonObject(BODY);\n" + 
+		"      if (body != null) {\n" + 
+		"         final String result = body.getString(RESULT);\n" + 
+		"         return result != null && SUCCESS.equals(result);\n" + 
+		"      }\n" + 
+		"\n" + 
+		"      final String result = jsonObject.getString(RESULT);\n" + 
+		"      return result != null && SUCCESS.equals(result);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static boolean isFail(JsonObject jsonObject) {\n" + 
+		"\n" + 
+		"      final JsonObject body = jsonObject.getJsonObject(BODY);\n" + 
+		"      if (body != null) {\n" + 
+		"         final String result = body.getString(RESULT);\n" + 
+		"         return result != null && FAIL.equals(result);\n" + 
+		"      }\n" + 
+		"\n" + 
+		"      final String result = jsonObject.getString(RESULT);\n" + 
+		"      if (result != null)\n" + 
+		"         return FAIL.equals(result);\n" + 
+		"\n" + 
+		"      return jsonObject.getString(FAILURE_CODE) != null;\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static String getFailCause(JsonObject jsonObject) {\n" + 
+		"\n" + 
+		"      final JsonObject body = jsonObject.getJsonObject(BODY);\n" + 
+		"      if (body != null)\n" + 
+		"         return body.getString(CAUSE);\n" + 
+		"\n" + 
+		"      final String cause = jsonObject.getString(CAUSE);\n" + 
+		"      if (cause != null) return cause;\n" + 
+		"\n" + 
+		"      final String failureCode = jsonObject.getString(FAILURE_CODE);\n" + 
+		"      if (failureCode != null)\n" + 
+		"         return failureCode + \" : \" + jsonObject.getString(FAILURE_TYPE) + \" : \" + jsonObject.getString(MESSAGE);\n" + 
+		"\n" + 
+		"      return UNKNOWN + \" : \" + jsonObject;\n" + 
+		"   }\n" + 
+		"}>>\n")
+			.append("Docker(exposePort,verticleFile,verticleHome,verticleName,vertxOptions,javaOptions,copies) ::= <<# Extend vert.x image\n" + 
+		"FROM vertx/vertx3\n" + 
+		"\n" + 
+		"#                                                      \n" + 
+		"ENV VERTICLE_NAME ~verticleName~\n" + 
+		"ENV VERTICLE_FILE ~verticleFile~\n" + 
+		"~if(javaOptions)~\n" + 
+		"ENV JAVA_OPTS \"~javaOptions:{it|-D~it.key~=~it.value~};separator=\" \"~\"\n" + 
+		"\n" + 
+		"~endif~\n" + 
+		"~if(vertxOptions)~\n" + 
+		"ENV VERTX_OPTS \"~vertxOptions:{it|-D~it.key~=~it.value~};separator=\" \"~\"\n" + 
+		"\n" + 
+		"~endif~\n" + 
+		"# Set the location of the verticles\n" + 
+		"ENV VERTICLE_HOME ~verticleHome~\n" + 
+		"\n" + 
+		"EXPOSE ~exposePort~\n" + 
+		"\n" + 
+		"# Copy your verticle to the container                  \n" + 
+		"COPY $VERTICLE_FILE $VERTICLE_HOME/\n" + 
+		"~copies:{it|COPY ~it.src~ $VERTICLE_HOME/~it.filename~};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"# Launch the verticle\n" + 
+		"WORKDIR $VERTICLE_HOME\n" + 
+		"ENTRYPOINT [\"sh\", \"-c\"]\n" + 
+		"CMD [\"exec vertx $VERTX_OPTS run $VERTICLE_NAME -cp $VERTICLE_HOME/*\"]>>\n")
+			.append("mvn_unit() ::= <<<!-- https://mvnrepository.com/artifact/io.vertx/vertx-unit -->\n" + 
+		"<dependency>\n" + 
+		"    <groupId>io.vertx</groupId>\n" + 
+		"    <artifactId>vertx-unit</artifactId>\n" + 
+		"    <version>3.5.1</version>\n" + 
+		"    <scope>test</scope>\n" + 
+		"</dependency> >>\n")
+			.append("JsonUtil(packageName) ::= <<package ~packageName~;\n" + 
+		"\n" + 
+		"import io.netty.handler.codec.http.HttpResponseStatus;\n" + 
+		"import io.vertx.core.eventbus.Message;\n" + 
+		"import io.vertx.core.json.JsonArray;\n" + 
+		"import io.vertx.core.json.JsonObject;\n" + 
+		"\n" + 
+		"import static ~packageName~.JsonUtil.KEYS.*;\n" + 
+		"import static io.netty.handler.codec.http.HttpResponseStatus.OK;\n" + 
+		"\n" + 
+		"public class JsonUtil {\n" + 
+		"\n" + 
+		"   public enum RESULT {\n" + 
+		"      SUCCESS,\n" + 
+		"      FAIL,\n" + 
+		"      EXCEPTION\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static RESULT getResult(JsonObject jsonObject) {\n" + 
+		"      return RESULT.valueOf(jsonObject.getString(\"RESULT\"));\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static RESULT getResult(Message<JsonObject> message) {\n" + 
+		"      return getResult(message.body());\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static boolean isSuccess(JsonObject jsonObject) {\n" + 
+		"      return RESULT.SUCCESS.name().equals(jsonObject.getString(\"RESULT\"));\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static boolean isSuccess(Message<JsonObject> message) {\n" + 
+		"      return isSuccess(message.body());\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject getJsonObjectContent(JsonObject jsonObject) {\n" + 
+		"      return jsonObject.getJsonObject(\"CONTENT\");\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static String getStringContent(JsonObject jsonObject) {\n" + 
+		"      return jsonObject.getString(\"CONTENT\");\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static String getStringContent(Message<JsonObject> message) {\n" + 
+		"      return getStringContent(message.body());\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject getJsonObjectContent(Message<JsonObject> message) {\n" + 
+		"      return getJsonObjectContent(message.body());\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonArray getJsonArrayContent(Message<JsonObject> message) {\n" + 
+		"      return getJsonArrayContent(message.body());\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   private static JsonArray getJsonArrayContent(JsonObject jsonObject) {\n" + 
+		"      return jsonObject.getJsonArray(\"CONTENT\");\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject newSuccess(JsonObject content) {\n" + 
+		"      return new JsonObject().\n" + 
+		"            put(\"RESULT\", RESULT.SUCCESS).\n" + 
+		"            put(\"CONTENT\", content);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject newSuccess(String content) {\n" + 
+		"      return new JsonObject().\n" + 
+		"            put(\"RESULT\", RESULT.SUCCESS).\n" + 
+		"            put(\"CONTENT\", content);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject newSuccess(JsonArray content) {\n" + 
+		"      return new JsonObject().\n" + 
+		"            put(\"RESULT\", RESULT.SUCCESS).\n" + 
+		"            put(\"CONTENT\", content);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject newFail(JsonArray errors) {\n" + 
+		"      return new JsonObject().\n" + 
+		"            put(\"RESULT\", RESULT.FAIL).\n" + 
+		"            put(\"ERRORS\", errors);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject newFail(String message) {\n" + 
+		"      return new JsonObject().\n" + 
+		"            put(\"RESULT\", RESULT.FAIL).\n" + 
+		"            put(\"ERRORS\", message);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject newException(Throwable t) {\n" + 
+		"      return new JsonObject().\n" + 
+		"            put(\"RESULT\", RESULT.EXCEPTION).\n" + 
+		"            put(\"MESSAGE\", t.getMessage());\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public enum KEYS {\n" + 
+		"      STATUS, DETAILS, CONTENT, VISITOR, PARAMS, API, MESSAGE, TYPE, FIELD, CONTEXT, HEADER, REQUIRED, ILLEGAL, MALFORMED, ERROR, REASON\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static String getMessage(JsonObject body) {\n" + 
+		"      return body.containsKey(MESSAGE.name()) ? body.getString(MESSAGE.name()) : null;\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject newJsonObject(Object... kv) {\n" + 
+		"      final JsonObject content = new JsonObject();\n" + 
+		"      if (kv.length % 2 != 0)\n" + 
+		"         throw new IllegalArgumentException(\"Expecting key value PAIRS\");\n" + 
+		"\n" + 
+		"      for (int i = 0; i < kv.length; i += 2)\n" + 
+		"         content.put(kv[i].toString(), kv[i + 1]);\n" + 
+		"\n" + 
+		"      return content;\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonArray newJsonArray(Object... values) {\n" + 
+		"      final JsonArray array = new JsonArray();\n" + 
+		"      for (Object v : values)\n" + 
+		"         array.add(v);\n" + 
+		"      return array;\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject success(JsonObject result, JsonObject content) {\n" + 
+		"      return result.\n" + 
+		"            put(STATUS.name(), OK.code()).\n" + 
+		"            put(TYPE.name(), OK.reasonPhrase()).\n" + 
+		"            put(CONTENT.name(), content);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject fail(JsonObject result, HttpResponseStatus status, final Throwable throwable) {\n" + 
+		"      return fail(result, status, newError(throwable.getMessage()));\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject fail(JsonObject result, HttpResponseStatus status, JsonObject... cause) {\n" + 
+		"\n" + 
+		"      result.\n" + 
+		"            put(STATUS.name(), status.code()).\n" + 
+		"            put(TYPE.name(), status.reasonPhrase());\n" + 
+		"\n" + 
+		"      JsonArray details = new JsonArray();\n" + 
+		"      for (JsonObject aCause : cause) details.add(aCause);\n" + 
+		"\n" + 
+		"      if (!details.isEmpty())\n" + 
+		"         result.put(DETAILS.name(), details);\n" + 
+		"\n" + 
+		"      return result;\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject newRequiredContext(String attributeName) {\n" + 
+		"      return new JsonObject().\n" + 
+		"            put(CONTEXT.name(), attributeName).\n" + 
+		"            put(REQUIRED.name(), true);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject newRequiredField(String attributeName) {\n" + 
+		"      return new JsonObject().\n" + 
+		"            put(FIELD.name(), attributeName).\n" + 
+		"            put(REQUIRED.name(), true);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject newRequiredHeader(String attributeName) {\n" + 
+		"      return new JsonObject().\n" + 
+		"            put(HEADER.name(), attributeName).\n" + 
+		"            put(REQUIRED.name(), true);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject newError(String error) {\n" + 
+		"      return new JsonObject().\n" + 
+		"            put(ERROR.name(), error);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject newJsonError(final int status, String type, final String message, final JsonArray details) {\n" + 
+		"\n" + 
+		"      final JsonObject response = new JsonObject().\n" + 
+		"            put(STATUS.name(), status).\n" + 
+		"            put(TYPE.name(), type);\n" + 
+		"\n" + 
+		"      if (message != null) {\n" + 
+		"         response.put(MESSAGE.name(), message);\n" + 
+		"      }\n" + 
+		"\n" + 
+		"      if (details != null)\n" + 
+		"         response.put(DETAILS.name(), details);\n" + 
+		"\n" + 
+		"      return response;\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject error(JsonObject result, String error) {\n" + 
+		"      return result.put(ERROR.name(), error);\n" + 
+		"   }\n" + 
+		"}>>\n")
+			.append("mvn_fat_jar(mainClass) ::= <<<plugin>\n" + 
+		"    <groupId>org.apache.maven.plugins</groupId>\n" + 
+		"    <artifactId>maven-shade-plugin</artifactId>\n" + 
+		"    <version>2.3</version>\n" + 
+		"    <executions>\n" + 
+		"        <execution>\n" + 
+		"            <phase>package</phase>\n" + 
+		"            <goals>\n" + 
+		"                <goal>shade</goal>\n" + 
+		"            </goals>\n" + 
+		"            <configuration>\n" + 
+		"                <filters>\n" + 
+		"                    <filter>\n" + 
+		"                        <artifact>*:*</artifact>\n" + 
+		"                        <excludes>\n" + 
+		"                            <exclude>META-INF/*.SF</exclude>\n" + 
+		"                            <exclude>META-INF/*.DSA</exclude>\n" + 
+		"                            <exclude>META-INF/*.RSA</exclude>\n" + 
+		"                        </excludes>\n" + 
+		"                    </filter>\n" + 
+		"                </filters>\n" + 
+		"                <transformers>\n" + 
+		"                    <transformer implementation=\"org.apache.maven.plugins.shade.resource.ManifestResourceTransformer\">\n" + 
+		"                        <manifestEntries>\n" + 
+		"                            <Main-Class>~mainClass~</Main-Class>\n" + 
+		"                        </manifestEntries>\n" + 
+		"                    </transformer>\n" + 
+		"                    <transformer implementation=\"org.apache.maven.plugins.shade.resource.AppendingTransformer\">\n" + 
+		"                        <resource>META-INF/services/io.vertx.core.spi.VerticleFactory</resource>\n" + 
+		"                    </transformer>\n" + 
+		"                </transformers>\n" + 
+		"                <artifactSet>\n" + 
+		"                </artifactSet>\n" + 
+		"                <outputFile>${project.build.directory}/${project.artifactId}-${project.version}-fat.jar</outputFile>\n" + 
+		"            </configuration>\n" + 
+		"        </execution>\n" + 
+		"    </executions>\n" + 
+		"</plugin>\n" + 
+		"\n" + 
+		"<plugin>\n" + 
+		"    <groupId>org.codehaus.mojo</groupId>\n" + 
+		"    <artifactId>exec-maven-plugin</artifactId>\n" + 
+		"    <version>1.4.0</version>\n" + 
+		"    <executions>\n" + 
+		"        <execution>\n" + 
+		"            <!-- run the application using the fat jar -->\n" + 
+		"            <id>run-app</id>\n" + 
+		"            <goals>\n" + 
+		"                <goal>exec</goal>\n" + 
+		"            </goals>\n" + 
+		"            <configuration>\n" + 
+		"                <executable>java</executable>\n" + 
+		"                <arguments>\n" + 
+		"                    <argument>-jar</argument>\n" + 
+		"                    <argument>target/${project.artifactId}-${project.version}-fat.jar</argument>\n" + 
+		"                </arguments>\n" + 
+		"            </configuration>\n" + 
+		"        </execution>\n" + 
+		"    </executions>\n" + 
+		"</plugin> >>\n")
+			.append("mvn_hazelcast() ::= <<<dependency>\n" + 
+		"  <groupId>io.vertx</groupId>\n" + 
+		"  <artifactId>vertx-hazelcast</artifactId>\n" + 
+		"  <version>3.5.1</version>\n" + 
+		"</dependency> >>\n")
+			.append("hazelcastConfigXML() ::= <<<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
+		"\n" + 
+		"<hazelcast xsi:schemaLocation=\"http://www.hazelcast.com/schema/config hazelcast-config-3.8.xsd\"\n" + 
+		"           xmlns=\"http://www.hazelcast.com/schema/config\"\n" + 
+		"           xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" + 
+		"  <properties>\n" + 
+		"    <property name=\"hazelcast.mancenter.enabled\">false</property>\n" + 
+		"    <property name=\"hazelcast.memcache.enabled\">false</property>\n" + 
+		"    <property name=\"hazelcast.rest.enabled\">false</property>\n" + 
+		"    <property name=\"hazelcast.wait.seconds.before.join\">0</property>\n" + 
+		"  </properties>\n" + 
+		"\n" + 
+		"  <group>\n" + 
+		"    <name>dev</name>\n" + 
+		"    <password>dev-pass</password>\n" + 
+		"  </group>\n" + 
+		"  <management-center enabled=\"false\">http://localhost:8080/mancenter</management-center>\n" + 
+		"  <network>\n" + 
+		"    <port auto-increment=\"true\" port-count=\"10000\">5701</port>\n" + 
+		"    <outbound-ports>\n" + 
+		"      <!--\n" + 
+		"      Allowed port range when connecting to other nodes.\n" + 
+		"      0 or * means use system provided port.\n" + 
+		"      -->\n" + 
+		"      <ports>0</ports>\n" + 
+		"    </outbound-ports>\n" + 
+		"    <join>\n" + 
+		"      <multicast enabled=\"true\">\n" + 
+		"        <multicast-group>224.2.2.3</multicast-group>\n" + 
+		"        <multicast-port>54327</multicast-port>\n" + 
+		"      </multicast>\n" + 
+		"      <tcp-ip enabled=\"false\">\n" + 
+		"        <interface>192.168.1.28</interface>\n" + 
+		"      </tcp-ip>\n" + 
+		"      <aws enabled=\"false\">\n" + 
+		"        <access-key>my-access-key</access-key>\n" + 
+		"        <secret-key>my-secret-key</secret-key>\n" + 
+		"        <!--optional, default is us-east-1 -->\n" + 
+		"        <region>us-west-1</region>\n" + 
+		"        <!--optional, default is ec2.amazonaws.com. If set, region shouldn't be set as it will override this property -->\n" + 
+		"        <host-header>ec2.amazonaws.com</host-header>\n" + 
+		"        <!-- optional, only instances belonging to this group will be discovered, default will try all running instances -->\n" + 
+		"        <security-group-name>hazelcast-sg</security-group-name>\n" + 
+		"        <tag-key>type</tag-key>\n" + 
+		"        <tag-value>hz-nodes</tag-value>\n" + 
+		"      </aws>\n" + 
+		"    </join>\n" + 
+		"    <interfaces enabled=\"false\">\n" + 
+		"      <interface>10.10.1.*</interface>\n" + 
+		"    </interfaces>\n" + 
+		"    <ssl enabled=\"false\"/>\n" + 
+		"    <socket-interceptor enabled=\"false\"/>\n" + 
+		"    <symmetric-encryption enabled=\"false\">\n" + 
+		"      <!--\n" + 
+		"         encryption algorithm such as\n" + 
+		"         DES/ECB/PKCS5Padding,\n" + 
+		"         PBEWithMD5AndDES,\n" + 
+		"         AES/CBC/PKCS5Padding,\n" + 
+		"         Blowfish,\n" + 
+		"         DESede\n" + 
+		"      -->\n" + 
+		"      <algorithm>PBEWithMD5AndDES</algorithm>\n" + 
+		"      <!-- salt value to use when generating the secret key -->\n" + 
+		"      <salt>thesalt</salt>\n" + 
+		"      <!-- pass phrase to use when generating the secret key -->\n" + 
+		"      <password>thepass</password>\n" + 
+		"      <!-- iteration count to use when generating the secret key -->\n" + 
+		"      <iteration-count>19</iteration-count>\n" + 
+		"    </symmetric-encryption>\n" + 
+		"  </network>\n" + 
+		"  <partition-group enabled=\"false\"/>\n" + 
+		"  <executor-service name=\"default\">\n" + 
+		"    <pool-size>16</pool-size>\n" + 
+		"    <!--Queue capacity. 0 means Integer.MAX_VALUE.-->\n" + 
+		"    <queue-capacity>0</queue-capacity>\n" + 
+		"  </executor-service>\n" + 
+		"\n" + 
+		"  <multimap name=\"__vertx.subs\">\n" + 
+		"\n" + 
+		"    <!--\n" + 
+		"        Number of backups. If 1 is set as the backup-count for example,\n" + 
+		"        then all entries of the map will be copied to another JVM for\n" + 
+		"        fail-safety. 0 means no backup.\n" + 
+		"    -->\n" + 
+		"    <backup-count>1</backup-count>\n" + 
+		"  </multimap>\n" + 
+		"\n" + 
+		"  <map name=\"__vertx.haInfo\">\n" + 
+		"\n" + 
+		"    <!--\n" + 
+		"        Number of backups. If 1 is set as the backup-count for example,\n" + 
+		"        then all entries of the map will be copied to another JVM for\n" + 
+		"        fail-safety. 0 means no backup.\n" + 
+		"    -->\n" + 
+		"    <backup-count>1</backup-count>\n" + 
+		"    <!--\n" + 
+		"  Maximum number of seconds for each entry to stay in the map. Entries that are\n" + 
+		"  older than <time-to-live-seconds> and not updated for <time-to-live-seconds>\n" + 
+		"  will get automatically evicted from the map.\n" + 
+		"  Any integer between 0 and Integer.MAX_VALUE. 0 means infinite. Default is 0.\n" + 
+		"-->\n" + 
+		"    <time-to-live-seconds>0</time-to-live-seconds>\n" + 
+		"    <!--\n" + 
+		"  Maximum number of seconds for each entry to stay idle in the map. Entries that are\n" + 
+		"  idle(not touched) for more than <max-idle-seconds> will get\n" + 
+		"  automatically evicted from the map. Entry is touched if get, put or containsKey is called.\n" + 
+		"  Any integer between 0 and Integer.MAX_VALUE. 0 means infinite. Default is 0.\n" + 
+		"-->\n" + 
+		"    <max-idle-seconds>0</max-idle-seconds>\n" + 
+		"    <!--\n" + 
+		"        Valid values are:\n" + 
+		"        NONE (no eviction),\n" + 
+		"        LRU (Least Recently Used),\n" + 
+		"        LFU (Least Frequently Used).\n" + 
+		"        NONE is the default.\n" + 
+		"    -->\n" + 
+		"    <eviction-policy>NONE</eviction-policy>\n" + 
+		"    <!--\n" + 
+		"        Maximum size of the map. When max size is reached,\n" + 
+		"        map is evicted based on the policy defined.\n" + 
+		"        Any integer between 0 and Integer.MAX_VALUE. 0 means\n" + 
+		"        Integer.MAX_VALUE. Default is 0.\n" + 
+		"    -->\n" + 
+		"    <max-size policy=\"PER_NODE\">0</max-size>\n" + 
+		"    <!--\n" + 
+		"        When max. size is reached, specified percentage of\n" + 
+		"        the map will be evicted. Any integer between 0 and 100.\n" + 
+		"        If 25 is set for example, 25% of the entries will\n" + 
+		"        get evicted.\n" + 
+		"    -->\n" + 
+		"    <eviction-percentage>25</eviction-percentage>\n" + 
+		"    <!--\n" + 
+		"        While recovering from split-brain (network partitioning),\n" + 
+		"        map entries in the small cluster will merge into the bigger cluster\n" + 
+		"        based on the policy set here. When an entry merge into the\n" + 
+		"        cluster, there might an existing entry with the same key already.\n" + 
+		"        Values of these entries might be different for that same key.\n" + 
+		"        Which value should be set for the key? Conflict is resolved by\n" + 
+		"        the policy set here. Default policy is PutIfAbsentMapMergePolicy\n" + 
+		"\n" + 
+		"        There are built-in merge policies such as\n" + 
+		"        com.hazelcast.map.merge.PassThroughMergePolicy; entry will be added if there is no existing entry for the key.\n" + 
+		"        com.hazelcast.map.merge.PutIfAbsentMapMergePolicy ; entry will be added if the merging entry doesn't exist in the cluster.\n" + 
+		"        com.hazelcast.map.merge.HigherHitsMapMergePolicy ; entry with the higher hits wins.\n" + 
+		"        com.hazelcast.map.merge.LatestUpdateMapMergePolicy ; entry with the latest update wins.\n" + 
+		"    -->\n" + 
+		"    <merge-policy>com.hazelcast.map.merge.LatestUpdateMapMergePolicy</merge-policy>\n" + 
+		"\n" + 
+		"  </map>\n" + 
+		"\n" + 
+		"  <!-- Used internally in Vert.x to implement async locks -->\n" + 
+		"  <semaphore name=\"__vertx.*\">\n" + 
+		"    <initial-permits>1</initial-permits>\n" + 
+		"  </semaphore>\n" + 
+		"\n" + 
+		"</hazelcast> >>\n")
 		.toString();
 }
