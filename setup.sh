@@ -154,6 +154,7 @@ gitPull() {
   return $?
 }
 
+# TODO: Change to a loop e.g. find *.sha1 files and process
 prepareElasticSearch() {
   sha1check "$1/lib" "analysis-icu-6.4.0.sha1"
   if [ "$?" -ne 0 ]; then
@@ -164,6 +165,49 @@ prepareElasticSearch() {
   if [ "$?" -ne 0 ]; then
     wgetURL "$1/lib" "https://artifacts.elastic.co/downloads/elasticsearch-plugins/ingest-attachment/ingest-attachment-6.4.0.zip"
     sha1check "$1/lib" "ingest-attachment-6.4.0.sha1" || exit 1
+  fi
+}
+
+prepareHazelcast() {
+  sha1check "$1/lib" "jackson-annotations-2.9.5.sha1"
+  if [ "$?" -ne 0 ]; then
+    wgetURL "$1/lib" "http://search.maven.org/remotecontent?filepath=com/fasterxml/jackson/core/jackson-annotations/2.9.5/jackson-annotations-2.9.5.jar"
+    sha1check "$1/lib" "jackson-annotations-2.9.5.sha1" || exit 1
+  fi
+  sha1check "$1/lib" "jackson-core-2.9.5.sha1"
+  if [ "$?" -ne 0 ]; then
+    wgetURL "$1/lib" "http://search.maven.org/remotecontent?filepath=com/fasterxml/jackson/core/jackson-core/2.9.5/jackson-core-2.9.5.jar"
+    sha1check "$1/lib" "jackson-core-2.9.5.sha1" || exit 1
+  fi
+  sha1check "$1/lib" "jackson-databind-2.9.5.sha1"
+  if [ "$?" -ne 0 ]; then
+    wgetURL "$1/lib" "http://search.maven.org/remotecontent?filepath=com/fasterxml/jackson/core/jackson-databind/2.9.5/jackson-databind-2.9.5.jar"
+    sha1check "$1/lib" "jackson-databind-2.9.5.sha1" || exit 1
+  fi
+  sha1check "$1/lib" "jul-to-slf4j-1.7.25.sha1"
+  if [ "$?" -ne 0 ]; then
+    wgetURL "$1/lib" "http://search.maven.org/remotecontent?filepath=org/slf4j/jul-to-slf4j/1.7.25/jul-to-slf4j-1.7.25.jar"
+    sha1check "$1/lib" "jul-to-slf4j-1.7.25.sha1" || exit 1
+  fi
+  sha1check "$1/lib" "logback-classic-1.2.3.sha1"
+  if [ "$?" -ne 0 ]; then
+    wgetURL "$1/lib" "http://search.maven.org/remotecontent?filepath=ch/qos/logback/logback-classic/1.2.3/logback-classic-1.2.3.jar"
+    sha1check "$1/lib" "logback-classic-1.2.3.sha1" || exit 1
+  fi
+  sha1check "$1/lib" "logback-core-1.2.3.sha1"
+  if [ "$?" -ne 0 ]; then
+    wgetURL "$1/lib" "http://search.maven.org/remotecontent?filepath=ch/qos/logback/logback-core/1.2.3/logback-core-1.2.3.jar"
+    sha1check "$1/lib" "logback-core-1.2.3.sha1" || exit 1
+  fi
+  sha1check "$1/lib" "logstash-logback-encoder-4.11.sha1"
+  if [ "$?" -ne 0 ]; then
+    wgetURL "$1/lib" "http://search.maven.org/remotecontent?filepath=net/logstash/logback/logstash-logback-encoder/4.11/logstash-logback-encoder-4.11.jar"
+    sha1check "$1/lib" "logstash-logback-encoder-4.11.sha1" || exit 1
+  fi
+  sha1check "$1/lib" "slf4j-api-1.7.25.sha1"
+  if [ "$?" -ne 0 ]; then
+    wgetURL "$1/lib" "http://search.maven.org/remotecontent?filepath=org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar"
+    sha1check "$1/lib" "slf4j-api-1.7.25.sha1" || exit 1
   fi
 }
 
@@ -209,6 +253,8 @@ case $1 in
 #    declare -a containers=("stardog" "elasticsearch" "elasticsearchlogs" "kibana" "fluentd" "web" "gitserver" "hazelcast")
 #    prepareElasticSearch docker/elasticsearch
 
+    prepareHazelcast docker/hazelcast
+
     if [[ "${1}" != "all" ]] ; then
       # TODO: Find better way
       export COMPOSE_FILE=docker-compose.yml:docker-compose.override.yml:docker-compose.nogui.yml
@@ -226,6 +272,7 @@ case $1 in
 
     # Components
     buildComponent api
+    buildComponent vertx-fatjar-test
 
     docker-compose up -d
 
@@ -234,7 +281,13 @@ case $1 in
     docker-compose restart nginx
     ;;
 
-  stardog | elasticsearchlogs | kibana | fluentd | nginx | gitserver | hazelcast)
+  stardog | elasticsearchlogs | kibana | fluentd | nginx | gitserver)
+    build $1 && start $1
+    ;;
+
+  hazelcast)
+    prepareHazelcast docker/hazelcast
+
     build $1 && start $1
     ;;
 

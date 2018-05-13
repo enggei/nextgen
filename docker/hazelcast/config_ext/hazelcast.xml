@@ -3,13 +3,16 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://www.hazelcast.com/schema/config
            http://www.hazelcast.com/schema/config/hazelcast-config-3.10.xsd">
+    <group>
+        <name>nextgen</name>
+        <password>nextgen</password>
+    </group>
+
     <properties>
         <property name="hazelcast.shutdownhook.enabled">false</property>
         <!--<property name="hazelcast.logging.type">slf4j</property>-->
     </properties>
-    <multimap name="__vertx.subs">
-        <backup-count>1</backup-count>
-    </multimap>
+
     <map name="__vertx.haInfo">
         <time-to-live-seconds>0</time-to-live-seconds>
         <max-idle-seconds>0</max-idle-seconds>
@@ -18,6 +21,11 @@
         <eviction-percentage>25</eviction-percentage>
         <merge-policy>com.hazelcast.map.merge.LatestUpdateMapMergePolicy</merge-policy>
     </map>
+
+    <multimap name="__vertx.subs">
+        <backup-count>1</backup-count>
+    </multimap>
+
     <semaphore name="__vertx.*">
         <initial-permits>1</initial-permits>
     </semaphore>

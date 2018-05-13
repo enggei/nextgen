@@ -22,7 +22,17 @@ public class ServerVerticle extends BaseServerVerticle {
 
          @Override
          public void onSuccess(String result) {
-            VertxUtil.deploy(vertx, DeployVerticle.class.getCanonicalName(), deploymentOptions, log);
+            VertxUtil.deploy(vertx, DeployVerticle.class.getCanonicalName(), deploymentOptions, log, new VertxUtil.SuccessHandler<String>() {
+               @Override
+               public void onSuccess(String result) {
+                  log.info(result);
+               }
+
+               @Override
+               public void onFail(Throwable t) {
+                  log.error("Failed to deploy", t);
+               }
+            });
          }
 
          @Override

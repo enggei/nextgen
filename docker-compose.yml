@@ -98,17 +98,22 @@ services:
 #      - platform
 
   hazelcast:
-    image: hazelcast/hazelcast
-#    image: ${DOCKER_REGISTRY}/hazelcast:${TAG}
+#    image: hazelcast/hazelcast
+    image: ${DOCKER_REGISTRY}/hazelcast:${TAG}
 #    restart: always
     environment:
-#      - CLASSPATH=lib
-      - JAVA_OPTS= -Xms512M -Xmx1024M -Dhazelcast.config=/opt/hazelcast/config_ext/hazelcast.xml
-    ports:
-      - "127.0.0.1:5701:5701"
+      - CLASSPATH=/opt/hazelcast/lib
+      - JAVA_OPTS= -Xms512M -Xmx1024M -Dhazelcast.config=/opt/hazelcast/config_ext/hazelcast.xml -Dhazelcast.logging.type=slf4j -Dlogback.configurationFile=/opt/hazelcast/config_ext/logback.xml
+    depends_on:
+      - elasticsearchlogs
+      - fluentd
     volumes:
       - ./docker/hazelcast/config_ext:/opt/hazelcast/config_ext
-#      - ./docker/hazelcast/lib:/opt/hazelcast/lib
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+        tag: hazelcast
     networks:
       - platform
 
@@ -142,7 +147,7 @@ services:
 
   frontend:
     image: ${DOCKER_REGISTRY}/nextgen/frontend:${TAG}
-    restart: always
+#    restart: always
     networks:
       platform:
 

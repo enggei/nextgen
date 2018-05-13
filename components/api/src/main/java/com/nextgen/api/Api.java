@@ -1,6 +1,8 @@
 package com.nextgen.api;
 
-import io.vertx.core.*;
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.Launcher;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.bridge.BridgeEventType;
 import io.vertx.ext.bridge.PermittedOptions;
@@ -52,6 +54,16 @@ public class Api extends AbstractVerticle {
       vertx.createHttpServer(new HttpServerOptions()).
          requestHandler(router::accept).
          listen(config().getInteger("http.port"));
+
+      // TEST
+      vertx.eventBus().consumer("ping.address", message -> {
+         log.debug("Received from \"" + message.address() + "\": " + message.body().toString());
+         message.reply("PONG!");
+      });
+
+      log.info("Started");
+
+      startFuture.complete();
    }
 
    private void forward(RoutingContext routingContext, String address) {

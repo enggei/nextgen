@@ -24,6 +24,9 @@ services:
 #  gitserver:
 #    build: docker/git-server
 
+  hazelcast:
+    build: docker/hazelcast
+
 #  vertx-test:
 #    build: components/vertx-test
 

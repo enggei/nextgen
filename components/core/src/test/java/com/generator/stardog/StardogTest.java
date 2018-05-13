@@ -2,6 +2,7 @@ package com.generator.stardog;
 
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -9,12 +10,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-//@RunWith(VertxUnitRunner.class)
+@RunWith(VertxUnitRunner.class)
 public class StardogTest extends StardogTestSession {
 
 	private static final Logger log = LoggerFactory.getLogger(StardogTest.class);
 
-	//@Test
+	@Test
+	@Ignore
 	public void testAdminConnection(TestContext context) {
 
 		final TestSession session = new TestSession(context);
@@ -25,7 +27,8 @@ public class StardogTest extends StardogTestSession {
 		});
 	}
 
-	//@Test
+	@Test
+	@Ignore
 	public void testGetGraphs(TestContext context) throws IOException {
 		final String query = "select distinct ?g where {\n" +
 			"   graph ?g {\n" +

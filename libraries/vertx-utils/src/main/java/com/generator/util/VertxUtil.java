@@ -1,9 +1,6 @@
 package com.generator.util;
 
-import io.vertx.core.DeploymentOptions;
-import io.vertx.core.Handler;
-import io.vertx.core.Verticle;
-import io.vertx.core.Vertx;
+import io.vertx.core.*;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.file.FileSystem;
@@ -11,6 +8,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.NetSocket;
 import io.vertx.core.shareddata.LocalMap;
 import io.vertx.core.shareddata.SharedData;
+import io.vertx.core.spi.cluster.ClusterManager;
 import io.vertx.ext.eventbus.bridge.tcp.impl.protocol.FrameHelper;
 import org.slf4j.Logger;
 
@@ -285,6 +283,44 @@ public class VertxUtil {
 
          log.info("undeploy success " + deploymentId);
          handler.onSuccess(null);
+      });
+   }
+
+   public static void deploy(ClusterManager clusterManager, Class[] verticleClass, DeploymentOptions deploymentOptions, Logger log, SuccessHandler<String> handler) {
+      VertxOptions options = new VertxOptions().setClusterManager(clusterManager);
+
+      Vertx.clusteredVertx(options, result -> {
+         if (result.failed()) {
+            log.error("cluster join failed " + result.cause().getMessage(), result.cause());
+            handler.onFail(result.cause());
+            return;
+         }
+
+         log.info("cluster join success");
+         Vertx vertx = result.result();
+
+         deploy(vertx, verticleClass, deploymentOptions, log, handler);
+      });
+   }
+
+   public static void deploy(ClusterManager clusterManager, Class verticleClass, Logger log, SuccessHandler<String> handler) {
+      deploy(clusterManager, verticleClass, null, log, handler);
+   }
+
+   public static void deploy(ClusterManager clusterManager, Class verticleClass, DeploymentOptions deploymentOptions, Logger log, SuccessHandler<String> handler) {
+      VertxOptions options = new VertxOptions().setClusterManager(clusterManager);
+
+      Vertx.clusteredVertx(options, result -> {
+         if (result.failed()) {
+            log.error("cluster join failed " + result.cause().getMessage(), result.cause());
+            handler.onFail(result.cause());
+            return;
+         }
+
+         log.info("cluster join success");
+         Vertx vertx = result.result();
+
+         deploy(vertx, verticleClass, deploymentOptions, log, handler);
       });
    }
 
