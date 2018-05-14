@@ -23,10 +23,31 @@ public final class StringUtil {
 
    public static void main(String[] args) {
       for (int i = 0; i < 1000; i++) {
-         log.info(randomCharacter()+"");
+         log.info(randomCharacter() + "");
       }
    }
 
+   public static String[] removeEmpty(String[] split) {
+      final List<String> result = new ArrayList<>(split.length);
+      for (String aSplit : split) {
+         if (aSplit.trim().length() == 0) continue;
+         result.add(aSplit);
+      }
+
+      return result.toArray(new String[result.size()]);
+   }
+
+   public interface LineHandler {
+
+      boolean handleLine(String line);
+
+
+   }
+
+   public static void readLine(String string, LineHandler lineHandler) {
+      for (String line : string.split("\n"))
+         lineHandler.handleLine(line);
+   }
 
 
    public interface CharacterHandler {

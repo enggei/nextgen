@@ -2,7 +2,7 @@ package com.generator.generators.excel;
 
 import com.generator.generators.java.JavaGroup;
 import com.generator.generators.mobx.MobXGroup;
-import com.generator.generators.stringtemplate.GeneratedFile;
+import com.generator.util.GeneratedFile;
 import com.generator.util.FileUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;

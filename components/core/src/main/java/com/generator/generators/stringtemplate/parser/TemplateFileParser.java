@@ -45,7 +45,7 @@ public class TemplateFileParser {
       final Map<String, TemplateFile> imports = new LinkedHashMap<>();
       final Map<String, TemplateImport> importNames = new LinkedHashMap<>();
       for (STGroup stGroup : group.getImportedGroups()) {
-         imports.put(stGroup.getName(), TemplateFileParser.parse(new File(file.getParent(), stGroup.getName() + (stGroup.getName().toLowerCase().endsWith(".stg") ? "" : ".stg")), errorListener));
+         imports.put(stGroup.getName(), parse(new File(file.getParent(), stGroup.getName() + (stGroup.getName().toLowerCase().endsWith(".stg") ? "" : ".stg")), errorListener));
          importNames.put(stGroup.getName(), new TemplateImport(stGroup.getName()));
       }
 

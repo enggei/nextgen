@@ -57,6 +57,7 @@ public final class ProjectGroup {
       private Object _packageName;
       private Object _configPath;
       private Object _description;
+      private Object _verticleTests;
 
       private final ST template;
 
@@ -206,6 +207,22 @@ public final class ProjectGroup {
       	return (String) this._description;
       }
 
+      public ProjectST setVerticleTests(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._verticleTests == null) {
+            this._verticleTests = value;
+         	template.add("verticleTests", value);
+         }
+
+      	return this;
+      }
+
+      public String getVerticleTests() {
+      	return (String) this._verticleTests;
+      }
+
       @Override
    	public String toString() {
    		return template.render();
@@ -342,14 +359,18 @@ public final class ProjectGroup {
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 		.append("eom() ::= <<}>>\n")
 		.append("gt() ::= \">\"\n")
-			.append("Project(generators,version,artifactId,groupId,comments,name,packageName,configPath,description) ::= <<package ~packageName~;\n" + 
+			.append("Project(generators,version,artifactId,groupId,comments,name,packageName,configPath,description,verticleTests) ::= <<package ~packageName~;\n" + 
 		"\n" + 
+		"import com.generator.util.GeneratedFile;\n" +
+		"import com.generator.generators.vertx.VertxGroup;\n" + 
 		"import com.generator.util.FileUtil;\n" + 
 		"import org.zeroturnaround.exec.ProcessExecutor;\n" + 
 		"import org.zeroturnaround.exec.stream.slf4j.Slf4jStream;\n" + 
 		"\n" + 
 		"import java.io.File;\n" + 
 		"import java.io.IOException;\n" + 
+		"import java.util.Map;\n" + 
+		"import java.util.Set;\n" + 
 		"import java.util.concurrent.TimeoutException;\n" + 
 		"\n" + 
 		"/**\n" + 
@@ -383,6 +404,78 @@ public final class ProjectGroup {
 		"				command(command).\n" + 
 		"				redirectOutput(Slf4jStream.ofCaller().asInfo()).execute();\n" + 
 		"	}\n" + 
+		"~if(verticleTests)~\n" + 
+		"\n" + 
+		"	protected void generateVerticleTest(VertxGroup.VerticleST verticleST, String utilsPackage, String testRoot) throws IOException {\n" + 
+		"\n" + 
+		"		final String name = verticleST.getName();\n" + 
+		"		final String verticleSTPackage = verticleST.getPackage();\n" + 
+		"		final Set<Map<String, Object~gt()~> verticleSTIncoming = verticleST.getIncoming();\n" + 
+		"		final Set<Map<String, Object~gt()~> verticleSTOutgoing = verticleST.getOutgoing();\n" + 
+		"\n" + 
+		"		final String testName = \"Base\" + name + \"Test\";\n" + 
+		"		final VertxGroup.VerticleTestST verticleTestST = vertxGroup.newVerticleTest().\n" + 
+		"				setPackageName(verticleSTPackage).\n" + 
+		"				setName(testName).\n" + 
+		"				setVerticle(name + \"Impl\").\n" + 
+		"				setVertxUtilPackage(utilsPackage);\n" + 
+		"\n" + 
+		"		for (Map<String, Object> map : verticleSTOutgoing)\n" + 
+		"			verticleTestST.addIncomingValue(map.get(\"address\"), map.get(\"name\"));\n" + 
+		"\n" + 
+		"		for (Map<String, Object> map : verticleSTIncoming)\n" + 
+		"			verticleTestST.addOutgoingValue(map.get(\"address\"), map.get(\"name\"));\n" + 
+		"\n" + 
+		"		GeneratedFile.newJavaFile(testRoot, verticleSTPackage, testName).write(verticleTestST);\n" + 
+		"\n" + 
+		"		final GeneratedFile testImplementation = GeneratedFile.newJavaFile(testRoot, verticleSTPackage, name + \"Test\");\n" + 
+		"		if (!testImplementation.exists())\n" + 
+		"			testImplementation.write(javaGroup.newClass().\n" + 
+		"					setPackage(verticleSTPackage).\n" + 
+		"					setScope(\"public\").\n" + 
+		"					setName(name + \"Test\").\n" + 
+		"					setExtends(testName));\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	protected void generateNeoVerticleTest(VertxGroup.NeoVerticleST verticleST, String utilsPackage, String testRoot) throws IOException {\n" + 
+		"\n" + 
+		"		final String name = verticleST.getName();\n" + 
+		"		final String verticleSTPackage = verticleST.getPackageName();\n" + 
+		"		final Set<Map<String, Object~gt()~> actions = verticleST.getActions();\n" + 
+		"\n" + 
+		"		final String testName = \"Base\" + name + \"Test\";\n" + 
+		"		final VertxGroup.VerticleTestST verticleTestST = vertxGroup.newVerticleTest().\n" + 
+		"				setPackageName(verticleSTPackage).\n" + 
+		"				setName(testName).\n" + 
+		"				setVerticle(name + \"Impl\").\n" + 
+		"				setVertxUtilPackage(utilsPackage);\n" + 
+		"\n" + 
+		"		for (Map<String, Object> map : actions)\n" + 
+		"			verticleTestST.addOutgoingValue(map.get(\"address\"), map.get(\"name\"));\n" + 
+		"\n" + 
+		"		GeneratedFile.newJavaFile(testRoot, verticleSTPackage, testName).write(verticleTestST);\n" + 
+		"\n" + 
+		"		final GeneratedFile testImplementation = GeneratedFile.newJavaFile(testRoot, verticleSTPackage, name + \"Test\");\n" + 
+		"		if (!testImplementation.exists())\n" + 
+		"			testImplementation.write(javaGroup.newClass().\n" + 
+		"					addImportsValue(utilsPackage + \".ResponseUtil\").\n" + 
+		"					addImportsValue(utilsPackage + \".VertxUtil\").\n" + 
+		"					addImportsValue(\"io.vertx.core.eventbus.Message\").\n" + 
+		"					addImportsValue(\"io.vertx.core.json.JsonObject\").\n" + 
+		"					addImportsValue(\"io.vertx.ext.unit.Async\").\n" + 
+		"					addImportsValue(\"io.vertx.ext.unit.TestContext\").\n" + 
+		"					addImportsValue(\"org.junit.Test\").\n" + 
+		"					setPackage(verticleSTPackage).\n" + 
+		"					setScope(\"public\").\n" + 
+		"					setName(name + \"Test\").\n" + 
+		"					setExtends(testName).\n" + 
+		"					addMethodsValue(javaGroup.newmethod().\n" + 
+		"							addAnnotationsValue(\"Test\").\n" + 
+		"							setName(\"test\").\n" + 
+		"							setScope(\"public\").\n" + 
+		"							addParametersValue(\"context\", \"TestContext\")));\n" + 
+		"	}\n" + 
+		"~endif~\n" + 
 		"}>>\n")
 		.toString();
 }

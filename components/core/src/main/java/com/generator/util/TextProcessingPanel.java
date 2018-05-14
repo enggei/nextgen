@@ -1,9 +1,10 @@
 package com.generator.util;
 
-import difflib.Chunk;
-import difflib.Delta;
-import difflib.DiffUtils;
-import difflib.Patch;
+import com.github.difflib.DiffUtils;
+import com.github.difflib.algorithm.DiffException;
+import com.github.difflib.patch.Chunk;
+import com.github.difflib.patch.Delta;
+import com.github.difflib.patch.Patch;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -291,7 +292,7 @@ public final class TextProcessingPanel extends JPanel {
       txtPattern.requestFocusInWindow();
    }
 
-   private void showDifference() {
+   private void showDifference() throws DiffException {
       final String src = txtInput.getText().trim();
       final String dst = txtOutput.getText().trim();
 

@@ -110,6 +110,22 @@ public final class VertxGroup {
       return new hazelcastConfigXMLST(stGroup);
    }
 
+   public ResponseUtilST newResponseUtil() {
+      return new ResponseUtilST(stGroup);
+   }
+
+   public mvn_eventbus_bridgeST newmvn_eventbus_bridge() {
+      return new mvn_eventbus_bridgeST(stGroup);
+   }
+
+   public mvn_webST newmvn_web() {
+      return new mvn_webST(stGroup);
+   }
+
+   public mvn_webClientST newmvn_webClient() {
+      return new mvn_webClientST(stGroup);
+   }
+
    public final class NeoVerticleST implements VertxGroupTemplate {
 
       private java.util.Set<java.util.Map<String, Object>> _actions = new java.util.LinkedHashSet<>();
@@ -199,6 +215,7 @@ public final class VertxGroup {
       private Object _package;
       private java.util.Set<java.util.Map<String, Object>> _routes = new java.util.LinkedHashSet<>();
       private java.util.Set<java.util.Map<String, Object>> _verticles = new java.util.LinkedHashSet<>();
+      private Object _vertxUtilPackage;
 
       private final ST template;
 
@@ -289,6 +306,22 @@ public final class VertxGroup {
 
       public java.util.Set<java.util.Map<String, Object>> getVerticles() {
       	return this._verticles;
+      }
+
+      public ServerST setVertxUtilPackage(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._vertxUtilPackage == null) {
+            this._vertxUtilPackage = value;
+         	template.add("vertxUtilPackage", value);
+         }
+
+      	return this;
+      }
+
+      public String getVertxUtilPackage() {
+      	return (String) this._vertxUtilPackage;
       }
 
       @Override
@@ -915,6 +948,7 @@ public final class VertxGroup {
       private java.util.Set<java.util.Map<String, Object>> _vertxOptions = new java.util.LinkedHashSet<>();
       private java.util.Set<java.util.Map<String, Object>> _javaOptions = new java.util.LinkedHashSet<>();
       private java.util.Set<java.util.Map<String, Object>> _copies = new java.util.LinkedHashSet<>();
+      private Object _cluster;
 
       private final ST template;
 
@@ -1028,6 +1062,22 @@ public final class VertxGroup {
       	return this._copies;
       }
 
+      public DockerST setCluster(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._cluster == null) {
+            this._cluster = value;
+         	template.add("cluster", value);
+         }
+
+      	return this;
+      }
+
+      public String getCluster() {
+      	return (String) this._cluster;
+      }
+
       @Override
    	public String toString() {
    		return template.render();
@@ -1136,6 +1186,134 @@ public final class VertxGroup {
       private hazelcastConfigXMLST(STGroup group) {
    		template = group.getInstanceOf("hazelcastConfigXML");
    	}
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class ResponseUtilST implements VertxGroupTemplate {
+
+      private Object _packageName;
+
+      private final ST template;
+
+      private ResponseUtilST(STGroup group) {
+   		template = group.getInstanceOf("ResponseUtil");
+   	}
+
+      public ResponseUtilST setPackageName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._packageName == null) {
+            this._packageName = value;
+         	template.add("packageName", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackageName() {
+      	return (String) this._packageName;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class mvn_eventbus_bridgeST implements VertxGroupTemplate {
+
+      private Object _version;
+
+      private final ST template;
+
+      private mvn_eventbus_bridgeST(STGroup group) {
+   		template = group.getInstanceOf("mvn_eventbus_bridge");
+   	}
+
+      public mvn_eventbus_bridgeST setVersion(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._version == null) {
+            this._version = value;
+         	template.add("version", value);
+         }
+
+      	return this;
+      }
+
+      public String getVersion() {
+      	return (String) this._version;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class mvn_webST implements VertxGroupTemplate {
+
+      private Object _version;
+
+      private final ST template;
+
+      private mvn_webST(STGroup group) {
+   		template = group.getInstanceOf("mvn_web");
+   	}
+
+      public mvn_webST setVersion(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._version == null) {
+            this._version = value;
+         	template.add("version", value);
+         }
+
+      	return this;
+      }
+
+      public String getVersion() {
+      	return (String) this._version;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class mvn_webClientST implements VertxGroupTemplate {
+
+      private Object _version;
+
+      private final ST template;
+
+      private mvn_webClientST(STGroup group) {
+   		template = group.getInstanceOf("mvn_webClient");
+   	}
+
+      public mvn_webClientST setVersion(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._version == null) {
+            this._version = value;
+         	template.add("version", value);
+         }
+
+      	return this;
+      }
+
+      public String getVersion() {
+      	return (String) this._version;
+      }
 
       @Override
    	public String toString() {
@@ -1276,7 +1454,7 @@ public final class VertxGroup {
 			.append("NeoVerticle(actions,name,packageName,vertxUtilPackage) ::= <<package ~packageName~;\n" + 
 		"\n" + 
 		"import ~if(vertxUtilPackage)~~vertxUtilPackage~~else~com.generator.util~endif~.VertxUtil;\n" + 
-		"import ~if(vertxUtilPackage)~~vertxUtilPackage~~else~com.generator.util~endif~.JsonUtil;\n" + 
+		"import ~if(vertxUtilPackage)~~vertxUtilPackage~~else~com.generator.util~endif~.ResponseUtil;\n" + 
 		"\n" + 
 		"import io.vertx.core.AbstractVerticle;\n" + 
 		"import io.vertx.core.Future;\n" + 
@@ -1318,8 +1496,14 @@ public final class VertxGroup {
 		"         @Override\n" + 
 		"         public JsonObject execute() {\n" + 
 		"\n" + 
+		"				final String path = config().getString(\"path\");\n" + 
+		"            log.info(\"Starting db at \" + path);\n" + 
+		"            \n" + 
+		"            if (path == null || path.length() == 0)\n" + 
+		"            	throw new IllegalArgumentException(\"missing 'path' config parameter\");\n" + 
+		"\n" + 
 		"            db = new GraphDatabaseFactory().\n" + 
-		"                  newEmbeddedDatabaseBuilder(new File(config().getString(\"path\"))).\n" + 
+		"                  newEmbeddedDatabaseBuilder(new File(path)).\n" + 
 		"                  setConfig(GraphDatabaseSettings.allow_upgrade, \"true\").\n" + 
 		"                  newGraphDatabase();\n" + 
 		"\n" + 
@@ -1341,9 +1525,9 @@ public final class VertxGroup {
 		"               on~it.name;format=\"capitalize\"~(tx, message);\n" + 
 		"	            tx.success();\n" + 
 		"            ~eom()~ catch (Exception e) {\n" + 
-		"               log.error(deploymentID() + \" exception on save.scanConfig \" + message.body().encode() + \" \" + e.getMessage(), e);\n" + 
+		"               log.error(deploymentID() + \" exception on ~it.address~ \" + message.body().encode() + \" \" + e.getMessage(), e);\n" + 
 		"               tx.failure();\n" + 
-		"               message.reply(JsonUtil.newException(e));\n" + 
+		"               message.reply(ResponseUtil.newException(e));\n" + 
 		"            ~eom()~\n" + 
 		"         ~eom()~      \n" + 
 		"      ~eom()~);};separator=\"\\n\"~\n" + 
@@ -1362,10 +1546,11 @@ public final class VertxGroup {
 		"	protected void onStart(Future<Void> startFuture) {\n" + 
 		"  	}\n" + 
 		"}>>\n")
-			.append("Server(inbound,name,outbound,package,routes,verticles) ::= <<package ~package~;\n" + 
+			.append("Server(inbound,name,outbound,package,routes,verticles,vertxUtilPackage) ::= <<package ~package~;\n" + 
 		"\n" + 
-		"import com.ud.vertx.VertxUtil;\n" + 
-		"import com.ud.vertx.VertxWebUtil;\n" + 
+		"import ~if(vertxUtilPackage)~~vertxUtilPackage~~else~com.generator.util~endif~.VertxUtil;\n" + 
+		"import ~if(vertxUtilPackage)~~vertxUtilPackage~~else~com.generator.util~endif~.ResponseUtil;\n" + 
+		"\n" + 
 		"import io.netty.handler.codec.http.HttpResponseStatus;\n" + 
 		"import io.vertx.core.AbstractVerticle;\n" + 
 		"import io.vertx.core.DeploymentOptions;\n" + 
@@ -1573,13 +1758,15 @@ public final class VertxGroup {
 		"}>>\n")
 			.append("VerticleTest(name,verticle,packageName,outgoing,vertxUtilPackage,incoming) ::= <<package ~packageName~;\n" + 
 		"\n" + 
-		"import ~if(vertxUtilPackage)~~vertxUtilPackage~~else~com.generator.util~endif~.VertxUtil;;\n" + 
+		"import ~if(vertxUtilPackage)~~vertxUtilPackage~~else~com.generator.util~endif~.VertxUtil;\n" + 
+		"import ~if(vertxUtilPackage)~~vertxUtilPackage~~else~com.generator.util~endif~.ResponseUtil;\n" + 
 		"\n" + 
 		"import io.vertx.core.DeploymentOptions;\n" + 
 		"import io.vertx.core.Handler;\n" + 
 		"import io.vertx.core.Vertx;\n" + 
 		"import io.vertx.core.eventbus.Message;\n" + 
 		"import io.vertx.core.json.JsonObject;\n" + 
+		"import io.vertx.core.json.JsonArray;\n" + 
 		"import io.vertx.ext.unit.Async;\n" + 
 		"import io.vertx.ext.unit.TestContext;\n" + 
 		"import io.vertx.ext.unit.junit.VertxUnitRunner;\n" + 
@@ -1595,10 +1782,10 @@ public final class VertxGroup {
 		"@RunWith(VertxUnitRunner.class)\n" + 
 		"public abstract class ~name~ {\n" + 
 		"\n" + 
-		"   protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" + 
+		"   static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" + 
 		"\n" + 
-		"   protected Vertx vertx;\n" + 
-		"   protected String deploymentID;\n" + 
+		"   Vertx vertx;\n" + 
+		"   String deploymentID;\n" + 
 		"\n" + 
 		"   @Before\n" + 
 		"   public void before(TestContext context) throws IOException {\n" + 
@@ -1623,7 +1810,7 @@ public final class VertxGroup {
 		"      });\n" + 
 		"   }\n" + 
 		"\n" + 
-		"   protected DeploymentOptions getDeploymentOptions() {\n" + 
+		"   DeploymentOptions getDeploymentOptions() {\n" + 
 		"      return new DeploymentOptions();\n" + 
 		"   }\n" + 
 		"\n" + 
@@ -1633,16 +1820,49 @@ public final class VertxGroup {
 		"   }\n" + 
 		"\n" + 
 		"~outgoing:{it|\n" + 
-		"	protected void send~it.name;format=\"capitalize\"~(JsonObject parameters, VertxUtil.SuccessHandler<Message<JsonObject~gt()~> handler) {\n" + 
+		"\n" + 
+		"	void send~it.name;format=\"capitalize\"~(JsonObject parameters, VertxUtil.SuccessHandler<Message<JsonObject~gt()~> handler) {\n" + 
 		"      VertxUtil.sendJsonMessage(vertx, \"~it.address~\", parameters, log, handler);\n" + 
 		"   ~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
-		"\n" + 
 		"~incoming:{it|\n" + 
-		"	protected void consume~it.name;format=\"capitalize\"~(Handler<Message<JsonObject~gt()~> handler) {\n" + 
+		"\n" + 
+		"	void consume~it.name;format=\"capitalize\"~(Handler<Message<JsonObject~gt()~> handler) {\n" + 
 		"      VertxUtil.consume(vertx, \"~name~\", \"~it.address~\", log, handler);\n" + 
 		"   ~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
+		"	class TestResponseHandler extends ResponseUtil.ResponseHandler {\n" + 
+		"\n" + 
+		"      private final TestContext context;\n" + 
+		"\n" + 
+		"      TestResponseHandler(org.slf4j.Logger log, TestContext context) {\n" + 
+		"         super(log);\n" + 
+		"         this.context = context;\n" + 
+		"      }\n" + 
+		"\n" + 
+		"      @Override\n" + 
+		"      protected void handleFail(JsonArray payload) {\n" + 
+		"         context.fail(payload.encodePrettily());\n" + 
+		"      }\n" + 
+		"\n" + 
+		"      @Override\n" + 
+		"      protected void handleFail(JsonObject payload) {\n" + 
+		"         context.fail(payload.encodePrettily());\n" + 
+		"      }\n" + 
+		"\n" + 
+		"      @Override\n" + 
+		"      protected void handleFail(String payload) {\n" + 
+		"         context.fail(payload);\n" + 
+		"      }\n" + 
+		"\n" + 
+		"      @Override\n" + 
+		"      public void onFail(Throwable t) {\n" + 
+		"         context.fail(t);\n" + 
+		"      }\n" + 
+		"\n" + 
+		"		@Override\n" + 
+		"      protected void handleException(String payload) { context.fail(payload); }\n" + 
+		"   }\n" + 
 		"}>>\n")
 			.append("API() ::= <<package ~packageName~;\n" + 
 		"\n" + 
@@ -2071,7 +2291,7 @@ public final class VertxGroup {
 		"   }\n" + 
 		"\n" + 
 		"   public static <T> void consume(Vertx vertx, String consumer, String address, Logger log, Handler<Message<T~gt()~> messageHandler) {\n" + 
-		"      log.info(\"consume \" + consumer + \" messages on address \" + address);\n" + 
+		"      log.info(\"consumer \" + consumer + \" handles '\" + address + \"'\");\n" + 
 		"      vertx.eventBus().consumer(address, messageHandler);\n" + 
 		"   }\n" + 
 		"\n" + 
@@ -2092,7 +2312,7 @@ public final class VertxGroup {
 		"\n" + 
 		"         @Override\n" + 
 		"         public void onFail(Throwable t) {\n" + 
-		"            // log.warn(\"message failed to \" + address + \" \" + content.encode());\n" + 
+		"            // log.warn(\"message sent to \" + address + \" \" + content.encode());\n" + 
 		"         }\n" + 
 		"      });\n" + 
 		"   }\n" + 
@@ -2101,7 +2321,7 @@ public final class VertxGroup {
 		"      sendMessage(vertx, address, content, null, log, new SuccessHandler<JsonObject>() {\n" + 
 		"         @Override\n" + 
 		"         public void onSuccess(JsonObject result) {\n" + 
-		"            log.info(\"sendMessage success \" + address + \" \" + result);\n" + 
+		"            log.info(\"message sent to \" + address + \" \" + result);\n" + 
 		"         }\n" + 
 		"\n" + 
 		"         @Override\n" + 
@@ -2114,7 +2334,7 @@ public final class VertxGroup {
 		"   @SuppressWarnings(\"unchecked\")\n" + 
 		"   public static <T, R> void sendMessage(Vertx vertx, String address, T content, DeliveryOptions options, Logger log, SuccessHandler<R> handler) {\n" + 
 		"\n" + 
-		"      log.info(\"sendingMessage \" + address + \" \" + content.toString());\n" + 
+		"      log.info(\"sendingMessage to \" + address + \" \" + content.toString());\n" + 
 		"\n" + 
 		"      if (options == null) options = new DeliveryOptions();\n" + 
 		"\n" + 
@@ -2125,7 +2345,7 @@ public final class VertxGroup {
 		"            handler.onFail(result.cause());\n" + 
 		"            return;\n" + 
 		"         }\n" + 
-		"         log.info(\"sendMessage success \" + address + \" \" + result.result().body());\n" + 
+		"         log.info(\"message sent to \" + address + \" \" + result.result().body());\n" + 
 		"         handler.onSuccess((R) result.result());\n" + 
 		"      });\n" + 
 		"   }\n" + 
@@ -2168,6 +2388,7 @@ public final class VertxGroup {
 		"   public static void deploy(Vertx vertx, Verticle verticle, DeploymentOptions deploymentOptions, Logger log, SuccessHandler<String> handler) {\n" + 
 		"\n" + 
 		"      if (deploymentOptions == null) deploymentOptions = new DeploymentOptions();\n" + 
+		"		log.info(\"deploying \" + verticle.getClass().getCanonicalName() + \" using \" + deploymentOptions.getConfig().encode());\n" + 
 		"\n" + 
 		"      vertx.deployVerticle(verticle, deploymentOptions, result -> {\n" + 
 		"\n" + 
@@ -2185,6 +2406,7 @@ public final class VertxGroup {
 		"   public static void deploy(Vertx vertx, String className, DeploymentOptions deploymentOptions, Logger log, SuccessHandler<String> handler) {\n" + 
 		"\n" + 
 		"      if (deploymentOptions == null) deploymentOptions = new DeploymentOptions();\n" + 
+		"		log.info(\"deploying \" + className + \" using \" + deploymentOptions.getConfig().encode());\n" + 
 		"\n" + 
 		"      vertx.deployVerticle(className, deploymentOptions, result -> {\n" + 
 		"\n" + 
@@ -2202,6 +2424,7 @@ public final class VertxGroup {
 		"   public static void deploy(Vertx vertx, String className, DeploymentOptions deploymentOptions, Logger log) {\n" + 
 		"\n" + 
 		"      if (deploymentOptions == null) deploymentOptions = new DeploymentOptions();\n" + 
+		"		log.info(\"deploying \" + className + \" using \" + deploymentOptions.getConfig().encode());\n" + 
 		"\n" + 
 		"      vertx.deployVerticle(className, deploymentOptions, result -> {\n" + 
 		"\n" + 
@@ -2305,7 +2528,7 @@ public final class VertxGroup {
 		"      return UNKNOWN + \" : \" + jsonObject;\n" + 
 		"   }\n" + 
 		"}>>\n")
-			.append("Docker(exposePort,verticleFile,verticleHome,verticleName,vertxOptions,javaOptions,copies) ::= <<# Extend vert.x image\n" + 
+			.append("Docker(exposePort,verticleFile,verticleHome,verticleName,vertxOptions,javaOptions,copies,cluster) ::= <<# Extend vert.x image\n" + 
 		"FROM vertx/vertx3\n" + 
 		"\n" + 
 		"#                                                      \n" + 
@@ -2317,6 +2540,8 @@ public final class VertxGroup {
 		"~endif~\n" + 
 		"~if(vertxOptions)~\n" + 
 		"ENV VERTX_OPTS \"~vertxOptions:{it|-D~it.key~=~it.value~};separator=\" \"~\"\n" + 
+		"~if(cluster)~\n" + 
+		"COPY ~cluster~ $VERTICLE_HOME/~endif~\n" + 
 		"\n" + 
 		"~endif~\n" + 
 		"# Set the location of the verticles\n" + 
@@ -2327,11 +2552,12 @@ public final class VertxGroup {
 		"# Copy your verticle to the container                  \n" + 
 		"COPY $VERTICLE_FILE $VERTICLE_HOME/\n" + 
 		"~copies:{it|COPY ~it.src~ $VERTICLE_HOME/~it.filename~};separator=\"\\n\"~\n" + 
+		"~if(cluster)~COPY ~cluster~ $VERTICLE_HOME/~endif~\n" + 
 		"\n" + 
 		"# Launch the verticle\n" + 
 		"WORKDIR $VERTICLE_HOME\n" + 
 		"ENTRYPOINT [\"sh\", \"-c\"]\n" + 
-		"CMD [\"exec vertx $VERTX_OPTS run $VERTICLE_NAME -cp $VERTICLE_HOME/*\"]>>\n")
+		"CMD [\"exec vertx $VERTX_OPTS -cp $VERTICLE_HOME/*\"]>>\n")
 			.append("mvn_unit() ::= <<<!-- https://mvnrepository.com/artifact/io.vertx/vertx-unit -->\n" + 
 		"<dependency>\n" + 
 		"    <groupId>io.vertx</groupId>\n" + 
@@ -2749,5 +2975,179 @@ public final class VertxGroup {
 		"  </semaphore>\n" + 
 		"\n" + 
 		"</hazelcast> >>\n")
+			.append("ResponseUtil(packageName) ::= <<package ~packageName~;\n" + 
+		"\n" + 
+		"import io.vertx.core.Handler;\n" + 
+		"import io.vertx.core.buffer.Buffer;\n" + 
+		"import io.vertx.core.eventbus.Message;\n" + 
+		"import io.vertx.core.json.JsonArray;\n" + 
+		"import io.vertx.core.json.JsonObject;\n" + 
+		"import org.slf4j.Logger;\n" + 
+		"\n" + 
+		"public class ResponseUtil {\n" + 
+		"\n" + 
+		"   private enum ResponseStatus {\n" + 
+		"      SUCCESS,\n" + 
+		"      FAIL\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   private enum PayloadType {\n" + 
+		"      STRING,\n" + 
+		"      JSONOBJECT,\n" + 
+		"      JSONARRAY,\n" + 
+		"      EXCEPTION\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject newSuccess(String payload) {\n" + 
+		"      return new JsonObject().\n" + 
+		"            put(\"status\", ResponseStatus.SUCCESS).\n" + 
+		"            put(\"payloadType\", PayloadType.STRING).\n" + 
+		"            put(\"payload\", payload);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject newSuccess(JsonObject payload) {\n" + 
+		"      return new JsonObject().\n" + 
+		"            put(\"status\", ResponseStatus.SUCCESS).\n" + 
+		"            put(\"payloadType\", PayloadType.JSONOBJECT).\n" + 
+		"            put(\"payload\", payload);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject newSuccess(JsonArray payload) {\n" + 
+		"      return new JsonObject().\n" + 
+		"            put(\"status\", ResponseStatus.SUCCESS).\n" + 
+		"            put(\"payloadType\", PayloadType.JSONARRAY).\n" + 
+		"            put(\"payload\", payload);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject newFail(String payload) {\n" + 
+		"      return new JsonObject().\n" + 
+		"            put(\"status\", ResponseStatus.FAIL).\n" + 
+		"            put(\"payloadType\", PayloadType.STRING).\n" + 
+		"            put(\"payload\", payload);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public static JsonObject newException(Exception e) {\n" + 
+		"      return new JsonObject().\n" + 
+		"            put(\"status\", ResponseStatus.FAIL).\n" + 
+		"            put(\"payloadType\", PayloadType.EXCEPTION).\n" + 
+		"            put(\"payload\", e.getMessage());\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public abstract static class EventbusHandler extends ResponseHandler implements Handler<Buffer> {\n" + 
+		"\n" + 
+		"      protected EventbusHandler(Logger log) {\n" + 
+		"         super(log);\n" + 
+		"      }\n" + 
+		"\n" + 
+		"      @Override\n" + 
+		"      public void handle(Buffer buffer) {\n" + 
+		"         final JsonObject message = new JsonObject(buffer.toString());\n" + 
+		"         log.debug(message.encode());\n" + 
+		"         handleResponse(message.getJsonObject(\"body\"));\n" + 
+		"      }\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public abstract static class ResponseHandler implements VertxUtil.SuccessHandler<Message<JsonObject~gt()~> {\n" + 
+		"\n" + 
+		"      protected final Logger log;\n" + 
+		"\n" + 
+		"      protected ResponseHandler(Logger log) {\n" + 
+		"         this.log = log;\n" + 
+		"      }\n" + 
+		"\n" + 
+		"      @Override\n" + 
+		"      public final void onSuccess(Message<JsonObject> result) {\n" + 
+		"         handleResponse(result.body());\n" + 
+		"      }\n" + 
+		"\n" + 
+		"      void handleResponse(JsonObject message) {\n" + 
+		"         switch (ResponseStatus.valueOf(message.getString(\"status\"))) {\n" + 
+		"\n" + 
+		"            case SUCCESS:\n" + 
+		"               switch (PayloadType.valueOf(message.getString(\"payloadType\"))) {\n" + 
+		"                  case STRING:\n" + 
+		"                     handleSuccess(message.getString(\"payload\"));\n" + 
+		"                     break;\n" + 
+		"                  case JSONOBJECT:\n" + 
+		"                     handleSuccess(message.getJsonObject(\"payload\"));\n" + 
+		"                     break;\n" + 
+		"                  case JSONARRAY:\n" + 
+		"                     handleSuccess(message.getJsonArray(\"payload\"));\n" + 
+		"                     break;\n" + 
+		"               }\n" + 
+		"               break;\n" + 
+		"\n" + 
+		"            case FAIL:\n" + 
+		"               switch (PayloadType.valueOf(message.getString(\"payloadType\"))) {\n" + 
+		"                  case STRING:\n" + 
+		"                     handleFail(message.getString(\"payload\"));\n" + 
+		"                     break;\n" + 
+		"                  case JSONOBJECT:\n" + 
+		"                     handleFail(message.getJsonObject(\"payload\"));\n" + 
+		"                     break;\n" + 
+		"                  case JSONARRAY:\n" + 
+		"                     handleFail(message.getJsonArray(\"payload\"));\n" + 
+		"                     break;\n" + 
+		"                  case EXCEPTION:\n" + 
+		"                     handleException(message.getString(\"payload\"));\n" + 
+		"                     break;\n" + 
+		"               }\n" + 
+		"               break;\n" + 
+		"\n" + 
+		"            default:\n" + 
+		"               log.error(\"unrecognized status '\" + message.getString(\"status\") + \"'\");\n" + 
+		"               break;\n" + 
+		"         }\n" + 
+		"      }\n" + 
+		"\n" + 
+		"      protected void handleException(String payload) {\n" + 
+		"         log.warn(\"unhandled exception \" + payload);\n" + 
+		"      }\n" + 
+		"\n" + 
+		"      protected void handleSuccess(String payload) {\n" + 
+		"         log.warn(\"unhandled success \" + payload);\n" + 
+		"      }\n" + 
+		"\n" + 
+		"      protected void handleSuccess(JsonObject payload) {\n" + 
+		"         log.warn(\"unhandled success \" + payload.encode());\n" + 
+		"      }\n" + 
+		"\n" + 
+		"      protected void handleSuccess(JsonArray payload) {\n" + 
+		"         log.warn(\"unhandled success \" + payload.encode());\n" + 
+		"      }\n" + 
+		"\n" + 
+		"      protected void handleFail(JsonArray payload) {\n" + 
+		"         log.warn(\"unhandled fail\" + payload.encode());\n" + 
+		"      }\n" + 
+		"\n" + 
+		"      protected void handleFail(JsonObject payload) {\n" + 
+		"         log.warn(\"unhandled fail \" + payload.encode());\n" + 
+		"      }\n" + 
+		"\n" + 
+		"      protected void handleFail(String payload) {\n" + 
+		"         log.warn(\"unhandled fail \" + payload);\n" + 
+		"      }\n" + 
+		"\n" + 
+		"      @Override\n" + 
+		"      public void onFail(Throwable t) {\n" + 
+		"         log.error(\"unhandled error \" + t.getMessage(), t);\n" + 
+		"      }\n" + 
+		"   }\n" + 
+		"}>>\n")
+			.append("mvn_eventbus_bridge(version) ::= <<<dependency>\n" + 
+		"   <groupId>io.vertx</groupId>\n" + 
+		"   <artifactId>vertx-tcp-eventbus-bridge</artifactId>\n" + 
+		"	<version>~version~</version>\n" + 
+		"</dependency> >>\n")
+			.append("mvn_web(version) ::= <<<dependency>\n" + 
+		"	<groupId>io.vertx</groupId>\n" + 
+		"   <artifactId>vertx-web</artifactId>\n" + 
+		"   <version>~version~</version>\n" + 
+		"</dependency> >>\n")
+			.append("mvn_webClient(version) ::= <<<dependency>\n" + 
+		"  <groupId>io.vertx</groupId>\n" + 
+		"  <artifactId>vertx-web-client</artifactId>\n" + 
+		"  <version>~version~</version>\n" + 
+		"</dependency> >>\n")
 		.toString();
 }

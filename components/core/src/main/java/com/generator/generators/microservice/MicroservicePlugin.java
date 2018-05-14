@@ -4,7 +4,7 @@ import com.generator.app.App;
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.java.JavaGroup;
 import com.generator.generators.mobx.MobXGroup;
-import com.generator.generators.stringtemplate.GeneratedFile;
+import com.generator.util.GeneratedFile;
 import com.generator.generators.vertx.VertxGroup;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Transaction;

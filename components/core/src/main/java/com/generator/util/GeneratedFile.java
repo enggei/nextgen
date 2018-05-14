@@ -1,6 +1,4 @@
-package com.generator.generators.stringtemplate;
-
-import com.generator.util.FileUtil;
+package com.generator.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,6 +38,11 @@ public class GeneratedFile {
       return new GeneratedFile(new File(root, file));
    }
 
+   public static GeneratedFile newDirectory(String root, String packageName) {
+      final String file = (packageName == null ? "" : (packageName.replaceAll("[.]", "/")));
+      return new GeneratedFile(new File(root, file));
+   }
+
    public static GeneratedFile newPlainFile(String root, String filename) {
       return newPlainFile(root, null, filename);
    }
@@ -61,6 +64,12 @@ public class GeneratedFile {
    }
 
    public GeneratedFile write(Object content) throws IOException {
+      FileUtil.writeFile(content, getFile());
+      return this;
+   }
+
+   public GeneratedFile writeIfNotExists(Object content) throws IOException {
+      if (this.exists()) return this;
       FileUtil.writeFile(content, getFile());
       return this;
    }

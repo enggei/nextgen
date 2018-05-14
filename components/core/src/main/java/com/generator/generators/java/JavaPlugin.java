@@ -10,7 +10,7 @@ import com.generator.generators.java.parser.JavaLexer;
 import com.generator.generators.java.parser.JavaParser;
 import com.generator.generators.java.parser.JavaParserNeoVisitor;
 import com.generator.generators.project.ProjectPlugin;
-import com.generator.generators.stringtemplate.GeneratedFile;
+import com.generator.util.GeneratedFile;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.neo.NeoModel;
 import com.generator.util.*;

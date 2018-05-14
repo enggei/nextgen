@@ -37,7 +37,7 @@
         <slf4j.version>1.7.2</slf4j.version>
         <apache.poi.version>3.17</apache.poi.version>
         <tensorflow.version>1.3.0</tensorflow.version>
-        <java-diff-utils.version>1.3.0</java-diff-utils.version>
+        <java-diff-utils.version>2.2</java-diff-utils.version>
         <clojure.version>1.8.0</clojure.version>
         <guava.version>22.0</guava.version>
     </properties>

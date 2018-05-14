@@ -6,7 +6,7 @@ import com.generator.app.NodeRenderPanel;
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.project.ProjectPlugin;
-import com.generator.generators.stringtemplate.GeneratedFile;
+import com.generator.util.GeneratedFile;
 import com.generator.neo.NeoModel;
 import com.generator.util.NeoUtil;
 import com.generator.util.SwingUtil;

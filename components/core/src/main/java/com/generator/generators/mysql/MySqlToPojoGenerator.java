@@ -3,7 +3,7 @@ package com.generator.generators.mysql;
 import com.generator.generators.java.JavaGroup;
 import com.generator.generators.mysql.parser.MySqlParser;
 import com.generator.generators.mysql.parser.MySqlParserNodeListener;
-import com.generator.generators.stringtemplate.GeneratedFile;
+import com.generator.util.GeneratedFile;
 import com.generator.util.StringUtil;
 
 import java.io.IOException;

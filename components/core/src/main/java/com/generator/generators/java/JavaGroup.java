@@ -241,6 +241,7 @@ public final class JavaGroup {
       private Object _returnValue;
       private Object _scope;
       private java.util.Set<Object> _statements = new java.util.LinkedHashSet<>();
+      private java.util.Set<Object> _throwsExceptions = new java.util.LinkedHashSet<>();
 
       private final ST template;
 
@@ -338,6 +339,20 @@ public final class JavaGroup {
       	return this._statements;
       }
 
+      public methodST addThrowsExceptionsValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._throwsExceptions.add(value);
+      	template.add("throwsExceptions", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getThrowsExceptionsValues() {
+      	return this._throwsExceptions;
+      }
+
       @Override
    	public String toString() {
    		return template.render();
@@ -357,6 +372,8 @@ public final class JavaGroup {
       private java.util.Set<java.util.Map<String, Object>> _properties = new java.util.LinkedHashSet<>();
       private Object _neoNode;
       private Object _json;
+      private Object _innerClass;
+      private Object _scope;
 
       private final ST template;
 
@@ -532,6 +549,38 @@ public final class JavaGroup {
 
       public String getJson() {
       	return (String) this._json;
+      }
+
+      public PojoST setInnerClass(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._innerClass == null) {
+            this._innerClass = value;
+         	template.add("innerClass", value);
+         }
+
+      	return this;
+      }
+
+      public String getInnerClass() {
+      	return (String) this._innerClass;
+      }
+
+      public PojoST setScope(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._scope == null) {
+            this._scope = value;
+         	template.add("scope", value);
+         }
+
+      	return this;
+      }
+
+      public String getScope() {
+      	return (String) this._scope;
       }
 
       @Override
@@ -1568,11 +1617,11 @@ public final class JavaGroup {
 		"   }\n" + 
 		"~endif~\n" + 
 		"}>>\n")
-			.append("method(annotations,name,parameters,returnValue,scope,statements) ::= <<~annotations:{it|@~it~};separator=\"\\n\"~\n" + 
-		"~if(scope)~~scope~ ~else~~endif~~if(returnValue)~~returnValue~ ~else~void ~endif~~name~(~parameters:{it|~it.type~ ~it.name~};separator=\",\"~) {\n" + 
+			.append("method(annotations,name,parameters,returnValue,scope,statements,throwsExceptions) ::= <<~annotations:{it|@~it~};separator=\"\\n\"~\n" + 
+		"~if(scope)~~scope~ ~else~~endif~~if(returnValue)~~returnValue~ ~else~void ~endif~~name~(~parameters:{it|~it.type~ ~it.name~};separator=\",\"~)~if(throwsExceptions)~ throws ~endif~~throwsExceptions:{it| ~it~};separator=\",\"~ {\n" + 
 		"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
 		"}>>\n")
-			.append("Pojo(classProperties,eqha,extends,implement,lexical,methods,name,package,properties,neoNode,json) ::= <<package ~package~;\n" + 
+			.append("Pojo(classProperties,eqha,extends,implement,lexical,methods,name,package,properties,neoNode,json,innerClass,scope) ::= <<~if(innerClass)~~else~package ~package~;\n" + 
 		"\n" + 
 		"~if(neoNode)~\n" + 
 		"import org.neo4j.graphdb.GraphDatabaseService;\n" + 
@@ -1581,56 +1630,31 @@ public final class JavaGroup {
 		"import org.neo4j.graphdb.RelationshipType;\n" + 
 		"import org.neo4j.graphdb.Node;\n" + 
 		"~endif~\n" + 
-		"~if(json)~\n" + 
-		"import io.vertx.core.json.JsonObject;\n" + 
-		"import io.vertx.core.json.JsonArray;\n" + 
 		"~endif~\n" + 
-		"\n" + 
-		"public class ~name~~if(extends)~ extends ~extends~~endif~~if(implement)~ implements ~implement:{it|~it~};separator=\", \"~~endif~ {\n" + 
+		"~scope~ class ~name~~if(extends)~ extends ~extends~~endif~~if(implement)~ implements ~implement:{it|~it~};separator=\", \"~~endif~ {\n" + 
 		"~if(classProperties)~\n" + 
 		"	~classProperties:{it|private static final ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
 		"~endif~\n" + 
 		"\n" + 
-		"	private final String uuid;\n" + 
 		"~if(properties)~\n" + 
 		"	~properties:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
 		"~endif~\n" + 
 		"\n" + 
 		"	public ~name~() {\n" + 
-		"		this.uuid = java.util.UUID.randomUUID().toString();\n" + 
 		"	}\n" + 
 		"\n" + 
-		"~if(properties)~\n" + 
-		"\n" + 
-		"	public ~name~(String uuid, ~properties:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
-		"		this.uuid = uuid;\n" + 
-		"		~properties:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
-		"	}\n" + 
-		"\n" + 
-		"	public ~name~(~properties:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
-		"		this.uuid = java.util.UUID.randomUUID().toString();\n" + 
-		"		~properties:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
-		"	}\n" + 
-		"\n" + 
-		"~endif~\n" + 
 		"~if(json)~\n" + 
-		"	public ~name~(JsonObject jsonObject) {\n" + 
-		"		this.uuid = jsonObject.getString(\"uuid\");\n" + 
+		"	public ~name~(io.vertx.core.json.JsonObject jsonObject) {\n" + 
 		"		~properties:{it|~if(it.collection)~for (Object o : jsonObject.getJsonArray(\"~it.name~\"))\n" + 
-		"this.~it.name~.add(~if(it.isPrimitive)~(~it.element~)o~else~new ~it.element~((JsonObject)o)~endif~);~else~this.~it.name~ = ~if(it.enum)~~it.type~.valueOf(jsonObject.getString(\"~it.name~\"))~else~jsonObject.get~it.type~(\"~it.name~\")~endif~;~endif~};separator=\"\\n\"~\n" + 
+		"this.~it.name~.add(~if(it.isPrimitive)~(~it.element~)o~else~new ~it.element~((io.vertx.core.json.JsonObject)o)~endif~);~else~this.~it.name~ = ~if(it.enum)~~it.type~.valueOf(jsonObject.getString(\"~it.name~\"))~else~jsonObject.get~it.type~(\"~it.name~\")~endif~;~endif~};separator=\"\\n\"~\n" + 
 		"   }\n" + 
 		"~endif~\n" + 
 		"~if(neoNode)~\n" + 
 		"\n" + 
 		"	public ~name~(Node node) {\n" + 
-		"		this.uuid = (String) node.getProperty(\"_uuid\");\n" + 
 		"		~properties:{it|~if(it.collection)~node.getRelationships(Direction.OUTGOING, RelationshipType.withName(\"~it.name~\")).forEach(relationship -> ~it.name~.add(new ~it.element~(relationship.getOtherNode(node))));~else~this.~it.name~ = node.hasProperty(\"~it.name~\") ? (~it.type~) node.getProperty(\"~it.name~\") : ~if(it.init)~~it.init~~else~null~endif~;~endif~};separator=\"\\n\"~\n" + 
 		"   }\n" + 
 		"~endif~\n" + 
-		"\n" + 
-		"	public String getUuid() {\n" + 
-		"		return uuid;\n" + 
-		"	}\n" + 
 		"\n" + 
 		"~properties:{it|\n" + 
 		"~if(it.collection)~\n" + 
@@ -1687,9 +1711,9 @@ public final class JavaGroup {
 		"\n" + 
 		"~endif~\n" + 
 		"~if(json)~\n" + 
-		"	public JsonObject toJson() {\n" + 
-		"		final JsonObject jsonObject = new JsonObject().put(\"uuid\", uuid);\n" + 
-		"		~properties:{it|~if(it.collection)~final JsonArray ~it.name~Array = new JsonArray();\n" + 
+		"	public io.vertx.core.json.JsonObject toJson() {\n" + 
+		"		final io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();\n" + 
+		"		~properties:{it|~if(it.collection)~final io.vertx.core.json.JsonArray ~it.name~Array = new io.vertx.core.json.JsonArray();\n" + 
 		"for (~it.element~ element : ~it.name~) ~it.name~Array.add(~if(it.isPrimitive)~element~else~element.toJson()~endif~);\n" + 
 		"jsonObject.put(\"~it.name~\", ~it.name~Array);~else~jsonObject.put(\"~it.name~\", ~it.name~);~endif~};separator=\"\\n\"~;\n" + 
 		"		return jsonObject;\n" + 
@@ -1712,10 +1736,10 @@ public final class JavaGroup {
 		"	}\n" + 
 		"\n" + 
 		"	private Node findOrCreate(GraphDatabaseService graphDb) {\n" + 
-		"      Node node = graphDb.findNode(org.neo4j.graphdb.Label.label(\"ScanStatus\"), \"_uuid\", uuid);\n" + 
+		"      Node node = graphDb.findNode(org.neo4j.graphdb.Label.label(\"~name~\"), \"_s\", s);\n" + 
 		"      if (node == null) {\n" + 
-		"         node = graphDb.createNode(org.neo4j.graphdb.Label.label(\"ScanStatus\"));\n" + 
-		"         node.setProperty(\"_uuid\", this.uuid);\n" + 
+		"         node = graphDb.createNode(org.neo4j.graphdb.Label.label(\"~name~\"));\n" + 
+		"         node.setProperty(\"_s\", this.uuid);\n" + 
 		"      }\n" + 
 		"      return node;\n" + 
 		"   }\n" + 
@@ -1766,14 +1790,14 @@ public final class JavaGroup {
 		"~endif~\n" + 
 		"~if(json)~\n" + 
 		"\n" + 
-		"	public static boolean isValid(JsonObject jsonObject) {\n" + 
-		"		~properties:{it|~if(it.collection)~ ~else~if (jsonObject.get~if(it.enum)~String~else~~it.type~~endif~(\"~it.name~\") == null) return false;~endif~};separator=\"\\n\"~\n" + 
+		"	public static boolean isValid(io.vertx.core.json.JsonObject jsonObject) {\n" + 
+		"		~properties:{it|~if(it.collection)~ ~else~if (jsonObject.get~if(it.enum)~String~else~~it.type~~endif~(\"~it.name~\") == null~if(it.enum)~ || java.util.Arrays.stream(~it.type~.values()).noneMatch((t) -> t.name().equals(jsonObject.getString(\"~it.name~\")))~endif~) return false;~endif~};separator=\"\\n\"~\n" + 
 		"      return true;\n" + 
 		"   }\n" + 
 		"\n" + 
-		"   public static JsonArray getErrors(JsonObject jsonObject) {\n" + 
-		"		final JsonArray errors = new JsonArray();\n" + 
-		"      ~properties:{it|~if(it.collection)~ ~else~if (jsonObject.get~if(it.enum)~String~else~~it.type~~endif~(\"~it.name~\") == null) errors.add(new JsonObject().put(\"missing\", \"~it.name~\"));~endif~};separator=\"\\n\"~\n" + 
+		"   public static io.vertx.core.json.JsonArray getErrors(io.vertx.core.json.JsonObject jsonObject) {\n" + 
+		"		final io.vertx.core.json.JsonArray errors = new io.vertx.core.json.JsonArray();\n" + 
+		"      ~properties:{it|~if(it.collection)~ ~else~if (jsonObject.get~if(it.enum)~String~else~~it.type~~endif~(\"~it.name~\") == null) errors.add(new io.vertx.core.json.JsonObject().put(\"missing\", \"~it.name~\"));~endif~};separator=\"\\n\"~\n" + 
 		"		return errors;\n" + 
 		"   }\n" + 
 		"~endif~\n" + 
@@ -1800,7 +1824,8 @@ public final class JavaGroup {
 		"	~fields:{it|~if(it.scope)~~it.scope~ ~endif~~if(it.isFinal)~final ~endif~~it.type~~if(it.isArray)~[]~endif~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
 		"\n" + 
 		"	~methods:{it|~it~};separator=\"\\n\\n\"~~if(innerClasses)~\n" + 
-		"	~innerClasses:{it|~it~};separator=\"\\n\"~~endif~\n" + 
+		"	\n" + 
+		"	~innerClasses:{it|~it~};separator=\"\\n\\n\"~~endif~\n" + 
 		"\n" + 
 		"}>>\n")
 			.append("CollectionAccessor(name,type,elementType) ::= <<public void add(~elementType~ value) {\n" + 
@@ -1960,6 +1985,6 @@ public final class JavaGroup {
 		"public ~type~ get~name;format=\"capitalize\"~(~type~ index) {\n" + 
 		"    return this.~name~[index];\n" + 
 		"}>>\n")
-			.append("statements(statements) ::= <<~statements:{it|~it~};separator=\";\\n\"~>>\n")
+			.append("statements(statements) ::= <<~statements:{it|~it~;};separator=\"\\n\"~>>\n")
 		.toString();
 }

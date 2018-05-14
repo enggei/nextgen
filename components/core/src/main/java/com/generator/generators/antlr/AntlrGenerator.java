@@ -42,7 +42,7 @@ import com.generator.generators.sparql.parser.SparqlListener;
 import com.generator.generators.sparql.parser.SparqlVisitor;
 import com.generator.generators.stacktrace.parser.StackTraceListener;
 import com.generator.generators.stacktrace.parser.StackTraceVisitor;
-import com.generator.generators.stringtemplate.GeneratedFile;
+import com.generator.util.GeneratedFile;
 import com.generator.generators.stringtemplate.parserg4.STGParserListener;
 import com.generator.generators.stringtemplate.parserg4.STGParserVisitor;
 import com.generator.generators.stringtemplate.parserg4.STParserListener;

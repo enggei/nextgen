@@ -11,10 +11,11 @@ import com.generator.generators.excel.ExcelPlugin;
 import com.generator.generators.gradle.GradlePlugin;
 import com.generator.generators.java.JavaPlugin;
 import com.generator.generators.javapoet.JavaPoetPlugin;
+import com.generator.generators.json.JsonGroup;
 import com.generator.generators.maven.MavenPlugin;
 import com.generator.generators.mysql.MySQLPlugin;
 import com.generator.generators.ssh.SSHPlugin;
-import com.generator.generators.stringtemplate.GeneratedFile;
+import com.generator.util.GeneratedFile;
 import com.generator.generators.stringtemplate.StringTemplateDomainPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.neo.NeoModel;
@@ -74,7 +75,9 @@ public class ProjectPlugin extends ProjectDomainPlugin {
             final String artifactId = split.length > 2 ? split[2] : null;
             final String version = split.length > 3 ? split[3] : null;
 
-            fireNodesLoaded(newProject(name, groupId, artifactId, version, null));
+            final Node projectNode = newProject(name, groupId, artifactId, version, null, false);
+            fireNodesLoaded(projectNode);
+            relateGENERATOR_ROOT(projectNode, newDirectory(name + "-root", "/home/goe/projects/nextgen/components/core/src/main/java"));
          }
       });
    }
@@ -116,22 +119,38 @@ public class ProjectPlugin extends ProjectDomainPlugin {
 
                final Node projectNode = neoNode.getNode();
 
+               final File outputDirectory = projectNode.hasProperty("outputDir") ? new File(projectNode.getProperty("outputDir").toString()) : selectOutputDir(projectNode);
+               if (outputDirectory == null) return;
+
                final String projectName = getNameProperty(projectNode, "").replaceAll("-", "_");
                final String packageName = "projects." + projectName.toLowerCase();
                final File path = getFile(directoryNode);
-               final File configPath = new File(path.getAbsolutePath(), GeneratedFile.packageToPath(packageName, projectName + ".json"));
 
-               if (!configPath.exists())
-                  FileUtil.tryToCreateFileIfNotExists(configPath);
+               final GeneratedFile configFile = GeneratedFile.newPlainFile(path.getAbsolutePath(), GeneratedFile.packageToPath(packageName), projectName + ".json");
+               if (!configFile.exists()) {
+                  final JsonGroup jsonGroup = new JsonGroup();
+                  final JsonGroup.documentST defaultConfigJson = jsonGroup.newdocument().
+                        addContentValue(jsonGroup.newobject().
+                              addPairsValue("root", "\"" + outputDirectory.getAbsolutePath() + "\"").
+                              addPairsValue("main.src", "\"" + new File(outputDirectory, "src" + File.separatorChar + "main" + File.separatorChar + "java").getAbsolutePath() + "\"").
+                              addPairsValue("test.src", "\"" + new File(outputDirectory, "src" + File.separatorChar + "test" + File.separatorChar + "java").getAbsolutePath() + "\"").
+                              addPairsValue("web.src", "\"" + new File(outputDirectory, "src" + File.separatorChar + "main" + File.separatorChar + "web").getAbsolutePath() + "\"").
+                              addPairsValue("test.resources", "\"" + new File(outputDirectory, "src" + File.separatorChar + "main" + File.separatorChar + "resources").getAbsolutePath() + "\"").
+                              addPairsValue("main.resources", "\"" + new File(outputDirectory, "src" + File.separatorChar + "main" + File.separatorChar + "resources").getAbsolutePath() + "\"")
+                        );
+
+                  configFile.write(defaultConfigJson);
+               }
 
                final ProjectGroup.ProjectST projectST = projectGroup.newProject().
                      setPackageName(packageName).
                      setName(projectName).
-                     setConfigPath(configPath).
+                     setConfigPath(configFile.getFile().getAbsolutePath()).
                      setDescription(getDescriptionProperty(projectNode)).
                      setVersion(getVersionProperty(projectNode)).
                      setGroupId(getGroupIdProperty(projectNode)).
-                     setArtifactId(getArtifactIdProperty(projectNode));
+                     setArtifactId(getArtifactIdProperty(projectNode)).
+                     setVerticleTests(getIsVertxProjectProperty(projectNode, false));
 
                outgoingGENERATOR(projectNode, (relationship, stGroupNode) -> incomingRENDERER(stGroupNode, (rendererRelation, other) -> {
                   final String groupPackage = getPackageNameProperty(rendererRelation);
@@ -141,6 +160,12 @@ public class ProjectPlugin extends ProjectDomainPlugin {
                GeneratedFile.newJavaFile(path, packageName, projectName).write(projectST);
 
                app.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            }
+
+            private File selectOutputDir(Node node) {
+               final File file = FileUtil.selectDirectory(app, new File(System.getProperty("user.home")));
+               if (file != null) node.setProperty("outputDir", file.getAbsolutePath());
+               return file;
             }
          });
       }

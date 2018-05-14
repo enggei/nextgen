@@ -2,7 +2,7 @@ package com.generator.generators.easyFlow;
 
 import com.generator.app.App;
 import com.generator.app.nodes.NeoNode;
-import com.generator.generators.stringtemplate.GeneratedFile;
+import com.generator.util.GeneratedFile;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;

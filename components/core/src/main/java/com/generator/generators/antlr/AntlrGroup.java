@@ -86,6 +86,10 @@ public final class AntlrGroup {
       return new NeoVisitorST(stGroup);
    }
 
+   public mvnST newmvn() {
+      return new mvnST(stGroup);
+   }
+
    public final class AntlrGrammarNodeST implements AntlrGroupTemplate {
 
       private java.util.Set<java.util.Map<String, Object>> _children = new java.util.LinkedHashSet<>();
@@ -801,6 +805,38 @@ public final class AntlrGroup {
    	}
    }
 
+   public final class mvnST implements AntlrGroupTemplate {
+
+      private Object _version;
+
+      private final ST template;
+
+      private mvnST(STGroup group) {
+   		template = group.getInstanceOf("mvn");
+   	}
+
+      public mvnST setVersion(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._version == null) {
+            this._version = value;
+         	template.add("version", value);
+         }
+
+      	return this;
+      }
+
+      public String getVersion() {
+      	return (String) this._version;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
 	static boolean tryToSetListProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (value == null || value.toString().length() == 0) return true;
 		alreadySet.set(true);
@@ -1103,7 +1139,7 @@ public final class AntlrGroup {
 		"\n" + 
 		"public class ~name~ extends ~parser~BaseListener {\n" + 
 		"\n" + 
-		"	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" +
+		"	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(~name~.class);\n" + 
 		"\n" + 
 		"   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();\n" + 
 		"	protected final StringBuilder delim = new StringBuilder(\"\");\n" + 
@@ -1162,7 +1198,7 @@ public final class AntlrGroup {
 		"\n" + 
 		"public class ~name~ extends ~parser~BaseListener {\n" + 
 		"\n" + 
-		"	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" +
+		"	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(~name~.class);\n" + 
 		"\n" + 
 		"   public static class Node {\n" + 
 		"\n" + 
@@ -1233,7 +1269,7 @@ public final class AntlrGroup {
 		"\n" + 
 		"public class ~name~ extends ~parser~BaseVisitor<~name~.Node> {\n" + 
 		"\n" + 
-		"	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" +
+		"	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(~name~.class);\n" + 
 		"\n" + 
 		"   public static class Node {\n" + 
 		"\n" + 
@@ -1300,7 +1336,7 @@ public final class AntlrGroup {
 		"\n" + 
 		"public class ~name~ extends ~parser~BaseVisitor<Node> {\n" + 
 		"\n" + 
-		"	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" +
+		"	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(~name~.class);\n" + 
 		"\n" + 
 		"   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();\n" + 
 		"	protected final com.generator.neo.NeoModel model;\n" + 
@@ -1335,5 +1371,10 @@ public final class AntlrGroup {
 		"	~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
 		"}>>\n")
+			.append("mvn(version) ::= <<<dependency>\n" + 
+		"   <groupId>org.antlr</groupId>\n" + 
+		"   <artifactId>antlr4</artifactId>\n" + 
+		"	<version>~version~</version>\n" + 
+		"</dependency> >>\n")
 		.toString();
 }

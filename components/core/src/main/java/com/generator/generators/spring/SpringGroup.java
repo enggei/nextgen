@@ -54,6 +54,58 @@ public final class SpringGroup {
       return new queryMethodST(stGroup);
    }
 
+   public mvn_starter_webST newmvn_starter_web() {
+      return new mvn_starter_webST(stGroup);
+   }
+
+   public mvn_springboot_pluginST newmvn_springboot_plugin() {
+      return new mvn_springboot_pluginST(stGroup);
+   }
+
+   public ControllerST newController() {
+      return new ControllerST(stGroup);
+   }
+
+   public mvn_starter_thymeleafST newmvn_starter_thymeleaf() {
+      return new mvn_starter_thymeleafST(stGroup);
+   }
+
+   public mvn_starter_devtoolsST newmvn_starter_devtools() {
+      return new mvn_starter_devtoolsST(stGroup);
+   }
+
+   public GET_methodST newGET_method() {
+      return new GET_methodST(stGroup);
+   }
+
+   public parameterDeclarationST newparameterDeclaration() {
+      return new parameterDeclarationST(stGroup);
+   }
+
+   public ApplicationST newApplication() {
+      return new ApplicationST(stGroup);
+   }
+
+   public mvn_starter_jpaST newmvn_starter_jpa() {
+      return new mvn_starter_jpaST(stGroup);
+   }
+
+   public mvn_mysql_connectorST newmvn_mysql_connector() {
+      return new mvn_mysql_connectorST(stGroup);
+   }
+
+   public jpa_hibernate_propertiesST newjpa_hibernate_properties() {
+      return new jpa_hibernate_propertiesST(stGroup);
+   }
+
+   public entityST newentity() {
+      return new entityST(stGroup);
+   }
+
+   public RepositoryST newRepository() {
+      return new RepositoryST(stGroup);
+   }
+
    public final class DAOST implements SpringGroupTemplate {
 
       private Object _name;
@@ -400,6 +452,584 @@ public final class SpringGroup {
    	}
    }
 
+   public final class mvn_starter_webST implements SpringGroupTemplate {
+
+
+      private final ST template;
+
+      private mvn_starter_webST(STGroup group) {
+   		template = group.getInstanceOf("mvn_starter_web");
+   	}
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class mvn_springboot_pluginST implements SpringGroupTemplate {
+
+
+      private final ST template;
+
+      private mvn_springboot_pluginST(STGroup group) {
+   		template = group.getInstanceOf("mvn_springboot_plugin");
+   	}
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class ControllerST implements SpringGroupTemplate {
+
+      private Object _name;
+      private Object _packageName;
+      private java.util.Set<Object> _methods = new java.util.LinkedHashSet<>();
+      private Object _requestMapping;
+      private java.util.Set<java.util.Map<String, Object>> _autoWired = new java.util.LinkedHashSet<>();
+
+      private final ST template;
+
+      private ControllerST(STGroup group) {
+   		template = group.getInstanceOf("Controller");
+   	}
+
+      public ControllerST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      public ControllerST setPackageName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._packageName == null) {
+            this._packageName = value;
+         	template.add("packageName", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackageName() {
+      	return (String) this._packageName;
+      }
+
+      public ControllerST addMethodsValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._methods.add(value);
+      	template.add("methods", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getMethodsValues() {
+      	return this._methods;
+      }
+
+      public ControllerST setRequestMapping(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._requestMapping == null) {
+            this._requestMapping = value;
+         	template.add("requestMapping", value);
+         }
+
+      	return this;
+      }
+
+      public String getRequestMapping() {
+      	return (String) this._requestMapping;
+      }
+
+      public ControllerST addAutoWiredValue(Object name_, Object type_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	map.put("type", (type_ == null || type_.toString().length() == 0) ? null : type_);
+      	this._autoWired.add(map);
+
+         template.addAggr("autoWired.{name, type}", map.get("name"), map.get("type"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getAutoWired() {
+      	return this._autoWired;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class mvn_starter_thymeleafST implements SpringGroupTemplate {
+
+
+      private final ST template;
+
+      private mvn_starter_thymeleafST(STGroup group) {
+   		template = group.getInstanceOf("mvn_starter_thymeleaf");
+   	}
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class mvn_starter_devtoolsST implements SpringGroupTemplate {
+
+
+      private final ST template;
+
+      private mvn_starter_devtoolsST(STGroup group) {
+   		template = group.getInstanceOf("mvn_starter_devtools");
+   	}
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class GET_methodST implements SpringGroupTemplate {
+
+      private Object _url;
+      private Object _name;
+      private java.util.Set<Object> _parameters = new java.util.LinkedHashSet<>();
+      private Object _returnType;
+      private Object _returnValue;
+      private java.util.Set<Object> _statements = new java.util.LinkedHashSet<>();
+      private Object _hasModel;
+
+      private final ST template;
+
+      private GET_methodST(STGroup group) {
+   		template = group.getInstanceOf("GET_method");
+   	}
+
+      public GET_methodST setUrl(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._url == null) {
+            this._url = value;
+         	template.add("url", value);
+         }
+
+      	return this;
+      }
+
+      public String getUrl() {
+      	return (String) this._url;
+      }
+
+      public GET_methodST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      public GET_methodST addParametersValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._parameters.add(value);
+      	template.add("parameters", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getParametersValues() {
+      	return this._parameters;
+      }
+
+      public GET_methodST setReturnType(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._returnType == null) {
+            this._returnType = value;
+         	template.add("returnType", value);
+         }
+
+      	return this;
+      }
+
+      public String getReturnType() {
+      	return (String) this._returnType;
+      }
+
+      public GET_methodST setReturnValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._returnValue == null) {
+            this._returnValue = value;
+         	template.add("returnValue", value);
+         }
+
+      	return this;
+      }
+
+      public String getReturnValue() {
+      	return (String) this._returnValue;
+      }
+
+      public GET_methodST addStatementsValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._statements.add(value);
+      	template.add("statements", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getStatementsValues() {
+      	return this._statements;
+      }
+
+      public GET_methodST setHasModel(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._hasModel == null) {
+            this._hasModel = value;
+         	template.add("hasModel", value);
+         }
+
+      	return this;
+      }
+
+      public String getHasModel() {
+      	return (String) this._hasModel;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class parameterDeclarationST implements SpringGroupTemplate {
+
+      private Object _defaultValue;
+      private Object _isRequired;
+      private Object _name;
+      private Object _type;
+
+      private final ST template;
+
+      private parameterDeclarationST(STGroup group) {
+   		template = group.getInstanceOf("parameterDeclaration");
+   	}
+
+      public parameterDeclarationST setDefaultValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._defaultValue == null) {
+            this._defaultValue = value;
+         	template.add("defaultValue", value);
+         }
+
+      	return this;
+      }
+
+      public String getDefaultValue() {
+      	return (String) this._defaultValue;
+      }
+
+      public parameterDeclarationST setIsRequired(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._isRequired == null) {
+            this._isRequired = value;
+         	template.add("isRequired", value);
+         }
+
+      	return this;
+      }
+
+      public String getIsRequired() {
+      	return (String) this._isRequired;
+      }
+
+      public parameterDeclarationST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      public parameterDeclarationST setType(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._type == null) {
+            this._type = value;
+         	template.add("type", value);
+         }
+
+      	return this;
+      }
+
+      public String getType() {
+      	return (String) this._type;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class ApplicationST implements SpringGroupTemplate {
+
+      private Object _packageName;
+
+      private final ST template;
+
+      private ApplicationST(STGroup group) {
+   		template = group.getInstanceOf("Application");
+   	}
+
+      public ApplicationST setPackageName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._packageName == null) {
+            this._packageName = value;
+         	template.add("packageName", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackageName() {
+      	return (String) this._packageName;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class mvn_starter_jpaST implements SpringGroupTemplate {
+
+
+      private final ST template;
+
+      private mvn_starter_jpaST(STGroup group) {
+   		template = group.getInstanceOf("mvn_starter_jpa");
+   	}
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class mvn_mysql_connectorST implements SpringGroupTemplate {
+
+
+      private final ST template;
+
+      private mvn_mysql_connectorST(STGroup group) {
+   		template = group.getInstanceOf("mvn_mysql_connector");
+   	}
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class jpa_hibernate_propertiesST implements SpringGroupTemplate {
+
+      private Object _db;
+      private Object _password;
+      private Object _username;
+      private Object _ddl_auto;
+
+      private final ST template;
+
+      private jpa_hibernate_propertiesST(STGroup group) {
+   		template = group.getInstanceOf("jpa_hibernate_properties");
+   	}
+
+      public jpa_hibernate_propertiesST setDb(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._db == null) {
+            this._db = value;
+         	template.add("db", value);
+         }
+
+      	return this;
+      }
+
+      public String getDb() {
+      	return (String) this._db;
+      }
+
+      public jpa_hibernate_propertiesST setPassword(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._password == null) {
+            this._password = value;
+         	template.add("password", value);
+         }
+
+      	return this;
+      }
+
+      public String getPassword() {
+      	return (String) this._password;
+      }
+
+      public jpa_hibernate_propertiesST setUsername(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._username == null) {
+            this._username = value;
+         	template.add("username", value);
+         }
+
+      	return this;
+      }
+
+      public String getUsername() {
+      	return (String) this._username;
+      }
+
+      public jpa_hibernate_propertiesST setDdl_auto(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._ddl_auto == null) {
+            this._ddl_auto = value;
+         	template.add("ddl_auto", value);
+         }
+
+      	return this;
+      }
+
+      public String getDdl_auto() {
+      	return (String) this._ddl_auto;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class entityST implements SpringGroupTemplate {
+
+      private Object _packageName;
+
+      private final ST template;
+
+      private entityST(STGroup group) {
+   		template = group.getInstanceOf("entity");
+   	}
+
+      public entityST setPackageName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._packageName == null) {
+            this._packageName = value;
+         	template.add("packageName", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackageName() {
+      	return (String) this._packageName;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class RepositoryST implements SpringGroupTemplate {
+
+      private Object _packageName;
+
+      private final ST template;
+
+      private RepositoryST(STGroup group) {
+   		template = group.getInstanceOf("Repository");
+   	}
+
+      public RepositoryST setPackageName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._packageName == null) {
+            this._packageName = value;
+         	template.add("packageName", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackageName() {
+      	return (String) this._packageName;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
 	static boolean tryToSetListProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (value == null || value.toString().length() == 0) return true;
 		alreadySet.set(true);
@@ -582,5 +1212,133 @@ public final class SpringGroup {
 		"\n" + 
 		"~entityDeclaration~\n" + 
 		"~endif~>>\n")
+			.append("mvn_starter_web() ::= <<<dependency>\n" + 
+		"   <groupId>org.springframework.boot</groupId>\n" + 
+		"	<artifactId>spring-boot-starter-web</artifactId>\n" + 
+		"</dependency> >>\n")
+			.append("mvn_springboot_plugin() ::= <<<plugin>\n" + 
+		"   <groupId>org.springframework.boot</groupId>\n" + 
+		"	<artifactId>spring-boot-maven-plugin</artifactId>\n" + 
+		"</plugin> >>\n")
+			.append("Controller(name,packageName,methods,requestMapping,autoWired) ::= <<package ~packageName~;\n" + 
+		"\n" + 
+		"import org.springframework.stereotype.Controller;\n" + 
+		"import org.springframework.ui.Model;\n" + 
+		"import org.springframework.web.bind.annotation.GetMapping;\n" + 
+		"import org.springframework.web.bind.annotation.RequestParam;\n" + 
+		"import org.springframework.beans.factory.annotation.Autowired;\n" + 
+		"import org.springframework.stereotype.Controller;\n" + 
+		"import org.springframework.web.bind.annotation.RequestMapping;\n" + 
+		"import org.springframework.web.bind.annotation.GetMapping;\n" + 
+		"import org.springframework.web.bind.annotation.RequestParam;\n" + 
+		"import org.springframework.web.bind.annotation.ResponseBody;\n" + 
+		"\n" + 
+		"@Controller~if(requestMapping)~\n" + 
+		"@RequestMapping(path=\"~requestMapping~\")\n" + 
+		"~endif~\n" + 
+		"public class ~name~ {\n" + 
+		"\n" + 
+		"~autoWired:{it|\n" + 
+		"	@Autowired\n" + 
+		"	private ~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"	~methods:{it|~it~};separator=\"\\n\"~    \n" + 
+		"\n" + 
+		"}>>\n")
+			.append("mvn_starter_thymeleaf() ::= <<<dependency>\n" + 
+		"   <groupId>org.springframework.boot</groupId>\n" + 
+		"	<artifactId>spring-boot-starter-thymeleaf</artifactId>\n" + 
+		"</dependency> >>\n")
+			.append("mvn_starter_devtools() ::= <<<dependency>\n" + 
+		"   <groupId>org.springframework.boot</groupId>\n" + 
+		"	<artifactId>spring-boot-devtools</artifactId>\n" + 
+		"   <optional>true</optional>\n" + 
+		"</dependency> >>\n")
+			.append("GET_method(url,name,parameters,returnType,returnValue,statements,hasModel) ::= <<@GetMapping(\"~url~\")\n" + 
+		"public ~returnType~ ~name~(~parameters:{it|~it~};separator=\",\"~~if(hasModel)~~if(parameters)~,~endif~Model model~endif~) {\n" + 
+		"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
+		"   return ~returnValue~;\n" + 
+		"}>>\n")
+			.append("parameterDeclaration(defaultValue,isRequired,name,type) ::= <<@RequestParam(name=\"~name~\", required=~isRequired~, defaultValue=\"~defaultValue~\") ~type~ ~name~>>\n")
+			.append("Application(packageName) ::= <<package ~packageName~;\n" + 
+		"\n" + 
+		"import org.springframework.boot.SpringApplication;\n" + 
+		"import org.springframework.boot.autoconfigure.SpringBootApplication;\n" + 
+		"\n" + 
+		"@SpringBootApplication\n" + 
+		"public class Application {\n" + 
+		"\n" + 
+		"    public static void main(String[] args) {\n" + 
+		"        SpringApplication.run(Application.class, args);\n" + 
+		"    }\n" + 
+		"\n" + 
+		"}>>\n")
+			.append("mvn_starter_jpa() ::= <<<dependency>\n" + 
+		"	<groupId>org.springframework.boot</groupId>\n" + 
+		"   <artifactId>spring-boot-starter-data-jpa</artifactId>\n" + 
+		"</dependency> >>\n")
+			.append("mvn_mysql_connector() ::= <<<dependency>\n" + 
+		"	<groupId>mysql</groupId>\n" + 
+		"   <artifactId>mysql-connector-java</artifactId>\n" + 
+		"</dependency> >>\n")
+			.append("jpa_hibernate_properties(db,password,username,ddl_auto) ::= <<spring.jpa.hibernate.ddl-auto=~if(ddl_auto)~~ddl_auto~~else~create~endif~\n" + 
+		"spring.datasource.url=jdbc:mysql://localhost:3306/~db~\n" + 
+		"spring.datasource.username=~username~\n" + 
+		"spring.datasource.password=~password~>>\n")
+			.append("entity(packageName) ::= <<package ~packageName~;\n" + 
+		"\n" + 
+		"import javax.persistence.Entity;\n" + 
+		"import javax.persistence.GeneratedValue;\n" + 
+		"import javax.persistence.GenerationType;\n" + 
+		"import javax.persistence.Id;\n" + 
+		"\n" + 
+		"@Entity\n" + 
+		"public class User {\n" + 
+		"    @Id\n" + 
+		"    @GeneratedValue(strategy=GenerationType.AUTO)\n" + 
+		"    private Integer id;\n" + 
+		"// todo use properties:\n" + 
+		"    private String name;\n" + 
+		"\n" + 
+		"    private String email;\n" + 
+		"\n" + 
+		"	public Integer getId() {\n" + 
+		"		return id;\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	public void setId(Integer id) {\n" + 
+		"		this.id = id;\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	public String getName() {\n" + 
+		"		return name;\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	public void setName(String name) {\n" + 
+		"		this.name = name;\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	public String getEmail() {\n" + 
+		"		return email;\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	public void setEmail(String email) {\n" + 
+		"		this.email = email;\n" + 
+		"	}\n" + 
+		"\n" + 
+		"\n" + 
+		"}>>\n")
+			.append("Repository(packageName) ::= <<package ~packageName~;\n" + 
+		"\n" + 
+		"import org.springframework.data.repository.CrudRepository;\n" + 
+		"\n" + 
+		"import hello.User;\n" + 
+		"\n" + 
+		"// This will be AUTO IMPLEMENTED by Spring into a Bean called userRepository\n" + 
+		"// CRUD refers Create, Read, Update, Delete\n" + 
+		"\n" + 
+		"public interface UserRepository extends CrudRepository<User, Long> {\n" + 
+		"\n" + 
+		"}>>\n")
 		.toString();
 }

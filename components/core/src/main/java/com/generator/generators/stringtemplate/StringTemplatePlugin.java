@@ -11,10 +11,7 @@ import com.generator.generators.stringtemplate.domain.TemplateParameter;
 import com.generator.generators.stringtemplate.domain.TemplateStatement;
 import com.generator.generators.stringtemplate.parser.TemplateFileParser;
 import com.generator.neo.NeoModel;
-import com.generator.util.RegexpUtil;
-import com.generator.util.StringUtil;
-import com.generator.util.SwingUtil;
-import com.generator.util.TextProcessingPanel;
+import com.generator.util.*;
 import org.antlr.runtime.Token;
 import org.jetbrains.annotations.NotNull;
 import org.neo4j.graphdb.*;
@@ -45,6 +42,7 @@ import static com.generator.util.NeoUtil.*;
  */
 public class StringTemplatePlugin extends StringTemplateDomainPlugin {
    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(StringTemplatePlugin.class);
+
    public StringTemplatePlugin(App app) {
       super(app);
    }
@@ -187,7 +185,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
                return;
             }
 
-            final Node newNode = newSTTemplate("",name);
+            final Node newNode = newSTTemplate("", name);
             newNode.addLabel(DomainPlugin.Entities.Entity);
             neoNode.getNode().createRelationshipTo(newNode, Relations.TEMPLATE);
             fireNodesLoaded(newNode);
@@ -423,6 +421,30 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
             final TemplateGroupGroup.NewStatementDeclarationST declarationST = group.newNewStatementDeclaration().setGroupname(groupName);
             final String statementName = getNameProperty(templateNode);
 
+            // add any enum- properties, if defined
+            for (Relationship srcRelation : outgoing(templateNode, DomainPlugin.Relations.SRC)) {
+               final Node relationNode = other(templateNode, srcRelation);
+               for (Relationship dstRelation : outgoing(relationNode, DomainPlugin.Relations.DST)) {
+                  final Node dstNode = other(relationNode, dstRelation);
+                  if (hasLabel(dstNode, DomainPlugin.Entities.Property)) {
+
+                     final Set<String> enumerations = new LinkedHashSet<>();
+                     for (Relationship enumeratedRelation : outgoing(dstNode, DomainPlugin.Relations.ENUMERATED))
+                        enumerations.add(getValueProperty(other(dstNode, enumeratedRelation)));
+
+                     if (enumerations.isEmpty()) continue;
+
+                     final TemplateGroupGroup.enumDeclarationST enumDeclarationST = group.newenumDeclaration().
+                           setName(getNameProperty(dstNode));
+
+                     for (String enumeration : enumerations)
+                        enumDeclarationST.addValuesValue(enumeration);
+
+                     declarationST.addEnumDeclarationsValue(enumDeclarationST);
+                  }
+               }
+            }
+
             final TemplateGroupGroup.templateST templateST = group.newtemplate().
                   setName(statementName);
 
@@ -639,7 +661,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
             }
          });
 
-         txtEditor.setText(getTextProperty(templateNode.getNode(),""));
+         txtEditor.setText(getTextProperty(templateNode.getNode(), ""));
 
          final Border defaultBorder = txtEditor.getBorder();
          final Color uneditedColor = txtEditor.getBackground();

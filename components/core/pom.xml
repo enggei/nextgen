@@ -75,7 +75,7 @@
         <dependency>
             <groupId>fr.inria.gforge.spoon</groupId>
             <artifactId>spoon-core</artifactId>
-            <version>6.0.0</version>
+            <version>6.2.0</version>
         </dependency>
 
         <!-- user interface -->
@@ -238,11 +238,10 @@
             <version>${clojure.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.googlecode.java-diff-utils/diffutils -->
         <dependency>
-            <groupId>com.googlecode.java-diff-utils</groupId>
+            <groupId>com.github.wumpz</groupId>
             <artifactId>diffutils</artifactId>
-            <version>${java-diff-utils.version}</version>
+            <version>2.2</version>
         </dependency>
 
         <dependency>

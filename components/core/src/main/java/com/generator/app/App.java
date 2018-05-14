@@ -17,6 +17,7 @@ import com.generator.generators.math.MathPlugin;
 import com.generator.generators.maven.MavenPlugin;
 import com.generator.generators.microservice.MicroservicePlugin;
 import com.generator.generators.mysql.MySQLPlugin;
+import com.generator.generators.neo4j.NeoPlugin;
 import com.generator.generators.project.ProjectPlugin;
 import com.generator.generators.rivescript.RivescriptPlugin;
 import com.generator.generators.ssh.SSHPlugin;
@@ -272,6 +273,7 @@ public class App extends JFrame {
                   plugins.add(new VertxPlugin(App.this));
                   plugins.add(new JavaPoetPlugin(App.this));
                   plugins.add(new MicroservicePlugin(App.this));
+                  plugins.add(new NeoPlugin(App.this));
                }
             }
          });

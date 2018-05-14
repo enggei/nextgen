@@ -66,6 +66,10 @@ public final class MavenGroup {
       return new testResourceST(stGroup);
    }
 
+   public repositoryST newrepository() {
+      return new repositoryST(stGroup);
+   }
+
    public final class PomST implements MavenGroupTemplate {
 
       private Object _artifactId;
@@ -76,6 +80,12 @@ public final class MavenGroup {
       private java.util.Set<java.util.Map<String, Object>> _properties = new java.util.LinkedHashSet<>();
       private java.util.Set<Object> _dependencies = new java.util.LinkedHashSet<>();
       private Object _baseBuild;
+      private Object _parentArtifactId;
+      private Object _parentGroupId;
+      private Object _parentVersion;
+      private java.util.Set<Object> _modules = new java.util.LinkedHashSet<>();
+      private java.util.Set<Object> _repositories = new java.util.LinkedHashSet<>();
+      private java.util.Set<Object> _distributionManagement = new java.util.LinkedHashSet<>();
 
       private final ST template;
 
@@ -205,6 +215,96 @@ public final class MavenGroup {
 
       public String getBaseBuild() {
       	return (String) this._baseBuild;
+      }
+
+      public PomST setParentArtifactId(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._parentArtifactId == null) {
+            this._parentArtifactId = value;
+         	template.add("parentArtifactId", value);
+         }
+
+      	return this;
+      }
+
+      public String getParentArtifactId() {
+      	return (String) this._parentArtifactId;
+      }
+
+      public PomST setParentGroupId(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._parentGroupId == null) {
+            this._parentGroupId = value;
+         	template.add("parentGroupId", value);
+         }
+
+      	return this;
+      }
+
+      public String getParentGroupId() {
+      	return (String) this._parentGroupId;
+      }
+
+      public PomST setParentVersion(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._parentVersion == null) {
+            this._parentVersion = value;
+         	template.add("parentVersion", value);
+         }
+
+      	return this;
+      }
+
+      public String getParentVersion() {
+      	return (String) this._parentVersion;
+      }
+
+      public PomST addModulesValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._modules.add(value);
+      	template.add("modules", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getModulesValues() {
+      	return this._modules;
+      }
+
+      public PomST addRepositoriesValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._repositories.add(value);
+      	template.add("repositories", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getRepositoriesValues() {
+      	return this._repositories;
+      }
+
+      public PomST addDistributionManagementValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._distributionManagement.add(value);
+      	template.add("distributionManagement", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getDistributionManagementValues() {
+      	return this._distributionManagement;
       }
 
       @Override
@@ -396,6 +496,7 @@ public final class MavenGroup {
       private Object _groupId;
       private Object _scope;
       private Object _version;
+      private Object _systemPath;
 
       private final ST template;
 
@@ -465,6 +566,22 @@ public final class MavenGroup {
 
       public String getVersion() {
       	return (String) this._version;
+      }
+
+      public dependencyST setSystemPath(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._systemPath == null) {
+            this._systemPath = value;
+         	template.add("systemPath", value);
+         }
+
+      	return this;
+      }
+
+      public String getSystemPath() {
+      	return (String) this._systemPath;
       }
 
       @Override
@@ -540,6 +657,55 @@ public final class MavenGroup {
 
       public java.util.Set<java.util.Map<String, Object>> getKeyValues() {
       	return this._keyValues;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class repositoryST implements MavenGroupTemplate {
+
+      private Object _id;
+      private Object _url;
+
+      private final ST template;
+
+      private repositoryST(STGroup group) {
+   		template = group.getInstanceOf("repository");
+   	}
+
+      public repositoryST setId(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._id == null) {
+            this._id = value;
+         	template.add("id", value);
+         }
+
+      	return this;
+      }
+
+      public String getId() {
+      	return (String) this._id;
+      }
+
+      public repositoryST setUrl(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._url == null) {
+            this._url = value;
+         	template.add("url", value);
+         }
+
+      	return this;
+      }
+
+      public String getUrl() {
+      	return (String) this._url;
       }
 
       @Override
@@ -678,30 +844,61 @@ public final class MavenGroup {
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 		.append("eom() ::= <<}>>\n")
 		.append("gt() ::= \">\"\n")
-			.append("Pom(artifactId,groupId,name,packaging,version,properties,dependencies,baseBuild) ::= <<<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
+			.append("Pom(artifactId,groupId,name,packaging,version,properties,dependencies,baseBuild,parentArtifactId,parentGroupId,parentVersion,modules,repositories,distributionManagement) ::= <<<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
 		"<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" + 
-		"    \n" + 
+		"\n" + 
+		"~if(parentArtifactId)~\n" + 
+		"	<parent>\n" + 
+		"	  <artifactId>~parentArtifactId~</artifactId>\n" + 
+		"      <groupId>~parentGroupId~</groupId>\n" + 
+		"      <version>~parentVersion~</version>\n" + 
+		"	</parent>\n" + 
+		"~endif~    \n" + 
 		"	<modelVersion>4.0.0</modelVersion>\n" + 
 		"\n" + 
-		"   <groupId>~groupId~</groupId>\n" + 
-		"   <artifactId>~artifactId~</artifactId>\n" + 
-		"   <version>~version~</version>\n" + 
-		"~if(packaging)~   <packaging>~packaging~</packaging>\n" + 
-		"~endif~\n" + 
-		"   <name>~name~</name>\n" + 
+		"	~if(groupId)~<groupId>~groupId~</groupId>~endif~\n" + 
+		"	~if(artifactId)~<artifactId>~artifactId~</artifactId>~endif~\n" + 
+		"	~if(version)~<version>~version~</version>~endif~\n" + 
+		"	~if(packaging)~<packaging>~packaging~</packaging>~endif~\n" + 
+		"~if(modules)~\n" + 
+		"	\n" + 
+		"	<modules>\n" + 
+		"		~modules:{it|<module>~it~</module>};separator=\"\\n\"~\n" + 
+		"    </modules>\n" + 
 		"\n" + 
-		"   <properties>\n" + 
+		"~endif~\n" + 
+		"	<name>~name~</name>\n" + 
+		"\n" + 
+		"~if(properties)~\n" + 
+		"    <properties>\n" + 
 		"		~properties:{it|<~it.name~>~it.value~</~it.name~>};separator=\"\\n\"~   	\n" + 
-		"	</properties>\n" + 
+		"	 </properties>\n" + 
+		"\n" + 
+		"~endif~\n" + 
 		"~if(baseBuild)~\n" + 
 		"\n" + 
 		"	~baseBuild~\n" + 
 		"\n" + 
 		"~endif~\n" + 
-		"   <dependencies>\n" + 
-		"		~dependencies:{it|~it~};separator=\"\\n\"~  \n" + 
-		"   </dependencies>\n" + 
+		"~if(dependencies)~\n" + 
 		"\n" + 
+		"    <dependencies>\n" + 
+		"		~dependencies:{it|~it~};separator=\"\\n\"~  \n" + 
+		"    </dependencies>\n" + 
+		"\n" + 
+		"~endif~\n" + 
+		"~if(distributionManagement)~\n" + 
+		"\n" + 
+		"	<distributionManagement>\n" + 
+		"   	~distributionManagement:{it|~it~};separator=\"\\n\"~\n" + 
+		"	</distributionManagement>\n" + 
+		"~endif~\n" + 
+		"~if(repositories)~\n" + 
+		"\n" + 
+		"	<repositories>\n" + 
+		"   	~repositories:{it|~it~};separator=\"\\n\"~\n" + 
+		"	</repositories>\n" + 
+		"~endif~\n" + 
 		"</project> >>\n")
 			.append("plugin(groupId,version,artifactId,configuration) ::= <<<plugin>\n" + 
 		"	<groupId>~groupId~</groupId>\n" + 
@@ -724,12 +921,14 @@ public final class MavenGroup {
 		"	   </tasks>\n" + 
 		"   </configuration>\n" + 
 		"</execution> >>\n")
-			.append("dependency(artifactId,groupId,scope,version) ::= <<<dependency>\n" + 
+			.append("dependency(artifactId,groupId,scope,version,systemPath) ::= <<<dependency>\n" + 
 		"	<groupId>~groupId~</groupId>\n" + 
 		"   <artifactId>~artifactId~</artifactId>\n" + 
 		"   <version>~version~</version>~if(scope)~\n" + 
 		"   <scope>~scope~</scope>\n" + 
-		"~else~\n" + 
+		"~endif~~if(systemPath)~\n" + 
+		"   <scope>system</scope>\n" + 
+		"	<systemPath>~systemPath~</systemPath>\n" + 
 		"~endif~\n" + 
 		"</dependency> >>\n")
 			.append("build(plugin,testResources) ::= <<<build>\n" + 
@@ -743,5 +942,9 @@ public final class MavenGroup {
 			.append("testResource(keyValues) ::= <<<testResource>\n" + 
 		"   ~keyValues:{it|<~it.name~>~it.value~</~it.name~>};separator=\"\\n\"~\n" + 
 		"</testResource> >>\n")
+			.append("repository(id,url) ::= <<<repository>\n" + 
+		"	<id>~id~</id>\n" + 
+		"   <url>~url~</url>\n" + 
+		"</repository> >>\n")
 		.toString();
 }

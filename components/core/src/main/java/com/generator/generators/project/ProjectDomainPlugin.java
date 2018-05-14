@@ -27,11 +27,11 @@ public abstract class ProjectDomainPlugin extends Plugin {
    }
 
    public enum Relations implements RelationshipType {
-      PROJECT, NODE, NAME, DIRECTORY, PATH, CHILD, FILE, FILETYPE, FILENAME, EXTENSION, GENERATOR, TEMPLATE, TEXT, GENERATOR_ROOT, GROUPID, ARTIFACTID, VERSION, DESCRIPTION, RENDERER, CLASSNAME, PACKAGENAME, DIR
+      PROJECT, NODE, NAME, DIRECTORY, PATH, CHILD, FILE, FILETYPE, FILENAME, EXTENSION, GENERATOR, TEMPLATE, TEXT, GENERATOR_ROOT, GROUPID, ARTIFACTID, VERSION, DESCRIPTION, ISVERTXPROJECT, RENDERER, CLASSNAME, PACKAGENAME, DIR
    }
 
    public enum Properties {
-      name, path, fileType, filename, extension, text, groupId, artifactId, version, description, className, packageName, file, dir
+      name, path, fileType, filename, extension, text, groupId, artifactId, version, description, isVertxProject, className, packageName, file, dir
    }
 
 	private static final Map<Label,Node> entitiesNodeMap = new LinkedHashMap<>();
@@ -55,6 +55,7 @@ public abstract class ProjectDomainPlugin extends Plugin {
 		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Project), Properties.artifactId.name());
 		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Project), Properties.version.name());
 		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Project), Properties.description.name());
+		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Project), Properties.isVertxProject.name());
 		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Directory), Properties.name.name());
 		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Directory), Properties.path.name());
 		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.File), Properties.fileType.name());
@@ -132,16 +133,17 @@ public abstract class ProjectDomainPlugin extends Plugin {
 	public static boolean isVisitor(Node node) { return hasLabel(node, Entities.Visitor); }
 
 	protected Node newProject() { return newProject(getGraph()); } 
-	protected Node newProject(Object name, Object groupId, Object artifactId, Object version, Object description) { return newProject(getGraph(), name, groupId, artifactId, version, description); } 
+	protected Node newProject(Object name, Object groupId, Object artifactId, Object version, Object description, Object isVertxProject) { return newProject(getGraph(), name, groupId, artifactId, version, description, isVertxProject); } 
 
 	public static Node newProject(NeoModel graph) { return DomainMotif.newInstanceNode(graph, entitiesNodeMap.get(Entities.Project)); } 
-	public static Node newProject(NeoModel graph, Object name, Object groupId, Object artifactId, Object version, Object description) {  	
+	public static Node newProject(NeoModel graph, Object name, Object groupId, Object artifactId, Object version, Object description, Object isVertxProject) {  	
 		final Node newNode = newProject(graph); 	
 		if (name != null) relate(newNode, DomainMotif.newValueNode(graph, name), RelationshipType.withName(Properties.name.name()));
 		if (groupId != null) relate(newNode, DomainMotif.newValueNode(graph, groupId), RelationshipType.withName(Properties.groupId.name()));
 		if (artifactId != null) relate(newNode, DomainMotif.newValueNode(graph, artifactId), RelationshipType.withName(Properties.artifactId.name()));
 		if (version != null) relate(newNode, DomainMotif.newValueNode(graph, version), RelationshipType.withName(Properties.version.name()));
-		if (description != null) relate(newNode, DomainMotif.newValueNode(graph, description), RelationshipType.withName(Properties.description.name())); 	
+		if (description != null) relate(newNode, DomainMotif.newValueNode(graph, description), RelationshipType.withName(Properties.description.name()));
+		if (isVertxProject != null) relate(newNode, DomainMotif.newValueNode(graph, isVertxProject), RelationshipType.withName(Properties.isVertxProject.name())); 	
 		return newNode; 
 	}
 	/* todo
@@ -170,6 +172,10 @@ public abstract class ProjectDomainPlugin extends Plugin {
 			   final String description = com.generator.util.SwingUtil.showInputDialog("description", app);
 				if (description != null && description.length() > 0)
 					properties.put("description", description);
+
+			   final String isVertxProject = com.generator.util.SwingUtil.showInputDialog("isVertxProject", app);
+				if (isVertxProject != null && isVertxProject.length() > 0)
+					properties.put("isVertxProject", isVertxProject);
 
 
 			if (properties.isEmpty()) return;
@@ -443,6 +449,11 @@ public abstract class ProjectDomainPlugin extends Plugin {
 	public static void incomingDESCRIPTION(Node src, RelationConsumer consumer) { incoming(src, Relations.DESCRIPTION).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
 	public static Node singleIncomingDESCRIPTION(Node src) { return other(src, singleIncoming(src, Relations.DESCRIPTION)); }
 
+	public static void outgoingISVERTXPROJECT(Node src, RelationConsumer consumer) { outgoing(src, Relations.ISVERTXPROJECT).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleOutgoingISVERTXPROJECT(Node src) { return other(src, singleOutgoing(src, Relations.ISVERTXPROJECT)); }
+	public static void incomingISVERTXPROJECT(Node src, RelationConsumer consumer) { incoming(src, Relations.ISVERTXPROJECT).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleIncomingISVERTXPROJECT(Node src) { return other(src, singleIncoming(src, Relations.ISVERTXPROJECT)); }
+
 	public static void outgoingRENDERER(Node src, RelationConsumer consumer) { outgoing(src, Relations.RENDERER).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
 	public static Node singleOutgoingRENDERER(Node src) { return other(src, singleOutgoing(src, Relations.RENDERER)); }
 	public static void incomingRENDERER(Node src, RelationConsumer consumer) { incoming(src, Relations.RENDERER).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
@@ -482,6 +493,7 @@ public abstract class ProjectDomainPlugin extends Plugin {
 	public static Relationship relateARTIFACTID(Node src, Node dst) { return relate(src, dst, Relations.ARTIFACTID); }
 	public static Relationship relateVERSION(Node src, Node dst) { return relate(src, dst, Relations.VERSION); }
 	public static Relationship relateDESCRIPTION(Node src, Node dst) { return relate(src, dst, Relations.DESCRIPTION); }
+	public static Relationship relateISVERTXPROJECT(Node src, Node dst) { return relate(src, dst, Relations.ISVERTXPROJECT); }
 	public static Relationship relateRENDERER(Node src, Node dst) { return relate(src, dst, Relations.RENDERER); }
 	public static Relationship relateCLASSNAME(Node src, Node dst) { return relate(src, dst, Relations.CLASSNAME); }
 	public static Relationship relatePACKAGENAME(Node src, Node dst) { return relate(src, dst, Relations.PACKAGENAME); }
@@ -576,6 +588,15 @@ public abstract class ProjectDomainPlugin extends Plugin {
 	public static <T extends PropertyContainer> T removeDescriptionProperty(T container) { DomainMotif.removeEntityProperty(container, Properties.description.name()); return container; }
 
 	protected <T extends PropertyContainer> T setDescriptionProperty(T container, Object value) { setDescriptionProperty(getGraph(), container, value); return container; }
+
+	// isVertxProject
+	public static <T> T getIsVertxProjectProperty(PropertyContainer container) { return getIsVertxProjectProperty(container, null); }
+	public static <T> T getIsVertxProjectProperty(PropertyContainer container, T defaultValue) { return DomainMotif.getEntityProperty(container, Properties.isVertxProject.name(), defaultValue); }
+	public static boolean hasIsVertxProjectProperty(PropertyContainer container) { return DomainMotif.hasEntityProperty(container, Properties.isVertxProject.name()); }
+	public static <T extends PropertyContainer> T setIsVertxProjectProperty(NeoModel graph, T container, Object value) { DomainMotif.setEntityProperty(graph, container, Properties.isVertxProject.name(), value); return container; }
+	public static <T extends PropertyContainer> T removeIsVertxProjectProperty(T container) { DomainMotif.removeEntityProperty(container, Properties.isVertxProject.name()); return container; }
+
+	protected <T extends PropertyContainer> T setIsVertxProjectProperty(T container, Object value) { setIsVertxProjectProperty(getGraph(), container, value); return container; }
 
 	// className
 	public static <T> T getClassNameProperty(PropertyContainer container) { return getClassNameProperty(container, null); }

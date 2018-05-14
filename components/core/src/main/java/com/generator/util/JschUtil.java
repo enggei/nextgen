@@ -61,7 +61,7 @@ public class JschUtil {
    public static Session getSessionUsingPrivateKey(String username, String host, Integer port, String privateKeyPath) throws JSchException {
       final JSch jSch = new JSch();
 
-      final Session session = jSch.getSession(username, host, port);
+      final Session session = jSch.getSession(username, host, port==null ? 22 : port);
       jSch.addIdentity(privateKeyPath);
 
       return connect(session);

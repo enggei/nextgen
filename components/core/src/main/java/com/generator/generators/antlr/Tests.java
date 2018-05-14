@@ -6,17 +6,15 @@ import com.generator.generators.antlr.parser.ANTLRv4Parser;
 import com.generator.generators.antlr.parser.ANTLRv4ParserNodeListener;
 import com.generator.generators.domain.DomainPluginGroup;
 import com.generator.generators.stringtemplate.TemplateGroupGroup;
-import com.generator.generators.stringtemplate.GeneratedFile;
+import com.generator.util.GeneratedFile;
 import com.generator.util.StringUtil;
 import com.generator.util.Tuple;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.junit.Test;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.function.Function;
 
 /**
  * Created 25.08.17.
