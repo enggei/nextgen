@@ -314,6 +314,10 @@ case $1 in
     docker-compose restart nginx
     ;;
 
+  scale)
+    docker-compose scale $2
+    ;;
+
   list)
     echo -e "Build options:\n
   - all
@@ -333,7 +337,8 @@ case $1 in
     ;;
   *)
     echo -e "Usage:\n'$0 list' to display available options
-'$0 all'  to build everything"
+'$0 all'  to build everything
+'$0 scale <container>' to scale up/down instances"
     ;;
 esac
 

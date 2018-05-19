@@ -36,9 +36,6 @@ services:
   elasticsearchlogs:
     image: ${DOCKER_REGISTRY}/elasticsearch-logs:${TAG}
     restart: always
-    ports:
-     - "127.0.0.1:9201:9200"
-     - "127.0.0.1:9301:9300"
     volumes:
      - ${DOCKER_BASE_DIR}/elasticsearch-logs:/usr/share/elasticsearch/data
     networks:
@@ -50,7 +47,7 @@ services:
     ports:
       - "127.0.0.1:5601:5601"
     volumes:
-      - ./docker/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+      - ./docker/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
     depends_on:
       - elasticsearchlogs
     networks:
