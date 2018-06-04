@@ -5,15 +5,15 @@ import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.java.parser.JavaLexer;
 import com.generator.generators.java.parser.JavaParser;
 import com.generator.generators.java.parser.JavaParserNodeListener;
-import com.generator.util.ClasspathUtil;
-import com.generator.util.CompilerUtil;
-import com.generator.util.FileUtil;
-import com.generator.util.Reflect;
+import com.generator.util.*;
 //import com.ud.equipment.devices.device.automation.driver.dolby.DolbyPlayerAutomationDriver;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 import org.reflections.Reflections;
 
 import javax.tools.DiagnosticCollector;
@@ -28,7 +28,84 @@ import java.util.*;
 import static org.reflections.ReflectionUtils.*;
 
 public class Tests {
+
    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Tests.class);
+
+   @Test
+   public void testJavaNeo() {
+
+      final GraphDatabaseService db = Java.newDatabase("/home/goe/projects/nextgen/components/core/src/main/java/com/generator/generators/java/testdb");
+
+      final Single<Node> comNode = new Single<>();
+      Java.doInTransaction(db, new Java.TransactionHandler() {
+         @Override
+         public void execute() throws Exception {
+
+            final Node comPackage = Java.newJPackage(db, "com");
+            comNode.setValue(comPackage);
+
+            final Node generatorPackage = Java.newJPackage(db, "generator");
+            final Node javaPackage = Java.newJPackage(db, "java");
+
+            Java.relate_JPackageSrc_PARENT_JPackageDst(comPackage, generatorPackage);
+            Java.relate_JPackageSrc_PARENT_JPackageDst(generatorPackage, javaPackage);
+
+            final Node classNode = Java.newJClass(db, Java.scope.PUBLIC, "HelloWorld");
+            Java.relate_JPackage_CLASSES_JClass(javaPackage, classNode);
+
+            final Node field = Java.newJField(db, "name", Java.scope.PACKAGE);
+            Java.relate_JClass_FIELDS_JField(classNode, field);
+
+         }
+
+         @Override
+         public void handleException(Exception e) {
+            e.printStackTrace();
+         }
+      });
+
+      final JavaGroup group = new JavaGroup();
+
+      Java.doInTransaction(db, new Java.TransactionHandler() {
+         @Override
+         public void execute() throws Exception {
+            printPackage(comNode.getValue(), "");
+         }
+
+         public void printPackage(Node parentPackage, String delim) {
+
+            Java.get_JPackageDst_PARENT_for_JPackageSrc(parentPackage, (relationship, other) -> {
+               printPackage(other, (delim.length() == 0 ? "" : ".") + Java.getName(parentPackage));
+               return false;
+            });
+
+            Java.get_JClass_CLASSES_for_JPackage(parentPackage, new Java.RelationConsumer() {
+               @Override
+               public boolean handle(Relationship relationship, Node other) {
+                  printClass(other, delim);
+                  return false;
+               }
+
+               private void printClass(Node classNode, String packageName) {
+
+                  final JavaGroup.PojoST pojoST = group.newPojo().
+                        setPackage(packageName).
+                        setName(Java.getName(classNode));
+
+                  System.out.println(pojoST.toString());
+               }
+            });
+         }
+
+         @Override
+         public void handleException(Exception e) {
+            e.printStackTrace();
+         }
+      });
+
+      db.shutdown();
+   }
+
    //@Test
    public void testAnnotations() {
 
@@ -126,7 +203,7 @@ public class Tests {
          @Override
          public void enterVariableDeclaratorId(JavaParser.VariableDeclaratorIdContext arg) {
             super.enterVariableDeclaratorId(arg);
-            if(inMemberDeclaration()) propertyName = arg.getText();
+            if (inMemberDeclaration()) propertyName = arg.getText();
          }
 
          @Override
@@ -152,8 +229,8 @@ public class Tests {
       final JavaGroup.PojoST pojoST = new JavaGroup().newPojo().
             setPackage("com.test").
             setName("Hello").
-            addPropertiesValue(null, "String", "name", null,null,null, true).
-            addPropertiesValue(null, "String", "yolo", null,null,null, true).
+            addPropertiesValue(null, "String", "name", null, null, null, true).
+            addPropertiesValue(null, "String", "yolo", null, null, null, true).
             addLexicalValue("name").
             addLexicalValue("yolo");
 
@@ -175,7 +252,7 @@ public class Tests {
             new BaseClassVisitor() {
                @Override
                public void onClass(Package classPackage, String className, Class superClass) {
-                  if(className.contains("$")) return;
+                  if (className.contains("$")) return;
                   log.info(classPackage.getName() + "\n\t" + className);
                }
 

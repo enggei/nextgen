@@ -1,5 +1,6 @@
 package com.generator.app;
 
+import com.generator.generators.domain.DomainDomainPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.domain.DomainVisitor;
 import com.generator.neo.NeoModel;
@@ -70,13 +71,13 @@ public class DomainMotif {
       }.visitDomain(domainNode);
 
       if (foundProperty.isEmpty()) {
-         newDomainEntityRelation(graph, srcEntity, name, DomainPlugin.RelationCardinality.SINGLE, graph.newNode(DomainPlugin.Entities.Property, AppMotif.Properties.name.name(), name));
+         newDomainEntityRelation(graph, srcEntity, name, DomainDomainPlugin.RelationCardinality.SINGLE, graph.newNode(DomainPlugin.Entities.Property, AppMotif.Properties.name.name(), name));
       } else {
-         newDomainEntityRelation(graph, srcEntity, name, DomainPlugin.RelationCardinality.SINGLE, foundProperty.iterator().next());
+         newDomainEntityRelation(graph, srcEntity, name, DomainDomainPlugin.RelationCardinality.SINGLE, foundProperty.iterator().next());
       }
    }
 
-   public static Node newDomainEntityRelation(NeoModel graph, Node srcEntity, String name, DomainPlugin.RelationCardinality relationCardinality, Node... dstEntities) {
+   public static Node newDomainEntityRelation(NeoModel graph, Node srcEntity, String name, DomainDomainPlugin.RelationCardinality relationCardinality, Node... dstEntities) {
 
       if (dstEntities.length == 0) throw new IllegalArgumentException("must have at least 1 dstEntity");
 

@@ -4,6 +4,7 @@ import com.generator.app.App;
 import com.generator.app.DomainMotif;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
+import com.generator.generators.domain.DomainDomainPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.neo.NeoModel;
 import org.neo4j.graphdb.*;
@@ -61,12 +62,12 @@ public abstract class SSHDomainPlugin extends Plugin {
 
 		relate(domainNode, entitiesNodeMap.get(Entities.Host), DomainPlugin.Relations.ENTITY);
 		relate(domainNode, entitiesNodeMap.get(Entities.CommandRoot), DomainPlugin.Relations.ENTITY);
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Host), Relations.SESSIONS.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Session));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Host), Relations.PATHS.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Path));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Host), Relations.HISTORY.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.CommandHistory));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Session), Relations.CHANNELS.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Channel));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.CommandRoot), Relations.CATEGORIES.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.CommandCategory));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.CommandCategory), Relations.COMMANDS.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Command));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Host), Relations.SESSIONS.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Session));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Host), Relations.PATHS.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Path));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Host), Relations.HISTORY.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.CommandHistory));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Session), Relations.CHANNELS.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Channel));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.CommandRoot), Relations.CATEGORIES.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.CommandCategory));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.CommandCategory), Relations.COMMANDS.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Command));
    }
 
    @Override

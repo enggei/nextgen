@@ -6,10 +6,7 @@ import com.generator.app.nodes.NeoRelationship;
 import com.generator.neo.NeoModel;
 import com.generator.util.NeoUtil;
 import com.generator.util.SwingUtil;
-import org.neo4j.graphdb.Direction;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.Transaction;
+import org.neo4j.graphdb.*;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -858,6 +855,101 @@ class NodeDetailPanel extends JPanel {
                      app.events.firePropertyChange(NODE_LOAD, nodes);
                   }
                });
+
+               if (elements.size() == 1) {
+                  final RelationTableModel.RelationElement relationElement = elements.iterator().next();
+                  final Relationship relationship = relationElement.relationship;
+
+
+                  pop.add(new App.TransactionAction("Change Type", workspace.app) {
+                     @Override
+                     protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                        final String existingType = relationship.getType().name();
+
+                        final Set<String> relationships = new LinkedHashSet<>();
+                        workspace.app.model.graph().getAllRelationshipTypesInUse().forEach(relationshipType -> relationships.add(relationshipType.name()));
+                        final JComboBox<String> cboRelationships = new JComboBox<>(relationships.toArray(new String[relationships.size()]));
+                        cboRelationships.setSelectedItem(existingType);
+
+                        final JRadioButton radOneToMany = new JRadioButton();
+                        final JRadioButton radManyToOne = new JRadioButton("", true);
+                        final ButtonGroup group = new ButtonGroup();
+                        group.add(radOneToMany);
+                        group.add(radManyToOne);
+
+                        final JTextField txtSearch = new JTextField();
+                        txtSearch.addKeyListener(new KeyAdapter() {
+                           @Override
+                           public void keyReleased(KeyEvent e) {
+                              SwingUtilities.invokeLater(() -> {
+                                 final String s = txtSearch.getText().trim().toLowerCase();
+                                 for (String lbl : relationships) {
+                                    if (lbl.toLowerCase().startsWith(s)) {
+                                       cboRelationships.setSelectedItem(lbl);
+                                    }
+                                 }
+                              });
+                           }
+                        });
+
+                        final JTextField txtNew = new JTextField();
+
+                        final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu,75dlu:grow", "pref,4dlu,pref,4dlu,pref");
+                        editor.addLabel("Relationship", 1, 1);
+                        editor.add(cboRelationships, 3, 1);
+                        editor.addLabel("Search", 1, 3);
+                        editor.add(txtSearch, 3, 3);
+                        editor.addLabel("New", 1, 5);
+                        editor.add(txtNew, 3, 5);
+                        editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
+                        SwingUtil.showDialog(editor, workspace.app, "Change type", new SwingUtil.ConfirmAction() {
+                           @Override
+                           public void verifyAndCommit() throws Exception {
+                              final String newType = txtNew.getText().trim().length() == 0 ? (String) cboRelationships.getSelectedItem() : txtNew.getText().trim().toUpperCase();
+
+                              workspace.app.model.graph().doInTransaction(new NeoModel.Committer() {
+                                 @Override
+                                 public void doAction(Transaction tx1) throws Throwable {
+                                    final Relationship newRelationship = relationship.getStartNode().createRelationshipTo(relationship.getEndNode(), RelationshipType.withName(newType));
+                                    for (String key : relationship.getPropertyKeys())
+                                       newRelationship.setProperty(key, relationship.getProperty(key));
+                                    relationship.delete();
+                                 }
+
+                                 @Override
+                                 public void exception(Throwable throwable) {
+                                    SwingUtil.showExceptionNoStack(workspace.app, throwable);
+                                 }
+                              });
+                           }
+                        });
+                     }
+                  });
+
+                  pop.add(new App.TransactionAction("Reverse Direction", workspace.app) {
+                     @Override
+                     protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                        final Relationship newRelationship = relationship.getEndNode().createRelationshipTo(relationship.getStartNode(), relationship.getType());
+                        for (String key : relationship.getPropertyKeys())
+                           newRelationship.setProperty(key, relationship.getProperty(key));
+                        relationship.delete();
+                     }
+                  });
+
+                  pop.add(new App.TransactionAction("Set Property", workspace.app) {
+                     @Override
+                     protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                        final String propertyValue = SwingUtil.showInputDialog("Property Name and value", RelationsTable.this);
+                        if (propertyValue == null || propertyValue.trim().length() == 0 || propertyValue.trim().split("[ ]").length != 2)
+                           return;
+
+                        relationship.setProperty(propertyValue.trim().split("[ ]")[0], propertyValue.trim().split("[ ]")[1]);
+                     }
+                  });
+               }
 
                pop.add(new TransactionAction("Delete", app) {
                   @Override

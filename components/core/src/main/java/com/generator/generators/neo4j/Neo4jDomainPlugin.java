@@ -34,6 +34,15 @@ public abstract class Neo4jDomainPlugin extends Plugin {
       name, cardinality, isRequired, type, isUnique, packageName, description, root
    }
 
+	public enum Cardinality {
+		ONE_TO_ONE, ONE_TO_MANY, MANY_TO_ONE, MANY_TO_MANY
+	}
+
+	public enum Type {
+		STRING, INTEGER, ENUM, LONG
+	}
+
+
 	private static final Map<Label,Node> entitiesNodeMap = new LinkedHashMap<>();
 
 	private final Node domainNode;

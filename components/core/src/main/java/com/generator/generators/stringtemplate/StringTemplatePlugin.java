@@ -51,6 +51,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
    protected void addActionsTo(JMenu menu) {
 
       addShowMenu(menu, Entities.STGroup);
+      addShowMenu(menu, Entities.STGroupBuilder);
 
       menu.add(new AbstractAction("Parse STG file") {
          @Override
@@ -128,6 +129,19 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
 
             final Node stGroupNode = newSTGroup(name);
             stGroupNode.addLabel(DomainPlugin.Entities.Domain);
+            fireNodesLoaded(stGroupNode);
+         }
+      });
+
+      menu.add(new App.TransactionAction("New STGroupBuilder", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final String name = SwingUtil.showInputDialog("STGroup name", app);
+            if (name == null || name.length() == 0) return;
+
+            final Node stGroupNode = newSTGroupBuilder(name, "~");
+//            stGroupNode.addLabel(DomainPlugin.Entities.Domain);
             fireNodesLoaded(stGroupNode);
          }
       });
@@ -246,6 +260,16 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
          if (isSTTemplate(other)) return new TemplateRenderPanel(neoNode, other);
       }
       return component;
+   }
+
+   @Override
+   protected JComponent newSTGroupBuilderEditor(NeoNode sTGroupBuilderNode) {
+      return new STGroupBuilderEditor(sTGroupBuilderNode.getNode());
+   }
+
+   @Override
+   protected JComponent newTemplateStatementEditor(NeoNode templateStatementNode) {
+      return new TemplateStatementEditor(templateStatementNode.getNode());
    }
 
    private static RelationCardinality getCardinalityFor(TemplateEntities domainEntityType) {
@@ -1061,6 +1085,198 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
 
       private void onRightClick(JTextArea txtEditor) {
          SwingUtil.toClipboard(txtEditor.getText());
+      }
+   }
+
+   private class STGroupBuilderEditor extends JPanel {
+
+      private final JTextArea txtEditor = new JTextArea(25, 85);
+      private final Node stGroupBuilderNode;
+
+      STGroupBuilderEditor(Node stGroupBuilderNode) {
+         super(new BorderLayout());
+
+         this.stGroupBuilderNode = stGroupBuilderNode;
+
+         txtEditor.setFont(com.generator.app.AppMotif.getDefaultFont());
+         txtEditor.setTabSize(3);
+         txtEditor.setEditable(false);
+         render();
+
+         txtEditor.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+               if (SwingUtilities.isLeftMouseButton(e)) {
+                  onLeftClick(txtEditor);
+               } else if (SwingUtilities.isRightMouseButton(e)) {
+                  onRightClick(txtEditor);
+               }
+            }
+         });
+
+         add(new JScrollPane(txtEditor), BorderLayout.CENTER);
+      }
+
+      private void render() {
+         txtEditor.setText(renderGroup(stGroupBuilderNode));
+         txtEditor.setCaretPosition(0);
+      }
+
+      private void onLeftClick(JTextArea txtEditor) {
+         SwingUtilities.invokeLater(() -> getGraph().doInTransaction(new NeoModel.Committer() {
+            @Override
+            public void doAction(Transaction tx) throws Throwable {
+               render();
+            }
+
+            @Override
+            public void exception(Throwable throwable) {
+               final StringBuilder stack = new StringBuilder("ERROR: " + throwable.getMessage() + "\n");
+               for (StackTraceElement stackTraceElement : throwable.getStackTrace())
+                  stack.append(stackTraceElement.toString()).append("\n");
+               txtEditor.setText(stack.toString());
+               txtEditor.setCaretPosition(0);
+            }
+         }));
+      }
+
+      private void onRightClick(JTextArea txtEditor) {
+         SwingUtil.toClipboard(txtEditor.getText());
+      }
+
+      private String renderGroup(Node stGroupBuilderNode) {
+
+         final TemplateGroupBuilder templateGroupBuilder = new TemplateGroupBuilder(getNameProperty(stGroupBuilderNode), getDelimiterProperty(stGroupBuilderNode));
+
+         outgoingSTATEMENTS(stGroupBuilderNode, (relationship, templateStatementNode) -> {
+            final TemplateGroupBuilder.TemplateStatement statement = new TemplateGroupBuilder.TemplateStatement(getNameProperty(templateStatementNode));
+            addSection(singleOutgoingSECTION(templateStatementNode), statement);
+            templateGroupBuilder.addStatement(statement);
+         });
+
+         return templateGroupBuilder.toSTG();
+      }
+   }
+
+
+   private static void addSection(Node sectionNode, TemplateGroupBuilder.TemplateStatement statement) {
+      if (sectionNode == null) return;
+      statement.addSection(createSection(sectionNode));
+      addSection(singleOutgoingNEXT(sectionNode), statement);
+   }
+
+   private static TemplateGroupBuilder.TemplateSection createSection(Node sectionNode) {
+
+      switch (SectionType.valueOf(getSectionTypeProperty(sectionNode))) {
+
+         case MAP_REFERENCE:
+//            return new TemplateGroupBuilder.MapReferenceSection(getValueProperty())
+            break;
+         case FIRST_REST:
+            break;
+         case STRING:
+            return new TemplateGroupBuilder.StringSection(getValueProperty(sectionNode));
+         case SINGLE_VALUE:
+            return new TemplateGroupBuilder.SingleValueSection(getValueProperty(sectionNode));
+         case LIST:
+            final Object attributeOperator = StringTemplatePlugin.getAttributeOperatorProperty(sectionNode);
+            final Object separator = StringTemplatePlugin.getSeparatorProperty(sectionNode);
+            final Object name = getValueProperty(sectionNode);
+            final TemplateGroupBuilder.ListSection listSection = new TemplateGroupBuilder.ListSection((String) name, separator == null ? null : separator.toString(), attributeOperator == null ? null : TemplateGroupBuilder.AttributeOperator.valueOf(attributeOperator.toString()));
+
+
+            return listSection;
+         case ITERATOR:
+            break;
+         case ITERATION_NUMBER:
+            break;
+         case KEY_VALUE_LIST:
+            break;
+         case IF:
+            break;
+         case LENGTH:
+            break;
+         case NEWLINE:
+            return new TemplateGroupBuilder.NewLineSection();
+         case SPACE:
+            break;
+         case COMMENT:
+            break;
+         case ESCAPE:
+            break;
+         case UNICODE:
+            break;
+         case METHOD_REFERENCE:
+            break;
+         case ELSE:
+            break;
+      }
+
+      throw new IllegalArgumentException("Unknown section type " + getSectionTypeProperty(sectionNode));
+   }
+
+   private class TemplateStatementEditor extends JPanel {
+      private final JTextArea txtEditor = new JTextArea(25, 85);
+      private final Node templateStatementNode;
+
+      TemplateStatementEditor(Node templateStatementNode) {
+         super(new BorderLayout());
+
+         this.templateStatementNode = templateStatementNode;
+
+         txtEditor.setFont(com.generator.app.AppMotif.getDefaultFont());
+         txtEditor.setTabSize(3);
+         txtEditor.setEditable(false);
+         render();
+
+         txtEditor.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+               if (SwingUtilities.isLeftMouseButton(e)) {
+                  onLeftClick(txtEditor);
+               } else if (SwingUtilities.isRightMouseButton(e)) {
+                  onRightClick(txtEditor);
+               }
+            }
+         });
+
+         add(new JScrollPane(txtEditor), BorderLayout.CENTER);
+      }
+
+      private void render() {
+         txtEditor.setText(renderStatement(templateStatementNode));
+         txtEditor.setCaretPosition(0);
+      }
+
+      private void onLeftClick(JTextArea txtEditor) {
+         SwingUtilities.invokeLater(() -> getGraph().doInTransaction(new NeoModel.Committer() {
+            @Override
+            public void doAction(Transaction tx) throws Throwable {
+               render();
+            }
+
+            @Override
+            public void exception(Throwable throwable) {
+               final StringBuilder stack = new StringBuilder("ERROR: " + throwable.getMessage() + "\n");
+               for (StackTraceElement stackTraceElement : throwable.getStackTrace())
+                  stack.append(stackTraceElement.toString()).append("\n");
+               txtEditor.setText(stack.toString());
+               txtEditor.setCaretPosition(0);
+            }
+         }));
+      }
+
+      private void onRightClick(JTextArea txtEditor) {
+         SwingUtil.toClipboard(txtEditor.getText());
+      }
+
+      private String renderStatement(Node templateStatementNode) {
+         final Node stGroupBuilderNode = singleIncomingSTATEMENTS(templateStatementNode);
+
+         final TemplateGroupBuilder.TemplateStatement statement = new TemplateGroupBuilder.TemplateStatement(getNameProperty(templateStatementNode));
+         addSection(singleOutgoingSECTION(templateStatementNode), statement);
+
+         return statement.toSTG(getDelimiterProperty(stGroupBuilderNode));
       }
    }
 }

@@ -4,6 +4,7 @@ import com.generator.app.App;
 import com.generator.app.DomainMotif;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
+import com.generator.generators.domain.DomainDomainPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.neo.NeoModel;
 import org.neo4j.graphdb.*;
@@ -59,11 +60,11 @@ public abstract class EasyFlowDomainPlugin extends Plugin {
 		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.ContextProperty), Properties.value.name());
 
 		relate(domainNode, entitiesNodeMap.get(Entities.Flow), DomainPlugin.Relations.ENTITY);
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Flow), Relations.FROM.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.State));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Flow), Relations.CONTEXT_PROPERTY.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.ContextProperty));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.State), Relations.ON.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Event));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Event), Relations.TO.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.State));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Event), Relations.FINISH.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.State));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Flow), Relations.FROM.name(), DomainDomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.State));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Flow), Relations.CONTEXT_PROPERTY.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.ContextProperty));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.State), Relations.ON.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Event));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Event), Relations.TO.name(), DomainDomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.State));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Event), Relations.FINISH.name(), DomainDomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.State));
    }
 
    @Override

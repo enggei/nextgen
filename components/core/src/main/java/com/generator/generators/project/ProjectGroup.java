@@ -46,7 +46,8 @@ public final class ProjectGroup {
       return new ProjectST(stGroup);
    }
 
-   public final class ProjectST implements ProjectGroupTemplate {
+   public static final class ProjectST implements ProjectGroupTemplate {
+
 
       private java.util.Set<java.util.Map<String, Object>> _generators = new java.util.LinkedHashSet<>();
       private Object _version;
@@ -361,7 +362,7 @@ public final class ProjectGroup {
 		.append("gt() ::= \">\"\n")
 			.append("Project(generators,version,artifactId,groupId,comments,name,packageName,configPath,description,verticleTests) ::= <<package ~packageName~;\n" + 
 		"\n" + 
-		"import com.generator.util.GeneratedFile;\n" +
+		"import com.generator.util.GeneratedFile;\n" + 
 		"import com.generator.generators.vertx.VertxGroup;\n" + 
 		"import com.generator.util.FileUtil;\n" + 
 		"import org.zeroturnaround.exec.ProcessExecutor;\n" + 
@@ -435,6 +436,45 @@ public final class ProjectGroup {
 		"					setScope(\"public\").\n" + 
 		"					setName(name + \"Test\").\n" + 
 		"					setExtends(testName));\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	protected void generateNeoVerticleTest(com.generator.generators.neo4j.Neo4jGroup.DomainVerticleST verticleST, String utilsPackage, String testRoot) throws IOException {\n" + 
+		"\n" + 
+		"		final String name = verticleST.getName();\n" + 
+		"		final String verticleSTPackage = verticleST.getPackageName();\n" + 
+		"		final Set<Map<String, Object>~gt()~ actions = verticleST.getIncoming();\n" + 
+		"\n" + 
+		"		final String testName = \"Base\" + name + \"Test\";\n" + 
+		"		final VertxGroup.VerticleTestST verticleTestST = vertxGroup.newVerticleTest().\n" + 
+		"				setPackageName(verticleSTPackage).\n" + 
+		"				setName(testName).\n" + 
+		"				setVerticle(name + \"Impl\").\n" + 
+		"				setVertxUtilPackage(utilsPackage);\n" + 
+		"\n" + 
+		"		for (Map<String, Object> map : actions)\n" + 
+		"			verticleTestST.addOutgoingValue(map.get(\"address\"), map.get(\"name\"));\n" + 
+		"\n" + 
+		"		GeneratedFile.newJavaFile(testRoot, verticleSTPackage, testName).write(verticleTestST);\n" + 
+		"\n" + 
+		"		final GeneratedFile testImplementation = GeneratedFile.newJavaFile(testRoot, verticleSTPackage, name + \"Test\");\n" + 
+		"		if (!testImplementation.exists())\n" + 
+		"			testImplementation.write(javaGroup.newClass().\n" + 
+		"					addImportsValue(utilsPackage + \".ResponseUtil\").\n" + 
+		"					addImportsValue(utilsPackage + \".VertxUtil\").\n" + 
+		"					addImportsValue(\"io.vertx.core.eventbus.Message\").\n" + 
+		"					addImportsValue(\"io.vertx.core.json.JsonObject\").\n" + 
+		"					addImportsValue(\"io.vertx.ext.unit.Async\").\n" + 
+		"					addImportsValue(\"io.vertx.ext.unit.TestContext\").\n" + 
+		"					addImportsValue(\"org.junit.Test\").\n" + 
+		"					setPackage(verticleSTPackage).\n" + 
+		"					setScope(\"public\").\n" + 
+		"					setName(name + \"Test\").\n" + 
+		"					setExtends(testName).\n" + 
+		"					addMethodsValue(javaGroup.newmethod().\n" + 
+		"							addAnnotationsValue(\"Test\").\n" + 
+		"							setName(\"test\").\n" + 
+		"							setScope(\"public\").\n" + 
+		"							addParametersValue(\"context\", \"TestContext\")));\n" + 
 		"	}\n" + 
 		"\n" + 
 		"	protected void generateNeoVerticleTest(VertxGroup.NeoVerticleST verticleST, String utilsPackage, String testRoot) throws IOException {\n" + 

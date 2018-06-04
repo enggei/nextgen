@@ -4,6 +4,7 @@ import com.generator.app.App;
 import com.generator.app.DomainMotif;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
+import com.generator.generators.domain.DomainDomainPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.neo.NeoModel;
 import org.neo4j.graphdb.*;
@@ -68,17 +69,19 @@ public abstract class VertxDomainPlugin extends Plugin {
 		relate(domainNode, entitiesNodeMap.get(Entities.TcpBridgeServer), DomainPlugin.Relations.ENTITY);
 		relate(domainNode, entitiesNodeMap.get(Entities.TcpBridgeHost), DomainPlugin.Relations.ENTITY);
 		relate(domainNode, entitiesNodeMap.get(Entities.Application), DomainPlugin.Relations.ENTITY);
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.MessageDomain), Relations.MESSAGE.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Message));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Message), Relations.KEYVALUE.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.KeyValue));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Message), Relations.LIST.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.List));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.List), Relations.ELEMENT.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.KeyValue));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.MessageDomain), Relations.MESSAGE.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Message));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Message), Relations.KEYVALUE.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.KeyValue));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Message), Relations.LIST.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.List));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.List), Relations.ELEMENT.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.KeyValue));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.TcpBridgeServer), Relations.SESSION.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.TcpBridgeHost));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.TcpBridgeServer), Relations.SESSION.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.TcpBridgeHost));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.MessageDomain), Relations.MESSAGE.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Message));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Message), Relations.KEYVALUE.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.KeyValue));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Message), Relations.LIST.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.List));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.List), Relations.ELEMENT.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.KeyValue));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.MessageDomain), Relations.MESSAGE.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Message));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Message), Relations.KEYVALUE.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.KeyValue));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Message), Relations.LIST.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.List));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.List), Relations.ELEMENT.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.KeyValue));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.TcpBridgeServer), Relations.SESSION.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.TcpBridgeHost));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.TcpBridgeServer), Relations.SESSION.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.TcpBridgeHost));
    }
+
+
 
    @Override
    protected Label[] getLabels() {

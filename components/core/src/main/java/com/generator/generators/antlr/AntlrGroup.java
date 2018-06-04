@@ -90,7 +90,8 @@ public final class AntlrGroup {
       return new mvnST(stGroup);
    }
 
-   public final class AntlrGrammarNodeST implements AntlrGroupTemplate {
+   public static final class AntlrGrammarNodeST implements AntlrGroupTemplate {
+
 
       private java.util.Set<java.util.Map<String, Object>> _children = new java.util.LinkedHashSet<>();
       private Object _name;
@@ -136,7 +137,8 @@ public final class AntlrGroup {
    	}
    }
 
-   public final class AntlrBnfRendererST implements AntlrGroupTemplate {
+   public static final class AntlrBnfRendererST implements AntlrGroupTemplate {
+
 
       private Object _name;
       private java.util.Set<java.util.Map<String, Object>> _nodes = new java.util.LinkedHashSet<>();
@@ -200,7 +202,8 @@ public final class AntlrGroup {
    	}
    }
 
-   public final class AntlrSymbolNodeST implements AntlrGroupTemplate {
+   public static final class AntlrSymbolNodeST implements AntlrGroupTemplate {
+
 
       private java.util.Set<java.util.Map<String, Object>> _children = new java.util.LinkedHashSet<>();
       private Object _name;
@@ -246,7 +249,8 @@ public final class AntlrGroup {
    	}
    }
 
-   public final class AntlrDomainST implements AntlrGroupTemplate {
+   public static final class AntlrDomainST implements AntlrGroupTemplate {
+
 
       private Object _name;
       private java.util.Set<java.util.Map<String, Object>> _nodes = new java.util.LinkedHashSet<>();
@@ -310,7 +314,8 @@ public final class AntlrGroup {
    	}
    }
 
-   public final class grammarBlockST implements AntlrGroupTemplate {
+   public static final class grammarBlockST implements AntlrGroupTemplate {
+
 
       private Object _ebnfSuffix;
       private java.util.Set<Object> _elements = new java.util.LinkedHashSet<>();
@@ -357,7 +362,8 @@ public final class AntlrGroup {
    	}
    }
 
-   public final class grammarParserRuleSpecST implements AntlrGroupTemplate {
+   public static final class grammarParserRuleSpecST implements AntlrGroupTemplate {
+
 
       private Object _name;
       private java.util.Set<Object> _comments = new java.util.LinkedHashSet<>();
@@ -419,7 +425,8 @@ public final class AntlrGroup {
    	}
    }
 
-   public final class grammarST implements AntlrGroupTemplate {
+   public static final class grammarST implements AntlrGroupTemplate {
+
 
       private Object _name;
       private java.util.Set<java.util.Map<String, Object>> _options = new java.util.LinkedHashSet<>();
@@ -481,7 +488,8 @@ public final class AntlrGroup {
    	}
    }
 
-   public final class NeoListenerST implements AntlrGroupTemplate {
+   public static final class NeoListenerST implements AntlrGroupTemplate {
+
 
       private java.util.Set<java.util.Map<String, Object>> _methods = new java.util.LinkedHashSet<>();
       private Object _name;
@@ -562,7 +570,8 @@ public final class AntlrGroup {
    	}
    }
 
-   public final class BaseNodeListenerST implements AntlrGroupTemplate {
+   public static final class BaseNodeListenerST implements AntlrGroupTemplate {
+
 
       private java.util.Set<java.util.Map<String, Object>> _methods = new java.util.LinkedHashSet<>();
       private Object _name;
@@ -643,7 +652,8 @@ public final class AntlrGroup {
    	}
    }
 
-   public final class BaseNodeVisitorST implements AntlrGroupTemplate {
+   public static final class BaseNodeVisitorST implements AntlrGroupTemplate {
+
 
       private java.util.Set<java.util.Map<String, Object>> _methods = new java.util.LinkedHashSet<>();
       private Object _name;
@@ -724,7 +734,8 @@ public final class AntlrGroup {
    	}
    }
 
-   public final class NeoVisitorST implements AntlrGroupTemplate {
+   public static final class NeoVisitorST implements AntlrGroupTemplate {
+
 
       private Object _packageName;
       private Object _parser;
@@ -805,7 +816,8 @@ public final class AntlrGroup {
    	}
    }
 
-   public final class mvnST implements AntlrGroupTemplate {
+   public static final class mvnST implements AntlrGroupTemplate {
+
 
       private Object _version;
 
@@ -1374,7 +1386,7 @@ public final class AntlrGroup {
 			.append("mvn(version) ::= <<<dependency>\n" + 
 		"   <groupId>org.antlr</groupId>\n" + 
 		"   <artifactId>antlr4</artifactId>\n" + 
-		"	<version>~version~</version>\n" + 
+		"	<version>~if(version)~~version~~else~4.7~endif~</version>\n" + 
 		"</dependency> >>\n")
 		.toString();
 }

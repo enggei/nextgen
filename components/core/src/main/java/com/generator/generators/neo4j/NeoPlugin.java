@@ -3,11 +3,8 @@ package com.generator.generators.neo4j;
 import com.generator.app.App;
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.jgoodies.JGoodiesGroup;
-import com.generator.util.GeneratedFile;
+import com.generator.util.*;
 import com.generator.neo.NeoModel;
-import com.generator.util.NeoUtil;
-import com.generator.util.StringUtil;
-import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
@@ -173,6 +170,71 @@ public class NeoPlugin extends Neo4jDomainPlugin {
       super.handleNeoEntity(pop, neoEntityNode, selectedNodes);
 
       if (selectedNodes.isEmpty()) {
+
+         pop.add(new App.TransactionAction("Add Relation to", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+               final SwingUtil.FormPanel formPanel = new SwingUtil.FormPanel("50dlu,4dlu,75dlu", "pref,4dlu,pref,4dlu,pref");
+
+               final JTextField txtRelation = new JTextField();
+               final JComboBox<Cardinality> cboCardinality = new JComboBox<>(Cardinality.values());
+               final JTextField txtEntityName = new JTextField();
+
+               formPanel.addLabel("Relation name", 1, 1);
+               formPanel.add(txtRelation, 3, 1);
+               formPanel.addLabel("Cardinality", 1, 3);
+               formPanel.add(cboCardinality, 3, 3);
+               formPanel.addLabel("Entity name", 1, 5);
+               formPanel.add(txtEntityName, 3, 5);
+
+               SwingUtil.showDialog(formPanel, app, "New relation", new SwingUtil.ConfirmAction() {
+                  @Override
+                  public void verifyAndCommit() throws Exception {
+                     getGraph().doInTransaction(new NeoModel.Committer() {
+                        @Override
+                        public void doAction(Transaction tx) throws Throwable {
+
+                           final String entityName = txtEntityName.getText().trim();
+                           final String relationName = txtRelation.getText().trim().toUpperCase();
+                           final Cardinality cardinality = (Cardinality) cboCardinality.getSelectedItem();
+
+                           if (entityName.length() == 0 || relationName.length() == 0)
+                              throw new IllegalArgumentException("Must have entity and relation name");
+
+                           final Node domainNode = singleIncomingENTITIES(neoEntityNode.getNode());
+
+                           final Single<Node> entityNode = new Single<>();
+                           outgoingENTITIES(domainNode, (relationship, node) -> {
+                              if (getNameProperty(node, "").equals(entityName)) {
+                                 entityNode.setValue(node);
+                              }
+                           });
+
+                           if (!entityNode.hasValue()) {
+                              final Node neoEntity = newNeoEntity(entityName);
+                              relateENTITIES(domainNode, neoEntity);
+                              entityNode.setValue(neoEntity);
+                           }
+
+                           final Node neoRelation = newNeoRelation(relationName, cardinality.name());
+                           relateRELATIONS(domainNode, neoRelation);
+                           relateSRC(neoRelation, neoEntityNode.getNode());
+                           relateDST(neoRelation, entityNode.getValue());
+
+                           fireNodesLoaded(neoRelation, entityNode.getValue());
+                        }
+
+                        @Override
+                        public void exception(Throwable throwable) {
+                           SwingUtil.showException(app, throwable);
+                        }
+                     });
+                  }
+               });
+            }
+         });
+
          pop.add(new App.TransactionAction("Add NeoProperties", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
@@ -184,19 +246,23 @@ public class NeoPlugin extends Neo4jDomainPlugin {
                   final Map<String, JComponent> componentMap = new LinkedHashMap<>();
 
                   componentMap.put("name", new JTextField());
-                  if (i == 0) columns.addElementsValue("50dlu");
+                  if (i == 0) columns.addElementsValue("50dlu").addElementsValue("4dlu").addElementsValue("50dlu");
 
                   componentMap.put("required", new JCheckBox("Required"));
-                  if (i == 0) columns.addElementsValue("4dlu").addElementsValue("10dlu");
+                  if (i == 0)
+                     columns.addElementsValue("4dlu").addElementsValue("50dlu").addElementsValue("4dlu").addElementsValue("10dlu");
 
-                  componentMap.put("required", new JCheckBox("Unique"));
-                  if (i == 0) columns.addElementsValue("4dlu").addElementsValue("10dlu");
+                  componentMap.put("unique", new JCheckBox("Unique"));
+                  if (i == 0)
+                     columns.addElementsValue("4dlu").addElementsValue("50dlu").addElementsValue("4dlu").addElementsValue("10dlu");
 
                   componentMap.put("type", new JComboBox<>(NeoDomainGenerator.NeoPropertyType.values()));
-                  if (i == 0) columns.addElementsValue("4dlu").addElementsValue("75dlu");
+                  if (i == 0)
+                     columns.addElementsValue("4dlu").addElementsValue("50dlu").addElementsValue("4dlu").addElementsValue("75dlu");
 
                   componentMap.put("enums", new JTextField());
-                  if (i == 0) columns.addElementsValue("4dlu").addElementsValue("50dlu");
+                  if (i == 0)
+                     columns.addElementsValue("4dlu").addElementsValue("50dlu").addElementsValue("4dlu").addElementsValue("50dlu");
 
                   propertyMap.add(componentMap);
 
@@ -207,11 +273,16 @@ public class NeoPlugin extends Neo4jDomainPlugin {
                final SwingUtil.FormPanel editor = new SwingUtil.FormPanel(columns.toString(), rows.toString());
                int row = 1;
                for (Map<String, JComponent> componentMap : propertyMap) {
-                  editor.add(componentMap.get("name"), 1, row);
-                  editor.add(componentMap.get("required"), 3, row);
-                  editor.add(componentMap.get("unique"), 5, row);
-                  editor.add(componentMap.get("type"), 7, row);
-                  editor.add(componentMap.get("enums"), 9, row);
+                  editor.addLabel("Name", 1, row);
+                  editor.add(componentMap.get("name"), 3, row);
+                  editor.addLabel("Required", 5, row);
+                  editor.add(componentMap.get("required"), 7, row);
+                  editor.addLabel("Unique", 9, row);
+                  editor.add(componentMap.get("unique"), 11, row);
+                  editor.addLabel("Type", 13, row);
+                  editor.add(componentMap.get("type"), 15, row);
+                  editor.addLabel("Enums", 17, row);
+                  editor.add(componentMap.get("enums"), 19, row);
                   row += 2;
                }
                editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
@@ -458,7 +529,9 @@ public class NeoPlugin extends Neo4jDomainPlugin {
          outgoingRELATIONS(domainNode, (relationRelation, relationNode) -> {
 
             final Node srcNode = singleOutgoingSRC(relationNode);
+            if (srcNode == null) return;
             final Node dstNode = singleOutgoingDST(relationNode);
+            if (dstNode == null) return;
 
             final NeoDomainGenerator.NeoRelation neoRelation = new NeoDomainGenerator.NeoRelation(getNameProperty(relationNode), getNameProperty(srcNode), getNameProperty(dstNode), NeoDomainGenerator.Cardinality.valueOf(getCardinalityProperty(relationNode)));
 

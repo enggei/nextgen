@@ -20,19 +20,27 @@ import static com.generator.util.NeoUtil.*;
  */
 public abstract class DomainDomainPlugin extends Plugin {
 
-	protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DomainDomainPlugin.class);
+	protected final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(DomainDomainPlugin.class);
 
 	public enum Entities implements Label {
       Domain, Visitor, Entity, Relation, Instance, Property, Enumeration, Value
    }
 
    public enum Relations implements RelationshipType {
-      DOMAIN, NAME, VISITOR, VISITORCLASS, ENTITY, SRC, DST, INSTANCE, RELATIONCARDINALITY, PROPERTY, ENUMERATED, VALUE, PACKAGENAME
+      DOMAIN, NAME, VISITOR, VISITORCLASS, ENTITY, SRC, DST, INSTANCE, RELATIONCARDINALITY, PROPERTY, ENUMERATED, VALUE, CONSTRAINT, PACKAGENAME
    }
 
    public enum Properties {
-      name, visitorClass, relationCardinality, value, packageName
+      name, visitorClass, relationCardinality, value, Constraint, packageName
    }
+
+	public enum RelationCardinality {
+		LIST, SINGLE
+	}
+	public enum Constraint {
+		ONLY_ONE, ONE_OF_EACH, MANY_OF_ONE, MANY_OF_MANY
+	}
+
 
 	private static final Map<Label,Node> entitiesNodeMap = new LinkedHashMap<>();
 
@@ -57,6 +65,7 @@ public abstract class DomainDomainPlugin extends Plugin {
 		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Visitor), Properties.visitorClass.name());
 		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Entity), Properties.name.name());
 		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Relation), Properties.relationCardinality.name());
+		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Relation), Properties.Constraint.name());
 		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Property), Properties.name.name());
 		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Enumeration), Properties.value.name());
 
@@ -142,6 +151,29 @@ public abstract class DomainDomainPlugin extends Plugin {
 		if (packageName != null) relate(newNode, DomainMotif.newValueNode(graph, packageName), RelationshipType.withName(Properties.packageName.name())); 	
 		return newNode; 
 	}
+	/* todo
+	public Action newDomainAction() {
+		return new App.TransactionAction("New Domain", app) {
+			@Override
+	   	public void actionPerformed(java.awt.event.ActionEvent e, Transaction tx) throws Exception {
+
+			final Map<String,String> properties = new java.util.HashMap<>();
+			   final String name = com.generator.util.SwingUtil.showInputDialog("name", app);
+				if (name != null && name.length() > 0)
+					properties.put("name", name);
+
+			   final String packageName = com.generator.util.SwingUtil.showInputDialog("packageName", app);
+				if (packageName != null && packageName.length() > 0)
+					properties.put("packageName", packageName);
+
+
+			if (properties.isEmpty()) return;
+
+		   //fireNodesLoaded(new());
+	   	}
+		};
+	}
+	*/
 
 	protected Node newVisitor() { return newVisitor(getGraph()); } 
 	protected Node newVisitor(Object name, Object visitorClass) { return newVisitor(getGraph(), name, visitorClass); } 
@@ -153,6 +185,29 @@ public abstract class DomainDomainPlugin extends Plugin {
 		if (visitorClass != null) relate(newNode, DomainMotif.newValueNode(graph, visitorClass), RelationshipType.withName(Properties.visitorClass.name())); 	
 		return newNode; 
 	}
+	/* todo
+	public Action newVisitorAction() {
+		return new App.TransactionAction("New Visitor", app) {
+			@Override
+	   	public void actionPerformed(java.awt.event.ActionEvent e, Transaction tx) throws Exception {
+
+			final Map<String,String> properties = new java.util.HashMap<>();
+			   final String name = com.generator.util.SwingUtil.showInputDialog("name", app);
+				if (name != null && name.length() > 0)
+					properties.put("name", name);
+
+			   final String visitorClass = com.generator.util.SwingUtil.showInputDialog("visitorClass", app);
+				if (visitorClass != null && visitorClass.length() > 0)
+					properties.put("visitorClass", visitorClass);
+
+
+			if (properties.isEmpty()) return;
+
+		   //fireNodesLoaded(new());
+	   	}
+		};
+	}
+	*/
 
 	protected Node newEntity() { return newEntity(getGraph()); } 
 	protected Node newEntity(Object name) { return newEntity(getGraph(), name); } 
@@ -163,19 +218,77 @@ public abstract class DomainDomainPlugin extends Plugin {
 		if (name != null) relate(newNode, DomainMotif.newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
 		return newNode; 
 	}
+	/* todo
+	public Action newEntityAction() {
+		return new App.TransactionAction("New Entity", app) {
+			@Override
+	   	public void actionPerformed(java.awt.event.ActionEvent e, Transaction tx) throws Exception {
+
+			final Map<String,String> properties = new java.util.HashMap<>();
+			   final String name = com.generator.util.SwingUtil.showInputDialog("name", app);
+				if (name != null && name.length() > 0)
+					properties.put("name", name);
+
+
+			if (properties.isEmpty()) return;
+
+		   //fireNodesLoaded(new());
+	   	}
+		};
+	}
+	*/
 
 	protected Node newRelation() { return newRelation(getGraph()); } 
-	protected Node newRelation(Object relationCardinality) { return newRelation(getGraph(), relationCardinality); } 
+	protected Node newRelation(Object relationCardinality, Object Constraint) { return newRelation(getGraph(), relationCardinality, Constraint); } 
 
 	public static Node newRelation(NeoModel graph) { return DomainMotif.newInstanceNode(graph, entitiesNodeMap.get(Entities.Relation)); } 
-	public static Node newRelation(NeoModel graph, Object relationCardinality) {  	
+	public static Node newRelation(NeoModel graph, Object relationCardinality, Object Constraint) {  	
 		final Node newNode = newRelation(graph); 	
-		if (relationCardinality != null) relate(newNode, DomainMotif.newValueNode(graph, relationCardinality), RelationshipType.withName(Properties.relationCardinality.name())); 	
+		if (relationCardinality != null) relate(newNode, DomainMotif.newValueNode(graph, relationCardinality), RelationshipType.withName(Properties.relationCardinality.name()));
+		if (Constraint != null) relate(newNode, DomainMotif.newValueNode(graph, Constraint), RelationshipType.withName(Properties.Constraint.name())); 	
 		return newNode; 
 	}
+	/* todo
+	public Action newRelationAction() {
+		return new App.TransactionAction("New Relation", app) {
+			@Override
+	   	public void actionPerformed(java.awt.event.ActionEvent e, Transaction tx) throws Exception {
+
+			final Map<String,String> properties = new java.util.HashMap<>();
+			   final String relationCardinality = com.generator.util.SwingUtil.showInputDialog("relationCardinality", app);
+				if (relationCardinality != null && relationCardinality.length() > 0)
+					properties.put("relationCardinality", relationCardinality);
+
+			   final String Constraint = com.generator.util.SwingUtil.showInputDialog("Constraint", app);
+				if (Constraint != null && Constraint.length() > 0)
+					properties.put("Constraint", Constraint);
+
+
+			if (properties.isEmpty()) return;
+
+		   //fireNodesLoaded(new());
+	   	}
+		};
+	}
+	*/
 
 	protected Node newInstance() { return newInstance(getGraph()); }
 	public static Node newInstance(NeoModel graph) { return DomainMotif.newInstanceNode(graph, entitiesNodeMap.get(Entities.Instance)); }
+	/* todo
+	public Action newInstanceAction() {
+		return new App.TransactionAction("New Instance", app) {
+			@Override
+	   	public void actionPerformed(java.awt.event.ActionEvent e, Transaction tx) throws Exception {
+
+			final Map<String,String> properties = new java.util.HashMap<>();
+
+			if (properties.isEmpty()) return;
+
+		   //fireNodesLoaded(new());
+	   	}
+		};
+	}
+	*/
 
 	protected Node newProperty() { return newProperty(getGraph()); } 
 	protected Node newProperty(Object name) { return newProperty(getGraph(), name); } 
@@ -186,6 +299,25 @@ public abstract class DomainDomainPlugin extends Plugin {
 		if (name != null) relate(newNode, DomainMotif.newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
 		return newNode; 
 	}
+	/* todo
+	public Action newPropertyAction() {
+		return new App.TransactionAction("New Property", app) {
+			@Override
+	   	public void actionPerformed(java.awt.event.ActionEvent e, Transaction tx) throws Exception {
+
+			final Map<String,String> properties = new java.util.HashMap<>();
+			   final String name = com.generator.util.SwingUtil.showInputDialog("name", app);
+				if (name != null && name.length() > 0)
+					properties.put("name", name);
+
+
+			if (properties.isEmpty()) return;
+
+		   //fireNodesLoaded(new());
+	   	}
+		};
+	}
+	*/
 
 	protected Node newEnumeration() { return newEnumeration(getGraph()); } 
 	protected Node newEnumeration(Object value) { return newEnumeration(getGraph(), value); } 
@@ -196,9 +328,43 @@ public abstract class DomainDomainPlugin extends Plugin {
 		if (value != null) relate(newNode, DomainMotif.newValueNode(graph, value), RelationshipType.withName(Properties.value.name())); 	
 		return newNode; 
 	}
+	/* todo
+	public Action newEnumerationAction() {
+		return new App.TransactionAction("New Enumeration", app) {
+			@Override
+	   	public void actionPerformed(java.awt.event.ActionEvent e, Transaction tx) throws Exception {
+
+			final Map<String,String> properties = new java.util.HashMap<>();
+			   final String value = com.generator.util.SwingUtil.showInputDialog("value", app);
+				if (value != null && value.length() > 0)
+					properties.put("value", value);
+
+
+			if (properties.isEmpty()) return;
+
+		   //fireNodesLoaded(new());
+	   	}
+		};
+	}
+	*/
 
 	protected Node newValue() { return newValue(getGraph()); }
 	public static Node newValue(NeoModel graph) { return DomainMotif.newInstanceNode(graph, entitiesNodeMap.get(Entities.Value)); }
+	/* todo
+	public Action newValueAction() {
+		return new App.TransactionAction("New Value", app) {
+			@Override
+	   	public void actionPerformed(java.awt.event.ActionEvent e, Transaction tx) throws Exception {
+
+			final Map<String,String> properties = new java.util.HashMap<>();
+
+			if (properties.isEmpty()) return;
+
+		   //fireNodesLoaded(new());
+	   	}
+		};
+	}
+	*/
 
 
 	public static void outgoingDOMAIN(Node src, RelationConsumer consumer) { outgoing(src, Relations.DOMAIN).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
@@ -261,6 +427,11 @@ public abstract class DomainDomainPlugin extends Plugin {
 	public static void incomingVALUE(Node src, RelationConsumer consumer) { incoming(src, Relations.VALUE).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
 	public static Node singleIncomingVALUE(Node src) { return other(src, singleIncoming(src, Relations.VALUE)); }
 
+	public static void outgoingCONSTRAINT(Node src, RelationConsumer consumer) { outgoing(src, Relations.CONSTRAINT).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleOutgoingCONSTRAINT(Node src) { return other(src, singleOutgoing(src, Relations.CONSTRAINT)); }
+	public static void incomingCONSTRAINT(Node src, RelationConsumer consumer) { incoming(src, Relations.CONSTRAINT).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleIncomingCONSTRAINT(Node src) { return other(src, singleIncoming(src, Relations.CONSTRAINT)); }
+
 	public static void outgoingPACKAGENAME(Node src, RelationConsumer consumer) { outgoing(src, Relations.PACKAGENAME).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
 	public static Node singleOutgoingPACKAGENAME(Node src) { return other(src, singleOutgoing(src, Relations.PACKAGENAME)); }
 	public static void incomingPACKAGENAME(Node src, RelationConsumer consumer) { incoming(src, Relations.PACKAGENAME).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
@@ -279,6 +450,7 @@ public abstract class DomainDomainPlugin extends Plugin {
 	public static Relationship relatePROPERTY(Node src, Node dst) { return relate(src, dst, Relations.PROPERTY); }
 	public static Relationship relateENUMERATED(Node src, Node dst) { return relate(src, dst, Relations.ENUMERATED); }
 	public static Relationship relateVALUE(Node src, Node dst) { return relate(src, dst, Relations.VALUE); }
+	public static Relationship relateCONSTRAINT(Node src, Node dst) { return relate(src, dst, Relations.CONSTRAINT); }
 	public static Relationship relatePACKAGENAME(Node src, Node dst) { return relate(src, dst, Relations.PACKAGENAME); }
 
 	// name
@@ -316,6 +488,15 @@ public abstract class DomainDomainPlugin extends Plugin {
 	public static <T extends PropertyContainer> T removeValueProperty(T container) { DomainMotif.removeEntityProperty(container, Properties.value.name()); return container; }
 
 	protected <T extends PropertyContainer> T setValueProperty(T container, Object value) { setValueProperty(getGraph(), container, value); return container; }
+
+	// Constraint
+	public static <T> T getConstraintProperty(PropertyContainer container) { return getConstraintProperty(container, null); }
+	public static <T> T getConstraintProperty(PropertyContainer container, T defaultValue) { return DomainMotif.getEntityProperty(container, Properties.Constraint.name(), defaultValue); }
+	public static boolean hasConstraintProperty(PropertyContainer container) { return DomainMotif.hasEntityProperty(container, Properties.Constraint.name()); }
+	public static <T extends PropertyContainer> T setConstraintProperty(NeoModel graph, T container, Object value) { DomainMotif.setEntityProperty(graph, container, Properties.Constraint.name(), value); return container; }
+	public static <T extends PropertyContainer> T removeConstraintProperty(T container) { DomainMotif.removeEntityProperty(container, Properties.Constraint.name()); return container; }
+
+	protected <T extends PropertyContainer> T setConstraintProperty(T container, Object value) { setConstraintProperty(getGraph(), container, value); return container; }
 
 	// packageName
 	public static <T> T getPackageNameProperty(PropertyContainer container) { return getPackageNameProperty(container, null); }

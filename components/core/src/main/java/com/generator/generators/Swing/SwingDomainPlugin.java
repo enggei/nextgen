@@ -4,6 +4,7 @@ import com.generator.app.App;
 import com.generator.app.DomainMotif;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
+import com.generator.generators.domain.DomainDomainPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.neo.NeoModel;
 import org.neo4j.graphdb.*;
@@ -50,8 +51,8 @@ public abstract class SwingDomainPlugin extends Plugin {
 		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Column), Properties.index.name());
 
 		relate(domainNode, entitiesNodeMap.get(Entities.FormPanel), DomainPlugin.Relations.ENTITY);
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.FormPanel), Relations.ROW.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Row));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.FormPanel), Relations.COL.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Column));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.FormPanel), Relations.ROW.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Row));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.FormPanel), Relations.COL.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Column));
    }
 
    @Override

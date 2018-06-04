@@ -4,6 +4,7 @@ import com.generator.app.App;
 import com.generator.app.DomainMotif;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
+import com.generator.generators.domain.DomainDomainPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.neo.NeoModel;
 import org.neo4j.graphdb.*;
@@ -62,16 +63,16 @@ public abstract class MySQLDomainPlugin extends Plugin {
 
 		relate(domainNode, entitiesNodeMap.get(Entities.Database), DomainPlugin.Relations.ENTITY);
 		relate(domainNode, entitiesNodeMap.get(Entities.Sql_statements), DomainPlugin.Relations.ENTITY);
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Database), Relations.TABLE.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Table));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Database), Relations.QUERY.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Query));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Table), Relations.COLUMN.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Column));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Table), Relations.TABLE_REFERENCE.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Index));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Column), Relations.FK_SRC.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.ForeignKey));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.ForeignKey), Relations.FK_DST.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Column));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Index), Relations.INDEXCOLUMN.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Column));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Index), Relations.INDEX_TABLE_REFERENCE.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Table));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Query), Relations.QUERY_TABLE.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Table));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Query), Relations.QUERY_COLUMN.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Column));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Database), Relations.TABLE.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Table));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Database), Relations.QUERY.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Query));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Table), Relations.COLUMN.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Column));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Table), Relations.TABLE_REFERENCE.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Index));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Column), Relations.FK_SRC.name(), DomainDomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.ForeignKey));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.ForeignKey), Relations.FK_DST.name(), DomainDomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Column));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Index), Relations.INDEXCOLUMN.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Column));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Index), Relations.INDEX_TABLE_REFERENCE.name(), DomainDomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Table));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Query), Relations.QUERY_TABLE.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Table));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Query), Relations.QUERY_COLUMN.name(), DomainDomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Column));
    }
 
    @Override

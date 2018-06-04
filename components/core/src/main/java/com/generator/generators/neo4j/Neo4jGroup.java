@@ -130,6 +130,18 @@ public final class Neo4jGroup {
       return new verticle_relateST(stGroup);
    }
 
+   public verticle_map_entityST newverticle_map_entity() {
+      return new verticle_map_entityST(stGroup);
+   }
+
+   public verticle_get_singleST newverticle_get_single() {
+      return new verticle_get_singleST(stGroup);
+   }
+
+   public verticle_get_manyST newverticle_get_many() {
+      return new verticle_get_manyST(stGroup);
+   }
+
    public static final class mvnST implements Neo4jGroupTemplate {
 
 
@@ -976,6 +988,7 @@ public final class Neo4jGroup {
       private Object _name;
       private java.util.Set<java.util.Map<String, Object>> _outgoing = new java.util.LinkedHashSet<>();
       private Object _packageName;
+      private java.util.Set<Object> _mappings = new java.util.LinkedHashSet<>();
 
       private final ST template;
 
@@ -1074,6 +1087,20 @@ public final class Neo4jGroup {
 
       public String getPackageName() {
       	return (String) this._packageName;
+      }
+
+      public DomainVerticleST addMappingsValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._mappings.add(value);
+      	template.add("mappings", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getMappingsValues() {
+      	return this._mappings;
       }
 
       @Override
@@ -1475,7 +1502,6 @@ public final class Neo4jGroup {
 
 
       private Object _label;
-      private java.util.Set<java.util.Map<String, Object>> _properties = new java.util.LinkedHashSet<>();
 
       private final ST template;
 
@@ -1497,19 +1523,6 @@ public final class Neo4jGroup {
 
       public String getLabel() {
       	return (String) this._label;
-      }
-
-      public verticle_get_entityST addPropertiesValue(Object name_) {
-      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
-      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
-      	this._properties.add(map);
-
-         template.addAggr("properties.{name}", map.get("name"));
-         return this;
-      }
-
-      public java.util.Set<java.util.Map<String, Object>> getProperties() {
-      	return this._properties;
       }
 
       @Override
@@ -1641,6 +1654,221 @@ public final class Neo4jGroup {
 
       public String getRelation() {
       	return (String) this._relation;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public static final class verticle_map_entityST implements Neo4jGroupTemplate {
+
+
+      private java.util.Set<java.util.Map<String, Object>> _properties = new java.util.LinkedHashSet<>();
+      private Object _label;
+
+      private final ST template;
+
+      private verticle_map_entityST(STGroup group) {
+   		template = group.getInstanceOf("verticle_map_entity");
+   	}
+
+      public verticle_map_entityST addPropertiesValue(Object name_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	this._properties.add(map);
+
+         template.addAggr("properties.{name}", map.get("name"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getProperties() {
+      	return this._properties;
+      }
+
+      public verticle_map_entityST setLabel(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._label == null) {
+            this._label = value;
+         	template.add("label", value);
+         }
+
+      	return this;
+      }
+
+      public String getLabel() {
+      	return (String) this._label;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public static final class verticle_get_singleST implements Neo4jGroupTemplate {
+
+
+      private Object _src;
+      private Object _relation;
+      private Object _direction;
+      private Object _dst;
+
+      private final ST template;
+
+      private verticle_get_singleST(STGroup group) {
+   		template = group.getInstanceOf("verticle_get_single");
+   	}
+
+      public verticle_get_singleST setSrc(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._src == null) {
+            this._src = value;
+         	template.add("src", value);
+         }
+
+      	return this;
+      }
+
+      public String getSrc() {
+      	return (String) this._src;
+      }
+
+      public verticle_get_singleST setRelation(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._relation == null) {
+            this._relation = value;
+         	template.add("relation", value);
+         }
+
+      	return this;
+      }
+
+      public String getRelation() {
+      	return (String) this._relation;
+      }
+
+      public verticle_get_singleST setDirection(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._direction == null) {
+            this._direction = value;
+         	template.add("direction", value);
+         }
+
+      	return this;
+      }
+
+      public String getDirection() {
+      	return (String) this._direction;
+      }
+
+      public verticle_get_singleST setDst(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._dst == null) {
+            this._dst = value;
+         	template.add("dst", value);
+         }
+
+      	return this;
+      }
+
+      public String getDst() {
+      	return (String) this._dst;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public static final class verticle_get_manyST implements Neo4jGroupTemplate {
+
+
+      private Object _direction;
+      private Object _dst;
+      private Object _relation;
+      private Object _src;
+
+      private final ST template;
+
+      private verticle_get_manyST(STGroup group) {
+   		template = group.getInstanceOf("verticle_get_many");
+   	}
+
+      public verticle_get_manyST setDirection(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._direction == null) {
+            this._direction = value;
+         	template.add("direction", value);
+         }
+
+      	return this;
+      }
+
+      public String getDirection() {
+      	return (String) this._direction;
+      }
+
+      public verticle_get_manyST setDst(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._dst == null) {
+            this._dst = value;
+         	template.add("dst", value);
+         }
+
+      	return this;
+      }
+
+      public String getDst() {
+      	return (String) this._dst;
+      }
+
+      public verticle_get_manyST setRelation(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._relation == null) {
+            this._relation = value;
+         	template.add("relation", value);
+         }
+
+      	return this;
+      }
+
+      public String getRelation() {
+      	return (String) this._relation;
+      }
+
+      public verticle_get_manyST setSrc(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._src == null) {
+            this._src = value;
+         	template.add("src", value);
+         }
+
+      	return this;
+      }
+
+      public String getSrc() {
+      	return (String) this._src;
       }
 
       @Override
@@ -1807,7 +2035,7 @@ public final class Neo4jGroup {
 		"final Node node = newNode(db, \"~label~\");\n" + 
 		"~properties:{it|map~if(it.isEnum)~String~else~~it.type~~endif~(message, node, \"~it.name~\");};separator=\"\\n\"~\n" + 
 		"\n" + 
-		"message.reply(newSuccess(node.getProperty(\"_uuid\").toString()));>>\n")
+		"message.reply(newSuccess(map~label~toJson(node)));>>\n")
 			.append("NeoUtil(packageName) ::= <<package ~packageName~;\n" + 
 		"\n" + 
 		"import org.neo4j.graphdb.*;\n" + 
@@ -2325,6 +2553,13 @@ public final class Neo4jGroup {
 		"   \n" + 
 		"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 		"\n" + 
+		"	public static GraphDatabaseService newDatabase(String path) {\n" + 
+		"		return new org.neo4j.graphdb.factory.GraphDatabaseFactory().\n" + 
+		"				newEmbeddedDatabaseBuilder(new java.io.File(path)).\n" + 
+		"				setConfig(org.neo4j.graphdb.factory.GraphDatabaseSettings.allow_store_upgrade, \"true\").\n" + 
+		"				newGraphDatabase();\n" + 
+		"	}\n" + 
+		"\n" + 
 		"	public static String getUuid(Node node) {\n" + 
 		"		return (String) node.getProperty(Properties._uuid.name());\n" + 
 		"	}\n" + 
@@ -2469,7 +2704,7 @@ public final class Neo4jGroup {
 		"   	if (consumer.handle(relationship, other)) break;\n" + 
 		"	}\n" + 
 		"}>>\n")
-			.append("DomainVerticle(hazelcastConfig,implementation,incoming,name,outgoing,packageName) ::= <<package ~packageName~;\n" + 
+			.append("DomainVerticle(hazelcastConfig,implementation,incoming,name,outgoing,packageName,mappings) ::= <<package ~packageName~;\n" + 
 		"\n" + 
 		"import io.vertx.core.AbstractVerticle;\n" + 
 		"import io.vertx.core.Future;\n" + 
@@ -2484,7 +2719,11 @@ public final class Neo4jGroup {
 		"import java.io.File;\n" + 
 		"import java.util.UUID;\n" + 
 		"\n" + 
-		"abstract class ~name~ extends AbstractVerticle {\n" + 
+		"public abstract class ~name~ extends AbstractVerticle {\n" + 
+		"\n" + 
+		"	~incoming:{it|public static final String ~it.name;format=\"toUpper\"~ = \"~it.address~\";};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"	~outgoing:{it|public static final String ~it.name;format=\"toUpper\"~ = \"~it.address~\";};separator=\"\\n\"~\n" + 
 		"\n" + 
 		"   protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" + 
 		"\n" + 
@@ -2510,11 +2749,16 @@ public final class Neo4jGroup {
 		"                  newGraphDatabase();\n" + 
 		"\n" + 
 		"            try (Transaction tx = db.beginTx()) {\n" + 
-		"               onStart(startFuture);\n" + 
-		"               tx.success();\n" + 
+		"               try {\n" + 
+		"                  onDatabaseStarted(tx, config());\n" + 
+		"                  tx.success();\n" + 
+		"                  future.complete();\n" + 
+		"               } catch (Exception e) {\n" + 
+		"                  log.error(deploymentID() + \" exception onDatabaseStarted \" + e.getMessage(), e);\n" + 
+		"                  tx.failure();\n" + 
+		"                  future.fail(e);\n" + 
+		"               }\n" + 
 		"            }\n" + 
-		"\n" + 
-		"            future.complete();\n" + 
 		"\n" + 
 		"         } catch (Throwable throwable) {\n" + 
 		"            log.error(\"executeBlocking exception : \" + throwable.getMessage(), throwable);\n" + 
@@ -2532,13 +2776,24 @@ public final class Neo4jGroup {
 		"            vertx.eventBus().consumer(deploymentID(), this::handleInstanceMessage);\n" + 
 		"\n" + 
 		"				~incoming:{it|log.info(\"consumer \" + deploymentID() + \" handles '~it.address~'\");\n" + 
-		"vertx.eventBus().consumer(\"~it.address~\", new TransactionMessageHandler(\"~it.address~\", on~it.name;format=\"capitalize\"~()));};separator=\"\\n\\n\"~\n" + 
+		"vertx.eventBus().consumer(~it.name;format=\"toUpper\"~, new TransactionMessageHandler(\"~it.address~\", on~it.name;format=\"capitalize\"~()));};separator=\"\\n\\n\"~\n" + 
 		"\n" + 
 		"            startFuture.complete();\n" + 
 		"         }\n" + 
 		"      });\n" + 
 		"	}\n" + 
 		"	\n" + 
+		"	@Override\n" + 
+		"   public void stop(Future<Void> stopFuture) throws Exception {\n" + 
+		"      \n" + 
+		"      if (db != null) {\n" + 
+		"         log.info(\"shutting down db\");\n" + 
+		"         db.shutdown();\n" + 
+		"      }\n" + 
+		"      \n" + 
+		"      super.stop(stopFuture);\n" + 
+		"   }\n" + 
+		"\n" + 
 		"	protected interface TransactionalMessageHandler {\n" + 
 		"\n" + 
 		"      void handle(Transaction tx, Message<JsonObject> message) throws Exception;\n" + 
@@ -2585,7 +2840,7 @@ public final class Neo4jGroup {
 		"\n" + 
 		"	protected void handleInstanceMessage(Message<JsonObject> message) { log.info(\"handle instance message \" + deploymentID() + \" \" + message.body().toString()); }\n" + 
 		"\n" + 
-		"	protected void onStart(Future<Void> startFuture) {\n" + 
+		"	protected void onDatabaseStarted(Transaction tx, JsonObject config) throws Exception {\n" + 
 		"  	}\n" + 
 		"\n" + 
 		"	private enum ResponseStatus {\n" + 
@@ -2635,11 +2890,22 @@ public final class Neo4jGroup {
 		"            put(\"payload\", payload);\n" + 
 		"   }\n" + 
 		"\n" + 
-		"   protected static JsonObject newException(Exception e) {\n" + 
+		"   protected static JsonObject newException(Throwable e) {\n" + 
+		"\n" + 
+		"      final JsonArray stacktrace = new JsonArray();\n" + 
+		"      for (StackTraceElement stackTraceElement : e.getStackTrace())\n" + 
+		"         stacktrace.add(new JsonObject().\n" + 
+		"               put(\"declaringClass\", stackTraceElement.getClassName()).\n" + 
+		"               put(\"methodName\", stackTraceElement.getMethodName()).\n" + 
+		"               put(\"fileName\", stackTraceElement.getFileName()).\n" + 
+		"               put(\"lineNumber\", stackTraceElement.getLineNumber()));\n" + 
+		"\n" + 
 		"      return new JsonObject().\n" + 
 		"            put(\"status\", ResponseStatus.FAIL).\n" + 
 		"            put(\"payloadType\", PayloadType.EXCEPTION).\n" + 
-		"            put(\"payload\", e.getMessage());\n" + 
+		"            put(\"payload\", new JsonObject().\n" + 
+		"                  put(\"message\", e.getMessage() == null ? \"null\" : e.getMessage()).\n" + 
+		"                  put(\"stackTrace\", stacktrace));\n" + 
 		"   }\n" + 
 		"\n" + 
 		"	private static Relationship relate(Node source, Node target, RelationshipType relationshipType, Object... properties) {\n" + 
@@ -2661,31 +2927,33 @@ public final class Neo4jGroup {
 		"      return relationship;\n" + 
 		"   }\n" + 
 		"\n" + 
-		"	private static void mapString(Message<JsonObject> message, Node node, String name) {\n" + 
+		"	protected static void mapString(Message<JsonObject> message, Node node, String name) {\n" + 
 		"      if (message.body().getString(name) != null) node.setProperty(name, message.body().getString(name));\n" + 
 		"   }\n" + 
 		"\n" + 
-		"	private static void mapInteger(Message<JsonObject> message, Node node, String name) {\n" + 
+		"	protected static void mapInteger(Message<JsonObject> message, Node node, String name) {\n" + 
 		"      if (message.body().getInteger(name) != null) node.setProperty(name, message.body().getInteger(name));\n" + 
 		"   }\n" + 
 		"\n" + 
-		"	private static void mapLong(Message<JsonObject> message, Node node, String name) {\n" + 
+		"	protected static void mapLong(Message<JsonObject> message, Node node, String name) {\n" + 
 		"      if (message.body().getLong(name) != null) node.setProperty(name, message.body().getLong(name));\n" + 
 		"   }\n" + 
 		"\n" + 
-		"	private static void mapBoolean(Message<JsonObject> message, Node node, String name) {\n" + 
+		"	protected static void mapBoolean(Message<JsonObject> message, Node node, String name) {\n" + 
 		"      if (message.body().getBoolean(name) != null) node.setProperty(name, message.body().getBoolean(name));\n" + 
 		"   }\n" + 
 		"\n" + 
-		"	private static void map(String name, JsonObject jsonObject, Node node) {\n" + 
+		"	protected static void map(String name, JsonObject jsonObject, Node node) {\n" + 
 		"      if (node.hasProperty(name))\n" + 
 		"         jsonObject.put(name, node.getProperty(name));\n" + 
 		"   }\n" + 
 		"\n" + 
-		"	private static void map(JsonArray properties, String name, JsonObject jsonObject, Node node) {\n" + 
+		"	protected static void map(JsonArray properties, String name, JsonObject jsonObject, Node node) {\n" + 
 		"      if ((properties == null || properties.contains(name)) && node.hasProperty(name))\n" + 
 		"         jsonObject.put(name, node.getProperty(name));\n" + 
 		"   }\n" + 
+		"\n" + 
+		"	~mappings:{it|~it~};separator=\"\\n\\n\"~\n" + 
 		"\n" + 
 		"	private static Node newNode(GraphDatabaseService db, String label) {\n" + 
 		"      final Node node = db.createNode(Label.label(label));\n" + 
@@ -2843,7 +3111,7 @@ public final class Neo4jGroup {
 		"\n" + 
 		"~properties:{it|map~if(it.isEnum)~String~else~~it.type~~endif~(message, node, \"~it.name~\");};separator=\"\\n\"~\n" + 
 		"\n" + 
-		"message.reply(newSuccess(new JsonObject().put(\"uuid\", node.getProperty(\"_uuid\"))));>>\n")
+		"message.reply(newSuccess(map~label~toJson(node)));>>\n")
 			.append("verticle_delete_entity(label) ::= <<final Node node = db.findNode(Label.label(\"~label~\"), \"_uuid\", message.body().getString(\"uuid\"));\n" + 
 		"if (node == null) {\n" + 
 		"	message.reply(newFail(\"~label~ \" + message.body().getString(\"uuid\") + \" not found\"));\n" + 
@@ -2853,16 +3121,13 @@ public final class Neo4jGroup {
 		"final String uuid = deleteNode(node);\n" + 
 		"\n" + 
 		"message.reply(newSuccess(uuid));>>\n")
-			.append("verticle_get_entity(label,properties) ::= <<final Node node = db.findNode(Label.label(\"~label~\"), \"_uuid\", message.body().getString(\"uuid\"));\n" + 
+			.append("verticle_get_entity(label) ::= <<final Node node = db.findNode(Label.label(\"~label~\"), \"_uuid\", message.body().getString(\"uuid\"));\n" + 
 		"if (node == null) {\n" + 
 		"   message.reply(newFail(\"~label~ \" + message.body().getString(\"uuid\") + \" not found\"));\n" + 
 		"   return;\n" + 
 		"}\n" + 
 		"\n" + 
-		"final JsonObject result = new JsonObject();\n" + 
-		"result.put(\"uuid\", node.getProperty(\"_uuid\"));\n" + 
-		"~properties:{it|map(\"~it.name~\", result, node);};separator=\"\\n\"~\n" + 
-		"message.reply(newSuccess(result));>>\n")
+		"message.reply(newSuccess(map~label~toJson(node)));>>\n")
 			.append("verticle_get_all_entities(label,properties) ::= <<final JsonArray properties = message.body().getJsonArray(\"properties\");\n" + 
 		"final JsonArray result = new JsonArray();\n" + 
 		"db.findNodes(Label.label(\"~label~\")).forEachRemaining(node -> {\n" + 
@@ -2889,5 +3154,38 @@ public final class Neo4jGroup {
 		"~properties:{it|~if(it.isRequired)~relation.setProperty(\"~it.name~\", message.body().get~if(it.isEnum)~String~else~~it.type~~endif~(\"~it.name~\"));~else~if (message.body().get~if(it.isEnum)~String~else~~it.type~~endif~(\"~it.name~\") != null) relation.setProperty(\"~it.name~\", message.body().get~if(it.isEnum)~String~else~~it.type~~endif~(\"~it.name~\"));~endif~};separator=\"\\n\"~\n" + 
 		"\n" + 
 		"message.reply(newSuccess(\"\"));>>\n")
+			.append("verticle_map_entity(properties,label) ::= <<protected JsonObject map~label~toJson(Node node) {\n" + 
+		"	final JsonObject result = new JsonObject();\n" + 
+		"	result.put(\"uuid\", node.getProperty(\"_uuid\"));\n" + 
+		"	~properties:{it|map(\"~it.name~\", result, node);};separator=\"\\n\"~\n" + 
+		"	return result;\n" + 
+		"}>>\n")
+			.append("verticle_get_single(src,relation,direction,dst) ::= <<final Node paramNode = db.findNode(Label.label(\"~src~\"), \"_uuid\", message.body().getString(\"uuid\"));\n" + 
+		"if (paramNode == null) {\n" + 
+		"   message.reply(newFail(\"~src~ \" + message.body().getString(\"uuid\") + \" not found\"));\n" + 
+		"	return;\n" + 
+		"}\n" + 
+		"\n" + 
+		"final Relationship relation = paramNode.getSingleRelationship(RelationshipType.withName(\"~relation~\"), Direction.~direction~);\n" + 
+		"final Node node = relation == null ? null : other(paramNode, relation);\n" + 
+		"if (node == null) {\n" + 
+		"   message.reply(newFail(\"~dst~ not found\"));\n" + 
+		"	return;\n" + 
+		"}\n" + 
+		"\n" + 
+		"message.reply(newSuccess(map~src~toJson(node)));>>\n")
+			.append("verticle_get_many(direction,dst,relation,src) ::= <<final Node paramNode = db.findNode(Label.label(\"~src~\"), \"_uuid\", message.body().getString(\"uuid\"));\n" + 
+		"\n" + 
+		"if (paramNode == null) {\n" + 
+		"   message.reply(newFail(\"~src~ \" + message.body().getString(\"uuid\") + \" not found\"));\n" + 
+		"	return;\n" + 
+		"}\n" + 
+		"\n" + 
+		"final JsonArray result = new JsonArray();\n" + 
+		"paramNode.getRelationships(Direction.~direction~, RelationshipType.withName(\"~relation~\")).forEach(relationship -> {\n" + 
+		"	result.add(map~dst~toJson(relationship.getOtherNode(paramNode)));\n" + 
+		"});\n" + 
+		"\n" + 
+		"message.reply(newSuccess(result));>>\n")
 		.toString();
 }

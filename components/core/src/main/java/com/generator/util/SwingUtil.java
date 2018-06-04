@@ -33,6 +33,10 @@ import static javax.swing.JOptionPane.*;
 public class SwingUtil {
    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SwingUtil.class);
 
+   public static Font getDefaultFont() {
+      return new Font("Hack", Font.PLAIN, 10);
+   }
+
    public static JTextArea newTextArea() {
       final JTextArea txtEditor = new JTextArea(30, 30);
       txtEditor.setFont(new Font("Hack", Font.PLAIN, 10));
@@ -98,7 +102,7 @@ public class SwingUtil {
       panel.add(new JLabel(title + " : "), BorderLayout.NORTH);
 
       final JTextArea txtEditor = new JTextArea(text);
-      txtEditor.setFont(com.generator.app.AppMotif.getDefaultFont());
+      txtEditor.setFont(getDefaultFont());
       txtEditor.setTabSize(3);
       txtEditor.setCaretPosition(0);
 //      txtEditor.setEditable(false);

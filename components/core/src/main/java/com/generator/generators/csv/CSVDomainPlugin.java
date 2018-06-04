@@ -4,6 +4,7 @@ import com.generator.app.App;
 import com.generator.app.DomainMotif;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
+import com.generator.generators.domain.DomainDomainPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.neo.NeoModel;
 import org.neo4j.graphdb.*;
@@ -52,11 +53,11 @@ public abstract class CSVDomainPlugin extends Plugin {
 		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Value), Properties.isString.name());
 
 		relate(domainNode, entitiesNodeMap.get(Entities.CSV), DomainPlugin.Relations.ENTITY);
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.CSV), Relations.HEADER.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Header));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.CSV), Relations.ROW.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Row));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Header), Relations.COLUMNS.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.HeaderColumn));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Row), Relations.VALUE.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Value));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Value), Relations.HEADER.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.HeaderColumn));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.CSV), Relations.HEADER.name(), DomainDomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Header));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.CSV), Relations.ROW.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Row));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Header), Relations.COLUMNS.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.HeaderColumn));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Row), Relations.VALUE.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Value));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Value), Relations.HEADER.name(), DomainDomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.HeaderColumn));
    }
 
    @Override

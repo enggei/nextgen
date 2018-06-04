@@ -4,6 +4,7 @@ import com.generator.app.App;
 import com.generator.app.DomainMotif;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
+import com.generator.generators.domain.DomainDomainPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.neo.NeoModel;
 import org.neo4j.graphdb.*;
@@ -67,13 +68,13 @@ public abstract class ProjectDomainPlugin extends Plugin {
 
 		relate(domainNode, entitiesNodeMap.get(Entities.Project), DomainPlugin.Relations.ENTITY);
 		relate(domainNode, entitiesNodeMap.get(Entities.Node), DomainPlugin.Relations.ENTITY);
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Project), Relations.DIRECTORY.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Directory));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Project), Relations.GENERATOR.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.STGroup));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Project), Relations.GENERATOR_ROOT.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Directory));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Directory), Relations.CHILD.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Directory));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Directory), Relations.FILE.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.File));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.STGroup), Relations.TEMPLATE.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.STTemplate));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Node), Relations.RENDERER.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Visitor));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Project), Relations.DIRECTORY.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Directory));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Project), Relations.GENERATOR.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.STGroup));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Project), Relations.GENERATOR_ROOT.name(), DomainDomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Directory));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Directory), Relations.CHILD.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Directory));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Directory), Relations.FILE.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.File));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.STGroup), Relations.TEMPLATE.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.STTemplate));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Node), Relations.RENDERER.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Visitor));
    }
 
    @Override

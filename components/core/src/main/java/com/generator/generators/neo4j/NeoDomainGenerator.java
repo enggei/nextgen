@@ -265,6 +265,7 @@ public final class NeoDomainGenerator {
          final Neo4jGroup.verticle_delete_entityST verticle_delete_entityST = group.newverticle_delete_entity().setLabel(entity);
          final Neo4jGroup.verticle_get_all_entitiesST verticle_get_all_entitiesST = group.newverticle_get_all_entities().setLabel(entity);
          final Neo4jGroup.verticle_get_entityST verticle_get_entityST = group.newverticle_get_entity().setLabel(entity);
+         final Neo4jGroup.verticle_map_entityST verticle_map_entityST = group.newverticle_map_entity().setLabel(entity);
 
          for (NeoProperty neoProperty : entities.get(entity).properties.values()) {
             if (neoProperty.unique)
@@ -272,7 +273,7 @@ public final class NeoDomainGenerator {
             verticle_update_entityST.addPropertiesValue(neoProperty.name, NeoPropertyType.Enum.equals(neoProperty.type), neoProperty.type);
             verticle_new_entityST.addPropertiesValue(neoProperty.required, neoProperty.name, neoProperty.type, NeoPropertyType.Enum.equals(neoProperty.type));
             verticle_get_all_entitiesST.addPropertiesValue(neoProperty.name);
-            verticle_get_entityST.addPropertiesValue(neoProperty.name);
+            verticle_map_entityST.addPropertiesValue(neoProperty.name);
          }
 
          domainVerticleST.addIncomingValue("New" + entity, verticle_new_entityST, "new." + name.toLowerCase() + "." + entity.toLowerCase());
@@ -280,6 +281,8 @@ public final class NeoDomainGenerator {
          domainVerticleST.addIncomingValue("Delete" + entity, verticle_delete_entityST, "delete." + name.toLowerCase() + "." + entity.toLowerCase());
          domainVerticleST.addIncomingValue("Get" + entity, verticle_get_entityST, "get." + name.toLowerCase() + "." + entity.toLowerCase());
          domainVerticleST.addIncomingValue("GetAll" + entity, verticle_get_all_entitiesST, "get.all." + name.toLowerCase() + "." + entity.toLowerCase());
+
+         domainVerticleST.addMappingsValue(verticle_map_entityST);
       }
 
       for (NeoRelation relation : relations.values()) {
@@ -289,13 +292,40 @@ public final class NeoDomainGenerator {
                setSrc(relation.src).
                setDst(relation.dst);
 
+         switch (relation.cardinality) {
+            case ONE_TO_ONE: {
+               domainVerticleST.addIncomingValue("get_" + relation.src + "_" + relation.name + "_FOR_" + relation.dst, group.newverticle_get_single().setDirection("OUTGOING").setSrc(relation.src).setDst(relation.dst).setRelation(relation.name), "get." + relation.src.toLowerCase() + "." + relation.name.toLowerCase() + ".for." + relation.dst.toLowerCase());
+               domainVerticleST.addIncomingValue("get_" + relation.dst + "_" + relation.name + "_FOR_" + relation.src, group.newverticle_get_single().setDirection("INCOMING").setSrc(relation.src).setDst(relation.dst).setRelation(relation.name), "get." + relation.dst.toLowerCase() + "." + relation.name.toLowerCase() + ".for." + relation.src.toLowerCase());
+               break;
+            }
+            case ONE_TO_MANY: {
+               domainVerticleST.addIncomingValue("get_" + relation.src + "_" + relation.name + "_FOR_" + relation.dst, group.newverticle_get_single().setDirection("INCOMING").setSrc(relation.dst).setDst(relation.src).setRelation(relation.name), "get." + relation.src.toLowerCase() + "." + relation.name.toLowerCase() + ".for." + relation.dst.toLowerCase());
+               domainVerticleST.addIncomingValue("get_" + relation.dst + "_" + relation.name + "_FOR_" + relation.src, group.newverticle_get_many().setDirection("OUTGOING").setSrc(relation.src).setDst(relation.dst).setRelation(relation.name), "get." + relation.dst.toLowerCase() + "." + relation.name.toLowerCase() + ".for." + relation.src.toLowerCase());
+
+               break;
+            }
+            case MANY_TO_ONE: {
+               domainVerticleST.addIncomingValue("get_" + relation.src + "_" + relation.name + "_FOR_" + relation.dst, group.newverticle_get_single().setDirection("OUTGOING").setSrc(relation.dst).setDst(relation.src).setRelation(relation.name), "get." + relation.src.toLowerCase() + "." + relation.name.toLowerCase() + ".for." + relation.dst.toLowerCase());
+               domainVerticleST.addIncomingValue("get_" + relation.dst + "_" + relation.name + "_FOR_" + relation.src, group.newverticle_get_many().setDirection("INCOMING").setSrc(relation.src).setDst(relation.dst).setRelation(relation.name), "get." + relation.dst.toLowerCase() + "." + relation.name.toLowerCase() + ".for." + relation.src.toLowerCase());
+
+               break;
+            }
+            case MANY_TO_MANY: {
+               domainVerticleST.addIncomingValue("get_" + relation.dst + "_" + relation.name + "_FOR_" + relation.src, group.newverticle_get_many().setDirection("OUTGOING").setSrc(relation.src).setDst(relation.dst).setRelation(relation.name), "get." + relation.dst.toLowerCase() + "." + relation.name.toLowerCase() + ".for." + relation.src.toLowerCase());
+               domainVerticleST.addIncomingValue("get_" + relation.src + "_" + relation.name + "_FOR_" + relation.dst, group.newverticle_get_many().setDirection("INCOMING").setSrc(relation.dst).setDst(relation.src).setRelation(relation.name), "get." + relation.src.toLowerCase() + "." + relation.name.toLowerCase() + ".for." + relation.dst.toLowerCase());
+
+               break;
+            }
+         }
+
          for (NeoProperty neoProperty : relation.properties.values()) {
             if (neoProperty.required) {
                verticle_relateST.addPropertiesValue(NeoPropertyType.Enum.equals(neoProperty.type), NeoPropertyType.Enum.equals(neoProperty.type) ? neoProperty.name : neoProperty.type, neoProperty.required, neoProperty.name);
             }
          }
 
-         domainVerticleST.addIncomingValue(relation.src + "_" + relation.name + "_" + relation.dst, verticle_relateST, "relate." + relation.src.toLowerCase() + "." + relation.name.toLowerCase() + "." + relation.dst.toLowerCase());
+         domainVerticleST.addIncomingValue("relate_" + relation.src + "_" + relation.name + "_" + relation.dst, verticle_relateST, "relate." + relation.src.toLowerCase() + "." + relation.name.toLowerCase() + "." + relation.dst.toLowerCase());
+
       }
 
       for (String function : functions.keySet()) {
@@ -312,6 +342,8 @@ public final class NeoDomainGenerator {
             setName(name).
             setDescription(description);
 
+      // use set to avoid duplicates
+      final Set<String> matchers = new LinkedHashSet<>();
       for (String entity : entities.keySet()) {
 
          final Neo4jGroup.NodeMatcherST nodeMatcherST = group.newNodeMatcher().
@@ -320,9 +352,13 @@ public final class NeoDomainGenerator {
          for (NeoProperty property : entities.get(entity).properties.values())
             nodeMatcherST.addPropertiesValue(property.name);
 
-         domainST.addMethodsValue(nodeMatcherST);
+         matchers.add(nodeMatcherST.toString());
       }
 
+      for (String matcher : matchers)
+         domainST.addMethodsValue(matcher);
+
+      final Set<String> relationMatchers = new LinkedHashSet<>();
       for (NeoRelation relation : relations.values()) {
 
          final Neo4jGroup.RelationMatcherST relationMatcherST = group.newRelationMatcher().
@@ -333,8 +369,11 @@ public final class NeoDomainGenerator {
          for (NeoProperty property : relation.properties.values())
             relationMatcherST.addPropertiesValue(property.name);
 
-         domainST.addMethodsValue(relationMatcherST);
+         relationMatchers.add(relationMatcherST.toString());
       }
+
+      for (String relationMatcher : relationMatchers)
+         domainST.addMethodsValue(relationMatcher);
 
       return domainST.toString();
    }
@@ -463,15 +502,15 @@ public final class NeoDomainGenerator {
 
       public NeoRelation(String name, String src, String dst, Cardinality cardinality) {
          this.name = name;
-         this.src = src;
-         this.dst = dst;
+         this.src = src + (src.equals(dst) ? "Src" : "");
+         this.dst = dst + (src.equals(dst) ? "Dst" : "");
          this.cardinality = cardinality;
       }
 
       public NeoRelation(JsonObject jsonObject) {
          this.name = jsonObject.getString("name");
-         this.src = jsonObject.getString("src");
-         this.dst = jsonObject.getString("dst");
+         this.src = jsonObject.getString("src") + (jsonObject.getString("src").equals(jsonObject.getString("dst")) ? "Src" : "");
+         this.dst = jsonObject.getString("dst") + (jsonObject.getString("src").equals(jsonObject.getString("dst")) ? "Dst" : "");
          this.cardinality = Cardinality.valueOf(jsonObject.getString("cardinality"));
 
          for (Object o : jsonObject.getJsonArray("properties")) {

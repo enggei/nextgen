@@ -4,6 +4,7 @@ import com.generator.app.App;
 import com.generator.app.DomainMotif;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
+import com.generator.generators.domain.DomainDomainPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.neo.NeoModel;
 import org.neo4j.graphdb.*;
@@ -54,12 +55,12 @@ public abstract class ExcelDomainPlugin extends Plugin {
 		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Row), Properties.name.name());
 
 		relate(domainNode, entitiesNodeMap.get(Entities.Workbook), DomainPlugin.Relations.ENTITY);
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Workbook), Relations.SHEET.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Sheet));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Sheet), Relations.COL.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Column));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Sheet), Relations.ROW.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Row));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Column), Relations.CELL.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Cell));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Cell), Relations.REFERENCE.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Cell));
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Row), Relations.CELL.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Cell));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Workbook), Relations.SHEET.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Sheet));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Sheet), Relations.COL.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Column));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Sheet), Relations.ROW.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Row));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Column), Relations.CELL.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Cell));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Cell), Relations.REFERENCE.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Cell));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Row), Relations.CELL.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Cell));
    }
 
    @Override

@@ -74,7 +74,12 @@ public final class DomainPluginGroup {
       return new VisitorST(stGroup);
    }
 
-   public final class EntityMethodsST implements DomainPluginGroupTemplate {
+   public DomainEnumDeclarationST newDomainEnumDeclaration() {
+      return new DomainEnumDeclarationST(stGroup);
+   }
+
+   public static final class EntityMethodsST implements DomainPluginGroupTemplate {
+
 
       private Object _name;
       private java.util.Set<java.util.Map<String, Object>> _properties = new java.util.LinkedHashSet<>();
@@ -137,7 +142,8 @@ public final class DomainPluginGroup {
    	}
    }
 
-   public final class EntityMessageHandlerST implements DomainPluginGroupTemplate {
+   public static final class EntityMessageHandlerST implements DomainPluginGroupTemplate {
+
 
       private Object _label;
       private java.util.Set<java.util.Map<String, Object>> _properties = new java.util.LinkedHashSet<>();
@@ -184,7 +190,8 @@ public final class DomainPluginGroup {
    	}
    }
 
-   public final class DomainVerticleST implements DomainPluginGroupTemplate {
+   public static final class DomainVerticleST implements DomainPluginGroupTemplate {
+
 
       private java.util.Set<java.util.Map<String, Object>> _relateEntities = new java.util.LinkedHashSet<>();
       private java.util.Set<java.util.Map<String, Object>> _entities = new java.util.LinkedHashSet<>();
@@ -326,7 +333,8 @@ public final class DomainPluginGroup {
    	}
    }
 
-   public final class newEntityNodeParametersST implements DomainPluginGroupTemplate {
+   public static final class newEntityNodeParametersST implements DomainPluginGroupTemplate {
+
 
       private Object _action;
       private Object _label;
@@ -375,7 +383,8 @@ public final class DomainPluginGroup {
    	}
    }
 
-   public final class DomainVerticleFacadeST implements DomainPluginGroupTemplate {
+   public static final class DomainVerticleFacadeST implements DomainPluginGroupTemplate {
+
 
       private Object _domain;
       private java.util.Set<Object> _entities = new java.util.LinkedHashSet<>();
@@ -472,7 +481,8 @@ public final class DomainPluginGroup {
    	}
    }
 
-   public final class DomainFacadeEntityMessagesST implements DomainPluginGroupTemplate {
+   public static final class DomainFacadeEntityMessagesST implements DomainPluginGroupTemplate {
+
 
       private Object _label;
       private java.util.Set<java.util.Map<String, Object>> _properties = new java.util.LinkedHashSet<>();
@@ -519,7 +529,8 @@ public final class DomainPluginGroup {
    	}
    }
 
-   public final class DomainPluginST implements DomainPluginGroupTemplate {
+   public static final class DomainPluginST implements DomainPluginGroupTemplate {
+
 
       private java.util.Set<java.util.Map<String, Object>> _relations = new java.util.LinkedHashSet<>();
       private java.util.Set<java.util.Map<String, Object>> _rootRelations = new java.util.LinkedHashSet<>();
@@ -530,6 +541,7 @@ public final class DomainPluginGroup {
       private Object _name;
       private Object _packageName;
       private java.util.Set<java.util.Map<String, Object>> _properties = new java.util.LinkedHashSet<>();
+      private java.util.Set<Object> _enums = new java.util.LinkedHashSet<>();
 
       private final ST template;
 
@@ -668,13 +680,28 @@ public final class DomainPluginGroup {
       	return this._properties;
       }
 
+      public DomainPluginST addEnumsValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._enums.add(value);
+      	template.add("enums", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getEnumsValues() {
+      	return this._enums;
+      }
+
       @Override
    	public String toString() {
    		return template.render();
    	}
    }
 
-   public final class VisitorST implements DomainPluginGroupTemplate {
+   public static final class VisitorST implements DomainPluginGroupTemplate {
+
 
       private java.util.Set<Object> _labels = new java.util.LinkedHashSet<>();
       private java.util.Set<java.util.Map<String, Object>> _paths = new java.util.LinkedHashSet<>();
@@ -744,6 +771,54 @@ public final class DomainPluginGroup {
 
       public String getName() {
       	return (String) this._name;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public static final class DomainEnumDeclarationST implements DomainPluginGroupTemplate {
+
+
+      private Object _name;
+      private java.util.Set<Object> _values = new java.util.LinkedHashSet<>();
+
+      private final ST template;
+
+      private DomainEnumDeclarationST(STGroup group) {
+   		template = group.getInstanceOf("DomainEnumDeclaration");
+   	}
+
+      public DomainEnumDeclarationST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      public DomainEnumDeclarationST addValuesValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._values.add(value);
+      	template.add("values", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getValuesValues() {
+      	return this._values;
       }
 
       @Override
@@ -1233,7 +1308,7 @@ public final class DomainPluginGroup {
 		"public void sendRemove~label~Message(Vertx vertx, JsonObject parameters, VertxUtil.SuccessHandler<Message<JsonObject~gt()~> handler) {\n" + 
 		"  	VertxUtil.sendMessage(vertx, address + \".remove.~label~\", parameters, log, handler);\n" + 
 		"}>>\n")
-			.append("DomainPlugin(relations,rootRelations,title,entities,entityProperties,entityRelations,name,packageName,properties) ::= <<package ~packageName~;\n" + 
+			.append("DomainPlugin(relations,rootRelations,title,entities,entityProperties,entityRelations,name,packageName,properties,enums) ::= <<package ~packageName~;\n" + 
 		"\n" + 
 		"import com.generator.app.App;\n" + 
 		"import com.generator.app.DomainMotif;\n" + 
@@ -1268,6 +1343,11 @@ public final class DomainPluginGroup {
 		"   public enum Properties {\n" + 
 		"      ~properties:{it|~it.name~};separator=\", \"~\n" + 
 		"   }\n" + 
+		"~if(enums)~\n" + 
+		"\n" + 
+		"	~enums:{it|~it~};separator=\"\\n\\n\"~\n" + 
+		"\n" + 
+		"~endif~\n" + 
 		"\n" + 
 		"	private static final Map<Label,Node> entitiesNodeMap = new LinkedHashMap<>();\n" + 
 		"\n" + 
@@ -1398,6 +1478,9 @@ public final class DomainPluginGroup {
 		"      //System.out.println(path.toString());\n" + 
 		"      return path.toString();\n" + 
 		"   }\n" + 
+		"}>>\n")
+			.append("DomainEnumDeclaration(name,values) ::= <<public enum ~name;format=\"capitalize\"~ {\n" + 
+		"	~values:{it|~it;format=\"toUpper\"~};separator=\", \"~\n" + 
 		"}>>\n")
 		.toString();
 }

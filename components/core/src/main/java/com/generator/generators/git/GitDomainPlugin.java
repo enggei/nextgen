@@ -20,18 +20,19 @@ import static com.generator.util.NeoUtil.*;
  */
 public abstract class GitDomainPlugin extends Plugin {
 
+	protected final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(GitDomainPlugin.class);
+
 	public enum Entities implements Label {
       Git
    }
 
    public enum Relations implements RelationshipType {
-      GIT
+      GIT, REPOSITORY, NAME
    }
 
    public enum Properties {
       repository, name
    }
-
 	private static final Map<Label,Node> entitiesNodeMap = new LinkedHashMap<>();
 
 	private final Node domainNode;
@@ -84,6 +85,29 @@ public abstract class GitDomainPlugin extends Plugin {
 		if (name != null) relate(newNode, DomainMotif.newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
 		return newNode; 
 	}
+	/* todo
+	public Action newGitAction() {
+		return new App.TransactionAction("New Git", app) {
+			@Override
+	   	public void actionPerformed(java.awt.event.ActionEvent e, Transaction tx) throws Exception {
+
+			final Map<String,String> properties = new java.util.HashMap<>();
+			   final String repository = com.generator.util.SwingUtil.showInputDialog("repository", app);
+				if (repository != null && repository.length() > 0)
+					properties.put("repository", repository);
+
+			   final String name = com.generator.util.SwingUtil.showInputDialog("name", app);
+				if (name != null && name.length() > 0)
+					properties.put("name", name);
+
+
+			if (properties.isEmpty()) return;
+
+		   //fireNodesLoaded(new());
+	   	}
+		};
+	}
+	*/
 
 
 	public static void outgoingGIT(Node src, RelationConsumer consumer) { outgoing(src, Relations.GIT).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
@@ -91,8 +115,20 @@ public abstract class GitDomainPlugin extends Plugin {
 	public static void incomingGIT(Node src, RelationConsumer consumer) { incoming(src, Relations.GIT).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
 	public static Node singleIncomingGIT(Node src) { return other(src, singleIncoming(src, Relations.GIT)); }
 
+	public static void outgoingREPOSITORY(Node src, RelationConsumer consumer) { outgoing(src, Relations.REPOSITORY).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleOutgoingREPOSITORY(Node src) { return other(src, singleOutgoing(src, Relations.REPOSITORY)); }
+	public static void incomingREPOSITORY(Node src, RelationConsumer consumer) { incoming(src, Relations.REPOSITORY).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleIncomingREPOSITORY(Node src) { return other(src, singleIncoming(src, Relations.REPOSITORY)); }
+
+	public static void outgoingNAME(Node src, RelationConsumer consumer) { outgoing(src, Relations.NAME).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleOutgoingNAME(Node src) { return other(src, singleOutgoing(src, Relations.NAME)); }
+	public static void incomingNAME(Node src, RelationConsumer consumer) { incoming(src, Relations.NAME).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleIncomingNAME(Node src) { return other(src, singleIncoming(src, Relations.NAME)); }
+
 
 	public static Relationship relateGIT(Node src, Node dst) { return relate(src, dst, Relations.GIT); }
+	public static Relationship relateREPOSITORY(Node src, Node dst) { return relate(src, dst, Relations.REPOSITORY); }
+	public static Relationship relateNAME(Node src, Node dst) { return relate(src, dst, Relations.NAME); }
 
 	// repository
 	public static <T> T getRepositoryProperty(PropertyContainer container) { return getRepositoryProperty(container, null); }

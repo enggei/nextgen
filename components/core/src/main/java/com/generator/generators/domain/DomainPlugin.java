@@ -16,6 +16,7 @@ import org.neo4j.graphdb.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -29,11 +30,8 @@ import static com.generator.util.NeoUtil.*;
  * Created 06.08.17.
  */
 public class DomainPlugin extends DomainDomainPlugin {
-   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DomainPlugin.class);
 
-   public enum RelationCardinality {
-      SINGLE, LIST
-   }
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DomainPlugin.class);
 
    public DomainPlugin(App app) {
       super(app);
@@ -146,6 +144,8 @@ public class DomainPlugin extends DomainDomainPlugin {
                   setName(className).
                   setTitle(getNameProperty(domainNode.getNode()));
 
+            final Map<String, Set<String>> enums = new LinkedHashMap<>();
+
             final Set<String> domainRelations = new LinkedHashSet<>();
             final Set<String> domainProperties = new LinkedHashSet<>();
             final Map<String, Set<String>> entityProperties = new LinkedHashMap<>();
@@ -180,32 +180,20 @@ public class DomainPlugin extends DomainDomainPlugin {
 
                @Override
                public void visitRelation(Node node) {
-
                   domainRelations.add(getNameProperty(node, "").toUpperCase());
-
-                  // relation can be either to a Property or Entity
-//                  final AtomicBoolean isProperty = new AtomicBoolean(false);
-//                  outgoingDST(node, (relationship, dstNode) -> {
-//                     if (isProperty(dstNode)) isProperty.set(true);
-//                  });
-
-                  // if Entity (not Property), add relation
-//                  if (!isProperty.get()) {
-//                     domainRelations.add(getNameProperty(node, "").toUpperCase());
-
-                  // add entity-relations
-//                     final LinkedHashMap<Node, String> relation = new LinkedHashMap<>();
-//                     relation.put(node, getNameProperty(singleOutgoingDST(node)));
-//
-//                     incomingSRC(node, (relationship, srcNode) -> entityRelations.get(getNameProperty(srcNode)).add(relation));
-//                     entityRelations.get(getNameProperty(singleIncomingSRC(node))).add(relation);
-//                  }
                   super.visitRelation(node);
                }
 
                @Override
                public void visitProperty(Node node) {
                   domainProperties.add(getNameProperty(node));
+
+                  final Set<String> values = new LinkedHashSet<>();
+                  outgoingENUMERATED(node, (relationship, valueNode) -> values.add(getValueProperty(valueNode)));
+
+                  if (!values.isEmpty())
+                     enums.put(getNameProperty(node), values);
+
                   super.visitProperty(node);
                }
             }.visitDomain(domainNode.getNode());
@@ -228,6 +216,12 @@ public class DomainPlugin extends DomainDomainPlugin {
 
             for (Relation relation : relations) {
                domainPluginST.addEntityRelationsValue(relation.cardinality, getNameProperty(relation.dst), relation.name, getNameProperty(relation.src));
+            }
+
+            for (Map.Entry<String, Set<String>> enumEntry : enums.entrySet()) {
+               final DomainPluginGroup.DomainEnumDeclarationST domainEnumDeclarationST = domainPluginGroup.newDomainEnumDeclaration().setName(enumEntry.getKey());
+               for (String value : enumEntry.getValue()) domainEnumDeclarationST.addValuesValue(value);
+               domainPluginST.addEnumsValue(domainEnumDeclarationST);
             }
 
             GeneratedFile.newJavaFile(ProjectConstants.MAIN_ROOT, domainPluginST.getPackageName(), className).write(domainPluginST);
@@ -863,6 +857,10 @@ public class DomainPlugin extends DomainDomainPlugin {
                referenceMenu.add(new App.TransactionAction("Set Properties", app) {
                   @Override
                   protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                     // for combo-listeners:
+                     final Set<String> changedComboBoxes = new LinkedHashSet<>();
+
                      final Map<String, JComponent> fields = new TreeMap<>();
                      final StringBuilder rows = new StringBuilder();
                      boolean first = true;
@@ -873,9 +871,17 @@ public class DomainPlugin extends DomainDomainPlugin {
                         final Set<String> enumValues = new LinkedHashSet<>();
                         outgoingENUMERATED(propertyEntry.getValue(), (relationship, enumNode) -> enumValues.add(getValueProperty(enumNode)));
                         final Node existing = other(templateNeoNode.getNode(), singleOutgoing(templateNeoNode.getNode(), RelationshipType.withName(propertyEntry.getKey())));
-                        fields.put(propertyEntry.getKey(), isBooleanProperty(propertyEntry.getValue()) ? new JCheckBox("", "true".equals(getNameProperty(existing, "false"))) : (enumValues.isEmpty() ? new JTextField(getNameProperty(existing, "")) : SwingUtil.newComboBox(enumValues, getNameProperty(existing))));
+                        final JComponent jComponent = isBooleanProperty(propertyEntry.getValue()) ? new JCheckBox("", "true".equals(getNameProperty(existing, "false"))) : (enumValues.isEmpty() ? new JTextField(getNameProperty(existing, "")) : SwingUtil.newComboBox(enumValues, getNameProperty(existing)));
+                        if (jComponent instanceof JComboBox) {
+                           ((JComboBox) jComponent).addActionListener(e1 -> {
+                              System.out.println(propertyEntry.getKey() + " changed");
+                              changedComboBoxes.add(propertyEntry.getKey());
+                           });
+                        }
+                        fields.put(propertyEntry.getKey(), jComponent);
                         first = false;
                      }
+
 
                      final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu:grow,4dlu,75dlu:grow", rows.toString().trim());
                      int row = 1;
@@ -923,7 +929,12 @@ public class DomainPlugin extends DomainDomainPlugin {
                                        foundAndUpdated.set(true);
                                     });
 
-                                    if (foundAndUpdated.get()) continue;
+                                    if (foundAndUpdated.get() || value == null) continue;
+
+                                    if (fieldEntry.getValue() instanceof JComboBox) {
+                                       if (!changedComboBoxes.contains(fieldEntry.getKey()))
+                                          continue;
+                                    }
 
                                     final Node existingNode = getGraph().newNode(Entities.Value, AppMotif.Properties.name.name(), value);
                                     final Node newDstNode = existingNode == null ? newValueNode(getGraph(), value) : existingNode;

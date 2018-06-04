@@ -4,6 +4,7 @@ import com.generator.app.App;
 import com.generator.app.DomainMotif;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
+import com.generator.generators.domain.DomainDomainPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.neo.NeoModel;
 import org.neo4j.graphdb.*;
@@ -51,9 +52,9 @@ public abstract class ClojureDomainPlugin extends Plugin {
 		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Symbol), Properties.name.name());
 
 		relate(domainNode, entitiesNodeMap.get(Entities.Repl), DomainPlugin.Relations.ENTITY);
-		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Repl), Relations.FORM.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Form));
-		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Repl), Relations.SYMBOL.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Symbol));
-		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Form), Relations.EVALUATION.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Result));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Repl), Relations.FORM.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Form));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Repl), Relations.SYMBOL.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Symbol));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Form), Relations.EVALUATION.name(), DomainDomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Result));
    }
 
    @Override

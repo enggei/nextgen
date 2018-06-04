@@ -4,6 +4,7 @@ import com.generator.app.App;
 import com.generator.app.DomainMotif;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
+import com.generator.generators.domain.DomainDomainPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.neo.NeoModel;
 import org.neo4j.graphdb.*;
@@ -53,8 +54,8 @@ public abstract class ChromeBookmarksDomainPlugin extends Plugin {
 		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Bookmark), Properties.name.name());
 
 		relate(domainNode, entitiesNodeMap.get(Entities.Catalog), DomainPlugin.Relations.ENTITY);
-		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Catalog), Relations.GROUP.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Group));
-		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Group), Relations.BOOKMARK.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Bookmark));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Catalog), Relations.GROUP.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Group));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Group), Relations.BOOKMARK.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Bookmark));
    }
 
    @Override

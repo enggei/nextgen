@@ -46,7 +46,12 @@ public final class JGoodiesGroup {
       return new layoutST(stGroup);
    }
 
-   public final class layoutST implements JGoodiesGroupTemplate {
+   public mvnST newmvn() {
+      return new mvnST(stGroup);
+   }
+
+   public static final class layoutST implements JGoodiesGroupTemplate {
+
 
       private java.util.Set<Object> _elements = new java.util.LinkedHashSet<>();
 
@@ -68,6 +73,39 @@ public final class JGoodiesGroup {
 
       public java.util.Set<Object> getElementsValues() {
       	return this._elements;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public static final class mvnST implements JGoodiesGroupTemplate {
+
+
+      private Object _version;
+
+      private final ST template;
+
+      private mvnST(STGroup group) {
+   		template = group.getInstanceOf("mvn");
+   	}
+
+      public mvnST setVersion(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._version == null) {
+            this._version = value;
+         	template.add("version", value);
+         }
+
+      	return this;
+      }
+
+      public String getVersion() {
+      	return (String) this._version;
       }
 
       @Override
@@ -207,5 +245,10 @@ public final class JGoodiesGroup {
 		.append("eom() ::= <<}>>\n")
 		.append("gt() ::= \">\"\n")
 			.append("layout(elements) ::= <<~elements:{it|~it~};separator=\",\"~>>\n")
+			.append("mvn(version) ::= <<<dependency>\n" + 
+		" 	<groupId>com.jgoodies</groupId>\n" + 
+		" 	<artifactId>jgoodies-forms</artifactId>\n" + 
+		"	<version>~if(version)~~version~~else~1.9.0~endif~</version>\n" + 
+		"</dependency> >>\n")
 		.toString();
 }

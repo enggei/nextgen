@@ -14,6 +14,17 @@ import java.io.IOException;
  */
 public class Tests {
    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Tests.class);
+
+//   create template-group domain by generator in code
+
+   @Test
+   public void generateTemplateGroupBuilderDomain() {
+
+
+
+   }
+
+
 //   //@Test
 //   public void testStatementAndRender() throws IOException {
 //      final TemplateGroupGroup group = new TemplateGroupGroup();

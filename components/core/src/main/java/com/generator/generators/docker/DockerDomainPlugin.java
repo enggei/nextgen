@@ -3,6 +3,7 @@ package com.generator.generators.docker;
 import com.generator.app.App;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
+import com.generator.generators.domain.DomainDomainPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.neo.NeoModel;
 import org.neo4j.graphdb.*;
@@ -50,8 +51,8 @@ public abstract class DockerDomainPlugin extends Plugin {
 		relate(domainNode, entitiesNodeMap.get(Entities.DockerFile), DomainPlugin.Relations.ENTITY);
 		relate(domainNode, entitiesNodeMap.get(Entities.Directory), DomainPlugin.Relations.ENTITY);
 		relate(domainNode, entitiesNodeMap.get(Entities.DockerComposeFile), DomainPlugin.Relations.ENTITY);
-		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.DockerFile), Relations.BUILD.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Directory));
-		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.DockerComposeFile), Relations.COMPOSE.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Directory));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.DockerFile), Relations.BUILD.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Directory));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.DockerComposeFile), Relations.COMPOSE.name(), DomainDomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Directory));
    }
 
    @Override

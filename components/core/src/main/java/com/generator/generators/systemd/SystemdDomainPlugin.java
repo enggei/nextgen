@@ -4,6 +4,7 @@ import com.generator.app.App;
 import com.generator.app.DomainMotif;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
+import com.generator.generators.domain.DomainDomainPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.neo.NeoModel;
 import org.neo4j.graphdb.*;
@@ -49,7 +50,7 @@ public abstract class SystemdDomainPlugin extends Plugin {
 		DomainMotif.newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.ServiceFile), Properties.content.name());
 
 		relate(domainNode, entitiesNodeMap.get(Entities.service), DomainPlugin.Relations.ENTITY);
-		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.service), Relations.FILE.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.ServiceFile));
+		DomainMotif.newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.service), Relations.FILE.name(), DomainDomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.ServiceFile));
    }
 
    @Override

@@ -21,7 +21,7 @@
         <vertx.version>3.4.1</vertx.version>
         <metrics.version>3.1.2</metrics.version>
         <chronicle.version>4.5.19</chronicle.version>
-        <neo4j.version>3.2.2</neo4j.version>
+        <neo4j.version>3.4.0</neo4j.version>
         <neo4j.driver.version>1.4.4</neo4j.driver.version>
         <stardog.version>5.0.4</stardog.version>
         <antlr.version>4.7</antlr.version>
