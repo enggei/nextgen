@@ -42,7 +42,7 @@ public class NextgenProject extends Nextgen {
       FileUtil.tryToCreateDirIfNotExists(new File(config("server.test.resources")));
       FileUtil.tryToCreateDirIfNotExists(new File(config("server.main.resources")));
 
-      FileUtil.tryToCreateDirIfNotExists(new File(config("core.main.src")));
+      FileUtil.tryToCreateDirIfNotExists(new File(dir("core.main.src")));
       FileUtil.tryToCreateDirIfNotExists(new File(config("core.test.src")));
       FileUtil.tryToCreateDirIfNotExists(new File(config("core.web.src")));
       FileUtil.tryToCreateDirIfNotExists(new File(config("core.test.resources")));
@@ -167,9 +167,11 @@ public class NextgenProject extends Nextgen {
 
       GeneratedFile.newPlainFile(config("root"), "core", "pom.xml").write(pomST);
 
-      GeneratedFile.newJavaFile(config("core.main.src"), utilsPackage, "ResponseUtil").write(vertxGroup.newResponseUtil().setPackageName(utilsPackage));
-      GeneratedFile.newJavaFile(config("core.main.src"), utilsPackage, "VertxUtil").write(vertxGroup.newVertxUtil().setPackageName(utilsPackage));
+      GeneratedFile.newJavaFile(dir("core.main.src"), utilsPackage, "ResponseUtil").write(vertxGroup.newResponseUtil().setPackageName(utilsPackage));
+      GeneratedFile.newJavaFile(dir("core.main.src"), utilsPackage, "VertxUtil").write(vertxGroup.newVertxUtil().setPackageName(utilsPackage));
    }
+
+
 
    @Test
    public void createLogging() throws IOException {
@@ -184,9 +186,9 @@ public class NextgenProject extends Nextgen {
             setName(stdLogger).
             setThreshold("DEBUG"));
 
-      GeneratedFile.newPlainFile(config("swing.test.resources"), "", "log4j.properties").write(textLog4JPropertiesST);
-      GeneratedFile.newPlainFile(config("server.test.resources"), "", "log4j.properties").write(textLog4JPropertiesST);
-      GeneratedFile.newPlainFile(config("core.test.resources"), "", "log4j.properties").write(textLog4JPropertiesST);
+      GeneratedFile.newPlainFile(dir("swing.test.resources"), "", "log4j.properties").write(textLog4JPropertiesST);
+      GeneratedFile.newPlainFile(dir("server.test.resources"), "", "log4j.properties").write(textLog4JPropertiesST);
+      GeneratedFile.newPlainFile(dir("core.test.resources"), "", "log4j.properties").write(textLog4JPropertiesST);
 
       final String fileLogger = "file";
       final PropertiesGroup.log4jPropertiesST liveLog4JPropertiesST = propertiesGroup.newlog4jProperties().
@@ -198,9 +200,9 @@ public class NextgenProject extends Nextgen {
             setThreshold("INFO").
             setFilePath("nextgen.log"));
 
-      GeneratedFile.newPlainFile(config("swing.main.resources"), "", "log4j.properties").write(liveLog4JPropertiesST);
-      GeneratedFile.newPlainFile(config("server.main.resources"), "", "log4j.properties").write(liveLog4JPropertiesST);
-      GeneratedFile.newPlainFile(config("core.main.resources"), "", "log4j.properties").write(liveLog4JPropertiesST);
+      GeneratedFile.newPlainFile(dir("swing.main.resources"), "", "log4j.properties").write(liveLog4JPropertiesST);
+      GeneratedFile.newPlainFile(dir("server.main.resources"), "", "log4j.properties").write(liveLog4JPropertiesST);
+      GeneratedFile.newPlainFile(dir("core.main.resources"), "", "log4j.properties").write(liveLog4JPropertiesST);
    }
 
    @Test
@@ -215,7 +217,7 @@ public class NextgenProject extends Nextgen {
             setVertxUtilPackage(utilsPackage);
 
 
-//      GeneratedFile.newJavaFile(config("server.main.src"), packageName, className).write(serverST);
+//      GeneratedFile.newJavaFile(dir("server.main.src"), packageName, className).write(serverST);
    }
 
    @Test
@@ -244,7 +246,7 @@ public class NextgenProject extends Nextgen {
       domainVerticleST.addIncomingValue("deleteTemplate", null, "delete.template");
       domainVerticleST.addIncomingValue("getAllTemplates", null, "get.all.templates");
 
-//      GeneratedFile.newJavaFile(config("server.main.src"), verticlePackage, verticleClass).write(domainVerticleST);
+//      GeneratedFile.newJavaFile(dir("server.main.src"), verticlePackage, verticleClass).write(domainVerticleST);
 
 //      generateNeoVerticleTest(domainVerticleST, utilsPackage, config("test.src"));
    }
@@ -272,7 +274,7 @@ public class NextgenProject extends Nextgen {
       verticleST.addIncomingValue("generateDomainPojos", null, "generate.domain.pojos");
       verticleST.addIncomingValue("generateDomainCypher", null, "generate.domain.cypher");
 
-//      GeneratedFile.newJavaFile(config("server.main.src"), verticlePackage, verticleClass).write(verticleST);
+//      GeneratedFile.newJavaFile(dir("server.main.src"), verticlePackage, verticleClass).write(verticleST);
 
 //      generateNeoVerticleTest(verticleST, utilsPackage, config("test.src"));
    }
