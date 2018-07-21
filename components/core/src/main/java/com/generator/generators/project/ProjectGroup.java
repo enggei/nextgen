@@ -392,7 +392,11 @@ public final class ProjectGroup {
 		"	\n" + 
 		"	protected static String config(String key) {\n" + 
 		"	   return config.getString(key);\n" + 
-		"   }\n" + 
+		"   	}\n" + 
+		"\n" + 
+		"	protected String dir(String name) {\n" + 
+		"		return new File(config(\"root\"), config(name)).getAbsolutePath();\n" + 
+		"	}\n" + 
 		"~endif~\n" + 
 		"\n" + 
 		"	protected String asString(String s) {\n" + 

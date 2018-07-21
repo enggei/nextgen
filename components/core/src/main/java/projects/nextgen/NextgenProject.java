@@ -30,23 +30,23 @@ public class NextgenProject extends Nextgen {
 
       FileUtil.tryToCreateDirIfNotExists(new File(config("root")));
 
-      FileUtil.tryToCreateDirIfNotExists(new File(config("swing.main.src")));
-      FileUtil.tryToCreateDirIfNotExists(new File(config("swing.test.src")));
-      FileUtil.tryToCreateDirIfNotExists(new File(config("swing.web.src")));
-      FileUtil.tryToCreateDirIfNotExists(new File(config("swing.test.resources")));
-      FileUtil.tryToCreateDirIfNotExists(new File(config("swing.main.resources")));
+      FileUtil.tryToCreateDirIfNotExists(new File(dir("swing.main.src")));
+      FileUtil.tryToCreateDirIfNotExists(new File(dir("swing.test.src")));
+      FileUtil.tryToCreateDirIfNotExists(new File(dir("swing.web.src")));
+      FileUtil.tryToCreateDirIfNotExists(new File(dir("swing.test.resources")));
+      FileUtil.tryToCreateDirIfNotExists(new File(dir("swing.main.resources")));
 
-      FileUtil.tryToCreateDirIfNotExists(new File(config("server.main.src")));
-      FileUtil.tryToCreateDirIfNotExists(new File(config("server.test.src")));
-      FileUtil.tryToCreateDirIfNotExists(new File(config("server.web.src")));
-      FileUtil.tryToCreateDirIfNotExists(new File(config("server.test.resources")));
-      FileUtil.tryToCreateDirIfNotExists(new File(config("server.main.resources")));
+      FileUtil.tryToCreateDirIfNotExists(new File(dir("server.main.src")));
+      FileUtil.tryToCreateDirIfNotExists(new File(dir("server.test.src")));
+      FileUtil.tryToCreateDirIfNotExists(new File(dir("server.web.src")));
+      FileUtil.tryToCreateDirIfNotExists(new File(dir("server.test.resources")));
+      FileUtil.tryToCreateDirIfNotExists(new File(dir("server.main.resources")));
 
       FileUtil.tryToCreateDirIfNotExists(new File(dir("core.main.src")));
-      FileUtil.tryToCreateDirIfNotExists(new File(config("core.test.src")));
-      FileUtil.tryToCreateDirIfNotExists(new File(config("core.web.src")));
-      FileUtil.tryToCreateDirIfNotExists(new File(config("core.test.resources")));
-      FileUtil.tryToCreateDirIfNotExists(new File(config("core.main.resources")));
+      FileUtil.tryToCreateDirIfNotExists(new File(dir("core.test.src")));
+      FileUtil.tryToCreateDirIfNotExists(new File(dir("core.web.src")));
+      FileUtil.tryToCreateDirIfNotExists(new File(dir("core.test.resources")));
+      FileUtil.tryToCreateDirIfNotExists(new File(dir("core.main.resources")));
    }
 
    @Test
@@ -164,6 +164,11 @@ public class NextgenProject extends Nextgen {
       pomST.addDependenciesValue(antlrGroup.newmvn());
       pomST.addDependenciesValue(slf4JGroup.newmvn());
       pomST.addDependenciesValue(neo4jGroup.newmvn());
+      pomST.addDependenciesValue("<dependency>\n" +
+              "            <groupId>org.clojure</groupId>\n" +
+              "            <artifactId>clojure</artifactId>\n" +
+              "            <version>1.8.0</version>\n" +
+              "        </dependency>");
 
       GeneratedFile.newPlainFile(config("root"), "core", "pom.xml").write(pomST);
 
@@ -179,12 +184,12 @@ public class NextgenProject extends Nextgen {
       final String stdLogger = "stdout";
 
       final PropertiesGroup.log4jPropertiesST textLog4JPropertiesST = propertiesGroup.newlog4jProperties().
-            setLogLevel("DEBUG").
+            setLogLevel("INFO").
             addRootLoggersValue(stdLogger);
 
       textLog4JPropertiesST.addAppendersValue(propertiesGroup.newconsoleAppender().
             setName(stdLogger).
-            setThreshold("DEBUG"));
+            setThreshold("INFO"));
 
       GeneratedFile.newPlainFile(dir("swing.test.resources"), "", "log4j.properties").write(textLog4JPropertiesST);
       GeneratedFile.newPlainFile(dir("server.test.resources"), "", "log4j.properties").write(textLog4JPropertiesST);

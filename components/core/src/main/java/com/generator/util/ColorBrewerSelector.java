@@ -10,7 +10,9 @@ import java.util.List;
  * Created 18.09.17.
  */
 public class ColorBrewerSelector extends JPanel {
+
    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ColorBrewerSelector.class);
+
    private final JTextField txtColor = new JTextField(30);
    private Color selectedColor;
 

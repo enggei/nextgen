@@ -106,7 +106,8 @@ public final class JavaGroup {
       return new statementsST(stGroup);
    }
 
-   public final class BeanST implements JavaGroupTemplate {
+   public static final class BeanST implements JavaGroupTemplate {
+
 
       private java.util.Set<Object> _eqha = new java.util.LinkedHashSet<>();
       private java.util.Set<Object> _lexical = new java.util.LinkedHashSet<>();
@@ -233,7 +234,8 @@ public final class JavaGroup {
    	}
    }
 
-   public final class methodST implements JavaGroupTemplate {
+   public static final class methodST implements JavaGroupTemplate {
+
 
       private java.util.Set<Object> _annotations = new java.util.LinkedHashSet<>();
       private Object _name;
@@ -359,7 +361,8 @@ public final class JavaGroup {
    	}
    }
 
-   public final class PojoST implements JavaGroupTemplate {
+   public static final class PojoST implements JavaGroupTemplate {
+
 
       private java.util.Set<java.util.Map<String, Object>> _classProperties = new java.util.LinkedHashSet<>();
       private java.util.Set<Object> _eqha = new java.util.LinkedHashSet<>();
@@ -374,6 +377,7 @@ public final class JavaGroup {
       private Object _json;
       private Object _innerClass;
       private Object _scope;
+      private java.util.Set<Object> _imports = new java.util.LinkedHashSet<>();
 
       private final ST template;
 
@@ -583,13 +587,28 @@ public final class JavaGroup {
       	return (String) this._scope;
       }
 
+      public PojoST addImportsValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._imports.add(value);
+      	template.add("imports", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getImportsValues() {
+      	return this._imports;
+      }
+
       @Override
    	public String toString() {
    		return template.render();
    	}
    }
 
-   public final class EnumST implements JavaGroupTemplate {
+   public static final class EnumST implements JavaGroupTemplate {
+
 
       private Object _name;
       private Object _package;
@@ -653,7 +672,8 @@ public final class JavaGroup {
    	}
    }
 
-   public final class toStringST implements JavaGroupTemplate {
+   public static final class toStringST implements JavaGroupTemplate {
+
 
       private java.util.Set<Object> _values = new java.util.LinkedHashSet<>();
 
@@ -683,7 +703,8 @@ public final class JavaGroup {
    	}
    }
 
-   public final class setST implements JavaGroupTemplate {
+   public static final class setST implements JavaGroupTemplate {
+
 
       private Object _name;
       private Object _type;
@@ -732,7 +753,8 @@ public final class JavaGroup {
    	}
    }
 
-   public final class ClassST implements JavaGroupTemplate {
+   public static final class ClassST implements JavaGroupTemplate {
+
 
       private Object _name;
       private Object _package;
@@ -930,7 +952,8 @@ public final class JavaGroup {
    	}
    }
 
-   public final class CollectionAccessorST implements JavaGroupTemplate {
+   public static final class CollectionAccessorST implements JavaGroupTemplate {
+
 
       private Object _name;
       private Object _type;
@@ -996,7 +1019,8 @@ public final class JavaGroup {
    	}
    }
 
-   public final class mapMethodsST implements JavaGroupTemplate {
+   public static final class mapMethodsST implements JavaGroupTemplate {
+
 
       private Object _name;
       private Object _keyType;
@@ -1062,7 +1086,8 @@ public final class JavaGroup {
    	}
    }
 
-   public final class constructorST implements JavaGroupTemplate {
+   public static final class constructorST implements JavaGroupTemplate {
+
 
       private Object _name;
       private java.util.Set<java.util.Map<String, Object>> _fields = new java.util.LinkedHashSet<>();
@@ -1126,7 +1151,8 @@ public final class JavaGroup {
    	}
    }
 
-   public final class setMethodsST implements JavaGroupTemplate {
+   public static final class setMethodsST implements JavaGroupTemplate {
+
 
       private Object _elementName;
       private Object _elementType;
@@ -1192,7 +1218,8 @@ public final class JavaGroup {
    	}
    }
 
-   public final class listMethodsST implements JavaGroupTemplate {
+   public static final class listMethodsST implements JavaGroupTemplate {
+
 
       private Object _elementName;
       private Object _elementType;
@@ -1258,7 +1285,8 @@ public final class JavaGroup {
    	}
    }
 
-   public final class getST implements JavaGroupTemplate {
+   public static final class getST implements JavaGroupTemplate {
+
 
       private Object _name;
       private Object _type;
@@ -1307,7 +1335,8 @@ public final class JavaGroup {
    	}
    }
 
-   public final class eqhaST implements JavaGroupTemplate {
+   public static final class eqhaST implements JavaGroupTemplate {
+
 
       private Object _name;
       private java.util.Set<Object> _eqha = new java.util.LinkedHashSet<>();
@@ -1354,7 +1383,8 @@ public final class JavaGroup {
    	}
    }
 
-   public final class arrayMethodsST implements JavaGroupTemplate {
+   public static final class arrayMethodsST implements JavaGroupTemplate {
+
 
       private Object _type;
       private Object _name;
@@ -1403,7 +1433,8 @@ public final class JavaGroup {
    	}
    }
 
-   public final class statementsST implements JavaGroupTemplate {
+   public static final class statementsST implements JavaGroupTemplate {
+
 
       private java.util.Set<Object> _statements = new java.util.LinkedHashSet<>();
 
@@ -1621,7 +1652,7 @@ public final class JavaGroup {
 		"~if(scope)~~scope~ ~else~~endif~~if(returnValue)~~returnValue~ ~else~void ~endif~~name~(~parameters:{it|~it.type~ ~it.name~};separator=\",\"~)~if(throwsExceptions)~ throws ~endif~~throwsExceptions:{it| ~it~};separator=\",\"~ {\n" + 
 		"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
 		"}>>\n")
-			.append("Pojo(classProperties,eqha,extends,implement,lexical,methods,name,package,properties,neoNode,json,innerClass,scope) ::= <<~if(innerClass)~~else~package ~package~;\n" + 
+			.append("Pojo(classProperties,eqha,extends,implement,lexical,methods,name,package,properties,neoNode,json,innerClass,scope,imports) ::= <<~if(innerClass)~~else~package ~package~;\n" + 
 		"\n" + 
 		"~if(neoNode)~\n" + 
 		"import org.neo4j.graphdb.GraphDatabaseService;\n" + 
@@ -1630,6 +1661,8 @@ public final class JavaGroup {
 		"import org.neo4j.graphdb.RelationshipType;\n" + 
 		"import org.neo4j.graphdb.Node;\n" + 
 		"~endif~\n" + 
+		"~imports:{it|import ~it~;};separator=\"\\n\"~\n" + 
+		"\n" + 
 		"~endif~\n" + 
 		"~scope~ class ~name~~if(extends)~ extends ~extends~~endif~~if(implement)~ implements ~implement:{it|~it~};separator=\", \"~~endif~ {\n" + 
 		"~if(classProperties)~\n" + 
@@ -1647,13 +1680,13 @@ public final class JavaGroup {
 		"	public ~name~(io.vertx.core.json.JsonObject jsonObject) {\n" + 
 		"		~properties:{it|~if(it.collection)~for (Object o : jsonObject.getJsonArray(\"~it.name~\"))\n" + 
 		"this.~it.name~.add(~if(it.isPrimitive)~(~it.element~)o~else~new ~it.element~((io.vertx.core.json.JsonObject)o)~endif~);~else~this.~it.name~ = ~if(it.enum)~~it.type~.valueOf(jsonObject.getString(\"~it.name~\"))~else~jsonObject.get~it.type~(\"~it.name~\")~endif~;~endif~};separator=\"\\n\"~\n" + 
-		"   }\n" + 
+		"}\n" + 
 		"~endif~\n" + 
 		"~if(neoNode)~\n" + 
 		"\n" + 
 		"	public ~name~(Node node) {\n" + 
 		"		~properties:{it|~if(it.collection)~node.getRelationships(Direction.OUTGOING, RelationshipType.withName(\"~it.name~\")).forEach(relationship -> ~it.name~.add(new ~it.element~(relationship.getOtherNode(node))));~else~this.~it.name~ = node.hasProperty(\"~it.name~\") ? (~it.type~) node.getProperty(\"~it.name~\") : ~if(it.init)~~it.init~~else~null~endif~;~endif~};separator=\"\\n\"~\n" + 
-		"   }\n" + 
+		"}\n" + 
 		"~endif~\n" + 
 		"\n" + 
 		"~properties:{it|\n" + 
@@ -1663,20 +1696,19 @@ public final class JavaGroup {
 		"	~eom()~\n" + 
 		"\n" + 
 		"	public ~name~ addTo~it.name;format=\"capitalize\"~(~it.element~ element) {\n" + 
-		"      this.~it.name~.add(element);\n" + 
+		"	this.~it.name~.add(element);\n" + 
 		"		return this;\n" + 
 		"	~eom()~\n" + 
-		"	\n" + 
-		"	public boolean removeFrom~it.name;format=\"capitalize\"~(~it.element~ element) {\n" + 
-		"	   return this.~it.name~.remove(element);\n" + 
-		"   ~eom()~\n" + 
+		"		public boolean removeFrom~it.name;format=\"capitalize\"~(~it.element~ element) {\n" + 
+		"	return this.~it.name~.remove(element);\n" + 
+		"~eom()~\n" + 
 		"~else~\n" + 
 		"	public ~it.type~ get~it.name;format=\"capitalize\"~() {\n" + 
 		"		return ~it.name~;\n" + 
 		"	~eom()~\n" + 
 		"\n" + 
 		"	public ~name~ set~it.name;format=\"capitalize\"~(~it.type~ ~it.name~) {\n" + 
-		"      this.~it.name~ = ~it.name~;\n" + 
+		"	this.~it.name~ = ~it.name~;\n" + 
 		"		return this;\n" + 
 		"	~eom()~\n" + 
 		"~endif~\n" + 
@@ -1689,25 +1721,24 @@ public final class JavaGroup {
 		"~if(eqha)~\n" + 
 		"	@Override\n" + 
 		"	public boolean equals(Object o) {\n" + 
-		"   	if (this == o) return true;\n" + 
-		"	   if (o == null || !(o instanceof ~name~)) return false;\n" + 
-		"	   ~name~ that = (~name~) o;\n" + 
-		"	   ~eqha:{it | if (~it~ != null ? !~it~.equals(that.~it~) : that.~it~ != null) return false;~\\n~}~		return true;\n" + 
+		"	if (this == o) return true;\n" + 
+		"	if (o == null || !(o instanceof ~name~)) return false;\n" + 
+		"	~name~ that = (~name~) o;\n" + 
+		"	~eqha:{it | if (~it~ != null ? !~it~.equals(that.~it~) : that.~it~ != null) return false;~\\n~}~		return true;\n" + 
 		"	}\n" + 
 		"\n" + 
 		"	@Override\n" + 
 		"	public int hashCode() {\n" + 
-		"   	int result;\n" + 
-		"	   result = ~first(eqha):{it | (~it~ !=null ? ~it~.hashCode() : 0)}~;\n" + 
-		"	   ~rest(eqha):{it | result = 31*result+(~it~ != null ? ~it~.hashCode() : 0);~\\n~}~      return result;\n" + 
+		"	int result;\n" + 
+		"	result = ~first(eqha):{it | (~it~ !=null ? ~it~.hashCode() : 0)}~;\n" + 
+		"	~rest(eqha):{it | result = 31*result+(~it~ != null ? ~it~.hashCode() : 0);~\\n~}~	  return result;\n" + 
 		"	}\n" + 
-		"	\n" + 
-		"~endif~\n" + 
+		"	~endif~\n" + 
 		"~if(lexical)~\n" + 
 		"	@Override\n" + 
-		"   public String toString() {\n" + 
-		"       return ~lexical:{it|\"~it~=\" + ~it~ };separator=\" + \\\" \\\" + \"~;\n" + 
-		"   }\n" + 
+		"public String toString() {\n" + 
+		"	return ~lexical:{it|\"~it~=\" + ~it~ };separator=\" + \\\" \\\" + \"~;\n" + 
+		"}\n" + 
 		"\n" + 
 		"~endif~\n" + 
 		"~if(json)~\n" + 
@@ -1723,12 +1754,12 @@ public final class JavaGroup {
 		"~if(neoNode)~\n" + 
 		"	public Node save(GraphDatabaseService graphDb) {\n" + 
 		"\n" + 
-		"      final Node node = findOrCreate(graphDb);\n" + 
+		"	final Node node = findOrCreate(graphDb);\n" + 
 		"\n" + 
 		"~properties:{it|\n" + 
 		"~if(it.collection)~~else~\n" + 
-		"      if (~it.name~ != null) node.setProperty(\"~it.name~\", ~it.name~);\n" + 
-		"      else if (node.hasProperty(\"~it.name~\")) node.removeProperty(\"~it.name~\");\n" + 
+		"	if (~it.name~ != null) node.setProperty(\"~it.name~\", ~it.name~);\n" + 
+		"	else if (node.hasProperty(\"~it.name~\")) node.removeProperty(\"~it.name~\");\n" + 
 		"~endif~\n" + 
 		"};separator=\"\\n\"~\n" + 
 		"\n" + 
@@ -1736,46 +1767,44 @@ public final class JavaGroup {
 		"	}\n" + 
 		"\n" + 
 		"	private Node findOrCreate(GraphDatabaseService graphDb) {\n" + 
-		"      Node node = graphDb.findNode(org.neo4j.graphdb.Label.label(\"~name~\"), \"_s\", s);\n" + 
-		"      if (node == null) {\n" + 
-		"         node = graphDb.createNode(org.neo4j.graphdb.Label.label(\"~name~\"));\n" + 
-		"         node.setProperty(\"_s\", this.uuid);\n" + 
-		"      }\n" + 
-		"      return node;\n" + 
-		"   }\n" + 
+		"	Node node = graphDb.findNode(org.neo4j.graphdb.Label.label(\"~name~\"), \"_s\", s);\n" + 
+		"	if (node == null) {\n" + 
+		"		node = graphDb.createNode(org.neo4j.graphdb.Label.label(\"~name~\"));\n" + 
+		"		node.setProperty(\"_s\", this.uuid);\n" + 
+		"	}\n" + 
+		"	return node;\n" + 
+		"}\n" + 
 		"\n" + 
 		"~properties:{it|~if(it.collection)~~if(it.isPrimitive)~~else~\n" + 
 		"	public ~name~ save~it.name;format=\"capitalize\"~(Node node, GraphDatabaseService graphDb) { \n" + 
-		" \n" + 
 		"		final java.util.Map<String, ~it.element~> existing = new java.util.LinkedHashMap<>();\n" + 
-		"      node.getRelationships(Direction.OUTGOING, RelationshipType.withName(\"~it.name~\")).forEach(relationship -> {\n" + 
-		"         final ~it.element~ element = new ~it.element~(relationship.getOtherNode(node));\n" + 
-		"         existing.put(element.getUuid(), element);\n" + 
-		"      ~eom()~);\n" + 
+		"	node.getRelationships(Direction.OUTGOING, RelationshipType.withName(\"~it.name~\")).forEach(relationship -> {\n" + 
+		"		final ~it.element~ element = new ~it.element~(relationship.getOtherNode(node));\n" + 
+		"		existing.put(element.getUuid(), element);\n" + 
+		"	~eom()~);\n" + 
 		"\n" + 
-		"      for (~it.element~ element : ~it.name~) {\n" + 
-		"         final ~it.element~ current = existing.remove(element.getUuid());\n" + 
-		"         if (current == null) {\n" + 
-		"            // new\n" + 
-		"            node.createRelationshipTo(element.save(graphDb), RelationshipType.withName(\"~it.name~\"));\n" + 
-		"         ~eom()~ else {\n" + 
-		"            // merge\n" + 
-		"            element.save(graphDb);\n" + 
-		"         ~eom()~\n" + 
-		"      ~eom()~\n" + 
+		"	for (~it.element~ element : ~it.name~) {\n" + 
+		"		final ~it.element~ current = existing.remove(element.getUuid());\n" + 
+		"		if (current == null) {\n" + 
+		"			// new\n" + 
+		"			node.createRelationshipTo(element.save(graphDb), RelationshipType.withName(\"~it.name~\"));\n" + 
+		"		~eom()~ else {\n" + 
+		"			// merge\n" + 
+		"			element.save(graphDb);\n" + 
+		"		~eom()~\n" + 
+		"	~eom()~\n" + 
 		"\n" + 
-		"      // delete\n" + 
-		"      for (~it.element~ old : existing.values())\n" + 
-		"         old.delete(graphDb);\n" + 
+		"	// delete\n" + 
+		"	for (~it.element~ old : existing.values())\n" + 
+		"		old.delete(graphDb);\n" + 
 		"\n" + 
-		"      return this;\n" + 
+		"	return this;\n" + 
 		"	~eom()~\n" + 
 		"~endif~~endif~\n" + 
 		"};separator=\"\\n\"~\n" + 
 		"\n" + 
 		"	public void delete(GraphDatabaseService graphDb) {\n" + 
-		"		\n" + 
-		"		final Node node = findOrCreate(graphDb);\n" + 
+		"				final Node node = findOrCreate(graphDb);\n" + 
 		"\n" + 
 		"~properties:{it|~if(it.collection)~		\n" + 
 		"		node.getRelationships(Direction.OUTGOING, RelationshipType.withName(\"~it.name~\")).forEach(relationship -> {\n" + 
@@ -1792,14 +1821,14 @@ public final class JavaGroup {
 		"\n" + 
 		"	public static boolean isValid(io.vertx.core.json.JsonObject jsonObject) {\n" + 
 		"		~properties:{it|~if(it.collection)~ ~else~if (jsonObject.get~if(it.enum)~String~else~~it.type~~endif~(\"~it.name~\") == null~if(it.enum)~ || java.util.Arrays.stream(~it.type~.values()).noneMatch((t) -> t.name().equals(jsonObject.getString(\"~it.name~\")))~endif~) return false;~endif~};separator=\"\\n\"~\n" + 
-		"      return true;\n" + 
-		"   }\n" + 
+		"	return true;\n" + 
+		"}\n" + 
 		"\n" + 
-		"   public static io.vertx.core.json.JsonArray getErrors(io.vertx.core.json.JsonObject jsonObject) {\n" + 
+		"public static io.vertx.core.json.JsonArray getErrors(io.vertx.core.json.JsonObject jsonObject) {\n" + 
 		"		final io.vertx.core.json.JsonArray errors = new io.vertx.core.json.JsonArray();\n" + 
-		"      ~properties:{it|~if(it.collection)~ ~else~if (jsonObject.get~if(it.enum)~String~else~~it.type~~endif~(\"~it.name~\") == null) errors.add(new io.vertx.core.json.JsonObject().put(\"missing\", \"~it.name~\"));~endif~};separator=\"\\n\"~\n" + 
+		"	~properties:{it|~if(it.collection)~ ~else~if (jsonObject.get~if(it.enum)~String~else~~it.type~~endif~(\"~it.name~\") == null) errors.add(new io.vertx.core.json.JsonObject().put(\"missing\", \"~it.name~\"));~endif~};separator=\"\\n\"~\n" + 
 		"		return errors;\n" + 
-		"   }\n" + 
+		"}\n" + 
 		"~endif~\n" + 
 		"}>>\n")
 			.append("Enum(name,package,values) ::= <<package ~package~;\n" + 

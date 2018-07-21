@@ -114,14 +114,15 @@ public class Tests {
       final TemplateGroupGroup templateGroupGroup = new TemplateGroupGroup();
 
       final TemplateGroupGroup.stgST stgST = templateGroupGroup.newstg().
-            setDelimiter("%").
+            setDelimiter("$").
             addTemplatesValue(templateGroupGroup.newtemplate().
                   setName("hello").
-                  setContent("Hello %name%!").
+                  setContent(" Hello $name$! ").
                   addParamsValue("name"));
-      log.info(stgST.toString());
+      final String s = stgST.toString();
+      log.info("|"+s+"|");
 
-      final STGParser parser = new STGParser(new CommonTokenStream(new STGLexer(CharStreams.fromString(stgST.toString()))));
+      final STGParser parser = new STGParser(new CommonTokenStream(new STGLexer(CharStreams.fromString(s))));
       final STGParserBaseListener listener = new STGParserBaseListener();
       new ParseTreeWalker().walk(listener, parser.group());
    }

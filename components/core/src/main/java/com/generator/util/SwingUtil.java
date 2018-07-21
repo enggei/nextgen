@@ -34,13 +34,13 @@ public class SwingUtil {
    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SwingUtil.class);
 
    public static Font getDefaultFont() {
-      return new Font("Hack", Font.PLAIN, 10);
+      return new Font("Hack", Font.PLAIN, 20);
    }
 
    public static JTextArea newTextArea() {
       final JTextArea txtEditor = new JTextArea(30, 30);
-      txtEditor.setFont(new Font("Hack", Font.PLAIN, 10));
-      txtEditor.setTabSize(3);
+      txtEditor.setFont(new Font("Hack", Font.PLAIN, 20));
+      txtEditor.setTabSize(4);
       txtEditor.setCaretPosition(0);
       return txtEditor;
    }
@@ -268,7 +268,6 @@ public class SwingUtil {
    public static void setLookAndFeel_Nimbus() {
       setLookAndFeel();
    }
-
 
    private static void setLookAndFeel() {
       for (UIManager.LookAndFeelInfo laf : UIManager.getInstalledLookAndFeels()) {
