@@ -1,0 +1,8 @@
+http://search.maven.org/remotecontent?filepath=org/slf4j/jul-to-slf4j/1.7.25/jul-to-slf4j-1.7.25.jar
+http://search.maven.org/remotecontent?filepath=net/logstash/logback/logstash-logback-encoder/4.11/logstash-logback-encoder-4.11.jar
+http://search.maven.org/remotecontent?filepath=org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar
+http://search.maven.org/remotecontent?filepath=com/fasterxml/jackson/core/jackson-databind/2.9.5/jackson-databind-2.9.5.jar
+http://search.maven.org/remotecontent?filepath=ch/qos/logback/logback-classic/1.2.3/logback-classic-1.2.3.jar
+http://search.maven.org/remotecontent?filepath=com/fasterxml/jackson/core/jackson-core/2.9.5/jackson-core-2.9.5.jar
+http://search.maven.org/remotecontent?filepath=ch/qos/logback/logback-core/1.2.3/logback-core-1.2.3.jar
+http://search.maven.org/remotecontent?filepath=com/fasterxml/jackson/core/jackson-annotations/2.9.5/jackson-annotations-2.9.5.jar

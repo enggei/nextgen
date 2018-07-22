@@ -69,34 +69,29 @@ sha1check() {
     return 1
   fi
 
-  echo "### CHECKING $2 in $1"
+#  echo "### CHECKING $2 in $1"
   current_dir=$(pwd)
   cd $1
 #  echo "$current_dir"
-#  pwd
   sha1sum --quiet -c $2
   retval=$?
 
-  if [ "$retval" -eq 0 ]; then
-    echo "    OK"
-  fi
+#  if [ "$retval" -eq 0 ]; then
+#    echo "### OK"
+#  fi
 
   cd ${current_dir}
   return ${retval}
 }
 
-wgetURL() {
-  if [ "$#" -lt 1 ] || [ "$#" -gt 2 ]; then
-    echo "wgetURL(): wrong number of arguments, expecting 1 or 2"
+wgetFile() {
+  if [ "$#" -lt 2 ]; then
+    echo "wgetFile(): wrong number of arguments, expecting 2"
     return 1
-  elif [ "$#" -eq 2 ]; then
-    echo "### DOWNLOADING $2 to $1"
-    wget -P $1 $2
-    return $?
   fi
 
-  echo "### DOWNLOADING $1"
-  wget $1
+  echo "### DOWNLOADING $1 to $2"
+  wget -q --show-progress -O $2 $1
   return $?
 }
 
@@ -154,61 +149,42 @@ gitPull() {
   return $?
 }
 
-# TODO: Change to a loop e.g. find *.sha1 files and process
-prepareElasticSearch() {
-  sha1check "$1/lib" "analysis-icu-6.4.0.sha1"
-  if [ "$?" -ne 0 ]; then
-    wgetURL "$1/lib" "https://artifacts.elastic.co/downloads/elasticsearch-plugins/analysis-icu/analysis-icu-6.4.0.zip"
-    sha1check "$1/lib" "analysis-icu-6.4.0.sha1" || exit 1
+updateDependencies() {
+  if [ "$#" -lt 1 ]; then
+    echo "updateDependencies(): wrong number of arguments, expecting 1"
+    return 1
   fi
-  sha1check "$1/lib" "ingest-attachment-6.4.0.sha1"
-  if [ "$?" -ne 0 ]; then
-    wgetURL "$1/lib" "https://artifacts.elastic.co/downloads/elasticsearch-plugins/ingest-attachment/ingest-attachment-6.4.0.zip"
-    sha1check "$1/lib" "ingest-attachment-6.4.0.sha1" || exit 1
-  fi
-}
 
-prepareHazelcast() {
-  sha1check "$1/lib" "jackson-annotations-2.9.5.sha1"
-  if [ "$?" -ne 0 ]; then
-    wgetURL "$1/lib" "http://search.maven.org/remotecontent?filepath=com/fasterxml/jackson/core/jackson-annotations/2.9.5/jackson-annotations-2.9.5.jar"
-    sha1check "$1/lib" "jackson-annotations-2.9.5.sha1" || exit 1
+  libdir="$1/lib"
+  dependencies="$libdir/dependencies.txt"
+
+  if [ ! -d "$libdir" ]; then
+    echo "$libdir does not exist!"
+    exit 1
   fi
-  sha1check "$1/lib" "jackson-core-2.9.5.sha1"
-  if [ "$?" -ne 0 ]; then
-    wgetURL "$1/lib" "http://search.maven.org/remotecontent?filepath=com/fasterxml/jackson/core/jackson-core/2.9.5/jackson-core-2.9.5.jar"
-    sha1check "$1/lib" "jackson-core-2.9.5.sha1" || exit 1
+
+  if [ ! -f "$dependencies" ]; then
+    echo "$dependencies does not exist!"
+    exit 1
   fi
-  sha1check "$1/lib" "jackson-databind-2.9.5.sha1"
-  if [ "$?" -ne 0 ]; then
-    wgetURL "$1/lib" "http://search.maven.org/remotecontent?filepath=com/fasterxml/jackson/core/jackson-databind/2.9.5/jackson-databind-2.9.5.jar"
-    sha1check "$1/lib" "jackson-databind-2.9.5.sha1" || exit 1
-  fi
-  sha1check "$1/lib" "jul-to-slf4j-1.7.25.sha1"
-  if [ "$?" -ne 0 ]; then
-    wgetURL "$1/lib" "http://search.maven.org/remotecontent?filepath=org/slf4j/jul-to-slf4j/1.7.25/jul-to-slf4j-1.7.25.jar"
-    sha1check "$1/lib" "jul-to-slf4j-1.7.25.sha1" || exit 1
-  fi
-  sha1check "$1/lib" "logback-classic-1.2.3.sha1"
-  if [ "$?" -ne 0 ]; then
-    wgetURL "$1/lib" "http://search.maven.org/remotecontent?filepath=ch/qos/logback/logback-classic/1.2.3/logback-classic-1.2.3.jar"
-    sha1check "$1/lib" "logback-classic-1.2.3.sha1" || exit 1
-  fi
-  sha1check "$1/lib" "logback-core-1.2.3.sha1"
-  if [ "$?" -ne 0 ]; then
-    wgetURL "$1/lib" "http://search.maven.org/remotecontent?filepath=ch/qos/logback/logback-core/1.2.3/logback-core-1.2.3.jar"
-    sha1check "$1/lib" "logback-core-1.2.3.sha1" || exit 1
-  fi
-  sha1check "$1/lib" "logstash-logback-encoder-4.11.sha1"
-  if [ "$?" -ne 0 ]; then
-    wgetURL "$1/lib" "http://search.maven.org/remotecontent?filepath=net/logstash/logback/logstash-logback-encoder/4.11/logstash-logback-encoder-4.11.jar"
-    sha1check "$1/lib" "logstash-logback-encoder-4.11.sha1" || exit 1
-  fi
-  sha1check "$1/lib" "slf4j-api-1.7.25.sha1"
-  if [ "$?" -ne 0 ]; then
-    wgetURL "$1/lib" "http://search.maven.org/remotecontent?filepath=org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar"
-    sha1check "$1/lib" "slf4j-api-1.7.25.sha1" || exit 1
-  fi
+
+  echo "Updating dependencies for $1 ..."
+
+  while read dep;
+  do
+    filename=${dep##*/}
+    path=${dep%${filename}}
+    sha1file=${filename}.sha1
+    sha1check "$libdir" "$sha1file"
+    if [ "$?" -ne 0 ]; then
+      echo "  $filename" "FAILED"
+      wgetFile "$dep" "$libdir/$filename"
+      sha1check "$libdir" "$sha1file" || exit 1
+    fi
+    echo "  $filename" "OK"
+  done < "$dependencies"
+
+  echo "...Dependencies up-to-date"
 }
 
 waitForDocker() {
@@ -250,10 +226,10 @@ echo "
 
 case $1 in
   all | all-nogui)
-#    declare -a containers=("stardog" "elasticsearch" "elasticsearchlogs" "kibana" "fluentd" "web" "gitserver" "hazelcast")
-#    prepareElasticSearch docker/elasticsearch
+#    declare -a containers=("elasticsearch" "elasticsearchlogs" "kibana" "fluentd" "web" "gitserver" "hazelcast")
+#    updateElasticSearchDependencies
 
-    prepareHazelcast docker/hazelcast
+    updateDependencies docker/hazelcast
 
     if [[ "${1}" != "all" ]] ; then
       # TODO: Find better way
@@ -281,12 +257,12 @@ case $1 in
     docker-compose restart nginx
     ;;
 
-  stardog | elasticsearchlogs | kibana | fluentd | nginx | gitserver)
+  elasticsearchlogs | kibana | fluentd | nginx | gitserver)
     build $1 && start $1
     ;;
 
   hazelcast)
-    prepareHazelcast docker/hazelcast
+    updateDependencies docker/hazelcast
 
     build $1 && start $1
     ;;
@@ -296,7 +272,7 @@ case $1 in
     ;;
 
   elasticsearch)
-    prepareElasticSearch docker/elasticsearch
+    updateDependencies docker/elasticsearch
 
     build $1 && start $1
     ;;
@@ -332,7 +308,6 @@ case $1 in
   - hazelcast
   - kibana
   - nginx
-  - stardog
 "
     ;;
   *)
