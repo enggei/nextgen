@@ -25,3 +25,7 @@ bak
 *.log*
 logs
 !/src/test/java/com/rita/rita.jar
+
+# Default local DBs
+db_template
+db_domain
