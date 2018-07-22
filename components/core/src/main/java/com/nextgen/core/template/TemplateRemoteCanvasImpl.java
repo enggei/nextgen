@@ -3,14 +3,11 @@ package com.nextgen.core.template;
 import com.nextgen.core.NodeCanvas;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Collections;
 
 public class TemplateRemoteCanvasImpl extends TemplateRemoteCanvas {
     public TemplateRemoteCanvasImpl(Vertx vertx, Integer port, String host) {
