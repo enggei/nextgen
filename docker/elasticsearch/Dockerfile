@@ -1,4 +1,4 @@
-FROM docker.elastic.co/elasticsearch/elasticsearch:5.6.3
+FROM docker.elastic.co/elasticsearch/elasticsearch:6.4.0
 
 ENV TZ=Europe/Oslo
 
@@ -8,11 +8,9 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 USER elasticsearch
 
-RUN elasticsearch-plugin remove x-pack
-
-COPY lib/ingest-attachment-5.6.3.zip /tmp/ingest-attachment-5.6.3.zip
-COPY lib/analysis-icu-5.6.3.zip /tmp/analysis-icu-5.6.3.zip
+COPY lib/ingest-attachment-6.4.0.zip /tmp/ingest-attachment-6.4.0.zip
+COPY lib/analysis-icu-6.4.0.zip /tmp/analysis-icu-6.4.0.zip
 COPY config/hunspell /usr/share/elasticsearch/config/hunspell
 
-RUN elasticsearch-plugin install file:/tmp/ingest-attachment-5.6.3.zip
-RUN elasticsearch-plugin install file:/tmp/analysis-icu-5.6.3.zip
+RUN elasticsearch-plugin install --batch file:/tmp/ingest-attachment-6.4.0.zip
+RUN elasticsearch-plugin install file:/tmp/analysis-icu-6.4.0.zip
