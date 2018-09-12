@@ -35,13 +35,3 @@ mkdir -p config/hunspell/ru_RU && cp -rp dictionaries/ru_RU/ru_RU* config/hunspe
 
 # etc... etc...
 ```
-
-#### Analysis ICU
-```bash
-wget https://artifacts.elastic.co/downloads/elasticsearch-plugins/analysis-icu/analysis-icu-5.6.3.zip
-```
-
-#### Ingest attachment
-```bash
-wget https://artifacts.elastic.co/downloads/elasticsearch-plugins/ingest-attachment/ingest-attachment-5.6.3.zip
-```
