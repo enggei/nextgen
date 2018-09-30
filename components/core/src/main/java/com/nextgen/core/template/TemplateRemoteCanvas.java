@@ -4529,6 +4529,29 @@ public class TemplateRemoteCanvas extends JsonCanvas {
 
 	public static abstract class RenderSTGroupHandler extends MessageHandler {
 
+		public abstract void onSuccess();
+
+		@Override
+		protected void handleSuccess(JsonObject payload) {
+			if (payload.isEmpty()) return;
+			onSuccess();
+		}
+	}
+
+
+	public void importSTG(String name, String text, ImportSTGHandler handler) {
+		send("template.importSTG", new JsonObject().put("name",name).put("text",text), handler);
+	}
+
+	public static abstract class ImportSTGHandler extends MessageHandler {
+
+		public abstract void onSuccess(String delimiter, String uuid, String name);
+
+		@Override
+		protected void handleSuccess(JsonObject payload) {
+			if (payload.isEmpty()) return;
+			onSuccess(payload.getString("delimiter"), payload.getString("uuid"), payload.getString("name"));
+		}
 	}
 
 
@@ -4538,15 +4561,29 @@ public class TemplateRemoteCanvas extends JsonCanvas {
 
 	public static abstract class ImportGroupHandler extends MessageHandler {
 
+		public abstract void onSuccess();
+
+		@Override
+		protected void handleSuccess(JsonObject payload) {
+			if (payload.isEmpty()) return;
+			onSuccess();
+		}
 	}
 
 
-	public void exportGroup(ExportGroupHandler handler) {
-		send("template.exportGroup", new JsonObject(), handler);
+	public void exportGroup(String stGroup, ExportGroupHandler handler) {
+		send("template.exportGroup", new JsonObject().put("stGroup",stGroup), handler);
 	}
 
 	public static abstract class ExportGroupHandler extends MessageHandler {
 
+		public abstract void onSuccess(JsonObject result);
+
+		@Override
+		protected void handleSuccess(JsonObject payload) {
+			if (payload.isEmpty()) return;
+			onSuccess(payload.getJsonObject("result"));
+		}
 	}
 
 

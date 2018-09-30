@@ -16,6 +16,7 @@ import org.junit.Test;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.Stack;
@@ -25,6 +26,13 @@ import java.util.Stack;
  */
 public class Tests {
    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Tests.class);
+
+   @Test
+   public void tmp() throws IOException {
+      new MysqlGroup().toSTGFile(new File("/home/goe/projects/nextgen/components/core/src/main/java/com/generator/generators/mysql/"));
+   }
+
+
    //@Test
    public void testParseSQLQuery() {
 

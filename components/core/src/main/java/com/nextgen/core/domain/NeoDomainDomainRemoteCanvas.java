@@ -228,7 +228,7 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 		protected NeoDomainForm(JsonObject content) {
 			this();
 			this.uuid = content.getString("uuid");
-			nameComponent.setValue(content.getValue("name"));
+			nameComponent.setValue(content.getValue(NeoDomain.Properties.name.name()));
 		}
 
 		public PropertyComponent getNameComponent() {
@@ -247,11 +247,11 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 		@Deprecated
 		protected JsonObject toJson() {
 			return new JsonObject()	
-				.put("name", (String) getNameValue());}
+				.put(NeoDomain.Properties.name.name(), (String) getNameValue());}
 
 		protected NeoDomain getNeoDomain() {
-			final JsonObject jsonObject = new JsonObject()
-				.put("name", (String) getNameValue());
+			final JsonObject jsonObject = new JsonObject() 
+				.put(NeoDomain.Properties.name.name(), (String) getNameValue());
 			if (uuid != null) jsonObject.put("uuid", uuid);
 			return mapNeoDomain(jsonObject);
 		}
@@ -263,7 +263,7 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 	public void newNeoDomain(String name, NeoDomainHandler handler) {
 		final JsonObject parameters = new JsonObject().
-			put("name", name);
+			put(NeoDomain.Properties.name.name(), name);
 		newNeoDomain(mapNeoDomain(parameters), handler);
 	}
 
@@ -274,7 +274,7 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 	public NeoDomain newNeoDomain(String name) {
 		return newNeoDomain(new JsonObject().
-			put("name", name));
+			put(NeoDomain.Properties.name.name(), name));
 	}
 
 	public NeoDomain newNeoDomain(JsonObject parameters) {
@@ -336,27 +336,22 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 		return new NeoDomain() {
 
 			@Override
-			public UUID getUUID() {
-				return UUID.fromString(payload.getString("uuid"));
-			}
-					@Override
-			public JsonObject toJson() {
-				return payload;
-			}
+			public UUID getUUID() { return UUID.fromString(payload.getString("uuid"));	}
 
 			@Override
-			public String toString() {
-				return payload.encode();
-			}
+			public JsonObject toJson() { return payload;	}
+
+			@Override
+			public String toString() {	return payload.encode(); }
 
 			@Override
 			public String getName() {
-				return payload.getString("name");
+				return payload.getString(NeoDomain.Properties.name.name());
 			}
 
 			@Override
 			public NeoDomain setName(String name) {
-				payload.put("name", name);
+				payload.put(NeoDomain.Properties.name.name(), name);
 				return this;
 			}
 
@@ -409,6 +404,26 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 				}
 			});
 
+			// ONE 'NeoVisitor' (NeoVisitor) -> VISITOR_RETURNVALUES -> MANY 'VisitorReturnValue' (VisitorReturnValue)
+			final JMenu VISITOR_RETURNVALUESMenu = new JMenu("VISITOR_RETURNVALUES");
+
+			VISITOR_RETURNVALUESMenu.add(new SwingAction("Get All VISITOR_RETURNVALUES") {
+				@Override
+				protected void onActionPerformed(ActionEvent e) {
+					get_VisitorReturnValue_VISITOR_RETURNVALUES_FOR_NeoVisitor(getUUID(), new ExpandVisitorReturnValue_VISITOR_RETURNVALUES_FOR_NeoVisitorHandler(getThis()));
+				}
+			});
+
+			VISITOR_RETURNVALUESMenu.add(new SwingAction("Add VisitorReturnValue") {
+				@Override
+				protected void onActionPerformed(ActionEvent e) {
+					add_VisitorReturnValue_VISITOR_RETURNVALUES_FOR_NeoVisitor(getThis(), canvas);
+				}
+			});
+
+			if (VISITOR_RETURNVALUESMenu.getMenuComponentCount() != 0) pop.add(VISITOR_RETURNVALUESMenu);
+
+
 			// ONE 'NeoVisitor' (NeoVisitor) -> VISITOR_PARAMETERS -> MANY 'VisitorParameter' (VisitorParameter)
 			final JMenu VISITOR_PARAMETERSMenu = new JMenu("VISITOR_PARAMETERS");
 
@@ -438,6 +453,9 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 			switch (event.getKeyCode()) {
 				case KeyEvent.VK_E:
+					// ONE 'NeoVisitor' (NeoVisitor) -> VISITOR_RETURNVALUES -> MANY 'VisitorReturnValue' (VisitorReturnValue)
+					if (event.isControlDown()) get_VisitorReturnValue_VISITOR_RETURNVALUES_FOR_NeoVisitor(getUUID(), new ExpandVisitorReturnValue_VISITOR_RETURNVALUES_FOR_NeoVisitorHandler(getThis()));
+
 					// ONE 'NeoVisitor' (NeoVisitor) -> VISITOR_PARAMETERS -> MANY 'VisitorParameter' (VisitorParameter)
 					if (event.isControlDown()) get_VisitorParameter_VISITOR_PARAMETERS_FOR_NeoVisitor(getUUID(), new ExpandVisitorParameter_VISITOR_PARAMETERS_FOR_NeoVisitorHandler(getThis()));
 
@@ -472,7 +490,7 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 		protected NeoVisitorForm(JsonObject content) {
 			this();
 			this.uuid = content.getString("uuid");
-			nameComponent.setValue(content.getValue("name"));
+			nameComponent.setValue(content.getValue(NeoVisitor.Properties.name.name()));
 		}
 
 		public PropertyComponent getNameComponent() {
@@ -491,11 +509,11 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 		@Deprecated
 		protected JsonObject toJson() {
 			return new JsonObject()	
-				.put("name", (String) getNameValue());}
+				.put(NeoVisitor.Properties.name.name(), (String) getNameValue());}
 
 		protected NeoVisitor getNeoVisitor() {
-			final JsonObject jsonObject = new JsonObject()
-				.put("name", (String) getNameValue());
+			final JsonObject jsonObject = new JsonObject() 
+				.put(NeoVisitor.Properties.name.name(), (String) getNameValue());
 			if (uuid != null) jsonObject.put("uuid", uuid);
 			return mapNeoVisitor(jsonObject);
 		}
@@ -507,7 +525,7 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 	public NeoVisitor newNeoVisitor(String name) {
 		return newNeoVisitor(new JsonObject().
-			put("name", name));
+			put(NeoVisitor.Properties.name.name(), name));
 	}
 
 	public NeoVisitor newNeoVisitor(JsonObject parameters) {
@@ -569,27 +587,22 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 		return new NeoVisitor() {
 
 			@Override
-			public UUID getUUID() {
-				return UUID.fromString(payload.getString("uuid"));
-			}
-					@Override
-			public JsonObject toJson() {
-				return payload;
-			}
+			public UUID getUUID() { return UUID.fromString(payload.getString("uuid"));	}
 
 			@Override
-			public String toString() {
-				return payload.encode();
-			}
+			public JsonObject toJson() { return payload;	}
+
+			@Override
+			public String toString() {	return payload.encode(); }
 
 			@Override
 			public String getName() {
-				return payload.getString("name");
+				return payload.getString(NeoVisitor.Properties.name.name());
 			}
 
 			@Override
 			public NeoVisitor setName(String name) {
-				payload.put("name", name);
+				payload.put(NeoVisitor.Properties.name.name(), name);
 				return this;
 			}
 
@@ -602,6 +615,252 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 			public void onSuccess(java.util.Iterator<NeoVisitor> it) {
 				final Set<BasePNode> nodes = new LinkedHashSet<>();
 				while (it.hasNext()) nodes.add(newNeoVisitorNode(it.next().toJson()));
+				addNodes(nodes, new LayoutRelativeTo(getMousePosition() == null ? getCenterPosition() : getMousePosition()));
+			}
+		});
+	}
+
+
+	public VisitorReturnValueNode newVisitorReturnValueNode(JsonObject jsonObject) {
+		return new VisitorReturnValueNode(jsonObject);
+	}
+
+	class VisitorReturnValueNode extends JsonPNode {
+
+		VisitorReturnValueNode(JsonObject visitorReturnValue) {
+			super(visitorReturnValue, "name", Color.decode("#0570b0"), Color.decode("#238b45"), Color.decode("#d7301f"));
+		}
+
+		@Override
+		protected void onRightClick(PInputEvent event, JPopupMenu pop, NodeCanvas canvas, Point mousePosition) {
+
+			// default actions 
+			pop.add(new SwingAction("Edit") {
+				@Override
+				protected void onActionPerformed(ActionEvent e) {
+
+					final VisitorReturnValueForm form = new VisitorReturnValueForm(content());
+					form.show(canvas, new ConfirmAction() {
+						@Override
+						public void verifyAndCommit() throws Exception {
+							updateVisitorReturnValue(form.getVisitorReturnValue(), new VisitorReturnValueHandler() {
+								@Override
+								public void onSuccess(VisitorReturnValue updated) {
+									setContent(updated.toJson());
+									nodeChangeSupport.firePropertyChange(nodeEvent("content"), null, updated.toJson());
+								}
+							});
+						}
+					});
+				}
+			});
+
+
+			super.onRightClick(event, pop, canvas, mousePosition);
+		}
+
+		@Override
+		protected void onKeyPressed(PInputEvent event, NodeCanvas canvas) {
+
+			switch (event.getKeyCode()) {
+				case KeyEvent.VK_E:
+				return;
+			}
+
+			super.onKeyPressed(event, canvas);
+		}
+	}
+
+	// NeoDomainDomain VisitorReturnValue
+	protected final class VisitorReturnValueForm extends JPanel {
+
+		private final String title = "New VisitorReturnValue";
+		private final PropertyComponent typeComponent = new PropertyComponent("String");
+		private final PropertyComponent nameComponent = new PropertyComponent("String");
+		private String uuid;
+
+		protected VisitorReturnValueForm() {
+			super(new BorderLayout());
+				this.uuid = null;
+
+			int c = 1, r = 1;
+			final FormPanel form = new FormPanel("100dlu,4dlu,150dlu", "pref,4dlu,pref,4dlu");
+			form.addLabel(NeoDomainDomain.Properties.type.name(), c, r);
+			c += 2;
+			form.add(typeComponent.getComponent(), c, r);
+
+			r +=2;
+			c = 1;
+			form.addLabel(NeoDomainDomain.Properties.name.name(), c, r);
+			c += 2;
+			form.add(nameComponent.getComponent(), c, r);
+
+			setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			add(form.build(), BorderLayout.CENTER);
+		}
+
+		protected VisitorReturnValueForm(JsonObject content) {
+			this();
+			this.uuid = content.getString("uuid");
+			typeComponent.setValue(content.getValue(VisitorReturnValue.Properties.type.name()));
+			nameComponent.setValue(content.getValue(VisitorReturnValue.Properties.name.name()));
+		}
+
+		public PropertyComponent getTypeComponent() {
+			return typeComponent;
+		}
+
+		protected VisitorReturnValueForm setTypeValue(String type) {
+			typeComponent.setValue(type);
+			return this;
+		}
+
+		protected <T> T getTypeValue() {
+			return typeComponent.getValue();
+		}
+
+
+		public PropertyComponent getNameComponent() {
+			return nameComponent;
+		}
+
+		protected VisitorReturnValueForm setNameValue(String name) {
+			nameComponent.setValue(name);
+			return this;
+		}
+
+		protected <T> T getNameValue() {
+			return nameComponent.getValue();
+		}
+
+		@Deprecated
+		protected JsonObject toJson() {
+			return new JsonObject()	
+				.put(VisitorReturnValue.Properties.type.name(), (String) getTypeValue())
+				.put(VisitorReturnValue.Properties.name.name(), (String) getNameValue());}
+
+		protected VisitorReturnValue getVisitorReturnValue() {
+			final JsonObject jsonObject = new JsonObject() 
+				.put(VisitorReturnValue.Properties.type.name(), (String) getTypeValue())
+				.put(VisitorReturnValue.Properties.name.name(), (String) getNameValue());
+			if (uuid != null) jsonObject.put("uuid", uuid);
+			return mapVisitorReturnValue(jsonObject);
+		}
+
+		protected void show(NodeCanvas canvas, ConfirmAction confirmAction) {
+			showDialog(this, canvas, title, confirmAction);
+		}
+	}
+
+	public VisitorReturnValue newVisitorReturnValue(String type, String name) {
+		return newVisitorReturnValue(new JsonObject().
+			put(VisitorReturnValue.Properties.type.name(), type).
+			put(VisitorReturnValue.Properties.name.name(), name));
+	}
+
+	public VisitorReturnValue newVisitorReturnValue(JsonObject parameters) {
+		return mapVisitorReturnValue(parameters);
+	}
+
+	public void updateVisitorReturnValue(VisitorReturnValue visitorReturnValue, VisitorReturnValueHandler handler) {
+		send("neoDomainDomain.update.visitorReturnValue", new JsonObject().put("uuid", visitorReturnValue.getUUID().toString()).put("VisitorReturnValue", visitorReturnValue.toJson()), handler);
+	}
+
+	public void deleteVisitorReturnValue(UUID uuid,  DeleteHandler handler) {
+		send("neoDomainDomain.delete.visitorReturnValue", new JsonObject().put("uuid", uuid.toString()), handler);
+	}
+
+	public void getVisitorReturnValue(UUID uuid, VisitorReturnValueHandler handler) {
+		send("neoDomainDomain.get.visitorReturnValue", new JsonObject().put("uuid", uuid.toString()), handler);
+	}
+
+	public void getAllVisitorReturnValue(VisitorReturnValueListHandler handler) {
+		send("neoDomainDomain.get.all.visitorReturnValue", new JsonObject(), handler);
+	}
+
+	public static abstract class VisitorReturnValueListHandler extends ListHandler<VisitorReturnValue> {
+
+		@Override
+		protected VisitorReturnValue map(JsonObject jsonObject) {
+			return mapVisitorReturnValue(jsonObject);
+		}
+	}
+
+	public static abstract class VisitorReturnValueHandler extends MessageHandler {
+
+		public abstract void onSuccess(VisitorReturnValue visitorReturnValue);
+
+		@Override
+		protected void handleSuccess(JsonObject payload) {
+			onSuccess(mapVisitorReturnValue(payload));
+		}
+	}
+
+	interface VisitorReturnValue {
+
+		enum Properties {
+			type,
+			name
+		}
+
+
+		UUID getUUID();
+
+		JsonObject toJson();
+
+		String getType();
+
+		VisitorReturnValue setType(String type);
+
+		String getName();
+
+		VisitorReturnValue setName(String name);
+
+	}
+
+	private static VisitorReturnValue mapVisitorReturnValue(JsonObject payload) {
+		return new VisitorReturnValue() {
+
+			@Override
+			public UUID getUUID() { return UUID.fromString(payload.getString("uuid"));	}
+
+			@Override
+			public JsonObject toJson() { return payload;	}
+
+			@Override
+			public String toString() {	return payload.encode(); }
+
+			@Override
+			public String getType() {
+				return payload.getString(VisitorReturnValue.Properties.type.name());
+			}
+
+			@Override
+			public VisitorReturnValue setType(String type) {
+				payload.put(VisitorReturnValue.Properties.type.name(), type);
+				return this;
+			}
+
+			@Override
+			public String getName() {
+				return payload.getString(VisitorReturnValue.Properties.name.name());
+			}
+
+			@Override
+			public VisitorReturnValue setName(String name) {
+				payload.put(VisitorReturnValue.Properties.name.name(), name);
+				return this;
+			}
+
+		};
+	}
+
+	protected void getAllVisitorReturnValue() {
+		getAllVisitorReturnValue(new VisitorReturnValueListHandler() {
+			@Override
+			public void onSuccess(java.util.Iterator<VisitorReturnValue> it) {
+				final Set<BasePNode> nodes = new LinkedHashSet<>();
+				while (it.hasNext()) nodes.add(newVisitorReturnValueNode(it.next().toJson()));
 				addNodes(nodes, new LayoutRelativeTo(getMousePosition() == null ? getCenterPosition() : getMousePosition()));
 			}
 		});
@@ -689,8 +948,8 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 		protected VisitorParameterForm(JsonObject content) {
 			this();
 			this.uuid = content.getString("uuid");
-			typeComponent.setValue(content.getValue("type"));
-			nameComponent.setValue(content.getValue("name"));
+			typeComponent.setValue(content.getValue(VisitorParameter.Properties.type.name()));
+			nameComponent.setValue(content.getValue(VisitorParameter.Properties.name.name()));
 		}
 
 		public PropertyComponent getTypeComponent() {
@@ -723,13 +982,13 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 		@Deprecated
 		protected JsonObject toJson() {
 			return new JsonObject()	
-				.put("type", (String) getTypeValue())
-				.put("name", (String) getNameValue());}
+				.put(VisitorParameter.Properties.type.name(), (String) getTypeValue())
+				.put(VisitorParameter.Properties.name.name(), (String) getNameValue());}
 
 		protected VisitorParameter getVisitorParameter() {
-			final JsonObject jsonObject = new JsonObject()
-				.put("type", (String) getTypeValue())
-				.put("name", (String) getNameValue());
+			final JsonObject jsonObject = new JsonObject() 
+				.put(VisitorParameter.Properties.type.name(), (String) getTypeValue())
+				.put(VisitorParameter.Properties.name.name(), (String) getNameValue());
 			if (uuid != null) jsonObject.put("uuid", uuid);
 			return mapVisitorParameter(jsonObject);
 		}
@@ -741,8 +1000,8 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 	public VisitorParameter newVisitorParameter(String type, String name) {
 		return newVisitorParameter(new JsonObject().
-			put("type", type).
-			put("name", name));
+			put(VisitorParameter.Properties.type.name(), type).
+			put(VisitorParameter.Properties.name.name(), name));
 	}
 
 	public VisitorParameter newVisitorParameter(JsonObject parameters) {
@@ -809,38 +1068,33 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 		return new VisitorParameter() {
 
 			@Override
-			public UUID getUUID() {
-				return UUID.fromString(payload.getString("uuid"));
-			}
-					@Override
-			public JsonObject toJson() {
-				return payload;
-			}
+			public UUID getUUID() { return UUID.fromString(payload.getString("uuid"));	}
 
 			@Override
-			public String toString() {
-				return payload.encode();
-			}
+			public JsonObject toJson() { return payload;	}
+
+			@Override
+			public String toString() {	return payload.encode(); }
 
 			@Override
 			public String getType() {
-				return payload.getString("type");
+				return payload.getString(VisitorParameter.Properties.type.name());
 			}
 
 			@Override
 			public VisitorParameter setType(String type) {
-				payload.put("type", type);
+				payload.put(VisitorParameter.Properties.type.name(), type);
 				return this;
 			}
 
 			@Override
 			public String getName() {
-				return payload.getString("name");
+				return payload.getString(VisitorParameter.Properties.name.name());
 			}
 
 			@Override
 			public VisitorParameter setName(String name) {
-				payload.put("name", name);
+				payload.put(VisitorParameter.Properties.name.name(), name);
 				return this;
 			}
 
@@ -1030,11 +1284,11 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 		protected NeoEntityForm(JsonObject content) {
 			this();
 			this.uuid = content.getString("uuid");
-			highlightedColorComponent.setValue(content.getValue("highlightedColor"));
-			selectedColorComponent.setValue(content.getValue("selectedColor"));
-			defaultColorComponent.setValue(content.getValue("defaultColor"));
-			labelComponent.setValue(content.getValue("label"));
-			nameComponent.setValue(content.getValue("name"));
+			highlightedColorComponent.setValue(content.getValue(NeoEntity.Properties.highlightedColor.name()));
+			selectedColorComponent.setValue(content.getValue(NeoEntity.Properties.selectedColor.name()));
+			defaultColorComponent.setValue(content.getValue(NeoEntity.Properties.defaultColor.name()));
+			labelComponent.setValue(content.getValue(NeoEntity.Properties.label.name()));
+			nameComponent.setValue(content.getValue(NeoEntity.Properties.name.name()));
 		}
 
 		public PropertyComponent getHighlightedColorComponent() {
@@ -1109,19 +1363,19 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 		@Deprecated
 		protected JsonObject toJson() {
 			return new JsonObject()	
-				.put("highlightedColor", (String) getHighlightedColorValue())
-				.put("selectedColor", (String) getSelectedColorValue())
-				.put("defaultColor", (String) getDefaultColorValue())
-				.put("label", (String) getLabelValue())
-				.put("name", (String) getNameValue());}
+				.put(NeoEntity.Properties.highlightedColor.name(), (String) getHighlightedColorValue())
+				.put(NeoEntity.Properties.selectedColor.name(), (String) getSelectedColorValue())
+				.put(NeoEntity.Properties.defaultColor.name(), (String) getDefaultColorValue())
+				.put(NeoEntity.Properties.label.name(), (String) getLabelValue())
+				.put(NeoEntity.Properties.name.name(), (String) getNameValue());}
 
 		protected NeoEntity getNeoEntity() {
-			final JsonObject jsonObject = new JsonObject()
-				.put("highlightedColor", (String) getHighlightedColorValue())
-				.put("selectedColor", (String) getSelectedColorValue())
-				.put("defaultColor", (String) getDefaultColorValue())
-				.put("label", (String) getLabelValue())
-				.put("name", (String) getNameValue());
+			final JsonObject jsonObject = new JsonObject() 
+				.put(NeoEntity.Properties.highlightedColor.name(), (String) getHighlightedColorValue())
+				.put(NeoEntity.Properties.selectedColor.name(), (String) getSelectedColorValue())
+				.put(NeoEntity.Properties.defaultColor.name(), (String) getDefaultColorValue())
+				.put(NeoEntity.Properties.label.name(), (String) getLabelValue())
+				.put(NeoEntity.Properties.name.name(), (String) getNameValue());
 			if (uuid != null) jsonObject.put("uuid", uuid);
 			return mapNeoEntity(jsonObject);
 		}
@@ -1133,11 +1387,11 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 	public NeoEntity newNeoEntity(String highlightedColor, String selectedColor, String defaultColor, String label, String name) {
 		return newNeoEntity(new JsonObject().
-			put("highlightedColor", highlightedColor).
-			put("selectedColor", selectedColor).
-			put("defaultColor", defaultColor).
-			put("label", label).
-			put("name", name));
+			put(NeoEntity.Properties.highlightedColor.name(), highlightedColor).
+			put(NeoEntity.Properties.selectedColor.name(), selectedColor).
+			put(NeoEntity.Properties.defaultColor.name(), defaultColor).
+			put(NeoEntity.Properties.label.name(), label).
+			put(NeoEntity.Properties.name.name(), name));
 	}
 
 	public NeoEntity newNeoEntity(JsonObject parameters) {
@@ -1219,71 +1473,66 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 		return new NeoEntity() {
 
 			@Override
-			public UUID getUUID() {
-				return UUID.fromString(payload.getString("uuid"));
-			}
-					@Override
-			public JsonObject toJson() {
-				return payload;
-			}
+			public UUID getUUID() { return UUID.fromString(payload.getString("uuid"));	}
 
 			@Override
-			public String toString() {
-				return payload.encode();
-			}
+			public JsonObject toJson() { return payload;	}
+
+			@Override
+			public String toString() {	return payload.encode(); }
 
 			@Override
 			public String getHighlightedColor() {
-				return payload.getString("highlightedColor");
+				return payload.getString(NeoEntity.Properties.highlightedColor.name());
 			}
 
 			@Override
 			public NeoEntity setHighlightedColor(String highlightedColor) {
-				payload.put("highlightedColor", highlightedColor);
+				payload.put(NeoEntity.Properties.highlightedColor.name(), highlightedColor);
 				return this;
 			}
 
 			@Override
 			public String getSelectedColor() {
-				return payload.getString("selectedColor");
+				return payload.getString(NeoEntity.Properties.selectedColor.name());
 			}
 
 			@Override
 			public NeoEntity setSelectedColor(String selectedColor) {
-				payload.put("selectedColor", selectedColor);
+				payload.put(NeoEntity.Properties.selectedColor.name(), selectedColor);
 				return this;
 			}
 
 			@Override
 			public String getDefaultColor() {
-				return payload.getString("defaultColor");
+				return payload.getString(NeoEntity.Properties.defaultColor.name());
 			}
 
 			@Override
 			public NeoEntity setDefaultColor(String defaultColor) {
-				payload.put("defaultColor", defaultColor);
+				payload.put(NeoEntity.Properties.defaultColor.name(), defaultColor);
 				return this;
 			}
 
 			@Override
 			public String getLabel() {
-				return payload.getString("label");
+				return payload.getString(NeoEntity.Properties.label.name());
 			}
 
 			@Override
 			public NeoEntity setLabel(String label) {
-				payload.put("label", label);
+				payload.put(NeoEntity.Properties.label.name(), label);
 				return this;
 			}
 
 			@Override
 			public String getName() {
-				return payload.getString("name");
+				return payload.getString(NeoEntity.Properties.name.name());
 			}
 
 			@Override
 			public NeoEntity setName(String name) {
-				payload.put("name", name);
+				payload.put(NeoEntity.Properties.name.name(), name);
 				return this;
 			}
 
@@ -1429,8 +1678,8 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 		protected NeoRelationForm(JsonObject content) {
 			this();
 			this.uuid = content.getString("uuid");
-			cardinalityComponent.setValue(content.getValue("cardinality"));
-			nameComponent.setValue(content.getValue("name"));
+			cardinalityComponent.setValue(content.getValue(NeoRelation.Properties.cardinality.name()));
+			nameComponent.setValue(content.getValue(NeoRelation.Properties.name.name()));
 		}
 
 		public PropertyComponent getCardinalityComponent() {
@@ -1463,13 +1712,13 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 		@Deprecated
 		protected JsonObject toJson() {
 			return new JsonObject()	
-				.put("Cardinality", (NeoRelation.Cardinality) getCardinalityValue())
-				.put("name", (String) getNameValue());}
+				.put(NeoRelation.Properties.cardinality.name(), (NeoRelation.Cardinality) getCardinalityValue())
+				.put(NeoRelation.Properties.name.name(), (String) getNameValue());}
 
 		protected NeoRelation getNeoRelation() {
-			final JsonObject jsonObject = new JsonObject()
-				.put("Cardinality", (NeoRelation.Cardinality) getCardinalityValue())
-				.put("name", (String) getNameValue());
+			final JsonObject jsonObject = new JsonObject() 
+				.put(NeoRelation.Properties.cardinality.name(), (NeoRelation.Cardinality) getCardinalityValue())
+				.put(NeoRelation.Properties.name.name(), (String) getNameValue());
 			if (uuid != null) jsonObject.put("uuid", uuid);
 			return mapNeoRelation(jsonObject);
 		}
@@ -1481,8 +1730,8 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 	public NeoRelation newNeoRelation(NeoRelation.Cardinality Cardinality, String name) {
 		return newNeoRelation(new JsonObject().
-			put("Cardinality", Cardinality.name()).
-			put("name", name));
+			put(NeoRelation.Properties.cardinality.name(), Cardinality.name()).
+			put(NeoRelation.Properties.name.name(), name));
 	}
 
 	public NeoRelation newNeoRelation(JsonObject parameters) {
@@ -1550,38 +1799,33 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 		return new NeoRelation() {
 
 			@Override
-			public UUID getUUID() {
-				return UUID.fromString(payload.getString("uuid"));
-			}
-					@Override
-			public JsonObject toJson() {
-				return payload;
-			}
+			public UUID getUUID() { return UUID.fromString(payload.getString("uuid"));	}
 
 			@Override
-			public String toString() {
-				return payload.encode();
-			}
+			public JsonObject toJson() { return payload;	}
+
+			@Override
+			public String toString() {	return payload.encode(); }
 
 			@Override
 			public Cardinality getCardinality() {
-				return Cardinality.valueOf(payload.getString("cardinality"));
+				return Cardinality.valueOf(payload.getString(NeoRelation.Properties.cardinality.name()));
 			}
 
 			@Override
 			public NeoRelation setCardinality(Cardinality cardinality) {
-				payload.put("Cardinality", cardinality.name());
+				payload.put(NeoRelation.Properties.cardinality.name(), cardinality.name());
 				return this;
 			}
 
 			@Override
 			public String getName() {
-				return payload.getString("name");
+				return payload.getString(NeoRelation.Properties.name.name());
 			}
 
 			@Override
 			public NeoRelation setName(String name) {
-				payload.put("name", name);
+				payload.put(NeoRelation.Properties.name.name(), name);
 				return this;
 			}
 
@@ -1688,9 +1932,9 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 		protected NeoPropertyForm(JsonObject content) {
 			this();
 			this.uuid = content.getString("uuid");
-			enumValuesComponent.setValue(content.getValue("enumValues"));
-			valueTypeComponent.setValue(content.getValue("valueType"));
-			nameComponent.setValue(content.getValue("name"));
+			enumValuesComponent.setValue(content.getValue(NeoProperty.Properties.enumValues.name()));
+			valueTypeComponent.setValue(content.getValue(NeoProperty.Properties.valueType.name()));
+			nameComponent.setValue(content.getValue(NeoProperty.Properties.name.name()));
 		}
 
 		public PropertyComponent getEnumValuesComponent() {
@@ -1737,15 +1981,15 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 		@Deprecated
 		protected JsonObject toJson() {
 			return new JsonObject()	
-				.put("enumValues", (String) getEnumValuesValue())
-				.put("ValueType", (NeoProperty.ValueType) getValueTypeValue())
-				.put("name", (String) getNameValue());}
+				.put(NeoProperty.Properties.enumValues.name(), (String) getEnumValuesValue())
+				.put(NeoProperty.Properties.valueType.name(), (NeoProperty.ValueType) getValueTypeValue())
+				.put(NeoProperty.Properties.name.name(), (String) getNameValue());}
 
 		protected NeoProperty getNeoProperty() {
-			final JsonObject jsonObject = new JsonObject()
-				.put("enumValues", (String) getEnumValuesValue())
-				.put("ValueType", (NeoProperty.ValueType) getValueTypeValue())
-				.put("name", (String) getNameValue());
+			final JsonObject jsonObject = new JsonObject() 
+				.put(NeoProperty.Properties.enumValues.name(), (String) getEnumValuesValue())
+				.put(NeoProperty.Properties.valueType.name(), (NeoProperty.ValueType) getValueTypeValue())
+				.put(NeoProperty.Properties.name.name(), (String) getNameValue());
 			if (uuid != null) jsonObject.put("uuid", uuid);
 			return mapNeoProperty(jsonObject);
 		}
@@ -1757,9 +2001,9 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 	public NeoProperty newNeoProperty(String enumValues, NeoProperty.ValueType ValueType, String name) {
 		return newNeoProperty(new JsonObject().
-			put("enumValues", enumValues).
-			put("ValueType", ValueType.name()).
-			put("name", name));
+			put(NeoProperty.Properties.enumValues.name(), enumValues).
+			put(NeoProperty.Properties.valueType.name(), ValueType.name()).
+			put(NeoProperty.Properties.name.name(), name));
 	}
 
 	public NeoProperty newNeoProperty(JsonObject parameters) {
@@ -1832,49 +2076,44 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 		return new NeoProperty() {
 
 			@Override
-			public UUID getUUID() {
-				return UUID.fromString(payload.getString("uuid"));
-			}
-					@Override
-			public JsonObject toJson() {
-				return payload;
-			}
+			public UUID getUUID() { return UUID.fromString(payload.getString("uuid"));	}
 
 			@Override
-			public String toString() {
-				return payload.encode();
-			}
+			public JsonObject toJson() { return payload;	}
+
+			@Override
+			public String toString() {	return payload.encode(); }
 
 			@Override
 			public String getEnumValues() {
-				return payload.getString("enumValues");
+				return payload.getString(NeoProperty.Properties.enumValues.name());
 			}
 
 			@Override
 			public NeoProperty setEnumValues(String enumValues) {
-				payload.put("enumValues", enumValues);
+				payload.put(NeoProperty.Properties.enumValues.name(), enumValues);
 				return this;
 			}
 
 			@Override
 			public ValueType getValueType() {
-				return ValueType.valueOf(payload.getString("valueType"));
+				return ValueType.valueOf(payload.getString(NeoProperty.Properties.valueType.name()));
 			}
 
 			@Override
 			public NeoProperty setValueType(ValueType valueType) {
-				payload.put("ValueType", valueType.name());
+				payload.put(NeoProperty.Properties.valueType.name(), valueType.name());
 				return this;
 			}
 
 			@Override
 			public String getName() {
-				return payload.getString("name");
+				return payload.getString(NeoProperty.Properties.name.name());
 			}
 
 			@Override
 			public NeoProperty setName(String name) {
-				payload.put("name", name);
+				payload.put(NeoProperty.Properties.name.name(), name);
 				return this;
 			}
 
@@ -1947,6 +2186,10 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 	protected final class NeoDomainRendererForm extends JPanel {
 
 		private final String title = "New NeoDomainRenderer";
+		private final PropertyComponent renderRemoteCanvasComponent = new PropertyComponent("Boolean");
+		private final PropertyComponent renderCanvasComponent = new PropertyComponent("Boolean");
+		private final PropertyComponent renderDomainComponent = new PropertyComponent("Boolean");
+		private final PropertyComponent renderVerticleComponent = new PropertyComponent("Boolean");
 		private final PropertyComponent packageNameComponent = new PropertyComponent("String");
 		private final PropertyComponent rootComponent = new PropertyComponent("String");
 		private String uuid;
@@ -1956,7 +2199,31 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 				this.uuid = null;
 
 			int c = 1, r = 1;
-			final FormPanel form = new FormPanel("100dlu,4dlu,150dlu", "pref,4dlu,pref,4dlu");
+			final FormPanel form = new FormPanel("100dlu,4dlu,150dlu", "pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu");
+			form.addLabel(NeoDomainDomain.Properties.renderRemoteCanvas.name(), c, r);
+			c += 2;
+			form.add(renderRemoteCanvasComponent.getComponent(), c, r);
+
+			r +=2;
+			c = 1;
+			form.addLabel(NeoDomainDomain.Properties.renderCanvas.name(), c, r);
+			c += 2;
+			form.add(renderCanvasComponent.getComponent(), c, r);
+
+			r +=2;
+			c = 1;
+			form.addLabel(NeoDomainDomain.Properties.renderDomain.name(), c, r);
+			c += 2;
+			form.add(renderDomainComponent.getComponent(), c, r);
+
+			r +=2;
+			c = 1;
+			form.addLabel(NeoDomainDomain.Properties.renderVerticle.name(), c, r);
+			c += 2;
+			form.add(renderVerticleComponent.getComponent(), c, r);
+
+			r +=2;
+			c = 1;
 			form.addLabel(NeoDomainDomain.Properties.packageName.name(), c, r);
 			c += 2;
 			form.add(packageNameComponent.getComponent(), c, r);
@@ -1974,9 +2241,69 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 		protected NeoDomainRendererForm(JsonObject content) {
 			this();
 			this.uuid = content.getString("uuid");
-			packageNameComponent.setValue(content.getValue("packageName"));
-			rootComponent.setValue(content.getValue("root"));
+			renderRemoteCanvasComponent.setValue(content.getValue(NeoDomainRenderer.Properties.renderRemoteCanvas.name()));
+			renderCanvasComponent.setValue(content.getValue(NeoDomainRenderer.Properties.renderCanvas.name()));
+			renderDomainComponent.setValue(content.getValue(NeoDomainRenderer.Properties.renderDomain.name()));
+			renderVerticleComponent.setValue(content.getValue(NeoDomainRenderer.Properties.renderVerticle.name()));
+			packageNameComponent.setValue(content.getValue(NeoDomainRenderer.Properties.packageName.name()));
+			rootComponent.setValue(content.getValue(NeoDomainRenderer.Properties.root.name()));
 		}
+
+		public PropertyComponent getRenderRemoteCanvasComponent() {
+			return renderRemoteCanvasComponent;
+		}
+
+		protected NeoDomainRendererForm setRenderRemoteCanvasValue(Boolean renderRemoteCanvas) {
+			renderRemoteCanvasComponent.setValue(renderRemoteCanvas);
+			return this;
+		}
+
+		protected <T> T getRenderRemoteCanvasValue() {
+			return renderRemoteCanvasComponent.getValue();
+		}
+
+
+		public PropertyComponent getRenderCanvasComponent() {
+			return renderCanvasComponent;
+		}
+
+		protected NeoDomainRendererForm setRenderCanvasValue(Boolean renderCanvas) {
+			renderCanvasComponent.setValue(renderCanvas);
+			return this;
+		}
+
+		protected <T> T getRenderCanvasValue() {
+			return renderCanvasComponent.getValue();
+		}
+
+
+		public PropertyComponent getRenderDomainComponent() {
+			return renderDomainComponent;
+		}
+
+		protected NeoDomainRendererForm setRenderDomainValue(Boolean renderDomain) {
+			renderDomainComponent.setValue(renderDomain);
+			return this;
+		}
+
+		protected <T> T getRenderDomainValue() {
+			return renderDomainComponent.getValue();
+		}
+
+
+		public PropertyComponent getRenderVerticleComponent() {
+			return renderVerticleComponent;
+		}
+
+		protected NeoDomainRendererForm setRenderVerticleValue(Boolean renderVerticle) {
+			renderVerticleComponent.setValue(renderVerticle);
+			return this;
+		}
+
+		protected <T> T getRenderVerticleValue() {
+			return renderVerticleComponent.getValue();
+		}
+
 
 		public PropertyComponent getPackageNameComponent() {
 			return packageNameComponent;
@@ -2008,13 +2335,21 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 		@Deprecated
 		protected JsonObject toJson() {
 			return new JsonObject()	
-				.put("packageName", (String) getPackageNameValue())
-				.put("root", (String) getRootValue());}
+				.put(NeoDomainRenderer.Properties.renderRemoteCanvas.name(), (Boolean) getRenderRemoteCanvasValue())
+				.put(NeoDomainRenderer.Properties.renderCanvas.name(), (Boolean) getRenderCanvasValue())
+				.put(NeoDomainRenderer.Properties.renderDomain.name(), (Boolean) getRenderDomainValue())
+				.put(NeoDomainRenderer.Properties.renderVerticle.name(), (Boolean) getRenderVerticleValue())
+				.put(NeoDomainRenderer.Properties.packageName.name(), (String) getPackageNameValue())
+				.put(NeoDomainRenderer.Properties.root.name(), (String) getRootValue());}
 
 		protected NeoDomainRenderer getNeoDomainRenderer() {
-			final JsonObject jsonObject = new JsonObject()
-				.put("packageName", (String) getPackageNameValue())
-				.put("root", (String) getRootValue());
+			final JsonObject jsonObject = new JsonObject() 
+				.put(NeoDomainRenderer.Properties.renderRemoteCanvas.name(), (Boolean) getRenderRemoteCanvasValue())
+				.put(NeoDomainRenderer.Properties.renderCanvas.name(), (Boolean) getRenderCanvasValue())
+				.put(NeoDomainRenderer.Properties.renderDomain.name(), (Boolean) getRenderDomainValue())
+				.put(NeoDomainRenderer.Properties.renderVerticle.name(), (Boolean) getRenderVerticleValue())
+				.put(NeoDomainRenderer.Properties.packageName.name(), (String) getPackageNameValue())
+				.put(NeoDomainRenderer.Properties.root.name(), (String) getRootValue());
 			if (uuid != null) jsonObject.put("uuid", uuid);
 			return mapNeoDomainRenderer(jsonObject);
 		}
@@ -2024,10 +2359,14 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 		}
 	}
 
-	public NeoDomainRenderer newNeoDomainRenderer(String packageName, String root) {
+	public NeoDomainRenderer newNeoDomainRenderer(Boolean RenderRemoteCanvas, Boolean RenderCanvas, Boolean RenderDomain, Boolean RenderVerticle, String packageName, String root) {
 		return newNeoDomainRenderer(new JsonObject().
-			put("packageName", packageName).
-			put("root", root));
+			put(NeoDomainRenderer.Properties.renderRemoteCanvas.name(), RenderRemoteCanvas).
+			put(NeoDomainRenderer.Properties.renderCanvas.name(), RenderCanvas).
+			put(NeoDomainRenderer.Properties.renderDomain.name(), RenderDomain).
+			put(NeoDomainRenderer.Properties.renderVerticle.name(), RenderVerticle).
+			put(NeoDomainRenderer.Properties.packageName.name(), packageName).
+			put(NeoDomainRenderer.Properties.root.name(), root));
 	}
 
 	public NeoDomainRenderer newNeoDomainRenderer(JsonObject parameters) {
@@ -2071,6 +2410,10 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 	interface NeoDomainRenderer {
 
 		enum Properties {
+			renderRemoteCanvas,
+			renderCanvas,
+			renderDomain,
+			renderVerticle,
 			packageName,
 			root
 		}
@@ -2079,6 +2422,22 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 		UUID getUUID();
 
 		JsonObject toJson();
+
+		Boolean getRenderRemoteCanvas();
+
+		NeoDomainRenderer setRenderRemoteCanvas(Boolean renderRemoteCanvas);
+
+		Boolean getRenderCanvas();
+
+		NeoDomainRenderer setRenderCanvas(Boolean renderCanvas);
+
+		Boolean getRenderDomain();
+
+		NeoDomainRenderer setRenderDomain(Boolean renderDomain);
+
+		Boolean getRenderVerticle();
+
+		NeoDomainRenderer setRenderVerticle(Boolean renderVerticle);
 
 		String getPackageName();
 
@@ -2094,38 +2453,77 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 		return new NeoDomainRenderer() {
 
 			@Override
-			public UUID getUUID() {
-				return UUID.fromString(payload.getString("uuid"));
-			}
-					@Override
-			public JsonObject toJson() {
-				return payload;
+			public UUID getUUID() { return UUID.fromString(payload.getString("uuid"));	}
+
+			@Override
+			public JsonObject toJson() { return payload;	}
+
+			@Override
+			public String toString() {	return payload.encode(); }
+
+			@Override
+			public Boolean getRenderRemoteCanvas() {
+				return payload.getBoolean(NeoDomainRenderer.Properties.renderRemoteCanvas.name());
 			}
 
 			@Override
-			public String toString() {
-				return payload.encode();
+			public NeoDomainRenderer setRenderRemoteCanvas(Boolean renderRemoteCanvas) {
+				payload.put(NeoDomainRenderer.Properties.renderRemoteCanvas.name(), renderRemoteCanvas);
+				return this;
+			}
+
+			@Override
+			public Boolean getRenderCanvas() {
+				return payload.getBoolean(NeoDomainRenderer.Properties.renderCanvas.name());
+			}
+
+			@Override
+			public NeoDomainRenderer setRenderCanvas(Boolean renderCanvas) {
+				payload.put(NeoDomainRenderer.Properties.renderCanvas.name(), renderCanvas);
+				return this;
+			}
+
+			@Override
+			public Boolean getRenderDomain() {
+				return payload.getBoolean(NeoDomainRenderer.Properties.renderDomain.name());
+			}
+
+			@Override
+			public NeoDomainRenderer setRenderDomain(Boolean renderDomain) {
+				payload.put(NeoDomainRenderer.Properties.renderDomain.name(), renderDomain);
+				return this;
+			}
+
+			@Override
+			public Boolean getRenderVerticle() {
+				return payload.getBoolean(NeoDomainRenderer.Properties.renderVerticle.name());
+			}
+
+			@Override
+			public NeoDomainRenderer setRenderVerticle(Boolean renderVerticle) {
+				payload.put(NeoDomainRenderer.Properties.renderVerticle.name(), renderVerticle);
+				return this;
 			}
 
 			@Override
 			public String getPackageName() {
-				return payload.getString("packageName");
+				return payload.getString(NeoDomainRenderer.Properties.packageName.name());
 			}
 
 			@Override
 			public NeoDomainRenderer setPackageName(String packageName) {
-				payload.put("packageName", packageName);
+				payload.put(NeoDomainRenderer.Properties.packageName.name(), packageName);
 				return this;
 			}
 
 			@Override
 			public String getRoot() {
-				return payload.getString("root");
+				return payload.getString(NeoDomainRenderer.Properties.root.name());
 			}
 
 			@Override
 			public NeoDomainRenderer setRoot(String root) {
-				payload.put("root", root);
+				payload.put(NeoDomainRenderer.Properties.root.name(), root);
 				return this;
 			}
 
@@ -2190,10 +2588,11 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 		@Deprecated
 		protected JsonObject toJson() {
-			return new JsonObject()	;}
+			return new JsonObject()	;
+		}
 
 		protected DOMAIN_VISITORS getDOMAIN_VISITORS() {
-			final JsonObject jsonObject = new JsonObject();
+			final JsonObject jsonObject = new JsonObject() ;
 			if (uuid != null) jsonObject.put("uuid", uuid);
 			return mapDOMAIN_VISITORS(jsonObject);
 		}
@@ -2312,24 +2711,209 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 	private static DOMAIN_VISITORS mapDOMAIN_VISITORS(JsonObject payload) {
 		return new DOMAIN_VISITORS() {
-			@Override
-			public UUID getUUID() {
-				return UUID.fromString(payload.getString("uuid"));
-			}
 
 			@Override
-			public JsonObject toJson() {
-				return payload;
-			}
+			public UUID getUUID() { return UUID.fromString(payload.getString("uuid")); }
 
 			@Override
-			public String toString() {
-				return toJson().encode();
-			}
+			public JsonObject toJson() { return payload; }
+
+			@Override
+			public String toString() { return toJson().encode(); }
+
 		};
 	}
 
 	interface DOMAIN_VISITORS {
+
+		UUID getUUID();
+
+		JsonObject toJson();
+
+	}
+
+
+	// ONE 'NeoVisitor' (NeoVisitor) -> VISITOR_RETURNVALUES -> MANY 'VisitorReturnValue' (VisitorReturnValue)
+
+	// 
+	protected VISITOR_RETURNVALUESRelation newVISITOR_RETURNVALUESRelation(JsonObject relationship, JsonPNode neoVisitor, JsonPNode visitorReturnValue) {
+			return new VISITOR_RETURNVALUESRelation(relationship, neoVisitor, visitorReturnValue);
+		}
+
+	class VISITOR_RETURNVALUESRelation extends JsonRelationship {
+
+		VISITOR_RETURNVALUESRelation(JsonObject relationship, JsonPNode neoVisitor, JsonPNode visitorReturnValue) {
+			super(relationship, "VISITOR_RETURNVALUES", neoVisitor, visitorReturnValue, Color.decode("#bdbdbd"), Color.decode("#636363"), Color.decode("#e34a33"));
+		}
+
+		@Override
+		protected void onRightClick(JPopupMenu pop, NodeCanvas canvas) {
+
+			super.onRightClick(pop, canvas);
+		}
+	}
+
+	// NeoDomainDomain VISITOR_RETURNVALUES
+	protected final class VISITOR_RETURNVALUESForm extends JPanel {
+
+		private final String title = "New VISITOR_RETURNVALUES";
+		private String uuid;
+
+		protected VISITOR_RETURNVALUESForm() {
+			super(new BorderLayout());
+				this.uuid = null;
+
+			int c = 1, r = 1;
+			final FormPanel form = new FormPanel("100dlu,4dlu,150dlu", "");
+			setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			add(form.build(), BorderLayout.CENTER);
+		}
+
+		protected VISITOR_RETURNVALUESForm(JsonObject content) {
+			this();
+			this.uuid = content.getString("uuid");
+		}
+
+
+		@Deprecated
+		protected JsonObject toJson() {
+			return new JsonObject()	;
+		}
+
+		protected VISITOR_RETURNVALUES getVISITOR_RETURNVALUES() {
+			final JsonObject jsonObject = new JsonObject() ;
+			if (uuid != null) jsonObject.put("uuid", uuid);
+			return mapVISITOR_RETURNVALUES(jsonObject);
+		}
+
+		protected void show(NodeCanvas canvas, ConfirmAction confirmAction) {
+			showDialog(this, canvas, title, confirmAction);
+		}
+	}
+
+	public void relateNeoVisitor_VISITOR_RETURNVALUES_VisitorReturnValue(UUID neoVisitor, VisitorReturnValue visitorReturnValue, VISITOR_RETURNVALUESHandler handler) {
+		final JsonObject parameters = new JsonObject().put("NeoVisitor", neoVisitor.toString()).put("VisitorReturnValue", visitorReturnValue.toJson());
+		send("neoDomainDomain.relate.neoVisitor.VISITOR_RETURNVALUES.visitorReturnValue", parameters, handler);
+	}
+
+	public static abstract class VISITOR_RETURNVALUESHandler extends MessageHandler {
+
+		public abstract void onSuccess(VISITOR_RETURNVALUES relation, VisitorReturnValue visitorReturnValue);
+
+		@Override
+		protected void handleSuccess(JsonObject payload) {
+			onSuccess(mapVISITOR_RETURNVALUES(payload.getJsonObject("VISITOR_RETURNVALUES")), mapVisitorReturnValue(payload.getJsonObject("VisitorReturnValue")));
+		}
+	}
+
+	// MISSING
+	// one-to-many
+	protected class ExpandVisitorReturnValue_VISITOR_RETURNVALUES_FOR_NeoVisitorHandler extends VisitorReturnValue_VISITOR_RETURNVALUES_FOR_NeoVisitorHandler {
+
+		private final NeoVisitorNode node;
+
+		ExpandVisitorReturnValue_VISITOR_RETURNVALUES_FOR_NeoVisitorHandler(NeoVisitorNode node) {
+			this.node = node;
+		}
+
+		@Override
+		public void onSuccess(Iterator<NeoVisitorVISITOR_RETURNVALUES> it) {
+			final Set<BasePNode> nodes = new LinkedHashSet<>();
+			final Set<Relation> relations = new LinkedHashSet<>();
+			while(it.hasNext()) {
+				final NeoVisitorVISITOR_RETURNVALUES next = it.next();
+				final VisitorReturnValueNode entityNode = newVisitorReturnValueNode(next.getVisitorReturnValue().toJson());
+				nodes.add(entityNode);
+				relations.add(newVISITOR_RETURNVALUESRelation(next.getVISITOR_RETURNVALUES().toJson(), node, entityNode));
+			}
+			addNodesAndRelations(nodes, relations, new LayoutRelativeTo(node));
+		}
+	}
+
+	protected void add_VisitorReturnValue_VISITOR_RETURNVALUES_FOR_NeoVisitor(final NeoVisitorNode node, NodeCanvas canvas) {
+
+		final VisitorReturnValueForm form = new VisitorReturnValueForm();
+		form.show(canvas, new ConfirmAction() {
+			@Override
+			public void verifyAndCommit() throws Exception {
+				final VisitorReturnValue entity = newVisitorReturnValue(form.toJson());
+
+				relateNeoVisitor_VISITOR_RETURNVALUES_VisitorReturnValue(node.getUUID(), entity, new VISITOR_RETURNVALUESHandler() {
+					@Override
+					public void onSuccess(VISITOR_RETURNVALUES relation, VisitorReturnValue newEntity) {
+						final VisitorReturnValueNode newNode = newVisitorReturnValueNode(newEntity.toJson());
+						addNodeAndRelation(newNode, newVISITOR_RETURNVALUESRelation(relation.toJson(), node, newNode), new LayoutRelativeTo(node));
+					}
+				});
+			}
+		});
+	}
+
+	// message support
+	public void get_VisitorReturnValue_VISITOR_RETURNVALUES_FOR_NeoVisitor(UUID neoVisitor, VisitorReturnValue_VISITOR_RETURNVALUES_FOR_NeoVisitorHandler handler) {
+		send("neoDomainDomain.get.visitorReturnValue.VISITOR_RETURNVALUES.neoVisitor", new JsonObject().put("NeoVisitor", neoVisitor.toString()), handler);
+	}
+
+	public void get_NeoVisitor_VISITOR_RETURNVALUES_FOR_VisitorReturnValue(UUID visitorReturnValue, VISITOR_RETURNVALUESNeoVisitorHandler handler) {
+		send("neoDomainDomain.get.neoVisitor.VISITOR_RETURNVALUES.visitorReturnValue", new JsonObject().put("VisitorReturnValue", visitorReturnValue.toString()), handler);
+	}
+
+	public interface NeoVisitorVISITOR_RETURNVALUES {
+
+		public VisitorReturnValue getVisitorReturnValue();
+
+		public VISITOR_RETURNVALUES getVISITOR_RETURNVALUES();
+	}
+
+	public static abstract class VisitorReturnValue_VISITOR_RETURNVALUES_FOR_NeoVisitorHandler extends ListHandler<NeoVisitorVISITOR_RETURNVALUES> {
+
+		@Override
+		protected NeoVisitorVISITOR_RETURNVALUES map(JsonObject payload) {
+			return new NeoVisitorVISITOR_RETURNVALUES() {
+				@Override
+				public VisitorReturnValue getVisitorReturnValue() {
+					return mapVisitorReturnValue(payload.getJsonObject("VisitorReturnValue"));
+				}
+
+				@Override
+				public VISITOR_RETURNVALUES getVISITOR_RETURNVALUES() {
+					return mapVISITOR_RETURNVALUES(payload.getJsonObject("VISITOR_RETURNVALUES"));
+				}
+			};
+		}
+	}
+
+	public static abstract class VISITOR_RETURNVALUESNeoVisitorHandler extends MessageHandler {
+
+		public abstract void onSuccess(VISITOR_RETURNVALUES VISITOR_RETURNVALUES, NeoVisitor neoVisitor);
+
+		@Override
+		protected void handleSuccess(JsonObject payload) {
+			if (payload.isEmpty()) return;
+			onSuccess(mapVISITOR_RETURNVALUES(payload.getJsonObject("VISITOR_RETURNVALUES")),mapNeoVisitor(payload.getJsonObject("NeoVisitor")));
+		}
+	}
+
+	public void updateVISITOR_RETURNVALUES(UUID srcNode, VISITOR_RETURNVALUES relationship, VISITOR_RETURNVALUESHandler handler) {
+		send("neoDomainDomain.update.VISITOR_RETURNVALUES", new JsonObject().put("uuid", srcNode.toString()).put("VISITOR_RETURNVALUES", relationship.toJson()), handler);
+	}
+
+	private static VISITOR_RETURNVALUES mapVISITOR_RETURNVALUES(JsonObject payload) {
+		return new VISITOR_RETURNVALUES() {
+
+			@Override
+			public UUID getUUID() { return UUID.fromString(payload.getString("uuid")); }
+
+			@Override
+			public JsonObject toJson() { return payload; }
+
+			@Override
+			public String toString() { return toJson().encode(); }
+
+		};
+	}
+
+	interface VISITOR_RETURNVALUES {
 
 		UUID getUUID();
 
@@ -2382,10 +2966,11 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 		@Deprecated
 		protected JsonObject toJson() {
-			return new JsonObject()	;}
+			return new JsonObject()	;
+		}
 
 		protected VISITOR_PARAMETERS getVISITOR_PARAMETERS() {
-			final JsonObject jsonObject = new JsonObject();
+			final JsonObject jsonObject = new JsonObject() ;
 			if (uuid != null) jsonObject.put("uuid", uuid);
 			return mapVISITOR_PARAMETERS(jsonObject);
 		}
@@ -2504,20 +3089,16 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 	private static VISITOR_PARAMETERS mapVISITOR_PARAMETERS(JsonObject payload) {
 		return new VISITOR_PARAMETERS() {
-			@Override
-			public UUID getUUID() {
-				return UUID.fromString(payload.getString("uuid"));
-			}
 
 			@Override
-			public JsonObject toJson() {
-				return payload;
-			}
+			public UUID getUUID() { return UUID.fromString(payload.getString("uuid")); }
 
 			@Override
-			public String toString() {
-				return toJson().encode();
-			}
+			public JsonObject toJson() { return payload; }
+
+			@Override
+			public String toString() { return toJson().encode(); }
+
 		};
 	}
 
@@ -2574,10 +3155,11 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 		@Deprecated
 		protected JsonObject toJson() {
-			return new JsonObject()	;}
+			return new JsonObject()	;
+		}
 
 		protected ENTITY_VISITORS getENTITY_VISITORS() {
-			final JsonObject jsonObject = new JsonObject();
+			final JsonObject jsonObject = new JsonObject() ;
 			if (uuid != null) jsonObject.put("uuid", uuid);
 			return mapENTITY_VISITORS(jsonObject);
 		}
@@ -2696,20 +3278,16 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 	private static ENTITY_VISITORS mapENTITY_VISITORS(JsonObject payload) {
 		return new ENTITY_VISITORS() {
-			@Override
-			public UUID getUUID() {
-				return UUID.fromString(payload.getString("uuid"));
-			}
 
 			@Override
-			public JsonObject toJson() {
-				return payload;
-			}
+			public UUID getUUID() { return UUID.fromString(payload.getString("uuid")); }
 
 			@Override
-			public String toString() {
-				return toJson().encode();
-			}
+			public JsonObject toJson() { return payload; }
+
+			@Override
+			public String toString() { return toJson().encode(); }
+
 		};
 	}
 
@@ -2766,10 +3344,11 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 		@Deprecated
 		protected JsonObject toJson() {
-			return new JsonObject()	;}
+			return new JsonObject()	;
+		}
 
 		protected ENTITY_RELATION getENTITY_RELATION() {
-			final JsonObject jsonObject = new JsonObject();
+			final JsonObject jsonObject = new JsonObject() ;
 			if (uuid != null) jsonObject.put("uuid", uuid);
 			return mapENTITY_RELATION(jsonObject);
 		}
@@ -2900,20 +3479,16 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 	private static ENTITY_RELATION mapENTITY_RELATION(JsonObject payload) {
 		return new ENTITY_RELATION() {
-			@Override
-			public UUID getUUID() {
-				return UUID.fromString(payload.getString("uuid"));
-			}
 
 			@Override
-			public JsonObject toJson() {
-				return payload;
-			}
+			public UUID getUUID() { return UUID.fromString(payload.getString("uuid")); }
 
 			@Override
-			public String toString() {
-				return toJson().encode();
-			}
+			public JsonObject toJson() { return payload; }
+
+			@Override
+			public String toString() { return toJson().encode(); }
+
 		};
 	}
 
@@ -2970,10 +3545,11 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 		@Deprecated
 		protected JsonObject toJson() {
-			return new JsonObject()	;}
+			return new JsonObject()	;
+		}
 
 		protected RELATION_PROPERTIES getRELATION_PROPERTIES() {
-			final JsonObject jsonObject = new JsonObject();
+			final JsonObject jsonObject = new JsonObject() ;
 			if (uuid != null) jsonObject.put("uuid", uuid);
 			return mapRELATION_PROPERTIES(jsonObject);
 		}
@@ -3092,20 +3668,16 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 	private static RELATION_PROPERTIES mapRELATION_PROPERTIES(JsonObject payload) {
 		return new RELATION_PROPERTIES() {
-			@Override
-			public UUID getUUID() {
-				return UUID.fromString(payload.getString("uuid"));
-			}
 
 			@Override
-			public JsonObject toJson() {
-				return payload;
-			}
+			public UUID getUUID() { return UUID.fromString(payload.getString("uuid")); }
 
 			@Override
-			public String toString() {
-				return toJson().encode();
-			}
+			public JsonObject toJson() { return payload; }
+
+			@Override
+			public String toString() { return toJson().encode(); }
+
 		};
 	}
 
@@ -3162,10 +3734,11 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 		@Deprecated
 		protected JsonObject toJson() {
-			return new JsonObject()	;}
+			return new JsonObject()	;
+		}
 
 		protected ENTITY_PROPERTIES getENTITY_PROPERTIES() {
-			final JsonObject jsonObject = new JsonObject();
+			final JsonObject jsonObject = new JsonObject() ;
 			if (uuid != null) jsonObject.put("uuid", uuid);
 			return mapENTITY_PROPERTIES(jsonObject);
 		}
@@ -3284,20 +3857,16 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 	private static ENTITY_PROPERTIES mapENTITY_PROPERTIES(JsonObject payload) {
 		return new ENTITY_PROPERTIES() {
-			@Override
-			public UUID getUUID() {
-				return UUID.fromString(payload.getString("uuid"));
-			}
 
 			@Override
-			public JsonObject toJson() {
-				return payload;
-			}
+			public UUID getUUID() { return UUID.fromString(payload.getString("uuid")); }
 
 			@Override
-			public String toString() {
-				return toJson().encode();
-			}
+			public JsonObject toJson() { return payload; }
+
+			@Override
+			public String toString() { return toJson().encode(); }
+
 		};
 	}
 
@@ -3354,10 +3923,11 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 		@Deprecated
 		protected JsonObject toJson() {
-			return new JsonObject()	;}
+			return new JsonObject()	;
+		}
 
 		protected RELATION_ENTITY getRELATION_ENTITY() {
-			final JsonObject jsonObject = new JsonObject();
+			final JsonObject jsonObject = new JsonObject() ;
 			if (uuid != null) jsonObject.put("uuid", uuid);
 			return mapRELATION_ENTITY(jsonObject);
 		}
@@ -3488,20 +4058,16 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 	private static RELATION_ENTITY mapRELATION_ENTITY(JsonObject payload) {
 		return new RELATION_ENTITY() {
-			@Override
-			public UUID getUUID() {
-				return UUID.fromString(payload.getString("uuid"));
-			}
 
 			@Override
-			public JsonObject toJson() {
-				return payload;
-			}
+			public UUID getUUID() { return UUID.fromString(payload.getString("uuid")); }
 
 			@Override
-			public String toString() {
-				return toJson().encode();
-			}
+			public JsonObject toJson() { return payload; }
+
+			@Override
+			public String toString() { return toJson().encode(); }
+
 		};
 	}
 
@@ -3558,10 +4124,11 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 		@Deprecated
 		protected JsonObject toJson() {
-			return new JsonObject()	;}
+			return new JsonObject()	;
+		}
 
 		protected ENTITIES getENTITIES() {
-			final JsonObject jsonObject = new JsonObject();
+			final JsonObject jsonObject = new JsonObject() ;
 			if (uuid != null) jsonObject.put("uuid", uuid);
 			return mapENTITIES(jsonObject);
 		}
@@ -3680,20 +4247,16 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 	private static ENTITIES mapENTITIES(JsonObject payload) {
 		return new ENTITIES() {
-			@Override
-			public UUID getUUID() {
-				return UUID.fromString(payload.getString("uuid"));
-			}
 
 			@Override
-			public JsonObject toJson() {
-				return payload;
-			}
+			public UUID getUUID() { return UUID.fromString(payload.getString("uuid")); }
 
 			@Override
-			public String toString() {
-				return toJson().encode();
-			}
+			public JsonObject toJson() { return payload; }
+
+			@Override
+			public String toString() { return toJson().encode(); }
+
 		};
 	}
 
@@ -3750,10 +4313,11 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 		@Deprecated
 		protected JsonObject toJson() {
-			return new JsonObject()	;}
+			return new JsonObject()	;
+		}
 
 		protected RENDERER getRENDERER() {
-			final JsonObject jsonObject = new JsonObject();
+			final JsonObject jsonObject = new JsonObject() ;
 			if (uuid != null) jsonObject.put("uuid", uuid);
 			return mapRENDERER(jsonObject);
 		}
@@ -3872,20 +4436,16 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 	private static RENDERER mapRENDERER(JsonObject payload) {
 		return new RENDERER() {
-			@Override
-			public UUID getUUID() {
-				return UUID.fromString(payload.getString("uuid"));
-			}
 
 			@Override
-			public JsonObject toJson() {
-				return payload;
-			}
+			public UUID getUUID() { return UUID.fromString(payload.getString("uuid")); }
 
 			@Override
-			public String toString() {
-				return toJson().encode();
-			}
+			public JsonObject toJson() { return payload; }
+
+			@Override
+			public String toString() { return toJson().encode(); }
+
 		};
 	}
 
@@ -3906,6 +4466,13 @@ public class NeoDomainDomainRemoteCanvas extends JsonCanvas {
 
 	public static abstract class RenderDomainHandler extends MessageHandler {
 
+		public abstract void onSuccess();
+
+		@Override
+		protected void handleSuccess(JsonObject payload) {
+			if (payload.isEmpty()) return;
+			onSuccess();
+		}
 	}
 
 

@@ -150,6 +150,12 @@
             <version>${vertx.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-auth-jwt</artifactId>
+            <version>${vertx.version}</version>
+        </dependency>
+
         <!-- CHRONICLE -->
         <dependency>
             <groupId>net.openhft</groupId>
@@ -257,6 +263,12 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>${apache.poi.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.everit.json</groupId>
+            <artifactId>org.everit.json.schema</artifactId>
+            <version>1.3.0</version>
         </dependency>
 
     </dependencies>

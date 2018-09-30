@@ -1,0 +1,143 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/root.json",
+  "type": "object",
+  "title": "The Root Schema",
+  "required": [
+    "name",
+    "packageName",
+    "properties"
+  ],
+  "properties": {
+    "name": {
+      "$id": "#/properties/name",
+      "type": "string",
+      "title": "The Name Schema",
+      "default": "",
+      "examples": [
+        "Probe"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "packageName": {
+      "$id": "#/properties/packageName",
+      "type": "string",
+      "title": "The Packagename Schema",
+      "default": "",
+      "examples": [
+        "com.ud.basekey.cloud.domain"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "properties": {
+      "$id": "#/properties/properties",
+      "type": "array",
+      "title": "The Properties Schema",
+      "items": {
+        "$id": "#/properties/properties/items",
+        "type": "object",
+        "title": "The Items Schema",
+        "required": [
+          "type",
+          "name",
+          "isEnum",
+          "column",
+          "ui.hidden",
+          "db.create"
+        ],
+        "properties": {
+          "type": {
+            "$id": "#/properties/properties/items/properties/type",
+            "type": "string",
+            "title": "The Type Schema",
+            "default": "",
+            "examples": [
+              "String"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "name": {
+            "$id": "#/properties/properties/items/properties/name",
+            "type": "string",
+            "title": "The Name Schema",
+            "default": "",
+            "examples": [
+              "uuid"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "isEnum": {
+            "$id": "#/properties/properties/items/properties/isEnum",
+            "type": "boolean",
+            "title": "The Isenum Schema",
+            "default": false,
+            "examples": [
+              false
+            ]
+          },
+          "column": {
+            "$id": "#/properties/properties/items/properties/column",
+            "type": "object",
+            "title": "The Column Schema",
+            "required": [
+              "name",
+              "type",
+              "nullable"
+            ],
+            "properties": {
+              "name": {
+                "$id": "#/properties/properties/items/properties/column/properties/name",
+                "type": "string",
+                "title": "The Name Schema",
+                "default": "",
+                "examples": [
+                  "uuid"
+                ],
+                "pattern": "^(.*)$"
+              },
+              "type": {
+                "$id": "#/properties/properties/items/properties/column/properties/type",
+                "type": "string",
+                "title": "The Type Schema",
+                "default": "",
+                "examples": [
+                  "CHAR(36)"
+                ],
+                "pattern": "^(.*)$"
+              },
+              "nullable": {
+                "$id": "#/properties/properties/items/properties/column/properties/nullable",
+                "type": "boolean",
+                "title": "The Nullable Schema",
+                "default": false,
+                "examples": [
+                  false
+                ]
+              }
+            }
+          },
+          "ui.hidden": {
+            "$id": "#/properties/properties/items/properties/ui.hidden",
+            "type": "boolean",
+            "title": "The Ui.hidden Schema",
+            "default": false,
+            "examples": [
+              true
+            ]
+          },
+          "db.create": {
+            "$id": "#/properties/properties/items/properties/db.create",
+            "type": "string",
+            "title": "The Db.create Schema",
+            "default": "",
+            "examples": [
+              "UUID.randomUUID().toString()"
+            ],
+            "pattern": "^(.*)$"
+          }
+        }
+      }
+    }
+  }
+}

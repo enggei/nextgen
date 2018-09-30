@@ -37,6 +37,27 @@ public class SwingUtil {
       return new Font("Hack", Font.PLAIN, 20);
    }
 
+   public static abstract class SwingAction extends AbstractAction {
+
+      public SwingAction() {
+      }
+
+      public SwingAction(String name) {
+         super(name);
+      }
+
+      public SwingAction(String name, Icon icon) {
+         super(name, icon);
+      }
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+         SwingUtilities.invokeLater(() -> onActionPerformed(e));
+      }
+
+      protected abstract void onActionPerformed(ActionEvent e);
+   }
+
    public static JTextArea newTextArea() {
       final JTextArea txtEditor = new JTextArea(30, 30);
       txtEditor.setFont(new Font("Hack", Font.PLAIN, 20));

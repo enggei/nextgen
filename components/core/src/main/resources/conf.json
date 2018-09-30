@@ -1,6 +1,20 @@
 {
-  "secure": false,
-  "host": "127.0.0.1",
-  "vertx.tcp.bridge.port": 7000,
-  "log.port": 7001
+  "path" : "./db_nextgen",
+  "tcpHost" : "127.0.0.1",
+  "port" : 8080,
+  "web.root" : "components/core/target",
+  "jwt.store.path" : "jwtStore.jceks",
+  "jwt.store.password" : "jwtPassword",
+  "jwt.store.type" : "jceks",
+  "ssl.store.path" : "sslStore.jceks",
+  "ssl.store.password" : "sslPassword",
+  "users" : [ {
+    "username" : "geirove",
+    "password" : "cuolVBvwbeK4pTNUMXDFA3w9aX7H3lDvEKxhxBw+x2U=",
+    "salt" : "APneTfjAiP"
+  }, {
+    "username" : "ernst",
+    "password" : "URoZqeWFrOVkz7o2ZpHjRr3oGipHjNIqbkzu/4C9haE=",
+    "salt" : "Exq8GzABeo"
+  } ]
 }

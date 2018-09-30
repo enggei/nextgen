@@ -78,6 +78,12 @@ public class NeoDomainDomainVerticle extends AbstractVerticle {
 				vertx.eventBus().consumer("neoDomainDomain.delete.neoVisitor", new TransactionMessageHandler("delete.neoVisitor", onDeleteNeoVisitor()));
 				vertx.eventBus().consumer("neoDomainDomain.get.all.neoVisitor", new TransactionMessageHandler("getAll.neoVisitor", onGetAllNeoVisitor()));
 
+				vertx.eventBus().consumer("neoDomainDomain.new.visitorReturnValue", new TransactionMessageHandler("new.visitorReturnValue", onNewVisitorReturnValue()));
+				vertx.eventBus().consumer("neoDomainDomain.update.visitorReturnValue", new TransactionMessageHandler("update.visitorReturnValue", onUpdateVisitorReturnValue()));
+				vertx.eventBus().consumer("neoDomainDomain.get.visitorReturnValue", new TransactionMessageHandler("get.visitorReturnValue", onGetVisitorReturnValue()));
+				vertx.eventBus().consumer("neoDomainDomain.delete.visitorReturnValue", new TransactionMessageHandler("delete.visitorReturnValue", onDeleteVisitorReturnValue()));
+				vertx.eventBus().consumer("neoDomainDomain.get.all.visitorReturnValue", new TransactionMessageHandler("getAll.visitorReturnValue", onGetAllVisitorReturnValue()));
+
 				vertx.eventBus().consumer("neoDomainDomain.new.visitorParameter", new TransactionMessageHandler("new.visitorParameter", onNewVisitorParameter()));
 				vertx.eventBus().consumer("neoDomainDomain.update.visitorParameter", new TransactionMessageHandler("update.visitorParameter", onUpdateVisitorParameter()));
 				vertx.eventBus().consumer("neoDomainDomain.get.visitorParameter", new TransactionMessageHandler("get.visitorParameter", onGetVisitorParameter()));
@@ -112,6 +118,11 @@ public class NeoDomainDomainVerticle extends AbstractVerticle {
 				vertx.eventBus().consumer("neoDomainDomain.get.neoDomain.DOMAIN_VISITORS.neoVisitor", new TransactionMessageHandler("neoDomainDomain.get.neoDomain.DOMAIN_VISITORS.neoVisitor", onGet_NeoDomain_DOMAIN_VISITORS_FOR_NeoVisitor()));
 				vertx.eventBus().consumer("neoDomainDomain.get.neoVisitor.DOMAIN_VISITORS.neoDomain", new TransactionMessageHandler("neoDomainDomain.get.neoVisitor.DOMAIN_VISITORS.neoDomain", onGet_NeoVisitor_DOMAIN_VISITORS_FOR_NeoDomain()));
 				vertx.eventBus().consumer("neoDomainDomain.update.DOMAIN_VISITORS", new TransactionMessageHandler("neoDomainDomain.update.DOMAIN_VISITORS", onUpdate_DOMAIN_VISITORS()));
+
+				vertx.eventBus().consumer("neoDomainDomain.relate.neoVisitor.VISITOR_RETURNVALUES.visitorReturnValue", new TransactionMessageHandler("neoDomainDomain.relate.neoVisitor.VISITOR_RETURNVALUES.visitorReturnValue", onRelate_NeoVisitor_VISITOR_RETURNVALUES_VisitorReturnValue()));
+				vertx.eventBus().consumer("neoDomainDomain.get.neoVisitor.VISITOR_RETURNVALUES.visitorReturnValue", new TransactionMessageHandler("neoDomainDomain.get.neoVisitor.VISITOR_RETURNVALUES.visitorReturnValue", onGet_NeoVisitor_VISITOR_RETURNVALUES_FOR_VisitorReturnValue()));
+				vertx.eventBus().consumer("neoDomainDomain.get.visitorReturnValue.VISITOR_RETURNVALUES.neoVisitor", new TransactionMessageHandler("neoDomainDomain.get.visitorReturnValue.VISITOR_RETURNVALUES.neoVisitor", onGet_VisitorReturnValue_VISITOR_RETURNVALUES_FOR_NeoVisitor()));
+				vertx.eventBus().consumer("neoDomainDomain.update.VISITOR_RETURNVALUES", new TransactionMessageHandler("neoDomainDomain.update.VISITOR_RETURNVALUES", onUpdate_VISITOR_RETURNVALUES()));
 
 				vertx.eventBus().consumer("neoDomainDomain.relate.neoVisitor.VISITOR_PARAMETERS.visitorParameter", new TransactionMessageHandler("neoDomainDomain.relate.neoVisitor.VISITOR_PARAMETERS.visitorParameter", onRelate_NeoVisitor_VISITOR_PARAMETERS_VisitorParameter()));
 				vertx.eventBus().consumer("neoDomainDomain.get.neoVisitor.VISITOR_PARAMETERS.visitorParameter", new TransactionMessageHandler("neoDomainDomain.get.neoVisitor.VISITOR_PARAMETERS.visitorParameter", onGet_NeoVisitor_VISITOR_PARAMETERS_FOR_VisitorParameter()));
@@ -153,8 +164,8 @@ public class NeoDomainDomainVerticle extends AbstractVerticle {
 				vertx.eventBus().consumer("neoDomainDomain.get.neoDomainRenderer.RENDERER.neoDomain", new TransactionMessageHandler("neoDomainDomain.get.neoDomainRenderer.RENDERER.neoDomain", onGet_NeoDomainRenderer_RENDERER_FOR_NeoDomain()));
 				vertx.eventBus().consumer("neoDomainDomain.update.RENDERER", new TransactionMessageHandler("neoDomainDomain.update.RENDERER", onUpdate_RENDERER()));
 
-				vertx.eventBus().consumer("neoDomainDomain.renderDomain", new TransactionMessageHandler("renderDomain", onRenderDomain()));
 
+				vertx.eventBus().consumer("neoDomainDomain.renderDomain", new TransactionMessageHandler("renderDomain", onRenderDomain()));
 
 				startFuture.complete();
 			}
@@ -215,11 +226,11 @@ public class NeoDomainDomainVerticle extends AbstractVerticle {
 		};
 	}
 
-	private Node newNeoDomain(JsonObject jsonObject, JsonArray errors) {
-		if (jsonObject.getString("name") == null) errors.add("missing name");
+	protected Node newNeoDomain(JsonObject jsonObject, JsonArray errors) {
+		if (jsonObject.getString(NeoDomainDomain.Properties.name.name()) == null) errors.add("missing name");
 		if (!errors.isEmpty()) return null;
 		final Node node = newNode(db, NeoDomainDomain.Entities.NeoDomain);
-		mapString(jsonObject, node, "name");
+		mapString(jsonObject, node, NeoDomainDomain.Properties.name.name());
 		return node;
 	}
 
@@ -230,7 +241,7 @@ public class NeoDomainDomainVerticle extends AbstractVerticle {
 				message.reply(newFail("NeoDomain not found"));
 				return;
 			}
-			mapString(message.body().getJsonObject("NeoDomain"), node, "name");
+			mapString(message.body().getJsonObject("NeoDomain"), node, NeoDomainDomain.Properties.name.name());
 
 			message.reply(newSuccess(mapNode(node, NeoDomainDomain.Entities.NeoDomain)));
 		};
@@ -291,11 +302,12 @@ public class NeoDomainDomainVerticle extends AbstractVerticle {
 			message.reply(newSuccess(new JsonObject().put("DOMAIN_VISITORS", mapRelation(relation)).put("NeoVisitor", mapNode(node, NeoDomainDomain.Entities.NeoVisitor))));
 		};
 	}
-	private Node newNeoVisitor(JsonObject jsonObject, JsonArray errors) {
-		if (jsonObject.getString("name") == null) errors.add("missing name");
+
+	protected Node newNeoVisitor(JsonObject jsonObject, JsonArray errors) {
+		if (jsonObject.getString(NeoDomainDomain.Properties.name.name()) == null) errors.add("missing name");
 		if (!errors.isEmpty()) return null;
 		final Node node = newNode(db, NeoDomainDomain.Entities.NeoVisitor);
-		mapString(jsonObject, node, "name");
+		mapString(jsonObject, node, NeoDomainDomain.Properties.name.name());
 		return node;
 	}
 
@@ -306,7 +318,7 @@ public class NeoDomainDomainVerticle extends AbstractVerticle {
 				message.reply(newFail("NeoVisitor not found"));
 				return;
 			}
-			mapString(message.body().getJsonObject("NeoVisitor"), node, "name");
+			mapString(message.body().getJsonObject("NeoVisitor"), node, NeoDomainDomain.Properties.name.name());
 
 			message.reply(newSuccess(mapNode(node, NeoDomainDomain.Entities.NeoVisitor)));
 		};
@@ -348,6 +360,86 @@ public class NeoDomainDomainVerticle extends AbstractVerticle {
 		};
 	}
 
+	// VisitorReturnValue
+
+	private TransactionalMessageHandler onNewVisitorReturnValue() {
+		return (tx, message) -> {
+			final Node src = NeoDomainDomain.findVisitorReturnValueBy_UUID(db, getUuid(message.body()));
+			if (src == null) {
+				message.reply(newFail("NeoVisitor " + message.body().getString("NeoVisitor") + " not found"));
+				return;
+			}
+			final JsonArray errors = new JsonArray();
+			final Node node = newVisitorReturnValue(message.body().getJsonObject("VisitorReturnValue"), errors);
+			if (!errors.isEmpty()) {
+				message.reply(newFail(errors));
+				return;
+			}
+			final Relationship relation = relate(src, node, RelationshipType.withName("VISITOR_RETURNVALUES"));
+			message.reply(newSuccess(new JsonObject().put("VISITOR_RETURNVALUES", mapRelation(relation)).put("VisitorReturnValue", mapNode(node, NeoDomainDomain.Entities.VisitorReturnValue))));
+		};
+	}
+
+	protected Node newVisitorReturnValue(JsonObject jsonObject, JsonArray errors) {
+		if (jsonObject.getString(NeoDomainDomain.Properties.type.name()) == null) errors.add("missing type");
+		if (jsonObject.getString(NeoDomainDomain.Properties.name.name()) == null) errors.add("missing name");
+		if (!errors.isEmpty()) return null;
+		final Node node = newNode(db, NeoDomainDomain.Entities.VisitorReturnValue);
+		mapString(jsonObject, node, NeoDomainDomain.Properties.type.name());
+		mapString(jsonObject, node, NeoDomainDomain.Properties.name.name());
+		return node;
+	}
+
+	private TransactionalMessageHandler onUpdateVisitorReturnValue() {
+		return (tx, message) -> {
+			final Node node = NeoDomainDomain.findVisitorReturnValueBy_UUID(db, getUuid(message.body()));
+			if (node == null) {
+				message.reply(newFail("VisitorReturnValue not found"));
+				return;
+			}
+			mapString(message.body().getJsonObject("VisitorReturnValue"), node, NeoDomainDomain.Properties.type.name());
+			mapString(message.body().getJsonObject("VisitorReturnValue"), node, NeoDomainDomain.Properties.name.name());
+
+			message.reply(newSuccess(mapNode(node, NeoDomainDomain.Entities.VisitorReturnValue)));
+		};
+	}
+
+	private TransactionalMessageHandler onDeleteVisitorReturnValue() {
+		return (tx, message) -> {
+			final Node node = NeoDomainDomain.findVisitorReturnValueBy_UUID(db, getUuid(message.body()));
+			if (node == null) {
+				message.reply(newFail("VisitorReturnValue " + message.body().getString("uuid") + " not found"));
+				return;
+			}
+
+			final String uuid = deleteNode(node);
+			message.reply(newSuccess(uuid));
+		};
+	}
+
+	private TransactionalMessageHandler onGetVisitorReturnValue() {
+		return (tx, message) -> {
+			final Node node = NeoDomainDomain.findVisitorReturnValueBy_UUID(db, getUuid(message.body()));
+			if (node == null) {
+				message.reply(newFail("VisitorReturnValue " + message.body().getString("uuid") + " not found"));
+				return;
+			}
+
+			message.reply(newSuccess(mapNode(node, NeoDomainDomain.Entities.VisitorReturnValue)));
+		};
+	}
+
+	private TransactionalMessageHandler onGetAllVisitorReturnValue() {
+		return (tx, message) -> {
+			final JsonArray result = new JsonArray();
+			NeoDomainDomain.findAllVisitorReturnValue(db, node -> {
+				result.add(mapNode(node, NeoDomainDomain.Entities.VisitorReturnValue));
+				return false;
+			});
+			message.reply(newSuccess(result));
+		};
+	}
+
 	// VisitorParameter
 
 	private TransactionalMessageHandler onNewVisitorParameter() {
@@ -367,13 +459,14 @@ public class NeoDomainDomainVerticle extends AbstractVerticle {
 			message.reply(newSuccess(new JsonObject().put("VISITOR_PARAMETERS", mapRelation(relation)).put("VisitorParameter", mapNode(node, NeoDomainDomain.Entities.VisitorParameter))));
 		};
 	}
-	private Node newVisitorParameter(JsonObject jsonObject, JsonArray errors) {
-		if (jsonObject.getString("type") == null) errors.add("missing type");
-		if (jsonObject.getString("name") == null) errors.add("missing name");
+
+	protected Node newVisitorParameter(JsonObject jsonObject, JsonArray errors) {
+		if (jsonObject.getString(NeoDomainDomain.Properties.type.name()) == null) errors.add("missing type");
+		if (jsonObject.getString(NeoDomainDomain.Properties.name.name()) == null) errors.add("missing name");
 		if (!errors.isEmpty()) return null;
 		final Node node = newNode(db, NeoDomainDomain.Entities.VisitorParameter);
-		mapString(jsonObject, node, "type");
-		mapString(jsonObject, node, "name");
+		mapString(jsonObject, node, NeoDomainDomain.Properties.type.name());
+		mapString(jsonObject, node, NeoDomainDomain.Properties.name.name());
 		return node;
 	}
 
@@ -384,8 +477,8 @@ public class NeoDomainDomainVerticle extends AbstractVerticle {
 				message.reply(newFail("VisitorParameter not found"));
 				return;
 			}
-			mapString(message.body().getJsonObject("VisitorParameter"), node, "type");
-			mapString(message.body().getJsonObject("VisitorParameter"), node, "name");
+			mapString(message.body().getJsonObject("VisitorParameter"), node, NeoDomainDomain.Properties.type.name());
+			mapString(message.body().getJsonObject("VisitorParameter"), node, NeoDomainDomain.Properties.name.name());
 
 			message.reply(newSuccess(mapNode(node, NeoDomainDomain.Entities.VisitorParameter)));
 		};
@@ -446,19 +539,20 @@ public class NeoDomainDomainVerticle extends AbstractVerticle {
 			message.reply(newSuccess(new JsonObject().put("ENTITY_VISITORS", mapRelation(relation)).put("NeoEntity", mapNode(node, NeoDomainDomain.Entities.NeoEntity))));
 		};
 	}
-	private Node newNeoEntity(JsonObject jsonObject, JsonArray errors) {
-		if (jsonObject.getString("highlightedColor") == null) errors.add("missing highlightedColor");
-		if (jsonObject.getString("selectedColor") == null) errors.add("missing selectedColor");
-		if (jsonObject.getString("defaultColor") == null) errors.add("missing defaultColor");
-		if (jsonObject.getString("label") == null) errors.add("missing label");
-		if (jsonObject.getString("name") == null) errors.add("missing name");
+
+	protected Node newNeoEntity(JsonObject jsonObject, JsonArray errors) {
+		if (jsonObject.getString(NeoDomainDomain.Properties.highlightedColor.name()) == null) errors.add("missing highlightedColor");
+		if (jsonObject.getString(NeoDomainDomain.Properties.selectedColor.name()) == null) errors.add("missing selectedColor");
+		if (jsonObject.getString(NeoDomainDomain.Properties.defaultColor.name()) == null) errors.add("missing defaultColor");
+		if (jsonObject.getString(NeoDomainDomain.Properties.label.name()) == null) errors.add("missing label");
+		if (jsonObject.getString(NeoDomainDomain.Properties.name.name()) == null) errors.add("missing name");
 		if (!errors.isEmpty()) return null;
 		final Node node = newNode(db, NeoDomainDomain.Entities.NeoEntity);
-		mapString(jsonObject, node, "highlightedColor");
-		mapString(jsonObject, node, "selectedColor");
-		mapString(jsonObject, node, "defaultColor");
-		mapString(jsonObject, node, "label");
-		mapString(jsonObject, node, "name");
+		mapString(jsonObject, node, NeoDomainDomain.Properties.highlightedColor.name());
+		mapString(jsonObject, node, NeoDomainDomain.Properties.selectedColor.name());
+		mapString(jsonObject, node, NeoDomainDomain.Properties.defaultColor.name());
+		mapString(jsonObject, node, NeoDomainDomain.Properties.label.name());
+		mapString(jsonObject, node, NeoDomainDomain.Properties.name.name());
 		return node;
 	}
 
@@ -469,11 +563,11 @@ public class NeoDomainDomainVerticle extends AbstractVerticle {
 				message.reply(newFail("NeoEntity not found"));
 				return;
 			}
-			mapString(message.body().getJsonObject("NeoEntity"), node, "highlightedColor");
-			mapString(message.body().getJsonObject("NeoEntity"), node, "selectedColor");
-			mapString(message.body().getJsonObject("NeoEntity"), node, "defaultColor");
-			mapString(message.body().getJsonObject("NeoEntity"), node, "label");
-			mapString(message.body().getJsonObject("NeoEntity"), node, "name");
+			mapString(message.body().getJsonObject("NeoEntity"), node, NeoDomainDomain.Properties.highlightedColor.name());
+			mapString(message.body().getJsonObject("NeoEntity"), node, NeoDomainDomain.Properties.selectedColor.name());
+			mapString(message.body().getJsonObject("NeoEntity"), node, NeoDomainDomain.Properties.defaultColor.name());
+			mapString(message.body().getJsonObject("NeoEntity"), node, NeoDomainDomain.Properties.label.name());
+			mapString(message.body().getJsonObject("NeoEntity"), node, NeoDomainDomain.Properties.name.name());
 
 			message.reply(newSuccess(mapNode(node, NeoDomainDomain.Entities.NeoEntity)));
 		};
@@ -534,13 +628,14 @@ public class NeoDomainDomainVerticle extends AbstractVerticle {
 			message.reply(newSuccess(new JsonObject().put("ENTITY_RELATION", mapRelation(relation)).put("NeoRelation", mapNode(node, NeoDomainDomain.Entities.NeoRelation))));
 		};
 	}
-	private Node newNeoRelation(JsonObject jsonObject, JsonArray errors) {
-		if (jsonObject.getString("Cardinality") == null) errors.add("missing Cardinality");
-		if (jsonObject.getString("name") == null) errors.add("missing name");
+
+	protected Node newNeoRelation(JsonObject jsonObject, JsonArray errors) {
+		if (jsonObject.getString(NeoDomainDomain.Properties.cardinality.name()) == null) errors.add("missing cardinality");
+		if (jsonObject.getString(NeoDomainDomain.Properties.name.name()) == null) errors.add("missing name");
 		if (!errors.isEmpty()) return null;
 		final Node node = newNode(db, NeoDomainDomain.Entities.NeoRelation);
-		mapString(jsonObject, node, "Cardinality");
-		mapString(jsonObject, node, "name");
+		mapString(jsonObject, node, NeoDomainDomain.Properties.cardinality.name());
+		mapString(jsonObject, node, NeoDomainDomain.Properties.name.name());
 		return node;
 	}
 
@@ -551,8 +646,8 @@ public class NeoDomainDomainVerticle extends AbstractVerticle {
 				message.reply(newFail("NeoRelation not found"));
 				return;
 			}
-			mapString(message.body().getJsonObject("NeoRelation"), node, "Cardinality");
-			mapString(message.body().getJsonObject("NeoRelation"), node, "name");
+			mapString(message.body().getJsonObject("NeoRelation"), node, NeoDomainDomain.Properties.cardinality.name());
+			mapString(message.body().getJsonObject("NeoRelation"), node, NeoDomainDomain.Properties.name.name());
 
 			message.reply(newSuccess(mapNode(node, NeoDomainDomain.Entities.NeoRelation)));
 		};
@@ -613,15 +708,16 @@ public class NeoDomainDomainVerticle extends AbstractVerticle {
 			message.reply(newSuccess(new JsonObject().put("RELATION_PROPERTIES", mapRelation(relation)).put("NeoProperty", mapNode(node, NeoDomainDomain.Entities.NeoProperty))));
 		};
 	}
-	private Node newNeoProperty(JsonObject jsonObject, JsonArray errors) {
-		if (jsonObject.getString("enumValues") == null) errors.add("missing enumValues");
-		if (jsonObject.getString("ValueType") == null) errors.add("missing ValueType");
-		if (jsonObject.getString("name") == null) errors.add("missing name");
+
+	protected Node newNeoProperty(JsonObject jsonObject, JsonArray errors) {
+		if (jsonObject.getString(NeoDomainDomain.Properties.enumValues.name()) == null) errors.add("missing enumValues");
+		if (jsonObject.getString(NeoDomainDomain.Properties.valueType.name()) == null) errors.add("missing valueType");
+		if (jsonObject.getString(NeoDomainDomain.Properties.name.name()) == null) errors.add("missing name");
 		if (!errors.isEmpty()) return null;
 		final Node node = newNode(db, NeoDomainDomain.Entities.NeoProperty);
-		mapString(jsonObject, node, "enumValues");
-		mapString(jsonObject, node, "ValueType");
-		mapString(jsonObject, node, "name");
+		mapString(jsonObject, node, NeoDomainDomain.Properties.enumValues.name());
+		mapString(jsonObject, node, NeoDomainDomain.Properties.valueType.name());
+		mapString(jsonObject, node, NeoDomainDomain.Properties.name.name());
 		return node;
 	}
 
@@ -632,9 +728,9 @@ public class NeoDomainDomainVerticle extends AbstractVerticle {
 				message.reply(newFail("NeoProperty not found"));
 				return;
 			}
-			mapString(message.body().getJsonObject("NeoProperty"), node, "enumValues");
-			mapString(message.body().getJsonObject("NeoProperty"), node, "ValueType");
-			mapString(message.body().getJsonObject("NeoProperty"), node, "name");
+			mapString(message.body().getJsonObject("NeoProperty"), node, NeoDomainDomain.Properties.enumValues.name());
+			mapString(message.body().getJsonObject("NeoProperty"), node, NeoDomainDomain.Properties.valueType.name());
+			mapString(message.body().getJsonObject("NeoProperty"), node, NeoDomainDomain.Properties.name.name());
 
 			message.reply(newSuccess(mapNode(node, NeoDomainDomain.Entities.NeoProperty)));
 		};
@@ -695,13 +791,22 @@ public class NeoDomainDomainVerticle extends AbstractVerticle {
 			message.reply(newSuccess(new JsonObject().put("RENDERER", mapRelation(relation)).put("NeoDomainRenderer", mapNode(node, NeoDomainDomain.Entities.NeoDomainRenderer))));
 		};
 	}
-	private Node newNeoDomainRenderer(JsonObject jsonObject, JsonArray errors) {
-		if (jsonObject.getString("packageName") == null) errors.add("missing packageName");
-		if (jsonObject.getString("root") == null) errors.add("missing root");
+
+	protected Node newNeoDomainRenderer(JsonObject jsonObject, JsonArray errors) {
+		if (jsonObject.getBoolean(NeoDomainDomain.Properties.renderRemoteCanvas.name()) == null) errors.add("missing renderRemoteCanvas");
+		if (jsonObject.getBoolean(NeoDomainDomain.Properties.renderCanvas.name()) == null) errors.add("missing renderCanvas");
+		if (jsonObject.getBoolean(NeoDomainDomain.Properties.renderDomain.name()) == null) errors.add("missing renderDomain");
+		if (jsonObject.getBoolean(NeoDomainDomain.Properties.renderVerticle.name()) == null) errors.add("missing renderVerticle");
+		if (jsonObject.getString(NeoDomainDomain.Properties.packageName.name()) == null) errors.add("missing packageName");
+		if (jsonObject.getString(NeoDomainDomain.Properties.root.name()) == null) errors.add("missing root");
 		if (!errors.isEmpty()) return null;
 		final Node node = newNode(db, NeoDomainDomain.Entities.NeoDomainRenderer);
-		mapString(jsonObject, node, "packageName");
-		mapString(jsonObject, node, "root");
+		mapBoolean(jsonObject, node, NeoDomainDomain.Properties.renderRemoteCanvas.name());
+		mapBoolean(jsonObject, node, NeoDomainDomain.Properties.renderCanvas.name());
+		mapBoolean(jsonObject, node, NeoDomainDomain.Properties.renderDomain.name());
+		mapBoolean(jsonObject, node, NeoDomainDomain.Properties.renderVerticle.name());
+		mapString(jsonObject, node, NeoDomainDomain.Properties.packageName.name());
+		mapString(jsonObject, node, NeoDomainDomain.Properties.root.name());
 		return node;
 	}
 
@@ -712,8 +817,12 @@ public class NeoDomainDomainVerticle extends AbstractVerticle {
 				message.reply(newFail("NeoDomainRenderer not found"));
 				return;
 			}
-			mapString(message.body().getJsonObject("NeoDomainRenderer"), node, "packageName");
-			mapString(message.body().getJsonObject("NeoDomainRenderer"), node, "root");
+			mapBoolean(message.body().getJsonObject("NeoDomainRenderer"), node, NeoDomainDomain.Properties.renderRemoteCanvas.name());
+			mapBoolean(message.body().getJsonObject("NeoDomainRenderer"), node, NeoDomainDomain.Properties.renderCanvas.name());
+			mapBoolean(message.body().getJsonObject("NeoDomainRenderer"), node, NeoDomainDomain.Properties.renderDomain.name());
+			mapBoolean(message.body().getJsonObject("NeoDomainRenderer"), node, NeoDomainDomain.Properties.renderVerticle.name());
+			mapString(message.body().getJsonObject("NeoDomainRenderer"), node, NeoDomainDomain.Properties.packageName.name());
+			mapString(message.body().getJsonObject("NeoDomainRenderer"), node, NeoDomainDomain.Properties.root.name());
 
 			message.reply(newSuccess(mapNode(node, NeoDomainDomain.Entities.NeoDomainRenderer)));
 		};
@@ -826,6 +935,82 @@ public class NeoDomainDomainVerticle extends AbstractVerticle {
 			final Relationship relation = NeoDomainDomain.get_NeoDomain_DOMAIN_VISITORS_Relation_for_NeoVisitor(node);
 			if (relation == null) message.reply(newSuccess(new JsonObject()));
 			else message.reply(newSuccess(new JsonObject().put(NeoDomainDomain.Relations.DOMAIN_VISITORS.name(), mapRelation(relation)).put("NeoDomain", mapNode(relation.getOtherNode(node), NeoDomainDomain.Entities.NeoDomain))));
+		};
+	}
+
+
+
+	// ONE 'NeoVisitor' -> VISITOR_RETURNVALUES -> MANY 'VisitorReturnValue'
+
+	private TransactionalMessageHandler onRelate_NeoVisitor_VISITOR_RETURNVALUES_VisitorReturnValue() {
+		return (tx, message) -> {
+
+			final Node src = NeoDomainDomain.findNeoVisitorBy_UUID(db, UUID.fromString(message.body().getString("NeoVisitor")));
+			if (src == null) {
+				message.reply(newFail("NeoVisitor " + message.body().getString("NeoVisitor") + " not found"));
+				return;
+			}
+			final JsonArray errors = new JsonArray();
+			final Node dst = newVisitorReturnValue(message.body().getJsonObject("VisitorReturnValue"), errors);
+			if (!errors.isEmpty()) {
+				message.reply(newFail(errors));
+				return;
+			}
+
+			final Relationship relation = NeoDomainDomain.relate_NeoVisitor_VISITOR_RETURNVALUES_VisitorReturnValue(src, dst);
+
+			message.reply(newSuccess(new JsonObject().put("VISITOR_RETURNVALUES", mapRelation(relation)).put("VisitorReturnValue", mapNode(dst, NeoDomainDomain.Entities.VisitorReturnValue))));
+		};
+	}
+
+	private TransactionalMessageHandler onUpdate_VISITOR_RETURNVALUES() {
+		return (tx, message) -> {
+
+			final Node src = NeoDomainDomain.findNeoVisitorBy_UUID(db, UUID.fromString(message.body().getString("uuid")));
+			if (src == null) {
+				message.reply(newFail("NeoVisitor " + message.body().getString("uuid") + " not found"));
+				return;
+			}
+
+			final JsonObject relation = message.body().getJsonObject("VISITOR_RETURNVALUES");
+			if (relation == null) {
+				message.reply(newFail("VISITOR_RETURNVALUES missing"));
+				return;
+			}
+
+			final UUID relationUUID = getUuid(relation);
+			final AtomicBoolean found = new AtomicBoolean(false);
+			NeoDomainDomain.get_VisitorReturnValue_VISITOR_RETURNVALUES_for_NeoVisitor(src, (relationship, other) -> {
+				if (!relationUUID.equals(NeoDomainDomain.getUUID(relationship))) return false;
+				message.reply(newSuccess(new JsonObject().put("VISITOR_RETURNVALUES", mapRelation(relationship))));
+				found.set(true);
+				return true;
+			});
+
+			if (!found.get())
+				message.reply(newFail("VISITOR_RETURNVALUES " + relationUUID + " not found"));
+		};
+	}
+
+
+	// one-to-many
+	private TransactionalMessageHandler onGet_VisitorReturnValue_VISITOR_RETURNVALUES_FOR_NeoVisitor() {
+		return (tx, message) -> {
+			final JsonArray result = new JsonArray();
+			NeoDomainDomain.get_VisitorReturnValue_VISITOR_RETURNVALUES_for_NeoVisitor(NeoDomainDomain.findNeoVisitorBy_UUID(db, UUID.fromString(message.body().getString("NeoVisitor"))), (relationship, other) -> {
+				result.add(new JsonObject().put(NeoDomainDomain.Relations.VISITOR_RETURNVALUES.name(), mapRelation(relationship)).put("VisitorReturnValue", mapNode(other, NeoDomainDomain.Entities.VisitorReturnValue)));
+				return false;
+			});
+			message.reply(newSuccess(result));
+		};
+	}
+
+	private TransactionalMessageHandler onGet_NeoVisitor_VISITOR_RETURNVALUES_FOR_VisitorReturnValue() {
+		return (tx, message) -> {
+			final Node node = NeoDomainDomain.findVisitorReturnValueBy_UUID(db, UUID.fromString(message.body().getString("VisitorReturnValue")));
+			final Relationship relation = NeoDomainDomain.get_NeoVisitor_VISITOR_RETURNVALUES_Relation_for_VisitorReturnValue(node);
+			if (relation == null) message.reply(newSuccess(new JsonObject()));
+			else message.reply(newSuccess(new JsonObject().put(NeoDomainDomain.Relations.VISITOR_RETURNVALUES.name(), mapRelation(relation)).put("NeoVisitor", mapNode(relation.getOtherNode(node), NeoDomainDomain.Entities.NeoVisitor))));
 		};
 	}
 
@@ -1447,6 +1632,11 @@ public class NeoDomainDomainVerticle extends AbstractVerticle {
 		};
 	}
 
+	protected JsonObject newRenderDomainReply() {
+		final JsonObject jsonObject = new JsonObject();
+		return jsonObject;
+	}
+
 	protected void renderDomain(String uuid, Message<JsonObject> message) {
 		log.warn("RenderDomain not implemented. Ignored parameters : " + message.body().encode());
 	}
@@ -1554,7 +1744,7 @@ public class NeoDomainDomainVerticle extends AbstractVerticle {
 		return relationship;
 	}
 
-	private JsonObject mapRelation(Relationship relation) {
+	protected JsonObject mapRelation(Relationship relation) {
 		final JsonObject jsonObject = new JsonObject();
 		jsonObject.put("uuid", relation.getProperty("_uuid"));
 		jsonObject.put("type", relation.getType().name());
@@ -1565,7 +1755,7 @@ public class NeoDomainDomainVerticle extends AbstractVerticle {
 		return jsonObject;
 	}
 
-	private JsonObject mapNode(Node relation, Label label) {
+	protected JsonObject mapNode(Node relation, Label label) {
 		final JsonObject jsonObject = new JsonObject();
 		jsonObject.put("uuid", relation.getProperty("_uuid"));
 		jsonObject.put("label", label.name());

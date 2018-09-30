@@ -13,7 +13,7 @@ public class Tests {
 
    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Tests.class);
 
-   //@Test
+   @Test
    public void testHelloWorld() {
 
       ParameterSpec parameter = ParameterSpec.builder(ArrayTypeName.of(String.class),"args").build();

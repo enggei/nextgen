@@ -176,6 +176,8 @@ public class TemplateVerticle extends AbstractVerticle {
 
 				vertx.eventBus().consumer("template.renderSTGroup", new TransactionMessageHandler("renderSTGroup", onRenderSTGroup()));
 
+				vertx.eventBus().consumer("template.importSTG", new TransactionMessageHandler("importSTG", onImportSTG()));
+
 				vertx.eventBus().consumer("template.importGroup", new TransactionMessageHandler("importGroup", onImportGroup()));
 
 				vertx.eventBus().consumer("template.exportGroup", new TransactionMessageHandler("exportGroup", onExportGroup()));
@@ -1747,8 +1749,31 @@ public class TemplateVerticle extends AbstractVerticle {
 		};
 	}
 
+	protected JsonObject newRenderSTGroupReply() {
+		final JsonObject jsonObject = new JsonObject();
+		return jsonObject;
+	}
+
 	protected void renderSTGroup(String packageName,String nodeUUID, Message<JsonObject> message) {
 		log.warn("RenderSTGroup not implemented. Ignored parameters : " + message.body().encode());
+	}
+
+	private final TransactionalMessageHandler onImportSTG() {
+		return (tx, message) -> {
+			importSTG(message.body().getString("name"),message.body().getString("text"), message);
+		};
+	}
+
+	protected JsonObject newImportSTGReply(String delimiter, String uuid, String name) {
+		final JsonObject jsonObject = new JsonObject();
+		jsonObject.put("delimiter",delimiter);
+		jsonObject.put("uuid",uuid);
+		jsonObject.put("name",name);
+		return jsonObject;
+	}
+
+	protected void importSTG(String name,String text, Message<JsonObject> message) {
+		log.warn("ImportSTG not implemented. Ignored parameters : " + message.body().encode());
 	}
 
 	private final TransactionalMessageHandler onImportGroup() {
@@ -1757,18 +1782,29 @@ public class TemplateVerticle extends AbstractVerticle {
 		};
 	}
 
+	protected JsonObject newImportGroupReply() {
+		final JsonObject jsonObject = new JsonObject();
+		return jsonObject;
+	}
+
 	protected void importGroup(JsonArray relations,JsonArray nodes, Message<JsonObject> message) {
 		log.warn("ImportGroup not implemented. Ignored parameters : " + message.body().encode());
 	}
 
 	private final TransactionalMessageHandler onExportGroup() {
 		return (tx, message) -> {
-			exportGroup(message);
+			exportGroup(message.body().getString("stGroup"), message);
 		};
 	}
 
-	protected void exportGroup(Message<JsonObject> message) {
-		log.warn("ExportGroup not implemented.");
+	protected JsonObject newExportGroupReply(JsonObject result) {
+		final JsonObject jsonObject = new JsonObject();
+		jsonObject.put("result",result);
+		return jsonObject;
+	}
+
+	protected void exportGroup(String stGroup, Message<JsonObject> message) {
+		log.warn("ExportGroup not implemented. Ignored parameters : " + message.body().encode());
 	}
 
 

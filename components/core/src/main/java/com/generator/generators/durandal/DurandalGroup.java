@@ -496,7 +496,7 @@ public final class DurandalGroup {
 	"    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n" + 
 	"\n" + 
 	"    <!-- uncomment this to force a refresh on the favicon -->\n" + 
-	"    <!--<link rel=\"shortcut icon\" href=\"https://localhost:8080/favicon.ico?v=2\" />-->\n" + 
+	"    <!--<link rel=\"shortcut icon\" href=\"https://localhost:8080/favicon.png?v=2\" />-->\n" +
 	"\n" + 
 	"    <link rel=\"apple-touch-startup-image\" href=\"./lib/durandal/img/ios-startup-image-landscape.png\" media=\"(orientation:landscape)\"/>\n" + 
 	"    <link rel=\"apple-touch-startup-image\" href=\"./lib/durandal/img/ios-startup-image-portrait.png\" media=\"(orientation:portrait)\"/>\n" + 
