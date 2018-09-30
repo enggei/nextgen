@@ -132,15 +132,15 @@ gitPull() {
 }
 
 prepareElasticSearch() {
-  sha1check "$1/lib" "analysis-icu-5.6.3.sha1"
+  sha1check "$1/lib" "analysis-icu-6.4.0.sha1"
   if [ "$?" -ne 0 ]; then
-    wgetURL "$1/lib" "https://artifacts.elastic.co/downloads/elasticsearch-plugins/analysis-icu/analysis-icu-5.6.3.zip"
-    sha1check "$1/lib" "analysis-icu-5.6.3.sha1" || exit 1
+    wgetURL "$1/lib" "https://artifacts.elastic.co/downloads/elasticsearch-plugins/analysis-icu/analysis-icu-6.4.0.zip"
+    sha1check "$1/lib" "analysis-icu-6.4.0.sha1" || exit 1
   fi
-  sha1check "$1/lib" "ingest-attachment-5.6.3.sha1"
+  sha1check "$1/lib" "ingest-attachment-6.4.0.sha1"
   if [ "$?" -ne 0 ]; then
-    wgetURL "$1/lib" "https://artifacts.elastic.co/downloads/elasticsearch-plugins/ingest-attachment/ingest-attachment-5.6.3.zip"
-    sha1check "$1/lib" "ingest-attachment-5.6.3.sha1" || exit 1
+    wgetURL "$1/lib" "https://artifacts.elastic.co/downloads/elasticsearch-plugins/ingest-attachment/ingest-attachment-6.4.0.zip"
+    sha1check "$1/lib" "ingest-attachment-6.4.0.sha1" || exit 1
   fi
 }
 
