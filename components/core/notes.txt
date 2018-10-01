@@ -1,0 +1,56 @@
+
+npm init
+npm install webpack webpack-cli --save-dev
+npm i react-svg-loader css-loader style-loader file-loader image-webpack-loader sass-loader node-sass --save-dev
+npm i html-webpack-plugin html-loader --save-dev
+npm install @babel/core babel-loader @babel/preset-env @babel/preset-react babel-plugin-transform-decorators-legacy @babel/plugin-proposal-decorators @babel/plugin-proposal-class-properties --save-dev
+
+# support hot reload
+npm i webpack-dev-server --save-dev
+
+# react
+npm i react react-dom npm react-router-dom prop-types --save-dev
+
+# mobx
+npm i mobx mobx-react mobx mobx-state-tree babel-preset-mobx babel-loader --save-dev
+npm i mobx-react-devtools --save-dev
+
+
+# react bootstrap
+npm i bootstrap react-bootstrap react-router-bootstrap --save-dev
+
+# superagent for rest-calls
+npm i superagent superagent-promise promise.prototype.finally --save-dev
+
+# draggable components
+npm i react-draggable --save-dev
+
+# graph
+npm i d3 react-d3-graph --save-dev
+
+#utilities
+npm i uuid --save-dev
+
+# development
+npm run develop
+
+# deployment
+npm run deploy
+
+
+#server-ssl certificate
+keytool -genkey -alias sslProbe -keyalg RSA -keystore sslStore.jceks -deststoretype pkcs12 -dname "CN=Geir Enge, OU=QUT, O=QUT, L=Brisbane, S=AU, C=EN" -storepass sslPassword
+
+#jwt certificate
+keytool -genseckey -keystore jwtStore.jceks -storetype jceks -storepass jwtPassword -keyalg HMacSHA256 -keysize 2048 -alias HS256 -keypass jwtPassword -dname "CN=Geir Enge, OU=QUT, O=QUT, L=Brisbane, S=AU, C=EN" -validity 360
+
+
+Todo:
+
+very nice
+http://mzabriskie.github.io/react-draggable/example/
+
+https://github.com/danielcaldas/react-d3-graph
+https://github.com/danielcaldas/react-d3-graph/blob/master/sandbox/Sandbox.jsx
+https://goodguydaniel.com/react-d3-graph/sandbox/index.html
+https://goodguydaniel.com/react-d3-graph/docs/index.html
