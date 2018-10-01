@@ -18,7 +18,7 @@ class GraphCanvas extends React.Component {
 
   render() {
 
-        if (this.props.loading) {
+        if (this.props.graphStore.isLoading) {
             return (
                 <LoadingSpinner />
             );
@@ -26,14 +26,8 @@ class GraphCanvas extends React.Component {
 
 
         const { nodes, links } = this.props.graphStore;
-
-        console.info(nodes.get());
-
-        // graph payload (with minimalist structure)
-        const data = {
-            nodes,
-            links
-        };
+        console.info("nodes = " + nodes);
+        const data = { nodes, links };
 
         // the graph configuration, you only need to pass down properties
         // that you want to override, otherwise default ones will be used

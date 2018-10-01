@@ -2,7 +2,11 @@ import { observable, action, computed } from 'mobx';
 
 import BoxModel from "../models/BoxModel";
 import ArrowModel from "../models/ArrowModel";
-import { randomUuid } from "../utils";
+import { v4 } from "uuid"
+
+export function randomUuid() {
+    return v4()
+}
 
 class DomainStore {
 

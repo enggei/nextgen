@@ -1,14 +1,15 @@
-import {observable, action} from 'mobx';
+import { observable } from 'mobx';
 
 export default class ArrowModel {
 
-    @observable id;
-    @observable.ref from;
-    @observable.ref to;
+	@observable id;;
+	@observable.ref from;;
+	@observable.ref to;
 
-    constructor(id, from, to) {
+	constructor(id, from, to) {
 		this.id = id;
 		this.from = from;
-		this.to = to;
+		this.to = to
 	}
+
 }

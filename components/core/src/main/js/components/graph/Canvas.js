@@ -4,9 +4,9 @@ import { values } from "mobx"
 import { inject, observer } from "mobx-react"
 import DevTools from "mobx-react-devtools"
 
-import Node from "./Node"
-import Relation from "./Relation"
-import Sidebar from "./sidebar"
+import Node from "./Node.js"
+import Relation from "./Relation.js"
+import Sidebar from "./Sidebar.js"
 
 @inject('domainStore')
 @withRouter

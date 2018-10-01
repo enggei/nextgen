@@ -3,8 +3,8 @@ import agent from '../agent';
 
 class GraphStore {
 
+    @observable isLoading = false;
     @observable currentNode;
-    @observable loadingNode;
     @observable updatingNode;
     @observable updatingNodeErrors;
 
@@ -18,7 +18,7 @@ class GraphStore {
 //    }
 
     @action reset() {
-        this.loadingNode = true;
+        this.isLoading = true;
         return agent.Graph.last()
             .then(action(({ nodes, links }) => {
                 console.info(nodes);
@@ -26,7 +26,7 @@ class GraphStore {
                 console.info(this.nodes);
                 this.links = links;
             }))
-            .finally(action(() => { this.loadingNode = false; }))
+            .finally(action(() => { this.isLoading = false; }))
     }
 }
 

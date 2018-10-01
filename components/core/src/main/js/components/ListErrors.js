@@ -2,31 +2,30 @@ import React from 'react';
 
 class ListErrors extends React.Component {
 
-  render() {
+render() {
 
-    const errors = this.props.errors;
+	const errors = this.props.errors;
 
-    if (errors) {
+	if (errors) {
 
-      return (
-        <ul className="form-error">
-          {
-            Object.keys(errors).map(key => {
-              return (
-                <li key={key}>
-                  {key} {errors[key]}
-                </li>
-              );
-            })
-          }
-        </ul>
-      );
+		return (
+			<ul className="form-error">
+				{
+					Object.keys(errors).map(key => {
+						return (
+							<li key={key}>
+								{key} {errors[key]}
+							</li>
+						);
+					})
+				}
+			</ul>
+		);
 
-    } else {
-      return null;
-    }
-
-  }
+	} else {
+		return null;
+	}
+	}
 }
 
 export default ListErrors;
