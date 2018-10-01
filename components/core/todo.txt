@@ -6,3 +6,14 @@ one template, a text-editor is shown, where one can edit the template. Parameter
 By clicking on a template and selecting new-instance, a form for this template is shown. User adds values, and presses
 Generate which downloads the template into a file and download. One can also copy template to paste automatically.
 
+
+
+Todo:
+
+very nice
+http://mzabriskie.github.io/react-draggable/example/
+
+https://github.com/danielcaldas/react-d3-graph
+https://github.com/danielcaldas/react-d3-graph/blob/master/sandbox/Sandbox.jsx
+https://goodguydaniel.com/react-d3-graph/sandbox/index.html
+https://goodguydaniel.com/react-d3-graph/docs/index.html
