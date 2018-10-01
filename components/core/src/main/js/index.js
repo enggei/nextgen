@@ -7,9 +7,11 @@ import { Provider } from 'mobx-react';
 
 import App from './App';
 
+// todo remove these defaults, and use builder to add these:
 import appStore from './stores/AppStore';
 import authStore from './stores/AuthStore';
 import userStore from './stores/UserStore';
+
 import graphStore from './stores/GraphStore';
 import domainStore from './stores/DomainStore';
 

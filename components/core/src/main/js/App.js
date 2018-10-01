@@ -5,11 +5,12 @@ import { Provider } from 'mobx-react';
 import { inject, observer } from 'mobx-react';
 
 import NavBar from './components/NavBar.js';
-import LoginForm from './components/LoginForm.js';
-import LogoutForm from './components/LogoutForm.js';
-import RegisterForm from './components/RegisterForm.js';
+import LoginForm from './components/authentication/LoginForm.js';
+import LogoutForm from './components/authentication/LogoutForm.js';
+import RegisterForm from './components/authentication/RegisterForm.js';
+
 import GraphCanvas from './components/GraphCanvas.js';
-import Canvas from './components/graph/canvas.js';
+import Canvas from './components/graph/Canvas.js';
 
 @inject('userStore', 'appStore', 'authStore', 'graphStore', 'domainStore')
 @withRouter
@@ -49,7 +50,7 @@ class App extends Component {
 			<div>
 				<NavBar />
 					<footer className="footer">
-						<span>{(new Date().getFullYear())}</span> Nextgen
+						&copy; Copyright <span>{(new Date().getFullYear())}</span> 
 					</footer>
 				</div>
 			);

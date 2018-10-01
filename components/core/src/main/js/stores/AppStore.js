@@ -3,7 +3,7 @@ import agent from '../agent';
 
 class AppStore {
 
-  @observable appName = 'SearchApp';
+  @observable appName = 'N E X T G E N';
   @observable token = window.localStorage.getItem('jwt');
   @observable appLoaded = false;
 

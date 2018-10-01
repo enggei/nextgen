@@ -59,7 +59,7 @@ const Auth = {
 }
 
 const Graph = { 
-	last: () => requests.get('/graph/last')	
+	last: () => requests.get('/api/graph/last')	
 }
 
 
