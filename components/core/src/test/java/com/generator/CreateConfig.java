@@ -4,6 +4,7 @@ import com.generator.util.PasswordUtils;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -35,6 +36,7 @@ public class CreateConfig {
 
         final JsonArray users = new JsonArray();
         users.add(newUser("geirove", "geirove"));
+        users.add(newUser("test", "test"));
         users.add(newUser("ernst", "ernst"));
         config.put("users", users);
 
@@ -43,39 +45,44 @@ public class CreateConfig {
         writer.close();
     }
 
-    private static void testGraph() {
-//        const data = {
-//                nodes: [{ id: 'Harry' }, { id: 'Sally' }, { id: 'Alice' }],
-//        links: [{ source: 'Harry', target: 'Sally' }, { source: 'Harry', target: 'Alice' }]
-//        };
+    private static void testGraph() throws IOException {
+//        this.boxMap.set("ce9131ee-f528-4952-a012-543780c5e66d", new BoxModel("ce9131ee-f528-4952-a012-543780c5e66d","Rotterdam", 10, 10));
+//        this.boxMap.set("14194d76-aa31-45c5-a00c-104cc550430f", new BoxModel("14194d76-aa31-45c5-a00c-104cc550430f","Bratislava", 10, 10));
+//
+//        this.arrows.push(new ArrowModel("7b5d33c1-5e12-4278-b1c5-e4ae05c036bd", this.boxMap.get("ce9131ee-f528-4952-a012-543780c5e66d"), this.boxMap.get("14194d76-aa31-45c5-a00c-104cc550430f")));
 
-        final StringBuilder nodeJs = new StringBuilder("nodes: [");
-        final StringBuilder linksJS = new StringBuilder("links: [");
-
-        final String[] nodes = new String[20];
-        for (int i = 0; i < nodes.length; i++) {
-            nodes[i] = UUID.randomUUID().toString().substring(0, 8);
-            if (i > 0) nodeJs.append(", ");
-            nodeJs.append("{ id: '" + nodes[i] + "' }");
-        }
-        nodeJs.append("],");
+        final JsonObject response = new JsonObject();
+        final JsonArray nodes = new JsonArray();
+        final JsonArray links = new JsonArray();
 
         final Random random = new Random();
-        boolean first = true;
-        for (int i = 0; i < nodes.length; i++) {
-            int nRel = random.nextInt(nodes.length/2 ) + 1;
+
+        final String[] nodeArray = new String[200];
+        for (int i = 0; i < nodeArray.length; i++) {
+            nodeArray[i] = UUID.randomUUID().toString();
+            nodes.add(new JsonObject().put("id", nodeArray[i]).put("code", "this.boxMap.set(\"" + nodeArray[i] + "\", new BoxModel(\"" + nodeArray[i] + "\",\"Node " + (i + 1) + "\", " + random.nextInt(800) + ", " + random.nextInt(800) + "));"));
+        }
+
+        for (String node : nodeArray) {
+            int nRel = random.nextInt(nodeArray.length / 2) + 1;
             for (int j = 0; j < nRel; j++) {
-                final String targetNode = nodes[random.nextInt(nodes.length - 1)];
-                if (targetNode.equals(nodes[i])) continue;
-                if (!first) linksJS.append(", ");
-                linksJS.append("{ source: '" + nodes[i] + "', target: '" + targetNode + "' }");
-                first = false;
+                final String targetNode = nodeArray[random.nextInt(nodeArray.length - 1)];
+                if (targetNode.equals(node)) continue;
+                links.add(new JsonObject().put("source", node).put("target", targetNode).put("code", "this.arrows.push(new ArrowModel(\"" + UUID.randomUUID().toString() + "\", this.boxMap.get(\"" + node + "\"), this.boxMap.get(\"" + targetNode + "\")));"));
             }
         }
-        linksJS.append("]");
 
-        System.out.println(nodeJs);
-        System.out.println(linksJS);
+        final BufferedWriter out = new BufferedWriter(new FileWriter(new File("/home/goe/projects/nextgen/components/core/src/test/java/com/generator/graph.txt")));
+
+        for (Object node : nodes) {
+            out.write(((JsonObject)node).getString("code"));
+            out.newLine();
+        }
+        for (Object link : links) {
+            out.write(((JsonObject)link).getString("code"));
+            out.newLine();
+        }
+        out.close();
     }
 
     private static JsonObject newUser(String username, String password) {

@@ -10,6 +10,8 @@ import App from './App';
 import appStore from './stores/AppStore';
 import authStore from './stores/AuthStore';
 import userStore from './stores/UserStore';
+import graphStore from './stores/GraphStore';
+import domainStore from './stores/DomainStore';
 
 import './index.css';
 import './css/app.css';
@@ -17,7 +19,9 @@ import './css/app.css';
 const stores = {
 	appStore,
 	authStore,
-	userStore
+	userStore,
+	graphStore,
+	domainStore
 };
 
 ReactDOM.render((

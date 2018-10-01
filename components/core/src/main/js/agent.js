@@ -58,6 +58,12 @@ const Auth = {
 	save: (user) => requests.put('/user', { user })	
 }
 
+const Graph = { 
+	last: () => requests.get('/graph/last')	
+}
+
+
 export default {
-	Auth
+	Auth,
+	Graph
 };

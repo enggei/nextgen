@@ -32,6 +32,9 @@ const LoggedInView = props => {
                      <LinkContainer to="/graph">
                         <MenuItem eventKey={3.9}><i className="fa fa-sign-in" /> Graph </MenuItem>
                     </LinkContainer>
+                    <LinkContainer to="/boxes">
+                        <MenuItem eventKey={3.9}><i className="fa fa-sign-in" /> Boxes </MenuItem>
+                    </LinkContainer>
 
                     <LinkContainer to="/logout">
                         <MenuItem eventKey={3.9}><i className="fa fa-sign-in" /> Sign out</MenuItem>

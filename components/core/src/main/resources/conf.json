@@ -10,11 +10,15 @@
   "ssl.store.password" : "sslPassword",
   "users" : [ {
     "username" : "geirove",
-    "password" : "cuolVBvwbeK4pTNUMXDFA3w9aX7H3lDvEKxhxBw+x2U=",
-    "salt" : "APneTfjAiP"
+    "password" : "B8n4l4z+pSRmnz8Xcx3N91gGWg6yYt990tD1j1qBF6o=",
+    "salt" : "W8AtN3XqdY"
+  }, {
+    "username" : "test",
+    "password" : "ZP2caNu0OnVY3iS2iY9sEe8K1yJDj14WHJr1O/fsdKg=",
+    "salt" : "dttFUqylmn"
   }, {
     "username" : "ernst",
-    "password" : "URoZqeWFrOVkz7o2ZpHjRr3oGipHjNIqbkzu/4C9haE=",
-    "salt" : "Exq8GzABeo"
+    "password" : "edrGHc8v74cSptJb7fFpxTSPULEQ16tXOyHC9wA1RR0=",
+    "salt" : "1FdnOqomZb"
   } ]
 }

@@ -15,7 +15,7 @@ public class Server extends AbstractVerticle {
 
     public static void main(String[] args) throws IOException {
 
-        final String configPath = args.length == 0 ? ("/home/goe/projects/nextgen/components/core/src/main/resources/conf.json") : args[0];
+        final String configPath = args.length == 0 ? ("components/core/src/main/resources/conf.json") : args[0];
         if (args.length == 0)
             System.out.println("using config file '" + configPath + "'");
 
@@ -37,7 +37,7 @@ public class Server extends AbstractVerticle {
 
         // front-end verticle (handles api requests from webfrontend
         verticles.add(new JsonObject().
-                put("verticle", FrontendVerticle.class.getCanonicalName()).
+                put("verticle", FrontendVerticleImpl.class.getCanonicalName()).
                 put("config", config));
 
         // pack verticles as configuration and start server

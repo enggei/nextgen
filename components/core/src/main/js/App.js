@@ -9,8 +9,9 @@ import LoginForm from './components/LoginForm.js';
 import LogoutForm from './components/LogoutForm.js';
 import RegisterForm from './components/RegisterForm.js';
 import GraphCanvas from './components/GraphCanvas.js';
+import Canvas from './components/graph/canvas.js';
 
-@inject('userStore', 'appStore', 'authStore')
+@inject('userStore', 'appStore', 'authStore', 'graphStore', 'domainStore')
 @withRouter
 @observer
 class App extends Component {
@@ -38,6 +39,7 @@ class App extends Component {
 						<Route path="/logout" component={LogoutForm} />
 						<Route path="/register" component={RegisterForm} />
 						<Route path="/graph" component={GraphCanvas} />
+						<Route path="/boxes" component={Canvas} />
 					</Switch>
 				</div>
 			);

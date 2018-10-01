@@ -1,6 +1,5 @@
 package com.nextgen.server;
 
-import com.generator.util.PasswordUtils;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
@@ -24,154 +23,162 @@ import io.vertx.ext.web.sstore.LocalSessionStore;
 
 import java.util.Map;
 
-public class FrontendVerticle extends AbstractVerticle {
+public abstract class FrontendVerticle extends AbstractVerticle {
 
-    protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FrontendVerticle.class);
+	protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FrontendVerticle.class);
 
-    protected static final String JSON_CONTENT_TYPE = "application/json; charset=utf-8";
 
-    private JsonObject config;
+	protected static final String JSON_CONTENT_TYPE = "application/json; charset=utf-8";
 
-    @Override
-    public void start(Future<Void> startFuture) throws Exception {
-        log.info("starting FrontendVerticle using config " + config());
+	private JsonObject config;
 
-        this.config = config();
+	@Override
+	public void start(Future<Void> startFuture) throws Exception {
+		log.info("starting FrontendVerticle using config " + config());
 
-        final Router router = Router.router(vertx);
+		this.config = config();
 
-        router.route().handler(BodyHandler.create());
-        router.route().handler(SessionHandler.create(LocalSessionStore.create(vertx)));
+		final Router router = Router.router(vertx);
 
-        final KeyStoreOptions keyStoreOptions = new KeyStoreOptions().
-                setPath(config().getString("jwt.store.path")).
-                setPassword(config().getString("jwt.store.password")).
-                setType(config().getString("jwt.store.type", "jceks"));
+		router.route().handler(BodyHandler.create());
+		router.route().handler(SessionHandler.create(LocalSessionStore.create(vertx)));
 
-        final JWTAuthOptions jwtAuthOptions = new JWTAuthOptions().setKeyStore(keyStoreOptions);
-        final JWTAuth auth = JWTAuth.create(vertx, jwtAuthOptions);
+		final KeyStoreOptions keyStoreOptions = new KeyStoreOptions().
+					setPath(config().getString("jwt.store.path")).
+					setPassword(config().getString("jwt.store.password")).
+					setType(config().getString("jwt.store.type", "jceks"));
 
-        router.post("/login").handler(routingContext -> login(routingContext, auth));
-        router.get("/user").handler(this::getUser);
-        router.route("/api/*").handler(JWTAuthHandler.create(auth, "/login"));
+		final JWTAuthOptions jwtAuthOptions = new JWTAuthOptions().setKeyStore(keyStoreOptions);
+		final JWTAuth auth = JWTAuth.create(vertx, jwtAuthOptions);
 
-        final StaticHandler staticHandler = StaticHandler.create();
-        staticHandler.setWebRoot(config.getString("web.root"));
-        router.route("/*").handler(staticHandler);
+		router.post("/login").handler(routingContext -> login(routingContext, auth));
+		router.get("/user").handler(this::getUser);
+		router.route("/api/*").handler(JWTAuthHandler.create(auth, "/login"));
 
-        final HttpServerOptions serverOptions = new HttpServerOptions().
-                setSsl(true).
-                setKeyStoreOptions(new JksOptions().
-                        setPath(config().getString("ssl.store.path")).
-                        setPassword(config().getString("ssl.store.password")));
+		// secure api
+		router.get("/api/graph/last").handler(this::getLastGraph);
 
-        vertx.createHttpServer(serverOptions).requestHandler(router::accept).listen(config().getInteger("port"));
+		final StaticHandler staticHandler = StaticHandler.create();
+		staticHandler.setWebRoot(config.getString("web.root"));
+		router.route("/*").handler(staticHandler);
 
-        log.info("serving on port " + config().getInteger("port"));
-        startFuture.complete();
-    }
+		final HttpServerOptions serverOptions = new HttpServerOptions().
+					setSsl(true).
+					setKeyStoreOptions(new JksOptions().
+								setPath(config().getString("ssl.store.path")).
+								setPassword(config().getString("ssl.store.password")));
 
-    private void getUser(RoutingContext routingContext) {
+		vertx.createHttpServer(serverOptions).requestHandler(router::accept).listen(config().getInteger("port"));
 
-        final String authorization = routingContext.request().getHeader("Authorization");
-        final String token = authorization == null ? null : authorization.substring(7).trim();
+		log.info("serving on port " + config().getInteger("port"));
+		startFuture.complete();
+	}
 
-        final JsonObject response = new JsonObject();
-        final JsonArray users = config.getJsonArray("users");
-        for (Object o : users) {
-            final JsonObject user = (JsonObject) o;
+	protected abstract void getLastGraph(RoutingContext routingContext);
 
-            if (user.getString("token","").equals(token)) {
+	private void getUser(RoutingContext routingContext) {
 
-                response.put("user", new JsonObject().
-                        put("token", token).
-                        put("username", user.getString("username")).
-                        put("bio", "bio").
-                        put("image", ""));
-                sendOKResponse(routingContext, response);
-                return;
-            }
-        }
+		final String authorization = routingContext.request().getHeader("Authorization");
+		final String token = authorization == null ? null : authorization.substring(7).trim();
 
-        sendErrorResponse(routingContext, new JsonObject().put("message", "user not found"));
-    }
+		final JsonObject response = new JsonObject();
+		final JsonArray users = config.getJsonArray("users");
+		for (Object o : users) {
+				final JsonObject user = (JsonObject) o;
 
-    private void login(RoutingContext routingContext, JWTAuth authProvider) {
+				if (user.getString("token", "").equals(token)) {
 
-        debug(routingContext);
+					response.put("user", new JsonObject().
+								put("token", token).
+								put("username", user.getString("username")).
+								put("bio", "bio").
+								put("image", ""));
+					sendOKResponse(routingContext, response);
+					return;
+				}
+		}
 
-        final JsonObject bodyAsJson = routingContext.getBodyAsJson();
+		sendErrorResponse(routingContext, new JsonObject().put("message", "user not found"));
+	}
 
-        final JsonObject response = new JsonObject();
+	protected abstract boolean verifyUserPassword(String providedPassword, String securedPassword, String salt);
 
-        final JsonArray users = config.getJsonArray("users");
-        for (Object o : users) {
-            final JsonObject user = (JsonObject) o;
+	private void login(RoutingContext routingContext, JWTAuth authProvider) {
 
-            if (user.getString("username").equals(bodyAsJson.getString("username"))) {
-                boolean passwordMatch = PasswordUtils.verifyUserPassword(bodyAsJson.getString("password"), user.getString("password"), user.getString("salt"));
+		debug(routingContext);
 
-                if (passwordMatch) {
+		final JsonObject bodyAsJson = routingContext.getBodyAsJson();
 
-                    final JsonObject payload = new JsonObject().put("sub", user.getString("username"));
-                    final String token = authProvider.generateToken(payload, new JWTOptions().setExpiresInMinutes(120).setSubject(user.getString("username")));
-                    user.put("token", token);
+		final JsonObject response = new JsonObject();
 
-                    response.put("user", new JsonObject().
-                            put("token", token).
-                            put("username", user.getString("username")).
-                            put("bio", "bio").
-                            put("image", ""));
-                    sendOKResponse(routingContext, response);
-                    return;
-                }
-            }
-        }
+		final JsonArray users = config.getJsonArray("users");
+		for (Object o : users) {
+				final JsonObject user = (JsonObject) o;
 
-        sendErrorResponse(routingContext, errorMessage("user not found"));
-    }
+				if (user.getString("username").equals(bodyAsJson.getString("username"))) {
+					boolean passwordMatch = verifyUserPassword(bodyAsJson.getString("password"), user.getString("password"), user.getString("salt"));
 
-    protected void sendOKResponse(RoutingContext routingContext, JsonObject content) {
-        final String encode = content.encode();
-        log.info(routingContext.request().absoluteURI() + " response " + encode);
-        routingContext.response().setStatusCode(HttpResponseStatus.OK.code())
-                .putHeader(HttpHeaders.CONTENT_LENGTH, encode.length() + "")
-                .putHeader(HttpHeaders.CONTENT_TYPE, JSON_CONTENT_TYPE)
-                .end(encode);
-    }
+					if (passwordMatch) {
 
-    protected void sendErrorResponse(RoutingContext routingContext, JsonObject content) {
-        sendErrorResponse(routingContext, HttpResponseStatus.INTERNAL_SERVER_ERROR.code(), content);
-    }
+						final JsonObject payload = new JsonObject().put("sub", user.getString("username"));
+						final String token = authProvider.generateToken(payload, new JWTOptions().setExpiresInMinutes(120).setSubject(user.getString("username")));
+						user.put("token", token);
 
-    protected JsonObject errorMessage(String... errors) {
-        final JsonArray errorMessages = new JsonArray();
-        for (String error : errors)
-            errorMessages.add(error);
-        return new JsonObject().put("errors", new JsonObject().put("error", errorMessages));
-    }
+						response.put("user", new JsonObject().
+									put("token", token).
+									put("username", user.getString("username")).
+									put("bio", "bio").
+									put("image", ""));
+						sendOKResponse(routingContext, response);
+						return;
+					}
+				}
+		}
 
-    protected void sendErrorResponse(RoutingContext routingContext, int responseCode, JsonObject content) {
-        final String encode = content.encode();
-        log.info(routingContext.request().absoluteURI() + " response " + encode);
-        routingContext.response().setStatusCode(responseCode)
-                .putHeader(HttpHeaders.CONTENT_LENGTH, encode.length() + "")
-                .putHeader(HttpHeaders.CONTENT_TYPE, JSON_CONTENT_TYPE)
-                .end(encode);
-    }
+		sendErrorResponse(routingContext, errorMessage("user not found"));
+	}
 
-    protected static void debug(String method, RoutingContext routingContext) {
-        final String uri = method + " " + routingContext.request().method().name() + " " + routingContext.request().uri();
-        boolean isAuthenticated = routingContext.user() != null;
-        log.info(uri + " " + (isAuthenticated ? "(authenticated)" : "(NOT authenticated)"));
-        final MultiMap headers = routingContext.request().headers();
-        for (Map.Entry<String, String> header : headers)
-            log.info("\t" + header.getKey() + "=" + header.getValue());
-        log.info("body " + routingContext.getBody().toString());
+	protected void sendOKResponse(RoutingContext routingContext, JsonObject content) {
+		final String encode = content.encode();
+		log.info(routingContext.request().absoluteURI() + " response " + encode);
+		routingContext.response().setStatusCode(HttpResponseStatus.OK.code())
+					.putHeader(HttpHeaders.CONTENT_LENGTH, encode.length() + "")
+					.putHeader(HttpHeaders.CONTENT_TYPE, JSON_CONTENT_TYPE)
+					.end(encode);
+	}
 
-    }
+	protected void sendErrorResponse(RoutingContext routingContext, JsonObject content) {
+		sendErrorResponse(routingContext, HttpResponseStatus.INTERNAL_SERVER_ERROR.code(), content);
+	}
 
-    protected static void debug(RoutingContext routingContext) {
-        debug("?", routingContext);
-    }
+	protected JsonObject errorMessage(String... errors) {
+		final JsonArray errorMessages = new JsonArray();
+		for (String error : errors)
+				errorMessages.add(error);
+		return new JsonObject().put("errors", new JsonObject().put("error", errorMessages));
+	}
+
+	protected void sendErrorResponse(RoutingContext routingContext, int responseCode, JsonObject content) {
+		final String encode = content.encode();
+		log.info(routingContext.request().absoluteURI() + " response " + encode);
+		routingContext.response().setStatusCode(responseCode)
+					.putHeader(HttpHeaders.CONTENT_LENGTH, encode.length() + "")
+					.putHeader(HttpHeaders.CONTENT_TYPE, JSON_CONTENT_TYPE)
+					.end(encode);
+	}
+
+	protected static void debug(String method, RoutingContext routingContext) {
+		final String uri = method + " " + routingContext.request().method().name() + " " + routingContext.request().uri();
+		boolean isAuthenticated = routingContext.user() != null;
+		log.info(uri + " " + (isAuthenticated ? "(authenticated)" : "(NOT authenticated)"));
+		final MultiMap headers = routingContext.request().headers();
+		for (Map.Entry<String, String> header : headers)
+				log.info("\t" + header.getKey() + "=" + header.getValue());
+		log.info("body " + routingContext.getBody().toString());
+
+	}
+
+	protected static void debug(RoutingContext routingContext) {
+		debug("?", routingContext);
+	}
 }
