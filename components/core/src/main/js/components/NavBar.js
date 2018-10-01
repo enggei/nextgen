@@ -8,13 +8,13 @@ const LoggedOutView = props => {
 
 	if (!props.currentUser) {
 		return (
-            <Nav pullRight>
-                <Navbar.Text>
-                     <LinkContainer to="/login">
-                       <NavItem>Login</NavItem>
-                     </LinkContainer>
-                </Navbar.Text>
-            </Nav>
+			<Nav pullRight>
+				<Navbar.Text>
+					<LinkContainer to="/login">
+						<NavItem>Login</NavItem>
+					</LinkContainer>
+				</Navbar.Text>
+			</Nav>
 		);
 	}
 
@@ -25,26 +25,22 @@ const LoggedInView = props => {
 
 	if (props.currentUser) {
 		return (
-            <Nav pullRight>
-
-                <NavDropdown eventKey={3} title="Actions" id="basic-nav-dropdown">
-
-                     <LinkContainer to="/graph">
-                        <MenuItem eventKey={3.9}><i className="fa fa-sign-in" /> Graph </MenuItem>
-                    </LinkContainer>
-                    <LinkContainer to="/boxes">
-                        <MenuItem eventKey={3.9}><i className="fa fa-sign-in" /> Boxes </MenuItem>
-                    </LinkContainer>
-
-                    <LinkContainer to="/logout">
-                        <MenuItem eventKey={3.9}><i className="fa fa-sign-in" /> Sign out</MenuItem>
-                    </LinkContainer>
-
-                </NavDropdown>
-                <Navbar.Text pullRight>
-                      <span> {props.currentUser.username} </span>
-                </Navbar.Text>
-            </Nav>
+			<Nav pullRight>
+				<NavDropdown eventKey={1} title="Actions" id="basic-nav-dropdown">
+					<LinkContainer to="/graph">
+						<MenuItem eventKey={1.1}><i className="fa fa-sign-in" /> Graph </MenuItem>
+					</LinkContainer> 
+					<LinkContainer to="/boxes">
+						<MenuItem eventKey={1.2}><i className="fa fa-sign-in" /> Boxes </MenuItem>
+					</LinkContainer> 
+					<LinkContainer to="/logout">
+						<MenuItem eventKey={1.3}><i className="fa fa-sign-in" /> Sign out </MenuItem>
+					</LinkContainer> 
+				</NavDropdown>
+				<Navbar.Text pullRight>
+					<span> {props.currentUser.username} </span>
+				</Navbar.Text>
+			</Nav>
 		);
 	}
 
@@ -57,19 +53,18 @@ class NavBar extends Component {
 
 	render() {
 		return (
-
-           <Navbar>
-             <Navbar.Header>
-               <Navbar.Brand>
-                 <a href="#home">N E X T G E N</a>
-               </Navbar.Brand>
-               <Navbar.Toggle />
-             </Navbar.Header>
-             <Navbar.Collapse>
-               <LoggedOutView currentUser={this.props.userStore.currentUser} />
-               <LoggedInView currentUser={this.props.userStore.currentUser} />
-             </Navbar.Collapse>
-           </Navbar>
+			<Navbar>
+				<Navbar.Header>
+					<Navbar.Brand>
+						<a href="#home">N E X T G E N</a>
+					</Navbar.Brand>
+					<Navbar.Toggle />
+				</Navbar.Header>
+				<Navbar.Collapse>
+					<LoggedOutView currentUser={this.props.userStore.currentUser} />
+					<LoggedInView currentUser={this.props.userStore.currentUser} />
+				</Navbar.Collapse>
+			</Navbar>
 		);
 	}
 }

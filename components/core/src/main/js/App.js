@@ -50,7 +50,7 @@ class App extends Component {
 			<div>
 				<NavBar />
 					<footer className="footer">
-						&copy; Copyright <span>{(new Date().getFullYear())}</span> 
+						&copy; Copyright <span>{(new Date().getFullYear())}</span> N E X T G E N
 					</footer>
 				</div>
 			);
