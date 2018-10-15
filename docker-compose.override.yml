@@ -9,9 +9,6 @@ services:
 #  elasticsearch:
 #    build: docker/elasticsearch
 
-  elasticsearchlogs:
-    build: docker/elasticsearch-logs
-
   kibana:
     build: docker/kibana
 

@@ -34,10 +34,12 @@ services:
 #      - platform
 
   elasticsearchlogs:
-    image: ${DOCKER_REGISTRY}/nextgen/elasticsearch-logs:${TAG}
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
     restart: always
+    environment:
+    - cluster.name=nextgen-logs
     volumes:
-     - ${DOCKER_BASE_DIR}/elasticsearch-logs:/usr/share/elasticsearch/data
+     - elasticsearchlogs:/usr/share/elasticsearch/data
     networks:
       - platform
 
@@ -46,8 +48,6 @@ services:
 #    restart: always
     ports:
       - "127.0.0.1:5601:5601"
-    volumes:
-      - ./docker/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
     depends_on:
       - elasticsearchlogs
     networks:
@@ -102,7 +102,6 @@ services:
       - CLASSPATH=/opt/hazelcast/lib
       - JAVA_OPTS= -Xms512M -Xmx1024M -Dhazelcast.config=/opt/hazelcast/config_ext/hazelcast.xml -Dhazelcast.logging.type=slf4j -Dlogback.configurationFile=/opt/hazelcast/config_ext/logback.xml
     depends_on:
-      - elasticsearchlogs
       - fluentd
     volumes:
       - ./docker/hazelcast/config_ext:/opt/hazelcast/config_ext
@@ -132,7 +131,6 @@ services:
     ports:
       - "127.0.0.1:8180:8080"
     depends_on:
-      - elasticsearchlogs
       - fluentd
     logging:
       driver: fluentd
@@ -150,6 +148,7 @@ services:
 
 volumes:
   fluentd:
+  elasticsearchlogs:
 
 networks:
   platform:

@@ -13,9 +13,3 @@ And make it permanent by adding / changing the value in ``/etc/sysctl.conf``:
 ```text
 vm.max_map_count = 262144
 ```
-
-## Preparation
-
-```bash
-sudo su -c "mkdir -p /opt/docker/nextgen/elasticsearch-logs && chown user:user /opt/docker/nextgen/elasticsearch-logs"
-```
