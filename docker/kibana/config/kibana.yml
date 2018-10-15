@@ -7,4 +7,4 @@ xpack.monitoring.kibana.collection.enabled: false
 xpack.monitoring.enabled: false
 xpack.ml.enabled: false
 xpack.graph.enabled: false
-kibana.defaultAppId: "dashboard/AWIRIvC-DCtTQAmSysdB"
+kibana.defaultAppId: "dashboard/0df6be20-b857-11e8-9c9a-03b9863ee396"
