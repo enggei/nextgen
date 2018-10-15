@@ -34,7 +34,7 @@ services:
 #      - platform
 
   elasticsearchlogs:
-    image: ${DOCKER_REGISTRY}/elasticsearch-logs:${TAG}
+    image: ${DOCKER_REGISTRY}/nextgen/elasticsearch-logs:${TAG}
     restart: always
     volumes:
      - ${DOCKER_BASE_DIR}/elasticsearch-logs:/usr/share/elasticsearch/data
@@ -42,7 +42,7 @@ services:
       - platform
 
   kibana:
-    image: ${DOCKER_REGISTRY}/kibana:${TAG}
+    image: ${DOCKER_REGISTRY}/nextgen/kibana:${TAG}
 #    restart: always
     ports:
       - "127.0.0.1:5601:5601"
@@ -54,7 +54,7 @@ services:
       - platform
 
   fluentd:
-    image: ${DOCKER_REGISTRY}/fluentd:${TAG}
+    image: ${DOCKER_REGISTRY}/nextgen/fluentd:${TAG}
     restart: always
     ports:
       - "127.0.0.1:24224:24224"
@@ -65,10 +65,10 @@ services:
       - platform
       - client
     volumes:
-      - ${DOCKER_BASE_DIR}/fluentd:/var/log/fluentd
+      - fluentd:/fluentd/log
 
   nginx:
-    image: nginx
+    image: ${DOCKER_REGISTRY}/nextgen/nginx:${TAG}
 #    restart: always
     ports:
       - "80:80"
@@ -84,7 +84,7 @@ services:
       - client
 
 #  gitserver:
-#    image: ${DOCKER_REGISTRY}/git-server:${TAG}
+#    image: ${DOCKER_REGISTRY}/nextgen/git-server:${TAG}
 #    restart: always
 #    ports:
 #      - "127.0.0.1:2222:22"
@@ -96,7 +96,7 @@ services:
 
   hazelcast:
 #    image: hazelcast/hazelcast
-    image: ${DOCKER_REGISTRY}/hazelcast:${TAG}
+    image: ${DOCKER_REGISTRY}/nextgen/hazelcast:${TAG}
 #    restart: always
     environment:
       - CLASSPATH=/opt/hazelcast/lib
@@ -148,8 +148,8 @@ services:
     networks:
       platform:
 
-#volumes:
-#  git-server-repos:
+volumes:
+  fluentd:
 
 networks:
   platform:

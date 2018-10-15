@@ -37,7 +37,7 @@ services:
     build: components/api
     environment:
 #      - JAVA_OPTS= -ea -Xmx1024M -Djava.security.egd=file:/dev/./urandom
-      - JAVA_OPTS= -ea -Djava.security.egd=file:/dev/./urandom
+      - JAVA_OPTS= -ea -Djava.security.egd=file:/dev/./urandom -Dhazelcast.logging.type=slf4j
 
   frontend:
     build: docker/frontend

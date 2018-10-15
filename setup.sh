@@ -196,11 +196,11 @@ waitForDocker() {
     CPU=`docker stats --no-stream --format "{{.CPUPerc}}" | awk '{gsub ( "[%]","" ) ; print $0 }' | awk '{s+=$1} END {print s}'`
     echo "CPU: $CPU%"
 
-    # Do floating point comparison, if $CPU is bigger than 15, WAIT will be 1
+    # Do floating point comparison, if $CPU is greater than 15, WAIT will be 1
     WAIT=`echo $CPU'>'15 | bc -l`
     echo "WAIT (0/1): $WAIT"
 
-    # Break from loop if WAIT is 0, which is when the sum of the cpu usage is smaller than 15%
+    # Break from loop if WAIT is 0, which is when the sum of the cpu usage is less than 15%
     [[ "$WAIT" -eq 0 ]] && break
 
     # Else sleep and loop
@@ -248,7 +248,7 @@ case $1 in
 
     # Components
     buildComponent api
-    buildComponent vertx-fatjar-test
+#    buildComponent vertx-fatjar-test
 
     docker-compose up -d
 
