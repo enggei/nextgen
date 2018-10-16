@@ -18,4 +18,4 @@ COPY src/main/resources/application-conf.json $VERTICLE_HOME/
 # Launch the verticle
 WORKDIR $VERTICLE_HOME
 ENTRYPOINT ["sh", "-c"]
-CMD ["exec java -jar $VERTICLE_FILE -conf application-conf.json"]
+CMD ["exec java -jar $JAVA_OPTS $VERTICLE_FILE -conf application-conf.json -cluster -cluster-host hazelcast"]

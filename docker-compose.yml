@@ -132,6 +132,7 @@ services:
       - "127.0.0.1:8180:8080"
     depends_on:
       - fluentd
+      - hazelcast
     logging:
       driver: fluentd
       options:

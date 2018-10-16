@@ -49,7 +49,7 @@ public class HelloVerticle extends AbstractVerticle {
    public static void main(String[] args) {
       ClientConfig clientConfig = new ClientConfig()
          .setGroupConfig(new GroupConfig().setName("nextgen").setPassword("nextgen"))
-         .setNetworkConfig(new ClientNetworkConfig().addAddress("172.19.0.5"));
+         .setNetworkConfig(new ClientNetworkConfig().addAddress("172.19.0.4"));
 
       HazelcastInstance hazelcastInstance = HazelcastClient.newHazelcastClient(clientConfig);
 

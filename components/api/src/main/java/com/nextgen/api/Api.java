@@ -58,6 +58,8 @@ public class Api extends AbstractVerticle {
       // TEST
       vertx.eventBus().consumer("ping.address", message -> {
          log.debug("Received from \"" + message.address() + "\": " + message.body().toString());
+         log.debug("Replying to " + message.replyAddress());
+
          message.reply("PONG!");
       });
 
