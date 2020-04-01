@@ -60,7 +60,7 @@ public class SwingUtil {
 
    public static JTextArea newTextArea() {
       final JTextArea txtEditor = new JTextArea(30, 30);
-      txtEditor.setFont(new Font("Hack", Font.PLAIN, 20));
+      txtEditor.setFont(new Font("Hack", Font.PLAIN, 10));
       txtEditor.setTabSize(4);
       txtEditor.setCaretPosition(0);
       return txtEditor;
@@ -80,6 +80,14 @@ public class SwingUtil {
       return "";
    }
 
+    public static void toClipboard(String content) {
+        StringSelection stringSelection = new StringSelection(content);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, (clipboard1, contents) -> {
+            // don't care ?
+        });
+    }
+
    public static void showPanel(final JComponent component) {
       SwingUtil.setLookAndFeel_Nimbus();
 
@@ -87,14 +95,6 @@ public class SwingUtil {
       frame.getContentPane().add(component, BorderLayout.CENTER);
       frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
       show(frame);
-   }
-
-   public static void toClipboard(String content) {
-      StringSelection stringSelection = new StringSelection(content);
-      Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-      clipboard.setContents(stringSelection, (clipboard1, contents) -> {
-         // don't care ?
-      });
    }
 
    public static File showOpenDir(Component parent, String dir) {

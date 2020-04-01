@@ -40,6 +40,7 @@ public final class TextProcessingPanel extends JPanel {
    private final JCheckBox chkTrimEmptyLines = new JCheckBox("Compress lines", true);
    private final JCheckBox chkShowDifference = new JCheckBox("Show Difference", false);
    private final JCheckBox chkKeepMatches = new JCheckBox("keep only matches", false);
+   private final JCheckBox chkToUpper = new JCheckBox("toUpper", false);
 
    public TextProcessingPanel(String inputText, Set<String> patterns) {
       super(new BorderLayout());
@@ -227,14 +228,15 @@ public final class TextProcessingPanel extends JPanel {
       radRemoveLineBefore.addActionListener(e -> filter());
       radRemoveLineAfter.addActionListener(e -> filter());
       chkKeepMatches.addActionListener(e -> filter());
+      chkToUpper.addActionListener(e -> filter());
 
       chkTrimEmptyLines.setToolTipText("Check to compress 2 or more empty lines into 1");
       chkTrimEmptyLines.addActionListener(e -> filter());
       chkShowDifference.addActionListener(e -> filter());
 
-      final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("350dlu:grow,4dlu,100dlu,4dlu,350dlu:grow", "pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,50dlu:grow");
+      final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("350dlu:grow,4dlu,100dlu,4dlu,350dlu:grow", "pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,50dlu:grow");
       int row = 1;
-      editor.add(new JScrollPane(txtInput), 1, row, 1, 37);
+      editor.add(new JScrollPane(txtInput), 1, row, 1, 39);
       editor.addLabel("Pattern", 3, row += 2);
       editor.add(txtPattern, 3, row += 2);
       editor.addLabel("Insert", 3, row += 2);
@@ -251,8 +253,9 @@ public final class TextProcessingPanel extends JPanel {
       editor.add(chkTrimEmptyLines, 3, row += 2);
       editor.add(chkShowDifference, 3, row += 2);
       editor.add(chkKeepMatches, 3, row += 2);
+      editor.add(chkToUpper, 3, row += 2);
       editor.add(btnSetAsInput, 3, row += 2);
-      editor.add(new JScrollPane(txtOutput), 5, 1, 1, 37);
+      editor.add(new JScrollPane(txtOutput), 5, 1, 1, 39);
 
       txtOutput.addMouseListener(new MouseAdapter() {
          @Override
@@ -363,7 +366,7 @@ public final class TextProcessingPanel extends JPanel {
             "m times");
 
 
-      SwingUtil.showTextResult("Regexp", out.toString(), txtPattern);
+      SwingUtil.showTextResult("Regexp", out.toString(), txtPattern, false);
    }
 
    private void filter() {
@@ -396,7 +399,7 @@ public final class TextProcessingPanel extends JPanel {
 
                String newLine = replacement;
                for (int i = 0; i < matcher.groupCount(); i++)
-                  newLine = newLine.replace("$" + (i + 1), matcher.group(i + 1));
+                  newLine = newLine.replace("$" + (i + 1), chkToUpper.isSelected() ? StringUtil.toUpper(matcher.group(i + 1)) : matcher.group(i + 1) );
 
                if (chkKeepMatches.isSelected()) {
                   filteredText.append(newLine).append(lineSeparator);

@@ -4,6 +4,7 @@ import com.generator.ProjectConstants;
 import com.generator.generators.html5.parser.HTMLLexer;
 import com.generator.generators.html5.parser.HTMLParser;
 import com.generator.generators.html5.parser.HTMLParserNodeListener;
+import com.generator.util.FileUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -35,10 +36,12 @@ public class Tests {
    }
 
 
-   //@Test
-   public void testHtml5Group() {
+   @Test
+   public void testHtml5Group() throws IOException {
 
       final Html5Group group = new Html5Group();
+
+      Html5Group.toSTGFile(FileUtil.tryToCreateDirIfNotExists(new File("/home/goe/projects/nextgen/components/core/src/main/java/com/generator/generators/html5/")));
 
       write(group.newpage().
                   setHead(group.newhead().

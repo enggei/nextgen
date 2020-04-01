@@ -20,7 +20,7 @@ public class Tests {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Tests.class);
 
 
-    //@Test
+    @Test
     public void testJsonGenerator() {
 
         final JsonGroup jsonGroup = new JsonGroup();

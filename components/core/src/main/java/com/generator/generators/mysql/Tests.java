@@ -168,7 +168,7 @@ public class Tests {
 
    @Test
    public void testMySqlParser() throws Exception {
-      final MySQLSession session = new MySQLSession("127.0.0.1", "tr", "root", "root");
+      final MySQLSession session = new MySQLSession("0.0.0.0",3316, "bkcloud", "root", "1234");
 
       for (String table : session.getTables()) {
          final MySqlParserNodeListener listener = new MySqlParserNodeListener(true) {

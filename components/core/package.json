@@ -31,6 +31,7 @@
     "mobx-react": "^5.2.8",
     "mobx-react-devtools": "^6.0.3",
     "mobx-state-tree": "^3.5.0",
+    "mxgraph-js": "^1.0.1",
     "node-sass": "^4.9.3",
     "npm": "^6.4.1",
     "promise.prototype.finally": "^3.1.0",
@@ -44,6 +45,7 @@
     "react-router-dom": "^4.3.1",
     "react-svg-loader": "^2.1.0",
     "sass-loader": "^7.1.0",
+    "script-loader": "^0.7.2",
     "style-loader": "^0.23.0",
     "superagent": "^3.8.3",
     "superagent-promise": "^1.1.0",
@@ -52,7 +54,9 @@
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.7"
   },
-  "dependencies": {},
+  "dependencies": {
+    "mxgraph": "^3.9.8"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/enggei/nextgen.git"

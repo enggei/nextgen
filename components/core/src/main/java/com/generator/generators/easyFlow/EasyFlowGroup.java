@@ -82,7 +82,8 @@ public final class EasyFlowGroup {
       return new transitST(stGroup);
    }
 
-   public final class statefulContextST implements EasyFlowGroupTemplate {
+   public static final class statefulContextST implements EasyFlowGroupTemplate {
+
 
       private Object _contextGeneric;
       private Object _name;
@@ -149,7 +150,8 @@ public final class EasyFlowGroup {
    	}
    }
 
-   public final class jsonMessageHandlerST implements EasyFlowGroupTemplate {
+   public static final class jsonMessageHandlerST implements EasyFlowGroupTemplate {
+
 
       private java.util.Set<Object> _states = new java.util.LinkedHashSet<>();
       private Object _name;
@@ -196,7 +198,8 @@ public final class EasyFlowGroup {
    	}
    }
 
-   public final class implST implements EasyFlowGroupTemplate {
+   public static final class implST implements EasyFlowGroupTemplate {
+
 
       private Object _name;
       private Object _state;
@@ -245,7 +248,8 @@ public final class EasyFlowGroup {
    	}
    }
 
-   public final class statesST implements EasyFlowGroupTemplate {
+   public static final class statesST implements EasyFlowGroupTemplate {
+
 
       private java.util.Set<Object> _states = new java.util.LinkedHashSet<>();
 
@@ -275,7 +279,8 @@ public final class EasyFlowGroup {
    	}
    }
 
-   public final class easyFlowST implements EasyFlowGroupTemplate {
+   public static final class easyFlowST implements EasyFlowGroupTemplate {
+
 
       private Object _context;
       private Object _events;
@@ -471,7 +476,8 @@ public final class EasyFlowGroup {
    	}
    }
 
-   public final class mvnST implements EasyFlowGroupTemplate {
+   public static final class mvnST implements EasyFlowGroupTemplate {
+
 
 
       private final ST template;
@@ -486,7 +492,8 @@ public final class EasyFlowGroup {
    	}
    }
 
-   public final class eventsST implements EasyFlowGroupTemplate {
+   public static final class eventsST implements EasyFlowGroupTemplate {
+
 
       private java.util.Set<Object> _events = new java.util.LinkedHashSet<>();
 
@@ -516,7 +523,8 @@ public final class EasyFlowGroup {
    	}
    }
 
-   public final class declarationST implements EasyFlowGroupTemplate {
+   public static final class declarationST implements EasyFlowGroupTemplate {
+
 
       private Object _name;
       private Object _state;
@@ -565,7 +573,8 @@ public final class EasyFlowGroup {
    	}
    }
 
-   public final class stateDeclarationST implements EasyFlowGroupTemplate {
+   public static final class stateDeclarationST implements EasyFlowGroupTemplate {
+
 
       private Object _comment;
       private Object _name;
@@ -614,7 +623,8 @@ public final class EasyFlowGroup {
    	}
    }
 
-   public final class transitST implements EasyFlowGroupTemplate {
+   public static final class transitST implements EasyFlowGroupTemplate {
+
 
       private Object _event;
       private Object _isFinish;
@@ -947,12 +957,12 @@ public final class EasyFlowGroup {
 		"}>>\n")
 			.append("declaration(name,state) ::= <<.whenEnter(~state~, (ContextHandler<~name~Context>) context -> {\n" + 
 		"	log.debug(\"~state;format=\"humpToCap\"~\");\n" + 
-		"   if (listener != null) listener.onEnter(~state~, context);\n" + 
-		"   ~state;format=\"toLower\"~(context);\n" + 
+		"   	if (listener != null) listener.onEnter(~state~, context);\n" + 
+		"   	~state;format=\"toLower\"~(context);\n" + 
 		"})>>\n")
 			.append("stateDeclaration(comment,name) ::= <<~name~~if(comment)~ /* ~comment~ */ ~endif~>>\n")
-			.append("transit(event,isFinish,isInit,state,transits) ::= <<~if(isInit)~from(~state~)~else~on(~event~).~if(isFinish)~finish~else~to~endif~(~state~)~endif~~if(transits)~.transit(\n" + 
-		"~transits:{it|~it~};separator=\",\\n\"~\n" + 
+			.append("transit(event,isFinish,isInit,state,transits) ::= <<~if(isInit)~from(~state~)~else~on(~event~).~if(isFinish)~finish~else~to~endif~(~state~)~endif~~if(transits)~.transit(\n" +
+		"~transits:{it|~it~};separator=\",\\n\"~\n" +
 		")~endif~>>\n")
 		.toString();
 }

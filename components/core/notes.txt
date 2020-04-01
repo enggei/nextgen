@@ -14,7 +14,7 @@ npm run deploy
 
 
 # the following steps was done to setup client:
-# It is NOT necessary to run this:
+# It is NOT necessary to run this more than once:
 
 npm init
 npm install webpack webpack-cli --save-dev
@@ -37,6 +37,12 @@ npm i bootstrap react-bootstrap react-router-bootstrap --save-dev
 
 # superagent for rest-calls
 npm i superagent superagent-promise promise.prototype.finally --save-dev
+
+# mxGraph
+npm i mxgraph-js script-loader --save-dev
+npm i --save-dev script-loader
+npm i mxgraph
+
 
 # draggable components
 npm i react-draggable --save-dev

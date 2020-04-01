@@ -47,7 +47,7 @@ public class Tests {
       });
 
       // Load a directory full of RiveScript documents (.rive files)
-      bot.loadDirectory("src/main/java/com/generator/generators/rivescript/replies");
+      bot.loadDirectory("/home/goe/projects/nextgen/components/core/src/main/java/com/generator/generators/rivescript/replies");
       // Load an individual file.
 //      bot.loadFile("src/main/java/com/generator/generators/rivescript/replies/eliza.rive");
 

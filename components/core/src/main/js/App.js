@@ -11,6 +11,7 @@ import RegisterForm from './components/authentication/RegisterForm.js';
 
 import GraphCanvas from './components/GraphCanvas.js';
 import Canvas from './components/graph/Canvas.js';
+import mxCanvas from './components/mxGraph/mxCanvas.js';
 
 @inject('userStore', 'appStore', 'authStore', 'graphStore', 'domainStore')
 @withRouter
@@ -40,6 +41,7 @@ class App extends Component {
 						<Route path="/logout" component={LogoutForm} />
 						<Route path="/register" component={RegisterForm} />
 						<Route path="/graph" component={GraphCanvas} />
+						<Route path="/mxgraph" component={mxCanvas} />
 						<Route path="/boxes" component={Canvas} />
 					</Switch>
 				</div>
