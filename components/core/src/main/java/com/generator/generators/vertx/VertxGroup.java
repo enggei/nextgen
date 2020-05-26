@@ -126,7 +126,8 @@ public final class VertxGroup {
       return new mvn_webClientST(stGroup);
    }
 
-   public final class NeoVerticleST implements VertxGroupTemplate {
+   public static final class NeoVerticleST implements VertxGroupTemplate {
+
 
       private java.util.Set<java.util.Map<String, Object>> _actions = new java.util.LinkedHashSet<>();
       private Object _name;
@@ -207,7 +208,8 @@ public final class VertxGroup {
    	}
    }
 
-   public final class ServerST implements VertxGroupTemplate {
+   public static final class ServerST implements VertxGroupTemplate {
+
 
       private java.util.Set<java.util.Map<String, Object>> _inbound = new java.util.LinkedHashSet<>();
       private Object _name;
@@ -330,7 +332,8 @@ public final class VertxGroup {
    	}
    }
 
-   public final class VerticleST implements VertxGroupTemplate {
+   public static final class VerticleST implements VertxGroupTemplate {
+
 
       private java.util.Set<java.util.Map<String, Object>> _incoming = new java.util.LinkedHashSet<>();
       private Object _name;
@@ -460,7 +463,8 @@ public final class VertxGroup {
    	}
    }
 
-   public final class RESTVerticleST implements VertxGroupTemplate {
+   public static final class RESTVerticleST implements VertxGroupTemplate {
+
 
       private Object _name;
       private Object _packageName;
@@ -539,7 +543,8 @@ public final class VertxGroup {
    	}
    }
 
-   public final class VerticleTestST implements VertxGroupTemplate {
+   public static final class VerticleTestST implements VertxGroupTemplate {
+
 
       private Object _name;
       private Object _verticle;
@@ -652,7 +657,8 @@ public final class VertxGroup {
    	}
    }
 
-   public final class APIST implements VertxGroupTemplate {
+   public static final class APIST implements VertxGroupTemplate {
+
 
 
       private final ST template;
@@ -667,7 +673,8 @@ public final class VertxGroup {
    	}
    }
 
-   public final class socksJSHandlerST implements VertxGroupTemplate {
+   public static final class socksJSHandlerST implements VertxGroupTemplate {
+
 
       private Object _route;
 
@@ -699,7 +706,8 @@ public final class VertxGroup {
    	}
    }
 
-   public final class socksJSBridgeST implements VertxGroupTemplate {
+   public static final class socksJSBridgeST implements VertxGroupTemplate {
+
 
       private java.util.Set<Object> _inbound = new java.util.LinkedHashSet<>();
       private java.util.Set<Object> _outbound = new java.util.LinkedHashSet<>();
@@ -761,7 +769,8 @@ public final class VertxGroup {
    	}
    }
 
-   public final class BaseRouterVerticleST implements VertxGroupTemplate {
+   public static final class BaseRouterVerticleST implements VertxGroupTemplate {
+
 
       private java.util.Set<java.util.Map<String, Object>> _endpoints = new java.util.LinkedHashSet<>();
       private Object _name;
@@ -875,7 +884,8 @@ public final class VertxGroup {
    	}
    }
 
-   public final class mvn_coreST implements VertxGroupTemplate {
+   public static final class mvn_coreST implements VertxGroupTemplate {
+
 
 
       private final ST template;
@@ -890,7 +900,8 @@ public final class VertxGroup {
    	}
    }
 
-   public final class VertxUtilST implements VertxGroupTemplate {
+   public static final class VertxUtilST implements VertxGroupTemplate {
+
 
       private Object _packageName;
       private Object _tcpEventbus;
@@ -939,7 +950,8 @@ public final class VertxGroup {
    	}
    }
 
-   public final class DockerST implements VertxGroupTemplate {
+   public static final class DockerST implements VertxGroupTemplate {
+
 
       private Object _exposePort;
       private Object _verticleFile;
@@ -1084,7 +1096,8 @@ public final class VertxGroup {
    	}
    }
 
-   public final class mvn_unitST implements VertxGroupTemplate {
+   public static final class mvn_unitST implements VertxGroupTemplate {
+
 
 
       private final ST template;
@@ -1099,7 +1112,8 @@ public final class VertxGroup {
    	}
    }
 
-   public final class JsonUtilST implements VertxGroupTemplate {
+   public static final class JsonUtilST implements VertxGroupTemplate {
+
 
       private Object _packageName;
 
@@ -1131,7 +1145,8 @@ public final class VertxGroup {
    	}
    }
 
-   public final class mvn_fat_jarST implements VertxGroupTemplate {
+   public static final class mvn_fat_jarST implements VertxGroupTemplate {
+
 
       private Object _mainClass;
 
@@ -1163,7 +1178,8 @@ public final class VertxGroup {
    	}
    }
 
-   public final class mvn_hazelcastST implements VertxGroupTemplate {
+   public static final class mvn_hazelcastST implements VertxGroupTemplate {
+
 
 
       private final ST template;
@@ -1178,7 +1194,8 @@ public final class VertxGroup {
    	}
    }
 
-   public final class hazelcastConfigXMLST implements VertxGroupTemplate {
+   public static final class hazelcastConfigXMLST implements VertxGroupTemplate {
+
 
 
       private final ST template;
@@ -1193,7 +1210,8 @@ public final class VertxGroup {
    	}
    }
 
-   public final class ResponseUtilST implements VertxGroupTemplate {
+   public static final class ResponseUtilST implements VertxGroupTemplate {
+
 
       private Object _packageName;
 
@@ -1225,7 +1243,8 @@ public final class VertxGroup {
    	}
    }
 
-   public final class mvn_eventbus_bridgeST implements VertxGroupTemplate {
+   public static final class mvn_eventbus_bridgeST implements VertxGroupTemplate {
+
 
       private Object _version;
 
@@ -1257,7 +1276,8 @@ public final class VertxGroup {
    	}
    }
 
-   public final class mvn_webST implements VertxGroupTemplate {
+   public static final class mvn_webST implements VertxGroupTemplate {
+
 
       private Object _version;
 
@@ -1289,7 +1309,8 @@ public final class VertxGroup {
    	}
    }
 
-   public final class mvn_webClientST implements VertxGroupTemplate {
+   public static final class mvn_webClientST implements VertxGroupTemplate {
+
 
       private Object _version;
 

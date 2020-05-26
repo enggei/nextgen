@@ -14,6 +14,28 @@
     <name>Core</name>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.jooq/joor -->
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>joor-java-8</artifactId>
+            <version>0.9.12</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.mvel/mvel2 -->
+        <dependency>
+            <groupId>org.mvel</groupId>
+            <artifactId>mvel2</artifactId>
+            <version>2.4.7.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jeasy</groupId>
+            <artifactId>easy-rules-core</artifactId>
+            <version>3.4.0</version>
+        </dependency><!-- https://mvnrepository.com/artifact/org.jeasy/easy-rules-mvel -->
+        <dependency>
+            <groupId>org.jeasy</groupId>
+            <artifactId>easy-rules-mvel</artifactId>
+            <version>3.4.0</version>
+        </dependency>
 
         <!-- GRAPH DATABASES -->
         <!--NEO4J-->
@@ -49,6 +71,17 @@
             <groupId>com.complexible.stardog.sesame</groupId>
             <artifactId>stardog-sesame-core</artifactId>
             <version>${stardog.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fifesoft</groupId>
+            <artifactId>autocomplete</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fifesoft</groupId>
+            <artifactId>rsyntaxtextarea</artifactId>
+            <version>3.0.3</version>
         </dependency>
 
         <!-- PARSERS -->
@@ -244,7 +277,17 @@
             <version>${clojure.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.javax0</groupId>
+            <artifactId>jscc</artifactId>
+            <version>1.0.1</version>
+        </dependency>
 
+        <dependency>
+            <groupId>org.codehaus.janino</groupId>
+            <artifactId>janino</artifactId>
+            <version>3.1.0</version>
+        </dependency>
 
         <dependency>
             <groupId>com.github.wumpz</groupId>
