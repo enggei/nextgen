@@ -24,13 +24,15 @@ public class MavenDomainProject {
     public static Domain getDomain() {
 
         final Entity project = newEntity("Project")
-                .addProperties(newStringProperty("Name"))
-                .addProperties(newStringProperty("root"));
+//                .addProperties(newStringProperty("Name"))
+//                .addProperties(newStringProperty("root"))
+                ;
 
         final Entity pom = newEntity("Pom");
 
         final Entity module = newEntity("Module")
-                .addProperties(newStringProperty("Name"));
+//                .addProperties(newStringProperty("Name"))
+                ;
 
         final Relation projectModule = newOneToManyRelation("modules", project, module);
         final Relation projectPom = newOneToOneRelation("pom", project, pom);

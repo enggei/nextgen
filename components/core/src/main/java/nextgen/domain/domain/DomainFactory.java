@@ -15,10 +15,6 @@ public class DomainFactory {
 		return new Entity();
 	}
 
-	public static Property newProperty() { 
-		return new Property();
-	}
-
 	public static Relation newRelation() { 
 		return new Relation();
 	}

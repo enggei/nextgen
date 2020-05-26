@@ -4,7 +4,7 @@ package nextgen.domain.domain;
 public class Domain {
 
 	private final java.util.UUID uuid;
-	private java.lang.String name;
+	private String name;
 	private final java.util.List<Enum> enums = new java.util.ArrayList<>();
 	private final java.util.List<Entity> entities = new java.util.ArrayList<>();
 	private final java.util.List<Relation> relations = new java.util.ArrayList<>();
@@ -34,17 +34,13 @@ public class Domain {
 		return uuid.equals(other.uuid);
 	}
 
-	public Domain setName(java.lang.String name) { 
+	public Domain setName(String name) { 
 		this.name = name;
 		return this;
 	}
 
-	public java.lang.String getName() { 
+	public String getName() { 
 		return this.name;
-	}
-
-	public boolean hasName() { 
-		return name != null;
 	}
 
 	@Override

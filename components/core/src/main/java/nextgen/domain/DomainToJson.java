@@ -50,13 +50,15 @@ public class DomainToJson extends DomainPatterns {
 
             final boolean primitive = isPrimitive(relation.getDst());
             final boolean external = isExternal(relation.getDst());
+            final String dstName = dstEntity.getName();
 
             switch (relation.getType()) {
 
                 case OneToOne:
 
                     if (external) {
-                        srcEntity.addFields(newPrivateFieldDeclaration().setName(DomainToPojos.variableName(relation)).setType(newClassOrInterfaceType(dstEntity.getName())));
+
+                        srcEntity.addFields(newPrivateFieldDeclaration().setName(DomainToPojos.variableName(relation)).setType(newClassOrInterfaceType(dstName)));
                         srcEntity.addMembers(DomainToPojos.setPropertyMethodDeclaration(relation.getSrc(), dstEntity));
                         srcEntity.addMembers(DomainToPojos.getPropertyMethodDeclaration(dstEntity));
                         srcEntity.addMembers(DomainToPojos.hasPropertyMethodDeclaration(dstEntity));
@@ -71,8 +73,8 @@ public class DomainToJson extends DomainPatterns {
                 case OneToMany:
 
                     if (external) {
-                        srcEntity.addMembers(DomainToPojos.getList(relation, dstEntity));
-                        srcEntity.addMembers(DomainToPojos.oneToMany(srcEntity, relation, dstEntity));
+                        srcEntity.addMembers(DomainToPojos.getList(relation, dstName));
+                        srcEntity.addMembers(DomainToPojos.oneToMany(srcEntity, relation, dstName));
                         break;
                     }
 
@@ -189,27 +191,27 @@ public class DomainToJson extends DomainPatterns {
                         .addStatements(newReturnThis()));
     }
 
-    private static MethodDeclaration hasPropertyMethodDeclaration(Property property) {
-        return newPublicMethodDeclaration("has" + capitalize(property.getName()), booleanType)
-                .setBlockStmt(newReturnBlockStmt(notNull(newMethodCallExpression(node, jsonGetter(property), newStringLiteralExpression(property.getName())))));
-    }
-
-    private static MethodDeclaration getPropertyMethodDeclaration(Property property) {
-        return newPublicMethodDeclaration("get" + capitalize(property.getName()), asJavaType(property))
-                .setBlockStmt(newReturnBlockStmt(isEnumProperty(property) ?
-                        newMethodCallExpression(property.getEnumType(), "valueOf", newMethodCallExpression(node, jsonGetter(property), newStringLiteralExpression(property.getName()))) :
-                        newMethodCallExpression(node, jsonGetter(property), newStringLiteralExpression(property.getName()))));
-    }
-
-    private static MethodDeclaration setPropertyMethodDeclaration(Entity entity, Property property) {
-        return newPublicMethodDeclaration("set" + capitalize(property.getName()), newClassOrInterfaceType(entity.getName()))
-                .addParameters(newParameter(asJavaType(property), value))
-                .setBlockStmt(newBlockStmt()
-                        .addStatements(newExpressionStmt(newMethodCallExpression(node, "put")
-                                .addArguments(newStringLiteralExpression(property.getName()))
-                                .addArguments(isEnumProperty(property) ? newMethodCallExpression(value, "name") : value)))
-                        .addStatements(newReturnThis()));
-    }
+//    private static MethodDeclaration hasPropertyMethodDeclaration(Property property) {
+//        return newPublicMethodDeclaration("has" + capitalize(property.getName()), booleanType)
+//                .setBlockStmt(newReturnBlockStmt(notNull(newMethodCallExpression(node, jsonGetter(property), newStringLiteralExpression(property.getName())))));
+//    }
+//
+//    private static MethodDeclaration getPropertyMethodDeclaration(Property property) {
+//        return newPublicMethodDeclaration("get" + capitalize(property.getName()), asJavaType(property))
+//                .setBlockStmt(newReturnBlockStmt(isEnumProperty(property) ?
+//                        newMethodCallExpression(property.getEnumType(), "valueOf", newMethodCallExpression(node, jsonGetter(property), newStringLiteralExpression(property.getName()))) :
+//                        newMethodCallExpression(node, jsonGetter(property), newStringLiteralExpression(property.getName()))));
+//    }
+//
+//    private static MethodDeclaration setPropertyMethodDeclaration(Entity entity, Property property) {
+//        return newPublicMethodDeclaration("set" + capitalize(property.getName()), newClassOrInterfaceType(entity.getName()))
+//                .addParameters(newParameter(asJavaType(property), value))
+//                .setBlockStmt(newBlockStmt()
+//                        .addStatements(newExpressionStmt(newMethodCallExpression(node, "put")
+//                                .addArguments(newStringLiteralExpression(property.getName()))
+//                                .addArguments(isEnumProperty(property) ? newMethodCallExpression(value, "name") : value)))
+//                        .addStatements(newReturnThis()));
+//    }
 
     private static ClassOrInterfaceDeclaration newJsonWrapper(String name) {
         return newPublicClassDeclaration(name)
@@ -240,22 +242,22 @@ public class DomainToJson extends DomainPatterns {
                 .setBlockStmt(newReturnBlockStmt(newObjectCreationExpression(entity.getName())));
     }
 
-    private static String jsonGetter(Property property) {
-        switch (property.getType()) {
-            case STRING:
-                return "getString";
-            case INTEGER:
-                return "getInteger";
-            case DOUBLE:
-                return "getDouble";
-            case BOOLEAN:
-                return "getBoolean";
-            case ENUM:
-                return "getString";
-            case LONG:
-                return "getLong";
-        }
-
-        return "getValue";
-    }
+//    private static String jsonGetter(Property property) {
+//        switch (property.getType()) {
+//            case STRING:
+//                return "getString";
+//            case INTEGER:
+//                return "getInteger";
+//            case DOUBLE:
+//                return "getDouble";
+//            case BOOLEAN:
+//                return "getBoolean";
+//            case ENUM:
+//                return "getString";
+//            case LONG:
+//                return "getLong";
+//        }
+//
+//        return "getValue";
+//    }
 }

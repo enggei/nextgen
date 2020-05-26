@@ -4,8 +4,7 @@ package nextgen.domain.domain;
 public class Property {
 
 	private final java.util.UUID uuid;
-	private java.lang.String name;
-	private PropertyType type;
+	private String name;
 	private Enum enumType;
 	private String externalType;
 
@@ -34,35 +33,18 @@ public class Property {
 		return uuid.equals(other.uuid);
 	}
 
-	public Property setName(java.lang.String name) { 
+	public Property setName(String name) { 
 		this.name = name;
 		return this;
 	}
 
-	public java.lang.String getName() { 
+	public String getName() { 
 		return this.name;
-	}
-
-	public boolean hasName() { 
-		return name != null;
 	}
 
 	@Override
 	public java.lang.String toString() { 
 		return name;
-	}
-
-	public Property setType(PropertyType type) { 
-		this.type = type;
-		return this;
-	}
-
-	public PropertyType getType() { 
-		return this.type;
-	}
-
-	public boolean hasType() { 
-		return type != null;
 	}
 
 	public Property setEnumType(Enum enumType) { 

@@ -4,7 +4,7 @@ package nextgen.domain.domain;
 public class Relation {
 
 	private final java.util.UUID uuid;
-	private java.lang.String name;
+	private String name;
 	private RelationType type;
 	private Entity src;
 	private Entity dst;
@@ -34,17 +34,13 @@ public class Relation {
 		return uuid.equals(other.uuid);
 	}
 
-	public Relation setName(java.lang.String name) { 
+	public Relation setName(String name) { 
 		this.name = name;
 		return this;
 	}
 
-	public java.lang.String getName() { 
+	public String getName() { 
 		return this.name;
-	}
-
-	public boolean hasName() { 
-		return name != null;
 	}
 
 	@Override
@@ -59,10 +55,6 @@ public class Relation {
 
 	public RelationType getType() { 
 		return this.type;
-	}
-
-	public boolean hasType() { 
-		return type != null;
 	}
 
 	public Relation setSrc(Entity src) { 

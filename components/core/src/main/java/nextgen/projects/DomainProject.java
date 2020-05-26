@@ -29,37 +29,23 @@ public class DomainProject {
         final Enum propertyTypeEnum = newEnum("PropertyType", "STRING,INTEGER,DOUBLE,BOOLEAN,ENUM,LONG,EXTERNAL");
         final Enum relationTypeEnum = newEnum("RelationType", "OneToOne,OneToMany,ManyToOne,ManyToMany");
 
-        final Property isPrimitive = newBooleanProperty("isPrimitive");
-        final Property isExternal = newBooleanProperty("isExternal");
-        final Property isEnumType = newBooleanProperty("isEnum");
-        final Property propertyType = newEnumProperty("Type", propertyTypeEnum);
-        final Property relationType = newEnumProperty("Type", relationTypeEnum);
-
         final Entity stringEntity = newPrimitiveEntity("String");
         final Entity booleanEntity = newPrimitiveEntity("Boolean");
-
         final Entity enumEntity = newEntity("Enum");
+        final Entity relationType = newEnumEntity("RelationType");
 
-        final Entity entity = newEntity("Entity")
-                .addProperties(isPrimitive)
-                .addProperties(isEnumType)
-                .addProperties(isExternal)
-                .addProperties(propertyType);
+        final Entity entity = newEntity("Entity");
 
-        final Entity property = newEntity("Property")
-                .addProperties(propertyType);
-
-        final Entity relation = newEntity("Relation")
-                .addProperties(relationType);
+        final Entity relation = newEntity("Relation");
 
         final Entity domain = newEntity("Domain");
 
         final Relation enums = newOneToManyRelation("Enums", domain, enumEntity);
         final Relation entities = newOneToManyRelation("Entities", domain, entity);
         final Relation relations = newOneToManyRelation("Relations", domain, relation);
-        final Relation properties = newOneToManyRelation("Properties", entity, property);
-        final Relation enumType = newOneToOneRelation("EnumType", property, enumEntity);
-        final Relation externalType = newOneToOneRelation("ExternalType", property, stringEntity);
+//        final Relation properties = newOneToManyRelation("Properties", entity, property);
+//        final Relation enumType = newOneToOneRelation("EnumType", property, enumEntity);
+//        final Relation externalType = newOneToOneRelation("ExternalType", property, stringEntity);
         final Relation enumValues = newOneToManyRelation("Values", enumEntity, stringEntity);
         final Relation src = newOneToOneRelation("Src", relation, entity);
         final Relation dst = newOneToOneRelation("Dst", relation, entity);
@@ -74,23 +60,26 @@ public class DomainProject {
                 .addEntities(booleanEntity)
                 .addEntities(enumEntity)
                 .addEntities(entity)
-                .addEntities(property)
+//                .addEntities(property)
                 .addEntities(relation)
+                .addEntities(relationType)
                 .addRelations(newOneToOneRelation("name", entity, stringEntity))
                 .addRelations(newOneToOneRelation("isPrimitive", entity, booleanEntity))
                 .addRelations(newOneToOneRelation("isEnum", entity, booleanEntity))
                 .addRelations(newOneToOneRelation("isExternal", entity, booleanEntity))
+                .addRelations(newOneToManyRelation("enumValues", entity, stringEntity))
                 .addRelations(newOneToOneRelation("name", enumEntity, stringEntity))
-                .addRelations(newOneToOneRelation("name", property, stringEntity))
+//                .addRelations(newOneToOneRelation("name", property, stringEntity))
                 .addRelations(newOneToOneRelation("name", relation, stringEntity))
                 .addRelations(newOneToOneRelation("name", domain, stringEntity))
+                .addRelations(newOneToOneRelation("type", relation, relationType))
                 .addRelations(enums)
                 .addRelations(enumValues)
                 .addRelations(entities)
                 .addRelations(relations)
-                .addRelations(properties)
-                .addRelations(enumType)
-                .addRelations(externalType)
+//                .addRelations(properties)
+//                .addRelations(enumType)
+//                .addRelations(externalType)
                 .addRelations(src)
                 .addRelations(dst);
     }

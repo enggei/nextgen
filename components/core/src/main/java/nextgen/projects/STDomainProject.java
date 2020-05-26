@@ -36,22 +36,27 @@ public class STDomainProject {
         final Entity argument = newPrimitiveEntity("String");
 
         final Entity astNode = newEntity("AstNode")
-                .addProperties(newExternalProperty("ast", "org.antlr.runtime.tree.Tree"))
-                .addProperties(newEnumProperty("type", astNodeType));
+//                .addProperties(newExternalProperty("ast", "org.antlr.runtime.tree.Tree"))
+//                .addProperties(newEnumProperty("type", astNodeType))
+                ;
 
         final Entity methodCall = newEntity("MethodCall")
-                .addProperties(newStringProperty("name"));
+//                .addProperties(newStringProperty("name"))
+                ;
 
         final Entity expression = newEntity("Expression")
-                .addProperties(newStringProperty("name"))
-                .addProperties(newStringProperty("options"));
+//                .addProperties(newStringProperty("name"))
+//                .addProperties(newStringProperty("options"))
+                ;
 
         final Entity subTemplate = newEntity("SubTemplate")
-                .addProperties(newStringProperty("options"));
+//                .addProperties(newStringProperty("options"))
+                ;
 
         final Entity prop = newEntity("Prop")
-                .addProperties(newStringProperty("Key"))
-                .addProperties(newStringProperty("Value"));
+//                .addProperties(newStringProperty("Key"))
+//                .addProperties(newStringProperty("Value"))
+                ;
 
         return newDomain("STParser")
                 .addEnums(astNodeType)
@@ -77,8 +82,6 @@ public class STDomainProject {
     public static Domain getDomain() {
 
         final Enum propertyTypeEnum = newEnum("STParameterType", "SINGLE,LIST,KVLIST");
-
-        final Property name = newStringProperty("Name");
 
         final Entity stDomain = newEntity("STDomain");
         final Entity stGroupModel = newEntity("STGroupModel");

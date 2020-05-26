@@ -4,7 +4,7 @@ package nextgen.domain.domain;
 public class Enum {
 
 	private final java.util.UUID uuid;
-	private java.lang.String name;
+	private String name;
 	private final java.util.List<String> values = new java.util.ArrayList<>();
 
 	public Enum() { 
@@ -32,17 +32,13 @@ public class Enum {
 		return uuid.equals(other.uuid);
 	}
 
-	public Enum setName(java.lang.String name) { 
+	public Enum setName(String name) { 
 		this.name = name;
 		return this;
 	}
 
-	public java.lang.String getName() { 
+	public String getName() { 
 		return this.name;
-	}
-
-	public boolean hasName() { 
-		return name != null;
 	}
 
 	@Override

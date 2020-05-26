@@ -29,22 +29,13 @@ public class DomainToNeo4J extends DomainPatterns {
         final PackageDeclaration packageDeclaration = newPackageDeclaration(packageName);
         final ClassOrInterfaceDeclaration domainClass = newDatabaseWrapper(domain);
 
-        domain.getEntities().forEach(entity -> {
+        domain.getEntities().stream().filter(entity -> !entity.getIsEnum()).forEach(entity -> {
 
             domainClass.addMembers(newEntityInstanceMethod(entity));
             domainClass.addMembers(newExistingEntityMethod(entity));
             domainClass.addMembers(findAllNodesWithLabel(entity.getName()));
-            entity.getProperties().forEach(property -> {
-                domainClass.addMembers(findNodeWithLabelAndProperty(entity.getName(), property));
-                domainClass.addMembers(findAllNodesWithLabelAndProperty(entity.getName(), property));
-            });
 
             entityClassMap.put(entity, newNeoWrapper(entity.getName()));
-
-            entity.getProperties().forEach(property -> {
-
-
-            });
         });
 
         domain.getRelations().forEach(relation -> {
@@ -78,6 +69,9 @@ public class DomainToNeo4J extends DomainPatterns {
                         srcEntity.addMembers(getPropertyOrDefaultMethodDeclaration(relation, relation.getDst()));
                         srcEntity.addMembers(hasPropertyMethodDeclaration(relation));
                         srcEntity.addMembers(removePropertyMethodDeclaration(relation.getSrc(), relation));
+
+                        domainClass.addMembers(findNodeWithLabelAndProperty(relation.getSrc().getName(), relation, relation.getDst()));
+                        domainClass.addMembers(findAllNodesWithLabelAndProperty(relation.getSrc().getName(), relation, relation.getDst()));
                         break;
                     }
 
@@ -305,13 +299,13 @@ public class DomainToNeo4J extends DomainPatterns {
                                 .setScope(newThisExpression()))));
     }
 
-    private static MethodDeclaration findAllNodesWithLabelAndProperty(String label, Property property) {
+    private static MethodDeclaration findAllNodesWithLabelAndProperty(String label, Relation relation, Entity dstEntity) {
 
-        final Object valueVariable = asNeoParameter(property);
+        final Object valueVariable = asNeoParameter(dstEntity);
 
-        return newPublicMethodDeclaration("findAll" + label + "By" + property.getName(), streamOf(newClassOrInterfaceType(label)))
-                .addParameters(newParameter(asJavaType(property), value))
-                .setBlockStmt(newReturnBlockStmt(newMethodCallExpression(streamNodesByLabel(db, label, property.getName(), valueVariable), "map")
+        return newPublicMethodDeclaration("findAll" + label + "By" + relation.getName(), streamOf(newClassOrInterfaceType(label)))
+                .addParameters(newParameter(asJavaType(dstEntity), value))
+                .setBlockStmt(newReturnBlockStmt(newMethodCallExpression(streamNodesByLabel(db, label, relation.getName(), valueVariable), "map")
                         .addArguments(newMethodReferenceExpression()
                                 .setIdentifier("new" + label)
                                 .setScope(newThisExpression()))));
@@ -321,15 +315,11 @@ public class DomainToNeo4J extends DomainPatterns {
         return isEnum(property) ? newMethodCallExpression(value, "name") : value;
     }
 
-    private static Object asNeoParameter(Property property) {
-        return isEnumProperty(property) ? newMethodCallExpression(value, "name") : value;
-    }
-
-    private static MethodDeclaration findNodeWithLabelAndProperty(String entityName, Property property) {
-        return newPublicMethodDeclaration("find" + entityName + "By" + property.getName(), newClassOrInterfaceType(entityName))
-                .addParameters(newParameter(asJavaType(property), value))
+    private static MethodDeclaration findNodeWithLabelAndProperty(String entityName, Relation relation, Entity dstEntity) {
+        return newPublicMethodDeclaration("find" + entityName + "By" + relation.getName(), newClassOrInterfaceType(entityName))
+                .addParameters(newParameter(asJavaType(dstEntity), value))
                 .setBlockStmt(newBlockStmt()
-                        .addStatements(newExpressionStmt(newFinalVariableDeclarationExpression(neoNodeType, node, findNode(db, entityName, property.getName(), asNeoParameter(property)))))
+                        .addStatements(newExpressionStmt(newFinalVariableDeclarationExpression(neoNodeType, node, findNode(db, entityName, relation.getName(), asNeoParameter(dstEntity)))))
                         .addStatements(newReturnStmt(newConditionalExpression()
                                 .setCondition(isNull(node))
                                 .setThenExpression(newNull())
@@ -352,7 +342,7 @@ public class DomainToNeo4J extends DomainPatterns {
                                 .setThen(newReturnStmt(isEnum(property) ?
                                         getEnumProperty(node, relation.getName(), property.getName()) :
                                         getProperty(node, relation.getName(), asJavaType(property)))))
-                        .addStatements(newReturnStmt(property.getType().equals(PropertyType.BOOLEAN) ? newFalseExpression() : newNull())));
+                        .addStatements(newReturnStmt(property.getName().equals("Boolean") ? newFalseExpression() : newNull())));
     }
 
     private static MethodDeclaration getPropertyOrDefaultMethodDeclaration(Relation relation, Entity property) {
@@ -364,7 +354,7 @@ public class DomainToNeo4J extends DomainPatterns {
                                 .setThen(newReturnStmt(isEnum(property) ?
                                         getEnumProperty(node, relation.getName(), property.getName()) :
                                         getProperty(node, relation.getName(), asJavaType(property)))))
-                        .addStatements(newReturnStmt(property.getType().equals(PropertyType.BOOLEAN) ? newFalseExpression() : newExpression("defaultValue"))));
+                        .addStatements(newReturnStmt(property.getName().equals("Boolean") ? newFalseExpression() : newExpression("defaultValue"))));
     }
 
     private static MethodDeclaration hasPropertyMethodDeclaration(Relation relation) {

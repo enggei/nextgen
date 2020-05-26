@@ -4,12 +4,11 @@ package nextgen.domain.domain;
 public class Entity {
 
 	private final java.util.UUID uuid;
-	private java.lang.String name;
-	private java.lang.Boolean isPrimitive;
-	private java.lang.Boolean isEnum;
-	private java.lang.Boolean isExternal;
-	private PropertyType type;
-	private final java.util.List<Property> properties = new java.util.ArrayList<>();
+	private String name;
+	private Boolean isPrimitive;
+	private Boolean isEnum;
+	private Boolean isExternal;
+	private final java.util.List<String> enumValues = new java.util.ArrayList<>();
 
 	public Entity() { 
 		this.uuid = java.util.UUID.randomUUID();
@@ -36,17 +35,13 @@ public class Entity {
 		return uuid.equals(other.uuid);
 	}
 
-	public Entity setName(java.lang.String name) { 
+	public Entity setName(String name) { 
 		this.name = name;
 		return this;
 	}
 
-	public java.lang.String getName() { 
+	public String getName() { 
 		return this.name;
-	}
-
-	public boolean hasName() { 
-		return name != null;
 	}
 
 	@Override
@@ -54,64 +49,39 @@ public class Entity {
 		return name;
 	}
 
-	public Entity setIsPrimitive(java.lang.Boolean isPrimitive) { 
+	public Entity setIsPrimitive(Boolean isPrimitive) { 
 		this.isPrimitive = isPrimitive;
 		return this;
 	}
 
-	public java.lang.Boolean getIsPrimitive() { 
+	public Boolean getIsPrimitive() { 
 		return this.isPrimitive;
 	}
 
-	public boolean hasIsPrimitive() { 
-		return isPrimitive != null;
-	}
-
-	public Entity setIsEnum(java.lang.Boolean isEnum) { 
+	public Entity setIsEnum(Boolean isEnum) { 
 		this.isEnum = isEnum;
 		return this;
 	}
 
-	public java.lang.Boolean getIsEnum() { 
+	public Boolean getIsEnum() { 
 		return this.isEnum;
 	}
 
-	public boolean hasIsEnum() { 
-		return isEnum != null;
-	}
-
-	public Entity setIsExternal(java.lang.Boolean isExternal) { 
+	public Entity setIsExternal(Boolean isExternal) { 
 		this.isExternal = isExternal;
 		return this;
 	}
 
-	public java.lang.Boolean getIsExternal() { 
+	public Boolean getIsExternal() { 
 		return this.isExternal;
 	}
 
-	public boolean hasIsExternal() { 
-		return isExternal != null;
-	}
-
-	public Entity setType(PropertyType type) { 
-		this.type = type;
+	public Entity addEnumValues(String value) { 
+		enumValues.add(value);
 		return this;
 	}
 
-	public PropertyType getType() { 
-		return this.type;
-	}
-
-	public boolean hasType() { 
-		return type != null;
-	}
-
-	public Entity addProperties(Property value) { 
-		properties.add(value);
-		return this;
-	}
-
-	public java.util.List<Property> getProperties() { 
-		return this.properties;
+	public java.util.List<String> getEnumValues() { 
+		return this.enumValues;
 	}
 }

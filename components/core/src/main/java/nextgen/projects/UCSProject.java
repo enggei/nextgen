@@ -22,37 +22,44 @@ public class UCSProject {
 
         final Enum screenStatusEnum = newEnum("ScreenStatus", "OPEN,CLOSED");
 
-        final Property name = newStringProperty("Name");
-        final Property string = newStringProperty("Value");
-        final Property active = newBooleanProperty("Active");
-        final Property seatNo = newIntegerProperty("No");
-        final Property seatCount = newIntegerProperty("SeatCount");
-        final Property screenStatus = newEnumProperty("Status", screenStatusEnum);
+//        final Property name = newStringProperty("Name");
+//        final Property string = newStringProperty("Value");
+//        final Property active = newBooleanProperty("Active");
+//        final Property seatNo = newIntegerProperty("No");
+//        final Property seatCount = newIntegerProperty("SeatCount");
+//        final Property screenStatus = newEnumProperty("Status", screenStatusEnum);
 
         final Entity stringEntity = newEntity("StringNode")
-                .addProperties(string);
+//                .addProperties(string)
+                ;
 
         final Entity exhibitor = newEntity("Exhibitor")
-                .addProperties(name);
+//                .addProperties(name)
+                ;
 
         final Entity city = newEntity("City")
-                .addProperties(name);
+//                .addProperties(name)
+                ;
 
         final Entity address = newEntity("Address")
-                .addProperties(string);
+//                .addProperties(string)
+                ;
 
         final Entity cinema = newEntity("Cinema")
-                .addProperties(name);
+//                .addProperties(name)
+                ;
 
         final Entity screen = newEntity("Screen")
-                .addProperties(name)
-                .addProperties(seatCount)
-                .addProperties(active)
-                .addProperties(screenStatus);
+//                .addProperties(name)
+//                .addProperties(seatCount)
+//                .addProperties(active)
+//                .addProperties(screenStatus)
+                ;
 
         final Entity seat = newEntity("Seat")
-                .addProperties(seatNo)
-                .addProperties(active);
+//                .addProperties(seatNo)
+//                .addProperties(active)
+                ;
 
         final Relation exhibitor_presence_city = newManyToManyRelation("Presence", exhibitor, city);
         final Relation cinema_location_address = newOneToOneRelation("Location", cinema, address);
