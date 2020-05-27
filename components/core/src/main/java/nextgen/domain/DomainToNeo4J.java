@@ -1,6 +1,8 @@
 package nextgen.domain;
 
-import nextgen.domain.domain.*;
+import nextgen.domain.domain.Domain;
+import nextgen.domain.domain.Entity;
+import nextgen.domain.domain.Relation;
 import nextgen.java.JavaPatterns;
 import nextgen.java.st.*;
 
@@ -25,132 +27,167 @@ public class DomainToNeo4J extends DomainPatterns {
     public static void generate(String root, String packageName, Domain domain) {
 
         final Map<Entity, ClassOrInterfaceDeclaration> entityClassMap = new HashMap<>();
-
         final PackageDeclaration packageDeclaration = newPackageDeclaration(packageName);
         final ClassOrInterfaceDeclaration domainClass = newDatabaseWrapper(domain);
 
-        domain.getEntities().stream().filter(entity -> !entity.getIsEnum()).forEach(entity -> {
+        new DomainVisitor(domain) {
 
-            domainClass.addMembers(newEntityInstanceMethod(entity));
-            domainClass.addMembers(newExistingEntityMethod(entity));
-            domainClass.addMembers(findAllNodesWithLabel(entity.getName()));
+            @Override
+            protected void start(Domain domain) {
 
-            entityClassMap.put(entity, newNeoWrapper(entity.getName()));
-        });
+            }
 
-        domain.getRelations().forEach(relation -> {
+            @Override
+            protected void onPrimitive(Entity entity) {
 
-            final ClassOrInterfaceDeclaration srcEntity = entityClassMap.get(relation.getSrc());
-            final ClassOrInterfaceDeclaration dstEntity = entityClassMap.get(relation.getDst());
-            if (srcEntity == null)
-                throw new IllegalStateException("srcEntity for " + relation.getName() + " is not registered in domain " + domain.getName());
-            if (dstEntity == null)
-                throw new IllegalStateException("dstEntity for " + relation.getName() + " is not registered in domain " + domain.getName());
+            }
 
-            boolean isSame = relation.getSrc().equals(relation.getDst());
-            final boolean primitive = isPrimitive(relation.getDst());
-            final boolean external = isExternal(relation.getDst());
+            @Override
+            protected void onReference(Entity entity) {
+                domainClass.addMembers(newEntityInstanceMethod(entity));
+                domainClass.addMembers(newExistingEntityMethod(entity));
+                domainClass.addMembers(findAllNodesWithLabel(entity.getName()));
 
-            switch (relation.getType()) {
+                entityClassMap.put(entity, newNeoWrapper(entity.getName()));
+            }
 
-                case OneToOne:
+            @Override
+            protected void onExternal(Entity entity) {
 
-                    if (external) {
-                        srcEntity.addFields(newPrivateFieldDeclaration().setName(DomainToPojos.variableName(relation)).setType(newClassOrInterfaceType(dstEntity.getName())));
-                        srcEntity.addMembers(DomainToPojos.setPropertyMethodDeclaration(relation.getSrc(), dstEntity));
-                        srcEntity.addMembers(DomainToPojos.getPropertyMethodDeclaration(dstEntity));
-                        srcEntity.addMembers(DomainToPojos.hasPropertyMethodDeclaration(dstEntity));
-                        break;
-                    }
+            }
 
-                    if (primitive) {
-                        srcEntity.addMembers(setPropertyMethodDeclaration(relation.getSrc(), relation.getDst()));
+            @Override
+            protected void onEnum(Entity entity) {
+                final EnumDeclaration enumDeclaration = newPublicEnumDeclaration(entity.getName());
+                entity.getEnumValues().forEach(enumDeclaration::addEntries);
+                JavaPatterns.writeToFile(enumDeclaration, packageDeclaration, root);
+            }
+
+            @Override
+            protected void visitOneToOne(Relation relation) {
+
+                final ClassOrInterfaceDeclaration srcEntity = entityClassMap.get(relation.getSrc());
+                final String srcName = relation.getSrc().getName();
+                final String dstName = relation.getDst().getName();
+
+                switch (relation.getDst().getType()) {
+
+                    case PRIMITIVE:
+                        srcEntity.addMembers(setPropertyMethodDeclaration(relation.getSrc(), relation, relation.getDst()));
                         srcEntity.addMembers(getPropertyMethodDeclaration(relation, relation.getDst()));
                         srcEntity.addMembers(getPropertyOrDefaultMethodDeclaration(relation, relation.getDst()));
                         srcEntity.addMembers(hasPropertyMethodDeclaration(relation));
                         srcEntity.addMembers(removePropertyMethodDeclaration(relation.getSrc(), relation));
 
-                        domainClass.addMembers(findNodeWithLabelAndProperty(relation.getSrc().getName(), relation, relation.getDst()));
-                        domainClass.addMembers(findAllNodesWithLabelAndProperty(relation.getSrc().getName(), relation, relation.getDst()));
+                        domainClass.addMembers(findNodeWithLabelAndProperty(srcName, relation, relation.getDst()));
+                        domainClass.addMembers(findAllNodesWithLabelAndProperty(srcName, relation, relation.getDst()));
                         break;
-                    }
+                    case REFERENCE:
+                        srcEntity.addMembers(oneToOneOutgoing(srcEntity, relation, newClassDeclaration(dstName)));
+                        srcEntity.addMembers(getSingle(srcEntity, relation, newClassDeclaration(dstName), getSingleOutgoingRelationship(node, relation.getName())));
+                        srcEntity.addMembers(remove(srcEntity, relation, newClassDeclaration(dstName)));
 
-                    srcEntity.addMembers(oneToOneOutgoing(srcEntity, relation, dstEntity));
-                    srcEntity.addMembers(getSingle(srcEntity, relation, dstEntity, getSingleOutgoingRelationship(node, relation.getName())));
-
-                    if (!isSame) {
-                        dstEntity.addMembers(oneToOneIncoming(dstEntity, relation, srcEntity));
-                        dstEntity.addMembers(getSingle(dstEntity, relation, srcEntity, getSingleIncomingRelationship(node, relation.getName())));
-                    }
-                    break;
-
-                case OneToMany:
-
-                    srcEntity.addMembers(oneToManyOutgoing(srcEntity, relation, dstEntity));
-                    srcEntity.addMembers(getMany(srcEntity, relation, dstEntity, streamOutgoing(node, relation.getName())));
-
-                    if (!isSame) {
-                        dstEntity.addMembers(oneToManyIncoming(dstEntity, relation, srcEntity));
-                        dstEntity.addMembers(getSingle(dstEntity, relation, srcEntity, getSingleIncomingRelationship(node, relation.getName())));
-                    }
-                    break;
-
-//                case ManyToOne:
-//
-//                    srcEntity.addMembers(manyToOneOutgoing(srcEntity, relation, dstEntity));
-//                    srcEntity.addMembers(getSingle(srcEntity, relation, dstEntity, getSingleOutgoingRelationship(node, relation.getName())));
-//
-//                    if (!isSame) {
-//                        dstEntity.addMembers(manyToOneIncoming(dstEntity, relation, srcEntity));
-//                        dstEntity.addMembers(getMany(dstEntity, relation, srcEntity, streamIncoming(node, relation.getName())));
+//                    if (!isSame && entityClassMap.containsKey(relation.getDst())) {
+//                        final ClassOrInterfaceDeclaration dstEntity = entityClassMap.get(relation.getDst());
+//                        dstEntity.addMembers(oneToOneIncoming(newClassDeclaration(dstName), relation, srcEntity));
+//                        dstEntity.addMembers(getSingle(dstEntity, relation, srcEntity, getSingleIncomingRelationship(node, relation.getName())));
 //                    }
-//                    break;
+                        break;
+                    case EXTERNAL:
+                        srcEntity.addFields(newPrivateFieldDeclaration().setName(DomainToPojos.variableName(relation)).setType(newClassOrInterfaceType(dstName)));
+                        srcEntity.addMembers(DomainToPojos.oneToOne(srcName, relation, dstName));
+                        srcEntity.addMembers(DomainToPojos.getSingle(relation, dstName));
+                        srcEntity.addMembers(DomainToPojos.hasPropertyMethodDeclaration(newClassDeclaration(dstName)));
+                        break;
+                    case ENUM:
+                        srcEntity.addMembers(setPropertyMethodDeclaration(relation.getSrc(), relation, relation.getDst()));
+                        srcEntity.addMembers(getPropertyMethodDeclaration(relation, relation.getDst()));
+                        srcEntity.addMembers(getPropertyOrDefaultMethodDeclaration(relation, relation.getDst()));
+                        srcEntity.addMembers(hasPropertyMethodDeclaration(relation));
+                        srcEntity.addMembers(removePropertyMethodDeclaration(relation.getSrc(), relation));
 
-
-//                case ManyToMany:
-//
-//                    srcEntity.addMembers(manyToManyOutgoing(srcEntity, relation, dstEntity));
-//                    srcEntity.addMembers(getMany(srcEntity, relation, dstEntity, streamOutgoing(node, relation.getName())));
-//
-//                    if (!isSame) {
-//                        dstEntity.addMembers(manyToManyIncoming(dstEntity, relation, srcEntity));
-//                        dstEntity.addMembers(getMany(dstEntity, relation, srcEntity, streamIncoming(node, relation.getName())));
-//                    }
-//                    break;
+                        domainClass.addMembers(findNodeWithLabelAndProperty(srcName, relation, relation.getDst()));
+                        domainClass.addMembers(findAllNodesWithLabelAndProperty(srcName, relation, relation.getDst()));
+                        break;
+                }
             }
-        });
 
-        domain.getEnums().forEach(anEnum -> {
+            @Override
+            protected void visitOneToMany(Relation relation) {
 
-            final EnumDeclaration enumDeclaration = newPublicEnumDeclaration(anEnum.getName());
-            anEnum.getValues().forEach(enumDeclaration::addEntries);
+                final ClassOrInterfaceDeclaration srcEntity = entityClassMap.get(relation.getSrc());
+                final String dstName = relation.getDst().getName();
 
-            JavaPatterns.writeToFile(enumDeclaration, packageDeclaration, root);
-        });
+                switch (relation.getDst().getType()) {
 
-        JavaPatterns.writeToFile(domainClass, packageDeclaration, root);
+                    case PRIMITIVE:
+                        srcEntity.addMembers(oneToManyOutgoingPrimitive(srcEntity, relation, newClassDeclaration(dstName)));
+                        srcEntity.addMembers(getManyPrimitive(srcEntity, relation, newClassDeclaration(dstName), streamOutgoing(node, relation.getName())));
+                        break;
+                    case REFERENCE:
+                        srcEntity.addMembers(oneToManyOutgoing(srcEntity, relation, newClassDeclaration(dstName)));
+                        srcEntity.addMembers(getMany(srcEntity, relation, newClassDeclaration(dstName), streamOutgoing(node, relation.getName())));
+                        srcEntity.addMembers(remove(srcEntity, relation, newClassDeclaration(dstName)));
 
-        for (ClassOrInterfaceDeclaration classOrInterfaceDeclaration : entityClassMap.values()) {
-            JavaPatterns.writeToFile(classOrInterfaceDeclaration, packageDeclaration, root);
-        }
+//                    if (!isSame && entityClassMap.containsKey(relation.getDst())) {
+//                        final ClassOrInterfaceDeclaration dstEntity = entityClassMap.get(relation.getDst());
+//                        dstEntity.addMembers(oneToManyIncoming(dstEntity, relation, srcEntity));
+//                        dstEntity.addMembers(getSingle(dstEntity, relation, srcEntity, getSingleIncomingRelationship(node, relation.getName())));
+//                    }
+                        break;
+                    case EXTERNAL:
+                        srcEntity.addFields(newPrivateFieldDeclaration().setName(DomainToPojos.variableName(relation)).setType(listOf(newClassOrInterfaceType(dstName))));
+                        srcEntity.addMembers(DomainToPojos.getList(relation, dstName));
+                        srcEntity.addMembers(DomainToPojos.oneToMany(srcEntity, relation, dstName));
+                        break;
+                    case ENUM:
+                        srcEntity.addMembers(oneToManyOutgoingEnum(srcEntity, relation, newClassDeclaration(dstName)));
+                        srcEntity.addMembers(getManyEnum(srcEntity, relation, newClassDeclaration(dstName), streamOutgoing(node, relation.getName())));
+                        break;
+                }
+
+            }
+
+            @Override
+            protected void end() {
+
+                JavaPatterns.writeToFile(domainClass, packageDeclaration, root);
+
+                for (ClassOrInterfaceDeclaration classOrInterfaceDeclaration : entityClassMap.values()) {
+                    JavaPatterns.writeToFile(classOrInterfaceDeclaration, packageDeclaration, root);
+                }
+            }
+        };
     }
 
-    public static MethodDeclaration manyToOneOutgoing(ClassOrInterfaceDeclaration srcEntity, Relation relation, ClassOrInterfaceDeclaration dstEntity) {
-        return newSetMethodDeclaration(srcEntity, relation, dstEntity)
+    public static MethodDeclaration oneToManyOutgoingPrimitive(ClassOrInterfaceDeclaration srcEntity, Relation relation, ClassOrInterfaceDeclaration dstEntity) {
+        return newAddMethodDeclaration(srcEntity, relation, dstEntity)
                 .setBlockStmt(newBlockStmt()
-                        .addStatements(newExpressionStmt(newFinalVariableDeclarationExpression(neoRelationshipType, relationship, getSingleOutgoingRelationship(node, relation.getName()))))
-                        .addStatements(deleteOrReturnIfAlreadyRelated())
-                        .addStatements(newExpressionStmt(deleteOutgoing(node, relation.getName())))
-                        .addStatements(newExpressionStmt(createRelationshipTo(node, getDstNode, relation.getName())))
+                        .addStatements(newExpressionStmt(newFinalVariableDeclarationExpression(optionalOf(neoNodeType), existing, newMethodCallExpression(hasPropertyValue("value").setScope(streamOutgoingNodes(node, relation.getName())), "findAny"))))
+                        .addStatements(newIfStmt(newMethodCallExpression(existing, "isPresent"), newReturnThis()))
+                        .addStatements(newExpressionStmt(newFinalVariableDeclarationExpression(neoNodeType, "newNode", createNode(newMethodCallExpression(node, "getGraphDatabase"), dstEntity.getName()))))
+                        .addStatements(newExpressionStmt(setProperty("newNode", "value", "dst")))
+                        .addStatements(newExpressionStmt(createRelationshipTo(node, "newNode", relation.getName())))
                         .addStatements(newReturnThis()));
     }
 
-    public static MethodDeclaration manyToOneIncoming(ClassOrInterfaceDeclaration srcEntity, Relation relation, ClassOrInterfaceDeclaration dstEntity) {
+    public static MethodDeclaration oneToManyOutgoingEnum(ClassOrInterfaceDeclaration srcEntity, Relation relation, ClassOrInterfaceDeclaration dstEntity) {
         return newAddMethodDeclaration(srcEntity, relation, dstEntity)
                 .setBlockStmt(newBlockStmt()
-                        .addStatements(newExpressionStmt(newFinalVariableDeclarationExpression(optionalOf(neoRelationshipType), existing, isRelated(node, getDstNode).setScope(findAnyIncoming(node, relation.getName())))))
+                        .addStatements(newExpressionStmt(newFinalVariableDeclarationExpression(optionalOf(neoNodeType), existing, newMethodCallExpression(hasPropertyValue("value").setScope(streamOutgoingNodes(node, relation.getName())), "findAny"))))
                         .addStatements(newIfStmt(newMethodCallExpression(existing, "isPresent"), newReturnThis()))
-                        .addStatements(newExpressionStmt(deleteOutgoing(getDstNode, relation.getName())))
+                        .addStatements(newExpressionStmt(newFinalVariableDeclarationExpression(neoNodeType, "newNode", createNode(newMethodCallExpression(node, "getGraphDatabase"), dstEntity.getName()))))
+                        .addStatements(newExpressionStmt(setProperty("newNode", "value", "dst")))
+                        .addStatements(newExpressionStmt(createRelationshipTo(node, "newNode", relation.getName())))
+                        .addStatements(newReturnThis()));
+    }
+
+    public static MethodDeclaration oneToManyIncoming(ClassOrInterfaceDeclaration srcEntity, Relation relation, ClassOrInterfaceDeclaration dstEntity) {
+        return newSetMethodDeclaration(srcEntity, relation, dstEntity)
+                .setBlockStmt(newBlockStmt()
+                        .addStatements(newExpressionStmt(newFinalVariableDeclarationExpression(optionalOf(neoRelationshipType), existing, newMethodCallExpression(isRelated(node, getDstNode).setScope(streamIncoming(node, relation.getName())), "findAny"))))
+                        .addStatements(newIfStmt(newMethodCallExpression(existing, "isPresent"), newReturnThis()))
+                        .addStatements(newExpressionStmt(deleteIncoming(node, relation.getName())))
                         .addStatements(newExpressionStmt(createRelationshipTo(getDstNode, node, relation.getName())))
                         .addStatements(newReturnThis()));
     }
@@ -158,38 +195,17 @@ public class DomainToNeo4J extends DomainPatterns {
     public static MethodDeclaration oneToManyOutgoing(ClassOrInterfaceDeclaration srcEntity, Relation relation, ClassOrInterfaceDeclaration dstEntity) {
         return newAddMethodDeclaration(srcEntity, relation, dstEntity)
                 .setBlockStmt(newBlockStmt()
-                        .addStatements(newExpressionStmt(newFinalVariableDeclarationExpression(optionalOf(neoRelationshipType), existing, isRelated(node, getDstNode).setScope(findAnyOutgoing(node, relation.getName())))))
-                        .addStatements(newIfStmt(newMethodCallExpression(existing, "isPresent"), newReturnThis()))
-                        .addStatements(newExpressionStmt(deleteIncoming(getDstNode, relation.getName())))
-                        .addStatements(newExpressionStmt(createRelationshipTo(node, getDstNode, relation.getName())))
-                        .addStatements(newReturnThis()));
-    }
-
-    public static MethodDeclaration oneToManyIncoming(ClassOrInterfaceDeclaration srcEntity, Relation relation, ClassOrInterfaceDeclaration dstEntity) {
-        return newSetMethodDeclaration(srcEntity, relation, dstEntity)
-                .setBlockStmt(newBlockStmt()
-                        .addStatements(newExpressionStmt(newFinalVariableDeclarationExpression(optionalOf(neoRelationshipType), existing, isRelated(node, getDstNode).setScope(findAnyIncoming(node, relation.getName())))))
-                        .addStatements(newIfStmt(newMethodCallExpression(existing, "isPresent"), newReturnThis()))
-                        .addStatements(newExpressionStmt(deleteIncoming(node, relation.getName())))
-                        .addStatements(newExpressionStmt(createRelationshipTo(getDstNode, node, relation.getName())))
-                        .addStatements(newReturnThis()));
-    }
-
-    public static MethodDeclaration manyToManyOutgoing(ClassOrInterfaceDeclaration srcEntity, Relation relation, ClassOrInterfaceDeclaration dstEntity) {
-        return newAddMethodDeclaration(srcEntity, relation, dstEntity)
-                .setBlockStmt(newBlockStmt()
-                        .addStatements(newExpressionStmt(newFinalVariableDeclarationExpression(optionalOf(neoRelationshipType), existing, isRelated(node, getDstNode).setScope(findAnyOutgoing(node, relation.getName())))))
+                        .addStatements(newExpressionStmt(newFinalVariableDeclarationExpression(optionalOf(neoRelationshipType), existing, newMethodCallExpression(isRelated(node, getDstNode).setScope(streamOutgoing(node, relation.getName())), "findAny"))))
                         .addStatements(newIfStmt(newMethodCallExpression(existing, "isPresent"), newReturnThis()))
                         .addStatements(newExpressionStmt(createRelationshipTo(node, getDstNode, relation.getName())))
                         .addStatements(newReturnThis()));
     }
 
-    public static MethodDeclaration manyToManyIncoming(ClassOrInterfaceDeclaration srcEntity, Relation relation, ClassOrInterfaceDeclaration dstEntity) {
-        return newAddMethodDeclaration(srcEntity, relation, dstEntity)
+    public static MethodDeclaration remove(ClassOrInterfaceDeclaration srcEntity, Relation relation, ClassOrInterfaceDeclaration dstEntity) {
+        return newRemoveMethodDeclaration(srcEntity, relation, dstEntity)
                 .setBlockStmt(newBlockStmt()
-                        .addStatements(newExpressionStmt(newFinalVariableDeclarationExpression(optionalOf(neoRelationshipType), existing, isRelated(node, getDstNode).setScope(findAnyIncoming(node, relation.getName())))))
-                        .addStatements(newIfStmt(newMethodCallExpression(existing, "isPresent"), newReturnThis()))
-                        .addStatements(newExpressionStmt(createRelationshipTo(getDstNode, node, relation.getName())))
+                        .addStatements(newExpressionStmt(newFinalVariableDeclarationExpression(optionalOf(neoRelationshipType), existing, newMethodCallExpression(isRelated(node, getDstNode).setScope(streamOutgoing(node, relation.getName())), "findAny"))))
+                        .addStatements(newExpressionStmt(newMethodCallExpression(existing, "ifPresent", newMethodReferenceExpression(neoRelationshipType, "delete"))))
                         .addStatements(newReturnThis()));
     }
 
@@ -218,6 +234,11 @@ public class DomainToNeo4J extends DomainPatterns {
                 .addParameters(newParameter(newClassOrInterfaceType(dstEntity.getName()), dst));
     }
 
+    public static MethodDeclaration newRemoveMethodDeclaration(ClassOrInterfaceDeclaration srcEntity, Relation relation, ClassOrInterfaceDeclaration dstEntity) {
+        return newPublicMethodDeclaration("remove" + capitalize(relation.getName()), newClassOrInterfaceType(srcEntity.getName()))
+                .addParameters(newParameter(newClassOrInterfaceType(dstEntity.getName()), dst));
+    }
+
     public static MethodDeclaration newSetMethodDeclaration(ClassOrInterfaceDeclaration srcEntity, Relation relation, ClassOrInterfaceDeclaration dstEntity) {
         return newPublicMethodDeclaration("set" + capitalize(relation.getName()), newClassOrInterfaceType(srcEntity.getName()))
                 .addParameters(newParameter(newClassOrInterfaceType(dstEntity.getName()), dst));
@@ -226,6 +247,16 @@ public class DomainToNeo4J extends DomainPatterns {
     public static MethodDeclaration getMany(ClassOrInterfaceDeclaration srcEntity, Relation relation, ClassOrInterfaceDeclaration dstEntity, Object stream) {
         return newPublicMethodDeclaration("get" + capitalize(relation.getName()), streamOf(newClassOrInterfaceType(dstEntity.getName())))
                 .setBlockStmt(newReturnBlockStmt(mapToEntity(dstEntity, stream)));
+    }
+
+    public static MethodDeclaration getManyPrimitive(ClassOrInterfaceDeclaration srcEntity, Relation relation, ClassOrInterfaceDeclaration dstEntity, Object stream) {
+        return newPublicMethodDeclaration("get" + capitalize(relation.getName()), streamOf(newClassOrInterfaceType(dstEntity.getName())))
+                .setBlockStmt(newReturnBlockStmt(mapToPrimitive(dstEntity, stream)));
+    }
+
+    public static MethodDeclaration getManyEnum(ClassOrInterfaceDeclaration srcEntity, Relation relation, ClassOrInterfaceDeclaration dstEntity, Object stream) {
+        return newPublicMethodDeclaration("get" + capitalize(relation.getName()), streamOf(newClassOrInterfaceType(dstEntity.getName())))
+                .setBlockStmt(newReturnBlockStmt(mapToEnum(dstEntity, stream)));
     }
 
     public static MethodDeclaration getSingle(ClassOrInterfaceDeclaration srcEntity, Relation relation, ClassOrInterfaceDeclaration dstEntity, Object initializer) {
@@ -290,7 +321,7 @@ public class DomainToNeo4J extends DomainPatterns {
     }
 
     private static MethodDeclaration findAllNodesWithLabel(String label) {
-        return newPublicMethodDeclaration("findAll" + label, streamOf(newClassOrInterfaceType(label)))
+        return newPublicMethodDeclaration("findAll" + capitalize(label), streamOf(newClassOrInterfaceType(label)))
                 .setBlockStmt(newReturnBlockStmt(newMethodCallExpression()
                         .setScope(streamNodesByLabel(db, label))
                         .setName("map")
@@ -300,12 +331,9 @@ public class DomainToNeo4J extends DomainPatterns {
     }
 
     private static MethodDeclaration findAllNodesWithLabelAndProperty(String label, Relation relation, Entity dstEntity) {
-
-        final Object valueVariable = asNeoParameter(dstEntity);
-
-        return newPublicMethodDeclaration("findAll" + label + "By" + relation.getName(), streamOf(newClassOrInterfaceType(label)))
+        return newPublicMethodDeclaration("findAll" + capitalize(label) + "By" + capitalize(relation.getName()), streamOf(newClassOrInterfaceType(label)))
                 .addParameters(newParameter(asJavaType(dstEntity), value))
-                .setBlockStmt(newReturnBlockStmt(newMethodCallExpression(streamNodesByLabel(db, label, relation.getName(), valueVariable), "map")
+                .setBlockStmt(newReturnBlockStmt(newMethodCallExpression(streamNodesByLabel(db, label, relation.getName(), asNeoParameter(dstEntity)), "map")
                         .addArguments(newMethodReferenceExpression()
                                 .setIdentifier("new" + label)
                                 .setScope(newThisExpression()))));
@@ -316,7 +344,7 @@ public class DomainToNeo4J extends DomainPatterns {
     }
 
     private static MethodDeclaration findNodeWithLabelAndProperty(String entityName, Relation relation, Entity dstEntity) {
-        return newPublicMethodDeclaration("find" + entityName + "By" + relation.getName(), newClassOrInterfaceType(entityName))
+        return newPublicMethodDeclaration("find" + capitalize(entityName) + "By" + capitalize(relation.getName()), newClassOrInterfaceType(entityName))
                 .addParameters(newParameter(asJavaType(dstEntity), value))
                 .setBlockStmt(newBlockStmt()
                         .addStatements(newExpressionStmt(newFinalVariableDeclarationExpression(neoNodeType, node, findNode(db, entityName, relation.getName(), asNeoParameter(dstEntity)))))
@@ -326,35 +354,35 @@ public class DomainToNeo4J extends DomainPatterns {
                                 .setElseExpression(newObjectCreationExpression(entityName, node)))));
     }
 
-    private static MethodDeclaration setPropertyMethodDeclaration(Entity entity, Entity property) {
-        return newPublicMethodDeclaration("set" + property.getName(), newClassOrInterfaceType(entity.getName()))
+    private static MethodDeclaration setPropertyMethodDeclaration(Entity entity, Relation relation, Entity property) {
+        return newPublicMethodDeclaration("set" + capitalize(relation.getName()), newClassOrInterfaceType(entity.getName()))
                 .addParameters(newParameter(newClassOrInterfaceType(property.getName()), value))
                 .setBlockStmt(newBlockStmt()
-                        .addStatements(newExpressionStmt(setProperty(node, property.getName(), asNeoParameter(property))))
+                        .addStatements(newExpressionStmt(setProperty(node, relation.getName(), asNeoParameter(property))))
                         .addStatements(newReturnThis()));
     }
 
     private static MethodDeclaration getPropertyMethodDeclaration(Relation relation, Entity property) {
-        return newPublicMethodDeclaration("get" + capitalize(property.getName()), asJavaType(property))
+        return newPublicMethodDeclaration("get" + capitalize(relation.getName()), asJavaType(property))
                 .setBlockStmt(newBlockStmt()
                         .addStatements(newIfStmt()
-                                .setCondition(hasProperty(node, property.getName()))
+                                .setCondition(hasProperty(node, relation.getName()))
                                 .setThen(newReturnStmt(isEnum(property) ?
                                         getEnumProperty(node, relation.getName(), property.getName()) :
                                         getProperty(node, relation.getName(), asJavaType(property)))))
-                        .addStatements(newReturnStmt(property.getName().equals("Boolean") ? newFalseExpression() : newNull())));
+                        .addStatements(newReturnStmt(property.getName().equals("boolean") ? newFalseExpression() : newNull())));
     }
 
     private static MethodDeclaration getPropertyOrDefaultMethodDeclaration(Relation relation, Entity property) {
-        return newPublicMethodDeclaration("get" + capitalize(property.getName()), asJavaType(property))
+        return newPublicMethodDeclaration("get" + capitalize(relation.getName()), asJavaType(property))
                 .addParameters(newParameter(asJavaType(property), "defaultValue"))
                 .setBlockStmt(newBlockStmt()
                         .addStatements(newIfStmt()
-                                .setCondition(hasProperty(node, property.getName()))
+                                .setCondition(hasProperty(node, relation.getName()))
                                 .setThen(newReturnStmt(isEnum(property) ?
                                         getEnumProperty(node, relation.getName(), property.getName()) :
                                         getProperty(node, relation.getName(), asJavaType(property)))))
-                        .addStatements(newReturnStmt(property.getName().equals("Boolean") ? newFalseExpression() : newExpression("defaultValue"))));
+                        .addStatements(newReturnStmt(property.getName().equals("boolean") ? newFalseExpression() : newExpression("defaultValue"))));
     }
 
     private static MethodDeclaration hasPropertyMethodDeclaration(Relation relation) {
@@ -372,6 +400,16 @@ public class DomainToNeo4J extends DomainPatterns {
     private static MethodCallExpression mapToEntity(ClassOrInterfaceDeclaration dstEntity, Object stream) {
         return newMethodCallExpression(stream, "map")
                 .addArguments(newLambdaExpression(newParameter(relationship), newObjectCreationExpression(dstEntity.getName(), getOtherNode(relationship, node))));
+    }
+
+    private static MethodCallExpression mapToPrimitive(ClassOrInterfaceDeclaration dstEntity, Object stream) {
+        return newMethodCallExpression(stream, "map")
+                .addArguments(newLambdaExpression(newParameter(relationship), newCastExpression().setType(newClassOrInterfaceType(dstEntity.getName())).setExpression(getProperty(getOtherNode(relationship, node), "value"))));
+    }
+
+    private static MethodCallExpression mapToEnum(ClassOrInterfaceDeclaration dstEntity, Object stream) {
+        return newMethodCallExpression(stream, "map")
+                .addArguments(newLambdaExpression(newParameter(relationship), newCastExpression().setType(newClassOrInterfaceType(dstEntity.getName())).setExpression(getProperty(getOtherNode(relationship, node), "value"))));
     }
 
     private static IfStmt deleteOrReturnIfAlreadyRelated() {

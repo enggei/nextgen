@@ -99,16 +99,12 @@ public class Neo4JPatterns extends JavaPatterns {
                 .addArguments(value);
     }
 
-    public static MethodCallExpression findAnyOutgoing(Object node, String relationType) {
-        return newMethodCallExpression(streamOutgoing(node, relationType), "findAny");
-    }
-
-    public static MethodCallExpression findAnyIncoming(Object node, String relationType) {
-        return newMethodCallExpression(streamIncoming(node, relationType), "findAny");
-    }
-
     public static MethodCallExpression streamOutgoing(Object node, String relationType) {
         return stream(getOutgoingRelationships(node, relationType));
+    }
+
+    public static MethodCallExpression streamOutgoingNodes(Object node, String relationType) {
+        return newMethodCallExpression(stream(getOutgoingRelationships(node, relationType)), "map", newLambdaExpression(newParameter("r"), newExpression(getOtherNode("r", node))));
     }
 
     public static MethodCallExpression streamIncoming(Object node, String relationType) {
@@ -158,6 +154,11 @@ public class Neo4JPatterns extends JavaPatterns {
     public static MethodCallExpression isRelated(Object src, Object dst) {
         return newMethodCallExpression("filter")
                 .addArguments(newLambdaExpression(newParameter("r"), newMethodCallExpression(getOtherNode("r", src), "equals", dst)));
+    }
+
+    public static MethodCallExpression hasPropertyValue(String property) {
+        return newMethodCallExpression("filter")
+                .addArguments(newLambdaExpression(newParameter("n"), newMethodCallExpression("dst", "equals", getProperty("n", property))));
     }
 
     public static MethodCallExpression getOtherNode(Object relationship, Object src) {

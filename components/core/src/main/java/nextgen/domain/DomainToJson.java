@@ -27,123 +27,164 @@ public class DomainToJson extends DomainPatterns {
         final PackageDeclaration packageDeclaration = newPackageDeclaration(packageName);
         final ClassOrInterfaceDeclaration domainClass = newJsonFactory(domain);
 
-        domain.getEntities().forEach(entity -> {
+        new DomainVisitor(domain) {
 
-            final boolean isPrimitiveOrExternal = isPrimitive(entity) || isExternal(entity);
+            @Override
+            protected void start(Domain domain) {
 
-            entityClassMap.put(entity, isPrimitiveOrExternal ? newClassOrInterfaceDeclaration().setName(entity.getName()) : newJsonWrapper(entity.getName()));
+            }
 
-            // do not process primitive entities, they represent an existing type (String, Long, etc)
-            if (isPrimitiveOrExternal) return;
+            @Override
+            protected void onPrimitive(Entity entity) {
+                entityClassMap.put(entity, newClass(entity.getName()));
+            }
 
-            domainClass.addMembers(newEntityInstanceMethod(entity));
-        });
+            @Override
+            protected void onReference(Entity entity) {
+                entityClassMap.put(entity, newJsonWrapper(entity.getName()));
+                domainClass.addMembers(newEntityInstanceMethod(entity));
+            }
 
-        domain.getRelations().forEach(relation -> {
+            @Override
+            protected void onExternal(Entity entity) {
+                entityClassMap.put(entity, newClass(entity.getName()));
+            }
 
-            final ClassOrInterfaceDeclaration srcEntity = entityClassMap.get(relation.getSrc());
-            final ClassOrInterfaceDeclaration dstEntity = entityClassMap.get(relation.getDst());
-            if (srcEntity == null)
-                throw new IllegalStateException("srcEntity for " + relation.getName() + " is not registered in domain " + domain.getName());
-            if (dstEntity == null)
-                throw new IllegalStateException("dstEntity for " + relation.getName() + " is not registered in domain " + domain.getName());
+            @Override
+            protected void onEnum(Entity entity) {
+                final EnumDeclaration enumDeclaration = newPublicEnumDeclaration(entity.getName());
+                entity.getEnumValues().forEach(enumDeclaration::addEntries);
+                JavaPatterns.writeToFile(enumDeclaration, packageDeclaration, root);
+            }
 
-            final boolean primitive = isPrimitive(relation.getDst());
-            final boolean external = isExternal(relation.getDst());
-            final String dstName = dstEntity.getName();
+            @Override
+            protected void visitOneToOne(Relation relation) {
 
-            switch (relation.getType()) {
+                final ClassOrInterfaceDeclaration srcEntity = entityClassMap.get(relation.getSrc());
 
-                case OneToOne:
+                final String srcName = relation.getSrc().getName();
+                final String dstName = relation.getDst().getName();
 
-                    if (external) {
-
-                        srcEntity.addFields(newPrivateFieldDeclaration().setName(DomainToPojos.variableName(relation)).setType(newClassOrInterfaceType(dstName)));
-                        srcEntity.addMembers(DomainToPojos.setPropertyMethodDeclaration(relation.getSrc(), dstEntity));
-                        srcEntity.addMembers(DomainToPojos.getPropertyMethodDeclaration(dstEntity));
-                        srcEntity.addMembers(DomainToPojos.hasPropertyMethodDeclaration(dstEntity));
+                switch (relation.getDst().getType()) {
+                    case PRIMITIVE:
+                        srcEntity.addMembers(oneToOnePrimitive(srcEntity, relation, dstName));
+                        srcEntity.addMembers(getSinglePrimitive(relation, dstName));
                         break;
-                    }
+                    case REFERENCE:
+                        srcEntity.addMembers(oneToOneReference(srcEntity, relation, dstName));
+                        srcEntity.addMembers(getSingleReference(relation, dstName));
+                        break;
+                    case EXTERNAL:
+                        srcEntity.addFields(newPrivateFieldDeclaration().setName(DomainToPojos.variableName(relation)).setType(newClassOrInterfaceType(dstName)));
+                        srcEntity.addMembers(DomainToPojos.oneToOne(srcName, relation, dstName));
+                        srcEntity.addMembers(DomainToPojos.getSingle(relation, dstName));
+                        srcEntity.addMembers(DomainToPojos.hasPropertyMethodDeclaration(newClassDeclaration(dstName)));
+                        break;
+                    case ENUM:
+                        srcEntity.addMembers(oneToOneEnum(newClassDeclaration(srcName), relation, dstName));
+                        srcEntity.addMembers(getSingleEnum(relation, dstName));
+                        break;
+                }
+            }
 
-                    srcEntity.addMembers(primitive ? oneToOnePrimitive(srcEntity, relation, dstEntity) : oneToOneReference(srcEntity, relation, dstEntity));
-                    srcEntity.addMembers(primitive ? getSinglePrimitive(relation, dstEntity) : getSingleReference(relation, dstEntity));
+            @Override
+            protected void visitOneToMany(Relation relation) {
 
-                   break;
+                final ClassOrInterfaceDeclaration srcEntity = entityClassMap.get(relation.getSrc());
 
-                case OneToMany:
-
-                    if (external) {
+                final String srcName = relation.getSrc().getName();
+                final String dstName = relation.getDst().getName();
+                switch (relation.getDst().getType()) {
+                    case PRIMITIVE:
+                        srcEntity.addMembers(oneToManyPrimitive(srcEntity, relation, dstName));
+                        srcEntity.addMembers(getListPrimitive(relation, dstName));
+                        break;
+                    case REFERENCE:
+                        srcEntity.addMembers(oneToManyReference(srcEntity, relation, dstName));
+                        srcEntity.addMembers(getListReference(relation, dstName));
+                        break;
+                    case EXTERNAL:
+                        srcEntity.addFields(newPrivateFieldDeclaration().setName(DomainToPojos.variableName(relation)).setType(listOf(newClassOrInterfaceType(dstName))));
                         srcEntity.addMembers(DomainToPojos.getList(relation, dstName));
                         srcEntity.addMembers(DomainToPojos.oneToMany(srcEntity, relation, dstName));
                         break;
-                    }
-
-                    srcEntity.addMembers(primitive ? oneToManyPrimitive(srcEntity, relation, dstEntity) : oneToManyReference(srcEntity, relation, dstEntity));
-                    srcEntity.addMembers(primitive ? getListPrimitive(relation, dstEntity) : getListReference(relation, dstEntity));
-                    break;
+                    case ENUM:
+                        srcEntity.addMembers(oneToManyEnum(newClassDeclaration(srcName), relation, dstName));
+                        srcEntity.addMembers(getListEnum(relation, dstName));
+                        break;
+                }
             }
-        });
 
-        domain.getEnums().forEach(anEnum -> {
+            @Override
+            protected void end() {
 
-            final EnumDeclaration enumDeclaration = newPublicEnumDeclaration(anEnum.getName());
-            anEnum.getValues().forEach(enumDeclaration::addEntries);
+                JavaPatterns.writeToFile(domainClass, packageDeclaration, root);
 
-            JavaPatterns.writeToFile(enumDeclaration, packageDeclaration, root);
-        });
-
-        JavaPatterns.writeToFile(domainClass, packageDeclaration, root);
-
-        for (Map.Entry<Entity, ClassOrInterfaceDeclaration> entry : entityClassMap.entrySet()) {
-
-            // do not write primitive entities or external ones, they represent an existing type (String, Long, ASTNode,etc)
-            if (isPrimitive(entry.getKey())) continue;
-            if (isExternal(entry.getKey())) continue;
-
-            JavaPatterns.writeToFile(entry.getValue(), packageDeclaration, root);
-        }
+                for (Map.Entry<Entity, ClassOrInterfaceDeclaration> entry : entityClassMap.entrySet()) {
+                    switch (entry.getKey().getType()) {
+                        case PRIMITIVE:
+                            break;
+                        case REFERENCE:
+                            JavaPatterns.writeToFile(entry.getValue(), packageDeclaration, root);
+                            break;
+                        case EXTERNAL:
+                            break;
+                        case ENUM:
+                            JavaPatterns.writeToFile(entry.getValue(), packageDeclaration, root);
+                            break;
+                    }
+                }
+            }
+        };
     }
 
-    private static MethodDeclaration getListReference(Relation relation, ClassOrInterfaceDeclaration dstEntity) {
-        return newPublicMethodDeclaration("get" + capitalize(relation.getName()), streamOf(newClassOrInterfaceType(dstEntity.getName())))
+    private static MethodDeclaration getListReference(Relation relation, String dstEntity) {
+        return newPublicMethodDeclaration("get" + capitalize(relation.getName()), streamOf(newClassOrInterfaceType(dstEntity)))
                 .setBlockStmt(newReturnBlockStmt(newMethodCallExpression(newMethodCallExpression(newMethodCallExpression(node, "getJsonArray")
                         .addArguments(newStringLiteralExpression(relation.getName()))
                         .addArguments(newObjectCreationExpression(jsonArrayType)), "stream"), "map")
-                        .addArguments(newLambdaExpression(newParameter("o"), newObjectCreationExpression(dstEntity.getName())
+                        .addArguments(newLambdaExpression(newParameter("o"), newObjectCreationExpression(dstEntity)
                                 .addArguments(newCastExpression()
                                         .setType(jsonObjectType)
                                         .setExpression(newExpression("o")))))));
     }
 
-    private static MethodDeclaration getListPrimitive(Relation relation, ClassOrInterfaceDeclaration dstEntity) {
-        return newPublicMethodDeclaration("get" + capitalize(relation.getName()), streamOf(newClassOrInterfaceType(dstEntity.getName())))
+    private static MethodDeclaration getListPrimitive(Relation relation, String dstEntity) {
+        return newPublicMethodDeclaration("get" + capitalize(relation.getName()), streamOf(newClassOrInterfaceType(dstEntity)))
                 .setBlockStmt(newReturnBlockStmt(newMethodCallExpression(newMethodCallExpression(newMethodCallExpression(node, "getJsonArray")
                         .addArguments(newStringLiteralExpression(relation.getName()))
                         .addArguments(newObjectCreationExpression(jsonArrayType)), "stream"), "map")
                         .addArguments(newLambdaExpression(newParameter("o"), newCastExpression()
-                                .setType(newClassOrInterfaceType(dstEntity.getName()))
+                                .setType(newClassOrInterfaceType(dstEntity))
                                 .setExpression(newExpression("o"))))));
     }
 
-    private static MethodDeclaration getSinglePrimitive(Relation relation, ClassOrInterfaceDeclaration dstEntity) {
-        return newPublicMethodDeclaration("get" + capitalize(relation.getName()), newClassOrInterfaceType(dstEntity.getName()))
+    private static MethodDeclaration getListEnum(Relation relation, String dstEntity) {
+        return newPublicMethodDeclaration("get" + capitalize(relation.getName()), streamOf(newClassOrInterfaceType(dstEntity)))
+                .setBlockStmt(newReturnBlockStmt(newMethodCallExpression(newMethodCallExpression(newMethodCallExpression(node, "getJsonArray")
+                        .addArguments(newStringLiteralExpression(relation.getName()))
+                        .addArguments(newObjectCreationExpression(jsonArrayType)), "stream"), "map")
+                        .addArguments(newLambdaExpression(newParameter("o"), newMethodCallExpression(dstEntity, "valueOf", newCastExpression()
+                                .setType(StringType)
+                                .setExpression(newExpression("o")))))));
+    }
+
+    private static MethodDeclaration getSinglePrimitive(Relation relation, String dstEntity) {
+        return newPublicMethodDeclaration("get" + capitalize(relation.getName()), newClassOrInterfaceType(dstEntity))
+                .setBlockStmt(newReturnBlockStmt(newMethodCallExpression(node, "get" + capitalize(dstEntity), newStringLiteralExpression(relation.getName()))));
+    }
+
+    private static MethodDeclaration getSingleReference(Relation relation, String dstEntity) {
+        return newPublicMethodDeclaration("get" + capitalize(relation.getName()), newClassOrInterfaceType(dstEntity))
                 .setBlockStmt(newReturnBlockStmt(newConditionalExpression()
                         .setCondition(isNull(newMethodCallExpression(node, "getJsonObject", newStringLiteralExpression(relation.getName()))))
                         .setThenExpression(newNull())
-                        .setElseExpression(newMethodCallExpression(node, "get" + capitalize(dstEntity.getName()), newStringLiteralExpression(relation.getName())))));
+                        .setElseExpression(newObjectCreationExpression(dstEntity, newMethodCallExpression(node, "getJsonObject", newStringLiteralExpression(relation.getName()))))));
     }
 
-    private static MethodDeclaration getSingleReference(Relation relation, ClassOrInterfaceDeclaration dstEntity) {
-        return newPublicMethodDeclaration("get" + capitalize(relation.getName()), newClassOrInterfaceType(dstEntity.getName()))
-                .setBlockStmt(newReturnBlockStmt(newConditionalExpression()
-                        .setCondition(isNull(newMethodCallExpression(node, "getJsonObject", newStringLiteralExpression(relation.getName()))))
-                        .setThenExpression(newNull())
-                        .setElseExpression(newObjectCreationExpression(dstEntity.getName(), newMethodCallExpression(node, "getJsonObject", newStringLiteralExpression(relation.getName()))))));
-    }
-
-    private static MethodDeclaration oneToOnePrimitive(ClassOrInterfaceDeclaration srcEntity, Relation relation, ClassOrInterfaceDeclaration dstEntity) {
+    private static MethodDeclaration oneToOnePrimitive(ClassOrInterfaceDeclaration srcEntity, Relation relation, String dstEntity) {
         return newPublicMethodDeclaration("set" + capitalize(relation.getName()), newClassOrInterfaceType(srcEntity.getName()))
-                .addParameters(newParameter(newClassOrInterfaceType(dstEntity.getName()), value))
+                .addParameters(newParameter(newClassOrInterfaceType(dstEntity), value))
                 .setBlockStmt(newBlockStmt()
                         .addStatements(newExpressionStmt(newMethodCallExpression(node, "put")
                                 .addArguments(newStringLiteralExpression(relation.getName()))
@@ -151,9 +192,28 @@ public class DomainToJson extends DomainPatterns {
                         .addStatements(newReturnThis()));
     }
 
-    private static MethodDeclaration oneToOneReference(ClassOrInterfaceDeclaration srcEntity, Relation relation, ClassOrInterfaceDeclaration dstEntity) {
+    private static MethodDeclaration oneToOneEnum(ClassOrInterfaceDeclaration srcEntity, Relation relation, String dstEntity) {
         return newPublicMethodDeclaration("set" + capitalize(relation.getName()), newClassOrInterfaceType(srcEntity.getName()))
-                .addParameters(newParameter(newClassOrInterfaceType(dstEntity.getName()), value))
+                .addParameters(newParameter(newClassOrInterfaceType(dstEntity), value))
+                .setBlockStmt(newBlockStmt()
+                        .addStatements(newExpressionStmt(newMethodCallExpression(node, "put")
+                                .addArguments(newStringLiteralExpression(relation.getName()))
+                                .addArguments(newMethodCallExpression(value, "name"))))
+                        .addStatements(newReturnThis()));
+    }
+
+    private static MethodDeclaration getSingleEnum(Relation relation, String dstEntity) {
+        return newPublicMethodDeclaration("get" + capitalize(relation.getName()), newClassOrInterfaceType(dstEntity))
+                .setBlockStmt(newReturnBlockStmt(newConditionalExpression()
+                        .setCondition(isNull(newMethodCallExpression(node, "getString", newStringLiteralExpression(relation.getName()))))
+                        .setThenExpression(newNull())
+                        .setElseExpression(newMethodCallExpression(dstEntity, "valueOf", newMethodCallExpression(node, "getString", newStringLiteralExpression(relation.getName()))))));
+    }
+
+
+    private static MethodDeclaration oneToOneReference(ClassOrInterfaceDeclaration srcEntity, Relation relation, String dstEntity) {
+        return newPublicMethodDeclaration("set" + capitalize(relation.getName()), newClassOrInterfaceType(srcEntity.getName()))
+                .addParameters(newParameter(newClassOrInterfaceType(dstEntity), value))
                 .setBlockStmt(newBlockStmt()
                         .addStatements(newExpressionStmt(newMethodCallExpression(node, "put")
                                 .addArguments(newStringLiteralExpression(relation.getName()))
@@ -161,9 +221,9 @@ public class DomainToJson extends DomainPatterns {
                         .addStatements(newReturnThis()));
     }
 
-    private static MethodDeclaration oneToManyReference(ClassOrInterfaceDeclaration srcEntity, Relation relation, ClassOrInterfaceDeclaration dstEntity) {
+    private static MethodDeclaration oneToManyReference(ClassOrInterfaceDeclaration srcEntity, Relation relation, String dstEntity) {
         return newPublicMethodDeclaration("add" + capitalize(relation.getName()), newClassOrInterfaceType(srcEntity.getName()))
-                .addParameters(newParameter(newClassOrInterfaceType(dstEntity.getName()), value))
+                .addParameters(newParameter(newClassOrInterfaceType(dstEntity), value))
                 .setBlockStmt(newBlockStmt()
                         .addStatements(newExpressionStmt(newVariableDeclarationExpression(jsonArrayType, "jsonArray", newMethodCallExpression(node, "getJsonArray", newStringLiteralExpression(relation.getName())))))
                         .addStatements(newIfStmt(isNull("jsonArray"), newExpressionStmt(newMethodCallExpression(node, "put")
@@ -176,9 +236,9 @@ public class DomainToJson extends DomainPatterns {
                         .addStatements(newReturnThis()));
     }
 
-    private static MethodDeclaration oneToManyPrimitive(ClassOrInterfaceDeclaration srcEntity, Relation relation, ClassOrInterfaceDeclaration dstEntity) {
+    private static MethodDeclaration oneToManyPrimitive(ClassOrInterfaceDeclaration srcEntity, Relation relation, String dstEntity) {
         return newPublicMethodDeclaration("add" + capitalize(relation.getName()), newClassOrInterfaceType(srcEntity.getName()))
-                .addParameters(newParameter(newClassOrInterfaceType(dstEntity.getName()), value))
+                .addParameters(newParameter(newClassOrInterfaceType(dstEntity), value))
                 .setBlockStmt(newBlockStmt()
                         .addStatements(newExpressionStmt(newVariableDeclarationExpression(jsonArrayType, "jsonArray", newMethodCallExpression(node, "getJsonArray", newStringLiteralExpression(relation.getName())))))
                         .addStatements(newIfStmt(isNull("jsonArray"), newExpressionStmt(newMethodCallExpression(node, "put")
@@ -188,6 +248,21 @@ public class DomainToJson extends DomainPatterns {
                                         .setOperator("=")
                                         .setRight(newObjectCreationExpression(jsonArrayType))))))
                         .addStatements(newExpressionStmt(newMethodCallExpression("jsonArray", "add", value)))
+                        .addStatements(newReturnThis()));
+    }
+
+    private static MethodDeclaration oneToManyEnum(ClassOrInterfaceDeclaration srcEntity, Relation relation, String dstEntity) {
+        return newPublicMethodDeclaration("add" + capitalize(relation.getName()), newClassOrInterfaceType(srcEntity.getName()))
+                .addParameters(newParameter(newClassOrInterfaceType(dstEntity), value))
+                .setBlockStmt(newBlockStmt()
+                        .addStatements(newExpressionStmt(newVariableDeclarationExpression(jsonArrayType, "jsonArray", newMethodCallExpression(node, "getJsonArray", newStringLiteralExpression(relation.getName())))))
+                        .addStatements(newIfStmt(isNull("jsonArray"), newExpressionStmt(newMethodCallExpression(node, "put")
+                                .addArguments(newStringLiteralExpression(relation.getName()))
+                                .addArguments(newBinaryExpression()
+                                        .setLeft("jsonArray")
+                                        .setOperator("=")
+                                        .setRight(newObjectCreationExpression(jsonArrayType))))))
+                        .addStatements(newExpressionStmt(newMethodCallExpression("jsonArray", "add", newMethodCallExpression(value, "name"))))
                         .addStatements(newReturnThis()));
     }
 

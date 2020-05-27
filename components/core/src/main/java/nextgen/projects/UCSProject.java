@@ -3,7 +3,6 @@ package nextgen.projects;
 import nextgen.domain.DomainToJson;
 import nextgen.domain.DomainToNeo4J;
 import nextgen.domain.DomainToPojos;
-import nextgen.domain.domain.Enum;
 import nextgen.domain.domain.*;
 
 import static nextgen.domain.DomainPatterns.*;
@@ -20,69 +19,32 @@ public class UCSProject {
 
     public static Domain ucsDomain() {
 
-        final Enum screenStatusEnum = newEnum("ScreenStatus", "OPEN,CLOSED");
+        final EntityBuilder address = newEntityBuilder("Address")
+                .addStringField("street")
+                .addIntegerField("no")
+                .addStringField("letter");
 
-//        final Property name = newStringProperty("Name");
-//        final Property string = newStringProperty("Value");
-//        final Property active = newBooleanProperty("Active");
-//        final Property seatNo = newIntegerProperty("No");
-//        final Property seatCount = newIntegerProperty("SeatCount");
-//        final Property screenStatus = newEnumProperty("Status", screenStatusEnum);
-
-        final Entity stringEntity = newEntity("StringNode")
-//                .addProperties(string)
-                ;
-
-        final Entity exhibitor = newEntity("Exhibitor")
-//                .addProperties(name)
-                ;
-
-        final Entity city = newEntity("City")
-//                .addProperties(name)
-                ;
-
-        final Entity address = newEntity("Address")
-//                .addProperties(string)
-                ;
-
-        final Entity cinema = newEntity("Cinema")
-//                .addProperties(name)
-                ;
-
-        final Entity screen = newEntity("Screen")
-//                .addProperties(name)
-//                .addProperties(seatCount)
-//                .addProperties(active)
-//                .addProperties(screenStatus)
-                ;
-
-        final Entity seat = newEntity("Seat")
-//                .addProperties(seatNo)
-//                .addProperties(active)
-                ;
-
-        final Relation exhibitor_presence_city = newManyToManyRelation("Presence", exhibitor, city);
-        final Relation cinema_location_address = newOneToOneRelation("Location", cinema, address);
-        final Relation exhibitor_owner_cinema = newManyToOneRelation("Owner", cinema, exhibitor);
-        final Relation cinema_screens_screen = newOneToManyRelation("Screens", cinema, screen);
-        final Relation screen_seats_seat = newOneToManyRelation("Seats", screen, seat);
-        final Relation cinema_names_name = newOneToManyRelation("Names", cinema, stringEntity);
-
-        return newDomain()
-                .setName("UCS")
-                .addEntities(city)
-                .addEntities(address)
-                .addEntities(exhibitor)
-                .addEntities(cinema)
-                .addEntities(stringEntity)
-                .addEntities(screen)
-                .addEnums(screenStatusEnum)
-                .addEntities(seat)
-                .addRelations(cinema_location_address)
-                .addRelations(cinema_names_name)
-                .addRelations(exhibitor_presence_city)
-                .addRelations(exhibitor_owner_cinema)
-                .addRelations(cinema_screens_screen)
-                .addRelations(screen_seats_seat);
+        return newDomainBuilder("UCS")
+                .add(newEntityBuilder("World")
+                        .addOneToManyRelation("regions", newEntityBuilder("Region")
+                                .addStringField("name")
+                                .addOneToManyRelation("countries", newEntityBuilder("Country")
+                                        .addStringField("name")
+                                        .addOneToManyRelation("cities", newEntityBuilder("City")
+                                                .addStringField("name")
+                                                .addOneToManyRelation("addresses", address)))))
+                .add(newEntityBuilder("Exhibitor")
+                        .addStringField("name")
+                        .addOneToManyRelation("cinemas", newEntityBuilder("Cinema")
+                                .addStringField("name")
+                                .addOneToManyRelation("aliases",newString())
+                                .addOneToOneRelation("address", address)
+                                .addOneToManyRelation("screens", newEntityBuilder("Screen")
+                                        .addStringField("name")
+                                        .addOneToOneRelation("status", newEnumEntity("ScreenStatus", "OPEN,CLOSED"))
+                                        .addOneToOneRelation("active", newBoolean())
+                                        .addOneToManyRelation("seats", newEntityBuilder("Seat")
+                                                .addIntegerField("no")
+                                                .addOneToOneRelation("status", newEnumEntity("SeatStatus", "AVAILABLE,BROKEN"))))));
     }
 }

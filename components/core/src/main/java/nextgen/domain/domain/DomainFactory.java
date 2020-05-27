@@ -7,10 +7,6 @@ public class DomainFactory {
 		return new Domain();
 	}
 
-	public static Enum newEnum() { 
-		return new Enum();
-	}
-
 	public static Entity newEntity() { 
 		return new Entity();
 	}

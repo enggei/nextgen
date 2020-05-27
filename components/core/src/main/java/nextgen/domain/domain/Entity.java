@@ -5,9 +5,7 @@ public class Entity {
 
 	private final java.util.UUID uuid;
 	private String name;
-	private Boolean isPrimitive;
-	private Boolean isEnum;
-	private Boolean isExternal;
+	private EntityType type;
 	private final java.util.List<String> enumValues = new java.util.ArrayList<>();
 
 	public Entity() { 
@@ -49,31 +47,13 @@ public class Entity {
 		return name;
 	}
 
-	public Entity setIsPrimitive(Boolean isPrimitive) { 
-		this.isPrimitive = isPrimitive;
+	public Entity setType(EntityType type) { 
+		this.type = type;
 		return this;
 	}
 
-	public Boolean getIsPrimitive() { 
-		return this.isPrimitive;
-	}
-
-	public Entity setIsEnum(Boolean isEnum) { 
-		this.isEnum = isEnum;
-		return this;
-	}
-
-	public Boolean getIsEnum() { 
-		return this.isEnum;
-	}
-
-	public Entity setIsExternal(Boolean isExternal) { 
-		this.isExternal = isExternal;
-		return this;
-	}
-
-	public Boolean getIsExternal() { 
-		return this.isExternal;
+	public EntityType getType() { 
+		return this.type;
 	}
 
 	public Entity addEnumValues(String value) { 

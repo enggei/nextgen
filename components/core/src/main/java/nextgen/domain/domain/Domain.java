@@ -5,7 +5,6 @@ public class Domain {
 
 	private final java.util.UUID uuid;
 	private String name;
-	private final java.util.List<Enum> enums = new java.util.ArrayList<>();
 	private final java.util.List<Entity> entities = new java.util.ArrayList<>();
 	private final java.util.List<Relation> relations = new java.util.ArrayList<>();
 
@@ -46,15 +45,6 @@ public class Domain {
 	@Override
 	public java.lang.String toString() { 
 		return name;
-	}
-
-	public Domain addEnums(Enum value) { 
-		enums.add(value);
-		return this;
-	}
-
-	public java.util.List<Enum> getEnums() { 
-		return this.enums;
 	}
 
 	public Domain addEntities(Entity value) { 

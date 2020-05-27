@@ -84,6 +84,12 @@ public class JavaPatterns extends JavaFactory {
         return newPackageDeclaration().setName(packageName);
     }
 
+    public static ClassOrInterfaceDeclaration newClass(String name) {
+        return newClassOrInterfaceDeclaration()
+                .setIsInterface(false)
+                .setName(name);
+    }
+
     public static ClassOrInterfaceDeclaration newPublicClassDeclaration() {
         return newClassOrInterfaceDeclaration()
                 .addModifiers(Modifier.PUBLIC);
@@ -288,6 +294,10 @@ public class JavaPatterns extends JavaFactory {
     public static NameExpression newExpression(Object name) {
         return newNameExpression()
                 .setValue(name);
+    }
+
+    public static MethodReferenceExpression newMethodReferenceExpression(ClassOrInterfaceType classOrInterfaceType, String method) {
+        return newMethodReferenceExpression().setScope(classOrInterfaceType).setIdentifier(method);
     }
 
     public static ExpressionStmt newExpressionStmt(Expression expression) {
