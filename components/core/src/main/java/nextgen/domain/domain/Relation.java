@@ -5,9 +5,10 @@ public class Relation {
 
 	private final java.util.UUID uuid;
 	private String name;
-	private RelationType type;
+	private Boolean lexical;
 	private Entity src;
 	private Entity dst;
+	private RelationType type;
 
 	public Relation() { 
 		this.uuid = java.util.UUID.randomUUID();
@@ -45,16 +46,16 @@ public class Relation {
 
 	@Override
 	public java.lang.String toString() { 
-		return name;
+		return name == null ? null : name;
 	}
 
-	public Relation setType(RelationType type) { 
-		this.type = type;
+	public Relation setLexical(Boolean lexical) { 
+		this.lexical = lexical;
 		return this;
 	}
 
-	public RelationType getType() { 
-		return this.type;
+	public Boolean getLexical() { 
+		return this.lexical;
 	}
 
 	public Relation setSrc(Entity src) { 
@@ -73,5 +74,14 @@ public class Relation {
 
 	public Entity getDst() { 
 		return this.dst;
+	}
+
+	public Relation setType(RelationType type) { 
+		this.type = type;
+		return this;
+	}
+
+	public RelationType getType() { 
+		return this.type;
 	}
 }

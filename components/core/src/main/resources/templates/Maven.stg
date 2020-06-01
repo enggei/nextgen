@@ -1,0 +1,185 @@
+delimiters "~", "~"
+eom() ::= <<}>>
+
+gt() ::= ">"
+
+propertyReference(name) ::= <<${~name~}>>
+
+build(plugin,testResources) ::= <<<build>
+~if(testResources)~
+	<testResources>
+		<testResource>
+			~testResources:{it|<~it.name~>~it.value~</~it.name~>};separator="\n"~
+		</testResource>
+	</testResources>
+~endif~
+	<plugins>
+		~plugin:{it|~it~};separator="\n"~
+	</plugins>
+</build> >>
+
+dependency(artifactId,groupId,scope,systemPath,version) ::= <<<dependency>
+	<groupId>~groupId~</groupId>
+	<artifactId>~artifactId~</artifactId>
+	<version>~version~</version>~if(scope)~
+	<scope>~scope;format="toLower"~</scope>~endif~~if(systemPath)~
+	<systemPath>~systemPath~</systemPath>~endif~
+
+</dependency> >>
+
+parent(artifactId,groupId,version) ::= <<<parent>
+	<artifactId>~artifactId~</artifactId>
+	<groupId>~groupId~</groupId>
+	<version>~version~</version>
+</parent> >>
+
+plugin(artifactId,configuration,executions,groupId,version) ::= <<<plugin>
+	<groupId>~groupId~</groupId>
+	<artifactId>~artifactId~</artifactId>
+	<version>~version~</version>
+	<configuration>
+		~configuration:{it|<~it.name~>~it.value~</~it.name~>};separator="\n"~
+	</configuration>
+	<executions>
+		~executions:{it|~it~};separator="\n"~
+	</executions>
+</plugin> >>
+
+pom(artifactId,build,dependencies,distributionManagement,groupId,modules,name,packaging,parent,properties,repositories,version) ::= <<<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+~if(parent)~
+
+	~parent~
+~endif~	 
+	<modelVersion>4.0.0</modelVersion>
+
+	<name>~name~</name>
+
+	~if(groupId)~<groupId>~groupId~</groupId>~endif~
+	~if(artifactId)~<artifactId>~artifactId~</artifactId>~endif~
+	~if(version)~<version>~version~</version>~endif~
+	~if(packaging)~<packaging>~packaging~</packaging>~endif~
+
+~if(modules)~
+	<modules>
+		~modules:{it|<module>~it~</module>};separator="\n"~
+	</modules>
+~endif~
+~if(properties)~
+	<properties>
+		~properties:{it|<~it.name~>~it.value~</~it.name~>};separator="\n"~		
+	</properties>
+~endif~
+~if(build)~
+
+	~build~
+
+~endif~
+~if(dependencies)~
+
+	<dependencies>
+		~dependencies:{it|~it~};separator="\n"~  
+	</dependencies>
+
+~endif~
+~if(distributionManagement)~
+
+	<distributionManagement>
+		~distributionManagement:{it|~it~};separator="\n"~
+	</distributionManagement>
+~endif~
+~if(repositories)~
+
+	<repositories>
+		~repositories:{it|~it~};separator="\n"~
+	</repositories>
+~endif~
+</project> >>
+
+repository(id,name,url) ::= <<<repository>
+	<id>~id~</id>
+	<name>~name~</name>
+	<url>~url~</url>
+</repository> >>
+
+execution() ::= <<
+<execution>
+    <phase>package</phase>
+    <goals>
+        <goal>shade</goal>
+    </goals>
+</execution>
+>>
+
+frontEndMavenPlugin(pluginVersion,installDirectory,nodeVersion) ::= <<<!--npm plugin-->
+<plugin>
+    <groupId>com.github.eirslett</groupId>
+    <artifactId>frontend-maven-plugin</artifactId>
+    <version>~if(pluginVersion)~~pluginVersion~~else~1.10.0~endif~</version>
+    <configuration>
+        <installDirectory>~if(installDirectory)~~installDirectory~~else~target~endif~</installDirectory>
+        <nodeVersion>v~nodeVersion~</nodeVersion>
+    </configuration>
+    <executions>
+        <execution>
+            <id>install node and npm</id>
+            <goals>
+                <goal>install-node-and-npm</goal>
+            </goals>
+        </execution>
+        <execution>
+            <id>npm install</id>
+            <goals>
+                <goal>npm</goal>
+            </goals>
+            <configuration>
+                <arguments>install</arguments>
+            </configuration>
+        </execution>
+        <execution>
+            <id>webpack build</id>
+            <goals>
+                <goal>webpack</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+>>
+
+shadePlugin(className,packageName) ::= <<<!--fat-jar plugin for single-file server package-->
+<plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-shade-plugin</artifactId>
+	<version>2.4.3</version>
+	<executions>
+		<execution>
+			<phase>package</phase>
+			<goals>
+				<goal>shade</goal>
+			</goals>
+			<configuration>
+				<filters>
+					<filter>
+						<artifact>*:*</artifact>
+						<excludes>
+							<exclude>META-INF/*.SF</exclude>
+							<exclude>META-INF/*.DSA</exclude>
+							<exclude>META-INF/*.RSA</exclude>
+						</excludes>
+					</filter>
+				</filters>
+				<transformers>
+					<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+					<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+						<manifestEntries>
+							<Main-Class>io.vertx.core.Launcher</Main-Class>
+							<Main-Verticle>~packageName~.~className~</Main-Verticle>
+						</manifestEntries>
+					</transformer>
+				</transformers>
+				<artifactSet/>
+				<outputFile>target/${project.artifactId}-${project.version}-fat.jar</outputFile>
+			</configuration>
+		</execution>
+	</executions>
+</plugin> >>

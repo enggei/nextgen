@@ -5,6 +5,7 @@ public class Domain {
 
 	private final java.util.UUID uuid;
 	private String name;
+	private String extendsClass;
 	private final java.util.List<Entity> entities = new java.util.ArrayList<>();
 	private final java.util.List<Relation> relations = new java.util.ArrayList<>();
 
@@ -12,7 +13,7 @@ public class Domain {
 		this.uuid = java.util.UUID.randomUUID();
 	}
 
-	public Domain(java.util.UUID uuid) { 
+	public Domain(java.util.UUID uuid) {
 		this.uuid = uuid;
 	}
 
@@ -44,7 +45,16 @@ public class Domain {
 
 	@Override
 	public java.lang.String toString() { 
-		return name;
+		return name == null ? null : name;
+	}
+
+	public Domain setExtendsClass(String extendsClass) { 
+		this.extendsClass = extendsClass;
+		return this;
+	}
+
+	public String getExtendsClass() { 
+		return this.extendsClass;
 	}
 
 	public Domain addEntities(Entity value) { 

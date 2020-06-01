@@ -88,6 +88,10 @@ public final class FileUtil {
         }
     }
 
+    public static void write(Object content, String file) {
+        write(content, new File(file));
+    }
+
     public static void write(Object content, File file) {
         if (content == null) return;
         tryToCreateFileIfNotExists(file);

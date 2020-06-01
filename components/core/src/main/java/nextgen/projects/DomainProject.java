@@ -18,9 +18,9 @@ public class DomainProject {
 
         DomainToPojos.generate(mainRoot, "nextgen.domain.domain", domain);
 
-        DomainToPojos.generate(testRoot, "tmp.domain.domain", domain);
-        DomainToNeo4J.generate(testRoot, "tmp.domain.domain.neo4j", domain);
-        DomainToJson.generate(testRoot, "tmp.domain.domain.json", domain);
+//        DomainToPojos.generate(testRoot, "tmp.domain.domain", domain);
+//        DomainToNeo4J.generate(testRoot, "tmp.domain.domain.neo4j", domain);
+//        DomainToJson.generate(testRoot, "tmp.domain.domain.json", domain);
     }
 
     public static Domain getDomain() {
@@ -30,16 +30,16 @@ public class DomainProject {
                 .addOneToManyRelation("enumValues", newString())
                 .addStringField("name");
 
-        final EntityBuilder relation = newEntityBuilder("Relation")
-                .addStringField("name")
-                .addOneToOneRelation("src", entity)
-                .addOneToOneRelation("dst", entity)
-                .addOneToOneRelation("type", newEnumEntity("RelationType", "OneToOne,OneToMany"));
-
         return newDomainBuilder("Domain")
                 .add(newEntityBuilder("Domain")
                         .addStringField("name")
+                        .addStringField("extendsClass")
                         .addOneToManyRelation("entities", entity)
-                        .addOneToManyRelation("relations", relation));
+                        .addOneToManyRelation("relations", newEntityBuilder("Relation")
+                                .addStringField("name")
+                                .addBooleanField("lexical")
+                                .addOneToOneRelation("src", entity)
+                                .addOneToOneRelation("dst", entity)
+                                .addOneToOneRelation("type", newEnumEntity("RelationType", "OneToOne,OneToMany"))));
     }
 }

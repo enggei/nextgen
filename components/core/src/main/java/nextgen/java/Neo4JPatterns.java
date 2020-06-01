@@ -4,49 +4,36 @@ import nextgen.java.st.*;
 
 public class Neo4JPatterns extends JavaPatterns {
 
-    public static final String graphdbPackage = "org.neo4j.graphdb";
-    public static final String factoryPackage = graphdbPackage + ".factory";
+    public static final String corePackage = "org.neo4j.graphdb";
+    public static final String factoryPackage = corePackage + ".factory";
 
     public static final ClassOrInterfaceType neoGraphDatabaseFactoryType = newClassOrInterfaceType().setScope(factoryPackage).addNames("GraphDatabaseFactory");
     public static final ClassOrInterfaceType neoGraphDatabaseSettingsType = newClassOrInterfaceType().setScope(factoryPackage).addNames("GraphDatabaseSettings");
 
-    public static final ClassOrInterfaceType neoGraphDatabaseServiceType = newClassOrInterfaceType().setScope(graphdbPackage).addNames("GraphDatabaseService");
-    public static final ClassOrInterfaceType neoNodeType = newClassOrInterfaceType().setScope(graphdbPackage).addNames("Node");
-    public static final ClassOrInterfaceType neoLabelType = newClassOrInterfaceType().setScope(graphdbPackage).addNames("Label");
-    public static final ClassOrInterfaceType neoDirectionType = newClassOrInterfaceType().setScope(graphdbPackage).addNames("Direction");
-    public static final ClassOrInterfaceType neoRelationshipType = newClassOrInterfaceType().setScope(graphdbPackage).addNames("Relationship");
-    public static final ClassOrInterfaceType neoRelationshipTypeType = newClassOrInterfaceType().setScope(graphdbPackage).addNames("RelationshipType");
-    public static final ClassOrInterfaceType neoTransactionType = newClassOrInterfaceType().setScope(graphdbPackage).addNames("Transaction");
+    public static final ClassOrInterfaceType neoGraphDatabaseServiceType = newClassOrInterfaceType().setScope(corePackage).addNames("GraphDatabaseService");
+    public static final ClassOrInterfaceType neoNodeType = newClassOrInterfaceType().setScope(corePackage).addNames("Node");
+    public static final ClassOrInterfaceType neoLabelType = newClassOrInterfaceType().setScope(corePackage).addNames("Label");
+    public static final ClassOrInterfaceType neoDirectionType = newClassOrInterfaceType().setScope(corePackage).addNames("Direction");
+    public static final ClassOrInterfaceType neoRelationshipType = newClassOrInterfaceType().setScope(corePackage).addNames("Relationship");
+    public static final ClassOrInterfaceType neoRelationshipTypeType = newClassOrInterfaceType().setScope(corePackage).addNames("RelationshipType");
+    public static final ClassOrInterfaceType neoTransactionType = newClassOrInterfaceType().setScope(corePackage).addNames("Transaction");
 
     public static final FieldAccessExpression INCOMING = newFieldAccessExpression(neoDirectionType, "INCOMING");
     public static final FieldAccessExpression OUTGOING = newFieldAccessExpression(neoDirectionType, "OUTGOING");
 
-    public static Statement doInStatement(Object db, BlockStmt blockStmt) {
+    public static Statement doInTransaction(Object db, BlockStmt blockStmt) {
         return newTryStmt()
                 .addResources(newTransactionVariable(db, "tx"))
-                .setTryBlock(blockStmt
-                        .addStatements(txSuccessStatement("tx")))
-                .addCatchClauses(newCatchClause()
-                        .setParameter(newParameter()
-                                .setType(ThrowableType)
-                                .setName("t"))
-                        .setBody(newBlockStmt()
-                                .addStatements(newExpressionStmt()
-                                        .setExpression(newMethodCallExpression()
-                                                .setScope("t")
-                                                .setName("printStackTrace")))));
+                .setTryBlock(blockStmt.addStatements(txSuccessStatement("tx")))
+                .addCatchClauses(newCatchClause(newParameter(ThrowableType, "t"), newBlockStmt(newMethodCallExpression("t", "printStackTrace"))));
     }
 
     public static ExpressionStmt txSuccessStatement(String tx) {
-        return newExpressionStmt()
-                .setExpression(newMethodCallExpression(tx, "success"));
+        return newExpressionStmt(newMethodCallExpression(tx, "success"));
     }
 
     public static VariableDeclaration newTransactionVariable(Object db, String name) {
-        return newVariableDeclaration()
-                .setType(neoTransactionType)
-                .setName(name)
-                .setInitializer(newMethodCallExpression(db, "beginTx"));
+        return newVariableDeclaration(neoTransactionType, name, newMethodCallExpression(db, "beginTx"));
     }
 
     public static MethodCallExpression newGraphDatabase(String pathVariable) {
@@ -66,11 +53,11 @@ public class Neo4JPatterns extends JavaPatterns {
     }
 
     public static MethodCallExpression streamNodesByLabel(Object db, String label) {
-        return stream(newMethodCallExpression(findNodes(db, label), "stream"));
+        return stream(findNodes(db, label));
     }
 
     public static MethodCallExpression streamNodesByLabel(Object db, String label, String property, Object valueVariable) {
-        return stream(newMethodCallExpression(findNodesWithProperty(db, label, property, valueVariable), "stream"));
+        return stream(findNodesWithProperty(db, label, property, valueVariable));
     }
 
     public static MethodCallExpression findNodes(Object db, String label) {
@@ -100,65 +87,55 @@ public class Neo4JPatterns extends JavaPatterns {
     }
 
     public static MethodCallExpression streamOutgoing(Object node, String relationType) {
-        return stream(getOutgoingRelationships(node, relationType));
-    }
-
-    public static MethodCallExpression streamOutgoingNodes(Object node, String relationType) {
-        return newMethodCallExpression(stream(getOutgoingRelationships(node, relationType)), "map", newLambdaExpression(newParameter("r"), newExpression(getOtherNode("r", node))));
+        return asStream(getOutgoingRelationships(node, relationType));
     }
 
     public static MethodCallExpression streamIncoming(Object node, String relationType) {
-        return stream(getIncomingRelationships(node, relationType));
+        return asStream(getIncomingRelationships(node, relationType));
+    }
+
+    public static MethodCallExpression streamOutgoingNodes(Object node, String relationType) {
+        return map(streamOutgoing(node, relationType), newLambdaExpression("r", newExpression(getOtherNode("r", node))));
+    }
+
+    public static MethodCallExpression streamIncomingNodes(Object node, String relationType) {
+        return map(streamIncomingNodes(node, relationType), newLambdaExpression("r", newExpression(getOtherNode("r", node))));
     }
 
     public static MethodCallExpression getOutgoingRelationships(Object node, String relationType) {
-        return newMethodCallExpression(node, "getRelationships")
-                .addArguments(OUTGOING)
-                .addArguments(withName(relationType));
+        return newMethodCallExpression(node, "getRelationships", OUTGOING, withName(relationType));
     }
 
     public static MethodCallExpression getIncomingRelationships(Object node, String relationType) {
-        return newMethodCallExpression(node, "getRelationships")
-                .addArguments(INCOMING)
-                .addArguments(withName(relationType));
+        return newMethodCallExpression(node, "getRelationships", INCOMING, withName(relationType));
     }
 
     public static MethodCallExpression getSingleOutgoingRelationship(Object src, String relationType) {
-        return newMethodCallExpression(src, "getSingleRelationship")
-                .addArguments(withName(relationType))
-                .addArguments(OUTGOING);
+        return newMethodCallExpression(src, "getSingleRelationship", withName(relationType), OUTGOING);
     }
 
     public static MethodCallExpression getSingleIncomingRelationship(Object src, String relationType) {
-        return newMethodCallExpression(src, "getSingleRelationship")
-                .addArguments(withName(relationType))
-                .addArguments(INCOMING);
+        return newMethodCallExpression(src, "getSingleRelationship", withName(relationType), INCOMING);
     }
 
     public static MethodCallExpression deleteOutgoing(Object node, String relationType) {
-        return newMethodCallExpression(getOutgoingRelationships(node, relationType), "forEach")
-                .addArguments(deleteRelationReferenceExpression());
+        return forEach(getOutgoingRelationships(node, relationType), deleteRelationReferenceExpression());
     }
 
     public static MethodCallExpression deleteIncoming(Object node, String relationType) {
-        return newMethodCallExpression(getIncomingRelationships(node, relationType), "forEach")
-                .addArguments(deleteRelationReferenceExpression());
+        return forEach(getIncomingRelationships(node, relationType), deleteRelationReferenceExpression());
     }
 
     public static MethodCallExpression createRelationshipTo(Object src, Object dst, String relationType) {
-        return newMethodCallExpression(src, "createRelationshipTo")
-                .addArguments(dst)
-                .addArguments(withName(relationType));
+        return newMethodCallExpression(src, "createRelationshipTo", dst, withName(relationType));
     }
 
-    public static MethodCallExpression isRelated(Object src, Object dst) {
-        return newMethodCallExpression("filter")
-                .addArguments(newLambdaExpression(newParameter("r"), newMethodCallExpression(getOtherNode("r", src), "equals", dst)));
+    public static MethodCallExpression isRelated(Expression scope, Object src, Object dst) {
+        return filter(scope, newLambdaExpression("r", isEqual(getOtherNode("r", src), dst)));
     }
 
-    public static MethodCallExpression hasPropertyValue(String property) {
-        return newMethodCallExpression("filter")
-                .addArguments(newLambdaExpression(newParameter("n"), newMethodCallExpression("dst", "equals", getProperty("n", property))));
+    public static MethodCallExpression hasPropertyValue(Expression scope, String property, Object value) {
+        return filter(scope, newLambdaExpression("n", isEqual(value, getProperty("n", property))));
     }
 
     public static MethodCallExpression getOtherNode(Object relationship, Object src) {
@@ -170,15 +147,11 @@ public class Neo4JPatterns extends JavaPatterns {
     }
 
     public static MethodCallExpression setProperty(Object propertyContainer, String property, Object value) {
-        return newMethodCallExpression(propertyContainer, "setProperty")
-                .addArguments(newStringLiteralExpression(property))
-                .addArguments(value);
+        return newMethodCallExpression(propertyContainer, "setProperty", newStringLiteralExpression(property), value);
     }
 
     public static MethodCallExpression setEnumProperty(Object propertyContainer, String property, Object value) {
-        return newMethodCallExpression(propertyContainer, "setProperty")
-                .addArguments(newStringLiteralExpression(property))
-                .addArguments(newMethodCallExpression(value, "name"));
+        return newMethodCallExpression(propertyContainer, "setProperty", newStringLiteralExpression(property), nameOf(value));
     }
 
     public static MethodCallExpression getProperty(Object propertyContainer, String property) {
@@ -186,28 +159,24 @@ public class Neo4JPatterns extends JavaPatterns {
     }
 
     public static MethodCallExpression getEnumProperty(Object propertyContainer, String property, String enumName) {
-        return newMethodCallExpression(enumName, "valueOf", getProperty(propertyContainer, property, StringType));
-    }
-
-    public static CastExpression getProperty(Object propertyContainer, String property, ClassOrInterfaceType classOrInterfaceType) {
-        return newCastExpression()
-                .setType(classOrInterfaceType)
-                .setExpression(getProperty(propertyContainer, property));
+        return valueOf(enumName, getProperty(propertyContainer, property, StringType));
     }
 
     public static MethodCallExpression hasProperty(Object propertyContainer, String property) {
         return newMethodCallExpression(propertyContainer, "hasProperty", newStringLiteralExpression(property));
     }
 
-    public static MethodCallExpression stream(Expression expression) {
-        return newMethodCallExpression(StreamSupportType, "stream")
-                .addArguments(newMethodCallExpression(expression, "spliterator"))
-                .addArguments(newFalseExpression());
+    public static MethodCallExpression asStream(Expression expression) {
+        return newMethodCallExpression(StreamSupportType, "stream", newMethodCallExpression(expression, "spliterator"), newFalseExpression());
     }
 
     public static MethodReferenceExpression deleteRelationReferenceExpression() {
         return newMethodReferenceExpression()
                 .setIdentifier("delete")
                 .setScope(neoRelationshipType);
+    }
+
+    public static CastExpression getProperty(Object propertyContainer, String property, ClassOrInterfaceType classOrInterfaceType) {
+        return newCastExpression(classOrInterfaceType, getProperty(propertyContainer, property));
     }
 }

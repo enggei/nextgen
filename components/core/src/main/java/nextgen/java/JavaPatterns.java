@@ -10,6 +10,10 @@ public class JavaPatterns extends JavaFactory {
 
     private static final JavaGenerator javaGenerator = new JavaGenerator();
 
+    public static String generate(Object model) {
+        return javaGenerator.generate(model).toString();
+    }
+
     public static ClassOrInterfaceType newTypedClassOrInterfaceType(ClassOrInterfaceType classOrInterfaceType, ClassOrInterfaceType... typeArguments) {
         final ClassOrInterfaceType copy = copy(classOrInterfaceType);
         for (ClassOrInterfaceType typeArgument : typeArguments) copy.addTypeArguments(typeArgument);
@@ -30,12 +34,24 @@ public class JavaPatterns extends JavaFactory {
         return copy;
     }
 
+    public static void writeToFile(EnumDeclaration enumDeclaration, PackageDeclaration packageDeclaration, File root) {
+        writeToFile(enumDeclaration, packageDeclaration, root.getAbsolutePath());
+    }
+
     public static void writeToFile(EnumDeclaration enumDeclaration, PackageDeclaration packageDeclaration, String root) {
         writeToFile(newCompilationUnit().addTypes(enumDeclaration).setPackageDeclaration(packageDeclaration), root);
     }
 
+    public static void writeToFile(ClassOrInterfaceDeclaration classOrInterfaceDeclaration, PackageDeclaration packageDeclaration, File root) {
+        writeToFile(classOrInterfaceDeclaration, packageDeclaration, root.getAbsolutePath());
+    }
+
     public static void writeToFile(ClassOrInterfaceDeclaration classOrInterfaceDeclaration, PackageDeclaration packageDeclaration, String root) {
         writeToFile(newCompilationUnit().addTypes(classOrInterfaceDeclaration).setPackageDeclaration(packageDeclaration), root);
+    }
+
+    public static void writeToFile(CompilationUnit compilationUnit, File root) {
+        writeToFile(compilationUnit, root.getAbsolutePath());
     }
 
     public static void writeToFile(CompilationUnit compilationUnit, String root) {
@@ -68,6 +84,7 @@ public class JavaPatterns extends JavaFactory {
                 }
                 if (!file.createNewFile()) throw new RuntimeException("Could not create file " + file.getName());
             }
+            System.out.println("writing file " + file.getAbsolutePath());
 
             final BufferedWriter out = new BufferedWriter(new FileWriter(file));
             out.write(content == null ? "" : content.toString());
@@ -82,6 +99,10 @@ public class JavaPatterns extends JavaFactory {
 
     public static PackageDeclaration newPackageDeclaration(String packageName) {
         return newPackageDeclaration().setName(packageName);
+    }
+
+    public static PackageDeclaration newPackageDeclaration(PackageDeclaration parentPackage, String packageName) {
+        return newPackageDeclaration().setName(parentPackage.getName() + "." + packageName);
     }
 
     public static ClassOrInterfaceDeclaration newClass(String name) {
@@ -181,6 +202,12 @@ public class JavaPatterns extends JavaFactory {
                 .addModifiers(Modifier.STATIC);
     }
 
+    public static MethodDeclaration newPublicStaticMethodDeclaration(String name) {
+        return newMethodDeclaration(name)
+                .addModifiers(Modifier.PUBLIC)
+                .addModifiers(Modifier.STATIC);
+    }
+
     public static MethodDeclaration newPrivateMethodDeclaration() {
         return newMethodDeclaration()
                 .addModifiers(Modifier.PRIVATE);
@@ -204,6 +231,24 @@ public class JavaPatterns extends JavaFactory {
     public static MethodDeclaration newMethodDeclaration(String name, ClassOrInterfaceType classOrInterfaceType) {
         return newMethodDeclaration(name)
                 .setType(classOrInterfaceType);
+    }
+
+    public static VariableDeclaration newVariableDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, Object initializer) {
+        return newVariableDeclaration()
+                .setType(classOrInterfaceType)
+                .setName(name)
+                .setInitializer(initializer);
+    }
+
+    public static VariableDeclaration newVariableDeclaration(ClassOrInterfaceType classOrInterfaceType, String name) {
+        return newVariableDeclaration()
+                .setType(classOrInterfaceType)
+                .setName(name);
+    }
+
+    public static VariableDeclarationExpression newVariableDeclarationExpression(VariableDeclaration variableDeclaration) {
+        return newVariableDeclarationExpression()
+                .addVariables(variableDeclaration);
     }
 
     public static VariableDeclarationExpression newVariableDeclarationExpression(ClassOrInterfaceType classOrInterfaceType, String name) {
@@ -264,8 +309,19 @@ public class JavaPatterns extends JavaFactory {
                 .setValue(value);
     }
 
+    public static AssignExpression newAssignExpression(Object target, Object value) {
+        return newAssignExpression()
+                .setTarget(target)
+                .setOperator("=")
+                .setValue(value);
+    }
+
     public static BlockStmt newBlockStmt(Expression expression) {
         return newBlockStmt().addStatements(newExpressionStmt(expression));
+    }
+
+    public static BlockStmt newBlockStmt(Statement statement) {
+        return newBlockStmt().addStatements(statement);
     }
 
     public static BlockStmt newReturnBlockStmt(Expression expression) {
@@ -311,6 +367,12 @@ public class JavaPatterns extends JavaFactory {
                 .setBlockStmt(newReturnBlockStmt(variableName));
     }
 
+    public static MethodDeclaration newToStringMethod(BlockStmt statement) {
+        return newPublicMethodDeclaration("toString", StringType)
+                .addAnnotations(newOverrideAnnotation())
+                .setBlockStmt(statement);
+    }
+
     public static MethodDeclaration newEqualsMethod(BlockStmt blockStmt) {
         return newPublicMethodDeclaration()
                 .addAnnotations(newOverrideAnnotation())
@@ -318,6 +380,21 @@ public class JavaPatterns extends JavaFactory {
                 .setName("equals")
                 .addParameters(newParameter(ObjectType, "o"))
                 .setBlockStmt(blockStmt);
+    }
+
+    public static MethodDeclaration newEqualsMethod(String className, String field) {
+        return newPublicMethodDeclaration()
+                .addAnnotations(newOverrideAnnotation())
+                .setType(booleanType)
+                .setName("equals")
+                .addParameters(newParameter(ObjectType, "o"))
+                .setBlockStmt(newBlockStmt()
+                        .addStatements(newIfStmt("this == o", returnTrue()))
+                        .addStatements(newIfStmt("o == null || getClass() != o.getClass()", returnFalse()))
+                        .addStatements(newExpressionStmt(newFinalVariableDeclarationExpression(newClassOrInterfaceType(className), "other", newCastExpression()
+                                .setType(newClassOrInterfaceType(className))
+                                .setExpression(newExpression("o")))))
+                        .addStatements(newReturnStmt(isEqual(field, newFieldAccessExpression("other", field)))));
     }
 
     public static MethodDeclaration newHashMethod(Object expression) {
@@ -359,13 +436,86 @@ public class JavaPatterns extends JavaFactory {
         return newMethodCallExpression("this");
     }
 
+    public static MethodCallExpression newThisConstructorCall(Object argument) {
+        return newMethodCallExpression("this")
+                .addArguments(argument);
+    }
+
     public static MethodCallExpression newSuperConstructorCall() {
         return newMethodCallExpression("super");
+    }
+
+    public static MethodCallExpression newToString(Object scope) {
+        return newMethodCallExpression(scope, "toString");
+    }
+
+    public static MethodCallExpression stream(Expression stream) {
+        return newMethodCallExpression(stream, "stream");
+    }
+
+    public static MethodCallExpression forEach(Expression stream, LambdaBody lambdaBody) {
+        return newMethodCallExpression(stream, "forEach", lambdaBody);
+    }
+
+    public static MethodCallExpression map(Expression stream, LambdaBody lambdaBody) {
+        return newMethodCallExpression(stream, "map", lambdaBody);
+    }
+
+    public static MethodCallExpression findAny(Expression stream) {
+        return newMethodCallExpression(stream, "findAny");
+    }
+
+    public static MethodCallExpression filter(Expression stream, LambdaBody lambdaBody) {
+        return newMethodCallExpression(stream, "filter", lambdaBody);
+    }
+
+    public static MethodCallExpression valueOf(String enumClass, Object parameter) {
+        return newMethodCallExpression(enumClass, "valueOf", parameter);
+    }
+
+    public static MethodCallExpression nameOf(Object enumObject) {
+        return newMethodCallExpression(enumObject, "name");
+    }
+
+    public static MethodCallExpression isEqual(Object src, Object target) {
+        return newMethodCallExpression(src, "equals", target);
+    }
+
+    public static MethodCallExpression newMethodCallExpression(String name) {
+        return newMethodCallExpression()
+                .setName(name);
+    }
+
+    public static MethodCallExpression newMethodCallExpression(Object scope, String name) {
+        return newMethodCallExpression()
+                .setName(name)
+                .setScope(scope);
+    }
+
+    public static MethodCallExpression newMethodCallExpression(Object scope, String name, Object argument) {
+        return newMethodCallExpression()
+                .setName(name)
+                .setScope(scope)
+                .addArguments(argument);
+    }
+
+    public static MethodCallExpression newMethodCallExpression(Object scope, String name, Object argument, Object argumentTwo) {
+        return newMethodCallExpression()
+                .setName(name)
+                .setScope(scope)
+                .addArguments(argument)
+                .addArguments(argumentTwo);
     }
 
     public static NullLiteralExpression newNull() {
         return newNullLiteralExpression()
                 .setValue("null");
+    }
+
+    public static MethodReferenceExpression newMethodReferenceExpression(String identifier, Object scope) {
+        return newMethodReferenceExpression()
+                .setIdentifier(identifier)
+                .setScope(scope);
     }
 
     public static ObjectCreationExpression newObjectCreationExpression(String name) {
@@ -388,22 +538,10 @@ public class JavaPatterns extends JavaFactory {
                 .addArguments(argument);
     }
 
-    public static MethodCallExpression newMethodCallExpression(String name) {
-        return newMethodCallExpression()
-                .setName(name);
-    }
-
-    public static MethodCallExpression newMethodCallExpression(Object scope, String name) {
-        return newMethodCallExpression()
-                .setName(name)
-                .setScope(scope);
-    }
-
-    public static MethodCallExpression newMethodCallExpression(Object scope, String name, Object argument) {
-        return newMethodCallExpression()
-                .setName(name)
-                .setScope(scope)
-                .addArguments(argument);
+    public static CastExpression newCastExpression(ClassOrInterfaceType classOrInterfaceType, Expression expression) {
+        return newCastExpression()
+                .setType(classOrInterfaceType)
+                .setExpression(expression);
     }
 
     public static Expression notNull(Object value) {
@@ -420,9 +558,16 @@ public class JavaPatterns extends JavaFactory {
                 .setRight("null");
     }
 
-    public static LambdaExpression newLambdaExpression(Parameter parameter, LambdaBody body) {
+    public static LambdaExpression newLambdaExpression(String paramName, LambdaBody body) {
         return newLambdaExpression()
-                .addParameters(parameter)
+                .addParameters(newParameter(paramName))
+                .setBody(body);
+    }
+
+    public static LambdaExpression newLambdaExpression(String paramOne, String paramTwo, LambdaBody body) {
+        return newLambdaExpression()
+                .addParameters(newParameter(paramOne))
+                .addParameters(newParameter(paramTwo))
                 .setBody(body);
     }
 
@@ -437,6 +582,12 @@ public class JavaPatterns extends JavaFactory {
                 .setCondition(condition)
                 .setThen(then)
                 .setElseStmt(otherwise);
+    }
+
+    public static CatchClause newCatchClause(Parameter parameter, Statement body) {
+        return newCatchClause()
+                .setParameter(parameter)
+                .setBody(body);
     }
 
     public static ClassOrInterfaceType streamOf(ClassOrInterfaceType classOrInterfaceType) {
@@ -455,6 +606,10 @@ public class JavaPatterns extends JavaFactory {
         return newTypedClassOrInterfaceType(ListType, type);
     }
 
+    public static ClassOrInterfaceType consumerOf(ClassOrInterfaceType type) {
+        return newTypedClassOrInterfaceType(ConsumerType, type);
+    }
+
     public static ClassOrInterfaceType mapOf(ClassOrInterfaceType keyType, ClassOrInterfaceType valueType) {
         return newTypedClassOrInterfaceType(MapType, keyType, valueType);
     }
@@ -463,5 +618,40 @@ public class JavaPatterns extends JavaFactory {
         return newTypedClassOrInterfaceType(SetType, type);
     }
 
+    private static ClassOrInterfaceType newArrayOf(ClassOrInterfaceType classOrInterfaceType) {
+        return copy(classOrInterfaceType).setIsArrayType(true);
+    }
 
+    public static FieldDeclaration newProtectedStaticFinalFieldDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, MethodCallExpression initializer) {
+        return newFieldDeclaration()
+                .addModifiers(Modifier.PROTECTED)
+                .addModifiers(Modifier.STATIC)
+                .addModifiers(Modifier.FINAL)
+                .addVariables(newVariableDeclaration(classOrInterfaceType, name, initializer));
+    }
+
+    public static MethodDeclaration newMainMethodDeclaration(BlockStmt blockStmt) {
+        return newPublicStaticMethodDeclaration("main")
+                .addParameters(newParameter(newArrayOf(StringType), "args"))
+                .setBlockStmt(blockStmt);
+    }
+
+    public static Statement newAddShutdownHook(Expression expression) {
+        return newExpressionStmt(newMethodCallExpression(newMethodCallExpression("Runtime", "getRuntime"), "addShutdownHook")
+                .addArguments(newObjectCreationExpression(ThreadType)
+                        .addArguments(expression)));
+    }
+
+    public static MethodCallExpression chain(MethodCallExpression... methodCallExpressions) {
+        return fluent(methodCallExpressions);
+    }
+
+    public static MethodCallExpression fluent(MethodCallExpression... methodCallExpressions) {
+        MethodCallExpression current = methodCallExpressions[0];
+        for (int i = 1; i < methodCallExpressions.length; i++) {
+            methodCallExpressions[i].setScope(current);
+            current = methodCallExpressions[i];
+        }
+        return current;
+    }
 }

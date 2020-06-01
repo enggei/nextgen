@@ -20,6 +20,12 @@
             <artifactId>joor-java-8</artifactId>
             <version>0.9.12</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.j2html</groupId>
+            <artifactId>j2html</artifactId>
+            <version>1.4.0</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.mvel/mvel2 -->
         <dependency>
             <groupId>org.mvel</groupId>

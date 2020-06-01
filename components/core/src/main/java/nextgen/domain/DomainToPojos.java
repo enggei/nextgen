@@ -6,6 +6,7 @@ import nextgen.domain.domain.Relation;
 import nextgen.java.JavaPatterns;
 import nextgen.java.st.*;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +16,11 @@ import static nextgen.java.JavaPatterns.*;
 public class DomainToPojos extends DomainPatterns {
 
     private static final String value = "value";
+
+    public static void generate(File root, PackageDeclaration packageDeclaration, Domain domain) {
+        generate(root.getAbsolutePath(), packageDeclaration.getName(), domain);
+
+    }
 
     public static void generate(String root, String packageName, Domain domain) {
 
@@ -38,7 +44,6 @@ public class DomainToPojos extends DomainPatterns {
             protected void onReference(Entity entity) {
                 entityClassMap.put(entity, newPojo(entity.getName()));
                 domainClass.addMembers(newEntityInstanceMethod(entity));
-
             }
 
             @Override
@@ -56,15 +61,12 @@ public class DomainToPojos extends DomainPatterns {
             @Override
             protected void visitOneToOne(Relation relation) {
                 final ClassOrInterfaceDeclaration srcEntity = entityClassMap.get(relation.getSrc());
-                final String srcName = relation.getSrc().getName();
-                final String dstName = relation.getDst().getName();
 
-                srcEntity.addFields(newPrivateFieldDeclaration().setName(variableName(relation)).setType(newClassOrInterfaceType(dstName)));
-                srcEntity.addMembers(oneToOne(srcName, relation, dstName));
-                srcEntity.addMembers(getSingle(relation, dstName));
+                srcEntity.addFields(newPrivateFieldDeclaration().setName(variableName(relation)).setType(newClassOrInterfaceType(relation.getDst().getName())));
+                srcEntity.addMembers(oneToOne(relation));
+                srcEntity.addMembers(getSingle(relation));
 
-                if (relation.getName().equals("name") && dstName.equals("String"))
-                    srcEntity.addMembers(newToStringMethod(newExpression(variableName(relation))));
+                if (isLexical(relation)) srcEntity.addMembers(toStringMethod(relation));
             }
 
             @Override
@@ -74,8 +76,8 @@ public class DomainToPojos extends DomainPatterns {
                 final ClassOrInterfaceType listOf = listOf(newClassOrInterfaceType(dstName));
 
                 srcEntity.addFields(newPrivateFinalFieldDeclaration().setName(variableName(relation)).setType(listOf).setInitializer(newObjectCreationExpression(ArrayListType)));
-                srcEntity.addMembers(oneToMany(srcEntity, relation, dstName));
-                srcEntity.addMembers(getList(relation, dstName));
+                srcEntity.addMembers(oneToMany(relation));
+                srcEntity.addMembers(getList(relation));
             }
 
             @Override
@@ -89,56 +91,56 @@ public class DomainToPojos extends DomainPatterns {
         };
     }
 
-    public static MethodDeclaration getList(Relation relation, String dstEntity) {
-        return newPublicMethodDeclaration("get" + capitalize(relation.getName()), listOf(newClassOrInterfaceType(dstEntity)))
+    public static MethodDeclaration getList(Relation relation) {
+        return newPublicMethodDeclaration(getterName(relation), listOf(newClassOrInterfaceType(relation.getDst().getName())))
                 .setBlockStmt(newReturnBlockStmt(newThisVariableExpression(variableName(relation))));
     }
 
-    public static MethodDeclaration getSingle(Relation relation, String dstEntity) {
-        return newPublicMethodDeclaration("get" + capitalize(relation.getName()), newClassOrInterfaceType(dstEntity))
+    public static MethodDeclaration getSingle(Relation relation) {
+        return newPublicMethodDeclaration(getterName(relation), newClassOrInterfaceType(relation.getDst().getName()))
                 .setBlockStmt(newReturnBlockStmt(newThisVariableExpression(variableName(relation))));
     }
 
-    public static MethodDeclaration oneToOne(String srcEntity, Relation relation, String dstEntity) {
-        return newPublicMethodDeclaration("set" + capitalize(relation.getName()), newClassOrInterfaceType(srcEntity))
-                .addParameters(newParameter(newClassOrInterfaceType(dstEntity), variableName(relation)))
+    public static MethodDeclaration oneToOne(Relation relation) {
+        return newPublicMethodDeclaration(setterName(relation), newClassOrInterfaceType(relation.getSrc().getName()))
+                .addParameters(newParameter(newClassOrInterfaceType(relation.getDst().getName()), variableName(relation)))
                 .setBlockStmt(newBlockStmt()
                         .addStatements(newExpressionStmt(newAssignThisVariableExpression(variableName(relation))))
                         .addStatements(newReturnThis()));
     }
 
-    public static MethodDeclaration oneToMany(ClassOrInterfaceDeclaration srcEntity, Relation relation, String dstEntity) {
-        return newPublicMethodDeclaration("add" + capitalize(relation.getName()), newClassOrInterfaceType(srcEntity.getName()))
-                .addParameters(newParameter(newClassOrInterfaceType(dstEntity), value))
+    public static MethodDeclaration oneToMany(Relation relation) {
+        return newPublicMethodDeclaration("add" + capitalize(relation.getName()), newClassOrInterfaceType(relation.getSrc().getName()))
+                .addParameters(newParameter(newClassOrInterfaceType(relation.getDst().getName()), value))
                 .setBlockStmt(newBlockStmt()
                         .addStatements(newExpressionStmt(newMethodCallExpression(variableName(relation), "add", value)))
                         .addStatements(newReturnThis()));
     }
 
-    public static MethodDeclaration manyToOne(ClassOrInterfaceDeclaration srcEntity, Relation relation, String dstEntity) {
-        return newPublicMethodDeclaration("set" + capitalize(relation.getName()));
-    }
+//    public static MethodDeclaration manyToOne(ClassOrInterfaceDeclaration relation.getSrc().getName(), Relation relation, String relation.getDst()) {
+//        return newPublicMethodDeclaration(setterName(relation));
+//    }
+//
+//    public static MethodDeclaration manyToMany(ClassOrInterfaceDeclaration relation.getSrc().getName(), Relation relation, String relation.getDst()) {
+//        return newPublicMethodDeclaration("add" + capitalize(relation.getName()));
+//    }
+//
+//    public static ClassOrInterfaceMember setPropertyMethodDeclaration(Entity entity, ClassOrInterfaceDeclaration property) {
+//        return newPublicMethodDeclaration("set" + capitalize(property.getName()), newClassOrInterfaceType(entity.getName()))
+//                .addParameters(newParameter(newClassOrInterfaceType(property.getName()), variableName(property)))
+//                .setBlockStmt(newBlockStmt()
+//                        .addStatements(newExpressionStmt(newAssignThisVariableExpression(variableName(property))))
+//                        .addStatements(newReturnThis()));
+//    }
+//
+//    public static ClassOrInterfaceMember getPropertyMethodDeclaration(ClassOrInterfaceDeclaration property) {
+//        return newPublicMethodDeclaration("get" + capitalize(property.getName()), newClassOrInterfaceType(property.getName()))
+//                .setBlockStmt(newReturnBlockStmt(newThisVariableExpression(variableName(property))));
+//    }
 
-    public static MethodDeclaration manyToMany(ClassOrInterfaceDeclaration srcEntity, Relation relation, String dstEntity) {
-        return newPublicMethodDeclaration("add" + capitalize(relation.getName()));
-    }
-
-    public static ClassOrInterfaceMember setPropertyMethodDeclaration(Entity entity, ClassOrInterfaceDeclaration property) {
-        return newPublicMethodDeclaration("set" + capitalize(property.getName()), newClassOrInterfaceType(entity.getName()))
-                .addParameters(newParameter(newClassOrInterfaceType(property.getName()), variableName(property)))
-                .setBlockStmt(newBlockStmt()
-                        .addStatements(newExpressionStmt(newAssignThisVariableExpression(variableName(property))))
-                        .addStatements(newReturnThis()));
-    }
-
-    public static ClassOrInterfaceMember getPropertyMethodDeclaration(ClassOrInterfaceDeclaration property) {
-        return newPublicMethodDeclaration("get" + capitalize(property.getName()), newClassOrInterfaceType(property.getName()))
-                .setBlockStmt(newReturnBlockStmt(newThisVariableExpression(variableName(property))));
-    }
-
-    public static ClassOrInterfaceMember hasPropertyMethodDeclaration(ClassOrInterfaceDeclaration property) {
-        return newPublicMethodDeclaration("has" + capitalize(property.getName()), booleanType)
-                .setBlockStmt(newReturnBlockStmt(notNull(variableName(property))));
+    public static ClassOrInterfaceMember hasPropertyMethodDeclaration(Relation relation) {
+        return newPublicMethodDeclaration("has" + capitalize(relation.getName()), booleanType)
+                .setBlockStmt(newReturnBlockStmt(notNull(variableName(relation))));
     }
 
     public static ClassOrInterfaceDeclaration newPojo(String name) {
@@ -170,11 +172,54 @@ public class DomainToPojos extends DomainPatterns {
     }
 
     public static ClassOrInterfaceDeclaration newPojoFactory(Domain domain) {
-        return newPublicClassDeclaration(domain.getName() + "Factory");
+        return newPublicClassDeclaration(domain.getName() + "Factory")
+                .addExtend(domain.getExtendsClass() != null ? newClassOrInterfaceType(domain.getExtendsClass()) : null);
     }
 
     public static MethodDeclaration newEntityInstanceMethod(Entity entity) {
         return newPublicStaticMethodDeclaration("new" + entity.getName(), newClassOrInterfaceType(entity.getName()))
                 .setBlockStmt(newReturnBlockStmt(newObjectCreationExpression(entity.getName())));
+    }
+
+    public static PrivateFieldDeclaration newField(Relation relation) {
+        return newPrivateFieldDeclaration().setName(variableName(relation)).setType(newClassOrInterfaceType(relation.getDst().getName()));
+    }
+
+    public static PrivateFieldDeclaration newListField(Relation relation) {
+        return newPrivateFieldDeclaration().setName(variableName(relation)).setType(listOf(newClassOrInterfaceType(relation.getDst().getName()))).setInitializer(newObjectCreationExpression(ArrayListType));
+    }
+
+    public static MethodDeclaration toStringMethod(Relation relation) {
+
+        final String variableName = variableName(relation);
+
+        switch (relation.getDst().getType()) {
+
+            case PRIMITIVE:
+                return relation.getDst().getName().equals("String") ?
+                        newToStringMethod(newConditionalExpression()
+                                .setCondition(isNull(variableName))
+                                .setThenExpression("null")
+                                .setElseExpression(variableName)) :
+                        newToStringMethod(newConditionalExpression()
+                                .setCondition(isNull(variableName))
+                                .setThenExpression("null")
+                                .setElseExpression(newToString(variableName)));
+
+            case REFERENCE:
+            case EXTERNAL:
+                return newToStringMethod(newConditionalExpression()
+                        .setCondition(isNull(variableName))
+                        .setThenExpression("null")
+                        .setElseExpression(newToString(variableName)));
+
+            case ENUM:
+                return newToStringMethod(newConditionalExpression()
+                        .setCondition(isNull(variableName))
+                        .setThenExpression("null")
+                        .setElseExpression(nameOf(variableName)));
+        }
+
+        return null;
     }
 }

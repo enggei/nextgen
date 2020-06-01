@@ -1,17 +1,13 @@
 package nextgen.domain;
 
 import nextgen.domain.domain.*;
-import nextgen.java.st.ClassOrInterfaceDeclaration;
-import nextgen.java.st.ClassOrInterfaceType;
-import nextgen.java.st.JavaGenerator;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.generator.util.StringUtil.capitalize;
 import static com.generator.util.StringUtil.lowFirst;
-import static nextgen.java.JavaPatterns.newClassOrInterfaceType;
 
 public class DomainPatterns extends DomainFactory {
 
@@ -80,11 +76,9 @@ public class DomainPatterns extends DomainFactory {
 
         protected abstract void end();
 
-        @NotNull
         private String debug(Entity entity) {
             return entity.getName() + " (" + entity.getType() + ")";
         }
-
     }
 
     public static DomainBuilder newDomainBuilder(String name) {
@@ -99,6 +93,17 @@ public class DomainPatterns extends DomainFactory {
 
         public DomainBuilder(String name) {
             setName(name);
+        }
+
+        @Override
+        public DomainBuilder setExtendsClass(String className) {
+            super.setExtendsClass(className);
+            return this;
+        }
+
+        public DomainBuilder setExtendsClass(Class<?> aClass) {
+            this.setExtendsClass(aClass.getCanonicalName());
+            return this;
         }
 
         public DomainBuilder add(Entity entity) {
@@ -123,6 +128,7 @@ public class DomainPatterns extends DomainFactory {
                             .filter(relation1 -> relation1.equals(relation))
                             .findAny();
                     if (!existingRelation.isPresent()) addRelations(relation);
+
                     add(relation.getDst());
                 }
             }
@@ -140,8 +146,23 @@ public class DomainPatterns extends DomainFactory {
             setType(entityType);
         }
 
-        public EntityBuilder addUuidField(String name) {
-            relations.add(newOneToOneRelation(name, this, newExternalEntity(java.util.UUID.class)));
+        public EntityBuilder addExternalField(String name, Class<?> className) {
+            relations.add(newOneToOneRelation(name, this, newExternalEntity(className)));
+            return this;
+        }
+
+        public EntityBuilder addExternalField(String name, String className) {
+            relations.add(newOneToOneRelation(name, this, newExternalEntity(className)));
+            return this;
+        }
+
+        public EntityBuilder addLongField(String name) {
+            relations.add(newOneToOneRelation(name, this, newLong()));
+            return this;
+        }
+
+        public EntityBuilder addDoubleField(String name) {
+            relations.add(newOneToOneRelation(name, this, newDouble()));
             return this;
         }
 
@@ -150,8 +171,23 @@ public class DomainPatterns extends DomainFactory {
             return this;
         }
 
+        public EntityBuilder addStringField(String name, boolean lexical) {
+            relations.add(newOneToOneRelation(name, this, newString()).setLexical(lexical));
+            return this;
+        }
+
+        public EntityBuilder addBooleanField(String name) {
+            relations.add(newOneToOneRelation(name, this, newBoolean()));
+            return this;
+        }
+
         public EntityBuilder addIntegerField(String name) {
             relations.add(newOneToOneRelation(name, this, newInteger()));
+            return this;
+        }
+
+        public EntityBuilder addEnumField(String name, String enumName, String enumValues) {
+            relations.add(newOneToOneRelation(name, this, newEnumEntity(enumName, enumValues)));
             return this;
         }
 
@@ -166,16 +202,6 @@ public class DomainPatterns extends DomainFactory {
         }
     }
 
-    private static final JavaGenerator javaGenerator = new JavaGenerator();
-
-    public static Domain newDomain(String name) {
-        return newDomain().setName(name);
-    }
-
-    public static Entity newEntity(String name) {
-        return newEntity().setType(EntityType.REFERENCE).setName(name);
-    }
-
     public static Entity newPrimitiveEntity(String name) {
         return newEntity().setType(EntityType.PRIMITIVE).setName(name);
     }
@@ -188,20 +214,8 @@ public class DomainPatterns extends DomainFactory {
         return newExternalEntity(aClass.getCanonicalName());
     }
 
-    public static Entity newExternalEntity(ClassOrInterfaceType aClass) {
-        return newExternalEntity(javaGenerator.generate(aClass).toString());
-    }
-
     public static Entity newString() {
         return newPrimitiveEntity("String");
-    }
-
-    public static Entity newInteger() {
-        return newPrimitiveEntity("Integer");
-    }
-
-    public static Entity newBoolean() {
-        return newPrimitiveEntity("Boolean");
     }
 
     public static Entity newDouble() {
@@ -210,6 +224,14 @@ public class DomainPatterns extends DomainFactory {
 
     public static Entity newLong() {
         return newPrimitiveEntity("Long");
+    }
+
+    public static Entity newInteger() {
+        return newPrimitiveEntity("Integer");
+    }
+
+    public static Entity newBoolean() {
+        return newPrimitiveEntity("Boolean");
     }
 
     public static Entity newEnumEntity(String name, String values) {
@@ -227,30 +249,35 @@ public class DomainPatterns extends DomainFactory {
         return newRelation().setName(name).setSrc(src).setDst(dst).setType(RelationType.OneToMany);
     }
 
-    @Deprecated
-    public static boolean isPrimitive(Entity entity) {
-        return EntityType.PRIMITIVE.equals(entity.getType());
-    }
-
-    @Deprecated
-    public static boolean isEnum(Entity entity) {
-        return EntityType.ENUM.equals(entity.getType());
-    }
-
-    @Deprecated
-    public static boolean isExternal(Entity entity) {
-        return EntityType.EXTERNAL.equals(entity.getType());
-    }
-
-    public static String variableName(ClassOrInterfaceDeclaration property) {
-        return lowFirst(property.getName());
+    public static String variableName(Entity entity) {
+        return lowFirst(entity.getName());
     }
 
     public static String variableName(Relation relation) {
         return lowFirst(relation.getName());
     }
 
-    public static ClassOrInterfaceType asJavaType(Entity entity) {
-        return newClassOrInterfaceType(entity.getName());
+    public static String getterName(Entity entity) {
+        return "get" + capitalize(entity.getName());
+    }
+
+    public static String getterName(Relation relation) {
+        return "get" + capitalize(relation.getName());
+    }
+
+    public static String setterName(Relation relation) {
+        return "set" + capitalize(relation.getName());
+    }
+
+    public static String adderName(Relation relation) {
+        return "add" + capitalize(relation.getName());
+    }
+
+    public static String removeName(Relation relation) {
+        return "remove" + capitalize(relation.getName());
+    }
+
+    public static boolean isLexical(Relation relation) {
+        return Boolean.TRUE.equals(relation.getLexical()) || (relation.getName().equals("name") && relation.getDst().getName().equals("String"));
     }
 }
