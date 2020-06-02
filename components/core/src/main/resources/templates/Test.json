@@ -42,6 +42,11 @@
         "argumentTypes" : [ "Object" ]
       } ]
     } ]
+  }, {
+    "uuid" : "ec05cc7e-4786-4ef8-98af-7c42c1ec546a",
+    "name" : "testIf",
+    "text" : "~if(condition)~condition~endif~",
+    "parameters" : [ ]
   } ],
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Test.stg"
 }

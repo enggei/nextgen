@@ -1,6 +1,5 @@
 package nextgen.st;
 
-import com.generator.util.FileUtil;
 import com.generator.util.StringUtil;
 import nextgen.java.JavaPatterns;
 import nextgen.java.st.PackageDeclaration;
@@ -11,9 +10,7 @@ import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupString;
 
 import java.io.File;
-import java.util.Comparator;
 
-import static com.nextgen.core.GeneratedFile.packageToPath;
 import static nextgen.java.JavaPatterns.newPackageDeclaration;
 
 public class STGenerator {
@@ -24,11 +21,11 @@ public class STGenerator {
         this.templateGroup = STGenerator.toSTGroup(templateGroup);
     }
 
-    public void generateSTGroup(STGroupModel stGroupModel, String packageName, String root) {
+    public void generateSTGroup(STGroupModel stGroupModel, String packageName, String rootPath) {
+
+        final File root = new File(rootPath);
 
         final PackageDeclaration packageDeclaration = newPackageDeclaration(packageName + "." + stGroupModel.getName().toLowerCase());
-
-        final File stgFile = JavaPatterns.writeToFile(toStg(stGroupModel), packageDeclaration, stGroupModel.getName(), "stg", new File(root));
 
         final String domainClassName = StringUtil.capitalize(stGroupModel.getName() + "ST");
         final ST stDomain = templateGroup.getInstanceOf("STDomain");
@@ -41,26 +38,32 @@ public class STGenerator {
         stDomainTests.add("packageName", packageDeclaration.getName());
         stDomainTests.add("name", testsClassName);
         stDomainTests.add("domainName", domainClassName);
-        stDomainTests.add("stgPath", stgFile.getAbsolutePath());
 
         stGroupModel.getTemplates().forEach(stTemplate -> {
-            final String className = StringUtil.capitalize(stTemplate.getName());
-            JavaPatterns.writeToFile(generateSTClass(className, stTemplate, packageDeclaration), packageDeclaration, className, new File(root));
-
-            final ST newEntity = templateGroup.getInstanceOf("newEntityInstance");
-            newEntity.add("entityName", className);
-            newEntity.add("template", stTemplate.getName());
-            stDomain.add("entities", newEntity);
-
-            final ST entityTestCase = templateGroup.getInstanceOf("templateTestMethod");
-            entityTestCase.add("template", stTemplate.getName());
-
-            stDomainTests.addAggr("testcases.{name,impl}", stTemplate.getName(), entityTestCase);
+            generateSTEntity(root, packageDeclaration, stDomain, stDomainTests, stTemplate);
         });
 
-        JavaPatterns.writeToFile(stDomain.render(), packageDeclaration, domainClassName, new File(root));
-        JavaPatterns.writeToFile(stDomainTests.render(), packageDeclaration, testsClassName, new File(root));
+        JavaPatterns.writeToFile(stDomain.render(), packageDeclaration, domainClassName, root);
+        JavaPatterns.writeToFile(stDomainTests.render(), packageDeclaration, testsClassName, root);
+        JavaPatterns.writeToFile(toStg(stGroupModel), packageDeclaration, stGroupModel.getName(), "stg", root);
+    }
 
+    public void generateSTEntity(File root, PackageDeclaration packageDeclaration, ST stDomain, ST stDomainTests, STTemplate stTemplate) {
+
+        final String className = StringUtil.capitalize(stTemplate.getName());
+        JavaPatterns.writeToFile(generateSTClass(className, stTemplate, packageDeclaration), packageDeclaration, className, root);
+
+        final ST newEntity = templateGroup.getInstanceOf("newEntityInstance");
+        newEntity.add("entityName", className);
+        newEntity.add("template", stTemplate.getName());
+        stDomain.add("entities", newEntity);
+
+        final ST entityTestCase = templateGroup.getInstanceOf("templateTestMethod");
+        entityTestCase.add("template", stTemplate.getName());
+
+        stDomainTests.addAggr("testcases.{name,impl}", stTemplate.getName(), entityTestCase);
+
+        stTemplate.getChildren().forEach(stTemplate1 -> generateSTEntity(root, packageDeclaration, stDomain, stDomainTests, stTemplate1));
     }
 
     public String generateSTClass(String className, STTemplate stTemplate, PackageDeclaration packageDeclaration) {
@@ -84,20 +87,41 @@ public class STGenerator {
                 case LIST:
                     stEntity.add("listFields", stParameter.getName());
 
-                    final ST listAccessors = templateGroup.getInstanceOf("entityListAccessors");
+                    ST listAccessors = templateGroup.getInstanceOf("entityListAccessors");
                     listAccessors.add("entity", className);
                     listAccessors.add("name", stParameter.getName());
                     stEntity.add("listAccessors", listAccessors);
 
                     break;
                 case KVLIST:
-                    stEntity.add("kvListFields", stParameter.getName());
 
-                    final ST kvListAccessors = templateGroup.getInstanceOf("entityKVListAccessors");
-                    kvListAccessors.add("entity", className);
-                    kvListAccessors.add("name", stParameter.getName());
-                    stParameter.getKeys().forEach(stParameterKey -> kvListAccessors.add("keys", stParameterKey));
-                    stEntity.add("kvListAccessors", kvListAccessors);
+                    if (stParameter.getKeys().count() == 0) {
+                        stEntity.add("listFields", stParameter.getName());
+
+                        listAccessors = templateGroup.getInstanceOf("entityListAccessors");
+                        listAccessors.add("entity", className);
+                        listAccessors.add("name", stParameter.getName());
+                        stEntity.add("listAccessors", listAccessors);
+
+                    } else {
+
+
+                        final StringBuilder aggrSpec = new StringBuilder();
+                        final StringBuilder aggrValues = new StringBuilder();
+
+                        final ST kvListAccessors = templateGroup.getInstanceOf("entityKVListAccessors");
+                        kvListAccessors.add("entity", className);
+                        kvListAccessors.add("name", stParameter.getName());
+                        stParameter.getKeys().forEach(stParameterKey -> {
+                            kvListAccessors.add("keys", stParameterKey);
+
+                            aggrSpec.append(aggrSpec.length() == 0 ? "" : ",").append(stParameterKey);
+                            aggrValues.append(aggrValues.length() == 0 ? "" : ", ").append("map.get(\"").append(stParameterKey).append("\")");
+                        });
+
+                        stEntity.addAggr("kvListFields.{name,aggrSpec,aggrValues}", stParameter.getName(), stParameter.getName() + ".{" + aggrSpec.toString().trim() + "}", aggrValues.toString().trim());
+                        stEntity.add("kvListAccessors", kvListAccessors);
+                    }
                     break;
             }
         });

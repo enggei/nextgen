@@ -18,7 +18,18 @@ import static nextgen.st.domain.STJsonFactory.newSTParameterKey;
 
 public class STParser {
 
-    public static boolean debug = false;
+    public static boolean debug = true;
+
+    public static void main(String[] args) {
+        final STGParseResult parseResult = STParser.parse(new File("/home/goe/projects/nextgen/components/core/src/test/java/tmp/st/test/Test.stg"));
+        parseResult.getParsed().getTemplates().forEach(stTemplate -> {
+            System.out.println(stTemplate.getName());
+            stTemplate.getParameters().forEach(stParameter -> {
+                System.out.println("\t" + stParameter.getName() + " " + stParameter.getType());
+                stParameter.getKeys().forEach(stParameterKey -> System.out.println("\t\t" + stParameterKey.getName()));
+            });
+        });
+    }
 
     public static STGParseResult parse(File stgFile) {
         final char delimiter = loadDelimiter(stgFile);
@@ -111,6 +122,11 @@ public class STParser {
                                                     return newKey;
                                                 });
                                     }));
+
+//                            // bugfix ?
+//                            if (stParameter.getKeys().count() == 0)
+//                                stParameter.setType(STParameterType.LIST);
+
                         }
                         stParameterMap.put(expression.getName(), stParameter);
                     }

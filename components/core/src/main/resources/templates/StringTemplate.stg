@@ -1,11 +1,15 @@
 delimiters "~","~"
 
-STDomain(packageName,name,entities) ::= <<package ~packageName~;
+STDomain(packageName,name,entities,template) ::= <<package ~packageName~;
 
 public class ~name~ {
 
 	private final org.stringtemplate.v4.STGroupFile stGroupFile;
 
+	public ~name~() {
+		this(new java.io.File("templates/~template~.stg"));
+	}
+	
 	public ~name~(final java.io.File stgFile) {
 		this(stgFile, '\~');
 	}
@@ -41,13 +45,13 @@ public class ~name~ {
 			}
 		}
 	}	
-}>> 
+} >>
 
 newEntityInstance(entityName,template) ::= <<public ~entityName~ new~entityName~() {
 	return new ~entityName~(stGroupFile, "~template~");
-}>> 
+} >>
 
-STDomainTests(name,stgPath,packageName,domainName,testcases) ::= <<package ~packageName~;
+STDomainTests(testcases,domainName,packageName,name) ::= <<package ~packageName~;
 
 public class ~name~ {
 
@@ -55,7 +59,7 @@ public class ~name~ {
 
 	@org.junit.BeforeClass
 	public static void loadSTGFile() {
-		domain = new ~domainName~(new java.io.File("~stgPath~"));
+		domain = new ~domainName~();
 	}
 
 	@org.junit.Test
@@ -64,16 +68,16 @@ public class ~name~ {
 	}
 
 	~testcases:{it|~it.impl~};separator="\n\n"~
-}>> 
+} >>
 
 templateTestMethod(template) ::= <<@org.junit.Test
 public void test~template;format="capitalize"~() {
 	System.out.println("~template~ ---\n");
 	System.out.println(domain.new~template;format="capitalize"~());
 	System.out.println("\n--- ~template~");
-}>> 
+} >>
 
-STEntity(listFields,singleFields,kvListFields,name,singleAccessors,packageName,kvListAccessors,listAccessors) ::= <<package ~packageName~;
+STEntity(kvListFields,name,singleFields,listAccessors,listFields,kvListAccessors,packageName,singleAccessors) ::= <<package ~packageName~;
 
 public class ~name~ {
 
@@ -83,7 +87,7 @@ public class ~name~ {
 	
 	~singleFields:{it|private Object _~it~;};separator="\n"~
 	~listFields:{it|private java.util.List<Object> _~it~ = new java.util.ArrayList<>();};separator="\n"~
-	~kvListFields:{it|private java.util.List<java.util.Map<String, Object~gt()~> _~it~ = new java.util.ArrayList<>();};separator="\n"~
+	~kvListFields:{it|private java.util.List<java.util.Map<String, Object~gt()~> _~it.name~ = new java.util.ArrayList<>();};separator="\n"~
 	
 	public ~name~(org.stringtemplate.v4.STGroupFile stGroupFile, String template) {
 		this.stGroupFile = stGroupFile;
@@ -108,7 +112,7 @@ public class ~name~ {
 		final org.stringtemplate.v4.ST st = stGroupFile.getInstanceOf(template);
 		~singleFields:{it|st.add("~it~" ,_~it~);};separator="\n"~
 		~listFields:{it|for (Object o : _~it~) st.add("~it~", o);};separator="\n"~
-		~kvListFields:{it|for (java.util.Map<String, Object> map : _~it~) addAggr("~it~", map, st);};separator="\n"~
+		~kvListFields:{it|for (java.util.Map<String, Object> map : _~it.name~) st.addAggr("~it.aggrSpec~", ~it.aggrValues~);};separator="\n"~
 		return st.render();
 	}
 	
@@ -134,7 +138,7 @@ public class ~name~ {
 
 		st.addAggr(aggrSpec.toString(), aggrArguments.toArray());
 	}~endif~
-}>> 
+} >>
 
 entityListAccessors(entity,name) ::= <<public ~entity~ add~name;format="capitalize"~(Object value) {
 	this._~name~.add(value);
@@ -153,7 +157,7 @@ public ~entity~ remove~name;format="capitalize"~(int index) {
 
 public java.util.List<Object> get~name;format="capitalize"~() {
 	return this._~name~;
-}>> 
+} >>
 
 entityKVListAccessors(name,keys,entity) ::= <<public ~entity~ add~name;format="capitalize"~(~keys:{it|Object _~it~};separator=","~) {
 	final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -164,7 +168,7 @@ entityKVListAccessors(name,keys,entity) ::= <<public ~entity~ add~name;format="c
 
 public java.util.List<java.util.Map<String, Object~gt()~> get~name;format="capitalize"~() {
 	return this._~name~;
-}>> 
+} >>
 
 entitySingleAccessors(name,entity) ::= <<public ~entity~ set~name;format="capitalize"~(Object value) {
 	this._~name~ = value;
@@ -182,7 +186,7 @@ public boolean has~name;format="capitalize"~() {
 public ~entity~ remove~name;format="capitalize"~() {
 	this._~name~ = null;
 	return this;
-}>> 
+} >>
 
 eom() ::= "}"
 
