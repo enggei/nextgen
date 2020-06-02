@@ -22,7 +22,7 @@ public class STEditor extends JPanel {
 
     private final RSyntaxTextArea txtEditor = new RSyntaxTextArea(20, 60);
     private final Color uneditedColor = txtEditor.getBackground();
-    private final Color editedColor = Color.LIGHT_GRAY;
+    private final Color editedColor = Color.decode("#fee8c8");
     private final Color errorColor = Color.RED;
     private final Border defaultBorder = txtEditor.getBorder();
 

@@ -1,83 +1,203 @@
-delimiters "~", "~"
+delimiters "~","~"
 
-ThisVariableExpression(value) ::= <<this.~value~>>
-AssignThisVariableExpression(value) ::= <<~ThisVariableExpression(value)~ = ~value~>>
+CatchClause(body,parameter) ::= <<catch (~parameter~) ~body~>> 
 
-FinalFieldDeclaration(initializer,name,type) ::= <<final ~VariableDeclaration(initializer,name,type)~;>>
-StaticFinalFieldDeclaration(initializer,name,type) ::= <<static final ~VariableDeclaration(initializer,name,type)~;>>
-PrivateFieldDeclaration(initializer,name,type) ::= <<private ~VariableDeclaration(initializer,name,type)~;>>
-PrivateFinalFieldDeclaration(initializer,name,type) ::= <<private final ~VariableDeclaration(initializer,name,type)~;>>
-StaticPrivateFinalFieldDeclaration(initializer,name,type) ::= <<static final ~VariableDeclaration(initializer,name,type)~;>>
-PublicFinalFieldDeclaration(initializer,name,type) ::= <<public final ~VariableDeclaration(initializer,name,type)~;>>
-staticPublicFinalFieldDeclaration(initializer,name,type) ::= <<static public final ~VariableDeclaration(initializer,name,type)~;>>
+TypeParameter(name,typeBounds) ::= <<~name~~if(typeBounds)~ extends ~typeBounds:{it|~it~};separator=" & "~~endif~>> 
 
+ArrayCreationLevel(dimension) ::= <<[~dimension~]>> 
 
-LongExpression(value) ::= <<~value~>>
-CharLiteralExpression(value) ::= <<~value~>>
-DoubleLiteralExpression(value) ::= <<~value~>>
-IntegerLiteralExpression(value) ::= <<~value~>>
-NullLiteralExpression(value) ::= <<~value~>>
-BooleanLiteralExpression(value) ::= <<~value~>>
-StringLiteralExpression(value) ::= <<"~value~">>
-NameExpression(value) ::= <<~value~>>
-SuperExpression(typeName) ::= <<super~if(typeName)~.~endif~~typeName~>>
-ThisExpression(typeName) ::= <<this~if(typeName)~.~endif~~typeName~>>
+ThisVariableExpression(value) ::= <<this.~value~>> 
 
-EmptyStmt() ::= <<;>>
+ConditionalExpression(thenExpression,elseExpression,condition) ::= <<~condition~ ? ~thenExpression~ : ~elseExpression~>> 
 
-ModuleDeclaration(exportsDirective,name,opens,providesDirective,requiresDirective,usesDirective) ::= <<module ~name~ {
+EmptyStmt() ::= <<;>> 
+
+IfStmt(condition,then,elseStmt) ::= <<if (~condition~) ~then~~if(elseStmt)~ 
+else ~elseStmt~~endif~>> 
+
+SuperExpression(typeName) ::= <<super~if(typeName)~.~endif~~typeName~>> 
+
+AnnotationMemberDeclaration(name,type,defaultValue) ::= <<~type~ ~name~()~if(defaultValue)~ default ~defaultValue~~endif~;>> 
+
+CompilationUnit(packageDeclaration,types,importDeclaration) ::= <<~packageDeclaration~
+
+~importDeclaration:{it|~it~};separator="\n"~
+
+~types:{it|~it~};separator="\n\n"~>> 
+
+StringLiteralExpression(value) ::= <<"~value~">> 
+
+LambdaExpression(body,parameters) ::= <<(~parameters:{it|~it~};separator=", "~) -> ~body~>> 
+
+MarkerAnnotationExpression(name) ::= <<@~name~>> 
+
+ForStmt(update,initialization,compare,body) ::= <<for (~initialization:{it|~it~};separator=", "~; ~compare~; ~update:{it|~it~};separator=", "~) ~body~>> 
+
+StaticFinalFieldDeclaration(initializer,name,type) ::= <<static final ~VariableDeclaration(initializer,name,type)~;>> 
+
+ReturnStmt(expression) ::= <<return~if(expression)~ ~expression~~endif~;>> 
+
+ExplicitConstructorInvocationStmt(arguments) ::= <<~if(isThis)~this~else~super~endif~(~arguments:{it|~it~};separator=", "~);>> 
+
+BooleanLiteralExpression(value) ::= <<~value~>> 
+
+ArrayAccessExpression(index,name) ::= <<~name~[~index~]>> 
+
+SwitchEntryStmt(labels,statements) ::= <<~if(labels)~~labels:{it|case ~it~ :};separator="\n"~~else~default :~endif~
+	~statements:{it|~it~};separator="\n"~>> 
+
+ContinueStmt(label) ::= <<continue~if(label)~ ~label~~endif~;>> 
+
+VariableDeclaration(name,initializer,type) ::= <<~if(type)~~type~ ~endif~~name~~if(initializer)~ = ~initializer~~endif~>> 
+
+BreakStmt(label) ::= <<break~if(label)~ ~label~~endif~;>> 
+
+PublicFinalFieldDeclaration(initializer,name,type) ::= <<public final ~VariableDeclaration(initializer,name,type)~;>> 
+
+ThisExpression(typeName) ::= <<this~if(typeName)~.~endif~~typeName~>> 
+
+ThrowStmt(expression) ::= <<throw ~expression~;>> 
+
+PackageDeclaration(name) ::= <<package ~name~;>> 
+
+LongExpression(value) ::= <<~value~>> 
+
+Parameter(type,name,modifiers,annotations) ::= <<~annotations:{it|~it~};separator=" "~~if(annotations)~ ~endif~~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~~if(type)~~type~ ~endif~~if(isVarargs)~... ~endif~~name~>> 
+
+NullLiteralExpression(value) ::= <<~value~>> 
+
+staticPublicFinalFieldDeclaration(initializer,name,type) ::= <<static public final ~VariableDeclaration(initializer,name,type)~;>> 
+
+MethodCallExpression(scope,arguments,typeArguments,name) ::= <<~if(scope)~~scope~.~endif~~if(typeArguments)~<~typeArguments:{it|~it~};separator=","~>~endif~~name~(~arguments:{it|~it~};separator=", "~)>> 
+
+InstanceOfExpression(type,expression) ::= <<~expression~ instanceof ~type~>> 
+
+BlockStmt(statements) ::= <<~if(isStatic)~ static~endif~ { ~if(statements)~
+	~statements:{it|~it~};separator="\n"~
+~endif~
+}>> 
+
+UnaryExpression(operator,expression) ::= <<~if(isPrefix)~~operator~~endif~~expression~~if(isPostfix)~~operator~~endif~>> 
+
+ClassOrInterfaceType(typeArguments,scope,names) ::= <<~if(scope)~~scope~.~endif~~names:{it|~it~};separator=" | "~~if(typeArguments)~<~typeArguments:{it|~it~};separator=", "~>~else~~if(isTyped)~<>~endif~~endif~~if(isArrayType)~[]~endif~>> 
+
+AnnotationDeclaration(members,name,modifiers,annotations) ::= <<~annotations:{it|~it~};separator="\n"~~if(annotations)~
+~endif~~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~@interface ~name~ {
+	~members:{it|~it~};separator="\n"~
+}>> 
+
+CastExpression(expression,type) ::= <<(~type~) ~expression~>> 
+
+ObjectCreationExpression(arguments,typeArguments,anonymousClassBodies,type,scope) ::= <<new ~if(scope)~~scope~.~endif~~type~~if(typeArguments)~<~typeArguments:{it|~it~};separator=", "~>~endif~(~arguments:{it|~it~};separator=", "~)~if(anonymousClassBodies)~ {
+
+	~anonymousClassBodies:{it|~it~};separator="\n"~
+
+}~elseif(emptyClassBody)~ {
+}~endif~>> 
+
+BinaryExpression(left,operator,right) ::= <<~left~ ~operator~ ~right~>> 
+
+ExpressionStmt(comment,expression) ::= <<~if(comment)~~comment~
+~endif~~expression~;>> 
+
+DoubleLiteralExpression(value) ::= <<~value~>> 
+
+PrivateFieldDeclaration(initializer,name,type) ::= <<private ~VariableDeclaration(initializer,name,type)~;>> 
+
+EnumConstant(methods,arguments,name,annotations) ::= <<~annotations:{it|~it~};separator="\n"~~if(annotations)~
+~endif~~name~~if(arguments)~(~arguments:{it|~it~};separator=","~)~endif~~if(methods)~ {
+	~methods:{it|~it~};separator="\n"~
+}~endif~>> 
+
+NormalAnnotationExpression(name,memberValues) ::= <<@~name~~if(memberValues)~(~memberValues:{it|~it~};separator=", "~)~endif~>> 
+
+AssignExpression(value,target,operator) ::= <<~target~ ~operator~ ~value~>> 
+
+WhileStmt(condition,body) ::= <<while (~condition~) ~body~>> 
+
+EnclosedExpression(expression) ::= <<(~expression~)>> 
+
+MemberValuePair(name,value) ::= <<~name~ = ~value~>> 
+
+DoStmt(condition,body) ::= <<do ~body~ while (~condition~);>> 
+
+ForEachStmt(body,variable,iterable) ::= <<for (~variable~ : ~iterable~) ~body~>> 
+
+QualifierName(value) ::= <<~value:{it|~it~};separator="."~>> 
+
+ConstructorDeclaration(name,blockStmt,modifiers,annotations,thrownExceptions,typeParameters,parameters) ::= <<~annotations:{it|~it~};separator="\n"~~if(annotations)~
+~endif~~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~~if(typeParameters)~~typeParameters:{it|<~it~>};separator=" "~ ~endif~~name~(~parameters:{it|~it~};separator=", "~)~if(thrownExceptions)~ throws ~thrownExceptions:{it|~it~};separator=", "~ ~endif~~if(blockStmt)~~blockStmt~~else~ { }~endif~>> 
+
+IntegerLiteralExpression(value) ::= <<~value~>> 
+
+SwitchStmt(selector,entries) ::= <<switch(~selector~) {
+	~entries:{it|~it~};separator="\n"~
+}>> 
+
+FinalFieldDeclaration(initializer,name,type) ::= <<final ~VariableDeclaration(initializer,name,type)~;>> 
+
+EnumDeclaration(name,members,annotations,implementedTypes,entries,extend,modifiers) ::= <<~annotations:{it|~it~};separator="\n"~~if(annotations)~
+~endif~~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~enum ~name~~if(extend)~ extends ~extend:{it|~it~};separator=", "~~endif~~if(implementedTypes)~ implements ~implementedTypes:{it|~it~};separator=","~~endif~ {
+
+	~entries:{it|~it~};separator=",\n"~~if(members)~;~endif~
+
+	~members:{it|~it~};separator="\n\n"~
+}>> 
+
+NameExpression(value) ::= <<~value~>> 
+
+MethodDeclaration(parameters,typeParameters,modifiers,thrownExceptions,name,annotations,type,blockStmt) ::= <<~annotations:{it|~it~};separator="\n"~~if(annotations)~
+~endif~~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~~if(type)~~if(typeParameters)~<~typeParameters:{it|~it~};separator=", "~> ~endif~~type~ ~else~void ~endif~~name~(~parameters:{it|~it~};separator=", "~)~if(thrownExceptions)~ throws ~thrownExceptions:{it|~it~};separator=", "~~endif~~if(isInterfaceDeclaration)~;~else~~if(blockStmt)~~blockStmt~~else~ { }~endif~~endif~>> 
+
+ClassExpression(type) ::= <<~type~.class>> 
+
+SynchronizedStmt(expression,body) ::= <<synchronized ( ~expression~ ) ~body~>> 
+
+LabeledStmt(statement,label) ::= <<~label~ : 
+	~statement~>> 
+
+MethodReferenceExpression(identifier,scope) ::= <<~scope~::~identifier~>> 
+
+TryStmt(tryBlock,finalClause,catchClauses,resources) ::= <<try~if(resources)~ (~resources:{it|~it~};separator=";"~)~endif~ ~tryBlock~ ~catchClauses:{it|~it~}~~if(finalClause)~ finally ~finalClause~~endif~>> 
+
+FieldDeclaration(variables,annotations,modifiers) ::= <<~annotations:{it|~it~};separator="\n"~~if(annotations)~
+~endif~~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~~variables:{it|~it~};separator=", "~;>> 
+
+AssertStmt(message,expression) ::= <<assert ~expression~~if(message)~ : ~message~~endif~;>> 
+
+FieldAccessExpression(scope,name) ::= <<~if(scope)~~scope~.~endif~~name~>> 
+
+ArrayCreationExpression(initializer,type,levels) ::= <<new ~type~~levels:{it|~it~}~~if(initializer)~ ~initializer~~endif~>> 
+
+ArrayInitializerExpression(values) ::= <<{
+	~values:{it|~it~};separator=",\n"~
+}>> 
+
+VariableDeclarationExpression(variables,modifiers) ::= <<~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~~variables:{it|~it~};separator=", "~>> 
+
+AssignThisVariableExpression(value) ::= <<~ThisVariableExpression(value)~ = ~value~>> 
+
+JavaPackageInfo(packageName,interfaces,classes) ::= <<~packageName~
+
+interfaces:
+	~interfaces:{it|~it.name~};separator="\n"~
+
+classes:
+	~classes:{it|~it.name~};separator="\n"~>> 
+
+ModuleDeclaration(providesDirective,usesDirective,name,requiresDirective,exportsDirective,opens) ::= <<module ~name~ {
     ~requiresDirective:{it|requires ~it~};separator="\n"~
     ~exportsDirective:{it|exports ~it~};separator="\n"~
     ~providesDirective:{it|provides ~it~};separator="\n"~
     ~usesDirective:{it|uses ~it~};separator="\n"~
     ~opens:{it|opens ~it~};separator="\n"~
-}>>
+}>> 
 
-LabeledStmt(label,statement) ::= <<~label~ : 
-	~statement~>>
+ImportDeclaration(name) ::= <<import ~if(isStatic)~static ~endif~~name~~if(isAsterisk)~.*~endif~;>> 
 
-SingleMemberAnnotationExpression(members,name) ::= <<@~name~~if(members)~(~members:{it|~it~};separator=", "~)~endif~>>
+StaticPrivateFinalFieldDeclaration(initializer,name,type) ::= <<static final ~VariableDeclaration(initializer,name,type)~;>> 
 
-ArrayAccessExpression(index,name) ::= <<~name~[~index~]>>
-
-ArrayCreationExpression(initializer,levels,type) ::= <<new ~type~~levels:{it|~it~}~~if(initializer)~ ~initializer~~endif~>>
-
-ArrayCreationLevel(dimension) ::= <<[~dimension~]>>
-
-ArrayInitializerExpression(values) ::= <<{
-	~values:{it|~it~};separator=",\n"~
-}>>
-
-AssertStmt(expression,message) ::= <<assert ~expression~~if(message)~ : ~message~~endif~;>>
-
-AssignExpression(operator,target,value) ::= <<~target~ ~operator~ ~value~>>
-
-BinaryExpression(left,operator,right) ::= <<~left~ ~operator~ ~right~>>
-
-BlockStmt(isStatic,statements) ::= <<~if(isStatic)~ static~endif~ { ~if(statements)~
-	~statements:{it|~it~};separator="\n"~
-~endif~
-}>>
-
-BreakStmt(label) ::= <<break~if(label)~ ~label~~endif~;>>
-
-CastExpression(expression,type) ::= <<(~type~) ~expression~>>
-
-CatchClause(body,parameter) ::= <<catch (~parameter~) ~body~>>
-
-ClassExpression(type) ::= <<~type~.class>>
-
-ClassOrInterfaceType(isArrayType,isTyped,names,scope,typeArguments) ::= <<~if(scope)~~scope~.~endif~~names:{it|~it~};separator=" | "~~if(typeArguments)~<~typeArguments:{it|~it~};separator=", "~>~else~~if(isTyped)~<>~endif~~endif~~if(isArrayType)~[]~endif~>>
-
-CompilationUnit(importDeclaration,packageDeclaration,types) ::= <<~packageDeclaration~
-
-~importDeclaration:{it|~it~};separator="\n"~
-
-~types:{it|~it~};separator="\n\n"~>>
-
-PackageDeclaration(name) ::= <<package ~name~;>>
-
-ClassOrInterfaceDeclaration(annotations,comments,extend,fields,implementedTypes,isInterface,members,modifiers,name,typeParameters) ::= <<~comments:{it|~it~};separator="\n"~~if(comments)~
+ClassOrInterfaceDeclaration(extend,fields,annotations,typeParameters,name,implementedTypes,members,comments,modifiers) ::= <<~comments:{it|~it~};separator="\n"~~if(comments)~
 ~endif~~annotations:{it|~it~};separator="\n"~~if(annotations)~
 ~endif~~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~~if(isInterface)~interface ~else~class ~endif~~name~~if(typeParameters)~<~typeParameters:{it|~it~};separator=", "~>~endif~~if(extend)~ extends ~extend:{it|~it~};separator=", "~~endif~~if(implementedTypes)~ implements ~implementedTypes:{it|~it~};separator=", "~~endif~ {
 	
@@ -86,116 +206,14 @@ ClassOrInterfaceDeclaration(annotations,comments,extend,fields,implementedTypes,
 	
 	~endif~
 	~members:{it|~it~};separator="\n\n"~
-}>>
+}>> 
 
-FieldDeclaration(annotations,modifiers,variables) ::= <<~annotations:{it|~it~};separator="\n"~~if(annotations)~
-~endif~~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~~variables:{it|~it~};separator=", "~;>>
+CharLiteralExpression(value) ::= <<~value~>> 
 
-VariableDeclaration(initializer,name,type) ::= <<~if(type)~~type~ ~endif~~name~~if(initializer)~ = ~initializer~~endif~>>
+PrivateFinalFieldDeclaration(initializer,name,type) ::= <<private final ~VariableDeclaration(initializer,name,type)~;>> 
 
-ImportDeclaration(isAsterisk,isStatic,name) ::= <<import ~if(isStatic)~static ~endif~~name~~if(isAsterisk)~.*~endif~;>>
+SingleMemberAnnotationExpression(members,name) ::= <<@~name~~if(members)~(~members:{it|~it~};separator=", "~)~endif~>> 
 
-EnumDeclaration(annotations,entries,extend,implementedTypes,members,modifiers,name) ::= <<~annotations:{it|~it~};separator="\n"~~if(annotations)~
-~endif~~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~enum ~name~~if(extend)~ extends ~extend:{it|~it~};separator=", "~~endif~~if(implementedTypes)~ implements ~implementedTypes:{it|~it~};separator=","~~endif~ {
+eom() ::= "}"
 
-	~entries:{it|~it~};separator=",\n"~~if(members)~;~endif~
-
-	~members:{it|~it~};separator="\n\n"~
-}>>
-
-EnumConstant(annotations,arguments,methods,name) ::= <<~annotations:{it|~it~};separator="\n"~~if(annotations)~
-~endif~~name~~if(arguments)~(~arguments:{it|~it~};separator=","~)~endif~~if(methods)~ {
-	~methods:{it|~it~};separator="\n"~
-}~endif~>>
-
-ConditionalExpression(condition,elseExpression,thenExpression) ::= <<~condition~ ? ~thenExpression~ : ~elseExpression~>>
-
-ConstructorDeclaration(annotations,blockStmt,modifiers,name,parameters,thrownExceptions,typeParameters) ::= <<~annotations:{it|~it~};separator="\n"~~if(annotations)~
-~endif~~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~~if(typeParameters)~~typeParameters:{it|<~it~>};separator=" "~ ~endif~~name~(~parameters:{it|~it~};separator=", "~)~if(thrownExceptions)~ throws ~thrownExceptions:{it|~it~};separator=", "~ ~endif~~if(blockStmt)~~blockStmt~~else~ { }~endif~>>
-
-ContinueStmt(label) ::= <<continue~if(label)~ ~label~~endif~;>>
-
-DoStmt(body,condition) ::= <<do ~body~ while (~condition~);>>
-
-EnclosedExpression(expression) ::= <<(~expression~)>>
-
-ExplicitConstructorInvocationStmt(arguments,isThis) ::= <<~if(isThis)~this~else~super~endif~(~arguments:{it|~it~};separator=", "~);>>
-
-ExpressionStmt(comment,expression) ::= <<~if(comment)~~comment~
-~endif~~expression~;>>
-
-FieldAccessExpression(name,scope) ::= <<~if(scope)~~scope~.~endif~~name~>>
-
-ForEachStmt(body,iterable,variable) ::= <<for (~variable~ : ~iterable~) ~body~>>
-
-ForStmt(body,compare,initialization,update) ::= <<for (~initialization:{it|~it~};separator=", "~; ~compare~; ~update:{it|~it~};separator=", "~) ~body~>>
-
-IfStmt(condition,elseStmt,then) ::= <<if (~condition~) ~then~~if(elseStmt)~ 
-else ~elseStmt~~endif~>>
-
-InstanceOfExpression(expression,type) ::= <<~expression~ instanceof ~type~>>
-
-LambdaExpression(body,parameters) ::= <<(~parameters:{it|~it~};separator=", "~) -> ~body~>>
-
-MethodCallExpression(arguments,name,scope,typeArguments) ::= <<~if(scope)~~scope~.~endif~~if(typeArguments)~<~typeArguments:{it|~it~};separator=","~>~endif~~name~(~arguments:{it|~it~};separator=", "~)>>
-
-MethodDeclaration(annotations,blockStmt,isInterfaceDeclaration,modifiers,name,parameters,thrownExceptions,type,typeParameters) ::= <<~annotations:{it|~it~};separator="\n"~~if(annotations)~
-~endif~~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~~if(type)~~if(typeParameters)~<~typeParameters:{it|~it~};separator=", "~> ~endif~~type~ ~else~void ~endif~~name~(~parameters:{it|~it~};separator=", "~)~if(thrownExceptions)~ throws ~thrownExceptions:{it|~it~};separator=", "~~endif~~if(isInterfaceDeclaration)~;~else~~if(blockStmt)~~blockStmt~~else~ { }~endif~~endif~>>
-
-MethodReferenceExpression(identifier,scope) ::= <<~scope~::~identifier~>>
-
-ObjectCreationExpression(anonymousClassBodies,arguments,emptyClassBody,scope,type,typeArguments) ::= <<new ~if(scope)~~scope~.~endif~~type~~if(typeArguments)~<~typeArguments:{it|~it~};separator=", "~>~endif~(~arguments:{it|~it~};separator=", "~)~if(anonymousClassBodies)~ {
-
-	~anonymousClassBodies:{it|~it~};separator="\n"~
-
-}~elseif(emptyClassBody)~ {
-}~endif~>>
-
-Parameter(annotations,isVarargs,modifiers,name,type) ::= <<~annotations:{it|~it~};separator=" "~~if(annotations)~ ~endif~~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~~if(type)~~type~ ~endif~~if(isVarargs)~... ~endif~~name~>>
-
-QualifierName(value) ::= <<~value:{it|~it~};separator="."~>>
-
-ReturnStmt(expression) ::= <<return~if(expression)~ ~expression~~endif~;>>
-
-SwitchEntryStmt(labels,statements) ::= <<~if(labels)~~labels:{it|case ~it~ :};separator="\n"~~else~default :~endif~
-	~statements:{it|~it~};separator="\n"~>>
-
-SwitchStmt(entries,selector) ::= <<switch(~selector~) {
-	~entries:{it|~it~};separator="\n"~
-}>>
-
-ThrowStmt(expression) ::= <<throw ~expression~;>>
-
-TryStmt(catchClauses,finalClause,resources,tryBlock) ::= <<try~if(resources)~ (~resources:{it|~it~};separator=";"~)~endif~ ~tryBlock~ ~catchClauses:{it|~it~}~~if(finalClause)~ finally ~finalClause~~endif~>>
-
-TypeParameter(name,typeBounds) ::= <<~name~~if(typeBounds)~ extends ~typeBounds:{it|~it~};separator=" & "~~endif~>>
-
-UnaryExpression(expression,isPostfix,isPrefix,operator) ::= <<~if(isPrefix)~~operator~~endif~~expression~~if(isPostfix)~~operator~~endif~>>
-
-VariableDeclarationExpression(modifiers,variables) ::= <<~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~~variables:{it|~it~};separator=", "~>>
-
-WhileStmt(body,condition) ::= <<while (~condition~) ~body~>>
-
-MarkerAnnotationExpression(name) ::= <<@~name~>>
-
-NormalAnnotationExpression(memberValues,name) ::= <<@~name~~if(memberValues)~(~memberValues:{it|~it~};separator=", "~)~endif~>>
-
-MemberValuePair(name,value) ::= <<~name~ = ~value~>>
-
-AnnotationDeclaration(annotations,members,modifiers,name) ::= <<~annotations:{it|~it~};separator="\n"~~if(annotations)~
-~endif~~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~@interface ~name~ {
-	~members:{it|~it~};separator="\n"~
-}>>
-
-AnnotationMemberDeclaration(defaultValue,name,type) ::= <<~type~ ~name~()~if(defaultValue)~ default ~defaultValue~~endif~;>>
-
-SynchronizedStmt(body,expression) ::= <<synchronized ( ~expression~ ) ~body~>>
-
-JavaPackageInfo(classes,interfaces,packageName) ::= <<~packageName~
-
-interfaces:
-	~interfaces:{it|~it.name~};separator="\n"~
-
-classes:
-	~classes:{it|~it.name~};separator="\n"~>>eom() ::= <<}>>
-gt() ::= <<> >>
+gt() ::= ">"

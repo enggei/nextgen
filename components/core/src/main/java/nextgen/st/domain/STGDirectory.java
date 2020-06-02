@@ -46,6 +46,32 @@ public class STGDirectory {
 		return jsonObject.getString("path", defaultValue);
 	}
 
+	public STGDirectory setOutputPackage(String value) { 
+		jsonObject.put("outputPackage", value);
+		return this;
+	}
+
+	public String getOutputPackage() { 
+		return jsonObject.getString("outputPackage");
+	}
+
+	public String getOutputPackage(String defaultValue) { 
+		return jsonObject.getString("outputPackage", defaultValue);
+	}
+
+	public STGDirectory setOutputPath(String value) { 
+		jsonObject.put("outputPath", value);
+		return this;
+	}
+
+	public String getOutputPath() { 
+		return jsonObject.getString("outputPath");
+	}
+
+	public String getOutputPath(String defaultValue) { 
+		return jsonObject.getString("outputPath", defaultValue);
+	}
+
 	public STGDirectory addGroups(STGroupModel value) { 
 		io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("groups");
 		if (jsonArray == null) jsonObject.put("groups", jsonArray = new io.vertx.core.json.JsonArray());

@@ -237,6 +237,30 @@ public class STNavigator extends JPanel {
                                 show(stGroupTreeNode);
                             });
                         }
+                    },
+                    new AbstractAction("Generate All") {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            SwingUtilities.invokeLater(() -> {
+
+                                final Optional<STGroupModel> renderer = getModel().getGroups()
+                                        .filter(stGroupModel1 -> stGroupModel1.getName().equals("StringTemplate"))
+                                        .findFirst();
+
+                                renderer.ifPresent(generator -> {
+
+                                    final STGenerator stGenerator = new STGenerator(generator);
+
+                                    getModel().getGroups()
+                                            .forEach(stGroupModel -> {
+                                                final String outputPackage = getModel().getOutputPackage("templates.st");
+                                                final String outputPath = getModel().getOutputPath("src/test/java");
+                                                stGenerator.generateSTGroup(stGroupModel, outputPackage, outputPath);
+                                            });
+                                });
+
+                            });
+                        }
                     }
             };
         }
@@ -268,14 +292,24 @@ public class STNavigator extends JPanel {
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 SwingUtilities.invokeLater(() -> {
-                                    getParentNode(STGDirectoryTreeNode.class)
-                                            .flatMap(parent -> parent.getModel().getGroups()
-                                                    .filter(stGroupModel1 -> stGroupModel1.getName().equals("StringTemplate"))
-                                                    .findFirst())
-                                            .ifPresent(stGroupModel -> {
-                                                final STDomainToSTWrappers stDomainToSTWrappers = new STDomainToSTWrappers(stGroupModel);
-                                                stDomainToSTWrappers.generateSTGroup(getModel(), "tmp.st", "components/core/src/test/java");
-                                            });
+
+                                    getParentNode(STGDirectoryTreeNode.class).ifPresent(parent -> {
+
+                                        final Optional<STGroupModel> renderer = parent.getModel().getGroups()
+                                                .filter(stGroupModel1 -> stGroupModel1.getName().equals("StringTemplate"))
+                                                .findFirst();
+
+                                        renderer.ifPresent(generator -> {
+
+                                            save();
+
+                                            final String outputPackage = parent.getModel().getOutputPackage("templates.st");
+                                            final String outputPath = parent.getModel().getOutputPath("src/test/java");
+
+                                            new STGenerator(generator).generateSTGroup(getModel(), outputPackage, outputPath);
+                                        });
+
+                                    });
                                 });
                             }
                         },
@@ -458,7 +492,7 @@ public class STNavigator extends JPanel {
 
                                     final TreeNode check = getParent();
 
-                                    if(check instanceof STGroupTreeNode) {
+                                    if (check instanceof STGroupTreeNode) {
                                         final STGroupTreeNode parent = (STGroupTreeNode) check;
 
                                         parent.getModel().removeTemplates(getModel());
@@ -469,7 +503,7 @@ public class STNavigator extends JPanel {
                                             findSTTemplateEditor(tabbedPane, parent).ifPresent(tabbedPane::remove);
                                         });
 
-                                    } else if(check instanceof STTemplateTreeNode) {
+                                    } else if (check instanceof STTemplateTreeNode) {
                                         final STTemplateTreeNode parent = (STTemplateTreeNode) check;
 
                                         parent.getModel().removeChildren(getModel());

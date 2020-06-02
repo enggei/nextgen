@@ -12,7 +12,6 @@ import org.stringtemplate.v4.misc.STMessage;
 
 import java.io.File;
 import java.util.*;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static nextgen.st.domain.STJsonFactory.newSTParameterKey;
@@ -67,6 +66,7 @@ public class STParser {
                 .filter(stTemplate -> !(stTemplate.getName().equals("/eom") || stTemplate.getName().equals("/gt")))
                 .filter(st -> !st.isAnonSubtemplate())
                 .filter(st -> st.impl.ast != null)
+                .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
                 .forEach(st -> {
 
                     final STTemplate stTemplate = new STTemplate()

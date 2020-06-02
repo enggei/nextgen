@@ -40,6 +40,8 @@ public class StringTemplateEditorProject {
         DomainToJson.generate(javaMainSrc, stDomainPackage, newDomainBuilder("ST")
                 .add(newEntityBuilder("STGDirectory")
                         .addStringField("path")
+                        .addStringField("outputPackage")
+                        .addStringField("outputPath")
                         .addOneToManyRelation("groups", stGroupModel))
                 .add(newEntityBuilder("STGParseResult")
                         .addOneToOneRelation("parsed", stGroupModel)
