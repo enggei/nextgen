@@ -54,11 +54,13 @@ public class STApp extends JFrame {
         Optional.ofNullable(FileUtil.list(dir, ".stg"))
                 .ifPresent(stgFiles -> {
                     for (File stgFile : stgFiles) {
+
+                        final Optional<STGroupModel> first = root.getGroups().filter(stGroupModel -> stGroupModel.getStgFile().equals(stgFile.getAbsolutePath())).findFirst();
+                        if (first.isPresent()) continue;
+
                         final STGParseResult parseResult = STParser.parse(stgFile);
                         if (parseResult.getErrors().count() == 0) {
-                            final Optional<STGroupModel> first = root.getGroups().filter(stGroupModel -> stGroupModel.getName().equals(parseResult.getParsed().getName())).findFirst();
-                            if (!first.isPresent())
-                                root.addGroups(parseResult.getParsed());
+                            root.addGroups(parseResult.getParsed());
                         } else
                             parseResult.getErrors().forEach(stgError -> System.out.println(stgFile.getName() + " : " + stgError.getType() + " " + stgError.getMessage()));
                     }

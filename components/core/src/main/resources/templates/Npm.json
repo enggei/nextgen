@@ -1,0 +1,126 @@
+{
+  "uuid" : "2ab72afd-3f7d-43af-9e32-3e16b3cc007a",
+  "name" : "Npm",
+  "delimiter" : "~",
+  "templates" : [ {
+    "uuid" : "a47d10f0-32a1-4e18-9504-2b9c359f5a5c",
+    "name" : "babelrc",
+    "text" : "{\r\n\t\"presets\": [\r\n\t\t\"@babel/preset-env\", \r\n\t\t\"@babel/preset-react\"\r\n\t],\r\n\t\"plugins\": [\r\n\t\t[\"module:@babel/plugin-proposal-decorators\", { \"legacy\": true }],\r\n\t\t[\"module:@babel/plugin-proposal-class-properties\", { \"loose\": true }]\r\n\t]\r\n} "
+  }, {
+    "uuid" : "f4131f43-115e-4876-86a4-14fc547473e6",
+    "name" : "dependency",
+    "text" : "\"~name~\": \"^~version~\" ",
+    "parameters" : [ {
+      "uuid" : "69f4476b-6080-4e11-8500-d74d83d09527",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "d146f65f-b1e9-4857-bb82-5dbf851ff750",
+      "name" : "version",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "b8a70aa9-d762-43a6-9680-1ba77ac63a02",
+    "name" : "packageJson",
+    "text" : "{\r\n  \"name\": \"~name~\",\r\n  \"version\": \"~version~\",\r\n  \"description\": \"~description~\",\r\n  \"main\": \"~main~\",\r\n  \"scripts\": {\r\n    ~scripts:{it|~it~};separator=\",\\n\"~\r\n  },\r\n  \"repository\": {\r\n    \"type\": \"~repositoryType~\",\r\n    \"url\": \"~repositoryUrl~\"\r\n  },\r\n  \"author\": \"~author~\",\r\n  \"license\": \"~license~\",\r\n  \"bugs\": {\r\n    \"url\": \"~bugsUrl~\"\r\n  },\r\n  \"homepage\": \"~homepage~\",\r\n  \"dependencies\": {\r\n    ~dependencies:{it|~it~};separator=\",\\n\"~\r\n  },\r\n  \"devDependencies\": {\r\n    ~devDependencies:{it|~it~};separator=\",\\n\"~\r\n  }\r\n} ",
+    "parameters" : [ {
+      "uuid" : "1d70e796-287e-454b-98c5-c65272a69b15",
+      "name" : "main",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "690b11d1-7096-4387-b7dd-c590b5172442",
+      "name" : "license",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "81475ec5-468c-4ca1-8af9-f65f7cc264dc",
+      "name" : "bugsUrl",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "93de6439-e2ac-42c9-b65c-681a86680a4e",
+      "name" : "devDependencies",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "00c6acc0-1d8c-4611-80c1-9d2708dd8560",
+      "name" : "scripts",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "fa01dde7-36e1-4c8c-a1bf-0fc051510d71",
+      "name" : "dependencies",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "72896769-4fb0-450e-8ee8-c193190ca6fc",
+      "name" : "homepage",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "da0e701f-b7b0-4eb0-ab7e-b0c2fba9483e",
+      "name" : "repositoryUrl",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "5832b661-3f23-4be7-9136-473a5c79b442",
+      "name" : "author",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "de454b3a-aaee-4374-b701-1ecd20afdf0b",
+      "name" : "version",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "79becd51-cabf-4951-944a-50a7e71fc27e",
+      "name" : "repositoryType",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "5fceceac-ad7a-4549-9869-d027b02106c9",
+      "name" : "description",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "34227853-ed0b-41d0-bfe4-d4968f677128",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "1e92681a-b585-4516-b8bf-3c4b0e044f3b",
+    "name" : "script",
+    "text" : "\"~name~\": \"~command~\" ",
+    "parameters" : [ {
+      "uuid" : "d19ca443-4c0a-48ab-a5e6-c1e5b5c8bd5b",
+      "name" : "command",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "e38500f8-18eb-4d29-bef0-ebeb91654fa3",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "02617ae9-b1b3-416e-a4ea-480d5ded9627",
+    "name" : "WebpackConfig",
+    "text" : "const path = require('path');\r\n\r\nmodule.exports = {\r\n\tentry: { \r\n\t\tmain: '~mainEntry~' \r\n\t},\r\n\toutput: {\r\n\t\tpath: __dirname,\r\n\t\tfilename: '~outputFilename~'\r\n\t},\r\n\tmodule: {\r\n\t\trules: [\r\n\t\t\t{\r\n\t\t\t\ttest: path.join(__dirname, '.'),\r\n\t\t\t\texclude: /(node_modules)/,\r\n\t\t\t\tuse: [\r\n\t\t\t\t\t{\r\n\t\t\t\t\t\tloader: 'babel-loader',\r\n\t\t\t\t\t\toptions: {\r\n\t\t\t    \t\t\tpresets: [\"@babel/preset-env\", \"@babel/preset-react\"]\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t}\r\n\t\t\t\t]\r\n\t\t\t}\r\n\t\t]\r\n\t}\r\n}; ",
+    "parameters" : [ {
+      "uuid" : "05fc85de-4f78-480b-830d-f069b01a372a",
+      "name" : "outputFilename",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "e512423f-6c5b-4779-8327-142ecd7ef18a",
+      "name" : "mainEntry",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  } ],
+  "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Npm.stg"
+}

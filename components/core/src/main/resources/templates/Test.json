@@ -1,0 +1,47 @@
+{
+  "uuid" : "10202975-778c-45d0-9403-603ab77c7d6d",
+  "name" : "Test",
+  "delimiter" : "~",
+  "templates" : [ {
+    "uuid" : "c41ba352-9f52-4dca-a44a-ad9f3c035d14",
+    "name" : "list",
+    "text" : "list : ~value:{it|~it~};separator=\", \"~",
+    "parameters" : [ {
+      "uuid" : "ba8ccc75-9e18-4db5-a95c-86705bf70672",
+      "name" : "value",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    } ]
+  }, {
+    "uuid" : "2acee399-79fc-46ff-b0c2-89f23ae0651b",
+    "name" : "single",
+    "text" : "single : ~value~",
+    "parameters" : [ {
+      "uuid" : "f4161cd2-f137-4362-b66d-1dbd49e4b253",
+      "name" : "value",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ],
+    "children" : [ ]
+  }, {
+    "uuid" : "3e4cd3ac-b36a-48c9-9197-00e3ca022235",
+    "name" : "kv",
+    "text" : "kv : ~value:{it|~it.key~:~it.value~};separator=\"\\n\"~",
+    "parameters" : [ {
+      "uuid" : "458f5bfe-f6ea-4bff-bf50-f22dfb197a19",
+      "name" : "value",
+      "argumentTypes" : [ "Object" ],
+      "type" : "KVLIST",
+      "keys" : [ {
+        "uuid" : "c1d623f4-4e40-4c5f-b621-3a8502804c1c",
+        "name" : "key",
+        "argumentTypes" : [ "Object" ]
+      }, {
+        "uuid" : "97758017-35b9-4c13-a6a1-28fd2dbe09b7",
+        "name" : "value",
+        "argumentTypes" : [ "Object" ]
+      } ]
+    } ]
+  } ],
+  "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Test.stg"
+}

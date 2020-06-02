@@ -1,0 +1,263 @@
+{
+  "uuid" : "942af5aa-e21e-4cf7-b989-7199bb89b8fd",
+  "name" : "Maven",
+  "delimiter" : "~",
+  "templates" : [ {
+    "uuid" : "74ebc0f1-a6ef-409f-b207-4190ef252c72",
+    "name" : "build",
+    "text" : "<build>\r\n~if(testResources)~\r\n\t<testResources>\r\n\t\t<testResource>\r\n\t\t\t~testResources:{it|<~it.name~>~it.value~</~it.name~>};separator=\"\\n\"~\r\n\t\t</testResource>\r\n\t</testResources>\r\n~endif~\r\n\t<plugins>\r\n\t\t~plugin:{it|~it~};separator=\"\\n\"~\r\n\t</plugins>\r\n</build> ",
+    "parameters" : [ {
+      "uuid" : "82c94ff1-cd47-4e1d-bd6f-654afbfeb54c",
+      "name" : "plugin",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "0aca8ca7-90a9-43f7-8149-83e28358cce0",
+      "name" : "testResources",
+      "argumentTypes" : [ "Object" ],
+      "type" : "KVLIST",
+      "keys" : [ {
+        "uuid" : "fcba80a1-421d-46d4-a57f-aee26fc5d4ce",
+        "name" : "name",
+        "argumentTypes" : [ "Object" ]
+      }, {
+        "uuid" : "21e2598b-9744-4560-85e7-d340ba696c63",
+        "name" : "value",
+        "argumentTypes" : [ "Object" ]
+      } ]
+    } ]
+  }, {
+    "uuid" : "68f2245d-08e1-42db-aafa-7245a5eda5b0",
+    "name" : "dependency",
+    "text" : "<dependency>\r\n\t<groupId>~groupId~</groupId>\r\n\t<artifactId>~artifactId~</artifactId>\r\n\t<version>~version~</version>~if(scope)~\r\n\t<scope>~scope;format=\"toLower\"~</scope>~endif~~if(systemPath)~\r\n\t<systemPath>~systemPath~</systemPath>~endif~\r\n\r\n</dependency> ",
+    "parameters" : [ {
+      "uuid" : "24330376-1635-4b3a-9971-2c6864cf7e31",
+      "name" : "groupId",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "bb0e5640-d742-4e02-ab57-ed2c43d2b78b",
+      "name" : "version",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "2b698983-4dfa-4f18-8a09-84715cfed038",
+      "name" : "scope",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "fab7a3f5-681e-4223-b53e-3a15b8c01919",
+      "name" : "artifactId",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "e1bc5bf0-d0a2-4b57-90fe-fa8dd8f39a41",
+      "name" : "systemPath",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "cb7743c2-f332-4f36-81e9-21d2aa69c103",
+    "name" : "execution",
+    "text" : "<execution>\r\n    <phase>package</phase>\r\n    <goals>\r\n        <goal>shade</goal>\r\n    </goals>\r\n</execution>"
+  }, {
+    "uuid" : "6c40ef07-6e2d-4fbe-89e3-49248b434503",
+    "name" : "frontEndMavenPlugin",
+    "text" : "<!--npm plugin-->\r\n<plugin>\r\n    <groupId>com.github.eirslett</groupId>\r\n    <artifactId>frontend-maven-plugin</artifactId>\r\n    <version>~if(pluginVersion)~~pluginVersion~~else~1.10.0~endif~</version>\r\n    <configuration>\r\n        <installDirectory>~if(installDirectory)~~installDirectory~~else~target~endif~</installDirectory>\r\n        <nodeVersion>v~nodeVersion~</nodeVersion>\r\n    </configuration>\r\n    <executions>\r\n        <execution>\r\n            <id>install node and npm</id>\r\n            <goals>\r\n                <goal>install-node-and-npm</goal>\r\n            </goals>\r\n        </execution>\r\n        <execution>\r\n            <id>npm install</id>\r\n            <goals>\r\n                <goal>npm</goal>\r\n            </goals>\r\n            <configuration>\r\n                <arguments>install</arguments>\r\n            </configuration>\r\n        </execution>\r\n        <execution>\r\n            <id>webpack build</id>\r\n            <goals>\r\n                <goal>webpack</goal>\r\n            </goals>\r\n        </execution>\r\n    </executions>\r\n</plugin>",
+    "parameters" : [ {
+      "uuid" : "f822ac98-7baa-428a-9a82-6c095f97097d",
+      "name" : "installDirectory",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "025c9536-555e-47fe-869a-d23e772aa62f",
+      "name" : "nodeVersion",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "9f9c7b5b-86f7-4010-b7c6-8d46786e6a09",
+      "name" : "pluginVersion",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "9b6aa1aa-6074-4744-823d-ad9edf0f1e0f",
+    "name" : "parent",
+    "text" : "<parent>\r\n\t<artifactId>~artifactId~</artifactId>\r\n\t<groupId>~groupId~</groupId>\r\n\t<version>~version~</version>\r\n</parent> ",
+    "parameters" : [ {
+      "uuid" : "c5f845c5-9adc-4cb9-bffa-fe0a4dde772b",
+      "name" : "version",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "01519963-822c-48e9-8b46-7f3c37a3fbe4",
+      "name" : "groupId",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "68ae95b9-49df-494f-9575-2297116d30ac",
+      "name" : "artifactId",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "f6b8a6ed-f3ff-4bed-9180-ea870f5b65c0",
+    "name" : "plugin",
+    "text" : "<plugin>\r\n\t<groupId>~groupId~</groupId>\r\n\t<artifactId>~artifactId~</artifactId>\r\n\t<version>~version~</version>\r\n\t<configuration>\r\n\t\t~configuration:{it|<~it.name~>~it.value~</~it.name~>};separator=\"\\n\"~\r\n\t</configuration>\r\n\t<executions>\r\n\t\t~executions:{it|~it~};separator=\"\\n\"~\r\n\t</executions>\r\n</plugin> ",
+    "parameters" : [ {
+      "uuid" : "5bbd05b8-11f0-41be-ab8c-9373ddd0178d",
+      "name" : "artifactId",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "18cd49f8-20e8-4d3b-b70b-b04f8cc77325",
+      "name" : "executions",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "29052fa0-39fe-48b9-beb4-6e0f8c10d3aa",
+      "name" : "version",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "37e6d3c4-3a23-4fce-92a5-56ebf5471569",
+      "name" : "configuration",
+      "argumentTypes" : [ "Object" ],
+      "type" : "KVLIST",
+      "keys" : [ {
+        "uuid" : "3b5e5c11-8c84-4e6a-a3ca-df21c29b1450",
+        "name" : "name",
+        "argumentTypes" : [ "Object" ]
+      }, {
+        "uuid" : "ff0ff9d0-122e-4370-8d45-971aabddd674",
+        "name" : "value",
+        "argumentTypes" : [ "Object" ]
+      } ]
+    }, {
+      "uuid" : "c0262743-6953-46ed-b1b7-ecaffa4ac92f",
+      "name" : "groupId",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "7a760f05-7071-4259-a27b-8abfbf1d6ce1",
+    "name" : "pom",
+    "text" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\r\n~if(parent)~\r\n\r\n\t~parent~\r\n~endif~\t \r\n\t<modelVersion>4.0.0</modelVersion>\r\n\r\n\t<name>~name~</name>\r\n\r\n\t~if(groupId)~<groupId>~groupId~</groupId>~endif~\r\n\t~if(artifactId)~<artifactId>~artifactId~</artifactId>~endif~\r\n\t~if(version)~<version>~version~</version>~endif~\r\n\t~if(packaging)~<packaging>~packaging~</packaging>~endif~\r\n\r\n~if(modules)~\r\n\t<modules>\r\n\t\t~modules:{it|<module>~it~</module>};separator=\"\\n\"~\r\n\t</modules>\r\n~endif~\r\n~if(properties)~\r\n\t<properties>\r\n\t\t~properties:{it|<~it.name~>~it.value~</~it.name~>};separator=\"\\n\"~\t\t\r\n\t</properties>\r\n~endif~\r\n~if(build)~\r\n\r\n\t~build~\r\n\r\n~endif~\r\n~if(dependencies)~\r\n\r\n\t<dependencies>\r\n\t\t~dependencies:{it|~it~};separator=\"\\n\"~  \r\n\t</dependencies>\r\n\r\n~endif~\r\n~if(distributionManagement)~\r\n\r\n\t<distributionManagement>\r\n\t\t~distributionManagement:{it|~it~};separator=\"\\n\"~\r\n\t</distributionManagement>\r\n~endif~\r\n~if(repositories)~\r\n\r\n\t<repositories>\r\n\t\t~repositories:{it|~it~};separator=\"\\n\"~\r\n\t</repositories>\r\n~endif~\r\n</project> ",
+    "parameters" : [ {
+      "uuid" : "a0117985-377d-40b3-8117-458b017e035f",
+      "name" : "version",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "c94ec9d5-90ec-4b91-9754-512aea87f563",
+      "name" : "dependencies",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "b9f7d87f-30e9-42f0-8d1f-6e9a0f910d54",
+      "name" : "parent",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "83b1123c-ac5c-49bf-80d5-8b4982b1f045",
+      "name" : "repositories",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "33f36c7c-4f8f-4bce-b6cc-23c21316b91e",
+      "name" : "modules",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "c226a5e7-1cf8-4215-a435-ac3418fc2b98",
+      "name" : "properties",
+      "argumentTypes" : [ "Object" ],
+      "type" : "KVLIST",
+      "keys" : [ {
+        "uuid" : "2ae88b6a-298f-4d48-88fe-e91b7c51b275",
+        "name" : "name",
+        "argumentTypes" : [ "Object" ]
+      }, {
+        "uuid" : "c1349669-27ab-495f-8f7f-67c4ac86d78e",
+        "name" : "value",
+        "argumentTypes" : [ "Object" ]
+      } ]
+    }, {
+      "uuid" : "ce52420b-a75e-443e-ae22-cc8815a167bc",
+      "name" : "artifactId",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "ae9f5c64-f76f-44dd-8a3f-25f7bd033ccc",
+      "name" : "distributionManagement",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "4a560e71-a93f-4f86-bb7f-6cba8284af9f",
+      "name" : "build",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "31450b22-59e8-496e-8652-baf9b5d66ddb",
+      "name" : "groupId",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "af1e4934-af2d-4354-b36b-4b0664a13a2d",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "7b73814b-1aa5-42c8-b884-51fa7acb7c2e",
+      "name" : "packaging",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "f3f8b1f9-6567-4061-a2ff-6166b425734f",
+    "name" : "propertyReference",
+    "text" : "${~name~}",
+    "parameters" : [ {
+      "uuid" : "206dde1a-868d-46c8-87e4-88cd0714c80c",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "20a1b770-609a-4146-8339-3b25b74fab7c",
+    "name" : "repository",
+    "text" : "<repository>\r\n\t<id>~id~</id>\r\n\t<name>~name~</name>\r\n\t<url>~url~</url>\r\n</repository> ",
+    "parameters" : [ {
+      "uuid" : "fd667387-fde1-4c2a-aa98-c4e7a9eb4b6a",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "362603e2-b8f9-459d-bd24-793c36496043",
+      "name" : "url",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "595c1f90-9db2-4adf-99a0-338db5db671a",
+      "name" : "id",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "e2949dab-710d-40d6-86ac-8f08b63ca5ce",
+    "name" : "shadePlugin",
+    "text" : "<!--fat-jar plugin for single-file server package-->\r\n<plugin>\r\n\t<groupId>org.apache.maven.plugins</groupId>\r\n\t<artifactId>maven-shade-plugin</artifactId>\r\n\t<version>2.4.3</version>\r\n\t<executions>\r\n\t\t<execution>\r\n\t\t\t<phase>package</phase>\r\n\t\t\t<goals>\r\n\t\t\t\t<goal>shade</goal>\r\n\t\t\t</goals>\r\n\t\t\t<configuration>\r\n\t\t\t\t<filters>\r\n\t\t\t\t\t<filter>\r\n\t\t\t\t\t\t<artifact>*:*</artifact>\r\n\t\t\t\t\t\t<excludes>\r\n\t\t\t\t\t\t\t<exclude>META-INF/*.SF</exclude>\r\n\t\t\t\t\t\t\t<exclude>META-INF/*.DSA</exclude>\r\n\t\t\t\t\t\t\t<exclude>META-INF/*.RSA</exclude>\r\n\t\t\t\t\t\t</excludes>\r\n\t\t\t\t\t</filter>\r\n\t\t\t\t</filters>\r\n\t\t\t\t<transformers>\r\n\t\t\t\t\t<transformer implementation=\"org.apache.maven.plugins.shade.resource.ServicesResourceTransformer\"/>\r\n\t\t\t\t\t<transformer implementation=\"org.apache.maven.plugins.shade.resource.ManifestResourceTransformer\">\r\n\t\t\t\t\t\t<manifestEntries>\r\n\t\t\t\t\t\t\t<Main-Class>io.vertx.core.Launcher</Main-Class>\r\n\t\t\t\t\t\t\t<Main-Verticle>~packageName~.~className~</Main-Verticle>\r\n\t\t\t\t\t\t</manifestEntries>\r\n\t\t\t\t\t</transformer>\r\n\t\t\t\t</transformers>\r\n\t\t\t\t<artifactSet/>\r\n\t\t\t\t<outputFile>target/${project.artifactId}-${project.version}-fat.jar</outputFile>\r\n\t\t\t</configuration>\r\n\t\t</execution>\r\n\t</executions>\r\n</plugin> ",
+    "parameters" : [ {
+      "uuid" : "74f4e21e-1a70-4c9f-809a-6065bcb6e182",
+      "name" : "packageName",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "7b931807-1b6c-4ddc-a7df-b55ffa112208",
+      "name" : "className",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  } ],
+  "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Maven.stg"
+}

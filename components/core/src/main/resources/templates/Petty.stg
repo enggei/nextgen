@@ -1,0 +1,71 @@
+delimiters "~","~"
+
+agent(agentDeclarations) ::= <<import superagentPromise from 'superagent-promise';
+import _superagent from 'superagent';
+import appStore from './stores/AppStore';
+
+const superagent = superagentPromise(_superagent, global.Promise);
+
+const handleErrors = err => {
+	if (err && err.response && err.response.status === 401) {
+		authStore.logout();
+	}
+	return err;
+};
+
+const responseBody = res => res.body;
+
+const tokenPlugin = req => {
+	if (appStore.token) {
+		req.set('Authorization', `Bearer ${appStore.token}`);
+	}
+};
+
+const requests = {
+	del: url =>
+		superagent
+			.del(`${url}`)
+			.use(tokenPlugin)
+			.end(handleErrors)
+			.then(responseBody),
+	get: url =>
+		superagent
+			.get(`${url}`)
+			.use(tokenPlugin)
+			.end(handleErrors)
+			.then(responseBody),
+	put: (url, body) =>
+		superagent
+			.put(`${url}`, body)
+			.use(tokenPlugin)
+			.end(handleErrors)
+			.then(responseBody),
+	post: (url, body) =>
+		superagent
+			.post(`${url}`, body)
+			.use(tokenPlugin)
+			.end(handleErrors)
+			.then(responseBody)
+};
+
+~agentDeclarations:{it|~it~};separator="\n"~
+
+const Auth = { 
+	current: () => requests.get('/user'),
+	login: (username, password) => requests.post('/login', { username, password }),
+	save: (user) => requests.put('/user', { user })
+}
+
+export default {
+	Auth
+};>> 
+
+agentDeclaration(agentEndpoint,name) ::= <<const ~name~ = { 
+	~agentEndpoint:{it|~it~};separator=",\n"~
+}>> 
+
+agentEndpoint(name,parameters,url,action) ::= <<~name~: (~parameters:{it|~it~};separator=","~) => requests.~action~('/~url~'~if(parameters)~, { ~parameters:{it|~it~};separator=","~ }~endif~)>> 
+
+eom() ::= "}"
+
+gt() ::= ">"

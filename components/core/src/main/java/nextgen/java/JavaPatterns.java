@@ -39,6 +39,13 @@ public class JavaPatterns extends JavaFactory {
         write(new File(directory, name + ".java"), content);
     }
 
+    public static File writeToFile(Object content, PackageDeclaration packageDeclaration, String name, String filetype,File root) {
+        final File directory = new File(root, packageToPath(packageDeclaration.getName()));
+        final File file = new File(directory, name + "." + filetype);
+        write(file, content);
+        return file;
+    }
+
     public static void writeToFile(EnumDeclaration enumDeclaration, PackageDeclaration packageDeclaration, File root) {
         writeToFile(enumDeclaration, packageDeclaration, root.getAbsolutePath());
     }

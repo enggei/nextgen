@@ -1,7 +1,19 @@
-delimiters "~", "~"
+delimiters "~","~"
 
+babelrc() ::= <<{
+	"presets": [
+		"@babel/preset-env", 
+		"@babel/preset-react"
+	],
+	"plugins": [
+		["module:@babel/plugin-proposal-decorators", { "legacy": true }],
+		["module:@babel/plugin-proposal-class-properties", { "loose": true }]
+	]
+} >> 
 
-packageJson(author,bugsUrl,dependencies,description,devDependencies,homepage,license,main,name,repositoryType,repositoryUrl,scripts,version) ::= <<{
+dependency(name,version) ::= <<"~name~": "^~version~" >> 
+
+packageJson(main,license,bugsUrl,devDependencies,scripts,dependencies,homepage,repositoryUrl,author,version,repositoryType,description,name) ::= <<{
   "name": "~name~",
   "version": "~version~",
   "description": "~description~",
@@ -25,24 +37,11 @@ packageJson(author,bugsUrl,dependencies,description,devDependencies,homepage,lic
   "devDependencies": {
     ~devDependencies:{it|~it~};separator=",\n"~
   }
-} >>
+} >> 
 
-script(command,name) ::= <<"~name~": "~command~" >>
+script(command,name) ::= <<"~name~": "~command~" >> 
 
-dependency(name,version) ::= <<"~name~": "^~version~" >>
-
-babelrc() ::= <<{
-	"presets": [
-		"@babel/preset-env", 
-		"@babel/preset-react"
-	],
-	"plugins": [
-		["module:@babel/plugin-proposal-decorators", { "legacy": true }],
-		["module:@babel/plugin-proposal-class-properties", { "loose": true }]
-	]
-} >>
-
-WebpackConfig(mainEntry,outputFilename) ::= <<const path = require('path');
+WebpackConfig(outputFilename,mainEntry) ::= <<const path = require('path');
 
 module.exports = {
 	entry: { 
@@ -68,5 +67,8 @@ module.exports = {
 			}
 		]
 	}
-}; >>eom() ::= <<}>>
-gt() ::= <<> >>
+}; >> 
+
+eom() ::= "}"
+
+gt() ::= ">"

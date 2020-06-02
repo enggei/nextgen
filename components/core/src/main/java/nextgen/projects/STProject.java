@@ -9,7 +9,7 @@ import java.io.File;
 import static nextgen.domain.DomainPatterns.*;
 import static nextgen.java.JavaPatterns.newPackageDeclaration;
 
-public class StringTemplateEditorProject {
+public class STProject {
 
     private final File root = new File("/home/goe/projects/nextgen/components/core");
     private final File javaMainSrc = new File(root, "src/main/java");

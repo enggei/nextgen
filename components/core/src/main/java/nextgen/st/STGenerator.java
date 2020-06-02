@@ -1,5 +1,6 @@
 package nextgen.st;
 
+import com.generator.util.FileUtil;
 import com.generator.util.StringUtil;
 import nextgen.java.JavaPatterns;
 import nextgen.java.st.PackageDeclaration;
@@ -12,6 +13,7 @@ import org.stringtemplate.v4.STGroupString;
 import java.io.File;
 import java.util.Comparator;
 
+import static com.nextgen.core.GeneratedFile.packageToPath;
 import static nextgen.java.JavaPatterns.newPackageDeclaration;
 
 public class STGenerator {
@@ -26,17 +28,20 @@ public class STGenerator {
 
         final PackageDeclaration packageDeclaration = newPackageDeclaration(packageName + "." + stGroupModel.getName().toLowerCase());
 
+        final File stgFile = JavaPatterns.writeToFile(toStg(stGroupModel), packageDeclaration, stGroupModel.getName(), "stg", new File(root));
+
         final String domainClassName = StringUtil.capitalize(stGroupModel.getName() + "ST");
         final ST stDomain = templateGroup.getInstanceOf("STDomain");
         stDomain.add("packageName", packageDeclaration.getName());
         stDomain.add("name", domainClassName);
+        stDomain.add("template", stGroupModel.getName());
 
         final ST stDomainTests = templateGroup.getInstanceOf("STDomainTests");
         final String testsClassName = StringUtil.capitalize(stGroupModel.getName() + "STTests");
         stDomainTests.add("packageName", packageDeclaration.getName());
         stDomainTests.add("name", testsClassName);
         stDomainTests.add("domainName", domainClassName);
-        stDomainTests.add("stgPath", new File(new File(stGroupModel.getStgFile()).getParentFile(), stGroupModel.getName() + ".stg"));
+        stDomainTests.add("stgPath", stgFile.getAbsolutePath());
 
         stGroupModel.getTemplates().forEach(stTemplate -> {
             final String className = StringUtil.capitalize(stTemplate.getName());
@@ -55,6 +60,7 @@ public class STGenerator {
 
         JavaPatterns.writeToFile(stDomain.render(), packageDeclaration, domainClassName, new File(root));
         JavaPatterns.writeToFile(stDomainTests.render(), packageDeclaration, testsClassName, new File(root));
+
     }
 
     public String generateSTClass(String className, STTemplate stTemplate, PackageDeclaration packageDeclaration) {
@@ -140,8 +146,8 @@ public class STGenerator {
                 "\n\n~templates:{it|~it~};separator=\"\\n\\n\"~" +
                 "\n\neom() ::= \"}\"" +
                 "\n\ngt() ::= \">\"" +
-                "\n\n>> " +
-                "\n\nSTTemplate(content,name,params) ::= <<~name~(~params:{it|~it~};separator=\",\"~) ::= <<~content~~eot()~ >>";
+                "\n\n>>" +
+                "\n\nSTTemplate(content,name,params) ::= <<~name~(~params:{it|~it~};separator=\",\"~) ::= <<~content~ ~eot()~>>";
 
         return new NamedSTGroup("TemplateTemplate", stg, "~");
     }

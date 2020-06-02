@@ -14,6 +14,8 @@ import java.awt.event.*;
 import java.io.File;
 import java.util.Optional;
 
+import static com.nextgen.core.GeneratedFile.packageToPath;
+
 public class STNavigator extends JPanel {
 
     private final JTree tree = new JTree();
@@ -276,7 +278,6 @@ public class STNavigator extends JPanel {
             public void save() {
                 final STGroupModel model = getModel();
                 final File dir = new File(model.getStgFile()).getParentFile();
-                FileUtil.write(STGenerator.toStg(model), FileUtil.tryToCreateFileIfNotExists(new File(dir, model.getName() + ".stg")));
                 FileUtil.write(model.getJsonObject().encodePrettily(), FileUtil.tryToCreateFileIfNotExists(new File(dir, model.getName() + ".json")));
             }
 

@@ -1,0 +1,57 @@
+{
+  "uuid" : "f3388b24-3ce3-4598-a218-0339ee9a44ac",
+  "name" : "Petty",
+  "delimiter" : "~",
+  "templates" : [ {
+    "uuid" : "d51e4b83-50e1-4901-8550-b6ce79b12b45",
+    "name" : "agent",
+    "text" : "import superagentPromise from 'superagent-promise';\nimport _superagent from 'superagent';\nimport appStore from './stores/AppStore';\n\nconst superagent = superagentPromise(_superagent, global.Promise);\n\nconst handleErrors = err => {\n\tif (err && err.response && err.response.status === 401) {\n\t\tauthStore.logout();\n\t}\n\treturn err;\n};\n\nconst responseBody = res => res.body;\n\nconst tokenPlugin = req => {\n\tif (appStore.token) {\n\t\treq.set('Authorization', `Bearer ${appStore.token}`);\n\t}\n};\n\nconst requests = {\n\tdel: url =>\n\t\tsuperagent\n\t\t\t.del(`${url}`)\n\t\t\t.use(tokenPlugin)\n\t\t\t.end(handleErrors)\n\t\t\t.then(responseBody),\n\tget: url =>\n\t\tsuperagent\n\t\t\t.get(`${url}`)\n\t\t\t.use(tokenPlugin)\n\t\t\t.end(handleErrors)\n\t\t\t.then(responseBody),\n\tput: (url, body) =>\n\t\tsuperagent\n\t\t\t.put(`${url}`, body)\n\t\t\t.use(tokenPlugin)\n\t\t\t.end(handleErrors)\n\t\t\t.then(responseBody),\n\tpost: (url, body) =>\n\t\tsuperagent\n\t\t\t.post(`${url}`, body)\n\t\t\t.use(tokenPlugin)\n\t\t\t.end(handleErrors)\n\t\t\t.then(responseBody)\n};\n\n~agentDeclarations:{it|~it~};separator=\"\\n\"~\n\nconst Auth = { \n\tcurrent: () => requests.get('/user'),\n\tlogin: (username, password) => requests.post('/login', { username, password }),\n\tsave: (user) => requests.put('/user', { user })\n}\n\nexport default {\n\tAuth\n};",
+    "parameters" : [ {
+      "uuid" : "ae550607-7546-42db-af91-787c3bfa8ce1",
+      "name" : "agentDeclarations",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    } ]
+  }, {
+    "uuid" : "0e37b30c-8b53-4d73-a85a-7919de1bd0d8",
+    "name" : "agentDeclaration",
+    "text" : "const ~name~ = { \n\t~agentEndpoint:{it|~it~};separator=\",\\n\"~\n}",
+    "parameters" : [ {
+      "uuid" : "c6f0299f-50a2-4509-9ea1-86e31663409d",
+      "name" : "agentEndpoint",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "33f8ce05-bd63-4642-ae1d-654a1271a80e",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "1c57e7f0-7b85-4aee-a163-c47ba5ee835a",
+    "name" : "agentEndpoint",
+    "text" : "~name~: (~parameters:{it|~it~};separator=\",\"~) => requests.~action~('/~url~'~if(parameters)~, { ~parameters:{it|~it~};separator=\",\"~ }~endif~)",
+    "parameters" : [ {
+      "uuid" : "19125191-8a41-447f-ba6e-7a4c12fe89f1",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "7fcfacd7-ff1c-4d49-8c8f-5ee4d15f601e",
+      "name" : "parameters",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "b20c0a0f-5e4f-4dc6-a6c9-c84300cc3bb1",
+      "name" : "url",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "ab60ad9c-bd77-492a-b886-49c74233c3c7",
+      "name" : "action",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  } ],
+  "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Petty.stg"
+}

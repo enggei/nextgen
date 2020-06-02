@@ -1,0 +1,520 @@
+{
+  "uuid" : "3ff969ac-4b1c-43fb-968a-7c579bf6779b",
+  "name" : "React",
+  "delimiter" : "~",
+  "templates" : [ {
+    "uuid" : "23401c8d-2b18-4ac1-a0d1-0b571679931a",
+    "name" : "App",
+    "text" : "import React, { Component } from 'react';\nimport { Switch, Route, withRouter } from 'react-router-dom';\n\nimport { Provider } from 'mobx-react';\nimport { inject, observer } from 'mobx-react';\n\nimport CssBaseline from '@material-ui/core/CssBaseline';\n\nimport NavBar from './components/NavBar.js';\nimport Login from './components/Login.js';\nimport LogoutForm from './components/LogoutForm.js';\n~components:{it|import ~it.name~ from './~it.directory~/~it.filename~.js';};separator=\"\\n\"~\n\n@inject('userStore', 'appStore', 'authStore', 'searchStore', 'currentStore')\n@withRouter\n@observer\nclass App extends Component {\n\n    constructor(props) {\n        super(props);\n        if (!this.props.appStore.token) {\n            this.props.appStore.setAppLoaded();\n        }\n    }\n\n\tcomponentDidMount() {\n\t\tif (this.props.appStore.token) {\n\t\t\tthis.props.userStore.pullUser().finally(() => this.props.appStore.setAppLoaded());\n\t\t}\n\t}\n\n\trender() {\n\n\t\tif (this.props.appStore.appLoaded) {\n\t\t\treturn (\n\t\t\t\t<div>\n\t\t\t\t\t<div>\n                        <NavBar></NavBar>\n                  </div>\n\t\t\t\t\t<Switch>\n\t\t\t\t\t\t<Route path=\"/login\" component={Login} />\n\t\t\t\t\t\t~components:{it|<Route path=\"/~it.path~\" component={ ~it.name~ ~eom()~ />};separator=\"\\n\"~\n\t\t\t\t\t\t<Route path=\"/logout\" component={LogoutForm} />\n\t\t\t\t\t</Switch>\n\t\t\t\t</div>\n\t\t\t);\n\t\t}\n\n\t\treturn (\n                <React.Fragment>\n                      <CssBaseline />\n                      <NavBar />\n                        <footer className=\"footer\">\n                            &copy; Copyright <span>{(new Date().getFullYear())}</span> Real Property Analytics\n                        </footer>\n                </React.Fragment>\n\t\t\t);\n\t}\n}\n\nexport default App; ",
+    "parameters" : [ {
+      "uuid" : "bfebd897-f30e-4fb4-b933-a47c23d7248b",
+      "name" : "components",
+      "argumentTypes" : [ "Object" ],
+      "type" : "KVLIST",
+      "keys" : [ {
+        "uuid" : "3d2ce053-9696-461d-a9ad-46f0185ae52a",
+        "name" : "path",
+        "argumentTypes" : [ "Object" ]
+      }, {
+        "uuid" : "35deb655-b247-459d-987c-8a0d1d58196c",
+        "name" : "name",
+        "argumentTypes" : [ "Object" ]
+      } ]
+    } ]
+  }, {
+    "uuid" : "248f73b6-364f-47e0-82f4-3ff9320a04e1",
+    "name" : "BlockStmt",
+    "text" : "~stmt~ {\n\t~children:{it|~it~};separator=\"\\n\"~\n} ",
+    "parameters" : [ {
+      "uuid" : "ced221fb-c204-4478-9f7b-5990e922f009",
+      "name" : "stmt",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "9118b07c-7268-4782-b1fa-346a899a3b60",
+      "name" : "children",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    } ]
+  }, {
+    "uuid" : "9752d4ad-2141-445a-9a80-3a79072db167",
+    "name" : "ClassComponent",
+    "text" : "// dependencies:\n~dependencies:{it|~it~};separator=\"\\n\"~\n\n~components:{it|~it~};separator=\"\\n\\n\"~\n\n~decorators:{it|~it~};separator=\"\\n\"~\nclass ~name~ extends React.Component {\n\n\tconstructor(props) {\n\t\tsuper(props);\n\t\tconsole.log(this.props);\n\t\t\n~if(state)~\n\t\tthis.state = {\n\t\t\t~state:{it|~it~};separator=\",\\n\"~;\n\t\t}\n~endif~\n\n\t\t~events:{it|this.~it.methodName~ = this.~it.methodName~.bind(this);};separator=\"\\n\"~\n\t}\n\n~if(events)~\n\t~events:{it|~it.declaration~};separator=\"\\n\\n\"~\n~endif~\n\t\n~if(methods)~\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n~endif~\n\n\trender() {\n~if(renderConstants)~\n\tconst { ~renderConstants:{it|~it~};separator=\", \"~ } = this.state;~endif~\n\t\t~returnStatements:{it|~it~};separator=\"\\n\\n\"~\t\n\t}\n}\n\nexport default (~name~); ",
+    "parameters" : [ {
+      "uuid" : "35ba12e6-0547-4b9c-9ac1-1910f9995a03",
+      "name" : "returnStatements",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "05f58836-daa1-4b4b-b32a-8be290816fe4",
+      "name" : "events",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "a1f90e60-e0e1-4e27-a494-79ac0469ac38",
+      "name" : "decorators",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "47954fb1-2ec7-4a90-8fac-e6d0070673dd",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "c36cd237-74e2-494a-9767-92e3c4d09811",
+      "name" : "components",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "ea5e3779-73af-4357-b265-97d8859944ab",
+      "name" : "methods",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "138470c5-3794-4872-8c4a-c59c3f7b8d1a",
+      "name" : "state",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "97543f0c-7dc5-4f8f-8308-c7c6aa5b10c9",
+      "name" : "dependencies",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "63a95642-e7a2-4c2c-b9e0-315065d37c8e",
+      "name" : "renderConstants",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    } ]
+  }, {
+    "uuid" : "bbfd8818-c42b-432d-9f65-71fa928ed43c",
+    "name" : "cssProp",
+    "text" : "~name~: ~value~ ",
+    "parameters" : [ {
+      "uuid" : "e09223b6-0703-4e76-9d38-b122abbab8f4",
+      "name" : "value",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "ad20beff-9b23-44f9-be9f-66eaea9527d4",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "1841ee29-23bc-43b0-8920-1cf3a66f43ac",
+    "name" : "Decorator",
+    "text" : "@~name~~if(parameters)~(~parameters:{it|~it~};separator=\", \"~)~endif~ ",
+    "parameters" : [ {
+      "uuid" : "e4fd7519-e10e-41fa-9f46-9635ccbbc2b1",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "930d5e00-0e46-4bd1-b79e-df1ceecd52ac",
+      "name" : "parameters",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    } ]
+  }, {
+    "uuid" : "a543cdea-b41f-40e7-b39f-4a7bd9ed20e5",
+    "name" : "defaultImport",
+    "text" : "~name~ ",
+    "parameters" : [ {
+      "uuid" : "2fd3cb43-a66f-4dc5-b2d6-58a498d1fbc2",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "c7c5c8b4-df97-446b-bf2f-4721d782af39",
+    "name" : "Dependency",
+    "text" : "import ~value~ from '~packageName~'; ",
+    "parameters" : [ {
+      "uuid" : "9a58bbe5-7e49-410d-bbe9-334829b60d19",
+      "name" : "value",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "078ac514-3b84-4415-89ac-459c7fb646b0",
+      "name" : "packageName",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "59814359-6f01-4138-9900-c11839c56461",
+    "name" : "DestructorProp",
+    "text" : "const { ~prop:{it|~it~};separator=\", \"~ } = this.props~if(child)~.~child~~endif~; ",
+    "parameters" : [ {
+      "uuid" : "3940d9cc-a3ac-4093-8b80-b61d20028014",
+      "name" : "child",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "eda2f2cf-79b3-4220-a047-15df0125b3e3",
+      "name" : "prop",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    } ]
+  }, {
+    "uuid" : "562c6189-0000-4cce-b64d-2a4594b462b2",
+    "name" : "Element",
+    "text" : "<~name~~if(props)~ \n\t~props:{it|~it~};separator=\"\\n\"~~endif~~if(children)~>\n\t~children:{it|~it~};separator=\"\\n\"~\n</~name~>~else~ />~endif~ ",
+    "parameters" : [ {
+      "uuid" : "4c8b0d6f-a090-434b-ac97-bffe76517fc5",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "c4a2750c-fea9-4bab-9c97-f62128d900c0",
+      "name" : "children",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "2252bf21-9123-4e82-af83-618d867986d8",
+      "name" : "props",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    } ]
+  }, {
+    "uuid" : "d323b41f-7f32-4e99-892c-65933422a78d",
+    "name" : "ForwardRef",
+    "text" : "const ~name~ = React.forwardRef( (props, ref) => (\n\t~forward~\n)); ",
+    "parameters" : [ {
+      "uuid" : "b91e109e-0578-450e-96ef-31420a6572bd",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "088a7a37-0b45-417f-ba18-89b26434bf39",
+      "name" : "forward",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "46c87215-26b5-4e66-8e66-e634043b31f9",
+    "name" : "Function",
+    "text" : "function ~name~(~parameters:{it|~it~};separator=\",\"~) {\n\t~body~\n} ",
+    "parameters" : [ {
+      "uuid" : "90517803-dff0-41b1-8aaa-4149dc9648fc",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "31e38d68-bc45-4557-a4b0-102dcbd4505a",
+      "name" : "parameters",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "74c84b4d-fb61-4b12-9514-62ac8ca60077",
+      "name" : "body",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "31602a2d-7462-44cb-8305-76cb7a9e5222",
+    "name" : "FunctionalComponent",
+    "text" : "// dependencies:\n~dependencies:{it|~it~};separator=\"\\n\"~\n~if(style)~import { makeStyles } from '@material-ui/core/styles';~endif~\n\n~if(localImports)~\n// local imports\n~localImports:{it|~it~};separator=\"\\n\"~\n~endif~\n\n\nfunction ~name~(props) {\n\n\treturn (\n\t\t~element~\n\t)\n}\n~if(wrapper)~// Wrap the component instead of decorating it\n~endif~\nexport default ~if(inject)~inject(~inject:{it|'~it~'};separator=\", \"~)~endif~~if(wrapper)~(~wrapper~(~endif~~name~~if(wrapper)~))~endif~ ",
+    "parameters" : [ {
+      "uuid" : "1487c82b-f360-477d-9b10-9ffe7e5029d1",
+      "name" : "wrapper",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "735922e0-64a6-4238-8113-845a99ea136b",
+      "name" : "inject",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "c1a0f5a4-c6f9-4f65-bb34-d88fee383294",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "4b4ed9da-97ec-499c-9225-2c7e3e20b9f5",
+      "name" : "element",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "047fa7e9-36d9-4fdf-8ca4-c0534f104cf7",
+      "name" : "dependencies",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "250ca29b-3205-4b7d-95c3-2dc3504b6ba0",
+      "name" : "localImports",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    } ]
+  }, {
+    "uuid" : "4c470834-253b-458f-aa48-4105d9e6a117",
+    "name" : "GlobalStyle",
+    "text" : "'@global': {\n\t~name~: {\n\t\t~properties:{it|~it.key~: ~it.value~};separator=\",\\n\"~\n\t}\n} ",
+    "parameters" : [ {
+      "uuid" : "826b8c3e-a7df-494e-8f58-2db652d7aaec",
+      "name" : "properties",
+      "argumentTypes" : [ "Object" ],
+      "type" : "KVLIST",
+      "keys" : [ {
+        "uuid" : "ed2e1f35-23db-4919-8637-44862c0f281b",
+        "name" : "key",
+        "argumentTypes" : [ "Object" ]
+      }, {
+        "uuid" : "916ea709-05b8-4a17-8312-da3e26d910e8",
+        "name" : "value",
+        "argumentTypes" : [ "Object" ]
+      } ]
+    }, {
+      "uuid" : "2acc126a-d4b3-4ecc-accd-a32350196942",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "815a0c8e-e5d8-4002-823d-15ba11da3dc6",
+    "name" : "If",
+    "text" : "if (~condition~) ~blockStmt~ ",
+    "parameters" : [ {
+      "uuid" : "e19073a0-da87-4e8b-84f4-66e90d4e9485",
+      "name" : "condition",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "7fb4255e-77d6-494b-beb9-d1bfe87c848d",
+      "name" : "blockStmt",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "fdce873c-54a0-4c29-9e6e-9999b00cf2b1",
+    "name" : "Inject",
+    "text" : "@inject(~values:{it|~it~};separator=\", \"~) ",
+    "parameters" : [ {
+      "uuid" : "682a2f9d-7430-44c2-860d-2d256bfe217b",
+      "name" : "values",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    } ]
+  }, {
+    "uuid" : "31e86568-78ff-454a-96e3-9dce9b673ea8",
+    "name" : "JsonObject",
+    "text" : "{ ~values:{it|~it~};separator=\", \"~ } ",
+    "parameters" : [ {
+      "uuid" : "da1c4610-522e-4c49-8a8f-9a1dc6f88e7b",
+      "name" : "values",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    } ]
+  }, {
+    "uuid" : "aa3cf47d-0823-4105-aa8b-a3843322cf6d",
+    "name" : "Link",
+    "text" : "<Link innerRef={ ref } to=\"~to~\" { ...props } /> ",
+    "parameters" : [ {
+      "uuid" : "d0b1fe16-d829-437b-8051-368a22aa7596",
+      "name" : "to",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "4be9f985-38bf-4afe-b1bc-e4b899d32516",
+    "name" : "MaterialUI",
+    "text" : " "
+  }, {
+    "uuid" : "320786a8-4367-42fd-9252-69836a02c84a",
+    "name" : "MaterialUIGroup",
+    "text" : "package ~packageName~;\n\nimport java.util.LinkedHashMap;\nimport java.util.Map;\n\npublic class MaterialUI extends ReactGroup {\n\n\tpublic static class BaseElement extends ReactGroup.ElementST {\n\n\t\tprotected final MaterialUI group;\n\t\tprotected final String name;\n\t\tprivate final String importPackage;\n\t\tprivate StyleST styleST;\n\t\tprotected String styleName;\n\t\tprivate final Map<String, Object> styleMap = new LinkedHashMap<>();\n\n\t\tBaseElement(MaterialUI group, String name, String importPackage) {\n\t\t\tsuper(group.getSTGroup());\n\t\t\tthis.group = group;\n\t\t\tthis.name = name;\n\t\t\tthis.importPackage = importPackage;\n\t\t\tsetName(name);\n\t\t}\n\n\t\tpublic ReactGroup.ImportST asImport() {\n\t\t\treturn group.newImport().setValue(name).setPackageName(importPackage);\n\t\t}\n\n\t\tpublic ReactGroup.StyleST asStyle() {\n\t\t\tfinal String componentStyleName = styleName == null ? lowFirst(name) : styleName;\n\t\t\tfinal StyleST styleST = group.newStyle().setName(componentStyleName);\n\t\t\tfor (Map.Entry<String, Object> entry : styleMap.entrySet())\n\t\t\t\tstyleST.addPropertiesValue(entry.getKey(), entry.getValue());\n\t\t\treturn styleST;\n\t\t}\n\n\t\tprotected void addStyle(String name, Object value) {\n\t\t\tstyleMap.put(name,value);\n\t\t}\n\n\t\t//addPropsValue(group.newProp().setName(\"className\").setValue(group.newObject().addValuesValue(\"this.props.classes.\" + componentStyleName)));\n\n\t\t@Override\n\t\tpublic String toString() {\n\t\t\treturn super.toString();\n\t\t}\n\t}\n\n\t~elements:{it|~it~};separator=\"\\n\\n\"~\n} ",
+    "parameters" : [ {
+      "uuid" : "461bdc44-dae8-4fa6-8f0a-c71cd07de84d",
+      "name" : "elements",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "e0c001c0-021f-4882-b33c-1a68f97d1f29",
+      "name" : "packageName",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "c6854148-dd6f-465c-9093-c893c46e51bf",
+    "name" : "MenuItem",
+    "text" : "<MenuItem component={ ~name~ } onClick={handleClose}> ~title~ </MenuItem> ",
+    "parameters" : [ {
+      "uuid" : "8504b5a0-e14d-476c-a69d-7aeda7d74838",
+      "name" : "title",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "ec21cdb4-92ac-4636-be4d-82dbac811cc7",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "ef2c7e87-4fb4-497b-afe3-ed22271f2076",
+    "name" : "MethodDeclaration",
+    "text" : "~if(const)~const ~endif~~name~ = ~if(parameter)~~parameter~~else~()~endif~ => {\n\t~statements:{it|~it~};separator=\"\\n\"~\n} ",
+    "parameters" : [ {
+      "uuid" : "70762948-31c5-468f-9b17-14072da07970",
+      "name" : "parameter",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "b55930c3-93fd-41a7-8ce8-c0d4d72023a4",
+      "name" : "statements",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "c14ad4d8-8478-4994-95ef-fd05aeb5c788",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "a8c30331-4406-45ce-9f9f-b3d7b6b75862",
+    "name" : "MobX",
+    "text" : " "
+  }, {
+    "uuid" : "0a0edb56-b90b-42b2-9fae-dd0c1321b773",
+    "name" : "NameArray",
+    "text" : "~name~ : [ ~values:{it|~it~};separator=\", \"~ ] ",
+    "parameters" : [ {
+      "uuid" : "94827655-ff32-464f-8204-7ef49463e79c",
+      "name" : "values",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "76c4bb66-d1a7-4053-b1b4-b88bd8b9b449",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "dfb86837-4149-4405-8ba9-262c22ee0924",
+    "name" : "namedImport",
+    "text" : "{ ~names:{it|~it~};separator=\", \"~ } ",
+    "parameters" : [ {
+      "uuid" : "b6217f8e-9cf7-41c2-bee8-7820ea339880",
+      "name" : "names",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    } ]
+  }, {
+    "uuid" : "e5dd09d9-0522-4c5a-87fa-b7795bcebeeb",
+    "name" : "NameValue",
+    "text" : "~name~ : ~value~ ",
+    "parameters" : [ {
+      "uuid" : "2bb92f4d-0987-49ed-bc51-33b1c370eddc",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "891e0d12-e529-4ab8-980f-6d98385f935b",
+      "name" : "value",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "5385edbb-3152-4134-9b3b-a939fa30c4ac",
+    "name" : "Prop",
+    "text" : "~name~~if(value)~=~value~~endif~ ",
+    "parameters" : [ {
+      "uuid" : "fd35c3b2-24e3-4acd-b8f5-b8d440142c05",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "9e359ad9-3a10-4d07-9cd9-5f5cd9da6797",
+      "name" : "value",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "1354a2c8-9e86-488e-a142-fe35f7aa0acb",
+    "name" : "returnStatement",
+    "text" : "~if(condition)~if (~condition~) ~endif~return (\n\t~element~\n\t); ",
+    "parameters" : [ {
+      "uuid" : "89e363dd-7aa1-40e8-9ffc-0c83d74d789d",
+      "name" : "condition",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "fd102358-cbaa-4aac-94e0-6a8c908d6855",
+      "name" : "element",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "c1d2b469-a811-44b5-b3ff-b081d54ce53b",
+    "name" : "SimpleMenu",
+    "text" : "import React from 'react';\nimport Button from '@material-ui/core/Button';\nimport Menu from '@material-ui/core/Menu';\nimport MenuItem from '@material-ui/core/MenuItem';\nimport MenuList from '@material-ui/core/MenuList';\nimport IconButton from '@material-ui/core/IconButton';\nimport MenuIcon from '@material-ui/icons/Menu';\nimport { Link } from 'react-router-dom';\n\nconst LoginLink = React.forwardRef( (props, ref) => (\n\t<Link innerRef={ ref } to=\"/login\" { ...props } />\n));\n\n~menuItems:{it|\nconst ~it.name~ = React.forwardRef( (props, ref) => (\n\t<Link innerRef={ ref ~eom()~ to=\"/~it.to~\"~if(it.target)~ target=\"~it.target~\" ~endif~ { ...props ~eom()~ />\n));\n};separator=\"\\n\\n\"~\n\nconst Testing = React.forwardRef( (props, ref) => (\n\t<Link innerRef={ ref } to=\"/testing\" { ...props } />\n));\n\nexport default function SimpleMenu(props) {\n\n  const [anchorEl, setAnchorEl] = React.useState(null);\n\n  function handleClick(event) {\n    setAnchorEl(event.currentTarget);\n  }\n\n  function handleClose() {\n    setAnchorEl(null);\n  }\n\n    if (!props.currentUser)  {\n        return (\n            <div>\n                <IconButton edge=\"start\" color=\"inherit\" aria-label=\"Menu\" onClick={handleClick}>\n                    <MenuIcon />\n                </IconButton>\n                <Menu id=\"simple-menu\" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>\n                    <MenuItem component={ LoginLink } onClick={handleClose}>Login</MenuItem>\n                </Menu>\n            </div>);\n    \t}\n\n    else {\n         return (\n                <div>\n                    <IconButton edge=\"start\" color=\"inherit\" aria-label=\"Menu\" onClick={handleClick}>\n                        <MenuIcon />\n                    </IconButton>\n                    <Menu id=\"simple-menu\" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>\n                       ~menuItems:{it|~it.element~};separator=\"\\n\"~\n                       ~menuComponents:{it|~it~};separator=\"\\n\"~\n                    </Menu>\n                </div>);\n        }\n} ",
+    "parameters" : [ {
+      "uuid" : "64dfe7fc-14ec-4f1c-8434-d64fed101843",
+      "name" : "menuItems",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "35ac557a-e5ce-4e3e-82c2-ac516d54b00b",
+      "name" : "menuComponents",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    } ]
+  }, {
+    "uuid" : "ec09e561-5533-4d1f-9134-205620a76d7a",
+    "name" : "State",
+    "text" : "{\n\t~values:{it|~it.name~: ~it.value~};separator=\",\\n\"~\n} ",
+    "parameters" : [ {
+      "uuid" : "9a45f5e7-2414-4810-969e-3ba0edb5f5e2",
+      "name" : "values",
+      "argumentTypes" : [ "Object" ],
+      "type" : "KVLIST",
+      "keys" : [ {
+        "uuid" : "0973bb5b-19a7-4de8-ba56-cd1ee3fe3b69",
+        "name" : "name",
+        "argumentTypes" : [ "Object" ]
+      }, {
+        "uuid" : "4941b694-35aa-4fc5-a16f-cc8964ddbd3b",
+        "name" : "value",
+        "argumentTypes" : [ "Object" ]
+      } ]
+    } ]
+  }, {
+    "uuid" : "8bef7efc-9073-4430-ba0d-4bfa6c45bb86",
+    "name" : "Style",
+    "text" : "~name~: {\n\t~properties:{it|~it.key~: ~it.value~};separator=\",\\n\"~\n} ",
+    "parameters" : [ {
+      "uuid" : "b6f38c06-f09f-4872-a396-909d576687cd",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "5ea85cf9-70e4-442a-aeec-07f87aa6d5c6",
+      "name" : "properties",
+      "argumentTypes" : [ "Object" ],
+      "type" : "KVLIST",
+      "keys" : [ {
+        "uuid" : "444bb55a-8796-41bc-bb8a-72aed36366a1",
+        "name" : "key",
+        "argumentTypes" : [ "Object" ]
+      }, {
+        "uuid" : "88cbb2b2-9b36-4c28-8634-fbff4731699e",
+        "name" : "value",
+        "argumentTypes" : [ "Object" ]
+      } ]
+    } ]
+  }, {
+    "uuid" : "9655c591-3736-422a-b69f-af15db91780e",
+    "name" : "StyleComponent",
+    "text" : "const useStyles = theme => ({\n\t~elements:{it|~it~};separator=\",\\n\"~\n\t}); ",
+    "parameters" : [ {
+      "uuid" : "292a0b89-e846-433f-852e-88df072ea7de",
+      "name" : "elements",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    } ]
+  }, {
+    "uuid" : "022d0d31-a515-4889-928e-012644896434",
+    "name" : "withStyles",
+    "text" : "@withStyles(useStyles) "
+  } ],
+  "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/React.stg"
+}
