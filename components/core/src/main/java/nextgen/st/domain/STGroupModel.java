@@ -3,27 +3,21 @@ package nextgen.st.domain;
 
 public class STGroupModel {
 
-	private final java.util.UUID uuid;
-	private String name;
-	private String delimiter;
-	private java.io.File stgFile;
-	private final java.util.List<STTemplate> templates = new java.util.ArrayList<>();
+	private final io.vertx.core.json.JsonObject jsonObject;
 
 	public STGroupModel() { 
-		this.uuid = java.util.UUID.randomUUID();
+		this.jsonObject = new io.vertx.core.json.JsonObject();
+		jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
 	}
 
-	public STGroupModel(java.util.UUID uuid) { 
-		this.uuid = uuid;
+	public STGroupModel(io.vertx.core.json.JsonObject jsonObject) { 
+		this.jsonObject = jsonObject;
+		java.lang.String uuidString = jsonObject.getString("uuid");
+		if (uuidString == null) jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
 	}
 
-	public java.util.UUID getUuid() { 
-		return uuid;
-	}
-
-	@Override
-	public int hashCode() { 
-		return java.util.Objects.hash(uuid);
+	public io.vertx.core.json.JsonObject getJsonObject() { 
+		return this.jsonObject;
 	}
 
 	@Override
@@ -31,47 +25,83 @@ public class STGroupModel {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		final STGroupModel other = (STGroupModel) o;
-		return uuid.equals(other.uuid);
+		return jsonObject.getString("uuid").equals(other.getJsonObject().getString("uuid"));
 	}
 
-	public STGroupModel setName(String name) { 
-		this.name = name;
+	@Override
+	public int hashCode() { 
+		return java.util.Objects.hash(jsonObject.getString("uuid"));
+	}
+
+	public STGroupModel setName(String value) { 
+		jsonObject.put("name", value);
 		return this;
 	}
 
 	public String getName() { 
-		return this.name;
+		return jsonObject.getString("name");
+	}
+
+	public String getName(String defaultValue) { 
+		return jsonObject.getString("name", defaultValue);
 	}
 
 	@Override
 	public java.lang.String toString() { 
-		return name == null ? null : name;
+		return jsonObject.getString("name");
 	}
 
-	public STGroupModel setDelimiter(String delimiter) { 
-		this.delimiter = delimiter;
+	public STGroupModel setDelimiter(String value) { 
+		jsonObject.put("delimiter", value);
 		return this;
 	}
 
 	public String getDelimiter() { 
-		return this.delimiter;
+		return jsonObject.getString("delimiter");
 	}
 
-	public STGroupModel setStgFile(java.io.File stgFile) { 
-		this.stgFile = stgFile;
+	public String getDelimiter(String defaultValue) { 
+		return jsonObject.getString("delimiter", defaultValue);
+	}
+
+	public STGroupModel setStgFile(String value) { 
+		jsonObject.put("stgFile", value);
 		return this;
 	}
 
-	public java.io.File getStgFile() { 
-		return this.stgFile;
+	public String getStgFile() { 
+		return jsonObject.getString("stgFile");
+	}
+
+	public String getStgFile(String defaultValue) { 
+		return jsonObject.getString("stgFile", defaultValue);
 	}
 
 	public STGroupModel addTemplates(STTemplate value) { 
-		templates.add(value);
+		io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("templates");
+		if (jsonArray == null) jsonObject.put("templates", jsonArray = new io.vertx.core.json.JsonArray());
+		jsonArray.add(value.getJsonObject());
 		return this;
 	}
 
-	public java.util.List<STTemplate> getTemplates() { 
-		return this.templates;
+	public java.util.stream.Stream<STTemplate> getTemplates() { 
+		return jsonObject.getJsonArray("templates", new io.vertx.core.json.JsonArray()).stream().map((o) -> new STTemplate((io.vertx.core.json.JsonObject) o));
+	}
+
+	public STGroupModel removeTemplates(STTemplate value) { 
+		final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("templates", new io.vertx.core.json.JsonArray());
+		for (int i = 0; i < jsonArray.size(); i++)  { 
+			final io.vertx.core.json.JsonObject o = jsonArray.getJsonObject(i);
+			if (value.getJsonObject().getString("uuid").equals(o.getString("uuid")))  { 
+				jsonArray.remove(i);
+				return this;
+			}
+		}
+		return this;
+	}
+
+	public STGroupModel clearTemplates() { 
+		jsonObject.put("templates", new io.vertx.core.json.JsonArray());
+		return this;
 	}
 }

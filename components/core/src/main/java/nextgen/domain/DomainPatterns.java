@@ -129,7 +129,8 @@ public class DomainPatterns extends DomainFactory {
                             .findAny();
                     if (!existingRelation.isPresent()) addRelations(relation);
 
-                    add(relation.getDst());
+                    if (!getEntities().contains(relation.getDst()))
+                        add(relation.getDst());
                 }
             }
 
@@ -144,6 +145,16 @@ public class DomainPatterns extends DomainFactory {
         public EntityBuilder(String name, EntityType entityType) {
             setName(name);
             setType(entityType);
+        }
+
+        public EntityBuilder addOneToManySelf(String name) {
+            relations.add(newOneToManyRelation(name, this, this));
+            return this;
+        }
+
+        public EntityBuilder addOneToOneSelf(String name) {
+            relations.add(newOneToOneRelation(name, this, this));
+            return this;
         }
 
         public EntityBuilder addExternalField(String name, Class<?> className) {

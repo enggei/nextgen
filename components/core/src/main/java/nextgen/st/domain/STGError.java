@@ -3,25 +3,22 @@ package nextgen.st.domain;
 
 public class STGError {
 
-	private final java.util.UUID uuid;
-	private STGErrorType type;
+	private final io.vertx.core.json.JsonObject jsonObject;
 	private org.stringtemplate.v4.misc.STMessage message;
 
 	public STGError() { 
-		this.uuid = java.util.UUID.randomUUID();
+		this.jsonObject = new io.vertx.core.json.JsonObject();
+		jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
 	}
 
-	public STGError(java.util.UUID uuid) { 
-		this.uuid = uuid;
+	public STGError(io.vertx.core.json.JsonObject jsonObject) { 
+		this.jsonObject = jsonObject;
+		java.lang.String uuidString = jsonObject.getString("uuid");
+		if (uuidString == null) jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
 	}
 
-	public java.util.UUID getUuid() { 
-		return uuid;
-	}
-
-	@Override
-	public int hashCode() { 
-		return java.util.Objects.hash(uuid);
+	public io.vertx.core.json.JsonObject getJsonObject() { 
+		return this.jsonObject;
 	}
 
 	@Override
@@ -29,16 +26,21 @@ public class STGError {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		final STGError other = (STGError) o;
-		return uuid.equals(other.uuid);
+		return jsonObject.getString("uuid").equals(other.getJsonObject().getString("uuid"));
 	}
 
-	public STGError setType(STGErrorType type) { 
-		this.type = type;
+	@Override
+	public int hashCode() { 
+		return java.util.Objects.hash(jsonObject.getString("uuid"));
+	}
+
+	public STGError setType(STGErrorType value) { 
+		jsonObject.put("type", value.name());
 		return this;
 	}
 
 	public STGErrorType getType() { 
-		return this.type;
+		return jsonObject.getString("type") == null ? null : STGErrorType.valueOf(jsonObject.getString("type"));
 	}
 
 	public STGError setMessage(org.stringtemplate.v4.misc.STMessage message) { 
@@ -48,5 +50,14 @@ public class STGError {
 
 	public org.stringtemplate.v4.misc.STMessage getMessage() { 
 		return this.message;
+	}
+
+	public boolean hasMessage() { 
+		return message != null;
+	}
+
+	@Override
+	public java.lang.String toString() { 
+		return jsonObject.encode();
 	}
 }

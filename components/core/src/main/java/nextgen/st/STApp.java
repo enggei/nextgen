@@ -2,7 +2,9 @@ package nextgen.st;
 
 import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
-import nextgen.st.domain.STFactory;
+import io.vertx.core.json.JsonObject;
+import nextgen.st.domain.STGroupModel;
+import nextgen.st.domain.STJsonFactory;
 import nextgen.st.domain.STGDirectory;
 import nextgen.st.domain.STGParseResult;
 
@@ -35,21 +37,30 @@ public class STApp extends JFrame {
         SwingUtil.show(new STApp(load("/home/goe/projects/nextgen/components/core/src/main/resources/templates")));
     }
 
-    private static STGDirectory load(String dir) {
+    public static STGDirectory load(String dir) {
 
-        final STGDirectory root = STFactory.newSTGDirectory()
-                .setPath(new File(dir));
+        final STGDirectory root = STJsonFactory.newSTGDirectory()
+                .setPath(new File(dir).getPath());
 
-        final Optional<File[]> files = Optional.ofNullable(FileUtil.list(dir, ".stg"));
-        files.ifPresent(stgFiles -> {
-            for (File stgFile : stgFiles) {
-                final STGParseResult parseResult = STParser.parse(stgFile);
-                if (parseResult.getErrors().isEmpty())
-                    root.addGroups(parseResult.getParsed());
-                else
-                    parseResult.getErrors().forEach(stgError -> System.out.println(stgFile.getName() + " : " + stgError.getType() + " " + stgError.getMessage()));
-            }
-        });
+        Optional.ofNullable(FileUtil.list(dir, ".json"))
+                .ifPresent(files -> {
+                    for (File file : files) {
+                        root.addGroups(new STGroupModel(new JsonObject(FileUtil.read(file))));
+                    }
+                });
+
+        Optional.ofNullable(FileUtil.list(dir, ".stg"))
+                .ifPresent(stgFiles -> {
+                    for (File stgFile : stgFiles) {
+                        final STGParseResult parseResult = STParser.parse(stgFile);
+                        if (parseResult.getErrors().count() == 0) {
+                            final Optional<STGroupModel> first = root.getGroups().filter(stGroupModel -> stGroupModel.getName().equals(parseResult.getParsed().getName())).findFirst();
+                            if (!first.isPresent())
+                                root.addGroups(parseResult.getParsed());
+                        } else
+                            parseResult.getErrors().forEach(stgError -> System.out.println(stgFile.getName() + " : " + stgError.getType() + " " + stgError.getMessage()));
+                    }
+                });
 
         return root;
     }

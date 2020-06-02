@@ -2,16 +2,13 @@ package nextgen.st;
 
 import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
-import nextgen.st.domain.STFactory;
 import nextgen.st.domain.STGDirectory;
 import nextgen.st.domain.STGroupModel;
+import nextgen.st.domain.STJsonFactory;
 import nextgen.st.domain.STTemplate;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
+import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -124,20 +121,24 @@ public class STNavigator extends JPanel {
     }
 
     public void show(STGDirectoryTreeNode.STGroupTreeNode.STTemplateTreeNode stTemplateTreeNode) {
-        final STGDirectoryTreeNode.STGroupTreeNode stGroupTreeNode = (STGDirectoryTreeNode.STGroupTreeNode) stTemplateTreeNode.getParent();
 
-        final STEditor stEditor = findSTTemplateEditor(tabbedPane, stGroupTreeNode)
-                .orElseGet(() -> {
-                    final STEditor stEditor1 = new STEditor(stGroupTreeNode);
-                    tabbedPane.addTab(stGroupTreeNode.getLabel(), stEditor1);
-                    return stEditor1;
+        stTemplateTreeNode
+                .getParentNode(STGDirectoryTreeNode.STGroupTreeNode.class)
+                .ifPresent(parent -> {
+
+                    final STEditor stEditor = findSTTemplateEditor(tabbedPane, parent)
+                            .orElseGet(() -> {
+                                final STEditor stEditor1 = new STEditor(parent);
+                                tabbedPane.addTab(parent.getLabel(), stEditor1);
+                                return stEditor1;
+                            });
+
+                    SwingUtilities.invokeLater(() -> {
+                        stEditor.setSTTemplate(stTemplateTreeNode);
+                        tabbedPane.setTitleAt(tabbedPane.indexOfComponent(stEditor), parent.getModel().getName() + " - " + stTemplateTreeNode.getModel().getName());
+                        tabbedPane.setSelectedComponent(stEditor);
+                    });
                 });
-
-        SwingUtilities.invokeLater(() -> {
-            stEditor.setSTTemplate(stTemplateTreeNode);
-            tabbedPane.setTitleAt(tabbedPane.indexOfComponent(stEditor), stGroupTreeNode.getModel().getName() + " - " + stTemplateTreeNode.getModel().getName());
-            tabbedPane.setSelectedComponent(stEditor);
-        });
     }
 
     public Optional<STEditor> findSTTemplateEditor(JTabbedPane tabbedPane, STGDirectoryTreeNode.STGroupTreeNode stGroupTreeNode) {
@@ -181,6 +182,16 @@ public class STNavigator extends JPanel {
         public int hashCode() {
             return getModel().hashCode();
         }
+
+        @SuppressWarnings("unchecked")
+        public <T> Optional<T> getParentNode(Class<T> type) {
+            if (getClass().equals(type)) return (Optional<T>) Optional.of(this);
+
+            final TreeNode parent = getParent();
+            if (!(parent instanceof BaseTreeNode)) return Optional.empty();
+
+            return ((BaseTreeNode<?>) parent).getParentNode(type);
+        }
     }
 
     class STGDirectoryTreeNode extends BaseTreeNode<STGDirectory> {
@@ -193,7 +204,7 @@ public class STNavigator extends JPanel {
 
         @Override
         public String getLabel() {
-            return getModel().getPath().getName();
+            return getModel().getPath();
         }
 
         @Override
@@ -205,16 +216,16 @@ public class STNavigator extends JPanel {
                             final String name = SwingUtil.showInputDialog("Name", tree);
                             if (name == null) return;
 
-                            final Optional<STGroupModel> existing = getModel().getGroups().stream().filter(groupModel -> groupModel.getName().toLowerCase().equals(name)).findAny();
+                            final Optional<STGroupModel> existing = getModel().getGroups().filter(groupModel -> groupModel.getName().toLowerCase().equals(name)).findAny();
                             if (existing.isPresent()) {
                                 SwingUtil.showMessage(name + " group already exists", tree);
                                 return;
                             }
 
-                            final STGroupModel stGroupModel = STFactory.newSTGroupModel()
+                            final STGroupModel stGroupModel = STJsonFactory.newSTGroupModel()
                                     .setName(name)
                                     .setDelimiter("~")
-                                    .setStgFile(FileUtil.tryToCreateFileIfNotExists(new File(getModel().getPath(), name + ".stg")));
+                                    .setStgFile(FileUtil.tryToCreateFileIfNotExists(new File(getModel().getPath(), name + ".stg")).getPath());
 
                             getModel().addGroups(stGroupModel);
 
@@ -240,7 +251,9 @@ public class STNavigator extends JPanel {
 
             public void save() {
                 final STGroupModel model = getModel();
-                FileUtil.write(STGenerator.toStg(model), FileUtil.tryToCreateFileIfNotExists(model.getStgFile()));
+                final File dir = new File(model.getStgFile()).getParentFile();
+                FileUtil.write(STGenerator.toStg(model), FileUtil.tryToCreateFileIfNotExists(new File(dir, model.getName() + ".stg")));
+                FileUtil.write(model.getJsonObject().encodePrettily(), FileUtil.tryToCreateFileIfNotExists(new File(dir, model.getName() + ".json")));
             }
 
             @Override
@@ -251,13 +264,28 @@ public class STNavigator extends JPanel {
             @Override
             protected Action[] getActions() {
                 return new Action[]{
+                        new AbstractAction("Generate") {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                SwingUtilities.invokeLater(() -> {
+                                    getParentNode(STGDirectoryTreeNode.class)
+                                            .flatMap(parent -> parent.getModel().getGroups()
+                                                    .filter(stGroupModel1 -> stGroupModel1.getName().equals("StringTemplate"))
+                                                    .findFirst())
+                                            .ifPresent(stGroupModel -> {
+                                                final STDomainToSTWrappers stDomainToSTWrappers = new STDomainToSTWrappers(stGroupModel);
+                                                stDomainToSTWrappers.generateSTGroup(getModel(), "tmp.st", "components/core/src/test/java");
+                                            });
+                                });
+                            }
+                        },
                         new AbstractAction("New template") {
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 final String name = SwingUtil.showInputDialog("Name", tree);
                                 if (name == null) return;
 
-                                final Optional<STTemplate> existing = getModel().getTemplates().stream().filter(stTemplate -> stTemplate.getName().toLowerCase().equals(name)).findAny();
+                                final Optional<STTemplate> existing = getModel().getTemplates().filter(stTemplate -> stTemplate.getName().toLowerCase().equals(name)).findAny();
                                 if (existing.isPresent()) {
                                     SwingUtil.showMessage(name + " already in use in this group", tree);
                                     return;
@@ -268,7 +296,7 @@ public class STNavigator extends JPanel {
                                     return;
                                 }
 
-                                final STTemplate stTemplate = STFactory.newSTTemplate()
+                                final STTemplate stTemplate = STJsonFactory.newSTTemplate()
                                         .setName(name)
                                         .setText("");
 
@@ -288,21 +316,30 @@ public class STNavigator extends JPanel {
                                 final String name = SwingUtil.showInputDialog("Name", tree, getModel().getName());
                                 if (name == null) return;
 
-                                final STGDirectoryTreeNode parent = (STGDirectoryTreeNode) getParent();
-                                final Optional<STGroupModel> existing = parent.getModel().getGroups().stream().filter(groupModel -> !groupModel.equals(getModel())).filter(groupModel -> groupModel.getName().toLowerCase().equals(name)).findAny();
-                                if (existing.isPresent()) {
-                                    SwingUtil.showMessage(name + " group already exists", tree);
-                                    return;
-                                }
+                                getParentNode(STGDirectoryTreeNode.class)
+                                        .ifPresent(parent -> {
 
-                                getModel().setName(name);
-                                save();
+                                            final Optional<STGroupModel> existing = parent.getModel()
+                                                    .getGroups()
+                                                    .filter(groupModel -> !groupModel.equals(getModel()))
+                                                    .filter(groupModel -> groupModel.getName().toLowerCase().equals(name))
+                                                    .findAny();
 
-                                SwingUtilities.invokeLater(() -> {
-                                    treeModel.nodeChanged(STGroupTreeNode.this);
-                                    findSTTemplateEditor(tabbedPane, STGroupTreeNode.this)
-                                            .ifPresent(stEditor1 -> tabbedPane.setTitleAt(tabbedPane.indexOfComponent(stEditor1), getModel().getName()));
-                                });
+                                            if (existing.isPresent()) {
+                                                SwingUtil.showMessage(name + " group already exists", tree);
+                                                return;
+                                            }
+
+                                            getModel().setName(name);
+                                            save();
+
+                                            SwingUtilities.invokeLater(() -> {
+                                                treeModel.nodeChanged(STGroupTreeNode.this);
+                                                findSTTemplateEditor(tabbedPane, STGroupTreeNode.this)
+                                                        .ifPresent(stEditor1 -> tabbedPane.setTitleAt(tabbedPane.indexOfComponent(stEditor1), getModel().getName()));
+                                            });
+                                        });
+
                             }
                         },
                         new AbstractAction("Delete") {
@@ -310,57 +347,107 @@ public class STNavigator extends JPanel {
                             public void actionPerformed(ActionEvent e) {
                                 if (!SwingUtil.showConfirmDialog(tree, "Delete " + getModel().getName())) return;
 
-                                final STGDirectoryTreeNode parent = (STGDirectoryTreeNode) getParent();
-                                parent.getModel().getGroups().remove(getModel());
-                                save();
+                                getParentNode(STGDirectoryTreeNode.class)
+                                        .ifPresent(parent -> {
 
-                                SwingUtilities.invokeLater(() -> {
-                                    treeModel.removeNodeFromParent(STGroupTreeNode.this);
-                                    findSTTemplateEditor(tabbedPane, STGroupTreeNode.this).ifPresent(tabbedPane::remove);
-                                    final File stgFile = new File(parent.getModel().getPath(), getModel().getName() + ".stg");
-                                    if (stgFile.exists()) {
-                                        stgFile.renameTo(new File(parent.getModel().getPath(), getModel().getName() + ".stg.deleted"));
-                                    }
-                                });
+                                            parent.getModel().removeGroups(getModel());
+                                            save();
+
+                                            SwingUtilities.invokeLater(() -> {
+                                                treeModel.removeNodeFromParent(STGroupTreeNode.this);
+                                                findSTTemplateEditor(tabbedPane, STGroupTreeNode.this).ifPresent(tabbedPane::remove);
+                                                final File stgFile = new File(parent.getModel().getPath(), getModel().getName() + ".stg");
+                                                if (stgFile.exists()) {
+                                                    stgFile.renameTo(new File(parent.getModel().getPath(), getModel().getName() + ".stg.deleted"));
+                                                }
+                                            });
+                                        });
+
                             }
                         }
                 };
             }
 
             class STTemplateTreeNode extends BaseTreeNode<STTemplate> {
+
                 public STTemplateTreeNode(STTemplate model) {
                     super(model);
+
+                    model.getChildren().forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
+                }
+
+                @Override
+                public String getLabel() {
+                    return getModel().getName();
                 }
 
                 @Override
                 protected Action[] getActions() {
                     return new Action[]{
+                            new AbstractAction("New Child-template") {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    final String name = SwingUtil.showInputDialog("Name", tree);
+                                    if (name == null) return;
+
+                                    getParentNode(STGroupTreeNode.class)
+                                            .ifPresent(parent -> {
+                                                final Optional<STTemplate> existing = parent.getModel().getTemplates().filter(stTemplate -> !stTemplate.equals(getModel())).filter(stTemplate -> stTemplate.getName().toLowerCase().equals(name)).findAny();
+                                                if (existing.isPresent()) {
+                                                    SwingUtil.showMessage(name + " already in use in this group", tree);
+                                                    return;
+                                                }
+
+                                                if (name.equals("eom") || name.equals("gt")) {
+                                                    SwingUtil.showMessage(name + " is a reserved name", tree);
+                                                    return;
+                                                }
+
+                                                final STTemplate stTemplate = STJsonFactory.newSTTemplate()
+                                                        .setName(name)
+                                                        .setText("");
+
+                                                getModel().addChildren(stTemplate);
+                                                save();
+
+                                                SwingUtilities.invokeLater(() -> {
+                                                    final STTemplateTreeNode stTemplateTreeNode = new STTemplateTreeNode(stTemplate);
+                                                    treeModel.insertNodeInto(stTemplateTreeNode, STTemplateTreeNode.this, getChildCount());
+                                                    show(stTemplateTreeNode);
+                                                });
+                                            });
+
+
+                                }
+                            },
                             new AbstractAction("Rename") {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
                                     final String name = SwingUtil.showInputDialog("Name", tree, getModel().getName());
                                     if (name == null) return;
 
-                                    final STGroupTreeNode parent = (STGroupTreeNode) getParent();
-                                    final Optional<STTemplate> existing = parent.getModel().getTemplates().stream().filter(stTemplate -> !stTemplate.equals(getModel())).filter(stTemplate -> stTemplate.getName().toLowerCase().equals(name)).findAny();
-                                    if (existing.isPresent()) {
-                                        SwingUtil.showMessage(name + " already in use in this group", tree);
-                                        return;
-                                    }
+                                    getParentNode(STGroupTreeNode.class)
+                                            .ifPresent(parent -> {
+                                                final Optional<STTemplate> existing = parent.getModel().getTemplates().filter(stTemplate -> !stTemplate.equals(getModel())).filter(stTemplate -> stTemplate.getName().toLowerCase().equals(name)).findAny();
+                                                if (existing.isPresent()) {
+                                                    SwingUtil.showMessage(name + " already in use in this group", tree);
+                                                    return;
+                                                }
 
-                                    if (name.equals("eom") || name.equals("gt")) {
-                                        SwingUtil.showMessage(name + " is a reserved name", tree);
-                                        return;
-                                    }
+                                                if (name.equals("eom") || name.equals("gt")) {
+                                                    SwingUtil.showMessage(name + " is a reserved name", tree);
+                                                    return;
+                                                }
 
-                                    getModel().setName(name);
-                                    save();
+                                                getModel().setName(name);
+                                                save();
 
-                                    SwingUtilities.invokeLater(() -> {
-                                        treeModel.nodeChanged(STTemplateTreeNode.this);
-                                        findSTTemplateEditor(tabbedPane, parent)
-                                                .ifPresent(stEditor1 -> tabbedPane.setTitleAt(tabbedPane.indexOfComponent(stEditor1), getModel().getName()));
-                                    });
+                                                SwingUtilities.invokeLater(() -> {
+                                                    treeModel.nodeChanged(STTemplateTreeNode.this);
+                                                    findSTTemplateEditor(tabbedPane, parent)
+                                                            .ifPresent(stEditor1 -> tabbedPane.setTitleAt(tabbedPane.indexOfComponent(stEditor1), getModel().getName()));
+                                                });
+                                            });
                                 }
                             },
                             new AbstractAction("Remove") {
@@ -369,15 +456,32 @@ public class STNavigator extends JPanel {
 
                                     if (!SwingUtil.showConfirmDialog(tree, "Delete " + getModel().getName())) return;
 
-                                    final STGroupTreeNode parent = (STGroupTreeNode) getParent();
+                                    final TreeNode check = getParent();
 
-                                    parent.getModel().getTemplates().remove(getModel());
-                                    save();
+                                    if(check instanceof STGroupTreeNode) {
+                                        final STGroupTreeNode parent = (STGroupTreeNode) check;
 
-                                    SwingUtilities.invokeLater(() -> {
-                                        treeModel.removeNodeFromParent(STTemplateTreeNode.this);
-                                        findSTTemplateEditor(tabbedPane, parent).ifPresent(tabbedPane::remove);
-                                    });
+                                        parent.getModel().removeTemplates(getModel());
+                                        save();
+
+                                        SwingUtilities.invokeLater(() -> {
+                                            treeModel.removeNodeFromParent(STTemplateTreeNode.this);
+                                            findSTTemplateEditor(tabbedPane, parent).ifPresent(tabbedPane::remove);
+                                        });
+
+                                    } else if(check instanceof STTemplateTreeNode) {
+                                        final STTemplateTreeNode parent = (STTemplateTreeNode) check;
+
+                                        parent.getModel().removeChildren(getModel());
+                                        save();
+
+                                        SwingUtilities.invokeLater(() -> {
+                                            treeModel.removeNodeFromParent(STTemplateTreeNode.this);
+                                            getParentNode(STGroupTreeNode.class)
+                                                    .flatMap(stGroupTreeNode -> findSTTemplateEditor(tabbedPane, stGroupTreeNode))
+                                                    .ifPresent(tabbedPane::remove);
+                                        });
+                                    }
                                 }
                             }
                     };

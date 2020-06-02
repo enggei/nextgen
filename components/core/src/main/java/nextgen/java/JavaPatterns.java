@@ -34,6 +34,11 @@ public class JavaPatterns extends JavaFactory {
         return copy;
     }
 
+    public static void writeToFile(Object content, PackageDeclaration packageDeclaration, String name, File root) {
+        final File directory = new File(root, packageToPath(packageDeclaration.getName()));
+        write(new File(directory, name + ".java"), content);
+    }
+
     public static void writeToFile(EnumDeclaration enumDeclaration, PackageDeclaration packageDeclaration, File root) {
         writeToFile(enumDeclaration, packageDeclaration, root.getAbsolutePath());
     }
@@ -395,6 +400,21 @@ public class JavaPatterns extends JavaFactory {
                                 .setType(newClassOrInterfaceType(className))
                                 .setExpression(newExpression("o")))))
                         .addStatements(newReturnStmt(isEqual(field, newFieldAccessExpression("other", field)))));
+    }
+
+    public static MethodDeclaration newEqualsMethod(String className, MethodCallExpression methodCallExpression) {
+        return newPublicMethodDeclaration()
+                .addAnnotations(newOverrideAnnotation())
+                .setType(booleanType)
+                .setName("equals")
+                .addParameters(newParameter(ObjectType, "o"))
+                .setBlockStmt(newBlockStmt()
+                        .addStatements(newIfStmt("this == o", returnTrue()))
+                        .addStatements(newIfStmt("o == null || getClass() != o.getClass()", returnFalse()))
+                        .addStatements(newExpressionStmt(newFinalVariableDeclarationExpression(newClassOrInterfaceType(className), "other", newCastExpression()
+                                .setType(newClassOrInterfaceType(className))
+                                .setExpression(newExpression("o")))))
+                        .addStatements(newReturnStmt(methodCallExpression)));
     }
 
     public static MethodDeclaration newHashMethod(Object expression) {

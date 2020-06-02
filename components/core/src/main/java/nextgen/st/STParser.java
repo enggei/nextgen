@@ -12,9 +12,10 @@ import org.stringtemplate.v4.misc.STMessage;
 
 import java.io.File;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static nextgen.st.domain.STFactory.newSTParameterKey;
+import static nextgen.st.domain.STJsonFactory.newSTParameterKey;
 
 public class STParser {
 
@@ -23,7 +24,7 @@ public class STParser {
     public static STGParseResult parse(File stgFile) {
         final char delimiter = loadDelimiter(stgFile);
         final STGParseResult parseResult = parse(new STGroupFile(stgFile.getAbsolutePath(), delimiter, delimiter));
-        if (parseResult.getErrors().isEmpty()) parseResult.getParsed().setStgFile(stgFile);
+        if (parseResult.getErrors().count() == 0) parseResult.getParsed().setStgFile(stgFile.getPath());
         return parseResult;
     }
 
@@ -99,9 +100,16 @@ public class STParser {
                             expression.getSubTemplate()
                                     .getExpressions()
                                     .forEach(kvExpression -> kvExpression.getProps().values().forEach(key -> {
-                                        stParameter.addKeys(newSTParameterKey()
-                                                .setName(key)
-                                                .addArgumentTypes("Object"));
+                                        stParameter.getKeys()
+                                                .filter(stParameterKey -> stParameterKey.getName().equals(key))
+                                                .findFirst()
+                                                .orElseGet(() -> {
+                                                    final STParameterKey newKey = newSTParameterKey()
+                                                            .setName(key)
+                                                            .addArgumentTypes("Object");
+                                                    stParameter.addKeys(newKey);
+                                                    return newKey;
+                                                });
                                     }));
                         }
                         stParameterMap.put(expression.getName(), stParameter);
@@ -117,8 +125,8 @@ public class STParser {
                 final String methodCallName = methodCall.getName();
                 final STTemplate methodCallTemplate = stTemplateMap.get(methodCallName);
                 for (String argument : methodCall.getArguments()) {
-                    final Optional<STParameter> methodParameter = methodCallTemplate.getParameters().stream().filter(stParameter -> stParameter.getName().equals(argument)).findFirst();
-                    final Optional<STParameter> callerArgument = caller.getParameters().stream().filter(stParameter -> stParameter.getName().equals(argument)).findFirst();
+                    final Optional<STParameter> methodParameter = methodCallTemplate.getParameters().filter(stParameter -> stParameter.getName().equals(argument)).findFirst();
+                    final Optional<STParameter> callerArgument = caller.getParameters().filter(stParameter -> stParameter.getName().equals(argument)).findFirst();
 
                     if (!callerArgument.isPresent() && methodParameter.isPresent())
                         caller.addParameters(methodParameter.get());
@@ -126,7 +134,7 @@ public class STParser {
             });
         }
 
-        if (parseResult.getErrors().isEmpty())
+        if (parseResult.getErrors().count() == 0)
             parseResult.setParsed(stGroupModel);
 
         return parseResult;

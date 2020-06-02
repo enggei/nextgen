@@ -1,28 +1,28 @@
 package nextgen.st;
 
-import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
 import nextgen.st.domain.STGParseResult;
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STTemplate;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.RTextScrollPane;
+import org.stringtemplate.v4.misc.STMessage;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.File;
 
 import static nextgen.st.STGenerator.toSTGroup;
-import static nextgen.st.domain.STFactory.newSTGroupModel;
-import static nextgen.st.domain.STFactory.newSTTemplate;
+import static nextgen.st.domain.STJsonFactory.newSTGroupModel;
+import static nextgen.st.domain.STJsonFactory.newSTTemplate;
 
 public class STEditor extends JPanel {
 
     private final RSyntaxTextArea txtEditor = new RSyntaxTextArea(20, 60);
     private final Color uneditedColor = txtEditor.getBackground();
+    private final Color editedColor = Color.LIGHT_GRAY;
     private final Color errorColor = Color.RED;
     private final Border defaultBorder = txtEditor.getBorder();
 
@@ -83,18 +83,40 @@ public class STEditor extends JPanel {
                         .setName(originalTemplate.getName())
                         .setText(text))));
 
-        if (parseResult.getErrors().isEmpty()) {
+        if (parseResult.getErrors().count() == 0) {
 
             originalTemplate.setText(text);
-            startText = text;
-            txtEditor.setBackground(uneditedColor);
+            originalTemplate.clearParameters();
+            parseResult.getParsed().getTemplates().findFirst().ifPresent(stTemplate -> stTemplate.getParameters().forEach(originalTemplate::addParameters));
 
-            final STNavigator.STGDirectoryTreeNode stgDirectoryTreeNode = (STNavigator.STGDirectoryTreeNode) stGroupTreeNode.getParent();
-            FileUtil.write(STGenerator.toStg(originalGroup), FileUtil.tryToCreateFileIfNotExists(new File(stgDirectoryTreeNode.getModel().getPath(), originalGroup.getName() + ".stg")));
+            startText = text;
+            stGroupTreeNode.save();
+
+            SwingUtilities.invokeLater(() -> txtEditor.setBackground(startText.equals(txtEditor.getText()) ? uneditedColor : editedColor));
 
         } else {
+
             this.txtEditor.setBorder(BorderFactory.createLineBorder(errorColor));
-            parseResult.getErrors().forEach(stgError -> System.out.println(stgError.getType() + " " + stgError.getMessage()));
+
+            parseResult.getErrors().forEach(stgError -> {
+
+                System.out.println(stgError.getType());
+                final STMessage message = stgError.getMessage();
+
+                switch (stgError.getType()) {
+
+                    case COMPILE:
+
+                        break;
+                    case RUNTIME:
+                        break;
+                    case IO:
+                        break;
+                    case INTERNAL:
+                        break;
+                }
+
+            });
         }
     }
 
@@ -104,19 +126,32 @@ public class STEditor extends JPanel {
 
             if (stTemplateTreeNode == null) return;
 
-            if (keyEvent.getKeyCode() == KeyEvent.VK_L && keyEvent.getModifiers() == KeyEvent.CTRL_MASK) {
+            SwingUtilities.invokeLater(() -> txtEditor.setBackground(startText.equals(txtEditor.getText()) ? uneditedColor : editedColor));
+
+            if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_L) {
                 insertListProperty();
-            } else if (keyEvent.getKeyCode() == KeyEvent.VK_I && keyEvent.getModifiers() == KeyEvent.CTRL_MASK) {
+            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_I) {
                 insertIf();
-            } else if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE && keyEvent.getModifiers() == KeyEvent.CTRL_MASK) {
+            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_1) {
+                capitalize();
+            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
                 insertSimpleProperty();
-            } else if (keyEvent.getKeyCode() == KeyEvent.VK_R && keyEvent.getModifiers() == KeyEvent.CTRL_MASK) {
+            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_R) {
                 replaceAndInsertProperty();
-            } else if (keyEvent.getKeyCode() == KeyEvent.VK_F && keyEvent.getModifiers() == KeyEvent.CTRL_MASK) {
+            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_F) {
                 format(txtEditor);
-            } else if ((keyEvent.getKeyCode() == KeyEvent.VK_ENTER || keyEvent.getKeyCode() == KeyEvent.VK_S) && keyEvent.getModifiers() == KeyEvent.CTRL_MASK) {
+            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && (keyEvent.getKeyCode() == KeyEvent.VK_ENTER || keyEvent.getKeyCode() == KeyEvent.VK_S)) {
                 commit();
             }
+        }
+
+        private void capitalize() {
+            SwingUtilities.invokeLater(() -> {
+                removeSelectedTextIfAny();
+                final int caretPosition = txtEditor.getCaretPosition();
+                txtEditor.insert(stGroupTreeNode.getModel().getDelimiter() + ";format=\"capitalize\"" + stGroupTreeNode.getModel().getDelimiter(), caretPosition);
+                txtEditor.setCaretPosition(caretPosition + 1);
+            });
         }
 
         private void insertListProperty() {

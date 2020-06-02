@@ -3,25 +3,21 @@ package nextgen.st.domain;
 
 public class STParameterKey {
 
-	private final java.util.UUID uuid;
-	private String name;
-	private final java.util.List<String> argumentTypes = new java.util.ArrayList<>();
+	private final io.vertx.core.json.JsonObject jsonObject;
 
 	public STParameterKey() { 
-		this.uuid = java.util.UUID.randomUUID();
+		this.jsonObject = new io.vertx.core.json.JsonObject();
+		jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
 	}
 
-	public STParameterKey(java.util.UUID uuid) { 
-		this.uuid = uuid;
+	public STParameterKey(io.vertx.core.json.JsonObject jsonObject) { 
+		this.jsonObject = jsonObject;
+		java.lang.String uuidString = jsonObject.getString("uuid");
+		if (uuidString == null) jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
 	}
 
-	public java.util.UUID getUuid() { 
-		return uuid;
-	}
-
-	@Override
-	public int hashCode() { 
-		return java.util.Objects.hash(uuid);
+	public io.vertx.core.json.JsonObject getJsonObject() { 
+		return this.jsonObject;
 	}
 
 	@Override
@@ -29,29 +25,45 @@ public class STParameterKey {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		final STParameterKey other = (STParameterKey) o;
-		return uuid.equals(other.uuid);
+		return jsonObject.getString("uuid").equals(other.getJsonObject().getString("uuid"));
 	}
 
-	public STParameterKey setName(String name) { 
-		this.name = name;
+	@Override
+	public int hashCode() { 
+		return java.util.Objects.hash(jsonObject.getString("uuid"));
+	}
+
+	public STParameterKey setName(String value) { 
+		jsonObject.put("name", value);
 		return this;
 	}
 
 	public String getName() { 
-		return this.name;
+		return jsonObject.getString("name");
+	}
+
+	public String getName(String defaultValue) { 
+		return jsonObject.getString("name", defaultValue);
 	}
 
 	@Override
 	public java.lang.String toString() { 
-		return name == null ? null : name;
+		return jsonObject.getString("name");
 	}
 
 	public STParameterKey addArgumentTypes(String value) { 
-		argumentTypes.add(value);
+		io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("argumentTypes");
+		if (jsonArray == null) jsonObject.put("argumentTypes", jsonArray = new io.vertx.core.json.JsonArray());
+		jsonArray.add(value);
 		return this;
 	}
 
-	public java.util.List<String> getArgumentTypes() { 
-		return this.argumentTypes;
+	public java.util.stream.Stream<String> getArgumentTypes() { 
+		return jsonObject.getJsonArray("argumentTypes", new io.vertx.core.json.JsonArray()).stream().map((o) -> (String) o);
+	}
+
+	public STParameterKey clearArgumentTypes() { 
+		jsonObject.put("argumentTypes", new io.vertx.core.json.JsonArray());
+		return this;
 	}
 }

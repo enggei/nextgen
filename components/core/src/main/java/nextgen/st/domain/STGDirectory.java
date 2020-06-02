@@ -3,25 +3,21 @@ package nextgen.st.domain;
 
 public class STGDirectory {
 
-	private final java.util.UUID uuid;
-	private java.io.File path;
-	private final java.util.List<STGroupModel> groups = new java.util.ArrayList<>();
+	private final io.vertx.core.json.JsonObject jsonObject;
 
 	public STGDirectory() { 
-		this.uuid = java.util.UUID.randomUUID();
+		this.jsonObject = new io.vertx.core.json.JsonObject();
+		jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
 	}
 
-	public STGDirectory(java.util.UUID uuid) { 
-		this.uuid = uuid;
+	public STGDirectory(io.vertx.core.json.JsonObject jsonObject) { 
+		this.jsonObject = jsonObject;
+		java.lang.String uuidString = jsonObject.getString("uuid");
+		if (uuidString == null) jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
 	}
 
-	public java.util.UUID getUuid() { 
-		return uuid;
-	}
-
-	@Override
-	public int hashCode() { 
-		return java.util.Objects.hash(uuid);
+	public io.vertx.core.json.JsonObject getJsonObject() { 
+		return this.jsonObject;
 	}
 
 	@Override
@@ -29,24 +25,57 @@ public class STGDirectory {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		final STGDirectory other = (STGDirectory) o;
-		return uuid.equals(other.uuid);
+		return jsonObject.getString("uuid").equals(other.getJsonObject().getString("uuid"));
 	}
 
-	public STGDirectory setPath(java.io.File path) { 
-		this.path = path;
+	@Override
+	public int hashCode() { 
+		return java.util.Objects.hash(jsonObject.getString("uuid"));
+	}
+
+	public STGDirectory setPath(String value) { 
+		jsonObject.put("path", value);
 		return this;
 	}
 
-	public java.io.File getPath() { 
-		return this.path;
+	public String getPath() { 
+		return jsonObject.getString("path");
+	}
+
+	public String getPath(String defaultValue) { 
+		return jsonObject.getString("path", defaultValue);
 	}
 
 	public STGDirectory addGroups(STGroupModel value) { 
-		groups.add(value);
+		io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("groups");
+		if (jsonArray == null) jsonObject.put("groups", jsonArray = new io.vertx.core.json.JsonArray());
+		jsonArray.add(value.getJsonObject());
 		return this;
 	}
 
-	public java.util.List<STGroupModel> getGroups() { 
-		return this.groups;
+	public java.util.stream.Stream<STGroupModel> getGroups() { 
+		return jsonObject.getJsonArray("groups", new io.vertx.core.json.JsonArray()).stream().map((o) -> new STGroupModel((io.vertx.core.json.JsonObject) o));
+	}
+
+	public STGDirectory removeGroups(STGroupModel value) { 
+		final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("groups", new io.vertx.core.json.JsonArray());
+		for (int i = 0; i < jsonArray.size(); i++)  { 
+			final io.vertx.core.json.JsonObject o = jsonArray.getJsonObject(i);
+			if (value.getJsonObject().getString("uuid").equals(o.getString("uuid")))  { 
+				jsonArray.remove(i);
+				return this;
+			}
+		}
+		return this;
+	}
+
+	public STGDirectory clearGroups() { 
+		jsonObject.put("groups", new io.vertx.core.json.JsonArray());
+		return this;
+	}
+
+	@Override
+	public java.lang.String toString() { 
+		return jsonObject.encode();
 	}
 }

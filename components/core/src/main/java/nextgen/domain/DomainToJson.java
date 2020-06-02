@@ -1,5 +1,6 @@
 package nextgen.domain;
 
+import com.generator.util.StringUtil;
 import nextgen.domain.domain.Domain;
 import nextgen.domain.domain.Entity;
 import nextgen.domain.domain.Relation;
@@ -10,6 +11,7 @@ import nextgen.java.st.*;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static nextgen.java.JavaPatterns.*;
 import static nextgen.java.VertxPatterns.*;
@@ -73,6 +75,7 @@ public class DomainToJson extends DomainPatterns {
                         srcEntity.addMembers(oneToOnePrimitive(relation));
                         srcEntity.addMembers(getSinglePrimitive(relation));
                         srcEntity.addMembers(getSinglePrimitiveOrDefault(relation));
+                        if (isLexical(relation)) srcEntity.addMembers(getToString(relation));
                         break;
                     case REFERENCE:
                         srcEntity.addMembers(oneToOneReference(relation));
@@ -119,19 +122,24 @@ public class DomainToJson extends DomainPatterns {
                     case PRIMITIVE:
                         srcEntity.addMembers(oneToManyPrimitive(relation));
                         srcEntity.addMembers(getListPrimitive(relation));
+                        srcEntity.addMembers(clearList(relation));
                         break;
                     case REFERENCE:
                         srcEntity.addMembers(oneToManyReference(relation));
                         srcEntity.addMembers(getListReference(relation));
+                        srcEntity.addMembers(removeFromListReference(relation));
+                        srcEntity.addMembers(clearList(relation));
                         break;
                     case EXTERNAL:
                         srcEntity.addFields(DomainToPojos.newListField(relation));
                         srcEntity.addMembers(DomainToPojos.getList(relation));
                         srcEntity.addMembers(DomainToPojos.oneToMany(relation));
+                        srcEntity.addMembers(DomainToPojos.clearList(relation));
                         break;
                     case ENUM:
                         srcEntity.addMembers(oneToManyEnum(relation));
                         srcEntity.addMembers(getListEnum(relation));
+                        srcEntity.addMembers(clearList(relation));
                         break;
                 }
             }
@@ -146,6 +154,17 @@ public class DomainToJson extends DomainPatterns {
                         case PRIMITIVE:
                             break;
                         case REFERENCE:
+
+                            final Optional<MethodDeclaration> toString = entry.getValue().getMembers()
+                                    .stream()
+                                    .filter(classOrInterfaceMember -> classOrInterfaceMember instanceof MethodDeclaration)
+                                    .map(classOrInterfaceMember -> (MethodDeclaration) classOrInterfaceMember)
+                                    .filter(methodDeclaration -> methodDeclaration.getName().equals("toString"))
+                                    .findAny();
+
+                            if (!toString.isPresent())
+                                entry.getValue().addMembers(newToStringMethod(newMethodCallExpression(jsonObject, "encode")));
+
                             JavaPatterns.writeToFile(entry.getValue(), packageDeclaration, root);
                             break;
                         case EXTERNAL:
@@ -159,10 +178,46 @@ public class DomainToJson extends DomainPatterns {
         };
     }
 
+    private static MethodDeclaration getToString(Relation relation) {
+        return newToStringMethod(newExpression(newMethodCallExpression(jsonObject, getterName(relation.getDst()), newStringLiteralExpression(relation.getName()))));
+    }
+
     private static MethodDeclaration getListReference(Relation relation) {
         return newPublicMethodDeclaration(getterName(relation), streamOf(newClassOrInterfaceType(relation.getDst().getName())))
                 .setBlockStmt(newReturnBlockStmt(map(stream(getJsonArrayOrDefault(jsonObject, relation.getName())), newLambdaExpression("o", newObjectCreationExpression(relation.getDst().getName())
                         .addArguments(newCastExpression(jsonObjectType, newExpression("o")))))));
+    }
+
+    private static MethodDeclaration clearList(Relation relation) {
+        return newPublicMethodDeclaration("clear" + StringUtil.capitalize(relation.getName()), newClassOrInterfaceType(relation.getSrc().getName()))
+                .setBlockStmt(newBlockStmt()
+                        .addStatements(newExpressionStmt(put(jsonObject, relation.getName(), newObjectCreationExpression(jsonArrayType))))
+                        .addStatements(newReturnThis()));
+    }
+
+    private static MethodDeclaration removeFromListReference(Relation relation) {
+        return newPublicMethodDeclaration(removeName(relation), newClassOrInterfaceType(relation.getSrc().getName()))
+                .addParameters(newParameter(newClassOrInterfaceType(relation.getDst().getName()), "value"))
+                .setBlockStmt(newBlockStmt()
+                        .addStatements(newExpressionStmt(newFinalVariableDeclarationExpression(jsonArrayType, "jsonArray", getJsonArrayOrDefault(jsonObject, relation.getName()))))
+                        .addStatements(newForStmt()
+                                .addInitialization(newVariableDeclaration(intType, "i", "0"))
+                                .setCompare(newBinaryExpression()
+                                        .setLeft("i")
+                                        .setOperator("<")
+                                        .setRight(newMethodCallExpression("jsonArray", "size")))
+                                .addUpdate(newUnaryExpression()
+                                        .setExpression(newExpression("i"))
+                                        .setOperator("++")
+                                        .setIsPostfix(true))
+                                .setBody(newBlockStmt()
+                                        .addStatements(newExpressionStmt(newFinalVariableDeclarationExpression(jsonObjectType, "o", newMethodCallExpression("jsonArray", "getJsonObject", "i"))))
+                                        .addStatements(newIfStmt()
+                                                .setCondition(isEqual(getString(newMethodCallExpression("value", "getJsonObject"), "uuid"), getString("o", "uuid")))
+                                                .setThen(newBlockStmt()
+                                                        .addStatements(newExpressionStmt(newMethodCallExpression("jsonArray", "remove", "i")))
+                                                        .addStatements(newReturnThis())))))
+                        .addStatements(newReturnThis()));
     }
 
     private static MethodDeclaration getListPrimitive(Relation relation) {
@@ -232,7 +287,7 @@ public class DomainToJson extends DomainPatterns {
     private static MethodDeclaration getObjectReferenceOrDefault(Relation relation) {
         return newPublicMethodDeclaration(getterName(relation), newClassOrInterfaceType(relation.getDst().getName()))
                 .addParameters(newParameter(ObjectType, "defaultValue"))
-                .setBlockStmt(newReturnBlockStmt(getObjectOrDefault(jsonObject, relation.getName(),"defaultValue")));
+                .setBlockStmt(newReturnBlockStmt(getObjectOrDefault(jsonObject, relation.getName(), "defaultValue")));
     }
 
     private static MethodDeclaration oneToOnePrimitive(Relation relation) {
@@ -306,14 +361,18 @@ public class DomainToJson extends DomainPatterns {
         return newPublicClassDeclaration(entity.getName())
                 .addFields(newPrivateFinalFieldDeclaration(jsonObjectType, jsonObject))
                 .addMembers(newPublicConstructorDeclaration(entity.getName())
-                        .setBlockStmt(newBlockStmt(newAssignThisExpression(jsonObject, newObjectCreationExpression(jsonObjectType)))))
+                        .setBlockStmt(newBlockStmt()
+                                .addStatements(newExpressionStmt(newAssignThisExpression(jsonObject, newObjectCreationExpression(jsonObjectType))))
+                                .addStatements(newExpressionStmt(put(jsonObject, "uuid", newToString(newMethodCallExpression(UUIDType, "randomUUID")))))))
                 .addMembers(newPublicConstructorDeclaration(entity.getName(), newParameter(jsonObjectType, jsonObject))
-                        .setBlockStmt(newBlockStmt(newAssignThisVariableExpression(jsonObject))))
+                        .setBlockStmt(newBlockStmt()
+                                .addStatements(newExpressionStmt(newAssignThisVariableExpression(jsonObject)))
+                                .addStatements(newExpressionStmt(newVariableDeclaration(StringType, "uuidString", getString(jsonObject, "uuid"))))
+                                .addStatements(newIfStmt(isNull("uuidString"), newExpressionStmt(put(jsonObject, "uuid", newToString(newMethodCallExpression(UUIDType, "randomUUID"))))))))
                 .addMembers(newPublicMethodDeclaration("getJsonObject", jsonObjectType)
                         .setBlockStmt(newReturnBlockStmt(newThisVariableExpression(jsonObject))))
-                .addMembers(newToStringMethod(newMethodCallExpression(jsonObject, "encode")))
-                .addMembers(newEqualsMethod(entity.getName(), jsonObject))
-                .addMembers(newHashMethod(jsonObject));
+                .addMembers(newEqualsMethod(entity.getName(), isEqual(getString(jsonObject, "uuid"), getString(newMethodCallExpression("other", "getJsonObject"), "uuid"))))
+                .addMembers(newHashMethod(getString(jsonObject, "uuid")));
     }
 
     private static ClassOrInterfaceDeclaration newJsonFactory(Domain domain) {

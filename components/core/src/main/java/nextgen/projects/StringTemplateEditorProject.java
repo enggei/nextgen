@@ -1,7 +1,6 @@
 package nextgen.projects;
 
 import nextgen.domain.DomainToJson;
-import nextgen.domain.DomainToPojos;
 import nextgen.java.st.PackageDeclaration;
 import org.junit.Test;
 
@@ -20,24 +19,27 @@ public class StringTemplateEditorProject {
     @Test
     public void generateDomain() {
 
+        final EntityBuilder stTemplate = newEntityBuilder("STTemplate")
+                .addStringField("name", true)
+                .addStringField("text")
+                .addOneToManyRelation("parameters", newEntityBuilder("STParameter")
+                        .addStringField("name", true)
+                        .addEnumField("type", "STParameterType", "SINGLE,LIST,KVLIST")
+                        .addOneToManyRelation("keys", newEntityBuilder("STParameterKey")
+                                .addStringField("name")
+                                .addOneToManyRelation("argumentTypes", newString()))
+                        .addOneToManyRelation("argumentTypes", newString()))
+                .addOneToManySelf("children");
+
         final EntityBuilder stGroupModel = newEntityBuilder("STGroupModel")
                 .addStringField("name", true)
                 .addStringField("delimiter")
-                .addExternalField("stgFile", File.class)
-                .addOneToManyRelation("templates", newEntityBuilder("STTemplate")
-                        .addStringField("name", true)
-                        .addStringField("text")
-                        .addOneToManyRelation("parameters", newEntityBuilder("STParameter")
-                                .addStringField("name", true)
-                                .addEnumField("type", "STParameterType", "SINGLE,LIST,KVLIST")
-                                .addOneToManyRelation("keys", newEntityBuilder("STParameterKey")
-                                        .addStringField("name")
-                                        .addOneToManyRelation("argumentTypes", newString()))
-                                .addOneToManyRelation("argumentTypes", newString())));
+                .addStringField("stgFile")
+                .addOneToManyRelation("templates", stTemplate);
 
         DomainToJson.generate(javaMainSrc, stDomainPackage, newDomainBuilder("ST")
                 .add(newEntityBuilder("STGDirectory")
-                        .addExternalField("path", File.class)
+                        .addStringField("path")
                         .addOneToManyRelation("groups", stGroupModel))
                 .add(newEntityBuilder("STGParseResult")
                         .addOneToOneRelation("parsed", stGroupModel)

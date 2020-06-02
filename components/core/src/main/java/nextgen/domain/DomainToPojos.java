@@ -96,6 +96,13 @@ public class DomainToPojos extends DomainPatterns {
                 .setBlockStmt(newReturnBlockStmt(newThisVariableExpression(variableName(relation))));
     }
 
+    public static MethodDeclaration clearList(Relation relation) {
+        return newPublicMethodDeclaration("clear" + capitalize(relation.getName()), newClassOrInterfaceType(relation.getSrc().getName()))
+                .setBlockStmt(newBlockStmt()
+                        .addStatements(newExpressionStmt(newMethodCallExpression(variableName(relation), "clear")))
+                        .addStatements(newReturnThis()));
+    }
+
     public static MethodDeclaration getSingle(Relation relation) {
         return newPublicMethodDeclaration(getterName(relation), newClassOrInterfaceType(relation.getDst().getName()))
                 .setBlockStmt(newReturnBlockStmt(newThisVariableExpression(variableName(relation))));
