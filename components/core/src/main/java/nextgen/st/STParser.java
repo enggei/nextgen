@@ -17,7 +17,7 @@ import java.util.*;
 
 public class STParser {
 
-    public static boolean debug = true;
+    public static boolean debug = false;
 
     public static void main(String[] args) {
 
@@ -74,8 +74,8 @@ public class STParser {
                 .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
                 .forEach(st -> {
 
-                    System.out.println("\n--- " + st.getName());
-                    System.out.println(st.impl.template);
+                    if (debug) System.out.println("\n--- " + st.getName());
+                    if (debug) System.out.println(st.impl.template);
 
                     final TemplateVisitor visitor = new TemplateVisitor();
                     visitor.visit(st);
@@ -88,11 +88,13 @@ public class STParser {
                     visitor.astNodeStack.peek().getChildren().forEach(astNode -> addParameters(stParameterMap, astNode, new Stack<STParameter>()));
                     stParameterMap.values().forEach(stTemplate::addParameters);
 
-                    System.out.println("=== >");
+                    if (debug) System.out.println("=== >");
                     stTemplate.getParameters().forEach(stParameter -> {
-                        System.out.print("\t" + stParameter.getName() + " " + stParameter.getType());
-                        stParameter.getKeys().forEach(stParameterKey -> System.out.print(" ." + stParameterKey.getName()));
-                        System.out.println();
+                        if (debug) System.out.print("\t" + stParameter.getName() + " " + stParameter.getType());
+                        stParameter.getKeys().forEach(stParameterKey -> {
+                            if (debug) System.out.print(" ." + stParameterKey.getName());
+                        });
+                        if (debug) System.out.println();
                     });
 
                     stTemplateMap.put(stTemplate.getName(), stTemplate);
@@ -301,8 +303,10 @@ public class STParser {
                     break;
 
                 default:
-                    System.out.println("case U" + ast.getType() + ":\npushAstNode(ast, AstNodeType.U" + ast.getType() + ");\nbreak;");
-                    System.out.println("private static final int U" + ast.getType() + " = " + ast.getType() + ";");
+                    if (debug)
+                        System.out.println("case U" + ast.getType() + ":\npushAstNode(ast, AstNodeType.U" + ast.getType() + ");\nbreak;");
+                    if (debug)
+                        System.out.println("private static final int U" + ast.getType() + " = " + ast.getType() + ";");
                     for (int i = 0; i < ast.getChildCount(); i++)
                         visit(ast.getChild(i));
                     break;
@@ -323,7 +327,7 @@ public class STParser {
 
             final AstNode astNode = STParserFactory.newAstNode().setType(astNodeType).setAst(ast);
 
-            System.out.println(debug(astNode, astNodeStack.size()));
+            if (debug) System.out.println(debug(astNode, astNodeStack.size()));
 
             if (!astNodeStack.isEmpty()) {
                 astNodeStack.peek().addChildren(astNode);

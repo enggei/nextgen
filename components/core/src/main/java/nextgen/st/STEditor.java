@@ -41,7 +41,7 @@ public class STEditor extends JPanel {
         this.txtEditor.setCodeFoldingEnabled(true);
         this.txtEditor.addKeyListener(new STTemplateEditorKeyListener());
 
-        this.startText = STGenerator.toStg(stGroupTreeNode.getModel());
+        this.startText = STGenerator.toStg(stGroupTreeNode.getModel()).trim();
         this.txtEditor.setText(startText);
         this.txtEditor.setEditable(false);
         this.txtEditor.setCaretPosition(0);
@@ -59,8 +59,8 @@ public class STEditor extends JPanel {
         this.stTemplateTreeNode = stTemplateTreeNode;
 
         this.startText = stTemplateTreeNode == null ?
-                this.startText = STGenerator.toStg(stGroupTreeNode.getModel()) :
-                stTemplateTreeNode.getModel().getText();
+                this.startText = STGenerator.toStg(stGroupTreeNode.getModel()).trim() :
+                stTemplateTreeNode.getModel().getText().trim();
 
         this.txtEditor.setText(startText);
         this.txtEditor.setCaretPosition(0);
@@ -89,10 +89,10 @@ public class STEditor extends JPanel {
             originalTemplate.clearParameters();
             parseResult.getParsed().getTemplates().findFirst().ifPresent(stTemplate -> stTemplate.getParameters().forEach(originalTemplate::addParameters));
 
-            startText = text;
+            startText = text.trim();
             stGroupTreeNode.save();
 
-            SwingUtilities.invokeLater(() -> txtEditor.setBackground(startText.equals(txtEditor.getText()) ? uneditedColor : editedColor));
+            SwingUtilities.invokeLater(() -> txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor));
 
         } else {
 
@@ -126,7 +126,7 @@ public class STEditor extends JPanel {
 
             if (stTemplateTreeNode == null) return;
 
-            SwingUtilities.invokeLater(() -> txtEditor.setBackground(startText.equals(txtEditor.getText()) ? uneditedColor : editedColor));
+            SwingUtilities.invokeLater(() -> txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor));
 
             if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_L) {
                 insertListProperty();
@@ -151,6 +151,7 @@ public class STEditor extends JPanel {
                 final int caretPosition = txtEditor.getCaretPosition();
                 txtEditor.insert(stGroupTreeNode.getModel().getDelimiter() + ";format=\"capitalize\"" + stGroupTreeNode.getModel().getDelimiter(), caretPosition);
                 txtEditor.setCaretPosition(caretPosition + 1);
+                txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
             });
         }
 
@@ -167,6 +168,7 @@ public class STEditor extends JPanel {
                 final String list = pre + "}" + sep + stGroupTreeNode.getModel().getDelimiter();
                 txtEditor.insert(list, caretPosition);
                 txtEditor.setCaretPosition(caretPosition + pre.length());
+                txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
             });
         }
 
@@ -181,6 +183,7 @@ public class STEditor extends JPanel {
                 final String list = pre + stGroupTreeNode.getModel().getDelimiter() + "endif" + stGroupTreeNode.getModel().getDelimiter();
                 txtEditor.insert(list, caretPosition);
                 txtEditor.setCaretPosition(caretPosition + pre.length());
+                txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
             });
         }
 
@@ -190,6 +193,7 @@ public class STEditor extends JPanel {
                 final int caretPosition = txtEditor.getCaretPosition();
                 txtEditor.insert(stGroupTreeNode.getModel().getDelimiter() + "" + stGroupTreeNode.getModel().getDelimiter(), caretPosition);
                 txtEditor.setCaretPosition(caretPosition + 1);
+                txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
             });
         }
 
@@ -201,6 +205,7 @@ public class STEditor extends JPanel {
             final String replacement = stGroupTreeNode.getModel().getDelimiter() + propertyName + stGroupTreeNode.getModel().getDelimiter();
             txtEditor.setText(txtEditor.getText().replaceAll(selected, replacement));
             txtEditor.setCaretPosition(0);
+            txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
         }
 
         private void format(JTextArea txtEditor) {
@@ -230,6 +235,7 @@ public class STEditor extends JPanel {
 
             txtEditor.setText(formatted2.toString().trim());
             txtEditor.setCaretPosition(Math.min(formatted2.toString().trim().length(), caretPosition));
+            txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
         }
 
         private void removeSelectedTextIfAny() {
@@ -237,6 +243,7 @@ public class STEditor extends JPanel {
                 final int selectionStart = txtEditor.getSelectionStart();
                 txtEditor.replaceRange("", selectionStart, txtEditor.getSelectionEnd());
                 txtEditor.setCaretPosition(selectionStart);
+                txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
             }
         }
     }

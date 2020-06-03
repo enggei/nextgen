@@ -212,41 +212,6 @@
       "type" : "SINGLE"
     } ]
   }, {
-    "uuid" : "31602a2d-7462-44cb-8305-76cb7a9e5222",
-    "name" : "FunctionalComponent",
-    "text" : "// dependencies:\n~dependencies:{it|~it~};separator=\"\\n\"~\n~if(style)~import { makeStyles } from '@material-ui/core/styles';~endif~\n\n~if(localImports)~\n// local imports\n~localImports:{it|~it~};separator=\"\\n\"~\n~endif~\n\n\nfunction ~name~(props) {\n\n\treturn (\n\t\t~element~\n\t)\n}\n~if(wrapper)~// Wrap the component instead of decorating it\n~endif~\nexport default ~if(inject)~inject(~inject:{it|'~it~'};separator=\", \"~)~endif~~if(wrapper)~(~wrapper~(~endif~~name~~if(wrapper)~))~endif~ ",
-    "parameters" : [ {
-      "uuid" : "1487c82b-f360-477d-9b10-9ffe7e5029d1",
-      "name" : "wrapper",
-      "argumentTypes" : [ "Object" ],
-      "type" : "SINGLE"
-    }, {
-      "uuid" : "735922e0-64a6-4238-8113-845a99ea136b",
-      "name" : "inject",
-      "argumentTypes" : [ "Object" ],
-      "type" : "LIST"
-    }, {
-      "uuid" : "c1a0f5a4-c6f9-4f65-bb34-d88fee383294",
-      "name" : "name",
-      "argumentTypes" : [ "Object" ],
-      "type" : "SINGLE"
-    }, {
-      "uuid" : "4b4ed9da-97ec-499c-9225-2c7e3e20b9f5",
-      "name" : "element",
-      "argumentTypes" : [ "Object" ],
-      "type" : "SINGLE"
-    }, {
-      "uuid" : "047fa7e9-36d9-4fdf-8ca4-c0534f104cf7",
-      "name" : "dependencies",
-      "argumentTypes" : [ "Object" ],
-      "type" : "LIST"
-    }, {
-      "uuid" : "250ca29b-3205-4b7d-95c3-2dc3504b6ba0",
-      "name" : "localImports",
-      "argumentTypes" : [ "Object" ],
-      "type" : "LIST"
-    } ]
-  }, {
     "uuid" : "4c470834-253b-458f-aa48-4105d9e6a117",
     "name" : "GlobalStyle",
     "text" : "'@global': {\n\t~name~: {\n\t\t~properties:{it|~it.key~: ~it.value~};separator=\",\\n\"~\n\t}\n} ",
@@ -515,6 +480,46 @@
     "uuid" : "022d0d31-a515-4889-928e-012644896434",
     "name" : "withStyles",
     "text" : "@withStyles(useStyles) "
+  }, {
+    "uuid" : "774f9a05-c6ea-4af8-878c-1932ef5e0906",
+    "name" : "JSX",
+    "text" : "",
+    "children" : [ {
+      "uuid" : "31602a2d-7462-44cb-8305-76cb7a9e5222",
+      "name" : "FunctionalComponent",
+      "text" : "// dependencies:\n~dependencies:{it|~it~};separator=\"\\n\"~\n~if(style)~import { makeStyles } from '@material-ui/core/styles';~endif~\n\n~if(localImports)~\n// local imports\n~localImports:{it|~it~};separator=\"\\n\"~\n~endif~\n\n\nfunction ~name~(props) {\n\n\treturn (\n\t\t~element~\n\t)\n}\n~if(wrapper)~// Wrap the component instead of decorating it\n~endif~\nexport default ~if(inject)~inject(~inject:{it|'~it~'};separator=\", \"~)~endif~~if(wrapper)~(~wrapper~(~endif~~name~~if(wrapper)~))~endif~ ",
+      "parameters" : [ {
+        "uuid" : "1487c82b-f360-477d-9b10-9ffe7e5029d1",
+        "name" : "wrapper",
+        "argumentTypes" : [ "Object" ],
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "735922e0-64a6-4238-8113-845a99ea136b",
+        "name" : "inject",
+        "argumentTypes" : [ "Object" ],
+        "type" : "LIST"
+      }, {
+        "uuid" : "c1a0f5a4-c6f9-4f65-bb34-d88fee383294",
+        "name" : "name",
+        "argumentTypes" : [ "Object" ],
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "4b4ed9da-97ec-499c-9225-2c7e3e20b9f5",
+        "name" : "element",
+        "argumentTypes" : [ "Object" ],
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "047fa7e9-36d9-4fdf-8ca4-c0534f104cf7",
+        "name" : "dependencies",
+        "argumentTypes" : [ "Object" ],
+        "type" : "LIST"
+      }, {
+        "uuid" : "250ca29b-3205-4b7d-95c3-2dc3504b6ba0",
+        "name" : "localImports",
+        "argumentTypes" : [ "Object" ],
+        "type" : "LIST"
+      } ]
+    } ]
   } ],
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/React.stg"
 }

@@ -1,0 +1,185 @@
+{
+  "uuid" : "22979c7d-7514-4e8f-8b11-77b4f3d6b7d0",
+  "name" : "StringTemplate",
+  "delimiter" : "~",
+  "templates" : [ {
+    "uuid" : "8ddb7783-2abb-40fe-9038-669f16c8ed6b",
+    "name" : "STDomain",
+    "text" : "package ~packageName~;\n\npublic class ~name~ {\n\n\tprivate final org.stringtemplate.v4.STGroup stGroup;\n\n\tpublic ~name~() {\n\t\tthis(new java.io.File(\"~templateDir~/~template~.stg\"));\n\t}\n\n\tpublic ~name~(String stgPath) {\n\t\tthis(new java.io.File(stgPath));\n\t}\n\t\n\tpublic ~name~(final java.io.File stgFile) {\n\t\tthis(stgFile, '\\~');\n\t}\n\n\tpublic ~name~(final java.io.File stgFile, char delimiter) {\n\t\tthis(new org.stringtemplate.v4.STGroupFile(stgFile.getAbsolutePath(), delimiter, delimiter), delimiter);\n\t}\n\n\tpublic ~name~(org.stringtemplate.v4.STGroup stGroup, char delimiter) {\n\t\tthis.stGroup = stGroup;\n\t\tthis.stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());\n\t}\n\n\t~entities:{it|~it~};separator=\"\\n\\n\"~\n\n\tprivate static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {\n\n\t\t@Override\n\t\tpublic String toString(Object o, String formatString, java.util.Locale locale) {\n\n\t\t\tfinal String text = o.toString();\n\t\t\tif (formatString == null) return text;\n\n\t\t\tfinal String s = text.length() > 1 ? text.substring(1) : \"\";\n\t\t\t\n\t\t\tswitch (formatString) {\n\t\t\t\tcase \"capitalize\":\n\t\t\t\t\treturn Character.toUpperCase(text.charAt(0)) + s;\n\t\t\t\tcase \"toUpper\":\n\t\t\t\t\treturn text.toUpperCase();\n\t\t\t\tcase \"lowFirst\":\n\t\t\t\t\treturn Character.toLowerCase(text.charAt(0)) + s;\n\t\t\t\tcase \"toLower\":\n\t\t\t\t\treturn text.toLowerCase();\n\t\t\t\tdefault:\n\t\t\t\t\treturn o.toString();\n\t\t\t}\n\t\t}\n\t}\t\n}",
+    "parameters" : [ {
+      "uuid" : "aada838b-b6c0-45a8-81b0-bd3700bf67a7",
+      "name" : "packageName",
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "06cf403e-43a0-42ba-b239-ef5d697ece53",
+      "name" : "name",
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "3d909119-d4b4-4db4-95e2-74aa5877e241",
+      "name" : "templateDir",
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "b625769f-9f6a-4ccc-a5f8-2642acfbffab",
+      "name" : "template",
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "f11e9fa0-8100-4ed7-b293-c66a4b5891e5",
+      "name" : "entities",
+      "type" : "LIST"
+    } ],
+    "children" : [ {
+      "uuid" : "5a5ffd3b-8338-449a-bb45-67e0f2ca0ec2",
+      "name" : "newEntityInstance",
+      "text" : "public ~entityName~ new~entityName~() {\n\treturn new ~entityName~(stGroup, \"~template~\");\n}",
+      "parameters" : [ {
+        "uuid" : "20361dca-0651-4da8-86b5-52d28809aea8",
+        "name" : "entityName",
+        "argumentTypes" : [ "Object" ],
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "cae87fe0-f696-42fd-acf9-fce0a3f4eb1a",
+        "name" : "template",
+        "argumentTypes" : [ "Object" ],
+        "type" : "SINGLE"
+      } ]
+    } ]
+  }, {
+    "uuid" : "d164aa89-502b-4f40-8f32-2386299f4290",
+    "name" : "STDomainTests",
+    "text" : "package ~packageName~;\n\npublic class ~name~ {\n\n\tprivate static ~domainName~ domain;\n\n\t@org.junit.BeforeClass\n\tpublic static void loadSTGFile() {\n\t\tdomain = new ~domainName~();\n\t}\n\n\t@org.junit.Test\n\tpublic void testAll() {\n\t\t~testcases:{it|test~it.name;format=\"capitalize\"~();};separator=\"\\n\"~\n\t}\n\n\t~testcases:{it|~it.impl~};separator=\"\\n\\n\"~\n}",
+    "parameters" : [ {
+      "uuid" : "5fb2842d-d540-404e-99da-fa8fc7e991ed",
+      "name" : "testcases",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "a4442e02-f0d6-4315-8045-52daa925757a",
+      "name" : "domainName",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "1e4a6b74-cc18-4c58-9cb9-2f703b47e766",
+      "name" : "packageName",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "0ba2ffe8-a349-4d02-a699-a13fabdac0b0",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    } ],
+    "children" : [ {
+      "uuid" : "ddf9f301-8ea9-447d-b1c8-ac4ef04a6f2e",
+      "name" : "templateTestMethod",
+      "text" : "@org.junit.Test\npublic void test~template;format=\"capitalize\"~() {\n\tSystem.out.println(\"~template~ ---\\n\");\n\tSystem.out.println(domain.new~template;format=\"capitalize\"~());\n\tSystem.out.println(\"\\n--- ~template~\");\n}",
+      "parameters" : [ {
+        "uuid" : "1779dc46-0f20-4c96-8575-2abccf4dcfb4",
+        "name" : "template",
+        "argumentTypes" : [ "Object" ],
+        "type" : "SINGLE"
+      } ]
+    } ]
+  }, {
+    "uuid" : "8f38f099-b784-4fbd-996f-8be16beb6d28",
+    "name" : "STEntity",
+    "text" : "package ~packageName~;\n\npublic class ~name~ {\n\n\tprivate final java.util.UUID uuid = java.util.UUID.randomUUID();\n\tprivate final org.stringtemplate.v4.STGroup stGroup;\n\tprivate final String template;\n\t\n\t~singleFields:{it|private Object _~it~;};separator=\"\\n\"~\n\t~listFields:{it|private java.util.List<Object> _~it~ = new java.util.ArrayList<>();};separator=\"\\n\"~\n\t~kvListFields:{it|private java.util.List<java.util.Map<String, Object~gt()~> _~it.name~ = new java.util.ArrayList<>();};separator=\"\\n\"~\n\t\n\tpublic ~name~(org.stringtemplate.v4.STGroup stGroup, String template) {\n\t\tthis.stGroup = stGroup;\n\t\tthis.template = template;\n\t}\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn uuid.equals(that.uuid);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(uuid);\n\t}\n\n\t@Override\n\tpublic String toString() {\n\t\tfinal org.stringtemplate.v4.ST st = stGroup.getInstanceOf(template);\n\t\t~singleFields:{it|st.add(\"~it~\" ,_~it~);};separator=\"\\n\"~\n\t\t~listFields:{it|for (Object o : _~it~) st.add(\"~it~\", o);};separator=\"\\n\"~\n\t\t~kvListFields:{it|for (java.util.Map<String, Object> map : _~it.name~) st.addAggr(\"~it.aggrSpec~\", ~it.aggrValues~);};separator=\"\\n\"~\n\t\treturn st.render();\n\t}\n\t\n\t~singleAccessors:{it|~it~};separator=\"\\n\\n\"~\n\t\n\t~listAccessors:{it|~it~};separator=\"\\n\\n\"~\n\t\n\t~kvListAccessors:{it|~it~};separator=\"\\n\\n\"~\n}",
+    "parameters" : [ {
+      "uuid" : "155a7f84-3e0a-4ae8-bb2b-3bf4a4339742",
+      "name" : "singleFields",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "cc695108-8ccc-4697-802d-e2054798a220",
+      "name" : "listAccessors",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "7d3ec507-2e73-4270-a5ef-9218da48c29f",
+      "name" : "name",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "749bf0d0-9f89-40bc-8a3d-d82dc0b94427",
+      "name" : "packageName",
+      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "7f14c010-56e7-4288-a239-750e599dfe82",
+      "name" : "singleAccessors",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "093d13e4-4118-4e29-b0df-f9e40ee02c1f",
+      "name" : "listFields",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "e18f3740-3e3b-4516-8a4a-7382fc347722",
+      "name" : "kvListAccessors",
+      "argumentTypes" : [ "Object" ],
+      "type" : "LIST"
+    }, {
+      "uuid" : "2eed7066-e488-4ef4-8553-76183ee8473b",
+      "name" : "kvListFields",
+      "argumentTypes" : [ "Object" ],
+      "type" : "KVLIST",
+      "keys" : [ {
+        "uuid" : "de58ff93-4cfa-412d-9637-5dcfca03c6b1",
+        "name" : "name",
+        "argumentTypes" : [ "Object" ]
+      } ]
+    } ],
+    "children" : [ {
+      "uuid" : "5fa1efb8-99ca-493c-925c-a173d8b79584",
+      "name" : "entityListAccessors",
+      "text" : "public ~entity~ add~name;format=\"capitalize\"~(Object value) {\n\tthis._~name~.add(value);\n\treturn this;\n}\n\npublic ~entity~ remove~name;format=\"capitalize\"~(Object value) {\n\tthis._~name~.remove(value);\n\treturn this;\n}\n\npublic ~entity~ remove~name;format=\"capitalize\"~(int index) {\n\tthis._~name~.remove(index);\n\treturn this;\n}\n\npublic java.util.List<Object> get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}",
+      "parameters" : [ {
+        "uuid" : "b77ed742-679d-4e83-9e36-2b29ce755bb0",
+        "name" : "entity",
+        "argumentTypes" : [ "Object" ],
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "10e17f9c-dffc-444e-8bb0-fbbeae91bdd6",
+        "name" : "name",
+        "argumentTypes" : [ "Object" ],
+        "type" : "SINGLE"
+      } ]
+    }, {
+      "uuid" : "fc61d6f5-bac5-43ea-92fc-ac9c397cc389",
+      "name" : "entityKVListAccessors",
+      "text" : "public ~entity~ add~name;format=\"capitalize\"~(~keys:{it|Object _~it~};separator=\",\"~) {\n\tfinal java.util.Map<String, Object> map = new java.util.HashMap<>();\n\t~keys:{it|map.put(\"~it~\", _~it~);};separator=\"\\n\"~\n\tthis._~name~.add(map);\n\treturn this;\n}\n\npublic java.util.List<java.util.Map<String, Object~gt()~> get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}",
+      "parameters" : [ {
+        "uuid" : "428fe54d-9d77-47c9-9ed8-f655a9f3f0e6",
+        "name" : "name",
+        "argumentTypes" : [ "Object" ],
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "0cd556ad-a511-4383-a21b-610a92d66f6d",
+        "name" : "keys",
+        "argumentTypes" : [ "Object" ],
+        "type" : "KVLIST"
+      }, {
+        "uuid" : "f0b19f32-9bce-4046-8976-d2e6a132984f",
+        "name" : "entity",
+        "argumentTypes" : [ "Object" ],
+        "type" : "SINGLE"
+      } ]
+    }, {
+      "uuid" : "e1d4dff9-7492-494f-acf4-e92a24074ae5",
+      "name" : "entitySingleAccessors",
+      "text" : "public ~entity~ set~name;format=\"capitalize\"~(Object value) {\n\tthis._~name~ = value;\n\treturn this;\n}\n\npublic Object get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic boolean has~name;format=\"capitalize\"~() {\n\treturn this._~name~ != null;\n}\n\npublic ~entity~ remove~name;format=\"capitalize\"~() {\n\tthis._~name~ = null;\n\treturn this;\n}",
+      "parameters" : [ {
+        "uuid" : "b8b52291-5ab5-47fb-ba2c-b3417ba4bec1",
+        "name" : "name",
+        "argumentTypes" : [ "Object" ],
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "0fb43fce-df22-46cd-92e4-ffc51393c3a6",
+        "name" : "entity",
+        "argumentTypes" : [ "Object" ],
+        "type" : "SINGLE"
+      } ]
+    } ]
+  } ],
+  "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/StringTemplate.stg"
+}

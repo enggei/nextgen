@@ -1,18 +1,15 @@
 package nextgen.st;
 
 import com.generator.util.StringUtil;
-import nextgen.java.JavaPatterns;
-import nextgen.java.st.PackageDeclaration;
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STTemplate;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupString;
 
+import java.io.BufferedWriter;
 import java.io.File;
-import java.util.Comparator;
-
-import static nextgen.java.JavaPatterns.newPackageDeclaration;
+import java.io.FileWriter;
 
 public class STGenerator {
 
@@ -26,35 +23,35 @@ public class STGenerator {
 
         final File root = new File(rootPath);
 
-        final PackageDeclaration packageDeclaration = newPackageDeclaration(packageName + "." + stGroupModel.getName().toLowerCase());
+        final String packageDeclaration = packageName + "." + stGroupModel.getName().toLowerCase();
 
-        final File stg = JavaPatterns.writeToFile(toStg(stGroupModel), packageDeclaration, stGroupModel.getName(), "stg", root);
+        final File stg = writeToFile(toStg(stGroupModel), packageDeclaration, stGroupModel.getName(), "stg", root);
 
         final String domainClassName = StringUtil.capitalize(stGroupModel.getName() + "ST");
         final ST stDomain = templateGroup.getInstanceOf("STDomain");
-        stDomain.add("packageName", packageDeclaration.getName());
+        stDomain.add("packageName", packageDeclaration);
         stDomain.add("name", domainClassName);
         stDomain.add("template", stGroupModel.getName());
         stDomain.add("templateDir", stg.getParentFile().getAbsolutePath());
 
         final ST stDomainTests = templateGroup.getInstanceOf("STDomainTests");
         final String testsClassName = StringUtil.capitalize(stGroupModel.getName() + "STTests");
-        stDomainTests.add("packageName", packageDeclaration.getName());
+        stDomainTests.add("packageName", packageDeclaration);
         stDomainTests.add("name", testsClassName);
         stDomainTests.add("domainName", domainClassName);
 
-        stGroupModel.getTemplates().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stTemplate -> {
-            generateSTEntity(root, packageDeclaration, stDomain, stDomainTests, stTemplate);
-        });
+        stGroupModel.getTemplates()
+                .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
+                .forEach(stTemplate -> generateSTEntity(root, packageDeclaration, stDomain, stDomainTests, stTemplate));
 
-        JavaPatterns.writeToFile(stDomain.render(), packageDeclaration, domainClassName, root);
-        JavaPatterns.writeToFile(stDomainTests.render(), packageDeclaration, testsClassName, root);
+        writeToFile(stDomain.render(), packageDeclaration, domainClassName, root);
+        writeToFile(stDomainTests.render(), packageDeclaration, testsClassName, root);
     }
 
-    public void generateSTEntity(File root, PackageDeclaration packageDeclaration, ST stDomain, ST stDomainTests, STTemplate stTemplate) {
+    public void generateSTEntity(File root, String packageDeclaration, ST stDomain, ST stDomainTests, STTemplate stTemplate) {
 
         final String className = StringUtil.capitalize(stTemplate.getName());
-        JavaPatterns.writeToFile(generateSTClass(className, stTemplate, packageDeclaration), packageDeclaration, className, root);
+        writeToFile(generateSTClass(className, stTemplate, packageDeclaration), packageDeclaration, className, root);
 
         final ST newEntity = templateGroup.getInstanceOf("newEntityInstance");
         newEntity.add("entityName", className);
@@ -69,10 +66,10 @@ public class STGenerator {
         stTemplate.getChildren().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stTemplate1 -> generateSTEntity(root, packageDeclaration, stDomain, stDomainTests, stTemplate1));
     }
 
-    public String generateSTClass(String className, STTemplate stTemplate, PackageDeclaration packageDeclaration) {
+    public String generateSTClass(String className, STTemplate stTemplate, String packageDeclaration) {
 
         final ST stEntity = templateGroup.getInstanceOf("STEntity");
-        stEntity.add("packageName", packageDeclaration.getName());
+        stEntity.add("packageName", packageDeclaration);
         stEntity.add("name", className);
 
         stTemplate.getParameters().forEach(stParameter -> {
@@ -210,5 +207,49 @@ public class STGenerator {
         aggrSpec.add("keys", 1);
 
         System.out.println(aggrSpec.render());
+    }
+
+    public static File writeToFile(Object content, String packageDeclaration, String name, File root) {
+        final File directory = new File(root, packageToPath(packageDeclaration));
+        final File file = new File(directory, name + ".java");
+        write(file, content);
+        return file;
+    }
+
+    public static File writeToFile(Object content, String packageDeclaration, String name, String filetype, File root) {
+        final File directory = new File(root, packageToPath(packageDeclaration));
+        final File file = new File(directory, name + "." + filetype);
+        write(file, content);
+        return file;
+    }
+
+    public static String packageToPath(String packageName) {
+        return packageName.replaceAll("[.]", "/");
+    }
+
+    public static File write(File file, Object content) {
+
+        try {
+
+            if (!file.exists()) {
+                final File parent = file.getParentFile();
+                if (!parent.exists()) {
+                    if (parent.getParentFile() != null && !parent.getParentFile().exists() && !parent.getParentFile().mkdirs())
+                        throw new RuntimeException("Could not create parent dirs for " + parent.getAbsolutePath());
+                    if (!parent.mkdir()) throw new RuntimeException("Could not create directory " + parent.getName());
+                }
+                if (!file.createNewFile()) throw new RuntimeException("Could not create file " + file.getName());
+            }
+            System.out.println("writing file " + file.getAbsolutePath());
+
+            final BufferedWriter out = new BufferedWriter(new FileWriter(file));
+            out.write(content == null ? "" : content.toString());
+            out.close();
+
+            return file;
+
+        } catch (Exception e) {
+            throw new RuntimeException("Could not write to " + file.getAbsolutePath() + " : " + e.getMessage(), e);
+        }
     }
 }

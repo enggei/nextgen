@@ -61,26 +61,6 @@
     "name" : "execution",
     "text" : "<execution>\r\n    <phase>package</phase>\r\n    <goals>\r\n        <goal>shade</goal>\r\n    </goals>\r\n</execution>"
   }, {
-    "uuid" : "6c40ef07-6e2d-4fbe-89e3-49248b434503",
-    "name" : "frontEndMavenPlugin",
-    "text" : "<!--npm plugin-->\r\n<plugin>\r\n    <groupId>com.github.eirslett</groupId>\r\n    <artifactId>frontend-maven-plugin</artifactId>\r\n    <version>~if(pluginVersion)~~pluginVersion~~else~1.10.0~endif~</version>\r\n    <configuration>\r\n        <installDirectory>~if(installDirectory)~~installDirectory~~else~target~endif~</installDirectory>\r\n        <nodeVersion>v~nodeVersion~</nodeVersion>\r\n    </configuration>\r\n    <executions>\r\n        <execution>\r\n            <id>install node and npm</id>\r\n            <goals>\r\n                <goal>install-node-and-npm</goal>\r\n            </goals>\r\n        </execution>\r\n        <execution>\r\n            <id>npm install</id>\r\n            <goals>\r\n                <goal>npm</goal>\r\n            </goals>\r\n            <configuration>\r\n                <arguments>install</arguments>\r\n            </configuration>\r\n        </execution>\r\n        <execution>\r\n            <id>webpack build</id>\r\n            <goals>\r\n                <goal>webpack</goal>\r\n            </goals>\r\n        </execution>\r\n    </executions>\r\n</plugin>",
-    "parameters" : [ {
-      "uuid" : "f822ac98-7baa-428a-9a82-6c095f97097d",
-      "name" : "installDirectory",
-      "argumentTypes" : [ "Object" ],
-      "type" : "SINGLE"
-    }, {
-      "uuid" : "025c9536-555e-47fe-869a-d23e772aa62f",
-      "name" : "nodeVersion",
-      "argumentTypes" : [ "Object" ],
-      "type" : "SINGLE"
-    }, {
-      "uuid" : "9f9c7b5b-86f7-4010-b7c6-8d46786e6a09",
-      "name" : "pluginVersion",
-      "argumentTypes" : [ "Object" ],
-      "type" : "SINGLE"
-    } ]
-  }, {
     "uuid" : "9b6aa1aa-6074-4744-823d-ad9edf0f1e0f",
     "name" : "parent",
     "text" : "<parent>\r\n\t<artifactId>~artifactId~</artifactId>\r\n\t<groupId>~groupId~</groupId>\r\n\t<version>~version~</version>\r\n</parent> ",
@@ -97,45 +77,6 @@
     }, {
       "uuid" : "68ae95b9-49df-494f-9575-2297116d30ac",
       "name" : "artifactId",
-      "argumentTypes" : [ "Object" ],
-      "type" : "SINGLE"
-    } ]
-  }, {
-    "uuid" : "f6b8a6ed-f3ff-4bed-9180-ea870f5b65c0",
-    "name" : "plugin",
-    "text" : "<plugin>\r\n\t<groupId>~groupId~</groupId>\r\n\t<artifactId>~artifactId~</artifactId>\r\n\t<version>~version~</version>\r\n\t<configuration>\r\n\t\t~configuration:{it|<~it.name~>~it.value~</~it.name~>};separator=\"\\n\"~\r\n\t</configuration>\r\n\t<executions>\r\n\t\t~executions:{it|~it~};separator=\"\\n\"~\r\n\t</executions>\r\n</plugin> ",
-    "parameters" : [ {
-      "uuid" : "5bbd05b8-11f0-41be-ab8c-9373ddd0178d",
-      "name" : "artifactId",
-      "argumentTypes" : [ "Object" ],
-      "type" : "SINGLE"
-    }, {
-      "uuid" : "18cd49f8-20e8-4d3b-b70b-b04f8cc77325",
-      "name" : "executions",
-      "argumentTypes" : [ "Object" ],
-      "type" : "LIST"
-    }, {
-      "uuid" : "29052fa0-39fe-48b9-beb4-6e0f8c10d3aa",
-      "name" : "version",
-      "argumentTypes" : [ "Object" ],
-      "type" : "SINGLE"
-    }, {
-      "uuid" : "37e6d3c4-3a23-4fce-92a5-56ebf5471569",
-      "name" : "configuration",
-      "argumentTypes" : [ "Object" ],
-      "type" : "KVLIST",
-      "keys" : [ {
-        "uuid" : "3b5e5c11-8c84-4e6a-a3ca-df21c29b1450",
-        "name" : "name",
-        "argumentTypes" : [ "Object" ]
-      }, {
-        "uuid" : "ff0ff9d0-122e-4370-8d45-971aabddd674",
-        "name" : "value",
-        "argumentTypes" : [ "Object" ]
-      } ]
-    }, {
-      "uuid" : "c0262743-6953-46ed-b1b7-ecaffa4ac92f",
-      "name" : "groupId",
       "argumentTypes" : [ "Object" ],
       "type" : "SINGLE"
     } ]
@@ -244,19 +185,83 @@
       "type" : "SINGLE"
     } ]
   }, {
-    "uuid" : "e2949dab-710d-40d6-86ac-8f08b63ca5ce",
-    "name" : "shadePlugin",
-    "text" : "<!--fat-jar plugin for single-file server package-->\r\n<plugin>\r\n\t<groupId>org.apache.maven.plugins</groupId>\r\n\t<artifactId>maven-shade-plugin</artifactId>\r\n\t<version>2.4.3</version>\r\n\t<executions>\r\n\t\t<execution>\r\n\t\t\t<phase>package</phase>\r\n\t\t\t<goals>\r\n\t\t\t\t<goal>shade</goal>\r\n\t\t\t</goals>\r\n\t\t\t<configuration>\r\n\t\t\t\t<filters>\r\n\t\t\t\t\t<filter>\r\n\t\t\t\t\t\t<artifact>*:*</artifact>\r\n\t\t\t\t\t\t<excludes>\r\n\t\t\t\t\t\t\t<exclude>META-INF/*.SF</exclude>\r\n\t\t\t\t\t\t\t<exclude>META-INF/*.DSA</exclude>\r\n\t\t\t\t\t\t\t<exclude>META-INF/*.RSA</exclude>\r\n\t\t\t\t\t\t</excludes>\r\n\t\t\t\t\t</filter>\r\n\t\t\t\t</filters>\r\n\t\t\t\t<transformers>\r\n\t\t\t\t\t<transformer implementation=\"org.apache.maven.plugins.shade.resource.ServicesResourceTransformer\"/>\r\n\t\t\t\t\t<transformer implementation=\"org.apache.maven.plugins.shade.resource.ManifestResourceTransformer\">\r\n\t\t\t\t\t\t<manifestEntries>\r\n\t\t\t\t\t\t\t<Main-Class>io.vertx.core.Launcher</Main-Class>\r\n\t\t\t\t\t\t\t<Main-Verticle>~packageName~.~className~</Main-Verticle>\r\n\t\t\t\t\t\t</manifestEntries>\r\n\t\t\t\t\t</transformer>\r\n\t\t\t\t</transformers>\r\n\t\t\t\t<artifactSet/>\r\n\t\t\t\t<outputFile>target/${project.artifactId}-${project.version}-fat.jar</outputFile>\r\n\t\t\t</configuration>\r\n\t\t</execution>\r\n\t</executions>\r\n</plugin> ",
-    "parameters" : [ {
-      "uuid" : "74f4e21e-1a70-4c9f-809a-6065bcb6e182",
-      "name" : "packageName",
-      "argumentTypes" : [ "Object" ],
-      "type" : "SINGLE"
+    "uuid" : "f5dc53d8-bbf6-4b8e-9cc8-b1e9a5fd17b0",
+    "name" : "Plugins",
+    "text" : "",
+    "children" : [ {
+      "uuid" : "6c40ef07-6e2d-4fbe-89e3-49248b434503",
+      "name" : "frontEndMavenPlugin",
+      "text" : "<!--npm plugin-->\r\n<plugin>\r\n    <groupId>com.github.eirslett</groupId>\r\n    <artifactId>frontend-maven-plugin</artifactId>\r\n    <version>~if(pluginVersion)~~pluginVersion~~else~1.10.0~endif~</version>\r\n    <configuration>\r\n        <installDirectory>~if(installDirectory)~~installDirectory~~else~target~endif~</installDirectory>\r\n        <nodeVersion>v~nodeVersion~</nodeVersion>\r\n    </configuration>\r\n    <executions>\r\n        <execution>\r\n            <id>install node and npm</id>\r\n            <goals>\r\n                <goal>install-node-and-npm</goal>\r\n            </goals>\r\n        </execution>\r\n        <execution>\r\n            <id>npm install</id>\r\n            <goals>\r\n                <goal>npm</goal>\r\n            </goals>\r\n            <configuration>\r\n                <arguments>install</arguments>\r\n            </configuration>\r\n        </execution>\r\n        <execution>\r\n            <id>webpack build</id>\r\n            <goals>\r\n                <goal>webpack</goal>\r\n            </goals>\r\n        </execution>\r\n    </executions>\r\n</plugin>",
+      "parameters" : [ {
+        "uuid" : "f822ac98-7baa-428a-9a82-6c095f97097d",
+        "name" : "installDirectory",
+        "argumentTypes" : [ "Object" ],
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "025c9536-555e-47fe-869a-d23e772aa62f",
+        "name" : "nodeVersion",
+        "argumentTypes" : [ "Object" ],
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "9f9c7b5b-86f7-4010-b7c6-8d46786e6a09",
+        "name" : "pluginVersion",
+        "argumentTypes" : [ "Object" ],
+        "type" : "SINGLE"
+      } ]
     }, {
-      "uuid" : "7b931807-1b6c-4ddc-a7df-b55ffa112208",
-      "name" : "className",
-      "argumentTypes" : [ "Object" ],
-      "type" : "SINGLE"
+      "uuid" : "e2949dab-710d-40d6-86ac-8f08b63ca5ce",
+      "name" : "shadePlugin",
+      "text" : "<!--fat-jar plugin for single-file server package-->\r\n<plugin>\r\n\t<groupId>org.apache.maven.plugins</groupId>\r\n\t<artifactId>maven-shade-plugin</artifactId>\r\n\t<version>2.4.3</version>\r\n\t<executions>\r\n\t\t<execution>\r\n\t\t\t<phase>package</phase>\r\n\t\t\t<goals>\r\n\t\t\t\t<goal>shade</goal>\r\n\t\t\t</goals>\r\n\t\t\t<configuration>\r\n\t\t\t\t<filters>\r\n\t\t\t\t\t<filter>\r\n\t\t\t\t\t\t<artifact>*:*</artifact>\r\n\t\t\t\t\t\t<excludes>\r\n\t\t\t\t\t\t\t<exclude>META-INF/*.SF</exclude>\r\n\t\t\t\t\t\t\t<exclude>META-INF/*.DSA</exclude>\r\n\t\t\t\t\t\t\t<exclude>META-INF/*.RSA</exclude>\r\n\t\t\t\t\t\t</excludes>\r\n\t\t\t\t\t</filter>\r\n\t\t\t\t</filters>\r\n\t\t\t\t<transformers>\r\n\t\t\t\t\t<transformer implementation=\"org.apache.maven.plugins.shade.resource.ServicesResourceTransformer\"/>\r\n\t\t\t\t\t<transformer implementation=\"org.apache.maven.plugins.shade.resource.ManifestResourceTransformer\">\r\n\t\t\t\t\t\t<manifestEntries>\r\n\t\t\t\t\t\t\t<Main-Class>io.vertx.core.Launcher</Main-Class>\r\n\t\t\t\t\t\t\t<Main-Verticle>~packageName~.~className~</Main-Verticle>\r\n\t\t\t\t\t\t</manifestEntries>\r\n\t\t\t\t\t</transformer>\r\n\t\t\t\t</transformers>\r\n\t\t\t\t<artifactSet/>\r\n\t\t\t\t<outputFile>target/${project.artifactId}-${project.version}-fat.jar</outputFile>\r\n\t\t\t</configuration>\r\n\t\t</execution>\r\n\t</executions>\r\n</plugin> ",
+      "parameters" : [ {
+        "uuid" : "74f4e21e-1a70-4c9f-809a-6065bcb6e182",
+        "name" : "packageName",
+        "argumentTypes" : [ "Object" ],
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "7b931807-1b6c-4ddc-a7df-b55ffa112208",
+        "name" : "className",
+        "argumentTypes" : [ "Object" ],
+        "type" : "SINGLE"
+      } ]
+    }, {
+      "uuid" : "f6b8a6ed-f3ff-4bed-9180-ea870f5b65c0",
+      "name" : "plugin",
+      "text" : "<plugin>\r\n\t<groupId>~groupId~</groupId>\r\n\t<artifactId>~artifactId~</artifactId>\r\n\t<version>~version~</version>\r\n\t<configuration>\r\n\t\t~configuration:{it|<~it.name~>~it.value~</~it.name~>};separator=\"\\n\"~\r\n\t</configuration>\r\n\t<executions>\r\n\t\t~executions:{it|~it~};separator=\"\\n\"~\r\n\t</executions>\r\n</plugin> ",
+      "parameters" : [ {
+        "uuid" : "5bbd05b8-11f0-41be-ab8c-9373ddd0178d",
+        "name" : "artifactId",
+        "argumentTypes" : [ "Object" ],
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "18cd49f8-20e8-4d3b-b70b-b04f8cc77325",
+        "name" : "executions",
+        "argumentTypes" : [ "Object" ],
+        "type" : "LIST"
+      }, {
+        "uuid" : "29052fa0-39fe-48b9-beb4-6e0f8c10d3aa",
+        "name" : "version",
+        "argumentTypes" : [ "Object" ],
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "37e6d3c4-3a23-4fce-92a5-56ebf5471569",
+        "name" : "configuration",
+        "argumentTypes" : [ "Object" ],
+        "type" : "KVLIST",
+        "keys" : [ {
+          "uuid" : "3b5e5c11-8c84-4e6a-a3ca-df21c29b1450",
+          "name" : "name",
+          "argumentTypes" : [ "Object" ]
+        }, {
+          "uuid" : "ff0ff9d0-122e-4370-8d45-971aabddd674",
+          "name" : "value",
+          "argumentTypes" : [ "Object" ]
+        } ]
+      }, {
+        "uuid" : "c0262743-6953-46ed-b1b7-ecaffa4ac92f",
+        "name" : "groupId",
+        "argumentTypes" : [ "Object" ],
+        "type" : "SINGLE"
+      } ]
     } ]
   } ],
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Maven.stg"

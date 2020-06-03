@@ -34,6 +34,7 @@ public class STApp extends JFrame {
     }
 
     public static void main(String[] args) {
+        STParser.debug = false;
         SwingUtil.show(new STApp(load("/home/goe/projects/nextgen/components/core/src/main/resources/templates")));
     }
 

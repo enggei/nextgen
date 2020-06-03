@@ -11,46 +11,47 @@
       "name" : "agentDeclarations",
       "argumentTypes" : [ "Object" ],
       "type" : "LIST"
-    } ]
-  }, {
-    "uuid" : "0e37b30c-8b53-4d73-a85a-7919de1bd0d8",
-    "name" : "agentDeclaration",
-    "text" : "const ~name~ = { \n\t~agentEndpoint:{it|~it~};separator=\",\\n\"~\n}",
-    "parameters" : [ {
-      "uuid" : "c6f0299f-50a2-4509-9ea1-86e31663409d",
+    } ],
+    "children" : [ {
+      "uuid" : "1c57e7f0-7b85-4aee-a163-c47ba5ee835a",
       "name" : "agentEndpoint",
-      "argumentTypes" : [ "Object" ],
-      "type" : "LIST"
+      "text" : "~name~: (~parameters:{it|~it~};separator=\",\"~) => requests.~action~('/~url~'~if(parameters)~, { ~parameters:{it|~it~};separator=\",\"~ }~endif~)",
+      "parameters" : [ {
+        "uuid" : "19125191-8a41-447f-ba6e-7a4c12fe89f1",
+        "name" : "name",
+        "argumentTypes" : [ "Object" ],
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "7fcfacd7-ff1c-4d49-8c8f-5ee4d15f601e",
+        "name" : "parameters",
+        "argumentTypes" : [ "Object" ],
+        "type" : "LIST"
+      }, {
+        "uuid" : "b20c0a0f-5e4f-4dc6-a6c9-c84300cc3bb1",
+        "name" : "url",
+        "argumentTypes" : [ "Object" ],
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "ab60ad9c-bd77-492a-b886-49c74233c3c7",
+        "name" : "action",
+        "argumentTypes" : [ "Object" ],
+        "type" : "SINGLE"
+      } ]
     }, {
-      "uuid" : "33f8ce05-bd63-4642-ae1d-654a1271a80e",
-      "name" : "name",
-      "argumentTypes" : [ "Object" ],
-      "type" : "SINGLE"
-    } ]
-  }, {
-    "uuid" : "1c57e7f0-7b85-4aee-a163-c47ba5ee835a",
-    "name" : "agentEndpoint",
-    "text" : "~name~: (~parameters:{it|~it~};separator=\",\"~) => requests.~action~('/~url~'~if(parameters)~, { ~parameters:{it|~it~};separator=\",\"~ }~endif~)",
-    "parameters" : [ {
-      "uuid" : "19125191-8a41-447f-ba6e-7a4c12fe89f1",
-      "name" : "name",
-      "argumentTypes" : [ "Object" ],
-      "type" : "SINGLE"
-    }, {
-      "uuid" : "7fcfacd7-ff1c-4d49-8c8f-5ee4d15f601e",
-      "name" : "parameters",
-      "argumentTypes" : [ "Object" ],
-      "type" : "LIST"
-    }, {
-      "uuid" : "b20c0a0f-5e4f-4dc6-a6c9-c84300cc3bb1",
-      "name" : "url",
-      "argumentTypes" : [ "Object" ],
-      "type" : "SINGLE"
-    }, {
-      "uuid" : "ab60ad9c-bd77-492a-b886-49c74233c3c7",
-      "name" : "action",
-      "argumentTypes" : [ "Object" ],
-      "type" : "SINGLE"
+      "uuid" : "0e37b30c-8b53-4d73-a85a-7919de1bd0d8",
+      "name" : "agentDeclaration",
+      "text" : "const ~name~ = { \n\t~agentEndpoint:{it|~it~};separator=\",\\n\"~\n}",
+      "parameters" : [ {
+        "uuid" : "c6f0299f-50a2-4509-9ea1-86e31663409d",
+        "name" : "agentEndpoint",
+        "argumentTypes" : [ "Object" ],
+        "type" : "LIST"
+      }, {
+        "uuid" : "33f8ce05-bd63-4642-ae1d-654a1271a80e",
+        "name" : "name",
+        "argumentTypes" : [ "Object" ],
+        "type" : "SINGLE"
+      } ]
     } ]
   } ],
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Petty.stg"
