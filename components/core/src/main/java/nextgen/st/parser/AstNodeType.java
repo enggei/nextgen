@@ -3,12 +3,15 @@ package nextgen.st.parser;
 
 public enum AstNodeType {
 
+	ST,
 	Expression,
 	Name,
 	Prop,
-	Options,
 	Args,
 	If,
+	Else,
+	ElseIf,
+	Assign,
 	Include,
 	Subtemplate
 

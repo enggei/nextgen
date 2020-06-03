@@ -7,9 +7,8 @@
     "name" : "list",
     "text" : "list : ~value:{it|~it~};separator=\", \"~",
     "parameters" : [ {
-      "uuid" : "ba8ccc75-9e18-4db5-a95c-86705bf70672",
+      "uuid" : "10cad08b-a095-4c39-a921-c0d4bd3a0e4e",
       "name" : "value",
-      "argumentTypes" : [ "Object" ],
       "type" : "LIST"
     } ]
   }, {
@@ -17,9 +16,8 @@
     "name" : "single",
     "text" : "single : ~value~",
     "parameters" : [ {
-      "uuid" : "f4161cd2-f137-4362-b66d-1dbd49e4b253",
+      "uuid" : "67c88eb9-576b-4896-96ad-a09c519b52e5",
       "name" : "value",
-      "argumentTypes" : [ "Object" ],
       "type" : "SINGLE"
     } ],
     "children" : [ ]
@@ -28,16 +26,15 @@
     "name" : "kv",
     "text" : "kv : ~value:{it|~it.key~:~it.value~};separator=\"\\n\"~",
     "parameters" : [ {
-      "uuid" : "458f5bfe-f6ea-4bff-bf50-f22dfb197a19",
+      "uuid" : "c5e7e914-5152-403f-aa6a-1a6bffc6b349",
       "name" : "value",
-      "argumentTypes" : [ "Object" ],
       "type" : "KVLIST",
       "keys" : [ {
-        "uuid" : "c1d623f4-4e40-4c5f-b621-3a8502804c1c",
+        "uuid" : "030f73c9-ef3a-4355-8985-c36fcc9588bf",
         "name" : "key",
         "argumentTypes" : [ "Object" ]
       }, {
-        "uuid" : "97758017-35b9-4c13-a6a1-28fd2dbe09b7",
+        "uuid" : "a4c11373-fcea-4173-98fb-86f131842e11",
         "name" : "value",
         "argumentTypes" : [ "Object" ]
       } ]
@@ -46,7 +43,38 @@
     "uuid" : "ec05cc7e-4786-4ef8-98af-7c42c1ec546a",
     "name" : "testIf",
     "text" : "~if(condition)~condition~endif~",
-    "parameters" : [ ]
+    "parameters" : [ {
+      "uuid" : "e6a73149-62e9-4a57-9522-2ec8beb87b74",
+      "name" : "condition",
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "63e8811d-a1ce-4d14-8e19-4719ee7e61a4",
+    "name" : "complex",
+    "text" : "~if(list)~~list:{it|~it.name~ ~it.value~};separator=\"\\n\"~~endif~",
+    "parameters" : [ {
+      "uuid" : "70e7a932-d325-49da-bdaa-1369953ad779",
+      "name" : "list",
+      "type" : "KVLIST",
+      "keys" : [ {
+        "uuid" : "8f7aa9b3-f2be-4494-a268-945bba5d0d38",
+        "name" : "name",
+        "argumentTypes" : [ "Object" ]
+      }, {
+        "uuid" : "a6e757eb-dced-42e7-b261-e3570e352dbf",
+        "name" : "value",
+        "argumentTypes" : [ "Object" ]
+      } ]
+    } ]
+  }, {
+    "uuid" : "d5fb4402-0fa4-4f5b-84f6-c0221cb13e6b",
+    "name" : "commalist",
+    "text" : "~keys:{it|~it~};separator=\",\"~",
+    "parameters" : [ {
+      "uuid" : "d7e4303a-a24b-42ca-a487-8f4a9b3f12ac",
+      "name" : "keys",
+      "type" : "LIST"
+    } ]
   } ],
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Test.stg"
 }

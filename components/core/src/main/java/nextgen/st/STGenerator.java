@@ -10,6 +10,7 @@ import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupString;
 
 import java.io.File;
+import java.util.Comparator;
 
 import static nextgen.java.JavaPatterns.newPackageDeclaration;
 
@@ -27,11 +28,14 @@ public class STGenerator {
 
         final PackageDeclaration packageDeclaration = newPackageDeclaration(packageName + "." + stGroupModel.getName().toLowerCase());
 
+        final File stg = JavaPatterns.writeToFile(toStg(stGroupModel), packageDeclaration, stGroupModel.getName(), "stg", root);
+
         final String domainClassName = StringUtil.capitalize(stGroupModel.getName() + "ST");
         final ST stDomain = templateGroup.getInstanceOf("STDomain");
         stDomain.add("packageName", packageDeclaration.getName());
         stDomain.add("name", domainClassName);
         stDomain.add("template", stGroupModel.getName());
+        stDomain.add("templateDir", stg.getParentFile().getAbsolutePath());
 
         final ST stDomainTests = templateGroup.getInstanceOf("STDomainTests");
         final String testsClassName = StringUtil.capitalize(stGroupModel.getName() + "STTests");
@@ -39,13 +43,12 @@ public class STGenerator {
         stDomainTests.add("name", testsClassName);
         stDomainTests.add("domainName", domainClassName);
 
-        stGroupModel.getTemplates().forEach(stTemplate -> {
+        stGroupModel.getTemplates().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stTemplate -> {
             generateSTEntity(root, packageDeclaration, stDomain, stDomainTests, stTemplate);
         });
 
         JavaPatterns.writeToFile(stDomain.render(), packageDeclaration, domainClassName, root);
         JavaPatterns.writeToFile(stDomainTests.render(), packageDeclaration, testsClassName, root);
-        JavaPatterns.writeToFile(toStg(stGroupModel), packageDeclaration, stGroupModel.getName(), "stg", root);
     }
 
     public void generateSTEntity(File root, PackageDeclaration packageDeclaration, ST stDomain, ST stDomainTests, STTemplate stTemplate) {
@@ -63,7 +66,7 @@ public class STGenerator {
 
         stDomainTests.addAggr("testcases.{name,impl}", stTemplate.getName(), entityTestCase);
 
-        stTemplate.getChildren().forEach(stTemplate1 -> generateSTEntity(root, packageDeclaration, stDomain, stDomainTests, stTemplate1));
+        stTemplate.getChildren().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stTemplate1 -> generateSTEntity(root, packageDeclaration, stDomain, stDomainTests, stTemplate1));
     }
 
     public String generateSTClass(String className, STTemplate stTemplate, PackageDeclaration packageDeclaration) {
@@ -95,33 +98,21 @@ public class STGenerator {
                     break;
                 case KVLIST:
 
-                    if (stParameter.getKeys().count() == 0) {
-                        stEntity.add("listFields", stParameter.getName());
+                    final ST aggrSpec = new ST(".{~keys:{it|~it~};separator=\",\"~}", '~', '~');
+                    final ST aggrValues = new ST("~values:{it|map.get(\"~it~\")};separator=\", \"~", '~', '~');
 
-                        listAccessors = templateGroup.getInstanceOf("entityListAccessors");
-                        listAccessors.add("entity", className);
-                        listAccessors.add("name", stParameter.getName());
-                        stEntity.add("listAccessors", listAccessors);
+                    final ST kvListAccessors = templateGroup.getInstanceOf("entityKVListAccessors");
+                    kvListAccessors.add("entity", className);
+                    kvListAccessors.add("name", stParameter.getName());
+                    stParameter.getKeys().forEach(stParameterKey -> {
+                        kvListAccessors.add("keys", stParameterKey);
 
-                    } else {
+                        aggrSpec.add("keys", stParameterKey);
+                        aggrValues.add("values", stParameterKey);
+                    });
 
-
-                        final StringBuilder aggrSpec = new StringBuilder();
-                        final StringBuilder aggrValues = new StringBuilder();
-
-                        final ST kvListAccessors = templateGroup.getInstanceOf("entityKVListAccessors");
-                        kvListAccessors.add("entity", className);
-                        kvListAccessors.add("name", stParameter.getName());
-                        stParameter.getKeys().forEach(stParameterKey -> {
-                            kvListAccessors.add("keys", stParameterKey);
-
-                            aggrSpec.append(aggrSpec.length() == 0 ? "" : ",").append(stParameterKey);
-                            aggrValues.append(aggrValues.length() == 0 ? "" : ", ").append("map.get(\"").append(stParameterKey).append("\")");
-                        });
-
-                        stEntity.addAggr("kvListFields.{name,aggrSpec,aggrValues}", stParameter.getName(), stParameter.getName() + ".{" + aggrSpec.toString().trim() + "}", aggrValues.toString().trim());
-                        stEntity.add("kvListAccessors", kvListAccessors);
-                    }
+                    stEntity.addAggr("kvListFields.{name,aggrSpec,aggrValues}", stParameter.getName(), stParameter.getName() + aggrSpec.render(), aggrValues.render());
+                    stEntity.add("kvListAccessors", kvListAccessors);
                     break;
             }
         });
@@ -209,5 +200,15 @@ public class STGenerator {
                     return o.toString();
             }
         }
+    }
+
+    public static void main(String[] args) {
+        final ST aggrSpec = new ST("~keys:{it|~it~};separator=\",\"~", '~', '~');
+
+        aggrSpec.add("keys", 1);
+        aggrSpec.add("keys", 1);
+        aggrSpec.add("keys", 1);
+
+        System.out.println(aggrSpec.render());
     }
 }

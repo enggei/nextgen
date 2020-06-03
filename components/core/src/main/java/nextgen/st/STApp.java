@@ -42,7 +42,7 @@ public class STApp extends JFrame {
         final STGDirectory root = STJsonFactory.newSTGDirectory()
                 .setPath(new File(dir).getPath())
                 .setOutputPackage("tmp.st")
-                .setOutputPath("components/core/src/test/java");
+                .setOutputPath("/home/goe/projects/nextgen/components/core/src/test/java/");
 
         Optional.ofNullable(FileUtil.list(dir, ".json"))
                 .ifPresent(files -> {

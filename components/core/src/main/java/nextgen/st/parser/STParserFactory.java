@@ -15,11 +15,7 @@ public class STParserFactory {
 		return AstNodeType.Prop;
 	}
 
-	public static AstNodeType AstNodeTypeOptions() { 
-		return AstNodeType.Options;
-	}
-
-	public static AstNodeType AstNodeTypeArgs() { 
+	public static AstNodeType AstNodeTypeArgs() {
 		return AstNodeType.Args;
 	}
 
@@ -35,11 +31,4 @@ public class STParserFactory {
 		return new AstNode();
 	}
 
-	public static Expression newExpression() { 
-		return new Expression();
-	}
-
-	public static Subtemplate newSubtemplate() { 
-		return new Subtemplate();
-	}
 }

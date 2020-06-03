@@ -2,7 +2,9 @@ package nextgen.st;
 
 import com.generator.util.FileUtil;
 import nextgen.st.domain.*;
-import nextgen.st.parser.*;
+import nextgen.st.parser.AstNode;
+import nextgen.st.parser.AstNodeType;
+import nextgen.st.parser.STParserFactory;
 import org.antlr.runtime.tree.Tree;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STErrorListener;
@@ -12,23 +14,15 @@ import org.stringtemplate.v4.misc.STMessage;
 
 import java.io.File;
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static nextgen.st.domain.STJsonFactory.newSTParameterKey;
 
 public class STParser {
 
     public static boolean debug = true;
 
     public static void main(String[] args) {
-        final STGParseResult parseResult = STParser.parse(new File("/home/goe/projects/nextgen/components/core/src/test/java/tmp/st/test/Test.stg"));
-        parseResult.getParsed().getTemplates().forEach(stTemplate -> {
-            System.out.println(stTemplate.getName());
-            stTemplate.getParameters().forEach(stParameter -> {
-                System.out.println("\t" + stParameter.getName() + " " + stParameter.getType());
-                stParameter.getKeys().forEach(stParameterKey -> System.out.println("\t\t" + stParameterKey.getName()));
-            });
-        });
+
+        STParser.parse(new File("/home/goe/projects/nextgen/components/core/src/test/java/tmp/st/test/Test.stg"));
+//        STParser.parse(new File("/home/goe/projects/nextgen/components/core/src/test/java/tmp/st/java/Java.stg"));
     }
 
     public static STGParseResult parse(File stgFile) {
@@ -64,12 +58,12 @@ public class STParser {
             }
         });
 
+
         final STGroupModel stGroupModel = new STGroupModel()
                 .setName(stGroup.getName())
                 .setDelimiter(stGroup.delimiterStartChar + "");
 
         final Map<String, STTemplate> stTemplateMap = new HashMap<>();
-        final Map<STTemplate, Set<MethodCall>> stTemplateMethodCalls = new HashMap<>();
 
         stGroup.getTemplateNames()
                 .stream()
@@ -80,80 +74,132 @@ public class STParser {
                 .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
                 .forEach(st -> {
 
-                    final STTemplate stTemplate = new STTemplate()
-                            .setName(st.getName().substring(1))
-                            .setText(st.impl.template);
-
-                    stTemplateMap.put(stTemplate.getName(), stTemplate);
+                    System.out.println("\n--- " + st.getName());
+                    System.out.println(st.impl.template);
 
                     final TemplateVisitor visitor = new TemplateVisitor();
                     visitor.visit(st);
 
+                    final STTemplate stTemplate = new STTemplate()
+                            .setName(st.getName().substring(1))
+                            .setText(st.impl.template);
+
                     final Map<String, STParameter> stParameterMap = new LinkedHashMap<>();
-                    for (Expression expression : visitor.getExpressions()) {
-                        if (debug) System.out.println(debug(expression.getAst(), 0));
-
-                        if (!expression.getMethodCalls().isEmpty()) {
-                            for (MethodCall methodCall : expression.getMethodCalls()) {
-                                stTemplateMethodCalls.putIfAbsent(stTemplate, new LinkedHashSet<>());
-                                stTemplateMethodCalls.get(stTemplate).add(methodCall);
-                            }
-                            continue;
-                        }
-
-                        final STParameter stParameter = new STParameter().setName(expression.getName()).addArgumentTypes("Object");
-                        if (expression.getSubTemplate() == null)
-                            stParameter.setType(STParameterType.SINGLE);
-                        else if (expression.getSubTemplate().getExpressions().size() == 1)
-                            stParameter.setType(STParameterType.LIST);
-                        else {
-                            stParameter.setType(STParameterType.KVLIST);
-                            expression.getSubTemplate()
-                                    .getExpressions()
-                                    .forEach(kvExpression -> kvExpression.getProps().values().forEach(key -> {
-                                        stParameter.getKeys()
-                                                .filter(stParameterKey -> stParameterKey.getName().equals(key))
-                                                .findFirst()
-                                                .orElseGet(() -> {
-                                                    final STParameterKey newKey = newSTParameterKey()
-                                                            .setName(key)
-                                                            .addArgumentTypes("Object");
-                                                    stParameter.addKeys(newKey);
-                                                    return newKey;
-                                                });
-                                    }));
-
-//                            // bugfix ?
-//                            if (stParameter.getKeys().count() == 0)
-//                                stParameter.setType(STParameterType.LIST);
-
-                        }
-                        stParameterMap.put(expression.getName(), stParameter);
-                    }
+                    visitor.astNodeStack.peek().getChildren().forEach(astNode -> addParameters(stParameterMap, astNode, new Stack<STParameter>()));
                     stParameterMap.values().forEach(stTemplate::addParameters);
+
+                    System.out.println("=== >");
+                    stTemplate.getParameters().forEach(stParameter -> {
+                        System.out.print("\t" + stParameter.getName() + " " + stParameter.getType());
+                        stParameter.getKeys().forEach(stParameterKey -> System.out.print(" ." + stParameterKey.getName()));
+                        System.out.println();
+                    });
+
+                    stTemplateMap.put(stTemplate.getName(), stTemplate);
 
                     stGroupModel.addTemplates(stTemplate);
                 });
-
-        for (Map.Entry<STTemplate, Set<MethodCall>> entry : stTemplateMethodCalls.entrySet()) {
-            final STTemplate caller = entry.getKey();
-            entry.getValue().forEach(methodCall -> {
-                final String methodCallName = methodCall.getName();
-                final STTemplate methodCallTemplate = stTemplateMap.get(methodCallName);
-                for (String argument : methodCall.getArguments()) {
-                    final Optional<STParameter> methodParameter = methodCallTemplate.getParameters().filter(stParameter -> stParameter.getName().equals(argument)).findFirst();
-                    final Optional<STParameter> callerArgument = caller.getParameters().filter(stParameter -> stParameter.getName().equals(argument)).findFirst();
-
-                    if (!callerArgument.isPresent() && methodParameter.isPresent())
-                        caller.addParameters(methodParameter.get());
-                }
-            });
-        }
 
         if (parseResult.getErrors().count() == 0)
             parseResult.setParsed(stGroupModel);
 
         return parseResult;
+    }
+
+    private static void addParameters(Map<String, STParameter> stParameterMap, AstNode astNode, Stack<STParameter> stParameters) {
+
+        switch (astNode.getType()) {
+            case Expression:
+
+                final String expressionName = astNode.getChildren().get(0).getAst().toString();
+
+                final boolean inSubtemplate = astNode.getParent().getType().equals(AstNodeType.Subtemplate);
+                if (inSubtemplate && expressionName.equals(astNode.getParent().getChildren().get(0).getAst().getChild(0).toString())) {
+                    for (AstNode child : astNode.getChildren())
+                        addParameters(stParameterMap, child, stParameters);
+                } else {
+
+                    if (astNode.getChildren().get(0).getType().equals(AstNodeType.Name)) {
+
+                        stParameterMap.putIfAbsent(expressionName, new STParameter().setName(expressionName).setType(STParameterType.SINGLE));
+                        stParameters.push(stParameterMap.get(expressionName));
+
+                        for (AstNode child : astNode.getChildren())
+                            addParameters(stParameterMap, child, stParameters);
+
+                        stParameters.pop();
+                    } else {
+                        for (AstNode child : astNode.getChildren())
+                            addParameters(stParameterMap, child, stParameters);
+                    }
+                }
+                break;
+
+            case Prop:
+                stParameters.peek().setType(STParameterType.KVLIST);
+
+                final STParameterKey parameterKey = new STParameterKey()
+                        .setName(astNode.getChildren().get(1).getAst().toString())
+                        .addArgumentTypes("Object");
+
+                final Optional<STParameterKey> exists = stParameters.peek().getKeys()
+                        .filter(stParameterKey -> stParameterKey.getName().equals(parameterKey.getName()))
+                        .findFirst();
+
+                if (!exists.isPresent())
+                    stParameters.peek().addKeys(parameterKey);
+                break;
+
+            case ElseIf:
+            case If:
+
+                final String ifName = astNode.getChildren().get(0).getAst().toString();
+                stParameterMap.putIfAbsent(ifName, new STParameter().setName(ifName).setType(STParameterType.SINGLE));
+
+                stParameters.push(stParameterMap.get(ifName));
+                for (AstNode child : astNode.getChildren())
+                    addParameters(stParameterMap, child, stParameters);
+                stParameters.pop();
+
+                break;
+
+            case Else:
+                for (AstNode child : astNode.getChildren())
+                    addParameters(stParameterMap, child, stParameters);
+                break;
+
+            case Assign:
+
+                final AstNode assignment = astNode.getChildren().get(1);
+                if (assignment.getType().equals(AstNodeType.Name)) {
+                    final String assignName = assignment.getAst().toString();
+                    stParameterMap.putIfAbsent(assignName, new STParameter().setName(assignName).setType(STParameterType.SINGLE));
+                }
+
+                for (AstNode child : astNode.getChildren())
+                    addParameters(stParameterMap, child, stParameters);
+
+                break;
+
+            case Include:
+                final List<AstNode> children = astNode.getChildren();
+                for (int i = 1; i < children.size(); i++) {
+                    AstNode child = children.get(i);
+                    if (child.getType().equals(AstNodeType.Name)) {
+                        final String assignName = child.getAst().toString();
+                        stParameterMap.putIfAbsent(assignName, new STParameter().setName(assignName).setType(STParameterType.SINGLE));
+                    } else
+                        addParameters(stParameterMap, child, stParameters);
+                }
+
+                break;
+
+            case Subtemplate:
+                if (!stParameters.isEmpty()) stParameters.peek().setType(STParameterType.LIST);
+                for (AstNode child : astNode.getChildren())
+                    addParameters(stParameterMap, child, stParameters);
+                break;
+        }
     }
 
     private static char loadDelimiter(File stgFile) {
@@ -173,7 +219,7 @@ public class STParser {
         final StringBuilder out = new StringBuilder();
         for (int i = 0; i < level; i++)
             out.append("\t");
-        out.append(astNode.getType());
+        out.append(astNode.getType()).append(" \"").append(astNode.getAst().getText()).append("\"");
         astNode.getChildren().forEach(astNode1 -> out.append("\n").append(debug(astNode1, level + 1)));
         return out.toString();
     }
@@ -183,76 +229,19 @@ public class STParser {
         private static final int EXPR = 41;
         private static final int NAME = 25;
         private static final int SUBTEMPLATE = 55;
-        private static final int OPTIONS = 51;
         private static final int ARGS = 38;
         private static final int PROP = 52;
         private static final int INCLUDE = 42;
-
-        private static final int nameIndex = 0;
-        private static final int keyNameIndex = 1;
+        private static final int IF = 4;
+        private static final int ELSE = 5;
+        private static final int ELSEIF = 6;
+        private static final int ASSIGN = 12;
 
         private final Stack<AstNode> astNodeStack = new Stack<>();
-        private final Set<AstNode> rootExpressions = new LinkedHashSet<>();
 
         public void visit(ST st) {
+            astNodeStack.push(STParserFactory.newAstNode().setType(AstNodeType.ST));
             visit(st.impl.ast);
-        }
-
-        public Set<Expression> getExpressions() {
-            return rootExpressions
-                    .stream()
-                    .map(this::asExpression)
-                    .collect(Collectors.toSet());
-        }
-
-        private Expression asExpression(AstNode astNode) {
-
-            final Expression expression = new Expression().setAst(astNode);
-
-            astNode.getChildren().forEach(child -> {
-                if (child.getType().equals(AstNodeType.Subtemplate))
-                    expression.setSubTemplate(asSubtemplate(child));
-                else if (child.getType().equals(AstNodeType.Options))
-                    expression.setOptions(child.getChildren().get(nameIndex).getAst().getText());
-                else if (child.getType().equals(AstNodeType.Name))
-                    expression.setName(astNode.getChildren().get(nameIndex).getAst().getText());
-                else if (child.getType().equals(AstNodeType.Prop))
-                    expression.addProps(child.getChildren().get(nameIndex).getAst().getText(), child.getChildren().get(keyNameIndex).getAst().getText());
-                else if (child.getType().equals(AstNodeType.Include)) {
-
-                    final List<AstNode> children = child.getChildren();
-                    final MethodCall methodCall = new MethodCall().setName(children.get(0).getAst().getText());
-                    expression.addMethodCalls(methodCall);
-
-                    for (int i = 1; i < children.size(); i++) {
-                        AstNode node = children.get(i);
-                        methodCall.addArguments(node.getAst().getText());
-                    }
-                } else
-                    System.out.println("unhandled expression child " + child.getType());
-            });
-
-            return expression;
-        }
-
-        private Subtemplate asSubtemplate(AstNode astNode) {
-
-            final Subtemplate subtemplate = new Subtemplate().setAst(astNode);
-
-            astNode.getChildren().forEach(child -> {
-                if (child.getType().equals(AstNodeType.Args))
-                    subtemplate.addArgs(child.getAst().getText());
-                else if (child.getType().equals(AstNodeType.Expression))
-                    subtemplate.addExpressions(asExpression(child));
-                else if (child.getType().equals(AstNodeType.Prop))
-                    subtemplate.addProps(child.getChildren().get(nameIndex).getAst().getText(), child.getChildren().get(keyNameIndex).getAst().getText());
-                else {
-                    System.out.println(debug(astNode, 0));
-                    System.out.println("unhandled subtemplate child " + child.getType());
-                }
-            });
-
-            return subtemplate;
         }
 
         private void visit(Tree ast) {
@@ -263,10 +252,6 @@ public class STParser {
 
                 case NAME:
                     pushAstNode(ast, AstNodeType.Name);
-                    break;
-
-                case OPTIONS:
-                    pushAstNode(ast, AstNodeType.Options);
                     break;
 
                 case PROP:
@@ -285,7 +270,39 @@ public class STParser {
                     pushAstNode(ast, AstNodeType.Include);
                     break;
 
+                case IF:
+                    pushAstNode(ast, AstNodeType.If);
+                    break;
+
+                case ELSE:
+                    pushAstNode(ast, AstNodeType.Else);
+                    break;
+
+                case ELSEIF:
+                    pushAstNode(ast, AstNodeType.ElseIf);
+                    break;
+
+                case ASSIGN:
+                    pushAstNode(ast, AstNodeType.Assign);
+                    break;
+
+                case 51:
+                case 22:
+                    break;
+
+                case 0:
+                case 26:
+                case 31:
+                case 32:
+                case 47:
+                case 49:
+                    for (int i = 0; i < ast.getChildCount(); i++)
+                        visit(ast.getChild(i));
+                    break;
+
                 default:
+                    System.out.println("case U" + ast.getType() + ":\npushAstNode(ast, AstNodeType.U" + ast.getType() + ");\nbreak;");
+                    System.out.println("private static final int U" + ast.getType() + " = " + ast.getType() + ";");
                     for (int i = 0; i < ast.getChildCount(); i++)
                         visit(ast.getChild(i));
                     break;
@@ -294,29 +311,19 @@ public class STParser {
 
         private void pushAstNode(Tree ast, AstNodeType astNodeType) {
 
-            final AstNode astNode = newAstNode(astNodeType, ast);
+            newAstNode(astNodeType, ast);
 
             for (int i = 0; i < ast.getChildCount(); i++)
                 visit(ast.getChild(i));
 
             astNodeStack.pop();
-
-            if (AstNodeType.Expression.equals(astNodeType) && isRootExpression())
-                rootExpressions.add(astNode);
         }
 
-        private boolean isRootExpression() {
-
-            for (AstNode astNode : astNodeStack)
-                if (astNode.getType().equals(AstNodeType.Expression))
-                    return false;
-
-            return true;
-        }
-
-        private AstNode newAstNode(AstNodeType astNodeType, Tree ast) {
+        private void newAstNode(AstNodeType astNodeType, Tree ast) {
 
             final AstNode astNode = STParserFactory.newAstNode().setType(astNodeType).setAst(ast);
+
+            System.out.println(debug(astNode, astNodeStack.size()));
 
             if (!astNodeStack.isEmpty()) {
                 astNodeStack.peek().addChildren(astNode);
@@ -324,8 +331,6 @@ public class STParser {
             }
 
             astNodeStack.push(astNode);
-
-            return astNode;
         }
     }
 }

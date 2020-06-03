@@ -12,6 +12,7 @@ import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.Comparator;
 import java.util.Optional;
 
 import static com.nextgen.core.GeneratedFile.packageToPath;
@@ -201,7 +202,7 @@ public class STNavigator extends JPanel {
         public STGDirectoryTreeNode(STGDirectory model) {
             super(model);
 
-            model.getGroups().forEach(stGroupModel -> add(new STGroupTreeNode(stGroupModel)));
+            model.getGroups().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stGroupModel -> add(new STGroupTreeNode(stGroupModel)));
         }
 
         @Override
@@ -272,7 +273,7 @@ public class STNavigator extends JPanel {
             public STGroupTreeNode(STGroupModel model) {
                 super(model);
 
-                model.getTemplates().forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
+                model.getTemplates().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
             }
 
             public void save() {

@@ -7,14 +7,12 @@
     "name" : "CatchClause",
     "text" : "catch (~parameter~) ~body~",
     "parameters" : [ {
-      "uuid" : "335d3e7e-21ab-4aa1-af2c-58b1ae001a22",
-      "name" : "body",
-      "argumentTypes" : [ "Object" ],
+      "uuid" : "d9e009a6-f494-4c3f-b0d1-ea014b2527e7",
+      "name" : "parameter",
       "type" : "SINGLE"
     }, {
-      "uuid" : "adf4b243-cce1-4c2d-a83d-c315264dd7dc",
-      "name" : "parameter",
-      "argumentTypes" : [ "Object" ],
+      "uuid" : "8524a1d5-27c6-4a9c-a82a-b66301b6cc34",
+      "name" : "body",
       "type" : "SINGLE"
     } ]
   }, {
@@ -241,9 +239,12 @@
     "name" : "ExplicitConstructorInvocationStmt",
     "text" : "~if(isThis)~this~else~super~endif~(~arguments:{it|~it~};separator=\", \"~);",
     "parameters" : [ {
-      "uuid" : "35b5d037-b760-42c9-b4ea-162a6cb49b65",
+      "uuid" : "becf2a29-f43a-4b21-810d-99c345beaec1",
+      "name" : "isThis",
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "ade779e2-69c3-454c-9131-6fb89e5095e9",
       "name" : "arguments",
-      "argumentTypes" : [ "Object" ],
       "type" : "LIST"
     } ]
   }, {
@@ -391,25 +392,25 @@
     "name" : "Parameter",
     "text" : "~annotations:{it|~it~};separator=\" \"~~if(annotations)~ ~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~if(type)~~type~ ~endif~~if(isVarargs)~... ~endif~~name~",
     "parameters" : [ {
-      "uuid" : "166886a5-6871-476b-9c57-584c2db97864",
-      "name" : "type",
-      "argumentTypes" : [ "Object" ],
-      "type" : "SINGLE"
-    }, {
-      "uuid" : "d7a07dc0-7ce5-4bd3-94e3-7df74cbc0349",
-      "name" : "name",
-      "argumentTypes" : [ "Object" ],
-      "type" : "SINGLE"
-    }, {
-      "uuid" : "0ef99380-4d79-4016-9818-52868395e364",
-      "name" : "modifiers",
-      "argumentTypes" : [ "Object" ],
-      "type" : "LIST"
-    }, {
-      "uuid" : "355615ce-d002-4bb1-881a-511be5d02e80",
+      "uuid" : "a02e39f1-7fa7-42b2-b6ce-5f48addcc4fe",
       "name" : "annotations",
-      "argumentTypes" : [ "Object" ],
       "type" : "LIST"
+    }, {
+      "uuid" : "afd51813-a858-48e2-8657-e61ac47905c2",
+      "name" : "modifiers",
+      "type" : "LIST"
+    }, {
+      "uuid" : "6c0db836-8899-4153-93bc-44a24743c265",
+      "name" : "type",
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "30777cfc-e073-411f-919d-c0872f078128",
+      "name" : "isVarargs",
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "63785dfa-56e5-4cde-8e7d-64aefd72a212",
+      "name" : "name",
+      "type" : "SINGLE"
     } ]
   }, {
     "uuid" : "3aea32ab-ec7c-4a8b-9be7-6db65066651c",
@@ -486,9 +487,12 @@
     "name" : "BlockStmt",
     "text" : "~if(isStatic)~ static~endif~ { ~if(statements)~\r\n\t~statements:{it|~it~};separator=\"\\n\"~\r\n~endif~\r\n}",
     "parameters" : [ {
-      "uuid" : "e104fb3e-c35d-4a36-8291-2772b5309591",
+      "uuid" : "54ac7726-eed5-4451-85d3-c5cf5721177c",
+      "name" : "isStatic",
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "5f398ca4-a981-44a7-be6a-bb2d4290937d",
       "name" : "statements",
-      "argumentTypes" : [ "Object" ],
       "type" : "LIST"
     } ]
   }, {
@@ -496,14 +500,20 @@
     "name" : "UnaryExpression",
     "text" : "~if(isPrefix)~~operator~~endif~~expression~~if(isPostfix)~~operator~~endif~",
     "parameters" : [ {
-      "uuid" : "06b316bb-7ad0-476c-a12c-a0eb6c6adef0",
-      "name" : "operator",
-      "argumentTypes" : [ "Object" ],
+      "uuid" : "5cb43b91-ac9c-49f1-9861-96983b74c9ac",
+      "name" : "isPrefix",
       "type" : "SINGLE"
     }, {
-      "uuid" : "b9610197-5982-4fd8-9ebf-8f6bfb09efe9",
+      "uuid" : "35d28491-6d70-434f-b165-2408bc3043ae",
+      "name" : "operator",
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "92d041e9-4ea8-41b8-a1c9-4b1861cdc438",
       "name" : "expression",
-      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "dc44d0da-01ad-4f5a-91b9-1de361b522b3",
+      "name" : "isPostfix",
       "type" : "SINGLE"
     } ]
   }, {
@@ -511,20 +521,25 @@
     "name" : "ClassOrInterfaceType",
     "text" : "~if(scope)~~scope~.~endif~~names:{it|~it~};separator=\" | \"~~if(typeArguments)~<~typeArguments:{it|~it~};separator=\", \"~>~else~~if(isTyped)~<>~endif~~endif~~if(isArrayType)~[]~endif~",
     "parameters" : [ {
-      "uuid" : "15a2ef05-ef9c-4729-9e3d-59cb1d2db297",
-      "name" : "typeArguments",
-      "argumentTypes" : [ "Object" ],
-      "type" : "LIST"
-    }, {
-      "uuid" : "d88dbf87-aeb3-429a-a3d2-7a4dc4b39ffd",
+      "uuid" : "8a7e497c-60ab-4db3-be47-29daa569743c",
       "name" : "scope",
-      "argumentTypes" : [ "Object" ],
       "type" : "SINGLE"
     }, {
-      "uuid" : "0fa6fc46-19ba-44d5-adcf-1f7460795fab",
+      "uuid" : "fb32e0f9-3f7e-417f-86b4-6e06ed130009",
       "name" : "names",
-      "argumentTypes" : [ "Object" ],
       "type" : "LIST"
+    }, {
+      "uuid" : "dc31f633-bb1f-46bf-a5db-72c199df8a1d",
+      "name" : "typeArguments",
+      "type" : "LIST"
+    }, {
+      "uuid" : "ec41acea-581f-47f3-8849-f3c402d981c9",
+      "name" : "isTyped",
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "040e81a9-0821-4eaf-8ce6-518dbc5b0040",
+      "name" : "isArrayType",
+      "type" : "SINGLE"
     } ]
   }, {
     "uuid" : "b33d32fe-8e0f-4bc9-80b4-44ac0a06116f",
@@ -571,29 +586,28 @@
     "name" : "ObjectCreationExpression",
     "text" : "new ~if(scope)~~scope~.~endif~~type~~if(typeArguments)~<~typeArguments:{it|~it~};separator=\", \"~>~endif~(~arguments:{it|~it~};separator=\", \"~)~if(anonymousClassBodies)~ {\r\n\r\n\t~anonymousClassBodies:{it|~it~};separator=\"\\n\"~\r\n\r\n}~elseif(emptyClassBody)~ {\r\n}~endif~",
     "parameters" : [ {
-      "uuid" : "cda1ca22-b257-4a1c-b8e4-f0543729b35c",
-      "name" : "arguments",
-      "argumentTypes" : [ "Object" ],
-      "type" : "LIST"
-    }, {
-      "uuid" : "f5007f5d-df1d-47f2-9a25-081a8f11ec6e",
-      "name" : "typeArguments",
-      "argumentTypes" : [ "Object" ],
-      "type" : "LIST"
-    }, {
-      "uuid" : "2a44a9c6-d498-407f-a817-26235ccb0815",
-      "name" : "anonymousClassBodies",
-      "argumentTypes" : [ "Object" ],
-      "type" : "LIST"
-    }, {
-      "uuid" : "342cbfbb-f494-4236-aa3a-19c80193fa8e",
-      "name" : "type",
-      "argumentTypes" : [ "Object" ],
+      "uuid" : "17e1fdf4-bf5b-4dfb-a75f-e23de9730118",
+      "name" : "scope",
       "type" : "SINGLE"
     }, {
-      "uuid" : "fe285eaf-6b22-4eb6-b2a4-42b133e89a1f",
-      "name" : "scope",
-      "argumentTypes" : [ "Object" ],
+      "uuid" : "18a71cbe-f82c-4aa9-af7b-542cf333382c",
+      "name" : "type",
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "b7e7be89-ba53-4c4b-8b79-82ebe5b0d504",
+      "name" : "typeArguments",
+      "type" : "LIST"
+    }, {
+      "uuid" : "ce7b2791-8e35-43f1-b8e4-84aabd50d5d1",
+      "name" : "arguments",
+      "type" : "LIST"
+    }, {
+      "uuid" : "3b248904-958a-46fa-8570-aca4b159994e",
+      "name" : "anonymousClassBodies",
+      "type" : "LIST"
+    }, {
+      "uuid" : "ac7f8942-d1a7-469b-a34a-41aadc48ef31",
+      "name" : "emptyClassBody",
       "type" : "SINGLE"
     } ]
   }, {
@@ -946,44 +960,40 @@
     "name" : "MethodDeclaration",
     "text" : "~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\r\n~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~if(type)~~if(typeParameters)~<~typeParameters:{it|~it~};separator=\", \"~> ~endif~~type~ ~else~void ~endif~~name~(~parameters:{it|~it~};separator=\", \"~)~if(thrownExceptions)~ throws ~thrownExceptions:{it|~it~};separator=\", \"~~endif~~if(isInterfaceDeclaration)~;~else~~if(blockStmt)~~blockStmt~~else~ { }~endif~~endif~",
     "parameters" : [ {
-      "uuid" : "23063173-7e38-4342-8d68-633819a6e246",
-      "name" : "parameters",
-      "argumentTypes" : [ "Object" ],
-      "type" : "LIST"
-    }, {
-      "uuid" : "7b5243c5-4a18-4bcd-8f02-661c288b7c7a",
-      "name" : "typeParameters",
-      "argumentTypes" : [ "Object" ],
-      "type" : "LIST"
-    }, {
-      "uuid" : "ff3941cd-4f52-492e-a62c-69d444db3d37",
-      "name" : "modifiers",
-      "argumentTypes" : [ "Object" ],
-      "type" : "LIST"
-    }, {
-      "uuid" : "349e277b-0f86-4d3b-b277-84b8fb8a0dad",
-      "name" : "thrownExceptions",
-      "argumentTypes" : [ "Object" ],
-      "type" : "LIST"
-    }, {
-      "uuid" : "29777b2b-f86c-44fa-b647-9d1dd2748d98",
-      "name" : "name",
-      "argumentTypes" : [ "Object" ],
-      "type" : "SINGLE"
-    }, {
-      "uuid" : "156a2df7-7262-4c15-8777-f3bb1c37e900",
+      "uuid" : "4360326b-93de-4a1a-9267-459fb0e40b4b",
       "name" : "annotations",
-      "argumentTypes" : [ "Object" ],
       "type" : "LIST"
     }, {
-      "uuid" : "2075381b-8c2f-46cc-b86f-4635ca53fab6",
+      "uuid" : "41eed75d-68e7-4bfd-807e-30beb9d25f37",
+      "name" : "modifiers",
+      "type" : "LIST"
+    }, {
+      "uuid" : "fa739514-3b52-44b7-b486-a7418e87a285",
       "name" : "type",
-      "argumentTypes" : [ "Object" ],
       "type" : "SINGLE"
     }, {
-      "uuid" : "6709ecb9-509a-49b4-94ab-82183385c453",
+      "uuid" : "43f5af7f-d9ff-45ef-a852-4e8aa6c16121",
+      "name" : "typeParameters",
+      "type" : "LIST"
+    }, {
+      "uuid" : "94cdb5db-11b0-4149-87b6-3d14381426dc",
+      "name" : "name",
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "70a1ace5-eee5-4e2b-becb-502c65c6033e",
+      "name" : "parameters",
+      "type" : "LIST"
+    }, {
+      "uuid" : "9ba79bd6-f33b-42ac-966c-9254fe1afa6f",
+      "name" : "thrownExceptions",
+      "type" : "LIST"
+    }, {
+      "uuid" : "cb3ce6a0-3e4f-4f36-931e-2b0f34356e84",
+      "name" : "isInterfaceDeclaration",
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "33a2653f-edf9-4b1a-9e30-58225f01089c",
       "name" : "blockStmt",
-      "argumentTypes" : [ "Object" ],
       "type" : "SINGLE"
     } ]
   }, {
@@ -1231,9 +1241,16 @@
     "name" : "ImportDeclaration",
     "text" : "import ~if(isStatic)~static ~endif~~name~~if(isAsterisk)~.*~endif~;",
     "parameters" : [ {
-      "uuid" : "4bad58b0-99b9-4607-8af7-8a6d34ce5d73",
+      "uuid" : "58e960bd-1932-426f-b4e6-027f9981ba72",
+      "name" : "isStatic",
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "dbbc3c12-d043-4cd9-bc2f-fb79f213b0ac",
       "name" : "name",
-      "argumentTypes" : [ "Object" ],
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "10062fa0-8951-4136-8bad-9d88d8f3b193",
+      "name" : "isAsterisk",
       "type" : "SINGLE"
     } ]
   }, {
@@ -1261,49 +1278,44 @@
     "name" : "ClassOrInterfaceDeclaration",
     "text" : "~comments:{it|~it~};separator=\"\\n\"~~if(comments)~\r\n~endif~~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\r\n~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~if(isInterface)~interface ~else~class ~endif~~name~~if(typeParameters)~<~typeParameters:{it|~it~};separator=\", \"~>~endif~~if(extend)~ extends ~extend:{it|~it~};separator=\", \"~~endif~~if(implementedTypes)~ implements ~implementedTypes:{it|~it~};separator=\", \"~~endif~ {\r\n\t\r\n\t~fields:{it|~it~};separator=\"\\n\"~\r\n\t~if(fields)~\r\n\t\r\n\t~endif~\r\n\t~members:{it|~it~};separator=\"\\n\\n\"~\r\n}",
     "parameters" : [ {
-      "uuid" : "fa9df3be-2fd6-410c-acef-802d1212ee4c",
-      "name" : "extend",
-      "argumentTypes" : [ "Object" ],
+      "uuid" : "4b49319e-0d61-4bbb-8279-b2e19478c37b",
+      "name" : "comments",
       "type" : "LIST"
     }, {
-      "uuid" : "ed9d595b-5be2-472f-8ecf-e4a5838f3288",
-      "name" : "fields",
-      "argumentTypes" : [ "Object" ],
-      "type" : "LIST"
-    }, {
-      "uuid" : "874f1fd1-ca4e-45ce-9f51-89d0591df990",
+      "uuid" : "01ff7728-dec1-45c6-90ff-9be07e221b36",
       "name" : "annotations",
-      "argumentTypes" : [ "Object" ],
       "type" : "LIST"
     }, {
-      "uuid" : "bc797c29-56ee-4919-bcdd-7644199889d3",
-      "name" : "typeParameters",
-      "argumentTypes" : [ "Object" ],
+      "uuid" : "b4e726d0-9ed1-4e8d-9355-3f10671adaff",
+      "name" : "modifiers",
       "type" : "LIST"
     }, {
-      "uuid" : "12a03101-fc06-471d-95ac-17b7b10c19a7",
-      "name" : "name",
-      "argumentTypes" : [ "Object" ],
+      "uuid" : "9645cec8-52f5-434c-a945-4d112b2dc5e1",
+      "name" : "isInterface",
       "type" : "SINGLE"
     }, {
-      "uuid" : "28d04552-839e-4a23-9ff7-1095e4f822fb",
+      "uuid" : "4efa148a-fc40-4bae-b4c9-385feabfcb8a",
+      "name" : "name",
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "943460c7-a331-44c2-9d8a-3e9daa48e2a6",
+      "name" : "typeParameters",
+      "type" : "LIST"
+    }, {
+      "uuid" : "d0e04766-2d8f-4287-9f98-c058b9f2c078",
+      "name" : "extend",
+      "type" : "LIST"
+    }, {
+      "uuid" : "f5ef5a07-a267-4a23-8367-38a5ded719d9",
       "name" : "implementedTypes",
-      "argumentTypes" : [ "Object" ],
       "type" : "LIST"
     }, {
-      "uuid" : "2b7ea8dc-9662-47a0-8c8a-8783fa95e4b9",
+      "uuid" : "3154df32-bc04-4686-a2f1-ee585f4c66b3",
+      "name" : "fields",
+      "type" : "LIST"
+    }, {
+      "uuid" : "29bf6d68-d21d-42a9-9255-0cdc84506683",
       "name" : "members",
-      "argumentTypes" : [ "Object" ],
-      "type" : "LIST"
-    }, {
-      "uuid" : "166f67b1-6d31-4175-9cd6-baf084acc3f3",
-      "name" : "comments",
-      "argumentTypes" : [ "Object" ],
-      "type" : "LIST"
-    }, {
-      "uuid" : "49e4fdae-46aa-4a87-92d3-9b9162c4eccc",
-      "name" : "modifiers",
-      "argumentTypes" : [ "Object" ],
       "type" : "LIST"
     } ]
   }, {
