@@ -5,30 +5,30 @@
   "templates" : [ {
     "uuid" : "8ddb7783-2abb-40fe-9038-669f16c8ed6b",
     "name" : "STDomain",
-    "text" : "package ~packageName~;\n\npublic class ~name~ {\n\n\tprivate final org.stringtemplate.v4.STGroup stGroup;\n\n\tpublic ~name~() {\n\t\tthis(new org.stringtemplate.v4.STGroupString(\"~name~\", stg, '\\~', '\\~'));\n\t}\n\n\tpublic ~name~(final java.io.File stgFile) {\n\t\tthis(stgFile, '\\~');\n\t}\n\n\tpublic ~name~(final java.io.File stgFile, char delimiter) {\n\t\tthis(new org.stringtemplate.v4.STGroupFile(stgFile.getAbsolutePath(), delimiter, delimiter));\n\t}\n\n\tpublic ~name~(org.stringtemplate.v4.STGroup stGroup) {\n\t\tthis.stGroup = stGroup;\n\t\tthis.stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());\n\t}\n\n\t~entities:{it|~it~};separator=\"\\n\\n\"~\n\n\tprivate static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {\n\n\t\t@Override\n\t\tpublic String toString(Object o, String formatString, java.util.Locale locale) {\n\n\t\t\tfinal String text = o.toString();\n\t\t\tif (formatString == null) return text;\n\n\t\t\tfinal String s = text.length() > 1 ? text.substring(1) : \"\";\n\t\t\t\n\t\t\tswitch (formatString) {\n\t\t\t\tcase \"capitalize\":\n\t\t\t\t\treturn Character.toUpperCase(text.charAt(0)) + s;\n\t\t\t\tcase \"toUpper\":\n\t\t\t\t\treturn text.toUpperCase();\n\t\t\t\tcase \"lowFirst\":\n\t\t\t\t\treturn Character.toLowerCase(text.charAt(0)) + s;\n\t\t\t\tcase \"toLower\":\n\t\t\t\t\treturn text.toLowerCase();\n\t\t\t\tdefault:\n\t\t\t\t\treturn o.toString();\n\t\t\t}\n\t\t}\n\t}\t\n\n\tstatic final String stg = ~stgString~;\n}",
+    "text" : "package ~packageName~;\n\npublic class ~name~ {\n\n\tprivate static final String stg = ~stgString~;\n\n\tpublic static org.stringtemplate.v4.STGroup defaultSTGroup() {\n\t\torg.stringtemplate.v4.STGroup stGroup = new org.stringtemplate.v4.STGroupString(\"~name~\", stg, '\\~', '\\~');\n\t\tstGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());\n\t\tstGroup.setListener(new org.stringtemplate.v4.STErrorListener() {\n\t\t\t@Override\n\t\t\tpublic void compileTimeError(org.stringtemplate.v4.misc.STMessage stMessage) {\n\t\t\t\tSystem.out.println(\"compileTimeError \" + stMessage.toString());\n\t\t\t}\n\n\t\t\t@Override\n\t\t\tpublic void runTimeError(org.stringtemplate.v4.misc.STMessage stMessage) {\n\t\t\t\tfinal org.stringtemplate.v4.misc.STRuntimeMessage stRuntimeMessage = (org.stringtemplate.v4.misc.STRuntimeMessage) stMessage;\n\t\t\t\tSystem.out.println(\"runTimeError \" + stMessage.self.getName() + \" \" + stRuntimeMessage.getSourceLocation());\n\t\t\t}\n\n\t\t\t@Override\n\t\t\tpublic void IOError(org.stringtemplate.v4.misc.STMessage stMessage) {\n\t\t\t\tSystem.out.println(\"IOError \" + stMessage.toString());\n\t\t\t}\n\n\t\t\t@Override\n\t\t\tpublic void internalError(org.stringtemplate.v4.misc.STMessage stMessage) {\n\t\t\t\tSystem.out.println(\"internalError \" + stMessage.toString());\n\t\t\t}\n\t\t});\n\t\treturn stGroup;\n\t}\n\t\n\tprivate static org.stringtemplate.v4.STGroup stGroup = defaultSTGroup();\n\n\tpublic static void setSTGroup(final java.io.File stgFile, char delimiter) {\n\t\tstGroup = new org.stringtemplate.v4.STGroupFile(stgFile.getAbsolutePath(), delimiter, delimiter);\n\t\tstGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());\n\t}\n\n\t~entities:{it|~it~};separator=\"\\n\\n\"~\n\n\tprivate static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {\n\n\t\t@Override\n\t\tpublic String toString(Object o, String formatString, java.util.Locale locale) {\n\n\t\t\tfinal String text = o.toString();\n\t\t\tif (formatString == null) return text;\n\n\t\t\tfinal String s = text.length() > 1 ? text.substring(1) : \"\";\n\t\t\t\n\t\t\tswitch (formatString) {\n\t\t\t\tcase \"capitalize\":\n\t\t\t\t\treturn Character.toUpperCase(text.charAt(0)) + s;\n\t\t\t\tcase \"toUpper\":\n\t\t\t\t\treturn text.toUpperCase();\n\t\t\t\tcase \"lowFirst\":\n\t\t\t\t\treturn Character.toLowerCase(text.charAt(0)) + s;\n\t\t\t\tcase \"toLower\":\n\t\t\t\t\treturn text.toLowerCase();\n\t\t\t\tdefault:\n\t\t\t\t\treturn o.toString();\n\t\t\t}\n\t\t}\n\t}\n}",
     "parameters" : [ {
-      "uuid" : "8876981b-280d-4d74-a570-aea6a2ed3634",
+      "uuid" : "9bd01a75-df30-43e4-bd28-01654efbef00",
       "name" : "packageName",
       "type" : "SINGLE"
     }, {
-      "uuid" : "dec84313-8b80-4666-8e5d-6c10ecf5f591",
+      "uuid" : "584db93f-df53-4169-b1c4-c005311808bc",
       "name" : "name",
       "type" : "SINGLE"
     }, {
-      "uuid" : "3a0351d6-060c-4413-afc3-23e5d47eb731",
-      "name" : "entities",
-      "type" : "LIST"
-    }, {
-      "uuid" : "9c6f0521-f9a5-4fae-b408-9bd1d9008e47",
+      "uuid" : "e380aee8-bd0d-4bc0-a432-7f197e57c129",
       "name" : "stgString",
       "type" : "SINGLE"
+    }, {
+      "uuid" : "7b3cdc04-91c4-4c0d-9700-0465d8484cb3",
+      "name" : "entities",
+      "type" : "LIST"
     } ],
     "children" : [ {
       "uuid" : "5a5ffd3b-8338-449a-bb45-67e0f2ca0ec2",
       "name" : "newEntityInstance",
-      "text" : "public ~entityName~ new~entityName~() {\n\treturn new ~entityName~(stGroup);\n}",
+      "text" : "public static ~entityName~ new~entityName~() {\n\treturn new ~entityName~(stGroup);\n}",
       "parameters" : [ {
-        "uuid" : "844065dc-0b79-4bdf-9d06-a201f67794e2",
+        "uuid" : "98cf4905-1132-4a0f-997a-5774cf663633",
         "name" : "entityName",
         "type" : "SINGLE"
       } ]
@@ -45,29 +45,29 @@
   }, {
     "uuid" : "d164aa89-502b-4f40-8f32-2386299f4290",
     "name" : "STDomainTests",
-    "text" : "package ~packageName~;\n\npublic class ~name~ {\n\n\tprivate static ~domainName~ domain;\n\n\t@org.junit.BeforeClass\n\tpublic static void loadSTGFile() {\n\t\tdomain = new ~domainName~();\n\t}\n\n\t@org.junit.Test\n\tpublic void testAll() {\n\t\t~testcases:{it|test~it.name;format=\"capitalize\"~();};separator=\"\\n\"~\n\t}\n\n\t~testcases:{it|~it.impl~};separator=\"\\n\\n\"~\n}",
+    "text" : "package ~packageName~;\n\nimport static ~packageName~.~domainName~.*;\n\n/**\n * Tests for ~domainName~\n **/\npublic class ~name~ {\n\n\t@org.junit.Test\n\tpublic void testAll() {\n\t\t~testcases:{it|test~it.name;format=\"capitalize\"~();};separator=\"\\n\"~\n\t}\n\n\t~testcases:{it|~it.impl~};separator=\"\\n\\n\"~\n}",
     "parameters" : [ {
-      "uuid" : "8dbf6703-9b4a-43fb-95f7-5e82b8fc8dbd",
+      "uuid" : "71645671-79b0-4d76-b0c6-6cf86a09df19",
       "name" : "packageName",
       "type" : "SINGLE"
     }, {
-      "uuid" : "31f52fca-cd5f-47b1-91fa-3de449603b2c",
-      "name" : "name",
-      "type" : "SINGLE"
-    }, {
-      "uuid" : "cf545e83-abbb-4a9c-a336-177bb9892aab",
+      "uuid" : "d42f3cfb-394e-4cc7-a9d8-33cad21e8024",
       "name" : "domainName",
       "type" : "SINGLE"
     }, {
-      "uuid" : "d7440724-a36c-4206-9152-2e6b678fd32f",
+      "uuid" : "7dca79cd-97df-48eb-8e77-8a28e6f81f78",
+      "name" : "name",
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "9f0178a2-7bd9-417d-bdb5-e2ef1cedd899",
       "name" : "testcases",
       "type" : "KVLIST",
       "keys" : [ {
-        "uuid" : "eb4c4f63-3b1c-4ee3-9cb8-56fc57e84e96",
+        "uuid" : "78db16b8-73ae-4e4e-8f93-2985a0eac546",
         "name" : "name",
         "argumentTypes" : [ "Object" ]
       }, {
-        "uuid" : "9c7e8830-7d95-4c82-8366-47e008905602",
+        "uuid" : "fd2555c4-8b2c-4ac2-bf84-10a260aa77b2",
         "name" : "impl",
         "argumentTypes" : [ "Object" ]
       } ]
@@ -75,9 +75,9 @@
     "children" : [ {
       "uuid" : "ddf9f301-8ea9-447d-b1c8-ac4ef04a6f2e",
       "name" : "templateTestMethod",
-      "text" : "@org.junit.Test\npublic void test~template;format=\"capitalize\"~() {\n// jupp\n\tSystem.out.println(\"~template~:\\n\");\n\tSystem.out.println(domain.new~template;format=\"capitalize\"~());\n\tSystem.out.println(\"\\n:~template~\");\n}",
+      "text" : "@org.junit.Test\npublic void test~template;format=\"capitalize\"~() {\n\tSystem.out.println(\"\\n--- TEST ~template~:\\n\" + new~template;format=\"capitalize\"~());\n}",
       "parameters" : [ {
-        "uuid" : "8ea27ce9-dc0b-44dc-a4ac-0c81867eb915",
+        "uuid" : "73afc0db-0242-4c01-a66c-2fb6454a76e4",
         "name" : "template",
         "type" : "SINGLE"
       } ]
@@ -85,58 +85,58 @@
   }, {
     "uuid" : "8f38f099-b784-4fbd-996f-8be16beb6d28",
     "name" : "STEntity",
-    "text" : "package ~packageName~;\n\npublic class ~name~ {\n\n\tprivate final java.util.UUID uuid = java.util.UUID.randomUUID();\n\tprivate final org.stringtemplate.v4.STGroup stGroup;\n\tprivate final String template = \"~template~\";\n\t\n\t~singleFields:{it|private Object _~it~;};separator=\"\\n\"~\n\t~listFields:{it|private java.util.List<Object> _~it~ = new java.util.ArrayList<>();};separator=\"\\n\"~\n\t~kvListFields:{it|private java.util.List<java.util.Map<String, Object~gt()~> _~it.name~ = new java.util.ArrayList<>();};separator=\"\\n\"~\n\n//\t~name~() {\n//\t\tthis.stGroup = null;\n//\t\tthis.template = st;\n//\t}\n\t\n\t~name~(org.stringtemplate.v4.STGroup stGroup) {\n\t\tthis.stGroup = stGroup;\n\t}\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn uuid.equals(that.uuid);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(uuid);\n\t}\n\n\t@Override\n\tpublic String toString() {\n\t\tfinal org.stringtemplate.v4.ST st = stGroup == null ? new org.stringtemplate.v4.ST(template, '\\~','\\~') : stGroup.getInstanceOf(template);\n\t\t~singleFields:{it|st.add(\"~it~\" ,_~it~);};separator=\"\\n\"~\n\t\t~listFields:{it|for (Object o : _~it~) st.add(\"~it~\", o);};separator=\"\\n\"~\n\t\t~kvListFields:{it|for (java.util.Map<String, Object> map : _~it.name~) st.addAggr(\"~it.aggrSpec~\", ~it.aggrValues~);};separator=\"\\n\"~\n\t\treturn st.render().trim();\n\t}\n\t\n\t~singleAccessors:{it|~it~};separator=\"\\n\\n\"~\n\t~listAccessors:{it|~it~};separator=\"\\n\\n\"~\n\t~kvListAccessors:{it|~it~};separator=\"\\n\\n\"~\n\n\t~if(stString)~static final String st = \"~stString~\";~endif~\n}",
+    "text" : "package ~packageName~;\n\npublic class ~name~ {\n\n\tprivate final java.util.UUID uuid = java.util.UUID.randomUUID();\n\tprivate final org.stringtemplate.v4.STGroup stGroup;\n\t\n\t~singleFields:{it|private Object _~it~;};separator=\"\\n\"~\n\t~listFields:{it|private java.util.List<Object> _~it~ = new java.util.ArrayList<>();};separator=\"\\n\"~\n\t~kvListFields:{it|private java.util.List<java.util.Map<String, Object~gt()~> _~it.name~ = new java.util.ArrayList<>();};separator=\"\\n\"~\n\t\n\t~name~(org.stringtemplate.v4.STGroup stGroup) {\n\t\tthis.stGroup = stGroup;\n\t}\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn uuid.equals(that.uuid);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(uuid);\n\t}\n\n\t@Override\n\tpublic String toString() {\n\t\tfinal org.stringtemplate.v4.ST st = stGroup.getInstanceOf(\"~template~\");\n\t\t~singleFields:{it|st.add(\"~it~\" ,_~it~);};separator=\"\\n\"~\n\t\t~listFields:{it|for (Object o : _~it~) st.add(\"~it~\", o);};separator=\"\\n\"~\n\t\t~kvListFields:{it|for (java.util.Map<String, Object> map : _~it.name~) st.addAggr(\"~it.aggrSpec~\", ~it.aggrValues~);};separator=\"\\n\"~\n\t\treturn st.render().trim();\n\t}\n\t\n\t~singleAccessors:{it|~it~};separator=\"\\n\\n\"~\n\t~listAccessors:{it|~it~};separator=\"\\n\\n\"~\n\t~kvListAccessors:{it|~it~};separator=\"\\n\\n\"~\n\n\t~if(stString)~static final String st = \"~stString~\";~endif~\n}",
     "parameters" : [ {
-      "uuid" : "f63e3aef-c45f-44cd-88ba-eccb172ef2c3",
+      "uuid" : "e5430c32-d55e-4312-9c12-aab67347dc0e",
       "name" : "packageName",
       "type" : "SINGLE"
     }, {
-      "uuid" : "2323fedb-c9a2-4c3f-b126-d312871e92ad",
+      "uuid" : "16922a7f-08b2-44d3-8888-e1ac4ede8ad2",
       "name" : "name",
       "type" : "SINGLE"
     }, {
-      "uuid" : "59a594b9-bbea-4332-9725-2adf1e86898c",
-      "name" : "template",
-      "type" : "SINGLE"
-    }, {
-      "uuid" : "a866c54f-0ba7-4c07-b8cc-b08a1181259b",
+      "uuid" : "a1c71d8e-55e6-437d-b234-267739b474cb",
       "name" : "singleFields",
       "type" : "LIST"
     }, {
-      "uuid" : "ce8b18e3-c1a9-42a5-9551-aaa02564f424",
+      "uuid" : "7dcbb53d-fdc9-4674-846d-19ba8be47498",
       "name" : "listFields",
       "type" : "LIST"
     }, {
-      "uuid" : "a1c4e84c-73c9-431a-8843-d6d49ce26550",
+      "uuid" : "e83b0e5d-3cf1-4ef4-8de8-c47910c2e111",
       "name" : "kvListFields",
       "type" : "KVLIST",
       "keys" : [ {
-        "uuid" : "b8393306-2e9e-4a51-8692-ad95db1a78d5",
+        "uuid" : "9b759ef5-dbba-49dd-a305-785e21d0a951",
         "name" : "name",
         "argumentTypes" : [ "Object" ]
       }, {
-        "uuid" : "49e084cc-1d7f-4068-b97d-7398a3c77794",
+        "uuid" : "1178f346-4c18-4949-88e7-fe6b0d99513a",
         "name" : "aggrSpec",
         "argumentTypes" : [ "Object" ]
       }, {
-        "uuid" : "11d73086-c4d9-4a06-81cc-48bf60cff0f8",
+        "uuid" : "c9a1e795-c4b8-404f-a654-b5b8ab5a2c8d",
         "name" : "aggrValues",
         "argumentTypes" : [ "Object" ]
       } ]
     }, {
-      "uuid" : "fffc35e4-7201-422f-92b6-e00168e4e6d9",
+      "uuid" : "139c05f1-3a68-4454-8e8f-51e3f11f2961",
+      "name" : "template",
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "bdfd21c4-b370-4faa-8d25-325370106836",
       "name" : "singleAccessors",
       "type" : "LIST"
     }, {
-      "uuid" : "0f311d01-7b12-4225-9004-52dd3c562539",
+      "uuid" : "a7d93728-a04a-4a33-94e8-44331932a780",
       "name" : "listAccessors",
       "type" : "LIST"
     }, {
-      "uuid" : "a5c9538e-3b9d-4f76-9672-240e0d9d9fec",
+      "uuid" : "3bc55241-8eca-4f58-909b-119ab8ed159d",
       "name" : "kvListAccessors",
       "type" : "LIST"
     }, {
-      "uuid" : "49d231ee-be2b-46d4-8232-0f9126328f90",
+      "uuid" : "dedab944-1a80-4c1b-bab6-4aea99785eb9",
       "name" : "stString",
       "type" : "SINGLE"
     } ],

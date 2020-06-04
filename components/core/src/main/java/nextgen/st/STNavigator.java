@@ -290,7 +290,7 @@ public class STNavigator extends JPanel {
                             return;
                         }
 
-                        if (SourceVersion.isIdentifier(name)) {
+                        if (!SourceVersion.isIdentifier(name)) {
                             SwingUtil.showMessage(name + " is a reserved java keyword", tree);
                             return;
                         }
@@ -464,7 +464,7 @@ public class STNavigator extends JPanel {
                         return Optional.empty();
                     }
 
-                    if (SourceVersion.isIdentifier(name)) {
+                    if (!SourceVersion.isIdentifier(name)) {
                         SwingUtil.showMessage(name + " is a reserved java keyword", tree);
                         return Optional.empty();
                     }

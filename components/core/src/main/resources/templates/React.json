@@ -287,17 +287,15 @@
   }, {
     "uuid" : "320786a8-4367-42fd-9252-69836a02c84a",
     "name" : "MaterialUIGroup",
-    "text" : "package ~packageName~;\n\nimport java.util.LinkedHashMap;\nimport java.util.Map;\n\npublic class MaterialUI extends ReactGroup {\n\n\tpublic static class BaseElement extends ReactGroup.ElementST {\n\n\t\tprotected final MaterialUI group;\n\t\tprotected final String name;\n\t\tprivate final String importPackage;\n\t\tprivate StyleST styleST;\n\t\tprotected String styleName;\n\t\tprivate final Map<String, Object> styleMap = new LinkedHashMap<>();\n\n\t\tBaseElement(MaterialUI group, String name, String importPackage) {\n\t\t\tsuper(group.getSTGroup());\n\t\t\tthis.group = group;\n\t\t\tthis.name = name;\n\t\t\tthis.importPackage = importPackage;\n\t\t\tsetName(name);\n\t\t}\n\n\t\tpublic ReactGroup.ImportST asImport() {\n\t\t\treturn group.newImport().setValue(name).setPackageName(importPackage);\n\t\t}\n\n\t\tpublic ReactGroup.StyleST asStyle() {\n\t\t\tfinal String componentStyleName = styleName == null ? lowFirst(name) : styleName;\n\t\t\tfinal StyleST styleST = group.newStyle().setName(componentStyleName);\n\t\t\tfor (Map.Entry<String, Object> entry : styleMap.entrySet())\n\t\t\t\tstyleST.addPropertiesValue(entry.getKey(), entry.getValue());\n\t\t\treturn styleST;\n\t\t}\n\n\t\tprotected void addStyle(String name, Object value) {\n\t\t\tstyleMap.put(name,value);\n\t\t}\n\n\t\t//addPropsValue(group.newProp().setName(\"className\").setValue(group.newObject().addValuesValue(\"this.props.classes.\" + componentStyleName)));\n\n\t\t@Override\n\t\tpublic String toString() {\n\t\t\treturn super.toString();\n\t\t}\n\t}\n\n\t~elements:{it|~it~};separator=\"\\n\\n\"~\n} ",
+    "text" : "package ~packageName~;\n\nimport java.util.LinkedHashMap;\nimport java.util.Map;\n\npublic class MaterialUI extends ReactGroup {\n\n\tpublic static class BaseElement extends ReactGroup.ElementST {\n\n\t\tprotected final MaterialUI group;\n\t\tprotected final String name;\n\t\tprivate final String importPackage;\n\t\tprivate StyleST styleST;\n\t\tprotected String styleName;\n\t\tprivate final Map<String, Object> styleMap = new LinkedHashMap<>();\n\n\t\tBaseElement(MaterialUI group, String name, String importPackage) {\n\t\t\tsuper(group.getSTGroup());\n\t\t\tthis.group = group;\n\t\t\tthis.name = name;\n\t\t\tthis.importPackage = importPackage;\n\t\t\tsetName(name);\n\t\t}\n\n\t\tpublic ReactGroup.ImportST asImport() {\n\t\t\treturn group.newImport().setValue(name).setPackageName(importPackage);\n\t\t}\n\n\t\tpublic ReactGroup.StyleST asStyle() {\n\t\t\tfinal String componentStyleName = styleName == null ? lowFirst(name) : styleName;\n\t\t\tfinal StyleST styleST = group.newStyle().setName(componentStyleName);\n\t\t\tfor (Map.Entry<String, Object> entry : styleMap.entrySet())\n\t\t\t\tstyleST.addPropertiesValue(entry.getKey(), entry.getValue());\n\t\t\treturn styleST;\n\t\t}\n\n\t\tprotected void addStyle(String name, Object value) {\n\t\t\tstyleMap.put(name,value);\n\t\t}\n\n\t\t//addPropsValue(group.newProp().setName(\"className\").setValue(group.newObject().addValuesValue(\"this.props.classes.\" + componentStyleName)));\n\n\t\t@Override\n\t\tpublic String toString() {\n\t\t\treturn super.toString();\n\t\t}\n\t}\n\n\t~elements:{it|~it~};separator=\"\\n\\n\"~\n}",
     "parameters" : [ {
-      "uuid" : "461bdc44-dae8-4fa6-8f0a-c71cd07de84d",
-      "name" : "elements",
-      "argumentTypes" : [ "Object" ],
-      "type" : "LIST"
-    }, {
-      "uuid" : "e0c001c0-021f-4882-b33c-1a68f97d1f29",
+      "uuid" : "3df8b807-eb3e-47a9-b562-1dd0e7d5402d",
       "name" : "packageName",
-      "argumentTypes" : [ "Object" ],
       "type" : "SINGLE"
+    }, {
+      "uuid" : "4a49f1a3-0a47-4ba6-a917-a1ca371dacdb",
+      "name" : "elements",
+      "type" : "LIST"
     } ]
   }, {
     "uuid" : "c6854148-dd6f-465c-9093-c893c46e51bf",
@@ -317,22 +315,23 @@
   }, {
     "uuid" : "ef2c7e87-4fb4-497b-afe3-ed22271f2076",
     "name" : "MethodDeclaration",
-    "text" : "~if(const)~const ~endif~~name~ = ~if(parameter)~~parameter~~else~()~endif~ => {\n\t~statements:{it|~it~};separator=\"\\n\"~\n} ",
+    "text" : "~if(const)~const ~endif~~name~ = ~if(parameter)~~parameter~~else~()~endif~ \\=\\> {\n\t~statements:{it|~it~};separator=\"\\n\"~\n}",
     "parameters" : [ {
-      "uuid" : "70762948-31c5-468f-9b17-14072da07970",
-      "name" : "parameter",
-      "argumentTypes" : [ "Object" ],
+      "uuid" : "08cc0e28-fcd5-47f4-8106-e5518badd6ac",
+      "name" : "const",
       "type" : "SINGLE"
     }, {
-      "uuid" : "b55930c3-93fd-41a7-8ce8-c0d4d72023a4",
-      "name" : "statements",
-      "argumentTypes" : [ "Object" ],
-      "type" : "LIST"
-    }, {
-      "uuid" : "c14ad4d8-8478-4994-95ef-fd05aeb5c788",
+      "uuid" : "cfdb85b9-02a7-419e-a64a-66ba811c9600",
       "name" : "name",
-      "argumentTypes" : [ "Object" ],
       "type" : "SINGLE"
+    }, {
+      "uuid" : "bdfcd33a-d803-426f-8bf3-560bea04db11",
+      "name" : "parameter",
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "23566a07-0242-4a51-a55c-3b8684036e5d",
+      "name" : "statements",
+      "type" : "LIST"
     } ]
   }, {
     "uuid" : "a8c30331-4406-45ce-9f9f-b3d7b6b75862",
@@ -487,36 +486,34 @@
     "children" : [ {
       "uuid" : "31602a2d-7462-44cb-8305-76cb7a9e5222",
       "name" : "FunctionalComponent",
-      "text" : "// dependencies:\n~dependencies:{it|~it~};separator=\"\\n\"~\n~if(style)~import { makeStyles } from '@material-ui/core/styles';~endif~\n\n~if(localImports)~\n// local imports\n~localImports:{it|~it~};separator=\"\\n\"~\n~endif~\n\n\nfunction ~name~(props) {\n\n\treturn (\n\t\t~element~\n\t)\n}\n~if(wrapper)~// Wrap the component instead of decorating it\n~endif~\nexport default ~if(inject)~inject(~inject:{it|'~it~'};separator=\", \"~)~endif~~if(wrapper)~(~wrapper~(~endif~~name~~if(wrapper)~))~endif~ ",
+      "text" : "// dependencies:\n~dependencies:{it|~it~};separator=\"\\n\"~\n~if(style)~import { makeStyles } from '@material-ui/core/styles';~endif~\n\n~if(localImports)~\n// local imports\n~localImports:{it|~it~};separator=\"\\n\"~\n~endif~\n\n\nfunction ~name~(props) {\n\n\treturn (\n\t\t~element~\n\t)\n}\n~if(wrapper)~// Wrap the component instead of decorating it\n~endif~\nexport default ~if(inject)~inject(~inject:{it|'~it~'};separator=\", \"~)~endif~~if(wrapper)~(~wrapper~(~endif~~name~~if(wrapper)~))~endif~",
       "parameters" : [ {
-        "uuid" : "1487c82b-f360-477d-9b10-9ffe7e5029d1",
-        "name" : "wrapper",
-        "argumentTypes" : [ "Object" ],
-        "type" : "SINGLE"
-      }, {
-        "uuid" : "735922e0-64a6-4238-8113-845a99ea136b",
-        "name" : "inject",
-        "argumentTypes" : [ "Object" ],
-        "type" : "LIST"
-      }, {
-        "uuid" : "c1a0f5a4-c6f9-4f65-bb34-d88fee383294",
-        "name" : "name",
-        "argumentTypes" : [ "Object" ],
-        "type" : "SINGLE"
-      }, {
-        "uuid" : "4b4ed9da-97ec-499c-9225-2c7e3e20b9f5",
-        "name" : "element",
-        "argumentTypes" : [ "Object" ],
-        "type" : "SINGLE"
-      }, {
-        "uuid" : "047fa7e9-36d9-4fdf-8ca4-c0534f104cf7",
+        "uuid" : "c3cb8b35-99b5-4833-a6e4-88ec0208fc30",
         "name" : "dependencies",
-        "argumentTypes" : [ "Object" ],
         "type" : "LIST"
       }, {
-        "uuid" : "250ca29b-3205-4b7d-95c3-2dc3504b6ba0",
+        "uuid" : "dbcf6313-5bd0-400b-995a-44a2b336ef6d",
+        "name" : "style",
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "d0c62c5d-fb29-405d-961d-4edc863cc197",
         "name" : "localImports",
-        "argumentTypes" : [ "Object" ],
+        "type" : "LIST"
+      }, {
+        "uuid" : "b5ffe9fb-958e-454b-b7a4-830d3804d9cc",
+        "name" : "name",
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "1d707c3c-e315-4122-9a92-e8df8f1debf4",
+        "name" : "element",
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "7a68a705-7dc6-46dc-bd73-32893b9f1320",
+        "name" : "wrapper",
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "7da8cbef-596a-407c-a88a-41257d610d29",
+        "name" : "inject",
         "type" : "LIST"
       } ]
     } ]
