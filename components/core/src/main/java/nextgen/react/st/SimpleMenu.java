@@ -3,9 +3,23 @@ package nextgen.react.st;
 
 public class SimpleMenu {
 
+	private java.util.List<SimpleMenuMenuItems> menuItems = new java.util.ArrayList<>();
 	private java.util.List<java.lang.Object> menuComponents = new java.util.ArrayList<>();
-	private java.util.List<java.lang.Object> menuItems = new java.util.ArrayList<>();
 	private final java.util.UUID uuid;
+
+	public java.util.List<SimpleMenuMenuItems> getMenuItems() { 
+		return menuItems;
+	}
+
+	public SimpleMenu addMenuItems(SimpleMenuMenuItems menuItems) { 
+		this.menuItems.add(menuItems);
+		return this;
+	}
+
+	public SimpleMenu removeMenuItems(SimpleMenuMenuItems menuItems) { 
+		this.menuItems.remove(menuItems);
+		return this;
+	}
 
 	public java.util.List<java.lang.Object> getMenuComponents() { 
 		return menuComponents;
@@ -18,20 +32,6 @@ public class SimpleMenu {
 
 	public SimpleMenu removeMenuComponents(java.lang.Object menuComponents) { 
 		this.menuComponents.remove(menuComponents);
-		return this;
-	}
-
-	public java.util.List<java.lang.Object> getMenuItems() { 
-		return menuItems;
-	}
-
-	public SimpleMenu addMenuItems(java.lang.Object menuItems) { 
-		this.menuItems.add(menuItems);
-		return this;
-	}
-
-	public SimpleMenu removeMenuItems(java.lang.Object menuItems) { 
-		this.menuItems.remove(menuItems);
 		return this;
 	}
 

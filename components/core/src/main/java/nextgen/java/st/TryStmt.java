@@ -3,25 +3,11 @@ package nextgen.java.st;
 
 public class TryStmt implements Statement, LambdaBody {
 
-	private java.lang.Object finalClause;
 	private java.util.List<java.lang.Object> resources = new java.util.ArrayList<>();
+	private java.lang.Object finalClause;
 	private java.lang.Object tryBlock;
 	private java.util.List<java.lang.Object> catchClauses = new java.util.ArrayList<>();
 	private final java.util.UUID uuid;
-
-	public java.lang.Object getFinalClause() { 
-		return finalClause;
-	}
-
-	public TryStmt setFinalClause(java.lang.Object finalClause) { 
-		this.finalClause = finalClause;
-		return this;
-	}
-
-	public TryStmt removeFinalClause() { 
-		this.finalClause = null;
-		return this;
-	}
 
 	public java.util.List<java.lang.Object> getResources() { 
 		return resources;
@@ -34,6 +20,20 @@ public class TryStmt implements Statement, LambdaBody {
 
 	public TryStmt removeResources(java.lang.Object resources) { 
 		this.resources.remove(resources);
+		return this;
+	}
+
+	public java.lang.Object getFinalClause() { 
+		return finalClause;
+	}
+
+	public TryStmt setFinalClause(java.lang.Object finalClause) { 
+		this.finalClause = finalClause;
+		return this;
+	}
+
+	public TryStmt removeFinalClause() { 
+		this.finalClause = null;
 		return this;
 	}
 

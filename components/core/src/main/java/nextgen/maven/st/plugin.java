@@ -3,26 +3,12 @@ package nextgen.maven.st;
 
 public class plugin {
 
-	private java.lang.String groupId;
 	private java.lang.String artifactId;
-	private java.util.List<pluginConfiguration> configuration = new java.util.ArrayList<>();
-	private java.util.List<java.lang.Object> executions = new java.util.ArrayList<>();
 	private java.lang.Object version;
+	private java.util.List<pluginConfiguration> configuration = new java.util.ArrayList<>();
+	private java.lang.String groupId;
+	private java.util.List<java.lang.Object> executions = new java.util.ArrayList<>();
 	private final java.util.UUID uuid;
-
-	public java.lang.String getGroupId() { 
-		return groupId;
-	}
-
-	public plugin setGroupId(java.lang.String groupId) { 
-		this.groupId = groupId;
-		return this;
-	}
-
-	public plugin removeGroupId() { 
-		this.groupId = null;
-		return this;
-	}
 
 	public java.lang.String getArtifactId() { 
 		return artifactId;
@@ -35,6 +21,20 @@ public class plugin {
 
 	public plugin removeArtifactId() { 
 		this.artifactId = null;
+		return this;
+	}
+
+	public java.lang.Object getVersion() { 
+		return version;
+	}
+
+	public plugin setVersion(java.lang.Object version) { 
+		this.version = version;
+		return this;
+	}
+
+	public plugin removeVersion() { 
+		this.version = null;
 		return this;
 	}
 
@@ -52,6 +52,20 @@ public class plugin {
 		return this;
 	}
 
+	public java.lang.String getGroupId() { 
+		return groupId;
+	}
+
+	public plugin setGroupId(java.lang.String groupId) { 
+		this.groupId = groupId;
+		return this;
+	}
+
+	public plugin removeGroupId() { 
+		this.groupId = null;
+		return this;
+	}
+
 	public java.util.List<java.lang.Object> getExecutions() { 
 		return executions;
 	}
@@ -63,20 +77,6 @@ public class plugin {
 
 	public plugin removeExecutions(java.lang.Object executions) { 
 		this.executions.remove(executions);
-		return this;
-	}
-
-	public java.lang.Object getVersion() { 
-		return version;
-	}
-
-	public plugin setVersion(java.lang.Object version) { 
-		this.version = version;
-		return this;
-	}
-
-	public plugin removeVersion() { 
-		this.version = null;
 		return this;
 	}
 

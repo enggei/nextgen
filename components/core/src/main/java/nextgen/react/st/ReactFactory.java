@@ -23,16 +23,16 @@ public class ReactFactory {
 		return new Prop();
 	}
 
-	public static ForwardRef newForwardRef() {
+	public static ForwardRef newForwardRef() { 
 		return new ForwardRef();
-	}
-
-	public static MobX newMobX() { 
-		return new MobX();
 	}
 
 	public static Function newFunction() { 
 		return new Function();
+	}
+
+	public static MobX newMobX() { 
+		return new MobX();
 	}
 
 	public static StyleComponent newStyleComponent() { 
@@ -61,6 +61,10 @@ public class ReactFactory {
 
 	public static SimpleMenu newSimpleMenu() { 
 		return new SimpleMenu();
+	}
+
+	public static SimpleMenuMenuItems newSimpleMenuMenuItems() { 
+		return new SimpleMenuMenuItems();
 	}
 
 	public static defaultImport newDefaultImport() { 
@@ -105,6 +109,10 @@ public class ReactFactory {
 
 	public static ClassComponent newClassComponent() { 
 		return new ClassComponent();
+	}
+
+	public static ClassComponentEvents newClassComponentEvents() { 
+		return new ClassComponentEvents();
 	}
 
 	public static MaterialUI newMaterialUI() { 

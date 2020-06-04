@@ -3,42 +3,28 @@ package nextgen.react.st;
 
 public class ClassComponent {
 
-	private java.util.List<java.lang.Object> returnStatements = new java.util.ArrayList<>();
-	private java.util.List<java.lang.Object> decorators = new java.util.ArrayList<>();
-	private java.util.List<java.lang.Object> components = new java.util.ArrayList<>();
-	private java.util.List<java.lang.Object> events = new java.util.ArrayList<>();
-	private java.util.List<java.lang.Object> renderConstants = new java.util.ArrayList<>();
-	private java.util.List<java.lang.Object> dependencies = new java.util.ArrayList<>();
-	private java.util.List<java.lang.Object> state = new java.util.ArrayList<>();
 	private java.util.List<java.lang.Object> methods = new java.util.ArrayList<>();
+	private java.util.List<java.lang.Object> components = new java.util.ArrayList<>();
+	private java.util.List<ClassComponentEvents> events = new java.util.ArrayList<>();
 	private java.lang.Object name;
+	private java.util.List<java.lang.Object> state = new java.util.ArrayList<>();
+	private java.util.List<java.lang.Object> renderConstants = new java.util.ArrayList<>();
+	private java.util.List<java.lang.Object> decorators = new java.util.ArrayList<>();
+	private java.util.List<java.lang.Object> dependencies = new java.util.ArrayList<>();
+	private java.util.List<java.lang.Object> returnStatements = new java.util.ArrayList<>();
 	private final java.util.UUID uuid;
 
-	public java.util.List<java.lang.Object> getReturnStatements() { 
-		return returnStatements;
+	public java.util.List<java.lang.Object> getMethods() { 
+		return methods;
 	}
 
-	public ClassComponent addReturnStatements(java.lang.Object returnStatements) { 
-		this.returnStatements.add(returnStatements);
+	public ClassComponent addMethods(java.lang.Object methods) { 
+		this.methods.add(methods);
 		return this;
 	}
 
-	public ClassComponent removeReturnStatements(java.lang.Object returnStatements) { 
-		this.returnStatements.remove(returnStatements);
-		return this;
-	}
-
-	public java.util.List<java.lang.Object> getDecorators() { 
-		return decorators;
-	}
-
-	public ClassComponent addDecorators(java.lang.Object decorators) { 
-		this.decorators.add(decorators);
-		return this;
-	}
-
-	public ClassComponent removeDecorators(java.lang.Object decorators) { 
-		this.decorators.remove(decorators);
+	public ClassComponent removeMethods(java.lang.Object methods) { 
+		this.methods.remove(methods);
 		return this;
 	}
 
@@ -56,45 +42,31 @@ public class ClassComponent {
 		return this;
 	}
 
-	public java.util.List<java.lang.Object> getEvents() { 
+	public java.util.List<ClassComponentEvents> getEvents() { 
 		return events;
 	}
 
-	public ClassComponent addEvents(java.lang.Object events) { 
+	public ClassComponent addEvents(ClassComponentEvents events) { 
 		this.events.add(events);
 		return this;
 	}
 
-	public ClassComponent removeEvents(java.lang.Object events) { 
+	public ClassComponent removeEvents(ClassComponentEvents events) { 
 		this.events.remove(events);
 		return this;
 	}
 
-	public java.util.List<java.lang.Object> getRenderConstants() { 
-		return renderConstants;
+	public java.lang.Object getName() { 
+		return name;
 	}
 
-	public ClassComponent addRenderConstants(java.lang.Object renderConstants) { 
-		this.renderConstants.add(renderConstants);
+	public ClassComponent setName(java.lang.Object name) { 
+		this.name = name;
 		return this;
 	}
 
-	public ClassComponent removeRenderConstants(java.lang.Object renderConstants) { 
-		this.renderConstants.remove(renderConstants);
-		return this;
-	}
-
-	public java.util.List<java.lang.Object> getDependencies() { 
-		return dependencies;
-	}
-
-	public ClassComponent addDependencies(java.lang.Object dependencies) { 
-		this.dependencies.add(dependencies);
-		return this;
-	}
-
-	public ClassComponent removeDependencies(java.lang.Object dependencies) { 
-		this.dependencies.remove(dependencies);
+	public ClassComponent removeName() { 
+		this.name = null;
 		return this;
 	}
 
@@ -112,31 +84,59 @@ public class ClassComponent {
 		return this;
 	}
 
-	public java.util.List<java.lang.Object> getMethods() { 
-		return methods;
+	public java.util.List<java.lang.Object> getRenderConstants() { 
+		return renderConstants;
 	}
 
-	public ClassComponent addMethods(java.lang.Object methods) { 
-		this.methods.add(methods);
+	public ClassComponent addRenderConstants(java.lang.Object renderConstants) { 
+		this.renderConstants.add(renderConstants);
 		return this;
 	}
 
-	public ClassComponent removeMethods(java.lang.Object methods) { 
-		this.methods.remove(methods);
+	public ClassComponent removeRenderConstants(java.lang.Object renderConstants) { 
+		this.renderConstants.remove(renderConstants);
 		return this;
 	}
 
-	public java.lang.Object getName() { 
-		return name;
+	public java.util.List<java.lang.Object> getDecorators() { 
+		return decorators;
 	}
 
-	public ClassComponent setName(java.lang.Object name) { 
-		this.name = name;
+	public ClassComponent addDecorators(java.lang.Object decorators) { 
+		this.decorators.add(decorators);
 		return this;
 	}
 
-	public ClassComponent removeName() { 
-		this.name = null;
+	public ClassComponent removeDecorators(java.lang.Object decorators) { 
+		this.decorators.remove(decorators);
+		return this;
+	}
+
+	public java.util.List<java.lang.Object> getDependencies() { 
+		return dependencies;
+	}
+
+	public ClassComponent addDependencies(java.lang.Object dependencies) { 
+		this.dependencies.add(dependencies);
+		return this;
+	}
+
+	public ClassComponent removeDependencies(java.lang.Object dependencies) { 
+		this.dependencies.remove(dependencies);
+		return this;
+	}
+
+	public java.util.List<java.lang.Object> getReturnStatements() { 
+		return returnStatements;
+	}
+
+	public ClassComponent addReturnStatements(java.lang.Object returnStatements) { 
+		this.returnStatements.add(returnStatements);
+		return this;
+	}
+
+	public ClassComponent removeReturnStatements(java.lang.Object returnStatements) { 
+		this.returnStatements.remove(returnStatements);
 		return this;
 	}
 

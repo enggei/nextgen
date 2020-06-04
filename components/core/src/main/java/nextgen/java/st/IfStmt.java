@@ -4,8 +4,8 @@ package nextgen.java.st;
 public class IfStmt implements Statement, LambdaBody {
 
 	private java.lang.Object elseStmt;
-	private java.lang.Object then;
 	private java.lang.Object condition;
+	private java.lang.Object then;
 	private final java.util.UUID uuid;
 
 	public java.lang.Object getElseStmt() { 
@@ -22,20 +22,6 @@ public class IfStmt implements Statement, LambdaBody {
 		return this;
 	}
 
-	public java.lang.Object getThen() { 
-		return then;
-	}
-
-	public IfStmt setThen(java.lang.Object then) { 
-		this.then = then;
-		return this;
-	}
-
-	public IfStmt removeThen() { 
-		this.then = null;
-		return this;
-	}
-
 	public java.lang.Object getCondition() { 
 		return condition;
 	}
@@ -47,6 +33,20 @@ public class IfStmt implements Statement, LambdaBody {
 
 	public IfStmt removeCondition() { 
 		this.condition = null;
+		return this;
+	}
+
+	public java.lang.Object getThen() { 
+		return then;
+	}
+
+	public IfStmt setThen(java.lang.Object then) { 
+		this.then = then;
+		return this;
+	}
+
+	public IfStmt removeThen() { 
+		this.then = null;
 		return this;
 	}
 

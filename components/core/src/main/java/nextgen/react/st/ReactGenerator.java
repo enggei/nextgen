@@ -28,20 +28,20 @@ public class ReactGenerator {
 	public java.lang.Object generate(FunctionalComponent model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("FunctionalComponent");
+		model.getInject().forEach((element) -> st.add("inject", generate(element)));
+		st.add("wrapper", generate(model.getWrapper()));
 		model.getDependencies().forEach((element) -> st.add("dependencies", generate(element)));
 		st.add("name", generate(model.getName()));
-		model.getLocalImports().forEach((element) -> st.add("localImports", generate(element)));
-		model.getInject().forEach((element) -> st.add("inject", generate(element)));
 		st.add("element", generate(model.getElement()));
-		st.add("wrapper", generate(model.getWrapper()));
+		model.getLocalImports().forEach((element) -> st.add("localImports", generate(element)));
 		return st.render();
 	}
 
 	public java.lang.Object generate(MenuItem model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("MenuItem");
-		st.add("title", generate(model.getTitle()));
 		st.add("name", generate(model.getName()));
+		st.add("title", generate(model.getTitle()));
 		return st.render();
 	}
 
@@ -56,32 +56,31 @@ public class ReactGenerator {
 	public java.lang.Object generate(Prop model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Prop");
-		st.add("name", generate(model.getName()));
 		st.add("value", generate(model.getValue()));
+		st.add("name", generate(model.getName()));
 		return st.render();
 	}
-
 
 	public java.lang.Object generate(ForwardRef model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ForwardRef");
-		st.add("name", generate(model.getName()));
 		st.add("forward", generate(model.getForward()));
-		return st.render();
-	}
-
-	public java.lang.Object generate(MobX model) { 
-		if (model == null) return null;
-		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("MobX");
+		st.add("name", generate(model.getName()));
 		return st.render();
 	}
 
 	public java.lang.Object generate(Function model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Function");
-		model.getParameters().forEach((element) -> st.add("parameters", generate(element)));
-		st.add("body", generate(model.getBody()));
 		st.add("name", generate(model.getName()));
+		st.add("body", generate(model.getBody()));
+		model.getParameters().forEach((element) -> st.add("parameters", generate(element)));
+		return st.render();
+	}
+
+	public java.lang.Object generate(MobX model) { 
+		if (model == null) return null;
+		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("MobX");
 		return st.render();
 	}
 
@@ -103,16 +102,16 @@ public class ReactGenerator {
 	public java.lang.Object generate(Decorator model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Decorator");
-		model.getParameters().forEach((element) -> st.add("parameters", generate(element)));
 		st.add("name", generate(model.getName()));
+		model.getParameters().forEach((element) -> st.add("parameters", generate(element)));
 		return st.render();
 	}
 
 	public java.lang.Object generate(If model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("If");
-		st.add("condition", generate(model.getCondition()));
 		st.add("blockStmt", generate(model.getBlockStmt()));
+		st.add("condition", generate(model.getCondition()));
 		return st.render();
 	}
 
@@ -126,8 +125,8 @@ public class ReactGenerator {
 	public java.lang.Object generate(SimpleMenu model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("SimpleMenu");
+		model.getMenuItems().forEach((element) -> st.addAggr("menuItems.{name,to,target}", generate(element.getName()), generate(element.getTo()), generate(element.getTarget())));
 		model.getMenuComponents().forEach((element) -> st.add("menuComponents", generate(element)));
-		model.getMenuItems().forEach((element) -> st.add("menuItems", generate(element)));
 		return st.render();
 	}
 
@@ -141,8 +140,8 @@ public class ReactGenerator {
 	public java.lang.Object generate(Style model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Style");
-		st.add("name", generate(model.getName()));
 		model.getProperties().forEach((element) -> st.addAggr("properties.{key,value}", generate(element.getKey()), generate(element.getValue())));
+		st.add("name", generate(model.getName()));
 		return st.render();
 	}
 
@@ -174,8 +173,8 @@ public class ReactGenerator {
 	public java.lang.Object generate(NameValue model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("NameValue");
-		st.add("name", generate(model.getName()));
 		st.add("value", generate(model.getValue()));
+		st.add("name", generate(model.getName()));
 		return st.render();
 	}
 
@@ -195,23 +194,23 @@ public class ReactGenerator {
 	public java.lang.Object generate(NameArray model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("NameArray");
-		model.getValues().forEach((element) -> st.add("values", generate(element)));
 		st.add("name", generate(model.getName()));
+		model.getValues().forEach((element) -> st.add("values", generate(element)));
 		return st.render();
 	}
 
 	public java.lang.Object generate(ClassComponent model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ClassComponent");
-		model.getReturnStatements().forEach((element) -> st.add("returnStatements", generate(element)));
-		model.getDecorators().forEach((element) -> st.add("decorators", generate(element)));
-		model.getComponents().forEach((element) -> st.add("components", generate(element)));
-		model.getEvents().forEach((element) -> st.add("events", generate(element)));
-		model.getRenderConstants().forEach((element) -> st.add("renderConstants", generate(element)));
-		model.getDependencies().forEach((element) -> st.add("dependencies", generate(element)));
-		model.getState().forEach((element) -> st.add("state", generate(element)));
 		model.getMethods().forEach((element) -> st.add("methods", generate(element)));
+		model.getComponents().forEach((element) -> st.add("components", generate(element)));
+		model.getEvents().forEach((element) -> st.addAggr("events.{methodName}", generate(element.getMethodName())));
 		st.add("name", generate(model.getName()));
+		model.getState().forEach((element) -> st.add("state", generate(element)));
+		model.getRenderConstants().forEach((element) -> st.add("renderConstants", generate(element)));
+		model.getDecorators().forEach((element) -> st.add("decorators", generate(element)));
+		model.getDependencies().forEach((element) -> st.add("dependencies", generate(element)));
+		model.getReturnStatements().forEach((element) -> st.add("returnStatements", generate(element)));
 		return st.render();
 	}
 
@@ -262,8 +261,8 @@ public class ReactGenerator {
 	public java.lang.Object generate(cssProp model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("cssProp");
-		st.add("value", generate(model.getValue()));
 		st.add("name", generate(model.getName()));
+		st.add("value", generate(model.getValue()));
 		return st.render();
 	}
 
@@ -281,8 +280,8 @@ public class ReactGenerator {
 		if (model instanceof returnStatement) return generate((returnStatement) model);
 		if (model instanceof Prop) return generate((Prop) model);
 		if (model instanceof ForwardRef) return generate((ForwardRef) model);
-		if (model instanceof MobX) return generate((MobX) model);
 		if (model instanceof Function) return generate((Function) model);
+		if (model instanceof MobX) return generate((MobX) model);
 		if (model instanceof StyleComponent) return generate((StyleComponent) model);
 		if (model instanceof GlobalStyle) return generate((GlobalStyle) model);
 		if (model instanceof Decorator) return generate((Decorator) model);

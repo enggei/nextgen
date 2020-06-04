@@ -3,24 +3,10 @@ package nextgen.java.st;
 
 public class CompilationUnit {
 
-	private java.util.List<ImportDeclaration> importDeclaration = new java.util.ArrayList<>();
 	private PackageDeclaration packageDeclaration;
 	private java.util.List<CompilationUnitMember> types = new java.util.ArrayList<>();
+	private java.util.List<ImportDeclaration> importDeclaration = new java.util.ArrayList<>();
 	private final java.util.UUID uuid;
-
-	public java.util.List<ImportDeclaration> getImportDeclaration() { 
-		return importDeclaration;
-	}
-
-	public CompilationUnit addImportDeclaration(ImportDeclaration importDeclaration) { 
-		this.importDeclaration.add(importDeclaration);
-		return this;
-	}
-
-	public CompilationUnit removeImportDeclaration(ImportDeclaration importDeclaration) { 
-		this.importDeclaration.remove(importDeclaration);
-		return this;
-	}
 
 	public PackageDeclaration getPackageDeclaration() { 
 		return packageDeclaration;
@@ -47,6 +33,20 @@ public class CompilationUnit {
 
 	public CompilationUnit removeTypes(CompilationUnitMember types) { 
 		this.types.remove(types);
+		return this;
+	}
+
+	public java.util.List<ImportDeclaration> getImportDeclaration() { 
+		return importDeclaration;
+	}
+
+	public CompilationUnit addImportDeclaration(ImportDeclaration importDeclaration) { 
+		this.importDeclaration.add(importDeclaration);
+		return this;
+	}
+
+	public CompilationUnit removeImportDeclaration(ImportDeclaration importDeclaration) { 
+		this.importDeclaration.remove(importDeclaration);
 		return this;
 	}
 

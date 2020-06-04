@@ -3,19 +3,117 @@ package nextgen.maven.st;
 
 public class pom {
 
-	private java.lang.String name;
-	private java.util.List<java.lang.Object> distributionManagement = new java.util.ArrayList<>();
-	private java.lang.Object build;
-	private java.lang.String groupId;
-	private java.lang.String artifactId;
 	private java.util.List<dependency> dependencies = new java.util.ArrayList<>();
-	private java.lang.Object version;
 	private java.lang.Object parent;
+	private java.lang.String groupId;
+	private java.util.List<java.lang.Object> distributionManagement = new java.util.ArrayList<>();
+	private java.lang.String artifactId;
+	private java.util.List<java.lang.Object> modules = new java.util.ArrayList<>();
+	private java.lang.Object version;
+	private java.lang.String name;
+	private java.lang.Object build;
 	private Packaging packaging;
 	private java.util.List<pomProperties> properties = new java.util.ArrayList<>();
-	private java.util.List<java.lang.Object> modules = new java.util.ArrayList<>();
 	private java.util.List<repository> repositories = new java.util.ArrayList<>();
 	private final java.util.UUID uuid;
+
+	public java.util.List<dependency> getDependencies() { 
+		return dependencies;
+	}
+
+	public pom addDependencies(dependency dependencies) { 
+		this.dependencies.add(dependencies);
+		return this;
+	}
+
+	public pom removeDependencies(dependency dependencies) { 
+		this.dependencies.remove(dependencies);
+		return this;
+	}
+
+	public java.lang.Object getParent() { 
+		return parent;
+	}
+
+	public pom setParent(java.lang.Object parent) { 
+		this.parent = parent;
+		return this;
+	}
+
+	public pom removeParent() { 
+		this.parent = null;
+		return this;
+	}
+
+	public java.lang.String getGroupId() { 
+		return groupId;
+	}
+
+	public pom setGroupId(java.lang.String groupId) { 
+		this.groupId = groupId;
+		return this;
+	}
+
+	public pom removeGroupId() { 
+		this.groupId = null;
+		return this;
+	}
+
+	public java.util.List<java.lang.Object> getDistributionManagement() { 
+		return distributionManagement;
+	}
+
+	public pom addDistributionManagement(java.lang.Object distributionManagement) { 
+		this.distributionManagement.add(distributionManagement);
+		return this;
+	}
+
+	public pom removeDistributionManagement(java.lang.Object distributionManagement) { 
+		this.distributionManagement.remove(distributionManagement);
+		return this;
+	}
+
+	public java.lang.String getArtifactId() { 
+		return artifactId;
+	}
+
+	public pom setArtifactId(java.lang.String artifactId) { 
+		this.artifactId = artifactId;
+		return this;
+	}
+
+	public pom removeArtifactId() { 
+		this.artifactId = null;
+		return this;
+	}
+
+	public java.util.List<java.lang.Object> getModules() { 
+		return modules;
+	}
+
+	public pom addModules(java.lang.Object modules) { 
+		this.modules.add(modules);
+		return this;
+	}
+
+	public pom removeModules(java.lang.Object modules) { 
+		this.modules.remove(modules);
+		return this;
+	}
+
+	public java.lang.Object getVersion() { 
+		return version;
+	}
+
+	public pom setVersion(java.lang.Object version) { 
+		this.version = version;
+		return this;
+	}
+
+	public pom removeVersion() { 
+		this.version = null;
+		return this;
+	}
 
 	public java.lang.String getName() { 
 		return name;
@@ -36,20 +134,6 @@ public class pom {
 		return name;
 	}
 
-	public java.util.List<java.lang.Object> getDistributionManagement() { 
-		return distributionManagement;
-	}
-
-	public pom addDistributionManagement(java.lang.Object distributionManagement) { 
-		this.distributionManagement.add(distributionManagement);
-		return this;
-	}
-
-	public pom removeDistributionManagement(java.lang.Object distributionManagement) { 
-		this.distributionManagement.remove(distributionManagement);
-		return this;
-	}
-
 	public java.lang.Object getBuild() { 
 		return build;
 	}
@@ -61,76 +145,6 @@ public class pom {
 
 	public pom removeBuild() { 
 		this.build = null;
-		return this;
-	}
-
-	public java.lang.String getGroupId() { 
-		return groupId;
-	}
-
-	public pom setGroupId(java.lang.String groupId) { 
-		this.groupId = groupId;
-		return this;
-	}
-
-	public pom removeGroupId() { 
-		this.groupId = null;
-		return this;
-	}
-
-	public java.lang.String getArtifactId() { 
-		return artifactId;
-	}
-
-	public pom setArtifactId(java.lang.String artifactId) { 
-		this.artifactId = artifactId;
-		return this;
-	}
-
-	public pom removeArtifactId() { 
-		this.artifactId = null;
-		return this;
-	}
-
-	public java.util.List<dependency> getDependencies() { 
-		return dependencies;
-	}
-
-	public pom addDependencies(dependency dependencies) { 
-		this.dependencies.add(dependencies);
-		return this;
-	}
-
-	public pom removeDependencies(dependency dependencies) { 
-		this.dependencies.remove(dependencies);
-		return this;
-	}
-
-	public java.lang.Object getVersion() { 
-		return version;
-	}
-
-	public pom setVersion(java.lang.Object version) { 
-		this.version = version;
-		return this;
-	}
-
-	public pom removeVersion() { 
-		this.version = null;
-		return this;
-	}
-
-	public java.lang.Object getParent() { 
-		return parent;
-	}
-
-	public pom setParent(java.lang.Object parent) { 
-		this.parent = parent;
-		return this;
-	}
-
-	public pom removeParent() { 
-		this.parent = null;
 		return this;
 	}
 
@@ -159,20 +173,6 @@ public class pom {
 
 	public pom removeProperties(pomProperties properties) { 
 		this.properties.remove(properties);
-		return this;
-	}
-
-	public java.util.List<java.lang.Object> getModules() { 
-		return modules;
-	}
-
-	public pom addModules(java.lang.Object modules) { 
-		this.modules.add(modules);
-		return this;
-	}
-
-	public pom removeModules(java.lang.Object modules) { 
-		this.modules.remove(modules);
 		return this;
 	}
 

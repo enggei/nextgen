@@ -47,25 +47,30 @@
     "name" : "STDomainTests",
     "text" : "package ~packageName~;\n\npublic class ~name~ {\n\n\tprivate static ~domainName~ domain;\n\n\t@org.junit.BeforeClass\n\tpublic static void loadSTGFile() {\n\t\tdomain = new ~domainName~();\n\t}\n\n\t@org.junit.Test\n\tpublic void testAll() {\n\t\t~testcases:{it|test~it.name;format=\"capitalize\"~();};separator=\"\\n\"~\n\t}\n\n\t~testcases:{it|~it.impl~};separator=\"\\n\\n\"~\n}",
     "parameters" : [ {
-      "uuid" : "5fb2842d-d540-404e-99da-fa8fc7e991ed",
-      "name" : "testcases",
-      "argumentTypes" : [ "Object" ],
-      "type" : "LIST"
-    }, {
-      "uuid" : "a4442e02-f0d6-4315-8045-52daa925757a",
-      "name" : "domainName",
-      "argumentTypes" : [ "Object" ],
-      "type" : "SINGLE"
-    }, {
-      "uuid" : "1e4a6b74-cc18-4c58-9cb9-2f703b47e766",
+      "uuid" : "8dbf6703-9b4a-43fb-95f7-5e82b8fc8dbd",
       "name" : "packageName",
-      "argumentTypes" : [ "Object" ],
       "type" : "SINGLE"
     }, {
-      "uuid" : "0ba2ffe8-a349-4d02-a699-a13fabdac0b0",
+      "uuid" : "31f52fca-cd5f-47b1-91fa-3de449603b2c",
       "name" : "name",
-      "argumentTypes" : [ "Object" ],
       "type" : "SINGLE"
+    }, {
+      "uuid" : "cf545e83-abbb-4a9c-a336-177bb9892aab",
+      "name" : "domainName",
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "d7440724-a36c-4206-9152-2e6b678fd32f",
+      "name" : "testcases",
+      "type" : "KVLIST",
+      "keys" : [ {
+        "uuid" : "eb4c4f63-3b1c-4ee3-9cb8-56fc57e84e96",
+        "name" : "name",
+        "argumentTypes" : [ "Object" ]
+      }, {
+        "uuid" : "9c7e8830-7d95-4c82-8366-47e008905602",
+        "name" : "impl",
+        "argumentTypes" : [ "Object" ]
+      } ]
     } ],
     "children" : [ {
       "uuid" : "ddf9f301-8ea9-447d-b1c8-ac4ef04a6f2e",

@@ -3,12 +3,26 @@ package nextgen.java.st;
 
 public class Parameter {
 
+	private java.util.List<Modifier> modifiers = new java.util.ArrayList<>();
 	private java.util.List<AnnotationExpression> annotations = new java.util.ArrayList<>();
 	private java.lang.String name;
-	private java.util.List<Modifier> modifiers = new java.util.ArrayList<>();
 	private ClassOrInterfaceType type;
 	private java.lang.Boolean isVarargs;
 	private final java.util.UUID uuid;
+
+	public java.util.List<Modifier> getModifiers() { 
+		return modifiers;
+	}
+
+	public Parameter addModifiers(Modifier modifiers) { 
+		this.modifiers.add(modifiers);
+		return this;
+	}
+
+	public Parameter removeModifiers(Modifier modifiers) { 
+		this.modifiers.remove(modifiers);
+		return this;
+	}
 
 	public java.util.List<AnnotationExpression> getAnnotations() { 
 		return annotations;
@@ -41,20 +55,6 @@ public class Parameter {
 	@Override
 	public java.lang.String toString() { 
 		return name;
-	}
-
-	public java.util.List<Modifier> getModifiers() { 
-		return modifiers;
-	}
-
-	public Parameter addModifiers(Modifier modifiers) { 
-		this.modifiers.add(modifiers);
-		return this;
-	}
-
-	public Parameter removeModifiers(Modifier modifiers) { 
-		this.modifiers.remove(modifiers);
-		return this;
 	}
 
 	public ClassOrInterfaceType getType() { 

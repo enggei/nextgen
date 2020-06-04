@@ -3,29 +3,10 @@ package nextgen.java.st;
 
 public class VariableDeclaration implements Expression {
 
-	private java.lang.String name;
 	private ClassOrInterfaceType type;
 	private java.lang.Object initializer;
+	private java.lang.String name;
 	private final java.util.UUID uuid;
-
-	public java.lang.String getName() { 
-		return name;
-	}
-
-	public VariableDeclaration setName(java.lang.String name) { 
-		this.name = name;
-		return this;
-	}
-
-	public VariableDeclaration removeName() { 
-		this.name = null;
-		return this;
-	}
-
-	@Override
-	public java.lang.String toString() { 
-		return name;
-	}
 
 	public ClassOrInterfaceType getType() { 
 		return type;
@@ -53,6 +34,25 @@ public class VariableDeclaration implements Expression {
 	public VariableDeclaration removeInitializer() { 
 		this.initializer = null;
 		return this;
+	}
+
+	public java.lang.String getName() { 
+		return name;
+	}
+
+	public VariableDeclaration setName(java.lang.String name) { 
+		this.name = name;
+		return this;
+	}
+
+	public VariableDeclaration removeName() { 
+		this.name = null;
+		return this;
+	}
+
+	@Override
+	public java.lang.String toString() { 
+		return name;
 	}
 
 	public VariableDeclaration() { 

@@ -3,23 +3,9 @@ package nextgen.java.st;
 
 public class DoStmt implements Statement, LambdaBody {
 
-	private Statement body;
 	private java.lang.Object condition;
+	private Statement body;
 	private final java.util.UUID uuid;
-
-	public Statement getBody() { 
-		return body;
-	}
-
-	public DoStmt setBody(Statement body) { 
-		this.body = body;
-		return this;
-	}
-
-	public DoStmt removeBody() { 
-		this.body = null;
-		return this;
-	}
 
 	public java.lang.Object getCondition() { 
 		return condition;
@@ -32,6 +18,20 @@ public class DoStmt implements Statement, LambdaBody {
 
 	public DoStmt removeCondition() { 
 		this.condition = null;
+		return this;
+	}
+
+	public Statement getBody() { 
+		return body;
+	}
+
+	public DoStmt setBody(Statement body) { 
+		this.body = body;
+		return this;
+	}
+
+	public DoStmt removeBody() { 
+		this.body = null;
 		return this;
 	}
 

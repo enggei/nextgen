@@ -3,23 +3,9 @@ package nextgen.react.st;
 
 public class NameArray {
 
-	private java.util.List<java.lang.Object> values = new java.util.ArrayList<>();
 	private java.lang.Object name;
+	private java.util.List<java.lang.Object> values = new java.util.ArrayList<>();
 	private final java.util.UUID uuid;
-
-	public java.util.List<java.lang.Object> getValues() { 
-		return values;
-	}
-
-	public NameArray addValues(java.lang.Object values) { 
-		this.values.add(values);
-		return this;
-	}
-
-	public NameArray removeValues(java.lang.Object values) { 
-		this.values.remove(values);
-		return this;
-	}
 
 	public java.lang.Object getName() { 
 		return name;
@@ -32,6 +18,20 @@ public class NameArray {
 
 	public NameArray removeName() { 
 		this.name = null;
+		return this;
+	}
+
+	public java.util.List<java.lang.Object> getValues() { 
+		return values;
+	}
+
+	public NameArray addValues(java.lang.Object values) { 
+		this.values.add(values);
+		return this;
+	}
+
+	public NameArray removeValues(java.lang.Object values) { 
+		this.values.remove(values);
 		return this;
 	}
 

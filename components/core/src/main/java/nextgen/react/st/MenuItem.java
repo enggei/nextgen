@@ -3,23 +3,9 @@ package nextgen.react.st;
 
 public class MenuItem {
 
-	private java.lang.Object title;
 	private java.lang.Object name;
+	private java.lang.Object title;
 	private final java.util.UUID uuid;
-
-	public java.lang.Object getTitle() { 
-		return title;
-	}
-
-	public MenuItem setTitle(java.lang.Object title) { 
-		this.title = title;
-		return this;
-	}
-
-	public MenuItem removeTitle() { 
-		this.title = null;
-		return this;
-	}
 
 	public java.lang.Object getName() { 
 		return name;
@@ -32,6 +18,20 @@ public class MenuItem {
 
 	public MenuItem removeName() { 
 		this.name = null;
+		return this;
+	}
+
+	public java.lang.Object getTitle() { 
+		return title;
+	}
+
+	public MenuItem setTitle(java.lang.Object title) { 
+		this.title = title;
+		return this;
+	}
+
+	public MenuItem removeTitle() { 
+		this.title = null;
 		return this;
 	}
 

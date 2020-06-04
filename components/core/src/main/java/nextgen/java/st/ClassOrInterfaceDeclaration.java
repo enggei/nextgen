@@ -3,29 +3,29 @@ package nextgen.java.st;
 
 public class ClassOrInterfaceDeclaration implements CompilationUnitMember, ClassOrInterfaceMember {
 
-	private java.util.List<java.lang.Object> fields = new java.util.ArrayList<>();
-	private java.util.List<java.lang.String> comments = new java.util.ArrayList<>();
-	private java.lang.String name;
-	private java.util.List<Modifier> modifiers = new java.util.ArrayList<>();
-	private java.util.List<ClassOrInterfaceType> typeParameters = new java.util.ArrayList<>();
 	private java.util.List<ClassOrInterfaceType> implementedTypes = new java.util.ArrayList<>();
+	private java.util.List<java.lang.String> comments = new java.util.ArrayList<>();
+	private java.util.List<ClassOrInterfaceType> typeParameters = new java.util.ArrayList<>();
+	private java.lang.String name;
 	private java.util.List<ClassOrInterfaceType> extend = new java.util.ArrayList<>();
-	private java.util.List<ClassOrInterfaceMember> members = new java.util.ArrayList<>();
+	private java.util.List<java.lang.Object> fields = new java.util.ArrayList<>();
 	private java.util.List<AnnotationExpression> annotations = new java.util.ArrayList<>();
+	private java.util.List<ClassOrInterfaceMember> members = new java.util.ArrayList<>();
+	private java.util.List<Modifier> modifiers = new java.util.ArrayList<>();
 	private java.lang.Boolean isInterface;
 	private final java.util.UUID uuid;
 
-	public java.util.List<java.lang.Object> getFields() { 
-		return fields;
+	public java.util.List<ClassOrInterfaceType> getImplementedTypes() { 
+		return implementedTypes;
 	}
 
-	public ClassOrInterfaceDeclaration addFields(java.lang.Object fields) { 
-		this.fields.add(fields);
+	public ClassOrInterfaceDeclaration addImplementedTypes(ClassOrInterfaceType implementedTypes) { 
+		this.implementedTypes.add(implementedTypes);
 		return this;
 	}
 
-	public ClassOrInterfaceDeclaration removeFields(java.lang.Object fields) { 
-		this.fields.remove(fields);
+	public ClassOrInterfaceDeclaration removeImplementedTypes(ClassOrInterfaceType implementedTypes) { 
+		this.implementedTypes.remove(implementedTypes);
 		return this;
 	}
 
@@ -40,6 +40,20 @@ public class ClassOrInterfaceDeclaration implements CompilationUnitMember, Class
 
 	public ClassOrInterfaceDeclaration removeComments(java.lang.String comments) { 
 		this.comments.remove(comments);
+		return this;
+	}
+
+	public java.util.List<ClassOrInterfaceType> getTypeParameters() { 
+		return typeParameters;
+	}
+
+	public ClassOrInterfaceDeclaration addTypeParameters(ClassOrInterfaceType typeParameters) { 
+		this.typeParameters.add(typeParameters);
+		return this;
+	}
+
+	public ClassOrInterfaceDeclaration removeTypeParameters(ClassOrInterfaceType typeParameters) { 
+		this.typeParameters.remove(typeParameters);
 		return this;
 	}
 
@@ -62,48 +76,6 @@ public class ClassOrInterfaceDeclaration implements CompilationUnitMember, Class
 		return name;
 	}
 
-	public java.util.List<Modifier> getModifiers() { 
-		return modifiers;
-	}
-
-	public ClassOrInterfaceDeclaration addModifiers(Modifier modifiers) { 
-		this.modifiers.add(modifiers);
-		return this;
-	}
-
-	public ClassOrInterfaceDeclaration removeModifiers(Modifier modifiers) { 
-		this.modifiers.remove(modifiers);
-		return this;
-	}
-
-	public java.util.List<ClassOrInterfaceType> getTypeParameters() { 
-		return typeParameters;
-	}
-
-	public ClassOrInterfaceDeclaration addTypeParameters(ClassOrInterfaceType typeParameters) { 
-		this.typeParameters.add(typeParameters);
-		return this;
-	}
-
-	public ClassOrInterfaceDeclaration removeTypeParameters(ClassOrInterfaceType typeParameters) { 
-		this.typeParameters.remove(typeParameters);
-		return this;
-	}
-
-	public java.util.List<ClassOrInterfaceType> getImplementedTypes() { 
-		return implementedTypes;
-	}
-
-	public ClassOrInterfaceDeclaration addImplementedTypes(ClassOrInterfaceType implementedTypes) { 
-		this.implementedTypes.add(implementedTypes);
-		return this;
-	}
-
-	public ClassOrInterfaceDeclaration removeImplementedTypes(ClassOrInterfaceType implementedTypes) { 
-		this.implementedTypes.remove(implementedTypes);
-		return this;
-	}
-
 	public java.util.List<ClassOrInterfaceType> getExtend() { 
 		return extend;
 	}
@@ -115,6 +87,34 @@ public class ClassOrInterfaceDeclaration implements CompilationUnitMember, Class
 
 	public ClassOrInterfaceDeclaration removeExtend(ClassOrInterfaceType extend) { 
 		this.extend.remove(extend);
+		return this;
+	}
+
+	public java.util.List<java.lang.Object> getFields() { 
+		return fields;
+	}
+
+	public ClassOrInterfaceDeclaration addFields(java.lang.Object fields) { 
+		this.fields.add(fields);
+		return this;
+	}
+
+	public ClassOrInterfaceDeclaration removeFields(java.lang.Object fields) { 
+		this.fields.remove(fields);
+		return this;
+	}
+
+	public java.util.List<AnnotationExpression> getAnnotations() { 
+		return annotations;
+	}
+
+	public ClassOrInterfaceDeclaration addAnnotations(AnnotationExpression annotations) { 
+		this.annotations.add(annotations);
+		return this;
+	}
+
+	public ClassOrInterfaceDeclaration removeAnnotations(AnnotationExpression annotations) { 
+		this.annotations.remove(annotations);
 		return this;
 	}
 
@@ -132,17 +132,17 @@ public class ClassOrInterfaceDeclaration implements CompilationUnitMember, Class
 		return this;
 	}
 
-	public java.util.List<AnnotationExpression> getAnnotations() { 
-		return annotations;
+	public java.util.List<Modifier> getModifiers() { 
+		return modifiers;
 	}
 
-	public ClassOrInterfaceDeclaration addAnnotations(AnnotationExpression annotations) { 
-		this.annotations.add(annotations);
+	public ClassOrInterfaceDeclaration addModifiers(Modifier modifiers) { 
+		this.modifiers.add(modifiers);
 		return this;
 	}
 
-	public ClassOrInterfaceDeclaration removeAnnotations(AnnotationExpression annotations) { 
-		this.annotations.remove(annotations);
+	public ClassOrInterfaceDeclaration removeModifiers(Modifier modifiers) { 
+		this.modifiers.remove(modifiers);
 		return this;
 	}
 

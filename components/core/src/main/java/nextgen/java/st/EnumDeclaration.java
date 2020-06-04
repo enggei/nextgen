@@ -3,28 +3,14 @@ package nextgen.java.st;
 
 public class EnumDeclaration implements CompilationUnitMember, ClassOrInterfaceMember {
 
-	private java.util.List<ClassOrInterfaceType> extend = new java.util.ArrayList<>();
 	private java.util.List<AnnotationExpression> annotations = new java.util.ArrayList<>();
+	private java.util.List<java.lang.Object> entries = new java.util.ArrayList<>();
+	private java.util.List<java.lang.Object> members = new java.util.ArrayList<>();
+	private java.lang.String name;
+	private java.util.List<ClassOrInterfaceType> extend = new java.util.ArrayList<>();
 	private java.util.List<Modifier> modifiers = new java.util.ArrayList<>();
 	private java.util.List<ClassOrInterfaceType> implementedTypes = new java.util.ArrayList<>();
-	private java.lang.String name;
-	private java.util.List<java.lang.Object> members = new java.util.ArrayList<>();
-	private java.util.List<java.lang.Object> entries = new java.util.ArrayList<>();
 	private final java.util.UUID uuid;
-
-	public java.util.List<ClassOrInterfaceType> getExtend() { 
-		return extend;
-	}
-
-	public EnumDeclaration addExtend(ClassOrInterfaceType extend) { 
-		this.extend.add(extend);
-		return this;
-	}
-
-	public EnumDeclaration removeExtend(ClassOrInterfaceType extend) { 
-		this.extend.remove(extend);
-		return this;
-	}
 
 	public java.util.List<AnnotationExpression> getAnnotations() { 
 		return annotations;
@@ -37,6 +23,67 @@ public class EnumDeclaration implements CompilationUnitMember, ClassOrInterfaceM
 
 	public EnumDeclaration removeAnnotations(AnnotationExpression annotations) { 
 		this.annotations.remove(annotations);
+		return this;
+	}
+
+	public java.util.List<java.lang.Object> getEntries() { 
+		return entries;
+	}
+
+	public EnumDeclaration addEntries(java.lang.Object entries) { 
+		this.entries.add(entries);
+		return this;
+	}
+
+	public EnumDeclaration removeEntries(java.lang.Object entries) { 
+		this.entries.remove(entries);
+		return this;
+	}
+
+	public java.util.List<java.lang.Object> getMembers() { 
+		return members;
+	}
+
+	public EnumDeclaration addMembers(java.lang.Object members) { 
+		this.members.add(members);
+		return this;
+	}
+
+	public EnumDeclaration removeMembers(java.lang.Object members) { 
+		this.members.remove(members);
+		return this;
+	}
+
+	public java.lang.String getName() { 
+		return name;
+	}
+
+	public EnumDeclaration setName(java.lang.String name) { 
+		this.name = name;
+		return this;
+	}
+
+	public EnumDeclaration removeName() { 
+		this.name = null;
+		return this;
+	}
+
+	@Override
+	public java.lang.String toString() { 
+		return name;
+	}
+
+	public java.util.List<ClassOrInterfaceType> getExtend() { 
+		return extend;
+	}
+
+	public EnumDeclaration addExtend(ClassOrInterfaceType extend) { 
+		this.extend.add(extend);
+		return this;
+	}
+
+	public EnumDeclaration removeExtend(ClassOrInterfaceType extend) { 
+		this.extend.remove(extend);
 		return this;
 	}
 
@@ -65,53 +112,6 @@ public class EnumDeclaration implements CompilationUnitMember, ClassOrInterfaceM
 
 	public EnumDeclaration removeImplementedTypes(ClassOrInterfaceType implementedTypes) { 
 		this.implementedTypes.remove(implementedTypes);
-		return this;
-	}
-
-	public java.lang.String getName() { 
-		return name;
-	}
-
-	public EnumDeclaration setName(java.lang.String name) { 
-		this.name = name;
-		return this;
-	}
-
-	public EnumDeclaration removeName() { 
-		this.name = null;
-		return this;
-	}
-
-	@Override
-	public java.lang.String toString() { 
-		return name;
-	}
-
-	public java.util.List<java.lang.Object> getMembers() { 
-		return members;
-	}
-
-	public EnumDeclaration addMembers(java.lang.Object members) { 
-		this.members.add(members);
-		return this;
-	}
-
-	public EnumDeclaration removeMembers(java.lang.Object members) { 
-		this.members.remove(members);
-		return this;
-	}
-
-	public java.util.List<java.lang.Object> getEntries() { 
-		return entries;
-	}
-
-	public EnumDeclaration addEntries(java.lang.Object entries) { 
-		this.entries.add(entries);
-		return this;
-	}
-
-	public EnumDeclaration removeEntries(java.lang.Object entries) { 
-		this.entries.remove(entries);
 		return this;
 	}
 

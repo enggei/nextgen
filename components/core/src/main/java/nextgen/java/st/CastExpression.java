@@ -3,23 +3,9 @@ package nextgen.java.st;
 
 public class CastExpression implements Expression, LambdaBody {
 
-	private Expression expression;
 	private ClassOrInterfaceType type;
+	private Expression expression;
 	private final java.util.UUID uuid;
-
-	public Expression getExpression() { 
-		return expression;
-	}
-
-	public CastExpression setExpression(Expression expression) { 
-		this.expression = expression;
-		return this;
-	}
-
-	public CastExpression removeExpression() { 
-		this.expression = null;
-		return this;
-	}
 
 	public ClassOrInterfaceType getType() { 
 		return type;
@@ -32,6 +18,20 @@ public class CastExpression implements Expression, LambdaBody {
 
 	public CastExpression removeType() { 
 		this.type = null;
+		return this;
+	}
+
+	public Expression getExpression() { 
+		return expression;
+	}
+
+	public CastExpression setExpression(Expression expression) { 
+		this.expression = expression;
+		return this;
+	}
+
+	public CastExpression removeExpression() { 
+		this.expression = null;
 		return this;
 	}
 

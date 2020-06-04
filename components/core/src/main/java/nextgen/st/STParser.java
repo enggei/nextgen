@@ -32,7 +32,7 @@ public class STParser {
     public static STGParseResult parse(File stgFile) {
         final char delimiter = loadDelimiter(stgFile);
         final STGParseResult parseResult = parse(new STGroupFile(stgFile.getAbsolutePath(), delimiter, delimiter));
-        if (parseResult.getErrors().count() == 0) parseResult.getParsed().setStgFile(stgFile.getPath());
+        if (parseResult.getErrors().count() == 0) parseResult.getParsed();
         return parseResult;
     }
 
@@ -210,7 +210,7 @@ public class STParser {
 
     private static char loadDelimiter(File stgFile) {
         try {
-            final String s = readString(stgFile);
+            final String s = read(stgFile);
             final String pattern = "delimiters \"";
             final int start = s.indexOf(pattern) + pattern.length();
             return s.charAt(start);
@@ -220,14 +220,19 @@ public class STParser {
         }
     }
 
-    public static String readString(File file) throws IOException {
+    public static String read(File file) {
         if (!file.exists()) return "";
-        final StringBuilder string = new StringBuilder();
-        final BufferedReader in = new BufferedReader(new FileReader(file));
-        String line;
-        while ((line = in.readLine()) != null) string.append(line);
-        in.close();
-        return string.toString();
+        try {
+            final StringBuilder content = new StringBuilder();
+            final BufferedReader in = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = in.readLine()) != null) content.append(line);
+            in.close();
+            return content.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "ERROR: " + e.getMessage();
+        }
     }
 
     private static String debug(AstNode astNode, int level) {

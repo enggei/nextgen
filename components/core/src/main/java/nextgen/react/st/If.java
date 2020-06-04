@@ -3,23 +3,9 @@ package nextgen.react.st;
 
 public class If {
 
-	private java.lang.Object condition;
 	private java.lang.Object blockStmt;
+	private java.lang.Object condition;
 	private final java.util.UUID uuid;
-
-	public java.lang.Object getCondition() { 
-		return condition;
-	}
-
-	public If setCondition(java.lang.Object condition) { 
-		this.condition = condition;
-		return this;
-	}
-
-	public If removeCondition() { 
-		this.condition = null;
-		return this;
-	}
 
 	public java.lang.Object getBlockStmt() { 
 		return blockStmt;
@@ -32,6 +18,20 @@ public class If {
 
 	public If removeBlockStmt() { 
 		this.blockStmt = null;
+		return this;
+	}
+
+	public java.lang.Object getCondition() { 
+		return condition;
+	}
+
+	public If setCondition(java.lang.Object condition) { 
+		this.condition = condition;
+		return this;
+	}
+
+	public If removeCondition() { 
+		this.condition = null;
 		return this;
 	}
 

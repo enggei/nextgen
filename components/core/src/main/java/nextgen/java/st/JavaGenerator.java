@@ -24,8 +24,8 @@ public class JavaGenerator {
 	public java.lang.Object generate(CatchClause model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("CatchClause");
-		st.add("body", generate(model.getBody()));
 		st.add("parameter", generate(model.getParameter()));
+		st.add("body", generate(model.getBody()));
 		return st.render();
 	}
 
@@ -54,9 +54,9 @@ public class JavaGenerator {
 	public java.lang.Object generate(ConditionalExpression model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ConditionalExpression");
-		st.add("condition", generate(model.getCondition()));
 		st.add("elseExpression", generate(model.getElseExpression()));
 		st.add("thenExpression", generate(model.getThenExpression()));
+		st.add("condition", generate(model.getCondition()));
 		return st.render();
 	}
 
@@ -70,8 +70,8 @@ public class JavaGenerator {
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("IfStmt");
 		st.add("elseStmt", generate(model.getElseStmt()));
-		st.add("then", generate(model.getThen()));
 		st.add("condition", generate(model.getCondition()));
+		st.add("then", generate(model.getThen()));
 		return st.render();
 	}
 
@@ -85,18 +85,18 @@ public class JavaGenerator {
 	public java.lang.Object generate(AnnotationMemberDeclaration model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("AnnotationMemberDeclaration");
+		st.add("defaultValue", generate(model.getDefaultValue()));
 		st.add("type", generate(model.getType()));
 		st.add("name", generate(model.getName()));
-		st.add("defaultValue", generate(model.getDefaultValue()));
 		return st.render();
 	}
 
 	public java.lang.Object generate(CompilationUnit model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("CompilationUnit");
-		model.getImportDeclaration().forEach((element) -> st.add("importDeclaration", generate(element)));
 		st.add("packageDeclaration", generate(model.getPackageDeclaration()));
 		model.getTypes().forEach((element) -> st.add("types", generate(element)));
+		model.getImportDeclaration().forEach((element) -> st.add("importDeclaration", generate(element)));
 		return st.render();
 	}
 
@@ -110,8 +110,8 @@ public class JavaGenerator {
 	public java.lang.Object generate(LambdaExpression model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("LambdaExpression");
-		st.add("body", generate(model.getBody()));
 		model.getParameters().forEach((element) -> st.add("parameters", generate(element)));
+		st.add("body", generate(model.getBody()));
 		return st.render();
 	}
 
@@ -125,10 +125,10 @@ public class JavaGenerator {
 	public java.lang.Object generate(ForStmt model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ForStmt");
-		model.getInitialization().forEach((element) -> st.add("initialization", generate(element)));
 		st.add("compare", generate(model.getCompare()));
-		st.add("body", generate(model.getBody()));
 		model.getUpdate().forEach((element) -> st.add("update", generate(element)));
+		model.getInitialization().forEach((element) -> st.add("initialization", generate(element)));
+		st.add("body", generate(model.getBody()));
 		return st.render();
 	}
 
@@ -189,9 +189,9 @@ public class JavaGenerator {
 	public java.lang.Object generate(VariableDeclaration model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("VariableDeclaration");
-		st.add("name", generate(model.getName()));
 		st.add("type", generate(model.getType()));
 		st.add("initializer", generate(model.getInitializer()));
+		st.add("name", generate(model.getName()));
 		return st.render();
 	}
 
@@ -242,9 +242,9 @@ public class JavaGenerator {
 	public java.lang.Object generate(Parameter model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Parameter");
+		model.getModifiers().forEach((element) -> st.add("modifiers", generate(element)));
 		model.getAnnotations().forEach((element) -> st.add("annotations", generate(element)));
 		st.add("name", generate(model.getName()));
-		model.getModifiers().forEach((element) -> st.add("modifiers", generate(element)));
 		st.add("type", generate(model.getType()));
 		st.add("isVarargs", generate(model.isVarargs()));
 		return st.render();
@@ -269,18 +269,18 @@ public class JavaGenerator {
 	public java.lang.Object generate(MethodCallExpression model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("MethodCallExpression");
-		model.getTypeArguments().forEach((element) -> st.add("typeArguments", generate(element)));
-		model.getArguments().forEach((element) -> st.add("arguments", generate(element)));
-		st.add("scope", generate(model.getScope()));
 		st.add("name", generate(model.getName()));
+		st.add("scope", generate(model.getScope()));
+		model.getArguments().forEach((element) -> st.add("arguments", generate(element)));
+		model.getTypeArguments().forEach((element) -> st.add("typeArguments", generate(element)));
 		return st.render();
 	}
 
 	public java.lang.Object generate(InstanceOfExpression model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("InstanceOfExpression");
-		st.add("expression", generate(model.getExpression()));
 		st.add("type", generate(model.getType()));
+		st.add("expression", generate(model.getExpression()));
 		return st.render();
 	}
 
@@ -315,18 +315,18 @@ public class JavaGenerator {
 	public java.lang.Object generate(AnnotationDeclaration model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("AnnotationDeclaration");
-		st.add("name", generate(model.getName()));
 		model.getMembers().forEach((element) -> st.add("members", generate(element)));
-		model.getAnnotations().forEach((element) -> st.add("annotations", generate(element)));
 		model.getModifiers().forEach((element) -> st.add("modifiers", generate(element)));
+		model.getAnnotations().forEach((element) -> st.add("annotations", generate(element)));
+		st.add("name", generate(model.getName()));
 		return st.render();
 	}
 
 	public java.lang.Object generate(CastExpression model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("CastExpression");
-		st.add("expression", generate(model.getExpression()));
 		st.add("type", generate(model.getType()));
+		st.add("expression", generate(model.getExpression()));
 		return st.render();
 	}
 
@@ -334,27 +334,27 @@ public class JavaGenerator {
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ObjectCreationExpression");
 		model.getAnonymousClassBodies().forEach((element) -> st.add("anonymousClassBodies", generate(element)));
-		st.add("type", generate(model.getType()));
 		model.getTypeArguments().forEach((element) -> st.add("typeArguments", generate(element)));
-		st.add("scope", generate(model.getScope()));
 		model.getArguments().forEach((element) -> st.add("arguments", generate(element)));
+		st.add("type", generate(model.getType()));
+		st.add("scope", generate(model.getScope()));
 		return st.render();
 	}
 
 	public java.lang.Object generate(BinaryExpression model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("BinaryExpression");
-		st.add("right", generate(model.getRight()));
-		st.add("operator", generate(model.getOperator()));
 		st.add("left", generate(model.getLeft()));
+		st.add("operator", generate(model.getOperator()));
+		st.add("right", generate(model.getRight()));
 		return st.render();
 	}
 
 	public java.lang.Object generate(ExpressionStmt model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ExpressionStmt");
-		st.add("comment", generate(model.getComment()));
 		st.add("expression", generate(model.getExpression()));
+		st.add("comment", generate(model.getComment()));
 		return st.render();
 	}
 
@@ -379,8 +379,8 @@ public class JavaGenerator {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("EnumConstant");
 		model.getMethods().forEach((element) -> st.add("methods", generate(element)));
 		st.add("name", generate(model.getName()));
-		model.getAnnotations().forEach((element) -> st.add("annotations", generate(element)));
 		model.getArguments().forEach((element) -> st.add("arguments", generate(element)));
+		model.getAnnotations().forEach((element) -> st.add("annotations", generate(element)));
 		return st.render();
 	}
 
@@ -395,9 +395,9 @@ public class JavaGenerator {
 	public java.lang.Object generate(AssignExpression model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("AssignExpression");
-		st.add("target", generate(model.getTarget()));
-		st.add("operator", generate(model.getOperator()));
 		st.add("value", generate(model.getValue()));
+		st.add("operator", generate(model.getOperator()));
+		st.add("target", generate(model.getTarget()));
 		return st.render();
 	}
 
@@ -419,16 +419,16 @@ public class JavaGenerator {
 	public java.lang.Object generate(MemberValuePair model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("MemberValuePair");
-		st.add("value", generate(model.getValue()));
 		st.add("name", generate(model.getName()));
+		st.add("value", generate(model.getValue()));
 		return st.render();
 	}
 
 	public java.lang.Object generate(DoStmt model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("DoStmt");
-		st.add("body", generate(model.getBody()));
 		st.add("condition", generate(model.getCondition()));
+		st.add("body", generate(model.getBody()));
 		return st.render();
 	}
 
@@ -451,13 +451,13 @@ public class JavaGenerator {
 	public java.lang.Object generate(ConstructorDeclaration model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ConstructorDeclaration");
-		model.getAnnotations().forEach((element) -> st.add("annotations", generate(element)));
-		st.add("blockStmt", generate(model.getBlockStmt()));
 		model.getTypeParameters().forEach((element) -> st.add("typeParameters", generate(element)));
 		model.getParameters().forEach((element) -> st.add("parameters", generate(element)));
+		model.getAnnotations().forEach((element) -> st.add("annotations", generate(element)));
 		st.add("name", generate(model.getName()));
 		model.getModifiers().forEach((element) -> st.add("modifiers", generate(element)));
 		model.getThrownExceptions().forEach((element) -> st.add("thrownExceptions", generate(element)));
+		st.add("blockStmt", generate(model.getBlockStmt()));
 		return st.render();
 	}
 
@@ -488,13 +488,13 @@ public class JavaGenerator {
 	public java.lang.Object generate(EnumDeclaration model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("EnumDeclaration");
-		model.getExtend().forEach((element) -> st.add("extend", generate(element)));
 		model.getAnnotations().forEach((element) -> st.add("annotations", generate(element)));
+		model.getEntries().forEach((element) -> st.add("entries", generate(element)));
+		model.getMembers().forEach((element) -> st.add("members", generate(element)));
+		st.add("name", generate(model.getName()));
+		model.getExtend().forEach((element) -> st.add("extend", generate(element)));
 		model.getModifiers().forEach((element) -> st.add("modifiers", generate(element)));
 		model.getImplementedTypes().forEach((element) -> st.add("implementedTypes", generate(element)));
-		st.add("name", generate(model.getName()));
-		model.getMembers().forEach((element) -> st.add("members", generate(element)));
-		model.getEntries().forEach((element) -> st.add("entries", generate(element)));
 		return st.render();
 	}
 
@@ -508,14 +508,14 @@ public class JavaGenerator {
 	public java.lang.Object generate(MethodDeclaration model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("MethodDeclaration");
-		model.getModifiers().forEach((element) -> st.add("modifiers", generate(element)));
-		model.getParameters().forEach((element) -> st.add("parameters", generate(element)));
-		model.getThrownExceptions().forEach((element) -> st.add("thrownExceptions", generate(element)));
-		st.add("blockStmt", generate(model.getBlockStmt()));
-		st.add("name", generate(model.getName()));
-		model.getTypeParameters().forEach((element) -> st.add("typeParameters", generate(element)));
 		model.getAnnotations().forEach((element) -> st.add("annotations", generate(element)));
 		st.add("type", generate(model.getType()));
+		model.getModifiers().forEach((element) -> st.add("modifiers", generate(element)));
+		model.getTypeParameters().forEach((element) -> st.add("typeParameters", generate(element)));
+		model.getParameters().forEach((element) -> st.add("parameters", generate(element)));
+		model.getThrownExceptions().forEach((element) -> st.add("thrownExceptions", generate(element)));
+		st.add("name", generate(model.getName()));
+		st.add("blockStmt", generate(model.getBlockStmt()));
 		st.add("isInterfaceDeclaration", generate(model.isInterfaceDeclaration()));
 		return st.render();
 	}
@@ -538,8 +538,8 @@ public class JavaGenerator {
 	public java.lang.Object generate(LabeledStmt model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("LabeledStmt");
-		st.add("label", generate(model.getLabel()));
 		st.add("statement", generate(model.getStatement()));
+		st.add("label", generate(model.getLabel()));
 		return st.render();
 	}
 
@@ -554,8 +554,8 @@ public class JavaGenerator {
 	public java.lang.Object generate(TryStmt model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("TryStmt");
-		st.add("finalClause", generate(model.getFinalClause()));
 		model.getResources().forEach((element) -> st.add("resources", generate(element)));
+		st.add("finalClause", generate(model.getFinalClause()));
 		st.add("tryBlock", generate(model.getTryBlock()));
 		model.getCatchClauses().forEach((element) -> st.add("catchClauses", generate(element)));
 		return st.render();
@@ -564,9 +564,9 @@ public class JavaGenerator {
 	public java.lang.Object generate(FieldDeclaration model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("FieldDeclaration");
-		model.getVariables().forEach((element) -> st.add("variables", generate(element)));
-		model.getModifiers().forEach((element) -> st.add("modifiers", generate(element)));
 		model.getAnnotations().forEach((element) -> st.add("annotations", generate(element)));
+		model.getModifiers().forEach((element) -> st.add("modifiers", generate(element)));
+		model.getVariables().forEach((element) -> st.add("variables", generate(element)));
 		return st.render();
 	}
 
@@ -589,9 +589,9 @@ public class JavaGenerator {
 	public java.lang.Object generate(ArrayCreationExpression model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ArrayCreationExpression");
-		st.add("type", generate(model.getType()));
-		st.add("initializer", generate(model.getInitializer()));
 		model.getLevels().forEach((element) -> st.add("levels", generate(element)));
+		st.add("initializer", generate(model.getInitializer()));
+		st.add("type", generate(model.getType()));
 		return st.render();
 	}
 
@@ -621,20 +621,20 @@ public class JavaGenerator {
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("JavaPackageInfo");
 		model.getInterfaces().forEach((element) -> st.add("interfaces", generate(element)));
-		model.getClasses().forEach((element) -> st.add("classes", generate(element)));
 		st.add("packageName", generate(model.getPackageName()));
+		model.getClasses().forEach((element) -> st.add("classes", generate(element)));
 		return st.render();
 	}
 
 	public java.lang.Object generate(ModuleDeclaration model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ModuleDeclaration");
-		model.getUsesDirective().forEach((element) -> st.add("usesDirective", generate(element)));
-		model.getRequiresDirective().forEach((element) -> st.add("requiresDirective", generate(element)));
-		model.getProvidesDirective().forEach((element) -> st.add("providesDirective", generate(element)));
 		st.add("name", generate(model.getName()));
 		model.getExportsDirective().forEach((element) -> st.add("exportsDirective", generate(element)));
+		model.getProvidesDirective().forEach((element) -> st.add("providesDirective", generate(element)));
 		model.getOpens().forEach((element) -> st.add("opens", generate(element)));
+		model.getRequiresDirective().forEach((element) -> st.add("requiresDirective", generate(element)));
+		model.getUsesDirective().forEach((element) -> st.add("usesDirective", generate(element)));
 		return st.render();
 	}
 
@@ -659,15 +659,15 @@ public class JavaGenerator {
 	public java.lang.Object generate(ClassOrInterfaceDeclaration model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ClassOrInterfaceDeclaration");
-		model.getFields().forEach((element) -> st.add("fields", generate(element)));
-		model.getComments().forEach((element) -> st.add("comments", generate(element)));
-		st.add("name", generate(model.getName()));
-		model.getModifiers().forEach((element) -> st.add("modifiers", generate(element)));
-		model.getTypeParameters().forEach((element) -> st.add("typeParameters", generate(element)));
 		model.getImplementedTypes().forEach((element) -> st.add("implementedTypes", generate(element)));
+		model.getComments().forEach((element) -> st.add("comments", generate(element)));
+		model.getTypeParameters().forEach((element) -> st.add("typeParameters", generate(element)));
+		st.add("name", generate(model.getName()));
 		model.getExtend().forEach((element) -> st.add("extend", generate(element)));
-		model.getMembers().forEach((element) -> st.add("members", generate(element)));
+		model.getFields().forEach((element) -> st.add("fields", generate(element)));
 		model.getAnnotations().forEach((element) -> st.add("annotations", generate(element)));
+		model.getMembers().forEach((element) -> st.add("members", generate(element)));
+		model.getModifiers().forEach((element) -> st.add("modifiers", generate(element)));
 		st.add("isInterface", generate(model.isInterface()));
 		return st.render();
 	}
@@ -691,8 +691,8 @@ public class JavaGenerator {
 	public java.lang.Object generate(SingleMemberAnnotationExpression model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("SingleMemberAnnotationExpression");
-		st.add("name", generate(model.getName()));
 		model.getMembers().forEach((element) -> st.add("members", generate(element)));
+		st.add("name", generate(model.getName()));
 		return st.render();
 	}
 

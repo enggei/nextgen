@@ -3,22 +3,22 @@ package nextgen.java.st;
 
 public class BinaryExpression implements Expression, LambdaBody {
 
-	private java.lang.Object right;
-	private java.lang.Object operator;
 	private java.lang.Object left;
+	private java.lang.Object operator;
+	private java.lang.Object right;
 	private final java.util.UUID uuid;
 
-	public java.lang.Object getRight() { 
-		return right;
+	public java.lang.Object getLeft() { 
+		return left;
 	}
 
-	public BinaryExpression setRight(java.lang.Object right) { 
-		this.right = right;
+	public BinaryExpression setLeft(java.lang.Object left) { 
+		this.left = left;
 		return this;
 	}
 
-	public BinaryExpression removeRight() { 
-		this.right = null;
+	public BinaryExpression removeLeft() { 
+		this.left = null;
 		return this;
 	}
 
@@ -36,17 +36,17 @@ public class BinaryExpression implements Expression, LambdaBody {
 		return this;
 	}
 
-	public java.lang.Object getLeft() { 
-		return left;
+	public java.lang.Object getRight() { 
+		return right;
 	}
 
-	public BinaryExpression setLeft(java.lang.Object left) { 
-		this.left = left;
+	public BinaryExpression setRight(java.lang.Object right) { 
+		this.right = right;
 		return this;
 	}
 
-	public BinaryExpression removeLeft() { 
-		this.left = null;
+	public BinaryExpression removeRight() { 
+		this.right = null;
 		return this;
 	}
 

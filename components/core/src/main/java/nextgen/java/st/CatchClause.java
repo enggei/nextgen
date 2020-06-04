@@ -3,23 +3,9 @@ package nextgen.java.st;
 
 public class CatchClause {
 
-	private Statement body;
 	private Parameter parameter;
+	private Statement body;
 	private final java.util.UUID uuid;
-
-	public Statement getBody() { 
-		return body;
-	}
-
-	public CatchClause setBody(Statement body) { 
-		this.body = body;
-		return this;
-	}
-
-	public CatchClause removeBody() { 
-		this.body = null;
-		return this;
-	}
 
 	public Parameter getParameter() { 
 		return parameter;
@@ -32,6 +18,20 @@ public class CatchClause {
 
 	public CatchClause removeParameter() { 
 		this.parameter = null;
+		return this;
+	}
+
+	public Statement getBody() { 
+		return body;
+	}
+
+	public CatchClause setBody(Statement body) { 
+		this.body = body;
+		return this;
+	}
+
+	public CatchClause removeBody() { 
+		this.body = null;
 		return this;
 	}
 

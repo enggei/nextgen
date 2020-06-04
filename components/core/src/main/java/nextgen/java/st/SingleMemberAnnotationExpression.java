@@ -3,23 +3,9 @@ package nextgen.java.st;
 
 public class SingleMemberAnnotationExpression implements AnnotationExpression, Expression, LambdaBody {
 
-	private ClassOrInterfaceType name;
 	private java.util.List<java.lang.Object> members = new java.util.ArrayList<>();
+	private ClassOrInterfaceType name;
 	private final java.util.UUID uuid;
-
-	public ClassOrInterfaceType getName() { 
-		return name;
-	}
-
-	public SingleMemberAnnotationExpression setName(ClassOrInterfaceType name) { 
-		this.name = name;
-		return this;
-	}
-
-	public SingleMemberAnnotationExpression removeName() { 
-		this.name = null;
-		return this;
-	}
 
 	public java.util.List<java.lang.Object> getMembers() { 
 		return members;
@@ -32,6 +18,20 @@ public class SingleMemberAnnotationExpression implements AnnotationExpression, E
 
 	public SingleMemberAnnotationExpression removeMembers(java.lang.Object members) { 
 		this.members.remove(members);
+		return this;
+	}
+
+	public ClassOrInterfaceType getName() { 
+		return name;
+	}
+
+	public SingleMemberAnnotationExpression setName(ClassOrInterfaceType name) { 
+		this.name = name;
+		return this;
+	}
+
+	public SingleMemberAnnotationExpression removeName() { 
+		this.name = null;
 		return this;
 	}
 

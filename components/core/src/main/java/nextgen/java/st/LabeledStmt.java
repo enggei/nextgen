@@ -3,23 +3,9 @@ package nextgen.java.st;
 
 public class LabeledStmt implements Statement, LambdaBody {
 
-	private java.lang.Object label;
 	private java.lang.Object statement;
+	private java.lang.Object label;
 	private final java.util.UUID uuid;
-
-	public java.lang.Object getLabel() { 
-		return label;
-	}
-
-	public LabeledStmt setLabel(java.lang.Object label) { 
-		this.label = label;
-		return this;
-	}
-
-	public LabeledStmt removeLabel() { 
-		this.label = null;
-		return this;
-	}
 
 	public java.lang.Object getStatement() { 
 		return statement;
@@ -32,6 +18,20 @@ public class LabeledStmt implements Statement, LambdaBody {
 
 	public LabeledStmt removeStatement() { 
 		this.statement = null;
+		return this;
+	}
+
+	public java.lang.Object getLabel() { 
+		return label;
+	}
+
+	public LabeledStmt setLabel(java.lang.Object label) { 
+		this.label = label;
+		return this;
+	}
+
+	public LabeledStmt removeLabel() { 
+		this.label = null;
 		return this;
 	}
 

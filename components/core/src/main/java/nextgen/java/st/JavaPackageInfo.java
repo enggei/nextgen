@@ -4,8 +4,8 @@ package nextgen.java.st;
 public class JavaPackageInfo {
 
 	private java.util.List<java.lang.Object> interfaces = new java.util.ArrayList<>();
-	private java.util.List<java.lang.Object> classes = new java.util.ArrayList<>();
 	private java.lang.Object packageName;
+	private java.util.List<java.lang.Object> classes = new java.util.ArrayList<>();
 	private final java.util.UUID uuid;
 
 	public java.util.List<java.lang.Object> getInterfaces() { 
@@ -22,20 +22,6 @@ public class JavaPackageInfo {
 		return this;
 	}
 
-	public java.util.List<java.lang.Object> getClasses() { 
-		return classes;
-	}
-
-	public JavaPackageInfo addClasses(java.lang.Object classes) { 
-		this.classes.add(classes);
-		return this;
-	}
-
-	public JavaPackageInfo removeClasses(java.lang.Object classes) { 
-		this.classes.remove(classes);
-		return this;
-	}
-
 	public java.lang.Object getPackageName() { 
 		return packageName;
 	}
@@ -47,6 +33,20 @@ public class JavaPackageInfo {
 
 	public JavaPackageInfo removePackageName() { 
 		this.packageName = null;
+		return this;
+	}
+
+	public java.util.List<java.lang.Object> getClasses() { 
+		return classes;
+	}
+
+	public JavaPackageInfo addClasses(java.lang.Object classes) { 
+		this.classes.add(classes);
+		return this;
+	}
+
+	public JavaPackageInfo removeClasses(java.lang.Object classes) { 
+		this.classes.remove(classes);
 		return this;
 	}
 

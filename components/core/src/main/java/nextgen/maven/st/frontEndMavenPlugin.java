@@ -3,24 +3,10 @@ package nextgen.maven.st;
 
 public class frontEndMavenPlugin {
 
-	private java.lang.Object nodeVersion;
 	private java.lang.Object installDirectory;
+	private java.lang.Object nodeVersion;
 	private java.lang.Object pluginVersion;
 	private final java.util.UUID uuid;
-
-	public java.lang.Object getNodeVersion() { 
-		return nodeVersion;
-	}
-
-	public frontEndMavenPlugin setNodeVersion(java.lang.Object nodeVersion) { 
-		this.nodeVersion = nodeVersion;
-		return this;
-	}
-
-	public frontEndMavenPlugin removeNodeVersion() { 
-		this.nodeVersion = null;
-		return this;
-	}
 
 	public java.lang.Object getInstallDirectory() { 
 		return installDirectory;
@@ -33,6 +19,20 @@ public class frontEndMavenPlugin {
 
 	public frontEndMavenPlugin removeInstallDirectory() { 
 		this.installDirectory = null;
+		return this;
+	}
+
+	public java.lang.Object getNodeVersion() { 
+		return nodeVersion;
+	}
+
+	public frontEndMavenPlugin setNodeVersion(java.lang.Object nodeVersion) { 
+		this.nodeVersion = nodeVersion;
+		return this;
+	}
+
+	public frontEndMavenPlugin removeNodeVersion() { 
+		this.nodeVersion = null;
 		return this;
 	}
 

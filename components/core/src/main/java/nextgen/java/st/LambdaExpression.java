@@ -3,23 +3,9 @@ package nextgen.java.st;
 
 public class LambdaExpression implements Expression, LambdaBody {
 
-	private LambdaBody body;
 	private java.util.List<Parameter> parameters = new java.util.ArrayList<>();
+	private LambdaBody body;
 	private final java.util.UUID uuid;
-
-	public LambdaBody getBody() { 
-		return body;
-	}
-
-	public LambdaExpression setBody(LambdaBody body) { 
-		this.body = body;
-		return this;
-	}
-
-	public LambdaExpression removeBody() { 
-		this.body = null;
-		return this;
-	}
 
 	public java.util.List<Parameter> getParameters() { 
 		return parameters;
@@ -32,6 +18,20 @@ public class LambdaExpression implements Expression, LambdaBody {
 
 	public LambdaExpression removeParameters(Parameter parameters) { 
 		this.parameters.remove(parameters);
+		return this;
+	}
+
+	public LambdaBody getBody() { 
+		return body;
+	}
+
+	public LambdaExpression setBody(LambdaBody body) { 
+		this.body = body;
+		return this;
+	}
+
+	public LambdaExpression removeBody() { 
+		this.body = null;
 		return this;
 	}
 

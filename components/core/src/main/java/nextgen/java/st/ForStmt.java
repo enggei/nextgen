@@ -3,25 +3,11 @@ package nextgen.java.st;
 
 public class ForStmt implements Statement, LambdaBody {
 
-	private java.util.List<java.lang.Object> initialization = new java.util.ArrayList<>();
 	private java.lang.Object compare;
-	private Statement body;
 	private java.util.List<java.lang.Object> update = new java.util.ArrayList<>();
+	private java.util.List<java.lang.Object> initialization = new java.util.ArrayList<>();
+	private Statement body;
 	private final java.util.UUID uuid;
-
-	public java.util.List<java.lang.Object> getInitialization() { 
-		return initialization;
-	}
-
-	public ForStmt addInitialization(java.lang.Object initialization) { 
-		this.initialization.add(initialization);
-		return this;
-	}
-
-	public ForStmt removeInitialization(java.lang.Object initialization) { 
-		this.initialization.remove(initialization);
-		return this;
-	}
 
 	public java.lang.Object getCompare() { 
 		return compare;
@@ -37,20 +23,6 @@ public class ForStmt implements Statement, LambdaBody {
 		return this;
 	}
 
-	public Statement getBody() { 
-		return body;
-	}
-
-	public ForStmt setBody(Statement body) { 
-		this.body = body;
-		return this;
-	}
-
-	public ForStmt removeBody() { 
-		this.body = null;
-		return this;
-	}
-
 	public java.util.List<java.lang.Object> getUpdate() { 
 		return update;
 	}
@@ -62,6 +34,34 @@ public class ForStmt implements Statement, LambdaBody {
 
 	public ForStmt removeUpdate(java.lang.Object update) { 
 		this.update.remove(update);
+		return this;
+	}
+
+	public java.util.List<java.lang.Object> getInitialization() { 
+		return initialization;
+	}
+
+	public ForStmt addInitialization(java.lang.Object initialization) { 
+		this.initialization.add(initialization);
+		return this;
+	}
+
+	public ForStmt removeInitialization(java.lang.Object initialization) { 
+		this.initialization.remove(initialization);
+		return this;
+	}
+
+	public Statement getBody() { 
+		return body;
+	}
+
+	public ForStmt setBody(Statement body) { 
+		this.body = body;
+		return this;
+	}
+
+	public ForStmt removeBody() { 
+		this.body = null;
 		return this;
 	}
 

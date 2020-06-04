@@ -3,53 +3,11 @@ package nextgen.java.st;
 
 public class MethodCallExpression implements Expression, LambdaBody {
 
-	private java.util.List<ClassOrInterfaceType> typeArguments = new java.util.ArrayList<>();
-	private java.util.List<java.lang.Object> arguments = new java.util.ArrayList<>();
-	private java.lang.Object scope;
 	private java.lang.String name;
+	private java.lang.Object scope;
+	private java.util.List<java.lang.Object> arguments = new java.util.ArrayList<>();
+	private java.util.List<ClassOrInterfaceType> typeArguments = new java.util.ArrayList<>();
 	private final java.util.UUID uuid;
-
-	public java.util.List<ClassOrInterfaceType> getTypeArguments() { 
-		return typeArguments;
-	}
-
-	public MethodCallExpression addTypeArguments(ClassOrInterfaceType typeArguments) { 
-		this.typeArguments.add(typeArguments);
-		return this;
-	}
-
-	public MethodCallExpression removeTypeArguments(ClassOrInterfaceType typeArguments) { 
-		this.typeArguments.remove(typeArguments);
-		return this;
-	}
-
-	public java.util.List<java.lang.Object> getArguments() { 
-		return arguments;
-	}
-
-	public MethodCallExpression addArguments(java.lang.Object arguments) { 
-		this.arguments.add(arguments);
-		return this;
-	}
-
-	public MethodCallExpression removeArguments(java.lang.Object arguments) { 
-		this.arguments.remove(arguments);
-		return this;
-	}
-
-	public java.lang.Object getScope() { 
-		return scope;
-	}
-
-	public MethodCallExpression setScope(java.lang.Object scope) { 
-		this.scope = scope;
-		return this;
-	}
-
-	public MethodCallExpression removeScope() { 
-		this.scope = null;
-		return this;
-	}
 
 	public java.lang.String getName() { 
 		return name;
@@ -68,6 +26,48 @@ public class MethodCallExpression implements Expression, LambdaBody {
 	@Override
 	public java.lang.String toString() { 
 		return name;
+	}
+
+	public java.lang.Object getScope() { 
+		return scope;
+	}
+
+	public MethodCallExpression setScope(java.lang.Object scope) { 
+		this.scope = scope;
+		return this;
+	}
+
+	public MethodCallExpression removeScope() { 
+		this.scope = null;
+		return this;
+	}
+
+	public java.util.List<java.lang.Object> getArguments() { 
+		return arguments;
+	}
+
+	public MethodCallExpression addArguments(java.lang.Object arguments) { 
+		this.arguments.add(arguments);
+		return this;
+	}
+
+	public MethodCallExpression removeArguments(java.lang.Object arguments) { 
+		this.arguments.remove(arguments);
+		return this;
+	}
+
+	public java.util.List<ClassOrInterfaceType> getTypeArguments() { 
+		return typeArguments;
+	}
+
+	public MethodCallExpression addTypeArguments(ClassOrInterfaceType typeArguments) { 
+		this.typeArguments.add(typeArguments);
+		return this;
+	}
+
+	public MethodCallExpression removeTypeArguments(ClassOrInterfaceType typeArguments) { 
+		this.typeArguments.remove(typeArguments);
+		return this;
 	}
 
 	public MethodCallExpression() { 

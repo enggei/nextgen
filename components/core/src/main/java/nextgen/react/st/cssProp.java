@@ -3,23 +3,9 @@ package nextgen.react.st;
 
 public class cssProp {
 
-	private java.lang.Object value;
 	private java.lang.Object name;
+	private java.lang.Object value;
 	private final java.util.UUID uuid;
-
-	public java.lang.Object getValue() { 
-		return value;
-	}
-
-	public cssProp setValue(java.lang.Object value) { 
-		this.value = value;
-		return this;
-	}
-
-	public cssProp removeValue() { 
-		this.value = null;
-		return this;
-	}
 
 	public java.lang.Object getName() { 
 		return name;
@@ -32,6 +18,20 @@ public class cssProp {
 
 	public cssProp removeName() { 
 		this.name = null;
+		return this;
+	}
+
+	public java.lang.Object getValue() { 
+		return value;
+	}
+
+	public cssProp setValue(java.lang.Object value) { 
+		this.value = value;
+		return this;
+	}
+
+	public cssProp removeValue() { 
+		this.value = null;
 		return this;
 	}
 

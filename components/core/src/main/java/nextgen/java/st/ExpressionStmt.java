@@ -3,23 +3,9 @@ package nextgen.java.st;
 
 public class ExpressionStmt implements Statement, LambdaBody {
 
-	private java.lang.String comment;
 	private Expression expression;
+	private java.lang.String comment;
 	private final java.util.UUID uuid;
-
-	public java.lang.String getComment() { 
-		return comment;
-	}
-
-	public ExpressionStmt setComment(java.lang.String comment) { 
-		this.comment = comment;
-		return this;
-	}
-
-	public ExpressionStmt removeComment() { 
-		this.comment = null;
-		return this;
-	}
 
 	public Expression getExpression() { 
 		return expression;
@@ -32,6 +18,20 @@ public class ExpressionStmt implements Statement, LambdaBody {
 
 	public ExpressionStmt removeExpression() { 
 		this.expression = null;
+		return this;
+	}
+
+	public java.lang.String getComment() { 
+		return comment;
+	}
+
+	public ExpressionStmt setComment(java.lang.String comment) { 
+		this.comment = comment;
+		return this;
+	}
+
+	public ExpressionStmt removeComment() { 
+		this.comment = null;
 		return this;
 	}
 

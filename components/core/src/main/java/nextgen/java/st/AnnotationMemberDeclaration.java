@@ -3,10 +3,24 @@ package nextgen.java.st;
 
 public class AnnotationMemberDeclaration {
 
+	private java.lang.Object defaultValue;
 	private ClassOrInterfaceType type;
 	private java.lang.String name;
-	private java.lang.Object defaultValue;
 	private final java.util.UUID uuid;
+
+	public java.lang.Object getDefaultValue() { 
+		return defaultValue;
+	}
+
+	public AnnotationMemberDeclaration setDefaultValue(java.lang.Object defaultValue) { 
+		this.defaultValue = defaultValue;
+		return this;
+	}
+
+	public AnnotationMemberDeclaration removeDefaultValue() { 
+		this.defaultValue = null;
+		return this;
+	}
 
 	public ClassOrInterfaceType getType() { 
 		return type;
@@ -39,20 +53,6 @@ public class AnnotationMemberDeclaration {
 	@Override
 	public java.lang.String toString() { 
 		return name;
-	}
-
-	public java.lang.Object getDefaultValue() { 
-		return defaultValue;
-	}
-
-	public AnnotationMemberDeclaration setDefaultValue(java.lang.Object defaultValue) { 
-		this.defaultValue = defaultValue;
-		return this;
-	}
-
-	public AnnotationMemberDeclaration removeDefaultValue() { 
-		this.defaultValue = null;
-		return this;
 	}
 
 	public AnnotationMemberDeclaration() { 

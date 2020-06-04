@@ -3,23 +3,9 @@ package nextgen.react.st;
 
 public class ForwardRef {
 
-	private java.lang.Object name;
 	private java.lang.Object forward;
+	private java.lang.Object name;
 	private final java.util.UUID uuid;
-
-	public java.lang.Object getName() { 
-		return name;
-	}
-
-	public ForwardRef setName(java.lang.Object name) { 
-		this.name = name;
-		return this;
-	}
-
-	public ForwardRef removeName() { 
-		this.name = null;
-		return this;
-	}
 
 	public java.lang.Object getForward() { 
 		return forward;
@@ -32,6 +18,20 @@ public class ForwardRef {
 
 	public ForwardRef removeForward() { 
 		this.forward = null;
+		return this;
+	}
+
+	public java.lang.Object getName() { 
+		return name;
+	}
+
+	public ForwardRef setName(java.lang.Object name) { 
+		this.name = name;
+		return this;
+	}
+
+	public ForwardRef removeName() { 
+		this.name = null;
 		return this;
 	}
 

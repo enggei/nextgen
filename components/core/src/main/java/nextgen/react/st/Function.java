@@ -3,22 +3,22 @@ package nextgen.react.st;
 
 public class Function {
 
-	private java.util.List<java.lang.Object> parameters = new java.util.ArrayList<>();
-	private java.lang.Object body;
 	private java.lang.Object name;
+	private java.lang.Object body;
+	private java.util.List<java.lang.Object> parameters = new java.util.ArrayList<>();
 	private final java.util.UUID uuid;
 
-	public java.util.List<java.lang.Object> getParameters() { 
-		return parameters;
+	public java.lang.Object getName() { 
+		return name;
 	}
 
-	public Function addParameters(java.lang.Object parameters) { 
-		this.parameters.add(parameters);
+	public Function setName(java.lang.Object name) { 
+		this.name = name;
 		return this;
 	}
 
-	public Function removeParameters(java.lang.Object parameters) { 
-		this.parameters.remove(parameters);
+	public Function removeName() { 
+		this.name = null;
 		return this;
 	}
 
@@ -36,17 +36,17 @@ public class Function {
 		return this;
 	}
 
-	public java.lang.Object getName() { 
-		return name;
+	public java.util.List<java.lang.Object> getParameters() { 
+		return parameters;
 	}
 
-	public Function setName(java.lang.Object name) { 
-		this.name = name;
+	public Function addParameters(java.lang.Object parameters) { 
+		this.parameters.add(parameters);
 		return this;
 	}
 
-	public Function removeName() { 
-		this.name = null;
+	public Function removeParameters(java.lang.Object parameters) { 
+		this.parameters.remove(parameters);
 		return this;
 	}
 

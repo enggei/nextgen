@@ -3,23 +3,9 @@ package nextgen.java.st;
 
 public class MemberValuePair {
 
-	private java.lang.Object value;
 	private java.lang.String name;
+	private java.lang.Object value;
 	private final java.util.UUID uuid;
-
-	public java.lang.Object getValue() { 
-		return value;
-	}
-
-	public MemberValuePair setValue(java.lang.Object value) { 
-		this.value = value;
-		return this;
-	}
-
-	public MemberValuePair removeValue() { 
-		this.value = null;
-		return this;
-	}
 
 	public java.lang.String getName() { 
 		return name;
@@ -38,6 +24,20 @@ public class MemberValuePair {
 	@Override
 	public java.lang.String toString() { 
 		return name;
+	}
+
+	public java.lang.Object getValue() { 
+		return value;
+	}
+
+	public MemberValuePair setValue(java.lang.Object value) { 
+		this.value = value;
+		return this;
+	}
+
+	public MemberValuePair removeValue() { 
+		this.value = null;
+		return this;
 	}
 
 	public MemberValuePair() { 

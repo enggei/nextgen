@@ -4,10 +4,10 @@ package nextgen.java.st;
 public class ObjectCreationExpression implements Expression, LambdaBody {
 
 	private java.util.List<java.lang.Object> anonymousClassBodies = new java.util.ArrayList<>();
-	private ClassOrInterfaceType type;
 	private java.util.List<ClassOrInterfaceType> typeArguments = new java.util.ArrayList<>();
-	private java.lang.Object scope;
 	private java.util.List<java.lang.Object> arguments = new java.util.ArrayList<>();
+	private ClassOrInterfaceType type;
+	private java.lang.Object scope;
 	private final java.util.UUID uuid;
 
 	public java.util.List<java.lang.Object> getAnonymousClassBodies() { 
@@ -21,20 +21,6 @@ public class ObjectCreationExpression implements Expression, LambdaBody {
 
 	public ObjectCreationExpression removeAnonymousClassBodies(java.lang.Object anonymousClassBodies) { 
 		this.anonymousClassBodies.remove(anonymousClassBodies);
-		return this;
-	}
-
-	public ClassOrInterfaceType getType() { 
-		return type;
-	}
-
-	public ObjectCreationExpression setType(ClassOrInterfaceType type) { 
-		this.type = type;
-		return this;
-	}
-
-	public ObjectCreationExpression removeType() { 
-		this.type = null;
 		return this;
 	}
 
@@ -52,20 +38,6 @@ public class ObjectCreationExpression implements Expression, LambdaBody {
 		return this;
 	}
 
-	public java.lang.Object getScope() { 
-		return scope;
-	}
-
-	public ObjectCreationExpression setScope(java.lang.Object scope) { 
-		this.scope = scope;
-		return this;
-	}
-
-	public ObjectCreationExpression removeScope() { 
-		this.scope = null;
-		return this;
-	}
-
 	public java.util.List<java.lang.Object> getArguments() { 
 		return arguments;
 	}
@@ -77,6 +49,34 @@ public class ObjectCreationExpression implements Expression, LambdaBody {
 
 	public ObjectCreationExpression removeArguments(java.lang.Object arguments) { 
 		this.arguments.remove(arguments);
+		return this;
+	}
+
+	public ClassOrInterfaceType getType() { 
+		return type;
+	}
+
+	public ObjectCreationExpression setType(ClassOrInterfaceType type) { 
+		this.type = type;
+		return this;
+	}
+
+	public ObjectCreationExpression removeType() { 
+		this.type = null;
+		return this;
+	}
+
+	public java.lang.Object getScope() { 
+		return scope;
+	}
+
+	public ObjectCreationExpression setScope(java.lang.Object scope) { 
+		this.scope = scope;
+		return this;
+	}
+
+	public ObjectCreationExpression removeScope() { 
+		this.scope = null;
 		return this;
 	}
 

@@ -3,22 +3,22 @@ package nextgen.java.st;
 
 public class AssignExpression implements Expression, LambdaBody {
 
-	private java.lang.Object target;
-	private java.lang.Object operator;
 	private java.lang.Object value;
+	private java.lang.Object operator;
+	private java.lang.Object target;
 	private final java.util.UUID uuid;
 
-	public java.lang.Object getTarget() { 
-		return target;
+	public java.lang.Object getValue() { 
+		return value;
 	}
 
-	public AssignExpression setTarget(java.lang.Object target) { 
-		this.target = target;
+	public AssignExpression setValue(java.lang.Object value) { 
+		this.value = value;
 		return this;
 	}
 
-	public AssignExpression removeTarget() { 
-		this.target = null;
+	public AssignExpression removeValue() { 
+		this.value = null;
 		return this;
 	}
 
@@ -36,17 +36,17 @@ public class AssignExpression implements Expression, LambdaBody {
 		return this;
 	}
 
-	public java.lang.Object getValue() { 
-		return value;
+	public java.lang.Object getTarget() { 
+		return target;
 	}
 
-	public AssignExpression setValue(java.lang.Object value) { 
-		this.value = value;
+	public AssignExpression setTarget(java.lang.Object target) { 
+		this.target = target;
 		return this;
 	}
 
-	public AssignExpression removeValue() { 
-		this.value = null;
+	public AssignExpression removeTarget() { 
+		this.target = null;
 		return this;
 	}
 

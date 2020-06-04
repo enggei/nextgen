@@ -3,24 +3,10 @@ package nextgen.maven.st;
 
 public class parent {
 
-	private java.lang.String artifactId;
 	private java.lang.String groupId;
+	private java.lang.String artifactId;
 	private java.lang.Object version;
 	private final java.util.UUID uuid;
-
-	public java.lang.String getArtifactId() { 
-		return artifactId;
-	}
-
-	public parent setArtifactId(java.lang.String artifactId) { 
-		this.artifactId = artifactId;
-		return this;
-	}
-
-	public parent removeArtifactId() { 
-		this.artifactId = null;
-		return this;
-	}
 
 	public java.lang.String getGroupId() { 
 		return groupId;
@@ -33,6 +19,20 @@ public class parent {
 
 	public parent removeGroupId() { 
 		this.groupId = null;
+		return this;
+	}
+
+	public java.lang.String getArtifactId() { 
+		return artifactId;
+	}
+
+	public parent setArtifactId(java.lang.String artifactId) { 
+		this.artifactId = artifactId;
+		return this;
+	}
+
+	public parent removeArtifactId() { 
+		this.artifactId = null;
 		return this;
 	}
 

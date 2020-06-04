@@ -3,6 +3,14 @@ package nextgen.st.domain;
 
 public class STJsonFactory {
 
+	public static STAppModel newSTAppModel() { 
+		return new STAppModel();
+	}
+
+	public static STAppModel newSTAppModel(io.vertx.core.json.JsonObject jsonObject) { 
+		return new STAppModel(jsonObject);
+	}
+
 	public static STGDirectory newSTGDirectory() { 
 		return new STGDirectory();
 	}

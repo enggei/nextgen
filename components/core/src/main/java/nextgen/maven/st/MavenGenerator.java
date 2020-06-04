@@ -32,17 +32,17 @@ public class MavenGenerator {
 	public java.lang.Object generate(pom model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("pom");
-		st.add("name", generate(model.getName()));
-		model.getDistributionManagement().forEach((element) -> st.add("distributionManagement", generate(element)));
-		st.add("build", generate(model.getBuild()));
-		st.add("groupId", generate(model.getGroupId()));
-		st.add("artifactId", generate(model.getArtifactId()));
 		model.getDependencies().forEach((element) -> st.add("dependencies", generate(element)));
-		st.add("version", generate(model.getVersion()));
 		st.add("parent", generate(model.getParent()));
+		st.add("groupId", generate(model.getGroupId()));
+		model.getDistributionManagement().forEach((element) -> st.add("distributionManagement", generate(element)));
+		st.add("artifactId", generate(model.getArtifactId()));
+		model.getModules().forEach((element) -> st.add("modules", generate(element)));
+		st.add("version", generate(model.getVersion()));
+		st.add("name", generate(model.getName()));
+		st.add("build", generate(model.getBuild()));
 		st.add("packaging", generate(model.getPackaging()));
 		model.getProperties().forEach((element) -> st.addAggr("properties.{name,value}", generate(element.getName()), generate(element.getValue())));
-		model.getModules().forEach((element) -> st.add("modules", generate(element)));
 		model.getRepositories().forEach((element) -> st.add("repositories", generate(element)));
 		return st.render();
 	}
@@ -57,11 +57,11 @@ public class MavenGenerator {
 	public java.lang.Object generate(plugin model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("plugin");
-		st.add("groupId", generate(model.getGroupId()));
 		st.add("artifactId", generate(model.getArtifactId()));
-		model.getConfiguration().forEach((element) -> st.addAggr("configuration.{name,value}", generate(element.getName()), generate(element.getValue())));
-		model.getExecutions().forEach((element) -> st.add("executions", generate(element)));
 		st.add("version", generate(model.getVersion()));
+		model.getConfiguration().forEach((element) -> st.addAggr("configuration.{name,value}", generate(element.getName()), generate(element.getValue())));
+		st.add("groupId", generate(model.getGroupId()));
+		model.getExecutions().forEach((element) -> st.add("executions", generate(element)));
 		return st.render();
 	}
 
@@ -76,19 +76,19 @@ public class MavenGenerator {
 	public java.lang.Object generate(dependency model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("dependency");
-		st.add("groupId", generate(model.getGroupId()));
-		st.add("scope", generate(model.getScope()));
-		st.add("systemPath", generate(model.getSystemPath()));
 		st.add("version", generate(model.getVersion()));
 		st.add("artifactId", generate(model.getArtifactId()));
+		st.add("systemPath", generate(model.getSystemPath()));
+		st.add("scope", generate(model.getScope()));
+		st.add("groupId", generate(model.getGroupId()));
 		return st.render();
 	}
 
 	public java.lang.Object generate(parent model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("parent");
-		st.add("artifactId", generate(model.getArtifactId()));
 		st.add("groupId", generate(model.getGroupId()));
+		st.add("artifactId", generate(model.getArtifactId()));
 		st.add("version", generate(model.getVersion()));
 		return st.render();
 	}
@@ -111,8 +111,8 @@ public class MavenGenerator {
 	public java.lang.Object generate(frontEndMavenPlugin model) { 
 		if (model == null) return null;
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("frontEndMavenPlugin");
-		st.add("nodeVersion", generate(model.getNodeVersion()));
 		st.add("installDirectory", generate(model.getInstallDirectory()));
+		st.add("nodeVersion", generate(model.getNodeVersion()));
 		st.add("pluginVersion", generate(model.getPluginVersion()));
 		return st.render();
 	}

@@ -3,22 +3,22 @@ package nextgen.java.st;
 
 public class ArrayCreationExpression implements Expression, LambdaBody {
 
-	private ClassOrInterfaceType type;
-	private java.lang.Object initializer;
 	private java.util.List<java.lang.Object> levels = new java.util.ArrayList<>();
+	private java.lang.Object initializer;
+	private ClassOrInterfaceType type;
 	private final java.util.UUID uuid;
 
-	public ClassOrInterfaceType getType() { 
-		return type;
+	public java.util.List<java.lang.Object> getLevels() { 
+		return levels;
 	}
 
-	public ArrayCreationExpression setType(ClassOrInterfaceType type) { 
-		this.type = type;
+	public ArrayCreationExpression addLevels(java.lang.Object levels) { 
+		this.levels.add(levels);
 		return this;
 	}
 
-	public ArrayCreationExpression removeType() { 
-		this.type = null;
+	public ArrayCreationExpression removeLevels(java.lang.Object levels) { 
+		this.levels.remove(levels);
 		return this;
 	}
 
@@ -36,17 +36,17 @@ public class ArrayCreationExpression implements Expression, LambdaBody {
 		return this;
 	}
 
-	public java.util.List<java.lang.Object> getLevels() { 
-		return levels;
+	public ClassOrInterfaceType getType() { 
+		return type;
 	}
 
-	public ArrayCreationExpression addLevels(java.lang.Object levels) { 
-		this.levels.add(levels);
+	public ArrayCreationExpression setType(ClassOrInterfaceType type) { 
+		this.type = type;
 		return this;
 	}
 
-	public ArrayCreationExpression removeLevels(java.lang.Object levels) { 
-		this.levels.remove(levels);
+	public ArrayCreationExpression removeType() { 
+		this.type = null;
 		return this;
 	}
 

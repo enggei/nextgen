@@ -3,24 +3,10 @@ package nextgen.java.st;
 
 public class ConditionalExpression implements Expression, LambdaBody {
 
-	private java.lang.Object condition;
 	private java.lang.Object elseExpression;
 	private java.lang.Object thenExpression;
+	private java.lang.Object condition;
 	private final java.util.UUID uuid;
-
-	public java.lang.Object getCondition() { 
-		return condition;
-	}
-
-	public ConditionalExpression setCondition(java.lang.Object condition) { 
-		this.condition = condition;
-		return this;
-	}
-
-	public ConditionalExpression removeCondition() { 
-		this.condition = null;
-		return this;
-	}
 
 	public java.lang.Object getElseExpression() { 
 		return elseExpression;
@@ -47,6 +33,20 @@ public class ConditionalExpression implements Expression, LambdaBody {
 
 	public ConditionalExpression removeThenExpression() { 
 		this.thenExpression = null;
+		return this;
+	}
+
+	public java.lang.Object getCondition() { 
+		return condition;
+	}
+
+	public ConditionalExpression setCondition(java.lang.Object condition) { 
+		this.condition = condition;
+		return this;
+	}
+
+	public ConditionalExpression removeCondition() { 
+		this.condition = null;
 		return this;
 	}
 

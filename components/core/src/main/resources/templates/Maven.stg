@@ -1,4 +1,9 @@
-delimiters "~","~"
+delimiters "~", "~"
+eom() ::= <<}>>
+
+gt() ::= ">"
+
+propertyReference(name) ::= <<${~name~}>>
 
 build(plugin,testResources) ::= <<<build>
 ~if(testResources)~
@@ -11,65 +16,24 @@ build(plugin,testResources) ::= <<<build>
 	<plugins>
 		~plugin:{it|~it~};separator="\n"~
 	</plugins>
-</build> >> 
+</build> >>
 
-dependency(groupId,version,scope,artifactId,systemPath) ::= <<<dependency>
+dependency(artifactId,groupId,scope,systemPath,version) ::= <<<dependency>
 	<groupId>~groupId~</groupId>
 	<artifactId>~artifactId~</artifactId>
 	<version>~version~</version>~if(scope)~
 	<scope>~scope;format="toLower"~</scope>~endif~~if(systemPath)~
 	<systemPath>~systemPath~</systemPath>~endif~
 
-</dependency> >> 
+</dependency> >>
 
-execution() ::= <<<execution>
-    <phase>package</phase>
-    <goals>
-        <goal>shade</goal>
-    </goals>
-</execution>>> 
-
-frontEndMavenPlugin(installDirectory,nodeVersion,pluginVersion) ::= <<<!--npm plugin-->
-<plugin>
-    <groupId>com.github.eirslett</groupId>
-    <artifactId>frontend-maven-plugin</artifactId>
-    <version>~if(pluginVersion)~~pluginVersion~~else~1.10.0~endif~</version>
-    <configuration>
-        <installDirectory>~if(installDirectory)~~installDirectory~~else~target~endif~</installDirectory>
-        <nodeVersion>v~nodeVersion~</nodeVersion>
-    </configuration>
-    <executions>
-        <execution>
-            <id>install node and npm</id>
-            <goals>
-                <goal>install-node-and-npm</goal>
-            </goals>
-        </execution>
-        <execution>
-            <id>npm install</id>
-            <goals>
-                <goal>npm</goal>
-            </goals>
-            <configuration>
-                <arguments>install</arguments>
-            </configuration>
-        </execution>
-        <execution>
-            <id>webpack build</id>
-            <goals>
-                <goal>webpack</goal>
-            </goals>
-        </execution>
-    </executions>
-</plugin>>> 
-
-parent(version,groupId,artifactId) ::= <<<parent>
+parent(artifactId,groupId,version) ::= <<<parent>
 	<artifactId>~artifactId~</artifactId>
 	<groupId>~groupId~</groupId>
 	<version>~version~</version>
-</parent> >> 
+</parent> >>
 
-plugin(artifactId,executions,version,configuration,groupId) ::= <<<plugin>
+plugin(artifactId,configuration,executions,groupId,version) ::= <<<plugin>
 	<groupId>~groupId~</groupId>
 	<artifactId>~artifactId~</artifactId>
 	<version>~version~</version>
@@ -79,9 +43,9 @@ plugin(artifactId,executions,version,configuration,groupId) ::= <<<plugin>
 	<executions>
 		~executions:{it|~it~};separator="\n"~
 	</executions>
-</plugin> >> 
+</plugin> >>
 
-pom(version,dependencies,parent,repositories,modules,properties,artifactId,distributionManagement,build,groupId,name,packaging) ::= <<<?xml version="1.0" encoding="UTF-8"?>
+pom(artifactId,build,dependencies,distributionManagement,groupId,modules,name,packaging,parent,properties,repositories,version) ::= <<<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 ~if(parent)~
 
@@ -130,17 +94,59 @@ pom(version,dependencies,parent,repositories,modules,properties,artifactId,distr
 		~repositories:{it|~it~};separator="\n"~
 	</repositories>
 ~endif~
-</project> >> 
+</project> >>
 
-propertyReference(name) ::= <<${~name~}>> 
-
-repository(name,url,id) ::= <<<repository>
+repository(id,name,url) ::= <<<repository>
 	<id>~id~</id>
 	<name>~name~</name>
 	<url>~url~</url>
-</repository> >> 
+</repository> >>
 
-shadePlugin(packageName,className) ::= <<<!--fat-jar plugin for single-file server package-->
+execution() ::= <<
+<execution>
+    <phase>package</phase>
+    <goals>
+        <goal>shade</goal>
+    </goals>
+</execution>
+>>
+
+frontEndMavenPlugin(pluginVersion,installDirectory,nodeVersion) ::= <<<!--npm plugin-->
+<plugin>
+    <groupId>com.github.eirslett</groupId>
+    <artifactId>frontend-maven-plugin</artifactId>
+    <version>~if(pluginVersion)~~pluginVersion~~else~1.10.0~endif~</version>
+    <configuration>
+        <installDirectory>~if(installDirectory)~~installDirectory~~else~target~endif~</installDirectory>
+        <nodeVersion>v~nodeVersion~</nodeVersion>
+    </configuration>
+    <executions>
+        <execution>
+            <id>install node and npm</id>
+            <goals>
+                <goal>install-node-and-npm</goal>
+            </goals>
+        </execution>
+        <execution>
+            <id>npm install</id>
+            <goals>
+                <goal>npm</goal>
+            </goals>
+            <configuration>
+                <arguments>install</arguments>
+            </configuration>
+        </execution>
+        <execution>
+            <id>webpack build</id>
+            <goals>
+                <goal>webpack</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+>>
+
+shadePlugin(className,packageName) ::= <<<!--fat-jar plugin for single-file server package-->
 <plugin>
 	<groupId>org.apache.maven.plugins</groupId>
 	<artifactId>maven-shade-plugin</artifactId>
@@ -176,8 +182,4 @@ shadePlugin(packageName,className) ::= <<<!--fat-jar plugin for single-file serv
 			</configuration>
 		</execution>
 	</executions>
-</plugin> >> 
-
-eom() ::= "}"
-
-gt() ::= ">"
+</plugin> >>

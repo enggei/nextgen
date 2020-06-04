@@ -3,22 +3,22 @@ package nextgen.java.st;
 
 public class FieldDeclaration {
 
-	private java.util.List<VariableDeclaration> variables = new java.util.ArrayList<>();
-	private java.util.List<Modifier> modifiers = new java.util.ArrayList<>();
 	private java.util.List<AnnotationExpression> annotations = new java.util.ArrayList<>();
+	private java.util.List<Modifier> modifiers = new java.util.ArrayList<>();
+	private java.util.List<VariableDeclaration> variables = new java.util.ArrayList<>();
 	private final java.util.UUID uuid;
 
-	public java.util.List<VariableDeclaration> getVariables() { 
-		return variables;
+	public java.util.List<AnnotationExpression> getAnnotations() { 
+		return annotations;
 	}
 
-	public FieldDeclaration addVariables(VariableDeclaration variables) { 
-		this.variables.add(variables);
+	public FieldDeclaration addAnnotations(AnnotationExpression annotations) { 
+		this.annotations.add(annotations);
 		return this;
 	}
 
-	public FieldDeclaration removeVariables(VariableDeclaration variables) { 
-		this.variables.remove(variables);
+	public FieldDeclaration removeAnnotations(AnnotationExpression annotations) { 
+		this.annotations.remove(annotations);
 		return this;
 	}
 
@@ -36,17 +36,17 @@ public class FieldDeclaration {
 		return this;
 	}
 
-	public java.util.List<AnnotationExpression> getAnnotations() { 
-		return annotations;
+	public java.util.List<VariableDeclaration> getVariables() { 
+		return variables;
 	}
 
-	public FieldDeclaration addAnnotations(AnnotationExpression annotations) { 
-		this.annotations.add(annotations);
+	public FieldDeclaration addVariables(VariableDeclaration variables) { 
+		this.variables.add(variables);
 		return this;
 	}
 
-	public FieldDeclaration removeAnnotations(AnnotationExpression annotations) { 
-		this.annotations.remove(annotations);
+	public FieldDeclaration removeVariables(VariableDeclaration variables) { 
+		this.variables.remove(variables);
 		return this;
 	}
 

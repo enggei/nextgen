@@ -17,6 +17,10 @@ public class STGenerator {
 
     private final STGroup generator;
 
+    public STGenerator(STGroupModel generator) {
+        this(toSTGroup(generator));
+    }
+
     public STGenerator(STGroup generator) {
         this.generator = generator;
     }
@@ -221,7 +225,7 @@ public class STGenerator {
         write(file, content);
     }
 
-    private static String packageToPath(String packageName) {
+    public static String packageToPath(String packageName) {
         return packageName.replaceAll("[.]", "/");
     }
 

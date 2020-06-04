@@ -5,8 +5,8 @@ public class EnumConstant {
 
 	private java.util.List<java.lang.Object> methods = new java.util.ArrayList<>();
 	private java.lang.String name;
-	private java.util.List<AnnotationExpression> annotations = new java.util.ArrayList<>();
 	private java.util.List<java.lang.Object> arguments = new java.util.ArrayList<>();
+	private java.util.List<AnnotationExpression> annotations = new java.util.ArrayList<>();
 	private final java.util.UUID uuid;
 
 	public java.util.List<java.lang.Object> getMethods() { 
@@ -42,20 +42,6 @@ public class EnumConstant {
 		return name;
 	}
 
-	public java.util.List<AnnotationExpression> getAnnotations() { 
-		return annotations;
-	}
-
-	public EnumConstant addAnnotations(AnnotationExpression annotations) { 
-		this.annotations.add(annotations);
-		return this;
-	}
-
-	public EnumConstant removeAnnotations(AnnotationExpression annotations) { 
-		this.annotations.remove(annotations);
-		return this;
-	}
-
 	public java.util.List<java.lang.Object> getArguments() { 
 		return arguments;
 	}
@@ -67,6 +53,20 @@ public class EnumConstant {
 
 	public EnumConstant removeArguments(java.lang.Object arguments) { 
 		this.arguments.remove(arguments);
+		return this;
+	}
+
+	public java.util.List<AnnotationExpression> getAnnotations() { 
+		return annotations;
+	}
+
+	public EnumConstant addAnnotations(AnnotationExpression annotations) { 
+		this.annotations.add(annotations);
+		return this;
+	}
+
+	public EnumConstant removeAnnotations(AnnotationExpression annotations) { 
+		this.annotations.remove(annotations);
 		return this;
 	}
 

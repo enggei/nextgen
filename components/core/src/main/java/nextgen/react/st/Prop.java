@@ -3,23 +3,9 @@ package nextgen.react.st;
 
 public class Prop {
 
-	private java.lang.Object name;
 	private java.lang.Object value;
+	private java.lang.Object name;
 	private final java.util.UUID uuid;
-
-	public java.lang.Object getName() { 
-		return name;
-	}
-
-	public Prop setName(java.lang.Object name) { 
-		this.name = name;
-		return this;
-	}
-
-	public Prop removeName() { 
-		this.name = null;
-		return this;
-	}
 
 	public java.lang.Object getValue() { 
 		return value;
@@ -32,6 +18,20 @@ public class Prop {
 
 	public Prop removeValue() { 
 		this.value = null;
+		return this;
+	}
+
+	public java.lang.Object getName() { 
+		return name;
+	}
+
+	public Prop setName(java.lang.Object name) { 
+		this.name = name;
+		return this;
+	}
+
+	public Prop removeName() { 
+		this.name = null;
 		return this;
 	}
 

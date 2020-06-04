@@ -3,23 +3,9 @@ package nextgen.java.st;
 
 public class InstanceOfExpression implements Expression, LambdaBody {
 
-	private Expression expression;
 	private ClassOrInterfaceType type;
+	private Expression expression;
 	private final java.util.UUID uuid;
-
-	public Expression getExpression() { 
-		return expression;
-	}
-
-	public InstanceOfExpression setExpression(Expression expression) { 
-		this.expression = expression;
-		return this;
-	}
-
-	public InstanceOfExpression removeExpression() { 
-		this.expression = null;
-		return this;
-	}
 
 	public ClassOrInterfaceType getType() { 
 		return type;
@@ -32,6 +18,20 @@ public class InstanceOfExpression implements Expression, LambdaBody {
 
 	public InstanceOfExpression removeType() { 
 		this.type = null;
+		return this;
+	}
+
+	public Expression getExpression() { 
+		return expression;
+	}
+
+	public InstanceOfExpression setExpression(Expression expression) { 
+		this.expression = expression;
+		return this;
+	}
+
+	public InstanceOfExpression removeExpression() { 
+		this.expression = null;
 		return this;
 	}
 

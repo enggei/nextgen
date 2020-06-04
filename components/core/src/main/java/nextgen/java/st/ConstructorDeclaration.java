@@ -3,42 +3,14 @@ package nextgen.java.st;
 
 public class ConstructorDeclaration implements ClassOrInterfaceMember {
 
-	private java.util.List<AnnotationExpression> annotations = new java.util.ArrayList<>();
-	private BlockStmt blockStmt;
 	private java.util.List<ClassOrInterfaceType> typeParameters = new java.util.ArrayList<>();
 	private java.util.List<Parameter> parameters = new java.util.ArrayList<>();
+	private java.util.List<AnnotationExpression> annotations = new java.util.ArrayList<>();
 	private java.lang.String name;
 	private java.util.List<Modifier> modifiers = new java.util.ArrayList<>();
 	private java.util.List<ClassOrInterfaceType> thrownExceptions = new java.util.ArrayList<>();
+	private BlockStmt blockStmt;
 	private final java.util.UUID uuid;
-
-	public java.util.List<AnnotationExpression> getAnnotations() { 
-		return annotations;
-	}
-
-	public ConstructorDeclaration addAnnotations(AnnotationExpression annotations) { 
-		this.annotations.add(annotations);
-		return this;
-	}
-
-	public ConstructorDeclaration removeAnnotations(AnnotationExpression annotations) { 
-		this.annotations.remove(annotations);
-		return this;
-	}
-
-	public BlockStmt getBlockStmt() { 
-		return blockStmt;
-	}
-
-	public ConstructorDeclaration setBlockStmt(BlockStmt blockStmt) { 
-		this.blockStmt = blockStmt;
-		return this;
-	}
-
-	public ConstructorDeclaration removeBlockStmt() { 
-		this.blockStmt = null;
-		return this;
-	}
 
 	public java.util.List<ClassOrInterfaceType> getTypeParameters() { 
 		return typeParameters;
@@ -65,6 +37,20 @@ public class ConstructorDeclaration implements ClassOrInterfaceMember {
 
 	public ConstructorDeclaration removeParameters(Parameter parameters) { 
 		this.parameters.remove(parameters);
+		return this;
+	}
+
+	public java.util.List<AnnotationExpression> getAnnotations() { 
+		return annotations;
+	}
+
+	public ConstructorDeclaration addAnnotations(AnnotationExpression annotations) { 
+		this.annotations.add(annotations);
+		return this;
+	}
+
+	public ConstructorDeclaration removeAnnotations(AnnotationExpression annotations) { 
+		this.annotations.remove(annotations);
 		return this;
 	}
 
@@ -112,6 +98,20 @@ public class ConstructorDeclaration implements ClassOrInterfaceMember {
 
 	public ConstructorDeclaration removeThrownExceptions(ClassOrInterfaceType thrownExceptions) { 
 		this.thrownExceptions.remove(thrownExceptions);
+		return this;
+	}
+
+	public BlockStmt getBlockStmt() { 
+		return blockStmt;
+	}
+
+	public ConstructorDeclaration setBlockStmt(BlockStmt blockStmt) { 
+		this.blockStmt = blockStmt;
+		return this;
+	}
+
+	public ConstructorDeclaration removeBlockStmt() { 
+		this.blockStmt = null;
 		return this;
 	}
 

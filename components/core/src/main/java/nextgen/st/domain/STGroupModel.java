@@ -64,19 +64,6 @@ public class STGroupModel {
 		return jsonObject.getString("delimiter", defaultValue);
 	}
 
-	public STGroupModel setStgFile(String value) { 
-		jsonObject.put("stgFile", value);
-		return this;
-	}
-
-	public String getStgFile() { 
-		return jsonObject.getString("stgFile");
-	}
-
-	public String getStgFile(String defaultValue) { 
-		return jsonObject.getString("stgFile", defaultValue);
-	}
-
 	public STGroupModel addTemplates(STTemplate value) { 
 		io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("templates");
 		if (jsonArray == null) jsonObject.put("templates", jsonArray = new io.vertx.core.json.JsonArray());

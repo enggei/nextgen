@@ -26,12 +26,12 @@ public class STEditor extends JPanel {
     private final Color errorColor = Color.RED;
     private final Border defaultBorder = txtEditor.getBorder();
 
-    private final STNavigator.STGDirectoryTreeNode.STGroupTreeNode stGroupTreeNode;
+    private final STNavigator.RootNode.STGDirectoryTreeNode.STGroupTreeNode stGroupTreeNode;
 
     private String startText;
-    private STNavigator.STGDirectoryTreeNode.STGroupTreeNode.STTemplateTreeNode stTemplateTreeNode;
+    private STNavigator.RootNode.STGDirectoryTreeNode.STGroupTreeNode.STTemplateTreeNode stTemplateTreeNode;
 
-    public STEditor(STNavigator.STGDirectoryTreeNode.STGroupTreeNode stGroupTreeNode) {
+    public STEditor(STNavigator.RootNode.STGDirectoryTreeNode.STGroupTreeNode stGroupTreeNode) {
         super(new BorderLayout());
 
         this.stGroupTreeNode = stGroupTreeNode;
@@ -50,11 +50,11 @@ public class STEditor extends JPanel {
         setPreferredSize(new Dimension(800, 600));
     }
 
-    public STNavigator.STGDirectoryTreeNode.STGroupTreeNode getStGroupTreeNode() {
+    public STNavigator.RootNode.STGDirectoryTreeNode.STGroupTreeNode getStGroupTreeNode() {
         return stGroupTreeNode;
     }
 
-    public void setSTTemplate(STNavigator.STGDirectoryTreeNode.STGroupTreeNode.STTemplateTreeNode stTemplateTreeNode) {
+    public void setSTTemplate(STNavigator.RootNode.STGDirectoryTreeNode.STGroupTreeNode.STTemplateTreeNode stTemplateTreeNode) {
 
         this.stTemplateTreeNode = stTemplateTreeNode;
 

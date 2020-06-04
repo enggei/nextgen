@@ -3,13 +3,41 @@ package nextgen.react.st;
 
 public class FunctionalComponent {
 
+	private java.util.List<java.lang.Object> inject = new java.util.ArrayList<>();
+	private java.lang.Object wrapper;
 	private java.util.List<java.lang.Object> dependencies = new java.util.ArrayList<>();
 	private java.lang.Object name;
-	private java.util.List<java.lang.Object> localImports = new java.util.ArrayList<>();
-	private java.util.List<java.lang.Object> inject = new java.util.ArrayList<>();
 	private java.lang.Object element;
-	private java.lang.Object wrapper;
+	private java.util.List<java.lang.Object> localImports = new java.util.ArrayList<>();
 	private final java.util.UUID uuid;
+
+	public java.util.List<java.lang.Object> getInject() { 
+		return inject;
+	}
+
+	public FunctionalComponent addInject(java.lang.Object inject) { 
+		this.inject.add(inject);
+		return this;
+	}
+
+	public FunctionalComponent removeInject(java.lang.Object inject) { 
+		this.inject.remove(inject);
+		return this;
+	}
+
+	public java.lang.Object getWrapper() { 
+		return wrapper;
+	}
+
+	public FunctionalComponent setWrapper(java.lang.Object wrapper) { 
+		this.wrapper = wrapper;
+		return this;
+	}
+
+	public FunctionalComponent removeWrapper() { 
+		this.wrapper = null;
+		return this;
+	}
 
 	public java.util.List<java.lang.Object> getDependencies() { 
 		return dependencies;
@@ -39,34 +67,6 @@ public class FunctionalComponent {
 		return this;
 	}
 
-	public java.util.List<java.lang.Object> getLocalImports() { 
-		return localImports;
-	}
-
-	public FunctionalComponent addLocalImports(java.lang.Object localImports) { 
-		this.localImports.add(localImports);
-		return this;
-	}
-
-	public FunctionalComponent removeLocalImports(java.lang.Object localImports) { 
-		this.localImports.remove(localImports);
-		return this;
-	}
-
-	public java.util.List<java.lang.Object> getInject() { 
-		return inject;
-	}
-
-	public FunctionalComponent addInject(java.lang.Object inject) { 
-		this.inject.add(inject);
-		return this;
-	}
-
-	public FunctionalComponent removeInject(java.lang.Object inject) { 
-		this.inject.remove(inject);
-		return this;
-	}
-
 	public java.lang.Object getElement() { 
 		return element;
 	}
@@ -81,17 +81,17 @@ public class FunctionalComponent {
 		return this;
 	}
 
-	public java.lang.Object getWrapper() { 
-		return wrapper;
+	public java.util.List<java.lang.Object> getLocalImports() { 
+		return localImports;
 	}
 
-	public FunctionalComponent setWrapper(java.lang.Object wrapper) { 
-		this.wrapper = wrapper;
+	public FunctionalComponent addLocalImports(java.lang.Object localImports) { 
+		this.localImports.add(localImports);
 		return this;
 	}
 
-	public FunctionalComponent removeWrapper() { 
-		this.wrapper = null;
+	public FunctionalComponent removeLocalImports(java.lang.Object localImports) { 
+		this.localImports.remove(localImports);
 		return this;
 	}
 

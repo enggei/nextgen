@@ -3,18 +3,46 @@ package nextgen.java.st;
 
 public class MethodDeclaration implements ClassOrInterfaceMember {
 
-	private java.util.List<Modifier> modifiers = new java.util.ArrayList<>();
-	private java.util.List<Parameter> parameters = new java.util.ArrayList<>();
-	private java.util.List<ClassOrInterfaceType> thrownExceptions = new java.util.ArrayList<>();
-	private BlockStmt blockStmt;
-	private java.lang.String name;
-	private java.util.List<ClassOrInterfaceType> typeParameters = new java.util.ArrayList<>();
 	private java.util.List<AnnotationExpression> annotations = new java.util.ArrayList<>();
 	private ClassOrInterfaceType type;
+	private java.util.List<Modifier> modifiers = new java.util.ArrayList<>();
+	private java.util.List<ClassOrInterfaceType> typeParameters = new java.util.ArrayList<>();
+	private java.util.List<Parameter> parameters = new java.util.ArrayList<>();
+	private java.util.List<ClassOrInterfaceType> thrownExceptions = new java.util.ArrayList<>();
+	private java.lang.String name;
+	private BlockStmt blockStmt;
 	private java.lang.Boolean isInterfaceDeclaration;
 	private final java.util.UUID uuid;
 	java.lang.Boolean isGetter = false;
 	java.lang.Boolean isSetter = false;
+
+	public java.util.List<AnnotationExpression> getAnnotations() { 
+		return annotations;
+	}
+
+	public MethodDeclaration addAnnotations(AnnotationExpression annotations) { 
+		this.annotations.add(annotations);
+		return this;
+	}
+
+	public MethodDeclaration removeAnnotations(AnnotationExpression annotations) { 
+		this.annotations.remove(annotations);
+		return this;
+	}
+
+	public ClassOrInterfaceType getType() { 
+		return type;
+	}
+
+	public MethodDeclaration setType(ClassOrInterfaceType type) { 
+		this.type = type;
+		return this;
+	}
+
+	public MethodDeclaration removeType() { 
+		this.type = null;
+		return this;
+	}
 
 	public java.util.List<Modifier> getModifiers() { 
 		return modifiers;
@@ -27,6 +55,20 @@ public class MethodDeclaration implements ClassOrInterfaceMember {
 
 	public MethodDeclaration removeModifiers(Modifier modifiers) { 
 		this.modifiers.remove(modifiers);
+		return this;
+	}
+
+	public java.util.List<ClassOrInterfaceType> getTypeParameters() { 
+		return typeParameters;
+	}
+
+	public MethodDeclaration addTypeParameters(ClassOrInterfaceType typeParameters) { 
+		this.typeParameters.add(typeParameters);
+		return this;
+	}
+
+	public MethodDeclaration removeTypeParameters(ClassOrInterfaceType typeParameters) { 
+		this.typeParameters.remove(typeParameters);
 		return this;
 	}
 
@@ -58,20 +100,6 @@ public class MethodDeclaration implements ClassOrInterfaceMember {
 		return this;
 	}
 
-	public BlockStmt getBlockStmt() { 
-		return blockStmt;
-	}
-
-	public MethodDeclaration setBlockStmt(BlockStmt blockStmt) { 
-		this.blockStmt = blockStmt;
-		return this;
-	}
-
-	public MethodDeclaration removeBlockStmt() { 
-		this.blockStmt = null;
-		return this;
-	}
-
 	public java.lang.String getName() { 
 		return name;
 	}
@@ -91,45 +119,17 @@ public class MethodDeclaration implements ClassOrInterfaceMember {
 		return name;
 	}
 
-	public java.util.List<ClassOrInterfaceType> getTypeParameters() { 
-		return typeParameters;
+	public BlockStmt getBlockStmt() { 
+		return blockStmt;
 	}
 
-	public MethodDeclaration addTypeParameters(ClassOrInterfaceType typeParameters) { 
-		this.typeParameters.add(typeParameters);
+	public MethodDeclaration setBlockStmt(BlockStmt blockStmt) { 
+		this.blockStmt = blockStmt;
 		return this;
 	}
 
-	public MethodDeclaration removeTypeParameters(ClassOrInterfaceType typeParameters) { 
-		this.typeParameters.remove(typeParameters);
-		return this;
-	}
-
-	public java.util.List<AnnotationExpression> getAnnotations() { 
-		return annotations;
-	}
-
-	public MethodDeclaration addAnnotations(AnnotationExpression annotations) { 
-		this.annotations.add(annotations);
-		return this;
-	}
-
-	public MethodDeclaration removeAnnotations(AnnotationExpression annotations) { 
-		this.annotations.remove(annotations);
-		return this;
-	}
-
-	public ClassOrInterfaceType getType() { 
-		return type;
-	}
-
-	public MethodDeclaration setType(ClassOrInterfaceType type) { 
-		this.type = type;
-		return this;
-	}
-
-	public MethodDeclaration removeType() { 
-		this.type = null;
+	public MethodDeclaration removeBlockStmt() { 
+		this.blockStmt = null;
 		return this;
 	}
 

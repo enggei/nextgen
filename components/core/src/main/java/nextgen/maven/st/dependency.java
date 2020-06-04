@@ -3,54 +3,12 @@ package nextgen.maven.st;
 
 public class dependency {
 
-	private java.lang.String groupId;
-	private java.lang.Object scope;
-	private java.lang.Object systemPath;
 	private java.lang.Object version;
 	private java.lang.String artifactId;
+	private java.lang.Object systemPath;
+	private java.lang.Object scope;
+	private java.lang.String groupId;
 	private final java.util.UUID uuid;
-
-	public java.lang.String getGroupId() { 
-		return groupId;
-	}
-
-	public dependency setGroupId(java.lang.String groupId) { 
-		this.groupId = groupId;
-		return this;
-	}
-
-	public dependency removeGroupId() { 
-		this.groupId = null;
-		return this;
-	}
-
-	public java.lang.Object getScope() { 
-		return scope;
-	}
-
-	public dependency setScope(java.lang.Object scope) { 
-		this.scope = scope;
-		return this;
-	}
-
-	public dependency removeScope() { 
-		this.scope = null;
-		return this;
-	}
-
-	public java.lang.Object getSystemPath() { 
-		return systemPath;
-	}
-
-	public dependency setSystemPath(java.lang.Object systemPath) { 
-		this.systemPath = systemPath;
-		return this;
-	}
-
-	public dependency removeSystemPath() { 
-		this.systemPath = null;
-		return this;
-	}
 
 	public java.lang.Object getVersion() { 
 		return version;
@@ -77,6 +35,48 @@ public class dependency {
 
 	public dependency removeArtifactId() { 
 		this.artifactId = null;
+		return this;
+	}
+
+	public java.lang.Object getSystemPath() { 
+		return systemPath;
+	}
+
+	public dependency setSystemPath(java.lang.Object systemPath) { 
+		this.systemPath = systemPath;
+		return this;
+	}
+
+	public dependency removeSystemPath() { 
+		this.systemPath = null;
+		return this;
+	}
+
+	public java.lang.Object getScope() { 
+		return scope;
+	}
+
+	public dependency setScope(java.lang.Object scope) { 
+		this.scope = scope;
+		return this;
+	}
+
+	public dependency removeScope() { 
+		this.scope = null;
+		return this;
+	}
+
+	public java.lang.String getGroupId() { 
+		return groupId;
+	}
+
+	public dependency setGroupId(java.lang.String groupId) { 
+		this.groupId = groupId;
+		return this;
+	}
+
+	public dependency removeGroupId() { 
+		this.groupId = null;
 		return this;
 	}
 

@@ -3,23 +3,9 @@ package nextgen.react.st;
 
 public class Decorator {
 
-	private java.util.List<java.lang.Object> parameters = new java.util.ArrayList<>();
 	private java.lang.Object name;
+	private java.util.List<java.lang.Object> parameters = new java.util.ArrayList<>();
 	private final java.util.UUID uuid;
-
-	public java.util.List<java.lang.Object> getParameters() { 
-		return parameters;
-	}
-
-	public Decorator addParameters(java.lang.Object parameters) { 
-		this.parameters.add(parameters);
-		return this;
-	}
-
-	public Decorator removeParameters(java.lang.Object parameters) { 
-		this.parameters.remove(parameters);
-		return this;
-	}
 
 	public java.lang.Object getName() { 
 		return name;
@@ -32,6 +18,20 @@ public class Decorator {
 
 	public Decorator removeName() { 
 		this.name = null;
+		return this;
+	}
+
+	public java.util.List<java.lang.Object> getParameters() { 
+		return parameters;
+	}
+
+	public Decorator addParameters(java.lang.Object parameters) { 
+		this.parameters.add(parameters);
+		return this;
+	}
+
+	public Decorator removeParameters(java.lang.Object parameters) { 
+		this.parameters.remove(parameters);
 		return this;
 	}
 
