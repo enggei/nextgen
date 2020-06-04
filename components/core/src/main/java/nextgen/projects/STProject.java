@@ -34,7 +34,6 @@ public class STProject {
         final EntityBuilder stGroupModel = newEntityBuilder("STGroupModel")
                 .addStringField("name", true)
                 .addStringField("delimiter")
-                .addStringField("stgFile")
                 .addOneToManyRelation("templates", stTemplate);
 
         DomainToJson.generate(javaMainSrc, stDomainPackage, newDomainBuilder("ST")

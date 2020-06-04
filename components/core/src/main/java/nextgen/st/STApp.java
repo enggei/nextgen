@@ -1,16 +1,18 @@
 package nextgen.st;
 
-import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
 import io.vertx.core.json.JsonObject;
+import nextgen.st.domain.STGDirectory;
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STJsonFactory;
-import nextgen.st.domain.STGDirectory;
-import nextgen.st.domain.STGParseResult;
+import org.stringtemplate.v4.STGroupFile;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Optional;
 
 public class STApp extends JFrame {
@@ -34,8 +36,17 @@ public class STApp extends JFrame {
     }
 
     public static void main(String[] args) {
-        STParser.debug = false;
-        SwingUtil.show(new STApp(load("/home/goe/projects/nextgen/components/core/src/main/resources/templates")));
+        final STGDirectory stgDirectory = load("/home/goe/projects/nextgen/components/core/src/main/resources/templates");
+
+
+        stgDirectory.getGroups().filter(stGroupModel -> stGroupModel.getName().equals("StringTemplate")).findFirst().ifPresent(stGroupModel -> {
+
+            final STGenerator stGenerator = new STGenerator(new STGroupFile("/home/goe/projects/nextgen/components/core/src/test/java/tmp/st/stringtemplate/StringTemplate.stg", '~', '~'));
+            stGenerator.generateSTGroup(stGroupModel, "tmp.st.stringtemplate2", "/home/goe/projects/nextgen/components/core/src/test/java/");
+
+        });
+
+        SwingUtil.show(new STApp(stgDirectory));
     }
 
     public static STGDirectory load(String dir) {
@@ -45,28 +56,34 @@ public class STApp extends JFrame {
                 .setOutputPackage("tmp.st")
                 .setOutputPath("/home/goe/projects/nextgen/components/core/src/test/java/");
 
-        Optional.ofNullable(FileUtil.list(dir, ".json"))
+        Optional.ofNullable(list(dir, ".json"))
                 .ifPresent(files -> {
                     for (File file : files) {
-                        root.addGroups(new STGroupModel(new JsonObject(FileUtil.read(file))));
-                    }
-                });
-
-        Optional.ofNullable(FileUtil.list(dir, ".stg"))
-                .ifPresent(stgFiles -> {
-                    for (File stgFile : stgFiles) {
-
-                        final Optional<STGroupModel> first = root.getGroups().filter(stGroupModel -> stGroupModel.getStgFile().equals(stgFile.getAbsolutePath())).findFirst();
-                        if (first.isPresent()) continue;
-
-                        final STGParseResult parseResult = STParser.parse(stgFile);
-                        if (parseResult.getErrors().count() == 0) {
-                            root.addGroups(parseResult.getParsed());
-                        } else
-                            parseResult.getErrors().forEach(stgError -> System.out.println(stgFile.getName() + " : " + stgError.getType() + " " + stgError.getMessage()));
+                        System.out.println("// todo: add a String-parameter constructor to remove JsonObject from this class");
+                        root.addGroups(new STGroupModel(new JsonObject(read(file)))); // todo: add a String-parameter constructor to remove JsonObject from this class
                     }
                 });
 
         return root;
+    }
+
+    public static File[] list(String dir, String postfix) {
+        final String s = postfix.toLowerCase();
+        return new File(dir).listFiles(pathname -> pathname.getAbsolutePath().toLowerCase().endsWith(s));
+    }
+
+    public static String read(File file) {
+        if (!file.exists()) return "";
+        try {
+            final StringBuilder content = new StringBuilder();
+            final BufferedReader in = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = in.readLine()) != null) content.append(line);
+            in.close();
+            return content.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "ERROR: " + e.getMessage();
+        }
     }
 }

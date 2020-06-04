@@ -65,6 +65,7 @@ public class STEditor extends JPanel {
         this.txtEditor.setText(startText);
         this.txtEditor.setCaretPosition(0);
         this.txtEditor.setEditable(stTemplateTreeNode != null);
+        txtEditor.setBackground( uneditedColor);
     }
 
     private void commit() {

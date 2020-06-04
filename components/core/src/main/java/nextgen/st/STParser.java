@@ -1,6 +1,5 @@
 package nextgen.st;
 
-import com.generator.util.FileUtil;
 import nextgen.st.domain.*;
 import nextgen.st.parser.AstNode;
 import nextgen.st.parser.AstNodeType;
@@ -12,8 +11,13 @@ import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 import org.stringtemplate.v4.misc.STMessage;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
+
+import static nextgen.st.parser.AstNodeType.*;
 
 public class STParser {
 
@@ -115,13 +119,13 @@ public class STParser {
 
                 final String expressionName = astNode.getChildren().get(0).getAst().toString();
 
-                final boolean inSubtemplate = astNode.getParent().getType().equals(AstNodeType.Subtemplate);
+                final boolean inSubtemplate = astNode.getParent().getType().equals(Subtemplate);
                 if (inSubtemplate && expressionName.equals(astNode.getParent().getChildren().get(0).getAst().getChild(0).toString())) {
                     for (AstNode child : astNode.getChildren())
                         addParameters(stParameterMap, child, stParameters);
                 } else {
 
-                    if (astNode.getChildren().get(0).getType().equals(AstNodeType.Name)) {
+                    if (astNode.getChildren().get(0).getType().equals(Name)) {
 
                         stParameterMap.putIfAbsent(expressionName, new STParameter().setName(expressionName).setType(STParameterType.SINGLE));
                         stParameters.push(stParameterMap.get(expressionName));
@@ -173,7 +177,7 @@ public class STParser {
             case Assign:
 
                 final AstNode assignment = astNode.getChildren().get(1);
-                if (assignment.getType().equals(AstNodeType.Name)) {
+                if (assignment.getType().equals(Name)) {
                     final String assignName = assignment.getAst().toString();
                     stParameterMap.putIfAbsent(assignName, new STParameter().setName(assignName).setType(STParameterType.SINGLE));
                 }
@@ -187,7 +191,7 @@ public class STParser {
                 final List<AstNode> children = astNode.getChildren();
                 for (int i = 1; i < children.size(); i++) {
                     AstNode child = children.get(i);
-                    if (child.getType().equals(AstNodeType.Name)) {
+                    if (child.getType().equals(Name)) {
                         final String assignName = child.getAst().toString();
                         stParameterMap.putIfAbsent(assignName, new STParameter().setName(assignName).setType(STParameterType.SINGLE));
                     } else
@@ -206,8 +210,7 @@ public class STParser {
 
     private static char loadDelimiter(File stgFile) {
         try {
-            final String s = FileUtil.readString(stgFile);
-            // delimiters "~", "~"
+            final String s = readString(stgFile);
             final String pattern = "delimiters \"";
             final int start = s.indexOf(pattern) + pattern.length();
             return s.charAt(start);
@@ -215,6 +218,16 @@ public class STParser {
             System.out.println("illegal format in file " + stgFile.getAbsolutePath());
             return '~';
         }
+    }
+
+    public static String readString(File file) throws IOException {
+        if (!file.exists()) return "";
+        final StringBuilder string = new StringBuilder();
+        final BufferedReader in = new BufferedReader(new FileReader(file));
+        String line;
+        while ((line = in.readLine()) != null) string.append(line);
+        in.close();
+        return string.toString();
     }
 
     private static String debug(AstNode astNode, int level) {
@@ -242,50 +255,50 @@ public class STParser {
         private final Stack<AstNode> astNodeStack = new Stack<>();
 
         public void visit(ST st) {
-            astNodeStack.push(STParserFactory.newAstNode().setType(AstNodeType.ST));
+            astNodeStack.push(STParserFactory.newAstNode().setType(ST));
             visit(st.impl.ast);
         }
 
         private void visit(Tree ast) {
             switch (ast.getType()) {
                 case ARGS:
-                    pushAstNode(ast, AstNodeType.Args);
+                    pushAstNode(ast, Args);
                     break;
 
                 case NAME:
-                    pushAstNode(ast, AstNodeType.Name);
+                    pushAstNode(ast, Name);
                     break;
 
                 case PROP:
-                    pushAstNode(ast, AstNodeType.Prop);
+                    pushAstNode(ast, Prop);
                     break;
 
                 case EXPR:
-                    pushAstNode(ast, AstNodeType.Expression);
+                    pushAstNode(ast, Expression);
                     break;
 
                 case SUBTEMPLATE:
-                    pushAstNode(ast, AstNodeType.Subtemplate);
+                    pushAstNode(ast, Subtemplate);
                     break;
 
                 case INCLUDE:
-                    pushAstNode(ast, AstNodeType.Include);
+                    pushAstNode(ast, Include);
                     break;
 
                 case IF:
-                    pushAstNode(ast, AstNodeType.If);
+                    pushAstNode(ast, If);
                     break;
 
                 case ELSE:
-                    pushAstNode(ast, AstNodeType.Else);
+                    pushAstNode(ast, Else);
                     break;
 
                 case ELSEIF:
-                    pushAstNode(ast, AstNodeType.ElseIf);
+                    pushAstNode(ast, ElseIf);
                     break;
 
                 case ASSIGN:
-                    pushAstNode(ast, AstNodeType.Assign);
+                    pushAstNode(ast, Assign);
                     break;
 
                 case 51:
@@ -304,7 +317,7 @@ public class STParser {
 
                 default:
                     if (debug)
-                        System.out.println("case U" + ast.getType() + ":\npushAstNode(ast, AstNodeType.U" + ast.getType() + ");\nbreak;");
+                        System.out.println("case U" + ast.getType() + ":\npushAstNode(ast, U" + ast.getType() + ");\nbreak;");
                     if (debug)
                         System.out.println("private static final int U" + ast.getType() + " = " + ast.getType() + ";");
                     for (int i = 0; i < ast.getChildCount(); i++)

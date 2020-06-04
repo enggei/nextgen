@@ -569,13 +569,7 @@ public final class FileUtil {
 
     public static File[] list(String dir, String postfix) {
         final String s = postfix.toLowerCase();
-        return new File(dir).listFiles(new FileFilter() {
-
-            @Override
-            public boolean accept(File pathname) {
-                return pathname.getAbsolutePath().toLowerCase().endsWith(s);
-            }
-        });
+        return new File(dir).listFiles(pathname -> pathname.getAbsolutePath().toLowerCase().endsWith(s));
     }
 
     public static File[] listDirs(String dir) {
@@ -599,13 +593,7 @@ public final class FileUtil {
     }
 
     public static File[] list(String dir) {
-        return new File(dir).listFiles(new FileFilter() {
-
-            @Override
-            public boolean accept(File pathname) {
-                return true;
-            }
-        });
+        return new File(dir).listFiles(pathname -> true);
     }
 
     public static void close(Writer writer) {

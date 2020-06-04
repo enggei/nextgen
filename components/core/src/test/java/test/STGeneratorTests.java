@@ -23,7 +23,7 @@ public class STGeneratorTests {
                 .findFirst();
 
         templateGroup.ifPresent(stGroupModel -> {
-            final STGenerator stGenerator = new STGenerator(stGroupModel);
+            final STGenerator stGenerator = new STGenerator(STGenerator.toSTGroup(stGroupModel));
 
             stgDirectory.getGroups()
                     .filter(stGroupModel1 -> stGroupModel1.getName().equals("Test"))

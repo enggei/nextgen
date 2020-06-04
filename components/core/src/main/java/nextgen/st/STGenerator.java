@@ -1,6 +1,5 @@
 package nextgen.st;
 
-import com.generator.util.StringUtil;
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STTemplate;
 import org.stringtemplate.v4.ST;
@@ -10,111 +9,128 @@ import org.stringtemplate.v4.STGroupString;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 
 public class STGenerator {
 
-    private final STGroup templateGroup;
+    public static final String DELIMITER = "~";
 
-    public STGenerator(STGroupModel templateGroup) {
-        this.templateGroup = STGenerator.toSTGroup(templateGroup);
+    private final STGroup generator;
+
+    public STGenerator(STGroup generator) {
+        this.generator = generator;
     }
 
     public void generateSTGroup(STGroupModel stGroupModel, String packageName, String rootPath) {
 
         final File root = new File(rootPath);
-
         final String packageDeclaration = packageName + "." + stGroupModel.getName().toLowerCase();
 
-        final File stg = writeToFile(toStg(stGroupModel), packageDeclaration, stGroupModel.getName(), "stg", root);
-
-        final String domainClassName = StringUtil.capitalize(stGroupModel.getName() + "ST");
-        final ST stDomain = templateGroup.getInstanceOf("STDomain");
+        final String domainClassName = capitalize(stGroupModel.getName() + "ST");
+        final ST stDomain = generator.getInstanceOf("STDomain");
         stDomain.add("packageName", packageDeclaration);
         stDomain.add("name", domainClassName);
-        stDomain.add("template", stGroupModel.getName());
-        stDomain.add("templateDir", stg.getParentFile().getAbsolutePath());
 
-        final ST stDomainTests = templateGroup.getInstanceOf("STDomainTests");
-        final String testsClassName = StringUtil.capitalize(stGroupModel.getName() + "STTests");
+        final String testsClassName = capitalize(stGroupModel.getName() + "STTests");
+        final ST stDomainTests = generator.getInstanceOf("STDomainTests");
         stDomainTests.add("packageName", packageDeclaration);
         stDomainTests.add("name", testsClassName);
         stDomainTests.add("domainName", domainClassName);
 
+        final ST stgString = generator.getInstanceOf("stgString");
         stGroupModel.getTemplates()
                 .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
-                .forEach(stTemplate -> generateSTEntity(root, packageDeclaration, stDomain, stDomainTests, stTemplate));
+                .forEach(stTemplate -> generateSTEntity(stTemplate, root, packageDeclaration, stDomain, stDomainTests, stgString));
 
-        writeToFile(stDomain.render(), packageDeclaration, domainClassName, root);
-        writeToFile(stDomainTests.render(), packageDeclaration, testsClassName, root);
+        stDomain.add("stgString", stgString);
+
+        writeToFile(toStg(stGroupModel), packageDeclaration, stGroupModel.getName(), "stg", root);
+        writeToFile(stDomain.render(), packageDeclaration, domainClassName, "java", root);
+        writeToFile(stDomainTests.render(), packageDeclaration, testsClassName, "java", root);
     }
 
-    public void generateSTEntity(File root, String packageDeclaration, ST stDomain, ST stDomainTests, STTemplate stTemplate) {
+    public void generateSTEntity(STTemplate stTemplate, File root, String packageDeclaration, ST stDomain, ST stDomainTests, ST stgString) {
 
-        final String className = StringUtil.capitalize(stTemplate.getName());
-        writeToFile(generateSTClass(className, stTemplate, packageDeclaration), packageDeclaration, className, root);
+        final String className = capitalize(stTemplate.getName());
 
-        final ST newEntity = templateGroup.getInstanceOf("newEntityInstance");
-        newEntity.add("entityName", className);
-        newEntity.add("template", stTemplate.getName());
-        stDomain.add("entities", newEntity);
+        stgString.add("templates", className);
 
-        final ST entityTestCase = templateGroup.getInstanceOf("templateTestMethod");
-        entityTestCase.add("template", stTemplate.getName());
+        final ST newEntityInstance = generator.getInstanceOf("newEntityInstance");
+        newEntityInstance.add("entityName", className);
+        stDomain.add("entities", newEntityInstance);
 
-        stDomainTests.addAggr("testcases.{name,impl}", stTemplate.getName(), entityTestCase);
+        final ST templateTestMethod = generator.getInstanceOf("templateTestMethod");
+        templateTestMethod.add("template", className);
+        stDomainTests.addAggr("testcases.{name,impl}", className, templateTestMethod);
 
-        stTemplate.getChildren().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stTemplate1 -> generateSTEntity(root, packageDeclaration, stDomain, stDomainTests, stTemplate1));
+        stTemplate.getChildren().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(childTemplate -> generateSTEntity(childTemplate, root, packageDeclaration, stDomain, stDomainTests, stgString));
+
+        final ST stClass = generateSTClass(className, stTemplate, packageDeclaration);
+        writeToFile(stClass.render(), packageDeclaration, className, "java", root);
     }
 
-    public String generateSTClass(String className, STTemplate stTemplate, String packageDeclaration) {
+    public ST generateSTClass(String className, STTemplate stTemplate, String packageDeclaration) {
 
-        final ST stEntity = templateGroup.getInstanceOf("STEntity");
+        final ST stEntity = generator.getInstanceOf("STEntity");
         stEntity.add("packageName", packageDeclaration);
         stEntity.add("name", className);
+        stEntity.add("template", stTemplate.getName());
+
+        String content = escape(stTemplate.getText()).replaceAll("\n", "\\\\n\" + \n\t\t\t\"");
+        content = content.replaceAll(">>", ">~gt()~");
+        content = content.endsWith(">") ? (content.trim() + " ") : content.trim();
+
+        final ST template = generator.getInstanceOf("Template")
+                .add("name", stTemplate.getName())
+                .add("content", content);
 
         stTemplate.getParameters().forEach(stParameter -> {
+
+            template.add("params", stParameter.getName());
 
             switch (stParameter.getType()) {
                 case SINGLE:
 
                     stEntity.add("singleFields", stParameter.getName());
-
-                    final ST singleAccessors = templateGroup.getInstanceOf("entitySingleAccessors");
+                    final ST singleAccessors = generator.getInstanceOf("entitySingleAccessors");
                     singleAccessors.add("entity", className);
                     singleAccessors.add("name", stParameter.getName());
                     stEntity.add("singleAccessors", singleAccessors);
                     break;
-                case LIST:
-                    stEntity.add("listFields", stParameter.getName());
 
-                    ST listAccessors = templateGroup.getInstanceOf("entityListAccessors");
+                case LIST:
+
+                    stEntity.add("listFields", stParameter.getName());
+                    final ST listAccessors = generator.getInstanceOf("entityListAccessors");
                     listAccessors.add("entity", className);
                     listAccessors.add("name", stParameter.getName());
                     stEntity.add("listAccessors", listAccessors);
-
                     break;
+
                 case KVLIST:
 
-                    final ST aggrSpec = new ST(".{~keys:{it|~it~};separator=\",\"~}", '~', '~');
+                    final ST aggrSpec = new ST("~name~.{~keys:{it|~it~};separator=\",\"~}", '~', '~')
+                            .add("name", stParameter.getName());
                     final ST aggrValues = new ST("~values:{it|map.get(\"~it~\")};separator=\", \"~", '~', '~');
 
-                    final ST kvListAccessors = templateGroup.getInstanceOf("entityKVListAccessors");
+                    final ST kvListAccessors = generator.getInstanceOf("entityKVListAccessors");
                     kvListAccessors.add("entity", className);
                     kvListAccessors.add("name", stParameter.getName());
                     stParameter.getKeys().forEach(stParameterKey -> {
                         kvListAccessors.add("keys", stParameterKey);
-
                         aggrSpec.add("keys", stParameterKey);
                         aggrValues.add("values", stParameterKey);
                     });
 
-                    stEntity.addAggr("kvListFields.{name,aggrSpec,aggrValues}", stParameter.getName(), stParameter.getName() + aggrSpec.render(), aggrValues.render());
+                    stEntity.addAggr("kvListFields.{name, aggrSpec, aggrValues}", stParameter.getName(), aggrSpec.render(), aggrValues.render());
                     stEntity.add("kvListAccessors", kvListAccessors);
                     break;
             }
         });
 
-        return stEntity.render();
+        stEntity.add("stString", template);
+
+        return stEntity;
     }
 
     public static STGroup toSTGroup(STGroupModel model) {
@@ -137,7 +153,7 @@ public class STGenerator {
         return stGroupTemplate.render();
     }
 
-    public static void addSTTemplate(STGroup templateGroup, ST stGroupTemplate, STTemplate stModel) {
+    private static void addSTTemplate(STGroup templateGroup, ST stGroupTemplate, STTemplate stModel) {
 
         final ST stTemplate = templateGroup.getInstanceOf("STTemplate");
         stTemplate.add("name", stModel.getName());
@@ -146,7 +162,7 @@ public class STGenerator {
 
         stGroupTemplate.add("templates", stTemplate);
 
-        stModel.getChildren().forEach(stTemplate1 -> addSTTemplate(templateGroup, stGroupTemplate, stTemplate1));
+        stModel.getChildren().forEach(childTemplate -> addSTTemplate(templateGroup, stGroupTemplate, childTemplate));
     }
 
     private static STGroup newTemplateGroup() {
@@ -199,57 +215,61 @@ public class STGenerator {
         }
     }
 
-    public static void main(String[] args) {
-        final ST aggrSpec = new ST("~keys:{it|~it~};separator=\",\"~", '~', '~');
-
-        aggrSpec.add("keys", 1);
-        aggrSpec.add("keys", 1);
-        aggrSpec.add("keys", 1);
-
-        System.out.println(aggrSpec.render());
-    }
-
-    public static File writeToFile(Object content, String packageDeclaration, String name, File root) {
-        final File directory = new File(root, packageToPath(packageDeclaration));
-        final File file = new File(directory, name + ".java");
-        write(file, content);
-        return file;
-    }
-
-    public static File writeToFile(Object content, String packageDeclaration, String name, String filetype, File root) {
+    public static void writeToFile(Object content, String packageDeclaration, String name, String filetype, File root) {
         final File directory = new File(root, packageToPath(packageDeclaration));
         final File file = new File(directory, name + "." + filetype);
         write(file, content);
-        return file;
     }
 
-    public static String packageToPath(String packageName) {
+    private static String packageToPath(String packageName) {
         return packageName.replaceAll("[.]", "/");
     }
 
-    public static File write(File file, Object content) {
+    public static File tryToCreateFileIfNotExists(File f) {
+        if (!f.exists()) {
+            tryToCreateDirIfNotExists(f.getParentFile());
+            try {
+                if (!f.createNewFile()) throw new RuntimeException("Could not create file " + f.getName());
+            } catch (IOException e) {
+                throw new RuntimeException("Could not create file " + f.getName());
+            }
+        }
+        return f;
+    }
+
+    public static File tryToCreateDirIfNotExists(File f) {
+
+        if (f == null) throw new RuntimeException("File cannot be null");
+
+        if (!f.exists()) {
+            if (f.getParentFile() != null && !f.getParentFile().exists() && !f.getParentFile().mkdirs())
+                throw new RuntimeException("Could not create parent dirs for " + f.getAbsolutePath());
+            if (!f.mkdir()) throw new RuntimeException("Could not create directory " + f.getName());
+        }
+        return f;
+    }
+
+    public static void write(File file, Object content) {
 
         try {
-
-            if (!file.exists()) {
-                final File parent = file.getParentFile();
-                if (!parent.exists()) {
-                    if (parent.getParentFile() != null && !parent.getParentFile().exists() && !parent.getParentFile().mkdirs())
-                        throw new RuntimeException("Could not create parent dirs for " + parent.getAbsolutePath());
-                    if (!parent.mkdir()) throw new RuntimeException("Could not create directory " + parent.getName());
-                }
-                if (!file.createNewFile()) throw new RuntimeException("Could not create file " + file.getName());
-            }
+            tryToCreateFileIfNotExists(file);
             System.out.println("writing file " + file.getAbsolutePath());
 
             final BufferedWriter out = new BufferedWriter(new FileWriter(file));
             out.write(content == null ? "" : content.toString());
             out.close();
 
-            return file;
-
         } catch (Exception e) {
             throw new RuntimeException("Could not write to " + file.getAbsolutePath() + " : " + e.getMessage(), e);
         }
     }
+
+    private static String capitalize(String str) {
+        return Character.toUpperCase(str.charAt(0)) + (str.length() > 1 ? str.substring(1) : "");
+    }
+
+    private static String escape(String text) {
+        return text.replaceAll("\\\\", "\\\\\\\\").replaceAll("\"", "\\\\\"");
+    }
+
 }
