@@ -1,5 +1,6 @@
 package nextgen.st;
 
+import io.vertx.core.json.JsonObject;
 import nextgen.st.domain.*;
 import nextgen.st.parser.AstNode;
 import nextgen.st.parser.AstNodeType;
@@ -218,6 +219,10 @@ public class STParser {
             System.out.println("illegal format in file " + stgFile.getAbsolutePath());
             return '~';
         }
+    }
+
+    public static JsonObject readJsonObject(File file) {
+        return new JsonObject(read(file));
     }
 
     public static String read(File file) {

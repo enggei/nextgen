@@ -1,7 +1,6 @@
 package nextgen.st;
 
 import com.generator.util.SwingUtil;
-import io.vertx.core.json.JsonObject;
 import nextgen.st.domain.STAppModel;
 import nextgen.st.domain.STGDirectory;
 import nextgen.st.domain.STGroupModel;
@@ -34,35 +33,41 @@ public class STApp extends JFrame {
 
     public static void main(String[] args) {
 
-        final String root = "/home/goe/projects/nextgen/components/core/src/main";
+        final File root = new File("./components/core");
+        final File srcMain = new File(root, "src/main");
+        final File srcTest = new File(root, "src/test");
+        final File javaMain = new File(srcMain, "java");
+        final File javaTest = new File(srcTest, "java");
+        final File resources = new File(srcMain, "resources");
+        final File templates = new File(resources, "templates");
 
         SwingUtil.show(new STApp(STJsonFactory.newSTAppModel()
-                .setGeneratorRoot(root + File.separator + "java")
+                .setGeneratorRoot(javaMain.getAbsolutePath())
                 .setGeneratorPackage("nextgen.st")
                 .setGeneratorName("StringTemplate")
-                .addDirectories(load(root + File.separator + "resources" + File.separator + "templates"))));
+                .addDirectories(load(templates, javaTest, "tmp.st"))));
     }
 
-    public static STGDirectory load(String dir) {
+    public static STGDirectory load(File path, File outputRoot, String outputPackage) {
 
         final STGDirectory root = STJsonFactory.newSTGDirectory()
-                .setPath(new File(dir).getPath())
-                .setOutputPackage("tmp.st")
-                .setOutputPath("/home/goe/projects/nextgen/components/core/src/test/java/");
+                .setPath(path.getAbsolutePath())
+                .setOutputPackage(outputPackage)
+                .setOutputPath(outputRoot.getAbsolutePath());
 
-        Optional.ofNullable(list(dir, ".json"))
+        Optional.ofNullable(list(path, ".json"))
                 .ifPresent(files -> {
                     for (File file : files) {
                         System.out.println("// todo: add a String-parameter constructor to remove JsonObject from this class");
-                        root.addGroups(new STGroupModel(new JsonObject(STParser.read(file)))); // todo: add a String-parameter constructor to remove JsonObject from this class
+                        root.addGroups(new STGroupModel(STParser.readJsonObject(file))); // todo: add a String-parameter constructor to remove JsonObject from this class
                     }
                 });
 
         return root;
     }
 
-    public static File[] list(String dir, String postfix) {
+    public static File[] list(File dir, String postfix) {
         final String s = postfix.toLowerCase();
-        return new File(dir).listFiles(pathname -> pathname.getAbsolutePath().toLowerCase().endsWith(s));
+        return dir.listFiles(pathname -> pathname.getAbsolutePath().toLowerCase().endsWith(s));
     }
 }

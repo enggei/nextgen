@@ -75,9 +75,9 @@
     "children" : [ {
       "uuid" : "ddf9f301-8ea9-447d-b1c8-ac4ef04a6f2e",
       "name" : "templateTestMethod",
-      "text" : "@org.junit.Test\npublic void test~template;format=\"capitalize\"~() {\n\tSystem.out.println(\"~template~:\\n\");\n\tSystem.out.println(domain.new~template;format=\"capitalize\"~());\n\tSystem.out.println(\"\\n:~template~\");\n}",
+      "text" : "@org.junit.Test\npublic void test~template;format=\"capitalize\"~() {\n// jupp\n\tSystem.out.println(\"~template~:\\n\");\n\tSystem.out.println(domain.new~template;format=\"capitalize\"~());\n\tSystem.out.println(\"\\n:~template~\");\n}",
       "parameters" : [ {
-        "uuid" : "9a609282-642f-48f0-969e-c58570199687",
+        "uuid" : "8ea27ce9-dc0b-44dc-a4ac-0c81867eb915",
         "name" : "template",
         "type" : "SINGLE"
       } ]
