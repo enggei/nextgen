@@ -5,6 +5,7 @@ import nextgen.templates.NpmPatterns;
 import nextgen.templates.java.PackageDeclaration;
 import nextgen.templates.maven.DependencyGroup;
 import nextgen.templates.maven.Pom;
+import nextgen.templates.test.TestST;
 import org.junit.Test;
 
 import java.io.File;
@@ -30,6 +31,14 @@ public class DemoProject {
     private final PackageDeclaration webPackage = newPackageDeclaration(corePackage, "web");
 
     private final String mainClass = "ServerApp";
+
+    @Test
+    public void testSimple() {
+
+        System.out.println(TestST.newSingle().setValue("Value"));
+
+    }
+
     @Test
     public void generateProjectFiles() {
 

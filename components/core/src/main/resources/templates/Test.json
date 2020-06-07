@@ -5,7 +5,7 @@
   "templates" : [ {
     "uuid" : "d5fb4402-0fa4-4f5b-84f6-c0221cb13e6b",
     "name" : "ParameterTests",
-    "text" : "Test the 3 types of parameters:\n\n* Single value \n* List values\n* Key-Value list values",
+    "text" : "Test the 3 types of parameters:\n\n* Single value \n* List values\n* Key-Value list values\n\nTest conditional parsing\n\nTest complex combination of all types",
     "parameters" : [ ],
     "children" : [ {
       "uuid" : "2acee399-79fc-46ff-b0c2-89f23ae0651b",
