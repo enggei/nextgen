@@ -1,0 +1,33 @@
+delimiters "~","~"
+
+Entities() ::= << >>
+
+Poko(packageDeclaration,classDeclaration) ::= <<~packageDeclaration~
+
+~classDeclaration~ >>
+
+Grammar() ::= << >>
+
+Declarations() ::= << >>
+
+AnnotationDeclaration(annotations) ::= <<~annotations:{it|@~it.name~(~it.params~)};separator="\n"~~if(annotations)~
+~endif~ >>
+
+AnnotationParam(param) ::= <<~param:{it|~it.key~ = ~it.value~};separator=", "~ >>
+
+PackageDeclaration(name) ::= <<package ~name~ >>
+
+ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends) ::= <<~if(annotations)~~annotations~~endif~
+~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(
+	~fields:{it|~it~};separator="\n"~
+)~if(extends)~ : ~extends:{it|~it.className~(~if(it.params)~~it.params:{p|~p.name~};separator=", "~~endif~)};separator=", "~~endif~ {
+	
+} >>
+
+FieldDeclaration(annotations,fields) ::= <<~annotations:{it|~it~};separator="\n"~~if(annotations)~
+~endif~
+~fields:{it|~if(it.isMutable)~var ~elseif(it.isNonMember)~~else~val ~endif~~it.name~: ~it.type~~if(it.initializer)~ = ~it.initializer~~endif~};separator=",\n"~ >>
+
+eom() ::= "}"
+
+gt() ::= ">"
