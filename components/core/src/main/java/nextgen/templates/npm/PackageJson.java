@@ -39,16 +39,16 @@ public class PackageJson {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("packageJson");
-		st.add("main" ,_main);
-		st.add("license" ,_license);
-		st.add("bugsUrl" ,_bugsUrl);
-		st.add("homepage" ,_homepage);
-		st.add("repositoryUrl" ,_repositoryUrl);
-		st.add("author" ,_author);
-		st.add("version" ,_version);
-		st.add("repositoryType" ,_repositoryType);
-		st.add("description" ,_description);
-		st.add("name" ,_name);
+		st.add("main", _main);
+		st.add("license", _license);
+		st.add("bugsUrl", _bugsUrl);
+		st.add("homepage", _homepage);
+		st.add("repositoryUrl", _repositoryUrl);
+		st.add("author", _author);
+		st.add("version", _version);
+		st.add("repositoryType", _repositoryType);
+		st.add("description", _description);
+		st.add("name", _name);
 		for (Object o : _devDependencies) st.add("devDependencies", o);
 		for (Object o : _scripts) st.add("scripts", o);
 		for (Object o : _dependencies) st.add("dependencies", o);

@@ -27,7 +27,7 @@ public class PropertyReference {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("propertyReference");
-		st.add("name" ,_name);
+		st.add("name", _name);
 		return st.render().trim();
 	}
 

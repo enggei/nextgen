@@ -31,11 +31,11 @@ public class Dependency {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("dependency");
-		st.add("groupId" ,_groupId);
-		st.add("artifactId" ,_artifactId);
-		st.add("version" ,_version);
-		st.add("scope" ,_scope);
-		st.add("systemPath" ,_systemPath);
+		st.add("groupId", _groupId);
+		st.add("artifactId", _artifactId);
+		st.add("version", _version);
+		st.add("scope", _scope);
+		st.add("systemPath", _systemPath);
 		return st.render().trim();
 	}
 

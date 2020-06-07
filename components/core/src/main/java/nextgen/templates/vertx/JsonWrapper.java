@@ -29,8 +29,8 @@ public class JsonWrapper {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("JsonWrapper");
-		st.add("package" ,_package);
-		st.add("name" ,_name);
+		st.add("package", _package);
+		st.add("name", _name);
 		for (Object o : _accessors) st.add("accessors", o);
 		return st.render().trim();
 	}

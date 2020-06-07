@@ -9,19 +9,12 @@ public class VertxSTTests {
 
 	@org.junit.Test
 	public void testAll() {
-		testEntities();
 		testJsonWrapper();
 		testListReferenceAccessors();
 		testPrimitiveAccessors();
 		testReferenceAccessors();
-		testVertxTypes();
 		testJsonArrayType();
 	}
-
-	@org.junit.Test
-	public void testEntities() {
-		System.out.println("\n--- TEST Entities:\n" + newEntities());
-	} 
 
 	@org.junit.Test
 	public void testJsonWrapper() {
@@ -41,11 +34,6 @@ public class VertxSTTests {
 	@org.junit.Test
 	public void testReferenceAccessors() {
 		System.out.println("\n--- TEST ReferenceAccessors:\n" + newReferenceAccessors());
-	} 
-
-	@org.junit.Test
-	public void testVertxTypes() {
-		System.out.println("\n--- TEST VertxTypes:\n" + newVertxTypes());
 	} 
 
 	@org.junit.Test

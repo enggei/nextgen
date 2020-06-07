@@ -3,7 +3,7 @@ package nextgen.java;
 import nextgen.java.st.ClassOrInterfaceType;
 import nextgen.java.st.MethodDeclaration;
 import nextgen.java.st.SingleMemberAnnotationExpression;
-
+@Deprecated
 public class JUnitPatterns extends JavaPatterns {
 
     public static final String junitCore = "org.junit";

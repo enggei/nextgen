@@ -28,7 +28,7 @@ public class Domain {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Domain");
-		st.add("name" ,_name);
+		st.add("name", _name);
 		for (Object o : _entities) st.add("entities", o);
 		return st.render().trim();
 	}

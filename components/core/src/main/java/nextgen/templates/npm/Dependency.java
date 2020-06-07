@@ -28,8 +28,8 @@ public class Dependency {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("dependency");
-		st.add("name" ,_name);
-		st.add("version" ,_version);
+		st.add("name", _name);
+		st.add("version", _version);
 		return st.render().trim();
 	}
 

@@ -30,9 +30,9 @@ public class Project {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Project");
-		st.add("name" ,_name);
-		st.add("root" ,_root);
-		st.add("pom" ,_pom);
+		st.add("name", _name);
+		st.add("root", _root);
+		st.add("pom", _pom);
 		for (Object o : _modules) st.add("modules", o);
 		return st.render().trim();
 	}

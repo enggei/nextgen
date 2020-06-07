@@ -5,12 +5,10 @@ public class VertxST {
 	private static final String stg = "delimiters \"~\", \"~\"\n" +
 	"eom() ::= \"}\"\n" +
 	"gt() ::= \">\"\n" +
-	Entities.st + "\n" + 
 	JsonWrapper.st + "\n" + 
 	ListReferenceAccessors.st + "\n" + 
 	PrimitiveAccessors.st + "\n" + 
 	ReferenceAccessors.st + "\n" + 
-	VertxTypes.st + "\n" + 
 	JsonArrayType.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup defaultSTGroup() {
@@ -70,10 +68,6 @@ public class VertxST {
 		});
 	}
 
-	public static Entities newEntities() {
-		return new Entities(stGroup);
-	} 
-
 	public static JsonWrapper newJsonWrapper() {
 		return new JsonWrapper(stGroup);
 	} 
@@ -88,10 +82,6 @@ public class VertxST {
 
 	public static ReferenceAccessors newReferenceAccessors() {
 		return new ReferenceAccessors(stGroup);
-	} 
-
-	public static VertxTypes newVertxTypes() {
-		return new VertxTypes(stGroup);
 	} 
 
 	public static JsonArrayType newJsonArrayType() {

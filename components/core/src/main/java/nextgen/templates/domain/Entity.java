@@ -29,8 +29,8 @@ public class Entity {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Entity");
-		st.add("name" ,_name);
-		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{name,type}", map.get("name"), map.get("type"));
+		st.add("name", _name);
+		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{name,type,lexical}", map.get("name"), map.get("type"), map.get("lexical"));
 		for (java.util.Map<String, Object> map : _relations) st.addAggr("relations.{name,type,target}", map.get("name"), map.get("type"), map.get("target"));
 		return st.render().trim();
 	}
@@ -52,10 +52,11 @@ public class Entity {
 		this._name = null;
 		return this;
 	} 
-	public Entity addFields(Object _name, Object _type) {
+	public Entity addFields(Object _name, Object _type, Object _lexical) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("name", _name);
 		map.put("type", _type);
+		map.put("lexical", _lexical);
 		this._fields.add(map);
 		return this;
 	}
@@ -65,7 +66,7 @@ public class Entity {
 	}
 
 	public Entity addFields(Entity_Fields value) {
-		return addFields(value._name, value._type);
+		return addFields(value._name, value._type, value._lexical);
 	}
 
 	public java.util.stream.Stream<Entity_Fields> streamFields() {
@@ -76,15 +77,18 @@ public class Entity {
 
 		Object _name;
 		Object _type;
+		Object _lexical;
 
-		public Entity_Fields(Object _name, Object _type) {
+		public Entity_Fields(Object _name, Object _type, Object _lexical) {
 			this._name = _name;
 			this._type = _type;
+			this._lexical = _lexical;
 		}
 
 		private Entity_Fields(java.util.Map<String, Object> map) {
-			this._name = map.get("name");
-			this._type = map.get("type");
+			this._name = (Object) map.get("name");
+			this._type = (Object) map.get("type");
+			this._lexical = (Object) map.get("lexical");
 		}
 
 		public Object getName() {
@@ -93,6 +97,10 @@ public class Entity {
 
 		public Object getType() {
 			return this._type;
+		}
+
+		public Object getLexical() {
+			return this._lexical;
 		}
 
 	} 
@@ -131,9 +139,9 @@ public class Entity {
 		}
 
 		private Entity_Relations(java.util.Map<String, Object> map) {
-			this._name = map.get("name");
-			this._type = map.get("type");
-			this._target = map.get("target");
+			this._name = (Object) map.get("name");
+			this._type = (Object) map.get("type");
+			this._target = (Object) map.get("target");
 		}
 
 		public Object getName() {
@@ -153,7 +161,7 @@ public class Entity {
 	static final String st = "Entity(name,fields,relations) ::= <<~name~\n" + 
 				"\n" + 
 				"Fields:\n" + 
-				"~fields:{it|~it.name~ ~it.type~};separator=\"\\n\"~\n" + 
+				"~fields:{it|~it.name~ ~it.type~ ~if(it.lexical)~lexical~endif~};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"Relations:\n" + 
 				"~relations:{it|~it.name~ ~it.type~ ~it.target~};separator=\"\\n\"~>> ";

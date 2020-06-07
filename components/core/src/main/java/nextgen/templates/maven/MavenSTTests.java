@@ -11,13 +11,11 @@ public class MavenSTTests {
 	public void testAll() {
 		testBuild();
 		testDependency();
-		testEntities();
 		testDependencyGroup();
 		testModule();
 		testProject();
 		testExecution();
 		testParent();
-		testPlugins();
 		testFrontEndMavenPlugin();
 		testPlugin();
 		testShadePlugin();
@@ -34,11 +32,6 @@ public class MavenSTTests {
 	@org.junit.Test
 	public void testDependency() {
 		System.out.println("\n--- TEST Dependency:\n" + newDependency());
-	} 
-
-	@org.junit.Test
-	public void testEntities() {
-		System.out.println("\n--- TEST Entities:\n" + newEntities());
 	} 
 
 	@org.junit.Test
@@ -64,11 +57,6 @@ public class MavenSTTests {
 	@org.junit.Test
 	public void testParent() {
 		System.out.println("\n--- TEST Parent:\n" + newParent());
-	} 
-
-	@org.junit.Test
-	public void testPlugins() {
-		System.out.println("\n--- TEST Plugins:\n" + newPlugins());
 	} 
 
 	@org.junit.Test

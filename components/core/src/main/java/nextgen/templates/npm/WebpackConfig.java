@@ -28,8 +28,8 @@ public class WebpackConfig {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("WebpackConfig");
-		st.add("outputFilename" ,_outputFilename);
-		st.add("mainEntry" ,_mainEntry);
+		st.add("outputFilename", _outputFilename);
+		st.add("mainEntry", _mainEntry);
 		return st.render().trim();
 	}
 

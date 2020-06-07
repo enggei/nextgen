@@ -28,8 +28,8 @@ public class Script {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("script");
-		st.add("command" ,_command);
-		st.add("name" ,_name);
+		st.add("command", _command);
+		st.add("name", _name);
 		return st.render().trim();
 	}
 

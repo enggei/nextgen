@@ -31,9 +31,9 @@ public class Plugin {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("plugin");
-		st.add("groupId" ,_groupId);
-		st.add("artifactId" ,_artifactId);
-		st.add("version" ,_version);
+		st.add("groupId", _groupId);
+		st.add("artifactId", _artifactId);
+		st.add("version", _version);
 		for (Object o : _executions) st.add("executions", o);
 		for (java.util.Map<String, Object> map : _configuration) st.addAggr("configuration.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
@@ -141,8 +141,8 @@ public class Plugin {
 		}
 
 		private Plugin_Configuration(java.util.Map<String, Object> map) {
-			this._name = map.get("name");
-			this._value = map.get("value");
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
 		}
 
 		public Object getName() {

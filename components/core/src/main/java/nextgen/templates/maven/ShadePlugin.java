@@ -28,8 +28,8 @@ public class ShadePlugin {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("shadePlugin");
-		st.add("packageName" ,_packageName);
-		st.add("className" ,_className);
+		st.add("packageName", _packageName);
+		st.add("className", _className);
 		return st.render().trim();
 	}
 

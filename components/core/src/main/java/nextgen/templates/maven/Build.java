@@ -82,8 +82,8 @@ public class Build {
 		}
 
 		private Build_TestResources(java.util.Map<String, Object> map) {
-			this._name = map.get("name");
-			this._value = map.get("value");
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
 		}
 
 		public Object getName() {

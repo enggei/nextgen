@@ -29,9 +29,9 @@ public class FrontEndMavenPlugin {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("frontEndMavenPlugin");
-		st.add("pluginVersion" ,_pluginVersion);
-		st.add("installDirectory" ,_installDirectory);
-		st.add("nodeVersion" ,_nodeVersion);
+		st.add("pluginVersion", _pluginVersion);
+		st.add("installDirectory", _installDirectory);
+		st.add("nodeVersion", _nodeVersion);
 		return st.render().trim();
 	}
 

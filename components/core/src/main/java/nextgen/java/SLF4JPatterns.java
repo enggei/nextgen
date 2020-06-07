@@ -5,7 +5,7 @@ import nextgen.java.st.FieldDeclaration;
 
 import static nextgen.java.JavaPatterns.*;
 import static nextgen.java.st.JavaFactory.newClassOrInterfaceType;
-
+@Deprecated
 public class SLF4JPatterns {
 
     public static final String corePackage = "org.slf4j";

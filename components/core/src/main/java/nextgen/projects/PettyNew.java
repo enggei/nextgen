@@ -130,7 +130,7 @@ public class PettyNew {
                 .setName("RM")
                 .addEntities(DomainST.newEntity()
                         .setName("ScanRoot")
-                        .addFields("path", "String"));
+                        .addFields("path", "String", true));
 
         writePojo(javaMainSrc, newPojo()
                 .setPackage(scanDomainPackage)

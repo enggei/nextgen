@@ -7,13 +7,11 @@ public class MavenST {
 	"gt() ::= \">\"\n" +
 	Build.st + "\n" + 
 	Dependency.st + "\n" + 
-	Entities.st + "\n" + 
 	DependencyGroup.st + "\n" + 
 	Module.st + "\n" + 
 	Project.st + "\n" + 
 	Execution.st + "\n" + 
 	Parent.st + "\n" + 
-	Plugins.st + "\n" + 
 	FrontEndMavenPlugin.st + "\n" + 
 	Plugin.st + "\n" + 
 	ShadePlugin.st + "\n" + 
@@ -86,10 +84,6 @@ public class MavenST {
 		return new Dependency(stGroup);
 	} 
 
-	public static Entities newEntities() {
-		return new Entities(stGroup);
-	} 
-
 	public static DependencyGroup newDependencyGroup() {
 		return new DependencyGroup(stGroup);
 	} 
@@ -108,10 +102,6 @@ public class MavenST {
 
 	public static Parent newParent() {
 		return new Parent(stGroup);
-	} 
-
-	public static Plugins newPlugins() {
-		return new Plugins(stGroup);
 	} 
 
 	public static FrontEndMavenPlugin newFrontEndMavenPlugin() {

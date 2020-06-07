@@ -29,9 +29,9 @@ public class Parent {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("parent");
-		st.add("artifactId" ,_artifactId);
-		st.add("groupId" ,_groupId);
-		st.add("version" ,_version);
+		st.add("artifactId", _artifactId);
+		st.add("groupId", _groupId);
+		st.add("version", _version);
 		return st.render().trim();
 	}
 

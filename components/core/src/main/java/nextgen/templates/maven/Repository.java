@@ -29,9 +29,9 @@ public class Repository {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("repository");
-		st.add("id" ,_id);
-		st.add("name" ,_name);
-		st.add("url" ,_url);
+		st.add("id", _id);
+		st.add("name", _name);
+		st.add("url", _url);
 		return st.render().trim();
 	}
 

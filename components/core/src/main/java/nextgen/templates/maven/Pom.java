@@ -38,13 +38,13 @@ public class Pom {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("pom");
-		st.add("parent" ,_parent);
-		st.add("name" ,_name);
-		st.add("groupId" ,_groupId);
-		st.add("artifactId" ,_artifactId);
-		st.add("version" ,_version);
-		st.add("packaging" ,_packaging);
-		st.add("build" ,_build);
+		st.add("parent", _parent);
+		st.add("name", _name);
+		st.add("groupId", _groupId);
+		st.add("artifactId", _artifactId);
+		st.add("version", _version);
+		st.add("packaging", _packaging);
+		st.add("build", _build);
 		for (Object o : _modules) st.add("modules", o);
 		for (Object o : _dependencies) st.add("dependencies", o);
 		for (Object o : _distributionManagement) st.add("distributionManagement", o);
@@ -284,8 +284,8 @@ public class Pom {
 		}
 
 		private Pom_Properties(java.util.Map<String, Object> map) {
-			this._name = map.get("name");
-			this._value = map.get("value");
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
 		}
 
 		public Object getName() {

@@ -6,10 +6,7 @@ public class DomainST {
 	"eom() ::= \"}\"\n" +
 	"gt() ::= \">\"\n" +
 	Domain.st + "\n" + 
-	Entity.st + "\n" + 
-	EntityType.st + "\n" + 
-	Relation.st + "\n" + 
-	RelationType.st + "\n" ;
+	Entity.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup defaultSTGroup() {
 		org.stringtemplate.v4.STGroup stGroup = new org.stringtemplate.v4.STGroupString("DomainST", stg, '~', '~');
@@ -74,18 +71,6 @@ public class DomainST {
 
 	public static Entity newEntity() {
 		return new Entity(stGroup);
-	} 
-
-	public static EntityType newEntityType() {
-		return new EntityType(stGroup);
-	} 
-
-	public static Relation newRelation() {
-		return new Relation(stGroup);
-	} 
-
-	public static RelationType newRelationType() {
-		return new RelationType(stGroup);
 	} 
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {

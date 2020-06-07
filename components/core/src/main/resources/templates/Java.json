@@ -121,11 +121,12 @@
     "children" : [ {
       "uuid" : "1ffe2d3b-73df-4fd5-b10e-7ef9a6e442e2",
       "name" : "ArrayList",
-      "text" : "java.util.ArrayList<~types:{it|~it~};separator=\",\"~>",
+      "text" : "java.util.ArrayList<~type~>",
       "parameters" : [ {
-        "uuid" : "0982b29b-8688-45bc-a398-b52da4ab9ca6",
-        "name" : "types",
-        "type" : "LIST"
+        "uuid" : "09737378-6f52-411b-ae70-bd214d0ce7b9",
+        "name" : "type",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       } ]
     }, {
       "uuid" : "d4e456e8-bd4d-403a-b155-7f9bf2f1ad29",

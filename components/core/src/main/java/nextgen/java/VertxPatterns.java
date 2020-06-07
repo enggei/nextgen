@@ -3,7 +3,7 @@ package nextgen.java;
 import nextgen.java.JavaPatterns;
 import nextgen.java.st.ClassOrInterfaceType;
 import nextgen.java.st.MethodCallExpression;
-
+@Deprecated
 public class VertxPatterns extends JavaPatterns {
 
     public static final String corePackage = "io.vertx.core";

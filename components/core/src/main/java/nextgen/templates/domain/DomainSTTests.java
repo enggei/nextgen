@@ -11,9 +11,6 @@ public class DomainSTTests {
 	public void testAll() {
 		testDomain();
 		testEntity();
-		testEntityType();
-		testRelation();
-		testRelationType();
 	}
 
 	@org.junit.Test
@@ -24,20 +21,5 @@ public class DomainSTTests {
 	@org.junit.Test
 	public void testEntity() {
 		System.out.println("\n--- TEST Entity:\n" + newEntity());
-	} 
-
-	@org.junit.Test
-	public void testEntityType() {
-		System.out.println("\n--- TEST EntityType:\n" + newEntityType());
-	} 
-
-	@org.junit.Test
-	public void testRelation() {
-		System.out.println("\n--- TEST Relation:\n" + newRelation());
-	} 
-
-	@org.junit.Test
-	public void testRelationType() {
-		System.out.println("\n--- TEST RelationType:\n" + newRelationType());
 	} 
 } 

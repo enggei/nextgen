@@ -5,7 +5,7 @@ public class ArrayList {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private java.util.List<Object> _types = new java.util.ArrayList<>();
+	private Object _type;
 
 	ArrayList(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -27,28 +27,27 @@ public class ArrayList {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ArrayList");
-		for (Object o : _types) st.add("types", o);
+		st.add("type", _type);
 		return st.render().trim();
 	}
 
-	public ArrayList addTypes(Object value) {
-		this._types.add(value);
+	public ArrayList setType(Object value) {
+		this._type = value;
 		return this;
 	}
 
-	public ArrayList removeTypes(Object value) {
-		this._types.remove(value);
-		return this;
+	public Object getType() {
+		return this._type;
 	}
 
-	public ArrayList removeTypes(int index) {
-		this._types.remove(index);
-		return this;
+	public boolean hasType() {
+		return this._type != null;
 	}
 
-	public java.util.List<Object> getTypes() {
-		return this._types;
+	public ArrayList removeType() {
+		this._type = null;
+		return this;
 	} 
 
-	static final String st = "ArrayList(types) ::= <<java.util.ArrayList<~types:{it|~it~};separator=\",\"~> >> ";
+	static final String st = "ArrayList(type) ::= <<java.util.ArrayList<~type~> >> ";
 } 

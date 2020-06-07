@@ -1,7 +1,7 @@
 package nextgen.java;
 
 import nextgen.java.st.*;
-
+@Deprecated
 public class Neo4JPatterns extends JavaPatterns {
 
     public static final String corePackage = "org.neo4j.graphdb";

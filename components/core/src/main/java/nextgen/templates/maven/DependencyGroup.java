@@ -30,9 +30,9 @@ public class DependencyGroup {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("DependencyGroup");
-		st.add("name" ,_name);
-		st.add("groupId" ,_groupId);
-		st.add("version" ,_version);
+		st.add("name", _name);
+		st.add("groupId", _groupId);
+		st.add("version", _version);
 		for (Object o : _artifacts) st.add("artifacts", o);
 		return st.render().trim();
 	}

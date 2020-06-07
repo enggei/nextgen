@@ -6,6 +6,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 
+@Deprecated
 public class JavaPatterns extends JavaFactory {
 
     private static final JavaGenerator javaGenerator = new JavaGenerator();

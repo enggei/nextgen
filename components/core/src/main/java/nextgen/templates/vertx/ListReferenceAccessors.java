@@ -29,9 +29,9 @@ public class ListReferenceAccessors {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("listReferenceAccessors");
-		st.add("className" ,_className);
-		st.add("name" ,_name);
-		st.add("type" ,_type);
+		st.add("className", _className);
+		st.add("name", _name);
+		st.add("type", _type);
 		return st.render().trim();
 	}
 
