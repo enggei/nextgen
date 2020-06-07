@@ -25,9 +25,7 @@ public class STParser {
     public static boolean debug = false;
 
     public static void main(String[] args) {
-
-        STParser.parse(new File("/home/goe/projects/nextgen/components/core/src/test/java/tmp/st/test/Test.stg"));
-//        STParser.parse(new File("/home/goe/projects/nextgen/components/core/src/test/java/tmp/st/java/Java.stg"));
+        STParser.parse(new File("/home/goe/projects/nextgen/components/core/src/main/java/nextgen/templates/test/Test.stg"));
     }
 
     public static STGParseResult parse(File stgFile) {
@@ -128,7 +126,7 @@ public class STParser {
 
                     if (astNode.getChildren().get(0).getType().equals(Name)) {
 
-                        stParameterMap.putIfAbsent(expressionName, new STParameter().setName(expressionName).setType(STParameterType.SINGLE));
+                        stParameterMap.putIfAbsent(expressionName, new STParameter().setName(expressionName).setType(STParameterType.SINGLE).setArgumentType("Object"));
                         stParameters.push(stParameterMap.get(expressionName));
 
                         for (AstNode child : astNode.getChildren())
@@ -147,7 +145,7 @@ public class STParser {
 
                 final STParameterKey parameterKey = new STParameterKey()
                         .setName(astNode.getChildren().get(1).getAst().toString())
-                        .addArgumentTypes("Object");
+                        .setArgumentType("Object");
 
                 final Optional<STParameterKey> exists = stParameters.peek().getKeys()
                         .filter(stParameterKey -> stParameterKey.getName().equals(parameterKey.getName()))
@@ -160,13 +158,21 @@ public class STParser {
             case ElseIf:
             case If:
 
-                final String ifName = astNode.getChildren().get(0).getAst().toString();
-                stParameterMap.putIfAbsent(ifName, new STParameter().setName(ifName).setType(STParameterType.SINGLE));
+                final AstNode condition = astNode.getChildren().get(0);
+                if (condition.getType().equals(Prop)) {
 
-                stParameters.push(stParameterMap.get(ifName));
-                for (AstNode child : astNode.getChildren())
-                    addParameters(stParameterMap, child, stParameters);
-                stParameters.pop();
+                    for (AstNode child : astNode.getChildren())
+                        addParameters(stParameterMap, child, stParameters);
+
+                } else {
+                    final String ifName = condition.getAst().toString();
+                    stParameterMap.putIfAbsent(ifName, new STParameter().setName(ifName).setType(STParameterType.SINGLE).setArgumentType("Object"));
+
+                    stParameters.push(stParameterMap.get(ifName));
+                    for (AstNode child : astNode.getChildren())
+                        addParameters(stParameterMap, child, stParameters);
+                    stParameters.pop();
+                }
 
                 break;
 
@@ -180,7 +186,7 @@ public class STParser {
                 final AstNode assignment = astNode.getChildren().get(1);
                 if (assignment.getType().equals(Name)) {
                     final String assignName = assignment.getAst().toString();
-                    stParameterMap.putIfAbsent(assignName, new STParameter().setName(assignName).setType(STParameterType.SINGLE));
+                    stParameterMap.putIfAbsent(assignName, new STParameter().setName(assignName).setType(STParameterType.SINGLE).setArgumentType("Object"));
                 }
 
                 for (AstNode child : astNode.getChildren())
@@ -194,7 +200,7 @@ public class STParser {
                     AstNode child = children.get(i);
                     if (child.getType().equals(Name)) {
                         final String assignName = child.getAst().toString();
-                        stParameterMap.putIfAbsent(assignName, new STParameter().setName(assignName).setType(STParameterType.SINGLE));
+                        stParameterMap.putIfAbsent(assignName, new STParameter().setName(assignName).setType(STParameterType.SINGLE).setArgumentType("Object"));
                     } else
                         addParameters(stParameterMap, child, stParameters);
                 }

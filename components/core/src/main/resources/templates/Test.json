@@ -14,7 +14,8 @@
       "parameters" : [ {
         "uuid" : "67c88eb9-576b-4896-96ad-a09c519b52e5",
         "name" : "value",
-        "type" : "SINGLE"
+        "type" : "SINGLE",
+        "argumentType" : "String"
       } ],
       "children" : [ ]
     }, {
@@ -24,7 +25,8 @@
       "parameters" : [ {
         "uuid" : "10cad08b-a095-4c39-a921-c0d4bd3a0e4e",
         "name" : "value",
-        "type" : "LIST"
+        "type" : "LIST",
+        "argumentType" : "Integer"
       } ]
     }, {
       "uuid" : "3e4cd3ac-b36a-48c9-9197-00e3ca022235",
@@ -37,12 +39,13 @@
         "keys" : [ {
           "uuid" : "030f73c9-ef3a-4355-8985-c36fcc9588bf",
           "name" : "key",
-          "argumentTypes" : [ "Object" ]
+          "argumentType" : "Integer"
         }, {
           "uuid" : "a4c11373-fcea-4173-98fb-86f131842e11",
           "name" : "value",
-          "argumentTypes" : [ "Object" ]
-        } ]
+          "argumentType" : "Long"
+        } ],
+        "argumentType" : "String"
       } ]
     }, {
       "uuid" : "820f5783-7219-4e86-85c4-1888882e7c8c",
@@ -63,11 +66,11 @@
         "keys" : [ {
           "uuid" : "bdc5b2d3-1d2d-46c6-8eaf-add69d39b47d",
           "name" : "name",
-          "argumentTypes" : [ "Object" ]
+          "argumentType" : "Object"
         }, {
           "uuid" : "907b5a55-4079-4899-a07b-3ec79bc330ad",
           "name" : "value",
-          "argumentTypes" : [ "Object" ]
+          "argumentType" : "Object"
         } ]
       }, {
         "uuid" : "a19d3c29-8100-466c-b689-3262d27ae3d0",
@@ -96,26 +99,53 @@
       "name" : "complex",
       "text" : "~if(list)~~list:{it|~it.name~ ~it.value~(~if(condition1)~1~elseif(condition2)~2~else~NULL~endif~)};separator=\"\\n\"~~endif~",
       "parameters" : [ {
-        "uuid" : "d58758fa-543d-4956-96ad-a594246624c7",
+        "uuid" : "d00fbb50-4aa6-4516-ae16-24332aed6439",
         "name" : "list",
         "type" : "KVLIST",
         "keys" : [ {
-          "uuid" : "03882180-613c-46c9-940e-b0aca0269195",
+          "uuid" : "8a910e2f-78f0-45aa-b3f4-ec47c8e6cc77",
           "name" : "name",
-          "argumentTypes" : [ "Object" ]
+          "argumentType" : "Object"
         }, {
-          "uuid" : "153c7804-8f37-4077-b0c2-3d2cf0d62315",
+          "uuid" : "fc6cf2e9-4526-40d1-94a2-8851ef6bf40c",
           "name" : "value",
-          "argumentTypes" : [ "Object" ]
+          "argumentType" : "Object"
         } ]
       }, {
-        "uuid" : "c5ae30ff-269a-4ea9-bb6d-ee108f86db9a",
+        "uuid" : "3da12775-3d52-4b4f-8a14-9b11f41cfde0",
         "name" : "condition1",
         "type" : "SINGLE"
       }, {
-        "uuid" : "2b5ef455-4a4b-4259-b084-ff929e4ff08e",
+        "uuid" : "5037ef90-9f1f-4e4f-8c5b-5f38ebef083f",
         "name" : "condition2",
         "type" : "SINGLE"
+      } ]
+    }, {
+      "uuid" : "dfceebac-cd86-4b73-9bb1-7560e1fbcf60",
+      "name" : "embeddedKVConditional",
+      "text" : "~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~",
+      "parameters" : [ {
+        "uuid" : "8259df32-6776-42af-bec4-bda876172ff7",
+        "name" : "fields",
+        "type" : "KVLIST",
+        "keys" : [ {
+          "uuid" : "1096df2f-1126-402a-b2cf-7a3e59a6c30f",
+          "name" : "type",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "6b605b63-995a-4b1e-ab26-7fefa72a9653",
+          "name" : "name",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "986a1747-fa95-447e-86b5-3b55030d9799",
+        "name" : "PROP",
+        "type" : "KVLIST",
+        "keys" : [ {
+          "uuid" : "a778a76e-4952-4a6e-86bd-9d4bee88408f",
+          "name" : "initializer",
+          "argumentType" : "Object"
+        } ]
       } ]
     } ]
   } ],

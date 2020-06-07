@@ -1,0 +1,255 @@
+delimiters "~","~"
+
+STDomain(packageName,name,stgString,entities) ::= <<package ~packageName~;
+
+public class ~name~ {
+
+	private static final String stg = ~stgString~;
+
+	public static org.stringtemplate.v4.STGroup defaultSTGroup() {
+		org.stringtemplate.v4.STGroup stGroup = new org.stringtemplate.v4.STGroupString("~name~", stg, '\~', '\~');
+		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
+		stGroup.setListener(new org.stringtemplate.v4.STErrorListener() {
+			@Override
+			public void compileTimeError(org.stringtemplate.v4.misc.STMessage stMessage) {
+				System.out.println("compileTimeError " + stMessage.toString());
+			}
+
+			@Override
+			public void runTimeError(org.stringtemplate.v4.misc.STMessage stMessage) {
+				final org.stringtemplate.v4.misc.STRuntimeMessage stRuntimeMessage = (org.stringtemplate.v4.misc.STRuntimeMessage) stMessage;
+				System.out.println("runTimeError " + stMessage.self.getName() + " " + stRuntimeMessage.getSourceLocation());
+			}
+
+			@Override
+			public void IOError(org.stringtemplate.v4.misc.STMessage stMessage) {
+				System.out.println("IOError " + stMessage.toString());
+			}
+
+			@Override
+			public void internalError(org.stringtemplate.v4.misc.STMessage stMessage) {
+				System.out.println("internalError " + stMessage.toString());
+			}
+		});
+		return stGroup;
+	}
+	
+	private static org.stringtemplate.v4.STGroup stGroup = defaultSTGroup();
+
+	public static void setSTGroup(final String stgFile) {
+		stGroup = new org.stringtemplate.v4.STGroupFile(stgFile, '\~', '\~');
+		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
+		stGroup.setListener(new org.stringtemplate.v4.STErrorListener() {
+			@Override
+			public void compileTimeError(org.stringtemplate.v4.misc.STMessage stMessage) {
+				System.out.println("compileTimeError " + stMessage.toString());
+			}
+
+			@Override
+			public void runTimeError(org.stringtemplate.v4.misc.STMessage stMessage) {
+				final org.stringtemplate.v4.misc.STRuntimeMessage stRuntimeMessage = (org.stringtemplate.v4.misc.STRuntimeMessage) stMessage;
+				System.out.println("runTimeError " + stMessage.self.getName() + " " + stRuntimeMessage.getSourceLocation());
+			}
+
+			@Override
+			public void IOError(org.stringtemplate.v4.misc.STMessage stMessage) {
+				System.out.println("IOError " + stMessage.toString());
+			}
+
+			@Override
+			public void internalError(org.stringtemplate.v4.misc.STMessage stMessage) {
+				System.out.println("internalError " + stMessage.toString());
+			}
+		});
+	}
+
+	~entities:{it|~it~};separator="\n\n"~
+
+	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
+
+		@Override
+		public String toString(Object o, String formatString, java.util.Locale locale) {
+
+			final String text = o.toString();
+			if (formatString == null) return text;
+
+			final String s = text.length() > 1 ? text.substring(1) : "";
+			
+			switch (formatString) {
+				case "capitalize":
+					return Character.toUpperCase(text.charAt(0)) + s;
+				case "toUpper":
+					return text.toUpperCase();
+				case "lowFirst":
+					return Character.toLowerCase(text.charAt(0)) + s;
+				case "toLower":
+					return text.toLowerCase();
+				default:
+					return o.toString();
+			}
+		}
+	}
+} >>
+
+newEntityInstance(entityName) ::= <<public static ~entityName~ new~entityName~() {
+	return new ~entityName~(stGroup);
+} >>
+
+stgString(templates) ::= <<"delimiters \"\~\", \"\~\"\\n" +
+	"eom() ::= \"}\"\\n" +
+	"gt() ::= \">\"\\n"~if(templates)~ +
+	~templates:{it|~it~.st + "\\n"};separator=" + \n"~~else~~endif~ >>
+
+STDomainTests(packageName,domainName,name,testcases) ::= <<package ~packageName~;
+
+import static ~packageName~.~domainName~.*;
+
+/**
+ * Tests for ~domainName~
+ **/
+public class ~name~ {
+
+	@org.junit.Test
+	public void testAll() {
+		~testcases:{it|test~it.name;format="capitalize"~();};separator="\n"~
+	}
+
+	~testcases:{it|~it.impl~};separator="\n\n"~
+} >>
+
+templateTestMethod(template) ::= <<@org.junit.Test
+public void test~template;format="capitalize"~() {
+	System.out.println("\n--- TEST ~template~:\n" + new~template;format="capitalize"~());
+} >>
+
+STEntity(packageName,name,singleFields,listFields,kvListFields,template,singleAccessors,listAccessors,kvListAccessors,stString) ::= <<package ~packageName~;
+
+public class ~name~ {
+
+	private final java.util.UUID uuid = java.util.UUID.randomUUID();
+	private final org.stringtemplate.v4.STGroup stGroup;
+	
+	~singleFields:{it|private Object _~it~;};separator="\n"~
+	~listFields:{it|private java.util.List<Object> _~it~ = new java.util.ArrayList<>();};separator="\n"~
+	~kvListFields:{it|private java.util.List<java.util.Map<String, Object~gt()~> _~it.name~ = new java.util.ArrayList<>();};separator="\n"~
+	
+	~name~(org.stringtemplate.v4.STGroup stGroup) {
+		this.stGroup = stGroup;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		~name~ that = (~name~) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
+	@Override
+	public String toString() {
+		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("~template~");
+		~singleFields:{it|st.add("~it~" ,_~it~);};separator="\n"~
+		~listFields:{it|for (Object o : _~it~) st.add("~it~", o);};separator="\n"~
+		~kvListFields:{it|for (java.util.Map<String, Object> map : _~it.name~) st.addAggr("~it.aggrSpec~", ~it.aggrValues~);};separator="\n"~
+		return st.render().trim();
+	}
+	
+	~singleAccessors:{it|~it~};separator="\n\n"~
+	~listAccessors:{it|~it~};separator="\n\n"~
+	~kvListAccessors:{it|~it~};separator="\n\n"~
+
+	~if(stString)~static final String st = "~stString~";~endif~
+} >>
+
+entityListAccessors(entity,name,type) ::= <<public ~entity~ add~name;format="capitalize"~(~if(type)~~type~~else~Object~endif~ value) {
+	this._~name~.add(value);
+	return this;
+}
+
+public ~entity~ remove~name;format="capitalize"~(~if(type)~~type~~else~Object~endif~ value) {
+	this._~name~.remove(value);
+	return this;
+}
+
+public ~entity~ remove~name;format="capitalize"~(int index) {
+	this._~name~.remove(index);
+	return this;
+}
+
+public java.util.List<~if(type)~~type~~else~Object~endif~> get~name;format="capitalize"~() {
+	return this._~name~;
+} >>
+
+entityKVListAccessors(entity,name,keys) ::= <<public ~entity~ add~name;format="capitalize"~(~keys:{it|~if(it.type)~~it.type~~else~Object~endif~ _~it.name~};separator=", "~) {
+	final java.util.Map<String, Object> map = new java.util.HashMap<>();
+	~keys:{it|map.put("~it.name~", _~it.name~);};separator="\n"~
+	this._~name~.add(map);
+	return this;
+}
+
+public java.util.List<java.util.Map<String, Object~gt()~> get~name;format="capitalize"~() {
+	return this._~name~;
+}
+
+public ~entity~ add~name;format="capitalize"~(~entity~_~name;format="capitalize"~ value) {
+	return add~name;format="capitalize"~(~keys:{it|value._~it.name~};separator=", "~);
+}
+
+public java.util.stream.Stream<~entity~_~name;format="capitalize"~> stream~name;format="capitalize"~() {
+	return this._~name~.stream().map(~entity~_~name;format="capitalize"~::new);
+}
+
+public static final class ~entity~_~name;format="capitalize"~ {
+
+	~keys:{it|~if(it.type)~~it.type~~else~Object~endif~ _~it.name~;};separator="\n"~
+
+	public ~entity~_~name;format="capitalize"~(~keys:{it|~if(it.type)~~it.type~~else~Object~endif~ _~it.name~};separator=", "~) {
+		~keys:{it|this._~it.name~ = _~it.name~;};separator="\n"~
+	}
+
+	private ~entity~_~name;format="capitalize"~(java.util.Map<String, Object> map) {
+		~keys:{it|this._~it.name~ = (~it.type~) map.get("~it.name~");};separator="\n"~
+	}
+
+	~keys:{it|public ~if(it.type)~~it.type~~else~Object~endif~ get~it.name;format="capitalize"~() {
+	return this._~it.name~;
+~eom()~
+	};separator="\n"~
+} >>
+
+entitySingleAccessors(entity,name,type) ::= <<public ~entity~ set~name;format="capitalize"~(~if(type)~~type~~else~Object~endif~ value) {
+	this._~name~ = value;
+	return this;
+}
+
+public ~if(type)~~type~~else~Object~endif~ get~name;format="capitalize"~() {
+	return this._~name~;
+}
+
+public boolean has~name;format="capitalize"~() {
+	return this._~name~ != null;
+}
+
+public ~entity~ remove~name;format="capitalize"~() {
+	this._~name~ = null;
+	return this;
+} >>
+
+STG(delimiter,templates) ::= <<delimiters ~delimiter~,~delimiter~
+
+eom() ::= "}"
+
+gt() ::= ">"
+
+~templates:{it|~it~};separator="\n\n"~ >\> >>
+
+Template(name,params,content) ::= <<~name~(~params:{it|~it~};separator=","~) ::= <<~content~>\> >>
+
+eom() ::= "}"
+
+gt() ::= ">"

@@ -13,6 +13,8 @@ import java.io.IOException;
 
 public class STGenerator {
 
+    public static boolean debug = false;
+
     public static final String DELIMITER = "~";
 
     private final STGroup generator;
@@ -55,6 +57,11 @@ public class STGenerator {
 
     public void generateSTEntity(STTemplate stTemplate, File root, String packageDeclaration, ST stDomain, ST stDomainTests, ST stgString) {
 
+        if (stTemplate.getText().trim().length() == 0) {
+            stTemplate.getChildren().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(childTemplate -> generateSTEntity(childTemplate, root, packageDeclaration, stDomain, stDomainTests, stgString));
+            return;
+        }
+
         final String className = capitalize(stTemplate.getName());
 
         stgString.add("templates", className);
@@ -95,19 +102,21 @@ public class STGenerator {
             switch (stParameter.getType()) {
                 case SINGLE:
 
-                    stEntity.add("singleFields", stParameter.getName());
+                    stEntity.addAggr("singleFields.{name,type}", stParameter.getName(), stParameter.getArgumentType("Object"));
                     final ST singleAccessors = generator.getInstanceOf("entitySingleAccessors");
                     singleAccessors.add("entity", className);
                     singleAccessors.add("name", stParameter.getName());
+                    singleAccessors.add("type", stParameter.getArgumentType("Object"));
                     stEntity.add("singleAccessors", singleAccessors);
                     break;
 
                 case LIST:
 
-                    stEntity.add("listFields", stParameter.getName());
+                    stEntity.addAggr("listFields.{name,type}", stParameter.getName(), stParameter.getArgumentType("Object"));
                     final ST listAccessors = generator.getInstanceOf("entityListAccessors");
                     listAccessors.add("entity", className);
                     listAccessors.add("name", stParameter.getName());
+                    listAccessors.add("type", stParameter.getArgumentType("Object"));
                     stEntity.add("listAccessors", listAccessors);
                     break;
 
@@ -121,9 +130,9 @@ public class STGenerator {
                     kvListAccessors.add("entity", className);
                     kvListAccessors.add("name", stParameter.getName());
                     stParameter.getKeys().forEach(stParameterKey -> {
-                        kvListAccessors.add("keys", stParameterKey);
-                        aggrSpec.add("keys", stParameterKey);
-                        aggrValues.add("values", stParameterKey);
+                        kvListAccessors.addAggr("keys.{name,type}", stParameterKey.getName(), stParameterKey.getArgumentType("Object"));
+                        aggrSpec.add("keys", stParameterKey.getName());
+                        aggrValues.add("values", stParameterKey.getName());
                     });
 
                     stEntity.addAggr("kvListFields.{name, aggrSpec, aggrValues}", stParameter.getName(), aggrSpec.render(), aggrValues.render());
@@ -257,7 +266,7 @@ public class STGenerator {
 
         try {
             tryToCreateFileIfNotExists(file);
-            System.out.println("writing file " + file.getAbsolutePath());
+            if (debug) System.out.println("writing file " + file.getAbsolutePath());
 
             final BufferedWriter out = new BufferedWriter(new FileWriter(file));
             out.write(content == null ? "" : content.toString());

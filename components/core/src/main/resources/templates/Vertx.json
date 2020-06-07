@@ -4,13 +4,88 @@
   "delimiter" : "~",
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Vertx.stg",
   "templates" : [ {
-    "uuid" : "4a756317-c8b7-44c4-a677-68c57d064ab6",
-    "name" : "JsonWrapper",
-    "text" : "package nextgen.st.domain;\n\n\npublic class ~name;format=\"capitalize\"~ {\n\n\tprivate final io.vertx.core.json.JsonObject jsonObject;\n\n\tpublic ~name;format=\"capitalize\"~() { \n\t\tthis.jsonObject = new io.vertx.core.json.JsonObject();\n\t\tjsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic ~name;format=\"capitalize\"~(io.vertx.core.json.JsonObject jsonObject) { \n\t\tthis.jsonObject = jsonObject;\n\t\tjava.lang.String uuidString = jsonObject.getString(\"uuid\");\n\t\tif (uuidString == null) jsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic io.vertx.core.json.JsonObject getJsonObject() { \n\t\treturn this.jsonObject;\n\t}\n\n\t@Override\n\tpublic boolean equals(java.lang.Object o) { \n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\tfinal ~name;format=\"capitalize\"~ other = (~name;format=\"capitalize\"~) o;\n\t\treturn jsonObject.getString(\"uuid\").equals(other.getJsonObject().getString(\"uuid\"));\n\t}\n\n\t@Override\n\tpublic int hashCode() { \n\t\treturn java.util.Objects.hash(jsonObject.getString(\"uuid\"));\n\t}\n\n\tpublic ~name;format=\"capitalize\"~ setPath(String value) { \n\t\tjsonObject.put(\"path\", value);\n\t\treturn this;\n\t}\n\n\tpublic String getPath() { \n\t\treturn jsonObject.getString(\"path\");\n\t}\n\n\tpublic String getPath(String defaultValue) { \n\t\treturn jsonObject.getString(\"path\", defaultValue);\n\t}\n\n\tpublic ~name;format=\"capitalize\"~ setOutputPackage(String value) { \n\t\tjsonObject.put(\"outputPackage\", value);\n\t\treturn this;\n\t}\n\n\tpublic String getOutputPackage() { \n\t\treturn jsonObject.getString(\"outputPackage\");\n\t}\n\n\tpublic String getOutputPackage(String defaultValue) { \n\t\treturn jsonObject.getString(\"outputPackage\", defaultValue);\n\t}\n\n\tpublic ~name;format=\"capitalize\"~ setOutputPath(String value) { \n\t\tjsonObject.put(\"outputPath\", value);\n\t\treturn this;\n\t}\n\n\tpublic String getOutputPath() { \n\t\treturn jsonObject.getString(\"outputPath\");\n\t}\n\n\tpublic String getOutputPath(String defaultValue) { \n\t\treturn jsonObject.getString(\"outputPath\", defaultValue);\n\t}\n\n\tpublic ~name;format=\"capitalize\"~ addGroups(STGroupModel value) { \n\t\tio.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray(\"groups\");\n\t\tif (jsonArray == null) jsonObject.put(\"groups\", jsonArray = new io.vertx.core.json.JsonArray());\n\t\tjsonArray.add(value.getJsonObject());\n\t\treturn this;\n\t}\n\n\tpublic java.util.stream.Stream<STGroupModel> getGroups() { \n\t\treturn jsonObject.getJsonArray(\"groups\", new io.vertx.core.json.JsonArray()).stream().map((o) -> new STGroupModel((io.vertx.core.json.JsonObject) o));\n\t}\n\n\tpublic ~name;format=\"capitalize\"~ removeGroups(STGroupModel value) { \n\t\tfinal io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray(\"groups\", new io.vertx.core.json.JsonArray());\n\t\tfor (int i = 0; i < jsonArray.size(); i++)  { \n\t\t\tfinal io.vertx.core.json.JsonObject o = jsonArray.getJsonObject(i);\n\t\t\tif (value.getJsonObject().getString(\"uuid\").equals(o.getString(\"uuid\")))  { \n\t\t\t\tjsonArray.remove(i);\n\t\t\t\treturn this;\n\t\t\t}\n\t\t}\n\t\treturn this;\n\t}\n\n\tpublic ~name;format=\"capitalize\"~ clearGroups() { \n\t\tjsonObject.put(\"groups\", new io.vertx.core.json.JsonArray());\n\t\treturn this;\n\t}\n\n\t@Override\n\tpublic java.lang.String toString() { \n\t\treturn jsonObject.encode();\n\t}\n}",
-    "parameters" : [ {
-      "uuid" : "f9b69ef4-5178-4a99-8506-13632363e6fb",
-      "name" : "name",
-      "type" : "SINGLE"
+    "uuid" : "af542412-d980-4a42-9851-6705eae0723e",
+    "name" : "VertxTypes",
+    "text" : "",
+    "children" : [ {
+      "uuid" : "f798ff04-364d-4a1a-a936-395261e3bbdf",
+      "name" : "JsonArrayType",
+      "text" : "io.vertx.core.json.JsonArray",
+      "parameters" : [ ]
+    } ]
+  }, {
+    "uuid" : "58f87deb-08cb-4f64-bb55-d28f76acb9c7",
+    "name" : "Entities",
+    "text" : "",
+    "children" : [ {
+      "uuid" : "4a756317-c8b7-44c4-a677-68c57d064ab6",
+      "name" : "JsonWrapper",
+      "text" : "~package~\n\npublic class ~name;format=\"capitalize\"~ {\n\n\tprivate final io.vertx.core.json.JsonObject jsonObject;\n\n\tpublic ~name;format=\"capitalize\"~() { \n\t\tthis.jsonObject = new io.vertx.core.json.JsonObject();\n\t\tjsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic ~name;format=\"capitalize\"~(io.vertx.core.json.JsonObject jsonObject) { \n\t\tthis.jsonObject = jsonObject;\n\t\tjava.lang.String uuidString = jsonObject.getString(\"uuid\");\n\t\tif (uuidString == null) jsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic io.vertx.core.json.JsonObject getJsonObject() { \n\t\treturn this.jsonObject;\n\t}\n\n\t@Override\n\tpublic boolean equals(java.lang.Object o) { \n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\tfinal ~name;format=\"capitalize\"~ other = (~name;format=\"capitalize\"~) o;\n\t\treturn jsonObject.getString(\"uuid\").equals(other.getJsonObject().getString(\"uuid\"));\n\t}\n\n\t@Override\n\tpublic int hashCode() { \n\t\treturn java.util.Objects.hash(jsonObject.getString(\"uuid\"));\n\t}\n\n\t@Override\n\tpublic java.lang.String toString() { \n\t\treturn jsonObject.encode();\n\t}\n\t\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\t\n}",
+      "parameters" : [ {
+        "uuid" : "1042f006-a55d-489d-ae1b-8605bdd1a722",
+        "name" : "package",
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "34afa8e0-ce55-4b2a-a245-073791af053d",
+        "name" : "name",
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "35cee2c0-1a61-42f3-b945-9b35a4318423",
+        "name" : "accessors",
+        "type" : "LIST"
+      } ],
+      "children" : [ {
+        "uuid" : "f9d01bcc-c94a-4a4f-adaf-e0cf9715b3ea",
+        "name" : "primitiveAccessors",
+        "text" : "public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n\tjsonObject.put(\"~name~\", value);\n\treturn this;\n}\n\npublic ~type~ get~name;format=\"capitalize\"~() { \n\treturn jsonObject.get~type~(\"~name~\");\n}\n\npublic ~type~ get~name;format=\"capitalize\"~(~type~ defaultValue) { \n\treturn jsonObject.get~type~(\"~name~\", defaultValue);\n}",
+        "parameters" : [ {
+          "uuid" : "c2943301-6650-4bc0-88f3-804bd61a2f50",
+          "name" : "className",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "45721405-4d4c-4cf7-8a92-f7b7953733b4",
+          "name" : "name",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "ef09ae6f-0acd-46ac-a613-60665a121d0e",
+          "name" : "type",
+          "type" : "SINGLE"
+        } ]
+      }, {
+        "uuid" : "23f3083f-6cd5-47ab-8c39-bce21da141ab",
+        "name" : "listReferenceAccessors",
+        "text" : "public ~className;format=\"capitalize\"~ add~name;format=\"capitalize\"~(~type~ value) { \n\tio.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray(\"~name~\");\n\tif (jsonArray == null) jsonObject.put(\"~name~\", jsonArray = new io.vertx.core.json.JsonArray());\n\tjsonArray.add(value.getJsonObject());\n\treturn this;\n}\n\npublic java.util.stream.Stream<~type~> get~name;format=\"capitalize\"~() { \n\treturn jsonObject.getJsonArray(\"~name~\", new io.vertx.core.json.JsonArray()).stream().map((o) -> new ~type~((io.vertx.core.json.JsonObject) o));\n}\n\npublic ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~(~type~ value) { \n\tfinal io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray(\"~name~\", new io.vertx.core.json.JsonArray());\n\tfor (int i = 0; i < jsonArray.size(); i++)  { \n\t\tfinal io.vertx.core.json.JsonObject o = jsonArray.getJsonObject(i);\n\t\tif (value.getJsonObject().getString(\"uuid\").equals(o.getString(\"uuid\")))  { \n\t\t\tjsonArray.remove(i);\n\t\t\treturn this;\n\t\t}\n\t}\n\treturn this;\n}\n\npublic ~className;format=\"capitalize\"~ clear~name;format=\"capitalize\"~() { \n\tjsonObject.put(\"~name~\", new io.vertx.core.json.JsonArray());\n\treturn this;\n}",
+        "parameters" : [ {
+          "uuid" : "80b97977-d278-4905-bfd1-19a065b4979c",
+          "name" : "className",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "db61ef5a-03ab-4d36-9f88-80a3097a4373",
+          "name" : "name",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "9695d63e-90d4-42b1-98e1-13071b09e877",
+          "name" : "type",
+          "type" : "SINGLE"
+        } ]
+      }, {
+        "uuid" : "f6ed57f1-6238-4590-82e1-27aff0ecf302",
+        "name" : "referenceAccessors",
+        "text" : "public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n\tjsonObject.put(\"~name~\", value.getJsonObject());\n\treturn this;\n}\n\npublic ~type~ get~name;format=\"capitalize\"~() { \n\treturn jsonObject.getJsonObject(\"~name~\") == null ? null : new ~type~(jsonObject.getJsonObject(\"~name~\"));\n}",
+        "parameters" : [ {
+          "uuid" : "5a5b52f3-5f4c-48c7-a5b3-2ed08eeb1444",
+          "name" : "className",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "d9c8fdc9-1589-406c-a6e7-473c8514e859",
+          "name" : "name",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "a0e59457-2f46-449b-8102-88371e0bf625",
+          "name" : "type",
+          "type" : "SINGLE"
+        } ]
+      } ]
     } ]
   } ]
 }

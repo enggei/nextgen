@@ -11,6 +11,9 @@ import java.awt.*;
 import java.io.File;
 import java.util.Optional;
 
+import static nextgen.st.STParser.readJsonObject;
+import static nextgen.st.domain.STJsonFactory.newSTGDirectory;
+
 public class STApp extends JFrame {
 
     final STNavigator navigator;
@@ -45,12 +48,12 @@ public class STApp extends JFrame {
                 .setGeneratorRoot(javaMain.getAbsolutePath())
                 .setGeneratorPackage("nextgen.st")
                 .setGeneratorName("StringTemplate")
-                .addDirectories(load(templates, javaTest, "tmp.st"))));
+                .addDirectories(load(templates, javaMain, "nextgen.templates"))));
     }
 
     public static STGDirectory load(File path, File outputRoot, String outputPackage) {
 
-        final STGDirectory root = STJsonFactory.newSTGDirectory()
+        final STGDirectory root = newSTGDirectory()
                 .setPath(path.getAbsolutePath())
                 .setOutputPackage(outputPackage)
                 .setOutputPath(outputRoot.getAbsolutePath());
@@ -58,8 +61,7 @@ public class STApp extends JFrame {
         Optional.ofNullable(list(path, ".json"))
                 .ifPresent(files -> {
                     for (File file : files) {
-                        System.out.println("// todo: add a String-parameter constructor to remove JsonObject from this class");
-                        root.addGroups(new STGroupModel(STParser.readJsonObject(file))); // todo: add a String-parameter constructor to remove JsonObject from this class
+                        root.addGroups(new STGroupModel(readJsonObject(file)));
                     }
                 });
 

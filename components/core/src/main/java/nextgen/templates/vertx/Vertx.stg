@@ -1,0 +1,103 @@
+delimiters "~","~"
+
+Entities() ::= << >>
+
+JsonWrapper(package,name,accessors) ::= <<~package~
+
+public class ~name;format="capitalize"~ {
+
+	private final io.vertx.core.json.JsonObject jsonObject;
+
+	public ~name;format="capitalize"~() { 
+		this.jsonObject = new io.vertx.core.json.JsonObject();
+		jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
+	}
+
+	public ~name;format="capitalize"~(io.vertx.core.json.JsonObject jsonObject) { 
+		this.jsonObject = jsonObject;
+		java.lang.String uuidString = jsonObject.getString("uuid");
+		if (uuidString == null) jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
+	}
+
+	public io.vertx.core.json.JsonObject getJsonObject() { 
+		return this.jsonObject;
+	}
+
+	@Override
+	public boolean equals(java.lang.Object o) { 
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		final ~name;format="capitalize"~ other = (~name;format="capitalize"~) o;
+		return jsonObject.getString("uuid").equals(other.getJsonObject().getString("uuid"));
+	}
+
+	@Override
+	public int hashCode() { 
+		return java.util.Objects.hash(jsonObject.getString("uuid"));
+	}
+
+	@Override
+	public java.lang.String toString() { 
+		return jsonObject.encode();
+	}
+	
+	~accessors:{it|~it~};separator="\n\n"~	
+} >>
+
+primitiveAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
+	jsonObject.put("~name~", value);
+	return this;
+}
+
+public ~type~ get~name;format="capitalize"~() { 
+	return jsonObject.get~type~("~name~");
+}
+
+public ~type~ get~name;format="capitalize"~(~type~ defaultValue) { 
+	return jsonObject.get~type~("~name~", defaultValue);
+} >>
+
+listReferenceAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ add~name;format="capitalize"~(~type~ value) { 
+	io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("~name~");
+	if (jsonArray == null) jsonObject.put("~name~", jsonArray = new io.vertx.core.json.JsonArray());
+	jsonArray.add(value.getJsonObject());
+	return this;
+}
+
+public java.util.stream.Stream<~type~> get~name;format="capitalize"~() { 
+	return jsonObject.getJsonArray("~name~", new io.vertx.core.json.JsonArray()).stream().map((o) -> new ~type~((io.vertx.core.json.JsonObject) o));
+}
+
+public ~className;format="capitalize"~ remove~name;format="capitalize"~(~type~ value) { 
+	final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("~name~", new io.vertx.core.json.JsonArray());
+	for (int i = 0; i < jsonArray.size(); i++)  { 
+		final io.vertx.core.json.JsonObject o = jsonArray.getJsonObject(i);
+		if (value.getJsonObject().getString("uuid").equals(o.getString("uuid")))  { 
+			jsonArray.remove(i);
+			return this;
+		}
+	}
+	return this;
+}
+
+public ~className;format="capitalize"~ clear~name;format="capitalize"~() { 
+	jsonObject.put("~name~", new io.vertx.core.json.JsonArray());
+	return this;
+} >>
+
+referenceAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
+	jsonObject.put("~name~", value.getJsonObject());
+	return this;
+}
+
+public ~type~ get~name;format="capitalize"~() { 
+	return jsonObject.getJsonObject("~name~") == null ? null : new ~type~(jsonObject.getJsonObject("~name~"));
+} >>
+
+VertxTypes() ::= << >>
+
+JsonArrayType() ::= <<io.vertx.core.json.JsonArray >>
+
+eom() ::= "}"
+
+gt() ::= ">"

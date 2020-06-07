@@ -1,0 +1,74 @@
+delimiters "~","~"
+
+babelrc() ::= <<{
+	"presets": [
+		"@babel/preset-env", 
+		"@babel/preset-react"
+	],
+	"plugins": [
+		["module:@babel/plugin-proposal-decorators", { "legacy": true }],
+		["module:@babel/plugin-proposal-class-properties", { "loose": true }]
+	]
+}  >>
+
+dependency(name,version) ::= <<"~name~": "^~version~"  >>
+
+packageJson(main,license,bugsUrl,devDependencies,scripts,dependencies,homepage,repositoryUrl,author,version,repositoryType,description,name) ::= <<{
+  "name": "~name~",
+  "version": "~version~",
+  "description": "~description~",
+  "main": "~main~",
+  "scripts": {
+    ~scripts:{it|~it~};separator=",\n"~
+  },
+  "repository": {
+    "type": "~repositoryType~",
+    "url": "~repositoryUrl~"
+  },
+  "author": "~author~",
+  "license": "~license~",
+  "bugs": {
+    "url": "~bugsUrl~"
+  },
+  "homepage": "~homepage~",
+  "dependencies": {
+    ~dependencies:{it|~it~};separator=",\n"~
+  },
+  "devDependencies": {
+    ~devDependencies:{it|~it~};separator=",\n"~
+  }
+}  >>
+
+script(command,name) ::= <<"~name~": "~command~"  >>
+
+WebpackConfig(outputFilename,mainEntry) ::= <<const path = require('path');
+
+module.exports = {
+	entry: { 
+		main: '~mainEntry~' 
+	},
+	output: {
+		path: __dirname,
+		filename: '~outputFilename~'
+	},
+	module: {
+		rules: [
+			{
+				test: path.join(__dirname, '.'),
+				exclude: /(node_modules)/,
+				use: [
+					{
+						loader: 'babel-loader',
+						options: {
+			    			presets: ["@babel/preset-env", "@babel/preset-react"]
+						}
+					}
+				]
+			}
+		]
+	}
+};  >>
+
+eom() ::= "}"
+
+gt() ::= ">"

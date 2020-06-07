@@ -30,8 +30,8 @@ public class STProject {
                                 .addEnumField("type", "STParameterType", "SINGLE,LIST,KVLIST")
                                 .addOneToManyRelation("keys", newEntityBuilder("STParameterKey")
                                         .addStringField("name")
-                                        .addOneToManyRelation("argumentTypes", newString()))
-                                .addOneToManyRelation("argumentTypes", newString()))
+                                        .addStringField("argumentType"))
+                                .addStringField("argumentType"))
                         .addOneToManySelf("children"));
 
         DomainToJson.generate(javaMainSrc, stDomainPackage, newDomainBuilder("ST")

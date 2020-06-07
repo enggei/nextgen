@@ -13,12 +13,12 @@
     "parameters" : [ {
       "uuid" : "69f4476b-6080-4e11-8500-d74d83d09527",
       "name" : "name",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "d146f65f-b1e9-4857-bb82-5dbf851ff750",
       "name" : "version",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     } ]
   }, {
@@ -28,67 +28,67 @@
     "parameters" : [ {
       "uuid" : "1d70e796-287e-454b-98c5-c65272a69b15",
       "name" : "main",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "690b11d1-7096-4387-b7dd-c590b5172442",
       "name" : "license",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "81475ec5-468c-4ca1-8af9-f65f7cc264dc",
       "name" : "bugsUrl",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "93de6439-e2ac-42c9-b65c-681a86680a4e",
       "name" : "devDependencies",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     }, {
       "uuid" : "00c6acc0-1d8c-4611-80c1-9d2708dd8560",
       "name" : "scripts",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     }, {
       "uuid" : "fa01dde7-36e1-4c8c-a1bf-0fc051510d71",
       "name" : "dependencies",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     }, {
       "uuid" : "72896769-4fb0-450e-8ee8-c193190ca6fc",
       "name" : "homepage",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "da0e701f-b7b0-4eb0-ab7e-b0c2fba9483e",
       "name" : "repositoryUrl",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "5832b661-3f23-4be7-9136-473a5c79b442",
       "name" : "author",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "de454b3a-aaee-4374-b701-1ecd20afdf0b",
       "name" : "version",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "79becd51-cabf-4951-944a-50a7e71fc27e",
       "name" : "repositoryType",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "5fceceac-ad7a-4549-9869-d027b02106c9",
       "name" : "description",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "34227853-ed0b-41d0-bfe4-d4968f677128",
       "name" : "name",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     } ]
   }, {
@@ -98,12 +98,12 @@
     "parameters" : [ {
       "uuid" : "d19ca443-4c0a-48ab-a5e6-c1e5b5c8bd5b",
       "name" : "command",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "e38500f8-18eb-4d29-bef0-ebeb91654fa3",
       "name" : "name",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     } ]
   }, {
@@ -113,12 +113,12 @@
     "parameters" : [ {
       "uuid" : "05fc85de-4f78-480b-830d-f069b01a372a",
       "name" : "outputFilename",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "e512423f-6c5b-4779-8327-142ecd7ef18a",
       "name" : "mainEntry",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     } ]
   } ],

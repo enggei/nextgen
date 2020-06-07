@@ -1,0 +1,23 @@
+delimiters "~","~"
+
+Domain(name,entities) ::= <<~name~
+
+~entities:{it|~it~};separator="\n"~ >>
+
+Entity(name,fields,relations) ::= <<~name~
+
+Fields:
+~fields:{it|~it.name~ ~it.type~};separator="\n"~
+
+Relations:
+~relations:{it|~it.name~ ~it.type~ ~it.target~};separator="\n"~ >>
+
+EntityType() ::= << >>
+
+Relation() ::= << >>
+
+RelationType() ::= << >>
+
+eom() ::= "}"
+
+gt() ::= ">"

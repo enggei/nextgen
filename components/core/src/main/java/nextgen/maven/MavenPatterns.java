@@ -15,6 +15,7 @@ import static com.generator.util.FileUtil.tryToCreateDirIfNotExists;
 import static com.generator.util.FileUtil.tryToCreateFileIfNotExists;
 import static nextgen.java.JavaPatterns.*;
 
+@Deprecated
 public class MavenPatterns extends MavenFactory {
 
     private static final MavenGenerator mavenGenerator = new MavenGenerator();

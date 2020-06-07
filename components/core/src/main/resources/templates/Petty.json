@@ -9,7 +9,7 @@
     "parameters" : [ {
       "uuid" : "ae550607-7546-42db-af91-787c3bfa8ce1",
       "name" : "agentDeclarations",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     } ],
     "children" : [ {
@@ -19,22 +19,22 @@
       "parameters" : [ {
         "uuid" : "19125191-8a41-447f-ba6e-7a4c12fe89f1",
         "name" : "name",
-        "argumentTypes" : [ "Object" ],
+        "argumentType" : "Object" ,
         "type" : "SINGLE"
       }, {
         "uuid" : "7fcfacd7-ff1c-4d49-8c8f-5ee4d15f601e",
         "name" : "parameters",
-        "argumentTypes" : [ "Object" ],
+        "argumentType" : "Object" ,
         "type" : "LIST"
       }, {
         "uuid" : "b20c0a0f-5e4f-4dc6-a6c9-c84300cc3bb1",
         "name" : "url",
-        "argumentTypes" : [ "Object" ],
+        "argumentType" : "Object" ,
         "type" : "SINGLE"
       }, {
         "uuid" : "ab60ad9c-bd77-492a-b886-49c74233c3c7",
         "name" : "action",
-        "argumentTypes" : [ "Object" ],
+        "argumentType" : "Object" ,
         "type" : "SINGLE"
       } ]
     }, {
@@ -44,12 +44,12 @@
       "parameters" : [ {
         "uuid" : "c6f0299f-50a2-4509-9ea1-86e31663409d",
         "name" : "agentEndpoint",
-        "argumentTypes" : [ "Object" ],
+        "argumentType" : "Object" ,
         "type" : "LIST"
       }, {
         "uuid" : "33f8ce05-bd63-4642-ae1d-654a1271a80e",
         "name" : "name",
-        "argumentTypes" : [ "Object" ],
+        "argumentType" : "Object" ,
         "type" : "SINGLE"
       } ]
     } ]

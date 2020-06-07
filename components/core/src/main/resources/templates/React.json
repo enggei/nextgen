@@ -9,16 +9,16 @@
     "parameters" : [ {
       "uuid" : "bfebd897-f30e-4fb4-b933-a47c23d7248b",
       "name" : "components",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "KVLIST",
       "keys" : [ {
         "uuid" : "3d2ce053-9696-461d-a9ad-46f0185ae52a",
         "name" : "path",
-        "argumentTypes" : [ "Object" ]
+        "argumentType" : "Object"
       }, {
         "uuid" : "35deb655-b247-459d-987c-8a0d1d58196c",
         "name" : "name",
-        "argumentTypes" : [ "Object" ]
+        "argumentType" : "Object"
       } ]
     } ]
   }, {
@@ -28,12 +28,12 @@
     "parameters" : [ {
       "uuid" : "ced221fb-c204-4478-9f7b-5990e922f009",
       "name" : "stmt",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "9118b07c-7268-4782-b1fa-346a899a3b60",
       "name" : "children",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     } ]
   }, {
@@ -43,47 +43,47 @@
     "parameters" : [ {
       "uuid" : "35ba12e6-0547-4b9c-9ac1-1910f9995a03",
       "name" : "returnStatements",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     }, {
       "uuid" : "05f58836-daa1-4b4b-b32a-8be290816fe4",
       "name" : "events",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     }, {
       "uuid" : "a1f90e60-e0e1-4e27-a494-79ac0469ac38",
       "name" : "decorators",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     }, {
       "uuid" : "47954fb1-2ec7-4a90-8fac-e6d0070673dd",
       "name" : "name",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "c36cd237-74e2-494a-9767-92e3c4d09811",
       "name" : "components",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     }, {
       "uuid" : "ea5e3779-73af-4357-b265-97d8859944ab",
       "name" : "methods",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     }, {
       "uuid" : "138470c5-3794-4872-8c4a-c59c3f7b8d1a",
       "name" : "state",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     }, {
       "uuid" : "97543f0c-7dc5-4f8f-8308-c7c6aa5b10c9",
       "name" : "dependencies",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     }, {
       "uuid" : "63a95642-e7a2-4c2c-b9e0-315065d37c8e",
       "name" : "renderConstants",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     } ]
   }, {
@@ -93,12 +93,12 @@
     "parameters" : [ {
       "uuid" : "e09223b6-0703-4e76-9d38-b122abbab8f4",
       "name" : "value",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "ad20beff-9b23-44f9-be9f-66eaea9527d4",
       "name" : "name",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     } ]
   }, {
@@ -108,12 +108,12 @@
     "parameters" : [ {
       "uuid" : "e4fd7519-e10e-41fa-9f46-9635ccbbc2b1",
       "name" : "name",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "930d5e00-0e46-4bd1-b79e-df1ceecd52ac",
       "name" : "parameters",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     } ]
   }, {
@@ -123,7 +123,7 @@
     "parameters" : [ {
       "uuid" : "2fd3cb43-a66f-4dc5-b2d6-58a498d1fbc2",
       "name" : "name",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     } ]
   }, {
@@ -133,12 +133,12 @@
     "parameters" : [ {
       "uuid" : "9a58bbe5-7e49-410d-bbe9-334829b60d19",
       "name" : "value",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "078ac514-3b84-4415-89ac-459c7fb646b0",
       "name" : "packageName",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     } ]
   }, {
@@ -148,12 +148,12 @@
     "parameters" : [ {
       "uuid" : "3940d9cc-a3ac-4093-8b80-b61d20028014",
       "name" : "child",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "eda2f2cf-79b3-4220-a047-15df0125b3e3",
       "name" : "prop",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     } ]
   }, {
@@ -163,17 +163,17 @@
     "parameters" : [ {
       "uuid" : "4c8b0d6f-a090-434b-ac97-bffe76517fc5",
       "name" : "name",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "c4a2750c-fea9-4bab-9c97-f62128d900c0",
       "name" : "children",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     }, {
       "uuid" : "2252bf21-9123-4e82-af83-618d867986d8",
       "name" : "props",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     } ]
   }, {
@@ -183,12 +183,12 @@
     "parameters" : [ {
       "uuid" : "b91e109e-0578-450e-96ef-31420a6572bd",
       "name" : "name",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "088a7a37-0b45-417f-ba18-89b26434bf39",
       "name" : "forward",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     } ]
   }, {
@@ -198,17 +198,17 @@
     "parameters" : [ {
       "uuid" : "90517803-dff0-41b1-8aaa-4149dc9648fc",
       "name" : "name",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "31e38d68-bc45-4557-a4b0-102dcbd4505a",
       "name" : "parameters",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     }, {
       "uuid" : "74c84b4d-fb61-4b12-9514-62ac8ca60077",
       "name" : "body",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     } ]
   }, {
@@ -218,21 +218,21 @@
     "parameters" : [ {
       "uuid" : "826b8c3e-a7df-494e-8f58-2db652d7aaec",
       "name" : "properties",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "KVLIST",
       "keys" : [ {
         "uuid" : "ed2e1f35-23db-4919-8637-44862c0f281b",
         "name" : "key",
-        "argumentTypes" : [ "Object" ]
+        "argumentType" : "Object"
       }, {
         "uuid" : "916ea709-05b8-4a17-8312-da3e26d910e8",
         "name" : "value",
-        "argumentTypes" : [ "Object" ]
+        "argumentType" : "Object"
       } ]
     }, {
       "uuid" : "2acc126a-d4b3-4ecc-accd-a32350196942",
       "name" : "name",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     } ]
   }, {
@@ -242,12 +242,12 @@
     "parameters" : [ {
       "uuid" : "e19073a0-da87-4e8b-84f4-66e90d4e9485",
       "name" : "condition",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "7fb4255e-77d6-494b-beb9-d1bfe87c848d",
       "name" : "blockStmt",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     } ]
   }, {
@@ -257,7 +257,7 @@
     "parameters" : [ {
       "uuid" : "682a2f9d-7430-44c2-860d-2d256bfe217b",
       "name" : "values",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     } ]
   }, {
@@ -267,7 +267,7 @@
     "parameters" : [ {
       "uuid" : "da1c4610-522e-4c49-8a8f-9a1dc6f88e7b",
       "name" : "values",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     } ]
   }, {
@@ -277,7 +277,7 @@
     "parameters" : [ {
       "uuid" : "d0b1fe16-d829-437b-8051-368a22aa7596",
       "name" : "to",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     } ]
   }, {
@@ -304,12 +304,12 @@
     "parameters" : [ {
       "uuid" : "8504b5a0-e14d-476c-a69d-7aeda7d74838",
       "name" : "title",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "ec21cdb4-92ac-4636-be4d-82dbac811cc7",
       "name" : "name",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     } ]
   }, {
@@ -344,12 +344,12 @@
     "parameters" : [ {
       "uuid" : "94827655-ff32-464f-8204-7ef49463e79c",
       "name" : "values",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     }, {
       "uuid" : "76c4bb66-d1a7-4053-b1b4-b88bd8b9b449",
       "name" : "name",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     } ]
   }, {
@@ -359,7 +359,7 @@
     "parameters" : [ {
       "uuid" : "b6217f8e-9cf7-41c2-bee8-7820ea339880",
       "name" : "names",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     } ]
   }, {
@@ -369,12 +369,12 @@
     "parameters" : [ {
       "uuid" : "2bb92f4d-0987-49ed-bc51-33b1c370eddc",
       "name" : "name",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "891e0d12-e529-4ab8-980f-6d98385f935b",
       "name" : "value",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     } ]
   }, {
@@ -384,12 +384,12 @@
     "parameters" : [ {
       "uuid" : "fd35c3b2-24e3-4acd-b8f5-b8d440142c05",
       "name" : "name",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "9e359ad9-3a10-4d07-9cd9-5f5cd9da6797",
       "name" : "value",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     } ]
   }, {
@@ -399,12 +399,12 @@
     "parameters" : [ {
       "uuid" : "89e363dd-7aa1-40e8-9ffc-0c83d74d789d",
       "name" : "condition",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "fd102358-cbaa-4aac-94e0-6a8c908d6855",
       "name" : "element",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     } ]
   }, {
@@ -414,12 +414,12 @@
     "parameters" : [ {
       "uuid" : "64dfe7fc-14ec-4f1c-8434-d64fed101843",
       "name" : "menuItems",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     }, {
       "uuid" : "35ac557a-e5ce-4e3e-82c2-ac516d54b00b",
       "name" : "menuComponents",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     } ]
   }, {
@@ -429,16 +429,16 @@
     "parameters" : [ {
       "uuid" : "9a45f5e7-2414-4810-969e-3ba0edb5f5e2",
       "name" : "values",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "KVLIST",
       "keys" : [ {
         "uuid" : "0973bb5b-19a7-4de8-ba56-cd1ee3fe3b69",
         "name" : "name",
-        "argumentTypes" : [ "Object" ]
+        "argumentType" : "Object"
       }, {
         "uuid" : "4941b694-35aa-4fc5-a16f-cc8964ddbd3b",
         "name" : "value",
-        "argumentTypes" : [ "Object" ]
+        "argumentType" : "Object"
       } ]
     } ]
   }, {
@@ -448,21 +448,21 @@
     "parameters" : [ {
       "uuid" : "b6f38c06-f09f-4872-a396-909d576687cd",
       "name" : "name",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "SINGLE"
     }, {
       "uuid" : "5ea85cf9-70e4-442a-aeec-07f87aa6d5c6",
       "name" : "properties",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "KVLIST",
       "keys" : [ {
         "uuid" : "444bb55a-8796-41bc-bb8a-72aed36366a1",
         "name" : "key",
-        "argumentTypes" : [ "Object" ]
+        "argumentType" : "Object"
       }, {
         "uuid" : "88cbb2b2-9b36-4c28-8634-fbff4731699e",
         "name" : "value",
-        "argumentTypes" : [ "Object" ]
+        "argumentType" : "Object"
       } ]
     } ]
   }, {
@@ -472,7 +472,7 @@
     "parameters" : [ {
       "uuid" : "292a0b89-e846-433f-852e-88df072ea7de",
       "name" : "elements",
-      "argumentTypes" : [ "Object" ],
+      "argumentType" : "Object" ,
       "type" : "LIST"
     } ]
   }, {

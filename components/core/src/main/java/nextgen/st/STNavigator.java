@@ -374,12 +374,7 @@ public class STNavigator extends JPanel {
                 }
 
                 private Action generateAction() {
-                    return newAction("Generate", actionEvent ->
-                            SwingUtilities.invokeLater(() ->
-                                    getParentNode(STGDirectoryTreeNode.class).ifPresent(parent -> {
-                                        save();
-                                        parent.generate(getModel());
-                                    })));
+                    return newAction("Generate", actionEvent -> generate());
                 }
 
                 private Action newTemplateAction() {
@@ -472,6 +467,14 @@ public class STNavigator extends JPanel {
                     return Optional.of(name);
                 }
 
+                public void generate() {
+                    SwingUtilities.invokeLater(() ->
+                            getParentNode(STGDirectoryTreeNode.class).ifPresent(parent -> {
+                                save();
+                                parent.generate(getModel());
+                            }));
+                }
+
                 class STTemplateTreeNode extends BaseTreeNode<STTemplate> {
 
                     public STTemplateTreeNode(STTemplate model) {
@@ -499,6 +502,7 @@ public class STNavigator extends JPanel {
                             return new Action[]{
                                     reparentAction(candidateChildren),
                                     newChildTemplateAction(),
+                                    newSetParameterTypesAction(),
                                     renameSTTemplateAction(),
                                     removeSTTemplateAction()
                             };
@@ -506,6 +510,7 @@ public class STNavigator extends JPanel {
 
                         return new Action[]{
                                 newChildTemplateAction(),
+                                newSetParameterTypesAction(),
                                 renameSTTemplateAction(),
                                 removeSTTemplateAction()
                         };
@@ -530,6 +535,76 @@ public class STNavigator extends JPanel {
                                     save();
                                     treeModel.nodeStructureChanged(getParent());
                                 }));
+                    }
+
+                    private Action newSetParameterTypesAction() {
+                        return newAction("Set parameter types", actionEvent -> {
+
+                            final Map<String, JTextField> txtParameterMap = new TreeMap<>();
+                            getModel().getParameters().forEach(stParameter -> {
+
+                                switch (stParameter.getType()) {
+
+                                    case SINGLE:
+                                    case LIST:
+                                        txtParameterMap.put(stParameter.getName(), new JTextField(stParameter.getArgumentType("Object"), 30));
+                                        break;
+                                    case KVLIST:
+                                        stParameter.getKeys().forEach(stParameterKey -> {
+                                            txtParameterMap.put(stParameter.getName() + "." + stParameterKey.getName(), new JTextField(stParameterKey.getArgumentType("Object"), 30));
+                                        });
+                                        break;
+                                }
+                            });
+
+                            final JDialog dialog = new JDialog((Frame) SwingUtilities.getAncestorOfClass(JFrame.class, tree), "Set Parameter types", true);
+                            final JPanel contentPanel = new JPanel(new GridLayout(txtParameterMap.size(), 2));
+                            contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
+                            txtParameterMap.forEach((key, value) -> {
+                                contentPanel.add(new JLabel(key));
+                                contentPanel.add(value);
+                            });
+                            dialog.add(contentPanel, BorderLayout.CENTER);
+
+                            final JButton btnSave = new JButton(newAction("Save", actionEvent1 -> {
+                                getModel().getParameters().forEach(stParameter -> {
+
+                                    switch (stParameter.getType()) {
+
+                                        case SINGLE:
+                                        case LIST:
+                                            final JTextField txtTypes = txtParameterMap.get(stParameter.getName());
+                                            final String types = txtTypes.getText().trim();
+                                            stParameter.setArgumentType(types.length() == 0 ? "Object" : types);
+                                            break;
+
+                                        case KVLIST:
+                                            stParameter.getKeys().forEach(stParameterKey -> {
+                                                final JTextField txtKVTypes = txtParameterMap.get(stParameter.getName() + "." + stParameterKey.getName());
+                                                final String kvTypes = txtKVTypes.getText().trim();
+                                                stParameterKey.setArgumentType(kvTypes.length() == 0 ? "Object" : kvTypes);
+                                            });
+                                            break;
+                                    }
+                                });
+
+                                save();
+
+                                SwingUtilities.invokeLater(dialog::dispose);
+                            }));
+                            dialog.getRootPane().setDefaultButton(btnSave);
+
+                            final JPanel commandPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+                            commandPanel.add(btnSave);
+                            commandPanel.add(new JButton(newAction("Cancel", actionEvent1 -> SwingUtilities.invokeLater(dialog::dispose))));
+                            dialog.add(commandPanel, BorderLayout.SOUTH);
+
+                            SwingUtilities.invokeLater(() -> {
+                                dialog.pack();
+                                dialog.setLocationRelativeTo(tree);
+                                dialog.setVisible(true);
+                            });
+                        });
                     }
 
                     private Action newChildTemplateAction() {

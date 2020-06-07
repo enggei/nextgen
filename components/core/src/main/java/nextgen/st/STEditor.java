@@ -5,14 +5,18 @@ import nextgen.st.domain.STGParseResult;
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STTemplate;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
 import org.stringtemplate.v4.misc.STMessage;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.text.BadLocationException;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.function.Consumer;
 
 import static nextgen.st.STGenerator.toSTGroup;
 import static nextgen.st.domain.STJsonFactory.newSTGroupModel;
@@ -35,6 +39,17 @@ public class STEditor extends JPanel {
         super(new BorderLayout());
 
         this.stGroupTreeNode = stGroupTreeNode;
+
+        final JPopupMenu pop = this.txtEditor.getPopupMenu();
+        pop.addSeparator();
+        pop.add(newAction("Insert Single", actionEvent -> insertSimpleProperty()));
+        pop.add(newAction("Insert Single Capitalized", actionEvent -> capitalize()));
+        pop.add(newAction("Insert List", actionEvent -> insertListProperty()));
+        pop.add(newAction("Insert If", actionEvent -> insertIf()));
+        pop.add(newAction("Replace text and insert Single", actionEvent -> replaceAndInsertProperty()));
+        pop.add(newAction("Save", actionEvent -> commit()));
+        pop.addSeparator();
+        pop.add(newAction("Add Java method", actionEvent -> addJavaMethod()));
 
         this.txtEditor.setFont(new Font("Hack", Font.PLAIN, 12));
         this.txtEditor.setTabSize(3);
@@ -62,10 +77,11 @@ public class STEditor extends JPanel {
                 this.startText = STGenerator.toStg(stGroupTreeNode.getModel()).trim() :
                 stTemplateTreeNode.getModel().getText().trim();
 
+        this.txtEditor.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
         this.txtEditor.setText(startText);
         this.txtEditor.setCaretPosition(0);
         this.txtEditor.setEditable(stTemplateTreeNode != null);
-        txtEditor.setBackground( uneditedColor);
+        txtEditor.setBackground(uneditedColor);
     }
 
     private void commit() {
@@ -121,6 +137,20 @@ public class STEditor extends JPanel {
         }
     }
 
+    private void generate() {
+        commit();
+        stGroupTreeNode.generate();
+    }
+
+    private Action newAction(String name, Consumer<ActionEvent> consumer) {
+        return new AbstractAction(name) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                consumer.accept(e);
+            }
+        };
+    }
+
     private class STTemplateEditorKeyListener extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent keyEvent) {
@@ -135,117 +165,146 @@ public class STEditor extends JPanel {
                 insertIf();
             } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_1) {
                 capitalize();
-            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
+            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_P) {
                 insertSimpleProperty();
             } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_R) {
                 replaceAndInsertProperty();
             } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_F) {
                 format(txtEditor);
-            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && (keyEvent.getKeyCode() == KeyEvent.VK_ENTER || keyEvent.getKeyCode() == KeyEvent.VK_S)) {
+            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_S) {
                 commit();
+            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_G) {
+                generate();
+            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
+                showPopup();
             }
         }
+    }
 
-        private void capitalize() {
-            SwingUtilities.invokeLater(() -> {
-                removeSelectedTextIfAny();
-                final int caretPosition = txtEditor.getCaretPosition();
-                txtEditor.insert(stGroupTreeNode.getModel().getDelimiter() + ";format=\"capitalize\"" + stGroupTreeNode.getModel().getDelimiter(), caretPosition);
-                txtEditor.setCaretPosition(caretPosition + 1);
-                txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
-            });
-        }
+    private void showPopup() {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                final Rectangle rectangle = txtEditor.modelToView(txtEditor.getCaretPosition());
+                Point p = rectangle.getLocation();
+                p.y += rectangle.height;
+                final JPopupMenu popupMenu = txtEditor.getPopupMenu();
+                popupMenu.show(txtEditor, p.x, p.y);
+            } catch (BadLocationException ignore) {
 
-        private void insertListProperty() {
-            final String input = SwingUtil.showInputDialog("name", txtEditor);
-            if (input == null) return;
-            final String name = input.contains(" ") ? input.split(" ")[0] : input;
-            final String separator = input.contains(" ") ? input.split(" ")[1] : null;
-            SwingUtilities.invokeLater(() -> {
-                removeSelectedTextIfAny();
-                final int caretPosition = txtEditor.getCaretPosition();
-                final String pre = stGroupTreeNode.getModel().getDelimiter() + name + ":{it|";
-                final String sep = separator == null ? "" : ";separator=\"" + separator + "\"";
-                final String list = pre + "}" + sep + stGroupTreeNode.getModel().getDelimiter();
-                txtEditor.insert(list, caretPosition);
-                txtEditor.setCaretPosition(caretPosition + pre.length());
-                txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
-            });
-        }
+            }
+        });
+    }
 
-        private void insertIf() {
-            final String input = SwingUtil.showInputDialog("condition", txtEditor);
-            if (input == null) return;
-            final String name = input.trim();
-            SwingUtilities.invokeLater(() -> {
-                removeSelectedTextIfAny();
-                final int caretPosition = txtEditor.getCaretPosition();
-                final String pre = stGroupTreeNode.getModel().getDelimiter() + "if(" + name + ")" + stGroupTreeNode.getModel().getDelimiter();
-                final String list = pre + stGroupTreeNode.getModel().getDelimiter() + "endif" + stGroupTreeNode.getModel().getDelimiter();
-                txtEditor.insert(list, caretPosition);
-                txtEditor.setCaretPosition(caretPosition + pre.length());
-                txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
-            });
-        }
-
-        private void insertSimpleProperty() {
-            SwingUtilities.invokeLater(() -> {
-                removeSelectedTextIfAny();
-                final int caretPosition = txtEditor.getCaretPosition();
-                txtEditor.insert(stGroupTreeNode.getModel().getDelimiter() + "" + stGroupTreeNode.getModel().getDelimiter(), caretPosition);
-                txtEditor.setCaretPosition(caretPosition + 1);
-                txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
-            });
-        }
-
-        private void replaceAndInsertProperty() {
-            final String selected = txtEditor.getSelectedText();
-            if (selected == null || selected.length() < 1) return;
-            final String propertyName = SwingUtil.showInputDialog("name", txtEditor);
-            if (propertyName == null) return;
-            final String replacement = stGroupTreeNode.getModel().getDelimiter() + propertyName + stGroupTreeNode.getModel().getDelimiter();
-            txtEditor.setText(txtEditor.getText().replaceAll(selected, replacement));
-            txtEditor.setCaretPosition(0);
-            txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
-        }
-
-        private void format(JTextArea txtEditor) {
+    private void capitalize() {
+        SwingUtilities.invokeLater(() -> {
+            removeSelectedTextIfAny();
             final int caretPosition = txtEditor.getCaretPosition();
-            final StringBuilder spaces = new StringBuilder();
-            for (int i = 0; i < txtEditor.getTabSize(); i++) spaces.append(" ");
+            txtEditor.insert(stGroupTreeNode.getModel().getDelimiter() + ";format=\"capitalize\"" + stGroupTreeNode.getModel().getDelimiter(), caretPosition);
+            txtEditor.setCaretPosition(caretPosition + 1);
+            txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
+        });
+    }
 
-            String[] split = txtEditor.getText().split("\n");
-            final StringBuilder formatted = new StringBuilder();
-            for (String s : split) formatted.append(s.replace(spaces, "\t")).append("\n");
-            split = formatted.toString().split("\n");
+    private void insertListProperty() {
+        final String input = SwingUtil.showInputDialog("name", txtEditor);
+        if (input == null) return;
+        final String name = input.contains(" ") ? input.split(" ")[0] : input;
+        final String separator = input.contains(" ") ? input.split(" ")[1] : null;
+        SwingUtilities.invokeLater(() -> {
+            removeSelectedTextIfAny();
+            final int caretPosition = txtEditor.getCaretPosition();
+            final String pre = stGroupTreeNode.getModel().getDelimiter() + name + ":{it|";
+            final String sep = separator == null ? "" : ";separator=\"" + separator + "\"";
+            final String list = pre + "}" + sep + stGroupTreeNode.getModel().getDelimiter();
+            txtEditor.insert(list, caretPosition);
+            txtEditor.setCaretPosition(caretPosition + pre.length());
+            txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
+        });
+    }
 
-            final StringBuilder formatted2 = new StringBuilder();
-            for (String s : split) {
-                final char[] c = s.toCharArray();
-                if (c.length == 0) formatted2.append("\n");
-                for (int i = 0; i < c.length; i++) {
-                    if (c[i] == '\t') {
-                        formatted2.append(c[i]);
-                        continue;
-                    }
-                    if (c[i] == ' ') continue;
-                    formatted2.append(s.substring(i)).append("\n");
-                    break;
+    private void insertIf() {
+        final String input = SwingUtil.showInputDialog("condition", txtEditor);
+        if (input == null) return;
+        final String name = input.trim();
+        SwingUtilities.invokeLater(() -> {
+            removeSelectedTextIfAny();
+            final int caretPosition = txtEditor.getCaretPosition();
+            final String pre = stGroupTreeNode.getModel().getDelimiter() + "if(" + name + ")" + stGroupTreeNode.getModel().getDelimiter();
+            final String list = pre + stGroupTreeNode.getModel().getDelimiter() + "endif" + stGroupTreeNode.getModel().getDelimiter();
+            txtEditor.insert(list, caretPosition);
+            txtEditor.setCaretPosition(caretPosition + pre.length());
+            txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
+        });
+    }
+
+    private void insertSimpleProperty() {
+        SwingUtilities.invokeLater(() -> {
+            removeSelectedTextIfAny();
+            final int caretPosition = txtEditor.getCaretPosition();
+            txtEditor.insert(stGroupTreeNode.getModel().getDelimiter() + "" + stGroupTreeNode.getModel().getDelimiter(), caretPosition);
+            txtEditor.setCaretPosition(caretPosition + 1);
+            txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
+        });
+    }
+
+    private void replaceAndInsertProperty() {
+        final String selected = txtEditor.getSelectedText();
+        if (selected == null || selected.length() < 1) return;
+        final String propertyName = SwingUtil.showInputDialog("name", txtEditor);
+        if (propertyName == null) return;
+        final String replacement = stGroupTreeNode.getModel().getDelimiter() + propertyName + stGroupTreeNode.getModel().getDelimiter();
+        txtEditor.setText(txtEditor.getText().replaceAll(selected, replacement));
+        txtEditor.setCaretPosition(0);
+        txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
+    }
+
+    private void format(JTextArea txtEditor) {
+        final int caretPosition = txtEditor.getCaretPosition();
+        final StringBuilder spaces = new StringBuilder();
+        for (int i = 0; i < txtEditor.getTabSize(); i++) spaces.append(" ");
+
+        String[] split = txtEditor.getText().split("\n");
+        final StringBuilder formatted = new StringBuilder();
+        for (String s : split) formatted.append(s.replace(spaces, "\t")).append("\n");
+        split = formatted.toString().split("\n");
+
+        final StringBuilder formatted2 = new StringBuilder();
+        for (String s : split) {
+            final char[] c = s.toCharArray();
+            if (c.length == 0) formatted2.append("\n");
+            for (int i = 0; i < c.length; i++) {
+                if (c[i] == '\t') {
+                    formatted2.append(c[i]);
+                    continue;
                 }
+                if (c[i] == ' ') continue;
+                formatted2.append(s.substring(i)).append("\n");
+                break;
             }
+        }
 
-            txtEditor.setText(formatted2.toString().trim());
-            txtEditor.setCaretPosition(Math.min(formatted2.toString().trim().length(), caretPosition));
+        txtEditor.setText(formatted2.toString().trim());
+        txtEditor.setCaretPosition(Math.min(formatted2.toString().trim().length(), caretPosition));
+        txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
+    }
+
+    private void removeSelectedTextIfAny() {
+        if (txtEditor.getSelectedText() != null) {
+            final int selectionStart = txtEditor.getSelectionStart();
+            txtEditor.replaceRange("", selectionStart, txtEditor.getSelectionEnd());
+            txtEditor.setCaretPosition(selectionStart);
             txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
         }
+    }
 
-        private void removeSelectedTextIfAny() {
-            if (txtEditor.getSelectedText() != null) {
-                final int selectionStart = txtEditor.getSelectionStart();
-                txtEditor.replaceRange("", selectionStart, txtEditor.getSelectionEnd());
-                txtEditor.setCaretPosition(selectionStart);
-                txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
-            }
-        }
+    private void addJavaMethod() {
+        SwingUtilities.invokeLater(() -> {
+            removeSelectedTextIfAny();
+            final int caretPosition = txtEditor.getCaretPosition();
+            final String str = "\tpublic void " + stGroupTreeNode.getModel().getDelimiter() + "name;format=\"capitalize\"" + stGroupTreeNode.getModel().getDelimiter() + "() {\n\t}";
+            txtEditor.insert(str, caretPosition);
+            txtEditor.setCaretPosition(caretPosition + str.length() - 1);
+            txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
+        });
     }
 }

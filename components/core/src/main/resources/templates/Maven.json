@@ -13,11 +13,11 @@
       "keys" : [ {
         "uuid" : "2d1569ef-04a0-479f-bd27-30e0f4a54f69",
         "name" : "name",
-        "argumentTypes" : [ "Object" ]
+        "argumentType" : "Object"
       }, {
         "uuid" : "7cb91a1a-ba44-41c4-8a05-61f9fdf4d20f",
         "name" : "value",
-        "argumentTypes" : [ "Object" ]
+        "argumentType" : "Object"
       } ]
     }, {
       "uuid" : "9cffc3a8-764e-4e01-bd37-3b3fdff7eea8",
@@ -110,11 +110,11 @@
       "keys" : [ {
         "uuid" : "73ad6d33-fb9d-48c6-810e-881e710e5099",
         "name" : "name",
-        "argumentTypes" : [ "Object" ]
+        "argumentType" : "Object"
       }, {
         "uuid" : "0061b2a4-6823-4fec-a1b0-450428d614b7",
         "name" : "value",
-        "argumentTypes" : [ "Object" ]
+        "argumentType" : "Object"
       } ]
     }, {
       "uuid" : "3539f0cd-4921-4c01-914a-634d517b6303",
@@ -216,15 +216,79 @@
         "keys" : [ {
           "uuid" : "87a1b27a-0917-4b27-b8e9-802d163ac8cd",
           "name" : "name",
-          "argumentTypes" : [ "Object" ]
+          "argumentType" : "Object"
         }, {
           "uuid" : "2aa3b5e4-b342-406e-820a-391a9c29d923",
           "name" : "value",
-          "argumentTypes" : [ "Object" ]
+          "argumentType" : "Object"
         } ]
       }, {
         "uuid" : "e42f8724-bddf-4065-9572-13628fcb0bf9",
         "name" : "executions",
+        "type" : "LIST"
+      } ]
+    } ]
+  }, {
+    "uuid" : "cb5b0503-2209-492a-9e23-8b4d63e2d68f",
+    "name" : "Entities",
+    "text" : "",
+    "children" : [ {
+      "uuid" : "38923b07-0e48-4289-b555-d8d8ddb357d6",
+      "name" : "DependencyGroup",
+      "text" : "Name ~name~\nGroupId ~groupId~\nVersion ~version~\n\n~artifacts:{it|~it~};separator=\"\\n\"~",
+      "parameters" : [ {
+        "uuid" : "055453ce-7766-4072-ab7d-2821e7b0ba61",
+        "name" : "name",
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "0854f7e6-1bfc-4a57-b545-1f78b8c34690",
+        "name" : "groupId",
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "4bc92646-ed83-4bf8-b317-1ef34a6e84f3",
+        "name" : "version",
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "ca564308-2500-4b2f-8350-02409eedd280",
+        "name" : "artifacts",
+        "type" : "LIST"
+      } ]
+    }, {
+      "uuid" : "862e955a-8316-48b7-9400-03d496580268",
+      "name" : "Project",
+      "text" : "Project ~name~\n\nroot\t:\t~root~\nPom\t: ~pom~\n\nModules :\n~modules:{it|~it~};separator=\"\\n\"~",
+      "parameters" : [ {
+        "uuid" : "98c1c33a-bdc3-41f3-9490-91def865f25e",
+        "name" : "name",
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "6496ea98-6eab-4d95-a926-fc8e5eea2f9c",
+        "name" : "root",
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "4104c7aa-cde1-4e1f-8b08-ce24b29ce36b",
+        "name" : "pom",
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "d81231ff-9894-4843-aa09-037d3f08c468",
+        "name" : "modules",
+        "type" : "LIST"
+      } ]
+    }, {
+      "uuid" : "a3de07f1-d8c2-4398-9e8c-87285480a161",
+      "name" : "Module",
+      "text" : "Module ~name~\nPom : ~pom~\n\nModules:\n~modules:{it|~it~};separator=\"\\n\"~",
+      "parameters" : [ {
+        "uuid" : "6def4750-0a8f-4b5b-a1cb-1194b5ffb23b",
+        "name" : "name",
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "340b9cf5-7cfc-44f7-81c1-f31dfb6c812a",
+        "name" : "pom",
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "30e3a908-7531-44a0-952e-119d739711b2",
+        "name" : "modules",
         "type" : "LIST"
       } ]
     } ]

@@ -51,19 +51,16 @@ public class STParameterKey {
 		return jsonObject.getString("name");
 	}
 
-	public STParameterKey addArgumentTypes(String value) { 
-		io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("argumentTypes");
-		if (jsonArray == null) jsonObject.put("argumentTypes", jsonArray = new io.vertx.core.json.JsonArray());
-		jsonArray.add(value);
+	public STParameterKey setArgumentType(String value) { 
+		jsonObject.put("argumentType", value);
 		return this;
 	}
 
-	public java.util.stream.Stream<String> getArgumentTypes() { 
-		return jsonObject.getJsonArray("argumentTypes", new io.vertx.core.json.JsonArray()).stream().map((o) -> (String) o);
+	public String getArgumentType() { 
+		return jsonObject.getString("argumentType");
 	}
 
-	public STParameterKey clearArgumentTypes() { 
-		jsonObject.put("argumentTypes", new io.vertx.core.json.JsonArray());
-		return this;
+	public String getArgumentType(String defaultValue) { 
+		return jsonObject.getString("argumentType", defaultValue);
 	}
 }
