@@ -186,7 +186,7 @@ public class ClassDeclaration {
 	static final String st = "ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends) ::= <<~if(annotations)~~annotations~~endif~\n" + 
 				"~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n" + 
 				"	~fields:{it|~it~};separator=\"\\n\"~\n" + 
-				")~if(extends)~ : ~extends:{it|~it.className~(~if(it.params)~~it.params:{p|~p.name~};separator=\", \"~~endif~)};separator=\", \"~~endif~ {\n" + 
+				")~if(extends)~ : ~extends:{it|~it.className~(~it.params:{p|~p.name~};separator=\", \"~)};separator=\", \"~~endif~ {\n" + 
 				"	\n" + 
 				"}>> ";
 } 

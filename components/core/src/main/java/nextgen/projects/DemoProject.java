@@ -2,33 +2,17 @@ package nextgen.projects;
 
 import nextgen.templates.MavenPatterns;
 import nextgen.templates.NpmPatterns;
-import nextgen.templates.java.JavaST;
 import nextgen.templates.java.PackageDeclaration;
 import nextgen.templates.kotlin.DataClass;
-import nextgen.templates.kotlin.KotlinST;
 import nextgen.templates.maven.DependencyGroup;
-import nextgen.templates.maven.MavenST;
 import nextgen.templates.maven.Pom;
-import nextgen.templates.react.ReactST;
-import nextgen.templates.test.TestST;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static nextgen.npm.st.NpmFactory.*;
-import static nextgen.npm.st.NpmFactory.newBabelrc;
 import static nextgen.templates.JavaPatterns.newPackageDeclaration;
 import static nextgen.templates.MavenPatterns.*;
-import static nextgen.templates.java.JavaST.*;
-import static nextgen.templates.kotlin.KotlinST.newDataClass;
-import static nextgen.templates.maven.MavenST.newBuild;
-import static nextgen.templates.maven.MavenST.newDependencyGroup;
-import static nextgen.templates.maven.MavenST.newFrontEndMavenPlugin;
-import static nextgen.templates.maven.MavenST.newPom;
-import static nextgen.templates.maven.MavenST.newProject;
-import static nextgen.templates.maven.MavenST.newShadePlugin;
-import static nextgen.templates.react.ReactST.newFunction;
 
 public class DemoProject {
 
@@ -40,18 +24,6 @@ public class DemoProject {
     private final PackageDeclaration webPackage = newPackageDeclaration(corePackage, "web");
 
     private final String mainClass = "ServerApp";
-
-    @Test
-    public void testSimple() {
-
-
-        final DataClass.DataClass_Users sogern = new DataClass.DataClass_Users("sogern", 41);
-
-        System.out.println(newDataClass().setIsFinal(true).setClassName("class"));
-        System.out.println(newDataClass().setClassName("Nonfinal class"));
-
-
-    }
 
     @Test
     public void generateProjectFiles() {

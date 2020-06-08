@@ -20,7 +20,7 @@ PackageDeclaration(name) ::= <<package ~name~ >>
 ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends) ::= <<~if(annotations)~~annotations~~endif~
 ~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(
 	~fields:{it|~it~};separator="\n"~
-)~if(extends)~ : ~extends:{it|~it.className~(~if(it.params)~~it.params:{p|~p.name~};separator=", "~~endif~)};separator=", "~~endif~ {
+)~if(extends)~ : ~extends:{it|~it.className~(~it.params:{p|~p.name~};separator=", "~)};separator=", "~~endif~ {
 	
 } >>
 

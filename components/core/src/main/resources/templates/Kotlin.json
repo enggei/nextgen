@@ -62,47 +62,47 @@
       }, {
         "uuid" : "f05c4cbf-3b7e-4156-9906-99ae7e7c47a6",
         "name" : "ClassDeclaration",
-        "text" : "~if(annotations)~~annotations~~endif~\n~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n\t~fields:{it|~it~};separator=\"\\n\"~\n)~if(extends)~ : ~extends:{it|~it.className~(~if(it.params)~~it.params:{p|~p.name~};separator=\", \"~~endif~)};separator=\", \"~~endif~ {\n\t\n}",
+        "text" : "~if(annotations)~~annotations~~endif~\n~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n\t~fields:{it|~it~};separator=\"\\n\"~\n)~if(extends)~ : ~extends:{it|~it.className~(~it.params:{p|~p.name~};separator=\", \"~)};separator=\", \"~~endif~ {\n\t\n}",
         "parameters" : [ {
-          "uuid" : "dc2c10dd-3fee-49c0-a125-c0b1411b8ba5",
+          "uuid" : "9fc6136b-69ea-4408-b012-91f478c92569",
           "name" : "annotations",
           "type" : "SINGLE",
           "argumentType" : "Object"
         }, {
-          "uuid" : "d4067c1f-f910-40cf-97d0-878d2932a509",
+          "uuid" : "49f07ea8-665b-4e51-be72-504629f0f4c5",
           "name" : "isOpen",
           "type" : "SINGLE",
           "argumentType" : "Object"
         }, {
-          "uuid" : "af8e85fb-5365-4592-9782-85047fdae87b",
+          "uuid" : "dd9f9db5-46af-4b4e-abe9-757d3b07add2",
           "name" : "isAbstract",
           "type" : "SINGLE",
           "argumentType" : "Object"
         }, {
-          "uuid" : "34f5e761-282a-4642-8acb-090829a964c6",
+          "uuid" : "cc2e864f-d702-487b-9083-2ea26efa24df",
           "name" : "name",
           "type" : "SINGLE",
           "argumentType" : "Object"
         }, {
-          "uuid" : "064ddcea-f826-46b2-8cfc-352ac9605b19",
+          "uuid" : "ca870e6c-da32-479f-9719-e8ff149cda11",
           "name" : "fields",
           "type" : "LIST",
           "argumentType" : "Object"
         }, {
-          "uuid" : "3485d6ff-07af-422d-bf46-a390ca7814c5",
+          "uuid" : "8ab534b7-a002-4408-b705-c148d752328a",
           "name" : "extends",
           "type" : "KVLIST",
           "argumentType" : "Object",
           "keys" : [ {
-            "uuid" : "a232450b-fde0-4b51-914d-b96b1745b909",
+            "uuid" : "366f429e-9546-486b-883b-be769381478c",
             "name" : "className",
             "argumentType" : "Object"
           }, {
-            "uuid" : "8ca42739-4b9d-4263-8c88-2f2fbe7a2c53",
+            "uuid" : "7b43a570-a874-450a-921f-401ced003d8a",
             "name" : "params",
             "argumentType" : "Object"
           }, {
-            "uuid" : "56155ab5-9b7d-45f4-89ac-7c431dcdc59e",
+            "uuid" : "10795106-815d-45fe-8175-6c3ad756a785",
             "name" : "name",
             "argumentType" : "Object"
           } ]
