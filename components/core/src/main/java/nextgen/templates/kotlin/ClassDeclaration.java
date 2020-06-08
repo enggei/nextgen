@@ -9,8 +9,8 @@ public class ClassDeclaration {
 	private Object _isOpen;
 	private Object _isAbstract;
 	private Object _name;
+	private Object _extends;
 	private java.util.List<Object> _fields = new java.util.ArrayList<>();
-	private java.util.List<java.util.Map<String, Object>> _extends = new java.util.ArrayList<>();
 
 	ClassDeclaration(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -36,8 +36,8 @@ public class ClassDeclaration {
 		st.add("isOpen", _isOpen);
 		st.add("isAbstract", _isAbstract);
 		st.add("name", _name);
+		st.add("extends", _extends);
 		for (Object o : _fields) st.add("fields", o);
-		for (java.util.Map<String, Object> map : _extends) st.addAggr("extends.{className,params,name}", map.get("className"), map.get("params"), map.get("name"));
 		return st.render().trim();
 	}
 
@@ -112,6 +112,24 @@ public class ClassDeclaration {
 		this._name = null;
 		return this;
 	} 
+
+	public ClassDeclaration setExtends(Object value) {
+		this._extends = value;
+		return this;
+	}
+
+	public Object getExtends() {
+		return this._extends;
+	}
+
+	public boolean hasExtends() {
+		return this._extends != null;
+	}
+
+	public ClassDeclaration removeExtends() {
+		this._extends = null;
+		return this;
+	} 
 	public ClassDeclaration addFields(Object value) {
 		this._fields.add(value);
 		return this;
@@ -130,63 +148,11 @@ public class ClassDeclaration {
 	public java.util.List<Object> getFields() {
 		return this._fields;
 	} 
-	public ClassDeclaration addExtends(Object _className, Object _params, Object _name) {
-		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("className", _className);
-		map.put("params", _params);
-		map.put("name", _name);
-		this._extends.add(map);
-		return this;
-	}
 
-	public java.util.List<java.util.Map<String, Object>> getExtends() {
-		return this._extends;
-	}
-
-	public ClassDeclaration addExtends(ClassDeclaration_Extends value) {
-		return addExtends(value._className, value._params, value._name);
-	}
-
-	public java.util.stream.Stream<ClassDeclaration_Extends> streamExtends() {
-		return this._extends.stream().map(ClassDeclaration_Extends::new);
-	}
-
-	public static final class ClassDeclaration_Extends {
-
-		Object _className;
-		Object _params;
-		Object _name;
-
-		public ClassDeclaration_Extends(Object _className, Object _params, Object _name) {
-			this._className = _className;
-			this._params = _params;
-			this._name = _name;
-		}
-
-		private ClassDeclaration_Extends(java.util.Map<String, Object> map) {
-			this._className = (Object) map.get("className");
-			this._params = (Object) map.get("params");
-			this._name = (Object) map.get("name");
-		}
-
-		public Object getClassName() {
-			return this._className;
-		}
-
-		public Object getParams() {
-			return this._params;
-		}
-
-		public Object getName() {
-			return this._name;
-		}
-
-	} 
-
-	static final String st = "ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends) ::= <<~if(annotations)~~annotations~~endif~\n" + 
+	static final String st = "ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends) ::= <<~annotations~\n" + 
 				"~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n" + 
 				"	~fields:{it|~it~};separator=\"\\n\"~\n" + 
-				")~if(extends)~ : ~extends:{it|~it.className~(~it.params:{p|~p.name~};separator=\", \"~)};separator=\", \"~~endif~ {\n" + 
+				") ~if(extends)~extends : ~extends~~endif~{\n" + 
 				"	\n" + 
 				"}>> ";
 } 

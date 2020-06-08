@@ -120,7 +120,6 @@ public class FieldDeclaration {
 
 	} 
 
-	static final String st = "FieldDeclaration(annotations,fields) ::= <<~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\n" + 
-				"~endif~\n" + 
+	static final String st = "FieldDeclaration(annotations,fields) ::= <<~annotations:{it|~it~};separator=\"\\n\"~\n" + 
 				"~fields:{it|~if(it.isMutable)~var ~elseif(it.isNonMember)~~else~val ~endif~~it.name~: ~it.type~~if(it.initializer)~ = ~it.initializer~~endif~};separator=\",\\n\"~>> ";
 } 

@@ -9,6 +9,7 @@ public class KotlinST {
 	AnnotationDeclaration.st + "\n" + 
 	AnnotationParam.st + "\n" + 
 	ClassDeclaration.st + "\n" + 
+	Extending.st + "\n" + 
 	FieldDeclaration.st + "\n" + 
 	PackageDeclaration.st + "\n" ;
 
@@ -83,6 +84,10 @@ public class KotlinST {
 
 	public static ClassDeclaration newClassDeclaration() {
 		return new ClassDeclaration(stGroup);
+	} 
+
+	public static Extending newExtending() {
+		return new Extending(stGroup);
 	} 
 
 	public static FieldDeclaration newFieldDeclaration() {

@@ -13,6 +13,7 @@ public class KotlinSTTests {
 		testAnnotationDeclaration();
 		testAnnotationParam();
 		testClassDeclaration();
+		testExtending();
 		testFieldDeclaration();
 		testPackageDeclaration();
 	}
@@ -34,7 +35,12 @@ public class KotlinSTTests {
 
 	@org.junit.Test
 	public void testClassDeclaration() {
-		System.out.println("\n--- TEST ClassDeclaration:\n" + newClassDeclaration());
+		System.out.println("\n--- TEST ClassDeclaration:\n" + newClassDeclaration().setName("ClassName").setExtends(newExtending().setClassName("Object").addParams("name").addParams("value")));
+	} 
+
+	@org.junit.Test
+	public void testExtending() {
+		System.out.println("\n--- TEST Extending:\n" + newExtending());
 	} 
 
 	@org.junit.Test

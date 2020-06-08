@@ -13,18 +13,18 @@
       "children" : [ {
         "uuid" : "cf797087-800a-45b5-9ef9-678e61e660c2",
         "name" : "AnnotationDeclaration",
-        "text" : "~annotations:{it|@~it.name~(~it.params~)};separator=\"\\n\"~~if(annotations)~\n~endif~",
+        "text" : "~annotations:{it|@~it.name~(~it.params~)};separator=\"\\n\"~",
         "parameters" : [ {
-          "uuid" : "55a99218-1cd0-480f-b24b-d7f633555f14",
+          "uuid" : "456e7d49-def3-47ea-a2b4-f23346540076",
           "name" : "annotations",
           "type" : "KVLIST",
           "argumentType" : "Object",
           "keys" : [ {
-            "uuid" : "1c3a3b5a-ba6a-4f56-b2fe-0f498e8cc725",
+            "uuid" : "b569be45-3926-4786-9ae0-1ac359ba589d",
             "name" : "name",
             "argumentType" : "Object"
           }, {
-            "uuid" : "332488ea-58df-4683-ba6d-f94552786f7c",
+            "uuid" : "d728c30f-83d6-47fc-8957-df5a84767a3d",
             "name" : "params",
             "argumentType" : "Object"
           } ]
@@ -62,84 +62,91 @@
       }, {
         "uuid" : "f05c4cbf-3b7e-4156-9906-99ae7e7c47a6",
         "name" : "ClassDeclaration",
-        "text" : "~if(annotations)~~annotations~~endif~\n~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n\t~fields:{it|~it~};separator=\"\\n\"~\n)~if(extends)~ : ~extends:{it|~it.className~(~it.params:{p|~p.name~};separator=\", \"~)};separator=\", \"~~endif~ {\n\t\n}",
+        "text" : "~annotations~\n~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n\t~fields:{it|~it~};separator=\"\\n\"~\n) ~if(extends)~extends : ~extends~~endif~{\n\t\n}",
         "parameters" : [ {
-          "uuid" : "9fc6136b-69ea-4408-b012-91f478c92569",
+          "uuid" : "a01699d5-d6c0-46b0-9ddd-cef1be586b5b",
           "name" : "annotations",
           "type" : "SINGLE",
           "argumentType" : "Object"
         }, {
-          "uuid" : "49f07ea8-665b-4e51-be72-504629f0f4c5",
+          "uuid" : "bab05a47-d04f-4cd6-b021-4afaab7c0278",
           "name" : "isOpen",
           "type" : "SINGLE",
           "argumentType" : "Object"
         }, {
-          "uuid" : "dd9f9db5-46af-4b4e-abe9-757d3b07add2",
+          "uuid" : "3174332f-fb6b-4cbb-9192-3e6e2cb92135",
           "name" : "isAbstract",
           "type" : "SINGLE",
           "argumentType" : "Object"
         }, {
-          "uuid" : "cc2e864f-d702-487b-9083-2ea26efa24df",
+          "uuid" : "86188b00-8d84-4aaa-b404-daded2b215b9",
           "name" : "name",
           "type" : "SINGLE",
           "argumentType" : "Object"
         }, {
-          "uuid" : "ca870e6c-da32-479f-9719-e8ff149cda11",
+          "uuid" : "bc969291-01bc-4a68-bf26-ec2e61d0b776",
           "name" : "fields",
           "type" : "LIST",
           "argumentType" : "Object"
         }, {
-          "uuid" : "8ab534b7-a002-4408-b705-c148d752328a",
+          "uuid" : "65b07dd1-bad2-4080-9f5c-4c5b7b34e2d4",
           "name" : "extends",
-          "type" : "KVLIST",
-          "argumentType" : "Object",
-          "keys" : [ {
-            "uuid" : "366f429e-9546-486b-883b-be769381478c",
-            "name" : "className",
-            "argumentType" : "Object"
-          }, {
-            "uuid" : "7b43a570-a874-450a-921f-401ced003d8a",
-            "name" : "params",
-            "argumentType" : "Object"
-          }, {
-            "uuid" : "10795106-815d-45fe-8175-6c3ad756a785",
-            "name" : "name",
-            "argumentType" : "Object"
-          } ]
+          "type" : "SINGLE",
+          "argumentType" : "Object"
         } ]
       }, {
         "uuid" : "653bb737-c5cb-401f-939f-6359a97fd7d6",
         "name" : "FieldDeclaration",
-        "text" : "~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\n~endif~\n~fields:{it|~if(it.isMutable)~var ~elseif(it.isNonMember)~~else~val ~endif~~it.name~: ~it.type~~if(it.initializer)~ = ~it.initializer~~endif~};separator=\",\\n\"~",
+        "text" : "~annotations:{it|~it~};separator=\"\\n\"~\n~fields:{it|~if(it.isMutable)~var ~elseif(it.isNonMember)~~else~val ~endif~~it.name~: ~it.type~~if(it.initializer)~ = ~it.initializer~~endif~};separator=\",\\n\"~",
         "parameters" : [ {
-          "uuid" : "c19e396b-1429-451f-a030-94db36d43dcc",
+          "uuid" : "d3037aa7-9402-4802-a5ed-0f62ab324d0c",
           "name" : "annotations",
           "type" : "LIST",
           "argumentType" : "Object"
         }, {
-          "uuid" : "02e6aade-56b7-482d-9a66-0c3207e1ce6e",
+          "uuid" : "26faa7d3-f5bf-4124-a0e3-9bc64766f1ad",
           "name" : "fields",
           "type" : "KVLIST",
           "argumentType" : "Object",
           "keys" : [ {
-            "uuid" : "403f27b4-91f3-4952-abec-afa7eb84a275",
+            "uuid" : "1b708f1d-9862-4828-9b98-d5cd2f61a77a",
             "name" : "isMutable",
             "argumentType" : "Object"
           }, {
-            "uuid" : "f575c066-788d-4310-a60d-70a9bc1d6bed",
+            "uuid" : "ac729446-a597-4169-a060-e0911dcea1d7",
             "name" : "isNonMember",
             "argumentType" : "Object"
           }, {
-            "uuid" : "05a5474f-0c46-416b-bdea-d0e9e365f7f9",
+            "uuid" : "02e004a7-5052-46ab-b83f-dee3f14c0850",
             "name" : "name",
             "argumentType" : "Object"
           }, {
-            "uuid" : "428f081e-63bf-428f-8635-3f28773aeffd",
+            "uuid" : "dab752cf-5848-4fdb-b0f3-9c836b94c8af",
             "name" : "type",
             "argumentType" : "Object"
           }, {
-            "uuid" : "7f6456ce-d9dd-4208-b25d-56af6776bb8b",
+            "uuid" : "1ff8462f-f4f9-4ebd-904b-a2bf1a4e8f66",
             "name" : "initializer",
+            "argumentType" : "Object"
+          } ]
+        } ]
+      }, {
+        "uuid" : "b1c03acb-f97b-4b10-9b1d-0013589a100c",
+        "name" : "Extending",
+        "text" : "~className~(~params:{it|~it.name~};separator=\", \"~)",
+        "parameters" : [ {
+          "uuid" : "42d84381-d7d1-4914-8a0d-ee08ed0e6118",
+          "name" : "className",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "c2236c05-3f3c-49b9-b6a5-e4bcdb495cfc",
+          "name" : "params",
+          "type" : "KVLIST",
+          "argumentType" : "Object",
+          "keys" : [ {
+            "uuid" : "9b9866fd-b1dc-439d-a625-f023ec5ea8ae",
+            "name" : "name",
             "argumentType" : "Object"
           } ]
         } ]
