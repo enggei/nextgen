@@ -7,6 +7,7 @@ public class NpmST {
 	"gt() ::= \">\"\n" +
 	Babelrc.st + "\n" + 
 	Dependency.st + "\n" + 
+	NpmProject.st + "\n" + 
 	PackageJson.st + "\n" + 
 	Script.st + "\n" + 
 	WebpackConfig.st + "\n" ;
@@ -74,6 +75,10 @@ public class NpmST {
 
 	public static Dependency newDependency() {
 		return new Dependency(stGroup);
+	} 
+
+	public static NpmProject newNpmProject() {
+		return new NpmProject(stGroup);
 	} 
 
 	public static PackageJson newPackageJson() {

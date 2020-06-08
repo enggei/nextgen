@@ -1,25 +1,23 @@
 package nextgen.projects;
 
-import nextgen.st.STGenerator;
-import nextgen.templates.domain.Domain;
-import nextgen.templates.domain.DomainST;
-import nextgen.templates.java.PackageDeclaration;
-import nextgen.templates.java.Pojo;
-import nextgen.templates.java.PojoFactory;
-import nextgen.templates.maven.DependencyGroup;
 import nextgen.templates.MavenPatterns;
-import nextgen.templates.maven.Pom;
 import nextgen.templates.NpmPatterns;
-import nextgen.templates.vertx.JsonWrapper;
+import nextgen.templates.domain.Domain;
+import nextgen.templates.java.PackageDeclaration;
+import nextgen.templates.maven.DependencyGroup;
+import nextgen.templates.maven.Pom;
 import nextgen.templates.vertx.VertxST;
 import org.junit.Test;
 
 import java.io.File;
 
-import static nextgen.npm.st.NpmFactory.*;
+import static nextgen.projects.ProjectPatterns.*;
 import static nextgen.templates.JavaPatterns.newPackageDeclaration;
-import static nextgen.templates.java.JavaST.*;
 import static nextgen.templates.MavenPatterns.*;
+import static nextgen.templates.domain.DomainST.newDomain;
+import static nextgen.templates.domain.DomainST.newEntity;
+import static nextgen.templates.java.JavaST.*;
+import static nextgen.templates.npm.NpmST.*;
 
 public class PettyNew {
 
@@ -126,11 +124,13 @@ public class PettyNew {
     @Test
     public void generateScanDomain() {
 
-        final Domain rmDomain = DomainST.newDomain()
-                .setName("RM")
-                .addEntities(DomainST.newEntity()
+        final Domain scanDomain = newDomain()
+                .setName("Scan")
+                .addEntities(newEntity()
                         .setName("ScanRoot")
-                        .addFields("path", "String", true));
+                        .addFields("path", "String", true)
+//                .addRelations("dates", RelationType)
+                );
 
         writePojo(javaMainSrc, newPojo()
                 .setPackage(scanDomainPackage)
@@ -245,21 +245,6 @@ public class PettyNew {
 //                                .addStringField("name", true)
 //                                .addOneToOneRelation("searchType", newEnumEntity("RMSearchType", "RENT,SALES_POSTCODE,SALES_BRANCH"))
 //                                .addStringField("locationIdentifier"))));
-    }
-
-    private void writeJsonWrapper(File root, JsonWrapper content) {
-        final PackageDeclaration packageDeclaration = (PackageDeclaration) content.getPackage();
-        STGenerator.writeToFile(content, packageDeclaration.getName().toString(), content.getName().toString(), "java", root);
-    }
-
-    private void writePojo(File root, Pojo content) {
-        final PackageDeclaration packageDeclaration = (PackageDeclaration) content.getPackage();
-        STGenerator.writeToFile(content, packageDeclaration.getName().toString(), content.getName().toString(), "java", root);
-    }
-
-    private void writePojoFactory(File root, PojoFactory content) {
-        final PackageDeclaration packageDeclaration = (PackageDeclaration) content.getPackage();
-        STGenerator.writeToFile(content, packageDeclaration.getName().toString(), content.getName().toString(), "java", root);
     }
 
     @Test

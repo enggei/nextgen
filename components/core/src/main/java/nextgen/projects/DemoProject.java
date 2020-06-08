@@ -3,14 +3,12 @@ package nextgen.projects;
 import nextgen.templates.MavenPatterns;
 import nextgen.templates.NpmPatterns;
 import nextgen.templates.java.PackageDeclaration;
-import nextgen.templates.kotlin.DataClass;
 import nextgen.templates.maven.DependencyGroup;
 import nextgen.templates.maven.Pom;
 import org.junit.Test;
 
 import java.io.File;
 
-import static nextgen.npm.st.NpmFactory.*;
 import static nextgen.templates.JavaPatterns.newPackageDeclaration;
 import static nextgen.templates.MavenPatterns.*;
 
@@ -68,19 +66,19 @@ public class DemoProject {
                 .setRoot(root.getAbsolutePath())
                 .setPom(projectPom));
 
-        NpmPatterns.generate(newNpmProject()
+        NpmPatterns.generate(NpmPatterns.newNpmProject()
                 .setRoot(root.getAbsolutePath())
-                .setPackageJson(newPackageJson()
+                .setPackageJson(NpmPatterns.newPackageJson()
                         .setName("demo")
                         .setVersion("1.0.0")
                         .setDescription("Demo Nextgen")
                         .setAuthor("GOE")
                         .setLicense("ISC")
                         .setMain("index.js")
-                        .addScripts(newScript().setName("deploy").setCommand("webpack --mode production"))
-                        .addScripts(newScript().setName("server").setCommand("webpack-dev-server --open --mode development"))
-                        .addScripts(newScript().setName("package").setCommand("webpack --mode development"))
-                        .addScripts(newScript().setName("develop").setCommand("webpack --watch --progress --mode development"))
+                        .addScripts(NpmPatterns.newScript().setName("deploy").setCommand("webpack --mode production"))
+                        .addScripts(NpmPatterns.newScript().setName("server").setCommand("webpack-dev-server --open --mode development"))
+                        .addScripts(NpmPatterns.newScript().setName("package").setCommand("webpack --mode development"))
+                        .addScripts(NpmPatterns.newScript().setName("develop").setCommand("webpack --watch --progress --mode development"))
                         .addDependencies(NpmPatterns.newDependency("react", "16.9.0"))
                         .addDependencies(NpmPatterns.newDependency("react-dom", "16.9.0"))
                         .addDependencies(NpmPatterns.newDependency("react-router-dom", "5.0.1"))
@@ -101,9 +99,9 @@ public class DemoProject {
                         .addDevDependencies(NpmPatterns.newDependency("webpack", "4.19.1"))
                         .addDevDependencies(NpmPatterns.newDependency("webpack-cli", "3.1.0"))
                         .addDevDependencies(NpmPatterns.newDependency("html-webpack-plugin", "3.2.0")))
-                .setWebpackConfig(newWebpackConfig()
+                .setWebpackConfig(NpmPatterns.newWebpackConfig()
                         .setMainEntry(new File("./src/main/webapp", "index.js").getPath())
                         .setOutputFilename(new File("./src/main/resources/static", "main.js")))
-                .setBabelrc(newBabelrc()));
+                .setBabelrc(NpmPatterns.newBabelrc()));
     }
 }

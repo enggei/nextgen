@@ -13,12 +13,12 @@
     "parameters" : [ {
       "uuid" : "69f4476b-6080-4e11-8500-d74d83d09527",
       "name" : "name",
-      "argumentType" : "Object" ,
+      "argumentType" : "Object",
       "type" : "SINGLE"
     }, {
       "uuid" : "d146f65f-b1e9-4857-bb82-5dbf851ff750",
       "name" : "version",
-      "argumentType" : "Object" ,
+      "argumentType" : "Object",
       "type" : "SINGLE"
     } ]
   }, {
@@ -28,67 +28,67 @@
     "parameters" : [ {
       "uuid" : "1d70e796-287e-454b-98c5-c65272a69b15",
       "name" : "main",
-      "argumentType" : "Object" ,
+      "argumentType" : "Object",
       "type" : "SINGLE"
     }, {
       "uuid" : "690b11d1-7096-4387-b7dd-c590b5172442",
       "name" : "license",
-      "argumentType" : "Object" ,
+      "argumentType" : "Object",
       "type" : "SINGLE"
     }, {
       "uuid" : "81475ec5-468c-4ca1-8af9-f65f7cc264dc",
       "name" : "bugsUrl",
-      "argumentType" : "Object" ,
+      "argumentType" : "Object",
       "type" : "SINGLE"
     }, {
       "uuid" : "93de6439-e2ac-42c9-b65c-681a86680a4e",
       "name" : "devDependencies",
-      "argumentType" : "Object" ,
+      "argumentType" : "Object",
       "type" : "LIST"
     }, {
       "uuid" : "00c6acc0-1d8c-4611-80c1-9d2708dd8560",
       "name" : "scripts",
-      "argumentType" : "Object" ,
+      "argumentType" : "Object",
       "type" : "LIST"
     }, {
       "uuid" : "fa01dde7-36e1-4c8c-a1bf-0fc051510d71",
       "name" : "dependencies",
-      "argumentType" : "Object" ,
+      "argumentType" : "Object",
       "type" : "LIST"
     }, {
       "uuid" : "72896769-4fb0-450e-8ee8-c193190ca6fc",
       "name" : "homepage",
-      "argumentType" : "Object" ,
+      "argumentType" : "Object",
       "type" : "SINGLE"
     }, {
       "uuid" : "da0e701f-b7b0-4eb0-ab7e-b0c2fba9483e",
       "name" : "repositoryUrl",
-      "argumentType" : "Object" ,
+      "argumentType" : "Object",
       "type" : "SINGLE"
     }, {
       "uuid" : "5832b661-3f23-4be7-9136-473a5c79b442",
       "name" : "author",
-      "argumentType" : "Object" ,
+      "argumentType" : "Object",
       "type" : "SINGLE"
     }, {
       "uuid" : "de454b3a-aaee-4374-b701-1ecd20afdf0b",
       "name" : "version",
-      "argumentType" : "Object" ,
+      "argumentType" : "Object",
       "type" : "SINGLE"
     }, {
       "uuid" : "79becd51-cabf-4951-944a-50a7e71fc27e",
       "name" : "repositoryType",
-      "argumentType" : "Object" ,
+      "argumentType" : "Object",
       "type" : "SINGLE"
     }, {
       "uuid" : "5fceceac-ad7a-4549-9869-d027b02106c9",
       "name" : "description",
-      "argumentType" : "Object" ,
+      "argumentType" : "Object",
       "type" : "SINGLE"
     }, {
       "uuid" : "34227853-ed0b-41d0-bfe4-d4968f677128",
       "name" : "name",
-      "argumentType" : "Object" ,
+      "argumentType" : "Object",
       "type" : "SINGLE"
     } ]
   }, {
@@ -98,12 +98,12 @@
     "parameters" : [ {
       "uuid" : "d19ca443-4c0a-48ab-a5e6-c1e5b5c8bd5b",
       "name" : "command",
-      "argumentType" : "Object" ,
+      "argumentType" : "Object",
       "type" : "SINGLE"
     }, {
       "uuid" : "e38500f8-18eb-4d29-bef0-ebeb91654fa3",
       "name" : "name",
-      "argumentType" : "Object" ,
+      "argumentType" : "Object",
       "type" : "SINGLE"
     } ]
   }, {
@@ -113,13 +113,38 @@
     "parameters" : [ {
       "uuid" : "05fc85de-4f78-480b-830d-f069b01a372a",
       "name" : "outputFilename",
-      "argumentType" : "Object" ,
+      "argumentType" : "Object",
       "type" : "SINGLE"
     }, {
       "uuid" : "e512423f-6c5b-4779-8327-142ecd7ef18a",
       "name" : "mainEntry",
-      "argumentType" : "Object" ,
+      "argumentType" : "Object",
       "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "661690b2-5d8b-4ca0-bfd5-0b1ded2452f1",
+    "name" : "NpmProject",
+    "text" : "~root~\n~packageJson~\n~webpackConfig~\n~babelrc~",
+    "parameters" : [ {
+      "uuid" : "14e9d70d-6c00-47d3-b633-972aebfe51f2",
+      "name" : "root",
+      "type" : "SINGLE",
+      "argumentType" : "String"
+    }, {
+      "uuid" : "4175a92e-ef85-4328-93b0-55e850b34442",
+      "name" : "packageJson",
+      "type" : "SINGLE",
+      "argumentType" : "PackageJson"
+    }, {
+      "uuid" : "44f88ea0-d2d3-44ab-8621-e7312105e00f",
+      "name" : "webpackConfig",
+      "type" : "SINGLE",
+      "argumentType" : "WebpackConfig"
+    }, {
+      "uuid" : "34560c3a-2181-493e-a70b-e929dbbeb7ac",
+      "name" : "babelrc",
+      "type" : "SINGLE",
+      "argumentType" : "Babelrc"
     } ]
   } ],
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Npm.stg"

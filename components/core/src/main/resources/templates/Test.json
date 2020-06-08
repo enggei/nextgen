@@ -140,6 +140,26 @@
         } ]
       } ]
     } ]
+  }, {
+    "uuid" : "1a2e10e0-218b-4970-ba2a-0d4fa175e65d",
+    "name" : "Patterns",
+    "text" : "Patterns for templates:\n\nAvoid to many if-elseifs:\n\n~if(isPublic)~public ~elseif(isPrivate)~private ~endif~ class {}\n\ncleaner solution:\n\n~scope~ class {}\n\nand set scope = \"public\"|\"private\" in generator",
+    "parameters" : [ {
+      "uuid" : "1ff46231-4b59-4daf-a522-e0339e06b1a4",
+      "name" : "isPublic",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "457489c7-2281-4cd6-ae64-4e0e3291c9ac",
+      "name" : "isPrivate",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "e7f77e65-0231-4f0f-9c6f-ef4b2983e4ff",
+      "name" : "scope",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
   } ],
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Test.stg"
 }

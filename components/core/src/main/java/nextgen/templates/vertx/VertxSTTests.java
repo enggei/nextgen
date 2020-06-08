@@ -10,6 +10,7 @@ public class VertxSTTests {
 	@org.junit.Test
 	public void testAll() {
 		testJsonWrapper();
+		testListPrimitiveAccessors();
 		testListReferenceAccessors();
 		testPrimitiveAccessors();
 		testReferenceAccessors();
@@ -19,6 +20,11 @@ public class VertxSTTests {
 	@org.junit.Test
 	public void testJsonWrapper() {
 		System.out.println("\n--- TEST JsonWrapper:\n" + newJsonWrapper());
+	} 
+
+	@org.junit.Test
+	public void testListPrimitiveAccessors() {
+		System.out.println("\n--- TEST ListPrimitiveAccessors:\n" + newListPrimitiveAccessors());
 	} 
 
 	@org.junit.Test

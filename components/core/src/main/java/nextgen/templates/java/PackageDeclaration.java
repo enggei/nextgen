@@ -5,7 +5,7 @@ public class PackageDeclaration {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _name;
+	private String _name;
 
 	PackageDeclaration(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -31,12 +31,12 @@ public class PackageDeclaration {
 		return st.render().trim();
 	}
 
-	public PackageDeclaration setName(Object value) {
+	public PackageDeclaration setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 

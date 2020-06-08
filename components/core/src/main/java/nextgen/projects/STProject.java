@@ -1,53 +1,59 @@
 package nextgen.projects;
 
-import nextgen.domain.DomainToJson;
-import nextgen.java.st.PackageDeclaration;
+import nextgen.templates.domain.Entity;
+import nextgen.templates.java.JavaST;
+import nextgen.templates.java.PackageDeclaration;
 import org.junit.Test;
 
 import java.io.File;
 
-import static nextgen.domain.DomainPatterns.*;
-import static nextgen.java.JavaPatterns.newPackageDeclaration;
+import static nextgen.templates.DomainPatterns.*;
 
 public class STProject {
 
     private final File root = new File("/home/goe/projects/nextgen/components/core");
     private final File javaMainSrc = new File(root, "src/main/java");
+    private final File javaTestSrc = new File(root, "src/test/java");
 
-    private final PackageDeclaration stDomainPackage = newPackageDeclaration("nextgen.st.domain");
+    private final PackageDeclaration stDomainPackage = JavaST.newPackageDeclaration().setName("nextgen.st.domain");
 
     @Test
     public void generateDomain() {
 
-        final EntityBuilder stGroupModel = newEntityBuilder("STGroupModel")
-                .addStringField("name", true)
-                .addStringField("delimiter")
-                .addOneToManyRelation("templates", newEntityBuilder("STTemplate")
-                        .addStringField("name", true)
-                        .addStringField("text")
-                        .addOneToManyRelation("parameters", newEntityBuilder("STParameter")
-                                .addStringField("name", true)
-                                .addEnumField("type", "STParameterType", "SINGLE,LIST,KVLIST")
-                                .addOneToManyRelation("keys", newEntityBuilder("STParameterKey")
-                                        .addStringField("name")
-                                        .addStringField("argumentType"))
-                                .addStringField("argumentType"))
-                        .addOneToManySelf("children"));
-
-        DomainToJson.generate(javaMainSrc, stDomainPackage, newDomainBuilder("ST")
-                .add(newEntityBuilder("STAppModel")
-                        .addStringField("generatorRoot")
-                        .addStringField("generatorPackage")
-                        .addStringField("generatorName")
-                        .addOneToManyRelation("directories", newEntityBuilder("STGDirectory")
-                                .addStringField("path")
-                                .addStringField("outputPackage")
-                                .addStringField("outputPath")
-                                .addOneToManyRelation("groups", stGroupModel)))
-                .add(newEntityBuilder("STGParseResult")
-                        .addOneToOneRelation("parsed", stGroupModel)
-                        .addOneToManyRelation("errors", newEntityBuilder("STGError")
-                                .addEnumField("type", "STGErrorType", "COMPILE,RUNTIME,IO,INTERNAL")
-                                .addExternalField("message", org.stringtemplate.v4.misc.STMessage.class))));
+//        final Entity stGroupModel = newEntity("STGroupModel")
+//                .addRelations(newStringField("name", true))
+//                .addRelations(newStringField("delimiter"))
+//                .addRelations(newOneToMany("templates", newEntity("STTemplate")
+//                        .addRelations(newStringField("name", true))
+//                        .addRelations(newStringField("text"))
+//                        .addRelations(newOneToMany("parameters", newEntity("STParameter")
+//                                .addRelations(newStringField("name", true))
+//                                .addRelations(newEnumField("type", newEnum("STParameterType", "SINGLE,LIST,KVLIST")))
+//                                .addRelations(newOneToMany("keys", newEntity("STParameterKey")
+//                                        .addRelations(newStringField("name"))
+//                                        .addRelations(newStringField("argumentType"))
+//                                        .addRelations(newStringField("argumentType"))))
+//                                .addRelations(newOneToManySelf("children")))
+//                                .addOneToManySelf("children"))
+//                                .addOneToManyRelation("enums", newEntity("STEnum")
+//                                        .addRelations(newStringField("name", true)
+//                                                .addRelations(newStringField("values"));
+//
+//        writeJsonWrapper(javaTestSrc, newDomain("ST", stDomainPackage.getName())
+//                .add(newEntity("STAppModel")
+//                        .addRelations(newStringField("generatorRoot")
+//                                .addRelations(newStringField("generatorPackage")
+//                                        .addRelations(newStringField("generatorName")
+//                                                .addOneToManyRelation("directories", newEntity("STGDirectory")
+//                                                        .addRelations(newStringField("path")
+//                                                                .addRelations(newStringField("outputPackage")
+//                                                                        .addRelations(newStringField("outputPath")
+//                                                                                .addOneToManyRelation("groups", stGroupModel)))
+//                                                                .add(newEntity("STGParseResult")
+//                                                                        .addOneToOneRelation("parsed", stGroupModel)
+//                                                                        .addOneToManyRelation("errors", newEntity("STGError")
+//                                                                                .addEnumField("type", "STGErrorType", "COMPILE,RUNTIME,IO,INTERNAL")
+//                                                                                .addExternalField("message", org.stringtemplate.v4.misc.STMessage.class))));
     }
+
 }

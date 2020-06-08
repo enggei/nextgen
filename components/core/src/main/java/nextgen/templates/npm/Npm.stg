@@ -13,6 +13,11 @@ babelrc() ::= <<{
 
 dependency(name,version) ::= <<"~name~": "^~version~"  >>
 
+NpmProject(root,packageJson,webpackConfig,babelrc) ::= <<~root~
+~packageJson~
+~webpackConfig~
+~babelrc~ >>
+
 packageJson(main,license,bugsUrl,devDependencies,scripts,dependencies,homepage,repositoryUrl,author,version,repositoryType,description,name) ::= <<{
   "name": "~name~",
   "version": "~version~",

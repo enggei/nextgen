@@ -11,6 +11,7 @@ public class NpmSTTests {
 	public void testAll() {
 		testBabelrc();
 		testDependency();
+		testNpmProject();
 		testPackageJson();
 		testScript();
 		testWebpackConfig();
@@ -24,6 +25,11 @@ public class NpmSTTests {
 	@org.junit.Test
 	public void testDependency() {
 		System.out.println("\n--- TEST Dependency:\n" + newDependency());
+	} 
+
+	@org.junit.Test
+	public void testNpmProject() {
+		System.out.println("\n--- TEST NpmProject:\n" + newNpmProject());
 	} 
 
 	@org.junit.Test

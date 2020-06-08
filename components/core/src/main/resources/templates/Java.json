@@ -535,7 +535,7 @@
         "parameters" : [ {
           "uuid" : "3c489417-b330-47e2-802c-38c51b411d64",
           "name" : "name",
-          "argumentType" : "Object",
+          "argumentType" : "String",
           "type" : "SINGLE"
         } ]
       }, {

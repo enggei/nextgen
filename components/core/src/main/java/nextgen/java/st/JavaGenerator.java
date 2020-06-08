@@ -6,7 +6,7 @@ public class JavaGenerator {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	public JavaGenerator() { 
-		this(new org.stringtemplate.v4.STGroupFile("templates/Java.stg"));
+		this(new org.stringtemplate.v4.STGroupFile("/home/goe/projects/nextgen/components/core/src/main/java/nextgen/templates/java/Java.stg"));
 	}
 
 	public JavaGenerator(java.io.File file) { 

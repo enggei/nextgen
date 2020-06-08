@@ -94,6 +94,34 @@ public ~type~ get~name;format="capitalize"~() {
 	return jsonObject.getJsonObject("~name~") == null ? null : new ~type~(jsonObject.getJsonObject("~name~"));
 } >>
 
+listPrimitiveAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ add~name;format="capitalize"~(~type~ value) { 
+	io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("~name~");
+	if (jsonArray == null) jsonObject.put("~name~", jsonArray = new io.vertx.core.json.JsonArray());
+	jsonArray.add(value);
+	return this;
+}
+
+public java.util.stream.Stream<~type~> get~name;format="capitalize"~() { 
+	return jsonObject.getJsonArray("~name~", new io.vertx.core.json.JsonArray()).stream().map((o) -> (~type~)o);
+}
+
+public ~className;format="capitalize"~ remove~name;format="capitalize"~(~type~ value) { 
+	final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("~name~", new io.vertx.core.json.JsonArray());
+	for (int i = 0; i < jsonArray.size(); i++)  { 
+		final io.vertx.core.json.JsonObject o = jsonArray.getJsonObject(i);
+		if (value.equals(o))  { 
+			jsonArray.remove(i);
+			return this;
+		}
+	}
+	return this;
+}
+
+public ~className;format="capitalize"~ clear~name;format="capitalize"~() { 
+	jsonObject.put("~name~", new io.vertx.core.json.JsonArray());
+	return this;
+} >>
+
 VertxTypes() ::= << >>
 
 JsonArrayType() ::= <<io.vertx.core.json.JsonArray >>

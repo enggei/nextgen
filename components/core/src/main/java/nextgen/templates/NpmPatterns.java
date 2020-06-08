@@ -1,8 +1,8 @@
 package nextgen.templates;
 
 import com.generator.util.FileUtil;
-import nextgen.npm.st.*;
-import nextgen.npm.st.WebpackConfig;
+import nextgen.templates.npm.*;
+import nextgen.templates.npm.WebpackConfig;
 import nextgen.templates.npm.Dependency;
 import nextgen.templates.npm.NpmST;
 
@@ -21,7 +21,7 @@ public class NpmPatterns extends NpmST {
         writeBabelrc(project.getBabelrc(), project.getRoot());
     }
 
-    private static void writePackageJson(packageJson packageJson, String root) {
+    private static void writePackageJson(PackageJson packageJson, String root) {
         FileUtil.write(packageJson, new File(root, "package.json"));
     }
 
@@ -29,7 +29,7 @@ public class NpmPatterns extends NpmST {
         FileUtil.write(webpackConfig, new File(root, "webpack.config.js"));
     }
 
-    private static void writeBabelrc(babelrc babelrc, String root) {
+    private static void writeBabelrc(Babelrc babelrc, String root) {
         FileUtil.write(babelrc, new File(root, ".babelrc"));
     }
 

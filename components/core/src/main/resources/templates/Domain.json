@@ -5,70 +5,117 @@
   "templates" : [ {
     "uuid" : "c4c6caaf-84a5-4975-8782-311476c8742c",
     "name" : "Entity",
-    "text" : "~name~\n\nFields:\n~fields:{it|~it.name~ ~it.type~ ~if(it.lexical)~lexical~endif~};separator=\"\\n\"~\n\nRelations:\n~relations:{it|~it.name~ ~it.type~ ~it.target~};separator=\"\\n\"~",
+    "text" : "~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~\n\nRelations:\n~relations:{it|~it~};separator=\"\\n\"~",
     "parameters" : [ {
-      "uuid" : "5c9a2024-c33f-4f1a-ba4d-7f098d653fa7",
+      "uuid" : "15e2ecf4-f9fd-4043-88da-3ef096e936f6",
       "name" : "name",
-      "type" : "SINGLE"
+      "type" : "SINGLE",
+      "argumentType" : "Object"
     }, {
-      "uuid" : "40f397f2-813c-4383-884a-584bd0a039c2",
-      "name" : "fields",
-      "type" : "KVLIST",
-      "keys" : [ {
-        "uuid" : "a2cbd6d9-e3de-46ea-929d-a714aae55fee",
-        "name" : "name",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "c85d0f71-8494-416b-85a0-5fc67d7b4170",
-        "name" : "type",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "41f33bad-886e-423e-8c0e-aaea89ca7ea1",
-        "name" : "lexical",
-        "argumentType" : "Object"
-      } ]
+      "uuid" : "4e694b66-1b88-4fca-84ab-ce014239805b",
+      "name" : "isEnum",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
     }, {
-      "uuid" : "5caa5f8a-69d6-4ebb-b161-a1ff3528d8cb",
+      "uuid" : "26861f94-5ad2-4aeb-8af7-b4e70cd69111",
+      "name" : "enumValues",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "7faf6bef-4dc1-4308-876e-99898e899ebe",
       "name" : "relations",
-      "type" : "KVLIST",
-      "keys" : [ {
-        "uuid" : "d78620ee-c9ae-44c0-8ee0-74e4face9a21",
-        "name" : "name",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "b0eb0dcd-4885-401f-aded-4f8823ac7a3a",
-        "name" : "type",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "a864fea8-32a2-4702-a822-25d4473c04f5",
-        "name" : "target",
-        "argumentType" : "Object"
-      } ]
+      "type" : "LIST",
+      "argumentType" : "Object"
     } ]
-  }, {
-    "uuid" : "1850d633-6ad9-4b10-8ca7-2a51c6c9409a",
-    "name" : "EntityType",
-    "text" : ""
-  }, {
-    "uuid" : "a9ef78dc-79af-46e7-b30a-5df961a6a973",
-    "name" : "Relation",
-    "text" : ""
-  }, {
-    "uuid" : "28d9fe07-c81a-4c2e-9822-03863a46d775",
-    "name" : "RelationType",
-    "text" : ""
   }, {
     "uuid" : "27fe2ba6-f50a-4f07-bc4b-12872efe17ad",
     "name" : "Domain",
-    "text" : "~name~\n\n~entities:{it|~it~};separator=\"\\n\"~",
+    "text" : "~name~\n~packageName~\n~entities:{it|~it~};separator=\"\\n\"~",
     "parameters" : [ {
-      "uuid" : "8df29e29-8f81-48cc-ad34-fd3c48263fb0",
+      "uuid" : "21f95d9b-5310-43e9-9865-9be1fc951308",
       "name" : "name",
-      "type" : "SINGLE"
+      "type" : "SINGLE",
+      "argumentType" : "String"
     }, {
-      "uuid" : "e8c3a93f-1e6b-461c-9ae3-405027a55867",
+      "uuid" : "3079031a-0bc3-4e73-85c1-6c0bd30cfdd1",
+      "name" : "packageName",
+      "type" : "SINGLE",
+      "argumentType" : "String"
+    }, {
+      "uuid" : "525f7437-e801-4a26-96ae-ebae456054e0",
       "name" : "entities",
-      "type" : "LIST"
+      "type" : "LIST",
+      "argumentType" : "Entity"
+    } ]
+  }, {
+    "uuid" : "b3684253-8078-4787-b9d7-b9a8538c13fd",
+    "name" : "PrimitiveField",
+    "text" : "One-to-one ~name~ ~type~ ~if(lexical)~lexical~endif~",
+    "parameters" : [ {
+      "uuid" : "1ff9170e-aca2-44c5-9f2a-cc31fd0f8ee3",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "0dc737ef-894d-474c-84ad-e71e51b66f11",
+      "name" : "type",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "44ef8f93-5ca8-4ac9-ba22-697a4eb5b7ac",
+      "name" : "lexical",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "2aecf888-abf3-4f63-8748-49c3bca774db",
+    "name" : "ReferenceField",
+    "text" : "One-to-one ~name~ ~entity~ ~if(lexical)~lexical~endif~",
+    "parameters" : [ {
+      "uuid" : "dd751078-ab79-4ad1-aefa-d85a8f28f649",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "97dca670-ddbb-4ab3-b87c-b58d67fe6948",
+      "name" : "entity",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "8469ebf4-bfe8-4a14-9f98-247d51740ba4",
+      "name" : "lexical",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "8f3b2449-252a-426d-9856-2d373471838d",
+    "name" : "PrimitiveList",
+    "text" : "One-to-many ~name~ ~type~",
+    "parameters" : [ {
+      "uuid" : "f5bd4b7a-85ef-438d-ba4f-70a9c568e8cd",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "String"
+    }, {
+      "uuid" : "05b3f18c-7b67-4156-9ff9-ba7c02cfa2e0",
+      "name" : "type",
+      "type" : "SINGLE",
+      "argumentType" : "Class<?>"
+    } ]
+  }, {
+    "uuid" : "4f87ca1a-15fe-4368-be92-fc8907a5308f",
+    "name" : "ReferenceList",
+    "text" : "One-to-many ~name~ ~entity~",
+    "parameters" : [ {
+      "uuid" : "0d90107b-d0d3-465d-9820-afc3d12c5943",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "String"
+    }, {
+      "uuid" : "dd0bcc25-e93d-4eff-9463-6078593a1c68",
+      "name" : "entity",
+      "type" : "SINGLE",
+      "argumentType" : "Entity"
     } ]
   } ]
 }
