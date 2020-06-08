@@ -1,0 +1,45 @@
+{
+  "uuid" : "64567d34-4e37-49e8-8f53-da14c00a0687",
+  "name" : "Kotlin",
+  "delimiter" : "~",
+  "templates" : [ {
+    "uuid" : "82d65867-5d1c-413b-a084-d7729f9d3aad",
+    "name" : "DataClass",
+    "text" : "// This is a dataclass:\n\n~if(isFinal)~final ~endif~~className~\n\nsingle : ~single~\n\nlist : ~liste:{it|~it~};separator=\", \"~\n\nkv : ~users:{it|~it.username~:~it.age~};separator=\"\\n\"~\n\n\nsadflasdfjadsøflkjsda",
+    "parameters" : [ {
+      "uuid" : "180ec082-186a-4cc3-b073-cde1422d7a2d",
+      "name" : "isFinal",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "4a06c0ee-3580-4494-8d04-072645049d56",
+      "name" : "className",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "198c55d6-3092-4ec7-bfeb-9f01eef086b1",
+      "name" : "single",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "7ba537ff-e333-4814-9c81-1de75b0aedce",
+      "name" : "liste",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "30808956-33c9-4c26-bccf-d5384d8fe43c",
+      "name" : "users",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "2e36c7b9-42b3-4931-8ab4-ca5c3ca01220",
+        "name" : "username",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "544a3d2b-5838-462e-996d-9bdb48c0788c",
+        "name" : "age",
+        "argumentType" : "Object"
+      } ]
+    } ]
+  } ]
+}

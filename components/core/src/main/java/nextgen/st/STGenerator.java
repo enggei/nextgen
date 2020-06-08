@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class STGenerator {
 
-    public static boolean debug = false;
+    public static boolean debug = true;
 
     public static final String DELIMITER = "~";
 

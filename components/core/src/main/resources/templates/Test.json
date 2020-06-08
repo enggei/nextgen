@@ -84,16 +84,8 @@
     }, {
       "uuid" : "ec05cc7e-4786-4ef8-98af-7c42c1ec546a",
       "name" : "conditional",
-      "text" : "~if(condition1)~condition1: ~condition1~~elseif(condition2)~isCondition2~endif~",
-      "parameters" : [ {
-        "uuid" : "a07cccc9-0006-493c-8944-47db8b8cad2e",
-        "name" : "condition1",
-        "type" : "SINGLE"
-      }, {
-        "uuid" : "3652a100-6860-4c17-b21f-6d858f7e6974",
-        "name" : "condition2",
-        "type" : "SINGLE"
-      } ]
+      "text" : "~if(condition1)~condition1: ~condition1~~elseif(condition2)~isCondition2~~else~endif~",
+      "parameters" : [ ]
     }, {
       "uuid" : "63e8811d-a1ce-4d14-8e19-4719ee7e61a4",
       "name" : "complex",
