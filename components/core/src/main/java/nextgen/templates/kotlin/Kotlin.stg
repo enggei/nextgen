@@ -18,13 +18,13 @@ PackageDeclaration(name) ::= <<package ~name~ >>
 
 ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends) ::= <<~annotations~
 ~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(
-	~fields:{it|~it~};separator="\n"~
+	~fields:{it|~it~};separator=",\n"~
 ) ~if(extends)~extends : ~extends~~endif~{
 	
 } >>
 
-FieldDeclaration(annotations,fields) ::= <<~annotations:{it|~it~};separator="\n"~
-~fields:{it|~if(it.isMutable)~var ~elseif(it.isNonMember)~~else~val ~endif~~it.name~: ~it.type~~if(it.initializer)~ = ~it.initializer~~endif~};separator=",\n"~ >>
+FieldDeclaration(annotations,isMutable,isNonMember,name,type,isNullable,initializer) ::= <<~annotations:{it|~it~};separator="\n"~
+~if(isMutable)~var ~elseif(isNonMember)~~else~val ~endif~~name~: ~type~~if(isNullable)~?~endif~~if(initializer)~ = ~initializer~~endif~ >>
 
 Extending(className,params) ::= <<~className~(~params:{it|~it.name~};separator=", "~) >>
 
