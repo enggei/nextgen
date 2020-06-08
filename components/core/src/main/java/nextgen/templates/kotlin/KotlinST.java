@@ -5,7 +5,12 @@ public class KotlinST {
 	private static final String stg = "delimiters \"~\", \"~\"\n" +
 	"eom() ::= \"}\"\n" +
 	"gt() ::= \">\"\n" +
-	DataClass.st + "\n" ;
+	Poko.st + "\n" + 
+	AnnotationDeclaration.st + "\n" + 
+	AnnotationParam.st + "\n" + 
+	ClassDeclaration.st + "\n" + 
+	FieldDeclaration.st + "\n" + 
+	PackageDeclaration.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup defaultSTGroup() {
 		org.stringtemplate.v4.STGroup stGroup = new org.stringtemplate.v4.STGroupString("KotlinST", stg, '~', '~');
@@ -64,8 +69,28 @@ public class KotlinST {
 		});
 	}
 
-	public static DataClass newDataClass() {
-		return new DataClass(stGroup);
+	public static Poko newPoko() {
+		return new Poko(stGroup);
+	} 
+
+	public static AnnotationDeclaration newAnnotationDeclaration() {
+		return new AnnotationDeclaration(stGroup);
+	} 
+
+	public static AnnotationParam newAnnotationParam() {
+		return new AnnotationParam(stGroup);
+	} 
+
+	public static ClassDeclaration newClassDeclaration() {
+		return new ClassDeclaration(stGroup);
+	} 
+
+	public static FieldDeclaration newFieldDeclaration() {
+		return new FieldDeclaration(stGroup);
+	} 
+
+	public static PackageDeclaration newPackageDeclaration() {
+		return new PackageDeclaration(stGroup);
 	} 
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
