@@ -62,34 +62,34 @@
       }, {
         "uuid" : "f05c4cbf-3b7e-4156-9906-99ae7e7c47a6",
         "name" : "ClassDeclaration",
-        "text" : "~annotations~\n~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n\t~fields:{it|~it~};separator=\"\\n\"~\n) ~if(extends)~extends : ~extends~~endif~{\n\t\n}",
+        "text" : "~annotations~\n~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n\t~fields:{it|~it~};separator=\",\\n\"~\n) ~if(extends)~extends : ~extends~~endif~{\n\t\n}",
         "parameters" : [ {
-          "uuid" : "a01699d5-d6c0-46b0-9ddd-cef1be586b5b",
+          "uuid" : "513fff03-c2d2-4bd9-810b-91d1c3edc7e6",
           "name" : "annotations",
           "type" : "SINGLE",
           "argumentType" : "Object"
         }, {
-          "uuid" : "bab05a47-d04f-4cd6-b021-4afaab7c0278",
+          "uuid" : "5e21d3fc-a153-4c09-9726-3b82d37d81b5",
           "name" : "isOpen",
           "type" : "SINGLE",
           "argumentType" : "Object"
         }, {
-          "uuid" : "3174332f-fb6b-4cbb-9192-3e6e2cb92135",
+          "uuid" : "d05e975d-e61f-49ac-b12f-9b41987a9d86",
           "name" : "isAbstract",
           "type" : "SINGLE",
           "argumentType" : "Object"
         }, {
-          "uuid" : "86188b00-8d84-4aaa-b404-daded2b215b9",
+          "uuid" : "9c77d80f-5cf0-41c1-902f-00a35243553b",
           "name" : "name",
           "type" : "SINGLE",
           "argumentType" : "Object"
         }, {
-          "uuid" : "bc969291-01bc-4a68-bf26-ec2e61d0b776",
+          "uuid" : "a5c2ff45-e17f-4979-9b74-4ad556a7be5f",
           "name" : "fields",
           "type" : "LIST",
           "argumentType" : "Object"
         }, {
-          "uuid" : "65b07dd1-bad2-4080-9f5c-4c5b7b34e2d4",
+          "uuid" : "45a1d0b4-32c1-4a15-9af7-9c0648e89ab1",
           "name" : "extends",
           "type" : "SINGLE",
           "argumentType" : "Object"
@@ -97,38 +97,42 @@
       }, {
         "uuid" : "653bb737-c5cb-401f-939f-6359a97fd7d6",
         "name" : "FieldDeclaration",
-        "text" : "~annotations:{it|~it~};separator=\"\\n\"~\n~fields:{it|~if(it.isMutable)~var ~elseif(it.isNonMember)~~else~val ~endif~~it.name~: ~it.type~~if(it.initializer)~ = ~it.initializer~~endif~};separator=\",\\n\"~",
+        "text" : "~annotations:{it|~it~};separator=\"\\n\"~\n~if(isMutable)~var ~elseif(isNonMember)~~else~val ~endif~~name~: ~type~~if(isNullable)~?~endif~~if(initializer)~ = ~initializer~~endif~",
         "parameters" : [ {
-          "uuid" : "d3037aa7-9402-4802-a5ed-0f62ab324d0c",
+          "uuid" : "ceafed81-99f4-4c2d-a279-6c99e1eec271",
           "name" : "annotations",
           "type" : "LIST",
           "argumentType" : "Object"
         }, {
-          "uuid" : "26faa7d3-f5bf-4124-a0e3-9bc64766f1ad",
-          "name" : "fields",
-          "type" : "KVLIST",
-          "argumentType" : "Object",
-          "keys" : [ {
-            "uuid" : "1b708f1d-9862-4828-9b98-d5cd2f61a77a",
-            "name" : "isMutable",
-            "argumentType" : "Object"
-          }, {
-            "uuid" : "ac729446-a597-4169-a060-e0911dcea1d7",
-            "name" : "isNonMember",
-            "argumentType" : "Object"
-          }, {
-            "uuid" : "02e004a7-5052-46ab-b83f-dee3f14c0850",
-            "name" : "name",
-            "argumentType" : "Object"
-          }, {
-            "uuid" : "dab752cf-5848-4fdb-b0f3-9c836b94c8af",
-            "name" : "type",
-            "argumentType" : "Object"
-          }, {
-            "uuid" : "1ff8462f-f4f9-4ebd-904b-a2bf1a4e8f66",
-            "name" : "initializer",
-            "argumentType" : "Object"
-          } ]
+          "uuid" : "862dd2de-20b1-492c-8d62-7839f410991c",
+          "name" : "isMutable",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "3ac81695-78a9-459f-b045-4ec62f854a6d",
+          "name" : "isNonMember",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "bd9a7315-9383-48fa-beff-3954270d7d08",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "4e86f085-54e1-4f76-9f5a-d8c393cc8cc9",
+          "name" : "type",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "77180942-d269-4584-a39b-f625c422ee31",
+          "name" : "isNullable",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "d370c099-a746-40ee-8529-aec04d003e23",
+          "name" : "initializer",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
         } ]
       }, {
         "uuid" : "b1c03acb-f97b-4b10-9b1d-0013589a100c",

@@ -35,7 +35,7 @@ public class KotlinSTTests {
 
 	@org.junit.Test
 	public void testClassDeclaration() {
-		System.out.println("\n--- TEST ClassDeclaration:\n" + newClassDeclaration().setName("ClassName").setExtends(newExtending().setClassName("Object").addParams("name").addParams("value")));
+		System.out.println("\n--- TEST ClassDeclaration:\n" + newClassDeclaration());
 	} 
 
 	@org.junit.Test

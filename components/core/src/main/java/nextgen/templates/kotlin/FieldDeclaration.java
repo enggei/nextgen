@@ -5,8 +5,13 @@ public class FieldDeclaration {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Object _isMutable;
+	private Object _isNonMember;
+	private Object _name;
+	private Object _type;
+	private Object _isNullable;
+	private Object _initializer;
 	private java.util.List<Object> _annotations = new java.util.ArrayList<>();
-	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 
 	FieldDeclaration(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -28,11 +33,123 @@ public class FieldDeclaration {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("FieldDeclaration");
+		st.add("isMutable", _isMutable);
+		st.add("isNonMember", _isNonMember);
+		st.add("name", _name);
+		st.add("type", _type);
+		st.add("isNullable", _isNullable);
+		st.add("initializer", _initializer);
 		for (Object o : _annotations) st.add("annotations", o);
-		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{isMutable,isNonMember,name,type,initializer}", map.get("isMutable"), map.get("isNonMember"), map.get("name"), map.get("type"), map.get("initializer"));
 		return st.render().trim();
 	}
 
+	public FieldDeclaration setIsMutable(Object value) {
+		this._isMutable = value;
+		return this;
+	}
+
+	public Object getIsMutable() {
+		return this._isMutable;
+	}
+
+	public boolean hasIsMutable() {
+		return this._isMutable != null;
+	}
+
+	public FieldDeclaration removeIsMutable() {
+		this._isMutable = null;
+		return this;
+	} 
+
+	public FieldDeclaration setIsNonMember(Object value) {
+		this._isNonMember = value;
+		return this;
+	}
+
+	public Object getIsNonMember() {
+		return this._isNonMember;
+	}
+
+	public boolean hasIsNonMember() {
+		return this._isNonMember != null;
+	}
+
+	public FieldDeclaration removeIsNonMember() {
+		this._isNonMember = null;
+		return this;
+	} 
+
+	public FieldDeclaration setName(Object value) {
+		this._name = value;
+		return this;
+	}
+
+	public Object getName() {
+		return this._name;
+	}
+
+	public boolean hasName() {
+		return this._name != null;
+	}
+
+	public FieldDeclaration removeName() {
+		this._name = null;
+		return this;
+	} 
+
+	public FieldDeclaration setType(Object value) {
+		this._type = value;
+		return this;
+	}
+
+	public Object getType() {
+		return this._type;
+	}
+
+	public boolean hasType() {
+		return this._type != null;
+	}
+
+	public FieldDeclaration removeType() {
+		this._type = null;
+		return this;
+	} 
+
+	public FieldDeclaration setIsNullable(Object value) {
+		this._isNullable = value;
+		return this;
+	}
+
+	public Object getIsNullable() {
+		return this._isNullable;
+	}
+
+	public boolean hasIsNullable() {
+		return this._isNullable != null;
+	}
+
+	public FieldDeclaration removeIsNullable() {
+		this._isNullable = null;
+		return this;
+	} 
+
+	public FieldDeclaration setInitializer(Object value) {
+		this._initializer = value;
+		return this;
+	}
+
+	public Object getInitializer() {
+		return this._initializer;
+	}
+
+	public boolean hasInitializer() {
+		return this._initializer != null;
+	}
+
+	public FieldDeclaration removeInitializer() {
+		this._initializer = null;
+		return this;
+	} 
 	public FieldDeclaration addAnnotations(Object value) {
 		this._annotations.add(value);
 		return this;
@@ -51,75 +168,7 @@ public class FieldDeclaration {
 	public java.util.List<Object> getAnnotations() {
 		return this._annotations;
 	} 
-	public FieldDeclaration addFields(Object _isMutable, Object _isNonMember, Object _name, Object _type, Object _initializer) {
-		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("isMutable", _isMutable);
-		map.put("isNonMember", _isNonMember);
-		map.put("name", _name);
-		map.put("type", _type);
-		map.put("initializer", _initializer);
-		this._fields.add(map);
-		return this;
-	}
 
-	public java.util.List<java.util.Map<String, Object>> getFields() {
-		return this._fields;
-	}
-
-	public FieldDeclaration addFields(FieldDeclaration_Fields value) {
-		return addFields(value._isMutable, value._isNonMember, value._name, value._type, value._initializer);
-	}
-
-	public java.util.stream.Stream<FieldDeclaration_Fields> streamFields() {
-		return this._fields.stream().map(FieldDeclaration_Fields::new);
-	}
-
-	public static final class FieldDeclaration_Fields {
-
-		Object _isMutable;
-		Object _isNonMember;
-		Object _name;
-		Object _type;
-		Object _initializer;
-
-		public FieldDeclaration_Fields(Object _isMutable, Object _isNonMember, Object _name, Object _type, Object _initializer) {
-			this._isMutable = _isMutable;
-			this._isNonMember = _isNonMember;
-			this._name = _name;
-			this._type = _type;
-			this._initializer = _initializer;
-		}
-
-		private FieldDeclaration_Fields(java.util.Map<String, Object> map) {
-			this._isMutable = (Object) map.get("isMutable");
-			this._isNonMember = (Object) map.get("isNonMember");
-			this._name = (Object) map.get("name");
-			this._type = (Object) map.get("type");
-			this._initializer = (Object) map.get("initializer");
-		}
-
-		public Object getIsMutable() {
-			return this._isMutable;
-		}
-
-		public Object getIsNonMember() {
-			return this._isNonMember;
-		}
-
-		public Object getName() {
-			return this._name;
-		}
-
-		public Object getType() {
-			return this._type;
-		}
-
-		public Object getInitializer() {
-			return this._initializer;
-		}
-
-	} 
-
-	static final String st = "FieldDeclaration(annotations,fields) ::= <<~annotations:{it|~it~};separator=\"\\n\"~\n" + 
-				"~fields:{it|~if(it.isMutable)~var ~elseif(it.isNonMember)~~else~val ~endif~~it.name~: ~it.type~~if(it.initializer)~ = ~it.initializer~~endif~};separator=\",\\n\"~>> ";
+	static final String st = "FieldDeclaration(annotations,isMutable,isNonMember,name,type,isNullable,initializer) ::= <<~annotations:{it|~it~};separator=\"\\n\"~\n" + 
+				"~if(isMutable)~var ~elseif(isNonMember)~~else~val ~endif~~name~: ~type~~if(isNullable)~?~endif~~if(initializer)~ = ~initializer~~endif~>> ";
 } 

@@ -151,7 +151,7 @@ public class ClassDeclaration {
 
 	static final String st = "ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends) ::= <<~annotations~\n" + 
 				"~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n" + 
-				"	~fields:{it|~it~};separator=\"\\n\"~\n" + 
+				"	~fields:{it|~it~};separator=\",\\n\"~\n" + 
 				") ~if(extends)~extends : ~extends~~endif~{\n" + 
 				"	\n" + 
 				"}>> ";
