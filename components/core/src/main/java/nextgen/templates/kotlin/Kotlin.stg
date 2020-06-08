@@ -1,0 +1,15 @@
+delimiters "~","~"
+
+DataClass(isFinal,className,single,liste,users) ::= <<// This is a dataclass:
+
+~if(isFinal)~final ~endif~~className~
+
+single : ~single~
+
+list : ~liste:{it|~it~};separator=", "~
+
+kv : ~users:{it|~it.username~:~it.age~};separator="\n"~ >>
+
+eom() ::= "}"
+
+gt() ::= ">"
