@@ -58,6 +58,10 @@ public class ClassOrInterfaceDeclaration {
 		return this._isInterface;
 	}
 
+	public Object getIsInterface(Object defaultValue) {
+		return this._isInterface == null ? defaultValue : this._isInterface;
+	}
+
 	public boolean hasIsInterface() {
 		return this._isInterface != null;
 	}
@@ -74,6 +78,10 @@ public class ClassOrInterfaceDeclaration {
 
 	public Object getName() {
 		return this._name;
+	}
+
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
 	}
 
 	public boolean hasName() {

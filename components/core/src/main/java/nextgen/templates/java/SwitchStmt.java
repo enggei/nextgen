@@ -42,6 +42,10 @@ public class SwitchStmt {
 		return this._selector;
 	}
 
+	public Object getSelector(Object defaultValue) {
+		return this._selector == null ? defaultValue : this._selector;
+	}
+
 	public boolean hasSelector() {
 		return this._selector != null;
 	}

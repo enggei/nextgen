@@ -44,6 +44,10 @@ public class JavaPackageInfo {
 		return this._packageName;
 	}
 
+	public Object getPackageName(Object defaultValue) {
+		return this._packageName == null ? defaultValue : this._packageName;
+	}
+
 	public boolean hasPackageName() {
 		return this._packageName != null;
 	}

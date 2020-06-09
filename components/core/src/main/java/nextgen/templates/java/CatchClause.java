@@ -42,6 +42,10 @@ public class CatchClause {
 		return this._parameter;
 	}
 
+	public Object getParameter(Object defaultValue) {
+		return this._parameter == null ? defaultValue : this._parameter;
+	}
+
 	public boolean hasParameter() {
 		return this._parameter != null;
 	}
@@ -58,6 +62,10 @@ public class CatchClause {
 
 	public Object getBody() {
 		return this._body;
+	}
+
+	public Object getBody(Object defaultValue) {
+		return this._body == null ? defaultValue : this._body;
 	}
 
 	public boolean hasBody() {

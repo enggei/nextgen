@@ -46,6 +46,10 @@ public class TryStmt {
 		return this._tryBlock;
 	}
 
+	public Object getTryBlock(Object defaultValue) {
+		return this._tryBlock == null ? defaultValue : this._tryBlock;
+	}
+
 	public boolean hasTryBlock() {
 		return this._tryBlock != null;
 	}
@@ -62,6 +66,10 @@ public class TryStmt {
 
 	public Object getFinalClause() {
 		return this._finalClause;
+	}
+
+	public Object getFinalClause(Object defaultValue) {
+		return this._finalClause == null ? defaultValue : this._finalClause;
 	}
 
 	public boolean hasFinalClause() {

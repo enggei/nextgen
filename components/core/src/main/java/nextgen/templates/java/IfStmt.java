@@ -44,6 +44,10 @@ public class IfStmt {
 		return this._condition;
 	}
 
+	public Object getCondition(Object defaultValue) {
+		return this._condition == null ? defaultValue : this._condition;
+	}
+
 	public boolean hasCondition() {
 		return this._condition != null;
 	}
@@ -62,6 +66,10 @@ public class IfStmt {
 		return this._then;
 	}
 
+	public Object getThen(Object defaultValue) {
+		return this._then == null ? defaultValue : this._then;
+	}
+
 	public boolean hasThen() {
 		return this._then != null;
 	}
@@ -78,6 +86,10 @@ public class IfStmt {
 
 	public Object getElseStmt() {
 		return this._elseStmt;
+	}
+
+	public Object getElseStmt(Object defaultValue) {
+		return this._elseStmt == null ? defaultValue : this._elseStmt;
 	}
 
 	public boolean hasElseStmt() {

@@ -44,6 +44,10 @@ public class ReferenceAccessors {
 		return this._type;
 	}
 
+	public Object getType(Object defaultValue) {
+		return this._type == null ? defaultValue : this._type;
+	}
+
 	public boolean hasType() {
 		return this._type != null;
 	}
@@ -62,6 +66,10 @@ public class ReferenceAccessors {
 		return this._name;
 	}
 
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
 	public boolean hasName() {
 		return this._name != null;
 	}
@@ -78,6 +86,10 @@ public class ReferenceAccessors {
 
 	public Object getClassName() {
 		return this._className;
+	}
+
+	public Object getClassName(Object defaultValue) {
+		return this._className == null ? defaultValue : this._className;
 	}
 
 	public boolean hasClassName() {

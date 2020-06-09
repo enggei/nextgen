@@ -30,9 +30,9 @@ public class STDomainTests {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("STDomainTests");
-		st.add("packageName" ,_packageName);
-		st.add("domainName" ,_domainName);
-		st.add("name" ,_name);
+		st.add("packageName", _packageName);
+		st.add("domainName", _domainName);
+		st.add("name", _name);
 		for (java.util.Map<String, Object> map : _testcases) st.addAggr("testcases.{name,impl}", map.get("name"), map.get("impl"));
 		return st.render().trim();
 	}
@@ -44,6 +44,10 @@ public class STDomainTests {
 
 	public Object getPackageName() {
 		return this._packageName;
+	}
+
+	public Object getPackageName(Object defaultValue) {
+		return this._packageName == null ? defaultValue : this._packageName;
 	}
 
 	public boolean hasPackageName() {
@@ -64,6 +68,10 @@ public class STDomainTests {
 		return this._domainName;
 	}
 
+	public Object getDomainName(Object defaultValue) {
+		return this._domainName == null ? defaultValue : this._domainName;
+	}
+
 	public boolean hasDomainName() {
 		return this._domainName != null;
 	}
@@ -80,6 +88,10 @@ public class STDomainTests {
 
 	public Object getName() {
 		return this._name;
+	}
+
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
 	}
 
 	public boolean hasName() {

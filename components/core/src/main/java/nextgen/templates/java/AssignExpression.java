@@ -44,6 +44,10 @@ public class AssignExpression {
 		return this._value;
 	}
 
+	public Object getValue(Object defaultValue) {
+		return this._value == null ? defaultValue : this._value;
+	}
+
 	public boolean hasValue() {
 		return this._value != null;
 	}
@@ -62,6 +66,10 @@ public class AssignExpression {
 		return this._target;
 	}
 
+	public Object getTarget(Object defaultValue) {
+		return this._target == null ? defaultValue : this._target;
+	}
+
 	public boolean hasTarget() {
 		return this._target != null;
 	}
@@ -78,6 +86,10 @@ public class AssignExpression {
 
 	public Object getOperator() {
 		return this._operator;
+	}
+
+	public Object getOperator(Object defaultValue) {
+		return this._operator == null ? defaultValue : this._operator;
 	}
 
 	public boolean hasOperator() {

@@ -42,6 +42,10 @@ public class LambdaExpression {
 		return this._body;
 	}
 
+	public Object getBody(Object defaultValue) {
+		return this._body == null ? defaultValue : this._body;
+	}
+
 	public boolean hasBody() {
 		return this._body != null;
 	}

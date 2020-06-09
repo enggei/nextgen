@@ -50,6 +50,10 @@ public class ObjectCreationExpression {
 		return this._scope;
 	}
 
+	public Object getScope(Object defaultValue) {
+		return this._scope == null ? defaultValue : this._scope;
+	}
+
 	public boolean hasScope() {
 		return this._scope != null;
 	}
@@ -68,6 +72,10 @@ public class ObjectCreationExpression {
 		return this._type;
 	}
 
+	public Object getType(Object defaultValue) {
+		return this._type == null ? defaultValue : this._type;
+	}
+
 	public boolean hasType() {
 		return this._type != null;
 	}
@@ -84,6 +92,10 @@ public class ObjectCreationExpression {
 
 	public Object getEmptyClassBody() {
 		return this._emptyClassBody;
+	}
+
+	public Object getEmptyClassBody(Object defaultValue) {
+		return this._emptyClassBody == null ? defaultValue : this._emptyClassBody;
 	}
 
 	public boolean hasEmptyClassBody() {

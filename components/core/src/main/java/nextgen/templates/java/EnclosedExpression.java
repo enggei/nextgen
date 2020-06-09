@@ -40,6 +40,10 @@ public class EnclosedExpression {
 		return this._expression;
 	}
 
+	public Object getExpression(Object defaultValue) {
+		return this._expression == null ? defaultValue : this._expression;
+	}
+
 	public boolean hasExpression() {
 		return this._expression != null;
 	}

@@ -42,6 +42,10 @@ public class LabeledStmt {
 		return this._statement;
 	}
 
+	public Object getStatement(Object defaultValue) {
+		return this._statement == null ? defaultValue : this._statement;
+	}
+
 	public boolean hasStatement() {
 		return this._statement != null;
 	}
@@ -58,6 +62,10 @@ public class LabeledStmt {
 
 	public Object getLabel() {
 		return this._label;
+	}
+
+	public Object getLabel(Object defaultValue) {
+		return this._label == null ? defaultValue : this._label;
 	}
 
 	public boolean hasLabel() {

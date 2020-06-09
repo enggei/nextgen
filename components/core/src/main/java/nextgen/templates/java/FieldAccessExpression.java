@@ -42,6 +42,10 @@ public class FieldAccessExpression {
 		return this._scope;
 	}
 
+	public Object getScope(Object defaultValue) {
+		return this._scope == null ? defaultValue : this._scope;
+	}
+
 	public boolean hasScope() {
 		return this._scope != null;
 	}
@@ -58,6 +62,10 @@ public class FieldAccessExpression {
 
 	public Object getName() {
 		return this._name;
+	}
+
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
 	}
 
 	public boolean hasName() {

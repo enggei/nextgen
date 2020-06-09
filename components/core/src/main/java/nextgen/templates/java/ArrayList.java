@@ -40,6 +40,10 @@ public class ArrayList {
 		return this._type;
 	}
 
+	public Object getType(Object defaultValue) {
+		return this._type == null ? defaultValue : this._type;
+	}
+
 	public boolean hasType() {
 		return this._type != null;
 	}

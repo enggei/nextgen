@@ -42,6 +42,10 @@ public class DoStmt {
 		return this._condition;
 	}
 
+	public Object getCondition(Object defaultValue) {
+		return this._condition == null ? defaultValue : this._condition;
+	}
+
 	public boolean hasCondition() {
 		return this._condition != null;
 	}
@@ -58,6 +62,10 @@ public class DoStmt {
 
 	public Object getBody() {
 		return this._body;
+	}
+
+	public Object getBody(Object defaultValue) {
+		return this._body == null ? defaultValue : this._body;
 	}
 
 	public boolean hasBody() {

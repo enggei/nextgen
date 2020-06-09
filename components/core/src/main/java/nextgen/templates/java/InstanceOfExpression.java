@@ -42,6 +42,10 @@ public class InstanceOfExpression {
 		return this._type;
 	}
 
+	public Object getType(Object defaultValue) {
+		return this._type == null ? defaultValue : this._type;
+	}
+
 	public boolean hasType() {
 		return this._type != null;
 	}
@@ -58,6 +62,10 @@ public class InstanceOfExpression {
 
 	public Object getExpression() {
 		return this._expression;
+	}
+
+	public Object getExpression(Object defaultValue) {
+		return this._expression == null ? defaultValue : this._expression;
 	}
 
 	public boolean hasExpression() {

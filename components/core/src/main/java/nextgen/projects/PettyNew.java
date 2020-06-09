@@ -128,7 +128,7 @@ public class PettyNew {
                 .setName("Scan")
                 .addEntities(newEntity()
                         .setName("ScanRoot")
-                        .addFields("path", "String", true)
+//                        .addFields("path", "String", true)
 //                .addRelations("dates", RelationType)
                 );
 

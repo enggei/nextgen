@@ -29,9 +29,9 @@ public class EntityListAccessors {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("entityListAccessors");
-		st.add("entity" ,_entity);
-		st.add("name" ,_name);
-		st.add("type" ,_type);
+		st.add("entity", _entity);
+		st.add("name", _name);
+		st.add("type", _type);
 		return st.render().trim();
 	}
 
@@ -42,6 +42,10 @@ public class EntityListAccessors {
 
 	public Object getEntity() {
 		return this._entity;
+	}
+
+	public Object getEntity(Object defaultValue) {
+		return this._entity == null ? defaultValue : this._entity;
 	}
 
 	public boolean hasEntity() {
@@ -62,6 +66,10 @@ public class EntityListAccessors {
 		return this._name;
 	}
 
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
 	public boolean hasName() {
 		return this._name != null;
 	}
@@ -78,6 +86,10 @@ public class EntityListAccessors {
 
 	public Object getType() {
 		return this._type;
+	}
+
+	public Object getType(Object defaultValue) {
+		return this._type == null ? defaultValue : this._type;
 	}
 
 	public boolean hasType() {

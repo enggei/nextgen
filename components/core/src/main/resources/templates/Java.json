@@ -113,6 +113,26 @@
         "name" : "entities",
         "type" : "LIST"
       } ]
+    }, {
+      "uuid" : "3b29b747-b53c-48f4-8217-ccb442b5a291",
+      "name" : "Enum",
+      "text" : "~package~\n\npublic enum ~name~ {\n\n\t~enumValues:{it|~it~};separator=\",\"~\n}",
+      "parameters" : [ {
+        "uuid" : "c9a05a04-6a47-485c-9783-e12b8b7dda19",
+        "name" : "package",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "b267bd36-58bb-44dd-82c0-d56710511e5c",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "3e91b360-fe1a-4cc5-98a9-66fb31c65ba6",
+        "name" : "enumValues",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
     } ]
   }, {
     "uuid" : "73adf979-46b7-422f-ac09-4d6c6caa8e56",

@@ -42,6 +42,10 @@ public class CastExpression {
 		return this._expression;
 	}
 
+	public Object getExpression(Object defaultValue) {
+		return this._expression == null ? defaultValue : this._expression;
+	}
+
 	public boolean hasExpression() {
 		return this._expression != null;
 	}
@@ -58,6 +62,10 @@ public class CastExpression {
 
 	public Object getType() {
 		return this._type;
+	}
+
+	public Object getType(Object defaultValue) {
+		return this._type == null ? defaultValue : this._type;
 	}
 
 	public boolean hasType() {

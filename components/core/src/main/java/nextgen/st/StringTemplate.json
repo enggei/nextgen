@@ -217,19 +217,22 @@
     }, {
       "uuid" : "e1d4dff9-7492-494f-acf4-e92a24074ae5",
       "name" : "entitySingleAccessors",
-      "text" : "public ~entity~ set~name;format=\"capitalize\"~(~if(type)~~type~~else~Object~endif~ value) {\n\tthis._~name~ = value;\n\treturn this;\n}\n\npublic ~if(type)~~type~~else~Object~endif~ get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic boolean has~name;format=\"capitalize\"~() {\n\treturn this._~name~ != null;\n}\n\npublic ~entity~ remove~name;format=\"capitalize\"~() {\n\tthis._~name~ = null;\n\treturn this;\n}",
+      "text" : "public ~entity~ set~name;format=\"capitalize\"~(~if(type)~~type~~else~Object~endif~ value) {\n\tthis._~name~ = value;\n\treturn this;\n}\n\npublic ~if(type)~~type~~else~Object~endif~ get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~if(type)~~type~~else~Object~endif~ get~name;format=\"capitalize\"~(~if(type)~~type~~else~Object~endif~ defaultValue) {\n\treturn this._~name~ == null ? defaultValue : this._~name~;\n}\n\npublic boolean has~name;format=\"capitalize\"~() {\n\treturn this._~name~ != null;\n}\n\npublic ~entity~ remove~name;format=\"capitalize\"~() {\n\tthis._~name~ = null;\n\treturn this;\n}",
       "parameters" : [ {
-        "uuid" : "acbadb45-c742-4e1b-b6e8-4e95af2f7a8e",
+        "uuid" : "473755a8-0be8-4be6-bc46-96e7cc0416b8",
         "name" : "entity",
-        "type" : "SINGLE"
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       }, {
-        "uuid" : "fd78fbf9-051a-4e44-863d-2208ccafa586",
+        "uuid" : "8784ff9c-6db2-4d0f-9703-036addf3f4fb",
         "name" : "name",
-        "type" : "SINGLE"
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       }, {
-        "uuid" : "0a69e4ca-4951-4168-a65d-835d6818ae96",
+        "uuid" : "4f8b06e7-5903-41b8-b75a-abcc87b3f6dd",
         "name" : "type",
-        "type" : "SINGLE"
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       } ]
     } ]
   }, {

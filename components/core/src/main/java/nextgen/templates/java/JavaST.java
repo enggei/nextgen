@@ -5,6 +5,7 @@ public class JavaST {
 	private static final String stg = "delimiters \"~\", \"~\"\n" +
 	"eom() ::= \"}\"\n" +
 	"gt() ::= \">\"\n" +
+	Enum.st + "\n" + 
 	Pojo.st + "\n" + 
 	ListAccessors.st + "\n" + 
 	PrimitiveAccessors.st + "\n" + 
@@ -150,6 +151,10 @@ public class JavaST {
 			}
 		});
 	}
+
+	public static Enum newEnum() {
+		return new Enum(stGroup);
+	} 
 
 	public static Pojo newPojo() {
 		return new Pojo(stGroup);

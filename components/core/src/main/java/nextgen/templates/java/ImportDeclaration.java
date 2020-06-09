@@ -44,6 +44,10 @@ public class ImportDeclaration {
 		return this._isStatic;
 	}
 
+	public Object getIsStatic(Object defaultValue) {
+		return this._isStatic == null ? defaultValue : this._isStatic;
+	}
+
 	public boolean hasIsStatic() {
 		return this._isStatic != null;
 	}
@@ -62,6 +66,10 @@ public class ImportDeclaration {
 		return this._name;
 	}
 
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
 	public boolean hasName() {
 		return this._name != null;
 	}
@@ -78,6 +86,10 @@ public class ImportDeclaration {
 
 	public Object getIsAsterisk() {
 		return this._isAsterisk;
+	}
+
+	public Object getIsAsterisk(Object defaultValue) {
+		return this._isAsterisk == null ? defaultValue : this._isAsterisk;
 	}
 
 	public boolean hasIsAsterisk() {

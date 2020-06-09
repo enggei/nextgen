@@ -46,6 +46,10 @@ public class ForStmt {
 		return this._compare;
 	}
 
+	public Object getCompare(Object defaultValue) {
+		return this._compare == null ? defaultValue : this._compare;
+	}
+
 	public boolean hasCompare() {
 		return this._compare != null;
 	}
@@ -62,6 +66,10 @@ public class ForStmt {
 
 	public Object getBody() {
 		return this._body;
+	}
+
+	public Object getBody(Object defaultValue) {
+		return this._body == null ? defaultValue : this._body;
 	}
 
 	public boolean hasBody() {

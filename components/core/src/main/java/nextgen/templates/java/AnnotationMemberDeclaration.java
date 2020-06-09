@@ -44,6 +44,10 @@ public class AnnotationMemberDeclaration {
 		return this._name;
 	}
 
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
 	public boolean hasName() {
 		return this._name != null;
 	}
@@ -62,6 +66,10 @@ public class AnnotationMemberDeclaration {
 		return this._type;
 	}
 
+	public Object getType(Object defaultValue) {
+		return this._type == null ? defaultValue : this._type;
+	}
+
 	public boolean hasType() {
 		return this._type != null;
 	}
@@ -78,6 +86,10 @@ public class AnnotationMemberDeclaration {
 
 	public Object getDefaultValue() {
 		return this._defaultValue;
+	}
+
+	public Object getDefaultValue(Object defaultValue) {
+		return this._defaultValue == null ? defaultValue : this._defaultValue;
 	}
 
 	public boolean hasDefaultValue() {

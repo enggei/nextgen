@@ -40,6 +40,10 @@ public class ContinueStmt {
 		return this._label;
 	}
 
+	public Object getLabel(Object defaultValue) {
+		return this._label == null ? defaultValue : this._label;
+	}
+
 	public boolean hasLabel() {
 		return this._label != null;
 	}

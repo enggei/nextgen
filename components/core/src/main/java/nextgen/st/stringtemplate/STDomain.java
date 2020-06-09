@@ -30,9 +30,9 @@ public class STDomain {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("STDomain");
-		st.add("packageName" ,_packageName);
-		st.add("name" ,_name);
-		st.add("stgString" ,_stgString);
+		st.add("packageName", _packageName);
+		st.add("name", _name);
+		st.add("stgString", _stgString);
 		for (Object o : _entities) st.add("entities", o);
 		return st.render().trim();
 	}
@@ -44,6 +44,10 @@ public class STDomain {
 
 	public Object getPackageName() {
 		return this._packageName;
+	}
+
+	public Object getPackageName(Object defaultValue) {
+		return this._packageName == null ? defaultValue : this._packageName;
 	}
 
 	public boolean hasPackageName() {
@@ -64,6 +68,10 @@ public class STDomain {
 		return this._name;
 	}
 
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
 	public boolean hasName() {
 		return this._name != null;
 	}
@@ -80,6 +88,10 @@ public class STDomain {
 
 	public Object getStgString() {
 		return this._stgString;
+	}
+
+	public Object getStgString(Object defaultValue) {
+		return this._stgString == null ? defaultValue : this._stgString;
 	}
 
 	public boolean hasStgString() {

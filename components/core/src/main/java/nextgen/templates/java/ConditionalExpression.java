@@ -44,6 +44,10 @@ public class ConditionalExpression {
 		return this._thenExpression;
 	}
 
+	public Object getThenExpression(Object defaultValue) {
+		return this._thenExpression == null ? defaultValue : this._thenExpression;
+	}
+
 	public boolean hasThenExpression() {
 		return this._thenExpression != null;
 	}
@@ -62,6 +66,10 @@ public class ConditionalExpression {
 		return this._elseExpression;
 	}
 
+	public Object getElseExpression(Object defaultValue) {
+		return this._elseExpression == null ? defaultValue : this._elseExpression;
+	}
+
 	public boolean hasElseExpression() {
 		return this._elseExpression != null;
 	}
@@ -78,6 +86,10 @@ public class ConditionalExpression {
 
 	public Object getCondition() {
 		return this._condition;
+	}
+
+	public Object getCondition(Object defaultValue) {
+		return this._condition == null ? defaultValue : this._condition;
 	}
 
 	public boolean hasCondition() {

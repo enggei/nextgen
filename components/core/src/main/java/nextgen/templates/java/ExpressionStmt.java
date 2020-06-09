@@ -42,6 +42,10 @@ public class ExpressionStmt {
 		return this._comment;
 	}
 
+	public Object getComment(Object defaultValue) {
+		return this._comment == null ? defaultValue : this._comment;
+	}
+
 	public boolean hasComment() {
 		return this._comment != null;
 	}
@@ -58,6 +62,10 @@ public class ExpressionStmt {
 
 	public Object getExpression() {
 		return this._expression;
+	}
+
+	public Object getExpression(Object defaultValue) {
+		return this._expression == null ? defaultValue : this._expression;
 	}
 
 	public boolean hasExpression() {

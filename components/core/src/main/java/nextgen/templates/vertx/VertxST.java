@@ -6,6 +6,8 @@ public class VertxST {
 	"eom() ::= \"}\"\n" +
 	"gt() ::= \">\"\n" +
 	JsonWrapper.st + "\n" + 
+	EnumAccessors.st + "\n" + 
+	ExternalAccessors.st + "\n" + 
 	ListPrimitiveAccessors.st + "\n" + 
 	ListReferenceAccessors.st + "\n" + 
 	PrimitiveAccessors.st + "\n" + 
@@ -71,6 +73,14 @@ public class VertxST {
 
 	public static JsonWrapper newJsonWrapper() {
 		return new JsonWrapper(stGroup);
+	} 
+
+	public static EnumAccessors newEnumAccessors() {
+		return new EnumAccessors(stGroup);
+	} 
+
+	public static ExternalAccessors newExternalAccessors() {
+		return new ExternalAccessors(stGroup);
 	} 
 
 	public static ListPrimitiveAccessors newListPrimitiveAccessors() {

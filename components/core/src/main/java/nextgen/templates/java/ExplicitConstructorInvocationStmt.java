@@ -42,6 +42,10 @@ public class ExplicitConstructorInvocationStmt {
 		return this._isThis;
 	}
 
+	public Object getIsThis(Object defaultValue) {
+		return this._isThis == null ? defaultValue : this._isThis;
+	}
+
 	public boolean hasIsThis() {
 		return this._isThis != null;
 	}

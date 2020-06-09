@@ -29,8 +29,8 @@ public class EntityKVListAccessors {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("entityKVListAccessors");
-		st.add("entity" ,_entity);
-		st.add("name" ,_name);
+		st.add("entity", _entity);
+		st.add("name", _name);
 		for (java.util.Map<String, Object> map : _keys) st.addAggr("keys.{type,name}", map.get("type"), map.get("name"));
 		return st.render().trim();
 	}
@@ -42,6 +42,10 @@ public class EntityKVListAccessors {
 
 	public Object getEntity() {
 		return this._entity;
+	}
+
+	public Object getEntity(Object defaultValue) {
+		return this._entity == null ? defaultValue : this._entity;
 	}
 
 	public boolean hasEntity() {
@@ -60,6 +64,10 @@ public class EntityKVListAccessors {
 
 	public Object getName() {
 		return this._name;
+	}
+
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
 	}
 
 	public boolean hasName() {

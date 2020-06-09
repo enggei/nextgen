@@ -27,7 +27,7 @@ public class NewEntityInstance {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("newEntityInstance");
-		st.add("entityName" ,_entityName);
+		st.add("entityName", _entityName);
 		return st.render().trim();
 	}
 
@@ -38,6 +38,10 @@ public class NewEntityInstance {
 
 	public Object getEntityName() {
 		return this._entityName;
+	}
+
+	public Object getEntityName(Object defaultValue) {
+		return this._entityName == null ? defaultValue : this._entityName;
 	}
 
 	public boolean hasEntityName() {

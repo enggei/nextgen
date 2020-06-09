@@ -29,9 +29,9 @@ public class EntitySingleAccessors {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("entitySingleAccessors");
-		st.add("entity" ,_entity);
-		st.add("name" ,_name);
-		st.add("type" ,_type);
+		st.add("entity", _entity);
+		st.add("name", _name);
+		st.add("type", _type);
 		return st.render().trim();
 	}
 
@@ -42,6 +42,10 @@ public class EntitySingleAccessors {
 
 	public Object getEntity() {
 		return this._entity;
+	}
+
+	public Object getEntity(Object defaultValue) {
+		return this._entity == null ? defaultValue : this._entity;
 	}
 
 	public boolean hasEntity() {
@@ -62,6 +66,10 @@ public class EntitySingleAccessors {
 		return this._name;
 	}
 
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
 	public boolean hasName() {
 		return this._name != null;
 	}
@@ -80,6 +88,10 @@ public class EntitySingleAccessors {
 		return this._type;
 	}
 
+	public Object getType(Object defaultValue) {
+		return this._type == null ? defaultValue : this._type;
+	}
+
 	public boolean hasType() {
 		return this._type != null;
 	}
@@ -96,6 +108,10 @@ public class EntitySingleAccessors {
 				"\n" + 
 				"public ~if(type)~~type~~else~Object~endif~ get~name;format=\"capitalize\"~() {\n" + 
 				"	return this._~name~;\n" + 
+				"}\n" + 
+				"\n" + 
+				"public ~if(type)~~type~~else~Object~endif~ get~name;format=\"capitalize\"~(~if(type)~~type~~else~Object~endif~ defaultValue) {\n" + 
+				"	return this._~name~ == null ? defaultValue : this._~name~;\n" + 
 				"}\n" + 
 				"\n" + 
 				"public boolean has~name;format=\"capitalize\"~() {\n" + 

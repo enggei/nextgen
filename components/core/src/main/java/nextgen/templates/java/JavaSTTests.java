@@ -9,6 +9,7 @@ public class JavaSTTests {
 
 	@org.junit.Test
 	public void testAll() {
+		testEnum();
 		testPojo();
 		testListAccessors();
 		testPrimitiveAccessors();
@@ -98,6 +99,11 @@ public class JavaSTTests {
 		testList();
 		testNewInstance();
 	}
+
+	@org.junit.Test
+	public void testEnum() {
+		System.out.println("\n--- TEST Enum:\n" + newEnum());
+	} 
 
 	@org.junit.Test
 	public void testPojo() {

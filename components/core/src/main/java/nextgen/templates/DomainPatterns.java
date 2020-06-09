@@ -23,11 +23,23 @@ public class DomainPatterns extends DomainST {
     }
 
     public static PrimitiveField newStringField(String name, boolean lexical) {
-        return newPrimitiveField().setName("generatorRoot").setType(String.class).setLexical(lexical);
+        return newPrimitiveField().setName(name).setType(String.class).setLexical(lexical);
+    }
+
+    public static PrimitiveField newOneToOnePrimitive(String name, Class<?> type) {
+        return newPrimitiveField().setName(name).setType(type);
+    }
+
+    public static ExternalReferenceField newOneToOneExternal(String name, Class<?> type) {
+        return newExternalReferenceField().setName(name).setType(type);
     }
 
     public static ReferenceList newOneToMany(String name, Entity entity) {
         return newReferenceList().setName(name).setEntity(entity);
+    }
+
+    public static ReferenceList newOneToManySelf(String name) {
+        return newReferenceList().setName(name).setSelf(Boolean.TRUE);
     }
 
     public static ReferenceField newOneToOne(String name, Entity entity) {
@@ -38,7 +50,7 @@ public class DomainPatterns extends DomainST {
         return newReferenceField().setName(name).setEntity(entity).setLexical(lexical);
     }
 
-    public static ReferenceField newEnumField(String name, Entity enumEntity) {
-        return newReferenceField().setName(name).setEntity(enumEntity);
+    public static EnumField newEnumField(String name, Entity enumEntity) {
+        return newEnumField().setName(name).setType(enumEntity);
     }
 }

@@ -44,6 +44,10 @@ public class CompilationUnit {
 		return this._packageDeclaration;
 	}
 
+	public Object getPackageDeclaration(Object defaultValue) {
+		return this._packageDeclaration == null ? defaultValue : this._packageDeclaration;
+	}
+
 	public boolean hasPackageDeclaration() {
 		return this._packageDeclaration != null;
 	}

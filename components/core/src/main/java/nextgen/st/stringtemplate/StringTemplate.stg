@@ -129,8 +129,8 @@ public class ~name~ {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 	
-	~singleFields:{it|private Object _~it~;};separator="\n"~
-	~listFields:{it|private java.util.List<Object> _~it~ = new java.util.ArrayList<>();};separator="\n"~
+	~singleFields:{it|private ~it.type~ _~it.name~;};separator="\n"~
+	~listFields:{it|private java.util.List<~it.type~> _~it.name~ = new java.util.ArrayList<>();};separator="\n"~
 	~kvListFields:{it|private java.util.List<java.util.Map<String, Object~gt()~> _~it.name~ = new java.util.ArrayList<>();};separator="\n"~
 	
 	~name~(org.stringtemplate.v4.STGroup stGroup) {
@@ -153,8 +153,8 @@ public class ~name~ {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("~template~");
-		~singleFields:{it|st.add("~it~" ,_~it~);};separator="\n"~
-		~listFields:{it|for (Object o : _~it~) st.add("~it~", o);};separator="\n"~
+		~singleFields:{it|st.add("~it.name~", _~it.name~);};separator="\n"~
+		~listFields:{it|for (Object o : _~it.name~) st.add("~it.name~", o);};separator="\n"~
 		~kvListFields:{it|for (java.util.Map<String, Object> map : _~it.name~) st.addAggr("~it.aggrSpec~", ~it.aggrValues~);};separator="\n"~
 		return st.render().trim();
 	}
@@ -229,6 +229,10 @@ entitySingleAccessors(entity,name,type) ::= <<public ~entity~ set~name;format="c
 
 public ~if(type)~~type~~else~Object~endif~ get~name;format="capitalize"~() {
 	return this._~name~;
+}
+
+public ~if(type)~~type~~else~Object~endif~ get~name;format="capitalize"~(~if(type)~~type~~else~Object~endif~ defaultValue) {
+	return this._~name~ == null ? defaultValue : this._~name~;
 }
 
 public boolean has~name;format="capitalize"~() {

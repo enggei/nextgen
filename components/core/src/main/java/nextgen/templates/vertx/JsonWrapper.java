@@ -8,6 +8,7 @@ public class JsonWrapper {
 	private Object _package;
 	private Object _name;
 	private java.util.List<Object> _accessors = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _externalFields = new java.util.ArrayList<>();
 
 	JsonWrapper(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -32,6 +33,7 @@ public class JsonWrapper {
 		st.add("package", _package);
 		st.add("name", _name);
 		for (Object o : _accessors) st.add("accessors", o);
+		for (java.util.Map<String, Object> map : _externalFields) st.addAggr("externalFields.{type,name,initializer}", map.get("type"), map.get("name"), map.get("initializer"));
 		return st.render().trim();
 	}
 
@@ -42,6 +44,10 @@ public class JsonWrapper {
 
 	public Object getPackage() {
 		return this._package;
+	}
+
+	public Object getPackage(Object defaultValue) {
+		return this._package == null ? defaultValue : this._package;
 	}
 
 	public boolean hasPackage() {
@@ -60,6 +66,10 @@ public class JsonWrapper {
 
 	public Object getName() {
 		return this._name;
+	}
+
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
 	}
 
 	public boolean hasName() {
@@ -88,12 +98,65 @@ public class JsonWrapper {
 	public java.util.List<Object> getAccessors() {
 		return this._accessors;
 	} 
+	public JsonWrapper addExternalFields(Object _type, Object _name, Object _initializer) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("type", _type);
+		map.put("name", _name);
+		map.put("initializer", _initializer);
+		this._externalFields.add(map);
+		return this;
+	}
 
-	static final String st = "JsonWrapper(package,name,accessors) ::= <<~package~\n" + 
+	public java.util.List<java.util.Map<String, Object>> getExternalFields() {
+		return this._externalFields;
+	}
+
+	public JsonWrapper addExternalFields(JsonWrapper_ExternalFields value) {
+		return addExternalFields(value._type, value._name, value._initializer);
+	}
+
+	public java.util.stream.Stream<JsonWrapper_ExternalFields> streamExternalFields() {
+		return this._externalFields.stream().map(JsonWrapper_ExternalFields::new);
+	}
+
+	public static final class JsonWrapper_ExternalFields {
+
+		Object _type;
+		Object _name;
+		Object _initializer;
+
+		public JsonWrapper_ExternalFields(Object _type, Object _name, Object _initializer) {
+			this._type = _type;
+			this._name = _name;
+			this._initializer = _initializer;
+		}
+
+		private JsonWrapper_ExternalFields(java.util.Map<String, Object> map) {
+			this._type = (Object) map.get("type");
+			this._name = (Object) map.get("name");
+			this._initializer = (Object) map.get("initializer");
+		}
+
+		public Object getType() {
+			return this._type;
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getInitializer() {
+			return this._initializer;
+		}
+
+	} 
+
+	static final String st = "JsonWrapper(package,name,externalFields,accessors) ::= <<~package~\n" + 
 				"\n" + 
 				"public class ~name;format=\"capitalize\"~ {\n" + 
 				"\n" + 
 				"	private final io.vertx.core.json.JsonObject jsonObject;\n" + 
+				"	~externalFields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"	public ~name;format=\"capitalize\"~() { \n" + 
 				"		this.jsonObject = new io.vertx.core.json.JsonObject();\n" + 

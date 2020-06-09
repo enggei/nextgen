@@ -56,6 +56,10 @@ public class MethodDeclaration {
 		return this._type;
 	}
 
+	public Object getType(Object defaultValue) {
+		return this._type == null ? defaultValue : this._type;
+	}
+
 	public boolean hasType() {
 		return this._type != null;
 	}
@@ -72,6 +76,10 @@ public class MethodDeclaration {
 
 	public Object getName() {
 		return this._name;
+	}
+
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
 	}
 
 	public boolean hasName() {
@@ -92,6 +100,10 @@ public class MethodDeclaration {
 		return this._isInterfaceDeclaration;
 	}
 
+	public Object getIsInterfaceDeclaration(Object defaultValue) {
+		return this._isInterfaceDeclaration == null ? defaultValue : this._isInterfaceDeclaration;
+	}
+
 	public boolean hasIsInterfaceDeclaration() {
 		return this._isInterfaceDeclaration != null;
 	}
@@ -108,6 +120,10 @@ public class MethodDeclaration {
 
 	public Object getBlockStmt() {
 		return this._blockStmt;
+	}
+
+	public Object getBlockStmt(Object defaultValue) {
+		return this._blockStmt == null ? defaultValue : this._blockStmt;
 	}
 
 	public boolean hasBlockStmt() {

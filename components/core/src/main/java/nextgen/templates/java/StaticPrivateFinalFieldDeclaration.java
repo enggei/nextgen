@@ -44,6 +44,10 @@ public class StaticPrivateFinalFieldDeclaration {
 		return this._initializer;
 	}
 
+	public Object getInitializer(Object defaultValue) {
+		return this._initializer == null ? defaultValue : this._initializer;
+	}
+
 	public boolean hasInitializer() {
 		return this._initializer != null;
 	}
@@ -62,6 +66,10 @@ public class StaticPrivateFinalFieldDeclaration {
 		return this._name;
 	}
 
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
 	public boolean hasName() {
 		return this._name != null;
 	}
@@ -78,6 +86,10 @@ public class StaticPrivateFinalFieldDeclaration {
 
 	public Object getType() {
 		return this._type;
+	}
+
+	public Object getType(Object defaultValue) {
+		return this._type == null ? defaultValue : this._type;
 	}
 
 	public boolean hasType() {

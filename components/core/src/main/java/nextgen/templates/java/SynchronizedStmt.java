@@ -42,6 +42,10 @@ public class SynchronizedStmt {
 		return this._expression;
 	}
 
+	public Object getExpression(Object defaultValue) {
+		return this._expression == null ? defaultValue : this._expression;
+	}
+
 	public boolean hasExpression() {
 		return this._expression != null;
 	}
@@ -58,6 +62,10 @@ public class SynchronizedStmt {
 
 	public Object getBody() {
 		return this._body;
+	}
+
+	public Object getBody(Object defaultValue) {
+		return this._body == null ? defaultValue : this._body;
 	}
 
 	public boolean hasBody() {

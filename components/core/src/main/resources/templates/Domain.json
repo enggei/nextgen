@@ -7,22 +7,22 @@
     "name" : "Entity",
     "text" : "~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~\n\nRelations:\n~relations:{it|~it~};separator=\"\\n\"~",
     "parameters" : [ {
-      "uuid" : "15e2ecf4-f9fd-4043-88da-3ef096e936f6",
+      "uuid" : "119cc126-9206-41a4-b3ab-9cc63a232ee1",
       "name" : "name",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "String"
     }, {
-      "uuid" : "4e694b66-1b88-4fca-84ab-ce014239805b",
+      "uuid" : "4003562b-cacc-4c08-ba0b-0160bfd516e3",
       "name" : "isEnum",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "Boolean"
     }, {
-      "uuid" : "26861f94-5ad2-4aeb-8af7-b4e70cd69111",
+      "uuid" : "da4306e4-39a1-4bf1-8892-55f5cee2b89b",
       "name" : "enumValues",
       "type" : "LIST",
-      "argumentType" : "Object"
+      "argumentType" : "String"
     }, {
-      "uuid" : "7faf6bef-4dc1-4308-876e-99898e899ebe",
+      "uuid" : "4082af75-9c01-4325-bb81-c760ec36b8a6",
       "name" : "relations",
       "type" : "LIST",
       "argumentType" : "Object"
@@ -70,22 +70,27 @@
   }, {
     "uuid" : "2aecf888-abf3-4f63-8748-49c3bca774db",
     "name" : "ReferenceField",
-    "text" : "One-to-one ~name~ ~entity~ ~if(lexical)~lexical~endif~",
+    "text" : "One-to-one ~name~ ~entity~~if(lexical)~ lexical~endif~~if(self)~ self~endif~",
     "parameters" : [ {
-      "uuid" : "dd751078-ab79-4ad1-aefa-d85a8f28f649",
+      "uuid" : "ff8b7870-1c06-441c-82be-9a62890086cc",
       "name" : "name",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "String"
     }, {
-      "uuid" : "97dca670-ddbb-4ab3-b87c-b58d67fe6948",
+      "uuid" : "d8987c50-b351-42be-8349-88f3ebbafec9",
       "name" : "entity",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "Entity"
     }, {
-      "uuid" : "8469ebf4-bfe8-4a14-9f98-247d51740ba4",
+      "uuid" : "371e11d6-8888-4c2c-b4f4-b62998f5e333",
       "name" : "lexical",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "Boolean"
+    }, {
+      "uuid" : "f1854fff-463e-4ad2-b587-e45188ce7a6b",
+      "name" : "self",
+      "type" : "SINGLE",
+      "argumentType" : "Boolean"
     } ]
   }, {
     "uuid" : "8f3b2449-252a-426d-9856-2d373471838d",
@@ -105,17 +110,77 @@
   }, {
     "uuid" : "4f87ca1a-15fe-4368-be92-fc8907a5308f",
     "name" : "ReferenceList",
-    "text" : "One-to-many ~name~ ~entity~",
+    "text" : "One-to-many ~name~ ~entity~~if(self)~ self~endif~",
     "parameters" : [ {
-      "uuid" : "0d90107b-d0d3-465d-9820-afc3d12c5943",
+      "uuid" : "a724ea22-df8f-4a66-9086-68d57bb7800f",
       "name" : "name",
       "type" : "SINGLE",
       "argumentType" : "String"
     }, {
-      "uuid" : "dd0bcc25-e93d-4eff-9463-6078593a1c68",
+      "uuid" : "9afd5294-cff3-462a-bb79-eab2f680a19a",
       "name" : "entity",
       "type" : "SINGLE",
       "argumentType" : "Entity"
+    }, {
+      "uuid" : "ed80c70a-7ef3-418d-98ff-0e01838407aa",
+      "name" : "self",
+      "type" : "SINGLE",
+      "argumentType" : "Boolean"
+    } ]
+  }, {
+    "uuid" : "8bcec9ae-2d0f-4545-ad0f-9967d9a78e35",
+    "name" : "ExternalReferenceField",
+    "text" : "One-to-one ~name~ ~type~~if(lexical)~ lexical~endif~",
+    "parameters" : [ {
+      "uuid" : "76cbc7f1-7a32-4b88-a71a-30f0a947ff1d",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "String"
+    }, {
+      "uuid" : "e36f4e45-bcb2-42d2-9918-63fc89946f60",
+      "name" : "type",
+      "type" : "SINGLE",
+      "argumentType" : "Class<?>"
+    }, {
+      "uuid" : "b108ca12-ecc1-4431-bab1-851b0f60e9d1",
+      "name" : "lexical",
+      "type" : "SINGLE",
+      "argumentType" : "Boolean"
+    } ]
+  }, {
+    "uuid" : "6c1257e4-216d-40f6-8282-dfe8e76034f6",
+    "name" : "ExternalReferenceList",
+    "text" : "One-to-many ~name~ ~type~",
+    "parameters" : [ {
+      "uuid" : "a35f3815-d3ac-49fa-a194-998460073d2d",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "String"
+    }, {
+      "uuid" : "700b651b-563d-4933-8c16-a2ee577f2fe5",
+      "name" : "type",
+      "type" : "SINGLE",
+      "argumentType" : "Class<?>"
+    } ]
+  }, {
+    "uuid" : "ce99389a-9195-4d49-888f-1b9fdeb09481",
+    "name" : "EnumField",
+    "text" : "One-to-one ~name~ ~type~ ~if(lexical)~lexical~endif~",
+    "parameters" : [ {
+      "uuid" : "48caded4-1ae2-4178-853c-27301fb34ce2",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "String"
+    }, {
+      "uuid" : "a57acff8-334a-47a8-bf5e-635e5f72330a",
+      "name" : "type",
+      "type" : "SINGLE",
+      "argumentType" : "Entity"
+    }, {
+      "uuid" : "ac1296e2-b76d-4da1-8c39-faa94f67f13c",
+      "name" : "lexical",
+      "type" : "SINGLE",
+      "argumentType" : "Boolean"
     } ]
   } ]
 }

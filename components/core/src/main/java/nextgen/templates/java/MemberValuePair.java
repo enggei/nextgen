@@ -42,6 +42,10 @@ public class MemberValuePair {
 		return this._name;
 	}
 
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
 	public boolean hasName() {
 		return this._name != null;
 	}
@@ -58,6 +62,10 @@ public class MemberValuePair {
 
 	public Object getValue() {
 		return this._value;
+	}
+
+	public Object getValue(Object defaultValue) {
+		return this._value == null ? defaultValue : this._value;
 	}
 
 	public boolean hasValue() {

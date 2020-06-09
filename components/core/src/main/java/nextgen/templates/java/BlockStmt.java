@@ -42,6 +42,10 @@ public class BlockStmt {
 		return this._isStatic;
 	}
 
+	public Object getIsStatic(Object defaultValue) {
+		return this._isStatic == null ? defaultValue : this._isStatic;
+	}
+
 	public boolean hasIsStatic() {
 		return this._isStatic != null;
 	}

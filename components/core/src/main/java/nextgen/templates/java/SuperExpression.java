@@ -40,6 +40,10 @@ public class SuperExpression {
 		return this._typeName;
 	}
 
+	public Object getTypeName(Object defaultValue) {
+		return this._typeName == null ? defaultValue : this._typeName;
+	}
+
 	public boolean hasTypeName() {
 		return this._typeName != null;
 	}

@@ -44,6 +44,10 @@ public class PojoFactory {
 		return this._package;
 	}
 
+	public Object getPackage(Object defaultValue) {
+		return this._package == null ? defaultValue : this._package;
+	}
+
 	public boolean hasPackage() {
 		return this._package != null;
 	}
@@ -60,6 +64,10 @@ public class PojoFactory {
 
 	public Object getName() {
 		return this._name;
+	}
+
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
 	}
 
 	public boolean hasName() {

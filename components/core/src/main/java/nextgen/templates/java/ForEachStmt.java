@@ -44,6 +44,10 @@ public class ForEachStmt {
 		return this._body;
 	}
 
+	public Object getBody(Object defaultValue) {
+		return this._body == null ? defaultValue : this._body;
+	}
+
 	public boolean hasBody() {
 		return this._body != null;
 	}
@@ -62,6 +66,10 @@ public class ForEachStmt {
 		return this._variable;
 	}
 
+	public Object getVariable(Object defaultValue) {
+		return this._variable == null ? defaultValue : this._variable;
+	}
+
 	public boolean hasVariable() {
 		return this._variable != null;
 	}
@@ -78,6 +86,10 @@ public class ForEachStmt {
 
 	public Object getIterable() {
 		return this._iterable;
+	}
+
+	public Object getIterable(Object defaultValue) {
+		return this._iterable == null ? defaultValue : this._iterable;
 	}
 
 	public boolean hasIterable() {

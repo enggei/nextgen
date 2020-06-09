@@ -44,6 +44,10 @@ public class ArrayCreationExpression {
 		return this._initializer;
 	}
 
+	public Object getInitializer(Object defaultValue) {
+		return this._initializer == null ? defaultValue : this._initializer;
+	}
+
 	public boolean hasInitializer() {
 		return this._initializer != null;
 	}
@@ -60,6 +64,10 @@ public class ArrayCreationExpression {
 
 	public Object getType() {
 		return this._type;
+	}
+
+	public Object getType(Object defaultValue) {
+		return this._type == null ? defaultValue : this._type;
 	}
 
 	public boolean hasType() {

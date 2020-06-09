@@ -48,6 +48,10 @@ public class Parameter {
 		return this._type;
 	}
 
+	public Object getType(Object defaultValue) {
+		return this._type == null ? defaultValue : this._type;
+	}
+
 	public boolean hasType() {
 		return this._type != null;
 	}
@@ -66,6 +70,10 @@ public class Parameter {
 		return this._isVarargs;
 	}
 
+	public Object getIsVarargs(Object defaultValue) {
+		return this._isVarargs == null ? defaultValue : this._isVarargs;
+	}
+
 	public boolean hasIsVarargs() {
 		return this._isVarargs != null;
 	}
@@ -82,6 +90,10 @@ public class Parameter {
 
 	public Object getName() {
 		return this._name;
+	}
+
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
 	}
 
 	public boolean hasName() {

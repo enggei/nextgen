@@ -52,6 +52,10 @@ public class ConstructorDeclaration {
 		return this._name;
 	}
 
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
 	public boolean hasName() {
 		return this._name != null;
 	}
@@ -68,6 +72,10 @@ public class ConstructorDeclaration {
 
 	public Object getBlockStmt() {
 		return this._blockStmt;
+	}
+
+	public Object getBlockStmt(Object defaultValue) {
+		return this._blockStmt == null ? defaultValue : this._blockStmt;
 	}
 
 	public boolean hasBlockStmt() {

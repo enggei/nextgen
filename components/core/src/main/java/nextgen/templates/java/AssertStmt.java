@@ -42,6 +42,10 @@ public class AssertStmt {
 		return this._message;
 	}
 
+	public Object getMessage(Object defaultValue) {
+		return this._message == null ? defaultValue : this._message;
+	}
+
 	public boolean hasMessage() {
 		return this._message != null;
 	}
@@ -58,6 +62,10 @@ public class AssertStmt {
 
 	public Object getExpression() {
 		return this._expression;
+	}
+
+	public Object getExpression(Object defaultValue) {
+		return this._expression == null ? defaultValue : this._expression;
 	}
 
 	public boolean hasExpression() {

@@ -28,7 +28,7 @@ public class STG {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("STG");
-		st.add("delimiter" ,_delimiter);
+		st.add("delimiter", _delimiter);
 		for (Object o : _templates) st.add("templates", o);
 		return st.render().trim();
 	}
@@ -40,6 +40,10 @@ public class STG {
 
 	public Object getDelimiter() {
 		return this._delimiter;
+	}
+
+	public Object getDelimiter(Object defaultValue) {
+		return this._delimiter == null ? defaultValue : this._delimiter;
 	}
 
 	public boolean hasDelimiter() {

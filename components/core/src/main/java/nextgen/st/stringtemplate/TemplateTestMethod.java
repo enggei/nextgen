@@ -27,7 +27,7 @@ public class TemplateTestMethod {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("templateTestMethod");
-		st.add("template" ,_template);
+		st.add("template", _template);
 		return st.render().trim();
 	}
 
@@ -38,6 +38,10 @@ public class TemplateTestMethod {
 
 	public Object getTemplate() {
 		return this._template;
+	}
+
+	public Object getTemplate(Object defaultValue) {
+		return this._template == null ? defaultValue : this._template;
 	}
 
 	public boolean hasTemplate() {

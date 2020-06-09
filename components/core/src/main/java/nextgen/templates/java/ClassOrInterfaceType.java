@@ -48,6 +48,10 @@ public class ClassOrInterfaceType {
 		return this._scope;
 	}
 
+	public Object getScope(Object defaultValue) {
+		return this._scope == null ? defaultValue : this._scope;
+	}
+
 	public boolean hasScope() {
 		return this._scope != null;
 	}
@@ -66,6 +70,10 @@ public class ClassOrInterfaceType {
 		return this._isTyped;
 	}
 
+	public Object getIsTyped(Object defaultValue) {
+		return this._isTyped == null ? defaultValue : this._isTyped;
+	}
+
 	public boolean hasIsTyped() {
 		return this._isTyped != null;
 	}
@@ -82,6 +90,10 @@ public class ClassOrInterfaceType {
 
 	public Object getIsArrayType() {
 		return this._isArrayType;
+	}
+
+	public Object getIsArrayType(Object defaultValue) {
+		return this._isArrayType == null ? defaultValue : this._isArrayType;
 	}
 
 	public boolean hasIsArrayType() {

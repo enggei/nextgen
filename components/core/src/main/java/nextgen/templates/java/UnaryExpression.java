@@ -46,6 +46,10 @@ public class UnaryExpression {
 		return this._isPrefix;
 	}
 
+	public Object getIsPrefix(Object defaultValue) {
+		return this._isPrefix == null ? defaultValue : this._isPrefix;
+	}
+
 	public boolean hasIsPrefix() {
 		return this._isPrefix != null;
 	}
@@ -62,6 +66,10 @@ public class UnaryExpression {
 
 	public Object getOperator() {
 		return this._operator;
+	}
+
+	public Object getOperator(Object defaultValue) {
+		return this._operator == null ? defaultValue : this._operator;
 	}
 
 	public boolean hasOperator() {
@@ -82,6 +90,10 @@ public class UnaryExpression {
 		return this._expression;
 	}
 
+	public Object getExpression(Object defaultValue) {
+		return this._expression == null ? defaultValue : this._expression;
+	}
+
 	public boolean hasExpression() {
 		return this._expression != null;
 	}
@@ -98,6 +110,10 @@ public class UnaryExpression {
 
 	public Object getIsPostfix() {
 		return this._isPostfix;
+	}
+
+	public Object getIsPostfix(Object defaultValue) {
+		return this._isPostfix == null ? defaultValue : this._isPostfix;
 	}
 
 	public boolean hasIsPostfix() {

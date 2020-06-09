@@ -42,6 +42,10 @@ public class ArrayAccessExpression {
 		return this._index;
 	}
 
+	public Object getIndex(Object defaultValue) {
+		return this._index == null ? defaultValue : this._index;
+	}
+
 	public boolean hasIndex() {
 		return this._index != null;
 	}
@@ -58,6 +62,10 @@ public class ArrayAccessExpression {
 
 	public Object getName() {
 		return this._name;
+	}
+
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
 	}
 
 	public boolean hasName() {

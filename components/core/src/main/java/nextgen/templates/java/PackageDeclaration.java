@@ -40,6 +40,10 @@ public class PackageDeclaration {
 		return this._name;
 	}
 
+	public String getName(String defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
 	public boolean hasName() {
 		return this._name != null;
 	}

@@ -85,6 +85,13 @@ public class ~name;format="capitalize"~ {
 	~eom()~};separator="\n\n"~
 } >>
 
+Enum(package,name,enumValues) ::= <<~package~
+
+public enum ~name~ {
+
+	~enumValues:{it|~it~};separator=","~
+} >>
+
 Grammar() ::= << >>
 
 CompilationUnit(packageDeclaration,types,importDeclaration) ::= <<~packageDeclaration~

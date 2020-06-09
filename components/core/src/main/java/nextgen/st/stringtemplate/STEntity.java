@@ -9,11 +9,11 @@ public class STEntity {
 	private Object _name;
 	private Object _template;
 	private Object _stString;
-	private java.util.List<Object> _singleFields = new java.util.ArrayList<>();
-	private java.util.List<Object> _listFields = new java.util.ArrayList<>();
 	private java.util.List<Object> _singleAccessors = new java.util.ArrayList<>();
 	private java.util.List<Object> _listAccessors = new java.util.ArrayList<>();
 	private java.util.List<Object> _kvListAccessors = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _singleFields = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _listFields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _kvListFields = new java.util.ArrayList<>();
 
 	STEntity(org.stringtemplate.v4.STGroup stGroup) {
@@ -36,15 +36,15 @@ public class STEntity {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("STEntity");
-		st.add("packageName" ,_packageName);
-		st.add("name" ,_name);
-		st.add("template" ,_template);
-		st.add("stString" ,_stString);
-		for (Object o : _singleFields) st.add("singleFields", o);
-		for (Object o : _listFields) st.add("listFields", o);
+		st.add("packageName", _packageName);
+		st.add("name", _name);
+		st.add("template", _template);
+		st.add("stString", _stString);
 		for (Object o : _singleAccessors) st.add("singleAccessors", o);
 		for (Object o : _listAccessors) st.add("listAccessors", o);
 		for (Object o : _kvListAccessors) st.add("kvListAccessors", o);
+		for (java.util.Map<String, Object> map : _singleFields) st.addAggr("singleFields.{type,name}", map.get("type"), map.get("name"));
+		for (java.util.Map<String, Object> map : _listFields) st.addAggr("listFields.{type,name}", map.get("type"), map.get("name"));
 		for (java.util.Map<String, Object> map : _kvListFields) st.addAggr("kvListFields.{name,aggrSpec,aggrValues}", map.get("name"), map.get("aggrSpec"), map.get("aggrValues"));
 		return st.render().trim();
 	}
@@ -56,6 +56,10 @@ public class STEntity {
 
 	public Object getPackageName() {
 		return this._packageName;
+	}
+
+	public Object getPackageName(Object defaultValue) {
+		return this._packageName == null ? defaultValue : this._packageName;
 	}
 
 	public boolean hasPackageName() {
@@ -76,6 +80,10 @@ public class STEntity {
 		return this._name;
 	}
 
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
 	public boolean hasName() {
 		return this._name != null;
 	}
@@ -92,6 +100,10 @@ public class STEntity {
 
 	public Object getTemplate() {
 		return this._template;
+	}
+
+	public Object getTemplate(Object defaultValue) {
+		return this._template == null ? defaultValue : this._template;
 	}
 
 	public boolean hasTemplate() {
@@ -112,6 +124,10 @@ public class STEntity {
 		return this._stString;
 	}
 
+	public Object getStString(Object defaultValue) {
+		return this._stString == null ? defaultValue : this._stString;
+	}
+
 	public boolean hasStString() {
 		return this._stString != null;
 	}
@@ -120,44 +136,6 @@ public class STEntity {
 		this._stString = null;
 		return this;
 	} 
-	public STEntity addSingleFields(Object value) {
-		this._singleFields.add(value);
-		return this;
-	}
-
-	public STEntity removeSingleFields(Object value) {
-		this._singleFields.remove(value);
-		return this;
-	}
-
-	public STEntity removeSingleFields(int index) {
-		this._singleFields.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getSingleFields() {
-		return this._singleFields;
-	} 
-
-	public STEntity addListFields(Object value) {
-		this._listFields.add(value);
-		return this;
-	}
-
-	public STEntity removeListFields(Object value) {
-		this._listFields.remove(value);
-		return this;
-	}
-
-	public STEntity removeListFields(int index) {
-		this._listFields.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getListFields() {
-		return this._listFields;
-	} 
-
 	public STEntity addSingleAccessors(Object value) {
 		this._singleAccessors.add(value);
 		return this;
@@ -214,6 +192,96 @@ public class STEntity {
 	public java.util.List<Object> getKvListAccessors() {
 		return this._kvListAccessors;
 	} 
+	public STEntity addSingleFields(Object _type, Object _name) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("type", _type);
+		map.put("name", _name);
+		this._singleFields.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getSingleFields() {
+		return this._singleFields;
+	}
+
+	public STEntity addSingleFields(STEntity_SingleFields value) {
+		return addSingleFields(value._type, value._name);
+	}
+
+	public java.util.stream.Stream<STEntity_SingleFields> streamSingleFields() {
+		return this._singleFields.stream().map(STEntity_SingleFields::new);
+	}
+
+	public static final class STEntity_SingleFields {
+
+		Object _type;
+		Object _name;
+
+		public STEntity_SingleFields(Object _type, Object _name) {
+			this._type = _type;
+			this._name = _name;
+		}
+
+		private STEntity_SingleFields(java.util.Map<String, Object> map) {
+			this._type = (Object) map.get("type");
+			this._name = (Object) map.get("name");
+		}
+
+		public Object getType() {
+			return this._type;
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+	} 
+
+	public STEntity addListFields(Object _type, Object _name) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("type", _type);
+		map.put("name", _name);
+		this._listFields.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getListFields() {
+		return this._listFields;
+	}
+
+	public STEntity addListFields(STEntity_ListFields value) {
+		return addListFields(value._type, value._name);
+	}
+
+	public java.util.stream.Stream<STEntity_ListFields> streamListFields() {
+		return this._listFields.stream().map(STEntity_ListFields::new);
+	}
+
+	public static final class STEntity_ListFields {
+
+		Object _type;
+		Object _name;
+
+		public STEntity_ListFields(Object _type, Object _name) {
+			this._type = _type;
+			this._name = _name;
+		}
+
+		private STEntity_ListFields(java.util.Map<String, Object> map) {
+			this._type = (Object) map.get("type");
+			this._name = (Object) map.get("name");
+		}
+
+		public Object getType() {
+			return this._type;
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+	} 
+
 	public STEntity addKvListFields(Object _name, Object _aggrSpec, Object _aggrValues) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("name", _name);
@@ -274,8 +342,8 @@ public class STEntity {
 				"	private final java.util.UUID uuid = java.util.UUID.randomUUID();\n" + 
 				"	private final org.stringtemplate.v4.STGroup stGroup;\n" + 
 				"	\n" + 
-				"	~singleFields:{it|private Object _~it~;};separator=\"\\n\"~\n" + 
-				"	~listFields:{it|private java.util.List<Object> _~it~ = new java.util.ArrayList<>();};separator=\"\\n\"~\n" + 
+				"	~singleFields:{it|private ~it.type~ _~it.name~;};separator=\"\\n\"~\n" + 
+				"	~listFields:{it|private java.util.List<~it.type~> _~it.name~ = new java.util.ArrayList<>();};separator=\"\\n\"~\n" + 
 				"	~kvListFields:{it|private java.util.List<java.util.Map<String, Object~gt()~> _~it.name~ = new java.util.ArrayList<>();};separator=\"\\n\"~\n" + 
 				"	\n" + 
 				"	~name~(org.stringtemplate.v4.STGroup stGroup) {\n" + 
@@ -298,8 +366,8 @@ public class STEntity {
 				"	@Override\n" + 
 				"	public String toString() {\n" + 
 				"		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf(\"~template~\");\n" + 
-				"		~singleFields:{it|st.add(\"~it~\" ,_~it~);};separator=\"\\n\"~\n" + 
-				"		~listFields:{it|for (Object o : _~it~) st.add(\"~it~\", o);};separator=\"\\n\"~\n" + 
+				"		~singleFields:{it|st.add(\"~it.name~\", _~it.name~);};separator=\"\\n\"~\n" + 
+				"		~listFields:{it|for (Object o : _~it.name~) st.add(\"~it.name~\", o);};separator=\"\\n\"~\n" + 
 				"		~kvListFields:{it|for (java.util.Map<String, Object> map : _~it.name~) st.addAggr(\"~it.aggrSpec~\", ~it.aggrValues~);};separator=\"\\n\"~\n" + 
 				"		return st.render().trim();\n" + 
 				"	}\n" + 

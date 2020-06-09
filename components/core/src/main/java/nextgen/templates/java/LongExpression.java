@@ -40,6 +40,10 @@ public class LongExpression {
 		return this._value;
 	}
 
+	public Object getValue(Object defaultValue) {
+		return this._value == null ? defaultValue : this._value;
+	}
+
 	public boolean hasValue() {
 		return this._value != null;
 	}

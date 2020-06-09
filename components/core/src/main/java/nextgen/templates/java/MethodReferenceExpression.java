@@ -42,6 +42,10 @@ public class MethodReferenceExpression {
 		return this._identifier;
 	}
 
+	public Object getIdentifier(Object defaultValue) {
+		return this._identifier == null ? defaultValue : this._identifier;
+	}
+
 	public boolean hasIdentifier() {
 		return this._identifier != null;
 	}
@@ -58,6 +62,10 @@ public class MethodReferenceExpression {
 
 	public Object getScope() {
 		return this._scope;
+	}
+
+	public Object getScope(Object defaultValue) {
+		return this._scope == null ? defaultValue : this._scope;
 	}
 
 	public boolean hasScope() {

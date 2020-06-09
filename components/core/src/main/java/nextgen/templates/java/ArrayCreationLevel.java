@@ -40,6 +40,10 @@ public class ArrayCreationLevel {
 		return this._dimension;
 	}
 
+	public Object getDimension(Object defaultValue) {
+		return this._dimension == null ? defaultValue : this._dimension;
+	}
+
 	public boolean hasDimension() {
 		return this._dimension != null;
 	}

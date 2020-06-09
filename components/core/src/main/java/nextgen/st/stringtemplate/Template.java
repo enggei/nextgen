@@ -29,8 +29,8 @@ public class Template {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Template");
-		st.add("name" ,_name);
-		st.add("content" ,_content);
+		st.add("name", _name);
+		st.add("content", _content);
 		for (Object o : _params) st.add("params", o);
 		return st.render().trim();
 	}
@@ -42,6 +42,10 @@ public class Template {
 
 	public Object getName() {
 		return this._name;
+	}
+
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
 	}
 
 	public boolean hasName() {
@@ -60,6 +64,10 @@ public class Template {
 
 	public Object getContent() {
 		return this._content;
+	}
+
+	public Object getContent(Object defaultValue) {
+		return this._content == null ? defaultValue : this._content;
 	}
 
 	public boolean hasContent() {

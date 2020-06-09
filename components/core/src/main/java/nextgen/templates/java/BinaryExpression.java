@@ -44,6 +44,10 @@ public class BinaryExpression {
 		return this._left;
 	}
 
+	public Object getLeft(Object defaultValue) {
+		return this._left == null ? defaultValue : this._left;
+	}
+
 	public boolean hasLeft() {
 		return this._left != null;
 	}
@@ -62,6 +66,10 @@ public class BinaryExpression {
 		return this._operator;
 	}
 
+	public Object getOperator(Object defaultValue) {
+		return this._operator == null ? defaultValue : this._operator;
+	}
+
 	public boolean hasOperator() {
 		return this._operator != null;
 	}
@@ -78,6 +86,10 @@ public class BinaryExpression {
 
 	public Object getRight() {
 		return this._right;
+	}
+
+	public Object getRight(Object defaultValue) {
+		return this._right == null ? defaultValue : this._right;
 	}
 
 	public boolean hasRight() {
