@@ -37,7 +37,7 @@ public class STProject {
                                         .addRelations(newStringField("name", true))
                                         .addRelations(newStringField("values"))))))));
 
-        ProjectPatterns.writeJsonWrapper(javaTestSrc, newDomain("ST", stDomainPackage.getName())
+        ProjectPatterns.writeJsonWrapper(javaMainSrc, newDomain("ST", stDomainPackage.getName())
                 .addEntities(newEntity("STAppModel")
                         .addRelations(newStringField("generatorRoot"))
                         .addRelations(newStringField("generatorPackage"))
