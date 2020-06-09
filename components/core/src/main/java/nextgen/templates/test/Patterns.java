@@ -14,19 +14,6 @@ public class Patterns {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Patterns that = (Patterns) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Patterns");
 		st.add("isPublic", _isPublic);
@@ -101,6 +88,19 @@ public class Patterns {
 		return this;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Patterns that = (Patterns) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "Patterns(isPublic,isPrivate,scope) ::= <<Patterns for templates:\n" + 
 				"\n" + 
 				"Avoid to many if-elseifs:\n" + 
@@ -112,4 +112,4 @@ public class Patterns {
 				"~scope~ class {}\n" + 
 				"\n" + 
 				"and set scope = \"public\"|\"private\" in generator>> ";
-} 
+}  

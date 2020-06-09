@@ -5,26 +5,13 @@ public class STDomain {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _packageName;
-	private Object _name;
-	private Object _stgString;
+	private String _packageName;
+	private String _name;
+	private StgString _stgString;
 	private java.util.List<Object> _entities = new java.util.ArrayList<>();
 
 	STDomain(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		STDomain that = (STDomain) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
 	}
 
 	@Override
@@ -37,16 +24,16 @@ public class STDomain {
 		return st.render().trim();
 	}
 
-	public STDomain setPackageName(Object value) {
+	public STDomain setPackageName(String value) {
 		this._packageName = value;
 		return this;
 	}
 
-	public Object getPackageName() {
+	public String getPackageName() {
 		return this._packageName;
 	}
 
-	public Object getPackageName(Object defaultValue) {
+	public String getPackageName(String defaultValue) {
 		return this._packageName == null ? defaultValue : this._packageName;
 	}
 
@@ -59,16 +46,16 @@ public class STDomain {
 		return this;
 	} 
 
-	public STDomain setName(Object value) {
+	public STDomain setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Object getName(Object defaultValue) {
+	public String getName(String defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 
@@ -81,16 +68,16 @@ public class STDomain {
 		return this;
 	} 
 
-	public STDomain setStgString(Object value) {
+	public STDomain setStgString(StgString value) {
 		this._stgString = value;
 		return this;
 	}
 
-	public Object getStgString() {
+	public StgString getStgString() {
 		return this._stgString;
 	}
 
-	public Object getStgString(Object defaultValue) {
+	public StgString getStgString(StgString defaultValue) {
 		return this._stgString == null ? defaultValue : this._stgString;
 	}
 
@@ -121,14 +108,26 @@ public class STDomain {
 		return this._entities;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		STDomain that = (STDomain) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "STDomain(packageName,name,stgString,entities) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"public class ~name~ {\n" + 
 				"\n" + 
 				"	private static final String stg = ~stgString~;\n" + 
 				"\n" + 
-				"	public static org.stringtemplate.v4.STGroup defaultSTGroup() {\n" + 
-				"		org.stringtemplate.v4.STGroup stGroup = new org.stringtemplate.v4.STGroupString(\"~name~\", stg, '\\~', '\\~');\n" + 
+				"	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {\n" + 
 				"		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());\n" + 
 				"		stGroup.setListener(new org.stringtemplate.v4.STErrorListener() {\n" + 
 				"			@Override\n" + 
@@ -152,36 +151,14 @@ public class STDomain {
 				"				System.out.println(\"internalError \" + stMessage.toString());\n" + 
 				"			}\n" + 
 				"		});\n" + 
+				"\n" + 
 				"		return stGroup;\n" + 
 				"	}\n" + 
-				"	\n" + 
-				"	private static org.stringtemplate.v4.STGroup stGroup = defaultSTGroup();\n" + 
+				"		\n" + 
+				"	private static org.stringtemplate.v4.STGroup stGroup = decorate(new org.stringtemplate.v4.STGroupString(\"~name~\", stg, '\\~', '\\~'));\n" + 
 				"\n" + 
 				"	public static void setSTGroup(final String stgFile) {\n" + 
-				"		stGroup = new org.stringtemplate.v4.STGroupFile(stgFile, '\\~', '\\~');\n" + 
-				"		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());\n" + 
-				"		stGroup.setListener(new org.stringtemplate.v4.STErrorListener() {\n" + 
-				"			@Override\n" + 
-				"			public void compileTimeError(org.stringtemplate.v4.misc.STMessage stMessage) {\n" + 
-				"				System.out.println(\"compileTimeError \" + stMessage.toString());\n" + 
-				"			}\n" + 
-				"\n" + 
-				"			@Override\n" + 
-				"			public void runTimeError(org.stringtemplate.v4.misc.STMessage stMessage) {\n" + 
-				"				final org.stringtemplate.v4.misc.STRuntimeMessage stRuntimeMessage = (org.stringtemplate.v4.misc.STRuntimeMessage) stMessage;\n" + 
-				"				System.out.println(\"runTimeError \" + stMessage.self.getName() + \" \" + stRuntimeMessage.getSourceLocation());\n" + 
-				"			}\n" + 
-				"\n" + 
-				"			@Override\n" + 
-				"			public void IOError(org.stringtemplate.v4.misc.STMessage stMessage) {\n" + 
-				"				System.out.println(\"IOError \" + stMessage.toString());\n" + 
-				"			}\n" + 
-				"\n" + 
-				"			@Override\n" + 
-				"			public void internalError(org.stringtemplate.v4.misc.STMessage stMessage) {\n" + 
-				"				System.out.println(\"internalError \" + stMessage.toString());\n" + 
-				"			}\n" + 
-				"		});\n" + 
+				"		stGroup = decorate(new org.stringtemplate.v4.STGroupFile(stgFile, '\\~', '\\~'));\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	~entities:{it|~it~};separator=\"\\n\\n\"~\n" + 
@@ -218,4 +195,4 @@ public class STDomain {
 				"		}\n" + 
 				"	}\n" + 
 				"}>> ";
-} 
+}  

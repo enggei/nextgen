@@ -12,19 +12,6 @@ public class TemplateTestMethod {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		TemplateTestMethod that = (TemplateTestMethod) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("templateTestMethod");
 		st.add("template", _template);
@@ -53,8 +40,21 @@ public class TemplateTestMethod {
 		return this;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		TemplateTestMethod that = (TemplateTestMethod) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "templateTestMethod(template) ::= <<@org.junit.Test\n" + 
 				"public void test~template;format=\"capitalize\"~() {\n" + 
 				"	System.out.println(\"\\n--- TEST ~template~:\\n\" + new~template;format=\"capitalize\"~());\n" + 
 				"}>> ";
-} 
+}  

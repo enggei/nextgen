@@ -14,19 +14,6 @@ public class EntityKVListAccessors {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		EntityKVListAccessors that = (EntityKVListAccessors) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("entityKVListAccessors");
 		st.add("entity", _entity);
@@ -123,6 +110,19 @@ public class EntityKVListAccessors {
 
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		EntityKVListAccessors that = (EntityKVListAccessors) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "entityKVListAccessors(entity,name,keys) ::= <<public ~entity~ add~name;format=\"capitalize\"~(~keys:{it|~if(it.type)~~it.type~~else~Object~endif~ _~it.name~};separator=\", \"~) {\n" + 
 				"	final java.util.Map<String, Object> map = new java.util.HashMap<>();\n" + 
 				"	~keys:{it|map.put(\"~it.name~\", _~it.name~);};separator=\"\\n\"~\n" + 
@@ -159,4 +159,4 @@ public class EntityKVListAccessors {
 				"~eom()~\n" + 
 				"	};separator=\"\\n\"~\n" + 
 				"}>> ";
-} 
+}  

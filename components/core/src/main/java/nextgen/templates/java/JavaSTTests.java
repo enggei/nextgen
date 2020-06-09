@@ -103,7 +103,7 @@ public class JavaSTTests {
 
 	@org.junit.Test
 	public void testEnum() {
-		System.out.println("\n--- TEST Enum:\n" + newEnum().setPackage("nextgen.templates.test").setName("LOL").addEnumValues(newEnumValue().setName("ONE").setLexical("1")).addEnumValues(newEnumValue().setName("STRING").setLexical("java.lang.String")));
+		System.out.println("\n--- TEST Enum:\n" + newEnum());
 	} 
 
 	@org.junit.Test

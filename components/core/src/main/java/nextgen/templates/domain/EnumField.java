@@ -101,5 +101,5 @@ public class EnumField {
 		return this;
 	} 
 
-	static final String st = "EnumField(name,type,lexical) ::= <<One-to-one ~name~ ~type~ ~if(lexical)~lexical~endif~>> ";
+	static final String st = "EnumField(name,type,lexical) ::= <<Enum field : ~name~ ~type~~if(lexical)~ lexical~endif~>> ";
 } 

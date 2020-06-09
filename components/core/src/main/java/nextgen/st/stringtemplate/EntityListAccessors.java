@@ -14,19 +14,6 @@ public class EntityListAccessors {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		EntityListAccessors that = (EntityListAccessors) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("entityListAccessors");
 		st.add("entity", _entity);
@@ -101,6 +88,19 @@ public class EntityListAccessors {
 		return this;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		EntityListAccessors that = (EntityListAccessors) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "entityListAccessors(entity,name,type) ::= <<public ~entity~ add~name;format=\"capitalize\"~(~if(type)~~type~~else~Object~endif~ value) {\n" + 
 				"	this._~name~.add(value);\n" + 
 				"	return this;\n" + 
@@ -119,4 +119,4 @@ public class EntityListAccessors {
 				"public java.util.List<~if(type)~~type~~else~Object~endif~> get~name;format=\"capitalize\"~() {\n" + 
 				"	return this._~name~;\n" + 
 				"}>> ";
-} 
+}  

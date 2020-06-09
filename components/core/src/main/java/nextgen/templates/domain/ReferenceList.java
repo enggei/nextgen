@@ -101,5 +101,5 @@ public class ReferenceList {
 		return this;
 	} 
 
-	static final String st = "ReferenceList(name,entity,self) ::= <<One-to-many ~name~ ~entity~~if(self)~ self~endif~>> ";
+	static final String st = "ReferenceList(name,entity,self) ::= <<Entity List of ~name~ ~entity~~if(self)~ self-referential~endif~>> ";
 } 

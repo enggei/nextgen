@@ -16,19 +16,6 @@ public class AllTypes {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		AllTypes that = (AllTypes) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("allTypes");
 		st.add("single", _single);
@@ -167,9 +154,22 @@ public class AllTypes {
 
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		AllTypes that = (AllTypes) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "allTypes(single,list,kvList,cond1,cond2) ::= <<A single value, ~single~, \n" + 
 				"then a list ~list:{it|~it~};separator=\",\"~, \n" + 
 				"and a kv-list : ~kvList:{it|~it.name~:~it.value~};separator=\",\"~\n" + 
 				"\n" + 
 				"If expression ~conditional(cond1,cond2)~>> ";
-} 
+}  

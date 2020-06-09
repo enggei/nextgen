@@ -21,19 +21,6 @@ public class STEntity {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		STEntity that = (STEntity) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("STEntity");
 		st.add("packageName", _packageName);
@@ -335,6 +322,19 @@ public class STEntity {
 
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		STEntity that = (STEntity) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "STEntity(packageName,name,singleFields,listFields,kvListFields,template,singleAccessors,listAccessors,kvListAccessors,stString) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"public class ~name~ {\n" + 
@@ -351,19 +351,6 @@ public class STEntity {
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 
-				"	public boolean equals(Object o) {\n" + 
-				"		if (this == o) return true;\n" + 
-				"		if (o == null || getClass() != o.getClass()) return false;\n" + 
-				"		~name~ that = (~name~) o;\n" + 
-				"		return uuid.equals(that.uuid);\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	@Override\n" + 
-				"	public int hashCode() {\n" + 
-				"		return java.util.Objects.hash(uuid);\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	@Override\n" + 
 				"	public String toString() {\n" + 
 				"		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf(\"~template~\");\n" + 
 				"		~singleFields:{it|st.add(\"~it.name~\", _~it.name~);};separator=\"\\n\"~\n" + 
@@ -376,6 +363,19 @@ public class STEntity {
 				"	~listAccessors:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"	~kvListAccessors:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
+				"	@Override\n" + 
+				"	public boolean equals(Object o) {\n" + 
+				"		if (this == o) return true;\n" + 
+				"		if (o == null || getClass() != o.getClass()) return false;\n" + 
+				"		~name~ that = (~name~) o;\n" + 
+				"		return uuid.equals(that.uuid);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	@Override\n" + 
+				"	public int hashCode() {\n" + 
+				"		return java.util.Objects.hash(uuid);\n" + 
+				"	}\n" + 
+				"	\n" + 
 				"	~if(stString)~static final String st = \"~stString~\";~endif~\n" + 
 				"}>> ";
-} 
+}  

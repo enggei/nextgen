@@ -77,5 +77,5 @@ public class PrimitiveList {
 		return this;
 	} 
 
-	static final String st = "PrimitiveList(name,type) ::= <<One-to-many ~name~ ~type~>> ";
+	static final String st = "PrimitiveList(name,type) ::= <<List of ~name~ (~type~)>> ";
 } 

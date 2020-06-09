@@ -658,11 +658,11 @@ public class STNavigator extends JPanel {
 
                                     case SINGLE:
                                     case LIST:
-                                        txtParameterMap.put(stParameter.getName(), new JTextField(stParameter.getArgumentType("Object"), 30));
+                                        txtParameterMap.put(stParameter.getName(), new JTextField(stParameter.getArgumentType("Object"), 15));
                                         break;
                                     case KVLIST:
                                         stParameter.getKeys().forEach(stParameterKey -> {
-                                            txtParameterMap.put(stParameter.getName() + "." + stParameterKey.getName(), new JTextField(stParameterKey.getArgumentType("Object"), 30));
+                                            txtParameterMap.put(stParameter.getName() + "." + stParameterKey.getName(), new JTextField(stParameterKey.getArgumentType("Object"), 15));
                                         });
                                         break;
                                 }

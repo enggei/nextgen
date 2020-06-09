@@ -101,5 +101,5 @@ public class ExternalReferenceField {
 		return this;
 	} 
 
-	static final String st = "ExternalReferenceField(name,type,lexical) ::= <<One-to-one ~name~ ~type~~if(lexical)~ lexical~endif~>> ";
+	static final String st = "ExternalReferenceField(name,type,lexical) ::= <<External field ~name~ (~type~)~if(lexical)~ lexical~endif~>> ";
 } 

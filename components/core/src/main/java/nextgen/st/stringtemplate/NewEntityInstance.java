@@ -12,19 +12,6 @@ public class NewEntityInstance {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		NewEntityInstance that = (NewEntityInstance) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("newEntityInstance");
 		st.add("entityName", _entityName);
@@ -53,7 +40,20 @@ public class NewEntityInstance {
 		return this;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		NewEntityInstance that = (NewEntityInstance) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "newEntityInstance(entityName) ::= <<public static ~entityName~ new~entityName~() {\n" + 
 				"	return new ~entityName~(stGroup);\n" + 
 				"}>> ";
-} 
+}  

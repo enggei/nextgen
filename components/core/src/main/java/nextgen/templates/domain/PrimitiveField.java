@@ -101,5 +101,5 @@ public class PrimitiveField {
 		return this;
 	} 
 
-	static final String st = "PrimitiveField(name,type,lexical) ::= <<One-to-one ~name~ ~type~ ~if(lexical)~lexical~endif~>> ";
+	static final String st = "PrimitiveField(name,type,lexical) ::= <<Field ~name~ (~type~)~if(lexical)~ lexical~endif~>> ";
 } 

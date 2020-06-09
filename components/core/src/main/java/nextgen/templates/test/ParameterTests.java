@@ -11,6 +11,13 @@ public class ParameterTests {
 	}
 
 	@Override
+	public String toString() {
+		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ParameterTests");
+		return st.render().trim();
+	}
+
+
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
@@ -23,13 +30,6 @@ public class ParameterTests {
 		return java.util.Objects.hash(uuid);
 	}
 
-	@Override
-	public String toString() {
-		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ParameterTests");
-		return st.render().trim();
-	}
-
-
 	static final String st = "ParameterTests() ::= <<Test the 3 types of parameters:\n" + 
 				"\n" + 
 				"* Single value \n" + 
@@ -39,4 +39,4 @@ public class ParameterTests {
 				"Test conditional parsing\n" + 
 				"\n" + 
 				"Test complex combination of all types>> ";
-} 
+}  

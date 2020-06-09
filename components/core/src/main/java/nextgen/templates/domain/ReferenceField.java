@@ -125,5 +125,5 @@ public class ReferenceField {
 		return this;
 	} 
 
-	static final String st = "ReferenceField(name,entity,lexical,self) ::= <<One-to-one ~name~ ~entity~~if(lexical)~ lexical~endif~~if(self)~ self~endif~>> ";
+	static final String st = "ReferenceField(name,entity,lexical,self) ::= <<Entity field : ~name~ ~entity~~if(lexical)~ lexical~endif~~if(self)~ self-referential~endif~>> ";
 } 

@@ -1,9 +1,7 @@
 package nextgen.st;
 
 import com.generator.util.SwingUtil;
-import nextgen.st.domain.STGParseResult;
-import nextgen.st.domain.STGroupModel;
-import nextgen.st.domain.STTemplate;
+import nextgen.st.domain.*;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
@@ -16,6 +14,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.LinkedHashSet;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import static nextgen.st.STGenerator.toSTGroup;
@@ -101,10 +102,39 @@ public class STEditor extends JPanel {
                         .setText(text))));
 
         if (parseResult.getErrors().count() == 0) {
+            parseResult.getParsed().getTemplates().findFirst().ifPresent(stTemplate -> {
+                originalTemplate.setText(stTemplate.getText());
 
-            originalTemplate.setText(text);
-            originalTemplate.clearParameters();
-            parseResult.getParsed().getTemplates().findFirst().ifPresent(stTemplate -> stTemplate.getParameters().forEach(originalTemplate::addParameters));
+                // add existing argument-types to parameter, if applicable:
+                stTemplate.getParameters().forEach(newParameter -> {
+                    originalTemplate.getParameters()
+                            .filter(oldParameter -> oldParameter.getName().equals(newParameter.getName()))
+                            .findFirst()
+                            .ifPresent(oldParameter -> {
+
+                                if (oldParameter.getType().equals(newParameter.getType())) {
+
+                                    switch (newParameter.getType()) {
+
+                                        case SINGLE:
+                                        case LIST:
+                                            newParameter.setArgumentType(oldParameter.getArgumentType());
+                                            break;
+                                        case KVLIST:
+                                            newParameter.getKeys().forEach(newKey -> {
+                                                oldParameter.getKeys()
+                                                        .filter(oldKey -> oldKey.getName().equals(newKey.getName()))
+                                                        .findFirst()
+                                                        .ifPresent(oldKey -> newKey.setArgumentType(oldKey.getArgumentType()));
+                                            });
+                                            break;
+                                    }
+                                }
+                            });
+                });
+                originalTemplate.clearParameters();
+                stTemplate.getParameters().forEach(originalTemplate::addParameters);
+            });
 
             startText = text.trim();
             stGroupTreeNode.save();

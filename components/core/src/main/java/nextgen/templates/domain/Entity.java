@@ -120,6 +120,5 @@ public class Entity {
 
 	static final String st = "Entity(name,isEnum,enumValues,relations) ::= <<~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~\n" + 
 				"\n" + 
-				"Relations:\n" + 
 				"~relations:{it|~it~};separator=\"\\n\"~>> ";
 } 

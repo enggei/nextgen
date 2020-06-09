@@ -77,5 +77,5 @@ public class ExternalReferenceList {
 		return this;
 	} 
 
-	static final String st = "ExternalReferenceList(name,type) ::= <<One-to-many ~name~ ~type~>> ";
+	static final String st = "ExternalReferenceList(name,type) ::= <<External List of ~name~ (~type~)>> ";
 } 

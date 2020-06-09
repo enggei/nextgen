@@ -12,19 +12,6 @@ public class StgString {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		StgString that = (StgString) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("stgString");
 		for (Object o : _templates) st.add("templates", o);
@@ -50,8 +37,21 @@ public class StgString {
 		return this._templates;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		StgString that = (StgString) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "stgString(templates) ::= <<\"delimiters \\\"\\~\\\", \\\"\\~\\\"\\\\n\" +\n" + 
 				"	\"eom() ::= \\\"}\\\"\\\\n\" +\n" + 
 				"	\"gt() ::= \\\">\\\"\\\\n\"~if(templates)~ +\n" + 
 				"	~templates:{it|~it~.st + \"\\\\n\"};separator=\" + \\n\"~~else~~endif~>> ";
-} 
+}  

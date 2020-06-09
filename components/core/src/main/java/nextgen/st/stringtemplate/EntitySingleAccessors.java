@@ -14,19 +14,6 @@ public class EntitySingleAccessors {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		EntitySingleAccessors that = (EntitySingleAccessors) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("entitySingleAccessors");
 		st.add("entity", _entity);
@@ -101,6 +88,19 @@ public class EntitySingleAccessors {
 		return this;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		EntitySingleAccessors that = (EntitySingleAccessors) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "entitySingleAccessors(entity,name,type) ::= <<public ~entity~ set~name;format=\"capitalize\"~(~if(type)~~type~~else~Object~endif~ value) {\n" + 
 				"	this._~name~ = value;\n" + 
 				"	return this;\n" + 
@@ -122,4 +122,4 @@ public class EntitySingleAccessors {
 				"	this._~name~ = null;\n" + 
 				"	return this;\n" + 
 				"}>> ";
-} 
+}  
