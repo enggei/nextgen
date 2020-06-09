@@ -156,6 +156,69 @@ incomingReferenceStream(type,name) ::= <<public java.util.stream.Stream<~type~> 
 	return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("~name~")).spliterator(), false).map((relationship) -> new ~type~(relationship.getOtherNode(node)));
 } >>
 
+NeoFactory(package,name,accessors) ::= <<package ~package~;
+
+public class ~name;format="capitalize"~ {
+
+	private final org.neo4j.graphdb.GraphDatabaseService db;
+
+	public ~name;format="capitalize"~(java.lang.String dir) { 
+		this(new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabaseBuilder(new java.io.File(dir)).setConfig(org.neo4j.graphdb.factory.GraphDatabaseSettings.allow_upgrade, "true").newGraphDatabase());
+		Runtime.getRuntime().addShutdownHook(new java.lang.Thread(db::shutdown));
+	}
+
+	public ~name;format="capitalize"~(org.neo4j.graphdb.GraphDatabaseService db) { 
+		this.db = db;
+	}
+
+	public org.neo4j.graphdb.GraphDatabaseService getDatabaseService() { 
+		return this.db;
+	}
+
+	public void doInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> action) { 
+		doInTransaction(action, java.lang.Throwable::printStackTrace);
+	}
+
+	public void doInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> action, java.util.function.Consumer<java.lang.Throwable> onException) { 
+		try (org.neo4j.graphdb.Transaction tx = db.beginTx())  { 
+			action.accept(tx);
+			tx.success();
+		} catch (java.lang.Throwable t)  { 
+			onException.accept(t);
+		}
+	}
+
+	~accessors:{it|~it~};separator="\n\n"~
+} >>
+
+NeoFactoryAccessors(name,properties) ::= <<public ~name;format="capitalize"~ new~name;format="capitalize"~() { 
+	return new~name;format="capitalize"~(db.createNode(org.neo4j.graphdb.Label.label("~name~")));
+}
+
+public ~name;format="capitalize"~ new~name;format="capitalize"~(org.neo4j.graphdb.Node node) { 
+	return new ~name;format="capitalize"~(node);
+}
+
+public java.util.stream.Stream<~name;format="capitalize"~> findAll~name;format="capitalize"~() { 
+	return db.findNodes(org.neo4j.graphdb.Label.label("~name~")).stream().map(this::new~name;format="capitalize"~);
+}
+
+~properties:{it|~it~};separator="\n\n"~ >>
+
+NeoFactoryPropertyAccessors(entity,propertyName,propertyType) ::= <<public ~entity;format="capitalize"~ find~entity;format="capitalize"~By~propertyName;format="capitalize"~(~propertyType~ value) {
+	final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("~entity~"), "~propertyName~", value);
+	return node == null ? null : new ~entity;format="capitalize"~(node);
+}
+
+public ~entity;format="capitalize"~ findOrCreate~entity;format="capitalize"~By~propertyName;format="capitalize"~(~propertyType~ value) {
+	final ~entity;format="capitalize"~ existing = find~entity;format="capitalize"~By~propertyName;format="capitalize"~(value);
+	return existing == null ? new~entity;format="capitalize"~().set~propertyName;format="capitalize"~(value) : existing;
+}
+
+public java.util.stream.Stream<~entity;format="capitalize"~> findAll~entity;format="capitalize"~By~propertyName;format="capitalize"~(~propertyType~ value) {
+	return db.findNodes(org.neo4j.graphdb.Label.label("~entity~"), "~propertyName~", value).stream().map(this::new~entity;format="capitalize"~);
+} >>
+
 Types() ::= << >>
 
 GraphDatabaseFactory() ::= <<org.neo4j.graphdb.factory.GraphDatabaseFactory >>

@@ -9,6 +9,9 @@ public class Neo4JSTTests {
 
 	@org.junit.Test
 	public void testAll() {
+		testNeoFactory();
+		testNeoFactoryAccessors();
+		testNeoFactoryPropertyAccessors();
 		testNodeWrapper();
 		testEnumAccessors();
 		testExternalAccessors();
@@ -27,6 +30,21 @@ public class Neo4JSTTests {
 		testRelationshipType();
 		testTransaction();
 	}
+
+	@org.junit.Test
+	public void testNeoFactory() {
+		System.out.println("\n--- TEST NeoFactory:\n" + newNeoFactory());
+	} 
+
+	@org.junit.Test
+	public void testNeoFactoryAccessors() {
+		System.out.println("\n--- TEST NeoFactoryAccessors:\n" + newNeoFactoryAccessors());
+	} 
+
+	@org.junit.Test
+	public void testNeoFactoryPropertyAccessors() {
+		System.out.println("\n--- TEST NeoFactoryPropertyAccessors:\n" + newNeoFactoryPropertyAccessors());
+	} 
 
 	@org.junit.Test
 	public void testNodeWrapper() {

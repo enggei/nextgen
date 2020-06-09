@@ -76,13 +76,15 @@ public ~className~ add~name;format="capitalize"~(~type~ value) {
 	return this;
 } >>
 
-PojoFactory(package,name,entities) ::= <<~package~;
+PojoFactory(package,name,entities) ::= <<package ~package~;
 
 public class ~name;format="capitalize"~ {
 
-	~entities:{it|public static ~it~ new~it~() { 
+~entities:{it|
+	public static ~it~ new~it~() { 
 		return new ~it~();
-	~eom()~};separator="\n\n"~
+	~eom()~
+};separator="\n"~
 } >>
 
 Enum(package,name,enumValues) ::= <<~package~

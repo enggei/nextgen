@@ -104,19 +104,22 @@
     }, {
       "uuid" : "66fc0a0a-a8c9-43ae-b79e-118651540701",
       "name" : "PojoFactory",
-      "text" : "~package~;\n\npublic class ~name;format=\"capitalize\"~ {\n\n\t~entities:{it|public static ~it~ new~it~() { \n\t\treturn new ~it~();\n\t~eom()~};separator=\"\\n\\n\"~\n}",
+      "text" : "package ~package~;\n\npublic class ~name;format=\"capitalize\"~ {\n\n~entities:{it|\n\tpublic static ~it~ new~it~() { \n\t\treturn new ~it~();\n\t~eom()~\n};separator=\"\\n\"~\n}",
       "parameters" : [ {
-        "uuid" : "8308170e-eaad-4e7b-b0fc-a7bd99b5b7ba",
+        "uuid" : "b5ae15f6-3d89-4bc9-b39f-9195fef86d66",
         "name" : "package",
-        "type" : "SINGLE"
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       }, {
-        "uuid" : "e2be3099-ad1f-41f4-a0d3-215bdf4e8b07",
+        "uuid" : "402fbb08-3a63-4b12-a352-22973894c102",
         "name" : "name",
-        "type" : "SINGLE"
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       }, {
-        "uuid" : "566a436f-e22d-429b-9e30-9b737d26e08b",
+        "uuid" : "929fe569-01e4-4210-8944-d66bb7b2683f",
         "name" : "entities",
-        "type" : "LIST"
+        "type" : "LIST",
+        "argumentType" : "Object"
       } ]
     }, {
       "uuid" : "3b29b747-b53c-48f4-8217-ccb442b5a291",

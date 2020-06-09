@@ -155,6 +155,21 @@ public ~type~ get~name;format="capitalize"~(~type~ defaultValue) {
 	return jsonObject.getString("~name~") == null ? defaultValue : ~type~.valueOf(jsonObject.getString("~name~"));
 } >>
 
+JsonFactory(package,name,entities) ::= <<package ~package~;
+
+public class ~name;format="capitalize"~ {
+
+~entities:{it|
+	public static ~it~ new~it~() { 
+		return new ~it~();
+	~eom()~
+	
+	public static ~it~ new~it~(io.vertx.core.json.JsonObject jsonObject) { 
+		return new ~it~(jsonObject);
+	~eom()~
+};separator="\n"~
+} >>
+
 VertxTypes() ::= << >>
 
 JsonArrayType() ::= <<io.vertx.core.json.JsonArray >>

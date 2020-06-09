@@ -5,14 +5,19 @@ import nextgen.templates.domain.*;
 import nextgen.templates.java.JavaST;
 import nextgen.templates.java.PackageDeclaration;
 import nextgen.templates.java.Pojo;
+import nextgen.templates.java.PojoFactory;
 import nextgen.templates.neo4j.Neo4JST;
+import nextgen.templates.neo4j.NeoFactory;
+import nextgen.templates.neo4j.NeoFactoryAccessors;
 import nextgen.templates.neo4j.NodeWrapper;
+import nextgen.templates.vertx.JsonFactory;
 import nextgen.templates.vertx.JsonWrapper;
 import nextgen.templates.vertx.VertxST;
 
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 import static nextgen.templates.JavaPatterns.newPackageDeclaration;
 import static nextgen.templates.JavaPatterns.writeEnum;
@@ -91,6 +96,12 @@ public class DomainPatterns extends DomainST {
         return newEnumField().setName(name).setType(enumEntity);
     }
 
+    // DOMAIN TO POJOs:
+
+    public static void writePojo(File root, String packageName, Domain domain) {
+        writePojo(root, newPackageDeclaration(packageName), domain);
+    }
+
     public static void writePojo(File root, PackageDeclaration packageDeclaration, Domain domain) {
 
         final Map<Entity, Pojo> visited = new LinkedHashMap<>();
@@ -103,55 +114,14 @@ public class DomainPatterns extends DomainST {
 
             generatePojo(root, packageDeclaration, entity, visited);
         });
-    }
 
-    public static void writePojo(File root, String packageName, Domain domain) {
-        writePojo(root, newPackageDeclaration(packageName), domain);
-    }
+        final PojoFactory factory = JavaST.newPojoFactory()
+                .setPackage(packageDeclaration.getName())
+                .setName(domain.getName() + "Factory");
 
-    public static void writeNeo(File root, String packageName, Domain domain) {
-        writeNeo(root, newPackageDeclaration(packageName), domain);
-    }
+        visited.forEach((entity, pojo) -> factory.addEntities(entity.getName()));
 
-    public static void writeNeo(File root, PackageDeclaration packageDeclaration, Domain domain) {
-
-        final Map<Entity, NodeWrapper> visited = new LinkedHashMap<>();
-        domain.getEntities().forEach(entity -> {
-
-            if (entity.getIsEnum(false)) {
-                writeEnum(root, packageDeclaration, entity.getName(), entity.getEnumValues().toArray());
-                return;
-            }
-
-            generateNeoWrapper(root, packageDeclaration, entity, visited);
-        });
-
-        // create incoming relations
-
-        visited.entrySet().forEach(entry -> {
-
-            entry.getKey().getRelations().forEach(o -> {
-                if (o instanceof ReferenceList) {
-                    final ReferenceList field = (ReferenceList) o;
-
-                    final NodeWrapper nodeWrapper = visited.get(field.getEntity());
-                    nodeWrapper.addAccessors(Neo4JST.newIncomingReferenceStream()
-                            .setName(field.getName())
-                            .setType(entry.getKey().getName()));
-
-                } else if (o instanceof ReferenceField) {
-                    final ReferenceField field = (ReferenceField) o;
-
-                    final NodeWrapper nodeWrapper = visited.get(field.getEntity());
-                    nodeWrapper.addAccessors(Neo4JST.newIncomingReferenceStream()
-                            .setName(field.getName())
-                            .setType(entry.getKey().getName()));
-                }
-            });
-
-            STGenerator.writeToFile(entry.getValue(), packageDeclaration.getName(), entry.getValue().getName().toString(), "java", root);
-        });
-
+        STGenerator.writeToFile(factory, packageDeclaration.getName(), factory.getName().toString(), "java", root);
     }
 
     private static Pojo generatePojo(File root, PackageDeclaration packageDeclaration, Entity entity, final Map<Entity, Pojo> visited) {
@@ -215,6 +185,70 @@ public class DomainPatterns extends DomainST {
         return entityClass;
     }
 
+    // DOMAIN TO NEO4J wrappers:
+
+    public static void writeNeo(File root, String packageName, Domain domain) {
+        writeNeo(root, newPackageDeclaration(packageName), domain);
+    }
+
+    public static void writeNeo(File root, PackageDeclaration packageDeclaration, Domain domain) {
+
+        final Map<Entity, NodeWrapper> visited = new LinkedHashMap<>();
+        domain.getEntities().forEach(entity -> {
+
+            if (entity.getIsEnum(false)) {
+                writeEnum(root, packageDeclaration, entity.getName(), entity.getEnumValues().toArray());
+                return;
+            }
+
+            generateNeoWrapper(root, packageDeclaration, entity, visited);
+        });
+
+        // create incoming relations, AND neo-factory class
+
+        final NeoFactory factory = Neo4JST.newNeoFactory()
+                .setPackage(packageDeclaration.getName())
+                .setName(domain.getName() + "NeoFactory");
+
+        visited.forEach((key, value) -> {
+
+            final NeoFactoryAccessors factoryAccessors = Neo4JST.newNeoFactoryAccessors()
+                    .setName(key.getName());
+
+            key.getRelations().forEach(o -> {
+                if (o instanceof PrimitiveField) {
+                    final PrimitiveField field = (PrimitiveField) o;
+
+                    factoryAccessors.addProperties(Neo4JST.newNeoFactoryPropertyAccessors()
+                            .setEntity(key.getName())
+                            .setPropertyName(field.getName())
+                            .setPropertyType(field.getType().getSimpleName()));
+                }
+            });
+
+            factory.addAccessors(factoryAccessors);
+
+            key.getRelations().forEach(o -> {
+                if (o instanceof ReferenceList) {
+                    final ReferenceList field = (ReferenceList) o;
+                    visited.get(field.getEntity()).addAccessors(Neo4JST.newIncomingReferenceStream()
+                            .setName(field.getName())
+                            .setType(key.getName()));
+
+                } else if (o instanceof ReferenceField) {
+                    final ReferenceField field = (ReferenceField) o;
+                    visited.get(field.getEntity()).addAccessors(Neo4JST.newIncomingReferenceStream()
+                            .setName(field.getName())
+                            .setType(key.getName()));
+                }
+            });
+
+            STGenerator.writeToFile(value, packageDeclaration.getName(), value.getName().toString(), "java", root);
+        });
+
+        STGenerator.writeToFile(factory, packageDeclaration.getName(), factory.getName().toString(), "java", root);
+    }
+
     private static NodeWrapper generateNeoWrapper(File root, PackageDeclaration packageDeclaration, Entity entity, final Map<Entity, NodeWrapper> visited) {
 
         if (entity == null || visited.containsKey(entity)) return visited.get(entity);
@@ -275,6 +309,8 @@ public class DomainPatterns extends DomainST {
         return entityClass;
     }
 
+    // DOMAIN TO Vertx JsonObject wrappers:
+
     public static void writeJsonWrapper(File root, String packageName, Domain domain) {
         writeJsonWrapper(root, newPackageDeclaration(packageName), domain);
     }
@@ -284,8 +320,22 @@ public class DomainPatterns extends DomainST {
         final Map<Entity, JsonWrapper> visited = new LinkedHashMap<>();
         domain.getEntities().forEach(entity -> {
 
+            if (entity.getIsEnum(false)) {
+                writeEnum(root, packageDeclaration, entity.getName(), entity.getEnumValues().toArray());
+                return;
+            }
+
             generateJsonWrapper(root, packageDeclaration, entity, visited);
         });
+
+
+        final JsonFactory factory = VertxST.newJsonFactory()
+                .setPackage(packageDeclaration.getName())
+                .setName(domain.getName() + "JsonFactory");
+
+        visited.forEach((entity, jsonWrapper) -> factory.addEntities(entity.getName()));
+
+        STGenerator.writeToFile(factory, packageDeclaration.getName(), factory.getName().toString(), "java", root);
     }
 
     private static JsonWrapper generateJsonWrapper(File root, PackageDeclaration packageDeclaration, Entity entity, final Map<Entity, JsonWrapper> visited) {
@@ -341,15 +391,6 @@ public class DomainPatterns extends DomainST {
         STGenerator.writeToFile(entityClass, packageDeclaration.getName(), entityClass.getName().toString(), "java", root);
         return entityClass;
     }
-
-//    private static String format(String name) {
-//        final StringBuilder formatted = new StringBuilder();
-//        final char[] chars = name.toCharArray();
-//        for (int i = 0; i < chars.length; i++)
-//            if (chars[i] != '.')
-//                formatted.append(i == 0 || chars[i - 1] == '.' ? Character.toUpperCase(chars[i]) : chars[i]);
-//        return formatted.toString();
-//    }
 
     private static Object getType(Object type) {
         if (type instanceof Class<?>) return ((Class<?>) type).getSimpleName();

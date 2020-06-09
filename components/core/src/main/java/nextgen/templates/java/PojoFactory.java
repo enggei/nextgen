@@ -97,12 +97,14 @@ public class PojoFactory {
 		return this._entities;
 	} 
 
-	static final String st = "PojoFactory(package,name,entities) ::= <<~package~;\n" + 
+	static final String st = "PojoFactory(package,name,entities) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public class ~name;format=\"capitalize\"~ {\n" + 
 				"\n" + 
-				"	~entities:{it|public static ~it~ new~it~() { \n" + 
+				"~entities:{it|\n" + 
+				"	public static ~it~ new~it~() { \n" + 
 				"		return new ~it~();\n" + 
-				"	~eom()~};separator=\"\\n\\n\"~\n" + 
+				"	~eom()~\n" + 
+				"};separator=\"\\n\"~\n" + 
 				"}>> ";
 } 

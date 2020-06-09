@@ -5,6 +5,7 @@ public class VertxST {
 	private static final String stg = "delimiters \"~\", \"~\"\n" +
 	"eom() ::= \"}\"\n" +
 	"gt() ::= \">\"\n" +
+	JsonFactory.st + "\n" + 
 	JsonWrapper.st + "\n" + 
 	EnumAccessors.st + "\n" + 
 	ExternalAccessors.st + "\n" + 
@@ -70,6 +71,10 @@ public class VertxST {
 			}
 		});
 	}
+
+	public static JsonFactory newJsonFactory() {
+		return new JsonFactory(stGroup);
+	} 
 
 	public static JsonWrapper newJsonWrapper() {
 		return new JsonWrapper(stGroup);

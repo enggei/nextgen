@@ -175,6 +175,26 @@
           "argumentType" : "Object"
         } ]
       } ]
+    }, {
+      "uuid" : "cefddd6f-722b-42df-8a8e-ced8c58ae2e0",
+      "name" : "JsonFactory",
+      "text" : "package ~package~;\n\npublic class ~name;format=\"capitalize\"~ {\n\n~entities:{it|\n\tpublic static ~it~ new~it~() { \n\t\treturn new ~it~();\n\t~eom()~\n\t\n\tpublic static ~it~ new~it~(io.vertx.core.json.JsonObject jsonObject) { \n\t\treturn new ~it~(jsonObject);\n\t~eom()~\n};separator=\"\\n\"~\n}",
+      "parameters" : [ {
+        "uuid" : "1d111729-bf71-4cdb-a8d2-046f315f7ade",
+        "name" : "package",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "80611892-5728-4791-80b1-1361b2a6ded3",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "8b113629-74bd-4ef6-b74d-3ac29a328b84",
+        "name" : "entities",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
     } ]
   } ]
 }

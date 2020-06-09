@@ -9,6 +9,7 @@ public class VertxSTTests {
 
 	@org.junit.Test
 	public void testAll() {
+		testJsonFactory();
 		testJsonWrapper();
 		testEnumAccessors();
 		testExternalAccessors();
@@ -18,6 +19,11 @@ public class VertxSTTests {
 		testReferenceAccessors();
 		testJsonArrayType();
 	}
+
+	@org.junit.Test
+	public void testJsonFactory() {
+		System.out.println("\n--- TEST JsonFactory:\n" + newJsonFactory());
+	} 
 
 	@org.junit.Test
 	public void testJsonWrapper() {
