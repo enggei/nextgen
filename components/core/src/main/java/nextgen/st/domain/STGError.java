@@ -1,10 +1,9 @@
 package nextgen.st.domain;
 
-
 public class STGError {
 
 	private final io.vertx.core.json.JsonObject jsonObject;
-	private org.stringtemplate.v4.misc.STMessage message;
+	private org.stringtemplate.v4.misc.STMessage _message;
 
 	public STGError() { 
 		this.jsonObject = new io.vertx.core.json.JsonObject();
@@ -35,25 +34,30 @@ public class STGError {
 	}
 
 	public STGError setType(STGErrorType value) { 
+		if (value == null) return this;
 		jsonObject.put("type", value.name());
 		return this;
 	}
 
 	public STGErrorType getType() { 
-		return jsonObject.getString("type") == null ? null : STGErrorType.valueOf(jsonObject.getString("type"));
+		return getType(null);
 	}
 
-	public STGError setMessage(org.stringtemplate.v4.misc.STMessage message) { 
-		this.message = message;
+	public STGErrorType getType(STGErrorType defaultValue) { 
+		return jsonObject.getString("type") == null ? defaultValue : STGErrorType.valueOf(jsonObject.getString("type"));
+	}
+
+	public STGError setMessage(org.stringtemplate.v4.misc.STMessage value) { 
+		this._message = value;
 		return this;
 	}
 
 	public org.stringtemplate.v4.misc.STMessage getMessage() { 
-		return this.message;
+		return this._message;
 	}
 
-	public boolean hasMessage() { 
-		return message != null;
+	public org.stringtemplate.v4.misc.STMessage getMessage(org.stringtemplate.v4.misc.STMessage defaultValue) { 
+		return this._message == null ? defaultValue : this._message;
 	}
 
 	@Override

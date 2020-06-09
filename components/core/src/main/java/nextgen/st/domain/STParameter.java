@@ -1,6 +1,5 @@
 package nextgen.st.domain;
 
-
 public class STParameter {
 
 	private final io.vertx.core.json.JsonObject jsonObject;
@@ -46,18 +45,18 @@ public class STParameter {
 		return jsonObject.getString("name", defaultValue);
 	}
 
-	@Override
-	public java.lang.String toString() { 
-		return jsonObject.getString("name");
-	}
-
 	public STParameter setType(STParameterType value) { 
+		if (value == null) return this;
 		jsonObject.put("type", value.name());
 		return this;
 	}
 
 	public STParameterType getType() { 
-		return jsonObject.getString("type") == null ? null : STParameterType.valueOf(jsonObject.getString("type"));
+		return getType(null);
+	}
+
+	public STParameterType getType(STParameterType defaultValue) { 
+		return jsonObject.getString("type") == null ? defaultValue : STParameterType.valueOf(jsonObject.getString("type"));
 	}
 
 	public STParameter addKeys(STParameterKey value) { 
@@ -99,5 +98,10 @@ public class STParameter {
 
 	public String getArgumentType(String defaultValue) { 
 		return jsonObject.getString("argumentType", defaultValue);
+	}
+
+	@Override
+	public java.lang.String toString() { 
+		return jsonObject.getString("name");
 	}
 }

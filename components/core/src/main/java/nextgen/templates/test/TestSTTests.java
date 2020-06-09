@@ -17,6 +17,7 @@ public class TestSTTests {
 		testKv();
 		testList();
 		testSingle();
+		testPatterns();
 	}
 
 	@org.junit.Test
@@ -57,5 +58,10 @@ public class TestSTTests {
 	@org.junit.Test
 	public void testSingle() {
 		System.out.println("\n--- TEST Single:\n" + newSingle());
+	} 
+
+	@org.junit.Test
+	public void testPatterns() {
+		System.out.println("\n--- TEST Patterns:\n" + newPatterns());
 	} 
 } 

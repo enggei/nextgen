@@ -12,7 +12,8 @@ public class TestST {
 	EmbeddedKVConditional.st + "\n" + 
 	Kv.st + "\n" + 
 	List.st + "\n" + 
-	Single.st + "\n" ;
+	Single.st + "\n" + 
+	Patterns.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup defaultSTGroup() {
 		org.stringtemplate.v4.STGroup stGroup = new org.stringtemplate.v4.STGroupString("TestST", stg, '~', '~');
@@ -101,6 +102,10 @@ public class TestST {
 
 	public static Single newSingle() {
 		return new Single(stGroup);
+	} 
+
+	public static Patterns newPatterns() {
+		return new Patterns(stGroup);
 	} 
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {

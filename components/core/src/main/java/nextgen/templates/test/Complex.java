@@ -44,6 +44,10 @@ public class Complex {
 		return this._condition1;
 	}
 
+	public Object getCondition1(Object defaultValue) {
+		return this._condition1 == null ? defaultValue : this._condition1;
+	}
+
 	public boolean hasCondition1() {
 		return this._condition1 != null;
 	}
@@ -60,6 +64,10 @@ public class Complex {
 
 	public Object getCondition2() {
 		return this._condition2;
+	}
+
+	public Object getCondition2(Object defaultValue) {
+		return this._condition2 == null ? defaultValue : this._condition2;
 	}
 
 	public boolean hasCondition2() {

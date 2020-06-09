@@ -1,10 +1,6 @@
 package nextgen.st.domain;
 
-
 public enum STParameterType {
 
-	SINGLE,
-	LIST,
-	KVLIST
-
+	SINGLE,LIST,KVLIST
 }

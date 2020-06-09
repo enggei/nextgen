@@ -4,7 +4,11 @@ ParameterTests() ::= <<Test the 3 types of parameters:
 
 * Single value 
 * List values
-* Key-Value list values >>
+* Key-Value list values
+
+Test conditional parsing
+
+Test complex combination of all types >>
 
 single(value) ::= <<single : ~value~ >>
 
@@ -18,11 +22,23 @@ and a kv-list : ~kvList:{it|~it.name~:~it.value~};separator=","~
 
 If expression ~conditional(cond1,cond2)~ >>
 
-conditional(condition1,condition2) ::= <<~if(condition1)~condition1: ~condition1~~elseif(condition2)~isCondition2~endif~ >>
+conditional(condition1,condition2) ::= <<~if(condition1)~condition1: ~condition1~~elseif(condition2)~isCondition2~else~~endif~ >>
 
 complex(list,condition1,condition2) ::= <<~if(list)~~list:{it|~it.name~ ~it.value~(~if(condition1)~1~elseif(condition2)~2~else~NULL~endif~)};separator="\n"~~endif~ >>
 
 embeddedKVConditional(fields,PROP) ::= <<~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator="\n"~ >>
+
+Patterns(isPublic,isPrivate,scope) ::= <<Patterns for templates:
+
+Avoid to many if-elseifs:
+
+~if(isPublic)~public ~elseif(isPrivate)~private ~endif~ class {}
+
+cleaner solution:
+
+~scope~ class {}
+
+and set scope = "public"|"private" in generator >>
 
 eom() ::= "}"
 

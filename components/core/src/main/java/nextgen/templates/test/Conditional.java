@@ -42,6 +42,10 @@ public class Conditional {
 		return this._condition1;
 	}
 
+	public Object getCondition1(Object defaultValue) {
+		return this._condition1 == null ? defaultValue : this._condition1;
+	}
+
 	public boolean hasCondition1() {
 		return this._condition1 != null;
 	}
@@ -60,6 +64,10 @@ public class Conditional {
 		return this._condition2;
 	}
 
+	public Object getCondition2(Object defaultValue) {
+		return this._condition2 == null ? defaultValue : this._condition2;
+	}
+
 	public boolean hasCondition2() {
 		return this._condition2 != null;
 	}
@@ -69,5 +77,5 @@ public class Conditional {
 		return this;
 	} 
 
-	static final String st = "conditional(condition1,condition2) ::= <<~if(condition1)~condition1: ~condition1~~elseif(condition2)~isCondition2~endif~>> ";
+	static final String st = "conditional(condition1,condition2) ::= <<~if(condition1)~condition1: ~condition1~~elseif(condition2)~isCondition2~else~~endif~>> ";
 } 

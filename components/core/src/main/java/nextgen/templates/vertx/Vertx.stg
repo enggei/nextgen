@@ -2,7 +2,7 @@ delimiters "~","~"
 
 Entities() ::= << >>
 
-JsonWrapper(package,name,externalFields,accessors) ::= <<~package~
+JsonWrapper(package,name,externalFields,accessors,lexical) ::= <<~package~
 
 public class ~name;format="capitalize"~ {
 
@@ -37,12 +37,12 @@ public class ~name;format="capitalize"~ {
 		return java.util.Objects.hash(jsonObject.getString("uuid"));
 	}
 
+	~accessors:{it|~it~};separator="\n\n"~
+
 	@Override
 	public java.lang.String toString() { 
-		return jsonObject.encode();
+		return ~if(lexical)~jsonObject.getString("~lexical~")~else~jsonObject.encode()~endif~;
 	}
-	
-	~accessors:{it|~it~};separator="\n\n"~	
 } >>
 
 primitiveAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
@@ -137,12 +137,13 @@ public ~type~ get~name;format="capitalize"~(~type~ defaultValue) {
 } >>
 
 enumAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
+	if (value == null) return this;
 	jsonObject.put("~name~", value.name());
 	return this;
 }
 
 public ~type~ get~name;format="capitalize"~() { 
-	return ~type~.valueOf(jsonObject.getString("~name~"));
+	return get~name;format="capitalize"~(null);
 }
 
 public ~type~ get~name;format="capitalize"~(~type~ defaultValue) { 

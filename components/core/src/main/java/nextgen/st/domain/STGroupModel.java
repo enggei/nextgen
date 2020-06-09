@@ -1,6 +1,5 @@
 package nextgen.st.domain;
 
-
 public class STGroupModel {
 
 	private final io.vertx.core.json.JsonObject jsonObject;
@@ -46,11 +45,6 @@ public class STGroupModel {
 		return jsonObject.getString("name", defaultValue);
 	}
 
-	@Override
-	public java.lang.String toString() { 
-		return jsonObject.getString("name");
-	}
-
 	public STGroupModel setDelimiter(String value) { 
 		jsonObject.put("delimiter", value);
 		return this;
@@ -90,5 +84,38 @@ public class STGroupModel {
 	public STGroupModel clearTemplates() { 
 		jsonObject.put("templates", new io.vertx.core.json.JsonArray());
 		return this;
+	}
+
+	public STGroupModel addEnums(STEnum value) { 
+		io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("enums");
+		if (jsonArray == null) jsonObject.put("enums", jsonArray = new io.vertx.core.json.JsonArray());
+		jsonArray.add(value.getJsonObject());
+		return this;
+	}
+
+	public java.util.stream.Stream<STEnum> getEnums() { 
+		return jsonObject.getJsonArray("enums", new io.vertx.core.json.JsonArray()).stream().map((o) -> new STEnum((io.vertx.core.json.JsonObject) o));
+	}
+
+	public STGroupModel removeEnums(STEnum value) { 
+		final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("enums", new io.vertx.core.json.JsonArray());
+		for (int i = 0; i < jsonArray.size(); i++)  { 
+			final io.vertx.core.json.JsonObject o = jsonArray.getJsonObject(i);
+			if (value.getJsonObject().getString("uuid").equals(o.getString("uuid")))  { 
+				jsonArray.remove(i);
+				return this;
+			}
+		}
+		return this;
+	}
+
+	public STGroupModel clearEnums() { 
+		jsonObject.put("enums", new io.vertx.core.json.JsonArray());
+		return this;
+	}
+
+	@Override
+	public java.lang.String toString() { 
+		return jsonObject.getString("name");
 	}
 }

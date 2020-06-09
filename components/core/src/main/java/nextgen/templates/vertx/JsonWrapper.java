@@ -7,6 +7,7 @@ public class JsonWrapper {
 
 	private Object _package;
 	private Object _name;
+	private Object _lexical;
 	private java.util.List<Object> _accessors = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _externalFields = new java.util.ArrayList<>();
 
@@ -32,6 +33,7 @@ public class JsonWrapper {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("JsonWrapper");
 		st.add("package", _package);
 		st.add("name", _name);
+		st.add("lexical", _lexical);
 		for (Object o : _accessors) st.add("accessors", o);
 		for (java.util.Map<String, Object> map : _externalFields) st.addAggr("externalFields.{type,name,initializer}", map.get("type"), map.get("name"), map.get("initializer"));
 		return st.render().trim();
@@ -78,6 +80,28 @@ public class JsonWrapper {
 
 	public JsonWrapper removeName() {
 		this._name = null;
+		return this;
+	} 
+
+	public JsonWrapper setLexical(Object value) {
+		this._lexical = value;
+		return this;
+	}
+
+	public Object getLexical() {
+		return this._lexical;
+	}
+
+	public Object getLexical(Object defaultValue) {
+		return this._lexical == null ? defaultValue : this._lexical;
+	}
+
+	public boolean hasLexical() {
+		return this._lexical != null;
+	}
+
+	public JsonWrapper removeLexical() {
+		this._lexical = null;
 		return this;
 	} 
 	public JsonWrapper addAccessors(Object value) {
@@ -151,7 +175,7 @@ public class JsonWrapper {
 
 	} 
 
-	static final String st = "JsonWrapper(package,name,externalFields,accessors) ::= <<~package~\n" + 
+	static final String st = "JsonWrapper(package,name,externalFields,accessors,lexical) ::= <<~package~\n" + 
 				"\n" + 
 				"public class ~name;format=\"capitalize\"~ {\n" + 
 				"\n" + 
@@ -186,11 +210,11 @@ public class JsonWrapper {
 				"		return java.util.Objects.hash(jsonObject.getString(\"uuid\"));\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	~accessors:{it|~it~};separator=\"\\n\\n\"~\n" + 
+				"\n" + 
 				"	@Override\n" + 
 				"	public java.lang.String toString() { \n" + 
-				"		return jsonObject.encode();\n" + 
+				"		return ~if(lexical)~jsonObject.getString(\"~lexical~\")~else~jsonObject.encode()~endif~;\n" + 
 				"	}\n" + 
-				"	\n" + 
-				"	~accessors:{it|~it~};separator=\"\\n\\n\"~	\n" + 
 				"}>> ";
 } 

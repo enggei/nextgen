@@ -47,6 +47,8 @@ public class ProjectPatterns {
                 final PrimitiveField field = (PrimitiveField) o;
                 jsonWrapper.addAccessors(VertxST.newPrimitiveAccessors().setClassName(entity.getName()).setType(getType(field.getType())).setName(field.getName()));
 
+                if (field.getLexical()) jsonWrapper.setLexical(field.getName());
+
             } else if (o instanceof PrimitiveList) {
                 final PrimitiveList field = (PrimitiveList) o;
                 jsonWrapper.addAccessors(VertxST.newListPrimitiveAccessors().setClassName(entity.getName()).setType(field.getType()).setName(field.getName()));

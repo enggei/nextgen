@@ -20,39 +20,44 @@
     "children" : [ {
       "uuid" : "4a756317-c8b7-44c4-a677-68c57d064ab6",
       "name" : "JsonWrapper",
-      "text" : "~package~\n\npublic class ~name;format=\"capitalize\"~ {\n\n\tprivate final io.vertx.core.json.JsonObject jsonObject;\n\t~externalFields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\n\tpublic ~name;format=\"capitalize\"~() { \n\t\tthis.jsonObject = new io.vertx.core.json.JsonObject();\n\t\tjsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic ~name;format=\"capitalize\"~(io.vertx.core.json.JsonObject jsonObject) { \n\t\tthis.jsonObject = jsonObject;\n\t\tjava.lang.String uuidString = jsonObject.getString(\"uuid\");\n\t\tif (uuidString == null) jsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic io.vertx.core.json.JsonObject getJsonObject() { \n\t\treturn this.jsonObject;\n\t}\n\n\t@Override\n\tpublic boolean equals(java.lang.Object o) { \n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\tfinal ~name;format=\"capitalize\"~ other = (~name;format=\"capitalize\"~) o;\n\t\treturn jsonObject.getString(\"uuid\").equals(other.getJsonObject().getString(\"uuid\"));\n\t}\n\n\t@Override\n\tpublic int hashCode() { \n\t\treturn java.util.Objects.hash(jsonObject.getString(\"uuid\"));\n\t}\n\n\t@Override\n\tpublic java.lang.String toString() { \n\t\treturn jsonObject.encode();\n\t}\n\t\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\t\n}",
+      "text" : "~package~\n\npublic class ~name;format=\"capitalize\"~ {\n\n\tprivate final io.vertx.core.json.JsonObject jsonObject;\n\t~externalFields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\n\tpublic ~name;format=\"capitalize\"~() { \n\t\tthis.jsonObject = new io.vertx.core.json.JsonObject();\n\t\tjsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic ~name;format=\"capitalize\"~(io.vertx.core.json.JsonObject jsonObject) { \n\t\tthis.jsonObject = jsonObject;\n\t\tjava.lang.String uuidString = jsonObject.getString(\"uuid\");\n\t\tif (uuidString == null) jsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic io.vertx.core.json.JsonObject getJsonObject() { \n\t\treturn this.jsonObject;\n\t}\n\n\t@Override\n\tpublic boolean equals(java.lang.Object o) { \n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\tfinal ~name;format=\"capitalize\"~ other = (~name;format=\"capitalize\"~) o;\n\t\treturn jsonObject.getString(\"uuid\").equals(other.getJsonObject().getString(\"uuid\"));\n\t}\n\n\t@Override\n\tpublic int hashCode() { \n\t\treturn java.util.Objects.hash(jsonObject.getString(\"uuid\"));\n\t}\n\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n\n\t@Override\n\tpublic java.lang.String toString() { \n\t\treturn ~if(lexical)~jsonObject.getString(\"~lexical~\")~else~jsonObject.encode()~endif~;\n\t}\n}",
       "parameters" : [ {
-        "uuid" : "63994893-85b2-48bf-babb-031b6942fa31",
+        "uuid" : "a0a60b7f-0e13-411e-b67d-e86076643bbe",
         "name" : "package",
         "type" : "SINGLE",
         "argumentType" : "Object"
       }, {
-        "uuid" : "56792dc1-30ae-4372-ab09-cb30564cb00e",
+        "uuid" : "c4d423ce-7d36-43c2-a4cb-143da8d986f0",
         "name" : "name",
         "type" : "SINGLE",
         "argumentType" : "Object"
       }, {
-        "uuid" : "98eace20-996f-4d58-8f24-6910b9161997",
+        "uuid" : "aa73981f-86a6-488a-afe5-b9257fd9d866",
         "name" : "externalFields",
         "type" : "KVLIST",
         "argumentType" : "Object",
         "keys" : [ {
-          "uuid" : "cfe1aa74-3bfa-40a7-8f69-479ad56d8145",
+          "uuid" : "75f4e90f-c1f1-40ae-bd4a-d6d27cc07f92",
           "name" : "type",
           "argumentType" : "Object"
         }, {
-          "uuid" : "e2ab9916-5a2f-4118-a0f9-dd77199ed2c4",
+          "uuid" : "cba4c0a7-e433-45a6-9f51-ec14d3fc6c92",
           "name" : "name",
           "argumentType" : "Object"
         }, {
-          "uuid" : "741f7cac-111e-4642-b655-da8af6c6aada",
+          "uuid" : "ec22745f-1107-4ae0-af1e-c1bf1e564766",
           "name" : "initializer",
           "argumentType" : "Object"
         } ]
       }, {
-        "uuid" : "c3c1c02b-5aad-4452-9cac-2c314d2c6e51",
+        "uuid" : "950a5b7e-4918-4c60-ac77-3569f8e27425",
         "name" : "accessors",
         "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "c254154e-7f62-4e4a-a93a-8a3535f9c729",
+        "name" : "lexical",
+        "type" : "SINGLE",
         "argumentType" : "Object"
       } ],
       "children" : [ {
@@ -149,19 +154,19 @@
       }, {
         "uuid" : "d725755e-d593-4b9f-90d9-74a8b46aa511",
         "name" : "enumAccessors",
-        "text" : "public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n\tjsonObject.put(\"~name~\", value.name());\n\treturn this;\n}\n\npublic ~type~ get~name;format=\"capitalize\"~() { \n\treturn ~type~.valueOf(jsonObject.getString(\"~name~\"));\n}\n\npublic ~type~ get~name;format=\"capitalize\"~(~type~ defaultValue) { \n\treturn jsonObject.getString(\"~name~\") == null ? defaultValue : ~type~.valueOf(jsonObject.getString(\"~name~\"));\n}",
+        "text" : "public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n\tif (value == null) return this;\n\tjsonObject.put(\"~name~\", value.name());\n\treturn this;\n}\n\npublic ~type~ get~name;format=\"capitalize\"~() { \n\treturn get~name;format=\"capitalize\"~(null);\n}\n\npublic ~type~ get~name;format=\"capitalize\"~(~type~ defaultValue) { \n\treturn jsonObject.getString(\"~name~\") == null ? defaultValue : ~type~.valueOf(jsonObject.getString(\"~name~\"));\n}",
         "parameters" : [ {
-          "uuid" : "8b993f90-c8e1-4774-ad39-4e64c10267ee",
+          "uuid" : "bf8e80a6-4e9c-4adb-905e-907438a551f8",
           "name" : "className",
           "type" : "SINGLE",
           "argumentType" : "Object"
         }, {
-          "uuid" : "0fa955b8-5128-4a61-98b9-6c2d13da5068",
+          "uuid" : "64d50e61-f4f7-4eac-81fc-5951d41fcd7b",
           "name" : "name",
           "type" : "SINGLE",
           "argumentType" : "Object"
         }, {
-          "uuid" : "debdf236-3952-4823-95f2-ef9b1ea1aeb3",
+          "uuid" : "c72f8db9-5d7a-4638-a959-3fc5fb072d3b",
           "name" : "type",
           "type" : "SINGLE",
           "argumentType" : "Object"

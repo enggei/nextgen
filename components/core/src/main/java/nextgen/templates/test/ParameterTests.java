@@ -34,5 +34,9 @@ public class ParameterTests {
 				"\n" + 
 				"* Single value \n" + 
 				"* List values\n" + 
-				"* Key-Value list values>> ";
+				"* Key-Value list values\n" + 
+				"\n" + 
+				"Test conditional parsing\n" + 
+				"\n" + 
+				"Test complex combination of all types>> ";
 } 

@@ -1,6 +1,5 @@
 package nextgen.st.domain;
 
-
 public class STTemplate {
 
 	private final io.vertx.core.json.JsonObject jsonObject;
@@ -44,11 +43,6 @@ public class STTemplate {
 
 	public String getName(String defaultValue) { 
 		return jsonObject.getString("name", defaultValue);
-	}
-
-	@Override
-	public java.lang.String toString() { 
-		return jsonObject.getString("name");
 	}
 
 	public STTemplate setText(String value) { 
@@ -118,5 +112,10 @@ public class STTemplate {
 	public STTemplate clearChildren() { 
 		jsonObject.put("children", new io.vertx.core.json.JsonArray());
 		return this;
+	}
+
+	@Override
+	public java.lang.String toString() { 
+		return jsonObject.getString("name");
 	}
 }

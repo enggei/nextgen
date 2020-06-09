@@ -1,6 +1,5 @@
 package nextgen.st.domain;
 
-
 public class STGParseResult {
 
 	private final io.vertx.core.json.JsonObject jsonObject;

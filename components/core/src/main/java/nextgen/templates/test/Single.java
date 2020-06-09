@@ -40,6 +40,10 @@ public class Single {
 		return this._value;
 	}
 
+	public String getValue(String defaultValue) {
+		return this._value == null ? defaultValue : this._value;
+	}
+
 	public boolean hasValue() {
 		return this._value != null;
 	}

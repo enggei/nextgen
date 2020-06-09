@@ -84,8 +84,18 @@
     }, {
       "uuid" : "ec05cc7e-4786-4ef8-98af-7c42c1ec546a",
       "name" : "conditional",
-      "text" : "~if(condition1)~condition1: ~condition1~~elseif(condition2)~isCondition2~~else~endif~",
-      "parameters" : [ ]
+      "text" : "~if(condition1)~condition1: ~condition1~~elseif(condition2)~isCondition2~else~~endif~",
+      "parameters" : [ {
+        "uuid" : "2f05320d-cb3c-4e0e-9fe6-8313218e74c0",
+        "name" : "condition1",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "ba9167f5-e5d3-4f25-ad8e-9432ce5c640a",
+        "name" : "condition2",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
     }, {
       "uuid" : "63e8811d-a1ce-4d14-8e19-4719ee7e61a4",
       "name" : "complex",

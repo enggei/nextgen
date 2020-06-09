@@ -32,10 +32,11 @@ public class STProject {
                                 .addRelations(newOneToMany("keys", newEntity("STParameterKey")
                                         .addRelations(newStringField("name"))
                                         .addRelations(newStringField("argumentType"))))
-                                .addRelations(newOneToManySelf("children"))
-                                .addRelations(newOneToMany("enums", newEntity("STEnum")
-                                        .addRelations(newStringField("name", true))
-                                        .addRelations(newStringField("values"))))))));
+                                .addRelations(newStringField("argumentType"))))
+                        .addRelations(newOneToManySelf("children"))))
+                .addRelations(newOneToMany("enums", newEntity("STEnum")
+                        .addRelations(newStringField("name", true))
+                        .addRelations(newStringField("values"))));
 
         ProjectPatterns.writeJsonWrapper(javaMainSrc, newDomain("ST", stDomainPackage.getName())
                 .addEntities(newEntity("STAppModel")

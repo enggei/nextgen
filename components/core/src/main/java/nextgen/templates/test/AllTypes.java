@@ -48,6 +48,10 @@ public class AllTypes {
 		return this._single;
 	}
 
+	public Object getSingle(Object defaultValue) {
+		return this._single == null ? defaultValue : this._single;
+	}
+
 	public boolean hasSingle() {
 		return this._single != null;
 	}
@@ -66,6 +70,10 @@ public class AllTypes {
 		return this._cond1;
 	}
 
+	public Object getCond1(Object defaultValue) {
+		return this._cond1 == null ? defaultValue : this._cond1;
+	}
+
 	public boolean hasCond1() {
 		return this._cond1 != null;
 	}
@@ -82,6 +90,10 @@ public class AllTypes {
 
 	public Object getCond2() {
 		return this._cond2;
+	}
+
+	public Object getCond2(Object defaultValue) {
+		return this._cond2 == null ? defaultValue : this._cond2;
 	}
 
 	public boolean hasCond2() {
