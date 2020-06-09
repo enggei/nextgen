@@ -16,6 +16,7 @@ public class MavenSTTests {
 		testProject();
 		testExecution();
 		testParent();
+		testCopyPlugin();
 		testFrontEndMavenPlugin();
 		testPlugin();
 		testShadePlugin();
@@ -57,6 +58,11 @@ public class MavenSTTests {
 	@org.junit.Test
 	public void testParent() {
 		System.out.println("\n--- TEST Parent:\n" + newParent());
+	} 
+
+	@org.junit.Test
+	public void testCopyPlugin() {
+		System.out.println("\n--- TEST CopyPlugin:\n" + newCopyPlugin());
 	} 
 
 	@org.junit.Test

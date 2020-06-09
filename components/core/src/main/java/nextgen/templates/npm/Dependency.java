@@ -42,6 +42,10 @@ public class Dependency {
 		return this._name;
 	}
 
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
 	public boolean hasName() {
 		return this._name != null;
 	}
@@ -58,6 +62,10 @@ public class Dependency {
 
 	public Object getVersion() {
 		return this._version;
+	}
+
+	public Object getVersion(Object defaultValue) {
+		return this._version == null ? defaultValue : this._version;
 	}
 
 	public boolean hasVersion() {

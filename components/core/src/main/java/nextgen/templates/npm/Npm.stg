@@ -46,11 +46,11 @@ packageJson(main,license,bugsUrl,devDependencies,scripts,dependencies,homepage,r
 
 script(command,name) ::= <<"~name~": "~command~"  >>
 
-WebpackConfig(outputFilename,mainEntry) ::= <<const path = require('path');
+WebpackConfig(mainEntry,outputFilename) ::= <<const path = require('path');
 
 module.exports = {
 	entry: { 
-		main: '~mainEntry~' 
+		main: './~mainEntry~' 
 	},
 	output: {
 		path: __dirname,
@@ -72,7 +72,7 @@ module.exports = {
 			}
 		]
 	}
-};  >>
+}; >>
 
 eom() ::= "}"
 

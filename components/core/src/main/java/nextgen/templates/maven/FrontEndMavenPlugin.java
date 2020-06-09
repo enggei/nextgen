@@ -44,6 +44,10 @@ public class FrontEndMavenPlugin {
 		return this._pluginVersion;
 	}
 
+	public Object getPluginVersion(Object defaultValue) {
+		return this._pluginVersion == null ? defaultValue : this._pluginVersion;
+	}
+
 	public boolean hasPluginVersion() {
 		return this._pluginVersion != null;
 	}
@@ -62,6 +66,10 @@ public class FrontEndMavenPlugin {
 		return this._installDirectory;
 	}
 
+	public Object getInstallDirectory(Object defaultValue) {
+		return this._installDirectory == null ? defaultValue : this._installDirectory;
+	}
+
 	public boolean hasInstallDirectory() {
 		return this._installDirectory != null;
 	}
@@ -78,6 +86,10 @@ public class FrontEndMavenPlugin {
 
 	public Object getNodeVersion() {
 		return this._nodeVersion;
+	}
+
+	public Object getNodeVersion(Object defaultValue) {
+		return this._nodeVersion == null ? defaultValue : this._nodeVersion;
 	}
 
 	public boolean hasNodeVersion() {

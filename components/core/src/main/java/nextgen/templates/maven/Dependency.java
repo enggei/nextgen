@@ -48,6 +48,10 @@ public class Dependency {
 		return this._groupId;
 	}
 
+	public Object getGroupId(Object defaultValue) {
+		return this._groupId == null ? defaultValue : this._groupId;
+	}
+
 	public boolean hasGroupId() {
 		return this._groupId != null;
 	}
@@ -64,6 +68,10 @@ public class Dependency {
 
 	public Object getArtifactId() {
 		return this._artifactId;
+	}
+
+	public Object getArtifactId(Object defaultValue) {
+		return this._artifactId == null ? defaultValue : this._artifactId;
 	}
 
 	public boolean hasArtifactId() {
@@ -84,6 +92,10 @@ public class Dependency {
 		return this._version;
 	}
 
+	public Object getVersion(Object defaultValue) {
+		return this._version == null ? defaultValue : this._version;
+	}
+
 	public boolean hasVersion() {
 		return this._version != null;
 	}
@@ -102,6 +114,10 @@ public class Dependency {
 		return this._scope;
 	}
 
+	public Object getScope(Object defaultValue) {
+		return this._scope == null ? defaultValue : this._scope;
+	}
+
 	public boolean hasScope() {
 		return this._scope != null;
 	}
@@ -118,6 +134,10 @@ public class Dependency {
 
 	public Object getSystemPath() {
 		return this._systemPath;
+	}
+
+	public Object getSystemPath(Object defaultValue) {
+		return this._systemPath == null ? defaultValue : this._systemPath;
 	}
 
 	public boolean hasSystemPath() {

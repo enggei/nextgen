@@ -44,6 +44,10 @@ public class Repository {
 		return this._id;
 	}
 
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
 	public boolean hasId() {
 		return this._id != null;
 	}
@@ -62,6 +66,10 @@ public class Repository {
 		return this._name;
 	}
 
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
 	public boolean hasName() {
 		return this._name != null;
 	}
@@ -78,6 +86,10 @@ public class Repository {
 
 	public Object getUrl() {
 		return this._url;
+	}
+
+	public Object getUrl(Object defaultValue) {
+		return this._url == null ? defaultValue : this._url;
 	}
 
 	public boolean hasUrl() {

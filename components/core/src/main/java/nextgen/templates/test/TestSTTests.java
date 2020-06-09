@@ -9,6 +9,9 @@ public class TestSTTests {
 
 	@org.junit.Test
 	public void testAll() {
+
+		System.out.println(TEST.ONE.name() + " " + TEST.ONE);
+
 		testParameterTests();
 		testAllTypes();
 		testComplex();

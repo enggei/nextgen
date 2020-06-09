@@ -142,6 +142,31 @@ plugin(groupId,artifactId,version,configuration,executions) ::= <<<plugin>
 	</executions>
 </plugin> >>
 
+copyPlugin(outputDirectory,directory,include) ::= <<<plugin>
+	<artifactId>maven-resources-plugin</artifactId>
+	<version>3.1.0</version>
+	<executions>
+		<execution>
+			<id>copy-resources</id>
+			<phase>validate</phase>
+			<goals>
+				<goal>copy-resources</goal>
+			</goals>
+			<configuration>
+				<outputDirectory>~outputDirectory~</outputDirectory>
+				<resources>			 
+					<resource>
+						<directory>~directory~</directory>
+						<includes>
+							~include:{it|<include>~it~</include>};separator="\n"~
+						</includes>
+					</resource>
+				</resources>				  
+			</configuration>				
+		</execution>
+	</executions>
+</plugin> >>
+
 pom(parent,name,groupId,artifactId,version,packaging,modules,properties,build,dependencies,distributionManagement,repositories) ::= <<<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 ~if(parent)~

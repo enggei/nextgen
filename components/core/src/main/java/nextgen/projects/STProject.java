@@ -35,7 +35,9 @@ public class STProject {
                         .addRelations(newOneToManySelf("children"))))
                 .addRelations(newOneToMany("enums", newEntity("STEnum")
                         .addRelations(newStringField("name", true))
-                        .addRelations(newStringField("values"))));
+                        .addRelations(newOneToMany("values", newEntity("STEnumValue")
+                                .addRelations(newStringField("name", true))
+                                .addRelations(newStringField("lexical"))))));
 
         DomainPatterns.writeJsonWrapper(javaMainSrc, stDomainPackage, newDomain("ST")
                 .addEntities(newEntity("STAppModel")

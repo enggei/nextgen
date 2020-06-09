@@ -97,10 +97,10 @@ public class Enum {
 		return this._enumValues;
 	} 
 
-	static final String st = "Enum(package,name,enumValues) ::= <<~package~\n" + 
+	static final String st = "Enum(package,name,enumValues) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public enum ~name~ {\n" + 
 				"\n" + 
-				"	~enumValues:{it|~it~};separator=\",\"~\n" + 
+				"	~enumValues:{it|~it~};separator=\",\\n\"~\n" + 
 				"}>> ";
 } 

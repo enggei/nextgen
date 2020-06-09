@@ -1,6 +1,5 @@
 package nextgen.st.domain;
 
-
 public class STJsonFactory {
 
 	public static STAppModel newSTAppModel() { 
@@ -51,6 +50,22 @@ public class STJsonFactory {
 		return new STParameterKey(jsonObject);
 	}
 
+	public static STEnum newSTEnum() { 
+		return new STEnum();
+	}
+
+	public static STEnum newSTEnum(io.vertx.core.json.JsonObject jsonObject) { 
+		return new STEnum(jsonObject);
+	}
+
+	public static STEnumValue newSTEnumValue() { 
+		return new STEnumValue();
+	}
+
+	public static STEnumValue newSTEnumValue(io.vertx.core.json.JsonObject jsonObject) { 
+		return new STEnumValue(jsonObject);
+	}
+
 	public static STGParseResult newSTGParseResult() { 
 		return new STGParseResult();
 	}
@@ -66,4 +81,5 @@ public class STJsonFactory {
 	public static STGError newSTGError(io.vertx.core.json.JsonObject jsonObject) { 
 		return new STGError(jsonObject);
 	}
+
 }

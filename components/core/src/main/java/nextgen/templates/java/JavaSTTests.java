@@ -10,6 +10,7 @@ public class JavaSTTests {
 	@org.junit.Test
 	public void testAll() {
 		testEnum();
+		testEnumValue();
 		testPojo();
 		testListAccessors();
 		testPrimitiveAccessors();
@@ -102,7 +103,12 @@ public class JavaSTTests {
 
 	@org.junit.Test
 	public void testEnum() {
-		System.out.println("\n--- TEST Enum:\n" + newEnum());
+		System.out.println("\n--- TEST Enum:\n" + newEnum().setPackage("nextgen.templates.test").setName("LOL").addEnumValues(newEnumValue().setName("ONE").setLexical("1")).addEnumValues(newEnumValue().setName("STRING").setLexical("java.lang.String")));
+	} 
+
+	@org.junit.Test
+	public void testEnumValue() {
+		System.out.println("\n--- TEST EnumValue:\n" + newEnumValue());
 	} 
 
 	@org.junit.Test

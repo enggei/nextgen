@@ -42,6 +42,10 @@ public class Script {
 		return this._command;
 	}
 
+	public Object getCommand(Object defaultValue) {
+		return this._command == null ? defaultValue : this._command;
+	}
+
 	public boolean hasCommand() {
 		return this._command != null;
 	}
@@ -58,6 +62,10 @@ public class Script {
 
 	public Object getName() {
 		return this._name;
+	}
+
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
 	}
 
 	public boolean hasName() {

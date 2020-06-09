@@ -6,6 +6,7 @@ public class JavaST {
 	"eom() ::= \"}\"\n" +
 	"gt() ::= \">\"\n" +
 	Enum.st + "\n" + 
+	EnumValue.st + "\n" + 
 	Pojo.st + "\n" + 
 	ListAccessors.st + "\n" + 
 	PrimitiveAccessors.st + "\n" + 
@@ -154,6 +155,10 @@ public class JavaST {
 
 	public static Enum newEnum() {
 		return new Enum(stGroup);
+	} 
+
+	public static EnumValue newEnumValue() {
+		return new EnumValue(stGroup);
 	} 
 
 	public static Pojo newPojo() {

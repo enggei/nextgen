@@ -5,8 +5,8 @@ public class WebpackConfig {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _outputFilename;
 	private Object _mainEntry;
+	private Object _outputFilename;
 
 	WebpackConfig(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -28,28 +28,10 @@ public class WebpackConfig {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("WebpackConfig");
-		st.add("outputFilename", _outputFilename);
 		st.add("mainEntry", _mainEntry);
+		st.add("outputFilename", _outputFilename);
 		return st.render().trim();
 	}
-
-	public WebpackConfig setOutputFilename(Object value) {
-		this._outputFilename = value;
-		return this;
-	}
-
-	public Object getOutputFilename() {
-		return this._outputFilename;
-	}
-
-	public boolean hasOutputFilename() {
-		return this._outputFilename != null;
-	}
-
-	public WebpackConfig removeOutputFilename() {
-		this._outputFilename = null;
-		return this;
-	} 
 
 	public WebpackConfig setMainEntry(Object value) {
 		this._mainEntry = value;
@@ -58,6 +40,10 @@ public class WebpackConfig {
 
 	public Object getMainEntry() {
 		return this._mainEntry;
+	}
+
+	public Object getMainEntry(Object defaultValue) {
+		return this._mainEntry == null ? defaultValue : this._mainEntry;
 	}
 
 	public boolean hasMainEntry() {
@@ -69,11 +55,33 @@ public class WebpackConfig {
 		return this;
 	} 
 
-	static final String st = "WebpackConfig(outputFilename,mainEntry) ::= <<const path = require('path');\n" + 
+	public WebpackConfig setOutputFilename(Object value) {
+		this._outputFilename = value;
+		return this;
+	}
+
+	public Object getOutputFilename() {
+		return this._outputFilename;
+	}
+
+	public Object getOutputFilename(Object defaultValue) {
+		return this._outputFilename == null ? defaultValue : this._outputFilename;
+	}
+
+	public boolean hasOutputFilename() {
+		return this._outputFilename != null;
+	}
+
+	public WebpackConfig removeOutputFilename() {
+		this._outputFilename = null;
+		return this;
+	} 
+
+	static final String st = "WebpackConfig(mainEntry,outputFilename) ::= <<const path = require('path');\n" + 
 				"\n" + 
 				"module.exports = {\n" + 
 				"	entry: { \n" + 
-				"		main: '~mainEntry~' \n" + 
+				"		main: './~mainEntry~' \n" + 
 				"	},\n" + 
 				"	output: {\n" + 
 				"		path: __dirname,\n" + 

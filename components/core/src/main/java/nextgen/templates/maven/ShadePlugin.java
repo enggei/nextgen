@@ -42,6 +42,10 @@ public class ShadePlugin {
 		return this._packageName;
 	}
 
+	public Object getPackageName(Object defaultValue) {
+		return this._packageName == null ? defaultValue : this._packageName;
+	}
+
 	public boolean hasPackageName() {
 		return this._packageName != null;
 	}
@@ -58,6 +62,10 @@ public class ShadePlugin {
 
 	public Object getClassName() {
 		return this._className;
+	}
+
+	public Object getClassName(Object defaultValue) {
+		return this._className == null ? defaultValue : this._className;
 	}
 
 	public boolean hasClassName() {

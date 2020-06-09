@@ -1,0 +1,296 @@
+{
+  "uuid" : "78736754-0769-45f5-b4e4-eec7df6f03bc",
+  "name" : "Neo4J",
+  "delimiter" : "~",
+  "templates" : [ {
+    "uuid" : "36bdedab-d23c-4c1e-9111-21b71e362a10",
+    "name" : "Entities",
+    "text" : "",
+    "children" : [ {
+      "uuid" : "bbe1e861-a07d-4516-ac58-76059fd89ed4",
+      "name" : "NodeWrapper",
+      "text" : "package ~package~;\n\npublic class ~name;format=\"capitalize\"~ {\n\n\tprivate final org.neo4j.graphdb.Node node;\n\t~externalFields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\n\tpublic ~name;format=\"capitalize\"~(org.neo4j.graphdb.Node node) { \n\t\tthis.node = node;\n\t}\n\n\tpublic org.neo4j.graphdb.Node getNode() { \n\t\treturn this.node;\n\t}\n\n\t@Override\n\tpublic boolean equals(java.lang.Object o) { \n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\tfinal ~name;format=\"capitalize\"~ other = (~name;format=\"capitalize\"~) o;\n\t\treturn node.equals(other.node);\n\t}\n\n\t@Override\n\tpublic int hashCode() { \n\t\treturn java.util.Objects.hash(node);\n\t}\n\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n\n\t@Override\n\tpublic String toString() {\n\t\treturn \"\"~if(lexical)~ + ~endif~~lexical:{it|node.getProperty(\"~it~\")};separator=\" + \\\" \\\" + \"~;\n\t}\n}",
+      "parameters" : [ {
+        "uuid" : "5f6aae6c-dab1-4b8d-b894-11ed9ed0d0c7",
+        "name" : "package",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "1318c578-e0cf-4d85-8e92-848ce07a4045",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "6fb15506-7046-4f1f-98b0-86234ac588df",
+        "name" : "externalFields",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "fc762c05-0efc-4316-9583-0c04e71c4ab3",
+          "name" : "type",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "25781d09-a2d5-4bed-a32a-72df19e370db",
+          "name" : "name",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "4c0d624b-8c48-42c0-9f1e-95938546a84a",
+          "name" : "initializer",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "3f30e62d-ec56-473f-9638-b1828b481022",
+        "name" : "accessors",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "e680706a-f33a-4bde-8de2-06e26bd70ab4",
+        "name" : "lexical",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ],
+      "children" : [ {
+        "uuid" : "1f644569-ced1-4ac3-88d9-d9ba5588fd9f",
+        "name" : "primitiveAccessors",
+        "text" : "public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n\tif (value == null) node.removeProperty(\"~name~\"); \n\telse node.setProperty(\"~name~\", value);\n\treturn this;\n}\n\npublic ~type~ get~name;format=\"capitalize\"~() { \n\tif (node.hasProperty(\"~name~\")) return (~type~) node.getProperty(\"~name~\");\n\treturn null;\n}\n\npublic ~type~ get~name;format=\"capitalize\"~(~type~ defaultValue) { \n\tif (node.hasProperty(\"~name~\")) return (~type~) node.getProperty(\"~name~\");\n\treturn defaultValue;\n}\n\npublic boolean has~name;format=\"capitalize\"~() { \n\treturn node.hasProperty(\"~name~\");\n}\n\npublic ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() { \n\tnode.removeProperty(\"~name~\");\n\treturn this;\n}",
+        "parameters" : [ {
+          "uuid" : "fb3b9086-e6df-4cd2-a19f-f8c4be3e3ee7",
+          "name" : "className",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "96789533-4810-47b3-aa34-9c762f16c4d2",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "9733d727-a691-40a9-ba4a-0844dc7acc82",
+          "name" : "type",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "adb625e7-714e-4df2-8133-acd78e798abe",
+        "name" : "listReferenceAccessors",
+        "text" : "public ~className;format=\"capitalize\"~ add~name;format=\"capitalize\"~(~type~ dst) { \n\tfinal java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();\n\tif (existing.isPresent()) return this;\n\tnode.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName(\"~name~\"));\n\treturn this;\n}\n\npublic java.util.stream.Stream<~type~> get~name;format=\"capitalize\"~() { \n\treturn java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).spliterator(), false).map((relationship) -> new ~type~(relationship.getOtherNode(node)));\n}\n\npublic ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~(~type~ dst) { \n\tfinal java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();\n\texisting.ifPresent(org.neo4j.graphdb.Relationship::delete);\n\treturn this;\n}",
+        "parameters" : [ {
+          "uuid" : "e480898b-0176-4ad2-a95f-8646d5d95886",
+          "name" : "className",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "6ff94c72-5dd8-4261-b45e-5536a70f24be",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "20bfdc18-1db4-40c8-9f7d-5269babd0f80",
+          "name" : "type",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "d20dad1e-291a-4d48-85f6-4bb4d3173a57",
+        "name" : "listPrimitiveAccessors",
+        "text" : "public ~className;format=\"capitalize\"~ add~name;format=\"capitalize\"~(~type~ dst) { \n\tfinal java.util.Optional<org.neo4j.graphdb.Node> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName(\"aliases\")).spliterator(), false).map((r) -> r.getOtherNode(node)).filter((n) -> dst.equals(n.getProperty(\"value\"))).findAny();\n\tif (existing.isPresent()) return this;\n\tfinal org.neo4j.graphdb.Node newNode = node.getGraphDatabase().createNode(org.neo4j.graphdb.Label.label(\"~type~\"));\n\tnewNode.setProperty(\"value\", dst);\n\tnode.createRelationshipTo(newNode, org.neo4j.graphdb.RelationshipType.withName(\"~name~\"));\n\treturn this;\n}\n\npublic java.util.stream.Stream<~type~> get~name;format=\"capitalize\"~() { \n\treturn java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).spliterator(), false).map((relationship) -> (~type~) relationship.getOtherNode(node).getProperty(\"value\"));\n}",
+        "parameters" : [ {
+          "uuid" : "9e7b2f2c-32f9-4c65-a379-c420f39ca8bb",
+          "name" : "className",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "6a8c250d-8e4f-4e5f-bd71-2541661c273c",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "69ae12f6-81e6-4fea-8153-d8cb1e2e4696",
+          "name" : "type",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "7c9142ef-d876-48c1-9e62-16d2ba9900e5",
+        "name" : "enumAccessors",
+        "text" : "public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n\tif (value == null) node.removeProperty(\"~name~\"); \n\telse node.setProperty(\"~name~\", value.name());\n\treturn this;\n}\n\npublic ~type~ get~name;format=\"capitalize\"~() { \n\tif (node.hasProperty(\"~name~\")) return ~type~.valueOf((java.lang.String) node.getProperty(\"~name~\"));\n\treturn null;\n}\n\npublic ~type~ get~name;format=\"capitalize\"~(~type~ defaultValue) { \n\tif (node.hasProperty(\"~name~\")) return ~type~.valueOf((java.lang.String) node.getProperty(\"~name~\"));\n\treturn defaultValue;\n}\n\npublic boolean has~name;format=\"capitalize\"~() { \n\treturn node.hasProperty(\"~name~\");\n}\n\npublic ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() { \n\tnode.removeProperty(\"~name~\");\n\treturn this;\n}",
+        "parameters" : [ {
+          "uuid" : "eae5e2cc-a8e4-4288-ad82-af4c8a10c360",
+          "name" : "className",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "09352b54-811f-4eaf-b3ca-9351c9bf449e",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "37e8b3d1-7fee-4bc8-8385-cf14e6f849d8",
+          "name" : "type",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "548f330d-68f5-40be-a037-16dfea33925b",
+        "name" : "referenceAccessors",
+        "text" : "public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ dst) { \n\tfinal org.neo4j.graphdb.Relationship relationship = node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName(\"~name~\"), org.neo4j.graphdb.Direction.OUTGOING);\n\tif (relationship != null)  { \n\t\tif (relationship.getOtherNode(node).equals(dst.getNode())) return this;\n\t\trelationship.delete();\n\t}\n\tnode.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName(\"~name~\"));\n\treturn this;\n}\n\npublic ~type~ get~name;format=\"capitalize\"~() { \n\tfinal org.neo4j.graphdb.Relationship relationship = node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName(\"~name~\"), org.neo4j.graphdb.Direction.OUTGOING);\n\treturn relationship == null ? null : new ~type~(relationship.getOtherNode(node));\n}\n\npublic ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~(~type~ dst) { \n\tfinal java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();\n\texisting.ifPresent(org.neo4j.graphdb.Relationship::delete);\n\treturn this;\n}",
+        "parameters" : [ {
+          "uuid" : "de1fee4f-4eb4-44b9-9671-b6b9d568a9b2",
+          "name" : "className",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "309e6134-dab0-4d26-a0e2-e8f8ea4fd6fa",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "430d1f1f-f421-4090-acb5-2f103db8888f",
+          "name" : "type",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "81e00ea3-95be-41d7-b4fe-b9bb7b3028e8",
+        "name" : "externalAccessors",
+        "text" : "public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n\tthis._~name~ = value;\n\treturn this;\n}\n\npublic ~type~ get~name;format=\"capitalize\"~() { \n\treturn this._~name~;\n}\n\npublic ~type~ get~name;format=\"capitalize\"~(~type~ defaultValue) { \n\treturn this._~name~ == null ? defaultValue : this._~name~;\n}",
+        "parameters" : [ {
+          "uuid" : "6d9f1a27-e7e5-4122-8b69-84fa1286ee57",
+          "name" : "className",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "af662c86-2746-4c4e-b75e-c22b92ea25e8",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "e913733d-ccc4-4db2-8c45-0432944474b8",
+          "name" : "type",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "4c1bf0fd-081b-4e21-942f-4b6b543661da",
+        "name" : "incomingReferenceStream",
+        "text" : "public java.util.stream.Stream<~type~> getIncoming~name;format=\"capitalize\"~() { \n\treturn java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).spliterator(), false).map((relationship) -> new ~type~(relationship.getOtherNode(node)));\n}",
+        "parameters" : [ {
+          "uuid" : "f97c9a28-d899-4837-8db2-159c2b6bd38e",
+          "name" : "type",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "eb1fddd1-9ad4-4ca7-8792-8f207a4cb2a4",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      } ]
+    }, {
+      "uuid" : "041dcc81-91db-41c1-bacd-ac90f635b371",
+      "name" : "NeoFactory",
+      "text" : "package ~package~;\n\npublic class ~name;format=\"capitalize\"~ {\n\n\tprivate final org.neo4j.graphdb.GraphDatabaseService db;\n\n\tpublic ~name;format=\"capitalize\"~(java.lang.String dir) { \n\t\tthis(new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabaseBuilder(new java.io.File(dir)).setConfig(org.neo4j.graphdb.factory.GraphDatabaseSettings.allow_upgrade, \"true\").newGraphDatabase());\n\t\tRuntime.getRuntime().addShutdownHook(new java.lang.Thread(db::shutdown));\n\t}\n\n\tpublic ~name;format=\"capitalize\"~(org.neo4j.graphdb.GraphDatabaseService db) { \n\t\tthis.db = db;\n\t}\n\n\tpublic org.neo4j.graphdb.GraphDatabaseService getDatabaseService() { \n\t\treturn this.db;\n\t}\n\n\tpublic void doInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> action) { \n\t\tdoInTransaction(action, java.lang.Throwable::printStackTrace);\n\t}\n\n\tpublic void doInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> action, java.util.function.Consumer<java.lang.Throwable> onException) { \n\t\ttry (org.neo4j.graphdb.Transaction tx = db.beginTx())  { \n\t\t\taction.accept(tx);\n\t\t\ttx.success();\n\t\t} catch (java.lang.Throwable t)  { \n\t\t\tonException.accept(t);\n\t\t}\n\t}\n\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n}",
+      "parameters" : [ {
+        "uuid" : "5d7380fe-8b7e-4453-9163-9bc0294e16a0",
+        "name" : "package",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "ff5df45a-d189-488a-8c5c-541c954700bc",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "bfb86ebd-5cce-4cc3-8edc-6299c35f39a6",
+        "name" : "accessors",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ],
+      "children" : [ {
+        "uuid" : "75d8bdac-df70-443b-8b8a-ce3456b1aae1",
+        "name" : "NeoFactoryAccessors",
+        "text" : "public ~name;format=\"capitalize\"~ new~name;format=\"capitalize\"~() { \n\treturn new~name;format=\"capitalize\"~(db.createNode(org.neo4j.graphdb.Label.label(\"~name~\")));\n}\n\npublic ~name;format=\"capitalize\"~ new~name;format=\"capitalize\"~(org.neo4j.graphdb.Node node) { \n\treturn new ~name;format=\"capitalize\"~(node);\n}\n\npublic java.util.stream.Stream<~name;format=\"capitalize\"~> findAll~name;format=\"capitalize\"~() { \n\treturn db.findNodes(org.neo4j.graphdb.Label.label(\"~name~\")).stream().map(this::new~name;format=\"capitalize\"~);\n}\n\n~properties:{it|~it~};separator=\"\\n\\n\"~",
+        "parameters" : [ {
+          "uuid" : "cda5f5bd-9a40-4fdb-a97b-e8a19d3757e2",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "c2372d04-c6e5-4fed-aa61-51b46d2b259b",
+          "name" : "properties",
+          "type" : "LIST",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "eca7a261-a0f4-40ed-be82-eb6f1c931658",
+        "name" : "NeoFactoryPropertyAccessors",
+        "text" : "public ~entity;format=\"capitalize\"~ find~entity;format=\"capitalize\"~By~propertyName;format=\"capitalize\"~(~propertyType~ value) {\n\tfinal org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label(\"~entity~\"), \"~propertyName~\", value);\n\treturn node == null ? null : new ~entity;format=\"capitalize\"~(node);\n}\n\npublic ~entity;format=\"capitalize\"~ findOrCreate~entity;format=\"capitalize\"~By~propertyName;format=\"capitalize\"~(~propertyType~ value) {\n\tfinal ~entity;format=\"capitalize\"~ existing = find~entity;format=\"capitalize\"~By~propertyName;format=\"capitalize\"~(value);\n\treturn existing == null ? new~entity;format=\"capitalize\"~().set~propertyName;format=\"capitalize\"~(value) : existing;\n}\n\npublic java.util.stream.Stream<~entity;format=\"capitalize\"~> findAll~entity;format=\"capitalize\"~By~propertyName;format=\"capitalize\"~(~propertyType~ value) {\n\treturn db.findNodes(org.neo4j.graphdb.Label.label(\"~entity~\"), \"~propertyName~\", value).stream().map(this::new~entity;format=\"capitalize\"~);\n}",
+        "parameters" : [ {
+          "uuid" : "c582b147-ef6f-44db-b9e9-d185ebc6a3fe",
+          "name" : "entity",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "67ae5898-ecd6-4d92-a316-953fd8c86378",
+          "name" : "propertyName",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "d8949dce-5e0b-4191-9eff-7a3fb1511786",
+          "name" : "propertyType",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      } ]
+    } ]
+  }, {
+    "uuid" : "c01a688d-8913-48c5-b4b0-53efded2fe01",
+    "name" : "Types",
+    "text" : "",
+    "children" : [ {
+      "uuid" : "74b2e718-c0c2-4242-b298-b0d1b1272265",
+      "name" : "GraphDatabaseFactory",
+      "text" : "org.neo4j.graphdb.factory.GraphDatabaseFactory",
+      "parameters" : [ ]
+    }, {
+      "uuid" : "aa89018f-fb49-4f93-ba1a-c3007b30c46d",
+      "name" : "GraphDatabaseSettings",
+      "text" : "org.neo4j.graphdb.factory.GraphDatabaseSettings",
+      "parameters" : [ ]
+    }, {
+      "uuid" : "ae93592d-bc38-4920-a58a-213599b01a57",
+      "name" : "GraphDatabaseService",
+      "text" : "org.neo4j.graphdb.GraphDatabaseService",
+      "parameters" : [ ]
+    }, {
+      "uuid" : "249faef2-c77c-4a11-a64c-d565a9456eaa",
+      "name" : "Node",
+      "text" : "org.neo4j.graphdb.Node",
+      "parameters" : [ ]
+    }, {
+      "uuid" : "5fc931ca-f30e-4ff5-bfe4-b4fa404097de",
+      "name" : "Label",
+      "text" : "org.neo4j.graphdb.Label",
+      "parameters" : [ ]
+    }, {
+      "uuid" : "8c239118-a68d-41c4-ad90-97f1467c0237",
+      "name" : "Direction",
+      "text" : "org.neo4j.graphdb.Direction",
+      "parameters" : [ ]
+    }, {
+      "uuid" : "c1ff9e32-40a3-4fa4-80d6-08ac6d0bf2c3",
+      "name" : "Relationship",
+      "text" : "org.neo4j.graphdb.Relationship",
+      "parameters" : [ ]
+    }, {
+      "uuid" : "fec84bd1-4dbc-488a-a807-01869d4d6a9e",
+      "name" : "RelationshipType",
+      "text" : "org.neo4j.graphdb.RelationshipType",
+      "parameters" : [ ]
+    }, {
+      "uuid" : "5543c5f3-f103-4e5e-b110-ecdcd6ce3572",
+      "name" : "Transaction",
+      "text" : "org.neo4j.graphdb.Transaction",
+      "parameters" : [ ]
+    } ]
+  } ]
+}

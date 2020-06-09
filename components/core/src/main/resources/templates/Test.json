@@ -171,5 +171,21 @@
       "argumentType" : "Object"
     } ]
   } ],
-  "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Test.stg"
+  "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Test.stg",
+  "enums" : [ {
+    "uuid" : "ecd4bba6-8548-4c8d-8a94-5285662deafa",
+    "name" : "TEST",
+    "values" : [ {
+      "uuid" : "52c4ae2e-53ee-4f4d-b8f0-5a01dde030f1",
+      "name" : "ONE",
+      "lexical" : "1"
+    }, {
+      "uuid" : "0e1df14a-ecb4-4fea-9174-e7bb580180bd",
+      "name" : "TWO",
+      "lexical" : "2"
+    }, {
+      "uuid" : "865c75fc-29aa-4d30-8bcc-4a2b944ccdff",
+      "name" : "THREE"
+    } ]
+  } ]
 }

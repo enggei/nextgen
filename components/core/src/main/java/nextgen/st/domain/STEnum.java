@@ -19,6 +19,11 @@ public class STEnum {
 		return this.jsonObject;
 	}
 
+	public STEnum removeUuid() {
+		this.jsonObject.remove("uuid");
+		return this;
+	}
+
 	@Override
 	public boolean equals(java.lang.Object o) { 
 		if (this == o) return true;
@@ -45,17 +50,32 @@ public class STEnum {
 		return jsonObject.getString("name", defaultValue);
 	}
 
-	public STEnum setValues(String value) { 
-		jsonObject.put("values", value);
+	public STEnum addValues(STEnumValue value) { 
+		io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("values");
+		if (jsonArray == null) jsonObject.put("values", jsonArray = new io.vertx.core.json.JsonArray());
+		jsonArray.add(value.getJsonObject());
 		return this;
 	}
 
-	public String getValues() { 
-		return jsonObject.getString("values");
+	public java.util.stream.Stream<STEnumValue> getValues() { 
+		return jsonObject.getJsonArray("values", new io.vertx.core.json.JsonArray()).stream().map((o) -> new STEnumValue((io.vertx.core.json.JsonObject) o));
 	}
 
-	public String getValues(String defaultValue) { 
-		return jsonObject.getString("values", defaultValue);
+	public STEnum removeValues(STEnumValue value) { 
+		final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("values", new io.vertx.core.json.JsonArray());
+		for (int i = 0; i < jsonArray.size(); i++)  { 
+			final io.vertx.core.json.JsonObject o = jsonArray.getJsonObject(i);
+			if (value.getJsonObject().getString("uuid").equals(o.getString("uuid")))  { 
+				jsonArray.remove(i);
+				return this;
+			}
+		}
+		return this;
+	}
+
+	public STEnum clearValues() { 
+		jsonObject.put("values", new io.vertx.core.json.JsonArray());
+		return this;
 	}
 
 	@Override

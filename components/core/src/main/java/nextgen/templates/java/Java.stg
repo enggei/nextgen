@@ -87,12 +87,17 @@ public class ~name;format="capitalize"~ {
 };separator="\n"~
 } >>
 
-Enum(package,name,enumValues) ::= <<~package~
+Enum(package,name,enumValues) ::= <<package ~package~;
 
 public enum ~name~ {
 
-	~enumValues:{it|~it~};separator=","~
+	~enumValues:{it|~it~};separator=",\n"~
 } >>
+
+EnumValue(name,lexical) ::= <<~name~~if(lexical)~() {
+	@Override
+	public String toString() { return "~lexical~"; }
+}~endif~ >>
 
 Grammar() ::= << >>
 

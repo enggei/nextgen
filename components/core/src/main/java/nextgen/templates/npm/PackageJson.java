@@ -64,6 +64,10 @@ public class PackageJson {
 		return this._main;
 	}
 
+	public Object getMain(Object defaultValue) {
+		return this._main == null ? defaultValue : this._main;
+	}
+
 	public boolean hasMain() {
 		return this._main != null;
 	}
@@ -80,6 +84,10 @@ public class PackageJson {
 
 	public Object getLicense() {
 		return this._license;
+	}
+
+	public Object getLicense(Object defaultValue) {
+		return this._license == null ? defaultValue : this._license;
 	}
 
 	public boolean hasLicense() {
@@ -100,6 +108,10 @@ public class PackageJson {
 		return this._bugsUrl;
 	}
 
+	public Object getBugsUrl(Object defaultValue) {
+		return this._bugsUrl == null ? defaultValue : this._bugsUrl;
+	}
+
 	public boolean hasBugsUrl() {
 		return this._bugsUrl != null;
 	}
@@ -116,6 +128,10 @@ public class PackageJson {
 
 	public Object getHomepage() {
 		return this._homepage;
+	}
+
+	public Object getHomepage(Object defaultValue) {
+		return this._homepage == null ? defaultValue : this._homepage;
 	}
 
 	public boolean hasHomepage() {
@@ -136,6 +152,10 @@ public class PackageJson {
 		return this._repositoryUrl;
 	}
 
+	public Object getRepositoryUrl(Object defaultValue) {
+		return this._repositoryUrl == null ? defaultValue : this._repositoryUrl;
+	}
+
 	public boolean hasRepositoryUrl() {
 		return this._repositoryUrl != null;
 	}
@@ -152,6 +172,10 @@ public class PackageJson {
 
 	public Object getAuthor() {
 		return this._author;
+	}
+
+	public Object getAuthor(Object defaultValue) {
+		return this._author == null ? defaultValue : this._author;
 	}
 
 	public boolean hasAuthor() {
@@ -172,6 +196,10 @@ public class PackageJson {
 		return this._version;
 	}
 
+	public Object getVersion(Object defaultValue) {
+		return this._version == null ? defaultValue : this._version;
+	}
+
 	public boolean hasVersion() {
 		return this._version != null;
 	}
@@ -188,6 +216,10 @@ public class PackageJson {
 
 	public Object getRepositoryType() {
 		return this._repositoryType;
+	}
+
+	public Object getRepositoryType(Object defaultValue) {
+		return this._repositoryType == null ? defaultValue : this._repositoryType;
 	}
 
 	public boolean hasRepositoryType() {
@@ -208,6 +240,10 @@ public class PackageJson {
 		return this._description;
 	}
 
+	public Object getDescription(Object defaultValue) {
+		return this._description == null ? defaultValue : this._description;
+	}
+
 	public boolean hasDescription() {
 		return this._description != null;
 	}
@@ -224,6 +260,10 @@ public class PackageJson {
 
 	public Object getName() {
 		return this._name;
+	}
+
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
 	}
 
 	public boolean hasName() {

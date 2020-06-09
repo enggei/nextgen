@@ -62,6 +62,10 @@ public class Pom {
 		return this._parent;
 	}
 
+	public Object getParent(Object defaultValue) {
+		return this._parent == null ? defaultValue : this._parent;
+	}
+
 	public boolean hasParent() {
 		return this._parent != null;
 	}
@@ -78,6 +82,10 @@ public class Pom {
 
 	public Object getName() {
 		return this._name;
+	}
+
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
 	}
 
 	public boolean hasName() {
@@ -98,6 +106,10 @@ public class Pom {
 		return this._groupId;
 	}
 
+	public Object getGroupId(Object defaultValue) {
+		return this._groupId == null ? defaultValue : this._groupId;
+	}
+
 	public boolean hasGroupId() {
 		return this._groupId != null;
 	}
@@ -114,6 +126,10 @@ public class Pom {
 
 	public Object getArtifactId() {
 		return this._artifactId;
+	}
+
+	public Object getArtifactId(Object defaultValue) {
+		return this._artifactId == null ? defaultValue : this._artifactId;
 	}
 
 	public boolean hasArtifactId() {
@@ -134,6 +150,10 @@ public class Pom {
 		return this._version;
 	}
 
+	public Object getVersion(Object defaultValue) {
+		return this._version == null ? defaultValue : this._version;
+	}
+
 	public boolean hasVersion() {
 		return this._version != null;
 	}
@@ -152,6 +172,10 @@ public class Pom {
 		return this._packaging;
 	}
 
+	public Object getPackaging(Object defaultValue) {
+		return this._packaging == null ? defaultValue : this._packaging;
+	}
+
 	public boolean hasPackaging() {
 		return this._packaging != null;
 	}
@@ -168,6 +192,10 @@ public class Pom {
 
 	public Object getBuild() {
 		return this._build;
+	}
+
+	public Object getBuild(Object defaultValue) {
+		return this._build == null ? defaultValue : this._build;
 	}
 
 	public boolean hasBuild() {

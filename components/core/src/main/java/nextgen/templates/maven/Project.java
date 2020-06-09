@@ -46,6 +46,10 @@ public class Project {
 		return this._name;
 	}
 
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
 	public boolean hasName() {
 		return this._name != null;
 	}
@@ -64,6 +68,10 @@ public class Project {
 		return this._root;
 	}
 
+	public Object getRoot(Object defaultValue) {
+		return this._root == null ? defaultValue : this._root;
+	}
+
 	public boolean hasRoot() {
 		return this._root != null;
 	}
@@ -80,6 +88,10 @@ public class Project {
 
 	public Object getPom() {
 		return this._pom;
+	}
+
+	public Object getPom(Object defaultValue) {
+		return this._pom == null ? defaultValue : this._pom;
 	}
 
 	public boolean hasPom() {

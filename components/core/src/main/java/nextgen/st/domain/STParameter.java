@@ -19,6 +19,11 @@ public class STParameter {
 		return this.jsonObject;
 	}
 
+	public STParameter removeUuid() {
+		this.jsonObject.remove("uuid");
+		return this;
+	}
+
 	@Override
 	public boolean equals(java.lang.Object o) { 
 		if (this == o) return true;

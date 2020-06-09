@@ -20,6 +20,11 @@ public class STGError {
 		return this.jsonObject;
 	}
 
+	public STGError removeUuid() {
+		this.jsonObject.remove("uuid");
+		return this;
+	}
+
 	@Override
 	public boolean equals(java.lang.Object o) { 
 		if (this == o) return true;

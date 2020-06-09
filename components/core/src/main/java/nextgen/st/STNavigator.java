@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -228,6 +229,11 @@ public class STNavigator extends JPanel {
             return Optional.ofNullable(s == null || s.trim().length() == 0 ? null : s);
         }
 
+        protected Optional<String> getStringFromUser(String description, String initialValue) {
+            final String s = SwingUtil.showInputDialog(description, tree, initialValue);
+            return Optional.ofNullable(s == null || s.trim().length() == 0 || s.equals(initialValue) ? null : s);
+        }
+
         protected Optional<Boolean> confirm(String description) {
             final boolean b = SwingUtil.showConfirmDialog(tree, description + "?");
             return Optional.ofNullable(b ? Boolean.TRUE : null);
@@ -346,6 +352,7 @@ public class STNavigator extends JPanel {
                 public STGroupTreeNode(STGroupModel model) {
                     super(model);
 
+                    model.getEnums().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stEnum -> add(new STEnumTreeNode(stEnum)));
                     model.getTemplates().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
                 }
 
@@ -367,6 +374,7 @@ public class STNavigator extends JPanel {
                 protected Action[] getActions() {
                     return new Action[]{
                             generateAction(),
+                            newEnumAction(),
                             newTemplateAction(),
                             renameSTGroupAction(),
                             deleteGroupAction()
@@ -375,6 +383,24 @@ public class STNavigator extends JPanel {
 
                 private Action generateAction() {
                     return newAction("Generate", actionEvent -> generate());
+                }
+
+                private Action newEnumAction() {
+                    return newAction("New enum", actionEvent ->
+                            getStringFromUser("Name").ifPresent(name ->
+                                    isValidTemplateName(name).ifPresent(s -> {
+
+                                        final STEnum stEnum = STJsonFactory.newSTEnum()
+                                                .setName(name);
+
+                                        getModel().addEnums(stEnum);
+                                        save();
+
+                                        SwingUtilities.invokeLater(() -> {
+                                            final STEnumTreeNode stTemplateTreeNode = new STEnumTreeNode(stEnum);
+                                            treeModel.insertNodeInto(stTemplateTreeNode, STGroupTreeNode.this, getChildCount());
+                                        });
+                                    })));
                 }
 
                 private Action newTemplateAction() {
@@ -473,6 +499,91 @@ public class STNavigator extends JPanel {
                                 save();
                                 parent.generate(getModel());
                             }));
+                }
+
+                class STEnumTreeNode extends BaseTreeNode<STEnum> {
+
+                    public STEnumTreeNode(STEnum model) {
+                        super(model);
+                    }
+
+                    @Override
+                    public String getLabel() {
+                        return getModel().getName();
+                    }
+
+                    @Override
+                    protected Action[] getActions() {
+
+                        final Action[] actions = new Action[(int) getModel().getValues().count() + 3];
+
+                        final AtomicInteger index = new AtomicInteger(-1);
+                        getModel().getValues().forEach(stEnumValue -> actions[index.incrementAndGet()] = newEditSTEnumValueAction(stEnumValue));
+                        actions[index.incrementAndGet()] = addSTEnumValueAction();
+                        actions[index.incrementAndGet()] = renameSTEnumAction();
+                        actions[index.incrementAndGet()] = removeSTEnumAction();
+
+                        return actions;
+                    }
+
+                    private Action newEditSTEnumValueAction(STEnumValue stEnumValue) {
+                        return newAction("Edit " + stEnumValue.getName(), actionEvent ->
+                                getStringFromUser("Name [lexical]").ifPresent(s -> {
+
+                                    final String[] kv = s.split("[ ]");
+
+                                    stEnumValue.setName(kv[0].trim());
+                                    if (kv.length != 1) stEnumValue.setLexical(kv[1].trim());
+                                    save();
+                                }));
+                    }
+
+                    private Action addSTEnumValueAction() {
+                        return newAction("New STEnum value", actionEvent ->
+                                getStringFromUser("Name [lexical]").ifPresent(s -> {
+
+                                    final String[] kv = s.split("[ ]");
+
+                                    final STEnumValue stEnumValue = STJsonFactory.newSTEnumValue()
+                                            .setName(kv[0].trim());
+
+                                    if (kv.length != 1) stEnumValue.setLexical(kv[1].trim());
+
+                                    getModel().addValues(stEnumValue);
+                                    save();
+                                }));
+                    }
+
+                    private Action renameSTEnumAction() {
+                        return newAction("Rename", actionEvent ->
+                                getStringFromUser("Name").ifPresent(name ->
+                                        getParentNode(STGroupTreeNode.class)
+                                                .ifPresent(parent -> parent.isValidTemplateName(name)
+                                                        .ifPresent(s -> {
+
+                                                            getModel().setName(name);
+                                                            save();
+
+                                                            SwingUtilities.invokeLater(() -> {
+                                                                treeModel.nodeChanged(STEnumTreeNode.this);
+                                                            });
+                                                        }))));
+                    }
+
+                    private Action removeSTEnumAction() {
+                        return newAction("Remove", actionEvent ->
+                                confirm("Delete " + getModel().getName()).ifPresent(aBoolean -> {
+
+                                    final STGroupTreeNode parent = (STGroupTreeNode) getParent();
+
+                                    parent.getModel().removeEnums(getModel());
+                                    save();
+
+                                    SwingUtilities.invokeLater(() -> {
+                                        treeModel.removeNodeFromParent(STEnumTreeNode.this);
+                                    });
+                                }));
+                    }
                 }
 
                 class STTemplateTreeNode extends BaseTreeNode<STTemplate> {

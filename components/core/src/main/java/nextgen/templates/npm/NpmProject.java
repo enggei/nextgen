@@ -46,6 +46,10 @@ public class NpmProject {
 		return this._root;
 	}
 
+	public String getRoot(String defaultValue) {
+		return this._root == null ? defaultValue : this._root;
+	}
+
 	public boolean hasRoot() {
 		return this._root != null;
 	}
@@ -62,6 +66,10 @@ public class NpmProject {
 
 	public PackageJson getPackageJson() {
 		return this._packageJson;
+	}
+
+	public PackageJson getPackageJson(PackageJson defaultValue) {
+		return this._packageJson == null ? defaultValue : this._packageJson;
 	}
 
 	public boolean hasPackageJson() {
@@ -82,6 +90,10 @@ public class NpmProject {
 		return this._webpackConfig;
 	}
 
+	public WebpackConfig getWebpackConfig(WebpackConfig defaultValue) {
+		return this._webpackConfig == null ? defaultValue : this._webpackConfig;
+	}
+
 	public boolean hasWebpackConfig() {
 		return this._webpackConfig != null;
 	}
@@ -98,6 +110,10 @@ public class NpmProject {
 
 	public Babelrc getBabelrc() {
 		return this._babelrc;
+	}
+
+	public Babelrc getBabelrc(Babelrc defaultValue) {
+		return this._babelrc == null ? defaultValue : this._babelrc;
 	}
 
 	public boolean hasBabelrc() {

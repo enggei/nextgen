@@ -44,6 +44,10 @@ public class Parent {
 		return this._artifactId;
 	}
 
+	public Object getArtifactId(Object defaultValue) {
+		return this._artifactId == null ? defaultValue : this._artifactId;
+	}
+
 	public boolean hasArtifactId() {
 		return this._artifactId != null;
 	}
@@ -62,6 +66,10 @@ public class Parent {
 		return this._groupId;
 	}
 
+	public Object getGroupId(Object defaultValue) {
+		return this._groupId == null ? defaultValue : this._groupId;
+	}
+
 	public boolean hasGroupId() {
 		return this._groupId != null;
 	}
@@ -78,6 +86,10 @@ public class Parent {
 
 	public Object getVersion() {
 		return this._version;
+	}
+
+	public Object getVersion(Object defaultValue) {
+		return this._version == null ? defaultValue : this._version;
 	}
 
 	public boolean hasVersion() {

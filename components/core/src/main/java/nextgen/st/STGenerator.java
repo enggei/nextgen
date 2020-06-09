@@ -2,6 +2,9 @@ package nextgen.st;
 
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STTemplate;
+import nextgen.templates.JavaPatterns;
+import nextgen.templates.java.EnumValue;
+import nextgen.templates.java.JavaST;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupString;
@@ -10,6 +13,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class STGenerator {
 
@@ -47,6 +52,11 @@ public class STGenerator {
         stGroupModel.getTemplates()
                 .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
                 .forEach(stTemplate -> generateSTEntity(stTemplate, root, packageDeclaration, stDomain, stDomainTests, stgString));
+
+        stGroupModel.getEnums().forEach(stEnum -> {
+            final List<EnumValue> enumValues = stEnum.getValues().map(stEnumValue -> JavaST.newEnumValue().setName(stEnumValue.getName()).setLexical(stEnumValue.getLexical())).collect(Collectors.toList());
+            JavaPatterns.writeEnum(root, JavaPatterns.newPackageDeclaration(packageDeclaration), stEnum.getName(), enumValues);
+        });
 
         stDomain.add("stgString", stgString);
 

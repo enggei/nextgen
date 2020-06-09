@@ -227,6 +227,26 @@
         "name" : "executions",
         "type" : "LIST"
       } ]
+    }, {
+      "uuid" : "f425a49a-40ef-4799-99d7-584e57d7bb40",
+      "name" : "copyPlugin",
+      "text" : "<plugin>\n\t<artifactId>maven-resources-plugin</artifactId>\n\t<version>3.1.0</version>\n\t<executions>\n\t\t<execution>\n\t\t\t<id>copy-resources</id>\n\t\t\t<phase>validate</phase>\n\t\t\t<goals>\n\t\t\t\t<goal>copy-resources</goal>\n\t\t\t</goals>\n\t\t\t<configuration>\n\t\t\t\t<outputDirectory>~outputDirectory~</outputDirectory>\n\t\t\t\t<resources>\t\t\t \n\t\t\t\t\t<resource>\n\t\t\t\t\t\t<directory>~directory~</directory>\n\t\t\t\t\t\t<includes>\n\t\t\t\t\t\t\t~include:{it|<include>~it~</include>};separator=\"\\n\"~\n\t\t\t\t\t\t</includes>\n\t\t\t\t\t</resource>\n\t\t\t\t</resources>\t\t\t\t  \n\t\t\t</configuration>\t\t\t\t\n\t\t</execution>\n\t</executions>\n</plugin>",
+      "parameters" : [ {
+        "uuid" : "7064c00b-f13c-477e-9a5c-1da48b897c26",
+        "name" : "outputDirectory",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "906c464b-8fea-481d-b416-ec11310a11f8",
+        "name" : "directory",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "057b9e80-5f8e-4c3e-838e-5f21e49f7c2e",
+        "name" : "include",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
     } ]
   }, {
     "uuid" : "cb5b0503-2209-492a-9e23-8b4d63e2d68f",

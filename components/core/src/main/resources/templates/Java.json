@@ -124,22 +124,38 @@
     }, {
       "uuid" : "3b29b747-b53c-48f4-8217-ccb442b5a291",
       "name" : "Enum",
-      "text" : "~package~\n\npublic enum ~name~ {\n\n\t~enumValues:{it|~it~};separator=\",\"~\n}",
+      "text" : "package ~package~;\n\npublic enum ~name~ {\n\n\t~enumValues:{it|~it~};separator=\",\\n\"~\n}",
       "parameters" : [ {
-        "uuid" : "c9a05a04-6a47-485c-9783-e12b8b7dda19",
+        "uuid" : "31acfb1b-f4e1-41cf-8d54-8ec9855c22c6",
         "name" : "package",
         "type" : "SINGLE",
         "argumentType" : "Object"
       }, {
-        "uuid" : "b267bd36-58bb-44dd-82c0-d56710511e5c",
+        "uuid" : "831ed4a3-93c5-4b2c-b5ac-a1d9fd26a2e4",
         "name" : "name",
         "type" : "SINGLE",
         "argumentType" : "Object"
       }, {
-        "uuid" : "3e91b360-fe1a-4cc5-98a9-66fb31c65ba6",
+        "uuid" : "a1921fb2-c307-4050-8db4-a297a7083940",
         "name" : "enumValues",
         "type" : "LIST",
         "argumentType" : "Object"
+      } ],
+      "children" : [ {
+        "uuid" : "6621b766-efbd-48bb-974e-6db2e2758de5",
+        "name" : "EnumValue",
+        "text" : "~name~~if(lexical)~() {\n\t@Override\n\tpublic String toString() { return \"~lexical~\"; }\n}~endif~",
+        "parameters" : [ {
+          "uuid" : "e607b6a0-e354-4347-805a-795c52d0cd09",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "String"
+        }, {
+          "uuid" : "e15effc3-6ca9-4b93-af93-da16cd283a19",
+          "name" : "lexical",
+          "type" : "SINGLE",
+          "argumentType" : "String"
+        } ]
       } ]
     } ]
   }, {

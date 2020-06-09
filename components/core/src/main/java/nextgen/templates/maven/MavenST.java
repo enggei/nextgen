@@ -12,6 +12,7 @@ public class MavenST {
 	Project.st + "\n" + 
 	Execution.st + "\n" + 
 	Parent.st + "\n" + 
+	CopyPlugin.st + "\n" + 
 	FrontEndMavenPlugin.st + "\n" + 
 	Plugin.st + "\n" + 
 	ShadePlugin.st + "\n" + 
@@ -104,6 +105,10 @@ public class MavenST {
 		return new Parent(stGroup);
 	} 
 
+	public static CopyPlugin newCopyPlugin() {
+		return new CopyPlugin(stGroup);
+	} 
+
 	public static FrontEndMavenPlugin newFrontEndMavenPlugin() {
 		return new FrontEndMavenPlugin(stGroup);
 	} 
@@ -147,6 +152,13 @@ public class MavenST {
 					return Character.toLowerCase(text.charAt(0)) + s;
 				case "toLower":
 					return text.toLowerCase();
+				case "dotToCap":
+					final StringBuilder formatted = new StringBuilder();
+					final char[] chars = o.toString().toCharArray();
+					for (int i = 0; i < chars.length; i++)
+            		if (chars[i] != '.')
+							formatted.append(i == 0 || chars[i - 1] == '.' ? Character.toUpperCase(chars[i]) : chars[i]);
+					return formatted.toString().trim();
 				default:
 					return o.toString();
 			}

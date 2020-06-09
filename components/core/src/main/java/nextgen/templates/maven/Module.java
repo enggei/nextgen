@@ -44,6 +44,10 @@ public class Module {
 		return this._name;
 	}
 
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
 	public boolean hasName() {
 		return this._name != null;
 	}
@@ -60,6 +64,10 @@ public class Module {
 
 	public Object getPom() {
 		return this._pom;
+	}
+
+	public Object getPom(Object defaultValue) {
+		return this._pom == null ? defaultValue : this._pom;
 	}
 
 	public boolean hasPom() {

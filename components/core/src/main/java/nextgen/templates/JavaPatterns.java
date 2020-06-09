@@ -5,12 +5,20 @@ import nextgen.templates.java.*;
 import nextgen.templates.java.Enum;
 
 import java.io.File;
+import java.util.Collection;
 
 public class JavaPatterns extends JavaST {
 
     public static void writeEnum(File root, PackageDeclaration packageDeclaration, String name, Object[] enumValues) {
-        final Enum content = JavaST.newEnum().setName(name).setPackage(packageDeclaration);
+        final Enum content = JavaST.newEnum().setName(name).setPackage(packageDeclaration.getName());
         for (Object enumValue : enumValues)
+            content.addEnumValues(enumValue);
+        STGenerator.writeToFile(content, packageDeclaration.getName(), name, "java", root);
+    }
+
+    public static void writeEnum(File root, PackageDeclaration packageDeclaration, String name, Collection<EnumValue> enumValues) {
+        final Enum content = JavaST.newEnum().setName(name).setPackage(packageDeclaration.getName());
+        for (EnumValue enumValue : enumValues)
             content.addEnumValues(enumValue);
         STGenerator.writeToFile(content, packageDeclaration.getName(), name, "java", root);
     }

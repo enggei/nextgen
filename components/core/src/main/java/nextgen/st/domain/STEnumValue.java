@@ -1,15 +1,15 @@
 package nextgen.st.domain;
 
-public class STParameterKey {
+public class STEnumValue {
 
 	private final io.vertx.core.json.JsonObject jsonObject;
 
-	public STParameterKey() { 
+	public STEnumValue() { 
 		this.jsonObject = new io.vertx.core.json.JsonObject();
 		jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
 	}
 
-	public STParameterKey(io.vertx.core.json.JsonObject jsonObject) { 
+	public STEnumValue(io.vertx.core.json.JsonObject jsonObject) { 
 		this.jsonObject = jsonObject;
 		java.lang.String uuidString = jsonObject.getString("uuid");
 		if (uuidString == null) jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
@@ -19,7 +19,7 @@ public class STParameterKey {
 		return this.jsonObject;
 	}
 
-	public STParameterKey removeUuid() {
+	public STEnumValue removeUuid() {
 		this.jsonObject.remove("uuid");
 		return this;
 	}
@@ -28,7 +28,7 @@ public class STParameterKey {
 	public boolean equals(java.lang.Object o) { 
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		final STParameterKey other = (STParameterKey) o;
+		final STEnumValue other = (STEnumValue) o;
 		return jsonObject.getString("uuid").equals(other.getJsonObject().getString("uuid"));
 	}
 
@@ -37,7 +37,7 @@ public class STParameterKey {
 		return java.util.Objects.hash(jsonObject.getString("uuid"));
 	}
 
-	public STParameterKey setName(String value) { 
+	public STEnumValue setName(String value) { 
 		jsonObject.put("name", value);
 		return this;
 	}
@@ -50,21 +50,21 @@ public class STParameterKey {
 		return jsonObject.getString("name", defaultValue);
 	}
 
-	public STParameterKey setArgumentType(String value) { 
-		jsonObject.put("argumentType", value);
+	public STEnumValue setLexical(String value) { 
+		jsonObject.put("lexical", value);
 		return this;
 	}
 
-	public String getArgumentType() { 
-		return jsonObject.getString("argumentType");
+	public String getLexical() { 
+		return jsonObject.getString("lexical");
 	}
 
-	public String getArgumentType(String defaultValue) { 
-		return jsonObject.getString("argumentType", defaultValue);
+	public String getLexical(String defaultValue) { 
+		return jsonObject.getString("lexical", defaultValue);
 	}
 
 	@Override
 	public java.lang.String toString() { 
-		return jsonObject.encode();
+		return jsonObject.getString("name");
 	}
 }
