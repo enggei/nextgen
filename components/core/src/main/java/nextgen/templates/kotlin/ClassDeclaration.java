@@ -9,8 +9,10 @@ public class ClassDeclaration {
 	private Object _isOpen;
 	private Object _isAbstract;
 	private Object _name;
-	private Object _extends;
+	private Object _overrideEquals;
 	private java.util.List<Object> _fields = new java.util.ArrayList<>();
+	private java.util.List<Object> _extends = new java.util.ArrayList<>();
+	private java.util.List<Object> _members = new java.util.ArrayList<>();
 
 	ClassDeclaration(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -36,8 +38,10 @@ public class ClassDeclaration {
 		st.add("isOpen", _isOpen);
 		st.add("isAbstract", _isAbstract);
 		st.add("name", _name);
-		st.add("extends", _extends);
+		st.add("overrideEquals", _overrideEquals);
 		for (Object o : _fields) st.add("fields", o);
+		for (Object o : _extends) st.add("extends", o);
+		for (Object o : _members) st.add("members", o);
 		return st.render().trim();
 	}
 
@@ -113,21 +117,21 @@ public class ClassDeclaration {
 		return this;
 	} 
 
-	public ClassDeclaration setExtends(Object value) {
-		this._extends = value;
+	public ClassDeclaration setOverrideEquals(Object value) {
+		this._overrideEquals = value;
 		return this;
 	}
 
-	public Object getExtends() {
-		return this._extends;
+	public Object getOverrideEquals() {
+		return this._overrideEquals;
 	}
 
-	public boolean hasExtends() {
-		return this._extends != null;
+	public boolean hasOverrideEquals() {
+		return this._overrideEquals != null;
 	}
 
-	public ClassDeclaration removeExtends() {
-		this._extends = null;
+	public ClassDeclaration removeOverrideEquals() {
+		this._overrideEquals = null;
 		return this;
 	} 
 	public ClassDeclaration addFields(Object value) {
@@ -149,10 +153,50 @@ public class ClassDeclaration {
 		return this._fields;
 	} 
 
-	static final String st = "ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends) ::= <<~annotations~\n" + 
-				"~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n" + 
+	public ClassDeclaration addExtends(Object value) {
+		this._extends.add(value);
+		return this;
+	}
+
+	public ClassDeclaration removeExtends(Object value) {
+		this._extends.remove(value);
+		return this;
+	}
+
+	public ClassDeclaration removeExtends(int index) {
+		this._extends.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getExtends() {
+		return this._extends;
+	} 
+
+	public ClassDeclaration addMembers(Object value) {
+		this._members.add(value);
+		return this;
+	}
+
+	public ClassDeclaration removeMembers(Object value) {
+		this._members.remove(value);
+		return this;
+	}
+
+	public ClassDeclaration removeMembers(int index) {
+		this._members.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getMembers() {
+		return this._members;
+	} 
+
+	static final String st = "ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,overrideEquals,members) ::= <<~annotations~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n" + 
 				"	~fields:{it|~it~};separator=\",\\n\"~\n" + 
-				") ~if(extends)~extends : ~extends~~endif~{\n" + 
-				"	\n" + 
+				")~if(extends)~: ~extends:{it|~it~};separator=\", \"~~endif~ {\n" + 
+				"\n" + 
+				"	~if(overrideEquals)~~overrideEquals~~endif~\n" + 
+				"	~members:{it|~it~};separator=\"\\n\"~\n" + 
+				"\n" + 
 				"}>> ";
 } 

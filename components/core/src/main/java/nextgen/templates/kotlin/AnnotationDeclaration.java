@@ -76,5 +76,6 @@ public class AnnotationDeclaration {
 
 	} 
 
-	static final String st = "AnnotationDeclaration(annotations) ::= <<~annotations:{it|@~it.name~(~it.params~)};separator=\"\\n\"~>> ";
+	static final String st = "AnnotationDeclaration(annotations) ::= <<~annotations:{it|@~it.name~(~it.params~)};separator=\"\\n\"~~if(annotations)~\n" + 
+				"~endif~>> ";
 } 
