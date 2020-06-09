@@ -5,8 +5,8 @@ public class JsonWrapper {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _package;
-	private Object _name;
+	private String _package;
+	private String _name;
 	private Object _lexical;
 	private java.util.List<Object> _accessors = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _externalFields = new java.util.ArrayList<>();
@@ -39,16 +39,16 @@ public class JsonWrapper {
 		return st.render().trim();
 	}
 
-	public JsonWrapper setPackage(Object value) {
+	public JsonWrapper setPackage(String value) {
 		this._package = value;
 		return this;
 	}
 
-	public Object getPackage() {
+	public String getPackage() {
 		return this._package;
 	}
 
-	public Object getPackage(Object defaultValue) {
+	public String getPackage(String defaultValue) {
 		return this._package == null ? defaultValue : this._package;
 	}
 
@@ -61,16 +61,16 @@ public class JsonWrapper {
 		return this;
 	} 
 
-	public JsonWrapper setName(Object value) {
+	public JsonWrapper setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Object getName(Object defaultValue) {
+	public String getName(String defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 
@@ -122,7 +122,7 @@ public class JsonWrapper {
 	public java.util.List<Object> getAccessors() {
 		return this._accessors;
 	} 
-	public JsonWrapper addExternalFields(Object _type, Object _name, Object _initializer) {
+	public JsonWrapper addExternalFields(Object _type, String _name, Object _initializer) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("type", _type);
 		map.put("name", _name);
@@ -146,10 +146,10 @@ public class JsonWrapper {
 	public static final class JsonWrapper_ExternalFields {
 
 		Object _type;
-		Object _name;
+		String _name;
 		Object _initializer;
 
-		public JsonWrapper_ExternalFields(Object _type, Object _name, Object _initializer) {
+		public JsonWrapper_ExternalFields(Object _type, String _name, Object _initializer) {
 			this._type = _type;
 			this._name = _name;
 			this._initializer = _initializer;
@@ -157,7 +157,7 @@ public class JsonWrapper {
 
 		private JsonWrapper_ExternalFields(java.util.Map<String, Object> map) {
 			this._type = (Object) map.get("type");
-			this._name = (Object) map.get("name");
+			this._name = (String) map.get("name");
 			this._initializer = (Object) map.get("initializer");
 		}
 
@@ -165,7 +165,7 @@ public class JsonWrapper {
 			return this._type;
 		}
 
-		public Object getName() {
+		public String getName() {
 			return this._name;
 		}
 
@@ -175,7 +175,7 @@ public class JsonWrapper {
 
 	} 
 
-	static final String st = "JsonWrapper(package,name,externalFields,accessors,lexical) ::= <<~package~\n" + 
+	static final String st = "JsonWrapper(package,name,externalFields,accessors,lexical) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public class ~name;format=\"capitalize\"~ {\n" + 
 				"\n" + 
@@ -195,6 +195,11 @@ public class JsonWrapper {
 				"\n" + 
 				"	public io.vertx.core.json.JsonObject getJsonObject() { \n" + 
 				"		return this.jsonObject;\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public ~name;format=\"capitalize\"~ removeUuid() {\n" + 
+				"		this.jsonObject.remove(\"uuid\");\n" + 
+				"		return this;\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 

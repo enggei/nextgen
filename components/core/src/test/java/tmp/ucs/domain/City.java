@@ -1,57 +1,51 @@
 package tmp.ucs.domain;
 
-
 public class City {
 
 	private final java.util.UUID uuid;
-	private String name;
-	private final java.util.List<Address> addresses = new java.util.ArrayList<>();
+	private java.lang.String _name;
+	private java.util.List<Address> _addresses;
 
-	public City() { 
+	public City() {
 		this.uuid = java.util.UUID.randomUUID();
 	}
 
-	public City(java.util.UUID uuid) { 
+	public City(java.util.UUID uuid) {
 		this.uuid = uuid;
 	}
 
-	public java.util.UUID getUuid() { 
-		return uuid;
+	public java.util.UUID getUuid() {
+		return this.uuid;
 	}
 
 	@Override
-	public int hashCode() { 
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		City that = (City) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
 		return java.util.Objects.hash(uuid);
 	}
 
-	@Override
-	public boolean equals(java.lang.Object o) { 
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		final City other = (City) o;
-		return uuid.equals(other.uuid);
+	public java.lang.String getName() {
+		return this._name;
 	}
 
-	public City setName(String name) { 
-		this.name = name;
+	public City setName(java.lang.String value) {
+		this._name = value;
 		return this;
 	}
 
-	public String getName() { 
-		return this.name;
+	public java.util.List<Address> getAddresses() {
+		return this._addresses;
 	}
 
-	@Override
-	public java.lang.String toString() { 
-		return name == null ? null : name;
-	}
-
-	public City addAddresses(Address value) { 
-		addresses.add(value);
+	public City addAddresses(Address value) {
+		this._addresses.add(value);
 		return this;
-	}
-
-	public java.util.List<Address> getAddresses() { 
-		return this.addresses;
 	}
 }

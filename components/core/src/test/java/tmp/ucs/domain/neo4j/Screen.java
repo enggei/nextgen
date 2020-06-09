@@ -1,12 +1,12 @@
 package tmp.ucs.domain.neo4j;
 
-
+// todo node wrapper
 public class Screen {
 
 	private final org.neo4j.graphdb.Node node;
 
 	public Screen(org.neo4j.graphdb.Node node) { 
-		this.node = node;
+		this.node= node;
 	}
 
 	public org.neo4j.graphdb.Node getNode() { 
@@ -26,23 +26,19 @@ public class Screen {
 		return java.util.Objects.hash(node);
 	}
 
-	public java.util.stream.Stream<Cinema> getIncomingScreens() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("screens")).spliterator(), false).map((relationship) -> new Cinema(relationship.getOtherNode(node)));
-	}
-
-	public Screen setName(String value) { 
+	public Screen setName(java.lang.String value) { 
 		if (value == null) node.removeProperty("name"); 
 		else node.setProperty("name", value);
 		return this;
 	}
 
-	public String getName() { 
-		if (node.hasProperty("name")) return (String) node.getProperty("name");
+	public java.lang.String getName() { 
+		if (node.hasProperty("name")) return (java.lang.String) node.getProperty("name");
 		return null;
 	}
 
-	public String getName(String defaultValue) { 
-		if (node.hasProperty("name")) return (String) node.getProperty("name");
+	public java.lang.String getName(java.lang.String defaultValue) { 
+		if (node.hasProperty("name")) return (java.lang.String) node.getProperty("name");
 		return defaultValue;
 	}
 
@@ -53,11 +49,6 @@ public class Screen {
 	public Screen removeName() { 
 		node.removeProperty("name");
 		return this;
-	}
-
-	@Override
-	public java.lang.String toString() { 
-		return (java.lang.String) node.getProperty("name");
 	}
 
 	public Screen setStatus(ScreenStatus value) { 
@@ -85,19 +76,19 @@ public class Screen {
 		return this;
 	}
 
-	public Screen setActive(Boolean value) { 
+	public Screen setActive(java.lang.Boolean value) { 
 		if (value == null) node.removeProperty("active"); 
 		else node.setProperty("active", value);
 		return this;
 	}
 
-	public Boolean getActive() { 
-		if (node.hasProperty("active")) return (Boolean) node.getProperty("active");
-		return false;
+	public java.lang.Boolean getActive() { 
+		if (node.hasProperty("active")) return (java.lang.Boolean) node.getProperty("active");
+		return null;
 	}
 
-	public Boolean getActive(Boolean defaultValue) { 
-		if (node.hasProperty("active")) return (Boolean) node.getProperty("active");
+	public java.lang.Boolean getActive(java.lang.Boolean defaultValue) { 
+		if (node.hasProperty("active")) return (java.lang.Boolean) node.getProperty("active");
 		return defaultValue;
 	}
 
@@ -111,7 +102,7 @@ public class Screen {
 	}
 
 	public Screen addSeats(Seat dst) { 
-		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("seats")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("addresses")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
 		if (existing.isPresent()) return this;
 		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("seats"));
 		return this;
@@ -125,5 +116,14 @@ public class Screen {
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("seats")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
 		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
 		return this;
+	}
+
+	public java.util.stream.Stream<Seat> getIncomingSeats() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("seats")).spliterator(), false).map((relationship) -> new Seat(relationship.getOtherNode(node)));
+	}
+
+	@Override
+	public String toString() {
+		return "";
 	}
 }

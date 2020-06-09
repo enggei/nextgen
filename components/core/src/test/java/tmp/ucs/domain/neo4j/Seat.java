@@ -1,12 +1,12 @@
 package tmp.ucs.domain.neo4j;
 
-
+// todo node wrapper
 public class Seat {
 
 	private final org.neo4j.graphdb.Node node;
 
 	public Seat(org.neo4j.graphdb.Node node) { 
-		this.node = node;
+		this.node= node;
 	}
 
 	public org.neo4j.graphdb.Node getNode() { 
@@ -26,23 +26,19 @@ public class Seat {
 		return java.util.Objects.hash(node);
 	}
 
-	public java.util.stream.Stream<Screen> getIncomingSeats() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("seats")).spliterator(), false).map((relationship) -> new Screen(relationship.getOtherNode(node)));
-	}
-
-	public Seat setNo(Integer value) { 
+	public Seat setNo(java.lang.Integer value) { 
 		if (value == null) node.removeProperty("no"); 
 		else node.setProperty("no", value);
 		return this;
 	}
 
-	public Integer getNo() { 
-		if (node.hasProperty("no")) return (Integer) node.getProperty("no");
+	public java.lang.Integer getNo() { 
+		if (node.hasProperty("no")) return (java.lang.Integer) node.getProperty("no");
 		return null;
 	}
 
-	public Integer getNo(Integer defaultValue) { 
-		if (node.hasProperty("no")) return (Integer) node.getProperty("no");
+	public java.lang.Integer getNo(java.lang.Integer defaultValue) { 
+		if (node.hasProperty("no")) return (java.lang.Integer) node.getProperty("no");
 		return defaultValue;
 	}
 
@@ -78,5 +74,10 @@ public class Seat {
 	public Seat removeStatus() { 
 		node.removeProperty("status");
 		return this;
+	}
+
+	@Override
+	public String toString() {
+		return "";
 	}
 }

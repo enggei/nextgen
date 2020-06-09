@@ -1,16 +1,18 @@
 package tmp.ucs.domain.json;
 
-
 public class Seat {
 
 	private final io.vertx.core.json.JsonObject jsonObject;
 
 	public Seat() { 
 		this.jsonObject = new io.vertx.core.json.JsonObject();
+		jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
 	}
 
 	public Seat(io.vertx.core.json.JsonObject jsonObject) { 
 		this.jsonObject = jsonObject;
+		java.lang.String uuidString = jsonObject.getString("uuid");
+		if (uuidString == null) jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
 	}
 
 	public io.vertx.core.json.JsonObject getJsonObject() { 
@@ -18,21 +20,16 @@ public class Seat {
 	}
 
 	@Override
-	public java.lang.String toString() { 
-		return jsonObject.encode();
-	}
-
-	@Override
 	public boolean equals(java.lang.Object o) { 
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		final Seat other = (Seat) o;
-		return jsonObject.equals(other.jsonObject);
+		return jsonObject.getString("uuid").equals(other.getJsonObject().getString("uuid"));
 	}
 
 	@Override
 	public int hashCode() { 
-		return java.util.Objects.hash(jsonObject);
+		return java.util.Objects.hash(jsonObject.getString("uuid"));
 	}
 
 	public Seat setNo(Integer value) { 
@@ -44,12 +41,26 @@ public class Seat {
 		return jsonObject.getInteger("no");
 	}
 
+	public Integer getNo(Integer defaultValue) { 
+		return jsonObject.getInteger("no", defaultValue);
+	}
+
 	public Seat setStatus(SeatStatus value) { 
+		if (value == null) return this;
 		jsonObject.put("status", value.name());
 		return this;
 	}
 
 	public SeatStatus getStatus() { 
-		return jsonObject.getString("status") == null ? null : SeatStatus.valueOf(jsonObject.getString("status"));
+		return getStatus(null);
+	}
+
+	public SeatStatus getStatus(SeatStatus defaultValue) { 
+		return jsonObject.getString("status") == null ? defaultValue : SeatStatus.valueOf(jsonObject.getString("status"));
+	}
+
+	@Override
+	public java.lang.String toString() { 
+		return jsonObject.encode();
 	}
 }

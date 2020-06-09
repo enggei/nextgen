@@ -1,77 +1,76 @@
 package tmp.ucs.domain;
 
-
 public class Cinema {
 
 	private final java.util.UUID uuid;
-	private String name;
-	private final java.util.List<String> aliases = new java.util.ArrayList<>();
-	private Address address;
-	private final java.util.List<Screen> screens = new java.util.ArrayList<>();
+	private java.lang.String _name;
+	private java.util.List<java.lang.String> _aliases;
+	private Address _address;
+	private java.util.List<Screen> _screens;
 
-	public Cinema() { 
+	public Cinema() {
 		this.uuid = java.util.UUID.randomUUID();
 	}
 
-	public Cinema(java.util.UUID uuid) { 
+	public Cinema(java.util.UUID uuid) {
 		this.uuid = uuid;
 	}
 
-	public java.util.UUID getUuid() { 
-		return uuid;
+	public java.util.UUID getUuid() {
+		return this.uuid;
 	}
 
 	@Override
-	public int hashCode() { 
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Cinema that = (Cinema) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
 		return java.util.Objects.hash(uuid);
 	}
 
-	@Override
-	public boolean equals(java.lang.Object o) { 
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		final Cinema other = (Cinema) o;
-		return uuid.equals(other.uuid);
+	public java.lang.String getName() {
+		return this._name;
 	}
 
-	public Cinema setName(String name) { 
-		this.name = name;
+	public Cinema setName(java.lang.String value) {
+		this._name = value;
 		return this;
 	}
 
-	public String getName() { 
-		return this.name;
+	public java.util.List<java.lang.String> getAliases() {
+		return this._aliases;
 	}
 
-	@Override
-	public java.lang.String toString() { 
-		return name == null ? null : name;
-	}
-
-	public Cinema addAliases(String value) { 
-		aliases.add(value);
+	public Cinema addAliases(java.lang.String value) {
+		this._aliases.add(value);
 		return this;
 	}
 
-	public java.util.List<String> getAliases() { 
-		return this.aliases;
+	public Address getAddress() {
+		return this._address;
 	}
 
-	public Cinema setAddress(Address address) { 
-		this.address = address;
+	public Cinema setAddress(Address value) {
+		this._address = value;
 		return this;
 	}
 
-	public Address getAddress() { 
-		return this.address;
-	}
-
-	public Cinema addScreens(Screen value) { 
-		screens.add(value);
+	public Cinema removeAddress() {
+		this._address = null;
 		return this;
 	}
 
-	public java.util.List<Screen> getScreens() { 
-		return this.screens;
+	public java.util.List<Screen> getScreens() {
+		return this._screens;
+	}
+
+	public Cinema addScreens(Screen value) {
+		this._screens.add(value);
+		return this;
 	}
 }

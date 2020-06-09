@@ -1,62 +1,61 @@
 package tmp.ucs.domain;
 
-
 public class Address {
 
 	private final java.util.UUID uuid;
-	private String street;
-	private Integer no;
-	private String letter;
+	private java.lang.String _street;
+	private java.lang.Integer _no;
+	private java.lang.String _letter;
 
-	public Address() { 
+	public Address() {
 		this.uuid = java.util.UUID.randomUUID();
 	}
 
-	public Address(java.util.UUID uuid) { 
+	public Address(java.util.UUID uuid) {
 		this.uuid = uuid;
 	}
 
-	public java.util.UUID getUuid() { 
-		return uuid;
+	public java.util.UUID getUuid() {
+		return this.uuid;
 	}
 
 	@Override
-	public int hashCode() { 
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Address that = (Address) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
 		return java.util.Objects.hash(uuid);
 	}
 
-	@Override
-	public boolean equals(java.lang.Object o) { 
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		final Address other = (Address) o;
-		return uuid.equals(other.uuid);
+	public java.lang.String getStreet() {
+		return this._street;
 	}
 
-	public Address setStreet(String street) { 
-		this.street = street;
+	public Address setStreet(java.lang.String value) {
+		this._street = value;
 		return this;
 	}
 
-	public String getStreet() { 
-		return this.street;
+	public java.lang.Integer getNo() {
+		return this._no;
 	}
 
-	public Address setNo(Integer no) { 
-		this.no = no;
+	public Address setNo(java.lang.Integer value) {
+		this._no = value;
 		return this;
 	}
 
-	public Integer getNo() { 
-		return this.no;
+	public java.lang.String getLetter() {
+		return this._letter;
 	}
 
-	public Address setLetter(String letter) { 
-		this.letter = letter;
+	public Address setLetter(java.lang.String value) {
+		this._letter = value;
 		return this;
-	}
-
-	public String getLetter() { 
-		return this.letter;
 	}
 }

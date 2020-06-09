@@ -60,7 +60,7 @@
       "uuid" : "0dc737ef-894d-474c-84ad-e71e51b66f11",
       "name" : "type",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "Class<?>"
     }, {
       "uuid" : "44ef8f93-5ca8-4ac9-ba22-697a4eb5b7ac",
       "name" : "lexical",

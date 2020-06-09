@@ -2,7 +2,7 @@ delimiters "~","~"
 
 Entities() ::= << >>
 
-Pojo(package,name,fields,lexical,accessors) ::= <<~package~
+Pojo(package,name,fields,lexical,accessors) ::= <<package ~package~;
 
 public class ~name~ {
 

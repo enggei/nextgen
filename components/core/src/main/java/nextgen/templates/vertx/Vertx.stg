@@ -2,7 +2,7 @@ delimiters "~","~"
 
 Entities() ::= << >>
 
-JsonWrapper(package,name,externalFields,accessors,lexical) ::= <<~package~
+JsonWrapper(package,name,externalFields,accessors,lexical) ::= <<package ~package~;
 
 public class ~name;format="capitalize"~ {
 
@@ -22,6 +22,11 @@ public class ~name;format="capitalize"~ {
 
 	public io.vertx.core.json.JsonObject getJsonObject() { 
 		return this.jsonObject;
+	}
+
+	public ~name;format="capitalize"~ removeUuid() {
+		this.jsonObject.remove("uuid");
+		return this;
 	}
 
 	@Override
@@ -45,17 +50,17 @@ public class ~name;format="capitalize"~ {
 	}
 } >>
 
-primitiveAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
+primitiveAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="dotToCap"~(~type~ value) { 
 	jsonObject.put("~name~", value);
 	return this;
 }
 
-public ~type~ get~name;format="capitalize"~() { 
-	return jsonObject.get~type~("~name~");
+public ~type~ get~name;format="dotToCap"~() { 
+	return jsonObject.get~type;format="capitalize"~("~name~");
 }
 
-public ~type~ get~name;format="capitalize"~(~type~ defaultValue) { 
-	return jsonObject.get~type~("~name~", defaultValue);
+public ~type~ get~name;format="dotToCap"~(~type~ defaultValue) { 
+	return jsonObject.get~type;format="capitalize"~("~name~", defaultValue);
 } >>
 
 listReferenceAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ add~name;format="capitalize"~(~type~ value) { 

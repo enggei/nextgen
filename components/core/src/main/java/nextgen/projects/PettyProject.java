@@ -1,17 +1,17 @@
 package nextgen.projects;
 
 import io.vertx.core.json.JsonArray;
-import nextgen.domain.DomainToJson;
-import nextgen.domain.DomainToNeo4J;
-import nextgen.domain.DomainToPojos;
-import nextgen.domain.domain.Domain;
-import nextgen.java.st.PackageDeclaration;
+import nextgen.templates.DomainPatterns;
+import nextgen.templates.domain.Domain;
+import nextgen.templates.domain.Entity;
+import nextgen.templates.java.PackageDeclaration;
 import org.junit.Test;
 
 import java.io.File;
 
-import static nextgen.domain.DomainPatterns.*;
-import static nextgen.java.JavaPatterns.newPackageDeclaration;
+import static nextgen.templates.DomainPatterns.*;
+import static nextgen.templates.JavaPatterns.newPackageDeclaration;
+
 
 public class PettyProject {
 
@@ -20,6 +20,8 @@ public class PettyProject {
     private final File javaTestSrc = new File(root, "src/test/java");
 
     private final PackageDeclaration corePackage = newPackageDeclaration("com.petty");
+    private final PackageDeclaration exportPackage = newPackageDeclaration(corePackage, "export");
+    private final PackageDeclaration exportDomain = newPackageDeclaration(exportPackage, "domain");
     private final PackageDeclaration reportPackage = newPackageDeclaration(corePackage, "reports");
     private final PackageDeclaration reportDomain = newPackageDeclaration(reportPackage, "domain");
     private final PackageDeclaration webPackage = newPackageDeclaration(corePackage, "web");
@@ -36,217 +38,224 @@ public class PettyProject {
     @Test
     public void generateScanDomain() {
 
-        DomainToPojos.generate(javaMainSrc, scanDomainPackage, newDomainBuilder("Scan")
-                .add(newEntityBuilder("ScanRoot")
-                        .addStringField("path", true)
-                        .addOneToManyRelation("dates", newEntityBuilder("ScanDate")
-                                .addStringField("date", true)
-                                .addOneToOneRelation("raw", newString())
-                                .addOneToOneRelation("parsed", newString())))
-                .add(newEntityBuilder("HtmlFileGroup")
-                        .addStringField("name")
-                        .addOneToOneRelation("properties", newExternalEntity(JsonArray.class))
-                        .addOneToManyRelation("htmlFiles", newExternalEntity(File.class))));
+        DomainPatterns.writePojo(javaMainSrc, scanDomainPackage, newDomain("Scan")
+                .addEntities(newEntity("ScanRoot")
+                        .addRelations(newStringField("path", true))
+                        .addRelations(newOneToMany("dates", newEntity("ScanDate")
+                                .addRelations(newStringField("date", true))
+                                .addRelations(newStringField("raw"))
+                                .addRelations(newStringField("parsed")))))
+                .addEntities(newEntity("HtmlFileGroup")
+                        .addRelations(newStringField("name"))
+                        .addRelations(newOneToOneExternal("properties", JsonArray.class))
+                        .addRelations(newOneToManyExternal("htmlFiles", File.class))));
 
-        DomainToJson.generate(javaMainSrc, rmScanDomainPackage, newDomainBuilder("RM")
-                .add(newEntityBuilder("RMPageModel")
-                        .addOneToManyRelation("properties", newEntityBuilder("RMPosting")
-                                .addLongField("id")
-                                .addIntegerField("bedrooms")
-                                .addStringField("displayAddress")
-                                .addStringField("addedOrReduced")
-                                .addStringField("propertySubType")
-                                .addStringField("firstVisibleDate")
-                                .addStringField("propertyTypeFullDescription")
-                                .addOneToOneRelation("listingUpdate", newEntityBuilder("RMListingUpdate")
-                                        .addStringField("listingUpdateReason")
-                                        .addStringField("listingUpdateDate"))
-                                .addOneToOneRelation("location", newEntityBuilder("RMLocation")
-                                        .addDoubleField("latitude")
-                                        .addDoubleField("longitude"))
-                                .addOneToOneRelation("price", newEntityBuilder("RMPrice")
-                                        .addIntegerField("amount")
-                                        .addStringField("currencyCode"))
-                                .addOneToOneRelation("customer", newEntityBuilder("RMCustomer")
-                                        .addLongField("branchId")
-                                        .addStringField("branchDisplayName")
-                                        .addStringField("branchName")
-                                        .addStringField("brandTradingName")))
-                        .addOneToOneRelation("pagination", newEntityBuilder("RMPagination")
-                                .addStringField("total")
-                                .addStringField("next")
-                                .addStringField("page")
-                                .addOneToManyRelation("options", newEntityBuilder("RMPaginationOptions")
-                                        .addStringField("value")
-                                        .addStringField("description")))));
+        DomainPatterns.writeJsonWrapper(javaMainSrc, rmScanDomainPackage, newDomain("RM")
+                .addEntities(newEntity("RMPageModel")
+                        .addRelations(newOneToMany("properties", newEntity("RMPosting")
+                                .addRelations(newLongField("id"))
+                                .addRelations(newIntegerField("bedrooms"))
+                                .addRelations(newStringField("displayAddress"))
+                                .addRelations(newStringField("addedOrReduced"))
+                                .addRelations(newStringField("propertySubType"))
+                                .addRelations(newStringField("firstVisibleDate"))
+                                .addRelations(newStringField("propertyTypeFullDescription"))
+                                .addRelations(newOneToOne("listingUpdate", newEntity("RMListingUpdate")
+                                        .addRelations(newStringField("listingUpdateReason"))
+                                        .addRelations(newStringField("listingUpdateDate"))))
+                                .addRelations(newOneToOne("location", newEntity("RMLocation")
+                                        .addRelations(newDoubleField("latitude"))
+                                        .addRelations(newDoubleField("longitude"))))
+                                .addRelations(newOneToOne("price", newEntity("RMPrice")
+                                        .addRelations(newIntegerField("amount"))
+                                        .addRelations(newStringField("currencyCode"))))
+                                .addRelations(newOneToOne("customer", newEntity("RMCustomer")
+                                        .addRelations(newLongField("branchId"))
+                                        .addRelations(newStringField("branchDisplayName"))
+                                        .addRelations(newStringField("branchName"))
+                                        .addRelations(newStringField("brandTradingName"))))))
+                        .addRelations(newOneToOne("pagination", newEntity("RMPagination")
+                                .addRelations(newStringField("total"))
+                                .addRelations(newStringField("next"))
+                                .addRelations(newStringField("page"))
+                                .addRelations(newOneToMany("options", newEntity("RMPaginationOptions")
+                                        .addRelations(newStringField("value"))
+                                        .addRelations(newStringField("description"))))))));
 
-        final EntityBuilder rmQuery = newEntityBuilder("RMUrl")
-                .addStringField("name")
-                .addStringField("path")
-                .addStringField("preQuery")
-                .addStringField("postQuery");
+        final Entity rmQuery = newEntity("RMUrl")
+                .addRelations(newStringField("name"))
+                .addRelations(newStringField("path"))
+                .addRelations(newStringField("preQuery"))
+                .addRelations(newStringField("postQuery"));
 
-        DomainToNeo4J.generate(javaMainSrc, rmScanDomainPackage, newDomainBuilder("RM")
-                .add(newEntityBuilder("RMConfig")
-                        .addStringField("name")
-                        .addStringField("host")
-                        .addStringField("protocol")
-                        .addOneToOneRelation("rentUrl", rmQuery)
-                        .addOneToOneRelation("salesPostcodeUrl", rmQuery)
-                        .addOneToOneRelation("salesBranchUrl", rmQuery)
-                        .addOneToManyRelation("scans", newEntityBuilder("RMScan")
-                                .addStringField("name", true)
-                                .addOneToOneRelation("searchType", newEnumEntity("RMSearchType", "RENT,SALES_POSTCODE,SALES_BRANCH"))
-                                .addStringField("locationIdentifier"))));
+        DomainPatterns.writeNeo(javaMainSrc, rmScanDomainPackage, newDomain("RM")
+                .addEntities(newEntity("RMConfig")
+                        .addRelations(newStringField("name"))
+                        .addRelations(newStringField("host"))
+                        .addRelations(newStringField("protocol"))
+                        .addRelations(newOneToOne("rentUrl", rmQuery))
+                        .addRelations(newOneToOne("salesPostcodeUrl", rmQuery))
+                        .addRelations(newOneToOne("salesBranchUrl", rmQuery))
+                        .addRelations(newOneToMany("scans", newEntity("RMScan")
+                                .addRelations(newStringField("name", true))
+                                .addRelations(newEnumField("searchType", newEnum("RMSearchType", "RENT,SALES_POSTCODE,SALES_BRANCH")))
+                                .addRelations(newStringField("locationIdentifier"))))));
     }
 
     @Test
     public void generateNeoDomain() {
 
-        final EntityBuilder branch = newEntityBuilder("Branch")
-                .addLongField("id")
-                .addBooleanField("isPetty")
-                .addStringField("name");
+        final Entity branch = newEntity("Branch")
+                .addRelations(newLongField("id"))
+                .addRelations(newBooleanField("isPetty"))
+                .addRelations(newStringField("name", true));
 
-        final EntityBuilder agent = newEntityBuilder("Agent")
-                .addStringField("name")
-                .addOneToManyRelation("branches", branch);
+        final Domain domain = newDomain("Domain")
+                .addEntities(newEntity("Agent")
+                        .addRelations(newStringField("name", true))
+                        .addRelations(newOneToMany("branches", branch)))
+                .addEntities(newEntity("ListingDate")
+                        .addRelations(newStringField("date", true))
+                        .addRelations(newOneToMany("areas", newEntity("DateAreaListings")
+                                .addRelations(newOneToOne("area", newEntity("Area")
+                                        .addRelations(newStringField("name", true))
+                                        .addRelations(newOneToMany("postcodes", newEntity("Postcode")
+                                                .addRelations(newStringField("code", true))))))
+                                .addRelations(newOneToMany("listings", newEntity("PropertyListing")
+                                        .addRelations(newLongField("id"))
+                                        .addRelations(newIntegerField("bedrooms"))
+                                        .addRelations(newStringField("streetAddress"))
+                                        .addRelations(newStringField("addedOrReduced"))
+                                        .addRelations(newStringField("propertySubType"))
+                                        .addRelations(newStringField("firstVisibleDate"))
+                                        .addRelations(newStringField("propertyTypeFullDescription"))
+                                        .addRelations(newStringField("listingUpdateReason"))
+                                        .addRelations(newStringField("listingUpdateDate"))
+                                        .addRelations(newStringField("image"))
+                                        .addRelations(newDoubleField("latitude"))
+                                        .addRelations(newDoubleField("longitude"))
+                                        .addRelations(newIntegerField("price"))
+                                        .addRelations(newOneToOne("branch", branch)))))))
+                .addEntities(newEntity("Postcodes")
+                        .addRelations(newStringField("country", true))
+                        .addRelations(newOneToMany("areas", newEntity("PostcodeArea")
+                                .addRelations(newStringField("name", true))
+                                .addRelations(newOneToMany("districts", newEntity("PostcodeDistrict")
+                                        .addRelations(newStringField("name", true))
+                                        .addRelations(newOneToMany("sectors", newEntity("PostcodeSector")
+                                                .addRelations(newStringField("name", true))
+                                                .addRelations(newOneToMany("units", newEntity("PostcodeUnit")
+                                                        .addRelations(newStringField("name", true)))))))))));
 
-        final EntityBuilder postcode = newEntityBuilder("Postcode")
-                .addStringField("code");
+        DomainPatterns.writeNeo(javaMainSrc, domainPackage.getName(), domain);
+    }
 
-        final EntityBuilder area = newEntityBuilder("Area")
-                .addStringField("name", true)
-                .addOneToManyRelation("postcodes", postcode);
+    @Test
+    public void generateExportDomain() {
 
-        final EntityBuilder propertyListing = newEntityBuilder("PropertyListing")
-                .addLongField("id")
-                .addIntegerField("bedrooms")
-                .addStringField("streetAddress")
-                .addStringField("addedOrReduced")
-                .addStringField("propertySubType")
-                .addStringField("firstVisibleDate")
-                .addStringField("propertyTypeFullDescription")
-                .addStringField("listingUpdateReason")
-                .addStringField("listingUpdateDate")
-                .addDoubleField("latitude")
-                .addDoubleField("longitude")
-                .addIntegerField("price")
-                .addOneToOneRelation("branch", branch);
-
-        final EntityBuilder dateArea = newEntityBuilder("DateAreaListings")
-                .addOneToOneRelation("area", area)
-                .addOneToManyRelation("listings", propertyListing);
-
-        final EntityBuilder listingDate = newEntityBuilder("ListingDate")
-                .addStringField("date", true)
-                .addOneToManyRelation("areas", dateArea);
-
-        final Domain domain = newDomainBuilder("Domain")
-                .add(agent)
-                .add(listingDate)
-                .add(newEntityBuilder("Postcodes")
-                        .addStringField("country")
-                        .addOneToManyRelation("areas", newEntityBuilder("PostcodeArea")
-                                .addStringField("name")
-                                .addOneToManyRelation("districts", newEntityBuilder("PostcodeDistrict")
-                                        .addStringField("name")
-                                        .addOneToManyRelation("sectors", newEntityBuilder("PostcodeSector")
-                                                .addStringField("name")
-                                                .addOneToManyRelation("units", newEntityBuilder("PostcodeUnit")
-                                                        .addStringField("name"))))));
-
-        DomainToNeo4J.generate(javaMainSrc, domainPackage, domain);
+        DomainPatterns.writeJsonWrapper(javaMainSrc, exportDomain, newDomain("Export")
+                .addEntities(newEntity("AreaPostings")
+                        .addRelations(newStringField("name", true))
+                        .addRelations(newOneToMany("postings", newEntity("AreaPosting")
+                                .addRelations(newLongField("id"))
+                                .addRelations(newStringField("address"))
+                                .addRelations(newDoubleField("lat"))
+                                .addRelations(newDoubleField("lon"))
+                                .addRelations(newStringField("image"))
+                                .addRelations(newLongField("agent.branch.id"))
+                                .addRelations(newStringField("agent.branch.displayName"))
+                                .addRelations(newStringField("agent.branch.name"))
+                        ))));
     }
 
     @Test
     public void generateServer() {
 
-        final EntityBuilder serverSettings = newEntityBuilder("ServerSettings")
-                .addStringField("name", true)
-                .addStringField("tcpHost")
-                .addStringField("tcpName")
-                .addIntegerField("port")
-                .addStringField("webRoot")
-                .addOneToManyRelation("verticles", newEntityBuilder("VerticleSettings")
-                        .addStringField("name", true)
-                        .addStringField("className"))
-                .addOneToOneRelation("botSettings", newEntityBuilder("BotSettings")
-                        .addStringField("name", true)
-                        .addStringField("botToken")
-                        .addBooleanField("start"))
-                .addOneToOneRelation("ssl", newEntityBuilder("SSLSettings")
-                        .addStringField("name", true)
-                        .addStringField("key")
-                        .addStringField("cert"))
-                .addOneToOneRelation("jwt", newEntityBuilder("JWTSettings")
-                        .addStringField("name", true)
-                        .addStringField("path")
-                        .addStringField("password")
-                        .addStringField("type")
-                        .addIntegerField("expiresInMinutes")
-                        .addOneToManyRelation("users", newEntityBuilder("UserSettings")
-                                .addStringField("username", true)
-                                .addStringField("password")
-                                .addStringField("salt")));
+        final Entity serverSettings = newEntity("ServerSettings")
+                .addRelations(newStringField("name", true))
+                .addRelations(newStringField("tcpHost"))
+                .addRelations(newStringField("tcpName"))
+                .addRelations(newIntegerField("port"))
+                .addRelations(newStringField("webRoot"))
+                .addRelations(newOneToMany("verticles", newEntity("VerticleSettings")
+                        .addRelations(newStringField("name", true))
+                        .addRelations(newStringField("className"))))
+                .addRelations(newOneToOne("botSettings", newEntity("BotSettings")
+                        .addRelations(newStringField("name", true))
+                        .addRelations(newStringField("botToken"))
+                        .addRelations(newBooleanField("start"))))
+                .addRelations(newOneToOne("ssl", newEntity("SSLSettings")
+                        .addRelations(newStringField("name", true))
+                        .addRelations(newStringField("key"))
+                        .addRelations(newStringField("cert"))))
+                .addRelations(newOneToOne("jwt", newEntity("JWTSettings")
+                        .addRelations(newStringField("name", true))
+                        .addRelations(newStringField("path"))
+                        .addRelations(newStringField("password"))
+                        .addRelations(newStringField("type"))
+                        .addRelations(newIntegerField("expiresInMinutes"))
+                        .addRelations(newOneToMany("users", newEntity("UserSettings")
+                                .addRelations(newStringField("username", true))
+                                .addRelations(newStringField("password"))
+                                .addRelations(newStringField("salt"))))));
 
-        DomainToNeo4J.generate(javaMainSrc, webDomainPackage, newDomainBuilder("Server")
-                .add(serverSettings));
+        DomainPatterns.writeNeo(javaMainSrc, webDomainPackage, newDomain("Server")
+                .addEntities(serverSettings));
 
 
-        final EntityBuilder serverDeploymentOptions = newEntityBuilder("ServerDeploymentOptions")
-                .addStringField("name", true)
-                .addStringField("tcpHost")
-                .addStringField("tcpName")
-                .addIntegerField("port")
-                .addStringField("webRoot")
-                .addOneToManyRelation("verticles", newEntityBuilder("VerticleDeploymentSettings")
-                        .addStringField("name", true)
-                        .addStringField("className"))
-                .addOneToOneRelation("botSettings", newEntityBuilder("BotDeploymentSettings")
-                        .addStringField("name", true)
-                        .addStringField("botToken")
-                        .addBooleanField("start"))
-                .addOneToOneRelation("ssl", newEntityBuilder("SSLDeploymentSettings")
-                        .addStringField("name", true)
-                        .addStringField("key")
-                        .addStringField("cert"))
-                .addOneToOneRelation("jwt", newEntityBuilder("JWTDeploymentSettings")
-                        .addStringField("name", true)
-                        .addStringField("path")
-                        .addStringField("password")
-                        .addStringField("type")
-                        .addIntegerField("expiresInMinutes")
-                        .addOneToManyRelation("users", newEntityBuilder("UserDeploymentSettings")
-                                .addStringField("username", true)
-                                .addStringField("token")
-                                .addStringField("password")
-                                .addStringField("salt")));
+        final Entity serverDeploymentOptions = newEntity("ServerDeploymentOptions")
+                .addRelations(newStringField("name", true))
+                .addRelations(newStringField("tcpHost"))
+                .addRelations(newStringField("tcpName"))
+                .addRelations(newIntegerField("port"))
+                .addRelations(newStringField("webRoot"))
+                .addRelations(newOneToMany("verticles", newEntity("VerticleDeploymentSettings")
+                        .addRelations(newStringField("name", true))
+                        .addRelations(newStringField("className"))))
+                .addRelations(newOneToOne("botSettings", newEntity("BotDeploymentSettings")
+                        .addRelations(newStringField("name", true))
+                        .addRelations(newStringField("botToken"))
+                        .addRelations(newBooleanField("start"))))
+                .addRelations(newOneToOne("ssl", newEntity("SSLDeploymentSettings")
+                        .addRelations(newStringField("name", true))
+                        .addRelations(newStringField("key"))
+                        .addRelations(newStringField("cert"))))
+                .addRelations(newOneToOne("jwt", newEntity("JWTDeploymentSettings")
+                        .addRelations(newStringField("name", true))
+                        .addRelations(newStringField("path"))
+                        .addRelations(newStringField("password"))
+                        .addRelations(newStringField("type"))
+                        .addRelations(newIntegerField("expiresInMinutes"))
+                        .addRelations(newOneToMany("users", newEntity("UserDeploymentSettings")
+                                .addRelations(newStringField("username", true))
+                                .addRelations(newStringField("token"))
+                                .addRelations(newStringField("password"))
+                                .addRelations(newStringField("salt"))))));
 
-        DomainToJson.generate(javaMainSrc, webDomainPackage, newDomainBuilder("Server")
-                .add(serverDeploymentOptions));
+        DomainPatterns.writeJsonWrapper(javaMainSrc, webDomainPackage, newDomain("Server")
+                .addEntities(serverDeploymentOptions));
     }
 
     @Test
     public void generateWebApi() {
 
-        DomainToJson.generate(javaMainSrc, webApiPackage, newDomainBuilder("WebApi")
-                .add(newEntityBuilder("Response")
-                        .addEnumField("status", "ResponseStatus", "FAIL,SUCCESS")
-                        .addEnumField("payloadType", "PayloadType", "STRING,JSONOBJECT,JSONARRAY")
-                        .addOneToOneRelation("payload", newExternalEntity(Object.class)))
-                .add(newEntityBuilder("LoginRequest")
-                        .addStringField("username")
-                        .addStringField("password"))
-                .add(newEntityBuilder("JWTPayload")
-                        .addStringField("sub"))
-                .add(newEntityBuilder("UserSession")
-                        .addStringField("token")
-                        .addStringField("username")
-                        .addOneToManyRelation("menus", newEntityBuilder("UserMenu")
-                                .addIntegerField("key")
-                                .addStringField("url")
-                                .addStringField("label"))));
+        DomainPatterns.writeJsonWrapper(javaMainSrc, webApiPackage, newDomain("WebApi")
+                .addEntities(newEntity("Response")
+                        .addRelations(newEnumField("status", newEnum("ResponseStatus", "FAIL,SUCCESS")))
+                        .addRelations(newEnumField("payloadType", newEnum("PayloadType", "STRING,JSONOBJECT,JSONARRAY")))
+                        .addRelations(newOneToOneExternal("payload", Object.class)))
+                .addEntities(newEntity("LoginRequest")
+                        .addRelations(newStringField("username"))
+                        .addRelations(newStringField("password")))
+                .addEntities(newEntity("JWTPayload")
+                        .addRelations(newStringField("sub")))
+                .addEntities(newEntity("UserSession")
+                        .addRelations(newStringField("token"))
+                        .addRelations(newStringField("username"))
+                        .addRelations(newOneToMany("menus", newEntity("UserMenu")
+                                .addRelations(newIntegerField("key"))
+                                .addRelations(newStringField("url"))
+                                .addRelations(newStringField("label"))))));
     }
 
     @Test
@@ -257,10 +266,10 @@ public class PettyProject {
     @Test
     public void generateReportingDomain() {
 
-//        DomainToPojos.generate(javaMainSrc, reportDomain, newDomainBuilder("Reports")
-//                .addEntities(newEntityBuilder("Trends")
-//                        .addStringField("name", true)
-//                        .addOneToOneRelation("today", )));
+//        DomainToPojos.generate(javaMainSrc, reportDomain, newDomain("Reports")
+//                .addEntities(newEntity("Trends")
+//                        .addRelations(newStringField("name", true))
+//                        .addRelations(oneToOne("today", )));
 
     }
 }

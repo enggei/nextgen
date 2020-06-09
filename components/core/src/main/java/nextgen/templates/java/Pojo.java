@@ -5,9 +5,9 @@ public class Pojo {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _package;
-	private Object _name;
-	private java.util.List<Object> _lexical = new java.util.ArrayList<>();
+	private String _package;
+	private String _name;
+	private java.util.List<String> _lexical = new java.util.ArrayList<>();
 	private java.util.List<Object> _accessors = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 
@@ -39,16 +39,16 @@ public class Pojo {
 		return st.render().trim();
 	}
 
-	public Pojo setPackage(Object value) {
+	public Pojo setPackage(String value) {
 		this._package = value;
 		return this;
 	}
 
-	public Object getPackage() {
+	public String getPackage() {
 		return this._package;
 	}
 
-	public Object getPackage(Object defaultValue) {
+	public String getPackage(String defaultValue) {
 		return this._package == null ? defaultValue : this._package;
 	}
 
@@ -61,16 +61,16 @@ public class Pojo {
 		return this;
 	} 
 
-	public Pojo setName(Object value) {
+	public Pojo setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Object getName(Object defaultValue) {
+	public String getName(String defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 
@@ -82,12 +82,12 @@ public class Pojo {
 		this._name = null;
 		return this;
 	} 
-	public Pojo addLexical(Object value) {
+	public Pojo addLexical(String value) {
 		this._lexical.add(value);
 		return this;
 	}
 
-	public Pojo removeLexical(Object value) {
+	public Pojo removeLexical(String value) {
 		this._lexical.remove(value);
 		return this;
 	}
@@ -97,7 +97,7 @@ public class Pojo {
 		return this;
 	}
 
-	public java.util.List<Object> getLexical() {
+	public java.util.List<String> getLexical() {
 		return this._lexical;
 	} 
 
@@ -119,7 +119,7 @@ public class Pojo {
 	public java.util.List<Object> getAccessors() {
 		return this._accessors;
 	} 
-	public Pojo addFields(Object _type, Object _name, Object _initializer) {
+	public Pojo addFields(Object _type, String _name, Object _initializer) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("type", _type);
 		map.put("name", _name);
@@ -143,10 +143,10 @@ public class Pojo {
 	public static final class Pojo_Fields {
 
 		Object _type;
-		Object _name;
+		String _name;
 		Object _initializer;
 
-		public Pojo_Fields(Object _type, Object _name, Object _initializer) {
+		public Pojo_Fields(Object _type, String _name, Object _initializer) {
 			this._type = _type;
 			this._name = _name;
 			this._initializer = _initializer;
@@ -154,7 +154,7 @@ public class Pojo {
 
 		private Pojo_Fields(java.util.Map<String, Object> map) {
 			this._type = (Object) map.get("type");
-			this._name = (Object) map.get("name");
+			this._name = (String) map.get("name");
 			this._initializer = (Object) map.get("initializer");
 		}
 
@@ -162,7 +162,7 @@ public class Pojo {
 			return this._type;
 		}
 
-		public Object getName() {
+		public String getName() {
 			return this._name;
 		}
 
@@ -172,7 +172,7 @@ public class Pojo {
 
 	} 
 
-	static final String st = "Pojo(package,name,fields,lexical,accessors) ::= <<~package~\n" + 
+	static final String st = "Pojo(package,name,fields,lexical,accessors) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public class ~name~ {\n" + 
 				"\n" + 

@@ -1,12 +1,12 @@
 package tmp.ucs.domain.neo4j;
 
-
+// todo node wrapper
 public class Address {
 
 	private final org.neo4j.graphdb.Node node;
 
 	public Address(org.neo4j.graphdb.Node node) { 
-		this.node = node;
+		this.node= node;
 	}
 
 	public org.neo4j.graphdb.Node getNode() { 
@@ -26,23 +26,19 @@ public class Address {
 		return java.util.Objects.hash(node);
 	}
 
-	public java.util.stream.Stream<City> getIncomingAddresses() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("addresses")).spliterator(), false).map((relationship) -> new City(relationship.getOtherNode(node)));
-	}
-
-	public Address setStreet(String value) { 
+	public Address setStreet(java.lang.String value) { 
 		if (value == null) node.removeProperty("street"); 
 		else node.setProperty("street", value);
 		return this;
 	}
 
-	public String getStreet() { 
-		if (node.hasProperty("street")) return (String) node.getProperty("street");
+	public java.lang.String getStreet() { 
+		if (node.hasProperty("street")) return (java.lang.String) node.getProperty("street");
 		return null;
 	}
 
-	public String getStreet(String defaultValue) { 
-		if (node.hasProperty("street")) return (String) node.getProperty("street");
+	public java.lang.String getStreet(java.lang.String defaultValue) { 
+		if (node.hasProperty("street")) return (java.lang.String) node.getProperty("street");
 		return defaultValue;
 	}
 
@@ -55,19 +51,19 @@ public class Address {
 		return this;
 	}
 
-	public Address setNo(Integer value) { 
+	public Address setNo(java.lang.Integer value) { 
 		if (value == null) node.removeProperty("no"); 
 		else node.setProperty("no", value);
 		return this;
 	}
 
-	public Integer getNo() { 
-		if (node.hasProperty("no")) return (Integer) node.getProperty("no");
+	public java.lang.Integer getNo() { 
+		if (node.hasProperty("no")) return (java.lang.Integer) node.getProperty("no");
 		return null;
 	}
 
-	public Integer getNo(Integer defaultValue) { 
-		if (node.hasProperty("no")) return (Integer) node.getProperty("no");
+	public java.lang.Integer getNo(java.lang.Integer defaultValue) { 
+		if (node.hasProperty("no")) return (java.lang.Integer) node.getProperty("no");
 		return defaultValue;
 	}
 
@@ -80,19 +76,19 @@ public class Address {
 		return this;
 	}
 
-	public Address setLetter(String value) { 
+	public Address setLetter(java.lang.String value) { 
 		if (value == null) node.removeProperty("letter"); 
 		else node.setProperty("letter", value);
 		return this;
 	}
 
-	public String getLetter() { 
-		if (node.hasProperty("letter")) return (String) node.getProperty("letter");
+	public java.lang.String getLetter() { 
+		if (node.hasProperty("letter")) return (java.lang.String) node.getProperty("letter");
 		return null;
 	}
 
-	public String getLetter(String defaultValue) { 
-		if (node.hasProperty("letter")) return (String) node.getProperty("letter");
+	public java.lang.String getLetter(java.lang.String defaultValue) { 
+		if (node.hasProperty("letter")) return (java.lang.String) node.getProperty("letter");
 		return defaultValue;
 	}
 
@@ -105,7 +101,8 @@ public class Address {
 		return this;
 	}
 
-	public java.util.stream.Stream<Cinema> getIncomingAddress() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("address")).spliterator(), false).map((relationship) -> new Cinema(relationship.getOtherNode(node)));
+	@Override
+	public String toString() {
+		return "";
 	}
 }

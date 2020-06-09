@@ -1,0 +1,28 @@
+delimiters "~","~"
+
+Domain(name,packageName,entities) ::= <<~name~
+~packageName~
+~entities:{it|~it~};separator="\n"~ >>
+
+Entity(name,isEnum,enumValues,relations) ::= <<~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=","~~endif~
+
+Relations:
+~relations:{it|~it~};separator="\n"~ >>
+
+EnumField(name,type,lexical) ::= <<One-to-one ~name~ ~type~ ~if(lexical)~lexical~endif~ >>
+
+ExternalReferenceField(name,type,lexical) ::= <<One-to-one ~name~ ~type~~if(lexical)~ lexical~endif~ >>
+
+ExternalReferenceList(name,type) ::= <<One-to-many ~name~ ~type~ >>
+
+PrimitiveField(name,type,lexical) ::= <<One-to-one ~name~ ~type~ ~if(lexical)~lexical~endif~ >>
+
+PrimitiveList(name,type) ::= <<One-to-many ~name~ ~type~ >>
+
+ReferenceField(name,entity,lexical,self) ::= <<One-to-one ~name~ ~entity~~if(lexical)~ lexical~endif~~if(self)~ self~endif~ >>
+
+ReferenceList(name,entity,self) ::= <<One-to-many ~name~ ~entity~~if(self)~ self~endif~ >>
+
+eom() ::= "}"
+
+gt() ::= ">"

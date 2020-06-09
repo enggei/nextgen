@@ -1,8 +1,7 @@
 package nextgen.projects;
 
+import nextgen.templates.DomainPatterns;
 import nextgen.templates.domain.Entity;
-import nextgen.templates.java.JavaST;
-import nextgen.templates.java.PackageDeclaration;
 import org.junit.Test;
 
 import java.io.File;
@@ -15,7 +14,7 @@ public class STProject {
     private final File javaMainSrc = new File(root, "src/main/java");
     private final File javaTestSrc = new File(root, "src/test/java");
 
-    private final PackageDeclaration stDomainPackage = JavaST.newPackageDeclaration().setName("nextgen.st.domain");
+    private final String stDomainPackage = "nextgen.st.domain";
 
     @Test
     public void generateDomain() {
@@ -38,7 +37,7 @@ public class STProject {
                         .addRelations(newStringField("name", true))
                         .addRelations(newStringField("values"))));
 
-        ProjectPatterns.writeJsonWrapper(javaMainSrc, newDomain("ST", stDomainPackage.getName())
+        DomainPatterns.writeJsonWrapper(javaMainSrc, stDomainPackage, newDomain("ST")
                 .addEntities(newEntity("STAppModel")
                         .addRelations(newStringField("generatorRoot"))
                         .addRelations(newStringField("generatorPackage"))

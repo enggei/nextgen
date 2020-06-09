@@ -20,42 +20,42 @@
     "children" : [ {
       "uuid" : "4a756317-c8b7-44c4-a677-68c57d064ab6",
       "name" : "JsonWrapper",
-      "text" : "~package~\n\npublic class ~name;format=\"capitalize\"~ {\n\n\tprivate final io.vertx.core.json.JsonObject jsonObject;\n\t~externalFields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\n\tpublic ~name;format=\"capitalize\"~() { \n\t\tthis.jsonObject = new io.vertx.core.json.JsonObject();\n\t\tjsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic ~name;format=\"capitalize\"~(io.vertx.core.json.JsonObject jsonObject) { \n\t\tthis.jsonObject = jsonObject;\n\t\tjava.lang.String uuidString = jsonObject.getString(\"uuid\");\n\t\tif (uuidString == null) jsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic io.vertx.core.json.JsonObject getJsonObject() { \n\t\treturn this.jsonObject;\n\t}\n\n\t@Override\n\tpublic boolean equals(java.lang.Object o) { \n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\tfinal ~name;format=\"capitalize\"~ other = (~name;format=\"capitalize\"~) o;\n\t\treturn jsonObject.getString(\"uuid\").equals(other.getJsonObject().getString(\"uuid\"));\n\t}\n\n\t@Override\n\tpublic int hashCode() { \n\t\treturn java.util.Objects.hash(jsonObject.getString(\"uuid\"));\n\t}\n\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n\n\t@Override\n\tpublic java.lang.String toString() { \n\t\treturn ~if(lexical)~jsonObject.getString(\"~lexical~\")~else~jsonObject.encode()~endif~;\n\t}\n}",
+      "text" : "package ~package~;\n\npublic class ~name;format=\"capitalize\"~ {\n\n\tprivate final io.vertx.core.json.JsonObject jsonObject;\n\t~externalFields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\n\tpublic ~name;format=\"capitalize\"~() { \n\t\tthis.jsonObject = new io.vertx.core.json.JsonObject();\n\t\tjsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic ~name;format=\"capitalize\"~(io.vertx.core.json.JsonObject jsonObject) { \n\t\tthis.jsonObject = jsonObject;\n\t\tjava.lang.String uuidString = jsonObject.getString(\"uuid\");\n\t\tif (uuidString == null) jsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic io.vertx.core.json.JsonObject getJsonObject() { \n\t\treturn this.jsonObject;\n\t}\n\n\tpublic ~name;format=\"capitalize\"~ removeUuid() {\n\t\tthis.jsonObject.remove(\"uuid\");\n\t\treturn this;\n\t}\n\n\t@Override\n\tpublic boolean equals(java.lang.Object o) { \n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\tfinal ~name;format=\"capitalize\"~ other = (~name;format=\"capitalize\"~) o;\n\t\treturn jsonObject.getString(\"uuid\").equals(other.getJsonObject().getString(\"uuid\"));\n\t}\n\n\t@Override\n\tpublic int hashCode() { \n\t\treturn java.util.Objects.hash(jsonObject.getString(\"uuid\"));\n\t}\n\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n\n\t@Override\n\tpublic java.lang.String toString() { \n\t\treturn ~if(lexical)~jsonObject.getString(\"~lexical~\")~else~jsonObject.encode()~endif~;\n\t}\n}",
       "parameters" : [ {
-        "uuid" : "a0a60b7f-0e13-411e-b67d-e86076643bbe",
+        "uuid" : "8e37bce1-6cb5-4d31-b3be-b126667d916d",
         "name" : "package",
         "type" : "SINGLE",
-        "argumentType" : "Object"
+        "argumentType" : "String"
       }, {
-        "uuid" : "c4d423ce-7d36-43c2-a4cb-143da8d986f0",
+        "uuid" : "0fab50f2-8d8e-4803-be87-c66bf057b7e8",
         "name" : "name",
         "type" : "SINGLE",
-        "argumentType" : "Object"
+        "argumentType" : "String"
       }, {
-        "uuid" : "aa73981f-86a6-488a-afe5-b9257fd9d866",
+        "uuid" : "ddd589e5-9286-486f-acbc-5b8afdea75cd",
         "name" : "externalFields",
         "type" : "KVLIST",
         "argumentType" : "Object",
         "keys" : [ {
-          "uuid" : "75f4e90f-c1f1-40ae-bd4a-d6d27cc07f92",
+          "uuid" : "593a33c6-d4ce-4e8f-9626-2ea4ebb5b949",
           "name" : "type",
           "argumentType" : "Object"
         }, {
-          "uuid" : "cba4c0a7-e433-45a6-9f51-ec14d3fc6c92",
+          "uuid" : "298c05da-43bc-40f5-8dc6-ccd1617354f2",
           "name" : "name",
-          "argumentType" : "Object"
+          "argumentType" : "String"
         }, {
-          "uuid" : "ec22745f-1107-4ae0-af1e-c1bf1e564766",
+          "uuid" : "8ff10c5c-9b65-46a7-a19b-fff7e7b46984",
           "name" : "initializer",
           "argumentType" : "Object"
         } ]
       }, {
-        "uuid" : "950a5b7e-4918-4c60-ac77-3569f8e27425",
+        "uuid" : "a4d24414-ea39-4f7b-ac9b-ecdcb2fc4c4a",
         "name" : "accessors",
         "type" : "LIST",
         "argumentType" : "Object"
       }, {
-        "uuid" : "c254154e-7f62-4e4a-a93a-8a3535f9c729",
+        "uuid" : "b4463219-434c-4902-8e04-8b9baf20a17e",
         "name" : "lexical",
         "type" : "SINGLE",
         "argumentType" : "Object"
@@ -63,19 +63,22 @@
       "children" : [ {
         "uuid" : "f9d01bcc-c94a-4a4f-adaf-e0cf9715b3ea",
         "name" : "primitiveAccessors",
-        "text" : "public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n\tjsonObject.put(\"~name~\", value);\n\treturn this;\n}\n\npublic ~type~ get~name;format=\"capitalize\"~() { \n\treturn jsonObject.get~type~(\"~name~\");\n}\n\npublic ~type~ get~name;format=\"capitalize\"~(~type~ defaultValue) { \n\treturn jsonObject.get~type~(\"~name~\", defaultValue);\n}",
+        "text" : "public ~className;format=\"capitalize\"~ set~name;format=\"dotToCap\"~(~type~ value) { \n\tjsonObject.put(\"~name~\", value);\n\treturn this;\n}\n\npublic ~type~ get~name;format=\"dotToCap\"~() { \n\treturn jsonObject.get~type;format=\"capitalize\"~(\"~name~\");\n}\n\npublic ~type~ get~name;format=\"dotToCap\"~(~type~ defaultValue) { \n\treturn jsonObject.get~type;format=\"capitalize\"~(\"~name~\", defaultValue);\n}",
         "parameters" : [ {
-          "uuid" : "c2943301-6650-4bc0-88f3-804bd61a2f50",
+          "uuid" : "4d6a3810-7799-4600-b42f-6aec6f8c77df",
           "name" : "className",
-          "type" : "SINGLE"
+          "type" : "SINGLE",
+          "argumentType" : "Object"
         }, {
-          "uuid" : "45721405-4d4c-4cf7-8a92-f7b7953733b4",
+          "uuid" : "e51f43a5-beb1-46dd-b574-bc8944b42f3a",
           "name" : "name",
-          "type" : "SINGLE"
+          "type" : "SINGLE",
+          "argumentType" : "Object"
         }, {
-          "uuid" : "ef09ae6f-0acd-46ac-a613-60665a121d0e",
+          "uuid" : "71dee823-dc69-41ad-a058-8b1122e5da93",
           "name" : "type",
-          "type" : "SINGLE"
+          "type" : "SINGLE",
+          "argumentType" : "Object"
         } ]
       }, {
         "uuid" : "23f3083f-6cd5-47ab-8c39-bce21da141ab",

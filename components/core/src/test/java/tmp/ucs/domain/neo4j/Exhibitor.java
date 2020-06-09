@@ -1,12 +1,12 @@
 package tmp.ucs.domain.neo4j;
 
-
+// todo node wrapper
 public class Exhibitor {
 
 	private final org.neo4j.graphdb.Node node;
 
 	public Exhibitor(org.neo4j.graphdb.Node node) { 
-		this.node = node;
+		this.node= node;
 	}
 
 	public org.neo4j.graphdb.Node getNode() { 
@@ -26,19 +26,19 @@ public class Exhibitor {
 		return java.util.Objects.hash(node);
 	}
 
-	public Exhibitor setName(String value) { 
+	public Exhibitor setName(java.lang.String value) { 
 		if (value == null) node.removeProperty("name"); 
 		else node.setProperty("name", value);
 		return this;
 	}
 
-	public String getName() { 
-		if (node.hasProperty("name")) return (String) node.getProperty("name");
+	public java.lang.String getName() { 
+		if (node.hasProperty("name")) return (java.lang.String) node.getProperty("name");
 		return null;
 	}
 
-	public String getName(String defaultValue) { 
-		if (node.hasProperty("name")) return (String) node.getProperty("name");
+	public java.lang.String getName(java.lang.String defaultValue) { 
+		if (node.hasProperty("name")) return (java.lang.String) node.getProperty("name");
 		return defaultValue;
 	}
 
@@ -51,13 +51,8 @@ public class Exhibitor {
 		return this;
 	}
 
-	@Override
-	public java.lang.String toString() { 
-		return (java.lang.String) node.getProperty("name");
-	}
-
 	public Exhibitor addCinemas(Cinema dst) { 
-		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("cinemas")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("addresses")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
 		if (existing.isPresent()) return this;
 		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("cinemas"));
 		return this;
@@ -71,5 +66,14 @@ public class Exhibitor {
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("cinemas")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
 		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
 		return this;
+	}
+
+	public java.util.stream.Stream<Cinema> getIncomingCinemas() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("cinemas")).spliterator(), false).map((relationship) -> new Cinema(relationship.getOtherNode(node)));
+	}
+
+	@Override
+	public String toString() {
+		return "";
 	}
 }

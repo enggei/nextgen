@@ -122,6 +122,13 @@ public class VertxST {
 					return Character.toLowerCase(text.charAt(0)) + s;
 				case "toLower":
 					return text.toLowerCase();
+				case "dotToCap":
+					final StringBuilder formatted = new StringBuilder();
+					final char[] chars = o.toString().toCharArray();
+					for (int i = 0; i < chars.length; i++)
+            		if (chars[i] != '.')
+							formatted.append(i == 0 || chars[i - 1] == '.' ? Character.toUpperCase(chars[i]) : chars[i]);
+					return formatted.toString().trim();
 				default:
 					return o.toString();
 			}

@@ -205,6 +205,13 @@ public class STDomain {
 				"					return Character.toLowerCase(text.charAt(0)) + s;\n" + 
 				"				case \"toLower\":\n" + 
 				"					return text.toLowerCase();\n" + 
+				"				case \"dotToCap\":\n" + 
+				"					final StringBuilder formatted = new StringBuilder();\n" + 
+				"					final char[] chars = o.toString().toCharArray();\n" + 
+				"					for (int i = 0; i < chars.length; i++)\n" + 
+				"            		if (chars[i] != '.')\n" + 
+				"							formatted.append(i == 0 || chars[i - 1] == '.' ? Character.toUpperCase(chars[i]) : chars[i]);\n" + 
+				"					return formatted.toString().trim();\n" + 
 				"				default:\n" + 
 				"					return o.toString();\n" + 
 				"			}\n" + 
