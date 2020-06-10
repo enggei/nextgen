@@ -170,10 +170,6 @@ public class ~name;format="capitalize"~ {
 };separator="\n"~
 } >>
 
-VertxTypes() ::= << >>
-
-JsonArrayType() ::= <<io.vertx.core.json.JsonArray >>
-
 eom() ::= "}"
 
 gt() ::= ">"

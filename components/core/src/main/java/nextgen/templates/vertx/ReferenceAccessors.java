@@ -14,19 +14,6 @@ public class ReferenceAccessors {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		ReferenceAccessors that = (ReferenceAccessors) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("referenceAccessors");
 		st.add("className", _className);
@@ -101,6 +88,19 @@ public class ReferenceAccessors {
 		return this;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ReferenceAccessors that = (ReferenceAccessors) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "referenceAccessors(className,name,type) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n" + 
 				"	jsonObject.put(\"~name~\", value.getJsonObject());\n" + 
 				"	return this;\n" + 
@@ -109,4 +109,4 @@ public class ReferenceAccessors {
 				"public ~type~ get~name;format=\"capitalize\"~() { \n" + 
 				"	return jsonObject.getJsonObject(\"~name~\") == null ? null : new ~type~(jsonObject.getJsonObject(\"~name~\"));\n" + 
 				"}>> ";
-} 
+}  

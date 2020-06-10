@@ -16,19 +16,6 @@ public class JsonWrapper {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		JsonWrapper that = (JsonWrapper) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("JsonWrapper");
 		st.add("package", _package);
@@ -175,6 +162,19 @@ public class JsonWrapper {
 
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		JsonWrapper that = (JsonWrapper) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "JsonWrapper(package,name,externalFields,accessors,lexical) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public class ~name;format=\"capitalize\"~ {\n" + 
@@ -222,4 +222,4 @@ public class JsonWrapper {
 				"		return ~if(lexical)~jsonObject.getString(\"~lexical~\")~else~jsonObject.encode()~endif~;\n" + 
 				"	}\n" + 
 				"}>> ";
-} 
+}  

@@ -1,18 +1,11 @@
-package nextgen.templates.vertx;
+package nextgen.templates.git;
 
-public class VertxST {
+public class GitST {
 
 	private static final String stg = "delimiters \"~\", \"~\"\n" +
 	"eom() ::= \"}\"\n" +
 	"gt() ::= \">\"\n" +
-	JsonFactory.st + "\n" + 
-	JsonWrapper.st + "\n" + 
-	EnumAccessors.st + "\n" + 
-	ExternalAccessors.st + "\n" + 
-	ListPrimitiveAccessors.st + "\n" + 
-	ListReferenceAccessors.st + "\n" + 
-	PrimitiveAccessors.st + "\n" + 
-	ReferenceAccessors.st + "\n" ;
+	Gitignore.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -42,42 +35,14 @@ public class VertxST {
 		return stGroup;
 	}
 
-	private static org.stringtemplate.v4.STGroup stGroup = decorate(new org.stringtemplate.v4.STGroupString("VertxST", stg, '~', '~'));
+	private static org.stringtemplate.v4.STGroup stGroup = decorate(new org.stringtemplate.v4.STGroupString("GitST", stg, '~', '~'));
 
 	public static void setSTGroup(final String stgFile) {
 		stGroup = decorate(new org.stringtemplate.v4.STGroupFile(stgFile, '~', '~'));
 	}
 
-	public static JsonFactory newJsonFactory() {
-		return new JsonFactory(stGroup);
-	} 
-
-	public static JsonWrapper newJsonWrapper() {
-		return new JsonWrapper(stGroup);
-	} 
-
-	public static EnumAccessors newEnumAccessors() {
-		return new EnumAccessors(stGroup);
-	} 
-
-	public static ExternalAccessors newExternalAccessors() {
-		return new ExternalAccessors(stGroup);
-	} 
-
-	public static ListPrimitiveAccessors newListPrimitiveAccessors() {
-		return new ListPrimitiveAccessors(stGroup);
-	} 
-
-	public static ListReferenceAccessors newListReferenceAccessors() {
-		return new ListReferenceAccessors(stGroup);
-	} 
-
-	public static PrimitiveAccessors newPrimitiveAccessors() {
-		return new PrimitiveAccessors(stGroup);
-	} 
-
-	public static ReferenceAccessors newReferenceAccessors() {
-		return new ReferenceAccessors(stGroup);
+	public static Gitignore newGitignore() {
+		return new Gitignore(stGroup);
 	} 
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {

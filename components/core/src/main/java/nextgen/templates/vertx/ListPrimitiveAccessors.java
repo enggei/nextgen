@@ -14,19 +14,6 @@ public class ListPrimitiveAccessors {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		ListPrimitiveAccessors that = (ListPrimitiveAccessors) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("listPrimitiveAccessors");
 		st.add("className", _className);
@@ -101,6 +88,19 @@ public class ListPrimitiveAccessors {
 		return this;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ListPrimitiveAccessors that = (ListPrimitiveAccessors) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "listPrimitiveAccessors(className,name,type) ::= <<public ~className;format=\"capitalize\"~ add~name;format=\"capitalize\"~(~type~ value) { \n" + 
 				"	io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray(\"~name~\");\n" + 
 				"	if (jsonArray == null) jsonObject.put(\"~name~\", jsonArray = new io.vertx.core.json.JsonArray());\n" + 
@@ -128,4 +128,4 @@ public class ListPrimitiveAccessors {
 				"	jsonObject.put(\"~name~\", new io.vertx.core.json.JsonArray());\n" + 
 				"	return this;\n" + 
 				"}>> ";
-} 
+}  

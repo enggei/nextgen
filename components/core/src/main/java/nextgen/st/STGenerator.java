@@ -239,8 +239,8 @@ public class STGenerator {
     }
 
     public static void writeToFile(Object content, String packageDeclaration, String name, String filetype, File root) {
-        final File directory = new File(root, packageToPath(packageDeclaration));
-        final File file = new File(directory, name + "." + filetype);
+        final File directory = packageDeclaration == null ? root : new File(root, packageToPath(packageDeclaration));
+        final File file = new File(directory, name + (filetype == null ? "" : ("." + filetype)));
         write(file, content);
     }
 

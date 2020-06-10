@@ -1,0 +1,7 @@
+delimiters "~","~"
+
+gitignore(exclude) ::= <<~exclude:{it|/~it~/};separator="\n"~  >>
+
+eom() ::= "}"
+
+gt() ::= ">"

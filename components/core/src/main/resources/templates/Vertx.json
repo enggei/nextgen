@@ -4,16 +4,6 @@
   "delimiter" : "~",
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Vertx.stg",
   "templates" : [ {
-    "uuid" : "af542412-d980-4a42-9851-6705eae0723e",
-    "name" : "VertxTypes",
-    "text" : "",
-    "children" : [ {
-      "uuid" : "f798ff04-364d-4a1a-a936-395261e3bbdf",
-      "name" : "JsonArrayType",
-      "text" : "io.vertx.core.json.JsonArray",
-      "parameters" : [ ]
-    } ]
-  }, {
     "uuid" : "58f87deb-08cb-4f64-bb55-d28f76acb9c7",
     "name" : "Entities",
     "text" : "",
@@ -195,6 +185,19 @@
         "type" : "LIST",
         "argumentType" : "Object"
       } ]
+    } ]
+  } ],
+  "enums" : [ {
+    "uuid" : "6e2148bc-d595-4695-bbdc-4cc674fe3edc",
+    "name" : "VertxTypes",
+    "values" : [ {
+      "uuid" : "d06918c3-0b26-4f1e-a1a6-333d5c9d69ef",
+      "name" : "JsonArrayType",
+      "lexical" : "io.vertx.core.json.JsonArray"
+    }, {
+      "uuid" : "9fa45041-3a12-4a5f-a774-6763dcae16d7",
+      "name" : "JsonObjectType",
+      "lexical" : "io.vertx.core.json.JsonObject"
     } ]
   } ]
 }

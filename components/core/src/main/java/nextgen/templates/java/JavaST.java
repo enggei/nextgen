@@ -92,7 +92,6 @@ public class JavaST {
 	ClassOrInterfaceType.st + "\n" + 
 	TypeParameter.st + "\n" + 
 	ArrayList.st + "\n" + 
-	FileType.st + "\n" + 
 	List.st + "\n" + 
 	NewInstance.st + "\n" ;
 
@@ -476,10 +475,6 @@ public class JavaST {
 
 	public static ArrayList newArrayList() {
 		return new ArrayList(stGroup);
-	} 
-
-	public static FileType newFileType() {
-		return new FileType(stGroup);
 	} 
 
 	public static List newList() {

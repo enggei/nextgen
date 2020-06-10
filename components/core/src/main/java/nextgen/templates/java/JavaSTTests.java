@@ -96,7 +96,6 @@ public class JavaSTTests {
 		testClassOrInterfaceType();
 		testTypeParameter();
 		testArrayList();
-		testFileType();
 		testList();
 		testNewInstance();
 	}
@@ -534,11 +533,6 @@ public class JavaSTTests {
 	@org.junit.Test
 	public void testArrayList() {
 		System.out.println("\n--- TEST ArrayList:\n" + newArrayList());
-	} 
-
-	@org.junit.Test
-	public void testFileType() {
-		System.out.println("\n--- TEST FileType:\n" + newFileType());
 	} 
 
 	@org.junit.Test

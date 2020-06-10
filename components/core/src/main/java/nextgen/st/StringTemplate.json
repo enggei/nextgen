@@ -7,22 +7,22 @@
     "name" : "STDomain",
     "text" : "package ~packageName~;\n\npublic class ~name~ {\n\n\tprivate static final String stg = ~stgString~;\n\n\tpublic static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {\n\t\tstGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());\n\t\tstGroup.setListener(new org.stringtemplate.v4.STErrorListener() {\n\t\t\t@Override\n\t\t\tpublic void compileTimeError(org.stringtemplate.v4.misc.STMessage stMessage) {\n\t\t\t\tSystem.out.println(\"compileTimeError \" + stMessage.toString());\n\t\t\t}\n\n\t\t\t@Override\n\t\t\tpublic void runTimeError(org.stringtemplate.v4.misc.STMessage stMessage) {\n\t\t\t\tfinal org.stringtemplate.v4.misc.STRuntimeMessage stRuntimeMessage = (org.stringtemplate.v4.misc.STRuntimeMessage) stMessage;\n\t\t\t\tSystem.out.println(\"runTimeError \" + stMessage.self.getName() + \" \" + stRuntimeMessage.getSourceLocation());\n\t\t\t}\n\n\t\t\t@Override\n\t\t\tpublic void IOError(org.stringtemplate.v4.misc.STMessage stMessage) {\n\t\t\t\tSystem.out.println(\"IOError \" + stMessage.toString());\n\t\t\t}\n\n\t\t\t@Override\n\t\t\tpublic void internalError(org.stringtemplate.v4.misc.STMessage stMessage) {\n\t\t\t\tSystem.out.println(\"internalError \" + stMessage.toString());\n\t\t\t}\n\t\t});\n\n\t\treturn stGroup;\n\t}\n\t\t\n\tprivate static org.stringtemplate.v4.STGroup stGroup = decorate(new org.stringtemplate.v4.STGroupString(\"~name~\", stg, '\\~', '\\~'));\n\n\tpublic static void setSTGroup(final String stgFile) {\n\t\tstGroup = decorate(new org.stringtemplate.v4.STGroupFile(stgFile, '\\~', '\\~'));\n\t}\n\n\t~entities:{it|~it~};separator=\"\\n\\n\"~\n\n\tprivate static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {\n\n\t\t@Override\n\t\tpublic String toString(Object o, String formatString, java.util.Locale locale) {\n\n\t\t\tfinal String text = o.toString();\n\t\t\tif (formatString == null) return text;\n\n\t\t\tfinal String s = text.length() > 1 ? text.substring(1) : \"\";\n\t\t\t\n\t\t\tswitch (formatString) {\n\t\t\t\tcase \"capitalize\":\n\t\t\t\t\treturn Character.toUpperCase(text.charAt(0)) + s;\n\t\t\t\tcase \"toUpper\":\n\t\t\t\t\treturn text.toUpperCase();\n\t\t\t\tcase \"lowFirst\":\n\t\t\t\t\treturn Character.toLowerCase(text.charAt(0)) + s;\n\t\t\t\tcase \"toLower\":\n\t\t\t\t\treturn text.toLowerCase();\n\t\t\t\tcase \"dotToCap\":\n\t\t\t\t\tfinal StringBuilder formatted = new StringBuilder();\n\t\t\t\t\tfinal char[] chars = o.toString().toCharArray();\n\t\t\t\t\tfor (int i = 0; i < chars.length; i++)\n            \t\tif (chars[i] != '.')\n\t\t\t\t\t\t\tformatted.append(i == 0 || chars[i - 1] == '.' ? Character.toUpperCase(chars[i]) : chars[i]);\n\t\t\t\t\treturn formatted.toString().trim();\n\t\t\t\tdefault:\n\t\t\t\t\treturn o.toString();\n\t\t\t}\n\t\t}\n\t}\n} ",
     "parameters" : [ {
-      "uuid" : "6d0683d6-9af7-451d-970e-3e5dfb53378f",
+      "uuid" : "9b2a5f0c-b769-42ef-a8f6-f15dda1087eb",
       "name" : "packageName",
       "type" : "SINGLE",
       "argumentType" : "String"
     }, {
-      "uuid" : "1d46af62-bb8c-41f8-a8db-1600d00f6c74",
+      "uuid" : "26f8b27a-9953-4aa0-a0a4-f32177c1b60f",
       "name" : "name",
       "type" : "SINGLE",
       "argumentType" : "String"
     }, {
-      "uuid" : "3ee24374-bd46-4909-9554-b18269e4cb1b",
+      "uuid" : "b14a0c53-fa0e-46af-8d86-ff14dcc1f264",
       "name" : "stgString",
       "type" : "SINGLE",
       "argumentType" : "StgString"
     }, {
-      "uuid" : "a1aed71a-7301-4d39-8d6f-421c28ef1fc8",
+      "uuid" : "421e3ff3-1652-4d2f-aeb1-836332ceff6c",
       "name" : "entities",
       "type" : "LIST",
       "argumentType" : "Object"

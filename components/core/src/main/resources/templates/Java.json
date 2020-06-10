@@ -181,11 +181,6 @@
         "name" : "type",
         "type" : "SINGLE"
       } ]
-    }, {
-      "uuid" : "6a505b1f-a639-4cb2-8ee0-54236b15676d",
-      "name" : "FileType",
-      "text" : "java.io.File",
-      "parameters" : [ ]
     } ]
   }, {
     "uuid" : "98bc23df-822a-437b-ba27-15f621ddc970",
@@ -1596,5 +1591,14 @@
       } ]
     } ]
   } ],
-  "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Java.stg"
+  "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Java.stg",
+  "enums" : [ {
+    "uuid" : "8bbeb79f-ca45-492b-b51b-53f13e702c42",
+    "name" : "CoreTypes",
+    "values" : [ {
+      "uuid" : "1d88fd16-609a-4911-b29f-dd8dd97ccd75",
+      "name" : "FileType",
+      "lexical" : "java.io.File"
+    } ]
+  } ]
 }

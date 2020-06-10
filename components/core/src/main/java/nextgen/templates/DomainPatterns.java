@@ -20,6 +20,7 @@ import java.util.Map;
 
 import static nextgen.templates.JavaPatterns.newPackageDeclaration;
 import static nextgen.templates.JavaPatterns.writeEnum;
+import static nextgen.templates.domain.RelationType.*;
 
 public class DomainPatterns extends DomainST {
 
@@ -42,7 +43,7 @@ public class DomainPatterns extends DomainST {
     }
 
     public static Relation newRelation(RelationType relationType, String name) {
-        return newRelation().setType(relationType).setName(name);
+        return newRelation(RelationType.ENUM).setType(relationType).setName(name);
     }
 
     public static Relation newEnumField(String name, String enumName, String enumValues) {
@@ -68,7 +69,7 @@ public class DomainPatterns extends DomainST {
     }
 
     public static Relation newExternalList(String name, Class<?> dstType) {
-        return newRelation(RelationType.EXT_LIST, name).setDst(dstType);
+        return newRelation(EXT_LIST, name).setDst(dstType);
     }
 
     public static Relation newRef(String name, Entity dstType) {

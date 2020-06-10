@@ -14,19 +14,6 @@ public class JsonFactory {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		JsonFactory that = (JsonFactory) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("JsonFactory");
 		st.add("package", _package);
@@ -97,6 +84,19 @@ public class JsonFactory {
 		return this._entities;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		JsonFactory that = (JsonFactory) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "JsonFactory(package,name,entities) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public class ~name;format=\"capitalize\"~ {\n" + 
@@ -111,4 +111,4 @@ public class JsonFactory {
 				"	~eom()~\n" + 
 				"};separator=\"\\n\"~\n" + 
 				"}>> ";
-} 
+}  

@@ -14,19 +14,6 @@ public class PrimitiveAccessors {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		PrimitiveAccessors that = (PrimitiveAccessors) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("primitiveAccessors");
 		st.add("className", _className);
@@ -101,6 +88,19 @@ public class PrimitiveAccessors {
 		return this;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		PrimitiveAccessors that = (PrimitiveAccessors) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "primitiveAccessors(className,name,type) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"dotToCap\"~(~type~ value) { \n" + 
 				"	jsonObject.put(\"~name~\", value);\n" + 
 				"	return this;\n" + 
@@ -113,4 +113,4 @@ public class PrimitiveAccessors {
 				"public ~type~ get~name;format=\"dotToCap\"~(~type~ defaultValue) { \n" + 
 				"	return jsonObject.get~type;format=\"capitalize\"~(\"~name~\", defaultValue);\n" + 
 				"}>> ";
-} 
+}  

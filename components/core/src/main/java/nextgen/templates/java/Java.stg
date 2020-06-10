@@ -329,8 +329,6 @@ ArrayList(type) ::= <<java.util.ArrayList<~type~> >>
 
 List(type) ::= <<java.util.List<~type~> >>
 
-FileType() ::= <<java.io.File >>
-
 Patterns() ::= << >>
 
 NewInstance(type,arguments) ::= <<new ~type~(~arguments:{it|~it~};separator=","~) >>
