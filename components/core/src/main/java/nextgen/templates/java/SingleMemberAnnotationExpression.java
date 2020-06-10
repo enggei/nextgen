@@ -13,19 +13,6 @@ public class SingleMemberAnnotationExpression {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		SingleMemberAnnotationExpression that = (SingleMemberAnnotationExpression) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("SingleMemberAnnotationExpression");
 		st.add("name", _name);
@@ -73,5 +60,18 @@ public class SingleMemberAnnotationExpression {
 		return this._members;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		SingleMemberAnnotationExpression that = (SingleMemberAnnotationExpression) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "SingleMemberAnnotationExpression(members,name) ::= <<@~name~~if(members)~(~members:{it|~it~};separator=\", \"~)~endif~>> ";
-} 
+}  

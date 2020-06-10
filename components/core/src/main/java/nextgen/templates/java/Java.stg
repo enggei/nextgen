@@ -2,7 +2,7 @@ delimiters "~","~"
 
 Entities() ::= << >>
 
-Pojo(package,name,fields,lexical,accessors) ::= <<package ~package~;
+Pojo(package,name,fields,accessors,lexical) ::= <<package ~package~;
 
 public class ~name~ {
 
@@ -19,8 +19,17 @@ public class ~name~ {
 
 	public java.util.UUID getUuid() {
 		return this.uuid;
+	}	
+	
+	~accessors:{it|~it~};separator="\n\n"~
+~if(lexical)~
+
+	@Override
+	public String toString() {
+		return ~lexical:{it|_~it~};separator=" + \" \" + "~;
 	}
-		
+~endif~
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -33,16 +42,7 @@ public class ~name~ {
 	public int hashCode() {
 		return java.util.Objects.hash(uuid);
 	}
-~if(lexical)~
-
-	@Override
-	public String toString() {
-		return ~lexical:{it|_~it~};separator=" + \" \" + "~;
-	}
-~endif~
-	
-	~accessors:{it|~it~};separator="\n\n"~
-} >>
+}  >>
 
 primitiveAccessors(type,name,className) ::= <<public ~type~ get~name;format="capitalize"~() {
 	return this._~name~;

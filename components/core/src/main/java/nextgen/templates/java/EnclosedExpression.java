@@ -12,19 +12,6 @@ public class EnclosedExpression {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		EnclosedExpression that = (EnclosedExpression) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("EnclosedExpression");
 		st.add("expression", _expression);
@@ -53,5 +40,18 @@ public class EnclosedExpression {
 		return this;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		EnclosedExpression that = (EnclosedExpression) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "EnclosedExpression(expression) ::= <<(~expression~)>> ";
-} 
+}  

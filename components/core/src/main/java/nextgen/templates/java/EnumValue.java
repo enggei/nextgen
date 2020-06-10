@@ -13,19 +13,6 @@ public class EnumValue {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		EnumValue that = (EnumValue) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("EnumValue");
 		st.add("name", _name);
@@ -77,8 +64,21 @@ public class EnumValue {
 		return this;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		EnumValue that = (EnumValue) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "EnumValue(name,lexical) ::= <<~name~~if(lexical)~() {\n" + 
 				"	@Override\n" + 
 				"	public String toString() { return \"~lexical~\"; }\n" + 
 				"}~endif~>> ";
-} 
+}  

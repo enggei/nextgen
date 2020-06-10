@@ -6,24 +6,12 @@ public class NeoFactoryPropertyAccessors {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _entity;
-	private Object _propertyName;
+	private String _propertyName;
 	private Object _propertyType;
+	private Boolean _isEnum;
 
 	NeoFactoryPropertyAccessors(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		NeoFactoryPropertyAccessors that = (NeoFactoryPropertyAccessors) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
 	}
 
 	@Override
@@ -32,6 +20,7 @@ public class NeoFactoryPropertyAccessors {
 		st.add("entity", _entity);
 		st.add("propertyName", _propertyName);
 		st.add("propertyType", _propertyType);
+		st.add("isEnum", _isEnum);
 		return st.render().trim();
 	}
 
@@ -57,16 +46,16 @@ public class NeoFactoryPropertyAccessors {
 		return this;
 	} 
 
-	public NeoFactoryPropertyAccessors setPropertyName(Object value) {
+	public NeoFactoryPropertyAccessors setPropertyName(String value) {
 		this._propertyName = value;
 		return this;
 	}
 
-	public Object getPropertyName() {
+	public String getPropertyName() {
 		return this._propertyName;
 	}
 
-	public Object getPropertyName(Object defaultValue) {
+	public String getPropertyName(String defaultValue) {
 		return this._propertyName == null ? defaultValue : this._propertyName;
 	}
 
@@ -101,8 +90,43 @@ public class NeoFactoryPropertyAccessors {
 		return this;
 	} 
 
-	static final String st = "NeoFactoryPropertyAccessors(entity,propertyName,propertyType) ::= <<public ~entity;format=\"capitalize\"~ find~entity;format=\"capitalize\"~By~propertyName;format=\"capitalize\"~(~propertyType~ value) {\n" + 
-				"	final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label(\"~entity~\"), \"~propertyName~\", value);\n" + 
+	public NeoFactoryPropertyAccessors setIsEnum(Boolean value) {
+		this._isEnum = value;
+		return this;
+	}
+
+	public Boolean getIsEnum() {
+		return this._isEnum;
+	}
+
+	public Boolean getIsEnum(Boolean defaultValue) {
+		return this._isEnum == null ? defaultValue : this._isEnum;
+	}
+
+	public boolean hasIsEnum() {
+		return this._isEnum != null;
+	}
+
+	public NeoFactoryPropertyAccessors removeIsEnum() {
+		this._isEnum = null;
+		return this;
+	} 
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		NeoFactoryPropertyAccessors that = (NeoFactoryPropertyAccessors) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
+	static final String st = "NeoFactoryPropertyAccessors(entity,propertyName,propertyType,isEnum) ::= <<public ~entity;format=\"capitalize\"~ find~entity;format=\"capitalize\"~By~propertyName;format=\"capitalize\"~(~propertyType~ value) {\n" + 
+				"	final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label(\"~entity~\"), \"~propertyName~\", value~if(isEnum)~.name()~endif~);\n" + 
 				"	return node == null ? null : new ~entity;format=\"capitalize\"~(node);\n" + 
 				"}\n" + 
 				"\n" + 
@@ -112,6 +136,6 @@ public class NeoFactoryPropertyAccessors {
 				"}\n" + 
 				"\n" + 
 				"public java.util.stream.Stream<~entity;format=\"capitalize\"~> findAll~entity;format=\"capitalize\"~By~propertyName;format=\"capitalize\"~(~propertyType~ value) {\n" + 
-				"	return db.findNodes(org.neo4j.graphdb.Label.label(\"~entity~\"), \"~propertyName~\", value).stream().map(this::new~entity;format=\"capitalize\"~);\n" + 
+				"	return db.findNodes(org.neo4j.graphdb.Label.label(\"~entity~\"), \"~propertyName~\", value~if(isEnum)~.name()~endif~).stream().map(this::new~entity;format=\"capitalize\"~);\n" + 
 				"}>> ";
-} 
+}  

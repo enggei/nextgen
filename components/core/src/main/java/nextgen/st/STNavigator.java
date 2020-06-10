@@ -11,7 +11,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -213,15 +212,6 @@ public class STNavigator extends JPanel {
             return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED), false)
                     .filter(baseTreeNode -> baseTreeNode.getClass().equals(type))
                     .map(baseTreeNode -> (T) baseTreeNode);
-        }
-
-        protected Action newAction(String name, Consumer<ActionEvent> actionEventConsumer) {
-            return new AbstractAction(name) {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    actionEventConsumer.accept(e);
-                }
-            };
         }
 
         protected Optional<String> getStringFromUser(String description) {
@@ -514,32 +504,103 @@ public class STNavigator extends JPanel {
 
                     @Override
                     protected Action[] getActions() {
-
-                        final Action[] actions = new Action[(int) getModel().getValues().count() + 3];
-
-                        final AtomicInteger index = new AtomicInteger(-1);
-                        getModel().getValues().forEach(stEnumValue -> actions[index.incrementAndGet()] = newEditSTEnumValueAction(stEnumValue));
-                        actions[index.incrementAndGet()] = addSTEnumValueAction();
-                        actions[index.incrementAndGet()] = renameSTEnumAction();
-                        actions[index.incrementAndGet()] = removeSTEnumAction();
-
-                        return actions;
+                        return new Action[]{
+                                newEditSTEnumValueAction(),
+                                addSTEnumValueAction(),
+                                renameSTEnumAction(),
+                                removeSTEnumAction()
+                        };
                     }
 
-                    private Action newEditSTEnumValueAction(STEnumValue stEnumValue) {
-                        return newAction("Edit " + stEnumValue.getName(), actionEvent ->
-                                getStringFromUser("Name [lexical]").ifPresent(s -> {
+                    private Action newEditSTEnumValueAction() {
+                        return newAction("Edit", actionEvent -> {
 
-                                    final String[] kv = s.split("[ ]");
+                            final int newFields = 5;
 
-                                    stEnumValue.setName(kv[0].trim());
-                                    if (kv.length != 1) stEnumValue.setLexical(kv[1].trim());
-                                    save();
-                                }));
+                            final JPanel contentPanel = new JPanel(new GridLayout((int) getModel().getValues().count() + newFields + 1, 2));
+                            contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
+                            contentPanel.add(new JLabel("Name"));
+                            contentPanel.add(new JLabel("Lexical"));
+
+                            // existing values:
+                            final Map<STEnumValue, JTextField> txtEnumValuesName = new LinkedHashMap<>();
+                            final Map<STEnumValue, JTextField> txtEnumLexical = new LinkedHashMap<>();
+                            getModel().getValues().forEach(stEnumValue -> {
+                                txtEnumValuesName.put(stEnumValue, new JTextField(stEnumValue.getName(), 10));
+                                txtEnumLexical.put(stEnumValue, new JTextField(stEnumValue.getLexical(), 10));
+
+                                contentPanel.add(txtEnumValuesName.get(stEnumValue));
+                                contentPanel.add(txtEnumLexical.get(stEnumValue));
+
+                                txtEnumValuesName.get(stEnumValue).addFocusListener(new java.awt.event.FocusAdapter() {
+                                    public void focusGained(java.awt.event.FocusEvent evt) {
+                                        SwingUtilities.invokeLater(() -> ((JTextField) evt.getSource()).selectAll());
+                                    }
+                                });
+                                txtEnumLexical.get(stEnumValue).addFocusListener(new java.awt.event.FocusAdapter() {
+                                    public void focusGained(java.awt.event.FocusEvent evt) {
+                                        SwingUtilities.invokeLater(() -> ((JTextField) evt.getSource()).selectAll());
+                                    }
+                                });
+                            });
+
+                            // allow adding new values:
+                            final Map<Integer, JTextField> newTxtEnumValuesName = new LinkedHashMap<>();
+                            final Map<Integer, JTextField> newTxtEnumLexical = new LinkedHashMap<>();
+                            for (int i = 0; i < newFields; i++) {
+                                newTxtEnumValuesName.put(i, new JTextField("", 10));
+                                newTxtEnumLexical.put(i, new JTextField("", 10));
+
+                                contentPanel.add(newTxtEnumValuesName.get(i));
+                                contentPanel.add(newTxtEnumLexical.get(i));
+
+                                newTxtEnumValuesName.get(i).addFocusListener(new java.awt.event.FocusAdapter() {
+                                    public void focusGained(java.awt.event.FocusEvent evt) {
+                                        SwingUtilities.invokeLater(() -> ((JTextField) evt.getSource()).selectAll());
+                                    }
+                                });
+                                newTxtEnumLexical.get(i).addFocusListener(new java.awt.event.FocusAdapter() {
+                                    public void focusGained(java.awt.event.FocusEvent evt) {
+                                        SwingUtilities.invokeLater(() -> ((JTextField) evt.getSource()).selectAll());
+                                    }
+                                });
+
+                            }
+
+                            final JDialog dialog = new JDialog((Frame) SwingUtilities.getAncestorOfClass(JFrame.class, tree), "Edit Enum", true);
+                            dialog.add(contentPanel, BorderLayout.CENTER);
+
+                            final JButton btnSave = new JButton(newAction("Save", actionEvent1 -> {
+
+                                for (STEnumValue stEnumValue : txtEnumValuesName.keySet()) {
+                                    final String txtEnumValueName = txtEnumValuesName.get(stEnumValue).getText().trim();
+                                    final String txtEnumValueLexical = txtEnumLexical.get(stEnumValue).getText().trim();
+
+                                    stEnumValue.setName(txtEnumValueName);
+                                    stEnumValue.setLexical(txtEnumValueLexical.length() == 0 ? null : txtEnumValueLexical);
+                                }
+
+                                for (int i = 0; i < newFields; i++) {
+                                    final String newEnumValue = newTxtEnumValuesName.get(i).getText().trim();
+                                    final String newEnumLexical = newTxtEnumLexical.get(i).getText().trim();
+                                    if (newEnumValue.length() == 0) continue;
+
+                                    getModel().addValues(STJsonFactory.newSTEnumValue()
+                                            .setName(newEnumValue)
+                                            .setLexical(newEnumLexical.length() == 0 ? null : newEnumLexical));
+                                }
+
+                                save();
+
+                                SwingUtilities.invokeLater(dialog::dispose);
+                            }));
+
+                            showDialog(dialog, btnSave);
+                        });
                     }
 
                     private Action addSTEnumValueAction() {
-                        return newAction("New STEnum value", actionEvent ->
+                        return newAction("Add value", actionEvent ->
                                 getStringFromUser("Name [lexical]").ifPresent(s -> {
 
                                     final String[] kv = s.split("[ ]");
@@ -658,11 +719,24 @@ public class STNavigator extends JPanel {
 
                                     case SINGLE:
                                     case LIST:
-                                        txtParameterMap.put(stParameter.getName(), new JTextField(stParameter.getArgumentType("Object"), 15));
+                                        final String key = stParameter.getName();
+                                        txtParameterMap.put(key, new JTextField(stParameter.getArgumentType("Object"), 15));
+                                        txtParameterMap.get(key).addFocusListener(new java.awt.event.FocusAdapter() {
+                                            public void focusGained(java.awt.event.FocusEvent evt) {
+                                                SwingUtilities.invokeLater(() -> ((JTextField) evt.getSource()).selectAll());
+                                            }
+                                        });
+
                                         break;
                                     case KVLIST:
                                         stParameter.getKeys().forEach(stParameterKey -> {
-                                            txtParameterMap.put(stParameter.getName() + "." + stParameterKey.getName(), new JTextField(stParameterKey.getArgumentType("Object"), 15));
+                                            final String kvListKey = stParameter.getName() + "." + stParameterKey.getName();
+                                            txtParameterMap.put(kvListKey, new JTextField(stParameterKey.getArgumentType("Object"), 15));
+                                            txtParameterMap.get(kvListKey).addFocusListener(new java.awt.event.FocusAdapter() {
+                                                public void focusGained(java.awt.event.FocusEvent evt) {
+                                                    SwingUtilities.invokeLater(() -> ((JTextField) evt.getSource()).selectAll());
+                                                }
+                                            });
                                         });
                                         break;
                                 }
@@ -703,18 +777,8 @@ public class STNavigator extends JPanel {
 
                                 SwingUtilities.invokeLater(dialog::dispose);
                             }));
-                            dialog.getRootPane().setDefaultButton(btnSave);
 
-                            final JPanel commandPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-                            commandPanel.add(btnSave);
-                            commandPanel.add(new JButton(newAction("Cancel", actionEvent1 -> SwingUtilities.invokeLater(dialog::dispose))));
-                            dialog.add(commandPanel, BorderLayout.SOUTH);
-
-                            SwingUtilities.invokeLater(() -> {
-                                dialog.pack();
-                                dialog.setLocationRelativeTo(tree);
-                                dialog.setVisible(true);
-                            });
+                            showDialog(dialog, btnSave);
                         });
                     }
 
@@ -791,5 +855,28 @@ public class STNavigator extends JPanel {
         }
     }
 
+    private Action newAction(String name, Consumer<ActionEvent> actionEventConsumer) {
+        return new AbstractAction(name) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actionEventConsumer.accept(e);
+            }
+        };
+    }
 
+    private void showDialog(JDialog dialog, JButton btnSave) {
+
+        dialog.getRootPane().setDefaultButton(btnSave);
+
+        final JPanel commandPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        commandPanel.add(btnSave);
+        commandPanel.add(new JButton(newAction("Cancel", actionEvent1 -> SwingUtilities.invokeLater(dialog::dispose))));
+        dialog.add(commandPanel, BorderLayout.SOUTH);
+
+        SwingUtilities.invokeLater(() -> {
+            dialog.pack();
+            dialog.setLocationRelativeTo(tree);
+            dialog.setVisible(true);
+        });
+    }
 }

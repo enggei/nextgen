@@ -14,19 +14,6 @@ public class IfStmt {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		IfStmt that = (IfStmt) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("IfStmt");
 		st.add("condition", _condition);
@@ -101,6 +88,19 @@ public class IfStmt {
 		return this;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		IfStmt that = (IfStmt) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "IfStmt(condition,then,elseStmt) ::= <<if (~condition~) ~then~~if(elseStmt)~ \n" + 
 				"else ~elseStmt~~endif~>> ";
-} 
+}  

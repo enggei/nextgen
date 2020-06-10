@@ -13,19 +13,6 @@ public class LambdaExpression {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		LambdaExpression that = (LambdaExpression) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("LambdaExpression");
 		st.add("body", _body);
@@ -73,5 +60,18 @@ public class LambdaExpression {
 		return this._parameters;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		LambdaExpression that = (LambdaExpression) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "LambdaExpression(body,parameters) ::= <<(~parameters:{it|~it~};separator=\", \"~) -> ~body~>> ";
-} 
+}  

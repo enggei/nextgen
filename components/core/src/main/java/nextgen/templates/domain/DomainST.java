@@ -7,13 +7,7 @@ public class DomainST {
 	"gt() ::= \">\"\n" +
 	Domain.st + "\n" + 
 	Entity.st + "\n" + 
-	EnumField.st + "\n" + 
-	ExternalReferenceField.st + "\n" + 
-	ExternalReferenceList.st + "\n" + 
-	PrimitiveField.st + "\n" + 
-	PrimitiveList.st + "\n" + 
-	ReferenceField.st + "\n" + 
-	ReferenceList.st + "\n" ;
+	Relation.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -57,32 +51,8 @@ public class DomainST {
 		return new Entity(stGroup);
 	} 
 
-	public static EnumField newEnumField() {
-		return new EnumField(stGroup);
-	} 
-
-	public static ExternalReferenceField newExternalReferenceField() {
-		return new ExternalReferenceField(stGroup);
-	} 
-
-	public static ExternalReferenceList newExternalReferenceList() {
-		return new ExternalReferenceList(stGroup);
-	} 
-
-	public static PrimitiveField newPrimitiveField() {
-		return new PrimitiveField(stGroup);
-	} 
-
-	public static PrimitiveList newPrimitiveList() {
-		return new PrimitiveList(stGroup);
-	} 
-
-	public static ReferenceField newReferenceField() {
-		return new ReferenceField(stGroup);
-	} 
-
-	public static ReferenceList newReferenceList() {
-		return new ReferenceList(stGroup);
+	public static Relation newRelation() {
+		return new Relation(stGroup);
 	} 
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {

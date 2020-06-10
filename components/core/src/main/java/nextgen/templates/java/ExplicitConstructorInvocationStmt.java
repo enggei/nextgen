@@ -13,19 +13,6 @@ public class ExplicitConstructorInvocationStmt {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		ExplicitConstructorInvocationStmt that = (ExplicitConstructorInvocationStmt) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ExplicitConstructorInvocationStmt");
 		st.add("isThis", _isThis);
@@ -73,5 +60,18 @@ public class ExplicitConstructorInvocationStmt {
 		return this._arguments;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ExplicitConstructorInvocationStmt that = (ExplicitConstructorInvocationStmt) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "ExplicitConstructorInvocationStmt(isThis,arguments) ::= <<~if(isThis)~this~else~super~endif~(~arguments:{it|~it~};separator=\", \"~);>> ";
-} 
+}  

@@ -19,6 +19,11 @@ public class Cinema {
 		return this.jsonObject;
 	}
 
+	public Cinema removeUuid() {
+		this.jsonObject.remove("uuid");
+		return this;
+	}
+
 	@Override
 	public boolean equals(java.lang.Object o) { 
 		if (this == o) return true;
@@ -45,18 +50,18 @@ public class Cinema {
 		return jsonObject.getString("name", defaultValue);
 	}
 
-	public Cinema addAliases(java.lang.String value) { 
+	public Cinema addAliases(String value) { 
 		io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("aliases");
 		if (jsonArray == null) jsonObject.put("aliases", jsonArray = new io.vertx.core.json.JsonArray());
 		jsonArray.add(value);
 		return this;
 	}
 
-	public java.util.stream.Stream<java.lang.String> getAliases() { 
-		return jsonObject.getJsonArray("aliases", new io.vertx.core.json.JsonArray()).stream().map((o) -> (java.lang.String)o);
+	public java.util.stream.Stream<String> getAliases() { 
+		return jsonObject.getJsonArray("aliases", new io.vertx.core.json.JsonArray()).stream().map((o) -> (String)o);
 	}
 
-	public Cinema removeAliases(java.lang.String value) { 
+	public Cinema removeAliases(String value) { 
 		final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("aliases", new io.vertx.core.json.JsonArray());
 		for (int i = 0; i < jsonArray.size(); i++)  { 
 			final io.vertx.core.json.JsonObject o = jsonArray.getJsonObject(i);

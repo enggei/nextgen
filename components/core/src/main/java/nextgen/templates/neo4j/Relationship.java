@@ -11,6 +11,13 @@ public class Relationship {
 	}
 
 	@Override
+	public String toString() {
+		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Relationship");
+		return st.render().trim();
+	}
+
+
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
@@ -23,12 +30,5 @@ public class Relationship {
 		return java.util.Objects.hash(uuid);
 	}
 
-	@Override
-	public String toString() {
-		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Relationship");
-		return st.render().trim();
-	}
-
-
 	static final String st = "Relationship() ::= <<org.neo4j.graphdb.Relationship>> ";
-} 
+}  

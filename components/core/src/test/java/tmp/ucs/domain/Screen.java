@@ -3,10 +3,10 @@ package tmp.ucs.domain;
 public class Screen {
 
 	private final java.util.UUID uuid;
-	private java.lang.String _name;
+	private String _name;
 	private ScreenStatus _status;
-	private java.lang.Boolean _active;
-	private java.util.List<Seat> _seats;
+	private Boolean _active;
+	private java.util.List<Seat> _seats = new java.util.ArrayList<>();
 
 	public Screen() {
 		this.uuid = java.util.UUID.randomUUID();
@@ -18,26 +18,13 @@ public class Screen {
 
 	public java.util.UUID getUuid() {
 		return this.uuid;
-	}
+	}	
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Screen that = (Screen) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	public java.lang.String getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Screen setName(java.lang.String value) {
+	public Screen setName(String value) {
 		this._name = value;
 		return this;
 	}
@@ -51,11 +38,11 @@ public class Screen {
 		return this;
 	}
 
-	public java.lang.Boolean getActive() {
+	public Boolean getActive() {
 		return this._active;
 	}
 
-	public Screen setActive(java.lang.Boolean value) {
+	public Screen setActive(Boolean value) {
 		this._active = value;
 		return this;
 	}
@@ -67,5 +54,17 @@ public class Screen {
 	public Screen addSeats(Seat value) {
 		this._seats.add(value);
 		return this;
+	}
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Screen that = (Screen) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
 	}
 }

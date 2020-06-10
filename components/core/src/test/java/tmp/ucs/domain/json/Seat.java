@@ -19,6 +19,11 @@ public class Seat {
 		return this.jsonObject;
 	}
 
+	public Seat removeUuid() {
+		this.jsonObject.remove("uuid");
+		return this;
+	}
+
 	@Override
 	public boolean equals(java.lang.Object o) { 
 		if (this == o) return true;

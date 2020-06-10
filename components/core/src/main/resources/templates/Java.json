@@ -9,45 +9,45 @@
     "children" : [ {
       "uuid" : "0f82b0f4-c6de-4e4c-be6d-aca80a1e4124",
       "name" : "Pojo",
-      "text" : "package ~package~;\n\npublic class ~name~ {\n\n\tprivate final java.util.UUID uuid;\n\t~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\t\n\tpublic ~name~() {\n\t\tthis.uuid = java.util.UUID.randomUUID();\n\t}\n\n\tpublic ~name~(java.util.UUID uuid) {\n\t\tthis.uuid = uuid;\n\t}\n\n\tpublic java.util.UUID getUuid() {\n\t\treturn this.uuid;\n\t}\n\t\t\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn uuid.equals(that.uuid);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(uuid);\n\t}\n~if(lexical)~\n\n\t@Override\n\tpublic String toString() {\n\t\treturn ~lexical:{it|_~it~};separator=\" + \\\" \\\" + \"~;\n\t}\n~endif~\n\t\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n}",
+      "text" : "package ~package~;\n\npublic class ~name~ {\n\n\tprivate final java.util.UUID uuid;\n\t~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\t\n\tpublic ~name~() {\n\t\tthis.uuid = java.util.UUID.randomUUID();\n\t}\n\n\tpublic ~name~(java.util.UUID uuid) {\n\t\tthis.uuid = uuid;\n\t}\n\n\tpublic java.util.UUID getUuid() {\n\t\treturn this.uuid;\n\t}\t\n\t\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n~if(lexical)~\n\n\t@Override\n\tpublic String toString() {\n\t\treturn ~lexical:{it|_~it~};separator=\" + \\\" \\\" + \"~;\n\t}\n~endif~\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn uuid.equals(that.uuid);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(uuid);\n\t}\n} ",
       "parameters" : [ {
-        "uuid" : "4ad1bbcb-c1e9-40d0-991b-11402de31c93",
+        "uuid" : "028bd4d1-6ca1-400a-b7b5-af1d4bc175d2",
         "name" : "package",
         "type" : "SINGLE",
         "argumentType" : "String"
       }, {
-        "uuid" : "3f3805af-4a98-4726-a602-9f1078bed3a4",
+        "uuid" : "174ccf04-43ef-44ef-af16-11f55d8fff2b",
         "name" : "name",
         "type" : "SINGLE",
         "argumentType" : "String"
       }, {
-        "uuid" : "e2861e41-6d41-4daa-b602-73cdeb670815",
+        "uuid" : "69f5775b-b5d2-4518-8445-07fe2f017240",
         "name" : "fields",
         "type" : "KVLIST",
         "argumentType" : "Object",
         "keys" : [ {
-          "uuid" : "0c5f5c25-eb62-426f-98b2-55053b45c406",
+          "uuid" : "e4970915-e6a7-4231-a8ae-344069a473e1",
           "name" : "type",
           "argumentType" : "Object"
         }, {
-          "uuid" : "c2508b16-6681-4765-88ae-ded682ac1cb8",
+          "uuid" : "131ba1b8-304e-4ed2-a531-b7917a84c5b8",
           "name" : "name",
           "argumentType" : "String"
         }, {
-          "uuid" : "bc11cae4-d7db-44de-bfba-ea381bf5029d",
+          "uuid" : "21d1d36a-1ba0-46e9-a4a0-d800c7820148",
           "name" : "initializer",
           "argumentType" : "Object"
         } ]
       }, {
-        "uuid" : "b5de18b8-00b8-4b9b-bc8e-ad2081cc2755",
-        "name" : "lexical",
-        "type" : "LIST",
-        "argumentType" : "String"
-      }, {
-        "uuid" : "5d281526-e9ca-4f01-a4f8-280685b3c7e5",
+        "uuid" : "87cf2225-bf71-480d-bead-41bb7ebd636e",
         "name" : "accessors",
         "type" : "LIST",
         "argumentType" : "Object"
+      }, {
+        "uuid" : "ffe3ece0-c548-44d5-9c39-912869442860",
+        "name" : "lexical",
+        "type" : "LIST",
+        "argumentType" : "String"
       } ],
       "children" : [ {
         "uuid" : "acce5fc9-50a0-4be5-81d9-cc4422abacbb",

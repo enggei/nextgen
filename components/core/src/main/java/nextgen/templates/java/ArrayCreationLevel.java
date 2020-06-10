@@ -12,19 +12,6 @@ public class ArrayCreationLevel {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		ArrayCreationLevel that = (ArrayCreationLevel) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ArrayCreationLevel");
 		st.add("dimension", _dimension);
@@ -53,5 +40,18 @@ public class ArrayCreationLevel {
 		return this;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ArrayCreationLevel that = (ArrayCreationLevel) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "ArrayCreationLevel(dimension) ::= <<[~dimension~]>> ";
-} 
+}  

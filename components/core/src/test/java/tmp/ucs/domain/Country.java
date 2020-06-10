@@ -3,8 +3,8 @@ package tmp.ucs.domain;
 public class Country {
 
 	private final java.util.UUID uuid;
-	private java.lang.String _name;
-	private java.util.List<City> _cities;
+	private String _name;
+	private java.util.List<City> _cities = new java.util.ArrayList<>();
 
 	public Country() {
 		this.uuid = java.util.UUID.randomUUID();
@@ -16,26 +16,13 @@ public class Country {
 
 	public java.util.UUID getUuid() {
 		return this.uuid;
-	}
+	}	
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Country that = (Country) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	public java.lang.String getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Country setName(java.lang.String value) {
+	public Country setName(String value) {
 		this._name = value;
 		return this;
 	}
@@ -47,5 +34,17 @@ public class Country {
 	public Country addCities(City value) {
 		this._cities.add(value);
 		return this;
+	}
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Country that = (Country) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
 	}
 }

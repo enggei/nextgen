@@ -13,19 +13,6 @@ public class ExpressionStmt {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		ExpressionStmt that = (ExpressionStmt) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ExpressionStmt");
 		st.add("comment", _comment);
@@ -77,6 +64,19 @@ public class ExpressionStmt {
 		return this;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ExpressionStmt that = (ExpressionStmt) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "ExpressionStmt(comment,expression) ::= <<~if(comment)~~comment~\n" + 
 				"~endif~~expression~;>> ";
-} 
+}  

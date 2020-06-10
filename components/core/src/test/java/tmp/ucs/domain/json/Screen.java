@@ -19,6 +19,11 @@ public class Screen {
 		return this.jsonObject;
 	}
 
+	public Screen removeUuid() {
+		this.jsonObject.remove("uuid");
+		return this;
+	}
+
 	@Override
 	public boolean equals(java.lang.Object o) { 
 		if (this == o) return true;

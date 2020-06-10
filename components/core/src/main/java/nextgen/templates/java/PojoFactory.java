@@ -14,19 +14,6 @@ public class PojoFactory {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		PojoFactory that = (PojoFactory) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("PojoFactory");
 		st.add("package", _package);
@@ -97,6 +84,19 @@ public class PojoFactory {
 		return this._entities;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		PojoFactory that = (PojoFactory) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "PojoFactory(package,name,entities) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public class ~name;format=\"capitalize\"~ {\n" + 
@@ -107,4 +107,4 @@ public class PojoFactory {
 				"	~eom()~\n" + 
 				"};separator=\"\\n\"~\n" + 
 				"}>> ";
-} 
+}  

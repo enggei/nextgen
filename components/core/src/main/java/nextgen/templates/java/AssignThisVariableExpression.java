@@ -12,19 +12,6 @@ public class AssignThisVariableExpression {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		AssignThisVariableExpression that = (AssignThisVariableExpression) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("AssignThisVariableExpression");
 		st.add("value", _value);
@@ -53,5 +40,18 @@ public class AssignThisVariableExpression {
 		return this;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		AssignThisVariableExpression that = (AssignThisVariableExpression) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "AssignThisVariableExpression(value) ::= <<~ThisVariableExpression(value)~ = ~value~>> ";
-} 
+}  

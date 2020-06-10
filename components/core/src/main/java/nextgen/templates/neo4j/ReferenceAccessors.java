@@ -14,19 +14,6 @@ public class ReferenceAccessors {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		ReferenceAccessors that = (ReferenceAccessors) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("referenceAccessors");
 		st.add("className", _className);
@@ -101,6 +88,19 @@ public class ReferenceAccessors {
 		return this;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ReferenceAccessors that = (ReferenceAccessors) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "referenceAccessors(className,name,type) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ dst) { \n" + 
 				"	final org.neo4j.graphdb.Relationship relationship = node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName(\"~name~\"), org.neo4j.graphdb.Direction.OUTGOING);\n" + 
 				"	if (relationship != null)  { \n" + 
@@ -121,4 +121,4 @@ public class ReferenceAccessors {
 				"	existing.ifPresent(org.neo4j.graphdb.Relationship::delete);\n" + 
 				"	return this;\n" + 
 				"}>> ";
-} 
+}  

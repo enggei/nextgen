@@ -3,7 +3,7 @@ package tmp.ucs.domain;
 public class World {
 
 	private final java.util.UUID uuid;
-	private java.util.List<Region> _regions;
+	private java.util.List<Region> _regions = new java.util.ArrayList<>();
 
 	public World() {
 		this.uuid = java.util.UUID.randomUUID();
@@ -15,8 +15,16 @@ public class World {
 
 	public java.util.UUID getUuid() {
 		return this.uuid;
+	}	
+
+	public java.util.List<Region> getRegions() {
+		return this._regions;
 	}
 
+	public World addRegions(Region value) {
+		this._regions.add(value);
+		return this;
+	}
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -28,14 +36,5 @@ public class World {
 	@Override
 	public int hashCode() {
 		return java.util.Objects.hash(uuid);
-	}
-
-	public java.util.List<Region> getRegions() {
-		return this._regions;
-	}
-
-	public World addRegions(Region value) {
-		this._regions.add(value);
-		return this;
 	}
 }

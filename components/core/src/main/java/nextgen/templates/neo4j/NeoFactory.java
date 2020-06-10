@@ -14,19 +14,6 @@ public class NeoFactory {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		NeoFactory that = (NeoFactory) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("NeoFactory");
 		st.add("package", _package);
@@ -97,6 +84,19 @@ public class NeoFactory {
 		return this._accessors;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		NeoFactory that = (NeoFactory) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "NeoFactory(package,name,accessors) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public class ~name;format=\"capitalize\"~ {\n" + 
@@ -131,4 +131,4 @@ public class NeoFactory {
 				"\n" + 
 				"	~accessors:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"}>> ";
-} 
+}  

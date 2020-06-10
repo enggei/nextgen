@@ -12,19 +12,6 @@ public class ArrayInitializerExpression {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		ArrayInitializerExpression that = (ArrayInitializerExpression) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ArrayInitializerExpression");
 		for (Object o : _values) st.add("values", o);
@@ -50,7 +37,20 @@ public class ArrayInitializerExpression {
 		return this._values;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ArrayInitializerExpression that = (ArrayInitializerExpression) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "ArrayInitializerExpression(values) ::= <<{\n" + 
 				"	~values:{it|~it~};separator=\",\\n\"~\n" + 
 				"}>> ";
-} 
+}  

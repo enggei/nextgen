@@ -8,23 +8,10 @@ public class Entity {
 	private String _name;
 	private Boolean _isEnum;
 	private java.util.List<String> _enumValues = new java.util.ArrayList<>();
-	private java.util.List<Object> _relations = new java.util.ArrayList<>();
+	private java.util.List<Relation> _relations = new java.util.ArrayList<>();
 
 	Entity(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Entity that = (Entity) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
 	}
 
 	@Override
@@ -99,12 +86,12 @@ public class Entity {
 		return this._enumValues;
 	} 
 
-	public Entity addRelations(Object value) {
+	public Entity addRelations(Relation value) {
 		this._relations.add(value);
 		return this;
 	}
 
-	public Entity removeRelations(Object value) {
+	public Entity removeRelations(Relation value) {
 		this._relations.remove(value);
 		return this;
 	}
@@ -114,11 +101,23 @@ public class Entity {
 		return this;
 	}
 
-	public java.util.List<Object> getRelations() {
+	public java.util.List<Relation> getRelations() {
 		return this._relations;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Entity that = (Entity) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "Entity(name,isEnum,enumValues,relations) ::= <<~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~\n" + 
-				"\n" + 
 				"~relations:{it|~it~};separator=\"\\n\"~>> ";
-} 
+}  

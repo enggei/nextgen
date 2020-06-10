@@ -14,19 +14,6 @@ public class EnumAccessors {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		EnumAccessors that = (EnumAccessors) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("enumAccessors");
 		st.add("className", _className);
@@ -101,6 +88,19 @@ public class EnumAccessors {
 		return this;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		EnumAccessors that = (EnumAccessors) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "enumAccessors(className,name,type) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n" + 
 				"	if (value == null) node.removeProperty(\"~name~\"); \n" + 
 				"	else node.setProperty(\"~name~\", value.name());\n" + 
@@ -125,4 +125,4 @@ public class EnumAccessors {
 				"	node.removeProperty(\"~name~\");\n" + 
 				"	return this;\n" + 
 				"}>> ";
-} 
+}  

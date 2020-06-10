@@ -13,19 +13,6 @@ public class SwitchEntryStmt {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		SwitchEntryStmt that = (SwitchEntryStmt) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("SwitchEntryStmt");
 		for (Object o : _labels) st.add("labels", o);
@@ -71,6 +58,19 @@ public class SwitchEntryStmt {
 		return this._statements;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		SwitchEntryStmt that = (SwitchEntryStmt) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "SwitchEntryStmt(labels,statements) ::= <<~if(labels)~~labels:{it|case ~it~ :};separator=\"\\n\"~~else~default :~endif~\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~>> ";
-} 
+}  

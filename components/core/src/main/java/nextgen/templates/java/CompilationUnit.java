@@ -14,19 +14,6 @@ public class CompilationUnit {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		CompilationUnit that = (CompilationUnit) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("CompilationUnit");
 		st.add("packageDeclaration", _packageDeclaration);
@@ -94,9 +81,22 @@ public class CompilationUnit {
 		return this._importDeclaration;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		CompilationUnit that = (CompilationUnit) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "CompilationUnit(packageDeclaration,types,importDeclaration) ::= <<~packageDeclaration~\n" + 
 				"\n" + 
 				"~importDeclaration:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"~types:{it|~it~};separator=\"\\n\\n\"~>> ";
-} 
+}  

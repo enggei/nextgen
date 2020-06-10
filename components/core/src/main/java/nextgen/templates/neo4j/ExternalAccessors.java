@@ -14,19 +14,6 @@ public class ExternalAccessors {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		ExternalAccessors that = (ExternalAccessors) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("externalAccessors");
 		st.add("className", _className);
@@ -101,6 +88,19 @@ public class ExternalAccessors {
 		return this;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ExternalAccessors that = (ExternalAccessors) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "externalAccessors(className,name,type) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n" + 
 				"	this._~name~ = value;\n" + 
 				"	return this;\n" + 
@@ -113,4 +113,4 @@ public class ExternalAccessors {
 				"public ~type~ get~name;format=\"capitalize\"~(~type~ defaultValue) { \n" + 
 				"	return this._~name~ == null ? defaultValue : this._~name~;\n" + 
 				"}>> ";
-} 
+}  

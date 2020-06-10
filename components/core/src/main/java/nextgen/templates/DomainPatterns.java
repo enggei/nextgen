@@ -17,12 +17,9 @@ import nextgen.templates.vertx.VertxST;
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 import static nextgen.templates.JavaPatterns.newPackageDeclaration;
 import static nextgen.templates.JavaPatterns.writeEnum;
-import static nextgen.templates.java.JavaST.newArrayList;
-import static nextgen.templates.java.JavaST.newList;
 
 public class DomainPatterns extends DomainST {
 
@@ -40,61 +37,100 @@ public class DomainPatterns extends DomainST {
         return entity;
     }
 
-    public static PrimitiveField newBooleanField(String name) {
-        return newPrimitiveField().setName(name).setType(Boolean.class);
+    public static Relation newRelation(RelationType relationType) {
+        return newRelation().setType(relationType);
     }
 
-    public static PrimitiveField newLongField(String name) {
-        return newPrimitiveField().setName(name).setType(Long.class);
+    public static Relation newRelation(RelationType relationType, String name) {
+        return newRelation().setType(relationType).setName(name);
     }
 
-    public static PrimitiveField newDoubleField(String name) {
-        return newPrimitiveField().setName(name).setType(Double.class);
+    public static Relation newEnumField(String name, String enumName, String enumValues) {
+        return newRelation(RelationType.ENUM).setName(name).setDst(newEnum(enumName, enumValues));
     }
 
-    public static PrimitiveField newIntegerField(String name) {
-        return newPrimitiveField().setName(name).setType(Integer.class);
+    public static Relation newEnumField(String name, Entity enumEntity) {
+        if (!enumEntity.getIsEnum(false))
+            throw new IllegalArgumentException("entity " + enumEntity.getName() + " in relation " + name + " is not an enum-entity");
+        return newRelation(RelationType.ENUM, name).setDst(enumEntity);
     }
 
-    public static PrimitiveField newStringField(String name) {
+    public static Relation newPrimitiveRef(String name, Class<?> dstType) {
+        return newRelation(RelationType.PRIM_REF, name).setDst(dstType);
+    }
+
+    public static Relation newPrimitiveList(String name, Class<?> dstType) {
+        return newRelation(RelationType.PRIM_LIST, name).setDst(dstType);
+    }
+
+    public static Relation newExternalRef(String name, Class<?> dstType) {
+        return newRelation(RelationType.EXT_REF, name).setDst(dstType);
+    }
+
+    public static Relation newExternalList(String name, Class<?> dstType) {
+        return newRelation(RelationType.EXT_LIST, name).setDst(dstType);
+    }
+
+    public static Relation newRef(String name, Entity dstType) {
+        return newRelation(RelationType.REF, name).setDst(dstType);
+    }
+
+    public static Relation newList(String name, Entity dstType) {
+        return newRelation(RelationType.LIST, name).setDst(dstType);
+    }
+
+    public static Relation newBooleanField(String name) {
+        return newPrimitiveRef(name, Boolean.class);
+    }
+
+    public static Relation newLongField(String name) {
+        return newPrimitiveRef(name, Long.class);
+    }
+
+    public static Relation newDoubleField(String name) {
+        return newPrimitiveRef(name, Double.class);
+    }
+
+    public static Relation newIntegerField(String name) {
+        return newPrimitiveRef(name, Integer.class);
+    }
+
+    public static Relation newStringField(String name, boolean lexical) {
+        return newPrimitiveRef(name, String.class).setLexical(lexical);
+    }
+
+    public static Relation newStringField(String name) {
         return newStringField(name, false);
     }
 
-    public static PrimitiveField newStringField(String name, boolean lexical) {
-        return newPrimitiveField().setName(name).setType(String.class).setLexical(lexical);
+    public static Relation newOneToOneExternal(String name, Class<?> type) {
+        return newExternalRef(name, type);
     }
 
-    public static ExternalReferenceField newOneToOneExternal(String name, Class<?> type) {
-        return newExternalReferenceField().setName(name).setType(type);
+    public static Relation newOneToManyExternal(String name, Class<?> type) {
+        return newExternalList(name, type);
     }
 
-    public static ExternalReferenceList newOneToManyExternal(String name, Class<?> type) {
-        return newExternalReferenceList().setName(name).setType(type);
+    public static Relation newOneToMany(String name, Entity entity) {
+        return newList(name, entity);
     }
 
-    public static ReferenceList newOneToMany(String name, Entity entity) {
-        return newReferenceList().setName(name).setEntity(entity);
+    public static Relation newOneToManyString(String name) {
+        return newPrimitiveList(name, String.class);
     }
 
-    public static PrimitiveList newOneToManyString(String name) {
-        return newPrimitiveList().setName(name).setType(String.class);
+    public static Relation newOneToManySelf(String name) {
+        return newRelation(RelationType.LIST, name).setSelf(Boolean.TRUE);
     }
 
-    public static ReferenceList newOneToManySelf(String name) {
-        return newReferenceList().setName(name).setSelf(Boolean.TRUE);
+    public static Relation newOneToOne(String name, Entity entity) {
+        return newRef(name, entity);
     }
 
-    public static ReferenceField newOneToOne(String name, Entity entity) {
-        return newOneToOne(name, entity, false);
+    public static Relation newOneToOne(String name, Entity entity, boolean lexical) {
+        return newRef(name, entity).setLexical(lexical);
     }
 
-    public static ReferenceField newOneToOne(String name, Entity entity, boolean lexical) {
-        return newReferenceField().setName(name).setEntity(entity).setLexical(lexical);
-    }
-
-    public static EnumField newEnumField(String name, Entity enumEntity) {
-        return newEnumField().setName(name).setType(enumEntity);
-    }
 
     // DOMAIN TO POJOs:
 
@@ -128,55 +164,66 @@ public class DomainPatterns extends DomainST {
 
         if (entity == null || visited.containsKey(entity)) return visited.get(entity);
 
+        final String entityName = entity.getName();
+
         final Pojo entityClass = JavaST.newPojo()
                 .setPackage(packageDeclaration.getName())
-                .setName(entity.getName());
+                .setName(entityName);
 
         visited.put(entity, entityClass);
 
         entity.getRelations().forEach(o -> {
 
-            if (o instanceof PrimitiveField) {
-                final PrimitiveField field = (PrimitiveField) o;
-                entityClass.addAccessors(JavaST.newPrimitiveAccessors().setClassName(entity.getName()).setType(field.getType().getCanonicalName()).setName(field.getName()));
-                entityClass.addFields(field.getType().getCanonicalName(), field.getName(), null);
-                if (field.getLexical(false)) entityClass.addLexical(field.getName());
+            switch (o.getType()) {
 
-            } else if (o instanceof PrimitiveList) {
-                final PrimitiveList field = (PrimitiveList) o;
-                entityClass.addFields(newList().setType(field.getType().getCanonicalName()), field.getName(), null);
-                entityClass.addAccessors(JavaST.newListAccessors().setClassName(entity.getName()).setType(field.getType().getCanonicalName()).setName(field.getName()));
+                case ENUM: {
+                    final Entity dst = asEntity(o.getDst());
+                    entityClass.addFields(dst.getName(), o.getName(), null);
+                    entityClass.addAccessors(JavaST.newPrimitiveAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
+                    writeEnum(root, packageDeclaration, dst.getName(), dst.getEnumValues().toArray());
+                    break;
+                }
+                case EXT_REF: {
+                    final Class<?> dst = asClass(o.getDst());
+                    entityClass.addFields(dst.getCanonicalName(), o.getName(), null);
+                    entityClass.addAccessors(JavaST.newReferenceAccessors().setClassName(entityName).setType(dst.getCanonicalName()).setName(o.getName()));
+                    break;
+                }
+                case EXT_LIST: {
+                    final Class<?> dst = asClass(o.getDst());
+                    entityClass.addFields(JavaST.newList().setType(dst.getCanonicalName()), o.getName(), JavaPatterns.newArrayListInstance());
+                    entityClass.addAccessors(JavaST.newListAccessors().setClassName(entityName).setType(dst.getCanonicalName()).setName(o.getName()));
+                    break;
+                }
+                case PRIM_REF: {
+                    final Class<?> dst = asClass(o.getDst());
+                    entityClass.addFields(dst.getSimpleName(), o.getName(), null);
+                    entityClass.addAccessors(JavaST.newPrimitiveAccessors().setClassName(entityName).setType(dst.getSimpleName()).setName(o.getName()));
+                    if (o.getLexical(false)) entityClass.addLexical(o.getName());
+                    break;
+                }
+                case PRIM_LIST: {
+                    final Class<?> dst = asClass(o.getDst());
+                    entityClass.addFields(JavaST.newList().setType(dst.getSimpleName()), o.getName(), null);
+                    entityClass.addAccessors(JavaST.newListAccessors().setClassName(entityName).setType(dst.getSimpleName()).setName(o.getName()));
+                    break;
+                }
+                case REF: {
+                    final Entity dst = asEntity(o.getDst());
+                    entityClass.addFields(dst.getName(), o.getName(), null);
+                    entityClass.addAccessors(JavaST.newReferenceAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
 
-            } else if (o instanceof EnumField) {
-                final EnumField field = (EnumField) o;
-                entityClass.addFields(field.getType().getName(), field.getName(), null);
-                entityClass.addAccessors(JavaST.newPrimitiveAccessors().setClassName(entity.getName()).setType(field.getType().getName()).setName(field.getName()));
-                writeEnum(root, packageDeclaration, field.getType().getName(), field.getType().getEnumValues().toArray());
+                    generatePojo(root, packageDeclaration, dst, visited);
+                    break;
+                }
+                case LIST: {
+                    final Entity dst = asEntity(o.getDst());
+                    entityClass.addFields(JavaST.newList().setType(dst.getName()), o.getName(), JavaPatterns.newArrayListInstance());
+                    entityClass.addAccessors(JavaST.newListAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
 
-            } else if (o instanceof ReferenceField) {
-                final ReferenceField field = (ReferenceField) o;
-                final Entity fieldEntity = field.getEntity();
-                entityClass.addFields(fieldEntity.getName(), field.getName(), null);
-                entityClass.addAccessors(JavaST.newReferenceAccessors().setClassName(entity.getName()).setType(fieldEntity.getName()).setName(field.getName()));
-
-                generatePojo(root, packageDeclaration, fieldEntity, visited);
-
-            } else if (o instanceof ExternalReferenceField) {
-                final ExternalReferenceField field = (ExternalReferenceField) o;
-                entityClass.addFields(field.getType().getCanonicalName(), field.getName(), null);
-                entityClass.addAccessors(JavaST.newReferenceAccessors().setClassName(entity.getName()).setType(field.getType().getCanonicalName()).setName(field.getName()));
-
-            } else if (o instanceof ExternalReferenceList) {
-                final ExternalReferenceList field = (ExternalReferenceList) o;
-                entityClass.addFields(newList().setType(field.getType().getCanonicalName()), field.getName(), JavaPatterns.newObjectCreationExpression().setType(newArrayList()));
-                entityClass.addAccessors(JavaST.newListAccessors().setClassName(entity.getName()).setType(field.getType().getCanonicalName()).setName(field.getName()));
-
-            } else if (o instanceof ReferenceList) {
-                final ReferenceList field = (ReferenceList) o;
-                entityClass.addFields(newList().setType(field.getEntity().getName()), field.getName(), JavaPatterns.newObjectCreationExpression().setType(newArrayList()));
-                entityClass.addAccessors(JavaST.newListAccessors().setClassName(entity.getName()).setType(field.getEntity().getName()).setName(field.getName()));
-
-                generatePojo(root, packageDeclaration, field.getEntity(), visited);
+                    generatePojo(root, packageDeclaration, dst, visited);
+                    break;
+                }
             }
         });
 
@@ -216,32 +263,36 @@ public class DomainPatterns extends DomainST {
                     .setName(key.getName());
 
             key.getRelations().forEach(o -> {
-                if (o instanceof PrimitiveField) {
-                    final PrimitiveField field = (PrimitiveField) o;
+                switch (o.getType()) {
+                    case ENUM: {
+                        final Entity dst = asEntity(o.getDst());
+                        factoryAccessors.addProperties(Neo4JST.newNeoFactoryPropertyAccessors()
+                                .setEntity(key.getName())
+                                .setPropertyName(o.getName())
+                                .setPropertyType(dst.getName())
+                                .setIsEnum(true));
+                        break;
+                    }
 
-                    factoryAccessors.addProperties(Neo4JST.newNeoFactoryPropertyAccessors()
-                            .setEntity(key.getName())
-                            .setPropertyName(field.getName())
-                            .setPropertyType(field.getType().getSimpleName()));
+                    case PRIM_REF: {
+                        final Class<?> dst = asClass(o.getDst());
+                        factoryAccessors.addProperties(Neo4JST.newNeoFactoryPropertyAccessors()
+                                .setEntity(key.getName())
+                                .setPropertyName(o.getName())
+                                .setPropertyType(dst.getSimpleName()));
+                        break;
+                    }
+
+                    case REF:
+                    case LIST: {
+                        final Entity dst = asEntity(o.getDst());
+                        visited.get(dst).addAccessors(Neo4JST.newIncomingReferenceStream().setName(o.getName()).setType(key.getName()));
+                        break;
+                    }
                 }
             });
 
             factory.addAccessors(factoryAccessors);
-
-            key.getRelations().forEach(o -> {
-                if (o instanceof ReferenceList) {
-                    final ReferenceList field = (ReferenceList) o;
-                    visited.get(field.getEntity()).addAccessors(Neo4JST.newIncomingReferenceStream()
-                            .setName(field.getName())
-                            .setType(key.getName()));
-
-                } else if (o instanceof ReferenceField) {
-                    final ReferenceField field = (ReferenceField) o;
-                    visited.get(field.getEntity()).addAccessors(Neo4JST.newIncomingReferenceStream()
-                            .setName(field.getName())
-                            .setType(key.getName()));
-                }
-            });
 
             STGenerator.writeToFile(value, packageDeclaration.getName(), value.getName().toString(), "java", root);
         });
@@ -253,54 +304,60 @@ public class DomainPatterns extends DomainST {
 
         if (entity == null || visited.containsKey(entity)) return visited.get(entity);
 
+        final String entityName = entity.getName();
+
         final NodeWrapper entityClass = Neo4JST.newNodeWrapper()
                 .setPackage(packageDeclaration.getName())
-                .setName(entity.getName());
+                .setName(entityName);
 
         visited.put(entity, entityClass);
 
         entity.getRelations().forEach(o -> {
 
-            if (o instanceof PrimitiveField) {
-                final PrimitiveField field = (PrimitiveField) o;
-                entityClass.addAccessors(Neo4JST.newPrimitiveAccessors().setClassName(entity.getName()).setType(getType(field.getType().getCanonicalName())).setName(field.getName()));
+            switch (o.getType()) {
 
-                if (field.getLexical(false)) entityClass.addLexical(field.getName());
-
-            } else if (o instanceof PrimitiveList) {
-                final PrimitiveList field = (PrimitiveList) o;
-                entityClass.addAccessors(Neo4JST.newListPrimitiveAccessors().setClassName(entity.getName()).setType(field.getType().getCanonicalName()).setName(field.getName()));
-
-            } else if (o instanceof EnumField) {
-                final EnumField field = (EnumField) o;
-                entityClass.addAccessors(Neo4JST.newEnumAccessors().setClassName(entity.getName()).setType(field.getType().getName()).setName(field.getName()));
-                writeEnum(root, packageDeclaration, field.getType().getName(), field.getType().getEnumValues().toArray());
-
-            } else if (o instanceof ReferenceField) {
-                final ReferenceField field = (ReferenceField) o;
-                final Entity fieldEntity = field.getEntity();
-                entityClass.addAccessors(Neo4JST.newReferenceAccessors().setClassName(entity.getName()).setType(fieldEntity.getName()).setName(field.getName()));
-
-                generateNeoWrapper(root, packageDeclaration, fieldEntity, visited);
-
-            } else if (o instanceof ExternalReferenceField) {
-                final ExternalReferenceField field = (ExternalReferenceField) o;
-                entityClass.addExternalFields(field.getType().getCanonicalName(), field.getName(), null);
-                entityClass.addAccessors(Neo4JST.newExternalAccessors().setClassName(entity.getName()).setType(field.getType().getCanonicalName()).setName(field.getName()));
-
-            } else if (o instanceof ReferenceList) {
-                final ReferenceList field = (ReferenceList) o;
-
-                entityClass.addAccessors(Neo4JST.newListReferenceAccessors()
-                        .setClassName(entity.getName())
-                        .setType(field.getSelf(false) ? entity.getName() : field.getEntity().getName())
-                        .setName(field.getName()));
-
-                entityClass.addAccessors(Neo4JST.newIncomingReferenceStream()
-                        .setName(field.getName())
-                        .setType(field.getSelf(false) ? entity.getName() : field.getEntity().getName()));
-
-                generateNeoWrapper(root, packageDeclaration, field.getEntity(), visited);
+                case ENUM: {
+                    final Entity dst = asEntity(o.getDst());
+                    entityClass.addAccessors(Neo4JST.newEnumAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
+                    writeEnum(root, packageDeclaration, dst.getName(), dst.getEnumValues().toArray());
+                    break;
+                }
+                case EXT_REF: {
+                    final Class<?> dst = asClass(o.getDst());
+                    entityClass.addExternalFields(dst.getCanonicalName(), o.getName(), null);
+                    entityClass.addAccessors(Neo4JST.newExternalAccessors().setClassName(entityName).setType(dst.getCanonicalName()).setName(o.getName()));
+                    break;
+                }
+                case EXT_LIST: {
+                    final Class<?> dst = asClass(o.getDst());
+                    entityClass.addExternalFields(JavaST.newList().setType(dst.getCanonicalName()), o.getName(), JavaPatterns.newArrayListInstance());
+                    entityClass.addAccessors(JavaST.newListAccessors().setClassName(entityName).setType(dst.getCanonicalName()).setName(o.getName()));
+                    break;
+                }
+                case PRIM_REF: {
+                    final Class<?> dst = asClass(o.getDst());
+                    entityClass.addAccessors(Neo4JST.newPrimitiveAccessors().setClassName(entityName).setType(dst.getSimpleName()).setName(o.getName()));
+                    if (o.getLexical(false)) entityClass.addLexical(o.getName());
+                    break;
+                }
+                case PRIM_LIST: {
+                    final Class<?> dst = asClass(o.getDst());
+                    entityClass.addAccessors(Neo4JST.newListPrimitiveAccessors().setClassName(entityName).setType(dst.getSimpleName()).setName(o.getName()));
+                    break;
+                }
+                case REF: {
+                    final Entity dst = asEntity(o.getDst());
+                    entityClass.addAccessors(Neo4JST.newReferenceAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
+                    generateNeoWrapper(root, packageDeclaration, dst, visited);
+                    break;
+                }
+                case LIST: {
+                    final Entity dst = asEntity(o.getDst());
+                    entityClass.addAccessors(Neo4JST.newListReferenceAccessors().setClassName(entityName).setType(o.getSelf(false) ? entityName : dst.getName()).setName(o.getName()));
+                    entityClass.addAccessors(Neo4JST.newIncomingReferenceStream().setName(o.getName()).setType(o.getSelf(false) ? entityName : dst.getName()));
+                    generateNeoWrapper(root, packageDeclaration, dst, visited);
+                    break;
+                }
             }
         });
 
@@ -342,49 +399,58 @@ public class DomainPatterns extends DomainST {
 
         if (entity == null || visited.containsKey(entity)) return visited.get(entity);
 
+        final String entityName = entity.getName();
         final JsonWrapper entityClass = VertxST.newJsonWrapper()
                 .setPackage(packageDeclaration.getName())
-                .setName(entity.getName());
+                .setName(entityName);
 
         visited.put(entity, entityClass);
 
         entity.getRelations().forEach(o -> {
 
-            if (o instanceof PrimitiveField) {
-                final PrimitiveField field = (PrimitiveField) o;
-                entityClass.addAccessors(VertxST.newPrimitiveAccessors().setClassName(entity.getName()).setType(getType(field.getType())).setName(field.getName()));
+            switch (o.getType()) {
 
-                if (field.getLexical(false)) entityClass.setLexical(field.getName());
+                case ENUM: {
+                    final Entity dst = asEntity(o.getDst());
+                    entityClass.addAccessors(VertxST.newEnumAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
 
-            } else if (o instanceof PrimitiveList) {
-                final PrimitiveList field = (PrimitiveList) o;
-                entityClass.addAccessors(VertxST.newListPrimitiveAccessors().setClassName(entity.getName()).setType(field.getType().getCanonicalName()).setName(field.getName()));
+                    writeEnum(root, packageDeclaration, dst.getName(), dst.getEnumValues().toArray());
+                    break;
+                }
+                case EXT_REF: {
+                    final Class<?> dst = asClass(o.getDst());
+                    entityClass.addExternalFields(dst.getCanonicalName(), o.getName(), null);
+                    entityClass.addAccessors(VertxST.newExternalAccessors().setClassName(entityName).setType(dst.getCanonicalName()).setName(o.getName()));
+                    break;
+                }
+                case EXT_LIST: {
+                    break;
+                }
+                case PRIM_REF: {
+                    final Class<?> dst = asClass(o.getDst());
+                    entityClass.addAccessors(VertxST.newPrimitiveAccessors().setClassName(entityName).setType(dst.getSimpleName()).setName(o.getName()));
+                    if (o.getLexical(false)) entityClass.setLexical(o.getName());
+                    break;
+                }
+                case PRIM_LIST: {
+                    final Class<?> dst = asClass(o.getDst());
+                    entityClass.addAccessors(VertxST.newListPrimitiveAccessors().setClassName(entityName).setType(dst.getSimpleName()).setName(o.getName()));
+                    break;
+                }
+                case REF: {
+                    final Entity dst = asEntity(o.getDst());
+                    entityClass.addAccessors(VertxST.newReferenceAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
 
-            } else if (o instanceof EnumField) {
-                final EnumField field = (EnumField) o;
-                entityClass.addAccessors(VertxST.newEnumAccessors().setClassName(entity.getName()).setType(field.getType().getName()).setName(field.getName()));
-                writeEnum(root, packageDeclaration, field.getType().getName(), field.getType().getEnumValues().toArray());
+                    generateJsonWrapper(root, packageDeclaration, dst, visited);
+                    break;
+                }
+                case LIST: {
+                    final Entity dst = asEntity(o.getDst());
+                    entityClass.addAccessors(VertxST.newListReferenceAccessors().setClassName(entityName).setType(o.getSelf(false) ? entityName : dst.getName()).setName(o.getName()));
 
-            } else if (o instanceof ReferenceField) {
-                final ReferenceField field = (ReferenceField) o;
-                final Entity fieldEntity = field.getEntity();
-                entityClass.addAccessors(VertxST.newReferenceAccessors().setClassName(entity.getName()).setType(fieldEntity.getName()).setName(field.getName()));
-
-                generateJsonWrapper(root, packageDeclaration, fieldEntity, visited);
-
-            } else if (o instanceof ExternalReferenceField) {
-                final ExternalReferenceField field = (ExternalReferenceField) o;
-                entityClass.addExternalFields(field.getType().getCanonicalName(), field.getName(), null);
-                entityClass.addAccessors(VertxST.newExternalAccessors().setClassName(entity.getName()).setType(field.getType().getCanonicalName()).setName(field.getName()));
-
-            } else if (o instanceof ReferenceList) {
-                final ReferenceList field = (ReferenceList) o;
-                entityClass.addAccessors(VertxST.newListReferenceAccessors()
-                        .setClassName(entity.getName())
-                        .setType(field.getSelf(false) ? entity.getName() : field.getEntity().getName())
-                        .setName(field.getName()));
-
-                generateJsonWrapper(root, packageDeclaration, field.getEntity(), visited);
+                    generateJsonWrapper(root, packageDeclaration, dst, visited);
+                    break;
+                }
             }
         });
 
@@ -392,8 +458,11 @@ public class DomainPatterns extends DomainST {
         return entityClass;
     }
 
-    private static Object getType(Object type) {
-        if (type instanceof Class<?>) return ((Class<?>) type).getSimpleName();
-        return type;
+    private static Entity asEntity(Object type) {
+        return (Entity) type;
+    }
+
+    private static Class<?> asClass(Object type) {
+        return (Class<?>) type;
     }
 }

@@ -52,7 +52,7 @@ public class STEditor extends JPanel {
         pop.addSeparator();
         pop.add(newAction("Add Java method", actionEvent -> addJavaMethod()));
 
-        this.txtEditor.setFont(new Font("Hack", Font.PLAIN, 12));
+        this.txtEditor.setFont(new Font("Hack", Font.PLAIN, 20));
         this.txtEditor.setTabSize(3);
         this.txtEditor.setCodeFoldingEnabled(true);
         this.txtEditor.addKeyListener(new STTemplateEditorKeyListener());

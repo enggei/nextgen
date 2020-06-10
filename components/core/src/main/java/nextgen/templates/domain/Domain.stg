@@ -5,22 +5,9 @@ Domain(name,packageName,entities) ::= <<~name~
 ~entities:{it|~it~};separator="\n"~ >>
 
 Entity(name,isEnum,enumValues,relations) ::= <<~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=","~~endif~
-
 ~relations:{it|~it~};separator="\n"~  >>
 
-EnumField(name,type,lexical) ::= <<Enum field : ~name~ ~type~~if(lexical)~ lexical~endif~  >>
-
-ExternalReferenceField(name,type,lexical) ::= <<External field ~name~ (~type~)~if(lexical)~ lexical~endif~  >>
-
-ExternalReferenceList(name,type) ::= <<External List of ~name~ (~type~)  >>
-
-PrimitiveField(name,type,lexical) ::= <<Field ~name~ (~type~)~if(lexical)~ lexical~endif~  >>
-
-PrimitiveList(name,type) ::= <<List of ~name~ (~type~)  >>
-
-ReferenceField(name,entity,lexical,self) ::= <<Entity field : ~name~ ~entity~~if(lexical)~ lexical~endif~~if(self)~ self-referential~endif~  >>
-
-ReferenceList(name,entity,self) ::= <<Entity List of ~name~ ~entity~~if(self)~ self-referential~endif~  >>
+Relation(name,type,dst,lexical,self) ::= <<~name~ ~type~ ~dst~~if(lexical)~ lexical~endif~~if(self)~ self-referential~endif~  >>
 
 eom() ::= "}"
 

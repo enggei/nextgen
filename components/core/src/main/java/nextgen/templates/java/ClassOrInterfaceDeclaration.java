@@ -21,19 +21,6 @@ public class ClassOrInterfaceDeclaration {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		ClassOrInterfaceDeclaration that = (ClassOrInterfaceDeclaration) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ClassOrInterfaceDeclaration");
 		st.add("isInterface", _isInterface);
@@ -244,6 +231,19 @@ public class ClassOrInterfaceDeclaration {
 		return this._members;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ClassOrInterfaceDeclaration that = (ClassOrInterfaceDeclaration) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "ClassOrInterfaceDeclaration(comments,annotations,modifiers,isInterface,name,typeParameters,extend,implementedTypes,fields,members) ::= <<~comments:{it|~it~};separator=\"\\n\"~~if(comments)~\n" + 
 				"~endif~~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\n" + 
 				"~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~if(isInterface)~interface ~else~class ~endif~~name~~if(typeParameters)~<~typeParameters:{it|~it~};separator=\", \"~>~endif~~if(extend)~ extends ~extend:{it|~it~};separator=\", \"~~endif~~if(implementedTypes)~ implements ~implementedTypes:{it|~it~};separator=\", \"~~endif~ {\n" + 
@@ -254,4 +254,4 @@ public class ClassOrInterfaceDeclaration {
 				"	~endif~\n" + 
 				"	~members:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"}>> ";
-} 
+}  

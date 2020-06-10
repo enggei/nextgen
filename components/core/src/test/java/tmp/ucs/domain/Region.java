@@ -3,8 +3,8 @@ package tmp.ucs.domain;
 public class Region {
 
 	private final java.util.UUID uuid;
-	private java.lang.String _name;
-	private java.util.List<Country> _countries;
+	private String _name;
+	private java.util.List<Country> _countries = new java.util.ArrayList<>();
 
 	public Region() {
 		this.uuid = java.util.UUID.randomUUID();
@@ -16,26 +16,13 @@ public class Region {
 
 	public java.util.UUID getUuid() {
 		return this.uuid;
-	}
+	}	
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Region that = (Region) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	public java.lang.String getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Region setName(java.lang.String value) {
+	public Region setName(String value) {
 		this._name = value;
 		return this;
 	}
@@ -47,5 +34,17 @@ public class Region {
 	public Region addCountries(Country value) {
 		this._countries.add(value);
 		return this;
+	}
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Region that = (Region) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
 	}
 }

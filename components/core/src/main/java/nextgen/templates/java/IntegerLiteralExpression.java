@@ -12,19 +12,6 @@ public class IntegerLiteralExpression {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		IntegerLiteralExpression that = (IntegerLiteralExpression) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("IntegerLiteralExpression");
 		st.add("value", _value);
@@ -53,5 +40,18 @@ public class IntegerLiteralExpression {
 		return this;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		IntegerLiteralExpression that = (IntegerLiteralExpression) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "IntegerLiteralExpression(value) ::= <<~value~>> ";
-} 
+}  

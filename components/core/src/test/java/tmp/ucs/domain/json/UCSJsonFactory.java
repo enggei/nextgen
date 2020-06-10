@@ -1,6 +1,5 @@
 package tmp.ucs.domain.json;
 
-
 public class UCSJsonFactory {
 
 	public static World newWorld() { 
@@ -74,4 +73,5 @@ public class UCSJsonFactory {
 	public static Seat newSeat(io.vertx.core.json.JsonObject jsonObject) { 
 		return new Seat(jsonObject);
 	}
+
 }

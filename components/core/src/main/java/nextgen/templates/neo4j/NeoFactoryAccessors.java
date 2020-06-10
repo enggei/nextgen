@@ -13,19 +13,6 @@ public class NeoFactoryAccessors {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		NeoFactoryAccessors that = (NeoFactoryAccessors) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("NeoFactoryAccessors");
 		st.add("name", _name);
@@ -73,6 +60,19 @@ public class NeoFactoryAccessors {
 		return this._properties;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		NeoFactoryAccessors that = (NeoFactoryAccessors) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "NeoFactoryAccessors(name,properties) ::= <<public ~name;format=\"capitalize\"~ new~name;format=\"capitalize\"~() { \n" + 
 				"	return new~name;format=\"capitalize\"~(db.createNode(org.neo4j.graphdb.Label.label(\"~name~\")));\n" + 
 				"}\n" + 
@@ -86,4 +86,4 @@ public class NeoFactoryAccessors {
 				"}\n" + 
 				"\n" + 
 				"~properties:{it|~it~};separator=\"\\n\\n\"~>> ";
-} 
+}  

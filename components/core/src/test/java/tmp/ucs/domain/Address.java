@@ -3,9 +3,9 @@ package tmp.ucs.domain;
 public class Address {
 
 	private final java.util.UUID uuid;
-	private java.lang.String _street;
-	private java.lang.Integer _no;
-	private java.lang.String _letter;
+	private String _street;
+	private Integer _no;
+	private String _letter;
 
 	public Address() {
 		this.uuid = java.util.UUID.randomUUID();
@@ -17,8 +17,34 @@ public class Address {
 
 	public java.util.UUID getUuid() {
 		return this.uuid;
+	}	
+
+	public String getStreet() {
+		return this._street;
 	}
 
+	public Address setStreet(String value) {
+		this._street = value;
+		return this;
+	}
+
+	public Integer getNo() {
+		return this._no;
+	}
+
+	public Address setNo(Integer value) {
+		this._no = value;
+		return this;
+	}
+
+	public String getLetter() {
+		return this._letter;
+	}
+
+	public Address setLetter(String value) {
+		this._letter = value;
+		return this;
+	}
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -30,32 +56,5 @@ public class Address {
 	@Override
 	public int hashCode() {
 		return java.util.Objects.hash(uuid);
-	}
-
-	public java.lang.String getStreet() {
-		return this._street;
-	}
-
-	public Address setStreet(java.lang.String value) {
-		this._street = value;
-		return this;
-	}
-
-	public java.lang.Integer getNo() {
-		return this._no;
-	}
-
-	public Address setNo(java.lang.Integer value) {
-		this._no = value;
-		return this;
-	}
-
-	public java.lang.String getLetter() {
-		return this._letter;
-	}
-
-	public Address setLetter(java.lang.String value) {
-		this._letter = value;
-		return this;
 	}
 }

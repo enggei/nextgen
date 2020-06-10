@@ -19,6 +19,11 @@ public class Address {
 		return this.jsonObject;
 	}
 
+	public Address removeUuid() {
+		this.jsonObject.remove("uuid");
+		return this;
+	}
+
 	@Override
 	public boolean equals(java.lang.Object o) { 
 		if (this == o) return true;

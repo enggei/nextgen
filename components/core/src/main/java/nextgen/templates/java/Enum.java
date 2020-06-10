@@ -14,19 +14,6 @@ public class Enum {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Enum that = (Enum) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Enum");
 		st.add("package", _package);
@@ -97,10 +84,23 @@ public class Enum {
 		return this._enumValues;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Enum that = (Enum) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "Enum(package,name,enumValues) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public enum ~name~ {\n" + 
 				"\n" + 
 				"	~enumValues:{it|~it~};separator=\",\\n\"~\n" + 
 				"}>> ";
-} 
+}  

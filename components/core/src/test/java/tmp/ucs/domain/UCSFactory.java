@@ -1,6 +1,5 @@
 package tmp.ucs.domain;
 
-
 public class UCSFactory {
 
 	public static World newWorld() { 
@@ -38,4 +37,5 @@ public class UCSFactory {
 	public static Seat newSeat() { 
 		return new Seat();
 	}
+
 }

@@ -16,19 +16,6 @@ public class NodeWrapper {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		NodeWrapper that = (NodeWrapper) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("NodeWrapper");
 		st.add("package", _package);
@@ -172,6 +159,19 @@ public class NodeWrapper {
 
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		NodeWrapper that = (NodeWrapper) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "NodeWrapper(package,name,externalFields,accessors,lexical) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public class ~name;format=\"capitalize\"~ {\n" + 
@@ -207,4 +207,4 @@ public class NodeWrapper {
 				"		return \"\"~if(lexical)~ + ~endif~~lexical:{it|node.getProperty(\"~it~\")};separator=\" + \\\" \\\" + \"~;\n" + 
 				"	}\n" + 
 				"}>> ";
-} 
+}  

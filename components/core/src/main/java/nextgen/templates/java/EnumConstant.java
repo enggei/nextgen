@@ -15,19 +15,6 @@ public class EnumConstant {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		EnumConstant that = (EnumConstant) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("EnumConstant");
 		st.add("name", _name);
@@ -115,8 +102,21 @@ public class EnumConstant {
 		return this._annotations;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		EnumConstant that = (EnumConstant) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "EnumConstant(methods,arguments,name,annotations) ::= <<~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\n" + 
 				"~endif~~name~~if(arguments)~(~arguments:{it|~it~};separator=\",\"~)~endif~~if(methods)~ {\n" + 
 				"	~methods:{it|~it~};separator=\"\\n\"~\n" + 
 				"}~endif~>> ";
-} 
+}  

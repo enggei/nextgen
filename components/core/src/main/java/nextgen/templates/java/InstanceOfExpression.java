@@ -13,19 +13,6 @@ public class InstanceOfExpression {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		InstanceOfExpression that = (InstanceOfExpression) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("InstanceOfExpression");
 		st.add("type", _type);
@@ -77,5 +64,18 @@ public class InstanceOfExpression {
 		return this;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		InstanceOfExpression that = (InstanceOfExpression) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "InstanceOfExpression(type,expression) ::= <<~expression~ instanceof ~type~>> ";
-} 
+}  

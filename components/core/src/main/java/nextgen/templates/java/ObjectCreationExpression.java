@@ -17,19 +17,6 @@ public class ObjectCreationExpression {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		ObjectCreationExpression that = (ObjectCreationExpression) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ObjectCreationExpression");
 		st.add("scope", _scope);
@@ -163,10 +150,23 @@ public class ObjectCreationExpression {
 		return this._anonymousClassBodies;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ObjectCreationExpression that = (ObjectCreationExpression) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "ObjectCreationExpression(scope,type,typeArguments,arguments,anonymousClassBodies,emptyClassBody) ::= <<new ~if(scope)~~scope~.~endif~~type~~if(typeArguments)~<~typeArguments:{it|~it~};separator=\", \"~>~endif~(~arguments:{it|~it~};separator=\", \"~)~if(anonymousClassBodies)~ {\n" + 
 				"\n" + 
 				"	~anonymousClassBodies:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"}~elseif(emptyClassBody)~ {\n" + 
 				"}~endif~>> ";
-} 
+}  

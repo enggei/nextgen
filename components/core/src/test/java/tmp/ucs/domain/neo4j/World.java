@@ -1,12 +1,11 @@
 package tmp.ucs.domain.neo4j;
 
-// todo node wrapper
 public class World {
 
 	private final org.neo4j.graphdb.Node node;
 
 	public World(org.neo4j.graphdb.Node node) { 
-		this.node= node;
+		this.node = node;
 	}
 
 	public org.neo4j.graphdb.Node getNode() { 
@@ -27,7 +26,7 @@ public class World {
 	}
 
 	public World addRegions(Region dst) { 
-		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("addresses")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("regions")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
 		if (existing.isPresent()) return this;
 		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("regions"));
 		return this;

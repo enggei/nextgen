@@ -14,19 +14,6 @@ public class PrimitiveAccessors {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		PrimitiveAccessors that = (PrimitiveAccessors) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("primitiveAccessors");
 		st.add("type", _type);
@@ -101,6 +88,19 @@ public class PrimitiveAccessors {
 		return this;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		PrimitiveAccessors that = (PrimitiveAccessors) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "primitiveAccessors(type,name,className) ::= <<public ~type~ get~name;format=\"capitalize\"~() {\n" + 
 				"	return this._~name~;\n" + 
 				"}\n" + 
@@ -109,4 +109,4 @@ public class PrimitiveAccessors {
 				"	this._~name~ = value;\n" + 
 				"	return this;\n" + 
 				"}>> ";
-} 
+}  

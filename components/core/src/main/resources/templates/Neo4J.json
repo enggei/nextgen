@@ -223,22 +223,27 @@
       }, {
         "uuid" : "eca7a261-a0f4-40ed-be82-eb6f1c931658",
         "name" : "NeoFactoryPropertyAccessors",
-        "text" : "public ~entity;format=\"capitalize\"~ find~entity;format=\"capitalize\"~By~propertyName;format=\"capitalize\"~(~propertyType~ value) {\n\tfinal org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label(\"~entity~\"), \"~propertyName~\", value);\n\treturn node == null ? null : new ~entity;format=\"capitalize\"~(node);\n}\n\npublic ~entity;format=\"capitalize\"~ findOrCreate~entity;format=\"capitalize\"~By~propertyName;format=\"capitalize\"~(~propertyType~ value) {\n\tfinal ~entity;format=\"capitalize\"~ existing = find~entity;format=\"capitalize\"~By~propertyName;format=\"capitalize\"~(value);\n\treturn existing == null ? new~entity;format=\"capitalize\"~().set~propertyName;format=\"capitalize\"~(value) : existing;\n}\n\npublic java.util.stream.Stream<~entity;format=\"capitalize\"~> findAll~entity;format=\"capitalize\"~By~propertyName;format=\"capitalize\"~(~propertyType~ value) {\n\treturn db.findNodes(org.neo4j.graphdb.Label.label(\"~entity~\"), \"~propertyName~\", value).stream().map(this::new~entity;format=\"capitalize\"~);\n}",
+        "text" : "public ~entity;format=\"capitalize\"~ find~entity;format=\"capitalize\"~By~propertyName;format=\"capitalize\"~(~propertyType~ value) {\n\tfinal org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label(\"~entity~\"), \"~propertyName~\", value~if(isEnum)~.name()~endif~);\n\treturn node == null ? null : new ~entity;format=\"capitalize\"~(node);\n}\n\npublic ~entity;format=\"capitalize\"~ findOrCreate~entity;format=\"capitalize\"~By~propertyName;format=\"capitalize\"~(~propertyType~ value) {\n\tfinal ~entity;format=\"capitalize\"~ existing = find~entity;format=\"capitalize\"~By~propertyName;format=\"capitalize\"~(value);\n\treturn existing == null ? new~entity;format=\"capitalize\"~().set~propertyName;format=\"capitalize\"~(value) : existing;\n}\n\npublic java.util.stream.Stream<~entity;format=\"capitalize\"~> findAll~entity;format=\"capitalize\"~By~propertyName;format=\"capitalize\"~(~propertyType~ value) {\n\treturn db.findNodes(org.neo4j.graphdb.Label.label(\"~entity~\"), \"~propertyName~\", value~if(isEnum)~.name()~endif~).stream().map(this::new~entity;format=\"capitalize\"~);\n} ",
         "parameters" : [ {
-          "uuid" : "c582b147-ef6f-44db-b9e9-d185ebc6a3fe",
+          "uuid" : "6175ef30-649d-4dda-8fc3-c8b96b3e9bc0",
           "name" : "entity",
           "type" : "SINGLE",
           "argumentType" : "Object"
         }, {
-          "uuid" : "67ae5898-ecd6-4d92-a316-953fd8c86378",
+          "uuid" : "484361a9-f990-4925-89aa-b0db5899f62a",
           "name" : "propertyName",
           "type" : "SINGLE",
-          "argumentType" : "Object"
+          "argumentType" : "String"
         }, {
-          "uuid" : "d8949dce-5e0b-4191-9eff-7a3fb1511786",
+          "uuid" : "47a78177-3b0e-4756-89ad-d4510948bade",
           "name" : "propertyType",
           "type" : "SINGLE",
           "argumentType" : "Object"
+        }, {
+          "uuid" : "25248602-7165-4067-948c-f8371964310e",
+          "name" : "isEnum",
+          "type" : "SINGLE",
+          "argumentType" : "Boolean"
         } ]
       } ]
     } ]

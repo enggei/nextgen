@@ -7,8 +7,8 @@ public class Pojo {
 
 	private String _package;
 	private String _name;
-	private java.util.List<String> _lexical = new java.util.ArrayList<>();
 	private java.util.List<Object> _accessors = new java.util.ArrayList<>();
+	private java.util.List<String> _lexical = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 
 	Pojo(org.stringtemplate.v4.STGroup stGroup) {
@@ -16,25 +16,12 @@ public class Pojo {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Pojo that = (Pojo) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Pojo");
 		st.add("package", _package);
 		st.add("name", _name);
-		for (Object o : _lexical) st.add("lexical", o);
 		for (Object o : _accessors) st.add("accessors", o);
+		for (Object o : _lexical) st.add("lexical", o);
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name,initializer}", map.get("type"), map.get("name"), map.get("initializer"));
 		return st.render().trim();
 	}
@@ -82,25 +69,6 @@ public class Pojo {
 		this._name = null;
 		return this;
 	} 
-	public Pojo addLexical(String value) {
-		this._lexical.add(value);
-		return this;
-	}
-
-	public Pojo removeLexical(String value) {
-		this._lexical.remove(value);
-		return this;
-	}
-
-	public Pojo removeLexical(int index) {
-		this._lexical.remove(index);
-		return this;
-	}
-
-	public java.util.List<String> getLexical() {
-		return this._lexical;
-	} 
-
 	public Pojo addAccessors(Object value) {
 		this._accessors.add(value);
 		return this;
@@ -118,6 +86,25 @@ public class Pojo {
 
 	public java.util.List<Object> getAccessors() {
 		return this._accessors;
+	} 
+
+	public Pojo addLexical(String value) {
+		this._lexical.add(value);
+		return this;
+	}
+
+	public Pojo removeLexical(String value) {
+		this._lexical.remove(value);
+		return this;
+	}
+
+	public Pojo removeLexical(int index) {
+		this._lexical.remove(index);
+		return this;
+	}
+
+	public java.util.List<String> getLexical() {
+		return this._lexical;
 	} 
 	public Pojo addFields(Object _type, String _name, Object _initializer) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -172,7 +159,20 @@ public class Pojo {
 
 	} 
 
-	static final String st = "Pojo(package,name,fields,lexical,accessors) ::= <<package ~package~;\n" + 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Pojo that = (Pojo) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
+	static final String st = "Pojo(package,name,fields,accessors,lexical) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public class ~name~ {\n" + 
 				"\n" + 
@@ -189,8 +189,17 @@ public class Pojo {
 				"\n" + 
 				"	public java.util.UUID getUuid() {\n" + 
 				"		return this.uuid;\n" + 
+				"	}	\n" + 
+				"	\n" + 
+				"	~accessors:{it|~it~};separator=\"\\n\\n\"~\n" + 
+				"~if(lexical)~\n" + 
+				"\n" + 
+				"	@Override\n" + 
+				"	public String toString() {\n" + 
+				"		return ~lexical:{it|_~it~};separator=\" + \\\" \\\" + \"~;\n" + 
 				"	}\n" + 
-				"		\n" + 
+				"~endif~\n" + 
+				"\n" + 
 				"	@Override\n" + 
 				"	public boolean equals(Object o) {\n" + 
 				"		if (this == o) return true;\n" + 
@@ -203,14 +212,5 @@ public class Pojo {
 				"	public int hashCode() {\n" + 
 				"		return java.util.Objects.hash(uuid);\n" + 
 				"	}\n" + 
-				"~if(lexical)~\n" + 
-				"\n" + 
-				"	@Override\n" + 
-				"	public String toString() {\n" + 
-				"		return ~lexical:{it|_~it~};separator=\" + \\\" \\\" + \"~;\n" + 
-				"	}\n" + 
-				"~endif~\n" + 
-				"	\n" + 
-				"	~accessors:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"}>> ";
-} 
+}  

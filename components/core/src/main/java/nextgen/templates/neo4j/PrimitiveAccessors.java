@@ -14,19 +14,6 @@ public class PrimitiveAccessors {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		PrimitiveAccessors that = (PrimitiveAccessors) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("primitiveAccessors");
 		st.add("className", _className);
@@ -101,6 +88,19 @@ public class PrimitiveAccessors {
 		return this;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		PrimitiveAccessors that = (PrimitiveAccessors) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "primitiveAccessors(className,name,type) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n" + 
 				"	if (value == null) node.removeProperty(\"~name~\"); \n" + 
 				"	else node.setProperty(\"~name~\", value);\n" + 
@@ -125,4 +125,4 @@ public class PrimitiveAccessors {
 				"	node.removeProperty(\"~name~\");\n" + 
 				"	return this;\n" + 
 				"}>> ";
-} 
+}  

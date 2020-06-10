@@ -14,19 +14,6 @@ public class Domain {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Domain that = (Domain) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Domain");
 		st.add("name", _name);
@@ -97,7 +84,20 @@ public class Domain {
 		return this._entities;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Domain that = (Domain) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "Domain(name,packageName,entities) ::= <<~name~\n" + 
 				"~packageName~\n" + 
 				"~entities:{it|~it~};separator=\"\\n\"~>> ";
-} 
+}  

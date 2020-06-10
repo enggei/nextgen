@@ -5,27 +5,27 @@
   "templates" : [ {
     "uuid" : "c4c6caaf-84a5-4975-8782-311476c8742c",
     "name" : "Entity",
-    "text" : "~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~\n\n~relations:{it|~it~};separator=\"\\n\"~ ",
+    "text" : "~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~\n~relations:{it|~it~};separator=\"\\n\"~ ",
     "parameters" : [ {
-      "uuid" : "f98f22cf-b9ea-4728-8a9b-44c4d218856b",
+      "uuid" : "df812852-1a4b-4e82-b4e1-31196c9b948f",
       "name" : "name",
       "type" : "SINGLE",
       "argumentType" : "String"
     }, {
-      "uuid" : "ff4a7014-e698-47f4-b00b-430a2352e520",
+      "uuid" : "b786761b-cdbb-4ea2-a0de-487a429da4f4",
       "name" : "isEnum",
       "type" : "SINGLE",
       "argumentType" : "Boolean"
     }, {
-      "uuid" : "84e59fdc-cda2-4bcd-9bf1-cf8431cf350d",
+      "uuid" : "ed6201f0-575e-4cff-8393-6deb1e2b8283",
       "name" : "enumValues",
       "type" : "LIST",
       "argumentType" : "String"
     }, {
-      "uuid" : "cfa5fe88-5c23-4f37-a9de-5468f45379d0",
+      "uuid" : "b082416f-6627-4868-8709-6e1d5ffaddbe",
       "name" : "relations",
       "type" : "LIST",
-      "argumentType" : "Object"
+      "argumentType" : "Relation"
     } ]
   }, {
     "uuid" : "27fe2ba6-f50a-4f07-bc4b-12872efe17ad",
@@ -48,139 +48,67 @@
       "argumentType" : "Entity"
     } ]
   }, {
-    "uuid" : "b3684253-8078-4787-b9d7-b9a8538c13fd",
-    "name" : "PrimitiveField",
-    "text" : "Field ~name~ (~type~)~if(lexical)~ lexical~endif~ ",
+    "uuid" : "6b160e63-6f7a-46c1-b128-db8e15f2d184",
+    "name" : "Relation",
+    "text" : "~name~ ~type~ ~dst~~if(lexical)~ lexical~endif~~if(self)~ self-referential~endif~ ",
     "parameters" : [ {
-      "uuid" : "b5e0a2ae-8ee3-495e-91a1-5b3698688974",
+      "uuid" : "6e9a1856-7da1-4ef9-b422-f3b990eef6d6",
       "name" : "name",
       "type" : "SINGLE",
       "argumentType" : "String"
     }, {
-      "uuid" : "1f683f48-7a1b-4511-ae7f-fe72e014a597",
+      "uuid" : "be034db9-ef54-4d8d-b4f0-281ca65d0a23",
       "name" : "type",
       "type" : "SINGLE",
-      "argumentType" : "Class<?>"
+      "argumentType" : "RelationType"
     }, {
-      "uuid" : "ba3ed837-7dc0-47ab-827c-001118616b59",
-      "name" : "lexical",
+      "uuid" : "ed35b23a-3a4c-4a3c-b315-9ef52a90f736",
+      "name" : "dst",
       "type" : "SINGLE",
-      "argumentType" : "Boolean"
-    } ]
-  }, {
-    "uuid" : "2aecf888-abf3-4f63-8748-49c3bca774db",
-    "name" : "ReferenceField",
-    "text" : "Entity field : ~name~ ~entity~~if(lexical)~ lexical~endif~~if(self)~ self-referential~endif~ ",
-    "parameters" : [ {
-      "uuid" : "0991e565-1aa4-4bec-8b88-5d7204b046eb",
-      "name" : "name",
-      "type" : "SINGLE",
-      "argumentType" : "String"
+      "argumentType" : "Object"
     }, {
-      "uuid" : "8d73d954-c3fd-4713-8182-cc26f4e02b4f",
-      "name" : "entity",
-      "type" : "SINGLE",
-      "argumentType" : "Entity"
-    }, {
-      "uuid" : "038f4d6e-4742-42aa-8614-b0e2dbc1c7b3",
+      "uuid" : "bdc441f7-1a34-4fc5-baa3-66ac94e19b2e",
       "name" : "lexical",
       "type" : "SINGLE",
       "argumentType" : "Boolean"
     }, {
-      "uuid" : "d7265340-b13a-4c3b-99ac-c15981018059",
+      "uuid" : "3293f726-fb4b-4194-b7c5-f5bea01a09c2",
       "name" : "self",
       "type" : "SINGLE",
       "argumentType" : "Boolean"
     } ]
-  }, {
-    "uuid" : "8f3b2449-252a-426d-9856-2d373471838d",
-    "name" : "PrimitiveList",
-    "text" : "List of ~name~ (~type~) ",
-    "parameters" : [ {
-      "uuid" : "c1a3038e-b57e-4872-a640-a2b689962060",
-      "name" : "name",
-      "type" : "SINGLE",
-      "argumentType" : "String"
+  } ],
+  "enums" : [ {
+    "uuid" : "85f93ad0-6b67-41ac-9211-4f5c88ea666c",
+    "name" : "RelationType",
+    "values" : [ {
+      "uuid" : "2eb9f61f-041b-4c0b-bada-fa3ab72b91f3",
+      "name" : "ENUM",
+      "lexical" : null
     }, {
-      "uuid" : "4f815017-fdae-456e-851f-05629da85817",
-      "name" : "type",
-      "type" : "SINGLE",
-      "argumentType" : "Class<?>"
-    } ]
-  }, {
-    "uuid" : "4f87ca1a-15fe-4368-be92-fc8907a5308f",
-    "name" : "ReferenceList",
-    "text" : "Entity List of ~name~ ~entity~~if(self)~ self-referential~endif~ ",
-    "parameters" : [ {
-      "uuid" : "8f6b9498-6f1d-4399-a49d-e8b37733ebd5",
-      "name" : "name",
-      "type" : "SINGLE",
-      "argumentType" : "String"
+      "uuid" : "15737a27-d002-4108-897e-108ca39c904e",
+      "name" : "EXT_REF",
+      "lexical" : null
     }, {
-      "uuid" : "257ad25e-c848-4629-95fd-d50f5388640e",
-      "name" : "entity",
-      "type" : "SINGLE",
-      "argumentType" : "Entity"
+      "uuid" : "d14b6758-eee7-44c3-b69e-999858b6df52",
+      "name" : "EXT_LIST",
+      "lexical" : null
     }, {
-      "uuid" : "e137a394-f62e-4dde-9237-1714e3066908",
-      "name" : "self",
-      "type" : "SINGLE",
-      "argumentType" : "Boolean"
-    } ]
-  }, {
-    "uuid" : "8bcec9ae-2d0f-4545-ad0f-9967d9a78e35",
-    "name" : "ExternalReferenceField",
-    "text" : "External field ~name~ (~type~)~if(lexical)~ lexical~endif~ ",
-    "parameters" : [ {
-      "uuid" : "358361f9-7607-4683-9232-8134f8105a26",
-      "name" : "name",
-      "type" : "SINGLE",
-      "argumentType" : "String"
+      "uuid" : "f522ca77-a02a-4363-a727-256b043b3cbe",
+      "name" : "PRIM_REF",
+      "lexical" : null
     }, {
-      "uuid" : "5a1c59cb-39d5-4991-8eda-bb5762583f38",
-      "name" : "type",
-      "type" : "SINGLE",
-      "argumentType" : "Class<?>"
+      "uuid" : "a9778b1f-b0c2-49b2-bcfa-1ada88e41309",
+      "name" : "PRIM_LIST",
+      "lexical" : null
     }, {
-      "uuid" : "5024a1c9-1e10-406b-8efd-ed2f81254ac4",
-      "name" : "lexical",
-      "type" : "SINGLE",
-      "argumentType" : "Boolean"
-    } ]
-  }, {
-    "uuid" : "6c1257e4-216d-40f6-8282-dfe8e76034f6",
-    "name" : "ExternalReferenceList",
-    "text" : "External List of ~name~ (~type~) ",
-    "parameters" : [ {
-      "uuid" : "bb634e47-843d-4ce1-a2d6-72cd217f764b",
-      "name" : "name",
-      "type" : "SINGLE",
-      "argumentType" : "String"
+      "uuid" : "dd9245ba-4396-45bb-89d9-29f6bd294872",
+      "name" : "REF",
+      "lexical" : null
     }, {
-      "uuid" : "6e8df117-254a-403e-acf0-911cedef99e9",
-      "name" : "type",
-      "type" : "SINGLE",
-      "argumentType" : "Class<?>"
-    } ]
-  }, {
-    "uuid" : "ce99389a-9195-4d49-888f-1b9fdeb09481",
-    "name" : "EnumField",
-    "text" : "Enum field : ~name~ ~type~~if(lexical)~ lexical~endif~ ",
-    "parameters" : [ {
-      "uuid" : "4679ab5d-3700-46fc-985a-dc36e465cac7",
-      "name" : "name",
-      "type" : "SINGLE",
-      "argumentType" : "String"
-    }, {
-      "uuid" : "99b45556-99c8-480a-8522-51d59574ac73",
-      "name" : "type",
-      "type" : "SINGLE",
-      "argumentType" : "Entity"
-    }, {
-      "uuid" : "ccba34ba-6555-425e-9e02-5e87234b0687",
-      "name" : "lexical",
-      "type" : "SINGLE",
-      "argumentType" : "Boolean"
+      "uuid" : "55bfc61a-0e2d-4ceb-92b9-397077c8fa48",
+      "name" : "LIST",
+      "lexical" : null
     } ]
   } ]
 }

@@ -13,19 +13,6 @@ public class NewInstance {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		NewInstance that = (NewInstance) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("NewInstance");
 		st.add("type", _type);
@@ -73,5 +60,18 @@ public class NewInstance {
 		return this._arguments;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		NewInstance that = (NewInstance) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "NewInstance(type,arguments) ::= <<new ~type~(~arguments:{it|~it~};separator=\",\"~)>> ";
-} 
+}  

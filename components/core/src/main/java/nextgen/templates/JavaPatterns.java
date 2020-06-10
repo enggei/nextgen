@@ -1,8 +1,8 @@
 package nextgen.templates;
 
 import nextgen.st.STGenerator;
-import nextgen.templates.java.*;
 import nextgen.templates.java.Enum;
+import nextgen.templates.java.*;
 
 import java.io.File;
 import java.util.Collection;
@@ -38,5 +38,9 @@ public class JavaPatterns extends JavaST {
     public static void writePojoFactory(File root, PojoFactory content) {
         final PackageDeclaration packageDeclaration = (PackageDeclaration) content.getPackage();
         STGenerator.writeToFile(content, packageDeclaration.getName(), content.getName().toString(), "java", root);
+    }
+
+    public static ObjectCreationExpression newArrayListInstance() {
+        return newObjectCreationExpression().setType(newArrayList());
     }
 }

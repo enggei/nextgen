@@ -14,19 +14,6 @@ public class JavaPackageInfo {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		JavaPackageInfo that = (JavaPackageInfo) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("JavaPackageInfo");
 		st.add("packageName", _packageName);
@@ -94,6 +81,19 @@ public class JavaPackageInfo {
 		return this._classes;
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		JavaPackageInfo that = (JavaPackageInfo) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "JavaPackageInfo(packageName,interfaces,classes) ::= <<~packageName~\n" + 
 				"\n" + 
 				"interfaces:\n" + 
@@ -101,4 +101,4 @@ public class JavaPackageInfo {
 				"\n" + 
 				"classes:\n" + 
 				"	~classes:{it|~it.name~};separator=\"\\n\"~>> ";
-} 
+}  
