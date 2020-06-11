@@ -9,8 +9,10 @@ public class KotlinST {
 	AnnotationDeclaration.st + "\n" + 
 	AnnotationParam.st + "\n" + 
 	ClassDeclaration.st + "\n" + 
+	OverrideEquals.st + "\n" + 
 	Extending.st + "\n" + 
 	FieldDeclaration.st + "\n" + 
+	FunctionDeclaration.st + "\n" + 
 	PackageDeclaration.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
@@ -63,12 +65,20 @@ public class KotlinST {
 		return new ClassDeclaration(stGroup);
 	} 
 
+	public static OverrideEquals newOverrideEquals() {
+		return new OverrideEquals(stGroup);
+	} 
+
 	public static Extending newExtending() {
 		return new Extending(stGroup);
 	} 
 
 	public static FieldDeclaration newFieldDeclaration() {
 		return new FieldDeclaration(stGroup);
+	} 
+
+	public static FunctionDeclaration newFunctionDeclaration() {
+		return new FunctionDeclaration(stGroup);
 	} 
 
 	public static PackageDeclaration newPackageDeclaration() {

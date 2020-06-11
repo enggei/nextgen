@@ -13,8 +13,10 @@ public class KotlinSTTests {
 		testAnnotationDeclaration();
 		testAnnotationParam();
 		testClassDeclaration();
+		testOverrideEquals();
 		testExtending();
 		testFieldDeclaration();
+		testFunctionDeclaration();
 		testPackageDeclaration();
 	}
 
@@ -39,6 +41,11 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
+	public void testOverrideEquals() {
+		System.out.println("\n--- TEST OverrideEquals:\n" + newOverrideEquals());
+	} 
+
+	@org.junit.Test
 	public void testExtending() {
 		System.out.println("\n--- TEST Extending:\n" + newExtending());
 	} 
@@ -46,6 +53,11 @@ public class KotlinSTTests {
 	@org.junit.Test
 	public void testFieldDeclaration() {
 		System.out.println("\n--- TEST FieldDeclaration:\n" + newFieldDeclaration());
+	} 
+
+	@org.junit.Test
+	public void testFunctionDeclaration() {
+		System.out.println("\n--- TEST FunctionDeclaration:\n" + newFunctionDeclaration());
 	} 
 
 	@org.junit.Test
