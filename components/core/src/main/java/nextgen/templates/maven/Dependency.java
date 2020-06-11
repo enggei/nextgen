@@ -156,6 +156,8 @@ public class Dependency {
 				"	<artifactId>~artifactId~</artifactId>\n" + 
 				"	<version>~version~</version>~if(scope)~\n" + 
 				"	<scope>~scope;format=\"toLower\"~</scope>~endif~~if(systemPath)~\n" + 
-				"	<systemPath>~systemPath~</systemPath>~endif~\n" + 
+				"	<systemPath>~systemPath~</systemPath>\n" + 
+				"	~endif~\n" + 
+				"	\n" + 
 				"</dependency> >> ";
 }  

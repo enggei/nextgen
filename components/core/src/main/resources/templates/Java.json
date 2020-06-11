@@ -1599,6 +1599,18 @@
       "uuid" : "1d88fd16-609a-4911-b29f-dd8dd97ccd75",
       "name" : "FileType",
       "lexical" : "java.io.File"
+    }, {
+      "uuid" : "44b619f7-558e-4060-9b5f-6eedd23c7cf0",
+      "name" : "StringType",
+      "lexical" : "java.lang.String"
+    }, {
+      "uuid" : "ee7f48cc-976a-4cdd-89e9-006d5a6cd5dd",
+      "name" : "LongType",
+      "lexical" : "java.lang.Long"
+    }, {
+      "uuid" : "cb66658d-2f94-4267-99bb-c34f68307f7f",
+      "name" : "AtomicLongType",
+      "lexical" : "java.util.concurrent.atomic.AtomicLong"
     } ]
   } ]
 }

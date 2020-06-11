@@ -230,6 +230,18 @@ public ~entity~ remove~name;format="capitalize"~() {
 	return this;
 } >>
 
+STEnum(package,name,enumValues) ::= <<package ~package~;
+
+public enum ~name~ {
+
+	~enumValues:{it|~it~};separator=",\n"~
+}  >>
+
+STEnumValue(name,lexical) ::= <<~name~~if(lexical)~() {
+	@Override
+	public String toString() { return "~lexical~"; }
+}~endif~  >>
+
 STG(delimiter,templates) ::= <<delimiters ~delimiter~,~delimiter~
 
 eom() ::= "}"

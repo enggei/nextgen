@@ -71,6 +71,21 @@ public class STEditor extends JPanel {
         return stGroupTreeNode;
     }
 
+    public void setSTEnum(String text) {
+
+        this.stTemplateTreeNode = null;
+
+        this.startText = text;
+
+        this.txtEditor.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
+        this.txtEditor.setText(startText);
+        this.txtEditor.setCaretPosition(0);
+        this.txtEditor.setEditable(false);
+
+        this.txtEditor.discardAllEdits();
+        txtEditor.setBackground(uneditedColor);
+    }
+
     public void setSTTemplate(STNavigator.RootNode.STGDirectoryTreeNode.STGroupTreeNode.STTemplateTreeNode stTemplateTreeNode) {
 
         this.stTemplateTreeNode = stTemplateTreeNode;

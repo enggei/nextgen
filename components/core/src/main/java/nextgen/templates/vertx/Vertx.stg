@@ -159,6 +159,17 @@ JsonFactory(package,name,entities) ::= <<package ~package~;
 
 public class ~name;format="capitalize"~ {
 
+	public static void save(io.vertx.core.json.JsonObject jsonObject, java.io.File file) throws java.io.IOException {
+
+		if (!file.getParentFile().exists() && !file.getParentFile().mkdirs())
+			throw new IllegalStateException("could not create " + file.getParentFile().getAbsolutePath());
+
+		if (!file.exists() && !file.createNewFile())
+			throw new IllegalStateException("could not create " + file.getAbsolutePath());
+
+		java.nio.file.Files.write(file.toPath(), jsonObject.toBuffer().getBytes());
+	}
+	
 ~entities:{it|
 	public static ~it~ new~it~() { 
 		return new ~it~();
@@ -167,8 +178,12 @@ public class ~name;format="capitalize"~ {
 	public static ~it~ new~it~(io.vertx.core.json.JsonObject jsonObject) { 
 		return new ~it~(jsonObject);
 	~eom()~
+
+	public static ~it~ new~it~(java.io.File file) throws java.io.IOException { 
+		return new ~it~(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));
+	~eom()~
 };separator="\n"~
-} >>
+}  >>
 
 eom() ::= "}"
 

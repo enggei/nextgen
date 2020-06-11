@@ -18,6 +18,8 @@ public class StringTemplateSTTests {
 		testEntityKVListAccessors();
 		testEntityListAccessors();
 		testEntitySingleAccessors();
+		testSTEnum();
+		testSTEnumValue();
 		testSTG();
 		testTemplate();
 	}
@@ -65,6 +67,16 @@ public class StringTemplateSTTests {
 	@org.junit.Test
 	public void testEntitySingleAccessors() {
 		System.out.println("\n--- TEST EntitySingleAccessors:\n" + newEntitySingleAccessors());
+	} 
+
+	@org.junit.Test
+	public void testSTEnum() {
+		System.out.println("\n--- TEST STEnum:\n" + newSTEnum());
+	} 
+
+	@org.junit.Test
+	public void testSTEnumValue() {
+		System.out.println("\n--- TEST STEnumValue:\n" + newSTEnumValue());
 	} 
 
 	@org.junit.Test

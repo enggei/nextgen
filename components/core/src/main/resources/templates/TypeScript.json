@@ -1,0 +1,43 @@
+{
+  "uuid" : "fc5a870d-cb22-46e2-86f0-555e30905950",
+  "name" : "TypeScript",
+  "delimiter" : "~",
+  "templates" : [ {
+    "uuid" : "98792b6e-3bca-4ff6-a427-313299ba6a98",
+    "name" : "variableDeclaration",
+    "text" : "let ~name~: ~type~~if(initializer)~ = ~initializer~~endif~; ",
+    "parameters" : [ {
+      "uuid" : "6c0f3031-5c14-467a-9423-a61041280f07",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "4f71d2b4-d0a1-46ed-be16-68b5e1f7e6a9",
+      "name" : "type",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "b6ecaddc-e592-4bd6-8f3c-5ff5bf9ccc55",
+      "name" : "initializer",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
+  } ],
+  "enums" : [ {
+    "uuid" : "f3819176-f9ca-4cf5-8faa-a8941b3157bf",
+    "name" : "Types",
+    "values" : [ {
+      "uuid" : "7770727a-d569-4cf1-8ec1-225647eb5891",
+      "name" : "booleanType",
+      "lexical" : "boolean"
+    }, {
+      "uuid" : "d416e71f-c424-4602-9ff6-ca6e268b1157",
+      "name" : "numberType",
+      "lexical" : "number"
+    }, {
+      "uuid" : "0a63d94c-20a7-4b8a-b1d4-26c1e6f62285",
+      "name" : "stringType",
+      "lexical" : "string"
+    } ]
+  } ]
+}

@@ -103,6 +103,17 @@ public class JsonFactory {
 				"\n" + 
 				"public class ~name;format=\"capitalize\"~ {\n" + 
 				"\n" + 
+				"	public static void save(io.vertx.core.json.JsonObject jsonObject, java.io.File file) throws java.io.IOException {\n" + 
+				"\n" + 
+				"		if (!file.getParentFile().exists() && !file.getParentFile().mkdirs())\n" + 
+				"			throw new IllegalStateException(\"could not create \" + file.getParentFile().getAbsolutePath());\n" + 
+				"\n" + 
+				"		if (!file.exists() && !file.createNewFile())\n" + 
+				"			throw new IllegalStateException(\"could not create \" + file.getAbsolutePath());\n" + 
+				"\n" + 
+				"		java.nio.file.Files.write(file.toPath(), jsonObject.toBuffer().getBytes());\n" + 
+				"	}\n" + 
+				"	\n" + 
 				"~entities:{it|\n" + 
 				"	public static ~it~ new~it~() { \n" + 
 				"		return new ~it~();\n" + 
@@ -110,6 +121,10 @@ public class JsonFactory {
 				"	\n" + 
 				"	public static ~it~ new~it~(io.vertx.core.json.JsonObject jsonObject) { \n" + 
 				"		return new ~it~(jsonObject);\n" + 
+				"	~eom()~\n" + 
+				"\n" + 
+				"	public static ~it~ new~it~(java.io.File file) throws java.io.IOException { \n" + 
+				"		return new ~it~(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));\n" + 
 				"	~eom()~\n" + 
 				"};separator=\"\\n\"~\n" + 
 				"}>> ";

@@ -27,27 +27,32 @@
   }, {
     "uuid" : "68f2245d-08e1-42db-aafa-7245a5eda5b0",
     "name" : "dependency",
-    "text" : "<dependency>\r\n\t<groupId>~groupId~</groupId>\r\n\t<artifactId>~artifactId~</artifactId>\r\n\t<version>~version~</version>~if(scope)~\r\n\t<scope>~scope;format=\"toLower\"~</scope>~endif~~if(systemPath)~\r\n\t<systemPath>~systemPath~</systemPath>~endif~\r\n\r</dependency>",
+    "text" : "<dependency>\n\t<groupId>~groupId~</groupId>\n\t<artifactId>~artifactId~</artifactId>\n\t<version>~version~</version>~if(scope)~\n\t<scope>~scope;format=\"toLower\"~</scope>~endif~~if(systemPath)~\n\t<systemPath>~systemPath~</systemPath>\n\t~endif~\n\t\n</dependency> ",
     "parameters" : [ {
-      "uuid" : "a325514b-da88-4684-ab2a-bf7332188c92",
+      "uuid" : "bae24156-e833-4edc-a46f-2d0f93ec1c2b",
       "name" : "groupId",
-      "type" : "SINGLE"
+      "type" : "SINGLE",
+      "argumentType" : "Object"
     }, {
-      "uuid" : "da537f23-9435-4e7b-a672-6c0075b65733",
+      "uuid" : "a2c9fadd-d991-4f14-bfc3-ed8fe123ac18",
       "name" : "artifactId",
-      "type" : "SINGLE"
+      "type" : "SINGLE",
+      "argumentType" : "Object"
     }, {
-      "uuid" : "10e07a1a-5e53-4366-be17-67f6fc3f0b45",
+      "uuid" : "c9a11d77-77f6-470a-a173-76384d7c048a",
       "name" : "version",
-      "type" : "SINGLE"
+      "type" : "SINGLE",
+      "argumentType" : "Object"
     }, {
-      "uuid" : "b8bd16c8-65b5-48df-b676-82369ddd328f",
+      "uuid" : "0f7f9be9-5883-4ed7-8213-afb8d584eea7",
       "name" : "scope",
-      "type" : "SINGLE"
+      "type" : "SINGLE",
+      "argumentType" : "Object"
     }, {
-      "uuid" : "f202eb4e-6a8d-450d-be8b-53123f52746f",
+      "uuid" : "d89c6b18-56f7-4c23-bf04-3981611f5a4c",
       "name" : "systemPath",
-      "type" : "SINGLE"
+      "type" : "SINGLE",
+      "argumentType" : "Object"
     } ]
   }, {
     "uuid" : "cb7743c2-f332-4f36-81e9-21d2aa69c103",

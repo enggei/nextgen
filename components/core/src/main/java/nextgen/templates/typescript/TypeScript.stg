@@ -1,0 +1,7 @@
+delimiters "~","~"
+
+variableDeclaration(name,type,initializer) ::= <<let ~name~: ~type~~if(initializer)~ = ~initializer~~endif~;  >>
+
+eom() ::= "}"
+
+gt() ::= ">"

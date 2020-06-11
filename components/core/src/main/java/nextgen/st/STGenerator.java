@@ -1,10 +1,9 @@
 package nextgen.st;
 
+import nextgen.st.domain.STEnum;
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STTemplate;
-import nextgen.templates.JavaPatterns;
-import nextgen.templates.java.EnumValue;
-import nextgen.templates.java.JavaST;
+import org.jetbrains.annotations.NotNull;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupString;
@@ -13,8 +12,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class STGenerator {
 
@@ -54,8 +51,8 @@ public class STGenerator {
                 .forEach(stTemplate -> generateSTEntity(stTemplate, root, packageDeclaration, stDomain, stDomainTests, stgString));
 
         stGroupModel.getEnums().forEach(stEnum -> {
-            final List<EnumValue> enumValues = stEnum.getValues().map(stEnumValue -> JavaST.newEnumValue().setName(stEnumValue.getName()).setLexical(stEnumValue.getLexical())).collect(Collectors.toList());
-            JavaPatterns.writeEnum(root, JavaPatterns.newPackageDeclaration(packageDeclaration), stEnum.getName(), enumValues);
+            final ST stEnumDeclaration = generateSTEnum(packageDeclaration, stEnum);
+            writeToFile(stEnumDeclaration.render(), packageDeclaration, stEnum.getName(), "java", root);
         });
 
         stDomain.add("stgString", stgString);
@@ -63,6 +60,24 @@ public class STGenerator {
         writeToFile(toStg(stGroupModel), packageDeclaration, stGroupModel.getName(), "stg", root);
         writeToFile(stDomain.render(), packageDeclaration, domainClassName, "java", root);
         writeToFile(stDomainTests.render(), packageDeclaration, testsClassName, "java", root);
+    }
+
+    @NotNull
+    public ST generateSTEnum(String packageDeclaration, STEnum stEnum) {
+
+        final ST stEnumDeclaration = generator.getInstanceOf("STEnum");
+        stEnumDeclaration.add("packageName", packageDeclaration);
+        stEnumDeclaration.add("name", stEnum.getName());
+
+        stEnum.getValues().forEach(stEnumValue -> {
+
+            final ST stEnumValue1 = generator.getInstanceOf("STEnumValue");
+            stEnumValue1.add("name", stEnumValue.getName());
+            stEnumValue1.add("lexical", stEnumValue.getLexical());
+
+            stEnumDeclaration.add("enumValues", stEnumValue1.render().trim());
+        });
+        return stEnumDeclaration;
     }
 
     public void generateSTEntity(STTemplate stTemplate, File root, String packageDeclaration, ST stDomain, ST stDomainTests, ST stgString) {
@@ -99,7 +114,7 @@ public class STGenerator {
 
         String content = escape(stTemplate.getText()).replaceAll("\n", "\\\\n\" + \n\t\t\t\"");
         content = content.replaceAll(">>", ">~gt()~");
-        content = content.endsWith(">") ? (content.trim() + " ") : content.trim();
+        content = content.trim().endsWith(">") ? (content.trim() + " ") : content.trim();
 
         final ST template = generator.getInstanceOf("Template")
                 .add("name", stTemplate.getName())

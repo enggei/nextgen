@@ -270,6 +270,42 @@
       "name" : "templates",
       "type" : "LIST"
     } ]
+  }, {
+    "uuid" : "af2f2a2f-dc9c-4a0e-a6da-c476e9868473",
+    "name" : "STEnum",
+    "text" : "package ~packageName~;\n\npublic enum ~name~ {\n\n\t~enumValues:{it|~it~};separator=\",\\n\"~\n} ",
+    "parameters" : [ {
+      "uuid" : "6cdec9fa-8937-4c02-9ce0-feaa28ced670",
+      "name" : "packageName",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "d279f7c0-ed27-4ab5-892d-348a29b334fd",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "a6300cd9-b73b-4ad7-aba8-cb7d6f4d517d",
+      "name" : "enumValues",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    } ],
+    "children" : [ {
+      "uuid" : "b4b9fd1e-c37b-43a0-b660-1963c2dd12f0",
+      "name" : "STEnumValue",
+      "text" : "~name~~if(lexical)~() {\n\t@Override\n\tpublic String toString() { return \"~lexical~\"; }\n}~endif~ ",
+      "parameters" : [ {
+        "uuid" : "0fefb10f-9ec5-4380-bebf-057bdf3a5ceb",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "c2864b0b-d4ec-4e79-a476-cc5d635b71b2",
+        "name" : "lexical",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    } ]
   } ],
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/StringTemplate.stg"
 }

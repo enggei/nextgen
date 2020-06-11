@@ -18,8 +18,10 @@ dependency(groupId,artifactId,version,scope,systemPath) ::= <<<dependency>
 	<artifactId>~artifactId~</artifactId>
 	<version>~version~</version>~if(scope)~
 	<scope>~scope;format="toLower"~</scope>~endif~~if(systemPath)~
-	<systemPath>~systemPath~</systemPath>~endif~
-</dependency> >>
+	<systemPath>~systemPath~</systemPath>
+	~endif~
+	
+</dependency>  >>
 
 Entities() ::= << >>
 

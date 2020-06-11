@@ -185,7 +185,8 @@
       "lexical" : "2"
     }, {
       "uuid" : "865c75fc-29aa-4d30-8bcc-4a2b944ccdff",
-      "name" : "THREE"
+      "name" : "THREE",
+      "lexical" : null
     } ]
   } ]
 }
