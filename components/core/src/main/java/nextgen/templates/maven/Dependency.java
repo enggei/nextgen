@@ -16,19 +16,6 @@ public class Dependency {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Dependency that = (Dependency) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("dependency");
 		st.add("groupId", _groupId);
@@ -149,6 +136,21 @@ public class Dependency {
 		return this;
 	} 
 
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Dependency that = (Dependency) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "dependency(groupId,artifactId,version,scope,systemPath) ::= <<<dependency>\n" + 
 				"	<groupId>~groupId~</groupId>\n" + 
 				"	<artifactId>~artifactId~</artifactId>\n" + 
@@ -156,4 +158,4 @@ public class Dependency {
 				"	<scope>~scope;format=\"toLower\"~</scope>~endif~~if(systemPath)~\n" + 
 				"	<systemPath>~systemPath~</systemPath>~endif~\n" + 
 				"</dependency> >> ";
-} 
+}  

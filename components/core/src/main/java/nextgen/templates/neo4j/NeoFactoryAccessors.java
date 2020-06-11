@@ -41,6 +41,7 @@ public class NeoFactoryAccessors {
 		this._name = null;
 		return this;
 	} 
+
 	public NeoFactoryAccessors addProperties(Object value) {
 		this._properties.add(value);
 		return this;
@@ -59,6 +60,7 @@ public class NeoFactoryAccessors {
 	public java.util.List<Object> getProperties() {
 		return this._properties;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

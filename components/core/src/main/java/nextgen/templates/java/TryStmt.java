@@ -67,6 +67,7 @@ public class TryStmt {
 		this._finalClause = null;
 		return this;
 	} 
+
 	public TryStmt addCatchClauses(Object value) {
 		this._catchClauses.add(value);
 		return this;
@@ -104,6 +105,7 @@ public class TryStmt {
 	public java.util.List<Object> getResources() {
 		return this._resources;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

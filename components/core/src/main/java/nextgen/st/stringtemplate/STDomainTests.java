@@ -89,6 +89,8 @@ public class STDomainTests {
 		this._name = null;
 		return this;
 	} 
+
+
 	public STDomainTests addTestcases(Object _name, Object _impl) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("name", _name);

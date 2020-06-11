@@ -69,6 +69,7 @@ public class Pojo {
 		this._name = null;
 		return this;
 	} 
+
 	public Pojo addAccessors(Object value) {
 		this._accessors.add(value);
 		return this;
@@ -106,6 +107,7 @@ public class Pojo {
 	public java.util.List<String> getLexical() {
 		return this._lexical;
 	} 
+
 	public Pojo addFields(Object _type, String _name, Object _initializer) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("type", _type);

@@ -158,7 +158,7 @@ public class DomainPatterns extends DomainST {
 
         visited.forEach((entity, pojo) -> factory.addEntities(entity.getName()));
 
-        STGenerator.writeToFile(factory, packageDeclaration.getName(), factory.getName().toString(), "java", root);
+        STGenerator.writeJavaFile(factory, packageDeclaration.getName(), factory.getName().toString(), root);
     }
 
     private static Pojo generatePojo(File root, PackageDeclaration packageDeclaration, Entity entity, final Map<Entity, Pojo> visited) {
@@ -228,7 +228,7 @@ public class DomainPatterns extends DomainST {
             }
         });
 
-        STGenerator.writeToFile(entityClass, packageDeclaration.getName(), entityClass.getName().toString(), "java", root);
+        STGenerator.writeJavaFile(entityClass, packageDeclaration.getName(), entityClass.getName().toString(),  root);
 
         return entityClass;
     }
@@ -295,10 +295,10 @@ public class DomainPatterns extends DomainST {
 
             factory.addAccessors(factoryAccessors);
 
-            STGenerator.writeToFile(value, packageDeclaration.getName(), value.getName().toString(), "java", root);
+            STGenerator.writeJavaFile(value, packageDeclaration.getName(), value.getName().toString(),  root);
         });
 
-        STGenerator.writeToFile(factory, packageDeclaration.getName(), factory.getName().toString(), "java", root);
+        STGenerator.writeJavaFile(factory, packageDeclaration.getName(), factory.getName().toString(),  root);
     }
 
     private static NodeWrapper generateNeoWrapper(File root, PackageDeclaration packageDeclaration, Entity entity, final Map<Entity, NodeWrapper> visited) {
@@ -362,7 +362,7 @@ public class DomainPatterns extends DomainST {
             }
         });
 
-        STGenerator.writeToFile(entityClass, packageDeclaration.getName(), entityClass.getName().toString(), "java", root);
+        STGenerator.writeJavaFile(entityClass, packageDeclaration.getName(), entityClass.getName().toString(),  root);
 
         return entityClass;
     }
@@ -393,7 +393,7 @@ public class DomainPatterns extends DomainST {
 
         visited.forEach((entity, jsonWrapper) -> factory.addEntities(entity.getName()));
 
-        STGenerator.writeToFile(factory, packageDeclaration.getName(), factory.getName().toString(), "java", root);
+        STGenerator.writeJavaFile(factory, packageDeclaration.getName(), factory.getName().toString(),  root);
     }
 
     private static JsonWrapper generateJsonWrapper(File root, PackageDeclaration packageDeclaration, Entity entity, final Map<Entity, JsonWrapper> visited) {
@@ -455,7 +455,7 @@ public class DomainPatterns extends DomainST {
             }
         });
 
-        STGenerator.writeToFile(entityClass, packageDeclaration.getName(), entityClass.getName().toString(), "java", root);
+        STGenerator.writeJavaFile(entityClass, packageDeclaration.getName(), entityClass.getName().toString(),  root);
         return entityClass;
     }
 

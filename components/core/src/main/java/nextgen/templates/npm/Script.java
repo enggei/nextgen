@@ -13,19 +13,6 @@ public class Script {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Script that = (Script) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("script");
 		st.add("command", _command);
@@ -77,5 +64,20 @@ public class Script {
 		return this;
 	} 
 
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Script that = (Script) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "script(command,name) ::= <<\"~name~\": \"~command~\">> ";
-} 
+}  

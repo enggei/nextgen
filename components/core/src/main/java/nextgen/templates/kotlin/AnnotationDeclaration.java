@@ -12,24 +12,13 @@ public class AnnotationDeclaration {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		AnnotationDeclaration that = (AnnotationDeclaration) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("AnnotationDeclaration");
 		for (java.util.Map<String, Object> map : _annotations) st.addAggr("annotations.{name,params}", map.get("name"), map.get("params"));
 		return st.render().trim();
 	}
+
+
 
 	public AnnotationDeclaration addAnnotations(Object _name, Object _params) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -76,5 +65,18 @@ public class AnnotationDeclaration {
 
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		AnnotationDeclaration that = (AnnotationDeclaration) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "AnnotationDeclaration(annotations) ::= <<~annotations:{it|@~it.name~(~it.params~)};separator=\"\\n\"~>> ";
-} 
+}  

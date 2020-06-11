@@ -91,6 +91,7 @@ public class ClassOrInterfaceType {
 		this._isArrayType = null;
 		return this;
 	} 
+
 	public ClassOrInterfaceType addNames(Object value) {
 		this._names.add(value);
 		return this;
@@ -128,6 +129,7 @@ public class ClassOrInterfaceType {
 	public java.util.List<Object> getTypeArguments() {
 		return this._typeArguments;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

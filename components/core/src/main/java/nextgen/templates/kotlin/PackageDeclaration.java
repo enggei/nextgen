@@ -12,19 +12,6 @@ public class PackageDeclaration {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		PackageDeclaration that = (PackageDeclaration) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("PackageDeclaration");
 		st.add("name", _name);
@@ -40,6 +27,10 @@ public class PackageDeclaration {
 		return this._name;
 	}
 
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
 	public boolean hasName() {
 		return this._name != null;
 	}
@@ -49,5 +40,20 @@ public class PackageDeclaration {
 		return this;
 	} 
 
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		PackageDeclaration that = (PackageDeclaration) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "PackageDeclaration(name) ::= <<package ~name~>> ";
-} 
+}  

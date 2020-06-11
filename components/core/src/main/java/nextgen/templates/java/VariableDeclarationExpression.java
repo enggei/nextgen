@@ -20,6 +20,7 @@ public class VariableDeclarationExpression {
 		return st.render().trim();
 	}
 
+
 	public VariableDeclarationExpression addVariables(Object value) {
 		this._variables.add(value);
 		return this;
@@ -57,6 +58,7 @@ public class VariableDeclarationExpression {
 	public java.util.List<Object> getModifiers() {
 		return this._modifiers;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

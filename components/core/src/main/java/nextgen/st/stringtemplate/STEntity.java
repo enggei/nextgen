@@ -123,6 +123,7 @@ public class STEntity {
 		this._stString = null;
 		return this;
 	} 
+
 	public STEntity addSingleAccessors(Object value) {
 		this._singleAccessors.add(value);
 		return this;
@@ -179,6 +180,7 @@ public class STEntity {
 	public java.util.List<Object> getKvListAccessors() {
 		return this._kvListAccessors;
 	} 
+
 	public STEntity addSingleFields(Object _type, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("type", _type);
@@ -360,7 +362,9 @@ public class STEntity {
 				"	}\n" + 
 				"	\n" + 
 				"	~singleAccessors:{it|~it~};separator=\"\\n\\n\"~\n" + 
+				"	\n" + 
 				"	~listAccessors:{it|~it~};separator=\"\\n\\n\"~\n" + 
+				"	\n" + 
 				"	~kvListAccessors:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
 				"	@Override\n" + 

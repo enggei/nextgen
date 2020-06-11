@@ -14,19 +14,6 @@ public class Repository {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Repository that = (Repository) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("repository");
 		st.add("id", _id);
@@ -101,9 +88,24 @@ public class Repository {
 		return this;
 	} 
 
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Repository that = (Repository) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "repository(id,name,url) ::= <<<repository>\n" + 
 				"	<id>~id~</id>\n" + 
 				"	<name>~name~</name>\n" + 
 				"	<url>~url~</url>\n" + 
 				"</repository> >> ";
-} 
+}  

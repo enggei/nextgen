@@ -15,19 +15,6 @@ public class DependencyGroup {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		DependencyGroup that = (DependencyGroup) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("DependencyGroup");
 		st.add("name", _name);
@@ -102,6 +89,7 @@ public class DependencyGroup {
 		this._version = null;
 		return this;
 	} 
+
 	public DependencyGroup addArtifacts(Object value) {
 		this._artifacts.add(value);
 		return this;
@@ -121,9 +109,23 @@ public class DependencyGroup {
 		return this._artifacts;
 	} 
 
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		DependencyGroup that = (DependencyGroup) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "DependencyGroup(name,groupId,version,artifacts) ::= <<Name ~name~\n" + 
 				"GroupId ~groupId~\n" + 
 				"Version ~version~\n" + 
 				"\n" + 
 				"~artifacts:{it|~it~};separator=\"\\n\"~>> ";
-} 
+}  

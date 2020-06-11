@@ -18,6 +18,7 @@ public class ArrayInitializerExpression {
 		return st.render().trim();
 	}
 
+
 	public ArrayInitializerExpression addValues(Object value) {
 		this._values.add(value);
 		return this;
@@ -36,6 +37,7 @@ public class ArrayInitializerExpression {
 	public java.util.List<Object> getValues() {
 		return this._values;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

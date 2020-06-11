@@ -67,6 +67,7 @@ public class ForStmt {
 		this._body = null;
 		return this;
 	} 
+
 	public ForStmt addUpdate(Object value) {
 		this._update.add(value);
 		return this;
@@ -104,6 +105,7 @@ public class ForStmt {
 	public java.util.List<Object> getInitialization() {
 		return this._initialization;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

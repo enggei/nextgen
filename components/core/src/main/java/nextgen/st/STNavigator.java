@@ -270,8 +270,7 @@ public class STNavigator extends JPanel {
             protected Action[] getActions() {
                 return new Action[]{
                         newSTGroupAction(),
-                        generateGroupAction(),
-                        verifyAndSaveGroupAction()
+                        generateAllGroupsAction()
                 };
             }
 
@@ -308,33 +307,15 @@ public class STNavigator extends JPanel {
                 });
             }
 
-            private Action generateGroupAction() {
-                return newAction("Generate", actionEvent ->
-                        SwingUtilities.invokeLater(() -> getModel().getGroups().forEach(this::generate))
-                );
+            private Action generateAllGroupsAction() {
+                return newAction("Generate All groups", actionEvent ->
+                        SwingUtilities.invokeLater(() -> getChildren(STGroupTreeNode.class).forEach(STGroupTreeNode::generate)));
             }
 
             private void generate(STGroupModel stGroupModel) {
                 final String outputPackage = getModel().getOutputPackage();
                 final String outputPath = getModel().getOutputPath();
                 new STGenerator(getGenerator()).generateSTGroup(stGroupModel, outputPackage, outputPath);
-            }
-
-            private Action verifyAndSaveGroupAction() {
-                return newAction("Verify and Save all groups", actionEvent ->
-                        SwingUtilities.invokeLater(() -> {
-                            getChildren(STGroupTreeNode.class).forEach(stGroupTreeNode -> {
-                                final STGParseResult parseResult = STParser.parse(toSTGroup(stGroupTreeNode.getModel()));
-                                if (parseResult.getErrors().count() == 0) {
-                                    stGroupTreeNode.save();
-                                } else {
-                                    System.out.println(stGroupTreeNode.getModel().getName() + " has errors: ");
-                                    parseResult.getErrors().forEach(stgError -> {
-                                        System.out.println("\t" + stgError.getType() + " " + stgError.getMessage());
-                                    });
-                                }
-                            });
-                        }));
             }
 
             class STGroupTreeNode extends BaseTreeNode<STGroupModel> {
@@ -364,8 +345,8 @@ public class STNavigator extends JPanel {
                 protected Action[] getActions() {
                     return new Action[]{
                             generateAction(),
-                            newEnumAction(),
                             newTemplateAction(),
+                            newEnumAction(),
                             renameSTGroupAction(),
                             deleteGroupAction()
                     };
@@ -373,24 +354,6 @@ public class STNavigator extends JPanel {
 
                 private Action generateAction() {
                     return newAction("Generate", actionEvent -> generate());
-                }
-
-                private Action newEnumAction() {
-                    return newAction("New enum", actionEvent ->
-                            getStringFromUser("Name").ifPresent(name ->
-                                    isValidTemplateName(name).ifPresent(s -> {
-
-                                        final STEnum stEnum = STJsonFactory.newSTEnum()
-                                                .setName(name);
-
-                                        getModel().addEnums(stEnum);
-                                        save();
-
-                                        SwingUtilities.invokeLater(() -> {
-                                            final STEnumTreeNode stTemplateTreeNode = new STEnumTreeNode(stEnum);
-                                            treeModel.insertNodeInto(stTemplateTreeNode, STGroupTreeNode.this, getChildCount());
-                                        });
-                                    })));
                 }
 
                 private Action newTemplateAction() {
@@ -413,6 +376,24 @@ public class STNavigator extends JPanel {
                                     })));
                 }
 
+                private Action newEnumAction() {
+                    return newAction("New enum", actionEvent ->
+                            getStringFromUser("Name").ifPresent(name ->
+                                    isValidTemplateName(name).ifPresent(s -> {
+
+                                        final STEnum stEnum = STJsonFactory.newSTEnum()
+                                                .setName(name);
+
+                                        getModel().addEnums(stEnum);
+                                        save();
+
+                                        SwingUtilities.invokeLater(() -> {
+                                            final STEnumTreeNode stTemplateTreeNode = new STEnumTreeNode(stEnum);
+                                            treeModel.insertNodeInto(stTemplateTreeNode, STGroupTreeNode.this, getChildCount());
+                                        });
+                                    })));
+                }
+
                 private Action renameSTGroupAction() {
                     return newAction("Rename", actionEvent ->
                             getStringFromUser("Name").ifPresent(name ->
@@ -430,6 +411,7 @@ public class STNavigator extends JPanel {
                                                     return;
                                                 }
 
+                                                final String oldName = getModel().getName();
                                                 getModel().setName(name);
                                                 save();
 
@@ -437,6 +419,7 @@ public class STNavigator extends JPanel {
                                                     treeModel.nodeChanged(STGroupTreeNode.this);
                                                     findSTTemplateEditor(tabbedPane, STGroupTreeNode.this)
                                                             .ifPresent(stEditor1 -> tabbedPane.setTitleAt(tabbedPane.indexOfComponent(stEditor1), getModel().getName()));
+                                                    deleteSTGFile(parent, oldName);
                                                 });
                                             })));
                 }
@@ -448,17 +431,19 @@ public class STNavigator extends JPanel {
                                     .ifPresent(parent -> {
 
                                         parent.getModel().removeGroups(getModel());
-                                        save();
 
                                         SwingUtilities.invokeLater(() -> {
                                             treeModel.removeNodeFromParent(STGroupTreeNode.this);
                                             findSTTemplateEditor(tabbedPane, STGroupTreeNode.this).ifPresent(tabbedPane::remove);
-                                            final File stgFile = new File(parent.getModel().getPath(), getModel().getName() + ".stg");
-                                            if (stgFile.exists()) {
-                                                stgFile.renameTo(new File(parent.getModel().getPath(), getModel().getName() + ".stg.deleted"));
-                                            }
+                                            deleteSTGFile(parent, getModel().getName());
                                         });
                                     }));
+                }
+
+                private void deleteSTGFile(STGDirectoryTreeNode parent, String name) {
+                    final File stgFile = new File(parent.getModel().getPath(), name + ".json");
+                    if (stgFile.exists())
+                        stgFile.renameTo(new File(parent.getModel().getPath(), name + ".json.deleted"));
                 }
 
                 private Optional<String> isValidTemplateName(String name) {
@@ -486,8 +471,16 @@ public class STNavigator extends JPanel {
                 public void generate() {
                     SwingUtilities.invokeLater(() ->
                             getParentNode(STGDirectoryTreeNode.class).ifPresent(parent -> {
-                                save();
-                                parent.generate(getModel());
+                                final STGParseResult parseResult = STParser.parse(toSTGroup(getModel()));
+                                if (parseResult.getErrors().count() == 0) {
+                                    save();
+                                    parent.generate(getModel());
+                                } else {
+                                    System.out.println(getModel().getName() + " has errors: ");
+                                    parseResult.getErrors().forEach(stgError -> {
+                                        System.out.println("\t" + stgError.getType() + " " + stgError.getMessage());
+                                    });
+                                }
                             }));
                 }
 

@@ -41,6 +41,7 @@ public class BlockStmt {
 		this._isStatic = null;
 		return this;
 	} 
+
 	public BlockStmt addStatements(Object value) {
 		this._statements.add(value);
 		return this;
@@ -59,6 +60,7 @@ public class BlockStmt {
 	public java.util.List<Object> getStatements() {
 		return this._statements;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

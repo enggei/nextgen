@@ -16,19 +16,6 @@ public class Plugin {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Plugin that = (Plugin) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("plugin");
 		st.add("groupId", _groupId);
@@ -104,6 +91,7 @@ public class Plugin {
 		this._version = null;
 		return this;
 	} 
+
 	public Plugin addExecutions(Object value) {
 		this._executions.add(value);
 		return this;
@@ -122,6 +110,7 @@ public class Plugin {
 	public java.util.List<Object> getExecutions() {
 		return this._executions;
 	} 
+
 	public Plugin addConfiguration(Object _name, Object _value) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("name", _name);
@@ -167,6 +156,19 @@ public class Plugin {
 
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Plugin that = (Plugin) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "plugin(groupId,artifactId,version,configuration,executions) ::= <<<plugin>\n" + 
 				"	<groupId>~groupId~</groupId>\n" + 
 				"	<artifactId>~artifactId~</artifactId>\n" + 
@@ -178,4 +180,4 @@ public class Plugin {
 				"		~executions:{it|~it~};separator=\"\\n\"~\n" + 
 				"	</executions>\n" + 
 				"</plugin> >> ";
-} 
+}  

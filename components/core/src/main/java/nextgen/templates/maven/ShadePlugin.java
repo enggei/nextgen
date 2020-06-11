@@ -13,19 +13,6 @@ public class ShadePlugin {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		ShadePlugin that = (ShadePlugin) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("shadePlugin");
 		st.add("packageName", _packageName);
@@ -77,6 +64,21 @@ public class ShadePlugin {
 		return this;
 	} 
 
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ShadePlugin that = (ShadePlugin) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "shadePlugin(packageName,className) ::= <<<!--fat-jar plugin for single-file server package-->\n" + 
 				"<plugin>\n" + 
 				"	<groupId>org.apache.maven.plugins</groupId>\n" + 
@@ -114,4 +116,4 @@ public class ShadePlugin {
 				"		</execution>\n" + 
 				"	</executions>\n" + 
 				"</plugin> >> ";
-} 
+}  

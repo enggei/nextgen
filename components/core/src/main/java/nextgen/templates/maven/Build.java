@@ -13,25 +13,13 @@ public class Build {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Build that = (Build) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("build");
 		for (Object o : _plugin) st.add("plugin", o);
 		for (java.util.Map<String, Object> map : _testResources) st.addAggr("testResources.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
+
 
 	public Build addPlugin(Object value) {
 		this._plugin.add(value);
@@ -51,6 +39,7 @@ public class Build {
 	public java.util.List<Object> getPlugin() {
 		return this._plugin;
 	} 
+
 	public Build addTestResources(Object _name, Object _value) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("name", _name);
@@ -96,6 +85,19 @@ public class Build {
 
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Build that = (Build) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "build(testResources,plugin) ::= <<<build>\n" + 
 				"~if(testResources)~\n" + 
 				"	<testResources>\n" + 
@@ -108,4 +110,4 @@ public class Build {
 				"		~plugin:{it|~it~};separator=\"\\n\"~\n" + 
 				"	</plugins>\n" + 
 				"</build> >> ";
-} 
+}  

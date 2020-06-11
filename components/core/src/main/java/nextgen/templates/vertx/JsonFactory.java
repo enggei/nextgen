@@ -65,6 +65,7 @@ public class JsonFactory {
 		this._name = null;
 		return this;
 	} 
+
 	public JsonFactory addEntities(Object value) {
 		this._entities.add(value);
 		return this;
@@ -83,6 +84,7 @@ public class JsonFactory {
 	public java.util.List<Object> getEntities() {
 		return this._entities;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

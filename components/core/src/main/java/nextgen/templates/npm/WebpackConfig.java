@@ -13,19 +13,6 @@ public class WebpackConfig {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		WebpackConfig that = (WebpackConfig) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("WebpackConfig");
 		st.add("mainEntry", _mainEntry);
@@ -77,11 +64,26 @@ public class WebpackConfig {
 		return this;
 	} 
 
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		WebpackConfig that = (WebpackConfig) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "WebpackConfig(mainEntry,outputFilename) ::= <<const path = require('path');\n" + 
 				"\n" + 
 				"module.exports = {\n" + 
 				"	entry: { \n" + 
-				"		main: './~mainEntry~' \n" + 
+				"		main: '.~mainEntry~' \n" + 
 				"	},\n" + 
 				"	output: {\n" + 
 				"		path: __dirname,\n" + 
@@ -104,4 +106,4 @@ public class WebpackConfig {
 				"		]\n" + 
 				"	}\n" + 
 				"};>> ";
-} 
+}  

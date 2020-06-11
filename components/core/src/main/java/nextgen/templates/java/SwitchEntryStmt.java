@@ -20,6 +20,7 @@ public class SwitchEntryStmt {
 		return st.render().trim();
 	}
 
+
 	public SwitchEntryStmt addLabels(Object value) {
 		this._labels.add(value);
 		return this;
@@ -57,6 +58,7 @@ public class SwitchEntryStmt {
 	public java.util.List<Object> getStatements() {
 		return this._statements;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

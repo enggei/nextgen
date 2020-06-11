@@ -23,19 +23,6 @@ public class Pom {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Pom that = (Pom) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("pom");
 		st.add("parent", _parent);
@@ -206,6 +193,7 @@ public class Pom {
 		this._build = null;
 		return this;
 	} 
+
 	public Pom addModules(Object value) {
 		this._modules.add(value);
 		return this;
@@ -281,6 +269,7 @@ public class Pom {
 	public java.util.List<Object> getRepositories() {
 		return this._repositories;
 	} 
+
 	public Pom addProperties(Object _name, Object _value) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("name", _name);
@@ -325,6 +314,19 @@ public class Pom {
 		}
 
 	} 
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Pom that = (Pom) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
 
 	static final String st = "pom(parent,name,groupId,artifactId,version,packaging,modules,properties,build,dependencies,distributionManagement,repositories) ::= <<<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
 				"<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" + 
@@ -376,4 +378,4 @@ public class Pom {
 				"	</repositories>\n" + 
 				"~endif~\n" + 
 				"</project> >> ";
-} 
+}  

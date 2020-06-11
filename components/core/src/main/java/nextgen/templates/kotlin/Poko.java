@@ -13,19 +13,6 @@ public class Poko {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Poko that = (Poko) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Poko");
 		st.add("packageDeclaration", _packageDeclaration);
@@ -40,6 +27,10 @@ public class Poko {
 
 	public Object getPackageDeclaration() {
 		return this._packageDeclaration;
+	}
+
+	public Object getPackageDeclaration(Object defaultValue) {
+		return this._packageDeclaration == null ? defaultValue : this._packageDeclaration;
 	}
 
 	public boolean hasPackageDeclaration() {
@@ -60,6 +51,10 @@ public class Poko {
 		return this._classDeclaration;
 	}
 
+	public Object getClassDeclaration(Object defaultValue) {
+		return this._classDeclaration == null ? defaultValue : this._classDeclaration;
+	}
+
 	public boolean hasClassDeclaration() {
 		return this._classDeclaration != null;
 	}
@@ -69,7 +64,22 @@ public class Poko {
 		return this;
 	} 
 
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Poko that = (Poko) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "Poko(packageDeclaration,classDeclaration) ::= <<~packageDeclaration~\n" + 
 				"\n" + 
 				"~classDeclaration~>> ";
-} 
+}  

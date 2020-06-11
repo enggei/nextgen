@@ -91,6 +91,7 @@ public class AllTypes {
 		this._cond2 = null;
 		return this;
 	} 
+
 	public AllTypes addList(Object value) {
 		this._list.add(value);
 		return this;
@@ -109,6 +110,7 @@ public class AllTypes {
 	public java.util.List<Object> getList() {
 		return this._list;
 	} 
+
 	public AllTypes addKvList(Object _name, Object _value) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("name", _name);

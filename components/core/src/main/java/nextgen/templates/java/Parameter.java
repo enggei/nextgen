@@ -91,6 +91,7 @@ public class Parameter {
 		this._name = null;
 		return this;
 	} 
+
 	public Parameter addAnnotations(Object value) {
 		this._annotations.add(value);
 		return this;
@@ -128,6 +129,7 @@ public class Parameter {
 	public java.util.List<Object> getModifiers() {
 		return this._modifiers;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

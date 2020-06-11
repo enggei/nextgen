@@ -67,6 +67,7 @@ public class MethodCallExpression {
 		this._name = null;
 		return this;
 	} 
+
 	public MethodCallExpression addArguments(Object value) {
 		this._arguments.add(value);
 		return this;
@@ -104,6 +105,7 @@ public class MethodCallExpression {
 	public java.util.List<Object> getTypeArguments() {
 		return this._typeArguments;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

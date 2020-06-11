@@ -73,6 +73,7 @@ public class ConstructorDeclaration {
 		this._blockStmt = null;
 		return this;
 	} 
+
 	public ConstructorDeclaration addModifiers(Object value) {
 		this._modifiers.add(value);
 		return this;
@@ -167,6 +168,7 @@ public class ConstructorDeclaration {
 	public java.util.List<Object> getParameters() {
 		return this._parameters;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

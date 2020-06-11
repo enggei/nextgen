@@ -43,6 +43,7 @@ public class JavaPackageInfo {
 		this._packageName = null;
 		return this;
 	} 
+
 	public JavaPackageInfo addInterfaces(Object value) {
 		this._interfaces.add(value);
 		return this;
@@ -80,6 +81,7 @@ public class JavaPackageInfo {
 	public java.util.List<Object> getClasses() {
 		return this._classes;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

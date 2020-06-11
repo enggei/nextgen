@@ -1,0 +1,36 @@
+{
+  "uuid" : "b6029af7-89b9-4bc5-936a-e0724c7bec73",
+  "name" : "Git",
+  "delimiter" : "~",
+  "templates" : [ {
+    "uuid" : "bdcb0751-37a3-456e-a7bf-77379f693796",
+    "name" : "gitignore",
+    "text" : "~exclude:{it|/~it~/};separator=\"\\n\"~ ",
+    "parameters" : [ {
+      "uuid" : "fd7dcdc2-f07e-40c6-9cd8-efda49a9f9c2",
+      "name" : "exclude",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "6b1945c9-6595-46b7-a351-3c6e06a230fb",
+    "name" : "removeFile",
+    "text" : "git rm --cached ~path~ ",
+    "parameters" : [ {
+      "uuid" : "0e145ab5-8321-4987-8a14-c61a1e279386",
+      "name" : "path",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "015e8be7-f4b7-4c20-b187-5e77302b0ed2",
+    "name" : "removeDir",
+    "text" : "git rm --cached -r ~dir~ ",
+    "parameters" : [ {
+      "uuid" : "bb2636f9-8bd4-4a51-b0e4-7448babb0d5e",
+      "name" : "dir",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
+  } ]
+}

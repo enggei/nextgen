@@ -12,24 +12,13 @@ public class AnnotationParam {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		AnnotationParam that = (AnnotationParam) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("AnnotationParam");
 		for (java.util.Map<String, Object> map : _param) st.addAggr("param.{key,value}", map.get("key"), map.get("value"));
 		return st.render().trim();
 	}
+
+
 
 	public AnnotationParam addParam(Object _key, Object _value) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -76,5 +65,18 @@ public class AnnotationParam {
 
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		AnnotationParam that = (AnnotationParam) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "AnnotationParam(param) ::= <<~param:{it|~it.key~ = ~it.value~};separator=\", \"~>> ";
-} 
+}  

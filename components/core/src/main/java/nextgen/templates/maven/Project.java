@@ -15,19 +15,6 @@ public class Project {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Project that = (Project) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Project");
 		st.add("name", _name);
@@ -102,6 +89,7 @@ public class Project {
 		this._pom = null;
 		return this;
 	} 
+
 	public Project addModules(Object value) {
 		this._modules.add(value);
 		return this;
@@ -121,6 +109,20 @@ public class Project {
 		return this._modules;
 	} 
 
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Project that = (Project) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "Project(name,root,pom,modules) ::= <<Project ~name~\n" + 
 				"\n" + 
 				"root	:	~root~\n" + 
@@ -128,4 +130,4 @@ public class Project {
 				"\n" + 
 				"Modules :\n" + 
 				"~modules:{it|~it~};separator=\"\\n\"~>> ";
-} 
+}  

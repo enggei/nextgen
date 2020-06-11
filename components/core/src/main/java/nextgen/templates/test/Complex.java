@@ -65,6 +65,8 @@ public class Complex {
 		this._condition2 = null;
 		return this;
 	} 
+
+
 	public Complex addList(Object _name, Object _value) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("name", _name);

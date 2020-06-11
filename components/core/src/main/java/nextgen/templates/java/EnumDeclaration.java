@@ -51,6 +51,7 @@ public class EnumDeclaration {
 		this._name = null;
 		return this;
 	} 
+
 	public EnumDeclaration addMembers(Object value) {
 		this._members.add(value);
 		return this;
@@ -164,6 +165,7 @@ public class EnumDeclaration {
 	public java.util.List<Object> getModifiers() {
 		return this._modifiers;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

@@ -41,6 +41,7 @@ public class LambdaExpression {
 		this._body = null;
 		return this;
 	} 
+
 	public LambdaExpression addParameters(Object value) {
 		this._parameters.add(value);
 		return this;
@@ -59,6 +60,7 @@ public class LambdaExpression {
 	public java.util.List<Object> getParameters() {
 		return this._parameters;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

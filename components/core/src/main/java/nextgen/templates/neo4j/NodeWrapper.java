@@ -69,6 +69,7 @@ public class NodeWrapper {
 		this._name = null;
 		return this;
 	} 
+
 	public NodeWrapper addAccessors(Object value) {
 		this._accessors.add(value);
 		return this;
@@ -106,6 +107,7 @@ public class NodeWrapper {
 	public java.util.List<Object> getLexical() {
 		return this._lexical;
 	} 
+
 	public NodeWrapper addExternalFields(Object _type, Object _name, Object _initializer) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("type", _type);

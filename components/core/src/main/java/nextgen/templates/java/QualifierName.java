@@ -18,6 +18,7 @@ public class QualifierName {
 		return st.render().trim();
 	}
 
+
 	public QualifierName addValue(Object value) {
 		this._value.add(value);
 		return this;
@@ -36,6 +37,7 @@ public class QualifierName {
 	public java.util.List<Object> getValue() {
 		return this._value;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

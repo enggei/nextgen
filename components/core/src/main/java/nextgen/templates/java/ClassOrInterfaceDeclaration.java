@@ -79,6 +79,7 @@ public class ClassOrInterfaceDeclaration {
 		this._name = null;
 		return this;
 	} 
+
 	public ClassOrInterfaceDeclaration addComments(Object value) {
 		this._comments.add(value);
 		return this;
@@ -230,6 +231,7 @@ public class ClassOrInterfaceDeclaration {
 	public java.util.List<Object> getMembers() {
 		return this._members;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

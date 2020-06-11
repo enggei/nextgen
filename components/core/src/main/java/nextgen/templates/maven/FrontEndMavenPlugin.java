@@ -14,19 +14,6 @@ public class FrontEndMavenPlugin {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		FrontEndMavenPlugin that = (FrontEndMavenPlugin) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("frontEndMavenPlugin");
 		st.add("pluginVersion", _pluginVersion);
@@ -101,6 +88,21 @@ public class FrontEndMavenPlugin {
 		return this;
 	} 
 
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		FrontEndMavenPlugin that = (FrontEndMavenPlugin) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "frontEndMavenPlugin(pluginVersion,installDirectory,nodeVersion) ::= <<<!--npm plugin-->\n" + 
 				"<plugin>\n" + 
 				"    <groupId>com.github.eirslett</groupId>\n" + 
@@ -134,4 +136,4 @@ public class FrontEndMavenPlugin {
 				"        </execution>\n" + 
 				"    </executions>\n" + 
 				"</plugin> >> ";
-} 
+}  

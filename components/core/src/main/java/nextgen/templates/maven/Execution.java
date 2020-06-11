@@ -11,6 +11,15 @@ public class Execution {
 	}
 
 	@Override
+	public String toString() {
+		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("execution");
+		return st.render().trim();
+	}
+
+
+
+
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
@@ -23,17 +32,10 @@ public class Execution {
 		return java.util.Objects.hash(uuid);
 	}
 
-	@Override
-	public String toString() {
-		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("execution");
-		return st.render().trim();
-	}
-
-
 	static final String st = "execution() ::= <<<execution>\n" + 
 				"    <phase>package</phase>\n" + 
 				"    <goals>\n" + 
 				"        <goal>shade</goal>\n" + 
 				"    </goals>\n" + 
 				"</execution> >> ";
-} 
+}  

@@ -41,6 +41,7 @@ public class NormalAnnotationExpression {
 		this._name = null;
 		return this;
 	} 
+
 	public NormalAnnotationExpression addMemberValues(Object value) {
 		this._memberValues.add(value);
 		return this;
@@ -59,6 +60,7 @@ public class NormalAnnotationExpression {
 	public java.util.List<Object> getMemberValues() {
 		return this._memberValues;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

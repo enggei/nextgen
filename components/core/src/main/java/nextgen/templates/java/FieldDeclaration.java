@@ -22,6 +22,7 @@ public class FieldDeclaration {
 		return st.render().trim();
 	}
 
+
 	public FieldDeclaration addVariables(Object value) {
 		this._variables.add(value);
 		return this;
@@ -78,6 +79,7 @@ public class FieldDeclaration {
 	public java.util.List<Object> getModifiers() {
 		return this._modifiers;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

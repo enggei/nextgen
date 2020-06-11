@@ -43,6 +43,7 @@ public class CompilationUnit {
 		this._packageDeclaration = null;
 		return this;
 	} 
+
 	public CompilationUnit addTypes(Object value) {
 		this._types.add(value);
 		return this;
@@ -80,6 +81,7 @@ public class CompilationUnit {
 	public java.util.List<Object> getImportDeclaration() {
 		return this._importDeclaration;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

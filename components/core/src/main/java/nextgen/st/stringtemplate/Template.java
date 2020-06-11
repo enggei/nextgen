@@ -65,6 +65,7 @@ public class Template {
 		this._content = null;
 		return this;
 	} 
+
 	public Template addParams(Object value) {
 		this._params.add(value);
 		return this;
@@ -83,6 +84,7 @@ public class Template {
 	public java.util.List<Object> getParams() {
 		return this._params;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

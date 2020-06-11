@@ -41,6 +41,7 @@ public class ExplicitConstructorInvocationStmt {
 		this._isThis = null;
 		return this;
 	} 
+
 	public ExplicitConstructorInvocationStmt addArguments(Object value) {
 		this._arguments.add(value);
 		return this;
@@ -59,6 +60,7 @@ public class ExplicitConstructorInvocationStmt {
 	public java.util.List<Object> getArguments() {
 		return this._arguments;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

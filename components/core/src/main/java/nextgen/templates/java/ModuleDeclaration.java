@@ -49,6 +49,7 @@ public class ModuleDeclaration {
 		this._name = null;
 		return this;
 	} 
+
 	public ModuleDeclaration addProvidesDirective(Object value) {
 		this._providesDirective.add(value);
 		return this;
@@ -143,6 +144,7 @@ public class ModuleDeclaration {
 	public java.util.List<Object> getOpens() {
 		return this._opens;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

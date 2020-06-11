@@ -18,6 +18,7 @@ public class Gitignore {
 		return st.render().trim();
 	}
 
+
 	public Gitignore addExclude(Object value) {
 		this._exclude.add(value);
 		return this;
@@ -36,6 +37,7 @@ public class Gitignore {
 	public java.util.List<Object> getExclude() {
 		return this._exclude;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

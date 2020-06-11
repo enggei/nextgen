@@ -41,6 +41,7 @@ public class NewInstance {
 		this._type = null;
 		return this;
 	} 
+
 	public NewInstance addArguments(Object value) {
 		this._arguments.add(value);
 		return this;
@@ -59,6 +60,7 @@ public class NewInstance {
 	public java.util.List<Object> getArguments() {
 		return this._arguments;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

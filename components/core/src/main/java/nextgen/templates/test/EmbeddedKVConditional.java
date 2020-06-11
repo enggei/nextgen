@@ -20,6 +20,8 @@ public class EmbeddedKVConditional {
 		return st.render().trim();
 	}
 
+
+
 	public EmbeddedKVConditional addFields(Object _type, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("type", _type);

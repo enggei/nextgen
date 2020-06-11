@@ -238,6 +238,14 @@ public class STGenerator {
         }
     }
 
+    public static void writeJavaFile(Object content, String packageDeclaration, String name, File root) {
+        writeToFile(content, packageDeclaration, name, "java", root);
+    }
+
+    public static void writeJsFile(Object content, String packageDeclaration, String name, File root) {
+        writeToFile(content, packageDeclaration, name, "js", root);
+    }
+
     public static void writeToFile(Object content, String packageDeclaration, String name, String filetype, File root) {
         final File directory = packageDeclaration == null ? root : new File(root, packageToPath(packageDeclaration));
         final File file = new File(directory, name + (filetype == null ? "" : ("." + filetype)));
@@ -246,6 +254,10 @@ public class STGenerator {
 
     public static String packageToPath(String packageName) {
         return packageName.replaceAll("[.]", "/");
+    }
+
+    public static File makeRelative(File file, File root) {
+        return new File(file.getAbsolutePath().substring(root.getAbsolutePath().length()));
     }
 
     public static File tryToCreateFileIfNotExists(File f) {

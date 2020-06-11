@@ -18,19 +18,6 @@ public class FieldDeclaration {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		FieldDeclaration that = (FieldDeclaration) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("FieldDeclaration");
 		st.add("isMutable", _isMutable);
@@ -52,6 +39,10 @@ public class FieldDeclaration {
 		return this._isMutable;
 	}
 
+	public Object getIsMutable(Object defaultValue) {
+		return this._isMutable == null ? defaultValue : this._isMutable;
+	}
+
 	public boolean hasIsMutable() {
 		return this._isMutable != null;
 	}
@@ -68,6 +59,10 @@ public class FieldDeclaration {
 
 	public Object getIsNonMember() {
 		return this._isNonMember;
+	}
+
+	public Object getIsNonMember(Object defaultValue) {
+		return this._isNonMember == null ? defaultValue : this._isNonMember;
 	}
 
 	public boolean hasIsNonMember() {
@@ -88,6 +83,10 @@ public class FieldDeclaration {
 		return this._name;
 	}
 
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
 	public boolean hasName() {
 		return this._name != null;
 	}
@@ -104,6 +103,10 @@ public class FieldDeclaration {
 
 	public Object getType() {
 		return this._type;
+	}
+
+	public Object getType(Object defaultValue) {
+		return this._type == null ? defaultValue : this._type;
 	}
 
 	public boolean hasType() {
@@ -124,6 +127,10 @@ public class FieldDeclaration {
 		return this._isNullable;
 	}
 
+	public Object getIsNullable(Object defaultValue) {
+		return this._isNullable == null ? defaultValue : this._isNullable;
+	}
+
 	public boolean hasIsNullable() {
 		return this._isNullable != null;
 	}
@@ -142,6 +149,10 @@ public class FieldDeclaration {
 		return this._initializer;
 	}
 
+	public Object getInitializer(Object defaultValue) {
+		return this._initializer == null ? defaultValue : this._initializer;
+	}
+
 	public boolean hasInitializer() {
 		return this._initializer != null;
 	}
@@ -150,6 +161,7 @@ public class FieldDeclaration {
 		this._initializer = null;
 		return this;
 	} 
+
 	public FieldDeclaration addAnnotations(Object value) {
 		this._annotations.add(value);
 		return this;
@@ -169,6 +181,20 @@ public class FieldDeclaration {
 		return this._annotations;
 	} 
 
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		FieldDeclaration that = (FieldDeclaration) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "FieldDeclaration(annotations,isMutable,isNonMember,name,type,isNullable,initializer) ::= <<~annotations:{it|~it~};separator=\"\\n\"~\n" + 
 				"~if(isMutable)~var ~elseif(isNonMember)~~else~val ~endif~~name~: ~type~~if(isNullable)~?~endif~~if(initializer)~ = ~initializer~~endif~>> ";
-} 
+}  

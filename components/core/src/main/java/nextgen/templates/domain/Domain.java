@@ -65,6 +65,7 @@ public class Domain {
 		this._packageName = null;
 		return this;
 	} 
+
 	public Domain addEntities(Entity value) {
 		this._entities.add(value);
 		return this;
@@ -83,6 +84,7 @@ public class Domain {
 	public java.util.List<Entity> getEntities() {
 		return this._entities;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

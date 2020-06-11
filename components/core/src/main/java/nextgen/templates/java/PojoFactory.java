@@ -65,6 +65,7 @@ public class PojoFactory {
 		this._name = null;
 		return this;
 	} 
+
 	public PojoFactory addEntities(Object value) {
 		this._entities.add(value);
 		return this;
@@ -83,6 +84,7 @@ public class PojoFactory {
 	public java.util.List<Object> getEntities() {
 		return this._entities;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

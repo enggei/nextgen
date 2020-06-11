@@ -18,6 +18,7 @@ public class List {
 		return st.render().trim();
 	}
 
+
 	public List addValue(Integer value) {
 		this._value.add(value);
 		return this;
@@ -36,6 +37,7 @@ public class List {
 	public java.util.List<Integer> getValue() {
 		return this._value;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

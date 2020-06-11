@@ -14,19 +14,6 @@ public class Module {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Module that = (Module) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Module");
 		st.add("name", _name);
@@ -78,6 +65,7 @@ public class Module {
 		this._pom = null;
 		return this;
 	} 
+
 	public Module addModules(Object value) {
 		this._modules.add(value);
 		return this;
@@ -97,9 +85,23 @@ public class Module {
 		return this._modules;
 	} 
 
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Module that = (Module) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "Module(name,pom,modules) ::= <<Module ~name~\n" + 
 				"Pom : ~pom~\n" + 
 				"\n" + 
 				"Modules:\n" + 
 				"~modules:{it|~it~};separator=\"\\n\"~>> ";
-} 
+}  

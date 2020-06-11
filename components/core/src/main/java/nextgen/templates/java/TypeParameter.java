@@ -41,6 +41,7 @@ public class TypeParameter {
 		this._name = null;
 		return this;
 	} 
+
 	public TypeParameter addTypeBounds(Object value) {
 		this._typeBounds.add(value);
 		return this;
@@ -59,6 +60,7 @@ public class TypeParameter {
 	public java.util.List<Object> getTypeBounds() {
 		return this._typeBounds;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

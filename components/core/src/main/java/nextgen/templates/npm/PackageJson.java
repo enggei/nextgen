@@ -24,19 +24,6 @@ public class PackageJson {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		PackageJson that = (PackageJson) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("packageJson");
 		st.add("main", _main);
@@ -274,6 +261,7 @@ public class PackageJson {
 		this._name = null;
 		return this;
 	} 
+
 	public PackageJson addDevDependencies(Object value) {
 		this._devDependencies.add(value);
 		return this;
@@ -331,6 +319,20 @@ public class PackageJson {
 		return this._dependencies;
 	} 
 
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		PackageJson that = (PackageJson) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "packageJson(main,license,bugsUrl,devDependencies,scripts,dependencies,homepage,repositoryUrl,author,version,repositoryType,description,name) ::= <<{\n" + 
 				"  \"name\": \"~name~\",\n" + 
 				"  \"version\": \"~version~\",\n" + 
@@ -356,4 +358,4 @@ public class PackageJson {
 				"    ~devDependencies:{it|~it~};separator=\",\\n\"~\n" + 
 				"  }\n" + 
 				"}>> ";
-} 
+}  

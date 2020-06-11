@@ -65,6 +65,7 @@ public class NeoFactory {
 		this._name = null;
 		return this;
 	} 
+
 	public NeoFactory addAccessors(Object value) {
 		this._accessors.add(value);
 		return this;
@@ -83,6 +84,7 @@ public class NeoFactory {
 	public java.util.List<Object> getAccessors() {
 		return this._accessors;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

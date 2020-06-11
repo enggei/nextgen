@@ -45,6 +45,7 @@ public class AnnotationDeclaration {
 		this._name = null;
 		return this;
 	} 
+
 	public AnnotationDeclaration addMembers(Object value) {
 		this._members.add(value);
 		return this;
@@ -101,6 +102,7 @@ public class AnnotationDeclaration {
 	public java.util.List<Object> getAnnotations() {
 		return this._annotations;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

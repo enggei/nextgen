@@ -41,6 +41,7 @@ public class SingleMemberAnnotationExpression {
 		this._name = null;
 		return this;
 	} 
+
 	public SingleMemberAnnotationExpression addMembers(Object value) {
 		this._members.add(value);
 		return this;
@@ -59,6 +60,7 @@ public class SingleMemberAnnotationExpression {
 	public java.util.List<Object> getMembers() {
 		return this._members;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

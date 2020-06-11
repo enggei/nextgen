@@ -17,19 +17,6 @@ public class ClassDeclaration {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		ClassDeclaration that = (ClassDeclaration) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ClassDeclaration");
 		st.add("annotations", _annotations);
@@ -50,6 +37,10 @@ public class ClassDeclaration {
 		return this._annotations;
 	}
 
+	public Object getAnnotations(Object defaultValue) {
+		return this._annotations == null ? defaultValue : this._annotations;
+	}
+
 	public boolean hasAnnotations() {
 		return this._annotations != null;
 	}
@@ -66,6 +57,10 @@ public class ClassDeclaration {
 
 	public Object getIsOpen() {
 		return this._isOpen;
+	}
+
+	public Object getIsOpen(Object defaultValue) {
+		return this._isOpen == null ? defaultValue : this._isOpen;
 	}
 
 	public boolean hasIsOpen() {
@@ -86,6 +81,10 @@ public class ClassDeclaration {
 		return this._isAbstract;
 	}
 
+	public Object getIsAbstract(Object defaultValue) {
+		return this._isAbstract == null ? defaultValue : this._isAbstract;
+	}
+
 	public boolean hasIsAbstract() {
 		return this._isAbstract != null;
 	}
@@ -102,6 +101,10 @@ public class ClassDeclaration {
 
 	public Object getName() {
 		return this._name;
+	}
+
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
 	}
 
 	public boolean hasName() {
@@ -122,6 +125,10 @@ public class ClassDeclaration {
 		return this._extends;
 	}
 
+	public Object getExtends(Object defaultValue) {
+		return this._extends == null ? defaultValue : this._extends;
+	}
+
 	public boolean hasExtends() {
 		return this._extends != null;
 	}
@@ -130,6 +137,7 @@ public class ClassDeclaration {
 		this._extends = null;
 		return this;
 	} 
+
 	public ClassDeclaration addFields(Object value) {
 		this._fields.add(value);
 		return this;
@@ -149,10 +157,24 @@ public class ClassDeclaration {
 		return this._fields;
 	} 
 
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ClassDeclaration that = (ClassDeclaration) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends) ::= <<~annotations~\n" + 
 				"~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n" + 
 				"	~fields:{it|~it~};separator=\",\\n\"~\n" + 
 				") ~if(extends)~extends : ~extends~~endif~{\n" + 
 				"	\n" + 
 				"}>> ";
-} 
+}  

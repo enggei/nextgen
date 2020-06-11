@@ -91,6 +91,7 @@ public class JsonWrapper {
 		this._lexical = null;
 		return this;
 	} 
+
 	public JsonWrapper addAccessors(Object value) {
 		this._accessors.add(value);
 		return this;
@@ -109,6 +110,7 @@ public class JsonWrapper {
 	public java.util.List<Object> getAccessors() {
 		return this._accessors;
 	} 
+
 	public JsonWrapper addExternalFields(Object _type, String _name, Object _initializer) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("type", _type);

@@ -41,6 +41,7 @@ public class STG {
 		this._delimiter = null;
 		return this;
 	} 
+
 	public STG addTemplates(Object value) {
 		this._templates.add(value);
 		return this;
@@ -59,6 +60,7 @@ public class STG {
 	public java.util.List<Object> getTemplates() {
 		return this._templates;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

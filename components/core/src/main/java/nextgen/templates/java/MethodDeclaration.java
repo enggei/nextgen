@@ -121,6 +121,7 @@ public class MethodDeclaration {
 		this._blockStmt = null;
 		return this;
 	} 
+
 	public MethodDeclaration addAnnotations(Object value) {
 		this._annotations.add(value);
 		return this;
@@ -215,6 +216,7 @@ public class MethodDeclaration {
 	public java.util.List<Object> getThrownExceptions() {
 		return this._thrownExceptions;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

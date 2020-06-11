@@ -131,7 +131,9 @@ public class ~name~ {
 	}
 	
 	~singleAccessors:{it|~it~};separator="\n\n"~
+	
 	~listAccessors:{it|~it~};separator="\n\n"~
+	
 	~kvListAccessors:{it|~it~};separator="\n\n"~
 
 	@Override

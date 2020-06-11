@@ -45,6 +45,7 @@ public class EnumConstant {
 		this._name = null;
 		return this;
 	} 
+
 	public EnumConstant addMethods(Object value) {
 		this._methods.add(value);
 		return this;
@@ -101,6 +102,7 @@ public class EnumConstant {
 	public java.util.List<Object> getAnnotations() {
 		return this._annotations;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

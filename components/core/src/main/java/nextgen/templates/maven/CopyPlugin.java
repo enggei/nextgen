@@ -14,19 +14,6 @@ public class CopyPlugin {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		CopyPlugin that = (CopyPlugin) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("copyPlugin");
 		st.add("outputDirectory", _outputDirectory);
@@ -78,6 +65,7 @@ public class CopyPlugin {
 		this._directory = null;
 		return this;
 	} 
+
 	public CopyPlugin addInclude(Object value) {
 		this._include.add(value);
 		return this;
@@ -96,6 +84,20 @@ public class CopyPlugin {
 	public java.util.List<Object> getInclude() {
 		return this._include;
 	} 
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		CopyPlugin that = (CopyPlugin) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
 
 	static final String st = "copyPlugin(outputDirectory,directory,include) ::= <<<plugin>\n" + 
 				"	<artifactId>maven-resources-plugin</artifactId>\n" + 
@@ -121,4 +123,4 @@ public class CopyPlugin {
 				"		</execution>\n" + 
 				"	</executions>\n" + 
 				"</plugin> >> ";
-} 
+}  

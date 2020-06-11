@@ -65,6 +65,7 @@ public class Enum {
 		this._name = null;
 		return this;
 	} 
+
 	public Enum addEnumValues(Object value) {
 		this._enumValues.add(value);
 		return this;
@@ -83,6 +84,7 @@ public class Enum {
 	public java.util.List<Object> getEnumValues() {
 		return this._enumValues;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

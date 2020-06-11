@@ -11,6 +11,15 @@ public class Babelrc {
 	}
 
 	@Override
+	public String toString() {
+		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("babelrc");
+		return st.render().trim();
+	}
+
+
+
+
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
@@ -23,13 +32,6 @@ public class Babelrc {
 		return java.util.Objects.hash(uuid);
 	}
 
-	@Override
-	public String toString() {
-		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("babelrc");
-		return st.render().trim();
-	}
-
-
 	static final String st = "babelrc() ::= <<{\n" + 
 				"	\"presets\": [\n" + 
 				"		\"@babel/preset-env\", \n" + 
@@ -40,4 +42,4 @@ public class Babelrc {
 				"		[\"module:@babel/plugin-proposal-class-properties\", { \"loose\": true }]\n" + 
 				"	]\n" + 
 				"}>> ";
-} 
+}  

@@ -89,6 +89,7 @@ public class STDomain {
 		this._stgString = null;
 		return this;
 	} 
+
 	public STDomain addEntities(Object value) {
 		this._entities.add(value);
 		return this;
@@ -107,6 +108,7 @@ public class STDomain {
 	public java.util.List<Object> getEntities() {
 		return this._entities;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

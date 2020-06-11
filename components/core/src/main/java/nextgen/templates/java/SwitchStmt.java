@@ -41,6 +41,7 @@ public class SwitchStmt {
 		this._selector = null;
 		return this;
 	} 
+
 	public SwitchStmt addEntries(Object value) {
 		this._entries.add(value);
 		return this;
@@ -59,6 +60,7 @@ public class SwitchStmt {
 	public java.util.List<Object> getEntries() {
 		return this._entries;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

@@ -13,19 +13,6 @@ public class Extending {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Extending that = (Extending) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Extending");
 		st.add("className", _className);
@@ -42,6 +29,10 @@ public class Extending {
 		return this._className;
 	}
 
+	public Object getClassName(Object defaultValue) {
+		return this._className == null ? defaultValue : this._className;
+	}
+
 	public boolean hasClassName() {
 		return this._className != null;
 	}
@@ -50,6 +41,8 @@ public class Extending {
 		this._className = null;
 		return this;
 	} 
+
+
 	public Extending addParams(Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("name", _name);
@@ -87,5 +80,18 @@ public class Extending {
 
 	} 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Extending that = (Extending) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	static final String st = "Extending(className,params) ::= <<~className~(~params:{it|~it.name~};separator=\", \"~)>> ";
-} 
+}  

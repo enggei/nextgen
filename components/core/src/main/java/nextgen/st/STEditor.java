@@ -5,6 +5,9 @@ import nextgen.st.domain.*;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
+import org.fife.ui.rtextarea.SearchContext;
+import org.fife.ui.rtextarea.SearchEngine;
+import org.fife.ui.rtextarea.SearchResult;
 import org.stringtemplate.v4.misc.STMessage;
 
 import javax.swing.*;
@@ -14,9 +17,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.LinkedHashSet;
-import java.util.Optional;
-import java.util.Set;
 import java.util.function.Consumer;
 
 import static nextgen.st.STGenerator.toSTGroup;
@@ -61,6 +61,7 @@ public class STEditor extends JPanel {
         this.txtEditor.setText(startText);
         this.txtEditor.setEditable(false);
         this.txtEditor.setCaretPosition(0);
+        this.txtEditor.discardAllEdits();
 
         add(new RTextScrollPane(txtEditor), BorderLayout.CENTER);
         setPreferredSize(new Dimension(800, 600));
@@ -82,6 +83,9 @@ public class STEditor extends JPanel {
         this.txtEditor.setText(startText);
         this.txtEditor.setCaretPosition(0);
         this.txtEditor.setEditable(stTemplateTreeNode != null);
+        this.txtEditor.requestFocusInWindow();
+
+        this.txtEditor.discardAllEdits();
         txtEditor.setBackground(uneditedColor);
     }
 
@@ -118,14 +122,14 @@ public class STEditor extends JPanel {
 
                                         case SINGLE:
                                         case LIST:
-                                            newParameter.setArgumentType(oldParameter.getArgumentType());
+                                            newParameter.setArgumentType(getArgumentType(oldParameter.getArgumentType()));
                                             break;
                                         case KVLIST:
                                             newParameter.getKeys().forEach(newKey -> {
                                                 oldParameter.getKeys()
                                                         .filter(oldKey -> oldKey.getName().equals(newKey.getName()))
                                                         .findFirst()
-                                                        .ifPresent(oldKey -> newKey.setArgumentType(oldKey.getArgumentType()));
+                                                        .ifPresent(oldKey -> newKey.setArgumentType(getArgumentType(oldKey.getArgumentType())));
                                             });
                                             break;
                                     }
@@ -165,6 +169,10 @@ public class STEditor extends JPanel {
 
             });
         }
+    }
+
+    private String getArgumentType(Object argumentType) {
+        return argumentType == null || argumentType.toString().trim().length() == 0 ? "Object" : argumentType.toString().trim();
     }
 
     private void generate() {
@@ -281,11 +289,19 @@ public class STEditor extends JPanel {
         final String selected = txtEditor.getSelectedText();
         if (selected == null || selected.length() < 1) return;
         final String propertyName = SwingUtil.showInputDialog("name", txtEditor);
-        if (propertyName == null) return;
-        final String replacement = stGroupTreeNode.getModel().getDelimiter() + propertyName + stGroupTreeNode.getModel().getDelimiter();
-        txtEditor.setText(txtEditor.getText().replaceAll(selected, replacement));
-        txtEditor.setCaretPosition(0);
-        txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
+        if (propertyName == null || propertyName.trim().length() == 0) return;
+
+        SwingUtilities.invokeLater(() -> {
+            final String replacement = stGroupTreeNode.getModel().getDelimiter() + propertyName + stGroupTreeNode.getModel().getDelimiter();
+            final SearchContext context = new SearchContext();
+            context.setSearchFor(selected);
+            context.setReplaceWith(replacement);
+            context.setMatchCase(false);
+            context.setSearchForward(true);
+            context.setWholeWord(false);
+            SearchEngine.replaceAll(txtEditor, context);
+            txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
+        });
     }
 
     private void format(JTextArea txtEditor) {

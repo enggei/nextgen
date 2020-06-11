@@ -67,6 +67,7 @@ public class Entity {
 		this._isEnum = null;
 		return this;
 	} 
+
 	public Entity addEnumValues(String value) {
 		this._enumValues.add(value);
 		return this;
@@ -104,6 +105,7 @@ public class Entity {
 	public java.util.List<Relation> getRelations() {
 		return this._relations;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

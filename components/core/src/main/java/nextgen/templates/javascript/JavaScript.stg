@@ -1,0 +1,234 @@
+delimiters "~","~"
+
+App() ::= << >>
+
+indexJS(name,stores) ::= <<import ReactDOM from 'react-dom';
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { useStrict } from 'mobx';
+import { Provider } from 'mobx-react';
+
+import ~name~ from './~name~';
+
+~stores:{it|import ~it~ from './stores/~it;format="capitalize"~'};separator="\n"~
+
+const stores = {
+	~stores:{it|~it~};separator=",\n"~
+};
+
+ReactDOM.render((
+	<Provider {...stores}>
+		<BrowserRouter>
+			<~name~ />
+		</BrowserRouter>
+	</Provider>
+), document.getElementById('root'));  >>
+
+SimpleMenu(menuItems,menuComponents) ::= <<import React from 'react';
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import { Link } from 'react-router-dom';
+
+const LoginLink = React.forwardRef( (props, ref) => (
+	<Link innerRef={ ref } to="/login" { ...props } />
+));
+
+~menuItems:{it|
+const ~it.name~ = React.forwardRef( (props, ref) => (
+	<Link innerRef={ ref ~eom()~ to="/~it.to~"~if(it.target)~ target="~it.target~" ~endif~ { ...props ~eom()~ />
+));
+};separator="\n\n"~
+
+export default function SimpleMenu(props) {
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  function handleClick(event) {
+    setAnchorEl(event.currentTarget);
+  }
+
+  function handleClose() {
+    setAnchorEl(null);
+  }
+
+    if (!props.currentUser)  {
+        return (
+            <div>
+                <IconButton edge="start" color="inherit" aria-label="Menu" onClick={handleClick}>
+                    <MenuIcon />
+                </IconButton>
+                <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+                    <MenuItem component={ LoginLink } onClick={handleClose}>Login</MenuItem>
+                </Menu>
+            </div>);
+    	}
+
+    else {
+         return (
+                <div>
+                    <IconButton edge="start" color="inherit" aria-label="Menu" onClick={handleClick}>
+                        <MenuIcon />
+                    </IconButton>
+                    <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+                       ~menuItems:{it|~it.element~};separator="\n"~
+                       ~menuComponents:{it|~it~};separator="\n"~
+                    </Menu>
+                </div>);
+        }
+}  >>
+
+BlockStmt(stmt,statements) ::= <<~stmt~ {
+	~statements:{it|~it~};separator="\n"~
+}  >>
+
+Decorator(name,parameters) ::= <<@~name~~if(parameters)~(~parameters:{it|~it~};separator=", "~)~endif~  >>
+
+Function(name,parameters,statements) ::= <<function ~name~(~parameters:{it|~it~};separator=","~) {
+	~statements:{it|~it~};separator="\n"~
+}  >>
+
+If(condition,blockStmt) ::= <<if (~condition~) ~blockStmt~  >>
+
+Inject(values) ::= <<@inject(~values:{it|~it~};separator=", "~)  >>
+
+JsonObject(values) ::= <<{ ~values:{it|~it~};separator=", "~ }  >>
+
+JSX() ::= << >>
+
+FunctionalComponent(dependencies,name,element) ::= <<~dependencies:{it|~it~};separator="\n"~
+
+function ~name~(props) {
+
+	return (
+		~element~
+	)
+}
+
+export default ~name~;  >>
+
+Element(name,children,props) ::= <<<~name~~if(props)~ 
+	~props:{it|~it~};separator="\n"~~endif~~if(children)~>
+	~children:{it|~it~};separator="\n"~
+</~name~>~else~ />~endif~  >>
+
+ForwardRef(name,forward) ::= <<const ~name~ = React.forwardRef( (props, ref) => (
+	~forward~
+));  >>
+
+DestructorProp(child,prop) ::= <<const { ~prop:{it|~it~};separator=", "~ } = this.props~if(child)~.~child~~endif~;  >>
+
+returnStatement(condition,element) ::= <<~if(condition)~if (~condition~) ~endif~return (
+	~element~
+	);  >>
+
+Prop(name,value) ::= <<~name~~if(value)~=~value~~endif~  >>
+
+State(values) ::= <<{
+	~values:{it|~it.name~: ~it.value~};separator=",\n"~
+}  >>
+
+ClassComponent(dependencies,components,decorators,name,state,events,methods,renderConstants,returnStatements) ::= <<~dependencies:{it|~it~};separator="\n"~
+
+~components:{it|~it~};separator="\n\n"~
+
+~decorators:{it|~it~};separator="\n"~
+class ~name~ extends React.Component {
+
+	constructor(props) {
+		super(props);
+		console.log(this.props);
+		
+~if(state)~
+		this.state = {
+			~state:{it|~it~};separator=",\n"~;
+		}
+~endif~
+
+		~events:{it|this.~it.methodName~ = this.~it.methodName~.bind(this);};separator="\n"~
+	}
+
+~if(events)~
+	~events:{it|~it.declaration~};separator="\n\n"~
+~endif~
+	
+~if(methods)~
+	~methods:{it|~it~};separator="\n\n"~
+~endif~
+
+	render() {
+~if(renderConstants)~
+	const { ~renderConstants:{it|~it~};separator=", "~ } = this.state;~endif~
+		~returnStatements:{it|~it~};separator="\n\n"~	
+	}
+}
+
+export default (~name~);  >>
+
+Dependency(value,packageName) ::= <<import ~value~ from '~packageName~';  >>
+
+MethodDeclaration(const,name,parameter,statements) ::= <<~if(const)~const ~endif~~name~ = ~if(parameter)~~parameter~~else~()~endif~ \=\> {
+	~statements:{it|~it~};separator="\n"~
+} >>
+
+namedImport(names) ::= <<{ ~names:{it|~it~};separator=", "~ }  >>
+
+MaterialUI() ::= <<  >>
+
+GlobalStyle(properties,name) ::= <<'@global': {
+	~name~: {
+		~properties:{it|~it.key~: ~it.value~};separator=",\n"~
+	}
+}  >>
+
+withStyles() ::= <<@withStyles(useStyles)  >>
+
+StyleComponent(elements) ::= <<const useStyles = theme => ({
+	~elements:{it|~it~};separator=",\n"~
+	});  >>
+
+Style(name,properties) ::= <<~name~: {
+	~properties:{it|~it.key~: ~it.value~};separator=",\n"~
+}  >>
+
+MenuItem(title,name) ::= <<<MenuItem component={ ~name~ } onClick={handleClose}> ~title~ </MenuItem>  >>
+
+MobX() ::= <<MobX constructs  >>
+
+MobXStore(observables,actions,imports,name,constructorStatements) ::= <<import { ~if(observables)~observable~endif~~if(actions)~~if(observables)~, ~endif~action, ~endif~ reaction } from 'mobx';
+
+~imports:{it|import ~it.ref~ from '~it.path~';};separator="\n"~
+
+class ~name;format="capitalize"~ {
+
+	~observables:{it|~it~;};separator="\n"~
+
+	constructor() {
+		~constructorStatements:{it|~it~};separator="\n"~
+	}
+
+	~actions:{it|~it~};separator="\n\n"~
+}
+
+export default new ~name;format="capitalize"~();  >>
+
+Observable(name,initializer) ::= <<@observable ~name~~if(initializer)~ = ~initializer~~endif~;  >>
+
+Action(name,params,statements) ::= <<@action ~name~(~params:{it|~it~};separator=","~) {
+	~statements:{it|~it~};separator="\n"~
+}  >>
+
+NameArray(values,name) ::= <<~name~ : [ ~values:{it|~it~};separator=", "~ ]  >>
+
+NameValue(name,value) ::= <<~name~: ~value~  >>
+
+ReactRouter() ::= << >>
+
+Link(to) ::= <<<Link innerRef={ ref } to="~to~" { ...props } />  >>
+
+eom() ::= "}"
+
+gt() ::= ">"

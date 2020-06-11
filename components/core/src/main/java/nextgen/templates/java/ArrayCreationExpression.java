@@ -65,6 +65,7 @@ public class ArrayCreationExpression {
 		this._type = null;
 		return this;
 	} 
+
 	public ArrayCreationExpression addLevels(Object value) {
 		this._levels.add(value);
 		return this;
@@ -83,6 +84,7 @@ public class ArrayCreationExpression {
 	public java.util.List<Object> getLevels() {
 		return this._levels;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

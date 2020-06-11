@@ -18,6 +18,7 @@ public class StgString {
 		return st.render().trim();
 	}
 
+
 	public StgString addTemplates(Object value) {
 		this._templates.add(value);
 		return this;
@@ -36,6 +37,7 @@ public class StgString {
 	public java.util.List<Object> getTemplates() {
 		return this._templates;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {

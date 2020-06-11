@@ -93,6 +93,7 @@ public class ObjectCreationExpression {
 		this._emptyClassBody = null;
 		return this;
 	} 
+
 	public ObjectCreationExpression addTypeArguments(Object value) {
 		this._typeArguments.add(value);
 		return this;
@@ -149,6 +150,7 @@ public class ObjectCreationExpression {
 	public java.util.List<Object> getAnonymousClassBodies() {
 		return this._anonymousClassBodies;
 	} 
+
 
 	@Override
 	public boolean equals(Object o) {
