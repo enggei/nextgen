@@ -119,6 +119,10 @@ public class JsonFactory {
 				"		return new ~it~();\n" + 
 				"	~eom()~\n" + 
 				"	\n" + 
+				"	public static ~it~ new~it~NoUuid() { \n" + 
+				"		return new ~it~().removeUuid();\n" + 
+				"	~eom()~\n" + 
+				"	\n" + 
 				"	public static ~it~ new~it~(io.vertx.core.json.JsonObject jsonObject) { \n" + 
 				"		return new ~it~(jsonObject);\n" + 
 				"	~eom()~\n" + 

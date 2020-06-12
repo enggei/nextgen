@@ -32,6 +32,6 @@ public class JavaPatterns extends JavaST {
     }
 
     public static ObjectCreationExpression newArrayListInstance() {
-        return newObjectCreationExpression().setType(newArrayList());
+        return newObjectCreationExpression().setType(newArrayListType());
     }
 }

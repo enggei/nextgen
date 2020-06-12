@@ -21,7 +21,7 @@ import java.util.Map;
 import static nextgen.templates.JavaPatterns.newPackageDeclaration;
 import static nextgen.templates.JavaPatterns.writeEnum;
 import static nextgen.templates.domain.RelationType.*;
-import static nextgen.templates.java.JavaST.newArrayList;
+import static nextgen.templates.java.JavaST.newArrayListType;
 
 public class DomainPatterns extends DomainST {
 
@@ -166,9 +166,12 @@ public class DomainPatterns extends DomainST {
         STGenerator.writeJavaFile(factory, packageDeclaration.getName(), factory.getName().toString(), root);
     }
 
-    private static Pojo generatePojo(File root, PackageDeclaration packageDeclaration, Entity entity, final Map<Entity, Pojo> visited) {
+    private static void generatePojo(File root, PackageDeclaration packageDeclaration, Entity entity, final Map<Entity, Pojo> visited) {
 
-        if (entity == null || visited.containsKey(entity)) return visited.get(entity);
+        if (entity == null || visited.containsKey(entity)) {
+            visited.get(entity);
+            return;
+        }
 
         final String entityName = entity.getName();
 
@@ -191,7 +194,7 @@ public class DomainPatterns extends DomainST {
                 }
                 case ENUM_LIST: {
                     final Entity dst = asEntity(o.getDst());
-                    entityClass.addFields(JavaST.newList().setType(dst.getName()), o.getName(), newArrayList());
+                    entityClass.addFields(JavaST.newListType().setType(dst.getName()), o.getName(), newArrayListType());
                     entityClass.addAccessors(JavaST.newListAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
                     writeEnum(root, packageDeclaration, dst.getName(), dst.getEnumValues().toArray());
                     break;
@@ -204,7 +207,7 @@ public class DomainPatterns extends DomainST {
                 }
                 case EXT_LIST: {
                     final Class<?> dst = asClass(o.getDst());
-                    entityClass.addFields(JavaST.newList().setType(dst.getCanonicalName()), o.getName(), JavaPatterns.newArrayListInstance());
+                    entityClass.addFields(JavaST.newListType().setType(dst.getCanonicalName()), o.getName(), JavaPatterns.newArrayListInstance());
                     entityClass.addAccessors(JavaST.newListAccessors().setClassName(entityName).setType(dst.getCanonicalName()).setName(o.getName()));
                     break;
                 }
@@ -217,7 +220,7 @@ public class DomainPatterns extends DomainST {
                 }
                 case PRIM_LIST: {
                     final Class<?> dst = asClass(o.getDst());
-                    entityClass.addFields(JavaST.newList().setType(dst.getSimpleName()), o.getName(), null);
+                    entityClass.addFields(JavaST.newListType().setType(dst.getSimpleName()), o.getName(), null);
                     entityClass.addAccessors(JavaST.newListAccessors().setClassName(entityName).setType(dst.getSimpleName()).setName(o.getName()));
                     break;
                 }
@@ -231,7 +234,7 @@ public class DomainPatterns extends DomainST {
                 }
                 case LIST: {
                     final Entity dst = asEntity(o.getDst());
-                    entityClass.addFields(JavaST.newList().setType(dst.getName()), o.getName(), JavaPatterns.newArrayListInstance());
+                    entityClass.addFields(JavaST.newListType().setType(dst.getName()), o.getName(), JavaPatterns.newArrayListInstance());
                     entityClass.addAccessors(JavaST.newListAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
 
                     generatePojo(root, packageDeclaration, dst, visited);
@@ -240,9 +243,8 @@ public class DomainPatterns extends DomainST {
             }
         });
 
-        STGenerator.writeJavaFile(entityClass, packageDeclaration.getName(), entityClass.getName().toString(), root);
+        STGenerator.writeJavaFile(entityClass, packageDeclaration.getName(), entityClass.getName(), root);
 
-        return entityClass;
     }
 
     // DOMAIN TO NEO4J wrappers:
@@ -313,9 +315,12 @@ public class DomainPatterns extends DomainST {
         STGenerator.writeJavaFile(factory, packageDeclaration.getName(), factory.getName().toString(), root);
     }
 
-    private static NodeWrapper generateNeoWrapper(File root, PackageDeclaration packageDeclaration, Entity entity, final Map<Entity, NodeWrapper> visited) {
+    private static void generateNeoWrapper(File root, PackageDeclaration packageDeclaration, Entity entity, final Map<Entity, NodeWrapper> visited) {
 
-        if (entity == null || visited.containsKey(entity)) return visited.get(entity);
+        if (entity == null || visited.containsKey(entity)) {
+            visited.get(entity);
+            return;
+        }
 
         final String entityName = entity.getName();
 
@@ -349,7 +354,7 @@ public class DomainPatterns extends DomainST {
                 }
                 case EXT_LIST: {
                     final Class<?> dst = asClass(o.getDst());
-                    entityClass.addExternalFields(JavaST.newList().setType(dst.getCanonicalName()), o.getName(), JavaPatterns.newArrayListInstance());
+                    entityClass.addExternalFields(JavaST.newListType().setType(dst.getCanonicalName()), o.getName(), JavaPatterns.newArrayListInstance());
                     entityClass.addAccessors(JavaST.newListAccessors().setClassName(entityName).setType(dst.getCanonicalName()).setName(o.getName()));
                     break;
                 }
@@ -382,7 +387,6 @@ public class DomainPatterns extends DomainST {
 
         STGenerator.writeJavaFile(entityClass, packageDeclaration.getName(), entityClass.getName().toString(), root);
 
-        return entityClass;
     }
 
     // DOMAIN TO Vertx JsonObject wrappers:
@@ -414,9 +418,12 @@ public class DomainPatterns extends DomainST {
         STGenerator.writeJavaFile(factory, packageDeclaration.getName(), factory.getName().toString(), root);
     }
 
-    private static JsonWrapper generateJsonWrapper(File root, PackageDeclaration packageDeclaration, Entity entity, final Map<Entity, JsonWrapper> visited) {
+    private static void generateJsonWrapper(File root, PackageDeclaration packageDeclaration, Entity entity, final Map<Entity, JsonWrapper> visited) {
 
-        if (entity == null || visited.containsKey(entity)) return visited.get(entity);
+        if (entity == null || visited.containsKey(entity)) {
+            visited.get(entity);
+            return;
+        }
 
         final String entityName = entity.getName();
         final JsonWrapper entityClass = VertxST.newJsonWrapper()
@@ -479,8 +486,7 @@ public class DomainPatterns extends DomainST {
             }
         });
 
-        STGenerator.writeJavaFile(entityClass, packageDeclaration.getName(), entityClass.getName().toString(), root);
-        return entityClass;
+        STGenerator.writeJavaFile(entityClass, packageDeclaration.getName(), entityClass.getName(), root);
     }
 
     private static Entity asEntity(Object type) {

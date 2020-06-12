@@ -197,6 +197,10 @@ public class ~name;format="capitalize"~ {
 		return new ~it~();
 	~eom()~
 	
+	public static ~it~ new~it~NoUuid() { 
+		return new ~it~().removeUuid();
+	~eom()~
+	
 	public static ~it~ new~it~(io.vertx.core.json.JsonObject jsonObject) { 
 		return new ~it~(jsonObject);
 	~eom()~
