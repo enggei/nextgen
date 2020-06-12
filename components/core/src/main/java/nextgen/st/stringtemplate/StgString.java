@@ -36,7 +36,7 @@ public class StgString {
 
 	public java.util.List<Object> getTemplates() {
 		return this._templates;
-	} 
+	}
 
 
 	@Override
@@ -55,5 +55,5 @@ public class StgString {
 	static final String st = "stgString(templates) ::= <<\"delimiters \\\"\\~\\\", \\\"\\~\\\"\\\\n\" +\n" + 
 				"	\"eom() ::= \\\"}\\\"\\\\n\" +\n" + 
 				"	\"gt() ::= \\\">\\\"\\\\n\"~if(templates)~ +\n" + 
-				"	~templates:{it|~it~.st + \"\\\\n\"};separator=\" + \\n\"~~else~~endif~>> ";
-}  
+				"	~templates:{it|~it~.st + \"\\\\n\"};separator=\" + \\n\"~~else~~endif~>>";
+} 

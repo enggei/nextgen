@@ -117,7 +117,7 @@ public class JsonFactory {
 				"~entities:{it|\n" + 
 				"	public static ~it~ new~it~() { \n" + 
 				"		return new ~it~();\n" + 
-				"	~eom()~\n" + 
+				"	\\}\n" + 
 				"	\n" + 
 				"	public static ~it~ new~it~NoUuid() { \n" + 
 				"		return new ~it~().removeUuid();\n" + 

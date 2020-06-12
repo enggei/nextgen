@@ -3,7 +3,6 @@ package nextgen.st.domain;
 public class STGError {
 
 	private final io.vertx.core.json.JsonObject jsonObject;
-	private org.stringtemplate.v4.misc.STMessage _message;
 
 	public STGError() { 
 		this.jsonObject = new io.vertx.core.json.JsonObject();
@@ -52,17 +51,43 @@ public class STGError {
 		return jsonObject.getString("type") == null ? defaultValue : STGErrorType.valueOf(jsonObject.getString("type"));
 	}
 
-	public STGError setMessage(org.stringtemplate.v4.misc.STMessage value) { 
-		this._message = value;
+	public STGError setMessage(String value) { 
+		jsonObject.put("message", value);
 		return this;
 	}
 
-	public org.stringtemplate.v4.misc.STMessage getMessage() { 
-		return this._message;
+	public String getMessage() { 
+		return jsonObject.getString("message");
 	}
 
-	public org.stringtemplate.v4.misc.STMessage getMessage(org.stringtemplate.v4.misc.STMessage defaultValue) { 
-		return this._message == null ? defaultValue : this._message;
+	public String getMessage(String defaultValue) { 
+		return jsonObject.getString("message", defaultValue);
+	}
+
+	public STGError setLine(Integer value) { 
+		jsonObject.put("line", value);
+		return this;
+	}
+
+	public Integer getLine() { 
+		return jsonObject.getInteger("line");
+	}
+
+	public Integer getLine(Integer defaultValue) { 
+		return jsonObject.getInteger("line", defaultValue);
+	}
+
+	public STGError setCharPosition(Integer value) { 
+		jsonObject.put("charPosition", value);
+		return this;
+	}
+
+	public Integer getCharPosition() { 
+		return jsonObject.getInteger("charPosition");
+	}
+
+	public Integer getCharPosition(Integer defaultValue) { 
+		return jsonObject.getInteger("charPosition", defaultValue);
 	}
 
 	@Override

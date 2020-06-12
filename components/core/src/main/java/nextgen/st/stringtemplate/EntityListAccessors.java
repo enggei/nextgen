@@ -42,7 +42,7 @@ public class EntityListAccessors {
 	public EntityListAccessors removeEntity() {
 		this._entity = null;
 		return this;
-	} 
+	}
 
 	public EntityListAccessors setName(Object value) {
 		this._name = value;
@@ -64,7 +64,7 @@ public class EntityListAccessors {
 	public EntityListAccessors removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public EntityListAccessors setType(Object value) {
 		this._type = value;
@@ -86,7 +86,7 @@ public class EntityListAccessors {
 	public EntityListAccessors removeType() {
 		this._type = null;
 		return this;
-	} 
+	}
 
 
 
@@ -120,5 +120,5 @@ public class EntityListAccessors {
 				"\n" + 
 				"public java.util.List<~if(type)~~type~~else~Object~endif~> get~name;format=\"capitalize\"~() {\n" + 
 				"	return this._~name~;\n" + 
-				"}>> ";
-}  
+				"}>>";
+} 

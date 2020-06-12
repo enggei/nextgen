@@ -17,7 +17,7 @@ public class StringTemplateST {
 	STEnum.st + "\n" + 
 	STEnumValue.st + "\n" + 
 	STG.st + "\n" + 
-	Template.st + "\n" ;
+	Template.st + "\n";
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -55,55 +55,55 @@ public class StringTemplateST {
 
 	public static STDomain newSTDomain() {
 		return new STDomain(stGroup);
-	} 
+	}
 
 	public static NewEntityInstance newNewEntityInstance() {
 		return new NewEntityInstance(stGroup);
-	} 
+	}
 
 	public static StgString newStgString() {
 		return new StgString(stGroup);
-	} 
+	}
 
 	public static STDomainTests newSTDomainTests() {
 		return new STDomainTests(stGroup);
-	} 
+	}
 
 	public static TemplateTestMethod newTemplateTestMethod() {
 		return new TemplateTestMethod(stGroup);
-	} 
+	}
 
 	public static STEntity newSTEntity() {
 		return new STEntity(stGroup);
-	} 
+	}
 
 	public static EntityKVListAccessors newEntityKVListAccessors() {
 		return new EntityKVListAccessors(stGroup);
-	} 
+	}
 
 	public static EntityListAccessors newEntityListAccessors() {
 		return new EntityListAccessors(stGroup);
-	} 
+	}
 
 	public static EntitySingleAccessors newEntitySingleAccessors() {
 		return new EntitySingleAccessors(stGroup);
-	} 
+	}
 
 	public static STEnum newSTEnum() {
 		return new STEnum(stGroup);
-	} 
+	}
 
 	public static STEnumValue newSTEnumValue() {
 		return new STEnumValue(stGroup);
-	} 
+	}
 
 	public static STG newSTG() {
 		return new STG(stGroup);
-	} 
+	}
 
 	public static Template newTemplate() {
 		return new Template(stGroup);
-	} 
+	}
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
 
@@ -136,4 +136,4 @@ public class StringTemplateST {
 			}
 		}
 	}
-}  
+} 

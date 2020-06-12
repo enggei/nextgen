@@ -1,10 +1,10 @@
 delimiters "~","~"
 
-gitignore(exclude) ::= <<~exclude:{it|/~it~/};separator="\n"~  >>
+gitignore(exclude) ::= <<~exclude:{it|/~it~/};separator="\n"~>>
 
-removeDir(dir) ::= <<git rm --cached -r ~dir~  >>
+removeDir(dir) ::= <<git rm --cached -r ~dir~>>
 
-removeFile(path) ::= <<git rm --cached ~path~  >>
+removeFile(path) ::= <<git rm --cached ~path~>>
 
 eom() ::= "}"
 

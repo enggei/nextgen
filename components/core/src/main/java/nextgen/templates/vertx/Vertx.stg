@@ -195,7 +195,7 @@ public class ~name;format="capitalize"~ {
 ~entities:{it|
 	public static ~it~ new~it~() { 
 		return new ~it~();
-	~eom()~
+	\}
 	
 	public static ~it~ new~it~NoUuid() { 
 		return new ~it~().removeUuid();

@@ -42,7 +42,7 @@ public class Template {
 	public Template removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public Template setContent(Object value) {
 		this._content = value;
@@ -64,7 +64,7 @@ public class Template {
 	public Template removeContent() {
 		this._content = null;
 		return this;
-	} 
+	}
 
 	public Template addParams(Object value) {
 		this._params.add(value);
@@ -83,7 +83,7 @@ public class Template {
 
 	public java.util.List<Object> getParams() {
 		return this._params;
-	} 
+	}
 
 
 	@Override
@@ -99,5 +99,5 @@ public class Template {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Template(name,params,content) ::= <<~name~(~params:{it|~it~};separator=\",\"~) ::= <<~content~>\\> >> ";
-}  
+	static final String st = "Template(name,params,content) ::= <<~name~(~params:{it|~it~};separator=\",\"~) ::= <<~content~~gt()~~gt()~>>";
+} 

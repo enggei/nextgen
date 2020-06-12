@@ -7,9 +7,8 @@ import nextgen.st.parser.AstNodeType;
 import nextgen.st.parser.STParserFactory;
 import org.antlr.runtime.tree.Tree;
 import org.stringtemplate.v4.ST;
-import org.stringtemplate.v4.STErrorListener;
-import org.stringtemplate.v4.STGroup;
-import org.stringtemplate.v4.STGroupFile;
+import org.stringtemplate.v4.*;
+import org.stringtemplate.v4.misc.STCompiletimeMessage;
 import org.stringtemplate.v4.misc.STMessage;
 
 import java.io.BufferedReader;
@@ -18,6 +17,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
+import static nextgen.st.STGenerator.toStg;
 import static nextgen.st.parser.AstNodeType.*;
 
 public class STParser {
@@ -35,6 +35,11 @@ public class STParser {
         return parseResult;
     }
 
+    public static STGParseResult parseTemplate(String text) {
+        final String stg = toStg(new STGroupModel().addTemplates(new STTemplate().setName("tmp").setText(text)).setDelimiter(STGenerator.DELIMITER));
+        return parse(new STGroupString("tmp", stg, STGenerator.DELIMITERCHAR, STGenerator.DELIMITERCHAR));
+    }
+
     public static STGParseResult parse(STGroup stGroup) {
 
         final STGParseResult parseResult = new STGParseResult();
@@ -42,31 +47,33 @@ public class STParser {
         stGroup.setListener(new STErrorListener() {
             @Override
             public void compileTimeError(STMessage stMessage) {
-                parseResult.addErrors(new STGError().setMessage(stMessage).setType(STGErrorType.COMPILE));
+                final STCompiletimeMessage message = (STCompiletimeMessage) stMessage;
+                parseResult.addErrors(new STGError()
+                        .setType(STGErrorType.COMPILE)
+                        .setLine(message.token.getLine())
+                        .setCharPosition(message.token.getCharPositionInLine())
+                        .setMessage(message.toString()));
             }
 
             @Override
             public void runTimeError(STMessage stMessage) {
-                parseResult.addErrors(new STGError().setMessage(stMessage).setType(STGErrorType.RUNTIME));
+                parseResult.addErrors(new STGError().setType(STGErrorType.RUNTIME));
             }
 
             @Override
             public void IOError(STMessage stMessage) {
-                parseResult.addErrors(new STGError().setMessage(stMessage).setType(STGErrorType.IO));
+                parseResult.addErrors(new STGError().setType(STGErrorType.IO));
             }
 
             @Override
             public void internalError(STMessage stMessage) {
-                parseResult.addErrors(new STGError().setMessage(stMessage).setType(STGErrorType.INTERNAL));
+                parseResult.addErrors(new STGError().setType(STGErrorType.INTERNAL));
             }
         });
-
 
         final STGroupModel stGroupModel = new STGroupModel()
                 .setName(stGroup.getName())
                 .setDelimiter(stGroup.delimiterStartChar + "");
-
-        final Map<String, STTemplate> stTemplateMap = new HashMap<>();
 
         stGroup.getTemplateNames()
                 .stream()
@@ -99,8 +106,6 @@ public class STParser {
                         });
                         if (debug) System.out.println();
                     });
-
-                    stTemplateMap.put(stTemplate.getName(), stTemplate);
 
                     stGroupModel.addTemplates(stTemplate);
                 });

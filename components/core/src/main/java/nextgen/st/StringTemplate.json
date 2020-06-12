@@ -242,33 +242,38 @@
   }, {
     "uuid" : "ddafac59-22bd-4387-b5b1-a269f89c5460",
     "name" : "STG",
-    "text" : "delimiters ~delimiter~,~delimiter~\n\neom() ::= \"}\"\n\ngt() ::= \">\"\n\n~templates:{it|~it~};separator=\"\\n\\n\"~ >\\>",
+    "text" : "delimiters ~delimiter~,~delimiter~\n\neom() ::= \"}\"\n\ngt() ::= \">\"\n\n~templates:{it|~it~};separator=\"\\n\\n\"~~gt()~~gt()~ ",
     "children" : [ {
       "uuid" : "3ef3243c-3f80-4539-a618-cfa1afeae4b0",
       "name" : "Template",
-      "text" : "~name~(~params:{it|~it~};separator=\",\"~) ::= <<~content~>\\>",
+      "text" : "~name~(~params:{it|~it~};separator=\",\"~) ::= <<~content~~gt()~~gt()~",
       "parameters" : [ {
-        "uuid" : "27638ade-39c7-4ba2-907b-5641ef0d9e54",
+        "uuid" : "fff824ee-7639-46e2-98a1-9fa9facdf6df",
         "name" : "name",
-        "type" : "SINGLE"
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       }, {
-        "uuid" : "5d37c82a-b3ef-4c57-9c21-f42d2d6c90f6",
+        "uuid" : "dac6cc5a-4e54-4475-b907-b8b825beaf27",
         "name" : "params",
-        "type" : "LIST"
+        "type" : "LIST",
+        "argumentType" : "Object"
       }, {
-        "uuid" : "f86912fd-f5e6-4bbb-9bcf-c73b28dbdebd",
+        "uuid" : "b6f4f467-bad9-4f81-b9ab-0331639a4f96",
         "name" : "content",
-        "type" : "SINGLE"
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       } ]
     } ],
     "parameters" : [ {
-      "uuid" : "f0d45a91-1e3a-460e-97b5-a34bfb6d6cab",
+      "uuid" : "f063b7a9-8dd3-444f-85e5-5447779fa272",
       "name" : "delimiter",
-      "type" : "SINGLE"
+      "type" : "SINGLE",
+      "argumentType" : "Object"
     }, {
-      "uuid" : "e6ec366c-e62f-4c23-9047-0ae8309f69cf",
+      "uuid" : "046b23aa-32f7-4737-8793-602571ddfd8f",
       "name" : "templates",
-      "type" : "LIST"
+      "type" : "LIST",
+      "argumentType" : "Object"
     } ]
   }, {
     "uuid" : "af2f2a2f-dc9c-4a0e-a6da-c476e9868473",

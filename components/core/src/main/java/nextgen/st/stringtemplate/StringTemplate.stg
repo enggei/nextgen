@@ -73,16 +73,16 @@ public class ~name~ {
 			}
 		}
 	}
-}  >>
+} >>
 
 newEntityInstance(entityName) ::= <<public static ~entityName~ new~entityName~() {
 	return new ~entityName~(stGroup);
-} >>
+}>>
 
 stgString(templates) ::= <<"delimiters \"\~\", \"\~\"\\n" +
 	"eom() ::= \"}\"\\n" +
 	"gt() ::= \">\"\\n"~if(templates)~ +
-	~templates:{it|~it~.st + "\\n"};separator=" + \n"~~else~~endif~ >>
+	~templates:{it|~it~.st + "\\n"};separator=" + \n"~~else~~endif~>>
 
 STDomainTests(packageName,domainName,name,testcases) ::= <<package ~packageName~;
 
@@ -99,12 +99,12 @@ public class ~name~ {
 	}
 
 	~testcases:{it|~it.impl~};separator="\n\n"~
-} >>
+}>>
 
 templateTestMethod(template) ::= <<@org.junit.Test
 public void test~template;format="capitalize"~() {
 	System.out.println("\n--- TEST ~template~:\n" + new~template;format="capitalize"~());
-} >>
+}>>
 
 STEntity(packageName,name,singleFields,listFields,kvListFields,template,singleAccessors,listAccessors,kvListAccessors,stString) ::= <<package ~packageName~;
 
@@ -150,7 +150,7 @@ public class ~name~ {
 	}
 	
 	~if(stString)~static final String st = "~stString~";~endif~
-}  >>
+} >>
 
 entityListAccessors(entity,name,type) ::= <<public ~entity~ add~name;format="capitalize"~(~if(type)~~type~~else~Object~endif~ value) {
 	this._~name~.add(value);
@@ -169,7 +169,7 @@ public ~entity~ remove~name;format="capitalize"~(int index) {
 
 public java.util.List<~if(type)~~type~~else~Object~endif~> get~name;format="capitalize"~() {
 	return this._~name~;
-} >>
+}>>
 
 entityKVListAccessors(entity,name,keys) ::= <<public ~entity~ add~name;format="capitalize"~(~keys:{it|~if(it.type)~~it.type~~else~Object~endif~ _~it.name~};separator=", "~) {
 	final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -206,7 +206,7 @@ public static final class ~entity~_~name;format="capitalize"~ {
 	return this._~it.name~;
 ~eom()~
 	};separator="\n"~
-} >>
+}>>
 
 entitySingleAccessors(entity,name,type) ::= <<public ~entity~ set~name;format="capitalize"~(~if(type)~~type~~else~Object~endif~ value) {
 	this._~name~ = value;
@@ -228,19 +228,19 @@ public boolean has~name;format="capitalize"~() {
 public ~entity~ remove~name;format="capitalize"~() {
 	this._~name~ = null;
 	return this;
-} >>
+}>>
 
-STEnum(package,name,enumValues) ::= <<package ~package~;
+STEnum(packageName,name,enumValues) ::= <<package ~packageName~;
 
 public enum ~name~ {
 
 	~enumValues:{it|~it~};separator=",\n"~
-}  >>
+} >>
 
 STEnumValue(name,lexical) ::= <<~name~~if(lexical)~() {
 	@Override
 	public String toString() { return "~lexical~"; }
-}~endif~  >>
+}~endif~ >>
 
 STG(delimiter,templates) ::= <<delimiters ~delimiter~,~delimiter~
 
@@ -248,9 +248,9 @@ eom() ::= "}"
 
 gt() ::= ">"
 
-~templates:{it|~it~};separator="\n\n"~ >\> >>
+~templates:{it|~it~};separator="\n\n"~~gt()~~gt()~ >>
 
-Template(name,params,content) ::= <<~name~(~params:{it|~it~};separator=","~) ::= <<~content~>\> >>
+Template(name,params,content) ::= <<~name~(~params:{it|~it~};separator=","~) ::= <<~content~~gt()~~gt()~>>
 
 eom() ::= "}"
 

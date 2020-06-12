@@ -40,7 +40,7 @@ public class STG {
 	public STG removeDelimiter() {
 		this._delimiter = null;
 		return this;
-	} 
+	}
 
 	public STG addTemplates(Object value) {
 		this._templates.add(value);
@@ -59,7 +59,7 @@ public class STG {
 
 	public java.util.List<Object> getTemplates() {
 		return this._templates;
-	} 
+	}
 
 
 	@Override
@@ -81,5 +81,5 @@ public class STG {
 				"\n" + 
 				"gt() ::= \">\"\n" + 
 				"\n" + 
-				"~templates:{it|~it~};separator=\"\\n\\n\"~ >\\> >> ";
-}  
+				"~templates:{it|~it~};separator=\"\\n\\n\"~~gt()~~gt()~>>";
+} 

@@ -23,7 +23,7 @@ public class STApp extends JFrame {
         super("ST Editor");
 
         navigator = new STNavigator(appModel, tabbedPane);
-        tabbedPane.setPreferredSize(new Dimension(800, 600));
+        tabbedPane.setPreferredSize(new Dimension(1024, 800));
 
         final JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));

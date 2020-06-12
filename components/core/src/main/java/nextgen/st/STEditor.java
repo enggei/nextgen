@@ -1,14 +1,13 @@
 package nextgen.st;
 
 import com.generator.util.SwingUtil;
-import nextgen.st.domain.*;
+import nextgen.st.domain.STGError;
+import nextgen.st.domain.STGParseResult;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
 import org.fife.ui.rtextarea.SearchContext;
 import org.fife.ui.rtextarea.SearchEngine;
-import org.fife.ui.rtextarea.SearchResult;
-import org.stringtemplate.v4.misc.STMessage;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -18,17 +17,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.function.Consumer;
-
-import static nextgen.st.STGenerator.toSTGroup;
-import static nextgen.st.domain.STJsonFactory.newSTGroupModel;
-import static nextgen.st.domain.STJsonFactory.newSTTemplate;
+import java.util.stream.Stream;
 
 public class STEditor extends JPanel {
 
     private final RSyntaxTextArea txtEditor = new RSyntaxTextArea(20, 60);
+    private final STEditorInfoPanel infoPanel = new STEditorInfoPanel();
+
     private final Color uneditedColor = txtEditor.getBackground();
-    private final Color editedColor = Color.decode("#fee8c8");
-    private final Color errorColor = Color.RED;
+    private final Color editedColor = Color.decode("#f0f0f0");
+    private final Color errorColor = Color.decode("#fbb4ae");
     private final Border defaultBorder = txtEditor.getBorder();
 
     private final STNavigator.RootNode.STGDirectoryTreeNode.STGroupTreeNode stGroupTreeNode;
@@ -64,6 +62,7 @@ public class STEditor extends JPanel {
         this.txtEditor.discardAllEdits();
 
         add(new RTextScrollPane(txtEditor), BorderLayout.CENTER);
+        add(infoPanel, BorderLayout.SOUTH);
         setPreferredSize(new Dimension(800, 600));
     }
 
@@ -83,7 +82,8 @@ public class STEditor extends JPanel {
         this.txtEditor.setEditable(false);
 
         this.txtEditor.discardAllEdits();
-        txtEditor.setBackground(uneditedColor);
+        this.txtEditor.setBackground(uneditedColor);
+        this.infoPanel.clear();
     }
 
     public void setSTTemplate(STNavigator.RootNode.STGDirectoryTreeNode.STGroupTreeNode.STTemplateTreeNode stTemplateTreeNode) {
@@ -101,32 +101,25 @@ public class STEditor extends JPanel {
         this.txtEditor.requestFocusInWindow();
 
         this.txtEditor.discardAllEdits();
-        txtEditor.setBackground(uneditedColor);
+        this.txtEditor.setBackground(uneditedColor);
+        this.infoPanel.clear();
     }
 
     private void commit() {
+        SwingUtilities.invokeLater(() -> {
 
-        this.txtEditor.setBorder(defaultBorder);
+            txtEditor.setBorder(defaultBorder);
 
-        final String text = txtEditor.getText().trim();
+            final String text = txtEditor.getText().trim();
 
-        final STGroupModel originalGroup = stGroupTreeNode.getModel();
-        final STTemplate originalTemplate = stTemplateTreeNode.getModel();
+            final STGParseResult parseResult = STParser.parseTemplate(text);
 
-        final STGParseResult parseResult = STParser.parse(toSTGroup(newSTGroupModel()
-                .setDelimiter(originalGroup.getDelimiter())
-                .setName(originalGroup.getName())
-                .addTemplates(newSTTemplate()
-                        .setName(originalTemplate.getName())
-                        .setText(text))));
+            if (parseResult.getErrors().count() == 0) {
+                parseResult.getParsed().getTemplates().findFirst().ifPresent(stTemplate -> {
+                    stTemplateTreeNode.getModel().setText(stTemplate.getText());
 
-        if (parseResult.getErrors().count() == 0) {
-            parseResult.getParsed().getTemplates().findFirst().ifPresent(stTemplate -> {
-                originalTemplate.setText(stTemplate.getText());
-
-                // add existing argument-types to parameter, if applicable:
-                stTemplate.getParameters().forEach(newParameter -> {
-                    originalTemplate.getParameters()
+                    // add existing argument-types to parameter, if applicable:
+                    stTemplate.getParameters().forEach(newParameter -> stTemplateTreeNode.getModel().getParameters()
                             .filter(oldParameter -> oldParameter.getName().equals(newParameter.getName()))
                             .findFirst()
                             .ifPresent(oldParameter -> {
@@ -149,41 +142,23 @@ public class STEditor extends JPanel {
                                             break;
                                     }
                                 }
-                            });
+                            }));
+                    stTemplateTreeNode.getModel().clearParameters();
+                    stTemplate.getParameters().forEach(stTemplateTreeNode.getModel()::addParameters);
                 });
-                originalTemplate.clearParameters();
-                stTemplate.getParameters().forEach(originalTemplate::addParameters);
-            });
 
-            startText = text.trim();
-            stGroupTreeNode.save();
+                startText = text.trim();
+                stGroupTreeNode.save();
 
-            SwingUtilities.invokeLater(() -> txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor));
+                txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
+                infoPanel.clear();
 
-        } else {
+            } else {
 
-            this.txtEditor.setBorder(BorderFactory.createLineBorder(errorColor));
-
-            parseResult.getErrors().forEach(stgError -> {
-
-                System.out.println(stgError.getType());
-                final STMessage message = stgError.getMessage();
-
-                switch (stgError.getType()) {
-
-                    case COMPILE:
-
-                        break;
-                    case RUNTIME:
-                        break;
-                    case IO:
-                        break;
-                    case INTERNAL:
-                        break;
-                }
-
-            });
-        }
+                txtEditor.setBorder(BorderFactory.createLineBorder(errorColor));
+                infoPanel.showParseErrors(parseResult.getErrors());
+            }
+        });
     }
 
     private String getArgumentType(Object argumentType) {
@@ -367,5 +342,65 @@ public class STEditor extends JPanel {
             txtEditor.setCaretPosition(caretPosition + str.length() - 1);
             txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
         });
+    }
+
+    private class STEditorInfoPanel extends JPanel {
+
+        private final JTextArea textArea = new JTextArea();
+
+        public STEditorInfoPanel() {
+            super(new BorderLayout());
+
+            this.textArea.setFont(new Font("Hack", Font.PLAIN, 20));
+            this.textArea.setTabSize(3);
+            this.textArea.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
+            add(new JScrollPane(textArea), BorderLayout.CENTER);
+            setPreferredSize(new Dimension(800, 200));
+        }
+
+        public void clear() {
+            SwingUtilities.invokeLater(() -> {
+                textArea.setText("");
+                textArea.setBackground(uneditedColor);
+                textArea.setToolTipText("");
+            });
+        }
+
+        public void showParseErrors(Stream<STGError> errors) {
+
+            final StringBuilder info = new StringBuilder("Parsing errors:\n");
+
+            errors.forEach(stgError -> {
+                info.append(stgError.getType());
+                switch (stgError.getType()) {
+                    case COMPILE: {
+                        info.append("\n\tline               ").append(stgError.getLine());
+                        info.append("\n\tpos                ").append(stgError.getCharPosition());
+                        info.append("\n\tmessage            ").append(stgError.getMessage());
+
+                        if (stgError.getMessage().contains("expecting RDELIM")) {
+                            info.append("\n\tpossible cause     ").append("This is probably a '}' being interpreted as end-of an kv-iteration.");
+                            info.append("\n\tpossible solution  ").append("Try escaping the previous '}' (i.e from '}' to '\\}')");
+                        }
+
+                        break;
+                    }
+
+                    case RUNTIME:
+                        break;
+
+                    case IO:
+                        break;
+
+                    case INTERNAL:
+                        break;
+                }
+            });
+
+            textArea.setBackground(errorColor);
+            textArea.setText(info.toString().trim());
+            textArea.setCaretPosition(0);
+        }
     }
 }

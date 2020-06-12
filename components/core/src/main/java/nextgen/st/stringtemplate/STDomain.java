@@ -44,7 +44,7 @@ public class STDomain {
 	public STDomain removePackageName() {
 		this._packageName = null;
 		return this;
-	} 
+	}
 
 	public STDomain setName(String value) {
 		this._name = value;
@@ -66,7 +66,7 @@ public class STDomain {
 	public STDomain removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public STDomain setStgString(StgString value) {
 		this._stgString = value;
@@ -88,7 +88,7 @@ public class STDomain {
 	public STDomain removeStgString() {
 		this._stgString = null;
 		return this;
-	} 
+	}
 
 	public STDomain addEntities(Object value) {
 		this._entities.add(value);
@@ -107,7 +107,7 @@ public class STDomain {
 
 	public java.util.List<Object> getEntities() {
 		return this._entities;
-	} 
+	}
 
 
 	@Override
@@ -196,5 +196,5 @@ public class STDomain {
 				"			}\n" + 
 				"		}\n" + 
 				"	}\n" + 
-				"}>> ";
-}  
+				"}>>";
+} 

@@ -53,7 +53,9 @@ public class STProject {
                         .addRelations(newOneToOne("parsed", stGroupModel))
                         .addRelations(newOneToMany("errors", newEntity("STGError")
                                 .addRelations(newEnumField("type", newEnum("STGErrorType", "COMPILE,RUNTIME,IO,INTERNAL")))
-                                .addRelations(newOneToOneExternal("message", org.stringtemplate.v4.misc.STMessage.class))))));
+                                .addRelations(newStringField("message"))
+                                .addRelations(newIntegerField("line"))
+                                .addRelations(newIntegerField("charPosition"))))));
     }
 
 }

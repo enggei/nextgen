@@ -17,7 +17,8 @@ public class STGenerator {
 
     public static boolean debug = true;
 
-    public static final String DELIMITER = "~";
+    public static final char DELIMITERCHAR = '~';
+    public static final String DELIMITER = "" + DELIMITERCHAR;
 
     private final STGroup generator;
 
@@ -213,7 +214,7 @@ public class STGenerator {
                 "\n\neom() ::= \"}\"" +
                 "\n\ngt() ::= \">\"" +
                 "\n\n>>" +
-                "\n\nSTTemplate(content,name,params) ::= <<~name~(~params:{it|~it~};separator=\",\"~) ::= <<~content~ ~eot()~>>";
+                "\n\nSTTemplate(content,name,params) ::= <<~name~(~params:{it|~it~};separator=\",\"~) ::= <<~content~~eot()~>>";
 
         return new NamedSTGroup("TemplateTemplate", stg, "~");
     }

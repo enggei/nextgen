@@ -44,7 +44,7 @@ public class STDomainTests {
 	public STDomainTests removePackageName() {
 		this._packageName = null;
 		return this;
-	} 
+	}
 
 	public STDomainTests setDomainName(Object value) {
 		this._domainName = value;
@@ -66,7 +66,7 @@ public class STDomainTests {
 	public STDomainTests removeDomainName() {
 		this._domainName = null;
 		return this;
-	} 
+	}
 
 	public STDomainTests setName(Object value) {
 		this._name = value;
@@ -88,7 +88,7 @@ public class STDomainTests {
 	public STDomainTests removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 
 	public STDomainTests addTestcases(Object _name, Object _impl) {
@@ -134,7 +134,7 @@ public class STDomainTests {
 			return this._impl;
 		}
 
-	} 
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -164,5 +164,5 @@ public class STDomainTests {
 				"	}\n" + 
 				"\n" + 
 				"	~testcases:{it|~it.impl~};separator=\"\\n\\n\"~\n" + 
-				"}>> ";
-}  
+				"}>>";
+} 

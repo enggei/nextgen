@@ -5,7 +5,7 @@ public class STEnum {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _package;
+	private Object _packageName;
 	private Object _name;
 	private java.util.List<Object> _enumValues = new java.util.ArrayList<>();
 
@@ -16,33 +16,33 @@ public class STEnum {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("STEnum");
-		st.add("package", _package);
+		st.add("packageName", _packageName);
 		st.add("name", _name);
 		for (Object o : _enumValues) st.add("enumValues", o);
 		return st.render().trim();
 	}
 
-	public STEnum setPackage(Object value) {
-		this._package = value;
+	public STEnum setPackageName(Object value) {
+		this._packageName = value;
 		return this;
 	}
 
-	public Object getPackage() {
-		return this._package;
+	public Object getPackageName() {
+		return this._packageName;
 	}
 
-	public Object getPackage(Object defaultValue) {
-		return this._package == null ? defaultValue : this._package;
+	public Object getPackageName(Object defaultValue) {
+		return this._packageName == null ? defaultValue : this._packageName;
 	}
 
-	public boolean hasPackage() {
-		return this._package != null;
+	public boolean hasPackageName() {
+		return this._packageName != null;
 	}
 
-	public STEnum removePackage() {
-		this._package = null;
+	public STEnum removePackageName() {
+		this._packageName = null;
 		return this;
-	} 
+	}
 
 	public STEnum setName(Object value) {
 		this._name = value;
@@ -64,7 +64,7 @@ public class STEnum {
 	public STEnum removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public STEnum addEnumValues(Object value) {
 		this._enumValues.add(value);
@@ -83,7 +83,7 @@ public class STEnum {
 
 	public java.util.List<Object> getEnumValues() {
 		return this._enumValues;
-	} 
+	}
 
 
 	@Override
@@ -99,10 +99,10 @@ public class STEnum {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "STEnum(package,name,enumValues) ::= <<package ~package~;\n" + 
+	static final String st = "STEnum(packageName,name,enumValues) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"public enum ~name~ {\n" + 
 				"\n" + 
 				"	~enumValues:{it|~it~};separator=\",\\n\"~\n" + 
-				"}>> ";
-}  
+				"}>>";
+} 

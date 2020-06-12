@@ -56,7 +56,7 @@ public class STEntity {
 	public STEntity removePackageName() {
 		this._packageName = null;
 		return this;
-	} 
+	}
 
 	public STEntity setName(Object value) {
 		this._name = value;
@@ -78,7 +78,7 @@ public class STEntity {
 	public STEntity removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public STEntity setTemplate(Object value) {
 		this._template = value;
@@ -100,7 +100,7 @@ public class STEntity {
 	public STEntity removeTemplate() {
 		this._template = null;
 		return this;
-	} 
+	}
 
 	public STEntity setStString(Object value) {
 		this._stString = value;
@@ -122,7 +122,7 @@ public class STEntity {
 	public STEntity removeStString() {
 		this._stString = null;
 		return this;
-	} 
+	}
 
 	public STEntity addSingleAccessors(Object value) {
 		this._singleAccessors.add(value);
@@ -141,7 +141,7 @@ public class STEntity {
 
 	public java.util.List<Object> getSingleAccessors() {
 		return this._singleAccessors;
-	} 
+	}
 
 	public STEntity addListAccessors(Object value) {
 		this._listAccessors.add(value);
@@ -160,7 +160,7 @@ public class STEntity {
 
 	public java.util.List<Object> getListAccessors() {
 		return this._listAccessors;
-	} 
+	}
 
 	public STEntity addKvListAccessors(Object value) {
 		this._kvListAccessors.add(value);
@@ -179,7 +179,7 @@ public class STEntity {
 
 	public java.util.List<Object> getKvListAccessors() {
 		return this._kvListAccessors;
-	} 
+	}
 
 	public STEntity addSingleFields(Object _type, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -224,7 +224,7 @@ public class STEntity {
 			return this._name;
 		}
 
-	} 
+	}
 
 	public STEntity addListFields(Object _type, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -269,7 +269,7 @@ public class STEntity {
 			return this._name;
 		}
 
-	} 
+	}
 
 	public STEntity addKvListFields(Object _name, Object _aggrSpec, Object _aggrValues) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -322,7 +322,7 @@ public class STEntity {
 			return this._aggrValues;
 		}
 
-	} 
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -381,5 +381,5 @@ public class STEntity {
 				"	}\n" + 
 				"	\n" + 
 				"	~if(stString)~static final String st = \"~stString~\";~endif~\n" + 
-				"}>> ";
-}  
+				"}>>";
+} 

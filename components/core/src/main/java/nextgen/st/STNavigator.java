@@ -499,7 +499,7 @@ public class STNavigator extends JPanel {
                                 } else {
                                     System.out.println(getModel().getName() + " has errors: ");
                                     parseResult.getErrors().forEach(stgError -> {
-                                        System.out.println("\t" + stgError.getType() + " " + stgError.getMessage());
+                                        System.out.println("\t" + stgError.getType() + " " + stgError.getCharPosition() + " at line " + stgError.getLine());
                                     });
                                 }
                             }));

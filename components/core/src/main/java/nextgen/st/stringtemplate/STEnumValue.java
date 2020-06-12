@@ -40,7 +40,7 @@ public class STEnumValue {
 	public STEnumValue removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public STEnumValue setLexical(Object value) {
 		this._lexical = value;
@@ -62,7 +62,7 @@ public class STEnumValue {
 	public STEnumValue removeLexical() {
 		this._lexical = null;
 		return this;
-	} 
+	}
 
 
 
@@ -82,5 +82,5 @@ public class STEnumValue {
 	static final String st = "STEnumValue(name,lexical) ::= <<~name~~if(lexical)~() {\n" + 
 				"	@Override\n" + 
 				"	public String toString() { return \"~lexical~\"; }\n" + 
-				"}~endif~>> ";
-}  
+				"}~endif~>>";
+} 
