@@ -254,6 +254,8 @@ public class STGenerator {
     }
 
     public static void writeJavaFile(Object content, String packageDeclaration, String name, File root) {
+        if (name == null || name.length() == 0)
+            throw new IllegalArgumentException("WriteJavaFile.name cannot be empty");
         writeToFile(content, packageDeclaration, name, "java", root);
     }
 

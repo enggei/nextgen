@@ -13,6 +13,7 @@ public class VertxSTTests {
 		testJsonWrapper();
 		testEnumAccessors();
 		testExternalAccessors();
+		testListEnumAccessors();
 		testListPrimitiveAccessors();
 		testListReferenceAccessors();
 		testPrimitiveAccessors();
@@ -37,6 +38,11 @@ public class VertxSTTests {
 	@org.junit.Test
 	public void testExternalAccessors() {
 		System.out.println("\n--- TEST ExternalAccessors:\n" + newExternalAccessors());
+	} 
+
+	@org.junit.Test
+	public void testListEnumAccessors() {
+		System.out.println("\n--- TEST ListEnumAccessors:\n" + newListEnumAccessors());
 	} 
 
 	@org.junit.Test

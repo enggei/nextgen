@@ -109,6 +109,10 @@
       "uuid" : "55bfc61a-0e2d-4ceb-92b9-397077c8fa48",
       "name" : "LIST",
       "lexical" : null
+    }, {
+      "uuid" : "0cbbe9b6-ff7f-4ce2-9c52-ed5c37ce0375",
+      "name" : "ENUM_LIST",
+      "lexical" : null
     } ]
   } ]
 }

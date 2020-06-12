@@ -8,5 +8,6 @@ public enum RelationType {
 	PRIM_REF,
 	PRIM_LIST,
 	REF,
-	LIST
-}
+	LIST,
+	ENUM_LIST
+}  

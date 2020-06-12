@@ -155,6 +155,28 @@ public ~type~ get~name;format="capitalize"~(~type~ defaultValue) {
 	return jsonObject.getString("~name~") == null ? defaultValue : ~type~.valueOf(jsonObject.getString("~name~"));
 } >>
 
+listEnumAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ add~name;format="capitalize"~(~type~ value) { 
+	io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("~name~");
+	if (jsonArray == null) jsonObject.put("~name~", jsonArray = new io.vertx.core.json.JsonArray());
+	jsonArray.add(value.name());
+	return this;
+}
+
+public java.util.stream.Stream<~type~> get~name;format="capitalize"~() { 
+	return jsonObject.getJsonArray("~name~", new io.vertx.core.json.JsonArray()).stream().map((o) -> ~type~.valueOf(o.toString()));
+}
+
+public ~className;format="capitalize"~ remove~name;format="capitalize"~(~type~ value) { 
+	final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("~name~", new io.vertx.core.json.JsonArray());
+	jsonArray.remove(value.name());
+	return this;
+}
+
+public ~className;format="capitalize"~ clear~name;format="capitalize"~() { 
+	jsonObject.put("~name~", new io.vertx.core.json.JsonArray());
+	return this;
+}  >>
+
 JsonFactory(package,name,entities) ::= <<package ~package~;
 
 public class ~name;format="capitalize"~ {

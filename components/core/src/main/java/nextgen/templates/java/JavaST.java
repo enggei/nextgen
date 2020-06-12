@@ -91,8 +91,9 @@ public class JavaST {
 	WhileStmt.st + "\n" + 
 	ClassOrInterfaceType.st + "\n" + 
 	TypeParameter.st + "\n" + 
-	ArrayList.st + "\n" + 
-	List.st + "\n" + 
+	ArrayListType.st + "\n" + 
+	ListType.st + "\n" + 
+	SetType.st + "\n" + 
 	NewInstance.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
@@ -473,12 +474,16 @@ public class JavaST {
 		return new TypeParameter(stGroup);
 	} 
 
-	public static ArrayList newArrayList() {
-		return new ArrayList(stGroup);
+	public static ArrayListType newArrayListType() {
+		return new ArrayListType(stGroup);
 	} 
 
-	public static List newList() {
-		return new List(stGroup);
+	public static ListType newListType() {
+		return new ListType(stGroup);
+	} 
+
+	public static SetType newSetType() {
+		return new SetType(stGroup);
 	} 
 
 	public static NewInstance newNewInstance() {

@@ -164,7 +164,7 @@
     "text" : "",
     "children" : [ {
       "uuid" : "1ffe2d3b-73df-4fd5-b10e-7ef9a6e442e2",
-      "name" : "ArrayList",
+      "name" : "ArrayListType",
       "text" : "java.util.ArrayList<~type~>",
       "parameters" : [ {
         "uuid" : "09737378-6f52-411b-ae70-bd214d0ce7b9",
@@ -174,12 +174,23 @@
       } ]
     }, {
       "uuid" : "d4e456e8-bd4d-403a-b155-7f9bf2f1ad29",
-      "name" : "List",
+      "name" : "ListType",
       "text" : "java.util.List<~type~>",
       "parameters" : [ {
         "uuid" : "a85730f8-85f8-454f-9cb4-80900aefed9e",
         "name" : "type",
         "type" : "SINGLE"
+      } ],
+      "children" : [ ]
+    }, {
+      "uuid" : "7a0f0f58-2508-45a1-b2ed-edace2ff6ec2",
+      "name" : "SetType",
+      "text" : "java.util.Set<~type~> ",
+      "parameters" : [ {
+        "uuid" : "1a7b9259-79c7-452c-87c8-1457ab9416ea",
+        "name" : "type",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       } ]
     } ]
   }, {

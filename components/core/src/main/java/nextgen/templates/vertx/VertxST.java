@@ -9,6 +9,7 @@ public class VertxST {
 	JsonWrapper.st + "\n" + 
 	EnumAccessors.st + "\n" + 
 	ExternalAccessors.st + "\n" + 
+	ListEnumAccessors.st + "\n" + 
 	ListPrimitiveAccessors.st + "\n" + 
 	ListReferenceAccessors.st + "\n" + 
 	PrimitiveAccessors.st + "\n" + 
@@ -62,6 +63,10 @@ public class VertxST {
 
 	public static ExternalAccessors newExternalAccessors() {
 		return new ExternalAccessors(stGroup);
+	} 
+
+	public static ListEnumAccessors newListEnumAccessors() {
+		return new ListEnumAccessors(stGroup);
 	} 
 
 	public static ListPrimitiveAccessors newListPrimitiveAccessors() {

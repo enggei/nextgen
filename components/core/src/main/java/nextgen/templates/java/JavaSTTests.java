@@ -95,8 +95,9 @@ public class JavaSTTests {
 		testWhileStmt();
 		testClassOrInterfaceType();
 		testTypeParameter();
-		testArrayList();
-		testList();
+		testArrayListType();
+		testListType();
+		testSetType();
 		testNewInstance();
 	}
 
@@ -531,13 +532,18 @@ public class JavaSTTests {
 	} 
 
 	@org.junit.Test
-	public void testArrayList() {
-		System.out.println("\n--- TEST ArrayList:\n" + newArrayList());
+	public void testArrayListType() {
+		System.out.println("\n--- TEST ArrayListType:\n" + newArrayListType());
 	} 
 
 	@org.junit.Test
-	public void testList() {
-		System.out.println("\n--- TEST List:\n" + newList());
+	public void testListType() {
+		System.out.println("\n--- TEST ListType:\n" + newListType());
+	} 
+
+	@org.junit.Test
+	public void testSetType() {
+		System.out.println("\n--- TEST SetType:\n" + newSetType());
 	} 
 
 	@org.junit.Test

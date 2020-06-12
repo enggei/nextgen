@@ -14,6 +14,7 @@ public class Neo4JSTTests {
 		testNeoFactoryPropertyAccessors();
 		testNodeWrapper();
 		testEnumAccessors();
+		testEnumListAccessors();
 		testExternalAccessors();
 		testIncomingReferenceStream();
 		testListPrimitiveAccessors();
@@ -54,6 +55,11 @@ public class Neo4JSTTests {
 	@org.junit.Test
 	public void testEnumAccessors() {
 		System.out.println("\n--- TEST EnumAccessors:\n" + newEnumAccessors());
+	} 
+
+	@org.junit.Test
+	public void testEnumListAccessors() {
+		System.out.println("\n--- TEST EnumListAccessors:\n" + newEnumListAccessors());
 	} 
 
 	@org.junit.Test

@@ -325,9 +325,11 @@ MemberValuePair(name,value) ::= <<~name~ = ~value~ >>
 
 JavaTypes() ::= << >>
 
-ArrayList(type) ::= <<java.util.ArrayList<~type~> >>
+ArrayListType(type) ::= <<java.util.ArrayList<~type~> >>
 
-List(type) ::= <<java.util.List<~type~> >>
+ListType(type) ::= <<java.util.List<~type~> >>
+
+SetType(type) ::= <<java.util.Set<~type~>  >>
 
 Patterns() ::= << >>
 

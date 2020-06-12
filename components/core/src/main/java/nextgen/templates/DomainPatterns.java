@@ -21,6 +21,7 @@ import java.util.Map;
 import static nextgen.templates.JavaPatterns.newPackageDeclaration;
 import static nextgen.templates.JavaPatterns.writeEnum;
 import static nextgen.templates.domain.RelationType.*;
+import static nextgen.templates.java.JavaST.newArrayList;
 
 public class DomainPatterns extends DomainST {
 
@@ -43,29 +44,33 @@ public class DomainPatterns extends DomainST {
     }
 
     public static Relation newRelation(RelationType relationType, String name) {
-        return newRelation(RelationType.ENUM).setType(relationType).setName(name);
+        return newRelation(ENUM).setType(relationType).setName(name);
     }
 
     public static Relation newEnumField(String name, String enumName, String enumValues) {
-        return newRelation(RelationType.ENUM).setName(name).setDst(newEnum(enumName, enumValues));
+        return newRelation(ENUM).setName(name).setDst(newEnum(enumName, enumValues));
+    }
+
+    public static Relation newEnumList(String name, String enumName, String enumValues) {
+        return newRelation(ENUM_LIST).setName(name).setDst(newEnum(enumName, enumValues));
     }
 
     public static Relation newEnumField(String name, Entity enumEntity) {
         if (!enumEntity.getIsEnum(false))
             throw new IllegalArgumentException("entity " + enumEntity.getName() + " in relation " + name + " is not an enum-entity");
-        return newRelation(RelationType.ENUM, name).setDst(enumEntity);
+        return newRelation(ENUM, name).setDst(enumEntity);
     }
 
     public static Relation newPrimitiveRef(String name, Class<?> dstType) {
-        return newRelation(RelationType.PRIM_REF, name).setDst(dstType);
+        return newRelation(PRIM_REF, name).setDst(dstType);
     }
 
     public static Relation newPrimitiveList(String name, Class<?> dstType) {
-        return newRelation(RelationType.PRIM_LIST, name).setDst(dstType);
+        return newRelation(PRIM_LIST, name).setDst(dstType);
     }
 
     public static Relation newExternalRef(String name, Class<?> dstType) {
-        return newRelation(RelationType.EXT_REF, name).setDst(dstType);
+        return newRelation(EXT_REF, name).setDst(dstType);
     }
 
     public static Relation newExternalList(String name, Class<?> dstType) {
@@ -73,11 +78,11 @@ public class DomainPatterns extends DomainST {
     }
 
     public static Relation newRef(String name, Entity dstType) {
-        return newRelation(RelationType.REF, name).setDst(dstType);
+        return newRelation(REF, name).setDst(dstType);
     }
 
     public static Relation newList(String name, Entity dstType) {
-        return newRelation(RelationType.LIST, name).setDst(dstType);
+        return newRelation(LIST, name).setDst(dstType);
     }
 
     public static Relation newBooleanField(String name) {
@@ -121,7 +126,7 @@ public class DomainPatterns extends DomainST {
     }
 
     public static Relation newOneToManySelf(String name) {
-        return newRelation(RelationType.LIST, name).setSelf(Boolean.TRUE);
+        return newRelation(LIST, name).setSelf(Boolean.TRUE);
     }
 
     public static Relation newOneToOne(String name, Entity entity) {
@@ -184,6 +189,13 @@ public class DomainPatterns extends DomainST {
                     writeEnum(root, packageDeclaration, dst.getName(), dst.getEnumValues().toArray());
                     break;
                 }
+                case ENUM_LIST: {
+                    final Entity dst = asEntity(o.getDst());
+                    entityClass.addFields(JavaST.newList().setType(dst.getName()), o.getName(), newArrayList());
+                    entityClass.addAccessors(JavaST.newListAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
+                    writeEnum(root, packageDeclaration, dst.getName(), dst.getEnumValues().toArray());
+                    break;
+                }
                 case EXT_REF: {
                     final Class<?> dst = asClass(o.getDst());
                     entityClass.addFields(dst.getCanonicalName(), o.getName(), null);
@@ -228,7 +240,7 @@ public class DomainPatterns extends DomainST {
             }
         });
 
-        STGenerator.writeJavaFile(entityClass, packageDeclaration.getName(), entityClass.getName().toString(),  root);
+        STGenerator.writeJavaFile(entityClass, packageDeclaration.getName(), entityClass.getName().toString(), root);
 
         return entityClass;
     }
@@ -295,10 +307,10 @@ public class DomainPatterns extends DomainST {
 
             factory.addAccessors(factoryAccessors);
 
-            STGenerator.writeJavaFile(value, packageDeclaration.getName(), value.getName().toString(),  root);
+            STGenerator.writeJavaFile(value, packageDeclaration.getName(), value.getName().toString(), root);
         });
 
-        STGenerator.writeJavaFile(factory, packageDeclaration.getName(), factory.getName().toString(),  root);
+        STGenerator.writeJavaFile(factory, packageDeclaration.getName(), factory.getName().toString(), root);
     }
 
     private static NodeWrapper generateNeoWrapper(File root, PackageDeclaration packageDeclaration, Entity entity, final Map<Entity, NodeWrapper> visited) {
@@ -320,6 +332,12 @@ public class DomainPatterns extends DomainST {
                 case ENUM: {
                     final Entity dst = asEntity(o.getDst());
                     entityClass.addAccessors(Neo4JST.newEnumAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
+                    writeEnum(root, packageDeclaration, dst.getName(), dst.getEnumValues().toArray());
+                    break;
+                }
+                case ENUM_LIST: {
+                    final Entity dst = asEntity(o.getDst());
+                    entityClass.addAccessors(Neo4JST.newEnumListAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
                     writeEnum(root, packageDeclaration, dst.getName(), dst.getEnumValues().toArray());
                     break;
                 }
@@ -362,7 +380,7 @@ public class DomainPatterns extends DomainST {
             }
         });
 
-        STGenerator.writeJavaFile(entityClass, packageDeclaration.getName(), entityClass.getName().toString(),  root);
+        STGenerator.writeJavaFile(entityClass, packageDeclaration.getName(), entityClass.getName().toString(), root);
 
         return entityClass;
     }
@@ -393,7 +411,7 @@ public class DomainPatterns extends DomainST {
 
         visited.forEach((entity, jsonWrapper) -> factory.addEntities(entity.getName()));
 
-        STGenerator.writeJavaFile(factory, packageDeclaration.getName(), factory.getName().toString(),  root);
+        STGenerator.writeJavaFile(factory, packageDeclaration.getName(), factory.getName().toString(), root);
     }
 
     private static JsonWrapper generateJsonWrapper(File root, PackageDeclaration packageDeclaration, Entity entity, final Map<Entity, JsonWrapper> visited) {
@@ -415,6 +433,12 @@ public class DomainPatterns extends DomainST {
                     final Entity dst = asEntity(o.getDst());
                     entityClass.addAccessors(VertxST.newEnumAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
 
+                    writeEnum(root, packageDeclaration, dst.getName(), dst.getEnumValues().toArray());
+                    break;
+                }
+                case ENUM_LIST: {
+                    final Entity dst = asEntity(o.getDst());
+                    entityClass.addAccessors(VertxST.newListEnumAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
                     writeEnum(root, packageDeclaration, dst.getName(), dst.getEnumValues().toArray());
                     break;
                 }
@@ -455,7 +479,7 @@ public class DomainPatterns extends DomainST {
             }
         });
 
-        STGenerator.writeJavaFile(entityClass, packageDeclaration.getName(), entityClass.getName().toString(),  root);
+        STGenerator.writeJavaFile(entityClass, packageDeclaration.getName(), entityClass.getName().toString(), root);
         return entityClass;
     }
 

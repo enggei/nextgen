@@ -10,6 +10,7 @@ public class Neo4JST {
 	NeoFactoryPropertyAccessors.st + "\n" + 
 	NodeWrapper.st + "\n" + 
 	EnumAccessors.st + "\n" + 
+	EnumListAccessors.st + "\n" + 
 	ExternalAccessors.st + "\n" + 
 	IncomingReferenceStream.st + "\n" + 
 	ListPrimitiveAccessors.st + "\n" + 
@@ -78,6 +79,10 @@ public class Neo4JST {
 
 	public static EnumAccessors newEnumAccessors() {
 		return new EnumAccessors(stGroup);
+	} 
+
+	public static EnumListAccessors newEnumListAccessors() {
+		return new EnumListAccessors(stGroup);
 	} 
 
 	public static ExternalAccessors newExternalAccessors() {
