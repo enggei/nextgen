@@ -40,7 +40,7 @@ public class ShadePlugin {
 	public ShadePlugin removePackageName() {
 		this._packageName = null;
 		return this;
-	} 
+	}
 
 	public ShadePlugin setClassName(Object value) {
 		this._className = value;
@@ -62,7 +62,7 @@ public class ShadePlugin {
 	public ShadePlugin removeClassName() {
 		this._className = null;
 		return this;
-	} 
+	}
 
 
 
@@ -115,5 +115,5 @@ public class ShadePlugin {
 				"			</configuration>\n" + 
 				"		</execution>\n" + 
 				"	</executions>\n" + 
-				"</plugin> >> ";
-}  
+				"</plugin> >>";
+} 

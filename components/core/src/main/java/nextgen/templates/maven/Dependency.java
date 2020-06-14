@@ -8,7 +8,7 @@ public class Dependency {
 	private Object _groupId;
 	private Object _artifactId;
 	private Object _version;
-	private Object _scope;
+	private DependencyScope _scope;
 	private Object _systemPath;
 
 	Dependency(org.stringtemplate.v4.STGroup stGroup) {
@@ -46,7 +46,7 @@ public class Dependency {
 	public Dependency removeGroupId() {
 		this._groupId = null;
 		return this;
-	} 
+	}
 
 	public Dependency setArtifactId(Object value) {
 		this._artifactId = value;
@@ -68,7 +68,7 @@ public class Dependency {
 	public Dependency removeArtifactId() {
 		this._artifactId = null;
 		return this;
-	} 
+	}
 
 	public Dependency setVersion(Object value) {
 		this._version = value;
@@ -90,18 +90,18 @@ public class Dependency {
 	public Dependency removeVersion() {
 		this._version = null;
 		return this;
-	} 
+	}
 
-	public Dependency setScope(Object value) {
+	public Dependency setScope(DependencyScope value) {
 		this._scope = value;
 		return this;
 	}
 
-	public Object getScope() {
+	public DependencyScope getScope() {
 		return this._scope;
 	}
 
-	public Object getScope(Object defaultValue) {
+	public DependencyScope getScope(DependencyScope defaultValue) {
 		return this._scope == null ? defaultValue : this._scope;
 	}
 
@@ -112,7 +112,7 @@ public class Dependency {
 	public Dependency removeScope() {
 		this._scope = null;
 		return this;
-	} 
+	}
 
 	public Dependency setSystemPath(Object value) {
 		this._systemPath = value;
@@ -134,7 +134,7 @@ public class Dependency {
 	public Dependency removeSystemPath() {
 		this._systemPath = null;
 		return this;
-	} 
+	}
 
 
 
@@ -159,5 +159,5 @@ public class Dependency {
 				"	<systemPath>~systemPath~</systemPath>\n" + 
 				"	~endif~\n" + 
 				"	\n" + 
-				"</dependency> >> ";
-}  
+				"</dependency> >>";
+} 

@@ -37,5 +37,5 @@ public class Execution {
 				"    <goals>\n" + 
 				"        <goal>shade</goal>\n" + 
 				"    </goals>\n" + 
-				"</execution> >> ";
-}  
+				"</execution> >>";
+} 

@@ -6,7 +6,7 @@ public class OverrideEquals {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _className;
-	private java.util.List<FieldDeclaration> _fields = new java.util.ArrayList<>();
+	private java.util.List<String> _fields = new java.util.ArrayList<>();
 
 	OverrideEquals(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -42,22 +42,22 @@ public class OverrideEquals {
 		return this;
 	}
 
-	public OverrideEquals addFields(FieldDeclaration value) {
+	public OverrideEquals addFields(String value) {
 		this._fields.add(value);
 		return this;
 	}
 
-	public OverrideEquals setFields(FieldDeclaration[] value) {
+	public OverrideEquals setFields(String[] value) {
 		this._fields.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public OverrideEquals setFields(java.util.Collection<FieldDeclaration> values) {
+	public OverrideEquals setFields(java.util.Collection<String> values) {
 		this._fields.addAll(values);
 		return this;
 	}
 
-	public OverrideEquals removeFields(FieldDeclaration value) {
+	public OverrideEquals removeFields(String value) {
 		this._fields.remove(value);
 		return this;
 	}
@@ -67,7 +67,7 @@ public class OverrideEquals {
 		return this;
 	}
 
-	public java.util.List<FieldDeclaration> getFields() {
+	public java.util.List<String> getFields() {
 		return this._fields;
 	}
 

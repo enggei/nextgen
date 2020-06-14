@@ -38,7 +38,7 @@ public class PropertyReference {
 	public PropertyReference removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 
 
@@ -55,5 +55,5 @@ public class PropertyReference {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "propertyReference(name) ::= <<${~name~}>> ";
-}  
+	static final String st = "propertyReference(name) ::= <<${~name~}>>";
+} 

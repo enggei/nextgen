@@ -42,7 +42,7 @@ public class Parent {
 	public Parent removeArtifactId() {
 		this._artifactId = null;
 		return this;
-	} 
+	}
 
 	public Parent setGroupId(Object value) {
 		this._groupId = value;
@@ -64,7 +64,7 @@ public class Parent {
 	public Parent removeGroupId() {
 		this._groupId = null;
 		return this;
-	} 
+	}
 
 	public Parent setVersion(Object value) {
 		this._version = value;
@@ -86,7 +86,7 @@ public class Parent {
 	public Parent removeVersion() {
 		this._version = null;
 		return this;
-	} 
+	}
 
 
 
@@ -107,5 +107,5 @@ public class Parent {
 				"	<artifactId>~artifactId~</artifactId>\n" + 
 				"	<groupId>~groupId~</groupId>\n" + 
 				"	<version>~version~</version>\n" + 
-				"</parent> >> ";
-}  
+				"</parent> >>";
+} 

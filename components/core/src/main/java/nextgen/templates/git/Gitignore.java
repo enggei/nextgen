@@ -24,6 +24,16 @@ public class Gitignore {
 		return this;
 	}
 
+	public Gitignore setExclude(Object[] value) {
+		this._exclude.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Gitignore setExclude(java.util.Collection<Object> values) {
+		this._exclude.addAll(values);
+		return this;
+	}
+
 	public Gitignore removeExclude(Object value) {
 		this._exclude.remove(value);
 		return this;

@@ -42,7 +42,7 @@ public class CopyPlugin {
 	public CopyPlugin removeOutputDirectory() {
 		this._outputDirectory = null;
 		return this;
-	} 
+	}
 
 	public CopyPlugin setDirectory(Object value) {
 		this._directory = value;
@@ -64,10 +64,20 @@ public class CopyPlugin {
 	public CopyPlugin removeDirectory() {
 		this._directory = null;
 		return this;
-	} 
+	}
 
 	public CopyPlugin addInclude(Object value) {
 		this._include.add(value);
+		return this;
+	}
+
+	public CopyPlugin setInclude(Object[] value) {
+		this._include.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public CopyPlugin setInclude(java.util.Collection<Object> values) {
+		this._include.addAll(values);
 		return this;
 	}
 
@@ -83,7 +93,7 @@ public class CopyPlugin {
 
 	public java.util.List<Object> getInclude() {
 		return this._include;
-	} 
+	}
 
 
 	@Override
@@ -122,5 +132,5 @@ public class CopyPlugin {
 				"			</configuration>				\n" + 
 				"		</execution>\n" + 
 				"	</executions>\n" + 
-				"</plugin> >> ";
-}  
+				"</plugin> >>";
+} 

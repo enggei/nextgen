@@ -60,7 +60,7 @@ public class Pom {
 	public Pom removeParent() {
 		this._parent = null;
 		return this;
-	} 
+	}
 
 	public Pom setName(Object value) {
 		this._name = value;
@@ -82,7 +82,7 @@ public class Pom {
 	public Pom removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public Pom setGroupId(Object value) {
 		this._groupId = value;
@@ -104,7 +104,7 @@ public class Pom {
 	public Pom removeGroupId() {
 		this._groupId = null;
 		return this;
-	} 
+	}
 
 	public Pom setArtifactId(Object value) {
 		this._artifactId = value;
@@ -126,7 +126,7 @@ public class Pom {
 	public Pom removeArtifactId() {
 		this._artifactId = null;
 		return this;
-	} 
+	}
 
 	public Pom setVersion(Object value) {
 		this._version = value;
@@ -148,7 +148,7 @@ public class Pom {
 	public Pom removeVersion() {
 		this._version = null;
 		return this;
-	} 
+	}
 
 	public Pom setPackaging(Object value) {
 		this._packaging = value;
@@ -170,7 +170,7 @@ public class Pom {
 	public Pom removePackaging() {
 		this._packaging = null;
 		return this;
-	} 
+	}
 
 	public Pom setBuild(Object value) {
 		this._build = value;
@@ -192,10 +192,20 @@ public class Pom {
 	public Pom removeBuild() {
 		this._build = null;
 		return this;
-	} 
+	}
 
 	public Pom addModules(Object value) {
 		this._modules.add(value);
+		return this;
+	}
+
+	public Pom setModules(Object[] value) {
+		this._modules.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Pom setModules(java.util.Collection<Object> values) {
+		this._modules.addAll(values);
 		return this;
 	}
 
@@ -211,10 +221,20 @@ public class Pom {
 
 	public java.util.List<Object> getModules() {
 		return this._modules;
-	} 
+	}
 
 	public Pom addDependencies(Object value) {
 		this._dependencies.add(value);
+		return this;
+	}
+
+	public Pom setDependencies(Object[] value) {
+		this._dependencies.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Pom setDependencies(java.util.Collection<Object> values) {
+		this._dependencies.addAll(values);
 		return this;
 	}
 
@@ -230,10 +250,20 @@ public class Pom {
 
 	public java.util.List<Object> getDependencies() {
 		return this._dependencies;
-	} 
+	}
 
 	public Pom addDistributionManagement(Object value) {
 		this._distributionManagement.add(value);
+		return this;
+	}
+
+	public Pom setDistributionManagement(Object[] value) {
+		this._distributionManagement.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Pom setDistributionManagement(java.util.Collection<Object> values) {
+		this._distributionManagement.addAll(values);
 		return this;
 	}
 
@@ -249,10 +279,20 @@ public class Pom {
 
 	public java.util.List<Object> getDistributionManagement() {
 		return this._distributionManagement;
-	} 
+	}
 
 	public Pom addRepositories(Object value) {
 		this._repositories.add(value);
+		return this;
+	}
+
+	public Pom setRepositories(Object[] value) {
+		this._repositories.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Pom setRepositories(java.util.Collection<Object> values) {
+		this._repositories.addAll(values);
 		return this;
 	}
 
@@ -268,7 +308,7 @@ public class Pom {
 
 	public java.util.List<Object> getRepositories() {
 		return this._repositories;
-	} 
+	}
 
 	public Pom addProperties(Object _name, Object _value) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -313,7 +353,7 @@ public class Pom {
 			return this._value;
 		}
 
-	} 
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -377,5 +417,5 @@ public class Pom {
 				"		~repositories:{it|~it~};separator=\"\\n\"~\n" + 
 				"	</repositories>\n" + 
 				"~endif~\n" + 
-				"</project> >> ";
-}  
+				"</project> >>";
+} 

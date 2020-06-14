@@ -5,11 +5,11 @@ public class FieldDeclaration {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _isMutable;
-	private Object _isNonMember;
-	private Object _name;
-	private Object _type;
-	private Object _isNullable;
+	private Boolean _isMutable;
+	private Boolean _isNonMember;
+	private String _name;
+	private String _type;
+	private Boolean _isNullable;
 	private Object _initializer;
 	private java.util.List<Object> _annotations = new java.util.ArrayList<>();
 
@@ -30,16 +30,16 @@ public class FieldDeclaration {
 		return st.render().trim();
 	}
 
-	public FieldDeclaration setIsMutable(Object value) {
+	public FieldDeclaration setIsMutable(Boolean value) {
 		this._isMutable = value;
 		return this;
 	}
 
-	public Object getIsMutable() {
+	public Boolean getIsMutable() {
 		return this._isMutable;
 	}
 
-	public Object getIsMutable(Object defaultValue) {
+	public Boolean getIsMutable(Boolean defaultValue) {
 		return this._isMutable == null ? defaultValue : this._isMutable;
 	}
 
@@ -52,16 +52,16 @@ public class FieldDeclaration {
 		return this;
 	}
 
-	public FieldDeclaration setIsNonMember(Object value) {
+	public FieldDeclaration setIsNonMember(Boolean value) {
 		this._isNonMember = value;
 		return this;
 	}
 
-	public Object getIsNonMember() {
+	public Boolean getIsNonMember() {
 		return this._isNonMember;
 	}
 
-	public Object getIsNonMember(Object defaultValue) {
+	public Boolean getIsNonMember(Boolean defaultValue) {
 		return this._isNonMember == null ? defaultValue : this._isNonMember;
 	}
 
@@ -74,16 +74,16 @@ public class FieldDeclaration {
 		return this;
 	}
 
-	public FieldDeclaration setName(Object value) {
+	public FieldDeclaration setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Object getName(Object defaultValue) {
+	public String getName(String defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 
@@ -96,16 +96,16 @@ public class FieldDeclaration {
 		return this;
 	}
 
-	public FieldDeclaration setType(Object value) {
+	public FieldDeclaration setType(String value) {
 		this._type = value;
 		return this;
 	}
 
-	public Object getType() {
+	public String getType() {
 		return this._type;
 	}
 
-	public Object getType(Object defaultValue) {
+	public String getType(String defaultValue) {
 		return this._type == null ? defaultValue : this._type;
 	}
 
@@ -118,16 +118,16 @@ public class FieldDeclaration {
 		return this;
 	}
 
-	public FieldDeclaration setIsNullable(Object value) {
+	public FieldDeclaration setIsNullable(Boolean value) {
 		this._isNullable = value;
 		return this;
 	}
 
-	public Object getIsNullable() {
+	public Boolean getIsNullable() {
 		return this._isNullable;
 	}
 
-	public Object getIsNullable(Object defaultValue) {
+	public Boolean getIsNullable(Boolean defaultValue) {
 		return this._isNullable == null ? defaultValue : this._isNullable;
 	}
 

@@ -11,7 +11,7 @@ build(testResources,plugin) ::= <<<build>
 	<plugins>
 		~plugin:{it|~it~};separator="\n"~
 	</plugins>
-</build> >>
+</build>>>
 
 dependency(groupId,artifactId,version,scope,systemPath) ::= <<<dependency>
 	<groupId>~groupId~</groupId>
@@ -21,15 +21,15 @@ dependency(groupId,artifactId,version,scope,systemPath) ::= <<<dependency>
 	<systemPath>~systemPath~</systemPath>
 	~endif~
 	
-</dependency>  >>
+</dependency> >>
 
-Entities() ::= << >>
+Entities() ::= <<>>
 
 DependencyGroup(name,groupId,version,artifacts) ::= <<Name ~name~
 GroupId ~groupId~
 Version ~version~
 
-~artifacts:{it|~it~};separator="\n"~ >>
+~artifacts:{it|~it~};separator="\n"~>>
 
 Project(name,root,pom,modules) ::= <<Project ~name~
 
@@ -37,28 +37,28 @@ root	:	~root~
 Pom	: ~pom~
 
 Modules :
-~modules:{it|~it~};separator="\n"~ >>
+~modules:{it|~it~};separator="\n"~>>
 
 Module(name,pom,modules) ::= <<Module ~name~
 Pom : ~pom~
 
 Modules:
-~modules:{it|~it~};separator="\n"~ >>
+~modules:{it|~it~};separator="\n"~>>
 
 execution() ::= <<<execution>
     <phase>package</phase>
     <goals>
         <goal>shade</goal>
     </goals>
-</execution> >>
+</execution>>>
 
 parent(artifactId,groupId,version) ::= <<<parent>
 	<artifactId>~artifactId~</artifactId>
 	<groupId>~groupId~</groupId>
 	<version>~version~</version>
-</parent> >>
+</parent>>>
 
-Plugins() ::= << >>
+Plugins() ::= <<>>
 
 frontEndMavenPlugin(pluginVersion,installDirectory,nodeVersion) ::= <<<!--npm plugin-->
 <plugin>
@@ -92,7 +92,7 @@ frontEndMavenPlugin(pluginVersion,installDirectory,nodeVersion) ::= <<<!--npm pl
             </goals>
         </execution>
     </executions>
-</plugin> >>
+</plugin>>>
 
 shadePlugin(packageName,className) ::= <<<!--fat-jar plugin for single-file server package-->
 <plugin>
@@ -130,7 +130,7 @@ shadePlugin(packageName,className) ::= <<<!--fat-jar plugin for single-file serv
 			</configuration>
 		</execution>
 	</executions>
-</plugin> >>
+</plugin>>>
 
 plugin(groupId,artifactId,version,configuration,executions) ::= <<<plugin>
 	<groupId>~groupId~</groupId>
@@ -142,7 +142,7 @@ plugin(groupId,artifactId,version,configuration,executions) ::= <<<plugin>
 	<executions>
 		~executions:{it|~it~};separator="\n"~
 	</executions>
-</plugin> >>
+</plugin>>>
 
 copyPlugin(outputDirectory,directory,include) ::= <<<plugin>
 	<artifactId>maven-resources-plugin</artifactId>
@@ -167,7 +167,7 @@ copyPlugin(outputDirectory,directory,include) ::= <<<plugin>
 			</configuration>				
 		</execution>
 	</executions>
-</plugin> >>
+</plugin>>>
 
 pom(parent,name,groupId,artifactId,version,packaging,modules,properties,build,dependencies,distributionManagement,repositories) ::= <<<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -218,15 +218,15 @@ pom(parent,name,groupId,artifactId,version,packaging,modules,properties,build,de
 		~repositories:{it|~it~};separator="\n"~
 	</repositories>
 ~endif~
-</project> >>
+</project>>>
 
-propertyReference(name) ::= <<${~name~} >>
+propertyReference(name) ::= <<${~name~}>>
 
 repository(id,name,url) ::= <<<repository>
 	<id>~id~</id>
 	<name>~name~</name>
 	<url>~url~</url>
-</repository> >>
+</repository>>>
 
 eom() ::= "}"
 

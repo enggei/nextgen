@@ -47,7 +47,7 @@
       "uuid" : "0f7f9be9-5883-4ed7-8213-afb8d584eea7",
       "name" : "scope",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "DependencyScope"
     }, {
       "uuid" : "d89c6b18-56f7-4c23-bf04-3981611f5a4c",
       "name" : "systemPath",
@@ -318,5 +318,30 @@
       } ]
     } ]
   } ],
-  "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Maven.stg"
+  "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Maven.stg",
+  "enums" : [ {
+    "uuid" : "a85f5c4a-3e46-42b4-aa71-fba7bc35a8dd",
+    "name" : "DependencyScope",
+    "values" : [ {
+      "uuid" : "042788ad-da5b-4222-9df7-e8548f3ed189",
+      "name" : "Provided",
+      "lexical" : "provided"
+    }, {
+      "uuid" : "41da9161-65e5-4ff8-a90b-d9724f48c90b",
+      "name" : "Runtime",
+      "lexical" : "runtime"
+    }, {
+      "uuid" : "b9234f59-5bf9-4576-96c1-9cdb26f972fc",
+      "name" : "Test",
+      "lexical" : "test"
+    }, {
+      "uuid" : "ecb965e9-670a-4287-99bf-2307fa9210fd",
+      "name" : "System",
+      "lexical" : "system"
+    }, {
+      "uuid" : "dd03edfc-511b-4cdd-8c8c-96e1a41b513a",
+      "name" : "Import",
+      "lexical" : "import"
+    } ]
+  } ]
 }

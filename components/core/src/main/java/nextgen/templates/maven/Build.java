@@ -26,6 +26,16 @@ public class Build {
 		return this;
 	}
 
+	public Build setPlugin(Object[] value) {
+		this._plugin.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Build setPlugin(java.util.Collection<Object> values) {
+		this._plugin.addAll(values);
+		return this;
+	}
+
 	public Build removePlugin(Object value) {
 		this._plugin.remove(value);
 		return this;
@@ -38,7 +48,7 @@ public class Build {
 
 	public java.util.List<Object> getPlugin() {
 		return this._plugin;
-	} 
+	}
 
 	public Build addTestResources(Object _name, Object _value) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -83,7 +93,7 @@ public class Build {
 			return this._value;
 		}
 
-	} 
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -109,5 +119,5 @@ public class Build {
 				"	<plugins>\n" + 
 				"		~plugin:{it|~it~};separator=\"\\n\"~\n" + 
 				"	</plugins>\n" + 
-				"</build> >> ";
-}  
+				"</build> >>";
+} 

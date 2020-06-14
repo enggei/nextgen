@@ -117,7 +117,7 @@
             "uuid" : "d3550948-8895-4adf-aee4-39d6124b35a1",
             "name" : "fields",
             "type" : "LIST",
-            "argumentType" : "FieldDeclaration"
+            "argumentType" : "String"
           } ]
         } ]
       }, {
@@ -133,27 +133,27 @@
           "uuid" : "862dd2de-20b1-492c-8d62-7839f410991c",
           "name" : "isMutable",
           "type" : "SINGLE",
-          "argumentType" : "Object"
+          "argumentType" : "Boolean"
         }, {
           "uuid" : "3ac81695-78a9-459f-b045-4ec62f854a6d",
           "name" : "isNonMember",
           "type" : "SINGLE",
-          "argumentType" : "Object"
+          "argumentType" : "Boolean"
         }, {
           "uuid" : "bd9a7315-9383-48fa-beff-3954270d7d08",
           "name" : "name",
           "type" : "SINGLE",
-          "argumentType" : "Object"
+          "argumentType" : "String"
         }, {
           "uuid" : "4e86f085-54e1-4f76-9f5a-d8c393cc8cc9",
           "name" : "type",
           "type" : "SINGLE",
-          "argumentType" : "Object"
+          "argumentType" : "String"
         }, {
           "uuid" : "77180942-d269-4584-a39b-f625c422ee31",
           "name" : "isNullable",
           "type" : "SINGLE",
-          "argumentType" : "Object"
+          "argumentType" : "Boolean"
         }, {
           "uuid" : "d370c099-a746-40ee-8529-aec04d003e23",
           "name" : "initializer",
