@@ -9,14 +9,14 @@ babelrc() ::= <<{
 		["module:@babel/plugin-proposal-decorators", { "legacy": true }],
 		["module:@babel/plugin-proposal-class-properties", { "loose": true }]
 	]
-}  >>
+} >>
 
-dependency(name,version) ::= <<"~name~": "^~version~"  >>
+dependency(name,version) ::= <<"~name~": "^~version~" >>
 
 NpmProject(root,packageJson,webpackConfig,babelrc) ::= <<~root~
 ~packageJson~
 ~webpackConfig~
-~babelrc~ >>
+~babelrc~>>
 
 packageJson(main,license,bugsUrl,devDependencies,scripts,dependencies,homepage,repositoryUrl,author,version,repositoryType,description,name) ::= <<{
   "name": "~name~",
@@ -42,16 +42,17 @@ packageJson(main,license,bugsUrl,devDependencies,scripts,dependencies,homepage,r
   "devDependencies": {
     ~devDependencies:{it|~it~};separator=",\n"~
   }
-}  >>
+} >>
 
-script(command,name) ::= <<"~name~": "~command~"  >>
+script(command,name) ::= <<"~name~": "~command~" >>
 
-WebpackConfig(mainEntry,outputFilename) ::= <<const path = require('path');
+WebpackConfig(mainEntry,mode,outputFilename) ::= <<const path = require('path');
 
 module.exports = {
 	entry: { 
 		main: '.~mainEntry~' 
 	},
+	mode: '~if(mode)~~mode~~else~production~endif~'
 	output: {
 		path: __dirname,
 		filename: '~outputFilename~'
@@ -72,7 +73,7 @@ module.exports = {
 			}
 		]
 	}
-};  >>
+};>>
 
 eom() ::= "}"
 

@@ -6,6 +6,7 @@ public class WebpackConfig {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _mainEntry;
+	private Object _mode;
 	private Object _outputFilename;
 
 	WebpackConfig(org.stringtemplate.v4.STGroup stGroup) {
@@ -16,6 +17,7 @@ public class WebpackConfig {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("WebpackConfig");
 		st.add("mainEntry", _mainEntry);
+		st.add("mode", _mode);
 		st.add("outputFilename", _outputFilename);
 		return st.render().trim();
 	}
@@ -40,7 +42,29 @@ public class WebpackConfig {
 	public WebpackConfig removeMainEntry() {
 		this._mainEntry = null;
 		return this;
-	} 
+	}
+
+	public WebpackConfig setMode(Object value) {
+		this._mode = value;
+		return this;
+	}
+
+	public Object getMode() {
+		return this._mode;
+	}
+
+	public Object getMode(Object defaultValue) {
+		return this._mode == null ? defaultValue : this._mode;
+	}
+
+	public boolean hasMode() {
+		return this._mode != null;
+	}
+
+	public WebpackConfig removeMode() {
+		this._mode = null;
+		return this;
+	}
 
 	public WebpackConfig setOutputFilename(Object value) {
 		this._outputFilename = value;
@@ -62,7 +86,7 @@ public class WebpackConfig {
 	public WebpackConfig removeOutputFilename() {
 		this._outputFilename = null;
 		return this;
-	} 
+	}
 
 
 
@@ -79,12 +103,13 @@ public class WebpackConfig {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "WebpackConfig(mainEntry,outputFilename) ::= <<const path = require('path');\n" + 
+	static final String st = "WebpackConfig(mainEntry,mode,outputFilename) ::= <<const path = require('path');\n" + 
 				"\n" + 
 				"module.exports = {\n" + 
 				"	entry: { \n" + 
 				"		main: '.~mainEntry~' \n" + 
 				"	},\n" + 
+				"	mode: '~if(mode)~~mode~~else~production~endif~'\n" + 
 				"	output: {\n" + 
 				"		path: __dirname,\n" + 
 				"		filename: '~outputFilename~'\n" + 
@@ -105,5 +130,5 @@ public class WebpackConfig {
 				"			}\n" + 
 				"		]\n" + 
 				"	}\n" + 
-				"};>> ";
-}  
+				"};>>";
+} 

@@ -40,7 +40,7 @@ public class Dependency {
 	public Dependency removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public Dependency setVersion(Object value) {
 		this._version = value;
@@ -62,7 +62,7 @@ public class Dependency {
 	public Dependency removeVersion() {
 		this._version = null;
 		return this;
-	} 
+	}
 
 
 
@@ -79,5 +79,5 @@ public class Dependency {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "dependency(name,version) ::= <<\"~name~\": \"^~version~\">> ";
-}  
+	static final String st = "dependency(name,version) ::= <<\"~name~\": \"^~version~\">>";
+} 
