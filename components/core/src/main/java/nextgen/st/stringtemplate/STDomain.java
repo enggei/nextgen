@@ -95,6 +95,16 @@ public class STDomain {
 		return this;
 	}
 
+	public STDomain setEntities(Object[] value) {
+		this._entities.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public STDomain setEntities(java.util.Collection<Object> values) {
+		this._entities.addAll(values);
+		return this;
+	}
+
 	public STDomain removeEntities(Object value) {
 		this._entities.remove(value);
 		return this;

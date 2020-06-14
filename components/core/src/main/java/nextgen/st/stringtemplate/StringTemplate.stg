@@ -157,6 +157,16 @@ entityListAccessors(entity,name,type) ::= <<public ~entity~ add~name;format="cap
 	return this;
 }
 
+public ~entity~ set~name;format="capitalize"~(~if(type)~~type~~else~Object~endif~[] value) {
+	this._~name~.addAll(java.util.Arrays.asList(value));
+	return this;
+}
+
+public ~entity~ set~name;format="capitalize"~(java.util.Collection<~if(type)~~type~~else~Object~endif~> values) {
+	this._~name~.addAll(values);
+	return this;
+}
+
 public ~entity~ remove~name;format="capitalize"~(~if(type)~~type~~else~Object~endif~ value) {
 	this._~name~.remove(value);
 	return this;

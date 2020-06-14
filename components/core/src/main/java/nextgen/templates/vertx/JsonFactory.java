@@ -42,7 +42,7 @@ public class JsonFactory {
 	public JsonFactory removePackage() {
 		this._package = null;
 		return this;
-	} 
+	}
 
 	public JsonFactory setName(Object value) {
 		this._name = value;
@@ -64,10 +64,20 @@ public class JsonFactory {
 	public JsonFactory removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public JsonFactory addEntities(Object value) {
 		this._entities.add(value);
+		return this;
+	}
+
+	public JsonFactory setEntities(Object[] value) {
+		this._entities.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public JsonFactory setEntities(java.util.Collection<Object> values) {
+		this._entities.addAll(values);
 		return this;
 	}
 
@@ -83,7 +93,7 @@ public class JsonFactory {
 
 	public java.util.List<Object> getEntities() {
 		return this._entities;
-	} 
+	}
 
 
 	@Override
@@ -121,15 +131,15 @@ public class JsonFactory {
 				"	\n" + 
 				"	public static ~it~ new~it~NoUuid() { \n" + 
 				"		return new ~it~().removeUuid();\n" + 
-				"	~eom()~\n" + 
+				"	\\}\n" + 
 				"	\n" + 
 				"	public static ~it~ new~it~(io.vertx.core.json.JsonObject jsonObject) { \n" + 
 				"		return new ~it~(jsonObject);\n" + 
-				"	~eom()~\n" + 
+				"	\\}\n" + 
 				"\n" + 
 				"	public static ~it~ new~it~(java.io.File file) throws java.io.IOException { \n" + 
 				"		return new ~it~(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));\n" + 
-				"	~eom()~\n" + 
+				"	\\}\n" + 
 				"};separator=\"\\n\"~\n" + 
-				"}>> ";
-}  
+				"}>>";
+} 

@@ -129,6 +129,16 @@ public class STEntity {
 		return this;
 	}
 
+	public STEntity setSingleAccessors(Object[] value) {
+		this._singleAccessors.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public STEntity setSingleAccessors(java.util.Collection<Object> values) {
+		this._singleAccessors.addAll(values);
+		return this;
+	}
+
 	public STEntity removeSingleAccessors(Object value) {
 		this._singleAccessors.remove(value);
 		return this;
@@ -148,6 +158,16 @@ public class STEntity {
 		return this;
 	}
 
+	public STEntity setListAccessors(Object[] value) {
+		this._listAccessors.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public STEntity setListAccessors(java.util.Collection<Object> values) {
+		this._listAccessors.addAll(values);
+		return this;
+	}
+
 	public STEntity removeListAccessors(Object value) {
 		this._listAccessors.remove(value);
 		return this;
@@ -164,6 +184,16 @@ public class STEntity {
 
 	public STEntity addKvListAccessors(Object value) {
 		this._kvListAccessors.add(value);
+		return this;
+	}
+
+	public STEntity setKvListAccessors(Object[] value) {
+		this._kvListAccessors.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public STEntity setKvListAccessors(java.util.Collection<Object> values) {
+		this._kvListAccessors.addAll(values);
 		return this;
 	}
 

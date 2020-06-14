@@ -12,7 +12,7 @@
       "name" : "single",
       "text" : "single : ~value~",
       "parameters" : [ {
-        "uuid" : "67c88eb9-576b-4896-96ad-a09c519b52e5",
+        "uuid" : "6fde5b3e-637e-49ec-860e-18bdae7fdf7e",
         "name" : "value",
         "type" : "SINGLE",
         "argumentType" : "String"

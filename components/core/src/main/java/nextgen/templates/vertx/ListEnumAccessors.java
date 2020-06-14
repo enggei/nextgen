@@ -42,7 +42,7 @@ public class ListEnumAccessors {
 	public ListEnumAccessors removeClassName() {
 		this._className = null;
 		return this;
-	} 
+	}
 
 	public ListEnumAccessors setName(Object value) {
 		this._name = value;
@@ -64,7 +64,7 @@ public class ListEnumAccessors {
 	public ListEnumAccessors removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public ListEnumAccessors setType(Object value) {
 		this._type = value;
@@ -86,7 +86,7 @@ public class ListEnumAccessors {
 	public ListEnumAccessors removeType() {
 		this._type = null;
 		return this;
-	} 
+	}
 
 
 
@@ -123,5 +123,5 @@ public class ListEnumAccessors {
 				"public ~className;format=\"capitalize\"~ clear~name;format=\"capitalize\"~() { \n" + 
 				"	jsonObject.put(\"~name~\", new io.vertx.core.json.JsonArray());\n" + 
 				"	return this;\n" + 
-				"}>> ";
-}  
+				"}>>";
+} 

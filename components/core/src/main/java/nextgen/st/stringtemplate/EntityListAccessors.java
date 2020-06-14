@@ -108,6 +108,16 @@ public class EntityListAccessors {
 				"	return this;\n" + 
 				"}\n" + 
 				"\n" + 
+				"public ~entity~ set~name;format=\"capitalize\"~(~if(type)~~type~~else~Object~endif~[] value) {\n" + 
+				"	this._~name~.addAll(java.util.Arrays.asList(value));\n" + 
+				"	return this;\n" + 
+				"}\n" + 
+				"\n" + 
+				"public ~entity~ set~name;format=\"capitalize\"~(java.util.Collection<~if(type)~~type~~else~Object~endif~> values) {\n" + 
+				"	this._~name~.addAll(values);\n" + 
+				"	return this;\n" + 
+				"}\n" + 
+				"\n" + 
 				"public ~entity~ remove~name;format=\"capitalize\"~(~if(type)~~type~~else~Object~endif~ value) {\n" + 
 				"	this._~name~.remove(value);\n" + 
 				"	return this;\n" + 

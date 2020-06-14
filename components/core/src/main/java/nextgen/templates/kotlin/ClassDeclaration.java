@@ -19,19 +19,6 @@ public class ClassDeclaration {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		ClassDeclaration that = (ClassDeclaration) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ClassDeclaration");
 		st.add("annotations", _annotations);
@@ -54,6 +41,10 @@ public class ClassDeclaration {
 		return this._annotations;
 	}
 
+	public Object getAnnotations(Object defaultValue) {
+		return this._annotations == null ? defaultValue : this._annotations;
+	}
+
 	public boolean hasAnnotations() {
 		return this._annotations != null;
 	}
@@ -61,7 +52,7 @@ public class ClassDeclaration {
 	public ClassDeclaration removeAnnotations() {
 		this._annotations = null;
 		return this;
-	} 
+	}
 
 	public ClassDeclaration setIsOpen(Object value) {
 		this._isOpen = value;
@@ -72,6 +63,10 @@ public class ClassDeclaration {
 		return this._isOpen;
 	}
 
+	public Object getIsOpen(Object defaultValue) {
+		return this._isOpen == null ? defaultValue : this._isOpen;
+	}
+
 	public boolean hasIsOpen() {
 		return this._isOpen != null;
 	}
@@ -79,7 +74,7 @@ public class ClassDeclaration {
 	public ClassDeclaration removeIsOpen() {
 		this._isOpen = null;
 		return this;
-	} 
+	}
 
 	public ClassDeclaration setIsAbstract(Object value) {
 		this._isAbstract = value;
@@ -90,6 +85,10 @@ public class ClassDeclaration {
 		return this._isAbstract;
 	}
 
+	public Object getIsAbstract(Object defaultValue) {
+		return this._isAbstract == null ? defaultValue : this._isAbstract;
+	}
+
 	public boolean hasIsAbstract() {
 		return this._isAbstract != null;
 	}
@@ -97,7 +96,7 @@ public class ClassDeclaration {
 	public ClassDeclaration removeIsAbstract() {
 		this._isAbstract = null;
 		return this;
-	} 
+	}
 
 	public ClassDeclaration setName(Object value) {
 		this._name = value;
@@ -108,6 +107,10 @@ public class ClassDeclaration {
 		return this._name;
 	}
 
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
 	public boolean hasName() {
 		return this._name != null;
 	}
@@ -115,7 +118,7 @@ public class ClassDeclaration {
 	public ClassDeclaration removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public ClassDeclaration setOverrideEquals(Object value) {
 		this._overrideEquals = value;
@@ -126,6 +129,10 @@ public class ClassDeclaration {
 		return this._overrideEquals;
 	}
 
+	public Object getOverrideEquals(Object defaultValue) {
+		return this._overrideEquals == null ? defaultValue : this._overrideEquals;
+	}
+
 	public boolean hasOverrideEquals() {
 		return this._overrideEquals != null;
 	}
@@ -133,9 +140,20 @@ public class ClassDeclaration {
 	public ClassDeclaration removeOverrideEquals() {
 		this._overrideEquals = null;
 		return this;
-	} 
+	}
+
 	public ClassDeclaration addFields(Object value) {
 		this._fields.add(value);
+		return this;
+	}
+
+	public ClassDeclaration setFields(Object[] value) {
+		this._fields.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassDeclaration setFields(java.util.Collection<Object> values) {
+		this._fields.addAll(values);
 		return this;
 	}
 
@@ -151,10 +169,20 @@ public class ClassDeclaration {
 
 	public java.util.List<Object> getFields() {
 		return this._fields;
-	} 
+	}
 
 	public ClassDeclaration addExtends(Object value) {
 		this._extends.add(value);
+		return this;
+	}
+
+	public ClassDeclaration setExtends(Object[] value) {
+		this._extends.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassDeclaration setExtends(java.util.Collection<Object> values) {
+		this._extends.addAll(values);
 		return this;
 	}
 
@@ -170,10 +198,20 @@ public class ClassDeclaration {
 
 	public java.util.List<Object> getExtends() {
 		return this._extends;
-	} 
+	}
 
 	public ClassDeclaration addMembers(Object value) {
 		this._members.add(value);
+		return this;
+	}
+
+	public ClassDeclaration setMembers(Object[] value) {
+		this._members.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassDeclaration setMembers(java.util.Collection<Object> values) {
+		this._members.addAll(values);
 		return this;
 	}
 
@@ -189,7 +227,21 @@ public class ClassDeclaration {
 
 	public java.util.List<Object> getMembers() {
 		return this._members;
-	} 
+	}
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ClassDeclaration that = (ClassDeclaration) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
 
 	static final String st = "ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,overrideEquals,members) ::= <<~annotations~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n" + 
 				"	~fields:{it|~it~};separator=\",\\n\"~\n" + 
@@ -198,5 +250,5 @@ public class ClassDeclaration {
 				"	~if(overrideEquals)~~overrideEquals~~endif~\n" + 
 				"	~members:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
-				"}>> ";
+				"}>>";
 } 

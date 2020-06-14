@@ -24,6 +24,16 @@ public class StgString {
 		return this;
 	}
 
+	public StgString setTemplates(Object[] value) {
+		this._templates.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public StgString setTemplates(java.util.Collection<Object> values) {
+		this._templates.addAll(values);
+		return this;
+	}
+
 	public StgString removeTemplates(Object value) {
 		this._templates.remove(value);
 		return this;

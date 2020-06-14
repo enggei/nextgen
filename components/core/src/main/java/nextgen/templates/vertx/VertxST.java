@@ -13,7 +13,7 @@ public class VertxST {
 	ListPrimitiveAccessors.st + "\n" + 
 	ListReferenceAccessors.st + "\n" + 
 	PrimitiveAccessors.st + "\n" + 
-	ReferenceAccessors.st + "\n" ;
+	ReferenceAccessors.st + "\n";
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -51,39 +51,39 @@ public class VertxST {
 
 	public static JsonFactory newJsonFactory() {
 		return new JsonFactory(stGroup);
-	} 
+	}
 
 	public static JsonWrapper newJsonWrapper() {
 		return new JsonWrapper(stGroup);
-	} 
+	}
 
 	public static EnumAccessors newEnumAccessors() {
 		return new EnumAccessors(stGroup);
-	} 
+	}
 
 	public static ExternalAccessors newExternalAccessors() {
 		return new ExternalAccessors(stGroup);
-	} 
+	}
 
 	public static ListEnumAccessors newListEnumAccessors() {
 		return new ListEnumAccessors(stGroup);
-	} 
+	}
 
 	public static ListPrimitiveAccessors newListPrimitiveAccessors() {
 		return new ListPrimitiveAccessors(stGroup);
-	} 
+	}
 
 	public static ListReferenceAccessors newListReferenceAccessors() {
 		return new ListReferenceAccessors(stGroup);
-	} 
+	}
 
 	public static PrimitiveAccessors newPrimitiveAccessors() {
 		return new PrimitiveAccessors(stGroup);
-	} 
+	}
 
 	public static ReferenceAccessors newReferenceAccessors() {
 		return new ReferenceAccessors(stGroup);
-	} 
+	}
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
 
@@ -116,4 +116,4 @@ public class VertxST {
 			}
 		}
 	}
-}  
+} 

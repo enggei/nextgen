@@ -40,7 +40,7 @@ public class Extending {
 	public Extending removeClassName() {
 		this._className = null;
 		return this;
-	} 
+	}
 
 
 	public Extending addParams(Object _name) {
@@ -78,7 +78,7 @@ public class Extending {
 			return this._name;
 		}
 
-	} 
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -93,5 +93,5 @@ public class Extending {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Extending(className,params) ::= <<~className~(~params:{it|~it.name~};separator=\", \"~)>> ";
-}  
+	static final String st = "Extending(className,params) ::= <<~className~(~params:{it|~it.name~};separator=\", \"~)>>";
+} 

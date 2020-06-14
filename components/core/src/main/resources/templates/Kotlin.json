@@ -117,7 +117,7 @@
             "uuid" : "d3550948-8895-4adf-aee4-39d6124b35a1",
             "name" : "fields",
             "type" : "LIST",
-            "argumentType" : "Object"
+            "argumentType" : "FieldDeclaration"
           } ]
         } ]
       }, {

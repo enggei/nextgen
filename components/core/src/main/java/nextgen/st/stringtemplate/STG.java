@@ -47,6 +47,16 @@ public class STG {
 		return this;
 	}
 
+	public STG setTemplates(Object[] value) {
+		this._templates.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public STG setTemplates(java.util.Collection<Object> values) {
+		this._templates.addAll(values);
+		return this;
+	}
+
 	public STG removeTemplates(Object value) {
 		this._templates.remove(value);
 		return this;

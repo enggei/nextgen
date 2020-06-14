@@ -63,7 +63,7 @@ public class AnnotationParam {
 			return this._value;
 		}
 
-	} 
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -78,5 +78,5 @@ public class AnnotationParam {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AnnotationParam(param) ::= <<~param:{it|~it.key~ = ~it.value~};separator=\", \"~>> ";
-}  
+	static final String st = "AnnotationParam(param) ::= <<~param:{it|~it.key~ = ~it.value~};separator=\", \"~>>";
+} 

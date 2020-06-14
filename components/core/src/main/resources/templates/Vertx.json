@@ -188,19 +188,19 @@
     }, {
       "uuid" : "cefddd6f-722b-42df-8a8e-ced8c58ae2e0",
       "name" : "JsonFactory",
-      "text" : "package ~package~;\n\npublic class ~name;format=\"capitalize\"~ {\n\n\tpublic static void save(io.vertx.core.json.JsonObject jsonObject, java.io.File file) throws java.io.IOException {\n\n\t\tif (!file.getParentFile().exists() && !file.getParentFile().mkdirs())\n\t\t\tthrow new IllegalStateException(\"could not create \" + file.getParentFile().getAbsolutePath());\n\n\t\tif (!file.exists() && !file.createNewFile())\n\t\t\tthrow new IllegalStateException(\"could not create \" + file.getAbsolutePath());\n\n\t\tjava.nio.file.Files.write(file.toPath(), jsonObject.toBuffer().getBytes());\n\t}\n\t\n~entities:{it|\n\tpublic static ~it~ new~it~() { \n\t\treturn new ~it~();\n\t\\}\n\t\n\tpublic static ~it~ new~it~NoUuid() { \n\t\treturn new ~it~().removeUuid();\n\t\\}\n\t\n\tpublic static ~it~ new~it~(io.vertx.core.json.JsonObject jsonObject) { \n\t\treturn new ~it~(jsonObject);\n\t\\}\n\n\tpublic static ~it~ new~it~(java.io.File file) throws java.io.IOException { \n\t\treturn new ~it~(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));\n\t\\}\n};separator=\"\\n\"~\n} ",
+      "text" : "package ~package~;\n\npublic class ~name;format=\"capitalize\"~ {\n\n\tpublic static void save(io.vertx.core.json.JsonObject jsonObject, java.io.File file) throws java.io.IOException {\n\n\t\tif (!file.getParentFile().exists() && !file.getParentFile().mkdirs())\n\t\t\tthrow new IllegalStateException(\"could not create \" + file.getParentFile().getAbsolutePath());\n\n\t\tif (!file.exists() && !file.createNewFile())\n\t\t\tthrow new IllegalStateException(\"could not create \" + file.getAbsolutePath());\n\n\t\tjava.nio.file.Files.write(file.toPath(), jsonObject.toBuffer().getBytes());\n\t}\n\t\n~entities:{it|\n\tpublic static ~it~ new~it~() { \n\t\treturn new ~it~();\n\t\\}\n\t\n\tpublic static ~it~ new~it~NoUuid() { \n\t\treturn new ~it~().removeUuid();\n\t\\}\n\t\n\tpublic static ~it~ new~it~(io.vertx.core.json.JsonObject jsonObject) { \n\t\treturn new ~it~(jsonObject);\n\t\\}\n\n\tpublic static ~it~ new~it~(java.io.File file) throws java.io.IOException { \n\t\treturn new ~it~(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));\n\t\\}\n};separator=\"\\n\"~\n}",
       "parameters" : [ {
-        "uuid" : "bbb126a0-6f10-4aba-b8c0-e76f728582de",
+        "uuid" : "bdf5d171-51ff-49cd-af42-e8c9e5556247",
         "name" : "package",
         "type" : "SINGLE",
         "argumentType" : "Object"
       }, {
-        "uuid" : "c0ee0f02-bed2-4eb7-b38e-8d7cdad86e2b",
+        "uuid" : "ae766e9d-fb87-4128-84d8-dfac019c18ac",
         "name" : "name",
         "type" : "SINGLE",
         "argumentType" : "Object"
       }, {
-        "uuid" : "3fed2cc5-68ca-489a-bcca-f47aa553dff7",
+        "uuid" : "fcd999dd-425d-4e8c-b284-60eccd7bb408",
         "name" : "entities",
         "type" : "LIST",
         "argumentType" : "Object"

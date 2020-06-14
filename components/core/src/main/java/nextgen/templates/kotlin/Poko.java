@@ -40,7 +40,7 @@ public class Poko {
 	public Poko removePackageDeclaration() {
 		this._packageDeclaration = null;
 		return this;
-	} 
+	}
 
 	public Poko setClassDeclaration(Object value) {
 		this._classDeclaration = value;
@@ -62,7 +62,7 @@ public class Poko {
 	public Poko removeClassDeclaration() {
 		this._classDeclaration = null;
 		return this;
-	} 
+	}
 
 
 
@@ -81,5 +81,5 @@ public class Poko {
 
 	static final String st = "Poko(packageDeclaration,classDeclaration) ::= <<~packageDeclaration~\n" + 
 				"\n" + 
-				"~classDeclaration~>> ";
-}  
+				"~classDeclaration~>>";
+} 

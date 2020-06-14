@@ -71,6 +71,16 @@ public class Template {
 		return this;
 	}
 
+	public Template setParams(Object[] value) {
+		this._params.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Template setParams(java.util.Collection<Object> values) {
+		this._params.addAll(values);
+		return this;
+	}
+
 	public Template removeParams(Object value) {
 		this._params.remove(value);
 		return this;

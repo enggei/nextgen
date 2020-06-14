@@ -71,6 +71,16 @@ public class STEnum {
 		return this;
 	}
 
+	public STEnum setEnumValues(Object[] value) {
+		this._enumValues.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public STEnum setEnumValues(java.util.Collection<Object> values) {
+		this._enumValues.addAll(values);
+		return this;
+	}
+
 	public STEnum removeEnumValues(Object value) {
 		this._enumValues.remove(value);
 		return this;

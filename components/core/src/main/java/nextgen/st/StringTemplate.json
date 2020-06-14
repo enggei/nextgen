@@ -175,19 +175,22 @@
     "children" : [ {
       "uuid" : "5fa1efb8-99ca-493c-925c-a173d8b79584",
       "name" : "entityListAccessors",
-      "text" : "public ~entity~ add~name;format=\"capitalize\"~(~if(type)~~type~~else~Object~endif~ value) {\n\tthis._~name~.add(value);\n\treturn this;\n}\n\npublic ~entity~ remove~name;format=\"capitalize\"~(~if(type)~~type~~else~Object~endif~ value) {\n\tthis._~name~.remove(value);\n\treturn this;\n}\n\npublic ~entity~ remove~name;format=\"capitalize\"~(int index) {\n\tthis._~name~.remove(index);\n\treturn this;\n}\n\npublic java.util.List<~if(type)~~type~~else~Object~endif~> get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}",
+      "text" : "public ~entity~ add~name;format=\"capitalize\"~(~if(type)~~type~~else~Object~endif~ value) {\n\tthis._~name~.add(value);\n\treturn this;\n}\n\npublic ~entity~ set~name;format=\"capitalize\"~(~if(type)~~type~~else~Object~endif~[] value) {\n\tthis._~name~.addAll(java.util.Arrays.asList(value));\n\treturn this;\n}\n\npublic ~entity~ set~name;format=\"capitalize\"~(java.util.Collection<~if(type)~~type~~else~Object~endif~> values) {\n\tthis._~name~.addAll(values);\n\treturn this;\n}\n\npublic ~entity~ remove~name;format=\"capitalize\"~(~if(type)~~type~~else~Object~endif~ value) {\n\tthis._~name~.remove(value);\n\treturn this;\n}\n\npublic ~entity~ remove~name;format=\"capitalize\"~(int index) {\n\tthis._~name~.remove(index);\n\treturn this;\n}\n\npublic java.util.List<~if(type)~~type~~else~Object~endif~> get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}",
       "parameters" : [ {
-        "uuid" : "26d3532a-0264-4443-9d53-56123daa9e62",
+        "uuid" : "ed1a29b5-77f2-42a9-85aa-2734d5de9eee",
         "name" : "entity",
-        "type" : "SINGLE"
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       }, {
-        "uuid" : "7a14b67f-75dc-4f33-bae0-916d45184716",
+        "uuid" : "23a91559-8efa-4b8c-b9f5-9383be34fb9d",
         "name" : "name",
-        "type" : "SINGLE"
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       }, {
-        "uuid" : "31227e6b-6d9c-4d94-ad86-05bb6b471615",
+        "uuid" : "2a243017-4e1f-4e99-9544-21ccf4018769",
         "name" : "type",
-        "type" : "SINGLE"
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       } ]
     }, {
       "uuid" : "fc61d6f5-bac5-43ea-92fc-ac9c397cc389",
