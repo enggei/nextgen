@@ -17,7 +17,8 @@
         "type" : "SINGLE",
         "argumentType" : "String"
       } ],
-      "children" : [ ]
+      "children" : [ ],
+      "implements" : [ "TestInterface" ]
     }, {
       "uuid" : "c41ba352-9f52-4dca-a44a-ad9f3c035d14",
       "name" : "list",
@@ -27,7 +28,8 @@
         "name" : "value",
         "type" : "LIST",
         "argumentType" : "Integer"
-      } ]
+      } ],
+      "implements" : [ "TestInterface" ]
     }, {
       "uuid" : "3e4cd3ac-b36a-48c9-9197-00e3ca022235",
       "name" : "kv",
@@ -46,7 +48,8 @@
           "argumentType" : "Long"
         } ],
         "argumentType" : "String"
-      } ]
+      } ],
+      "implements" : [ "TestInterface" ]
     }, {
       "uuid" : "820f5783-7219-4e86-85c4-1888882e7c8c",
       "name" : "allTypes",
@@ -54,11 +57,13 @@
       "parameters" : [ {
         "uuid" : "2012fe87-af67-4941-9e7a-5bce103c1b5e",
         "name" : "single",
-        "type" : "SINGLE"
+        "type" : "SINGLE",
+        "argumentType" : "TestInterface"
       }, {
         "uuid" : "1daf4999-5c51-45d6-aae0-909eedb949bc",
         "name" : "list",
-        "type" : "LIST"
+        "type" : "LIST",
+        "argumentType" : "TestInterface"
       }, {
         "uuid" : "39b8baf6-c780-40c8-b257-2f47edec0c01",
         "name" : "kvList",
@@ -75,11 +80,13 @@
       }, {
         "uuid" : "a19d3c29-8100-466c-b689-3262d27ae3d0",
         "name" : "cond1",
-        "type" : "SINGLE"
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       }, {
         "uuid" : "8d55d54f-2509-4dbf-80fa-17c295f3e5ed",
         "name" : "cond2",
-        "type" : "SINGLE"
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       } ]
     }, {
       "uuid" : "ec05cc7e-4786-4ef8-98af-7c42c1ec546a",
@@ -188,5 +195,9 @@
       "name" : "THREE",
       "lexical" : null
     } ]
+  } ],
+  "interfaces" : [ {
+    "uuid" : "cfb55588-5d46-4a07-a766-a1c51630c713",
+    "name" : "TestInterface"
   } ]
 }

@@ -38,7 +38,7 @@ public class Link {
 	public Link removeTo() {
 		this._to = null;
 		return this;
-	} 
+	}
 
 
 
@@ -55,5 +55,5 @@ public class Link {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Link(to) ::= <<<Link innerRef={ ref } to=\"~to~\" { ...props } />>> ";
-}  
+	static final String st = "Link(to) ::= <<<Link innerRef={ ref } to=\"~to~\" { ...props } /> >>";
+}

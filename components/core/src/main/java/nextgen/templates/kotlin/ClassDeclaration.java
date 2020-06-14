@@ -251,4 +251,4 @@ public class ClassDeclaration {
 				"	~members:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"}>>";
-} 
+}

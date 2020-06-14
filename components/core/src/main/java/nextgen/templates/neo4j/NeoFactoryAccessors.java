@@ -40,10 +40,20 @@ public class NeoFactoryAccessors {
 	public NeoFactoryAccessors removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public NeoFactoryAccessors addProperties(Object value) {
 		this._properties.add(value);
+		return this;
+	}
+
+	public NeoFactoryAccessors setProperties(Object[] value) {
+		this._properties.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public NeoFactoryAccessors setProperties(java.util.Collection<Object> values) {
+		this._properties.addAll(values);
 		return this;
 	}
 
@@ -59,7 +69,7 @@ public class NeoFactoryAccessors {
 
 	public java.util.List<Object> getProperties() {
 		return this._properties;
-	} 
+	}
 
 
 	@Override
@@ -87,5 +97,5 @@ public class NeoFactoryAccessors {
 				"	return db.findNodes(org.neo4j.graphdb.Label.label(\"~name~\")).stream().map(this::new~name;format=\"capitalize\"~);\n" + 
 				"}\n" + 
 				"\n" + 
-				"~properties:{it|~it~};separator=\"\\n\\n\"~>> ";
-}  
+				"~properties:{it|~it~};separator=\"\\n\\n\"~>>";
+}

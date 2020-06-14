@@ -130,4 +130,4 @@ public class ListPrimitiveAccessors {
 				"	jsonObject.put(\"~name~\", new io.vertx.core.json.JsonArray());\n" + 
 				"	return this;\n" + 
 				"}>>";
-} 
+}

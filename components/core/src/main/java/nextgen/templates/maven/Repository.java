@@ -42,7 +42,7 @@ public class Repository {
 	public Repository removeId() {
 		this._id = null;
 		return this;
-	}
+	} 
 
 	public Repository setName(Object value) {
 		this._name = value;
@@ -64,7 +64,7 @@ public class Repository {
 	public Repository removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public Repository setUrl(Object value) {
 		this._url = value;
@@ -86,7 +86,7 @@ public class Repository {
 	public Repository removeUrl() {
 		this._url = null;
 		return this;
-	}
+	} 
 
 
 

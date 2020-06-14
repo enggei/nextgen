@@ -80,4 +80,4 @@ public class Dependency {
 	}
 
 	static final String st = "dependency(name,version) ::= <<\"~name~\": \"^~version~\">>";
-} 
+}

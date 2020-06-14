@@ -40,7 +40,7 @@ public class If {
 	public If removeCondition() {
 		this._condition = null;
 		return this;
-	} 
+	}
 
 	public If setBlockStmt(Object value) {
 		this._blockStmt = value;
@@ -62,7 +62,7 @@ public class If {
 	public If removeBlockStmt() {
 		this._blockStmt = null;
 		return this;
-	} 
+	}
 
 
 
@@ -79,5 +79,5 @@ public class If {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "If(condition,blockStmt) ::= <<if (~condition~) ~blockStmt~>> ";
-}  
+	static final String st = "If(condition,blockStmt) ::= <<if (~condition~) ~blockStmt~>>";
+}

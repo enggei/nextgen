@@ -44,7 +44,7 @@ public class TryStmt {
 	public TryStmt removeTryBlock() {
 		this._tryBlock = null;
 		return this;
-	} 
+	}
 
 	public TryStmt setFinalClause(Object value) {
 		this._finalClause = value;
@@ -66,10 +66,20 @@ public class TryStmt {
 	public TryStmt removeFinalClause() {
 		this._finalClause = null;
 		return this;
-	} 
+	}
 
 	public TryStmt addCatchClauses(Object value) {
 		this._catchClauses.add(value);
+		return this;
+	}
+
+	public TryStmt setCatchClauses(Object[] value) {
+		this._catchClauses.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public TryStmt setCatchClauses(java.util.Collection<Object> values) {
+		this._catchClauses.addAll(values);
 		return this;
 	}
 
@@ -85,10 +95,20 @@ public class TryStmt {
 
 	public java.util.List<Object> getCatchClauses() {
 		return this._catchClauses;
-	} 
+	}
 
 	public TryStmt addResources(Object value) {
 		this._resources.add(value);
+		return this;
+	}
+
+	public TryStmt setResources(Object[] value) {
+		this._resources.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public TryStmt setResources(java.util.Collection<Object> values) {
+		this._resources.addAll(values);
 		return this;
 	}
 
@@ -104,7 +124,7 @@ public class TryStmt {
 
 	public java.util.List<Object> getResources() {
 		return this._resources;
-	} 
+	}
 
 
 	@Override
@@ -120,5 +140,5 @@ public class TryStmt {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TryStmt(tryBlock,finalClause,catchClauses,resources) ::= <<try~if(resources)~ (~resources:{it|~it~};separator=\";\"~)~endif~ ~tryBlock~ ~catchClauses:{it|~it~}~~if(finalClause)~ finally ~finalClause~~endif~>> ";
-}  
+	static final String st = "TryStmt(tryBlock,finalClause,catchClauses,resources) ::= <<try~if(resources)~ (~resources:{it|~it~};separator=\";\"~)~endif~ ~tryBlock~ ~catchClauses:{it|~it~}~~if(finalClause)~ finally ~finalClause~~endif~>>";
+}

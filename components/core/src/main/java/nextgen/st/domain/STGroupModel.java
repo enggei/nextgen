@@ -91,6 +91,34 @@ public class STGroupModel {
 		return this;
 	}
 
+	public STGroupModel addInterfaces(STInterface value) { 
+		io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("interfaces");
+		if (jsonArray == null) jsonObject.put("interfaces", jsonArray = new io.vertx.core.json.JsonArray());
+		jsonArray.add(value.getJsonObject());
+		return this;
+	}
+
+	public java.util.stream.Stream<STInterface> getInterfaces() { 
+		return jsonObject.getJsonArray("interfaces", new io.vertx.core.json.JsonArray()).stream().map((o) -> new STInterface((io.vertx.core.json.JsonObject) o));
+	}
+
+	public STGroupModel removeInterfaces(STInterface value) { 
+		final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("interfaces", new io.vertx.core.json.JsonArray());
+		for (int i = 0; i < jsonArray.size(); i++)  { 
+			final io.vertx.core.json.JsonObject o = jsonArray.getJsonObject(i);
+			if (value.getJsonObject().getString("uuid").equals(o.getString("uuid")))  { 
+				jsonArray.remove(i);
+				return this;
+			}
+		}
+		return this;
+	}
+
+	public STGroupModel clearInterfaces() { 
+		jsonObject.put("interfaces", new io.vertx.core.json.JsonArray());
+		return this;
+	}
+
 	public STGroupModel addEnums(STEnum value) { 
 		io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("enums");
 		if (jsonArray == null) jsonObject.put("enums", jsonArray = new io.vertx.core.json.JsonArray());

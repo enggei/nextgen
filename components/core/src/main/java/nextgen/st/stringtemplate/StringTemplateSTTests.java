@@ -22,6 +22,7 @@ public class StringTemplateSTTests {
 		testSTEnumValue();
 		testSTG();
 		testTemplate();
+		testSTInterface();
 	}
 
 	@org.junit.Test
@@ -87,5 +88,10 @@ public class StringTemplateSTTests {
 	@org.junit.Test
 	public void testTemplate() {
 		System.out.println("\n--- TEST Template:\n" + newTemplate());
+	}
+
+	@org.junit.Test
+	public void testSTInterface() {
+		System.out.println("\n--- TEST STInterface:\n" + newSTInterface());
 	}
 }

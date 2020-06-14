@@ -9,6 +9,7 @@ import org.antlr.runtime.tree.Tree;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.*;
 import org.stringtemplate.v4.misc.STCompiletimeMessage;
+import org.stringtemplate.v4.misc.STGroupCompiletimeMessage;
 import org.stringtemplate.v4.misc.STMessage;
 
 import java.io.BufferedReader;
@@ -47,12 +48,19 @@ public class STParser {
         stGroup.setListener(new STErrorListener() {
             @Override
             public void compileTimeError(STMessage stMessage) {
-                final STCompiletimeMessage message = (STCompiletimeMessage) stMessage;
-                parseResult.addErrors(new STGError()
+
+                final STGError stgError = new STGError()
                         .setType(STGErrorType.COMPILE)
-                        .setLine(message.token.getLine())
-                        .setCharPosition(message.token.getCharPositionInLine())
-                        .setMessage(message.toString()));
+                        .setMessage(stMessage.toString());
+
+                if (stMessage instanceof STCompiletimeMessage) {
+                    final STCompiletimeMessage message = (STCompiletimeMessage) stMessage;
+                    parseResult.addErrors(stgError
+                            .setLine(message.token.getLine())
+                            .setCharPosition(message.token.getCharPositionInLine()));
+                }
+
+                parseResult.addErrors(stgError);
             }
 
             @Override

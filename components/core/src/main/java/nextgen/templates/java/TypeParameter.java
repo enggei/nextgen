@@ -40,10 +40,20 @@ public class TypeParameter {
 	public TypeParameter removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public TypeParameter addTypeBounds(Object value) {
 		this._typeBounds.add(value);
+		return this;
+	}
+
+	public TypeParameter setTypeBounds(Object[] value) {
+		this._typeBounds.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public TypeParameter setTypeBounds(java.util.Collection<Object> values) {
+		this._typeBounds.addAll(values);
 		return this;
 	}
 
@@ -59,7 +69,7 @@ public class TypeParameter {
 
 	public java.util.List<Object> getTypeBounds() {
 		return this._typeBounds;
-	} 
+	}
 
 
 	@Override
@@ -75,5 +85,5 @@ public class TypeParameter {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TypeParameter(name,typeBounds) ::= <<~name~~if(typeBounds)~ extends ~typeBounds:{it|~it~};separator=\" & \"~~endif~>> ";
-}  
+	static final String st = "TypeParameter(name,typeBounds) ::= <<~name~~if(typeBounds)~ extends ~typeBounds:{it|~it~};separator=\" & \"~~endif~>>";
+}

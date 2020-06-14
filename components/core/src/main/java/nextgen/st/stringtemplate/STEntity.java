@@ -9,6 +9,7 @@ public class STEntity {
 	private Object _name;
 	private Object _template;
 	private Object _stString;
+	private java.util.List<Object> _interfaces = new java.util.ArrayList<>();
 	private java.util.List<Object> _singleAccessors = new java.util.ArrayList<>();
 	private java.util.List<Object> _listAccessors = new java.util.ArrayList<>();
 	private java.util.List<Object> _kvListAccessors = new java.util.ArrayList<>();
@@ -27,6 +28,7 @@ public class STEntity {
 		st.add("name", _name);
 		st.add("template", _template);
 		st.add("stString", _stString);
+		for (Object o : _interfaces) st.add("interfaces", o);
 		for (Object o : _singleAccessors) st.add("singleAccessors", o);
 		for (Object o : _listAccessors) st.add("listAccessors", o);
 		for (Object o : _kvListAccessors) st.add("kvListAccessors", o);
@@ -122,6 +124,35 @@ public class STEntity {
 	public STEntity removeStString() {
 		this._stString = null;
 		return this;
+	}
+
+	public STEntity addInterfaces(Object value) {
+		this._interfaces.add(value);
+		return this;
+	}
+
+	public STEntity setInterfaces(Object[] value) {
+		this._interfaces.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public STEntity setInterfaces(java.util.Collection<Object> values) {
+		this._interfaces.addAll(values);
+		return this;
+	}
+
+	public STEntity removeInterfaces(Object value) {
+		this._interfaces.remove(value);
+		return this;
+	}
+
+	public STEntity removeInterfaces(int index) {
+		this._interfaces.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getInterfaces() {
+		return this._interfaces;
 	}
 
 	public STEntity addSingleAccessors(Object value) {
@@ -367,9 +398,9 @@ public class STEntity {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "STEntity(packageName,name,singleFields,listFields,kvListFields,template,singleAccessors,listAccessors,kvListAccessors,stString) ::= <<package ~packageName~;\n" + 
+	static final String st = "STEntity(packageName,name,interfaces,singleFields,listFields,kvListFields,template,singleAccessors,listAccessors,kvListAccessors,stString) ::= <<package ~packageName~;\n" + 
 				"\n" + 
-				"public class ~name~ {\n" + 
+				"public class ~name~~if(interfaces)~ implements ~endif~~interfaces:{it|~it~};separator=\", \"~ {\n" + 
 				"\n" + 
 				"	private final java.util.UUID uuid = java.util.UUID.randomUUID();\n" + 
 				"	private final org.stringtemplate.v4.STGroup stGroup;\n" + 
@@ -411,5 +442,5 @@ public class STEntity {
 				"	}\n" + 
 				"	\n" + 
 				"	~if(stString)~static final String st = \"~stString~\";~endif~\n" + 
-				"}>>";
-} 
+				"} >>";
+}

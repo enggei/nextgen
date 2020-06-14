@@ -26,6 +26,16 @@ public class VariableDeclarationExpression {
 		return this;
 	}
 
+	public VariableDeclarationExpression setVariables(Object[] value) {
+		this._variables.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public VariableDeclarationExpression setVariables(java.util.Collection<Object> values) {
+		this._variables.addAll(values);
+		return this;
+	}
+
 	public VariableDeclarationExpression removeVariables(Object value) {
 		this._variables.remove(value);
 		return this;
@@ -38,10 +48,20 @@ public class VariableDeclarationExpression {
 
 	public java.util.List<Object> getVariables() {
 		return this._variables;
-	} 
+	}
 
 	public VariableDeclarationExpression addModifiers(Object value) {
 		this._modifiers.add(value);
+		return this;
+	}
+
+	public VariableDeclarationExpression setModifiers(Object[] value) {
+		this._modifiers.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public VariableDeclarationExpression setModifiers(java.util.Collection<Object> values) {
+		this._modifiers.addAll(values);
 		return this;
 	}
 
@@ -57,7 +77,7 @@ public class VariableDeclarationExpression {
 
 	public java.util.List<Object> getModifiers() {
 		return this._modifiers;
-	} 
+	}
 
 
 	@Override
@@ -73,5 +93,5 @@ public class VariableDeclarationExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "VariableDeclarationExpression(variables,modifiers) ::= <<~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~variables:{it|~it~};separator=\", \"~>> ";
-}  
+	static final String st = "VariableDeclarationExpression(variables,modifiers) ::= <<~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~variables:{it|~it~};separator=\", \"~>>";
+}

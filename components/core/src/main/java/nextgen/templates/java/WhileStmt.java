@@ -40,7 +40,7 @@ public class WhileStmt {
 	public WhileStmt removeCondition() {
 		this._condition = null;
 		return this;
-	} 
+	}
 
 	public WhileStmt setBody(Object value) {
 		this._body = value;
@@ -62,7 +62,7 @@ public class WhileStmt {
 	public WhileStmt removeBody() {
 		this._body = null;
 		return this;
-	} 
+	}
 
 
 
@@ -79,5 +79,5 @@ public class WhileStmt {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "WhileStmt(condition,body) ::= <<while (~condition~) ~body~>> ";
-}  
+	static final String st = "WhileStmt(condition,body) ::= <<while (~condition~) ~body~>>";
+}

@@ -24,6 +24,16 @@ public class StyleComponent {
 		return this;
 	}
 
+	public StyleComponent setElements(Object[] value) {
+		this._elements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public StyleComponent setElements(java.util.Collection<Object> values) {
+		this._elements.addAll(values);
+		return this;
+	}
+
 	public StyleComponent removeElements(Object value) {
 		this._elements.remove(value);
 		return this;
@@ -36,7 +46,7 @@ public class StyleComponent {
 
 	public java.util.List<Object> getElements() {
 		return this._elements;
-	} 
+	}
 
 
 	@Override
@@ -54,5 +64,5 @@ public class StyleComponent {
 
 	static final String st = "StyleComponent(elements) ::= <<const useStyles = theme => ({\n" + 
 				"	~elements:{it|~it~};separator=\",\\n\"~\n" + 
-				"	});>> ";
-}  
+				"	});>>";
+}

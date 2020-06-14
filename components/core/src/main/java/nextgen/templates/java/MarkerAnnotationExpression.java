@@ -38,7 +38,7 @@ public class MarkerAnnotationExpression {
 	public MarkerAnnotationExpression removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 
 
@@ -55,5 +55,5 @@ public class MarkerAnnotationExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MarkerAnnotationExpression(name) ::= <<@~name~>> ";
-}  
+	static final String st = "MarkerAnnotationExpression(name) ::= <<@~name~>>";
+}

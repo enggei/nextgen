@@ -40,7 +40,7 @@ public class ExpressionStmt {
 	public ExpressionStmt removeComment() {
 		this._comment = null;
 		return this;
-	} 
+	}
 
 	public ExpressionStmt setExpression(Object value) {
 		this._expression = value;
@@ -62,7 +62,7 @@ public class ExpressionStmt {
 	public ExpressionStmt removeExpression() {
 		this._expression = null;
 		return this;
-	} 
+	}
 
 
 
@@ -80,5 +80,5 @@ public class ExpressionStmt {
 	}
 
 	static final String st = "ExpressionStmt(comment,expression) ::= <<~if(comment)~~comment~\n" + 
-				"~endif~~expression~;>> ";
-}  
+				"~endif~~expression~;>>";
+}

@@ -38,7 +38,7 @@ public class LongExpression {
 	public LongExpression removeValue() {
 		this._value = null;
 		return this;
-	} 
+	}
 
 
 
@@ -55,5 +55,5 @@ public class LongExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "LongExpression(value) ::= <<~value~>> ";
-}  
+	static final String st = "LongExpression(value) ::= <<~value~>>";
+}

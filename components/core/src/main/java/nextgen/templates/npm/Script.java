@@ -80,4 +80,4 @@ public class Script {
 	}
 
 	static final String st = "script(command,name) ::= <<\"~name~\": \"~command~\">>";
-} 
+}

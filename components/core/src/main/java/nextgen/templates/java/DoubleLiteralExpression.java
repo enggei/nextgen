@@ -38,7 +38,7 @@ public class DoubleLiteralExpression {
 	public DoubleLiteralExpression removeValue() {
 		this._value = null;
 		return this;
-	} 
+	}
 
 
 
@@ -55,5 +55,5 @@ public class DoubleLiteralExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "DoubleLiteralExpression(value) ::= <<~value~>> ";
-}  
+	static final String st = "DoubleLiteralExpression(value) ::= <<~value~>>";
+}

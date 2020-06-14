@@ -94,4 +94,4 @@ public class Extending {
 	}
 
 	static final String st = "Extending(className,params) ::= <<~className~(~params:{it|~it.name~};separator=\", \"~)>>";
-} 
+}

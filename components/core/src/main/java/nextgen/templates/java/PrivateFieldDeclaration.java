@@ -42,7 +42,7 @@ public class PrivateFieldDeclaration {
 	public PrivateFieldDeclaration removeInitializer() {
 		this._initializer = null;
 		return this;
-	} 
+	}
 
 	public PrivateFieldDeclaration setName(Object value) {
 		this._name = value;
@@ -64,7 +64,7 @@ public class PrivateFieldDeclaration {
 	public PrivateFieldDeclaration removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public PrivateFieldDeclaration setType(Object value) {
 		this._type = value;
@@ -86,7 +86,7 @@ public class PrivateFieldDeclaration {
 	public PrivateFieldDeclaration removeType() {
 		this._type = null;
 		return this;
-	} 
+	}
 
 
 
@@ -103,5 +103,5 @@ public class PrivateFieldDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PrivateFieldDeclaration(initializer,name,type) ::= <<private ~VariableDeclaration(initializer,name,type)~;>> ";
-}  
+	static final String st = "PrivateFieldDeclaration(initializer,name,type) ::= <<private ~VariableDeclaration(initializer,name,type)~;>>";
+}

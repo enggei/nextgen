@@ -38,7 +38,7 @@ public class ListType {
 	public ListType removeType() {
 		this._type = null;
 		return this;
-	} 
+	}
 
 
 
@@ -55,5 +55,5 @@ public class ListType {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ListType(type) ::= <<java.util.List<~type~> >> ";
-}  
+	static final String st = "ListType(type) ::= <<java.util.List<~type~> >>";
+}

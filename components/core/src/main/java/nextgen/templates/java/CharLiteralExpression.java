@@ -38,7 +38,7 @@ public class CharLiteralExpression {
 	public CharLiteralExpression removeValue() {
 		this._value = null;
 		return this;
-	} 
+	}
 
 
 
@@ -55,5 +55,5 @@ public class CharLiteralExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "CharLiteralExpression(value) ::= <<~value~>> ";
-}  
+	static final String st = "CharLiteralExpression(value) ::= <<~value~>>";
+}

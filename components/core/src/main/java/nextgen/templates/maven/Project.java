@@ -44,7 +44,7 @@ public class Project {
 	public Project removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public Project setRoot(Object value) {
 		this._root = value;
@@ -66,7 +66,7 @@ public class Project {
 	public Project removeRoot() {
 		this._root = null;
 		return this;
-	}
+	} 
 
 	public Project setPom(Object value) {
 		this._pom = value;
@@ -88,7 +88,7 @@ public class Project {
 	public Project removePom() {
 		this._pom = null;
 		return this;
-	}
+	} 
 
 	public Project addModules(Object value) {
 		this._modules.add(value);
@@ -117,7 +117,7 @@ public class Project {
 
 	public java.util.List<Object> getModules() {
 		return this._modules;
-	}
+	} 
 
 
 	@Override
@@ -139,5 +139,5 @@ public class Project {
 				"Pom	: ~pom~\n" + 
 				"\n" + 
 				"Modules :\n" + 
-				"~modules:{it|~it~};separator=\"\\n\"~>>";
+				"~modules:{it|~it~};separator=\"\\n\"~ >>";
 } 

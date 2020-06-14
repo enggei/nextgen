@@ -40,10 +40,20 @@ public class LambdaExpression {
 	public LambdaExpression removeBody() {
 		this._body = null;
 		return this;
-	} 
+	}
 
 	public LambdaExpression addParameters(Object value) {
 		this._parameters.add(value);
+		return this;
+	}
+
+	public LambdaExpression setParameters(Object[] value) {
+		this._parameters.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public LambdaExpression setParameters(java.util.Collection<Object> values) {
+		this._parameters.addAll(values);
 		return this;
 	}
 
@@ -59,7 +69,7 @@ public class LambdaExpression {
 
 	public java.util.List<Object> getParameters() {
 		return this._parameters;
-	} 
+	}
 
 
 	@Override
@@ -75,5 +85,5 @@ public class LambdaExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "LambdaExpression(body,parameters) ::= <<(~parameters:{it|~it~};separator=\", \"~) -> ~body~>> ";
-}  
+	static final String st = "LambdaExpression(body,parameters) ::= <<(~parameters:{it|~it~};separator=\", \"~) -> ~body~>>";
+}

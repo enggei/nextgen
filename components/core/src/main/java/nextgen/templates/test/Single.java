@@ -1,6 +1,6 @@
 package nextgen.templates.test;
 
-public class Single {
+public class Single implements TestInterface {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -38,7 +38,7 @@ public class Single {
 	public Single removeValue() {
 		this._value = null;
 		return this;
-	} 
+	}
 
 
 
@@ -55,5 +55,5 @@ public class Single {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "single(value) ::= <<single : ~value~>> ";
-}  
+	static final String st = "single(value) ::= <<single : ~value~>>";
+}

@@ -26,6 +26,16 @@ public class SimpleMenu {
 		return this;
 	}
 
+	public SimpleMenu setMenuComponents(Object[] value) {
+		this._menuComponents.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public SimpleMenu setMenuComponents(java.util.Collection<Object> values) {
+		this._menuComponents.addAll(values);
+		return this;
+	}
+
 	public SimpleMenu removeMenuComponents(Object value) {
 		this._menuComponents.remove(value);
 		return this;
@@ -38,7 +48,7 @@ public class SimpleMenu {
 
 	public java.util.List<Object> getMenuComponents() {
 		return this._menuComponents;
-	} 
+	}
 
 	public SimpleMenu addMenuItems(Object _name, Object _to, Object _target, Object _element) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -99,7 +109,7 @@ public class SimpleMenu {
 			return this._element;
 		}
 
-	} 
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -169,5 +179,5 @@ public class SimpleMenu {
 				"                    </Menu>\n" + 
 				"                </div>);\n" + 
 				"        }\n" + 
-				"}>> ";
-}  
+				"}>>";
+}

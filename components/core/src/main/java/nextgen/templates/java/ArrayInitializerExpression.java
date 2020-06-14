@@ -24,6 +24,16 @@ public class ArrayInitializerExpression {
 		return this;
 	}
 
+	public ArrayInitializerExpression setValues(Object[] value) {
+		this._values.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ArrayInitializerExpression setValues(java.util.Collection<Object> values) {
+		this._values.addAll(values);
+		return this;
+	}
+
 	public ArrayInitializerExpression removeValues(Object value) {
 		this._values.remove(value);
 		return this;
@@ -36,7 +46,7 @@ public class ArrayInitializerExpression {
 
 	public java.util.List<Object> getValues() {
 		return this._values;
-	} 
+	}
 
 
 	@Override
@@ -54,5 +64,5 @@ public class ArrayInitializerExpression {
 
 	static final String st = "ArrayInitializerExpression(values) ::= <<{\n" + 
 				"	~values:{it|~it~};separator=\",\\n\"~\n" + 
-				"}>> ";
-}  
+				"}>>";
+}

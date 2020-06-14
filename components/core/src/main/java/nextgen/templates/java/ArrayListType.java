@@ -38,7 +38,7 @@ public class ArrayListType {
 	public ArrayListType removeType() {
 		this._type = null;
 		return this;
-	} 
+	}
 
 
 
@@ -55,5 +55,5 @@ public class ArrayListType {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ArrayListType(type) ::= <<java.util.ArrayList<~type~> >> ";
-}  
+	static final String st = "ArrayListType(type) ::= <<java.util.ArrayList<~type~> >>";
+}

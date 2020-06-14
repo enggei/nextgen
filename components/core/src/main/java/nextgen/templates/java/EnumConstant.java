@@ -44,10 +44,20 @@ public class EnumConstant {
 	public EnumConstant removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public EnumConstant addMethods(Object value) {
 		this._methods.add(value);
+		return this;
+	}
+
+	public EnumConstant setMethods(Object[] value) {
+		this._methods.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public EnumConstant setMethods(java.util.Collection<Object> values) {
+		this._methods.addAll(values);
 		return this;
 	}
 
@@ -63,10 +73,20 @@ public class EnumConstant {
 
 	public java.util.List<Object> getMethods() {
 		return this._methods;
-	} 
+	}
 
 	public EnumConstant addArguments(Object value) {
 		this._arguments.add(value);
+		return this;
+	}
+
+	public EnumConstant setArguments(Object[] value) {
+		this._arguments.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public EnumConstant setArguments(java.util.Collection<Object> values) {
+		this._arguments.addAll(values);
 		return this;
 	}
 
@@ -82,10 +102,20 @@ public class EnumConstant {
 
 	public java.util.List<Object> getArguments() {
 		return this._arguments;
-	} 
+	}
 
 	public EnumConstant addAnnotations(Object value) {
 		this._annotations.add(value);
+		return this;
+	}
+
+	public EnumConstant setAnnotations(Object[] value) {
+		this._annotations.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public EnumConstant setAnnotations(java.util.Collection<Object> values) {
+		this._annotations.addAll(values);
 		return this;
 	}
 
@@ -101,7 +131,7 @@ public class EnumConstant {
 
 	public java.util.List<Object> getAnnotations() {
 		return this._annotations;
-	} 
+	}
 
 
 	@Override
@@ -120,5 +150,5 @@ public class EnumConstant {
 	static final String st = "EnumConstant(methods,arguments,name,annotations) ::= <<~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\n" + 
 				"~endif~~name~~if(arguments)~(~arguments:{it|~it~};separator=\",\"~)~endif~~if(methods)~ {\n" + 
 				"	~methods:{it|~it~};separator=\"\\n\"~\n" + 
-				"}~endif~>> ";
-}  
+				"}~endif~>>";
+}

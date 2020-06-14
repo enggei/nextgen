@@ -44,7 +44,7 @@ public class ForStmt {
 	public ForStmt removeCompare() {
 		this._compare = null;
 		return this;
-	} 
+	}
 
 	public ForStmt setBody(Object value) {
 		this._body = value;
@@ -66,10 +66,20 @@ public class ForStmt {
 	public ForStmt removeBody() {
 		this._body = null;
 		return this;
-	} 
+	}
 
 	public ForStmt addUpdate(Object value) {
 		this._update.add(value);
+		return this;
+	}
+
+	public ForStmt setUpdate(Object[] value) {
+		this._update.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ForStmt setUpdate(java.util.Collection<Object> values) {
+		this._update.addAll(values);
 		return this;
 	}
 
@@ -85,10 +95,20 @@ public class ForStmt {
 
 	public java.util.List<Object> getUpdate() {
 		return this._update;
-	} 
+	}
 
 	public ForStmt addInitialization(Object value) {
 		this._initialization.add(value);
+		return this;
+	}
+
+	public ForStmt setInitialization(Object[] value) {
+		this._initialization.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ForStmt setInitialization(java.util.Collection<Object> values) {
+		this._initialization.addAll(values);
 		return this;
 	}
 
@@ -104,7 +124,7 @@ public class ForStmt {
 
 	public java.util.List<Object> getInitialization() {
 		return this._initialization;
-	} 
+	}
 
 
 	@Override
@@ -120,5 +140,5 @@ public class ForStmt {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ForStmt(update,initialization,compare,body) ::= <<for (~initialization:{it|~it~};separator=\", \"~; ~compare~; ~update:{it|~it~};separator=\", \"~) ~body~>> ";
-}  
+	static final String st = "ForStmt(update,initialization,compare,body) ::= <<for (~initialization:{it|~it~};separator=\", \"~; ~compare~; ~update:{it|~it~};separator=\", \"~) ~body~>>";
+}

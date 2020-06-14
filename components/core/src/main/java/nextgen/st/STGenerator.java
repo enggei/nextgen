@@ -53,14 +53,20 @@ public class STGenerator {
 
         stGroupModel.getEnums().forEach(stEnum -> {
             final ST stEnumDeclaration = generateSTEnum(packageDeclaration, stEnum);
-            writeToFile(stEnumDeclaration.render(), packageDeclaration, stEnum.getName(), "java", root);
+            writeJavaFile(stEnumDeclaration.render(), packageDeclaration, stEnum.getName(), root);
         });
 
+        stGroupModel.getInterfaces().forEach(stInterface -> {
+            final ST interfaceDeclaration = generator.getInstanceOf("STInterface");
+            interfaceDeclaration.add("packageName", packageDeclaration);
+            interfaceDeclaration.add("name", stInterface.getName());
+            writeJavaFile(interfaceDeclaration.render(), packageDeclaration, stInterface.getName(), root);
+        });
         stDomain.add("stgString", stgString);
 
         writeToFile(toStg(stGroupModel), packageDeclaration, stGroupModel.getName(), "stg", root);
-        writeToFile(stDomain.render(), packageDeclaration, domainClassName, "java", root);
-        writeToFile(stDomainTests.render(), packageDeclaration, testsClassName, "java", root);
+        writeJavaFile(stDomain.render(), packageDeclaration, domainClassName, root);
+        writeJavaFile(stDomainTests.render(), packageDeclaration, testsClassName, new File(root.getAbsolutePath().replaceAll("src/main","src/test")));
     }
 
     @NotNull
@@ -103,7 +109,7 @@ public class STGenerator {
         stTemplate.getChildren().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(childTemplate -> generateSTEntity(childTemplate, root, packageDeclaration, stDomain, stDomainTests, stgString));
 
         final ST stClass = generateSTClass(className, stTemplate, packageDeclaration);
-        writeToFile(stClass.render(), packageDeclaration, className, "java", root);
+        writeJavaFile(stClass.render(), packageDeclaration, className,  root);
     }
 
     public ST generateSTClass(String className, STTemplate stTemplate, String packageDeclaration) {
@@ -113,11 +119,14 @@ public class STGenerator {
         stEntity.add("name", className);
         stEntity.add("template", stTemplate.getName());
 
+        stTemplate.getImplements().forEach(s -> stEntity.add("interfaces", s));
+
         String content = escape(stTemplate.getText()).replaceAll("\n", "\\\\n\" + \n\t\t\t\"");
         content = content.replaceAll(">>", ">~gt()~");
-        content = content.trim().endsWith(">") ? (content.trim() + " ") : content.trim();
+//        content = content.trim().endsWith(">") ? (content.trim() + " ") : content.trim();
+        content = content.trim();
 
-        final ST template = generator.getInstanceOf("Template")
+        final ST template = newTemplateGroup().getInstanceOf("STTemplate")
                 .add("name", stTemplate.getName())
                 .add("content", content);
 
@@ -167,7 +176,7 @@ public class STGenerator {
             }
         });
 
-        stEntity.add("stString", template);
+        stEntity.add("stString", template.render().trim());
 
         return stEntity;
     }
@@ -214,7 +223,7 @@ public class STGenerator {
                 "\n\neom() ::= \"}\"" +
                 "\n\ngt() ::= \">\"" +
                 "\n\n>>" +
-                "\n\nSTTemplate(content,name,params) ::= <<~name~(~params:{it|~it~};separator=\",\"~) ::= <<~content~~eot()~>>";
+                "\n\nSTTemplate(content,name,params) ::= <<~name~(~params:{it|~it~};separator=\",\"~) ::= <<~content~ ~eot()~>>";
 
         return new NamedSTGroup("TemplateTemplate", stg, "~");
     }

@@ -48,7 +48,7 @@ public class ObjectCreationExpression {
 	public ObjectCreationExpression removeScope() {
 		this._scope = null;
 		return this;
-	} 
+	}
 
 	public ObjectCreationExpression setType(Object value) {
 		this._type = value;
@@ -70,7 +70,7 @@ public class ObjectCreationExpression {
 	public ObjectCreationExpression removeType() {
 		this._type = null;
 		return this;
-	} 
+	}
 
 	public ObjectCreationExpression setEmptyClassBody(Object value) {
 		this._emptyClassBody = value;
@@ -92,10 +92,20 @@ public class ObjectCreationExpression {
 	public ObjectCreationExpression removeEmptyClassBody() {
 		this._emptyClassBody = null;
 		return this;
-	} 
+	}
 
 	public ObjectCreationExpression addTypeArguments(Object value) {
 		this._typeArguments.add(value);
+		return this;
+	}
+
+	public ObjectCreationExpression setTypeArguments(Object[] value) {
+		this._typeArguments.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ObjectCreationExpression setTypeArguments(java.util.Collection<Object> values) {
+		this._typeArguments.addAll(values);
 		return this;
 	}
 
@@ -111,10 +121,20 @@ public class ObjectCreationExpression {
 
 	public java.util.List<Object> getTypeArguments() {
 		return this._typeArguments;
-	} 
+	}
 
 	public ObjectCreationExpression addArguments(Object value) {
 		this._arguments.add(value);
+		return this;
+	}
+
+	public ObjectCreationExpression setArguments(Object[] value) {
+		this._arguments.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ObjectCreationExpression setArguments(java.util.Collection<Object> values) {
+		this._arguments.addAll(values);
 		return this;
 	}
 
@@ -130,10 +150,20 @@ public class ObjectCreationExpression {
 
 	public java.util.List<Object> getArguments() {
 		return this._arguments;
-	} 
+	}
 
 	public ObjectCreationExpression addAnonymousClassBodies(Object value) {
 		this._anonymousClassBodies.add(value);
+		return this;
+	}
+
+	public ObjectCreationExpression setAnonymousClassBodies(Object[] value) {
+		this._anonymousClassBodies.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ObjectCreationExpression setAnonymousClassBodies(java.util.Collection<Object> values) {
+		this._anonymousClassBodies.addAll(values);
 		return this;
 	}
 
@@ -149,7 +179,7 @@ public class ObjectCreationExpression {
 
 	public java.util.List<Object> getAnonymousClassBodies() {
 		return this._anonymousClassBodies;
-	} 
+	}
 
 
 	@Override
@@ -170,5 +200,5 @@ public class ObjectCreationExpression {
 				"	~anonymousClassBodies:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"}~elseif(emptyClassBody)~ {\n" + 
-				"}~endif~>> ";
-}  
+				"}~endif~>>";
+}

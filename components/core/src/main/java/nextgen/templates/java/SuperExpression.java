@@ -38,7 +38,7 @@ public class SuperExpression {
 	public SuperExpression removeTypeName() {
 		this._typeName = null;
 		return this;
-	} 
+	}
 
 
 
@@ -55,5 +55,5 @@ public class SuperExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SuperExpression(typeName) ::= <<super~if(typeName)~.~endif~~typeName~>> ";
-}  
+	static final String st = "SuperExpression(typeName) ::= <<super~if(typeName)~.~endif~~typeName~>>";
+}

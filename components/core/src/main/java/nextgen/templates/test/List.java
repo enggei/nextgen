@@ -1,6 +1,6 @@
 package nextgen.templates.test;
 
-public class List {
+public class List implements TestInterface {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -24,6 +24,16 @@ public class List {
 		return this;
 	}
 
+	public List setValue(Integer[] value) {
+		this._value.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public List setValue(java.util.Collection<Integer> values) {
+		this._value.addAll(values);
+		return this;
+	}
+
 	public List removeValue(Integer value) {
 		this._value.remove(value);
 		return this;
@@ -36,7 +46,7 @@ public class List {
 
 	public java.util.List<Integer> getValue() {
 		return this._value;
-	} 
+	}
 
 
 	@Override
@@ -52,5 +62,5 @@ public class List {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "list(value) ::= <<list : ~value:{it|~it~};separator=\", \"~>> ";
-}  
+	static final String st = "list(value) ::= <<list : ~value:{it|~it~};separator=\", \"~>>";
+}

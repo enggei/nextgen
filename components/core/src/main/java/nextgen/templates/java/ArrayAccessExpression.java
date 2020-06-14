@@ -40,7 +40,7 @@ public class ArrayAccessExpression {
 	public ArrayAccessExpression removeIndex() {
 		this._index = null;
 		return this;
-	} 
+	}
 
 	public ArrayAccessExpression setName(Object value) {
 		this._name = value;
@@ -62,7 +62,7 @@ public class ArrayAccessExpression {
 	public ArrayAccessExpression removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 
 
@@ -79,5 +79,5 @@ public class ArrayAccessExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ArrayAccessExpression(index,name) ::= <<~name~[~index~]>> ";
-}  
+	static final String st = "ArrayAccessExpression(index,name) ::= <<~name~[~index~]>>";
+}

@@ -40,10 +40,20 @@ public class SwitchStmt {
 	public SwitchStmt removeSelector() {
 		this._selector = null;
 		return this;
-	} 
+	}
 
 	public SwitchStmt addEntries(Object value) {
 		this._entries.add(value);
+		return this;
+	}
+
+	public SwitchStmt setEntries(Object[] value) {
+		this._entries.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public SwitchStmt setEntries(java.util.Collection<Object> values) {
+		this._entries.addAll(values);
 		return this;
 	}
 
@@ -59,7 +69,7 @@ public class SwitchStmt {
 
 	public java.util.List<Object> getEntries() {
 		return this._entries;
-	} 
+	}
 
 
 	@Override
@@ -77,5 +87,5 @@ public class SwitchStmt {
 
 	static final String st = "SwitchStmt(selector,entries) ::= <<switch(~selector~) {\n" + 
 				"	~entries:{it|~it~};separator=\"\\n\"~\n" + 
-				"}>> ";
-}  
+				"}>>";
+}

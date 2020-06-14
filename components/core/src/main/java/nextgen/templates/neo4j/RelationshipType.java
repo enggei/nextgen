@@ -32,5 +32,5 @@ public class RelationshipType {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "RelationshipType() ::= <<org.neo4j.graphdb.RelationshipType>> ";
-}  
+	static final String st = "RelationshipType() ::= <<org.neo4j.graphdb.RelationshipType>>";
+}

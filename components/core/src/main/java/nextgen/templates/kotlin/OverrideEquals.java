@@ -91,4 +91,4 @@ public class OverrideEquals {
 				"		else\n" + 
 				"			~fields:{it|this.~it~ == other.~it~};separator=\" && \"~\n" + 
 				"}>>";
-} 
+}

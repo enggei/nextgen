@@ -131,4 +131,4 @@ public class NpmProject {
 				"~packageJson~\n" + 
 				"~webpackConfig~\n" + 
 				"~babelrc~>>";
-} 
+}

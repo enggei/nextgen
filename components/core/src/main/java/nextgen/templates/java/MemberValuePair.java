@@ -40,7 +40,7 @@ public class MemberValuePair {
 	public MemberValuePair removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public MemberValuePair setValue(Object value) {
 		this._value = value;
@@ -62,7 +62,7 @@ public class MemberValuePair {
 	public MemberValuePair removeValue() {
 		this._value = null;
 		return this;
-	} 
+	}
 
 
 
@@ -79,5 +79,5 @@ public class MemberValuePair {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MemberValuePair(name,value) ::= <<~name~ = ~value~>> ";
-}  
+	static final String st = "MemberValuePair(name,value) ::= <<~name~ = ~value~>>";
+}

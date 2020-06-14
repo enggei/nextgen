@@ -160,5 +160,5 @@ public class EntityKVListAccessors {
 				"	return this._~it.name~;\n" + 
 				"~eom()~\n" + 
 				"	};separator=\"\\n\"~\n" + 
-				"}>>";
-} 
+				"} >>";
+}

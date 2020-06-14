@@ -32,5 +32,5 @@ public class EmptyStmt {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "EmptyStmt() ::= <<;>> ";
-}  
+	static final String st = "EmptyStmt() ::= <<;>>";
+}

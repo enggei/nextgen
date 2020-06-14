@@ -38,7 +38,7 @@ public class ClassExpression {
 	public ClassExpression removeType() {
 		this._type = null;
 		return this;
-	} 
+	}
 
 
 
@@ -55,5 +55,5 @@ public class ClassExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ClassExpression(type) ::= <<~type~.class>> ";
-}  
+	static final String st = "ClassExpression(type) ::= <<~type~.class>>";
+}

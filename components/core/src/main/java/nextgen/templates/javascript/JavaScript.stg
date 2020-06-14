@@ -1,6 +1,6 @@
 delimiters "~","~"
 
-App() ::= << >>
+App() ::= <<>>
 
 indexJS(name,stores) ::= <<import ReactDOM from 'react-dom';
 import React from 'react';
@@ -22,7 +22,7 @@ ReactDOM.render((
 			<~name~ />
 		</BrowserRouter>
 	</Provider>
-), document.getElementById('root'));  >>
+), document.getElementById('root')); >>
 
 SimpleMenu(menuItems,menuComponents) ::= <<import React from 'react';
 import Button from '@material-ui/core/Button';
@@ -79,25 +79,25 @@ export default function SimpleMenu(props) {
                     </Menu>
                 </div>);
         }
-}  >>
+} >>
 
 BlockStmt(stmt,statements) ::= <<~stmt~ {
 	~statements:{it|~it~};separator="\n"~
-}  >>
+} >>
 
-Decorator(name,parameters) ::= <<@~name~~if(parameters)~(~parameters:{it|~it~};separator=", "~)~endif~  >>
+Decorator(name,parameters) ::= <<@~name~~if(parameters)~(~parameters:{it|~it~};separator=", "~)~endif~ >>
 
 Function(name,parameters,statements) ::= <<function ~name~(~parameters:{it|~it~};separator=","~) {
 	~statements:{it|~it~};separator="\n"~
-}  >>
+} >>
 
-If(condition,blockStmt) ::= <<if (~condition~) ~blockStmt~  >>
+If(condition,blockStmt) ::= <<if (~condition~) ~blockStmt~ >>
 
-Inject(values) ::= <<@inject(~values:{it|~it~};separator=", "~)  >>
+Inject(values) ::= <<@inject(~values:{it|~it~};separator=", "~) >>
 
-JsonObject(values) ::= <<{ ~values:{it|~it~};separator=", "~ }  >>
+JsonObject(values) ::= <<{ ~values:{it|~it~};separator=", "~ } >>
 
-JSX() ::= << >>
+JSX() ::= <<>>
 
 FunctionalComponent(dependencies,name,element) ::= <<~dependencies:{it|~it~};separator="\n"~
 
@@ -108,28 +108,28 @@ function ~name~(props) {
 	)
 }
 
-export default ~name~;  >>
+export default ~name~; >>
 
 Element(name,children,props) ::= <<<~name~~if(props)~ 
 	~props:{it|~it~};separator="\n"~~endif~~if(children)~>
 	~children:{it|~it~};separator="\n"~
-</~name~>~else~ />~endif~  >>
+</~name~>~else~ />~endif~ >>
 
 ForwardRef(name,forward) ::= <<const ~name~ = React.forwardRef( (props, ref) => (
 	~forward~
-));  >>
+)); >>
 
-DestructorProp(child,prop) ::= <<const { ~prop:{it|~it~};separator=", "~ } = this.props~if(child)~.~child~~endif~;  >>
+DestructorProp(child,prop) ::= <<const { ~prop:{it|~it~};separator=", "~ } = this.props~if(child)~.~child~~endif~; >>
 
 returnStatement(condition,element) ::= <<~if(condition)~if (~condition~) ~endif~return (
 	~element~
-	);  >>
+	); >>
 
-Prop(name,value) ::= <<~name~~if(value)~=~value~~endif~  >>
+Prop(name,value) ::= <<~name~~if(value)~=~value~~endif~ >>
 
 State(values) ::= <<{
 	~values:{it|~it.name~: ~it.value~};separator=",\n"~
-}  >>
+} >>
 
 ClassComponent(dependencies,components,decorators,name,state,events,methods,renderConstants,returnStatements) ::= <<~dependencies:{it|~it~};separator="\n"~
 
@@ -166,37 +166,37 @@ class ~name~ extends React.Component {
 	}
 }
 
-export default (~name~);  >>
+export default (~name~); >>
 
-Dependency(value,packageName) ::= <<import ~value~ from '~packageName~';  >>
+Dependency(value,packageName) ::= <<import ~value~ from '~packageName~'; >>
 
 MethodDeclaration(const,name,parameter,statements) ::= <<~if(const)~const ~endif~~name~ = ~if(parameter)~~parameter~~else~()~endif~ \=\> {
 	~statements:{it|~it~};separator="\n"~
-} >>
+}>>
 
-namedImport(names) ::= <<{ ~names:{it|~it~};separator=", "~ }  >>
+namedImport(names) ::= <<{ ~names:{it|~it~};separator=", "~ } >>
 
-MaterialUI() ::= <<  >>
+MaterialUI() ::= << >>
 
 GlobalStyle(properties,name) ::= <<'@global': {
 	~name~: {
 		~properties:{it|~it.key~: ~it.value~};separator=",\n"~
 	}
-}  >>
+} >>
 
-withStyles() ::= <<@withStyles(useStyles)  >>
+withStyles() ::= <<@withStyles(useStyles) >>
 
 StyleComponent(elements) ::= <<const useStyles = theme => ({
 	~elements:{it|~it~};separator=",\n"~
-	});  >>
+	}); >>
 
 Style(name,properties) ::= <<~name~: {
 	~properties:{it|~it.key~: ~it.value~};separator=",\n"~
-}  >>
+} >>
 
-MenuItem(title,name) ::= <<<MenuItem component={ ~name~ } onClick={handleClose}> ~title~ </MenuItem>  >>
+MenuItem(title,name) ::= <<<MenuItem component={ ~name~ } onClick={handleClose}> ~title~ </MenuItem> >>
 
-MobX() ::= <<MobX constructs  >>
+MobX() ::= <<MobX constructs >>
 
 MobXStore(observables,actions,imports,name,constructorStatements) ::= <<import { ~if(observables)~observable~endif~~if(actions)~~if(observables)~, ~endif~action, ~endif~ reaction } from 'mobx';
 
@@ -213,21 +213,21 @@ class ~name;format="capitalize"~ {
 	~actions:{it|~it~};separator="\n\n"~
 }
 
-export default new ~name;format="capitalize"~();  >>
+export default new ~name;format="capitalize"~(); >>
 
-Observable(name,initializer) ::= <<@observable ~name~~if(initializer)~ = ~initializer~~endif~;  >>
+Observable(name,initializer) ::= <<@observable ~name~~if(initializer)~ = ~initializer~~endif~; >>
 
 Action(name,params,statements) ::= <<@action ~name~(~params:{it|~it~};separator=","~) {
 	~statements:{it|~it~};separator="\n"~
-}  >>
+} >>
 
-NameArray(values,name) ::= <<~name~ : [ ~values:{it|~it~};separator=", "~ ]  >>
+NameArray(values,name) ::= <<~name~ : [ ~values:{it|~it~};separator=", "~ ] >>
 
-NameValue(name,value) ::= <<~name~: ~value~  >>
+NameValue(name,value) ::= <<~name~: ~value~ >>
 
-ReactRouter() ::= << >>
+ReactRouter() ::= <<>>
 
-Link(to) ::= <<<Link innerRef={ ref } to="~to~" { ...props } />  >>
+Link(to) ::= <<<Link innerRef={ ref } to="~to~" { ...props } /> >>
 
 eom() ::= "}"
 

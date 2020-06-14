@@ -89,85 +89,90 @@
   }, {
     "uuid" : "8f38f099-b784-4fbd-996f-8be16beb6d28",
     "name" : "STEntity",
-    "text" : "package ~packageName~;\n\npublic class ~name~ {\n\n\tprivate final java.util.UUID uuid = java.util.UUID.randomUUID();\n\tprivate final org.stringtemplate.v4.STGroup stGroup;\n\t\n\t~singleFields:{it|private ~it.type~ _~it.name~;};separator=\"\\n\"~\n\t~listFields:{it|private java.util.List<~it.type~> _~it.name~ = new java.util.ArrayList<>();};separator=\"\\n\"~\n\t~kvListFields:{it|private java.util.List<java.util.Map<String, Object~gt()~> _~it.name~ = new java.util.ArrayList<>();};separator=\"\\n\"~\n\t\n\t~name~(org.stringtemplate.v4.STGroup stGroup) {\n\t\tthis.stGroup = stGroup;\n\t}\n\n\t@Override\n\tpublic String toString() {\n\t\tfinal org.stringtemplate.v4.ST st = stGroup.getInstanceOf(\"~template~\");\n\t\t~singleFields:{it|st.add(\"~it.name~\", _~it.name~);};separator=\"\\n\"~\n\t\t~listFields:{it|for (Object o : _~it.name~) st.add(\"~it.name~\", o);};separator=\"\\n\"~\n\t\t~kvListFields:{it|for (java.util.Map<String, Object> map : _~it.name~) st.addAggr(\"~it.aggrSpec~\", ~it.aggrValues~);};separator=\"\\n\"~\n\t\treturn st.render().trim();\n\t}\n\t\n\t~singleAccessors:{it|~it~};separator=\"\\n\\n\"~\n\t\n\t~listAccessors:{it|~it~};separator=\"\\n\\n\"~\n\t\n\t~kvListAccessors:{it|~it~};separator=\"\\n\\n\"~\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn uuid.equals(that.uuid);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(uuid);\n\t}\n\t\n\t~if(stString)~static final String st = \"~stString~\";~endif~\n} ",
+    "text" : "package ~packageName~;\n\npublic class ~name~~if(interfaces)~ implements ~endif~~interfaces:{it|~it~};separator=\", \"~ {\n\n\tprivate final java.util.UUID uuid = java.util.UUID.randomUUID();\n\tprivate final org.stringtemplate.v4.STGroup stGroup;\n\t\n\t~singleFields:{it|private ~it.type~ _~it.name~;};separator=\"\\n\"~\n\t~listFields:{it|private java.util.List<~it.type~> _~it.name~ = new java.util.ArrayList<>();};separator=\"\\n\"~\n\t~kvListFields:{it|private java.util.List<java.util.Map<String, Object~gt()~> _~it.name~ = new java.util.ArrayList<>();};separator=\"\\n\"~\n\t\n\t~name~(org.stringtemplate.v4.STGroup stGroup) {\n\t\tthis.stGroup = stGroup;\n\t}\n\n\t@Override\n\tpublic String toString() {\n\t\tfinal org.stringtemplate.v4.ST st = stGroup.getInstanceOf(\"~template~\");\n\t\t~singleFields:{it|st.add(\"~it.name~\", _~it.name~);};separator=\"\\n\"~\n\t\t~listFields:{it|for (Object o : _~it.name~) st.add(\"~it.name~\", o);};separator=\"\\n\"~\n\t\t~kvListFields:{it|for (java.util.Map<String, Object> map : _~it.name~) st.addAggr(\"~it.aggrSpec~\", ~it.aggrValues~);};separator=\"\\n\"~\n\t\treturn st.render().trim();\n\t}\n\t\n\t~singleAccessors:{it|~it~};separator=\"\\n\\n\"~\n\t\n\t~listAccessors:{it|~it~};separator=\"\\n\\n\"~\n\t\n\t~kvListAccessors:{it|~it~};separator=\"\\n\\n\"~\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn uuid.equals(that.uuid);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(uuid);\n\t}\n\t\n\t~if(stString)~static final String st = \"~stString~\";~endif~\n}",
     "parameters" : [ {
-      "uuid" : "977b2672-a65f-4729-9348-4aa134aa53ea",
+      "uuid" : "ab3f96bc-38da-4b7b-a9a7-5ea153ae6928",
       "name" : "packageName",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "deae390f-b607-4222-be1e-3e90e25500a3",
+      "uuid" : "d333ef41-6c2a-4f28-b5f5-8e9f6c42fb1f",
       "name" : "name",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "431ce1d1-1bf6-4b0b-8db3-723b4431460b",
+      "uuid" : "b74464a1-850a-49aa-9f97-66dadbd19941",
+      "name" : "interfaces",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "b8c562b4-a590-471f-9127-859d77cf7276",
       "name" : "singleFields",
       "type" : "KVLIST",
       "argumentType" : "Object",
       "keys" : [ {
-        "uuid" : "60843204-a4b4-48dc-95d3-7849b01d083a",
+        "uuid" : "5dd27bd0-ae4f-42b6-a3ac-e3ae70f2967d",
         "name" : "type",
         "argumentType" : "Object"
       }, {
-        "uuid" : "711ef170-e46a-4983-9ced-c33415534798",
+        "uuid" : "96276abd-41f7-4cb2-a124-4f0883a83f02",
         "name" : "name",
         "argumentType" : "Object"
       } ]
     }, {
-      "uuid" : "a1aa5541-126c-4b9e-9daf-dd4c3970f333",
+      "uuid" : "364396f0-ec94-419a-bccf-fcdb8d5b7158",
       "name" : "listFields",
       "type" : "KVLIST",
       "argumentType" : "Object",
       "keys" : [ {
-        "uuid" : "7935b17d-9120-4ac1-b841-691a2b335c1b",
+        "uuid" : "c7e17efb-5bdc-4c21-ba5d-313361c93d0f",
         "name" : "type",
         "argumentType" : "Object"
       }, {
-        "uuid" : "65519f3b-bf59-4c59-b0db-6760c7607871",
+        "uuid" : "d00c2241-16f2-424d-8b68-77f3dd6f7e1e",
         "name" : "name",
         "argumentType" : "Object"
       } ]
     }, {
-      "uuid" : "17ce8008-54d9-4d8e-92b8-4eab260a7534",
+      "uuid" : "eaa6fb37-3d44-4e0b-aa5d-2d37dff74e3b",
       "name" : "kvListFields",
       "type" : "KVLIST",
       "argumentType" : "Object",
       "keys" : [ {
-        "uuid" : "2365e6db-8453-48ab-836a-0fe26a754e0e",
+        "uuid" : "26a61329-c841-4ea7-abea-68abbeb6f4ac",
         "name" : "name",
         "argumentType" : "Object"
       }, {
-        "uuid" : "225582ec-82ee-4bad-9f3d-df5e21d9a597",
+        "uuid" : "71179e41-8ef6-4652-860e-4a2e62d490a2",
         "name" : "aggrSpec",
         "argumentType" : "Object"
       }, {
-        "uuid" : "96804dcd-8f05-4e83-9724-a460f9aef501",
+        "uuid" : "7d2a8c70-aa1a-4ece-9b2e-2e824133e9fa",
         "name" : "aggrValues",
         "argumentType" : "Object"
       } ]
     }, {
-      "uuid" : "5148a960-0265-4283-b14a-e1016166637d",
+      "uuid" : "7d76eb73-71d7-4b29-b3ff-ba51645fa3bf",
       "name" : "template",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "c5fa0b09-99e1-4e47-b76f-4f5966b50b2f",
+      "uuid" : "5d9ea6f8-aabe-4ecf-8728-66ca67ee621b",
       "name" : "singleAccessors",
       "type" : "LIST",
       "argumentType" : "Object"
     }, {
-      "uuid" : "66273201-f349-4be2-939f-258494be5989",
+      "uuid" : "5d7a8958-cd47-4e08-b3b5-381fa6c35a37",
       "name" : "listAccessors",
       "type" : "LIST",
       "argumentType" : "Object"
     }, {
-      "uuid" : "3f3e3e5b-684a-49d8-a834-67375b29bb4a",
+      "uuid" : "c9a49587-90f6-48c2-8187-d3a7e82fa61e",
       "name" : "kvListAccessors",
       "type" : "LIST",
       "argumentType" : "Object"
     }, {
-      "uuid" : "a294c0ad-b332-4172-a10f-aa9991636f23",
+      "uuid" : "838fa779-8131-4ed9-9739-e4bbd0f97438",
       "name" : "stString",
       "type" : "SINGLE",
       "argumentType" : "Object"
@@ -243,42 +248,6 @@
       } ]
     } ]
   }, {
-    "uuid" : "ddafac59-22bd-4387-b5b1-a269f89c5460",
-    "name" : "STG",
-    "text" : "delimiters ~delimiter~,~delimiter~\n\neom() ::= \"}\"\n\ngt() ::= \">\"\n\n~templates:{it|~it~};separator=\"\\n\\n\"~~gt()~~gt()~ ",
-    "children" : [ {
-      "uuid" : "3ef3243c-3f80-4539-a618-cfa1afeae4b0",
-      "name" : "Template",
-      "text" : "~name~(~params:{it|~it~};separator=\",\"~) ::= <<~content~~gt()~~gt()~",
-      "parameters" : [ {
-        "uuid" : "fff824ee-7639-46e2-98a1-9fa9facdf6df",
-        "name" : "name",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "dac6cc5a-4e54-4475-b907-b8b825beaf27",
-        "name" : "params",
-        "type" : "LIST",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "b6f4f467-bad9-4f81-b9ab-0331639a4f96",
-        "name" : "content",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      } ]
-    } ],
-    "parameters" : [ {
-      "uuid" : "f063b7a9-8dd3-444f-85e5-5447779fa272",
-      "name" : "delimiter",
-      "type" : "SINGLE",
-      "argumentType" : "Object"
-    }, {
-      "uuid" : "046b23aa-32f7-4737-8793-602571ddfd8f",
-      "name" : "templates",
-      "type" : "LIST",
-      "argumentType" : "Object"
-    } ]
-  }, {
     "uuid" : "af2f2a2f-dc9c-4a0e-a6da-c476e9868473",
     "name" : "STEnum",
     "text" : "package ~packageName~;\n\npublic enum ~name~ {\n\n\t~enumValues:{it|~it~};separator=\",\\n\"~\n} ",
@@ -313,6 +282,21 @@
         "type" : "SINGLE",
         "argumentType" : "Object"
       } ]
+    } ]
+  }, {
+    "uuid" : "eec2d3d5-de31-44c8-8223-b6cd8ed15fba",
+    "name" : "STInterface",
+    "text" : "package ~packageName~;\n\npublic interface ~name~ {\n\t\n}",
+    "parameters" : [ {
+      "uuid" : "195f8f15-a265-4bac-a130-648c78bcd5f0",
+      "name" : "packageName",
+      "type" : "SINGLE",
+      "argumentType" : "String"
+    }, {
+      "uuid" : "985791de-7985-41a0-97b0-5f1cfb93fa1a",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "String"
     } ]
   } ],
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/StringTemplate.stg"

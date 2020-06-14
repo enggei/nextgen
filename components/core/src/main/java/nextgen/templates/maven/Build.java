@@ -48,7 +48,7 @@ public class Build {
 
 	public java.util.List<Object> getPlugin() {
 		return this._plugin;
-	}
+	} 
 
 	public Build addTestResources(Object _name, Object _value) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -93,7 +93,7 @@ public class Build {
 			return this._value;
 		}
 
-	}
+	} 
 
 	@Override
 	public boolean equals(Object o) {

@@ -35,7 +35,7 @@ public class JavaScriptST {
 	Observable.st + "\n" + 
 	NameArray.st + "\n" + 
 	NameValue.st + "\n" + 
-	Link.st + "\n" ;
+	Link.st + "\n";
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -73,127 +73,127 @@ public class JavaScriptST {
 
 	public static IndexJS newIndexJS() {
 		return new IndexJS(stGroup);
-	} 
+	}
 
 	public static SimpleMenu newSimpleMenu() {
 		return new SimpleMenu(stGroup);
-	} 
+	}
 
 	public static BlockStmt newBlockStmt() {
 		return new BlockStmt(stGroup);
-	} 
+	}
 
 	public static Decorator newDecorator() {
 		return new Decorator(stGroup);
-	} 
+	}
 
 	public static Function newFunction() {
 		return new Function(stGroup);
-	} 
+	}
 
 	public static If newIf() {
 		return new If(stGroup);
-	} 
+	}
 
 	public static Inject newInject() {
 		return new Inject(stGroup);
-	} 
+	}
 
 	public static JsonObject newJsonObject() {
 		return new JsonObject(stGroup);
-	} 
+	}
 
 	public static ClassComponent newClassComponent() {
 		return new ClassComponent(stGroup);
-	} 
+	}
 
 	public static Dependency newDependency() {
 		return new Dependency(stGroup);
-	} 
+	}
 
 	public static DestructorProp newDestructorProp() {
 		return new DestructorProp(stGroup);
-	} 
+	}
 
 	public static Element newElement() {
 		return new Element(stGroup);
-	} 
+	}
 
 	public static ForwardRef newForwardRef() {
 		return new ForwardRef(stGroup);
-	} 
+	}
 
 	public static FunctionalComponent newFunctionalComponent() {
 		return new FunctionalComponent(stGroup);
-	} 
+	}
 
 	public static MethodDeclaration newMethodDeclaration() {
 		return new MethodDeclaration(stGroup);
-	} 
+	}
 
 	public static NamedImport newNamedImport() {
 		return new NamedImport(stGroup);
-	} 
+	}
 
 	public static Prop newProp() {
 		return new Prop(stGroup);
-	} 
+	}
 
 	public static ReturnStatement newReturnStatement() {
 		return new ReturnStatement(stGroup);
-	} 
+	}
 
 	public static State newState() {
 		return new State(stGroup);
-	} 
+	}
 
 	public static GlobalStyle newGlobalStyle() {
 		return new GlobalStyle(stGroup);
-	} 
+	}
 
 	public static MenuItem newMenuItem() {
 		return new MenuItem(stGroup);
-	} 
+	}
 
 	public static Style newStyle() {
 		return new Style(stGroup);
-	} 
+	}
 
 	public static StyleComponent newStyleComponent() {
 		return new StyleComponent(stGroup);
-	} 
+	}
 
 	public static WithStyles newWithStyles() {
 		return new WithStyles(stGroup);
-	} 
+	}
 
 	public static MobX newMobX() {
 		return new MobX(stGroup);
-	} 
+	}
 
 	public static Action newAction() {
 		return new Action(stGroup);
-	} 
+	}
 
 	public static MobXStore newMobXStore() {
 		return new MobXStore(stGroup);
-	} 
+	}
 
 	public static Observable newObservable() {
 		return new Observable(stGroup);
-	} 
+	}
 
 	public static NameArray newNameArray() {
 		return new NameArray(stGroup);
-	} 
+	}
 
 	public static NameValue newNameValue() {
 		return new NameValue(stGroup);
-	} 
+	}
 
 	public static Link newLink() {
 		return new Link(stGroup);
-	} 
+	}
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
 
@@ -226,4 +226,4 @@ public class JavaScriptST {
 			}
 		}
 	}
-}  
+} 

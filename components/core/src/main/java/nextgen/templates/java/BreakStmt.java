@@ -38,7 +38,7 @@ public class BreakStmt {
 	public BreakStmt removeLabel() {
 		this._label = null;
 		return this;
-	} 
+	}
 
 
 
@@ -55,5 +55,5 @@ public class BreakStmt {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "BreakStmt(label) ::= <<break~if(label)~ ~label~~endif~;>> ";
-}  
+	static final String st = "BreakStmt(label) ::= <<break~if(label)~ ~label~~endif~;>>";
+}

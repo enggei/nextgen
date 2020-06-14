@@ -56,4 +56,4 @@ public class PackageDeclaration {
 	}
 
 	static final String st = "PackageDeclaration(name) ::= <<package ~name~>>";
-} 
+}

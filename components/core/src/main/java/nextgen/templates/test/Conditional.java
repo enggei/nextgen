@@ -40,7 +40,7 @@ public class Conditional {
 	public Conditional removeCondition1() {
 		this._condition1 = null;
 		return this;
-	} 
+	}
 
 	public Conditional setCondition2(Object value) {
 		this._condition2 = value;
@@ -62,7 +62,7 @@ public class Conditional {
 	public Conditional removeCondition2() {
 		this._condition2 = null;
 		return this;
-	} 
+	}
 
 
 
@@ -79,5 +79,5 @@ public class Conditional {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "conditional(condition1,condition2) ::= <<~if(condition1)~condition1: ~condition1~~elseif(condition2)~isCondition2~else~~endif~>> ";
-}  
+	static final String st = "conditional(condition1,condition2) ::= <<~if(condition1)~condition1: ~condition1~~elseif(condition2)~isCondition2~else~~endif~>>";
+}

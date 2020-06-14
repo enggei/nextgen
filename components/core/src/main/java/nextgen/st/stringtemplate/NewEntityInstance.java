@@ -57,5 +57,5 @@ public class NewEntityInstance {
 
 	static final String st = "newEntityInstance(entityName) ::= <<public static ~entityName~ new~entityName~() {\n" + 
 				"	return new ~entityName~(stGroup);\n" + 
-				"}>>";
-} 
+				"} >>";
+}

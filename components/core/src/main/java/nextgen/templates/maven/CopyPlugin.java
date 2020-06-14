@@ -42,7 +42,7 @@ public class CopyPlugin {
 	public CopyPlugin removeOutputDirectory() {
 		this._outputDirectory = null;
 		return this;
-	}
+	} 
 
 	public CopyPlugin setDirectory(Object value) {
 		this._directory = value;
@@ -64,7 +64,7 @@ public class CopyPlugin {
 	public CopyPlugin removeDirectory() {
 		this._directory = null;
 		return this;
-	}
+	} 
 
 	public CopyPlugin addInclude(Object value) {
 		this._include.add(value);
@@ -93,7 +93,7 @@ public class CopyPlugin {
 
 	public java.util.List<Object> getInclude() {
 		return this._include;
-	}
+	} 
 
 
 	@Override

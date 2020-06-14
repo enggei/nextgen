@@ -42,10 +42,20 @@ public class Action {
 	public Action removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public Action addParams(Object value) {
 		this._params.add(value);
+		return this;
+	}
+
+	public Action setParams(Object[] value) {
+		this._params.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Action setParams(java.util.Collection<Object> values) {
+		this._params.addAll(values);
 		return this;
 	}
 
@@ -61,10 +71,20 @@ public class Action {
 
 	public java.util.List<Object> getParams() {
 		return this._params;
-	} 
+	}
 
 	public Action addStatements(Object value) {
 		this._statements.add(value);
+		return this;
+	}
+
+	public Action setStatements(Object[] value) {
+		this._statements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Action setStatements(java.util.Collection<Object> values) {
+		this._statements.addAll(values);
 		return this;
 	}
 
@@ -80,7 +100,7 @@ public class Action {
 
 	public java.util.List<Object> getStatements() {
 		return this._statements;
-	} 
+	}
 
 
 	@Override
@@ -98,5 +118,5 @@ public class Action {
 
 	static final String st = "Action(name,params,statements) ::= <<@action ~name~(~params:{it|~it~};separator=\",\"~) {\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
-				"}>> ";
-}  
+				"}>>";
+}

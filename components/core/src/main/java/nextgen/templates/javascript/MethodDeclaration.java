@@ -44,7 +44,7 @@ public class MethodDeclaration {
 	public MethodDeclaration removeConst() {
 		this._const = null;
 		return this;
-	} 
+	}
 
 	public MethodDeclaration setName(Object value) {
 		this._name = value;
@@ -66,7 +66,7 @@ public class MethodDeclaration {
 	public MethodDeclaration removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public MethodDeclaration setParameter(Object value) {
 		this._parameter = value;
@@ -88,10 +88,20 @@ public class MethodDeclaration {
 	public MethodDeclaration removeParameter() {
 		this._parameter = null;
 		return this;
-	} 
+	}
 
 	public MethodDeclaration addStatements(Object value) {
 		this._statements.add(value);
+		return this;
+	}
+
+	public MethodDeclaration setStatements(Object[] value) {
+		this._statements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public MethodDeclaration setStatements(java.util.Collection<Object> values) {
+		this._statements.addAll(values);
 		return this;
 	}
 
@@ -107,7 +117,7 @@ public class MethodDeclaration {
 
 	public java.util.List<Object> getStatements() {
 		return this._statements;
-	} 
+	}
 
 
 	@Override
@@ -125,5 +135,5 @@ public class MethodDeclaration {
 
 	static final String st = "MethodDeclaration(const,name,parameter,statements) ::= <<~if(const)~const ~endif~~name~ = ~if(parameter)~~parameter~~else~()~endif~ \\=\\> {\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
-				"}>> ";
-}  
+				"}>>";
+}

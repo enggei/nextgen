@@ -91,5 +91,5 @@ public class STG {
 				"\n" + 
 				"gt() ::= \">\"\n" + 
 				"\n" + 
-				"~templates:{it|~it~};separator=\"\\n\\n\"~~gt()~~gt()~>>";
-} 
+				"~templates:{it|~it~};separator=\"\\n\\n\"~ ~gt()~~gt()~ >>";
+}

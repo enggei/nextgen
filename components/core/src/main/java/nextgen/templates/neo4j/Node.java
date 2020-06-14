@@ -32,5 +32,5 @@ public class Node {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Node() ::= <<org.neo4j.graphdb.Node>> ";
-}  
+	static final String st = "Node() ::= <<org.neo4j.graphdb.Node>>";
+}

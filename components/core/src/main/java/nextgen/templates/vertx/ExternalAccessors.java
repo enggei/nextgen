@@ -115,4 +115,4 @@ public class ExternalAccessors {
 				"public ~type~ get~name;format=\"capitalize\"~(~type~ defaultValue) { \n" + 
 				"	return this._~name~ == null ? defaultValue : this._~name~;\n" + 
 				"}>>";
-} 
+}

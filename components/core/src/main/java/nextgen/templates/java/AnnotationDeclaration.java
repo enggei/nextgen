@@ -44,10 +44,20 @@ public class AnnotationDeclaration {
 	public AnnotationDeclaration removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public AnnotationDeclaration addMembers(Object value) {
 		this._members.add(value);
+		return this;
+	}
+
+	public AnnotationDeclaration setMembers(Object[] value) {
+		this._members.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public AnnotationDeclaration setMembers(java.util.Collection<Object> values) {
+		this._members.addAll(values);
 		return this;
 	}
 
@@ -63,10 +73,20 @@ public class AnnotationDeclaration {
 
 	public java.util.List<Object> getMembers() {
 		return this._members;
-	} 
+	}
 
 	public AnnotationDeclaration addModifiers(Object value) {
 		this._modifiers.add(value);
+		return this;
+	}
+
+	public AnnotationDeclaration setModifiers(Object[] value) {
+		this._modifiers.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public AnnotationDeclaration setModifiers(java.util.Collection<Object> values) {
+		this._modifiers.addAll(values);
 		return this;
 	}
 
@@ -82,10 +102,20 @@ public class AnnotationDeclaration {
 
 	public java.util.List<Object> getModifiers() {
 		return this._modifiers;
-	} 
+	}
 
 	public AnnotationDeclaration addAnnotations(Object value) {
 		this._annotations.add(value);
+		return this;
+	}
+
+	public AnnotationDeclaration setAnnotations(Object[] value) {
+		this._annotations.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public AnnotationDeclaration setAnnotations(java.util.Collection<Object> values) {
+		this._annotations.addAll(values);
 		return this;
 	}
 
@@ -101,7 +131,7 @@ public class AnnotationDeclaration {
 
 	public java.util.List<Object> getAnnotations() {
 		return this._annotations;
-	} 
+	}
 
 
 	@Override
@@ -120,5 +150,5 @@ public class AnnotationDeclaration {
 	static final String st = "AnnotationDeclaration(members,name,modifiers,annotations) ::= <<~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\n" + 
 				"~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~@interface ~name~ {\n" + 
 				"	~members:{it|~it~};separator=\"\\n\"~\n" + 
-				"}>> ";
-}  
+				"}>>";
+}

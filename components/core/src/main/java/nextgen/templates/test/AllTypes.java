@@ -5,10 +5,10 @@ public class AllTypes {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _single;
+	private TestInterface _single;
 	private Object _cond1;
 	private Object _cond2;
-	private java.util.List<Object> _list = new java.util.ArrayList<>();
+	private java.util.List<TestInterface> _list = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _kvList = new java.util.ArrayList<>();
 
 	AllTypes(org.stringtemplate.v4.STGroup stGroup) {
@@ -26,16 +26,16 @@ public class AllTypes {
 		return st.render().trim();
 	}
 
-	public AllTypes setSingle(Object value) {
+	public AllTypes setSingle(TestInterface value) {
 		this._single = value;
 		return this;
 	}
 
-	public Object getSingle() {
+	public TestInterface getSingle() {
 		return this._single;
 	}
 
-	public Object getSingle(Object defaultValue) {
+	public TestInterface getSingle(TestInterface defaultValue) {
 		return this._single == null ? defaultValue : this._single;
 	}
 
@@ -46,7 +46,7 @@ public class AllTypes {
 	public AllTypes removeSingle() {
 		this._single = null;
 		return this;
-	} 
+	}
 
 	public AllTypes setCond1(Object value) {
 		this._cond1 = value;
@@ -68,7 +68,7 @@ public class AllTypes {
 	public AllTypes removeCond1() {
 		this._cond1 = null;
 		return this;
-	} 
+	}
 
 	public AllTypes setCond2(Object value) {
 		this._cond2 = value;
@@ -90,14 +90,24 @@ public class AllTypes {
 	public AllTypes removeCond2() {
 		this._cond2 = null;
 		return this;
-	} 
+	}
 
-	public AllTypes addList(Object value) {
+	public AllTypes addList(TestInterface value) {
 		this._list.add(value);
 		return this;
 	}
 
-	public AllTypes removeList(Object value) {
+	public AllTypes setList(TestInterface[] value) {
+		this._list.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public AllTypes setList(java.util.Collection<TestInterface> values) {
+		this._list.addAll(values);
+		return this;
+	}
+
+	public AllTypes removeList(TestInterface value) {
 		this._list.remove(value);
 		return this;
 	}
@@ -107,9 +117,9 @@ public class AllTypes {
 		return this;
 	}
 
-	public java.util.List<Object> getList() {
+	public java.util.List<TestInterface> getList() {
 		return this._list;
-	} 
+	}
 
 	public AllTypes addKvList(Object _name, Object _value) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -154,7 +164,7 @@ public class AllTypes {
 			return this._value;
 		}
 
-	} 
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -173,5 +183,5 @@ public class AllTypes {
 				"then a list ~list:{it|~it~};separator=\",\"~, \n" + 
 				"and a kv-list : ~kvList:{it|~it.name~:~it.value~};separator=\",\"~\n" + 
 				"\n" + 
-				"If expression ~conditional(cond1,cond2)~>> ";
-}  
+				"If expression ~conditional(cond1,cond2)~>>";
+}

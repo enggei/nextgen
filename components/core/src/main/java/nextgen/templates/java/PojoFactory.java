@@ -42,7 +42,7 @@ public class PojoFactory {
 	public PojoFactory removePackage() {
 		this._package = null;
 		return this;
-	} 
+	}
 
 	public PojoFactory setName(Object value) {
 		this._name = value;
@@ -64,10 +64,20 @@ public class PojoFactory {
 	public PojoFactory removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public PojoFactory addEntities(Object value) {
 		this._entities.add(value);
+		return this;
+	}
+
+	public PojoFactory setEntities(Object[] value) {
+		this._entities.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public PojoFactory setEntities(java.util.Collection<Object> values) {
+		this._entities.addAll(values);
 		return this;
 	}
 
@@ -83,7 +93,7 @@ public class PojoFactory {
 
 	public java.util.List<Object> getEntities() {
 		return this._entities;
-	} 
+	}
 
 
 	@Override
@@ -108,5 +118,5 @@ public class PojoFactory {
 				"		return new ~it~();\n" + 
 				"	~eom()~\n" + 
 				"};separator=\"\\n\"~\n" + 
-				"}>> ";
-}  
+				"}>>";
+}

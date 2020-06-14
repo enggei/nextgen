@@ -131,4 +131,4 @@ public class WebpackConfig {
 				"		]\n" + 
 				"	}\n" + 
 				"};>>";
-} 
+}

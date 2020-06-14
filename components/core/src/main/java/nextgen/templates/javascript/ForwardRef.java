@@ -40,7 +40,7 @@ public class ForwardRef {
 	public ForwardRef removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public ForwardRef setForward(Object value) {
 		this._forward = value;
@@ -62,7 +62,7 @@ public class ForwardRef {
 	public ForwardRef removeForward() {
 		this._forward = null;
 		return this;
-	} 
+	}
 
 
 
@@ -81,5 +81,5 @@ public class ForwardRef {
 
 	static final String st = "ForwardRef(name,forward) ::= <<const ~name~ = React.forwardRef( (props, ref) => (\n" + 
 				"	~forward~\n" + 
-				"));>> ";
-}  
+				"));>>";
+}

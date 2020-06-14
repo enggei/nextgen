@@ -22,4 +22,4 @@ public enum DependencyScope {
 		@Override
 		public String toString() { return "import"; }
 	}
-} 
+}  

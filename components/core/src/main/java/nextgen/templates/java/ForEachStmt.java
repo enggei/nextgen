@@ -42,7 +42,7 @@ public class ForEachStmt {
 	public ForEachStmt removeBody() {
 		this._body = null;
 		return this;
-	} 
+	}
 
 	public ForEachStmt setVariable(Object value) {
 		this._variable = value;
@@ -64,7 +64,7 @@ public class ForEachStmt {
 	public ForEachStmt removeVariable() {
 		this._variable = null;
 		return this;
-	} 
+	}
 
 	public ForEachStmt setIterable(Object value) {
 		this._iterable = value;
@@ -86,7 +86,7 @@ public class ForEachStmt {
 	public ForEachStmt removeIterable() {
 		this._iterable = null;
 		return this;
-	} 
+	}
 
 
 
@@ -103,5 +103,5 @@ public class ForEachStmt {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ForEachStmt(body,variable,iterable) ::= <<for (~variable~ : ~iterable~) ~body~>> ";
-}  
+	static final String st = "ForEachStmt(body,variable,iterable) ::= <<for (~variable~ : ~iterable~) ~body~>>";
+}

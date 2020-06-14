@@ -109,6 +109,22 @@ public class STJsonFactory {
 		return new STParameterKey(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));
 	}
 
+	public static STInterface newSTInterface() { 
+		return new STInterface();
+	}
+
+	public static STInterface newSTInterfaceNoUuid() { 
+		return new STInterface().removeUuid();
+	}
+
+	public static STInterface newSTInterface(io.vertx.core.json.JsonObject jsonObject) { 
+		return new STInterface(jsonObject);
+	}
+
+	public static STInterface newSTInterface(java.io.File file) throws java.io.IOException { 
+		return new STInterface(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));
+	}
+
 	public static STEnum newSTEnum() { 
 		return new STEnum();
 	}

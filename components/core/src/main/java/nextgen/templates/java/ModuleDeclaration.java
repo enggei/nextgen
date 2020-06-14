@@ -48,10 +48,20 @@ public class ModuleDeclaration {
 	public ModuleDeclaration removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public ModuleDeclaration addProvidesDirective(Object value) {
 		this._providesDirective.add(value);
+		return this;
+	}
+
+	public ModuleDeclaration setProvidesDirective(Object[] value) {
+		this._providesDirective.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ModuleDeclaration setProvidesDirective(java.util.Collection<Object> values) {
+		this._providesDirective.addAll(values);
 		return this;
 	}
 
@@ -67,10 +77,20 @@ public class ModuleDeclaration {
 
 	public java.util.List<Object> getProvidesDirective() {
 		return this._providesDirective;
-	} 
+	}
 
 	public ModuleDeclaration addUsesDirective(Object value) {
 		this._usesDirective.add(value);
+		return this;
+	}
+
+	public ModuleDeclaration setUsesDirective(Object[] value) {
+		this._usesDirective.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ModuleDeclaration setUsesDirective(java.util.Collection<Object> values) {
+		this._usesDirective.addAll(values);
 		return this;
 	}
 
@@ -86,10 +106,20 @@ public class ModuleDeclaration {
 
 	public java.util.List<Object> getUsesDirective() {
 		return this._usesDirective;
-	} 
+	}
 
 	public ModuleDeclaration addRequiresDirective(Object value) {
 		this._requiresDirective.add(value);
+		return this;
+	}
+
+	public ModuleDeclaration setRequiresDirective(Object[] value) {
+		this._requiresDirective.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ModuleDeclaration setRequiresDirective(java.util.Collection<Object> values) {
+		this._requiresDirective.addAll(values);
 		return this;
 	}
 
@@ -105,10 +135,20 @@ public class ModuleDeclaration {
 
 	public java.util.List<Object> getRequiresDirective() {
 		return this._requiresDirective;
-	} 
+	}
 
 	public ModuleDeclaration addExportsDirective(Object value) {
 		this._exportsDirective.add(value);
+		return this;
+	}
+
+	public ModuleDeclaration setExportsDirective(Object[] value) {
+		this._exportsDirective.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ModuleDeclaration setExportsDirective(java.util.Collection<Object> values) {
+		this._exportsDirective.addAll(values);
 		return this;
 	}
 
@@ -124,10 +164,20 @@ public class ModuleDeclaration {
 
 	public java.util.List<Object> getExportsDirective() {
 		return this._exportsDirective;
-	} 
+	}
 
 	public ModuleDeclaration addOpens(Object value) {
 		this._opens.add(value);
+		return this;
+	}
+
+	public ModuleDeclaration setOpens(Object[] value) {
+		this._opens.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ModuleDeclaration setOpens(java.util.Collection<Object> values) {
+		this._opens.addAll(values);
 		return this;
 	}
 
@@ -143,7 +193,7 @@ public class ModuleDeclaration {
 
 	public java.util.List<Object> getOpens() {
 		return this._opens;
-	} 
+	}
 
 
 	@Override
@@ -165,5 +215,5 @@ public class ModuleDeclaration {
 				"    ~providesDirective:{it|provides ~it~};separator=\"\\n\"~\n" + 
 				"    ~usesDirective:{it|uses ~it~};separator=\"\\n\"~\n" + 
 				"    ~opens:{it|opens ~it~};separator=\"\\n\"~\n" + 
-				"}>> ";
-}  
+				"}>>";
+}

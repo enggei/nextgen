@@ -82,5 +82,5 @@ public class STEnumValue {
 	static final String st = "STEnumValue(name,lexical) ::= <<~name~~if(lexical)~() {\n" + 
 				"	@Override\n" + 
 				"	public String toString() { return \"~lexical~\"; }\n" + 
-				"}~endif~>>";
-} 
+				"}~endif~ >>";
+}

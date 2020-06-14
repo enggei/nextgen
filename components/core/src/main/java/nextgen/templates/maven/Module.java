@@ -42,7 +42,7 @@ public class Module {
 	public Module removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public Module setPom(Object value) {
 		this._pom = value;
@@ -64,7 +64,7 @@ public class Module {
 	public Module removePom() {
 		this._pom = null;
 		return this;
-	}
+	} 
 
 	public Module addModules(Object value) {
 		this._modules.add(value);
@@ -93,7 +93,7 @@ public class Module {
 
 	public java.util.List<Object> getModules() {
 		return this._modules;
-	}
+	} 
 
 
 	@Override
@@ -113,5 +113,5 @@ public class Module {
 				"Pom : ~pom~\n" + 
 				"\n" + 
 				"Modules:\n" + 
-				"~modules:{it|~it~};separator=\"\\n\"~>>";
+				"~modules:{it|~it~};separator=\"\\n\"~ >>";
 } 

@@ -79,4 +79,4 @@ public class AnnotationParam {
 	}
 
 	static final String st = "AnnotationParam(param) ::= <<~param:{it|~it.key~ = ~it.value~};separator=\", \"~>>";
-} 
+}

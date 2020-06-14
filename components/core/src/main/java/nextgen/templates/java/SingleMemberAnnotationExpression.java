@@ -40,10 +40,20 @@ public class SingleMemberAnnotationExpression {
 	public SingleMemberAnnotationExpression removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public SingleMemberAnnotationExpression addMembers(Object value) {
 		this._members.add(value);
+		return this;
+	}
+
+	public SingleMemberAnnotationExpression setMembers(Object[] value) {
+		this._members.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public SingleMemberAnnotationExpression setMembers(java.util.Collection<Object> values) {
+		this._members.addAll(values);
 		return this;
 	}
 
@@ -59,7 +69,7 @@ public class SingleMemberAnnotationExpression {
 
 	public java.util.List<Object> getMembers() {
 		return this._members;
-	} 
+	}
 
 
 	@Override
@@ -75,5 +85,5 @@ public class SingleMemberAnnotationExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SingleMemberAnnotationExpression(members,name) ::= <<@~name~~if(members)~(~members:{it|~it~};separator=\", \"~)~endif~>> ";
-}  
+	static final String st = "SingleMemberAnnotationExpression(members,name) ::= <<@~name~~if(members)~(~members:{it|~it~};separator=\", \"~)~endif~>>";
+}

@@ -40,7 +40,7 @@ public class Dependency {
 	public Dependency removeValue() {
 		this._value = null;
 		return this;
-	} 
+	}
 
 	public Dependency setPackageName(Object value) {
 		this._packageName = value;
@@ -62,7 +62,7 @@ public class Dependency {
 	public Dependency removePackageName() {
 		this._packageName = null;
 		return this;
-	} 
+	}
 
 
 
@@ -79,5 +79,5 @@ public class Dependency {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Dependency(value,packageName) ::= <<import ~value~ from '~packageName~';>> ";
-}  
+	static final String st = "Dependency(value,packageName) ::= <<import ~value~ from '~packageName~';>>";
+}

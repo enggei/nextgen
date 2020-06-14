@@ -115,4 +115,4 @@ public class PrimitiveAccessors {
 				"public ~type~ get~name;format=\"dotToCap\"~(~type~ defaultValue) { \n" + 
 				"	return jsonObject.get~type;format=\"capitalize\"~(\"~name~\", defaultValue);\n" + 
 				"}>>";
-} 
+}

@@ -38,7 +38,7 @@ public class NullLiteralExpression {
 	public NullLiteralExpression removeValue() {
 		this._value = null;
 		return this;
-	} 
+	}
 
 
 
@@ -55,5 +55,5 @@ public class NullLiteralExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NullLiteralExpression(value) ::= <<~value~>> ";
-}  
+	static final String st = "NullLiteralExpression(value) ::= <<~value~>>";
+}

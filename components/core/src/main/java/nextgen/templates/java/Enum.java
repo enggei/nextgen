@@ -42,7 +42,7 @@ public class Enum {
 	public Enum removePackage() {
 		this._package = null;
 		return this;
-	} 
+	}
 
 	public Enum setName(Object value) {
 		this._name = value;
@@ -64,10 +64,20 @@ public class Enum {
 	public Enum removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public Enum addEnumValues(Object value) {
 		this._enumValues.add(value);
+		return this;
+	}
+
+	public Enum setEnumValues(Object[] value) {
+		this._enumValues.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Enum setEnumValues(java.util.Collection<Object> values) {
+		this._enumValues.addAll(values);
 		return this;
 	}
 
@@ -83,7 +93,7 @@ public class Enum {
 
 	public java.util.List<Object> getEnumValues() {
 		return this._enumValues;
-	} 
+	}
 
 
 	@Override
@@ -104,5 +114,5 @@ public class Enum {
 				"public enum ~name~ {\n" + 
 				"\n" + 
 				"	~enumValues:{it|~it~};separator=\",\\n\"~\n" + 
-				"}>> ";
-}  
+				"}>>";
+}

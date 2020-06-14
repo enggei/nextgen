@@ -40,7 +40,7 @@ public class Style {
 	public Style removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 
 	public Style addProperties(Object _key, Object _value) {
@@ -86,7 +86,7 @@ public class Style {
 			return this._value;
 		}
 
-	} 
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -103,5 +103,5 @@ public class Style {
 
 	static final String st = "Style(name,properties) ::= <<~name~: {\n" + 
 				"	~properties:{it|~it.key~: ~it.value~};separator=\",\\n\"~\n" + 
-				"}>> ";
-}  
+				"}>>";
+}

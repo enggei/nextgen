@@ -63,6 +63,34 @@ public class STTemplate {
 		return jsonObject.getString("text", defaultValue);
 	}
 
+	public STTemplate addImplements(String value) { 
+		io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("implements");
+		if (jsonArray == null) jsonObject.put("implements", jsonArray = new io.vertx.core.json.JsonArray());
+		jsonArray.add(value);
+		return this;
+	}
+
+	public java.util.stream.Stream<String> getImplements() { 
+		return jsonObject.getJsonArray("implements", new io.vertx.core.json.JsonArray()).stream().map((o) -> (String)o);
+	}
+
+	public STTemplate removeImplements(String value) { 
+		final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("implements", new io.vertx.core.json.JsonArray());
+		for (int i = 0; i < jsonArray.size(); i++)  { 
+			final io.vertx.core.json.JsonObject o = jsonArray.getJsonObject(i);
+			if (value.equals(o))  { 
+				jsonArray.remove(i);
+				return this;
+			}
+		}
+		return this;
+	}
+
+	public STTemplate clearImplements() { 
+		jsonObject.put("implements", new io.vertx.core.json.JsonArray());
+		return this;
+	}
+
 	public STTemplate addParameters(STParameter value) { 
 		io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("parameters");
 		if (jsonArray == null) jsonObject.put("parameters", jsonArray = new io.vertx.core.json.JsonArray());

@@ -116,4 +116,4 @@ public class EnumAccessors {
 				"public ~type~ get~name;format=\"capitalize\"~(~type~ defaultValue) { \n" + 
 				"	return jsonObject.getString(\"~name~\") == null ? defaultValue : ~type~.valueOf(jsonObject.getString(\"~name~\"));\n" + 
 				"}>>";
-} 
+}

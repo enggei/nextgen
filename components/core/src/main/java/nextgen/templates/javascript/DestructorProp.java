@@ -40,10 +40,20 @@ public class DestructorProp {
 	public DestructorProp removeChild() {
 		this._child = null;
 		return this;
-	} 
+	}
 
 	public DestructorProp addProp(Object value) {
 		this._prop.add(value);
+		return this;
+	}
+
+	public DestructorProp setProp(Object[] value) {
+		this._prop.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public DestructorProp setProp(java.util.Collection<Object> values) {
+		this._prop.addAll(values);
 		return this;
 	}
 
@@ -59,7 +69,7 @@ public class DestructorProp {
 
 	public java.util.List<Object> getProp() {
 		return this._prop;
-	} 
+	}
 
 
 	@Override
@@ -75,5 +85,5 @@ public class DestructorProp {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "DestructorProp(child,prop) ::= <<const { ~prop:{it|~it~};separator=\", \"~ } = this.props~if(child)~.~child~~endif~;>> ";
-}  
+	static final String st = "DestructorProp(child,prop) ::= <<const { ~prop:{it|~it~};separator=\", \"~ } = this.props~if(child)~.~child~~endif~;>>";
+}

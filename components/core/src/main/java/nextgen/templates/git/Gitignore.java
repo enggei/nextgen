@@ -63,4 +63,4 @@ public class Gitignore {
 	}
 
 	static final String st = "gitignore(exclude) ::= <<~exclude:{it|/~it~/};separator=\"\\n\"~>>";
-} 
+}

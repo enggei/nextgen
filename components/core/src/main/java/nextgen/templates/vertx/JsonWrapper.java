@@ -234,4 +234,4 @@ public class JsonWrapper {
 				"		return ~if(lexical)~jsonObject.getString(\"~lexical~\")~else~jsonObject.encode()~endif~;\n" + 
 				"	}\n" + 
 				"}>>";
-} 
+}

@@ -1,6 +1,6 @@
 package nextgen.templates.test;
 
-public class Kv {
+public class Kv implements TestInterface {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -63,7 +63,7 @@ public class Kv {
 			return this._value;
 		}
 
-	} 
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -78,5 +78,5 @@ public class Kv {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "kv(value) ::= <<kv : ~value:{it|~it.key~:~it.value~};separator=\"\\n\"~>> ";
-}  
+	static final String st = "kv(value) ::= <<kv : ~value:{it|~it.key~:~it.value~};separator=\"\\n\"~>>";
+}

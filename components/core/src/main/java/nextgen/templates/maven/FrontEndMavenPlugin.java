@@ -42,7 +42,7 @@ public class FrontEndMavenPlugin {
 	public FrontEndMavenPlugin removePluginVersion() {
 		this._pluginVersion = null;
 		return this;
-	}
+	} 
 
 	public FrontEndMavenPlugin setInstallDirectory(Object value) {
 		this._installDirectory = value;
@@ -64,7 +64,7 @@ public class FrontEndMavenPlugin {
 	public FrontEndMavenPlugin removeInstallDirectory() {
 		this._installDirectory = null;
 		return this;
-	}
+	} 
 
 	public FrontEndMavenPlugin setNodeVersion(Object value) {
 		this._nodeVersion = value;
@@ -86,7 +86,7 @@ public class FrontEndMavenPlugin {
 	public FrontEndMavenPlugin removeNodeVersion() {
 		this._nodeVersion = null;
 		return this;
-	}
+	} 
 
 
 
@@ -135,5 +135,5 @@ public class FrontEndMavenPlugin {
 				"            </goals>\n" + 
 				"        </execution>\n" + 
 				"    </executions>\n" + 
-				"</plugin> >>";
+				"</plugin~gt()~ >>";
 } 

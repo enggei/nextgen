@@ -42,10 +42,20 @@ public class CompilationUnit {
 	public CompilationUnit removePackageDeclaration() {
 		this._packageDeclaration = null;
 		return this;
-	} 
+	}
 
 	public CompilationUnit addTypes(Object value) {
 		this._types.add(value);
+		return this;
+	}
+
+	public CompilationUnit setTypes(Object[] value) {
+		this._types.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public CompilationUnit setTypes(java.util.Collection<Object> values) {
+		this._types.addAll(values);
 		return this;
 	}
 
@@ -61,10 +71,20 @@ public class CompilationUnit {
 
 	public java.util.List<Object> getTypes() {
 		return this._types;
-	} 
+	}
 
 	public CompilationUnit addImportDeclaration(Object value) {
 		this._importDeclaration.add(value);
+		return this;
+	}
+
+	public CompilationUnit setImportDeclaration(Object[] value) {
+		this._importDeclaration.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public CompilationUnit setImportDeclaration(java.util.Collection<Object> values) {
+		this._importDeclaration.addAll(values);
 		return this;
 	}
 
@@ -80,7 +100,7 @@ public class CompilationUnit {
 
 	public java.util.List<Object> getImportDeclaration() {
 		return this._importDeclaration;
-	} 
+	}
 
 
 	@Override
@@ -100,5 +120,5 @@ public class CompilationUnit {
 				"\n" + 
 				"~importDeclaration:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
-				"~types:{it|~it~};separator=\"\\n\\n\"~>> ";
-}  
+				"~types:{it|~it~};separator=\"\\n\\n\"~>>";
+}

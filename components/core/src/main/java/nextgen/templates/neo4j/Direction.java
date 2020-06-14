@@ -32,5 +32,5 @@ public class Direction {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Direction() ::= <<org.neo4j.graphdb.Direction>> ";
-}  
+	static final String st = "Direction() ::= <<org.neo4j.graphdb.Direction>>";
+}

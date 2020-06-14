@@ -42,7 +42,7 @@ public class AnnotationMemberDeclaration {
 	public AnnotationMemberDeclaration removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public AnnotationMemberDeclaration setType(Object value) {
 		this._type = value;
@@ -64,7 +64,7 @@ public class AnnotationMemberDeclaration {
 	public AnnotationMemberDeclaration removeType() {
 		this._type = null;
 		return this;
-	} 
+	}
 
 	public AnnotationMemberDeclaration setDefaultValue(Object value) {
 		this._defaultValue = value;
@@ -86,7 +86,7 @@ public class AnnotationMemberDeclaration {
 	public AnnotationMemberDeclaration removeDefaultValue() {
 		this._defaultValue = null;
 		return this;
-	} 
+	}
 
 
 
@@ -103,5 +103,5 @@ public class AnnotationMemberDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AnnotationMemberDeclaration(name,type,defaultValue) ::= <<~type~ ~name~()~if(defaultValue)~ default ~defaultValue~~endif~;>> ";
-}  
+	static final String st = "AnnotationMemberDeclaration(name,type,defaultValue) ::= <<~type~ ~name~()~if(defaultValue)~ default ~defaultValue~~endif~;>>";
+}

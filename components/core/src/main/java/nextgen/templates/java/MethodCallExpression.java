@@ -44,7 +44,7 @@ public class MethodCallExpression {
 	public MethodCallExpression removeScope() {
 		this._scope = null;
 		return this;
-	} 
+	}
 
 	public MethodCallExpression setName(Object value) {
 		this._name = value;
@@ -66,10 +66,20 @@ public class MethodCallExpression {
 	public MethodCallExpression removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public MethodCallExpression addArguments(Object value) {
 		this._arguments.add(value);
+		return this;
+	}
+
+	public MethodCallExpression setArguments(Object[] value) {
+		this._arguments.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public MethodCallExpression setArguments(java.util.Collection<Object> values) {
+		this._arguments.addAll(values);
 		return this;
 	}
 
@@ -85,10 +95,20 @@ public class MethodCallExpression {
 
 	public java.util.List<Object> getArguments() {
 		return this._arguments;
-	} 
+	}
 
 	public MethodCallExpression addTypeArguments(Object value) {
 		this._typeArguments.add(value);
+		return this;
+	}
+
+	public MethodCallExpression setTypeArguments(Object[] value) {
+		this._typeArguments.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public MethodCallExpression setTypeArguments(java.util.Collection<Object> values) {
+		this._typeArguments.addAll(values);
 		return this;
 	}
 
@@ -104,7 +124,7 @@ public class MethodCallExpression {
 
 	public java.util.List<Object> getTypeArguments() {
 		return this._typeArguments;
-	} 
+	}
 
 
 	@Override
@@ -120,5 +140,5 @@ public class MethodCallExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MethodCallExpression(scope,arguments,typeArguments,name) ::= <<~if(scope)~~scope~.~endif~~if(typeArguments)~<~typeArguments:{it|~it~};separator=\",\"~>~endif~~name~(~arguments:{it|~it~};separator=\", \"~)>> ";
-}  
+	static final String st = "MethodCallExpression(scope,arguments,typeArguments,name) ::= <<~if(scope)~~scope~.~endif~~if(typeArguments)~<~typeArguments:{it|~it~};separator=\",\"~>~endif~~name~(~arguments:{it|~it~};separator=\", \"~)>>";
+}

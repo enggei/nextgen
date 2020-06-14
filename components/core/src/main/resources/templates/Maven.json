@@ -5,51 +5,53 @@
   "templates" : [ {
     "uuid" : "74ebc0f1-a6ef-409f-b207-4190ef252c72",
     "name" : "build",
-    "text" : "<build>\r\n~if(testResources)~\r\n\t<testResources>\r\n\t\t<testResource>\r\n\t\t\t~testResources:{it|<~it.name~>~it.value~</~it.name~>};separator=\"\\n\"~\r\n\t\t</testResource>\r\n\t</testResources>\r\n~endif~\r\n\t<plugins>\r\n\t\t~plugin:{it|~it~};separator=\"\\n\"~\r\n\t</plugins>\r\n</build>",
+    "text" : "<build>\n~if(testResources)~\n\t<testResources>\n\t\t<testResource>\n\t\t\t~testResources:{it|<~it.name~>~it.value~</~it.name~>};separator=\"\\n\"~\n\t\t</testResource>\n\t</testResources>\n~endif~\n\t<plugins>\n\t\t~plugin:{it|~it~};separator=\"\\n\"~\n\t</plugins>\n</build> ",
     "parameters" : [ {
-      "uuid" : "90114fdd-93d6-492b-a47e-76cad62934b4",
+      "uuid" : "c020c315-170c-4a71-8352-140b698d29b8",
       "name" : "testResources",
       "type" : "KVLIST",
+      "argumentType" : "Object",
       "keys" : [ {
-        "uuid" : "2d1569ef-04a0-479f-bd27-30e0f4a54f69",
+        "uuid" : "ee445638-17e6-4332-b9cf-dd73c6de987e",
         "name" : "name",
         "argumentType" : "Object"
       }, {
-        "uuid" : "7cb91a1a-ba44-41c4-8a05-61f9fdf4d20f",
+        "uuid" : "e131cf6e-f617-439b-883d-f794585dc2fe",
         "name" : "value",
         "argumentType" : "Object"
       } ]
     }, {
-      "uuid" : "9cffc3a8-764e-4e01-bd37-3b3fdff7eea8",
+      "uuid" : "e8a0727f-4dbe-4cc0-8cad-39906f6eacb5",
       "name" : "plugin",
-      "type" : "LIST"
+      "type" : "LIST",
+      "argumentType" : "Object"
     } ]
   }, {
     "uuid" : "68f2245d-08e1-42db-aafa-7245a5eda5b0",
     "name" : "dependency",
     "text" : "<dependency>\n\t<groupId>~groupId~</groupId>\n\t<artifactId>~artifactId~</artifactId>\n\t<version>~version~</version>~if(scope)~\n\t<scope>~scope;format=\"toLower\"~</scope>~endif~~if(systemPath)~\n\t<systemPath>~systemPath~</systemPath>\n\t~endif~\n\t\n</dependency> ",
     "parameters" : [ {
-      "uuid" : "bae24156-e833-4edc-a46f-2d0f93ec1c2b",
+      "uuid" : "7d1193ae-6e6b-44c9-8ff6-f2e18e6d0ba2",
       "name" : "groupId",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "a2c9fadd-d991-4f14-bfc3-ed8fe123ac18",
+      "uuid" : "28ab3485-4e20-4430-b4f0-6e30b24b0212",
       "name" : "artifactId",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "c9a11d77-77f6-470a-a173-76384d7c048a",
+      "uuid" : "00af0d34-8e7d-4ebb-be3d-23772b6db9ec",
       "name" : "version",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "0f7f9be9-5883-4ed7-8213-afb8d584eea7",
+      "uuid" : "1d3f28a3-cfb7-4611-8ec7-be173b909a70",
       "name" : "scope",
       "type" : "SINGLE",
       "argumentType" : "DependencyScope"
     }, {
-      "uuid" : "d89c6b18-56f7-4c23-bf04-3981611f5a4c",
+      "uuid" : "c421033a-a3ea-40df-bf04-b98316da98cc",
       "name" : "systemPath",
       "type" : "SINGLE",
       "argumentType" : "Object"
@@ -57,24 +59,27 @@
   }, {
     "uuid" : "cb7743c2-f332-4f36-81e9-21d2aa69c103",
     "name" : "execution",
-    "text" : "<execution>\r\n    <phase>package</phase>\r\n    <goals>\r\n        <goal>shade</goal>\r\n    </goals>\r\n</execution>",
+    "text" : "<execution>\n    <phase>package</phase>\n    <goals>\n        <goal>shade</goal>\n    </goals>\n</execution> ",
     "parameters" : [ ]
   }, {
     "uuid" : "9b6aa1aa-6074-4744-823d-ad9edf0f1e0f",
     "name" : "parent",
-    "text" : "<parent>\r\n\t<artifactId>~artifactId~</artifactId>\r\n\t<groupId>~groupId~</groupId>\r\n\t<version>~version~</version>\r\n</parent>",
+    "text" : "<parent>\n\t<artifactId>~artifactId~</artifactId>\n\t<groupId>~groupId~</groupId>\n\t<version>~version~</version>\n</parent> ",
     "parameters" : [ {
-      "uuid" : "68b2e508-f130-4909-8355-2077bc7194c9",
+      "uuid" : "31f79fc6-fbf9-4bec-9a35-1bf26568ba2e",
       "name" : "artifactId",
-      "type" : "SINGLE"
+      "type" : "SINGLE",
+      "argumentType" : "Object"
     }, {
-      "uuid" : "a7bc01ef-61f0-453f-8375-5f0136e4b510",
+      "uuid" : "6f88ee1d-bed7-4905-9971-e21770387fcc",
       "name" : "groupId",
-      "type" : "SINGLE"
+      "type" : "SINGLE",
+      "argumentType" : "Object"
     }, {
-      "uuid" : "14ca729a-b05f-48cc-9643-4740c199bbc1",
+      "uuid" : "b0948cee-73e2-41c5-bac7-bed081aa87e6",
       "name" : "version",
-      "type" : "SINGLE"
+      "type" : "SINGLE",
+      "argumentType" : "Object"
     } ]
   }, {
     "uuid" : "7a760f05-7071-4259-a27b-8abfbf1d6ce1",
@@ -171,19 +176,22 @@
     "children" : [ {
       "uuid" : "6c40ef07-6e2d-4fbe-89e3-49248b434503",
       "name" : "frontEndMavenPlugin",
-      "text" : "<!--npm plugin-->\r\n<plugin>\r\n    <groupId>com.github.eirslett</groupId>\r\n    <artifactId>frontend-maven-plugin</artifactId>\r\n    <version>~if(pluginVersion)~~pluginVersion~~else~1.10.0~endif~</version>\r\n    <configuration>\r\n        <installDirectory>~if(installDirectory)~~installDirectory~~else~target~endif~</installDirectory>\r\n        <nodeVersion>v~nodeVersion~</nodeVersion>\r\n    </configuration>\r\n    <executions>\r\n        <execution>\r\n            <id>install node and npm</id>\r\n            <goals>\r\n                <goal>install-node-and-npm</goal>\r\n            </goals>\r\n        </execution>\r\n        <execution>\r\n            <id>npm install</id>\r\n            <goals>\r\n                <goal>npm</goal>\r\n            </goals>\r\n            <configuration>\r\n                <arguments>install</arguments>\r\n            </configuration>\r\n        </execution>\r\n        <execution>\r\n            <id>webpack build</id>\r\n            <goals>\r\n                <goal>webpack</goal>\r\n            </goals>\r\n        </execution>\r\n    </executions>\r\n</plugin>",
+      "text" : "<!--npm plugin-->\n<plugin>\n    <groupId>com.github.eirslett</groupId>\n    <artifactId>frontend-maven-plugin</artifactId>\n    <version>~if(pluginVersion)~~pluginVersion~~else~1.10.0~endif~</version>\n    <configuration>\n        <installDirectory>~if(installDirectory)~~installDirectory~~else~target~endif~</installDirectory>\n        <nodeVersion>v~nodeVersion~</nodeVersion>\n    </configuration>\n    <executions>\n        <execution>\n            <id>install node and npm</id>\n            <goals>\n                <goal>install-node-and-npm</goal>\n            </goals>\n        </execution>\n        <execution>\n            <id>npm install</id>\n            <goals>\n                <goal>npm</goal>\n            </goals>\n            <configuration>\n                <arguments>install</arguments>\n            </configuration>\n        </execution>\n        <execution>\n            <id>webpack build</id>\n            <goals>\n                <goal>webpack</goal>\n            </goals>\n        </execution>\n    </executions>\n</plugin~gt()~",
       "parameters" : [ {
-        "uuid" : "4ac6256d-6086-42b8-86bd-2c8d549e4fbd",
+        "uuid" : "5891705b-46b2-47c7-8210-9d0d26e65c96",
         "name" : "pluginVersion",
-        "type" : "SINGLE"
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       }, {
-        "uuid" : "e5204438-8c87-49a6-9ce7-a7686b6d7bdf",
+        "uuid" : "b7fd3c2e-bcda-4b58-a213-eb43140239ea",
         "name" : "installDirectory",
-        "type" : "SINGLE"
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       }, {
-        "uuid" : "d83a449f-1cef-4a92-b204-4245f477c820",
+        "uuid" : "59d45e89-6cff-4296-84f1-7fb3b01b5283",
         "name" : "nodeVersion",
-        "type" : "SINGLE"
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       } ]
     }, {
       "uuid" : "e2949dab-710d-40d6-86ac-8f08b63ca5ce",

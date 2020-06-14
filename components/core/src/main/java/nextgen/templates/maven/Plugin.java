@@ -46,7 +46,7 @@ public class Plugin {
 	public Plugin removeGroupId() {
 		this._groupId = null;
 		return this;
-	}
+	} 
 
 	public Plugin setArtifactId(Object value) {
 		this._artifactId = value;
@@ -68,7 +68,7 @@ public class Plugin {
 	public Plugin removeArtifactId() {
 		this._artifactId = null;
 		return this;
-	}
+	} 
 
 	public Plugin setVersion(Object value) {
 		this._version = value;
@@ -90,7 +90,7 @@ public class Plugin {
 	public Plugin removeVersion() {
 		this._version = null;
 		return this;
-	}
+	} 
 
 	public Plugin addExecutions(Object value) {
 		this._executions.add(value);
@@ -119,7 +119,7 @@ public class Plugin {
 
 	public java.util.List<Object> getExecutions() {
 		return this._executions;
-	}
+	} 
 
 	public Plugin addConfiguration(Object _name, Object _value) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -164,7 +164,7 @@ public class Plugin {
 			return this._value;
 		}
 
-	}
+	} 
 
 	@Override
 	public boolean equals(Object o) {

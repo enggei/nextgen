@@ -40,7 +40,7 @@ public class FieldAccessExpression {
 	public FieldAccessExpression removeScope() {
 		this._scope = null;
 		return this;
-	} 
+	}
 
 	public FieldAccessExpression setName(Object value) {
 		this._name = value;
@@ -62,7 +62,7 @@ public class FieldAccessExpression {
 	public FieldAccessExpression removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 
 
@@ -79,5 +79,5 @@ public class FieldAccessExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "FieldAccessExpression(scope,name) ::= <<~if(scope)~~scope~.~endif~~name~>> ";
-}  
+	static final String st = "FieldAccessExpression(scope,name) ::= <<~if(scope)~~scope~.~endif~~name~>>";
+}

@@ -106,9 +106,9 @@ public void test~template;format="capitalize"~() {
 	System.out.println("\n--- TEST ~template~:\n" + new~template;format="capitalize"~());
 }>>
 
-STEntity(packageName,name,singleFields,listFields,kvListFields,template,singleAccessors,listAccessors,kvListAccessors,stString) ::= <<package ~packageName~;
+STEntity(packageName,name,interfaces,singleFields,listFields,kvListFields,template,singleAccessors,listAccessors,kvListAccessors,stString) ::= <<package ~packageName~;
 
-public class ~name~ {
+public class ~name~~if(interfaces)~ implements ~endif~~interfaces:{it|~it~};separator=", "~ {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -150,7 +150,7 @@ public class ~name~ {
 	}
 	
 	~if(stString)~static final String st = "~stString~";~endif~
-} >>
+}>>
 
 entityListAccessors(entity,name,type) ::= <<public ~entity~ add~name;format="capitalize"~(~if(type)~~type~~else~Object~endif~ value) {
 	this._~name~.add(value);
@@ -261,6 +261,12 @@ gt() ::= ">"
 ~templates:{it|~it~};separator="\n\n"~~gt()~~gt()~ >>
 
 Template(name,params,content) ::= <<~name~(~params:{it|~it~};separator=","~) ::= <<~content~~gt()~~gt()~>>
+
+STInterface(packageName,name) ::= <<package ~packageName~;
+
+public interface ~name~ {
+	
+}>>
 
 eom() ::= "}"
 

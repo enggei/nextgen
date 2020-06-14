@@ -82,4 +82,4 @@ public class Poko {
 	static final String st = "Poko(packageDeclaration,classDeclaration) ::= <<~packageDeclaration~\n" + 
 				"\n" + 
 				"~classDeclaration~>>";
-} 
+}

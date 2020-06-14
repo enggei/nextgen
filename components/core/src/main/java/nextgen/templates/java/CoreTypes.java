@@ -18,4 +18,4 @@ public enum CoreTypes {
 		@Override
 		public String toString() { return "java.util.concurrent.atomic.AtomicLong"; }
 	}
-}  
+} 

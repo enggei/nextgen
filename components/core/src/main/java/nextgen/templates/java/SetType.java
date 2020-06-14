@@ -38,7 +38,7 @@ public class SetType {
 	public SetType removeType() {
 		this._type = null;
 		return this;
-	} 
+	}
 
 
 
@@ -55,5 +55,5 @@ public class SetType {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SetType(type) ::= <<java.util.Set<~type~> >> ";
-}  
+	static final String st = "SetType(type) ::= <<java.util.Set<~type~> >>";
+}

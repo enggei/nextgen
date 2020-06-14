@@ -42,7 +42,7 @@ public class ArrayCreationExpression {
 	public ArrayCreationExpression removeInitializer() {
 		this._initializer = null;
 		return this;
-	} 
+	}
 
 	public ArrayCreationExpression setType(Object value) {
 		this._type = value;
@@ -64,10 +64,20 @@ public class ArrayCreationExpression {
 	public ArrayCreationExpression removeType() {
 		this._type = null;
 		return this;
-	} 
+	}
 
 	public ArrayCreationExpression addLevels(Object value) {
 		this._levels.add(value);
+		return this;
+	}
+
+	public ArrayCreationExpression setLevels(Object[] value) {
+		this._levels.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ArrayCreationExpression setLevels(java.util.Collection<Object> values) {
+		this._levels.addAll(values);
 		return this;
 	}
 
@@ -83,7 +93,7 @@ public class ArrayCreationExpression {
 
 	public java.util.List<Object> getLevels() {
 		return this._levels;
-	} 
+	}
 
 
 	@Override
@@ -99,5 +109,5 @@ public class ArrayCreationExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ArrayCreationExpression(initializer,type,levels) ::= <<new ~type~~levels:{it|~it~}~~if(initializer)~ ~initializer~~endif~>> ";
-}  
+	static final String st = "ArrayCreationExpression(initializer,type,levels) ::= <<new ~type~~levels:{it|~it~}~~if(initializer)~ ~initializer~~endif~>>";
+}

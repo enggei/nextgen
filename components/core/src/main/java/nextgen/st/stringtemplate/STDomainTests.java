@@ -164,5 +164,5 @@ public class STDomainTests {
 				"	}\n" + 
 				"\n" + 
 				"	~testcases:{it|~it.impl~};separator=\"\\n\\n\"~\n" + 
-				"}>>";
-} 
+				"} >>";
+}

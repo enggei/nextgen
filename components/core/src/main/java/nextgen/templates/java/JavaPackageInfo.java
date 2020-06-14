@@ -42,10 +42,20 @@ public class JavaPackageInfo {
 	public JavaPackageInfo removePackageName() {
 		this._packageName = null;
 		return this;
-	} 
+	}
 
 	public JavaPackageInfo addInterfaces(Object value) {
 		this._interfaces.add(value);
+		return this;
+	}
+
+	public JavaPackageInfo setInterfaces(Object[] value) {
+		this._interfaces.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public JavaPackageInfo setInterfaces(java.util.Collection<Object> values) {
+		this._interfaces.addAll(values);
 		return this;
 	}
 
@@ -61,10 +71,20 @@ public class JavaPackageInfo {
 
 	public java.util.List<Object> getInterfaces() {
 		return this._interfaces;
-	} 
+	}
 
 	public JavaPackageInfo addClasses(Object value) {
 		this._classes.add(value);
+		return this;
+	}
+
+	public JavaPackageInfo setClasses(Object[] value) {
+		this._classes.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public JavaPackageInfo setClasses(java.util.Collection<Object> values) {
+		this._classes.addAll(values);
 		return this;
 	}
 
@@ -80,7 +100,7 @@ public class JavaPackageInfo {
 
 	public java.util.List<Object> getClasses() {
 		return this._classes;
-	} 
+	}
 
 
 	@Override
@@ -102,5 +122,5 @@ public class JavaPackageInfo {
 				"	~interfaces:{it|~it.name~};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"classes:\n" + 
-				"	~classes:{it|~it.name~};separator=\"\\n\"~>> ";
-}  
+				"	~classes:{it|~it.name~};separator=\"\\n\"~>>";
+}

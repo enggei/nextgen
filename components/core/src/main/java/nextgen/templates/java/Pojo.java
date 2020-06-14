@@ -46,7 +46,7 @@ public class Pojo {
 	public Pojo removePackage() {
 		this._package = null;
 		return this;
-	} 
+	}
 
 	public Pojo setName(String value) {
 		this._name = value;
@@ -68,10 +68,20 @@ public class Pojo {
 	public Pojo removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public Pojo addAccessors(Object value) {
 		this._accessors.add(value);
+		return this;
+	}
+
+	public Pojo setAccessors(Object[] value) {
+		this._accessors.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Pojo setAccessors(java.util.Collection<Object> values) {
+		this._accessors.addAll(values);
 		return this;
 	}
 
@@ -87,10 +97,20 @@ public class Pojo {
 
 	public java.util.List<Object> getAccessors() {
 		return this._accessors;
-	} 
+	}
 
 	public Pojo addLexical(String value) {
 		this._lexical.add(value);
+		return this;
+	}
+
+	public Pojo setLexical(String[] value) {
+		this._lexical.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Pojo setLexical(java.util.Collection<String> values) {
+		this._lexical.addAll(values);
 		return this;
 	}
 
@@ -106,7 +126,7 @@ public class Pojo {
 
 	public java.util.List<String> getLexical() {
 		return this._lexical;
-	} 
+	}
 
 	public Pojo addFields(Object _type, String _name, Object _initializer) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -159,7 +179,7 @@ public class Pojo {
 			return this._initializer;
 		}
 
-	} 
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -214,5 +234,5 @@ public class Pojo {
 				"	public int hashCode() {\n" + 
 				"		return java.util.Objects.hash(uuid);\n" + 
 				"	}\n" + 
-				"}>> ";
-}  
+				"}>>";
+}

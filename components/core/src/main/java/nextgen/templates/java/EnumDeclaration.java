@@ -50,10 +50,20 @@ public class EnumDeclaration {
 	public EnumDeclaration removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public EnumDeclaration addMembers(Object value) {
 		this._members.add(value);
+		return this;
+	}
+
+	public EnumDeclaration setMembers(Object[] value) {
+		this._members.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public EnumDeclaration setMembers(java.util.Collection<Object> values) {
+		this._members.addAll(values);
 		return this;
 	}
 
@@ -69,10 +79,20 @@ public class EnumDeclaration {
 
 	public java.util.List<Object> getMembers() {
 		return this._members;
-	} 
+	}
 
 	public EnumDeclaration addAnnotations(Object value) {
 		this._annotations.add(value);
+		return this;
+	}
+
+	public EnumDeclaration setAnnotations(Object[] value) {
+		this._annotations.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public EnumDeclaration setAnnotations(java.util.Collection<Object> values) {
+		this._annotations.addAll(values);
 		return this;
 	}
 
@@ -88,10 +108,20 @@ public class EnumDeclaration {
 
 	public java.util.List<Object> getAnnotations() {
 		return this._annotations;
-	} 
+	}
 
 	public EnumDeclaration addImplementedTypes(Object value) {
 		this._implementedTypes.add(value);
+		return this;
+	}
+
+	public EnumDeclaration setImplementedTypes(Object[] value) {
+		this._implementedTypes.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public EnumDeclaration setImplementedTypes(java.util.Collection<Object> values) {
+		this._implementedTypes.addAll(values);
 		return this;
 	}
 
@@ -107,10 +137,20 @@ public class EnumDeclaration {
 
 	public java.util.List<Object> getImplementedTypes() {
 		return this._implementedTypes;
-	} 
+	}
 
 	public EnumDeclaration addEntries(Object value) {
 		this._entries.add(value);
+		return this;
+	}
+
+	public EnumDeclaration setEntries(Object[] value) {
+		this._entries.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public EnumDeclaration setEntries(java.util.Collection<Object> values) {
+		this._entries.addAll(values);
 		return this;
 	}
 
@@ -126,10 +166,20 @@ public class EnumDeclaration {
 
 	public java.util.List<Object> getEntries() {
 		return this._entries;
-	} 
+	}
 
 	public EnumDeclaration addExtend(Object value) {
 		this._extend.add(value);
+		return this;
+	}
+
+	public EnumDeclaration setExtend(Object[] value) {
+		this._extend.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public EnumDeclaration setExtend(java.util.Collection<Object> values) {
+		this._extend.addAll(values);
 		return this;
 	}
 
@@ -145,10 +195,20 @@ public class EnumDeclaration {
 
 	public java.util.List<Object> getExtend() {
 		return this._extend;
-	} 
+	}
 
 	public EnumDeclaration addModifiers(Object value) {
 		this._modifiers.add(value);
+		return this;
+	}
+
+	public EnumDeclaration setModifiers(Object[] value) {
+		this._modifiers.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public EnumDeclaration setModifiers(java.util.Collection<Object> values) {
+		this._modifiers.addAll(values);
 		return this;
 	}
 
@@ -164,7 +224,7 @@ public class EnumDeclaration {
 
 	public java.util.List<Object> getModifiers() {
 		return this._modifiers;
-	} 
+	}
 
 
 	@Override
@@ -186,5 +246,5 @@ public class EnumDeclaration {
 				"	~entries:{it|~it~};separator=\",\\n\"~~if(members)~;~endif~\n" + 
 				"\n" + 
 				"	~members:{it|~it~};separator=\"\\n\\n\"~\n" + 
-				"}>> ";
-}  
+				"}>>";
+}

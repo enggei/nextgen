@@ -38,7 +38,7 @@ public class ReturnStmt {
 	public ReturnStmt removeExpression() {
 		this._expression = null;
 		return this;
-	} 
+	}
 
 
 
@@ -55,5 +55,5 @@ public class ReturnStmt {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ReturnStmt(expression) ::= <<return~if(expression)~ ~expression~~endif~;>> ";
-}  
+	static final String st = "ReturnStmt(expression) ::= <<return~if(expression)~ ~expression~~endif~;>>";
+}

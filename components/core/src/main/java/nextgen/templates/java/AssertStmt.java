@@ -40,7 +40,7 @@ public class AssertStmt {
 	public AssertStmt removeMessage() {
 		this._message = null;
 		return this;
-	} 
+	}
 
 	public AssertStmt setExpression(Object value) {
 		this._expression = value;
@@ -62,7 +62,7 @@ public class AssertStmt {
 	public AssertStmt removeExpression() {
 		this._expression = null;
 		return this;
-	} 
+	}
 
 
 
@@ -79,5 +79,5 @@ public class AssertStmt {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AssertStmt(message,expression) ::= <<assert ~expression~~if(message)~ : ~message~~endif~;>> ";
-}  
+	static final String st = "AssertStmt(message,expression) ::= <<assert ~expression~~if(message)~ : ~message~~endif~;>>";
+}

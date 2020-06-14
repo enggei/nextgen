@@ -46,7 +46,7 @@ public class Parameter {
 	public Parameter removeType() {
 		this._type = null;
 		return this;
-	} 
+	}
 
 	public Parameter setIsVarargs(Object value) {
 		this._isVarargs = value;
@@ -68,7 +68,7 @@ public class Parameter {
 	public Parameter removeIsVarargs() {
 		this._isVarargs = null;
 		return this;
-	} 
+	}
 
 	public Parameter setName(Object value) {
 		this._name = value;
@@ -90,10 +90,20 @@ public class Parameter {
 	public Parameter removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public Parameter addAnnotations(Object value) {
 		this._annotations.add(value);
+		return this;
+	}
+
+	public Parameter setAnnotations(Object[] value) {
+		this._annotations.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Parameter setAnnotations(java.util.Collection<Object> values) {
+		this._annotations.addAll(values);
 		return this;
 	}
 
@@ -109,10 +119,20 @@ public class Parameter {
 
 	public java.util.List<Object> getAnnotations() {
 		return this._annotations;
-	} 
+	}
 
 	public Parameter addModifiers(Object value) {
 		this._modifiers.add(value);
+		return this;
+	}
+
+	public Parameter setModifiers(Object[] value) {
+		this._modifiers.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Parameter setModifiers(java.util.Collection<Object> values) {
+		this._modifiers.addAll(values);
 		return this;
 	}
 
@@ -128,7 +148,7 @@ public class Parameter {
 
 	public java.util.List<Object> getModifiers() {
 		return this._modifiers;
-	} 
+	}
 
 
 	@Override
@@ -144,5 +164,5 @@ public class Parameter {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Parameter(annotations,modifiers,type,isVarargs,name) ::= <<~annotations:{it|~it~};separator=\" \"~~if(annotations)~ ~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~if(type)~~type~ ~endif~~if(isVarargs)~... ~endif~~name~>> ";
-}  
+	static final String st = "Parameter(annotations,modifiers,type,isVarargs,name) ::= <<~annotations:{it|~it~};separator=\" \"~~if(annotations)~ ~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~if(type)~~type~ ~endif~~if(isVarargs)~... ~endif~~name~>>";
+}

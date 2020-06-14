@@ -17,7 +17,8 @@ public class StringTemplateST {
 	STEnum.st + "\n" + 
 	STEnumValue.st + "\n" + 
 	STG.st + "\n" + 
-	Template.st + "\n";
+	Template.st + "\n" + 
+	STInterface.st + "\n";
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -103,6 +104,10 @@ public class StringTemplateST {
 
 	public static Template newTemplate() {
 		return new Template(stGroup);
+	}
+
+	public static STInterface newSTInterface() {
+		return new STInterface(stGroup);
 	}
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {

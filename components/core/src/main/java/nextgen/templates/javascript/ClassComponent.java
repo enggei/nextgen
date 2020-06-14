@@ -54,10 +54,20 @@ public class ClassComponent {
 	public ClassComponent removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public ClassComponent addDependencies(Object value) {
 		this._dependencies.add(value);
+		return this;
+	}
+
+	public ClassComponent setDependencies(Object[] value) {
+		this._dependencies.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassComponent setDependencies(java.util.Collection<Object> values) {
+		this._dependencies.addAll(values);
 		return this;
 	}
 
@@ -73,10 +83,20 @@ public class ClassComponent {
 
 	public java.util.List<Object> getDependencies() {
 		return this._dependencies;
-	} 
+	}
 
 	public ClassComponent addComponents(Object value) {
 		this._components.add(value);
+		return this;
+	}
+
+	public ClassComponent setComponents(Object[] value) {
+		this._components.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassComponent setComponents(java.util.Collection<Object> values) {
+		this._components.addAll(values);
 		return this;
 	}
 
@@ -92,10 +112,20 @@ public class ClassComponent {
 
 	public java.util.List<Object> getComponents() {
 		return this._components;
-	} 
+	}
 
 	public ClassComponent addDecorators(Object value) {
 		this._decorators.add(value);
+		return this;
+	}
+
+	public ClassComponent setDecorators(Object[] value) {
+		this._decorators.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassComponent setDecorators(java.util.Collection<Object> values) {
+		this._decorators.addAll(values);
 		return this;
 	}
 
@@ -111,10 +141,20 @@ public class ClassComponent {
 
 	public java.util.List<Object> getDecorators() {
 		return this._decorators;
-	} 
+	}
 
 	public ClassComponent addState(Object value) {
 		this._state.add(value);
+		return this;
+	}
+
+	public ClassComponent setState(Object[] value) {
+		this._state.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassComponent setState(java.util.Collection<Object> values) {
+		this._state.addAll(values);
 		return this;
 	}
 
@@ -130,10 +170,20 @@ public class ClassComponent {
 
 	public java.util.List<Object> getState() {
 		return this._state;
-	} 
+	}
 
 	public ClassComponent addMethods(Object value) {
 		this._methods.add(value);
+		return this;
+	}
+
+	public ClassComponent setMethods(Object[] value) {
+		this._methods.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassComponent setMethods(java.util.Collection<Object> values) {
+		this._methods.addAll(values);
 		return this;
 	}
 
@@ -149,10 +199,20 @@ public class ClassComponent {
 
 	public java.util.List<Object> getMethods() {
 		return this._methods;
-	} 
+	}
 
 	public ClassComponent addRenderConstants(Object value) {
 		this._renderConstants.add(value);
+		return this;
+	}
+
+	public ClassComponent setRenderConstants(Object[] value) {
+		this._renderConstants.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassComponent setRenderConstants(java.util.Collection<Object> values) {
+		this._renderConstants.addAll(values);
 		return this;
 	}
 
@@ -168,10 +228,20 @@ public class ClassComponent {
 
 	public java.util.List<Object> getRenderConstants() {
 		return this._renderConstants;
-	} 
+	}
 
 	public ClassComponent addReturnStatements(Object value) {
 		this._returnStatements.add(value);
+		return this;
+	}
+
+	public ClassComponent setReturnStatements(Object[] value) {
+		this._returnStatements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassComponent setReturnStatements(java.util.Collection<Object> values) {
+		this._returnStatements.addAll(values);
 		return this;
 	}
 
@@ -187,7 +257,7 @@ public class ClassComponent {
 
 	public java.util.List<Object> getReturnStatements() {
 		return this._returnStatements;
-	} 
+	}
 
 	public ClassComponent addEvents(Object _methodName, Object _declaration) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -232,7 +302,7 @@ public class ClassComponent {
 			return this._declaration;
 		}
 
-	} 
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -282,5 +352,5 @@ public class ClassComponent {
 				"	}\n" + 
 				"}\n" + 
 				"\n" + 
-				"export default (~name~);>> ";
-}  
+				"export default (~name~);>>";
+}

@@ -24,6 +24,16 @@ public class Inject {
 		return this;
 	}
 
+	public Inject setValues(Object[] value) {
+		this._values.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Inject setValues(java.util.Collection<Object> values) {
+		this._values.addAll(values);
+		return this;
+	}
+
 	public Inject removeValues(Object value) {
 		this._values.remove(value);
 		return this;
@@ -36,7 +46,7 @@ public class Inject {
 
 	public java.util.List<Object> getValues() {
 		return this._values;
-	} 
+	}
 
 
 	@Override
@@ -52,5 +62,5 @@ public class Inject {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Inject(values) ::= <<@inject(~values:{it|~it~};separator=\", \"~)>> ";
-}  
+	static final String st = "Inject(values) ::= <<@inject(~values:{it|~it~};separator=\", \"~)>>";
+}

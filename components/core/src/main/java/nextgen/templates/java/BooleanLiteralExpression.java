@@ -38,7 +38,7 @@ public class BooleanLiteralExpression {
 	public BooleanLiteralExpression removeValue() {
 		this._value = null;
 		return this;
-	} 
+	}
 
 
 
@@ -55,5 +55,5 @@ public class BooleanLiteralExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "BooleanLiteralExpression(value) ::= <<~value~>> ";
-}  
+	static final String st = "BooleanLiteralExpression(value) ::= <<~value~>>";
+}

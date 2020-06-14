@@ -24,6 +24,16 @@ public class QualifierName {
 		return this;
 	}
 
+	public QualifierName setValue(Object[] value) {
+		this._value.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public QualifierName setValue(java.util.Collection<Object> values) {
+		this._value.addAll(values);
+		return this;
+	}
+
 	public QualifierName removeValue(Object value) {
 		this._value.remove(value);
 		return this;
@@ -36,7 +46,7 @@ public class QualifierName {
 
 	public java.util.List<Object> getValue() {
 		return this._value;
-	} 
+	}
 
 
 	@Override
@@ -52,5 +62,5 @@ public class QualifierName {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "QualifierName(value) ::= <<~value:{it|~it~};separator=\".\"~>> ";
-}  
+	static final String st = "QualifierName(value) ::= <<~value:{it|~it~};separator=\".\"~>>";
+}

@@ -42,7 +42,7 @@ public class NeoFactory {
 	public NeoFactory removePackage() {
 		this._package = null;
 		return this;
-	} 
+	}
 
 	public NeoFactory setName(Object value) {
 		this._name = value;
@@ -64,10 +64,20 @@ public class NeoFactory {
 	public NeoFactory removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public NeoFactory addAccessors(Object value) {
 		this._accessors.add(value);
+		return this;
+	}
+
+	public NeoFactory setAccessors(Object[] value) {
+		this._accessors.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public NeoFactory setAccessors(java.util.Collection<Object> values) {
+		this._accessors.addAll(values);
 		return this;
 	}
 
@@ -83,7 +93,7 @@ public class NeoFactory {
 
 	public java.util.List<Object> getAccessors() {
 		return this._accessors;
-	} 
+	}
 
 
 	@Override
@@ -132,5 +142,5 @@ public class NeoFactory {
 				"	}\n" + 
 				"\n" + 
 				"	~accessors:{it|~it~};separator=\"\\n\\n\"~\n" + 
-				"}>> ";
-}  
+				"}>>";
+}

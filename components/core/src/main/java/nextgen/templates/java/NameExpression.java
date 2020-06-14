@@ -38,7 +38,7 @@ public class NameExpression {
 	public NameExpression removeValue() {
 		this._value = null;
 		return this;
-	} 
+	}
 
 
 
@@ -55,5 +55,5 @@ public class NameExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NameExpression(value) ::= <<~value~>> ";
-}  
+	static final String st = "NameExpression(value) ::= <<~value~>>";
+}

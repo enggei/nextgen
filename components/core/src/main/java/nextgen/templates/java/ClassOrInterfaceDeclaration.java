@@ -56,7 +56,7 @@ public class ClassOrInterfaceDeclaration {
 	public ClassOrInterfaceDeclaration removeIsInterface() {
 		this._isInterface = null;
 		return this;
-	} 
+	}
 
 	public ClassOrInterfaceDeclaration setName(Object value) {
 		this._name = value;
@@ -78,10 +78,20 @@ public class ClassOrInterfaceDeclaration {
 	public ClassOrInterfaceDeclaration removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public ClassOrInterfaceDeclaration addComments(Object value) {
 		this._comments.add(value);
+		return this;
+	}
+
+	public ClassOrInterfaceDeclaration setComments(Object[] value) {
+		this._comments.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassOrInterfaceDeclaration setComments(java.util.Collection<Object> values) {
+		this._comments.addAll(values);
 		return this;
 	}
 
@@ -97,10 +107,20 @@ public class ClassOrInterfaceDeclaration {
 
 	public java.util.List<Object> getComments() {
 		return this._comments;
-	} 
+	}
 
 	public ClassOrInterfaceDeclaration addAnnotations(Object value) {
 		this._annotations.add(value);
+		return this;
+	}
+
+	public ClassOrInterfaceDeclaration setAnnotations(Object[] value) {
+		this._annotations.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassOrInterfaceDeclaration setAnnotations(java.util.Collection<Object> values) {
+		this._annotations.addAll(values);
 		return this;
 	}
 
@@ -116,10 +136,20 @@ public class ClassOrInterfaceDeclaration {
 
 	public java.util.List<Object> getAnnotations() {
 		return this._annotations;
-	} 
+	}
 
 	public ClassOrInterfaceDeclaration addModifiers(Object value) {
 		this._modifiers.add(value);
+		return this;
+	}
+
+	public ClassOrInterfaceDeclaration setModifiers(Object[] value) {
+		this._modifiers.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassOrInterfaceDeclaration setModifiers(java.util.Collection<Object> values) {
+		this._modifiers.addAll(values);
 		return this;
 	}
 
@@ -135,10 +165,20 @@ public class ClassOrInterfaceDeclaration {
 
 	public java.util.List<Object> getModifiers() {
 		return this._modifiers;
-	} 
+	}
 
 	public ClassOrInterfaceDeclaration addTypeParameters(Object value) {
 		this._typeParameters.add(value);
+		return this;
+	}
+
+	public ClassOrInterfaceDeclaration setTypeParameters(Object[] value) {
+		this._typeParameters.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassOrInterfaceDeclaration setTypeParameters(java.util.Collection<Object> values) {
+		this._typeParameters.addAll(values);
 		return this;
 	}
 
@@ -154,10 +194,20 @@ public class ClassOrInterfaceDeclaration {
 
 	public java.util.List<Object> getTypeParameters() {
 		return this._typeParameters;
-	} 
+	}
 
 	public ClassOrInterfaceDeclaration addExtend(Object value) {
 		this._extend.add(value);
+		return this;
+	}
+
+	public ClassOrInterfaceDeclaration setExtend(Object[] value) {
+		this._extend.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassOrInterfaceDeclaration setExtend(java.util.Collection<Object> values) {
+		this._extend.addAll(values);
 		return this;
 	}
 
@@ -173,10 +223,20 @@ public class ClassOrInterfaceDeclaration {
 
 	public java.util.List<Object> getExtend() {
 		return this._extend;
-	} 
+	}
 
 	public ClassOrInterfaceDeclaration addImplementedTypes(Object value) {
 		this._implementedTypes.add(value);
+		return this;
+	}
+
+	public ClassOrInterfaceDeclaration setImplementedTypes(Object[] value) {
+		this._implementedTypes.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassOrInterfaceDeclaration setImplementedTypes(java.util.Collection<Object> values) {
+		this._implementedTypes.addAll(values);
 		return this;
 	}
 
@@ -192,10 +252,20 @@ public class ClassOrInterfaceDeclaration {
 
 	public java.util.List<Object> getImplementedTypes() {
 		return this._implementedTypes;
-	} 
+	}
 
 	public ClassOrInterfaceDeclaration addFields(Object value) {
 		this._fields.add(value);
+		return this;
+	}
+
+	public ClassOrInterfaceDeclaration setFields(Object[] value) {
+		this._fields.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassOrInterfaceDeclaration setFields(java.util.Collection<Object> values) {
+		this._fields.addAll(values);
 		return this;
 	}
 
@@ -211,10 +281,20 @@ public class ClassOrInterfaceDeclaration {
 
 	public java.util.List<Object> getFields() {
 		return this._fields;
-	} 
+	}
 
 	public ClassOrInterfaceDeclaration addMembers(Object value) {
 		this._members.add(value);
+		return this;
+	}
+
+	public ClassOrInterfaceDeclaration setMembers(Object[] value) {
+		this._members.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassOrInterfaceDeclaration setMembers(java.util.Collection<Object> values) {
+		this._members.addAll(values);
 		return this;
 	}
 
@@ -230,7 +310,7 @@ public class ClassOrInterfaceDeclaration {
 
 	public java.util.List<Object> getMembers() {
 		return this._members;
-	} 
+	}
 
 
 	@Override
@@ -255,5 +335,5 @@ public class ClassOrInterfaceDeclaration {
 				"	\n" + 
 				"	~endif~\n" + 
 				"	~members:{it|~it~};separator=\"\\n\\n\"~\n" + 
-				"}>> ";
-}  
+				"}>>";
+}

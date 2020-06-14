@@ -44,7 +44,7 @@ public class DependencyGroup {
 	public DependencyGroup removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public DependencyGroup setGroupId(Object value) {
 		this._groupId = value;
@@ -66,7 +66,7 @@ public class DependencyGroup {
 	public DependencyGroup removeGroupId() {
 		this._groupId = null;
 		return this;
-	}
+	} 
 
 	public DependencyGroup setVersion(Object value) {
 		this._version = value;
@@ -88,7 +88,7 @@ public class DependencyGroup {
 	public DependencyGroup removeVersion() {
 		this._version = null;
 		return this;
-	}
+	} 
 
 	public DependencyGroup addArtifacts(Object value) {
 		this._artifacts.add(value);
@@ -117,7 +117,7 @@ public class DependencyGroup {
 
 	public java.util.List<Object> getArtifacts() {
 		return this._artifacts;
-	}
+	} 
 
 
 	@Override
@@ -137,5 +137,5 @@ public class DependencyGroup {
 				"GroupId ~groupId~\n" + 
 				"Version ~version~\n" + 
 				"\n" + 
-				"~artifacts:{it|~it~};separator=\"\\n\"~>>";
+				"~artifacts:{it|~it~};separator=\"\\n\"~ >>";
 } 

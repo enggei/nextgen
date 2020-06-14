@@ -56,4 +56,4 @@ public class RemoveFile {
 	}
 
 	static final String st = "removeFile(path) ::= <<git rm --cached ~path~>>";
-} 
+}

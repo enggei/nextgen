@@ -42,7 +42,7 @@ public class FunctionalComponent {
 	public FunctionalComponent removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public FunctionalComponent setElement(Object value) {
 		this._element = value;
@@ -64,10 +64,20 @@ public class FunctionalComponent {
 	public FunctionalComponent removeElement() {
 		this._element = null;
 		return this;
-	} 
+	}
 
 	public FunctionalComponent addDependencies(Object value) {
 		this._dependencies.add(value);
+		return this;
+	}
+
+	public FunctionalComponent setDependencies(Object[] value) {
+		this._dependencies.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public FunctionalComponent setDependencies(java.util.Collection<Object> values) {
+		this._dependencies.addAll(values);
 		return this;
 	}
 
@@ -83,7 +93,7 @@ public class FunctionalComponent {
 
 	public java.util.List<Object> getDependencies() {
 		return this._dependencies;
-	} 
+	}
 
 
 	@Override
@@ -108,5 +118,5 @@ public class FunctionalComponent {
 				"	)\n" + 
 				"}\n" + 
 				"\n" + 
-				"export default ~name~;>> ";
-}  
+				"export default ~name~;>>";
+}

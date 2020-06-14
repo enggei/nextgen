@@ -40,7 +40,7 @@ public class LabeledStmt {
 	public LabeledStmt removeStatement() {
 		this._statement = null;
 		return this;
-	} 
+	}
 
 	public LabeledStmt setLabel(Object value) {
 		this._label = value;
@@ -62,7 +62,7 @@ public class LabeledStmt {
 	public LabeledStmt removeLabel() {
 		this._label = null;
 		return this;
-	} 
+	}
 
 
 
@@ -80,5 +80,5 @@ public class LabeledStmt {
 	}
 
 	static final String st = "LabeledStmt(statement,label) ::= <<~label~ : \n" + 
-				"	~statement~>> ";
-}  
+				"	~statement~>>";
+}

@@ -206,5 +206,5 @@ public class STDomain {
 				"			}\n" + 
 				"		}\n" + 
 				"	}\n" + 
-				"}>>";
-} 
+				"} >>";
+}

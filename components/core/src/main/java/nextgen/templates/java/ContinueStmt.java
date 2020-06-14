@@ -38,7 +38,7 @@ public class ContinueStmt {
 	public ContinueStmt removeLabel() {
 		this._label = null;
 		return this;
-	} 
+	}
 
 
 
@@ -55,5 +55,5 @@ public class ContinueStmt {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ContinueStmt(label) ::= <<continue~if(label)~ ~label~~endif~;>> ";
-}  
+	static final String st = "ContinueStmt(label) ::= <<continue~if(label)~ ~label~~endif~;>>";
+}

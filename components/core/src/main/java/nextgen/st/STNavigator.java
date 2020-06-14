@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.*;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -346,6 +347,7 @@ public class STNavigator extends JPanel {
 
                     model.getEnums().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stEnum -> add(new STEnumTreeNode(stEnum)));
                     model.getTemplates().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
+                    model.getInterfaces().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stInterface -> add(new STInterfaceTreeNode(stInterface)));
                 }
 
                 public void save() {
@@ -368,6 +370,7 @@ public class STNavigator extends JPanel {
                             generateAction(),
                             newTemplateAction(),
                             newEnumAction(),
+                            newInterfaceAction(),
                             renameSTGroupAction(),
                             deleteGroupAction()
                     };
@@ -410,6 +413,24 @@ public class STNavigator extends JPanel {
 
                                         SwingUtilities.invokeLater(() -> {
                                             final STEnumTreeNode stTemplateTreeNode = new STEnumTreeNode(stEnum);
+                                            treeModel.insertNodeInto(stTemplateTreeNode, STGroupTreeNode.this, getChildCount());
+                                        });
+                                    })));
+                }
+
+                private Action newInterfaceAction() {
+                    return newAction("New interface", actionEvent ->
+                            getNameFromUser().ifPresent(name ->
+                                    isValidTemplateName(name).ifPresent(s -> {
+
+                                        final STInterface stInterface = STJsonFactory.newSTInterface()
+                                                .setName(name);
+
+                                        getModel().addInterfaces(stInterface);
+                                        save();
+
+                                        SwingUtilities.invokeLater(() -> {
+                                            final STInterfaceTreeNode stTemplateTreeNode = new STInterfaceTreeNode(stInterface);
                                             treeModel.insertNodeInto(stTemplateTreeNode, STGroupTreeNode.this, getChildCount());
                                         });
                                     })));
@@ -503,6 +524,53 @@ public class STNavigator extends JPanel {
                                     });
                                 }
                             }));
+                }
+
+                class STInterfaceTreeNode extends BaseTreeNode<STInterface> {
+
+                    public STInterfaceTreeNode(STInterface model) {
+                        super(model);
+                    }
+
+                    @Override
+                    public String getLabel() {
+                        return getModel().getName();
+                    }
+
+                    @Override
+                    protected Action[] getActions() {
+                        return new Action[]{
+                                renameSTInterfaceAction(),
+                                removeSTInterfaceAction()
+                        };
+                    }
+
+                    private Action renameSTInterfaceAction() {
+                        return newAction("Rename", actionEvent ->
+                                getNameFromUser()
+                                        .flatMap(name -> getParentNode(STGroupTreeNode.class)
+                                                .flatMap(parent -> parent.isValidTemplateName(name)))
+                                        .ifPresent(s -> {
+
+                                            getModel().setName(s);
+                                            save();
+
+                                            SwingUtilities.invokeLater(() -> treeModel.nodeChanged(STInterfaceTreeNode.this));
+                                        }));
+                    }
+
+                    private Action removeSTInterfaceAction() {
+                        return newAction("Remove", actionEvent ->
+                                confirm("Delete " + getModel().getName()).ifPresent(aBoolean -> {
+
+                                    final STGroupTreeNode parent = (STGroupTreeNode) getParent();
+
+                                    parent.getModel().removeInterfaces(getModel());
+                                    save();
+
+                                    SwingUtilities.invokeLater(() -> treeModel.removeNodeFromParent(STInterfaceTreeNode.this));
+                                }));
+                    }
                 }
 
                 class STEnumTreeNode extends BaseTreeNode<STEnum> {
@@ -652,6 +720,7 @@ public class STNavigator extends JPanel {
                                     reparentAction(candidateChildren),
                                     newChildTemplateAction(),
                                     newSetParameterTypesAction(),
+                                    newSetInterfacesAction(),
                                     renameSTTemplateAction(),
                                     removeSTTemplateAction()
                             };
@@ -660,6 +729,7 @@ public class STNavigator extends JPanel {
                         return new Action[]{
                                 newChildTemplateAction(),
                                 newSetParameterTypesAction(),
+                                newSetInterfacesAction(),
                                 renameSTTemplateAction(),
                                 removeSTTemplateAction()
                         };
@@ -742,6 +812,43 @@ public class STNavigator extends JPanel {
                                     }
                                 });
 
+                                save();
+
+                                SwingUtilities.invokeLater(dialog::dispose);
+                            }));
+
+                            showDialog(dialog, btnSave);
+                        });
+                    }
+
+                    private Action newSetInterfacesAction() {
+                        return newAction("Set interfaces", actionEvent -> {
+
+                            final List<JTextField> txtImplements = new ArrayList<>();
+                            getModel().getImplements().forEach(implement -> {
+                                final JTextField textField = new JTextField(implement, 15);
+                                txtImplements.add(textField);
+                                textField.addFocusListener(new SelectFocusAdapter());
+                            });
+                            txtImplements.add(new JTextField("", 15));
+                            txtImplements.add(new JTextField("", 15));
+
+                            final JDialog dialog = new JDialog((Frame) SwingUtilities.getAncestorOfClass(JFrame.class, tree), "Edit interfaces", true);
+                            final JPanel contentPanel = new JPanel(new GridLayout(txtImplements.size(), 1));
+                            contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
+                            for (JTextField txtImplement : txtImplements) {
+                                contentPanel.add(txtImplement);
+                            }
+                            dialog.add(contentPanel, BorderLayout.CENTER);
+
+                            final JButton btnSave = new JButton(newAction("Save", actionEvent1 -> {
+
+                                getModel().clearImplements();
+                                for (JTextField txtImplement : txtImplements) {
+                                    final String trim = txtImplement.getText().trim();
+                                    if(trim.length()==0) continue;
+                                    getModel().addImplements(trim);
+                                }
                                 save();
 
                                 SwingUtilities.invokeLater(dialog::dispose);

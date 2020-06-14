@@ -380,8 +380,11 @@ public class STEditor extends JPanel {
                         info.append("\n\tmessage            ").append(stgError.getMessage());
 
                         if (stgError.getMessage().contains("expecting RDELIM")) {
-                            info.append("\n\tpossible cause     ").append("This is probably a '}' being interpreted as end-of an kv-iteration.");
+                            info.append("\n\tpossible cause     ").append("This is probably a '}' being interpreted as end-of a kv-iteration.");
                             info.append("\n\tpossible solution  ").append("Try escaping the previous '}' (i.e from '}' to '\\}')");
+                        } else if (stgError.getMessage().contains("invalid character '>'")) {
+                            info.append("\n\tpossible cause     ").append("This is probably a '>' being interpreted as end-of template.");
+                            info.append("\n\tpossible solution  ").append("Try changing the last '>' to '" + STGenerator.DELIMITERCHAR + "gt()" + STGenerator.DELIMITERCHAR + "'");
                         }
 
                         break;

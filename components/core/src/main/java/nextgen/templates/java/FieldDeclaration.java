@@ -28,6 +28,16 @@ public class FieldDeclaration {
 		return this;
 	}
 
+	public FieldDeclaration setVariables(Object[] value) {
+		this._variables.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public FieldDeclaration setVariables(java.util.Collection<Object> values) {
+		this._variables.addAll(values);
+		return this;
+	}
+
 	public FieldDeclaration removeVariables(Object value) {
 		this._variables.remove(value);
 		return this;
@@ -40,10 +50,20 @@ public class FieldDeclaration {
 
 	public java.util.List<Object> getVariables() {
 		return this._variables;
-	} 
+	}
 
 	public FieldDeclaration addAnnotations(Object value) {
 		this._annotations.add(value);
+		return this;
+	}
+
+	public FieldDeclaration setAnnotations(Object[] value) {
+		this._annotations.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public FieldDeclaration setAnnotations(java.util.Collection<Object> values) {
+		this._annotations.addAll(values);
 		return this;
 	}
 
@@ -59,10 +79,20 @@ public class FieldDeclaration {
 
 	public java.util.List<Object> getAnnotations() {
 		return this._annotations;
-	} 
+	}
 
 	public FieldDeclaration addModifiers(Object value) {
 		this._modifiers.add(value);
+		return this;
+	}
+
+	public FieldDeclaration setModifiers(Object[] value) {
+		this._modifiers.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public FieldDeclaration setModifiers(java.util.Collection<Object> values) {
+		this._modifiers.addAll(values);
 		return this;
 	}
 
@@ -78,7 +108,7 @@ public class FieldDeclaration {
 
 	public java.util.List<Object> getModifiers() {
 		return this._modifiers;
-	} 
+	}
 
 
 	@Override
@@ -95,5 +125,5 @@ public class FieldDeclaration {
 	}
 
 	static final String st = "FieldDeclaration(variables,annotations,modifiers) ::= <<~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\n" + 
-				"~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~variables:{it|~it~};separator=\", \"~;>> ";
-}  
+				"~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~variables:{it|~it~};separator=\", \"~;>>";
+}

@@ -42,10 +42,20 @@ public class Element {
 	public Element removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public Element addChildren(Object value) {
 		this._children.add(value);
+		return this;
+	}
+
+	public Element setChildren(Object[] value) {
+		this._children.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Element setChildren(java.util.Collection<Object> values) {
+		this._children.addAll(values);
 		return this;
 	}
 
@@ -61,10 +71,20 @@ public class Element {
 
 	public java.util.List<Object> getChildren() {
 		return this._children;
-	} 
+	}
 
 	public Element addProps(Object value) {
 		this._props.add(value);
+		return this;
+	}
+
+	public Element setProps(Object[] value) {
+		this._props.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Element setProps(java.util.Collection<Object> values) {
+		this._props.addAll(values);
 		return this;
 	}
 
@@ -80,7 +100,7 @@ public class Element {
 
 	public java.util.List<Object> getProps() {
 		return this._props;
-	} 
+	}
 
 
 	@Override
@@ -99,5 +119,5 @@ public class Element {
 	static final String st = "Element(name,children,props) ::= <<<~name~~if(props)~ \n" + 
 				"	~props:{it|~it~};separator=\"\\n\"~~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
-				"</~name~>~else~ />~endif~>> ";
-}  
+				"</~name~>~else~ />~endif~>>";
+}

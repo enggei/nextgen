@@ -40,7 +40,7 @@ public class MenuItem {
 	public MenuItem removeTitle() {
 		this._title = null;
 		return this;
-	} 
+	}
 
 	public MenuItem setName(Object value) {
 		this._name = value;
@@ -62,7 +62,7 @@ public class MenuItem {
 	public MenuItem removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 
 
@@ -79,5 +79,5 @@ public class MenuItem {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MenuItem(title,name) ::= <<<MenuItem component={ ~name~ } onClick={handleClose}> ~title~ </MenuItem>>> ";
-}  
+	static final String st = "MenuItem(title,name) ::= <<<MenuItem component={ ~name~ } onClick={handleClose}> ~title~ </MenuItem> >>";
+}

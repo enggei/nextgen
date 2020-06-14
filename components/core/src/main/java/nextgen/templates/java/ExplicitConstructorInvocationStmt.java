@@ -40,10 +40,20 @@ public class ExplicitConstructorInvocationStmt {
 	public ExplicitConstructorInvocationStmt removeIsThis() {
 		this._isThis = null;
 		return this;
-	} 
+	}
 
 	public ExplicitConstructorInvocationStmt addArguments(Object value) {
 		this._arguments.add(value);
+		return this;
+	}
+
+	public ExplicitConstructorInvocationStmt setArguments(Object[] value) {
+		this._arguments.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ExplicitConstructorInvocationStmt setArguments(java.util.Collection<Object> values) {
+		this._arguments.addAll(values);
 		return this;
 	}
 
@@ -59,7 +69,7 @@ public class ExplicitConstructorInvocationStmt {
 
 	public java.util.List<Object> getArguments() {
 		return this._arguments;
-	} 
+	}
 
 
 	@Override
@@ -75,5 +85,5 @@ public class ExplicitConstructorInvocationStmt {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ExplicitConstructorInvocationStmt(isThis,arguments) ::= <<~if(isThis)~this~else~super~endif~(~arguments:{it|~it~};separator=\", \"~);>> ";
-}  
+	static final String st = "ExplicitConstructorInvocationStmt(isThis,arguments) ::= <<~if(isThis)~this~else~super~endif~(~arguments:{it|~it~};separator=\", \"~);>>";
+}

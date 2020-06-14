@@ -130,4 +130,4 @@ public class ListReferenceAccessors {
 				"	jsonObject.put(\"~name~\", new io.vertx.core.json.JsonArray());\n" + 
 				"	return this;\n" + 
 				"}>>";
-} 
+}

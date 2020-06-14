@@ -32,5 +32,5 @@ public class Label {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Label() ::= <<org.neo4j.graphdb.Label>> ";
-}  
+	static final String st = "Label() ::= <<org.neo4j.graphdb.Label>>";
+}

@@ -42,7 +42,7 @@ public class ListReferenceAccessors {
 	public ListReferenceAccessors removeClassName() {
 		this._className = null;
 		return this;
-	} 
+	}
 
 	public ListReferenceAccessors setName(Object value) {
 		this._name = value;
@@ -64,7 +64,7 @@ public class ListReferenceAccessors {
 	public ListReferenceAccessors removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public ListReferenceAccessors setType(Object value) {
 		this._type = value;
@@ -86,7 +86,7 @@ public class ListReferenceAccessors {
 	public ListReferenceAccessors removeType() {
 		this._type = null;
 		return this;
-	} 
+	}
 
 
 
@@ -118,5 +118,5 @@ public class ListReferenceAccessors {
 				"	final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();\n" + 
 				"	existing.ifPresent(org.neo4j.graphdb.Relationship::delete);\n" + 
 				"	return this;\n" + 
-				"}>> ";
-}  
+				"}>>";
+}

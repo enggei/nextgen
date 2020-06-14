@@ -114,5 +114,5 @@ public class STEnum {
 				"public enum ~name~ {\n" + 
 				"\n" + 
 				"	~enumValues:{it|~it~};separator=\",\\n\"~\n" + 
-				"}>>";
-} 
+				"} >>";
+}

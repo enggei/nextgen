@@ -42,4 +42,4 @@ public class Babelrc {
 				"		[\"module:@babel/plugin-proposal-class-properties\", { \"loose\": true }]\n" + 
 				"	]\n" + 
 				"}>>";
-} 
+}

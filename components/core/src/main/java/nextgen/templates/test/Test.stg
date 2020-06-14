@@ -8,25 +8,25 @@ ParameterTests() ::= <<Test the 3 types of parameters:
 
 Test conditional parsing
 
-Test complex combination of all types >>
+Test complex combination of all types>>
 
-single(value) ::= <<single : ~value~ >>
+single(value) ::= <<single : ~value~>>
 
-list(value) ::= <<list : ~value:{it|~it~};separator=", "~ >>
+list(value) ::= <<list : ~value:{it|~it~};separator=", "~>>
 
-kv(value) ::= <<kv : ~value:{it|~it.key~:~it.value~};separator="\n"~ >>
+kv(value) ::= <<kv : ~value:{it|~it.key~:~it.value~};separator="\n"~>>
 
 allTypes(single,list,kvList,cond1,cond2) ::= <<A single value, ~single~, 
 then a list ~list:{it|~it~};separator=","~, 
 and a kv-list : ~kvList:{it|~it.name~:~it.value~};separator=","~
 
-If expression ~conditional(cond1,cond2)~ >>
+If expression ~conditional(cond1,cond2)~>>
 
-conditional(condition1,condition2) ::= <<~if(condition1)~condition1: ~condition1~~elseif(condition2)~isCondition2~else~~endif~ >>
+conditional(condition1,condition2) ::= <<~if(condition1)~condition1: ~condition1~~elseif(condition2)~isCondition2~else~~endif~>>
 
-complex(list,condition1,condition2) ::= <<~if(list)~~list:{it|~it.name~ ~it.value~(~if(condition1)~1~elseif(condition2)~2~else~NULL~endif~)};separator="\n"~~endif~ >>
+complex(list,condition1,condition2) ::= <<~if(list)~~list:{it|~it.name~ ~it.value~(~if(condition1)~1~elseif(condition2)~2~else~NULL~endif~)};separator="\n"~~endif~>>
 
-embeddedKVConditional(fields,PROP) ::= <<~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator="\n"~ >>
+embeddedKVConditional(fields,PROP) ::= <<~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator="\n"~>>
 
 Patterns(isPublic,isPrivate,scope) ::= <<Patterns for templates:
 
@@ -38,7 +38,7 @@ cleaner solution:
 
 ~scope~ class {}
 
-and set scope = "public"|"private" in generator >>
+and set scope = "public"|"private" in generator>>
 
 eom() ::= "}"
 

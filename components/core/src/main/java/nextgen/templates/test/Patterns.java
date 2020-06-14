@@ -42,7 +42,7 @@ public class Patterns {
 	public Patterns removeIsPublic() {
 		this._isPublic = null;
 		return this;
-	} 
+	}
 
 	public Patterns setIsPrivate(Object value) {
 		this._isPrivate = value;
@@ -64,7 +64,7 @@ public class Patterns {
 	public Patterns removeIsPrivate() {
 		this._isPrivate = null;
 		return this;
-	} 
+	}
 
 	public Patterns setScope(Object value) {
 		this._scope = value;
@@ -86,7 +86,7 @@ public class Patterns {
 	public Patterns removeScope() {
 		this._scope = null;
 		return this;
-	} 
+	}
 
 
 
@@ -113,5 +113,5 @@ public class Patterns {
 				"\n" + 
 				"~scope~ class {}\n" + 
 				"\n" + 
-				"and set scope = \"public\"|\"private\" in generator>> ";
-}  
+				"and set scope = \"public\"|\"private\" in generator>>";
+}

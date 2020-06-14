@@ -40,7 +40,7 @@ public class EnumValue {
 	public EnumValue removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public EnumValue setLexical(String value) {
 		this._lexical = value;
@@ -62,7 +62,7 @@ public class EnumValue {
 	public EnumValue removeLexical() {
 		this._lexical = null;
 		return this;
-	} 
+	}
 
 
 
@@ -82,5 +82,5 @@ public class EnumValue {
 	static final String st = "EnumValue(name,lexical) ::= <<~name~~if(lexical)~() {\n" + 
 				"	@Override\n" + 
 				"	public String toString() { return \"~lexical~\"; }\n" + 
-				"}~endif~>> ";
-}  
+				"}~endif~>>";
+}

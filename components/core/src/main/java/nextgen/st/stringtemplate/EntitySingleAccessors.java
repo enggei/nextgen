@@ -123,5 +123,5 @@ public class EntitySingleAccessors {
 				"public ~entity~ remove~name;format=\"capitalize\"~() {\n" + 
 				"	this._~name~ = null;\n" + 
 				"	return this;\n" + 
-				"}>>";
-} 
+				"} >>";
+}

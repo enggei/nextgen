@@ -42,10 +42,20 @@ public class Function {
 	public Function removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public Function addParameters(Object value) {
 		this._parameters.add(value);
+		return this;
+	}
+
+	public Function setParameters(Object[] value) {
+		this._parameters.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Function setParameters(java.util.Collection<Object> values) {
+		this._parameters.addAll(values);
 		return this;
 	}
 
@@ -61,10 +71,20 @@ public class Function {
 
 	public java.util.List<Object> getParameters() {
 		return this._parameters;
-	} 
+	}
 
 	public Function addStatements(Object value) {
 		this._statements.add(value);
+		return this;
+	}
+
+	public Function setStatements(Object[] value) {
+		this._statements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Function setStatements(java.util.Collection<Object> values) {
+		this._statements.addAll(values);
 		return this;
 	}
 
@@ -80,7 +100,7 @@ public class Function {
 
 	public java.util.List<Object> getStatements() {
 		return this._statements;
-	} 
+	}
 
 
 	@Override
@@ -98,5 +118,5 @@ public class Function {
 
 	static final String st = "Function(name,parameters,statements) ::= <<function ~name~(~parameters:{it|~it~};separator=\",\"~) {\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
-				"}>> ";
-}  
+				"}>>";
+}

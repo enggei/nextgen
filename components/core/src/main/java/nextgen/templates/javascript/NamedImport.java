@@ -24,6 +24,16 @@ public class NamedImport {
 		return this;
 	}
 
+	public NamedImport setNames(Object[] value) {
+		this._names.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public NamedImport setNames(java.util.Collection<Object> values) {
+		this._names.addAll(values);
+		return this;
+	}
+
 	public NamedImport removeNames(Object value) {
 		this._names.remove(value);
 		return this;
@@ -36,7 +46,7 @@ public class NamedImport {
 
 	public java.util.List<Object> getNames() {
 		return this._names;
-	} 
+	}
 
 
 	@Override
@@ -52,5 +62,5 @@ public class NamedImport {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "namedImport(names) ::= <<{ ~names:{it|~it~};separator=\", \"~ }>> ";
-}  
+	static final String st = "namedImport(names) ::= <<{ ~names:{it|~it~};separator=\", \"~ }>>";
+}

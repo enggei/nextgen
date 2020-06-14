@@ -26,6 +26,16 @@ public class SwitchEntryStmt {
 		return this;
 	}
 
+	public SwitchEntryStmt setLabels(Object[] value) {
+		this._labels.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public SwitchEntryStmt setLabels(java.util.Collection<Object> values) {
+		this._labels.addAll(values);
+		return this;
+	}
+
 	public SwitchEntryStmt removeLabels(Object value) {
 		this._labels.remove(value);
 		return this;
@@ -38,10 +48,20 @@ public class SwitchEntryStmt {
 
 	public java.util.List<Object> getLabels() {
 		return this._labels;
-	} 
+	}
 
 	public SwitchEntryStmt addStatements(Object value) {
 		this._statements.add(value);
+		return this;
+	}
+
+	public SwitchEntryStmt setStatements(Object[] value) {
+		this._statements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public SwitchEntryStmt setStatements(java.util.Collection<Object> values) {
+		this._statements.addAll(values);
 		return this;
 	}
 
@@ -57,7 +77,7 @@ public class SwitchEntryStmt {
 
 	public java.util.List<Object> getStatements() {
 		return this._statements;
-	} 
+	}
 
 
 	@Override
@@ -74,5 +94,5 @@ public class SwitchEntryStmt {
 	}
 
 	static final String st = "SwitchEntryStmt(labels,statements) ::= <<~if(labels)~~labels:{it|case ~it~ :};separator=\"\\n\"~~else~default :~endif~\n" + 
-				"	~statements:{it|~it~};separator=\"\\n\"~>> ";
-}  
+				"	~statements:{it|~it~};separator=\"\\n\"~>>";
+}

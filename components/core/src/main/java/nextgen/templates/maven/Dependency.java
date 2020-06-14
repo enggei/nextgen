@@ -46,7 +46,7 @@ public class Dependency {
 	public Dependency removeGroupId() {
 		this._groupId = null;
 		return this;
-	}
+	} 
 
 	public Dependency setArtifactId(Object value) {
 		this._artifactId = value;
@@ -68,7 +68,7 @@ public class Dependency {
 	public Dependency removeArtifactId() {
 		this._artifactId = null;
 		return this;
-	}
+	} 
 
 	public Dependency setVersion(Object value) {
 		this._version = value;
@@ -90,7 +90,7 @@ public class Dependency {
 	public Dependency removeVersion() {
 		this._version = null;
 		return this;
-	}
+	} 
 
 	public Dependency setScope(DependencyScope value) {
 		this._scope = value;
@@ -112,7 +112,7 @@ public class Dependency {
 	public Dependency removeScope() {
 		this._scope = null;
 		return this;
-	}
+	} 
 
 	public Dependency setSystemPath(Object value) {
 		this._systemPath = value;
@@ -134,7 +134,7 @@ public class Dependency {
 	public Dependency removeSystemPath() {
 		this._systemPath = null;
 		return this;
-	}
+	} 
 
 
 

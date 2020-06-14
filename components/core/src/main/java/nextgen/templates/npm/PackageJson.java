@@ -267,6 +267,16 @@ public class PackageJson {
 		return this;
 	}
 
+	public PackageJson setDevDependencies(Object[] value) {
+		this._devDependencies.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public PackageJson setDevDependencies(java.util.Collection<Object> values) {
+		this._devDependencies.addAll(values);
+		return this;
+	}
+
 	public PackageJson removeDevDependencies(Object value) {
 		this._devDependencies.remove(value);
 		return this;
@@ -286,6 +296,16 @@ public class PackageJson {
 		return this;
 	}
 
+	public PackageJson setScripts(Object[] value) {
+		this._scripts.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public PackageJson setScripts(java.util.Collection<Object> values) {
+		this._scripts.addAll(values);
+		return this;
+	}
+
 	public PackageJson removeScripts(Object value) {
 		this._scripts.remove(value);
 		return this;
@@ -302,6 +322,16 @@ public class PackageJson {
 
 	public PackageJson addDependencies(Object value) {
 		this._dependencies.add(value);
+		return this;
+	}
+
+	public PackageJson setDependencies(Object[] value) {
+		this._dependencies.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public PackageJson setDependencies(java.util.Collection<Object> values) {
+		this._dependencies.addAll(values);
 		return this;
 	}
 
@@ -358,4 +388,4 @@ public class PackageJson {
 				"    ~devDependencies:{it|~it~};separator=\",\\n\"~\n" + 
 				"  }\n" + 
 				"}>>";
-} 
+}

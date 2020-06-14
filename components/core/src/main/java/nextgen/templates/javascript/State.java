@@ -63,7 +63,7 @@ public class State {
 			return this._value;
 		}
 
-	} 
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -80,5 +80,5 @@ public class State {
 
 	static final String st = "State(values) ::= <<{\n" + 
 				"	~values:{it|~it.name~: ~it.value~};separator=\",\\n\"~\n" + 
-				"}>> ";
-}  
+				"}>>";
+}

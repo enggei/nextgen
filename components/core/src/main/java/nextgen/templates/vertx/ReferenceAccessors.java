@@ -111,4 +111,4 @@ public class ReferenceAccessors {
 				"public ~type~ get~name;format=\"capitalize\"~() { \n" + 
 				"	return jsonObject.getJsonObject(\"~name~\") == null ? null : new ~type~(jsonObject.getJsonObject(\"~name~\"));\n" + 
 				"}>>";
-} 
+}

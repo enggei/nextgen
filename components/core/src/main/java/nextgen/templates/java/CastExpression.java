@@ -40,7 +40,7 @@ public class CastExpression {
 	public CastExpression removeExpression() {
 		this._expression = null;
 		return this;
-	} 
+	}
 
 	public CastExpression setType(Object value) {
 		this._type = value;
@@ -62,7 +62,7 @@ public class CastExpression {
 	public CastExpression removeType() {
 		this._type = null;
 		return this;
-	} 
+	}
 
 
 
@@ -79,5 +79,5 @@ public class CastExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "CastExpression(expression,type) ::= <<(~type~) ~expression~>> ";
-}  
+	static final String st = "CastExpression(expression,type) ::= <<(~type~) ~expression~>>";
+}

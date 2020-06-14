@@ -130,4 +130,4 @@ public class FunctionDeclaration {
 	static final String st = "FunctionDeclaration(annotations,override,name,returnType) ::= <<~annotations~~if(override)~override ~endif~fun ~name~(): ~returnType~ {\n" + 
 				"	// TODO: Expression body / expression statememt\n" + 
 				"}>>";
-} 
+}

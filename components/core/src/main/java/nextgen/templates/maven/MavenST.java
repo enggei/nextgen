@@ -18,7 +18,7 @@ public class MavenST {
 	ShadePlugin.st + "\n" + 
 	Pom.st + "\n" + 
 	PropertyReference.st + "\n" + 
-	Repository.st + "\n";
+	Repository.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -56,59 +56,59 @@ public class MavenST {
 
 	public static Build newBuild() {
 		return new Build(stGroup);
-	}
+	} 
 
 	public static Dependency newDependency() {
 		return new Dependency(stGroup);
-	}
+	} 
 
 	public static DependencyGroup newDependencyGroup() {
 		return new DependencyGroup(stGroup);
-	}
+	} 
 
 	public static Module newModule() {
 		return new Module(stGroup);
-	}
+	} 
 
 	public static Project newProject() {
 		return new Project(stGroup);
-	}
+	} 
 
 	public static Execution newExecution() {
 		return new Execution(stGroup);
-	}
+	} 
 
 	public static Parent newParent() {
 		return new Parent(stGroup);
-	}
+	} 
 
 	public static CopyPlugin newCopyPlugin() {
 		return new CopyPlugin(stGroup);
-	}
+	} 
 
 	public static FrontEndMavenPlugin newFrontEndMavenPlugin() {
 		return new FrontEndMavenPlugin(stGroup);
-	}
+	} 
 
 	public static Plugin newPlugin() {
 		return new Plugin(stGroup);
-	}
+	} 
 
 	public static ShadePlugin newShadePlugin() {
 		return new ShadePlugin(stGroup);
-	}
+	} 
 
 	public static Pom newPom() {
 		return new Pom(stGroup);
-	}
+	} 
 
 	public static PropertyReference newPropertyReference() {
 		return new PropertyReference(stGroup);
-	}
+	} 
 
 	public static Repository newRepository() {
 		return new Repository(stGroup);
-	}
+	} 
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
 
@@ -141,4 +141,4 @@ public class MavenST {
 			}
 		}
 	}
-} 
+}  

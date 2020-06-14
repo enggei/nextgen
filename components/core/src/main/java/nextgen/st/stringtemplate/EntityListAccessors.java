@@ -130,5 +130,5 @@ public class EntityListAccessors {
 				"\n" + 
 				"public java.util.List<~if(type)~~type~~else~Object~endif~> get~name;format=\"capitalize\"~() {\n" + 
 				"	return this._~name~;\n" + 
-				"}>>";
-} 
+				"} >>";
+}

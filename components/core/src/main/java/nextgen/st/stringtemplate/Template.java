@@ -109,5 +109,5 @@ public class Template {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Template(name,params,content) ::= <<~name~(~params:{it|~it~};separator=\",\"~) ::= <<~content~~gt()~~gt()~>>";
-} 
+	static final String st = "Template(name,params,content) ::= <<~name~(~params:{it|~it~};separator=\",\"~) ::= <<~content~ ~gt()~~gt()~ >>";
+}

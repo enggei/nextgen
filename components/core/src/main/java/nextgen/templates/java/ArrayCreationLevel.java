@@ -38,7 +38,7 @@ public class ArrayCreationLevel {
 	public ArrayCreationLevel removeDimension() {
 		this._dimension = null;
 		return this;
-	} 
+	}
 
 
 
@@ -55,5 +55,5 @@ public class ArrayCreationLevel {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ArrayCreationLevel(dimension) ::= <<[~dimension~]>> ";
-}  
+	static final String st = "ArrayCreationLevel(dimension) ::= <<[~dimension~]>>";
+}

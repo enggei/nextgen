@@ -40,10 +40,20 @@ public class BlockStmt {
 	public BlockStmt removeStmt() {
 		this._stmt = null;
 		return this;
-	} 
+	}
 
 	public BlockStmt addStatements(Object value) {
 		this._statements.add(value);
+		return this;
+	}
+
+	public BlockStmt setStatements(Object[] value) {
+		this._statements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public BlockStmt setStatements(java.util.Collection<Object> values) {
+		this._statements.addAll(values);
 		return this;
 	}
 
@@ -59,7 +69,7 @@ public class BlockStmt {
 
 	public java.util.List<Object> getStatements() {
 		return this._statements;
-	} 
+	}
 
 
 	@Override
@@ -77,5 +87,5 @@ public class BlockStmt {
 
 	static final String st = "BlockStmt(stmt,statements) ::= <<~stmt~ {\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
-				"}>> ";
-}  
+				"}>>";
+}

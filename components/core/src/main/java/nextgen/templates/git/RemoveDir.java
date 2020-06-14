@@ -56,4 +56,4 @@ public class RemoveDir {
 	}
 
 	static final String st = "removeDir(dir) ::= <<git rm --cached -r ~dir~>>";
-} 
+}

@@ -5,7 +5,7 @@ public class TypeScriptST {
 	private static final String stg = "delimiters \"~\", \"~\"\n" +
 	"eom() ::= \"}\"\n" +
 	"gt() ::= \">\"\n" +
-	VariableDeclaration.st + "\n" ;
+	VariableDeclaration.st + "\n";
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -43,7 +43,7 @@ public class TypeScriptST {
 
 	public static VariableDeclaration newVariableDeclaration() {
 		return new VariableDeclaration(stGroup);
-	} 
+	}
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
 
@@ -76,4 +76,4 @@ public class TypeScriptST {
 			}
 		}
 	}
-}  
+} 

@@ -46,7 +46,7 @@ public class Relation {
 	public Relation removeName() {
 		this._name = null;
 		return this;
-	} 
+	}
 
 	public Relation setType(RelationType value) {
 		this._type = value;
@@ -68,7 +68,7 @@ public class Relation {
 	public Relation removeType() {
 		this._type = null;
 		return this;
-	} 
+	}
 
 	public Relation setDst(Object value) {
 		this._dst = value;
@@ -90,7 +90,7 @@ public class Relation {
 	public Relation removeDst() {
 		this._dst = null;
 		return this;
-	} 
+	}
 
 	public Relation setLexical(Boolean value) {
 		this._lexical = value;
@@ -112,7 +112,7 @@ public class Relation {
 	public Relation removeLexical() {
 		this._lexical = null;
 		return this;
-	} 
+	}
 
 	public Relation setSelf(Boolean value) {
 		this._self = value;
@@ -134,7 +134,7 @@ public class Relation {
 	public Relation removeSelf() {
 		this._self = null;
 		return this;
-	} 
+	}
 
 
 
@@ -151,5 +151,5 @@ public class Relation {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Relation(name,type,dst,lexical,self) ::= <<~name~ ~type~ ~dst~~if(lexical)~ lexical~endif~~if(self)~ self-referential~endif~>> ";
-}  
+	static final String st = "Relation(name,type,dst,lexical,self) ::= <<~name~ ~type~ ~dst~~if(lexical)~ lexical~endif~~if(self)~ self-referential~endif~>>";
+}
