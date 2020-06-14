@@ -42,7 +42,7 @@ public class STEnum {
 	public STEnum removePackageName() {
 		this._packageName = null;
 		return this;
-	}
+	} 
 
 	public STEnum setName(Object value) {
 		this._name = value;
@@ -64,7 +64,7 @@ public class STEnum {
 	public STEnum removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public STEnum addEnumValues(Object value) {
 		this._enumValues.add(value);
@@ -93,7 +93,7 @@ public class STEnum {
 
 	public java.util.List<Object> getEnumValues() {
 		return this._enumValues;
-	}
+	} 
 
 
 	@Override
@@ -115,4 +115,4 @@ public class STEnum {
 				"\n" + 
 				"	~enumValues:{it|~it~};separator=\",\\n\"~\n" + 
 				"} >>";
-}
+} 

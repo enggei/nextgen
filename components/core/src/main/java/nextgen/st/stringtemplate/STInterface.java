@@ -40,7 +40,7 @@ public class STInterface {
 	public STInterface removePackageName() {
 		this._packageName = null;
 		return this;
-	}
+	} 
 
 	public STInterface setName(String value) {
 		this._name = value;
@@ -62,7 +62,7 @@ public class STInterface {
 	public STInterface removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 
 
@@ -84,4 +84,4 @@ public class STInterface {
 				"public interface ~name~ {\n" + 
 				"	\n" + 
 				"} >>";
-}
+} 

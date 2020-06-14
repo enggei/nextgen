@@ -42,7 +42,7 @@ public class EntityKVListAccessors {
 	public EntityKVListAccessors removeEntity() {
 		this._entity = null;
 		return this;
-	}
+	} 
 
 	public EntityKVListAccessors setName(Object value) {
 		this._name = value;
@@ -64,7 +64,7 @@ public class EntityKVListAccessors {
 	public EntityKVListAccessors removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 
 	public EntityKVListAccessors addKeys(Object _type, Object _name) {
@@ -110,7 +110,7 @@ public class EntityKVListAccessors {
 			return this._name;
 		}
 
-	}
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -161,4 +161,4 @@ public class EntityKVListAccessors {
 				"~eom()~\n" + 
 				"	};separator=\"\\n\"~\n" + 
 				"} >>";
-}
+} 

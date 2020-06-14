@@ -42,7 +42,7 @@ public class EntitySingleAccessors {
 	public EntitySingleAccessors removeEntity() {
 		this._entity = null;
 		return this;
-	}
+	} 
 
 	public EntitySingleAccessors setName(Object value) {
 		this._name = value;
@@ -64,7 +64,7 @@ public class EntitySingleAccessors {
 	public EntitySingleAccessors removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public EntitySingleAccessors setType(Object value) {
 		this._type = value;
@@ -86,7 +86,7 @@ public class EntitySingleAccessors {
 	public EntitySingleAccessors removeType() {
 		this._type = null;
 		return this;
-	}
+	} 
 
 
 
@@ -124,4 +124,4 @@ public class EntitySingleAccessors {
 				"	this._~name~ = null;\n" + 
 				"	return this;\n" + 
 				"} >>";
-}
+} 

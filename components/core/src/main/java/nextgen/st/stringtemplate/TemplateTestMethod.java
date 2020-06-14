@@ -38,7 +38,7 @@ public class TemplateTestMethod {
 	public TemplateTestMethod removeTemplate() {
 		this._template = null;
 		return this;
-	}
+	} 
 
 
 
@@ -59,4 +59,4 @@ public class TemplateTestMethod {
 				"public void test~template;format=\"capitalize\"~() {\n" + 
 				"	System.out.println(\"\\n--- TEST ~template~:\\n\" + new~template;format=\"capitalize\"~());\n" + 
 				"} >>";
-}
+} 
