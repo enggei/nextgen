@@ -42,7 +42,7 @@ public class EnumListAccessors {
 	public EnumListAccessors removeClassName() {
 		this._className = null;
 		return this;
-	}
+	} 
 
 	public EnumListAccessors setName(Object value) {
 		this._name = value;
@@ -64,7 +64,7 @@ public class EnumListAccessors {
 	public EnumListAccessors removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public EnumListAccessors setType(Object value) {
 		this._type = value;
@@ -86,7 +86,7 @@ public class EnumListAccessors {
 	public EnumListAccessors removeType() {
 		this._type = null;
 		return this;
-	}
+	} 
 
 
 
@@ -114,5 +114,5 @@ public class EnumListAccessors {
 				"\n" + 
 				"public java.util.stream.Stream<~type~> get~name;format=\"capitalize\"~() { \n" + 
 				"	return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).spliterator(), false).map((relationship) -> ~type~.valueOf(relationship.getOtherNode(node).getProperty(\"value\").toString()));\n" + 
-				"}>>";
-}
+				"} >>";
+} 

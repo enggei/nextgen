@@ -42,7 +42,7 @@ public class ImportDeclaration {
 	public ImportDeclaration removeIsStatic() {
 		this._isStatic = null;
 		return this;
-	}
+	} 
 
 	public ImportDeclaration setName(Object value) {
 		this._name = value;
@@ -64,7 +64,7 @@ public class ImportDeclaration {
 	public ImportDeclaration removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public ImportDeclaration setIsAsterisk(Object value) {
 		this._isAsterisk = value;
@@ -86,7 +86,7 @@ public class ImportDeclaration {
 	public ImportDeclaration removeIsAsterisk() {
 		this._isAsterisk = null;
 		return this;
-	}
+	} 
 
 
 
@@ -103,5 +103,5 @@ public class ImportDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ImportDeclaration(isStatic,name,isAsterisk) ::= <<import ~if(isStatic)~static ~endif~~name~~if(isAsterisk)~.*~endif~;>>";
-}
+	static final String st = "ImportDeclaration(isStatic,name,isAsterisk) ::= <<import ~if(isStatic)~static ~endif~~name~~if(isAsterisk)~.*~endif~; >>";
+} 

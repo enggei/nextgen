@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class ObjectCreationExpression {
+public class ObjectCreationExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -48,7 +48,7 @@ public class ObjectCreationExpression {
 	public ObjectCreationExpression removeScope() {
 		this._scope = null;
 		return this;
-	}
+	} 
 
 	public ObjectCreationExpression setType(Object value) {
 		this._type = value;
@@ -70,7 +70,7 @@ public class ObjectCreationExpression {
 	public ObjectCreationExpression removeType() {
 		this._type = null;
 		return this;
-	}
+	} 
 
 	public ObjectCreationExpression setEmptyClassBody(Object value) {
 		this._emptyClassBody = value;
@@ -92,7 +92,7 @@ public class ObjectCreationExpression {
 	public ObjectCreationExpression removeEmptyClassBody() {
 		this._emptyClassBody = null;
 		return this;
-	}
+	} 
 
 	public ObjectCreationExpression addTypeArguments(Object value) {
 		this._typeArguments.add(value);
@@ -121,7 +121,7 @@ public class ObjectCreationExpression {
 
 	public java.util.List<Object> getTypeArguments() {
 		return this._typeArguments;
-	}
+	} 
 
 	public ObjectCreationExpression addArguments(Object value) {
 		this._arguments.add(value);
@@ -150,7 +150,7 @@ public class ObjectCreationExpression {
 
 	public java.util.List<Object> getArguments() {
 		return this._arguments;
-	}
+	} 
 
 	public ObjectCreationExpression addAnonymousClassBodies(Object value) {
 		this._anonymousClassBodies.add(value);
@@ -179,7 +179,7 @@ public class ObjectCreationExpression {
 
 	public java.util.List<Object> getAnonymousClassBodies() {
 		return this._anonymousClassBodies;
-	}
+	} 
 
 
 	@Override
@@ -200,5 +200,5 @@ public class ObjectCreationExpression {
 				"	~anonymousClassBodies:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"}~elseif(emptyClassBody)~ {\n" + 
-				"}~endif~>>";
-}
+				"}~endif~ >>";
+} 

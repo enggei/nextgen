@@ -10,4 +10,4 @@ public enum VertxTypes {
 		@Override
 		public String toString() { return "io.vertx.core.json.JsonObject"; }
 	}
-} 
+}  

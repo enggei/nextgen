@@ -46,7 +46,7 @@ public class JsonWrapper {
 	public JsonWrapper removePackage() {
 		this._package = null;
 		return this;
-	}
+	} 
 
 	public JsonWrapper setName(String value) {
 		this._name = value;
@@ -68,7 +68,7 @@ public class JsonWrapper {
 	public JsonWrapper removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public JsonWrapper setLexical(Object value) {
 		this._lexical = value;
@@ -90,7 +90,7 @@ public class JsonWrapper {
 	public JsonWrapper removeLexical() {
 		this._lexical = null;
 		return this;
-	}
+	} 
 
 	public JsonWrapper addAccessors(Object value) {
 		this._accessors.add(value);
@@ -119,7 +119,7 @@ public class JsonWrapper {
 
 	public java.util.List<Object> getAccessors() {
 		return this._accessors;
-	}
+	} 
 
 	public JsonWrapper addExternalFields(Object _type, String _name, Object _initializer) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -172,7 +172,7 @@ public class JsonWrapper {
 			return this._initializer;
 		}
 
-	}
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -233,5 +233,5 @@ public class JsonWrapper {
 				"	public java.lang.String toString() { \n" + 
 				"		return ~if(lexical)~jsonObject.getString(\"~lexical~\")~else~jsonObject.encode()~endif~;\n" + 
 				"	}\n" + 
-				"}>>";
-}
+				"} >>";
+} 

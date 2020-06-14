@@ -44,7 +44,7 @@ public class Entity {
 	public Entity removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public Entity setIsEnum(Boolean value) {
 		this._isEnum = value;
@@ -66,7 +66,7 @@ public class Entity {
 	public Entity removeIsEnum() {
 		this._isEnum = null;
 		return this;
-	}
+	} 
 
 	public Entity addEnumValues(String value) {
 		this._enumValues.add(value);
@@ -95,7 +95,7 @@ public class Entity {
 
 	public java.util.List<String> getEnumValues() {
 		return this._enumValues;
-	}
+	} 
 
 	public Entity addRelations(Relation value) {
 		this._relations.add(value);
@@ -124,7 +124,7 @@ public class Entity {
 
 	public java.util.List<Relation> getRelations() {
 		return this._relations;
-	}
+	} 
 
 
 	@Override
@@ -141,5 +141,5 @@ public class Entity {
 	}
 
 	static final String st = "Entity(name,isEnum,enumValues,relations) ::= <<~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~\n" + 
-				"~relations:{it|~it~};separator=\"\\n\"~>>";
-}
+				"~relations:{it|~it~};separator=\"\\n\"~ >>";
+} 

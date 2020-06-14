@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class ThisVariableExpression {
+public class ThisVariableExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -38,7 +38,7 @@ public class ThisVariableExpression {
 	public ThisVariableExpression removeValue() {
 		this._value = null;
 		return this;
-	}
+	} 
 
 
 
@@ -55,5 +55,5 @@ public class ThisVariableExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ThisVariableExpression(value) ::= <<this.~value~>>";
-}
+	static final String st = "ThisVariableExpression(value) ::= <<this.~value~ >>";
+} 

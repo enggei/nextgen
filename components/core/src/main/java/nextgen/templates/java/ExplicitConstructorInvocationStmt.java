@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class ExplicitConstructorInvocationStmt {
+public class ExplicitConstructorInvocationStmt implements Statement {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -40,7 +40,7 @@ public class ExplicitConstructorInvocationStmt {
 	public ExplicitConstructorInvocationStmt removeIsThis() {
 		this._isThis = null;
 		return this;
-	}
+	} 
 
 	public ExplicitConstructorInvocationStmt addArguments(Object value) {
 		this._arguments.add(value);
@@ -69,7 +69,7 @@ public class ExplicitConstructorInvocationStmt {
 
 	public java.util.List<Object> getArguments() {
 		return this._arguments;
-	}
+	} 
 
 
 	@Override
@@ -85,5 +85,5 @@ public class ExplicitConstructorInvocationStmt {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ExplicitConstructorInvocationStmt(isThis,arguments) ::= <<~if(isThis)~this~else~super~endif~(~arguments:{it|~it~};separator=\", \"~);>>";
-}
+	static final String st = "ExplicitConstructorInvocationStmt(isThis,arguments) ::= <<~if(isThis)~this~else~super~endif~(~arguments:{it|~it~};separator=\", \"~); >>";
+} 

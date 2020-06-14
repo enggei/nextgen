@@ -46,7 +46,7 @@ public class MobXStore {
 	public MobXStore removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public MobXStore addObservables(Object value) {
 		this._observables.add(value);
@@ -75,7 +75,7 @@ public class MobXStore {
 
 	public java.util.List<Object> getObservables() {
 		return this._observables;
-	}
+	} 
 
 	public MobXStore addActions(Object value) {
 		this._actions.add(value);
@@ -104,7 +104,7 @@ public class MobXStore {
 
 	public java.util.List<Object> getActions() {
 		return this._actions;
-	}
+	} 
 
 	public MobXStore addConstructorStatements(Object value) {
 		this._constructorStatements.add(value);
@@ -133,7 +133,7 @@ public class MobXStore {
 
 	public java.util.List<Object> getConstructorStatements() {
 		return this._constructorStatements;
-	}
+	} 
 
 	public MobXStore addImports(Object _ref, Object _path) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -178,7 +178,7 @@ public class MobXStore {
 			return this._path;
 		}
 
-	}
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -208,5 +208,5 @@ public class MobXStore {
 				"	~actions:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"}\n" + 
 				"\n" + 
-				"export default new ~name;format=\"capitalize\"~();>>";
-}
+				"export default new ~name;format=\"capitalize\"~(); >>";
+} 

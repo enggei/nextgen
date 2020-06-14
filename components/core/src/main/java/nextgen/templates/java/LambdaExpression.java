@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class LambdaExpression {
+public class LambdaExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -40,7 +40,7 @@ public class LambdaExpression {
 	public LambdaExpression removeBody() {
 		this._body = null;
 		return this;
-	}
+	} 
 
 	public LambdaExpression addParameters(Object value) {
 		this._parameters.add(value);
@@ -69,7 +69,7 @@ public class LambdaExpression {
 
 	public java.util.List<Object> getParameters() {
 		return this._parameters;
-	}
+	} 
 
 
 	@Override
@@ -85,5 +85,5 @@ public class LambdaExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "LambdaExpression(body,parameters) ::= <<(~parameters:{it|~it~};separator=\", \"~) -> ~body~>>";
-}
+	static final String st = "LambdaExpression(body,parameters) ::= <<(~parameters:{it|~it~};separator=\", \"~) -> ~body~ >>";
+} 

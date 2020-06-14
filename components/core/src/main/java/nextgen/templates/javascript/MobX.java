@@ -32,5 +32,5 @@ public class MobX {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MobX() ::= <<MobX constructs>>";
-}
+	static final String st = "MobX() ::= <<MobX constructs >>";
+} 

@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class NormalAnnotationExpression {
+public class NormalAnnotationExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -40,7 +40,7 @@ public class NormalAnnotationExpression {
 	public NormalAnnotationExpression removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public NormalAnnotationExpression addMemberValues(Object value) {
 		this._memberValues.add(value);
@@ -69,7 +69,7 @@ public class NormalAnnotationExpression {
 
 	public java.util.List<Object> getMemberValues() {
 		return this._memberValues;
-	}
+	} 
 
 
 	@Override
@@ -85,5 +85,5 @@ public class NormalAnnotationExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NormalAnnotationExpression(name,memberValues) ::= <<@~name~~if(memberValues)~(~memberValues:{it|~it~};separator=\", \"~)~endif~>>";
-}
+	static final String st = "NormalAnnotationExpression(name,memberValues) ::= <<@~name~~if(memberValues)~(~memberValues:{it|~it~};separator=\", \"~)~endif~ >>";
+} 

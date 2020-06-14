@@ -40,7 +40,7 @@ public class GlobalStyle {
 	public GlobalStyle removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 
 	public GlobalStyle addProperties(Object _key, Object _value) {
@@ -86,7 +86,7 @@ public class GlobalStyle {
 			return this._value;
 		}
 
-	}
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -105,5 +105,5 @@ public class GlobalStyle {
 				"	~name~: {\n" + 
 				"		~properties:{it|~it.key~: ~it.value~};separator=\",\\n\"~\n" + 
 				"	}\n" + 
-				"}>>";
-}
+				"} >>";
+} 

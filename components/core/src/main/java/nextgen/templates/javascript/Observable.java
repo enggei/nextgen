@@ -40,7 +40,7 @@ public class Observable {
 	public Observable removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public Observable setInitializer(Object value) {
 		this._initializer = value;
@@ -62,7 +62,7 @@ public class Observable {
 	public Observable removeInitializer() {
 		this._initializer = null;
 		return this;
-	}
+	} 
 
 
 
@@ -79,5 +79,5 @@ public class Observable {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Observable(name,initializer) ::= <<@observable ~name~~if(initializer)~ = ~initializer~~endif~;>>";
-}
+	static final String st = "Observable(name,initializer) ::= <<@observable ~name~~if(initializer)~ = ~initializer~~endif~; >>";
+} 

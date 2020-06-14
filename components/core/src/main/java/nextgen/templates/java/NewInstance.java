@@ -40,7 +40,7 @@ public class NewInstance {
 	public NewInstance removeType() {
 		this._type = null;
 		return this;
-	}
+	} 
 
 	public NewInstance addArguments(Object value) {
 		this._arguments.add(value);
@@ -69,7 +69,7 @@ public class NewInstance {
 
 	public java.util.List<Object> getArguments() {
 		return this._arguments;
-	}
+	} 
 
 
 	@Override
@@ -85,5 +85,5 @@ public class NewInstance {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NewInstance(type,arguments) ::= <<new ~type~(~arguments:{it|~it~};separator=\",\"~)>>";
-}
+	static final String st = "NewInstance(type,arguments) ::= <<new ~type~(~arguments:{it|~it~};separator=\",\"~) >>";
+} 

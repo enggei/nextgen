@@ -32,5 +32,5 @@ public class GraphDatabaseService {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "GraphDatabaseService() ::= <<org.neo4j.graphdb.GraphDatabaseService>>";
-}
+	static final String st = "GraphDatabaseService() ::= <<org.neo4j.graphdb.GraphDatabaseService >>";
+} 

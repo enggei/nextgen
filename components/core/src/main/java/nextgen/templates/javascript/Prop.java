@@ -40,7 +40,7 @@ public class Prop {
 	public Prop removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public Prop setValue(Object value) {
 		this._value = value;
@@ -62,7 +62,7 @@ public class Prop {
 	public Prop removeValue() {
 		this._value = null;
 		return this;
-	}
+	} 
 
 
 
@@ -79,5 +79,5 @@ public class Prop {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Prop(name,value) ::= <<~name~~if(value)~=~value~~endif~>>";
-}
+	static final String st = "Prop(name,value) ::= <<~name~~if(value)~=~value~~endif~ >>";
+} 

@@ -46,7 +46,7 @@ public class QualifierName {
 
 	public java.util.List<Object> getValue() {
 		return this._value;
-	}
+	} 
 
 
 	@Override
@@ -62,5 +62,5 @@ public class QualifierName {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "QualifierName(value) ::= <<~value:{it|~it~};separator=\".\"~>>";
-}
+	static final String st = "QualifierName(value) ::= <<~value:{it|~it~};separator=\".\"~ >>";
+} 

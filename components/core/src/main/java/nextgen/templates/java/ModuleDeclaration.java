@@ -48,7 +48,7 @@ public class ModuleDeclaration {
 	public ModuleDeclaration removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public ModuleDeclaration addProvidesDirective(Object value) {
 		this._providesDirective.add(value);
@@ -77,7 +77,7 @@ public class ModuleDeclaration {
 
 	public java.util.List<Object> getProvidesDirective() {
 		return this._providesDirective;
-	}
+	} 
 
 	public ModuleDeclaration addUsesDirective(Object value) {
 		this._usesDirective.add(value);
@@ -106,7 +106,7 @@ public class ModuleDeclaration {
 
 	public java.util.List<Object> getUsesDirective() {
 		return this._usesDirective;
-	}
+	} 
 
 	public ModuleDeclaration addRequiresDirective(Object value) {
 		this._requiresDirective.add(value);
@@ -135,7 +135,7 @@ public class ModuleDeclaration {
 
 	public java.util.List<Object> getRequiresDirective() {
 		return this._requiresDirective;
-	}
+	} 
 
 	public ModuleDeclaration addExportsDirective(Object value) {
 		this._exportsDirective.add(value);
@@ -164,7 +164,7 @@ public class ModuleDeclaration {
 
 	public java.util.List<Object> getExportsDirective() {
 		return this._exportsDirective;
-	}
+	} 
 
 	public ModuleDeclaration addOpens(Object value) {
 		this._opens.add(value);
@@ -193,7 +193,7 @@ public class ModuleDeclaration {
 
 	public java.util.List<Object> getOpens() {
 		return this._opens;
-	}
+	} 
 
 
 	@Override
@@ -215,5 +215,5 @@ public class ModuleDeclaration {
 				"    ~providesDirective:{it|provides ~it~};separator=\"\\n\"~\n" + 
 				"    ~usesDirective:{it|uses ~it~};separator=\"\\n\"~\n" + 
 				"    ~opens:{it|opens ~it~};separator=\"\\n\"~\n" + 
-				"}>>";
-}
+				"} >>";
+} 

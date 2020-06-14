@@ -1,21 +1,21 @@
 delimiters "~","~"
 
-Entities() ::= <<>>
+Entities() ::= << >>
 
 Poko(packageDeclaration,classDeclaration) ::= <<~packageDeclaration~
 
-~classDeclaration~>>
+~classDeclaration~ >>
 
-Grammar() ::= <<>>
+Grammar() ::= << >>
 
-Declarations() ::= <<>>
+Declarations() ::= << >>
 
 AnnotationDeclaration(annotations) ::= <<~annotations:{it|@~it.name~(~it.params~)};separator="\n"~~if(annotations)~
-~endif~>>
+~endif~ >>
 
-AnnotationParam(param) ::= <<~param:{it|~it.key~ = ~it.value~};separator=", "~>>
+AnnotationParam(param) ::= <<~param:{it|~it.key~ = ~it.value~};separator=", "~ >>
 
-PackageDeclaration(name) ::= <<package ~name~>>
+PackageDeclaration(name) ::= <<package ~name~ >>
 
 ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,overrideEquals,members) ::= <<~annotations~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(
 	~fields:{it|~it~};separator=",\n"~
@@ -24,23 +24,23 @@ ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,overrideEqual
 	~if(overrideEquals)~~overrideEquals~~endif~
 	~members:{it|~it~};separator="\n"~
 
-}>>
+} >>
 
 OverrideEquals(className,fields) ::= <<override fun equals(other: Any?): Boolean {
 	if (other !is ~className~) return false
 		return if (other === this) true
 		else
 			~fields:{it|this.~it~ == other.~it~};separator=" && "~
-}>>
+} >>
 
 FieldDeclaration(annotations,isMutable,isNonMember,name,type,isNullable,initializer) ::= <<~annotations:{it|~it~};separator="\n"~
-~if(isMutable)~var ~elseif(isNonMember)~~else~val ~endif~~name~: ~type~~if(isNullable)~?~endif~~if(initializer)~ = ~initializer~~endif~>>
+~if(isMutable)~var ~elseif(isNonMember)~~else~val ~endif~~name~: ~type~~if(isNullable)~?~endif~~if(initializer)~ = ~initializer~~endif~ >>
 
-Extending(className,params) ::= <<~className~(~params:{it|~it.name~};separator=", "~)>>
+Extending(className,params) ::= <<~className~(~params:{it|~it.name~};separator=", "~) >>
 
 FunctionDeclaration(annotations,override,name,returnType) ::= <<~annotations~~if(override)~override ~endif~fun ~name~(): ~returnType~ {
 	// TODO: Expression body / expression statememt
-}>>
+} >>
 
 eom() ::= "}"
 

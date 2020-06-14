@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class ConditionalExpression {
+public class ConditionalExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -42,7 +42,7 @@ public class ConditionalExpression {
 	public ConditionalExpression removeThenExpression() {
 		this._thenExpression = null;
 		return this;
-	}
+	} 
 
 	public ConditionalExpression setElseExpression(Object value) {
 		this._elseExpression = value;
@@ -64,7 +64,7 @@ public class ConditionalExpression {
 	public ConditionalExpression removeElseExpression() {
 		this._elseExpression = null;
 		return this;
-	}
+	} 
 
 	public ConditionalExpression setCondition(Object value) {
 		this._condition = value;
@@ -86,7 +86,7 @@ public class ConditionalExpression {
 	public ConditionalExpression removeCondition() {
 		this._condition = null;
 		return this;
-	}
+	} 
 
 
 
@@ -103,5 +103,5 @@ public class ConditionalExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ConditionalExpression(thenExpression,elseExpression,condition) ::= <<~condition~ ? ~thenExpression~ : ~elseExpression~>>";
-}
+	static final String st = "ConditionalExpression(thenExpression,elseExpression,condition) ::= <<~condition~ ? ~thenExpression~ : ~elseExpression~ >>";
+} 

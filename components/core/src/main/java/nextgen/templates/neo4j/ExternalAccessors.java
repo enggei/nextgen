@@ -42,7 +42,7 @@ public class ExternalAccessors {
 	public ExternalAccessors removeClassName() {
 		this._className = null;
 		return this;
-	}
+	} 
 
 	public ExternalAccessors setName(Object value) {
 		this._name = value;
@@ -64,7 +64,7 @@ public class ExternalAccessors {
 	public ExternalAccessors removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public ExternalAccessors setType(Object value) {
 		this._type = value;
@@ -86,7 +86,7 @@ public class ExternalAccessors {
 	public ExternalAccessors removeType() {
 		this._type = null;
 		return this;
-	}
+	} 
 
 
 
@@ -114,5 +114,5 @@ public class ExternalAccessors {
 				"\n" + 
 				"public ~type~ get~name;format=\"capitalize\"~(~type~ defaultValue) { \n" + 
 				"	return this._~name~ == null ? defaultValue : this._~name~;\n" + 
-				"}>>";
-}
+				"} >>";
+} 

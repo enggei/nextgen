@@ -54,7 +54,7 @@ public class ClassComponent {
 	public ClassComponent removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public ClassComponent addDependencies(Object value) {
 		this._dependencies.add(value);
@@ -83,7 +83,7 @@ public class ClassComponent {
 
 	public java.util.List<Object> getDependencies() {
 		return this._dependencies;
-	}
+	} 
 
 	public ClassComponent addComponents(Object value) {
 		this._components.add(value);
@@ -112,7 +112,7 @@ public class ClassComponent {
 
 	public java.util.List<Object> getComponents() {
 		return this._components;
-	}
+	} 
 
 	public ClassComponent addDecorators(Object value) {
 		this._decorators.add(value);
@@ -141,7 +141,7 @@ public class ClassComponent {
 
 	public java.util.List<Object> getDecorators() {
 		return this._decorators;
-	}
+	} 
 
 	public ClassComponent addState(Object value) {
 		this._state.add(value);
@@ -170,7 +170,7 @@ public class ClassComponent {
 
 	public java.util.List<Object> getState() {
 		return this._state;
-	}
+	} 
 
 	public ClassComponent addMethods(Object value) {
 		this._methods.add(value);
@@ -199,7 +199,7 @@ public class ClassComponent {
 
 	public java.util.List<Object> getMethods() {
 		return this._methods;
-	}
+	} 
 
 	public ClassComponent addRenderConstants(Object value) {
 		this._renderConstants.add(value);
@@ -228,7 +228,7 @@ public class ClassComponent {
 
 	public java.util.List<Object> getRenderConstants() {
 		return this._renderConstants;
-	}
+	} 
 
 	public ClassComponent addReturnStatements(Object value) {
 		this._returnStatements.add(value);
@@ -257,7 +257,7 @@ public class ClassComponent {
 
 	public java.util.List<Object> getReturnStatements() {
 		return this._returnStatements;
-	}
+	} 
 
 	public ClassComponent addEvents(Object _methodName, Object _declaration) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -302,7 +302,7 @@ public class ClassComponent {
 			return this._declaration;
 		}
 
-	}
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -352,5 +352,5 @@ public class ClassComponent {
 				"	}\n" + 
 				"}\n" + 
 				"\n" + 
-				"export default (~name~);>>";
-}
+				"export default (~name~); >>";
+} 

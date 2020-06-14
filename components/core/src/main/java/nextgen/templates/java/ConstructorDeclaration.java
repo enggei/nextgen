@@ -50,7 +50,7 @@ public class ConstructorDeclaration {
 	public ConstructorDeclaration removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public ConstructorDeclaration setBlockStmt(Object value) {
 		this._blockStmt = value;
@@ -72,7 +72,7 @@ public class ConstructorDeclaration {
 	public ConstructorDeclaration removeBlockStmt() {
 		this._blockStmt = null;
 		return this;
-	}
+	} 
 
 	public ConstructorDeclaration addModifiers(Object value) {
 		this._modifiers.add(value);
@@ -101,7 +101,7 @@ public class ConstructorDeclaration {
 
 	public java.util.List<Object> getModifiers() {
 		return this._modifiers;
-	}
+	} 
 
 	public ConstructorDeclaration addAnnotations(Object value) {
 		this._annotations.add(value);
@@ -130,7 +130,7 @@ public class ConstructorDeclaration {
 
 	public java.util.List<Object> getAnnotations() {
 		return this._annotations;
-	}
+	} 
 
 	public ConstructorDeclaration addThrownExceptions(Object value) {
 		this._thrownExceptions.add(value);
@@ -159,7 +159,7 @@ public class ConstructorDeclaration {
 
 	public java.util.List<Object> getThrownExceptions() {
 		return this._thrownExceptions;
-	}
+	} 
 
 	public ConstructorDeclaration addTypeParameters(Object value) {
 		this._typeParameters.add(value);
@@ -188,7 +188,7 @@ public class ConstructorDeclaration {
 
 	public java.util.List<Object> getTypeParameters() {
 		return this._typeParameters;
-	}
+	} 
 
 	public ConstructorDeclaration addParameters(Object value) {
 		this._parameters.add(value);
@@ -217,7 +217,7 @@ public class ConstructorDeclaration {
 
 	public java.util.List<Object> getParameters() {
 		return this._parameters;
-	}
+	} 
 
 
 	@Override
@@ -234,5 +234,5 @@ public class ConstructorDeclaration {
 	}
 
 	static final String st = "ConstructorDeclaration(name,blockStmt,modifiers,annotations,thrownExceptions,typeParameters,parameters) ::= <<~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\n" + 
-				"~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~if(typeParameters)~~typeParameters:{it|<~it~>};separator=\" \"~ ~endif~~name~(~parameters:{it|~it~};separator=\", \"~)~if(thrownExceptions)~ throws ~thrownExceptions:{it|~it~};separator=\", \"~ ~endif~~if(blockStmt)~~blockStmt~~else~ { }~endif~>>";
-}
+				"~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~if(typeParameters)~~typeParameters:{it|<~it~>};separator=\" \"~ ~endif~~name~(~parameters:{it|~it~};separator=\", \"~)~if(thrownExceptions)~ throws ~thrownExceptions:{it|~it~};separator=\", \"~ ~endif~~if(blockStmt)~~blockStmt~~else~ { }~endif~ >>";
+} 

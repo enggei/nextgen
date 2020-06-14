@@ -42,7 +42,7 @@ public class WebpackConfig {
 	public WebpackConfig removeMainEntry() {
 		this._mainEntry = null;
 		return this;
-	}
+	} 
 
 	public WebpackConfig setMode(Object value) {
 		this._mode = value;
@@ -64,7 +64,7 @@ public class WebpackConfig {
 	public WebpackConfig removeMode() {
 		this._mode = null;
 		return this;
-	}
+	} 
 
 	public WebpackConfig setOutputFilename(Object value) {
 		this._outputFilename = value;
@@ -86,7 +86,7 @@ public class WebpackConfig {
 	public WebpackConfig removeOutputFilename() {
 		this._outputFilename = null;
 		return this;
-	}
+	} 
 
 
 
@@ -130,5 +130,5 @@ public class WebpackConfig {
 				"			}\n" + 
 				"		]\n" + 
 				"	}\n" + 
-				"};>>";
-}
+				"}; >>";
+} 

@@ -38,7 +38,7 @@ public class Link {
 	public Link removeTo() {
 		this._to = null;
 		return this;
-	}
+	} 
 
 
 
@@ -56,4 +56,4 @@ public class Link {
 	}
 
 	static final String st = "Link(to) ::= <<<Link innerRef={ ref } to=\"~to~\" { ...props } /> >>";
-}
+} 

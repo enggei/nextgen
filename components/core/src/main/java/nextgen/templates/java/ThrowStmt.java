@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class ThrowStmt {
+public class ThrowStmt implements Statement {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -38,7 +38,7 @@ public class ThrowStmt {
 	public ThrowStmt removeExpression() {
 		this._expression = null;
 		return this;
-	}
+	} 
 
 
 
@@ -55,5 +55,5 @@ public class ThrowStmt {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ThrowStmt(expression) ::= <<throw ~expression~;>>";
-}
+	static final String st = "ThrowStmt(expression) ::= <<throw ~expression~; >>";
+} 

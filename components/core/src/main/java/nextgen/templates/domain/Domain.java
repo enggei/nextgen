@@ -42,7 +42,7 @@ public class Domain {
 	public Domain removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public Domain setPackageName(String value) {
 		this._packageName = value;
@@ -64,7 +64,7 @@ public class Domain {
 	public Domain removePackageName() {
 		this._packageName = null;
 		return this;
-	}
+	} 
 
 	public Domain addEntities(Entity value) {
 		this._entities.add(value);
@@ -93,7 +93,7 @@ public class Domain {
 
 	public java.util.List<Entity> getEntities() {
 		return this._entities;
-	}
+	} 
 
 
 	@Override
@@ -111,5 +111,5 @@ public class Domain {
 
 	static final String st = "Domain(name,packageName,entities) ::= <<~name~\n" + 
 				"~packageName~\n" + 
-				"~entities:{it|~it~};separator=\"\\n\"~>>";
-}
+				"~entities:{it|~it~};separator=\"\\n\"~ >>";
+} 

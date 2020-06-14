@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class SwitchEntryStmt {
+public class SwitchEntryStmt implements Statement {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -48,7 +48,7 @@ public class SwitchEntryStmt {
 
 	public java.util.List<Object> getLabels() {
 		return this._labels;
-	}
+	} 
 
 	public SwitchEntryStmt addStatements(Object value) {
 		this._statements.add(value);
@@ -77,7 +77,7 @@ public class SwitchEntryStmt {
 
 	public java.util.List<Object> getStatements() {
 		return this._statements;
-	}
+	} 
 
 
 	@Override
@@ -94,5 +94,5 @@ public class SwitchEntryStmt {
 	}
 
 	static final String st = "SwitchEntryStmt(labels,statements) ::= <<~if(labels)~~labels:{it|case ~it~ :};separator=\"\\n\"~~else~default :~endif~\n" + 
-				"	~statements:{it|~it~};separator=\"\\n\"~>>";
-}
+				"	~statements:{it|~it~};separator=\"\\n\"~ >>";
+} 

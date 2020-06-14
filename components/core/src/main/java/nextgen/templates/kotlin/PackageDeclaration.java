@@ -38,7 +38,7 @@ public class PackageDeclaration {
 	public PackageDeclaration removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 
 
@@ -55,5 +55,5 @@ public class PackageDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PackageDeclaration(name) ::= <<package ~name~>>";
-}
+	static final String st = "PackageDeclaration(name) ::= <<package ~name~ >>";
+} 

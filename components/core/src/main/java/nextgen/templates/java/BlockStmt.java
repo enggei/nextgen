@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class BlockStmt {
+public class BlockStmt implements Statement {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -40,7 +40,7 @@ public class BlockStmt {
 	public BlockStmt removeIsStatic() {
 		this._isStatic = null;
 		return this;
-	}
+	} 
 
 	public BlockStmt addStatements(Object value) {
 		this._statements.add(value);
@@ -69,7 +69,7 @@ public class BlockStmt {
 
 	public java.util.List<Object> getStatements() {
 		return this._statements;
-	}
+	} 
 
 
 	@Override
@@ -88,5 +88,5 @@ public class BlockStmt {
 	static final String st = "BlockStmt(isStatic,statements) ::= <<~if(isStatic)~ static~endif~ { ~if(statements)~\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
 				"~endif~\n" + 
-				"}>>";
-}
+				"} >>";
+} 

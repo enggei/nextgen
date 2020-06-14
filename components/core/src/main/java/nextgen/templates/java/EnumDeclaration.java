@@ -50,7 +50,7 @@ public class EnumDeclaration {
 	public EnumDeclaration removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public EnumDeclaration addMembers(Object value) {
 		this._members.add(value);
@@ -79,7 +79,7 @@ public class EnumDeclaration {
 
 	public java.util.List<Object> getMembers() {
 		return this._members;
-	}
+	} 
 
 	public EnumDeclaration addAnnotations(Object value) {
 		this._annotations.add(value);
@@ -108,7 +108,7 @@ public class EnumDeclaration {
 
 	public java.util.List<Object> getAnnotations() {
 		return this._annotations;
-	}
+	} 
 
 	public EnumDeclaration addImplementedTypes(Object value) {
 		this._implementedTypes.add(value);
@@ -137,7 +137,7 @@ public class EnumDeclaration {
 
 	public java.util.List<Object> getImplementedTypes() {
 		return this._implementedTypes;
-	}
+	} 
 
 	public EnumDeclaration addEntries(Object value) {
 		this._entries.add(value);
@@ -166,7 +166,7 @@ public class EnumDeclaration {
 
 	public java.util.List<Object> getEntries() {
 		return this._entries;
-	}
+	} 
 
 	public EnumDeclaration addExtend(Object value) {
 		this._extend.add(value);
@@ -195,7 +195,7 @@ public class EnumDeclaration {
 
 	public java.util.List<Object> getExtend() {
 		return this._extend;
-	}
+	} 
 
 	public EnumDeclaration addModifiers(Object value) {
 		this._modifiers.add(value);
@@ -224,7 +224,7 @@ public class EnumDeclaration {
 
 	public java.util.List<Object> getModifiers() {
 		return this._modifiers;
-	}
+	} 
 
 
 	@Override
@@ -246,5 +246,5 @@ public class EnumDeclaration {
 				"	~entries:{it|~it~};separator=\",\\n\"~~if(members)~;~endif~\n" + 
 				"\n" + 
 				"	~members:{it|~it~};separator=\"\\n\\n\"~\n" + 
-				"}>>";
-}
+				"} >>";
+} 

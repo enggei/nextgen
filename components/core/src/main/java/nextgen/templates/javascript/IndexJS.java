@@ -40,7 +40,7 @@ public class IndexJS {
 	public IndexJS removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public IndexJS addStores(Object value) {
 		this._stores.add(value);
@@ -69,7 +69,7 @@ public class IndexJS {
 
 	public java.util.List<Object> getStores() {
 		return this._stores;
-	}
+	} 
 
 
 	@Override
@@ -105,5 +105,5 @@ public class IndexJS {
 				"			<~name~ />\n" + 
 				"		</BrowserRouter>\n" + 
 				"	</Provider>\n" + 
-				"), document.getElementById('root'));>>";
-}
+				"), document.getElementById('root')); >>";
+} 

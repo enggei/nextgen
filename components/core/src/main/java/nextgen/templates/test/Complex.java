@@ -42,7 +42,7 @@ public class Complex {
 	public Complex removeCondition1() {
 		this._condition1 = null;
 		return this;
-	}
+	} 
 
 	public Complex setCondition2(Object value) {
 		this._condition2 = value;
@@ -64,7 +64,7 @@ public class Complex {
 	public Complex removeCondition2() {
 		this._condition2 = null;
 		return this;
-	}
+	} 
 
 
 	public Complex addList(Object _name, Object _value) {
@@ -110,7 +110,7 @@ public class Complex {
 			return this._value;
 		}
 
-	}
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -125,5 +125,5 @@ public class Complex {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "complex(list,condition1,condition2) ::= <<~if(list)~~list:{it|~it.name~ ~it.value~(~if(condition1)~1~elseif(condition2)~2~else~NULL~endif~)};separator=\"\\n\"~~endif~>>";
-}
+	static final String st = "complex(list,condition1,condition2) ::= <<~if(list)~~list:{it|~it.name~ ~it.value~(~if(condition1)~1~elseif(condition2)~2~else~NULL~endif~)};separator=\"\\n\"~~endif~ >>";
+} 

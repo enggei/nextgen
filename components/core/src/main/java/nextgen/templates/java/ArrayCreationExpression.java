@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class ArrayCreationExpression {
+public class ArrayCreationExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -42,7 +42,7 @@ public class ArrayCreationExpression {
 	public ArrayCreationExpression removeInitializer() {
 		this._initializer = null;
 		return this;
-	}
+	} 
 
 	public ArrayCreationExpression setType(Object value) {
 		this._type = value;
@@ -64,7 +64,7 @@ public class ArrayCreationExpression {
 	public ArrayCreationExpression removeType() {
 		this._type = null;
 		return this;
-	}
+	} 
 
 	public ArrayCreationExpression addLevels(Object value) {
 		this._levels.add(value);
@@ -93,7 +93,7 @@ public class ArrayCreationExpression {
 
 	public java.util.List<Object> getLevels() {
 		return this._levels;
-	}
+	} 
 
 
 	@Override
@@ -109,5 +109,5 @@ public class ArrayCreationExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ArrayCreationExpression(initializer,type,levels) ::= <<new ~type~~levels:{it|~it~}~~if(initializer)~ ~initializer~~endif~>>";
-}
+	static final String st = "ArrayCreationExpression(initializer,type,levels) ::= <<new ~type~~levels:{it|~it~}~~if(initializer)~ ~initializer~~endif~ >>";
+} 

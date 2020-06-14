@@ -2,12 +2,12 @@ delimiters "~","~"
 
 Domain(name,packageName,entities) ::= <<~name~
 ~packageName~
-~entities:{it|~it~};separator="\n"~>>
+~entities:{it|~it~};separator="\n"~ >>
 
 Entity(name,isEnum,enumValues,relations) ::= <<~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=","~~endif~
-~relations:{it|~it~};separator="\n"~ >>
+~relations:{it|~it~};separator="\n"~  >>
 
-Relation(name,type,dst,lexical,self) ::= <<~name~ ~type~ ~dst~~if(lexical)~ lexical~endif~~if(self)~ self-referential~endif~ >>
+Relation(name,type,dst,lexical,self) ::= <<~name~ ~type~ ~dst~~if(lexical)~ lexical~endif~~if(self)~ self-referential~endif~  >>
 
 eom() ::= "}"
 

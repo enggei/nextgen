@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class DoStmt {
+public class DoStmt implements Statement {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -40,7 +40,7 @@ public class DoStmt {
 	public DoStmt removeCondition() {
 		this._condition = null;
 		return this;
-	}
+	} 
 
 	public DoStmt setBody(Object value) {
 		this._body = value;
@@ -62,7 +62,7 @@ public class DoStmt {
 	public DoStmt removeBody() {
 		this._body = null;
 		return this;
-	}
+	} 
 
 
 
@@ -79,5 +79,5 @@ public class DoStmt {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "DoStmt(condition,body) ::= <<do ~body~ while (~condition~);>>";
-}
+	static final String st = "DoStmt(condition,body) ::= <<do ~body~ while (~condition~); >>";
+} 

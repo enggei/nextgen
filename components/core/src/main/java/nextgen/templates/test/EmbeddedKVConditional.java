@@ -65,7 +65,7 @@ public class EmbeddedKVConditional {
 			return this._name;
 		}
 
-	}
+	} 
 
 	public EmbeddedKVConditional addPROP(Object _initializer) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -102,7 +102,7 @@ public class EmbeddedKVConditional {
 			return this._initializer;
 		}
 
-	}
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -117,5 +117,5 @@ public class EmbeddedKVConditional {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "embeddedKVConditional(fields,PROP) ::= <<~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~>>";
-}
+	static final String st = "embeddedKVConditional(fields,PROP) ::= <<~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~ >>";
+} 

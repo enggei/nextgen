@@ -44,7 +44,7 @@ public class FunctionDeclaration {
 	public FunctionDeclaration removeAnnotations() {
 		this._annotations = null;
 		return this;
-	}
+	} 
 
 	public FunctionDeclaration setOverride(Object value) {
 		this._override = value;
@@ -66,7 +66,7 @@ public class FunctionDeclaration {
 	public FunctionDeclaration removeOverride() {
 		this._override = null;
 		return this;
-	}
+	} 
 
 	public FunctionDeclaration setName(Object value) {
 		this._name = value;
@@ -88,7 +88,7 @@ public class FunctionDeclaration {
 	public FunctionDeclaration removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public FunctionDeclaration setReturnType(Object value) {
 		this._returnType = value;
@@ -110,7 +110,7 @@ public class FunctionDeclaration {
 	public FunctionDeclaration removeReturnType() {
 		this._returnType = null;
 		return this;
-	}
+	} 
 
 
 
@@ -129,5 +129,5 @@ public class FunctionDeclaration {
 
 	static final String st = "FunctionDeclaration(annotations,override,name,returnType) ::= <<~annotations~~if(override)~override ~endif~fun ~name~(): ~returnType~ {\n" + 
 				"	// TODO: Expression body / expression statememt\n" + 
-				"}>>";
-}
+				"} >>";
+} 

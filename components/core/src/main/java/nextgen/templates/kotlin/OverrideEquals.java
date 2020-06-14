@@ -40,7 +40,7 @@ public class OverrideEquals {
 	public OverrideEquals removeClassName() {
 		this._className = null;
 		return this;
-	}
+	} 
 
 	public OverrideEquals addFields(String value) {
 		this._fields.add(value);
@@ -69,7 +69,7 @@ public class OverrideEquals {
 
 	public java.util.List<String> getFields() {
 		return this._fields;
-	}
+	} 
 
 
 	@Override
@@ -90,5 +90,5 @@ public class OverrideEquals {
 				"		return if (other === this) true\n" + 
 				"		else\n" + 
 				"			~fields:{it|this.~it~ == other.~it~};separator=\" && \"~\n" + 
-				"}>>";
-}
+				"} >>";
+} 

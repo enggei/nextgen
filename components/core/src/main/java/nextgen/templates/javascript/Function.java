@@ -42,7 +42,7 @@ public class Function {
 	public Function removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public Function addParameters(Object value) {
 		this._parameters.add(value);
@@ -71,7 +71,7 @@ public class Function {
 
 	public java.util.List<Object> getParameters() {
 		return this._parameters;
-	}
+	} 
 
 	public Function addStatements(Object value) {
 		this._statements.add(value);
@@ -100,7 +100,7 @@ public class Function {
 
 	public java.util.List<Object> getStatements() {
 		return this._statements;
-	}
+	} 
 
 
 	@Override
@@ -118,5 +118,5 @@ public class Function {
 
 	static final String st = "Function(name,parameters,statements) ::= <<function ~name~(~parameters:{it|~it~};separator=\",\"~) {\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
-				"}>>";
-}
+				"} >>";
+} 

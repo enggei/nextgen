@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class ForStmt {
+public class ForStmt implements Statement {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -44,7 +44,7 @@ public class ForStmt {
 	public ForStmt removeCompare() {
 		this._compare = null;
 		return this;
-	}
+	} 
 
 	public ForStmt setBody(Object value) {
 		this._body = value;
@@ -66,7 +66,7 @@ public class ForStmt {
 	public ForStmt removeBody() {
 		this._body = null;
 		return this;
-	}
+	} 
 
 	public ForStmt addUpdate(Object value) {
 		this._update.add(value);
@@ -95,7 +95,7 @@ public class ForStmt {
 
 	public java.util.List<Object> getUpdate() {
 		return this._update;
-	}
+	} 
 
 	public ForStmt addInitialization(Object value) {
 		this._initialization.add(value);
@@ -124,7 +124,7 @@ public class ForStmt {
 
 	public java.util.List<Object> getInitialization() {
 		return this._initialization;
-	}
+	} 
 
 
 	@Override
@@ -140,5 +140,5 @@ public class ForStmt {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ForStmt(update,initialization,compare,body) ::= <<for (~initialization:{it|~it~};separator=\", \"~; ~compare~; ~update:{it|~it~};separator=\", \"~) ~body~>>";
-}
+	static final String st = "ForStmt(update,initialization,compare,body) ::= <<for (~initialization:{it|~it~};separator=\", \"~; ~compare~; ~update:{it|~it~};separator=\", \"~) ~body~ >>";
+} 

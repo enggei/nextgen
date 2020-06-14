@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class IfStmt {
+public class IfStmt implements Statement {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -42,7 +42,7 @@ public class IfStmt {
 	public IfStmt removeCondition() {
 		this._condition = null;
 		return this;
-	}
+	} 
 
 	public IfStmt setThen(Object value) {
 		this._then = value;
@@ -64,7 +64,7 @@ public class IfStmt {
 	public IfStmt removeThen() {
 		this._then = null;
 		return this;
-	}
+	} 
 
 	public IfStmt setElseStmt(Object value) {
 		this._elseStmt = value;
@@ -86,7 +86,7 @@ public class IfStmt {
 	public IfStmt removeElseStmt() {
 		this._elseStmt = null;
 		return this;
-	}
+	} 
 
 
 
@@ -104,5 +104,5 @@ public class IfStmt {
 	}
 
 	static final String st = "IfStmt(condition,then,elseStmt) ::= <<if (~condition~) ~then~~if(elseStmt)~ \n" + 
-				"else ~elseStmt~~endif~>>";
-}
+				"else ~elseStmt~~endif~ >>";
+} 

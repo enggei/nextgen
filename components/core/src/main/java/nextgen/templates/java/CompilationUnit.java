@@ -42,7 +42,7 @@ public class CompilationUnit {
 	public CompilationUnit removePackageDeclaration() {
 		this._packageDeclaration = null;
 		return this;
-	}
+	} 
 
 	public CompilationUnit addTypes(Object value) {
 		this._types.add(value);
@@ -71,7 +71,7 @@ public class CompilationUnit {
 
 	public java.util.List<Object> getTypes() {
 		return this._types;
-	}
+	} 
 
 	public CompilationUnit addImportDeclaration(Object value) {
 		this._importDeclaration.add(value);
@@ -100,7 +100,7 @@ public class CompilationUnit {
 
 	public java.util.List<Object> getImportDeclaration() {
 		return this._importDeclaration;
-	}
+	} 
 
 
 	@Override
@@ -120,5 +120,5 @@ public class CompilationUnit {
 				"\n" + 
 				"~importDeclaration:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
-				"~types:{it|~it~};separator=\"\\n\\n\"~>>";
-}
+				"~types:{it|~it~};separator=\"\\n\\n\"~ >>";
+} 

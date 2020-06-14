@@ -38,7 +38,7 @@ public class Single implements TestInterface {
 	public Single removeValue() {
 		this._value = null;
 		return this;
-	}
+	} 
 
 
 
@@ -55,5 +55,5 @@ public class Single implements TestInterface {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "single(value) ::= <<single : ~value~>>";
-}
+	static final String st = "single(value) ::= <<single : ~value~ >>";
+} 

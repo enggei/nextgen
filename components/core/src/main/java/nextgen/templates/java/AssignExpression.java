@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class AssignExpression {
+public class AssignExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -42,7 +42,7 @@ public class AssignExpression {
 	public AssignExpression removeValue() {
 		this._value = null;
 		return this;
-	}
+	} 
 
 	public AssignExpression setTarget(Object value) {
 		this._target = value;
@@ -64,7 +64,7 @@ public class AssignExpression {
 	public AssignExpression removeTarget() {
 		this._target = null;
 		return this;
-	}
+	} 
 
 	public AssignExpression setOperator(Object value) {
 		this._operator = value;
@@ -86,7 +86,7 @@ public class AssignExpression {
 	public AssignExpression removeOperator() {
 		this._operator = null;
 		return this;
-	}
+	} 
 
 
 
@@ -103,5 +103,5 @@ public class AssignExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AssignExpression(value,target,operator) ::= <<~target~ ~operator~ ~value~>>";
-}
+	static final String st = "AssignExpression(value,target,operator) ::= <<~target~ ~operator~ ~value~ >>";
+} 

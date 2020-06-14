@@ -46,7 +46,7 @@ public class AllTypes {
 	public AllTypes removeSingle() {
 		this._single = null;
 		return this;
-	}
+	} 
 
 	public AllTypes setCond1(Object value) {
 		this._cond1 = value;
@@ -68,7 +68,7 @@ public class AllTypes {
 	public AllTypes removeCond1() {
 		this._cond1 = null;
 		return this;
-	}
+	} 
 
 	public AllTypes setCond2(Object value) {
 		this._cond2 = value;
@@ -90,7 +90,7 @@ public class AllTypes {
 	public AllTypes removeCond2() {
 		this._cond2 = null;
 		return this;
-	}
+	} 
 
 	public AllTypes addList(TestInterface value) {
 		this._list.add(value);
@@ -119,7 +119,7 @@ public class AllTypes {
 
 	public java.util.List<TestInterface> getList() {
 		return this._list;
-	}
+	} 
 
 	public AllTypes addKvList(Object _name, Object _value) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -164,7 +164,7 @@ public class AllTypes {
 			return this._value;
 		}
 
-	}
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -183,5 +183,5 @@ public class AllTypes {
 				"then a list ~list:{it|~it~};separator=\",\"~, \n" + 
 				"and a kv-list : ~kvList:{it|~it.name~:~it.value~};separator=\",\"~\n" + 
 				"\n" + 
-				"If expression ~conditional(cond1,cond2)~>>";
-}
+				"If expression ~conditional(cond1,cond2)~ >>";
+} 

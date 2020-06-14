@@ -11,4 +11,4 @@ public enum TEST {
 		public String toString() { return "2"; }
 	},
 	THREE
-} 
+}  

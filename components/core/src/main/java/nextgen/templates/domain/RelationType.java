@@ -10,4 +10,4 @@ public enum RelationType {
 	REF,
 	LIST,
 	ENUM_LIST
-} 
+}  

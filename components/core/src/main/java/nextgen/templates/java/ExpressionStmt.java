@@ -1,12 +1,12 @@
 package nextgen.templates.java;
 
-public class ExpressionStmt {
+public class ExpressionStmt implements Statement {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _comment;
-	private Object _expression;
+	private Expression _expression;
 
 	ExpressionStmt(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -40,18 +40,18 @@ public class ExpressionStmt {
 	public ExpressionStmt removeComment() {
 		this._comment = null;
 		return this;
-	}
+	} 
 
-	public ExpressionStmt setExpression(Object value) {
+	public ExpressionStmt setExpression(Expression value) {
 		this._expression = value;
 		return this;
 	}
 
-	public Object getExpression() {
+	public Expression getExpression() {
 		return this._expression;
 	}
 
-	public Object getExpression(Object defaultValue) {
+	public Expression getExpression(Expression defaultValue) {
 		return this._expression == null ? defaultValue : this._expression;
 	}
 
@@ -62,7 +62,7 @@ public class ExpressionStmt {
 	public ExpressionStmt removeExpression() {
 		this._expression = null;
 		return this;
-	}
+	} 
 
 
 
@@ -79,6 +79,6 @@ public class ExpressionStmt {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ExpressionStmt(comment,expression) ::= <<~if(comment)~~comment~\n" + 
-				"~endif~~expression~;>>";
-}
+	static final String st = "ExpressionStmt(comment,expression) ::= <<~if(comment)~//~comment~\n" + 
+				"~endif~~expression~; >>";
+} 

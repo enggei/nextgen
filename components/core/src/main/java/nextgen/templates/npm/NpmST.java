@@ -10,7 +10,7 @@ public class NpmST {
 	NpmProject.st + "\n" + 
 	PackageJson.st + "\n" + 
 	Script.st + "\n" + 
-	WebpackConfig.st + "\n";
+	WebpackConfig.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -48,27 +48,27 @@ public class NpmST {
 
 	public static Babelrc newBabelrc() {
 		return new Babelrc(stGroup);
-	}
+	} 
 
 	public static Dependency newDependency() {
 		return new Dependency(stGroup);
-	}
+	} 
 
 	public static NpmProject newNpmProject() {
 		return new NpmProject(stGroup);
-	}
+	} 
 
 	public static PackageJson newPackageJson() {
 		return new PackageJson(stGroup);
-	}
+	} 
 
 	public static Script newScript() {
 		return new Script(stGroup);
-	}
+	} 
 
 	public static WebpackConfig newWebpackConfig() {
 		return new WebpackConfig(stGroup);
-	}
+	} 
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
 
@@ -101,4 +101,4 @@ public class NpmST {
 			}
 		}
 	}
-} 
+}  

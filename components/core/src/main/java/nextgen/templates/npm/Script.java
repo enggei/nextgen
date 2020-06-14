@@ -40,7 +40,7 @@ public class Script {
 	public Script removeCommand() {
 		this._command = null;
 		return this;
-	}
+	} 
 
 	public Script setName(Object value) {
 		this._name = value;
@@ -62,7 +62,7 @@ public class Script {
 	public Script removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 
 
@@ -79,5 +79,5 @@ public class Script {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "script(command,name) ::= <<\"~name~\": \"~command~\">>";
-}
+	static final String st = "script(command,name) ::= <<\"~name~\": \"~command~\" >>";
+} 

@@ -56,7 +56,7 @@ public class ClassOrInterfaceDeclaration {
 	public ClassOrInterfaceDeclaration removeIsInterface() {
 		this._isInterface = null;
 		return this;
-	}
+	} 
 
 	public ClassOrInterfaceDeclaration setName(Object value) {
 		this._name = value;
@@ -78,7 +78,7 @@ public class ClassOrInterfaceDeclaration {
 	public ClassOrInterfaceDeclaration removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public ClassOrInterfaceDeclaration addComments(Object value) {
 		this._comments.add(value);
@@ -107,7 +107,7 @@ public class ClassOrInterfaceDeclaration {
 
 	public java.util.List<Object> getComments() {
 		return this._comments;
-	}
+	} 
 
 	public ClassOrInterfaceDeclaration addAnnotations(Object value) {
 		this._annotations.add(value);
@@ -136,7 +136,7 @@ public class ClassOrInterfaceDeclaration {
 
 	public java.util.List<Object> getAnnotations() {
 		return this._annotations;
-	}
+	} 
 
 	public ClassOrInterfaceDeclaration addModifiers(Object value) {
 		this._modifiers.add(value);
@@ -165,7 +165,7 @@ public class ClassOrInterfaceDeclaration {
 
 	public java.util.List<Object> getModifiers() {
 		return this._modifiers;
-	}
+	} 
 
 	public ClassOrInterfaceDeclaration addTypeParameters(Object value) {
 		this._typeParameters.add(value);
@@ -194,7 +194,7 @@ public class ClassOrInterfaceDeclaration {
 
 	public java.util.List<Object> getTypeParameters() {
 		return this._typeParameters;
-	}
+	} 
 
 	public ClassOrInterfaceDeclaration addExtend(Object value) {
 		this._extend.add(value);
@@ -223,7 +223,7 @@ public class ClassOrInterfaceDeclaration {
 
 	public java.util.List<Object> getExtend() {
 		return this._extend;
-	}
+	} 
 
 	public ClassOrInterfaceDeclaration addImplementedTypes(Object value) {
 		this._implementedTypes.add(value);
@@ -252,7 +252,7 @@ public class ClassOrInterfaceDeclaration {
 
 	public java.util.List<Object> getImplementedTypes() {
 		return this._implementedTypes;
-	}
+	} 
 
 	public ClassOrInterfaceDeclaration addFields(Object value) {
 		this._fields.add(value);
@@ -281,7 +281,7 @@ public class ClassOrInterfaceDeclaration {
 
 	public java.util.List<Object> getFields() {
 		return this._fields;
-	}
+	} 
 
 	public ClassOrInterfaceDeclaration addMembers(Object value) {
 		this._members.add(value);
@@ -310,7 +310,7 @@ public class ClassOrInterfaceDeclaration {
 
 	public java.util.List<Object> getMembers() {
 		return this._members;
-	}
+	} 
 
 
 	@Override
@@ -335,5 +335,5 @@ public class ClassOrInterfaceDeclaration {
 				"	\n" + 
 				"	~endif~\n" + 
 				"	~members:{it|~it~};separator=\"\\n\\n\"~\n" + 
-				"}>>";
-}
+				"} >>";
+} 

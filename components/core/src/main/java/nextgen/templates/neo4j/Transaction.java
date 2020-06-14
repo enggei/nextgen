@@ -32,5 +32,5 @@ public class Transaction {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Transaction() ::= <<org.neo4j.graphdb.Transaction>>";
-}
+	static final String st = "Transaction() ::= <<org.neo4j.graphdb.Transaction >>";
+} 

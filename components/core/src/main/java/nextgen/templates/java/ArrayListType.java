@@ -38,7 +38,7 @@ public class ArrayListType {
 	public ArrayListType removeType() {
 		this._type = null;
 		return this;
-	}
+	} 
 
 
 
@@ -56,4 +56,4 @@ public class ArrayListType {
 	}
 
 	static final String st = "ArrayListType(type) ::= <<java.util.ArrayList<~type~> >>";
-}
+} 

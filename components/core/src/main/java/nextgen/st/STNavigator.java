@@ -13,6 +13,8 @@ import java.io.File;
 import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -94,8 +96,8 @@ public class STNavigator extends JPanel {
     }
 
     public void showPopup(BaseTreeNode<?> lastPathComponent, int x, int y) {
-        final Action[] actions = lastPathComponent.getActions();
-        if (actions.length == 0) return;
+        final List<Action> actions = lastPathComponent.getActions();
+        if (actions.isEmpty()) return;
 
         final JPopupMenu pop = new JPopupMenu();
         pop.add("With " + lastPathComponent.getLabel() + " :");
@@ -190,8 +192,8 @@ public class STNavigator extends JPanel {
             return getUserObject().toString();
         }
 
-        protected Action[] getActions() {
-            return new Action[0];
+        protected List<Action> getActions() {
+            return Collections.emptyList();
         }
 
         @Override
@@ -289,11 +291,8 @@ public class STNavigator extends JPanel {
             }
 
             @Override
-            protected Action[] getActions() {
-                return new Action[]{
-                        newSTGroupAction(),
-                        generateAllGroupsAction()
-                };
+            protected List<Action> getActions() {
+                return Arrays.asList(newSTGroupAction(), generateAllGroupsAction());
             }
 
             private Action newSTGroupAction() {
@@ -365,15 +364,14 @@ public class STNavigator extends JPanel {
                 }
 
                 @Override
-                protected Action[] getActions() {
-                    return new Action[]{
+                protected List<Action> getActions() {
+                    return Arrays.asList(
                             generateAction(),
                             newTemplateAction(),
                             newEnumAction(),
                             newInterfaceAction(),
                             renameSTGroupAction(),
-                            deleteGroupAction()
-                    };
+                            deleteGroupAction());
                 }
 
                 private Action generateAction() {
@@ -538,11 +536,10 @@ public class STNavigator extends JPanel {
                     }
 
                     @Override
-                    protected Action[] getActions() {
-                        return new Action[]{
+                    protected List<Action> getActions() {
+                        return Arrays.asList(
                                 renameSTInterfaceAction(),
-                                removeSTInterfaceAction()
-                        };
+                                removeSTInterfaceAction());
                     }
 
                     private Action renameSTInterfaceAction() {
@@ -585,12 +582,11 @@ public class STNavigator extends JPanel {
                     }
 
                     @Override
-                    protected Action[] getActions() {
-                        return new Action[]{
+                    protected List<Action> getActions() {
+                        return Arrays.asList(
                                 newEditSTEnumValueAction(),
                                 renameSTEnumAction(),
-                                removeSTEnumAction()
-                        };
+                                removeSTEnumAction());
                     }
 
                     private Action newEditSTEnumValueAction() {
@@ -706,7 +702,9 @@ public class STNavigator extends JPanel {
                     }
 
                     @Override
-                    protected Action[] getActions() {
+                    protected List<Action> getActions() {
+
+                        final List<Action> actions = new ArrayList<>();
 
                         final Set<STTemplateTreeNode> candidateChildren = new LinkedHashSet<>();
                         final TreePath[] selectionPaths = tree.getSelectionPaths();
@@ -715,24 +713,20 @@ public class STNavigator extends JPanel {
                                 if (selectionPath.getLastPathComponent() != null && (selectionPath.getLastPathComponent() instanceof STTemplateTreeNode) && !(STTemplateTreeNode.this.equals(selectionPath.getLastPathComponent())))
                                     candidateChildren.add((STTemplateTreeNode) selectionPath.getLastPathComponent());
 
-                        if (!candidateChildren.isEmpty()) {
-                            return new Action[]{
-                                    reparentAction(candidateChildren),
-                                    newChildTemplateAction(),
-                                    newSetParameterTypesAction(),
-                                    newSetInterfacesAction(),
-                                    renameSTTemplateAction(),
-                                    removeSTTemplateAction()
-                            };
-                        }
+                        if (!candidateChildren.isEmpty())
+                            actions.add(reparentAction(candidateChildren));
 
-                        return new Action[]{
-                                newChildTemplateAction(),
-                                newSetParameterTypesAction(),
-                                newSetInterfacesAction(),
-                                renameSTTemplateAction(),
-                                removeSTTemplateAction()
-                        };
+                        final List<STTemplate> childTemplates = getModel().getChildren().collect(Collectors.toList());
+                        if (!childTemplates.isEmpty())
+                            actions.add(newSetInterfacesAction(childTemplates));
+
+                        actions.add(newChildTemplateAction());
+                        actions.add(newSetParameterTypesAction());
+                        actions.add(newSetInterfacesAction());
+                        actions.add(renameSTTemplateAction());
+                        actions.add(removeSTTemplateAction());
+
+                        return actions;
                     }
 
                     private Action reparentAction(Set<STTemplateTreeNode> candidateChildren) {
@@ -846,9 +840,41 @@ public class STNavigator extends JPanel {
                                 getModel().clearImplements();
                                 for (JTextField txtImplement : txtImplements) {
                                     final String trim = txtImplement.getText().trim();
-                                    if(trim.length()==0) continue;
+                                    if (trim.length() == 0) continue;
                                     getModel().addImplements(trim);
                                 }
+                                save();
+
+                                SwingUtilities.invokeLater(dialog::dispose);
+                            }));
+
+                            showDialog(dialog, btnSave);
+                        });
+                    }
+
+                    private Action newSetInterfacesAction(List<STTemplate> children) {
+                        return newAction("Set interfaces on " + children.size() + " children", actionEvent -> {
+
+                            final JTextField txtImplements = new JTextField("", 15);
+
+                            final JDialog dialog = new JDialog((Frame) SwingUtilities.getAncestorOfClass(JFrame.class, tree), "Edit interfaces", true);
+                            final JPanel contentPanel = new JPanel(new GridLayout(1, 1));
+                            contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
+                            contentPanel.add(txtImplements);
+                            dialog.add(contentPanel, BorderLayout.CENTER);
+
+                            final JButton btnSave = new JButton(newAction("Save", actionEvent1 -> {
+
+                                final String interfaceName = txtImplements.getText().trim();
+
+                                children.forEach(stTemplate -> stTemplate.getImplements()
+                                        .filter(s -> s.equalsIgnoreCase(interfaceName))
+                                        .findAny()
+                                        .orElseGet(() -> {
+                                            stTemplate.addImplements(interfaceName);
+                                            return interfaceName;
+                                        }));
+
                                 save();
 
                                 SwingUtilities.invokeLater(dialog::dispose);

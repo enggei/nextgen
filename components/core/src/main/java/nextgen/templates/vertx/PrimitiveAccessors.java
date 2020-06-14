@@ -42,7 +42,7 @@ public class PrimitiveAccessors {
 	public PrimitiveAccessors removeClassName() {
 		this._className = null;
 		return this;
-	}
+	} 
 
 	public PrimitiveAccessors setName(Object value) {
 		this._name = value;
@@ -64,7 +64,7 @@ public class PrimitiveAccessors {
 	public PrimitiveAccessors removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public PrimitiveAccessors setType(Object value) {
 		this._type = value;
@@ -86,7 +86,7 @@ public class PrimitiveAccessors {
 	public PrimitiveAccessors removeType() {
 		this._type = null;
 		return this;
-	}
+	} 
 
 
 
@@ -114,5 +114,5 @@ public class PrimitiveAccessors {
 				"\n" + 
 				"public ~type~ get~name;format=\"dotToCap\"~(~type~ defaultValue) { \n" + 
 				"	return jsonObject.get~type;format=\"capitalize\"~(\"~name~\", defaultValue);\n" + 
-				"}>>";
-}
+				"} >>";
+} 

@@ -48,7 +48,7 @@ public class SimpleMenu {
 
 	public java.util.List<Object> getMenuComponents() {
 		return this._menuComponents;
-	}
+	} 
 
 	public SimpleMenu addMenuItems(Object _name, Object _to, Object _target, Object _element) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -109,7 +109,7 @@ public class SimpleMenu {
 			return this._element;
 		}
 
-	}
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -179,5 +179,5 @@ public class SimpleMenu {
 				"                    </Menu>\n" + 
 				"                </div>);\n" + 
 				"        }\n" + 
-				"}>>";
-}
+				"} >>";
+} 

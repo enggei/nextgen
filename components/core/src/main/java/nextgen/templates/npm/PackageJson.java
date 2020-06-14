@@ -62,7 +62,7 @@ public class PackageJson {
 	public PackageJson removeMain() {
 		this._main = null;
 		return this;
-	}
+	} 
 
 	public PackageJson setLicense(Object value) {
 		this._license = value;
@@ -84,7 +84,7 @@ public class PackageJson {
 	public PackageJson removeLicense() {
 		this._license = null;
 		return this;
-	}
+	} 
 
 	public PackageJson setBugsUrl(Object value) {
 		this._bugsUrl = value;
@@ -106,7 +106,7 @@ public class PackageJson {
 	public PackageJson removeBugsUrl() {
 		this._bugsUrl = null;
 		return this;
-	}
+	} 
 
 	public PackageJson setHomepage(Object value) {
 		this._homepage = value;
@@ -128,7 +128,7 @@ public class PackageJson {
 	public PackageJson removeHomepage() {
 		this._homepage = null;
 		return this;
-	}
+	} 
 
 	public PackageJson setRepositoryUrl(Object value) {
 		this._repositoryUrl = value;
@@ -150,7 +150,7 @@ public class PackageJson {
 	public PackageJson removeRepositoryUrl() {
 		this._repositoryUrl = null;
 		return this;
-	}
+	} 
 
 	public PackageJson setAuthor(Object value) {
 		this._author = value;
@@ -172,7 +172,7 @@ public class PackageJson {
 	public PackageJson removeAuthor() {
 		this._author = null;
 		return this;
-	}
+	} 
 
 	public PackageJson setVersion(Object value) {
 		this._version = value;
@@ -194,7 +194,7 @@ public class PackageJson {
 	public PackageJson removeVersion() {
 		this._version = null;
 		return this;
-	}
+	} 
 
 	public PackageJson setRepositoryType(Object value) {
 		this._repositoryType = value;
@@ -216,7 +216,7 @@ public class PackageJson {
 	public PackageJson removeRepositoryType() {
 		this._repositoryType = null;
 		return this;
-	}
+	} 
 
 	public PackageJson setDescription(Object value) {
 		this._description = value;
@@ -238,7 +238,7 @@ public class PackageJson {
 	public PackageJson removeDescription() {
 		this._description = null;
 		return this;
-	}
+	} 
 
 	public PackageJson setName(Object value) {
 		this._name = value;
@@ -260,7 +260,7 @@ public class PackageJson {
 	public PackageJson removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public PackageJson addDevDependencies(Object value) {
 		this._devDependencies.add(value);
@@ -289,7 +289,7 @@ public class PackageJson {
 
 	public java.util.List<Object> getDevDependencies() {
 		return this._devDependencies;
-	}
+	} 
 
 	public PackageJson addScripts(Object value) {
 		this._scripts.add(value);
@@ -318,7 +318,7 @@ public class PackageJson {
 
 	public java.util.List<Object> getScripts() {
 		return this._scripts;
-	}
+	} 
 
 	public PackageJson addDependencies(Object value) {
 		this._dependencies.add(value);
@@ -347,7 +347,7 @@ public class PackageJson {
 
 	public java.util.List<Object> getDependencies() {
 		return this._dependencies;
-	}
+	} 
 
 
 	@Override
@@ -387,5 +387,5 @@ public class PackageJson {
 				"  \"devDependencies\": {\n" + 
 				"    ~devDependencies:{it|~it~};separator=\",\\n\"~\n" + 
 				"  }\n" + 
-				"}>>";
-}
+				"} >>";
+} 

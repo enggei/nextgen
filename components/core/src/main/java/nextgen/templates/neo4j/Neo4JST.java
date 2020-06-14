@@ -25,7 +25,7 @@ public class Neo4JST {
 	Node.st + "\n" + 
 	Relationship.st + "\n" + 
 	RelationshipType.st + "\n" + 
-	Transaction.st + "\n";
+	Transaction.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -63,87 +63,87 @@ public class Neo4JST {
 
 	public static NeoFactory newNeoFactory() {
 		return new NeoFactory(stGroup);
-	}
+	} 
 
 	public static NeoFactoryAccessors newNeoFactoryAccessors() {
 		return new NeoFactoryAccessors(stGroup);
-	}
+	} 
 
 	public static NeoFactoryPropertyAccessors newNeoFactoryPropertyAccessors() {
 		return new NeoFactoryPropertyAccessors(stGroup);
-	}
+	} 
 
 	public static NodeWrapper newNodeWrapper() {
 		return new NodeWrapper(stGroup);
-	}
+	} 
 
 	public static EnumAccessors newEnumAccessors() {
 		return new EnumAccessors(stGroup);
-	}
+	} 
 
 	public static EnumListAccessors newEnumListAccessors() {
 		return new EnumListAccessors(stGroup);
-	}
+	} 
 
 	public static ExternalAccessors newExternalAccessors() {
 		return new ExternalAccessors(stGroup);
-	}
+	} 
 
 	public static IncomingReferenceStream newIncomingReferenceStream() {
 		return new IncomingReferenceStream(stGroup);
-	}
+	} 
 
 	public static ListPrimitiveAccessors newListPrimitiveAccessors() {
 		return new ListPrimitiveAccessors(stGroup);
-	}
+	} 
 
 	public static ListReferenceAccessors newListReferenceAccessors() {
 		return new ListReferenceAccessors(stGroup);
-	}
+	} 
 
 	public static PrimitiveAccessors newPrimitiveAccessors() {
 		return new PrimitiveAccessors(stGroup);
-	}
+	} 
 
 	public static ReferenceAccessors newReferenceAccessors() {
 		return new ReferenceAccessors(stGroup);
-	}
+	} 
 
 	public static Direction newDirection() {
 		return new Direction(stGroup);
-	}
+	} 
 
 	public static GraphDatabaseFactory newGraphDatabaseFactory() {
 		return new GraphDatabaseFactory(stGroup);
-	}
+	} 
 
 	public static GraphDatabaseService newGraphDatabaseService() {
 		return new GraphDatabaseService(stGroup);
-	}
+	} 
 
 	public static GraphDatabaseSettings newGraphDatabaseSettings() {
 		return new GraphDatabaseSettings(stGroup);
-	}
+	} 
 
 	public static Label newLabel() {
 		return new Label(stGroup);
-	}
+	} 
 
 	public static Node newNode() {
 		return new Node(stGroup);
-	}
+	} 
 
 	public static Relationship newRelationship() {
 		return new Relationship(stGroup);
-	}
+	} 
 
 	public static RelationshipType newRelationshipType() {
 		return new RelationshipType(stGroup);
-	}
+	} 
 
 	public static Transaction newTransaction() {
 		return new Transaction(stGroup);
-	}
+	} 
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
 
@@ -176,4 +176,4 @@ public class Neo4JST {
 			}
 		}
 	}
-} 
+}  

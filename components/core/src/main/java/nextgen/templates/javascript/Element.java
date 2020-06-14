@@ -42,7 +42,7 @@ public class Element {
 	public Element removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public Element addChildren(Object value) {
 		this._children.add(value);
@@ -71,7 +71,7 @@ public class Element {
 
 	public java.util.List<Object> getChildren() {
 		return this._children;
-	}
+	} 
 
 	public Element addProps(Object value) {
 		this._props.add(value);
@@ -100,7 +100,7 @@ public class Element {
 
 	public java.util.List<Object> getProps() {
 		return this._props;
-	}
+	} 
 
 
 	@Override
@@ -119,5 +119,5 @@ public class Element {
 	static final String st = "Element(name,children,props) ::= <<<~name~~if(props)~ \n" + 
 				"	~props:{it|~it~};separator=\"\\n\"~~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
-				"</~name~>~else~ />~endif~>>";
-}
+				"</~name~>~else~ />~endif~ >>";
+} 

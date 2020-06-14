@@ -14,4 +14,4 @@ public enum Types {
 		@Override
 		public String toString() { return "string"; }
 	}
-} 
+}  

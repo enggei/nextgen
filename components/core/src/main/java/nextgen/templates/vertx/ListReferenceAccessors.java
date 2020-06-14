@@ -42,7 +42,7 @@ public class ListReferenceAccessors {
 	public ListReferenceAccessors removeClassName() {
 		this._className = null;
 		return this;
-	}
+	} 
 
 	public ListReferenceAccessors setName(Object value) {
 		this._name = value;
@@ -64,7 +64,7 @@ public class ListReferenceAccessors {
 	public ListReferenceAccessors removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public ListReferenceAccessors setType(Object value) {
 		this._type = value;
@@ -86,7 +86,7 @@ public class ListReferenceAccessors {
 	public ListReferenceAccessors removeType() {
 		this._type = null;
 		return this;
-	}
+	} 
 
 
 
@@ -129,5 +129,5 @@ public class ListReferenceAccessors {
 				"public ~className;format=\"capitalize\"~ clear~name;format=\"capitalize\"~() { \n" + 
 				"	jsonObject.put(\"~name~\", new io.vertx.core.json.JsonArray());\n" + 
 				"	return this;\n" + 
-				"}>>";
-}
+				"} >>";
+} 

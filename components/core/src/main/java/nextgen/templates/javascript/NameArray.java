@@ -40,7 +40,7 @@ public class NameArray {
 	public NameArray removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public NameArray addValues(Object value) {
 		this._values.add(value);
@@ -69,7 +69,7 @@ public class NameArray {
 
 	public java.util.List<Object> getValues() {
 		return this._values;
-	}
+	} 
 
 
 	@Override
@@ -85,5 +85,5 @@ public class NameArray {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NameArray(values,name) ::= <<~name~ : [ ~values:{it|~it~};separator=\", \"~ ]>>";
-}
+	static final String st = "NameArray(values,name) ::= <<~name~ : [ ~values:{it|~it~};separator=\", \"~ ] >>";
+} 

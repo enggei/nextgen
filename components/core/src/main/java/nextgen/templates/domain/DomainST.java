@@ -7,7 +7,7 @@ public class DomainST {
 	"gt() ::= \">\"\n" +
 	Domain.st + "\n" + 
 	Entity.st + "\n" + 
-	Relation.st + "\n";
+	Relation.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -45,15 +45,15 @@ public class DomainST {
 
 	public static Domain newDomain() {
 		return new Domain(stGroup);
-	}
+	} 
 
 	public static Entity newEntity() {
 		return new Entity(stGroup);
-	}
+	} 
 
 	public static Relation newRelation() {
 		return new Relation(stGroup);
-	}
+	} 
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
 
@@ -86,4 +86,4 @@ public class DomainST {
 			}
 		}
 	}
-} 
+}  

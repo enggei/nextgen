@@ -42,7 +42,7 @@ public class VariableDeclaration {
 	public VariableDeclaration removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public VariableDeclaration setType(Object value) {
 		this._type = value;
@@ -64,7 +64,7 @@ public class VariableDeclaration {
 	public VariableDeclaration removeType() {
 		this._type = null;
 		return this;
-	}
+	} 
 
 	public VariableDeclaration setInitializer(Object value) {
 		this._initializer = value;
@@ -86,7 +86,7 @@ public class VariableDeclaration {
 	public VariableDeclaration removeInitializer() {
 		this._initializer = null;
 		return this;
-	}
+	} 
 
 
 
@@ -103,5 +103,5 @@ public class VariableDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "variableDeclaration(name,type,initializer) ::= <<let ~name~: ~type~~if(initializer)~ = ~initializer~~endif~;>>";
-}
+	static final String st = "variableDeclaration(name,type,initializer) ::= <<let ~name~: ~type~~if(initializer)~ = ~initializer~~endif~; >>";
+} 

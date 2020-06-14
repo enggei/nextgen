@@ -44,7 +44,7 @@ public class NpmProject {
 	public NpmProject removeRoot() {
 		this._root = null;
 		return this;
-	}
+	} 
 
 	public NpmProject setPackageJson(PackageJson value) {
 		this._packageJson = value;
@@ -66,7 +66,7 @@ public class NpmProject {
 	public NpmProject removePackageJson() {
 		this._packageJson = null;
 		return this;
-	}
+	} 
 
 	public NpmProject setWebpackConfig(WebpackConfig value) {
 		this._webpackConfig = value;
@@ -88,7 +88,7 @@ public class NpmProject {
 	public NpmProject removeWebpackConfig() {
 		this._webpackConfig = null;
 		return this;
-	}
+	} 
 
 	public NpmProject setBabelrc(Babelrc value) {
 		this._babelrc = value;
@@ -110,7 +110,7 @@ public class NpmProject {
 	public NpmProject removeBabelrc() {
 		this._babelrc = null;
 		return this;
-	}
+	} 
 
 
 
@@ -130,5 +130,5 @@ public class NpmProject {
 	static final String st = "NpmProject(root,packageJson,webpackConfig,babelrc) ::= <<~root~\n" + 
 				"~packageJson~\n" + 
 				"~webpackConfig~\n" + 
-				"~babelrc~>>";
-}
+				"~babelrc~ >>";
+} 

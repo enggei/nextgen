@@ -46,7 +46,7 @@ public class NodeWrapper {
 	public NodeWrapper removePackage() {
 		this._package = null;
 		return this;
-	}
+	} 
 
 	public NodeWrapper setName(Object value) {
 		this._name = value;
@@ -68,7 +68,7 @@ public class NodeWrapper {
 	public NodeWrapper removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public NodeWrapper addAccessors(Object value) {
 		this._accessors.add(value);
@@ -97,7 +97,7 @@ public class NodeWrapper {
 
 	public java.util.List<Object> getAccessors() {
 		return this._accessors;
-	}
+	} 
 
 	public NodeWrapper addLexical(Object value) {
 		this._lexical.add(value);
@@ -126,7 +126,7 @@ public class NodeWrapper {
 
 	public java.util.List<Object> getLexical() {
 		return this._lexical;
-	}
+	} 
 
 	public NodeWrapper addExternalFields(Object _type, Object _name, Object _initializer) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -179,7 +179,7 @@ public class NodeWrapper {
 			return this._initializer;
 		}
 
-	}
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -228,5 +228,5 @@ public class NodeWrapper {
 				"	public String toString() {\n" + 
 				"		return \"\"~if(lexical)~ + ~endif~~lexical:{it|node.getProperty(\"~it~\")};separator=\" + \\\" \\\" + \"~;\n" + 
 				"	}\n" + 
-				"}>>";
-}
+				"} >>";
+} 

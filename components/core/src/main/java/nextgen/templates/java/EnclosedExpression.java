@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class EnclosedExpression {
+public class EnclosedExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -38,7 +38,7 @@ public class EnclosedExpression {
 	public EnclosedExpression removeExpression() {
 		this._expression = null;
 		return this;
-	}
+	} 
 
 
 
@@ -55,5 +55,5 @@ public class EnclosedExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "EnclosedExpression(expression) ::= <<(~expression~)>>";
-}
+	static final String st = "EnclosedExpression(expression) ::= <<(~expression~) >>";
+} 

@@ -42,7 +42,7 @@ public class ListAccessors {
 	public ListAccessors removeType() {
 		this._type = null;
 		return this;
-	}
+	} 
 
 	public ListAccessors setName(Object value) {
 		this._name = value;
@@ -64,7 +64,7 @@ public class ListAccessors {
 	public ListAccessors removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public ListAccessors setClassName(Object value) {
 		this._className = value;
@@ -86,7 +86,7 @@ public class ListAccessors {
 	public ListAccessors removeClassName() {
 		this._className = null;
 		return this;
-	}
+	} 
 
 
 
@@ -110,5 +110,5 @@ public class ListAccessors {
 				"public ~className~ add~name;format=\"capitalize\"~(~type~ value) {\n" + 
 				"	this._~name~.add(value);\n" + 
 				"	return this;\n" + 
-				"}>>";
-}
+				"} >>";
+} 

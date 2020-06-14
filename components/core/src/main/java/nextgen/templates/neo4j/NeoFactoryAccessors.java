@@ -40,7 +40,7 @@ public class NeoFactoryAccessors {
 	public NeoFactoryAccessors removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public NeoFactoryAccessors addProperties(Object value) {
 		this._properties.add(value);
@@ -69,7 +69,7 @@ public class NeoFactoryAccessors {
 
 	public java.util.List<Object> getProperties() {
 		return this._properties;
-	}
+	} 
 
 
 	@Override
@@ -97,5 +97,5 @@ public class NeoFactoryAccessors {
 				"	return db.findNodes(org.neo4j.graphdb.Label.label(\"~name~\")).stream().map(this::new~name;format=\"capitalize\"~);\n" + 
 				"}\n" + 
 				"\n" + 
-				"~properties:{it|~it~};separator=\"\\n\\n\"~>>";
-}
+				"~properties:{it|~it~};separator=\"\\n\\n\"~ >>";
+} 

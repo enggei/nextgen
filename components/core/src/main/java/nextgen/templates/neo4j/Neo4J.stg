@@ -1,6 +1,6 @@
 delimiters "~","~"
 
-Entities() ::= <<>>
+Entities() ::= << >>
 
 NodeWrapper(package,name,externalFields,accessors,lexical) ::= <<package ~package~;
 
@@ -36,7 +36,7 @@ public class ~name;format="capitalize"~ {
 	public String toString() {
 		return ""~if(lexical)~ + ~endif~~lexical:{it|node.getProperty("~it~")};separator=" + \" \" + "~;
 	}
-}>>
+} >>
 
 primitiveAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
 	if (value == null) node.removeProperty("~name~"); 
@@ -61,7 +61,7 @@ public boolean has~name;format="capitalize"~() {
 public ~className;format="capitalize"~ remove~name;format="capitalize"~() { 
 	node.removeProperty("~name~");
 	return this;
-}>>
+} >>
 
 listReferenceAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ add~name;format="capitalize"~(~type~ dst) { 
 	final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("~name~")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
@@ -78,7 +78,7 @@ public ~className;format="capitalize"~ remove~name;format="capitalize"~(~type~ d
 	final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("~name~")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
 	existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
 	return this;
-}>>
+} >>
 
 listPrimitiveAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ add~name;format="capitalize"~(~type~ dst) { 
 	final java.util.Optional<org.neo4j.graphdb.Node> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("~name~")).spliterator(), false).map((r) -> r.getOtherNode(node)).filter((n) -> dst.equals(n.getProperty("value"))).findAny();
@@ -91,7 +91,7 @@ listPrimitiveAccessors(className,name,type) ::= <<public ~className;format="capi
 
 public java.util.stream.Stream<~type~> get~name;format="capitalize"~() { 
 	return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("~name~")).spliterator(), false).map((relationship) -> (~type~) relationship.getOtherNode(node).getProperty("value"));
-} >>
+}  >>
 
 enumAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
 	if (value == null) node.removeProperty("~name~"); 
@@ -116,7 +116,7 @@ public boolean has~name;format="capitalize"~() {
 public ~className;format="capitalize"~ remove~name;format="capitalize"~() { 
 	node.removeProperty("~name~");
 	return this;
-}>>
+} >>
 
 referenceAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ dst) { 
 	final org.neo4j.graphdb.Relationship relationship = node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("~name~"), org.neo4j.graphdb.Direction.OUTGOING);
@@ -137,7 +137,7 @@ public ~className;format="capitalize"~ remove~name;format="capitalize"~(~type~ d
 	final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("~name~")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
 	existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
 	return this;
-}>>
+} >>
 
 externalAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
 	this._~name~ = value;
@@ -150,11 +150,11 @@ public ~type~ get~name;format="capitalize"~() {
 
 public ~type~ get~name;format="capitalize"~(~type~ defaultValue) { 
 	return this._~name~ == null ? defaultValue : this._~name~;
-}>>
+} >>
 
 incomingReferenceStream(type,name) ::= <<public java.util.stream.Stream<~type~> getIncoming~name;format="capitalize"~() { 
 	return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("~name~")).spliterator(), false).map((relationship) -> new ~type~(relationship.getOtherNode(node)));
-}>>
+} >>
 
 enumListAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ add~name;format="capitalize"~(~type~ dst) { 
 	final java.util.Optional<org.neo4j.graphdb.Node> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("~name~")).spliterator(), false).map((r) -> r.getOtherNode(node)).filter((n) -> dst.equals(n.getProperty("value"))).findAny();
@@ -167,7 +167,7 @@ enumListAccessors(className,name,type) ::= <<public ~className;format="capitaliz
 
 public java.util.stream.Stream<~type~> get~name;format="capitalize"~() { 
 	return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("~name~")).spliterator(), false).map((relationship) -> ~type~.valueOf(relationship.getOtherNode(node).getProperty("value").toString()));
-} >>
+}  >>
 
 NeoFactory(package,name,accessors) ::= <<package ~package~;
 
@@ -202,7 +202,7 @@ public class ~name;format="capitalize"~ {
 	}
 
 	~accessors:{it|~it~};separator="\n\n"~
-}>>
+} >>
 
 NeoFactoryAccessors(name,properties) ::= <<public ~name;format="capitalize"~ new~name;format="capitalize"~() { 
 	return new~name;format="capitalize"~(db.createNode(org.neo4j.graphdb.Label.label("~name~")));
@@ -216,7 +216,7 @@ public java.util.stream.Stream<~name;format="capitalize"~> findAll~name;format="
 	return db.findNodes(org.neo4j.graphdb.Label.label("~name~")).stream().map(this::new~name;format="capitalize"~);
 }
 
-~properties:{it|~it~};separator="\n\n"~>>
+~properties:{it|~it~};separator="\n\n"~ >>
 
 NeoFactoryPropertyAccessors(entity,propertyName,propertyType,isEnum) ::= <<public ~entity;format="capitalize"~ find~entity;format="capitalize"~By~propertyName;format="capitalize"~(~propertyType~ value) {
 	final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("~entity~"), "~propertyName~", value~if(isEnum)~.name()~endif~);
@@ -230,27 +230,27 @@ public ~entity;format="capitalize"~ findOrCreate~entity;format="capitalize"~By~p
 
 public java.util.stream.Stream<~entity;format="capitalize"~> findAll~entity;format="capitalize"~By~propertyName;format="capitalize"~(~propertyType~ value) {
 	return db.findNodes(org.neo4j.graphdb.Label.label("~entity~"), "~propertyName~", value~if(isEnum)~.name()~endif~).stream().map(this::new~entity;format="capitalize"~);
-} >>
+}  >>
 
-Types() ::= <<>>
+Types() ::= << >>
 
-GraphDatabaseFactory() ::= <<org.neo4j.graphdb.factory.GraphDatabaseFactory>>
+GraphDatabaseFactory() ::= <<org.neo4j.graphdb.factory.GraphDatabaseFactory >>
 
-GraphDatabaseSettings() ::= <<org.neo4j.graphdb.factory.GraphDatabaseSettings>>
+GraphDatabaseSettings() ::= <<org.neo4j.graphdb.factory.GraphDatabaseSettings >>
 
-GraphDatabaseService() ::= <<org.neo4j.graphdb.GraphDatabaseService>>
+GraphDatabaseService() ::= <<org.neo4j.graphdb.GraphDatabaseService >>
 
-Node() ::= <<org.neo4j.graphdb.Node>>
+Node() ::= <<org.neo4j.graphdb.Node >>
 
-Label() ::= <<org.neo4j.graphdb.Label>>
+Label() ::= <<org.neo4j.graphdb.Label >>
 
-Direction() ::= <<org.neo4j.graphdb.Direction>>
+Direction() ::= <<org.neo4j.graphdb.Direction >>
 
-Relationship() ::= <<org.neo4j.graphdb.Relationship>>
+Relationship() ::= <<org.neo4j.graphdb.Relationship >>
 
-RelationshipType() ::= <<org.neo4j.graphdb.RelationshipType>>
+RelationshipType() ::= <<org.neo4j.graphdb.RelationshipType >>
 
-Transaction() ::= <<org.neo4j.graphdb.Transaction>>
+Transaction() ::= <<org.neo4j.graphdb.Transaction >>
 
 eom() ::= "}"
 

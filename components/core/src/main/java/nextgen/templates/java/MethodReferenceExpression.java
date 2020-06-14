@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class MethodReferenceExpression {
+public class MethodReferenceExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -40,7 +40,7 @@ public class MethodReferenceExpression {
 	public MethodReferenceExpression removeIdentifier() {
 		this._identifier = null;
 		return this;
-	}
+	} 
 
 	public MethodReferenceExpression setScope(Object value) {
 		this._scope = value;
@@ -62,7 +62,7 @@ public class MethodReferenceExpression {
 	public MethodReferenceExpression removeScope() {
 		this._scope = null;
 		return this;
-	}
+	} 
 
 
 
@@ -79,5 +79,5 @@ public class MethodReferenceExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MethodReferenceExpression(identifier,scope) ::= <<~scope~::~identifier~>>";
-}
+	static final String st = "MethodReferenceExpression(identifier,scope) ::= <<~scope~::~identifier~ >>";
+} 

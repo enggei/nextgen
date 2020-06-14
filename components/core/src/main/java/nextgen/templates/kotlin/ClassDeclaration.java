@@ -52,7 +52,7 @@ public class ClassDeclaration {
 	public ClassDeclaration removeAnnotations() {
 		this._annotations = null;
 		return this;
-	}
+	} 
 
 	public ClassDeclaration setIsOpen(Object value) {
 		this._isOpen = value;
@@ -74,7 +74,7 @@ public class ClassDeclaration {
 	public ClassDeclaration removeIsOpen() {
 		this._isOpen = null;
 		return this;
-	}
+	} 
 
 	public ClassDeclaration setIsAbstract(Object value) {
 		this._isAbstract = value;
@@ -96,7 +96,7 @@ public class ClassDeclaration {
 	public ClassDeclaration removeIsAbstract() {
 		this._isAbstract = null;
 		return this;
-	}
+	} 
 
 	public ClassDeclaration setName(Object value) {
 		this._name = value;
@@ -118,7 +118,7 @@ public class ClassDeclaration {
 	public ClassDeclaration removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public ClassDeclaration setOverrideEquals(Object value) {
 		this._overrideEquals = value;
@@ -140,7 +140,7 @@ public class ClassDeclaration {
 	public ClassDeclaration removeOverrideEquals() {
 		this._overrideEquals = null;
 		return this;
-	}
+	} 
 
 	public ClassDeclaration addFields(Object value) {
 		this._fields.add(value);
@@ -169,7 +169,7 @@ public class ClassDeclaration {
 
 	public java.util.List<Object> getFields() {
 		return this._fields;
-	}
+	} 
 
 	public ClassDeclaration addExtends(Object value) {
 		this._extends.add(value);
@@ -198,7 +198,7 @@ public class ClassDeclaration {
 
 	public java.util.List<Object> getExtends() {
 		return this._extends;
-	}
+	} 
 
 	public ClassDeclaration addMembers(Object value) {
 		this._members.add(value);
@@ -227,7 +227,7 @@ public class ClassDeclaration {
 
 	public java.util.List<Object> getMembers() {
 		return this._members;
-	}
+	} 
 
 
 	@Override
@@ -250,5 +250,5 @@ public class ClassDeclaration {
 				"	~if(overrideEquals)~~overrideEquals~~endif~\n" + 
 				"	~members:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
-				"}>>";
-}
+				"} >>";
+} 

@@ -747,7 +747,8 @@
           "name" : "name",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "5f885af0-d0e2-41eb-9f81-b1b81ec61d8d",
         "name" : "ArrayCreationExpression",
@@ -767,7 +768,8 @@
           "name" : "levels",
           "argumentType" : "Object",
           "type" : "LIST"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "2a28a1ea-19af-43c7-9048-b30e815782ba",
         "name" : "ArrayInitializerExpression",
@@ -777,7 +779,8 @@
           "name" : "values",
           "argumentType" : "Object",
           "type" : "LIST"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "9db85c55-6138-41a3-8bc1-f5fff078fbac",
         "name" : "AssignExpression",
@@ -797,7 +800,8 @@
           "name" : "operator",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "dc2103ed-3fee-44e6-86d5-d91ce74fa613",
         "name" : "AssignThisVariableExpression",
@@ -807,7 +811,8 @@
           "name" : "value",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "c049574f-2959-40ad-a30f-c0e950de3c76",
         "name" : "UnaryExpression",
@@ -828,7 +833,8 @@
           "uuid" : "dc44d0da-01ad-4f5a-91b9-1de361b522b3",
           "name" : "isPostfix",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "5ceb1d92-4dca-42fe-9a22-3c4c90d1b123",
         "name" : "ThisVariableExpression",
@@ -838,7 +844,8 @@
           "name" : "value",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "38e3bbaf-3713-4abf-b9ce-c7c1468344de",
         "name" : "SuperExpression",
@@ -848,7 +855,8 @@
           "name" : "typeName",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "1f4e4f22-cfd8-41fc-bb17-b7285def7fc0",
         "name" : "StringLiteralExpression",
@@ -858,7 +866,8 @@
           "name" : "value",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "4b5767f7-6d47-472f-9604-413c06995d92",
         "name" : "ObjectCreationExpression",
@@ -887,7 +896,8 @@
           "uuid" : "ac7f8942-d1a7-469b-a34a-41aadc48ef31",
           "name" : "emptyClassBody",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "cd871a18-9f82-4e2b-9745-bc7c3839f950",
         "name" : "NormalAnnotationExpression",
@@ -902,7 +912,8 @@
           "name" : "memberValues",
           "argumentType" : "Object",
           "type" : "LIST"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "3aea32ab-ec7c-4a8b-9be7-6db65066651c",
         "name" : "NullLiteralExpression",
@@ -912,7 +923,8 @@
           "name" : "value",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "f7c8bf30-7680-46dc-9c52-34866b5d440d",
         "name" : "VariableDeclarationExpression",
@@ -927,7 +939,8 @@
           "name" : "modifiers",
           "argumentType" : "Object",
           "type" : "LIST"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "da0e02b6-9fe8-4121-9e7d-baa5689226d4",
         "name" : "SingleMemberAnnotationExpression",
@@ -942,7 +955,8 @@
           "name" : "name",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "4da7576c-69d6-49c3-ac0a-28276008b110",
         "name" : "MethodReferenceExpression",
@@ -957,7 +971,8 @@
           "name" : "scope",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "3b717596-8e8a-4cb7-a9d0-8d83b801a391",
         "name" : "MethodCallExpression",
@@ -982,7 +997,8 @@
           "name" : "name",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "b5ede38e-ec89-46f9-a872-500093228e42",
         "name" : "MarkerAnnotationExpression",
@@ -992,7 +1008,8 @@
           "name" : "name",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "faaa9451-182c-4ea5-adc3-deccfc4be779",
         "name" : "LambdaExpression",
@@ -1007,7 +1024,8 @@
           "name" : "parameters",
           "argumentType" : "Object",
           "type" : "LIST"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "6f654f56-0b69-408d-b064-a1065f26d2ce",
         "name" : "IntegerLiteralExpression",
@@ -1017,7 +1035,8 @@
           "name" : "value",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "c7a09c33-f538-4813-8119-147ceed369a9",
         "name" : "InstanceOfExpression",
@@ -1032,7 +1051,8 @@
           "name" : "expression",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "9ad8ac74-6528-452b-9751-804e524eedfe",
         "name" : "FieldAccessExpression",
@@ -1047,7 +1067,8 @@
           "name" : "name",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "04c31639-ec3f-4fae-a055-3692448be802",
         "name" : "EnclosedExpression",
@@ -1057,7 +1078,8 @@
           "name" : "expression",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "39693644-aaed-4149-ace2-ec9e3dfe47c6",
         "name" : "DoubleLiteralExpression",
@@ -1067,7 +1089,8 @@
           "name" : "value",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "e9ac7b74-c9a4-47ac-84ea-6bc1c87e5268",
         "name" : "ConditionalExpression",
@@ -1087,7 +1110,8 @@
           "name" : "condition",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "5f7743f9-4f02-457f-b655-da7d0ada027a",
         "name" : "CharLiteralExpression",
@@ -1097,7 +1121,8 @@
           "name" : "value",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "d0341008-740e-46a6-8fdc-10da253c2508",
         "name" : "CastExpression",
@@ -1112,7 +1137,8 @@
           "name" : "type",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "1e0d86e9-f341-4b56-88cd-540772b23168",
         "name" : "BooleanLiteralExpression",
@@ -1122,7 +1148,8 @@
           "name" : "value",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "983b5d5f-4b67-4c15-a681-5bafde3ac374",
         "name" : "BinaryExpression",
@@ -1142,7 +1169,8 @@
           "name" : "right",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "16745752-8449-469b-bbc4-f377a8ede0a3",
         "name" : "LongExpression",
@@ -1152,7 +1180,8 @@
           "name" : "value",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "0ad77aa5-b4d6-414e-b86a-0f075bd0c6f8",
         "name" : "NameExpression",
@@ -1162,7 +1191,8 @@
           "name" : "value",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "f1789fa7-e36e-4dab-b7ab-47c1425e0b16",
         "name" : "ThisExpression",
@@ -1172,7 +1202,8 @@
           "name" : "typeName",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       }, {
         "uuid" : "160af200-e4eb-477d-a87f-b406a414dd65",
         "name" : "ClassExpression",
@@ -1182,7 +1213,8 @@
           "name" : "type",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Expression" ]
       } ]
     }, {
       "uuid" : "8d648fed-a90c-497a-a6c1-01c3c951d1fa",
@@ -1191,18 +1223,19 @@
       "children" : [ {
         "uuid" : "57de2a08-41e3-492c-8368-5eec88990652",
         "name" : "ExpressionStmt",
-        "text" : "~if(comment)~~comment~\r\n~endif~~expression~;",
+        "text" : "~if(comment)~//~comment~\n~endif~~expression~; ",
         "parameters" : [ {
-          "uuid" : "7de8732c-ccc5-456c-a728-9842022284b6",
+          "uuid" : "19a2405e-c098-486f-bc1b-79a302dca301",
           "name" : "comment",
-          "argumentType" : "Object",
-          "type" : "SINGLE"
+          "type" : "SINGLE",
+          "argumentType" : "Object"
         }, {
-          "uuid" : "d8636e09-ed73-4b0f-8321-3027c917c30f",
+          "uuid" : "0d97c576-aa94-4b6a-8f33-81ddbb47afc1",
           "name" : "expression",
-          "argumentType" : "Object",
-          "type" : "SINGLE"
-        } ]
+          "type" : "SINGLE",
+          "argumentType" : "Expression"
+        } ],
+        "implements" : [ "Statement" ]
       }, {
         "uuid" : "797a5a5a-d2ed-4a96-984a-76c9f8ec4262",
         "name" : "ContinueStmt",
@@ -1212,7 +1245,8 @@
           "name" : "label",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Statement" ]
       }, {
         "uuid" : "d9fa491e-74fc-4b2b-9f29-97d1a28621a7",
         "name" : "SwitchEntryStmt",
@@ -1227,7 +1261,8 @@
           "name" : "statements",
           "argumentType" : "Object",
           "type" : "LIST"
-        } ]
+        } ],
+        "implements" : [ "Statement" ]
       }, {
         "uuid" : "8ac23afe-088b-428d-9511-bf5517297b50",
         "name" : "SwitchStmt",
@@ -1242,7 +1277,8 @@
           "name" : "entries",
           "argumentType" : "Object",
           "type" : "LIST"
-        } ]
+        } ],
+        "implements" : [ "Statement" ]
       }, {
         "uuid" : "06fdd2f7-5f8f-45ef-8e19-6778a32d71bc",
         "name" : "SynchronizedStmt",
@@ -1257,7 +1293,8 @@
           "name" : "body",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Statement" ]
       }, {
         "uuid" : "70be02be-f566-4f83-883e-47e67bd22e27",
         "name" : "WhileStmt",
@@ -1265,14 +1302,15 @@
         "parameters" : [ {
           "uuid" : "3f416773-db5b-469f-a721-caea94ae820d",
           "name" : "condition",
-          "argumentType" : "Object",
+          "argumentType" : "Expression",
           "type" : "SINGLE"
         }, {
           "uuid" : "b4760c15-bbb2-4a4c-855e-9e913df669c6",
           "name" : "body",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Statement" ]
       }, {
         "uuid" : "cb071756-48eb-41ad-9566-2e8dc6cae4f1",
         "name" : "LabeledStmt",
@@ -1287,7 +1325,8 @@
           "name" : "label",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Statement" ]
       }, {
         "uuid" : "8005d178-19b3-4749-8c69-40a6cc5f96a2",
         "name" : "ForEachStmt",
@@ -1307,7 +1346,8 @@
           "name" : "iterable",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Statement" ]
       }, {
         "uuid" : "5c27cba8-bf0d-4e56-9ee0-5ccd25e637a7",
         "name" : "AssertStmt",
@@ -1322,7 +1362,8 @@
           "name" : "expression",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Statement" ]
       }, {
         "uuid" : "4ec25d5d-b26f-4896-be9c-2a97ee1e5dba",
         "name" : "BlockStmt",
@@ -1335,7 +1376,8 @@
           "uuid" : "5f398ca4-a981-44a7-be6a-bb2d4290937d",
           "name" : "statements",
           "type" : "LIST"
-        } ]
+        } ],
+        "implements" : [ "Statement" ]
       }, {
         "uuid" : "64dee618-e8f3-4f42-b789-5b553d9c59f6",
         "name" : "BreakStmt",
@@ -1345,11 +1387,13 @@
           "name" : "label",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Statement" ]
       }, {
         "uuid" : "ce64c7c0-9799-42c0-bd29-adba171e1561",
         "name" : "EmptyStmt",
-        "text" : ";"
+        "text" : ";",
+        "implements" : [ "Statement" ]
       }, {
         "uuid" : "24b56c9b-2efe-4099-8529-bc75c8474211",
         "name" : "ThrowStmt",
@@ -1359,7 +1403,8 @@
           "name" : "expression",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Statement" ]
       }, {
         "uuid" : "eed6cac0-8360-4191-8063-254431970d31",
         "name" : "ReturnStmt",
@@ -1369,7 +1414,8 @@
           "name" : "expression",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Statement" ]
       }, {
         "uuid" : "56288e29-fab8-4d53-85be-7bf3da503c5b",
         "name" : "IfStmt",
@@ -1389,7 +1435,8 @@
           "name" : "elseStmt",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Statement" ]
       }, {
         "uuid" : "fef30544-81fa-42ea-8613-e2525ef0f2ea",
         "name" : "ForStmt",
@@ -1414,7 +1461,8 @@
           "name" : "body",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Statement" ]
       }, {
         "uuid" : "30412603-f34e-4195-b2e4-f93e7b6c3df3",
         "name" : "DoStmt",
@@ -1429,7 +1477,8 @@
           "name" : "body",
           "argumentType" : "Object",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Statement" ]
       }, {
         "uuid" : "fe48ed36-f2d0-4cc6-ab85-76a224930a61",
         "name" : "ExplicitConstructorInvocationStmt",
@@ -1442,7 +1491,8 @@
           "uuid" : "ade779e2-69c3-454c-9131-6fb89e5095e9",
           "name" : "arguments",
           "type" : "LIST"
-        } ]
+        } ],
+        "implements" : [ "Statement" ]
       }, {
         "uuid" : "926a43bf-b116-4dab-ace2-03c7d45b8888",
         "name" : "TryStmt",
@@ -1467,7 +1517,8 @@
           "name" : "resources",
           "argumentType" : "Object",
           "type" : "LIST"
-        } ]
+        } ],
+        "implements" : [ "Statement" ]
       }, {
         "uuid" : "8d9b7ed2-8689-406f-b27b-ab5830a9d9b1",
         "name" : "CatchClause",
@@ -1480,7 +1531,8 @@
           "uuid" : "8524a1d5-27c6-4a9c-a82a-b66301b6cc34",
           "name" : "body",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "Statement" ]
       } ]
     }, {
       "uuid" : "28f2148c-b735-45f4-9fa1-5581e4cc5755",
@@ -1623,5 +1675,12 @@
       "name" : "AtomicLongType",
       "lexical" : "java.util.concurrent.atomic.AtomicLong"
     } ]
+  } ],
+  "interfaces" : [ {
+    "uuid" : "ae723f96-c87d-4156-bee9-9ada295b912f",
+    "name" : "Expression"
+  }, {
+    "uuid" : "49ff2457-f2d9-4b42-b4ce-6d0c91bb85db",
+    "name" : "Statement"
   } ]
 }

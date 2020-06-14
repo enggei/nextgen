@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class CastExpression {
+public class CastExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -40,7 +40,7 @@ public class CastExpression {
 	public CastExpression removeExpression() {
 		this._expression = null;
 		return this;
-	}
+	} 
 
 	public CastExpression setType(Object value) {
 		this._type = value;
@@ -62,7 +62,7 @@ public class CastExpression {
 	public CastExpression removeType() {
 		this._type = null;
 		return this;
-	}
+	} 
 
 
 
@@ -79,5 +79,5 @@ public class CastExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "CastExpression(expression,type) ::= <<(~type~) ~expression~>>";
-}
+	static final String st = "CastExpression(expression,type) ::= <<(~type~) ~expression~ >>";
+} 

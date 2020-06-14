@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class InstanceOfExpression {
+public class InstanceOfExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -40,7 +40,7 @@ public class InstanceOfExpression {
 	public InstanceOfExpression removeType() {
 		this._type = null;
 		return this;
-	}
+	} 
 
 	public InstanceOfExpression setExpression(Object value) {
 		this._expression = value;
@@ -62,7 +62,7 @@ public class InstanceOfExpression {
 	public InstanceOfExpression removeExpression() {
 		this._expression = null;
 		return this;
-	}
+	} 
 
 
 
@@ -79,5 +79,5 @@ public class InstanceOfExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "InstanceOfExpression(type,expression) ::= <<~expression~ instanceof ~type~>>";
-}
+	static final String st = "InstanceOfExpression(type,expression) ::= <<~expression~ instanceof ~type~ >>";
+} 

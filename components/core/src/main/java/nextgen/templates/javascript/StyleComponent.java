@@ -46,7 +46,7 @@ public class StyleComponent {
 
 	public java.util.List<Object> getElements() {
 		return this._elements;
-	}
+	} 
 
 
 	@Override
@@ -64,5 +64,5 @@ public class StyleComponent {
 
 	static final String st = "StyleComponent(elements) ::= <<const useStyles = theme => ({\n" + 
 				"	~elements:{it|~it~};separator=\",\\n\"~\n" + 
-				"	});>>";
-}
+				"	}); >>";
+} 

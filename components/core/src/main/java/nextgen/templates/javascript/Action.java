@@ -42,7 +42,7 @@ public class Action {
 	public Action removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public Action addParams(Object value) {
 		this._params.add(value);
@@ -71,7 +71,7 @@ public class Action {
 
 	public java.util.List<Object> getParams() {
 		return this._params;
-	}
+	} 
 
 	public Action addStatements(Object value) {
 		this._statements.add(value);
@@ -100,7 +100,7 @@ public class Action {
 
 	public java.util.List<Object> getStatements() {
 		return this._statements;
-	}
+	} 
 
 
 	@Override
@@ -118,5 +118,5 @@ public class Action {
 
 	static final String st = "Action(name,params,statements) ::= <<@action ~name~(~params:{it|~it~};separator=\",\"~) {\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
-				"}>>";
-}
+				"} >>";
+} 

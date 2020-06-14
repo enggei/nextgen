@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class SingleMemberAnnotationExpression {
+public class SingleMemberAnnotationExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -40,7 +40,7 @@ public class SingleMemberAnnotationExpression {
 	public SingleMemberAnnotationExpression removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public SingleMemberAnnotationExpression addMembers(Object value) {
 		this._members.add(value);
@@ -69,7 +69,7 @@ public class SingleMemberAnnotationExpression {
 
 	public java.util.List<Object> getMembers() {
 		return this._members;
-	}
+	} 
 
 
 	@Override
@@ -85,5 +85,5 @@ public class SingleMemberAnnotationExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SingleMemberAnnotationExpression(members,name) ::= <<@~name~~if(members)~(~members:{it|~it~};separator=\", \"~)~endif~>>";
-}
+	static final String st = "SingleMemberAnnotationExpression(members,name) ::= <<@~name~~if(members)~(~members:{it|~it~};separator=\", \"~)~endif~ >>";
+} 

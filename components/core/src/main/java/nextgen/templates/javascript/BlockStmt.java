@@ -40,7 +40,7 @@ public class BlockStmt {
 	public BlockStmt removeStmt() {
 		this._stmt = null;
 		return this;
-	}
+	} 
 
 	public BlockStmt addStatements(Object value) {
 		this._statements.add(value);
@@ -69,7 +69,7 @@ public class BlockStmt {
 
 	public java.util.List<Object> getStatements() {
 		return this._statements;
-	}
+	} 
 
 
 	@Override
@@ -87,5 +87,5 @@ public class BlockStmt {
 
 	static final String st = "BlockStmt(stmt,statements) ::= <<~stmt~ {\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
-				"}>>";
-}
+				"} >>";
+} 

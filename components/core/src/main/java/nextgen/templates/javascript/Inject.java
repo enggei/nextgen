@@ -46,7 +46,7 @@ public class Inject {
 
 	public java.util.List<Object> getValues() {
 		return this._values;
-	}
+	} 
 
 
 	@Override
@@ -62,5 +62,5 @@ public class Inject {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Inject(values) ::= <<@inject(~values:{it|~it~};separator=\", \"~)>>";
-}
+	static final String st = "Inject(values) ::= <<@inject(~values:{it|~it~};separator=\", \"~) >>";
+} 

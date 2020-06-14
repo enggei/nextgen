@@ -1,11 +1,11 @@
 package nextgen.templates.java;
 
-public class WhileStmt {
+public class WhileStmt implements Statement {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _condition;
+	private Expression _condition;
 	private Object _body;
 
 	WhileStmt(org.stringtemplate.v4.STGroup stGroup) {
@@ -20,16 +20,16 @@ public class WhileStmt {
 		return st.render().trim();
 	}
 
-	public WhileStmt setCondition(Object value) {
+	public WhileStmt setCondition(Expression value) {
 		this._condition = value;
 		return this;
 	}
 
-	public Object getCondition() {
+	public Expression getCondition() {
 		return this._condition;
 	}
 
-	public Object getCondition(Object defaultValue) {
+	public Expression getCondition(Expression defaultValue) {
 		return this._condition == null ? defaultValue : this._condition;
 	}
 
@@ -40,7 +40,7 @@ public class WhileStmt {
 	public WhileStmt removeCondition() {
 		this._condition = null;
 		return this;
-	}
+	} 
 
 	public WhileStmt setBody(Object value) {
 		this._body = value;
@@ -62,7 +62,7 @@ public class WhileStmt {
 	public WhileStmt removeBody() {
 		this._body = null;
 		return this;
-	}
+	} 
 
 
 
@@ -79,5 +79,5 @@ public class WhileStmt {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "WhileStmt(condition,body) ::= <<while (~condition~) ~body~>>";
-}
+	static final String st = "WhileStmt(condition,body) ::= <<while (~condition~) ~body~ >>";
+} 

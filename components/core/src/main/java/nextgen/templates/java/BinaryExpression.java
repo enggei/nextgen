@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class BinaryExpression {
+public class BinaryExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -42,7 +42,7 @@ public class BinaryExpression {
 	public BinaryExpression removeLeft() {
 		this._left = null;
 		return this;
-	}
+	} 
 
 	public BinaryExpression setOperator(Object value) {
 		this._operator = value;
@@ -64,7 +64,7 @@ public class BinaryExpression {
 	public BinaryExpression removeOperator() {
 		this._operator = null;
 		return this;
-	}
+	} 
 
 	public BinaryExpression setRight(Object value) {
 		this._right = value;
@@ -86,7 +86,7 @@ public class BinaryExpression {
 	public BinaryExpression removeRight() {
 		this._right = null;
 		return this;
-	}
+	} 
 
 
 
@@ -103,5 +103,5 @@ public class BinaryExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "BinaryExpression(left,operator,right) ::= <<~left~ ~operator~ ~right~>>";
-}
+	static final String st = "BinaryExpression(left,operator,right) ::= <<~left~ ~operator~ ~right~ >>";
+} 

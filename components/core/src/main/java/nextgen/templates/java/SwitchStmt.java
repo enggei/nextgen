@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class SwitchStmt {
+public class SwitchStmt implements Statement {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -40,7 +40,7 @@ public class SwitchStmt {
 	public SwitchStmt removeSelector() {
 		this._selector = null;
 		return this;
-	}
+	} 
 
 	public SwitchStmt addEntries(Object value) {
 		this._entries.add(value);
@@ -69,7 +69,7 @@ public class SwitchStmt {
 
 	public java.util.List<Object> getEntries() {
 		return this._entries;
-	}
+	} 
 
 
 	@Override
@@ -87,5 +87,5 @@ public class SwitchStmt {
 
 	static final String st = "SwitchStmt(selector,entries) ::= <<switch(~selector~) {\n" + 
 				"	~entries:{it|~it~};separator=\"\\n\"~\n" + 
-				"}>>";
-}
+				"} >>";
+} 

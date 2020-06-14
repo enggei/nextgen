@@ -13,7 +13,7 @@ public class KotlinST {
 	Extending.st + "\n" + 
 	FieldDeclaration.st + "\n" + 
 	FunctionDeclaration.st + "\n" + 
-	PackageDeclaration.st + "\n";
+	PackageDeclaration.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -51,39 +51,39 @@ public class KotlinST {
 
 	public static Poko newPoko() {
 		return new Poko(stGroup);
-	}
+	} 
 
 	public static AnnotationDeclaration newAnnotationDeclaration() {
 		return new AnnotationDeclaration(stGroup);
-	}
+	} 
 
 	public static AnnotationParam newAnnotationParam() {
 		return new AnnotationParam(stGroup);
-	}
+	} 
 
 	public static ClassDeclaration newClassDeclaration() {
 		return new ClassDeclaration(stGroup);
-	}
+	} 
 
 	public static OverrideEquals newOverrideEquals() {
 		return new OverrideEquals(stGroup);
-	}
+	} 
 
 	public static Extending newExtending() {
 		return new Extending(stGroup);
-	}
+	} 
 
 	public static FieldDeclaration newFieldDeclaration() {
 		return new FieldDeclaration(stGroup);
-	}
+	} 
 
 	public static FunctionDeclaration newFunctionDeclaration() {
 		return new FunctionDeclaration(stGroup);
-	}
+	} 
 
 	public static PackageDeclaration newPackageDeclaration() {
 		return new PackageDeclaration(stGroup);
-	}
+	} 
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
 
@@ -116,4 +116,4 @@ public class KotlinST {
 			}
 		}
 	}
-} 
+}  

@@ -42,7 +42,7 @@ public class JavaPackageInfo {
 	public JavaPackageInfo removePackageName() {
 		this._packageName = null;
 		return this;
-	}
+	} 
 
 	public JavaPackageInfo addInterfaces(Object value) {
 		this._interfaces.add(value);
@@ -71,7 +71,7 @@ public class JavaPackageInfo {
 
 	public java.util.List<Object> getInterfaces() {
 		return this._interfaces;
-	}
+	} 
 
 	public JavaPackageInfo addClasses(Object value) {
 		this._classes.add(value);
@@ -100,7 +100,7 @@ public class JavaPackageInfo {
 
 	public java.util.List<Object> getClasses() {
 		return this._classes;
-	}
+	} 
 
 
 	@Override
@@ -122,5 +122,5 @@ public class JavaPackageInfo {
 				"	~interfaces:{it|~it.name~};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"classes:\n" + 
-				"	~classes:{it|~it.name~};separator=\"\\n\"~>>";
-}
+				"	~classes:{it|~it.name~};separator=\"\\n\"~ >>";
+} 

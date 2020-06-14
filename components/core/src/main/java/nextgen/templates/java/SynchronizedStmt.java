@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class SynchronizedStmt {
+public class SynchronizedStmt implements Statement {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -40,7 +40,7 @@ public class SynchronizedStmt {
 	public SynchronizedStmt removeExpression() {
 		this._expression = null;
 		return this;
-	}
+	} 
 
 	public SynchronizedStmt setBody(Object value) {
 		this._body = value;
@@ -62,7 +62,7 @@ public class SynchronizedStmt {
 	public SynchronizedStmt removeBody() {
 		this._body = null;
 		return this;
-	}
+	} 
 
 
 
@@ -79,5 +79,5 @@ public class SynchronizedStmt {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SynchronizedStmt(expression,body) ::= <<synchronized ( ~expression~ ) ~body~>>";
-}
+	static final String st = "SynchronizedStmt(expression,body) ::= <<synchronized ( ~expression~ ) ~body~ >>";
+} 

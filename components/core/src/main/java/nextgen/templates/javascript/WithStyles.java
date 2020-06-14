@@ -32,5 +32,5 @@ public class WithStyles {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "withStyles() ::= <<@withStyles(useStyles)>>";
-}
+	static final String st = "withStyles() ::= <<@withStyles(useStyles) >>";
+} 

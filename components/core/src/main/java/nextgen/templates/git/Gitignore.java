@@ -46,7 +46,7 @@ public class Gitignore {
 
 	public java.util.List<Object> getExclude() {
 		return this._exclude;
-	}
+	} 
 
 
 	@Override
@@ -62,5 +62,5 @@ public class Gitignore {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "gitignore(exclude) ::= <<~exclude:{it|/~it~/};separator=\"\\n\"~>>";
-}
+	static final String st = "gitignore(exclude) ::= <<~exclude:{it|/~it~/};separator=\"\\n\"~ >>";
+} 

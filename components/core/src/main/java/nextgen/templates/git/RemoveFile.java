@@ -38,7 +38,7 @@ public class RemoveFile {
 	public RemoveFile removePath() {
 		this._path = null;
 		return this;
-	}
+	} 
 
 
 
@@ -55,5 +55,5 @@ public class RemoveFile {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "removeFile(path) ::= <<git rm --cached ~path~>>";
-}
+	static final String st = "removeFile(path) ::= <<git rm --cached ~path~ >>";
+} 

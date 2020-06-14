@@ -44,7 +44,7 @@ public class NeoFactoryPropertyAccessors {
 	public NeoFactoryPropertyAccessors removeEntity() {
 		this._entity = null;
 		return this;
-	}
+	} 
 
 	public NeoFactoryPropertyAccessors setPropertyName(String value) {
 		this._propertyName = value;
@@ -66,7 +66,7 @@ public class NeoFactoryPropertyAccessors {
 	public NeoFactoryPropertyAccessors removePropertyName() {
 		this._propertyName = null;
 		return this;
-	}
+	} 
 
 	public NeoFactoryPropertyAccessors setPropertyType(Object value) {
 		this._propertyType = value;
@@ -88,7 +88,7 @@ public class NeoFactoryPropertyAccessors {
 	public NeoFactoryPropertyAccessors removePropertyType() {
 		this._propertyType = null;
 		return this;
-	}
+	} 
 
 	public NeoFactoryPropertyAccessors setIsEnum(Boolean value) {
 		this._isEnum = value;
@@ -110,7 +110,7 @@ public class NeoFactoryPropertyAccessors {
 	public NeoFactoryPropertyAccessors removeIsEnum() {
 		this._isEnum = null;
 		return this;
-	}
+	} 
 
 
 
@@ -139,5 +139,5 @@ public class NeoFactoryPropertyAccessors {
 				"\n" + 
 				"public java.util.stream.Stream<~entity;format=\"capitalize\"~> findAll~entity;format=\"capitalize\"~By~propertyName;format=\"capitalize\"~(~propertyType~ value) {\n" + 
 				"	return db.findNodes(org.neo4j.graphdb.Label.label(\"~entity~\"), \"~propertyName~\", value~if(isEnum)~.name()~endif~).stream().map(this::new~entity;format=\"capitalize\"~);\n" + 
-				"}>>";
-}
+				"} >>";
+} 

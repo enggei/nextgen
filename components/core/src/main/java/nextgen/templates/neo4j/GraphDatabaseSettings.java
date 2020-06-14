@@ -32,5 +32,5 @@ public class GraphDatabaseSettings {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "GraphDatabaseSettings() ::= <<org.neo4j.graphdb.factory.GraphDatabaseSettings>>";
-}
+	static final String st = "GraphDatabaseSettings() ::= <<org.neo4j.graphdb.factory.GraphDatabaseSettings >>";
+} 

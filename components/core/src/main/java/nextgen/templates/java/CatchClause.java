@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class CatchClause {
+public class CatchClause implements Statement {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -40,7 +40,7 @@ public class CatchClause {
 	public CatchClause removeParameter() {
 		this._parameter = null;
 		return this;
-	}
+	} 
 
 	public CatchClause setBody(Object value) {
 		this._body = value;
@@ -62,7 +62,7 @@ public class CatchClause {
 	public CatchClause removeBody() {
 		this._body = null;
 		return this;
-	}
+	} 
 
 
 
@@ -79,5 +79,5 @@ public class CatchClause {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "CatchClause(parameter,body) ::= <<catch (~parameter~) ~body~>>";
-}
+	static final String st = "CatchClause(parameter,body) ::= <<catch (~parameter~) ~body~ >>";
+} 

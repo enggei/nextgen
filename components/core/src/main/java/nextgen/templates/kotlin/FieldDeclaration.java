@@ -50,7 +50,7 @@ public class FieldDeclaration {
 	public FieldDeclaration removeIsMutable() {
 		this._isMutable = null;
 		return this;
-	}
+	} 
 
 	public FieldDeclaration setIsNonMember(Boolean value) {
 		this._isNonMember = value;
@@ -72,7 +72,7 @@ public class FieldDeclaration {
 	public FieldDeclaration removeIsNonMember() {
 		this._isNonMember = null;
 		return this;
-	}
+	} 
 
 	public FieldDeclaration setName(String value) {
 		this._name = value;
@@ -94,7 +94,7 @@ public class FieldDeclaration {
 	public FieldDeclaration removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public FieldDeclaration setType(String value) {
 		this._type = value;
@@ -116,7 +116,7 @@ public class FieldDeclaration {
 	public FieldDeclaration removeType() {
 		this._type = null;
 		return this;
-	}
+	} 
 
 	public FieldDeclaration setIsNullable(Boolean value) {
 		this._isNullable = value;
@@ -138,7 +138,7 @@ public class FieldDeclaration {
 	public FieldDeclaration removeIsNullable() {
 		this._isNullable = null;
 		return this;
-	}
+	} 
 
 	public FieldDeclaration setInitializer(Object value) {
 		this._initializer = value;
@@ -160,7 +160,7 @@ public class FieldDeclaration {
 	public FieldDeclaration removeInitializer() {
 		this._initializer = null;
 		return this;
-	}
+	} 
 
 	public FieldDeclaration addAnnotations(Object value) {
 		this._annotations.add(value);
@@ -189,7 +189,7 @@ public class FieldDeclaration {
 
 	public java.util.List<Object> getAnnotations() {
 		return this._annotations;
-	}
+	} 
 
 
 	@Override
@@ -206,5 +206,5 @@ public class FieldDeclaration {
 	}
 
 	static final String st = "FieldDeclaration(annotations,isMutable,isNonMember,name,type,isNullable,initializer) ::= <<~annotations:{it|~it~};separator=\"\\n\"~\n" + 
-				"~if(isMutable)~var ~elseif(isNonMember)~~else~val ~endif~~name~: ~type~~if(isNullable)~?~endif~~if(initializer)~ = ~initializer~~endif~>>";
-}
+				"~if(isMutable)~var ~elseif(isNonMember)~~else~val ~endif~~name~: ~type~~if(isNullable)~?~endif~~if(initializer)~ = ~initializer~~endif~ >>";
+} 

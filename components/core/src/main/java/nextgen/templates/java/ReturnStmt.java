@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class ReturnStmt {
+public class ReturnStmt implements Statement {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -38,7 +38,7 @@ public class ReturnStmt {
 	public ReturnStmt removeExpression() {
 		this._expression = null;
 		return this;
-	}
+	} 
 
 
 
@@ -55,5 +55,5 @@ public class ReturnStmt {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ReturnStmt(expression) ::= <<return~if(expression)~ ~expression~~endif~;>>";
-}
+	static final String st = "ReturnStmt(expression) ::= <<return~if(expression)~ ~expression~~endif~; >>";
+} 

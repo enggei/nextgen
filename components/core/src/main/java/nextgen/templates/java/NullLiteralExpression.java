@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class NullLiteralExpression {
+public class NullLiteralExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -38,7 +38,7 @@ public class NullLiteralExpression {
 	public NullLiteralExpression removeValue() {
 		this._value = null;
 		return this;
-	}
+	} 
 
 
 
@@ -55,5 +55,5 @@ public class NullLiteralExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NullLiteralExpression(value) ::= <<~value~>>";
-}
+	static final String st = "NullLiteralExpression(value) ::= <<~value~ >>";
+} 

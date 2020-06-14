@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class UnaryExpression {
+public class UnaryExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -44,7 +44,7 @@ public class UnaryExpression {
 	public UnaryExpression removeIsPrefix() {
 		this._isPrefix = null;
 		return this;
-	}
+	} 
 
 	public UnaryExpression setOperator(Object value) {
 		this._operator = value;
@@ -66,7 +66,7 @@ public class UnaryExpression {
 	public UnaryExpression removeOperator() {
 		this._operator = null;
 		return this;
-	}
+	} 
 
 	public UnaryExpression setExpression(Object value) {
 		this._expression = value;
@@ -88,7 +88,7 @@ public class UnaryExpression {
 	public UnaryExpression removeExpression() {
 		this._expression = null;
 		return this;
-	}
+	} 
 
 	public UnaryExpression setIsPostfix(Object value) {
 		this._isPostfix = value;
@@ -110,7 +110,7 @@ public class UnaryExpression {
 	public UnaryExpression removeIsPostfix() {
 		this._isPostfix = null;
 		return this;
-	}
+	} 
 
 
 
@@ -127,5 +127,5 @@ public class UnaryExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "UnaryExpression(isPrefix,operator,expression,isPostfix) ::= <<~if(isPrefix)~~operator~~endif~~expression~~if(isPostfix)~~operator~~endif~>>";
-}
+	static final String st = "UnaryExpression(isPrefix,operator,expression,isPostfix) ::= <<~if(isPrefix)~~operator~~endif~~expression~~if(isPostfix)~~operator~~endif~ >>";
+} 

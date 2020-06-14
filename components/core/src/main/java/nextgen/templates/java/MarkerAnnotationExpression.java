@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class MarkerAnnotationExpression {
+public class MarkerAnnotationExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -38,7 +38,7 @@ public class MarkerAnnotationExpression {
 	public MarkerAnnotationExpression removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 
 
@@ -55,5 +55,5 @@ public class MarkerAnnotationExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MarkerAnnotationExpression(name) ::= <<@~name~>>";
-}
+	static final String st = "MarkerAnnotationExpression(name) ::= <<@~name~ >>";
+} 

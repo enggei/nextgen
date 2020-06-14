@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class ContinueStmt {
+public class ContinueStmt implements Statement {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -38,7 +38,7 @@ public class ContinueStmt {
 	public ContinueStmt removeLabel() {
 		this._label = null;
 		return this;
-	}
+	} 
 
 
 
@@ -55,5 +55,5 @@ public class ContinueStmt {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ContinueStmt(label) ::= <<continue~if(label)~ ~label~~endif~;>>";
-}
+	static final String st = "ContinueStmt(label) ::= <<continue~if(label)~ ~label~~endif~; >>";
+} 

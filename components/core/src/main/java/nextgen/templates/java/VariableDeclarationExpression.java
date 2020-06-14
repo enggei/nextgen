@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class VariableDeclarationExpression {
+public class VariableDeclarationExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -48,7 +48,7 @@ public class VariableDeclarationExpression {
 
 	public java.util.List<Object> getVariables() {
 		return this._variables;
-	}
+	} 
 
 	public VariableDeclarationExpression addModifiers(Object value) {
 		this._modifiers.add(value);
@@ -77,7 +77,7 @@ public class VariableDeclarationExpression {
 
 	public java.util.List<Object> getModifiers() {
 		return this._modifiers;
-	}
+	} 
 
 
 	@Override
@@ -93,5 +93,5 @@ public class VariableDeclarationExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "VariableDeclarationExpression(variables,modifiers) ::= <<~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~variables:{it|~it~};separator=\", \"~>>";
-}
+	static final String st = "VariableDeclarationExpression(variables,modifiers) ::= <<~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~variables:{it|~it~};separator=\", \"~ >>";
+} 

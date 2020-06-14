@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class SuperExpression {
+public class SuperExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -38,7 +38,7 @@ public class SuperExpression {
 	public SuperExpression removeTypeName() {
 		this._typeName = null;
 		return this;
-	}
+	} 
 
 
 
@@ -55,5 +55,5 @@ public class SuperExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SuperExpression(typeName) ::= <<super~if(typeName)~.~endif~~typeName~>>";
-}
+	static final String st = "SuperExpression(typeName) ::= <<super~if(typeName)~.~endif~~typeName~ >>";
+} 

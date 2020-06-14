@@ -42,7 +42,7 @@ public class JsonFactory {
 	public JsonFactory removePackage() {
 		this._package = null;
 		return this;
-	}
+	} 
 
 	public JsonFactory setName(Object value) {
 		this._name = value;
@@ -64,7 +64,7 @@ public class JsonFactory {
 	public JsonFactory removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public JsonFactory addEntities(Object value) {
 		this._entities.add(value);
@@ -93,7 +93,7 @@ public class JsonFactory {
 
 	public java.util.List<Object> getEntities() {
 		return this._entities;
-	}
+	} 
 
 
 	@Override
@@ -141,5 +141,5 @@ public class JsonFactory {
 				"		return new ~it~(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));\n" + 
 				"	\\}\n" + 
 				"};separator=\"\\n\"~\n" + 
-				"}>>";
-}
+				"} >>";
+} 

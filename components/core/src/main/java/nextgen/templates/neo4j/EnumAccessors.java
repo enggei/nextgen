@@ -42,7 +42,7 @@ public class EnumAccessors {
 	public EnumAccessors removeClassName() {
 		this._className = null;
 		return this;
-	}
+	} 
 
 	public EnumAccessors setName(Object value) {
 		this._name = value;
@@ -64,7 +64,7 @@ public class EnumAccessors {
 	public EnumAccessors removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public EnumAccessors setType(Object value) {
 		this._type = value;
@@ -86,7 +86,7 @@ public class EnumAccessors {
 	public EnumAccessors removeType() {
 		this._type = null;
 		return this;
-	}
+	} 
 
 
 
@@ -126,5 +126,5 @@ public class EnumAccessors {
 				"public ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() { \n" + 
 				"	node.removeProperty(\"~name~\");\n" + 
 				"	return this;\n" + 
-				"}>>";
-}
+				"} >>";
+} 

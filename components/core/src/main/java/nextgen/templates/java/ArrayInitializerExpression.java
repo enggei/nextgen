@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class ArrayInitializerExpression {
+public class ArrayInitializerExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -46,7 +46,7 @@ public class ArrayInitializerExpression {
 
 	public java.util.List<Object> getValues() {
 		return this._values;
-	}
+	} 
 
 
 	@Override
@@ -64,5 +64,5 @@ public class ArrayInitializerExpression {
 
 	static final String st = "ArrayInitializerExpression(values) ::= <<{\n" + 
 				"	~values:{it|~it~};separator=\",\\n\"~\n" + 
-				"}>>";
-}
+				"} >>";
+} 

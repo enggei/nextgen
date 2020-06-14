@@ -40,5 +40,5 @@ public class ParameterTests {
 				"\n" + 
 				"Test conditional parsing\n" + 
 				"\n" + 
-				"Test complex combination of all types>>";
-}
+				"Test complex combination of all types >>";
+} 

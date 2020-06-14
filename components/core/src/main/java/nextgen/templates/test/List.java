@@ -46,7 +46,7 @@ public class List implements TestInterface {
 
 	public java.util.List<Integer> getValue() {
 		return this._value;
-	}
+	} 
 
 
 	@Override
@@ -62,5 +62,5 @@ public class List implements TestInterface {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "list(value) ::= <<list : ~value:{it|~it~};separator=\", \"~>>";
-}
+	static final String st = "list(value) ::= <<list : ~value:{it|~it~};separator=\", \"~ >>";
+} 

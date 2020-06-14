@@ -46,7 +46,7 @@ public class JsonObject {
 
 	public java.util.List<Object> getValues() {
 		return this._values;
-	}
+	} 
 
 
 	@Override
@@ -62,5 +62,5 @@ public class JsonObject {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "JsonObject(values) ::= <<{ ~values:{it|~it~};separator=\", \"~ }>>";
-}
+	static final String st = "JsonObject(values) ::= <<{ ~values:{it|~it~};separator=\", \"~ } >>";
+} 

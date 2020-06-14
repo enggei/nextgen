@@ -63,7 +63,7 @@ public class Kv implements TestInterface {
 			return this._value;
 		}
 
-	}
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -78,5 +78,5 @@ public class Kv implements TestInterface {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "kv(value) ::= <<kv : ~value:{it|~it.key~:~it.value~};separator=\"\\n\"~>>";
-}
+	static final String st = "kv(value) ::= <<kv : ~value:{it|~it.key~:~it.value~};separator=\"\\n\"~ >>";
+} 

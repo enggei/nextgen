@@ -63,7 +63,7 @@ public class AnnotationDeclaration {
 			return this._params;
 		}
 
-	}
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -79,5 +79,5 @@ public class AnnotationDeclaration {
 	}
 
 	static final String st = "AnnotationDeclaration(annotations) ::= <<~annotations:{it|@~it.name~(~it.params~)};separator=\"\\n\"~~if(annotations)~\n" + 
-				"~endif~>>";
-}
+				"~endif~ >>";
+} 

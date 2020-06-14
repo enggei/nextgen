@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class DoubleLiteralExpression {
+public class DoubleLiteralExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -38,7 +38,7 @@ public class DoubleLiteralExpression {
 	public DoubleLiteralExpression removeValue() {
 		this._value = null;
 		return this;
-	}
+	} 
 
 
 
@@ -55,5 +55,5 @@ public class DoubleLiteralExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "DoubleLiteralExpression(value) ::= <<~value~>>";
-}
+	static final String st = "DoubleLiteralExpression(value) ::= <<~value~ >>";
+} 

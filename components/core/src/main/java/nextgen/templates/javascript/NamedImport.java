@@ -46,7 +46,7 @@ public class NamedImport {
 
 	public java.util.List<Object> getNames() {
 		return this._names;
-	}
+	} 
 
 
 	@Override
@@ -62,5 +62,5 @@ public class NamedImport {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "namedImport(names) ::= <<{ ~names:{it|~it~};separator=\", \"~ }>>";
-}
+	static final String st = "namedImport(names) ::= <<{ ~names:{it|~it~};separator=\", \"~ } >>";
+} 

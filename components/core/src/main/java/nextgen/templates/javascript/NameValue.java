@@ -40,7 +40,7 @@ public class NameValue {
 	public NameValue removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public NameValue setValue(Object value) {
 		this._value = value;
@@ -62,7 +62,7 @@ public class NameValue {
 	public NameValue removeValue() {
 		this._value = null;
 		return this;
-	}
+	} 
 
 
 
@@ -79,5 +79,5 @@ public class NameValue {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NameValue(name,value) ::= <<~name~: ~value~>>";
-}
+	static final String st = "NameValue(name,value) ::= <<~name~: ~value~ >>";
+} 

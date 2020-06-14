@@ -1,6 +1,6 @@
 delimiters "~","~"
 
-Entities() ::= <<>>
+Entities() ::= << >>
 
 JsonWrapper(package,name,externalFields,accessors,lexical) ::= <<package ~package~;
 
@@ -48,7 +48,7 @@ public class ~name;format="capitalize"~ {
 	public java.lang.String toString() { 
 		return ~if(lexical)~jsonObject.getString("~lexical~")~else~jsonObject.encode()~endif~;
 	}
-}>>
+} >>
 
 primitiveAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="dotToCap"~(~type~ value) { 
 	jsonObject.put("~name~", value);
@@ -61,7 +61,7 @@ public ~type~ get~name;format="dotToCap"~() {
 
 public ~type~ get~name;format="dotToCap"~(~type~ defaultValue) { 
 	return jsonObject.get~type;format="capitalize"~("~name~", defaultValue);
-}>>
+} >>
 
 listReferenceAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ add~name;format="capitalize"~(~type~ value) { 
 	io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("~name~");
@@ -89,7 +89,7 @@ public ~className;format="capitalize"~ remove~name;format="capitalize"~(~type~ v
 public ~className;format="capitalize"~ clear~name;format="capitalize"~() { 
 	jsonObject.put("~name~", new io.vertx.core.json.JsonArray());
 	return this;
-}>>
+} >>
 
 referenceAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
 	jsonObject.put("~name~", value.getJsonObject());
@@ -98,7 +98,7 @@ referenceAccessors(className,name,type) ::= <<public ~className;format="capitali
 
 public ~type~ get~name;format="capitalize"~() { 
 	return jsonObject.getJsonObject("~name~") == null ? null : new ~type~(jsonObject.getJsonObject("~name~"));
-}>>
+} >>
 
 listPrimitiveAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ add~name;format="capitalize"~(~type~ value) { 
 	io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("~name~");
@@ -126,7 +126,7 @@ public ~className;format="capitalize"~ remove~name;format="capitalize"~(~type~ v
 public ~className;format="capitalize"~ clear~name;format="capitalize"~() { 
 	jsonObject.put("~name~", new io.vertx.core.json.JsonArray());
 	return this;
-}>>
+} >>
 
 externalAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
 	this._~name~ = value;
@@ -139,7 +139,7 @@ public ~type~ get~name;format="capitalize"~() {
 
 public ~type~ get~name;format="capitalize"~(~type~ defaultValue) { 
 	return this._~name~ == null ? defaultValue : this._~name~;
-}>>
+} >>
 
 enumAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
 	if (value == null) return this;
@@ -153,7 +153,7 @@ public ~type~ get~name;format="capitalize"~() {
 
 public ~type~ get~name;format="capitalize"~(~type~ defaultValue) { 
 	return jsonObject.getString("~name~") == null ? defaultValue : ~type~.valueOf(jsonObject.getString("~name~"));
-}>>
+} >>
 
 listEnumAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ add~name;format="capitalize"~(~type~ value) { 
 	io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("~name~");
@@ -175,7 +175,7 @@ public ~className;format="capitalize"~ remove~name;format="capitalize"~(~type~ v
 public ~className;format="capitalize"~ clear~name;format="capitalize"~() { 
 	jsonObject.put("~name~", new io.vertx.core.json.JsonArray());
 	return this;
-} >>
+}  >>
 
 JsonFactory(package,name,entities) ::= <<package ~package~;
 
@@ -209,7 +209,7 @@ public class ~name;format="capitalize"~ {
 		return new ~it~(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));
 	\}
 };separator="\n"~
-}>>
+} >>
 
 eom() ::= "}"
 

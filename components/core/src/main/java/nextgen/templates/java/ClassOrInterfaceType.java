@@ -46,7 +46,7 @@ public class ClassOrInterfaceType {
 	public ClassOrInterfaceType removeScope() {
 		this._scope = null;
 		return this;
-	}
+	} 
 
 	public ClassOrInterfaceType setIsTyped(Object value) {
 		this._isTyped = value;
@@ -68,7 +68,7 @@ public class ClassOrInterfaceType {
 	public ClassOrInterfaceType removeIsTyped() {
 		this._isTyped = null;
 		return this;
-	}
+	} 
 
 	public ClassOrInterfaceType setIsArrayType(Object value) {
 		this._isArrayType = value;
@@ -90,7 +90,7 @@ public class ClassOrInterfaceType {
 	public ClassOrInterfaceType removeIsArrayType() {
 		this._isArrayType = null;
 		return this;
-	}
+	} 
 
 	public ClassOrInterfaceType addNames(Object value) {
 		this._names.add(value);
@@ -119,7 +119,7 @@ public class ClassOrInterfaceType {
 
 	public java.util.List<Object> getNames() {
 		return this._names;
-	}
+	} 
 
 	public ClassOrInterfaceType addTypeArguments(Object value) {
 		this._typeArguments.add(value);
@@ -148,7 +148,7 @@ public class ClassOrInterfaceType {
 
 	public java.util.List<Object> getTypeArguments() {
 		return this._typeArguments;
-	}
+	} 
 
 
 	@Override
@@ -164,5 +164,5 @@ public class ClassOrInterfaceType {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ClassOrInterfaceType(scope,names,typeArguments,isTyped,isArrayType) ::= <<~if(scope)~~scope~.~endif~~names:{it|~it~};separator=\" | \"~~if(typeArguments)~<~typeArguments:{it|~it~};separator=\", \"~>~else~~if(isTyped)~<>~endif~~endif~~if(isArrayType)~[]~endif~>>";
-}
+	static final String st = "ClassOrInterfaceType(scope,names,typeArguments,isTyped,isArrayType) ::= <<~if(scope)~~scope~.~endif~~names:{it|~it~};separator=\" | \"~~if(typeArguments)~<~typeArguments:{it|~it~};separator=\", \"~>~else~~if(isTyped)~<>~endif~~endif~~if(isArrayType)~[]~endif~ >>";
+} 

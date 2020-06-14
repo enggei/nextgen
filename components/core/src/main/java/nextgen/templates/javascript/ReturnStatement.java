@@ -40,7 +40,7 @@ public class ReturnStatement {
 	public ReturnStatement removeCondition() {
 		this._condition = null;
 		return this;
-	}
+	} 
 
 	public ReturnStatement setElement(Object value) {
 		this._element = value;
@@ -62,7 +62,7 @@ public class ReturnStatement {
 	public ReturnStatement removeElement() {
 		this._element = null;
 		return this;
-	}
+	} 
 
 
 
@@ -81,5 +81,5 @@ public class ReturnStatement {
 
 	static final String st = "returnStatement(condition,element) ::= <<~if(condition)~if (~condition~) ~endif~return (\n" + 
 				"	~element~\n" + 
-				"	);>>";
-}
+				"	); >>";
+} 

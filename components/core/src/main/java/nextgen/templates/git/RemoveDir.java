@@ -38,7 +38,7 @@ public class RemoveDir {
 	public RemoveDir removeDir() {
 		this._dir = null;
 		return this;
-	}
+	} 
 
 
 
@@ -55,5 +55,5 @@ public class RemoveDir {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "removeDir(dir) ::= <<git rm --cached -r ~dir~>>";
-}
+	static final String st = "removeDir(dir) ::= <<git rm --cached -r ~dir~ >>";
+} 

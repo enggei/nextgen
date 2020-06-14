@@ -44,7 +44,7 @@ public class AnnotationDeclaration {
 	public AnnotationDeclaration removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public AnnotationDeclaration addMembers(Object value) {
 		this._members.add(value);
@@ -73,7 +73,7 @@ public class AnnotationDeclaration {
 
 	public java.util.List<Object> getMembers() {
 		return this._members;
-	}
+	} 
 
 	public AnnotationDeclaration addModifiers(Object value) {
 		this._modifiers.add(value);
@@ -102,7 +102,7 @@ public class AnnotationDeclaration {
 
 	public java.util.List<Object> getModifiers() {
 		return this._modifiers;
-	}
+	} 
 
 	public AnnotationDeclaration addAnnotations(Object value) {
 		this._annotations.add(value);
@@ -131,7 +131,7 @@ public class AnnotationDeclaration {
 
 	public java.util.List<Object> getAnnotations() {
 		return this._annotations;
-	}
+	} 
 
 
 	@Override
@@ -150,5 +150,5 @@ public class AnnotationDeclaration {
 	static final String st = "AnnotationDeclaration(members,name,modifiers,annotations) ::= <<~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\n" + 
 				"~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~@interface ~name~ {\n" + 
 				"	~members:{it|~it~};separator=\"\\n\"~\n" + 
-				"}>>";
-}
+				"} >>";
+} 

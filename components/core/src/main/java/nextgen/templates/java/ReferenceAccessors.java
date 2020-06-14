@@ -42,7 +42,7 @@ public class ReferenceAccessors {
 	public ReferenceAccessors removeType() {
 		this._type = null;
 		return this;
-	}
+	} 
 
 	public ReferenceAccessors setName(Object value) {
 		this._name = value;
@@ -64,7 +64,7 @@ public class ReferenceAccessors {
 	public ReferenceAccessors removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public ReferenceAccessors setClassName(Object value) {
 		this._className = value;
@@ -86,7 +86,7 @@ public class ReferenceAccessors {
 	public ReferenceAccessors removeClassName() {
 		this._className = null;
 		return this;
-	}
+	} 
 
 
 
@@ -115,5 +115,5 @@ public class ReferenceAccessors {
 				"public ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() {\n" + 
 				"	this._~name~ = null;\n" + 
 				"	return this;\n" + 
-				"}>>";
-}
+				"} >>";
+} 

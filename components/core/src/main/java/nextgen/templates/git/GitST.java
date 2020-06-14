@@ -7,7 +7,7 @@ public class GitST {
 	"gt() ::= \">\"\n" +
 	Gitignore.st + "\n" + 
 	RemoveDir.st + "\n" + 
-	RemoveFile.st + "\n";
+	RemoveFile.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -45,15 +45,15 @@ public class GitST {
 
 	public static Gitignore newGitignore() {
 		return new Gitignore(stGroup);
-	}
+	} 
 
 	public static RemoveDir newRemoveDir() {
 		return new RemoveDir(stGroup);
-	}
+	} 
 
 	public static RemoveFile newRemoveFile() {
 		return new RemoveFile(stGroup);
-	}
+	} 
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
 
@@ -86,4 +86,4 @@ public class GitST {
 			}
 		}
 	}
-} 
+}  

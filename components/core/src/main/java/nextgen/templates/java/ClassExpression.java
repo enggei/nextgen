@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class ClassExpression {
+public class ClassExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -38,7 +38,7 @@ public class ClassExpression {
 	public ClassExpression removeType() {
 		this._type = null;
 		return this;
-	}
+	} 
 
 
 
@@ -55,5 +55,5 @@ public class ClassExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ClassExpression(type) ::= <<~type~.class>>";
-}
+	static final String st = "ClassExpression(type) ::= <<~type~.class >>";
+} 

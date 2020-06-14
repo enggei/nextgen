@@ -42,7 +42,7 @@ public class ReferenceAccessors {
 	public ReferenceAccessors removeClassName() {
 		this._className = null;
 		return this;
-	}
+	} 
 
 	public ReferenceAccessors setName(Object value) {
 		this._name = value;
@@ -64,7 +64,7 @@ public class ReferenceAccessors {
 	public ReferenceAccessors removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public ReferenceAccessors setType(Object value) {
 		this._type = value;
@@ -86,7 +86,7 @@ public class ReferenceAccessors {
 	public ReferenceAccessors removeType() {
 		this._type = null;
 		return this;
-	}
+	} 
 
 
 
@@ -110,5 +110,5 @@ public class ReferenceAccessors {
 				"\n" + 
 				"public ~type~ get~name;format=\"capitalize\"~() { \n" + 
 				"	return jsonObject.getJsonObject(\"~name~\") == null ? null : new ~type~(jsonObject.getJsonObject(\"~name~\"));\n" + 
-				"}>>";
-}
+				"} >>";
+} 

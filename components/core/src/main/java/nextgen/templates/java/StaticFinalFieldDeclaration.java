@@ -42,7 +42,7 @@ public class StaticFinalFieldDeclaration {
 	public StaticFinalFieldDeclaration removeInitializer() {
 		this._initializer = null;
 		return this;
-	}
+	} 
 
 	public StaticFinalFieldDeclaration setName(Object value) {
 		this._name = value;
@@ -64,7 +64,7 @@ public class StaticFinalFieldDeclaration {
 	public StaticFinalFieldDeclaration removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public StaticFinalFieldDeclaration setType(Object value) {
 		this._type = value;
@@ -86,7 +86,7 @@ public class StaticFinalFieldDeclaration {
 	public StaticFinalFieldDeclaration removeType() {
 		this._type = null;
 		return this;
-	}
+	} 
 
 
 
@@ -103,5 +103,5 @@ public class StaticFinalFieldDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "StaticFinalFieldDeclaration(initializer,name,type) ::= <<static final ~VariableDeclaration(initializer,name,type)~;>>";
-}
+	static final String st = "StaticFinalFieldDeclaration(initializer,name,type) ::= <<static final ~VariableDeclaration(initializer,name,type)~; >>";
+} 

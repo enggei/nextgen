@@ -42,7 +42,7 @@ public class ListPrimitiveAccessors {
 	public ListPrimitiveAccessors removeClassName() {
 		this._className = null;
 		return this;
-	}
+	} 
 
 	public ListPrimitiveAccessors setName(Object value) {
 		this._name = value;
@@ -64,7 +64,7 @@ public class ListPrimitiveAccessors {
 	public ListPrimitiveAccessors removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public ListPrimitiveAccessors setType(Object value) {
 		this._type = value;
@@ -86,7 +86,7 @@ public class ListPrimitiveAccessors {
 	public ListPrimitiveAccessors removeType() {
 		this._type = null;
 		return this;
-	}
+	} 
 
 
 
@@ -129,5 +129,5 @@ public class ListPrimitiveAccessors {
 				"public ~className;format=\"capitalize\"~ clear~name;format=\"capitalize\"~() { \n" + 
 				"	jsonObject.put(\"~name~\", new io.vertx.core.json.JsonArray());\n" + 
 				"	return this;\n" + 
-				"}>>";
-}
+				"} >>";
+} 

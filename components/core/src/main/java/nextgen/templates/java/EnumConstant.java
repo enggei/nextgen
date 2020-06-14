@@ -44,7 +44,7 @@ public class EnumConstant {
 	public EnumConstant removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public EnumConstant addMethods(Object value) {
 		this._methods.add(value);
@@ -73,7 +73,7 @@ public class EnumConstant {
 
 	public java.util.List<Object> getMethods() {
 		return this._methods;
-	}
+	} 
 
 	public EnumConstant addArguments(Object value) {
 		this._arguments.add(value);
@@ -102,7 +102,7 @@ public class EnumConstant {
 
 	public java.util.List<Object> getArguments() {
 		return this._arguments;
-	}
+	} 
 
 	public EnumConstant addAnnotations(Object value) {
 		this._annotations.add(value);
@@ -131,7 +131,7 @@ public class EnumConstant {
 
 	public java.util.List<Object> getAnnotations() {
 		return this._annotations;
-	}
+	} 
 
 
 	@Override
@@ -150,5 +150,5 @@ public class EnumConstant {
 	static final String st = "EnumConstant(methods,arguments,name,annotations) ::= <<~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\n" + 
 				"~endif~~name~~if(arguments)~(~arguments:{it|~it~};separator=\",\"~)~endif~~if(methods)~ {\n" + 
 				"	~methods:{it|~it~};separator=\"\\n\"~\n" + 
-				"}~endif~>>";
-}
+				"}~endif~ >>";
+} 

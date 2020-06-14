@@ -40,7 +40,7 @@ public class Decorator {
 	public Decorator removeName() {
 		this._name = null;
 		return this;
-	}
+	} 
 
 	public Decorator addParameters(Object value) {
 		this._parameters.add(value);
@@ -69,7 +69,7 @@ public class Decorator {
 
 	public java.util.List<Object> getParameters() {
 		return this._parameters;
-	}
+	} 
 
 
 	@Override
@@ -85,5 +85,5 @@ public class Decorator {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Decorator(name,parameters) ::= <<@~name~~if(parameters)~(~parameters:{it|~it~};separator=\", \"~)~endif~>>";
-}
+	static final String st = "Decorator(name,parameters) ::= <<@~name~~if(parameters)~(~parameters:{it|~it~};separator=\", \"~)~endif~ >>";
+} 

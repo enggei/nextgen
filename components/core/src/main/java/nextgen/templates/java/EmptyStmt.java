@@ -1,6 +1,6 @@
 package nextgen.templates.java;
 
-public class EmptyStmt {
+public class EmptyStmt implements Statement {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -32,5 +32,5 @@ public class EmptyStmt {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "EmptyStmt() ::= <<;>>";
-}
+	static final String st = "EmptyStmt() ::= <<; >>";
+} 
