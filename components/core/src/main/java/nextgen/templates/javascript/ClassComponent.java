@@ -5,7 +5,7 @@ public class ClassComponent {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _name;
+	private String _name;
 	private java.util.List<Object> _dependencies = new java.util.ArrayList<>();
 	private java.util.List<Object> _components = new java.util.ArrayList<>();
 	private java.util.List<Object> _decorators = new java.util.ArrayList<>();
@@ -34,16 +34,16 @@ public class ClassComponent {
 		return st.render().trim();
 	}
 
-	public ClassComponent setName(Object value) {
+	public ClassComponent setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Object getName(Object defaultValue) {
+	public String getName(String defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 
@@ -317,7 +317,8 @@ public class ClassComponent {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ClassComponent(dependencies,components,decorators,name,state,events,methods,renderConstants,returnStatements) ::= <<~dependencies:{it|~it~};separator=\"\\n\"~\n" + 
+	static final String st = "ClassComponent(dependencies,components,decorators,name,state,events,methods,renderConstants,returnStatements) ::= <<import React from 'react';\n" + 
+				"~dependencies:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"~components:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
@@ -327,24 +328,20 @@ public class ClassComponent {
 				"	constructor(props) {\n" + 
 				"		super(props);\n" + 
 				"		console.log(this.props);\n" + 
-				"		\n" + 
 				"~if(state)~\n" + 
 				"		this.state = {\n" + 
 				"			~state:{it|~it~};separator=\",\\n\"~;\n" + 
 				"		}\n" + 
 				"~endif~\n" + 
-				"\n" + 
 				"		~events:{it|this.~it.methodName~ = this.~it.methodName~.bind(this);};separator=\"\\n\"~\n" + 
 				"	}\n" + 
 				"\n" + 
 				"~if(events)~\n" + 
 				"	~events:{it|~it.declaration~};separator=\"\\n\\n\"~\n" + 
 				"~endif~\n" + 
-				"	\n" + 
 				"~if(methods)~\n" + 
 				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"~endif~\n" + 
-				"\n" + 
 				"	render() {\n" + 
 				"~if(renderConstants)~\n" + 
 				"	const { ~renderConstants:{it|~it~};separator=\", \"~ } = this.state;~endif~\n" + 

@@ -5,10 +5,10 @@ public class DependencyGroup {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _name;
-	private Object _groupId;
-	private Object _version;
-	private java.util.List<Object> _artifacts = new java.util.ArrayList<>();
+	private String _name;
+	private String _groupId;
+	private String _version;
+	private java.util.List<String> _artifacts = new java.util.ArrayList<>();
 
 	DependencyGroup(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -24,16 +24,16 @@ public class DependencyGroup {
 		return st.render().trim();
 	}
 
-	public DependencyGroup setName(Object value) {
+	public DependencyGroup setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Object getName(Object defaultValue) {
+	public String getName(String defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 
@@ -46,16 +46,16 @@ public class DependencyGroup {
 		return this;
 	} 
 
-	public DependencyGroup setGroupId(Object value) {
+	public DependencyGroup setGroupId(String value) {
 		this._groupId = value;
 		return this;
 	}
 
-	public Object getGroupId() {
+	public String getGroupId() {
 		return this._groupId;
 	}
 
-	public Object getGroupId(Object defaultValue) {
+	public String getGroupId(String defaultValue) {
 		return this._groupId == null ? defaultValue : this._groupId;
 	}
 
@@ -68,16 +68,16 @@ public class DependencyGroup {
 		return this;
 	} 
 
-	public DependencyGroup setVersion(Object value) {
+	public DependencyGroup setVersion(String value) {
 		this._version = value;
 		return this;
 	}
 
-	public Object getVersion() {
+	public String getVersion() {
 		return this._version;
 	}
 
-	public Object getVersion(Object defaultValue) {
+	public String getVersion(String defaultValue) {
 		return this._version == null ? defaultValue : this._version;
 	}
 
@@ -90,22 +90,22 @@ public class DependencyGroup {
 		return this;
 	} 
 
-	public DependencyGroup addArtifacts(Object value) {
+	public DependencyGroup addArtifacts(String value) {
 		this._artifacts.add(value);
 		return this;
 	}
 
-	public DependencyGroup setArtifacts(Object[] value) {
+	public DependencyGroup setArtifacts(String[] value) {
 		this._artifacts.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public DependencyGroup setArtifacts(java.util.Collection<Object> values) {
+	public DependencyGroup setArtifacts(java.util.Collection<String> values) {
 		this._artifacts.addAll(values);
 		return this;
 	}
 
-	public DependencyGroup removeArtifacts(Object value) {
+	public DependencyGroup removeArtifacts(String value) {
 		this._artifacts.remove(value);
 		return this;
 	}
@@ -115,7 +115,7 @@ public class DependencyGroup {
 		return this;
 	}
 
-	public java.util.List<Object> getArtifacts() {
+	public java.util.List<String> getArtifacts() {
 		return this._artifacts;
 	} 
 

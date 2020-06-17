@@ -7,6 +7,7 @@ public class JsonWrapper {
 
 	private String _package;
 	private String _name;
+	private Object _neoNodeMapper;
 	private Object _lexical;
 	private java.util.List<Object> _accessors = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _externalFields = new java.util.ArrayList<>();
@@ -20,6 +21,7 @@ public class JsonWrapper {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("JsonWrapper");
 		st.add("package", _package);
 		st.add("name", _name);
+		st.add("neoNodeMapper", _neoNodeMapper);
 		st.add("lexical", _lexical);
 		for (Object o : _accessors) st.add("accessors", o);
 		for (java.util.Map<String, Object> map : _externalFields) st.addAggr("externalFields.{type,name,initializer}", map.get("type"), map.get("name"), map.get("initializer"));
@@ -67,6 +69,28 @@ public class JsonWrapper {
 
 	public JsonWrapper removeName() {
 		this._name = null;
+		return this;
+	} 
+
+	public JsonWrapper setNeoNodeMapper(Object value) {
+		this._neoNodeMapper = value;
+		return this;
+	}
+
+	public Object getNeoNodeMapper() {
+		return this._neoNodeMapper;
+	}
+
+	public Object getNeoNodeMapper(Object defaultValue) {
+		return this._neoNodeMapper == null ? defaultValue : this._neoNodeMapper;
+	}
+
+	public boolean hasNeoNodeMapper() {
+		return this._neoNodeMapper != null;
+	}
+
+	public JsonWrapper removeNeoNodeMapper() {
+		this._neoNodeMapper = null;
 		return this;
 	} 
 
@@ -187,7 +211,7 @@ public class JsonWrapper {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "JsonWrapper(package,name,externalFields,accessors,lexical) ::= <<package ~package~;\n" + 
+	static final String st = "JsonWrapper(package,name,externalFields,accessors,neoNodeMapper,lexical) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public class ~name;format=\"capitalize\"~ {\n" + 
 				"\n" + 
@@ -228,6 +252,8 @@ public class JsonWrapper {
 				"	}\n" + 
 				"\n" + 
 				"	~accessors:{it|~it~};separator=\"\\n\\n\"~\n" + 
+				"\n" + 
+				"	~neoNodeMapper~\n" + 
 				"\n" + 
 				"	@Override\n" + 
 				"	public java.lang.String toString() { \n" + 

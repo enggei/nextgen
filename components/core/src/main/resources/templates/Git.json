@@ -5,10 +5,15 @@
   "templates" : [ {
     "uuid" : "bdcb0751-37a3-456e-a7bf-77379f693796",
     "name" : "gitignore",
-    "text" : "~exclude:{it|/~it~/};separator=\"\\n\"~",
+    "text" : "~excludeDirs:{it|/~it~/};separator=\"\\n\"~\n~excludeFiles:{it|/~it~};separator=\"\\n\"~ ",
     "parameters" : [ {
-      "uuid" : "70cb3bb8-1616-48c2-80c9-26e312947333",
-      "name" : "exclude",
+      "uuid" : "b62c858e-af0e-4abb-867e-e4f55689ba9d",
+      "name" : "excludeDirs",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "2eab4f09-8619-4a42-beed-e5ec64a6e179",
+      "name" : "excludeFiles",
       "type" : "LIST",
       "argumentType" : "Object"
     } ]

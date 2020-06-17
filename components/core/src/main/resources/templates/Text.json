@@ -1,0 +1,26 @@
+{
+  "uuid" : "0af2a59b-0c9e-43ec-a894-fa9828448a12",
+  "name" : "Text",
+  "delimiter" : "~",
+  "templates" : [ {
+    "uuid" : "d7f830e8-c2d5-4d7f-a38b-06c42d6317b1",
+    "name" : "Block",
+    "text" : "~start~\n\t~scope:{it|~it~};separator=\"\\n\"~\n~end~ ",
+    "parameters" : [ {
+      "uuid" : "e125de50-2b10-43a2-86c3-d9efa193b45a",
+      "name" : "start",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "7c5c2e52-b3af-4bfb-8d74-51d37be39672",
+      "name" : "scope",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "b161a0c8-4e4c-439f-89ae-1b8cd78aec67",
+      "name" : "end",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
+  } ]
+}

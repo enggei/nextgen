@@ -109,19 +109,19 @@
   }, {
     "uuid" : "02617ae9-b1b3-416e-a4ea-480d5ded9627",
     "name" : "WebpackConfig",
-    "text" : "const path = require('path');\n\nmodule.exports = {\n\tentry: { \n\t\tmain: '.~mainEntry~' \n\t},\n\tmode: '~if(mode)~~mode~~else~production~endif~'\n\toutput: {\n\t\tpath: __dirname,\n\t\tfilename: '~outputFilename~'\n\t},\n\tmodule: {\n\t\trules: [\n\t\t\t{\n\t\t\t\ttest: path.join(__dirname, '.'),\n\t\t\t\texclude: /(node_modules)/,\n\t\t\t\tuse: [\n\t\t\t\t\t{\n\t\t\t\t\t\tloader: 'babel-loader',\n\t\t\t\t\t\toptions: {\n\t\t\t    \t\t\tpresets: [\"@babel/preset-env\", \"@babel/preset-react\"]\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t]\n\t\t\t}\n\t\t]\n\t}\n};",
+    "text" : "const path = require('path');\n\nmodule.exports = {\n\tentry: { \n\t\tmain: '.~mainEntry~' \n\t},\n\tmode: '~if(mode)~~mode~~else~production~endif~',\n\toutput: {\n\t\tpath: __dirname,\n\t\tfilename: '~outputFilename~'\n\t},\n\tmodule: {\n\t\trules: [\n\t\t\t{\n\t\t\t\ttest: path.join(__dirname, '.'),\n\t\t\t\texclude: /(node_modules)/,\n\t\t\t\tuse: [\n\t\t\t\t\t{\n\t\t\t\t\t\tloader: 'babel-loader',\n\t\t\t\t\t\toptions: {\n\t\t\t    \t\t\tpresets: [\"@babel/preset-env\", \"@babel/preset-react\"]\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t]\n\t\t\t}\n\t\t]\n\t}\n}; ",
     "parameters" : [ {
-      "uuid" : "d1da9df5-a767-49d1-912a-b5c9e88555b9",
+      "uuid" : "b3602bb1-e343-4606-847b-88d534ad4878",
       "name" : "mainEntry",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "e2f8cc83-ed4d-4ed5-94f7-54b1e7aa7e87",
+      "uuid" : "26190c47-f675-4a0b-b0e3-c47fec40462f",
       "name" : "mode",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "ff56157d-0389-4400-b3f8-84244e321140",
+      "uuid" : "64535551-c2a4-425f-99c4-1506d523421d",
       "name" : "outputFilename",
       "type" : "SINGLE",
       "argumentType" : "Object"

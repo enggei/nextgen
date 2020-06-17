@@ -272,19 +272,23 @@
       "parameters" : [ {
         "uuid" : "055453ce-7766-4072-ab7d-2821e7b0ba61",
         "name" : "name",
-        "type" : "SINGLE"
+        "type" : "SINGLE",
+        "argumentType" : "String"
       }, {
         "uuid" : "0854f7e6-1bfc-4a57-b545-1f78b8c34690",
         "name" : "groupId",
-        "type" : "SINGLE"
+        "type" : "SINGLE",
+        "argumentType" : "String"
       }, {
         "uuid" : "4bc92646-ed83-4bf8-b317-1ef34a6e84f3",
         "name" : "version",
-        "type" : "SINGLE"
+        "type" : "SINGLE",
+        "argumentType" : "String"
       }, {
         "uuid" : "ca564308-2500-4b2f-8350-02409eedd280",
         "name" : "artifacts",
-        "type" : "LIST"
+        "type" : "LIST",
+        "argumentType" : "String"
       } ]
     }, {
       "uuid" : "862e955a-8316-48b7-9400-03d496580268",

@@ -6,7 +6,8 @@ public class If {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _condition;
-	private Object _blockStmt;
+	private Object _then;
+	private Object _otherwise;
 
 	If(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -16,7 +17,8 @@ public class If {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("If");
 		st.add("condition", _condition);
-		st.add("blockStmt", _blockStmt);
+		st.add("then", _then);
+		st.add("otherwise", _otherwise);
 		return st.render().trim();
 	}
 
@@ -42,25 +44,47 @@ public class If {
 		return this;
 	} 
 
-	public If setBlockStmt(Object value) {
-		this._blockStmt = value;
+	public If setThen(Object value) {
+		this._then = value;
 		return this;
 	}
 
-	public Object getBlockStmt() {
-		return this._blockStmt;
+	public Object getThen() {
+		return this._then;
 	}
 
-	public Object getBlockStmt(Object defaultValue) {
-		return this._blockStmt == null ? defaultValue : this._blockStmt;
+	public Object getThen(Object defaultValue) {
+		return this._then == null ? defaultValue : this._then;
 	}
 
-	public boolean hasBlockStmt() {
-		return this._blockStmt != null;
+	public boolean hasThen() {
+		return this._then != null;
 	}
 
-	public If removeBlockStmt() {
-		this._blockStmt = null;
+	public If removeThen() {
+		this._then = null;
+		return this;
+	} 
+
+	public If setOtherwise(Object value) {
+		this._otherwise = value;
+		return this;
+	}
+
+	public Object getOtherwise() {
+		return this._otherwise;
+	}
+
+	public Object getOtherwise(Object defaultValue) {
+		return this._otherwise == null ? defaultValue : this._otherwise;
+	}
+
+	public boolean hasOtherwise() {
+		return this._otherwise != null;
+	}
+
+	public If removeOtherwise() {
+		this._otherwise = null;
 		return this;
 	} 
 
@@ -79,5 +103,6 @@ public class If {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "If(condition,blockStmt) ::= <<if (~condition~) ~blockStmt~ >>";
+	static final String st = "If(condition,then,otherwise) ::= <<if (~condition~) ~then~~if(otherwise)~\n" + 
+				"else ~otherwise~~endif~ >>";
 } 

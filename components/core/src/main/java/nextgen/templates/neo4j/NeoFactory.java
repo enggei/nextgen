@@ -141,6 +141,24 @@ public class NeoFactory {
 				"		}\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	public <T> T getInTransaction(java.util.function.Function<org.neo4j.graphdb.Transaction, T> action) {\n" + 
+				"		return getInTransaction(action, throwable -> {\n" + 
+				"			throwable.printStackTrace();\n" + 
+				"			return null;\n" + 
+				"		});\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public <T> T getInTransaction(java.util.function.Function<org.neo4j.graphdb.Transaction, T> action, java.util.function.Function<java.lang.Throwable, T> onException) {\n" + 
+				"		T returnValue;\n" + 
+				"		try (org.neo4j.graphdb.Transaction tx = db.beginTx()) {\n" + 
+				"			returnValue = action.apply(tx);\n" + 
+				"			tx.success();\n" + 
+				"		} catch (java.lang.Throwable t) {\n" + 
+				"			return onException.apply(t);\n" + 
+				"		}\n" + 
+				"		return returnValue;\n" + 
+				"	}\n" + 
+				"\n" + 
 				"	~accessors:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"} >>";
 } 

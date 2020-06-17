@@ -9,6 +9,7 @@ public class NodeWrapper {
 	private Object _name;
 	private java.util.List<Object> _accessors = new java.util.ArrayList<>();
 	private java.util.List<Object> _lexical = new java.util.ArrayList<>();
+	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _externalFields = new java.util.ArrayList<>();
 
 	NodeWrapper(org.stringtemplate.v4.STGroup stGroup) {
@@ -22,6 +23,7 @@ public class NodeWrapper {
 		st.add("name", _name);
 		for (Object o : _accessors) st.add("accessors", o);
 		for (Object o : _lexical) st.add("lexical", o);
+		for (Object o : _methods) st.add("methods", o);
 		for (java.util.Map<String, Object> map : _externalFields) st.addAggr("externalFields.{type,name,initializer}", map.get("type"), map.get("name"), map.get("initializer"));
 		return st.render().trim();
 	}
@@ -128,6 +130,35 @@ public class NodeWrapper {
 		return this._lexical;
 	} 
 
+	public NodeWrapper addMethods(Object value) {
+		this._methods.add(value);
+		return this;
+	}
+
+	public NodeWrapper setMethods(Object[] value) {
+		this._methods.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public NodeWrapper setMethods(java.util.Collection<Object> values) {
+		this._methods.addAll(values);
+		return this;
+	}
+
+	public NodeWrapper removeMethods(Object value) {
+		this._methods.remove(value);
+		return this;
+	}
+
+	public NodeWrapper removeMethods(int index) {
+		this._methods.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getMethods() {
+		return this._methods;
+	} 
+
 	public NodeWrapper addExternalFields(Object _type, Object _name, Object _initializer) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("type", _type);
@@ -194,7 +225,7 @@ public class NodeWrapper {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NodeWrapper(package,name,externalFields,accessors,lexical) ::= <<package ~package~;\n" + 
+	static final String st = "NodeWrapper(package,name,externalFields,accessors,lexical,methods) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public class ~name;format=\"capitalize\"~ {\n" + 
 				"\n" + 
@@ -228,5 +259,7 @@ public class NodeWrapper {
 				"	public String toString() {\n" + 
 				"		return \"\"~if(lexical)~ + ~endif~~lexical:{it|node.getProperty(\"~it~\")};separator=\" + \\\" \\\" + \"~;\n" + 
 				"	}\n" + 
+				"\n" + 
+				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"} >>";
 } 

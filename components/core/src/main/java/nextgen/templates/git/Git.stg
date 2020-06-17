@@ -1,6 +1,7 @@
 delimiters "~","~"
 
-gitignore(exclude) ::= <<~exclude:{it|/~it~/};separator="\n"~ >>
+gitignore(excludeDirs,excludeFiles) ::= <<~excludeDirs:{it|/~it~/};separator="\n"~
+~excludeFiles:{it|/~it~};separator="\n"~  >>
 
 removeDir(dir) ::= <<git rm --cached -r ~dir~ >>
 

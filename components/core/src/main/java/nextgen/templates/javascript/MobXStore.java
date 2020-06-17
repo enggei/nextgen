@@ -5,9 +5,9 @@ public class MobXStore {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _name;
-	private java.util.List<Object> _observables = new java.util.ArrayList<>();
-	private java.util.List<Object> _actions = new java.util.ArrayList<>();
+	private String _name;
+	private java.util.List<Observable> _observables = new java.util.ArrayList<>();
+	private java.util.List<Action> _actions = new java.util.ArrayList<>();
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _imports = new java.util.ArrayList<>();
 
@@ -26,16 +26,16 @@ public class MobXStore {
 		return st.render().trim();
 	}
 
-	public MobXStore setName(Object value) {
+	public MobXStore setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Object getName(Object defaultValue) {
+	public String getName(String defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 
@@ -48,22 +48,22 @@ public class MobXStore {
 		return this;
 	} 
 
-	public MobXStore addObservables(Object value) {
+	public MobXStore addObservables(Observable value) {
 		this._observables.add(value);
 		return this;
 	}
 
-	public MobXStore setObservables(Object[] value) {
+	public MobXStore setObservables(Observable[] value) {
 		this._observables.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public MobXStore setObservables(java.util.Collection<Object> values) {
+	public MobXStore setObservables(java.util.Collection<Observable> values) {
 		this._observables.addAll(values);
 		return this;
 	}
 
-	public MobXStore removeObservables(Object value) {
+	public MobXStore removeObservables(Observable value) {
 		this._observables.remove(value);
 		return this;
 	}
@@ -73,26 +73,26 @@ public class MobXStore {
 		return this;
 	}
 
-	public java.util.List<Object> getObservables() {
+	public java.util.List<Observable> getObservables() {
 		return this._observables;
 	} 
 
-	public MobXStore addActions(Object value) {
+	public MobXStore addActions(Action value) {
 		this._actions.add(value);
 		return this;
 	}
 
-	public MobXStore setActions(Object[] value) {
+	public MobXStore setActions(Action[] value) {
 		this._actions.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public MobXStore setActions(java.util.Collection<Object> values) {
+	public MobXStore setActions(java.util.Collection<Action> values) {
 		this._actions.addAll(values);
 		return this;
 	}
 
-	public MobXStore removeActions(Object value) {
+	public MobXStore removeActions(Action value) {
 		this._actions.remove(value);
 		return this;
 	}
@@ -102,7 +102,7 @@ public class MobXStore {
 		return this;
 	}
 
-	public java.util.List<Object> getActions() {
+	public java.util.List<Action> getActions() {
 		return this._actions;
 	} 
 
@@ -199,7 +199,7 @@ public class MobXStore {
 				"\n" + 
 				"class ~name;format=\"capitalize\"~ {\n" + 
 				"\n" + 
-				"	~observables:{it|~it~;};separator=\"\\n\"~\n" + 
+				"	~observables:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"	constructor() {\n" + 
 				"		~constructorStatements:{it|~it~};separator=\"\\n\"~\n" + 

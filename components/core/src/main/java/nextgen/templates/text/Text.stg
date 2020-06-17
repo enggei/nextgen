@@ -1,0 +1,9 @@
+delimiters "~","~"
+
+Block(start,scope,end) ::= <<~start~
+	~scope:{it|~it~};separator="\n"~
+~end~  >>
+
+eom() ::= "}"
+
+gt() ::= ">"

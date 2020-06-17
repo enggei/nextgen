@@ -1,8 +1,101 @@
 delimiters "~","~"
 
+DomainVerticle(packageName,domainPackage,name,actions,domainFactory,address) ::= <<package ~packageName~;
+
+import ~domainPackage~.*;
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Promise;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class ~name;format="capitalize"~ extends AbstractVerticle {
+
+	private static final Logger log = LoggerFactory.getLogger(~name;format="capitalize"~.class);
+
+	public enum Action {
+		~actions:{it|~it.name~};separator=",\n"~
+	}
+
+	public enum ErrorCodes {
+		NO_ACTION_HEADER,
+		UNKNOWN_ACTION
+	}
+
+	private ~domainFactory~ db;
+
+	@Override
+	public void start(Promise<Void> promise) throws Exception {
+		db = new ~domainFactory~(config().getString("path"));
+		vertx.eventBus().consumer(config().getString("~address~", "~address~"), this::onMessage);
+	}
+
+	public void onMessage(Message<JsonObject> message) {
+
+		if (!message.headers().contains("action")) {
+			log.error("No action header specified for message with headers {} and body {}", message.headers(), message.body().encodePrettily());
+			message.fail(ErrorCodes.NO_ACTION_HEADER.ordinal(), "No action header specified");
+			return;
+		}
+
+		final Action action = getAction(message);
+		
+		if (action == null) {
+			message.fail(ErrorCodes.UNKNOWN_ACTION.ordinal(), "Unknown action");
+			return;
+		}
+
+		switch (action) {
+~actions:{it|
+			case ~it.name~: {
+				~it.name~(message);
+				break;
+			\}};separator="\n"~
+		}
+	}
+
+	~actions:{it|~it.declaration~};separator="\n\n"~
+
+	private Action getAction(Message<JsonObject> message) {
+		final String action = message.headers().get("action");
+		try {
+				return Action.valueOf(action);
+		} catch (Throwable e) {
+				log.error("Unknown action " + action);
+				return null;
+		}
+	}
+}  >>
+
+jsonArrayAction(name,params,statements) ::= <<private void ~name~(Message<JsonObject> message) {
+
+	final JsonObject body = message.body();
+	~params:{it|final ~it.type~ ~it.name~ = body.get~it.type~("~it.name~");};separator="\n"~
+
+	final JsonArray response = new JsonArray();
+	
+	~statements:{it|~it~};separator="\n"~
+
+	message.reply(response);
+}  >>
+
+jsonObjectAction(name,params,statements) ::= <<private void ~name~(Message<JsonObject> message) {
+
+	final JsonObject body = message.body();
+	~params:{it|final ~it.type~ ~it.name~ = body.get~it.type~("~it.name~");};separator="\n"~
+
+	final JsonObject response = new JsonObject();
+	
+	~statements:{it|~it~};separator="\n"~
+
+	message.reply(response);
+}  >>
+
 Entities() ::= << >>
 
-JsonWrapper(package,name,externalFields,accessors,lexical) ::= <<package ~package~;
+JsonWrapper(package,name,externalFields,accessors,neoNodeMapper,lexical) ::= <<package ~package~;
 
 public class ~name;format="capitalize"~ {
 
@@ -44,11 +137,13 @@ public class ~name;format="capitalize"~ {
 
 	~accessors:{it|~it~};separator="\n\n"~
 
+	~neoNodeMapper~
+
 	@Override
 	public java.lang.String toString() { 
 		return ~if(lexical)~jsonObject.getString("~lexical~")~else~jsonObject.encode()~endif~;
 	}
-} >>
+}  >>
 
 primitiveAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="dotToCap"~(~type~ value) { 
 	jsonObject.put("~name~", value);

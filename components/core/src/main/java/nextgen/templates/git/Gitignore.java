@@ -5,7 +5,8 @@ public class Gitignore {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private java.util.List<Object> _exclude = new java.util.ArrayList<>();
+	private java.util.List<Object> _excludeDirs = new java.util.ArrayList<>();
+	private java.util.List<Object> _excludeFiles = new java.util.ArrayList<>();
 
 	Gitignore(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -14,38 +15,68 @@ public class Gitignore {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("gitignore");
-		for (Object o : _exclude) st.add("exclude", o);
+		for (Object o : _excludeDirs) st.add("excludeDirs", o);
+		for (Object o : _excludeFiles) st.add("excludeFiles", o);
 		return st.render().trim();
 	}
 
 
-	public Gitignore addExclude(Object value) {
-		this._exclude.add(value);
+	public Gitignore addExcludeDirs(Object value) {
+		this._excludeDirs.add(value);
 		return this;
 	}
 
-	public Gitignore setExclude(Object[] value) {
-		this._exclude.addAll(java.util.Arrays.asList(value));
+	public Gitignore setExcludeDirs(Object[] value) {
+		this._excludeDirs.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public Gitignore setExclude(java.util.Collection<Object> values) {
-		this._exclude.addAll(values);
+	public Gitignore setExcludeDirs(java.util.Collection<Object> values) {
+		this._excludeDirs.addAll(values);
 		return this;
 	}
 
-	public Gitignore removeExclude(Object value) {
-		this._exclude.remove(value);
+	public Gitignore removeExcludeDirs(Object value) {
+		this._excludeDirs.remove(value);
 		return this;
 	}
 
-	public Gitignore removeExclude(int index) {
-		this._exclude.remove(index);
+	public Gitignore removeExcludeDirs(int index) {
+		this._excludeDirs.remove(index);
 		return this;
 	}
 
-	public java.util.List<Object> getExclude() {
-		return this._exclude;
+	public java.util.List<Object> getExcludeDirs() {
+		return this._excludeDirs;
+	} 
+
+	public Gitignore addExcludeFiles(Object value) {
+		this._excludeFiles.add(value);
+		return this;
+	}
+
+	public Gitignore setExcludeFiles(Object[] value) {
+		this._excludeFiles.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Gitignore setExcludeFiles(java.util.Collection<Object> values) {
+		this._excludeFiles.addAll(values);
+		return this;
+	}
+
+	public Gitignore removeExcludeFiles(Object value) {
+		this._excludeFiles.remove(value);
+		return this;
+	}
+
+	public Gitignore removeExcludeFiles(int index) {
+		this._excludeFiles.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getExcludeFiles() {
+		return this._excludeFiles;
 	} 
 
 
@@ -62,5 +93,6 @@ public class Gitignore {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "gitignore(exclude) ::= <<~exclude:{it|/~it~/};separator=\"\\n\"~ >>";
+	static final String st = "gitignore(excludeDirs,excludeFiles) ::= <<~excludeDirs:{it|/~it~/};separator=\"\\n\"~\n" + 
+				"~excludeFiles:{it|/~it~};separator=\"\\n\"~ >>";
 } 

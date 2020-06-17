@@ -2,7 +2,7 @@ delimiters "~","~"
 
 Entities() ::= << >>
 
-NodeWrapper(package,name,externalFields,accessors,lexical) ::= <<package ~package~;
+NodeWrapper(package,name,externalFields,accessors,lexical,methods) ::= <<package ~package~;
 
 public class ~name;format="capitalize"~ {
 
@@ -36,7 +36,9 @@ public class ~name;format="capitalize"~ {
 	public String toString() {
 		return ""~if(lexical)~ + ~endif~~lexical:{it|node.getProperty("~it~")};separator=" + \" \" + "~;
 	}
-} >>
+
+	~methods:{it|~it~};separator="\n\n"~
+}  >>
 
 primitiveAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
 	if (value == null) node.removeProperty("~name~"); 
@@ -119,7 +121,7 @@ public ~className;format="capitalize"~ remove~name;format="capitalize"~() {
 } >>
 
 referenceAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ dst) { 
-	final org.neo4j.graphdb.Relationship relationship = node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("~name~"), org.neo4j.graphdb.Direction.OUTGOING);
+	final org.neo4j.graphdb.Relationship relationship = get~name;format="capitalize"~Relation();
 	if (relationship != null)  { 
 		if (relationship.getOtherNode(node).equals(dst.getNode())) return this;
 		relationship.delete();
@@ -129,7 +131,7 @@ referenceAccessors(className,name,type) ::= <<public ~className;format="capitali
 }
 
 public ~type~ get~name;format="capitalize"~() { 
-	final org.neo4j.graphdb.Relationship relationship = node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("~name~"), org.neo4j.graphdb.Direction.OUTGOING);
+	final org.neo4j.graphdb.Relationship relationship = get~name;format="capitalize"~Relation();
 	return relationship == null ? null : new ~type~(relationship.getOtherNode(node));
 }
 
@@ -137,7 +139,11 @@ public ~className;format="capitalize"~ remove~name;format="capitalize"~(~type~ d
 	final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("~name~")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
 	existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
 	return this;
-} >>
+}
+
+public org.neo4j.graphdb.Relationship get~name;format="capitalize"~Relation() { 
+	return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("~name~"), org.neo4j.graphdb.Direction.OUTGOING);
+}  >>
 
 externalAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
 	this._~name~ = value;
@@ -167,6 +173,39 @@ enumListAccessors(className,name,type) ::= <<public ~className;format="capitaliz
 
 public java.util.stream.Stream<~type~> get~name;format="capitalize"~() { 
 	return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("~name~")).spliterator(), false).map((relationship) -> ~type~.valueOf(relationship.getOtherNode(node).getProperty("value").toString()));
+}  >>
+
+nodeToJsonObject(properties,refs,refList,primitiveList) ::= <<public io.vertx.core.json.JsonObject toJsonObject() {
+	io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
+	if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
+	~properties:{it|if (node.hasProperty("~it.name~")) jsonObject.put("~it.name~", node.getProperty("~it.name~"));};separator="\n"~
+~refs:{it|
+	final ~it.type~ _~it.name~ = get~it.name;format="capitalize"~();
+	if (_~it.name~ != null) jsonObject.put("~it.name~", _~it.name~.toJsonObject());
+};separator="\n"~
+~refList:{it|
+	final io.vertx.core.json.JsonArray _~it.name~ = new io.vertx.core.json.JsonArray();
+	get~it.name;format="capitalize"~().forEach(element -> _~it.name~.add(element.toJsonObject()));
+	if (!_~it.name~.isEmpty()) jsonObject.put("~it.name~", _~it.name~);
+};separator="\n"~
+~primitiveList:{it|
+	final io.vertx.core.json.JsonArray _~it.name~ = new io.vertx.core.json.JsonArray();
+	get~it.name;format="capitalize"~().forEach(_~it.name~::add);
+	if (!_~it.name~.isEmpty()) jsonObject.put("~it.name~", _~it.name~);
+};separator="\n"~
+	return jsonObject;
+}  >>
+
+deleteNode(refs,refList) ::= <<public void deleteTree() {
+~refs:{it|
+	final ~it.type~ _~it.name~ = get~it.name;format="capitalize"~();
+	if (_~it.name~ != null) _~it.name~.deleteTree();
+};separator="\n"~
+~refList:{it|
+	get~it.name;format="capitalize"~().forEach(element -> element.deleteTree());
+};separator="\n"~
+	node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
+	node.delete();
 }  >>
 
 NeoFactory(package,name,accessors) ::= <<package ~package~;
@@ -201,8 +240,26 @@ public class ~name;format="capitalize"~ {
 		}
 	}
 
+	public <T> T getInTransaction(java.util.function.Function<org.neo4j.graphdb.Transaction, T> action) {
+		return getInTransaction(action, throwable -> {
+			throwable.printStackTrace();
+			return null;
+		});
+	}
+
+	public <T> T getInTransaction(java.util.function.Function<org.neo4j.graphdb.Transaction, T> action, java.util.function.Function<java.lang.Throwable, T> onException) {
+		T returnValue;
+		try (org.neo4j.graphdb.Transaction tx = db.beginTx()) {
+			returnValue = action.apply(tx);
+			tx.success();
+		} catch (java.lang.Throwable t) {
+			return onException.apply(t);
+		}
+		return returnValue;
+	}
+
 	~accessors:{it|~it~};separator="\n\n"~
-} >>
+}  >>
 
 NeoFactoryAccessors(name,properties) ::= <<public ~name;format="capitalize"~ new~name;format="capitalize"~() { 
 	return new~name;format="capitalize"~(db.createNode(org.neo4j.graphdb.Label.label("~name~")));

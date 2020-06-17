@@ -3,6 +3,7 @@ package nextgen.st;
 import nextgen.st.domain.STEnum;
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STTemplate;
+import nextgen.templates.java.PackageDeclaration;
 import org.jetbrains.annotations.NotNull;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -66,7 +67,7 @@ public class STGenerator {
 
         writeToFile(toStg(stGroupModel), packageDeclaration, stGroupModel.getName(), "stg", root);
         writeJavaFile(stDomain.render(), packageDeclaration, domainClassName, root);
-        writeJavaFile(stDomainTests.render(), packageDeclaration, testsClassName, new File(root.getAbsolutePath().replaceAll("src/main","src/test")));
+        writeJavaFile(stDomainTests.render(), packageDeclaration, testsClassName, new File(root.getAbsolutePath().replaceAll("src/main", "src/test")));
     }
 
     @NotNull
@@ -109,7 +110,7 @@ public class STGenerator {
         stTemplate.getChildren().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(childTemplate -> generateSTEntity(childTemplate, root, packageDeclaration, stDomain, stDomainTests, stgString));
 
         final ST stClass = generateSTClass(className, stTemplate, packageDeclaration);
-        writeJavaFile(stClass.render(), packageDeclaration, className,  root);
+        writeJavaFile(stClass.render(), packageDeclaration, className, root);
     }
 
     public ST generateSTClass(String className, STTemplate stTemplate, String packageDeclaration) {
@@ -263,6 +264,10 @@ public class STGenerator {
         }
     }
 
+    public static void writeJavaFile(Object content, PackageDeclaration packageDeclaration, String name, File root) {
+        writeJavaFile(content, packageDeclaration.getName(), name, root);
+    }
+
     public static void writeJavaFile(Object content, String packageDeclaration, String name, File root) {
         if (name == null || name.length() == 0)
             throw new IllegalArgumentException("WriteJavaFile.name cannot be empty");
@@ -271,6 +276,10 @@ public class STGenerator {
 
     public static void writeJsFile(Object content, String packageDeclaration, String name, File root) {
         writeToFile(content, packageDeclaration, name, "js", root);
+    }
+
+    public static void writeHtmlFile(Object content, String packageDeclaration, String name, File root) {
+        writeToFile(content, packageDeclaration, name, "html", root);
     }
 
     public static void writeToFile(Object content, String packageDeclaration, String name, String filetype, File root) {

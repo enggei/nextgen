@@ -9,12 +9,14 @@ public class Neo4JST {
 	NeoFactoryAccessors.st + "\n" + 
 	NeoFactoryPropertyAccessors.st + "\n" + 
 	NodeWrapper.st + "\n" + 
+	DeleteNode.st + "\n" + 
 	EnumAccessors.st + "\n" + 
 	EnumListAccessors.st + "\n" + 
 	ExternalAccessors.st + "\n" + 
 	IncomingReferenceStream.st + "\n" + 
 	ListPrimitiveAccessors.st + "\n" + 
 	ListReferenceAccessors.st + "\n" + 
+	NodeToJsonObject.st + "\n" + 
 	PrimitiveAccessors.st + "\n" + 
 	ReferenceAccessors.st + "\n" + 
 	Direction.st + "\n" + 
@@ -77,6 +79,10 @@ public class Neo4JST {
 		return new NodeWrapper(stGroup);
 	} 
 
+	public static DeleteNode newDeleteNode() {
+		return new DeleteNode(stGroup);
+	} 
+
 	public static EnumAccessors newEnumAccessors() {
 		return new EnumAccessors(stGroup);
 	} 
@@ -99,6 +105,10 @@ public class Neo4JST {
 
 	public static ListReferenceAccessors newListReferenceAccessors() {
 		return new ListReferenceAccessors(stGroup);
+	} 
+
+	public static NodeToJsonObject newNodeToJsonObject() {
+		return new NodeToJsonObject(stGroup);
 	} 
 
 	public static PrimitiveAccessors newPrimitiveAccessors() {

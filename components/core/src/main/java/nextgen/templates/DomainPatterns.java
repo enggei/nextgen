@@ -6,10 +6,7 @@ import nextgen.templates.java.JavaST;
 import nextgen.templates.java.PackageDeclaration;
 import nextgen.templates.java.Pojo;
 import nextgen.templates.java.PojoFactory;
-import nextgen.templates.neo4j.Neo4JST;
-import nextgen.templates.neo4j.NeoFactory;
-import nextgen.templates.neo4j.NeoFactoryAccessors;
-import nextgen.templates.neo4j.NodeWrapper;
+import nextgen.templates.neo4j.*;
 import nextgen.templates.vertx.JsonFactory;
 import nextgen.templates.vertx.JsonWrapper;
 import nextgen.templates.vertx.VertxST;
@@ -22,6 +19,7 @@ import static nextgen.templates.JavaPatterns.newPackageDeclaration;
 import static nextgen.templates.JavaPatterns.writeEnum;
 import static nextgen.templates.domain.RelationType.*;
 import static nextgen.templates.java.JavaST.newArrayListType;
+import static nextgen.templates.neo4j.Neo4JST.newDeleteNode;
 
 public class DomainPatterns extends DomainST {
 
@@ -330,6 +328,9 @@ public class DomainPatterns extends DomainST {
 
         visited.put(entity, entityClass);
 
+        final NodeToJsonObject nodeToJsonObject = Neo4JST.newNodeToJsonObject();
+        final DeleteNode deleteNode = newDeleteNode();
+
         entity.getRelations().forEach(o -> {
 
             switch (o.getType()) {
@@ -338,12 +339,16 @@ public class DomainPatterns extends DomainST {
                     final Entity dst = asEntity(o.getDst());
                     entityClass.addAccessors(Neo4JST.newEnumAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
                     writeEnum(root, packageDeclaration, dst.getName(), dst.getEnumValues().toArray());
+
+                    nodeToJsonObject.addProperties(o.getName());
                     break;
                 }
                 case ENUM_LIST: {
                     final Entity dst = asEntity(o.getDst());
                     entityClass.addAccessors(Neo4JST.newEnumListAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
                     writeEnum(root, packageDeclaration, dst.getName(), dst.getEnumValues().toArray());
+
+                    nodeToJsonObject.addPrimitiveList(o.getName());
                     break;
                 }
                 case EXT_REF: {
@@ -362,17 +367,24 @@ public class DomainPatterns extends DomainST {
                     final Class<?> dst = asClass(o.getDst());
                     entityClass.addAccessors(Neo4JST.newPrimitiveAccessors().setClassName(entityName).setType(dst.getSimpleName()).setName(o.getName()));
                     if (o.getLexical(false)) entityClass.addLexical(o.getName());
+
+                    nodeToJsonObject.addProperties(o.getName());
                     break;
                 }
                 case PRIM_LIST: {
                     final Class<?> dst = asClass(o.getDst());
                     entityClass.addAccessors(Neo4JST.newListPrimitiveAccessors().setClassName(entityName).setType(dst.getSimpleName()).setName(o.getName()));
+
+                    nodeToJsonObject.addPrimitiveList(o.getName());
                     break;
                 }
                 case REF: {
                     final Entity dst = asEntity(o.getDst());
                     entityClass.addAccessors(Neo4JST.newReferenceAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
                     generateNeoWrapper(root, packageDeclaration, dst, visited);
+
+                    nodeToJsonObject.addRefs(dst.getName(), o.getName());
+                    deleteNode.addRefs(dst.getName(), o.getName());
                     break;
                 }
                 case LIST: {
@@ -380,10 +392,16 @@ public class DomainPatterns extends DomainST {
                     entityClass.addAccessors(Neo4JST.newListReferenceAccessors().setClassName(entityName).setType(o.getSelf(false) ? entityName : dst.getName()).setName(o.getName()));
                     entityClass.addAccessors(Neo4JST.newIncomingReferenceStream().setName(o.getName()).setType(o.getSelf(false) ? entityName : dst.getName()));
                     generateNeoWrapper(root, packageDeclaration, dst, visited);
+
+                    nodeToJsonObject.addRefList(o.getName());
+                    deleteNode.addRefList(o.getName());
                     break;
                 }
             }
         });
+
+        entityClass.addMethods(nodeToJsonObject);
+        entityClass.addMethods(deleteNode);
 
         STGenerator.writeJavaFile(entityClass, packageDeclaration.getName(), entityClass.getName().toString(), root);
 
@@ -396,6 +414,10 @@ public class DomainPatterns extends DomainST {
     }
 
     public static void writeJsonWrapper(File root, PackageDeclaration packageDeclaration, Domain domain) {
+        writeJsonWrapper(root, packageDeclaration, domain, false);
+    }
+
+    public static void writeJsonWrapper(File root, PackageDeclaration packageDeclaration, Domain domain, boolean addNeoNodeMapper) {
 
         final Map<Entity, JsonWrapper> visited = new LinkedHashMap<>();
         domain.getEntities().forEach(entity -> {

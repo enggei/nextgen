@@ -10,42 +10,47 @@
     "children" : [ {
       "uuid" : "4a756317-c8b7-44c4-a677-68c57d064ab6",
       "name" : "JsonWrapper",
-      "text" : "package ~package~;\n\npublic class ~name;format=\"capitalize\"~ {\n\n\tprivate final io.vertx.core.json.JsonObject jsonObject;\n\t~externalFields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\n\tpublic ~name;format=\"capitalize\"~() { \n\t\tthis.jsonObject = new io.vertx.core.json.JsonObject();\n\t\tjsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic ~name;format=\"capitalize\"~(io.vertx.core.json.JsonObject jsonObject) { \n\t\tthis.jsonObject = jsonObject;\n\t\tjava.lang.String uuidString = jsonObject.getString(\"uuid\");\n\t\tif (uuidString == null) jsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic io.vertx.core.json.JsonObject getJsonObject() { \n\t\treturn this.jsonObject;\n\t}\n\n\tpublic ~name;format=\"capitalize\"~ removeUuid() {\n\t\tthis.jsonObject.remove(\"uuid\");\n\t\treturn this;\n\t}\n\n\t@Override\n\tpublic boolean equals(java.lang.Object o) { \n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\tfinal ~name;format=\"capitalize\"~ other = (~name;format=\"capitalize\"~) o;\n\t\treturn jsonObject.getString(\"uuid\").equals(other.getJsonObject().getString(\"uuid\"));\n\t}\n\n\t@Override\n\tpublic int hashCode() { \n\t\treturn java.util.Objects.hash(jsonObject.getString(\"uuid\"));\n\t}\n\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n\n\t@Override\n\tpublic java.lang.String toString() { \n\t\treturn ~if(lexical)~jsonObject.getString(\"~lexical~\")~else~jsonObject.encode()~endif~;\n\t}\n}",
+      "text" : "package ~package~;\n\npublic class ~name;format=\"capitalize\"~ {\n\n\tprivate final io.vertx.core.json.JsonObject jsonObject;\n\t~externalFields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\n\tpublic ~name;format=\"capitalize\"~() { \n\t\tthis.jsonObject = new io.vertx.core.json.JsonObject();\n\t\tjsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic ~name;format=\"capitalize\"~(io.vertx.core.json.JsonObject jsonObject) { \n\t\tthis.jsonObject = jsonObject;\n\t\tjava.lang.String uuidString = jsonObject.getString(\"uuid\");\n\t\tif (uuidString == null) jsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic io.vertx.core.json.JsonObject getJsonObject() { \n\t\treturn this.jsonObject;\n\t}\n\n\tpublic ~name;format=\"capitalize\"~ removeUuid() {\n\t\tthis.jsonObject.remove(\"uuid\");\n\t\treturn this;\n\t}\n\n\t@Override\n\tpublic boolean equals(java.lang.Object o) { \n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\tfinal ~name;format=\"capitalize\"~ other = (~name;format=\"capitalize\"~) o;\n\t\treturn jsonObject.getString(\"uuid\").equals(other.getJsonObject().getString(\"uuid\"));\n\t}\n\n\t@Override\n\tpublic int hashCode() { \n\t\treturn java.util.Objects.hash(jsonObject.getString(\"uuid\"));\n\t}\n\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n\n\t~neoNodeMapper~\n\n\t@Override\n\tpublic java.lang.String toString() { \n\t\treturn ~if(lexical)~jsonObject.getString(\"~lexical~\")~else~jsonObject.encode()~endif~;\n\t}\n} ",
       "parameters" : [ {
-        "uuid" : "8e37bce1-6cb5-4d31-b3be-b126667d916d",
+        "uuid" : "2da1a664-0aae-4f5d-8a27-c72d60243f4e",
         "name" : "package",
         "type" : "SINGLE",
         "argumentType" : "String"
       }, {
-        "uuid" : "0fab50f2-8d8e-4803-be87-c66bf057b7e8",
+        "uuid" : "e397cf7f-d14c-430c-a49c-ee8e60fdb4df",
         "name" : "name",
         "type" : "SINGLE",
         "argumentType" : "String"
       }, {
-        "uuid" : "ddd589e5-9286-486f-acbc-5b8afdea75cd",
+        "uuid" : "96ac093b-96bc-434b-8612-23e3a47ddbcd",
         "name" : "externalFields",
         "type" : "KVLIST",
         "argumentType" : "Object",
         "keys" : [ {
-          "uuid" : "593a33c6-d4ce-4e8f-9626-2ea4ebb5b949",
+          "uuid" : "51ab5fba-b7f1-4cb1-b24c-17b4db289696",
           "name" : "type",
           "argumentType" : "Object"
         }, {
-          "uuid" : "298c05da-43bc-40f5-8dc6-ccd1617354f2",
+          "uuid" : "6c49261a-f4ae-4cac-a420-b04d237fbc62",
           "name" : "name",
           "argumentType" : "String"
         }, {
-          "uuid" : "8ff10c5c-9b65-46a7-a19b-fff7e7b46984",
+          "uuid" : "ccc917a5-e150-481f-b924-5a1b7b76d836",
           "name" : "initializer",
           "argumentType" : "Object"
         } ]
       }, {
-        "uuid" : "a4d24414-ea39-4f7b-ac9b-ecdcb2fc4c4a",
+        "uuid" : "24ed3cb9-319c-4629-aaf2-089b8fd4f7f5",
         "name" : "accessors",
         "type" : "LIST",
         "argumentType" : "Object"
       }, {
-        "uuid" : "b4463219-434c-4902-8e04-8b9baf20a17e",
+        "uuid" : "0b80270d-70d7-4aec-9cfc-cd44763d6003",
+        "name" : "neoNodeMapper",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "c1cdf046-0f90-482d-8f2f-b4e8d6caf680",
         "name" : "lexical",
         "type" : "SINGLE",
         "argumentType" : "Object"
@@ -202,6 +207,109 @@
       }, {
         "uuid" : "fcd999dd-425d-4e8c-b284-60eccd7bb408",
         "name" : "entities",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
+    } ]
+  }, {
+    "uuid" : "57405911-04a7-483b-97ac-497ecb3361da",
+    "name" : "DomainVerticle",
+    "text" : "package ~packageName~;\n\nimport ~domainPackage~.*;\nimport io.vertx.core.AbstractVerticle;\nimport io.vertx.core.Promise;\nimport io.vertx.core.eventbus.Message;\nimport io.vertx.core.json.JsonArray;\nimport io.vertx.core.json.JsonObject;\nimport org.slf4j.Logger;\nimport org.slf4j.LoggerFactory;\n\npublic class ~name;format=\"capitalize\"~ extends AbstractVerticle {\n\n\tprivate static final Logger log = LoggerFactory.getLogger(~name;format=\"capitalize\"~.class);\n\n\tpublic enum Action {\n\t\t~actions:{it|~it.name~};separator=\",\\n\"~\n\t}\n\n\tpublic enum ErrorCodes {\n\t\tNO_ACTION_HEADER,\n\t\tUNKNOWN_ACTION\n\t}\n\n\tprivate ~domainFactory~ db;\n\n\t@Override\n\tpublic void start(Promise<Void> promise) throws Exception {\n\t\tdb = new ~domainFactory~(config().getString(\"path\"));\n\t\tvertx.eventBus().consumer(config().getString(\"~address~\", \"~address~\"), this::onMessage);\n\t}\n\n\tpublic void onMessage(Message<JsonObject> message) {\n\n\t\tif (!message.headers().contains(\"action\")) {\n\t\t\tlog.error(\"No action header specified for message with headers {} and body {}\", message.headers(), message.body().encodePrettily());\n\t\t\tmessage.fail(ErrorCodes.NO_ACTION_HEADER.ordinal(), \"No action header specified\");\n\t\t\treturn;\n\t\t}\n\n\t\tfinal Action action = getAction(message);\n\t\t\n\t\tif (action == null) {\n\t\t\tmessage.fail(ErrorCodes.UNKNOWN_ACTION.ordinal(), \"Unknown action\");\n\t\t\treturn;\n\t\t}\n\n\t\tswitch (action) {\n~actions:{it|\n\t\t\tcase ~it.name~: {\n\t\t\t\t~it.name~(message);\n\t\t\t\tbreak;\n\t\t\t\\}};separator=\"\\n\"~\n\t\t}\n\t}\n\n\t~actions:{it|~it.declaration~};separator=\"\\n\\n\"~\n\n\tprivate Action getAction(Message<JsonObject> message) {\n\t\tfinal String action = message.headers().get(\"action\");\n\t\ttry {\n\t\t\t\treturn Action.valueOf(action);\n\t\t} catch (Throwable e) {\n\t\t\t\tlog.error(\"Unknown action \" + action);\n\t\t\t\treturn null;\n\t\t}\n\t}\n} ",
+    "parameters" : [ {
+      "uuid" : "604ca774-5203-4897-b242-0a4d16129c5f",
+      "name" : "packageName",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "66856d61-8989-4b99-8e47-82bb8e1054d2",
+      "name" : "domainPackage",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "9ec94940-ab30-498a-a929-0db40e660216",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "ebef4e8f-9253-4f58-8e49-88b08913abcb",
+      "name" : "actions",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "15b701cc-a76c-49c8-9421-efd489126a4a",
+        "name" : "name",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "d030a7cd-0e85-4cdc-8cd0-000facee3c18",
+        "name" : "declaration",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "099b78a8-bb2e-4495-a4e6-d5a4b8876f2b",
+      "name" : "domainFactory",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "1a643a76-4b06-4be4-a9ea-22164966130c",
+      "name" : "address",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ],
+    "children" : [ {
+      "uuid" : "08a7233d-aa4c-4f4e-87ec-abad6ab284fc",
+      "name" : "jsonArrayAction",
+      "text" : "private void ~name~(Message<JsonObject> message) {\n\n\tfinal JsonObject body = message.body();\n\t~params:{it|final ~it.type~ ~it.name~ = body.get~it.type~(\"~it.name~\");};separator=\"\\n\"~\n\n\tfinal JsonArray response = new JsonArray();\n\t\n\t~statements:{it|~it~};separator=\"\\n\"~\n\n\tmessage.reply(response);\n} ",
+      "parameters" : [ {
+        "uuid" : "7b0c3362-ace4-4c86-b46a-02d654bd1bb9",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "40fa55c2-70af-4022-bd0f-173340d88445",
+        "name" : "params",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "cfa7f766-9e0b-417c-94a7-b4c64e97e16a",
+          "name" : "type",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "baf898fe-c234-4f18-b516-ea498ac870a8",
+          "name" : "name",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "313a6c15-6f31-4ae7-a280-dce3c85fc7ff",
+        "name" : "statements",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "9f95ad7e-12e6-4d2a-bc20-1539d7428678",
+      "name" : "jsonObjectAction",
+      "text" : "private void ~name~(Message<JsonObject> message) {\n\n\tfinal JsonObject body = message.body();\n\t~params:{it|final ~it.type~ ~it.name~ = body.get~it.type~(\"~it.name~\");};separator=\"\\n\"~\n\n\tfinal JsonObject response = new JsonObject();\n\t\n\t~statements:{it|~it~};separator=\"\\n\"~\n\n\tmessage.reply(response);\n} ",
+      "parameters" : [ {
+        "uuid" : "50fca414-6344-45e9-a707-dbe6b108910a",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "08b3344e-62d1-4c83-a2a6-218b3b021f7f",
+        "name" : "params",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "1bc7fcfd-226a-47a8-b61c-6b99831b5f93",
+          "name" : "type",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "440aeb47-4fcb-43cd-9cfd-03c4bb809117",
+          "name" : "name",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "6960a106-4eec-404e-b71f-e875e6dbae9d",
+        "name" : "statements",
         "type" : "LIST",
         "argumentType" : "Object"
       } ]

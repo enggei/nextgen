@@ -104,7 +104,7 @@ public class ReferenceAccessors {
 	}
 
 	static final String st = "referenceAccessors(className,name,type) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ dst) { \n" + 
-				"	final org.neo4j.graphdb.Relationship relationship = node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName(\"~name~\"), org.neo4j.graphdb.Direction.OUTGOING);\n" + 
+				"	final org.neo4j.graphdb.Relationship relationship = get~name;format=\"capitalize\"~Relation();\n" + 
 				"	if (relationship != null)  { \n" + 
 				"		if (relationship.getOtherNode(node).equals(dst.getNode())) return this;\n" + 
 				"		relationship.delete();\n" + 
@@ -114,7 +114,7 @@ public class ReferenceAccessors {
 				"}\n" + 
 				"\n" + 
 				"public ~type~ get~name;format=\"capitalize\"~() { \n" + 
-				"	final org.neo4j.graphdb.Relationship relationship = node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName(\"~name~\"), org.neo4j.graphdb.Direction.OUTGOING);\n" + 
+				"	final org.neo4j.graphdb.Relationship relationship = get~name;format=\"capitalize\"~Relation();\n" + 
 				"	return relationship == null ? null : new ~type~(relationship.getOtherNode(node));\n" + 
 				"}\n" + 
 				"\n" + 
@@ -122,5 +122,9 @@ public class ReferenceAccessors {
 				"	final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();\n" + 
 				"	existing.ifPresent(org.neo4j.graphdb.Relationship::delete);\n" + 
 				"	return this;\n" + 
+				"}\n" + 
+				"\n" + 
+				"public org.neo4j.graphdb.Relationship get~name;format=\"capitalize\"~Relation() { \n" + 
+				"	return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName(\"~name~\"), org.neo4j.graphdb.Direction.OUTGOING);\n" + 
 				"} >>";
 } 

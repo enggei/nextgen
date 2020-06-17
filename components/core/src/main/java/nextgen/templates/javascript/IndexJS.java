@@ -5,8 +5,8 @@ public class IndexJS {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _name;
-	private java.util.List<Object> _stores = new java.util.ArrayList<>();
+	private String _name;
+	private java.util.List<String> _stores = new java.util.ArrayList<>();
 
 	IndexJS(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -20,16 +20,16 @@ public class IndexJS {
 		return st.render().trim();
 	}
 
-	public IndexJS setName(Object value) {
+	public IndexJS setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Object getName(Object defaultValue) {
+	public String getName(String defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 
@@ -42,22 +42,22 @@ public class IndexJS {
 		return this;
 	} 
 
-	public IndexJS addStores(Object value) {
+	public IndexJS addStores(String value) {
 		this._stores.add(value);
 		return this;
 	}
 
-	public IndexJS setStores(Object[] value) {
+	public IndexJS setStores(String[] value) {
 		this._stores.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public IndexJS setStores(java.util.Collection<Object> values) {
+	public IndexJS setStores(java.util.Collection<String> values) {
 		this._stores.addAll(values);
 		return this;
 	}
 
-	public IndexJS removeStores(Object value) {
+	public IndexJS removeStores(String value) {
 		this._stores.remove(value);
 		return this;
 	}
@@ -67,7 +67,7 @@ public class IndexJS {
 		return this;
 	}
 
-	public java.util.List<Object> getStores() {
+	public java.util.List<String> getStores() {
 		return this._stores;
 	} 
 
