@@ -5,11 +5,12 @@ public class ClassDeclaration {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _annotations;
-	private Object _isOpen;
-	private Object _isAbstract;
-	private Object _name;
-	private Object _overrideEquals;
+	private java.util.Collection<AnnotationDeclaration> _annotations;
+	private Boolean _isOpen;
+	private Boolean _isAbstract;
+	private String _name;
+	private OverrideEquals _overrideEquals;
+	private OverrideHashCode _overrideHashCode;
 	private java.util.List<Object> _fields = new java.util.ArrayList<>();
 	private java.util.List<Object> _extends = new java.util.ArrayList<>();
 	private java.util.List<Object> _members = new java.util.ArrayList<>();
@@ -26,22 +27,23 @@ public class ClassDeclaration {
 		st.add("isAbstract", _isAbstract);
 		st.add("name", _name);
 		st.add("overrideEquals", _overrideEquals);
+		st.add("overrideHashCode", _overrideHashCode);
 		for (Object o : _fields) st.add("fields", o);
 		for (Object o : _extends) st.add("extends", o);
 		for (Object o : _members) st.add("members", o);
 		return st.render().trim();
 	}
 
-	public ClassDeclaration setAnnotations(Object value) {
+	public ClassDeclaration setAnnotations(java.util.Collection<AnnotationDeclaration> value) {
 		this._annotations = value;
 		return this;
 	}
 
-	public Object getAnnotations() {
+	public java.util.Collection<AnnotationDeclaration> getAnnotations() {
 		return this._annotations;
 	}
 
-	public Object getAnnotations(Object defaultValue) {
+	public java.util.Collection<AnnotationDeclaration> getAnnotations(java.util.Collection<AnnotationDeclaration> defaultValue) {
 		return this._annotations == null ? defaultValue : this._annotations;
 	}
 
@@ -54,16 +56,16 @@ public class ClassDeclaration {
 		return this;
 	} 
 
-	public ClassDeclaration setIsOpen(Object value) {
+	public ClassDeclaration setIsOpen(Boolean value) {
 		this._isOpen = value;
 		return this;
 	}
 
-	public Object getIsOpen() {
+	public Boolean getIsOpen() {
 		return this._isOpen;
 	}
 
-	public Object getIsOpen(Object defaultValue) {
+	public Boolean getIsOpen(Boolean defaultValue) {
 		return this._isOpen == null ? defaultValue : this._isOpen;
 	}
 
@@ -76,16 +78,16 @@ public class ClassDeclaration {
 		return this;
 	} 
 
-	public ClassDeclaration setIsAbstract(Object value) {
+	public ClassDeclaration setIsAbstract(Boolean value) {
 		this._isAbstract = value;
 		return this;
 	}
 
-	public Object getIsAbstract() {
+	public Boolean getIsAbstract() {
 		return this._isAbstract;
 	}
 
-	public Object getIsAbstract(Object defaultValue) {
+	public Boolean getIsAbstract(Boolean defaultValue) {
 		return this._isAbstract == null ? defaultValue : this._isAbstract;
 	}
 
@@ -98,16 +100,16 @@ public class ClassDeclaration {
 		return this;
 	} 
 
-	public ClassDeclaration setName(Object value) {
+	public ClassDeclaration setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Object getName(Object defaultValue) {
+	public String getName(String defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 
@@ -120,16 +122,16 @@ public class ClassDeclaration {
 		return this;
 	} 
 
-	public ClassDeclaration setOverrideEquals(Object value) {
+	public ClassDeclaration setOverrideEquals(OverrideEquals value) {
 		this._overrideEquals = value;
 		return this;
 	}
 
-	public Object getOverrideEquals() {
+	public OverrideEquals getOverrideEquals() {
 		return this._overrideEquals;
 	}
 
-	public Object getOverrideEquals(Object defaultValue) {
+	public OverrideEquals getOverrideEquals(OverrideEquals defaultValue) {
 		return this._overrideEquals == null ? defaultValue : this._overrideEquals;
 	}
 
@@ -139,6 +141,28 @@ public class ClassDeclaration {
 
 	public ClassDeclaration removeOverrideEquals() {
 		this._overrideEquals = null;
+		return this;
+	} 
+
+	public ClassDeclaration setOverrideHashCode(OverrideHashCode value) {
+		this._overrideHashCode = value;
+		return this;
+	}
+
+	public OverrideHashCode getOverrideHashCode() {
+		return this._overrideHashCode;
+	}
+
+	public OverrideHashCode getOverrideHashCode(OverrideHashCode defaultValue) {
+		return this._overrideHashCode == null ? defaultValue : this._overrideHashCode;
+	}
+
+	public boolean hasOverrideHashCode() {
+		return this._overrideHashCode != null;
+	}
+
+	public ClassDeclaration removeOverrideHashCode() {
+		this._overrideHashCode = null;
 		return this;
 	} 
 
@@ -243,12 +267,19 @@ public class ClassDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,overrideEquals,members) ::= <<~annotations~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n" + 
+	static final String st = "ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,overrideEquals,overrideHashCode,members) ::= <<~annotations~~if(annotations)~\n" + 
+				"~endif~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n" + 
 				"	~fields:{it|~it~};separator=\",\\n\"~\n" + 
 				")~if(extends)~: ~extends:{it|~it~};separator=\", \"~~endif~ {\n" + 
 				"\n" + 
-				"	~if(overrideEquals)~~overrideEquals~~endif~\n" + 
-				"	~members:{it|~it~};separator=\"\\n\"~\n" + 
+				"	~if(overrideEquals)~~overrideEquals~\n" + 
 				"\n" + 
+				"	~endif~\n" + 
+				"\n" + 
+				"	~if(overrideHashCode)~~overrideHashCode~\n" + 
+				"\n" + 
+				"	~endif~\n" + 
+				"\n" + 
+				"	~members:{it|~it~};separator=\"\\n\"~\n" + 
 				"} >>";
 } 

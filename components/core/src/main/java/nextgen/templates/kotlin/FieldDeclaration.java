@@ -8,10 +8,10 @@ public class FieldDeclaration {
 	private Boolean _isMutable;
 	private Boolean _isNonMember;
 	private String _name;
-	private String _type;
+	private TypeDeclaration _type;
 	private Boolean _isNullable;
-	private Object _initializer;
-	private java.util.List<Object> _annotations = new java.util.ArrayList<>();
+	private Initializer _initializer;
+	private java.util.List<java.util.Collection<AnnotationDeclaration>> _annotations = new java.util.ArrayList<>();
 
 	FieldDeclaration(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -96,16 +96,16 @@ public class FieldDeclaration {
 		return this;
 	} 
 
-	public FieldDeclaration setType(String value) {
+	public FieldDeclaration setType(TypeDeclaration value) {
 		this._type = value;
 		return this;
 	}
 
-	public String getType() {
+	public TypeDeclaration getType() {
 		return this._type;
 	}
 
-	public String getType(String defaultValue) {
+	public TypeDeclaration getType(TypeDeclaration defaultValue) {
 		return this._type == null ? defaultValue : this._type;
 	}
 
@@ -140,16 +140,16 @@ public class FieldDeclaration {
 		return this;
 	} 
 
-	public FieldDeclaration setInitializer(Object value) {
+	public FieldDeclaration setInitializer(Initializer value) {
 		this._initializer = value;
 		return this;
 	}
 
-	public Object getInitializer() {
+	public Initializer getInitializer() {
 		return this._initializer;
 	}
 
-	public Object getInitializer(Object defaultValue) {
+	public Initializer getInitializer(Initializer defaultValue) {
 		return this._initializer == null ? defaultValue : this._initializer;
 	}
 
@@ -162,22 +162,22 @@ public class FieldDeclaration {
 		return this;
 	} 
 
-	public FieldDeclaration addAnnotations(Object value) {
+	public FieldDeclaration addAnnotations(java.util.Collection<AnnotationDeclaration> value) {
 		this._annotations.add(value);
 		return this;
 	}
 
-	public FieldDeclaration setAnnotations(Object[] value) {
+	public FieldDeclaration setAnnotations(java.util.Collection<AnnotationDeclaration>[] value) {
 		this._annotations.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public FieldDeclaration setAnnotations(java.util.Collection<Object> values) {
+	public FieldDeclaration setAnnotations(java.util.Collection<java.util.Collection<AnnotationDeclaration>> values) {
 		this._annotations.addAll(values);
 		return this;
 	}
 
-	public FieldDeclaration removeAnnotations(Object value) {
+	public FieldDeclaration removeAnnotations(java.util.Collection<AnnotationDeclaration> value) {
 		this._annotations.remove(value);
 		return this;
 	}
@@ -187,7 +187,7 @@ public class FieldDeclaration {
 		return this;
 	}
 
-	public java.util.List<Object> getAnnotations() {
+	public java.util.List<java.util.Collection<AnnotationDeclaration>> getAnnotations() {
 		return this._annotations;
 	} 
 
