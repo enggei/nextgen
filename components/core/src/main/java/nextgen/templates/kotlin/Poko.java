@@ -5,8 +5,8 @@ public class Poko {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _packageDeclaration;
-	private Object _classDeclaration;
+	private PackageDeclaration _packageDeclaration;
+	private ClassDeclaration _classDeclaration;
 
 	Poko(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -20,16 +20,16 @@ public class Poko {
 		return st.render().trim();
 	}
 
-	public Poko setPackageDeclaration(Object value) {
+	public Poko setPackageDeclaration(PackageDeclaration value) {
 		this._packageDeclaration = value;
 		return this;
 	}
 
-	public Object getPackageDeclaration() {
+	public PackageDeclaration getPackageDeclaration() {
 		return this._packageDeclaration;
 	}
 
-	public Object getPackageDeclaration(Object defaultValue) {
+	public PackageDeclaration getPackageDeclaration(PackageDeclaration defaultValue) {
 		return this._packageDeclaration == null ? defaultValue : this._packageDeclaration;
 	}
 
@@ -42,16 +42,16 @@ public class Poko {
 		return this;
 	} 
 
-	public Poko setClassDeclaration(Object value) {
+	public Poko setClassDeclaration(ClassDeclaration value) {
 		this._classDeclaration = value;
 		return this;
 	}
 
-	public Object getClassDeclaration() {
+	public ClassDeclaration getClassDeclaration() {
 		return this._classDeclaration;
 	}
 
-	public Object getClassDeclaration(Object defaultValue) {
+	public ClassDeclaration getClassDeclaration(ClassDeclaration defaultValue) {
 		return this._classDeclaration == null ? defaultValue : this._classDeclaration;
 	}
 

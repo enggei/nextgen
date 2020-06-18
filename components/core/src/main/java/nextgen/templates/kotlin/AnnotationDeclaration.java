@@ -20,7 +20,7 @@ public class AnnotationDeclaration {
 
 
 
-	public AnnotationDeclaration addAnnotations(Object _name, Object _params) {
+	public AnnotationDeclaration addAnnotations(String _name, java.util.Collection<AnnotationParam> _params) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("name", _name);
 		map.put("params", _params);
@@ -42,24 +42,24 @@ public class AnnotationDeclaration {
 
 	public static final class AnnotationDeclaration_Annotations {
 
-		Object _name;
-		Object _params;
+		String _name;
+		java.util.Collection<AnnotationParam> _params;
 
-		public AnnotationDeclaration_Annotations(Object _name, Object _params) {
+		public AnnotationDeclaration_Annotations(String _name, java.util.Collection<AnnotationParam> _params) {
 			this._name = _name;
 			this._params = _params;
 		}
 
 		private AnnotationDeclaration_Annotations(java.util.Map<String, Object> map) {
-			this._name = (Object) map.get("name");
-			this._params = (Object) map.get("params");
+			this._name = (String) map.get("name");
+			this._params = (java.util.Collection<AnnotationParam>) map.get("params");
 		}
 
-		public Object getName() {
+		public String getName() {
 			return this._name;
 		}
 
-		public Object getParams() {
+		public java.util.Collection<AnnotationParam> getParams() {
 			return this._params;
 		}
 
@@ -78,6 +78,5 @@ public class AnnotationDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AnnotationDeclaration(annotations) ::= <<~annotations:{it|@~it.name~(~it.params~)};separator=\"\\n\"~~if(annotations)~\n" + 
-				"~endif~ >>";
+	static final String st = "AnnotationDeclaration(annotations) ::= <<~annotations:{it|@~it.name~(~it.params~)};separator=\"\\n\"~ >>";
 } 

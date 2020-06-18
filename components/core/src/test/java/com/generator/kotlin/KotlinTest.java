@@ -2,24 +2,19 @@ package com.generator.kotlin;
 
 import nextgen.templates.DomainPatterns;
 import nextgen.templates.domain.Domain;
-import nextgen.templates.domain.DomainST;
-import nextgen.templates.kotlin.ClassDeclaration;
-import nextgen.templates.kotlin.FieldDeclaration;
-import nextgen.templates.kotlin.PackageDeclaration;
-import nextgen.templates.kotlin.Poko;
+import nextgen.templates.kotlin.*;
 import org.junit.Test;
 import org.test.json.KotlinTestJsonFactory;
-import org.test.neo4j.Capitol;
 import org.test.neo4j.Country;
 import org.test.neo4j.KotlinTestNeoFactory;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static nextgen.templates.DomainPatterns.*;
 import static nextgen.templates.kotlin.KotlinST.*;
 
@@ -91,28 +86,36 @@ public class KotlinTest {
 
         String className = "Country";
 
-        List<FieldDeclaration> fields = Arrays.asList(
-                newFieldDeclaration().setName("id").setType("Long").setIsNullable(true).setInitializer("null").setIsNonMember(true),
-                newFieldDeclaration().setName("uuid").setType("UUID").setInitializer("UUID.randomUUID()").setIsNonMember(true),
-                newFieldDeclaration().setName("epId").setType("Long").setIsMutable(true),
-                newFieldDeclaration().setName("code").setType("String").setIsMutable(true),
-                newFieldDeclaration().setName("name").setType("String").setIsMutable(true),
+        TypeDeclaration longType = newNamedType().setName("Long");
+        TypeDeclaration stringType = newNamedType().setName("String");
+        TypeDeclaration uuidType = newNamedType().setName("UUID");
+        TypeDeclaration countryIsPartOfContinentRelationshipType = newNamedType().setName("CountryIsPartOfContinentRelationship");
+        ArrayType countryIsPartOfContinentRelationshipTypeArray = newArrayType().setType(countryIsPartOfContinentRelationshipType);
+
+        List<FieldDeclaration> fields = asList(
+                newFieldDeclaration().setName("id").setType(longType).setIsNullable(true).setInitializer(newNullInitializer()).setIsNonMember(true),
+                newFieldDeclaration().setName("uuid").setType(uuidType).setInitializer(
+                   newExpressionInitializer().setExpression(newFunctionCallExpression().setScope("UUID").setFunctionName("randomUUID"))
+                ).setIsNonMember(true),
+                newFieldDeclaration().setName("epId").setType(longType).setIsMutable(true),
+                newFieldDeclaration().setName("code").setType(stringType).setIsMutable(true),
+                newFieldDeclaration().setName("name").setType(stringType).setIsMutable(true),
                 newFieldDeclaration()
-                        .addAnnotations(newAnnotationDeclaration()
-                                .addAnnotations("Relationship", newAnnotationParam()
-                                        .addParam("type", "REL_IS_PART_OF")
-                                        .addParam("direction", "Relationship.OUTGOING")
-                                )
-                        ).setName("isPartOfContinent").setType("Array<CountryIsPartOfContinentRelationship>").setInitializer("arrayOf()").setIsMutable(true)
+                    .addAnnotations(singletonList(newAnnotationDeclaration()
+                       .addAnnotations("Relationship", singletonList(newAnnotationParam()
+                          .addParam("type", "REL_IS_PART_OF")
+                          .addParam("direction", "Relationship.OUTGOING")
+                       ))
+                    )).setName("isPartOfContinent").setType(countryIsPartOfContinentRelationshipTypeArray).setInitializer(newEmptyArrayInitializer()).setIsMutable(true)
         );
 
         ClassDeclaration dataClass = newClassDeclaration()
                 .setName(className)
-                .setAnnotations(newAnnotationDeclaration()
-                        .addAnnotations("NodeEntity", newAnnotationParam()
-                                .addParam("label", "NODE_COUNTRY")
-                        )
-                )
+                .setAnnotations(singletonList(newAnnotationDeclaration()
+                        .addAnnotations("NodeEntity", singletonList(newAnnotationParam()
+                           .addParam("label", "NODE_COUNTRY")
+                        ))
+                ))
                 .setIsOpen(true)
                 .addFields(fields)
                 .addExtends(newExtending().setClassName("Entity")
@@ -123,7 +126,9 @@ public class KotlinTest {
                         .setFields(fields.stream()
                                 .map(FieldDeclaration::getName)
                                 .filter(name -> !name.equals("id"))
-                                .collect(Collectors.toList())));
+                                .collect(Collectors.toList())))
+                .setOverrideHashCode(newOverrideHashCode())
+           ;
 
 
         Poko poko = newPoko()

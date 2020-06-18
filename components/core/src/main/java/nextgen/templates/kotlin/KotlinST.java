@@ -6,14 +6,29 @@ public class KotlinST {
 	"eom() ::= \"}\"\n" +
 	"gt() ::= \">\"\n" +
 	Poko.st + "\n" + 
+	CastExpression.st + "\n" + 
+	FunctionCallExpression.st + "\n" + 
+	NullExpression.st + "\n" + 
+	VarExpression.st + "\n" + 
 	AnnotationDeclaration.st + "\n" + 
 	AnnotationParam.st + "\n" + 
 	ClassDeclaration.st + "\n" + 
 	OverrideEquals.st + "\n" + 
+	OverrideHashCode.st + "\n" + 
 	Extending.st + "\n" + 
 	FieldDeclaration.st + "\n" + 
 	FunctionDeclaration.st + "\n" + 
-	PackageDeclaration.st + "\n" ;
+	PackageDeclaration.st + "\n" + 
+	ArrayInitializer.st + "\n" + 
+	EmptyArrayInitializer.st + "\n" + 
+	ExpressionInitializer.st + "\n" + 
+	ListInitializer.st + "\n" + 
+	MapInitializer.st + "\n" + 
+	NullInitializer.st + "\n" + 
+	ArrayType.st + "\n" + 
+	ListType.st + "\n" + 
+	MapType.st + "\n" + 
+	NamedType.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -53,6 +68,22 @@ public class KotlinST {
 		return new Poko(stGroup);
 	} 
 
+	public static CastExpression newCastExpression() {
+		return new CastExpression(stGroup);
+	} 
+
+	public static FunctionCallExpression newFunctionCallExpression() {
+		return new FunctionCallExpression(stGroup);
+	} 
+
+	public static NullExpression newNullExpression() {
+		return new NullExpression(stGroup);
+	} 
+
+	public static VarExpression newVarExpression() {
+		return new VarExpression(stGroup);
+	} 
+
 	public static AnnotationDeclaration newAnnotationDeclaration() {
 		return new AnnotationDeclaration(stGroup);
 	} 
@@ -69,6 +100,10 @@ public class KotlinST {
 		return new OverrideEquals(stGroup);
 	} 
 
+	public static OverrideHashCode newOverrideHashCode() {
+		return new OverrideHashCode(stGroup);
+	} 
+
 	public static Extending newExtending() {
 		return new Extending(stGroup);
 	} 
@@ -83,6 +118,46 @@ public class KotlinST {
 
 	public static PackageDeclaration newPackageDeclaration() {
 		return new PackageDeclaration(stGroup);
+	} 
+
+	public static ArrayInitializer newArrayInitializer() {
+		return new ArrayInitializer(stGroup);
+	} 
+
+	public static EmptyArrayInitializer newEmptyArrayInitializer() {
+		return new EmptyArrayInitializer(stGroup);
+	} 
+
+	public static ExpressionInitializer newExpressionInitializer() {
+		return new ExpressionInitializer(stGroup);
+	} 
+
+	public static ListInitializer newListInitializer() {
+		return new ListInitializer(stGroup);
+	} 
+
+	public static MapInitializer newMapInitializer() {
+		return new MapInitializer(stGroup);
+	} 
+
+	public static NullInitializer newNullInitializer() {
+		return new NullInitializer(stGroup);
+	} 
+
+	public static ArrayType newArrayType() {
+		return new ArrayType(stGroup);
+	} 
+
+	public static ListType newListType() {
+		return new ListType(stGroup);
+	} 
+
+	public static MapType newMapType() {
+		return new MapType(stGroup);
+	} 
+
+	public static NamedType newNamedType() {
+		return new NamedType(stGroup);
 	} 
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {

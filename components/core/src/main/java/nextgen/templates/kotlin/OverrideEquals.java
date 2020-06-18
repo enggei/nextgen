@@ -5,7 +5,7 @@ public class OverrideEquals {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _className;
+	private String _className;
 	private java.util.List<String> _fields = new java.util.ArrayList<>();
 
 	OverrideEquals(org.stringtemplate.v4.STGroup stGroup) {
@@ -20,16 +20,16 @@ public class OverrideEquals {
 		return st.render().trim();
 	}
 
-	public OverrideEquals setClassName(Object value) {
+	public OverrideEquals setClassName(String value) {
 		this._className = value;
 		return this;
 	}
 
-	public Object getClassName() {
+	public String getClassName() {
 		return this._className;
 	}
 
-	public Object getClassName(Object defaultValue) {
+	public String getClassName(String defaultValue) {
 		return this._className == null ? defaultValue : this._className;
 	}
 
@@ -87,8 +87,8 @@ public class OverrideEquals {
 
 	static final String st = "OverrideEquals(className,fields) ::= <<override fun equals(other: Any?): Boolean {\n" + 
 				"	if (other !is ~className~) return false\n" + 
-				"		return if (other === this) true\n" + 
-				"		else\n" + 
-				"			~fields:{it|this.~it~ == other.~it~};separator=\" && \"~\n" + 
+				"	return if (other === this) true\n" + 
+				"	else\n" + 
+				"		~fields:{it|this.~it~ == other.~it~};separator=\" && \"~\n" + 
 				"} >>";
 } 

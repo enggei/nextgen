@@ -6,32 +6,52 @@ Poko(packageDeclaration,classDeclaration) ::= <<~packageDeclaration~
 
 ~classDeclaration~ >>
 
+Expressions() ::= << >>
+
+NullExpression() ::= <<null  >>
+
+VarExpression(varname) ::= <<~varname~  >>
+
+CastExpression(expression,type) ::= <<~expression~ as ~type~  >>
+
+FunctionCallExpression(scope,functionName,arguments) ::= <<~if(scope)~~scope~.~endif~~functionName~(~arguments:{it|~it~};separator=", "~)  >>
+
 Grammar() ::= << >>
 
 Declarations() ::= << >>
 
-AnnotationDeclaration(annotations) ::= <<~annotations:{it|@~it.name~(~it.params~)};separator="\n"~~if(annotations)~
-~endif~ >>
+AnnotationDeclaration(annotations) ::= <<~annotations:{it|@~it.name~(~it.params~)};separator="\n"~  >>
 
 AnnotationParam(param) ::= <<~param:{it|~it.key~ = ~it.value~};separator=", "~ >>
 
 PackageDeclaration(name) ::= <<package ~name~ >>
 
-ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,overrideEquals,members) ::= <<~annotations~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(
+ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,overrideEquals,overrideHashCode,members) ::= <<~annotations~~if(annotations)~
+~endif~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(
 	~fields:{it|~it~};separator=",\n"~
 )~if(extends)~: ~extends:{it|~it~};separator=", "~~endif~ {
 
-	~if(overrideEquals)~~overrideEquals~~endif~
-	~members:{it|~it~};separator="\n"~
+	~if(overrideEquals)~~overrideEquals~
 
-} >>
+	~endif~
+
+	~if(overrideHashCode)~~overrideHashCode~
+
+	~endif~
+
+	~members:{it|~it~};separator="\n"~
+}  >>
 
 OverrideEquals(className,fields) ::= <<override fun equals(other: Any?): Boolean {
 	if (other !is ~className~) return false
-		return if (other === this) true
-		else
-			~fields:{it|this.~it~ == other.~it~};separator=" && "~
-} >>
+	return if (other === this) true
+	else
+		~fields:{it|this.~it~ == other.~it~};separator=" && "~
+}  >>
+
+OverrideHashCode() ::= <<override fun hashCode(): Int {
+	TODO("not implemented")
+}  >>
 
 FieldDeclaration(annotations,isMutable,isNonMember,name,type,isNullable,initializer) ::= <<~annotations:{it|~it~};separator="\n"~
 ~if(isMutable)~var ~elseif(isNonMember)~~else~val ~endif~~name~: ~type~~if(isNullable)~?~endif~~if(initializer)~ = ~initializer~~endif~ >>
@@ -41,6 +61,30 @@ Extending(className,params) ::= <<~className~(~params:{it|~it.name~};separator="
 FunctionDeclaration(annotations,override,name,returnType) ::= <<~annotations~~if(override)~override ~endif~fun ~name~(): ~returnType~ {
 	// TODO: Expression body / expression statememt
 } >>
+
+Initializers() ::= << >>
+
+ArrayInitializer(statements) ::= <<arrayOf(~statements:{it|~it~};separator=", "~)  >>
+
+EmptyArrayInitializer() ::= <<emptyArray()  >>
+
+ListInitializer(statements) ::= <<listOf(~statements:{it|~it~};separator=", "~)  >>
+
+MapInitializer(kvpairs) ::= <<mapOf(~kvpairs:{it|~it.key~ to ~it.value~};separator=", "~)  >>
+
+NullInitializer() ::= <<null  >>
+
+ExpressionInitializer(expression) ::= <<~expression~  >>
+
+KotlinTypes() ::= << >>
+
+ArrayType(type) ::= <<Array<~type~>  >>
+
+ListType(type) ::= <<List<~type~>  >>
+
+MapType(type) ::= <<Map<~type~>  >>
+
+NamedType(name) ::= <<~name~  >>
 
 eom() ::= "}"
 

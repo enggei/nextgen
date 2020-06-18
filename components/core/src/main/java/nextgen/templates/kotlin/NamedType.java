@@ -1,24 +1,24 @@
 package nextgen.templates.kotlin;
 
-public class PackageDeclaration {
+public class NamedType implements TypeDeclaration {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private String _name;
 
-	PackageDeclaration(org.stringtemplate.v4.STGroup stGroup) {
+	NamedType(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
 	@Override
 	public String toString() {
-		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("PackageDeclaration");
+		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("NamedType");
 		st.add("name", _name);
 		return st.render().trim();
 	}
 
-	public PackageDeclaration setName(String value) {
+	public NamedType setName(String value) {
 		this._name = value;
 		return this;
 	}
@@ -35,7 +35,7 @@ public class PackageDeclaration {
 		return this._name != null;
 	}
 
-	public PackageDeclaration removeName() {
+	public NamedType removeName() {
 		this._name = null;
 		return this;
 	} 
@@ -46,7 +46,7 @@ public class PackageDeclaration {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		PackageDeclaration that = (PackageDeclaration) o;
+		NamedType that = (NamedType) o;
 		return uuid.equals(that.uuid);
 	}
 
@@ -55,5 +55,5 @@ public class PackageDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PackageDeclaration(name) ::= <<package ~name~ >>";
+	static final String st = "NamedType(name) ::= <<~name~ >>";
 } 
