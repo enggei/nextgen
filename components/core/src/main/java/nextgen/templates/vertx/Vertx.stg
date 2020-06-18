@@ -21,7 +21,8 @@ public class ~name;format="capitalize"~ extends AbstractVerticle {
 
 	public enum ErrorCodes {
 		NO_ACTION_HEADER,
-		UNKNOWN_ACTION
+		UNKNOWN_ACTION,
+		DB_ERROR
 	}
 
 	private ~domainFactory~ db;
@@ -61,10 +62,10 @@ public class ~name;format="capitalize"~ extends AbstractVerticle {
 	private Action getAction(Message<JsonObject> message) {
 		final String action = message.headers().get("action");
 		try {
-				return Action.valueOf(action);
+			return Action.valueOf(action);
 		} catch (Throwable e) {
-				log.error("Unknown action " + action);
-				return null;
+			log.error("Unknown action " + action);
+			return null;
 		}
 	}
 }  >>
@@ -75,10 +76,13 @@ jsonArrayAction(name,params,statements) ::= <<private void ~name~(Message<JsonOb
 	~params:{it|final ~it.type~ ~it.name~ = body.get~it.type~("~it.name~");};separator="\n"~
 
 	final JsonArray response = new JsonArray();
-	
-	~statements:{it|~it~};separator="\n"~
 
-	message.reply(response);
+	db.doInTransaction(transaction -> {
+		~statements:{it|~it~};separator="\n"~
+		message.reply(response);
+	}, throwable -> {
+		message.fail(ErrorCodes.DB_ERROR.ordinal(), throwable.getMessage());
+	});
 }  >>
 
 jsonObjectAction(name,params,statements) ::= <<private void ~name~(Message<JsonObject> message) {
@@ -88,9 +92,12 @@ jsonObjectAction(name,params,statements) ::= <<private void ~name~(Message<JsonO
 
 	final JsonObject response = new JsonObject();
 	
-	~statements:{it|~it~};separator="\n"~
-
-	message.reply(response);
+	db.doInTransaction(transaction -> {
+		~statements:{it|~it~};separator="\n"~
+		message.reply(response);
+	}, throwable -> {
+		message.fail(ErrorCodes.DB_ERROR.ordinal(), throwable.getMessage());
+	});
 }  >>
 
 Entities() ::= << >>

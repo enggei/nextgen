@@ -214,43 +214,43 @@
   }, {
     "uuid" : "57405911-04a7-483b-97ac-497ecb3361da",
     "name" : "DomainVerticle",
-    "text" : "package ~packageName~;\n\nimport ~domainPackage~.*;\nimport io.vertx.core.AbstractVerticle;\nimport io.vertx.core.Promise;\nimport io.vertx.core.eventbus.Message;\nimport io.vertx.core.json.JsonArray;\nimport io.vertx.core.json.JsonObject;\nimport org.slf4j.Logger;\nimport org.slf4j.LoggerFactory;\n\npublic class ~name;format=\"capitalize\"~ extends AbstractVerticle {\n\n\tprivate static final Logger log = LoggerFactory.getLogger(~name;format=\"capitalize\"~.class);\n\n\tpublic enum Action {\n\t\t~actions:{it|~it.name~};separator=\",\\n\"~\n\t}\n\n\tpublic enum ErrorCodes {\n\t\tNO_ACTION_HEADER,\n\t\tUNKNOWN_ACTION\n\t}\n\n\tprivate ~domainFactory~ db;\n\n\t@Override\n\tpublic void start(Promise<Void> promise) throws Exception {\n\t\tdb = new ~domainFactory~(config().getString(\"path\"));\n\t\tvertx.eventBus().consumer(config().getString(\"~address~\", \"~address~\"), this::onMessage);\n\t}\n\n\tpublic void onMessage(Message<JsonObject> message) {\n\n\t\tif (!message.headers().contains(\"action\")) {\n\t\t\tlog.error(\"No action header specified for message with headers {} and body {}\", message.headers(), message.body().encodePrettily());\n\t\t\tmessage.fail(ErrorCodes.NO_ACTION_HEADER.ordinal(), \"No action header specified\");\n\t\t\treturn;\n\t\t}\n\n\t\tfinal Action action = getAction(message);\n\t\t\n\t\tif (action == null) {\n\t\t\tmessage.fail(ErrorCodes.UNKNOWN_ACTION.ordinal(), \"Unknown action\");\n\t\t\treturn;\n\t\t}\n\n\t\tswitch (action) {\n~actions:{it|\n\t\t\tcase ~it.name~: {\n\t\t\t\t~it.name~(message);\n\t\t\t\tbreak;\n\t\t\t\\}};separator=\"\\n\"~\n\t\t}\n\t}\n\n\t~actions:{it|~it.declaration~};separator=\"\\n\\n\"~\n\n\tprivate Action getAction(Message<JsonObject> message) {\n\t\tfinal String action = message.headers().get(\"action\");\n\t\ttry {\n\t\t\t\treturn Action.valueOf(action);\n\t\t} catch (Throwable e) {\n\t\t\t\tlog.error(\"Unknown action \" + action);\n\t\t\t\treturn null;\n\t\t}\n\t}\n} ",
+    "text" : "package ~packageName~;\n\nimport ~domainPackage~.*;\nimport io.vertx.core.AbstractVerticle;\nimport io.vertx.core.Promise;\nimport io.vertx.core.eventbus.Message;\nimport io.vertx.core.json.JsonArray;\nimport io.vertx.core.json.JsonObject;\nimport org.slf4j.Logger;\nimport org.slf4j.LoggerFactory;\n\npublic class ~name;format=\"capitalize\"~ extends AbstractVerticle {\n\n\tprivate static final Logger log = LoggerFactory.getLogger(~name;format=\"capitalize\"~.class);\n\n\tpublic enum Action {\n\t\t~actions:{it|~it.name~};separator=\",\\n\"~\n\t}\n\n\tpublic enum ErrorCodes {\n\t\tNO_ACTION_HEADER,\n\t\tUNKNOWN_ACTION,\n\t\tDB_ERROR\n\t}\n\n\tprivate ~domainFactory~ db;\n\n\t@Override\n\tpublic void start(Promise<Void> promise) throws Exception {\n\t\tdb = new ~domainFactory~(config().getString(\"path\"));\n\t\tvertx.eventBus().consumer(config().getString(\"~address~\", \"~address~\"), this::onMessage);\n\t}\n\n\tpublic void onMessage(Message<JsonObject> message) {\n\n\t\tif (!message.headers().contains(\"action\")) {\n\t\t\tlog.error(\"No action header specified for message with headers {} and body {}\", message.headers(), message.body().encodePrettily());\n\t\t\tmessage.fail(ErrorCodes.NO_ACTION_HEADER.ordinal(), \"No action header specified\");\n\t\t\treturn;\n\t\t}\n\n\t\tfinal Action action = getAction(message);\n\t\t\n\t\tif (action == null) {\n\t\t\tmessage.fail(ErrorCodes.UNKNOWN_ACTION.ordinal(), \"Unknown action\");\n\t\t\treturn;\n\t\t}\n\n\t\tswitch (action) {\n~actions:{it|\n\t\t\tcase ~it.name~: {\n\t\t\t\t~it.name~(message);\n\t\t\t\tbreak;\n\t\t\t\\}};separator=\"\\n\"~\n\t\t}\n\t}\n\n\t~actions:{it|~it.declaration~};separator=\"\\n\\n\"~\n\n\tprivate Action getAction(Message<JsonObject> message) {\n\t\tfinal String action = message.headers().get(\"action\");\n\t\ttry {\n\t\t\treturn Action.valueOf(action);\n\t\t} catch (Throwable e) {\n\t\t\tlog.error(\"Unknown action \" + action);\n\t\t\treturn null;\n\t\t}\n\t}\n} ",
     "parameters" : [ {
-      "uuid" : "604ca774-5203-4897-b242-0a4d16129c5f",
+      "uuid" : "f4bce84f-94c5-42f7-8f8e-1c6c84ec5a45",
       "name" : "packageName",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "66856d61-8989-4b99-8e47-82bb8e1054d2",
+      "uuid" : "d86df286-b2ba-49f9-ba90-49eff454f1d7",
       "name" : "domainPackage",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "9ec94940-ab30-498a-a929-0db40e660216",
+      "uuid" : "c953f7a5-782d-4e9d-808e-a640f18c7c7b",
       "name" : "name",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "ebef4e8f-9253-4f58-8e49-88b08913abcb",
+      "uuid" : "505cdf6d-abd8-469e-a14a-be516bb57f8e",
       "name" : "actions",
       "type" : "KVLIST",
       "argumentType" : "Object",
       "keys" : [ {
-        "uuid" : "15b701cc-a76c-49c8-9421-efd489126a4a",
+        "uuid" : "119606c9-e065-4e4d-b1c7-a7eaaf199ee5",
         "name" : "name",
         "argumentType" : "Object"
       }, {
-        "uuid" : "d030a7cd-0e85-4cdc-8cd0-000facee3c18",
+        "uuid" : "0d823fed-511a-4029-a353-b60a9e25f0bb",
         "name" : "declaration",
         "argumentType" : "Object"
       } ]
     }, {
-      "uuid" : "099b78a8-bb2e-4495-a4e6-d5a4b8876f2b",
+      "uuid" : "213012dd-d209-4400-9b57-e7c81ccc7236",
       "name" : "domainFactory",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "1a643a76-4b06-4be4-a9ea-22164966130c",
+      "uuid" : "e4903375-31f4-4568-96e8-fe214c2dd9a9",
       "name" : "address",
       "type" : "SINGLE",
       "argumentType" : "Object"
@@ -258,28 +258,28 @@
     "children" : [ {
       "uuid" : "08a7233d-aa4c-4f4e-87ec-abad6ab284fc",
       "name" : "jsonArrayAction",
-      "text" : "private void ~name~(Message<JsonObject> message) {\n\n\tfinal JsonObject body = message.body();\n\t~params:{it|final ~it.type~ ~it.name~ = body.get~it.type~(\"~it.name~\");};separator=\"\\n\"~\n\n\tfinal JsonArray response = new JsonArray();\n\t\n\t~statements:{it|~it~};separator=\"\\n\"~\n\n\tmessage.reply(response);\n} ",
+      "text" : "private void ~name~(Message<JsonObject> message) {\n\n\tfinal JsonObject body = message.body();\n\t~params:{it|final ~it.type~ ~it.name~ = body.get~it.type~(\"~it.name~\");};separator=\"\\n\"~\n\n\tfinal JsonArray response = new JsonArray();\n\n\tdb.doInTransaction(transaction -> {\n\t\t~statements:{it|~it~};separator=\"\\n\"~\n\t\tmessage.reply(response);\n\t}, throwable -> {\n\t\tmessage.fail(ErrorCodes.DB_ERROR.ordinal(), throwable.getMessage());\n\t});\n} ",
       "parameters" : [ {
-        "uuid" : "7b0c3362-ace4-4c86-b46a-02d654bd1bb9",
+        "uuid" : "985dba03-4ba8-46bd-9010-990c3807e4d2",
         "name" : "name",
         "type" : "SINGLE",
         "argumentType" : "Object"
       }, {
-        "uuid" : "40fa55c2-70af-4022-bd0f-173340d88445",
+        "uuid" : "4ced2a46-578a-4216-b1c3-02cb654e1e7d",
         "name" : "params",
         "type" : "KVLIST",
         "argumentType" : "Object",
         "keys" : [ {
-          "uuid" : "cfa7f766-9e0b-417c-94a7-b4c64e97e16a",
+          "uuid" : "b44f3887-4c96-4ce4-a7d0-92a78d59e3e0",
           "name" : "type",
           "argumentType" : "Object"
         }, {
-          "uuid" : "baf898fe-c234-4f18-b516-ea498ac870a8",
+          "uuid" : "64ae206d-0e20-4202-ae40-c8eb7d3b7487",
           "name" : "name",
           "argumentType" : "Object"
         } ]
       }, {
-        "uuid" : "313a6c15-6f31-4ae7-a280-dce3c85fc7ff",
+        "uuid" : "d3e78c27-48ec-4d1f-976e-ceed0047228e",
         "name" : "statements",
         "type" : "LIST",
         "argumentType" : "Object"
@@ -287,28 +287,28 @@
     }, {
       "uuid" : "9f95ad7e-12e6-4d2a-bc20-1539d7428678",
       "name" : "jsonObjectAction",
-      "text" : "private void ~name~(Message<JsonObject> message) {\n\n\tfinal JsonObject body = message.body();\n\t~params:{it|final ~it.type~ ~it.name~ = body.get~it.type~(\"~it.name~\");};separator=\"\\n\"~\n\n\tfinal JsonObject response = new JsonObject();\n\t\n\t~statements:{it|~it~};separator=\"\\n\"~\n\n\tmessage.reply(response);\n} ",
+      "text" : "private void ~name~(Message<JsonObject> message) {\n\n\tfinal JsonObject body = message.body();\n\t~params:{it|final ~it.type~ ~it.name~ = body.get~it.type~(\"~it.name~\");};separator=\"\\n\"~\n\n\tfinal JsonObject response = new JsonObject();\n\t\n\tdb.doInTransaction(transaction -> {\n\t\t~statements:{it|~it~};separator=\"\\n\"~\n\t\tmessage.reply(response);\n\t}, throwable -> {\n\t\tmessage.fail(ErrorCodes.DB_ERROR.ordinal(), throwable.getMessage());\n\t});\n} ",
       "parameters" : [ {
-        "uuid" : "50fca414-6344-45e9-a707-dbe6b108910a",
+        "uuid" : "d0796f08-9615-429f-b827-d9e801ca1238",
         "name" : "name",
         "type" : "SINGLE",
         "argumentType" : "Object"
       }, {
-        "uuid" : "08b3344e-62d1-4c83-a2a6-218b3b021f7f",
+        "uuid" : "58581b6a-553f-4ff6-b90b-dfa8c6088526",
         "name" : "params",
         "type" : "KVLIST",
         "argumentType" : "Object",
         "keys" : [ {
-          "uuid" : "1bc7fcfd-226a-47a8-b61c-6b99831b5f93",
+          "uuid" : "9a096025-3907-4f1f-8973-eec66910575f",
           "name" : "type",
           "argumentType" : "Object"
         }, {
-          "uuid" : "440aeb47-4fcb-43cd-9cfd-03c4bb809117",
+          "uuid" : "c7ffa1c4-688d-400c-8cfc-e08c3022f0e8",
           "name" : "name",
           "argumentType" : "Object"
         } ]
       }, {
-        "uuid" : "6960a106-4eec-404e-b71f-e875e6dbae9d",
+        "uuid" : "a5a51827-a3af-4aea-88e8-8885bf936e26",
         "name" : "statements",
         "type" : "LIST",
         "argumentType" : "Object"

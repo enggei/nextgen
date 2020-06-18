@@ -7,6 +7,8 @@ public class Prop {
 
 	private Object _name;
 	private Object _value;
+	private Object _stringValue;
+	private Object _expression;
 
 	Prop(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -17,6 +19,8 @@ public class Prop {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Prop");
 		st.add("name", _name);
 		st.add("value", _value);
+		st.add("stringValue", _stringValue);
+		st.add("expression", _expression);
 		return st.render().trim();
 	}
 
@@ -64,6 +68,50 @@ public class Prop {
 		return this;
 	} 
 
+	public Prop setStringValue(Object value) {
+		this._stringValue = value;
+		return this;
+	}
+
+	public Object getStringValue() {
+		return this._stringValue;
+	}
+
+	public Object getStringValue(Object defaultValue) {
+		return this._stringValue == null ? defaultValue : this._stringValue;
+	}
+
+	public boolean hasStringValue() {
+		return this._stringValue != null;
+	}
+
+	public Prop removeStringValue() {
+		this._stringValue = null;
+		return this;
+	} 
+
+	public Prop setExpression(Object value) {
+		this._expression = value;
+		return this;
+	}
+
+	public Object getExpression() {
+		return this._expression;
+	}
+
+	public Object getExpression(Object defaultValue) {
+		return this._expression == null ? defaultValue : this._expression;
+	}
+
+	public boolean hasExpression() {
+		return this._expression != null;
+	}
+
+	public Prop removeExpression() {
+		this._expression = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -79,5 +127,5 @@ public class Prop {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Prop(name,value) ::= <<~name~~if(value)~=~value~~endif~ >>";
+	static final String st = "Prop(name,value,stringValue,expression) ::= <<~name~~if(value)~=~value~~elseif(stringValue)~=\"~stringValue~\"~else~={ ~expression~ }~endif~ >>";
 } 

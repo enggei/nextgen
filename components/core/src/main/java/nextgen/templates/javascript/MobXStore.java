@@ -194,7 +194,6 @@ public class MobXStore {
 	}
 
 	static final String st = "MobXStore(observables,actions,imports,name,constructorStatements) ::= <<import { ~if(observables)~observable~endif~~if(actions)~~if(observables)~, ~endif~action, ~endif~ reaction } from 'mobx';\n" + 
-				"\n" + 
 				"~imports:{it|import ~it.ref~ from '~it.path~';};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"class ~name;format=\"capitalize\"~ {\n" + 

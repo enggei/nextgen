@@ -218,7 +218,8 @@ public class DomainVerticle {
 				"\n" + 
 				"	public enum ErrorCodes {\n" + 
 				"		NO_ACTION_HEADER,\n" + 
-				"		UNKNOWN_ACTION\n" + 
+				"		UNKNOWN_ACTION,\n" + 
+				"		DB_ERROR\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	private ~domainFactory~ db;\n" + 
@@ -258,10 +259,10 @@ public class DomainVerticle {
 				"	private Action getAction(Message<JsonObject> message) {\n" + 
 				"		final String action = message.headers().get(\"action\");\n" + 
 				"		try {\n" + 
-				"				return Action.valueOf(action);\n" + 
+				"			return Action.valueOf(action);\n" + 
 				"		} catch (Throwable e) {\n" + 
-				"				log.error(\"Unknown action \" + action);\n" + 
-				"				return null;\n" + 
+				"			log.error(\"Unknown action \" + action);\n" + 
+				"			return null;\n" + 
 				"		}\n" + 
 				"	}\n" + 
 				"} >>";

@@ -52,39 +52,37 @@ public class UserMenu {
 				"\n" + 
 				"export default function UserMenu(props) {\n" + 
 				"\n" + 
-				"  const [anchorEl, setAnchorEl] = React.useState(null);\n" + 
+				"	const [anchorEl, setAnchorEl] = React.useState(null);\n" + 
 				"\n" + 
-				"  function handleClick(event) {\n" + 
-				"    setAnchorEl(event.currentTarget);\n" + 
-				"  }\n" + 
+				"	function handleClick(event) {\n" + 
+				"		setAnchorEl(event.currentTarget);\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	function handleClose() {\n" + 
+				"		setAnchorEl(null);\n" + 
+				"	}\n" + 
 				"\n" + 
-				"  function handleClose() {\n" + 
-				"    setAnchorEl(null);\n" + 
-				"  }\n" + 
-				"\n" + 
-				"    if (!props.currentUser)  {\n" + 
-				"        return (\n" + 
-				"            <div>\n" + 
-				"                <IconButton edge=\"start\" color=\"inherit\" aria-label=\"Menu\" onClick={handleClick}>\n" + 
-				"                    <MenuIcon />\n" + 
-				"                </IconButton>\n" + 
-				"                <Menu id=\"simple-menu\" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>\n" + 
-				"                    <MenuItem component={ LoginLink } onClick={handleClose}>Login</MenuItem>\n" + 
-				"                </Menu>\n" + 
-				"            </div>);\n" + 
-				"    	}\n" + 
-				"\n" + 
-				"    else {\n" + 
-				"         return (\n" + 
-				"                <div>\n" + 
-				"                    <IconButton edge=\"start\" color=\"inherit\" aria-label=\"Menu\" onClick={handleClick}>\n" + 
-				"                        <MenuIcon />\n" + 
-				"                    </IconButton>\n" + 
-				"                    <Menu id=\"simple-menu\" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>\n" + 
-				"                       {props.currentUser.menus.map((e, i) => (<MenuItem key={e.key} component={ React.forwardRef( (props, ref) => (<Link innerRef={ ref } to={e.url} { ...props } />)) } onClick={handleClose}> {e.label} </MenuItem>))}\n" + 
-				"                       <MenuItem component={ LogoutLink } onClick={handleClose}> Logout </MenuItem> \n" + 
-				"                    </Menu>\n" + 
-				"                </div>);\n" + 
-				"        }\n" + 
+				"	if (!props.currentUser)  {\n" + 
+				"		return (\n" + 
+				"			<div>\n" + 
+				"				<IconButton edge=\"start\" color=\"inherit\" aria-label=\"Menu\" onClick={handleClick}>\n" + 
+				"					<MenuIcon />\n" + 
+				"				</IconButton>\n" + 
+				"				<Menu id=\"simple-menu\" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>\n" + 
+				"					<MenuItem component={ LoginLink } onClick={handleClose}>Login</MenuItem>\n" + 
+				"				</Menu>\n" + 
+				"			</div>);\n" + 
+				"	} else {\n" + 
+				"		return (\n" + 
+				"			<div>\n" + 
+				"				<IconButton edge=\"start\" color=\"inherit\" aria-label=\"Menu\" onClick={handleClick}>\n" + 
+				"						<MenuIcon />\n" + 
+				"				</IconButton>\n" + 
+				"				<Menu id=\"simple-menu\" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>\n" + 
+				"					{props.currentUser.menus.map((e, i) => (<MenuItem key={e.key} component={ React.forwardRef( (props, ref) => (<Link innerRef={ ref } to={e.url} { ...props } />)) } onClick={handleClose}> {e.label} </MenuItem>))}\n" + 
+				"					<MenuItem component={ LogoutLink } onClick={handleClose}> Logout </MenuItem> \n" + 
+				"				</Menu>\n" + 
+				"			</div>);\n" + 
+				"	}\n" + 
 				"} >>";
 } 

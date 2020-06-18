@@ -218,7 +218,7 @@ public class DomainPatterns extends DomainST {
                 }
                 case PRIM_LIST: {
                     final Class<?> dst = asClass(o.getDst());
-                    entityClass.addFields(JavaST.newListType().setType(dst.getSimpleName()), o.getName(), null);
+                    entityClass.addFields(JavaST.newListType().setType(dst.getSimpleName()), o.getName(), JavaPatterns.newArrayListInstance());
                     entityClass.addAccessors(JavaST.newListAccessors().setClassName(entityName).setType(dst.getSimpleName()).setName(o.getName()));
                     break;
                 }

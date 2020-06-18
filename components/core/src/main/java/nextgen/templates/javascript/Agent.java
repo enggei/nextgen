@@ -139,5 +139,6 @@ public class Agent {
 				"	Auth~if(agentDeclarations)~,\n" + 
 				"	\n" + 
 				"	~agentDeclarations:{it|~it.name~};separator=\",\\n\"~~endif~\n" + 
+				"	\n" + 
 				"}; >>";
 } 

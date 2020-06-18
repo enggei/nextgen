@@ -80,6 +80,6 @@ public class ReturnStatement {
 	}
 
 	static final String st = "returnStatement(condition,element) ::= <<~if(condition)~if (~condition~) ~endif~return (\n" + 
-				"	~element~\n" + 
+				"	~if(element)~~element~~else~null~endif~\n" + 
 				"	); >>";
 } 

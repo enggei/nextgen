@@ -191,8 +191,7 @@ public class MethodCall {
 	static final String st = "methodCall(scope,name,arguments,then,catch,finally) ::= <<~if(scope)~~scope~.~endif~~name~(~arguments:{it|~it~};separator=\", \"~)\n" + 
 				"	~then:{it|.then(~it~)};separator=\"\\n\"~\n" + 
 				"~if(catch)~\n" + 
-				"	.catch(~catch~)\n" + 
-				"~endif~\n" + 
+				"	.catch(~catch~)~endif~\n" + 
 				"~if(finally)~\n" + 
 				"	.finally(~finally~)\n" + 
 				"~endif~ >>";

@@ -137,9 +137,12 @@ public class JsonArrayAction {
 				"	~params:{it|final ~it.type~ ~it.name~ = body.get~it.type~(\"~it.name~\");};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"	final JsonArray response = new JsonArray();\n" + 
-				"	\n" + 
-				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
-				"	message.reply(response);\n" + 
+				"	db.doInTransaction(transaction -> {\n" + 
+				"		~statements:{it|~it~};separator=\"\\n\"~\n" + 
+				"		message.reply(response);\n" + 
+				"	}, throwable -> {\n" + 
+				"		message.fail(ErrorCodes.DB_ERROR.ordinal(), throwable.getMessage());\n" + 
+				"	});\n" + 
 				"} >>";
 } 

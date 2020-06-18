@@ -6,8 +6,8 @@ public class Element {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _name;
-	private java.util.List<Object> _children = new java.util.ArrayList<>();
 	private java.util.List<Object> _props = new java.util.ArrayList<>();
+	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
 	Element(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -17,8 +17,8 @@ public class Element {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Element");
 		st.add("name", _name);
-		for (Object o : _children) st.add("children", o);
 		for (Object o : _props) st.add("props", o);
+		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
 	}
 
@@ -42,35 +42,6 @@ public class Element {
 	public Element removeName() {
 		this._name = null;
 		return this;
-	} 
-
-	public Element addChildren(Object value) {
-		this._children.add(value);
-		return this;
-	}
-
-	public Element setChildren(Object[] value) {
-		this._children.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public Element setChildren(java.util.Collection<Object> values) {
-		this._children.addAll(values);
-		return this;
-	}
-
-	public Element removeChildren(Object value) {
-		this._children.remove(value);
-		return this;
-	}
-
-	public Element removeChildren(int index) {
-		this._children.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getChildren() {
-		return this._children;
 	} 
 
 	public Element addProps(Object value) {
@@ -102,6 +73,35 @@ public class Element {
 		return this._props;
 	} 
 
+	public Element addChildren(Object value) {
+		this._children.add(value);
+		return this;
+	}
+
+	public Element setChildren(Object[] value) {
+		this._children.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Element setChildren(java.util.Collection<Object> values) {
+		this._children.addAll(values);
+		return this;
+	}
+
+	public Element removeChildren(Object value) {
+		this._children.remove(value);
+		return this;
+	}
+
+	public Element removeChildren(int index) {
+		this._children.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getChildren() {
+		return this._children;
+	} 
+
 
 	@Override
 	public boolean equals(Object o) {
@@ -116,8 +116,7 @@ public class Element {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Element(name,children,props) ::= <<<~name~~if(props)~ \n" + 
-				"	~props:{it|~it~};separator=\"\\n\"~~endif~~if(children)~>\n" + 
+	static final String st = "Element(name,props,children) ::= <<<~name~~if(props)~ ~props:{it|~it~};separator=\" \"~~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</~name~>~else~ />~endif~ >>";
 } 

@@ -52,7 +52,7 @@ module.exports = {
 	entry: { 
 		main: '.~mainEntry~' 
 	},
-	mode: '~if(mode)~~mode~~else~production~endif~'
+	mode: '~if(mode)~~mode~~else~production~endif~',
 	output: {
 		path: __dirname,
 		filename: '~outputFilename~'
@@ -73,7 +73,7 @@ module.exports = {
 			}
 		]
 	}
-}; >>
+};  >>
 
 eom() ::= "}"
 

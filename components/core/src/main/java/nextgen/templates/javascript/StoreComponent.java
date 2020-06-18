@@ -1,49 +1,55 @@
 package nextgen.templates.javascript;
 
-public class ClassComponent {
+public class StoreComponent {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private String _name;
+	private Object _name;
 	private java.util.List<Object> _dependencies = new java.util.ArrayList<>();
 	private java.util.List<Object> _components = new java.util.ArrayList<>();
 	private java.util.List<Object> _decorators = new java.util.ArrayList<>();
+	private java.util.List<Object> _stores = new java.util.ArrayList<>();
 	private java.util.List<Object> _state = new java.util.ArrayList<>();
+	private java.util.List<Object> _componentDidMountStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
+	private java.util.List<Object> _renderStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _renderConstants = new java.util.ArrayList<>();
 	private java.util.List<Object> _returnStatements = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _events = new java.util.ArrayList<>();
 
-	ClassComponent(org.stringtemplate.v4.STGroup stGroup) {
+	StoreComponent(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
 	@Override
 	public String toString() {
-		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ClassComponent");
+		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("StoreComponent");
 		st.add("name", _name);
 		for (Object o : _dependencies) st.add("dependencies", o);
 		for (Object o : _components) st.add("components", o);
 		for (Object o : _decorators) st.add("decorators", o);
+		for (Object o : _stores) st.add("stores", o);
 		for (Object o : _state) st.add("state", o);
+		for (Object o : _componentDidMountStatements) st.add("componentDidMountStatements", o);
 		for (Object o : _methods) st.add("methods", o);
+		for (Object o : _renderStatements) st.add("renderStatements", o);
 		for (Object o : _renderConstants) st.add("renderConstants", o);
 		for (Object o : _returnStatements) st.add("returnStatements", o);
 		for (java.util.Map<String, Object> map : _events) st.addAggr("events.{methodName,declaration}", map.get("methodName"), map.get("declaration"));
 		return st.render().trim();
 	}
 
-	public ClassComponent setName(String value) {
+	public StoreComponent setName(Object value) {
 		this._name = value;
 		return this;
 	}
 
-	public String getName() {
+	public Object getName() {
 		return this._name;
 	}
 
-	public String getName(String defaultValue) {
+	public Object getName(Object defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 
@@ -51,32 +57,32 @@ public class ClassComponent {
 		return this._name != null;
 	}
 
-	public ClassComponent removeName() {
+	public StoreComponent removeName() {
 		this._name = null;
 		return this;
 	} 
 
-	public ClassComponent addDependencies(Object value) {
+	public StoreComponent addDependencies(Object value) {
 		this._dependencies.add(value);
 		return this;
 	}
 
-	public ClassComponent setDependencies(Object[] value) {
+	public StoreComponent setDependencies(Object[] value) {
 		this._dependencies.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public ClassComponent setDependencies(java.util.Collection<Object> values) {
+	public StoreComponent setDependencies(java.util.Collection<Object> values) {
 		this._dependencies.addAll(values);
 		return this;
 	}
 
-	public ClassComponent removeDependencies(Object value) {
+	public StoreComponent removeDependencies(Object value) {
 		this._dependencies.remove(value);
 		return this;
 	}
 
-	public ClassComponent removeDependencies(int index) {
+	public StoreComponent removeDependencies(int index) {
 		this._dependencies.remove(index);
 		return this;
 	}
@@ -85,27 +91,27 @@ public class ClassComponent {
 		return this._dependencies;
 	} 
 
-	public ClassComponent addComponents(Object value) {
+	public StoreComponent addComponents(Object value) {
 		this._components.add(value);
 		return this;
 	}
 
-	public ClassComponent setComponents(Object[] value) {
+	public StoreComponent setComponents(Object[] value) {
 		this._components.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public ClassComponent setComponents(java.util.Collection<Object> values) {
+	public StoreComponent setComponents(java.util.Collection<Object> values) {
 		this._components.addAll(values);
 		return this;
 	}
 
-	public ClassComponent removeComponents(Object value) {
+	public StoreComponent removeComponents(Object value) {
 		this._components.remove(value);
 		return this;
 	}
 
-	public ClassComponent removeComponents(int index) {
+	public StoreComponent removeComponents(int index) {
 		this._components.remove(index);
 		return this;
 	}
@@ -114,27 +120,27 @@ public class ClassComponent {
 		return this._components;
 	} 
 
-	public ClassComponent addDecorators(Object value) {
+	public StoreComponent addDecorators(Object value) {
 		this._decorators.add(value);
 		return this;
 	}
 
-	public ClassComponent setDecorators(Object[] value) {
+	public StoreComponent setDecorators(Object[] value) {
 		this._decorators.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public ClassComponent setDecorators(java.util.Collection<Object> values) {
+	public StoreComponent setDecorators(java.util.Collection<Object> values) {
 		this._decorators.addAll(values);
 		return this;
 	}
 
-	public ClassComponent removeDecorators(Object value) {
+	public StoreComponent removeDecorators(Object value) {
 		this._decorators.remove(value);
 		return this;
 	}
 
-	public ClassComponent removeDecorators(int index) {
+	public StoreComponent removeDecorators(int index) {
 		this._decorators.remove(index);
 		return this;
 	}
@@ -143,27 +149,56 @@ public class ClassComponent {
 		return this._decorators;
 	} 
 
-	public ClassComponent addState(Object value) {
+	public StoreComponent addStores(Object value) {
+		this._stores.add(value);
+		return this;
+	}
+
+	public StoreComponent setStores(Object[] value) {
+		this._stores.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public StoreComponent setStores(java.util.Collection<Object> values) {
+		this._stores.addAll(values);
+		return this;
+	}
+
+	public StoreComponent removeStores(Object value) {
+		this._stores.remove(value);
+		return this;
+	}
+
+	public StoreComponent removeStores(int index) {
+		this._stores.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getStores() {
+		return this._stores;
+	} 
+
+	public StoreComponent addState(Object value) {
 		this._state.add(value);
 		return this;
 	}
 
-	public ClassComponent setState(Object[] value) {
+	public StoreComponent setState(Object[] value) {
 		this._state.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public ClassComponent setState(java.util.Collection<Object> values) {
+	public StoreComponent setState(java.util.Collection<Object> values) {
 		this._state.addAll(values);
 		return this;
 	}
 
-	public ClassComponent removeState(Object value) {
+	public StoreComponent removeState(Object value) {
 		this._state.remove(value);
 		return this;
 	}
 
-	public ClassComponent removeState(int index) {
+	public StoreComponent removeState(int index) {
 		this._state.remove(index);
 		return this;
 	}
@@ -172,27 +207,56 @@ public class ClassComponent {
 		return this._state;
 	} 
 
-	public ClassComponent addMethods(Object value) {
+	public StoreComponent addComponentDidMountStatements(Object value) {
+		this._componentDidMountStatements.add(value);
+		return this;
+	}
+
+	public StoreComponent setComponentDidMountStatements(Object[] value) {
+		this._componentDidMountStatements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public StoreComponent setComponentDidMountStatements(java.util.Collection<Object> values) {
+		this._componentDidMountStatements.addAll(values);
+		return this;
+	}
+
+	public StoreComponent removeComponentDidMountStatements(Object value) {
+		this._componentDidMountStatements.remove(value);
+		return this;
+	}
+
+	public StoreComponent removeComponentDidMountStatements(int index) {
+		this._componentDidMountStatements.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getComponentDidMountStatements() {
+		return this._componentDidMountStatements;
+	} 
+
+	public StoreComponent addMethods(Object value) {
 		this._methods.add(value);
 		return this;
 	}
 
-	public ClassComponent setMethods(Object[] value) {
+	public StoreComponent setMethods(Object[] value) {
 		this._methods.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public ClassComponent setMethods(java.util.Collection<Object> values) {
+	public StoreComponent setMethods(java.util.Collection<Object> values) {
 		this._methods.addAll(values);
 		return this;
 	}
 
-	public ClassComponent removeMethods(Object value) {
+	public StoreComponent removeMethods(Object value) {
 		this._methods.remove(value);
 		return this;
 	}
 
-	public ClassComponent removeMethods(int index) {
+	public StoreComponent removeMethods(int index) {
 		this._methods.remove(index);
 		return this;
 	}
@@ -201,27 +265,56 @@ public class ClassComponent {
 		return this._methods;
 	} 
 
-	public ClassComponent addRenderConstants(Object value) {
+	public StoreComponent addRenderStatements(Object value) {
+		this._renderStatements.add(value);
+		return this;
+	}
+
+	public StoreComponent setRenderStatements(Object[] value) {
+		this._renderStatements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public StoreComponent setRenderStatements(java.util.Collection<Object> values) {
+		this._renderStatements.addAll(values);
+		return this;
+	}
+
+	public StoreComponent removeRenderStatements(Object value) {
+		this._renderStatements.remove(value);
+		return this;
+	}
+
+	public StoreComponent removeRenderStatements(int index) {
+		this._renderStatements.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getRenderStatements() {
+		return this._renderStatements;
+	} 
+
+	public StoreComponent addRenderConstants(Object value) {
 		this._renderConstants.add(value);
 		return this;
 	}
 
-	public ClassComponent setRenderConstants(Object[] value) {
+	public StoreComponent setRenderConstants(Object[] value) {
 		this._renderConstants.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public ClassComponent setRenderConstants(java.util.Collection<Object> values) {
+	public StoreComponent setRenderConstants(java.util.Collection<Object> values) {
 		this._renderConstants.addAll(values);
 		return this;
 	}
 
-	public ClassComponent removeRenderConstants(Object value) {
+	public StoreComponent removeRenderConstants(Object value) {
 		this._renderConstants.remove(value);
 		return this;
 	}
 
-	public ClassComponent removeRenderConstants(int index) {
+	public StoreComponent removeRenderConstants(int index) {
 		this._renderConstants.remove(index);
 		return this;
 	}
@@ -230,27 +323,27 @@ public class ClassComponent {
 		return this._renderConstants;
 	} 
 
-	public ClassComponent addReturnStatements(Object value) {
+	public StoreComponent addReturnStatements(Object value) {
 		this._returnStatements.add(value);
 		return this;
 	}
 
-	public ClassComponent setReturnStatements(Object[] value) {
+	public StoreComponent setReturnStatements(Object[] value) {
 		this._returnStatements.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public ClassComponent setReturnStatements(java.util.Collection<Object> values) {
+	public StoreComponent setReturnStatements(java.util.Collection<Object> values) {
 		this._returnStatements.addAll(values);
 		return this;
 	}
 
-	public ClassComponent removeReturnStatements(Object value) {
+	public StoreComponent removeReturnStatements(Object value) {
 		this._returnStatements.remove(value);
 		return this;
 	}
 
-	public ClassComponent removeReturnStatements(int index) {
+	public StoreComponent removeReturnStatements(int index) {
 		this._returnStatements.remove(index);
 		return this;
 	}
@@ -259,7 +352,7 @@ public class ClassComponent {
 		return this._returnStatements;
 	} 
 
-	public ClassComponent addEvents(Object _methodName, Object _declaration) {
+	public StoreComponent addEvents(Object _methodName, Object _declaration) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("methodName", _methodName);
 		map.put("declaration", _declaration);
@@ -271,25 +364,25 @@ public class ClassComponent {
 		return this._events;
 	}
 
-	public ClassComponent addEvents(ClassComponent_Events value) {
+	public StoreComponent addEvents(StoreComponent_Events value) {
 		return addEvents(value._methodName, value._declaration);
 	}
 
-	public java.util.stream.Stream<ClassComponent_Events> streamEvents() {
-		return this._events.stream().map(ClassComponent_Events::new);
+	public java.util.stream.Stream<StoreComponent_Events> streamEvents() {
+		return this._events.stream().map(StoreComponent_Events::new);
 	}
 
-	public static final class ClassComponent_Events {
+	public static final class StoreComponent_Events {
 
 		Object _methodName;
 		Object _declaration;
 
-		public ClassComponent_Events(Object _methodName, Object _declaration) {
+		public StoreComponent_Events(Object _methodName, Object _declaration) {
 			this._methodName = _methodName;
 			this._declaration = _declaration;
 		}
 
-		private ClassComponent_Events(java.util.Map<String, Object> map) {
+		private StoreComponent_Events(java.util.Map<String, Object> map) {
 			this._methodName = (Object) map.get("methodName");
 			this._declaration = (Object) map.get("declaration");
 		}
@@ -308,7 +401,7 @@ public class ClassComponent {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		ClassComponent that = (ClassComponent) o;
+		StoreComponent that = (StoreComponent) o;
 		return uuid.equals(that.uuid);
 	}
 
@@ -317,12 +410,17 @@ public class ClassComponent {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ClassComponent(dependencies,components,decorators,name,state,events,methods,renderConstants,returnStatements) ::= <<import React from 'react';\n" + 
+	static final String st = "StoreComponent(dependencies,components,decorators,stores,name,state,events,componentDidMountStatements,methods,renderStatements,renderConstants,returnStatements) ::= <<import React from 'react';\n" + 
+				"import { inject, observer } from 'mobx-react';\n" + 
+				"\n" + 
 				"~dependencies:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"~components:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
 				"~decorators:{it|~it~};separator=\"\\n\"~\n" + 
+				"\n" + 
+				"@inject(~stores:{it|'~it~'};separator=\",\"~)\n" + 
+				"@observer\n" + 
 				"class ~name~ extends React.Component {\n" + 
 				"\n" + 
 				"	constructor(props) {\n" + 
@@ -336,6 +434,11 @@ public class ClassComponent {
 				"		~events:{it|this.~it.methodName~ = this.~it.methodName~.bind(this);};separator=\"\\n\"~\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	componentDidMount() {\n" + 
+				"		console.log(\"mount ~name~ : \" +  this.props);\n" + 
+				"		~componentDidMountStatements:{it|~it~};separator=\"\\n\"~\n" + 
+				"	}\n" + 
+				"	\n" + 
 				"~if(events)~\n" + 
 				"	~events:{it|~it.declaration~};separator=\"\\n\\n\"~\n" + 
 				"~endif~\n" + 
@@ -344,6 +447,7 @@ public class ClassComponent {
 				"~endif~\n" + 
 				"	render() {\n" + 
 				"		console.log(\"render ~name~ : \" +  this.props);\n" + 
+				"		~renderStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"		~if(renderConstants)~const { ~renderConstants:{it|~it~};separator=\", \"~ } = this.state;~endif~\n" + 
 				"		\n" + 
 				"		~if(returnStatements)~return (~returnStatements:{it|~it~};separator=\"\\n\\n\"~)~else~return null;~endif~\n" + 

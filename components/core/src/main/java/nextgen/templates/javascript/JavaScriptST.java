@@ -9,17 +9,30 @@ public class JavaScriptST {
 	Agent.st + "\n" + 
 	AgentDeclaration.st + "\n" + 
 	AgentEndpoint.st + "\n" + 
+	Copyright.st + "\n" + 
+	Loading.st + "\n" + 
+	SignIn.st + "\n" + 
+	SignOut.st + "\n" + 
+	StoreComponent.st + "\n" + 
 	IndexJS.st + "\n" + 
+	ListErrors.st + "\n" + 
 	LoginForm.st + "\n" + 
 	LogoutForm.st + "\n" + 
 	NavigationBar.st + "\n" + 
 	SimpleMenu.st + "\n" + 
+	Status.st + "\n" + 
+	Usecase.st + "\n" + 
 	UserMenu.st + "\n" + 
-	ArrowFunction.st + "\n" + 
+	WebVerticle.st + "\n" + 
+	RouteHandler.st + "\n" + 
+	SendEventBusAction.st + "\n" + 
 	BlockStmt.st + "\n" + 
+	Conditional.st + "\n" + 
 	Decorator.st + "\n" + 
 	ExpressionStmt.st + "\n" + 
+	ArrowFunction.st + "\n" + 
 	Function.st + "\n" + 
+	FunctionExpression.st + "\n" + 
 	If.st + "\n" + 
 	IndexHtml.st + "\n" + 
 	Inject.st + "\n" + 
@@ -35,6 +48,7 @@ public class JavaScriptST {
 	Prop.st + "\n" + 
 	ReturnStatement.st + "\n" + 
 	State.st + "\n" + 
+	CenteredGrid.st + "\n" + 
 	GlobalStyle.st + "\n" + 
 	MenuItem.st + "\n" + 
 	Style.st + "\n" + 
@@ -101,8 +115,32 @@ public class JavaScriptST {
 		return new AgentEndpoint(stGroup);
 	} 
 
+	public static Copyright newCopyright() {
+		return new Copyright(stGroup);
+	} 
+
+	public static Loading newLoading() {
+		return new Loading(stGroup);
+	} 
+
+	public static SignIn newSignIn() {
+		return new SignIn(stGroup);
+	} 
+
+	public static SignOut newSignOut() {
+		return new SignOut(stGroup);
+	} 
+
+	public static StoreComponent newStoreComponent() {
+		return new StoreComponent(stGroup);
+	} 
+
 	public static IndexJS newIndexJS() {
 		return new IndexJS(stGroup);
+	} 
+
+	public static ListErrors newListErrors() {
+		return new ListErrors(stGroup);
 	} 
 
 	public static LoginForm newLoginForm() {
@@ -121,16 +159,36 @@ public class JavaScriptST {
 		return new SimpleMenu(stGroup);
 	} 
 
+	public static Status newStatus() {
+		return new Status(stGroup);
+	} 
+
+	public static Usecase newUsecase() {
+		return new Usecase(stGroup);
+	} 
+
 	public static UserMenu newUserMenu() {
 		return new UserMenu(stGroup);
 	} 
 
-	public static ArrowFunction newArrowFunction() {
-		return new ArrowFunction(stGroup);
+	public static WebVerticle newWebVerticle() {
+		return new WebVerticle(stGroup);
+	} 
+
+	public static RouteHandler newRouteHandler() {
+		return new RouteHandler(stGroup);
+	} 
+
+	public static SendEventBusAction newSendEventBusAction() {
+		return new SendEventBusAction(stGroup);
 	} 
 
 	public static BlockStmt newBlockStmt() {
 		return new BlockStmt(stGroup);
+	} 
+
+	public static Conditional newConditional() {
+		return new Conditional(stGroup);
 	} 
 
 	public static Decorator newDecorator() {
@@ -141,8 +199,16 @@ public class JavaScriptST {
 		return new ExpressionStmt(stGroup);
 	} 
 
+	public static ArrowFunction newArrowFunction() {
+		return new ArrowFunction(stGroup);
+	} 
+
 	public static Function newFunction() {
 		return new Function(stGroup);
+	} 
+
+	public static FunctionExpression newFunctionExpression() {
+		return new FunctionExpression(stGroup);
 	} 
 
 	public static If newIf() {
@@ -203,6 +269,10 @@ public class JavaScriptST {
 
 	public static State newState() {
 		return new State(stGroup);
+	} 
+
+	public static CenteredGrid newCenteredGrid() {
+		return new CenteredGrid(stGroup);
 	} 
 
 	public static GlobalStyle newGlobalStyle() {

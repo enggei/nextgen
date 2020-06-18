@@ -5,7 +5,6 @@ public class App {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private String _footerName;
 	private java.util.List<String> _stores = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _routes = new java.util.ArrayList<>();
 
@@ -16,33 +15,11 @@ public class App {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("App");
-		st.add("footerName", _footerName);
 		for (Object o : _stores) st.add("stores", o);
 		for (java.util.Map<String, Object> map : _routes) st.addAggr("routes.{component,filename,path}", map.get("component"), map.get("filename"), map.get("path"));
 		return st.render().trim();
 	}
 
-	public App setFooterName(String value) {
-		this._footerName = value;
-		return this;
-	}
-
-	public String getFooterName() {
-		return this._footerName;
-	}
-
-	public String getFooterName(String defaultValue) {
-		return this._footerName == null ? defaultValue : this._footerName;
-	}
-
-	public boolean hasFooterName() {
-		return this._footerName != null;
-	}
-
-	public App removeFooterName() {
-		this._footerName = null;
-		return this;
-	} 
 
 	public App addStores(String value) {
 		this._stores.add(value);
@@ -139,64 +116,60 @@ public class App {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "App(routes,stores,footerName) ::= <<import React, { Component } from 'react';\n" + 
+	static final String st = "App(routes,stores) ::= <<import React, { Component } from 'react';\n" + 
 				"import { Switch, Route, withRouter } from 'react-router-dom';\n" + 
 				"\n" + 
 				"import { Provider } from 'mobx-react';\n" + 
 				"import { inject, observer } from 'mobx-react';\n" + 
 				"\n" + 
-				"import CssBaseline from '@material-ui/core/CssBaseline';\n" + 
+				"~routes:{it|import ~it.component~ from './pages/~it.filename~';};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"import NavigationBar from './components/NavigationBar.js';\n" + 
-				"import LoginForm from './components/LoginForm.js';\n" + 
-				"import LogoutForm from './components/LogoutForm.js';\n" + 
+				"import LoginForm from './pages/LoginForm.js';\n" + 
+				"import LogoutForm from './pages/LogoutForm.js';\n" + 
 				"\n" + 
-				"~routes:{it|import ~it.component~ from './components/~it.filename~';};separator=\"\\n\"~\n" + 
+				"import CssBaseline from '@material-ui/core/CssBaseline';\n" + 
+				"import { ThemeProvider } from '@material-ui/styles';\n" + 
+				"import { createMuiTheme } from '@material-ui/core/styles';\n" + 
+				"\n" + 
+				"// https://in-your-saas.github.io/material-ui-theme-editor/\n" + 
+				"const theme = createMuiTheme({\"palette\":{\"common\":{\"black\":\"#000\",\"white\":\"#fff\"},\"background\":{\"paper\":\"#fff\",\"default\":\"#fafafa\"},\"primary\":{\"light\":\"rgba(255, 255, 255, 1)\",\"main\":\"rgba(22, 22, 23, 1)\",\"dark\":\"rgba(74, 74, 74, 1)\",\"contrastText\":\"#fff\"},\"secondary\":{\"light\":\"#ff4081\",\"main\":\"rgba(245, 166, 35, 1)\",\"dark\":\"#c51162\",\"contrastText\":\"#fff\"},\"error\":{\"light\":\"#e57373\",\"main\":\"#f44336\",\"dark\":\"#d32f2f\",\"contrastText\":\"#fff\"},\"text\":{\"primary\":\"rgba(0, 0, 0, 0.87)\",\"secondary\":\"rgba(0, 0, 0, 0.54)\",\"disabled\":\"rgba(0, 0, 0, 0.38)\",\"hint\":\"rgba(0, 0, 0, 0.38)\"}}});\n" + 
 				"\n" + 
 				"@inject(~stores:{it|'~it~'};separator=\", \"~)\n" + 
 				"@withRouter\n" + 
 				"@observer\n" + 
 				"class App extends Component {\n" + 
 				"\n" + 
-				"    constructor(props) {\n" + 
-				"        super(props);\n" + 
-				"        if (!this.props.appStore.token) {\n" + 
-				"            this.props.appStore.setAppLoaded();\n" + 
-				"        }\n" + 
-				"    }\n" + 
+				"	constructor(props) {\n" + 
+				"		super(props);\n" + 
+				"		\n" + 
+				"		if (!this.props.appStore.token) \n" + 
+				"			this.props.appStore.setAppLoaded();\n" + 
+				"		\n" + 
+				"	}\n" + 
 				"\n" + 
 				"	componentDidMount() {\n" + 
-				"		if (this.props.appStore.token) {\n" + 
+				"		\n" + 
+				"		if (this.props.appStore.token) \n" + 
 				"			this.props.userStore.pullUser().finally(() => this.props.appStore.setAppLoaded());\n" + 
-				"		}\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	render() {\n" + 
 				"\n" + 
-				"	    if (this.props.appStore.appLoaded) {\n" + 
-				"            return (\n" + 
-				"                <div>\n" + 
-				"                    <div>\n" + 
-				"                        <NavigationBar></NavigationBar>\n" + 
-				"                  </div>\n" + 
-				"                    <Switch>\n" + 
-				"                        <Route path=\"/login\" component={LoginForm} />\n" + 
-				"                        <Route path=\"/logout\" component={LogoutForm} />\n" + 
-				"                        ~routes:{it|<Route path=\"/~it.path~\" component={~it.component~\\} />};separator=\"\\n\"~\n" + 
-				"                    </Switch>\n" + 
-				"                </div>\n" + 
-				"            );\n" + 
-				"        }\n" + 
-				"\n" + 
-				"		return (\n" + 
-				"            <React.Fragment>\n" + 
-				"                  <CssBaseline />\n" + 
-				"                  <NavigationBar />\n" + 
-				"                    <footer className=\"footer\">\n" + 
-				"                        &copy; Copyright <span>{(new Date().getFullYear())}</span> ~footerName~\n" + 
-				"                    </footer>\n" + 
-				"            </React.Fragment>\n" + 
-				"			);\n" + 
+				"		if (this.props.appStore.appLoaded) {\n" + 
+				"			return (\n" + 
+				"				<ThemeProvider theme={theme}>\n" + 
+				"					<CssBaseline />\n" + 
+				"					<div>\n" + 
+				"						<NavigationBar></NavigationBar>\n" + 
+				"					</div>\n" + 
+				"					<Switch>\n" + 
+				"						<Route path=\"/login\" component={LoginForm} />\n" + 
+				"						<Route path=\"/logout\" component={LogoutForm} />\n" + 
+				"						~routes:{it|<Route path=\"/~it.path~\" component={~it.component~\\} />};separator=\"\\n\"~\n" + 
+				"					</Switch>\n" + 
+				"				</ThemeProvider>);\n" + 
+				"		} else return null;\n" + 
 				"	}\n" + 
 				"}\n" + 
 				"\n" + 

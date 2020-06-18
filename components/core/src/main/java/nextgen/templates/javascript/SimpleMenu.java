@@ -145,39 +145,37 @@ public class SimpleMenu {
 				"\n" + 
 				"export default function SimpleMenu(props) {\n" + 
 				"\n" + 
-				"  const [anchorEl, setAnchorEl] = React.useState(null);\n" + 
+				"	const [anchorEl, setAnchorEl] = React.useState(null);\n" + 
 				"\n" + 
-				"  function handleClick(event) {\n" + 
-				"    setAnchorEl(event.currentTarget);\n" + 
-				"  }\n" + 
+				"	function handleClick(event) {\n" + 
+				"		setAnchorEl(event.currentTarget);\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	function handleClose() {\n" + 
+				"		setAnchorEl(null);\n" + 
+				"	}\n" + 
 				"\n" + 
-				"  function handleClose() {\n" + 
-				"    setAnchorEl(null);\n" + 
-				"  }\n" + 
-				"\n" + 
-				"    if (!props.currentUser)  {\n" + 
-				"        return (\n" + 
-				"            <div>\n" + 
-				"                <IconButton edge=\"start\" color=\"inherit\" aria-label=\"Menu\" onClick={handleClick}>\n" + 
-				"                    <MenuIcon />\n" + 
-				"                </IconButton>\n" + 
-				"                <Menu id=\"simple-menu\" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>\n" + 
-				"                    <MenuItem component={ LoginLink } onClick={handleClose}>Login</MenuItem>\n" + 
-				"                </Menu>\n" + 
-				"            </div>);\n" + 
-				"    	}\n" + 
-				"\n" + 
-				"    else {\n" + 
-				"         return (\n" + 
-				"                <div>\n" + 
-				"                    <IconButton edge=\"start\" color=\"inherit\" aria-label=\"Menu\" onClick={handleClick}>\n" + 
-				"                        <MenuIcon />\n" + 
-				"                    </IconButton>\n" + 
-				"                    <Menu id=\"simple-menu\" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>\n" + 
-				"                       ~menuItems:{it|~it.element~};separator=\"\\n\"~\n" + 
-				"                       ~menuComponents:{it|~it~};separator=\"\\n\"~\n" + 
-				"                    </Menu>\n" + 
-				"                </div>);\n" + 
-				"        }\n" + 
+				"	if (!props.currentUser)  {\n" + 
+				"		return (\n" + 
+				"				<div>\n" + 
+				"					<IconButton edge=\"start\" color=\"inherit\" aria-label=\"Menu\" onClick={handleClick}>\n" + 
+				"						<MenuIcon />\n" + 
+				"					</IconButton>\n" + 
+				"					<Menu id=\"simple-menu\" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>\n" + 
+				"						<MenuItem component={ LoginLink } onClick={handleClose}>Login</MenuItem>\n" + 
+				"					</Menu>\n" + 
+				"				</div>);\n" + 
+				"	} else {\n" + 
+				"		return (\n" + 
+				"			<div>\n" + 
+				"				<IconButton edge=\"start\" color=\"inherit\" aria-label=\"Menu\" onClick={handleClick}>\n" + 
+				"					<MenuIcon />\n" + 
+				"				</IconButton>\n" + 
+				"				<Menu id=\"simple-menu\" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>\n" + 
+				"					~menuItems:{it|~it.element~};separator=\"\\n\"~\n" + 
+				"					~menuComponents:{it|~it~};separator=\"\\n\"~\n" + 
+				"				</Menu>\n" + 
+				"			</div>);\n" + 
+				"	}\n" + 
 				"} >>";
 } 

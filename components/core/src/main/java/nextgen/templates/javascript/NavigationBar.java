@@ -32,8 +32,7 @@ public class NavigationBar {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NavigationBar() ::= <<// dependencies:\n" + 
-				"import React from 'react';\n" + 
+	static final String st = "NavigationBar() ::= <<import React from 'react';\n" + 
 				"import { Link } from 'react-router-dom';\n" + 
 				"import { inject, observer } from 'mobx-react';\n" + 
 				"\n" + 

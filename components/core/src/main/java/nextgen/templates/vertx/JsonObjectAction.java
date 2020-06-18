@@ -138,8 +138,11 @@ public class JsonObjectAction {
 				"\n" + 
 				"	final JsonObject response = new JsonObject();\n" + 
 				"	\n" + 
-				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
-				"\n" + 
-				"	message.reply(response);\n" + 
+				"	db.doInTransaction(transaction -> {\n" + 
+				"		~statements:{it|~it~};separator=\"\\n\"~\n" + 
+				"		message.reply(response);\n" + 
+				"	}, throwable -> {\n" + 
+				"		message.fail(ErrorCodes.DB_ERROR.ordinal(), throwable.getMessage());\n" + 
+				"	});\n" + 
 				"} >>";
 } 

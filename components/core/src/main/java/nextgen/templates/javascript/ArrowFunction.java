@@ -116,7 +116,7 @@ public class ArrowFunction {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ArrowFunction(params,expression,statements) ::= <<(~params:{it|~it~};separator=\",\"~) => ~if(expression)~~expression~~endif~~if(statements)~{\n" + 
-				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
-				"}~endif~ >>";
+	static final String st = "ArrowFunction(params,expression,statements) ::= <<(~params:{it|~it~};separator=\",\"~) => ~if(expression)~~expression~~else~{\n" + 
+				"		~statements:{it|~it~};separator=\"\\n\"~ \n" + 
+				"	}~endif~ >>";
 } 

@@ -109,7 +109,7 @@ public class WebpackConfig {
 				"	entry: { \n" + 
 				"		main: '.~mainEntry~' \n" + 
 				"	},\n" + 
-				"	mode: '~if(mode)~~mode~~else~production~endif~'\n" + 
+				"	mode: '~if(mode)~~mode~~else~production~endif~',\n" + 
 				"	output: {\n" + 
 				"		path: __dirname,\n" + 
 				"		filename: '~outputFilename~'\n" + 
