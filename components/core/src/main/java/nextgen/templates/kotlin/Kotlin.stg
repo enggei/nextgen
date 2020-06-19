@@ -16,6 +16,12 @@ CastExpression(expression,type) ::= <<~expression~ as ~type~  >>
 
 FunctionCallExpression(scope,functionName,arguments) ::= <<~if(scope)~~scope~.~endif~~functionName~(~arguments:{it|~it~};separator=", "~)  >>
 
+ThisExpression(value) ::= <<this.~value~  >>
+
+ConstructorCallExpression(className,params) ::= <<~className~(~params:{it|~it~};separator=", "~)  >>
+
+FunctionCallParamExpression(fieldName,expression) ::= <<~fieldName~ = ~expression~  >>
+
 Grammar() ::= << >>
 
 Declarations() ::= << >>
@@ -26,7 +32,7 @@ AnnotationParam(param) ::= <<~param:{it|~it.key~ = ~it.value~};separator=", "~ >
 
 PackageDeclaration(name) ::= <<package ~name~ >>
 
-ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,overrideEquals,overrideHashCode,members) ::= <<~annotations~~if(annotations)~
+ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,overrideEquals,overrideHashCode,overrideToString,members) ::= <<~annotations~~if(annotations)~
 ~endif~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(
 	~fields:{it|~it~};separator=",\n"~
 )~if(extends)~: ~extends:{it|~it~};separator=", "~~endif~ {
@@ -36,6 +42,10 @@ ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,overrideEqual
 	~endif~
 
 	~if(overrideHashCode)~~overrideHashCode~
+
+	~endif~
+
+	~if(overrideToString)~~overrideToString~
 
 	~endif~
 
@@ -53,14 +63,23 @@ OverrideHashCode() ::= <<override fun hashCode(): Int {
 	TODO("not implemented")
 }  >>
 
+OverrideToString(className,fields) ::= <<override fun toString(): String {
+	return "~className~(~fields:{it|~it~='$~it~'};separator=", "~)"
+}  >>
+
 FieldDeclaration(annotations,isMutable,isNonMember,name,type,isNullable,initializer) ::= <<~annotations:{it|~it~};separator="\n"~
 ~if(isMutable)~var ~elseif(isNonMember)~~else~val ~endif~~name~: ~type~~if(isNullable)~?~endif~~if(initializer)~ = ~initializer~~endif~ >>
 
 Extending(className,params) ::= <<~className~(~params:{it|~it.name~};separator=", "~) >>
 
-FunctionDeclaration(annotations,override,name,returnType) ::= <<~annotations~~if(override)~override ~endif~fun ~name~(): ~returnType~ {
-	// TODO: Expression body / expression statememt
-} >>
+FunctionDeclaration(annotations,override,name,params,returnType,expressionBody,statements) ::= <<~annotations~~if(override)~override ~endif~fun ~name~(~params:{it|~it~};separator=", "~): ~returnType~~if(expressionBody)~ =
+	~expressionBody~~else~ {
+	~statements~
+}~endif~  >>
+
+FunctionParam(name,typeDeclaration,defaultValue) ::= <<~name~: ~typeDeclaration~~if(defaultValue)~ = ~defaultValue~~endif~  >>
+
+Statements() ::= << >>
 
 Initializers() ::= << >>
 
@@ -75,6 +94,10 @@ MapInitializer(kvpairs) ::= <<mapOf(~kvpairs:{it|~it.key~ to ~it.value~};separat
 NullInitializer() ::= <<null  >>
 
 ExpressionInitializer(expression) ::= <<~expression~  >>
+
+KotlinFile(packageDeclaration,compilationUnit) ::= <<~packageDeclaration~
+
+~compilationUnit:{it|~it~};separator="\n\n"~  >>
 
 KotlinTypes() ::= << >>
 

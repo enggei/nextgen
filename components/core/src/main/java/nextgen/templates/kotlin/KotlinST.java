@@ -7,17 +7,22 @@ public class KotlinST {
 	"gt() ::= \">\"\n" +
 	Poko.st + "\n" + 
 	CastExpression.st + "\n" + 
+	ConstructorCallExpression.st + "\n" + 
 	FunctionCallExpression.st + "\n" + 
+	FunctionCallParamExpression.st + "\n" + 
 	NullExpression.st + "\n" + 
+	ThisExpression.st + "\n" + 
 	VarExpression.st + "\n" + 
 	AnnotationDeclaration.st + "\n" + 
 	AnnotationParam.st + "\n" + 
 	ClassDeclaration.st + "\n" + 
 	OverrideEquals.st + "\n" + 
 	OverrideHashCode.st + "\n" + 
+	OverrideToString.st + "\n" + 
 	Extending.st + "\n" + 
 	FieldDeclaration.st + "\n" + 
 	FunctionDeclaration.st + "\n" + 
+	FunctionParam.st + "\n" + 
 	PackageDeclaration.st + "\n" + 
 	ArrayInitializer.st + "\n" + 
 	EmptyArrayInitializer.st + "\n" + 
@@ -25,6 +30,7 @@ public class KotlinST {
 	ListInitializer.st + "\n" + 
 	MapInitializer.st + "\n" + 
 	NullInitializer.st + "\n" + 
+	KotlinFile.st + "\n" + 
 	ArrayType.st + "\n" + 
 	ListType.st + "\n" + 
 	MapType.st + "\n" + 
@@ -72,12 +78,24 @@ public class KotlinST {
 		return new CastExpression(stGroup);
 	} 
 
+	public static ConstructorCallExpression newConstructorCallExpression() {
+		return new ConstructorCallExpression(stGroup);
+	} 
+
 	public static FunctionCallExpression newFunctionCallExpression() {
 		return new FunctionCallExpression(stGroup);
 	} 
 
+	public static FunctionCallParamExpression newFunctionCallParamExpression() {
+		return new FunctionCallParamExpression(stGroup);
+	} 
+
 	public static NullExpression newNullExpression() {
 		return new NullExpression(stGroup);
+	} 
+
+	public static ThisExpression newThisExpression() {
+		return new ThisExpression(stGroup);
 	} 
 
 	public static VarExpression newVarExpression() {
@@ -104,6 +122,10 @@ public class KotlinST {
 		return new OverrideHashCode(stGroup);
 	} 
 
+	public static OverrideToString newOverrideToString() {
+		return new OverrideToString(stGroup);
+	} 
+
 	public static Extending newExtending() {
 		return new Extending(stGroup);
 	} 
@@ -114,6 +136,10 @@ public class KotlinST {
 
 	public static FunctionDeclaration newFunctionDeclaration() {
 		return new FunctionDeclaration(stGroup);
+	} 
+
+	public static FunctionParam newFunctionParam() {
+		return new FunctionParam(stGroup);
 	} 
 
 	public static PackageDeclaration newPackageDeclaration() {
@@ -142,6 +168,10 @@ public class KotlinST {
 
 	public static NullInitializer newNullInitializer() {
 		return new NullInitializer(stGroup);
+	} 
+
+	public static KotlinFile newKotlinFile() {
+		return new KotlinFile(stGroup);
 	} 
 
 	public static ArrayType newArrayType() {

@@ -62,52 +62,57 @@
       }, {
         "uuid" : "f05c4cbf-3b7e-4156-9906-99ae7e7c47a6",
         "name" : "ClassDeclaration",
-        "text" : "~annotations~~if(annotations)~\n~endif~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n\t~fields:{it|~it~};separator=\",\\n\"~\n)~if(extends)~: ~extends:{it|~it~};separator=\", \"~~endif~ {\n\n\t~if(overrideEquals)~~overrideEquals~\n\n\t~endif~\n\n\t~if(overrideHashCode)~~overrideHashCode~\n\n\t~endif~\n\n\t~members:{it|~it~};separator=\"\\n\"~\n} ",
+        "text" : "~annotations~~if(annotations)~\n~endif~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n\t~fields:{it|~it~};separator=\",\\n\"~\n)~if(extends)~: ~extends:{it|~it~};separator=\", \"~~endif~ {\n\n\t~if(overrideEquals)~~overrideEquals~\n\n\t~endif~\n\n\t~if(overrideHashCode)~~overrideHashCode~\n\n\t~endif~\n\n\t~if(overrideToString)~~overrideToString~\n\n\t~endif~\n\n\t~members:{it|~it~};separator=\"\\n\"~\n} ",
         "parameters" : [ {
-          "uuid" : "900924f2-df24-4e12-8c73-8f2929fb7776",
+          "uuid" : "d8e4a9a8-1804-462d-ab96-b0410e9aa82e",
           "name" : "annotations",
           "type" : "SINGLE",
           "argumentType" : "java.util.Collection<AnnotationDeclaration>"
         }, {
-          "uuid" : "1c8996a4-9b49-458a-8f0c-012d85e75bd6",
+          "uuid" : "d5a81a72-7967-49bd-aa73-2902fbf553de",
           "name" : "isOpen",
           "type" : "SINGLE",
           "argumentType" : "Boolean"
         }, {
-          "uuid" : "dbf84b5c-6161-420c-a8f4-952a19e48e3e",
+          "uuid" : "2dcc7bce-7bd8-401b-9998-35f96a2f0f8b",
           "name" : "isAbstract",
           "type" : "SINGLE",
           "argumentType" : "Boolean"
         }, {
-          "uuid" : "332a76cc-7b1e-43e0-8b2a-aa6dae23fa94",
+          "uuid" : "12b687d2-a83f-47b1-b60a-86610135b88d",
           "name" : "name",
           "type" : "SINGLE",
           "argumentType" : "String"
         }, {
-          "uuid" : "ec75e142-092d-4497-b1dd-5d1cc6daf52c",
+          "uuid" : "b5d5e002-3e3d-4beb-9961-1634e7ed311a",
           "name" : "fields",
           "type" : "LIST",
-          "argumentType" : "Object"
+          "argumentType" : "java.util.Collection<FieldDeclaration>"
         }, {
-          "uuid" : "118e37d5-2491-4e4d-84e2-ab103414d5e3",
+          "uuid" : "456133af-4ad9-477b-ad00-7e8b74dde48f",
           "name" : "extends",
           "type" : "LIST",
-          "argumentType" : "Object"
+          "argumentType" : "java.util.Collection<Extending>"
         }, {
-          "uuid" : "7c503c75-ef57-41af-aee6-1a4d0bb33e5c",
+          "uuid" : "29fbd809-843b-4d89-bce7-129bbec04ac0",
           "name" : "overrideEquals",
           "type" : "SINGLE",
           "argumentType" : "OverrideEquals"
         }, {
-          "uuid" : "a3ed64ae-f624-461f-879b-688184fe7e08",
+          "uuid" : "de7455dc-497f-4a45-9b2b-c7d7c5d05c5a",
           "name" : "overrideHashCode",
           "type" : "SINGLE",
           "argumentType" : "OverrideHashCode"
         }, {
-          "uuid" : "baf1a3af-6dc9-4ffc-9b81-96a2d456f34f",
+          "uuid" : "054d9c74-05ca-4785-871e-fd5dba06d4d8",
+          "name" : "overrideToString",
+          "type" : "SINGLE",
+          "argumentType" : "OverrideToString"
+        }, {
+          "uuid" : "d4697cf5-af07-4d26-a8ad-f724692d0b34",
           "name" : "members",
           "type" : "LIST",
-          "argumentType" : "Object"
+          "argumentType" : "java.util.Collection<FunctionDeclaration>"
         } ],
         "children" : [ {
           "uuid" : "ac119cc9-31e2-48b0-822c-4fb713f7cbd4",
@@ -129,7 +134,23 @@
           "name" : "OverrideHashCode",
           "text" : "override fun hashCode(): Int {\n\tTODO(\"not implemented\")\n} ",
           "parameters" : [ ]
-        } ]
+        }, {
+          "uuid" : "91608716-9aa7-41e5-958a-bdce665fd59f",
+          "name" : "OverrideToString",
+          "text" : "override fun toString(): String {\n\treturn \"~className~(~fields:{it|~it~='$~it~'};separator=\", \"~)\"\n} ",
+          "parameters" : [ {
+            "uuid" : "fab75e4e-e2ee-46fe-bf07-17c263fa5ba5",
+            "name" : "className",
+            "type" : "SINGLE",
+            "argumentType" : "String"
+          }, {
+            "uuid" : "7b1fa60b-9ed4-438f-8adf-25fb89a779de",
+            "name" : "fields",
+            "type" : "LIST",
+            "argumentType" : "String"
+          } ]
+        } ],
+        "implements" : [ "CompilationUnit" ]
       }, {
         "uuid" : "653bb737-c5cb-401f-939f-6359a97fd7d6",
         "name" : "FieldDeclaration",
@@ -193,29 +214,70 @@
       }, {
         "uuid" : "927474a1-3d34-4a60-83ca-5025dbd47a19",
         "name" : "FunctionDeclaration",
-        "text" : "~annotations~~if(override)~override ~endif~fun ~name~(): ~returnType~ {\n\t// TODO: Expression body / expression statememt\n}",
+        "text" : "~annotations~~if(override)~override ~endif~fun ~name~(~params:{it|~it~};separator=\", \"~): ~returnType~~if(expressionBody)~ =\n\t~expressionBody~~else~ {\n\t~statements~\n}~endif~ ",
         "parameters" : [ {
-          "uuid" : "13e3efe8-271a-4191-a06c-681a3ab1687e",
+          "uuid" : "0260f194-a1a3-4f68-a26e-c6227e7d9f5e",
           "name" : "annotations",
           "type" : "SINGLE",
-          "argumentType" : "Object"
+          "argumentType" : "java.util.Collection<AnnotationDeclaration>"
         }, {
-          "uuid" : "88c088ca-571a-4928-896c-2068e3aa1759",
+          "uuid" : "c9c8a32b-2cfe-4904-83c2-e9d4825d054e",
           "name" : "override",
           "type" : "SINGLE",
-          "argumentType" : "Object"
+          "argumentType" : "Boolean"
         }, {
-          "uuid" : "5e1d1dab-3595-467a-903b-45a4e90688c6",
+          "uuid" : "83321b86-ac78-4d09-a3f4-f9144436a38b",
           "name" : "name",
           "type" : "SINGLE",
-          "argumentType" : "Object"
+          "argumentType" : "String"
         }, {
-          "uuid" : "3657c2a5-bbfc-4446-ad2e-62bc4c81cd01",
+          "uuid" : "c15b8c35-4f43-4e65-a568-f2e96777b217",
+          "name" : "params",
+          "type" : "LIST",
+          "argumentType" : "FunctionParam"
+        }, {
+          "uuid" : "b6267266-54d6-4f91-bf17-0ae5b76f8247",
           "name" : "returnType",
           "type" : "SINGLE",
+          "argumentType" : "TypeDeclaration"
+        }, {
+          "uuid" : "0d1a2056-12d0-43aa-aa50-fb1d76c2b0c9",
+          "name" : "expressionBody",
+          "type" : "SINGLE",
+          "argumentType" : "Expression"
+        }, {
+          "uuid" : "5b92c8e7-b383-4b77-a6a5-f1c34dd364b1",
+          "name" : "statements",
+          "type" : "SINGLE",
           "argumentType" : "Object"
+        } ],
+        "implements" : [ "CompilationUnit" ],
+        "children" : [ {
+          "uuid" : "947b0577-03a2-46c4-87f1-0fec7c5c4955",
+          "name" : "FunctionParam",
+          "text" : "~name~: ~typeDeclaration~~if(defaultValue)~ = ~defaultValue~~endif~ ",
+          "parameters" : [ {
+            "uuid" : "ad989458-dee9-45cf-95c2-f8a36a754846",
+            "name" : "name",
+            "type" : "SINGLE",
+            "argumentType" : "String"
+          }, {
+            "uuid" : "90828ebe-c268-448c-824e-9301075d1c6e",
+            "name" : "typeDeclaration",
+            "type" : "SINGLE",
+            "argumentType" : "TypeDeclaration"
+          }, {
+            "uuid" : "0a33b8ce-69f5-4e5c-b5dc-15bb1368cd28",
+            "name" : "defaultValue",
+            "type" : "SINGLE",
+            "argumentType" : "Expression"
+          } ]
         } ]
       } ]
+    }, {
+      "uuid" : "6ba51d6b-19b3-48f8-8fa1-c51fe4874579",
+      "name" : "Statements",
+      "text" : ""
     } ]
   }, {
     "uuid" : "a2cb0002-82be-44f4-8721-e50d3c09b76a",
@@ -414,6 +476,64 @@
         "type" : "LIST",
         "argumentType" : "Expression"
       } ]
+    }, {
+      "uuid" : "fdea740e-773d-4c4b-8b40-73a53e9a1222",
+      "name" : "ThisExpression",
+      "text" : "this.~value~ ",
+      "parameters" : [ {
+        "uuid" : "6170be46-96a1-440e-82fa-590423392630",
+        "name" : "value",
+        "type" : "SINGLE",
+        "argumentType" : "Expression"
+      } ],
+      "implements" : [ "Expression" ]
+    }, {
+      "uuid" : "c62a1ba2-2435-4bf2-bcce-2388512910af",
+      "name" : "ConstructorCallExpression",
+      "text" : "~className~(~params:{it|~it~};separator=\", \"~) ",
+      "implements" : [ "Expression" ],
+      "parameters" : [ {
+        "uuid" : "73eba293-65db-48c3-b73a-8e3ca56b0440",
+        "name" : "className",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "c289d647-5178-4b7a-9e9e-e000108e5c88",
+        "name" : "params",
+        "type" : "LIST",
+        "argumentType" : "java.util.Collection<FunctionCallParamExpression>"
+      } ]
+    }, {
+      "uuid" : "9adacc2f-44d8-4643-bfc7-f58d56e63daf",
+      "name" : "FunctionCallParamExpression",
+      "text" : "~fieldName~ = ~expression~ ",
+      "implements" : [ "Expression" ],
+      "parameters" : [ {
+        "uuid" : "cce67ec6-65b6-4fea-b9a1-c30c87a22bc6",
+        "name" : "fieldName",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "a8023104-596a-434d-be2e-56b6e7d96251",
+        "name" : "expression",
+        "type" : "SINGLE",
+        "argumentType" : "Expression"
+      } ]
+    } ]
+  }, {
+    "uuid" : "7f297955-618e-40d3-a441-920c4f5ec56e",
+    "name" : "KotlinFile",
+    "text" : "~packageDeclaration~\n\n~compilationUnit:{it|~it~};separator=\"\\n\\n\"~ ",
+    "parameters" : [ {
+      "uuid" : "5317a954-72ae-4cc3-9d20-c7f71cefb65d",
+      "name" : "packageDeclaration",
+      "type" : "SINGLE",
+      "argumentType" : "PackageDeclaration"
+    }, {
+      "uuid" : "ed8e41a2-6453-4fbf-bde1-f3b6c384914a",
+      "name" : "compilationUnit",
+      "type" : "LIST",
+      "argumentType" : "java.util.Collection<CompilationUnit>"
     } ]
   } ],
   "interfaces" : [ {
@@ -425,5 +545,11 @@
   }, {
     "uuid" : "0c32e514-c69f-4839-bd43-6c90855d996a",
     "name" : "Expression"
+  }, {
+    "uuid" : "69fefabc-90da-4960-abe2-985e1161d0d3",
+    "name" : "CompilationUnit"
+  }, {
+    "uuid" : "42d8dab5-3ffe-44d1-be40-65a989aa4fe6",
+    "name" : "Statement"
   } ]
 }
