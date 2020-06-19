@@ -1,14 +1,17 @@
 package nextgen.templates.kotlin;
 
-public class FunctionDeclaration {
+public class FunctionDeclaration implements CompilationUnit {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _annotations;
-	private Object _override;
-	private Object _name;
-	private Object _returnType;
+	private java.util.Collection<AnnotationDeclaration> _annotations;
+	private Boolean _override;
+	private String _name;
+	private TypeDeclaration _returnType;
+	private Expression _expressionBody;
+	private Object _statements;
+	private java.util.List<FunctionParam> _params = new java.util.ArrayList<>();
 
 	FunctionDeclaration(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -21,19 +24,22 @@ public class FunctionDeclaration {
 		st.add("override", _override);
 		st.add("name", _name);
 		st.add("returnType", _returnType);
+		st.add("expressionBody", _expressionBody);
+		st.add("statements", _statements);
+		for (Object o : _params) st.add("params", o);
 		return st.render().trim();
 	}
 
-	public FunctionDeclaration setAnnotations(Object value) {
+	public FunctionDeclaration setAnnotations(java.util.Collection<AnnotationDeclaration> value) {
 		this._annotations = value;
 		return this;
 	}
 
-	public Object getAnnotations() {
+	public java.util.Collection<AnnotationDeclaration> getAnnotations() {
 		return this._annotations;
 	}
 
-	public Object getAnnotations(Object defaultValue) {
+	public java.util.Collection<AnnotationDeclaration> getAnnotations(java.util.Collection<AnnotationDeclaration> defaultValue) {
 		return this._annotations == null ? defaultValue : this._annotations;
 	}
 
@@ -46,16 +52,16 @@ public class FunctionDeclaration {
 		return this;
 	} 
 
-	public FunctionDeclaration setOverride(Object value) {
+	public FunctionDeclaration setOverride(Boolean value) {
 		this._override = value;
 		return this;
 	}
 
-	public Object getOverride() {
+	public Boolean getOverride() {
 		return this._override;
 	}
 
-	public Object getOverride(Object defaultValue) {
+	public Boolean getOverride(Boolean defaultValue) {
 		return this._override == null ? defaultValue : this._override;
 	}
 
@@ -68,16 +74,16 @@ public class FunctionDeclaration {
 		return this;
 	} 
 
-	public FunctionDeclaration setName(Object value) {
+	public FunctionDeclaration setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Object getName(Object defaultValue) {
+	public String getName(String defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 
@@ -90,16 +96,16 @@ public class FunctionDeclaration {
 		return this;
 	} 
 
-	public FunctionDeclaration setReturnType(Object value) {
+	public FunctionDeclaration setReturnType(TypeDeclaration value) {
 		this._returnType = value;
 		return this;
 	}
 
-	public Object getReturnType() {
+	public TypeDeclaration getReturnType() {
 		return this._returnType;
 	}
 
-	public Object getReturnType(Object defaultValue) {
+	public TypeDeclaration getReturnType(TypeDeclaration defaultValue) {
 		return this._returnType == null ? defaultValue : this._returnType;
 	}
 
@@ -112,6 +118,78 @@ public class FunctionDeclaration {
 		return this;
 	} 
 
+	public FunctionDeclaration setExpressionBody(Expression value) {
+		this._expressionBody = value;
+		return this;
+	}
+
+	public Expression getExpressionBody() {
+		return this._expressionBody;
+	}
+
+	public Expression getExpressionBody(Expression defaultValue) {
+		return this._expressionBody == null ? defaultValue : this._expressionBody;
+	}
+
+	public boolean hasExpressionBody() {
+		return this._expressionBody != null;
+	}
+
+	public FunctionDeclaration removeExpressionBody() {
+		this._expressionBody = null;
+		return this;
+	} 
+
+	public FunctionDeclaration setStatements(Object value) {
+		this._statements = value;
+		return this;
+	}
+
+	public Object getStatements() {
+		return this._statements;
+	}
+
+	public Object getStatements(Object defaultValue) {
+		return this._statements == null ? defaultValue : this._statements;
+	}
+
+	public boolean hasStatements() {
+		return this._statements != null;
+	}
+
+	public FunctionDeclaration removeStatements() {
+		this._statements = null;
+		return this;
+	} 
+
+	public FunctionDeclaration addParams(FunctionParam value) {
+		this._params.add(value);
+		return this;
+	}
+
+	public FunctionDeclaration setParams(FunctionParam[] value) {
+		this._params.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public FunctionDeclaration setParams(java.util.Collection<FunctionParam> values) {
+		this._params.addAll(values);
+		return this;
+	}
+
+	public FunctionDeclaration removeParams(FunctionParam value) {
+		this._params.remove(value);
+		return this;
+	}
+
+	public FunctionDeclaration removeParams(int index) {
+		this._params.remove(index);
+		return this;
+	}
+
+	public java.util.List<FunctionParam> getParams() {
+		return this._params;
+	} 
 
 
 	@Override
@@ -127,7 +205,8 @@ public class FunctionDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "FunctionDeclaration(annotations,override,name,returnType) ::= <<~annotations~~if(override)~override ~endif~fun ~name~(): ~returnType~ {\n" + 
-				"	// TODO: Expression body / expression statememt\n" + 
-				"} >>";
+	static final String st = "FunctionDeclaration(annotations,override,name,params,returnType,expressionBody,statements) ::= <<~annotations~~if(override)~override ~endif~fun ~name~(~params:{it|~it~};separator=\", \"~): ~returnType~~if(expressionBody)~ =\n" + 
+				"	~expressionBody~~else~ {\n" + 
+				"	~statements~\n" + 
+				"}~endif~ >>";
 } 

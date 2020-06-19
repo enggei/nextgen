@@ -1,6 +1,6 @@
 package nextgen.templates.kotlin;
 
-public class ClassDeclaration {
+public class ClassDeclaration implements CompilationUnit {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -11,9 +11,10 @@ public class ClassDeclaration {
 	private String _name;
 	private OverrideEquals _overrideEquals;
 	private OverrideHashCode _overrideHashCode;
-	private java.util.List<Object> _fields = new java.util.ArrayList<>();
-	private java.util.List<Object> _extends = new java.util.ArrayList<>();
-	private java.util.List<Object> _members = new java.util.ArrayList<>();
+	private OverrideToString _overrideToString;
+	private java.util.List<java.util.Collection<FieldDeclaration>> _fields = new java.util.ArrayList<>();
+	private java.util.List<java.util.Collection<Extending>> _extends = new java.util.ArrayList<>();
+	private java.util.List<java.util.Collection<FunctionDeclaration>> _members = new java.util.ArrayList<>();
 
 	ClassDeclaration(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -28,6 +29,7 @@ public class ClassDeclaration {
 		st.add("name", _name);
 		st.add("overrideEquals", _overrideEquals);
 		st.add("overrideHashCode", _overrideHashCode);
+		st.add("overrideToString", _overrideToString);
 		for (Object o : _fields) st.add("fields", o);
 		for (Object o : _extends) st.add("extends", o);
 		for (Object o : _members) st.add("members", o);
@@ -166,22 +168,44 @@ public class ClassDeclaration {
 		return this;
 	} 
 
-	public ClassDeclaration addFields(Object value) {
+	public ClassDeclaration setOverrideToString(OverrideToString value) {
+		this._overrideToString = value;
+		return this;
+	}
+
+	public OverrideToString getOverrideToString() {
+		return this._overrideToString;
+	}
+
+	public OverrideToString getOverrideToString(OverrideToString defaultValue) {
+		return this._overrideToString == null ? defaultValue : this._overrideToString;
+	}
+
+	public boolean hasOverrideToString() {
+		return this._overrideToString != null;
+	}
+
+	public ClassDeclaration removeOverrideToString() {
+		this._overrideToString = null;
+		return this;
+	} 
+
+	public ClassDeclaration addFields(java.util.Collection<FieldDeclaration> value) {
 		this._fields.add(value);
 		return this;
 	}
 
-	public ClassDeclaration setFields(Object[] value) {
+	public ClassDeclaration setFields(java.util.Collection<FieldDeclaration>[] value) {
 		this._fields.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public ClassDeclaration setFields(java.util.Collection<Object> values) {
+	public ClassDeclaration setFields(java.util.Collection<java.util.Collection<FieldDeclaration>> values) {
 		this._fields.addAll(values);
 		return this;
 	}
 
-	public ClassDeclaration removeFields(Object value) {
+	public ClassDeclaration removeFields(java.util.Collection<FieldDeclaration> value) {
 		this._fields.remove(value);
 		return this;
 	}
@@ -191,26 +215,26 @@ public class ClassDeclaration {
 		return this;
 	}
 
-	public java.util.List<Object> getFields() {
+	public java.util.List<java.util.Collection<FieldDeclaration>> getFields() {
 		return this._fields;
 	} 
 
-	public ClassDeclaration addExtends(Object value) {
+	public ClassDeclaration addExtends(java.util.Collection<Extending> value) {
 		this._extends.add(value);
 		return this;
 	}
 
-	public ClassDeclaration setExtends(Object[] value) {
+	public ClassDeclaration setExtends(java.util.Collection<Extending>[] value) {
 		this._extends.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public ClassDeclaration setExtends(java.util.Collection<Object> values) {
+	public ClassDeclaration setExtends(java.util.Collection<java.util.Collection<Extending>> values) {
 		this._extends.addAll(values);
 		return this;
 	}
 
-	public ClassDeclaration removeExtends(Object value) {
+	public ClassDeclaration removeExtends(java.util.Collection<Extending> value) {
 		this._extends.remove(value);
 		return this;
 	}
@@ -220,26 +244,26 @@ public class ClassDeclaration {
 		return this;
 	}
 
-	public java.util.List<Object> getExtends() {
+	public java.util.List<java.util.Collection<Extending>> getExtends() {
 		return this._extends;
 	} 
 
-	public ClassDeclaration addMembers(Object value) {
+	public ClassDeclaration addMembers(java.util.Collection<FunctionDeclaration> value) {
 		this._members.add(value);
 		return this;
 	}
 
-	public ClassDeclaration setMembers(Object[] value) {
+	public ClassDeclaration setMembers(java.util.Collection<FunctionDeclaration>[] value) {
 		this._members.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public ClassDeclaration setMembers(java.util.Collection<Object> values) {
+	public ClassDeclaration setMembers(java.util.Collection<java.util.Collection<FunctionDeclaration>> values) {
 		this._members.addAll(values);
 		return this;
 	}
 
-	public ClassDeclaration removeMembers(Object value) {
+	public ClassDeclaration removeMembers(java.util.Collection<FunctionDeclaration> value) {
 		this._members.remove(value);
 		return this;
 	}
@@ -249,7 +273,7 @@ public class ClassDeclaration {
 		return this;
 	}
 
-	public java.util.List<Object> getMembers() {
+	public java.util.List<java.util.Collection<FunctionDeclaration>> getMembers() {
 		return this._members;
 	} 
 
@@ -267,7 +291,7 @@ public class ClassDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,overrideEquals,overrideHashCode,members) ::= <<~annotations~~if(annotations)~\n" + 
+	static final String st = "ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,overrideEquals,overrideHashCode,overrideToString,members) ::= <<~annotations~~if(annotations)~\n" + 
 				"~endif~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n" + 
 				"	~fields:{it|~it~};separator=\",\\n\"~\n" + 
 				")~if(extends)~: ~extends:{it|~it~};separator=\", \"~~endif~ {\n" + 
@@ -277,6 +301,10 @@ public class ClassDeclaration {
 				"	~endif~\n" + 
 				"\n" + 
 				"	~if(overrideHashCode)~~overrideHashCode~\n" + 
+				"\n" + 
+				"	~endif~\n" + 
+				"\n" + 
+				"	~if(overrideToString)~~overrideToString~\n" + 
 				"\n" + 
 				"	~endif~\n" + 
 				"\n" + 
