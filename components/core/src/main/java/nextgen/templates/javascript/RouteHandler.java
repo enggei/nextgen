@@ -87,8 +87,6 @@ public class RouteHandler {
 
 	static final String st = "routeHandler(name,statements) ::= <<private void ~name~(RoutingContext routingContext) {\n" + 
 				"	WebUtils.debug(\"~name~\", routingContext);\n" + 
-				"\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
-				"\n" + 
 				"} >>";
 } 

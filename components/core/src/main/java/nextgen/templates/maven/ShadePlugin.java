@@ -79,7 +79,7 @@ public class ShadePlugin {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "shadePlugin(packageName,className) ::= <<<!--fat-jar plugin for single-file server package-->\n" + 
+	static final String st = "shadePlugin(packageName,className) ::= <<<!-- https://maven.apache.org/plugins/maven-shade-plugin/ -->\n" + 
 				"<plugin>\n" + 
 				"	<groupId>org.apache.maven.plugins</groupId>\n" + 
 				"	<artifactId>maven-shade-plugin</artifactId>\n" + 

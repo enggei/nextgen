@@ -109,7 +109,8 @@ public class CopyPlugin {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "copyPlugin(outputDirectory,directory,include) ::= <<<plugin>\n" + 
+	static final String st = "copyPlugin(outputDirectory,directory,include) ::= <<<!-- https://maven.apache.org/plugins/maven-resources-plugin/ -->\n" + 
+				"<plugin>\n" + 
 				"	<artifactId>maven-resources-plugin</artifactId>\n" + 
 				"	<version>3.1.0</version>\n" + 
 				"	<executions>\n" + 

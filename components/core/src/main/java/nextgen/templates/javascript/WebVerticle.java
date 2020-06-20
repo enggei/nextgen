@@ -147,6 +147,7 @@ public class WebVerticle {
 				"import com.securityx.web.domain.*;\n" + 
 				"import io.vertx.core.AbstractVerticle;\n" + 
 				"import io.vertx.core.Future;\n" + 
+				"import io.vertx.core.Vertx;\n" + 
 				"import io.vertx.core.eventbus.DeliveryOptions;\n" + 
 				"import io.vertx.core.http.HttpServerOptions;\n" + 
 				"import io.vertx.core.json.JsonArray;\n" + 
@@ -202,8 +203,7 @@ public class WebVerticle {
 				"		router.route(\"/api/*\").handler(JWTAuthHandler.create(auth, \"/login\"));\n" + 
 				"		router.get(\"/user\").handler(routingContext -> getUser(routingContext, config));\n" + 
 				"		~routes:{it|router.~it.action~(\"/api/~it.url~\").handler(this::~it.methodName~);};separator=\"\\n\"~\n" + 
-				"		\n" + 
-				"		final HttpServerOptions serverOptions = new HttpServerOptions();\n" + 
+				"				final HttpServerOptions serverOptions = new HttpServerOptions();\n" + 
 				"		ssl.ifPresent(sslConfig ->\n" + 
 				"					serverOptions\n" + 
 				"								.setSsl(true)\n" + 
@@ -292,5 +292,14 @@ public class WebVerticle {
 				"\n" + 
 				"	~routes:{it|~it.declaration~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
+				"	private static void getFromDomainDB(Vertx vertx, RoutingContext routingContext, String action, JsonObject params) {\n" + 
+				"		vertx.eventBus().request(\"domain.db\", params, new DeliveryOptions().addHeader(\"action\", action), reply -> {\n" + 
+				"			if (reply.succeeded()) {\n" + 
+				"				sendResponse(routingContext, OK, (JsonObject) reply.result().body());\n" + 
+				"			} else {\n" + 
+				"				sendErrors(routingContext, INTERNAL_SERVER_ERROR,	\"Server Error\");\n" + 
+				"			}\n" + 
+				"		});\n" + 
+				"	}\n" + 
 				"} >>";
 } 

@@ -176,19 +176,19 @@
     "children" : [ {
       "uuid" : "6c40ef07-6e2d-4fbe-89e3-49248b434503",
       "name" : "frontEndMavenPlugin",
-      "text" : "<!--npm plugin-->\n<plugin>\n    <groupId>com.github.eirslett</groupId>\n    <artifactId>frontend-maven-plugin</artifactId>\n    <version>~if(pluginVersion)~~pluginVersion~~else~1.10.0~endif~</version>\n    <configuration>\n        <installDirectory>~if(installDirectory)~~installDirectory~~else~target~endif~</installDirectory>\n        <nodeVersion>v~nodeVersion~</nodeVersion>\n    </configuration>\n    <executions>\n        <execution>\n            <id>install node and npm</id>\n            <goals>\n                <goal>install-node-and-npm</goal>\n            </goals>\n        </execution>\n        <execution>\n            <id>npm install</id>\n            <goals>\n                <goal>npm</goal>\n            </goals>\n            <configuration>\n                <arguments>install</arguments>\n            </configuration>\n        </execution>\n        <execution>\n            <id>webpack build</id>\n            <goals>\n                <goal>webpack</goal>\n            </goals>\n        </execution>\n    </executions>\n</plugin~gt()~",
+      "text" : "<!-- https://github.com/eirslett/frontend-maven-plugin -->\n<plugin>\n    <groupId>com.github.eirslett</groupId>\n    <artifactId>frontend-maven-plugin</artifactId>\n    <version>~if(pluginVersion)~~pluginVersion~~else~1.10.0~endif~</version>\n    <configuration>\n        <installDirectory>~if(installDirectory)~~installDirectory~~else~target~endif~</installDirectory>\n        <nodeVersion>v~nodeVersion~</nodeVersion>\n    </configuration>\n    <executions>\n        <execution>\n            <id>install node and npm</id>\n            <goals>\n                <goal>install-node-and-npm</goal>\n            </goals>\n        </execution>\n        <execution>\n            <id>npm install</id>\n            <goals>\n                <goal>npm</goal>\n            </goals>\n            <configuration>\n                <arguments>install</arguments>\n            </configuration>\n        </execution>\n        <execution>\n            <id>webpack build</id>\n            <goals>\n                <goal>webpack</goal>\n            </goals>\n        </execution>\n    </executions>\n</plugin~gt()~ ",
       "parameters" : [ {
-        "uuid" : "5891705b-46b2-47c7-8210-9d0d26e65c96",
+        "uuid" : "fa79c412-d0ac-414a-8936-07696c4f55ac",
         "name" : "pluginVersion",
         "type" : "SINGLE",
         "argumentType" : "Object"
       }, {
-        "uuid" : "b7fd3c2e-bcda-4b58-a213-eb43140239ea",
+        "uuid" : "0797dfc6-ba80-4be0-9ee2-2c904b2fd915",
         "name" : "installDirectory",
         "type" : "SINGLE",
         "argumentType" : "Object"
       }, {
-        "uuid" : "59d45e89-6cff-4296-84f1-7fb3b01b5283",
+        "uuid" : "4e468b7f-da83-43a1-8a74-259556f1509d",
         "name" : "nodeVersion",
         "type" : "SINGLE",
         "argumentType" : "Object"
@@ -196,15 +196,17 @@
     }, {
       "uuid" : "e2949dab-710d-40d6-86ac-8f08b63ca5ce",
       "name" : "shadePlugin",
-      "text" : "<!--fat-jar plugin for single-file server package-->\r\n<plugin>\r\n\t<groupId>org.apache.maven.plugins</groupId>\r\n\t<artifactId>maven-shade-plugin</artifactId>\r\n\t<version>2.4.3</version>\r\n\t<executions>\r\n\t\t<execution>\r\n\t\t\t<phase>package</phase>\r\n\t\t\t<goals>\r\n\t\t\t\t<goal>shade</goal>\r\n\t\t\t</goals>\r\n\t\t\t<configuration>\r\n\t\t\t\t<filters>\r\n\t\t\t\t\t<filter>\r\n\t\t\t\t\t\t<artifact>*:*</artifact>\r\n\t\t\t\t\t\t<excludes>\r\n\t\t\t\t\t\t\t<exclude>META-INF/*.SF</exclude>\r\n\t\t\t\t\t\t\t<exclude>META-INF/*.DSA</exclude>\r\n\t\t\t\t\t\t\t<exclude>META-INF/*.RSA</exclude>\r\n\t\t\t\t\t\t</excludes>\r\n\t\t\t\t\t</filter>\r\n\t\t\t\t</filters>\r\n\t\t\t\t<transformers>\r\n\t\t\t\t\t<transformer implementation=\"org.apache.maven.plugins.shade.resource.ServicesResourceTransformer\"/>\r\n\t\t\t\t\t<transformer implementation=\"org.apache.maven.plugins.shade.resource.ManifestResourceTransformer\">\r\n\t\t\t\t\t\t<manifestEntries>\r\n\t\t\t\t\t\t\t<Main-Class>io.vertx.core.Launcher</Main-Class>\r\n\t\t\t\t\t\t\t<Main-Verticle>~packageName~.~className~</Main-Verticle>\r\n\t\t\t\t\t\t</manifestEntries>\r\n\t\t\t\t\t</transformer>\r\n\t\t\t\t</transformers>\r\n\t\t\t\t<artifactSet/>\r\n\t\t\t\t<outputFile>target/${project.artifactId}-${project.version}-fat.jar</outputFile>\r\n\t\t\t</configuration>\r\n\t\t</execution>\r\n\t</executions>\r\n</plugin>",
+      "text" : "<!-- https://maven.apache.org/plugins/maven-shade-plugin/ -->\n<plugin>\n\t<groupId>org.apache.maven.plugins</groupId>\n\t<artifactId>maven-shade-plugin</artifactId>\n\t<version>2.4.3</version>\n\t<executions>\n\t\t<execution>\n\t\t\t<phase>package</phase>\n\t\t\t<goals>\n\t\t\t\t<goal>shade</goal>\n\t\t\t</goals>\n\t\t\t<configuration>\n\t\t\t\t<filters>\n\t\t\t\t\t<filter>\n\t\t\t\t\t\t<artifact>*:*</artifact>\n\t\t\t\t\t\t<excludes>\n\t\t\t\t\t\t\t<exclude>META-INF/*.SF</exclude>\n\t\t\t\t\t\t\t<exclude>META-INF/*.DSA</exclude>\n\t\t\t\t\t\t\t<exclude>META-INF/*.RSA</exclude>\n\t\t\t\t\t\t</excludes>\n\t\t\t\t\t</filter>\n\t\t\t\t</filters>\n\t\t\t\t<transformers>\n\t\t\t\t\t<transformer implementation=\"org.apache.maven.plugins.shade.resource.ServicesResourceTransformer\"/>\n\t\t\t\t\t<transformer implementation=\"org.apache.maven.plugins.shade.resource.ManifestResourceTransformer\">\n\t\t\t\t\t\t<manifestEntries>\n\t\t\t\t\t\t\t<Main-Class>io.vertx.core.Launcher</Main-Class>\n\t\t\t\t\t\t\t<Main-Verticle>~packageName~.~className~</Main-Verticle>\n\t\t\t\t\t\t</manifestEntries>\n\t\t\t\t\t</transformer>\n\t\t\t\t</transformers>\n\t\t\t\t<artifactSet/>\n\t\t\t\t<outputFile>target/${project.artifactId}-${project.version}-fat.jar</outputFile>\n\t\t\t</configuration>\n\t\t</execution>\n\t</executions>\n</plugin> ",
       "parameters" : [ {
-        "uuid" : "f43c0d07-a82a-429b-aa41-8eeea2011c59",
+        "uuid" : "bafeb6b2-944f-4d95-af56-d14dbdd7d0c8",
         "name" : "packageName",
-        "type" : "SINGLE"
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       }, {
-        "uuid" : "7e61bd0a-6ab4-4af9-8110-64e90880aad1",
+        "uuid" : "010c26c2-99d0-4600-b5a6-88bbf3b104b8",
         "name" : "className",
-        "type" : "SINGLE"
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       } ]
     }, {
       "uuid" : "f6b8a6ed-f3ff-4bed-9180-ea870f5b65c0",
@@ -243,19 +245,19 @@
     }, {
       "uuid" : "f425a49a-40ef-4799-99d7-584e57d7bb40",
       "name" : "copyPlugin",
-      "text" : "<plugin>\n\t<artifactId>maven-resources-plugin</artifactId>\n\t<version>3.1.0</version>\n\t<executions>\n\t\t<execution>\n\t\t\t<id>copy-resources</id>\n\t\t\t<phase>validate</phase>\n\t\t\t<goals>\n\t\t\t\t<goal>copy-resources</goal>\n\t\t\t</goals>\n\t\t\t<configuration>\n\t\t\t\t<outputDirectory>~outputDirectory~</outputDirectory>\n\t\t\t\t<resources>\t\t\t \n\t\t\t\t\t<resource>\n\t\t\t\t\t\t<directory>~directory~</directory>\n\t\t\t\t\t\t<includes>\n\t\t\t\t\t\t\t~include:{it|<include>~it~</include>};separator=\"\\n\"~\n\t\t\t\t\t\t</includes>\n\t\t\t\t\t</resource>\n\t\t\t\t</resources>\t\t\t\t  \n\t\t\t</configuration>\t\t\t\t\n\t\t</execution>\n\t</executions>\n</plugin>",
+      "text" : "<!-- https://maven.apache.org/plugins/maven-resources-plugin/ -->\n<plugin>\n\t<artifactId>maven-resources-plugin</artifactId>\n\t<version>3.1.0</version>\n\t<executions>\n\t\t<execution>\n\t\t\t<id>copy-resources</id>\n\t\t\t<phase>validate</phase>\n\t\t\t<goals>\n\t\t\t\t<goal>copy-resources</goal>\n\t\t\t</goals>\n\t\t\t<configuration>\n\t\t\t\t<outputDirectory>~outputDirectory~</outputDirectory>\n\t\t\t\t<resources>\t\t\t \n\t\t\t\t\t<resource>\n\t\t\t\t\t\t<directory>~directory~</directory>\n\t\t\t\t\t\t<includes>\n\t\t\t\t\t\t\t~include:{it|<include>~it~</include>};separator=\"\\n\"~\n\t\t\t\t\t\t</includes>\n\t\t\t\t\t</resource>\n\t\t\t\t</resources>\t\t\t\t  \n\t\t\t</configuration>\t\t\t\t\n\t\t</execution>\n\t</executions>\n</plugin> ",
       "parameters" : [ {
-        "uuid" : "7064c00b-f13c-477e-9a5c-1da48b897c26",
+        "uuid" : "f1d6f054-c19a-43ca-858a-174c5b54e922",
         "name" : "outputDirectory",
         "type" : "SINGLE",
         "argumentType" : "Object"
       }, {
-        "uuid" : "906c464b-8fea-481d-b416-ec11310a11f8",
+        "uuid" : "abf2788b-e00c-41b8-b988-175b5f86f22b",
         "name" : "directory",
         "type" : "SINGLE",
         "argumentType" : "Object"
       }, {
-        "uuid" : "057b9e80-5f8e-4c3e-838e-5f21e49f7c2e",
+        "uuid" : "4cc650e5-ffe3-4794-b719-e12eef3092da",
         "name" : "include",
         "type" : "LIST",
         "argumentType" : "Object"

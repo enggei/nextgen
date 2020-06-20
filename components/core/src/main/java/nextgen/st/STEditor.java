@@ -26,6 +26,7 @@ import java.util.stream.Stream;
 public class STEditor extends JPanel {
 
     private final RSyntaxTextArea txtEditor = new RSyntaxTextArea(20, 60);
+    private final STEditorCommandPanel commandPanel = new STEditorCommandPanel();
     private final STEditorInfoPanel infoPanel = new STEditorInfoPanel();
 
     private final Color uneditedColor = txtEditor.getBackground();
@@ -45,11 +46,11 @@ public class STEditor extends JPanel {
 
         final JPopupMenu pop = this.txtEditor.getPopupMenu();
         pop.addSeparator();
-        pop.add(newAction("Insert Single", actionEvent -> insertSimpleProperty()));
-        pop.add(newAction("Insert Single Capitalized", actionEvent -> capitalize()));
-        pop.add(newAction("Insert List", actionEvent -> insertListProperty()));
+        pop.add(newAction("Insert Single", actionEvent -> insertSingle()));
+        pop.add(newAction("Insert Single Capitalized", actionEvent -> insertCapitalized()));
+        pop.add(newAction("Insert List", actionEvent -> insertList()));
         pop.add(newAction("Insert If", actionEvent -> insertIf()));
-        pop.add(newAction("Replace text and insert Single", actionEvent -> replaceAndInsertProperty()));
+        pop.add(newAction("Replace text and insert Single", actionEvent -> replaceAndInsertSingle()));
         pop.add(newAction("Save", actionEvent -> commit()));
         pop.addSeparator();
         pop.add(newAction("Add Java method", actionEvent -> addJavaMethod()));
@@ -62,10 +63,12 @@ public class STEditor extends JPanel {
         this.startText = STGenerator.toStg(stGroupTreeNode.getModel()).trim();
         this.txtEditor.setText(startText);
         this.txtEditor.setEditable(false);
+        this.commandPanel.setEditable(false);
         this.txtEditor.setCaretPosition(0);
         this.txtEditor.discardAllEdits();
 
         add(new RTextScrollPane(txtEditor), BorderLayout.CENTER);
+        add(commandPanel, BorderLayout.NORTH);
         add(infoPanel, BorderLayout.SOUTH);
         setPreferredSize(new Dimension(800, 600));
     }
@@ -84,6 +87,7 @@ public class STEditor extends JPanel {
         this.txtEditor.setText(startText);
         this.txtEditor.setCaretPosition(0);
         this.txtEditor.setEditable(false);
+        this.commandPanel.setEditable(false);
 
         this.txtEditor.discardAllEdits();
         this.txtEditor.setBackground(uneditedColor);
@@ -102,11 +106,13 @@ public class STEditor extends JPanel {
         this.txtEditor.setText(startText);
         this.txtEditor.setCaretPosition(0);
         this.txtEditor.setEditable(stTemplateTreeNode != null);
-        this.txtEditor.requestFocusInWindow();
-
         this.txtEditor.discardAllEdits();
         this.txtEditor.setBackground(uneditedColor);
+
+        this.commandPanel.setEditable(stTemplateTreeNode != null);
         this.infoPanel.clear();
+
+        this.txtEditor.requestFocusInWindow();
     }
 
     private void commit() {
@@ -192,15 +198,15 @@ public class STEditor extends JPanel {
             SwingUtilities.invokeLater(() -> txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor));
 
             if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_L) {
-                insertListProperty();
+                insertList();
             } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_I) {
                 insertIf();
             } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_1) {
-                capitalize();
+                insertCapitalized();
             } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_P) {
-                insertSimpleProperty();
+                insertSingle();
             } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_R) {
-                replaceAndInsertProperty();
+                replaceAndInsertSingle();
             } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_F) {
                 format(txtEditor);
             } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_S) {
@@ -227,7 +233,7 @@ public class STEditor extends JPanel {
         });
     }
 
-    private void capitalize() {
+    private void insertCapitalized() {
         SwingUtilities.invokeLater(() -> {
             removeSelectedTextIfAny();
             final int caretPosition = txtEditor.getCaretPosition();
@@ -237,7 +243,7 @@ public class STEditor extends JPanel {
         });
     }
 
-    private void insertListProperty() {
+    private void insertList() {
         final String input = SwingUtil.showInputDialog("name", txtEditor);
         if (input == null) return;
         final String name = input.contains(" ") ? input.split(" ")[0] : input;
@@ -269,7 +275,7 @@ public class STEditor extends JPanel {
         });
     }
 
-    private void insertSimpleProperty() {
+    private void insertSingle() {
         SwingUtilities.invokeLater(() -> {
             removeSelectedTextIfAny();
             final int caretPosition = txtEditor.getCaretPosition();
@@ -279,7 +285,7 @@ public class STEditor extends JPanel {
         });
     }
 
-    private void replaceAndInsertProperty() {
+    private void replaceAndInsertSingle() {
         final String selected = txtEditor.getSelectedText();
         if (selected == null || selected.length() < 1) return;
         final String propertyName = SwingUtil.showInputDialog("name", txtEditor);
@@ -290,7 +296,7 @@ public class STEditor extends JPanel {
             final SearchContext context = new SearchContext();
             context.setSearchFor(selected);
             context.setReplaceWith(replacement);
-            context.setMatchCase(false);
+            context.setMatchCase(true);
             context.setSearchForward(true);
             context.setWholeWord(false);
             SearchEngine.replaceAll(txtEditor, context);
@@ -348,6 +354,47 @@ public class STEditor extends JPanel {
         });
     }
 
+    private class STEditorCommandPanel extends JPanel {
+
+        public STEditorCommandPanel() {
+            super(new FlowLayout(FlowLayout.LEFT));
+
+            add(new JButton(newAction("Insert Single", actionEvent -> {
+                insertSingle();
+                txtEditor.requestFocusInWindow();
+            })));
+
+            add(new JButton(newAction("Insert Single Capitalized", actionEvent -> {
+                insertCapitalized();
+                txtEditor.requestFocusInWindow();
+            })));
+            add(new JButton(newAction("Insert List", actionEvent -> {
+                insertList();
+                txtEditor.requestFocusInWindow();
+            })));
+            add(new JButton(newAction("Insert If", actionEvent -> {
+                insertIf();
+                txtEditor.requestFocusInWindow();
+            })));
+            add(new JButton(newAction("Replace text and insert Single", actionEvent -> {
+                replaceAndInsertSingle();
+                txtEditor.requestFocusInWindow();
+            })));
+            add(new JButton(newAction("Save", actionEvent -> {
+                commit();
+                txtEditor.requestFocusInWindow();
+            })));
+        }
+
+        void setEditable(boolean editabe) {
+            for (Component component : getComponents()) {
+                if (component instanceof JButton) {
+                    component.setEnabled(editabe);
+                }
+            }
+        }
+    }
+
     private class STEditorInfoPanel extends JPanel {
 
         private final JTextArea textArea = new JTextArea();
@@ -390,7 +437,6 @@ public class STEditor extends JPanel {
                             info.append("\n\tpossible cause     ").append("This is probably a '>' being interpreted as end-of template.");
                             info.append("\n\tpossible solution  ").append("Try changing the last '>' to '" + STGenerator.DELIMITERCHAR + "gt()" + STGenerator.DELIMITERCHAR + "'");
                         }
-
                         break;
                     }
 
@@ -415,8 +461,8 @@ public class STEditor extends JPanel {
         Set<String> fonts = new HashSet<>(Arrays.asList(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
 
         return alternatives.stream()
-           .filter(fonts::contains)
-           .findFirst().map(s -> new Font(s, Font.PLAIN, size))
-           .orElse(null);
+                .filter(fonts::contains)
+                .findFirst().map(s -> new Font(s, Font.PLAIN, size))
+                .orElse(null);
     }
 }

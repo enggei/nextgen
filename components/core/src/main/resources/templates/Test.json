@@ -10,9 +10,9 @@
     "children" : [ {
       "uuid" : "2acee399-79fc-46ff-b0c2-89f23ae0651b",
       "name" : "single",
-      "text" : "single : ~value~",
+      "text" : "single : ~value~ ",
       "parameters" : [ {
-        "uuid" : "6fde5b3e-637e-49ec-860e-18bdae7fdf7e",
+        "uuid" : "dd7e1d48-be96-43ae-a87d-d61bd96d2b01",
         "name" : "value",
         "type" : "SINGLE",
         "argumentType" : "String"

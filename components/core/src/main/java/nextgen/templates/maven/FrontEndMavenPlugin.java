@@ -103,7 +103,7 @@ public class FrontEndMavenPlugin {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "frontEndMavenPlugin(pluginVersion,installDirectory,nodeVersion) ::= <<<!--npm plugin-->\n" + 
+	static final String st = "frontEndMavenPlugin(pluginVersion,installDirectory,nodeVersion) ::= <<<!-- https://github.com/eirslett/frontend-maven-plugin -->\n" + 
 				"<plugin>\n" + 
 				"    <groupId>com.github.eirslett</groupId>\n" + 
 				"    <artifactId>frontend-maven-plugin</artifactId>\n" + 

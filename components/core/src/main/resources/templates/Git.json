@@ -37,5 +37,15 @@
       "type" : "SINGLE",
       "argumentType" : "Object"
     } ]
+  }, {
+    "uuid" : "8b10410e-ee88-42bb-9e0c-28bd63672c6b",
+    "name" : "clone",
+    "text" : "git clone ~url~ ",
+    "parameters" : [ {
+      "uuid" : "e18a1b09-31c4-45ff-93b7-dd20ae9d6eda",
+      "name" : "url",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
   } ]
 }
