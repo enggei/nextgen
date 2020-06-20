@@ -160,19 +160,19 @@
   }, {
     "uuid" : "1a2e10e0-218b-4970-ba2a-0d4fa175e65d",
     "name" : "Patterns",
-    "text" : "Patterns for templates:\n\nAvoid to many if-elseifs:\n\n~if(isPublic)~public ~elseif(isPrivate)~private ~endif~ class {}\n\ncleaner solution:\n\n~scope~ class {}\n\nand set scope = \"public\"|\"private\" in generator",
+    "text" : "Patterns for templates:\n\nAvoid to many if-elseifs:\n\n~if(isPublic)~public ~elseif(isPrivate)~private ~endif~ class {}\n\ncleaner solution:\n\n~scope~ class {}\n\nand set scope = \"public\"|\"private\" in generator (Use of STEnums is perfect for this:)\n\nSTEnumExample:\n\nclassDeclaration.addModifiers(Modifiers.PUBLIC).addModifiers(Modifiers.PRIVATE)\n\nWith static imports:\n\nclassDeclaration.addModifiers(PUBLIC).addModifiers(PRIVATE) ",
     "parameters" : [ {
-      "uuid" : "1ff46231-4b59-4daf-a522-e0339e06b1a4",
+      "uuid" : "eb2f5933-39e8-4124-8762-b6b1a6ef7d01",
       "name" : "isPublic",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "457489c7-2281-4cd6-ae64-4e0e3291c9ac",
+      "uuid" : "c46daa8e-e705-4fd6-9b84-802df68cad88",
       "name" : "isPrivate",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "e7f77e65-0231-4f0f-9c6f-ef4b2983e4ff",
+      "uuid" : "48d11d04-8c22-406d-b5c4-364601ffa00c",
       "name" : "scope",
       "type" : "SINGLE",
       "argumentType" : "Object"

@@ -420,10 +420,12 @@ public class STEditor extends JPanel {
 
         public void showParseErrors(Stream<STGError> errors) {
 
-            final StringBuilder info = new StringBuilder("Parsing errors:\n");
+            final StringBuilder info = new StringBuilder("Parsing errors:");
 
             errors.forEach(stgError -> {
-                info.append(stgError.getType());
+
+                info.append("\n").append(stgError.getType());
+
                 switch (stgError.getType()) {
                     case COMPILE: {
                         info.append("\n\tline               ").append(stgError.getLine());
