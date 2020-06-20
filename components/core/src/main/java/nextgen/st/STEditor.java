@@ -17,7 +17,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -55,7 +54,7 @@ public class STEditor extends JPanel {
         pop.addSeparator();
         pop.add(newAction("Add Java method", actionEvent -> addJavaMethod()));
 
-        this.txtEditor.setFont(getInstalledFont(Arrays.asList("Hack", "Fira Code", "Source Code Pro", "Monospaced"), 12));
+        this.txtEditor.setFont(getPreferredFont());
         this.txtEditor.setTabSize(3);
         this.txtEditor.setCodeFoldingEnabled(true);
         this.txtEditor.addKeyListener(new STTemplateEditorKeyListener());
@@ -402,7 +401,7 @@ public class STEditor extends JPanel {
         public STEditorInfoPanel() {
             super(new BorderLayout());
 
-            this.textArea.setFont(new Font("Hack", Font.PLAIN, 20));
+            this.textArea.setFont(getPreferredFont());
             this.textArea.setTabSize(3);
             this.textArea.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
@@ -459,12 +458,12 @@ public class STEditor extends JPanel {
         }
     }
 
-    private Font getInstalledFont(Collection<String> alternatives, int size) {
-        Set<String> fonts = new HashSet<>(Arrays.asList(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
-
-        return alternatives.stream()
+    public Font getPreferredFont() {
+        final Set<String> fonts = new HashSet<>(Arrays.asList(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
+        return Stream
+                .of("Hack", "Fira Code", "Source Code Pro", "Monospaced")
                 .filter(fonts::contains)
-                .findFirst().map(s -> new Font(s, Font.PLAIN, size))
+                .findFirst().map(s -> new Font(s, Font.PLAIN, 12))
                 .orElse(null);
     }
 }
