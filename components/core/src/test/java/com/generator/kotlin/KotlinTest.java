@@ -82,7 +82,6 @@ public class KotlinTest {
 
     @Test
     public void testKotlin() {
-        PackageDeclaration packageDeclaration = newPackageDeclaration().setName("org.test");
 
         String className = "Country";
 
@@ -118,23 +117,47 @@ public class KotlinTest {
                 ))
                 .setIsOpen(true)
                 .addFields(fields)
-                .addExtends(newExtending().setClassName("Entity")
+                .addExtends(singletonList(newExtending().setClassName("Entity")
                         .addParams("id")
-                        .addParams("uuid"))
+                        .addParams("uuid")))
                 .setOverrideEquals(newOverrideEquals()
                         .setClassName(className)
                         .setFields(fields.stream()
-                                .map(FieldDeclaration::getName)
-                                .filter(name -> !name.equals("id"))
-                                .collect(Collectors.toList())))
+                           .map(FieldDeclaration::getName)
+                           .filter(name -> !name.equals("id"))
+                           .collect(Collectors.toList())))
+                .setOverrideToString(newOverrideToString()
+                        .setClassName(className)
+                        .setFields(fields.stream()
+                           .map(FieldDeclaration::getName)
+                           .collect(Collectors.toList())))
                 .setOverrideHashCode(newOverrideHashCode())
+                .addMembers(singletonList(
+                   newFunctionDeclaration()
+                     .setName("copy")
+                     .setReturnType(newNamedType().setName(className))
+                     .setParams(fields.stream()
+                       .map(fieldDeclaration -> newFunctionParam()
+                          .setName(fieldDeclaration.getName())
+                          .setTypeDeclaration(fieldDeclaration.getType())
+                          .setDefaultValue(newThisExpression().setValue(newVarExpression().setVarname(fieldDeclaration.getName()))))
+                       .collect(Collectors.toList())
+                     )
+                   .setExpressionBody(newConstructorCallExpression()
+                     .setClassName(className)
+                     .addParams(fields.stream().map(fieldDeclaration -> newFunctionCallParamExpression()
+                        .setFieldName(fieldDeclaration.getName())
+                        .setExpression(newVarExpression().setVarname(fieldDeclaration.getName()))
+                     ).collect(Collectors.toList()))
+                   ))
+                )
+           ;
+// newFunctionCallParamExpression().setFieldName("uuid").setExpression(newVarExpression().setVarname("uuid"))
+        KotlinFile kotlinFile = newKotlinFile()
+           .setPackageDeclaration(newPackageDeclaration().setName("org.test"))
+           .addCompilationUnit(singletonList(dataClass))
            ;
 
-
-        Poko poko = newPoko()
-                .setPackageDeclaration(packageDeclaration)
-                .setClassDeclaration(dataClass);
-
-        System.out.println(poko);
+        System.out.println(kotlinFile);
     }
 }
