@@ -9,7 +9,6 @@ import org.antlr.runtime.tree.Tree;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.*;
 import org.stringtemplate.v4.misc.STCompiletimeMessage;
-import org.stringtemplate.v4.misc.STGroupCompiletimeMessage;
 import org.stringtemplate.v4.misc.STMessage;
 
 import java.io.BufferedReader;
@@ -266,6 +265,11 @@ public class STParser {
         out.append(astNode.getType()).append(" \"").append(astNode.getAst().getText()).append("\"");
         astNode.getChildren().forEach(astNode1 -> out.append("\n").append(debug(astNode1, level + 1)));
         return out.toString();
+    }
+
+    public static ST asST(String content) {
+        final STTemplate stTemplate = parseTemplate(content).getParsed().getTemplates().iterator().next();
+        return STGenerator.asST(stTemplate);
     }
 
     static final class TemplateVisitor {

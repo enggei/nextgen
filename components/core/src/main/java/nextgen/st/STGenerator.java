@@ -31,6 +31,10 @@ public class STGenerator {
         this.generator = generator;
     }
 
+    public static ST asST(STTemplate stTemplate) {
+        return asST(newTemplateGroup(), stTemplate);
+    }
+
     public void generateSTGroup(STGroupModel stGroupModel, String packageName, String rootPath) {
 
         final File root = new File(rootPath);
@@ -204,14 +208,19 @@ public class STGenerator {
 
     private static void addSTTemplate(STGroup templateGroup, ST stGroupTemplate, STTemplate stModel) {
 
-        final ST stTemplate = templateGroup.getInstanceOf("STTemplate");
-        stTemplate.add("name", stModel.getName());
-        stTemplate.add("content", stModel.getText());
-        stModel.getParameters().forEach(stParameter -> stTemplate.add("params", stParameter.getName()));
+        final ST stTemplate = asST(templateGroup, stModel);
 
         stGroupTemplate.add("templates", stTemplate);
 
         stModel.getChildren().forEach(childTemplate -> addSTTemplate(templateGroup, stGroupTemplate, childTemplate));
+    }
+
+    public static ST asST(STGroup templateGroup, STTemplate stModel) {
+        final ST stTemplate = templateGroup.getInstanceOf("STTemplate");
+        stTemplate.add("name", stModel.getName());
+        stTemplate.add("content", stModel.getText());
+        stModel.getParameters().forEach(stParameter -> stTemplate.add("params", stParameter.getName()));
+        return stTemplate;
     }
 
     private static STGroup newTemplateGroup() {
