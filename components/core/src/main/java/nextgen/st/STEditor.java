@@ -51,6 +51,7 @@ public class STEditor extends JPanel {
         pop.add(newAction("Insert If", actionEvent -> insertIf()));
         pop.add(newAction("Replace text and insert Single", actionEvent -> replaceAndInsertSingle()));
         pop.add(newAction("Save", actionEvent -> commit()));
+        pop.add(newAction("Generate", actionEvent -> generate()));
         pop.add(newAction("Debug Template", actionEvent -> debug()));
         pop.addSeparator();
         pop.add(newAction("Add Java method", actionEvent -> addJavaMethod()));
@@ -397,6 +398,11 @@ public class STEditor extends JPanel {
             })));
             add(new JButton(newAction("Save", actionEvent -> {
                 commit();
+                txtEditor.requestFocusInWindow();
+            })));
+
+            add(new JButton(newAction("Generate", actionEvent -> {
+                generate();
                 txtEditor.requestFocusInWindow();
             })));
         }

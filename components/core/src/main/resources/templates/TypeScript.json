@@ -22,6 +22,36 @@
       "type" : "SINGLE",
       "argumentType" : "Object"
     } ]
+  }, {
+    "uuid" : "924187dc-55af-4ed4-954b-ef0f183e7313",
+    "name" : "embeddedExpression",
+    "text" : "${ ~ref~ } ",
+    "parameters" : [ {
+      "uuid" : "4639e58a-aa8c-4334-aa2f-e059d25fd909",
+      "name" : "ref",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "2d010022-ffb7-4082-904b-8cf7be12992c",
+    "name" : "arrayType",
+    "text" : "Array<~elementType~> ",
+    "parameters" : [ {
+      "uuid" : "d385d7f7-65b4-4eae-a3b4-c39643cce7b7",
+      "name" : "elementType",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "33a0d763-cff9-42e3-9bf6-9bb8df494837",
+    "name" : "arrayInitializer",
+    "text" : "[~elements:{it|~it~};separator=\",\"~] ",
+    "parameters" : [ {
+      "uuid" : "60e98907-0ce7-4510-918a-34c688be21e2",
+      "name" : "elements",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    } ]
   } ],
   "enums" : [ {
     "uuid" : "f3819176-f9ca-4cf5-8faa-a8941b3157bf",

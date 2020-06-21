@@ -1,5 +1,11 @@
 delimiters "~","~"
 
+arrayInitializer(elements) ::= <<[~elements:{it|~it~};separator=","~]  >>
+
+arrayType(elementType) ::= <<Array<~elementType~>  >>
+
+embeddedExpression(ref) ::= <<${ ~ref~ }  >>
+
 variableDeclaration(name,type,initializer) ::= <<let ~name~: ~type~~if(initializer)~ = ~initializer~~endif~;  >>
 
 eom() ::= "}"

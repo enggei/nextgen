@@ -5,6 +5,9 @@ public class TypeScriptST {
 	private static final String stg = "delimiters \"~\", \"~\"\n" +
 	"eom() ::= \"}\"\n" +
 	"gt() ::= \">\"\n" +
+	ArrayInitializer.st + "\n" + 
+	ArrayType.st + "\n" + 
+	EmbeddedExpression.st + "\n" + 
 	VariableDeclaration.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
@@ -40,6 +43,18 @@ public class TypeScriptST {
 	public static void setSTGroup(final String stgFile) {
 		stGroup = decorate(new org.stringtemplate.v4.STGroupFile(stgFile, '~', '~'));
 	}
+
+	public static ArrayInitializer newArrayInitializer() {
+		return new ArrayInitializer(stGroup);
+	} 
+
+	public static ArrayType newArrayType() {
+		return new ArrayType(stGroup);
+	} 
+
+	public static EmbeddedExpression newEmbeddedExpression() {
+		return new EmbeddedExpression(stGroup);
+	} 
 
 	public static VariableDeclaration newVariableDeclaration() {
 		return new VariableDeclaration(stGroup);
