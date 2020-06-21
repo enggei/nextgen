@@ -27,18 +27,8 @@ public class STNavigator extends JPanel {
     private final JTabbedPane tabbedPane;
     private final DefaultTreeModel treeModel;
 
-    // https://materialdesignicons.com/
-    private final Map<Class<?>, Icon> icons = new LinkedHashMap<>();
-
     public STNavigator(STAppModel appModel, JTabbedPane contentPanel) {
         super(new BorderLayout());
-
-        icons.put(RootNode.class, loadIcon("RootNode"));
-        icons.put(RootNode.STGDirectoryTreeNode.class, loadIcon("STGDirectory"));
-        icons.put(RootNode.STGDirectoryTreeNode.STGroupTreeNode.class, loadIcon("STGroup"));
-        icons.put(RootNode.STGDirectoryTreeNode.STGroupTreeNode.STTemplateTreeNode.class, loadIcon("STTemplate"));
-        icons.put(RootNode.STGDirectoryTreeNode.STGroupTreeNode.STEnumTreeNode.class, loadIcon("STEnum"));
-        icons.put(RootNode.STGDirectoryTreeNode.STGroupTreeNode.STInterfaceTreeNode.class, loadIcon("STInterface"));
 
         tabbedPane = contentPanel;
 
@@ -48,11 +38,16 @@ public class STNavigator extends JPanel {
 
             @Override
             public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-                setIcon(icons.get(value.getClass()));
-                setOpenIcon(icons.get(value.getClass()));
-                setClosedIcon(icons.get(value.getClass()));
-                setLeafIcon(icons.get(value.getClass()));
-                return super.getTreeCellRendererComponent(tree, (value instanceof BaseTreeNode ? ((BaseTreeNode<?>) value).getLabel() : value), sel, expanded, leaf, row, hasFocus);
+                final boolean isBaseTreeNode = value instanceof BaseTreeNode;
+                if (isBaseTreeNode) {
+                    final BaseTreeNode<?> baseTreeNode = (BaseTreeNode<?>) value;
+                    setIcon(baseTreeNode.getIcon());
+                    setOpenIcon(baseTreeNode.getIcon());
+                    setClosedIcon(baseTreeNode.getIcon());
+                    setLeafIcon(baseTreeNode.getIcon());
+                    return super.getTreeCellRendererComponent(tree, baseTreeNode.getLabel(), sel, expanded, leaf, row, hasFocus);
+                }
+                return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
             }
         });
 
@@ -110,9 +105,12 @@ public class STNavigator extends JPanel {
         add(new JScrollPane(tree), BorderLayout.CENTER);
     }
 
-    @NotNull
+    private static final Map<String, ImageIcon> cache = new LinkedHashMap<>();
+
     public ImageIcon loadIcon(String iconName) {
-        return new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("icons/" + iconName + "16x16.png")));
+        if (cache.containsKey(iconName)) return cache.get(iconName);
+        cache.put(iconName, new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("icons/" + iconName + "16x16.png"))));
+        return cache.get(iconName);
     }
 
     public void showPopup(BaseTreeNode<?> lastPathComponent, int x, int y) {
@@ -199,8 +197,11 @@ public class STNavigator extends JPanel {
 
     private class BaseTreeNode<T> extends DefaultMutableTreeNode {
 
-        public BaseTreeNode(T model) {
+        private final ImageIcon icon;
+
+        public BaseTreeNode(T model, String icon) {
             setUserObject(model);
+            this.icon = loadIcon(icon);
         }
 
         @SuppressWarnings("unchecked")
@@ -210,6 +211,10 @@ public class STNavigator extends JPanel {
 
         public String getLabel() {
             return getUserObject().toString();
+        }
+
+        public ImageIcon getIcon() {
+            return icon;
         }
 
         protected List<Action> getActions() {
@@ -279,7 +284,7 @@ public class STNavigator extends JPanel {
         private final STGDirectoryTreeNode generatorTreeNode;
 
         public RootNode(STAppModel appModel) {
-            super("App");
+            super("App", "RootNode");
 
             final File jsonFileDir = new File(appModel.getGeneratorRoot(), STGenerator.packageToPath(appModel.getGeneratorPackage()));
             add(generatorTreeNode = new STGDirectoryTreeNode(STJsonFactory.newSTGDirectory()
@@ -301,7 +306,7 @@ public class STNavigator extends JPanel {
         class STGDirectoryTreeNode extends BaseTreeNode<STGDirectory> {
 
             public STGDirectoryTreeNode(STGDirectory model) {
-                super(model);
+                super(model, "STGDirectory");
                 model.getGroups().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stGroupModel -> add(new STGroupTreeNode(stGroupModel)));
             }
 
@@ -362,7 +367,7 @@ public class STNavigator extends JPanel {
             class STGroupTreeNode extends BaseTreeNode<STGroupModel> {
 
                 public STGroupTreeNode(STGroupModel model) {
-                    super(model);
+                    super(model, getLanguageIcon(model));
 
                     model.getEnums().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stEnum -> add(new STEnumTreeNode(stEnum)));
                     model.getTemplates().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
@@ -547,7 +552,7 @@ public class STNavigator extends JPanel {
                 class STInterfaceTreeNode extends BaseTreeNode<STInterface> {
 
                     public STInterfaceTreeNode(STInterface model) {
-                        super(model);
+                        super(model, "STInterface");
                     }
 
                     @Override
@@ -593,7 +598,7 @@ public class STNavigator extends JPanel {
                 class STEnumTreeNode extends BaseTreeNode<STEnum> {
 
                     public STEnumTreeNode(STEnum model) {
-                        super(model);
+                        super(model, "STEnum");
                     }
 
                     @Override
@@ -711,7 +716,7 @@ public class STNavigator extends JPanel {
                 class STTemplateTreeNode extends BaseTreeNode<STTemplate> {
 
                     public STTemplateTreeNode(STTemplate model) {
-                        super(model);
+                        super(model, "STTemplate");
 
                         model.getChildren().forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
                     }
@@ -974,6 +979,29 @@ public class STNavigator extends JPanel {
                     }
                 }
             }
+        }
+    }
+
+    private static String getLanguageIcon(STGroupModel model) {
+
+        switch (model.getName().toLowerCase()) {
+            case "kotlin":
+                return "language-kotlin";
+            case "java":
+                return "language-java";
+            case "javascript":
+                return "language-javascript";
+            case "cpp":
+                return "language-cpp";
+            case "python":
+                return "language-python";
+            case "typescript":
+                return "language-typescript";
+            case "html":
+            case "html5":
+                return "language-html5";
+            default:
+                return "STGroup";
         }
     }
 

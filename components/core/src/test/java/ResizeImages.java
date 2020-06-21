@@ -8,6 +8,8 @@ public class ResizeImages {
 
     public static void main(String[] args) throws IOException {
 
+        // https://materialdesignicons.com/
+
         final File[] pngs = new File("components/core/src/main/resources/icons")
                 .listFiles(pathname -> pathname.isFile() && pathname.getName().endsWith(".png") && !pathname.getName().endsWith("16x16.png"));
 
