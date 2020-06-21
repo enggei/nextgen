@@ -14,6 +14,7 @@ public class KotlinST {
 	FunctionCallParamExpression.st + "\n" + 
 	NullExpression.st + "\n" + 
 	ScopeExpression.st + "\n" + 
+	TestExpression.st + "\n" + 
 	ThisExpression.st + "\n" + 
 	VarExpression.st + "\n" + 
 	AnnotationDeclaration.st + "\n" + 
@@ -108,6 +109,10 @@ public class KotlinST {
 
 	public static ScopeExpression newScopeExpression() {
 		return new ScopeExpression(stGroup);
+	} 
+
+	public static TestExpression newTestExpression() {
+		return new TestExpression(stGroup);
 	} 
 
 	public static ThisExpression newThisExpression() {

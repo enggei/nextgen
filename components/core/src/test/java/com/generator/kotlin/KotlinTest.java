@@ -16,9 +16,7 @@ import java.util.stream.Collectors;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static nextgen.templates.DomainPatterns.*;
-import static nextgen.templates.KotlinPatterns.asScopeExpression;
-import static nextgen.templates.KotlinPatterns.asThisExpression;
-import static nextgen.templates.kotlin.KotlinST.*;
+import static nextgen.templates.KotlinPatterns.*;
 
 public class KotlinTest {
 
@@ -95,13 +93,13 @@ public class KotlinTest {
         ArrayType countryIsPartOfContinentRelationshipTypeArray = newArrayType().setType(countryIsPartOfContinentRelationshipType);
 
         List<FieldDeclaration> fields = asList(
-                newFieldDeclaration().setName("id").setType(nullableLongType).setInitializer(newNullInitializer()).setIsNonMember(true),
-                newFieldDeclaration().setName("uuid").setType(uuidType).setInitializer(
+                newFieldDeclaration(nullableLongType, "id").setInitializer(newNullInitializer()).setIsNonMember(true),
+                newFieldDeclaration(uuidType, "uuid").setInitializer(
                    newExpressionInitializer().setExpression(newFunctionCallExpression().setScope("UUID").setFunctionName("randomUUID"))
                 ).setIsNonMember(true),
-                newFieldDeclaration().setName("epId").setType(longType).setIsMutable(true),
-                newFieldDeclaration().setName("code").setType(stringType).setIsMutable(true),
-                newFieldDeclaration().setName("name").setType(stringType).setIsMutable(true),
+           newFieldDeclaration(longType, "epId"),
+           newFieldDeclaration(stringType, "code"),
+           newFieldDeclaration(stringType, "name"),
                 newFieldDeclaration()
                     .addAnnotations(singletonList(newAnnotationDeclaration()
                        .addAnnotations("Relationship", singletonList(newAnnotationParam()
@@ -111,8 +109,7 @@ public class KotlinTest {
                     )).setName("isPartOfContinent").setType(countryIsPartOfContinentRelationshipTypeArray).setInitializer(newEmptyArrayInitializer()).setIsMutable(true)
         );
 
-        ClassDeclaration dataClass = newClassDeclaration()
-                .setName(className)
+        ClassDeclaration dataClass = newClassDeclaration(className)
                 .setAnnotations(singletonList(newAnnotationDeclaration()
                         .addAnnotations("NodeEntity", singletonList(newAnnotationParam()
                            .addParam("label", "NODE_COUNTRY")
@@ -123,25 +120,8 @@ public class KotlinTest {
                 .addExtends(singletonList(newExtending().setClassName("Entity")
                         .addParams("id")
                         .addParams("uuid")))
-                .setOverrideEquals(newOverrideEquals()
-                        .setClassName(className)
-                        .setFields(fields.stream()
-                           .map(fieldDeclaration -> {
-                               if (fieldDeclaration.getType().getClass().getSimpleName().equals("ArrayType")) {
-                                   return newArrayEqualsExpression()
-                                      .setLeftArray(asThisExpression(fieldDeclaration))
-                                      .setRightArray(asScopeExpression("other", fieldDeclaration));
-                               } else {
-                                  return newEqualsExpression().setLhs(asThisExpression(fieldDeclaration)).setRhs(asScopeExpression("other", fieldDeclaration));
-                               }
-                           })
-                           .filter(name -> !name.equals("id"))
-                           .collect(Collectors.toList())))
-                .setOverrideToString(newOverrideToString()
-                        .setClassName(className)
-                        .setFields(fields.stream()
-                           .map(FieldDeclaration::getName)
-                           .collect(Collectors.toList())))
+                .setOverrideEquals(createEqualsFunction(className, fields))
+                .setOverrideToString(createToStringFunction(className, fields))
                 .setOverrideHashCode(newOverrideHashCode())
                 .addMembers(singletonList(
                    newFunctionDeclaration()

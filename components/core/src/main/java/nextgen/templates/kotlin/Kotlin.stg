@@ -28,6 +28,8 @@ EqualsExpression(lhs,rhs) ::= <<~lhs~ == ~rhs~  >>
 
 ScopeExpression(scope,expression) ::= <<~scope~.~expression~  >>
 
+TestExpression() ::= <<abc  >>
+
 Grammar() ::= << >>
 
 Declarations() ::= << >>
@@ -43,17 +45,11 @@ ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,overrideEqual
 	~fields:{it|~it~};separator=",\n"~
 )~if(extends)~: ~extends:{it|~it~};separator=", "~~endif~ {
 
-	~if(overrideEquals)~~overrideEquals~
+	~overrideEquals~
 
-	~endif~
+	~overrideHashCode~
 
-	~if(overrideHashCode)~~overrideHashCode~
-
-	~endif~
-
-	~if(overrideToString)~~overrideToString~
-
-	~endif~
+	~overrideToString~
 
 	~members:{it|~it~};separator="\n"~
 }  >>

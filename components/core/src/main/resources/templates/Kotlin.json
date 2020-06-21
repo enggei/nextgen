@@ -62,54 +62,54 @@
       }, {
         "uuid" : "f05c4cbf-3b7e-4156-9906-99ae7e7c47a6",
         "name" : "ClassDeclaration",
-        "text" : "~annotations~~if(annotations)~\n~endif~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n\t~fields:{it|~it~};separator=\",\\n\"~\n)~if(extends)~: ~extends:{it|~it~};separator=\", \"~~endif~ {\n\n\t~if(overrideEquals)~~overrideEquals~\n\n\t~endif~\n\n\t~if(overrideHashCode)~~overrideHashCode~\n\n\t~endif~\n\n\t~if(overrideToString)~~overrideToString~\n\n\t~endif~\n\n\t~members:{it|~it~};separator=\"\\n\"~\n} ",
+        "text" : "~annotations~~if(annotations)~\n~endif~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n\t~fields:{it|~it~};separator=\",\\n\"~\n)~if(extends)~: ~extends:{it|~it~};separator=\", \"~~endif~ {\n\n\t~overrideEquals~\n\n\t~overrideHashCode~\n\n\t~overrideToString~\n\n\t~members:{it|~it~};separator=\"\\n\"~\n} ",
         "parameters" : [ {
-          "uuid" : "d8e4a9a8-1804-462d-ab96-b0410e9aa82e",
+          "uuid" : "b70272a9-24eb-4c3a-b871-948bcc10abb4",
           "name" : "annotations",
           "type" : "SINGLE",
           "argumentType" : "java.util.Collection<AnnotationDeclaration>"
         }, {
-          "uuid" : "d5a81a72-7967-49bd-aa73-2902fbf553de",
+          "uuid" : "7967e10f-b215-44fb-a455-86e7b0358b5a",
           "name" : "isOpen",
           "type" : "SINGLE",
           "argumentType" : "Boolean"
         }, {
-          "uuid" : "2dcc7bce-7bd8-401b-9998-35f96a2f0f8b",
+          "uuid" : "f6e7be2a-a39a-46b8-a286-ebadd559823e",
           "name" : "isAbstract",
           "type" : "SINGLE",
           "argumentType" : "Boolean"
         }, {
-          "uuid" : "12b687d2-a83f-47b1-b60a-86610135b88d",
+          "uuid" : "4ab3e754-9f43-4bf4-b0fe-7b435f2db2ef",
           "name" : "name",
           "type" : "SINGLE",
           "argumentType" : "String"
         }, {
-          "uuid" : "b5d5e002-3e3d-4beb-9961-1634e7ed311a",
+          "uuid" : "8c2abbfd-6489-45e3-9a1e-d3c409621b04",
           "name" : "fields",
           "type" : "LIST",
           "argumentType" : "java.util.Collection<FieldDeclaration>"
         }, {
-          "uuid" : "456133af-4ad9-477b-ad00-7e8b74dde48f",
+          "uuid" : "75736249-834b-42be-8656-db66f9ae08b3",
           "name" : "extends",
           "type" : "LIST",
           "argumentType" : "java.util.Collection<Extending>"
         }, {
-          "uuid" : "29fbd809-843b-4d89-bce7-129bbec04ac0",
+          "uuid" : "946a4184-27d9-4204-9ba6-d313ef44d9d2",
           "name" : "overrideEquals",
           "type" : "SINGLE",
           "argumentType" : "OverrideEquals"
         }, {
-          "uuid" : "de7455dc-497f-4a45-9b2b-c7d7c5d05c5a",
+          "uuid" : "0f60d301-813f-4569-aa30-02ad07458da1",
           "name" : "overrideHashCode",
           "type" : "SINGLE",
           "argumentType" : "OverrideHashCode"
         }, {
-          "uuid" : "054d9c74-05ca-4785-871e-fd5dba06d4d8",
+          "uuid" : "037aff5c-5aa5-4378-9898-ab0d9dce4d7e",
           "name" : "overrideToString",
           "type" : "SINGLE",
           "argumentType" : "OverrideToString"
         }, {
-          "uuid" : "d4697cf5-af07-4d26-a8ad-f724692d0b34",
+          "uuid" : "fbab7e08-e561-431d-a9b3-b95155efaf65",
           "name" : "members",
           "type" : "LIST",
           "argumentType" : "java.util.Collection<FunctionDeclaration>"
@@ -119,12 +119,12 @@
           "name" : "OverrideEquals",
           "text" : "override fun equals(other: Any?): Boolean {\n\tif (other !is ~className~) return false\n\treturn if (other === this) true\n\telse\n\t\t~fields:{it|~it~};separator=\" && \"~\n} ",
           "parameters" : [ {
-            "uuid" : "21273147-781c-456a-b42c-e4e65818951d",
+            "uuid" : "0267d52b-0a38-48cc-845b-0d7dbbf9e696",
             "name" : "className",
             "type" : "SINGLE",
             "argumentType" : "String"
           }, {
-            "uuid" : "5dfef939-bd59-49fe-82a4-7eaf38d93987",
+            "uuid" : "e9e3857c-41bc-4cd1-a2db-7949a8e52b25",
             "name" : "fields",
             "type" : "LIST",
             "argumentType" : "Expression"
@@ -139,12 +139,12 @@
           "name" : "OverrideToString",
           "text" : "override fun toString(): String {\n\treturn \"~className~(~fields:{it|~it~='$~it~'};separator=\", \"~)\"\n} ",
           "parameters" : [ {
-            "uuid" : "fab75e4e-e2ee-46fe-bf07-17c263fa5ba5",
+            "uuid" : "a805298c-f2f1-460c-b83a-89d0ef9d662a",
             "name" : "className",
             "type" : "SINGLE",
             "argumentType" : "String"
           }, {
-            "uuid" : "7b1fa60b-9ed4-438f-8adf-25fb89a779de",
+            "uuid" : "94b92549-a64f-4e6d-82e2-1462b11dca4e",
             "name" : "fields",
             "type" : "LIST",
             "argumentType" : "String"
@@ -573,6 +573,12 @@
         "argumentType" : "Expression"
       } ],
       "implements" : [ "Expression" ]
+    }, {
+      "uuid" : "1219d04f-86d0-48c5-8362-1fce770b435b",
+      "name" : "TestExpression",
+      "text" : "abc ",
+      "implements" : [ "Expression" ],
+      "parameters" : [ ]
     } ]
   }, {
     "uuid" : "7f297955-618e-40d3-a441-920c4f5ec56e",

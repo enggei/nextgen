@@ -296,17 +296,11 @@ public class ClassDeclaration implements CompilationUnit {
 				"	~fields:{it|~it~};separator=\",\\n\"~\n" + 
 				")~if(extends)~: ~extends:{it|~it~};separator=\", \"~~endif~ {\n" + 
 				"\n" + 
-				"	~if(overrideEquals)~~overrideEquals~\n" + 
+				"	~overrideEquals~\n" + 
 				"\n" + 
-				"	~endif~\n" + 
+				"	~overrideHashCode~\n" + 
 				"\n" + 
-				"	~if(overrideHashCode)~~overrideHashCode~\n" + 
-				"\n" + 
-				"	~endif~\n" + 
-				"\n" + 
-				"	~if(overrideToString)~~overrideToString~\n" + 
-				"\n" + 
-				"	~endif~\n" + 
+				"	~overrideToString~\n" + 
 				"\n" + 
 				"	~members:{it|~it~};separator=\"\\n\"~\n" + 
 				"} >>";
