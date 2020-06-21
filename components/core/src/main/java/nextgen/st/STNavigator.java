@@ -10,10 +10,9 @@ import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -27,6 +26,26 @@ public class STNavigator extends JPanel {
     private final JTabbedPane tabbedPane;
     private final DefaultTreeModel treeModel;
 
+    private static final ClassLoader classLoader = STNavigator.class.getClassLoader();
+
+    // Ref: https://stackoverflow.com/questions/6714045/how-to-resize-jlabel-imageicon
+    private static ImageIcon resizeImageIcon(ImageIcon icon, int w, int h) {
+        int nw = icon.getIconWidth();
+        int nh = icon.getIconHeight();
+
+        if (icon.getIconWidth() > w) {
+            nw = w;
+            nh = (nw * icon.getIconHeight()) / icon.getIconWidth();
+        }
+
+        if (nh > h) {
+            nh = h;
+            nw = (icon.getIconWidth() * nh) / icon.getIconHeight();
+        }
+
+        return new ImageIcon(icon.getImage().getScaledInstance(nw, nh, Image.SCALE_DEFAULT));
+    }
+
     public STNavigator(STAppModel appModel, JTabbedPane contentPanel) {
         super(new BorderLayout());
 
@@ -35,8 +54,26 @@ public class STNavigator extends JPanel {
         treeModel = new DefaultTreeModel(new RootNode(appModel));
         tree.setModel(treeModel);
         tree.setCellRenderer(new DefaultTreeCellRenderer() {
+            private final Icon interfaceIcon = resizeImageIcon(new ImageIcon(Objects.requireNonNull(classLoader.getResource("icons/interface_32.png"))), 16, 16);
+            private final Icon enumIcon = resizeImageIcon(new ImageIcon(Objects.requireNonNull(classLoader.getResource("icons/enum_32.png"))), 16, 16);
+            private final Icon templateIcon = resizeImageIcon(new ImageIcon(Objects.requireNonNull(classLoader.getResource("icons/template_32.png"))), 16, 16);
+
             @Override
             public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+                switch (value.getClass().getSimpleName()) {
+                    case "STTemplateTreeNode":
+                        this.setLeafIcon(templateIcon);
+                        break;
+                    case "STEnumTreeNode":
+                        this.setLeafIcon(enumIcon);
+                        break;
+                    case "STInterfaceTreeNode":
+                        this.setLeafIcon(interfaceIcon);
+                        break;
+                    default:
+                        break;
+                }
+
                 return super.getTreeCellRendererComponent(tree, (value instanceof BaseTreeNode ? ((BaseTreeNode<?>) value).getLabel() : value), sel, expanded, leaf, row, hasFocus);
             }
         });
