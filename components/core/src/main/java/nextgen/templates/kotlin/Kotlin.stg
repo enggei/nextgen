@@ -28,6 +28,12 @@ EqualsExpression(lhs,rhs) ::= <<~lhs~ == ~rhs~  >>
 
 ScopeExpression(scope,expression) ::= <<~scope~.~expression~  >>
 
+SimpleStringExpression(expression) ::= <<$~expression~  >>
+
+ToStringExpression(name,stringExpression) ::= <<~name~='~stringExpression~'  >>
+
+ComplexStringExpression(expression) ::= <<${~expression~}  >>
+
 Grammar() ::= << >>
 
 Declarations() ::= << >>
@@ -64,7 +70,7 @@ OverrideHashCode() ::= <<override fun hashCode(): Int {
 }  >>
 
 OverrideToString(className,fields) ::= <<override fun toString(): String {
-	return "~className~(~fields:{it|~it~='$~it~'};separator=", "~)"
+	return "~className~(~fields:{it|~it~};separator=", "~)"
 }  >>
 
 FieldDeclaration(annotations,isMutable,isNonMember,name,type,initializer) ::= <<~annotations:{it|~it~};separator="\n"~

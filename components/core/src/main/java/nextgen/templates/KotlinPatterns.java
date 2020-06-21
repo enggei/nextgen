@@ -2,7 +2,8 @@ package nextgen.templates;
 
 import nextgen.templates.kotlin.*;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 public class KotlinPatterns extends KotlinST {
@@ -15,12 +16,20 @@ public class KotlinPatterns extends KotlinST {
       return newScopeExpression().setScope(scope).setExpression(newVarExpression().setVarname(fieldDeclaration.getName()));
    }
 
-   public static OverrideEquals createEqualsFunction(String className, List<FieldDeclaration> fields) {
+   public static Expression asFunctionCallExpression(String scope, String functionName) {
+      return newFunctionCallExpression().setScope(scope).setFunctionName(functionName).setArguments(Collections.emptyList());
+   }
+
+   public static Expression asFunctionCallExpression(String scope, String functionName, Collection<Expression> arguments) {
+      return newFunctionCallExpression().setScope(scope).setFunctionName(functionName).setArguments(arguments);
+   }
+
+   public static OverrideEquals createEqualsFunction(String className, Collection<FieldDeclaration> fields) {
       return newOverrideEquals()
          .setClassName(className)
          .setFields(fields.stream()
             .map(fieldDeclaration -> {
-               if (fieldDeclaration.getType().getClass().getSimpleName().equals("ArrayType")) {
+               if (fieldDeclaration.getType() instanceof ArrayType) {
                   return newArrayEqualsExpression()
                      .setLeftArray(asThisExpression(fieldDeclaration))
                      .setRightArray(asScopeExpression("other", fieldDeclaration));
@@ -28,19 +37,31 @@ public class KotlinPatterns extends KotlinST {
                   return newEqualsExpression().setLhs(asThisExpression(fieldDeclaration)).setRhs(asScopeExpression("other", fieldDeclaration));
                }
             })
-            .filter(name -> !name.equals("id"))
             .collect(Collectors.toList()));
    }
 
-   public static OverrideToString createToStringFunction(String className, List<FieldDeclaration> fields) {
+   public static OverrideToString createToStringFunction(String className, Collection<FieldDeclaration> fields) {
       return newOverrideToString()
          .setClassName(className)
          .setFields(fields.stream()
-            .map(FieldDeclaration::getName)
+            .map(fieldDeclaration -> {
+               ToStringExpression tse = newToStringExpression()
+                       .setName(fieldDeclaration.getName());
+               if (fieldDeclaration.getType() instanceof ArrayType) {
+                   tse.setStringExpression(
+                           newComplexStringExpression().setExpression(asFunctionCallExpression(fieldDeclaration.getName(), "contentToString"))
+                   );
+               } else {
+                   tse.setStringExpression(
+                           newSimpleStringExpression().setExpression(newVarExpression().setVarname(fieldDeclaration.getName()))
+                   );
+               }
+               return tse;
+            })
             .collect(Collectors.toList()));
    }
 
-   public static FunctionDeclaration createCopyFunction(String className, List<FieldDeclaration> fields) {
+   public static FunctionDeclaration createCopyFunction(String className, Collection<FieldDeclaration> fields) {
       return newFunctionDeclaration()
               .setName("copy")
               .setReturnType(newNamedType().setName(className))
@@ -53,7 +74,7 @@ public class KotlinPatterns extends KotlinST {
               )
               .setExpressionBody(newConstructorCallExpression()
                       .setClassName(className)
-                      .addParams(fields.stream().map(fieldDeclaration -> newFunctionCallParamExpression()
+                      .setParams(fields.stream().map(fieldDeclaration -> newFunctionCallParamExpression()
                               .setFieldName(fieldDeclaration.getName())
                               .setExpression(newVarExpression().setVarname(fieldDeclaration.getName()))
                       ).collect(Collectors.toList()))
@@ -70,5 +91,9 @@ public class KotlinPatterns extends KotlinST {
 
    public static ClassDeclaration newClassDeclaration(String name) {
       return newClassDeclaration().setName(name);
+   }
+
+   public static NullableType newNullableType(TypeDeclaration typeDeclaration) {
+      return newNullableType().setType(typeDeclaration);
    }
 }

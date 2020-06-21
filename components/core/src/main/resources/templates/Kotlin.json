@@ -137,17 +137,17 @@
         }, {
           "uuid" : "91608716-9aa7-41e5-958a-bdce665fd59f",
           "name" : "OverrideToString",
-          "text" : "override fun toString(): String {\n\treturn \"~className~(~fields:{it|~it~='$~it~'};separator=\", \"~)\"\n} ",
+          "text" : "override fun toString(): String {\n\treturn \"~className~(~fields:{it|~it~};separator=\", \"~)\"\n} ",
           "parameters" : [ {
-            "uuid" : "a805298c-f2f1-460c-b83a-89d0ef9d662a",
+            "uuid" : "fb99af53-d88a-4f22-9914-2d05189828e7",
             "name" : "className",
             "type" : "SINGLE",
             "argumentType" : "String"
           }, {
-            "uuid" : "94b92549-a64f-4e6d-82e2-1462b11dca4e",
+            "uuid" : "490bfba1-1f40-4bdd-a521-0191961a09d0",
             "name" : "fields",
             "type" : "LIST",
-            "argumentType" : "String"
+            "argumentType" : "ToStringExpression"
           } ]
         } ],
         "implements" : [ "CompilationUnit" ]
@@ -524,7 +524,7 @@
         "uuid" : "c289d647-5178-4b7a-9e9e-e000108e5c88",
         "name" : "params",
         "type" : "LIST",
-        "argumentType" : "java.util.Collection<FunctionCallParamExpression>"
+        "argumentType" : "FunctionCallParamExpression"
       } ]
     }, {
       "uuid" : "9adacc2f-44d8-4643-bfc7-f58d56e63daf",
@@ -590,6 +590,44 @@
         "argumentType" : "Expression"
       } ],
       "implements" : [ "Expression" ]
+    }, {
+      "uuid" : "94518cf4-0757-413c-8734-c08d07f1a799",
+      "name" : "SimpleStringExpression",
+      "text" : "$~expression~ ",
+      "implements" : [ "Expression", "StringExpression" ],
+      "parameters" : [ {
+        "uuid" : "99612a41-c005-45da-b0c9-722167e20bff",
+        "name" : "expression",
+        "type" : "SINGLE",
+        "argumentType" : "Expression"
+      } ]
+    }, {
+      "uuid" : "126345be-a7e6-444f-9af8-783b772f5c02",
+      "name" : "ToStringExpression",
+      "text" : "~name~='~stringExpression~' ",
+      "implements" : [ "Expression" ],
+      "parameters" : [ {
+        "uuid" : "a00bbbcb-204a-44f1-84f7-786d02da6c3b",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "0dba3d38-7e44-4dd9-820f-4238c95f33cb",
+        "name" : "stringExpression",
+        "type" : "SINGLE",
+        "argumentType" : "StringExpression"
+      } ]
+    }, {
+      "uuid" : "2fc76283-1e6c-43aa-9fb3-26a85ad122de",
+      "name" : "ComplexStringExpression",
+      "text" : "${~expression~} ",
+      "implements" : [ "Expression", "StringExpression" ],
+      "parameters" : [ {
+        "uuid" : "656433b5-3420-42d8-b5dd-f86e805b08a5",
+        "name" : "expression",
+        "type" : "SINGLE",
+        "argumentType" : "Expression"
+      } ]
     } ]
   }, {
     "uuid" : "7f297955-618e-40d3-a441-920c4f5ec56e",
@@ -627,5 +665,8 @@
   }, {
     "uuid" : "42d8dab5-3ffe-44d1-be40-65a989aa4fe6",
     "name" : "Statement"
+  }, {
+    "uuid" : "5df95551-1678-44f1-8abb-783f24de627f",
+    "name" : "StringExpression"
   } ]
 }

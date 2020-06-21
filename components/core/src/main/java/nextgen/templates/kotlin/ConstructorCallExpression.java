@@ -6,7 +6,7 @@ public class ConstructorCallExpression implements Expression {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private String _className;
-	private java.util.List<java.util.Collection<FunctionCallParamExpression>> _params = new java.util.ArrayList<>();
+	private java.util.List<FunctionCallParamExpression> _params = new java.util.ArrayList<>();
 
 	ConstructorCallExpression(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -42,22 +42,22 @@ public class ConstructorCallExpression implements Expression {
 		return this;
 	} 
 
-	public ConstructorCallExpression addParams(java.util.Collection<FunctionCallParamExpression> value) {
+	public ConstructorCallExpression addParams(FunctionCallParamExpression value) {
 		this._params.add(value);
 		return this;
 	}
 
-	public ConstructorCallExpression setParams(java.util.Collection<FunctionCallParamExpression>[] value) {
+	public ConstructorCallExpression setParams(FunctionCallParamExpression[] value) {
 		this._params.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public ConstructorCallExpression setParams(java.util.Collection<java.util.Collection<FunctionCallParamExpression>> values) {
+	public ConstructorCallExpression setParams(java.util.Collection<FunctionCallParamExpression> values) {
 		this._params.addAll(values);
 		return this;
 	}
 
-	public ConstructorCallExpression removeParams(java.util.Collection<FunctionCallParamExpression> value) {
+	public ConstructorCallExpression removeParams(FunctionCallParamExpression value) {
 		this._params.remove(value);
 		return this;
 	}
@@ -67,7 +67,7 @@ public class ConstructorCallExpression implements Expression {
 		return this;
 	}
 
-	public java.util.List<java.util.Collection<FunctionCallParamExpression>> getParams() {
+	public java.util.List<FunctionCallParamExpression> getParams() {
 		return this._params;
 	} 
 
