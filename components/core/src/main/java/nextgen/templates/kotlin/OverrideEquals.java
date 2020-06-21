@@ -6,7 +6,7 @@ public class OverrideEquals {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private String _className;
-	private java.util.List<String> _fields = new java.util.ArrayList<>();
+	private java.util.List<Expression> _fields = new java.util.ArrayList<>();
 
 	OverrideEquals(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -42,22 +42,22 @@ public class OverrideEquals {
 		return this;
 	} 
 
-	public OverrideEquals addFields(String value) {
+	public OverrideEquals addFields(Expression value) {
 		this._fields.add(value);
 		return this;
 	}
 
-	public OverrideEquals setFields(String[] value) {
+	public OverrideEquals setFields(Expression[] value) {
 		this._fields.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public OverrideEquals setFields(java.util.Collection<String> values) {
+	public OverrideEquals setFields(java.util.Collection<Expression> values) {
 		this._fields.addAll(values);
 		return this;
 	}
 
-	public OverrideEquals removeFields(String value) {
+	public OverrideEquals removeFields(Expression value) {
 		this._fields.remove(value);
 		return this;
 	}
@@ -67,7 +67,7 @@ public class OverrideEquals {
 		return this;
 	}
 
-	public java.util.List<String> getFields() {
+	public java.util.List<Expression> getFields() {
 		return this._fields;
 	} 
 
@@ -89,6 +89,6 @@ public class OverrideEquals {
 				"	if (other !is ~className~) return false\n" + 
 				"	return if (other === this) true\n" + 
 				"	else\n" + 
-				"		~fields:{it|this.~it~ == other.~it~};separator=\" && \"~\n" + 
+				"		~fields:{it|~it~};separator=\" && \"~\n" + 
 				"} >>";
 } 

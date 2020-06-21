@@ -1,24 +1,48 @@
 package nextgen.templates.kotlin;
 
-public class ThisExpression implements Expression {
+public class ScopeExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private String _scope;
 	private Expression _expression;
 
-	ThisExpression(org.stringtemplate.v4.STGroup stGroup) {
+	ScopeExpression(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
 	@Override
 	public String toString() {
-		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ThisExpression");
+		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ScopeExpression");
+		st.add("scope", _scope);
 		st.add("expression", _expression);
 		return st.render().trim();
 	}
 
-	public ThisExpression setExpression(Expression value) {
+	public ScopeExpression setScope(String value) {
+		this._scope = value;
+		return this;
+	}
+
+	public String getScope() {
+		return this._scope;
+	}
+
+	public String getScope(String defaultValue) {
+		return this._scope == null ? defaultValue : this._scope;
+	}
+
+	public boolean hasScope() {
+		return this._scope != null;
+	}
+
+	public ScopeExpression removeScope() {
+		this._scope = null;
+		return this;
+	} 
+
+	public ScopeExpression setExpression(Expression value) {
 		this._expression = value;
 		return this;
 	}
@@ -35,7 +59,7 @@ public class ThisExpression implements Expression {
 		return this._expression != null;
 	}
 
-	public ThisExpression removeExpression() {
+	public ScopeExpression removeExpression() {
 		this._expression = null;
 		return this;
 	} 
@@ -46,7 +70,7 @@ public class ThisExpression implements Expression {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		ThisExpression that = (ThisExpression) o;
+		ScopeExpression that = (ScopeExpression) o;
 		return uuid.equals(that.uuid);
 	}
 
@@ -55,5 +79,5 @@ public class ThisExpression implements Expression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ThisExpression(expression) ::= <<this.~expression~ >>";
+	static final String st = "ScopeExpression(scope,expression) ::= <<~scope~.~expression~ >>";
 } 

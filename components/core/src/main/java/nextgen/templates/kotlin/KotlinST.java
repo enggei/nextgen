@@ -6,11 +6,14 @@ public class KotlinST {
 	"eom() ::= \"}\"\n" +
 	"gt() ::= \">\"\n" +
 	Poko.st + "\n" + 
+	ArrayEqualsExpression.st + "\n" + 
 	CastExpression.st + "\n" + 
 	ConstructorCallExpression.st + "\n" + 
+	EqualsExpression.st + "\n" + 
 	FunctionCallExpression.st + "\n" + 
 	FunctionCallParamExpression.st + "\n" + 
 	NullExpression.st + "\n" + 
+	ScopeExpression.st + "\n" + 
 	ThisExpression.st + "\n" + 
 	VarExpression.st + "\n" + 
 	AnnotationDeclaration.st + "\n" + 
@@ -34,7 +37,8 @@ public class KotlinST {
 	ArrayType.st + "\n" + 
 	ListType.st + "\n" + 
 	MapType.st + "\n" + 
-	NamedType.st + "\n" ;
+	NamedType.st + "\n" + 
+	NullableType.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -74,12 +78,20 @@ public class KotlinST {
 		return new Poko(stGroup);
 	} 
 
+	public static ArrayEqualsExpression newArrayEqualsExpression() {
+		return new ArrayEqualsExpression(stGroup);
+	} 
+
 	public static CastExpression newCastExpression() {
 		return new CastExpression(stGroup);
 	} 
 
 	public static ConstructorCallExpression newConstructorCallExpression() {
 		return new ConstructorCallExpression(stGroup);
+	} 
+
+	public static EqualsExpression newEqualsExpression() {
+		return new EqualsExpression(stGroup);
 	} 
 
 	public static FunctionCallExpression newFunctionCallExpression() {
@@ -92,6 +104,10 @@ public class KotlinST {
 
 	public static NullExpression newNullExpression() {
 		return new NullExpression(stGroup);
+	} 
+
+	public static ScopeExpression newScopeExpression() {
+		return new ScopeExpression(stGroup);
 	} 
 
 	public static ThisExpression newThisExpression() {
@@ -188,6 +204,10 @@ public class KotlinST {
 
 	public static NamedType newNamedType() {
 		return new NamedType(stGroup);
+	} 
+
+	public static NullableType newNullableType() {
+		return new NullableType(stGroup);
 	} 
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {

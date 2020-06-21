@@ -16,11 +16,17 @@ CastExpression(expression,type) ::= <<~expression~ as ~type~  >>
 
 FunctionCallExpression(scope,functionName,arguments) ::= <<~if(scope)~~scope~.~endif~~functionName~(~arguments:{it|~it~};separator=", "~)  >>
 
-ThisExpression(value) ::= <<this.~value~  >>
+ThisExpression(expression) ::= <<this.~expression~  >>
 
 ConstructorCallExpression(className,params) ::= <<~className~(~params:{it|~it~};separator=", "~)  >>
 
 FunctionCallParamExpression(fieldName,expression) ::= <<~fieldName~ = ~expression~  >>
+
+ArrayEqualsExpression(leftArray,rightArray) ::= <<~leftArray~.contentEquals(~rightArray~)  >>
+
+EqualsExpression(lhs,rhs) ::= <<~lhs~ == ~rhs~  >>
+
+ScopeExpression(scope,expression) ::= <<~scope~.~expression~  >>
 
 Grammar() ::= << >>
 
@@ -56,7 +62,7 @@ OverrideEquals(className,fields) ::= <<override fun equals(other: Any?): Boolean
 	if (other !is ~className~) return false
 	return if (other === this) true
 	else
-		~fields:{it|this.~it~ == other.~it~};separator=" && "~
+		~fields:{it|~it~};separator=" && "~
 }  >>
 
 OverrideHashCode() ::= <<override fun hashCode(): Int {
@@ -67,8 +73,8 @@ OverrideToString(className,fields) ::= <<override fun toString(): String {
 	return "~className~(~fields:{it|~it~='$~it~'};separator=", "~)"
 }  >>
 
-FieldDeclaration(annotations,isMutable,isNonMember,name,type,isNullable,initializer) ::= <<~annotations:{it|~it~};separator="\n"~
-~if(isMutable)~var ~elseif(isNonMember)~~else~val ~endif~~name~: ~type~~if(isNullable)~?~endif~~if(initializer)~ = ~initializer~~endif~ >>
+FieldDeclaration(annotations,isMutable,isNonMember,name,type,initializer) ::= <<~annotations:{it|~it~};separator="\n"~
+~if(isMutable)~var ~elseif(isNonMember)~~else~val ~endif~~name~: ~type~~if(initializer)~ = ~initializer~~endif~  >>
 
 Extending(className,params) ::= <<~className~(~params:{it|~it.name~};separator=", "~) >>
 
@@ -108,6 +114,8 @@ ListType(type) ::= <<List<~type~>  >>
 MapType(type) ::= <<Map<~type~>  >>
 
 NamedType(name) ::= <<~name~  >>
+
+NullableType(type) ::= <<~type~?  >>
 
 eom() ::= "}"
 

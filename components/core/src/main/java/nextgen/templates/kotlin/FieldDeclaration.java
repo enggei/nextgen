@@ -9,7 +9,6 @@ public class FieldDeclaration {
 	private Boolean _isNonMember;
 	private String _name;
 	private TypeDeclaration _type;
-	private Boolean _isNullable;
 	private Initializer _initializer;
 	private java.util.List<java.util.Collection<AnnotationDeclaration>> _annotations = new java.util.ArrayList<>();
 
@@ -24,7 +23,6 @@ public class FieldDeclaration {
 		st.add("isNonMember", _isNonMember);
 		st.add("name", _name);
 		st.add("type", _type);
-		st.add("isNullable", _isNullable);
 		st.add("initializer", _initializer);
 		for (Object o : _annotations) st.add("annotations", o);
 		return st.render().trim();
@@ -118,28 +116,6 @@ public class FieldDeclaration {
 		return this;
 	} 
 
-	public FieldDeclaration setIsNullable(Boolean value) {
-		this._isNullable = value;
-		return this;
-	}
-
-	public Boolean getIsNullable() {
-		return this._isNullable;
-	}
-
-	public Boolean getIsNullable(Boolean defaultValue) {
-		return this._isNullable == null ? defaultValue : this._isNullable;
-	}
-
-	public boolean hasIsNullable() {
-		return this._isNullable != null;
-	}
-
-	public FieldDeclaration removeIsNullable() {
-		this._isNullable = null;
-		return this;
-	} 
-
 	public FieldDeclaration setInitializer(Initializer value) {
 		this._initializer = value;
 		return this;
@@ -205,6 +181,6 @@ public class FieldDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "FieldDeclaration(annotations,isMutable,isNonMember,name,type,isNullable,initializer) ::= <<~annotations:{it|~it~};separator=\"\\n\"~\n" + 
-				"~if(isMutable)~var ~elseif(isNonMember)~~else~val ~endif~~name~: ~type~~if(isNullable)~?~endif~~if(initializer)~ = ~initializer~~endif~ >>";
+	static final String st = "FieldDeclaration(annotations,isMutable,isNonMember,name,type,initializer) ::= <<~annotations:{it|~it~};separator=\"\\n\"~\n" + 
+				"~if(isMutable)~var ~elseif(isNonMember)~~else~val ~endif~~name~: ~type~~if(initializer)~ = ~initializer~~endif~ >>";
 } 

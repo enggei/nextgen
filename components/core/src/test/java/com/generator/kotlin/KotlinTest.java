@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static nextgen.templates.DomainPatterns.*;
+import static nextgen.templates.KotlinPatterns.asScopeExpression;
+import static nextgen.templates.KotlinPatterns.asThisExpression;
 import static nextgen.templates.kotlin.KotlinST.*;
 
 public class KotlinTest {
@@ -86,13 +88,14 @@ public class KotlinTest {
         String className = "Country";
 
         TypeDeclaration longType = newNamedType().setName("Long");
+        TypeDeclaration nullableLongType = newNullableType().setType(longType);
         TypeDeclaration stringType = newNamedType().setName("String");
         TypeDeclaration uuidType = newNamedType().setName("UUID");
         TypeDeclaration countryIsPartOfContinentRelationshipType = newNamedType().setName("CountryIsPartOfContinentRelationship");
         ArrayType countryIsPartOfContinentRelationshipTypeArray = newArrayType().setType(countryIsPartOfContinentRelationshipType);
 
         List<FieldDeclaration> fields = asList(
-                newFieldDeclaration().setName("id").setType(longType).setIsNullable(true).setInitializer(newNullInitializer()).setIsNonMember(true),
+                newFieldDeclaration().setName("id").setType(nullableLongType).setInitializer(newNullInitializer()).setIsNonMember(true),
                 newFieldDeclaration().setName("uuid").setType(uuidType).setInitializer(
                    newExpressionInitializer().setExpression(newFunctionCallExpression().setScope("UUID").setFunctionName("randomUUID"))
                 ).setIsNonMember(true),
@@ -123,7 +126,15 @@ public class KotlinTest {
                 .setOverrideEquals(newOverrideEquals()
                         .setClassName(className)
                         .setFields(fields.stream()
-                           .map(FieldDeclaration::getName)
+                           .map(fieldDeclaration -> {
+                               if (fieldDeclaration.getType().getClass().getSimpleName().equals("ArrayType")) {
+                                   return newArrayEqualsExpression()
+                                      .setLeftArray(asThisExpression(fieldDeclaration))
+                                      .setRightArray(asScopeExpression("other", fieldDeclaration));
+                               } else {
+                                  return newEqualsExpression().setLhs(asThisExpression(fieldDeclaration)).setRhs(asScopeExpression("other", fieldDeclaration));
+                               }
+                           })
                            .filter(name -> !name.equals("id"))
                            .collect(Collectors.toList())))
                 .setOverrideToString(newOverrideToString()
@@ -140,7 +151,7 @@ public class KotlinTest {
                        .map(fieldDeclaration -> newFunctionParam()
                           .setName(fieldDeclaration.getName())
                           .setTypeDeclaration(fieldDeclaration.getType())
-                          .setDefaultValue(newThisExpression().setValue(newVarExpression().setVarname(fieldDeclaration.getName()))))
+                          .setDefaultValue(asThisExpression(fieldDeclaration)))
                        .collect(Collectors.toList())
                      )
                    .setExpressionBody(newConstructorCallExpression()

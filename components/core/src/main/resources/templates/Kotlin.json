@@ -117,17 +117,17 @@
         "children" : [ {
           "uuid" : "ac119cc9-31e2-48b0-822c-4fb713f7cbd4",
           "name" : "OverrideEquals",
-          "text" : "override fun equals(other: Any?): Boolean {\n\tif (other !is ~className~) return false\n\treturn if (other === this) true\n\telse\n\t\t~fields:{it|this.~it~ == other.~it~};separator=\" && \"~\n} ",
+          "text" : "override fun equals(other: Any?): Boolean {\n\tif (other !is ~className~) return false\n\treturn if (other === this) true\n\telse\n\t\t~fields:{it|~it~};separator=\" && \"~\n} ",
           "parameters" : [ {
-            "uuid" : "eac3c28d-e70e-4588-92b7-0d6b8abd68ea",
+            "uuid" : "21273147-781c-456a-b42c-e4e65818951d",
             "name" : "className",
             "type" : "SINGLE",
             "argumentType" : "String"
           }, {
-            "uuid" : "74b09aa6-ab54-4113-968f-cd6bcfb6ba66",
+            "uuid" : "5dfef939-bd59-49fe-82a4-7eaf38d93987",
             "name" : "fields",
             "type" : "LIST",
-            "argumentType" : "String"
+            "argumentType" : "Expression"
           } ]
         }, {
           "uuid" : "af33183e-aa15-4220-b24e-2cd3dde33384",
@@ -154,39 +154,34 @@
       }, {
         "uuid" : "653bb737-c5cb-401f-939f-6359a97fd7d6",
         "name" : "FieldDeclaration",
-        "text" : "~annotations:{it|~it~};separator=\"\\n\"~\n~if(isMutable)~var ~elseif(isNonMember)~~else~val ~endif~~name~: ~type~~if(isNullable)~?~endif~~if(initializer)~ = ~initializer~~endif~",
+        "text" : "~annotations:{it|~it~};separator=\"\\n\"~\n~if(isMutable)~var ~elseif(isNonMember)~~else~val ~endif~~name~: ~type~~if(initializer)~ = ~initializer~~endif~ ",
         "parameters" : [ {
-          "uuid" : "ceafed81-99f4-4c2d-a279-6c99e1eec271",
+          "uuid" : "908c6daf-cb19-4a81-abdc-1c1b44d21dd4",
           "name" : "annotations",
           "type" : "LIST",
           "argumentType" : "java.util.Collection<AnnotationDeclaration>"
         }, {
-          "uuid" : "862dd2de-20b1-492c-8d62-7839f410991c",
+          "uuid" : "cafdaa00-6a29-46ee-99c5-64d25b9492a0",
           "name" : "isMutable",
           "type" : "SINGLE",
           "argumentType" : "Boolean"
         }, {
-          "uuid" : "3ac81695-78a9-459f-b045-4ec62f854a6d",
+          "uuid" : "269cd61f-f292-4340-affa-1e845d7697df",
           "name" : "isNonMember",
           "type" : "SINGLE",
           "argumentType" : "Boolean"
         }, {
-          "uuid" : "bd9a7315-9383-48fa-beff-3954270d7d08",
+          "uuid" : "749e7afa-d5bb-4ea3-b1b9-513b886310d2",
           "name" : "name",
           "type" : "SINGLE",
           "argumentType" : "String"
         }, {
-          "uuid" : "4e86f085-54e1-4f76-9f5a-d8c393cc8cc9",
+          "uuid" : "a065c4e2-ff36-49d3-b27f-5979816cfa7a",
           "name" : "type",
           "type" : "SINGLE",
           "argumentType" : "TypeDeclaration"
         }, {
-          "uuid" : "77180942-d269-4584-a39b-f625c422ee31",
-          "name" : "isNullable",
-          "type" : "SINGLE",
-          "argumentType" : "Boolean"
-        }, {
-          "uuid" : "d370c099-a746-40ee-8529-aec04d003e23",
+          "uuid" : "a41e1d08-e09a-425c-80ec-9d98f291aafb",
           "name" : "initializer",
           "type" : "SINGLE",
           "argumentType" : "Initializer"
@@ -347,6 +342,17 @@
         "type" : "SINGLE",
         "argumentType" : "String"
       } ]
+    }, {
+      "uuid" : "c443c852-bbd7-443a-bf1d-6e765f9c83da",
+      "name" : "NullableType",
+      "text" : "~type~? ",
+      "parameters" : [ {
+        "uuid" : "d73fa694-83f2-4d0a-8b08-1e26a39213dd",
+        "name" : "type",
+        "type" : "SINGLE",
+        "argumentType" : "TypeDeclaration"
+      } ],
+      "implements" : [ "TypeDeclaration" ]
     } ]
   }, {
     "uuid" : "1a8fb7ac-a032-4ff8-a218-5176c959e20e",
@@ -479,10 +485,10 @@
     }, {
       "uuid" : "fdea740e-773d-4c4b-8b40-73a53e9a1222",
       "name" : "ThisExpression",
-      "text" : "this.~value~ ",
+      "text" : "this.~expression~ ",
       "parameters" : [ {
-        "uuid" : "6170be46-96a1-440e-82fa-590423392630",
-        "name" : "value",
+        "uuid" : "d5a7ed43-84aa-493f-ab6b-2468e7b3fed9",
+        "name" : "expression",
         "type" : "SINGLE",
         "argumentType" : "Expression"
       } ],
@@ -519,6 +525,54 @@
         "type" : "SINGLE",
         "argumentType" : "Expression"
       } ]
+    }, {
+      "uuid" : "7042d0d4-16f8-412a-80c3-fac403ee289e",
+      "name" : "ArrayEqualsExpression",
+      "text" : "~leftArray~.contentEquals(~rightArray~) ",
+      "implements" : [ "Expression" ],
+      "parameters" : [ {
+        "uuid" : "9a042384-9b30-41f9-8c8a-0232cf860f1a",
+        "name" : "leftArray",
+        "type" : "SINGLE",
+        "argumentType" : "Expression"
+      }, {
+        "uuid" : "48aa6535-48b3-47c3-a0e5-101df9702d99",
+        "name" : "rightArray",
+        "type" : "SINGLE",
+        "argumentType" : "Expression"
+      } ]
+    }, {
+      "uuid" : "1af81755-34e0-4d02-a879-f15f6e0221a2",
+      "name" : "EqualsExpression",
+      "text" : "~lhs~ == ~rhs~ ",
+      "implements" : [ "Expression" ],
+      "parameters" : [ {
+        "uuid" : "5b020b58-abd7-48b8-9a5b-d164be139fc3",
+        "name" : "lhs",
+        "type" : "SINGLE",
+        "argumentType" : "Expression"
+      }, {
+        "uuid" : "620d4a30-b0fd-45b5-85ba-dfe56e6d6fe8",
+        "name" : "rhs",
+        "type" : "SINGLE",
+        "argumentType" : "Expression"
+      } ]
+    }, {
+      "uuid" : "d70e2290-4d42-4278-aff2-4996f197dc2f",
+      "name" : "ScopeExpression",
+      "text" : "~scope~.~expression~ ",
+      "parameters" : [ {
+        "uuid" : "b7051b08-f960-47df-9cf6-530650d5217b",
+        "name" : "scope",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "682064fd-45d6-4798-baac-8ee2d11ca94a",
+        "name" : "expression",
+        "type" : "SINGLE",
+        "argumentType" : "Expression"
+      } ],
+      "implements" : [ "Expression" ]
     } ]
   }, {
     "uuid" : "7f297955-618e-40d3-a441-920c4f5ec56e",
