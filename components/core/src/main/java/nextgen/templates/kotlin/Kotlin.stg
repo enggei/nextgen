@@ -28,8 +28,6 @@ EqualsExpression(lhs,rhs) ::= <<~lhs~ == ~rhs~  >>
 
 ScopeExpression(scope,expression) ::= <<~scope~.~expression~  >>
 
-TestExpression() ::= <<abc  >>
-
 Grammar() ::= << >>
 
 Declarations() ::= << >>
@@ -83,6 +81,8 @@ FunctionParam(name,typeDeclaration,defaultValue) ::= <<~name~: ~typeDeclaration~
 
 Statements() ::= << >>
 
+ImportStatement(scope,name) ::= <<import ~scope~.~name~  >>
+
 Initializers() ::= << >>
 
 ArrayInitializer(statements) ::= <<arrayOf(~statements:{it|~it~};separator=", "~)  >>
@@ -97,7 +97,9 @@ NullInitializer() ::= <<null  >>
 
 ExpressionInitializer(expression) ::= <<~expression~  >>
 
-KotlinFile(packageDeclaration,compilationUnit) ::= <<~packageDeclaration~
+KotlinFile(packageDeclaration,imports,compilationUnit) ::= <<~packageDeclaration~
+
+~imports:{it|~it~};separator="\n"~
 
 ~compilationUnit:{it|~it~};separator="\n\n"~  >>
 

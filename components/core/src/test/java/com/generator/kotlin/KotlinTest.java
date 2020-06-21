@@ -1,5 +1,6 @@
 package com.generator.kotlin;
 
+import nextgen.st.STGenerator;
 import nextgen.templates.DomainPatterns;
 import nextgen.templates.domain.Domain;
 import nextgen.templates.kotlin.*;
@@ -48,7 +49,7 @@ public class KotlinTest {
 
             // post as json:
 
-            db.findAllCountry().forEach(country ->  {
+            db.findAllCountry().forEach(country -> {
                 System.out.println(KotlinTestJsonFactory.newCountry().setName(country.getName()));
             });
 
@@ -95,24 +96,24 @@ public class KotlinTest {
         List<FieldDeclaration> fields = asList(
                 newFieldDeclaration(nullableLongType, "id").setInitializer(newNullInitializer()).setIsNonMember(true),
                 newFieldDeclaration(uuidType, "uuid").setInitializer(
-                   newExpressionInitializer().setExpression(newFunctionCallExpression().setScope("UUID").setFunctionName("randomUUID"))
+                        newExpressionInitializer().setExpression(newFunctionCallExpression().setScope("UUID").setFunctionName("randomUUID"))
                 ).setIsNonMember(true),
-           newFieldDeclaration(longType, "epId"),
-           newFieldDeclaration(stringType, "code"),
-           newFieldDeclaration(stringType, "name"),
-                newFieldDeclaration()
-                    .addAnnotations(singletonList(newAnnotationDeclaration()
-                       .addAnnotations("Relationship", singletonList(newAnnotationParam()
-                          .addParam("type", "REL_IS_PART_OF")
-                          .addParam("direction", "Relationship.OUTGOING")
-                       ))
-                    )).setName("isPartOfContinent").setType(countryIsPartOfContinentRelationshipTypeArray).setInitializer(newEmptyArrayInitializer()).setIsMutable(true)
+                newFieldDeclaration(longType, "epId", true),
+                newFieldDeclaration(stringType, "code", true),
+                newFieldDeclaration(stringType, "name", true),
+                newFieldDeclaration(countryIsPartOfContinentRelationshipTypeArray, "isPartOfContinent", true)
+                        .addAnnotations(singletonList(newAnnotationDeclaration()
+                                .addAnnotations("Relationship", singletonList(newAnnotationParam()
+                                        .addParam("type", "REL_IS_PART_OF")
+                                        .addParam("direction", "Relationship.OUTGOING")
+                                ))
+                        )).setInitializer(newEmptyArrayInitializer())
         );
 
         ClassDeclaration dataClass = newClassDeclaration(className)
                 .setAnnotations(singletonList(newAnnotationDeclaration()
                         .addAnnotations("NodeEntity", singletonList(newAnnotationParam()
-                           .addParam("label", "NODE_COUNTRY")
+                                .addParam("label", "NODE_COUNTRY")
                         ))
                 ))
                 .setIsOpen(true)
@@ -124,31 +125,44 @@ public class KotlinTest {
                 .setOverrideToString(createToStringFunction(className, fields))
                 .setOverrideHashCode(newOverrideHashCode())
                 .addMembers(singletonList(
-                   newFunctionDeclaration()
-                     .setName("copy")
-                     .setReturnType(newNamedType().setName(className))
-                     .setParams(fields.stream()
-                       .map(fieldDeclaration -> newFunctionParam()
-                          .setName(fieldDeclaration.getName())
-                          .setTypeDeclaration(fieldDeclaration.getType())
-                          .setDefaultValue(asThisExpression(fieldDeclaration)))
-                       .collect(Collectors.toList())
-                     )
-                   .setExpressionBody(newConstructorCallExpression()
-                     .setClassName(className)
-                     .addParams(fields.stream().map(fieldDeclaration -> newFunctionCallParamExpression()
-                        .setFieldName(fieldDeclaration.getName())
-                        .setExpression(newVarExpression().setVarname(fieldDeclaration.getName()))
-                     ).collect(Collectors.toList()))
-                   ))
-                )
-           ;
+                        newFunctionDeclaration()
+                                .setName("copy")
+                                .setReturnType(newNamedType().setName(className))
+                                .setParams(fields.stream()
+                                        .map(fieldDeclaration -> newFunctionParam()
+                                                .setName(fieldDeclaration.getName())
+                                                .setTypeDeclaration(fieldDeclaration.getType())
+                                                .setDefaultValue(asThisExpression(fieldDeclaration)))
+                                        .collect(Collectors.toList())
+                                )
+                                .setExpressionBody(newConstructorCallExpression()
+                                        .setClassName(className)
+                                        .addParams(fields.stream().map(fieldDeclaration -> newFunctionCallParamExpression()
+                                                .setFieldName(fieldDeclaration.getName())
+                                                .setExpression(newVarExpression().setVarname(fieldDeclaration.getName()))
+                                        ).collect(Collectors.toList()))
+                                ))
+                );
 // newFunctionCallParamExpression().setFieldName("uuid").setExpression(newVarExpression().setVarname("uuid"))
+        PackageDeclaration packageDeclaration = newPackageDeclaration().setName("org.test");
+
+        List<ImportStatement> imports = asList(
+                newImportStatement().setScope("no.tv2.sport.data.domain").setName("NODE_COUNTRY"),
+                newImportStatement().setScope("no.tv2.sport.data.domain").setName("REL_IS_PART_OF"),
+                newImportStatement().setScope("no.tv2.sport.data.domain.sportsapp").setName("CountryIsPartOfContinentRelationship"),
+                newImportStatement().setScope("no.tv2.sport.neo4j").setName("Entity"),
+                newImportStatement().setScope("org.neo4j.ogm.annotation").setName("NodeEntity"),
+                newImportStatement().setScope("org.neo4j.ogm.annotation").setName("Relationship"),
+                newImportStatement().setScope("java.util").setName("*")
+        );
+
         KotlinFile kotlinFile = newKotlinFile()
-           .setPackageDeclaration(newPackageDeclaration().setName("org.test"))
-           .addCompilationUnit(singletonList(dataClass))
-           ;
+                .setPackageDeclaration(packageDeclaration)
+                .setImports(imports)
+                .setCompilationUnit(singletonList(dataClass));
 
         System.out.println(kotlinFile);
+
+        STGenerator.writeKotlinFile(kotlinFile, packageDeclaration, "CodeGenTests", new File("/media/Storage/projects/tv2/sportsdata-api.tmp/libraries/sportdata-domain/src/main/kotlin"));
     }
 }

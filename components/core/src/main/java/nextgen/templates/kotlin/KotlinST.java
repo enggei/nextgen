@@ -14,7 +14,6 @@ public class KotlinST {
 	FunctionCallParamExpression.st + "\n" + 
 	NullExpression.st + "\n" + 
 	ScopeExpression.st + "\n" + 
-	TestExpression.st + "\n" + 
 	ThisExpression.st + "\n" + 
 	VarExpression.st + "\n" + 
 	AnnotationDeclaration.st + "\n" + 
@@ -28,6 +27,7 @@ public class KotlinST {
 	FunctionDeclaration.st + "\n" + 
 	FunctionParam.st + "\n" + 
 	PackageDeclaration.st + "\n" + 
+	ImportStatement.st + "\n" + 
 	ArrayInitializer.st + "\n" + 
 	EmptyArrayInitializer.st + "\n" + 
 	ExpressionInitializer.st + "\n" + 
@@ -111,10 +111,6 @@ public class KotlinST {
 		return new ScopeExpression(stGroup);
 	} 
 
-	public static TestExpression newTestExpression() {
-		return new TestExpression(stGroup);
-	} 
-
 	public static ThisExpression newThisExpression() {
 		return new ThisExpression(stGroup);
 	} 
@@ -165,6 +161,10 @@ public class KotlinST {
 
 	public static PackageDeclaration newPackageDeclaration() {
 		return new PackageDeclaration(stGroup);
+	} 
+
+	public static ImportStatement newImportStatement() {
+		return new ImportStatement(stGroup);
 	} 
 
 	public static ArrayInitializer newArrayInitializer() {

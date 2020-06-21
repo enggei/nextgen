@@ -272,7 +272,24 @@
     }, {
       "uuid" : "6ba51d6b-19b3-48f8-8fa1-c51fe4874579",
       "name" : "Statements",
-      "text" : ""
+      "text" : "",
+      "children" : [ {
+        "uuid" : "8e4e3524-7335-49ca-88f6-80f17cf28ae6",
+        "name" : "ImportStatement",
+        "text" : "import ~scope~.~name~ ",
+        "implements" : [ "Statement" ],
+        "parameters" : [ {
+          "uuid" : "c1c49b43-d1e6-4ed0-b8e8-386e4275abde",
+          "name" : "scope",
+          "type" : "SINGLE",
+          "argumentType" : "String"
+        }, {
+          "uuid" : "f88d948b-bc10-4d57-8604-cec22f478ea0",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "String"
+        } ]
+      } ]
     } ]
   }, {
     "uuid" : "a2cb0002-82be-44f4-8721-e50d3c09b76a",
@@ -573,27 +590,26 @@
         "argumentType" : "Expression"
       } ],
       "implements" : [ "Expression" ]
-    }, {
-      "uuid" : "1219d04f-86d0-48c5-8362-1fce770b435b",
-      "name" : "TestExpression",
-      "text" : "abc ",
-      "implements" : [ "Expression" ],
-      "parameters" : [ ]
     } ]
   }, {
     "uuid" : "7f297955-618e-40d3-a441-920c4f5ec56e",
     "name" : "KotlinFile",
-    "text" : "~packageDeclaration~\n\n~compilationUnit:{it|~it~};separator=\"\\n\\n\"~ ",
+    "text" : "~packageDeclaration~\n\n~imports:{it|~it~};separator=\"\\n\"~\n\n~compilationUnit:{it|~it~};separator=\"\\n\\n\"~ ",
     "parameters" : [ {
-      "uuid" : "5317a954-72ae-4cc3-9d20-c7f71cefb65d",
+      "uuid" : "978a130d-ae2d-45ee-8de3-9f6f19326caa",
       "name" : "packageDeclaration",
       "type" : "SINGLE",
       "argumentType" : "PackageDeclaration"
     }, {
-      "uuid" : "ed8e41a2-6453-4fbf-bde1-f3b6c384914a",
+      "uuid" : "05e6a8dc-18fc-456f-bb34-281e812017d2",
+      "name" : "imports",
+      "type" : "LIST",
+      "argumentType" : "ImportStatement"
+    }, {
+      "uuid" : "3d993731-d7af-45b7-9aac-c17933b7e815",
       "name" : "compilationUnit",
       "type" : "LIST",
-      "argumentType" : "java.util.Collection<CompilationUnit>"
+      "argumentType" : "CompilationUnit"
     } ]
   } ],
   "interfaces" : [ {

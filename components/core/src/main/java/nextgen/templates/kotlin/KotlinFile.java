@@ -6,7 +6,8 @@ public class KotlinFile {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private PackageDeclaration _packageDeclaration;
-	private java.util.List<java.util.Collection<CompilationUnit>> _compilationUnit = new java.util.ArrayList<>();
+	private java.util.List<ImportStatement> _imports = new java.util.ArrayList<>();
+	private java.util.List<CompilationUnit> _compilationUnit = new java.util.ArrayList<>();
 
 	KotlinFile(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -16,6 +17,7 @@ public class KotlinFile {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("KotlinFile");
 		st.add("packageDeclaration", _packageDeclaration);
+		for (Object o : _imports) st.add("imports", o);
 		for (Object o : _compilationUnit) st.add("compilationUnit", o);
 		return st.render().trim();
 	}
@@ -42,22 +44,51 @@ public class KotlinFile {
 		return this;
 	} 
 
-	public KotlinFile addCompilationUnit(java.util.Collection<CompilationUnit> value) {
+	public KotlinFile addImports(ImportStatement value) {
+		this._imports.add(value);
+		return this;
+	}
+
+	public KotlinFile setImports(ImportStatement[] value) {
+		this._imports.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public KotlinFile setImports(java.util.Collection<ImportStatement> values) {
+		this._imports.addAll(values);
+		return this;
+	}
+
+	public KotlinFile removeImports(ImportStatement value) {
+		this._imports.remove(value);
+		return this;
+	}
+
+	public KotlinFile removeImports(int index) {
+		this._imports.remove(index);
+		return this;
+	}
+
+	public java.util.List<ImportStatement> getImports() {
+		return this._imports;
+	} 
+
+	public KotlinFile addCompilationUnit(CompilationUnit value) {
 		this._compilationUnit.add(value);
 		return this;
 	}
 
-	public KotlinFile setCompilationUnit(java.util.Collection<CompilationUnit>[] value) {
+	public KotlinFile setCompilationUnit(CompilationUnit[] value) {
 		this._compilationUnit.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public KotlinFile setCompilationUnit(java.util.Collection<java.util.Collection<CompilationUnit>> values) {
+	public KotlinFile setCompilationUnit(java.util.Collection<CompilationUnit> values) {
 		this._compilationUnit.addAll(values);
 		return this;
 	}
 
-	public KotlinFile removeCompilationUnit(java.util.Collection<CompilationUnit> value) {
+	public KotlinFile removeCompilationUnit(CompilationUnit value) {
 		this._compilationUnit.remove(value);
 		return this;
 	}
@@ -67,7 +98,7 @@ public class KotlinFile {
 		return this;
 	}
 
-	public java.util.List<java.util.Collection<CompilationUnit>> getCompilationUnit() {
+	public java.util.List<CompilationUnit> getCompilationUnit() {
 		return this._compilationUnit;
 	} 
 
@@ -85,7 +116,9 @@ public class KotlinFile {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "KotlinFile(packageDeclaration,compilationUnit) ::= <<~packageDeclaration~\n" + 
+	static final String st = "KotlinFile(packageDeclaration,imports,compilationUnit) ::= <<~packageDeclaration~\n" + 
+				"\n" + 
+				"~imports:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"~compilationUnit:{it|~it~};separator=\"\\n\\n\"~ >>";
 } 

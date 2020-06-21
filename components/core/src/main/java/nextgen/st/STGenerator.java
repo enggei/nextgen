@@ -3,7 +3,6 @@ package nextgen.st;
 import nextgen.st.domain.STEnum;
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STTemplate;
-import nextgen.templates.java.PackageDeclaration;
 import org.jetbrains.annotations.NotNull;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -273,7 +272,7 @@ public class STGenerator {
         }
     }
 
-    public static void writeJavaFile(Object content, PackageDeclaration packageDeclaration, String name, File root) {
+    public static void writeJavaFile(Object content, nextgen.templates.java.PackageDeclaration packageDeclaration, String name, File root) {
         writeJavaFile(content, packageDeclaration.getName(), name, root);
     }
 
@@ -281,6 +280,16 @@ public class STGenerator {
         if (name == null || name.length() == 0)
             throw new IllegalArgumentException("WriteJavaFile.name cannot be empty");
         writeToFile(content, packageDeclaration, name, "java", root);
+    }
+
+    public static void writeKotlinFile(Object content, nextgen.templates.kotlin.PackageDeclaration packageDeclaration, String name, File root) {
+        writeKotlinFile(content, packageDeclaration.getName(), name, root);
+    }
+
+    public static void writeKotlinFile(Object content, String packageDeclaration, String name, File root) {
+        if (name == null || name.length() == 0)
+            throw new IllegalArgumentException("WriteKotlinFile.name cannot be empty");
+        writeToFile(content, packageDeclaration, name, "kt", root);
     }
 
     public static void writeJsFile(Object content, String packageDeclaration, String name, File root) {
