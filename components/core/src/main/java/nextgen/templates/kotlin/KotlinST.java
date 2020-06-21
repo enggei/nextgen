@@ -8,13 +8,16 @@ public class KotlinST {
 	Poko.st + "\n" + 
 	ArrayEqualsExpression.st + "\n" + 
 	CastExpression.st + "\n" + 
+	ComplexStringExpression.st + "\n" + 
 	ConstructorCallExpression.st + "\n" + 
 	EqualsExpression.st + "\n" + 
 	FunctionCallExpression.st + "\n" + 
 	FunctionCallParamExpression.st + "\n" + 
 	NullExpression.st + "\n" + 
 	ScopeExpression.st + "\n" + 
+	SimpleStringExpression.st + "\n" + 
 	ThisExpression.st + "\n" + 
+	ToStringExpression.st + "\n" + 
 	VarExpression.st + "\n" + 
 	AnnotationDeclaration.st + "\n" + 
 	AnnotationParam.st + "\n" + 
@@ -87,6 +90,10 @@ public class KotlinST {
 		return new CastExpression(stGroup);
 	} 
 
+	public static ComplexStringExpression newComplexStringExpression() {
+		return new ComplexStringExpression(stGroup);
+	} 
+
 	public static ConstructorCallExpression newConstructorCallExpression() {
 		return new ConstructorCallExpression(stGroup);
 	} 
@@ -111,8 +118,16 @@ public class KotlinST {
 		return new ScopeExpression(stGroup);
 	} 
 
+	public static SimpleStringExpression newSimpleStringExpression() {
+		return new SimpleStringExpression(stGroup);
+	} 
+
 	public static ThisExpression newThisExpression() {
 		return new ThisExpression(stGroup);
+	} 
+
+	public static ToStringExpression newToStringExpression() {
+		return new ToStringExpression(stGroup);
 	} 
 
 	public static VarExpression newVarExpression() {

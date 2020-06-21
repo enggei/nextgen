@@ -87,7 +87,7 @@ public class KotlinTest {
         String className = "Country";
 
         TypeDeclaration longType = newNamedType().setName("Long");
-        TypeDeclaration nullableLongType = newNullableType().setType(longType);
+        NullableType nullableLongType = newNullableType(longType);
         TypeDeclaration stringType = newNamedType().setName("String");
         TypeDeclaration uuidType = newNamedType().setName("UUID");
         TypeDeclaration countryIsPartOfContinentRelationshipType = newNamedType().setName("CountryIsPartOfContinentRelationship");
@@ -121,7 +121,9 @@ public class KotlinTest {
                 .setExtends(singletonList(newExtending().setClassName("Entity")
                         .addParams("id")
                         .addParams("uuid")))
-                .setOverrideEquals(createEqualsFunction(className, fields))
+                .setOverrideEquals(createEqualsFunction(className,
+                        fields.stream().filter(fieldDeclaration -> !fieldDeclaration.getName().equals("id")).collect(Collectors.toList()))
+                )
                 .setOverrideToString(createToStringFunction(className, fields))
                 .setOverrideHashCode(newOverrideHashCode())
                 .setMembers(singletonList(

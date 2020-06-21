@@ -6,7 +6,7 @@ public class OverrideToString {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private String _className;
-	private java.util.List<String> _fields = new java.util.ArrayList<>();
+	private java.util.List<ToStringExpression> _fields = new java.util.ArrayList<>();
 
 	OverrideToString(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -42,22 +42,22 @@ public class OverrideToString {
 		return this;
 	} 
 
-	public OverrideToString addFields(String value) {
+	public OverrideToString addFields(ToStringExpression value) {
 		this._fields.add(value);
 		return this;
 	}
 
-	public OverrideToString setFields(String[] value) {
+	public OverrideToString setFields(ToStringExpression[] value) {
 		this._fields.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public OverrideToString setFields(java.util.Collection<String> values) {
+	public OverrideToString setFields(java.util.Collection<ToStringExpression> values) {
 		this._fields.addAll(values);
 		return this;
 	}
 
-	public OverrideToString removeFields(String value) {
+	public OverrideToString removeFields(ToStringExpression value) {
 		this._fields.remove(value);
 		return this;
 	}
@@ -67,7 +67,7 @@ public class OverrideToString {
 		return this;
 	}
 
-	public java.util.List<String> getFields() {
+	public java.util.List<ToStringExpression> getFields() {
 		return this._fields;
 	} 
 
@@ -86,6 +86,6 @@ public class OverrideToString {
 	}
 
 	static final String st = "OverrideToString(className,fields) ::= <<override fun toString(): String {\n" + 
-				"	return \"~className~(~fields:{it|~it~='$~it~'};separator=\", \"~)\"\n" + 
+				"	return \"~className~(~fields:{it|~it~};separator=\", \"~)\"\n" + 
 				"} >>";
 } 
