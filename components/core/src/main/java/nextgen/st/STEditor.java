@@ -51,6 +51,7 @@ public class STEditor extends JPanel {
         pop.add(newAction("Insert If", actionEvent -> insertIf()));
         pop.add(newAction("Replace text and insert Single", actionEvent -> replaceAndInsertSingle()));
         pop.add(newAction("Save", actionEvent -> commit()));
+        pop.add(newAction("Debug Template", actionEvent -> debug()));
         pop.addSeparator();
         pop.add(newAction("Add Java method", actionEvent -> addJavaMethod()));
 
@@ -114,6 +115,73 @@ public class STEditor extends JPanel {
         this.txtEditor.requestFocusInWindow();
     }
 
+    private Font getPreferredFont() {
+        final Set<String> fonts = new HashSet<>(Arrays.asList(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
+        return Stream
+                .of("Hack", "Fira Code", "Source Code Pro", "Monospaced")
+                .filter(fonts::contains)
+                .findFirst().map(s -> new Font(s, Font.PLAIN, 12))
+                .orElse(null);
+    }
+
+    private void generate() {
+        commit();
+        stGroupTreeNode.generate();
+    }
+
+    private Action newAction(String name, Consumer<ActionEvent> consumer) {
+        return new AbstractAction(name) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                consumer.accept(e);
+            }
+        };
+    }
+
+    private class STTemplateEditorKeyListener extends KeyAdapter {
+        @Override
+        public void keyPressed(KeyEvent keyEvent) {
+
+            if (stTemplateTreeNode == null) return;
+
+            SwingUtilities.invokeLater(() -> txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor));
+
+            if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_L) {
+                insertList();
+            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_I) {
+                insertIf();
+            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_1) {
+                insertCapitalized();
+            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_P) {
+                insertSingle();
+            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_R) {
+                replaceAndInsertSingle();
+            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_F) {
+                format(txtEditor);
+            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_S) {
+                commit();
+            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_G) {
+                generate();
+            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
+                showPopup();
+            }
+        }
+    }
+
+    private void showPopup() {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                final Rectangle rectangle = txtEditor.modelToView(txtEditor.getCaretPosition());
+                Point p = rectangle.getLocation();
+                p.y += rectangle.height;
+                final JPopupMenu popupMenu = txtEditor.getPopupMenu();
+                popupMenu.show(txtEditor, p.x, p.y);
+            } catch (BadLocationException ignore) {
+
+            }
+        });
+    }
+
     private void commit() {
         SwingUtilities.invokeLater(() -> {
 
@@ -174,61 +242,9 @@ public class STEditor extends JPanel {
         return argumentType == null || argumentType.toString().trim().length() == 0 ? "Object" : argumentType.toString().trim();
     }
 
-    private void generate() {
-        commit();
-        stGroupTreeNode.generate();
-    }
-
-    private Action newAction(String name, Consumer<ActionEvent> consumer) {
-        return new AbstractAction(name) {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                consumer.accept(e);
-            }
-        };
-    }
-
-    private class STTemplateEditorKeyListener extends KeyAdapter {
-        @Override
-        public void keyPressed(KeyEvent keyEvent) {
-
-            if (stTemplateTreeNode == null) return;
-
-            SwingUtilities.invokeLater(() -> txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor));
-
-            if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_L) {
-                insertList();
-            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_I) {
-                insertIf();
-            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_1) {
-                insertCapitalized();
-            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_P) {
-                insertSingle();
-            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_R) {
-                replaceAndInsertSingle();
-            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_F) {
-                format(txtEditor);
-            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_S) {
-                commit();
-            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_G) {
-                generate();
-            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
-                showPopup();
-            }
-        }
-    }
-
-    private void showPopup() {
+    private void debug() {
         SwingUtilities.invokeLater(() -> {
-            try {
-                final Rectangle rectangle = txtEditor.modelToView(txtEditor.getCaretPosition());
-                Point p = rectangle.getLocation();
-                p.y += rectangle.height;
-                final JPopupMenu popupMenu = txtEditor.getPopupMenu();
-                popupMenu.show(txtEditor, p.x, p.y);
-            } catch (BadLocationException ignore) {
-
-            }
+            STParser.asST(txtEditor.getText().trim()).inspect();
         });
     }
 
@@ -458,12 +474,5 @@ public class STEditor extends JPanel {
         }
     }
 
-    public Font getPreferredFont() {
-        final Set<String> fonts = new HashSet<>(Arrays.asList(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
-        return Stream
-                .of("Hack", "Fira Code", "Source Code Pro", "Monospaced")
-                .filter(fonts::contains)
-                .findFirst().map(s -> new Font(s, Font.PLAIN, 12))
-                .orElse(null);
-    }
+
 }
