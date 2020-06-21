@@ -12,9 +12,9 @@ public class ClassDeclaration implements CompilationUnit {
 	private OverrideEquals _overrideEquals;
 	private OverrideHashCode _overrideHashCode;
 	private OverrideToString _overrideToString;
-	private java.util.List<java.util.Collection<FieldDeclaration>> _fields = new java.util.ArrayList<>();
-	private java.util.List<java.util.Collection<Extending>> _extends = new java.util.ArrayList<>();
-	private java.util.List<java.util.Collection<FunctionDeclaration>> _members = new java.util.ArrayList<>();
+	private java.util.List<FieldDeclaration> _fields = new java.util.ArrayList<>();
+	private java.util.List<Extending> _extends = new java.util.ArrayList<>();
+	private java.util.List<FunctionDeclaration> _members = new java.util.ArrayList<>();
 
 	ClassDeclaration(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -190,22 +190,22 @@ public class ClassDeclaration implements CompilationUnit {
 		return this;
 	} 
 
-	public ClassDeclaration addFields(java.util.Collection<FieldDeclaration> value) {
+	public ClassDeclaration addFields(FieldDeclaration value) {
 		this._fields.add(value);
 		return this;
 	}
 
-	public ClassDeclaration setFields(java.util.Collection<FieldDeclaration>[] value) {
+	public ClassDeclaration setFields(FieldDeclaration[] value) {
 		this._fields.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public ClassDeclaration setFields(java.util.Collection<java.util.Collection<FieldDeclaration>> values) {
+	public ClassDeclaration setFields(java.util.Collection<FieldDeclaration> values) {
 		this._fields.addAll(values);
 		return this;
 	}
 
-	public ClassDeclaration removeFields(java.util.Collection<FieldDeclaration> value) {
+	public ClassDeclaration removeFields(FieldDeclaration value) {
 		this._fields.remove(value);
 		return this;
 	}
@@ -215,26 +215,26 @@ public class ClassDeclaration implements CompilationUnit {
 		return this;
 	}
 
-	public java.util.List<java.util.Collection<FieldDeclaration>> getFields() {
+	public java.util.List<FieldDeclaration> getFields() {
 		return this._fields;
 	} 
 
-	public ClassDeclaration addExtends(java.util.Collection<Extending> value) {
+	public ClassDeclaration addExtends(Extending value) {
 		this._extends.add(value);
 		return this;
 	}
 
-	public ClassDeclaration setExtends(java.util.Collection<Extending>[] value) {
+	public ClassDeclaration setExtends(Extending[] value) {
 		this._extends.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public ClassDeclaration setExtends(java.util.Collection<java.util.Collection<Extending>> values) {
+	public ClassDeclaration setExtends(java.util.Collection<Extending> values) {
 		this._extends.addAll(values);
 		return this;
 	}
 
-	public ClassDeclaration removeExtends(java.util.Collection<Extending> value) {
+	public ClassDeclaration removeExtends(Extending value) {
 		this._extends.remove(value);
 		return this;
 	}
@@ -244,26 +244,26 @@ public class ClassDeclaration implements CompilationUnit {
 		return this;
 	}
 
-	public java.util.List<java.util.Collection<Extending>> getExtends() {
+	public java.util.List<Extending> getExtends() {
 		return this._extends;
 	} 
 
-	public ClassDeclaration addMembers(java.util.Collection<FunctionDeclaration> value) {
+	public ClassDeclaration addMembers(FunctionDeclaration value) {
 		this._members.add(value);
 		return this;
 	}
 
-	public ClassDeclaration setMembers(java.util.Collection<FunctionDeclaration>[] value) {
+	public ClassDeclaration setMembers(FunctionDeclaration[] value) {
 		this._members.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public ClassDeclaration setMembers(java.util.Collection<java.util.Collection<FunctionDeclaration>> values) {
+	public ClassDeclaration setMembers(java.util.Collection<FunctionDeclaration> values) {
 		this._members.addAll(values);
 		return this;
 	}
 
-	public ClassDeclaration removeMembers(java.util.Collection<FunctionDeclaration> value) {
+	public ClassDeclaration removeMembers(FunctionDeclaration value) {
 		this._members.remove(value);
 		return this;
 	}
@@ -273,7 +273,7 @@ public class ClassDeclaration implements CompilationUnit {
 		return this;
 	}
 
-	public java.util.List<java.util.Collection<FunctionDeclaration>> getMembers() {
+	public java.util.List<FunctionDeclaration> getMembers() {
 		return this._members;
 	} 
 

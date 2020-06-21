@@ -87,12 +87,12 @@
           "uuid" : "8c2abbfd-6489-45e3-9a1e-d3c409621b04",
           "name" : "fields",
           "type" : "LIST",
-          "argumentType" : "java.util.Collection<FieldDeclaration>"
+          "argumentType" : "FieldDeclaration"
         }, {
           "uuid" : "75736249-834b-42be-8656-db66f9ae08b3",
           "name" : "extends",
           "type" : "LIST",
-          "argumentType" : "java.util.Collection<Extending>"
+          "argumentType" : "Extending"
         }, {
           "uuid" : "946a4184-27d9-4204-9ba6-d313ef44d9d2",
           "name" : "overrideEquals",
@@ -112,7 +112,7 @@
           "uuid" : "fbab7e08-e561-431d-a9b3-b95155efaf65",
           "name" : "members",
           "type" : "LIST",
-          "argumentType" : "java.util.Collection<FunctionDeclaration>"
+          "argumentType" : "FunctionDeclaration"
         } ],
         "children" : [ {
           "uuid" : "ac119cc9-31e2-48b0-822c-4fb713f7cbd4",
@@ -159,7 +159,7 @@
           "uuid" : "908c6daf-cb19-4a81-abdc-1c1b44d21dd4",
           "name" : "annotations",
           "type" : "LIST",
-          "argumentType" : "java.util.Collection<AnnotationDeclaration>"
+          "argumentType" : "AnnotationDeclaration"
         }, {
           "uuid" : "cafdaa00-6a29-46ee-99c5-64d25b9492a0",
           "name" : "isMutable",

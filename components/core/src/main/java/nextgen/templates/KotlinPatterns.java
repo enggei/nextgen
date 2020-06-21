@@ -40,6 +40,26 @@ public class KotlinPatterns extends KotlinST {
             .collect(Collectors.toList()));
    }
 
+   public static FunctionDeclaration createCopyFunction(String className, List<FieldDeclaration> fields) {
+      return newFunctionDeclaration()
+              .setName("copy")
+              .setReturnType(newNamedType().setName(className))
+              .setParams(fields.stream()
+                      .map(fieldDeclaration -> newFunctionParam()
+                              .setName(fieldDeclaration.getName())
+                              .setTypeDeclaration(fieldDeclaration.getType())
+                              .setDefaultValue(asThisExpression(fieldDeclaration)))
+                      .collect(Collectors.toList())
+              )
+              .setExpressionBody(newConstructorCallExpression()
+                      .setClassName(className)
+                      .addParams(fields.stream().map(fieldDeclaration -> newFunctionCallParamExpression()
+                              .setFieldName(fieldDeclaration.getName())
+                              .setExpression(newVarExpression().setVarname(fieldDeclaration.getName()))
+                      ).collect(Collectors.toList()))
+              );
+   }
+
    public static FieldDeclaration newFieldDeclaration(TypeDeclaration typeDeclaration, String name) {
       return newFieldDeclaration(typeDeclaration, name, false);
    }
