@@ -985,6 +985,8 @@ public class STNavigator extends JPanel {
     private static String getLanguageIcon(STGroupModel model) {
 
         switch (model.getName().toLowerCase()) {
+            case "stringtemplate":
+                return "language-stringtemplate";
             case "kotlin":
                 return "language-kotlin";
             case "java":
