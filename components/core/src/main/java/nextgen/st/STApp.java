@@ -36,6 +36,16 @@ public class STApp extends JFrame {
 
     public static void main(String[] args) {
 
+        for (UIManager.LookAndFeelInfo laf : UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(laf.getName())) {
+                try {
+                    UIManager.setLookAndFeel(laf.getClassName());
+                } catch (Exception e) {
+                    System.err.println("Could not set look and feel '" + "Nimbus" + "': " + e.getMessage());
+                }
+            }
+        }
+
         final File root = new File("./components/core");
         final File srcMain = new File(root, "src/main");
         final File srcTest = new File(root, "src/test");

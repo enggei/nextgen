@@ -3,6 +3,7 @@ package nextgen.st;
 import com.generator.util.SwingUtil;
 import io.vertx.core.json.JsonObject;
 import nextgen.st.domain.*;
+import org.jetbrains.annotations.NotNull;
 
 import javax.lang.model.SourceVersion;
 import javax.swing.*;
@@ -26,54 +27,31 @@ public class STNavigator extends JPanel {
     private final JTabbedPane tabbedPane;
     private final DefaultTreeModel treeModel;
 
-    private static final ClassLoader classLoader = STNavigator.class.getClassLoader();
-
-    // Ref: https://stackoverflow.com/questions/6714045/how-to-resize-jlabel-imageicon
-    private static ImageIcon resizeImageIcon(ImageIcon icon, int w, int h) {
-        int nw = icon.getIconWidth();
-        int nh = icon.getIconHeight();
-
-        if (icon.getIconWidth() > w) {
-            nw = w;
-            nh = (nw * icon.getIconHeight()) / icon.getIconWidth();
-        }
-
-        if (nh > h) {
-            nh = h;
-            nw = (icon.getIconWidth() * nh) / icon.getIconHeight();
-        }
-
-        return new ImageIcon(icon.getImage().getScaledInstance(nw, nh, Image.SCALE_DEFAULT));
-    }
+    // https://materialdesignicons.com/
+    private final Map<Class<?>, Icon> icons = new LinkedHashMap<>();
 
     public STNavigator(STAppModel appModel, JTabbedPane contentPanel) {
         super(new BorderLayout());
+
+        icons.put(RootNode.class, loadIcon("RootNode"));
+        icons.put(RootNode.STGDirectoryTreeNode.class, loadIcon("STGDirectory"));
+        icons.put(RootNode.STGDirectoryTreeNode.STGroupTreeNode.class, loadIcon("STGroup"));
+        icons.put(RootNode.STGDirectoryTreeNode.STGroupTreeNode.STTemplateTreeNode.class, loadIcon("STTemplate"));
+        icons.put(RootNode.STGDirectoryTreeNode.STGroupTreeNode.STEnumTreeNode.class, loadIcon("STEnum"));
+        icons.put(RootNode.STGDirectoryTreeNode.STGroupTreeNode.STInterfaceTreeNode.class, loadIcon("STInterface"));
 
         tabbedPane = contentPanel;
 
         treeModel = new DefaultTreeModel(new RootNode(appModel));
         tree.setModel(treeModel);
         tree.setCellRenderer(new DefaultTreeCellRenderer() {
-            private final Icon interfaceIcon = resizeImageIcon(new ImageIcon(Objects.requireNonNull(classLoader.getResource("icons/interface_32.png"))), 16, 16);
-            private final Icon enumIcon = resizeImageIcon(new ImageIcon(Objects.requireNonNull(classLoader.getResource("icons/enum_32.png"))), 16, 16);
-            private final Icon templateIcon = resizeImageIcon(new ImageIcon(Objects.requireNonNull(classLoader.getResource("icons/template_32.png"))), 16, 16);
 
             @Override
             public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-                switch (value.getClass().getSimpleName()) {
-                    case "STTemplateTreeNode":
-                        this.setLeafIcon(templateIcon);
-                        break;
-                    case "STEnumTreeNode":
-                        this.setLeafIcon(enumIcon);
-                        break;
-                    case "STInterfaceTreeNode":
-                        this.setLeafIcon(interfaceIcon);
-                        break;
-                    default:
-                        break;
-                }
-
+                setIcon(icons.get(value.getClass()));
+                setOpenIcon(icons.get(value.getClass()));
+                setClosedIcon(icons.get(value.getClass()));
+                setLeafIcon(icons.get(value.getClass()));
                 return super.getTreeCellRendererComponent(tree, (value instanceof BaseTreeNode ? ((BaseTreeNode<?>) value).getLabel() : value), sel, expanded, leaf, row, hasFocus);
             }
         });
@@ -130,6 +108,11 @@ public class STNavigator extends JPanel {
 
         setPreferredSize(new Dimension(300, 600));
         add(new JScrollPane(tree), BorderLayout.CENTER);
+    }
+
+    @NotNull
+    public ImageIcon loadIcon(String iconName) {
+        return new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("icons/" + iconName + "16x16.png")));
     }
 
     public void showPopup(BaseTreeNode<?> lastPathComponent, int x, int y) {
