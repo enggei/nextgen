@@ -8,6 +8,9 @@ public class TypeScriptST {
 	ArrayInitializer.st + "\n" + 
 	ArrayType.st + "\n" + 
 	EmbeddedExpression.st + "\n" + 
+	EnumDeclaration.st + "\n" + 
+	Interface.st + "\n" + 
+	TupleType.st + "\n" + 
 	VariableDeclaration.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
@@ -54,6 +57,18 @@ public class TypeScriptST {
 
 	public static EmbeddedExpression newEmbeddedExpression() {
 		return new EmbeddedExpression(stGroup);
+	} 
+
+	public static EnumDeclaration newEnumDeclaration() {
+		return new EnumDeclaration(stGroup);
+	} 
+
+	public static Interface newInterface() {
+		return new Interface(stGroup);
+	} 
+
+	public static TupleType newTupleType() {
+		return new TupleType(stGroup);
 	} 
 
 	public static VariableDeclaration newVariableDeclaration() {

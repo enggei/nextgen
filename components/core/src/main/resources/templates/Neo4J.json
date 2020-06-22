@@ -350,55 +350,47 @@
         } ]
       } ]
     } ]
-  }, {
-    "uuid" : "c01a688d-8913-48c5-b4b0-53efded2fe01",
-    "name" : "Types",
-    "text" : "",
-    "children" : [ {
-      "uuid" : "74b2e718-c0c2-4242-b298-b0d1b1272265",
+  } ],
+  "icon" : "neo4j",
+  "enums" : [ {
+    "uuid" : "e5935293-50d2-41ee-9e1a-3906afd5ef2f",
+    "name" : "Neo4JTypes",
+    "values" : [ {
+      "uuid" : "913c0bc5-0e09-4f3b-8db0-f2a561ed2072",
       "name" : "GraphDatabaseFactory",
-      "text" : "org.neo4j.graphdb.factory.GraphDatabaseFactory",
-      "parameters" : [ ]
+      "lexical" : "org.neo4j.graphdb.factory.GraphDatabaseFactory"
     }, {
-      "uuid" : "aa89018f-fb49-4f93-ba1a-c3007b30c46d",
+      "uuid" : "923ea73d-4bd4-4421-b0d4-a99b73ec4905",
       "name" : "GraphDatabaseSettings",
-      "text" : "org.neo4j.graphdb.factory.GraphDatabaseSettings",
-      "parameters" : [ ]
+      "lexical" : "org.neo4j.graphdb.factory.GraphDatabaseSettings"
     }, {
-      "uuid" : "ae93592d-bc38-4920-a58a-213599b01a57",
+      "uuid" : "e90bbe5b-276c-437f-8e3d-c88951b6ef86",
       "name" : "GraphDatabaseService",
-      "text" : "org.neo4j.graphdb.GraphDatabaseService",
-      "parameters" : [ ]
+      "lexical" : "org.neo4j.graphdb.GraphDatabaseService"
     }, {
-      "uuid" : "249faef2-c77c-4a11-a64c-d565a9456eaa",
+      "uuid" : "8a5944cc-5227-43dd-9662-2657abd53288",
       "name" : "Node",
-      "text" : "org.neo4j.graphdb.Node",
-      "parameters" : [ ]
+      "lexical" : "org.neo4j.graphdb.Node"
     }, {
-      "uuid" : "5fc931ca-f30e-4ff5-bfe4-b4fa404097de",
+      "uuid" : "4bacaae9-637c-4261-977c-20602324a633",
       "name" : "Label",
-      "text" : "org.neo4j.graphdb.Label",
-      "parameters" : [ ]
+      "lexical" : "org.neo4j.graphdb.Label"
     }, {
-      "uuid" : "8c239118-a68d-41c4-ad90-97f1467c0237",
+      "uuid" : "b236790d-385b-4f9f-b72b-a2a43ddce8e3",
       "name" : "Direction",
-      "text" : "org.neo4j.graphdb.Direction",
-      "parameters" : [ ]
+      "lexical" : "org.neo4j.graphdb.Direction"
     }, {
-      "uuid" : "c1ff9e32-40a3-4fa4-80d6-08ac6d0bf2c3",
+      "uuid" : "0d44794b-ac04-4819-8486-bd4f955551a2",
       "name" : "Relationship",
-      "text" : "org.neo4j.graphdb.Relationship",
-      "parameters" : [ ]
+      "lexical" : "org.neo4j.graphdb.Relationship"
     }, {
-      "uuid" : "fec84bd1-4dbc-488a-a807-01869d4d6a9e",
+      "uuid" : "07c24901-f17f-42a7-a5b1-37c0c9639331",
       "name" : "RelationshipType",
-      "text" : "org.neo4j.graphdb.RelationshipType",
-      "parameters" : [ ]
+      "lexical" : "org.neo4j.graphdb.RelationshipType"
     }, {
-      "uuid" : "5543c5f3-f103-4e5e-b110-ecdcd6ce3572",
+      "uuid" : "799b779c-1f5e-4ba9-b0ac-19ed1354ad07",
       "name" : "Transaction",
-      "text" : "org.neo4j.graphdb.Transaction",
-      "parameters" : [ ]
+      "lexical" : "org.neo4j.graphdb.Transaction"
     } ]
   } ]
 }

@@ -63,6 +63,7 @@ public class STEnumValue {
 		return jsonObject.getString("lexical", defaultValue);
 	}
 
+
 	@Override
 	public java.lang.String toString() { 
 		return jsonObject.getString("name");

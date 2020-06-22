@@ -6,6 +6,14 @@ arrayType(elementType) ::= <<Array<~elementType~>  >>
 
 embeddedExpression(ref) ::= <<${ ~ref~ }  >>
 
+enumDeclaration(name,enumValues) ::= <<enum ~name~ {~enumValues:{it|~it~};separator=","~}  >>
+
+interface(name,properties) ::= <<interface ~name~ {
+    ~properties:{it|~if(it.isReadOnly)~readonly ~endif~~it.name~~if(it.isReadOnly)~~elseif(it.isOptional)~?~endif~ : ~it.type~;};separator="\n"~
+}  >>
+
+tupleType(first,second) ::= <<[~first~,~second~]  >>
+
 variableDeclaration(name,type,initializer) ::= <<let ~name~: ~type~~if(initializer)~ = ~initializer~~endif~;  >>
 
 eom() ::= "}"

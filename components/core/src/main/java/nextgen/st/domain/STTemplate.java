@@ -147,6 +147,7 @@ public class STTemplate {
 		return this;
 	}
 
+
 	@Override
 	public java.lang.String toString() { 
 		return jsonObject.getString("name");

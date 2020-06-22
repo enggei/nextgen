@@ -52,6 +52,73 @@
       "type" : "LIST",
       "argumentType" : "Object"
     } ]
+  }, {
+    "uuid" : "86cf7316-f4fd-4414-9fcc-cc5801b2b67f",
+    "name" : "tupleType",
+    "text" : "[~first~,~second~] ",
+    "parameters" : [ {
+      "uuid" : "90d28d46-35a5-4296-b63c-9b3034e98482",
+      "name" : "first",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "3b60ff50-e8b4-4a51-9167-f6ade002ee89",
+      "name" : "second",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "9deaf2b8-3832-441c-8faf-d831c11e808d",
+    "name" : "enumDeclaration",
+    "text" : "enum ~name~ {~enumValues:{it|~it~};separator=\",\"~} ",
+    "parameters" : [ {
+      "uuid" : "54b25783-cddd-4a58-a9cf-5270184f3809",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "ff6e3af8-5ace-48f1-9b45-b5ab1ae01ff1",
+      "name" : "enumValues",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "adf4793d-f85d-412b-a292-9d6da6567adb",
+    "name" : "interface",
+    "text" : "interface ~name~ {\n    ~properties:{it|~if(it.isReadOnly)~readonly ~endif~~it.name~~if(it.isReadOnly)~~elseif(it.isOptional)~?~endif~ : ~it.type~;};separator=\"\\n\"~\n} ",
+    "parameters" : [ {
+      "uuid" : "d54c28a3-0929-4404-8678-b815587b2fc4",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "f4af56cf-5757-4306-8711-41990821a7e8",
+      "name" : "properties",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "eff84bdf-28e1-47f7-8e22-271aeeb1a0ca",
+        "name" : "isReadOnly",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "a125009c-1cb9-4b39-9fda-3c34b54544ff",
+        "name" : "name",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "d9052859-b059-4b29-a8e0-b3b86d42ff93",
+        "name" : "isOptional",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "b71b354b-d16d-4ac4-89a8-16da83880319",
+        "name" : "type",
+        "argumentType" : "Object"
+      } ]
+    } ]
+  }, {
+    "uuid" : "db431bd0-a333-4adc-b2ff-09565baf7d33",
+    "name" : "functionalTypeInterface",
+    "text" : "interface SearchFunc {\n\t(source: string, subString: string): boolean;\n} ",
+    "parameters" : [ ]
   } ],
   "enums" : [ {
     "uuid" : "f3819176-f9ca-4cf5-8faa-a8941b3157bf",
@@ -69,5 +136,6 @@
       "name" : "stringType",
       "lexical" : "string"
     } ]
-  } ]
+  } ],
+  "icon" : "language-typescript"
 }

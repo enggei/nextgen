@@ -22,6 +22,7 @@ public class STProject {
         final Entity stGroupModel = newEntity("STGroupModel")
                 .addRelations(newStringField("name", true))
                 .addRelations(newStringField("delimiter"))
+                .addRelations(newStringField("icon"))
                 .addRelations(newOneToMany("templates", newEntity("STTemplate")
                         .addRelations(newStringField("name", true))
                         .addRelations(newStringField("text"))

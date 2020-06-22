@@ -63,6 +63,19 @@ public class STGroupModel {
 		return jsonObject.getString("delimiter", defaultValue);
 	}
 
+	public STGroupModel setIcon(String value) { 
+		jsonObject.put("icon", value);
+		return this;
+	}
+
+	public String getIcon() { 
+		return jsonObject.getString("icon");
+	}
+
+	public String getIcon(String defaultValue) { 
+		return jsonObject.getString("icon", defaultValue);
+	}
+
 	public STGroupModel addTemplates(STTemplate value) { 
 		io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("templates");
 		if (jsonArray == null) jsonObject.put("templates", jsonArray = new io.vertx.core.json.JsonArray());
@@ -146,6 +159,7 @@ public class STGroupModel {
 		jsonObject.put("enums", new io.vertx.core.json.JsonArray());
 		return this;
 	}
+
 
 	@Override
 	public java.lang.String toString() { 

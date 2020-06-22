@@ -299,5 +299,6 @@
       "argumentType" : "String"
     } ]
   } ],
-  "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/StringTemplate.stg"
+  "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/StringTemplate.stg",
+  "icon" : "language-stringtemplate"
 }

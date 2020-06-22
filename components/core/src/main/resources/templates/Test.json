@@ -199,5 +199,6 @@
   "interfaces" : [ {
     "uuid" : "cfb55588-5d46-4a07-a766-a1c51630c713",
     "name" : "TestInterface"
-  } ]
+  } ],
+  "icon" : "language-cpp"
 }

@@ -668,5 +668,6 @@
   }, {
     "uuid" : "5df95551-1678-44f1-8abb-783f24de627f",
     "name" : "StringExpression"
-  } ]
+  } ],
+  "icon" : "language-kotlin"
 }

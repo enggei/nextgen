@@ -289,26 +289,6 @@ public java.util.stream.Stream<~entity;format="capitalize"~> findAll~entity;form
 	return db.findNodes(org.neo4j.graphdb.Label.label("~entity~"), "~propertyName~", value~if(isEnum)~.name()~endif~).stream().map(this::new~entity;format="capitalize"~);
 }  >>
 
-Types() ::= << >>
-
-GraphDatabaseFactory() ::= <<org.neo4j.graphdb.factory.GraphDatabaseFactory >>
-
-GraphDatabaseSettings() ::= <<org.neo4j.graphdb.factory.GraphDatabaseSettings >>
-
-GraphDatabaseService() ::= <<org.neo4j.graphdb.GraphDatabaseService >>
-
-Node() ::= <<org.neo4j.graphdb.Node >>
-
-Label() ::= <<org.neo4j.graphdb.Label >>
-
-Direction() ::= <<org.neo4j.graphdb.Direction >>
-
-Relationship() ::= <<org.neo4j.graphdb.Relationship >>
-
-RelationshipType() ::= <<org.neo4j.graphdb.RelationshipType >>
-
-Transaction() ::= <<org.neo4j.graphdb.Transaction >>
-
 eom() ::= "}"
 
 gt() ::= ">"

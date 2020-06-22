@@ -90,6 +90,7 @@ public class STGError {
 		return jsonObject.getInteger("charPosition", defaultValue);
 	}
 
+
 	@Override
 	public java.lang.String toString() { 
 		return jsonObject.encode();

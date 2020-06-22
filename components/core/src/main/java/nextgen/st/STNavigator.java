@@ -3,7 +3,6 @@ package nextgen.st;
 import com.generator.util.SwingUtil;
 import io.vertx.core.json.JsonObject;
 import nextgen.st.domain.*;
-import org.jetbrains.annotations.NotNull;
 
 import javax.lang.model.SourceVersion;
 import javax.swing.*;
@@ -11,6 +10,7 @@ import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
@@ -107,9 +107,14 @@ public class STNavigator extends JPanel {
 
     private static final Map<String, ImageIcon> cache = new LinkedHashMap<>();
 
-    public ImageIcon loadIcon(String iconName) {
+    private ImageIcon loadIcon(String iconName) {
+
         if (cache.containsKey(iconName)) return cache.get(iconName);
-        cache.put(iconName, new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("icons/" + iconName + "16x16.png"))));
+
+        URL resource = getClass().getClassLoader().getResource("icons/" + iconName + "16x16.png");
+        if (resource == null) resource = getClass().getClassLoader().getResource("icons/STGroup16x16.png");
+
+        cache.put(iconName, new ImageIcon(Objects.requireNonNull(resource)));
         return cache.get(iconName);
     }
 
@@ -197,7 +202,7 @@ public class STNavigator extends JPanel {
 
     private class BaseTreeNode<T> extends DefaultMutableTreeNode {
 
-        private final ImageIcon icon;
+        protected ImageIcon icon;
 
         public BaseTreeNode(T model, String icon) {
             setUserObject(model);
@@ -263,14 +268,13 @@ public class STNavigator extends JPanel {
                     .map(baseTreeNode -> (T) baseTreeNode);
         }
 
-        protected Optional<String> getNameFromUser() {
-            final String s = SwingUtil.showInputDialog("Name", tree);
+        protected Optional<String> getInputFromUser(String message) {
+            final String s = SwingUtil.showInputDialog(message, tree);
             return Optional.ofNullable(s == null || s.trim().length() == 0 ? null : s);
         }
 
-        protected Optional<String> getNameFromUser(String description, String initialValue) {
-            final String s = SwingUtil.showInputDialog(description, tree, initialValue);
-            return Optional.ofNullable(s == null || s.trim().length() == 0 || s.equals(initialValue) ? null : s);
+        protected Optional<String> getInputFromUser() {
+            return getInputFromUser("Name");
         }
 
         protected Optional<Boolean> confirm(String description) {
@@ -323,7 +327,7 @@ public class STNavigator extends JPanel {
             private Action newSTGroupAction() {
                 return newAction("New STGroup", actionEvent -> {
 
-                    getNameFromUser().ifPresent(name -> {
+                    getInputFromUser().ifPresent(name -> {
 
                         final Optional<STGroupModel> existing = getModel().getGroups().filter(groupModel -> groupModel.getName().toLowerCase().equals(name)).findAny();
                         if (existing.isPresent()) {
@@ -367,7 +371,7 @@ public class STNavigator extends JPanel {
             class STGroupTreeNode extends BaseTreeNode<STGroupModel> {
 
                 public STGroupTreeNode(STGroupModel model) {
-                    super(model, getLanguageIcon(model));
+                    super(model, model.getIcon());
 
                     model.getEnums().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stEnum -> add(new STEnumTreeNode(stEnum)));
                     model.getTemplates().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
@@ -395,6 +399,7 @@ public class STNavigator extends JPanel {
                             newTemplateAction(),
                             newEnumAction(),
                             newInterfaceAction(),
+                            setIconNameAction(),
                             renameSTGroupAction(),
                             deleteGroupAction());
                 }
@@ -405,7 +410,7 @@ public class STNavigator extends JPanel {
 
                 private Action newTemplateAction() {
                     return newAction("New template", actionEvent ->
-                            getNameFromUser().ifPresent(name ->
+                            getInputFromUser().ifPresent(name ->
                                     isValidTemplateName(name).ifPresent(s -> {
 
                                         final STTemplate stTemplate = STJsonFactory.newSTTemplate()
@@ -425,7 +430,7 @@ public class STNavigator extends JPanel {
 
                 private Action newEnumAction() {
                     return newAction("New enum", actionEvent ->
-                            getNameFromUser().ifPresent(name ->
+                            getInputFromUser().ifPresent(name ->
                                     isValidTemplateName(name).ifPresent(s -> {
 
                                         final STEnum stEnum = STJsonFactory.newSTEnum()
@@ -443,7 +448,7 @@ public class STNavigator extends JPanel {
 
                 private Action newInterfaceAction() {
                     return newAction("New interface", actionEvent ->
-                            getNameFromUser().ifPresent(name ->
+                            getInputFromUser().ifPresent(name ->
                                     isValidTemplateName(name).ifPresent(s -> {
 
                                         final STInterface stInterface = STJsonFactory.newSTInterface()
@@ -461,7 +466,7 @@ public class STNavigator extends JPanel {
 
                 private Action renameSTGroupAction() {
                     return newAction("Rename", actionEvent ->
-                            getNameFromUser().ifPresent(name ->
+                            getInputFromUser().ifPresent(name ->
                                     getParentNode(STGDirectoryTreeNode.class)
                                             .ifPresent(parent -> {
 
@@ -485,6 +490,22 @@ public class STNavigator extends JPanel {
                                                     findSTTemplateEditor(tabbedPane, STGroupTreeNode.this)
                                                             .ifPresent(stEditor1 -> tabbedPane.setTitleAt(tabbedPane.indexOfComponent(stEditor1), getModel().getName()));
                                                     deleteSTGFile(parent, oldName);
+                                                });
+                                            })));
+                }
+
+                private Action setIconNameAction() {
+                    return newAction("Set Icon name", actionEvent ->
+                            getInputFromUser("Icon name").ifPresent(iconName ->
+                                    getParentNode(STGDirectoryTreeNode.class)
+                                            .ifPresent(parent -> {
+
+                                                getModel().setIcon(iconName);
+                                                save();
+
+                                                SwingUtilities.invokeLater(() -> {
+                                                    this.icon = loadIcon(iconName);
+                                                    treeModel.nodeChanged(STGroupTreeNode.this);
                                                 });
                                             })));
                 }
@@ -569,7 +590,7 @@ public class STNavigator extends JPanel {
 
                     private Action renameSTInterfaceAction() {
                         return newAction("Rename", actionEvent ->
-                                getNameFromUser()
+                                getInputFromUser()
                                         .flatMap(name -> getParentNode(STGroupTreeNode.class)
                                                 .flatMap(parent -> parent.isValidTemplateName(name)))
                                         .ifPresent(s -> {
@@ -687,7 +708,7 @@ public class STNavigator extends JPanel {
 
                     private Action renameSTEnumAction() {
                         return newAction("Rename", actionEvent ->
-                                getNameFromUser()
+                                getInputFromUser()
                                         .flatMap(name -> getParentNode(STGroupTreeNode.class)
                                                 .flatMap(parent -> parent.isValidTemplateName(name)))
                                         .ifPresent(s -> {
@@ -910,7 +931,7 @@ public class STNavigator extends JPanel {
                     }
 
                     private Action newChildTemplateAction() {
-                        return newAction("New Child-template", actionEvent -> getNameFromUser()
+                        return newAction("New Child-template", actionEvent -> getInputFromUser()
                                 .ifPresent(name -> getParentNode(STGroupTreeNode.class)
                                         .flatMap(parent -> parent.isValidTemplateName(name))
                                         .ifPresent(s -> {
@@ -931,7 +952,7 @@ public class STNavigator extends JPanel {
 
                     private Action renameSTTemplateAction() {
                         return newAction("Rename", actionEvent ->
-                                getNameFromUser().ifPresent(name ->
+                                getInputFromUser().ifPresent(name ->
                                         getParentNode(STGroupTreeNode.class)
                                                 .ifPresent(parent -> parent.isValidTemplateName(name)
                                                         .ifPresent(s -> {
@@ -979,31 +1000,6 @@ public class STNavigator extends JPanel {
                     }
                 }
             }
-        }
-    }
-
-    private static String getLanguageIcon(STGroupModel model) {
-
-        switch (model.getName().toLowerCase()) {
-            case "stringtemplate":
-                return "language-stringtemplate";
-            case "kotlin":
-                return "language-kotlin";
-            case "java":
-                return "language-java";
-            case "javascript":
-                return "language-javascript";
-            case "cpp":
-                return "language-cpp";
-            case "python":
-                return "language-python";
-            case "typescript":
-                return "language-typescript";
-            case "html":
-            case "html5":
-                return "language-html5";
-            default:
-                return "STGroup";
         }
     }
 

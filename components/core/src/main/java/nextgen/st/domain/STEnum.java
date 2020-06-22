@@ -78,6 +78,7 @@ public class STEnum {
 		return this;
 	}
 
+
 	@Override
 	public java.lang.String toString() { 
 		return jsonObject.getString("name");
