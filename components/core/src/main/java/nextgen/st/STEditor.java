@@ -78,11 +78,35 @@ public class STEditor extends JPanel {
         return stGroupTreeNode;
     }
 
-    public void setSTEnum(String text) {
+    public void setSTEnum(STNavigator.RootNode.STGDirectoryTreeNode.STGroupTreeNode.STEnumTreeNode stEnumTreeNode) {
 
         this.stTemplateTreeNode = null;
 
-        this.startText = text;
+        final StringBuilder text = new StringBuilder();
+        text.append(stEnumTreeNode.getModel().getName());
+        stEnumTreeNode.getModel().getValues().forEach(stEnumValue -> text.append("\n\t").append(stEnumValue.getName()).append(stEnumValue.getLexical()==null ? "" : (" -> \"" + stEnumValue.getLexical() + "\"")));
+
+        this.startText = text.toString().trim();
+
+        this.txtEditor.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
+        this.txtEditor.setText(startText);
+        this.txtEditor.setCaretPosition(0);
+        this.txtEditor.setEditable(false);
+        this.commandPanel.setEditable(false);
+
+        this.txtEditor.discardAllEdits();
+        this.txtEditor.setBackground(uneditedColor);
+        this.infoPanel.clear();
+    }
+
+    public void setSTInterface(STNavigator.RootNode.STGDirectoryTreeNode.STGroupTreeNode.STInterfaceTreeNode stInterfaceTreeNode) {
+
+        this.stTemplateTreeNode = null;
+
+        final StringBuilder text = new StringBuilder();
+        text.append(stInterfaceTreeNode.getModel().getName());
+
+        this.startText = text.toString().trim();
 
         this.txtEditor.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
         this.txtEditor.setText(startText);

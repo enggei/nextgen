@@ -13,6 +13,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -97,6 +98,8 @@ public class STNavigator extends JPanel {
                     show((RootNode.STGDirectoryTreeNode.STGroupTreeNode.STTemplateTreeNode) lastPathComponent);
                 } else if (lastPathComponent instanceof RootNode.STGDirectoryTreeNode.STGroupTreeNode.STEnumTreeNode) {
                     show((RootNode.STGDirectoryTreeNode.STGroupTreeNode.STEnumTreeNode) lastPathComponent);
+                } else if (lastPathComponent instanceof RootNode.STGDirectoryTreeNode.STGroupTreeNode.STInterfaceTreeNode) {
+                    show((RootNode.STGDirectoryTreeNode.STGroupTreeNode.STInterfaceTreeNode) lastPathComponent);
                 }
             }
         });
@@ -181,8 +184,29 @@ public class STNavigator extends JPanel {
                             });
 
                     SwingUtilities.invokeLater(() -> parent.getParentNode(RootNode.class).ifPresent(rootNode -> {
-                        stEditor.setSTEnum(new STGenerator(rootNode.getGenerator()).generateSTEnum(null, stEnumTreeNode.getModel()).render());
+                        stEditor.setSTEnum(stEnumTreeNode);
                         tabbedPane.setTitleAt(tabbedPane.indexOfComponent(stEditor), parent.getModel().getName() + " - " + stEnumTreeNode.getModel().getName());
+                        tabbedPane.setSelectedComponent(stEditor);
+                    }));
+                });
+    }
+
+    public void show(RootNode.STGDirectoryTreeNode.STGroupTreeNode.STInterfaceTreeNode stInterfaceTreeNode) {
+
+        stInterfaceTreeNode
+                .getParentNode(RootNode.STGDirectoryTreeNode.STGroupTreeNode.class)
+                .ifPresent(parent -> {
+
+                    final STEditor stEditor = findSTTemplateEditor(tabbedPane, parent)
+                            .orElseGet(() -> {
+                                final STEditor stEditor1 = new STEditor(parent);
+                                tabbedPane.addTab(parent.getLabel(), stEditor1);
+                                return stEditor1;
+                            });
+
+                    SwingUtilities.invokeLater(() -> parent.getParentNode(RootNode.class).ifPresent(rootNode -> {
+                        stEditor.setSTInterface(stInterfaceTreeNode);
+                        tabbedPane.setTitleAt(tabbedPane.indexOfComponent(stEditor), parent.getModel().getName() + " - " + stInterfaceTreeNode.getModel().getName());
                         tabbedPane.setSelectedComponent(stEditor);
                     }));
                 });
@@ -281,6 +305,39 @@ public class STNavigator extends JPanel {
             final boolean b = SwingUtil.showConfirmDialog(tree, description + "?");
             return Optional.ofNullable(b ? Boolean.TRUE : null);
         }
+
+        protected Action newExpandAction() {
+            return newAction("Expand", actionEvent ->
+                    SwingUtilities.invokeLater(() -> {
+
+                        final List<Object> nodes = new ArrayList<>();
+                        nodes.add(this);
+                        TreeNode treeNode = getParent();
+                        while (treeNode != null) {
+                            nodes.add(0, treeNode);
+                            treeNode = treeNode.getParent();
+                        }
+
+                        final TreePath treePath = new TreePath(nodes.toArray());
+                        final int rowForPath = tree.getRowForPath(treePath);
+
+                        final AtomicInteger childCount = new AtomicInteger(0);
+                        getAllChildCount(this, childCount);
+
+                        final int childOffset = rowForPath + childCount.get();
+                        for (int i = rowForPath; i < childOffset; i++) {
+                            tree.expandRow(i);
+                        }
+                    }));
+        }
+
+        private void getAllChildCount(TreeNode treeNode, AtomicInteger childCount) {
+            for (int i = 0; i < treeNode.getChildCount(); i++) {
+                childCount.incrementAndGet();
+                final TreeNode childAt = treeNode.getChildAt(i);
+                getAllChildCount(childAt, childCount);
+            }
+        }
     }
 
     class RootNode extends BaseTreeNode<String> {
@@ -298,9 +355,7 @@ public class STNavigator extends JPanel {
                     .addGroups(new STGroupModel(new JsonObject(STParser.read(new File(jsonFileDir, appModel.getGeneratorName() + ".json")))))
             ));
 
-            appModel.getDirectories().forEach(stgDirectory -> {
-                add(new STGDirectoryTreeNode(stgDirectory));
-            });
+            appModel.getDirectories().forEach(stgDirectory -> add(new STGDirectoryTreeNode(stgDirectory)));
         }
 
         public STGroupModel getGenerator() {
@@ -325,36 +380,33 @@ public class STNavigator extends JPanel {
             }
 
             private Action newSTGroupAction() {
-                return newAction("New STGroup", actionEvent -> {
+                return newAction("New STGroup", actionEvent -> getInputFromUser().ifPresent(name -> {
 
-                    getInputFromUser().ifPresent(name -> {
+                    final Optional<STGroupModel> existing = getModel().getGroups().filter(groupModel -> groupModel.getName().toLowerCase().equals(name)).findAny();
+                    if (existing.isPresent()) {
+                        SwingUtil.showMessage(name + " group already exists in this directory", tree);
+                        return;
+                    }
 
-                        final Optional<STGroupModel> existing = getModel().getGroups().filter(groupModel -> groupModel.getName().toLowerCase().equals(name)).findAny();
-                        if (existing.isPresent()) {
-                            SwingUtil.showMessage(name + " group already exists in this directory", tree);
-                            return;
-                        }
+                    if (!SourceVersion.isIdentifier(name)) {
+                        SwingUtil.showMessage(name + " is a reserved java keyword", tree);
+                        return;
+                    }
 
-                        if (!SourceVersion.isIdentifier(name)) {
-                            SwingUtil.showMessage(name + " is a reserved java keyword", tree);
-                            return;
-                        }
+                    final STGroupModel stGroupModel = STJsonFactory.newSTGroupModel()
+                            .setName(name)
+                            .setDelimiter(STGenerator.DELIMITER);
 
-                        final STGroupModel stGroupModel = STJsonFactory.newSTGroupModel()
-                                .setName(name)
-                                .setDelimiter(STGenerator.DELIMITER);
+                    getModel().addGroups(stGroupModel);
 
-                        getModel().addGroups(stGroupModel);
+                    SwingUtilities.invokeLater(() -> {
+                        final STGroupTreeNode stGroupTreeNode = new STGroupTreeNode(stGroupModel);
+                        stGroupTreeNode.save();
 
-                        SwingUtilities.invokeLater(() -> {
-                            final STGroupTreeNode stGroupTreeNode = new STGroupTreeNode(stGroupModel);
-                            stGroupTreeNode.save();
-
-                            treeModel.insertNodeInto(stGroupTreeNode, STGDirectoryTreeNode.this, getChildCount());
-                            show(stGroupTreeNode);
-                        });
+                        treeModel.insertNodeInto(stGroupTreeNode, STGDirectoryTreeNode.this, getChildCount());
+                        show(stGroupTreeNode);
                     });
-                });
+                }));
             }
 
             private Action generateAllGroupsAction() {
@@ -399,6 +451,7 @@ public class STNavigator extends JPanel {
                             newTemplateAction(),
                             newEnumAction(),
                             newInterfaceAction(),
+                            newExpandAction(),
                             setIconNameAction(),
                             renameSTGroupAction(),
                             deleteGroupAction());
@@ -563,9 +616,7 @@ public class STNavigator extends JPanel {
                                     parent.generate(getModel());
                                 } else {
                                     System.out.println(getModel().getName() + " has errors: ");
-                                    parseResult.getErrors().forEach(stgError -> {
-                                        System.out.println("\t" + stgError.getType() + " " + stgError.getCharPosition() + " at line " + stgError.getLine());
-                                    });
+                                    parseResult.getErrors().forEach(stgError -> System.out.println("\t" + stgError.getType() + " " + stgError.getCharPosition() + " at line " + stgError.getLine()));
                                 }
                             }));
                 }
