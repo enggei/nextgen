@@ -113,4 +113,27 @@ public class KotlinTest {
 
         STGenerator.writeKotlinFile(kotlinFile, packageDeclaration, "CodeGenTests", new File("/media/Storage/projects/tv2/sportsdata-api.tmp/libraries/sportdata-domain/src/main/kotlin"));
     }
+
+    @Test
+    public void testExpressions() {
+
+        PairType pairOfStringAndIntType = newPairType().setFirst(newStringType()).setSecond(newIntType());
+        FunctionDeclaration testFunction = newFunctionDeclaration()
+                .setName("test")
+                .setReturnType(pairOfStringAndIntType)
+                .setStatements(asList(
+                        newVarDeclarationStatement()
+                            .setName("aMap")
+                            .setType(newMapType()
+                                .setFirst(pairOfStringAndIntType.getFirst())
+                                .setSecond(pairOfStringAndIntType.getSecond()))
+                            .setInitializer(newMutableMapInitializer()),
+                        newReturnStatement()
+                            .setExpression(newPairExpression()
+                                .setFirst(newStringLiteralExpression().setLiteral("Test"))
+                                .setSecond(newLiteralExpression().setLiteral("123")))
+                ));
+
+        System.out.println(testFunction);
+    }
 }

@@ -1,18 +1,18 @@
 package nextgen.templates.kotlin;
 
-public class NullInitializer implements Initializer, Expression {
+public class EmptyMapInitializer implements Initializer, Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 
-	NullInitializer(org.stringtemplate.v4.STGroup stGroup) {
+	EmptyMapInitializer(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
 	@Override
 	public String toString() {
-		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("NullInitializer");
+		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("EmptyMapInitializer");
 		return st.render().trim();
 	}
 
@@ -23,7 +23,7 @@ public class NullInitializer implements Initializer, Expression {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		NullInitializer that = (NullInitializer) o;
+		EmptyMapInitializer that = (EmptyMapInitializer) o;
 		return uuid.equals(that.uuid);
 	}
 
@@ -32,5 +32,5 @@ public class NullInitializer implements Initializer, Expression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NullInitializer() ::= <<null >>";
+	static final String st = "EmptyMapInitializer() ::= <<emptyMap() >>";
 } 

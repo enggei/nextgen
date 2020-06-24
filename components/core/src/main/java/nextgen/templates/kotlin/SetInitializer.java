@@ -1,45 +1,45 @@
 package nextgen.templates.kotlin;
 
-public class ListInitializer implements Initializer, Expression {
+public class SetInitializer implements Initializer, Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private java.util.List<Expression> _expressions = new java.util.ArrayList<>();
 
-	ListInitializer(org.stringtemplate.v4.STGroup stGroup) {
+	SetInitializer(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
 	@Override
 	public String toString() {
-		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ListInitializer");
+		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("SetInitializer");
 		for (Object o : _expressions) st.add("expressions", o);
 		return st.render().trim();
 	}
 
 
-	public ListInitializer addExpressions(Expression value) {
+	public SetInitializer addExpressions(Expression value) {
 		this._expressions.add(value);
 		return this;
 	}
 
-	public ListInitializer setExpressions(Expression[] value) {
+	public SetInitializer setExpressions(Expression[] value) {
 		this._expressions.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public ListInitializer setExpressions(java.util.Collection<Expression> values) {
+	public SetInitializer setExpressions(java.util.Collection<Expression> values) {
 		this._expressions.addAll(values);
 		return this;
 	}
 
-	public ListInitializer removeExpressions(Expression value) {
+	public SetInitializer removeExpressions(Expression value) {
 		this._expressions.remove(value);
 		return this;
 	}
 
-	public ListInitializer removeExpressions(int index) {
+	public SetInitializer removeExpressions(int index) {
 		this._expressions.remove(index);
 		return this;
 	}
@@ -53,7 +53,7 @@ public class ListInitializer implements Initializer, Expression {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		ListInitializer that = (ListInitializer) o;
+		SetInitializer that = (SetInitializer) o;
 		return uuid.equals(that.uuid);
 	}
 
@@ -62,5 +62,5 @@ public class ListInitializer implements Initializer, Expression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ListInitializer(expressions) ::= <<listOf(~expressions:{it|~it~};separator=\", \"~) >>";
+	static final String st = "SetInitializer(expressions) ::= <<setOf(~expressions:{it|~it~};separator=\", \"~) >>";
 } 

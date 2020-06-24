@@ -34,6 +34,14 @@ ToStringExpression(name,stringExpression) ::= <<~name~='~stringExpression~'  >>
 
 ComplexStringExpression(expression) ::= <<${~expression~}  >>
 
+PairExpression(first,second) ::= <<~first~ to ~second~  >>
+
+LiteralExpression(literal) ::= <<~literal~  >>
+
+StringLiteralExpression(literal) ::= <<"~literal~"  >>
+
+AssignExpression(varExpression,expression) ::= <<~varExpression~ = ~expression~  >>
+
 Grammar() ::= << >>
 
 Declarations() ::= << >>
@@ -80,7 +88,7 @@ Extending(className,params) ::= <<~className~(~params:{it|~it.name~};separator="
 
 FunctionDeclaration(annotations,override,name,params,returnType,expressionBody,statements) ::= <<~annotations~~if(override)~override ~endif~fun ~name~(~params:{it|~it~};separator=", "~): ~returnType~~if(expressionBody)~ =
 	~expressionBody~~else~ {
-	~statements:{it|};separator="\n"~
+	~statements:{it|~it~};separator="\n"~
 }~endif~  >>
 
 FunctionParam(name,typeDeclaration,defaultValue) ::= <<~name~: ~typeDeclaration~~if(defaultValue)~ = ~defaultValue~~endif~  >>
@@ -93,19 +101,29 @@ TodoStatement(reason) ::= <<TODO("~reason~")  >>
 
 ReturnStatement(expression) ::= <<return ~expression~  >>
 
+VarDeclarationStatement(isMutable,name,type,initializer) ::= <<~if(isMutable)~var ~else~val ~endif~~name~: ~type~~if(initializer)~ = ~initializer~~endif~  >>
+
 Initializers() ::= << >>
 
-ArrayInitializer(statements) ::= <<arrayOf(~statements:{it|~it~};separator=", "~)  >>
+ArrayInitializer(expressions) ::= <<arrayOf(~expressions:{it|~it~};separator=", "~)  >>
 
 EmptyArrayInitializer() ::= <<emptyArray()  >>
 
-ListInitializer(statements) ::= <<listOf(~statements:{it|~it~};separator=", "~)  >>
+ListInitializer(expressions) ::= <<listOf(~expressions:{it|~it~};separator=", "~)  >>
 
 MapInitializer(kvpairs) ::= <<mapOf(~kvpairs:{it|~it.key~ to ~it.value~};separator=", "~)  >>
 
 NullInitializer() ::= <<null  >>
 
 ExpressionInitializer(expression) ::= <<~expression~  >>
+
+EmptyMapInitializer() ::= <<emptyMap()  >>
+
+MutableMapInitializer(kvpairs) ::= <<mutableMapOf(~kvpairs:{it|~it.key~ to ~it.value~};separator=", "~)  >>
+
+SetInitializer(expressions) ::= <<setOf(~expressions:{it|~it~};separator=", "~)  >>
+
+MutableSetInitializer(expressions) ::= <<setOf(~expressions:{it|~it~};separator=", "~)  >>
 
 KotlinFile(packageDeclaration,imports,compilationUnit) ::= <<~packageDeclaration~
 
@@ -119,11 +137,37 @@ ArrayType(type) ::= <<Array<~type~>  >>
 
 ListType(type) ::= <<List<~type~>  >>
 
-MapType(type) ::= <<Map<~type~>  >>
+MapType(first,second) ::= <<Map<~first~, ~second~>  >>
 
 NamedType(name) ::= <<~name~  >>
 
 NullableType(type) ::= <<~type~?  >>
+
+StringType() ::= <<String  >>
+
+IntType() ::= <<Int  >>
+
+LongType() ::= <<Long  >>
+
+BooleanType() ::= <<Boolean  >>
+
+FloatType() ::= <<Float  >>
+
+DoubleType() ::= <<Double  >>
+
+UnitType() ::= <<Unit  >>
+
+PairType(first,second) ::= <<Pair<~first~, ~second~>  >>
+
+MutableMapType(first,second) ::= <<MutableMap<~first~, ~second~>  >>
+
+MutableListType(type) ::= <<MutableList<~type~>  >>
+
+SetType(type) ::= <<Set<~type~>  >>
+
+MutableSetType(type) ::= <<MutableSet<~type~>  >>
+
+AnyType() ::= <<Any  >>
 
 eom() ::= "}"
 

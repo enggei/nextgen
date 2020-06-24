@@ -1,6 +1,6 @@
 package nextgen.templates.kotlin;
 
-public class MapType implements TypeDeclaration {
+public class MutableMapType implements TypeDeclaration {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -8,19 +8,19 @@ public class MapType implements TypeDeclaration {
 	private TypeDeclaration _first;
 	private TypeDeclaration _second;
 
-	MapType(org.stringtemplate.v4.STGroup stGroup) {
+	MutableMapType(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
 	@Override
 	public String toString() {
-		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("MapType");
+		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("MutableMapType");
 		st.add("first", _first);
 		st.add("second", _second);
 		return st.render().trim();
 	}
 
-	public MapType setFirst(TypeDeclaration value) {
+	public MutableMapType setFirst(TypeDeclaration value) {
 		this._first = value;
 		return this;
 	}
@@ -37,12 +37,12 @@ public class MapType implements TypeDeclaration {
 		return this._first != null;
 	}
 
-	public MapType removeFirst() {
+	public MutableMapType removeFirst() {
 		this._first = null;
 		return this;
 	} 
 
-	public MapType setSecond(TypeDeclaration value) {
+	public MutableMapType setSecond(TypeDeclaration value) {
 		this._second = value;
 		return this;
 	}
@@ -59,7 +59,7 @@ public class MapType implements TypeDeclaration {
 		return this._second != null;
 	}
 
-	public MapType removeSecond() {
+	public MutableMapType removeSecond() {
 		this._second = null;
 		return this;
 	} 
@@ -70,7 +70,7 @@ public class MapType implements TypeDeclaration {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		MapType that = (MapType) o;
+		MutableMapType that = (MutableMapType) o;
 		return uuid.equals(that.uuid);
 	}
 
@@ -79,5 +79,5 @@ public class MapType implements TypeDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MapType(first,second) ::= <<Map<~first~, ~second~> >>";
+	static final String st = "MutableMapType(first,second) ::= <<MutableMap<~first~, ~second~> >>";
 } 

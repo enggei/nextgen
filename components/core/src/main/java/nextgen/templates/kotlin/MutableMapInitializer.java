@@ -1,26 +1,26 @@
 package nextgen.templates.kotlin;
 
-public class MapInitializer implements Initializer, Expression {
+public class MutableMapInitializer implements Initializer, Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private java.util.List<java.util.Map<String, Object>> _kvpairs = new java.util.ArrayList<>();
 
-	MapInitializer(org.stringtemplate.v4.STGroup stGroup) {
+	MutableMapInitializer(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
 	@Override
 	public String toString() {
-		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("MapInitializer");
+		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("MutableMapInitializer");
 		for (java.util.Map<String, Object> map : _kvpairs) st.addAggr("kvpairs.{key,value}", map.get("key"), map.get("value"));
 		return st.render().trim();
 	}
 
 
 
-	public MapInitializer addKvpairs(Expression _key, Expression _value) {
+	public MutableMapInitializer addKvpairs(Expression _key, Expression _value) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("key", _key);
 		map.put("value", _value);
@@ -32,25 +32,25 @@ public class MapInitializer implements Initializer, Expression {
 		return this._kvpairs;
 	}
 
-	public MapInitializer addKvpairs(MapInitializer_Kvpairs value) {
+	public MutableMapInitializer addKvpairs(MutableMapInitializer_Kvpairs value) {
 		return addKvpairs(value._key, value._value);
 	}
 
-	public java.util.stream.Stream<MapInitializer_Kvpairs> streamKvpairs() {
-		return this._kvpairs.stream().map(MapInitializer_Kvpairs::new);
+	public java.util.stream.Stream<MutableMapInitializer_Kvpairs> streamKvpairs() {
+		return this._kvpairs.stream().map(MutableMapInitializer_Kvpairs::new);
 	}
 
-	public static final class MapInitializer_Kvpairs {
+	public static final class MutableMapInitializer_Kvpairs {
 
 		Expression _key;
 		Expression _value;
 
-		public MapInitializer_Kvpairs(Expression _key, Expression _value) {
+		public MutableMapInitializer_Kvpairs(Expression _key, Expression _value) {
 			this._key = _key;
 			this._value = _value;
 		}
 
-		private MapInitializer_Kvpairs(java.util.Map<String, Object> map) {
+		private MutableMapInitializer_Kvpairs(java.util.Map<String, Object> map) {
 			this._key = (Expression) map.get("key");
 			this._value = (Expression) map.get("value");
 		}
@@ -69,7 +69,7 @@ public class MapInitializer implements Initializer, Expression {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		MapInitializer that = (MapInitializer) o;
+		MutableMapInitializer that = (MutableMapInitializer) o;
 		return uuid.equals(that.uuid);
 	}
 
@@ -78,5 +78,5 @@ public class MapInitializer implements Initializer, Expression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MapInitializer(kvpairs) ::= <<mapOf(~kvpairs:{it|~it.key~ to ~it.value~};separator=\", \"~) >>";
+	static final String st = "MutableMapInitializer(kvpairs) ::= <<mutableMapOf(~kvpairs:{it|~it.key~ to ~it.value~};separator=\", \"~) >>";
 } 
