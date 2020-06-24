@@ -5,9 +5,6 @@ import nextgen.templates.DomainPatterns;
 import nextgen.templates.domain.Domain;
 import nextgen.templates.kotlin.*;
 import org.junit.Test;
-import org.test.json.KotlinTestJsonFactory;
-import org.test.neo4j.Country;
-import org.test.neo4j.KotlinTestNeoFactory;
 
 import java.io.File;
 import java.util.List;
@@ -22,43 +19,6 @@ import static nextgen.templates.KotlinPatterns.*;
 public class KotlinTest {
 
     private File root = new File("src/test/java");
-    private File db = new File("src/test/java/db");
-
-    @Test
-    public void testNeo4J() {
-
-        final KotlinTestNeoFactory db = new KotlinTestNeoFactory(this.db.getAbsolutePath());
-
-        db.doInTransaction(transaction -> {
-
-            for (int i = 0; i < 100; i++) {
-                final Country sverige = db.findAllCountryByName("Sverige").findAny().orElseGet(() -> db.newCountry().setName("Sverige"));
-
-                final Country norge = db.newCountry().setName("Norge").setId(1L)
-                        .addCities(db.newCity().setName("Oslo"))
-                        .addCities(db.newCity().setName("Bergen"));
-            }
-        });
-
-        db.doInTransaction(transaction -> {
-
-            db.findAllCountry().forEach(country -> System.out.println(country.getName()));
-
-            db.findOrCreateCapitolByName("Sverige");
-
-
-            // post as json:
-
-            db.findAllCountry().forEach(country -> {
-                System.out.println(KotlinTestJsonFactory.newCountry().setName(country.getName()));
-            });
-
-
-        });
-
-
-    }
-
     @Test
     public void testKotlinDomain() {
 

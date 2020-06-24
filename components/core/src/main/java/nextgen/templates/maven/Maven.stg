@@ -177,6 +177,32 @@ copyPlugin(outputDirectory,directory,include) ::= <<<!-- https://maven.apache.or
 	</executions>
 </plugin>  >>
 
+antlr4(version,sourceDirectory,grammars,includes,arguments,outputDirectory,visitor,listener,goal) ::= <<<plugin>
+	<groupId>org.antlr</groupId>
+	<artifactId>antlr4-maven-plugin</artifactId>
+	<version>~if(version)~~version~~else~4.8-1~endif~</version>
+	<configuration>
+		<sourceDirectory>~sourceDirectory~</sourceDirectory>
+		~grammars:{it|<grammars>~it~.g4</grammars>};separator="\n"~
+		<includes>
+			~includes:{it|<include>~it~.g4</include>};separator="\n"~
+		</includes>		
+		<arguments>
+			~arguments:{it|<argument>~it~</argument>};separator="\n"~
+		</arguments>
+		<outputDirectory>~outputDirectory~</outputDirectory>
+		<visitor>~if(visitor)~true~else~false~endif~</visitor>
+		<listener>~if(listener)~true~else~false~endif~</listener>
+	</configuration>
+	<executions>
+		<execution>
+			<goals>
+				<goal>~if(goal)~~goal~~else~antlr4~endif~</goal>
+		</goals>
+		</execution>
+	</executions>
+</plugin>  >>
+
 pom(parent,name,groupId,artifactId,version,packaging,modules,properties,build,dependencyManagement,dependencies,distributionManagement,repositories) ::= <<<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 ~if(parent)~

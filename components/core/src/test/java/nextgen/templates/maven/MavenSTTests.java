@@ -17,6 +17,7 @@ public class MavenSTTests {
 		testProject();
 		testExecution();
 		testParent();
+		testAntlr4();
 		testCopyPlugin();
 		testFrontEndMavenPlugin();
 		testPlugin();
@@ -64,6 +65,11 @@ public class MavenSTTests {
 	@org.junit.Test
 	public void testParent() {
 		System.out.println("\n--- TEST Parent:\n" + newParent());
+	} 
+
+	@org.junit.Test
+	public void testAntlr4() {
+		System.out.println("\n--- TEST Antlr4:\n" + newAntlr4());
 	} 
 
 	@org.junit.Test

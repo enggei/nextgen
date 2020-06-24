@@ -289,6 +289,56 @@
         "type" : "LIST",
         "argumentType" : "Object"
       } ]
+    }, {
+      "uuid" : "7056b832-a8a9-47ab-a195-73a14a458efc",
+      "name" : "antlr4",
+      "text" : "<plugin>\n\t<groupId>org.antlr</groupId>\n\t<artifactId>antlr4-maven-plugin</artifactId>\n\t<version>~if(version)~~version~~else~4.8-1~endif~</version>\n\t<configuration>\n\t\t<sourceDirectory>~sourceDirectory~</sourceDirectory>\n\t\t~grammars:{it|<grammars>~it~.g4</grammars>};separator=\"\\n\"~\n\t\t<includes>\n\t\t\t~includes:{it|<include>~it~.g4</include>};separator=\"\\n\"~\n\t\t</includes>\t\t\n\t\t<arguments>\n\t\t\t~arguments:{it|<argument>~it~</argument>};separator=\"\\n\"~\n\t\t</arguments>\n\t\t<outputDirectory>~outputDirectory~</outputDirectory>\n\t\t<visitor>~if(visitor)~true~else~false~endif~</visitor>\n\t\t<listener>~if(listener)~true~else~false~endif~</listener>\n\t</configuration>\n\t<executions>\n\t\t<execution>\n\t\t\t<goals>\n\t\t\t\t<goal>~if(goal)~~goal~~else~antlr4~endif~</goal>\n\t\t</goals>\n\t\t</execution>\n\t</executions>\n</plugin> ",
+      "parameters" : [ {
+        "uuid" : "52563828-ac96-4ffd-b5dd-554b01207b4a",
+        "name" : "version",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "e4375f85-8322-4c8c-aadf-81e8eed10619",
+        "name" : "sourceDirectory",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "c878dd20-0c50-4647-8b65-beb49bfa98be",
+        "name" : "grammars",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "5b404a41-d030-49c1-9e8a-e77e63213a0c",
+        "name" : "includes",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "4aed7088-8efd-4992-ac31-16cc06d7ded6",
+        "name" : "arguments",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "ba26b6a4-8cc7-4c35-8a3f-a3661e1e8d53",
+        "name" : "outputDirectory",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "7b906964-471f-4f08-9360-1fcc457700f0",
+        "name" : "visitor",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "4f4c4828-3be9-43ae-b15f-f07000f5c268",
+        "name" : "listener",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "24a35264-d061-4470-9045-9a882ad2c776",
+        "name" : "goal",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
     } ]
   }, {
     "uuid" : "cb5b0503-2209-492a-9e23-8b4d63e2d68f",

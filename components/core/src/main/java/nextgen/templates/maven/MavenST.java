@@ -13,6 +13,7 @@ public class MavenST {
 	Project.st + "\n" + 
 	Execution.st + "\n" + 
 	Parent.st + "\n" + 
+	Antlr4.st + "\n" + 
 	CopyPlugin.st + "\n" + 
 	FrontEndMavenPlugin.st + "\n" + 
 	Plugin.st + "\n" + 
@@ -85,6 +86,10 @@ public class MavenST {
 
 	public static Parent newParent() {
 		return new Parent(stGroup);
+	} 
+
+	public static Antlr4 newAntlr4() {
+		return new Antlr4(stGroup);
 	} 
 
 	public static CopyPlugin newCopyPlugin() {
