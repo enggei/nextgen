@@ -6,17 +6,19 @@ public class StoreComponent {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _name;
-	private java.util.List<Object> _dependencies = new java.util.ArrayList<>();
+	private Object _debug;
+	private Object _renderElement;
 	private java.util.List<Object> _components = new java.util.ArrayList<>();
-	private java.util.List<Object> _decorators = new java.util.ArrayList<>();
 	private java.util.List<Object> _stores = new java.util.ArrayList<>();
+	private java.util.List<Object> _decorators = new java.util.ArrayList<>();
 	private java.util.List<Object> _state = new java.util.ArrayList<>();
+	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _componentDidMountStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<Object> _renderStatements = new java.util.ArrayList<>();
-	private java.util.List<Object> _renderConstants = new java.util.ArrayList<>();
-	private java.util.List<Object> _returnStatements = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _imports = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _events = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _renderCondition = new java.util.ArrayList<>();
 
 	StoreComponent(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -26,17 +28,19 @@ public class StoreComponent {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("StoreComponent");
 		st.add("name", _name);
-		for (Object o : _dependencies) st.add("dependencies", o);
+		st.add("debug", _debug);
+		st.add("renderElement", _renderElement);
 		for (Object o : _components) st.add("components", o);
-		for (Object o : _decorators) st.add("decorators", o);
 		for (Object o : _stores) st.add("stores", o);
+		for (Object o : _decorators) st.add("decorators", o);
 		for (Object o : _state) st.add("state", o);
+		for (Object o : _constructorStatements) st.add("constructorStatements", o);
 		for (Object o : _componentDidMountStatements) st.add("componentDidMountStatements", o);
 		for (Object o : _methods) st.add("methods", o);
 		for (Object o : _renderStatements) st.add("renderStatements", o);
-		for (Object o : _renderConstants) st.add("renderConstants", o);
-		for (Object o : _returnStatements) st.add("returnStatements", o);
+		for (java.util.Map<String, Object> map : _imports) st.addAggr("imports.{name,path}", map.get("name"), map.get("path"));
 		for (java.util.Map<String, Object> map : _events) st.addAggr("events.{methodName,declaration}", map.get("methodName"), map.get("declaration"));
+		for (java.util.Map<String, Object> map : _renderCondition) st.addAggr("renderCondition.{condition,element}", map.get("condition"), map.get("element"));
 		return st.render().trim();
 	}
 
@@ -62,33 +66,48 @@ public class StoreComponent {
 		return this;
 	} 
 
-	public StoreComponent addDependencies(Object value) {
-		this._dependencies.add(value);
+	public StoreComponent setDebug(Object value) {
+		this._debug = value;
 		return this;
 	}
 
-	public StoreComponent setDependencies(Object[] value) {
-		this._dependencies.addAll(java.util.Arrays.asList(value));
+	public Object getDebug() {
+		return this._debug;
+	}
+
+	public Object getDebug(Object defaultValue) {
+		return this._debug == null ? defaultValue : this._debug;
+	}
+
+	public boolean hasDebug() {
+		return this._debug != null;
+	}
+
+	public StoreComponent removeDebug() {
+		this._debug = null;
+		return this;
+	} 
+
+	public StoreComponent setRenderElement(Object value) {
+		this._renderElement = value;
 		return this;
 	}
 
-	public StoreComponent setDependencies(java.util.Collection<Object> values) {
-		this._dependencies.addAll(values);
-		return this;
+	public Object getRenderElement() {
+		return this._renderElement;
 	}
 
-	public StoreComponent removeDependencies(Object value) {
-		this._dependencies.remove(value);
-		return this;
+	public Object getRenderElement(Object defaultValue) {
+		return this._renderElement == null ? defaultValue : this._renderElement;
 	}
 
-	public StoreComponent removeDependencies(int index) {
-		this._dependencies.remove(index);
-		return this;
+	public boolean hasRenderElement() {
+		return this._renderElement != null;
 	}
 
-	public java.util.List<Object> getDependencies() {
-		return this._dependencies;
+	public StoreComponent removeRenderElement() {
+		this._renderElement = null;
+		return this;
 	} 
 
 	public StoreComponent addComponents(Object value) {
@@ -120,35 +139,6 @@ public class StoreComponent {
 		return this._components;
 	} 
 
-	public StoreComponent addDecorators(Object value) {
-		this._decorators.add(value);
-		return this;
-	}
-
-	public StoreComponent setDecorators(Object[] value) {
-		this._decorators.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public StoreComponent setDecorators(java.util.Collection<Object> values) {
-		this._decorators.addAll(values);
-		return this;
-	}
-
-	public StoreComponent removeDecorators(Object value) {
-		this._decorators.remove(value);
-		return this;
-	}
-
-	public StoreComponent removeDecorators(int index) {
-		this._decorators.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getDecorators() {
-		return this._decorators;
-	} 
-
 	public StoreComponent addStores(Object value) {
 		this._stores.add(value);
 		return this;
@@ -178,6 +168,35 @@ public class StoreComponent {
 		return this._stores;
 	} 
 
+	public StoreComponent addDecorators(Object value) {
+		this._decorators.add(value);
+		return this;
+	}
+
+	public StoreComponent setDecorators(Object[] value) {
+		this._decorators.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public StoreComponent setDecorators(java.util.Collection<Object> values) {
+		this._decorators.addAll(values);
+		return this;
+	}
+
+	public StoreComponent removeDecorators(Object value) {
+		this._decorators.remove(value);
+		return this;
+	}
+
+	public StoreComponent removeDecorators(int index) {
+		this._decorators.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getDecorators() {
+		return this._decorators;
+	} 
+
 	public StoreComponent addState(Object value) {
 		this._state.add(value);
 		return this;
@@ -205,6 +224,35 @@ public class StoreComponent {
 
 	public java.util.List<Object> getState() {
 		return this._state;
+	} 
+
+	public StoreComponent addConstructorStatements(Object value) {
+		this._constructorStatements.add(value);
+		return this;
+	}
+
+	public StoreComponent setConstructorStatements(Object[] value) {
+		this._constructorStatements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public StoreComponent setConstructorStatements(java.util.Collection<Object> values) {
+		this._constructorStatements.addAll(values);
+		return this;
+	}
+
+	public StoreComponent removeConstructorStatements(Object value) {
+		this._constructorStatements.remove(value);
+		return this;
+	}
+
+	public StoreComponent removeConstructorStatements(int index) {
+		this._constructorStatements.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getConstructorStatements() {
+		return this._constructorStatements;
 	} 
 
 	public StoreComponent addComponentDidMountStatements(Object value) {
@@ -294,62 +342,49 @@ public class StoreComponent {
 		return this._renderStatements;
 	} 
 
-	public StoreComponent addRenderConstants(Object value) {
-		this._renderConstants.add(value);
+	public StoreComponent addImports(Object _name, Object _path) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("path", _path);
+		this._imports.add(map);
 		return this;
 	}
 
-	public StoreComponent setRenderConstants(Object[] value) {
-		this._renderConstants.addAll(java.util.Arrays.asList(value));
-		return this;
+	public java.util.List<java.util.Map<String, Object>> getImports() {
+		return this._imports;
 	}
 
-	public StoreComponent setRenderConstants(java.util.Collection<Object> values) {
-		this._renderConstants.addAll(values);
-		return this;
+	public StoreComponent addImports(StoreComponent_Imports value) {
+		return addImports(value._name, value._path);
 	}
 
-	public StoreComponent removeRenderConstants(Object value) {
-		this._renderConstants.remove(value);
-		return this;
+	public java.util.stream.Stream<StoreComponent_Imports> streamImports() {
+		return this._imports.stream().map(StoreComponent_Imports::new);
 	}
 
-	public StoreComponent removeRenderConstants(int index) {
-		this._renderConstants.remove(index);
-		return this;
-	}
+	public static final class StoreComponent_Imports {
 
-	public java.util.List<Object> getRenderConstants() {
-		return this._renderConstants;
-	} 
+		Object _name;
+		Object _path;
 
-	public StoreComponent addReturnStatements(Object value) {
-		this._returnStatements.add(value);
-		return this;
-	}
+		public StoreComponent_Imports(Object _name, Object _path) {
+			this._name = _name;
+			this._path = _path;
+		}
 
-	public StoreComponent setReturnStatements(Object[] value) {
-		this._returnStatements.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
+		private StoreComponent_Imports(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._path = (Object) map.get("path");
+		}
 
-	public StoreComponent setReturnStatements(java.util.Collection<Object> values) {
-		this._returnStatements.addAll(values);
-		return this;
-	}
+		public Object getName() {
+			return this._name;
+		}
 
-	public StoreComponent removeReturnStatements(Object value) {
-		this._returnStatements.remove(value);
-		return this;
-	}
+		public Object getPath() {
+			return this._path;
+		}
 
-	public StoreComponent removeReturnStatements(int index) {
-		this._returnStatements.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getReturnStatements() {
-		return this._returnStatements;
 	} 
 
 	public StoreComponent addEvents(Object _methodName, Object _declaration) {
@@ -397,6 +432,51 @@ public class StoreComponent {
 
 	} 
 
+	public StoreComponent addRenderCondition(Object _condition, Object _element) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("condition", _condition);
+		map.put("element", _element);
+		this._renderCondition.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getRenderCondition() {
+		return this._renderCondition;
+	}
+
+	public StoreComponent addRenderCondition(StoreComponent_RenderCondition value) {
+		return addRenderCondition(value._condition, value._element);
+	}
+
+	public java.util.stream.Stream<StoreComponent_RenderCondition> streamRenderCondition() {
+		return this._renderCondition.stream().map(StoreComponent_RenderCondition::new);
+	}
+
+	public static final class StoreComponent_RenderCondition {
+
+		Object _condition;
+		Object _element;
+
+		public StoreComponent_RenderCondition(Object _condition, Object _element) {
+			this._condition = _condition;
+			this._element = _element;
+		}
+
+		private StoreComponent_RenderCondition(java.util.Map<String, Object> map) {
+			this._condition = (Object) map.get("condition");
+			this._element = (Object) map.get("element");
+		}
+
+		public Object getCondition() {
+			return this._condition;
+		}
+
+		public Object getElement() {
+			return this._element;
+		}
+
+	} 
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -410,47 +490,66 @@ public class StoreComponent {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "StoreComponent(dependencies,components,decorators,stores,name,state,events,componentDidMountStatements,methods,renderStatements,renderConstants,returnStatements) ::= <<import React from 'react';\n" + 
+	static final String st = "StoreComponent(imports,components,stores,decorators,name,debug,state,constructorStatements,events,componentDidMountStatements,methods,renderStatements,renderCondition,renderElement) ::= <<import React from 'react';\n" + 
 				"import { inject, observer } from 'mobx-react';\n" + 
-				"\n" + 
-				"~dependencies:{it|~it~};separator=\"\\n\"~\n" + 
-				"\n" + 
+				"~imports:{it|import ~it.name~ from '~it.path~';};separator=\"\\n\"~\n" + 
 				"~components:{it|~it~};separator=\"\\n\\n\"~\n" + 
-				"\n" + 
-				"~decorators:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"@inject(~stores:{it|'~it~'};separator=\",\"~)\n" + 
 				"@observer\n" + 
+				"~decorators:{it|~it~};separator=\"\\n\"~\n" + 
 				"class ~name~ extends React.Component {\n" + 
 				"\n" + 
 				"	constructor(props) {\n" + 
 				"		super(props);\n" + 
+				"~if(debug)~\n" + 
 				"		console.log(\"new ~name~ : \" +  this.props);\n" + 
+				"~endif~\n" + 
 				"~if(state)~\n" + 
 				"		this.state = {\n" + 
 				"			~state:{it|~it~};separator=\",\\n\"~;\n" + 
 				"		}\n" + 
 				"~endif~\n" + 
+				"		~constructorStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"		~events:{it|this.~it.methodName~ = this.~it.methodName~.bind(this);};separator=\"\\n\"~\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	componentDidMount() {\n" + 
+				"~if(debug)~\n" + 
 				"		console.log(\"mount ~name~ : \" +  this.props);\n" + 
+				"~endif~\n" + 
 				"		~componentDidMountStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"	}\n" + 
-				"	\n" + 
 				"~if(events)~\n" + 
+				"\n" + 
 				"	~events:{it|~it.declaration~};separator=\"\\n\\n\"~\n" + 
 				"~endif~\n" + 
 				"~if(methods)~\n" + 
+				"\n" + 
 				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"~endif~\n" + 
+				"	\n" + 
 				"	render() {\n" + 
+				"~if(debug)~\n" + 
 				"		console.log(\"render ~name~ : \" +  this.props);\n" + 
+				"~endif~\n" + 
 				"		~renderStatements:{it|~it~};separator=\"\\n\"~\n" + 
-				"		~if(renderConstants)~const { ~renderConstants:{it|~it~};separator=\", \"~ } = this.state;~endif~\n" + 
-				"		\n" + 
-				"		~if(returnStatements)~return (~returnStatements:{it|~it~};separator=\"\\n\\n\"~)~else~return null;~endif~\n" + 
+				"\n" + 
+				"~if(renderCondition)~\n" + 
+				"		~renderCondition:{it|if (~it.condition~) \n" + 
+				"	return (\n" + 
+				"		~it.element~\n" + 
+				"	);};separator=\"\\n\\nelse \"~\n" + 
+				"	\n" + 
+				"		else\n" + 
+				"			return (\n" + 
+				"				~renderElement~\n" + 
+				"			);\n" + 
+				"~else~\n" + 
+				"		return (\n" + 
+				"			~renderElement~\n" + 
+				"		);\n" + 
+				"~endif~\n" + 
 				"	}\n" + 
 				"}\n" + 
 				"\n" + 

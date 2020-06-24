@@ -29,30 +29,40 @@
   }, {
     "uuid" : "68f2245d-08e1-42db-aafa-7245a5eda5b0",
     "name" : "dependency",
-    "text" : "<dependency>\n\t<groupId>~groupId~</groupId>\n\t<artifactId>~artifactId~</artifactId>\n\t<version>~version~</version>~if(scope)~\n\t<scope>~scope;format=\"toLower\"~</scope>~endif~~if(systemPath)~\n\t<systemPath>~systemPath~</systemPath>\n\t~endif~\n\t\n</dependency> ",
+    "text" : "<dependency>\n\t<groupId>~groupId~</groupId>\n\t<artifactId>~artifactId~</artifactId>~if(version)~\n\t<version>~version~</version>~endif~~if(scope)~\n\t<scope>~scope;format=\"toLower\"~</scope>~endif~~if(systemPath)~\n\t<systemPath>~systemPath~</systemPath>~endif~~if(classifier)~\n\t<classifier>~classifier~</classifier>~endif~~if(type)~\n\t<type>~type~</type>~endif~\n\t\n</dependency> ",
     "parameters" : [ {
-      "uuid" : "7d1193ae-6e6b-44c9-8ff6-f2e18e6d0ba2",
+      "uuid" : "b12643df-58cb-47d0-8ea0-77506ee70a0a",
       "name" : "groupId",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "28ab3485-4e20-4430-b4f0-6e30b24b0212",
+      "uuid" : "71053f05-5114-4394-9fc7-b9f578175b58",
       "name" : "artifactId",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "00af0d34-8e7d-4ebb-be3d-23772b6db9ec",
+      "uuid" : "c5d1e261-e5d3-46c1-af07-ad0fa149fcdb",
       "name" : "version",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "1d3f28a3-cfb7-4611-8ec7-be173b909a70",
+      "uuid" : "17d38e23-c22b-4f2b-8a75-7da19dfe1a0c",
       "name" : "scope",
       "type" : "SINGLE",
       "argumentType" : "DependencyScope"
     }, {
-      "uuid" : "c421033a-a3ea-40df-bf04-b98316da98cc",
+      "uuid" : "13bbe556-03e5-497d-a80b-314439b73de2",
       "name" : "systemPath",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "2b654cca-0719-4a66-af07-0bd1675d7b51",
+      "name" : "classifier",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "938744f6-0f4e-4adb-bf3c-4fe7fbb10e79",
+      "name" : "type",
       "type" : "SINGLE",
       "argumentType" : "Object"
     } ]
@@ -84,64 +94,81 @@
   }, {
     "uuid" : "7a760f05-7071-4259-a27b-8abfbf1d6ce1",
     "name" : "pom",
-    "text" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\r\n~if(parent)~\r\n\r\n\t~parent~\r\n~endif~\t \r\n\t<modelVersion>4.0.0</modelVersion>\r\n\r\n\t<name>~name~</name>\r\n\r\n\t~if(groupId)~<groupId>~groupId~</groupId>~endif~\r\n\t~if(artifactId)~<artifactId>~artifactId~</artifactId>~endif~\r\n\t~if(version)~<version>~version~</version>~endif~\r\n\t~if(packaging)~<packaging>~packaging~</packaging>~endif~\r\n\r\n~if(modules)~\r\n\t<modules>\r\n\t\t~modules:{it|<module>~it~</module>};separator=\"\\n\"~\r\n\t</modules>\r\n~endif~\r\n~if(properties)~\r\n\t<properties>\r\n\t\t~properties:{it|<~it.name~>~it.value~</~it.name~>};separator=\"\\n\"~\t\t\r\n\t</properties>\r\n~endif~\r\n~if(build)~\r\n\r\n\t~build~\r\n\r\n~endif~\r\n~if(dependencies)~\r\n\r\n\t<dependencies>\r\n\t\t~dependencies:{it|~it~};separator=\"\\n\"~  \r\n\t</dependencies>\r\n\r\n~endif~\r\n~if(distributionManagement)~\r\n\r\n\t<distributionManagement>\r\n\t\t~distributionManagement:{it|~it~};separator=\"\\n\"~\r\n\t</distributionManagement>\r\n~endif~\r\n~if(repositories)~\r\n\r\n\t<repositories>\r\n\t\t~repositories:{it|~it~};separator=\"\\n\"~\r\n\t</repositories>\r\n~endif~\r\n</project>",
+    "text" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n~if(parent)~\n\n\t~parent~\n~endif~\t \n\t<modelVersion>4.0.0</modelVersion>\n\n\t<name>~name~</name>\n\n\t~if(groupId)~<groupId>~groupId~</groupId>~endif~\n\t~if(artifactId)~<artifactId>~artifactId~</artifactId>~endif~\n\t~if(version)~<version>~version~</version>~endif~\n\t~if(packaging)~<packaging>~packaging~</packaging>~endif~\n\n~if(modules)~\n\t<modules>\n\t\t~modules:{it|<module>~it~</module>};separator=\"\\n\"~\n\t</modules>\n~endif~\n~if(properties)~\n\t<properties>\n\t\t~properties:{it|<~it.name~>~it.value~</~it.name~>};separator=\"\\n\"~\t\t\n\t</properties>\n~endif~\n~if(build)~\n\n\t~build~\n\n~endif~\n~if(dependencyManagement)~\n\t~dependencyManagement~\n~endif~\n~if(dependencies)~\n\n\t<dependencies>\n\t\t~dependencies:{it|~it~};separator=\"\\n\"~  \n\t</dependencies>\n\n~endif~\n~if(distributionManagement)~\n\n\t<distributionManagement>\n\t\t~distributionManagement:{it|~it~};separator=\"\\n\"~\n\t</distributionManagement>\n~endif~\n~if(repositories)~\n\n\t<repositories>\n\t\t~repositories:{it|~it~};separator=\"\\n\"~\n\t</repositories>\n~endif~\n</project> ",
     "parameters" : [ {
-      "uuid" : "a035ff4c-0deb-4a33-8797-e30ee515c95d",
+      "uuid" : "667f4d62-fd57-4121-babf-dd556e2cefec",
       "name" : "parent",
-      "type" : "SINGLE"
+      "type" : "SINGLE",
+      "argumentType" : "Object"
     }, {
-      "uuid" : "fc199abd-f02b-4d7e-9dca-6d6a055bf68e",
+      "uuid" : "b8f56f81-fda0-4ee7-b876-c0c68d283dff",
       "name" : "name",
-      "type" : "SINGLE"
+      "type" : "SINGLE",
+      "argumentType" : "Object"
     }, {
-      "uuid" : "10f9e9ee-0aa5-4bad-8db1-63f512060f93",
+      "uuid" : "fcb19822-9dca-4062-b280-506873b294fa",
       "name" : "groupId",
-      "type" : "SINGLE"
+      "type" : "SINGLE",
+      "argumentType" : "Object"
     }, {
-      "uuid" : "6299ba76-eccd-43cd-ab93-76776b2dbf34",
+      "uuid" : "32ff4f1d-72c4-425b-8a96-0e4dcfca6d99",
       "name" : "artifactId",
-      "type" : "SINGLE"
+      "type" : "SINGLE",
+      "argumentType" : "Object"
     }, {
-      "uuid" : "d6a386f9-2ea0-435a-aa86-1840c2ee15c8",
+      "uuid" : "72403059-fb1a-4fe5-af2c-e7b4490a51ff",
       "name" : "version",
-      "type" : "SINGLE"
+      "type" : "SINGLE",
+      "argumentType" : "Object"
     }, {
-      "uuid" : "f8d0fa80-9e96-4a6e-b10f-1299169eb8dc",
+      "uuid" : "5848193f-467a-4b56-8166-ba36723d5a91",
       "name" : "packaging",
-      "type" : "SINGLE"
+      "type" : "SINGLE",
+      "argumentType" : "Object"
     }, {
-      "uuid" : "f303b0fc-cd00-41e9-bb30-c2bdc5eb5c80",
+      "uuid" : "e7a51cdc-410c-41dd-9788-57099919b6e8",
       "name" : "modules",
-      "type" : "LIST"
+      "type" : "LIST",
+      "argumentType" : "Object"
     }, {
-      "uuid" : "85b12476-abdb-480f-b0a7-3b3a54a74608",
+      "uuid" : "b8cb8f7c-6c59-44e8-a123-ce3ad696ddf0",
       "name" : "properties",
       "type" : "KVLIST",
+      "argumentType" : "Object",
       "keys" : [ {
-        "uuid" : "73ad6d33-fb9d-48c6-810e-881e710e5099",
+        "uuid" : "b11ad048-c214-4b70-89c3-8b5df571383f",
         "name" : "name",
         "argumentType" : "Object"
       }, {
-        "uuid" : "0061b2a4-6823-4fec-a1b0-450428d614b7",
+        "uuid" : "4ade3152-88d9-49c6-834b-c6e9db8abb42",
         "name" : "value",
         "argumentType" : "Object"
       } ]
     }, {
-      "uuid" : "3539f0cd-4921-4c01-914a-634d517b6303",
+      "uuid" : "e078cac5-a180-419b-b251-01ebd13a75cd",
       "name" : "build",
-      "type" : "SINGLE"
+      "type" : "SINGLE",
+      "argumentType" : "Object"
     }, {
-      "uuid" : "c02575d6-e6d6-4a03-a29b-78a04481e326",
+      "uuid" : "c25f1803-7397-4f2b-90f1-033588580d33",
+      "name" : "dependencyManagement",
+      "type" : "SINGLE",
+      "argumentType" : "DependencyManagement"
+    }, {
+      "uuid" : "64a47005-e38b-46f2-93d0-536e6fd5eaac",
       "name" : "dependencies",
-      "type" : "LIST"
+      "type" : "LIST",
+      "argumentType" : "Object"
     }, {
-      "uuid" : "e8fabc3a-db50-484d-bc57-54cba23b79c8",
+      "uuid" : "6634da04-39ad-4379-9485-efcf9770baa5",
       "name" : "distributionManagement",
-      "type" : "LIST"
+      "type" : "LIST",
+      "argumentType" : "Object"
     }, {
-      "uuid" : "956771f7-efad-4391-aec7-d30e426f6967",
+      "uuid" : "8fb26899-f6a3-4efd-93bb-1e060a46acba",
       "name" : "repositories",
-      "type" : "LIST"
+      "type" : "LIST",
+      "argumentType" : "Object"
     } ]
   }, {
     "uuid" : "f3f8b1f9-6567-4061-a2ff-6166b425734f",
@@ -331,6 +358,16 @@
         "type" : "LIST"
       } ]
     } ]
+  }, {
+    "uuid" : "ec3aaf4b-dc85-4bb4-b1e3-7a8ac732865f",
+    "name" : "dependencyManagement",
+    "text" : "<dependencyManagement>\n\t<dependencies>\n\t\t~dependencies:{it|~it~};separator=\"\\n\"~\n\t</dependencies>\n</dependencyManagement> ",
+    "parameters" : [ {
+      "uuid" : "27916ba5-16af-4c26-b7b9-c102839707a1",
+      "name" : "dependencies",
+      "type" : "LIST",
+      "argumentType" : "Dependency"
+    } ]
   } ],
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Maven.stg",
   "enums" : [ {
@@ -356,6 +393,22 @@
       "uuid" : "dd03edfc-511b-4cdd-8c8c-96e1a41b513a",
       "name" : "Import",
       "lexical" : "import"
+    } ]
+  }, {
+    "uuid" : "59c76de1-72d0-4a6f-a2bb-c497eb042e36",
+    "name" : "DependencyType",
+    "values" : [ {
+      "uuid" : "c868393b-ee01-4167-8c6e-a0515f4e43ee",
+      "name" : "Pom",
+      "lexical" : "pom"
+    }, {
+      "uuid" : "5f36140b-8cd3-4432-a920-db9fd8f031f2",
+      "name" : "Jar",
+      "lexical" : "jar"
+    }, {
+      "uuid" : "2045822a-6cc4-40d3-af8d-70d74a0ab571",
+      "name" : "War",
+      "lexical" : "war"
     } ]
   } ]
 }

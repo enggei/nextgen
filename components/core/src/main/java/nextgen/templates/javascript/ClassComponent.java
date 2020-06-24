@@ -10,6 +10,7 @@ public class ClassComponent {
 	private java.util.List<Object> _components = new java.util.ArrayList<>();
 	private java.util.List<Object> _decorators = new java.util.ArrayList<>();
 	private java.util.List<Object> _state = new java.util.ArrayList<>();
+	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<Object> _renderConstants = new java.util.ArrayList<>();
 	private java.util.List<Object> _returnStatements = new java.util.ArrayList<>();
@@ -27,6 +28,7 @@ public class ClassComponent {
 		for (Object o : _components) st.add("components", o);
 		for (Object o : _decorators) st.add("decorators", o);
 		for (Object o : _state) st.add("state", o);
+		for (Object o : _constructorStatements) st.add("constructorStatements", o);
 		for (Object o : _methods) st.add("methods", o);
 		for (Object o : _renderConstants) st.add("renderConstants", o);
 		for (Object o : _returnStatements) st.add("returnStatements", o);
@@ -170,6 +172,35 @@ public class ClassComponent {
 
 	public java.util.List<Object> getState() {
 		return this._state;
+	} 
+
+	public ClassComponent addConstructorStatements(Object value) {
+		this._constructorStatements.add(value);
+		return this;
+	}
+
+	public ClassComponent setConstructorStatements(Object[] value) {
+		this._constructorStatements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassComponent setConstructorStatements(java.util.Collection<Object> values) {
+		this._constructorStatements.addAll(values);
+		return this;
+	}
+
+	public ClassComponent removeConstructorStatements(Object value) {
+		this._constructorStatements.remove(value);
+		return this;
+	}
+
+	public ClassComponent removeConstructorStatements(int index) {
+		this._constructorStatements.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getConstructorStatements() {
+		return this._constructorStatements;
 	} 
 
 	public ClassComponent addMethods(Object value) {
@@ -317,9 +348,8 @@ public class ClassComponent {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ClassComponent(dependencies,components,decorators,name,state,events,methods,renderConstants,returnStatements) ::= <<import React from 'react';\n" + 
+	static final String st = "ClassComponent(dependencies,components,decorators,name,state,constructorStatements,events,methods,renderConstants,returnStatements) ::= <<import React from 'react';\n" + 
 				"~dependencies:{it|~it~};separator=\"\\n\"~\n" + 
-				"\n" + 
 				"~components:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
 				"~decorators:{it|~it~};separator=\"\\n\"~\n" + 
@@ -333,6 +363,8 @@ public class ClassComponent {
 				"			~state:{it|~it~};separator=\",\\n\"~;\n" + 
 				"		}\n" + 
 				"~endif~\n" + 
+				"\n" + 
+				"		~constructorStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"		~events:{it|this.~it.methodName~ = this.~it.methodName~.bind(this);};separator=\"\\n\"~\n" + 
 				"	}\n" + 
 				"\n" + 

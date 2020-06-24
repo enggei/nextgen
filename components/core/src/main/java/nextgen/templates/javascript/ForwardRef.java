@@ -5,8 +5,8 @@ public class ForwardRef {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _name;
-	private Object _forward;
+	private Object _to;
+	private Object _argument;
 
 	ForwardRef(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -15,52 +15,52 @@ public class ForwardRef {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ForwardRef");
-		st.add("name", _name);
-		st.add("forward", _forward);
+		st.add("to", _to);
+		st.add("argument", _argument);
 		return st.render().trim();
 	}
 
-	public ForwardRef setName(Object value) {
-		this._name = value;
+	public ForwardRef setTo(Object value) {
+		this._to = value;
 		return this;
 	}
 
-	public Object getName() {
-		return this._name;
+	public Object getTo() {
+		return this._to;
 	}
 
-	public Object getName(Object defaultValue) {
-		return this._name == null ? defaultValue : this._name;
+	public Object getTo(Object defaultValue) {
+		return this._to == null ? defaultValue : this._to;
 	}
 
-	public boolean hasName() {
-		return this._name != null;
+	public boolean hasTo() {
+		return this._to != null;
 	}
 
-	public ForwardRef removeName() {
-		this._name = null;
+	public ForwardRef removeTo() {
+		this._to = null;
 		return this;
 	} 
 
-	public ForwardRef setForward(Object value) {
-		this._forward = value;
+	public ForwardRef setArgument(Object value) {
+		this._argument = value;
 		return this;
 	}
 
-	public Object getForward() {
-		return this._forward;
+	public Object getArgument() {
+		return this._argument;
 	}
 
-	public Object getForward(Object defaultValue) {
-		return this._forward == null ? defaultValue : this._forward;
+	public Object getArgument(Object defaultValue) {
+		return this._argument == null ? defaultValue : this._argument;
 	}
 
-	public boolean hasForward() {
-		return this._forward != null;
+	public boolean hasArgument() {
+		return this._argument != null;
 	}
 
-	public ForwardRef removeForward() {
-		this._forward = null;
+	public ForwardRef removeArgument() {
+		this._argument = null;
 		return this;
 	} 
 
@@ -79,7 +79,7 @@ public class ForwardRef {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ForwardRef(name,forward) ::= <<const ~name~ = React.forwardRef( (props, ref) => (\n" + 
-				"	~forward~\n" + 
+	static final String st = "ForwardRef(to,argument) ::= <<React.forwardRef((props, ref) => (\n" + 
+				"	<RouterLink ref={ref} to={'~to~~if(argument)~/~endif~'~if(argument)~ + ~argument~~endif~} {...props} />\n" + 
 				")); >>";
 } 

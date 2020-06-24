@@ -8,6 +8,8 @@ public class Usecase {
 	private String _name;
 	private String _description;
 	private String _url;
+	private Object _parameterName;
+	private Object _parameterType;
 	private String _action;
 	private java.util.List<String> _successStatements = new java.util.ArrayList<>();
 	private java.util.List<String> _failStatements = new java.util.ArrayList<>();
@@ -23,6 +25,8 @@ public class Usecase {
 		st.add("name", _name);
 		st.add("description", _description);
 		st.add("url", _url);
+		st.add("parameterName", _parameterName);
+		st.add("parameterType", _parameterType);
 		st.add("action", _action);
 		for (Object o : _successStatements) st.add("successStatements", o);
 		for (Object o : _failStatements) st.add("failStatements", o);
@@ -93,6 +97,50 @@ public class Usecase {
 
 	public Usecase removeUrl() {
 		this._url = null;
+		return this;
+	} 
+
+	public Usecase setParameterName(Object value) {
+		this._parameterName = value;
+		return this;
+	}
+
+	public Object getParameterName() {
+		return this._parameterName;
+	}
+
+	public Object getParameterName(Object defaultValue) {
+		return this._parameterName == null ? defaultValue : this._parameterName;
+	}
+
+	public boolean hasParameterName() {
+		return this._parameterName != null;
+	}
+
+	public Usecase removeParameterName() {
+		this._parameterName = null;
+		return this;
+	} 
+
+	public Usecase setParameterType(Object value) {
+		this._parameterType = value;
+		return this;
+	}
+
+	public Object getParameterType() {
+		return this._parameterType;
+	}
+
+	public Object getParameterType(Object defaultValue) {
+		return this._parameterType == null ? defaultValue : this._parameterType;
+	}
+
+	public boolean hasParameterType() {
+		return this._parameterType != null;
+	}
+
+	public Usecase removeParameterType() {
+		this._parameterType = null;
 		return this;
 	} 
 
@@ -219,10 +267,11 @@ public class Usecase {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Usecase(name,description,url,action,successStatements,failStatements,domainStatements) ::= <<~name~\n" + 
+	static final String st = "Usecase(name,description,url,parameterName,parameterType,action,successStatements,failStatements,domainStatements) ::= <<~name~\n" + 
 				"~description~\n" + 
 				"\n" + 
 				"~url~\n" + 
+				"~parameterName~ ~parameterType~\n" + 
 				"~action~\n" + 
 				"\n" + 
 				"~successStatements:{it|~it~};separator=\"\\n\"~\n" + 

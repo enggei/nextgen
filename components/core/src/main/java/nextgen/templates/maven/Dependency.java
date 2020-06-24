@@ -10,6 +10,8 @@ public class Dependency {
 	private Object _version;
 	private DependencyScope _scope;
 	private Object _systemPath;
+	private Object _classifier;
+	private Object _type;
 
 	Dependency(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -23,6 +25,8 @@ public class Dependency {
 		st.add("version", _version);
 		st.add("scope", _scope);
 		st.add("systemPath", _systemPath);
+		st.add("classifier", _classifier);
+		st.add("type", _type);
 		return st.render().trim();
 	}
 
@@ -136,6 +140,50 @@ public class Dependency {
 		return this;
 	} 
 
+	public Dependency setClassifier(Object value) {
+		this._classifier = value;
+		return this;
+	}
+
+	public Object getClassifier() {
+		return this._classifier;
+	}
+
+	public Object getClassifier(Object defaultValue) {
+		return this._classifier == null ? defaultValue : this._classifier;
+	}
+
+	public boolean hasClassifier() {
+		return this._classifier != null;
+	}
+
+	public Dependency removeClassifier() {
+		this._classifier = null;
+		return this;
+	} 
+
+	public Dependency setType(Object value) {
+		this._type = value;
+		return this;
+	}
+
+	public Object getType() {
+		return this._type;
+	}
+
+	public Object getType(Object defaultValue) {
+		return this._type == null ? defaultValue : this._type;
+	}
+
+	public boolean hasType() {
+		return this._type != null;
+	}
+
+	public Dependency removeType() {
+		this._type = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -151,13 +199,14 @@ public class Dependency {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "dependency(groupId,artifactId,version,scope,systemPath) ::= <<<dependency>\n" + 
+	static final String st = "dependency(groupId,artifactId,version,scope,systemPath,classifier,type) ::= <<<dependency>\n" + 
 				"	<groupId>~groupId~</groupId>\n" + 
-				"	<artifactId>~artifactId~</artifactId>\n" + 
-				"	<version>~version~</version>~if(scope)~\n" + 
+				"	<artifactId>~artifactId~</artifactId>~if(version)~\n" + 
+				"	<version>~version~</version>~endif~~if(scope)~\n" + 
 				"	<scope>~scope;format=\"toLower\"~</scope>~endif~~if(systemPath)~\n" + 
-				"	<systemPath>~systemPath~</systemPath>\n" + 
-				"	~endif~\n" + 
+				"	<systemPath>~systemPath~</systemPath>~endif~~if(classifier)~\n" + 
+				"	<classifier>~classifier~</classifier>~endif~~if(type)~\n" + 
+				"	<type>~type~</type>~endif~\n" + 
 				"	\n" + 
 				"</dependency> >>";
 } 

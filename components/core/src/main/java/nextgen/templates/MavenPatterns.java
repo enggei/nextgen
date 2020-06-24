@@ -5,8 +5,8 @@ import nextgen.templates.maven.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -84,19 +84,61 @@ public class MavenPatterns extends MavenST {
                 .setVersion(version);
     }
 
+    public static Set<Dependency> parseDependencies(String xml) {
+
+        final Set<Dependency> dependencies = new LinkedHashSet<>();
+
+        final String[] s = xml.split("\n");
+        final AtomicBoolean inDependency = new AtomicBoolean(false);
+        final List<String> dependency = new ArrayList<>();
+        for (String value : s) {
+            final String line = value.trim();
+            if (line.contains("<dependency>")) {
+                inDependency.set(true);
+                dependency.clear();
+                dependency.add(line.trim());
+            } else if (line.contains("</dependency>")) {
+                if (!dependency.isEmpty()) {
+                    final StringBuilder tmp = new StringBuilder();
+                    for (String s1 : dependency)
+                        tmp.append(s1).append("\n");
+                    dependencies.add(newDependency(tmp.toString()));
+                }
+                inDependency.set(false);
+            } else if (inDependency.get()) {
+                dependency.add(line.trim());
+            }
+        }
+
+        return dependencies;
+    }
+
     public static Dependency newDependency(String xml) {
 
+        final String scope = parseDependency("scope", xml);
         final Dependency dependency = newDependency()
-                .setArtifactId(parseDependency("artifactId", xml))
                 .setGroupId(parseDependency("groupId", xml))
+                .setClassifier(parseDependency("classifier", xml))
+                .setType(parseDependency("type", xml))
+                .setScope(scope == null ? null : DependencyScope.valueOf(scope))
+                .setSystemPath(parseDependency("systemPath", xml))
+                .setArtifactId(parseDependency("artifactId", xml))
                 .setVersion(parseDependency("version", xml));
 
-//        JavaPatterns.generate(fluent(
-//                newMethodCallExpression(null, "newDependency"),
-//                newMethodCallExpression(null, "setArtifactId", newStringLiteralExpression(dependency.getArtifactId())),
-//                newMethodCallExpression(null, "setGroupId", newStringLiteralExpression(dependency.getGroupId())),
-//                newMethodCallExpression(null, "setVersion", newStringLiteralExpression(JavaPatterns.generate(dependency.getVersion())))
-//        ));
+        final StringBuilder out = new StringBuilder(".addDependencies(nextgen.templates.MavenPatterns.newDependency()");
+        if (dependency.getGroupId() != null) out.append(".setGroupId(\"").append(dependency.getGroupId()).append("\")");
+        if (dependency.getArtifactId() != null)
+            out.append(".setArtifactId(\"").append(dependency.getArtifactId()).append("\")");
+        if (dependency.getVersion() != null) out.append(".setVersion(\"").append(dependency.getVersion()).append("\")");
+        if (dependency.getClassifier() != null)
+            out.append(".setClassifier(\"").append(dependency.getClassifier()).append("\")");
+        if (dependency.getScope() != null) out.append(".setScope(\"").append(dependency.getScope()).append("\")");
+        if (dependency.getType() != null) out.append(".setType(\"").append(dependency.getType()).append("\")");
+        if (dependency.getSystemPath() != null)
+            out.append(".setSystemPath(\"").append(dependency.getSystemPath()).append("\")");
+        out.append(")");
+
+        System.out.println(out.toString().trim());
 
         return dependency;
     }

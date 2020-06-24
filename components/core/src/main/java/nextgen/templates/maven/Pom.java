@@ -12,6 +12,7 @@ public class Pom {
 	private Object _version;
 	private Object _packaging;
 	private Object _build;
+	private DependencyManagement _dependencyManagement;
 	private java.util.List<Object> _modules = new java.util.ArrayList<>();
 	private java.util.List<Object> _dependencies = new java.util.ArrayList<>();
 	private java.util.List<Object> _distributionManagement = new java.util.ArrayList<>();
@@ -32,6 +33,7 @@ public class Pom {
 		st.add("version", _version);
 		st.add("packaging", _packaging);
 		st.add("build", _build);
+		st.add("dependencyManagement", _dependencyManagement);
 		for (Object o : _modules) st.add("modules", o);
 		for (Object o : _dependencies) st.add("dependencies", o);
 		for (Object o : _distributionManagement) st.add("distributionManagement", o);
@@ -191,6 +193,28 @@ public class Pom {
 
 	public Pom removeBuild() {
 		this._build = null;
+		return this;
+	} 
+
+	public Pom setDependencyManagement(DependencyManagement value) {
+		this._dependencyManagement = value;
+		return this;
+	}
+
+	public DependencyManagement getDependencyManagement() {
+		return this._dependencyManagement;
+	}
+
+	public DependencyManagement getDependencyManagement(DependencyManagement defaultValue) {
+		return this._dependencyManagement == null ? defaultValue : this._dependencyManagement;
+	}
+
+	public boolean hasDependencyManagement() {
+		return this._dependencyManagement != null;
+	}
+
+	public Pom removeDependencyManagement() {
+		this._dependencyManagement = null;
 		return this;
 	} 
 
@@ -368,7 +392,7 @@ public class Pom {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "pom(parent,name,groupId,artifactId,version,packaging,modules,properties,build,dependencies,distributionManagement,repositories) ::= <<<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
+	static final String st = "pom(parent,name,groupId,artifactId,version,packaging,modules,properties,build,dependencyManagement,dependencies,distributionManagement,repositories) ::= <<<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
 				"<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" + 
 				"~if(parent)~\n" + 
 				"\n" + 
@@ -397,6 +421,9 @@ public class Pom {
 				"\n" + 
 				"	~build~\n" + 
 				"\n" + 
+				"~endif~\n" + 
+				"~if(dependencyManagement)~\n" + 
+				"	~dependencyManagement~\n" + 
 				"~endif~\n" + 
 				"~if(dependencies)~\n" + 
 				"\n" + 

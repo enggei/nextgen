@@ -1,5 +1,7 @@
 delimiters "~","~"
 
+clone(url) ::= <<git clone ~url~  >>
+
 gitignore(excludeDirs,excludeFiles) ::= <<~excludeDirs:{it|/~it~/};separator="\n"~
 ~excludeFiles:{it|/~it~};separator="\n"~  >>
 

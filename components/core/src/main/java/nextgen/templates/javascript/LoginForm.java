@@ -32,8 +32,7 @@ public class LoginForm {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "LoginForm() ::= <<// dependencies:\n" + 
-				"import { withRouter } from 'react-router-dom';\n" + 
+	static final String st = "LoginForm() ::= <<import { withRouter } from 'react-router-dom';\n" + 
 				"import React from 'react';\n" + 
 				"\n" + 
 				"import { inject, observer } from 'mobx-react';\n" + 

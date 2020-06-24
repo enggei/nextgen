@@ -9,6 +9,7 @@ public class TypeScriptST {
 	ArrayType.st + "\n" + 
 	EmbeddedExpression.st + "\n" + 
 	EnumDeclaration.st + "\n" + 
+	FunctionalTypeInterface.st + "\n" + 
 	Interface.st + "\n" + 
 	TupleType.st + "\n" + 
 	VariableDeclaration.st + "\n" ;
@@ -61,6 +62,10 @@ public class TypeScriptST {
 
 	public static EnumDeclaration newEnumDeclaration() {
 		return new EnumDeclaration(stGroup);
+	} 
+
+	public static FunctionalTypeInterface newFunctionalTypeInterface() {
+		return new FunctionalTypeInterface(stGroup);
 	} 
 
 	public static Interface newInterface() {

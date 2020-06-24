@@ -1,8 +1,11 @@
 delimiters "~","~"
 
-Block(start,scope,end) ::= <<~start~
-	~scope:{it|~it~};separator="\n"~
-~end~  >>
+Block(lines) ::= <<~lines:{it|~it~};separator="\n"~  >>
+
+Line(line,children,end,next) ::= <<~line~~if(children)~
+	~children:{it|~it~};separator="\n"~~endif~~if(end)~
+~end~~endif~
+~next~  >>
 
 eom() ::= "}"
 

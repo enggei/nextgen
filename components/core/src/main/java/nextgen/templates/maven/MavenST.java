@@ -7,6 +7,7 @@ public class MavenST {
 	"gt() ::= \">\"\n" +
 	Build.st + "\n" + 
 	Dependency.st + "\n" + 
+	DependencyManagement.st + "\n" + 
 	DependencyGroup.st + "\n" + 
 	Module.st + "\n" + 
 	Project.st + "\n" + 
@@ -60,6 +61,10 @@ public class MavenST {
 
 	public static Dependency newDependency() {
 		return new Dependency(stGroup);
+	} 
+
+	public static DependencyManagement newDependencyManagement() {
+		return new DependencyManagement(stGroup);
 	} 
 
 	public static DependencyGroup newDependencyGroup() {

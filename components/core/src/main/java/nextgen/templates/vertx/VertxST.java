@@ -6,8 +6,7 @@ public class VertxST {
 	"eom() ::= \"}\"\n" +
 	"gt() ::= \">\"\n" +
 	DomainVerticle.st + "\n" + 
-	JsonArrayAction.st + "\n" + 
-	JsonObjectAction.st + "\n" + 
+	DomainAction.st + "\n" + 
 	JsonFactory.st + "\n" + 
 	JsonWrapper.st + "\n" + 
 	EnumAccessors.st + "\n" + 
@@ -16,7 +15,10 @@ public class VertxST {
 	ListPrimitiveAccessors.st + "\n" + 
 	ListReferenceAccessors.st + "\n" + 
 	PrimitiveAccessors.st + "\n" + 
-	ReferenceAccessors.st + "\n" ;
+	ReferenceAccessors.st + "\n" + 
+	WebVerticle.st + "\n" + 
+	RouteHandler.st + "\n" + 
+	SendEventBusAction.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -56,12 +58,8 @@ public class VertxST {
 		return new DomainVerticle(stGroup);
 	} 
 
-	public static JsonArrayAction newJsonArrayAction() {
-		return new JsonArrayAction(stGroup);
-	} 
-
-	public static JsonObjectAction newJsonObjectAction() {
-		return new JsonObjectAction(stGroup);
+	public static DomainAction newDomainAction() {
+		return new DomainAction(stGroup);
 	} 
 
 	public static JsonFactory newJsonFactory() {
@@ -98,6 +96,18 @@ public class VertxST {
 
 	public static ReferenceAccessors newReferenceAccessors() {
 		return new ReferenceAccessors(stGroup);
+	} 
+
+	public static WebVerticle newWebVerticle() {
+		return new WebVerticle(stGroup);
+	} 
+
+	public static RouteHandler newRouteHandler() {
+		return new RouteHandler(stGroup);
+	} 
+
+	public static SendEventBusAction newSendEventBusAction() {
+		return new SendEventBusAction(stGroup);
 	} 
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {

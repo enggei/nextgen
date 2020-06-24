@@ -5,7 +5,8 @@ public class TextST {
 	private static final String stg = "delimiters \"~\", \"~\"\n" +
 	"eom() ::= \"}\"\n" +
 	"gt() ::= \">\"\n" +
-	Block.st + "\n" ;
+	Block.st + "\n" + 
+	Line.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -43,6 +44,10 @@ public class TextST {
 
 	public static Block newBlock() {
 		return new Block(stGroup);
+	} 
+
+	public static Line newLine() {
+		return new Line(stGroup);
 	} 
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {

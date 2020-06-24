@@ -297,7 +297,7 @@ public class STNavigator extends JPanel {
             return Optional.ofNullable(s == null || s.trim().length() == 0 ? null : s);
         }
 
-        protected Optional<String> getInputFromUser() {
+        protected Optional<String> getNameFromUser() {
             return getInputFromUser("Name");
         }
 
@@ -380,7 +380,7 @@ public class STNavigator extends JPanel {
             }
 
             private Action newSTGroupAction() {
-                return newAction("New STGroup", actionEvent -> getInputFromUser().ifPresent(name -> {
+                return newAction("New STGroup", actionEvent -> getNameFromUser().ifPresent(name -> {
 
                     final Optional<STGroupModel> existing = getModel().getGroups().filter(groupModel -> groupModel.getName().toLowerCase().equals(name)).findAny();
                     if (existing.isPresent()) {
@@ -463,7 +463,7 @@ public class STNavigator extends JPanel {
 
                 private Action newTemplateAction() {
                     return newAction("New template", actionEvent ->
-                            getInputFromUser().ifPresent(name ->
+                            getNameFromUser().ifPresent(name ->
                                     isValidTemplateName(name).ifPresent(s -> {
 
                                         final STTemplate stTemplate = STJsonFactory.newSTTemplate()
@@ -483,7 +483,7 @@ public class STNavigator extends JPanel {
 
                 private Action newEnumAction() {
                     return newAction("New enum", actionEvent ->
-                            getInputFromUser().ifPresent(name ->
+                            getNameFromUser().ifPresent(name ->
                                     isValidTemplateName(name).ifPresent(s -> {
 
                                         final STEnum stEnum = STJsonFactory.newSTEnum()
@@ -501,7 +501,7 @@ public class STNavigator extends JPanel {
 
                 private Action newInterfaceAction() {
                     return newAction("New interface", actionEvent ->
-                            getInputFromUser().ifPresent(name ->
+                            getNameFromUser().ifPresent(name ->
                                     isValidTemplateName(name).ifPresent(s -> {
 
                                         final STInterface stInterface = STJsonFactory.newSTInterface()
@@ -519,7 +519,7 @@ public class STNavigator extends JPanel {
 
                 private Action renameSTGroupAction() {
                     return newAction("Rename", actionEvent ->
-                            getInputFromUser().ifPresent(name ->
+                            getNameFromUser().ifPresent(name ->
                                     getParentNode(STGDirectoryTreeNode.class)
                                             .ifPresent(parent -> {
 
@@ -641,7 +641,7 @@ public class STNavigator extends JPanel {
 
                     private Action renameSTInterfaceAction() {
                         return newAction("Rename", actionEvent ->
-                                getInputFromUser()
+                                getNameFromUser()
                                         .flatMap(name -> getParentNode(STGroupTreeNode.class)
                                                 .flatMap(parent -> parent.isValidTemplateName(name)))
                                         .ifPresent(s -> {
@@ -759,7 +759,7 @@ public class STNavigator extends JPanel {
 
                     private Action renameSTEnumAction() {
                         return newAction("Rename", actionEvent ->
-                                getInputFromUser()
+                                getNameFromUser()
                                         .flatMap(name -> getParentNode(STGroupTreeNode.class)
                                                 .flatMap(parent -> parent.isValidTemplateName(name)))
                                         .ifPresent(s -> {
@@ -982,7 +982,7 @@ public class STNavigator extends JPanel {
                     }
 
                     private Action newChildTemplateAction() {
-                        return newAction("New Child-template", actionEvent -> getInputFromUser()
+                        return newAction("New Child-template", actionEvent -> getNameFromUser()
                                 .ifPresent(name -> getParentNode(STGroupTreeNode.class)
                                         .flatMap(parent -> parent.isValidTemplateName(name))
                                         .ifPresent(s -> {
@@ -1003,7 +1003,7 @@ public class STNavigator extends JPanel {
 
                     private Action renameSTTemplateAction() {
                         return newAction("Rename", actionEvent ->
-                                getInputFromUser().ifPresent(name ->
+                                getNameFromUser().ifPresent(name ->
                                         getParentNode(STGroupTreeNode.class)
                                                 .ifPresent(parent -> parent.isValidTemplateName(name)
                                                         .ifPresent(s -> {

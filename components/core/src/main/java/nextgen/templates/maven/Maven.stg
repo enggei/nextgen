@@ -13,15 +13,22 @@ build(testResources,plugin) ::= <<<build>
 	</plugins>
 </build>  >>
 
-dependency(groupId,artifactId,version,scope,systemPath) ::= <<<dependency>
+dependency(groupId,artifactId,version,scope,systemPath,classifier,type) ::= <<<dependency>
 	<groupId>~groupId~</groupId>
-	<artifactId>~artifactId~</artifactId>
-	<version>~version~</version>~if(scope)~
+	<artifactId>~artifactId~</artifactId>~if(version)~
+	<version>~version~</version>~endif~~if(scope)~
 	<scope>~scope;format="toLower"~</scope>~endif~~if(systemPath)~
-	<systemPath>~systemPath~</systemPath>
-	~endif~
+	<systemPath>~systemPath~</systemPath>~endif~~if(classifier)~
+	<classifier>~classifier~</classifier>~endif~~if(type)~
+	<type>~type~</type>~endif~
 	
 </dependency>  >>
+
+dependencyManagement(dependencies) ::= <<<dependencyManagement>
+	<dependencies>
+		~dependencies:{it|~it~};separator="\n"~
+	</dependencies>
+</dependencyManagement>  >>
 
 Entities() ::= << >>
 
@@ -170,7 +177,7 @@ copyPlugin(outputDirectory,directory,include) ::= <<<!-- https://maven.apache.or
 	</executions>
 </plugin>  >>
 
-pom(parent,name,groupId,artifactId,version,packaging,modules,properties,build,dependencies,distributionManagement,repositories) ::= <<<?xml version="1.0" encoding="UTF-8"?>
+pom(parent,name,groupId,artifactId,version,packaging,modules,properties,build,dependencyManagement,dependencies,distributionManagement,repositories) ::= <<<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 ~if(parent)~
 
@@ -200,6 +207,9 @@ pom(parent,name,groupId,artifactId,version,packaging,modules,properties,build,de
 	~build~
 
 ~endif~
+~if(dependencyManagement)~
+	~dependencyManagement~
+~endif~
 ~if(dependencies)~
 
 	<dependencies>
@@ -219,7 +229,7 @@ pom(parent,name,groupId,artifactId,version,packaging,modules,properties,build,de
 		~repositories:{it|~it~};separator="\n"~
 	</repositories>
 ~endif~
-</project> >>
+</project>  >>
 
 propertyReference(name) ::= <<${~name~} >>
 

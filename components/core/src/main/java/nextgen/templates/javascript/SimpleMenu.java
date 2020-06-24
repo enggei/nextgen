@@ -125,6 +125,7 @@ public class SimpleMenu {
 	}
 
 	static final String st = "SimpleMenu(menuItems,menuComponents) ::= <<import React from 'react';\n" + 
+				"\n" + 
 				"import Button from '@material-ui/core/Button';\n" + 
 				"import Menu from '@material-ui/core/Menu';\n" + 
 				"import MenuItem from '@material-ui/core/MenuItem';\n" + 

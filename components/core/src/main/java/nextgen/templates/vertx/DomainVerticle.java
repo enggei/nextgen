@@ -6,7 +6,6 @@ public class DomainVerticle {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _packageName;
-	private Object _domainPackage;
 	private Object _name;
 	private Object _domainFactory;
 	private Object _address;
@@ -20,7 +19,6 @@ public class DomainVerticle {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("DomainVerticle");
 		st.add("packageName", _packageName);
-		st.add("domainPackage", _domainPackage);
 		st.add("name", _name);
 		st.add("domainFactory", _domainFactory);
 		st.add("address", _address);
@@ -47,28 +45,6 @@ public class DomainVerticle {
 
 	public DomainVerticle removePackageName() {
 		this._packageName = null;
-		return this;
-	} 
-
-	public DomainVerticle setDomainPackage(Object value) {
-		this._domainPackage = value;
-		return this;
-	}
-
-	public Object getDomainPackage() {
-		return this._domainPackage;
-	}
-
-	public Object getDomainPackage(Object defaultValue) {
-		return this._domainPackage == null ? defaultValue : this._domainPackage;
-	}
-
-	public boolean hasDomainPackage() {
-		return this._domainPackage != null;
-	}
-
-	public DomainVerticle removeDomainPackage() {
-		this._domainPackage = null;
 		return this;
 	} 
 
@@ -197,13 +173,12 @@ public class DomainVerticle {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "DomainVerticle(packageName,domainPackage,name,actions,domainFactory,address) ::= <<package ~packageName~;\n" + 
+	static final String st = "DomainVerticle(packageName,name,actions,domainFactory,address) ::= <<package ~packageName~;\n" + 
 				"\n" + 
-				"import ~domainPackage~.*;\n" + 
+				"import ~packageName~.messages.*;\n" + 
 				"import io.vertx.core.AbstractVerticle;\n" + 
 				"import io.vertx.core.Promise;\n" + 
 				"import io.vertx.core.eventbus.Message;\n" + 
-				"import io.vertx.core.json.JsonArray;\n" + 
 				"import io.vertx.core.json.JsonObject;\n" + 
 				"import org.slf4j.Logger;\n" + 
 				"import org.slf4j.LoggerFactory;\n" + 

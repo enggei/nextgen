@@ -113,5 +113,13 @@ public class Patterns {
 				"\n" + 
 				"~scope~ class {}\n" + 
 				"\n" + 
-				"and set scope = \"public\"|\"private\" in generator >>";
+				"and set scope = \"public\"|\"private\" in generator (Use of STEnums is perfect for this:)\n" + 
+				"\n" + 
+				"STEnumExample:\n" + 
+				"\n" + 
+				"classDeclaration.addModifiers(Modifiers.PUBLIC).addModifiers(Modifiers.PRIVATE)\n" + 
+				"\n" + 
+				"With static imports:\n" + 
+				"\n" + 
+				"classDeclaration.addModifiers(PUBLIC).addModifiers(PRIVATE) >>";
 } 

@@ -1,12 +1,11 @@
 delimiters "~","~"
 
-DomainVerticle(packageName,domainPackage,name,actions,domainFactory,address) ::= <<package ~packageName~;
+DomainVerticle(packageName,name,actions,domainFactory,address) ::= <<package ~packageName~;
 
-import ~domainPackage~.*;
+import ~packageName~.messages.*;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.eventbus.Message;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,31 +69,14 @@ public class ~name;format="capitalize"~ extends AbstractVerticle {
 	}
 }  >>
 
-jsonArrayAction(name,params,statements) ::= <<private void ~name~(Message<JsonObject> message) {
-
+DomainAction(name,params,statements) ::= <<private void ~name~(Message<JsonObject> message) {
+~if(params)~
 	final JsonObject body = message.body();
 	~params:{it|final ~it.type~ ~it.name~ = body.get~it.type~("~it.name~");};separator="\n"~
-
-	final JsonArray response = new JsonArray();
-
-	db.doInTransaction(transaction -> {
-		~statements:{it|~it~};separator="\n"~
-		message.reply(response);
-	}, throwable -> {
-		message.fail(ErrorCodes.DB_ERROR.ordinal(), throwable.getMessage());
-	});
-}  >>
-
-jsonObjectAction(name,params,statements) ::= <<private void ~name~(Message<JsonObject> message) {
-
-	final JsonObject body = message.body();
-	~params:{it|final ~it.type~ ~it.name~ = body.get~it.type~("~it.name~");};separator="\n"~
-
-	final JsonObject response = new JsonObject();
+~endif~
 	
 	db.doInTransaction(transaction -> {
 		~statements:{it|~it~};separator="\n"~
-		message.reply(response);
 	}, throwable -> {
 		message.fail(ErrorCodes.DB_ERROR.ordinal(), throwable.getMessage());
 	});
@@ -312,6 +294,174 @@ public class ~name;format="capitalize"~ {
 	\}
 };separator="\n"~
 } >>
+
+WebVerticle(packageName,name,routes) ::= <<package ~packageName~;
+
+import com.securityx.web.api.LoginRequest;
+import com.securityx.web.domain.*;
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.Vertx;
+import io.vertx.core.eventbus.DeliveryOptions;
+import io.vertx.core.http.HttpServerOptions;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.core.net.PemKeyCertOptions;
+import io.vertx.ext.auth.KeyStoreOptions;
+import io.vertx.ext.auth.jwt.JWTAuth;
+import io.vertx.ext.auth.jwt.JWTAuthOptions;
+import io.vertx.ext.jwt.JWTOptions;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.handler.JWTAuthHandler;
+import io.vertx.ext.web.handler.SessionHandler;
+import io.vertx.ext.web.handler.StaticHandler;
+import io.vertx.ext.web.sstore.LocalSessionStore;
+
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static com.securityx.web.PasswordUtils.verifyUserPassword;
+import static com.securityx.web.WebUtils.sendErrors;
+import static com.securityx.web.WebUtils.sendResponse;
+import static com.securityx.web.api.WebApiJsonFactory.newJWTPayload;
+import static com.securityx.web.api.WebApiJsonFactory.newLoginRequest;
+import static com.securityx.web.domain.ServerJsonFactory.newUserMenu;
+import static com.securityx.web.domain.ServerJsonFactory.newUserSession;
+import static io.netty.handler.codec.http.HttpResponseStatus.*;
+
+public class ~name;format="capitalize"~ extends AbstractVerticle {
+
+	protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name;format="capitalize"~.class);
+
+	@Override
+	public void start(Future<Void> startFuture) throws Exception {
+		log.info("starting");
+
+		final ~name;format="capitalize"~Config config = new ~name;format="capitalize"~Config(config());
+
+		final KeyStoreOptions keyStoreOptions = new KeyStoreOptions().
+					setPath(config.getJwt().getPath()).
+					setPassword(config.getJwt().getPassword()).
+					setType(config.getJwt().getType());
+
+		final JWTAuthOptions jwtAuthOptions = new JWTAuthOptions().setKeyStore(keyStoreOptions);
+		final JWTAuth auth = JWTAuth.create(vertx, jwtAuthOptions);
+
+		final Router router = Router.router(vertx);
+		router.route().handler(BodyHandler.create());
+		router.route().handler(SessionHandler.create(LocalSessionStore.create(vertx)));
+		router.post("/login").handler(routingContext -> login(routingContext, auth, config));
+		router.route("/api/*").handler(JWTAuthHandler.create(auth, "/login"));
+		router.get("/user").handler(routingContext -> getUser(routingContext, config));
+		~routes:{it|router.~it.action~("/api/~it.url~").handler(this::~it.methodName~);};separator="\n"~
+				final HttpServerOptions serverOptions = new HttpServerOptions();
+		final Optional<SSLConfig> ssl = Optional.ofNullable(config.getSsl());
+
+		ssl.ifPresent(sslConfig ->
+				serverOptions
+						.setSsl(true)
+						.setPemKeyCertOptions(
+								new PemKeyCertOptions().
+											setKeyPath(sslConfig.getKey()).
+											setCertPath(sslConfig.getCert())));
+
+		final StaticHandler staticHandler = StaticHandler.create();
+		staticHandler.setWebRoot(config.getWebRoot());
+		staticHandler.setCachingEnabled(false);
+		staticHandler.setIndexPage("index.html");
+		router.route("/*").handler(staticHandler);
+
+		vertx.createHttpServer(serverOptions).requestHandler(router::accept).listen(config.getPort());
+
+		log.info("server running on " + (ssl.isPresent() ? "https" : "http") + "://" + config.getTcpHost() + ":" + config.getPort());
+		log.info("server running on " + (ssl.isPresent() ? "https" : "http") + "://" + config.getTcpName("securityxresidential.info") + ":" + config.getPort());
+
+		startFuture.succeeded();
+	}
+
+	private void login(RoutingContext routingContext, JWTAuth auth, ~name;format="capitalize"~Config deploymentOptions) {
+		WebUtils.debug("login", routingContext);
+
+		final LoginRequest loginRequest = newLoginRequest(routingContext.getBodyAsJson());
+
+		final Optional<UserConfig> foundUserConfig = deploymentOptions.getJwt().getUsers()
+				.filter(userConfig -> userConfig.getUsername() != null && userConfig.getPassword() != null)
+				.filter(userConfig -> userConfig.getUsername().equals(loginRequest.getUsername()))
+				.findFirst();
+
+		if (!foundUserConfig.isPresent()) {
+			sendErrors(routingContext, UNAUTHORIZED, "User credentials not found");
+			return;
+		}
+
+		final boolean passwordMatch = verifyUserPassword(loginRequest.getPassword(), foundUserConfig.get().getPassword(), foundUserConfig.get().getSalt());
+
+		if (!passwordMatch) {
+			sendErrors(routingContext, UNAUTHORIZED, "User credentials not found");
+			return;
+		}
+
+		final UserSession userSession = newUserSession()
+			.setToken(auth.generateToken(
+					newJWTPayload()
+							.setSub(foundUserConfig.get().getUsername())
+							.getJsonObject(),
+					new JWTOptions()
+							.setExpiresInMinutes(deploymentOptions.getJwt().getExpiresInMinutes())
+							.setSubject(foundUserConfig.get().getUsername())))
+			.setUsername(foundUserConfig.get().getUsername());
+
+		final AtomicInteger id = new AtomicInteger(0);
+		foundUserConfig.get().getAccess()
+			.forEach(webPageAccessSettings -> userSession.addMenus(newUserMenu()
+						.setKey(id.incrementAndGet())
+						.setLabel(webPageAccessSettings.getLabel())
+						.setUrl(webPageAccessSettings.getUrl())));
+
+		foundUserConfig.get().setSession(userSession);
+
+		sendResponse(routingContext, OK, new JsonObject().put("user", userSession.getJsonObject()));
+	}
+
+	private void getUser(RoutingContext routingContext, ~name;format="capitalize"~Config deploymentOptions) {
+		WebUtils.debug("getUser", routingContext);
+
+		final String authorization = routingContext.request().getHeader("Authorization");
+		final String token = authorization == null ? null : authorization.substring(7).trim();
+
+		final Optional<UserSession> userSession = deploymentOptions.getJwt().getUsers()
+				.filter(userConfig -> userConfig.getSession() != null)
+				.map(UserConfig::getSession)
+				.filter(session -> session.getToken().equals(token))
+				.findFirst();
+
+		if (!userSession.isPresent())
+			sendErrors(routingContext, UNAUTHORIZED,	"User session not found");
+		else
+			sendResponse(routingContext, OK, new JsonObject().put("user", userSession.get().getJsonObject()));
+	}
+
+	~routes:{it|~it.declaration~};separator="\n\n"~
+
+	private static void getFromDomainDB(Vertx vertx, RoutingContext routingContext, String action, JsonObject params) {
+		vertx.eventBus().request("domain.db", params, new DeliveryOptions().addHeader("action", action), reply -> {
+			if (reply.succeeded()) {
+				sendResponse(routingContext, OK, (JsonObject) reply.result().body());
+			} else {
+				sendErrors(routingContext, INTERNAL_SERVER_ERROR,	"Server Error");
+			}
+		});
+	}
+}  >>
+
+SendEventBusAction(actionName,params) ::= <<getFromDomainDB(vertx, routingContext, "~actionName~", new JsonObject()~if(params)~.~params:{it|put("~it.name~", routingContext.request().getParam("~it.name~"))}~~endif~);  >>
+
+RouteHandler(name,statements) ::= <<private void ~name~(RoutingContext routingContext) {
+	WebUtils.debug("~name~", routingContext);
+	~statements:{it|~it~};separator="\n"~
+}  >>
 
 eom() ::= "}"
 

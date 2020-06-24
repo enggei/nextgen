@@ -10,7 +10,7 @@ Test conditional parsing
 
 Test complex combination of all types >>
 
-single(value) ::= <<single : ~value~ >>
+single(value) ::= <<single : ~value~  >>
 
 list(value) ::= <<list : ~value:{it|~it~};separator=", "~ >>
 
@@ -38,7 +38,15 @@ cleaner solution:
 
 ~scope~ class {}
 
-and set scope = "public"|"private" in generator >>
+and set scope = "public"|"private" in generator (Use of STEnums is perfect for this:)
+
+STEnumExample:
+
+classDeclaration.addModifiers(Modifiers.PUBLIC).addModifiers(Modifiers.PRIVATE)
+
+With static imports:
+
+classDeclaration.addModifiers(PUBLIC).addModifiers(PRIVATE)  >>
 
 eom() ::= "}"
 

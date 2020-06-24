@@ -6,9 +6,6 @@ public class JavaScriptST {
 	"eom() ::= \"}\"\n" +
 	"gt() ::= \">\"\n" +
 	App.st + "\n" + 
-	Agent.st + "\n" + 
-	AgentDeclaration.st + "\n" + 
-	AgentEndpoint.st + "\n" + 
 	Copyright.st + "\n" + 
 	Loading.st + "\n" + 
 	SignIn.st + "\n" + 
@@ -20,12 +17,11 @@ public class JavaScriptST {
 	LogoutForm.st + "\n" + 
 	NavigationBar.st + "\n" + 
 	SimpleMenu.st + "\n" + 
-	Status.st + "\n" + 
+	Superagent.st + "\n" + 
+	AgentDeclaration.st + "\n" + 
+	AgentEndpoint.st + "\n" + 
 	Usecase.st + "\n" + 
 	UserMenu.st + "\n" + 
-	WebVerticle.st + "\n" + 
-	RouteHandler.st + "\n" + 
-	SendEventBusAction.st + "\n" + 
 	BlockStmt.st + "\n" + 
 	Conditional.st + "\n" + 
 	Decorator.st + "\n" + 
@@ -41,8 +37,8 @@ public class JavaScriptST {
 	Dependency.st + "\n" + 
 	DestructorProp.st + "\n" + 
 	Element.st + "\n" + 
-	ForwardRef.st + "\n" + 
 	FunctionalComponent.st + "\n" + 
+	MapProperty.st + "\n" + 
 	MethodDeclaration.st + "\n" + 
 	NamedImport.st + "\n" + 
 	Prop.st + "\n" + 
@@ -62,6 +58,7 @@ public class JavaScriptST {
 	Reaction.st + "\n" + 
 	NameArray.st + "\n" + 
 	NameValue.st + "\n" + 
+	ForwardRef.st + "\n" + 
 	Link.st + "\n" + 
 	ReturnStmt.st + "\n" ;
 
@@ -101,18 +98,6 @@ public class JavaScriptST {
 
 	public static App newApp() {
 		return new App(stGroup);
-	} 
-
-	public static Agent newAgent() {
-		return new Agent(stGroup);
-	} 
-
-	public static AgentDeclaration newAgentDeclaration() {
-		return new AgentDeclaration(stGroup);
-	} 
-
-	public static AgentEndpoint newAgentEndpoint() {
-		return new AgentEndpoint(stGroup);
 	} 
 
 	public static Copyright newCopyright() {
@@ -159,8 +144,16 @@ public class JavaScriptST {
 		return new SimpleMenu(stGroup);
 	} 
 
-	public static Status newStatus() {
-		return new Status(stGroup);
+	public static Superagent newSuperagent() {
+		return new Superagent(stGroup);
+	} 
+
+	public static AgentDeclaration newAgentDeclaration() {
+		return new AgentDeclaration(stGroup);
+	} 
+
+	public static AgentEndpoint newAgentEndpoint() {
+		return new AgentEndpoint(stGroup);
 	} 
 
 	public static Usecase newUsecase() {
@@ -169,18 +162,6 @@ public class JavaScriptST {
 
 	public static UserMenu newUserMenu() {
 		return new UserMenu(stGroup);
-	} 
-
-	public static WebVerticle newWebVerticle() {
-		return new WebVerticle(stGroup);
-	} 
-
-	public static RouteHandler newRouteHandler() {
-		return new RouteHandler(stGroup);
-	} 
-
-	public static SendEventBusAction newSendEventBusAction() {
-		return new SendEventBusAction(stGroup);
 	} 
 
 	public static BlockStmt newBlockStmt() {
@@ -243,12 +224,12 @@ public class JavaScriptST {
 		return new Element(stGroup);
 	} 
 
-	public static ForwardRef newForwardRef() {
-		return new ForwardRef(stGroup);
-	} 
-
 	public static FunctionalComponent newFunctionalComponent() {
 		return new FunctionalComponent(stGroup);
+	} 
+
+	public static MapProperty newMapProperty() {
+		return new MapProperty(stGroup);
 	} 
 
 	public static MethodDeclaration newMethodDeclaration() {
@@ -325,6 +306,10 @@ public class JavaScriptST {
 
 	public static NameValue newNameValue() {
 		return new NameValue(stGroup);
+	} 
+
+	public static ForwardRef newForwardRef() {
+		return new ForwardRef(stGroup);
 	} 
 
 	public static Link newLink() {

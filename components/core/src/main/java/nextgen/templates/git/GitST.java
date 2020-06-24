@@ -5,6 +5,7 @@ public class GitST {
 	private static final String stg = "delimiters \"~\", \"~\"\n" +
 	"eom() ::= \"}\"\n" +
 	"gt() ::= \">\"\n" +
+	Clone.st + "\n" + 
 	Gitignore.st + "\n" + 
 	RemoveDir.st + "\n" + 
 	RemoveFile.st + "\n" ;
@@ -42,6 +43,10 @@ public class GitST {
 	public static void setSTGroup(final String stgFile) {
 		stGroup = decorate(new org.stringtemplate.v4.STGroupFile(stgFile, '~', '~'));
 	}
+
+	public static Clone newClone() {
+		return new Clone(stGroup);
+	} 
 
 	public static Gitignore newGitignore() {
 		return new Gitignore(stGroup);

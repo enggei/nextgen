@@ -1,0 +1,421 @@
+{
+  "uuid" : "945b43c0-cefb-4bd4-87cd-873ee3976ea8",
+  "name" : "MaterialUI",
+  "delimiter" : "~",
+  "templates" : [ {
+    "uuid" : "f3dde3c8-ec21-4268-b78e-9d6ebef01fa5",
+    "name" : "Component",
+    "text" : "import React from 'react';\nimport { makeStyles } from '@material-ui/core/styles';\n~imports:{it|import ~it.name~ from '~it.path~';};separator=\"\\n\"~\n~components:{it|import ~it.name~ from '~it.lexical~';};separator=\"\\n\"~\n\nconst useStyles = makeStyles((theme) => ({\n\t~styleClasses:{it|~it~};separator=\",\\n\"~\n}));\n\nexport default function ~name~(props) {\n\n\tconst classes = useStyles();\n\t~const:{it|const ~it.name~ = ~it.declaration~;};separator=\"\\n\"~\n\n~if(renderCondition)~\n\tif(~renderCondition~)\n\t\treturn ( \n\t\t\t~renderTrue~\n\t\t);\n\telse\n\t\treturn (\n\t\t\t~renderFalse~\n\t\t);\n~else~\n\treturn (\n\t\t~renderElement~\n\t);\n~endif~\n} ",
+    "parameters" : [ {
+      "uuid" : "43162948-8271-4f08-82ee-7b1894d4d053",
+      "name" : "imports",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "c4776938-979c-4fe8-895a-9d0da569878b",
+        "name" : "name",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "b51946dd-555b-4cde-ace6-ab2e7da39791",
+        "name" : "path",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "5d8b52bb-a577-4890-bdc6-ce535a9ad85c",
+      "name" : "components",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "4d744e07-e6e0-43c1-8493-8d193a410ab3",
+        "name" : "name",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "24b9b34d-0484-46ed-93b3-aa0c0cddd6da",
+        "name" : "lexical",
+        "argumentType" : "String"
+      } ]
+    }, {
+      "uuid" : "21cbbb08-cfa8-4f15-b9e0-e28611e24895",
+      "name" : "styleClasses",
+      "type" : "LIST",
+      "argumentType" : "StyleClass"
+    }, {
+      "uuid" : "f37847c5-47e2-448e-8ec9-0f73b2234304",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "String"
+    }, {
+      "uuid" : "c7ad6773-05a0-4576-8679-e99dba649d0f",
+      "name" : "const",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "2a03ed22-2dc3-4a22-83e2-512e6f67c3db",
+        "name" : "name",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "cfde3f9e-5c05-4a44-9126-f93ca040fa23",
+        "name" : "declaration",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "7f70ee7e-984b-4f08-9c12-7026043fd0c4",
+      "name" : "renderCondition",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "e7d77be1-5d1f-46f7-95c5-a6bb18a18698",
+      "name" : "renderTrue",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "1fd0be9b-8570-42a3-9596-efabd6cca160",
+      "name" : "renderFalse",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "2dbc0272-a95f-4115-96ab-e7c20220cc6b",
+      "name" : "renderElement",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ],
+    "children" : [ {
+      "uuid" : "ece55b10-10f6-43a4-822d-afed31bec40a",
+      "name" : "StyleClass",
+      "text" : "~name~: {\n\t~attributes:{it|~it.name~: ~it.value~};separator=\",\\n\"~\n} ",
+      "parameters" : [ {
+        "uuid" : "7a6e2b8e-a2ee-4528-8e17-98772cff66c1",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "e802596f-31c7-4685-857e-239f84d9ba2b",
+        "name" : "attributes",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "a4a366d7-1c1d-44b2-9109-df4ab06281f4",
+          "name" : "name",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "5680c794-3374-4012-a204-62b43c8d7358",
+          "name" : "value",
+          "argumentType" : "Object"
+        } ]
+      } ]
+    } ]
+  }, {
+    "uuid" : "7f27567e-f7bf-429d-8506-5a2dd57fa2c6",
+    "name" : "SimpleElement",
+    "text" : "<~name~~if(key)~ key=~key~~endif~~if(className)~ className={classes.~className~}~endif~~if(attributes)~ ~endif~~attributes:{it|~it.name~~if(it.value)~=~it.value~~endif~};separator=\" \"~>\n\t~children:{it|~it~};separator=\"\\n\"~\n</~name~> ",
+    "children" : [ {
+      "uuid" : "e4eae1d2-a60f-4bb5-ab8e-7ae28969a6f2",
+      "name" : "PaperElement",
+      "text" : "<Paper~if(key)~ key=~key~~endif~~if(className)~ className={classes.~className~}~endif~>\n\t~children:{it|~it~};separator=\"\\n\"~\n</Paper> ",
+      "parameters" : [ {
+        "uuid" : "b0a474d9-dcab-4637-b345-18f675193b5f",
+        "name" : "key",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "39c66f43-0ba3-40e8-8c83-8d60187c8a02",
+        "name" : "className",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "120613f8-2908-4409-af0b-8cba2393f998",
+        "name" : "children",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "f872c5ea-4667-4e50-898e-27817ff33c80",
+      "name" : "TypographyElement",
+      "text" : "<Typography~if(key)~ key=~key~~endif~~if(className)~ className={classes.~className~}~endif~~if(variant)~ variant=\"~variant~\"~endif~~if(component)~ component=\"~component~\"~endif~~if(gutter)~ ~gutter~~endif~>\n\t~text~\n</Typography> ",
+      "parameters" : [ {
+        "uuid" : "5863eef0-b7ce-4795-a5df-d232b67a08a6",
+        "name" : "key",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "f2da7064-8272-4988-bc8e-787b26358c86",
+        "name" : "className",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "25d1b4e4-8456-4acf-8928-368da2e96df7",
+        "name" : "variant",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "c6f1d215-be55-4040-bc2f-365757ef95aa",
+        "name" : "component",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "801e782c-5d09-4450-ad69-d87d71592c4b",
+        "name" : "gutter",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "d0a71ba6-5481-4614-8da6-caa1509078dd",
+        "name" : "text",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "315b4c86-571b-423a-b58f-b44dd62d5433",
+      "name" : "LinkElement",
+      "text" : "<Link href=\"~href~\" onClick=~onClick~>\n\t~text~\n</Link> ",
+      "parameters" : [ {
+        "uuid" : "54f7f287-abe2-4219-988b-daa48a2753aa",
+        "name" : "href",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "63ebd5de-0653-4e4f-829f-5eb0db9c8ec5",
+        "name" : "onClick",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "37c03eeb-f326-4fa5-abc2-80d66d3a5321",
+        "name" : "text",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "c6a6f739-bdad-401c-adbe-a33f209421aa",
+      "name" : "ButtonElement",
+      "text" : "<Button~if(key)~ key=~key~~endif~~if(className)~ className={classes.~className~}~endif~~if(color)~ color=\"~color~\"~endif~~if(component)~ component=~component~~endif~~if(attributes)~ ~endif~~attributes:{it|~it.name~~if(it.value)~=~it.value~~endif~};separator=\" \"~>\n\t~children:{it|~it~};separator=\"\\n\"~\n</Button> ",
+      "parameters" : [ {
+        "uuid" : "7d95015b-3528-40bc-b3f9-1fcb040058a7",
+        "name" : "key",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "eb9ad62c-f2a5-41e4-9fec-d028e78e469a",
+        "name" : "className",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "1054a1a5-f102-4e1c-a309-8ed30604d3fc",
+        "name" : "color",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "db3e0eb3-939b-46a9-963a-180918057ec7",
+        "name" : "component",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "96b22fb6-8799-4e3f-98b4-8c4f6f714544",
+        "name" : "attributes",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "3ef82db8-bf52-4d1d-a3b7-c106d4a548a0",
+          "name" : "name",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "7d0d44c2-6804-458d-8090-fcd306fcc35c",
+          "name" : "value",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "e25d9d31-5bce-4b3a-941b-c59bbef24f58",
+        "name" : "children",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "29b2f806-9155-4e69-96f6-ac065e4f0c34",
+      "name" : "GridContainerElement",
+      "text" : "<Grid container~if(key)~ key=~key~~endif~~if(className)~ className={classes.~className~}~endif~~if(justify)~ justify=\"~justify~\"~endif~~if(spacing)~ spacing={~spacing~}~endif~>\n\t~children:{it|~it~};separator=\"\\n\"~\n</Grid> ",
+      "parameters" : [ {
+        "uuid" : "747b54e7-1c06-4cb9-8cec-e4f23bff8a69",
+        "name" : "key",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "89a458b2-c683-43d7-9a4e-726282420aef",
+        "name" : "className",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "07342999-e126-4509-9a62-de87594e8586",
+        "name" : "justify",
+        "type" : "SINGLE",
+        "argumentType" : "Justify"
+      }, {
+        "uuid" : "28a4c3a0-7ea0-456a-b026-9411e32811ae",
+        "name" : "spacing",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "3f17367f-1e77-401d-95dd-4b1c62c6a784",
+        "name" : "children",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "ebc6b2cc-ed20-413e-90e8-1ae30b67bc0d",
+      "name" : "GridItemElement",
+      "text" : "<Grid item~if(xs)~ xs={~xs~}~endif~~if(key)~ key=~key~~endif~~if(className)~ className={classes.~className~}~endif~>\n\t~children:{it|~it~};separator=\"\\n\"~\n</Grid> ",
+      "parameters" : [ {
+        "uuid" : "c439c6cf-e8d1-4043-a569-190a4483b541",
+        "name" : "xs",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "75d051b3-da8f-4971-83dc-0273c6ce63ab",
+        "name" : "key",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "5632864b-9701-4b46-989a-60cc9a8d20ba",
+        "name" : "className",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "7817a9c3-653d-4884-8ce4-a9ea30e5361d",
+        "name" : "children",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "c8757e5f-a4bc-4259-99bd-1a6987ff9f45",
+      "name" : "DividerElement",
+      "text" : "<Divider~if(light)~ light~endif~~if(orientation)~ orientation=\"~orientation~\"~endif~~if(variant)~ variant=\"~variant~\"~endif~~if(className)~ className={classes.~className~}~endif~ /> ",
+      "parameters" : [ {
+        "uuid" : "19d34780-ec46-4212-bcf0-0ab34fd91ffb",
+        "name" : "light",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "cf46fd97-0654-46b5-9e3e-5345593576f6",
+        "name" : "orientation",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "c1f73756-0774-4d8e-abe1-391bbcd8e9d5",
+        "name" : "variant",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "63380e6f-a2dc-4425-9ca5-863535ed67fb",
+        "name" : "className",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    } ],
+    "parameters" : [ {
+      "uuid" : "8e0820e4-3d7b-40fd-9679-1491c9447e7b",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "1544c86b-5171-4f15-b383-f956d683c9be",
+      "name" : "key",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "02c914f0-a6ce-49b4-8115-f05357b123fe",
+      "name" : "className",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "bbb19a0f-d550-4f9f-b98f-841f677ef82e",
+      "name" : "attributes",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "9c32ed02-3e81-483f-bb83-27df9608aacb",
+        "name" : "name",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "d0539ff1-88bd-4024-965d-b9d62b84d091",
+        "name" : "value",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "c214737d-a8e9-4f10-9dfd-ff2ce15c1646",
+      "name" : "children",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    } ],
+    "implements" : [ "Element" ]
+  } ],
+  "enums" : [ {
+    "uuid" : "38d0214b-e70d-4943-b066-0ee2bf56f032",
+    "name" : "ComponentTypes",
+    "values" : [ {
+      "uuid" : "6882e32e-3ea3-4f18-92f6-51a1f4687596",
+      "name" : "Grid",
+      "lexical" : "@material-ui/core/Grid"
+    }, {
+      "uuid" : "8596a3b9-be10-4fab-a2d5-57b82d75c15f",
+      "name" : "FormLabel",
+      "lexical" : "@material-ui/core/FormLabel"
+    }, {
+      "uuid" : "36a1ec66-dee4-437c-9e16-434c8dd03913",
+      "name" : "FormControlLabel",
+      "lexical" : "'@material-ui/core/FormControlLabel"
+    }, {
+      "uuid" : "4d1800d5-5b0b-48d2-9ec5-8a96e977f40a",
+      "name" : "RadioGroup",
+      "lexical" : "@material-ui/core/RadioGroup"
+    }, {
+      "uuid" : "d56183bd-d556-4e5f-abf4-62fda97b8bb6",
+      "name" : "Paper",
+      "lexical" : "@material-ui/core/Paper"
+    }, {
+      "uuid" : "c9d9f204-36b8-41ef-b779-471d79ec18cd",
+      "name" : "Typography",
+      "lexical" : "@material-ui/core/Typography"
+    }, {
+      "uuid" : "885cd98c-e1c2-4dbc-bf9b-183d04b0fd9a",
+      "name" : "Link",
+      "lexical" : "@material-ui/core/Link"
+    }, {
+      "uuid" : "7bbcf93c-7b9f-4010-a56f-86214aee199e",
+      "name" : "Button",
+      "lexical" : "@material-ui/core/Button"
+    }, {
+      "uuid" : "c718f1ff-a98c-4e41-98cc-07f3568c6df5",
+      "name" : "Divider",
+      "lexical" : "@material-ui/core/Divider"
+    } ]
+  }, {
+    "uuid" : "3756e097-1eca-4ede-be25-6909dc1ceaab",
+    "name" : "Justify",
+    "values" : [ {
+      "uuid" : "fd25431a-fe46-4d71-8d05-93e07c8c9c50",
+      "name" : "START",
+      "lexical" : "flex-start"
+    }, {
+      "uuid" : "c1ff5e76-eef4-4f8d-91a4-e268d50c4bbb",
+      "name" : "CENTER",
+      "lexical" : "center"
+    }, {
+      "uuid" : "41c2c318-14d2-4986-87aa-f0aa11eb8874",
+      "name" : "END",
+      "lexical" : "flex-end"
+    }, {
+      "uuid" : "53c34b78-248b-4c07-a396-e1800883c0df",
+      "name" : "BETWEEN",
+      "lexical" : "space-between"
+    }, {
+      "uuid" : "f3990278-8004-44d9-96f6-9c5cbc1ee40c",
+      "name" : "AROUND",
+      "lexical" : "space-around"
+    }, {
+      "uuid" : "6f739688-4c7a-4b72-9a52-31f3a8660a89",
+      "name" : "EVENLY",
+      "lexical" : "space-evenly"
+    } ]
+  } ],
+  "interfaces" : [ {
+    "uuid" : "d112b0c1-c3b2-4f95-8dcd-b40103b4f21a",
+    "name" : "Element"
+  } ]
+}

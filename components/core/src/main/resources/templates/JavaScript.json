@@ -329,21 +329,6 @@
         "argumentType" : "Object"
       } ]
     }, {
-      "uuid" : "d323b41f-7f32-4e99-892c-65933422a78d",
-      "name" : "ForwardRef",
-      "text" : "const ~name~ = React.forwardRef( (props, ref) => (\n\t~forward~\n)); ",
-      "parameters" : [ {
-        "uuid" : "b91e109e-0578-450e-96ef-31420a6572bd",
-        "name" : "name",
-        "argumentType" : "Object",
-        "type" : "SINGLE"
-      }, {
-        "uuid" : "088a7a37-0b45-417f-ba18-89b26434bf39",
-        "name" : "forward",
-        "argumentType" : "Object",
-        "type" : "SINGLE"
-      } ]
-    }, {
       "uuid" : "59814359-6f01-4138-9900-c11839c56461",
       "name" : "DestructorProp",
       "text" : "const { ~prop:{it|~it~};separator=\", \"~ } = this.props~if(child)~.~child~~endif~; ",
@@ -420,58 +405,63 @@
     }, {
       "uuid" : "9752d4ad-2141-445a-9a80-3a79072db167",
       "name" : "ClassComponent",
-      "text" : "import React from 'react';\n~dependencies:{it|~it~};separator=\"\\n\"~\n\n~components:{it|~it~};separator=\"\\n\\n\"~\n\n~decorators:{it|~it~};separator=\"\\n\"~\nclass ~name~ extends React.Component {\n\n\tconstructor(props) {\n\t\tsuper(props);\n\t\tconsole.log(\"new ~name~ : \" +  this.props);\n~if(state)~\n\t\tthis.state = {\n\t\t\t~state:{it|~it~};separator=\",\\n\"~;\n\t\t}\n~endif~\n\t\t~events:{it|this.~it.methodName~ = this.~it.methodName~.bind(this);};separator=\"\\n\"~\n\t}\n\n~if(events)~\n\t~events:{it|~it.declaration~};separator=\"\\n\\n\"~\n~endif~\n~if(methods)~\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n~endif~\n\trender() {\n\t\tconsole.log(\"render ~name~ : \" +  this.props);\n\t\t~if(renderConstants)~const { ~renderConstants:{it|~it~};separator=\", \"~ } = this.state;~endif~\n\t\t\n\t\t~if(returnStatements)~return (~returnStatements:{it|~it~};separator=\"\\n\\n\"~)~else~return null;~endif~\n\t}\n}\n\nexport default (~name~); ",
+      "text" : "import React from 'react';\n~dependencies:{it|~it~};separator=\"\\n\"~\n~components:{it|~it~};separator=\"\\n\\n\"~\n\n~decorators:{it|~it~};separator=\"\\n\"~\nclass ~name~ extends React.Component {\n\n\tconstructor(props) {\n\t\tsuper(props);\n\t\tconsole.log(\"new ~name~ : \" +  this.props);\n~if(state)~\n\t\tthis.state = {\n\t\t\t~state:{it|~it~};separator=\",\\n\"~;\n\t\t}\n~endif~\n\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t\t~events:{it|this.~it.methodName~ = this.~it.methodName~.bind(this);};separator=\"\\n\"~\n\t}\n\n~if(events)~\n\t~events:{it|~it.declaration~};separator=\"\\n\\n\"~\n~endif~\n~if(methods)~\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n~endif~\n\trender() {\n\t\tconsole.log(\"render ~name~ : \" +  this.props);\n\t\t~if(renderConstants)~const { ~renderConstants:{it|~it~};separator=\", \"~ } = this.state;~endif~\n\t\t\n\t\t~if(returnStatements)~return (~returnStatements:{it|~it~};separator=\"\\n\\n\"~)~else~return null;~endif~\n\t}\n}\n\nexport default (~name~); ",
       "parameters" : [ {
-        "uuid" : "e8f436c1-4966-478c-876f-195548fd71a5",
+        "uuid" : "5774b4ed-f9d0-4fd5-b2ab-6ed1c3b1e0b5",
         "name" : "dependencies",
         "type" : "LIST",
         "argumentType" : "Object"
       }, {
-        "uuid" : "da9cef57-828a-4edd-815c-f5c31f9eabb5",
+        "uuid" : "fb6099e9-64f5-49aa-9bc1-0360d75b872b",
         "name" : "components",
         "type" : "LIST",
         "argumentType" : "Object"
       }, {
-        "uuid" : "740307af-adce-4826-9da2-4c98db1e0932",
+        "uuid" : "453af56b-d7b3-4848-b82c-d7c38162a83d",
         "name" : "decorators",
         "type" : "LIST",
         "argumentType" : "Object"
       }, {
-        "uuid" : "1811c2b8-2e24-45fa-8b76-55c74e1f2385",
+        "uuid" : "a522f3d0-667a-4c3d-bea0-ab2b6c2cdfd1",
         "name" : "name",
         "type" : "SINGLE",
         "argumentType" : "String"
       }, {
-        "uuid" : "37eabf62-5466-45a8-ad4a-100b1b73e444",
+        "uuid" : "a84dc23d-aa48-472c-a94f-a54f66f6ca05",
         "name" : "state",
         "type" : "LIST",
         "argumentType" : "Object"
       }, {
-        "uuid" : "5e8deb32-4cfd-4661-95b6-843a3703e657",
+        "uuid" : "c5ee4918-a61e-4bc1-b2ed-e1eae0081721",
+        "name" : "constructorStatements",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "001ed227-f3dc-4921-9272-975443a9bdf8",
         "name" : "events",
         "type" : "KVLIST",
         "argumentType" : "Object",
         "keys" : [ {
-          "uuid" : "c4ea679e-a683-48be-a040-1d936081d426",
+          "uuid" : "f4ce1d8c-5f15-4d90-abb6-370ffc5aa8f9",
           "name" : "methodName",
           "argumentType" : "Object"
         }, {
-          "uuid" : "98efd97f-2b60-450c-af5c-e8447c415d89",
+          "uuid" : "495a61ab-647f-460b-9169-c059908a638b",
           "name" : "declaration",
           "argumentType" : "Object"
         } ]
       }, {
-        "uuid" : "b40e3859-0fb9-4a1c-b9ac-724c8d4fca31",
+        "uuid" : "7f51fdcc-903d-4499-a7d2-b4c7a3115f4f",
         "name" : "methods",
         "type" : "LIST",
         "argumentType" : "Object"
       }, {
-        "uuid" : "1f93182a-2382-4f24-97b0-506f4e21f655",
+        "uuid" : "d317ae3e-0ab1-4e01-8c06-270aa9af4ef0",
         "name" : "renderConstants",
         "type" : "LIST",
         "argumentType" : "Object"
       }, {
-        "uuid" : "5400901a-0aa7-40e5-84d2-226a9c808ea7",
+        "uuid" : "1850bca0-cb2a-4c71-a9f6-185027773f9f",
         "name" : "returnStatements",
         "type" : "LIST",
         "argumentType" : "Object"
@@ -522,6 +512,21 @@
         "argumentType" : "Object",
         "type" : "LIST"
       } ]
+    }, {
+      "uuid" : "a58a9128-7ab6-4655-8dda-8a8a51d00c40",
+      "name" : "MapProperty",
+      "text" : "{\n\t~property~.map((element) => (\n\t\t~forEach~\n\t)) \n} ",
+      "parameters" : [ {
+        "uuid" : "729081ef-720c-47f2-aec9-b73303eecb60",
+        "name" : "property",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "cbeef884-76c8-46f2-90ea-6947b5158e52",
+        "name" : "forEach",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
     } ]
   }, {
     "uuid" : "14e250cf-b417-4fb7-b512-a54f6ba8fe58",
@@ -545,50 +550,50 @@
     }, {
       "uuid" : "c1d2b469-a811-44b5-b3ff-b081d54ce53b",
       "name" : "SimpleMenu",
-      "text" : "import React from 'react';\nimport Button from '@material-ui/core/Button';\nimport Menu from '@material-ui/core/Menu';\nimport MenuItem from '@material-ui/core/MenuItem';\nimport MenuList from '@material-ui/core/MenuList';\nimport IconButton from '@material-ui/core/IconButton';\nimport MenuIcon from '@material-ui/icons/Menu';\nimport { Link } from 'react-router-dom';\n\nconst LoginLink = React.forwardRef( (props, ref) => (\n\t<Link innerRef={ ref } to=\"/login\" { ...props } />\n));\n\n~menuItems:{it|\nconst ~it.name~ = React.forwardRef( (props, ref) => (\n\t<Link innerRef={ ref ~eom()~ to=\"/~it.to~\"~if(it.target)~ target=\"~it.target~\" ~endif~ { ...props ~eom()~ />\n));\n};separator=\"\\n\\n\"~\n\nexport default function SimpleMenu(props) {\n\n\tconst [anchorEl, setAnchorEl] = React.useState(null);\n\n\tfunction handleClick(event) {\n\t\tsetAnchorEl(event.currentTarget);\n\t}\n\t\n\tfunction handleClose() {\n\t\tsetAnchorEl(null);\n\t}\n\n\tif (!props.currentUser)  {\n\t\treturn (\n\t\t\t\t<div>\n\t\t\t\t\t<IconButton edge=\"start\" color=\"inherit\" aria-label=\"Menu\" onClick={handleClick}>\n\t\t\t\t\t\t<MenuIcon />\n\t\t\t\t\t</IconButton>\n\t\t\t\t\t<Menu id=\"simple-menu\" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>\n\t\t\t\t\t\t<MenuItem component={ LoginLink } onClick={handleClose}>Login</MenuItem>\n\t\t\t\t\t</Menu>\n\t\t\t\t</div>);\n\t} else {\n\t\treturn (\n\t\t\t<div>\n\t\t\t\t<IconButton edge=\"start\" color=\"inherit\" aria-label=\"Menu\" onClick={handleClick}>\n\t\t\t\t\t<MenuIcon />\n\t\t\t\t</IconButton>\n\t\t\t\t<Menu id=\"simple-menu\" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>\n\t\t\t\t\t~menuItems:{it|~it.element~};separator=\"\\n\"~\n\t\t\t\t\t~menuComponents:{it|~it~};separator=\"\\n\"~\n\t\t\t\t</Menu>\n\t\t\t</div>);\n\t}\n} ",
+      "text" : "import React from 'react';\n\nimport Button from '@material-ui/core/Button';\nimport Menu from '@material-ui/core/Menu';\nimport MenuItem from '@material-ui/core/MenuItem';\nimport MenuList from '@material-ui/core/MenuList';\nimport IconButton from '@material-ui/core/IconButton';\nimport MenuIcon from '@material-ui/icons/Menu';\nimport { Link } from 'react-router-dom';\n\nconst LoginLink = React.forwardRef( (props, ref) => (\n\t<Link innerRef={ ref } to=\"/login\" { ...props } />\n));\n\n~menuItems:{it|\nconst ~it.name~ = React.forwardRef( (props, ref) => (\n\t<Link innerRef={ ref ~eom()~ to=\"/~it.to~\"~if(it.target)~ target=\"~it.target~\" ~endif~ { ...props ~eom()~ />\n));\n};separator=\"\\n\\n\"~\n\nexport default function SimpleMenu(props) {\n\n\tconst [anchorEl, setAnchorEl] = React.useState(null);\n\n\tfunction handleClick(event) {\n\t\tsetAnchorEl(event.currentTarget);\n\t}\n\t\n\tfunction handleClose() {\n\t\tsetAnchorEl(null);\n\t}\n\n\tif (!props.currentUser)  {\n\t\treturn (\n\t\t\t\t<div>\n\t\t\t\t\t<IconButton edge=\"start\" color=\"inherit\" aria-label=\"Menu\" onClick={handleClick}>\n\t\t\t\t\t\t<MenuIcon />\n\t\t\t\t\t</IconButton>\n\t\t\t\t\t<Menu id=\"simple-menu\" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>\n\t\t\t\t\t\t<MenuItem component={ LoginLink } onClick={handleClose}>Login</MenuItem>\n\t\t\t\t\t</Menu>\n\t\t\t\t</div>);\n\t} else {\n\t\treturn (\n\t\t\t<div>\n\t\t\t\t<IconButton edge=\"start\" color=\"inherit\" aria-label=\"Menu\" onClick={handleClick}>\n\t\t\t\t\t<MenuIcon />\n\t\t\t\t</IconButton>\n\t\t\t\t<Menu id=\"simple-menu\" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>\n\t\t\t\t\t~menuItems:{it|~it.element~};separator=\"\\n\"~\n\t\t\t\t\t~menuComponents:{it|~it~};separator=\"\\n\"~\n\t\t\t\t</Menu>\n\t\t\t</div>);\n\t}\n} ",
       "parameters" : [ {
-        "uuid" : "22640b1f-a10f-4936-a81a-f1a97f714b79",
+        "uuid" : "8ae5d3ef-6e9d-45ea-a2d3-1f9776b9c595",
         "name" : "menuItems",
         "type" : "KVLIST",
         "argumentType" : "Object",
         "keys" : [ {
-          "uuid" : "5e5c3a40-8bc5-4c75-b9e7-19a7960bd87e",
+          "uuid" : "f5ff7f33-5096-4df9-b864-da4bf0ae7951",
           "name" : "name",
           "argumentType" : "Object"
         }, {
-          "uuid" : "0f30142f-c462-4ad2-be21-ff9f2712de5b",
+          "uuid" : "a8245f81-471b-4dbe-ad04-c952b36a16a2",
           "name" : "to",
           "argumentType" : "Object"
         }, {
-          "uuid" : "79182220-fa5c-416d-87da-b07ff81e256f",
+          "uuid" : "e73e734f-a1a5-48fb-b46b-1ab4b19d4e5c",
           "name" : "target",
           "argumentType" : "Object"
         }, {
-          "uuid" : "ff95ce19-920a-4b04-b920-537030a2178f",
+          "uuid" : "50133e35-ec5e-444b-9106-1115fa27e3d4",
           "name" : "element",
           "argumentType" : "Object"
         } ]
       }, {
-        "uuid" : "ba663914-2c98-4d82-96bf-3d6a738878a5",
+        "uuid" : "fe7e5c58-5f28-42f1-b483-5feddacc053c",
         "name" : "menuComponents",
         "type" : "LIST",
         "argumentType" : "Object"
       } ]
     }, {
       "uuid" : "538e35d7-4d4c-4f24-b283-a72a18145154",
-      "name" : "Agent",
-      "text" : "import superagentPromise from 'superagent-promise';\nimport _superagent from 'superagent';\nimport appStore from './stores/AppStore';\nimport authStore from './stores/AuthStore';\n\nconst superagent = superagentPromise(_superagent, global.Promise);\n\nconst handleErrors = err => {\n\tif (err && err.response && err.response.status === 401) {\n\t\tauthStore.logout();\n\t}\n\treturn err;\n};\n\nconst responseBody = res => res.body;\n\nconst tokenPlugin = req => {\n\tif (appStore.token) {\n\t\treq.set('Authorization', `Bearer ${appStore.token}`);\n\t}\n};\n\nconst requests = {\n\tdel: url =>\n\t\tsuperagent\n\t\t\t.del(`${url}`)\n\t\t\t.use(tokenPlugin)\n\t\t\t.end(handleErrors)\n\t\t\t.then(responseBody),\n\tget: url =>\n\t\tsuperagent\n\t\t\t.get(`${url}`)\n\t\t\t.use(tokenPlugin)\n\t\t\t.end(handleErrors)\n\t\t\t.then(responseBody),\n\tput: (url, body) =>\n\t\tsuperagent\n\t\t\t.put(`${url}`, body)\n\t\t\t.use(tokenPlugin)\n\t\t\t.end(handleErrors)\n\t\t\t.then(responseBody),\n\tpost: (url, body) =>\n\t\tsuperagent\n\t\t\t.post(`${url}`, body)\n\t\t\t.use(tokenPlugin)\n\t\t\t.end(handleErrors)\n\t\t\t.then(responseBody)\n};\n\n~agentDeclarations:{it|~it.declaration~};separator=\"\\n\"~\n\nconst Auth = { \n\tcurrent: () => requests.get('/user'),\n\tlogin: (username, password) => requests.post('/login', { username, password }),\n\tsave: (user) => requests.put('/user', { user })\n}\n\nexport default {\n\tAuth~if(agentDeclarations)~,\n\t\n\t~agentDeclarations:{it|~it.name~};separator=\",\\n\"~~endif~\n\t\n}; ",
+      "name" : "Superagent",
+      "text" : "import superagentPromise from 'superagent-promise';\nimport _superagent from 'superagent';\n\nimport appStore from './stores/AppStore';\nimport authStore from './stores/AuthStore';\n\nconst superagent = superagentPromise(_superagent, global.Promise);\n\nconst handleErrors = err => {\n\tif (err && err.response && err.response.status === 401) {\n\t\tauthStore.logout();\n\t}\n\treturn err;\n};\n\nconst responseBody = res => res.body;\n\nconst tokenPlugin = req => {\n\tif (appStore.token) {\n\t\treq.set('Authorization', `Bearer ${appStore.token}`);\n\t}\n};\n\nconst requests = {\n\tdel: url =>\n\t\tsuperagent\n\t\t\t.del(`${url}`)\n\t\t\t.use(tokenPlugin)\n\t\t\t.end(handleErrors)\n\t\t\t.then(responseBody),\n\tget: url =>\n\t\tsuperagent\n\t\t\t.get(`${url}`)\n\t\t\t.use(tokenPlugin)\n\t\t\t.end(handleErrors)\n\t\t\t.then(responseBody),\n\tput: (url, body) =>\n\t\tsuperagent\n\t\t\t.put(`${url}`, body)\n\t\t\t.use(tokenPlugin)\n\t\t\t.end(handleErrors)\n\t\t\t.then(responseBody),\n\tpost: (url, body) =>\n\t\tsuperagent\n\t\t\t.post(`${url}`, body)\n\t\t\t.use(tokenPlugin)\n\t\t\t.end(handleErrors)\n\t\t\t.then(responseBody)\n};\n\n~agentDeclarations:{it|~it.declaration~};separator=\"\\n\"~\n\nconst Auth = { \n\tcurrent: () => requests.get('/user'),\n\tlogin: (username, password) => requests.post('/login', { username, password }),\n\tsave: (user) => requests.put('/user', { user })\n}\n\nexport default {\n\tAuth~if(agentDeclarations)~,\n\t\n\t~agentDeclarations:{it|~it.name~};separator=\",\\n\"~~endif~\n\t\n}; ",
       "parameters" : [ {
-        "uuid" : "58402911-e6e3-4469-b29e-9c690d9bd5ad",
+        "uuid" : "2ce57895-bddf-4eeb-92ce-fc7f128ef790",
         "name" : "agentDeclarations",
         "type" : "KVLIST",
         "argumentType" : "Object",
         "keys" : [ {
-          "uuid" : "f96484d6-e163-4f2f-b436-97d4f5c89cd1",
+          "uuid" : "38e564b8-e940-490c-9960-2f6715da385e",
           "name" : "declaration",
           "argumentType" : "Object"
         }, {
-          "uuid" : "edf38bc5-ec3a-4815-af2d-aea4858b0187",
+          "uuid" : "ea078493-b4ae-4a7a-9567-2bf3c9754e47",
           "name" : "name",
           "argumentType" : "Object"
         } ]
@@ -596,24 +601,29 @@
       "children" : [ {
         "uuid" : "6c458cfe-4e20-4668-b4fa-855460ef2fba",
         "name" : "agentEndpoint",
-        "text" : "~name~: (~parameters:{it|~it~};separator=\",\"~) => requests.~action~('/~url~'~if(parameters)~, { ~parameters:{it|~it~};separator=\",\"~ }~endif~) ",
+        "text" : "~name~: (~if(urlParam)~~urlParam~~if(parameters)~, ~endif~~endif~~parameters:{it|~it~};separator=\",\"~) => requests.~action~('/~url~'~if(urlParam)~ + ~urlParam~~endif~~if(parameters)~, { ~parameters:{it|~it~};separator=\",\"~ }~endif~) ",
         "parameters" : [ {
-          "uuid" : "82437ca2-f5d5-4415-acb1-8ad42a67de79",
+          "uuid" : "f015e1ac-3367-40bc-9635-e332b430d8e9",
           "name" : "name",
           "type" : "SINGLE",
           "argumentType" : "Object"
         }, {
-          "uuid" : "6d7edae4-bb3f-468e-8aee-84048c61e961",
+          "uuid" : "d3e4fbb7-1970-4328-8931-258cb6cddf1b",
+          "name" : "urlParam",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "2ef5b4d3-1eba-4ede-a268-e1832bc9d11b",
           "name" : "parameters",
           "type" : "LIST",
           "argumentType" : "Object"
         }, {
-          "uuid" : "9521b331-c4b2-4edf-bfc0-4228f3e3ba12",
+          "uuid" : "3d56afd1-2666-49b3-b618-83e3c0354d42",
           "name" : "action",
           "type" : "SINGLE",
           "argumentType" : "Object"
         }, {
-          "uuid" : "941abd36-617b-4687-89c8-48902fb18f27",
+          "uuid" : "c715b828-e4b3-4a37-a246-536ba3f7a0d1",
           "name" : "url",
           "type" : "SINGLE",
           "argumentType" : "Object"
@@ -647,7 +657,7 @@
     }, {
       "uuid" : "c53c04ba-8dc8-428b-88ad-5aee518a2899",
       "name" : "LoginForm",
-      "text" : "// dependencies:\nimport { withRouter } from 'react-router-dom';\nimport React from 'react';\n\nimport { inject, observer } from 'mobx-react';\n\nimport SignIn from '../components/SignIn.js';\n\n@withRouter\n@inject('authStore')\n@observer\nclass LoginForm extends React.Component {\n\n\tconstructor(){\n\t\tsuper();\n\t\tthis.handleSubmitForm = this.handleSubmitForm.bind(this);\n\t\tthis.handleUsernameChange = this.handleUsernameChange.bind(this);\n\t\tthis.handlePasswordChange = this.handlePasswordChange.bind(this);\n\t}\n\n\thandleSubmitForm = (e) => {\n\t\te.preventDefault();\n\t\tthis.props.authStore.login().then(() => this.props.history.replace('/')).catch(e => {});\n\t}\n\n\thandleUsernameChange = (e) => {\n\t\tthis.props.authStore.setUsername(e.target.value);\n\t}\n\n\thandlePasswordChange = (e) => {\n\t\tthis.props.authStore.setPassword(e.target.value);\n\t}\n\n\trender() {\n\t\treturn (<SignIn authStore={ this.props.authStore } onSubmit={ this.handleSubmitForm } />);\n\t}\n}\n\nexport default (LoginForm); ",
+      "text" : "import { withRouter } from 'react-router-dom';\nimport React from 'react';\n\nimport { inject, observer } from 'mobx-react';\n\nimport SignIn from '../components/SignIn.js';\n\n@withRouter\n@inject('authStore')\n@observer\nclass LoginForm extends React.Component {\n\n\tconstructor(){\n\t\tsuper();\n\t\tthis.handleSubmitForm = this.handleSubmitForm.bind(this);\n\t\tthis.handleUsernameChange = this.handleUsernameChange.bind(this);\n\t\tthis.handlePasswordChange = this.handlePasswordChange.bind(this);\n\t}\n\n\thandleSubmitForm = (e) => {\n\t\te.preventDefault();\n\t\tthis.props.authStore.login().then(() => this.props.history.replace('/')).catch(e => {});\n\t}\n\n\thandleUsernameChange = (e) => {\n\t\tthis.props.authStore.setUsername(e.target.value);\n\t}\n\n\thandlePasswordChange = (e) => {\n\t\tthis.props.authStore.setPassword(e.target.value);\n\t}\n\n\trender() {\n\t\treturn (<SignIn authStore={ this.props.authStore } onSubmit={ this.handleSubmitForm } />);\n\t}\n}\n\nexport default (LoginForm); ",
       "parameters" : [ ]
     }, {
       "uuid" : "b26f163f-b701-4078-8b3d-7b984d504dfd",
@@ -686,75 +696,103 @@
       }, {
         "uuid" : "223cb889-17f9-48d9-8dbe-9892c0c59003",
         "name" : "StoreComponent",
-        "text" : "import React from 'react';\nimport { inject, observer } from 'mobx-react';\n\n~dependencies:{it|~it~};separator=\"\\n\"~\n\n~components:{it|~it~};separator=\"\\n\\n\"~\n\n~decorators:{it|~it~};separator=\"\\n\"~\n\n@inject(~stores:{it|'~it~'};separator=\",\"~)\n@observer\nclass ~name~ extends React.Component {\n\n\tconstructor(props) {\n\t\tsuper(props);\n\t\tconsole.log(\"new ~name~ : \" +  this.props);\n~if(state)~\n\t\tthis.state = {\n\t\t\t~state:{it|~it~};separator=\",\\n\"~;\n\t\t}\n~endif~\n\t\t~events:{it|this.~it.methodName~ = this.~it.methodName~.bind(this);};separator=\"\\n\"~\n\t}\n\n\tcomponentDidMount() {\n\t\tconsole.log(\"mount ~name~ : \" +  this.props);\n\t\t~componentDidMountStatements:{it|~it~};separator=\"\\n\"~\n\t}\n\t\n~if(events)~\n\t~events:{it|~it.declaration~};separator=\"\\n\\n\"~\n~endif~\n~if(methods)~\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n~endif~\n\trender() {\n\t\tconsole.log(\"render ~name~ : \" +  this.props);\n\t\t~renderStatements:{it|~it~};separator=\"\\n\"~\n\t\t~if(renderConstants)~const { ~renderConstants:{it|~it~};separator=\", \"~ } = this.state;~endif~\n\t\t\n\t\t~if(returnStatements)~return (~returnStatements:{it|~it~};separator=\"\\n\\n\"~)~else~return null;~endif~\n\t}\n}\n\nexport default (~name~); ",
+        "text" : "import React from 'react';\nimport { inject, observer } from 'mobx-react';\n~imports:{it|import ~it.name~ from '~it.path~';};separator=\"\\n\"~\n~components:{it|~it~};separator=\"\\n\\n\"~\n\n@inject(~stores:{it|'~it~'};separator=\",\"~)\n@observer\n~decorators:{it|~it~};separator=\"\\n\"~\nclass ~name~ extends React.Component {\n\n\tconstructor(props) {\n\t\tsuper(props);\n~if(debug)~\n\t\tconsole.log(\"new ~name~ : \" +  this.props);\n~endif~\n~if(state)~\n\t\tthis.state = {\n\t\t\t~state:{it|~it~};separator=\",\\n\"~;\n\t\t}\n~endif~\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t\t~events:{it|this.~it.methodName~ = this.~it.methodName~.bind(this);};separator=\"\\n\"~\n\t}\n\n\tcomponentDidMount() {\n~if(debug)~\n\t\tconsole.log(\"mount ~name~ : \" +  this.props);\n~endif~\n\t\t~componentDidMountStatements:{it|~it~};separator=\"\\n\"~\n\t}\n~if(events)~\n\n\t~events:{it|~it.declaration~};separator=\"\\n\\n\"~\n~endif~\n~if(methods)~\n\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n~endif~\n\t\n\trender() {\n~if(debug)~\n\t\tconsole.log(\"render ~name~ : \" +  this.props);\n~endif~\n\t\t~renderStatements:{it|~it~};separator=\"\\n\"~\n\n~if(renderCondition)~\n\t\t~renderCondition:{it|if (~it.condition~) \n\treturn (\n\t\t~it.element~\n\t);};separator=\"\\n\\nelse \"~\n\t\n\t\telse\n\t\t\treturn (\n\t\t\t\t~renderElement~\n\t\t\t);\n~else~\n\t\treturn (\n\t\t\t~renderElement~\n\t\t);\n~endif~\n\t}\n}\n\nexport default (~name~); ",
         "parameters" : [ {
-          "uuid" : "ec1ab504-4f67-424e-bc63-9e7eb29568e6",
-          "name" : "dependencies",
-          "type" : "LIST",
-          "argumentType" : "Object"
+          "uuid" : "3bdfbc9c-d4a8-465c-92eb-b9cf67d70b83",
+          "name" : "imports",
+          "type" : "KVLIST",
+          "argumentType" : "Object",
+          "keys" : [ {
+            "uuid" : "61bcd977-2db6-43fb-bb5d-17edec2cf32a",
+            "name" : "name",
+            "argumentType" : "Object"
+          }, {
+            "uuid" : "b22ab47e-0d1a-4678-b938-2b6cbbd2d494",
+            "name" : "path",
+            "argumentType" : "Object"
+          } ]
         }, {
-          "uuid" : "8593dde1-04ab-4902-a078-0aebccd739bd",
+          "uuid" : "7b212e40-be77-4efd-bda1-7e4f41d492f0",
           "name" : "components",
           "type" : "LIST",
           "argumentType" : "Object"
         }, {
-          "uuid" : "a232b92c-22bf-43ec-89ce-bf85f7f0e8fe",
-          "name" : "decorators",
-          "type" : "LIST",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "39ccabae-1abc-4e86-99ee-b874f0403ac6",
+          "uuid" : "191b8116-ca43-4d1c-b7c3-1653260e7575",
           "name" : "stores",
           "type" : "LIST",
           "argumentType" : "Object"
         }, {
-          "uuid" : "0af55fac-c894-457f-a548-e84e7bf751de",
+          "uuid" : "c9004ff4-7a89-4ace-a33d-132f9e6f5f28",
+          "name" : "decorators",
+          "type" : "LIST",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "96f33472-3347-4e11-91d9-2060a62d2eca",
           "name" : "name",
           "type" : "SINGLE",
           "argumentType" : "Object"
         }, {
-          "uuid" : "5cfd4e59-e001-4d23-9338-bb291f387b19",
+          "uuid" : "be1a81fa-4dd4-4f47-a52c-1dea65bee337",
+          "name" : "debug",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "51b7f54f-1233-441c-b1ce-23a6cb844a64",
           "name" : "state",
           "type" : "LIST",
           "argumentType" : "Object"
         }, {
-          "uuid" : "f1ae1e1f-8c8d-4959-888f-626bcd7ce6b9",
+          "uuid" : "3a307c57-e024-492c-a767-ec2d3e947c47",
+          "name" : "constructorStatements",
+          "type" : "LIST",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "496dc5ad-51c6-415d-b2c1-3b9a168251a8",
           "name" : "events",
           "type" : "KVLIST",
           "argumentType" : "Object",
           "keys" : [ {
-            "uuid" : "80c42280-f3d5-4622-9b25-2c80c2610a08",
+            "uuid" : "8c1f9632-c08e-4fb7-a6a1-7b2ca73817e0",
             "name" : "methodName",
             "argumentType" : "Object"
           }, {
-            "uuid" : "a85f1fcb-5f7d-47b1-9b94-ee4ca5e47abb",
+            "uuid" : "171b05af-b922-4d09-96ef-1897edffd1e7",
             "name" : "declaration",
             "argumentType" : "Object"
           } ]
         }, {
-          "uuid" : "ce4aaeda-7315-48c7-b727-88e40a31ff9a",
+          "uuid" : "16ed527d-c8f6-4cbd-9c17-2c30ed345a49",
           "name" : "componentDidMountStatements",
           "type" : "LIST",
           "argumentType" : "Object"
         }, {
-          "uuid" : "29a7a489-2a20-4db4-9103-36d574bb82b6",
+          "uuid" : "d4b911ec-9db6-49d1-8a51-ebf90f5b9a52",
           "name" : "methods",
           "type" : "LIST",
           "argumentType" : "Object"
         }, {
-          "uuid" : "54b25ef2-70ba-41ac-9f46-d316a0a971ab",
+          "uuid" : "d63127d2-2d80-426c-896a-99b9bcfff2bc",
           "name" : "renderStatements",
           "type" : "LIST",
           "argumentType" : "Object"
         }, {
-          "uuid" : "17a4d7d8-18d1-47f5-a5fc-a44f35c9028f",
-          "name" : "renderConstants",
-          "type" : "LIST",
-          "argumentType" : "Object"
+          "uuid" : "4412c9e9-5808-4223-af2c-4cafb492244b",
+          "name" : "renderCondition",
+          "type" : "KVLIST",
+          "argumentType" : "Object",
+          "keys" : [ {
+            "uuid" : "bbbc20a7-0382-4891-b388-40d98d281b81",
+            "name" : "condition",
+            "argumentType" : "Object"
+          }, {
+            "uuid" : "e9961e5e-17cb-409e-aaea-e6d7b78e05ee",
+            "name" : "element",
+            "argumentType" : "Object"
+          } ]
         }, {
-          "uuid" : "24d4dd83-1650-4dc2-9561-f2c30c0cbee6",
-          "name" : "returnStatements",
-          "type" : "LIST",
+          "uuid" : "1a6e6707-9be5-450c-b139-23169db6852d",
+          "name" : "renderElement",
+          "type" : "SINGLE",
           "argumentType" : "Object"
         } ]
       }, {
@@ -764,114 +802,51 @@
         "parameters" : [ ]
       } ]
     }, {
-      "uuid" : "fbd53dbf-a71d-439e-9e1e-2afb899c102b",
-      "name" : "Status",
-      "text" : "import React from 'react';\nimport clsx from 'clsx';\nimport { makeStyles } from '@material-ui/core/styles';\nimport CssBaseline from '@material-ui/core/CssBaseline';\nimport Drawer from '@material-ui/core/Drawer';\nimport Box from '@material-ui/core/Box';\nimport AppBar from '@material-ui/core/AppBar';\nimport Toolbar from '@material-ui/core/Toolbar';\nimport List from '@material-ui/core/List';\nimport Typography from '@material-ui/core/Typography';\nimport Divider from '@material-ui/core/Divider';\nimport IconButton from '@material-ui/core/IconButton';\nimport Badge from '@material-ui/core/Badge';\nimport Container from '@material-ui/core/Container';\nimport Grid from '@material-ui/core/Grid';\nimport Paper from '@material-ui/core/Paper';\nimport Link from '@material-ui/core/Link';\nimport MenuIcon from '@material-ui/icons/Menu';\nimport ChevronLeftIcon from '@material-ui/icons/ChevronLeft';\nimport NotificationsIcon from '@material-ui/icons/Notifications';\nimport { mainListItems, secondaryListItems } from './listItems';\n\n\nimport Copyright from '../components/Copyright';\n\nconst drawerWidth = 240;\n\nconst useStyles = makeStyles((theme) => ({\n\troot: {\n\t\tdisplay: 'flex',\n\t},\n\ttoolbar: {\n\t\tpaddingRight: 24, // keep right padding when drawer closed\n\t},\n\ttoolbarIcon: {\n\t\tdisplay: 'flex',\n\t\talignItems: 'center',\n\t\tjustifyContent: 'flex-end',\n\t\tpadding: '0 8px',\n\t\t...theme.mixins.toolbar,\n\t},\n\tappBar: {\n\t\tzIndex: theme.zIndex.drawer + 1,\n\t\ttransition: theme.transitions.create(['width', 'margin'], {\n\t\t\teasing: theme.transitions.easing.sharp,\n\t\t\tduration: theme.transitions.duration.leavingScreen,\n\t\t}),\n\t},\n\tappBarShift: {\n\t\tmarginLeft: drawerWidth,\n\t\twidth: `calc(100% - ${drawerWidth}px)`,\n\t\ttransition: theme.transitions.create(['width', 'margin'], {\n\t\t\teasing: theme.transitions.easing.sharp,\n\t\t\tduration: theme.transitions.duration.enteringScreen,\n\t\t}),\n\t},\n\tmenuButton: {\n\t\tmarginRight: 36,\n\t},\n\tmenuButtonHidden: {\n\t\tdisplay: 'none',\n\t},\n\ttitle: {\n\t\tflexGrow: 1,\n\t},\n\tdrawerPaper: {\n\t\tposition: 'relative',\n\t\twhiteSpace: 'nowrap',\n\t\twidth: drawerWidth,\n\t\ttransition: theme.transitions.create('width', {\n\t\t\teasing: theme.transitions.easing.sharp,\n\t\t\tduration: theme.transitions.duration.enteringScreen,\n\t\t}),\n\t},\n\tdrawerPaperClose: {\n\t\toverflowX: 'hidden',\n\t\ttransition: theme.transitions.create('width', {\n\t\t\teasing: theme.transitions.easing.sharp,\n\t\t\tduration: theme.transitions.duration.leavingScreen,\n\t\t}),\n\t\twidth: theme.spacing(7),\n\t\t[theme.breakpoints.up('sm')]: {\n\t\t\twidth: theme.spacing(9),\n\t\t},\n\t},\n\tappBarSpacer: theme.mixins.toolbar,\n\tcontent: {\n\t\tflexGrow: 1,\n\t\theight: '100vh',\n\t\toverflow: 'auto',\n\t},\n\tcontainer: {\n\t\tpaddingTop: theme.spacing(4),\n\t\tpaddingBottom: theme.spacing(4),\n\t},\n\tpaper: {\n\t\tpadding: theme.spacing(2),\n\t\tdisplay: 'flex',\n\t\toverflow: 'auto',\n\t\tflexDirection: 'column',\n\t},\n\tfixedHeight: {\n\t\theight: 240,\n\t},\n}));\n\nexport default function Dashboard() {\n\tconst classes = useStyles();\n\tconst [open, setOpen] = React.useState(true);\n\tconst handleDrawerOpen = () => {\n\t\tsetOpen(true);\n\t};\n\tconst handleDrawerClose = () => {\n\t\tsetOpen(false);\n\t};\n\tconst fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);\n\t\n\treturn (\n\t\t<div className={classes.root}>\n\t\t\t<AppBar position=\"absolute\" className={clsx(classes.appBar, open && classes.appBarShift)}>\n\t\t\t<Toolbar className={classes.toolbar}>\n\t\t\t\t<IconButton\n\t\t\t\t\tedge=\"start\"\n\t\t\t\t\tcolor=\"inherit\"\n\t\t\t\t\taria-label=\"open drawer\"\n\t\t\t\t\tonClick={handleDrawerOpen}\n\t\t\t\t\tclassName={clsx(classes.menuButton, open && classes.menuButtonHidden)}\n\t\t\t\t>\n\t\t\t\t\t<MenuIcon />\n\t\t\t\t</IconButton>\n\t\t\t\t<Typography component=\"h1\" variant=\"h6\" color=\"inherit\" noWrap className={classes.title}>\n\t\t\t\t\tDashboard\n\t\t\t\t</Typography>\n\t\t\t\t<IconButton color=\"inherit\">\n\t\t\t\t\t<Badge badgeContent={4} color=\"secondary\">\n\t\t\t\t\t<NotificationsIcon />\n\t\t\t\t\t</Badge>\n\t\t\t\t</IconButton>\n\t\t\t</Toolbar>\n\t\t\t</AppBar>\n\t\t\t<Drawer\n\t\t\tvariant=\"permanent\"\n\t\t\tclasses={{\n\t\t\t\tpaper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),\n\t\t\t}}\n\t\t\topen={open}\n\t\t\t>\n\t\t\t<div className={classes.toolbarIcon}>\n\t\t\t\t<IconButton onClick={handleDrawerClose}>\n\t\t\t\t\t<ChevronLeftIcon />\n\t\t\t\t</IconButton>\n\t\t\t</div>\n\t\t\t<Divider />\n\t\t\t<List>{mainListItems}</List>\n\t\t\t<Divider />\n\t\t\t<List>{secondaryListItems}</List>\n\t\t\t</Drawer>\n\t\t\t<main className={classes.content}>\n\t\t\t<div className={classes.appBarSpacer} />\n\t\t\t<Container maxWidth=\"lg\" className={classes.container}>\n\t\t\t\t<Grid container spacing={3}>\n\t\t\t\t\t{/* Chart */}\n\t\t\t\t\t<Grid item xs={12} md={8} lg={9}>\n\t\t\t\t\t<Paper className={fixedHeightPaper}>\n\t\t\t\t\t\t<Chart />\n\t\t\t\t\t</Paper>\n\t\t\t\t\t</Grid>\n\t\t\t\t\t{/* Recent Deposits */}\n\t\t\t\t\t<Grid item xs={12} md={4} lg={3}>\n\t\t\t\t\t<Paper className={fixedHeightPaper}>\n\t\t\t\t\t\t<Deposits />\n\t\t\t\t\t</Paper>\n\t\t\t\t\t</Grid>\n\t\t\t\t\t{/* Recent Orders */}\n\t\t\t\t\t<Grid item xs={12}>\n\t\t\t\t\t<Paper className={classes.paper}>\n\t\t\t\t\t\t<Orders />\n\t\t\t\t\t</Paper>\n\t\t\t\t\t</Grid>\n\t\t\t\t</Grid>\n\t\t\t\t<Box pt={4}>\n\t\t\t\t\t<Copyright />\n\t\t\t\t</Box>\n\t\t\t</Container>\n\t\t\t</main>\n\t\t</div>\n\t);\n} ",
-      "parameters" : [ ]
-    }, {
-      "uuid" : "da129890-a877-453c-82ab-13857ee3dc18",
-      "name" : "Verticles",
-      "text" : "",
-      "children" : [ {
-        "uuid" : "c66fd6ed-58c6-4b27-99f4-0537faf36c22",
-        "name" : "WebVerticle",
-        "text" : "package ~packageName~;\n\nimport com.securityx.web.api.LoginRequest;\nimport com.securityx.web.domain.*;\nimport io.vertx.core.AbstractVerticle;\nimport io.vertx.core.Future;\nimport io.vertx.core.Vertx;\nimport io.vertx.core.eventbus.DeliveryOptions;\nimport io.vertx.core.http.HttpServerOptions;\nimport io.vertx.core.json.JsonArray;\nimport io.vertx.core.json.JsonObject;\nimport io.vertx.core.net.PemKeyCertOptions;\nimport io.vertx.ext.auth.KeyStoreOptions;\nimport io.vertx.ext.auth.jwt.JWTAuth;\nimport io.vertx.ext.auth.jwt.JWTAuthOptions;\nimport io.vertx.ext.jwt.JWTOptions;\nimport io.vertx.ext.web.Router;\nimport io.vertx.ext.web.RoutingContext;\nimport io.vertx.ext.web.handler.BodyHandler;\nimport io.vertx.ext.web.handler.JWTAuthHandler;\nimport io.vertx.ext.web.handler.SessionHandler;\nimport io.vertx.ext.web.handler.StaticHandler;\nimport io.vertx.ext.web.sstore.LocalSessionStore;\n\nimport java.util.Optional;\nimport java.util.concurrent.atomic.AtomicInteger;\n\nimport static com.securityx.web.PasswordUtils.verifyUserPassword;\nimport static com.securityx.web.WebUtils.sendErrors;\nimport static com.securityx.web.WebUtils.sendResponse;\nimport static com.securityx.web.api.WebApiJsonFactory.newJWTPayload;\nimport static com.securityx.web.api.WebApiJsonFactory.newLoginRequest;\nimport static com.securityx.web.domain.ServerJsonFactory.newUserMenu;\nimport static com.securityx.web.domain.ServerJsonFactory.newUserSession;\nimport static io.netty.handler.codec.http.HttpResponseStatus.*;\n\npublic class ~name;format=\"capitalize\"~ extends AbstractVerticle {\n\n\tprotected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name;format=\"capitalize\"~.class);\n\n\t@Override\n\tpublic void start(Future<Void> startFuture) throws Exception {\n\t\tlog.info(\"starting\");\n\n\t\tfinal ~name;format=\"capitalize\"~Config config = new ~name;format=\"capitalize\"~Config(config());\n\t\tfinal Optional<SSLConfig> ssl = Optional.ofNullable(config.getSsl());\n\n\t\tfinal KeyStoreOptions keyStoreOptions = new KeyStoreOptions().\n\t\t\t\t\tsetPath(config.getJwt().getPath()).\n\t\t\t\t\tsetPassword(config.getJwt().getPassword()).\n\t\t\t\t\tsetType(config.getJwt().getType());\n\n\t\tfinal JWTAuthOptions jwtAuthOptions = new JWTAuthOptions().setKeyStore(keyStoreOptions);\n\t\tfinal JWTAuth auth = JWTAuth.create(vertx, jwtAuthOptions);\n\n\t\tfinal Router router = Router.router(vertx);\n\t\trouter.route().handler(BodyHandler.create());\n\t\trouter.route().handler(SessionHandler.create(LocalSessionStore.create(vertx)));\n\t\trouter.post(\"/login\").handler(routingContext -> login(routingContext, auth, config));\n\t\trouter.route(\"/api/*\").handler(JWTAuthHandler.create(auth, \"/login\"));\n\t\trouter.get(\"/user\").handler(routingContext -> getUser(routingContext, config));\n\t\t~routes:{it|router.~it.action~(\"/api/~it.url~\").handler(this::~it.methodName~);};separator=\"\\n\"~\n\t\t\n\t\tfinal HttpServerOptions serverOptions = new HttpServerOptions();\n\t\tssl.ifPresent(sslConfig ->\n\t\t\t\tserverOptions\n\t\t\t\t\t\t.setSsl(true)\n\t\t\t\t\t\t.setPemKeyCertOptions(\n\t\t\t\t\t\t\t\tnew PemKeyCertOptions().\n\t\t\t\t\t\t\t\t\t\t\tsetKeyPath(sslConfig.getKey()).\n\t\t\t\t\t\t\t\t\t\t\tsetCertPath(sslConfig.getCert())));\n\n\t\tfinal StaticHandler staticHandler = StaticHandler.create();\n\t\tstaticHandler.setWebRoot(config.getWebRoot());\n\t\tstaticHandler.setCachingEnabled(false);\n\t\tstaticHandler.setIndexPage(\"index.html\");\n\t\trouter.route(\"/*\").handler(staticHandler);\n\n\t\tvertx.createHttpServer(serverOptions).requestHandler(router::accept).listen(config.getPort());\n\n\t\tlog.info(\"server running on \" + (ssl.isPresent() ? \"https\" : \"http\") + \"://\" + config.getTcpHost() + \":\" + config.getPort());\n\t\tlog.info(\"server running on \" + (ssl.isPresent() ? \"https\" : \"http\") + \"://\" + config.getTcpName(\"securityxresidential.info\") + \":\" + config.getPort());\n\n\t\tstartFuture.succeeded();\n\t}\n\n\tprivate void login(RoutingContext routingContext, JWTAuth auth, ~name;format=\"capitalize\"~Config deploymentOptions) {\n\t\tWebUtils.debug(\"login\", routingContext);\n\n\t\tfinal LoginRequest loginRequest = newLoginRequest(routingContext.getBodyAsJson());\n\n\t\tfinal Optional<UserConfig> foundUserConfig = deploymentOptions.getJwt().getUsers()\n\t\t\t\t.filter(userConfig -> userConfig.getUsername() != null && userConfig.getPassword() != null)\n\t\t\t\t.filter(userConfig -> userConfig.getUsername().equals(loginRequest.getUsername()))\n\t\t\t\t.findFirst();\n\n\t\tif (!foundUserConfig.isPresent()) {\n\t\t\tsendErrors(routingContext, UNAUTHORIZED, \"User credentials not found\");\n\t\t\treturn;\n\t\t}\n\n\t\tfinal boolean passwordMatch = verifyUserPassword(loginRequest.getPassword(), foundUserConfig.get().getPassword(), foundUserConfig.get().getSalt());\n\n\t\tif (!passwordMatch) {\n\t\t\tsendErrors(routingContext, UNAUTHORIZED, \"User credentials not found\");\n\t\t\treturn;\n\t\t}\n\n\t\tfinal UserSession userSession = newUserSession()\n\t\t\t.setToken(auth.generateToken(\n\t\t\t\tnewJWTPayload()\n\t\t\t\t\t.setSub(foundUserConfig.get().getUsername())\n\t\t\t\t\t.getJsonObject(),\n\t\t\t\t\tnew JWTOptions()\n\t\t\t\t\t\t.setExpiresInMinutes(deploymentOptions.getJwt().getExpiresInMinutes())\n\t\t\t\t\t\t.setSubject(foundUserConfig.get().getUsername())))\n\t\t\t.setUsername(foundUserConfig.get().getUsername());\n\n\t\tfinal DeliveryOptions options = new DeliveryOptions().addHeader(\"action\", \"getPagesForUser\");\n\t\tvertx.eventBus().request(\"domain.db\", new JsonObject().put(\"username\", userSession.getUsername()), options, reply -> {\n\t\t\tif (reply.succeeded()) {\n\t\t\t\tJsonArray body = (JsonArray) reply.result().body();\n\t\t\t\tfinal AtomicInteger key = new AtomicInteger(0);\n\t\t\t\tbody.stream().map(o -> (JsonObject) o).map(ServerJsonFactory::newUserMenu).filter(userMenu -> userSession.getMenus().noneMatch(userMenu1 -> userMenu1.getLabel().equalsIgnoreCase(userMenu.getUrl()))).forEach(userMenu -> userSession.addMenus(newUserMenu().setKey(key.incrementAndGet()).setUrl(\"/\" + userMenu.getUrl()).setLabel(userMenu.getLabel())));\n\t\t\t\tfoundUserConfig.get().setSession(userSession);\n\t\t\t\tsendResponse(routingContext, OK, new JsonObject().put(\"user\", userSession.getJsonObject()));\n\t\t\t} else {\n\t\t\t\tsendErrors(routingContext, UNAUTHORIZED,  \"User login unsuccessfull\");\n\t\t\t}\n\t\t});\n\t}\n\n\tprivate void getUser(RoutingContext routingContext, ~name;format=\"capitalize\"~Config deploymentOptions) {\n\t\tWebUtils.debug(\"getUser\", routingContext);\n\n\t\tfinal String authorization = routingContext.request().getHeader(\"Authorization\");\n\t\tfinal String token = authorization == null ? null : authorization.substring(7).trim();\n\n\t\tfinal Optional<UserSession> userSession = deploymentOptions.getJwt().getUsers()\n\t\t\t\t.filter(userConfig -> userConfig.getSession() != null)\n\t\t\t\t.map(UserConfig::getSession)\n\t\t\t\t.filter(session -> session.getToken().equals(token))\n\t\t\t\t.findFirst();\n\n\t\tif (!userSession.isPresent())\n\t\t\tsendErrors(routingContext, UNAUTHORIZED,\t\"User session not found\");\n\t\telse\n\t\t\tsendResponse(routingContext, OK, new JsonObject().put(\"user\", userSession.get().getJsonObject()));\n\t}\n\n\t~routes:{it|~it.declaration~};separator=\"\\n\\n\"~\n\n\tprivate static void getFromDomainDB(Vertx vertx, RoutingContext routingContext, String action, JsonObject params) {\n\t\tvertx.eventBus().request(\"domain.db\", params, new DeliveryOptions().addHeader(\"action\", action), reply -> {\n\t\t\tif (reply.succeeded()) {\n\t\t\t\tsendResponse(routingContext, OK, (JsonObject) reply.result().body());\n\t\t\t} else {\n\t\t\t\tsendErrors(routingContext, INTERNAL_SERVER_ERROR,\t\"Server Error\");\n\t\t\t}\n\t\t});\n\t}\n} ",
-        "parameters" : [ {
-          "uuid" : "602063f3-282d-4c9c-b675-48e9e442c681",
-          "name" : "packageName",
-          "type" : "SINGLE",
-          "argumentType" : "String"
-        }, {
-          "uuid" : "e0d25c77-9b1d-4ba7-bd7d-a20b1277c785",
-          "name" : "name",
-          "type" : "SINGLE",
-          "argumentType" : "String"
-        }, {
-          "uuid" : "89a6cc5c-7d0e-46e0-a6eb-9c30a61c680b",
-          "name" : "routes",
-          "type" : "KVLIST",
-          "argumentType" : "Object",
-          "keys" : [ {
-            "uuid" : "9a28e54d-fe65-48b9-ab12-8dc93fec8038",
-            "name" : "action",
-            "argumentType" : "String"
-          }, {
-            "uuid" : "835f5992-ad37-4b65-b78f-220fd28acb7d",
-            "name" : "url",
-            "argumentType" : "String"
-          }, {
-            "uuid" : "73254071-768c-442c-bd20-1c748d410226",
-            "name" : "methodName",
-            "argumentType" : "String"
-          }, {
-            "uuid" : "c7485b35-c6ef-488d-b90a-2ea4bf0fb475",
-            "name" : "declaration",
-            "argumentType" : "RouteHandler"
-          } ]
-        } ],
-        "children" : [ {
-          "uuid" : "f56f3292-24dc-4cea-84e7-00e7d77fc428",
-          "name" : "SendEventBusAction",
-          "text" : "getFromDomainDB(vertx, routingContext, \"~actionName~\", new JsonObject()); ",
-          "parameters" : [ {
-            "uuid" : "19e60d9e-ae06-4cbc-a8f4-e438b01db01c",
-            "name" : "actionName",
-            "type" : "SINGLE",
-            "argumentType" : "Object"
-          } ]
-        }, {
-          "uuid" : "def313a4-c3e6-49e7-97ba-cc4cfa182c3f",
-          "name" : "routeHandler",
-          "text" : "private void ~name~(RoutingContext routingContext) {\n\tWebUtils.debug(\"~name~\", routingContext);\n\t~statements:{it|~it~};separator=\"\\n\"~\n} ",
-          "parameters" : [ {
-            "uuid" : "496be754-2af1-4713-86f3-e04e3fa014fd",
-            "name" : "name",
-            "type" : "SINGLE",
-            "argumentType" : "Object"
-          }, {
-            "uuid" : "372ad8fe-3529-46aa-9dbc-5e69dff9be16",
-            "name" : "statements",
-            "type" : "LIST",
-            "argumentType" : "Object"
-          } ]
-        } ]
-      } ]
-    }, {
       "uuid" : "84bd2ae0-2777-4bb3-832f-753e4e276509",
       "name" : "Usecase",
-      "text" : "~name~\n~description~\n\n~url~\n~action~\n\n~successStatements:{it|~it~};separator=\"\\n\"~\n~failStatements:{it|~it~};separator=\"\\n\"~\n\n~domainStatements:{it|~it~};separator=\"\\n\"~ ",
+      "text" : "~name~\n~description~\n\n~url~\n~parameterName~ ~parameterType~\n~action~\n\n~successStatements:{it|~it~};separator=\"\\n\"~\n~failStatements:{it|~it~};separator=\"\\n\"~\n\n~domainStatements:{it|~it~};separator=\"\\n\"~ ",
       "parameters" : [ {
-        "uuid" : "58dc01b1-6e3d-4a2e-b72f-160a1a27871e",
+        "uuid" : "947f7ad4-8834-42ba-8935-59f7b4146d56",
         "name" : "name",
         "type" : "SINGLE",
         "argumentType" : "String"
       }, {
-        "uuid" : "ebe12a80-5827-4c1b-950c-83d91de79412",
+        "uuid" : "39ab887d-2c59-4a42-901d-76db8138743b",
         "name" : "description",
         "type" : "SINGLE",
         "argumentType" : "String"
       }, {
-        "uuid" : "d46f5f66-e126-4973-b39e-9be697f7c095",
+        "uuid" : "689394cb-12e8-4a0d-84a6-72d34591d984",
         "name" : "url",
         "type" : "SINGLE",
         "argumentType" : "String"
       }, {
-        "uuid" : "80b0e084-c8b2-401c-bf0d-02d5da737e1e",
+        "uuid" : "46db8050-f2d0-46ea-b9a7-18cd2d4d4785",
+        "name" : "parameterName",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "42f7ba94-954e-4c2f-8f0f-6c106bca7f56",
+        "name" : "parameterType",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "fa9a6aa4-cace-4775-a132-b9dc6da4442d",
         "name" : "action",
         "type" : "SINGLE",
         "argumentType" : "String"
       }, {
-        "uuid" : "7e972d2c-b104-4ba4-8a8f-fe47f64384f1",
+        "uuid" : "fcc76b38-024b-4c4a-8574-0d3069f1908b",
         "name" : "successStatements",
         "type" : "LIST",
         "argumentType" : "String"
       }, {
-        "uuid" : "06bf79e5-13e3-47db-8c48-3460afa7f980",
+        "uuid" : "f95de09e-1d71-4a59-a998-6ad006aced8d",
         "name" : "failStatements",
         "type" : "LIST",
         "argumentType" : "String"
       }, {
-        "uuid" : "785d86cd-4dd5-49ca-bc27-63135005dd54",
+        "uuid" : "28aa5c1b-21b7-45df-af7a-3994b94d16d5",
         "name" : "domainStatements",
         "type" : "LIST",
         "argumentType" : "Object"
@@ -914,6 +889,21 @@
         "name" : "to",
         "argumentType" : "Object",
         "type" : "SINGLE"
+      } ]
+    }, {
+      "uuid" : "cb0c96ee-1562-44a1-ac14-7cb96f535c93",
+      "name" : "ForwardRef",
+      "text" : "React.forwardRef((props, ref) => (\n\t<RouterLink ref={ref} to={'~to~~if(argument)~/~endif~'~if(argument)~ + ~argument~~endif~} {...props} />\n)); ",
+      "parameters" : [ {
+        "uuid" : "adf43f26-b3f9-40f7-8a81-f2987b676828",
+        "name" : "to",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "c1e634d6-ad5a-4605-9191-8272d1575c47",
+        "name" : "argument",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       } ]
     } ]
   }, {
@@ -1068,5 +1058,14 @@
     } ]
   } ],
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/React.stg",
-  "icon" : "language-javascript"
+  "icon" : "language-javascript",
+  "enums" : [ {
+    "uuid" : "e6ce4a78-0c26-4218-922a-71d3998d2641",
+    "name" : "ReactRouterTypes",
+    "values" : [ {
+      "uuid" : "e2a5fe19-3ef6-4cb8-b4b4-e2618e30ce41",
+      "name" : "RouterLink",
+      "lexical" : "react-router-dom"
+    } ]
+  } ]
 }

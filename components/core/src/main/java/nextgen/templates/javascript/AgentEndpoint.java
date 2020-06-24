@@ -6,6 +6,7 @@ public class AgentEndpoint {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _name;
+	private Object _urlParam;
 	private Object _action;
 	private Object _url;
 	private java.util.List<Object> _parameters = new java.util.ArrayList<>();
@@ -18,6 +19,7 @@ public class AgentEndpoint {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("agentEndpoint");
 		st.add("name", _name);
+		st.add("urlParam", _urlParam);
 		st.add("action", _action);
 		st.add("url", _url);
 		for (Object o : _parameters) st.add("parameters", o);
@@ -43,6 +45,28 @@ public class AgentEndpoint {
 
 	public AgentEndpoint removeName() {
 		this._name = null;
+		return this;
+	} 
+
+	public AgentEndpoint setUrlParam(Object value) {
+		this._urlParam = value;
+		return this;
+	}
+
+	public Object getUrlParam() {
+		return this._urlParam;
+	}
+
+	public Object getUrlParam(Object defaultValue) {
+		return this._urlParam == null ? defaultValue : this._urlParam;
+	}
+
+	public boolean hasUrlParam() {
+		return this._urlParam != null;
+	}
+
+	public AgentEndpoint removeUrlParam() {
+		this._urlParam = null;
 		return this;
 	} 
 
@@ -133,5 +157,5 @@ public class AgentEndpoint {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "agentEndpoint(name,parameters,action,url) ::= <<~name~: (~parameters:{it|~it~};separator=\",\"~) => requests.~action~('/~url~'~if(parameters)~, { ~parameters:{it|~it~};separator=\",\"~ }~endif~) >>";
+	static final String st = "agentEndpoint(name,urlParam,parameters,action,url) ::= <<~name~: (~if(urlParam)~~urlParam~~if(parameters)~, ~endif~~endif~~parameters:{it|~it~};separator=\",\"~) => requests.~action~('/~url~'~if(urlParam)~ + ~urlParam~~endif~~if(parameters)~, { ~parameters:{it|~it~};separator=\",\"~ }~endif~) >>";
 } 

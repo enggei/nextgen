@@ -82,6 +82,7 @@ ReactDOM.render((
 ), document.getElementById('root'));  >>
 
 SimpleMenu(menuItems,menuComponents) ::= <<import React from 'react';
+
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -136,8 +137,9 @@ export default function SimpleMenu(props) {
 	}
 }  >>
 
-Agent(agentDeclarations) ::= <<import superagentPromise from 'superagent-promise';
+Superagent(agentDeclarations) ::= <<import superagentPromise from 'superagent-promise';
 import _superagent from 'superagent';
+
 import appStore from './stores/AppStore';
 import authStore from './stores/AuthStore';
 
@@ -200,7 +202,7 @@ export default {
 	
 };  >>
 
-agentEndpoint(name,parameters,action,url) ::= <<~name~: (~parameters:{it|~it~};separator=","~) => requests.~action~('/~url~'~if(parameters)~, { ~parameters:{it|~it~};separator=","~ }~endif~)  >>
+agentEndpoint(name,urlParam,parameters,action,url) ::= <<~name~: (~if(urlParam)~~urlParam~~if(parameters)~, ~endif~~endif~~parameters:{it|~it~};separator=","~) => requests.~action~('/~url~'~if(urlParam)~ + ~urlParam~~endif~~if(parameters)~, { ~parameters:{it|~it~};separator=","~ }~endif~)  >>
 
 agentDeclaration(name,agentEndpoint) ::= <<const ~name~ = { 
 	~agentEndpoint:{it|~it~};separator=",\n"~
@@ -331,8 +333,7 @@ export default function UserMenu(props) {
 	}
 }  >>
 
-LoginForm() ::= <<// dependencies:
-import { withRouter } from 'react-router-dom';
+LoginForm() ::= <<import { withRouter } from 'react-router-dom';
 import React from 'react';
 
 import { inject, observer } from 'mobx-react';
@@ -593,47 +594,66 @@ export default function Copyright() {
 	);
 }  >>
 
-StoreComponent(dependencies,components,decorators,stores,name,state,events,componentDidMountStatements,methods,renderStatements,renderConstants,returnStatements) ::= <<import React from 'react';
+StoreComponent(imports,components,stores,decorators,name,debug,state,constructorStatements,events,componentDidMountStatements,methods,renderStatements,renderCondition,renderElement) ::= <<import React from 'react';
 import { inject, observer } from 'mobx-react';
-
-~dependencies:{it|~it~};separator="\n"~
-
+~imports:{it|import ~it.name~ from '~it.path~';};separator="\n"~
 ~components:{it|~it~};separator="\n\n"~
-
-~decorators:{it|~it~};separator="\n"~
 
 @inject(~stores:{it|'~it~'};separator=","~)
 @observer
+~decorators:{it|~it~};separator="\n"~
 class ~name~ extends React.Component {
 
 	constructor(props) {
 		super(props);
+~if(debug)~
 		console.log("new ~name~ : " +  this.props);
+~endif~
 ~if(state)~
 		this.state = {
 			~state:{it|~it~};separator=",\n"~;
 		}
 ~endif~
+		~constructorStatements:{it|~it~};separator="\n"~
 		~events:{it|this.~it.methodName~ = this.~it.methodName~.bind(this);};separator="\n"~
 	}
 
 	componentDidMount() {
+~if(debug)~
 		console.log("mount ~name~ : " +  this.props);
+~endif~
 		~componentDidMountStatements:{it|~it~};separator="\n"~
 	}
-	
 ~if(events)~
+
 	~events:{it|~it.declaration~};separator="\n\n"~
 ~endif~
 ~if(methods)~
+
 	~methods:{it|~it~};separator="\n\n"~
 ~endif~
+	
 	render() {
+~if(debug)~
 		console.log("render ~name~ : " +  this.props);
+~endif~
 		~renderStatements:{it|~it~};separator="\n"~
-		~if(renderConstants)~const { ~renderConstants:{it|~it~};separator=", "~ } = this.state;~endif~
-		
-		~if(returnStatements)~return (~returnStatements:{it|~it~};separator="\n\n"~)~else~return null;~endif~
+
+~if(renderCondition)~
+		~renderCondition:{it|if (~it.condition~) 
+	return (
+		~it.element~
+	);};separator="\n\nelse "~
+	
+		else
+			return (
+				~renderElement~
+			);
+~else~
+		return (
+			~renderElement~
+		);
+~endif~
 	}
 }
 
@@ -674,370 +694,11 @@ export default class Loading extends React.Component {
 	}
 }  >>
 
-Status() ::= <<import React from 'react';
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Drawer from '@material-ui/core/Drawer';
-import Box from '@material-ui/core/Box';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import { mainListItems, secondaryListItems } from './listItems';
-
-
-import Copyright from '../components/Copyright';
-
-const drawerWidth = 240;
-
-const useStyles = makeStyles((theme) => ({
-	root: {
-		display: 'flex',
-	},
-	toolbar: {
-		paddingRight: 24, // keep right padding when drawer closed
-	},
-	toolbarIcon: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'flex-end',
-		padding: '0 8px',
-		...theme.mixins.toolbar,
-	},
-	appBar: {
-		zIndex: theme.zIndex.drawer + 1,
-		transition: theme.transitions.create(['width', 'margin'], {
-			easing: theme.transitions.easing.sharp,
-			duration: theme.transitions.duration.leavingScreen,
-		}),
-	},
-	appBarShift: {
-		marginLeft: drawerWidth,
-		width: `calc(100% - ${drawerWidth}px)`,
-		transition: theme.transitions.create(['width', 'margin'], {
-			easing: theme.transitions.easing.sharp,
-			duration: theme.transitions.duration.enteringScreen,
-		}),
-	},
-	menuButton: {
-		marginRight: 36,
-	},
-	menuButtonHidden: {
-		display: 'none',
-	},
-	title: {
-		flexGrow: 1,
-	},
-	drawerPaper: {
-		position: 'relative',
-		whiteSpace: 'nowrap',
-		width: drawerWidth,
-		transition: theme.transitions.create('width', {
-			easing: theme.transitions.easing.sharp,
-			duration: theme.transitions.duration.enteringScreen,
-		}),
-	},
-	drawerPaperClose: {
-		overflowX: 'hidden',
-		transition: theme.transitions.create('width', {
-			easing: theme.transitions.easing.sharp,
-			duration: theme.transitions.duration.leavingScreen,
-		}),
-		width: theme.spacing(7),
-		[theme.breakpoints.up('sm')]: {
-			width: theme.spacing(9),
-		},
-	},
-	appBarSpacer: theme.mixins.toolbar,
-	content: {
-		flexGrow: 1,
-		height: '100vh',
-		overflow: 'auto',
-	},
-	container: {
-		paddingTop: theme.spacing(4),
-		paddingBottom: theme.spacing(4),
-	},
-	paper: {
-		padding: theme.spacing(2),
-		display: 'flex',
-		overflow: 'auto',
-		flexDirection: 'column',
-	},
-	fixedHeight: {
-		height: 240,
-	},
-}));
-
-export default function Dashboard() {
-	const classes = useStyles();
-	const [open, setOpen] = React.useState(true);
-	const handleDrawerOpen = () => {
-		setOpen(true);
-	};
-	const handleDrawerClose = () => {
-		setOpen(false);
-	};
-	const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-	
-	return (
-		<div className={classes.root}>
-			<AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
-			<Toolbar className={classes.toolbar}>
-				<IconButton
-					edge="start"
-					color="inherit"
-					aria-label="open drawer"
-					onClick={handleDrawerOpen}
-					className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
-				>
-					<MenuIcon />
-				</IconButton>
-				<Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-					Dashboard
-				</Typography>
-				<IconButton color="inherit">
-					<Badge badgeContent={4} color="secondary">
-					<NotificationsIcon />
-					</Badge>
-				</IconButton>
-			</Toolbar>
-			</AppBar>
-			<Drawer
-			variant="permanent"
-			classes={{
-				paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-			}}
-			open={open}
-			>
-			<div className={classes.toolbarIcon}>
-				<IconButton onClick={handleDrawerClose}>
-					<ChevronLeftIcon />
-				</IconButton>
-			</div>
-			<Divider />
-			<List>{mainListItems}</List>
-			<Divider />
-			<List>{secondaryListItems}</List>
-			</Drawer>
-			<main className={classes.content}>
-			<div className={classes.appBarSpacer} />
-			<Container maxWidth="lg" className={classes.container}>
-				<Grid container spacing={3}>
-					{/* Chart */}
-					<Grid item xs={12} md={8} lg={9}>
-					<Paper className={fixedHeightPaper}>
-						<Chart />
-					</Paper>
-					</Grid>
-					{/* Recent Deposits */}
-					<Grid item xs={12} md={4} lg={3}>
-					<Paper className={fixedHeightPaper}>
-						<Deposits />
-					</Paper>
-					</Grid>
-					{/* Recent Orders */}
-					<Grid item xs={12}>
-					<Paper className={classes.paper}>
-						<Orders />
-					</Paper>
-					</Grid>
-				</Grid>
-				<Box pt={4}>
-					<Copyright />
-				</Box>
-			</Container>
-			</main>
-		</div>
-	);
-}  >>
-
-Verticles() ::= << >>
-
-WebVerticle(packageName,name,routes) ::= <<package ~packageName~;
-
-import com.securityx.web.api.LoginRequest;
-import com.securityx.web.domain.*;
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
-import io.vertx.core.Vertx;
-import io.vertx.core.eventbus.DeliveryOptions;
-import io.vertx.core.http.HttpServerOptions;
-import io.vertx.core.json.JsonArray;
-import io.vertx.core.json.JsonObject;
-import io.vertx.core.net.PemKeyCertOptions;
-import io.vertx.ext.auth.KeyStoreOptions;
-import io.vertx.ext.auth.jwt.JWTAuth;
-import io.vertx.ext.auth.jwt.JWTAuthOptions;
-import io.vertx.ext.jwt.JWTOptions;
-import io.vertx.ext.web.Router;
-import io.vertx.ext.web.RoutingContext;
-import io.vertx.ext.web.handler.BodyHandler;
-import io.vertx.ext.web.handler.JWTAuthHandler;
-import io.vertx.ext.web.handler.SessionHandler;
-import io.vertx.ext.web.handler.StaticHandler;
-import io.vertx.ext.web.sstore.LocalSessionStore;
-
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static com.securityx.web.PasswordUtils.verifyUserPassword;
-import static com.securityx.web.WebUtils.sendErrors;
-import static com.securityx.web.WebUtils.sendResponse;
-import static com.securityx.web.api.WebApiJsonFactory.newJWTPayload;
-import static com.securityx.web.api.WebApiJsonFactory.newLoginRequest;
-import static com.securityx.web.domain.ServerJsonFactory.newUserMenu;
-import static com.securityx.web.domain.ServerJsonFactory.newUserSession;
-import static io.netty.handler.codec.http.HttpResponseStatus.*;
-
-public class ~name;format="capitalize"~ extends AbstractVerticle {
-
-	protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name;format="capitalize"~.class);
-
-	@Override
-	public void start(Future<Void> startFuture) throws Exception {
-		log.info("starting");
-
-		final ~name;format="capitalize"~Config config = new ~name;format="capitalize"~Config(config());
-		final Optional<SSLConfig> ssl = Optional.ofNullable(config.getSsl());
-
-		final KeyStoreOptions keyStoreOptions = new KeyStoreOptions().
-					setPath(config.getJwt().getPath()).
-					setPassword(config.getJwt().getPassword()).
-					setType(config.getJwt().getType());
-
-		final JWTAuthOptions jwtAuthOptions = new JWTAuthOptions().setKeyStore(keyStoreOptions);
-		final JWTAuth auth = JWTAuth.create(vertx, jwtAuthOptions);
-
-		final Router router = Router.router(vertx);
-		router.route().handler(BodyHandler.create());
-		router.route().handler(SessionHandler.create(LocalSessionStore.create(vertx)));
-		router.post("/login").handler(routingContext -> login(routingContext, auth, config));
-		router.route("/api/*").handler(JWTAuthHandler.create(auth, "/login"));
-		router.get("/user").handler(routingContext -> getUser(routingContext, config));
-		~routes:{it|router.~it.action~("/api/~it.url~").handler(this::~it.methodName~);};separator="\n"~
-				final HttpServerOptions serverOptions = new HttpServerOptions();
-		ssl.ifPresent(sslConfig ->
-					serverOptions
-								.setSsl(true)
-								.setPemKeyCertOptions(
-										new PemKeyCertOptions().
-													setKeyPath(sslConfig.getKey()).
-													setCertPath(sslConfig.getCert())));
-
-		final StaticHandler staticHandler = StaticHandler.create();
-		staticHandler.setWebRoot(config.getWebRoot());
-		staticHandler.setCachingEnabled(false);
-		staticHandler.setIndexPage("index.html");
-		router.route("/*").handler(staticHandler);
-
-		vertx.createHttpServer(serverOptions).requestHandler(router::accept).listen(config.getPort());
-
-		log.info("server running on " + (ssl.isPresent() ? "https" : "http") + "://" + config.getTcpHost() + ":" + config.getPort());
-		log.info("server running on " + (ssl.isPresent() ? "https" : "http") + "://" + config.getTcpName("securityxresidential.info") + ":" + config.getPort());
-
-		startFuture.succeeded();
-	}
-
-	private void login(RoutingContext routingContext, JWTAuth auth, ~name;format="capitalize"~Config deploymentOptions) {
-		WebUtils.debug("login", routingContext);
-
-		final LoginRequest loginRequest = newLoginRequest(routingContext.getBodyAsJson());
-
-		final Optional<UserConfig> foundUserConfig = deploymentOptions.getJwt().getUsers()
-					.filter(userConfig -> userConfig.getUsername() != null && userConfig.getPassword() != null)
-					.filter(userConfig -> userConfig.getUsername().equals(loginRequest.getUsername()))
-					.findFirst();
-
-		if (!foundUserConfig.isPresent()) {
-				sendErrors(routingContext, UNAUTHORIZED, "User credentials not found");
-				return;
-		}
-
-		final boolean passwordMatch = verifyUserPassword(loginRequest.getPassword(), foundUserConfig.get().getPassword(), foundUserConfig.get().getSalt());
-
-		if (!passwordMatch) {
-				sendErrors(routingContext, UNAUTHORIZED, "User credentials not found");
-				return;
-		}
-
-		final UserSession userSession = newUserSession()
-			.setToken(auth.generateToken(
-				newJWTPayload()
-					.setSub(foundUserConfig.get().getUsername())
-					.getJsonObject(),
-					new JWTOptions()
-						.setExpiresInMinutes(deploymentOptions.getJwt().getExpiresInMinutes())
-						.setSubject(foundUserConfig.get().getUsername())))
-			.setUsername(foundUserConfig.get().getUsername());
-
-		final DeliveryOptions options = new DeliveryOptions().addHeader("action", "getPagesForUser");
-		vertx.eventBus().request("domain.db", new JsonObject().put("username", userSession.getUsername()), options, reply -> {
-			if (reply.succeeded()) {
-				JsonArray body = (JsonArray) reply.result().body();
-				final AtomicInteger key = new AtomicInteger(0);
-				body.stream().map(o -> (JsonObject) o).map(ServerJsonFactory::newUserMenu).filter(userMenu -> userSession.getMenus().noneMatch(userMenu1 -> userMenu1.getLabel().equalsIgnoreCase(userMenu.getUrl()))).forEach(userMenu -> userSession.addMenus(newUserMenu().setKey(key.incrementAndGet()).setUrl("/" + userMenu.getUrl()).setLabel(userMenu.getLabel())));
-				foundUserConfig.get().setSession(userSession);
-				sendResponse(routingContext, OK, new JsonObject().put("user", userSession.getJsonObject()));
-			} else {
-				sendErrors(routingContext, UNAUTHORIZED,  "User login unsuccessfull");
-			}
-		});
-	}
-
-	private void getUser(RoutingContext routingContext, ~name;format="capitalize"~Config deploymentOptions) {
-		WebUtils.debug("getUser", routingContext);
-
-		final String authorization = routingContext.request().getHeader("Authorization");
-		final String token = authorization == null ? null : authorization.substring(7).trim();
-
-		final Optional<UserSession> userSession = deploymentOptions.getJwt().getUsers()
-				.filter(userConfig -> userConfig.getSession() != null)
-				.map(UserConfig::getSession)
-				.filter(session -> session.getToken().equals(token))
-				.findFirst();
-
-		if (!userSession.isPresent())
-			sendErrors(routingContext, UNAUTHORIZED,	"User session not found");
-		else
-			sendResponse(routingContext, OK, new JsonObject().put("user", userSession.get().getJsonObject()));
-	}
-
-	~routes:{it|~it.declaration~};separator="\n\n"~
-
-	private static void getFromDomainDB(Vertx vertx, RoutingContext routingContext, String action, JsonObject params) {
-		vertx.eventBus().request("domain.db", params, new DeliveryOptions().addHeader("action", action), reply -> {
-			if (reply.succeeded()) {
-				sendResponse(routingContext, OK, (JsonObject) reply.result().body());
-			} else {
-				sendErrors(routingContext, INTERNAL_SERVER_ERROR,	"Server Error");
-			}
-		});
-	}
-}  >>
-
-SendEventBusAction(actionName) ::= <<getFromDomainDB(vertx, routingContext, "~actionName~", new JsonObject());  >>
-
-routeHandler(name,statements) ::= <<private void ~name~(RoutingContext routingContext) {
-	WebUtils.debug("~name~", routingContext);
-	~statements:{it|~it~};separator="\n"~
-}  >>
-
-Usecase(name,description,url,action,successStatements,failStatements,domainStatements) ::= <<~name~
+Usecase(name,description,url,parameterName,parameterType,action,successStatements,failStatements,domainStatements) ::= <<~name~
 ~description~
 
 ~url~
+~parameterName~ ~parameterType~
 ~action~
 
 ~successStatements:{it|~it~};separator="\n"~
@@ -1111,10 +772,6 @@ Element(name,props,children) ::= <<<~name~~if(props)~ ~props:{it|~it~};separator
 	~children:{it|~it~};separator="\n"~
 </~name~>~else~ />~endif~  >>
 
-ForwardRef(name,forward) ::= <<const ~name~ = React.forwardRef( (props, ref) => (
-	~forward~
-));  >>
-
 DestructorProp(child,prop) ::= <<const { ~prop:{it|~it~};separator=", "~ } = this.props~if(child)~.~child~~endif~;  >>
 
 returnStatement(condition,element) ::= <<~if(condition)~if (~condition~) ~endif~return (
@@ -1127,9 +784,8 @@ State(values) ::= <<{
 	~values:{it|~it.name~: ~it.value~};separator=",\n"~
 }  >>
 
-ClassComponent(dependencies,components,decorators,name,state,events,methods,renderConstants,returnStatements) ::= <<import React from 'react';
+ClassComponent(dependencies,components,decorators,name,state,constructorStatements,events,methods,renderConstants,returnStatements) ::= <<import React from 'react';
 ~dependencies:{it|~it~};separator="\n"~
-
 ~components:{it|~it~};separator="\n\n"~
 
 ~decorators:{it|~it~};separator="\n"~
@@ -1143,6 +799,8 @@ class ~name~ extends React.Component {
 			~state:{it|~it~};separator=",\n"~;
 		}
 ~endif~
+
+		~constructorStatements:{it|~it~};separator="\n"~
 		~events:{it|this.~it.methodName~ = this.~it.methodName~.bind(this);};separator="\n"~
 	}
 
@@ -1169,6 +827,12 @@ MethodDeclaration(const,name,parameter,statements) ::= <<~if(const)~const ~endif
 } >>
 
 namedImport(names) ::= <<{ ~names:{it|~it~};separator=", "~ }  >>
+
+MapProperty(property,forEach) ::= <<{
+	~property~.map((element) => (
+		~forEach~
+	)) 
+}  >>
 
 MaterialUI() ::= <<  >>
 
@@ -1281,6 +945,10 @@ NameValue(name,value) ::= <<~name~: ~value~  >>
 ReactRouter() ::= << >>
 
 Link(to) ::= <<<Link innerRef={ ref } to="~to~" { ...props } />  >>
+
+ForwardRef(to,argument) ::= <<React.forwardRef((props, ref) => (
+	<RouterLink ref={ref} to={'~to~~if(argument)~/~endif~'~if(argument)~ + ~argument~~endif~} {...props} />
+));  >>
 
 returnStmt(returnValue) ::= <<return ~returnValue~;  >>
 

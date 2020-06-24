@@ -5,20 +5,35 @@
   "templates" : [ {
     "uuid" : "d7f830e8-c2d5-4d7f-a38b-06c42d6317b1",
     "name" : "Block",
-    "text" : "~start~\n\t~scope:{it|~it~};separator=\"\\n\"~\n~end~ ",
+    "text" : "~lines:{it|~it~};separator=\"\\n\"~ ",
     "parameters" : [ {
-      "uuid" : "e125de50-2b10-43a2-86c3-d9efa193b45a",
-      "name" : "start",
+      "uuid" : "50a8fc56-252e-4ef4-9ed9-63bb5ff6d306",
+      "name" : "lines",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "4e1bb39e-5a46-4926-883b-2db89e3b7347",
+    "name" : "Line",
+    "text" : "~line~~if(children)~\n\t~children:{it|~it~};separator=\"\\n\"~~endif~~if(end)~\n~end~~endif~\n~next~ ",
+    "parameters" : [ {
+      "uuid" : "41629b19-2e07-41e5-81e4-1d458e395e1f",
+      "name" : "line",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "7c5c2e52-b3af-4bfb-8d74-51d37be39672",
-      "name" : "scope",
+      "uuid" : "7f2d1878-cdbf-401b-a969-4b5f30a5a618",
+      "name" : "children",
       "type" : "LIST",
       "argumentType" : "Object"
     }, {
-      "uuid" : "b161a0c8-4e4c-439f-89ae-1b8cd78aec67",
+      "uuid" : "3bc9d85f-01c5-4223-926f-273fd1b81d56",
       "name" : "end",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "3c979ccf-0e04-4761-8409-0d2086fa296c",
+      "name" : "next",
       "type" : "SINGLE",
       "argumentType" : "Object"
     } ]

@@ -80,6 +80,7 @@ public class Agent {
 
 	static final String st = "Agent(agentDeclarations) ::= <<import superagentPromise from 'superagent-promise';\n" + 
 				"import _superagent from 'superagent';\n" + 
+				"\n" + 
 				"import appStore from './stores/AppStore';\n" + 
 				"import authStore from './stores/AuthStore';\n" + 
 				"\n" + 
