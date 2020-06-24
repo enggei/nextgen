@@ -18,8 +18,6 @@ ThisExpression(expression) ::= <<this.~expression~  >>
 
 ConstructorCallExpression(className,params) ::= <<~className~(~params:{it|~it~};separator=", "~)  >>
 
-FunctionCallParamExpression(fieldName,expression) ::= <<~fieldName~ = ~expression~  >>
-
 ArrayEqualsExpression(leftArray,rightArray) ::= <<~leftArray~.contentEquals(~rightArray~)  >>
 
 EqualsExpression(lhs,rhs) ::= <<~lhs~ == ~rhs~  >>

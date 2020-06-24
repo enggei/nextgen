@@ -17,7 +17,6 @@ public class KotlinSTTests {
 		testConstructorCallExpression();
 		testEqualsExpression();
 		testFunctionCallExpression();
-		testFunctionCallParamExpression();
 		testLiteralExpression();
 		testNullExpression();
 		testPairExpression();
@@ -110,11 +109,6 @@ public class KotlinSTTests {
 	@org.junit.Test
 	public void testFunctionCallExpression() {
 		System.out.println("\n--- TEST FunctionCallExpression:\n" + newFunctionCallExpression());
-	} 
-
-	@org.junit.Test
-	public void testFunctionCallParamExpression() {
-		System.out.println("\n--- TEST FunctionCallParamExpression:\n" + newFunctionCallParamExpression());
 	} 
 
 	@org.junit.Test

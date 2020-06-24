@@ -724,30 +724,14 @@
       "text" : "~className~(~params:{it|~it~};separator=\", \"~) ",
       "implements" : [ "Expression" ],
       "parameters" : [ {
-        "uuid" : "73eba293-65db-48c3-b73a-8e3ca56b0440",
+        "uuid" : "360193ff-00ca-4e6e-b4f6-99369b465f33",
         "name" : "className",
         "type" : "SINGLE",
         "argumentType" : "String"
       }, {
-        "uuid" : "c289d647-5178-4b7a-9e9e-e000108e5c88",
+        "uuid" : "7a6e6f04-972b-44d6-91fa-07b43ec3e6a9",
         "name" : "params",
         "type" : "LIST",
-        "argumentType" : "FunctionCallParamExpression"
-      } ]
-    }, {
-      "uuid" : "9adacc2f-44d8-4643-bfc7-f58d56e63daf",
-      "name" : "FunctionCallParamExpression",
-      "text" : "~fieldName~ = ~expression~ ",
-      "implements" : [ "Expression" ],
-      "parameters" : [ {
-        "uuid" : "cce67ec6-65b6-4fea-b9a1-c30c87a22bc6",
-        "name" : "fieldName",
-        "type" : "SINGLE",
-        "argumentType" : "String"
-      }, {
-        "uuid" : "a8023104-596a-434d-be2e-56b6e7d96251",
-        "name" : "expression",
-        "type" : "SINGLE",
         "argumentType" : "Expression"
       } ]
     }, {
@@ -880,12 +864,12 @@
       "text" : "~varName~ = ~expression~ ",
       "implements" : [ "Expression" ],
       "parameters" : [ {
-        "uuid" : "f89a8e9d-1240-4838-8623-2957dae338c5",
+        "uuid" : "c9f4cb4f-be1c-41ae-813b-738fb71f21fb",
         "name" : "varName",
         "type" : "SINGLE",
         "argumentType" : "Expression"
       }, {
-        "uuid" : "645fd07e-c645-4b6b-aca4-a29aea13a24d",
+        "uuid" : "8064f1e7-302e-4b31-b3bc-497634f0e2b6",
         "name" : "expression",
         "type" : "SINGLE",
         "argumentType" : "Expression"

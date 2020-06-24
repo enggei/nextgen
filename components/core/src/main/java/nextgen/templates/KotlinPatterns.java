@@ -81,10 +81,12 @@ public class KotlinPatterns extends KotlinST {
               )
               .setExpressionBody(newConstructorCallExpression()
                       .setClassName(className)
-                      .setParams(fields.stream().map(fieldDeclaration -> newFunctionCallParamExpression()
-                              .setFieldName(fieldDeclaration.getName())
-                              .setExpression(newLiteralExpression().setLiteral(fieldDeclaration.getName()))
-                      ).collect(Collectors.toList()))
+                      .setParams(fields.stream()
+                              .map(fieldDeclaration -> newLiteralExpression().setLiteral(fieldDeclaration.getName()))
+                              .map(fieldName -> newAssignExpression()
+                                  .setVarName(fieldName)
+                                  .setExpression(fieldName))
+                              .collect(Collectors.toList()))
               );
    }
 

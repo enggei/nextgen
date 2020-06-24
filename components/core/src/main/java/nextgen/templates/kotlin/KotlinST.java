@@ -13,7 +13,6 @@ public class KotlinST {
 	ConstructorCallExpression.st + "\n" + 
 	EqualsExpression.st + "\n" + 
 	FunctionCallExpression.st + "\n" + 
-	FunctionCallParamExpression.st + "\n" + 
 	LiteralExpression.st + "\n" + 
 	NullExpression.st + "\n" + 
 	PairExpression.st + "\n" + 
@@ -131,10 +130,6 @@ public class KotlinST {
 
 	public static FunctionCallExpression newFunctionCallExpression() {
 		return new FunctionCallExpression(stGroup);
-	} 
-
-	public static FunctionCallParamExpression newFunctionCallParamExpression() {
-		return new FunctionCallParamExpression(stGroup);
 	} 
 
 	public static LiteralExpression newLiteralExpression() {
