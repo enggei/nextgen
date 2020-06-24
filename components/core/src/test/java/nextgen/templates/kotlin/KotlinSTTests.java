@@ -26,7 +26,6 @@ public class KotlinSTTests {
 		testStringLiteralExpression();
 		testThisExpression();
 		testToStringExpression();
-		testVarExpression();
 		testAnnotationDeclaration();
 		testAnnotationParam();
 		testClassDeclaration();
@@ -156,11 +155,6 @@ public class KotlinSTTests {
 	@org.junit.Test
 	public void testToStringExpression() {
 		System.out.println("\n--- TEST ToStringExpression:\n" + newToStringExpression());
-	} 
-
-	@org.junit.Test
-	public void testVarExpression() {
-		System.out.println("\n--- TEST VarExpression:\n" + newVarExpression());
 	} 
 
 	@org.junit.Test

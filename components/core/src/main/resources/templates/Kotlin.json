@@ -671,17 +671,6 @@
       "parameters" : [ ],
       "implements" : [ "Expression" ]
     }, {
-      "uuid" : "c3df2f67-6be2-4eee-9888-5b5d9bf2115f",
-      "name" : "VarExpression",
-      "text" : "~varname~ ",
-      "parameters" : [ {
-        "uuid" : "3164835b-6122-46b0-a7f5-ff084527aee9",
-        "name" : "varname",
-        "type" : "SINGLE",
-        "argumentType" : "String"
-      } ],
-      "implements" : [ "Expression" ]
-    }, {
       "uuid" : "783459c2-2651-498a-bbd1-9ea177d12b0a",
       "name" : "CastExpression",
       "text" : "~expression~ as ~type~ ",
@@ -888,18 +877,18 @@
     }, {
       "uuid" : "e2a37f79-dc3e-4d3a-b31a-089b7f5442ba",
       "name" : "AssignExpression",
-      "text" : "~varExpression~ = ~expression~ ",
+      "text" : "~varName~ = ~expression~ ",
       "implements" : [ "Expression" ],
       "parameters" : [ {
-        "uuid" : "f64636ed-9b28-480e-8039-9cd28262cce4",
-        "name" : "varExpression",
+        "uuid" : "f89a8e9d-1240-4838-8623-2957dae338c5",
+        "name" : "varName",
         "type" : "SINGLE",
         "argumentType" : "Expression"
       }, {
-        "uuid" : "97c25777-213c-4e3c-9ac0-fa6666ebc826",
+        "uuid" : "645fd07e-c645-4b6b-aca4-a29aea13a24d",
         "name" : "expression",
         "type" : "SINGLE",
-        "argumentType" : "VarExpression"
+        "argumentType" : "Expression"
       } ]
     } ]
   }, {

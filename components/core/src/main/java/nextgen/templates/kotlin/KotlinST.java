@@ -22,7 +22,6 @@ public class KotlinST {
 	StringLiteralExpression.st + "\n" + 
 	ThisExpression.st + "\n" + 
 	ToStringExpression.st + "\n" + 
-	VarExpression.st + "\n" + 
 	AnnotationDeclaration.st + "\n" + 
 	AnnotationParam.st + "\n" + 
 	ClassDeclaration.st + "\n" + 
@@ -168,10 +167,6 @@ public class KotlinST {
 
 	public static ToStringExpression newToStringExpression() {
 		return new ToStringExpression(stGroup);
-	} 
-
-	public static VarExpression newVarExpression() {
-		return new VarExpression(stGroup);
 	} 
 
 	public static AnnotationDeclaration newAnnotationDeclaration() {

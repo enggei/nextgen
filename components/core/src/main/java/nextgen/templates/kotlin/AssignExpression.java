@@ -5,8 +5,8 @@ public class AssignExpression implements Expression {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Expression _varExpression;
-	private VarExpression _expression;
+	private Expression _varName;
+	private Expression _expression;
 
 	AssignExpression(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -15,43 +15,43 @@ public class AssignExpression implements Expression {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("AssignExpression");
-		st.add("varExpression", _varExpression);
+		st.add("varName", _varName);
 		st.add("expression", _expression);
 		return st.render().trim();
 	}
 
-	public AssignExpression setVarExpression(Expression value) {
-		this._varExpression = value;
+	public AssignExpression setVarName(Expression value) {
+		this._varName = value;
 		return this;
 	}
 
-	public Expression getVarExpression() {
-		return this._varExpression;
+	public Expression getVarName() {
+		return this._varName;
 	}
 
-	public Expression getVarExpression(Expression defaultValue) {
-		return this._varExpression == null ? defaultValue : this._varExpression;
+	public Expression getVarName(Expression defaultValue) {
+		return this._varName == null ? defaultValue : this._varName;
 	}
 
-	public boolean hasVarExpression() {
-		return this._varExpression != null;
+	public boolean hasVarName() {
+		return this._varName != null;
 	}
 
-	public AssignExpression removeVarExpression() {
-		this._varExpression = null;
+	public AssignExpression removeVarName() {
+		this._varName = null;
 		return this;
 	} 
 
-	public AssignExpression setExpression(VarExpression value) {
+	public AssignExpression setExpression(Expression value) {
 		this._expression = value;
 		return this;
 	}
 
-	public VarExpression getExpression() {
+	public Expression getExpression() {
 		return this._expression;
 	}
 
-	public VarExpression getExpression(VarExpression defaultValue) {
+	public Expression getExpression(Expression defaultValue) {
 		return this._expression == null ? defaultValue : this._expression;
 	}
 
@@ -79,5 +79,5 @@ public class AssignExpression implements Expression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AssignExpression(varExpression,expression) ::= <<~varExpression~ = ~expression~ >>";
+	static final String st = "AssignExpression(varName,expression) ::= <<~varName~ = ~expression~ >>";
 } 

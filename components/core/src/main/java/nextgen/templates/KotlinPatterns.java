@@ -9,11 +9,11 @@ import java.util.stream.Collectors;
 public class KotlinPatterns extends KotlinST {
 
    public static Expression asThisExpression(FieldDeclaration fieldDeclaration) {
-      return newThisExpression().setExpression(newVarExpression().setVarname(fieldDeclaration.getName()));
+      return newThisExpression().setExpression(newLiteralExpression().setLiteral(fieldDeclaration.getName()));
    }
 
    public static Expression asScopeExpression(String scope, FieldDeclaration fieldDeclaration) {
-      return newScopeExpression().setScope(scope).setExpression(newVarExpression().setVarname(fieldDeclaration.getName()));
+      return newScopeExpression().setScope(scope).setExpression(newLiteralExpression().setLiteral(fieldDeclaration.getName()));
    }
 
    public static Expression asFunctionCallExpression(String scope, String functionName) {
@@ -44,7 +44,7 @@ public class KotlinPatterns extends KotlinST {
       return newOverrideHashCode()
          .setReturnStatement(newReturnStatement()
             .setExpression(newFunctionCallExpression().setScope("Objects").setFunctionName("hash")
-               .setArguments(Collections.singletonList(newVarExpression().setVarname(field.getName())))));
+               .setArguments(Collections.singletonList(newLiteralExpression().setLiteral(field.getName())))));
    }
 
    public static OverrideToString createToStringFunction(String className, Collection<FieldDeclaration> fields) {
@@ -60,7 +60,7 @@ public class KotlinPatterns extends KotlinST {
                    );
                } else {
                    tse.setStringExpression(
-                           newSimpleStringExpression().setExpression(newVarExpression().setVarname(fieldDeclaration.getName()))
+                           newSimpleStringExpression().setExpression(newLiteralExpression().setLiteral(fieldDeclaration.getName()))
                    );
                }
                return tse;
@@ -83,7 +83,7 @@ public class KotlinPatterns extends KotlinST {
                       .setClassName(className)
                       .setParams(fields.stream().map(fieldDeclaration -> newFunctionCallParamExpression()
                               .setFieldName(fieldDeclaration.getName())
-                              .setExpression(newVarExpression().setVarname(fieldDeclaration.getName()))
+                              .setExpression(newLiteralExpression().setLiteral(fieldDeclaration.getName()))
                       ).collect(Collectors.toList()))
               );
    }

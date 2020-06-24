@@ -10,8 +10,6 @@ Expressions() ::= << >>
 
 NullExpression() ::= <<null  >>
 
-VarExpression(varname) ::= <<~varname~  >>
-
 CastExpression(expression,type) ::= <<~expression~ as ~type~  >>
 
 FunctionCallExpression(scope,functionName,arguments) ::= <<~if(scope)~~scope~.~endif~~functionName~(~arguments:{it|~it~};separator=", "~)  >>
@@ -40,7 +38,7 @@ LiteralExpression(literal) ::= <<~literal~  >>
 
 StringLiteralExpression(literal) ::= <<"~literal~"  >>
 
-AssignExpression(varExpression,expression) ::= <<~varExpression~ = ~expression~  >>
+AssignExpression(varName,expression) ::= <<~varName~ = ~expression~  >>
 
 Grammar() ::= << >>
 
