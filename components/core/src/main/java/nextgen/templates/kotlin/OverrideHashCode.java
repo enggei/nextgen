@@ -5,6 +5,7 @@ public class OverrideHashCode {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private ReturnStatement _returnStatement;
 
 	OverrideHashCode(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -13,9 +14,31 @@ public class OverrideHashCode {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("OverrideHashCode");
+		st.add("returnStatement", _returnStatement);
 		return st.render().trim();
 	}
 
+	public OverrideHashCode setReturnStatement(ReturnStatement value) {
+		this._returnStatement = value;
+		return this;
+	}
+
+	public ReturnStatement getReturnStatement() {
+		return this._returnStatement;
+	}
+
+	public ReturnStatement getReturnStatement(ReturnStatement defaultValue) {
+		return this._returnStatement == null ? defaultValue : this._returnStatement;
+	}
+
+	public boolean hasReturnStatement() {
+		return this._returnStatement != null;
+	}
+
+	public OverrideHashCode removeReturnStatement() {
+		this._returnStatement = null;
+		return this;
+	} 
 
 
 
@@ -32,7 +55,7 @@ public class OverrideHashCode {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "OverrideHashCode() ::= <<override fun hashCode(): Int {\n" + 
-				"	TODO(\"not implemented\")\n" + 
+	static final String st = "OverrideHashCode(returnStatement) ::= <<override fun hashCode(): Int {\n" + 
+				"	~returnStatement~\n" + 
 				"} >>";
 } 

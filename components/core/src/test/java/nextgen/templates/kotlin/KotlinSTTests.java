@@ -35,6 +35,8 @@ public class KotlinSTTests {
 		testFunctionParam();
 		testPackageDeclaration();
 		testImportStatement();
+		testReturnStatement();
+		testTodoStatement();
 		testArrayInitializer();
 		testEmptyArrayInitializer();
 		testExpressionInitializer();
@@ -177,6 +179,16 @@ public class KotlinSTTests {
 	@org.junit.Test
 	public void testImportStatement() {
 		System.out.println("\n--- TEST ImportStatement:\n" + newImportStatement());
+	} 
+
+	@org.junit.Test
+	public void testReturnStatement() {
+		System.out.println("\n--- TEST ReturnStatement:\n" + newReturnStatement());
+	} 
+
+	@org.junit.Test
+	public void testTodoStatement() {
+		System.out.println("\n--- TEST TodoStatement:\n" + newTodoStatement());
 	} 
 
 	@org.junit.Test

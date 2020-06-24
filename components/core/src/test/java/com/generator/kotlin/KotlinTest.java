@@ -53,11 +53,13 @@ public class KotlinTest {
         TypeDeclaration countryIsPartOfContinentRelationshipType = newNamedType().setName("CountryIsPartOfContinentRelationship");
         ArrayType countryIsPartOfContinentRelationshipTypeArray = newArrayType().setType(countryIsPartOfContinentRelationshipType);
 
+        FieldDeclaration uuidField = newFieldDeclaration(uuidType, "uuid").setInitializer(
+                newExpressionInitializer().setExpression(newFunctionCallExpression().setScope("UUID").setFunctionName("randomUUID"))
+        ).setIsNonMember(true);
+
         List<FieldDeclaration> fields = asList(
                 newFieldDeclaration(nullableLongType, "id").setInitializer(newNullInitializer()).setIsNonMember(true),
-                newFieldDeclaration(uuidType, "uuid").setInitializer(
-                        newExpressionInitializer().setExpression(newFunctionCallExpression().setScope("UUID").setFunctionName("randomUUID"))
-                ).setIsNonMember(true),
+                uuidField,
                 newFieldDeclaration(longType, "epId", true),
                 newFieldDeclaration(stringType, "code", true),
                 newFieldDeclaration(stringType, "name", true),
@@ -85,7 +87,7 @@ public class KotlinTest {
                         fields.stream().filter(fieldDeclaration -> !fieldDeclaration.getName().equals("id")).collect(Collectors.toList()))
                 )
                 .setOverrideToString(createToStringFunction(className, fields))
-                .setOverrideHashCode(newOverrideHashCode())
+                .setOverrideHashCode(createHashCodeFunction(uuidField))
                 .setMembers(singletonList(
                         createCopyFunction(className, fields))
                 );

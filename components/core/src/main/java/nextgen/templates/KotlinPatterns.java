@@ -40,6 +40,13 @@ public class KotlinPatterns extends KotlinST {
             .collect(Collectors.toList()));
    }
 
+   public static OverrideHashCode createHashCodeFunction(FieldDeclaration field) {
+      return newOverrideHashCode()
+         .setReturnStatement(newReturnStatement()
+            .setExpression(newFunctionCallExpression().setScope("Objects").setFunctionName("hash")
+               .setArguments(Collections.singletonList(newVarExpression().setVarname(field.getName())))));
+   }
+
    public static OverrideToString createToStringFunction(String className, Collection<FieldDeclaration> fields) {
       return newOverrideToString()
          .setClassName(className)

@@ -132,8 +132,13 @@
         }, {
           "uuid" : "af33183e-aa15-4220-b24e-2cd3dde33384",
           "name" : "OverrideHashCode",
-          "text" : "override fun hashCode(): Int {\n\tTODO(\"not implemented\")\n} ",
-          "parameters" : [ ]
+          "text" : "override fun hashCode(): Int {\n\t~returnStatement~\n} ",
+          "parameters" : [ {
+            "uuid" : "9a4b6e1a-403f-4191-ac88-ed672132dedd",
+            "name" : "returnStatement",
+            "type" : "SINGLE",
+            "argumentType" : "ReturnStatement"
+          } ]
         }, {
           "uuid" : "91608716-9aa7-41e5-958a-bdce665fd59f",
           "name" : "OverrideToString",
@@ -209,42 +214,42 @@
       }, {
         "uuid" : "927474a1-3d34-4a60-83ca-5025dbd47a19",
         "name" : "FunctionDeclaration",
-        "text" : "~annotations~~if(override)~override ~endif~fun ~name~(~params:{it|~it~};separator=\", \"~): ~returnType~~if(expressionBody)~ =\n\t~expressionBody~~else~ {\n\t~statements~\n}~endif~ ",
+        "text" : "~annotations~~if(override)~override ~endif~fun ~name~(~params:{it|~it~};separator=\", \"~): ~returnType~~if(expressionBody)~ =\n\t~expressionBody~~else~ {\n\t~statements:{it|};separator=\"\\n\"~\n}~endif~ ",
         "parameters" : [ {
-          "uuid" : "0260f194-a1a3-4f68-a26e-c6227e7d9f5e",
+          "uuid" : "a491019b-efa5-4d98-9146-23627a1952b8",
           "name" : "annotations",
           "type" : "SINGLE",
           "argumentType" : "java.util.Collection<AnnotationDeclaration>"
         }, {
-          "uuid" : "c9c8a32b-2cfe-4904-83c2-e9d4825d054e",
+          "uuid" : "a68f61ca-b0a3-429d-927e-39bf8acdae50",
           "name" : "override",
           "type" : "SINGLE",
           "argumentType" : "Boolean"
         }, {
-          "uuid" : "83321b86-ac78-4d09-a3f4-f9144436a38b",
+          "uuid" : "4332042c-71c4-42b7-8bb5-1ed0444994f2",
           "name" : "name",
           "type" : "SINGLE",
           "argumentType" : "String"
         }, {
-          "uuid" : "c15b8c35-4f43-4e65-a568-f2e96777b217",
+          "uuid" : "19f44e89-dc47-4152-8874-ddcec95f803c",
           "name" : "params",
           "type" : "LIST",
           "argumentType" : "FunctionParam"
         }, {
-          "uuid" : "b6267266-54d6-4f91-bf17-0ae5b76f8247",
+          "uuid" : "b7eafaf7-02db-4fea-bfae-0e65842800de",
           "name" : "returnType",
           "type" : "SINGLE",
           "argumentType" : "TypeDeclaration"
         }, {
-          "uuid" : "0d1a2056-12d0-43aa-aa50-fb1d76c2b0c9",
+          "uuid" : "98c67bb6-5e86-40df-81a4-b01a384e0d8e",
           "name" : "expressionBody",
           "type" : "SINGLE",
           "argumentType" : "Expression"
         }, {
-          "uuid" : "5b92c8e7-b383-4b77-a6a5-f1c34dd364b1",
+          "uuid" : "bc27ae77-75ea-49b2-9c7e-975d6b61ccd2",
           "name" : "statements",
-          "type" : "SINGLE",
-          "argumentType" : "Object"
+          "type" : "LIST",
+          "argumentType" : "Statement"
         } ],
         "implements" : [ "CompilationUnit" ],
         "children" : [ {
@@ -288,6 +293,28 @@
           "name" : "name",
           "type" : "SINGLE",
           "argumentType" : "String"
+        } ]
+      }, {
+        "uuid" : "b23e00dd-f748-4d6d-a29b-615e03477ec0",
+        "name" : "TodoStatement",
+        "text" : "TODO(\"~reason~\") ",
+        "implements" : [ "Statement" ],
+        "parameters" : [ {
+          "uuid" : "f7fc9a2a-084c-4009-b9f0-963580b51cbe",
+          "name" : "reason",
+          "type" : "SINGLE",
+          "argumentType" : "String"
+        } ]
+      }, {
+        "uuid" : "9c5c63bd-eba1-4f9c-b355-6ba80a849f9b",
+        "name" : "ReturnStatement",
+        "text" : "return ~expression~ ",
+        "implements" : [ "Statement" ],
+        "parameters" : [ {
+          "uuid" : "cb830691-7484-4976-8d54-c8f00e44ea26",
+          "name" : "expression",
+          "type" : "SINGLE",
+          "argumentType" : "Expression"
         } ]
       } ]
     } ]

@@ -65,8 +65,8 @@ OverrideEquals(className,fields) ::= <<override fun equals(other: Any?): Boolean
 		~fields:{it|~it~};separator=" && "~
 }  >>
 
-OverrideHashCode() ::= <<override fun hashCode(): Int {
-	TODO("not implemented")
+OverrideHashCode(returnStatement) ::= <<override fun hashCode(): Int {
+	~returnStatement~
 }  >>
 
 OverrideToString(className,fields) ::= <<override fun toString(): String {
@@ -80,7 +80,7 @@ Extending(className,params) ::= <<~className~(~params:{it|~it.name~};separator="
 
 FunctionDeclaration(annotations,override,name,params,returnType,expressionBody,statements) ::= <<~annotations~~if(override)~override ~endif~fun ~name~(~params:{it|~it~};separator=", "~): ~returnType~~if(expressionBody)~ =
 	~expressionBody~~else~ {
-	~statements~
+	~statements:{it|};separator="\n"~
 }~endif~  >>
 
 FunctionParam(name,typeDeclaration,defaultValue) ::= <<~name~: ~typeDeclaration~~if(defaultValue)~ = ~defaultValue~~endif~  >>
@@ -88,6 +88,10 @@ FunctionParam(name,typeDeclaration,defaultValue) ::= <<~name~: ~typeDeclaration~
 Statements() ::= << >>
 
 ImportStatement(scope,name) ::= <<import ~scope~.~name~  >>
+
+TodoStatement(reason) ::= <<TODO("~reason~")  >>
+
+ReturnStatement(expression) ::= <<return ~expression~  >>
 
 Initializers() ::= << >>
 

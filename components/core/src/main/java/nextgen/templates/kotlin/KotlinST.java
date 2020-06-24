@@ -31,6 +31,8 @@ public class KotlinST {
 	FunctionParam.st + "\n" + 
 	PackageDeclaration.st + "\n" + 
 	ImportStatement.st + "\n" + 
+	ReturnStatement.st + "\n" + 
+	TodoStatement.st + "\n" + 
 	ArrayInitializer.st + "\n" + 
 	EmptyArrayInitializer.st + "\n" + 
 	ExpressionInitializer.st + "\n" + 
@@ -180,6 +182,14 @@ public class KotlinST {
 
 	public static ImportStatement newImportStatement() {
 		return new ImportStatement(stGroup);
+	} 
+
+	public static ReturnStatement newReturnStatement() {
+		return new ReturnStatement(stGroup);
+	} 
+
+	public static TodoStatement newTodoStatement() {
+		return new TodoStatement(stGroup);
 	} 
 
 	public static ArrayInitializer newArrayInitializer() {
