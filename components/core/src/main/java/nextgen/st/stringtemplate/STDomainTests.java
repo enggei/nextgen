@@ -14,6 +14,10 @@ public class STDomainTests {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("STDomainTests");
@@ -165,4 +169,4 @@ public class STDomainTests {
 				"\n" + 
 				"	~testcases:{it|~it.impl~};separator=\"\\n\\n\"~\n" + 
 				"} >>";
-} 
+}  

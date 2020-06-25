@@ -1,15 +1,15 @@
-package nextgen.st.domain;
+package nextgen.st.model;
 
-public class STGParseResult {
+public class STModel {
 
 	private final io.vertx.core.json.JsonObject jsonObject;
 
-	public STGParseResult() { 
+	public STModel() { 
 		this.jsonObject = new io.vertx.core.json.JsonObject();
 		jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
 	}
 
-	public STGParseResult(io.vertx.core.json.JsonObject jsonObject) { 
+	public STModel(io.vertx.core.json.JsonObject jsonObject) { 
 		this.jsonObject = jsonObject;
 		java.lang.String uuidString = jsonObject.getString("uuid");
 		if (uuidString == null) jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
@@ -23,7 +23,7 @@ public class STGParseResult {
 		return this.jsonObject.getString("uuid");
 	}
 
-	public STGParseResult removeUuid() {
+	public STModel removeUuid() {
 		this.jsonObject.remove("uuid");
 		return this;
 	}
@@ -32,7 +32,7 @@ public class STGParseResult {
 	public boolean equals(java.lang.Object o) { 
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		final STGParseResult other = (STGParseResult) o;
+		final STModel other = (STModel) o;
 		return jsonObject.getString("uuid").equals(other.getJsonObject().getString("uuid"));
 	}
 
@@ -41,28 +41,32 @@ public class STGParseResult {
 		return java.util.Objects.hash(jsonObject.getString("uuid"));
 	}
 
-	public STGParseResult setParsed(STGroupModel value) { 
-		jsonObject.put("parsed", value.getJsonObject());
+	public STModel setStTemplate(String value) { 
+		jsonObject.put("stTemplate", value);
 		return this;
 	}
 
-	public STGroupModel getParsed() { 
-		return jsonObject.getJsonObject("parsed") == null ? null : new STGroupModel(jsonObject.getJsonObject("parsed"));
+	public String getStTemplate() { 
+		return jsonObject.getString("stTemplate");
 	}
 
-	public STGParseResult addErrors(STGError value) { 
-		io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("errors");
-		if (jsonArray == null) jsonObject.put("errors", jsonArray = new io.vertx.core.json.JsonArray());
+	public String getStTemplate(String defaultValue) { 
+		return jsonObject.getString("stTemplate", defaultValue);
+	}
+
+	public STModel addArguments(STArgument value) { 
+		io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("arguments");
+		if (jsonArray == null) jsonObject.put("arguments", jsonArray = new io.vertx.core.json.JsonArray());
 		jsonArray.add(value.getJsonObject());
 		return this;
 	}
 
-	public java.util.stream.Stream<STGError> getErrors() { 
-		return jsonObject.getJsonArray("errors", new io.vertx.core.json.JsonArray()).stream().map((o) -> new STGError((io.vertx.core.json.JsonObject) o));
+	public java.util.stream.Stream<STArgument> getArguments() { 
+		return jsonObject.getJsonArray("arguments", new io.vertx.core.json.JsonArray()).stream().map((o) -> new STArgument((io.vertx.core.json.JsonObject) o));
 	}
 
-	public STGParseResult removeErrors(STGError value) { 
-		final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("errors", new io.vertx.core.json.JsonArray());
+	public STModel removeArguments(STArgument value) { 
+		final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("arguments", new io.vertx.core.json.JsonArray());
 		for (int i = 0; i < jsonArray.size(); i++)  { 
 			final io.vertx.core.json.JsonObject o = jsonArray.getJsonObject(i);
 			if (value.getJsonObject().getString("uuid").equals(o.getString("uuid")))  { 
@@ -73,8 +77,8 @@ public class STGParseResult {
 		return this;
 	}
 
-	public STGParseResult clearErrors() { 
-		jsonObject.put("errors", new io.vertx.core.json.JsonArray());
+	public STModel clearArguments() { 
+		jsonObject.put("arguments", new io.vertx.core.json.JsonArray());
 		return this;
 	}
 

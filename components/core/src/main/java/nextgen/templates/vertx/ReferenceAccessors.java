@@ -13,6 +13,10 @@ public class ReferenceAccessors {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("referenceAccessors");
@@ -111,4 +115,4 @@ public class ReferenceAccessors {
 				"public ~type~ get~name;format=\"capitalize\"~() { \n" + 
 				"	return jsonObject.getJsonObject(\"~name~\") == null ? null : new ~type~(jsonObject.getJsonObject(\"~name~\"));\n" + 
 				"} >>";
-} 
+}  

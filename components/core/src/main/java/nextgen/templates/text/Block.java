@@ -11,6 +11,10 @@ public class Block {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Block");
@@ -63,4 +67,4 @@ public class Block {
 	}
 
 	static final String st = "Block(lines) ::= <<~lines:{it|~it~};separator=\"\\n\"~ >>";
-} 
+}  

@@ -11,6 +11,10 @@ public class TemplateTestMethod {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("templateTestMethod");
@@ -59,4 +63,4 @@ public class TemplateTestMethod {
 				"public void test~template;format=\"capitalize\"~() {\n" + 
 				"	System.out.println(\"\\n--- TEST ~template~:\\n\" + new~template;format=\"capitalize\"~());\n" + 
 				"} >>";
-} 
+}  

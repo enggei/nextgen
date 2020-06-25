@@ -1,10 +1,12 @@
 package antlr;
 
 import org.antlr.parser.antlr4.*;
-import org.antlr.parser.st4.STGLexer;
-import org.antlr.parser.st4.STGParser;
-import org.antlr.parser.st4.STGParserBaseVisitor;
+import org.antlr.parser.st4.*;
 import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.tree.ErrorNode;
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+import org.stringtemplate.v4.STGroupFile;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,13 +24,22 @@ public class Test {
 
     public static void testStringtemplateParser() {
         try {
-            InputStream inputStream = new FileInputStream(new File("/home/goe/projects/nextgen/components/core/src/main/java/nextgen/templates/git/Git.stg"));
-            Lexer lexer = new STGLexer(CharStreams.fromStream(inputStream));
+            final File file = new File("/home/goe/projects/nextgen/components/core/src/test/java/antlr/Test.stg");
+
+//            final STGroup stGroup = new STGroupFile(file.getAbsolutePath());
+//            final ST clone = stGroup.getInstanceOf("clone");
+//            System.out.println(clone.render());
+
+            InputStream inputStream = new FileInputStream(file);
+            Lexer lexer = new STLexer(CharStreams.fromStream(inputStream));
+//            Lexer lexer = new STGLexer(CharStreams.fromStream(inputStream));
             TokenStream tokenStream = new CommonTokenStream(lexer);
-            STGParser parser = new STGParser(tokenStream);
+            STParser parser = new STParser(tokenStream);
+//            STGParser parser = new STGParser(tokenStream);
 
             final DebugSTGVisitor debugVisitor = new DebugSTGVisitor();
-            debugVisitor.visit(parser.group());
+            debugVisitor.visit(parser.template());
+//            debugVisitor.visit(parser.group());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -36,6 +47,11 @@ public class Test {
     }
 
     private static final class DebugSTGVisitor extends STGParserBaseVisitor<Object> {
+
+        @Override
+        public Object visitErrorNode(ErrorNode node) {
+            return super.visitErrorNode(node);
+        }
 
         @Override
         public Object visitGroup(STGParser.GroupContext ctx) {

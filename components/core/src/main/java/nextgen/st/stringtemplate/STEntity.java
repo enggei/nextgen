@@ -21,6 +21,10 @@ public class STEntity {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("STEntity");
@@ -413,6 +417,10 @@ public class STEntity {
 				"		this.stGroup = stGroup;\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	public java.util.UUID uuid() {\n" + 
+				"		return uuid;\n" + 
+				"	}\n" + 
+				"\n" + 
 				"	@Override\n" + 
 				"	public String toString() {\n" + 
 				"		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf(\"~template~\");\n" + 
@@ -443,4 +451,4 @@ public class STEntity {
 				"	\n" + 
 				"	~if(stString)~static final String st = \"~stString~\";~endif~\n" + 
 				"} >>";
-} 
+}  

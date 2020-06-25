@@ -11,6 +11,10 @@ public class Single implements TestInterface {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("single");
@@ -55,5 +59,6 @@ public class Single implements TestInterface {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "single(value) ::= <<single : ~value~ >>";
-} 
+	static final String st = "single(value) ::= <<single : \n" + 
+				"	~value~ >>";
+}  

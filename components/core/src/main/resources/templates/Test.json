@@ -10,9 +10,9 @@
     "children" : [ {
       "uuid" : "2acee399-79fc-46ff-b0c2-89f23ae0651b",
       "name" : "single",
-      "text" : "single : ~value~ ",
+      "text" : "single : \n\t~value~ ",
       "parameters" : [ {
-        "uuid" : "dd7e1d48-be96-43ae-a87d-d61bd96d2b01",
+        "uuid" : "25ccfeda-fb71-4c50-b9f3-698bdc7f5c1e",
         "name" : "value",
         "type" : "SINGLE",
         "argumentType" : "String"
@@ -22,9 +22,9 @@
     }, {
       "uuid" : "c41ba352-9f52-4dca-a44a-ad9f3c035d14",
       "name" : "list",
-      "text" : "list : ~value:{it|~it~};separator=\", \"~",
+      "text" : "list : \n\t~value:{it|~it~};separator=\"\\n\"~ ",
       "parameters" : [ {
-        "uuid" : "10cad08b-a095-4c39-a921-c0d4bd3a0e4e",
+        "uuid" : "22a67c79-8d90-4fa1-9451-fdb1e4005591",
         "name" : "value",
         "type" : "LIST",
         "argumentType" : "Integer"
@@ -33,21 +33,21 @@
     }, {
       "uuid" : "3e4cd3ac-b36a-48c9-9197-00e3ca022235",
       "name" : "kv",
-      "text" : "kv : ~value:{it|~it.key~:~it.value~};separator=\"\\n\"~",
+      "text" : "kv : \n\t~value:{it|~it.key~ : ~it.value~};separator=\"\\n\"~ ",
       "parameters" : [ {
-        "uuid" : "c5e7e914-5152-403f-aa6a-1a6bffc6b349",
+        "uuid" : "fcfc3dee-4878-45ce-ab82-53ecebb9b3c5",
         "name" : "value",
         "type" : "KVLIST",
+        "argumentType" : "Object",
         "keys" : [ {
-          "uuid" : "030f73c9-ef3a-4355-8985-c36fcc9588bf",
+          "uuid" : "41e12bb7-1622-4264-a6fd-701d660c4fa3",
           "name" : "key",
           "argumentType" : "Integer"
         }, {
-          "uuid" : "a4c11373-fcea-4173-98fb-86f131842e11",
+          "uuid" : "56059869-e621-4075-941c-da80226ff096",
           "name" : "value",
           "argumentType" : "Long"
-        } ],
-        "argumentType" : "String"
+        } ]
       } ],
       "implements" : [ "TestInterface" ]
     }, {

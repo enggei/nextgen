@@ -10,11 +10,14 @@ Test conditional parsing
 
 Test complex combination of all types >>
 
-single(value) ::= <<single : ~value~  >>
+single(value) ::= <<single : 
+	~value~  >>
 
-list(value) ::= <<list : ~value:{it|~it~};separator=", "~ >>
+list(value) ::= <<list : 
+	~value:{it|~it~};separator="\n"~  >>
 
-kv(value) ::= <<kv : ~value:{it|~it.key~:~it.value~};separator="\n"~ >>
+kv(value) ::= <<kv : 
+	~value:{it|~it.key~ : ~it.value~};separator="\n"~  >>
 
 allTypes(single,list,kvList,cond1,cond2) ::= <<A single value, ~single~, 
 then a list ~list:{it|~it~};separator=","~, 

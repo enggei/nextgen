@@ -13,6 +13,10 @@ public class JsonFactory {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("JsonFactory");
@@ -142,4 +146,4 @@ public class JsonFactory {
 				"	\\}\n" + 
 				"};separator=\"\\n\"~\n" + 
 				"} >>";
-} 
+}  

@@ -19,6 +19,10 @@ public class STGError {
 		return this.jsonObject;
 	}
 
+	public String uuid() {
+		return this.jsonObject.getString("uuid");
+	}
+
 	public STGError removeUuid() {
 		this.jsonObject.remove("uuid");
 		return this;

@@ -19,6 +19,10 @@ public class STEnumValue {
 		return this.jsonObject;
 	}
 
+	public String uuid() {
+		return this.jsonObject.getString("uuid");
+	}
+
 	public STEnumValue removeUuid() {
 		this.jsonObject.remove("uuid");
 		return this;

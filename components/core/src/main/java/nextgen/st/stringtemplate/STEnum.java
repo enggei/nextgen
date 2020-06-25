@@ -13,6 +13,10 @@ public class STEnum {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("STEnum");
@@ -115,4 +119,4 @@ public class STEnum {
 				"\n" + 
 				"	~enumValues:{it|~it~};separator=\",\\n\"~\n" + 
 				"} >>";
-} 
+}  

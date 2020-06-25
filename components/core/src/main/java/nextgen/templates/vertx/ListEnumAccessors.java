@@ -13,6 +13,10 @@ public class ListEnumAccessors {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("listEnumAccessors");
@@ -124,4 +128,4 @@ public class ListEnumAccessors {
 				"	jsonObject.put(\"~name~\", new io.vertx.core.json.JsonArray());\n" + 
 				"	return this;\n" + 
 				"} >>";
-} 
+}  

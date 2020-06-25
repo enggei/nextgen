@@ -12,6 +12,10 @@ public class EmbeddedKVConditional {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("embeddedKVConditional");
@@ -118,4 +122,4 @@ public class EmbeddedKVConditional {
 	}
 
 	static final String st = "embeddedKVConditional(fields,PROP) ::= <<~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~ >>";
-} 
+}  

@@ -13,6 +13,10 @@ public class EntityListAccessors {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("entityListAccessors");
@@ -131,4 +135,4 @@ public class EntityListAccessors {
 				"public java.util.List<~if(type)~~type~~else~Object~endif~> get~name;format=\"capitalize\"~() {\n" + 
 				"	return this._~name~;\n" + 
 				"} >>";
-} 
+}  

@@ -10,6 +10,10 @@ public class ParameterTests {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ParameterTests");
@@ -41,4 +45,4 @@ public class ParameterTests {
 				"Test conditional parsing\n" + 
 				"\n" + 
 				"Test complex combination of all types >>";
-} 
+}  

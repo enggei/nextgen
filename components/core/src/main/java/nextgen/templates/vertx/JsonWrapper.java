@@ -16,6 +16,10 @@ public class JsonWrapper {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("JsonWrapper");
@@ -233,6 +237,10 @@ public class JsonWrapper {
 				"		return this.jsonObject;\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	public String uuid() {\n" + 
+				"		return this.jsonObject.getString(\"uuid\");\n" + 
+				"	}\n" + 
+				"\n" + 
 				"	public ~name;format=\"capitalize\"~ removeUuid() {\n" + 
 				"		this.jsonObject.remove(\"uuid\");\n" + 
 				"		return this;\n" + 
@@ -260,4 +268,4 @@ public class JsonWrapper {
 				"		return ~if(lexical)~jsonObject.getString(\"~lexical~\")~else~jsonObject.encode()~endif~;\n" + 
 				"	}\n" + 
 				"} >>";
-} 
+}  

@@ -19,6 +19,10 @@ public class STInterface {
 		return this.jsonObject;
 	}
 
+	public String uuid() {
+		return this.jsonObject.getString("uuid");
+	}
+
 	public STInterface removeUuid() {
 		this.jsonObject.remove("uuid");
 		return this;

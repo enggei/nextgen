@@ -1,15 +1,15 @@
-package nextgen.st.domain;
+package nextgen.st.model;
 
-public class STParameterKey {
+public class STValue {
 
 	private final io.vertx.core.json.JsonObject jsonObject;
 
-	public STParameterKey() { 
+	public STValue() { 
 		this.jsonObject = new io.vertx.core.json.JsonObject();
 		jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
 	}
 
-	public STParameterKey(io.vertx.core.json.JsonObject jsonObject) { 
+	public STValue(io.vertx.core.json.JsonObject jsonObject) { 
 		this.jsonObject = jsonObject;
 		java.lang.String uuidString = jsonObject.getString("uuid");
 		if (uuidString == null) jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
@@ -23,7 +23,7 @@ public class STParameterKey {
 		return this.jsonObject.getString("uuid");
 	}
 
-	public STParameterKey removeUuid() {
+	public STValue removeUuid() {
 		this.jsonObject.remove("uuid");
 		return this;
 	}
@@ -32,7 +32,7 @@ public class STParameterKey {
 	public boolean equals(java.lang.Object o) { 
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		final STParameterKey other = (STParameterKey) o;
+		final STValue other = (STValue) o;
 		return jsonObject.getString("uuid").equals(other.getJsonObject().getString("uuid"));
 	}
 
@@ -41,30 +41,31 @@ public class STParameterKey {
 		return java.util.Objects.hash(jsonObject.getString("uuid"));
 	}
 
-	public STParameterKey setName(String value) { 
-		jsonObject.put("name", value);
+	public STValue setType(STValueType value) { 
+		if (value == null) return this;
+		jsonObject.put("type", value.name());
 		return this;
 	}
 
-	public String getName() { 
-		return jsonObject.getString("name");
+	public STValueType getType() { 
+		return getType(null);
 	}
 
-	public String getName(String defaultValue) { 
-		return jsonObject.getString("name", defaultValue);
+	public STValueType getType(STValueType defaultValue) { 
+		return jsonObject.getString("type") == null ? defaultValue : STValueType.valueOf(jsonObject.getString("type"));
 	}
 
-	public STParameterKey setArgumentType(String value) { 
-		jsonObject.put("argumentType", value);
+	public STValue setValue(String value) { 
+		jsonObject.put("value", value);
 		return this;
 	}
 
-	public String getArgumentType() { 
-		return jsonObject.getString("argumentType");
+	public String getValue() { 
+		return jsonObject.getString("value");
 	}
 
-	public String getArgumentType(String defaultValue) { 
-		return jsonObject.getString("argumentType", defaultValue);
+	public String getValue(String defaultValue) { 
+		return jsonObject.getString("value", defaultValue);
 	}
 
 

@@ -11,6 +11,10 @@ public class StgString {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("stgString");
@@ -66,4 +70,4 @@ public class StgString {
 				"	\"eom() ::= \\\"}\\\"\\\\n\" +\n" + 
 				"	\"gt() ::= \\\">\\\"\\\\n\"~if(templates)~ +\n" + 
 				"	~templates:{it|~it~.st + \"\\\\n\"};separator=\" + \\n\"~~else~~endif~ >>";
-} 
+}  

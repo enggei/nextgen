@@ -19,6 +19,10 @@ public class STAppModel {
 		return this.jsonObject;
 	}
 
+	public String uuid() {
+		return this.jsonObject.getString("uuid");
+	}
+
 	public STAppModel removeUuid() {
 		this.jsonObject.remove("uuid");
 		return this;

@@ -11,6 +11,10 @@ public class NewEntityInstance {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("newEntityInstance");
@@ -58,4 +62,4 @@ public class NewEntityInstance {
 	static final String st = "newEntityInstance(entityName) ::= <<public static ~entityName~ new~entityName~() {\n" + 
 				"	return new ~entityName~(stGroup);\n" + 
 				"} >>";
-} 
+}  

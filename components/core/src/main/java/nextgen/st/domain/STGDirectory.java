@@ -19,6 +19,10 @@ public class STGDirectory {
 		return this.jsonObject;
 	}
 
+	public String uuid() {
+		return this.jsonObject.getString("uuid");
+	}
+
 	public STGDirectory removeUuid() {
 		this.jsonObject.remove("uuid");
 		return this;

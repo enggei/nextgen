@@ -13,6 +13,10 @@ public class DomainAction {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("DomainAction");
@@ -143,4 +147,4 @@ public class DomainAction {
 				"		message.fail(ErrorCodes.DB_ERROR.ordinal(), throwable.getMessage());\n" + 
 				"	});\n" + 
 				"} >>";
-} 
+}  

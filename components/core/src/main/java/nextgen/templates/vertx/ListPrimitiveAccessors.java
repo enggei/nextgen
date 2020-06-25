@@ -13,6 +13,10 @@ public class ListPrimitiveAccessors {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("listPrimitiveAccessors");
@@ -130,4 +134,4 @@ public class ListPrimitiveAccessors {
 				"	jsonObject.put(\"~name~\", new io.vertx.core.json.JsonArray());\n" + 
 				"	return this;\n" + 
 				"} >>";
-} 
+}  

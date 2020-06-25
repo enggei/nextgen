@@ -12,6 +12,10 @@ public class Conditional {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("conditional");
@@ -80,4 +84,4 @@ public class Conditional {
 	}
 
 	static final String st = "conditional(condition1,condition2) ::= <<~if(condition1)~condition1: ~condition1~~elseif(condition2)~isCondition2~else~~endif~ >>";
-} 
+}  

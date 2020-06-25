@@ -14,6 +14,10 @@ public class Line {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Line");
@@ -137,4 +141,4 @@ public class Line {
 				"	~children:{it|~it~};separator=\"\\n\"~~endif~~if(end)~\n" + 
 				"~end~~endif~\n" + 
 				"~next~ >>";
-} 
+}  

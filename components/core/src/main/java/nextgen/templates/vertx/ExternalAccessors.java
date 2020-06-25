@@ -13,6 +13,10 @@ public class ExternalAccessors {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("externalAccessors");
@@ -115,4 +119,4 @@ public class ExternalAccessors {
 				"public ~type~ get~name;format=\"capitalize\"~(~type~ defaultValue) { \n" + 
 				"	return this._~name~ == null ? defaultValue : this._~name~;\n" + 
 				"} >>";
-} 
+}  

@@ -12,6 +12,10 @@ public class SendEventBusAction {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("SendEventBusAction");
@@ -94,4 +98,4 @@ public class SendEventBusAction {
 	}
 
 	static final String st = "SendEventBusAction(actionName,params) ::= <<getFromDomainDB(vertx, routingContext, \"~actionName~\", new JsonObject()~if(params)~.~params:{it|put(\"~it.name~\", routingContext.request().getParam(\"~it.name~\"))}~~endif~); >>";
-} 
+}  

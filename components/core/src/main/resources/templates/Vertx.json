@@ -10,47 +10,47 @@
     "children" : [ {
       "uuid" : "4a756317-c8b7-44c4-a677-68c57d064ab6",
       "name" : "JsonWrapper",
-      "text" : "package ~package~;\n\npublic class ~name;format=\"capitalize\"~ {\n\n\tprivate final io.vertx.core.json.JsonObject jsonObject;\n\t~externalFields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\n\tpublic ~name;format=\"capitalize\"~() { \n\t\tthis.jsonObject = new io.vertx.core.json.JsonObject();\n\t\tjsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic ~name;format=\"capitalize\"~(io.vertx.core.json.JsonObject jsonObject) { \n\t\tthis.jsonObject = jsonObject;\n\t\tjava.lang.String uuidString = jsonObject.getString(\"uuid\");\n\t\tif (uuidString == null) jsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic io.vertx.core.json.JsonObject getJsonObject() { \n\t\treturn this.jsonObject;\n\t}\n\n\tpublic ~name;format=\"capitalize\"~ removeUuid() {\n\t\tthis.jsonObject.remove(\"uuid\");\n\t\treturn this;\n\t}\n\n\t@Override\n\tpublic boolean equals(java.lang.Object o) { \n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\tfinal ~name;format=\"capitalize\"~ other = (~name;format=\"capitalize\"~) o;\n\t\treturn jsonObject.getString(\"uuid\").equals(other.getJsonObject().getString(\"uuid\"));\n\t}\n\n\t@Override\n\tpublic int hashCode() { \n\t\treturn java.util.Objects.hash(jsonObject.getString(\"uuid\"));\n\t}\n\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n\n\t~neoNodeMapper~\n\n\t@Override\n\tpublic java.lang.String toString() { \n\t\treturn ~if(lexical)~jsonObject.getString(\"~lexical~\")~else~jsonObject.encode()~endif~;\n\t}\n} ",
+      "text" : "package ~package~;\n\npublic class ~name;format=\"capitalize\"~ {\n\n\tprivate final io.vertx.core.json.JsonObject jsonObject;\n\t~externalFields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\n\tpublic ~name;format=\"capitalize\"~() { \n\t\tthis.jsonObject = new io.vertx.core.json.JsonObject();\n\t\tjsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic ~name;format=\"capitalize\"~(io.vertx.core.json.JsonObject jsonObject) { \n\t\tthis.jsonObject = jsonObject;\n\t\tjava.lang.String uuidString = jsonObject.getString(\"uuid\");\n\t\tif (uuidString == null) jsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic io.vertx.core.json.JsonObject getJsonObject() { \n\t\treturn this.jsonObject;\n\t}\n\n\tpublic String uuid() {\n\t\treturn this.jsonObject.getString(\"uuid\");\n\t}\n\n\tpublic ~name;format=\"capitalize\"~ removeUuid() {\n\t\tthis.jsonObject.remove(\"uuid\");\n\t\treturn this;\n\t}\n\n\t@Override\n\tpublic boolean equals(java.lang.Object o) { \n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\tfinal ~name;format=\"capitalize\"~ other = (~name;format=\"capitalize\"~) o;\n\t\treturn jsonObject.getString(\"uuid\").equals(other.getJsonObject().getString(\"uuid\"));\n\t}\n\n\t@Override\n\tpublic int hashCode() { \n\t\treturn java.util.Objects.hash(jsonObject.getString(\"uuid\"));\n\t}\n\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n\n\t~neoNodeMapper~\n\n\t@Override\n\tpublic java.lang.String toString() { \n\t\treturn ~if(lexical)~jsonObject.getString(\"~lexical~\")~else~jsonObject.encode()~endif~;\n\t}\n} ",
       "parameters" : [ {
-        "uuid" : "2da1a664-0aae-4f5d-8a27-c72d60243f4e",
+        "uuid" : "4d639a81-c7d5-4a31-aeb7-dc34b6e37a3d",
         "name" : "package",
         "type" : "SINGLE",
         "argumentType" : "String"
       }, {
-        "uuid" : "e397cf7f-d14c-430c-a49c-ee8e60fdb4df",
+        "uuid" : "cf2cc501-9e14-4e59-bec9-ef952a1d4da6",
         "name" : "name",
         "type" : "SINGLE",
         "argumentType" : "String"
       }, {
-        "uuid" : "96ac093b-96bc-434b-8612-23e3a47ddbcd",
+        "uuid" : "a9ef4ef0-acf7-4c48-bedf-26d2cd61115f",
         "name" : "externalFields",
         "type" : "KVLIST",
         "argumentType" : "Object",
         "keys" : [ {
-          "uuid" : "51ab5fba-b7f1-4cb1-b24c-17b4db289696",
+          "uuid" : "b56fa0c7-a7b9-4356-93a7-25d613fc3aff",
           "name" : "type",
           "argumentType" : "Object"
         }, {
-          "uuid" : "6c49261a-f4ae-4cac-a420-b04d237fbc62",
+          "uuid" : "bdb93ebe-322c-44c6-baa6-2d6f4cfe463f",
           "name" : "name",
           "argumentType" : "String"
         }, {
-          "uuid" : "ccc917a5-e150-481f-b924-5a1b7b76d836",
+          "uuid" : "0a68c542-044e-4b17-ae24-8f70484e3b15",
           "name" : "initializer",
           "argumentType" : "Object"
         } ]
       }, {
-        "uuid" : "24ed3cb9-319c-4629-aaf2-089b8fd4f7f5",
+        "uuid" : "733aec27-d21b-4751-82ab-02207cf0feae",
         "name" : "accessors",
         "type" : "LIST",
         "argumentType" : "Object"
       }, {
-        "uuid" : "0b80270d-70d7-4aec-9cfc-cd44763d6003",
+        "uuid" : "9884634b-6558-45f7-8c41-756730c2261b",
         "name" : "neoNodeMapper",
         "type" : "SINGLE",
         "argumentType" : "Object"
       }, {
-        "uuid" : "c1cdf046-0f90-482d-8f2f-b4e8d6caf680",
+        "uuid" : "4eec6de0-1ca1-4d42-9bcb-2d4e3ddb5210",
         "name" : "lexical",
         "type" : "SINGLE",
         "argumentType" : "Object"

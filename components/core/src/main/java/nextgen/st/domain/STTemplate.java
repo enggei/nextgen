@@ -19,6 +19,10 @@ public class STTemplate {
 		return this.jsonObject;
 	}
 
+	public String uuid() {
+		return this.jsonObject.getString("uuid");
+	}
+
 	public STTemplate removeUuid() {
 		this.jsonObject.remove("uuid");
 		return this;

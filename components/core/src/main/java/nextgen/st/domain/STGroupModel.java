@@ -19,6 +19,10 @@ public class STGroupModel {
 		return this.jsonObject;
 	}
 
+	public String uuid() {
+		return this.jsonObject.getString("uuid");
+	}
+
 	public STGroupModel removeUuid() {
 		this.jsonObject.remove("uuid");
 		return this;

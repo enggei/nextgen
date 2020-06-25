@@ -19,6 +19,10 @@ public class STParameter {
 		return this.jsonObject;
 	}
 
+	public String uuid() {
+		return this.jsonObject.getString("uuid");
+	}
+
 	public STParameter removeUuid() {
 		this.jsonObject.remove("uuid");
 		return this;

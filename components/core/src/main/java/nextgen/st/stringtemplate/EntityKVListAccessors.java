@@ -13,6 +13,10 @@ public class EntityKVListAccessors {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("entityKVListAccessors");
@@ -161,4 +165,4 @@ public class EntityKVListAccessors {
 				"~eom()~\n" + 
 				"	};separator=\"\\n\"~\n" + 
 				"} >>";
-} 
+}  

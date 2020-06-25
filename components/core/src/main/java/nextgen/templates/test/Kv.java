@@ -11,6 +11,10 @@ public class Kv implements TestInterface {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("kv");
@@ -78,5 +82,6 @@ public class Kv implements TestInterface {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "kv(value) ::= <<kv : ~value:{it|~it.key~:~it.value~};separator=\"\\n\"~ >>";
-} 
+	static final String st = "kv(value) ::= <<kv : \n" + 
+				"	~value:{it|~it.key~ : ~it.value~};separator=\"\\n\"~ >>";
+}  

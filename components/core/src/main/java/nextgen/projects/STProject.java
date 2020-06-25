@@ -1,7 +1,8 @@
 package nextgen.projects;
 
-import nextgen.templates.DomainPatterns;
+import nextgen.templates.JavaPatterns;
 import nextgen.templates.domain.Entity;
+import nextgen.templates.java.PackageDeclaration;
 import org.junit.Test;
 
 import java.io.File;
@@ -14,7 +15,32 @@ public class STProject {
     private final File javaMainSrc = new File(root, "src/main/java");
     private final File javaTestSrc = new File(root, "src/test/java");
 
-    private final String stDomainPackage = "nextgen.st.domain";
+    private final PackageDeclaration stDomainPackage = JavaPatterns.newPackageDeclaration("nextgen.st.domain");
+    private final PackageDeclaration stModelPackage = JavaPatterns.newPackageDeclaration("nextgen.st.model");
+
+    @Test
+    public void generateModellingDomain() {
+
+        final Entity stValue = newEntity("STValue")
+                .addRelations(newEnumField("type", "STValueType", "STMODEL,PRIMITIVE"))
+                .addRelations(newStringField("value"));
+
+        writeJsonWrapper(javaTestSrc, stModelPackage.getName(), newDomain("STModel")
+                .addEntities(newEntity("STModule")
+                        .addRelations(newStringField("name"))
+                        .addRelations(newOneToManyString("stGroups"))
+                        .addRelations(newOneToMany("models", newEntity("STModel")
+                                .addRelations(newStringField("stTemplate"))
+                                .addRelations(newOneToMany("arguments", newEntity("STArgument")
+                                        .addRelations(newStringField("stParameter"))
+                                        .addRelations(newOneToOne("value", stValue))
+                                        .addRelations(newOneToMany("keyValues", newEntity("STArgumentKV")
+                                                .addRelations(newStringField("key"))
+                                                .addRelations(newOneToOne("value", stValue))))))))
+                        .addRelations(newOneToMany("values", stValue))
+                )
+        );
+    }
 
     @Test
     public void generateDomain() {
@@ -43,7 +69,7 @@ public class STProject {
                                 .addRelations(newStringField("name", true))
                                 .addRelations(newStringField("lexical"))))));
 
-        DomainPatterns.writeJsonWrapper(javaMainSrc, stDomainPackage, newDomain("ST")
+        writeJsonWrapper(javaMainSrc, stDomainPackage.getName(), newDomain("ST")
                 .addEntities(newEntity("STAppModel")
                         .addRelations(newStringField("generatorRoot"))
                         .addRelations(newStringField("generatorPackage"))
@@ -61,5 +87,4 @@ public class STProject {
                                 .addRelations(newIntegerField("line"))
                                 .addRelations(newIntegerField("charPosition"))))));
     }
-
 }

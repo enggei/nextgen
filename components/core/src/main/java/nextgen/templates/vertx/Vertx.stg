@@ -106,6 +106,10 @@ public class ~name;format="capitalize"~ {
 		return this.jsonObject;
 	}
 
+	public String uuid() {
+		return this.jsonObject.getString("uuid");
+	}
+
 	public ~name;format="capitalize"~ removeUuid() {
 		this.jsonObject.remove("uuid");
 		return this;
