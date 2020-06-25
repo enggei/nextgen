@@ -22,10 +22,12 @@ import static nextgen.st.parser.AstNodeType.*;
 
 public class STParser {
 
+    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STParser.class);
+
     public static boolean debug = false;
 
     public static void main(String[] args) {
-        STParser.parse(new File("/home/goe/projects/nextgen/components/core/src/main/java/nextgen/templates/test/Test.stg"));
+        STParser.parse(new File("./components/core/src/main/java/nextgen/templates/test/Test.stg"));
     }
 
     public static STGParseResult parse(File stgFile) {
@@ -91,8 +93,8 @@ public class STParser {
                 .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
                 .forEach(st -> {
 
-                    if (debug) System.out.println("\n--- " + st.getName());
-                    if (debug) System.out.println(st.impl.template);
+                    if (debug) log.debug("\n--- " + st.getName());
+                    if (debug) log.debug(st.impl.template);
 
                     final TemplateVisitor visitor = new TemplateVisitor();
                     visitor.visit(st);
@@ -105,13 +107,13 @@ public class STParser {
                     visitor.astNodeStack.peek().getChildren().forEach(astNode -> addParameters(stParameterMap, astNode, new Stack<STParameter>()));
                     stParameterMap.values().forEach(stTemplate::addParameters);
 
-                    if (debug) System.out.println("=== >");
+                    if (debug) log.debug("=== >");
                     stTemplate.getParameters().forEach(stParameter -> {
-                        if (debug) System.out.print("\t" + stParameter.getName() + " " + stParameter.getType());
+                        if (debug) log.debug("\t" + stParameter.getName() + " " + stParameter.getType());
                         stParameter.getKeys().forEach(stParameterKey -> {
-                            if (debug) System.out.print(" ." + stParameterKey.getName());
+                            if (debug) log.debug(" ." + stParameterKey.getName());
                         });
-                        if (debug) System.out.println();
+                        if (debug) log.debug("");
                     });
 
                     stGroupModel.addTemplates(stTemplate);
@@ -234,7 +236,7 @@ public class STParser {
             final int start = s.indexOf(pattern) + pattern.length();
             return s.charAt(start);
         } catch (Throwable e) {
-            System.out.println("illegal format in file " + stgFile.getAbsolutePath());
+            log.debug("illegal format in file " + stgFile.getAbsolutePath());
             return '~';
         }
     }
@@ -350,9 +352,9 @@ public class STParser {
 
                 default:
                     if (debug)
-                        System.out.println("case U" + ast.getType() + ":\npushAstNode(ast, U" + ast.getType() + ");\nbreak;");
+                        log.debug("case U" + ast.getType() + ":\npushAstNode(ast, U" + ast.getType() + ");\nbreak;");
                     if (debug)
-                        System.out.println("private static final int U" + ast.getType() + " = " + ast.getType() + ";");
+                        log.debug("private static final int U" + ast.getType() + " = " + ast.getType() + ";");
                     for (int i = 0; i < ast.getChildCount(); i++)
                         visit(ast.getChild(i));
                     break;
@@ -373,7 +375,7 @@ public class STParser {
 
             final AstNode astNode = STParserFactory.newAstNode().setType(astNodeType).setAst(ast);
 
-            if (debug) System.out.println(debug(astNode, astNodeStack.size()));
+            if (debug) log.debug(debug(astNode, astNodeStack.size()));
 
             if (!astNodeStack.isEmpty()) {
                 astNodeStack.peek().addChildren(astNode);

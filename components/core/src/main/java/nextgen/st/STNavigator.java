@@ -23,6 +23,8 @@ import static nextgen.st.STGenerator.toSTGroup;
 
 public class STNavigator extends JPanel {
 
+    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STNavigator.class);
+
     private final JTree tree = new JTree();
 
     private final JTabbedPane tabbedPane;
@@ -615,8 +617,8 @@ public class STNavigator extends JPanel {
                                     save();
                                     parent.generate(getModel());
                                 } else {
-                                    System.out.println(getModel().getName() + " has errors: ");
-                                    parseResult.getErrors().forEach(stgError -> System.out.println("\t" + stgError.getType() + " " + stgError.getCharPosition() + " at line " + stgError.getLine()));
+                                    log.info(getModel().getName() + " has errors: ");
+                                    parseResult.getErrors().forEach(stgError -> log.info("\t" + stgError.getType() + " " + stgError.getCharPosition() + " at line " + stgError.getLine()));
                                 }
                             }));
                 }

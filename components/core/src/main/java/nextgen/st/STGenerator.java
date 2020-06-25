@@ -15,6 +15,8 @@ import java.io.IOException;
 
 public class STGenerator {
 
+    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STGenerator.class);
+
     public static boolean debug = true;
 
     public static final char DELIMITERCHAR = '~';
@@ -342,7 +344,7 @@ public class STGenerator {
 
         try {
             tryToCreateFileIfNotExists(file);
-            if (debug) System.out.println("writing file " + file.getAbsolutePath());
+            if (debug) log.info("writing file " + file.getAbsolutePath());
 
             final BufferedWriter out = new BufferedWriter(new FileWriter(file));
             out.write(content == null ? "" : content.toString());
