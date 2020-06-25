@@ -11,18 +11,20 @@ public class KotlinSTTests {
 	public void testAll() {
 		testPoko();
 		testArrayEqualsExpression();
+		testAssignExpression();
 		testCastExpression();
 		testComplexStringExpression();
 		testConstructorCallExpression();
 		testEqualsExpression();
 		testFunctionCallExpression();
-		testFunctionCallParamExpression();
+		testLiteralExpression();
 		testNullExpression();
+		testPairExpression();
 		testScopeExpression();
 		testSimpleStringExpression();
+		testStringLiteralExpression();
 		testThisExpression();
 		testToStringExpression();
-		testVarExpression();
 		testAnnotationDeclaration();
 		testAnnotationParam();
 		testClassDeclaration();
@@ -35,18 +37,38 @@ public class KotlinSTTests {
 		testFunctionParam();
 		testPackageDeclaration();
 		testImportStatement();
+		testReturnStatement();
+		testTodoStatement();
+		testVarDeclarationStatement();
 		testArrayInitializer();
 		testEmptyArrayInitializer();
+		testEmptyMapInitializer();
 		testExpressionInitializer();
 		testListInitializer();
 		testMapInitializer();
+		testMutableMapInitializer();
+		testMutableSetInitializer();
 		testNullInitializer();
+		testSetInitializer();
 		testKotlinFile();
+		testAnyType();
 		testArrayType();
+		testBooleanType();
+		testDoubleType();
+		testFloatType();
+		testIntType();
 		testListType();
+		testLongType();
 		testMapType();
+		testMutableListType();
+		testMutableMapType();
+		testMutableSetType();
 		testNamedType();
 		testNullableType();
+		testPairType();
+		testSetType();
+		testStringType();
+		testUnitType();
 	}
 
 	@org.junit.Test
@@ -57,6 +79,11 @@ public class KotlinSTTests {
 	@org.junit.Test
 	public void testArrayEqualsExpression() {
 		System.out.println("\n--- TEST ArrayEqualsExpression:\n" + newArrayEqualsExpression());
+	} 
+
+	@org.junit.Test
+	public void testAssignExpression() {
+		System.out.println("\n--- TEST AssignExpression:\n" + newAssignExpression());
 	} 
 
 	@org.junit.Test
@@ -85,13 +112,18 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
-	public void testFunctionCallParamExpression() {
-		System.out.println("\n--- TEST FunctionCallParamExpression:\n" + newFunctionCallParamExpression());
+	public void testLiteralExpression() {
+		System.out.println("\n--- TEST LiteralExpression:\n" + newLiteralExpression());
 	} 
 
 	@org.junit.Test
 	public void testNullExpression() {
 		System.out.println("\n--- TEST NullExpression:\n" + newNullExpression());
+	} 
+
+	@org.junit.Test
+	public void testPairExpression() {
+		System.out.println("\n--- TEST PairExpression:\n" + newPairExpression());
 	} 
 
 	@org.junit.Test
@@ -105,6 +137,11 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
+	public void testStringLiteralExpression() {
+		System.out.println("\n--- TEST StringLiteralExpression:\n" + newStringLiteralExpression());
+	} 
+
+	@org.junit.Test
 	public void testThisExpression() {
 		System.out.println("\n--- TEST ThisExpression:\n" + newThisExpression());
 	} 
@@ -112,11 +149,6 @@ public class KotlinSTTests {
 	@org.junit.Test
 	public void testToStringExpression() {
 		System.out.println("\n--- TEST ToStringExpression:\n" + newToStringExpression());
-	} 
-
-	@org.junit.Test
-	public void testVarExpression() {
-		System.out.println("\n--- TEST VarExpression:\n" + newVarExpression());
 	} 
 
 	@org.junit.Test
@@ -180,6 +212,21 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
+	public void testReturnStatement() {
+		System.out.println("\n--- TEST ReturnStatement:\n" + newReturnStatement());
+	} 
+
+	@org.junit.Test
+	public void testTodoStatement() {
+		System.out.println("\n--- TEST TodoStatement:\n" + newTodoStatement());
+	} 
+
+	@org.junit.Test
+	public void testVarDeclarationStatement() {
+		System.out.println("\n--- TEST VarDeclarationStatement:\n" + newVarDeclarationStatement());
+	} 
+
+	@org.junit.Test
 	public void testArrayInitializer() {
 		System.out.println("\n--- TEST ArrayInitializer:\n" + newArrayInitializer());
 	} 
@@ -187,6 +234,11 @@ public class KotlinSTTests {
 	@org.junit.Test
 	public void testEmptyArrayInitializer() {
 		System.out.println("\n--- TEST EmptyArrayInitializer:\n" + newEmptyArrayInitializer());
+	} 
+
+	@org.junit.Test
+	public void testEmptyMapInitializer() {
+		System.out.println("\n--- TEST EmptyMapInitializer:\n" + newEmptyMapInitializer());
 	} 
 
 	@org.junit.Test
@@ -205,8 +257,23 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
+	public void testMutableMapInitializer() {
+		System.out.println("\n--- TEST MutableMapInitializer:\n" + newMutableMapInitializer());
+	} 
+
+	@org.junit.Test
+	public void testMutableSetInitializer() {
+		System.out.println("\n--- TEST MutableSetInitializer:\n" + newMutableSetInitializer());
+	} 
+
+	@org.junit.Test
 	public void testNullInitializer() {
 		System.out.println("\n--- TEST NullInitializer:\n" + newNullInitializer());
+	} 
+
+	@org.junit.Test
+	public void testSetInitializer() {
+		System.out.println("\n--- TEST SetInitializer:\n" + newSetInitializer());
 	} 
 
 	@org.junit.Test
@@ -215,8 +282,33 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
+	public void testAnyType() {
+		System.out.println("\n--- TEST AnyType:\n" + newAnyType());
+	} 
+
+	@org.junit.Test
 	public void testArrayType() {
 		System.out.println("\n--- TEST ArrayType:\n" + newArrayType());
+	} 
+
+	@org.junit.Test
+	public void testBooleanType() {
+		System.out.println("\n--- TEST BooleanType:\n" + newBooleanType());
+	} 
+
+	@org.junit.Test
+	public void testDoubleType() {
+		System.out.println("\n--- TEST DoubleType:\n" + newDoubleType());
+	} 
+
+	@org.junit.Test
+	public void testFloatType() {
+		System.out.println("\n--- TEST FloatType:\n" + newFloatType());
+	} 
+
+	@org.junit.Test
+	public void testIntType() {
+		System.out.println("\n--- TEST IntType:\n" + newIntType());
 	} 
 
 	@org.junit.Test
@@ -225,8 +317,28 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
+	public void testLongType() {
+		System.out.println("\n--- TEST LongType:\n" + newLongType());
+	} 
+
+	@org.junit.Test
 	public void testMapType() {
 		System.out.println("\n--- TEST MapType:\n" + newMapType());
+	} 
+
+	@org.junit.Test
+	public void testMutableListType() {
+		System.out.println("\n--- TEST MutableListType:\n" + newMutableListType());
+	} 
+
+	@org.junit.Test
+	public void testMutableMapType() {
+		System.out.println("\n--- TEST MutableMapType:\n" + newMutableMapType());
+	} 
+
+	@org.junit.Test
+	public void testMutableSetType() {
+		System.out.println("\n--- TEST MutableSetType:\n" + newMutableSetType());
 	} 
 
 	@org.junit.Test
@@ -237,5 +349,25 @@ public class KotlinSTTests {
 	@org.junit.Test
 	public void testNullableType() {
 		System.out.println("\n--- TEST NullableType:\n" + newNullableType());
+	} 
+
+	@org.junit.Test
+	public void testPairType() {
+		System.out.println("\n--- TEST PairType:\n" + newPairType());
+	} 
+
+	@org.junit.Test
+	public void testSetType() {
+		System.out.println("\n--- TEST SetType:\n" + newSetType());
+	} 
+
+	@org.junit.Test
+	public void testStringType() {
+		System.out.println("\n--- TEST StringType:\n" + newStringType());
+	} 
+
+	@org.junit.Test
+	public void testUnitType() {
+		System.out.println("\n--- TEST UnitType:\n" + newUnitType());
 	} 
 } 

@@ -53,11 +53,13 @@ public class KotlinTest {
         TypeDeclaration countryIsPartOfContinentRelationshipType = newNamedType().setName("CountryIsPartOfContinentRelationship");
         ArrayType countryIsPartOfContinentRelationshipTypeArray = newArrayType().setType(countryIsPartOfContinentRelationshipType);
 
+        FieldDeclaration uuidField = newFieldDeclaration(uuidType, "uuid").setInitializer(
+                newExpressionInitializer().setExpression(newFunctionCallExpression().setScope("UUID").setFunctionName("randomUUID"))
+        ).setIsNonMember(true);
+
         List<FieldDeclaration> fields = asList(
                 newFieldDeclaration(nullableLongType, "id").setInitializer(newNullInitializer()).setIsNonMember(true),
-                newFieldDeclaration(uuidType, "uuid").setInitializer(
-                        newExpressionInitializer().setExpression(newFunctionCallExpression().setScope("UUID").setFunctionName("randomUUID"))
-                ).setIsNonMember(true),
+                uuidField,
                 newFieldDeclaration(longType, "epId", true),
                 newFieldDeclaration(stringType, "code", true),
                 newFieldDeclaration(stringType, "name", true),
@@ -85,7 +87,7 @@ public class KotlinTest {
                         fields.stream().filter(fieldDeclaration -> !fieldDeclaration.getName().equals("id")).collect(Collectors.toList()))
                 )
                 .setOverrideToString(createToStringFunction(className, fields))
-                .setOverrideHashCode(newOverrideHashCode())
+                .setOverrideHashCode(createHashCodeFunction(uuidField))
                 .setMembers(singletonList(
                         createCopyFunction(className, fields))
                 );
@@ -110,5 +112,28 @@ public class KotlinTest {
         System.out.println(kotlinFile);
 
         STGenerator.writeKotlinFile(kotlinFile, packageDeclaration, "CodeGenTests", new File("/media/Storage/projects/tv2/sportsdata-api.tmp/libraries/sportdata-domain/src/main/kotlin"));
+    }
+
+    @Test
+    public void testExpressions() {
+
+        PairType pairOfStringAndIntType = newPairType().setFirst(newStringType()).setSecond(newIntType());
+        FunctionDeclaration testFunction = newFunctionDeclaration()
+                .setName("test")
+                .setReturnType(pairOfStringAndIntType)
+                .setStatements(asList(
+                        newVarDeclarationStatement()
+                            .setName("aMap")
+                            .setType(newMapType()
+                                .setFirst(pairOfStringAndIntType.getFirst())
+                                .setSecond(pairOfStringAndIntType.getSecond()))
+                            .setInitializer(newMutableMapInitializer()),
+                        newReturnStatement()
+                            .setExpression(newPairExpression()
+                                .setFirst(newStringLiteralExpression().setLiteral("Test"))
+                                .setSecond(newLiteralExpression().setLiteral("123")))
+                ));
+
+        System.out.println(testFunction);
     }
 }

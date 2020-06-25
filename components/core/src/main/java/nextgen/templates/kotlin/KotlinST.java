@@ -7,18 +7,20 @@ public class KotlinST {
 	"gt() ::= \">\"\n" +
 	Poko.st + "\n" + 
 	ArrayEqualsExpression.st + "\n" + 
+	AssignExpression.st + "\n" + 
 	CastExpression.st + "\n" + 
 	ComplexStringExpression.st + "\n" + 
 	ConstructorCallExpression.st + "\n" + 
 	EqualsExpression.st + "\n" + 
 	FunctionCallExpression.st + "\n" + 
-	FunctionCallParamExpression.st + "\n" + 
+	LiteralExpression.st + "\n" + 
 	NullExpression.st + "\n" + 
+	PairExpression.st + "\n" + 
 	ScopeExpression.st + "\n" + 
 	SimpleStringExpression.st + "\n" + 
+	StringLiteralExpression.st + "\n" + 
 	ThisExpression.st + "\n" + 
 	ToStringExpression.st + "\n" + 
-	VarExpression.st + "\n" + 
 	AnnotationDeclaration.st + "\n" + 
 	AnnotationParam.st + "\n" + 
 	ClassDeclaration.st + "\n" + 
@@ -31,18 +33,38 @@ public class KotlinST {
 	FunctionParam.st + "\n" + 
 	PackageDeclaration.st + "\n" + 
 	ImportStatement.st + "\n" + 
+	ReturnStatement.st + "\n" + 
+	TodoStatement.st + "\n" + 
+	VarDeclarationStatement.st + "\n" + 
 	ArrayInitializer.st + "\n" + 
 	EmptyArrayInitializer.st + "\n" + 
+	EmptyMapInitializer.st + "\n" + 
 	ExpressionInitializer.st + "\n" + 
 	ListInitializer.st + "\n" + 
 	MapInitializer.st + "\n" + 
+	MutableMapInitializer.st + "\n" + 
+	MutableSetInitializer.st + "\n" + 
 	NullInitializer.st + "\n" + 
+	SetInitializer.st + "\n" + 
 	KotlinFile.st + "\n" + 
+	AnyType.st + "\n" + 
 	ArrayType.st + "\n" + 
+	BooleanType.st + "\n" + 
+	DoubleType.st + "\n" + 
+	FloatType.st + "\n" + 
+	IntType.st + "\n" + 
 	ListType.st + "\n" + 
+	LongType.st + "\n" + 
 	MapType.st + "\n" + 
+	MutableListType.st + "\n" + 
+	MutableMapType.st + "\n" + 
+	MutableSetType.st + "\n" + 
 	NamedType.st + "\n" + 
-	NullableType.st + "\n" ;
+	NullableType.st + "\n" + 
+	PairType.st + "\n" + 
+	SetType.st + "\n" + 
+	StringType.st + "\n" + 
+	UnitType.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -86,6 +108,10 @@ public class KotlinST {
 		return new ArrayEqualsExpression(stGroup);
 	} 
 
+	public static AssignExpression newAssignExpression() {
+		return new AssignExpression(stGroup);
+	} 
+
 	public static CastExpression newCastExpression() {
 		return new CastExpression(stGroup);
 	} 
@@ -106,12 +132,16 @@ public class KotlinST {
 		return new FunctionCallExpression(stGroup);
 	} 
 
-	public static FunctionCallParamExpression newFunctionCallParamExpression() {
-		return new FunctionCallParamExpression(stGroup);
+	public static LiteralExpression newLiteralExpression() {
+		return new LiteralExpression(stGroup);
 	} 
 
 	public static NullExpression newNullExpression() {
 		return new NullExpression(stGroup);
+	} 
+
+	public static PairExpression newPairExpression() {
+		return new PairExpression(stGroup);
 	} 
 
 	public static ScopeExpression newScopeExpression() {
@@ -122,16 +152,16 @@ public class KotlinST {
 		return new SimpleStringExpression(stGroup);
 	} 
 
+	public static StringLiteralExpression newStringLiteralExpression() {
+		return new StringLiteralExpression(stGroup);
+	} 
+
 	public static ThisExpression newThisExpression() {
 		return new ThisExpression(stGroup);
 	} 
 
 	public static ToStringExpression newToStringExpression() {
 		return new ToStringExpression(stGroup);
-	} 
-
-	public static VarExpression newVarExpression() {
-		return new VarExpression(stGroup);
 	} 
 
 	public static AnnotationDeclaration newAnnotationDeclaration() {
@@ -182,12 +212,28 @@ public class KotlinST {
 		return new ImportStatement(stGroup);
 	} 
 
+	public static ReturnStatement newReturnStatement() {
+		return new ReturnStatement(stGroup);
+	} 
+
+	public static TodoStatement newTodoStatement() {
+		return new TodoStatement(stGroup);
+	} 
+
+	public static VarDeclarationStatement newVarDeclarationStatement() {
+		return new VarDeclarationStatement(stGroup);
+	} 
+
 	public static ArrayInitializer newArrayInitializer() {
 		return new ArrayInitializer(stGroup);
 	} 
 
 	public static EmptyArrayInitializer newEmptyArrayInitializer() {
 		return new EmptyArrayInitializer(stGroup);
+	} 
+
+	public static EmptyMapInitializer newEmptyMapInitializer() {
+		return new EmptyMapInitializer(stGroup);
 	} 
 
 	public static ExpressionInitializer newExpressionInitializer() {
@@ -202,24 +248,72 @@ public class KotlinST {
 		return new MapInitializer(stGroup);
 	} 
 
+	public static MutableMapInitializer newMutableMapInitializer() {
+		return new MutableMapInitializer(stGroup);
+	} 
+
+	public static MutableSetInitializer newMutableSetInitializer() {
+		return new MutableSetInitializer(stGroup);
+	} 
+
 	public static NullInitializer newNullInitializer() {
 		return new NullInitializer(stGroup);
+	} 
+
+	public static SetInitializer newSetInitializer() {
+		return new SetInitializer(stGroup);
 	} 
 
 	public static KotlinFile newKotlinFile() {
 		return new KotlinFile(stGroup);
 	} 
 
+	public static AnyType newAnyType() {
+		return new AnyType(stGroup);
+	} 
+
 	public static ArrayType newArrayType() {
 		return new ArrayType(stGroup);
+	} 
+
+	public static BooleanType newBooleanType() {
+		return new BooleanType(stGroup);
+	} 
+
+	public static DoubleType newDoubleType() {
+		return new DoubleType(stGroup);
+	} 
+
+	public static FloatType newFloatType() {
+		return new FloatType(stGroup);
+	} 
+
+	public static IntType newIntType() {
+		return new IntType(stGroup);
 	} 
 
 	public static ListType newListType() {
 		return new ListType(stGroup);
 	} 
 
+	public static LongType newLongType() {
+		return new LongType(stGroup);
+	} 
+
 	public static MapType newMapType() {
 		return new MapType(stGroup);
+	} 
+
+	public static MutableListType newMutableListType() {
+		return new MutableListType(stGroup);
+	} 
+
+	public static MutableMapType newMutableMapType() {
+		return new MutableMapType(stGroup);
+	} 
+
+	public static MutableSetType newMutableSetType() {
+		return new MutableSetType(stGroup);
 	} 
 
 	public static NamedType newNamedType() {
@@ -228,6 +322,22 @@ public class KotlinST {
 
 	public static NullableType newNullableType() {
 		return new NullableType(stGroup);
+	} 
+
+	public static PairType newPairType() {
+		return new PairType(stGroup);
+	} 
+
+	public static SetType newSetType() {
+		return new SetType(stGroup);
+	} 
+
+	public static StringType newStringType() {
+		return new StringType(stGroup);
+	} 
+
+	public static UnitType newUnitType() {
+		return new UnitType(stGroup);
 	} 
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {

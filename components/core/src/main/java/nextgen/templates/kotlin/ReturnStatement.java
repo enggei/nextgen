@@ -1,24 +1,24 @@
 package nextgen.templates.kotlin;
 
-public class ExpressionInitializer implements Initializer, Expression {
+public class ReturnStatement implements Statement {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Expression _expression;
 
-	ExpressionInitializer(org.stringtemplate.v4.STGroup stGroup) {
+	ReturnStatement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
 	@Override
 	public String toString() {
-		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ExpressionInitializer");
+		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ReturnStatement");
 		st.add("expression", _expression);
 		return st.render().trim();
 	}
 
-	public ExpressionInitializer setExpression(Expression value) {
+	public ReturnStatement setExpression(Expression value) {
 		this._expression = value;
 		return this;
 	}
@@ -35,7 +35,7 @@ public class ExpressionInitializer implements Initializer, Expression {
 		return this._expression != null;
 	}
 
-	public ExpressionInitializer removeExpression() {
+	public ReturnStatement removeExpression() {
 		this._expression = null;
 		return this;
 	} 
@@ -46,7 +46,7 @@ public class ExpressionInitializer implements Initializer, Expression {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		ExpressionInitializer that = (ExpressionInitializer) o;
+		ReturnStatement that = (ReturnStatement) o;
 		return uuid.equals(that.uuid);
 	}
 
@@ -55,5 +55,5 @@ public class ExpressionInitializer implements Initializer, Expression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ExpressionInitializer(expression) ::= <<~expression~ >>";
+	static final String st = "ReturnStatement(expression) ::= <<return ~expression~ >>";
 } 

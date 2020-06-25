@@ -10,8 +10,8 @@ public class FunctionDeclaration implements CompilationUnit {
 	private String _name;
 	private TypeDeclaration _returnType;
 	private Expression _expressionBody;
-	private Object _statements;
 	private java.util.List<FunctionParam> _params = new java.util.ArrayList<>();
+	private java.util.List<Statement> _statements = new java.util.ArrayList<>();
 
 	FunctionDeclaration(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -25,8 +25,8 @@ public class FunctionDeclaration implements CompilationUnit {
 		st.add("name", _name);
 		st.add("returnType", _returnType);
 		st.add("expressionBody", _expressionBody);
-		st.add("statements", _statements);
 		for (Object o : _params) st.add("params", o);
+		for (Object o : _statements) st.add("statements", o);
 		return st.render().trim();
 	}
 
@@ -140,28 +140,6 @@ public class FunctionDeclaration implements CompilationUnit {
 		return this;
 	} 
 
-	public FunctionDeclaration setStatements(Object value) {
-		this._statements = value;
-		return this;
-	}
-
-	public Object getStatements() {
-		return this._statements;
-	}
-
-	public Object getStatements(Object defaultValue) {
-		return this._statements == null ? defaultValue : this._statements;
-	}
-
-	public boolean hasStatements() {
-		return this._statements != null;
-	}
-
-	public FunctionDeclaration removeStatements() {
-		this._statements = null;
-		return this;
-	} 
-
 	public FunctionDeclaration addParams(FunctionParam value) {
 		this._params.add(value);
 		return this;
@@ -191,6 +169,35 @@ public class FunctionDeclaration implements CompilationUnit {
 		return this._params;
 	} 
 
+	public FunctionDeclaration addStatements(Statement value) {
+		this._statements.add(value);
+		return this;
+	}
+
+	public FunctionDeclaration setStatements(Statement[] value) {
+		this._statements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public FunctionDeclaration setStatements(java.util.Collection<Statement> values) {
+		this._statements.addAll(values);
+		return this;
+	}
+
+	public FunctionDeclaration removeStatements(Statement value) {
+		this._statements.remove(value);
+		return this;
+	}
+
+	public FunctionDeclaration removeStatements(int index) {
+		this._statements.remove(index);
+		return this;
+	}
+
+	public java.util.List<Statement> getStatements() {
+		return this._statements;
+	} 
+
 
 	@Override
 	public boolean equals(Object o) {
@@ -207,6 +214,6 @@ public class FunctionDeclaration implements CompilationUnit {
 
 	static final String st = "FunctionDeclaration(annotations,override,name,params,returnType,expressionBody,statements) ::= <<~annotations~~if(override)~override ~endif~fun ~name~(~params:{it|~it~};separator=\", \"~): ~returnType~~if(expressionBody)~ =\n" + 
 				"	~expressionBody~~else~ {\n" + 
-				"	~statements~\n" + 
+				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
 				"}~endif~ >>";
 } 

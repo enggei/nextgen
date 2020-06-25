@@ -1,35 +1,35 @@
 package nextgen.templates.kotlin;
 
-public class MapType implements TypeDeclaration {
+public class PairExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private TypeDeclaration _first;
-	private TypeDeclaration _second;
+	private Expression _first;
+	private Expression _second;
 
-	MapType(org.stringtemplate.v4.STGroup stGroup) {
+	PairExpression(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
 	@Override
 	public String toString() {
-		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("MapType");
+		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("PairExpression");
 		st.add("first", _first);
 		st.add("second", _second);
 		return st.render().trim();
 	}
 
-	public MapType setFirst(TypeDeclaration value) {
+	public PairExpression setFirst(Expression value) {
 		this._first = value;
 		return this;
 	}
 
-	public TypeDeclaration getFirst() {
+	public Expression getFirst() {
 		return this._first;
 	}
 
-	public TypeDeclaration getFirst(TypeDeclaration defaultValue) {
+	public Expression getFirst(Expression defaultValue) {
 		return this._first == null ? defaultValue : this._first;
 	}
 
@@ -37,21 +37,21 @@ public class MapType implements TypeDeclaration {
 		return this._first != null;
 	}
 
-	public MapType removeFirst() {
+	public PairExpression removeFirst() {
 		this._first = null;
 		return this;
 	} 
 
-	public MapType setSecond(TypeDeclaration value) {
+	public PairExpression setSecond(Expression value) {
 		this._second = value;
 		return this;
 	}
 
-	public TypeDeclaration getSecond() {
+	public Expression getSecond() {
 		return this._second;
 	}
 
-	public TypeDeclaration getSecond(TypeDeclaration defaultValue) {
+	public Expression getSecond(Expression defaultValue) {
 		return this._second == null ? defaultValue : this._second;
 	}
 
@@ -59,7 +59,7 @@ public class MapType implements TypeDeclaration {
 		return this._second != null;
 	}
 
-	public MapType removeSecond() {
+	public PairExpression removeSecond() {
 		this._second = null;
 		return this;
 	} 
@@ -70,7 +70,7 @@ public class MapType implements TypeDeclaration {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		MapType that = (MapType) o;
+		PairExpression that = (PairExpression) o;
 		return uuid.equals(that.uuid);
 	}
 
@@ -79,5 +79,5 @@ public class MapType implements TypeDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MapType(first,second) ::= <<Map<~first~, ~second~> >>";
+	static final String st = "PairExpression(first,second) ::= <<~first~ to ~second~ >>";
 } 

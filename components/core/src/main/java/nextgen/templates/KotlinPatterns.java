@@ -9,11 +9,11 @@ import java.util.stream.Collectors;
 public class KotlinPatterns extends KotlinST {
 
    public static Expression asThisExpression(FieldDeclaration fieldDeclaration) {
-      return newThisExpression().setExpression(newVarExpression().setVarname(fieldDeclaration.getName()));
+      return newThisExpression().setExpression(newLiteralExpression().setLiteral(fieldDeclaration.getName()));
    }
 
    public static Expression asScopeExpression(String scope, FieldDeclaration fieldDeclaration) {
-      return newScopeExpression().setScope(scope).setExpression(newVarExpression().setVarname(fieldDeclaration.getName()));
+      return newScopeExpression().setScope(scope).setExpression(newLiteralExpression().setLiteral(fieldDeclaration.getName()));
    }
 
    public static Expression asFunctionCallExpression(String scope, String functionName) {
@@ -40,6 +40,13 @@ public class KotlinPatterns extends KotlinST {
             .collect(Collectors.toList()));
    }
 
+   public static OverrideHashCode createHashCodeFunction(FieldDeclaration field) {
+      return newOverrideHashCode()
+         .setReturnStatement(newReturnStatement()
+            .setExpression(newFunctionCallExpression().setScope("Objects").setFunctionName("hash")
+               .setArguments(Collections.singletonList(newLiteralExpression().setLiteral(field.getName())))));
+   }
+
    public static OverrideToString createToStringFunction(String className, Collection<FieldDeclaration> fields) {
       return newOverrideToString()
          .setClassName(className)
@@ -53,7 +60,7 @@ public class KotlinPatterns extends KotlinST {
                    );
                } else {
                    tse.setStringExpression(
-                           newSimpleStringExpression().setExpression(newVarExpression().setVarname(fieldDeclaration.getName()))
+                           newSimpleStringExpression().setExpression(newLiteralExpression().setLiteral(fieldDeclaration.getName()))
                    );
                }
                return tse;
@@ -74,10 +81,12 @@ public class KotlinPatterns extends KotlinST {
               )
               .setExpressionBody(newConstructorCallExpression()
                       .setClassName(className)
-                      .setParams(fields.stream().map(fieldDeclaration -> newFunctionCallParamExpression()
-                              .setFieldName(fieldDeclaration.getName())
-                              .setExpression(newVarExpression().setVarname(fieldDeclaration.getName()))
-                      ).collect(Collectors.toList()))
+                      .setParams(fields.stream()
+                              .map(fieldDeclaration -> newLiteralExpression().setLiteral(fieldDeclaration.getName()))
+                              .map(fieldName -> newAssignExpression()
+                                  .setVarName(fieldName)
+                                  .setExpression(fieldName))
+                              .collect(Collectors.toList()))
               );
    }
 

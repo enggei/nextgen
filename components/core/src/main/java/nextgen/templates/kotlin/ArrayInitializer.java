@@ -1,11 +1,11 @@
 package nextgen.templates.kotlin;
 
-public class ArrayInitializer implements Initializer {
+public class ArrayInitializer implements Initializer, Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private java.util.List<String> _statements = new java.util.ArrayList<>();
+	private java.util.List<Expression> _expressions = new java.util.ArrayList<>();
 
 	ArrayInitializer(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -14,38 +14,38 @@ public class ArrayInitializer implements Initializer {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ArrayInitializer");
-		for (Object o : _statements) st.add("statements", o);
+		for (Object o : _expressions) st.add("expressions", o);
 		return st.render().trim();
 	}
 
 
-	public ArrayInitializer addStatements(String value) {
-		this._statements.add(value);
+	public ArrayInitializer addExpressions(Expression value) {
+		this._expressions.add(value);
 		return this;
 	}
 
-	public ArrayInitializer setStatements(String[] value) {
-		this._statements.addAll(java.util.Arrays.asList(value));
+	public ArrayInitializer setExpressions(Expression[] value) {
+		this._expressions.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public ArrayInitializer setStatements(java.util.Collection<String> values) {
-		this._statements.addAll(values);
+	public ArrayInitializer setExpressions(java.util.Collection<Expression> values) {
+		this._expressions.addAll(values);
 		return this;
 	}
 
-	public ArrayInitializer removeStatements(String value) {
-		this._statements.remove(value);
+	public ArrayInitializer removeExpressions(Expression value) {
+		this._expressions.remove(value);
 		return this;
 	}
 
-	public ArrayInitializer removeStatements(int index) {
-		this._statements.remove(index);
+	public ArrayInitializer removeExpressions(int index) {
+		this._expressions.remove(index);
 		return this;
 	}
 
-	public java.util.List<String> getStatements() {
-		return this._statements;
+	public java.util.List<Expression> getExpressions() {
+		return this._expressions;
 	} 
 
 
@@ -62,5 +62,5 @@ public class ArrayInitializer implements Initializer {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ArrayInitializer(statements) ::= <<arrayOf(~statements:{it|~it~};separator=\", \"~) >>";
+	static final String st = "ArrayInitializer(expressions) ::= <<arrayOf(~expressions:{it|~it~};separator=\", \"~) >>";
 } 
