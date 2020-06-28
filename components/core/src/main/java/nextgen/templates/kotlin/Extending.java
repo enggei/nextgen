@@ -12,6 +12,10 @@ public class Extending {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Extending");
@@ -94,4 +98,4 @@ public class Extending {
 	}
 
 	static final String st = "Extending(className,params) ::= <<~className~(~params:{it|~it.name~};separator=\", \"~) >>";
-} 
+}  

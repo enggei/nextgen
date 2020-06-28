@@ -12,6 +12,10 @@ public class ScopeExpression implements Expression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ScopeExpression");
@@ -80,4 +84,4 @@ public class ScopeExpression implements Expression {
 	}
 
 	static final String st = "ScopeExpression(scope,expression) ::= <<~scope~.~expression~ >>";
-} 
+}  

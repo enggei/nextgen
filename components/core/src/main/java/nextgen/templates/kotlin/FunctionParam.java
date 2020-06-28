@@ -13,6 +13,10 @@ public class FunctionParam {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("FunctionParam");
@@ -104,4 +108,4 @@ public class FunctionParam {
 	}
 
 	static final String st = "FunctionParam(name,typeDeclaration,defaultValue) ::= <<~name~: ~typeDeclaration~~if(defaultValue)~ = ~defaultValue~~endif~ >>";
-} 
+}  

@@ -11,6 +11,10 @@ public class ArrayInitializer implements Initializer, Expression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ArrayInitializer");
@@ -63,4 +67,4 @@ public class ArrayInitializer implements Initializer, Expression {
 	}
 
 	static final String st = "ArrayInitializer(expressions) ::= <<arrayOf(~expressions:{it|~it~};separator=\", \"~) >>";
-} 
+}  

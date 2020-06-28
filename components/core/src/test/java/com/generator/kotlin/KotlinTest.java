@@ -49,6 +49,7 @@ public class KotlinTest {
         TypeDeclaration longType = newNamedType().setName("Long");
         NullableType nullableLongType = newNullableType(longType);
         TypeDeclaration stringType = newNamedType().setName("String");
+        NullableType nullableStringType = newNullableType(stringType);
         TypeDeclaration uuidType = newNamedType().setName("UUID");
         TypeDeclaration countryIsPartOfContinentRelationshipType = newNamedType().setName("CountryIsPartOfContinentRelationship");
         ArrayType countryIsPartOfContinentRelationshipTypeArray = newArrayType().setType(countryIsPartOfContinentRelationshipType);
@@ -72,7 +73,20 @@ public class KotlinTest {
                         )).setInitializer(newEmptyArrayInitializer())
         );
 
-        ClassDeclaration dataClass = newClassDeclaration(className)
+
+        String dataClassName = "Thing";
+        DataClassDeclaration thingClass = newDataClassDeclaration(dataClassName)
+                .setAnnotations(singletonList(newAnnotationDeclaration()
+                        .addAnnotations("NodeEntity", singletonList(newAnnotationParam()
+                                .addParam("label", newStringLiteralExpression().setLiteral("NODE_THING"))
+                        ))
+                ))
+                .setFields(asList(
+                        newFieldDeclaration(nullableLongType, "id").setInitializer(newNullInitializer()),
+                        newFieldDeclaration(nullableStringType, "name").setInitializer(newNullInitializer())
+                ));
+
+        ClassDeclaration countryClass = newClassDeclaration(className)
                 .setAnnotations(singletonList(newAnnotationDeclaration()
                         .addAnnotations("NodeEntity", singletonList(newAnnotationParam()
                                 .addParam("label", "NODE_COUNTRY")
@@ -90,8 +104,9 @@ public class KotlinTest {
                 .setOverrideHashCode(createHashCodeFunction(uuidField))
                 .setMembers(singletonList(
                         createCopyFunction(className, fields))
-                );
-// newFunctionCallParamExpression().setFieldName("uuid").setExpression(newVarExpression().setVarname("uuid"))
+                )
+                .setSubclasses(singletonList(thingClass));
+
         PackageDeclaration packageDeclaration = newPackageDeclaration().setName("org.test");
 
         List<ImportStatement> imports = asList(
@@ -107,7 +122,7 @@ public class KotlinTest {
         KotlinFile kotlinFile = newKotlinFile()
                 .setPackageDeclaration(packageDeclaration)
                 .setImports(imports)
-                .setCompilationUnit(singletonList(dataClass));
+                .setCompilationUnit(singletonList(countryClass));
 
         System.out.println(kotlinFile);
 

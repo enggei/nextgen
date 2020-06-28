@@ -11,6 +11,10 @@ public class AnnotationParam {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("AnnotationParam");
@@ -20,7 +24,7 @@ public class AnnotationParam {
 
 
 
-	public AnnotationParam addParam(String _key, String _value) {
+	public AnnotationParam addParam(String _key, Object _value) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("key", _key);
 		map.put("value", _value);
@@ -43,23 +47,23 @@ public class AnnotationParam {
 	public static final class AnnotationParam_Param {
 
 		String _key;
-		String _value;
+		Object _value;
 
-		public AnnotationParam_Param(String _key, String _value) {
+		public AnnotationParam_Param(String _key, Object _value) {
 			this._key = _key;
 			this._value = _value;
 		}
 
 		private AnnotationParam_Param(java.util.Map<String, Object> map) {
 			this._key = (String) map.get("key");
-			this._value = (String) map.get("value");
+			this._value = (Object) map.get("value");
 		}
 
 		public String getKey() {
 			return this._key;
 		}
 
-		public String getValue() {
+		public Object getValue() {
 			return this._value;
 		}
 
@@ -79,4 +83,4 @@ public class AnnotationParam {
 	}
 
 	static final String st = "AnnotationParam(param) ::= <<~param:{it|~it.key~ = ~it.value~};separator=\", \"~ >>";
-} 
+}  

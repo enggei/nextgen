@@ -11,6 +11,10 @@ public class MutableListType implements TypeDeclaration {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("MutableListType");
@@ -56,4 +60,4 @@ public class MutableListType implements TypeDeclaration {
 	}
 
 	static final String st = "MutableListType(type) ::= <<MutableList<~type~> >>";
-} 
+}  

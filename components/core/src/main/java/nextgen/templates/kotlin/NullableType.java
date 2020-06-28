@@ -11,6 +11,10 @@ public class NullableType implements TypeDeclaration {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("NullableType");
@@ -56,4 +60,4 @@ public class NullableType implements TypeDeclaration {
 	}
 
 	static final String st = "NullableType(type) ::= <<~type~? >>";
-} 
+}  

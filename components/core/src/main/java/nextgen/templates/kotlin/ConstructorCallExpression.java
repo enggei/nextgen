@@ -12,6 +12,10 @@ public class ConstructorCallExpression implements Expression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ConstructorCallExpression");
@@ -86,4 +90,4 @@ public class ConstructorCallExpression implements Expression {
 	}
 
 	static final String st = "ConstructorCallExpression(className,params) ::= <<~className~(~params:{it|~it~};separator=\", \"~) >>";
-} 
+}  

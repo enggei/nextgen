@@ -11,6 +11,10 @@ public class SimpleStringExpression implements Expression, StringExpression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("SimpleStringExpression");
@@ -56,4 +60,4 @@ public class SimpleStringExpression implements Expression, StringExpression {
 	}
 
 	static final String st = "SimpleStringExpression(expression) ::= <<$~expression~ >>";
-} 
+}  

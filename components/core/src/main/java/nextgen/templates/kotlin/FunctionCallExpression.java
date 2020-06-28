@@ -13,6 +13,10 @@ public class FunctionCallExpression implements Expression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("FunctionCallExpression");
@@ -110,4 +114,4 @@ public class FunctionCallExpression implements Expression {
 	}
 
 	static final String st = "FunctionCallExpression(scope,functionName,arguments) ::= <<~if(scope)~~scope~.~endif~~functionName~(~arguments:{it|~it~};separator=\", \"~) >>";
-} 
+}  

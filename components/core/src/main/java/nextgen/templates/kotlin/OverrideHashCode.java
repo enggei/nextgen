@@ -11,6 +11,10 @@ public class OverrideHashCode {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("OverrideHashCode");
@@ -58,4 +62,4 @@ public class OverrideHashCode {
 	static final String st = "OverrideHashCode(returnStatement) ::= <<override fun hashCode(): Int {\n" + 
 				"	~returnStatement~\n" + 
 				"} >>";
-} 
+}  

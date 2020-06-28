@@ -12,6 +12,10 @@ public class ToStringExpression implements Expression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ToStringExpression");
@@ -80,4 +84,4 @@ public class ToStringExpression implements Expression {
 	}
 
 	static final String st = "ToStringExpression(name,stringExpression) ::= <<~name~='~stringExpression~' >>";
-} 
+}  

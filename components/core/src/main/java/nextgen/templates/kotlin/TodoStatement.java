@@ -11,6 +11,10 @@ public class TodoStatement implements Statement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("TodoStatement");
@@ -56,4 +60,4 @@ public class TodoStatement implements Statement {
 	}
 
 	static final String st = "TodoStatement(reason) ::= <<TODO(\"~reason~\") >>";
-} 
+}  

@@ -12,6 +12,10 @@ public class MutableMapType implements TypeDeclaration {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("MutableMapType");
@@ -80,4 +84,4 @@ public class MutableMapType implements TypeDeclaration {
 	}
 
 	static final String st = "MutableMapType(first,second) ::= <<MutableMap<~first~, ~second~> >>";
-} 
+}  

@@ -11,6 +11,10 @@ public class SetInitializer implements Initializer, Expression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("SetInitializer");
@@ -63,4 +67,4 @@ public class SetInitializer implements Initializer, Expression {
 	}
 
 	static final String st = "SetInitializer(expressions) ::= <<setOf(~expressions:{it|~it~};separator=\", \"~) >>";
-} 
+}  

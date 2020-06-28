@@ -10,6 +10,10 @@ public class EmptyArrayInitializer implements Initializer, Expression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("EmptyArrayInitializer");
@@ -33,4 +37,4 @@ public class EmptyArrayInitializer implements Initializer, Expression {
 	}
 
 	static final String st = "EmptyArrayInitializer() ::= <<emptyArray() >>";
-} 
+}  

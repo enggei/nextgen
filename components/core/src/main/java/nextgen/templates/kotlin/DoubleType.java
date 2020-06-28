@@ -10,6 +10,10 @@ public class DoubleType implements TypeDeclaration {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("DoubleType");
@@ -33,4 +37,4 @@ public class DoubleType implements TypeDeclaration {
 	}
 
 	static final String st = "DoubleType() ::= <<Double >>";
-} 
+}  

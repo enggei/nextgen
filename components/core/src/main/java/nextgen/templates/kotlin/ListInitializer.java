@@ -11,6 +11,10 @@ public class ListInitializer implements Initializer, Expression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ListInitializer");
@@ -63,4 +67,4 @@ public class ListInitializer implements Initializer, Expression {
 	}
 
 	static final String st = "ListInitializer(expressions) ::= <<listOf(~expressions:{it|~it~};separator=\", \"~) >>";
-} 
+}  

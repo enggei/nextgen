@@ -11,6 +11,10 @@ public class MapInitializer implements Initializer, Expression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("MapInitializer");
@@ -79,4 +83,4 @@ public class MapInitializer implements Initializer, Expression {
 	}
 
 	static final String st = "MapInitializer(kvpairs) ::= <<mapOf(~kvpairs:{it|~it.key~ to ~it.value~};separator=\", \"~) >>";
-} 
+}  

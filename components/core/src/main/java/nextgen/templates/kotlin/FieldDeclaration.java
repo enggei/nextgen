@@ -16,6 +16,10 @@ public class FieldDeclaration {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("FieldDeclaration");
@@ -183,4 +187,4 @@ public class FieldDeclaration {
 
 	static final String st = "FieldDeclaration(annotations,isMutable,isNonMember,name,type,initializer) ::= <<~annotations:{it|~it~};separator=\"\\n\"~\n" + 
 				"~if(isMutable)~var ~elseif(isNonMember)~~else~val ~endif~~name~: ~type~~if(initializer)~ = ~initializer~~endif~ >>";
-} 
+}  
