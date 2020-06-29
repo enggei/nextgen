@@ -14,6 +14,10 @@ public class VarDeclarationStatement implements Statement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("VarDeclarationStatement");
@@ -128,4 +132,4 @@ public class VarDeclarationStatement implements Statement {
 	}
 
 	static final String st = "VarDeclarationStatement(isMutable,name,type,initializer) ::= <<~if(isMutable)~var ~else~val ~endif~~name~: ~type~~if(initializer)~ = ~initializer~~endif~ >>";
-} 
+}  

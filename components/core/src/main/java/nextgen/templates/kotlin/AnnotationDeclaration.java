@@ -11,6 +11,10 @@ public class AnnotationDeclaration {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("AnnotationDeclaration");
@@ -79,4 +83,4 @@ public class AnnotationDeclaration {
 	}
 
 	static final String st = "AnnotationDeclaration(annotations) ::= <<~annotations:{it|@~it.name~(~it.params~)};separator=\"\\n\"~ >>";
-} 
+}  

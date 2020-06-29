@@ -1,11 +1,5 @@
 delimiters "~","~"
 
-Entities() ::= << >>
-
-Poko(packageDeclaration,classDeclaration) ::= <<~packageDeclaration~
-
-~classDeclaration~ >>
-
 Expressions() ::= << >>
 
 NullExpression() ::= <<null  >>
@@ -44,11 +38,11 @@ Declarations() ::= << >>
 
 AnnotationDeclaration(annotations) ::= <<~annotations:{it|@~it.name~(~it.params~)};separator="\n"~  >>
 
-AnnotationParam(param) ::= <<~param:{it|~it.key~ = ~it.value~};separator=", "~ >>
+AnnotationParam(param) ::= <<~param:{it|~it.key~ = ~it.value~};separator=", "~  >>
 
 PackageDeclaration(name) ::= <<package ~name~ >>
 
-ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,overrideEquals,overrideHashCode,overrideToString,members) ::= <<~annotations~~if(annotations)~
+ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,overrideEquals,overrideHashCode,overrideToString,members,subclasses) ::= <<~annotations~~if(annotations)~
 ~endif~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(
 	~fields:{it|~it~};separator=",\n"~
 )~if(extends)~: ~extends:{it|~it~};separator=", "~~endif~ {
@@ -60,6 +54,8 @@ ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,overrideEqual
 	~overrideToString~
 
 	~members:{it|~it~};separator="\n"~
+
+	~subclasses:{it|~it~};separator="\n"~
 }  >>
 
 OverrideEquals(className,fields) ::= <<override fun equals(other: Any?): Boolean {
@@ -88,6 +84,16 @@ FunctionDeclaration(annotations,override,name,params,returnType,expressionBody,s
 }~endif~  >>
 
 FunctionParam(name,typeDeclaration,defaultValue) ::= <<~name~: ~typeDeclaration~~if(defaultValue)~ = ~defaultValue~~endif~  >>
+
+DataClassDeclaration(annotations,name,fields,members,subclasses) ::= <<~annotations~~if(annotations)~
+~endif~data class ~name~(
+	~fields:{it|~it~};separator=",\n"~
+)~if(members)~ {
+
+	~members:{it|~it~};separator="\n"~
+
+	~subclasses:{it|~it~};separator="\n"~
+}~endif~  >>
 
 Statements() ::= << >>
 

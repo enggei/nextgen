@@ -11,6 +11,10 @@ public class NamedType implements TypeDeclaration {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("NamedType");
@@ -56,4 +60,4 @@ public class NamedType implements TypeDeclaration {
 	}
 
 	static final String st = "NamedType(name) ::= <<~name~ >>";
-} 
+}  

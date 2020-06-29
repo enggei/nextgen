@@ -9,7 +9,6 @@ public class KotlinSTTests {
 
 	@org.junit.Test
 	public void testAll() {
-		testPoko();
 		testArrayEqualsExpression();
 		testAssignExpression();
 		testCastExpression();
@@ -31,6 +30,7 @@ public class KotlinSTTests {
 		testOverrideEquals();
 		testOverrideHashCode();
 		testOverrideToString();
+		testDataClassDeclaration();
 		testExtending();
 		testFieldDeclaration();
 		testFunctionDeclaration();
@@ -70,11 +70,6 @@ public class KotlinSTTests {
 		testStringType();
 		testUnitType();
 	}
-
-	@org.junit.Test
-	public void testPoko() {
-		System.out.println("\n--- TEST Poko:\n" + newPoko());
-	} 
 
 	@org.junit.Test
 	public void testArrayEqualsExpression() {
@@ -179,6 +174,11 @@ public class KotlinSTTests {
 	@org.junit.Test
 	public void testOverrideToString() {
 		System.out.println("\n--- TEST OverrideToString:\n" + newOverrideToString());
+	} 
+
+	@org.junit.Test
+	public void testDataClassDeclaration() {
+		System.out.println("\n--- TEST DataClassDeclaration:\n" + newDataClassDeclaration());
 	} 
 
 	@org.junit.Test

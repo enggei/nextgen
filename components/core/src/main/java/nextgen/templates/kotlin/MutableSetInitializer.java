@@ -11,6 +11,10 @@ public class MutableSetInitializer implements Initializer, Expression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("MutableSetInitializer");
@@ -63,4 +67,4 @@ public class MutableSetInitializer implements Initializer, Expression {
 	}
 
 	static final String st = "MutableSetInitializer(expressions) ::= <<setOf(~expressions:{it|~it~};separator=\", \"~) >>";
-} 
+}  

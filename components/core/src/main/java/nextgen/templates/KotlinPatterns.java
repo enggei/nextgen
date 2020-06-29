@@ -102,6 +102,10 @@ public class KotlinPatterns extends KotlinST {
       return newClassDeclaration().setName(name);
    }
 
+   public static DataClassDeclaration newDataClassDeclaration(String name) {
+      return newDataClassDeclaration().setName(name);
+   }
+
    public static NullableType newNullableType(TypeDeclaration typeDeclaration) {
       return newNullableType().setType(typeDeclaration);
    }

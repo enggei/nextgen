@@ -1,6 +1,6 @@
 package nextgen.templates.kotlin;
 
-public class ClassDeclaration implements CompilationUnit {
+public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -15,9 +15,14 @@ public class ClassDeclaration implements CompilationUnit {
 	private java.util.List<FieldDeclaration> _fields = new java.util.ArrayList<>();
 	private java.util.List<Extending> _extends = new java.util.ArrayList<>();
 	private java.util.List<FunctionDeclaration> _members = new java.util.ArrayList<>();
+	private java.util.List<ClassDefinition> _subclasses = new java.util.ArrayList<>();
 
 	ClassDeclaration(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
+	}
+
+	public java.util.UUID uuid() {
+		return uuid;
 	}
 
 	@Override
@@ -33,6 +38,7 @@ public class ClassDeclaration implements CompilationUnit {
 		for (Object o : _fields) st.add("fields", o);
 		for (Object o : _extends) st.add("extends", o);
 		for (Object o : _members) st.add("members", o);
+		for (Object o : _subclasses) st.add("subclasses", o);
 		return st.render().trim();
 	}
 
@@ -277,6 +283,35 @@ public class ClassDeclaration implements CompilationUnit {
 		return this._members;
 	} 
 
+	public ClassDeclaration addSubclasses(ClassDefinition value) {
+		this._subclasses.add(value);
+		return this;
+	}
+
+	public ClassDeclaration setSubclasses(ClassDefinition[] value) {
+		this._subclasses.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassDeclaration setSubclasses(java.util.Collection<ClassDefinition> values) {
+		this._subclasses.addAll(values);
+		return this;
+	}
+
+	public ClassDeclaration removeSubclasses(ClassDefinition value) {
+		this._subclasses.remove(value);
+		return this;
+	}
+
+	public ClassDeclaration removeSubclasses(int index) {
+		this._subclasses.remove(index);
+		return this;
+	}
+
+	public java.util.List<ClassDefinition> getSubclasses() {
+		return this._subclasses;
+	} 
+
 
 	@Override
 	public boolean equals(Object o) {
@@ -291,7 +326,7 @@ public class ClassDeclaration implements CompilationUnit {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,overrideEquals,overrideHashCode,overrideToString,members) ::= <<~annotations~~if(annotations)~\n" + 
+	static final String st = "ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,overrideEquals,overrideHashCode,overrideToString,members,subclasses) ::= <<~annotations~~if(annotations)~\n" + 
 				"~endif~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n" + 
 				"	~fields:{it|~it~};separator=\",\\n\"~\n" + 
 				")~if(extends)~: ~extends:{it|~it~};separator=\", \"~~endif~ {\n" + 
@@ -303,5 +338,7 @@ public class ClassDeclaration implements CompilationUnit {
 				"	~overrideToString~\n" + 
 				"\n" + 
 				"	~members:{it|~it~};separator=\"\\n\"~\n" + 
+				"\n" + 
+				"	~subclasses:{it|~it~};separator=\"\\n\"~\n" + 
 				"} >>";
-} 
+}  

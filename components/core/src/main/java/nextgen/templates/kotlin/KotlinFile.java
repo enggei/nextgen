@@ -13,6 +13,10 @@ public class KotlinFile {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("KotlinFile");
@@ -121,4 +125,4 @@ public class KotlinFile {
 				"~imports:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"~compilationUnit:{it|~it~};separator=\"\\n\\n\"~ >>";
-} 
+}  

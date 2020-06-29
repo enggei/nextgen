@@ -12,6 +12,10 @@ public class CastExpression implements Expression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("CastExpression");
@@ -80,4 +84,4 @@ public class CastExpression implements Expression {
 	}
 
 	static final String st = "CastExpression(expression,type) ::= <<~expression~ as ~type~ >>";
-} 
+}  

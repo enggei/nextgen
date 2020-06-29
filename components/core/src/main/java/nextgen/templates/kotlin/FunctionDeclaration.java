@@ -17,6 +17,10 @@ public class FunctionDeclaration implements CompilationUnit {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("FunctionDeclaration");
@@ -216,4 +220,4 @@ public class FunctionDeclaration implements CompilationUnit {
 				"	~expressionBody~~else~ {\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
 				"}~endif~ >>";
-} 
+}  

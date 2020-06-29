@@ -12,6 +12,10 @@ public class OverrideToString {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("OverrideToString");
@@ -88,4 +92,4 @@ public class OverrideToString {
 	static final String st = "OverrideToString(className,fields) ::= <<override fun toString(): String {\n" + 
 				"	return \"~className~(~fields:{it|~it~};separator=\", \"~)\"\n" + 
 				"} >>";
-} 
+}  

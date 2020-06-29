@@ -11,6 +11,10 @@ public class SetType implements TypeDeclaration {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("SetType");
@@ -56,4 +60,4 @@ public class SetType implements TypeDeclaration {
 	}
 
 	static final String st = "SetType(type) ::= <<Set<~type~> >>";
-} 
+}  

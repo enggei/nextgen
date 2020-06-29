@@ -5,7 +5,6 @@ public class KotlinST {
 	private static final String stg = "delimiters \"~\", \"~\"\n" +
 	"eom() ::= \"}\"\n" +
 	"gt() ::= \">\"\n" +
-	Poko.st + "\n" + 
 	ArrayEqualsExpression.st + "\n" + 
 	AssignExpression.st + "\n" + 
 	CastExpression.st + "\n" + 
@@ -27,6 +26,7 @@ public class KotlinST {
 	OverrideEquals.st + "\n" + 
 	OverrideHashCode.st + "\n" + 
 	OverrideToString.st + "\n" + 
+	DataClassDeclaration.st + "\n" + 
 	Extending.st + "\n" + 
 	FieldDeclaration.st + "\n" + 
 	FunctionDeclaration.st + "\n" + 
@@ -99,10 +99,6 @@ public class KotlinST {
 	public static void setSTGroup(final String stgFile) {
 		stGroup = decorate(new org.stringtemplate.v4.STGroupFile(stgFile, '~', '~'));
 	}
-
-	public static Poko newPoko() {
-		return new Poko(stGroup);
-	} 
 
 	public static ArrayEqualsExpression newArrayEqualsExpression() {
 		return new ArrayEqualsExpression(stGroup);
@@ -186,6 +182,10 @@ public class KotlinST {
 
 	public static OverrideToString newOverrideToString() {
 		return new OverrideToString(stGroup);
+	} 
+
+	public static DataClassDeclaration newDataClassDeclaration() {
+		return new DataClassDeclaration(stGroup);
 	} 
 
 	public static Extending newExtending() {
