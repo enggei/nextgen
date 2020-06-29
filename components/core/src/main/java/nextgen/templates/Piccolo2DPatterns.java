@@ -16,15 +16,16 @@ public class Piccolo2DPatterns extends Piccolo2DST {
                 .addStatements("SwingUtilities.invokeLater(() -> canvas.getSelectedNodes().forEach(" + canvas.getNodeName() + "::close));");
 
         final LayoutVerticallyAction layoutVerticallyAction = newLayoutVerticallyAction()
+                .setName("LayoutVerticallyAction")
                 .setCanvasName(canvas.getName())
                 .setNodeType(canvas.getNodeName());
 
         registerRightClickAction(canvas, selectAllNodesAction, selectAllNodesAction.getName());
         registerRightClickAction(canvas, unselectAllNodesAction, unselectAllNodesAction.getName());
         registerRightClickAction(canvas, closeSelectedNodesAction, closeSelectedNodesAction.getName());
-        registerRightClickAction(canvas, layoutVerticallyAction, "LayoutVerticallyAction");
+        registerRightClickAction(canvas, layoutVerticallyAction, layoutVerticallyAction.getName());
 
-        canvas.addOnKeyPressed("1", "LayoutVerticallyAction");
+        canvas.addOnKeyPressed("1", layoutVerticallyAction.getName());
         canvas.addOnKeyPressed("A", selectAllNodesAction.getName());
         canvas.addOnKeyPressed("C", closeSelectedNodesAction.getName());
     }
@@ -44,6 +45,7 @@ public class Piccolo2DPatterns extends Piccolo2DST {
     public static void addDefaultActionsToNode(PNode node) {
 
         final LayoutTreeAction layoutTreeAction = newLayoutTreeAction()
+                .setName("LayoutTreeAction")
                 .setCanvasName(node.getCanvasName())
                 .setNodeType(node.getName());
 
@@ -55,13 +57,18 @@ public class Piccolo2DPatterns extends Piccolo2DST {
                         ".filter(canvasNode -> !canvasNode.getUuid().equals(node.getUuid()))" +
                         ".forEach(" + node.getName() + "::close));");
 
-        node.addActions(layoutTreeAction);
+        registerRightClickAction(node, layoutTreeAction, layoutTreeAction.getName());
+
         node.addActions(closeNodeAction);
         node.addActions(retainNodeAction);
-        node.addOnRightClick("LayoutTreeAction");
-        node.addOnKeyPressed("1", "LayoutTreeAction");
+        node.addOnKeyPressed("1", layoutTreeAction.getName());
         node.addOnKeyPressed("C", closeNodeAction.getName());
         node.addOnKeyPressed("R", retainNodeAction.getName());
+    }
+
+    public static void registerRightClickAction(PNode node, Object action, Object name) {
+        node.addActions(action);
+        node.addOnRightClick(name);
     }
 
     public static NodeAction newNodeAction(PNode node, String name, String title) {

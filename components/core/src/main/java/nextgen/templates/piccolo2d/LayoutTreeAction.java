@@ -5,6 +5,7 @@ public class LayoutTreeAction {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Object _name;
 	private Object _nodeType;
 	private Object _canvasName;
 
@@ -19,10 +20,33 @@ public class LayoutTreeAction {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("LayoutTreeAction");
+		st.add("name", _name);
 		st.add("nodeType", _nodeType);
 		st.add("canvasName", _canvasName);
 		return st.render().trim();
 	}
+
+	public LayoutTreeAction setName(Object value) {
+		this._name = value;
+		return this;
+	}
+
+	public Object getName() {
+		return this._name;
+	}
+
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
+	public boolean hasName() {
+		return this._name != null;
+	}
+
+	public LayoutTreeAction removeName() {
+		this._name = null;
+		return this;
+	} 
 
 	public LayoutTreeAction setNodeType(Object value) {
 		this._nodeType = value;
@@ -83,17 +107,17 @@ public class LayoutTreeAction {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "LayoutTreeAction(nodeType,canvasName) ::= <<private static final class LayoutTreeAction extends NodeAction {\n" + 
+	static final String st = "LayoutTreeAction(name,nodeType,canvasName) ::= <<private static final class ~name~ extends NodeAction {\n" + 
 				"\n" + 
 				"	private final Map<UUID, ~nodeType~> parentsMap = new LinkedHashMap<>();\n" + 
 				"	private final Map<UUID, java.util.List<~nodeType~~gt()~> childrensMap = new LinkedHashMap<>();\n" + 
 				"	private final org.abego.treelayout.util.DefaultConfiguration<~nodeType~> configuration;\n" + 
 				"\n" + 
-				"	private LayoutTreeAction(~nodeType~ root, ~canvasName~ canvas, PInputEvent event) {\n" + 
+				"	private ~name~(~nodeType~ root, ~canvasName~ canvas, PInputEvent event) {\n" + 
 				"		this(root, canvas, event, org.abego.treelayout.Configuration.Location.Left, org.abego.treelayout.Configuration.AlignmentInLevel.Center);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	private LayoutTreeAction(~nodeType~ root, ~canvasName~ canvas, PInputEvent event, org.abego.treelayout.Configuration.Location location, org.abego.treelayout.Configuration.AlignmentInLevel alignmentInLevel) {\n" + 
+				"	private ~name~(~nodeType~ root, ~canvasName~ canvas, PInputEvent event, org.abego.treelayout.Configuration.Location location, org.abego.treelayout.Configuration.AlignmentInLevel alignmentInLevel) {\n" + 
 				"		super(\"Layout Tree\", root, canvas, event);\n" + 
 				"		this.configuration = new org.abego.treelayout.util.DefaultConfiguration<>(100, 5, location, alignmentInLevel);\n" + 
 				"	}\n" + 

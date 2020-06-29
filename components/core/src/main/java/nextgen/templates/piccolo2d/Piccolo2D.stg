@@ -314,12 +314,12 @@ CanvasAction(name,canvasName,title,statements) ::= <<private static final class 
 
 PCanvasActions() ::= << >>
 
-LayoutVerticallyAction(canvasName,nodeType) ::= <<private static final class LayoutVerticallyAction extends CanvasAction {
+LayoutVerticallyAction(name,canvasName,nodeType) ::= <<private static final class ~name~ extends CanvasAction {
 
 	private final Point position;
 	private final int heightPadding = 20;
 
-	LayoutVerticallyAction(~canvasName~ canvas, PInputEvent event) {
+	~name~(~canvasName~ canvas, PInputEvent event) {
 		super("Layout selected nodes vertically", canvas, event);
 		this.position = canvas.getCurrentMousePosition();
 	}
@@ -645,17 +645,17 @@ PNodeActions() ::= <<Contains complex actions for PNode:
 LayoutTreeAction
 Uses a root-node and layout outgoing relations in any NSEW direction.  >>
 
-LayoutTreeAction(nodeType,canvasName) ::= <<private static final class LayoutTreeAction extends NodeAction {
+LayoutTreeAction(name,nodeType,canvasName) ::= <<private static final class ~name~ extends NodeAction {
 
 	private final Map<UUID, ~nodeType~> parentsMap = new LinkedHashMap<>();
 	private final Map<UUID, java.util.List<~nodeType~~gt()~> childrensMap = new LinkedHashMap<>();
 	private final org.abego.treelayout.util.DefaultConfiguration<~nodeType~> configuration;
 
-	private LayoutTreeAction(~nodeType~ root, ~canvasName~ canvas, PInputEvent event) {
+	private ~name~(~nodeType~ root, ~canvasName~ canvas, PInputEvent event) {
 		this(root, canvas, event, org.abego.treelayout.Configuration.Location.Left, org.abego.treelayout.Configuration.AlignmentInLevel.Center);
 	}
 
-	private LayoutTreeAction(~nodeType~ root, ~canvasName~ canvas, PInputEvent event, org.abego.treelayout.Configuration.Location location, org.abego.treelayout.Configuration.AlignmentInLevel alignmentInLevel) {
+	private ~name~(~nodeType~ root, ~canvasName~ canvas, PInputEvent event, org.abego.treelayout.Configuration.Location location, org.abego.treelayout.Configuration.AlignmentInLevel alignmentInLevel) {
 		super("Layout Tree", root, canvas, event);
 		this.configuration = new org.abego.treelayout.util.DefaultConfiguration<>(100, 5, location, alignmentInLevel);
 	}

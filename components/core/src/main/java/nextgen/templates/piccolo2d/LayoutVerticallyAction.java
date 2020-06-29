@@ -5,6 +5,7 @@ public class LayoutVerticallyAction {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Object _name;
 	private Object _canvasName;
 	private Object _nodeType;
 
@@ -19,10 +20,33 @@ public class LayoutVerticallyAction {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("LayoutVerticallyAction");
+		st.add("name", _name);
 		st.add("canvasName", _canvasName);
 		st.add("nodeType", _nodeType);
 		return st.render().trim();
 	}
+
+	public LayoutVerticallyAction setName(Object value) {
+		this._name = value;
+		return this;
+	}
+
+	public Object getName() {
+		return this._name;
+	}
+
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
+	public boolean hasName() {
+		return this._name != null;
+	}
+
+	public LayoutVerticallyAction removeName() {
+		this._name = null;
+		return this;
+	} 
 
 	public LayoutVerticallyAction setCanvasName(Object value) {
 		this._canvasName = value;
@@ -83,12 +107,12 @@ public class LayoutVerticallyAction {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "LayoutVerticallyAction(canvasName,nodeType) ::= <<private static final class LayoutVerticallyAction extends CanvasAction {\n" + 
+	static final String st = "LayoutVerticallyAction(name,canvasName,nodeType) ::= <<private static final class ~name~ extends CanvasAction {\n" + 
 				"\n" + 
 				"	private final Point position;\n" + 
 				"	private final int heightPadding = 20;\n" + 
 				"\n" + 
-				"	LayoutVerticallyAction(~canvasName~ canvas, PInputEvent event) {\n" + 
+				"	~name~(~canvasName~ canvas, PInputEvent event) {\n" + 
 				"		super(\"Layout selected nodes vertically\", canvas, event);\n" + 
 				"		this.position = canvas.getCurrentMousePosition();\n" + 
 				"	}\n" + 
