@@ -14,6 +14,10 @@ public class MethodDeclaration {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("MethodDeclaration");
@@ -136,4 +140,4 @@ public class MethodDeclaration {
 	static final String st = "MethodDeclaration(const,name,parameter,statements) ::= <<~if(const)~const ~endif~~name~ = ~if(parameter)~~parameter~~else~()~endif~ \\=\\> {\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
 				"} >>";
-} 
+}  

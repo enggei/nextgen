@@ -12,6 +12,10 @@ public class BlockStmt implements Statement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("BlockStmt");
@@ -89,4 +93,4 @@ public class BlockStmt implements Statement {
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
 				"~endif~\n" + 
 				"} >>";
-} 
+}  

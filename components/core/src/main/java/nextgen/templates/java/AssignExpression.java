@@ -13,6 +13,10 @@ public class AssignExpression implements Expression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("AssignExpression");
@@ -104,4 +108,4 @@ public class AssignExpression implements Expression {
 	}
 
 	static final String st = "AssignExpression(value,target,operator) ::= <<~target~ ~operator~ ~value~ >>";
-} 
+}  

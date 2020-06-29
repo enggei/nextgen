@@ -20,6 +20,10 @@ public class ClassComponent {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ClassComponent");
@@ -383,4 +387,4 @@ public class ClassComponent {
 				"}\n" + 
 				"\n" + 
 				"export default (~name~); >>";
-} 
+}  

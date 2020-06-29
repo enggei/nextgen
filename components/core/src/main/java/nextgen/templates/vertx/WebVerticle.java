@@ -8,6 +8,7 @@ public class WebVerticle {
 	private String _packageName;
 	private String _name;
 	private java.util.List<java.util.Map<String, Object>> _routes = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _rawRoutes = new java.util.ArrayList<>();
 
 	WebVerticle(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -23,6 +24,7 @@ public class WebVerticle {
 		st.add("packageName", _packageName);
 		st.add("name", _name);
 		for (java.util.Map<String, Object> map : _routes) st.addAggr("routes.{action,url,methodName,declaration}", map.get("action"), map.get("url"), map.get("methodName"), map.get("declaration"));
+		for (java.util.Map<String, Object> map : _rawRoutes) st.addAggr("rawRoutes.{action,url,methodName,declaration}", map.get("action"), map.get("url"), map.get("methodName"), map.get("declaration"));
 		return st.render().trim();
 	}
 
@@ -132,6 +134,67 @@ public class WebVerticle {
 
 	} 
 
+	public WebVerticle addRawRoutes(Object _action, Object _url, Object _methodName, Object _declaration) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("action", _action);
+		map.put("url", _url);
+		map.put("methodName", _methodName);
+		map.put("declaration", _declaration);
+		this._rawRoutes.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getRawRoutes() {
+		return this._rawRoutes;
+	}
+
+	public WebVerticle addRawRoutes(WebVerticle_RawRoutes value) {
+		return addRawRoutes(value._action, value._url, value._methodName, value._declaration);
+	}
+
+	public java.util.stream.Stream<WebVerticle_RawRoutes> streamRawRoutes() {
+		return this._rawRoutes.stream().map(WebVerticle_RawRoutes::new);
+	}
+
+	public static final class WebVerticle_RawRoutes {
+
+		Object _action;
+		Object _url;
+		Object _methodName;
+		Object _declaration;
+
+		public WebVerticle_RawRoutes(Object _action, Object _url, Object _methodName, Object _declaration) {
+			this._action = _action;
+			this._url = _url;
+			this._methodName = _methodName;
+			this._declaration = _declaration;
+		}
+
+		private WebVerticle_RawRoutes(java.util.Map<String, Object> map) {
+			this._action = (Object) map.get("action");
+			this._url = (Object) map.get("url");
+			this._methodName = (Object) map.get("methodName");
+			this._declaration = (Object) map.get("declaration");
+		}
+
+		public Object getAction() {
+			return this._action;
+		}
+
+		public Object getUrl() {
+			return this._url;
+		}
+
+		public Object getMethodName() {
+			return this._methodName;
+		}
+
+		public Object getDeclaration() {
+			return this._declaration;
+		}
+
+	} 
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -145,7 +208,7 @@ public class WebVerticle {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "WebVerticle(packageName,name,routes) ::= <<package ~packageName~;\n" + 
+	static final String st = "WebVerticle(packageName,name,routes,rawRoutes) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import com.securityx.web.api.LoginRequest;\n" + 
 				"import com.securityx.web.domain.*;\n" + 
@@ -154,7 +217,6 @@ public class WebVerticle {
 				"import io.vertx.core.Vertx;\n" + 
 				"import io.vertx.core.eventbus.DeliveryOptions;\n" + 
 				"import io.vertx.core.http.HttpServerOptions;\n" + 
-				"import io.vertx.core.json.JsonArray;\n" + 
 				"import io.vertx.core.json.JsonObject;\n" + 
 				"import io.vertx.core.net.PemKeyCertOptions;\n" + 
 				"import io.vertx.ext.auth.KeyStoreOptions;\n" + 
@@ -206,7 +268,9 @@ public class WebVerticle {
 				"		router.route(\"/api/*\").handler(JWTAuthHandler.create(auth, \"/login\"));\n" + 
 				"		router.get(\"/user\").handler(routingContext -> getUser(routingContext, config));\n" + 
 				"		~routes:{it|router.~it.action~(\"/api/~it.url~\").handler(this::~it.methodName~);};separator=\"\\n\"~\n" + 
-				"				final HttpServerOptions serverOptions = new HttpServerOptions();\n" + 
+				"		~rawRoutes:{it|router.~it.action~(\"~it.url~\").handler(this::~it.methodName~);};separator=\"\\n\"~\n" + 
+				"		\n" + 
+				"		final HttpServerOptions serverOptions = new HttpServerOptions();\n" + 
 				"		final Optional<SSLConfig> ssl = Optional.ofNullable(config.getSsl());\n" + 
 				"\n" + 
 				"		ssl.ifPresent(sslConfig ->\n" + 
@@ -294,6 +358,7 @@ public class WebVerticle {
 				"	}\n" + 
 				"\n" + 
 				"	~routes:{it|~it.declaration~};separator=\"\\n\\n\"~\n" + 
+				"	~rawRoutes:{it|~it.declaration~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
 				"	private static void getFromDomainDB(Vertx vertx, RoutingContext routingContext, String action, JsonObject params) {\n" + 
 				"		vertx.eventBus().request(\"domain.db\", params, new DeliveryOptions().addHeader(\"action\", action), reply -> {\n" + 

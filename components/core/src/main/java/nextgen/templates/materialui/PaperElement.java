@@ -13,6 +13,10 @@ public class PaperElement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("PaperElement");
@@ -112,4 +116,4 @@ public class PaperElement {
 	static final String st = "PaperElement(key,className,children) ::= <<<Paper~if(key)~ key=~key~~endif~~if(className)~ className={classes.~className~}~endif~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Paper> >>";
-} 
+}  

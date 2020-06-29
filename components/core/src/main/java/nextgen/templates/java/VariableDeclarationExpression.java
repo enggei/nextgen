@@ -12,6 +12,10 @@ public class VariableDeclarationExpression implements Expression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("VariableDeclarationExpression");
@@ -94,4 +98,4 @@ public class VariableDeclarationExpression implements Expression {
 	}
 
 	static final String st = "VariableDeclarationExpression(variables,modifiers) ::= <<~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~variables:{it|~it~};separator=\", \"~ >>";
-} 
+}  

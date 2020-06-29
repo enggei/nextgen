@@ -1674,6 +1674,22 @@
       "uuid" : "cb66658d-2f94-4267-99bb-c34f68307f7f",
       "name" : "AtomicLongType",
       "lexical" : "java.util.concurrent.atomic.AtomicLong"
+    }, {
+      "uuid" : "9ea7863a-5aca-4202-8b84-f644f8f7f649",
+      "name" : "ThreadType",
+      "lexical" : "java.util.Thread"
+    } ]
+  }, {
+    "uuid" : "a3651402-afaa-49df-aa0a-a580d4425251",
+    "name" : "SwingTypes",
+    "values" : [ {
+      "uuid" : "3659f5cb-24ff-43e3-a5a6-580c499c0e94",
+      "name" : "SwingUtilitiesType",
+      "lexical" : "javax.swing.SwingUtilities"
+    }, {
+      "uuid" : "9a58b498-e907-479f-ad30-a0b4ff780041",
+      "name" : "JPanelType",
+      "lexical" : "javax.swing.JPanel"
     } ]
   } ],
   "interfaces" : [ {

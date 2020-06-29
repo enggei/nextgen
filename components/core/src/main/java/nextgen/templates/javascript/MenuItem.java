@@ -12,6 +12,10 @@ public class MenuItem {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("MenuItem");
@@ -80,4 +84,4 @@ public class MenuItem {
 	}
 
 	static final String st = "MenuItem(title,name) ::= <<<MenuItem component={ ~name~ } onClick={handleClose}> ~title~ </MenuItem> >>";
-} 
+}  

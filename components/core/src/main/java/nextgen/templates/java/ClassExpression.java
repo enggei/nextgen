@@ -11,6 +11,10 @@ public class ClassExpression implements Expression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ClassExpression");
@@ -56,4 +60,4 @@ public class ClassExpression implements Expression {
 	}
 
 	static final String st = "ClassExpression(type) ::= <<~type~.class >>";
-} 
+}  

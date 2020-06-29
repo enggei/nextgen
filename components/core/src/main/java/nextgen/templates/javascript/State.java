@@ -11,6 +11,10 @@ public class State {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("State");
@@ -81,4 +85,4 @@ public class State {
 	static final String st = "State(values) ::= <<{\n" + 
 				"	~values:{it|~it.name~: ~it.value~};separator=\",\\n\"~\n" + 
 				"} >>";
-} 
+}  

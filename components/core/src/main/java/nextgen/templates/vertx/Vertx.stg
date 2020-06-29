@@ -299,7 +299,7 @@ public class ~name;format="capitalize"~ {
 };separator="\n"~
 } >>
 
-WebVerticle(packageName,name,routes) ::= <<package ~packageName~;
+WebVerticle(packageName,name,routes,rawRoutes) ::= <<package ~packageName~;
 
 import com.securityx.web.api.LoginRequest;
 import com.securityx.web.domain.*;
@@ -308,7 +308,6 @@ import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.http.HttpServerOptions;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.PemKeyCertOptions;
 import io.vertx.ext.auth.KeyStoreOptions;
@@ -360,7 +359,9 @@ public class ~name;format="capitalize"~ extends AbstractVerticle {
 		router.route("/api/*").handler(JWTAuthHandler.create(auth, "/login"));
 		router.get("/user").handler(routingContext -> getUser(routingContext, config));
 		~routes:{it|router.~it.action~("/api/~it.url~").handler(this::~it.methodName~);};separator="\n"~
-				final HttpServerOptions serverOptions = new HttpServerOptions();
+		~rawRoutes:{it|router.~it.action~("~it.url~").handler(this::~it.methodName~);};separator="\n"~
+		
+		final HttpServerOptions serverOptions = new HttpServerOptions();
 		final Optional<SSLConfig> ssl = Optional.ofNullable(config.getSsl());
 
 		ssl.ifPresent(sslConfig ->
@@ -448,6 +449,7 @@ public class ~name;format="capitalize"~ extends AbstractVerticle {
 	}
 
 	~routes:{it|~it.declaration~};separator="\n\n"~
+	~rawRoutes:{it|~it.declaration~};separator="\n\n"~
 
 	private static void getFromDomainDB(Vertx vertx, RoutingContext routingContext, String action, JsonObject params) {
 		vertx.eventBus().request("domain.db", params, new DeliveryOptions().addHeader("action", action), reply -> {

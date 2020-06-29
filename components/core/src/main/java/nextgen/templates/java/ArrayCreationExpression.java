@@ -13,6 +13,10 @@ public class ArrayCreationExpression implements Expression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ArrayCreationExpression");
@@ -110,4 +114,4 @@ public class ArrayCreationExpression implements Expression {
 	}
 
 	static final String st = "ArrayCreationExpression(initializer,type,levels) ::= <<new ~type~~levels:{it|~it~}~~if(initializer)~ ~initializer~~endif~ >>";
-} 
+}  

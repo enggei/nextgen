@@ -16,6 +16,10 @@ public class ButtonElement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ButtonElement");
@@ -206,4 +210,4 @@ public class ButtonElement {
 	static final String st = "ButtonElement(key,className,color,component,attributes,children) ::= <<<Button~if(key)~ key=~key~~endif~~if(className)~ className={classes.~className~}~endif~~if(color)~ color=\"~color~\"~endif~~if(component)~ component=~component~~endif~~if(attributes)~ ~endif~~attributes:{it|~it.name~~if(it.value)~=~it.value~~endif~};separator=\" \"~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Button> >>";
-} 
+}  

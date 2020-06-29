@@ -11,6 +11,10 @@ public class BreakStmt implements Statement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("BreakStmt");
@@ -56,4 +60,4 @@ public class BreakStmt implements Statement {
 	}
 
 	static final String st = "BreakStmt(label) ::= <<break~if(label)~ ~label~~endif~; >>";
-} 
+}  

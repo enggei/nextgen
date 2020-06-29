@@ -11,6 +11,10 @@ public class QualifierName {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("QualifierName");
@@ -63,4 +67,4 @@ public class QualifierName {
 	}
 
 	static final String st = "QualifierName(value) ::= <<~value:{it|~it~};separator=\".\"~ >>";
-} 
+}  

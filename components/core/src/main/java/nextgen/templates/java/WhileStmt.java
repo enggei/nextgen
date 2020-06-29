@@ -12,6 +12,10 @@ public class WhileStmt implements Statement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("WhileStmt");
@@ -80,4 +84,4 @@ public class WhileStmt implements Statement {
 	}
 
 	static final String st = "WhileStmt(condition,body) ::= <<while (~condition~) ~body~ >>";
-} 
+}  

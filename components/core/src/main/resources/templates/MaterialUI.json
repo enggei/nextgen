@@ -107,7 +107,7 @@
   }, {
     "uuid" : "7f27567e-f7bf-429d-8506-5a2dd57fa2c6",
     "name" : "SimpleElement",
-    "text" : "<~name~~if(key)~ key=~key~~endif~~if(className)~ className={classes.~className~}~endif~~if(attributes)~ ~endif~~attributes:{it|~it.name~~if(it.value)~=~it.value~~endif~};separator=\" \"~>\n\t~children:{it|~it~};separator=\"\\n\"~\n</~name~> ",
+    "text" : "<~name~~if(key)~ key=~key~~endif~~if(className)~ className={classes.~className~}~endif~~if(attributes)~ ~endif~~attributes:{it|~it.name~~if(it.value)~=~it.value~~endif~};separator=\" \"~~if(const)~ ~const~ ~endif~>\n\t~children:{it|~it~};separator=\"\\n\"~\n</~name~> ",
     "children" : [ {
       "uuid" : "e4eae1d2-a60f-4bb5-ab8e-7ae28969a6f2",
       "name" : "PaperElement",
@@ -309,36 +309,41 @@
       } ]
     } ],
     "parameters" : [ {
-      "uuid" : "8e0820e4-3d7b-40fd-9679-1491c9447e7b",
+      "uuid" : "988ec18f-fcee-444f-9524-48d140475dee",
       "name" : "name",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "1544c86b-5171-4f15-b383-f956d683c9be",
+      "uuid" : "5313150a-157b-4849-9a5f-e02b00f6bb19",
       "name" : "key",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "02c914f0-a6ce-49b4-8115-f05357b123fe",
+      "uuid" : "1d495d96-ca0e-45d0-9b0d-5ef62c6b6ad2",
       "name" : "className",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "bbb19a0f-d550-4f9f-b98f-841f677ef82e",
+      "uuid" : "19efd2d0-47c8-4506-b067-560d68545647",
       "name" : "attributes",
       "type" : "KVLIST",
       "argumentType" : "Object",
       "keys" : [ {
-        "uuid" : "9c32ed02-3e81-483f-bb83-27df9608aacb",
+        "uuid" : "036278fd-773b-437e-9a07-470ad1857459",
         "name" : "name",
         "argumentType" : "Object"
       }, {
-        "uuid" : "d0539ff1-88bd-4024-965d-b9d62b84d091",
+        "uuid" : "9b2307c0-58e4-40c3-9a7c-b1a6f78c3362",
         "name" : "value",
         "argumentType" : "Object"
       } ]
     }, {
-      "uuid" : "c214737d-a8e9-4f10-9dfd-ff2ce15c1646",
+      "uuid" : "98c9a9c4-db99-4b01-9bf1-dacb66c416fc",
+      "name" : "const",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "cb7de0f3-a7bc-4625-8671-2940951c4696",
       "name" : "children",
       "type" : "LIST",
       "argumentType" : "Object"

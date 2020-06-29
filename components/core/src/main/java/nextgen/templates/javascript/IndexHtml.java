@@ -12,6 +12,10 @@ public class IndexHtml {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("indexHtml");
@@ -98,4 +102,4 @@ public class IndexHtml {
 				"<script type=\"text/javascript\" src=\"~src~.js\"></script>\n" + 
 				"</body>\n" + 
 				"</html> >>";
-} 
+}  

@@ -15,6 +15,10 @@ public class MobXStore {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("MobXStore");
@@ -208,4 +212,4 @@ public class MobXStore {
 				"}\n" + 
 				"\n" + 
 				"export default new ~name;format=\"capitalize\"~(); >>";
-} 
+}  

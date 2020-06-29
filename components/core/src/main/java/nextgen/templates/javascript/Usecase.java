@@ -5,12 +5,14 @@ public class Usecase {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private String _module;
 	private String _name;
 	private String _description;
 	private String _url;
 	private Object _parameterName;
 	private Object _parameterType;
 	private String _action;
+	private Object _returnValue;
 	private java.util.List<String> _successStatements = new java.util.ArrayList<>();
 	private java.util.List<String> _failStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _domainStatements = new java.util.ArrayList<>();
@@ -19,20 +21,48 @@ public class Usecase {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Usecase");
+		st.add("module", _module);
 		st.add("name", _name);
 		st.add("description", _description);
 		st.add("url", _url);
 		st.add("parameterName", _parameterName);
 		st.add("parameterType", _parameterType);
 		st.add("action", _action);
+		st.add("returnValue", _returnValue);
 		for (Object o : _successStatements) st.add("successStatements", o);
 		for (Object o : _failStatements) st.add("failStatements", o);
 		for (Object o : _domainStatements) st.add("domainStatements", o);
 		return st.render().trim();
 	}
+
+	public Usecase setModule(String value) {
+		this._module = value;
+		return this;
+	}
+
+	public String getModule() {
+		return this._module;
+	}
+
+	public String getModule(String defaultValue) {
+		return this._module == null ? defaultValue : this._module;
+	}
+
+	public boolean hasModule() {
+		return this._module != null;
+	}
+
+	public Usecase removeModule() {
+		this._module = null;
+		return this;
+	} 
 
 	public Usecase setName(String value) {
 		this._name = value;
@@ -166,6 +196,28 @@ public class Usecase {
 		return this;
 	} 
 
+	public Usecase setReturnValue(Object value) {
+		this._returnValue = value;
+		return this;
+	}
+
+	public Object getReturnValue() {
+		return this._returnValue;
+	}
+
+	public Object getReturnValue(Object defaultValue) {
+		return this._returnValue == null ? defaultValue : this._returnValue;
+	}
+
+	public boolean hasReturnValue() {
+		return this._returnValue != null;
+	}
+
+	public Usecase removeReturnValue() {
+		this._returnValue = null;
+		return this;
+	} 
+
 	public Usecase addSuccessStatements(String value) {
 		this._successStatements.add(value);
 		return this;
@@ -267,7 +319,9 @@ public class Usecase {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Usecase(name,description,url,parameterName,parameterType,action,successStatements,failStatements,domainStatements) ::= <<~name~\n" + 
+	static final String st = "Usecase(module,name,description,url,parameterName,parameterType,action,successStatements,failStatements,domainStatements,returnValue) ::= <<~module~\n" + 
+				"\n" + 
+				"~name~\n" + 
 				"~description~\n" + 
 				"\n" + 
 				"~url~\n" + 
@@ -277,5 +331,7 @@ public class Usecase {
 				"~successStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"~failStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
-				"~domainStatements:{it|~it~};separator=\"\\n\"~ >>";
-} 
+				"~domainStatements:{it|~it~};separator=\"\\n\"~\n" + 
+				"\n" + 
+				"~returnValue~ >>";
+}  

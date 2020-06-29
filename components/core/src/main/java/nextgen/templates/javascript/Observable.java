@@ -12,6 +12,10 @@ public class Observable {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Observable");
@@ -80,4 +84,4 @@ public class Observable {
 	}
 
 	static final String st = "Observable(name,initializer) ::= <<@observable ~name~~if(initializer)~ = ~initializer~~endif~; >>";
-} 
+}  

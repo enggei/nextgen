@@ -12,6 +12,10 @@ public class CatchClause implements Statement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("CatchClause");
@@ -80,4 +84,4 @@ public class CatchClause implements Statement {
 	}
 
 	static final String st = "CatchClause(parameter,body) ::= <<catch (~parameter~) ~body~ >>";
-} 
+}  

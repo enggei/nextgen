@@ -12,6 +12,10 @@ public class NormalAnnotationExpression implements Expression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("NormalAnnotationExpression");
@@ -86,4 +90,4 @@ public class NormalAnnotationExpression implements Expression {
 	}
 
 	static final String st = "NormalAnnotationExpression(name,memberValues) ::= <<@~name~~if(memberValues)~(~memberValues:{it|~it~};separator=\", \"~)~endif~ >>";
-} 
+}  

@@ -13,6 +13,10 @@ public class FieldDeclaration {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("FieldDeclaration");
@@ -126,4 +130,4 @@ public class FieldDeclaration {
 
 	static final String st = "FieldDeclaration(variables,annotations,modifiers) ::= <<~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\n" + 
 				"~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~variables:{it|~it~};separator=\", \"~; >>";
-} 
+}  

@@ -13,6 +13,10 @@ public class AnnotationMemberDeclaration {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("AnnotationMemberDeclaration");
@@ -104,4 +108,4 @@ public class AnnotationMemberDeclaration {
 	}
 
 	static final String st = "AnnotationMemberDeclaration(name,type,defaultValue) ::= <<~type~ ~name~()~if(defaultValue)~ default ~defaultValue~~endif~; >>";
-} 
+}  

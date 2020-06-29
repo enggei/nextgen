@@ -16,6 +16,10 @@ public class TypographyElement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("TypographyElement");
@@ -178,4 +182,4 @@ public class TypographyElement {
 	static final String st = "TypographyElement(key,className,variant,component,gutter,text) ::= <<<Typography~if(key)~ key=~key~~endif~~if(className)~ className={classes.~className~}~endif~~if(variant)~ variant=\"~variant~\"~endif~~if(component)~ component=\"~component~\"~endif~~if(gutter)~ ~gutter~~endif~>\n" + 
 				"	~text~\n" + 
 				"</Typography> >>";
-} 
+}  

@@ -11,6 +11,10 @@ public class SuperExpression implements Expression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("SuperExpression");
@@ -56,4 +60,4 @@ public class SuperExpression implements Expression {
 	}
 
 	static final String st = "SuperExpression(typeName) ::= <<super~if(typeName)~.~endif~~typeName~ >>";
-} 
+}  

@@ -13,6 +13,10 @@ public class FinalFieldDeclaration {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("FinalFieldDeclaration");
@@ -104,4 +108,4 @@ public class FinalFieldDeclaration {
 	}
 
 	static final String st = "FinalFieldDeclaration(initializer,name,type) ::= <<final ~VariableDeclaration(initializer,name,type)~; >>";
-} 
+}  

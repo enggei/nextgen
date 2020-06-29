@@ -12,6 +12,10 @@ public class NameArray {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("NameArray");
@@ -86,4 +90,4 @@ public class NameArray {
 	}
 
 	static final String st = "NameArray(values,name) ::= <<~name~ : [ ~values:{it|~it~};separator=\", \"~ ] >>";
-} 
+}  

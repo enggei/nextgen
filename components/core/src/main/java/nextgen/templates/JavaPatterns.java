@@ -34,4 +34,19 @@ public class JavaPatterns extends JavaST {
     public static ObjectCreationExpression newArrayListInstance() {
         return newObjectCreationExpression().setType(newArrayListType());
     }
+
+    public static ObjectCreationExpression newThread(Object body) {
+        return newObjectCreationExpression()
+                .setScope(CoreTypes.ThreadType)
+                .addArguments(newLambdaExpression().setBody(body));
+    }
+
+    public static Statement invokeLater(Object body) {
+        return newExpressionStmt()
+                .setExpression(newMethodCallExpression()
+                        .setScope(SwingTypes.SwingUtilitiesType)
+                        .setName("invokeLater")
+                        .addArguments(newLambdaExpression()
+                                .setBody(body)));
+    }
 }

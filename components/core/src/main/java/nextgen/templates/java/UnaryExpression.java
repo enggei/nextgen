@@ -14,6 +14,10 @@ public class UnaryExpression implements Expression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("UnaryExpression");
@@ -128,4 +132,4 @@ public class UnaryExpression implements Expression {
 	}
 
 	static final String st = "UnaryExpression(isPrefix,operator,expression,isPostfix) ::= <<~if(isPrefix)~~operator~~endif~~expression~~if(isPostfix)~~operator~~endif~ >>";
-} 
+}  

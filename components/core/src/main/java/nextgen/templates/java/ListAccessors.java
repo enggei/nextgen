@@ -13,6 +13,10 @@ public class ListAccessors {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("listAccessors");
@@ -111,4 +115,4 @@ public class ListAccessors {
 				"	this._~name~.add(value);\n" + 
 				"	return this;\n" + 
 				"} >>";
-} 
+}  

@@ -13,6 +13,10 @@ public class BinaryExpression implements Expression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("BinaryExpression");
@@ -104,4 +108,4 @@ public class BinaryExpression implements Expression {
 	}
 
 	static final String st = "BinaryExpression(left,operator,right) ::= <<~left~ ~operator~ ~right~ >>";
-} 
+}  

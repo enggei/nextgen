@@ -14,6 +14,10 @@ public class GridItemElement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("GridItemElement");
@@ -136,4 +140,4 @@ public class GridItemElement {
 	static final String st = "GridItemElement(xs,key,className,children) ::= <<<Grid item~if(xs)~ xs={~xs~}~endif~~if(key)~ key=~key~~endif~~if(className)~ className={classes.~className~}~endif~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Grid> >>";
-} 
+}  

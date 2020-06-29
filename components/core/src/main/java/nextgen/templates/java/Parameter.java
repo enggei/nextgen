@@ -15,6 +15,10 @@ public class Parameter {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Parameter");
@@ -165,4 +169,4 @@ public class Parameter {
 	}
 
 	static final String st = "Parameter(annotations,modifiers,type,isVarargs,name) ::= <<~annotations:{it|~it~};separator=\" \"~~if(annotations)~ ~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~if(type)~~type~ ~endif~~if(isVarargs)~... ~endif~~name~ >>";
-} 
+}  

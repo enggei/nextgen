@@ -12,6 +12,10 @@ public class SwitchEntryStmt implements Statement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("SwitchEntryStmt");
@@ -95,4 +99,4 @@ public class SwitchEntryStmt implements Statement {
 
 	static final String st = "SwitchEntryStmt(labels,statements) ::= <<~if(labels)~~labels:{it|case ~it~ :};separator=\"\\n\"~~else~default :~endif~\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~ >>";
-} 
+}  

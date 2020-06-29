@@ -34,7 +34,7 @@ StyleClass(name,attributes) ::= <<~name~: {
 	~attributes:{it|~it.name~: ~it.value~};separator=",\n"~
 }  >>
 
-SimpleElement(name,key,className,attributes,children) ::= <<<~name~~if(key)~ key=~key~~endif~~if(className)~ className={classes.~className~}~endif~~if(attributes)~ ~endif~~attributes:{it|~it.name~~if(it.value)~=~it.value~~endif~};separator=" "~>
+SimpleElement(name,key,className,attributes,const,children) ::= <<<~name~~if(key)~ key=~key~~endif~~if(className)~ className={classes.~className~}~endif~~if(attributes)~ ~endif~~attributes:{it|~it.name~~if(it.value)~=~it.value~~endif~};separator=" "~~if(const)~ ~const~ ~endif~>
 	~children:{it|~it~};separator="\n"~
 </~name~>  >>
 

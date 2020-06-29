@@ -11,6 +11,10 @@ public class ThrowStmt implements Statement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ThrowStmt");
@@ -56,4 +60,4 @@ public class ThrowStmt implements Statement {
 	}
 
 	static final String st = "ThrowStmt(expression) ::= <<throw ~expression~; >>";
-} 
+}  

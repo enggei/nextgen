@@ -13,6 +13,10 @@ public class ImportDeclaration {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ImportDeclaration");
@@ -104,4 +108,4 @@ public class ImportDeclaration {
 	}
 
 	static final String st = "ImportDeclaration(isStatic,name,isAsterisk) ::= <<import ~if(isStatic)~static ~endif~~name~~if(isAsterisk)~.*~endif~; >>";
-} 
+}  

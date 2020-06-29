@@ -12,6 +12,10 @@ public class ExplicitConstructorInvocationStmt implements Statement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ExplicitConstructorInvocationStmt");
@@ -86,4 +90,4 @@ public class ExplicitConstructorInvocationStmt implements Statement {
 	}
 
 	static final String st = "ExplicitConstructorInvocationStmt(isThis,arguments) ::= <<~if(isThis)~this~else~super~endif~(~arguments:{it|~it~};separator=\", \"~); >>";
-} 
+}  

@@ -12,6 +12,10 @@ public class InstanceOfExpression implements Expression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("InstanceOfExpression");
@@ -80,4 +84,4 @@ public class InstanceOfExpression implements Expression {
 	}
 
 	static final String st = "InstanceOfExpression(type,expression) ::= <<~expression~ instanceof ~type~ >>";
-} 
+}  

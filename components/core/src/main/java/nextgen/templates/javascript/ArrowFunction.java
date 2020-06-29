@@ -13,6 +13,10 @@ public class ArrowFunction {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ArrowFunction");
@@ -119,4 +123,4 @@ public class ArrowFunction {
 	static final String st = "ArrowFunction(params,expression,statements) ::= <<(~params:{it|~it~};separator=\",\"~) => ~if(expression)~~expression~~else~{\n" + 
 				"		~statements:{it|~it~};separator=\"\\n\"~ \n" + 
 				"	}~endif~ >>";
-} 
+}  

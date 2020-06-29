@@ -11,6 +11,10 @@ public class Inject {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Inject");
@@ -63,4 +67,4 @@ public class Inject {
 	}
 
 	static final String st = "Inject(values) ::= <<@inject(~values:{it|~it~};separator=\", \"~) >>";
-} 
+}  

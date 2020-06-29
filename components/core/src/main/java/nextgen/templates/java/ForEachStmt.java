@@ -13,6 +13,10 @@ public class ForEachStmt implements Statement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ForEachStmt");
@@ -104,4 +108,4 @@ public class ForEachStmt implements Statement {
 	}
 
 	static final String st = "ForEachStmt(body,variable,iterable) ::= <<for (~variable~ : ~iterable~) ~body~ >>";
-} 
+}  

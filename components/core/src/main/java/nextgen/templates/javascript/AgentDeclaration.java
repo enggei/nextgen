@@ -12,6 +12,10 @@ public class AgentDeclaration {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("agentDeclaration");
@@ -88,4 +92,4 @@ public class AgentDeclaration {
 	static final String st = "agentDeclaration(name,agentEndpoint) ::= <<const ~name~ = { \n" + 
 				"	~agentEndpoint:{it|~it~};separator=\",\\n\"~\n" + 
 				"} >>";
-} 
+}  

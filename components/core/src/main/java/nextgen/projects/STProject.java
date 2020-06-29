@@ -1,13 +1,17 @@
 package nextgen.projects;
 
+import nextgen.st.STGenerator;
 import nextgen.templates.JavaPatterns;
+import nextgen.templates.Piccolo2DPatterns;
 import nextgen.templates.domain.Entity;
 import nextgen.templates.java.PackageDeclaration;
+import nextgen.templates.piccolo2d.*;
 import org.junit.Test;
 
 import java.io.File;
 
 import static nextgen.templates.DomainPatterns.*;
+import static nextgen.templates.Piccolo2DPatterns.*;
 
 public class STProject {
 
@@ -15,8 +19,47 @@ public class STProject {
     private final File javaMainSrc = new File(root, "src/main/java");
     private final File javaTestSrc = new File(root, "src/test/java");
 
-    private final PackageDeclaration stDomainPackage = JavaPatterns.newPackageDeclaration("nextgen.st.domain");
-    private final PackageDeclaration stModelPackage = JavaPatterns.newPackageDeclaration("nextgen.st.model");
+    private final PackageDeclaration stPackage = JavaPatterns.newPackageDeclaration("nextgen.st");
+    private final PackageDeclaration stDomainPackage = JavaPatterns.newPackageDeclaration(stPackage, "domain");
+    private final PackageDeclaration stModelPackage = JavaPatterns.newPackageDeclaration(stPackage, "model");
+    private final PackageDeclaration stCanvasPackage = JavaPatterns.newPackageDeclaration(stPackage, "canvas");
+
+    @Test
+    public void generateCanvasPackage() {
+
+        final String canvasName = "STCanvas";
+        final String nodeName = "STNode";
+        final String relationName = "STRelation";
+
+        final PCanvas canvas = newPCanvas()
+                .setName(canvasName)
+                .setPackageName(stCanvasPackage.getName())
+                .setNodeName(nodeName)
+                .setRelationName(relationName);
+
+        final PNode node = newPNode()
+                .setName(nodeName)
+                .setCanvasName(canvas.getName())
+                .setPackageName(stCanvasPackage.getName());
+
+        final PRelation relation = newPRelation()
+                .setName(relationName)
+                .setNodeName(node.getName())
+                .setCanvasName(canvas.getName())
+                .setPackageName(stCanvasPackage.getName());
+
+        final CanvasAction newSTNodeAction = newCanvasAction(canvas, "NewNode", "New Node")
+                .addStatements("SwingUtilities.invokeLater(() -> canvas.addNode(new " + node.getName() + "(canvas, \"HelloWorld\")));");
+
+        registerRightClickAction(canvas, newSTNodeAction, newSTNodeAction.getName());
+
+        Piccolo2DPatterns.addDefaultActionsToCanvas(canvas);
+        Piccolo2DPatterns.addDefaultActionsToNode(node);
+
+        STGenerator.writeJavaFile(canvas, stCanvasPackage, canvas.getName(), javaMainSrc);
+        STGenerator.writeJavaFile(node, stCanvasPackage, node.getName(), javaMainSrc);
+        STGenerator.writeJavaFile(relation, stCanvasPackage, relation.getName(), javaMainSrc);
+    }
 
     @Test
     public void generateModellingDomain() {

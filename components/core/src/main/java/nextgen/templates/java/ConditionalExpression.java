@@ -13,6 +13,10 @@ public class ConditionalExpression implements Expression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ConditionalExpression");
@@ -104,4 +108,4 @@ public class ConditionalExpression implements Expression {
 	}
 
 	static final String st = "ConditionalExpression(thenExpression,elseExpression,condition) ::= <<~condition~ ? ~thenExpression~ : ~elseExpression~ >>";
-} 
+}  

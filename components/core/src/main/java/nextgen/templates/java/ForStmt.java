@@ -14,6 +14,10 @@ public class ForStmt implements Statement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ForStmt");
@@ -141,4 +145,4 @@ public class ForStmt implements Statement {
 	}
 
 	static final String st = "ForStmt(update,initialization,compare,body) ::= <<for (~initialization:{it|~it~};separator=\", \"~; ~compare~; ~update:{it|~it~};separator=\", \"~) ~body~ >>";
-} 
+}  

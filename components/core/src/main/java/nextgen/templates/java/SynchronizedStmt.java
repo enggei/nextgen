@@ -12,6 +12,10 @@ public class SynchronizedStmt implements Statement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("SynchronizedStmt");
@@ -80,4 +84,4 @@ public class SynchronizedStmt implements Statement {
 	}
 
 	static final String st = "SynchronizedStmt(expression,body) ::= <<synchronized ( ~expression~ ) ~body~ >>";
-} 
+}  

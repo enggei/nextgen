@@ -10,6 +10,10 @@ public class SignOut {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("SignOut");
@@ -84,4 +88,4 @@ public class SignOut {
 				"		</Container>\n" + 
 				"	);\n" + 
 				"} >>";
-} 
+}  

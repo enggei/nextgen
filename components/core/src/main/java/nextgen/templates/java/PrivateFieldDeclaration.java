@@ -13,6 +13,10 @@ public class PrivateFieldDeclaration {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("PrivateFieldDeclaration");
@@ -104,4 +108,4 @@ public class PrivateFieldDeclaration {
 	}
 
 	static final String st = "PrivateFieldDeclaration(initializer,name,type) ::= <<private ~VariableDeclaration(initializer,name,type)~; >>";
-} 
+}  

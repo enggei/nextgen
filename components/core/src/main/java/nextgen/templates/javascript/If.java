@@ -13,6 +13,10 @@ public class If {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("If");
@@ -105,4 +109,4 @@ public class If {
 
 	static final String st = "If(condition,then,otherwise) ::= <<if (~condition~) ~then~~if(otherwise)~\n" + 
 				"else ~otherwise~~endif~ >>";
-} 
+}  

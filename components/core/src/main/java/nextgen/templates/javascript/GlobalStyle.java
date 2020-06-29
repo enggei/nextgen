@@ -12,6 +12,10 @@ public class GlobalStyle {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("GlobalStyle");
@@ -106,4 +110,4 @@ public class GlobalStyle {
 				"		~properties:{it|~it.key~: ~it.value~};separator=\",\\n\"~\n" + 
 				"	}\n" + 
 				"} >>";
-} 
+}  

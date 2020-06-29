@@ -13,6 +13,10 @@ public class ReferenceAccessors {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("referenceAccessors");
@@ -116,4 +120,4 @@ public class ReferenceAccessors {
 				"	this._~name~ = null;\n" + 
 				"	return this;\n" + 
 				"} >>";
-} 
+}  

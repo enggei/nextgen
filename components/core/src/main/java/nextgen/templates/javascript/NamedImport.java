@@ -11,6 +11,10 @@ public class NamedImport {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("namedImport");
@@ -63,4 +67,4 @@ public class NamedImport {
 	}
 
 	static final String st = "namedImport(names) ::= <<{ ~names:{it|~it~};separator=\", \"~ } >>";
-} 
+}  

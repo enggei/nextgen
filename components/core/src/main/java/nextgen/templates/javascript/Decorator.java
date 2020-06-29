@@ -12,6 +12,10 @@ public class Decorator {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Decorator");
@@ -86,4 +90,4 @@ public class Decorator {
 	}
 
 	static final String st = "Decorator(name,parameters) ::= <<@~name~~if(parameters)~(~parameters:{it|~it~};separator=\", \"~)~endif~ >>";
-} 
+}  

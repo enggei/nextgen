@@ -31,6 +31,8 @@ public class STApp extends JFrame {
         contentPanel.add(tabbedPane, BorderLayout.CENTER);
         add(contentPanel, BorderLayout.CENTER);
 
+        tabbedPane.addTab("Canvas", new nextgen.st.canvas.STCanvas());
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 

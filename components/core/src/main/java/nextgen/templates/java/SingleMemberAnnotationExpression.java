@@ -12,6 +12,10 @@ public class SingleMemberAnnotationExpression implements Expression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("SingleMemberAnnotationExpression");
@@ -86,4 +90,4 @@ public class SingleMemberAnnotationExpression implements Expression {
 	}
 
 	static final String st = "SingleMemberAnnotationExpression(members,name) ::= <<@~name~~if(members)~(~members:{it|~it~};separator=\", \"~)~endif~ >>";
-} 
+}  

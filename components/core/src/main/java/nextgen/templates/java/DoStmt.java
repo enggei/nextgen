@@ -12,6 +12,10 @@ public class DoStmt implements Statement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("DoStmt");
@@ -80,4 +84,4 @@ public class DoStmt implements Statement {
 	}
 
 	static final String st = "DoStmt(condition,body) ::= <<do ~body~ while (~condition~); >>";
-} 
+}  

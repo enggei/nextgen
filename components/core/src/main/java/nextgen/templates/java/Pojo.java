@@ -15,6 +15,10 @@ public class Pojo {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Pojo");
@@ -235,4 +239,4 @@ public class Pojo {
 				"		return java.util.Objects.hash(uuid);\n" + 
 				"	}\n" + 
 				"} >>";
-} 
+}  

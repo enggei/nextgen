@@ -17,6 +17,10 @@ public class ConstructorDeclaration {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ConstructorDeclaration");
@@ -235,4 +239,4 @@ public class ConstructorDeclaration {
 
 	static final String st = "ConstructorDeclaration(name,blockStmt,modifiers,annotations,thrownExceptions,typeParameters,parameters) ::= <<~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\n" + 
 				"~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~if(typeParameters)~~typeParameters:{it|<~it~>};separator=\" \"~ ~endif~~name~(~parameters:{it|~it~};separator=\", \"~)~if(thrownExceptions)~ throws ~thrownExceptions:{it|~it~};separator=\", \"~ ~endif~~if(blockStmt)~~blockStmt~~else~ { }~endif~ >>";
-} 
+}  

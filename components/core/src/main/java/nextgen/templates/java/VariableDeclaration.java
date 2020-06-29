@@ -13,6 +13,10 @@ public class VariableDeclaration {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("VariableDeclaration");
@@ -104,4 +108,4 @@ public class VariableDeclaration {
 	}
 
 	static final String st = "VariableDeclaration(name,initializer,type) ::= <<~if(type)~~type~ ~endif~~name~~if(initializer)~ = ~initializer~~endif~ >>";
-} 
+}  

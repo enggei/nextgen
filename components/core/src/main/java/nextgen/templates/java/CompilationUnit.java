@@ -13,6 +13,10 @@ public class CompilationUnit {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("CompilationUnit");
@@ -121,4 +125,4 @@ public class CompilationUnit {
 				"~importDeclaration:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"~types:{it|~it~};separator=\"\\n\\n\"~ >>";
-} 
+}  

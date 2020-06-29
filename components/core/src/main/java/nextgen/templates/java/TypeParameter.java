@@ -12,6 +12,10 @@ public class TypeParameter {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("TypeParameter");
@@ -86,4 +90,4 @@ public class TypeParameter {
 	}
 
 	static final String st = "TypeParameter(name,typeBounds) ::= <<~name~~if(typeBounds)~ extends ~typeBounds:{it|~it~};separator=\" & \"~~endif~ >>";
-} 
+}  

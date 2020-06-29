@@ -12,6 +12,10 @@ public class DestructorProp {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("DestructorProp");
@@ -86,4 +90,4 @@ public class DestructorProp {
 	}
 
 	static final String st = "DestructorProp(child,prop) ::= <<const { ~prop:{it|~it~};separator=\", \"~ } = this.props~if(child)~.~child~~endif~; >>";
-} 
+}  

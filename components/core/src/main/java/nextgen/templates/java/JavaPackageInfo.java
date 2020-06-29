@@ -13,6 +13,10 @@ public class JavaPackageInfo {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("JavaPackageInfo");
@@ -123,4 +127,4 @@ public class JavaPackageInfo {
 				"\n" + 
 				"classes:\n" + 
 				"	~classes:{it|~it.name~};separator=\"\\n\"~ >>";
-} 
+}  

@@ -18,10 +18,15 @@ public class StoreComponent {
 	private java.util.List<Object> _renderStatements = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _imports = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _events = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _const = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _renderCondition = new java.util.ArrayList<>();
 
 	StoreComponent(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
+	}
+
+	public java.util.UUID uuid() {
+		return uuid;
 	}
 
 	@Override
@@ -40,6 +45,7 @@ public class StoreComponent {
 		for (Object o : _renderStatements) st.add("renderStatements", o);
 		for (java.util.Map<String, Object> map : _imports) st.addAggr("imports.{name,path}", map.get("name"), map.get("path"));
 		for (java.util.Map<String, Object> map : _events) st.addAggr("events.{methodName,declaration}", map.get("methodName"), map.get("declaration"));
+		for (java.util.Map<String, Object> map : _const) st.addAggr("const.{name,declaration}", map.get("name"), map.get("declaration"));
 		for (java.util.Map<String, Object> map : _renderCondition) st.addAggr("renderCondition.{condition,element}", map.get("condition"), map.get("element"));
 		return st.render().trim();
 	}
@@ -432,6 +438,51 @@ public class StoreComponent {
 
 	} 
 
+	public StoreComponent addConst(Object _name, Object _declaration) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("declaration", _declaration);
+		this._const.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getConst() {
+		return this._const;
+	}
+
+	public StoreComponent addConst(StoreComponent_Const value) {
+		return addConst(value._name, value._declaration);
+	}
+
+	public java.util.stream.Stream<StoreComponent_Const> streamConst() {
+		return this._const.stream().map(StoreComponent_Const::new);
+	}
+
+	public static final class StoreComponent_Const {
+
+		Object _name;
+		Object _declaration;
+
+		public StoreComponent_Const(Object _name, Object _declaration) {
+			this._name = _name;
+			this._declaration = _declaration;
+		}
+
+		private StoreComponent_Const(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._declaration = (Object) map.get("declaration");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getDeclaration() {
+			return this._declaration;
+		}
+
+	} 
+
 	public StoreComponent addRenderCondition(Object _condition, Object _element) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("condition", _condition);
@@ -490,7 +541,7 @@ public class StoreComponent {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "StoreComponent(imports,components,stores,decorators,name,debug,state,constructorStatements,events,componentDidMountStatements,methods,renderStatements,renderCondition,renderElement) ::= <<import React from 'react';\n" + 
+	static final String st = "StoreComponent(imports,components,stores,decorators,name,debug,state,constructorStatements,events,componentDidMountStatements,methods,renderStatements,const,renderCondition,renderElement) ::= <<import React from 'react';\n" + 
 				"import { inject, observer } from 'mobx-react';\n" + 
 				"~imports:{it|import ~it.name~ from '~it.path~';};separator=\"\\n\"~\n" + 
 				"~components:{it|~it~};separator=\"\\n\\n\"~\n" + 
@@ -534,6 +585,7 @@ public class StoreComponent {
 				"		console.log(\"render ~name~ : \" +  this.props);\n" + 
 				"~endif~\n" + 
 				"		~renderStatements:{it|~it~};separator=\"\\n\"~\n" + 
+				"		~const:{it|const ~it.name~ = ~it.declaration~;};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"~if(renderCondition)~\n" + 
 				"		~renderCondition:{it|if (~it.condition~) \n" + 
@@ -554,4 +606,4 @@ public class StoreComponent {
 				"}\n" + 
 				"\n" + 
 				"export default (~name~); >>";
-} 
+}  

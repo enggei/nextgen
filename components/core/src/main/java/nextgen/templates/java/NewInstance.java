@@ -12,6 +12,10 @@ public class NewInstance {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("NewInstance");
@@ -86,4 +90,4 @@ public class NewInstance {
 	}
 
 	static final String st = "NewInstance(type,arguments) ::= <<new ~type~(~arguments:{it|~it~};separator=\",\"~) >>";
-} 
+}  

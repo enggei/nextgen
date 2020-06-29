@@ -11,6 +11,10 @@ public class ContinueStmt implements Statement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ContinueStmt");
@@ -56,4 +60,4 @@ public class ContinueStmt implements Statement {
 	}
 
 	static final String st = "ContinueStmt(label) ::= <<continue~if(label)~ ~label~~endif~; >>";
-} 
+}  

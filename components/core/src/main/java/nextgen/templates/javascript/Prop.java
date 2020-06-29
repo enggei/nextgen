@@ -14,6 +14,10 @@ public class Prop {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Prop");
@@ -128,4 +132,4 @@ public class Prop {
 	}
 
 	static final String st = "Prop(name,value,stringValue,expression) ::= <<~name~~if(value)~=~value~~elseif(stringValue)~=\"~stringValue~\"~else~={ ~expression~ }~endif~ >>";
-} 
+}  

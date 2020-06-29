@@ -16,6 +16,10 @@ public class ModuleDeclaration {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ModuleDeclaration");
@@ -216,4 +220,4 @@ public class ModuleDeclaration {
 				"    ~usesDirective:{it|uses ~it~};separator=\"\\n\"~\n" + 
 				"    ~opens:{it|opens ~it~};separator=\"\\n\"~\n" + 
 				"} >>";
-} 
+}  

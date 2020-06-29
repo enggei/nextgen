@@ -1,0 +1,1055 @@
+delimiters "~","~"
+
+PCanvas(packageName,name,nodeName,relationName,onRightClick,onKeyPressed,actions) ::= <<package ~packageName~;
+
+import org.piccolo2d.PCamera;
+import org.piccolo2d.PCanvas;
+import org.piccolo2d.PLayer;
+import org.piccolo2d.PNode;
+import org.piccolo2d.event.PBasicInputEventHandler;
+import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.event.PInputEventFilter;
+import org.piccolo2d.event.PInputEventListener;
+import org.piccolo2d.nodes.PPath;
+import org.piccolo2d.util.PBounds;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.geom.Point2D;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
+import static java.awt.event.KeyEvent.*;
+
+public class ~name~ extends PCanvas implements PInputEventListener {
+
+	private final PLayer nodeLayer;
+	private final PLayer relationLayer = new PLayer();
+	
+	final Map<UUID, ~nodeName~> nodeMap = new ConcurrentHashMap<>();
+	final Map<UUID, ~relationName~> relationMap = new ConcurrentHashMap<>();
+	
+	private final SelectEventsHandler selectEventHandler = new SelectEventsHandler();
+	private final CanvasInputEventsHandler canvasInputEventsHandler = new CanvasInputEventsHandler();
+	
+	public ~name~() {
+		this(Color.WHITE, new Dimension(1024, 768));
+	}
+	
+	public ~name~(Color background, Dimension preferredSize) {
+		super();
+		setBackground(background);
+		setPreferredSize(preferredSize);
+		nodeLayer = getLayer();
+		getCamera().addLayer(0, relationLayer);
+
+		removeInputEventListener(getZoomEventHandler());
+		addInputEventListener(new CanvasZoomHandler());
+		addInputEventListener(canvasInputEventsHandler);
+	}
+
+	@Override
+	public void processEvent(PInputEvent pInputEvent, int i) {
+		canvasInputEventsHandler.processEvent(pInputEvent, i);
+	}
+
+	public Point getCenterPosition() {
+		final Point2D center2D = getCamera().getViewBounds().getCenter2D();
+		return new Point((int) center2D.getX(), (int) center2D.getY());
+	}
+
+	public Point getCurrentMousePosition() {
+		final Point mousePosition = getMousePosition();
+		if (mousePosition == null) return getCenterPosition();
+		final Point2D localToView = getCamera().localToView(mousePosition);
+		return new Point((int) localToView.getX(), (int) localToView.getY());
+	}
+
+	@SuppressWarnings("unchecked")
+	public <N extends ~nodeName~> Stream<N> getAllNodes() {
+		return nodeLayer.getAllNodes().stream().filter((Predicate<PNode>) node -> node instanceof ~nodeName~);
+	}
+
+	public <N extends ~nodeName~> Stream<N> getSelectedNodes() {
+		return (Stream<N>) getAllNodes().filter(~nodeName~::isSelected);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <R extends ~relationName~> Stream<R> getAllRelations() {
+		return relationLayer.getAllNodes().stream().filter((Predicate<PNode>) node -> node instanceof ~relationName~);
+	}
+
+	public <R extends ~relationName~> Stream<R> getSelectedRelations() {
+		return (Stream<R>) getAllRelations().filter(~relationName~::isSelected);
+	}
+
+	public <N extends ~nodeName~> N addNode(N node) {
+		return addNode(node, getCenterPosition());
+	}
+
+	public <N extends ~nodeName~> N addNode(N node, Point2D offset) {
+		final N existing = getNode(node.getUuid());
+		if (existing != null) {
+			existing.refresh();
+			return existing;
+		}
+		if (offset != null) node.setOffset(offset);
+		node.select();
+		nodeMap.put(node.getUuid(), node);
+		SwingUtilities.invokeLater(() -> nodeLayer.addChild(node));
+		return node;
+	}
+
+	public <N extends ~nodeName~> N getNode(UUID uuid) {
+		return (N) nodeMap.get(uuid);
+	}
+
+	public <N extends ~nodeName~> N removeNode(UUID uuid) {
+		final ~nodeName~ remove = nodeMap.remove(uuid);
+		nodeLayer.removeChild(remove);
+		return (N) remove;
+	}
+
+	public <R extends ~relationName~> R addRelation(R relation) {
+		relationMap.put(relation.getUuid(), relation);
+		relationLayer.addChild(relation);
+		return relation;
+	}
+		public <R extends ~relationName~> R removeRelation(UUID uuid) {
+		final ~relationName~ remove = relationMap.remove(uuid);
+		relationLayer.removeChild(remove);
+		return (R) remove;
+	}
+
+	public <R extends ~relationName~> R getRelation(UUID uuid) {
+		return (R) relationMap.get(uuid);
+	}
+
+	protected void onCanvasRightClick(JPopupMenu pop, PInputEvent event) {
+		~onRightClick:{it|pop.add(new ~it.name~(this, event));};separator="\n"~
+	}
+
+	protected void onCanvasLeftClick(PInputEvent event) {
+		SwingUtilities.invokeLater(() -> getSelectedNodes().forEach(~nodeName~::unselect));
+	}
+
+	protected void onCanvasKeyPressed(PInputEvent event) {
+~if(onKeyPressed)~
+		switch (event.getKeyCode()) {
+	~onKeyPressed:{it|
+		case VK_~it.key~:
+			new ~it.name~(this, event).actionPerformed(null);
+			break;
+		};separator="\n"~
+		}
+~endif~
+	}
+
+	~CanvasInputEventsHandler(canvasName=name)~
+	
+	~SelectEventsHandler(nodeName=nodeName)~
+	
+	~CanvasZoomHandler()~
+
+	static abstract class CanvasAction extends AbstractAction {
+
+		final ~name~ canvas;
+		final PInputEvent event;
+	
+		CanvasAction(String name, ~name~ canvas, PInputEvent event) {
+			super(name);
+			this.canvas = canvas;
+			this.event = event;
+		}
+	
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			actionPerformed(canvas, event, e);
+		}
+	
+		abstract void actionPerformed(~name~ canvas, PInputEvent event, ActionEvent e);
+	}
+	
+	~actions:{it|~it~};separator="\n\n"~
+}  >>
+
+CanvasInputEventsHandler(canvasName) ::= <<private final class CanvasInputEventsHandler extends PBasicInputEventHandler {
+
+	@Override
+	public void mouseEntered(PInputEvent event) {
+		if (!this.equals(event.getInputManager().getKeyboardFocus())) {
+			event.getInputManager().setKeyboardFocus(this);
+			requestFocusInWindow();
+		}
+	}
+
+	@Override
+	public void mouseExited(PInputEvent event) {
+		event.getInputManager().setKeyboardFocus(null);
+	}
+
+	@Override
+	public void mouseClicked(PInputEvent event) {
+		removeInputEventListener(selectEventHandler);
+		if (!this.equals(event.getInputManager().getKeyboardFocus())) event.getInputManager().setKeyboardFocus(this);
+		if (event.isRightMouseButton()) {
+			SwingUtilities.invokeLater(() -> {
+				final JPopupMenu pop = new JPopupMenu();
+				~canvasName~.this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				onCanvasRightClick(pop, event);
+				~canvasName~.this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				pop.show(~canvasName~.this, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
+			});
+		} else if (event.isLeftMouseButton()) SwingUtilities.invokeLater(() -> onCanvasLeftClick(event));
+	}
+
+	@Override
+	public void keyPressed(PInputEvent event) {
+		if (event.isControlDown()) {
+			removeInputEventListener(selectEventHandler);
+			addInputEventListener(selectEventHandler.init(event));
+		} else {
+			onCanvasKeyPressed(event);
+		}
+	}
+
+	@Override
+	public void keyReleased(PInputEvent event) {
+		if (event.getKeyCode() == KeyEvent.VK_CONTROL) removeInputEventListener(selectEventHandler.end());
+	}
+
+	@Override
+	public void mouseMoved(PInputEvent event) {
+		if (!event.isControlDown()) removeInputEventListener(selectEventHandler.end());
+		invalidate();
+		repaint();
+	}
+}  >>
+
+SelectEventsHandler(nodeName) ::= <<private final class SelectEventsHandler extends PBasicInputEventHandler {
+
+	private PPath selectionRectangle;
+	private boolean isDragging = true;
+	private double startX;
+	private double startY;
+
+	PInputEventListener init(PInputEvent event) {
+		isDragging = event.isControlDown();
+		if (selectionRectangle != null) nodeLayer.removeChild(selectionRectangle);
+		startX = getCamera().localToView(event.getCanvasPosition()).getX();
+		startY = getCamera().localToView(event.getCanvasPosition()).getY();
+		selectionRectangle = PPath.createRectangle(startX, startY, 1, 1);
+		selectionRectangle.setTransparency(.5f);
+		nodeLayer.addChild(selectionRectangle);
+		return this;
+	}
+
+	@Override
+	public void mouseMoved(PInputEvent event) {
+		if (isDragging) {
+			final double eventX = getCamera().localToView(event.getCanvasPosition()).getX();
+			final double eventY = getCamera().localToView(event.getCanvasPosition()).getY();
+			final boolean left = eventX < startX;
+			selectionRectangle.setX(left ? eventX : startX);
+			selectionRectangle.setWidth(left ? (startX - eventX) : (eventX - startX));
+			final boolean top = eventY < startY;
+			selectionRectangle.setY(top ? eventY : startY);
+			selectionRectangle.setHeight(top ? (startY - eventY) : (eventY - startY));
+			final PBounds fullBounds = selectionRectangle.getFullBounds();
+			SwingUtilities.invokeLater(() -> getAllNodes()
+				.filter(~nodeName~::isSelected)
+				.forEach(node -> {
+					if (fullBounds.contains(node.getFullBounds())) node.select();
+				}));
+		}
+	}
+
+	public PInputEventListener end() {
+		isDragging = false;
+		if (selectionRectangle != null) nodeLayer.removeChild(selectionRectangle);
+		return this;
+	}
+}  >>
+
+CanvasZoomHandler() ::= <<private static class CanvasZoomHandler extends PBasicInputEventHandler {
+
+	final private static double maxZoomScale = 2.5d;
+	final private static double minZomScale = 0.025d;
+	private double scaleFactor = 0.05d;
+
+	CanvasZoomHandler() {
+		super();
+		final PInputEventFilter eventFilter = new PInputEventFilter();
+		eventFilter.rejectAllEventTypes();
+		eventFilter.setAcceptsMouseWheelRotated(true);
+		setEventFilter(eventFilter);
+	}
+
+	public void mouseWheelRotated(final PInputEvent event) {
+		final PCamera camera = event.getCamera();
+		if ((camera.getViewScale() < minZomScale && event.getWheelRotation() < 0) || (camera.getViewScale() > maxZoomScale && event.getWheelRotation() > 0)) return;
+		final double scale = 1.0d + event.getWheelRotation() * scaleFactor;
+		final Point2D viewAboutPoint = event.getPosition();
+		camera.scaleViewAboutPoint(scale, viewAboutPoint.getX(), viewAboutPoint.getY());
+	}
+}  >>
+
+CanvasAction(name,canvasName,title,statements) ::= <<private static final class ~name~ extends CanvasAction {
+
+	~name~(~canvasName~ canvas, PInputEvent event) {
+		super("~title~", canvas, event);
+	}
+
+	@Override
+	void actionPerformed(~canvasName~ canvas, PInputEvent event, ActionEvent e) {
+		~statements:{it|~it~};separator="\n"~
+	}
+}  >>
+
+PCanvasActions() ::= << >>
+
+LayoutVerticallyAction(canvasName,nodeType) ::= <<private static final class LayoutVerticallyAction extends CanvasAction {
+
+	private final Point position;
+	private final int heightPadding = 20;
+
+	LayoutVerticallyAction(~canvasName~ canvas, PInputEvent event) {
+		super("Layout selected nodes vertically", canvas, event);
+		this.position = canvas.getCurrentMousePosition();
+	}
+
+	@Override
+	void actionPerformed(~canvasName~ canvas, PInputEvent event, ActionEvent e) {
+
+		SwingUtilities.invokeLater(() -> canvas.getSelectedNodes().forEach(new Consumer<~nodeType~>() {
+
+			double x = position.getX();
+			double y = position.getY();
+			double height = -1d;
+
+			@Override
+			public void accept(~nodeType~ abstractNode) {
+				if (height == -1) {
+					abstractNode.setOffset(x, y);
+					height = abstractNode.getHeight();
+				} else {
+					y += height + heightPadding;
+					abstractNode.setOffset(x, y);
+					height = abstractNode.getHeight();
+				}
+			}
+		}));
+	}
+}  >>
+
+PNode(packageName,name,canvasName,onKeyPressed,onRightClick,actions) ::= <<package ~packageName~;
+
+import org.piccolo2d.PNode;
+import org.piccolo2d.event.PDragSequenceEventHandler;
+import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.nodes.PPath;
+import org.piccolo2d.nodes.PText;
+import org.piccolo2d.util.PBounds;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.util.*;
+import java.util.stream.Stream;
+
+import static java.awt.event.KeyEvent.*;
+
+public class ~name~ extends PNode {
+
+	protected enum Attributes {
+		_defaultColor, _selectedColor, _highlightedColor, _uuid, _text, _selected, _highlight
+	}
+
+	protected final ~canvasName~ canvas;
+	protected final PText child;
+
+	private PPath rectangle;
+
+	private final Set<UUID> outgoing = new LinkedHashSet<>();
+	private final Set<UUID> incoming = new LinkedHashSet<>();
+
+	public ~name~(~canvasName~ canvas, String text) {
+		this(canvas, text, UUID.randomUUID());
+	}
+	
+	public ~name~(~canvasName~ canvas, String text, UUID uuid) {
+		this.canvas = canvas;
+
+		this.addAttribute(Attributes._defaultColor, Color.decode("#0571b0"));
+		this.addAttribute(Attributes._selectedColor, Color.decode("#ca0020"));
+		this.addAttribute(Attributes._highlightedColor, Color.decode("#000000"));
+		this.addAttribute(Attributes._uuid, uuid);
+		this.addAttribute(Attributes._text, text);
+		this.child = new PText(text == null || text.trim().length() == 0 ? getUuid().toString() : text);
+
+		final NodeInputEventHandler nodeInputEventHandler = new NodeInputEventHandler();
+		nodeInputEventHandler.getEventFilter().setMarksAcceptedEventsAsHandled(true);
+		addInputEventListener(nodeInputEventHandler);
+
+		this.addChild(this.child);
+	}
+
+	@Override
+	public double getHeight() {
+		return child.getHeight();
+	}
+
+	@Override
+	public double getWidth() {
+		return child.getWidth();
+	}
+
+	@Override
+	public String toString() {
+		return getUuid() + " " + getText();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		~name~ other = (~name~) o;
+
+		return getUuid().equals(other.getUuid());
+	}
+
+	@Override
+	public int hashCode() {
+		return getUuid().hashCode();
+	}
+
+	public UUID getUuid() {
+		return (UUID) getAttribute(Attributes._uuid);
+	}
+
+	public String getText() {
+		return (String) getAttribute(Attributes._text);
+	}
+
+	public void refresh() {
+		SwingUtilities.invokeLater(() -> {
+			setPaintInvalid(true);
+			repaint();
+		});
+	}
+
+	public void addOutgoingRelation(UUID relation) {
+		this.outgoing.add(relation);
+	}
+
+	public void addIncomingRelation(UUID relation) {
+		this.incoming.add(relation);
+	}
+
+	public Stream<UUID> outgoing() {
+		return this.outgoing.stream();
+	}
+
+	public Stream<UUID> incoming() {
+		return this.incoming.stream();
+	}
+
+	public void setText(String text) {
+		addAttribute(Attributes._text, text);
+		SwingUtilities.invokeLater(() -> child.setText(text));
+	}
+
+	public void unselect() {
+		addAttribute(Attributes._selected, Boolean.FALSE);
+		SwingUtilities.invokeLater(() -> child.setTextPaint((Color) getAttribute(Attributes._defaultColor)));
+	}
+
+	public void select() {
+		addAttribute(Attributes._selected, Boolean.TRUE);
+		SwingUtilities.invokeLater(() -> child.setTextPaint((Color) getAttribute(Attributes._selectedColor)));
+	}
+
+	public boolean isSelected() {
+		return getBooleanAttribute(Attributes._selected, false);
+	}
+
+	public void unhighlight() {
+		addAttribute(Attributes._highlight, Boolean.FALSE);
+		SwingUtilities.invokeLater(() -> {
+			
+			child.setTextPaint(isSelected() ? (Color) getAttribute(Attributes._selectedColor) : (Color) getAttribute(Attributes._defaultColor));
+			if (rectangle != null) ~name~.this.removeChild(rectangle);
+			
+		});
+	}
+
+	public void highlight() {
+		addAttribute(Attributes._highlight, Boolean.TRUE);
+		SwingUtilities.invokeLater(() -> {
+
+			final PBounds fullBounds = child.getFullBoundsReference();
+			rectangle = PPath.createRectangle(fullBounds.getX(), fullBounds.getY(), fullBounds.getWidth(), fullBounds.getHeight());
+			final Color green = new Color(0, 255, 0, 50);
+			rectangle.setPaint(green);
+			rectangle.setStroke(new BasicStroke());
+			~name~.this.addChild(rectangle);
+
+			child.setTextPaint((Color) getAttribute(Attributes._highlightedColor));
+		});
+	}
+
+	public void close() {
+		SwingUtilities.invokeLater(() -> {
+			
+			for (UUID uuid : incoming) canvas.removeRelation(uuid);
+			for (UUID uuid : outgoing) canvas.removeRelation(uuid);
+			canvas.removeNode(getUuid());
+			
+		});
+	}
+
+	protected void onNodeKeyPressed(PInputEvent event) {
+~if(onKeyPressed)~
+		switch (event.getKeyCode()) {
+			~onKeyPressed:{it|
+case VK_~it.key~:
+	new ~it.name~(this, canvas, event).actionPerformed(null);
+	break;
+};separator="\n"~
+		}
+~endif~
+	}
+
+	protected void onNodeLeftClick(PInputEvent event) {
+		if (isSelected()) unselect();
+		else select();
+	}
+
+	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
+
+		~onRightClick:{it|pop.add(new ~it.name~(this, canvas, event));};separator="\n"~
+
+		pop.addSeparator();
+		
+		pop.add(new AbstractAction("Close") {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				close();
+			}
+		});
+	}
+
+	~PNodeInputEventHandler()~	
+
+	static abstract class NodeAction extends AbstractAction {
+
+		final ~name~ node;
+		final ~canvasName~ canvas;
+		final PInputEvent event;
+	
+		NodeAction(String name, ~name~ node, ~canvasName~ canvas, PInputEvent event) {
+			super(name);
+			this.node = node;
+			this.canvas = canvas;
+			this.event = event;
+		}
+	
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			actionPerformed(node, canvas, event, e);
+		}
+	
+		abstract void actionPerformed(~name~ node, ~canvasName~ canvas, PInputEvent event, ActionEvent e);
+	}
+	
+	~actions:{it|~it~};separator="\n\n"~
+}  >>
+
+PNodeInputEventHandler() ::= <<private final class NodeInputEventHandler extends PDragSequenceEventHandler {
+
+	@Override
+	final protected void startDrag(PInputEvent event) {
+		super.startDrag(event);
+	}
+
+	@Override
+	final protected void drag(PInputEvent event) {
+		super.drag(event);
+		translate(event.getDelta().width, event.getDelta().height);
+	}
+
+	@Override
+	final protected void endDrag(PInputEvent event) {
+		super.endDrag(event);
+	}
+
+	@Override
+	final protected boolean shouldStartDragInteraction(PInputEvent event) {
+		return super.shouldStartDragInteraction(event);
+	}
+
+	@Override
+	public void mouseEntered(PInputEvent event) {
+		event.getInputManager().setKeyboardFocus(this);
+		highlight();
+	}
+
+	@Override
+	public void mouseExited(PInputEvent event) {
+		unhighlight();
+		event.getInputManager().setKeyboardFocus(canvas);
+	}
+
+	@Override
+	public void mouseClicked(PInputEvent event) {
+		if (event.isRightMouseButton()) {
+			final JPopupMenu pop = new JPopupMenu();
+			canvas.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			onNodeRightClick(event, pop);
+			canvas.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
+		} else if (event.isLeftMouseButton()) {
+			SwingUtilities.invokeLater(() -> onNodeLeftClick(event));
+		}
+	}
+
+	@Override
+	public void keyPressed(PInputEvent event) {
+		onNodeKeyPressed(event);
+	}
+}  >>
+
+NodeAction(name,nodeType,canvasName,title,statements) ::= <<private static final class ~name~ extends NodeAction {
+
+	~name~(~nodeType~ node, ~canvasName~ canvas, PInputEvent event) {
+		super("~title~", node, canvas, event);
+	}
+
+	@Override
+	void actionPerformed(~nodeType~ node, ~canvasName~ canvas, PInputEvent event, ActionEvent e) {
+		~statements:{it|~it~};separator="\n"~
+	}
+}  >>
+
+PNodeActions() ::= <<Contains complex actions for PNode:
+
+LayoutTreeAction
+Uses a root-node and layout outgoing relations in any NSEW direction.  >>
+
+LayoutTreeAction(nodeType,canvasName) ::= <<private static final class LayoutTreeAction extends NodeAction {
+
+	private final Map<UUID, ~nodeType~> parentsMap = new LinkedHashMap<>();
+	private final Map<UUID, java.util.List<~nodeType~~gt()~> childrensMap = new LinkedHashMap<>();
+	private final org.abego.treelayout.util.DefaultConfiguration<~nodeType~> configuration;
+
+	private LayoutTreeAction(~nodeType~ root, ~canvasName~ canvas, PInputEvent event) {
+		this(root, canvas, event, org.abego.treelayout.Configuration.Location.Left, org.abego.treelayout.Configuration.AlignmentInLevel.Center);
+	}
+
+	private LayoutTreeAction(~nodeType~ root, ~canvasName~ canvas, PInputEvent event, org.abego.treelayout.Configuration.Location location, org.abego.treelayout.Configuration.AlignmentInLevel alignmentInLevel) {
+		super("Layout Tree", root, canvas, event);
+		this.configuration = new org.abego.treelayout.util.DefaultConfiguration<>(100, 5, location, alignmentInLevel);
+	}
+
+	@Override
+	void actionPerformed(~nodeType~ node, ~canvasName~ canvas, PInputEvent event, ActionEvent e) {
+
+		new Thread(() -> {
+
+			findChildren(node);
+
+			final org.abego.treelayout.TreeForTreeLayout<~nodeType~> tree = new org.abego.treelayout.util.AbstractTreeForTreeLayout<~nodeType~>(node) {
+				@Override
+				public ~nodeType~ getParent(~nodeType~ textNode) {
+					return parentsMap.get(textNode.getUuid());
+				}
+
+				@Override
+				public java.util.List<~nodeType~> getChildrenList(~nodeType~ textNode) {
+					if (textNode == null) return Collections.emptyList();
+					return childrensMap.get(textNode.getUuid());
+				}
+			};
+
+			final org.abego.treelayout.NodeExtentProvider<~nodeType~> nodeExtendProvider = new org.abego.treelayout.NodeExtentProvider<~nodeType~>() {
+				@Override
+				public double getWidth(~nodeType~ textNode) {
+					return textNode.getFullBounds().getWidth();
+				}
+
+				@Override
+				public double getHeight(~nodeType~ textNode) {
+					return textNode.getFullBounds().getHeight();
+				}
+			};
+
+			final org.abego.treelayout.TreeLayout<~nodeType~> layout = new org.abego.treelayout.TreeLayout<>(tree, nodeExtendProvider, configuration);
+
+			// apply coordination-translation
+			final Point2D rootLocation = node.getFullBoundsReference().getCenter2D();
+			final Map<~nodeType~, Rectangle2D.Double> nodeBounds = layout.getNodeBounds();
+			final Rectangle2D.Double rootBounds = nodeBounds.get(node);
+			final double dX = rootLocation.getX() - rootBounds.getCenterX();
+			final double dY = rootLocation.getY() - rootBounds.getCenterY();
+
+			SwingUtilities.invokeLater(() -> {
+				for (Map.Entry<~nodeType~, Rectangle2D.Double> nodeBound : nodeBounds.entrySet()) {
+					if (node.equals(nodeBound.getKey())) continue;
+					final double centerX = nodeBound.getValue().getCenterX() + dX;
+					final double centerY = nodeBound.getValue().getCenterY() + dY;
+					nodeBound.getKey().setOffset(centerX, centerY);
+				}
+			});
+
+		}).start();
+	}
+
+	private void findChildren(~nodeType~ node) {
+
+		if (childrensMap.containsKey(node.getUuid())) return;
+
+		childrensMap.put(node.getUuid(), new ArrayList<>());
+
+		node.outgoing()
+				.map(aLong -> canvas.relationMap.get(aLong).getDst())
+				.filter(abstractNode -> !childrensMap.containsKey(abstractNode.getUuid()))
+				.forEach(abstractNode -> {
+						childrensMap.get(node.getUuid()).add(abstractNode);
+						parentsMap.put(abstractNode.getUuid(), node);
+				});
+
+		childrensMap.get(node.getUuid()).forEach(this::findChildren);
+	}
+}  >>
+
+PRelation(packageName,name,canvasName,nodeName,onRightClickActions) ::= <<package ~packageName~;
+
+import org.piccolo2d.PNode;
+import org.piccolo2d.event.PBasicInputEventHandler;
+import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.nodes.PPath;
+import org.piccolo2d.nodes.PText;
+import org.piccolo2d.util.PBounds;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Comparator;
+import java.util.UUID;
+
+public class ~name~ extends PPath.Double implements Comparator<~name~> {
+
+	protected enum Attributes {
+		_defaultColor, _selectedColor, _highlightedColor, _uuid, _text, _selected, _highlight, _order, _type, _src, _dst
+	}
+	
+	private ~canvasName~ canvas;
+	final protected PText child;
+
+	public ~name~(~canvasName~ canvas, ~nodeName~ src, ~nodeName~ dst, String type) {
+		this.canvas = canvas;
+		this.addAttribute(Attributes._defaultColor, Color.decode("#bababa"));
+		this.addAttribute(Attributes._selectedColor, Color.decode("#b2182b"));
+		this.addAttribute(Attributes._highlightedColor, Color.decode("#f4a582"));
+		this.addAttribute(Attributes._uuid, UUID.randomUUID());
+		this.addAttribute(Attributes._type, type);
+		this.addAttribute(Attributes._src, src);
+		this.addAttribute(Attributes._dst, dst);
+
+		src.addOutgoingRelation(getUuid());
+		dst.addIncomingRelation(getUuid());
+
+		this.child = new PText(type);
+
+		setPaint((Color) getAttribute(Attributes._defaultColor));
+		child.setTextPaint((Color) getAttribute(Attributes._defaultColor));
+
+		final RelationInputEventHandler relationInputEventHandler = new RelationInputEventHandler();
+		relationInputEventHandler.getEventFilter().setMarksAcceptedEventsAsHandled(true);
+		addInputEventListener(relationInputEventHandler);
+
+		final PNodeChangeListener nodeChangeListener = new PNodeChangeListener();
+		src.addPropertyChangeListener(nodeChangeListener);
+		dst.addPropertyChangeListener(nodeChangeListener);
+		addChild(this.child);
+	}
+
+	@Override
+	public String toString() {
+		return getUuid() + " " + getSrc() + " -> " + getType() + " -> " + getDst();
+	}
+			@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		~name~ other = (~name~) o;
+
+		return getUuid().equals(other.getUuid());
+	}
+
+	@Override
+	public int hashCode() {
+		return getUuid().hashCode();
+	}
+
+	public UUID getUuid() {
+		return (UUID) getAttribute(Attributes._uuid);
+	}
+
+	public String getType() {
+		return (String) getAttribute(Attributes._type);
+	}
+
+	public void unselect() {
+		addAttribute(Attributes._selected, Boolean.FALSE);
+		SwingUtilities.invokeLater(() -> updatePath((Color) getAttribute(Attributes._defaultColor)));
+	}
+
+	public void select() {
+		addAttribute(Attributes._selected, Boolean.TRUE);
+		SwingUtilities.invokeLater(() -> updatePath((Color) getAttribute(Attributes._selectedColor)));
+	}
+
+	public boolean isSelected() {
+		return getBooleanAttribute(Attributes._selected, false);
+	}
+
+	protected void unhighlight() {
+		addAttribute(Attributes._highlight, Boolean.FALSE);
+		SwingUtilities.invokeLater(() -> updatePath(isSelected() ? (Color) getAttribute(Attributes._selectedColor) : (Color) getAttribute(Attributes._defaultColor)));
+	}
+
+	protected void highlight() {
+		addAttribute(Attributes._highlight, Boolean.TRUE);
+		SwingUtilities.invokeLater(() -> updatePath((Color) getAttribute(Attributes._highlightedColor)));
+	}
+
+	protected ~nodeName~ getSrc() {
+		return (~nodeName~) getAttribute(Attributes._src);
+	}
+
+	protected ~nodeName~ getDst() {
+		return (~nodeName~) getAttribute(Attributes._dst);
+	}
+
+	public Long getOrder() {
+		return (Long) getAttribute(Attributes._order);
+	}
+
+	private void updatePath(Color color) {
+		setPaint(color);
+		child.setTextPaint(color);
+		updatePath(getSrc(), getDst());
+	}
+
+	private void updatePath(~nodeName~ source, ~nodeName~ target) {
+		final PBounds src = source.getFullBoundsReference();
+		final PBounds dst = target.getFullBoundsReference();
+		final boolean horizontalOverlap = !(src.getMaxX() < dst.getMinX() || src.getMinX() > dst.getMaxX());
+		final Point2D.Double startCenterBottom = new Point2D.Double(src.getCenterX(), src.getMaxY());
+		final Point2D.Double endCenterTop = new Point2D.Double(dst.getCenterX(), dst.getMinY());
+		final Point2D.Double startCenterTop = new Point2D.Double(src.getCenterX(), src.getMinY());
+		final Point2D.Double endCenterBottom = new Point2D.Double(dst.getCenterX(), dst.getMaxY());
+		if (src.getCenterX() < dst.getCenterX()) {
+			final Point2D.Double startRightCenter = new Point2D.Double(src.getMaxX(), src.getCenterY());
+			final Point2D.Double endRightCenter = new Point2D.Double(dst.getMinX(), dst.getCenterY());
+			if (src.getCenterY() < dst.getCenterY()) {
+				if (!horizontalOverlap) {
+					drawStraightPath(startRightCenter, endRightCenter);
+				} else {
+					drawStraightPath(startCenterBottom, endCenterTop);
+				}
+			} else {
+				if (!horizontalOverlap) {
+					drawStraightPath(startRightCenter, endRightCenter);
+				} else {
+					drawStraightPath(startCenterTop, endCenterBottom);
+				}
+			}
+		} else {
+			final Point2D.Double startLeftCenter = new Point2D.Double(src.getMinX(), src.getCenterY());
+			final Point2D.Double endLeftCenter = new Point2D.Double(dst.getMaxX(), dst.getCenterY());
+			if (src.getCenterY() < dst.getCenterY()) {
+				if (!horizontalOverlap) {
+					drawStraightPath(startLeftCenter, endLeftCenter);
+				} else {
+					drawStraightPath(startCenterBottom, endCenterTop);
+				}
+			} else {
+				if (!horizontalOverlap) {
+					drawStraightPath(startLeftCenter, endLeftCenter);
+				} else {
+					drawStraightPath(startCenterTop, endCenterBottom);
+				}
+			}
+		}
+	}
+
+	private void drawStraightPath(Point2D start, Point2D end) {
+		reset();
+		setStrokePaint(child.getTextPaint());
+		moveTo(start.getX(), start.getY());
+		lineTo(end.getX(), end.getY());
+		child.setOffset(getBounds().getCenter2D());
+		final int ARR_SIZE = 4;
+		final double dx = end.getX() - start.getX();
+		final double dy = end.getY() - start.getY();
+		final double angle = Math.atan2(dy, dx);
+		final int len = (int) (Math.sqrt(dx * dx + dy * dy) - 10);
+		final AffineTransform at = AffineTransform.getTranslateInstance(start.getX(), start.getY());
+		at.concatenate(AffineTransform.getRotateInstance(angle));
+		append(new Polygon(new int[]{len,
+					len - ARR_SIZE,
+					len - ARR_SIZE,
+					len}, new int[]{0,
+					-ARR_SIZE,
+					ARR_SIZE,
+					0}, 4).getPathIterator(at), false);
+		setPaintInvalid(true);
+		validateFullPaint();
+	}
+
+	@Override
+	public int compare(~name~ o1, ~name~ o2) {
+		return o1.getOrder().compareTo(o2.getOrder());
+	}
+
+	~PNodeChangeListener()~
+
+	~RelationInputEventHandler()~
+
+	protected void onRelationRightClick(PInputEvent event, JPopupMenu pop) {
+		~onRightClickActions:{it|pop.add(new ~it.name~(this, canvas, event));};separator="\n"~
+	}
+
+	protected void onRelationLeftClick(PInputEvent event) {
+		if (isSelected()) unselect();
+		else select();
+	}
+
+	protected void onRelationKeyPressed(PInputEvent event) {
+
+	}
+
+	static abstract class RelationAction extends AbstractAction {
+
+		final ~name~ relation;
+		final ~canvasName~ canvas;
+		final PInputEvent event;
+	
+		RelationAction(String name, ~name~ relation, ~canvasName~ canvas, PInputEvent event) {
+			super(name);
+			this.relation = relation;
+			this.canvas = canvas;
+			this.event = event;
+		}
+	
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			actionPerformed(relation, canvas, event, e);
+		}
+	
+		abstract void actionPerformed(~name~ relation, ~canvasName~ canvas, PInputEvent event, ActionEvent e);
+	}
+	
+	~onRightClickActions:{it|~it.declaration~};separator="\n\n"~
+}  >>
+
+PNodeChangeListener() ::= <<private final class PNodeChangeListener implements PropertyChangeListener {
+	
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		switch (evt.getPropertyName()) {
+			case PNode.PROPERTY_FULL_BOUNDS:
+			case PNode.PROPERTY_TRANSFORM:
+				SwingUtilities.invokeLater(() -> updatePath((getSrc()), getDst()));
+				break;
+			case PNode.PROPERTY_PARENT:
+				break;
+		}
+	}
+}  >>
+
+RelationInputEventHandler() ::= <<private final class RelationInputEventHandler extends PBasicInputEventHandler {
+	
+	@Override
+	public void mouseEntered(PInputEvent event) {
+		event.getInputManager().setKeyboardFocus(this);
+		highlight();
+	}
+
+	@Override
+	public void mouseExited(PInputEvent event) {
+		unhighlight();
+		event.getInputManager().setKeyboardFocus(canvas);
+	}
+
+	@Override
+	public void mouseClicked(PInputEvent event) {
+		if (event.isRightMouseButton()) {
+			final JPopupMenu pop = new JPopupMenu();
+			canvas.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			onRelationRightClick(event, pop);
+			canvas.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
+		} else if (event.isLeftMouseButton()) {
+			SwingUtilities.invokeLater(() -> onRelationLeftClick(event));
+		}
+	}
+
+	@Override
+	public void keyPressed(PInputEvent event) {
+		onRelationKeyPressed(event);
+	}
+}  >>
+
+RelationAction(name,relationType,canvasName,title,statements) ::= <<private static final class ~name~ extends RelationAction {
+
+	~name~(~relationType~ relation, ~canvasName~ canvas, PInputEvent event) {
+		super("~title~", relation, canvas, event);
+	}
+
+	@Override
+	void actionPerformed(~relationType~ relation, ~canvasName~ canvas, PInputEvent event, ActionEvent e) {
+		~statements:{it|~it~};separator="\n"~
+	}
+}  >>
+
+readme() ::= <<http://piccolo2d.org/
+
+Piccolo2D is a toolkit that supports the development of 2D structured graphics programs, in general, and Zoomable User Interfaces (ZUIs), in particular. 
+A ZUI is a new kind of interface that presents a huge canvas of information on a traditional computer display by letting the user smoothly zoom in, 
+to get more detailed information, and zoom out for an overview.
+
+There are 3 classes:
+
+PCanvas contains PNode and PRelation instances. 
+	It displays nodes and relations.
+	Its zoomable by mouse-scroll.
+	One can add right-click actions by adding a CanvasAction.
+
+PNode is a node.
+	It displays a label using a PText child.
+	One can add right-click actions by adding a NodeAction.
+
+PRelation is a relation between two nodes.
+	It displays a label using a PText child.
+	One can add right-click actions by adding a RelationAction.  >>
+
+eom() ::= "}"
+
+gt() ::= ">"

@@ -11,6 +11,10 @@ public class Superagent {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Superagent");
@@ -142,4 +146,4 @@ public class Superagent {
 				"	~agentDeclarations:{it|~it.name~};separator=\",\\n\"~~endif~\n" + 
 				"	\n" + 
 				"}; >>";
-} 
+}  

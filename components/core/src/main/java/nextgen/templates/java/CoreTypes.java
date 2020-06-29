@@ -17,5 +17,9 @@ public enum CoreTypes {
 	AtomicLongType() {
 		@Override
 		public String toString() { return "java.util.concurrent.atomic.AtomicLong"; }
+	},
+	ThreadType() {
+		@Override
+		public String toString() { return "java.util.Thread"; }
 	}
 }  

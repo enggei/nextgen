@@ -13,6 +13,10 @@ public class Element {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Element");
@@ -119,4 +123,4 @@ public class Element {
 	static final String st = "Element(name,props,children) ::= <<<~name~~if(props)~ ~props:{it|~it~};separator=\" \"~~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</~name~>~else~ />~endif~ >>";
-} 
+}  

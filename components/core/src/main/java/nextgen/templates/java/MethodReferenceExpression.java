@@ -12,6 +12,10 @@ public class MethodReferenceExpression implements Expression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("MethodReferenceExpression");
@@ -80,4 +84,4 @@ public class MethodReferenceExpression implements Expression {
 	}
 
 	static final String st = "MethodReferenceExpression(identifier,scope) ::= <<~scope~::~identifier~ >>";
-} 
+}  

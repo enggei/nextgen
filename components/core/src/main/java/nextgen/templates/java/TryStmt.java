@@ -14,6 +14,10 @@ public class TryStmt implements Statement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("TryStmt");
@@ -141,4 +145,4 @@ public class TryStmt implements Statement {
 	}
 
 	static final String st = "TryStmt(tryBlock,finalClause,catchClauses,resources) ::= <<try~if(resources)~ (~resources:{it|~it~};separator=\";\"~)~endif~ ~tryBlock~ ~catchClauses:{it|~it~}~~if(finalClause)~ finally ~finalClause~~endif~ >>";
-} 
+}  

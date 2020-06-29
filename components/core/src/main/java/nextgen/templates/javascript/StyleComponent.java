@@ -11,6 +11,10 @@ public class StyleComponent {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("StyleComponent");
@@ -65,4 +69,4 @@ public class StyleComponent {
 	static final String st = "StyleComponent(elements) ::= <<const useStyles = theme => ({\n" + 
 				"	~elements:{it|~it~};separator=\",\\n\"~\n" + 
 				"	}); >>";
-} 
+}  

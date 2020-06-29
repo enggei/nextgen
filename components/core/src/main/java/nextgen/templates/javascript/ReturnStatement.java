@@ -12,6 +12,10 @@ public class ReturnStatement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("returnStatement");
@@ -82,4 +86,4 @@ public class ReturnStatement {
 	static final String st = "returnStatement(condition,element) ::= <<~if(condition)~if (~condition~) ~endif~return (\n" + 
 				"	~if(element)~~element~~else~null~endif~\n" + 
 				"	); >>";
-} 
+}  

@@ -12,6 +12,10 @@ public class LabeledStmt implements Statement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("LabeledStmt");
@@ -81,4 +85,4 @@ public class LabeledStmt implements Statement {
 
 	static final String st = "LabeledStmt(statement,label) ::= <<~label~ : \n" + 
 				"	~statement~ >>";
-} 
+}  

@@ -11,6 +11,10 @@ public class ListType {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ListType");
@@ -56,4 +60,4 @@ public class ListType {
 	}
 
 	static final String st = "ListType(type) ::= <<java.util.List<~type~> >>";
-} 
+}  

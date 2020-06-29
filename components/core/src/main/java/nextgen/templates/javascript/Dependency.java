@@ -12,6 +12,10 @@ public class Dependency {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Dependency");
@@ -80,4 +84,4 @@ public class Dependency {
 	}
 
 	static final String st = "Dependency(value,packageName) ::= <<import ~value~ from '~packageName~'; >>";
-} 
+}  

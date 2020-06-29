@@ -15,6 +15,10 @@ public class ClassOrInterfaceType {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ClassOrInterfaceType");
@@ -165,4 +169,4 @@ public class ClassOrInterfaceType {
 	}
 
 	static final String st = "ClassOrInterfaceType(scope,names,typeArguments,isTyped,isArrayType) ::= <<~if(scope)~~scope~.~endif~~names:{it|~it~};separator=\" | \"~~if(typeArguments)~<~typeArguments:{it|~it~};separator=\", \"~>~else~~if(isTyped)~<>~endif~~endif~~if(isArrayType)~[]~endif~ >>";
-} 
+}  

@@ -13,6 +13,10 @@ public class Action {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Action");
@@ -119,4 +123,4 @@ public class Action {
 	static final String st = "Action(name,params,statements) ::= <<@action ~name~(~params:{it|~it~};separator=\",\"~) {\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
 				"} >>";
-} 
+}  

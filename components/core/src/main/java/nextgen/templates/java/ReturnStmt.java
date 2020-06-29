@@ -11,6 +11,10 @@ public class ReturnStmt implements Statement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ReturnStmt");
@@ -56,4 +60,4 @@ public class ReturnStmt implements Statement {
 	}
 
 	static final String st = "ReturnStmt(expression) ::= <<return~if(expression)~ ~expression~~endif~; >>";
-} 
+}  

@@ -14,6 +14,10 @@ public class DividerElement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("DividerElement");
@@ -128,4 +132,4 @@ public class DividerElement {
 	}
 
 	static final String st = "DividerElement(light,orientation,variant,className) ::= <<<Divider~if(light)~ light~endif~~if(orientation)~ orientation=\"~orientation~\"~endif~~if(variant)~ variant=\"~variant~\"~endif~~if(className)~ className={classes.~className~}~endif~ /> >>";
-} 
+}  

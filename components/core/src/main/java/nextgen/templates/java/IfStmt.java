@@ -13,6 +13,10 @@ public class IfStmt implements Statement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("IfStmt");
@@ -105,4 +109,4 @@ public class IfStmt implements Statement {
 
 	static final String st = "IfStmt(condition,then,elseStmt) ::= <<if (~condition~) ~then~~if(elseStmt)~ \n" + 
 				"else ~elseStmt~~endif~ >>";
-} 
+}  

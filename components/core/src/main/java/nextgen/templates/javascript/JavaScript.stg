@@ -594,7 +594,7 @@ export default function Copyright() {
 	);
 }  >>
 
-StoreComponent(imports,components,stores,decorators,name,debug,state,constructorStatements,events,componentDidMountStatements,methods,renderStatements,renderCondition,renderElement) ::= <<import React from 'react';
+StoreComponent(imports,components,stores,decorators,name,debug,state,constructorStatements,events,componentDidMountStatements,methods,renderStatements,const,renderCondition,renderElement) ::= <<import React from 'react';
 import { inject, observer } from 'mobx-react';
 ~imports:{it|import ~it.name~ from '~it.path~';};separator="\n"~
 ~components:{it|~it~};separator="\n\n"~
@@ -638,6 +638,7 @@ class ~name~ extends React.Component {
 		console.log("render ~name~ : " +  this.props);
 ~endif~
 		~renderStatements:{it|~it~};separator="\n"~
+		~const:{it|const ~it.name~ = ~it.declaration~;};separator="\n"~
 
 ~if(renderCondition)~
 		~renderCondition:{it|if (~it.condition~) 
@@ -694,7 +695,9 @@ export default class Loading extends React.Component {
 	}
 }  >>
 
-Usecase(name,description,url,parameterName,parameterType,action,successStatements,failStatements,domainStatements) ::= <<~name~
+Usecase(module,name,description,url,parameterName,parameterType,action,successStatements,failStatements,domainStatements,returnValue) ::= <<~module~
+
+~name~
 ~description~
 
 ~url~
@@ -704,7 +707,9 @@ Usecase(name,description,url,parameterName,parameterType,action,successStatement
 ~successStatements:{it|~it~};separator="\n"~
 ~failStatements:{it|~it~};separator="\n"~
 
-~domainStatements:{it|~it~};separator="\n"~  >>
+~domainStatements:{it|~it~};separator="\n"~
+
+~returnValue~  >>
 
 BlockStmt(stmt,statements) ::= <<~stmt~ {
 	~statements:{it|~it~};separator="\n"~
@@ -946,8 +951,8 @@ ReactRouter() ::= << >>
 
 Link(to) ::= <<<Link innerRef={ ref } to="~to~" { ...props } />  >>
 
-ForwardRef(to,argument) ::= <<React.forwardRef((props, ref) => (
-	<RouterLink ref={ref} to={'~to~~if(argument)~/~endif~'~if(argument)~ + ~argument~~endif~} {...props} />
+ForwardRef(to,argument,target) ::= <<React.forwardRef((props, ref) => (
+	<RouterLink ref={ref} to={'~to~~if(argument)~/~endif~'~if(argument)~ + ~argument~~endif~}~if(target)~ target="~target~"~endif~ {...props} />
 ));  >>
 
 returnStmt(returnValue) ::= <<return ~returnValue~;  >>

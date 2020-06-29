@@ -10,6 +10,10 @@ public class EmptyStmt implements Statement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("EmptyStmt");
@@ -33,4 +37,4 @@ public class EmptyStmt implements Statement {
 	}
 
 	static final String st = "EmptyStmt() ::= <<; >>";
-} 
+}  

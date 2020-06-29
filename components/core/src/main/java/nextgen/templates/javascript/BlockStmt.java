@@ -12,6 +12,10 @@ public class BlockStmt {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("BlockStmt");
@@ -88,4 +92,4 @@ public class BlockStmt {
 	static final String st = "BlockStmt(stmt,statements) ::= <<~stmt~ {\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
 				"} >>";
-} 
+}  

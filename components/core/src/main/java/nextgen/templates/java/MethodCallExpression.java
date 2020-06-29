@@ -14,6 +14,10 @@ public class MethodCallExpression implements Expression {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("MethodCallExpression");
@@ -141,4 +145,4 @@ public class MethodCallExpression implements Expression {
 	}
 
 	static final String st = "MethodCallExpression(scope,arguments,typeArguments,name) ::= <<~if(scope)~~scope~.~endif~~if(typeArguments)~<~typeArguments:{it|~it~};separator=\",\"~>~endif~~name~(~arguments:{it|~it~};separator=\", \"~) >>";
-} 
+}  

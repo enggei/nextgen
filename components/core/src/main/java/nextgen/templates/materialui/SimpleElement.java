@@ -8,11 +8,16 @@ public class SimpleElement implements Element {
 	private Object _name;
 	private Object _key;
 	private Object _className;
+	private Object _const;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _attributes = new java.util.ArrayList<>();
 
 	SimpleElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
+	}
+
+	public java.util.UUID uuid() {
+		return uuid;
 	}
 
 	@Override
@@ -21,6 +26,7 @@ public class SimpleElement implements Element {
 		st.add("name", _name);
 		st.add("key", _key);
 		st.add("className", _className);
+		st.add("const", _const);
 		for (Object o : _children) st.add("children", o);
 		for (java.util.Map<String, Object> map : _attributes) st.addAggr("attributes.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
@@ -89,6 +95,28 @@ public class SimpleElement implements Element {
 
 	public SimpleElement removeClassName() {
 		this._className = null;
+		return this;
+	} 
+
+	public SimpleElement setConst(Object value) {
+		this._const = value;
+		return this;
+	}
+
+	public Object getConst() {
+		return this._const;
+	}
+
+	public Object getConst(Object defaultValue) {
+		return this._const == null ? defaultValue : this._const;
+	}
+
+	public boolean hasConst() {
+		return this._const != null;
+	}
+
+	public SimpleElement removeConst() {
+		this._const = null;
 		return this;
 	} 
 
@@ -179,7 +207,7 @@ public class SimpleElement implements Element {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SimpleElement(name,key,className,attributes,children) ::= <<<~name~~if(key)~ key=~key~~endif~~if(className)~ className={classes.~className~}~endif~~if(attributes)~ ~endif~~attributes:{it|~it.name~~if(it.value)~=~it.value~~endif~};separator=\" \"~>\n" + 
+	static final String st = "SimpleElement(name,key,className,attributes,const,children) ::= <<<~name~~if(key)~ key=~key~~endif~~if(className)~ className={classes.~className~}~endif~~if(attributes)~ ~endif~~attributes:{it|~it.name~~if(it.value)~=~it.value~~endif~};separator=\" \"~~if(const)~ ~const~ ~endif~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</~name~> >>";
-} 
+}  

@@ -12,6 +12,10 @@ public class StyleClass {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("StyleClass");
@@ -104,4 +108,4 @@ public class StyleClass {
 	static final String st = "StyleClass(name,attributes) ::= <<~name~: {\n" + 
 				"	~attributes:{it|~it.name~: ~it.value~};separator=\",\\n\"~\n" + 
 				"} >>";
-} 
+}  

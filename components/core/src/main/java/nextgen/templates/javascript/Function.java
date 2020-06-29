@@ -13,6 +13,10 @@ public class Function {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Function");
@@ -119,4 +123,4 @@ public class Function {
 	static final String st = "Function(name,parameters,statements) ::= <<function ~name~(~parameters:{it|~it~};separator=\",\"~) {\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
 				"} >>";
-} 
+}  

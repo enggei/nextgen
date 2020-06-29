@@ -13,6 +13,10 @@ public class LinkElement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("LinkElement");
@@ -106,4 +110,4 @@ public class LinkElement {
 	static final String st = "LinkElement(href,onClick,text) ::= <<<Link href=\"~href~\" onClick=~onClick~>\n" + 
 				"	~text~\n" + 
 				"</Link> >>";
-} 
+}  

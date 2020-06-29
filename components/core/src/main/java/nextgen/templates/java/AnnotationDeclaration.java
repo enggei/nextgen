@@ -14,6 +14,10 @@ public class AnnotationDeclaration {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("AnnotationDeclaration");
@@ -151,4 +155,4 @@ public class AnnotationDeclaration {
 				"~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~@interface ~name~ {\n" + 
 				"	~members:{it|~it~};separator=\"\\n\"~\n" + 
 				"} >>";
-} 
+}  

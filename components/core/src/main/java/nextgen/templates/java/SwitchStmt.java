@@ -12,6 +12,10 @@ public class SwitchStmt implements Statement {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("SwitchStmt");
@@ -88,4 +92,4 @@ public class SwitchStmt implements Statement {
 	static final String st = "SwitchStmt(selector,entries) ::= <<switch(~selector~) {\n" + 
 				"	~entries:{it|~it~};separator=\"\\n\"~\n" + 
 				"} >>";
-} 
+}  
