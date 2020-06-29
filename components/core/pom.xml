@@ -331,6 +331,64 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-maven-plugin</artifactId>
+                <version>${antlr.version}</version>
+                <configuration>
+                    <sourceDirectory>src/test/java/grammars/antlr</sourceDirectory>
+                    <includes>
+                        <include>ANTLRv4Lexer.g4</include>
+                        <include>ANTLRv4Parser.g4</include>
+                        <include>LexBasic.g4</include>
+
+                    </includes>
+                    <arguments>
+                        <argument>-package</argument>
+                        <argument>org.antlr.parser.antlr4</argument>
+                    </arguments>
+                    <outputDirectory>src/test/java/org/antlr/parser/antlr4</outputDirectory>
+                    <visitor>true</visitor>
+                    <listener>true</listener>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>antlr4</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-maven-plugin</artifactId>
+                <version>${antlr.version}</version>
+                <configuration>
+                    <sourceDirectory>src/test/java/grammars/stringtemplate</sourceDirectory>
+                    <includes>
+                        <include>LexUnicode.g4</include>
+                        <include>LexBasic.g4</include>
+                        <include>STGLexer.g4</include>
+                        <include>STGParser.g4</include>
+                        <include>STLexer.g4</include>
+                        <include>STParser.g4</include>
+                    </includes>
+                    <arguments>
+                        <argument>-package</argument>
+                        <argument>org.antlr.parser.st4</argument>
+                    </arguments>
+                    <outputDirectory>src/test/java/org/antlr/parser/st4</outputDirectory>
+                    <visitor>true</visitor>
+                    <listener>true</listener>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>antlr4</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!--fat-jar plugin for single-file server package-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
