@@ -39,12 +39,11 @@ public class KotlinST {
 	ArrayInitializer.st + "\n" + 
 	EmptyArrayInitializer.st + "\n" + 
 	EmptyMapInitializer.st + "\n" + 
-	ExpressionInitializer.st + "\n" + 
 	ListInitializer.st + "\n" + 
 	MapInitializer.st + "\n" + 
+	MutableListInitializer.st + "\n" + 
 	MutableMapInitializer.st + "\n" + 
 	MutableSetInitializer.st + "\n" + 
-	NullInitializer.st + "\n" + 
 	SetInitializer.st + "\n" + 
 	KotlinFile.st + "\n" + 
 	AnyType.st + "\n" + 
@@ -236,10 +235,6 @@ public class KotlinST {
 		return new EmptyMapInitializer(stGroup);
 	} 
 
-	public static ExpressionInitializer newExpressionInitializer() {
-		return new ExpressionInitializer(stGroup);
-	} 
-
 	public static ListInitializer newListInitializer() {
 		return new ListInitializer(stGroup);
 	} 
@@ -248,16 +243,16 @@ public class KotlinST {
 		return new MapInitializer(stGroup);
 	} 
 
+	public static MutableListInitializer newMutableListInitializer() {
+		return new MutableListInitializer(stGroup);
+	} 
+
 	public static MutableMapInitializer newMutableMapInitializer() {
 		return new MutableMapInitializer(stGroup);
 	} 
 
 	public static MutableSetInitializer newMutableSetInitializer() {
 		return new MutableSetInitializer(stGroup);
-	} 
-
-	public static NullInitializer newNullInitializer() {
-		return new NullInitializer(stGroup);
 	} 
 
 	public static SetInitializer newSetInitializer() {

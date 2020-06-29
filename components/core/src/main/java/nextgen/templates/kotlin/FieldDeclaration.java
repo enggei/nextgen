@@ -9,7 +9,7 @@ public class FieldDeclaration {
 	private Boolean _isNonMember;
 	private String _name;
 	private TypeDeclaration _type;
-	private Initializer _initializer;
+	private Expression _initializer;
 	private java.util.List<AnnotationDeclaration> _annotations = new java.util.ArrayList<>();
 
 	FieldDeclaration(org.stringtemplate.v4.STGroup stGroup) {
@@ -120,16 +120,16 @@ public class FieldDeclaration {
 		return this;
 	} 
 
-	public FieldDeclaration setInitializer(Initializer value) {
+	public FieldDeclaration setInitializer(Expression value) {
 		this._initializer = value;
 		return this;
 	}
 
-	public Initializer getInitializer() {
+	public Expression getInitializer() {
 		return this._initializer;
 	}
 
-	public Initializer getInitializer(Initializer defaultValue) {
+	public Expression getInitializer(Expression defaultValue) {
 		return this._initializer == null ? defaultValue : this._initializer;
 	}
 

@@ -166,35 +166,35 @@
         "name" : "FieldDeclaration",
         "text" : "~annotations:{it|~it~};separator=\"\\n\"~\n~if(isMutable)~var ~elseif(isNonMember)~~else~val ~endif~~name~: ~type~~if(initializer)~ = ~initializer~~endif~ ",
         "parameters" : [ {
-          "uuid" : "908c6daf-cb19-4a81-abdc-1c1b44d21dd4",
+          "uuid" : "e8da6a89-a74e-47a4-aafd-d32096ddceb7",
           "name" : "annotations",
           "type" : "LIST",
           "argumentType" : "AnnotationDeclaration"
         }, {
-          "uuid" : "cafdaa00-6a29-46ee-99c5-64d25b9492a0",
+          "uuid" : "a2ae883e-b7f3-4f3a-96bd-a90be6334c02",
           "name" : "isMutable",
           "type" : "SINGLE",
           "argumentType" : "Boolean"
         }, {
-          "uuid" : "269cd61f-f292-4340-affa-1e845d7697df",
+          "uuid" : "6c2486c7-cda2-405b-9a68-057020d228c7",
           "name" : "isNonMember",
           "type" : "SINGLE",
           "argumentType" : "Boolean"
         }, {
-          "uuid" : "749e7afa-d5bb-4ea3-b1b9-513b886310d2",
+          "uuid" : "88bea6db-c784-4240-9d6d-6743aa88bea2",
           "name" : "name",
           "type" : "SINGLE",
           "argumentType" : "String"
         }, {
-          "uuid" : "a065c4e2-ff36-49d3-b27f-5979816cfa7a",
+          "uuid" : "06992b73-e062-44e3-ac56-f5574fa7d17f",
           "name" : "type",
           "type" : "SINGLE",
           "argumentType" : "TypeDeclaration"
         }, {
-          "uuid" : "a41e1d08-e09a-425c-80ec-9d98f291aafb",
+          "uuid" : "58f0bf74-4227-4872-b743-ddfe38556bd2",
           "name" : "initializer",
           "type" : "SINGLE",
-          "argumentType" : "Initializer"
+          "argumentType" : "Expression"
         } ]
       }, {
         "uuid" : "b1c03acb-f97b-4b10-9b1d-0013589a100c",
@@ -358,25 +358,25 @@
         "text" : "~if(isMutable)~var ~else~val ~endif~~name~: ~type~~if(initializer)~ = ~initializer~~endif~ ",
         "implements" : [ "Statement" ],
         "parameters" : [ {
-          "uuid" : "2b0844c6-3ae5-4c01-aec6-fab8a68fbfa8",
+          "uuid" : "02a015e4-d2d4-4d34-bc06-46e862f5a96f",
           "name" : "isMutable",
           "type" : "SINGLE",
           "argumentType" : "Boolean"
         }, {
-          "uuid" : "d3c1d7e5-d7e1-40c3-a040-39666ef924e4",
+          "uuid" : "778fea0d-c5b6-402b-a056-a1901bde85c0",
           "name" : "name",
           "type" : "SINGLE",
           "argumentType" : "String"
         }, {
-          "uuid" : "ed0115b5-e518-4c8f-b89a-d3f25610ae9c",
+          "uuid" : "ea52ecba-322e-4dc0-9bb2-d883e7e60aba",
           "name" : "type",
           "type" : "SINGLE",
           "argumentType" : "TypeDeclaration"
         }, {
-          "uuid" : "66bdb561-24cf-48ae-9b44-88807348c4ce",
+          "uuid" : "2f7e17c2-61ce-4c46-be36-3e56f99f2cb0",
           "name" : "initializer",
           "type" : "SINGLE",
-          "argumentType" : "Initializer"
+          "argumentType" : "Expression"
         } ]
       } ]
     } ]
@@ -566,7 +566,7 @@
       "uuid" : "75978bba-449f-45a1-a0cd-009e0a434c34",
       "name" : "ArrayInitializer",
       "text" : "arrayOf(~expressions:{it|~it~};separator=\", \"~) ",
-      "implements" : [ "Initializer", "Expression" ],
+      "implements" : [ "Expression" ],
       "parameters" : [ {
         "uuid" : "b2ded0c4-759f-4a6e-9a9b-e589dcc2f440",
         "name" : "expressions",
@@ -577,13 +577,13 @@
       "uuid" : "d3f7a962-d0df-4122-9818-c7752b111847",
       "name" : "EmptyArrayInitializer",
       "text" : "emptyArray() ",
-      "implements" : [ "Initializer", "Expression" ],
+      "implements" : [ "Expression" ],
       "parameters" : [ ]
     }, {
       "uuid" : "18054d30-44cc-4223-9c10-e63170782549",
       "name" : "ListInitializer",
       "text" : "listOf(~expressions:{it|~it~};separator=\", \"~) ",
-      "implements" : [ "Initializer", "Expression" ],
+      "implements" : [ "Expression" ],
       "parameters" : [ {
         "uuid" : "279f5462-4beb-496e-ac98-4fd90c37c664",
         "name" : "expressions",
@@ -594,7 +594,7 @@
       "uuid" : "ed93dc77-2b48-4e4b-98e2-368d6f4635b5",
       "name" : "MapInitializer",
       "text" : "mapOf(~kvpairs:{it|~it.key~ to ~it.value~};separator=\", \"~) ",
-      "implements" : [ "Initializer", "Expression" ],
+      "implements" : [ "Expression" ],
       "parameters" : [ {
         "uuid" : "bc847dc2-eb69-4ad8-8352-45eaf17aba35",
         "name" : "kvpairs",
@@ -611,28 +611,11 @@
         } ]
       } ]
     }, {
-      "uuid" : "8c94ebc6-727f-4f93-b52a-ba062996f875",
-      "name" : "NullInitializer",
-      "text" : "null ",
-      "parameters" : [ ],
-      "implements" : [ "Initializer", "Expression" ]
-    }, {
-      "uuid" : "03cb173c-2f3e-46b6-b78f-b11a14a1e145",
-      "name" : "ExpressionInitializer",
-      "text" : "~expression~ ",
-      "implements" : [ "Initializer", "Expression" ],
-      "parameters" : [ {
-        "uuid" : "b98c5589-2896-4c31-bf28-c0cf0bcddecd",
-        "name" : "expression",
-        "type" : "SINGLE",
-        "argumentType" : "Expression"
-      } ]
-    }, {
       "uuid" : "2f25c294-27f4-428c-ac6c-1d753c5d9d54",
       "name" : "EmptyMapInitializer",
       "text" : "emptyMap() ",
       "parameters" : [ ],
-      "implements" : [ "Initializer", "Expression" ]
+      "implements" : [ "Expression" ]
     }, {
       "uuid" : "bff05ada-fbe8-45d9-92bd-6a750b9acb2e",
       "name" : "MutableMapInitializer",
@@ -652,12 +635,12 @@
           "argumentType" : "Expression"
         } ]
       } ],
-      "implements" : [ "Initializer", "Expression" ]
+      "implements" : [ "Expression" ]
     }, {
       "uuid" : "827ca235-d1b4-4a99-a392-6448358bba78",
       "name" : "SetInitializer",
       "text" : "setOf(~expressions:{it|~it~};separator=\", \"~) ",
-      "implements" : [ "Initializer", "Expression" ],
+      "implements" : [ "Expression" ],
       "parameters" : [ {
         "uuid" : "3a954cdb-08d6-43b3-ac98-02b4951011f4",
         "name" : "expressions",
@@ -667,14 +650,25 @@
     }, {
       "uuid" : "281a81d6-a2a3-4abe-b79b-2a4385bf0720",
       "name" : "MutableSetInitializer",
-      "text" : "setOf(~expressions:{it|~it~};separator=\", \"~) ",
-      "implements" : [ "Initializer", "Expression" ],
+      "text" : "mutableSetOf(~expressions:{it|~it~};separator=\", \"~) ",
+      "implements" : [ "Expression" ],
       "parameters" : [ {
-        "uuid" : "c037930f-7893-4f45-876a-6151a5ebbb0c",
+        "uuid" : "546b01b7-ed7a-4e9c-a6a2-36a53eaca87d",
         "name" : "expressions",
         "type" : "LIST",
         "argumentType" : "Expression"
       } ]
+    }, {
+      "uuid" : "db470a9d-3257-4a83-a414-6cd0a114f784",
+      "name" : "MutableListInitializer",
+      "text" : "mutableListOf(~expressions:{it|~it~};separator=\", \"~) ",
+      "parameters" : [ {
+        "uuid" : "803ad0b6-2f8d-4735-8eb4-312bc07d749c",
+        "name" : "expressions",
+        "type" : "LIST",
+        "argumentType" : "Expression"
+      } ],
+      "implements" : [ "Expression" ]
     } ]
   }, {
     "uuid" : "919f6da8-d442-437f-a9f9-4f51aaec3c31",
@@ -913,9 +907,6 @@
     } ]
   } ],
   "interfaces" : [ {
-    "uuid" : "61dbba2b-2d5c-4605-a6c9-81b9e46ca603",
-    "name" : "Initializer"
-  }, {
     "uuid" : "a95f8243-6a25-4571-9d7d-5a91ee9289e6",
     "name" : "TypeDeclaration"
   }, {

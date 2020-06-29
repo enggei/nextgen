@@ -8,7 +8,7 @@ public class VarDeclarationStatement implements Statement {
 	private Boolean _isMutable;
 	private String _name;
 	private TypeDeclaration _type;
-	private Initializer _initializer;
+	private Expression _initializer;
 
 	VarDeclarationStatement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -94,16 +94,16 @@ public class VarDeclarationStatement implements Statement {
 		return this;
 	} 
 
-	public VarDeclarationStatement setInitializer(Initializer value) {
+	public VarDeclarationStatement setInitializer(Expression value) {
 		this._initializer = value;
 		return this;
 	}
 
-	public Initializer getInitializer() {
+	public Expression getInitializer() {
 		return this._initializer;
 	}
 
-	public Initializer getInitializer(Initializer defaultValue) {
+	public Expression getInitializer(Expression defaultValue) {
 		return this._initializer == null ? defaultValue : this._initializer;
 	}
 

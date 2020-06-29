@@ -43,12 +43,11 @@ public class KotlinSTTests {
 		testArrayInitializer();
 		testEmptyArrayInitializer();
 		testEmptyMapInitializer();
-		testExpressionInitializer();
 		testListInitializer();
 		testMapInitializer();
+		testMutableListInitializer();
 		testMutableMapInitializer();
 		testMutableSetInitializer();
-		testNullInitializer();
 		testSetInitializer();
 		testKotlinFile();
 		testAnyType();
@@ -242,11 +241,6 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
-	public void testExpressionInitializer() {
-		System.out.println("\n--- TEST ExpressionInitializer:\n" + newExpressionInitializer());
-	} 
-
-	@org.junit.Test
 	public void testListInitializer() {
 		System.out.println("\n--- TEST ListInitializer:\n" + newListInitializer());
 	} 
@@ -257,6 +251,11 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
+	public void testMutableListInitializer() {
+		System.out.println("\n--- TEST MutableListInitializer:\n" + newMutableListInitializer());
+	} 
+
+	@org.junit.Test
 	public void testMutableMapInitializer() {
 		System.out.println("\n--- TEST MutableMapInitializer:\n" + newMutableMapInitializer());
 	} 
@@ -264,11 +263,6 @@ public class KotlinSTTests {
 	@org.junit.Test
 	public void testMutableSetInitializer() {
 		System.out.println("\n--- TEST MutableSetInitializer:\n" + newMutableSetInitializer());
-	} 
-
-	@org.junit.Test
-	public void testNullInitializer() {
-		System.out.println("\n--- TEST NullInitializer:\n" + newNullInitializer());
 	} 
 
 	@org.junit.Test

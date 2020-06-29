@@ -115,17 +115,15 @@ ListInitializer(expressions) ::= <<listOf(~expressions:{it|~it~};separator=", "~
 
 MapInitializer(kvpairs) ::= <<mapOf(~kvpairs:{it|~it.key~ to ~it.value~};separator=", "~)  >>
 
-NullInitializer() ::= <<null  >>
-
-ExpressionInitializer(expression) ::= <<~expression~  >>
-
 EmptyMapInitializer() ::= <<emptyMap()  >>
 
 MutableMapInitializer(kvpairs) ::= <<mutableMapOf(~kvpairs:{it|~it.key~ to ~it.value~};separator=", "~)  >>
 
 SetInitializer(expressions) ::= <<setOf(~expressions:{it|~it~};separator=", "~)  >>
 
-MutableSetInitializer(expressions) ::= <<setOf(~expressions:{it|~it~};separator=", "~)  >>
+MutableSetInitializer(expressions) ::= <<mutableSetOf(~expressions:{it|~it~};separator=", "~)  >>
+
+MutableListInitializer(expressions) ::= <<mutableListOf(~expressions:{it|~it~};separator=", "~)  >>
 
 KotlinFile(packageDeclaration,imports,compilationUnit) ::= <<~packageDeclaration~
 

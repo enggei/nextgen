@@ -53,13 +53,14 @@ public class KotlinTest {
         TypeDeclaration uuidType = newNamedType().setName("UUID");
         TypeDeclaration countryIsPartOfContinentRelationshipType = newNamedType().setName("CountryIsPartOfContinentRelationship");
         ArrayType countryIsPartOfContinentRelationshipTypeArray = newArrayType().setType(countryIsPartOfContinentRelationshipType);
+        TypeDeclaration mutableSetOfStrings = newMutableSetType().setType(stringType);
 
         FieldDeclaration uuidField = newFieldDeclaration(uuidType, "uuid").setInitializer(
-                newExpressionInitializer().setExpression(newFunctionCallExpression().setScope("UUID").setFunctionName("randomUUID"))
+                newFunctionCallExpression().setScope("UUID").setFunctionName("randomUUID")
         ).setIsNonMember(true);
 
         List<FieldDeclaration> fields = asList(
-                newFieldDeclaration(nullableLongType, "id").setInitializer(newNullInitializer()).setIsNonMember(true),
+                newFieldDeclaration(nullableLongType, "id").setInitializer(newNullExpression()).setIsNonMember(true),
                 uuidField,
                 newFieldDeclaration(longType, "epId", true),
                 newFieldDeclaration(stringType, "code", true),
@@ -82,8 +83,9 @@ public class KotlinTest {
                         ))
                 ))
                 .setFields(asList(
-                        newFieldDeclaration(nullableLongType, "id").setInitializer(newNullInitializer()),
-                        newFieldDeclaration(nullableStringType, "name").setInitializer(newNullInitializer())
+                        newFieldDeclaration(nullableLongType, "id").setInitializer(newNullExpression()),
+                        newFieldDeclaration(nullableStringType, "name").setInitializer(newNullExpression()),
+                        newFieldDeclaration(mutableSetOfStrings, "stuff").setInitializer(newMutableSetInitializer())
                 ));
 
         ClassDeclaration countryClass = newClassDeclaration(className)
