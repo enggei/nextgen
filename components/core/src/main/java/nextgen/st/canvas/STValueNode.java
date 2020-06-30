@@ -1,9 +1,22 @@
 package nextgen.st.canvas;
 
+import com.generator.util.SwingUtil;
+import nextgen.st.domain.STParameterKey;
+import nextgen.st.model.STArgumentKV;
+import nextgen.st.model.STValue;
+import nextgen.st.model.STValueType;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static nextgen.st.STModelPatterns.*;
 
 public class STValueNode extends STNode {
 
@@ -42,6 +55,7 @@ public class STValueNode extends STNode {
 			final String s = com.generator.util.SwingUtil.showInputDialog("Value", canvas, node.stValue.getValue().toString());
 			if (s == null || s.trim().length() == 0) return;
 			node.stValue.setValue(s);
+			node.setText(node.stValue.getValue().toString());
 		}
 	}
 }

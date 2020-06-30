@@ -267,77 +267,77 @@
     }, {
       "uuid" : "ce822f9c-b805-4dbb-abf3-5a4a7e7bf7c0",
       "name" : "PNodeImpl",
-      "text" : "package ~packageName~;\n\nimport com.generator.util.SwingUtil;\nimport nextgen.st.STModeller;\nimport nextgen.st.domain.STParameterKey;\nimport nextgen.st.model.STArgumentKV;\nimport nextgen.st.model.STValue;\nimport nextgen.st.model.STValueType;\nimport org.piccolo2d.event.PInputEvent;\n\nimport javax.swing.*;\nimport java.awt.*;\nimport java.awt.event.ActionEvent;\nimport java.util.*;\nimport java.util.stream.Collectors;\n\npublic class ~name~ extends ~nodeName~ {\n\n\t~fields:{it|final ~it.type~ ~it.name~;};separator=\"\\n\"~\n\t\t\n\tpublic ~name~(~canvasName~ canvas, String initText, java.util.UUID uuid~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n\t\tsuper(canvas, initText, uuid);\n\t\t~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n\t}\n\n\t@Override\n\tprotected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {\n\t\t~rightClickStatements:{it|~it~};separator=\"\\n\"~\n\t\t~anonymousRightClickActions:{it|pop.add(~it~);};separator=\"\\n\"~\n\t\t~onRightClick:{it|pop.add(new ~it.name~(this, canvas, event));};separator=\"\\n\"~\n\t\t~if(onRightClick)~\n\t\tpop.addSeparator();\n\t\t~endif~\n\t\tsuper.onNodeRightClick(event, pop);\n\t}\n\n\t@Override\n\tprotected void onNodeKeyPressed(PInputEvent event) {\n~if(onKeyPressed)~\n\t\tswitch (event.getKeyCode()) {\n\t\t\t~onKeyPressed:{it|\ncase VK_~it.key~:\n\tnew ~it.name~(this, canvas, event).actionPerformed(null);\n\treturn;\n};separator=\"\\n\"~\n\t\t}\n~endif~\n\t\tsuper.onNodeKeyPressed(event);\n\t}\n\n\t@Override\n\tprotected void onNodeLeftClick(PInputEvent event) {\n\t\tsuper.onNodeLeftClick(event);\n\t}\n\n\t~actions:{it|~it~};separator=\"\\n\\n\"~\n} ",
+      "text" : "package ~packageName~;\n\nimport com.generator.util.SwingUtil;\nimport nextgen.st.domain.STParameterKey;\nimport nextgen.st.model.STArgumentKV;\nimport nextgen.st.model.STValue;\nimport nextgen.st.model.STValueType;\nimport org.piccolo2d.event.PInputEvent;\n\nimport javax.swing.*;\nimport java.awt.*;\nimport java.awt.event.ActionEvent;\nimport java.util.ArrayList;\nimport java.util.Collection;\nimport java.util.LinkedHashMap;\nimport java.util.Map;\nimport java.util.stream.Collectors;\n\nimport static nextgen.st.STModelPatterns.*;\n\npublic class ~name~ extends ~nodeName~ {\n\n\t~fields:{it|final ~it.type~ ~it.name~;};separator=\"\\n\"~\n\t\t\n\tpublic ~name~(~canvasName~ canvas, String initText, java.util.UUID uuid~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n\t\tsuper(canvas, initText, uuid);\n\t\t~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n\t}\n\n\t@Override\n\tprotected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {\n\t\t~rightClickStatements:{it|~it~};separator=\"\\n\"~\n\t\t~anonymousRightClickActions:{it|pop.add(~it~);};separator=\"\\n\"~\n\t\t~onRightClick:{it|pop.add(new ~it.name~(this, canvas, event));};separator=\"\\n\"~\n\t\t~if(onRightClick)~\n\t\tpop.addSeparator();\n\t\t~endif~\n\t\tsuper.onNodeRightClick(event, pop);\n\t}\n\n\t@Override\n\tprotected void onNodeKeyPressed(PInputEvent event) {\n~if(onKeyPressed)~\n\t\tswitch (event.getKeyCode()) {\n\t\t\t~onKeyPressed:{it|\ncase VK_~it.key~:\n\tnew ~it.name~(this, canvas, event).actionPerformed(null);\n\treturn;\n};separator=\"\\n\"~\n\t\t}\n~endif~\n\t\tsuper.onNodeKeyPressed(event);\n\t}\n\n\t@Override\n\tprotected void onNodeLeftClick(PInputEvent event) {\n\t\tsuper.onNodeLeftClick(event);\n\t}\n\n\t~actions:{it|~it~};separator=\"\\n\\n\"~\n} ",
       "parameters" : [ {
-        "uuid" : "156de11d-7f12-4d58-be14-6161176d910d",
+        "uuid" : "67cfa6cb-4dbd-4909-93b8-e1aad411d841",
         "name" : "packageName",
         "type" : "SINGLE",
         "argumentType" : "Object"
       }, {
-        "uuid" : "ae9b9536-9a14-4601-aa75-3ae012aa967a",
+        "uuid" : "64111d31-a156-4c50-aacb-6c89cdd203cc",
         "name" : "name",
         "type" : "SINGLE",
         "argumentType" : "String"
       }, {
-        "uuid" : "73b0d6f1-40b3-445d-927e-d5ec374ee9a1",
+        "uuid" : "bd3f424f-f8c1-4fe5-ae2b-fae3caa42e2d",
         "name" : "nodeName",
         "type" : "SINGLE",
         "argumentType" : "Object"
       }, {
-        "uuid" : "99b5a201-1ecc-4330-97ad-beb70606a12c",
+        "uuid" : "36a4825a-3ab0-4cf6-9ae5-0b7b781b7431",
         "name" : "fields",
         "type" : "KVLIST",
         "argumentType" : "Object",
         "keys" : [ {
-          "uuid" : "fb8391cf-6d87-4fc2-b4b1-3b36115b734e",
+          "uuid" : "f889e32d-5ede-49f6-8ef2-56d9a6fe1d06",
           "name" : "type",
           "argumentType" : "Object"
         }, {
-          "uuid" : "2ad06c14-204f-4802-887d-b2c28470378c",
+          "uuid" : "c97f4747-6275-424c-9805-25a8c4ffe0d1",
           "name" : "name",
           "argumentType" : "Object"
         } ]
       }, {
-        "uuid" : "31e0b873-0341-41b0-a8c4-64ba714fc238",
+        "uuid" : "7d54ad32-b876-487e-945b-4fd373a72ce6",
         "name" : "canvasName",
         "type" : "SINGLE",
         "argumentType" : "Object"
       }, {
-        "uuid" : "c2e64ff7-cd18-4044-8f0a-1dfac7d3b759",
+        "uuid" : "2492a620-f91b-41d4-8628-74e659109990",
         "name" : "rightClickStatements",
         "type" : "LIST",
         "argumentType" : "Object"
       }, {
-        "uuid" : "7ccfed22-7ac4-4477-8d3b-fc4b5a885959",
+        "uuid" : "454cc20b-f814-4931-981c-601d7cd0ca34",
         "name" : "anonymousRightClickActions",
         "type" : "LIST",
         "argumentType" : "Object"
       }, {
-        "uuid" : "39e80541-8248-4022-b7e9-4245fdc5d494",
+        "uuid" : "79ead8c8-6fb7-47bf-907b-3a1541390ec8",
         "name" : "onRightClick",
         "type" : "KVLIST",
         "argumentType" : "Object",
         "keys" : [ {
-          "uuid" : "1f51b93b-d4ca-40db-ad58-3f53a8b92953",
+          "uuid" : "231b6848-3ff6-4d33-96c8-58dd775bcf43",
           "name" : "name",
           "argumentType" : "Object"
         } ]
       }, {
-        "uuid" : "3fbc365e-d3c9-4795-bd14-e43813ae0936",
+        "uuid" : "68b5bf7d-51e8-45a9-ac2a-f0aeb7bba0eb",
         "name" : "onKeyPressed",
         "type" : "KVLIST",
         "argumentType" : "Object",
         "keys" : [ {
-          "uuid" : "7362ea36-e4ad-4caf-ba03-33d925125ec4",
+          "uuid" : "bcb98896-d754-474c-aa69-6b6fa908bb21",
           "name" : "key",
           "argumentType" : "Object"
         }, {
-          "uuid" : "0e73c441-70bc-4069-bfd9-bb40f087265f",
+          "uuid" : "6a53a8f1-dcd0-4f2b-be21-1cc45ca77226",
           "name" : "name",
           "argumentType" : "Object"
         } ]
       }, {
-        "uuid" : "5b384b08-c0f3-479d-86d7-e1f48e4816cf",
+        "uuid" : "5aff081b-ad84-496e-93a0-1e51447734ef",
         "name" : "actions",
         "type" : "LIST",
         "argumentType" : "Object"
