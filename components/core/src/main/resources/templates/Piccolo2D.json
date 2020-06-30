@@ -136,48 +136,48 @@
   }, {
     "uuid" : "e9567ba2-5007-4a88-b09c-902314e5d742",
     "name" : "PNode",
-    "text" : "package ~packageName~;\n\nimport org.piccolo2d.PNode;\nimport org.piccolo2d.event.PDragSequenceEventHandler;\nimport org.piccolo2d.event.PInputEvent;\nimport org.piccolo2d.nodes.PPath;\nimport org.piccolo2d.nodes.PText;\nimport org.piccolo2d.util.PBounds;\n\nimport javax.swing.*;\nimport java.awt.*;\nimport java.awt.event.ActionEvent;\nimport java.awt.geom.Point2D;\nimport java.awt.geom.Rectangle2D;\nimport java.util.*;\nimport java.util.stream.Stream;\n\nimport static java.awt.event.KeyEvent.*;\n\npublic class ~name~ extends PNode {\n\n\tprotected enum Attributes {\n\t\t_defaultColor, _selectedColor, _highlightedColor, _uuid, _text, _selected, _highlight\n\t}\n\n\tprotected final ~canvasName~ canvas;\n\tprotected final PText child;\n\n\tprivate PPath rectangle;\n\n\tprivate final Set<UUID> outgoing = new LinkedHashSet<>();\n\tprivate final Set<UUID> incoming = new LinkedHashSet<>();\n\n\tpublic ~name~(~canvasName~ canvas, String text) {\n\t\tthis(canvas, text, UUID.randomUUID());\n\t}\n\t\n\tpublic ~name~(~canvasName~ canvas, String text, UUID uuid) {\n\t\tthis.canvas = canvas;\n\n\t\tthis.addAttribute(Attributes._defaultColor, Color.decode(\"#0571b0\"));\n\t\tthis.addAttribute(Attributes._selectedColor, Color.decode(\"#ca0020\"));\n\t\tthis.addAttribute(Attributes._highlightedColor, Color.decode(\"#000000\"));\n\t\tthis.addAttribute(Attributes._uuid, uuid);\n\t\tthis.addAttribute(Attributes._text, text);\n\t\tthis.child = new PText(text == null || text.trim().length() == 0 ? getUuid().toString() : text);\n\n\t\tfinal NodeInputEventHandler nodeInputEventHandler = new NodeInputEventHandler();\n\t\tnodeInputEventHandler.getEventFilter().setMarksAcceptedEventsAsHandled(true);\n\t\taddInputEventListener(nodeInputEventHandler);\n\n\t\tthis.addChild(this.child);\n\t}\n\n\t@Override\n\tpublic double getHeight() {\n\t\treturn child.getHeight();\n\t}\n\n\t@Override\n\tpublic double getWidth() {\n\t\treturn child.getWidth();\n\t}\n\n\t@Override\n\tpublic String toString() {\n\t\treturn getUuid() + \" \" + getText();\n\t}\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\n\t\t~name~ other = (~name~) o;\n\n\t\treturn getUuid().equals(other.getUuid());\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn getUuid().hashCode();\n\t}\n\n\tpublic UUID getUuid() {\n\t\treturn (UUID) getAttribute(Attributes._uuid);\n\t}\n\n\tpublic String getText() {\n\t\treturn (String) getAttribute(Attributes._text);\n\t}\n\n\tpublic void refresh() {\n\t\tSwingUtilities.invokeLater(() -> {\n\t\t\tsetPaintInvalid(true);\n\t\t\trepaint();\n\t\t});\n\t}\n\n\tpublic void addOutgoingRelation(UUID relation) {\n\t\tthis.outgoing.add(relation);\n\t}\n\n\tpublic void addIncomingRelation(UUID relation) {\n\t\tthis.incoming.add(relation);\n\t}\n\n\tpublic Stream<UUID> outgoing() {\n\t\treturn this.outgoing.stream();\n\t}\n\n\tpublic Stream<UUID> incoming() {\n\t\treturn this.incoming.stream();\n\t}\n\n\tpublic void setText(String text) {\n\t\taddAttribute(Attributes._text, text);\n\t\tSwingUtilities.invokeLater(() -> child.setText(text));\n\t}\n\n\tpublic void unselect() {\n\t\taddAttribute(Attributes._selected, Boolean.FALSE);\n\t\tSwingUtilities.invokeLater(() -> child.setTextPaint((Color) getAttribute(Attributes._defaultColor)));\n\t}\n\n\tpublic void select() {\n\t\taddAttribute(Attributes._selected, Boolean.TRUE);\n\t\tSwingUtilities.invokeLater(() -> child.setTextPaint((Color) getAttribute(Attributes._selectedColor)));\n\t}\n\n\tpublic boolean isSelected() {\n\t\treturn getBooleanAttribute(Attributes._selected, false);\n\t}\n\n\tpublic void unhighlight() {\n\t\taddAttribute(Attributes._highlight, Boolean.FALSE);\n\t\tSwingUtilities.invokeLater(() -> {\n\t\t\t\n\t\t\tchild.setTextPaint(isSelected() ? (Color) getAttribute(Attributes._selectedColor) : (Color) getAttribute(Attributes._defaultColor));\n\t\t\tif (rectangle != null) ~name~.this.removeChild(rectangle);\n\t\t\t\n\t\t});\n\t}\n\n\tpublic void highlight() {\n\t\taddAttribute(Attributes._highlight, Boolean.TRUE);\n\t\tSwingUtilities.invokeLater(() -> {\n\n\t\t\tfinal PBounds fullBounds = child.getFullBoundsReference();\n\t\t\trectangle = PPath.createRectangle(fullBounds.getX(), fullBounds.getY(), fullBounds.getWidth(), fullBounds.getHeight());\n\t\t\tfinal Color green = new Color(0, 255, 0, 50);\n\t\t\trectangle.setPaint(green);\n\t\t\trectangle.setStroke(new BasicStroke());\n\t\t\t~name~.this.addChild(rectangle);\n\n\t\t\tchild.setTextPaint((Color) getAttribute(Attributes._highlightedColor));\n\t\t});\n\t}\n\n\tpublic void close() {\n\t\tSwingUtilities.invokeLater(() -> {\n\t\t\t\n\t\t\tfor (UUID uuid : incoming) canvas.removeRelation(uuid);\n\t\t\tfor (UUID uuid : outgoing) canvas.removeRelation(uuid);\n\t\t\tcanvas.removeNode(getUuid());\n\t\t\t\n\t\t});\n\t}\n\n\tprotected void onNodeKeyPressed(PInputEvent event) {\n~if(onKeyPressed)~\n\t\tswitch (event.getKeyCode()) {\n\t\t\t~onKeyPressed:{it|\ncase VK_~it.key~:\n\tnew ~it.name~(this, canvas, event).actionPerformed(null);\n\tbreak;\n};separator=\"\\n\"~\n\t\t}\n~endif~\n\t}\n\n\tprotected void onNodeLeftClick(PInputEvent event) {\n\t\tif (isSelected()) unselect();\n\t\telse select();\n\t}\n\n\tprotected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {\n\n\t\t~onRightClick:{it|pop.add(new ~it.name~(this, canvas, event));};separator=\"\\n\"~\n\n\t\tpop.addSeparator();\n\t\t\n\t\tpop.add(new AbstractAction(\"Close\") {\n\t\t\t@Override\n\t\t\tpublic void actionPerformed(ActionEvent e) {\n\t\t\t\tclose();\n\t\t\t}\n\t\t});\n\t}\n\n\t~PNodeInputEventHandler()~\t\n\n\tstatic abstract class NodeAction extends AbstractAction {\n\n\t\tfinal ~name~ node;\n\t\tfinal ~canvasName~ canvas;\n\t\tfinal PInputEvent event;\n\t\n\t\tNodeAction(String name, ~name~ node, ~canvasName~ canvas, PInputEvent event) {\n\t\t\tsuper(name);\n\t\t\tthis.node = node;\n\t\t\tthis.canvas = canvas;\n\t\t\tthis.event = event;\n\t\t}\n\t\n\t\t@Override\n\t\tpublic void actionPerformed(ActionEvent e) {\n\t\t\tactionPerformed(node, canvas, event, e);\n\t\t}\n\t\n\t\tabstract void actionPerformed(~name~ node, ~canvasName~ canvas, PInputEvent event, ActionEvent e);\n\t}\n\t\n\t~actions:{it|~it~};separator=\"\\n\\n\"~\n} ",
+    "text" : "package ~packageName~;\n\nimport org.piccolo2d.PNode;\nimport org.piccolo2d.event.PDragSequenceEventHandler;\nimport org.piccolo2d.event.PInputEvent;\nimport org.piccolo2d.nodes.PPath;\nimport org.piccolo2d.nodes.PText;\nimport org.piccolo2d.util.PBounds;\n\nimport javax.swing.*;\nimport java.awt.*;\nimport java.awt.event.ActionEvent;\nimport java.awt.geom.Point2D;\nimport java.awt.geom.Rectangle2D;\nimport java.util.*;\nimport java.util.stream.Stream;\n\nimport static java.awt.event.KeyEvent.*;\n\npublic class ~name~ extends PNode {\n\n\tprotected enum Attributes {\n\t\t_defaultColor, _selectedColor, _highlightedColor, _uuid, _text, _selected, _highlight\n\t}\n\n\tprotected final ~canvasName~ canvas;\n\tprotected final PText child;\n\n\tprivate PPath rectangle;\n\n\tprivate final Set<UUID> outgoing = new LinkedHashSet<>();\n\tprivate final Set<UUID> incoming = new LinkedHashSet<>();\n\n\tpublic ~name~(~canvasName~ canvas, String text) {\n\t\tthis(canvas, text, UUID.randomUUID());\n\t}\n\t\n\tpublic ~name~(~canvasName~ canvas, String text, UUID uuid) {\n\t\tthis.canvas = canvas;\n\n\t\tthis.addAttribute(Attributes._defaultColor, Color.decode(\"#0571b0\"));\n\t\tthis.addAttribute(Attributes._selectedColor, Color.decode(\"#ca0020\"));\n\t\tthis.addAttribute(Attributes._highlightedColor, Color.decode(\"#000000\"));\n\t\tthis.addAttribute(Attributes._uuid, uuid);\n\t\tthis.addAttribute(Attributes._text, text);\n\t\tthis.child = new PText(text == null || text.trim().length() == 0 ? getUuid().toString() : text);\n\n\t\tfinal NodeInputEventHandler nodeInputEventHandler = new NodeInputEventHandler();\n\t\tnodeInputEventHandler.getEventFilter().setMarksAcceptedEventsAsHandled(true);\n\t\taddInputEventListener(nodeInputEventHandler);\n\n\t\tthis.addChild(this.child);\n\t}\n\n\t@Override\n\tpublic double getHeight() {\n\t\treturn child.getHeight();\n\t}\n\n\t@Override\n\tpublic double getWidth() {\n\t\treturn child.getWidth();\n\t}\n\n\t@Override\n\tpublic String toString() {\n\t\treturn getUuid() + \" \" + getText();\n\t}\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\n\t\t~name~ other = (~name~) o;\n\n\t\treturn getUuid().equals(other.getUuid());\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn getUuid().hashCode();\n\t}\n\n\tpublic UUID getUuid() {\n\t\treturn (UUID) getAttribute(Attributes._uuid);\n\t}\n\n\tpublic String getText() {\n\t\treturn (String) getAttribute(Attributes._text);\n\t}\n\n\tpublic void refresh() {\n\t\tSwingUtilities.invokeLater(() -> {\n\t\t\tsetPaintInvalid(true);\n\t\t\trepaint();\n\t\t});\n\t}\n\n\tpublic void addOutgoingRelation(UUID relation) {\n\t\tthis.outgoing.add(relation);\n\t}\n\n\tpublic void addIncomingRelation(UUID relation) {\n\t\tthis.incoming.add(relation);\n\t}\n\n\tpublic Stream<UUID> outgoing() {\n\t\treturn this.outgoing.stream();\n\t}\n\n\tpublic Stream<UUID> incoming() {\n\t\treturn this.incoming.stream();\n\t}\n\n\tpublic void setText(String text) {\n\t\taddAttribute(Attributes._text, text);\n\t\tchild.setText(text);\n\t\trefresh();\n\t}\n\n\tpublic void unselect() {\n\t\taddAttribute(Attributes._selected, Boolean.FALSE);\n\t\tSwingUtilities.invokeLater(() -> child.setTextPaint((Color) getAttribute(Attributes._defaultColor)));\n\t}\n\n\tpublic void select() {\n\t\taddAttribute(Attributes._selected, Boolean.TRUE);\n\t\tSwingUtilities.invokeLater(() -> child.setTextPaint((Color) getAttribute(Attributes._selectedColor)));\n\t}\n\n\tpublic boolean isSelected() {\n\t\treturn getBooleanAttribute(Attributes._selected, false);\n\t}\n\n\tpublic void unhighlight() {\n\t\taddAttribute(Attributes._highlight, Boolean.FALSE);\n\t\tSwingUtilities.invokeLater(() -> {\n\t\t\t\n\t\t\tchild.setTextPaint(isSelected() ? (Color) getAttribute(Attributes._selectedColor) : (Color) getAttribute(Attributes._defaultColor));\n\t\t\tif (rectangle != null) ~name~.this.removeChild(rectangle);\n\t\t\t\n\t\t});\n\t}\n\n\tpublic void highlight() {\n\t\taddAttribute(Attributes._highlight, Boolean.TRUE);\n\t\tSwingUtilities.invokeLater(() -> {\n\n\t\t\tfinal PBounds fullBounds = child.getFullBoundsReference();\n\t\t\trectangle = PPath.createRectangle(fullBounds.getX(), fullBounds.getY(), fullBounds.getWidth(), fullBounds.getHeight());\n\t\t\tfinal Color green = new Color(0, 255, 0, 50);\n\t\t\trectangle.setPaint(green);\n\t\t\trectangle.setStroke(new BasicStroke());\n\t\t\t~name~.this.addChild(rectangle);\n\n\t\t\tchild.setTextPaint((Color) getAttribute(Attributes._highlightedColor));\n\t\t});\n\t}\n\n\tpublic void close() {\n\t\tSwingUtilities.invokeLater(() -> {\n\t\t\t\n\t\t\tfor (UUID uuid : incoming) canvas.removeRelation(uuid);\n\t\t\tfor (UUID uuid : outgoing) canvas.removeRelation(uuid);\n\t\t\tcanvas.removeNode(getUuid());\n\t\t\t\n\t\t});\n\t}\n\n\tprotected void onNodeKeyPressed(PInputEvent event) {\n~if(onKeyPressed)~\n\t\tswitch (event.getKeyCode()) {\n\t\t\t~onKeyPressed:{it|\ncase VK_~it.key~:\n\tnew ~it.name~(this, canvas, event).actionPerformed(null);\n\tbreak;\n};separator=\"\\n\"~\n\t\t}\n~endif~\n\t}\n\n\tprotected void onNodeLeftClick(PInputEvent event) {\n\t\tif (isSelected()) unselect();\n\t\telse select();\n\t}\n\n\tprotected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {\n\n\t\t~onRightClick:{it|pop.add(new ~it.name~(this, canvas, event));};separator=\"\\n\"~\n\t\t~if(onRightClick)~\n\t\tpop.addSeparator();\n\t\t~endif~\n\t\t\n\t\tpop.add(new AbstractAction(\"Close\") {\n\t\t\t@Override\n\t\t\tpublic void actionPerformed(ActionEvent e) {\n\t\t\t\tclose();\n\t\t\t}\n\t\t});\n\t}\n\n\t~PNodeInputEventHandler()~\t\n\n\tstatic abstract class NodeAction<N extends ~name~> extends AbstractAction {\n\n\t\tfinal N node;\n\t\tfinal ~canvasName~ canvas;\n\t\tfinal PInputEvent event;\n\t\n\t\tNodeAction(String name, N node, ~canvasName~ canvas, PInputEvent event) {\n\t\t\tsuper(name);\n\t\t\tthis.node = node;\n\t\t\tthis.canvas = canvas;\n\t\t\tthis.event = event;\n\t\t}\n\t\n\t\t@Override\n\t\tpublic void actionPerformed(ActionEvent e) {\n\t\t\tactionPerformed(node, canvas, event, e);\n\t\t}\n\t\n\t\tabstract void actionPerformed(N node, ~canvasName~ canvas, PInputEvent event, ActionEvent e);\n\t}\n\t\n\t~actions:{it|~it~};separator=\"\\n\\n\"~\n} ",
     "parameters" : [ {
-      "uuid" : "918f859c-a49f-4d4a-9437-49cadbcef3a3",
+      "uuid" : "d921bc93-f006-4513-9436-79e0e8e24934",
       "name" : "packageName",
       "type" : "SINGLE",
       "argumentType" : "String"
     }, {
-      "uuid" : "d0b6686f-aa04-4a27-bc2a-5ae5ff0275f1",
+      "uuid" : "b2f48db7-17f6-4ed5-88fa-d7ecf2575690",
       "name" : "name",
       "type" : "SINGLE",
       "argumentType" : "String"
     }, {
-      "uuid" : "51777350-d467-495b-9ff4-66a3624e3446",
+      "uuid" : "f99d7b3a-5b4a-4500-99ab-2d597c7ffb31",
       "name" : "canvasName",
       "type" : "SINGLE",
       "argumentType" : "String"
     }, {
-      "uuid" : "6b0012a4-c7bb-42b5-a2fb-d681b5f03ba2",
+      "uuid" : "5b9cdea5-7da7-49d4-98a8-4f9a479f671e",
       "name" : "onKeyPressed",
       "type" : "KVLIST",
       "argumentType" : "Object",
       "keys" : [ {
-        "uuid" : "29979bbc-e95d-464a-afd1-cdef24900fde",
+        "uuid" : "946f2e1e-c9aa-4511-ad8c-4e461b2d7396",
         "name" : "key",
         "argumentType" : "Object"
       }, {
-        "uuid" : "effec536-9d6a-4c4d-9605-053c0b7b0f59",
+        "uuid" : "53091fe4-9f8d-4716-b5dc-e2de5cb55892",
         "name" : "name",
         "argumentType" : "Object"
       } ]
     }, {
-      "uuid" : "92de8f78-d745-426b-ac09-d2d0b8d9ed74",
+      "uuid" : "68dd9bb8-1564-42ca-99c5-858808404dab",
       "name" : "onRightClick",
       "type" : "KVLIST",
       "argumentType" : "Object",
       "keys" : [ {
-        "uuid" : "522aed61-e185-478c-888c-1762b247912a",
+        "uuid" : "1600f1ac-3bdd-41cf-b356-88686b27049e",
         "name" : "name",
         "argumentType" : "Object"
       } ]
     }, {
-      "uuid" : "18d7c617-8cfc-49fb-aa3b-b5c77dc7e184",
+      "uuid" : "a5e1b98e-c831-4f3e-bf02-870da62f7993",
       "name" : "actions",
       "type" : "LIST",
       "argumentType" : "Object"
@@ -190,29 +190,29 @@
     }, {
       "uuid" : "6d808c89-9fcd-4a47-99c9-519afb19a83f",
       "name" : "NodeAction",
-      "text" : "private static final class ~name~ extends NodeAction {\n\n\t~name~(~nodeType~ node, ~canvasName~ canvas, PInputEvent event) {\n\t\tsuper(\"~title~\", node, canvas, event);\n\t}\n\n\t@Override\n\tvoid actionPerformed(~nodeType~ node, ~canvasName~ canvas, PInputEvent event, ActionEvent e) {\n\t\t~statements:{it|~it~};separator=\"\\n\"~\n\t}\n} ",
+      "text" : "private static final class ~name~ extends NodeAction<~nodeType~> {\n\n\t~name~(~nodeType~ node, ~canvasName~ canvas, PInputEvent event) {\n\t\tsuper(\"~title~\", node, canvas, event);\n\t}\n\n\t@Override\n\tvoid actionPerformed(~nodeType~ node, ~canvasName~ canvas, PInputEvent event, ActionEvent e) {\n\t\t~statements:{it|~it~};separator=\"\\n\"~\n\t}\n} ",
       "parameters" : [ {
-        "uuid" : "571158ed-d864-4393-bcda-cd34fb18eb74",
+        "uuid" : "6c421274-0193-48a6-bd9f-ddc3fc84cc61",
         "name" : "name",
         "type" : "SINGLE",
         "argumentType" : "Object"
       }, {
-        "uuid" : "b34c4210-cb33-4a6d-8c30-821222a17e02",
+        "uuid" : "bc28b7ce-fb74-400e-b2ae-a05ee657228f",
         "name" : "nodeType",
         "type" : "SINGLE",
         "argumentType" : "Object"
       }, {
-        "uuid" : "a210e956-4b43-4fe7-869d-9f7d92b673ea",
+        "uuid" : "dd0df0f6-7ddf-49bf-ad74-5e7dcd065504",
         "name" : "canvasName",
         "type" : "SINGLE",
         "argumentType" : "Object"
       }, {
-        "uuid" : "f2d1d940-fd95-4371-9cc0-9b568ae29cf2",
+        "uuid" : "16760a5d-f4c7-4bc5-af73-58d4b431d7c7",
         "name" : "title",
         "type" : "SINGLE",
         "argumentType" : "Object"
       }, {
-        "uuid" : "0c969431-c0a5-4e02-b83f-fd0caa924bf5",
+        "uuid" : "903adfad-09d5-4ba3-9ef4-7f73ccbb6dc0",
         "name" : "statements",
         "type" : "LIST",
         "argumentType" : "Object"
@@ -225,25 +225,123 @@
       "children" : [ {
         "uuid" : "d393fbe8-2dfb-43d4-b454-7197f760593c",
         "name" : "LayoutTreeAction",
-        "text" : "private static final class ~name~ extends NodeAction {\n\n\tprivate final Map<UUID, ~nodeType~> parentsMap = new LinkedHashMap<>();\n\tprivate final Map<UUID, java.util.List<~nodeType~~gt()~> childrensMap = new LinkedHashMap<>();\n\tprivate final org.abego.treelayout.util.DefaultConfiguration<~nodeType~> configuration;\n\n\tprivate ~name~(~nodeType~ root, ~canvasName~ canvas, PInputEvent event) {\n\t\tthis(root, canvas, event, org.abego.treelayout.Configuration.Location.Left, org.abego.treelayout.Configuration.AlignmentInLevel.Center);\n\t}\n\n\tprivate ~name~(~nodeType~ root, ~canvasName~ canvas, PInputEvent event, org.abego.treelayout.Configuration.Location location, org.abego.treelayout.Configuration.AlignmentInLevel alignmentInLevel) {\n\t\tsuper(\"Layout Tree\", root, canvas, event);\n\t\tthis.configuration = new org.abego.treelayout.util.DefaultConfiguration<>(100, 5, location, alignmentInLevel);\n\t}\n\n\t@Override\n\tvoid actionPerformed(~nodeType~ node, ~canvasName~ canvas, PInputEvent event, ActionEvent e) {\n\n\t\tnew Thread(() -> {\n\n\t\t\tfindChildren(node);\n\n\t\t\tfinal org.abego.treelayout.TreeForTreeLayout<~nodeType~> tree = new org.abego.treelayout.util.AbstractTreeForTreeLayout<~nodeType~>(node) {\n\t\t\t\t@Override\n\t\t\t\tpublic ~nodeType~ getParent(~nodeType~ textNode) {\n\t\t\t\t\treturn parentsMap.get(textNode.getUuid());\n\t\t\t\t}\n\n\t\t\t\t@Override\n\t\t\t\tpublic java.util.List<~nodeType~> getChildrenList(~nodeType~ textNode) {\n\t\t\t\t\tif (textNode == null) return Collections.emptyList();\n\t\t\t\t\treturn childrensMap.get(textNode.getUuid());\n\t\t\t\t}\n\t\t\t};\n\n\t\t\tfinal org.abego.treelayout.NodeExtentProvider<~nodeType~> nodeExtendProvider = new org.abego.treelayout.NodeExtentProvider<~nodeType~>() {\n\t\t\t\t@Override\n\t\t\t\tpublic double getWidth(~nodeType~ textNode) {\n\t\t\t\t\treturn textNode.getFullBounds().getWidth();\n\t\t\t\t}\n\n\t\t\t\t@Override\n\t\t\t\tpublic double getHeight(~nodeType~ textNode) {\n\t\t\t\t\treturn textNode.getFullBounds().getHeight();\n\t\t\t\t}\n\t\t\t};\n\n\t\t\tfinal org.abego.treelayout.TreeLayout<~nodeType~> layout = new org.abego.treelayout.TreeLayout<>(tree, nodeExtendProvider, configuration);\n\n\t\t\t// apply coordination-translation\n\t\t\tfinal Point2D rootLocation = node.getFullBoundsReference().getCenter2D();\n\t\t\tfinal Map<~nodeType~, Rectangle2D.Double> nodeBounds = layout.getNodeBounds();\n\t\t\tfinal Rectangle2D.Double rootBounds = nodeBounds.get(node);\n\t\t\tfinal double dX = rootLocation.getX() - rootBounds.getCenterX();\n\t\t\tfinal double dY = rootLocation.getY() - rootBounds.getCenterY();\n\n\t\t\tSwingUtilities.invokeLater(() -> {\n\t\t\t\tfor (Map.Entry<~nodeType~, Rectangle2D.Double> nodeBound : nodeBounds.entrySet()) {\n\t\t\t\t\tif (node.equals(nodeBound.getKey())) continue;\n\t\t\t\t\tfinal double centerX = nodeBound.getValue().getCenterX() + dX;\n\t\t\t\t\tfinal double centerY = nodeBound.getValue().getCenterY() + dY;\n\t\t\t\t\tnodeBound.getKey().setOffset(centerX, centerY);\n\t\t\t\t}\n\t\t\t});\n\n\t\t}).start();\n\t}\n\n\tprivate void findChildren(~nodeType~ node) {\n\n\t\tif (childrensMap.containsKey(node.getUuid())) return;\n\n\t\tchildrensMap.put(node.getUuid(), new ArrayList<>());\n\n\t\tnode.outgoing()\n\t\t\t\t.map(aLong -> canvas.relationMap.get(aLong).getDst())\n\t\t\t\t.filter(abstractNode -> !childrensMap.containsKey(abstractNode.getUuid()))\n\t\t\t\t.forEach(abstractNode -> {\n\t\t\t\t\t\tchildrensMap.get(node.getUuid()).add(abstractNode);\n\t\t\t\t\t\tparentsMap.put(abstractNode.getUuid(), node);\n\t\t\t\t});\n\n\t\tchildrensMap.get(node.getUuid()).forEach(this::findChildren);\n\t}\n} ",
+        "text" : "private static final class ~name~ extends NodeAction<~nodeType~> {\n\n\tprivate final Map<UUID, ~nodeType~> parentsMap = new LinkedHashMap<>();\n\tprivate final Map<UUID, java.util.List<~nodeType~~gt()~> childrensMap = new LinkedHashMap<>();\n\tprivate final org.abego.treelayout.util.DefaultConfiguration<~nodeType~> configuration;\n\n\tprivate ~name~(~nodeType~ root, ~canvasName~ canvas, PInputEvent event) {\n\t\tthis(root, canvas, event, org.abego.treelayout.Configuration.Location.Left, org.abego.treelayout.Configuration.AlignmentInLevel.Center);\n\t}\n\n\tprivate ~name~(~nodeType~ root, ~canvasName~ canvas, PInputEvent event, org.abego.treelayout.Configuration.Location location, org.abego.treelayout.Configuration.AlignmentInLevel alignmentInLevel) {\n\t\tsuper(\"Layout Tree\", root, canvas, event);\n\t\tthis.configuration = new org.abego.treelayout.util.DefaultConfiguration<>(100, 5, location, alignmentInLevel);\n\t}\n\n\t@Override\n\tvoid actionPerformed(~nodeType~ node, ~canvasName~ canvas, PInputEvent event, ActionEvent e) {\n\n\t\tnew Thread(() -> {\n\n\t\t\tfindChildren(node);\n\n\t\t\tfinal org.abego.treelayout.TreeForTreeLayout<~nodeType~> tree = new org.abego.treelayout.util.AbstractTreeForTreeLayout<~nodeType~>(node) {\n\t\t\t\t@Override\n\t\t\t\tpublic ~nodeType~ getParent(~nodeType~ textNode) {\n\t\t\t\t\treturn parentsMap.get(textNode.getUuid());\n\t\t\t\t}\n\n\t\t\t\t@Override\n\t\t\t\tpublic java.util.List<~nodeType~> getChildrenList(~nodeType~ textNode) {\n\t\t\t\t\tif (textNode == null) return Collections.emptyList();\n\t\t\t\t\treturn childrensMap.get(textNode.getUuid());\n\t\t\t\t}\n\t\t\t};\n\n\t\t\tfinal org.abego.treelayout.NodeExtentProvider<~nodeType~> nodeExtendProvider = new org.abego.treelayout.NodeExtentProvider<~nodeType~>() {\n\t\t\t\t@Override\n\t\t\t\tpublic double getWidth(~nodeType~ textNode) {\n\t\t\t\t\treturn textNode.getFullBounds().getWidth();\n\t\t\t\t}\n\n\t\t\t\t@Override\n\t\t\t\tpublic double getHeight(~nodeType~ textNode) {\n\t\t\t\t\treturn textNode.getFullBounds().getHeight();\n\t\t\t\t}\n\t\t\t};\n\n\t\t\tfinal org.abego.treelayout.TreeLayout<~nodeType~> layout = new org.abego.treelayout.TreeLayout<>(tree, nodeExtendProvider, configuration);\n\n\t\t\t// apply coordination-translation\n\t\t\tfinal Point2D rootLocation = node.getFullBoundsReference().getCenter2D();\n\t\t\tfinal Map<~nodeType~, Rectangle2D.Double> nodeBounds = layout.getNodeBounds();\n\t\t\tfinal Rectangle2D.Double rootBounds = nodeBounds.get(node);\n\t\t\tfinal double dX = rootLocation.getX() - rootBounds.getCenterX();\n\t\t\tfinal double dY = rootLocation.getY() - rootBounds.getCenterY();\n\n\t\t\tSwingUtilities.invokeLater(() -> {\n\t\t\t\tfor (Map.Entry<~nodeType~, Rectangle2D.Double> nodeBound : nodeBounds.entrySet()) {\n\t\t\t\t\tif (node.equals(nodeBound.getKey())) continue;\n\t\t\t\t\tfinal double centerX = nodeBound.getValue().getCenterX() + dX;\n\t\t\t\t\tfinal double centerY = nodeBound.getValue().getCenterY() + dY;\n\t\t\t\t\tnodeBound.getKey().setOffset(centerX, centerY);\n\t\t\t\t}\n\t\t\t});\n\n\t\t}).start();\n\t}\n\n\tprivate void findChildren(~nodeType~ node) {\n\n\t\tif (childrensMap.containsKey(node.getUuid())) return;\n\n\t\tchildrensMap.put(node.getUuid(), new ArrayList<>());\n\n\t\tnode.outgoing()\n\t\t\t\t.map(aLong -> canvas.relationMap.get(aLong).getDst())\n\t\t\t\t.filter(abstractNode -> !childrensMap.containsKey(abstractNode.getUuid()))\n\t\t\t\t.forEach(abstractNode -> {\n\t\t\t\t\t\tchildrensMap.get(node.getUuid()).add(abstractNode);\n\t\t\t\t\t\tparentsMap.put(abstractNode.getUuid(), node);\n\t\t\t\t});\n\n\t\tchildrensMap.get(node.getUuid()).forEach(this::findChildren);\n\t}\n} ",
         "parameters" : [ {
-          "uuid" : "bd06296b-27ce-423b-9d10-d0013ac51fd3",
+          "uuid" : "03cc7964-caaa-45fb-942d-0bdc50887fe8",
           "name" : "name",
           "type" : "SINGLE",
           "argumentType" : "Object"
         }, {
-          "uuid" : "48622e9a-ffc6-4e42-bb1f-eebe4195052b",
+          "uuid" : "8bafd27c-0d2c-4aab-bdde-6ac84338629a",
           "name" : "nodeType",
           "type" : "SINGLE",
           "argumentType" : "Object"
         }, {
-          "uuid" : "b9a6f18b-8307-4f25-9d74-4f8a35885c6c",
+          "uuid" : "4e2ef48e-451b-48ec-8e5f-b02516a78307",
           "name" : "canvasName",
           "type" : "SINGLE",
           "argumentType" : "Object"
         } ]
+      }, {
+        "uuid" : "59cbf485-eeea-4bf7-8c6f-c73728a33ff4",
+        "name" : "AnonymousPNodeAction",
+        "text" : "new STNode.NodeAction<~nodeType~>(~header~, this, canvas, event) {\n\t@Override\n\tvoid actionPerformed(~nodeType~ node, STCanvas canvas, PInputEvent event, ActionEvent e) {\n\t\t~statements:{it|~it~};separator=\"\\n\"~\n\t}\n} ",
+        "parameters" : [ {
+          "uuid" : "9059d16f-8cf0-4dfa-ba0c-5ae9290e0ec1",
+          "name" : "nodeType",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "0fc4f85b-266c-4551-88b3-b194265013d6",
+          "name" : "header",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "b003e062-5a01-4d2a-aa18-480b76650e7d",
+          "name" : "statements",
+          "type" : "LIST",
+          "argumentType" : "Object"
+        } ]
       } ],
       "parameters" : [ ]
+    }, {
+      "uuid" : "ce822f9c-b805-4dbb-abf3-5a4a7e7bf7c0",
+      "name" : "PNodeImpl",
+      "text" : "package ~packageName~;\n\nimport com.generator.util.SwingUtil;\nimport nextgen.st.STModeller;\nimport nextgen.st.domain.STParameterKey;\nimport nextgen.st.model.STArgumentKV;\nimport nextgen.st.model.STValue;\nimport nextgen.st.model.STValueType;\nimport org.piccolo2d.event.PInputEvent;\n\nimport javax.swing.*;\nimport java.awt.*;\nimport java.awt.event.ActionEvent;\nimport java.util.*;\nimport java.util.stream.Collectors;\n\npublic class ~name~ extends ~nodeName~ {\n\n\t~fields:{it|final ~it.type~ ~it.name~;};separator=\"\\n\"~\n\t\t\n\tpublic ~name~(~canvasName~ canvas, String initText, java.util.UUID uuid~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n\t\tsuper(canvas, initText, uuid);\n\t\t~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n\t}\n\n\t@Override\n\tprotected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {\n\t\t~rightClickStatements:{it|~it~};separator=\"\\n\"~\n\t\t~anonymousRightClickActions:{it|pop.add(~it~);};separator=\"\\n\"~\n\t\t~onRightClick:{it|pop.add(new ~it.name~(this, canvas, event));};separator=\"\\n\"~\n\t\t~if(onRightClick)~\n\t\tpop.addSeparator();\n\t\t~endif~\n\t\tsuper.onNodeRightClick(event, pop);\n\t}\n\n\t@Override\n\tprotected void onNodeKeyPressed(PInputEvent event) {\n~if(onKeyPressed)~\n\t\tswitch (event.getKeyCode()) {\n\t\t\t~onKeyPressed:{it|\ncase VK_~it.key~:\n\tnew ~it.name~(this, canvas, event).actionPerformed(null);\n\treturn;\n};separator=\"\\n\"~\n\t\t}\n~endif~\n\t\tsuper.onNodeKeyPressed(event);\n\t}\n\n\t@Override\n\tprotected void onNodeLeftClick(PInputEvent event) {\n\t\tsuper.onNodeLeftClick(event);\n\t}\n\n\t~actions:{it|~it~};separator=\"\\n\\n\"~\n} ",
+      "parameters" : [ {
+        "uuid" : "156de11d-7f12-4d58-be14-6161176d910d",
+        "name" : "packageName",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "ae9b9536-9a14-4601-aa75-3ae012aa967a",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "73b0d6f1-40b3-445d-927e-d5ec374ee9a1",
+        "name" : "nodeName",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "99b5a201-1ecc-4330-97ad-beb70606a12c",
+        "name" : "fields",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "fb8391cf-6d87-4fc2-b4b1-3b36115b734e",
+          "name" : "type",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "2ad06c14-204f-4802-887d-b2c28470378c",
+          "name" : "name",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "31e0b873-0341-41b0-a8c4-64ba714fc238",
+        "name" : "canvasName",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "c2e64ff7-cd18-4044-8f0a-1dfac7d3b759",
+        "name" : "rightClickStatements",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "7ccfed22-7ac4-4477-8d3b-fc4b5a885959",
+        "name" : "anonymousRightClickActions",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "39e80541-8248-4022-b7e9-4245fdc5d494",
+        "name" : "onRightClick",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "1f51b93b-d4ca-40db-ad58-3f53a8b92953",
+          "name" : "name",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "3fbc365e-d3c9-4795-bd14-e43813ae0936",
+        "name" : "onKeyPressed",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "7362ea36-e4ad-4caf-ba03-33d925125ec4",
+          "name" : "key",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "0e73c441-70bc-4069-bfd9-bb40f087265f",
+          "name" : "name",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "5b384b08-c0f3-479d-86d7-e1f48e4816cf",
+        "name" : "actions",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
     } ]
   }, {
     "uuid" : "810651ec-67d4-4301-98d5-5df6eab93d5f",

@@ -99,6 +99,7 @@ public class JavaSTTests {
 		testListType();
 		testSetType();
 		testNewInstance();
+		testSwitch();
 	}
 
 	@org.junit.Test
@@ -549,5 +550,10 @@ public class JavaSTTests {
 	@org.junit.Test
 	public void testNewInstance() {
 		System.out.println("\n--- TEST NewInstance:\n" + newNewInstance());
+	} 
+
+	@org.junit.Test
+	public void testSwitch() {
+		System.out.println("\n--- TEST Switch:\n" + newSwitch());
 	} 
 } 

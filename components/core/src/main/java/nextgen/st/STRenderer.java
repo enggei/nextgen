@@ -1,22 +1,23 @@
 package nextgen.st;
 
+import nextgen.st.domain.STGroupModel;
+import nextgen.st.domain.STParameterKey;
+import nextgen.st.domain.STTemplate;
 import nextgen.st.model.*;
-import nextgen.st.domain.*;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
 import java.io.File;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static nextgen.st.STParser.readJsonObject;
 
 public class STRenderer {
 
     private final Set<STMapper> mappers = new LinkedHashSet<>();
+    private final Set<STModule> modules = new LinkedHashSet<>();
 
     public STRenderer(Set<STGroupModel> groupModels) {
         setGroupModels(groupModels);
@@ -37,7 +38,11 @@ public class STRenderer {
             mappers.add(new STMapper(stGroupModel));
     }
 
-    public ST render(STModel stModel, STModule stModule) {
+    public void addModule(STModule stModule) {
+        this.modules.add(stModule);
+    }
+
+    public String render(STModel stModel) {
 
         final STMapper stMapper = findMapper(stModel.getStTemplate());
         if (stMapper == null) return null;
@@ -55,7 +60,7 @@ public class STRenderer {
 
                                         case SINGLE:
                                         case LIST:
-                                            st.add(stParameter.getName(), render(stArgument, stModule));
+                                            st.add(stParameter.getName(), render(stArgument));
                                             break;
 
                                         case KVLIST:
@@ -69,34 +74,43 @@ public class STRenderer {
                                             final AtomicInteger index = new AtomicInteger(-1);
                                             stParameter.getKeys().forEach(stParameterKey -> {
                                                 aggrSpec.add("keys", stParameterKey.getName());
-                                                values[index.incrementAndGet()] = render(stArgument, stModule, stParameterKey);
+                                                values[index.incrementAndGet()] = render(stArgument, stParameterKey);
                                             });
 
                                             st.addAggr(aggrSpec.render(), values);
                                             break;
                                     }
                                 }));
-        return st;
+        return st.render();
     }
 
-    private Object render(STArgument stArgument, STModule stModule, STParameterKey stParameterKey) {
+    public Object render(STArgument stArgument, STParameterKey stParameterKey) {
         final STArgumentKV found = stArgument.getKeyValues()
                 .filter(stArgumentKV -> stArgumentKV.getKey().equals(stParameterKey.getName()))
                 .findFirst()
                 .orElse(null);
-        return found == null ? null : render(found.getValue(), stModule);
+        return found == null ? null : render(found.getValue());
     }
 
-    private Object render(STArgument stArgument, STModule stModule) {
-        return render(stArgument.getValue(), stModule);
+    public Object render(STArgument stArgument) {
+
+        final List<STArgumentKV> kvs = stArgument.getKeyValues().collect(Collectors.toList());
+        if (kvs.isEmpty())
+            return render(stArgument.getValue());
+
+        final StringBuilder kv = new StringBuilder();
+        for (STArgumentKV stArgumentKV : kvs) {
+            kv.append(stArgumentKV.getKey()).append("=").append(render(stArgumentKV.getValue()));
+        }
+        return kv.toString();
     }
 
-    private Object render(STValue value, STModule stModule) {
+    public Object render(STValue value) {
         if (value == null) return null;
 
         switch (value.getType()) {
             case STMODEL:
-                return render(findSTModel(value.getValue(), stModule), stModule);
+                return render(findSTModel(value.getValue()));
             case PRIMITIVE:
                 return value.getValue();
         }
@@ -111,8 +125,13 @@ public class STRenderer {
         return null;
     }
 
-    private STModel findSTModel(String uuid, STModule stModule) {
-        return stModule.getModels().filter(stModel -> uuid.equals(stModel.uuid())).findFirst().orElse(null);
+    private STModel findSTModel(String uuid) {
+        for (STModule stModule : modules) {
+            final STModel model = stModule.getModels().filter(stModel -> uuid.equals(stModel.uuid())).findFirst().orElse(null);
+            if (model != null) return model;
+        }
+
+        return null;
     }
 
     private static final class STMapper {

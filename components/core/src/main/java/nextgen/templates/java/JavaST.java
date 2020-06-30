@@ -94,7 +94,8 @@ public class JavaST {
 	ArrayListType.st + "\n" + 
 	ListType.st + "\n" + 
 	SetType.st + "\n" + 
-	NewInstance.st + "\n" ;
+	NewInstance.st + "\n" + 
+	Switch.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -488,6 +489,10 @@ public class JavaST {
 
 	public static NewInstance newNewInstance() {
 		return new NewInstance(stGroup);
+	} 
+
+	public static Switch newSwitch() {
+		return new Switch(stGroup);
 	} 
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {

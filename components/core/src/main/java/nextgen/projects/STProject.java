@@ -1,8 +1,10 @@
 package nextgen.projects;
 
 import nextgen.st.STGenerator;
+import nextgen.templates.DomainPatterns;
 import nextgen.templates.JavaPatterns;
 import nextgen.templates.Piccolo2DPatterns;
+import nextgen.templates.TextPatterns;
 import nextgen.templates.domain.Entity;
 import nextgen.templates.java.PackageDeclaration;
 import nextgen.templates.piccolo2d.*;
@@ -12,6 +14,8 @@ import java.io.File;
 
 import static nextgen.templates.DomainPatterns.*;
 import static nextgen.templates.Piccolo2DPatterns.*;
+import static nextgen.templates.TextPatterns.newLine;
+import static nextgen.templates.text.TextST.newBlock;
 
 public class STProject {
 
@@ -37,6 +41,7 @@ public class STProject {
                 .setNodeName(nodeName)
                 .setRelationName(relationName);
 
+
         final PNode node = newPNode()
                 .setName(nodeName)
                 .setCanvasName(canvas.getName())
@@ -48,10 +53,127 @@ public class STProject {
                 .setCanvasName(canvas.getName())
                 .setPackageName(stCanvasPackage.getName());
 
-        final CanvasAction newSTNodeAction = newCanvasAction(canvas, "NewNode", "New Node")
-                .addStatements("SwingUtilities.invokeLater(() -> canvas.addNode(new " + node.getName() + "(canvas, \"HelloWorld\")));");
+        final PNodeImpl stValueNode = newPNodeImpl(canvas, node)
+                .setName("STValueNode")
+                .setPackageName(stCanvasPackage.getName())
+                .setNodeName("STNode")
+                .addFields("nextgen.st.model.STValue", "stValue");
 
+        final PNodeImpl stModelNode = newPNodeImpl(canvas, node)
+                .setPackageName(stCanvasPackage.getName())
+                .setName("STModelNode")
+                .addFields("nextgen.st.domain.STGroupModel", "stGroupModel")
+                .addFields("nextgen.st.domain.STTemplate", "stTemplate")
+                .addFields("nextgen.st.model.STModel", "stModel")
+                .addFields("nextgen.st.STRenderer", "stRenderer")
+                .addRightClickStatements(TextPatterns.newLine(
+                        "final java.util.List<STValueNode> stValueNodes = canvas.getSelectedNodes()",
+                        ".filter(stNode -> stNode instanceof STValueNode)",
+                        ".filter(stNode -> !stNode.getUuid().equals(getUuid()))",
+                        ".map(stNode -> (STValueNode) stNode)",
+                        ".collect(Collectors.toList());"))
+                .addRightClickStatements(TextPatterns.newLine(
+                        "final java.util.List<STModelNode> stModelNodes = canvas.getSelectedNodes()",
+                        ".filter(stNode -> stNode instanceof STModelNode)",
+                        ".filter(stNode -> !stNode.getUuid().equals(getUuid()))",
+                        ".map(stNode -> (STModelNode) stNode)",
+                        ".collect(Collectors.toList());"))
+                .addRightClickStatements(newLine("stTemplate.getParameters().forEach(stParameter -> {", "});")
+                        .addChildren("final JMenu stParameterMenu = new JMenu(stParameter.getName());")
+                        .addChildren(JavaPatterns.newSwitch().setSelector("stParameter.getType()")
+                                .addCases("SINGLE", newBlock()
+                                        .addLines(newLine("stParameterMenu.add(", Piccolo2DPatterns.newAnonymousPNodeAction("STModelNode")
+                                                        .setHeader("\"Set \" + stParameter.getName()")
+                                                        .addStatements("final String s = SwingUtil.showInputDialog(stParameter.getName(), canvas);")
+                                                        .addStatements("if (s == null || s.trim().length() == 0) return;")
+                                                        .addStatements("STModeller.setArgument(stParameter, stModel, new STValue().setType(STValueType.PRIMITIVE).setValue(s.trim()));")
+                                                        .addStatements("setText(stRenderer.render(stModel));")
+                                                , ");"))
+                                        .addLines(newLine("stValueNodes.forEach(stNode -> {", "});")
+                                                .addChildren("final int end = Math.min(stNode.getText().length(), 50);")
+                                                .addChildren(newLine("stParameterMenu.add(", newAnonymousPNodeAction("STModelNode")
+                                                                .setHeader("\"Set \" + stParameter.getName() + \" = \" + stNode.getText().substring(0, end)")
+                                                                .addStatements("STModeller.setArgument(stParameter, stModel, stNode.stValue);")
+                                                                .addStatements("setText(stRenderer.render(stModel));")
+                                                        , ");")))
+                                        .addLines(newLine("stModelNodes.forEach(stNode -> {", "});")
+                                                .addChildren("final int end = Math.min(stNode.getText().length(), 50);")
+                                                .addChildren(newLine("stParameterMenu.add(", newAnonymousPNodeAction("STModelNode")
+                                                                .setHeader("\"Set \" + stParameter.getName() + \" = \" + stNode.getText().substring(0, end)")
+                                                                .addStatements("STModeller.setArgument(stParameter, stModel, new STValue().setType(STValueType.STMODEL).setValue(stNode.getUuid().toString()));")
+                                                                .addStatements("setText(stRenderer.render(stModel));")
+                                                        , ");"))))
+                                .addCases("LIST", newBlock()
+                                        .addLines(newLine("stParameterMenu.add(", newAnonymousPNodeAction("STModelNode")
+                                                        .setHeader("\"Add \" + stParameter.getName()")
+                                                        .addStatements("final String s = SwingUtil.showInputDialog(stParameter.getName(), canvas);")
+                                                        .addStatements("if (s == null || s.trim().length() == 0) return;")
+                                                        .addStatements("STModeller.addArgument(stParameter, stModel, new STValue().setType(STValueType.PRIMITIVE).setValue(s.trim()));")
+                                                        .addStatements("setText(stRenderer.render(stModel));")
+                                                , ");"))
+                                        .addLines(newLine("stValueNodes.forEach(stNode -> {", "});")
+                                                .addChildren("final int end = Math.min(stNode.getText().length(), 50);")
+                                                .addChildren(newLine("stParameterMenu.add(", newAnonymousPNodeAction("STModelNode")
+                                                                .setHeader("\"Add \" + stParameter.getName() + \" = \" + stNode.getText().substring(0, end)")
+                                                                .addStatements("STModeller.addArgument(stParameter, stModel, stNode.stValue);")
+                                                                .addStatements("setText(stRenderer.render(stModel));")
+                                                        , ");")))
+                                        .addLines(newLine("stModelNodes.forEach(stNode -> {", "});")
+                                                .addChildren("final int end = Math.min(stNode.getText().length(), 50);")
+                                                .addChildren(newLine("stParameterMenu.add(", newAnonymousPNodeAction("STModelNode")
+                                                                .setHeader("\"Add \" + stParameter.getName() + \" = \" + stNode.getText().substring(0, end)")
+                                                                .addStatements("STModeller.addArgument(stParameter, stModel, new STValue().setType(STValueType.STMODEL).setValue(stNode.getUuid().toString()));")
+                                                                .addStatements("setText(stRenderer.render(stModel));")
+                                                        , ");")))
+                                )
+                                .addCases("KVLIST", newBlock()
+                                        .addLines(newLine("stParameterMenu.add(", newAnonymousPNodeAction("STModelNode")
+                                                .setHeader("\"Add \" + stParameter.getName()")
+                                                .addStatements(newBlock()
+                                                        .addLines("final Map<STParameterKey, JTextField> fieldMap = new LinkedHashMap<>();")
+                                                        .addLines(newLine("stParameter.getKeys().forEach(stParameterKey -> {", "});")
+                                                                .addChildren("fieldMap.put(stParameterKey, new JTextField(15));")))
+                                                .addStatements(newBlock()
+                                                        .addLines("final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));")
+                                                        .addLines("inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));")
+                                                        .addLines(newLine("for (Map.Entry<STParameterKey, JTextField> fieldEntry : fieldMap.entrySet()) {", "}")
+                                                                .addChildren("inputPanel.add(new JLabel(fieldEntry.getKey().getName()));")
+                                                                .addChildren("inputPanel.add(fieldEntry.getValue());")))
+                                                .addStatements(newBlock()
+                                                        .addLines(newLine("SwingUtil.showDialog(inputPanel, canvas, stParameter.getName(), new SwingUtil.ConfirmAction() {", "});")
+                                                                .addChildren("@Override")
+                                                                .addChildren(newLine("public void verifyAndCommit() throws Exception {", "}")
+                                                                        .addChildren("final Collection<STArgumentKV> kvs = new ArrayList<>();")
+                                                                        .addChildren(newLine("for (Map.Entry<STParameterKey, JTextField> fieldEntry : fieldMap.entrySet()) {", "}")
+                                                                                .addChildren("kvs.add(new STArgumentKV().setKey(fieldEntry.getKey().getName()).setValue(new STValue().setType(STValueType.PRIMITIVE).setValue(fieldEntry.getValue().getText().trim())));"))
+                                                                        .addChildren("STModeller.addArgument(stParameter, stModel, kvs);")
+                                                                        .addChildren("setText(stRenderer.render(stModel));")))), ");"))
+                                ))
+                        .addChildren("pop.add(stParameterMenu);"))
+                .addRightClickStatements("final JMenu remove = new JMenu(\"Remove\");")
+                .addRightClickStatements(newLine("stModel.getArguments().forEach(stArgument -> {", "});")
+                        .addChildren("final String s = stRenderer.render(stArgument).toString();")
+                        .addChildren("final int end = Math.min(s.length(), 50);")
+                        .addChildren(newLine("remove.add(new STNode.NodeAction<STModelNode>(\"Remove \" + s.substring(0, end), this, canvas, event) {", "});")
+                                .addChildren("@Override")
+                                .addChildren(newLine("void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {", "}")
+                                        .addChildren("STModeller.removeArgument(stArgument, stModel);")
+                                        .addChildren("setText(stRenderer.render(stModel));"))))
+                .addRightClickStatements("if (remove.getMenuComponentCount() != 0) pop.add(remove);");
+
+        final CanvasAction newSTNodeAction = newCanvasAction(canvas, "NewSTValueNode", "New Value")
+                .addStatements("final String s = com.generator.util.SwingUtil.showInputDialog(\"Value\", canvas);\n" +
+                        "if (s == null || s.trim().length() == 0) return;")
+                .addStatements(newLine("SwingUtilities.invokeLater(() -> {", "});")
+                        .addChildren("final nextgen.st.model.STValue stValue = new nextgen.st.model.STValue().setType(nextgen.st.model.STValueType.PRIMITIVE).setValue(s);")
+                        .addChildren("canvas.addNode(new " + stValueNode.getName() + "(canvas, s, UUID.fromString(stValue.uuid()), stValue));"));
         registerRightClickAction(canvas, newSTNodeAction, newSTNodeAction.getName());
+
+        final NodeAction editSTValue = newNodeAction(stValueNode, "EditSTValue", "Edit")
+                .addStatements("final String s = com.generator.util.SwingUtil.showInputDialog(\"Value\", canvas, node.stValue.getValue().toString());\n" +
+                        "if (s == null || s.trim().length() == 0) return;")
+                .addStatements("node.stValue.setValue(s);");
+        registerRightClickAction(stValueNode, editSTValue, editSTValue.getName());
 
         Piccolo2DPatterns.addDefaultActionsToCanvas(canvas);
         Piccolo2DPatterns.addDefaultActionsToNode(node);
@@ -59,6 +181,9 @@ public class STProject {
         STGenerator.writeJavaFile(canvas, stCanvasPackage, canvas.getName(), javaMainSrc);
         STGenerator.writeJavaFile(node, stCanvasPackage, node.getName(), javaMainSrc);
         STGenerator.writeJavaFile(relation, stCanvasPackage, relation.getName(), javaMainSrc);
+
+        STGenerator.writeJavaFile(stModelNode, stCanvasPackage, stModelNode.getName(), javaMainSrc);
+        STGenerator.writeJavaFile(stValueNode, stCanvasPackage, stValueNode.getName(), javaMainSrc);
     }
 
     @Test
@@ -68,17 +193,17 @@ public class STProject {
                 .addRelations(newEnumField("type", "STValueType", "STMODEL,PRIMITIVE"))
                 .addRelations(newStringField("value"));
 
-        writeJsonWrapper(javaTestSrc, stModelPackage.getName(), newDomain("STModel")
+        writePojo(javaTestSrc, stModelPackage.getName(), newDomain("STModel")
                 .addEntities(newEntity("STModule")
                         .addRelations(newStringField("name"))
                         .addRelations(newOneToManyString("stGroups"))
                         .addRelations(newOneToMany("models", newEntity("STModel")
-                                .addRelations(newStringField("stTemplate"))
+                                .addRelations(newExternalRef("stTemplate", DomainPatterns.newType(stDomainPackage, "STTemplate")))
                                 .addRelations(newOneToMany("arguments", newEntity("STArgument")
-                                        .addRelations(newStringField("stParameter"))
+                                        .addRelations(newExternalRef("stParameter", DomainPatterns.newType(stDomainPackage, "STParameter")))
                                         .addRelations(newOneToOne("value", stValue))
                                         .addRelations(newOneToMany("keyValues", newEntity("STArgumentKV")
-                                                .addRelations(newStringField("key"))
+                                                .addRelations(newExternalRef("key", DomainPatterns.newType(stDomainPackage, "STParameterKey")))
                                                 .addRelations(newOneToOne("value", stValue))))))))
                         .addRelations(newOneToMany("values", stValue))
                 )

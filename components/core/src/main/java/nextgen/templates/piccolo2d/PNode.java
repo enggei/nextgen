@@ -339,7 +339,8 @@ public class PNode {
 				"\n" + 
 				"	public void setText(String text) {\n" + 
 				"		addAttribute(Attributes._text, text);\n" + 
-				"		SwingUtilities.invokeLater(() -> child.setText(text));\n" + 
+				"		child.setText(text);\n" + 
+				"		refresh();\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public void unselect() {\n" + 
@@ -411,8 +412,9 @@ public class PNode {
 				"	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {\n" + 
 				"\n" + 
 				"		~onRightClick:{it|pop.add(new ~it.name~(this, canvas, event));};separator=\"\\n\"~\n" + 
-				"\n" + 
+				"		~if(onRightClick)~\n" + 
 				"		pop.addSeparator();\n" + 
+				"		~endif~\n" + 
 				"		\n" + 
 				"		pop.add(new AbstractAction(\"Close\") {\n" + 
 				"			@Override\n" + 
@@ -424,13 +426,13 @@ public class PNode {
 				"\n" + 
 				"	~PNodeInputEventHandler()~	\n" + 
 				"\n" + 
-				"	static abstract class NodeAction extends AbstractAction {\n" + 
+				"	static abstract class NodeAction<N extends ~name~> extends AbstractAction {\n" + 
 				"\n" + 
-				"		final ~name~ node;\n" + 
+				"		final N node;\n" + 
 				"		final ~canvasName~ canvas;\n" + 
 				"		final PInputEvent event;\n" + 
 				"	\n" + 
-				"		NodeAction(String name, ~name~ node, ~canvasName~ canvas, PInputEvent event) {\n" + 
+				"		NodeAction(String name, N node, ~canvasName~ canvas, PInputEvent event) {\n" + 
 				"			super(name);\n" + 
 				"			this.node = node;\n" + 
 				"			this.canvas = canvas;\n" + 
@@ -442,7 +444,7 @@ public class PNode {
 				"			actionPerformed(node, canvas, event, e);\n" + 
 				"		}\n" + 
 				"	\n" + 
-				"		abstract void actionPerformed(~name~ node, ~canvasName~ canvas, PInputEvent event, ActionEvent e);\n" + 
+				"		abstract void actionPerformed(N node, ~canvasName~ canvas, PInputEvent event, ActionEvent e);\n" + 
 				"	}\n" + 
 				"	\n" + 
 				"	~actions:{it|~it~};separator=\"\\n\\n\"~\n" + 

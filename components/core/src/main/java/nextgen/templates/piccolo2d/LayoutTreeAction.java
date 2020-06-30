@@ -107,7 +107,7 @@ public class LayoutTreeAction {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "LayoutTreeAction(name,nodeType,canvasName) ::= <<private static final class ~name~ extends NodeAction {\n" + 
+	static final String st = "LayoutTreeAction(name,nodeType,canvasName) ::= <<private static final class ~name~ extends NodeAction<~nodeType~> {\n" + 
 				"\n" + 
 				"	private final Map<UUID, ~nodeType~> parentsMap = new LinkedHashMap<>();\n" + 
 				"	private final Map<UUID, java.util.List<~nodeType~~gt()~> childrensMap = new LinkedHashMap<>();\n" + 

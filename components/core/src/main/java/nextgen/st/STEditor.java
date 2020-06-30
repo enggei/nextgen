@@ -145,7 +145,7 @@ public class STEditor extends JPanel {
         return Stream
                 .of("Hack", "Fira Code", "Source Code Pro", "Monospaced")
                 .filter(fonts::contains)
-                .findFirst().map(s -> new Font(s, Font.PLAIN, 14))
+                .findFirst().map(s -> new Font(s, Font.PLAIN, 24))
                 .orElse(null);
     }
 

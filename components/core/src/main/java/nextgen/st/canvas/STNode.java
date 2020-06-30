@@ -115,7 +115,8 @@ public class STNode extends PNode {
 
 	public void setText(String text) {
 		addAttribute(Attributes._text, text);
-		SwingUtilities.invokeLater(() -> child.setText(text));
+		child.setText(text);
+		refresh();
 	}
 
 	public void unselect() {
@@ -192,7 +193,6 @@ public class STNode extends PNode {
 	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
 
 		pop.add(new LayoutTreeAction(this, canvas, event));
-
 		pop.addSeparator();
 
 		pop.add(new AbstractAction("Close") {
@@ -257,13 +257,13 @@ public class STNode extends PNode {
 		}
 	} 	
 
-	static abstract class NodeAction extends AbstractAction {
+	static abstract class NodeAction<N extends STNode> extends AbstractAction {
 
-		final STNode node;
+		final N node;
 		final STCanvas canvas;
 		final PInputEvent event;
 
-		NodeAction(String name, STNode node, STCanvas canvas, PInputEvent event) {
+		NodeAction(String name, N node, STCanvas canvas, PInputEvent event) {
 			super(name);
 			this.node = node;
 			this.canvas = canvas;
@@ -275,10 +275,10 @@ public class STNode extends PNode {
 			actionPerformed(node, canvas, event, e);
 		}
 
-		abstract void actionPerformed(STNode node, STCanvas canvas, PInputEvent event, ActionEvent e);
+		abstract void actionPerformed(N node, STCanvas canvas, PInputEvent event, ActionEvent e);
 	}
 
-	private static final class LayoutTreeAction extends NodeAction {
+	private static final class LayoutTreeAction extends NodeAction<STNode> {
 
 		private final Map<UUID, STNode> parentsMap = new LinkedHashMap<>();
 		private final Map<UUID, java.util.List<STNode>> childrensMap = new LinkedHashMap<>();
@@ -364,7 +364,7 @@ public class STNode extends PNode {
 		}
 	}
 
-	private static final class CloseNode extends NodeAction {
+	private static final class CloseNode extends NodeAction<STNode> {
 
 		CloseNode(STNode node, STCanvas canvas, PInputEvent event) {
 			super("Close node", node, canvas, event);
@@ -376,7 +376,7 @@ public class STNode extends PNode {
 		}
 	}
 
-	private static final class RetainNode extends NodeAction {
+	private static final class RetainNode extends NodeAction<STNode> {
 
 		RetainNode(STNode node, STCanvas canvas, PInputEvent event) {
 			super("Retain", node, canvas, event);

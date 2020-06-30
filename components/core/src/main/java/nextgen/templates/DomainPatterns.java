@@ -71,6 +71,10 @@ public class DomainPatterns extends DomainST {
         return newRelation(EXT_REF, name).setDst(dstType);
     }
 
+    public static Relation newExternalRef(String name, String dstType) {
+        return newRelation(EXT_REF, name).setDst(dstType);
+    }
+
     public static Relation newExternalList(String name, Class<?> dstType) {
         return newRelation(EXT_LIST, name).setDst(dstType);
     }
@@ -517,5 +521,9 @@ public class DomainPatterns extends DomainST {
 
     private static Class<?> asClass(Object type) {
         return (Class<?>) type;
+    }
+
+    public static String newType(PackageDeclaration packageDeclaration, String name) {
+        return packageDeclaration.toString() + "." + name;
     }
 }

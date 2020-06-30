@@ -4,6 +4,12 @@ import nextgen.templates.piccolo2d.*;
 
 public class Piccolo2DPatterns extends Piccolo2DST {
 
+    public static PNodeImpl newPNodeImpl(PCanvas canvas, PNode node) {
+        return newPNodeImpl()
+                .setNodeName(node.getName())
+                .setCanvasName(canvas.getName());
+    }
+
     public static void addDefaultActionsToCanvas(PCanvas canvas) {
 
         final CanvasAction selectAllNodesAction = newCanvasAction(canvas, "SelectAllNodes", "Select all nodes")
@@ -66,6 +72,11 @@ public class Piccolo2DPatterns extends Piccolo2DST {
         node.addOnKeyPressed("R", retainNodeAction.getName());
     }
 
+    public static void registerRightClickAction(PNodeImpl node, Object action, Object name) {
+        node.addActions(action);
+        node.addOnRightClick(name);
+    }
+
     public static void registerRightClickAction(PNode node, Object action, Object name) {
         node.addActions(action);
         node.addOnRightClick(name);
@@ -77,5 +88,17 @@ public class Piccolo2DPatterns extends Piccolo2DST {
                 .setNodeType(node.getName())
                 .setName(name)
                 .setTitle(title);
+    }
+
+    public static NodeAction newNodeAction(PNodeImpl node, String name, String title) {
+        return newNodeAction()
+                .setCanvasName(node.getCanvasName())
+                .setNodeType(node.getName())
+                .setName(name)
+                .setTitle(title);
+    }
+
+    public static AnonymousPNodeAction newAnonymousPNodeAction(String nodeType) {
+        return newAnonymousPNodeAction().setNodeType(nodeType);
     }
 }

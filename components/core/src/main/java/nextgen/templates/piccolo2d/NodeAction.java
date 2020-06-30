@@ -161,7 +161,7 @@ public class NodeAction {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NodeAction(name,nodeType,canvasName,title,statements) ::= <<private static final class ~name~ extends NodeAction {\n" + 
+	static final String st = "NodeAction(name,nodeType,canvasName,title,statements) ::= <<private static final class ~name~ extends NodeAction<~nodeType~> {\n" + 
 				"\n" + 
 				"	~name~(~nodeType~ node, ~canvasName~ canvas, PInputEvent event) {\n" + 
 				"		super(\"~title~\", node, canvas, event);\n" + 

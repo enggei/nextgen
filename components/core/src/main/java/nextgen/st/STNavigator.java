@@ -2,7 +2,11 @@ package nextgen.st;
 
 import com.generator.util.SwingUtil;
 import io.vertx.core.json.JsonObject;
+import nextgen.st.canvas.STCanvas;
+import nextgen.st.canvas.STModelNode;
 import nextgen.st.domain.*;
+import nextgen.st.model.STModel;
+import nextgen.st.model.STModule;
 
 import javax.lang.model.SourceVersion;
 import javax.swing.*;
@@ -20,6 +24,8 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static nextgen.st.STGenerator.toSTGroup;
+import static nextgen.st.STModeller.newModule;
+import static nextgen.st.model.STModelJsonFactory.newSTModel;
 
 public class STNavigator extends JPanel {
 
@@ -226,6 +232,15 @@ public class STNavigator extends JPanel {
         return Optional.empty();
     }
 
+    public Optional<STCanvas> findCanvas(JTabbedPane tabbedPane) {
+        for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+            final Component tabComponentAt = tabbedPane.getComponentAt(i);
+            if (tabComponentAt instanceof STCanvas)
+                return Optional.of((STCanvas) tabComponentAt);
+        }
+        return Optional.empty();
+    }
+
     private class BaseTreeNode<T> extends DefaultMutableTreeNode {
 
         protected ImageIcon icon;
@@ -366,9 +381,19 @@ public class STNavigator extends JPanel {
 
         class STGDirectoryTreeNode extends BaseTreeNode<STGDirectory> {
 
+            private final STRenderer stRenderer;
+            private final STModule stModule = newModule("CanvasModule");
+
             public STGDirectoryTreeNode(STGDirectory model) {
                 super(model, "STGDirectory");
-                model.getGroups().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stGroupModel -> add(new STGroupTreeNode(stGroupModel)));
+
+                final Set<STGroupModel> stGroups = new LinkedHashSet<>();
+                model.getGroups().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stGroupModel -> {
+                    stGroups.add(stGroupModel);
+                    add(new STGroupTreeNode(stGroupModel));
+                });
+                stRenderer = new STRenderer(stGroups);
+                stRenderer.addModule(stModule);
             }
 
             @Override
@@ -819,6 +844,7 @@ public class STNavigator extends JPanel {
                         if (!childTemplates.isEmpty())
                             actions.add(newSetInterfacesAction(childTemplates));
 
+                        actions.add(newModelAction());
                         actions.add(newChildTemplateAction());
                         actions.add(newSetParameterTypesAction());
                         actions.add(newSetInterfacesAction());
@@ -980,6 +1006,24 @@ public class STNavigator extends JPanel {
                             }));
 
                             showDialog(dialog, btnSave);
+                        });
+                    }
+
+                    private Action newModelAction() {
+                        return newAction("New Instance", actionEvent -> {
+                            getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> {
+                                findCanvas(tabbedPane).ifPresent(stCanvas -> {
+                                    SwingUtilities.invokeLater(() -> {
+
+                                        final STModel entityModel = newSTModel().setStTemplate(getModel().uuid());
+                                        stModule.addModels(entityModel);
+
+                                        stCanvas.addNode(new STModelNode(stCanvas, stRenderer.render(entityModel), UUID.fromString(entityModel.uuid()), stGroupTreeNode.getModel(), getModel(), entityModel, stRenderer));
+                                        tabbedPane.setSelectedComponent(stCanvas);
+                                        stCanvas.requestFocusInWindow();
+                                    });
+                                });
+                            });
                         });
                     }
 

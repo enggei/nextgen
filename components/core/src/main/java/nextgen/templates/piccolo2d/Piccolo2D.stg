@@ -465,7 +465,8 @@ public class ~name~ extends PNode {
 
 	public void setText(String text) {
 		addAttribute(Attributes._text, text);
-		SwingUtilities.invokeLater(() -> child.setText(text));
+		child.setText(text);
+		refresh();
 	}
 
 	public void unselect() {
@@ -537,8 +538,9 @@ case VK_~it.key~:
 	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
 
 		~onRightClick:{it|pop.add(new ~it.name~(this, canvas, event));};separator="\n"~
-
+		~if(onRightClick)~
 		pop.addSeparator();
+		~endif~
 		
 		pop.add(new AbstractAction("Close") {
 			@Override
@@ -550,13 +552,13 @@ case VK_~it.key~:
 
 	~PNodeInputEventHandler()~	
 
-	static abstract class NodeAction extends AbstractAction {
+	static abstract class NodeAction<N extends ~name~> extends AbstractAction {
 
-		final ~name~ node;
+		final N node;
 		final ~canvasName~ canvas;
 		final PInputEvent event;
 	
-		NodeAction(String name, ~name~ node, ~canvasName~ canvas, PInputEvent event) {
+		NodeAction(String name, N node, ~canvasName~ canvas, PInputEvent event) {
 			super(name);
 			this.node = node;
 			this.canvas = canvas;
@@ -568,7 +570,7 @@ case VK_~it.key~:
 			actionPerformed(node, canvas, event, e);
 		}
 	
-		abstract void actionPerformed(~name~ node, ~canvasName~ canvas, PInputEvent event, ActionEvent e);
+		abstract void actionPerformed(N node, ~canvasName~ canvas, PInputEvent event, ActionEvent e);
 	}
 	
 	~actions:{it|~it~};separator="\n\n"~
@@ -628,7 +630,7 @@ PNodeInputEventHandler() ::= <<private final class NodeInputEventHandler extends
 	}
 }  >>
 
-NodeAction(name,nodeType,canvasName,title,statements) ::= <<private static final class ~name~ extends NodeAction {
+NodeAction(name,nodeType,canvasName,title,statements) ::= <<private static final class ~name~ extends NodeAction<~nodeType~> {
 
 	~name~(~nodeType~ node, ~canvasName~ canvas, PInputEvent event) {
 		super("~title~", node, canvas, event);
@@ -645,7 +647,7 @@ PNodeActions() ::= <<Contains complex actions for PNode:
 LayoutTreeAction
 Uses a root-node and layout outgoing relations in any NSEW direction.  >>
 
-LayoutTreeAction(name,nodeType,canvasName) ::= <<private static final class ~name~ extends NodeAction {
+LayoutTreeAction(name,nodeType,canvasName) ::= <<private static final class ~name~ extends NodeAction<~nodeType~> {
 
 	private final Map<UUID, ~nodeType~> parentsMap = new LinkedHashMap<>();
 	private final Map<UUID, java.util.List<~nodeType~~gt()~> childrensMap = new LinkedHashMap<>();
@@ -729,6 +731,71 @@ LayoutTreeAction(name,nodeType,canvasName) ::= <<private static final class ~nam
 
 		childrensMap.get(node.getUuid()).forEach(this::findChildren);
 	}
+}  >>
+
+AnonymousPNodeAction(nodeType,header,statements) ::= <<new STNode.NodeAction<~nodeType~>(~header~, this, canvas, event) {
+	@Override
+	void actionPerformed(~nodeType~ node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+		~statements:{it|~it~};separator="\n"~
+	}
+}  >>
+
+PNodeImpl(packageName,name,nodeName,fields,canvasName,rightClickStatements,anonymousRightClickActions,onRightClick,onKeyPressed,actions) ::= <<package ~packageName~;
+
+import com.generator.util.SwingUtil;
+import nextgen.st.STModeller;
+import nextgen.st.domain.STParameterKey;
+import nextgen.st.model.STArgumentKV;
+import nextgen.st.model.STValue;
+import nextgen.st.model.STValueType;
+import org.piccolo2d.event.PInputEvent;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class ~name~ extends ~nodeName~ {
+
+	~fields:{it|final ~it.type~ ~it.name~;};separator="\n"~
+		
+	public ~name~(~canvasName~ canvas, String initText, java.util.UUID uuid~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
+		super(canvas, initText, uuid);
+		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+	}
+
+	@Override
+	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
+		~rightClickStatements:{it|~it~};separator="\n"~
+		~anonymousRightClickActions:{it|pop.add(~it~);};separator="\n"~
+		~onRightClick:{it|pop.add(new ~it.name~(this, canvas, event));};separator="\n"~
+		~if(onRightClick)~
+		pop.addSeparator();
+		~endif~
+		super.onNodeRightClick(event, pop);
+	}
+
+	@Override
+	protected void onNodeKeyPressed(PInputEvent event) {
+~if(onKeyPressed)~
+		switch (event.getKeyCode()) {
+			~onKeyPressed:{it|
+case VK_~it.key~:
+	new ~it.name~(this, canvas, event).actionPerformed(null);
+	return;
+};separator="\n"~
+		}
+~endif~
+		super.onNodeKeyPressed(event);
+	}
+
+	@Override
+	protected void onNodeLeftClick(PInputEvent event) {
+		super.onNodeLeftClick(event);
+	}
+
+	~actions:{it|~it~};separator="\n\n"~
 }  >>
 
 PRelation(packageName,name,canvasName,nodeName,onRightClickActions) ::= <<package ~packageName~;

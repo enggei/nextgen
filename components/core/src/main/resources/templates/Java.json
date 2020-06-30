@@ -1652,6 +1652,30 @@
         "name" : "arguments",
         "type" : "LIST"
       } ]
+    }, {
+      "uuid" : "7401943e-8216-4c1e-be68-61f49464af60",
+      "name" : "Switch",
+      "text" : "switch(~selector~) {\n\t~cases:{it|\ncase ~it.trigger~: {\n\t~it.statement~\n\tbreak;\n\\}};separator=\"\\n\"~\n} ",
+      "parameters" : [ {
+        "uuid" : "54fb9cb8-6527-467e-bd35-addc98e44284",
+        "name" : "selector",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "863667f6-bb48-4b3b-8cfc-3d32a1367656",
+        "name" : "cases",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "5c9e0b7d-25b1-4ecd-848f-359c255f5fc2",
+          "name" : "trigger",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "bc9f9fdd-0e9a-47fb-bd3f-37a04a76ed4f",
+          "name" : "statement",
+          "argumentType" : "Object"
+        } ]
+      } ]
     } ]
   } ],
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Java.stg",

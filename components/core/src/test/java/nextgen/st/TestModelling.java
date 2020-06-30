@@ -27,12 +27,9 @@ public class TestModelling {
                     for (File file : files) {
                         final STGroupModel stGroupModel = new STGroupModel(readJsonObject(file));
                         stGroupModelMap.put(stGroupModel.uuid(), stGroupModel);
-                        stGroupModel.getTemplates().forEach(stTemplate -> {
-                            addTemplate(stGroupModelMap, stGroupModel, stTemplate);
-                        });
+                        stGroupModel.getTemplates().forEach(stTemplate -> addTemplate(stGroupModelMap, stGroupModel, stTemplate));
                     }
                 });
-
 
         final STModule stModule = newModule("TestModel");
 
@@ -64,8 +61,10 @@ public class TestModelling {
         System.out.println(stModule.getJsonObject().encodePrettily());
 
         final STRenderer stRenderer = new STRenderer(templatesDir);
+        stRenderer.addModule(stModule);
+
         stModule.getModels().forEach(stModel -> {
-            System.out.println(stRenderer.render(stModel, stModule).render());
+            System.out.println(stRenderer.render(stModel));
         });
     }
 

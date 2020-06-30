@@ -1,8 +1,11 @@
 package nextgen.st;
 
+import nextgen.st.domain.STGroupModel;
+import nextgen.st.domain.STParameter;
+import nextgen.st.domain.STTemplate;
 import nextgen.st.model.*;
-import nextgen.st.domain.*;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
@@ -39,6 +42,51 @@ public class STModeller {
         return entityModel;
     }
 
+    public static void removeArgument(STArgument stArgument, STModel stModel) {
+        stModel.getArguments()
+                .filter(argument -> argument.uuid().equals(stArgument.uuid()))
+                .findAny()
+                .ifPresent(stModel::removeArguments);
+    }
+
+    public static void setArgument(STParameter stParameter, STModel stModel, STValue stValue) {
+
+        stModel.getArguments()
+                .filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid()))
+                .findAny()
+                .ifPresent(stModel::removeArguments);
+
+        stModel.addArguments(newSTArgument()
+                .setStParameter(stParameter.uuid())
+                .setValue(stValue));
+    }
+
+    public static void addArgument(STParameter stParameter, STModel stModel, STValue stValue) {
+        stModel.addArguments(newSTArgument()
+                .setStParameter(stParameter.uuid())
+                .setValue(stValue));
+    }
+
+    public static void addArgument(STParameter stParameter, STModel kvModel, Collection<STArgumentKV> kvs) {
+        final STArgument stArgument = newSTArgument()
+                .setStParameter(stParameter.uuid());
+        for (STArgumentKV stArgumentKV : kvs) {
+            stArgument.addKeyValues(stArgumentKV);
+        }
+        kvModel.addArguments(stArgument);
+    }
+
+    public static void addArgument(STTemplate stTemplate, STModel entityModel, String parameterName, STValue parameterValue) {
+        stTemplate.getParameters()
+                .filter(stParameter -> stParameter.getName().equalsIgnoreCase(parameterName))
+                .findFirst()
+                .ifPresent(stParameter -> {
+                    entityModel.addArguments(newSTArgument()
+                            .setStParameter(stParameter.uuid())
+                            .setValue(parameterValue));
+                });
+    }
+
     public static void addArgument(STTemplate kv, STModel kvModel, String parameterName, STArgumentKV... kvs) {
         kv.getParameters()
                 .filter(stParameter -> stParameter.getName().equalsIgnoreCase(parameterName))
@@ -50,17 +98,6 @@ public class STModeller {
                         stArgument.addKeyValues(stArgumentKV);
                     }
                     kvModel.addArguments(stArgument);
-                });
-    }
-
-    public static void addArgument(STTemplate stTemplate, STModel entityModel, String parameterName, STValue parameterValue) {
-        stTemplate.getParameters()
-                .filter(stParameter -> stParameter.getName().equalsIgnoreCase(parameterName))
-                .findFirst()
-                .ifPresent(stParameter -> {
-                    entityModel.addArguments(newSTArgument()
-                            .setStParameter(stParameter.uuid())
-                            .setValue(parameterValue));
                 });
     }
 

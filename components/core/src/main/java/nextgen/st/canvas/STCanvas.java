@@ -130,7 +130,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	}
 
 	protected void onCanvasRightClick(JPopupMenu pop, PInputEvent event) {
-		pop.add(new NewNode(this, event));
+		pop.add(new NewSTValueNode(this, event));
 		pop.add(new SelectAllNodes(this, event));
 		pop.add(new UnselectAllNodes(this, event));
 		pop.add(new CloseSelectedNodes(this, event));
@@ -298,15 +298,20 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		abstract void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e);
 	}
 
-	private static final class NewNode extends CanvasAction {
+	private static final class NewSTValueNode extends CanvasAction {
 
-		NewNode(STCanvas canvas, PInputEvent event) {
-			super("New Node", canvas, event);
+		NewSTValueNode(STCanvas canvas, PInputEvent event) {
+			super("New Value", canvas, event);
 		}
 
 		@Override
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
-			SwingUtilities.invokeLater(() -> canvas.addNode(new STNode(canvas, "HelloWorld")));
+			final String s = com.generator.util.SwingUtil.showInputDialog("Value", canvas);
+			if (s == null || s.trim().length() == 0) return;
+			SwingUtilities.invokeLater(() -> {
+				final nextgen.st.model.STValue stValue = new nextgen.st.model.STValue().setType(nextgen.st.model.STValueType.PRIMITIVE).setValue(s);
+				canvas.addNode(new STValueNode(canvas, s, UUID.fromString(stValue.uuid()), stValue));
+			});
 		}
 	}
 
