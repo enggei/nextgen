@@ -145,7 +145,7 @@ public class STProject {
                                                                 .addChildren(newLine("public void verifyAndCommit() throws Exception {", "}")
                                                                         .addChildren("final Collection<STArgumentKV> kvs = new ArrayList<>();")
                                                                         .addChildren(newLine("for (Map.Entry<STParameterKey, JTextField> fieldEntry : fieldMap.entrySet()) {", "}")
-                                                                                .addChildren("kvs.add(new STArgumentKV().setKey(fieldEntry.getKey().getName()).setValue(new STValue().setType(STValueType.PRIMITIVE).setValue(fieldEntry.getValue().getText().trim())));"))
+                                                                                .addChildren("kvs.add(new STArgumentKV().setKey(fieldEntry.getKey()).setValue(new STValue().setType(STValueType.PRIMITIVE).setValue(fieldEntry.getValue().getText().trim())));"))
                                                                         .addChildren("STModeller.addArgument(stParameter, stModel, kvs);")
                                                                         .addChildren("setText(stRenderer.render(stModel));")))), ");"))
                                 ))
@@ -166,7 +166,7 @@ public class STProject {
                         "if (s == null || s.trim().length() == 0) return;")
                 .addStatements(newLine("SwingUtilities.invokeLater(() -> {", "});")
                         .addChildren("final nextgen.st.model.STValue stValue = new nextgen.st.model.STValue().setType(nextgen.st.model.STValueType.PRIMITIVE).setValue(s);")
-                        .addChildren("canvas.addNode(new " + stValueNode.getName() + "(canvas, s, UUID.fromString(stValue.uuid()), stValue));"));
+                        .addChildren("canvas.addNode(new " + stValueNode.getName() + "(canvas, s, stValue.getUuid(), stValue));"));
         registerRightClickAction(canvas, newSTNodeAction, newSTNodeAction.getName());
 
         final NodeAction editSTValue = newNodeAction(stValueNode, "EditSTValue", "Edit")
@@ -191,9 +191,9 @@ public class STProject {
 
         final Entity stValue = newEntity("STValue")
                 .addRelations(newEnumField("type", "STValueType", "STMODEL,PRIMITIVE"))
-                .addRelations(newStringField("value"));
+                .addRelations(newExternalRef("value", Object.class));
 
-        writePojo(javaTestSrc, stModelPackage.getName(), newDomain("STModel")
+        writePojo(javaMainSrc, stModelPackage.getName(), newDomain("STModel")
                 .addEntities(newEntity("STModule")
                         .addRelations(newStringField("name"))
                         .addRelations(newOneToManyString("stGroups"))
@@ -203,7 +203,7 @@ public class STProject {
                                         .addRelations(newExternalRef("stParameter", DomainPatterns.newType(stDomainPackage, "STParameter")))
                                         .addRelations(newOneToOne("value", stValue))
                                         .addRelations(newOneToMany("keyValues", newEntity("STArgumentKV")
-                                                .addRelations(newExternalRef("key", DomainPatterns.newType(stDomainPackage, "STParameterKey")))
+                                                .addRelations(newExternalRef("stParameterKey", DomainPatterns.newType(stDomainPackage, "STParameterKey")))
                                                 .addRelations(newOneToOne("value", stValue))))))))
                         .addRelations(newOneToMany("values", stValue))
                 )

@@ -6,7 +6,6 @@ import nextgen.st.canvas.STCanvas;
 import nextgen.st.canvas.STModelNode;
 import nextgen.st.domain.*;
 import nextgen.st.model.STModel;
-import nextgen.st.model.STModule;
 
 import javax.lang.model.SourceVersion;
 import javax.swing.*;
@@ -24,8 +23,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static nextgen.st.STGenerator.toSTGroup;
-import static nextgen.st.STModeller.newModule;
-import static nextgen.st.model.STModelJsonFactory.newSTModel;
+import static nextgen.st.model.STModelFactory.newSTModel;
 
 public class STNavigator extends JPanel {
 
@@ -382,7 +380,6 @@ public class STNavigator extends JPanel {
         class STGDirectoryTreeNode extends BaseTreeNode<STGDirectory> {
 
             private final STRenderer stRenderer;
-            private final STModule stModule = newModule("CanvasModule");
 
             public STGDirectoryTreeNode(STGDirectory model) {
                 super(model, "STGDirectory");
@@ -393,7 +390,6 @@ public class STNavigator extends JPanel {
                     add(new STGroupTreeNode(stGroupModel));
                 });
                 stRenderer = new STRenderer(stGroups);
-                stRenderer.addModule(stModule);
             }
 
             @Override
@@ -1015,10 +1011,9 @@ public class STNavigator extends JPanel {
                                 findCanvas(tabbedPane).ifPresent(stCanvas -> {
                                     SwingUtilities.invokeLater(() -> {
 
-                                        final STModel entityModel = newSTModel().setStTemplate(getModel().uuid());
-                                        stModule.addModels(entityModel);
+                                        final STModel entityModel = newSTModel().setStTemplate(getModel());
 
-                                        stCanvas.addNode(new STModelNode(stCanvas, stRenderer.render(entityModel), UUID.fromString(entityModel.uuid()), stGroupTreeNode.getModel(), getModel(), entityModel, stRenderer));
+                                        stCanvas.addNode(new STModelNode(stCanvas, stRenderer.render(entityModel), entityModel.getUuid(), stGroupTreeNode.getModel(), getModel(), entityModel, stRenderer));
                                         tabbedPane.setSelectedComponent(stCanvas);
                                         stCanvas.requestFocusInWindow();
                                     });

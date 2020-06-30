@@ -114,5 +114,10 @@ public class ListAccessors {
 				"public ~className~ add~name;format=\"capitalize\"~(~type~ value) {\n" + 
 				"	this._~name~.add(value);\n" + 
 				"	return this;\n" + 
+				"}\n" + 
+				"\n" + 
+				"public ~className~ remove~name;format=\"capitalize\"~(~type~ value) {\n" + 
+				"	this._~name~.remove(value);\n" + 
+				"	return this;\n" + 
 				"} >>";
 }  

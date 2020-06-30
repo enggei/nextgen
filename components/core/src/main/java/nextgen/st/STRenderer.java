@@ -3,21 +3,22 @@ package nextgen.st;
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STParameterKey;
 import nextgen.st.domain.STTemplate;
-import nextgen.st.model.*;
+import nextgen.st.model.STArgument;
+import nextgen.st.model.STArgumentKV;
+import nextgen.st.model.STModel;
+import nextgen.st.model.STValue;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import static nextgen.st.STParser.readJsonObject;
 
 public class STRenderer {
 
     private final Set<STMapper> mappers = new LinkedHashSet<>();
-    private final Set<STModule> modules = new LinkedHashSet<>();
 
     public STRenderer(Set<STGroupModel> groupModels) {
         setGroupModels(groupModels);
@@ -38,22 +39,16 @@ public class STRenderer {
             mappers.add(new STMapper(stGroupModel));
     }
 
-    public void addModule(STModule stModule) {
-        this.modules.add(stModule);
-    }
-
     public String render(STModel stModel) {
 
-        final STMapper stMapper = findMapper(stModel.getStTemplate());
-        if (stMapper == null) return null;
+        final ST st = newInstanceOf(stModel.getStTemplate());
+        if (st == null) return null;
 
-        final STTemplate stTemplate = stMapper.find(stModel.getStTemplate());
-        final ST st = stMapper.newInstanceOf(stTemplate);
-
-        stTemplate.getParameters()
+        stModel.getStTemplate().getParameters()
                 .forEach(stParameter ->
                         stModel.getArguments()
-                                .filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid()))
+                                .stream()
+                                .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
                                 .forEach(stArgument -> {
 
                                     switch (stParameter.getType()) {
@@ -84,9 +79,18 @@ public class STRenderer {
         return st.render();
     }
 
+    private ST newInstanceOf(STTemplate stTemplate) {
+        for (STMapper mapper : mappers) {
+            final STTemplate found = mapper.find(stTemplate);
+            if (found != null) return mapper.newInstanceOf(stTemplate);
+        }
+        return null;
+    }
+
     public Object render(STArgument stArgument, STParameterKey stParameterKey) {
         final STArgumentKV found = stArgument.getKeyValues()
-                .filter(stArgumentKV -> stArgumentKV.getKey().equals(stParameterKey.getName()))
+                .stream()
+                .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey))
                 .findFirst()
                 .orElse(null);
         return found == null ? null : render(found.getValue());
@@ -94,13 +98,13 @@ public class STRenderer {
 
     public Object render(STArgument stArgument) {
 
-        final List<STArgumentKV> kvs = stArgument.getKeyValues().collect(Collectors.toList());
+        final List<STArgumentKV> kvs = new ArrayList<>(stArgument.getKeyValues());
         if (kvs.isEmpty())
             return render(stArgument.getValue());
 
         final StringBuilder kv = new StringBuilder();
         for (STArgumentKV stArgumentKV : kvs) {
-            kv.append(stArgumentKV.getKey()).append("=").append(render(stArgumentKV.getValue()));
+            kv.append(stArgumentKV.getStParameterKey()).append("=").append(render(stArgumentKV.getValue()));
         }
         return kv.toString();
     }
@@ -110,58 +114,47 @@ public class STRenderer {
 
         switch (value.getType()) {
             case STMODEL:
-                return render(findSTModel(value.getValue()));
+                return render((STModel) value.getValue());
             case PRIMITIVE:
                 return value.getValue();
         }
         return null;
     }
 
-    private STMapper findMapper(String templateUuid) {
-        for (STMapper mapper : mappers) {
-            final STTemplate stTemplate = mapper.find(templateUuid);
-            if (stTemplate != null) return mapper;
-        }
-        return null;
-    }
-
-    private STModel findSTModel(String uuid) {
-        for (STModule stModule : modules) {
-            final STModel model = stModule.getModels().filter(stModel -> uuid.equals(stModel.uuid())).findFirst().orElse(null);
-            if (model != null) return model;
-        }
-
-        return null;
-    }
-
     private static final class STMapper {
 
         private final STGroupModel groupModel;
-        private final STGroup stGroup;
+        private long lastUpdated = System.currentTimeMillis();
+        private STGroup stGroup;
 
         public STMapper(STGroupModel groupModel) {
             this.groupModel = groupModel;
-            this.stGroup = STGenerator.toSTGroup(groupModel);
         }
 
-        public STTemplate find(String templateUuid) {
-            return find(templateUuid, groupModel.getTemplates().iterator());
+        public STTemplate find(STTemplate stTemplate) {
+            return find(stTemplate, groupModel.getTemplates().iterator());
         }
 
-        private STTemplate find(STTemplate stTemplate, String templateUuid) {
-            if (stTemplate.uuid().equals(templateUuid)) return stTemplate;
-            return find(templateUuid, stTemplate.getChildren().iterator());
-        }
-
-        public STTemplate find(String templateUuid, Iterator<STTemplate> iterator) {
+        private STTemplate find(STTemplate stTemplate, Iterator<STTemplate> iterator) {
             while (iterator.hasNext()) {
-                final STTemplate found = find(iterator.next(), templateUuid);
+                final STTemplate next = iterator.next();
+                if (next.equals(stTemplate)) return next;
+
+                final STTemplate found = find(stTemplate, next.getChildren().iterator());
                 if (found != null) return found;
             }
             return null;
         }
 
         public ST newInstanceOf(STTemplate stTemplate) {
+
+            // simple timer-based cache
+            if (stGroup == null || (System.currentTimeMillis() - lastUpdated > 2000L)) {
+                stGroup = STGenerator.toSTGroup(groupModel);
+                lastUpdated = System.currentTimeMillis();
+                System.out.println("cache updated for " + groupModel.getName());
+            }
+
             return stGroup.getInstanceOf(stTemplate.getName());
         }
     }

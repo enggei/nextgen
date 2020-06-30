@@ -2,70 +2,59 @@ package nextgen.st.model;
 
 public class STArgumentKV {
 
-	private final io.vertx.core.json.JsonObject jsonObject;
+	private final java.util.UUID uuid;
+	private nextgen.st.domain.STParameterKey _stParameterKey;
+	private STValue _value;
 
-	public STArgumentKV() { 
-		this.jsonObject = new io.vertx.core.json.JsonObject();
-		jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
+	public STArgumentKV() {
+		this.uuid = java.util.UUID.randomUUID();
 	}
 
-	public STArgumentKV(io.vertx.core.json.JsonObject jsonObject) { 
-		this.jsonObject = jsonObject;
-		java.lang.String uuidString = jsonObject.getString("uuid");
-		if (uuidString == null) jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
+	public STArgumentKV(java.util.UUID uuid) {
+		this.uuid = uuid;
 	}
 
-	public io.vertx.core.json.JsonObject getJsonObject() { 
-		return this.jsonObject;
+	public java.util.UUID getUuid() {
+		return this.uuid;
+	}	
+
+	public nextgen.st.domain.STParameterKey getStParameterKey() {
+		return this._stParameterKey;
 	}
 
-	public String uuid() {
-		return this.jsonObject.getString("uuid");
-	}
-
-	public STArgumentKV removeUuid() {
-		this.jsonObject.remove("uuid");
+	public STArgumentKV setStParameterKey(nextgen.st.domain.STParameterKey value) {
+		this._stParameterKey = value;
 		return this;
 	}
 
+	public STArgumentKV removeStParameterKey() {
+		this._stParameterKey = null;
+		return this;
+	}
+
+	public STValue getValue() {
+		return this._value;
+	}
+
+	public STArgumentKV setValue(STValue value) {
+		this._value = value;
+		return this;
+	}
+
+	public STArgumentKV removeValue() {
+		this._value = null;
+		return this;
+	}
 	@Override
-	public boolean equals(java.lang.Object o) { 
+	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		final STArgumentKV other = (STArgumentKV) o;
-		return jsonObject.getString("uuid").equals(other.getJsonObject().getString("uuid"));
+		STArgumentKV that = (STArgumentKV) o;
+		return uuid.equals(that.uuid);
 	}
 
 	@Override
-	public int hashCode() { 
-		return java.util.Objects.hash(jsonObject.getString("uuid"));
-	}
-
-	public STArgumentKV setKey(String value) { 
-		jsonObject.put("key", value);
-		return this;
-	}
-
-	public String getKey() { 
-		return jsonObject.getString("key");
-	}
-
-	public String getKey(String defaultValue) { 
-		return jsonObject.getString("key", defaultValue);
-	}
-
-	public STArgumentKV setValue(STValue value) { 
-		jsonObject.put("value", value.getJsonObject());
-		return this;
-	}
-
-	public STValue getValue() { 
-		return jsonObject.getJsonObject("value") == null ? null : new STValue(jsonObject.getJsonObject("value"));
-	}
-
-
-	@Override
-	public java.lang.String toString() { 
-		return jsonObject.encode();
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
 	}
 }

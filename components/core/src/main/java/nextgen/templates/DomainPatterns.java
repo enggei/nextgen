@@ -202,28 +202,24 @@ public class DomainPatterns extends DomainST {
                     break;
                 }
                 case EXT_REF: {
-                    final Class<?> dst = asClass(o.getDst());
-                    entityClass.addFields(dst.getCanonicalName(), o.getName(), null);
-                    entityClass.addAccessors(JavaST.newReferenceAccessors().setClassName(entityName).setType(dst.getCanonicalName()).setName(o.getName()));
+                    entityClass.addFields(getCanonicalName(o.getDst()), o.getName(), null);
+                    entityClass.addAccessors(JavaST.newReferenceAccessors().setClassName(entityName).setType(getCanonicalName(o.getDst())).setName(o.getName()));
                     break;
                 }
                 case EXT_LIST: {
-                    final Class<?> dst = asClass(o.getDst());
-                    entityClass.addFields(JavaST.newListType().setType(dst.getCanonicalName()), o.getName(), JavaPatterns.newArrayListInstance());
-                    entityClass.addAccessors(JavaST.newListAccessors().setClassName(entityName).setType(dst.getCanonicalName()).setName(o.getName()));
+                    entityClass.addFields(JavaST.newListType().setType(getCanonicalName(o.getDst())), o.getName(), JavaPatterns.newArrayListInstance());
+                    entityClass.addAccessors(JavaST.newListAccessors().setClassName(entityName).setType(getCanonicalName(o.getDst())).setName(o.getName()));
                     break;
                 }
                 case PRIM_REF: {
-                    final Class<?> dst = asClass(o.getDst());
-                    entityClass.addFields(dst.getSimpleName(), o.getName(), null);
-                    entityClass.addAccessors(JavaST.newPrimitiveAccessors().setClassName(entityName).setType(dst.getSimpleName()).setName(o.getName()));
+                    entityClass.addFields(getSimpleName(o.getDst()), o.getName(), null);
+                    entityClass.addAccessors(JavaST.newPrimitiveAccessors().setClassName(entityName).setType(getSimpleName(o.getDst())).setName(o.getName()));
                     if (o.getLexical(false)) entityClass.addLexical(o.getName());
                     break;
                 }
                 case PRIM_LIST: {
-                    final Class<?> dst = asClass(o.getDst());
-                    entityClass.addFields(JavaST.newListType().setType(dst.getSimpleName()), o.getName(), JavaPatterns.newArrayListInstance());
-                    entityClass.addAccessors(JavaST.newListAccessors().setClassName(entityName).setType(dst.getSimpleName()).setName(o.getName()));
+                    entityClass.addFields(JavaST.newListType().setType(getSimpleName(o.getDst())), o.getName(), JavaPatterns.newArrayListInstance());
+                    entityClass.addAccessors(JavaST.newListAccessors().setClassName(entityName).setType(getSimpleName(o.getDst())).setName(o.getName()));
                     break;
                 }
                 case REF: {
@@ -247,6 +243,14 @@ public class DomainPatterns extends DomainST {
 
         STGenerator.writeJavaFile(entityClass, packageDeclaration.getName(), entityClass.getName(), root);
 
+    }
+
+    private static String getCanonicalName(Object dst) {
+        return dst instanceof Class ? ((Class) dst).getCanonicalName() : dst.toString();
+    }
+
+    private static String getSimpleName(Object dst) {
+        return dst instanceof Class ? ((Class) dst).getSimpleName() : dst.toString();
     }
 
     // DOMAIN TO NEO4J wrappers:
@@ -292,11 +296,10 @@ public class DomainPatterns extends DomainST {
                     }
 
                     case PRIM_REF: {
-                        final Class<?> dst = asClass(o.getDst());
                         factoryAccessors.addProperties(Neo4JST.newNeoFactoryPropertyAccessors()
                                 .setEntity(key.getName())
                                 .setPropertyName(o.getName())
-                                .setPropertyType(dst.getSimpleName()));
+                                .setPropertyType(getSimpleName(o.getDst())));
                         break;
                     }
 
@@ -356,29 +359,26 @@ public class DomainPatterns extends DomainST {
                     break;
                 }
                 case EXT_REF: {
-                    final Class<?> dst = asClass(o.getDst());
-                    entityClass.addExternalFields(dst.getCanonicalName(), o.getName(), null);
-                    entityClass.addAccessors(Neo4JST.newExternalAccessors().setClassName(entityName).setType(dst.getCanonicalName()).setName(o.getName()));
+
+                    entityClass.addExternalFields(getCanonicalName(o.getDst()), o.getName(), null);
+                    entityClass.addAccessors(Neo4JST.newExternalAccessors().setClassName(entityName).setType(getCanonicalName(o.getDst())).setName(o.getName()));
                     break;
                 }
                 case EXT_LIST: {
-                    final Class<?> dst = asClass(o.getDst());
-                    entityClass.addExternalFields(JavaST.newListType().setType(dst.getCanonicalName()), o.getName(), JavaPatterns.newArrayListInstance());
-                    entityClass.addAccessors(JavaST.newListAccessors().setClassName(entityName).setType(dst.getCanonicalName()).setName(o.getName()));
+
+                    entityClass.addExternalFields(JavaST.newListType().setType(getCanonicalName(o.getDst())), o.getName(), JavaPatterns.newArrayListInstance());
+                    entityClass.addAccessors(JavaST.newListAccessors().setClassName(entityName).setType(getCanonicalName(o.getDst())).setName(o.getName()));
                     break;
                 }
                 case PRIM_REF: {
-                    final Class<?> dst = asClass(o.getDst());
-                    entityClass.addAccessors(Neo4JST.newPrimitiveAccessors().setClassName(entityName).setType(dst.getSimpleName()).setName(o.getName()));
+                    entityClass.addAccessors(Neo4JST.newPrimitiveAccessors().setClassName(entityName).setType(getSimpleName(o.getDst())).setName(o.getName()));
                     if (o.getLexical(false)) entityClass.addLexical(o.getName());
 
                     nodeToJsonObject.addProperties(o.getName());
                     break;
                 }
                 case PRIM_LIST: {
-                    final Class<?> dst = asClass(o.getDst());
-                    entityClass.addAccessors(Neo4JST.newListPrimitiveAccessors().setClassName(entityName).setType(dst.getSimpleName()).setName(o.getName()));
-
+                    entityClass.addAccessors(Neo4JST.newListPrimitiveAccessors().setClassName(entityName).setType(getSimpleName(o.getDst())).setName(o.getName()));
                     nodeToJsonObject.addPrimitiveList(o.getName());
                     break;
                 }
@@ -476,23 +476,23 @@ public class DomainPatterns extends DomainST {
                     break;
                 }
                 case EXT_REF: {
-                    final Class<?> dst = asClass(o.getDst());
-                    entityClass.addExternalFields(dst.getCanonicalName(), o.getName(), null);
-                    entityClass.addAccessors(VertxST.newExternalAccessors().setClassName(entityName).setType(dst.getCanonicalName()).setName(o.getName()));
+
+                    entityClass.addExternalFields(getCanonicalName(o.getDst()), o.getName(), null);
+                    entityClass.addAccessors(VertxST.newExternalAccessors().setClassName(entityName).setType(getCanonicalName(o.getDst())).setName(o.getName()));
                     break;
                 }
                 case EXT_LIST: {
                     break;
                 }
                 case PRIM_REF: {
-                    final Class<?> dst = asClass(o.getDst());
-                    entityClass.addAccessors(VertxST.newPrimitiveAccessors().setClassName(entityName).setType(dst.getSimpleName()).setName(o.getName()));
+
+                    entityClass.addAccessors(VertxST.newPrimitiveAccessors().setClassName(entityName).setType(getSimpleName(o.getDst())).setName(o.getName()));
                     if (o.getLexical(false)) entityClass.setLexical(o.getName());
                     break;
                 }
                 case PRIM_LIST: {
-                    final Class<?> dst = asClass(o.getDst());
-                    entityClass.addAccessors(VertxST.newListPrimitiveAccessors().setClassName(entityName).setType(dst.getSimpleName()).setName(o.getName()));
+
+                    entityClass.addAccessors(VertxST.newListPrimitiveAccessors().setClassName(entityName).setType(getSimpleName(o.getDst())).setName(o.getName()));
                     break;
                 }
                 case REF: {
@@ -519,11 +519,11 @@ public class DomainPatterns extends DomainST {
         return (Entity) type;
     }
 
-    private static Class<?> asClass(Object type) {
-        return (Class<?>) type;
-    }
+//    private static Class<?> asClass(Object type) {
+//        return (Class<?>) type;
+//    }
 
     public static String newType(PackageDeclaration packageDeclaration, String name) {
-        return packageDeclaration.toString() + "." + name;
+        return packageDeclaration.getName() + "." + name;
     }
 }

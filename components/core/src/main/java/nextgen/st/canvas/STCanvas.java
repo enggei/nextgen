@@ -310,7 +310,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 			if (s == null || s.trim().length() == 0) return;
 			SwingUtilities.invokeLater(() -> {
 				final nextgen.st.model.STValue stValue = new nextgen.st.model.STValue().setType(nextgen.st.model.STValueType.PRIMITIVE).setValue(s);
-				canvas.addNode(new STValueNode(canvas, s, UUID.fromString(stValue.uuid()), stValue));
+				canvas.addNode(new STValueNode(canvas, s, stValue.getUuid(), stValue));
 			});
 		}
 	}

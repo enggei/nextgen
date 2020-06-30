@@ -1,6 +1,7 @@
 package nextgen.st;
 
 import nextgen.st.domain.STGroupModel;
+import nextgen.st.domain.STParameterKey;
 import nextgen.st.domain.STTemplate;
 import nextgen.st.model.STModel;
 import nextgen.st.model.STModule;
@@ -8,10 +9,12 @@ import org.junit.Test;
 
 import java.io.File;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import static nextgen.st.STModeller.*;
+import static nextgen.st.STModelPatterns.*;
 import static nextgen.st.STParser.readJsonObject;
 
 public class TestModelling {
@@ -31,44 +34,44 @@ public class TestModelling {
                     }
                 });
 
-        final STModule stModule = newModule("TestModel");
+        final STModule stModule = newSTModule("TestModel");
 
         find(stGroupModelMap, "Test")
                 .ifPresent(domainSTGroupModel ->
 
                         find(domainSTGroupModel, "single").ifPresent(single -> {
 
-                            final STModel singleModel = addSTModel(stModule, single);
-                            addArgument(single, singleModel, "value", newValue("HelloWorld"));
+                            final STModel singleModel = newSTModel(stModule, single);
+                            single.getParameters().findFirst().ifPresent(stParameter -> addArgument(single, singleModel, newSTArgument(stParameter, newSTValue("HelloWorld"))));
 
                             find(domainSTGroupModel, "list").ifPresent(list -> {
 
-                                final STModel listModel = addSTModel(stModule, list);
-                                addArgument(list, listModel, "value", newValue("1"));
-                                addArgument(list, listModel, "value", newValue("2"));
-                                addArgument(list, listModel, "value", newValue(singleModel));
+                                list.getParameters().findFirst().ifPresent(stParameter -> {
 
-                                find(domainSTGroupModel, "kv").ifPresent(kv -> {
+                                    final STModel listModel = newSTModel(stModule, list);
+                                    addArgument(list, listModel, newSTArgument(stParameter, newSTValue("1")));
+                                    addArgument(list, listModel, newSTArgument(stParameter, newSTValue("2")));
+                                    addArgument(list, listModel, newSTArgument(stParameter, newSTValue(singleModel)));
 
-                                    final STModel kvModel = addSTModel(stModule, kv);
-                                    addArgument(kv, kvModel, "value", newKVArgument("key", newValue("KEY_1")), newKVArgument("value", newValue("VAL_1")));
-                                    addArgument(kv, kvModel, "value", newKVArgument("key", newValue("KEY_2")), newKVArgument("value", newValue(singleModel)));
-                                    addArgument(kv, kvModel, "value", newKVArgument("key", newValue("KEY_3")), newKVArgument("value", newValue(listModel)));
+                                    find(domainSTGroupModel, "kv").ifPresent(kv -> {
+
+                                        final STModel kvModel = newSTModel(stModule, kv);
+
+                                        kv.getParameters().forEach(kvParameter -> {
+                                            final List<STParameterKey> keys = kvParameter.getKeys().collect(Collectors.toList());
+                                            addArgument(kv, kvModel, newSTArgument(kvParameter, newSTArgument(keys.get(0), newSTValue("KEY_1")), newSTArgument(keys.get(1), newSTValue("VAL_1"))));
+                                            addArgument(kv, kvModel, newSTArgument(kvParameter, newSTArgument(keys.get(0), newSTValue("KEY_2")), newSTArgument(keys.get(1), newSTValue(singleModel))));
+                                            addArgument(kv, kvModel, newSTArgument(kvParameter, newSTArgument(keys.get(0), newSTValue("KEY_3")), newSTArgument(keys.get(1), newSTValue(listModel))));
+                                        });
+                                    });
                                 });
                             });
                         }));
 
-        System.out.println(stModule.getJsonObject().encodePrettily());
-
         final STRenderer stRenderer = new STRenderer(templatesDir);
-        stRenderer.addModule(stModule);
 
-        stModule.getModels().forEach(stModel -> {
-            System.out.println(stRenderer.render(stModel));
-        });
+        stModule.getModels().forEach(stModel -> System.out.println(stRenderer.render(stModel)));
     }
-
-
 
     private static void addTemplate(Map<String, STGroupModel> stGroupModelMap, STGroupModel stGroupModel, STTemplate stTemplate) {
         stGroupModelMap.put(stTemplate.uuid(), stGroupModel);

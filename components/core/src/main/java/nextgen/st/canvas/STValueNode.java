@@ -1,18 +1,9 @@
 package nextgen.st.canvas;
 
-import com.generator.util.SwingUtil;
-import nextgen.st.STModeller;
-import nextgen.st.domain.STParameterKey;
-import nextgen.st.model.STArgumentKV;
-import nextgen.st.model.STValue;
-import nextgen.st.model.STValueType;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.*;
-import java.util.stream.Collectors;
 
 public class STValueNode extends STNode {
 

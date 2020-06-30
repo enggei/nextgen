@@ -86,19 +86,22 @@
       }, {
         "uuid" : "e81a642f-d6da-4db8-a157-a01969768fd8",
         "name" : "listAccessors",
-        "text" : "public java.util.List<~type~> get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className~ add~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.add(value);\n\treturn this;\n}",
+        "text" : "public java.util.List<~type~> get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className~ add~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.add(value);\n\treturn this;\n}\n\npublic ~className~ remove~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.remove(value);\n\treturn this;\n} ",
         "parameters" : [ {
-          "uuid" : "6715c9e2-7135-40be-b1fe-641fe254747c",
+          "uuid" : "0ba437c6-7f75-4f09-b372-f7821623298d",
           "name" : "type",
-          "type" : "SINGLE"
+          "type" : "SINGLE",
+          "argumentType" : "Object"
         }, {
-          "uuid" : "f1bd6ec2-92b4-4c0c-99f3-c20ae7660b49",
+          "uuid" : "c3a3b49a-edcf-41fc-8325-5e85ef6c72a6",
           "name" : "name",
-          "type" : "SINGLE"
+          "type" : "SINGLE",
+          "argumentType" : "Object"
         }, {
-          "uuid" : "468ed682-3af2-41d8-93c8-48b776c07fe8",
+          "uuid" : "35d4952f-12c1-4359-a551-688930859628",
           "name" : "className",
-          "type" : "SINGLE"
+          "type" : "SINGLE",
+          "argumentType" : "Object"
         } ]
       } ]
     }, {
