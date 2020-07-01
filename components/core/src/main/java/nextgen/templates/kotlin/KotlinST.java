@@ -24,6 +24,7 @@ public class KotlinST {
 	AnnotationDeclaration.st + "\n" + 
 	AnnotationParam.st + "\n" + 
 	ClassDeclaration.st + "\n" + 
+	CompanionObject.st + "\n" + 
 	OverrideEquals.st + "\n" + 
 	OverrideHashCode.st + "\n" + 
 	OverrideToString.st + "\n" + 
@@ -33,6 +34,7 @@ public class KotlinST {
 	FunctionParam.st + "\n" + 
 	ImplementingInterface.st + "\n" + 
 	InterfaceDeclaration.st + "\n" + 
+	ObjectDeclaration.st + "\n" + 
 	PackageDeclaration.st + "\n" + 
 	ParameterDeclaration.st + "\n" + 
 	PropertyDeclaration.st + "\n" + 
@@ -179,6 +181,10 @@ public class KotlinST {
 		return new ClassDeclaration(stGroup);
 	} 
 
+	public static CompanionObject newCompanionObject() {
+		return new CompanionObject(stGroup);
+	} 
+
 	public static OverrideEquals newOverrideEquals() {
 		return new OverrideEquals(stGroup);
 	} 
@@ -213,6 +219,10 @@ public class KotlinST {
 
 	public static InterfaceDeclaration newInterfaceDeclaration() {
 		return new InterfaceDeclaration(stGroup);
+	} 
+
+	public static ObjectDeclaration newObjectDeclaration() {
+		return new ObjectDeclaration(stGroup);
 	} 
 
 	public static PackageDeclaration newPackageDeclaration() {

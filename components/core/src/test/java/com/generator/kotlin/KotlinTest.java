@@ -100,6 +100,13 @@ public class KotlinTest {
         String somethingInterfaceName = "Something";
         InterfaceDeclaration somethingInterface = newInterfaceDeclaration(somethingInterfaceName).addExtends(newImplementingInterface(anotherThingInterfaceName));
 
+        CompanionObject companionObject = newCompanionObject()
+                .setObjectDeclaration(newObjectDeclaration()
+                    .addFields(
+                            newPropertyDeclaration(newNamedType().setName("Logger"), "log", newLiteralExpression().setLiteral("LoggerFactory.getLogger(Country::class.java)"))
+                                    .setIsPrivate(true))
+                );
+
         ClassDeclaration countryClass = newClassDeclaration(className)
                 .setAnnotations(singletonList(newAnnotationDeclaration()
                         .addAnnotations("NodeEntity", singletonList(newAnnotationParam()
@@ -114,6 +121,7 @@ public class KotlinTest {
                         ),
                         newImplementingInterface().setInterfaceName("Something")
                 ))
+                .setCompanionObject(companionObject)
                 .setOverrideEquals(createEqualsFunction(className,
                         fields.stream().filter(fieldDeclaration -> !Objects.equals(getNameFromParameterDefinition(fieldDeclaration), "id")).collect(Collectors.toList()))
                 )
@@ -133,6 +141,8 @@ public class KotlinTest {
                 newImportStatement().setScope("no.tv2.sport.neo4j").setName("Entity"),
                 newImportStatement().setScope("org.neo4j.ogm.annotation").setName("NodeEntity"),
                 newImportStatement().setScope("org.neo4j.ogm.annotation").setName("Relationship"),
+                newImportStatement().setScope("org.slf4j").setName("Logger"),
+                newImportStatement().setScope("org.slf4j").setName("LoggerFactory"),
                 newImportStatement().setScope("java.util").setName("*")
         );
 
@@ -174,13 +184,28 @@ public class KotlinTest {
     }
 
     @Test
-    public void testObjectDeclaration() {
+    public void testAnonymousObject() {
 
         ObjectExpression objectExpression = newObjectExpression()
                 .addExtends(newExtendingClass("MouseAdapter", singletonList(newNullExpression())))
-                .addFields(newPropertyDeclaration(newIntType(), "abc", newLiteralExpression().setLiteral("0")));
+                .addFields(
+                        newPropertyDeclaration(newIntType(), "abc", newLiteralExpression().setLiteral("0")).setIsPrivate(true)
+                );
         VarDeclarationStatement varDeclarationStatement = newVarDeclarationStatement().setName("a").setIsMutable(true).setInitializer(objectExpression);
 
         System.out.println(varDeclarationStatement);
+    }
+
+    @Test
+    public void testObjectDeclaration() {
+
+        ObjectDeclaration objectDeclaration = newObjectDeclaration()
+                .setName("DataProviderManager")
+//                .addExtends(newImplementingInterface("Whatever"))
+//                .addExtends(newExtendingClass("Manager"))
+                .addMembers(newFunctionDeclaration().setName("registerDataProvider").addParams(newFunctionParam().setName("provider").setTypeDeclaration(newNamedType().setName("DataProvider"))))
+                ;
+
+        System.out.println(objectDeclaration);
     }
 }

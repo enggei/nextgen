@@ -28,6 +28,7 @@ public class KotlinSTTests {
 		testAnnotationDeclaration();
 		testAnnotationParam();
 		testClassDeclaration();
+		testCompanionObject();
 		testOverrideEquals();
 		testOverrideHashCode();
 		testOverrideToString();
@@ -37,6 +38,7 @@ public class KotlinSTTests {
 		testFunctionParam();
 		testImplementingInterface();
 		testInterfaceDeclaration();
+		testObjectDeclaration();
 		testPackageDeclaration();
 		testParameterDeclaration();
 		testPropertyDeclaration();
@@ -170,6 +172,11 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
+	public void testCompanionObject() {
+		System.out.println("\n--- TEST CompanionObject:\n" + newCompanionObject());
+	} 
+
+	@org.junit.Test
 	public void testOverrideEquals() {
 		System.out.println("\n--- TEST OverrideEquals:\n" + newOverrideEquals());
 	} 
@@ -212,6 +219,11 @@ public class KotlinSTTests {
 	@org.junit.Test
 	public void testInterfaceDeclaration() {
 		System.out.println("\n--- TEST InterfaceDeclaration:\n" + newInterfaceDeclaration());
+	} 
+
+	@org.junit.Test
+	public void testObjectDeclaration() {
+		System.out.println("\n--- TEST ObjectDeclaration:\n" + newObjectDeclaration());
 	} 
 
 	@org.junit.Test

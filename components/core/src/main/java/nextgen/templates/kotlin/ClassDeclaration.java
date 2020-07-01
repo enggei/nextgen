@@ -9,6 +9,7 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 	private Boolean _isOpen;
 	private Boolean _isAbstract;
 	private String _name;
+	private CompanionObject _companionObject;
 	private OverrideEquals _overrideEquals;
 	private OverrideHashCode _overrideHashCode;
 	private OverrideToString _overrideToString;
@@ -32,6 +33,7 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 		st.add("isOpen", _isOpen);
 		st.add("isAbstract", _isAbstract);
 		st.add("name", _name);
+		st.add("companionObject", _companionObject);
 		st.add("overrideEquals", _overrideEquals);
 		st.add("overrideHashCode", _overrideHashCode);
 		st.add("overrideToString", _overrideToString);
@@ -127,6 +129,28 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 
 	public ClassDeclaration removeName() {
 		this._name = null;
+		return this;
+	} 
+
+	public ClassDeclaration setCompanionObject(CompanionObject value) {
+		this._companionObject = value;
+		return this;
+	}
+
+	public CompanionObject getCompanionObject() {
+		return this._companionObject;
+	}
+
+	public CompanionObject getCompanionObject(CompanionObject defaultValue) {
+		return this._companionObject == null ? defaultValue : this._companionObject;
+	}
+
+	public boolean hasCompanionObject() {
+		return this._companionObject != null;
+	}
+
+	public ClassDeclaration removeCompanionObject() {
+		this._companionObject = null;
 		return this;
 	} 
 
@@ -326,10 +350,12 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,overrideEquals,overrideHashCode,overrideToString,members,subclasses) ::= <<~annotations~~if(annotations)~\n" + 
+	static final String st = "ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,companionObject,overrideEquals,overrideHashCode,overrideToString,members,subclasses) ::= <<~annotations~~if(annotations)~\n" + 
 				"~endif~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n" + 
 				"	~fields:{it|~it~};separator=\",\\n\"~\n" + 
 				")~if(extends)~: ~extends:{it|~it~};separator=\", \"~~endif~ {\n" + 
+				"\n" + 
+				"	~companionObject~\n" + 
 				"\n" + 
 				"	~overrideEquals~\n" + 
 				"\n" + 

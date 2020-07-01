@@ -5,6 +5,8 @@ public class PropertyDeclaration implements ParameterDefinition {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Boolean _isPrivate;
+	private Boolean _isProtected;
 	private Boolean _isMutable;
 	private String _name;
 	private TypeDeclaration _type;
@@ -22,6 +24,8 @@ public class PropertyDeclaration implements ParameterDefinition {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("PropertyDeclaration");
+		st.add("isPrivate", _isPrivate);
+		st.add("isProtected", _isProtected);
 		st.add("isMutable", _isMutable);
 		st.add("name", _name);
 		st.add("type", _type);
@@ -29,6 +33,50 @@ public class PropertyDeclaration implements ParameterDefinition {
 		for (Object o : _annotations) st.add("annotations", o);
 		return st.render().trim();
 	}
+
+	public PropertyDeclaration setIsPrivate(Boolean value) {
+		this._isPrivate = value;
+		return this;
+	}
+
+	public Boolean getIsPrivate() {
+		return this._isPrivate;
+	}
+
+	public Boolean getIsPrivate(Boolean defaultValue) {
+		return this._isPrivate == null ? defaultValue : this._isPrivate;
+	}
+
+	public boolean hasIsPrivate() {
+		return this._isPrivate != null;
+	}
+
+	public PropertyDeclaration removeIsPrivate() {
+		this._isPrivate = null;
+		return this;
+	} 
+
+	public PropertyDeclaration setIsProtected(Boolean value) {
+		this._isProtected = value;
+		return this;
+	}
+
+	public Boolean getIsProtected() {
+		return this._isProtected;
+	}
+
+	public Boolean getIsProtected(Boolean defaultValue) {
+		return this._isProtected == null ? defaultValue : this._isProtected;
+	}
+
+	public boolean hasIsProtected() {
+		return this._isProtected != null;
+	}
+
+	public PropertyDeclaration removeIsProtected() {
+		this._isProtected = null;
+		return this;
+	} 
 
 	public PropertyDeclaration setIsMutable(Boolean value) {
 		this._isMutable = value;
@@ -161,6 +209,6 @@ public class PropertyDeclaration implements ParameterDefinition {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PropertyDeclaration(annotations,isMutable,name,type,initializer) ::= <<~annotations:{it|~it~};separator=\"\\n\"~\n" + 
-				"~if(isMutable)~var ~else~val ~endif~~name~: ~type~~if(initializer)~ = ~initializer~~endif~ >>";
+	static final String st = "PropertyDeclaration(annotations,isPrivate,isProtected,isMutable,name,type,initializer) ::= <<~annotations:{it|~it~};separator=\"\\n\"~\n" + 
+				"~if(isPrivate)~private ~elseif(isProtected)~protected ~endif~~if(isMutable)~var ~else~val ~endif~~name~: ~type~~if(initializer)~ = ~initializer~~endif~ >>";
 }  

@@ -216,7 +216,7 @@ public class FunctionDeclaration implements CompilationUnit {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "FunctionDeclaration(annotations,override,name,params,returnType,expressionBody,statements) ::= <<~annotations~~if(override)~override ~endif~fun ~name~(~params:{it|~it~};separator=\", \"~): ~returnType~~if(expressionBody)~ =\n" + 
+	static final String st = "FunctionDeclaration(annotations,override,name,params,returnType,expressionBody,statements) ::= <<~annotations~~if(override)~override ~endif~fun ~name~(~params:{it|~it~};separator=\", \"~)~if(returnType)~: ~returnType~~endif~~if(expressionBody)~ =\n" + 
 				"	~expressionBody~~else~ {\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
 				"}~endif~ >>";
