@@ -1,9 +1,6 @@
 package nextgen.st;
 
-import nextgen.st.domain.STGroupModel;
-import nextgen.st.domain.STParameter;
-import nextgen.st.domain.STParameterKey;
-import nextgen.st.domain.STTemplate;
+import nextgen.st.domain.*;
 import nextgen.st.model.*;
 
 import java.util.*;
@@ -53,6 +50,10 @@ public class STModelPatterns extends STModelFactory {
 
     public static STValue newSTValue(STModel stModel) {
         return newSTValue().setType(STValueType.STMODEL).setValue(stModel);
+    }
+
+    public static STValue newSTValue(STEnumValue value) {
+        return newSTValue().setType(STValueType.ENUM).setValue(value);
     }
 
     public static STValue newSTValue(Object value) {

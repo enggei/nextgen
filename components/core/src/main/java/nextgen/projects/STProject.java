@@ -159,6 +159,10 @@ public class STProject {
                                         .addChildren("setText(stRenderer.render(stModel));"))))
                 .addRightClickStatements("if (remove.getMenuComponentCount() != 0) pop.add(remove);");
 
+        final NodeAction toClipboard = newNodeAction(stModelNode, "ToClipboard", "To Clipboard")
+                .addStatements("com.generator.util.SwingUtil.toClipboard(node.stRenderer.render(node.stModel));");
+        registerRightClickAction(stModelNode, toClipboard, toClipboard.getName());
+
         final CanvasAction newSTNodeAction = newCanvasAction(canvas, "NewSTValueNode", "New Value")
                 .addStatements("final String s = com.generator.util.SwingUtil.showInputDialog(\"Value\", canvas);\n" +
                         "if (s == null || s.trim().length() == 0) return;")
@@ -189,7 +193,7 @@ public class STProject {
     public void generateModellingDomain() {
 
         final Entity stValue = newEntity("STValue")
-                .addRelations(newEnumField("type", "STValueType", "STMODEL,PRIMITIVE"))
+                .addRelations(newEnumField("type", "STValueType", "STMODEL,PRIMITIVE,ENUM"))
                 .addRelations(newExternalRef("value", Object.class));
 
         writePojo(javaMainSrc, stModelPackage.getName(), newDomain("STModel")

@@ -188,6 +188,7 @@ public class STNode extends PNode {
 	protected void onNodeLeftClick(PInputEvent event) {
 		if (isSelected()) unselect();
 		else select();
+		refresh();
 	}
 
 	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {

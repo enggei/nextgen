@@ -4,8 +4,10 @@ import com.generator.util.SwingUtil;
 import io.vertx.core.json.JsonObject;
 import nextgen.st.canvas.STCanvas;
 import nextgen.st.canvas.STModelNode;
+import nextgen.st.canvas.STValueNode;
 import nextgen.st.domain.*;
 import nextgen.st.model.STModel;
+import nextgen.st.model.STValue;
 
 import javax.lang.model.SourceVersion;
 import javax.swing.*;
@@ -24,6 +26,7 @@ import java.util.stream.StreamSupport;
 
 import static nextgen.st.STGenerator.toSTGroup;
 import static nextgen.st.model.STModelFactory.newSTModel;
+import static nextgen.st.model.STModelFactory.newSTValue;
 
 public class STNavigator extends JPanel {
 
@@ -703,10 +706,26 @@ public class STNavigator extends JPanel {
 
                     @Override
                     protected List<Action> getActions() {
-                        return Arrays.asList(
-                                newEditSTEnumValueAction(),
-                                renameSTEnumAction(),
-                                removeSTEnumAction());
+
+                        final List<Action> actions = new ArrayList<>();
+                        actions.add(newEditSTEnumValueAction());
+                        actions.add(renameSTEnumAction());
+                        actions.add(removeSTEnumAction());
+
+                        getModel().getValues().forEach(stEnumValue -> {
+                            actions.add(newAction("New " + stEnumValue.getName() + " instance", actionEvent -> {
+                                findCanvas(tabbedPane).ifPresent(stCanvas -> {
+                                    SwingUtilities.invokeLater(() -> {
+                                        final STValue stValue = STModelPatterns.newSTValue(stEnumValue);
+                                        stCanvas.addNode(new STValueNode(stCanvas, stEnumValue.getLexical(), stValue.getUuid(), stValue));
+                                        tabbedPane.setSelectedComponent(stCanvas);
+                                        stCanvas.requestFocusInWindow();
+                                    });
+                                });
+                            }));
+                        });
+
+                        return actions;
                     }
 
                     private Action newEditSTEnumValueAction() {

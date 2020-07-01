@@ -1,8 +1,6 @@
 package nextgen.st;
 
-import nextgen.st.domain.STGroupModel;
-import nextgen.st.domain.STParameterKey;
-import nextgen.st.domain.STTemplate;
+import nextgen.st.domain.*;
 import nextgen.st.model.STArgument;
 import nextgen.st.model.STArgumentKV;
 import nextgen.st.model.STModel;
@@ -116,7 +114,10 @@ public class STRenderer {
             case STMODEL:
                 return render((STModel) value.getValue());
             case PRIMITIVE:
-                return value.getValue();
+                final String s = value.getValue().toString();
+                return s==null || s.trim().length()==0 ? null : s;
+            case ENUM:
+                return ((STEnumValue)value.getValue()).getLexical();
         }
         return null;
     }

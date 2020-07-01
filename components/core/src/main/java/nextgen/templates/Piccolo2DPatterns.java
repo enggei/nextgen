@@ -64,6 +64,8 @@ public class Piccolo2DPatterns extends Piccolo2DST {
                         ".forEach(" + node.getName() + "::close));");
 
         registerRightClickAction(node, layoutTreeAction, layoutTreeAction.getName());
+        registerRightClickAction(node, retainNodeAction, retainNodeAction.getName());
+        registerRightClickAction(node, closeNodeAction, closeNodeAction.getName());
 
         node.addActions(closeNodeAction);
         node.addActions(retainNodeAction);
