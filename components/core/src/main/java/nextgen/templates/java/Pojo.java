@@ -7,6 +7,7 @@ public class Pojo {
 
 	private String _package;
 	private String _name;
+	private java.util.List<Object> _fieldDeclarations = new java.util.ArrayList<>();
 	private java.util.List<Object> _accessors = new java.util.ArrayList<>();
 	private java.util.List<String> _lexical = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
@@ -24,6 +25,7 @@ public class Pojo {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Pojo");
 		st.add("package", _package);
 		st.add("name", _name);
+		for (Object o : _fieldDeclarations) st.add("fieldDeclarations", o);
 		for (Object o : _accessors) st.add("accessors", o);
 		for (Object o : _lexical) st.add("lexical", o);
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name,initializer}", map.get("type"), map.get("name"), map.get("initializer"));
@@ -72,6 +74,35 @@ public class Pojo {
 	public Pojo removeName() {
 		this._name = null;
 		return this;
+	} 
+
+	public Pojo addFieldDeclarations(Object value) {
+		this._fieldDeclarations.add(value);
+		return this;
+	}
+
+	public Pojo setFieldDeclarations(Object[] value) {
+		this._fieldDeclarations.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Pojo setFieldDeclarations(java.util.Collection<Object> values) {
+		this._fieldDeclarations.addAll(values);
+		return this;
+	}
+
+	public Pojo removeFieldDeclarations(Object value) {
+		this._fieldDeclarations.remove(value);
+		return this;
+	}
+
+	public Pojo removeFieldDeclarations(int index) {
+		this._fieldDeclarations.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getFieldDeclarations() {
+		return this._fieldDeclarations;
 	} 
 
 	public Pojo addAccessors(Object value) {
@@ -198,12 +229,13 @@ public class Pojo {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Pojo(package,name,fields,accessors,lexical) ::= <<package ~package~;\n" + 
+	static final String st = "Pojo(package,name,fields,fieldDeclarations,accessors,lexical) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public class ~name~ {\n" + 
 				"\n" + 
 				"	private final java.util.UUID uuid;\n" + 
 				"	~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n" + 
+				"	~fieldDeclarations:{it|~it~};separator=\"\\n\"~\n" + 
 				"	\n" + 
 				"	public ~name~() {\n" + 
 				"		this.uuid = java.util.UUID.randomUUID();\n" + 

@@ -143,7 +143,9 @@ public class STProject {
                                                                 .addChildren(newLine("public void verifyAndCommit() throws Exception {", "}")
                                                                         .addChildren("final Collection<STArgumentKV> kvs = new ArrayList<>();")
                                                                         .addChildren(newLine("for (Map.Entry<STParameterKey, JTextField> fieldEntry : fieldMap.entrySet()) {", "}")
-                                                                                .addChildren("kvs.add(new STArgumentKV().setStParameterKey(fieldEntry.getKey()).setValue(new STValue().setType(STValueType.PRIMITIVE).setValue(fieldEntry.getValue().getText().trim())));"))
+                                                                                .addChildren("final String value = fieldEntry.getValue().getText().trim();")
+                                                                                .addChildren("if (value.length() == 0) continue;")
+                                                                                .addChildren("kvs.add(new STArgumentKV().setStParameterKey(fieldEntry.getKey()).setValue(newSTValue(value)));"))
                                                                         .addChildren("addArgument(stTemplate, stModel,  newSTArgument(stParameter, kvs));")
                                                                         .addChildren("setText(stRenderer.render(stModel));")))), ");"))
                                 ))
@@ -170,6 +172,7 @@ public class STProject {
                         .addChildren("final nextgen.st.model.STValue stValue = nextgen.st.STModelPatterns.newSTValue(s);")
                         .addChildren("canvas.addNode(new " + stValueNode.getName() + "(canvas, s, stValue.getUuid(), stValue));"));
         registerRightClickAction(canvas, newSTNodeAction, newSTNodeAction.getName());
+
 
         final NodeAction editSTValue = newNodeAction(stValueNode, "EditSTValue", "Edit")
                 .addStatements("final String s = com.generator.util.SwingUtil.showInputDialog(\"Value\", canvas, node.stValue.getValue().toString());\n" +

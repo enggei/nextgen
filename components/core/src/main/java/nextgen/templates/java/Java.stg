@@ -2,12 +2,13 @@ delimiters "~","~"
 
 Entities() ::= << >>
 
-Pojo(package,name,fields,accessors,lexical) ::= <<package ~package~;
+Pojo(package,name,fields,fieldDeclarations,accessors,lexical) ::= <<package ~package~;
 
 public class ~name~ {
 
 	private final java.util.UUID uuid;
 	~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator="\n"~
+	~fieldDeclarations:{it|~it~};separator="\n"~
 	
 	public ~name~() {
 		this.uuid = java.util.UUID.randomUUID();

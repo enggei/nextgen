@@ -188,12 +188,13 @@ public class STNode extends PNode {
 	protected void onNodeLeftClick(PInputEvent event) {
 		if (isSelected()) unselect();
 		else select();
-		refresh();
 	}
 
 	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
 
 		pop.add(new LayoutTreeAction(this, canvas, event));
+		pop.add(new RetainNode(this, canvas, event));
+		pop.add(new CloseNode(this, canvas, event));
 		pop.addSeparator();
 
 		pop.add(new AbstractAction("Close") {
@@ -365,18 +366,6 @@ public class STNode extends PNode {
 		}
 	}
 
-	private static final class CloseNode extends NodeAction<STNode> {
-
-		CloseNode(STNode node, STCanvas canvas, PInputEvent event) {
-			super("Close node", node, canvas, event);
-		}
-
-		@Override
-		void actionPerformed(STNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			SwingUtilities.invokeLater(node::close);
-		}
-	}
-
 	private static final class RetainNode extends NodeAction<STNode> {
 
 		RetainNode(STNode node, STCanvas canvas, PInputEvent event) {
@@ -386,6 +375,18 @@ public class STNode extends PNode {
 		@Override
 		void actionPerformed(STNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
 			SwingUtilities.invokeLater(() -> canvas.getAllNodes().filter(canvasNode -> !canvasNode.getUuid().equals(node.getUuid())).forEach(STNode::close));
+		}
+	}
+
+	private static final class CloseNode extends NodeAction<STNode> {
+
+		CloseNode(STNode node, STCanvas canvas, PInputEvent event) {
+			super("Close node", node, canvas, event);
+		}
+
+		@Override
+		void actionPerformed(STNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+			SwingUtilities.invokeLater(node::close);
 		}
 	}
 }

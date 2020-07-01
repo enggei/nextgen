@@ -12,10 +12,10 @@
       "name" : "single",
       "text" : "single : \n\t~value~ ",
       "parameters" : [ {
-        "uuid" : "25ccfeda-fb71-4c50-b9f3-698bdc7f5c1e",
+        "uuid" : "421b3f1e-32db-4e53-8f70-2424fd019e1c",
         "name" : "value",
         "type" : "SINGLE",
-        "argumentType" : "String"
+        "argumentType" : "Object"
       } ],
       "children" : [ ],
       "implements" : [ "TestInterface" ]
@@ -106,28 +106,31 @@
     }, {
       "uuid" : "63e8811d-a1ce-4d14-8e19-4719ee7e61a4",
       "name" : "complex",
-      "text" : "~if(list)~~list:{it|~it.name~ ~it.value~(~if(condition1)~1~elseif(condition2)~2~else~NULL~endif~)};separator=\"\\n\"~~endif~",
+      "text" : "test ~if(list)~~list:{it|~it.name~ ~it.value~(~if(condition1)~1~elseif(condition2)~2~else~NULL~endif~)};separator=\"\\n\"~~endif~ ",
       "parameters" : [ {
-        "uuid" : "d00fbb50-4aa6-4516-ae16-24332aed6439",
+        "uuid" : "0ddd36b5-3c4a-44b1-a88a-23852d23e1cd",
         "name" : "list",
         "type" : "KVLIST",
+        "argumentType" : "Object",
         "keys" : [ {
-          "uuid" : "8a910e2f-78f0-45aa-b3f4-ec47c8e6cc77",
+          "uuid" : "9f055abd-ce69-4cf4-8a5b-05ef7d2d2466",
           "name" : "name",
           "argumentType" : "Object"
         }, {
-          "uuid" : "fc6cf2e9-4526-40d1-94a2-8851ef6bf40c",
+          "uuid" : "69c54920-448e-4b3e-a0e9-9c02423007e8",
           "name" : "value",
           "argumentType" : "Object"
         } ]
       }, {
-        "uuid" : "3da12775-3d52-4b4f-8a14-9b11f41cfde0",
+        "uuid" : "6b3fb6b9-e344-4a63-8170-4fa1580daa7b",
         "name" : "condition1",
-        "type" : "SINGLE"
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       }, {
-        "uuid" : "5037ef90-9f1f-4e4f-8c5b-5f38ebef083f",
+        "uuid" : "75e24deb-7b55-4806-9622-0a98d5a0a2c3",
         "name" : "condition2",
-        "type" : "SINGLE"
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       } ]
     }, {
       "uuid" : "dfceebac-cd86-4b73-9bb1-7560e1fbcf60",

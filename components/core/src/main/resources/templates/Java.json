@@ -9,42 +9,47 @@
     "children" : [ {
       "uuid" : "0f82b0f4-c6de-4e4c-be6d-aca80a1e4124",
       "name" : "Pojo",
-      "text" : "package ~package~;\n\npublic class ~name~ {\n\n\tprivate final java.util.UUID uuid;\n\t~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\t\n\tpublic ~name~() {\n\t\tthis.uuid = java.util.UUID.randomUUID();\n\t}\n\n\tpublic ~name~(java.util.UUID uuid) {\n\t\tthis.uuid = uuid;\n\t}\n\n\tpublic java.util.UUID getUuid() {\n\t\treturn this.uuid;\n\t}\t\n\t\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n~if(lexical)~\n\n\t@Override\n\tpublic String toString() {\n\t\treturn ~lexical:{it|_~it~};separator=\" + \\\" \\\" + \"~;\n\t}\n~endif~\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn uuid.equals(that.uuid);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(uuid);\n\t}\n} ",
+      "text" : "package ~package~;\n\npublic class ~name~ {\n\n\tprivate final java.util.UUID uuid;\n\t~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\t~fieldDeclarations:{it|~it~};separator=\"\\n\"~\n\t\n\tpublic ~name~() {\n\t\tthis.uuid = java.util.UUID.randomUUID();\n\t}\n\n\tpublic ~name~(java.util.UUID uuid) {\n\t\tthis.uuid = uuid;\n\t}\n\n\tpublic java.util.UUID getUuid() {\n\t\treturn this.uuid;\n\t}\t\n\t\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n~if(lexical)~\n\n\t@Override\n\tpublic String toString() {\n\t\treturn ~lexical:{it|_~it~};separator=\" + \\\" \\\" + \"~;\n\t}\n~endif~\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn uuid.equals(that.uuid);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(uuid);\n\t}\n} ",
       "parameters" : [ {
-        "uuid" : "028bd4d1-6ca1-400a-b7b5-af1d4bc175d2",
+        "uuid" : "f84f1434-4f3b-4d39-8298-976fdc09668d",
         "name" : "package",
         "type" : "SINGLE",
         "argumentType" : "String"
       }, {
-        "uuid" : "174ccf04-43ef-44ef-af16-11f55d8fff2b",
+        "uuid" : "23c8758c-db3f-4045-a4d7-ce7aadb43ebe",
         "name" : "name",
         "type" : "SINGLE",
         "argumentType" : "String"
       }, {
-        "uuid" : "69f5775b-b5d2-4518-8445-07fe2f017240",
+        "uuid" : "65d3dbef-f610-4312-a685-4a607e53d2e6",
         "name" : "fields",
         "type" : "KVLIST",
         "argumentType" : "Object",
         "keys" : [ {
-          "uuid" : "e4970915-e6a7-4231-a8ae-344069a473e1",
+          "uuid" : "3fa720d8-f241-445c-9ca3-67c348690f1b",
           "name" : "type",
           "argumentType" : "Object"
         }, {
-          "uuid" : "131ba1b8-304e-4ed2-a531-b7917a84c5b8",
+          "uuid" : "238bb4fb-333a-4715-aa64-22389ec9b485",
           "name" : "name",
           "argumentType" : "String"
         }, {
-          "uuid" : "21d1d36a-1ba0-46e9-a4a0-d800c7820148",
+          "uuid" : "78f731dc-5624-4d7e-ae55-5213857ea065",
           "name" : "initializer",
           "argumentType" : "Object"
         } ]
       }, {
-        "uuid" : "87cf2225-bf71-480d-bead-41bb7ebd636e",
+        "uuid" : "3f4b8adf-1795-4fc3-8877-c87544618d3d",
+        "name" : "fieldDeclarations",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "b7e39149-0446-4c28-9d97-718411a70373",
         "name" : "accessors",
         "type" : "LIST",
         "argumentType" : "Object"
       }, {
-        "uuid" : "ffe3ece0-c548-44d5-9c39-912869442860",
+        "uuid" : "01f7aa4a-bd0e-42bc-acb4-9a02caab6796",
         "name" : "lexical",
         "type" : "LIST",
         "argumentType" : "String"

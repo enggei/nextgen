@@ -3,6 +3,8 @@ package nextgen.st;
 import com.generator.util.SwingUtil;
 import nextgen.st.domain.STGError;
 import nextgen.st.domain.STGParseResult;
+import nextgen.st.domain.STParameter;
+import nextgen.st.domain.STTemplate;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
@@ -16,10 +18,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class STEditor extends JPanel {
@@ -84,7 +86,7 @@ public class STEditor extends JPanel {
 
         final StringBuilder text = new StringBuilder();
         text.append(stEnumTreeNode.getModel().getName());
-        stEnumTreeNode.getModel().getValues().forEach(stEnumValue -> text.append("\n\t").append(stEnumValue.getName()).append(stEnumValue.getLexical()==null ? "" : (" -> \"" + stEnumValue.getLexical() + "\"")));
+        stEnumTreeNode.getModel().getValues().forEach(stEnumValue -> text.append("\n\t").append(stEnumValue.getName()).append(stEnumValue.getLexical() == null ? "" : (" -> \"" + stEnumValue.getLexical() + "\"")));
 
         this.startText = text.toString().trim();
 
@@ -218,35 +220,34 @@ public class STEditor extends JPanel {
 
             if (parseResult.getErrors().count() == 0) {
                 parseResult.getParsed().getTemplates().findFirst().ifPresent(stTemplate -> {
-                    stTemplateTreeNode.getModel().setText(stTemplate.getText());
 
-                    // add existing argument-types to parameter, if applicable:
-                    stTemplate.getParameters().forEach(newParameter -> stTemplateTreeNode.getModel().getParameters()
-                            .filter(oldParameter -> oldParameter.getName().equals(newParameter.getName()))
-                            .findFirst()
-                            .ifPresent(oldParameter -> {
+                    final STTemplate model = stTemplateTreeNode.getModel();
+                    model.setText(stTemplate.getText());
 
-                                if (oldParameter.getType().equals(newParameter.getType())) {
+                    final List<STParameter> existingParameters = model.getParameters().collect(Collectors.toList());
+                    final List<STParameter> parsedParameters = stTemplate.getParameters().collect(Collectors.toList());
 
-                                    switch (newParameter.getType()) {
+                    final Map<String, STParameter> newParameters = new LinkedHashMap<>();
+                    for (STParameter parsedParameter : parsedParameters) {
 
-                                        case SINGLE:
-                                        case LIST:
-                                            newParameter.setArgumentType(getArgumentType(oldParameter.getArgumentType()));
-                                            break;
-                                        case KVLIST:
-                                            newParameter.getKeys().forEach(newKey -> {
-                                                oldParameter.getKeys()
-                                                        .filter(oldKey -> oldKey.getName().equals(newKey.getName()))
-                                                        .findFirst()
-                                                        .ifPresent(oldKey -> newKey.setArgumentType(getArgumentType(oldKey.getArgumentType())));
-                                            });
-                                            break;
-                                    }
-                                }
-                            }));
-                    stTemplateTreeNode.getModel().clearParameters();
-                    stTemplate.getParameters().forEach(stTemplateTreeNode.getModel()::addParameters);
+                        boolean foundExisting = false;
+                        for (STParameter existingParameter : existingParameters) {
+                            if (parsedParameter.getName().equals(existingParameter.getName()) && parsedParameter.getType().equals(existingParameter.getType())) {
+                                System.out.println("unchanged parameter " + parsedParameter.getName());
+                                newParameters.put(existingParameter.getName(), existingParameter);
+                                foundExisting = true;
+                                break;
+                            }
+                        }
+
+                        if (!foundExisting) {
+                            System.out.println("new parameter " + parsedParameter.getName());
+                            newParameters.put(parsedParameter.getName(), parsedParameter);
+                        }
+                    }
+
+                    model.clearParameters();
+                    newParameters.values().forEach(model::addParameters);
                 });
 
                 startText = text.trim();
