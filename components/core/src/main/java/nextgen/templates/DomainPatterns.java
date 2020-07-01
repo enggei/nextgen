@@ -140,8 +140,112 @@ public class DomainPatterns extends DomainST {
     }
 
 
-    // DOMAIN TO POJOs:
+    // DOMAIN TO BEANS:
 
+    public static void writeBean(File root, String packageName, Domain domain) {
+        writeBean(root, newPackageDeclaration(packageName), domain);
+    }
+
+    public static void writeBean(File root, PackageDeclaration packageDeclaration, Domain domain) {
+
+        final Map<Entity, Pojo> visited = new LinkedHashMap<>();
+        domain.getEntities().forEach(entity -> {
+
+            if (entity.getIsEnum(false)) {
+                writeEnum(root, packageDeclaration, entity.getName(), entity.getEnumValues().toArray());
+                return;
+            }
+
+            generateBean(root, packageDeclaration, entity, visited);
+        });
+
+        final PojoFactory factory = JavaST.newPojoFactory()
+                .setPackage(packageDeclaration.getName())
+                .setName(domain.getName() + "Factory");
+
+        visited.forEach((entity, pojo) -> factory.addEntities(entity.getName()));
+
+        STGenerator.writeJavaFile(factory, packageDeclaration.getName(), factory.getName().toString(), root);
+    }
+
+    private static void generateBean(File root, PackageDeclaration packageDeclaration, Entity entity, final Map<Entity, Pojo> visited) {
+
+        if (entity == null || visited.containsKey(entity)) {
+            visited.get(entity);
+            return;
+        }
+
+        final String entityName = entity.getName();
+
+        final Pojo entityClass = JavaST.newPojo()
+                .setPackage(packageDeclaration.getName())
+                .setName(entityName);
+
+        visited.put(entity, entityClass);
+
+        entity.getRelations().forEach(o -> {
+
+            switch (o.getType()) {
+
+                case ENUM: {
+                    final Entity dst = asEntity(o.getDst());
+                    entityClass.addFields(dst.getName(), o.getName(), null);
+                    entityClass.addAccessors(JavaST.newBoundedPrimitiveAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
+                    writeEnum(root, packageDeclaration, dst.getName(), dst.getEnumValues().toArray());
+                    break;
+                }
+                case ENUM_LIST: {
+                    final Entity dst = asEntity(o.getDst());
+                    entityClass.addFields(JavaST.newListType().setType(dst.getName()), o.getName(), newArrayListType());
+                    entityClass.addAccessors(JavaST.newBoundedListAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
+                    writeEnum(root, packageDeclaration, dst.getName(), dst.getEnumValues().toArray());
+                    break;
+                }
+                case EXT_REF: {
+                    entityClass.addFields(getCanonicalName(o.getDst()), o.getName(), null);
+                    entityClass.addAccessors(JavaST.newBoundedReferenceAccessors().setClassName(entityName).setType(getCanonicalName(o.getDst())).setName(o.getName()));
+                    break;
+                }
+                case EXT_LIST: {
+                    entityClass.addFields(JavaST.newListType().setType(getCanonicalName(o.getDst())), o.getName(), JavaPatterns.newArrayListInstance());
+                    entityClass.addAccessors(JavaST.newBoundedListAccessors().setClassName(entityName).setType(getCanonicalName(o.getDst())).setName(o.getName()));
+                    break;
+                }
+                case PRIM_REF: {
+                    entityClass.addFields(getSimpleName(o.getDst()), o.getName(), null);
+                    entityClass.addAccessors(JavaST.newBoundedPrimitiveAccessors().setClassName(entityName).setType(getSimpleName(o.getDst())).setName(o.getName()));
+                    if (o.getLexical(false)) entityClass.addLexical(o.getName());
+                    break;
+                }
+                case PRIM_LIST: {
+                    entityClass.addFields(JavaST.newListType().setType(getSimpleName(o.getDst())), o.getName(), JavaPatterns.newArrayListInstance());
+                    entityClass.addAccessors(JavaST.newBoundedListAccessors().setClassName(entityName).setType(getSimpleName(o.getDst())).setName(o.getName()));
+                    break;
+                }
+                case REF: {
+                    final Entity dst = asEntity(o.getDst());
+                    entityClass.addFields(dst.getName(), o.getName(), null);
+                    entityClass.addAccessors(JavaST.newBoundedReferenceAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
+
+                    generatePojo(root, packageDeclaration, dst, visited);
+                    break;
+                }
+                case LIST: {
+                    final Entity dst = asEntity(o.getDst());
+                    entityClass.addFields(JavaST.newListType().setType(dst.getName()), o.getName(), JavaPatterns.newArrayListInstance());
+                    entityClass.addAccessors(JavaST.newBoundedListAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
+
+                    generatePojo(root, packageDeclaration, dst, visited);
+                    break;
+                }
+            }
+        });
+
+        STGenerator.writeJavaFile(entityClass, packageDeclaration.getName(), entityClass.getName(), root);
+
+    }
+
+    // DOMAIN TO POJOs:
     public static void writePojo(File root, String packageName, Domain domain) {
         writePojo(root, newPackageDeclaration(packageName), domain);
     }

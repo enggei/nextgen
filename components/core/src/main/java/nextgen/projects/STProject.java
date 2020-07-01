@@ -199,7 +199,7 @@ public class STProject {
                 .addRelations(newEnumField("type", "STValueType", "STMODEL,PRIMITIVE,ENUM"))
                 .addRelations(newExternalRef("value", Object.class));
 
-        writePojo(javaMainSrc, stModelPackage.getName(), newDomain("STModel")
+        writeBean(javaMainSrc, stModelPackage.getName(), newDomain("STModel")
                 .addEntities(newEntity("STModule")
                         .addRelations(newStringField("name"))
                         .addRelations(newOneToManyString("stGroups"))

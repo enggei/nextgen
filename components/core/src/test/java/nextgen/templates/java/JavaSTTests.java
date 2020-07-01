@@ -9,6 +9,10 @@ public class JavaSTTests {
 
 	@org.junit.Test
 	public void testAll() {
+		testBean();
+		testBoundedListAccessors();
+		testBoundedPrimitiveAccessors();
+		testBoundedReferenceAccessors();
 		testEnum();
 		testEnumValue();
 		testPojo();
@@ -101,6 +105,26 @@ public class JavaSTTests {
 		testNewInstance();
 		testSwitch();
 	}
+
+	@org.junit.Test
+	public void testBean() {
+		System.out.println("\n--- TEST Bean:\n" + newBean());
+	} 
+
+	@org.junit.Test
+	public void testBoundedListAccessors() {
+		System.out.println("\n--- TEST BoundedListAccessors:\n" + newBoundedListAccessors());
+	} 
+
+	@org.junit.Test
+	public void testBoundedPrimitiveAccessors() {
+		System.out.println("\n--- TEST BoundedPrimitiveAccessors:\n" + newBoundedPrimitiveAccessors());
+	} 
+
+	@org.junit.Test
+	public void testBoundedReferenceAccessors() {
+		System.out.println("\n--- TEST BoundedReferenceAccessors:\n" + newBoundedReferenceAccessors());
+	} 
 
 	@org.junit.Test
 	public void testEnum() {

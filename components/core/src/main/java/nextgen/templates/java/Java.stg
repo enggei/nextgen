@@ -105,6 +105,103 @@ EnumValue(name,lexical) ::= <<~name~~if(lexical)~() {
 	public String toString() { return "~lexical~"; }
 }~endif~ >>
 
+Bean(package,name,fields,fieldDeclarations,accessors,lexical) ::= <<package ~package~;
+
+public class ~name~ {
+
+	private final java.util.UUID uuid;
+	~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator="\n"~
+	~fieldDeclarations:{it|~it~};separator="\n"~
+
+	private final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);
+	
+	public ~name~() {
+		this.uuid = java.util.UUID.randomUUID();
+	}
+
+	public ~name~(java.util.UUID uuid) {
+		this.uuid = uuid;
+	}
+
+	public java.util.UUID getUuid() {
+		return this.uuid;
+	}	
+		~accessors:{it|~it~};separator="\n\n"~
+~if(lexical)~
+
+	@Override
+	public String toString() {
+		return ~lexical:{it|_~it~};separator=" + \" \" + "~;
+	}
+~endif~
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		~name~ that = (~name~) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
+	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
+		this.pcs.addPropertyChangeListener(listener);
+	}
+
+	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
+		this.pcs.removePropertyChangeListener(listener);
+	}
+}  >>
+
+boundedPrimitiveAccessors(type,name,className) ::= <<public ~type~ get~name;format="capitalize"~() {
+	return this._~name~;
+}
+
+public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) {
+	~type~ oldValue = this._~name~;
+	this._~name~ = value;
+	this.pcs.firePropertyChange("~name~", oldValue, value);
+	return this;
+}  >>
+
+boundedReferenceAccessors(type,name,className) ::= <<public ~type~ get~name;format="capitalize"~() {
+	return this._~name~;
+}
+
+public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) {
+	~type~ oldValue = this._~name~;
+	this._~name~ = value;
+	this.pcs.firePropertyChange("~name~", oldValue, value);
+	return this;
+}
+
+public ~className;format="capitalize"~ remove~name;format="capitalize"~() {
+	~type~ oldValue = this._~name~;
+	this._~name~ = null;
+	this.pcs.firePropertyChange("~name~", oldValue, null);
+	return this;
+}  >>
+
+boundedListAccessors(type,name,className) ::= <<public java.util.List<~type~> get~name;format="capitalize"~() {
+	return this._~name~;
+}
+
+public ~className~ add~name;format="capitalize"~(~type~ value) {
+	this._~name~.add(value);
+	this.pcs.firePropertyChange("~name~", null, value);
+	return this;
+}
+
+public ~className~ remove~name;format="capitalize"~(~type~ value) {
+	this._~name~.remove(value);
+	this.pcs.firePropertyChange("~name~", value, null);
+	return this;
+}  >>
+
 Grammar() ::= << >>
 
 CompilationUnit(packageDeclaration,types,importDeclaration) ::= <<~packageDeclaration~

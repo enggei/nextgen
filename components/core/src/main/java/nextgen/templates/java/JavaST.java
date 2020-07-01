@@ -5,6 +5,10 @@ public class JavaST {
 	private static final String stg = "delimiters \"~\", \"~\"\n" +
 	"eom() ::= \"}\"\n" +
 	"gt() ::= \">\"\n" +
+	Bean.st + "\n" + 
+	BoundedListAccessors.st + "\n" + 
+	BoundedPrimitiveAccessors.st + "\n" + 
+	BoundedReferenceAccessors.st + "\n" + 
 	Enum.st + "\n" + 
 	EnumValue.st + "\n" + 
 	Pojo.st + "\n" + 
@@ -130,6 +134,22 @@ public class JavaST {
 	public static void setSTGroup(final String stgFile) {
 		stGroup = decorate(new org.stringtemplate.v4.STGroupFile(stgFile, '~', '~'));
 	}
+
+	public static Bean newBean() {
+		return new Bean(stGroup);
+	} 
+
+	public static BoundedListAccessors newBoundedListAccessors() {
+		return new BoundedListAccessors(stGroup);
+	} 
+
+	public static BoundedPrimitiveAccessors newBoundedPrimitiveAccessors() {
+		return new BoundedPrimitiveAccessors(stGroup);
+	} 
+
+	public static BoundedReferenceAccessors newBoundedReferenceAccessors() {
+		return new BoundedReferenceAccessors(stGroup);
+	} 
 
 	public static Enum newEnum() {
 		return new Enum(stGroup);
