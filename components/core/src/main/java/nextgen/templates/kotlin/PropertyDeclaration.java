@@ -1,18 +1,17 @@
 package nextgen.templates.kotlin;
 
-public class FieldDeclaration {
+public class PropertyDeclaration implements ParameterDefinition {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Boolean _isMutable;
-	private Boolean _isNonMember;
 	private String _name;
 	private TypeDeclaration _type;
 	private Expression _initializer;
 	private java.util.List<AnnotationDeclaration> _annotations = new java.util.ArrayList<>();
 
-	FieldDeclaration(org.stringtemplate.v4.STGroup stGroup) {
+	PropertyDeclaration(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
@@ -22,9 +21,8 @@ public class FieldDeclaration {
 
 	@Override
 	public String toString() {
-		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("FieldDeclaration");
+		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("PropertyDeclaration");
 		st.add("isMutable", _isMutable);
-		st.add("isNonMember", _isNonMember);
 		st.add("name", _name);
 		st.add("type", _type);
 		st.add("initializer", _initializer);
@@ -32,7 +30,7 @@ public class FieldDeclaration {
 		return st.render().trim();
 	}
 
-	public FieldDeclaration setIsMutable(Boolean value) {
+	public PropertyDeclaration setIsMutable(Boolean value) {
 		this._isMutable = value;
 		return this;
 	}
@@ -49,34 +47,12 @@ public class FieldDeclaration {
 		return this._isMutable != null;
 	}
 
-	public FieldDeclaration removeIsMutable() {
+	public PropertyDeclaration removeIsMutable() {
 		this._isMutable = null;
 		return this;
 	} 
 
-	public FieldDeclaration setIsNonMember(Boolean value) {
-		this._isNonMember = value;
-		return this;
-	}
-
-	public Boolean getIsNonMember() {
-		return this._isNonMember;
-	}
-
-	public Boolean getIsNonMember(Boolean defaultValue) {
-		return this._isNonMember == null ? defaultValue : this._isNonMember;
-	}
-
-	public boolean hasIsNonMember() {
-		return this._isNonMember != null;
-	}
-
-	public FieldDeclaration removeIsNonMember() {
-		this._isNonMember = null;
-		return this;
-	} 
-
-	public FieldDeclaration setName(String value) {
+	public PropertyDeclaration setName(String value) {
 		this._name = value;
 		return this;
 	}
@@ -93,12 +69,12 @@ public class FieldDeclaration {
 		return this._name != null;
 	}
 
-	public FieldDeclaration removeName() {
+	public PropertyDeclaration removeName() {
 		this._name = null;
 		return this;
 	} 
 
-	public FieldDeclaration setType(TypeDeclaration value) {
+	public PropertyDeclaration setType(TypeDeclaration value) {
 		this._type = value;
 		return this;
 	}
@@ -115,12 +91,12 @@ public class FieldDeclaration {
 		return this._type != null;
 	}
 
-	public FieldDeclaration removeType() {
+	public PropertyDeclaration removeType() {
 		this._type = null;
 		return this;
 	} 
 
-	public FieldDeclaration setInitializer(Expression value) {
+	public PropertyDeclaration setInitializer(Expression value) {
 		this._initializer = value;
 		return this;
 	}
@@ -137,32 +113,32 @@ public class FieldDeclaration {
 		return this._initializer != null;
 	}
 
-	public FieldDeclaration removeInitializer() {
+	public PropertyDeclaration removeInitializer() {
 		this._initializer = null;
 		return this;
 	} 
 
-	public FieldDeclaration addAnnotations(AnnotationDeclaration value) {
+	public PropertyDeclaration addAnnotations(AnnotationDeclaration value) {
 		this._annotations.add(value);
 		return this;
 	}
 
-	public FieldDeclaration setAnnotations(AnnotationDeclaration[] value) {
+	public PropertyDeclaration setAnnotations(AnnotationDeclaration[] value) {
 		this._annotations.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public FieldDeclaration setAnnotations(java.util.Collection<AnnotationDeclaration> values) {
+	public PropertyDeclaration setAnnotations(java.util.Collection<AnnotationDeclaration> values) {
 		this._annotations.addAll(values);
 		return this;
 	}
 
-	public FieldDeclaration removeAnnotations(AnnotationDeclaration value) {
+	public PropertyDeclaration removeAnnotations(AnnotationDeclaration value) {
 		this._annotations.remove(value);
 		return this;
 	}
 
-	public FieldDeclaration removeAnnotations(int index) {
+	public PropertyDeclaration removeAnnotations(int index) {
 		this._annotations.remove(index);
 		return this;
 	}
@@ -176,7 +152,7 @@ public class FieldDeclaration {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		FieldDeclaration that = (FieldDeclaration) o;
+		PropertyDeclaration that = (PropertyDeclaration) o;
 		return uuid.equals(that.uuid);
 	}
 
@@ -185,6 +161,6 @@ public class FieldDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "FieldDeclaration(annotations,isMutable,isNonMember,name,type,initializer) ::= <<~annotations:{it|~it~};separator=\"\\n\"~\n" + 
-				"~if(isMutable)~var ~elseif(isNonMember)~~else~val ~endif~~name~: ~type~~if(initializer)~ = ~initializer~~endif~ >>";
+	static final String st = "PropertyDeclaration(annotations,isMutable,name,type,initializer) ::= <<~annotations:{it|~it~};separator=\"\\n\"~\n" + 
+				"~if(isMutable)~var ~else~val ~endif~~name~: ~type~~if(initializer)~ = ~initializer~~endif~ >>";
 }  

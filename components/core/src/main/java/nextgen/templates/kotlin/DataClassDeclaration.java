@@ -7,7 +7,7 @@ public class DataClassDeclaration implements CompilationUnit, ClassDefinition {
 
 	private java.util.Collection<AnnotationDeclaration> _annotations;
 	private String _name;
-	private java.util.List<FieldDeclaration> _fields = new java.util.ArrayList<>();
+	private java.util.List<PropertyDeclaration> _fields = new java.util.ArrayList<>();
 	private java.util.List<FunctionDeclaration> _members = new java.util.ArrayList<>();
 	private java.util.List<ClassDefinition> _subclasses = new java.util.ArrayList<>();
 
@@ -74,22 +74,22 @@ public class DataClassDeclaration implements CompilationUnit, ClassDefinition {
 		return this;
 	} 
 
-	public DataClassDeclaration addFields(FieldDeclaration value) {
+	public DataClassDeclaration addFields(PropertyDeclaration value) {
 		this._fields.add(value);
 		return this;
 	}
 
-	public DataClassDeclaration setFields(FieldDeclaration[] value) {
+	public DataClassDeclaration setFields(PropertyDeclaration[] value) {
 		this._fields.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public DataClassDeclaration setFields(java.util.Collection<FieldDeclaration> values) {
+	public DataClassDeclaration setFields(java.util.Collection<PropertyDeclaration> values) {
 		this._fields.addAll(values);
 		return this;
 	}
 
-	public DataClassDeclaration removeFields(FieldDeclaration value) {
+	public DataClassDeclaration removeFields(PropertyDeclaration value) {
 		this._fields.remove(value);
 		return this;
 	}
@@ -99,7 +99,7 @@ public class DataClassDeclaration implements CompilationUnit, ClassDefinition {
 		return this;
 	}
 
-	public java.util.List<FieldDeclaration> getFields() {
+	public java.util.List<PropertyDeclaration> getFields() {
 		return this._fields;
 	} 
 

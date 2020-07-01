@@ -18,6 +18,7 @@ public class KotlinSTTests {
 		testFunctionCallExpression();
 		testLiteralExpression();
 		testNullExpression();
+		testObjectExpression();
 		testPairExpression();
 		testScopeExpression();
 		testSimpleStringExpression();
@@ -31,11 +32,14 @@ public class KotlinSTTests {
 		testOverrideHashCode();
 		testOverrideToString();
 		testDataClassDeclaration();
-		testExtending();
-		testFieldDeclaration();
+		testExtendingClass();
 		testFunctionDeclaration();
 		testFunctionParam();
+		testImplementingInterface();
+		testInterfaceDeclaration();
 		testPackageDeclaration();
+		testParameterDeclaration();
+		testPropertyDeclaration();
 		testImportStatement();
 		testReturnStatement();
 		testTodoStatement();
@@ -116,6 +120,11 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
+	public void testObjectExpression() {
+		System.out.println("\n--- TEST ObjectExpression:\n" + newObjectExpression());
+	} 
+
+	@org.junit.Test
 	public void testPairExpression() {
 		System.out.println("\n--- TEST PairExpression:\n" + newPairExpression());
 	} 
@@ -181,13 +190,8 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
-	public void testExtending() {
-		System.out.println("\n--- TEST Extending:\n" + newExtending());
-	} 
-
-	@org.junit.Test
-	public void testFieldDeclaration() {
-		System.out.println("\n--- TEST FieldDeclaration:\n" + newFieldDeclaration());
+	public void testExtendingClass() {
+		System.out.println("\n--- TEST ExtendingClass:\n" + newExtendingClass());
 	} 
 
 	@org.junit.Test
@@ -201,8 +205,28 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
+	public void testImplementingInterface() {
+		System.out.println("\n--- TEST ImplementingInterface:\n" + newImplementingInterface());
+	} 
+
+	@org.junit.Test
+	public void testInterfaceDeclaration() {
+		System.out.println("\n--- TEST InterfaceDeclaration:\n" + newInterfaceDeclaration());
+	} 
+
+	@org.junit.Test
 	public void testPackageDeclaration() {
 		System.out.println("\n--- TEST PackageDeclaration:\n" + newPackageDeclaration());
+	} 
+
+	@org.junit.Test
+	public void testParameterDeclaration() {
+		System.out.println("\n--- TEST ParameterDeclaration:\n" + newParameterDeclaration());
+	} 
+
+	@org.junit.Test
+	public void testPropertyDeclaration() {
+		System.out.println("\n--- TEST PropertyDeclaration:\n" + newPropertyDeclaration());
 	} 
 
 	@org.junit.Test

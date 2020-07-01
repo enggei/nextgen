@@ -32,6 +32,12 @@ StringLiteralExpression(literal) ::= <<"~literal~"  >>
 
 AssignExpression(varName,expression) ::= <<~varName~ = ~expression~  >>
 
+ObjectExpression(extends,fields,members) ::= <<object~if(extends)~ : ~extends:{it|~it~};separator=", "~~endif~ {
+	~fields:{it|~it~};separator="\n"~
+
+	~members:{it|~it~};separator="\n"~
+}  >>
+
 Grammar() ::= << >>
 
 Declarations() ::= << >>
@@ -73,10 +79,8 @@ OverrideToString(className,fields) ::= <<override fun toString(): String {
 	return "~className~(~fields:{it|~it~};separator=", "~)"
 }  >>
 
-FieldDeclaration(annotations,isMutable,isNonMember,name,type,initializer) ::= <<~annotations:{it|~it~};separator="\n"~
-~if(isMutable)~var ~elseif(isNonMember)~~else~val ~endif~~name~: ~type~~if(initializer)~ = ~initializer~~endif~  >>
-
-Extending(className,params) ::= <<~className~(~params:{it|~it.name~};separator=", "~) >>
+PropertyDeclaration(annotations,isMutable,name,type,initializer) ::= <<~annotations:{it|~it~};separator="\n"~
+~if(isMutable)~var ~else~val ~endif~~name~: ~type~~if(initializer)~ = ~initializer~~endif~  >>
 
 FunctionDeclaration(annotations,override,name,params,returnType,expressionBody,statements) ::= <<~annotations~~if(override)~override ~endif~fun ~name~(~params:{it|~it~};separator=", "~): ~returnType~~if(expressionBody)~ =
 	~expressionBody~~else~ {
@@ -95,6 +99,14 @@ DataClassDeclaration(annotations,name,fields,members,subclasses) ::= <<~annotati
 	~subclasses:{it|~it~};separator="\n"~
 }~endif~  >>
 
+ExtendingClass(className,params) ::= <<~className~(~params:{it|~it~};separator=", "~)  >>
+
+ImplementingInterface(interfaceName) ::= <<~interfaceName~  >>
+
+InterfaceDeclaration(name,extends) ::= <<interface ~name~~if(extends)~: ~extends:{it|~it~};separator=", "~~endif~  >>
+
+ParameterDeclaration(name,type,initializer) ::= <<~name~: ~type~~if(initializer)~ = ~initializer~~endif~  >>
+
 Statements() ::= << >>
 
 ImportStatement(scope,name) ::= <<import ~scope~.~name~  >>
@@ -103,7 +115,7 @@ TodoStatement(reason) ::= <<TODO("~reason~")  >>
 
 ReturnStatement(expression) ::= <<return ~expression~  >>
 
-VarDeclarationStatement(isMutable,name,type,initializer) ::= <<~if(isMutable)~var ~else~val ~endif~~name~: ~type~~if(initializer)~ = ~initializer~~endif~  >>
+VarDeclarationStatement(isMutable,name,type,initializer) ::= <<~if(isMutable)~var ~else~val ~endif~~name~~if(type)~: ~type~~endif~~if(initializer)~ = ~initializer~~endif~  >>
 
 Initializers() ::= << >>
 

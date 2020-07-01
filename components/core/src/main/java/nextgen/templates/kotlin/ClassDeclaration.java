@@ -12,7 +12,7 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 	private OverrideEquals _overrideEquals;
 	private OverrideHashCode _overrideHashCode;
 	private OverrideToString _overrideToString;
-	private java.util.List<FieldDeclaration> _fields = new java.util.ArrayList<>();
+	private java.util.List<ParameterDefinition> _fields = new java.util.ArrayList<>();
 	private java.util.List<Extending> _extends = new java.util.ArrayList<>();
 	private java.util.List<FunctionDeclaration> _members = new java.util.ArrayList<>();
 	private java.util.List<ClassDefinition> _subclasses = new java.util.ArrayList<>();
@@ -196,22 +196,22 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 		return this;
 	} 
 
-	public ClassDeclaration addFields(FieldDeclaration value) {
+	public ClassDeclaration addFields(ParameterDefinition value) {
 		this._fields.add(value);
 		return this;
 	}
 
-	public ClassDeclaration setFields(FieldDeclaration[] value) {
+	public ClassDeclaration setFields(ParameterDefinition[] value) {
 		this._fields.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public ClassDeclaration setFields(java.util.Collection<FieldDeclaration> values) {
+	public ClassDeclaration setFields(java.util.Collection<ParameterDefinition> values) {
 		this._fields.addAll(values);
 		return this;
 	}
 
-	public ClassDeclaration removeFields(FieldDeclaration value) {
+	public ClassDeclaration removeFields(ParameterDefinition value) {
 		this._fields.remove(value);
 		return this;
 	}
@@ -221,7 +221,7 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 		return this;
 	}
 
-	public java.util.List<FieldDeclaration> getFields() {
+	public java.util.List<ParameterDefinition> getFields() {
 		return this._fields;
 	} 
 

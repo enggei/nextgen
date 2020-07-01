@@ -7,7 +7,9 @@ import nextgen.templates.kotlin.*;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -55,25 +57,30 @@ public class KotlinTest {
         ArrayType countryIsPartOfContinentRelationshipTypeArray = newArrayType().setType(countryIsPartOfContinentRelationshipType);
         TypeDeclaration mutableSetOfStrings = newMutableSetType().setType(stringType);
 
-        FieldDeclaration uuidField = newFieldDeclaration(uuidType, "uuid").setInitializer(
-                newFunctionCallExpression().setScope("UUID").setFunctionName("randomUUID")
-        ).setIsNonMember(true);
+        ParameterDeclaration uuidField = newParameterDeclaration(uuidType, "uuid", newFunctionCallExpression().setScope("UUID").setFunctionName("randomUUID"));
+        ParameterDeclaration idField = newParameterDeclaration(nullableLongType, "id", newNullExpression());
 
-        List<FieldDeclaration> fields = asList(
-                newFieldDeclaration(nullableLongType, "id").setInitializer(newNullExpression()).setIsNonMember(true),
-                uuidField,
-                newFieldDeclaration(longType, "epId", true),
-                newFieldDeclaration(stringType, "code", true),
-                newFieldDeclaration(stringType, "name", true),
-                newFieldDeclaration(countryIsPartOfContinentRelationshipTypeArray, "isPartOfContinent", true)
+        List<PropertyDeclaration> properties = asList(
+                newPropertyDeclaration(longType, "epId", true),
+                newPropertyDeclaration(stringType, "code", true),
+                newPropertyDeclaration(stringType, "name", true),
+                newPropertyDeclaration(countryIsPartOfContinentRelationshipTypeArray, "isPartOfContinent", newEmptyArrayInitializer(), true)
                         .setAnnotations(singletonList(newAnnotationDeclaration()
                                 .addAnnotations("Relationship", singletonList(newAnnotationParam()
                                         .addParam("type", "REL_IS_PART_OF")
                                         .addParam("direction", "Relationship.OUTGOING")
                                 ))
-                        )).setInitializer(newEmptyArrayInitializer())
+                        ))
         );
 
+        List<ParameterDefinition> parameters = asList(
+                idField,
+                uuidField
+        );
+
+        List<ParameterDefinition> fields = new ArrayList<>();
+        fields.addAll(parameters);
+        fields.addAll(properties);
 
         String dataClassName = "Thing";
         DataClassDeclaration thingClass = newDataClassDeclaration(dataClassName)
@@ -83,10 +90,15 @@ public class KotlinTest {
                         ))
                 ))
                 .setFields(asList(
-                        newFieldDeclaration(nullableLongType, "id").setInitializer(newNullExpression()),
-                        newFieldDeclaration(nullableStringType, "name").setInitializer(newNullExpression()),
-                        newFieldDeclaration(mutableSetOfStrings, "stuff").setInitializer(newMutableSetInitializer())
+                        newPropertyDeclaration(nullableLongType, "id").setInitializer(newNullExpression()),
+                        newPropertyDeclaration(nullableStringType, "name").setInitializer(newNullExpression()),
+                        newPropertyDeclaration(mutableSetOfStrings, "stuff").setInitializer(newMutableSetInitializer())
                 ));
+
+        String anotherThingInterfaceName = "AnotherThing";
+        InterfaceDeclaration anotherThingsInterface = newInterfaceDeclaration(anotherThingInterfaceName);
+        String somethingInterfaceName = "Something";
+        InterfaceDeclaration somethingInterface = newInterfaceDeclaration(somethingInterfaceName).addExtends(newImplementingInterface(anotherThingInterfaceName));
 
         ClassDeclaration countryClass = newClassDeclaration(className)
                 .setAnnotations(singletonList(newAnnotationDeclaration()
@@ -96,11 +108,14 @@ public class KotlinTest {
                 ))
                 .setIsOpen(true)
                 .setFields(fields)
-                .setExtends(singletonList(newExtending().setClassName("Entity")
-                        .addParams("id")
-                        .addParams("uuid")))
+                .setExtends(asList(
+                        newExtendingClass("Entity",
+                                asList(newLiteralExpression().setLiteral("id"), newLiteralExpression().setLiteral("uuid"))
+                        ),
+                        newImplementingInterface().setInterfaceName("Something")
+                ))
                 .setOverrideEquals(createEqualsFunction(className,
-                        fields.stream().filter(fieldDeclaration -> !fieldDeclaration.getName().equals("id")).collect(Collectors.toList()))
+                        fields.stream().filter(fieldDeclaration -> !Objects.equals(getNameFromParameterDefinition(fieldDeclaration), "id")).collect(Collectors.toList()))
                 )
                 .setOverrideToString(createToStringFunction(className, fields))
                 .setOverrideHashCode(createHashCodeFunction(uuidField))
@@ -124,7 +139,11 @@ public class KotlinTest {
         KotlinFile kotlinFile = newKotlinFile()
                 .setPackageDeclaration(packageDeclaration)
                 .setImports(imports)
-                .setCompilationUnit(singletonList(countryClass));
+                .setCompilationUnit(asList(
+                        anotherThingsInterface,
+                        somethingInterface,
+                        countryClass
+                ));
 
         System.out.println(kotlinFile);
 
@@ -152,5 +171,16 @@ public class KotlinTest {
                 ));
 
         System.out.println(testFunction);
+    }
+
+    @Test
+    public void testObjectDeclaration() {
+
+        ObjectExpression objectExpression = newObjectExpression()
+                .addExtends(newExtendingClass("MouseAdapter", singletonList(newNullExpression())))
+                .addFields(newPropertyDeclaration(newIntType(), "abc", newLiteralExpression().setLiteral("0")));
+        VarDeclarationStatement varDeclarationStatement = newVarDeclarationStatement().setName("a").setIsMutable(true).setInitializer(objectExpression);
+
+        System.out.println(varDeclarationStatement);
     }
 }
