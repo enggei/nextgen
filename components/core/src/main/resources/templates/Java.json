@@ -168,7 +168,7 @@
     }, {
       "uuid" : "a8289fe2-14b3-4683-9490-5ef389a3f5e4",
       "name" : "Bean",
-      "text" : "package ~package~;\n\npublic class ~name~ {\n\n\tpublic static boolean debug = true;\n\t\n\tprivate final java.util.UUID uuid;\n\t~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\t~fieldDeclarations:{it|~it~};separator=\"\\n\"~\n\n\tprivate final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);\n\t\n\tpublic ~name~() {\n\t\tthis.uuid = java.util.UUID.randomUUID();\n\t}\n\n\tpublic ~name~(java.util.UUID uuid) {\n\t\tthis.uuid = uuid;\n\t}\n\n\tpublic java.util.UUID getUuid() {\n\t\treturn this.uuid;\n\t}\t\n\t\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n\t\n~if(lexical)~\n\n\t@Override\n\tpublic String toString() {\n\t\treturn ~lexical:{it|_~it~};separator=\" + \\\" \\\" + \"~;\n\t}\n~endif~\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn uuid.equals(that.uuid);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(uuid);\n\t}\n\n\tpublic void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tif (debug) System.out.println(\"~name~ add listener \" + listener.getClass().getSimpleName());\n\t\tthis.pcs.addPropertyChangeListener(listener);\n\t}\n\n\tpublic void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tif (debug) System.out.println(\"~name~ rem listener \" + listener.getClass().getSimpleName());\n\t\tthis.pcs.removePropertyChangeListener(listener);\n\t}\n} ",
+      "text" : "package ~package~;\n\npublic class ~name~ {\n\n\tprivate final java.util.UUID uuid;\n\t~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\t~fieldDeclarations:{it|~it~};separator=\"\\n\"~\n\n\tprivate final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);\n\t\n\tpublic ~name~() {\n\t\tthis.uuid = java.util.UUID.randomUUID();\n\t}\n\n\tpublic ~name~(java.util.UUID uuid) {\n\t\tthis.uuid = uuid;\n\t}\n\n\tpublic java.util.UUID getUuid() {\n\t\treturn this.uuid;\n\t}\t\n\t\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n\t\n~if(lexical)~\n\n\t@Override\n\tpublic String toString() {\n\t\treturn ~lexical:{it|_~it~};separator=\" + \\\" \\\" + \"~;\n\t}\n~endif~\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn uuid.equals(that.uuid);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(uuid);\n\t}\n\n\tpublic void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tthis.pcs.addPropertyChangeListener(listener);\n\t}\n\n\tpublic void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tthis.pcs.removePropertyChangeListener(listener);\n\t}\n} ",
       "parameters" : [ {
         "uuid" : "cb61bc25-1333-40db-9cd8-ea46acf2540c",
         "name" : "package",
@@ -277,7 +277,7 @@
     } ]
   }, {
     "uuid" : "73adf979-46b7-422f-ac09-4d6c6caa8e56",
-    "name" : "JavaTypes",
+    "name" : "CollectionTypes",
     "text" : "",
     "children" : [ {
       "uuid" : "1ffe2d3b-73df-4fd5-b10e-7ef9a6e442e2",
@@ -1831,6 +1831,30 @@
       "uuid" : "9a58b498-e907-479f-ad30-a0b4ff780041",
       "name" : "JPanelType",
       "lexical" : "javax.swing.JPanel"
+    } ]
+  }, {
+    "uuid" : "f6ed4328-3cec-4cf3-b846-ba55bd03d89c",
+    "name" : "Modifiers",
+    "values" : [ {
+      "uuid" : "da112044-e40a-455f-b947-4b5a90cfa27c",
+      "name" : "PUBLIC",
+      "lexical" : "public"
+    }, {
+      "uuid" : "d351e39a-a4a5-49c8-a12b-d80e6fd08a02",
+      "name" : "PROTECTED",
+      "lexical" : "protected"
+    }, {
+      "uuid" : "530bb674-3989-45ee-92f3-fd1d120f948c",
+      "name" : "PRIVATE",
+      "lexical" : "private"
+    }, {
+      "uuid" : "9ae5122c-2e6f-475f-ab18-335dbff84d09",
+      "name" : "FINAL",
+      "lexical" : "final"
+    }, {
+      "uuid" : "5d659653-148c-430f-af7c-4670ebd64dfd",
+      "name" : "STATIC",
+      "lexical" : "static"
     } ]
   } ],
   "interfaces" : [ {

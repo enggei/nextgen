@@ -9,6 +9,9 @@ public class JavaSTTests {
 
 	@org.junit.Test
 	public void testAll() {
+		testArrayListType();
+		testListType();
+		testSetType();
 		testBean();
 		testBoundedListAccessors();
 		testBoundedPrimitiveAccessors();
@@ -99,12 +102,24 @@ public class JavaSTTests {
 		testWhileStmt();
 		testClassOrInterfaceType();
 		testTypeParameter();
-		testArrayListType();
-		testListType();
-		testSetType();
 		testNewInstance();
 		testSwitch();
 	}
+
+	@org.junit.Test
+	public void testArrayListType() {
+		System.out.println("\n--- TEST ArrayListType:\n" + newArrayListType());
+	} 
+
+	@org.junit.Test
+	public void testListType() {
+		System.out.println("\n--- TEST ListType:\n" + newListType());
+	} 
+
+	@org.junit.Test
+	public void testSetType() {
+		System.out.println("\n--- TEST SetType:\n" + newSetType());
+	} 
 
 	@org.junit.Test
 	public void testBean() {
@@ -554,21 +569,6 @@ public class JavaSTTests {
 	@org.junit.Test
 	public void testTypeParameter() {
 		System.out.println("\n--- TEST TypeParameter:\n" + newTypeParameter());
-	} 
-
-	@org.junit.Test
-	public void testArrayListType() {
-		System.out.println("\n--- TEST ArrayListType:\n" + newArrayListType());
-	} 
-
-	@org.junit.Test
-	public void testListType() {
-		System.out.println("\n--- TEST ListType:\n" + newListType());
-	} 
-
-	@org.junit.Test
-	public void testSetType() {
-		System.out.println("\n--- TEST SetType:\n" + newSetType());
 	} 
 
 	@org.junit.Test

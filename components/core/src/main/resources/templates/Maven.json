@@ -418,6 +418,31 @@
       "type" : "LIST",
       "argumentType" : "Dependency"
     } ]
+  }, {
+    "uuid" : "91b19c45-f3ae-457d-bfbd-dec7d697ba49",
+    "name" : "MavenProject",
+    "text" : "~projectName~\n\nroot : ~root~\nmainJava : ~mainJava~\ntestJava : ~testJava~ ",
+    "parameters" : [ {
+      "uuid" : "c2ecbab0-e2ef-422c-970c-91dc29259fc3",
+      "name" : "projectName",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "ccef079f-157e-4bf9-a4f4-bf2edecac7e1",
+      "name" : "root",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "ee6c97da-6f3d-49e0-b2ec-a805b438e0b3",
+      "name" : "mainJava",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "f4aeceda-f358-41dd-837a-f2eacc9c1721",
+      "name" : "testJava",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
   } ],
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Maven.stg",
   "enums" : [ {

@@ -1,5 +1,13 @@
 delimiters "~","~"
 
+CollectionTypes() ::= << >>
+
+ArrayListType(type) ::= <<java.util.ArrayList<~type~> >>
+
+ListType(type) ::= <<java.util.List<~type~> >>
+
+SetType(type) ::= <<java.util.Set<~type~>  >>
+
 Entities() ::= << >>
 
 Pojo(package,name,fields,fieldDeclarations,accessors,lexical) ::= <<package ~package~;
@@ -109,8 +117,6 @@ Bean(package,name,fields,fieldDeclarations,accessors,lexical) ::= <<package ~pac
 
 public class ~name~ {
 
-	public static boolean debug = false;
-	
 	private final java.util.UUID uuid;
 	~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator="\n"~
 	~fieldDeclarations:{it|~it~};separator="\n"~
@@ -153,12 +159,10 @@ public class ~name~ {
 	}
 
 	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
-		if (debug) System.out.println("~name~ add listener " + listener.getClass().getSimpleName());
 		this.pcs.addPropertyChangeListener(listener);
 	}
 
 	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
-		if (debug) System.out.println("~name~ rem listener " + listener.getClass().getSimpleName());
 		this.pcs.removePropertyChangeListener(listener);
 	}
 }  >>
@@ -431,14 +435,6 @@ classes:
 	~classes:{it|~it.name~};separator="\n"~ >>
 
 MemberValuePair(name,value) ::= <<~name~ = ~value~ >>
-
-JavaTypes() ::= << >>
-
-ArrayListType(type) ::= <<java.util.ArrayList<~type~> >>
-
-ListType(type) ::= <<java.util.List<~type~> >>
-
-SetType(type) ::= <<java.util.Set<~type~>  >>
 
 Patterns() ::= << >>
 

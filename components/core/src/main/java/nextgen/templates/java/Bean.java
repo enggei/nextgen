@@ -233,8 +233,6 @@ public class Bean {
 				"\n" + 
 				"public class ~name~ {\n" + 
 				"\n" + 
-				"	public static boolean debug = false;\n" + 
-				"	\n" + 
 				"	private final java.util.UUID uuid;\n" + 
 				"	~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n" + 
 				"	~fieldDeclarations:{it|~it~};separator=\"\\n\"~\n" + 
@@ -277,12 +275,10 @@ public class Bean {
 				"	}\n" + 
 				"\n" + 
 				"	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {\n" + 
-				"		if (debug) System.out.println(\"~name~ add listener \" + listener.getClass().getSimpleName());\n" + 
 				"		this.pcs.addPropertyChangeListener(listener);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {\n" + 
-				"		if (debug) System.out.println(\"~name~ rem listener \" + listener.getClass().getSimpleName());\n" + 
 				"		this.pcs.removePropertyChangeListener(listener);\n" + 
 				"	}\n" + 
 				"} >>";

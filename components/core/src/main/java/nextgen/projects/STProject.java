@@ -15,6 +15,8 @@ import java.io.File;
 import static nextgen.templates.DomainPatterns.*;
 import static nextgen.templates.Piccolo2DPatterns.*;
 import static nextgen.templates.TextPatterns.*;
+import static nextgen.templates.java.JavaST.newBlockStmt;
+import static nextgen.templates.java.JavaST.newForEachStmt;
 
 public class STProject {
 
@@ -247,9 +249,12 @@ public class STProject {
                 .addStatements("fieldMap.put(\"package\", new JTextField(getSTModelPackage(node.stModel, \"\"), 15));")
                 .addStatements("final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));")
                 .addStatements("inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));")
-                .addStatements(newLine("for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {", "}")
-                        .addChildren("inputPanel.add(new JLabel(fieldEntry.getKey()));")
-                        .addChildren("inputPanel.add(fieldEntry.getValue());"))
+                .addStatements(newForEachStmt()
+                        .setVariable("Map.Entry<String, JTextField> fieldEntry")
+                        .setIterable("fieldMap.entrySet()")
+                        .setBody(newBlockStmt()
+                                .addStatements("inputPanel.add(new JLabel(fieldEntry.getKey()));")
+                                .addStatements("inputPanel.add(fieldEntry.getValue());")))
                 .addStatements(newBlock()
                         .addLines(newLine("com.generator.util.SwingUtil.showDialog(inputPanel, canvas, \"New File sink\", new com.generator.util.SwingUtil.ConfirmAction() {", "});")
                                 .addChildren("@Override")
