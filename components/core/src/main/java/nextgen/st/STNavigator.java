@@ -430,6 +430,7 @@ public class STNavigator extends JPanel {
                             .setDelimiter(STGenerator.DELIMITER);
 
                     getModel().addGroups(stGroupModel);
+                    stGroups.add(stGroupModel);
 
                     SwingUtilities.invokeLater(() -> {
                         final STGroupTreeNode stGroupTreeNode = new STGroupTreeNode(stGroupModel);

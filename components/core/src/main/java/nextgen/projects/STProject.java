@@ -220,7 +220,7 @@ public class STProject {
                                 .addChildren(newLine("void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {", "}")
                                         .addChildren(newLine("SwingUtilities.invokeLater(() -> {", "});")
                                                 .addChildren("final STValue stValue = stArgument.getValue();")
-                                                .addChildren("canvas.addNode(new STValueNode(canvas, stRenderer.render(stValue).toString(), stValue.getUuid(), stValue, node.stRenderer));")))))
+                                                .addChildren("canvas.addNode(new STValueNode(canvas, stRenderer.render(stValue), stValue.getUuid(), stValue, node.stRenderer));")))))
                 .addRightClickStatements("if (open.getMenuComponentCount() != 0) pop.add(open);")
 
                 .addRightClickStatements("final JMenu remove = new JMenu(\"Remove\");")
@@ -251,7 +251,7 @@ public class STProject {
                         .addChildren("inputPanel.add(new JLabel(fieldEntry.getKey()));")
                         .addChildren("inputPanel.add(fieldEntry.getValue());"))
                 .addStatements(newBlock()
-                        .addLines(newLine("com.generator.util.SwingUtil.showDialog(inputPanel, canvas, \"New sink\", new com.generator.util.SwingUtil.ConfirmAction() {", "});")
+                        .addLines(newLine("com.generator.util.SwingUtil.showDialog(inputPanel, canvas, \"New File sink\", new com.generator.util.SwingUtil.ConfirmAction() {", "});")
                                 .addChildren("@Override")
                                 .addChildren(newLine("public void verifyAndCommit() throws Exception {", "}")
                                         .addChildren("final String name = fieldMap.get(\"name\").getText().trim();")
