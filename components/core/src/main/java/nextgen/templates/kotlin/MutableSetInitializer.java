@@ -1,6 +1,6 @@
 package nextgen.templates.kotlin;
 
-public class MutableSetInitializer implements Initializer, Expression {
+public class MutableSetInitializer implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -66,5 +66,5 @@ public class MutableSetInitializer implements Initializer, Expression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MutableSetInitializer(expressions) ::= <<setOf(~expressions:{it|~it~};separator=\", \"~) >>";
+	static final String st = "MutableSetInitializer(expressions) ::= <<mutableSetOf(~expressions:{it|~it~};separator=\", \"~) >>";
 }  

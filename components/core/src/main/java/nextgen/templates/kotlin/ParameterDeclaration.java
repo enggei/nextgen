@@ -1,16 +1,15 @@
 package nextgen.templates.kotlin;
 
-public class VarDeclarationStatement implements Statement {
+public class ParameterDeclaration implements ParameterDefinition {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Boolean _isMutable;
 	private String _name;
 	private TypeDeclaration _type;
 	private Expression _initializer;
 
-	VarDeclarationStatement(org.stringtemplate.v4.STGroup stGroup) {
+	ParameterDeclaration(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
@@ -20,37 +19,14 @@ public class VarDeclarationStatement implements Statement {
 
 	@Override
 	public String toString() {
-		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("VarDeclarationStatement");
-		st.add("isMutable", _isMutable);
+		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ParameterDeclaration");
 		st.add("name", _name);
 		st.add("type", _type);
 		st.add("initializer", _initializer);
 		return st.render().trim();
 	}
 
-	public VarDeclarationStatement setIsMutable(Boolean value) {
-		this._isMutable = value;
-		return this;
-	}
-
-	public Boolean getIsMutable() {
-		return this._isMutable;
-	}
-
-	public Boolean getIsMutable(Boolean defaultValue) {
-		return this._isMutable == null ? defaultValue : this._isMutable;
-	}
-
-	public boolean hasIsMutable() {
-		return this._isMutable != null;
-	}
-
-	public VarDeclarationStatement removeIsMutable() {
-		this._isMutable = null;
-		return this;
-	} 
-
-	public VarDeclarationStatement setName(String value) {
+	public ParameterDeclaration setName(String value) {
 		this._name = value;
 		return this;
 	}
@@ -67,12 +43,12 @@ public class VarDeclarationStatement implements Statement {
 		return this._name != null;
 	}
 
-	public VarDeclarationStatement removeName() {
+	public ParameterDeclaration removeName() {
 		this._name = null;
 		return this;
 	} 
 
-	public VarDeclarationStatement setType(TypeDeclaration value) {
+	public ParameterDeclaration setType(TypeDeclaration value) {
 		this._type = value;
 		return this;
 	}
@@ -89,12 +65,12 @@ public class VarDeclarationStatement implements Statement {
 		return this._type != null;
 	}
 
-	public VarDeclarationStatement removeType() {
+	public ParameterDeclaration removeType() {
 		this._type = null;
 		return this;
 	} 
 
-	public VarDeclarationStatement setInitializer(Expression value) {
+	public ParameterDeclaration setInitializer(Expression value) {
 		this._initializer = value;
 		return this;
 	}
@@ -111,7 +87,7 @@ public class VarDeclarationStatement implements Statement {
 		return this._initializer != null;
 	}
 
-	public VarDeclarationStatement removeInitializer() {
+	public ParameterDeclaration removeInitializer() {
 		this._initializer = null;
 		return this;
 	} 
@@ -122,7 +98,7 @@ public class VarDeclarationStatement implements Statement {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		VarDeclarationStatement that = (VarDeclarationStatement) o;
+		ParameterDeclaration that = (ParameterDeclaration) o;
 		return uuid.equals(that.uuid);
 	}
 
@@ -131,5 +107,5 @@ public class VarDeclarationStatement implements Statement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "VarDeclarationStatement(isMutable,name,type,initializer) ::= <<~if(isMutable)~var ~else~val ~endif~~name~~if(type)~: ~type~~endif~~if(initializer)~ = ~initializer~~endif~ >>";
+	static final String st = "ParameterDeclaration(name,type,initializer) ::= <<~name~: ~type~~if(initializer)~ = ~initializer~~endif~ >>";
 }  

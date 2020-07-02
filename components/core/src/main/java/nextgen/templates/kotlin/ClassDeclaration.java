@@ -9,10 +9,11 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 	private Boolean _isOpen;
 	private Boolean _isAbstract;
 	private String _name;
+	private CompanionObject _companionObject;
 	private OverrideEquals _overrideEquals;
 	private OverrideHashCode _overrideHashCode;
 	private OverrideToString _overrideToString;
-	private java.util.List<FieldDeclaration> _fields = new java.util.ArrayList<>();
+	private java.util.List<ParameterDefinition> _fields = new java.util.ArrayList<>();
 	private java.util.List<Extending> _extends = new java.util.ArrayList<>();
 	private java.util.List<FunctionDeclaration> _members = new java.util.ArrayList<>();
 	private java.util.List<ClassDefinition> _subclasses = new java.util.ArrayList<>();
@@ -32,6 +33,7 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 		st.add("isOpen", _isOpen);
 		st.add("isAbstract", _isAbstract);
 		st.add("name", _name);
+		st.add("companionObject", _companionObject);
 		st.add("overrideEquals", _overrideEquals);
 		st.add("overrideHashCode", _overrideHashCode);
 		st.add("overrideToString", _overrideToString);
@@ -130,6 +132,28 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 		return this;
 	} 
 
+	public ClassDeclaration setCompanionObject(CompanionObject value) {
+		this._companionObject = value;
+		return this;
+	}
+
+	public CompanionObject getCompanionObject() {
+		return this._companionObject;
+	}
+
+	public CompanionObject getCompanionObject(CompanionObject defaultValue) {
+		return this._companionObject == null ? defaultValue : this._companionObject;
+	}
+
+	public boolean hasCompanionObject() {
+		return this._companionObject != null;
+	}
+
+	public ClassDeclaration removeCompanionObject() {
+		this._companionObject = null;
+		return this;
+	} 
+
 	public ClassDeclaration setOverrideEquals(OverrideEquals value) {
 		this._overrideEquals = value;
 		return this;
@@ -196,22 +220,22 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 		return this;
 	} 
 
-	public ClassDeclaration addFields(FieldDeclaration value) {
+	public ClassDeclaration addFields(ParameterDefinition value) {
 		this._fields.add(value);
 		return this;
 	}
 
-	public ClassDeclaration setFields(FieldDeclaration[] value) {
+	public ClassDeclaration setFields(ParameterDefinition[] value) {
 		this._fields.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public ClassDeclaration setFields(java.util.Collection<FieldDeclaration> values) {
+	public ClassDeclaration setFields(java.util.Collection<ParameterDefinition> values) {
 		this._fields.addAll(values);
 		return this;
 	}
 
-	public ClassDeclaration removeFields(FieldDeclaration value) {
+	public ClassDeclaration removeFields(ParameterDefinition value) {
 		this._fields.remove(value);
 		return this;
 	}
@@ -221,7 +245,7 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 		return this;
 	}
 
-	public java.util.List<FieldDeclaration> getFields() {
+	public java.util.List<ParameterDefinition> getFields() {
 		return this._fields;
 	} 
 
@@ -326,10 +350,12 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,overrideEquals,overrideHashCode,overrideToString,members,subclasses) ::= <<~annotations~~if(annotations)~\n" + 
+	static final String st = "ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,companionObject,overrideEquals,overrideHashCode,overrideToString,members,subclasses) ::= <<~annotations~~if(annotations)~\n" + 
 				"~endif~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n" + 
 				"	~fields:{it|~it~};separator=\",\\n\"~\n" + 
 				")~if(extends)~: ~extends:{it|~it~};separator=\", \"~~endif~ {\n" + 
+				"\n" + 
+				"	~companionObject~\n" + 
 				"\n" + 
 				"	~overrideEquals~\n" + 
 				"\n" + 

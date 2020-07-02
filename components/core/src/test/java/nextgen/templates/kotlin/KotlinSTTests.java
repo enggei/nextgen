@@ -18,6 +18,7 @@ public class KotlinSTTests {
 		testFunctionCallExpression();
 		testLiteralExpression();
 		testNullExpression();
+		testObjectExpression();
 		testPairExpression();
 		testScopeExpression();
 		testSimpleStringExpression();
@@ -27,15 +28,20 @@ public class KotlinSTTests {
 		testAnnotationDeclaration();
 		testAnnotationParam();
 		testClassDeclaration();
+		testCompanionObject();
 		testOverrideEquals();
 		testOverrideHashCode();
 		testOverrideToString();
 		testDataClassDeclaration();
-		testExtending();
-		testFieldDeclaration();
+		testExtendingClass();
 		testFunctionDeclaration();
 		testFunctionParam();
+		testImplementingInterface();
+		testInterfaceDeclaration();
+		testObjectDeclaration();
 		testPackageDeclaration();
+		testParameterDeclaration();
+		testPropertyDeclaration();
 		testImportStatement();
 		testReturnStatement();
 		testTodoStatement();
@@ -43,12 +49,11 @@ public class KotlinSTTests {
 		testArrayInitializer();
 		testEmptyArrayInitializer();
 		testEmptyMapInitializer();
-		testExpressionInitializer();
 		testListInitializer();
 		testMapInitializer();
+		testMutableListInitializer();
 		testMutableMapInitializer();
 		testMutableSetInitializer();
-		testNullInitializer();
 		testSetInitializer();
 		testKotlinFile();
 		testAnyType();
@@ -117,6 +122,11 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
+	public void testObjectExpression() {
+		System.out.println("\n--- TEST ObjectExpression:\n" + newObjectExpression());
+	} 
+
+	@org.junit.Test
 	public void testPairExpression() {
 		System.out.println("\n--- TEST PairExpression:\n" + newPairExpression());
 	} 
@@ -162,6 +172,11 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
+	public void testCompanionObject() {
+		System.out.println("\n--- TEST CompanionObject:\n" + newCompanionObject());
+	} 
+
+	@org.junit.Test
 	public void testOverrideEquals() {
 		System.out.println("\n--- TEST OverrideEquals:\n" + newOverrideEquals());
 	} 
@@ -182,13 +197,8 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
-	public void testExtending() {
-		System.out.println("\n--- TEST Extending:\n" + newExtending());
-	} 
-
-	@org.junit.Test
-	public void testFieldDeclaration() {
-		System.out.println("\n--- TEST FieldDeclaration:\n" + newFieldDeclaration());
+	public void testExtendingClass() {
+		System.out.println("\n--- TEST ExtendingClass:\n" + newExtendingClass());
 	} 
 
 	@org.junit.Test
@@ -202,8 +212,33 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
+	public void testImplementingInterface() {
+		System.out.println("\n--- TEST ImplementingInterface:\n" + newImplementingInterface());
+	} 
+
+	@org.junit.Test
+	public void testInterfaceDeclaration() {
+		System.out.println("\n--- TEST InterfaceDeclaration:\n" + newInterfaceDeclaration());
+	} 
+
+	@org.junit.Test
+	public void testObjectDeclaration() {
+		System.out.println("\n--- TEST ObjectDeclaration:\n" + newObjectDeclaration());
+	} 
+
+	@org.junit.Test
 	public void testPackageDeclaration() {
 		System.out.println("\n--- TEST PackageDeclaration:\n" + newPackageDeclaration());
+	} 
+
+	@org.junit.Test
+	public void testParameterDeclaration() {
+		System.out.println("\n--- TEST ParameterDeclaration:\n" + newParameterDeclaration());
+	} 
+
+	@org.junit.Test
+	public void testPropertyDeclaration() {
+		System.out.println("\n--- TEST PropertyDeclaration:\n" + newPropertyDeclaration());
 	} 
 
 	@org.junit.Test
@@ -242,11 +277,6 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
-	public void testExpressionInitializer() {
-		System.out.println("\n--- TEST ExpressionInitializer:\n" + newExpressionInitializer());
-	} 
-
-	@org.junit.Test
 	public void testListInitializer() {
 		System.out.println("\n--- TEST ListInitializer:\n" + newListInitializer());
 	} 
@@ -257,6 +287,11 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
+	public void testMutableListInitializer() {
+		System.out.println("\n--- TEST MutableListInitializer:\n" + newMutableListInitializer());
+	} 
+
+	@org.junit.Test
 	public void testMutableMapInitializer() {
 		System.out.println("\n--- TEST MutableMapInitializer:\n" + newMutableMapInitializer());
 	} 
@@ -264,11 +299,6 @@ public class KotlinSTTests {
 	@org.junit.Test
 	public void testMutableSetInitializer() {
 		System.out.println("\n--- TEST MutableSetInitializer:\n" + newMutableSetInitializer());
-	} 
-
-	@org.junit.Test
-	public void testNullInitializer() {
-		System.out.println("\n--- TEST NullInitializer:\n" + newNullInitializer());
 	} 
 
 	@org.junit.Test

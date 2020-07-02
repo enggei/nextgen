@@ -14,6 +14,7 @@ public class KotlinST {
 	FunctionCallExpression.st + "\n" + 
 	LiteralExpression.st + "\n" + 
 	NullExpression.st + "\n" + 
+	ObjectExpression.st + "\n" + 
 	PairExpression.st + "\n" + 
 	ScopeExpression.st + "\n" + 
 	SimpleStringExpression.st + "\n" + 
@@ -23,15 +24,20 @@ public class KotlinST {
 	AnnotationDeclaration.st + "\n" + 
 	AnnotationParam.st + "\n" + 
 	ClassDeclaration.st + "\n" + 
+	CompanionObject.st + "\n" + 
 	OverrideEquals.st + "\n" + 
 	OverrideHashCode.st + "\n" + 
 	OverrideToString.st + "\n" + 
 	DataClassDeclaration.st + "\n" + 
-	Extending.st + "\n" + 
-	FieldDeclaration.st + "\n" + 
+	ExtendingClass.st + "\n" + 
 	FunctionDeclaration.st + "\n" + 
 	FunctionParam.st + "\n" + 
+	ImplementingInterface.st + "\n" + 
+	InterfaceDeclaration.st + "\n" + 
+	ObjectDeclaration.st + "\n" + 
 	PackageDeclaration.st + "\n" + 
+	ParameterDeclaration.st + "\n" + 
+	PropertyDeclaration.st + "\n" + 
 	ImportStatement.st + "\n" + 
 	ReturnStatement.st + "\n" + 
 	TodoStatement.st + "\n" + 
@@ -39,12 +45,11 @@ public class KotlinST {
 	ArrayInitializer.st + "\n" + 
 	EmptyArrayInitializer.st + "\n" + 
 	EmptyMapInitializer.st + "\n" + 
-	ExpressionInitializer.st + "\n" + 
 	ListInitializer.st + "\n" + 
 	MapInitializer.st + "\n" + 
+	MutableListInitializer.st + "\n" + 
 	MutableMapInitializer.st + "\n" + 
 	MutableSetInitializer.st + "\n" + 
-	NullInitializer.st + "\n" + 
 	SetInitializer.st + "\n" + 
 	KotlinFile.st + "\n" + 
 	AnyType.st + "\n" + 
@@ -136,6 +141,10 @@ public class KotlinST {
 		return new NullExpression(stGroup);
 	} 
 
+	public static ObjectExpression newObjectExpression() {
+		return new ObjectExpression(stGroup);
+	} 
+
 	public static PairExpression newPairExpression() {
 		return new PairExpression(stGroup);
 	} 
@@ -172,6 +181,10 @@ public class KotlinST {
 		return new ClassDeclaration(stGroup);
 	} 
 
+	public static CompanionObject newCompanionObject() {
+		return new CompanionObject(stGroup);
+	} 
+
 	public static OverrideEquals newOverrideEquals() {
 		return new OverrideEquals(stGroup);
 	} 
@@ -188,12 +201,8 @@ public class KotlinST {
 		return new DataClassDeclaration(stGroup);
 	} 
 
-	public static Extending newExtending() {
-		return new Extending(stGroup);
-	} 
-
-	public static FieldDeclaration newFieldDeclaration() {
-		return new FieldDeclaration(stGroup);
+	public static ExtendingClass newExtendingClass() {
+		return new ExtendingClass(stGroup);
 	} 
 
 	public static FunctionDeclaration newFunctionDeclaration() {
@@ -204,8 +213,28 @@ public class KotlinST {
 		return new FunctionParam(stGroup);
 	} 
 
+	public static ImplementingInterface newImplementingInterface() {
+		return new ImplementingInterface(stGroup);
+	} 
+
+	public static InterfaceDeclaration newInterfaceDeclaration() {
+		return new InterfaceDeclaration(stGroup);
+	} 
+
+	public static ObjectDeclaration newObjectDeclaration() {
+		return new ObjectDeclaration(stGroup);
+	} 
+
 	public static PackageDeclaration newPackageDeclaration() {
 		return new PackageDeclaration(stGroup);
+	} 
+
+	public static ParameterDeclaration newParameterDeclaration() {
+		return new ParameterDeclaration(stGroup);
+	} 
+
+	public static PropertyDeclaration newPropertyDeclaration() {
+		return new PropertyDeclaration(stGroup);
 	} 
 
 	public static ImportStatement newImportStatement() {
@@ -236,10 +265,6 @@ public class KotlinST {
 		return new EmptyMapInitializer(stGroup);
 	} 
 
-	public static ExpressionInitializer newExpressionInitializer() {
-		return new ExpressionInitializer(stGroup);
-	} 
-
 	public static ListInitializer newListInitializer() {
 		return new ListInitializer(stGroup);
 	} 
@@ -248,16 +273,16 @@ public class KotlinST {
 		return new MapInitializer(stGroup);
 	} 
 
+	public static MutableListInitializer newMutableListInitializer() {
+		return new MutableListInitializer(stGroup);
+	} 
+
 	public static MutableMapInitializer newMutableMapInitializer() {
 		return new MutableMapInitializer(stGroup);
 	} 
 
 	public static MutableSetInitializer newMutableSetInitializer() {
 		return new MutableSetInitializer(stGroup);
-	} 
-
-	public static NullInitializer newNullInitializer() {
-		return new NullInitializer(stGroup);
 	} 
 
 	public static SetInitializer newSetInitializer() {

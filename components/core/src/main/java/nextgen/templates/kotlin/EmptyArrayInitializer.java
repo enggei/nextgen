@@ -1,6 +1,6 @@
 package nextgen.templates.kotlin;
 
-public class EmptyArrayInitializer implements Initializer, Expression {
+public class EmptyArrayInitializer implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;

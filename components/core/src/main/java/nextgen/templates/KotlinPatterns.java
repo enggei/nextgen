@@ -8,12 +8,30 @@ import java.util.stream.Collectors;
 
 public class KotlinPatterns extends KotlinST {
 
-   public static Expression asThisExpression(FieldDeclaration fieldDeclaration) {
-      return newThisExpression().setExpression(newLiteralExpression().setLiteral(fieldDeclaration.getName()));
+   public static String getNameFromParameterDefinition(ParameterDefinition parameterDefinition) {
+       if (parameterDefinition instanceof PropertyDeclaration) {
+           return ((PropertyDeclaration)parameterDefinition).getName();
+       } else if(parameterDefinition instanceof ParameterDeclaration) {
+           return ((ParameterDeclaration)parameterDefinition).getName();
+       }
+       return null;
    }
 
-   public static Expression asScopeExpression(String scope, FieldDeclaration fieldDeclaration) {
-      return newScopeExpression().setScope(scope).setExpression(newLiteralExpression().setLiteral(fieldDeclaration.getName()));
+   public static TypeDeclaration getTypeFromParameterDefinition(ParameterDefinition parameterDefinition) {
+       if (parameterDefinition instanceof PropertyDeclaration) {
+           return ((PropertyDeclaration)parameterDefinition).getType();
+       } else if(parameterDefinition instanceof ParameterDeclaration) {
+           return ((ParameterDeclaration)parameterDefinition).getType();
+       }
+       return null;
+   }
+
+   public static Expression asThisExpression(ParameterDefinition parameterDefinition) {
+      return newThisExpression().setExpression(newLiteralExpression().setLiteral(getNameFromParameterDefinition(parameterDefinition)));
+   }
+
+   public static Expression asScopeExpression(String scope, ParameterDefinition parameterDefinition) {
+      return newScopeExpression().setScope(scope).setExpression(newLiteralExpression().setLiteral(getNameFromParameterDefinition(parameterDefinition)));
    }
 
    public static Expression asFunctionCallExpression(String scope, String functionName) {
@@ -24,65 +42,70 @@ public class KotlinPatterns extends KotlinST {
       return newFunctionCallExpression().setScope(scope).setFunctionName(functionName).setArguments(arguments);
    }
 
-   public static OverrideEquals createEqualsFunction(String className, Collection<FieldDeclaration> fields) {
+   public static Expression createEqualsExpression(ParameterDefinition parameterDefinition) {
+       if (getTypeFromParameterDefinition(parameterDefinition) instanceof ArrayType) {
+           return newArrayEqualsExpression()
+               .setLeftArray(asThisExpression(parameterDefinition))
+               .setRightArray(asScopeExpression("other", parameterDefinition));
+       } else {
+           return newEqualsExpression().setLhs(asThisExpression(parameterDefinition)).setRhs(asScopeExpression("other", parameterDefinition));
+       }
+   }
+
+   public static OverrideEquals createEqualsFunction(String className, Collection<ParameterDefinition> fields) {
       return newOverrideEquals()
          .setClassName(className)
          .setFields(fields.stream()
-            .map(fieldDeclaration -> {
-               if (fieldDeclaration.getType() instanceof ArrayType) {
-                  return newArrayEqualsExpression()
-                     .setLeftArray(asThisExpression(fieldDeclaration))
-                     .setRightArray(asScopeExpression("other", fieldDeclaration));
-               } else {
-                  return newEqualsExpression().setLhs(asThisExpression(fieldDeclaration)).setRhs(asScopeExpression("other", fieldDeclaration));
-               }
-            })
+            .map(KotlinPatterns::createEqualsExpression)
             .collect(Collectors.toList()));
    }
 
-   public static OverrideHashCode createHashCodeFunction(FieldDeclaration field) {
+   public static OverrideHashCode createHashCodeFunction(ParameterDefinition field) {
       return newOverrideHashCode()
          .setReturnStatement(newReturnStatement()
             .setExpression(newFunctionCallExpression().setScope("Objects").setFunctionName("hash")
-               .setArguments(Collections.singletonList(newLiteralExpression().setLiteral(field.getName())))));
+               .setArguments(Collections.singletonList(newLiteralExpression().setLiteral(getNameFromParameterDefinition(field))))));
    }
 
-   public static OverrideToString createToStringFunction(String className, Collection<FieldDeclaration> fields) {
+   public static ToStringExpression createToStringExpression(ParameterDefinition parameterDefinition) {
+       String name = getNameFromParameterDefinition(parameterDefinition);
+       ToStringExpression tse = newToStringExpression()
+               .setName(name);
+       if (getTypeFromParameterDefinition(parameterDefinition) instanceof ArrayType) {
+           tse.setStringExpression(
+                   newComplexStringExpression().setExpression(asFunctionCallExpression(name, "contentToString"))
+           );
+       } else {
+           tse.setStringExpression(
+                   newSimpleStringExpression().setExpression(newLiteralExpression().setLiteral(name))
+           );
+       }
+       return tse;
+   }
+
+   public static OverrideToString createToStringFunction(String className, Collection<ParameterDefinition> fields) {
       return newOverrideToString()
          .setClassName(className)
          .setFields(fields.stream()
-            .map(fieldDeclaration -> {
-               ToStringExpression tse = newToStringExpression()
-                       .setName(fieldDeclaration.getName());
-               if (fieldDeclaration.getType() instanceof ArrayType) {
-                   tse.setStringExpression(
-                           newComplexStringExpression().setExpression(asFunctionCallExpression(fieldDeclaration.getName(), "contentToString"))
-                   );
-               } else {
-                   tse.setStringExpression(
-                           newSimpleStringExpression().setExpression(newLiteralExpression().setLiteral(fieldDeclaration.getName()))
-                   );
-               }
-               return tse;
-            })
+            .map(KotlinPatterns::createToStringExpression)
             .collect(Collectors.toList()));
    }
 
-   public static FunctionDeclaration createCopyFunction(String className, Collection<FieldDeclaration> fields) {
+   public static FunctionDeclaration createCopyFunction(String className, Collection<ParameterDefinition> fields) {
       return newFunctionDeclaration()
               .setName("copy")
               .setReturnType(newNamedType().setName(className))
               .setParams(fields.stream()
                       .map(fieldDeclaration -> newFunctionParam()
-                              .setName(fieldDeclaration.getName())
-                              .setTypeDeclaration(fieldDeclaration.getType())
+                              .setName(getNameFromParameterDefinition(fieldDeclaration))
+                              .setTypeDeclaration(getTypeFromParameterDefinition(fieldDeclaration))
                               .setDefaultValue(asThisExpression(fieldDeclaration)))
                       .collect(Collectors.toList())
               )
               .setExpressionBody(newConstructorCallExpression()
                       .setClassName(className)
                       .setParams(fields.stream()
-                              .map(fieldDeclaration -> newLiteralExpression().setLiteral(fieldDeclaration.getName()))
+                              .map(fieldDeclaration -> newLiteralExpression().setLiteral(getNameFromParameterDefinition(fieldDeclaration)))
                               .map(fieldName -> newAssignExpression()
                                   .setVarName(fieldName)
                                   .setExpression(fieldName))
@@ -90,12 +113,28 @@ public class KotlinPatterns extends KotlinST {
               );
    }
 
-   public static FieldDeclaration newFieldDeclaration(TypeDeclaration typeDeclaration, String name) {
-      return newFieldDeclaration(typeDeclaration, name, false);
+   public static ParameterDeclaration newParameterDeclaration(TypeDeclaration typeDeclaration, String name) {
+       return KotlinST.newParameterDeclaration().setName(name).setType(typeDeclaration);
    }
 
-   public static FieldDeclaration newFieldDeclaration(TypeDeclaration typeDeclaration, String name, Boolean mutable) {
-      return newFieldDeclaration().setName(name).setType(typeDeclaration).setIsMutable(mutable);
+   public static ParameterDeclaration newParameterDeclaration(TypeDeclaration typeDeclaration, String name, Expression initializer) {
+       return KotlinST.newParameterDeclaration().setName(name).setType(typeDeclaration).setInitializer(initializer);
+   }
+
+   public static PropertyDeclaration newPropertyDeclaration(TypeDeclaration typeDeclaration, String name) {
+      return KotlinST.newPropertyDeclaration().setName(name).setType(typeDeclaration);
+   }
+
+   public static PropertyDeclaration newPropertyDeclaration(TypeDeclaration typeDeclaration, String name, Boolean mutable) {
+      return KotlinST.newPropertyDeclaration().setName(name).setType(typeDeclaration).setIsMutable(mutable);
+   }
+
+   public static PropertyDeclaration newPropertyDeclaration(TypeDeclaration typeDeclaration, String name, Expression initializer, Boolean mutable) {
+      return KotlinST.newPropertyDeclaration().setName(name).setType(typeDeclaration).setInitializer(initializer).setIsMutable(mutable);
+   }
+
+   public static PropertyDeclaration newPropertyDeclaration(TypeDeclaration typeDeclaration, String name, Expression initializer) {
+      return KotlinST.newPropertyDeclaration().setName(name).setType(typeDeclaration).setInitializer(initializer);
    }
 
    public static ClassDeclaration newClassDeclaration(String name) {
@@ -106,7 +145,23 @@ public class KotlinPatterns extends KotlinST {
       return newDataClassDeclaration().setName(name);
    }
 
+   public static InterfaceDeclaration newInterfaceDeclaration(String name) {
+      return newInterfaceDeclaration().setName(name);
+   }
+
    public static NullableType newNullableType(TypeDeclaration typeDeclaration) {
       return newNullableType().setType(typeDeclaration);
+   }
+
+   public static Extending newImplementingInterface(String name) {
+       return newImplementingInterface().setInterfaceName(name);
+   }
+
+   public static Extending newExtendingClass(String name) {
+       return KotlinST.newExtendingClass().setClassName(name);
+   }
+
+   public static Extending newExtendingClass(String name, Collection<Expression> params) {
+       return KotlinST.newExtendingClass().setClassName(name).setParams(params);
    }
 }
