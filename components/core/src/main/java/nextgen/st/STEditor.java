@@ -1,10 +1,7 @@
 package nextgen.st;
 
 import com.generator.util.SwingUtil;
-import nextgen.st.domain.STGError;
-import nextgen.st.domain.STGParseResult;
-import nextgen.st.domain.STParameter;
-import nextgen.st.domain.STTemplate;
+import nextgen.st.domain.*;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
@@ -235,6 +232,40 @@ public class STEditor extends JPanel {
                             if (parsedParameter.getName().equals(existingParameter.getName()) && parsedParameter.getType().equals(existingParameter.getType())) {
                                 System.out.println("unchanged parameter " + parsedParameter.getName());
                                 newParameters.put(existingParameter.getName(), existingParameter);
+
+                                if (existingParameter.getType().equals(STParameterType.KVLIST)) {
+
+                                    final List<STParameterKey> existingKeys = existingParameter.getKeys().collect(Collectors.toList());
+                                    final List<STParameterKey> parsedKeys = parsedParameter.getKeys().collect(Collectors.toList());
+
+                                    for (int i = existingKeys.size() - 1; i >= 0; i--) {
+                                        STParameterKey existingKey = existingKeys.get(i);
+                                        boolean foundExistingKey = false;
+                                        for (STParameterKey parsedKey : parsedKeys) {
+                                            if (parsedKey.getName().equals(existingKey.getName())) {
+                                                foundExistingKey = true;
+                                                break;
+                                            }
+                                        }
+                                        if (!foundExistingKey)
+                                            existingParameter.removeKeys(existingKey);
+                                    }
+
+                                    for (STParameterKey parsedKey : parsedKeys) {
+
+                                        boolean foundExistingKey = false;
+                                        for (STParameterKey existingKey : existingKeys) {
+                                            if (existingKey.getName().equals(parsedKey.getName())) {
+                                                foundExistingKey = true;
+                                                break;
+                                            }
+                                        }
+
+                                        if (!foundExistingKey)
+                                            existingParameter.addKeys(parsedKey);
+                                    }
+                                }
+
                                 foundExisting = true;
                                 break;
                             }

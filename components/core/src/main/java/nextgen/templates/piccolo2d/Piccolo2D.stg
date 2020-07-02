@@ -1,6 +1,6 @@
 delimiters "~","~"
 
-PCanvas(packageName,name,nodeName,relationName,onRightClick,onKeyPressed,actions) ::= <<package ~packageName~;
+PCanvas(packageName,name,nodeName,relationName,fields,onRightClick,onKeyPressed,actions) ::= <<package ~packageName~;
 
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PCanvas;
@@ -37,12 +37,14 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 	
 	private final SelectEventsHandler selectEventHandler = new SelectEventsHandler();
 	private final CanvasInputEventsHandler canvasInputEventsHandler = new CanvasInputEventsHandler();
+
+	~fields:{it|~it.type~ ~it.name~;};separator="\n"~
 	
-	public ~name~() {
-		this(Color.WHITE, new Dimension(1024, 768));
+	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=","~) {
+		this(~fields:{it|~it.name~};separator=", "~~if(fields)~, ~endif~Color.WHITE, new Dimension(1024, 768));
 	}
 	
-	public ~name~(Color background, Dimension preferredSize) {
+	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=", "~~if(fields)~, ~endif~Color background, Dimension preferredSize) {
 		super();
 		setBackground(background);
 		setPreferredSize(preferredSize);
@@ -52,6 +54,7 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 		removeInputEventListener(getZoomEventHandler());
 		addInputEventListener(new CanvasZoomHandler());
 		addInputEventListener(canvasInputEventsHandler);
+		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
 	}
 
 	@Override
@@ -820,9 +823,10 @@ case VK_~it.key~:
 	~actions:{it|~it~};separator="\n\n"~
 }  >>
 
-nodeMethod(returnValue,name,params,statements,returnStatement) ::= <<public ~if(returnValue)~~returnValue~~else~void~endif~ ~name~(~params:{it|~it.name~ ~it.value~};separator=","~) {
+nodeMethod(returnValue,name,params,statements,returnStatement) ::= <<public ~if(returnValue)~~returnValue~~else~void~endif~ ~name~(~params:{it|~it.type~ ~it.name~};separator=","~) {
 	~statements:{it|~it~};separator="\n"~~if(returnValue)~
 	return ~returnStatement~~endif~
+	
 }  >>
 
 PRelation(packageName,name,canvasName,nodeName,onRightClickActions) ::= <<package ~packageName~;

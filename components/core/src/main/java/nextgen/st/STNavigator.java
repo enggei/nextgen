@@ -37,6 +37,8 @@ public class STNavigator extends JPanel {
     private final JTabbedPane tabbedPane;
     private final DefaultTreeModel treeModel;
 
+    STRenderer stRenderer;
+
     public STNavigator(STAppModel appModel, JTabbedPane contentPanel) {
         super(new BorderLayout());
 
@@ -373,7 +375,13 @@ public class STNavigator extends JPanel {
                     .addGroups(new STGroupModel(new JsonObject(STParser.read(new File(jsonFileDir, appModel.getGeneratorName() + ".json")))))
             ));
 
-            appModel.getDirectories().forEach(stgDirectory -> add(new STGDirectoryTreeNode(stgDirectory)));
+            final Set<STGroupModel> stGroups = new LinkedHashSet<>();
+            appModel.getDirectories().forEach(stgDirectory -> {
+                final STGDirectoryTreeNode stgDirectoryTreeNode = new STGDirectoryTreeNode(stgDirectory);
+                add(stgDirectoryTreeNode);
+                stGroups.addAll(stgDirectoryTreeNode.stGroups);
+            });
+            stRenderer = new STRenderer(stGroups);
         }
 
         public STGroupModel getGenerator() {
@@ -382,17 +390,15 @@ public class STNavigator extends JPanel {
 
         class STGDirectoryTreeNode extends BaseTreeNode<STGDirectory> {
 
-            private final STRenderer stRenderer;
+            final Set<STGroupModel> stGroups = new LinkedHashSet<>();
 
             public STGDirectoryTreeNode(STGDirectory model) {
                 super(model, "STGDirectory");
 
-                final Set<STGroupModel> stGroups = new LinkedHashSet<>();
                 model.getGroups().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stGroupModel -> {
                     stGroups.add(stGroupModel);
                     add(new STGroupTreeNode(stGroupModel));
                 });
-                stRenderer = new STRenderer(stGroups);
             }
 
             @Override
@@ -717,7 +723,7 @@ public class STNavigator extends JPanel {
                                 findCanvas(tabbedPane).ifPresent(stCanvas -> {
                                     SwingUtilities.invokeLater(() -> {
                                         final STValue stValue = STModelPatterns.newSTValue(stEnumValue);
-                                        stCanvas.addNode(new STValueNode(stCanvas, stEnumValue.getLexical(), stValue.getUuid(), stValue));
+                                        stCanvas.addNode(new STValueNode(stCanvas, stEnumValue.getLexical(), stValue.getUuid(), stValue, stRenderer));
                                         tabbedPane.setSelectedComponent(stCanvas);
                                         stCanvas.requestFocusInWindow();
                                     });

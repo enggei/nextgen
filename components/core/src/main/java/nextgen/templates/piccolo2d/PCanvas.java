@@ -10,6 +10,7 @@ public class PCanvas {
 	private String _nodeName;
 	private String _relationName;
 	private java.util.List<Object> _actions = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _onRightClick = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _onKeyPressed = new java.util.ArrayList<>();
 
@@ -29,6 +30,7 @@ public class PCanvas {
 		st.add("nodeName", _nodeName);
 		st.add("relationName", _relationName);
 		for (Object o : _actions) st.add("actions", o);
+		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
 		for (java.util.Map<String, Object> map : _onRightClick) st.addAggr("onRightClick.{name}", map.get("name"));
 		for (java.util.Map<String, Object> map : _onKeyPressed) st.addAggr("onKeyPressed.{key,name}", map.get("key"), map.get("name"));
 		return st.render().trim();
@@ -151,6 +153,51 @@ public class PCanvas {
 		return this._actions;
 	} 
 
+	public PCanvas addFields(Object _type, Object _name) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("type", _type);
+		map.put("name", _name);
+		this._fields.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getFields() {
+		return this._fields;
+	}
+
+	public PCanvas addFields(PCanvas_Fields value) {
+		return addFields(value._type, value._name);
+	}
+
+	public java.util.stream.Stream<PCanvas_Fields> streamFields() {
+		return this._fields.stream().map(PCanvas_Fields::new);
+	}
+
+	public static final class PCanvas_Fields {
+
+		Object _type;
+		Object _name;
+
+		public PCanvas_Fields(Object _type, Object _name) {
+			this._type = _type;
+			this._name = _name;
+		}
+
+		private PCanvas_Fields(java.util.Map<String, Object> map) {
+			this._type = (Object) map.get("type");
+			this._name = (Object) map.get("name");
+		}
+
+		public Object getType() {
+			return this._type;
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+	} 
+
 	public PCanvas addOnRightClick(Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("name", _name);
@@ -246,7 +293,7 @@ public class PCanvas {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PCanvas(packageName,name,nodeName,relationName,onRightClick,onKeyPressed,actions) ::= <<package ~packageName~;\n" + 
+	static final String st = "PCanvas(packageName,name,nodeName,relationName,fields,onRightClick,onKeyPressed,actions) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import org.piccolo2d.PCamera;\n" + 
 				"import org.piccolo2d.PCanvas;\n" + 
@@ -283,12 +330,14 @@ public class PCanvas {
 				"	\n" + 
 				"	private final SelectEventsHandler selectEventHandler = new SelectEventsHandler();\n" + 
 				"	private final CanvasInputEventsHandler canvasInputEventsHandler = new CanvasInputEventsHandler();\n" + 
+				"\n" + 
+				"	~fields:{it|~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
 				"	\n" + 
-				"	public ~name~() {\n" + 
-				"		this(Color.WHITE, new Dimension(1024, 768));\n" + 
+				"	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=\",\"~) {\n" + 
+				"		this(~fields:{it|~it.name~};separator=\", \"~~if(fields)~, ~endif~Color.WHITE, new Dimension(1024, 768));\n" + 
 				"	}\n" + 
 				"	\n" + 
-				"	public ~name~(Color background, Dimension preferredSize) {\n" + 
+				"	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=\", \"~~if(fields)~, ~endif~Color background, Dimension preferredSize) {\n" + 
 				"		super();\n" + 
 				"		setBackground(background);\n" + 
 				"		setPreferredSize(preferredSize);\n" + 
@@ -298,6 +347,7 @@ public class PCanvas {
 				"		removeInputEventListener(getZoomEventHandler());\n" + 
 				"		addInputEventListener(new CanvasZoomHandler());\n" + 
 				"		addInputEventListener(canvasInputEventsHandler);\n" + 
+				"		~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 

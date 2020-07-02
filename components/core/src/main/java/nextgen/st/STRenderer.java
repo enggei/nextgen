@@ -108,7 +108,7 @@ public class STRenderer {
         return kv.toString();
     }
 
-    public Object render(STValue value) {
+    public String render(STValue value) {
         if (value == null) return null;
 
         switch (value.getType()) {
@@ -154,7 +154,6 @@ public class STRenderer {
             if (stGroup == null || (System.currentTimeMillis() - lastUpdated > 2000L)) {
                 stGroup = STGenerator.toSTGroup(groupModel);
                 lastUpdated = System.currentTimeMillis();
-                System.out.println("cache updated for " + groupModel.getName());
             }
 
             return stGroup.getInstanceOf(stTemplate.getName());
