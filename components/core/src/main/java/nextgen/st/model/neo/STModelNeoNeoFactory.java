@@ -48,6 +48,46 @@ public class STModelNeoNeoFactory {
 		return returnValue;
 	}
 
+	public STModelNeo newSTModelNeo() { 
+		return newSTModelNeo(db.createNode(org.neo4j.graphdb.Label.label("STModelNeo")));
+	}
+
+	public STModelNeo newSTModelNeo(org.neo4j.graphdb.Node node) { 
+		return new STModelNeo(node);
+	}
+
+	public java.util.stream.Stream<STModelNeo> findAllSTModelNeo() { 
+		return db.findNodes(org.neo4j.graphdb.Label.label("STModelNeo")).stream().map(this::newSTModelNeo);
+	}
+
+	public STModelNeo findSTModelNeoByUuid(String value) {
+		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STModelNeo"), "uuid", value);
+		return node == null ? null : new STModelNeo(node);
+	}
+
+	public STModelNeo findOrCreateSTModelNeoByUuid(String value) {
+		final STModelNeo existing = findSTModelNeoByUuid(value);
+		return existing == null ? newSTModelNeo().setUuid(value) : existing;
+	}
+
+	public java.util.stream.Stream<STModelNeo> findAllSTModelNeoByUuid(String value) {
+		return db.findNodes(org.neo4j.graphdb.Label.label("STModelNeo"), "uuid", value).stream().map(this::newSTModelNeo);
+	}
+
+	public STModelNeo findSTModelNeoByStTemplate(String value) {
+		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STModelNeo"), "stTemplate", value);
+		return node == null ? null : new STModelNeo(node);
+	}
+
+	public STModelNeo findOrCreateSTModelNeoByStTemplate(String value) {
+		final STModelNeo existing = findSTModelNeoByStTemplate(value);
+		return existing == null ? newSTModelNeo().setStTemplate(value) : existing;
+	}
+
+	public java.util.stream.Stream<STModelNeo> findAllSTModelNeoByStTemplate(String value) {
+		return db.findNodes(org.neo4j.graphdb.Label.label("STModelNeo"), "stTemplate", value).stream().map(this::newSTModelNeo);
+	}
+
 	public STFileNeo newSTFileNeo() { 
 		return newSTFileNeo(db.createNode(org.neo4j.graphdb.Label.label("STFileNeo")));
 	}
@@ -128,46 +168,6 @@ public class STModelNeoNeoFactory {
 
 	public java.util.stream.Stream<STFileNeo> findAllSTFileNeoByPath(String value) {
 		return db.findNodes(org.neo4j.graphdb.Label.label("STFileNeo"), "path", value).stream().map(this::newSTFileNeo);
-	}
-
-	public STModelNeo newSTModelNeo() { 
-		return newSTModelNeo(db.createNode(org.neo4j.graphdb.Label.label("STModelNeo")));
-	}
-
-	public STModelNeo newSTModelNeo(org.neo4j.graphdb.Node node) { 
-		return new STModelNeo(node);
-	}
-
-	public java.util.stream.Stream<STModelNeo> findAllSTModelNeo() { 
-		return db.findNodes(org.neo4j.graphdb.Label.label("STModelNeo")).stream().map(this::newSTModelNeo);
-	}
-
-	public STModelNeo findSTModelNeoByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STModelNeo"), "uuid", value);
-		return node == null ? null : new STModelNeo(node);
-	}
-
-	public STModelNeo findOrCreateSTModelNeoByUuid(String value) {
-		final STModelNeo existing = findSTModelNeoByUuid(value);
-		return existing == null ? newSTModelNeo().setUuid(value) : existing;
-	}
-
-	public java.util.stream.Stream<STModelNeo> findAllSTModelNeoByUuid(String value) {
-		return db.findNodes(org.neo4j.graphdb.Label.label("STModelNeo"), "uuid", value).stream().map(this::newSTModelNeo);
-	}
-
-	public STModelNeo findSTModelNeoByStTemplate(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STModelNeo"), "stTemplate", value);
-		return node == null ? null : new STModelNeo(node);
-	}
-
-	public STModelNeo findOrCreateSTModelNeoByStTemplate(String value) {
-		final STModelNeo existing = findSTModelNeoByStTemplate(value);
-		return existing == null ? newSTModelNeo().setStTemplate(value) : existing;
-	}
-
-	public java.util.stream.Stream<STModelNeo> findAllSTModelNeoByStTemplate(String value) {
-		return db.findNodes(org.neo4j.graphdb.Label.label("STModelNeo"), "stTemplate", value).stream().map(this::newSTModelNeo);
 	}
 
 	public STArgumentNeo newSTArgumentNeo() { 

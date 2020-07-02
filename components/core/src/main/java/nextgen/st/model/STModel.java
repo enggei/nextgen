@@ -3,6 +3,7 @@ package nextgen.st.model;
 public class STModel {
 
 	private final java.util.UUID uuid;
+	private STFile _file;
 	private nextgen.st.domain.STTemplate _stTemplate;
 	private java.util.List<STArgument> _arguments = new java.util.ArrayList<>();
 
@@ -19,6 +20,24 @@ public class STModel {
 	public java.util.UUID getUuid() {
 		return this.uuid;
 	}	
+
+	public STFile getFile() {
+		return this._file;
+	}
+
+	public STModel setFile(STFile value) {
+		STFile oldValue = this._file;
+		this._file = value;
+		this.pcs.firePropertyChange("file", oldValue, value);
+		return this;
+	}
+
+	public STModel removeFile() {
+		STFile oldValue = this._file;
+		this._file = null;
+		this.pcs.firePropertyChange("file", oldValue, null);
+		return this;
+	}
 
 	public nextgen.st.domain.STTemplate getStTemplate() {
 		return this._stTemplate;

@@ -150,6 +150,10 @@ public class STFileNeo {
 		return this;
 	}
 
+	public java.util.stream.Stream<STModelNeo> getIncomingFile() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("file")).spliterator(), false).map((relationship) -> new STModelNeo(relationship.getOtherNode(node)));
+	}
+
 	@Override
 	public String toString() {
 		return "";

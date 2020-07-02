@@ -408,7 +408,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 					final String packageName = fieldMap.get("package").getText().trim();
 					SwingUtilities.invokeLater(() -> {
 						final nextgen.st.model.STFile stFile = nextgen.st.STModelPatterns.newSTFile(name, type, path, packageName);
-						canvas.addNode(new STFileNode(canvas, "File : " + path + java.io.File.separator + (packageName.length() == 0 ? "" : packageName + ".") + name + "." + type, stFile.getUuid(), stFile, null, null));
+						canvas.addNode(new STFileNode(canvas, nextgen.st.STGenerator.asFile(stFile).getAbsolutePath(), stFile.getUuid(), stFile, null, null));
 					});
 				}
 			});
@@ -423,7 +423,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 		@Override
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
-			SwingUtilities.invokeLater(() -> canvas.getAllNodes().forEach(STNode::select));
+			javax.swing.SwingUtilities.invokeLater(() -> canvas.getAllNodes().forEach(STNode::select));
 		}
 	}
 
@@ -435,7 +435,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 		@Override
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
-			SwingUtilities.invokeLater(() -> canvas.getSelectedNodes().forEach(STNode::unselect));
+			javax.swing.SwingUtilities.invokeLater(() -> canvas.getSelectedNodes().forEach(STNode::unselect));
 		}
 	}
 
@@ -447,7 +447,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 		@Override
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
-			SwingUtilities.invokeLater(() -> canvas.getSelectedNodes().forEach(STNode::close));
+			javax.swing.SwingUtilities.invokeLater(() -> canvas.getSelectedNodes().forEach(STNode::close));
 		}
 	}
 

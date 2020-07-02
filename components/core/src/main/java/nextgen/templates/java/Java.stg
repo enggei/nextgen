@@ -448,6 +448,10 @@ case ~it.trigger~: {
 \}};separator="\n"~
 }  >>
 
+InvokeLater(methodReference,statement,statements) ::= <<javax.swing.SwingUtilities.invokeLater(~if(methodReference)~~methodReference~~else~() -> ~if(statement)~~statement~~else~ {
+	~statements:{it|~it~};separator="\n"~	
+}~endif~~endif~);  >>
+
 eom() ::= "}"
 
 gt() ::= ">"

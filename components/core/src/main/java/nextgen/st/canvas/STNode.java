@@ -381,19 +381,19 @@ public class STNode extends PNode implements PropertyChangeListener {
 
 		@Override
 		void actionPerformed(STNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			SwingUtilities.invokeLater(() -> canvas.getAllNodes().filter(canvasNode -> !canvasNode.getUuid().equals(node.getUuid())).forEach(STNode::close));
+			javax.swing.SwingUtilities.invokeLater(() -> canvas.getAllNodes().filter(canvasNode -> !canvasNode.getUuid().equals(node.getUuid())).forEach(STNode::close));
 		}
 	}
 
 	private static final class CloseNode extends NodeAction<STNode> {
 
 		CloseNode(STNode node, STCanvas canvas, PInputEvent event) {
-			super("Close node", node, canvas, event);
+			super("Close", node, canvas, event);
 		}
 
 		@Override
 		void actionPerformed(STNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			SwingUtilities.invokeLater(node::close);
+			javax.swing.SwingUtilities.invokeLater(node::close);
 		}
 	}
 }

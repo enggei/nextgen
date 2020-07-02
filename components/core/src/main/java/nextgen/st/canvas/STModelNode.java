@@ -184,6 +184,7 @@ public class STModelNode extends STNode {
 		if (remove.getMenuComponentCount() != 0) pop.add(remove);
 		pop.add(new ToClipboard(this, canvas, event));
 		pop.add(new AddFileSink(this, canvas, event));
+		pop.add(new OpenFileSink(this, canvas, event));
 		pop.addSeparator();
 		super.onNodeRightClick(event, pop);
 	}
@@ -244,9 +245,26 @@ public class STModelNode extends STNode {
 					final String packageName = fieldMap.get("package").getText().trim();
 					SwingUtilities.invokeLater(() -> {
 						final nextgen.st.model.STFile stFile = newSTFile(name, type, path, packageName);
+						node.stModel.setFile(stFile);
 						canvas.addNode(new STFileNode(canvas, nextgen.st.STGenerator.asFile(stFile).getAbsolutePath(), stFile.getUuid(), stFile, node.stModel, node.stRenderer));
 					});
 				}
+			});
+		}
+	}
+
+	private static final class OpenFileSink extends NodeAction<STModelNode> {
+
+		OpenFileSink(STModelNode node, STCanvas canvas, PInputEvent event) {
+			super("Open File Sink", node, canvas, event);
+		}
+
+		@Override
+		void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+			SwingUtilities.invokeLater(() -> {
+				final nextgen.st.model.STFile stFile = node.stModel.getFile();
+				if (stFile == null) return;
+				canvas.addNode(new STFileNode(canvas, nextgen.st.STGenerator.asFile(stFile).getAbsolutePath(), stFile.getUuid(), stFile, node.stModel, node.stRenderer));
 			});
 		}
 	}

@@ -1,7 +1,6 @@
 package nextgen.projects;
 
 import nextgen.st.STGenerator;
-import nextgen.templates.DomainPatterns;
 import nextgen.templates.JavaPatterns;
 import nextgen.templates.Piccolo2DPatterns;
 import nextgen.templates.domain.Domain;
@@ -70,6 +69,7 @@ public class STProject {
                                 .addChildren("this.stModel.removePropertyChangeListener(this);"))
                         .addStatements("this.stModel = stModel;")
                         .addStatements("this.stModel.addPropertyChangeListener(this);")
+                        .addStatements("this.stModel.setFile(stFile);")
                         .addStatements("setText(nextgen.st.STGenerator.asFile(stFile).getAbsolutePath());")
                 )
                 .addOnLeftClick("if (stRenderer == null || stModel == null) return;")
@@ -98,6 +98,33 @@ public class STProject {
                                 .addChildren("final nextgen.st.model.STModel stModel = (nextgen.st.model.STModel) source;")
                                 .addChildren("this.stFile.setName(nextgen.st.STModelPatterns.getSTModelValue(stModel, \"name\", this.stFile.getName()));")
                                 .addChildren("this.stFile.setPackageName(nextgen.st.STModelPatterns.getSTModelPackage(stModel, this.stFile.getPackageName()));")));
+
+        final NodeAction editFileSinkAction = newNodeAction(stFileNode, "EditFileSink", "Edit")
+                .addStatements("final Map<String, JTextField> fieldMap = new java.util.LinkedHashMap<>();")
+                .addStatements("fieldMap.put(\"name\", new JTextField(node.stFile.getName(), 15));")
+                .addStatements("fieldMap.put(\"type\", new JTextField(node.stFile.getType(), 15));")
+                .addStatements("fieldMap.put(\"path\", new JTextField(node.stFile.getPath(), 15));")
+                .addStatements("fieldMap.put(\"package\", new JTextField(node.stFile.getPackageName(), 15));")
+                .addStatements("final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));")
+                .addStatements("inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));")
+                .addStatements(newLine("for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {", "}")
+                        .addChildren("inputPanel.add(new JLabel(fieldEntry.getKey()));")
+                        .addChildren("inputPanel.add(fieldEntry.getValue());"))
+                .addStatements(newBlock()
+                        .addLines(newLine("com.generator.util.SwingUtil.showDialog(inputPanel, canvas, \"Edit\", new com.generator.util.SwingUtil.ConfirmAction() {", "});")
+                                .addChildren("@Override")
+                                .addChildren(newLine("public void verifyAndCommit() throws Exception {", "}")
+                                        .addChildren("final String name = fieldMap.get(\"name\").getText().trim();")
+                                        .addChildren("final String type = fieldMap.get(\"type\").getText().trim();")
+                                        .addChildren("final String path = fieldMap.get(\"path\").getText().trim();")
+                                        .addChildren("final String packageName = fieldMap.get(\"package\").getText().trim();")
+                                        .addChildren(JavaPatterns.newInvokeLater(
+                                                "node.stFile.setName(name);",
+                                                "node.stFile.setType(type);",
+                                                "node.stFile.setPath(path);",
+                                                "node.stFile.setPackageName(packageName);",
+                                                "node.setText(nextgen.st.STGenerator.asFile(node.stFile).getAbsolutePath());")))));
+        registerRightClickAction(stFileNode, editFileSinkAction, editFileSinkAction.getName());
 
         final PNodeImpl stValueNode = newPNodeImpl(canvas, node)
                 .setName("STValueNode")
@@ -266,11 +293,20 @@ public class STProject {
                                         .addChildren("final String packageName = fieldMap.get(\"package\").getText().trim();")
                                         .addChildren(newLine("SwingUtilities.invokeLater(() -> {", "});")
                                                 .addChildren("final nextgen.st.model.STFile stFile = newSTFile(name, type, path, packageName);")
+                                                .addChildren("node.stModel.setFile(stFile);")
                                                 .addChildren("canvas.addNode(new STFileNode(canvas, nextgen.st.STGenerator.asFile(stFile).getAbsolutePath(), stFile.getUuid(), stFile, node.stModel, node.stRenderer));")))));
         registerRightClickAction(stModelNode, addFileSink, addFileSink.getName());
 
+        final NodeAction openFileSInk = newNodeAction(stModelNode, "OpenFileSink", "Open File Sink")
+                .addStatements(newLine("SwingUtilities.invokeLater(() -> {", "});")
+                        .addChildren("final nextgen.st.model.STFile stFile = node.stModel.getFile();")
+                        .addChildren("if (stFile == null) return;")
+                        .addChildren("canvas.addNode(new STFileNode(canvas, nextgen.st.STGenerator.asFile(stFile).getAbsolutePath(), stFile.getUuid(), stFile, node.stModel, node.stRenderer));"));
+
+        registerRightClickAction(stModelNode, openFileSInk, openFileSInk.getName());
+
         final NodeAction openFile = newNodeAction(stFileNode, "OpenFile", "Open")
-                .addStatements(newLine("try {", "} catch (java.io.IOException ex) { com.generator.util.SwingUtil.showException(canvas, ex); }")
+                .addStatements(newLine("try {", "} catch (Exception ex) { com.generator.util.SwingUtil.showException(canvas, ex); }")
                         .addChildren("java.awt.Desktop.getDesktop().open(nextgen.st.STGenerator.asFile(node.stFile));"));
         registerRightClickAction(stFileNode, openFile, openFile.getName());
 
@@ -330,7 +366,7 @@ public class STProject {
                                         .addChildren("final String packageName = fieldMap.get(\"package\").getText().trim();")
                                         .addChildren(newLine("SwingUtilities.invokeLater(() -> {", "});")
                                                 .addChildren("final nextgen.st.model.STFile stFile = nextgen.st.STModelPatterns.newSTFile(name, type, path, packageName);")
-                                                .addChildren("canvas.addNode(new STFileNode(canvas, \"File : \" + path + java.io.File.separator + (packageName.length() == 0 ? \"\" : packageName + \".\") + name + \".\" + type, stFile.getUuid(), stFile, null, null));")))));
+                                                .addChildren("canvas.addNode(new STFileNode(canvas, nextgen.st.STGenerator.asFile(stFile).getAbsolutePath(), stFile.getUuid(), stFile, null, null));")))));
         registerRightClickAction(canvas, newSTFileNode, newSTFileNode.getName());
 
         final NodeAction editSTValue = newNodeAction(stValueNode, "EditSTValue", "Edit")
@@ -361,12 +397,12 @@ public class STProject {
                 .addRelations(newExternalRef("value", Object.class));
 
         final Domain domain = newDomain("STModel")
-                .addEntities(newEntity("STFile")
-                        .addRelations(newStringField("name"))
-                        .addRelations(newStringField("type"))
-                        .addRelations(newStringField("packageName"))
-                        .addRelations(newStringField("path")))
                 .addEntities(newEntity("STModel")
+                        .addRelations(newOneToOne("file", newEntity("STFile")
+                                .addRelations(newStringField("name"))
+                                .addRelations(newStringField("type"))
+                                .addRelations(newStringField("packageName"))
+                                .addRelations(newStringField("path"))))
                         .addRelations(newExternalRef("stTemplate", newType(stDomainPackage, "STTemplate")))
                         .addRelations(newOneToMany("arguments", newEntity("STArgument")
                                 .addRelations(newExternalRef("stParameter", newType(stDomainPackage, "STParameter")))
@@ -386,6 +422,12 @@ public class STProject {
         final Entity stModelNeo = newEntity("STModelNeo")
                 .addRelations(newStringField("uuid"))
                 .addRelations(newStringField("stTemplate"))
+                .addRelations(newOneToOne("file", newEntity("STFileNeo")
+                        .addRelations(newStringField("uuid"))
+                        .addRelations(newStringField("name"))
+                        .addRelations(newStringField("type"))
+                        .addRelations(newStringField("packageName"))
+                        .addRelations(newStringField("path"))))
                 .addRelations(newOneToMany("arguments", newEntity("STArgumentNeo")
                         .addRelations(newStringField("uuid"))
                         .addRelations(newStringField("stParameter"))
@@ -398,12 +440,6 @@ public class STProject {
         stValueNeo.addRelations(newOneToOne("stModel", stModelNeo));
 
         writeNeo(javaMainSrc, stModelNeoPackage.getName(), newDomain("STModelNeo")
-                .addEntities(newEntity("STFileNeo")
-                        .addRelations(newStringField("uuid"))
-                        .addRelations(newStringField("name"))
-                        .addRelations(newStringField("type"))
-                        .addRelations(newStringField("packageName"))
-                        .addRelations(newStringField("path")))
                 .addEntities(stModelNeo));
     }
 

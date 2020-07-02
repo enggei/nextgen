@@ -38,6 +38,7 @@ public class STFileNode extends STNode {
 			this.stModel.removePropertyChangeListener(this);
 		this.stModel = stModel;
 		this.stModel.addPropertyChangeListener(this);
+		this.stModel.setFile(stFile);
 		setText(nextgen.st.STGenerator.asFile(stFile).getAbsolutePath());
 	}
 
@@ -59,6 +60,7 @@ public class STFileNode extends STNode {
 			});
 		});
 		pop.add(sourceMenu);
+		pop.add(new EditFileSink(this, canvas, event));
 		pop.add(new OpenFile(this, canvas, event));
 		pop.addSeparator();
 		super.onNodeRightClick(event, pop);
@@ -86,6 +88,44 @@ public class STFileNode extends STNode {
 		}	
 	}
 
+	private static final class EditFileSink extends NodeAction<STFileNode> {
+
+		EditFileSink(STFileNode node, STCanvas canvas, PInputEvent event) {
+			super("Edit", node, canvas, event);
+		}
+
+		@Override
+		void actionPerformed(STFileNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+			final Map<String, JTextField> fieldMap = new java.util.LinkedHashMap<>();
+			fieldMap.put("name", new JTextField(node.stFile.getName(), 15));
+			fieldMap.put("type", new JTextField(node.stFile.getType(), 15));
+			fieldMap.put("path", new JTextField(node.stFile.getPath(), 15));
+			fieldMap.put("package", new JTextField(node.stFile.getPackageName(), 15));
+			final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
+			inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
+			for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {
+				inputPanel.add(new JLabel(fieldEntry.getKey()));
+				inputPanel.add(fieldEntry.getValue());
+			}
+			com.generator.util.SwingUtil.showDialog(inputPanel, canvas, "Edit", new com.generator.util.SwingUtil.ConfirmAction() {
+				@Override
+				public void verifyAndCommit() throws Exception {
+					final String name = fieldMap.get("name").getText().trim();
+					final String type = fieldMap.get("type").getText().trim();
+					final String path = fieldMap.get("path").getText().trim();
+					final String packageName = fieldMap.get("package").getText().trim();
+					javax.swing.SwingUtilities.invokeLater(() ->  {
+						node.stFile.setName(name);
+						node.stFile.setType(type);
+						node.stFile.setPath(path);
+						node.stFile.setPackageName(packageName);
+						node.setText(nextgen.st.STGenerator.asFile(node.stFile).getAbsolutePath());	
+					});
+				}
+			});
+		}
+	}
+
 	private static final class OpenFile extends NodeAction<STFileNode> {
 
 		OpenFile(STFileNode node, STCanvas canvas, PInputEvent event) {
@@ -96,7 +136,7 @@ public class STFileNode extends STNode {
 		void actionPerformed(STFileNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
 			try {
 				java.awt.Desktop.getDesktop().open(nextgen.st.STGenerator.asFile(node.stFile));
-			} catch (java.io.IOException ex) { com.generator.util.SwingUtil.showException(canvas, ex); }
+			} catch (Exception ex) { com.generator.util.SwingUtil.showException(canvas, ex); }
 		}
 	}
 }

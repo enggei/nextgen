@@ -1793,6 +1793,26 @@
           "argumentType" : "Object"
         } ]
       } ]
+    }, {
+      "uuid" : "e20389fc-08bb-4e76-9881-de460afcd15b",
+      "name" : "InvokeLater",
+      "text" : "javax.swing.SwingUtilities.invokeLater(~if(methodReference)~~methodReference~~else~() -> ~if(statement)~~statement~~else~ {\n\t~statements:{it|~it~};separator=\"\\n\"~\t\n}~endif~~endif~); ",
+      "parameters" : [ {
+        "uuid" : "21fc8ddc-c955-4f66-9db1-066c13086907",
+        "name" : "methodReference",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "bad672e0-abb6-43df-b62b-a535679aba23",
+        "name" : "statement",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "728f3fd8-a935-4a9c-91d9-5d7ce46f582e",
+        "name" : "statements",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
     } ]
   } ],
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Java.stg",

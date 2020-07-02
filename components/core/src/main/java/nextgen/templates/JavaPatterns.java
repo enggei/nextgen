@@ -49,4 +49,15 @@ public class JavaPatterns extends JavaST {
                         .addArguments(newLambdaExpression()
                                 .setBody(body)));
     }
+
+    public static Object newInvokeLater(Object statement) {
+        return newInvokeLater().setStatement(statement);
+    }
+
+    public static Object newInvokeLater(Object... statements) {
+        final InvokeLater invokeLater = newInvokeLater();
+        for (Object statement : statements)
+            invokeLater.addStatements(statement);
+        return invokeLater;
+    }
 }

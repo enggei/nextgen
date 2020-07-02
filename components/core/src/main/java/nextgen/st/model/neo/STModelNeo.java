@@ -75,6 +75,32 @@ public class STModelNeo {
 		return this;
 	}
 
+	public STModelNeo setFile(STFileNeo dst) { 
+		final org.neo4j.graphdb.Relationship relationship = getFileRelation();
+		if (relationship != null)  { 
+			if (relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			relationship.delete();
+		}
+		if (dst == null) return this;
+		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("file"));
+		return this;
+	}
+
+	public STFileNeo getFile() { 
+		final org.neo4j.graphdb.Relationship relationship = getFileRelation();
+		return relationship == null ? null : new STFileNeo(relationship.getOtherNode(node));
+	}
+
+	public STModelNeo removeFile() { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getFileRelation());
+		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		return this;
+	}
+
+	public org.neo4j.graphdb.Relationship getFileRelation() { 
+		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("file"), org.neo4j.graphdb.Direction.OUTGOING);
+	}
+
 	public STModelNeo addArguments(STArgumentNeo dst) { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("arguments")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
 		if (existing.isPresent()) return this;
@@ -116,6 +142,9 @@ public class STModelNeo {
 		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
 		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
 		if (node.hasProperty("stTemplate")) jsonObject.put("stTemplate", node.getProperty("stTemplate"));
+		final STFileNeo _file = getFile();
+		if (_file != null) jsonObject.put("file", _file.toJsonObject());
+
 		final io.vertx.core.json.JsonArray _arguments = new io.vertx.core.json.JsonArray();
 		getArguments().forEach(element -> _arguments.add(element.toJsonObject()));
 		if (!_arguments.isEmpty()) jsonObject.put("arguments", _arguments);
@@ -124,6 +153,9 @@ public class STModelNeo {
 	}
 
 	public void deleteTree() {
+		final STFileNeo _file = getFile();
+		if (_file != null) _file.deleteTree();
+
 		getArguments().forEach(element -> element.deleteTree());
 
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);

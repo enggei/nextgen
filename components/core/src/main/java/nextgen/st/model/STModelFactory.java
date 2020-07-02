@@ -2,12 +2,12 @@ package nextgen.st.model;
 
 public class STModelFactory {
 
-	public static STFile newSTFile() { 
-		return new STFile();
-	}
-
 	public static STModel newSTModel() { 
 		return new STModel();
+	}
+
+	public static STFile newSTFile() { 
+		return new STFile();
 	}
 
 	public static STArgument newSTArgument() { 

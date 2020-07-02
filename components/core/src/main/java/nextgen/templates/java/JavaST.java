@@ -98,6 +98,7 @@ public class JavaST {
 	WhileStmt.st + "\n" + 
 	ClassOrInterfaceType.st + "\n" + 
 	TypeParameter.st + "\n" + 
+	InvokeLater.st + "\n" + 
 	NewInstance.st + "\n" + 
 	Switch.st + "\n" ;
 
@@ -505,6 +506,10 @@ public class JavaST {
 
 	public static TypeParameter newTypeParameter() {
 		return new TypeParameter(stGroup);
+	} 
+
+	public static InvokeLater newInvokeLater() {
+		return new InvokeLater(stGroup);
 	} 
 
 	public static NewInstance newNewInstance() {

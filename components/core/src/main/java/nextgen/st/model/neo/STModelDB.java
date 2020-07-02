@@ -24,21 +24,25 @@ public class STModelDB extends STModelNeoNeoFactory {
         return findAllSTModelNeo().map(this::map);
     }
 
+    public STModelNeo save(STModel stModel) {
+        final STModelNeo singleModelNeo = findOrCreateSTModelNeoByUuid(stModel.getUuid().toString());
+        singleModelNeo.setStTemplate(stModel.getStTemplate().uuid());
+        singleModelNeo.setFile(save(stModel.getFile()));
+        singleModelNeo.removeAllArguments();
+        stModel.getArguments().forEach(stArgument -> singleModelNeo.addArguments(save(stArgument)));
+        return singleModelNeo;
+    }
+
     public STFileNeo save(STFile stFile) {
+
+        if (stFile == null) return null;
+
         final STFileNeo stFileNeo = findOrCreateSTFileNeoByUuid(stFile.getUuid().toString());
         stFileNeo.setName(stFile.getName());
         stFileNeo.setPackageName(stFile.getPackageName());
         stFileNeo.setPath(stFile.getPath());
         stFileNeo.setType(stFile.getType());
         return stFileNeo;
-    }
-
-    public STModelNeo save(STModel stModel) {
-        final STModelNeo singleModelNeo = findOrCreateSTModelNeoByUuid(stModel.getUuid().toString());
-        singleModelNeo.setStTemplate(stModel.getStTemplate().uuid());
-        singleModelNeo.removeAllArguments();
-        stModel.getArguments().forEach(stArgument -> singleModelNeo.addArguments(save(stArgument)));
-        return singleModelNeo;
     }
 
     public STArgumentNeo save(STArgument stArgument) {
@@ -81,8 +85,21 @@ public class STModelDB extends STModelNeoNeoFactory {
         final STTemplate stTemplate = findSTModel(stModelNeo.getStTemplate());
         final STModel stModel = new STModel(UUID.fromString(stModelNeo.getUuid()));
         stModel.setStTemplate(stTemplate);
+        stModel.setFile(map(stModelNeo.getFile()));
         stModelNeo.getArgumentsSorted().forEach(stArgumentNeo -> stModel.addArguments(map(stArgumentNeo, stTemplate)));
         return stModel;
+    }
+
+    private STFile map(STFileNeo fileNeo) {
+
+        if (fileNeo == null) return null;
+
+        final STFile stFile = new STFile(UUID.fromString(fileNeo.getUuid()));
+        stFile.setPackageName(fileNeo.getPackageName());
+        stFile.setName(fileNeo.getName());
+        stFile.setType(fileNeo.getType());
+        stFile.setPath(fileNeo.getPath());
+        return stFile;
     }
 
     private STArgument map(STArgumentNeo stArgumentNeo, STTemplate stTemplate) {

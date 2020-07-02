@@ -2,6 +2,9 @@ package nextgen.templates;
 
 import nextgen.templates.piccolo2d.*;
 
+import static nextgen.templates.JavaPatterns.invokeLater;
+import static nextgen.templates.JavaPatterns.newInvokeLater;
+
 public class Piccolo2DPatterns extends Piccolo2DST {
 
     public static PNodeImpl newPNodeImpl(PCanvas canvas, PNode node) {
@@ -13,13 +16,13 @@ public class Piccolo2DPatterns extends Piccolo2DST {
     public static void addDefaultActionsToCanvas(PCanvas canvas) {
 
         final CanvasAction selectAllNodesAction = newCanvasAction(canvas, "SelectAllNodes", "Select all nodes")
-                .addStatements("SwingUtilities.invokeLater(() -> canvas.getAllNodes().forEach(" + canvas.getNodeName() + "::select));");
+                .addStatements(invokeLater("canvas.getAllNodes().forEach(" + canvas.getNodeName() + "::select)"));
 
         final CanvasAction unselectAllNodesAction = newCanvasAction(canvas, "UnselectAllNodes", "Unselect all nodes")
-                .addStatements("SwingUtilities.invokeLater(() -> canvas.getSelectedNodes().forEach(" + canvas.getNodeName() + "::unselect));");
+                .addStatements(invokeLater("canvas.getSelectedNodes().forEach(" + canvas.getNodeName() + "::unselect)"));
 
         final CanvasAction closeSelectedNodesAction = newCanvasAction(canvas, "CloseSelectedNodes", "Close selected nodes")
-                .addStatements("SwingUtilities.invokeLater(() -> canvas.getSelectedNodes().forEach(" + canvas.getNodeName() + "::close));");
+                .addStatements(invokeLater("canvas.getSelectedNodes().forEach(" + canvas.getNodeName() + "::close)"));
 
         final LayoutVerticallyAction layoutVerticallyAction = newLayoutVerticallyAction()
                 .setName("LayoutVerticallyAction")
@@ -55,13 +58,13 @@ public class Piccolo2DPatterns extends Piccolo2DST {
                 .setCanvasName(node.getCanvasName())
                 .setNodeType(node.getName());
 
-        final NodeAction closeNodeAction = newNodeAction(node, "CloseNode", "Close node")
-                .addStatements("SwingUtilities.invokeLater(node::close);");
+        final NodeAction closeNodeAction = newNodeAction(node, "CloseNode", "Close")
+                .addStatements(newInvokeLater().setMethodReference("node::close"));
 
         final NodeAction retainNodeAction = newNodeAction(node, "RetainNode", "Retain")
-                .addStatements("SwingUtilities.invokeLater(() -> canvas.getAllNodes()" +
+                .addStatements(newInvokeLater("canvas.getAllNodes()" +
                         ".filter(canvasNode -> !canvasNode.getUuid().equals(node.getUuid()))" +
-                        ".forEach(" + node.getName() + "::close));");
+                        ".forEach(" + node.getName() + "::close)"));
 
         registerRightClickAction(node, layoutTreeAction, layoutTreeAction.getName());
         registerRightClickAction(node, retainNodeAction, retainNodeAction.getName());
