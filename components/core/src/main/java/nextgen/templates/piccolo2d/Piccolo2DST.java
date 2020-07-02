@@ -17,6 +17,7 @@ public class Piccolo2DST {
 	AnonymousPNodeAction.st + "\n" + 
 	LayoutTreeAction.st + "\n" + 
 	PNodeImpl.st + "\n" + 
+	NodeMethod.st + "\n" + 
 	PNodeInputEventHandler.st + "\n" + 
 	PRelation.st + "\n" + 
 	PNodeChangeListener.st + "\n" + 
@@ -104,6 +105,10 @@ public class Piccolo2DST {
 
 	public static PNodeImpl newPNodeImpl() {
 		return new PNodeImpl(stGroup);
+	} 
+
+	public static NodeMethod newNodeMethod() {
+		return new NodeMethod(stGroup);
 	} 
 
 	public static PNodeInputEventHandler newPNodeInputEventHandler() {

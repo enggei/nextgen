@@ -12,12 +12,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.stream.Stream;
 
 import static java.awt.event.KeyEvent.*;
 
-public class STNode extends PNode {
+public class STNode extends PNode implements PropertyChangeListener {
 
 	protected enum Attributes {
 		_defaultColor, _selectedColor, _highlightedColor, _uuid, _text, _selected, _highlight
@@ -203,6 +205,11 @@ public class STNode extends PNode {
 				close();
 			}
 		});
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+
 	}
 
 	private final class NodeInputEventHandler extends PDragSequenceEventHandler {

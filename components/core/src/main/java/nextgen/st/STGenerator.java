@@ -3,6 +3,7 @@ package nextgen.st;
 import nextgen.st.domain.STEnum;
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STTemplate;
+import nextgen.st.model.STFile;
 import org.jetbrains.annotations.NotNull;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -34,6 +35,10 @@ public class STGenerator {
 
     public static ST asST(STTemplate stTemplate) {
         return asST(newTemplateGroup(), stTemplate);
+    }
+
+    public static File asFile(STFile stFile) {
+        return new java.io.File(new java.io.File(stFile.getPath(), nextgen.st.STGenerator.packageToPath(stFile.getPackageName())), stFile.getName() + (stFile.getType() == null ? "" : ("." + stFile.getType())));
     }
 
     public void generateSTGroup(STGroupModel stGroupModel, String packageName, String rootPath) {

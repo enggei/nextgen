@@ -236,12 +236,14 @@ public class PNode {
 				"import java.awt.event.ActionEvent;\n" + 
 				"import java.awt.geom.Point2D;\n" + 
 				"import java.awt.geom.Rectangle2D;\n" + 
+				"import java.beans.PropertyChangeEvent;\n" + 
+				"import java.beans.PropertyChangeListener;\n" + 
 				"import java.util.*;\n" + 
 				"import java.util.stream.Stream;\n" + 
 				"\n" + 
 				"import static java.awt.event.KeyEvent.*;\n" + 
 				"\n" + 
-				"public class ~name~ extends PNode {\n" + 
+				"public class ~name~ extends PNode implements PropertyChangeListener {\n" + 
 				"\n" + 
 				"	protected enum Attributes {\n" + 
 				"		_defaultColor, _selectedColor, _highlightedColor, _uuid, _text, _selected, _highlight\n" + 
@@ -424,6 +426,11 @@ public class PNode {
 				"		});\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	@Override\n" + 
+				"	public void propertyChange(PropertyChangeEvent evt) {\n" + 
+				"		\n" + 
+				"	}\n" + 
+				"	\n" + 
 				"	~PNodeInputEventHandler()~	\n" + 
 				"\n" + 
 				"	static abstract class NodeAction<N extends ~name~> extends AbstractAction {\n" + 

@@ -20,7 +20,7 @@ import static nextgen.st.STModelPatterns.*;
 
 public class STValueNode extends STNode {
 
-	final nextgen.st.model.STValue stValue;
+	nextgen.st.model.STValue stValue;
 
 	public STValueNode(STCanvas canvas, String initText, java.util.UUID uuid, nextgen.st.model.STValue stValue) {
 		super(canvas, initText, uuid);

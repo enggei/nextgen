@@ -362,12 +362,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.stream.Stream;
 
 import static java.awt.event.KeyEvent.*;
 
-public class ~name~ extends PNode {
+public class ~name~ extends PNode implements PropertyChangeListener {
 
 	protected enum Attributes {
 		_defaultColor, _selectedColor, _highlightedColor, _uuid, _text, _selected, _highlight
@@ -550,6 +552,11 @@ case VK_~it.key~:
 		});
 	}
 
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		
+	}
+	
 	~PNodeInputEventHandler()~	
 
 	static abstract class NodeAction<N extends ~name~> extends AbstractAction {
@@ -740,7 +747,7 @@ AnonymousPNodeAction(nodeType,header,statements) ::= <<new STNode.NodeAction<~no
 	}
 }  >>
 
-PNodeImpl(packageName,name,nodeName,fields,canvasName,rightClickStatements,anonymousRightClickActions,onRightClick,onKeyPressed,actions) ::= <<package ~packageName~;
+PNodeImpl(packageName,name,nodeName,fields,canvasName,constructorStatements,methods,rightClickStatements,anonymousRightClickActions,onRightClick,onKeyPressed,onLeftClick,onPropertyChange,actions) ::= <<package ~packageName~;
 
 import com.generator.util.SwingUtil;
 import nextgen.st.domain.STParameterKey;
@@ -762,12 +769,15 @@ import static nextgen.st.STModelPatterns.*;
 
 public class ~name~ extends ~nodeName~ {
 
-	~fields:{it|final ~it.type~ ~it.name~;};separator="\n"~
+	~fields:{it|~it.type~ ~it.name~;};separator="\n"~
 		
 	public ~name~(~canvasName~ canvas, String initText, java.util.UUID uuid~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
 		super(canvas, initText, uuid);
 		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+		~constructorStatements:{it|~it~};separator="\n"~
 	}
+
+	~methods:{it|~it~};separator="\n\n"~
 
 	@Override
 	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
@@ -797,9 +807,22 @@ case VK_~it.key~:
 	@Override
 	protected void onNodeLeftClick(PInputEvent event) {
 		super.onNodeLeftClick(event);
+		~onLeftClick:{it|~it~};separator="\n"~
 	}
 
+~if(onPropertyChange)~
+	@Override
+	public void propertyChange(java.beans.PropertyChangeEvent evt) {
+		~onPropertyChange:{it|~it~};separator="\n"~	
+	}
+~endif~
+
 	~actions:{it|~it~};separator="\n\n"~
+}  >>
+
+nodeMethod(returnValue,name,params,statements,returnStatement) ::= <<public ~if(returnValue)~~returnValue~~else~void~endif~ ~name~(~params:{it|~it.name~ ~it.value~};separator=","~) {
+	~statements:{it|~it~};separator="\n"~~if(returnValue)~
+	return ~returnStatement~~endif~
 }  >>
 
 PRelation(packageName,name,canvasName,nodeName,onRightClickActions) ::= <<package ~packageName~;

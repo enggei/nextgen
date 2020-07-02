@@ -2,9 +2,13 @@ package nextgen.st.model;
 
 public class STValue {
 
+	public static boolean debug = false;
+
 	private final java.util.UUID uuid;
 	private STValueType _type;
 	private java.lang.Object _value;
+
+	private final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);
 
 	public STValue() {
 		this.uuid = java.util.UUID.randomUUID();
@@ -23,7 +27,9 @@ public class STValue {
 	}
 
 	public STValue setType(STValueType value) {
+		STValueType oldValue = this._type;
 		this._type = value;
+		this.pcs.firePropertyChange("type", oldValue, value);
 		return this;
 	}
 
@@ -32,14 +38,19 @@ public class STValue {
 	}
 
 	public STValue setValue(java.lang.Object value) {
+		java.lang.Object oldValue = this._value;
 		this._value = value;
+		this.pcs.firePropertyChange("value", oldValue, value);
 		return this;
 	}
 
 	public STValue removeValue() {
+		java.lang.Object oldValue = this._value;
 		this._value = null;
+		this.pcs.firePropertyChange("value", oldValue, null);
 		return this;
 	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -51,5 +62,15 @@ public class STValue {
 	@Override
 	public int hashCode() {
 		return java.util.Objects.hash(uuid);
+	}
+
+	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
+		if (debug) System.out.println("STValue add listener " + listener.getClass().getSimpleName());
+		this.pcs.addPropertyChangeListener(listener);
+	}
+
+	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
+		if (debug) System.out.println("STValue rem listener " + listener.getClass().getSimpleName());
+		this.pcs.removePropertyChangeListener(listener);
 	}
 }

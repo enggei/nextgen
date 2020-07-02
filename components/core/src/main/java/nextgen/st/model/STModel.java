@@ -2,9 +2,13 @@ package nextgen.st.model;
 
 public class STModel {
 
+	public static boolean debug = false;
+
 	private final java.util.UUID uuid;
 	private nextgen.st.domain.STTemplate _stTemplate;
 	private java.util.List<STArgument> _arguments = new java.util.ArrayList<>();
+
+	private final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);
 
 	public STModel() {
 		this.uuid = java.util.UUID.randomUUID();
@@ -23,12 +27,16 @@ public class STModel {
 	}
 
 	public STModel setStTemplate(nextgen.st.domain.STTemplate value) {
+		nextgen.st.domain.STTemplate oldValue = this._stTemplate;
 		this._stTemplate = value;
+		this.pcs.firePropertyChange("stTemplate", oldValue, value);
 		return this;
 	}
 
 	public STModel removeStTemplate() {
+		nextgen.st.domain.STTemplate oldValue = this._stTemplate;
 		this._stTemplate = null;
+		this.pcs.firePropertyChange("stTemplate", oldValue, null);
 		return this;
 	}
 
@@ -38,13 +46,16 @@ public class STModel {
 
 	public STModel addArguments(STArgument value) {
 		this._arguments.add(value);
+		this.pcs.firePropertyChange("arguments", null, value);
 		return this;
 	}
 
 	public STModel removeArguments(STArgument value) {
 		this._arguments.remove(value);
+		this.pcs.firePropertyChange("arguments", value, null);
 		return this;
 	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -56,5 +67,15 @@ public class STModel {
 	@Override
 	public int hashCode() {
 		return java.util.Objects.hash(uuid);
+	}
+
+	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
+		if (debug) System.out.println("STModel add listener " + listener.getClass().getSimpleName());
+		this.pcs.addPropertyChangeListener(listener);
+	}
+
+	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
+		if (debug) System.out.println("STModel rem listener " + listener.getClass().getSimpleName());
+		this.pcs.removePropertyChangeListener(listener);
 	}
 }

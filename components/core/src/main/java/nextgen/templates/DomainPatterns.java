@@ -2,10 +2,7 @@ package nextgen.templates;
 
 import nextgen.st.STGenerator;
 import nextgen.templates.domain.*;
-import nextgen.templates.java.JavaST;
-import nextgen.templates.java.PackageDeclaration;
-import nextgen.templates.java.Pojo;
-import nextgen.templates.java.PojoFactory;
+import nextgen.templates.java.*;
 import nextgen.templates.neo4j.*;
 import nextgen.templates.vertx.JsonFactory;
 import nextgen.templates.vertx.JsonWrapper;
@@ -148,7 +145,7 @@ public class DomainPatterns extends DomainST {
 
     public static void writeBean(File root, PackageDeclaration packageDeclaration, Domain domain) {
 
-        final Map<Entity, Pojo> visited = new LinkedHashMap<>();
+        final Map<Entity, Bean> visited = new LinkedHashMap<>();
         domain.getEntities().forEach(entity -> {
 
             if (entity.getIsEnum(false)) {
@@ -168,7 +165,7 @@ public class DomainPatterns extends DomainST {
         STGenerator.writeJavaFile(factory, packageDeclaration.getName(), factory.getName().toString(), root);
     }
 
-    private static void generateBean(File root, PackageDeclaration packageDeclaration, Entity entity, final Map<Entity, Pojo> visited) {
+    private static void generateBean(File root, PackageDeclaration packageDeclaration, Entity entity, final Map<Entity, Bean> visited) {
 
         if (entity == null || visited.containsKey(entity)) {
             visited.get(entity);
@@ -177,7 +174,7 @@ public class DomainPatterns extends DomainST {
 
         final String entityName = entity.getName();
 
-        final Pojo entityClass = JavaST.newPojo()
+        final Bean entityClass = JavaST.newBean()
                 .setPackage(packageDeclaration.getName())
                 .setName(entityName);
 
@@ -227,7 +224,7 @@ public class DomainPatterns extends DomainST {
                     entityClass.addFields(dst.getName(), o.getName(), null);
                     entityClass.addAccessors(JavaST.newBoundedReferenceAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
 
-                    generatePojo(root, packageDeclaration, dst, visited);
+                    generateBean(root, packageDeclaration, dst, visited);
                     break;
                 }
                 case LIST: {
@@ -235,7 +232,7 @@ public class DomainPatterns extends DomainST {
                     entityClass.addFields(JavaST.newListType().setType(dst.getName()), o.getName(), JavaPatterns.newArrayListInstance());
                     entityClass.addAccessors(JavaST.newBoundedListAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
 
-                    generatePojo(root, packageDeclaration, dst, visited);
+                    generateBean(root, packageDeclaration, dst, visited);
                     break;
                 }
             }

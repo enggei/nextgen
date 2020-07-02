@@ -168,17 +168,17 @@
     }, {
       "uuid" : "a8289fe2-14b3-4683-9490-5ef389a3f5e4",
       "name" : "Bean",
-      "text" : "package ~package~;\n\npublic class ~name~ {\n\n\tprivate final java.util.UUID uuid;\n\t~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\t~fieldDeclarations:{it|~it~};separator=\"\\n\"~\n\n\tprivate final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);\n\t\n\tpublic ~name~() {\n\t\tthis.uuid = java.util.UUID.randomUUID();\n\t}\n\n\tpublic ~name~(java.util.UUID uuid) {\n\t\tthis.uuid = uuid;\n\t}\n\n\tpublic java.util.UUID getUuid() {\n\t\treturn this.uuid;\n\t}\t\n\t\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n~if(lexical)~\n\n\t@Override\n\tpublic String toString() {\n\t\treturn ~lexical:{it|_~it~};separator=\" + \\\" \\\" + \"~;\n\t}\n~endif~\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn uuid.equals(that.uuid);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(uuid);\n\t}\n\n\tpublic void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tthis.pcs.addPropertyChangeListener(listener);\n\t}\n\n\tpublic void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tthis.pcs.removePropertyChangeListener(listener);\n\t}\n} ",
+      "text" : "package ~package~;\n\npublic class ~name~ {\n\n\tpublic static boolean debug = true;\n\t\n\tprivate final java.util.UUID uuid;\n\t~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\t~fieldDeclarations:{it|~it~};separator=\"\\n\"~\n\n\tprivate final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);\n\t\n\tpublic ~name~() {\n\t\tthis.uuid = java.util.UUID.randomUUID();\n\t}\n\n\tpublic ~name~(java.util.UUID uuid) {\n\t\tthis.uuid = uuid;\n\t}\n\n\tpublic java.util.UUID getUuid() {\n\t\treturn this.uuid;\n\t}\t\n\t\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n\t\n~if(lexical)~\n\n\t@Override\n\tpublic String toString() {\n\t\treturn ~lexical:{it|_~it~};separator=\" + \\\" \\\" + \"~;\n\t}\n~endif~\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn uuid.equals(that.uuid);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(uuid);\n\t}\n\n\tpublic void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tif (debug) System.out.println(\"~name~ add listener \" + listener.getClass().getSimpleName());\n\t\tthis.pcs.addPropertyChangeListener(listener);\n\t}\n\n\tpublic void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tif (debug) System.out.println(\"~name~ rem listener \" + listener.getClass().getSimpleName());\n\t\tthis.pcs.removePropertyChangeListener(listener);\n\t}\n} ",
       "parameters" : [ {
         "uuid" : "cb61bc25-1333-40db-9cd8-ea46acf2540c",
         "name" : "package",
         "type" : "SINGLE",
-        "argumentType" : "Object"
+        "argumentType" : "String"
       }, {
         "uuid" : "1de63c49-2aa9-4a90-a6ab-aa57e716081b",
         "name" : "name",
         "type" : "SINGLE",
-        "argumentType" : "Object"
+        "argumentType" : "String"
       }, {
         "uuid" : "c4c50500-f363-474c-8d68-9a3c5d4a3b77",
         "name" : "fields",
@@ -191,7 +191,7 @@
         }, {
           "uuid" : "d8045312-76d9-40ef-aa0f-3140a3979583",
           "name" : "name",
-          "argumentType" : "Object"
+          "argumentType" : "String"
         }, {
           "uuid" : "dc85e5d7-e4fa-47c5-b039-1390b019da34",
           "name" : "initializer",
@@ -211,7 +211,7 @@
         "uuid" : "94471edb-4d3a-42c8-901d-c9663426946b",
         "name" : "lexical",
         "type" : "LIST",
-        "argumentType" : "Object"
+        "argumentType" : "String"
       } ],
       "children" : [ {
         "uuid" : "7790bf52-39dc-41c3-a76d-2fc88b3b0ec4",

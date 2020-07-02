@@ -2,6 +2,10 @@ package nextgen.st.model;
 
 public class STModelFactory {
 
+	public static STFile newSTFile() { 
+		return new STFile();
+	}
+
 	public static STModule newSTModule() { 
 		return new STModule();
 	}

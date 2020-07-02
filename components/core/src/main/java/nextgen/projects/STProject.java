@@ -14,8 +14,7 @@ import java.io.File;
 
 import static nextgen.templates.DomainPatterns.*;
 import static nextgen.templates.Piccolo2DPatterns.*;
-import static nextgen.templates.TextPatterns.newLine;
-import static nextgen.templates.text.TextST.newBlock;
+import static nextgen.templates.TextPatterns.*;
 
 public class STProject {
 
@@ -52,6 +51,41 @@ public class STProject {
                 .setCanvasName(canvas.getName())
                 .setPackageName(stCanvasPackage.getName());
 
+        final PNodeImpl stFileNode = newPNodeImpl(canvas, node)
+                .setName("STFileNode")
+                .setPackageName(stCanvasPackage.getName())
+                .setNodeName("STNode")
+                .addFields("nextgen.st.model.STFile", "stFile")
+                .addFields("nextgen.st.model.STModel", "stModel")
+                .addFields("nextgen.st.STRenderer", "stRenderer")
+                .addOnLeftClick("if (stRenderer == null || stModel == null) return;")
+                .addOnLeftClick("nextgen.st.STGenerator.writeToFile(stRenderer.render(stModel), stFile.getPackageName(), stFile.getName(), stFile.getType(), new java.io.File(stFile.getPath()));")
+                .addRightClickStatements(newLineIndent(
+                        "final java.util.List<STModelNode> stModelNodes = canvas.getSelectedNodes()",
+                        "\t",
+                        ".filter(stNode -> stNode instanceof STModelNode)",
+                        ".filter(stNode -> !stNode.getUuid().equals(getUuid()))",
+                        ".map(stNode -> (STModelNode) stNode)",
+                        ".collect(Collectors.toList());"))
+                .addRightClickStatements(newBlock(
+                        "final JMenu sourceMenu = new JMenu(\"STModels\");",
+                        newLine("stModelNodes.forEach(stNode -> {", "});")
+                                .addChildren("final int end = Math.min(stNode.getText().length(), 50);")
+                                .addChildren(newLine("sourceMenu.add(", newAnonymousPNodeAction("STFileNode")
+                                                .setHeader("\"Set source to \" + stNode.getText().substring(0, end)")
+                                                .addStatements("node.stModel = stNode.stModel;")
+                                        , ");")),
+                        "pop.add(sourceMenu);"))
+                .addConstructorStatements(newLine("\"if (this.stModel != null)\"")
+                        .addChildren("this.stModel.addPropertyChangeListener(this);"))
+                .addOnPropertyChange(newBlock(
+                        "final Object source = evt.getSource();",
+                        newLine("if (source instanceof STModel) {", "}")
+                                .addChildren("System.out.println(\"STModel changed\");")
+                                .addChildren("final STModel stModel = (STModel) source;")
+                                .addChildren("this.stFile.setName(STModelPatterns.getSTModelValue(stModel, \"name\", this.stFile.getName()));")
+                                .addChildren("this.stFile.setPackageName(STModelPatterns.getSTModelPackage(stModel, this.stFile.getPackageName()));")));
+
         final PNodeImpl stValueNode = newPNodeImpl(canvas, node)
                 .setName("STValueNode")
                 .setPackageName(stCanvasPackage.getName())
@@ -65,13 +99,15 @@ public class STProject {
                 .addFields("nextgen.st.domain.STTemplate", "stTemplate")
                 .addFields("nextgen.st.model.STModel", "stModel")
                 .addFields("nextgen.st.STRenderer", "stRenderer")
-                .addRightClickStatements(TextPatterns.newLine(
+                .addOnPropertyChange("setText(stRenderer.render(stModel));")
+                .addOnLeftClick("setText(stRenderer.render(stModel));")
+                .addRightClickStatements(newLine(
                         "final java.util.List<STValueNode> stValueNodes = canvas.getSelectedNodes()",
                         ".filter(stNode -> stNode instanceof STValueNode)",
                         ".filter(stNode -> !stNode.getUuid().equals(getUuid()))",
                         ".map(stNode -> (STValueNode) stNode)",
                         ".collect(Collectors.toList());"))
-                .addRightClickStatements(TextPatterns.newLine(
+                .addRightClickStatements(newLine(
                         "final java.util.List<STModelNode> stModelNodes = canvas.getSelectedNodes()",
                         ".filter(stNode -> stNode instanceof STModelNode)",
                         ".filter(stNode -> !stNode.getUuid().equals(getUuid()))",
@@ -85,30 +121,38 @@ public class STProject {
                                                         .setHeader("\"Set \" + stParameter.getName()")
                                                         .addStatements("final String s = SwingUtil.showInputDialog(stParameter.getName(), canvas);")
                                                         .addStatements("if (s == null || s.trim().length() == 0) return;")
-                                                        .addStatements("setArgument(stModel, newSTArgument(stParameter, newSTValue(s.trim())));")
+                                                        .addStatements("final nextgen.st.model.STValue stValue = newSTValue(s.trim());")
+                                                        .addStatements("canvas.addNode(new STValueNode(canvas, s, stValue.getUuid(), stValue));")
+                                                        .addStatements("setArgument(stTemplate, stModel, newSTArgument(stParameter, stValue));")
                                                         .addStatements("setText(stRenderer.render(stModel));")
+                                                        .addStatements("stValue.addPropertyChangeListener(STModelNode.this);")
                                                 , ");"))
                                         .addLines(newLine("stValueNodes.forEach(stNode -> {", "});")
                                                 .addChildren("final int end = Math.min(stNode.getText().length(), 50);")
                                                 .addChildren(newLine("stParameterMenu.add(", newAnonymousPNodeAction("STModelNode")
                                                                 .setHeader("\"Set \" + stParameter.getName() + \" = \" + stNode.getText().substring(0, end)")
-                                                                .addStatements("setArgument(stModel, newSTArgument(stParameter, stNode.stValue));")
+                                                                .addStatements("setArgument(stTemplate, stModel, newSTArgument(stParameter, stNode.stValue));")
                                                                 .addStatements("setText(stRenderer.render(stModel));")
+                                                                .addStatements("stNode.stValue.addPropertyChangeListener(STModelNode.this);")
                                                         , ");")))
                                         .addLines(newLine("stModelNodes.forEach(stNode -> {", "});")
                                                 .addChildren("final int end = Math.min(stNode.getText().length(), 50);")
                                                 .addChildren(newLine("stParameterMenu.add(", newAnonymousPNodeAction("STModelNode")
                                                                 .setHeader("\"Set \" + stParameter.getName() + \" = \" + stNode.getText().substring(0, end)")
-                                                                .addStatements("setArgument(stModel, newSTArgument(stParameter, newSTValue(stNode.stModel)));")
+                                                                .addStatements("setArgument(stTemplate, stModel, newSTArgument(stParameter, newSTValue(stNode.stModel)));")
                                                                 .addStatements("setText(stRenderer.render(stModel));")
+                                                                .addStatements("stNode.stModel.addPropertyChangeListener(STModelNode.this);")
                                                         , ");"))))
                                 .addCases("LIST", newBlock()
                                         .addLines(newLine("stParameterMenu.add(", newAnonymousPNodeAction("STModelNode")
                                                         .setHeader("\"Add \" + stParameter.getName()")
                                                         .addStatements("final String s = SwingUtil.showInputDialog(stParameter.getName(), canvas);")
                                                         .addStatements("if (s == null || s.trim().length() == 0) return;")
-                                                        .addStatements("addArgument(stTemplate, stModel, newSTArgument(stParameter, newSTValue(s.trim())));")
+                                                        .addStatements("final nextgen.st.model.STValue stValue = newSTValue(s.trim());")
+                                                        .addStatements("canvas.addNode(new STValueNode(canvas, s, stValue.getUuid(), stValue));")
+                                                        .addStatements("addArgument(stTemplate, stModel, newSTArgument(stParameter, stValue));")
                                                         .addStatements("setText(stRenderer.render(stModel));")
+                                                        .addStatements("stValue.addPropertyChangeListener(STModelNode.this);")
                                                 , ");"))
                                         .addLines(newLine("stValueNodes.forEach(stNode -> {", "});")
                                                 .addChildren("final int end = Math.min(stNode.getText().length(), 50);")
@@ -116,6 +160,7 @@ public class STProject {
                                                                 .setHeader("\"Add \" + stParameter.getName() + \" = \" + stNode.getText().substring(0, end)")
                                                                 .addStatements("addArgument(stTemplate, stModel, newSTArgument(stParameter, stNode.stValue));")
                                                                 .addStatements("setText(stRenderer.render(stModel));")
+                                                                .addStatements("stNode.stValue.addPropertyChangeListener(STModelNode.this);")
                                                         , ");")))
                                         .addLines(newLine("stModelNodes.forEach(stNode -> {", "});")
                                                 .addChildren("final int end = Math.min(stNode.getText().length(), 50);")
@@ -123,6 +168,7 @@ public class STProject {
                                                                 .setHeader("\"Add \" + stParameter.getName() + \" = \" + stNode.getText().substring(0, end)")
                                                                 .addStatements("addArgument(stTemplate, stModel, newSTArgument(stParameter, newSTValue(stNode.stModel)));")
                                                                 .addStatements("setText(stRenderer.render(stModel));")
+                                                                .addStatements("stNode.stModel.addPropertyChangeListener(STModelNode.this);")
                                                         , ");")))
                                 )
                                 .addCases("KVLIST", newBlock()
@@ -150,6 +196,18 @@ public class STProject {
                                                                         .addChildren("setText(stRenderer.render(stModel));")))), ");"))
                                 ))
                         .addChildren("pop.add(stParameterMenu);"))
+                .addRightClickStatements("final JMenu open = new JMenu(\"Open\");")
+                .addRightClickStatements(newLine("stModel.getArguments().forEach(stArgument -> {", "});")
+                        .addChildren("final String s = stRenderer.render(stArgument).toString();")
+                        .addChildren("final int end = Math.min(s.length(), 50);")
+                        .addChildren(newLine("open.add(new STNode.NodeAction<STModelNode>(\"Open \" + s.substring(0, end), this, canvas, event) {", "});")
+                                .addChildren("@Override")
+                                .addChildren(newLine("void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {", "}")
+                                        .addChildren(newLine("SwingUtilities.invokeLater(() -> {", "});")
+                                                .addChildren("final STValue stValue = stArgument.getValue();")
+                                                .addChildren("canvas.addNode(new STValueNode(canvas, stRenderer.render(stValue).toString(), stValue.getUuid(), stValue));")))))
+                .addRightClickStatements("if (open.getMenuComponentCount() != 0) pop.add(open);")
+
                 .addRightClickStatements("final JMenu remove = new JMenu(\"Remove\");")
                 .addRightClickStatements(newLine("stModel.getArguments().forEach(stArgument -> {", "});")
                         .addChildren("final String s = stRenderer.render(stArgument).toString();")
@@ -157,6 +215,7 @@ public class STProject {
                         .addChildren(newLine("remove.add(new STNode.NodeAction<STModelNode>(\"Remove \" + s.substring(0, end), this, canvas, event) {", "});")
                                 .addChildren("@Override")
                                 .addChildren(newLine("void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {", "}")
+                                        .addChildren("stArgument.getValue().removePropertyChangeListener(STModelNode.this);")
                                         .addChildren("stModel.removeArguments(stArgument);")
                                         .addChildren("setText(stRenderer.render(stModel));"))))
                 .addRightClickStatements("if (remove.getMenuComponentCount() != 0) pop.add(remove);");
@@ -164,6 +223,35 @@ public class STProject {
         final NodeAction toClipboard = newNodeAction(stModelNode, "ToClipboard", "To Clipboard")
                 .addStatements("com.generator.util.SwingUtil.toClipboard(node.stRenderer.render(node.stModel));");
         registerRightClickAction(stModelNode, toClipboard, toClipboard.getName());
+
+        final NodeAction addFileSink = newNodeAction(stModelNode, "AddFileSink", "Add File Sink")
+                .addStatements("final Map<String, JTextField> fieldMap = new java.util.LinkedHashMap<>();")
+                .addStatements("fieldMap.put(\"name\", new JTextField(getSTModelValue(node.stModel, \"name\", \"\"), 15));")
+                .addStatements("fieldMap.put(\"type\", new JTextField(15));")
+                .addStatements("fieldMap.put(\"path\", new JTextField(15));")
+                .addStatements("fieldMap.put(\"package\", new JTextField(getSTModelPackage(node.stModel, \"\"), 15));")
+                .addStatements("final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));")
+                .addStatements("inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));")
+                .addStatements(newLine("for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {", "}")
+                        .addChildren("inputPanel.add(new JLabel(fieldEntry.getKey()));")
+                        .addChildren("inputPanel.add(fieldEntry.getValue());"))
+                .addStatements(newBlock()
+                        .addLines(newLine("com.generator.util.SwingUtil.showDialog(inputPanel, canvas, \"New sink\", new com.generator.util.SwingUtil.ConfirmAction() {", "});")
+                                .addChildren("@Override")
+                                .addChildren(newLine("public void verifyAndCommit() throws Exception {", "}")
+                                        .addChildren("final String name = fieldMap.get(\"name\").getText().trim();")
+                                        .addChildren("final String type = fieldMap.get(\"type\").getText().trim();")
+                                        .addChildren("final String path = fieldMap.get(\"path\").getText().trim();")
+                                        .addChildren("final String packageName = fieldMap.get(\"package\").getText().trim();")
+                                        .addChildren(newLine("SwingUtilities.invokeLater(() -> {", "});")
+                                                .addChildren("final nextgen.st.model.STFile stFile = newSTFile(name, type, path, packageName);")
+                                                .addChildren("canvas.addNode(new STFileNode(canvas, \"File : \" + path + java.io.File.separator + (packageName.length() == 0 ? \"\" : packageName + \".\") + name + \".\" + type, stFile.getUuid(), stFile, node.stModel, node.stRenderer));")))));
+        registerRightClickAction(stModelNode, addFileSink, addFileSink.getName());
+
+        final NodeAction openFile = newNodeAction(stFileNode, "OpenFile", "Open")
+                .addStatements(newLine("try {", "} catch (java.io.IOException ex) { com.generator.util.SwingUtil.showException(canvas, ex); }")
+                        .addChildren("java.awt.Desktop.getDesktop().open(nextgen.st.STGenerator.asFile(node.stFile));"));
+        registerRightClickAction(stFileNode, openFile, openFile.getName());
 
         final CanvasAction newSTNodeAction = newCanvasAction(canvas, "NewSTValueNode", "New Value")
                 .addStatements("final String s = com.generator.util.SwingUtil.showInputDialog(\"Value\", canvas);\n" +
@@ -173,6 +261,37 @@ public class STProject {
                         .addChildren("canvas.addNode(new " + stValueNode.getName() + "(canvas, s, stValue.getUuid(), stValue));"));
         registerRightClickAction(canvas, newSTNodeAction, newSTNodeAction.getName());
 
+        final CanvasAction newSTNodeFromClipboardAction = newCanvasAction(canvas, "NewSTValueFromClipboard", "New Value from Clipboard")
+                .addStatements("final String s = com.generator.util.SwingUtil.fromClipboard();")
+                .addStatements("if (s == null || s.trim().length() == 0) return;")
+                .addStatements(newLine("SwingUtilities.invokeLater(() -> {", "});")
+                        .addChildren("final nextgen.st.model.STValue stValue = nextgen.st.STModelPatterns.newSTValue(s);")
+                        .addChildren("canvas.addNode(new " + stValueNode.getName() + "(canvas, s, stValue.getUuid(), stValue));"));
+        registerRightClickAction(canvas, newSTNodeFromClipboardAction, newSTNodeFromClipboardAction.getName());
+
+        final CanvasAction newSTFileNode = newCanvasAction(canvas, "NewSTFileNode", "New Sink")
+                .addStatements("final Map<String, JTextField> fieldMap = new java.util.LinkedHashMap<>();")
+                .addStatements("fieldMap.put(\"name\", new JTextField(15));")
+                .addStatements("fieldMap.put(\"type\", new JTextField(15));")
+                .addStatements("fieldMap.put(\"path\", new JTextField(15));")
+                .addStatements("fieldMap.put(\"package\", new JTextField(15));")
+                .addStatements("final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));")
+                .addStatements("inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));")
+                .addStatements(newLine("for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {", "}")
+                        .addChildren("inputPanel.add(new JLabel(fieldEntry.getKey()));")
+                        .addChildren("inputPanel.add(fieldEntry.getValue());"))
+                .addStatements(newBlock()
+                        .addLines(newLine("com.generator.util.SwingUtil.showDialog(inputPanel, canvas, \"New sink\", new com.generator.util.SwingUtil.ConfirmAction() {", "});")
+                                .addChildren("@Override")
+                                .addChildren(newLine("public void verifyAndCommit() throws Exception {", "}")
+                                        .addChildren("final String name = fieldMap.get(\"name\").getText().trim();")
+                                        .addChildren("final String type = fieldMap.get(\"type\").getText().trim();")
+                                        .addChildren("final String path = fieldMap.get(\"path\").getText().trim();")
+                                        .addChildren("final String packageName = fieldMap.get(\"package\").getText().trim();")
+                                        .addChildren(newLine("SwingUtilities.invokeLater(() -> {", "});")
+                                                .addChildren("final nextgen.st.model.STFile stFile = nextgen.st.STModelPatterns.newSTFile(name, type, path, packageName);")
+                                                .addChildren("canvas.addNode(new STFileNode(canvas, \"File : \" + path + java.io.File.separator + (packageName.length() == 0 ? \"\" : packageName + \".\") + name + \".\" + type, stFile.getUuid(), stFile, null, null));")))));
+        registerRightClickAction(canvas, newSTFileNode, newSTFileNode.getName());
 
         final NodeAction editSTValue = newNodeAction(stValueNode, "EditSTValue", "Edit")
                 .addStatements("final String s = com.generator.util.SwingUtil.showInputDialog(\"Value\", canvas, node.stValue.getValue().toString());\n" +
@@ -181,6 +300,7 @@ public class STProject {
                 .addStatements("node.setText(node.stValue.getValue().toString());");
         registerRightClickAction(stValueNode, editSTValue, editSTValue.getName());
 
+
         Piccolo2DPatterns.addDefaultActionsToCanvas(canvas);
         Piccolo2DPatterns.addDefaultActionsToNode(node);
 
@@ -188,8 +308,9 @@ public class STProject {
         STGenerator.writeJavaFile(node, stCanvasPackage, node.getName(), javaMainSrc);
         STGenerator.writeJavaFile(relation, stCanvasPackage, relation.getName(), javaMainSrc);
 
-        STGenerator.writeJavaFile(stModelNode, stCanvasPackage, stModelNode.getName(), javaMainSrc);
+        STGenerator.writeJavaFile(stFileNode, stCanvasPackage, stFileNode.getName(), javaMainSrc);
         STGenerator.writeJavaFile(stValueNode, stCanvasPackage, stValueNode.getName(), javaMainSrc);
+        STGenerator.writeJavaFile(stModelNode, stCanvasPackage, stModelNode.getName(), javaMainSrc);
     }
 
     @Test
@@ -200,6 +321,11 @@ public class STProject {
                 .addRelations(newExternalRef("value", Object.class));
 
         writeBean(javaMainSrc, stModelPackage.getName(), newDomain("STModel")
+                .addEntities(newEntity("STFile")
+                        .addRelations(newStringField("name"))
+                        .addRelations(newStringField("type"))
+                        .addRelations(newStringField("packageName"))
+                        .addRelations(newStringField("path")))
                 .addEntities(newEntity("STModule")
                         .addRelations(newStringField("name"))
                         .addRelations(newOneToManyString("stGroups"))

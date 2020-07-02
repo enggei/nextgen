@@ -1,5 +1,6 @@
 package nextgen.st;
 
+import com.generator.util.FileUtil;
 import nextgen.st.domain.*;
 import nextgen.st.model.STArgument;
 import nextgen.st.model.STArgumentKV;
@@ -115,9 +116,9 @@ public class STRenderer {
                 return render((STModel) value.getValue());
             case PRIMITIVE:
                 final String s = value.getValue().toString();
-                return s==null || s.trim().length()==0 ? null : s;
+                return s == null || s.trim().length() == 0 ? null : s;
             case ENUM:
-                return ((STEnumValue)value.getValue()).getLexical();
+                return ((STEnumValue) value.getValue()).getLexical();
         }
         return null;
     }

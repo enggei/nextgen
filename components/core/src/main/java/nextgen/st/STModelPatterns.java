@@ -1,11 +1,16 @@
 package nextgen.st;
 
+import com.generator.util.Reflect;
 import nextgen.st.domain.*;
 import nextgen.st.model.*;
 
 import java.util.*;
 
 public class STModelPatterns extends STModelFactory {
+
+    public static STFile newSTFile(String name, String type, String path, String packageName) {
+        return newSTFile().setName(name).setType(type).setPath(path).setPackageName(packageName);
+    }
 
     public static STModule newSTModule(String name) {
         return newSTModule().setName(name);
@@ -60,7 +65,7 @@ public class STModelPatterns extends STModelFactory {
         return newSTValue().setType(STValueType.PRIMITIVE).setValue(value);
     }
 
-    public static void setArgument(STModel stModel, STArgument stArgument) {
+    public static void setArgument(STTemplate stTemplate, STModel stModel, STArgument stArgument) {
 
         stModel.getArguments()
                 .stream()
@@ -68,7 +73,7 @@ public class STModelPatterns extends STModelFactory {
                 .findAny()
                 .ifPresent(stModel::removeArguments);
 
-        stModel.addArguments(stArgument);
+        addArgument(stTemplate, stModel, stArgument);
     }
 
     public static void addArgument(STTemplate stTemplate, STModel stModel, STArgument stArgument) {
@@ -106,5 +111,11 @@ public class STModelPatterns extends STModelFactory {
         return null;
     }
 
+    public static String getSTModelValue(STModel stModel, String parameterName, String defaultValue) {
+        return stModel.getArguments().stream().filter(stArgument -> stArgument.getStParameter().getName().equals(parameterName)).map(stArgument -> stArgument.getValue().getValue().toString()).findFirst().orElse(defaultValue);
+    }
 
+    public static String getSTModelPackage(STModel stModel, String defaultValue) {
+        return stModel.getArguments().stream().filter(stArgument -> stArgument.getStParameter().getName().equals("package") || stArgument.getStParameter().getName().equals("packageName")).map(stArgument -> stArgument.getValue().getValue().toString()).findFirst().orElse(defaultValue);
+    }
 }
