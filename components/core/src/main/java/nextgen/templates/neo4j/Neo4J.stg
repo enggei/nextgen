@@ -85,6 +85,11 @@ public ~className;format="capitalize"~ remove~name;format="capitalize"~(~type~ d
 	final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("~name~")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
 	existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
 	return this;
+}
+
+public ~className;format="capitalize"~ removeAll~name;format="capitalize"~() { 
+	node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("~name~")).forEach(org.neo4j.graphdb.Relationship::delete);
+	return this;
 }  >>
 
 listPrimitiveAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ add~name;format="capitalize"~(~type~ dst) { 
@@ -103,6 +108,11 @@ public java.util.stream.Stream<~type~> get~name;format="capitalize"~() {
 
 public java.util.stream.Stream<~type~> get~name;format="capitalize"~Sorted() { 
 	return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("~name~")).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t", o.getId()))).map((relationship) -> (~type~) relationship.getOtherNode(node).getProperty("value"));
+}
+
+public ~className;format="capitalize"~ removeAll~name;format="capitalize"~() { 
+	node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("~name~")).forEach(org.neo4j.graphdb.Relationship::delete);
+	return this;
 }  >>
 
 enumAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
@@ -184,6 +194,11 @@ enumListAccessors(className,name,type) ::= <<public ~className;format="capitaliz
 
 public java.util.stream.Stream<~type~> get~name;format="capitalize"~() { 
 	return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("~name~")).spliterator(), false).map((relationship) -> ~type~.valueOf(relationship.getOtherNode(node).getProperty("value").toString()));
+}
+
+public ~className;format="capitalize"~ removeAll~name;format="capitalize"~() { 
+	node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("~name~")).forEach(org.neo4j.graphdb.Relationship::delete);
+	return this;
 }  >>
 
 nodeToJsonObject(properties,refs,refList,primitiveList) ::= <<public io.vertx.core.json.JsonObject toJsonObject() {

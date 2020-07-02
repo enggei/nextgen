@@ -36,6 +36,7 @@ public class STModelDB extends STModelNeoNeoFactory {
     public STModelNeo save(STModel stModel) {
         final STModelNeo singleModelNeo = findOrCreateSTModelNeoByUuid(stModel.getUuid().toString());
         singleModelNeo.setStTemplate(stModel.getStTemplate().uuid());
+        singleModelNeo.removeAllArguments();
         stModel.getArguments().forEach(stArgument -> singleModelNeo.addArguments(save(stArgument)));
         return singleModelNeo;
     }
@@ -44,6 +45,7 @@ public class STModelDB extends STModelNeoNeoFactory {
         final STArgumentNeo stArgumentNeo = findOrCreateSTArgumentNeoByUuid(stArgument.getUuid().toString());
         stArgumentNeo.setStParameter(stArgument.getStParameter().uuid());
         stArgumentNeo.setValue(save(stArgument.getValue()));
+        stArgumentNeo.removeAllKeyValues();
         for (STArgumentKV stArgumentKV : stArgument.getKeyValues()) stArgumentNeo.addKeyValues(save(stArgumentKV));
         return stArgumentNeo;
     }
@@ -75,7 +77,7 @@ public class STModelDB extends STModelNeoNeoFactory {
         return stValueNeo;
     }
 
-     private STModel map(STModelNeo stModelNeo) {
+    private STModel map(STModelNeo stModelNeo) {
         final STTemplate stTemplate = findSTModel(stModelNeo.getStTemplate());
         final STModel stModel = new STModel(UUID.fromString(stModelNeo.getUuid()));
         stModel.setStTemplate(stTemplate);

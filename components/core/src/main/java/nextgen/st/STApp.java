@@ -5,6 +5,7 @@ import nextgen.st.domain.STAppModel;
 import nextgen.st.domain.STGDirectory;
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STJsonFactory;
+import nextgen.st.model.neo.STModelDB;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +32,7 @@ public class STApp extends JFrame {
         contentPanel.add(tabbedPane, BorderLayout.CENTER);
         add(contentPanel, BorderLayout.CENTER);
 
-        tabbedPane.addTab("Canvas", new nextgen.st.canvas.STCanvas(navigator.stRenderer));
+        tabbedPane.addTab("Canvas", new nextgen.st.canvas.STCanvas(navigator.stRenderer, navigator.db));
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -57,6 +58,7 @@ public class STApp extends JFrame {
         final File templates = new File(resources, "templates");
 
         SwingUtil.show(new STApp(STJsonFactory.newSTAppModel()
+                .setModelDb("./db")
                 .setGeneratorRoot(javaMain.getAbsolutePath())
                 .setGeneratorPackage("nextgen.st")
                 .setGeneratorName("StringTemplate")

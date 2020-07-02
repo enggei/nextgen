@@ -123,6 +123,11 @@ public class STArgumentNeo {
 		return this;
 	}
 
+	public STArgumentNeo removeAllKeyValues() { 
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("keyValues")).forEach(org.neo4j.graphdb.Relationship::delete);
+		return this;
+	}
+
 	public java.util.stream.Stream<STArgumentKVNeo> getIncomingKeyValues() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("keyValues")).spliterator(), false).map((relationship) -> new STArgumentKVNeo(relationship.getOtherNode(node)));
 	}

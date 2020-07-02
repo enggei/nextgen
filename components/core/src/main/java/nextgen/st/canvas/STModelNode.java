@@ -20,14 +20,12 @@ import static nextgen.st.STModelPatterns.*;
 
 public class STModelNode extends STNode {
 
-	nextgen.st.domain.STGroupModel stGroupModel;
 	nextgen.st.domain.STTemplate stTemplate;
 	nextgen.st.model.STModel stModel;
 	nextgen.st.STRenderer stRenderer;
 
-	public STModelNode(STCanvas canvas, String initText, java.util.UUID uuid, nextgen.st.domain.STGroupModel stGroupModel, nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STModel stModel, nextgen.st.STRenderer stRenderer) {
+	public STModelNode(STCanvas canvas, String initText, java.util.UUID uuid, nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STModel stModel, nextgen.st.STRenderer stRenderer) {
 		super(canvas, initText, uuid);
-		this.stGroupModel = stGroupModel;
 		this.stTemplate = stTemplate;
 		this.stModel = stModel;
 		this.stRenderer = stRenderer;

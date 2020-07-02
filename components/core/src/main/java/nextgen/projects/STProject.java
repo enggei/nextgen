@@ -42,7 +42,8 @@ public class STProject {
                 .setPackageName(stCanvasPackage.getName())
                 .setNodeName(nodeName)
                 .setRelationName(relationName)
-                .addFields("nextgen.st.STRenderer", "stRenderer");
+                .addFields("nextgen.st.STRenderer", "stRenderer")
+                .addFields("nextgen.st.model.neo.STModelDB", "modelDb");
 
         final PNode node = newPNode()
                 .setName(nodeName)
@@ -113,7 +114,6 @@ public class STProject {
         final PNodeImpl stModelNode = newPNodeImpl(canvas, node)
                 .setPackageName(stCanvasPackage.getName())
                 .setName("STModelNode")
-                .addFields("nextgen.st.domain.STGroupModel", "stGroupModel")
                 .addFields("nextgen.st.domain.STTemplate", "stTemplate")
                 .addFields("nextgen.st.model.STModel", "stModel")
                 .addFields("nextgen.st.STRenderer", "stRenderer")
@@ -282,6 +282,25 @@ public class STProject {
                         .addChildren("canvas.addNode(new " + stValueNode.getName() + "(canvas, s, stValue.getUuid(), stValue, canvas.stRenderer));"));
         registerRightClickAction(canvas, newSTNodeAction, newSTNodeAction.getName());
 
+        final CanvasAction saveAction = newCanvasAction(canvas, "SaveCanvas", "Save")
+                .addStatements(newLine("SwingUtilities.invokeLater(() -> {", "});")
+                        .addChildren(newLine(
+                                "final java.util.List<STModelNode> stModelNodes = canvas.getSelectedNodes()",
+                                ".filter(stNode -> stNode instanceof STModelNode)",
+                                ".map(stNode -> (STModelNode) stNode)",
+                                ".collect(java.util.stream.Collectors.toList());"))
+                        .addChildren(newLine("canvas.modelDb.doInTransaction(tx -> {", "});")
+                                .addChildren(newLine("for (STModelNode stModelNode : stModelNodes)")
+                                        .addChildren("canvas.modelDb.save(stModelNode.stModel);"))));
+        registerRightClickAction(canvas, saveAction, saveAction.getName());
+
+        final CanvasAction loadAllAction = newCanvasAction(canvas, "LoadAllModels", "Load All Models")
+                .addStatements(newLine("SwingUtilities.invokeLater(() -> {", "});")
+                        .addChildren(newLine("canvas.modelDb.doInTransaction(tx -> {", "});")
+                                .addChildren(newLine("canvas.modelDb.getAllSTModels().forEach(stModel -> ", ");")
+                                        .addChildren("canvas.addNode(new STModelNode(canvas, canvas.stRenderer.render(stModel), stModel.getUuid(), stModel.getStTemplate(), stModel, canvas.stRenderer))"))));
+        registerRightClickAction(canvas, loadAllAction, loadAllAction.getName());
+
         final CanvasAction newSTNodeFromClipboardAction = newCanvasAction(canvas, "NewSTValueFromClipboard", "New Value from Clipboard")
                 .addStatements("final String s = com.generator.util.SwingUtil.fromClipboard();")
                 .addStatements("if (s == null || s.trim().length() == 0) return;")
@@ -417,6 +436,7 @@ public class STProject {
 
         writeJsonWrapper(javaMainSrc, stDomainPackage.getName(), newDomain("ST")
                 .addEntities(newEntity("STAppModel")
+                        .addRelations(newStringField("modelDb"))
                         .addRelations(newStringField("generatorRoot"))
                         .addRelations(newStringField("generatorPackage"))
                         .addRelations(newStringField("generatorName"))

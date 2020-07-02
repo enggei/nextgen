@@ -118,5 +118,10 @@ public class EnumListAccessors {
 				"\n" + 
 				"public java.util.stream.Stream<~type~> get~name;format=\"capitalize\"~() { \n" + 
 				"	return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).spliterator(), false).map((relationship) -> ~type~.valueOf(relationship.getOtherNode(node).getProperty(\"value\").toString()));\n" + 
+				"}\n" + 
+				"\n" + 
+				"public ~className;format=\"capitalize\"~ removeAll~name;format=\"capitalize\"~() { \n" + 
+				"	node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).forEach(org.neo4j.graphdb.Relationship::delete);\n" + 
+				"	return this;\n" + 
 				"} >>";
 }  

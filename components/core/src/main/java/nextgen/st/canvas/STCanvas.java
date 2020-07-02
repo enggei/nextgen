@@ -37,12 +37,13 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	private final CanvasInputEventsHandler canvasInputEventsHandler = new CanvasInputEventsHandler();
 
 	nextgen.st.STRenderer stRenderer;
+	nextgen.st.model.neo.STModelDB modelDb;
 
-	public STCanvas(nextgen.st.STRenderer stRenderer) {
-		this(stRenderer, Color.WHITE, new Dimension(1024, 768));
+	public STCanvas(nextgen.st.STRenderer stRenderer,nextgen.st.model.neo.STModelDB modelDb) {
+		this(stRenderer, modelDb, Color.WHITE, new Dimension(1024, 768));
 	}
 
-	public STCanvas(nextgen.st.STRenderer stRenderer, Color background, Dimension preferredSize) {
+	public STCanvas(nextgen.st.STRenderer stRenderer, nextgen.st.model.neo.STModelDB modelDb, Color background, Dimension preferredSize) {
 		super();
 		setBackground(background);
 		setPreferredSize(preferredSize);
@@ -53,6 +54,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		addInputEventListener(new CanvasZoomHandler());
 		addInputEventListener(canvasInputEventsHandler);
 		this.stRenderer = stRenderer;
+		this.modelDb = modelDb;
 	}
 
 	@Override
@@ -134,6 +136,8 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 	protected void onCanvasRightClick(JPopupMenu pop, PInputEvent event) {
 		pop.add(new NewSTValueNode(this, event));
+		pop.add(new SaveCanvas(this, event));
+		pop.add(new LoadAllModels(this, event));
 		pop.add(new NewSTValueFromClipboard(this, event));
 		pop.add(new NewSTFileNode(this, event));
 		pop.add(new SelectAllNodes(this, event));
@@ -316,6 +320,45 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 			SwingUtilities.invokeLater(() -> {
 				final nextgen.st.model.STValue stValue = nextgen.st.STModelPatterns.newSTValue(s);
 				canvas.addNode(new STValueNode(canvas, s, stValue.getUuid(), stValue, canvas.stRenderer));
+			});
+		}
+	}
+
+	private static final class SaveCanvas extends CanvasAction {
+
+		SaveCanvas(STCanvas canvas, PInputEvent event) {
+			super("Save", canvas, event);
+		}
+
+		@Override
+		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
+			SwingUtilities.invokeLater(() -> {
+				final java.util.List<STModelNode> stModelNodes = canvas.getSelectedNodes()
+					.filter(stNode -> stNode instanceof STModelNode)
+					.map(stNode -> (STModelNode) stNode)
+					.collect(java.util.stream.Collectors.toList());
+				canvas.modelDb.doInTransaction(tx -> {
+					for (STModelNode stModelNode : stModelNodes)
+						canvas.modelDb.save(stModelNode.stModel);
+				});
+			});
+		}
+	}
+
+	private static final class LoadAllModels extends CanvasAction {
+
+		LoadAllModels(STCanvas canvas, PInputEvent event) {
+			super("Load All Models", canvas, event);
+		}
+
+		@Override
+		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
+			SwingUtilities.invokeLater(() -> {
+				canvas.modelDb.doInTransaction(tx -> {
+					canvas.modelDb.getAllSTModels().forEach(stModel -> 
+						canvas.addNode(new STModelNode(canvas, canvas.stRenderer.render(stModel), stModel.getUuid(), stModel.getStTemplate(), stModel, canvas.stRenderer))
+					);
+				});
 			});
 		}
 	}

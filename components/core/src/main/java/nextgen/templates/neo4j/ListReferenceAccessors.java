@@ -127,5 +127,10 @@ public class ListReferenceAccessors {
 				"	final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();\n" + 
 				"	existing.ifPresent(org.neo4j.graphdb.Relationship::delete);\n" + 
 				"	return this;\n" + 
+				"}\n" + 
+				"\n" + 
+				"public ~className;format=\"capitalize\"~ removeAll~name;format=\"capitalize\"~() { \n" + 
+				"	node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).forEach(org.neo4j.graphdb.Relationship::delete);\n" + 
+				"	return this;\n" + 
 				"} >>";
 }  

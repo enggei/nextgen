@@ -41,6 +41,19 @@ public class STAppModel {
 		return java.util.Objects.hash(jsonObject.getString("uuid"));
 	}
 
+	public STAppModel setModelDb(String value) { 
+		jsonObject.put("modelDb", value);
+		return this;
+	}
+
+	public String getModelDb() { 
+		return jsonObject.getString("modelDb");
+	}
+
+	public String getModelDb(String defaultValue) { 
+		return jsonObject.getString("modelDb", defaultValue);
+	}
+
 	public STAppModel setGeneratorRoot(String value) { 
 		jsonObject.put("generatorRoot", value);
 		return this;

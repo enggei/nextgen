@@ -97,6 +97,11 @@ public class STModelNeo {
 		return this;
 	}
 
+	public STModelNeo removeAllArguments() { 
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("arguments")).forEach(org.neo4j.graphdb.Relationship::delete);
+		return this;
+	}
+
 	public java.util.stream.Stream<STArgumentNeo> getIncomingArguments() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("arguments")).spliterator(), false).map((relationship) -> new STArgumentNeo(relationship.getOtherNode(node)));
 	}

@@ -8,6 +8,7 @@ import nextgen.st.canvas.STValueNode;
 import nextgen.st.domain.*;
 import nextgen.st.model.STModel;
 import nextgen.st.model.STValue;
+import nextgen.st.model.neo.STModelDB;
 
 import javax.lang.model.SourceVersion;
 import javax.swing.*;
@@ -38,13 +39,18 @@ public class STNavigator extends JPanel {
     private final DefaultTreeModel treeModel;
 
     STRenderer stRenderer;
+    final STModelDB db;
 
     public STNavigator(STAppModel appModel, JTabbedPane contentPanel) {
         super(new BorderLayout());
 
-        tabbedPane = contentPanel;
+        final RootNode rootNode = new RootNode(appModel);
 
-        treeModel = new DefaultTreeModel(new RootNode(appModel));
+        tabbedPane = contentPanel;
+        stRenderer = new STRenderer(rootNode.stGroups);
+        db = new STModelDB(appModel.getModelDb("./db"), rootNode.stGroups);
+
+        treeModel = new DefaultTreeModel(rootNode);
         tree.setModel(treeModel);
         tree.setCellRenderer(new DefaultTreeCellRenderer() {
 
@@ -363,6 +369,7 @@ public class STNavigator extends JPanel {
     class RootNode extends BaseTreeNode<String> {
 
         private final STGDirectoryTreeNode generatorTreeNode;
+        final Set<STGroupModel> stGroups = new LinkedHashSet<>();
 
         public RootNode(STAppModel appModel) {
             super("App", "RootNode");
@@ -375,13 +382,11 @@ public class STNavigator extends JPanel {
                     .addGroups(new STGroupModel(new JsonObject(STParser.read(new File(jsonFileDir, appModel.getGeneratorName() + ".json")))))
             ));
 
-            final Set<STGroupModel> stGroups = new LinkedHashSet<>();
             appModel.getDirectories().forEach(stgDirectory -> {
                 final STGDirectoryTreeNode stgDirectoryTreeNode = new STGDirectoryTreeNode(stgDirectory);
                 add(stgDirectoryTreeNode);
                 stGroups.addAll(stgDirectoryTreeNode.stGroups);
             });
-            stRenderer = new STRenderer(stGroups);
         }
 
         public STGroupModel getGenerator() {
@@ -1039,7 +1044,7 @@ public class STNavigator extends JPanel {
 
                                         final STModel entityModel = newSTModel().setStTemplate(getModel());
 
-                                        stCanvas.addNode(new STModelNode(stCanvas, stRenderer.render(entityModel), entityModel.getUuid(), stGroupTreeNode.getModel(), getModel(), entityModel, stRenderer));
+                                        stCanvas.addNode(new STModelNode(stCanvas, stRenderer.render(entityModel), entityModel.getUuid(), getModel(), entityModel, stRenderer));
                                         tabbedPane.setSelectedComponent(stCanvas);
                                         stCanvas.requestFocusInWindow();
                                     });
