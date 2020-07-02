@@ -543,16 +543,7 @@ case VK_~it.key~:
 	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
 
 		~onRightClick:{it|pop.add(new ~it.name~(this, canvas, event));};separator="\n"~
-		~if(onRightClick)~
-		pop.addSeparator();
-		~endif~
 		
-		pop.add(new AbstractAction("Close") {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				close();
-			}
-		});
 	}
 
 	@Override

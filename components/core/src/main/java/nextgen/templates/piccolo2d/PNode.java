@@ -414,16 +414,7 @@ public class PNode {
 				"	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {\n" + 
 				"\n" + 
 				"		~onRightClick:{it|pop.add(new ~it.name~(this, canvas, event));};separator=\"\\n\"~\n" + 
-				"		~if(onRightClick)~\n" + 
-				"		pop.addSeparator();\n" + 
-				"		~endif~\n" + 
 				"		\n" + 
-				"		pop.add(new AbstractAction(\"Close\") {\n" + 
-				"			@Override\n" + 
-				"			public void actionPerformed(ActionEvent e) {\n" + 
-				"				close();\n" + 
-				"			}\n" + 
-				"		});\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 

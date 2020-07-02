@@ -30,7 +30,7 @@
   }, {
     "uuid" : "27fe2ba6-f50a-4f07-bc4b-12872efe17ad",
     "name" : "Domain",
-    "text" : "~name~\n~packageName~\n~entities:{it|~it~};separator=\"\\n\"~",
+    "text" : "Domain: ~name~ ~if(packageName)~(~packageName~)~endif~\nEntities:\n~entities:{it|~it~};separator=\"\\n\"~ ",
     "parameters" : [ {
       "uuid" : "21f95d9b-5310-43e9-9865-9be1fc951308",
       "name" : "name",

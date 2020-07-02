@@ -333,7 +333,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		@Override
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
 			SwingUtilities.invokeLater(() -> {
-				final java.util.List<STModelNode> stModelNodes = canvas.getSelectedNodes()
+				final java.util.List<STModelNode> stModelNodes = canvas.getAllNodes()
 					.filter(stNode -> stNode instanceof STModelNode)
 					.map(stNode -> (STModelNode) stNode)
 					.collect(java.util.stream.Collectors.toList());

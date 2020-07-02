@@ -197,14 +197,7 @@ public class STNode extends PNode implements PropertyChangeListener {
 		pop.add(new LayoutTreeAction(this, canvas, event));
 		pop.add(new RetainNode(this, canvas, event));
 		pop.add(new CloseNode(this, canvas, event));
-		pop.addSeparator();
 
-		pop.add(new AbstractAction("Close") {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				close();
-			}
-		});
 	}
 
 	@Override

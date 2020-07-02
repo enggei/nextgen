@@ -167,7 +167,7 @@ public class STProject {
                                                         .addStatements("final String s = SwingUtil.showInputDialog(stParameter.getName(), canvas);")
                                                         .addStatements("if (s == null || s.trim().length() == 0) return;")
                                                         .addStatements("final nextgen.st.model.STValue stValue = newSTValue(s.trim());")
-                                                        .addStatements("canvas.addNode(new STValueNode(canvas, s, stValue.getUuid(), stValue, node.stRenderer));")
+                                                        .addStatements("//canvas.addNode(new STValueNode(canvas, s, stValue.getUuid(), stValue, node.stRenderer));")
                                                         .addStatements("setArgument(stTemplate, stModel, newSTArgument(stParameter, stValue));")
                                                         .addStatements("setText(stRenderer.render(stModel));")
                                                         .addStatements("stValue.addPropertyChangeListener(STModelNode.this);")
@@ -321,7 +321,7 @@ public class STProject {
         final CanvasAction saveAction = newCanvasAction(canvas, "SaveCanvas", "Save")
                 .addStatements(newLine("SwingUtilities.invokeLater(() -> {", "});")
                         .addChildren(newLine(
-                                "final java.util.List<STModelNode> stModelNodes = canvas.getSelectedNodes()",
+                                "final java.util.List<STModelNode> stModelNodes = canvas.getAllNodes()",
                                 ".filter(stNode -> stNode instanceof STModelNode)",
                                 ".map(stNode -> (STModelNode) stNode)",
                                 ".collect(java.util.stream.Collectors.toList());"))

@@ -54,7 +54,7 @@ public class STModelNode extends STNode {
 							final String s = SwingUtil.showInputDialog(stParameter.getName(), canvas);
 							if (s == null || s.trim().length() == 0) return;
 							final nextgen.st.model.STValue stValue = newSTValue(s.trim());
-							canvas.addNode(new STValueNode(canvas, s, stValue.getUuid(), stValue, node.stRenderer));
+							//canvas.addNode(new STValueNode(canvas, s, stValue.getUuid(), stValue, node.stRenderer));
 							setArgument(stTemplate, stModel, newSTArgument(stParameter, stValue));
 							setText(stRenderer.render(stModel));
 							stValue.addPropertyChangeListener(STModelNode.this);
