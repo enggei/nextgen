@@ -4,14 +4,11 @@ import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STParameterKey;
 import nextgen.st.domain.STTemplate;
 import nextgen.st.model.STModel;
-import nextgen.st.model.STModule;
+import nextgen.st.model.neo.STModelDB;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static nextgen.st.STModelPatterns.*;
@@ -22,7 +19,7 @@ public class TestModelling {
     @Test
     public void testModel() {
 
-        final File templatesDir = new File("/home/goe/projects/nextgen/components/core/src/main/resources/templates");
+        final File templatesDir = new File("src/main/resources/templates");
 
         final Map<String, STGroupModel> stGroupModelMap = new LinkedHashMap<>();
         Optional.ofNullable(STApp.list(templatesDir, ".json"))
@@ -34,28 +31,29 @@ public class TestModelling {
                     }
                 });
 
-        final STModule stModule = newSTModule("TestModel");
+        final STRenderer stRenderer = new STRenderer(stGroupModelMap.values());
+        final STModelDB db = new STModelDB("src/test/testdb", stGroupModelMap.values());
 
         find(stGroupModelMap, "Test")
                 .ifPresent(domainSTGroupModel ->
 
                         find(domainSTGroupModel, "single").ifPresent(single -> {
 
-                            final STModel singleModel = newSTModel(stModule, single);
+                            final STModel singleModel = newSTModel(single);
                             single.getParameters().findFirst().ifPresent(stParameter -> addArgument(single, singleModel, newSTArgument(stParameter, newSTValue("HelloWorld"))));
 
                             find(domainSTGroupModel, "list").ifPresent(list -> {
 
                                 list.getParameters().findFirst().ifPresent(stParameter -> {
 
-                                    final STModel listModel = newSTModel(stModule, list);
+                                    final STModel listModel = newSTModel(list);
                                     addArgument(list, listModel, newSTArgument(stParameter, newSTValue("1")));
                                     addArgument(list, listModel, newSTArgument(stParameter, newSTValue("2")));
                                     addArgument(list, listModel, newSTArgument(stParameter, newSTValue(singleModel)));
 
                                     find(domainSTGroupModel, "kv").ifPresent(kv -> {
 
-                                        final STModel kvModel = newSTModel(stModule, kv);
+                                        final STModel kvModel = newSTModel(kv);
 
                                         kv.getParameters().forEach(kvParameter -> {
                                             final List<STParameterKey> keys = kvParameter.getKeys().collect(Collectors.toList());
@@ -63,14 +61,26 @@ public class TestModelling {
                                             addArgument(kv, kvModel, newSTArgument(kvParameter, newSTArgument(keys.get(0), newSTValue("KEY_2")), newSTArgument(keys.get(1), newSTValue(singleModel))));
                                             addArgument(kv, kvModel, newSTArgument(kvParameter, newSTArgument(keys.get(0), newSTValue("KEY_3")), newSTArgument(keys.get(1), newSTValue(listModel))));
                                         });
+
+                                        System.out.println(stRenderer.render(kvModel));
+
+                                        db.doInTransaction(transaction -> {
+                                            db.save(singleModel);
+                                            db.save(listModel);
+                                            db.save(kvModel);
+                                        });
                                     });
+
+                                    System.out.println(stRenderer.render(listModel));
                                 });
                             });
+
+                            System.out.println(stRenderer.render(singleModel));
                         }));
-
-        final STRenderer stRenderer = new STRenderer(templatesDir);
-
-        stModule.getModels().forEach(stModel -> System.out.println(stRenderer.render(stModel)));
+        System.out.println("-----");
+        db.doInTransaction(transaction -> {
+            db.getAllSTModels().forEach(stModel -> System.out.println(stRenderer.render(stModel)));
+        });
     }
 
     private static void addTemplate(Map<String, STGroupModel> stGroupModelMap, STGroupModel stGroupModel, STTemplate stTemplate) {

@@ -13,6 +13,10 @@ public class ListPrimitiveAccessors {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("listPrimitiveAccessors");
@@ -108,11 +112,16 @@ public class ListPrimitiveAccessors {
 				"	if (existing.isPresent()) return this;\n" + 
 				"	final org.neo4j.graphdb.Node newNode = node.getGraphDatabase().createNode(org.neo4j.graphdb.Label.label(\"~type~\"));\n" + 
 				"	newNode.setProperty(\"value\", dst);\n" + 
-				"	node.createRelationshipTo(newNode, org.neo4j.graphdb.RelationshipType.withName(\"~name~\"));\n" + 
+				"	final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(newNode, org.neo4j.graphdb.RelationshipType.withName(\"~name~\"));\n" + 
+				"	relationship.setProperty(\"_t\", System.nanoTime());\n" + 
 				"	return this;\n" + 
 				"}\n" + 
 				"\n" + 
 				"public java.util.stream.Stream<~type~> get~name;format=\"capitalize\"~() { \n" + 
 				"	return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).spliterator(), false).map((relationship) -> (~type~) relationship.getOtherNode(node).getProperty(\"value\"));\n" + 
+				"}\n" + 
+				"\n" + 
+				"public java.util.stream.Stream<~type~> get~name;format=\"capitalize\"~Sorted() { \n" + 
+				"	return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty(\"_t\", o.getId()))).map((relationship) -> (~type~) relationship.getOtherNode(node).getProperty(\"value\"));\n" + 
 				"} >>";
-} 
+}  

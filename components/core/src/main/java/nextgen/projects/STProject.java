@@ -4,7 +4,7 @@ import nextgen.st.STGenerator;
 import nextgen.templates.DomainPatterns;
 import nextgen.templates.JavaPatterns;
 import nextgen.templates.Piccolo2DPatterns;
-import nextgen.templates.TextPatterns;
+import nextgen.templates.domain.Domain;
 import nextgen.templates.domain.Entity;
 import nextgen.templates.java.PackageDeclaration;
 import nextgen.templates.piccolo2d.*;
@@ -27,6 +27,7 @@ public class STProject {
     private final PackageDeclaration stPackage = JavaPatterns.newPackageDeclaration("nextgen.st");
     private final PackageDeclaration stDomainPackage = JavaPatterns.newPackageDeclaration(stPackage, "domain");
     private final PackageDeclaration stModelPackage = JavaPatterns.newPackageDeclaration(stPackage, "model");
+    private final PackageDeclaration stModelNeoPackage = JavaPatterns.newPackageDeclaration(stModelPackage, "neo");
     private final PackageDeclaration stCanvasPackage = JavaPatterns.newPackageDeclaration(stPackage, "canvas");
 
     @Test
@@ -340,26 +341,51 @@ public class STProject {
                 .addRelations(newEnumField("type", "STValueType", "STMODEL,PRIMITIVE,ENUM"))
                 .addRelations(newExternalRef("value", Object.class));
 
-        writeBean(javaMainSrc, stModelPackage.getName(), newDomain("STModel")
+        final Domain domain = newDomain("STModel")
                 .addEntities(newEntity("STFile")
                         .addRelations(newStringField("name"))
                         .addRelations(newStringField("type"))
                         .addRelations(newStringField("packageName"))
                         .addRelations(newStringField("path")))
-                .addEntities(newEntity("STModule")
+                .addEntities(newEntity("STModel")
+                        .addRelations(newExternalRef("stTemplate", newType(stDomainPackage, "STTemplate")))
+                        .addRelations(newOneToMany("arguments", newEntity("STArgument")
+                                .addRelations(newExternalRef("stParameter", newType(stDomainPackage, "STParameter")))
+                                .addRelations(newOneToOne("value", stValue))
+                                .addRelations(newOneToMany("keyValues", newEntity("STArgumentKV")
+                                        .addRelations(newExternalRef("stParameterKey", newType(stDomainPackage, "STParameterKey")))
+                                        .addRelations(newOneToOne("value", stValue)))))));
+        writeBean(javaMainSrc, stModelPackage.getName(), domain);
+
+        // neo-persistence domain:
+
+        final Entity stValueNeo = newEntity("STValueNeo")
+                .addRelations(newStringField("uuid"))
+                .addRelations(newStringField("value"))
+                .addRelations(newStringField("type"));
+
+        final Entity stModelNeo = newEntity("STModelNeo")
+                .addRelations(newStringField("uuid"))
+                .addRelations(newStringField("stTemplate"))
+                .addRelations(newOneToMany("arguments", newEntity("STArgumentNeo")
+                        .addRelations(newStringField("uuid"))
+                        .addRelations(newStringField("stParameter"))
+                        .addRelations(newOneToOne("value", stValueNeo))
+                        .addRelations(newOneToMany("keyValues", newEntity("STArgumentKVNeo")
+                                .addRelations(newStringField("uuid"))
+                                .addRelations(newStringField("stParameterKey"))
+                                .addRelations(newOneToOne("value", stValueNeo))))));
+
+        stValueNeo.addRelations(newOneToOne("stModel", stModelNeo));
+
+        writeNeo(javaMainSrc, stModelNeoPackage.getName(), newDomain("STModelNeo")
+                .addEntities(newEntity("STFileNeo")
+                        .addRelations(newStringField("uuid"))
                         .addRelations(newStringField("name"))
-                        .addRelations(newOneToManyString("stGroups"))
-                        .addRelations(newOneToMany("models", newEntity("STModel")
-                                .addRelations(newExternalRef("stTemplate", DomainPatterns.newType(stDomainPackage, "STTemplate")))
-                                .addRelations(newOneToMany("arguments", newEntity("STArgument")
-                                        .addRelations(newExternalRef("stParameter", DomainPatterns.newType(stDomainPackage, "STParameter")))
-                                        .addRelations(newOneToOne("value", stValue))
-                                        .addRelations(newOneToMany("keyValues", newEntity("STArgumentKV")
-                                                .addRelations(newExternalRef("stParameterKey", DomainPatterns.newType(stDomainPackage, "STParameterKey")))
-                                                .addRelations(newOneToOne("value", stValue))))))))
-                        .addRelations(newOneToMany("values", stValue))
-                )
-        );
+                        .addRelations(newStringField("type"))
+                        .addRelations(newStringField("packageName"))
+                        .addRelations(newStringField("path")))
+                .addEntities(stModelNeo));
     }
 
     @Test

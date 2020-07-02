@@ -2,8 +2,6 @@ package nextgen.st.model;
 
 public class STModel {
 
-	public static boolean debug = false;
-
 	private final java.util.UUID uuid;
 	private nextgen.st.domain.STTemplate _stTemplate;
 	private java.util.List<STArgument> _arguments = new java.util.ArrayList<>();
@@ -70,12 +68,10 @@ public class STModel {
 	}
 
 	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
-		if (debug) System.out.println("STModel add listener " + listener.getClass().getSimpleName());
 		this.pcs.addPropertyChangeListener(listener);
 	}
 
 	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
-		if (debug) System.out.println("STModel rem listener " + listener.getClass().getSimpleName());
 		this.pcs.removePropertyChangeListener(listener);
 	}
 }

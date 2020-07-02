@@ -12,6 +12,10 @@ public class DeleteNode {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("deleteNode");
@@ -128,4 +132,4 @@ public class DeleteNode {
 				"	node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);\n" + 
 				"	node.delete();\n" + 
 				"} >>";
-} 
+}  

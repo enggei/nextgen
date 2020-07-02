@@ -16,6 +16,10 @@ public class NodeWrapper {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("NodeWrapper");
@@ -262,4 +266,4 @@ public class NodeWrapper {
 				"\n" + 
 				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"} >>";
-} 
+}  

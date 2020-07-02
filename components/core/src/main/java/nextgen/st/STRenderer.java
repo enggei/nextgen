@@ -1,7 +1,9 @@
 package nextgen.st;
 
-import com.generator.util.FileUtil;
-import nextgen.st.domain.*;
+import nextgen.st.domain.STEnumValue;
+import nextgen.st.domain.STGroupModel;
+import nextgen.st.domain.STParameterKey;
+import nextgen.st.domain.STTemplate;
 import nextgen.st.model.STArgument;
 import nextgen.st.model.STArgumentKV;
 import nextgen.st.model.STModel;
@@ -9,31 +11,18 @@ import nextgen.st.model.STValue;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
-import java.io.File;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static nextgen.st.STParser.readJsonObject;
 
 public class STRenderer {
 
     private final Set<STMapper> mappers = new LinkedHashSet<>();
 
-    public STRenderer(Set<STGroupModel> groupModels) {
+    public STRenderer(Collection<STGroupModel> groupModels) {
         setGroupModels(groupModels);
     }
 
-    public STRenderer(File templatesDir) {
-        Optional.ofNullable(STApp.list(templatesDir, ".json"))
-                .map(files -> {
-                    final Set<STGroupModel> stGroupModels = new LinkedHashSet<>();
-                    for (File file : files) stGroupModels.add(new STGroupModel(readJsonObject(file)));
-                    return stGroupModels;
-                })
-                .ifPresent(this::setGroupModels);
-    }
-
-    public void setGroupModels(Set<STGroupModel> groupModels) {
+    public void setGroupModels(Collection<STGroupModel> groupModels) {
         for (STGroupModel stGroupModel : groupModels)
             mappers.add(new STMapper(stGroupModel));
     }

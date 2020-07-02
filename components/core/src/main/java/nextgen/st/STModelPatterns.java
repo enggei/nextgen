@@ -1,6 +1,5 @@
 package nextgen.st;
 
-import com.generator.util.Reflect;
 import nextgen.st.domain.*;
 import nextgen.st.model.*;
 
@@ -10,16 +9,6 @@ public class STModelPatterns extends STModelFactory {
 
     public static STFile newSTFile(String name, String type, String path, String packageName) {
         return newSTFile().setName(name).setType(type).setPath(path).setPackageName(packageName);
-    }
-
-    public static STModule newSTModule(String name) {
-        return newSTModule().setName(name);
-    }
-
-    public static STModel newSTModel(STModule stModule, STTemplate stTemplate) {
-        final STModel stModel = newSTModel(stTemplate);
-        stModule.addModels(stModel);
-        return stModel;
     }
 
     public static STModel newSTModel(STTemplate stTemplate) {

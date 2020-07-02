@@ -13,6 +13,10 @@ public class EnumAccessors {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("enumAccessors");
@@ -127,4 +131,4 @@ public class EnumAccessors {
 				"	node.removeProperty(\"~name~\");\n" + 
 				"	return this;\n" + 
 				"} >>";
-} 
+}  

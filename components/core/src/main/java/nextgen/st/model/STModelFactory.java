@@ -6,10 +6,6 @@ public class STModelFactory {
 		return new STFile();
 	}
 
-	public static STModule newSTModule() { 
-		return new STModule();
-	}
-
 	public static STModel newSTModel() { 
 		return new STModel();
 	}

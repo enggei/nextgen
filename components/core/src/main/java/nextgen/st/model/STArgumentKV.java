@@ -2,8 +2,6 @@ package nextgen.st.model;
 
 public class STArgumentKV {
 
-	public static boolean debug = false;
-
 	private final java.util.UUID uuid;
 	private nextgen.st.domain.STParameterKey _stParameterKey;
 	private STValue _value;
@@ -72,12 +70,10 @@ public class STArgumentKV {
 	}
 
 	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
-		if (debug) System.out.println("STArgumentKV add listener " + listener.getClass().getSimpleName());
 		this.pcs.addPropertyChangeListener(listener);
 	}
 
 	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
-		if (debug) System.out.println("STArgumentKV rem listener " + listener.getClass().getSimpleName());
 		this.pcs.removePropertyChangeListener(listener);
 	}
 }

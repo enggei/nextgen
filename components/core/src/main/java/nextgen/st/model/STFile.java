@@ -2,8 +2,6 @@ package nextgen.st.model;
 
 public class STFile {
 
-	public static boolean debug = false;
-
 	private final java.util.UUID uuid;
 	private String _name;
 	private String _type;
@@ -82,12 +80,10 @@ public class STFile {
 	}
 
 	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
-		if (debug) System.out.println("STFile add listener " + listener.getClass().getSimpleName());
 		this.pcs.addPropertyChangeListener(listener);
 	}
 
 	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
-		if (debug) System.out.println("STFile rem listener " + listener.getClass().getSimpleName());
 		this.pcs.removePropertyChangeListener(listener);
 	}
 }

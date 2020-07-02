@@ -13,6 +13,10 @@ public class EnumListAccessors {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("enumListAccessors");
@@ -115,4 +119,4 @@ public class EnumListAccessors {
 				"public java.util.stream.Stream<~type~> get~name;format=\"capitalize\"~() { \n" + 
 				"	return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).spliterator(), false).map((relationship) -> ~type~.valueOf(relationship.getOtherNode(node).getProperty(\"value\").toString()));\n" + 
 				"} >>";
-} 
+}  

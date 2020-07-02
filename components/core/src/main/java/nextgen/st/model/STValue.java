@@ -2,8 +2,6 @@ package nextgen.st.model;
 
 public class STValue {
 
-	public static boolean debug = false;
-
 	private final java.util.UUID uuid;
 	private STValueType _type;
 	private java.lang.Object _value;
@@ -65,12 +63,10 @@ public class STValue {
 	}
 
 	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
-		if (debug) System.out.println("STValue add listener " + listener.getClass().getSimpleName());
 		this.pcs.addPropertyChangeListener(listener);
 	}
 
 	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
-		if (debug) System.out.println("STValue rem listener " + listener.getClass().getSimpleName());
 		this.pcs.removePropertyChangeListener(listener);
 	}
 }

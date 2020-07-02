@@ -13,6 +13,10 @@ public class ReferenceAccessors {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("referenceAccessors");
@@ -109,6 +113,7 @@ public class ReferenceAccessors {
 				"		if (relationship.getOtherNode(node).equals(dst.getNode())) return this;\n" + 
 				"		relationship.delete();\n" + 
 				"	}\n" + 
+				"	if (dst == null) return this;\n" + 
 				"	node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName(\"~name~\"));\n" + 
 				"	return this;\n" + 
 				"}\n" + 
@@ -118,8 +123,8 @@ public class ReferenceAccessors {
 				"	return relationship == null ? null : new ~type~(relationship.getOtherNode(node));\n" + 
 				"}\n" + 
 				"\n" + 
-				"public ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~(~type~ dst) { \n" + 
-				"	final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();\n" + 
+				"public ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() { \n" + 
+				"	final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(get~name;format=\"capitalize\"~Relation());\n" + 
 				"	existing.ifPresent(org.neo4j.graphdb.Relationship::delete);\n" + 
 				"	return this;\n" + 
 				"}\n" + 
@@ -127,4 +132,4 @@ public class ReferenceAccessors {
 				"public org.neo4j.graphdb.Relationship get~name;format=\"capitalize\"~Relation() { \n" + 
 				"	return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName(\"~name~\"), org.neo4j.graphdb.Direction.OUTGOING);\n" + 
 				"} >>";
-} 
+}  

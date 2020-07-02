@@ -14,6 +14,10 @@ public class NeoFactoryPropertyAccessors {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("NeoFactoryPropertyAccessors");
@@ -140,4 +144,4 @@ public class NeoFactoryPropertyAccessors {
 				"public java.util.stream.Stream<~entity;format=\"capitalize\"~> findAll~entity;format=\"capitalize\"~By~propertyName;format=\"capitalize\"~(~propertyType~ value) {\n" + 
 				"	return db.findNodes(org.neo4j.graphdb.Label.label(\"~entity~\"), \"~propertyName~\", value~if(isEnum)~.name()~endif~).stream().map(this::new~entity;format=\"capitalize\"~);\n" + 
 				"} >>";
-} 
+}  
