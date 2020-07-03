@@ -68,10 +68,21 @@ public class STValueNode extends STNode {
 
 		@Override
 		void actionPerformed(STValueNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			final String s = com.generator.util.SwingUtil.showInputDialog("Value", canvas, node.stValue.getValue().toString());
-			if (s == null || s.trim().length() == 0) return;
-			node.stValue.setValue(s);
-			node.setText(node.stValue.getValue().toString());
+			final JTextArea textArea = new JTextArea(15,40);
+			textArea.setText(node.stValue.getValue().toString());
+			final JPanel inputPanel = new JPanel(new BorderLayout());
+			inputPanel.add(textArea, BorderLayout.CENTER);
+			inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
+			com.generator.util.SwingUtil.showDialog(inputPanel, canvas, "Edit", new com.generator.util.SwingUtil.ConfirmAction() {
+				@Override
+				public void verifyAndCommit() throws Exception {
+					final String s = textArea.getText().trim();
+					javax.swing.SwingUtilities.invokeLater(() ->  {
+						node.stValue.setValue(s);
+						node.setText(node.stValue.getValue().toString());	
+					});
+				}
+			});
 		}
 	}
 }

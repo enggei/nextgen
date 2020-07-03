@@ -113,7 +113,9 @@ public class BoundedReferenceAccessors {
 				"\n" + 
 				"public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) {\n" + 
 				"	~type~ oldValue = this._~name~;\n" + 
+				"	if (oldValue != null) oldValue.removePropertyChangeListener(this);\n" + 
 				"	this._~name~ = value;\n" + 
+				"	if (value != null) value.addPropertyChangeListener(this);\n" + 
 				"	this.pcs.firePropertyChange(\"~name~\", oldValue, value);\n" + 
 				"	return this;\n" + 
 				"}\n" + 
@@ -121,6 +123,7 @@ public class BoundedReferenceAccessors {
 				"public ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() {\n" + 
 				"	~type~ oldValue = this._~name~;\n" + 
 				"	this._~name~ = null;\n" + 
+				"	if (oldValue != null) oldValue.removePropertyChangeListener(this);\n" + 
 				"	this.pcs.firePropertyChange(\"~name~\", oldValue, null);\n" + 
 				"	return this;\n" + 
 				"} >>";

@@ -200,12 +200,12 @@ public class DomainPatterns extends DomainST {
                 }
                 case EXT_REF: {
                     entityClass.addFields(getCanonicalName(o.getDst()), o.getName(), null);
-                    entityClass.addAccessors(JavaST.newBoundedReferenceAccessors().setClassName(entityName).setType(getCanonicalName(o.getDst())).setName(o.getName()));
+                    entityClass.addAccessors(JavaST.newBoundedExternalReferenceAccessors().setClassName(entityName).setType(getCanonicalName(o.getDst())).setName(o.getName()));
                     break;
                 }
                 case EXT_LIST: {
                     entityClass.addFields(JavaST.newListType().setType(getCanonicalName(o.getDst())), o.getName(), JavaPatterns.newArrayListInstance());
-                    entityClass.addAccessors(JavaST.newBoundedListAccessors().setClassName(entityName).setType(getCanonicalName(o.getDst())).setName(o.getName()));
+                    entityClass.addAccessors(JavaST.newBoundedExternalListAccessors().setClassName(entityName).setType(getCanonicalName(o.getDst())).setName(o.getName()));
                     break;
                 }
                 case PRIM_REF: {
@@ -230,7 +230,7 @@ public class DomainPatterns extends DomainST {
                 case LIST: {
                     final Entity dst = asEntity(o.getDst());
                     entityClass.addFields(JavaST.newListType().setType(dst.getName()), o.getName(), JavaPatterns.newArrayListInstance());
-                    entityClass.addAccessors(JavaST.newBoundedListAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
+                    entityClass.addAccessors(JavaST.newBoundedListReferenceAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
 
                     generateBean(root, packageDeclaration, dst, visited);
                     break;

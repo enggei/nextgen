@@ -81,6 +81,7 @@ public class STFileNode extends STNode {
 	@Override
 	public void propertyChange(java.beans.PropertyChangeEvent evt) {
 		final Object source = evt.getSource();
+		System.out.println("Event :" + source.getClass().getCanonicalName());
 		if (source instanceof nextgen.st.model.STModel) {
 			final nextgen.st.model.STModel stModel = (nextgen.st.model.STModel) source;
 			this.stFile.setName(nextgen.st.STModelPatterns.getSTModelValue(stModel, "name", this.stFile.getName()));

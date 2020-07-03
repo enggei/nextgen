@@ -39,21 +39,21 @@ public class TestModelling {
 
                         find(domainSTGroupModel, "single").ifPresent(single -> {
 
-                            final STModel singleModel = newSTModel(single);
+                            final STModel singleModel = newSTModel().setStTemplate(single);
                             single.getParameters().findFirst().ifPresent(stParameter -> addArgument(single, singleModel, newSTArgument(stParameter, newSTValue("HelloWorld"))));
 
                             find(domainSTGroupModel, "list").ifPresent(list -> {
 
                                 list.getParameters().findFirst().ifPresent(stParameter -> {
 
-                                    final STModel listModel = newSTModel(list);
+                                    final STModel listModel = newSTModel().setStTemplate(list);
                                     addArgument(list, listModel, newSTArgument(stParameter, newSTValue("1")));
                                     addArgument(list, listModel, newSTArgument(stParameter, newSTValue("2")));
                                     addArgument(list, listModel, newSTArgument(stParameter, newSTValue(singleModel)));
 
                                     find(domainSTGroupModel, "kv").ifPresent(kv -> {
 
-                                        final STModel kvModel = newSTModel(kv);
+                                        final STModel kvModel = newSTModel().setStTemplate(kv);
 
                                         kv.getParameters().forEach(kvParameter -> {
                                             final List<STParameterKey> keys = kvParameter.getKeys().collect(Collectors.toList());

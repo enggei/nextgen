@@ -11,11 +11,7 @@ public class STModelPatterns extends STModelFactory {
         return newSTFile().setName(name).setType(type).setPath(path).setPackageName(packageName);
     }
 
-    public static STModel newSTModel(STTemplate stTemplate) {
-        return newSTModel().setStTemplate(stTemplate);
-    }
-
-    public static STArgument newSTArgument(STParameter stParameter, STValue stValue) {
+  public static STArgument newSTArgument(STParameter stParameter, STValue stValue) {
         return newSTArgument()
                 .setStParameter(stParameter)
                 .setValue(stValue);
@@ -43,7 +39,7 @@ public class STModelPatterns extends STModelFactory {
     }
 
     public static STValue newSTValue(STModel stModel) {
-        return newSTValue().setType(STValueType.STMODEL).setValue(stModel);
+        return newSTValue().setType(STValueType.STMODEL).setStModel(stModel);
     }
 
     public static STValue newSTValue(STEnumValue value) {
@@ -69,7 +65,9 @@ public class STModelPatterns extends STModelFactory {
         stTemplate.getParameters()
                 .filter(parameter -> parameter.equals(stArgument.getStParameter()))
                 .findFirst()
-                .ifPresent(parameter -> stModel.addArguments(stArgument));
+                .ifPresent(parameter -> {
+                    stModel.addArguments(stArgument);
+                });
     }
 
     public static Optional<STGroupModel> find(final Map<String, STGroupModel> stGroupModelMap, String groupName) {

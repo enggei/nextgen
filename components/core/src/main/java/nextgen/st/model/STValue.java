@@ -1,10 +1,11 @@
 package nextgen.st.model;
 
-public class STValue {
+public class STValue implements java.beans.PropertyChangeListener {
 
 	private final java.util.UUID uuid;
 	private STValueType _type;
 	private java.lang.Object _value;
+	private STModel _stModel;
 
 	private final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);
 
@@ -49,6 +50,27 @@ public class STValue {
 		return this;
 	}
 
+	public STModel getStModel() {
+		return this._stModel;
+	}
+
+	public STValue setStModel(STModel value) {
+		STModel oldValue = this._stModel;
+		if (oldValue != null) oldValue.removePropertyChangeListener(this);
+		this._stModel = value;
+		if (value != null) value.addPropertyChangeListener(this);
+		this.pcs.firePropertyChange("stModel", oldValue, value);
+		return this;
+	}
+
+	public STValue removeStModel() {
+		STModel oldValue = this._stModel;
+		this._stModel = null;
+		if (oldValue != null) oldValue.removePropertyChangeListener(this);
+		this.pcs.firePropertyChange("stModel", oldValue, null);
+		return this;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -62,11 +84,19 @@ public class STValue {
 		return java.util.Objects.hash(uuid);
 	}
 
+	@Override
+	public void propertyChange(java.beans.PropertyChangeEvent evt) {
+		System.out.println("STValue updated");
+		this.pcs.firePropertyChange("STValue", null, this);
+	}
+
 	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
+		System.out.println("STValue add " + listener.getClass().getSimpleName());
 		this.pcs.addPropertyChangeListener(listener);
 	}
 
 	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
+		System.out.println("STValue del " + listener.getClass().getSimpleName());
 		this.pcs.removePropertyChangeListener(listener);
 	}
 }

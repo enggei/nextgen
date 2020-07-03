@@ -9,7 +9,10 @@ public class JavaST {
 	ListType.st + "\n" + 
 	SetType.st + "\n" + 
 	Bean.st + "\n" + 
+	BoundedExternalListAccessors.st + "\n" + 
+	BoundedExternalReferenceAccessors.st + "\n" + 
 	BoundedListAccessors.st + "\n" + 
+	BoundedListReferenceAccessors.st + "\n" + 
 	BoundedPrimitiveAccessors.st + "\n" + 
 	BoundedReferenceAccessors.st + "\n" + 
 	Enum.st + "\n" + 
@@ -152,8 +155,20 @@ public class JavaST {
 		return new Bean(stGroup);
 	} 
 
+	public static BoundedExternalListAccessors newBoundedExternalListAccessors() {
+		return new BoundedExternalListAccessors(stGroup);
+	} 
+
+	public static BoundedExternalReferenceAccessors newBoundedExternalReferenceAccessors() {
+		return new BoundedExternalReferenceAccessors(stGroup);
+	} 
+
 	public static BoundedListAccessors newBoundedListAccessors() {
 		return new BoundedListAccessors(stGroup);
+	} 
+
+	public static BoundedListReferenceAccessors newBoundedListReferenceAccessors() {
+		return new BoundedListReferenceAccessors(stGroup);
 	} 
 
 	public static BoundedPrimitiveAccessors newBoundedPrimitiveAccessors() {

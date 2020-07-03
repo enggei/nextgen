@@ -1,6 +1,6 @@
 package nextgen.st.model;
 
-public class STModel {
+public class STModel implements java.beans.PropertyChangeListener {
 
 	private final java.util.UUID uuid;
 	private STFile _file;
@@ -27,7 +27,9 @@ public class STModel {
 
 	public STModel setFile(STFile value) {
 		STFile oldValue = this._file;
+		if (oldValue != null) oldValue.removePropertyChangeListener(this);
 		this._file = value;
+		if (value != null) value.addPropertyChangeListener(this);
 		this.pcs.firePropertyChange("file", oldValue, value);
 		return this;
 	}
@@ -35,6 +37,7 @@ public class STModel {
 	public STModel removeFile() {
 		STFile oldValue = this._file;
 		this._file = null;
+		if (oldValue != null) oldValue.removePropertyChangeListener(this);
 		this.pcs.firePropertyChange("file", oldValue, null);
 		return this;
 	}
@@ -63,12 +66,14 @@ public class STModel {
 
 	public STModel addArguments(STArgument value) {
 		this._arguments.add(value);
+		value.addPropertyChangeListener(this);
 		this.pcs.firePropertyChange("arguments", null, value);
 		return this;
 	}
 
 	public STModel removeArguments(STArgument value) {
 		this._arguments.remove(value);
+		if (value != null) value.removePropertyChangeListener(this);
 		this.pcs.firePropertyChange("arguments", value, null);
 		return this;
 	}
@@ -86,11 +91,19 @@ public class STModel {
 		return java.util.Objects.hash(uuid);
 	}
 
+	@Override
+	public void propertyChange(java.beans.PropertyChangeEvent evt) {
+		System.out.println("STModel updated");
+		this.pcs.firePropertyChange("STModel", null, this);
+	}
+
 	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
+		System.out.println("STModel add " + listener.getClass().getSimpleName());
 		this.pcs.addPropertyChangeListener(listener);
 	}
 
 	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
+		System.out.println("STModel del " + listener.getClass().getSimpleName());
 		this.pcs.removePropertyChangeListener(listener);
 	}
 }

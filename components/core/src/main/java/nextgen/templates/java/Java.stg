@@ -115,7 +115,7 @@ EnumValue(name,lexical) ::= <<~name~~if(lexical)~() {
 
 Bean(package,name,fields,fieldDeclarations,accessors,lexical) ::= <<package ~package~;
 
-public class ~name~ {
+public class ~name~ implements java.beans.PropertyChangeListener {
 
 	private final java.util.UUID uuid;
 	~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator="\n"~
@@ -158,11 +158,19 @@ public class ~name~ {
 		return java.util.Objects.hash(uuid);
 	}
 
+	@Override
+	public void propertyChange(java.beans.PropertyChangeEvent evt) {
+		System.out.println("~name~ updated");
+		this.pcs.firePropertyChange("~name~", null, this);
+	}
+	
 	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
+		System.out.println("~name~ add " + listener.getClass().getSimpleName());
 		this.pcs.addPropertyChangeListener(listener);
 	}
 
 	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
+		System.out.println("~name~ del " + listener.getClass().getSimpleName());
 		this.pcs.removePropertyChangeListener(listener);
 	}
 }  >>
@@ -184,6 +192,61 @@ boundedReferenceAccessors(type,name,className) ::= <<public ~type~ get~name;form
 
 public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) {
 	~type~ oldValue = this._~name~;
+	if (oldValue != null) oldValue.removePropertyChangeListener(this);
+	this._~name~ = value;
+	if (value != null) value.addPropertyChangeListener(this);
+	this.pcs.firePropertyChange("~name~", oldValue, value);
+	return this;
+}
+
+public ~className;format="capitalize"~ remove~name;format="capitalize"~() {
+	~type~ oldValue = this._~name~;
+	this._~name~ = null;
+	if (oldValue != null) oldValue.removePropertyChangeListener(this);
+	this.pcs.firePropertyChange("~name~", oldValue, null);
+	return this;
+}  >>
+
+boundedListAccessors(type,name,className) ::= <<public java.util.List<~type~> get~name;format="capitalize"~() {
+	return this._~name~;
+}
+
+public ~className~ add~name;format="capitalize"~(~type~ value) {
+	this._~name~.add(value);
+	this.pcs.firePropertyChange("~name~", null, value);
+	return this;
+}
+
+public ~className~ remove~name;format="capitalize"~(~type~ value) {
+	this._~name~.remove(value);
+	this.pcs.firePropertyChange("~name~", value, null);
+	return this;
+}  >>
+
+boundedListReferenceAccessors(type,name,className) ::= <<public java.util.List<~type~> get~name;format="capitalize"~() {
+	return this._~name~;
+}
+
+public ~className~ add~name;format="capitalize"~(~type~ value) {
+	this._~name~.add(value);
+	if (value != null) value.addPropertyChangeListener(this);
+	this.pcs.firePropertyChange("~name~", null, value);
+	return this;
+}
+
+public ~className~ remove~name;format="capitalize"~(~type~ value) {
+	this._~name~.remove(value);
+	if (value != null) value.removePropertyChangeListener(this);
+	this.pcs.firePropertyChange("~name~", value, null);
+	return this;
+}  >>
+
+boundedExternalReferenceAccessors(type,name,className) ::= <<public ~type~ get~name;format="capitalize"~() {
+	return this._~name~;
+}
+
+public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) {
+	~type~ oldValue = this._~name~;
 	this._~name~ = value;
 	this.pcs.firePropertyChange("~name~", oldValue, value);
 	return this;
@@ -196,7 +259,7 @@ public ~className;format="capitalize"~ remove~name;format="capitalize"~() {
 	return this;
 }  >>
 
-boundedListAccessors(type,name,className) ::= <<public java.util.List<~type~> get~name;format="capitalize"~() {
+boundedExternalListAccessors(type,name,className) ::= <<public java.util.List<~type~> get~name;format="capitalize"~() {
 	return this._~name~;
 }
 

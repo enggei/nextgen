@@ -872,6 +872,7 @@ public class STNavigator extends JPanel {
                             actions.add(newSetInterfacesAction(childTemplates));
 
                         actions.add(newModelAction());
+                        actions.add(openAllModelsAction());
                         actions.add(newChildTemplateAction());
                         actions.add(newSetParameterTypesAction());
                         actions.add(newSetInterfacesAction());
@@ -1050,6 +1051,20 @@ public class STNavigator extends JPanel {
                                     });
                                 });
                             });
+                        });
+                    }
+
+                    private Action openAllModelsAction() {
+                        return newAction("Open all instances", actionEvent -> {
+                            getParentNode(STGroupTreeNode.class)
+                                    .flatMap(stGroupTreeNode -> findCanvas(tabbedPane))
+                                    .ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> {
+                                        db.doInTransaction(transaction ->
+                                                db.getAllSTModelsFor(getModel())
+                                                        .forEach(stModel -> stCanvas.addNode(new STModelNode(stCanvas, stRenderer.render(stModel), stModel.getUuid(), getModel(), stModel, stRenderer))));
+                                        tabbedPane.setSelectedComponent(stCanvas);
+                                        stCanvas.requestFocusInWindow();
+                                    }));
                         });
                     }
 

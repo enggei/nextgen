@@ -1,6 +1,6 @@
 package nextgen.st.model;
 
-public class STFile {
+public class STFile implements java.beans.PropertyChangeListener {
 
 	private final java.util.UUID uuid;
 	private String _name;
@@ -79,11 +79,19 @@ public class STFile {
 		return java.util.Objects.hash(uuid);
 	}
 
+	@Override
+	public void propertyChange(java.beans.PropertyChangeEvent evt) {
+		System.out.println("STFile updated");
+		this.pcs.firePropertyChange("STFile", null, this);
+	}
+
 	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
+		System.out.println("STFile add " + listener.getClass().getSimpleName());
 		this.pcs.addPropertyChangeListener(listener);
 	}
 
 	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
+		System.out.println("STFile del " + listener.getClass().getSimpleName());
 		this.pcs.removePropertyChangeListener(listener);
 	}
 }

@@ -102,12 +102,13 @@ public class STRenderer {
 
         switch (value.getType()) {
             case STMODEL:
-                return render((STModel) value.getValue());
+                return render(value.getStModel());
             case PRIMITIVE:
-                final String s = value.getValue().toString();
+                final String s = value.getValue() == null ? null : value.getValue().toString();
                 return s == null || s.trim().length() == 0 ? null : s;
             case ENUM:
-                return ((STEnumValue) value.getValue()).getLexical();
+                final Object enumValue = value.getValue();
+                return (enumValue instanceof STEnumValue) ? ((STEnumValue) enumValue).getLexical() : (enumValue == null ? null : enumValue.toString());
         }
         return null;
     }

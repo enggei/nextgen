@@ -13,7 +13,10 @@ public class JavaSTTests {
 		testListType();
 		testSetType();
 		testBean();
+		testBoundedExternalListAccessors();
+		testBoundedExternalReferenceAccessors();
 		testBoundedListAccessors();
+		testBoundedListReferenceAccessors();
 		testBoundedPrimitiveAccessors();
 		testBoundedReferenceAccessors();
 		testEnum();
@@ -128,8 +131,23 @@ public class JavaSTTests {
 	} 
 
 	@org.junit.Test
+	public void testBoundedExternalListAccessors() {
+		System.out.println("\n--- TEST BoundedExternalListAccessors:\n" + newBoundedExternalListAccessors());
+	} 
+
+	@org.junit.Test
+	public void testBoundedExternalReferenceAccessors() {
+		System.out.println("\n--- TEST BoundedExternalReferenceAccessors:\n" + newBoundedExternalReferenceAccessors());
+	} 
+
+	@org.junit.Test
 	public void testBoundedListAccessors() {
 		System.out.println("\n--- TEST BoundedListAccessors:\n" + newBoundedListAccessors());
+	} 
+
+	@org.junit.Test
+	public void testBoundedListReferenceAccessors() {
+		System.out.println("\n--- TEST BoundedListReferenceAccessors:\n" + newBoundedListReferenceAccessors());
 	} 
 
 	@org.junit.Test

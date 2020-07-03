@@ -5,6 +5,9 @@ import nextgen.st.domain.STParameter;
 import nextgen.st.domain.STParameterKey;
 import nextgen.st.domain.STTemplate;
 import nextgen.st.model.*;
+import org.neo4j.graphdb.Direction;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -21,7 +24,62 @@ public class STModelDB extends STModelNeoNeoFactory {
     }
 
     public Stream<STModel> getAllSTModels() {
-        return findAllSTModelNeo().map(this::map);
+        return findAllSTModelNeo()
+                .map(this::map);
+    }
+
+    public Stream<STModel> getAllSTModelsFor(STTemplate stTemplate) {
+        return findAllSTModelNeo()
+                .filter(stModelNeo -> stTemplate.uuid().equals(stModelNeo.getStTemplate()))
+                .map(this::map);
+    }
+
+    public Stream<STModel> getAllSTModelsWithParameter(String parameterName) {
+        return findAllSTModelNeo()
+                .map(this::map)
+                .filter(stModel -> hasParameter(stModel, parameterName));
+    }
+
+    public Stream<STModel> getAllSTModelsWithParameterValue(String parameterName, String value) {
+        return findAllSTModelNeo()
+                .map(this::map)
+                .filter(stModel -> hasParameterValue(stModel, parameterName, value));
+    }
+
+    private boolean hasParameter(STModel stModel, String parameterName) {
+        return stModel.getArguments()
+                .stream()
+                .anyMatch(stArgument -> stArgument.getStParameter().getName().equalsIgnoreCase(parameterName));
+    }
+
+    private boolean hasParameterValue(STModel stModel, String parameterName, String value) {
+        return stModel.getArguments()
+                .stream()
+                .filter(stArgument -> stArgument.getStParameter().getName().equalsIgnoreCase(parameterName))
+                .filter(stArgument -> stArgument.getValue().getType().equals(STValueType.PRIMITIVE))
+                .anyMatch(stArgument -> stArgument.getValue().getValue().toString().equalsIgnoreCase(value));
+    }
+
+    public STModelDB remove(STModel stModel) {
+        final STModelNeo singleModelNeo = findSTModelNeoByUuid(stModel.getUuid().toString());
+        if (singleModelNeo == null) return this;
+        deleteTree(singleModelNeo.getNode());
+        return this;
+    }
+
+    // deletes node and its outgoing relations (NOT if it has incoming dependencies)
+    private void deleteTree(Node node) {
+
+        final Iterator<Relationship> incoming = node.getRelationships(Direction.INCOMING).iterator();
+        if (incoming.hasNext()) return;
+
+        for (Relationship relation : node.getRelationships(Direction.OUTGOING)) {
+            final Node otherNode = relation.getOtherNode(node);
+            relation.delete();
+            deleteTree(otherNode);
+        }
+
+        node.delete();
     }
 
     public STModelNeo save(STModel stModel) {
@@ -70,7 +128,7 @@ public class STModelDB extends STModelNeoNeoFactory {
         switch (stValue.getType()) {
             case STMODEL:
                 stValueNeo.removeValue();
-                stValueNeo.setStModel(save(((STModel) stValue.getValue())));
+                stValueNeo.setStModel(save((stValue.getStModel())));
                 break;
             case PRIMITIVE:
             case ENUM:
@@ -126,7 +184,7 @@ public class STModelDB extends STModelNeoNeoFactory {
         stValue.setType(STValueType.valueOf(stValueNeo.getType()));
         switch (stValue.getType()) {
             case STMODEL:
-                stValue.setValue(map(stValueNeo.getStModel()));
+                stValue.setStModel(map(stValueNeo.getStModel()));
                 break;
             case PRIMITIVE:
             case ENUM:

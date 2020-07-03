@@ -168,7 +168,7 @@
     }, {
       "uuid" : "a8289fe2-14b3-4683-9490-5ef389a3f5e4",
       "name" : "Bean",
-      "text" : "package ~package~;\n\npublic class ~name~ {\n\n\tprivate final java.util.UUID uuid;\n\t~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\t~fieldDeclarations:{it|~it~};separator=\"\\n\"~\n\n\tprivate final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);\n\t\n\tpublic ~name~() {\n\t\tthis.uuid = java.util.UUID.randomUUID();\n\t}\n\n\tpublic ~name~(java.util.UUID uuid) {\n\t\tthis.uuid = uuid;\n\t}\n\n\tpublic java.util.UUID getUuid() {\n\t\treturn this.uuid;\n\t}\t\n\t\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n\t\n~if(lexical)~\n\n\t@Override\n\tpublic String toString() {\n\t\treturn ~lexical:{it|_~it~};separator=\" + \\\" \\\" + \"~;\n\t}\n~endif~\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn uuid.equals(that.uuid);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(uuid);\n\t}\n\n\tpublic void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tthis.pcs.addPropertyChangeListener(listener);\n\t}\n\n\tpublic void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tthis.pcs.removePropertyChangeListener(listener);\n\t}\n} ",
+      "text" : "package ~package~;\n\npublic class ~name~ implements java.beans.PropertyChangeListener {\n\n\tprivate final java.util.UUID uuid;\n\t~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\t~fieldDeclarations:{it|~it~};separator=\"\\n\"~\n\n\tprivate final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);\n\t\n\tpublic ~name~() {\n\t\tthis.uuid = java.util.UUID.randomUUID();\n\t}\n\n\tpublic ~name~(java.util.UUID uuid) {\n\t\tthis.uuid = uuid;\n\t}\n\n\tpublic java.util.UUID getUuid() {\n\t\treturn this.uuid;\n\t}\t\n\t\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n\t\n~if(lexical)~\n\n\t@Override\n\tpublic String toString() {\n\t\treturn ~lexical:{it|_~it~};separator=\" + \\\" \\\" + \"~;\n\t}\n~endif~\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn uuid.equals(that.uuid);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(uuid);\n\t}\n\n\t@Override\n\tpublic void propertyChange(java.beans.PropertyChangeEvent evt) {\n\t\tSystem.out.println(\"~name~ updated\");\n\t\tthis.pcs.firePropertyChange(\"~name~\", null, this);\n\t}\n\t\n\tpublic void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tSystem.out.println(\"~name~ add \" + listener.getClass().getSimpleName());\n\t\tthis.pcs.addPropertyChangeListener(listener);\n\t}\n\n\tpublic void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tSystem.out.println(\"~name~ del \" + listener.getClass().getSimpleName());\n\t\tthis.pcs.removePropertyChangeListener(listener);\n\t}\n} ",
       "parameters" : [ {
         "uuid" : "cb61bc25-1333-40db-9cd8-ea46acf2540c",
         "name" : "package",
@@ -236,7 +236,7 @@
       }, {
         "uuid" : "fdd1d906-65a3-489d-938e-be7650b01f72",
         "name" : "boundedReferenceAccessors",
-        "text" : "public ~type~ get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) {\n\t~type~ oldValue = this._~name~;\n\tthis._~name~ = value;\n\tthis.pcs.firePropertyChange(\"~name~\", oldValue, value);\n\treturn this;\n}\n\npublic ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() {\n\t~type~ oldValue = this._~name~;\n\tthis._~name~ = null;\n\tthis.pcs.firePropertyChange(\"~name~\", oldValue, null);\n\treturn this;\n} ",
+        "text" : "public ~type~ get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) {\n\t~type~ oldValue = this._~name~;\n\tif (oldValue != null) oldValue.removePropertyChangeListener(this);\n\tthis._~name~ = value;\n\tif (value != null) value.addPropertyChangeListener(this);\n\tthis.pcs.firePropertyChange(\"~name~\", oldValue, value);\n\treturn this;\n}\n\npublic ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() {\n\t~type~ oldValue = this._~name~;\n\tthis._~name~ = null;\n\tif (oldValue != null) oldValue.removePropertyChangeListener(this);\n\tthis.pcs.firePropertyChange(\"~name~\", oldValue, null);\n\treturn this;\n} ",
         "parameters" : [ {
           "uuid" : "f5cdb8a5-0624-4dcf-86cc-9f9d9590bb0b",
           "name" : "type",
@@ -269,6 +269,66 @@
           "argumentType" : "Object"
         }, {
           "uuid" : "8a7bee5e-6c88-4cc2-91e8-f281bf2d7aee",
+          "name" : "className",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "a3e11d70-a806-40a4-989d-ef41c01d047b",
+        "name" : "boundedListReferenceAccessors",
+        "text" : "public java.util.List<~type~> get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className~ add~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.add(value);\n\tif (value != null) value.addPropertyChangeListener(this);\n\tthis.pcs.firePropertyChange(\"~name~\", null, value);\n\treturn this;\n}\n\npublic ~className~ remove~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.remove(value);\n\tif (value != null) value.removePropertyChangeListener(this);\n\tthis.pcs.firePropertyChange(\"~name~\", value, null);\n\treturn this;\n} ",
+        "parameters" : [ {
+          "uuid" : "4d430506-8c99-47cd-baa0-fa15b6a1d0be",
+          "name" : "type",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "6a984339-0c4f-4f79-871c-d3fc3eca769b",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "97e6b9d0-458a-41f0-991b-4b9de85c8714",
+          "name" : "className",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "9a273a3f-d7b3-4717-aaf0-84b487fc4de3",
+        "name" : "boundedExternalReferenceAccessors",
+        "text" : "public ~type~ get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) {\n\t~type~ oldValue = this._~name~;\n\tthis._~name~ = value;\n\tthis.pcs.firePropertyChange(\"~name~\", oldValue, value);\n\treturn this;\n}\n\npublic ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() {\n\t~type~ oldValue = this._~name~;\n\tthis._~name~ = null;\n\tthis.pcs.firePropertyChange(\"~name~\", oldValue, null);\n\treturn this;\n} ",
+        "parameters" : [ {
+          "uuid" : "e22060d9-fe6b-46ef-a304-2ff46c73c494",
+          "name" : "type",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "5606a26a-cd29-48d7-8af7-3574b1be901b",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "278ebcfa-814d-4b0f-8886-3186b05fb5d6",
+          "name" : "className",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "6bcf8fc6-52fc-457b-8f7e-61815dfe04a6",
+        "name" : "boundedExternalListAccessors",
+        "text" : "public java.util.List<~type~> get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className~ add~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.add(value);\n\tthis.pcs.firePropertyChange(\"~name~\", null, value);\n\treturn this;\n}\n\npublic ~className~ remove~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.remove(value);\n\tthis.pcs.firePropertyChange(\"~name~\", value, null);\n\treturn this;\n} ",
+        "parameters" : [ {
+          "uuid" : "c4e304e6-a957-4b8a-b61d-7fefa5ee3f12",
+          "name" : "type",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "270feb4d-7953-4b7b-a94c-149b8bd1d91e",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "b13fdc5d-06f1-4365-a19e-0b5f3a6c994e",
           "name" : "className",
           "type" : "SINGLE",
           "argumentType" : "Object"
