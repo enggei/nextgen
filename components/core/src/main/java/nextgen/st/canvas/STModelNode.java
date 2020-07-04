@@ -4,19 +4,13 @@ import com.generator.util.SwingUtil;
 import nextgen.st.domain.STParameterKey;
 import nextgen.st.model.STArgumentKV;
 import nextgen.st.model.STValue;
-import nextgen.st.model.STValueType;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
-
-import static nextgen.st.STModelPatterns.*;
 
 public class STModelNode extends STNode {
 
@@ -24,13 +18,11 @@ public class STModelNode extends STNode {
     nextgen.st.model.STModel stModel;
     nextgen.st.STRenderer stRenderer;
 
-    public STModelNode(STCanvas canvas, String initText, java.util.UUID uuid, nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STModel stModel, nextgen.st.STRenderer stRenderer) {
-        super(canvas, initText, uuid);
+    public STModelNode(STCanvas canvas, nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STModel stModel, nextgen.st.STRenderer stRenderer) {
+        super(canvas, stRenderer.render(stModel), UUID.fromString(stModel.getUuid()));
         this.stTemplate = stTemplate;
         this.stModel = stModel;
         this.stRenderer = stRenderer;
-        if (this.stModel != null)
-            this.stModel.addPropertyChangeListener(this);
     }
 
 
@@ -55,8 +47,7 @@ public class STModelNode extends STNode {
                         void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
                             final String s = SwingUtil.showInputDialog(stParameter.getName(), canvas);
                             if (s == null || s.trim().length() == 0) return;
-                            final nextgen.st.model.STValue stValue = newSTValue(s.trim());
-                            setArgument(stTemplate, stModel, newSTArgument(stParameter, stValue));
+                            canvas.modelDb.setArgument(stModel, stParameter, canvas.modelDb.newSTValue(s.trim()));
                             setText(stRenderer.render(stModel));
                         }
                     });
@@ -65,7 +56,7 @@ public class STModelNode extends STNode {
                         stParameterMenu.add(new STNode.NodeAction<STModelNode>("Set " + stParameter.getName() + " = " + stNode.getText().substring(0, end), this, canvas, event) {
                             @Override
                             void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-                                setArgument(stTemplate, stModel, newSTArgument(stParameter, stNode.stValue));
+                                canvas.modelDb.setArgument(stModel, stParameter, stNode.stValue);
                                 setText(stRenderer.render(stModel));
                             }
                         });
@@ -75,7 +66,7 @@ public class STModelNode extends STNode {
                         stParameterMenu.add(new STNode.NodeAction<STModelNode>("Set " + stParameter.getName() + " = " + stNode.getText().substring(0, end), this, canvas, event) {
                             @Override
                             void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-                                setArgument(stTemplate, stModel, newSTArgument(stParameter, newSTValue(stNode.stModel)));
+                                canvas.modelDb.setArgument(stModel, stParameter, canvas.modelDb.newSTValue(stNode.stModel));
                                 setText(stRenderer.render(stModel));
                             }
                         });
@@ -88,9 +79,9 @@ public class STModelNode extends STNode {
                         void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
                             final String s = SwingUtil.showInputDialog(stParameter.getName(), canvas);
                             if (s == null || s.trim().length() == 0) return;
-                            final nextgen.st.model.STValue stValue = newSTValue(s.trim());
-                            canvas.addNode(new STValueNode(canvas, s, stValue.getUuid(), stValue, node.stRenderer));
-                            addArgument(stTemplate, stModel, newSTArgument(stParameter, stValue));
+                            final nextgen.st.model.STValue stValue = canvas.modelDb.newSTValue(s.trim());
+                            canvas.addNode(new STValueNode(canvas, s, UUID.fromString(stValue.getUuid()), stValue, node.stRenderer));
+                            canvas.modelDb.addArgument(stModel, stParameter, stValue);
                             setText(stRenderer.render(stModel));
                         }
                     });
@@ -99,7 +90,7 @@ public class STModelNode extends STNode {
                         stParameterMenu.add(new STNode.NodeAction<STModelNode>("Add " + stParameter.getName() + " = " + stNode.getText().substring(0, end), this, canvas, event) {
                             @Override
                             void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-                                addArgument(stTemplate, stModel, newSTArgument(stParameter, stNode.stValue));
+                                canvas.modelDb.addArgument(stModel, stParameter, stNode.stValue);
                                 setText(stRenderer.render(stModel));
                             }
                         });
@@ -109,7 +100,7 @@ public class STModelNode extends STNode {
                         stParameterMenu.add(new STNode.NodeAction<STModelNode>("Add " + stParameter.getName() + " = " + stNode.getText().substring(0, end), this, canvas, event) {
                             @Override
                             void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-                                addArgument(stTemplate, stModel, newSTArgument(stParameter, newSTValue(stNode.stModel)));
+                                canvas.modelDb.addArgument(stModel, stParameter, canvas.modelDb.newSTValue(stNode.stModel));
                                 setText(stRenderer.render(stModel));
                             }
                         });
@@ -135,9 +126,9 @@ public class STModelNode extends STNode {
                                     for (Map.Entry<STParameterKey, JTextField> fieldEntry : fieldMap.entrySet()) {
                                         final String value = fieldEntry.getValue().getText().trim();
                                         if (value.length() == 0) continue;
-                                        kvs.add(new STArgumentKV().setStParameterKey(fieldEntry.getKey()).setValue(newSTValue(value)));
+                                        kvs.add(canvas.modelDb.newSTArgumentKV(fieldEntry.getKey(), canvas.modelDb.newSTValue(value)));
                                     }
-                                    addArgument(stTemplate, stModel, newSTArgument(stParameter, kvs));
+                                    canvas.modelDb.addArgument(stModel, stParameter, kvs);
                                     setText(stRenderer.render(stModel));
                                 }
                             });
@@ -159,19 +150,15 @@ public class STModelNode extends STNode {
                         final STValue stValue = stArgument.getValue();
                         switch (stValue.getType()) {
                             case STMODEL: {
-                                final nextgen.st.model.STModel stModel = stValue.getStModel();
-                                if (canvas.getNode(stModel.getUuid()) == null)
-                                    canvas.addNode(new STModelNode(canvas, stRenderer.render(stModel), stModel.getUuid(), stModel.getStTemplate(), stModel, node.stRenderer));
+                                canvas.addNode(new STModelNode(canvas, canvas.modelDb.findSTTemplateByUuid(stValue.getStModel().getStTemplate()), stValue.getStModel(), node.stRenderer));
                                 break;
                             }
                             case PRIMITIVE: {
-								if (canvas.getNode(stValue.getUuid()) == null)
-                                	canvas.addNode(new STValueNode(canvas, stRenderer.render(stValue), stValue.getUuid(), stValue, node.stRenderer));
+                                canvas.addNode(new STValueNode(canvas, stRenderer.render(stValue), UUID.fromString(stValue.getUuid()), stValue, node.stRenderer));
                                 break;
                             }
                             case ENUM: {
-								if (canvas.getNode(stValue.getUuid()) == null)
-                                	canvas.addNode(new STValueNode(canvas, stRenderer.render(stValue), stValue.getUuid(), stValue, node.stRenderer));
+                                canvas.addNode(new STValueNode(canvas, stRenderer.render(stValue), UUID.fromString(stValue.getUuid()), stValue, node.stRenderer));
                                 break;
                             }
                         }
@@ -253,10 +240,10 @@ public class STModelNode extends STNode {
         @Override
         void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
             final Map<String, JTextField> fieldMap = new java.util.LinkedHashMap<>();
-            fieldMap.put("name", new JTextField(getSTModelValue(node.stModel, "name", ""), 15));
+            fieldMap.put("name", new JTextField(canvas.modelDb.getSTModelName(node.stModel,  ""), 15));
             fieldMap.put("type", new JTextField(15));
             fieldMap.put("path", new JTextField(15));
-            fieldMap.put("package", new JTextField(getSTModelPackage(node.stModel, ""), 15));
+            fieldMap.put("package", new JTextField(canvas.modelDb.getSTModelPackage(node.stModel, ""), 15));
             final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
             inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
             for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {
@@ -271,9 +258,9 @@ public class STModelNode extends STNode {
                     final String path = fieldMap.get("path").getText().trim();
                     final String packageName = fieldMap.get("package").getText().trim();
                     javax.swing.SwingUtilities.invokeLater(() -> {
-                        final nextgen.st.model.STFile stFile = newSTFile(name, type, path, packageName);
+                        final nextgen.st.model.STFile stFile = canvas.modelDb.newSTFile(name, type, path, packageName);
                         node.stModel.setFile(stFile);
-                        canvas.addNode(new STFileNode(canvas, nextgen.st.STGenerator.asFile(stFile).getAbsolutePath(), stFile.getUuid(), stFile, node.stModel, node.stRenderer));
+                        canvas.addNode(new STFileNode(canvas, nextgen.st.STGenerator.asFile(stFile).getAbsolutePath(), UUID.fromString(stFile.getUuid()), stFile, node.stModel, node.stRenderer));
                     });
                 }
             });
@@ -291,7 +278,7 @@ public class STModelNode extends STNode {
             javax.swing.SwingUtilities.invokeLater(() -> {
                 final nextgen.st.model.STFile stFile = node.stModel.getFile();
                 if (stFile == null) return;
-                canvas.addNode(new STFileNode(canvas, nextgen.st.STGenerator.asFile(stFile).getAbsolutePath(), stFile.getUuid(), stFile, node.stModel, node.stRenderer));
+                canvas.addNode(new STFileNode(canvas, nextgen.st.STGenerator.asFile(stFile).getAbsolutePath(), UUID.fromString(stFile.getUuid()), stFile, node.stModel, node.stRenderer));
             });
         }
     }

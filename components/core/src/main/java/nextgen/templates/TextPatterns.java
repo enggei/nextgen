@@ -4,14 +4,21 @@ import nextgen.templates.text.Block;
 import nextgen.templates.text.Line;
 import nextgen.templates.text.TextST;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 public class TextPatterns extends TextST {
 
-    public static Block newBlock(Object... children) {
+    public static Block newBlock(Collection<Object> children) {
         final Block block = newBlock();
         for (Object child : children) {
             block.addLines(child);
         }
         return block;
+    }
+
+    public static Block newBlock(Object... children) {
+        return newBlock(Arrays.asList(children));
     }
 
     public static Line newLine(String header, Object... children) {
@@ -38,5 +45,9 @@ public class TextPatterns extends TextST {
 
     public static Line newLine(String line, Object between, String end) {
         return newLine().setLine(line + between + end);
+    }
+
+    public static Line newLine(String line, Collection<Object> between, String end) {
+        return newLine().setLine(line + newBlock(between) + end);
     }
 }

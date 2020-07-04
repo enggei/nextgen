@@ -1,109 +1,164 @@
 package nextgen.st.model;
 
-public class STModel implements java.beans.PropertyChangeListener {
+public class STModel {
 
-	private final java.util.UUID uuid;
-	private STFile _file;
-	private nextgen.st.domain.STTemplate _stTemplate;
-	private java.util.List<STArgument> _arguments = new java.util.ArrayList<>();
+	private final org.neo4j.graphdb.Node node;
 
-	private final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);
-
-	public STModel() {
-		this.uuid = java.util.UUID.randomUUID();
+	public STModel(org.neo4j.graphdb.Node node) { 
+		this.node = node;
 	}
 
-	public STModel(java.util.UUID uuid) {
-		this.uuid = uuid;
-	}
-
-	public java.util.UUID getUuid() {
-		return this.uuid;
-	}	
-
-	public STFile getFile() {
-		return this._file;
-	}
-
-	public STModel setFile(STFile value) {
-		STFile oldValue = this._file;
-		if (oldValue != null) oldValue.removePropertyChangeListener(this);
-		this._file = value;
-		if (value != null) value.addPropertyChangeListener(this);
-		this.pcs.firePropertyChange("file", oldValue, value);
-		return this;
-	}
-
-	public STModel removeFile() {
-		STFile oldValue = this._file;
-		this._file = null;
-		if (oldValue != null) oldValue.removePropertyChangeListener(this);
-		this.pcs.firePropertyChange("file", oldValue, null);
-		return this;
-	}
-
-	public nextgen.st.domain.STTemplate getStTemplate() {
-		return this._stTemplate;
-	}
-
-	public STModel setStTemplate(nextgen.st.domain.STTemplate value) {
-		nextgen.st.domain.STTemplate oldValue = this._stTemplate;
-		this._stTemplate = value;
-		this.pcs.firePropertyChange("stTemplate", oldValue, value);
-		return this;
-	}
-
-	public STModel removeStTemplate() {
-		nextgen.st.domain.STTemplate oldValue = this._stTemplate;
-		this._stTemplate = null;
-		this.pcs.firePropertyChange("stTemplate", oldValue, null);
-		return this;
-	}
-
-	public java.util.List<STArgument> getArguments() {
-		return this._arguments;
-	}
-
-	public STModel addArguments(STArgument value) {
-		this._arguments.add(value);
-		value.addPropertyChangeListener(this);
-		this.pcs.firePropertyChange("arguments", null, value);
-		return this;
-	}
-
-	public STModel removeArguments(STArgument value) {
-		this._arguments.remove(value);
-		if (value != null) value.removePropertyChangeListener(this);
-		this.pcs.firePropertyChange("arguments", value, null);
-		return this;
+	public org.neo4j.graphdb.Node getNode() { 
+		return this.node;
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(java.lang.Object o) { 
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		STModel that = (STModel) o;
-		return uuid.equals(that.uuid);
+		final STModel other = (STModel) o;
+		return node.equals(other.node);
 	}
 
 	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
+	public int hashCode() { 
+		return java.util.Objects.hash(node);
+	}
+
+	public STModel setUuid(String value) { 
+		if (value == null) node.removeProperty("uuid"); 
+		else node.setProperty("uuid", value);
+		return this;
+	}
+
+	public String getUuid() { 
+		if (node.hasProperty("uuid")) return (String) node.getProperty("uuid");
+		return null;
+	}
+
+	public String getUuid(String defaultValue) { 
+		if (node.hasProperty("uuid")) return (String) node.getProperty("uuid");
+		return defaultValue;
+	}
+
+	public boolean hasUuid() { 
+		return node.hasProperty("uuid");
+	}
+
+	public STModel removeUuid() { 
+		node.removeProperty("uuid");
+		return this;
+	}
+
+	public STModel setStTemplate(String value) { 
+		if (value == null) node.removeProperty("stTemplate"); 
+		else node.setProperty("stTemplate", value);
+		return this;
+	}
+
+	public String getStTemplate() { 
+		if (node.hasProperty("stTemplate")) return (String) node.getProperty("stTemplate");
+		return null;
+	}
+
+	public String getStTemplate(String defaultValue) { 
+		if (node.hasProperty("stTemplate")) return (String) node.getProperty("stTemplate");
+		return defaultValue;
+	}
+
+	public boolean hasStTemplate() { 
+		return node.hasProperty("stTemplate");
+	}
+
+	public STModel removeStTemplate() { 
+		node.removeProperty("stTemplate");
+		return this;
+	}
+
+	public STModel setFile(STFile dst) { 
+		final org.neo4j.graphdb.Relationship relationship = getFileRelation();
+		if (relationship != null)  { 
+			if (relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			relationship.delete();
+		}
+		if (dst == null) return this;
+		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("file"));
+		return this;
+	}
+
+	public STFile getFile() { 
+		final org.neo4j.graphdb.Relationship relationship = getFileRelation();
+		return relationship == null ? null : new STFile(relationship.getOtherNode(node));
+	}
+
+	public STModel removeFile() { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getFileRelation());
+		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		return this;
+	}
+
+	public org.neo4j.graphdb.Relationship getFileRelation() { 
+		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("file"), org.neo4j.graphdb.Direction.OUTGOING);
+	}
+
+	public STModel addArguments(STArgument dst) { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("arguments")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+		if (existing.isPresent()) return this;
+		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("arguments"));
+		relationship.setProperty("_t", System.nanoTime());
+		return this;
+	}
+
+	public java.util.stream.Stream<STArgument> getArguments() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("arguments")).spliterator(), false).map((relationship) -> new STArgument(relationship.getOtherNode(node)));
+	}
+
+	public java.util.stream.Stream<STArgument> getArgumentsSorted() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("arguments")).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t", o.getId()))).map((relationship) -> new STArgument(relationship.getOtherNode(node)));
+	}
+
+	public STModel removeArguments(STArgument dst) { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("arguments")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		return this;
+	}
+
+	public STModel removeAllArguments() { 
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("arguments")).forEach(org.neo4j.graphdb.Relationship::delete);
+		return this;
+	}
+
+	public java.util.stream.Stream<STArgument> getIncomingArguments() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("arguments")).spliterator(), false).map((relationship) -> new STArgument(relationship.getOtherNode(node)));
 	}
 
 	@Override
-	public void propertyChange(java.beans.PropertyChangeEvent evt) {
-		System.out.println("STModel updated");
-		this.pcs.firePropertyChange("STModel", null, this);
+	public String toString() {
+		return "";
 	}
 
-	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
-		System.out.println("STModel add " + listener.getClass().getSimpleName());
-		this.pcs.addPropertyChangeListener(listener);
+	public io.vertx.core.json.JsonObject toJsonObject() {
+		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
+		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
+		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
+		if (node.hasProperty("stTemplate")) jsonObject.put("stTemplate", node.getProperty("stTemplate"));
+		final STFile _file = getFile();
+		if (_file != null) jsonObject.put("file", _file.toJsonObject());
+
+		final io.vertx.core.json.JsonArray _arguments = new io.vertx.core.json.JsonArray();
+		getArguments().forEach(element -> _arguments.add(element.toJsonObject()));
+		if (!_arguments.isEmpty()) jsonObject.put("arguments", _arguments);
+
+		return jsonObject;
 	}
 
-	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
-		System.out.println("STModel del " + listener.getClass().getSimpleName());
-		this.pcs.removePropertyChangeListener(listener);
+	public void deleteTree() {
+		final STFile _file = getFile();
+		if (_file != null) _file.deleteTree();
+
+		getArguments().forEach(element -> element.deleteTree());
+
+		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
+		node.delete();
 	}
 }

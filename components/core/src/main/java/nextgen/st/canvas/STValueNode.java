@@ -1,22 +1,11 @@
 package nextgen.st.canvas;
 
-import com.generator.util.SwingUtil;
-import nextgen.st.domain.STParameterKey;
-import nextgen.st.model.STArgumentKV;
-import nextgen.st.model.STValue;
-import nextgen.st.model.STValueType;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-import static nextgen.st.STModelPatterns.*;
 
 public class STValueNode extends STNode {
 
@@ -69,7 +58,7 @@ public class STValueNode extends STNode {
 		@Override
 		void actionPerformed(STValueNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
 			final JTextArea textArea = new JTextArea(15,40);
-			textArea.setText(node.stValue.getValue().toString());
+			textArea.setText(node.stValue.getValue());
 			final JPanel inputPanel = new JPanel(new BorderLayout());
 			inputPanel.add(textArea, BorderLayout.CENTER);
 			inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
@@ -79,7 +68,7 @@ public class STValueNode extends STNode {
 					final String s = textArea.getText().trim();
 					javax.swing.SwingUtilities.invokeLater(() ->  {
 						node.stValue.setValue(s);
-						node.setText(node.stValue.getValue().toString());	
+						node.setText(node.stValue.getValue());
 					});
 				}
 			});

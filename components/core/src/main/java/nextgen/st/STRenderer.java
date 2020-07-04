@@ -1,6 +1,5 @@
 package nextgen.st;
 
-import nextgen.st.domain.STEnumValue;
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STParameterKey;
 import nextgen.st.domain.STTemplate;
@@ -13,6 +12,7 @@ import org.stringtemplate.v4.STGroup;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class STRenderer {
 
@@ -29,14 +29,19 @@ public class STRenderer {
 
     public String render(STModel stModel) {
 
-        final ST st = newInstanceOf(stModel.getStTemplate());
+        final STMapper stMapper = findSTMapper(stModel.getStTemplate());
+        if (stMapper == null) return null;
+
+        final STTemplate stTemplate = stMapper.find(stModel.getStTemplate());
+        if (stTemplate == null) return null;
+
+        final ST st = stMapper.newInstanceOf(stTemplate);
         if (st == null) return null;
 
-        stModel.getStTemplate().getParameters()
+        stTemplate.getParameters()
                 .forEach(stParameter ->
                         stModel.getArguments()
-                                .stream()
-                                .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
+                                .filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid()))
                                 .forEach(stArgument -> {
 
                                     switch (stParameter.getType()) {
@@ -67,18 +72,17 @@ public class STRenderer {
         return st.render();
     }
 
-    private ST newInstanceOf(STTemplate stTemplate) {
+    private STMapper findSTMapper(String stTemplate) {
         for (STMapper mapper : mappers) {
             final STTemplate found = mapper.find(stTemplate);
-            if (found != null) return mapper.newInstanceOf(stTemplate);
+            if (found != null) return mapper;
         }
         return null;
     }
 
     public Object render(STArgument stArgument, STParameterKey stParameterKey) {
         final STArgumentKV found = stArgument.getKeyValues()
-                .stream()
-                .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey))
+                .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.uuid()))
                 .findFirst()
                 .orElse(null);
         return found == null ? null : render(found.getValue());
@@ -86,14 +90,12 @@ public class STRenderer {
 
     public Object render(STArgument stArgument) {
 
-        final List<STArgumentKV> kvs = new ArrayList<>(stArgument.getKeyValues());
-        if (kvs.isEmpty())
-            return render(stArgument.getValue());
+        final List<STArgumentKV> kvs = stArgument.getKeyValues().collect(Collectors.toList());
+        if (kvs.isEmpty()) return render(stArgument.getValue());
 
         final StringBuilder kv = new StringBuilder();
-        for (STArgumentKV stArgumentKV : kvs) {
+        for (STArgumentKV stArgumentKV : kvs)
             kv.append(stArgumentKV.getStParameterKey()).append("=").append(render(stArgumentKV.getValue()));
-        }
         return kv.toString();
     }
 
@@ -104,11 +106,11 @@ public class STRenderer {
             case STMODEL:
                 return render(value.getStModel());
             case PRIMITIVE:
-                final String s = value.getValue() == null ? null : value.getValue().toString();
+                final String s = value.getValue();
                 return s == null || s.trim().length() == 0 ? null : s;
             case ENUM:
                 final Object enumValue = value.getValue();
-                return (enumValue instanceof STEnumValue) ? ((STEnumValue) enumValue).getLexical() : (enumValue == null ? null : enumValue.toString());
+                return enumValue == null ? null : enumValue.toString();
         }
         return null;
     }
@@ -123,15 +125,14 @@ public class STRenderer {
             this.groupModel = groupModel;
         }
 
-        public STTemplate find(STTemplate stTemplate) {
+        public STTemplate find(String stTemplate) {
             return find(stTemplate, groupModel.getTemplates().iterator());
         }
 
-        private STTemplate find(STTemplate stTemplate, Iterator<STTemplate> iterator) {
+        private STTemplate find(String stTemplate, Iterator<STTemplate> iterator) {
             while (iterator.hasNext()) {
                 final STTemplate next = iterator.next();
-                if (next.equals(stTemplate)) return next;
-
+                if (next.uuid().equals(stTemplate)) return next;
                 final STTemplate found = find(stTemplate, next.getChildren().iterator());
                 if (found != null) return found;
             }

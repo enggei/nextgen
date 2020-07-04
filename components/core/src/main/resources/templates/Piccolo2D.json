@@ -281,7 +281,7 @@
     }, {
       "uuid" : "ce822f9c-b805-4dbb-abf3-5a4a7e7bf7c0",
       "name" : "PNodeImpl",
-      "text" : "package ~packageName~;\n\nimport com.generator.util.SwingUtil;\nimport nextgen.st.domain.STParameterKey;\nimport nextgen.st.model.STArgumentKV;\nimport nextgen.st.model.STValue;\nimport nextgen.st.model.STValueType;\nimport org.piccolo2d.event.PInputEvent;\n\nimport javax.swing.*;\nimport java.awt.*;\nimport java.awt.event.ActionEvent;\nimport java.util.ArrayList;\nimport java.util.Collection;\nimport java.util.LinkedHashMap;\nimport java.util.Map;\nimport java.util.stream.Collectors;\n\nimport static nextgen.st.STModelPatterns.*;\n\npublic class ~name~ extends ~nodeName~ {\n\n\t~fields:{it|~it.type~ ~it.name~;};separator=\"\\n\"~\n\t\t\n\tpublic ~name~(~canvasName~ canvas, String initText, java.util.UUID uuid~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n\t\tsuper(canvas, initText, uuid);\n\t\t~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t}\n\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n\n\t@Override\n\tprotected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {\n\t\t~rightClickStatements:{it|~it~};separator=\"\\n\"~\n\t\t~anonymousRightClickActions:{it|pop.add(~it~);};separator=\"\\n\"~\n\t\t~onRightClick:{it|pop.add(new ~it.name~(this, canvas, event));};separator=\"\\n\"~\n\t\t~if(onRightClick)~\n\t\tpop.addSeparator();\n\t\t~endif~\n\t\tsuper.onNodeRightClick(event, pop);\n\t}\n\n\t@Override\n\tprotected void onNodeKeyPressed(PInputEvent event) {\n~if(onKeyPressed)~\n\t\tswitch (event.getKeyCode()) {\n\t\t\t~onKeyPressed:{it|\ncase VK_~it.key~:\n\tnew ~it.name~(this, canvas, event).actionPerformed(null);\n\treturn;\n};separator=\"\\n\"~\n\t\t}\n~endif~\n\t\tsuper.onNodeKeyPressed(event);\n\t}\n\n\t@Override\n\tprotected void onNodeLeftClick(PInputEvent event) {\n\t\tsuper.onNodeLeftClick(event);\n\t\t~onLeftClick:{it|~it~};separator=\"\\n\"~\n\t}\n\n~if(onPropertyChange)~\n\t@Override\n\tpublic void propertyChange(java.beans.PropertyChangeEvent evt) {\n\t\t~onPropertyChange:{it|~it~};separator=\"\\n\"~\t\n\t}\n~endif~\n\n\t~actions:{it|~it~};separator=\"\\n\\n\"~\n} ",
+      "text" : "package ~packageName~;\n\nimport com.generator.util.SwingUtil;\nimport nextgen.st.domain.STParameterKey;\nimport nextgen.st.model.STArgumentKV;\nimport nextgen.st.model.STValue;\nimport nextgen.st.model.STValueType;\nimport org.piccolo2d.event.PInputEvent;\n\nimport javax.swing.*;\nimport java.awt.*;\nimport java.awt.event.ActionEvent;\nimport java.util.ArrayList;\nimport java.util.Collection;\nimport java.util.LinkedHashMap;\nimport java.util.Map;\nimport java.util.stream.Collectors;\n\nimport static nextgen.st.STModelPatterns.*;\n\npublic class ~name~ extends ~nodeName~ {\n\n\t~fields:{it|~it.type~ ~it.name~;};separator=\"\\n\"~\n\t\t\n\tpublic ~name~(~canvasName~ canvas~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n\t\tsuper(canvas, ~initText~, ~uuid~);\n\t\t~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t}\n\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n\n\t@Override\n\tprotected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {\n\t\t~rightClickStatements:{it|~it~};separator=\"\\n\"~\n\t\t~anonymousRightClickActions:{it|pop.add(~it~);};separator=\"\\n\"~\n\t\t~onRightClick:{it|pop.add(new ~it.name~(this, canvas, event));};separator=\"\\n\"~\n\t\t~if(onRightClick)~\n\t\tpop.addSeparator();\n\t\t~endif~\n\t\tsuper.onNodeRightClick(event, pop);\n\t}\n\n\t@Override\n\tprotected void onNodeKeyPressed(PInputEvent event) {\n~if(onKeyPressed)~\n\t\tswitch (event.getKeyCode()) {\n\t\t\t~onKeyPressed:{it|\ncase VK_~it.key~:\n\tnew ~it.name~(this, canvas, event).actionPerformed(null);\n\treturn;\n};separator=\"\\n\"~\n\t\t}\n~endif~\n\t\tsuper.onNodeKeyPressed(event);\n\t}\n\n\t@Override\n\tprotected void onNodeLeftClick(PInputEvent event) {\n\t\tsuper.onNodeLeftClick(event);\n\t\t~onLeftClick:{it|~it~};separator=\"\\n\"~\n\t}\n\n~if(onPropertyChange)~\n\t@Override\n\tpublic void propertyChange(java.beans.PropertyChangeEvent evt) {\n\t\t~onPropertyChange:{it|~it~};separator=\"\\n\"~\t\n\t}\n~endif~\n\n\t~actions:{it|~it~};separator=\"\\n\\n\"~\n} ",
       "parameters" : [ {
         "uuid" : "67cfa6cb-4dbd-4909-93b8-e1aad411d841",
         "name" : "packageName",
@@ -314,6 +314,16 @@
       }, {
         "uuid" : "7d54ad32-b876-487e-945b-4fd373a72ce6",
         "name" : "canvasName",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "1520f79c-408a-41fb-91f5-f08e97b816a4",
+        "name" : "initText",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "5f29fcaa-9fe6-4ea3-b1ac-7694139e0f87",
+        "name" : "uuid",
         "type" : "SINGLE",
         "argumentType" : "Object"
       }, {

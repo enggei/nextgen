@@ -741,7 +741,7 @@ AnonymousPNodeAction(nodeType,header,statements) ::= <<new STNode.NodeAction<~no
 	}
 }  >>
 
-PNodeImpl(packageName,name,nodeName,fields,canvasName,constructorStatements,methods,rightClickStatements,anonymousRightClickActions,onRightClick,onKeyPressed,onLeftClick,onPropertyChange,actions) ::= <<package ~packageName~;
+PNodeImpl(packageName,name,nodeName,fields,canvasName,initText,uuid,constructorStatements,methods,rightClickStatements,anonymousRightClickActions,onRightClick,onKeyPressed,onLeftClick,onPropertyChange,actions) ::= <<package ~packageName~;
 
 import com.generator.util.SwingUtil;
 import nextgen.st.domain.STParameterKey;
@@ -765,8 +765,8 @@ public class ~name~ extends ~nodeName~ {
 
 	~fields:{it|~it.type~ ~it.name~;};separator="\n"~
 		
-	public ~name~(~canvasName~ canvas, String initText, java.util.UUID uuid~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
-		super(canvas, initText, uuid);
+	public ~name~(~canvasName~ canvas~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
+		super(canvas, ~initText~, ~uuid~);
 		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
 		~constructorStatements:{it|~it~};separator="\n"~
 	}

@@ -9,6 +9,8 @@ public class PNodeImpl {
 	private String _name;
 	private Object _nodeName;
 	private Object _canvasName;
+	private Object _initText;
+	private Object _uuid;
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<Object> _rightClickStatements = new java.util.ArrayList<>();
@@ -35,6 +37,8 @@ public class PNodeImpl {
 		st.add("name", _name);
 		st.add("nodeName", _nodeName);
 		st.add("canvasName", _canvasName);
+		st.add("initText", _initText);
+		st.add("uuid", _uuid);
 		for (Object o : _constructorStatements) st.add("constructorStatements", o);
 		for (Object o : _methods) st.add("methods", o);
 		for (Object o : _rightClickStatements) st.add("rightClickStatements", o);
@@ -133,6 +137,50 @@ public class PNodeImpl {
 
 	public PNodeImpl removeCanvasName() {
 		this._canvasName = null;
+		return this;
+	} 
+
+	public PNodeImpl setInitText(Object value) {
+		this._initText = value;
+		return this;
+	}
+
+	public Object getInitText() {
+		return this._initText;
+	}
+
+	public Object getInitText(Object defaultValue) {
+		return this._initText == null ? defaultValue : this._initText;
+	}
+
+	public boolean hasInitText() {
+		return this._initText != null;
+	}
+
+	public PNodeImpl removeInitText() {
+		this._initText = null;
+		return this;
+	} 
+
+	public PNodeImpl setUuid(Object value) {
+		this._uuid = value;
+		return this;
+	}
+
+	public Object getUuid() {
+		return this._uuid;
+	}
+
+	public Object getUuid(Object defaultValue) {
+		return this._uuid == null ? defaultValue : this._uuid;
+	}
+
+	public boolean hasUuid() {
+		return this._uuid != null;
+	}
+
+	public PNodeImpl removeUuid() {
+		this._uuid = null;
 		return this;
 	} 
 
@@ -479,7 +527,7 @@ public class PNodeImpl {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PNodeImpl(packageName,name,nodeName,fields,canvasName,constructorStatements,methods,rightClickStatements,anonymousRightClickActions,onRightClick,onKeyPressed,onLeftClick,onPropertyChange,actions) ::= <<package ~packageName~;\n" + 
+	static final String st = "PNodeImpl(packageName,name,nodeName,fields,canvasName,initText,uuid,constructorStatements,methods,rightClickStatements,anonymousRightClickActions,onRightClick,onKeyPressed,onLeftClick,onPropertyChange,actions) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import com.generator.util.SwingUtil;\n" + 
 				"import nextgen.st.domain.STParameterKey;\n" + 
@@ -503,8 +551,8 @@ public class PNodeImpl {
 				"\n" + 
 				"	~fields:{it|~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
 				"		\n" + 
-				"	public ~name~(~canvasName~ canvas, String initText, java.util.UUID uuid~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n" + 
-				"		super(canvas, initText, uuid);\n" + 
+				"	public ~name~(~canvasName~ canvas~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n" + 
+				"		super(canvas, ~initText~, ~uuid~);\n" + 
 				"		~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
 				"		~constructorStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"	}\n" + 

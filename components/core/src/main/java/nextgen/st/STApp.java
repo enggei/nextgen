@@ -5,7 +5,7 @@ import nextgen.st.domain.STAppModel;
 import nextgen.st.domain.STGDirectory;
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STJsonFactory;
-import nextgen.st.model.neo.STModelDB;
+import nextgen.st.model.STModelDB;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,22 +1,12 @@
 package nextgen.st.canvas;
 
-import com.generator.util.SwingUtil;
-import nextgen.st.domain.STParameterKey;
-import nextgen.st.model.STArgumentKV;
-import nextgen.st.model.STValue;
-import nextgen.st.model.STValueType;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static nextgen.st.STModelPatterns.*;
 
 public class STFileNode extends STNode {
 
@@ -29,15 +19,10 @@ public class STFileNode extends STNode {
 		this.stFile = stFile;
 		this.stModel = stModel;
 		this.stRenderer = stRenderer;
-		if (this.stModel != null)
-			this.stModel.addPropertyChangeListener(this);
 	}
 
 	public void setSTModel(nextgen.st.model.STModel stModel) {
-		if (this.stModel != null)
-			this.stModel.removePropertyChangeListener(this);
 		this.stModel = stModel;
-		this.stModel.addPropertyChangeListener(this);
 		this.stModel.setFile(stFile);
 		setText(nextgen.st.STGenerator.asFile(stFile).getAbsolutePath());
 	}
@@ -84,8 +69,8 @@ public class STFileNode extends STNode {
 		System.out.println("Event :" + source.getClass().getCanonicalName());
 		if (source instanceof nextgen.st.model.STModel) {
 			final nextgen.st.model.STModel stModel = (nextgen.st.model.STModel) source;
-			this.stFile.setName(nextgen.st.STModelPatterns.getSTModelValue(stModel, "name", this.stFile.getName()));
-			this.stFile.setPackageName(nextgen.st.STModelPatterns.getSTModelPackage(stModel, this.stFile.getPackageName()));
+			this.stFile.setName(canvas.modelDb.getSTModelName(stModel,  this.stFile.getName()));
+			this.stFile.setPackageName(canvas.modelDb.getSTModelPackage(stModel, this.stFile.getPackageName()));
 		}	
 	}
 

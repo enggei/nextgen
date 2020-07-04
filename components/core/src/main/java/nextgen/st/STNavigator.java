@@ -7,8 +7,8 @@ import nextgen.st.canvas.STModelNode;
 import nextgen.st.canvas.STValueNode;
 import nextgen.st.domain.*;
 import nextgen.st.model.STModel;
+import nextgen.st.model.STModelDB;
 import nextgen.st.model.STValue;
-import nextgen.st.model.neo.STModelDB;
 
 import javax.lang.model.SourceVersion;
 import javax.swing.*;
@@ -26,8 +26,6 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static nextgen.st.STGenerator.toSTGroup;
-import static nextgen.st.model.STModelFactory.newSTModel;
-import static nextgen.st.model.STModelFactory.newSTValue;
 
 public class STNavigator extends JPanel {
 
@@ -728,8 +726,8 @@ public class STNavigator extends JPanel {
                             actions.add(newAction("New " + stEnumValue.getName() + " instance", actionEvent -> {
                                 findCanvas(tabbedPane).ifPresent(stCanvas -> {
                                     SwingUtilities.invokeLater(() -> {
-                                        final STValue stValue = STModelPatterns.newSTValue(stEnumValue);
-                                        stCanvas.addNode(new STValueNode(stCanvas, stEnumValue.getLexical(), stValue.getUuid(), stValue, stRenderer));
+                                        final STValue stValue = db.newSTValue(stEnumValue);
+                                        stCanvas.addNode(new STValueNode(stCanvas, stEnumValue.getLexical(), UUID.fromString(stValue.getUuid()), stValue, stRenderer));
                                         tabbedPane.setSelectedComponent(stCanvas);
                                         stCanvas.requestFocusInWindow();
                                     });
@@ -1038,20 +1036,19 @@ public class STNavigator extends JPanel {
                     }
 
                     private Action newModelAction() {
-                        return newAction("New Instance", actionEvent -> {
-                            getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> {
-                                findCanvas(tabbedPane).ifPresent(stCanvas -> {
-                                    SwingUtilities.invokeLater(() -> {
+                        return newAction("New Instance", actionEvent ->
+                                getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> {
+                                    findCanvas(tabbedPane).ifPresent(stCanvas -> {
+                                        SwingUtilities.invokeLater(() -> {
 
-                                        final STModel entityModel = newSTModel().setStTemplate(getModel());
+                                            final STModel entityModel = db.newSTModel(getModel());
 
-                                        stCanvas.addNode(new STModelNode(stCanvas, stRenderer.render(entityModel), entityModel.getUuid(), getModel(), entityModel, stRenderer));
-                                        tabbedPane.setSelectedComponent(stCanvas);
-                                        stCanvas.requestFocusInWindow();
+                                            stCanvas.addNode(new STModelNode(stCanvas,  getModel(), entityModel, stRenderer));
+                                            tabbedPane.setSelectedComponent(stCanvas);
+                                            stCanvas.requestFocusInWindow();
+                                        });
                                     });
-                                });
-                            });
-                        });
+                                }));
                     }
 
                     private Action openAllModelsAction() {
@@ -1060,8 +1057,8 @@ public class STNavigator extends JPanel {
                                     .flatMap(stGroupTreeNode -> findCanvas(tabbedPane))
                                     .ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> {
                                         db.doInTransaction(transaction ->
-                                                db.getAllSTModelsFor(getModel())
-                                                        .forEach(stModel -> stCanvas.addNode(new STModelNode(stCanvas, stRenderer.render(stModel), stModel.getUuid(), getModel(), stModel, stRenderer))));
+                                                db.findAllSTModelByStTemplate(getModel().uuid())
+                                                        .forEach(stModel -> stCanvas.addNode(new STModelNode(stCanvas,  getModel(), stModel, stRenderer))));
                                         tabbedPane.setSelectedComponent(stCanvas);
                                         stCanvas.requestFocusInWindow();
                                     }));

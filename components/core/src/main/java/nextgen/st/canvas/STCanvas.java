@@ -37,13 +37,13 @@ public class STCanvas extends PCanvas implements PInputEventListener {
     private final CanvasInputEventsHandler canvasInputEventsHandler = new CanvasInputEventsHandler();
 
     nextgen.st.STRenderer stRenderer;
-    nextgen.st.model.neo.STModelDB modelDb;
+    nextgen.st.model.STModelDB modelDb;
 
-    public STCanvas(nextgen.st.STRenderer stRenderer, nextgen.st.model.neo.STModelDB modelDb) {
+    public STCanvas(nextgen.st.STRenderer stRenderer, nextgen.st.model.STModelDB modelDb) {
         this(stRenderer, modelDb, Color.WHITE, new Dimension(1024, 768));
     }
 
-    public STCanvas(nextgen.st.STRenderer stRenderer, nextgen.st.model.neo.STModelDB modelDb, Color background, Dimension preferredSize) {
+    public STCanvas(nextgen.st.STRenderer stRenderer, nextgen.st.model.STModelDB modelDb, Color background, Dimension preferredSize) {
         super();
         setBackground(background);
         setPreferredSize(preferredSize);
@@ -137,7 +137,6 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
     protected void onCanvasRightClick(JPopupMenu pop, PInputEvent event) {
         pop.add(new NewSTValueNode(this, event));
-        pop.add(new SaveCanvas(this, event));
         pop.add(new LoadAllModels(this, event));
         pop.add(new NewSTValueFromClipboard(this, event));
         pop.add(new NewSTFileNode(this, event));
@@ -321,29 +320,8 @@ public class STCanvas extends PCanvas implements PInputEventListener {
             final String s = com.generator.util.SwingUtil.showInputDialog("Value", canvas);
             if (s == null || s.trim().length() == 0) return;
             javax.swing.SwingUtilities.invokeLater(() -> {
-                final nextgen.st.model.STValue stValue = nextgen.st.STModelPatterns.newSTValue(s);
-                canvas.addNode(new STValueNode(canvas, s, stValue.getUuid(), stValue, canvas.stRenderer));
-            });
-        }
-    }
-
-    private static final class SaveCanvas extends CanvasAction {
-
-        SaveCanvas(STCanvas canvas, PInputEvent event) {
-            super("Save", canvas, event);
-        }
-
-        @Override
-        void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
-            javax.swing.SwingUtilities.invokeLater(() -> {
-                final java.util.List<STModelNode> stModelNodes = canvas.getAllNodes()
-                        .filter(stNode -> stNode instanceof STModelNode)
-                        .map(stNode -> (STModelNode) stNode)
-                        .collect(java.util.stream.Collectors.toList());
-                canvas.modelDb.doInTransaction(tx -> {
-                    for (STModelNode stModelNode : stModelNodes)
-                        canvas.modelDb.save(stModelNode.stModel);
-                });
+                final nextgen.st.model.STValue stValue = canvas.modelDb.newSTValue(s);
+                canvas.addNode(new STValueNode(canvas, s, UUID.fromString(stValue.getUuid()), stValue, canvas.stRenderer));
             });
         }
     }
@@ -357,10 +335,10 @@ public class STCanvas extends PCanvas implements PInputEventListener {
         @Override
         void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
             javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(tx -> {
-                canvas.modelDb.getAllSTModels().forEach(stModel -> {
-                            final STNode stModelNode = canvas.getNode(stModel.getUuid());
+                canvas.modelDb.findAllSTModel().forEach(stModel -> {
+                            final STNode stModelNode = canvas.getNode(UUID.fromString(stModel.getUuid()));
                             if (stModelNode == null)
-                                canvas.addNode(new STModelNode(canvas, canvas.stRenderer.render(stModel), stModel.getUuid(), stModel.getStTemplate(), stModel, canvas.stRenderer));
+                                canvas.addNode(new STModelNode(canvas, canvas.stRenderer.render(stModel), UUID.fromString(stModel.getUuid()), canvas.modelDb.findSTTemplateByUuid(stModel.getStTemplate()), stModel, canvas.stRenderer));
 
 
                         }
@@ -380,8 +358,8 @@ public class STCanvas extends PCanvas implements PInputEventListener {
             final String s = com.generator.util.SwingUtil.fromClipboard();
             if (s == null || s.trim().length() == 0) return;
             javax.swing.SwingUtilities.invokeLater(() -> {
-                final nextgen.st.model.STValue stValue = nextgen.st.STModelPatterns.newSTValue(s);
-                canvas.addNode(new STValueNode(canvas, s, stValue.getUuid(), stValue, canvas.stRenderer));
+                final nextgen.st.model.STValue stValue = canvas.modelDb.newSTValue(s);
+                canvas.addNode(new STValueNode(canvas, s, UUID.fromString(stValue.getUuid()), stValue, canvas.stRenderer));
             });
         }
     }
@@ -413,8 +391,8 @@ public class STCanvas extends PCanvas implements PInputEventListener {
                     final String path = fieldMap.get("path").getText().trim();
                     final String packageName = fieldMap.get("package").getText().trim();
                     javax.swing.SwingUtilities.invokeLater(() -> {
-                        final nextgen.st.model.STFile stFile = nextgen.st.STModelPatterns.newSTFile(name, type, path, packageName);
-                        canvas.addNode(new STFileNode(canvas, nextgen.st.STGenerator.asFile(stFile).getAbsolutePath(), stFile.getUuid(), stFile, null, null));
+                        final nextgen.st.model.STFile stFile = canvas.modelDb.newSTFile(name, type, path, packageName);
+                        canvas.addNode(new STFileNode(canvas, nextgen.st.STGenerator.asFile(stFile).getAbsolutePath(), UUID.fromString(stFile.getUuid()), stFile, null, null));
                     });
                 }
             });
