@@ -545,7 +545,6 @@ public class PNodeImpl {
 				"import java.util.Map;\n" + 
 				"import java.util.stream.Collectors;\n" + 
 				"\n" + 
-				"import static nextgen.st.STModelPatterns.*;\n" + 
 				"\n" + 
 				"public class ~name~ extends ~nodeName~ {\n" + 
 				"\n" + 

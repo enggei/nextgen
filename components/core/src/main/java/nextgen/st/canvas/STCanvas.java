@@ -338,7 +338,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
                 canvas.modelDb.findAllSTModel().forEach(stModel -> {
                             final STNode stModelNode = canvas.getNode(UUID.fromString(stModel.getUuid()));
                             if (stModelNode == null)
-                                canvas.addNode(new STModelNode(canvas, canvas.stRenderer.render(stModel), UUID.fromString(stModel.getUuid()), canvas.modelDb.findSTTemplateByUuid(stModel.getStTemplate()), stModel, canvas.stRenderer));
+                                canvas.addNode(new STModelNode(canvas,  canvas.modelDb.findSTTemplateByUuid(stModel.getStTemplate()), stModel, canvas.stRenderer));
 
 
                         }
