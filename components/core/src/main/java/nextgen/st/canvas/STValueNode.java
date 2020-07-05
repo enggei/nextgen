@@ -72,7 +72,9 @@ public class STValueNode extends STNode {
 		@Override
 		void actionPerformed(STValueNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
 			final JTextArea textArea = new JTextArea(15,40);
-			textArea.setText(node.stValue.getValue().toString());
+			canvas.modelDb.doInTransaction(tx -> {
+				textArea.setText(node.stValue.getValue().toString());
+			}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable));
 			final JPanel inputPanel = new JPanel(new BorderLayout());
 			inputPanel.add(textArea, BorderLayout.CENTER);
 			inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));

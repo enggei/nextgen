@@ -1,0 +1,9 @@
+
+Definetly:
+#1 Add selected-nodes support for Key-Value STArguments
+# Add set/add argument from Clipboard
+# Add Multiple values (5) in dialog
+# on delete tree- remove nodes from canvas too (Using Graph-listener ?)cc
+
+Maybe:
+# Use SwingUtil input dialog instead of SwingUtilities (support right-click field)

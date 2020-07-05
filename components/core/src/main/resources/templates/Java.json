@@ -1874,6 +1874,48 @@
         "argumentType" : "Object"
       } ]
     } ]
+  }, {
+    "uuid" : "f1c854d3-1dac-4b91-b6c0-86f29a19cb0c",
+    "name" : "ProjectTypes",
+    "text" : "Project ~projectName~\n\n~packages:{it|~it~};separator=\"\\n\"~ ",
+    "parameters" : [ {
+      "uuid" : "f9a0f89c-1f68-4b86-95a5-41670f6141c6",
+      "name" : "projectName",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "bf315912-83db-4eef-bf27-054c0048a2a5",
+      "name" : "packages",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    } ],
+    "children" : [ {
+      "uuid" : "570ab6c2-8658-401f-afe9-0012739d9162",
+      "name" : "ProjectPackage",
+      "text" : "Package ~packageName~:\n\n\t~types:{it|~it~};separator=\"\\n\"~ ",
+      "parameters" : [ {
+        "uuid" : "686cf8f1-c743-4081-b45d-81108c8c2b58",
+        "name" : "packageName",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "c70e85af-8abe-4f0c-a4ad-2ffd11043a83",
+        "name" : "types",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ],
+      "children" : [ {
+        "uuid" : "dfcc8fa0-02ee-4070-a70f-5b4985c84424",
+        "name" : "ProjectType",
+        "text" : "Type ~typeName~ ",
+        "parameters" : [ {
+          "uuid" : "1f4055bf-810a-4268-b2b4-8ea1a8d2b1c5",
+          "name" : "typeName",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      } ]
+    } ]
   } ],
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Java.stg",
   "enums" : [ {

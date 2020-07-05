@@ -385,7 +385,7 @@ public class STProject {
 
         final NodeAction editSTValue = newNodeAction(stValueNode, "EditSTValue", "Edit")
                 .addStatements("final JTextArea textArea = new JTextArea(15,40);")
-                .addStatements("textArea.setText(node.stValue.getValue().toString());")
+                .addStatements(doInTransaction("textArea.setText(node.stValue.getValue().toString());"))
                 .addStatements("final JPanel inputPanel = new JPanel(new BorderLayout());")
                 .addStatements("inputPanel.add(textArea, BorderLayout.CENTER);")
                 .addStatements("inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));")
