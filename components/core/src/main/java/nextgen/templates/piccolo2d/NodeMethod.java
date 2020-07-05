@@ -5,7 +5,7 @@ public class NodeMethod {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _returnValue;
+	private Object _type;
 	private Object _name;
 	private Object _returnStatement;
 	private java.util.List<Object> _statements = new java.util.ArrayList<>();
@@ -22,7 +22,7 @@ public class NodeMethod {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("nodeMethod");
-		st.add("returnValue", _returnValue);
+		st.add("type", _type);
 		st.add("name", _name);
 		st.add("returnStatement", _returnStatement);
 		for (Object o : _statements) st.add("statements", o);
@@ -30,25 +30,25 @@ public class NodeMethod {
 		return st.render().trim();
 	}
 
-	public NodeMethod setReturnValue(Object value) {
-		this._returnValue = value;
+	public NodeMethod setType(Object value) {
+		this._type = value;
 		return this;
 	}
 
-	public Object getReturnValue() {
-		return this._returnValue;
+	public Object getType() {
+		return this._type;
 	}
 
-	public Object getReturnValue(Object defaultValue) {
-		return this._returnValue == null ? defaultValue : this._returnValue;
+	public Object getType(Object defaultValue) {
+		return this._type == null ? defaultValue : this._type;
 	}
 
-	public boolean hasReturnValue() {
-		return this._returnValue != null;
+	public boolean hasType() {
+		return this._type != null;
 	}
 
-	public NodeMethod removeReturnValue() {
-		this._returnValue = null;
+	public NodeMethod removeType() {
+		this._type = null;
 		return this;
 	} 
 
@@ -183,8 +183,8 @@ public class NodeMethod {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "nodeMethod(returnValue,name,params,statements,returnStatement) ::= <<public ~if(returnValue)~~returnValue~~else~void~endif~ ~name~(~params:{it|~it.type~ ~it.name~};separator=\",\"~) {\n" + 
-				"	~statements:{it|~it~};separator=\"\\n\"~~if(returnValue)~\n" + 
+	static final String st = "nodeMethod(type,name,params,statements,returnStatement) ::= <<public ~if(type)~~type~~else~void~endif~ ~name~(~params:{it|~it.type~ ~it.name~};separator=\",\"~) {\n" + 
+				"	~statements:{it|~it~};separator=\"\\n\"~~if(returnStatement)~\n" + 
 				"	return ~returnStatement~~endif~\n" + 
 				"	\n" + 
 				"} >>";

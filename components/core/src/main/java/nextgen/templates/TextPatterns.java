@@ -47,7 +47,11 @@ public class TextPatterns extends TextST {
         return newLine().setLine(line + between + end);
     }
 
-    public static Line newLine(String line, Collection<Object> between, String end) {
-        return newLine().setLine(line + newBlock(between) + end);
+    public static Line newLine(String start, Collection<Object> between, String end) {
+        final Line line = newLine(start);
+        for (Object o : between)
+            line.addChildren(o);
+        line.setEnd(end);
+        return line;
     }
 }

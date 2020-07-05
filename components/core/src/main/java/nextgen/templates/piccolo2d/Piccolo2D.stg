@@ -565,7 +565,11 @@ case VK_~it.key~:
 			this.canvas = canvas;
 			this.event = event;
 		}
-	
+
+		protected void setName(String name) {
+			putValue(Action.NAME, name);
+		}
+        
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			actionPerformed(node, canvas, event, e);
@@ -631,10 +635,14 @@ PNodeInputEventHandler() ::= <<private final class NodeInputEventHandler extends
 	}
 }  >>
 
-NodeAction(name,nodeType,canvasName,title,statements) ::= <<private static final class ~name~ extends NodeAction<~nodeType~> {
+NodeAction(name,nodeType,fields,titleExpression,canvasName,title,constructorStatements,statements) ::= <<private static final class ~name~ extends NodeAction<~nodeType~> {
 
-	~name~(~nodeType~ node, ~canvasName~ canvas, PInputEvent event) {
-		super("~title~", node, canvas, event);
+	~fields:{it|~it.type~ ~it.name~;};separator="\n"~
+	
+	~name~(~if(titleExpression)~String name, ~endif~~nodeType~ node, ~canvasName~ canvas, PInputEvent event~if(fields)~, ~endif~~fields:{it|~it.type~ ~it.name~};separator=", "~) {
+		super(~if(titleExpression)~name~else~"~title~"~endif~, node, canvas, event);
+		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+		~constructorStatements:{it|~it~};separator="\n"~
 	}
 
 	@Override
@@ -813,8 +821,8 @@ case VK_~it.key~:
 	~actions:{it|~it~};separator="\n\n"~
 }  >>
 
-nodeMethod(returnValue,name,params,statements,returnStatement) ::= <<public ~if(returnValue)~~returnValue~~else~void~endif~ ~name~(~params:{it|~it.type~ ~it.name~};separator=","~) {
-	~statements:{it|~it~};separator="\n"~~if(returnValue)~
+nodeMethod(type,name,params,statements,returnStatement) ::= <<public ~if(type)~~type~~else~void~endif~ ~name~(~params:{it|~it.type~ ~it.name~};separator=","~) {
+	~statements:{it|~it~};separator="\n"~~if(returnStatement)~
 	return ~returnStatement~~endif~
 	
 }  >>

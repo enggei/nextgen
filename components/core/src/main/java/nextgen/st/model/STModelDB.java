@@ -152,6 +152,14 @@ public class STModelDB extends STModelNeoFactory {
         stModel.addArguments(newSTArgument(stParameter, value));
     }
 
+    public void addArgument(STModel stModel, STParameter stParameter, STModel value) {
+        stModel.addArguments(newSTArgument(stParameter, newSTValue(value)));
+    }
+
+    public void setArgument(STModel stModel, STParameter stParameter, STModel value) {
+        setArgument(stModel, stParameter, newSTValue(value));
+    }
+
     public void setArgument(STModel stModel, STParameter stParameter, STValue value) {
         stModel.getArguments()
                 .filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid()))

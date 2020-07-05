@@ -105,7 +105,7 @@ public class Switch {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Switch(selector,cases) ::= <<switch(~selector~) {\n" + 
+	static final String st = "Switch(selector,cases) ::= <<switch (~selector~) {\n" + 
 				"	~cases:{it|\n" + 
 				"case ~it.trigger~: {\n" + 
 				"	~it.statement~\n" + 

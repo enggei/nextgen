@@ -436,7 +436,11 @@ public class PNode {
 				"			this.canvas = canvas;\n" + 
 				"			this.event = event;\n" + 
 				"		}\n" + 
-				"	\n" + 
+				"\n" + 
+				"		protected void setName(String name) {\n" + 
+				"			putValue(Action.NAME, name);\n" + 
+				"		}\n" + 
+				"        \n" + 
 				"		@Override\n" + 
 				"		public void actionPerformed(ActionEvent e) {\n" + 
 				"			actionPerformed(node, canvas, event, e);\n" + 

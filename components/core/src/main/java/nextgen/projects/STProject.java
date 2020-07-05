@@ -3,7 +3,6 @@ package nextgen.projects;
 import nextgen.st.STGenerator;
 import nextgen.templates.JavaPatterns;
 import nextgen.templates.Piccolo2DPatterns;
-import nextgen.templates.domain.Domain;
 import nextgen.templates.domain.Entity;
 import nextgen.templates.java.PackageDeclaration;
 import nextgen.templates.piccolo2d.*;
@@ -13,10 +12,11 @@ import org.junit.Test;
 import java.io.File;
 import java.util.Arrays;
 
+import static nextgen.templates.DomainPatterns.newEnum;
 import static nextgen.templates.DomainPatterns.*;
+import static nextgen.templates.JavaPatterns.*;
 import static nextgen.templates.Piccolo2DPatterns.*;
 import static nextgen.templates.TextPatterns.*;
-import static nextgen.templates.JavaPatterns.*;
 
 public class STProject {
 
@@ -64,21 +64,20 @@ public class STProject {
                 .addFields("nextgen.st.model.STModel", "stModel")
                 .addFields("nextgen.st.STRenderer", "stRenderer")
                 .setInitText("nextgen.st.STGenerator.asFile(stFile).getAbsolutePath()")
-                .setInitText("java.util.UUID.fromString(stFile.getUuid())")
+                .setUuid("java.util.UUID.fromString(stFile.getUuid())")
                 .addMethods(newNodeMethod()
                         .setName("setSTModel")
                         .addParams("stModel", "nextgen.st.model.STModel")
-                        .addStatements(newLine("if (this.stModel != null)", "")
-                                .addChildren("this.stModel.removePropertyChangeListener(this);"))
-                        .addStatements("this.stModel = stModel;")
-                        .addStatements("this.stModel.addPropertyChangeListener(this);")
-                        .addStatements("this.stModel.setFile(stFile);")
-                        .addStatements("setText(nextgen.st.STGenerator.asFile(stFile).getAbsolutePath());")
-                )
-                .addOnLeftClick("if (stRenderer == null || stModel == null) return;")
-                .addOnLeftClick("nextgen.st.STGenerator.writeToFile(stRenderer.render(stModel), stFile.getPackageName(), stFile.getName(), stFile.getType(), new java.io.File(stFile.getPath()));")
+                        .addStatements(newInvokeLaterInTransaction(newBlock(
+                                "this.stModel = stModel;",
+                                "this.stModel.setFile(stFile);",
+                                "setText(nextgen.st.STGenerator.asFile(stFile).getAbsolutePath());"
+                        ))))
+                .addOnLeftClick(newInvokeLaterInTransaction(
+                        "if (stRenderer == null || stModel == null) return;",
+                        "nextgen.st.STGenerator.writeToFile(stRenderer.render(stModel), stFile.getPackageName(), stFile.getName(), stFile.getType(), new java.io.File(stFile.getPath()));"))
                 .addRightClickStatements(getSelectedSTModelNodes("stModelNodes"))
-                .addRightClickStatements(newBlock(
+                .addRightClickStatements(newInvokeLaterInTransaction(
                         "final JMenu sourceMenu = new JMenu(\"STModels\");",
                         newLine("stModelNodes.forEach(stNode -> {", "});")
                                 .addChildren("final int end = Math.min(stNode.getText().length(), 50);")
@@ -136,156 +135,189 @@ public class STProject {
                 .addFields("nextgen.st.STRenderer", "stRenderer")
                 .setInitText("stRenderer.render(stModel)")
                 .setUuid("java.util.UUID.fromString(stModel.getUuid())")
-                .addOnPropertyChange("setText(stRenderer.render(stModel));")
-                .addOnLeftClick("setText(stRenderer.render(stModel));")
+                .addMethods(newNodeMethod()
+                        .setName("cut")
+                        .addParams("text", "String")
+                        .setType("String")
+                        .setReturnStatement("text.substring(0, Math.min(text.length(), 20));"))
+                .addOnLeftClick(doInTransactionSilent("setText(stRenderer.render(stModel));"))
                 .addRightClickStatements(getSelectedSTValueNodes("stValueNodes"))
                 .addRightClickStatements(getSelectedSTModelNodes("stModelNodes"))
-                .addRightClickStatements(newLine("stTemplate.getParameters().forEach(stParameter -> {", "});")
-                        .addChildren("final JMenu stParameterMenu = new JMenu(stParameter.getName());")
-                        .addChildren(newSwitch().setSelector("stParameter.getType()")
-                                .addCases("SINGLE", newBlock()
-                                        .addLines(newLine("stParameterMenu.add(", Piccolo2DPatterns.newAnonymousPNodeAction("STModelNode")
-                                                        .setHeader("\"Set \" + stParameter.getName()")
-                                                        .addStatements("final String s = SwingUtil.showInputDialog(stParameter.getName(), canvas);")
-                                                        .addStatements("if (s == null || s.trim().length() == 0) return;")
-                                                        .addStatements("final nextgen.st.model.STValue stValue = canvas.modelDb.newSTValue(s.trim());")
-                                                        .addStatements("canvas.modelDb.setArgument(stTemplate, stModel, stParameter, stValue);")
-                                                        .addStatements("setText(stRenderer.render(stModel));")
-                                                , ");"))
-                                        .addLines(newLine("stValueNodes.forEach(stNode -> {", "});")
-                                                .addChildren("final int end = Math.min(stNode.getText().length(), 50);")
-                                                .addChildren(newLine("stParameterMenu.add(", newAnonymousPNodeAction("STModelNode")
-                                                                .setHeader("\"Set \" + stParameter.getName() + \" = \" + stNode.getText().substring(0, end)")
-                                                                .addStatements("canvas.modelDb.setArgument(stModel, stParameter, stNode.stValue);")
-                                                                .addStatements("setText(stRenderer.render(stModel));")
-                                                        , ");")))
-                                        .addLines(newLine("stModelNodes.forEach(stNode -> {", "});")
-                                                .addChildren("final int end = Math.min(stNode.getText().length(), 50);")
-                                                .addChildren(newLine("stParameterMenu.add(", newAnonymousPNodeAction("STModelNode")
-                                                                .setHeader("\"Set \" + stParameter.getName() + \" = \" + stNode.getText().substring(0, end)")
-                                                                .addStatements("canvas.modelDb.setArgument(stModel, stParameter, canvas.modelDb.newSTValue(stNode.stModel));")
-                                                                .addStatements("setText(stRenderer.render(stModel));")
-                                                        , ");"))))
-                                .addCases("LIST", newBlock()
-                                        .addLines(newLine("stParameterMenu.add(", newAnonymousPNodeAction("STModelNode")
-                                                        .setHeader("\"Add \" + stParameter.getName()")
-                                                        .addStatements("final String s = SwingUtil.showInputDialog(stParameter.getName(), canvas);")
-                                                        .addStatements("if (s == null || s.trim().length() == 0) return;")
-                                                        .addStatements("final nextgen.st.model.STValue stValue = canvas.modelDb.newSTValue(s.trim());")
-                                                        .addStatements("canvas.addNode(new STValueNode(canvas, stValue, node.stRenderer));")
-                                                        .addStatements("canvas.modelDb.addArgument(stModel, stParameter, stValue);")
-                                                        .addStatements("setText(stRenderer.render(stModel));")
-                                                , ");"))
-                                        .addLines(newLine("stValueNodes.forEach(stNode -> {", "});")
-                                                .addChildren("final int end = Math.min(stNode.getText().length(), 50);")
-                                                .addChildren(newLine("stParameterMenu.add(", newAnonymousPNodeAction("STModelNode")
-                                                                .setHeader("\"Add \" + stParameter.getName() + \" = \" + stNode.getText().substring(0, end)")
-                                                                .addStatements("canvas.modelDb.addArgument(stModel, stParameter, stNode.stValue);")
-                                                                .addStatements("setText(stRenderer.render(stModel));")
-                                                        , ");")))
-                                        .addLines(newLine("stModelNodes.forEach(stNode -> {", "});")
-                                                .addChildren("final int end = Math.min(stNode.getText().length(), 50);")
-                                                .addChildren(newLine("stParameterMenu.add(", newAnonymousPNodeAction("STModelNode")
-                                                                .setHeader("\"Add \" + stParameter.getName() + \" = \" + stNode.getText().substring(0, end)")
-                                                                .addStatements("canvas.modelDb.addArgument(stModel, stParameter, canvas.modelDb.newSTValue(stNode.stModel));")
-                                                                .addStatements("setText(stRenderer.render(stModel));")
-                                                        , ");")))
-                                )
-                                .addCases("KVLIST", newBlock()
-                                        .addLines(newLine("stParameterMenu.add(", newAnonymousPNodeAction("STModelNode")
-                                                .setHeader("\"Add \" + stParameter.getName()")
-                                                .addStatements(newBlock()
-                                                        .addLines("final Map<STParameterKey, JTextField> fieldMap = new LinkedHashMap<>();")
-                                                        .addLines(newLine("stParameter.getKeys().forEach(stParameterKey -> ", "fieldMap.put(stParameterKey, new JTextField(15))", ");")))
-                                                .addStatements(newBlock()
-                                                        .addLines("final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));")
-                                                        .addLines("inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));")
-                                                        .addLines(newLine("for (Map.Entry<STParameterKey, JTextField> fieldEntry : fieldMap.entrySet()) {", "}")
-                                                                .addChildren("inputPanel.add(new JLabel(fieldEntry.getKey().getName()));")
-                                                                .addChildren("inputPanel.add(fieldEntry.getValue());")))
-                                                .addStatements(newBlock()
-                                                        .addLines(newLine("SwingUtil.showDialog(inputPanel, canvas, stParameter.getName(), new SwingUtil.ConfirmAction() {", "});")
-                                                                .addChildren("@Override")
-                                                                .addChildren(newLine("public void verifyAndCommit() throws Exception {", "}")
-                                                                        .addChildren("final Collection<STArgumentKV> kvs = new ArrayList<>();")
-                                                                        .addChildren(newLine("for (Map.Entry<STParameterKey, JTextField> fieldEntry : fieldMap.entrySet()) {", "}")
-                                                                                .addChildren("final String value = fieldEntry.getValue().getText().trim();")
-                                                                                .addChildren("if (value.length() == 0) continue;")
-                                                                                .addChildren("kvs.add(canvas.modelDb.newSTArgumentKV(fieldEntry.getKey(),canvas.modelDb.newSTValue(value)));"))
-                                                                        .addChildren("canvas.modelDb.addArgument(stModel, stParameter, kvs);")
-                                                                        .addChildren("setText(stRenderer.render(stModel));")))), ");"))
+                .addRightClickStatements(doInTransactionSilent()
+                        .addChildren(newLine("stTemplate.getParameters().forEach(stParameter -> {", "});")
+                                .addChildren("final JMenu stParameterMenu = new JMenu(stParameter.getName());")
+                                .addChildren(newSwitch().setSelector("stParameter.getType()")
+                                        .addCases("SINGLE", newBlock()
+                                                .addLines(newLine("stParameterMenu.add(new SetInputValueArgumentAction(\"Set \" + stParameter.getName(), STModelNode.this, canvas, event, stParameter));"))
+                                                .addLines(newLine("stValueNodes.forEach(stNode -> {", "});")
+                                                        .addChildren(newLine("stParameterMenu.add(new SetSTValueArgumentAction(\"Set \" + stParameter.getName() + \" = \" + cut(stNode.getText()), STModelNode.this, canvas, event, stParameter, stNode.stValue));")))
+                                                .addLines(newLine("stModelNodes.forEach(stNode -> {", "});")
+                                                        .addChildren(newLine("stParameterMenu.add(new SetSTModelArgumentAction(\"Set \" + stParameter.getName() + \" = \" + cut(stNode.getText()), STModelNode.this, canvas, event, stParameter, stNode.stModel));"))))
+                                        .addCases("LIST", newBlock()
+                                                .addLines(newLine("stParameterMenu.add(new AddInputValueArgumentAction(\"Add \" + stParameter.getName(), STModelNode.this, canvas, event, stParameter));"))
+                                                .addLines(newLine("stValueNodes.forEach(stNode -> {", "});")
+                                                        .addChildren(newLine("stParameterMenu.add(new AddSTValueArgumentAction(\"Add \" + stParameter.getName() + \" = \" + cut(stNode.getText()), STModelNode.this, canvas, event, stParameter, stNode.stValue));")))
+                                                .addLines(newLine("stModelNodes.forEach(stNode -> {", "});")
+                                                        .addChildren(newLine("stParameterMenu.add(new AddSTModelArgumentAction(\"Add \" + stParameter.getName() + \" = \" + cut(stNode.getText()), STModelNode.this, canvas, event, stParameter, stNode.stModel));"))))
+                                        .addCases("KVLIST", newBlock()
+                                                .addLines(newLine("stParameterMenu.add(new AddKVInputValueArgumentAction(\"Add \" + stParameter.getName(), STModelNode.this, canvas, event, stParameter));"))))
+                                .addChildren("if (stParameterMenu.getMenuComponentCount() != 0) pop.add(stParameterMenu);"))
+                        .addChildren("final JMenu open = new JMenu(\"Open\");")
+                        .addChildren("final JMenu remove = new JMenu(\"Remove\");")
+                        .addChildren(newLine("stModel.getArguments().forEach(stArgument -> {", "});")
+                                .addChildren("open.add(new OpenArgument(STModelNode.this, canvas, event, stArgument));")
+                                .addChildren("remove.add(new RemoveArgument(STModelNode.this, canvas, event, stArgument));"))
+                        .addChildren("if (open.getMenuComponentCount() != 0) pop.add(open);")
+                        .addChildren("if (remove.getMenuComponentCount() != 0) pop.add(remove);"));
+
+        stModelNode.addActions(newNodeAction(stModelNode, "SetInputValueArgumentAction", "Set")
+                .addFields("nextgen.st.domain.STParameter", "stParameter")
+                .setTitleExpression(true)
+                .addStatements("final String s = SwingUtil.showInputDialog(stParameter.getName(), canvas);")
+                .addStatements("if (s == null || s.trim().length() == 0) return;")
+                .addStatements(newInvokeLaterInTransaction(
+                        "final nextgen.st.model.STValue stValue = canvas.modelDb.newSTValue(s.trim());",
+                        "canvas.modelDb.setArgument(node.stModel, stParameter, stValue);",
+                        "node.setText(node.stRenderer.render(node.stModel));"
+                )));
+
+        stModelNode.addActions(newNodeAction(stModelNode, "SetSTValueArgumentAction", "Set")
+                .addFields("nextgen.st.domain.STParameter", "stParameter")
+                .addFields("nextgen.st.model.STValue", "stValue")
+                .setTitleExpression(true)
+                .addStatements(newInvokeLaterInTransaction(
+                        "canvas.modelDb.setArgument(node.stModel, stParameter, stValue);",
+                        "node.setText(node.stRenderer.render(node.stModel));"
+                )));
+
+        stModelNode.addActions(newNodeAction(stModelNode, "SetSTModelArgumentAction", "Set")
+                .addFields("nextgen.st.domain.STParameter", "stParameter")
+                .addFields("nextgen.st.model.STModel", "stModel")
+                .setTitleExpression(true)
+                .addStatements(newInvokeLaterInTransaction(
+                        "canvas.modelDb.setArgument(node.stModel, stParameter, stModel);",
+                        "node.setText(node.stRenderer.render(node.stModel));"
+                )));
+
+        stModelNode.addActions(newNodeAction(stModelNode, "AddInputValueArgumentAction", "Add")
+                .addFields("nextgen.st.domain.STParameter", "stParameter")
+                .setTitleExpression(true)
+                .addStatements("final String s = SwingUtil.showInputDialog(stParameter.getName(), canvas);")
+                .addStatements("if (s == null || s.trim().length() == 0) return;")
+                .addStatements(newInvokeLaterInTransaction(
+                        "final nextgen.st.model.STValue stValue = canvas.modelDb.newSTValue(s.trim());",
+                        "canvas.modelDb.addArgument(node.stModel, stParameter, stValue);",
+                        "node.setText(node.stRenderer.render(node.stModel));"
+                )));
+
+        stModelNode.addActions(newNodeAction(stModelNode, "AddSTValueArgumentAction", "Add")
+                .addFields("nextgen.st.domain.STParameter", "stParameter")
+                .addFields("nextgen.st.model.STValue", "stValue")
+                .setTitleExpression(true)
+                .addStatements(newInvokeLaterInTransaction(
+                        "canvas.modelDb.addArgument(node.stModel, stParameter, stValue);",
+                        "node.setText(node.stRenderer.render(node.stModel));"
+                )));
+
+        stModelNode.addActions(newNodeAction(stModelNode, "AddSTModelArgumentAction", "Add")
+                .addFields("nextgen.st.domain.STParameter", "stParameter")
+                .addFields("nextgen.st.model.STModel", "stModel")
+                .setTitleExpression(true)
+                .addStatements(newInvokeLaterInTransaction(
+                        "canvas.modelDb.addArgument(node.stModel, stParameter, stModel);",
+                        "node.setText(node.stRenderer.render(node.stModel));"
+                )));
+
+        stModelNode.addActions(newNodeAction(stModelNode, "AddKVInputValueArgumentAction", "Add")
+                .addFields("nextgen.st.domain.STParameter", "stParameter")
+                .setTitleExpression(true)
+                .addStatements("final Map<STParameterKey, JTextField> fieldMap = new LinkedHashMap<>();")
+                .addStatements(newInvokeLaterInTransaction(newBlock()
+                        .addLines(newLine("stParameter.getKeys().forEach(stParameterKey -> ", "fieldMap.put(stParameterKey, new JTextField(15))", ");"))
+                        .addLines("final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));")
+                        .addLines("inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));")
+                        .addLines(newLine("for (Map.Entry<STParameterKey, JTextField> fieldEntry : fieldMap.entrySet()) {", "}")
+                                .addChildren("inputPanel.add(new JLabel(fieldEntry.getKey().getName()));")
+                                .addChildren("inputPanel.add(fieldEntry.getValue());"))
+                        .addLines(newBlock()
+                                .addLines(newLine("SwingUtil.showDialog(inputPanel, canvas, stParameter.getName(), new SwingUtil.ConfirmAction() {", "});")
+                                        .addChildren("@Override")
+                                        .addChildren(newLine("public void verifyAndCommit() throws Exception {", "}")
+                                                .addChildren("final Collection<STArgumentKV> kvs = new ArrayList<>();")
+                                                .addChildren(newLine("for (Map.Entry<STParameterKey, JTextField> fieldEntry : fieldMap.entrySet()) {", "}")
+                                                        .addChildren("final String value = fieldEntry.getValue().getText().trim();")
+                                                        .addChildren("if (value.length() == 0) continue;")
+                                                        .addChildren("kvs.add(canvas.modelDb.newSTArgumentKV(fieldEntry.getKey(),canvas.modelDb.newSTValue(value)));"))
+                                                .addChildren("canvas.modelDb.addArgument(node.stModel, stParameter, kvs);")
+                                                .addChildren("node.setText(node.stRenderer.render(node.stModel));"))))
+                )));
+
+        final NodeAction openSTArgument = newNodeAction(stModelNode, "OpenArgument", "Open")
+                .addFields("nextgen.st.model.STArgument", "stArgument")
+                .addConstructorStatements("final String s = node.stRenderer.render(stArgument).toString();")
+                .addConstructorStatements("final int end = Math.min(s.length(), 50);")
+                .addConstructorStatements("setName(\"Open \" + s.substring(0, end));")
+                .addStatements(newInvokeLaterInTransaction(
+                        "final STValue stValue = stArgument.getValue();",
+                        JavaPatterns.newSwitch()
+                                .setSelector("stValue.getType()")
+                                .addCases("STMODEL", newBlock(
+                                        "final nextgen.st.model.STModel stModel = stValue.getStModel();",
+                                        "canvas.addNode(new STModelNode(canvas, canvas.modelDb.findSTTemplateByUuid(stModel.getStTemplate()), stModel, node.stRenderer));"
                                 ))
-                        .addChildren("pop.add(stParameterMenu);"))
-                .addRightClickStatements("final JMenu open = new JMenu(\"Open\");")
-                .addRightClickStatements(newLine("stModel.getArguments().forEach(stArgument -> {", "});")
-                        .addChildren("final String s = stRenderer.render(stArgument).toString();")
-                        .addChildren("final int end = Math.min(s.length(), 50);")
-                        .addChildren(newLine("open.add(new STNode.NodeAction<STModelNode>(\"Open \" + s.substring(0, end), this, canvas, event) {", "});")
-                                .addChildren("@Override")
-                                .addChildren(newLine("void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {", "}")
-                                        .addChildren(newInvokeLaterInTransaction(
-                                                "final STValue stValue = stArgument.getValue();",
-                                                JavaPatterns.newSwitch()
-                                                        .setSelector("stValue.getType()")
-                                                        .addCases("STMODEL", newBlock(
-                                                                "final nextgen.st.model.STModel stModel = stValue.getStModel();",
-                                                                "canvas.addNode(new STModelNode(canvas, canvas.modelDb.findSTTemplateByUuid(stModel.getStTemplate()), stModel, node.stRenderer));"
-                                                        ))
-                                                        .addCases("PRIMITIVE", "canvas.addNode(new STValueNode(canvas, stValue, node.stRenderer));")
-                                                        .addCases("ENUM", "canvas.addNode(new STValueNode(canvas, stValue, node.stRenderer));")
+                                .addCases("PRIMITIVE", "canvas.addNode(new STValueNode(canvas, stValue, node.stRenderer));")
+                                .addCases("ENUM", "canvas.addNode(new STValueNode(canvas, stValue, node.stRenderer));")));
+        stModelNode.addActions(openSTArgument);
 
-                                        )))))
-                .addRightClickStatements("if (open.getMenuComponentCount() != 0) pop.add(open);")
-
-                .addRightClickStatements("final JMenu remove = new JMenu(\"Remove\");")
-                .addRightClickStatements(newLine("stModel.getArguments().forEach(stArgument -> {", "});")
-                        .addChildren("final String s = stRenderer.render(stArgument).toString();")
-                        .addChildren("final int end = Math.min(s.length(), 50);")
-                        .addChildren(newLine("remove.add(new STNode.NodeAction<STModelNode>(\"Remove \" + s.substring(0, end), this, canvas, event) {", "});")
-                                .addChildren("@Override")
-                                .addChildren(newLine("void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {", "}")
-                                        .addChildren("stModel.removeArguments(stArgument);")
-                                        .addChildren("setText(stRenderer.render(stModel));"))))
-                .addRightClickStatements("if (remove.getMenuComponentCount() != 0) pop.add(remove);");
+        final NodeAction removeSTArgument = newNodeAction(stModelNode, "RemoveArgument", "Remove")
+                .addFields("nextgen.st.model.STArgument", "stArgument")
+                .addConstructorStatements("final String s = node.stRenderer.render(stArgument).toString();")
+                .addConstructorStatements("final int end = Math.min(s.length(), 50);")
+                .addConstructorStatements("setName(\"Remove \" + s.substring(0, end));")
+                .addStatements(newInvokeLaterInTransaction(
+                        "node.stModel.removeArguments(stArgument);",
+                        "node.setText(node.stRenderer.render(node.stModel));"));
+        stModelNode.addActions(removeSTArgument);
 
         final NodeAction stModelToClipboard = newNodeAction(stModelNode, "ToClipboard", "To Clipboard")
-                .addStatements("com.generator.util.SwingUtil.toClipboard(node.stRenderer.render(node.stModel));");
+                .addStatements(newInvokeLaterInTransaction("com.generator.util.SwingUtil.toClipboard(node.stRenderer.render(node.stModel));"));
         registerRightClickAction(stModelNode, stModelToClipboard, stModelToClipboard.getName());
 
         final NodeAction deleteSTModel = newNodeAction(stModelNode, "Delete", "Delete")
                 .addStatements(newInvokeLaterInTransaction(
-                        newLine("canvas.modelDb.doInTransaction(tx -> {", "})")
-                                .addChildren("canvas.modelDb.remove(node.stModel);")
-                                .addChildren("canvas.removeNode(node.getUuid());")));
+                        "canvas.modelDb.remove(node.stModel);",
+                        "canvas.removeNode(node.getUuid());"));
         registerRightClickAction(stModelNode, deleteSTModel, deleteSTModel.getName());
 
         final NodeAction addFileSink = newNodeAction(stModelNode, "AddFileSink", "Add File Sink")
-                .addStatements("final Map<String, JTextField> fieldMap = new java.util.LinkedHashMap<>();")
-                .addStatements("fieldMap.put(\"name\", new JTextField(canvas.modelDb.getSTModelName(node.stModel, \"\"), 15));")
-                .addStatements("fieldMap.put(\"type\", new JTextField(15));")
-                .addStatements("fieldMap.put(\"path\", new JTextField(15));")
-                .addStatements("fieldMap.put(\"package\", new JTextField(canvas.modelDb.getSTModelPackage(node.stModel, \"\"), 15));")
-                .addStatements("final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));")
-                .addStatements("inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));")
-                .addStatements(newForEachStmt()
-                        .setVariable("Map.Entry<String, JTextField> fieldEntry")
-                        .setIterable("fieldMap.entrySet()")
-                        .setBody(newBlockStmt()
-                                .addStatements("inputPanel.add(new JLabel(fieldEntry.getKey()));")
-                                .addStatements("inputPanel.add(fieldEntry.getValue());")))
-                .addStatements(newBlock()
-                        .addLines(newLine("com.generator.util.SwingUtil.showDialog(inputPanel, canvas, \"New File sink\", new com.generator.util.SwingUtil.ConfirmAction() {", "});")
-                                .addChildren("@Override")
-                                .addChildren(newLine("public void verifyAndCommit() throws Exception {", "}")
-                                        .addChildren("final String name = fieldMap.get(\"name\").getText().trim();")
-                                        .addChildren("final String type = fieldMap.get(\"type\").getText().trim();")
-                                        .addChildren("final String path = fieldMap.get(\"path\").getText().trim();")
-                                        .addChildren("final String packageName = fieldMap.get(\"package\").getText().trim();")
-                                        .addChildren(newInvokeLaterInTransaction(
-                                                "final nextgen.st.model.STFile stFile = canvas.modelDb.newSTFile(name, type, path, packageName);",
-                                                "node.stModel.setFile(stFile);",
-                                                "canvas.addNode(new STFileNode(canvas, stFile, node.stModel, node.stRenderer));"
-                                        )))));
+                .addStatements(doInTransaction(newBlock(
+                        "final Map<String, JTextField> fieldMap = new java.util.LinkedHashMap<>();",
+                        "fieldMap.put(\"name\", new JTextField(canvas.modelDb.getSTModelName(node.stModel, \"\"), 15));",
+                        "fieldMap.put(\"type\", new JTextField(15));",
+                        "fieldMap.put(\"path\", new JTextField(15));",
+                        "fieldMap.put(\"package\", new JTextField(canvas.modelDb.getSTModelPackage(node.stModel, \"\"), 15));",
+                        "final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));",
+                        "inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));",
+                        newForEachStmt()
+                                .setVariable("Map.Entry<String, JTextField> fieldEntry")
+                                .setIterable("fieldMap.entrySet()")
+                                .setBody(newBlockStmt()
+                                        .addStatements("inputPanel.add(new JLabel(fieldEntry.getKey()));")
+                                        .addStatements("inputPanel.add(fieldEntry.getValue());")),
+                        newBlock()
+                                .addLines(newLine("com.generator.util.SwingUtil.showDialog(inputPanel, canvas, \"New File sink\", new com.generator.util.SwingUtil.ConfirmAction() {", "});")
+                                        .addChildren("@Override")
+                                        .addChildren(newLine("public void verifyAndCommit() throws Exception {", "}")
+                                                .addChildren("final String name = fieldMap.get(\"name\").getText().trim();")
+                                                .addChildren("final String type = fieldMap.get(\"type\").getText().trim();")
+                                                .addChildren("final String path = fieldMap.get(\"path\").getText().trim();")
+                                                .addChildren("final String packageName = fieldMap.get(\"package\").getText().trim();")
+                                                .addChildren(newInvokeLaterInTransaction(
+                                                        "final nextgen.st.model.STFile stFile = canvas.modelDb.newSTFile(name, type, path, packageName);",
+                                                        "node.stModel.setFile(stFile);",
+                                                        "canvas.addNode(new STFileNode(canvas, stFile, node.stModel, node.stRenderer));"
+                                                ))))
+                )));
         registerRightClickAction(stModelNode, addFileSink, addFileSink.getName());
 
         final NodeAction openFileSInk = newNodeAction(stModelNode, "OpenFileSink", "Open File Sink")
@@ -298,8 +330,8 @@ public class STProject {
         registerRightClickAction(stModelNode, openFileSInk, openFileSInk.getName());
 
         final NodeAction openFile = newNodeAction(stFileNode, "OpenFile", "Open")
-                .addStatements(newLine("try {", "} catch (Exception ex) { com.generator.util.SwingUtil.showException(canvas, ex); }")
-                        .addChildren("java.awt.Desktop.getDesktop().open(nextgen.st.STGenerator.asFile(node.stFile));"));
+                .addStatements(newInvokeLaterInTransaction(newLine("try {", "} catch (Exception ex) { com.generator.util.SwingUtil.showException(canvas, ex); }")
+                        .addChildren("java.awt.Desktop.getDesktop().open(nextgen.st.STGenerator.asFile(node.stFile));")));
         registerRightClickAction(stFileNode, openFile, openFile.getName());
 
         final CanvasAction newSTNodeAction = newCanvasAction(canvas, "NewSTValueNode", "New Value")
@@ -312,8 +344,8 @@ public class STProject {
 
 
         final CanvasAction loadAllAction = newCanvasAction(canvas, "LoadAllModels", "Load All Models")
-                .addStatements(newInvokeLaterInTransaction(newLine("canvas.modelDb.getAllSTModels().forEach(stModel -> ", ");")
-                        .addChildren("canvas.addNode(new STModelNode(canvas, stModel.getStTemplate(), stModel, canvas.stRenderer))")));
+                .addStatements(newInvokeLaterInTransaction(newLine("canvas.modelDb.findAllSTModel().forEach(stModel -> ", ");")
+                        .addChildren("canvas.addNode(new STModelNode(canvas, canvas.modelDb.findSTTemplateByUuid(stModel.getStTemplate()), stModel, canvas.stRenderer))")));
         registerRightClickAction(canvas, loadAllAction, loadAllAction.getName());
 
         final CanvasAction newSTValueFromClipboard = newCanvasAction(canvas, "NewSTValueFromClipboard", "New Value from Clipboard")
@@ -321,7 +353,7 @@ public class STProject {
                 .addStatements("if (s == null || s.trim().length() == 0) return;")
                 .addStatements(newInvokeLaterInTransaction(
                         "final nextgen.st.model.STValue stValue = canvas.modelDb.newSTValue(s);",
-                        "canvas.addNode(new " + stValueNode.getName() + "(canvas, s, stValue.getUuid(), stValue, canvas.stRenderer));"));
+                        "canvas.addNode(new STValueNode(canvas, stValue, canvas.stRenderer));"));
         registerRightClickAction(canvas, newSTValueFromClipboard, newSTValueFromClipboard.getName());
 
         final CanvasAction newSTFileNode = newCanvasAction(canvas, "NewSTFileNode", "New Sink")
@@ -380,12 +412,21 @@ public class STProject {
     }
 
     private Object newInvokeLaterInTransaction(Object... statements) {
-        return newInvokeLater(newLine("canvas.modelDb.doInTransaction(tx -> {", Arrays.asList(statements), "})"));
+        return newInvokeLater(newLine("canvas.modelDb.doInTransaction(tx -> {", Arrays.asList(statements), "}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable))"));
+    }
+
+    private Line doInTransaction(Object... statements) {
+        return newLine("canvas.modelDb.doInTransaction(tx -> {", Arrays.asList(statements), "}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable));");
+    }
+
+    private Line doInTransactionSilent(Object... statements) {
+        return newLine("canvas.modelDb.doInTransaction(tx -> {", Arrays.asList(statements), "});");
     }
 
     public Line getSelectedSTValueNodes(String name) {
-        return newLine(
+        return newLineIndent(
                 "final java.util.List<STValueNode> " + name + " = canvas.getSelectedNodes()",
+                "\t",
                 ".filter(stNode -> stNode instanceof STValueNode)",
                 ".filter(stNode -> !stNode.getUuid().equals(getUuid()))",
                 ".map(stNode -> (STValueNode) stNode)",

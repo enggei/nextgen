@@ -503,7 +503,7 @@ Patterns() ::= << >>
 
 NewInstance(type,arguments) ::= <<new ~type~(~arguments:{it|~it~};separator=","~) >>
 
-Switch(selector,cases) ::= <<switch(~selector~) {
+Switch(selector,cases) ::= <<switch (~selector~) {
 	~cases:{it|
 case ~it.trigger~: {
 	~it.statement~

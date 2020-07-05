@@ -272,6 +272,10 @@ public class STNode extends PNode implements PropertyChangeListener {
 			this.event = event;
 		}
 
+		protected void setName(String name) {
+			putValue(Action.NAME, name);
+		}
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			actionPerformed(node, canvas, event, e);
@@ -368,6 +372,7 @@ public class STNode extends PNode implements PropertyChangeListener {
 
 	private static final class RetainNode extends NodeAction<STNode> {
 
+
 		RetainNode(STNode node, STCanvas canvas, PInputEvent event) {
 			super("Retain", node, canvas, event);
 		}
@@ -379,6 +384,7 @@ public class STNode extends PNode implements PropertyChangeListener {
 	}
 
 	private static final class CloseNode extends NodeAction<STNode> {
+
 
 		CloseNode(STNode node, STCanvas canvas, PInputEvent event) {
 			super("Close", node, canvas, event);

@@ -1,12 +1,21 @@
 package nextgen.st.canvas;
 
+import com.generator.util.SwingUtil;
+import nextgen.st.domain.STParameterKey;
+import nextgen.st.model.STArgumentKV;
+import nextgen.st.model.STValue;
+import nextgen.st.model.STValueType;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 
 public class STFileNode extends STNode {
 
@@ -14,17 +23,19 @@ public class STFileNode extends STNode {
 	nextgen.st.model.STModel stModel;
 	nextgen.st.STRenderer stRenderer;
 
-	public STFileNode(STCanvas canvas, String initText, java.util.UUID uuid, nextgen.st.model.STFile stFile, nextgen.st.model.STModel stModel, nextgen.st.STRenderer stRenderer) {
-		super(canvas, initText, uuid);
+	public STFileNode(STCanvas canvas, nextgen.st.model.STFile stFile, nextgen.st.model.STModel stModel, nextgen.st.STRenderer stRenderer) {
+		super(canvas, nextgen.st.STGenerator.asFile(stFile).getAbsolutePath(), java.util.UUID.fromString(stFile.getUuid()));
 		this.stFile = stFile;
 		this.stModel = stModel;
 		this.stRenderer = stRenderer;
 	}
 
 	public void setSTModel(nextgen.st.model.STModel stModel) {
-		this.stModel = stModel;
-		this.stModel.setFile(stFile);
-		setText(nextgen.st.STGenerator.asFile(stFile).getAbsolutePath());
+		javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(tx -> {
+			this.stModel = stModel;
+			this.stModel.setFile(stFile);
+			setText(nextgen.st.STGenerator.asFile(stFile).getAbsolutePath());
+		}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable)));
 	}
 
 	@Override
@@ -34,17 +45,19 @@ public class STFileNode extends STNode {
 				.filter(stNode -> !stNode.getUuid().equals(getUuid()))
 				.map(stNode -> (STModelNode) stNode)
 				.collect(Collectors.toList());
-		final JMenu sourceMenu = new JMenu("STModels");
-		stModelNodes.forEach(stNode -> {
-			final int end = Math.min(stNode.getText().length(), 50);
-			sourceMenu.add(new STNode.NodeAction<STFileNode>("Set source to " + stNode.getText().substring(0, end), this, canvas, event) {
-				@Override
-				void actionPerformed(STFileNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-					node.setSTModel(stNode.stModel);
-				}
+		javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(tx -> {
+			final JMenu sourceMenu = new JMenu("STModels");
+			stModelNodes.forEach(stNode -> {
+				final int end = Math.min(stNode.getText().length(), 50);
+				sourceMenu.add(new STNode.NodeAction<STFileNode>("Set source to " + stNode.getText().substring(0, end), this, canvas, event) {
+					@Override
+					void actionPerformed(STFileNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+						node.setSTModel(stNode.stModel);
+					}
+				});
 			});
-		});
-		pop.add(sourceMenu);
+			pop.add(sourceMenu);
+		}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable)));
 		pop.add(new EditFileSink(this, canvas, event));
 		pop.add(new OpenFile(this, canvas, event));
 		pop.addSeparator();
@@ -59,22 +72,14 @@ public class STFileNode extends STNode {
 	@Override
 	protected void onNodeLeftClick(PInputEvent event) {
 		super.onNodeLeftClick(event);
-		if (stRenderer == null || stModel == null) return;
-		nextgen.st.STGenerator.writeToFile(stRenderer.render(stModel), stFile.getPackageName(), stFile.getName(), stFile.getType(), new java.io.File(stFile.getPath()));
-	}
-
-	@Override
-	public void propertyChange(java.beans.PropertyChangeEvent evt) {
-		final Object source = evt.getSource();
-		System.out.println("Event :" + source.getClass().getCanonicalName());
-		if (source instanceof nextgen.st.model.STModel) {
-			final nextgen.st.model.STModel stModel = (nextgen.st.model.STModel) source;
-			this.stFile.setName(canvas.modelDb.getSTModelName(stModel,  this.stFile.getName()));
-			this.stFile.setPackageName(canvas.modelDb.getSTModelPackage(stModel, this.stFile.getPackageName()));
-		}	
+		javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(tx -> {
+			if (stRenderer == null || stModel == null) return;
+			nextgen.st.STGenerator.writeToFile(stRenderer.render(stModel), stFile.getPackageName(), stFile.getName(), stFile.getType(), new java.io.File(stFile.getPath()));
+		}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable)));
 	}
 
 	private static final class EditFileSink extends NodeAction<STFileNode> {
+
 
 		EditFileSink(STFileNode node, STCanvas canvas, PInputEvent event) {
 			super("Edit", node, canvas, event);
@@ -100,13 +105,13 @@ public class STFileNode extends STNode {
 					final String type = fieldMap.get("type").getText().trim();
 					final String path = fieldMap.get("path").getText().trim();
 					final String packageName = fieldMap.get("package").getText().trim();
-					javax.swing.SwingUtilities.invokeLater(() ->  {
+					javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(tx -> {
 						node.stFile.setName(name);
 						node.stFile.setType(type);
 						node.stFile.setPath(path);
 						node.stFile.setPackageName(packageName);
-						node.setText(nextgen.st.STGenerator.asFile(node.stFile).getAbsolutePath());	
-					});
+						node.setText(nextgen.st.STGenerator.asFile(node.stFile).getAbsolutePath());
+					}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable)));
 				}
 			});
 		}
@@ -114,15 +119,18 @@ public class STFileNode extends STNode {
 
 	private static final class OpenFile extends NodeAction<STFileNode> {
 
+
 		OpenFile(STFileNode node, STCanvas canvas, PInputEvent event) {
 			super("Open", node, canvas, event);
 		}
 
 		@Override
 		void actionPerformed(STFileNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			try {
-				java.awt.Desktop.getDesktop().open(nextgen.st.STGenerator.asFile(node.stFile));
-			} catch (Exception ex) { com.generator.util.SwingUtil.showException(canvas, ex); }
+			javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(tx -> {
+				try {
+					java.awt.Desktop.getDesktop().open(nextgen.st.STGenerator.asFile(node.stFile));
+				} catch (Exception ex) { com.generator.util.SwingUtil.showException(canvas, ex); }
+			}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable)));
 		}
 	}
 }

@@ -1832,7 +1832,7 @@
     }, {
       "uuid" : "7401943e-8216-4c1e-be68-61f49464af60",
       "name" : "Switch",
-      "text" : "switch(~selector~) {\n\t~cases:{it|\ncase ~it.trigger~: {\n\t~it.statement~\n\tbreak;\n\\}};separator=\"\\n\"~\n} ",
+      "text" : "switch (~selector~) {\n\t~cases:{it|\ncase ~it.trigger~: {\n\t~it.statement~\n\tbreak;\n\\}};separator=\"\\n\"~\n} ",
       "parameters" : [ {
         "uuid" : "54fb9cb8-6527-467e-bd35-addc98e44284",
         "name" : "selector",

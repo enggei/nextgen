@@ -38,7 +38,7 @@ public class STParser {
     }
 
     public static STGParseResult parseTemplate(String text) {
-        final String stg = toStg(new STGroupModel().addTemplates(new STTemplate().setName("tmp").setText(text)).setDelimiter(STGenerator.DELIMITER));
+        final String stg = toStg(STJsonFactory.newSTGroupModel().addTemplates(STJsonFactory.newSTTemplate().setName("tmp").setText(text)).setDelimiter(STGenerator.DELIMITER));
         return parse(new STGroupString("tmp", stg, STGenerator.DELIMITERCHAR, STGenerator.DELIMITERCHAR));
     }
 
@@ -99,7 +99,7 @@ public class STParser {
                     final TemplateVisitor visitor = new TemplateVisitor();
                     visitor.visit(st);
 
-                    final STTemplate stTemplate = new STTemplate()
+                    final STTemplate stTemplate = STJsonFactory.newSTTemplate()
                             .setName(st.getName().substring(1))
                             .setText(st.impl.template);
 
