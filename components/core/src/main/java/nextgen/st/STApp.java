@@ -5,11 +5,13 @@ import nextgen.st.domain.STAppModel;
 import nextgen.st.domain.STGDirectory;
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STJsonFactory;
-import nextgen.st.model.STModelDB;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 import java.util.Optional;
 
 import static nextgen.st.STParser.readJsonObject;
@@ -57,12 +59,15 @@ public class STApp extends JFrame {
         final File resources = new File(srcMain, "resources");
         final File templates = new File(resources, "templates");
 
-        SwingUtil.show(new STApp(STJsonFactory.newSTAppModel()
+        STAppModel config = loadConfig("appconfig.json", STJsonFactory.newSTAppModel()
                 .setModelDb("./db")
                 .setEditorFontSize(12)
                 .setGeneratorRoot(javaMain.getAbsolutePath())
                 .setGeneratorPackage("nextgen.st")
                 .setGeneratorName("StringTemplate")
+        );
+
+        SwingUtil.show(new STApp(config
                 .addDirectories(load(templates, javaMain, "nextgen.templates"))));
     }
 
@@ -86,5 +91,21 @@ public class STApp extends JFrame {
     public static File[] list(File dir, String postfix) {
         final String s = postfix.toLowerCase();
         return dir.listFiles(pathname -> pathname.getAbsolutePath().toLowerCase().endsWith(s));
+    }
+
+    public static STAppModel loadConfig(String configFile, STAppModel defaultConfig) {
+        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        final URL url = classLoader.getResource(configFile);
+        assert url != null;
+
+        File file = new File(URI.create(url.toString()));
+
+        try {
+            return STJsonFactory.merge(defaultConfig, STJsonFactory.newSTAppModel(file));
+        } catch (IOException ioE) {
+            System.err.println("Could not load partial config from '" + configFile + "': " + ioE.getMessage());
+        }
+
+        return defaultConfig;
     }
 }
