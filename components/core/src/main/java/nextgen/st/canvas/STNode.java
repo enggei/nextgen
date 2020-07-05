@@ -40,7 +40,7 @@ public class STNode extends PNode implements PropertyChangeListener {
 	public STNode(STCanvas canvas, String text, UUID uuid) {
 		this.canvas = canvas;
 
-		this.addAttribute(Attributes._defaultColor, Color.decode("#0571b0"));
+		this.addAttribute(Attributes._defaultColor, Color.decode("#000000"));
 		this.addAttribute(Attributes._selectedColor, Color.decode("#ca0020"));
 		this.addAttribute(Attributes._highlightedColor, Color.decode("#000000"));
 		this.addAttribute(Attributes._uuid, uuid);
@@ -92,6 +92,12 @@ public class STNode extends PNode implements PropertyChangeListener {
 		return (String) getAttribute(Attributes._text);
 	}
 
+	public void setText(String text) {
+		addAttribute(Attributes._text, text == null || text.trim().length() == 0 ? getUuid().toString() : text);
+		child.setText(getText());
+		refresh();
+	}
+
 	public void refresh() {
 		SwingUtilities.invokeLater(() -> {
 			setPaintInvalid(true);
@@ -113,12 +119,6 @@ public class STNode extends PNode implements PropertyChangeListener {
 
 	public Stream<UUID> incoming() {
 		return this.incoming.stream();
-	}
-
-	public void setText(String text) {
-		addAttribute(Attributes._text, text);
-		child.setText(text);
-		refresh();
 	}
 
 	public void unselect() {

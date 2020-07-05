@@ -346,6 +346,7 @@ public class STModelNode extends STNode {
 
 		@Override
 		void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+			if (!com.generator.util.SwingUtil.showConfirmDialog(canvas, "Delete model ?")) return;
 			javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(tx -> {
 				canvas.modelDb.remove(node.stModel);
 				canvas.removeNode(node.getUuid());

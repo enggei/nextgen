@@ -136,8 +136,8 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 	protected void onCanvasRightClick(JPopupMenu pop, PInputEvent event) {
 		pop.add(new NewSTValueNode(this, event));
-		pop.add(new LoadAllModels(this, event));
 		pop.add(new NewSTValueFromClipboard(this, event));
+		pop.add(new LoadAllModels(this, event));
 		pop.add(new NewSTFileNode(this, event));
 		pop.add(new SelectAllNodes(this, event));
 		pop.add(new UnselectAllNodes(this, event));
@@ -322,22 +322,6 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		}
 	}
 
-	private static final class LoadAllModels extends CanvasAction {
-
-		LoadAllModels(STCanvas canvas, PInputEvent event) {
-			super("Load All Models", canvas, event);
-		}
-
-		@Override
-		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
-			javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(tx -> {
-				canvas.modelDb.findAllSTModel().forEach(stModel -> 
-					canvas.addNode(new STModelNode(canvas, canvas.modelDb.findSTTemplateByUuid(stModel.getStTemplate()), stModel, canvas.stRenderer))
-				);
-			}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable)));
-		}
-	}
-
 	private static final class NewSTValueFromClipboard extends CanvasAction {
 
 		NewSTValueFromClipboard(STCanvas canvas, PInputEvent event) {
@@ -351,6 +335,22 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 			javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(tx -> {
 				final nextgen.st.model.STValue stValue = canvas.modelDb.newSTValue(s);
 				canvas.addNode(new STValueNode(canvas, stValue, canvas.stRenderer));
+			}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable)));
+		}
+	}
+
+	private static final class LoadAllModels extends CanvasAction {
+
+		LoadAllModels(STCanvas canvas, PInputEvent event) {
+			super("Load All Models", canvas, event);
+		}
+
+		@Override
+		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
+			javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(tx -> {
+				canvas.modelDb.findAllSTModel().forEach(stModel -> 
+					canvas.addNode(new STModelNode(canvas, canvas.modelDb.findSTTemplateByUuid(stModel.getStTemplate()), stModel, canvas.stRenderer))
+				);
 			}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable)));
 		}
 	}

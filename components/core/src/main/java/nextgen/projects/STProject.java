@@ -286,6 +286,7 @@ public class STProject {
         registerRightClickAction(stModelNode, stModelToClipboard, stModelToClipboard.getName());
 
         final NodeAction deleteSTModel = newNodeAction(stModelNode, "Delete", "Delete")
+                .addStatements("if (!com.generator.util.SwingUtil.showConfirmDialog(canvas, \"Delete model ?\")) return;")
                 .addStatements(newInvokeLaterInTransaction(
                         "canvas.modelDb.remove(node.stModel);",
                         "canvas.removeNode(node.getUuid());"));
@@ -344,12 +345,6 @@ public class STProject {
                 ));
         registerRightClickAction(canvas, newSTNodeAction, newSTNodeAction.getName());
 
-
-        final CanvasAction loadAllAction = newCanvasAction(canvas, "LoadAllModels", "Load All Models")
-                .addStatements(newInvokeLaterInTransaction(newLine("canvas.modelDb.findAllSTModel().forEach(stModel -> ", ");")
-                        .addChildren("canvas.addNode(new STModelNode(canvas, canvas.modelDb.findSTTemplateByUuid(stModel.getStTemplate()), stModel, canvas.stRenderer))")));
-        registerRightClickAction(canvas, loadAllAction, loadAllAction.getName());
-
         final CanvasAction newSTValueFromClipboard = newCanvasAction(canvas, "NewSTValueFromClipboard", "New Value from Clipboard")
                 .addStatements("final String s = com.generator.util.SwingUtil.fromClipboard();")
                 .addStatements("if (s == null || s.trim().length() == 0) return;")
@@ -357,6 +352,11 @@ public class STProject {
                         "final nextgen.st.model.STValue stValue = canvas.modelDb.newSTValue(s);",
                         "canvas.addNode(new STValueNode(canvas, stValue, canvas.stRenderer));"));
         registerRightClickAction(canvas, newSTValueFromClipboard, newSTValueFromClipboard.getName());
+
+        final CanvasAction loadAllAction = newCanvasAction(canvas, "LoadAllModels", "Load All Models")
+                .addStatements(newInvokeLaterInTransaction(newLine("canvas.modelDb.findAllSTModel().forEach(stModel -> ", ");")
+                        .addChildren("canvas.addNode(new STModelNode(canvas, canvas.modelDb.findSTTemplateByUuid(stModel.getStTemplate()), stModel, canvas.stRenderer))")));
+        registerRightClickAction(canvas, loadAllAction, loadAllAction.getName());
 
         final CanvasAction newSTFileNode = newCanvasAction(canvas, "NewSTFileNode", "New Sink")
                 .addStatements("final Map<String, JTextField> fieldMap = new java.util.LinkedHashMap<>();")

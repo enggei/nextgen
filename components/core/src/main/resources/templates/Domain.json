@@ -5,7 +5,7 @@
   "templates" : [ {
     "uuid" : "c4c6caaf-84a5-4975-8782-311476c8742c",
     "name" : "Entity",
-    "text" : "~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~\n~relations:{it|~it~};separator=\"\\n\"~ ",
+    "text" : "Entity: ~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~\n~relations:{it|~it~};separator=\"\\n\"~ ",
     "parameters" : [ {
       "uuid" : "df812852-1a4b-4e82-b4e1-31196c9b948f",
       "name" : "name",

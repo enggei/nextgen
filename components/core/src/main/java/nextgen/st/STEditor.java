@@ -230,7 +230,6 @@ public class STEditor extends JPanel {
                         boolean foundExisting = false;
                         for (STParameter existingParameter : existingParameters) {
                             if (parsedParameter.getName().equals(existingParameter.getName()) && parsedParameter.getType().equals(existingParameter.getType())) {
-                                System.out.println("unchanged parameter " + parsedParameter.getName());
                                 newParameters.put(existingParameter.getName(), existingParameter);
 
                                 if (existingParameter.getType().equals(STParameterType.KVLIST)) {
@@ -272,7 +271,6 @@ public class STEditor extends JPanel {
                         }
 
                         if (!foundExisting) {
-                            System.out.println("new parameter " + parsedParameter.getName());
                             newParameters.put(parsedParameter.getName(), parsedParameter);
                         }
                     }

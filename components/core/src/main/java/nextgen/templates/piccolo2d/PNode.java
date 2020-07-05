@@ -264,7 +264,7 @@ public class PNode {
 				"	public ~name~(~canvasName~ canvas, String text, UUID uuid) {\n" + 
 				"		this.canvas = canvas;\n" + 
 				"\n" + 
-				"		this.addAttribute(Attributes._defaultColor, Color.decode(\"#0571b0\"));\n" + 
+				"		this.addAttribute(Attributes._defaultColor, Color.decode(\"#000000\"));\n" + 
 				"		this.addAttribute(Attributes._selectedColor, Color.decode(\"#ca0020\"));\n" + 
 				"		this.addAttribute(Attributes._highlightedColor, Color.decode(\"#000000\"));\n" + 
 				"		this.addAttribute(Attributes._uuid, uuid);\n" + 
@@ -316,6 +316,12 @@ public class PNode {
 				"		return (String) getAttribute(Attributes._text);\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	public void setText(String text) {\n" + 
+				"		addAttribute(Attributes._text, text == null || text.trim().length() == 0 ? getUuid().toString() : text);\n" + 
+				"		child.setText(getText());\n" + 
+				"		refresh();\n" + 
+				"	}\n" + 
+				"	\n" + 
 				"	public void refresh() {\n" + 
 				"		SwingUtilities.invokeLater(() -> {\n" + 
 				"			setPaintInvalid(true);\n" + 
@@ -337,12 +343,6 @@ public class PNode {
 				"\n" + 
 				"	public Stream<UUID> incoming() {\n" + 
 				"		return this.incoming.stream();\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	public void setText(String text) {\n" + 
-				"		addAttribute(Attributes._text, text);\n" + 
-				"		child.setText(text);\n" + 
-				"		refresh();\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public void unselect() {\n" + 
