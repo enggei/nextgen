@@ -210,5 +210,5 @@ public class PropertyDeclaration implements ParameterDefinition {
 	}
 
 	static final String st = "PropertyDeclaration(annotations,isPrivate,isProtected,isMutable,name,type,initializer) ::= <<~annotations:{it|~it~};separator=\"\\n\"~\n" + 
-				"~if(isPrivate)~private ~elseif(isProtected)~protected ~endif~~if(isMutable)~var ~else~val ~endif~~name~: ~type~~if(initializer)~ = ~initializer~~endif~ >>";
+				"~if(isPrivate)~private ~elseif(isProtected)~protected ~endif~~if(isMutable)~var ~else~val ~endif~~name~~if(type)~: ~type~~endif~~if(initializer)~ = ~initializer~~endif~ >>";
 }  

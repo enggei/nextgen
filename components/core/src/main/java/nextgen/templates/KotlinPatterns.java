@@ -27,11 +27,11 @@ public class KotlinPatterns extends KotlinST {
    }
 
    public static Expression asThisExpression(ParameterDefinition parameterDefinition) {
-      return newThisExpression().setExpression(newLiteralExpression().setLiteral(getNameFromParameterDefinition(parameterDefinition)));
+      return newThisExpression().setExpression(newLiteralExpression(getNameFromParameterDefinition(parameterDefinition)));
    }
 
    public static Expression asScopeExpression(String scope, ParameterDefinition parameterDefinition) {
-      return newScopeExpression().setScope(scope).setExpression(newLiteralExpression().setLiteral(getNameFromParameterDefinition(parameterDefinition)));
+      return newScopeExpression().setScope(scope).setExpression(newLiteralExpression(getNameFromParameterDefinition(parameterDefinition)));
    }
 
    public static Expression asFunctionCallExpression(String scope, String functionName) {
@@ -64,31 +64,31 @@ public class KotlinPatterns extends KotlinST {
       return newOverrideHashCode()
          .setReturnStatement(newReturnStatement()
             .setExpression(newFunctionCallExpression().setScope("Objects").setFunctionName("hash")
-               .setArguments(Collections.singletonList(newLiteralExpression().setLiteral(getNameFromParameterDefinition(field))))));
-   }
-
-   public static ToStringExpression createToStringExpression(ParameterDefinition parameterDefinition) {
-       String name = getNameFromParameterDefinition(parameterDefinition);
-       ToStringExpression tse = newToStringExpression()
-               .setName(name);
-       if (getTypeFromParameterDefinition(parameterDefinition) instanceof ArrayType) {
-           tse.setStringExpression(
-                   newComplexStringExpression().setExpression(asFunctionCallExpression(name, "contentToString"))
-           );
-       } else {
-           tse.setStringExpression(
-                   newSimpleStringExpression().setExpression(newLiteralExpression().setLiteral(name))
-           );
-       }
-       return tse;
+               .setArguments(Collections.singletonList(newLiteralExpression(getNameFromParameterDefinition(field))))));
    }
 
    public static OverrideToString createToStringFunction(String className, Collection<ParameterDefinition> fields) {
-      return newOverrideToString()
-         .setClassName(className)
-         .setFields(fields.stream()
-            .map(KotlinPatterns::createToStringExpression)
-            .collect(Collectors.toList()));
+      OverrideToString overrideToString = newOverrideToString().setClassName(className);
+      mapParameterDefinitionsToOverrideToString_Fields(fields).forEach(overrideToString::addFields);
+      return overrideToString;
+   }
+
+   private static Collection<OverrideToString.OverrideToString_Fields> mapParameterDefinitionsToOverrideToString_Fields(Collection<ParameterDefinition> fields) {
+      return fields.stream()
+         .map(KotlinPatterns::createOverrideToString_Fields)
+         .collect(Collectors.toList());
+   }
+
+   public static OverrideToString.OverrideToString_Fields createOverrideToString_Fields(ParameterDefinition parameterDefinition) {
+      String name = getNameFromParameterDefinition(parameterDefinition);
+
+      if (getTypeFromParameterDefinition(parameterDefinition) instanceof ArrayType) {
+         return new OverrideToString.OverrideToString_Fields(name, newKotlinStringTemplateExpression(
+               asFunctionCallExpression(name, "contentToString")
+         ));
+      }
+
+      return new OverrideToString.OverrideToString_Fields(name, newKotlinStringTemplateSingleValue(name));
    }
 
    public static FunctionDeclaration createCopyFunction(String className, Collection<ParameterDefinition> fields) {
@@ -105,7 +105,7 @@ public class KotlinPatterns extends KotlinST {
               .setExpressionBody(newConstructorCallExpression()
                       .setClassName(className)
                       .setParams(fields.stream()
-                              .map(fieldDeclaration -> newLiteralExpression().setLiteral(getNameFromParameterDefinition(fieldDeclaration)))
+                              .map(fieldDeclaration -> newLiteralExpression(getNameFromParameterDefinition(fieldDeclaration)))
                               .map(fieldName -> newAssignExpression()
                                   .setVarName(fieldName)
                                   .setExpression(fieldName))
@@ -163,5 +163,33 @@ public class KotlinPatterns extends KotlinST {
 
    public static Extending newExtendingClass(String name, Collection<Expression> params) {
        return KotlinST.newExtendingClass().setClassName(name).setParams(params);
+   }
+
+   public static LiteralExpression newLiteralExpression(Object literal) {
+       return KotlinST.newLiteralExpression().setLiteral(literal);
+   }
+
+   public static StringLiteralExpression newStringLiteralExpression(Object literal) {
+       return KotlinST.newStringLiteralExpression().setLiteral(literal);
+   }
+
+   public static PropertyAccessorExpression newPropertyAccessorExpression(Expression object, Expression property) {
+       return KotlinST.newPropertyAccessorExpression().setObject(object).setProperty(property);
+   }
+
+   public static ReferenceExpression newReferenceExpression(String name, Expression property) {
+       return KotlinST.newReferenceExpression().setName(name).setProperty(property);
+   }
+
+   public static ReferenceExpression newReferenceExpression(String scope, String name, Expression property) {
+       return KotlinST.newReferenceExpression().setScope(scope).setName(name).setProperty(property);
+   }
+
+   public static KotlinStringTemplateSingleValue newKotlinStringTemplateSingleValue(String name) {
+       return KotlinST.newKotlinStringTemplateSingleValue().setName(name);
+   }
+
+   public static KotlinStringTemplateExpression newKotlinStringTemplateExpression(Expression expression) {
+       return KotlinST.newKotlinStringTemplateExpression().setExpression(expression);
    }
 }

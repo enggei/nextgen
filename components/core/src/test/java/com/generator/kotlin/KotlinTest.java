@@ -103,8 +103,18 @@ public class KotlinTest {
         CompanionObject companionObject = newCompanionObject()
                 .setObjectDeclaration(newObjectDeclaration()
                     .addFields(
-                            newPropertyDeclaration(newNamedType().setName("Logger"), "log", newLiteralExpression().setLiteral("LoggerFactory.getLogger(Country::class.java)"))
-                                    .setIsPrivate(true))
+                            newPropertyDeclaration(newNamedType().setName("Logger"), "log",
+                                    newFunctionCallExpression()
+                                            .setScope("LoggerFactory")
+                                            .setFunctionName("getLogger")
+                                            .addArguments(
+                                                    newReferenceExpression(className, newPropertyAccessorExpression(
+                                                                    newLiteralExpression("class"),
+                                                                    newLiteralExpression("java")
+                                                            )
+                                                    )
+                                            )
+                            ).setIsPrivate(true))
                 );
 
         ClassDeclaration countryClass = newClassDeclaration(className)
@@ -117,7 +127,7 @@ public class KotlinTest {
                 .setFields(fields)
                 .setExtends(asList(
                         newExtendingClass("Entity",
-                                asList(newLiteralExpression().setLiteral("id"), newLiteralExpression().setLiteral("uuid"))
+                                asList(newLiteralExpression("id"), newLiteralExpression("uuid"))
                         ),
                         newImplementingInterface().setInterfaceName("Something")
                 ))
@@ -176,8 +186,8 @@ public class KotlinTest {
                             .setInitializer(newMutableMapInitializer()),
                         newReturnStatement()
                             .setExpression(newPairExpression()
-                                .setFirst(newStringLiteralExpression().setLiteral("Test"))
-                                .setSecond(newLiteralExpression().setLiteral("123")))
+                                .setFirst(newStringLiteralExpression("Test"))
+                                .setSecond(newLiteralExpression("123")))
                 ));
 
         System.out.println(testFunction);
@@ -189,7 +199,7 @@ public class KotlinTest {
         ObjectExpression objectExpression = newObjectExpression()
                 .addExtends(newExtendingClass("MouseAdapter", singletonList(newNullExpression())))
                 .addFields(
-                        newPropertyDeclaration(newIntType(), "abc", newLiteralExpression().setLiteral("0")).setIsPrivate(true)
+                        newPropertyDeclaration(newIntType(), "abc", newLiteralExpression("0")).setIsPrivate(true)
                 );
         VarDeclarationStatement varDeclarationStatement = newVarDeclarationStatement().setName("a").setIsMutable(true).setInitializer(objectExpression);
 

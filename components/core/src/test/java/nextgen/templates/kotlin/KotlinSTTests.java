@@ -12,7 +12,6 @@ public class KotlinSTTests {
 		testArrayEqualsExpression();
 		testAssignExpression();
 		testCastExpression();
-		testComplexStringExpression();
 		testConstructorCallExpression();
 		testEqualsExpression();
 		testFunctionCallExpression();
@@ -20,11 +19,11 @@ public class KotlinSTTests {
 		testNullExpression();
 		testObjectExpression();
 		testPairExpression();
+		testPropertyAccessorExpression();
+		testReferenceExpression();
 		testScopeExpression();
-		testSimpleStringExpression();
 		testStringLiteralExpression();
 		testThisExpression();
-		testToStringExpression();
 		testAnnotationDeclaration();
 		testAnnotationParam();
 		testClassDeclaration();
@@ -42,6 +41,8 @@ public class KotlinSTTests {
 		testPackageDeclaration();
 		testParameterDeclaration();
 		testPropertyDeclaration();
+		testKotlinStringTemplateExpression();
+		testKotlinStringTemplateSingleValue();
 		testImportStatement();
 		testReturnStatement();
 		testTodoStatement();
@@ -92,11 +93,6 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
-	public void testComplexStringExpression() {
-		System.out.println("\n--- TEST ComplexStringExpression:\n" + newComplexStringExpression());
-	} 
-
-	@org.junit.Test
 	public void testConstructorCallExpression() {
 		System.out.println("\n--- TEST ConstructorCallExpression:\n" + newConstructorCallExpression());
 	} 
@@ -132,13 +128,18 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
-	public void testScopeExpression() {
-		System.out.println("\n--- TEST ScopeExpression:\n" + newScopeExpression());
+	public void testPropertyAccessorExpression() {
+		System.out.println("\n--- TEST PropertyAccessorExpression:\n" + newPropertyAccessorExpression());
 	} 
 
 	@org.junit.Test
-	public void testSimpleStringExpression() {
-		System.out.println("\n--- TEST SimpleStringExpression:\n" + newSimpleStringExpression());
+	public void testReferenceExpression() {
+		System.out.println("\n--- TEST ReferenceExpression:\n" + newReferenceExpression());
+	} 
+
+	@org.junit.Test
+	public void testScopeExpression() {
+		System.out.println("\n--- TEST ScopeExpression:\n" + newScopeExpression());
 	} 
 
 	@org.junit.Test
@@ -149,11 +150,6 @@ public class KotlinSTTests {
 	@org.junit.Test
 	public void testThisExpression() {
 		System.out.println("\n--- TEST ThisExpression:\n" + newThisExpression());
-	} 
-
-	@org.junit.Test
-	public void testToStringExpression() {
-		System.out.println("\n--- TEST ToStringExpression:\n" + newToStringExpression());
 	} 
 
 	@org.junit.Test
@@ -239,6 +235,16 @@ public class KotlinSTTests {
 	@org.junit.Test
 	public void testPropertyDeclaration() {
 		System.out.println("\n--- TEST PropertyDeclaration:\n" + newPropertyDeclaration());
+	} 
+
+	@org.junit.Test
+	public void testKotlinStringTemplateExpression() {
+		System.out.println("\n--- TEST KotlinStringTemplateExpression:\n" + newKotlinStringTemplateExpression());
+	} 
+
+	@org.junit.Test
+	public void testKotlinStringTemplateSingleValue() {
+		System.out.println("\n--- TEST KotlinStringTemplateSingleValue:\n" + newKotlinStringTemplateSingleValue());
 	} 
 
 	@org.junit.Test

@@ -107,5 +107,5 @@ public class ParameterDeclaration implements ParameterDefinition {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ParameterDeclaration(name,type,initializer) ::= <<~name~: ~type~~if(initializer)~ = ~initializer~~endif~ >>";
+	static final String st = "ParameterDeclaration(name,type,initializer) ::= <<~name~~if(type)~: ~type~~endif~~if(initializer)~ = ~initializer~~endif~ >>";
 }  

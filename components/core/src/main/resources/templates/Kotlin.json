@@ -152,17 +152,26 @@
         }, {
           "uuid" : "91608716-9aa7-41e5-958a-bdce665fd59f",
           "name" : "OverrideToString",
-          "text" : "override fun toString(): String {\n\treturn \"~className~(~fields:{it|~it~};separator=\", \"~)\"\n} ",
+          "text" : "override fun toString(): String {\n\treturn \"~className~(~fields:{it|~it.name~=~it.output~};separator=\", \"~)\"\n} ",
           "parameters" : [ {
             "uuid" : "fb99af53-d88a-4f22-9914-2d05189828e7",
             "name" : "className",
             "type" : "SINGLE",
             "argumentType" : "String"
           }, {
-            "uuid" : "490bfba1-1f40-4bdd-a521-0191961a09d0",
+            "uuid" : "f6b7181a-9405-48a5-84ca-87a30eb0494a",
             "name" : "fields",
-            "type" : "LIST",
-            "argumentType" : "ToStringExpression"
+            "type" : "KVLIST",
+            "argumentType" : "Object",
+            "keys" : [ {
+              "uuid" : "67011442-4277-432c-b3d6-ab917235a72c",
+              "name" : "name",
+              "argumentType" : "String"
+            }, {
+              "uuid" : "c8135101-5cab-4617-beb4-154102f4ca3d",
+              "name" : "output",
+              "argumentType" : "KotlinStringTemplate"
+            } ]
           } ]
         }, {
           "uuid" : "39867c4e-8872-40bb-9888-cecc0059c257",
@@ -179,7 +188,7 @@
       }, {
         "uuid" : "653bb737-c5cb-401f-939f-6359a97fd7d6",
         "name" : "PropertyDeclaration",
-        "text" : "~annotations:{it|~it~};separator=\"\\n\"~\n~if(isPrivate)~private ~elseif(isProtected)~protected ~endif~~if(isMutable)~var ~else~val ~endif~~name~: ~type~~if(initializer)~ = ~initializer~~endif~ ",
+        "text" : "~annotations:{it|~it~};separator=\"\\n\"~\n~if(isPrivate)~private ~elseif(isProtected)~protected ~endif~~if(isMutable)~var ~else~val ~endif~~name~~if(type)~: ~type~~endif~~if(initializer)~ = ~initializer~~endif~ ",
         "parameters" : [ {
           "uuid" : "b3f43ef1-8777-4ffd-add4-c645a90d671f",
           "name" : "annotations",
@@ -356,7 +365,7 @@
       }, {
         "uuid" : "39a53af3-04c1-4ffa-9fcd-c263cd542d8e",
         "name" : "ParameterDeclaration",
-        "text" : "~name~: ~type~~if(initializer)~ = ~initializer~~endif~ ",
+        "text" : "~name~~if(type)~: ~type~~endif~~if(initializer)~ = ~initializer~~endif~ ",
         "parameters" : [ {
           "uuid" : "e4d55a4f-849e-4c8b-b643-27d4b02c3204",
           "name" : "name",
@@ -469,6 +478,33 @@
           "type" : "SINGLE",
           "argumentType" : "Expression"
         } ]
+      } ]
+    }, {
+      "uuid" : "53692429-b08c-4ef5-a9b7-04186e79e6ee",
+      "name" : "KotlinStringTemplates",
+      "text" : "",
+      "children" : [ {
+        "uuid" : "63b9c628-9f6d-48b0-b149-0cb5c599fd0f",
+        "name" : "KotlinStringTemplateExpression",
+        "text" : "${~expression~} ",
+        "parameters" : [ {
+          "uuid" : "b3c6a1d4-df63-49b2-bbeb-0824722c4df5",
+          "name" : "expression",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ],
+        "implements" : [ "KotlinStringTemplate" ]
+      }, {
+        "uuid" : "352192c0-0e47-405c-a709-43b3dc601bad",
+        "name" : "KotlinStringTemplateSingleValue",
+        "text" : "$~name~ ",
+        "parameters" : [ {
+          "uuid" : "5aa23ec3-bc8e-4161-97cc-062672577070",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "String"
+        } ],
+        "implements" : [ "KotlinStringTemplate" ]
       } ]
     } ]
   }, {
@@ -884,44 +920,6 @@
       } ],
       "implements" : [ "Expression" ]
     }, {
-      "uuid" : "94518cf4-0757-413c-8734-c08d07f1a799",
-      "name" : "SimpleStringExpression",
-      "text" : "$~expression~ ",
-      "implements" : [ "Expression", "StringExpression" ],
-      "parameters" : [ {
-        "uuid" : "99612a41-c005-45da-b0c9-722167e20bff",
-        "name" : "expression",
-        "type" : "SINGLE",
-        "argumentType" : "Expression"
-      } ]
-    }, {
-      "uuid" : "126345be-a7e6-444f-9af8-783b772f5c02",
-      "name" : "ToStringExpression",
-      "text" : "~name~='~stringExpression~' ",
-      "implements" : [ "Expression" ],
-      "parameters" : [ {
-        "uuid" : "a00bbbcb-204a-44f1-84f7-786d02da6c3b",
-        "name" : "name",
-        "type" : "SINGLE",
-        "argumentType" : "String"
-      }, {
-        "uuid" : "0dba3d38-7e44-4dd9-820f-4238c95f33cb",
-        "name" : "stringExpression",
-        "type" : "SINGLE",
-        "argumentType" : "StringExpression"
-      } ]
-    }, {
-      "uuid" : "2fc76283-1e6c-43aa-9fb3-26a85ad122de",
-      "name" : "ComplexStringExpression",
-      "text" : "${~expression~} ",
-      "implements" : [ "Expression", "StringExpression" ],
-      "parameters" : [ {
-        "uuid" : "656433b5-3420-42d8-b5dd-f86e805b08a5",
-        "name" : "expression",
-        "type" : "SINGLE",
-        "argumentType" : "Expression"
-      } ]
-    }, {
       "uuid" : "df95fc27-9ac4-4c90-b1df-fd4b0cc38f57",
       "name" : "PairExpression",
       "text" : "~first~ to ~second~ ",
@@ -996,6 +994,43 @@
         "type" : "LIST",
         "argumentType" : "FunctionDeclaration"
       } ]
+    }, {
+      "uuid" : "9268e6c5-1b60-4e91-bec0-9e146151d7e4",
+      "name" : "ReferenceExpression",
+      "text" : "~if(scope)~~scope~.~endif~~name~::~property~ ",
+      "implements" : [ "Expression" ],
+      "parameters" : [ {
+        "uuid" : "be29ba10-5beb-4d69-afd2-424ab5c700f2",
+        "name" : "scope",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "ca5375d0-9660-42e8-82d5-3e5a7214ca8a",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "69091c37-7938-402e-a6d9-ce4df96eba5f",
+        "name" : "property",
+        "type" : "SINGLE",
+        "argumentType" : "Expression"
+      } ]
+    }, {
+      "uuid" : "a018ce94-6b98-462e-9acf-6172decd945c",
+      "name" : "PropertyAccessorExpression",
+      "text" : "~object~.~property~ ",
+      "implements" : [ "Expression" ],
+      "parameters" : [ {
+        "uuid" : "ed0a65b9-6053-4278-bd55-9e46ef8e7aa9",
+        "name" : "object",
+        "type" : "SINGLE",
+        "argumentType" : "Expression"
+      }, {
+        "uuid" : "4ffb7815-5573-4bb6-89cb-e8d321e6bfbb",
+        "name" : "property",
+        "type" : "SINGLE",
+        "argumentType" : "Expression"
+      } ]
     } ]
   }, {
     "uuid" : "7f297955-618e-40d3-a441-920c4f5ec56e",
@@ -1045,6 +1080,9 @@
   }, {
     "uuid" : "3054347c-8dc6-4b28-8312-c1b26e238bdf",
     "name" : "ParameterDefinition"
+  }, {
+    "uuid" : "572adfcc-0062-4005-8ce0-123bba76d679",
+    "name" : "KotlinStringTemplate"
   } ],
   "icon" : "language-kotlin"
 }

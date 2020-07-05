@@ -1,13 +1,13 @@
 package nextgen.templates.kotlin;
 
-public class SimpleStringExpression implements Expression, StringExpression {
+public class KotlinStringTemplateExpression implements KotlinStringTemplate {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Expression _expression;
+	private Object _expression;
 
-	SimpleStringExpression(org.stringtemplate.v4.STGroup stGroup) {
+	KotlinStringTemplateExpression(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
@@ -17,21 +17,21 @@ public class SimpleStringExpression implements Expression, StringExpression {
 
 	@Override
 	public String toString() {
-		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("SimpleStringExpression");
+		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("KotlinStringTemplateExpression");
 		st.add("expression", _expression);
 		return st.render().trim();
 	}
 
-	public SimpleStringExpression setExpression(Expression value) {
+	public KotlinStringTemplateExpression setExpression(Object value) {
 		this._expression = value;
 		return this;
 	}
 
-	public Expression getExpression() {
+	public Object getExpression() {
 		return this._expression;
 	}
 
-	public Expression getExpression(Expression defaultValue) {
+	public Object getExpression(Object defaultValue) {
 		return this._expression == null ? defaultValue : this._expression;
 	}
 
@@ -39,7 +39,7 @@ public class SimpleStringExpression implements Expression, StringExpression {
 		return this._expression != null;
 	}
 
-	public SimpleStringExpression removeExpression() {
+	public KotlinStringTemplateExpression removeExpression() {
 		this._expression = null;
 		return this;
 	} 
@@ -50,7 +50,7 @@ public class SimpleStringExpression implements Expression, StringExpression {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		SimpleStringExpression that = (SimpleStringExpression) o;
+		KotlinStringTemplateExpression that = (KotlinStringTemplateExpression) o;
 		return uuid.equals(that.uuid);
 	}
 
@@ -59,5 +59,5 @@ public class SimpleStringExpression implements Expression, StringExpression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SimpleStringExpression(expression) ::= <<$~expression~ >>";
+	static final String st = "KotlinStringTemplateExpression(expression) ::= <<${~expression~} >>";
 }  

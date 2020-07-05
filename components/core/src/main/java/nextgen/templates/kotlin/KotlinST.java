@@ -8,7 +8,6 @@ public class KotlinST {
 	ArrayEqualsExpression.st + "\n" + 
 	AssignExpression.st + "\n" + 
 	CastExpression.st + "\n" + 
-	ComplexStringExpression.st + "\n" + 
 	ConstructorCallExpression.st + "\n" + 
 	EqualsExpression.st + "\n" + 
 	FunctionCallExpression.st + "\n" + 
@@ -16,11 +15,11 @@ public class KotlinST {
 	NullExpression.st + "\n" + 
 	ObjectExpression.st + "\n" + 
 	PairExpression.st + "\n" + 
+	PropertyAccessorExpression.st + "\n" + 
+	ReferenceExpression.st + "\n" + 
 	ScopeExpression.st + "\n" + 
-	SimpleStringExpression.st + "\n" + 
 	StringLiteralExpression.st + "\n" + 
 	ThisExpression.st + "\n" + 
-	ToStringExpression.st + "\n" + 
 	AnnotationDeclaration.st + "\n" + 
 	AnnotationParam.st + "\n" + 
 	ClassDeclaration.st + "\n" + 
@@ -38,6 +37,8 @@ public class KotlinST {
 	PackageDeclaration.st + "\n" + 
 	ParameterDeclaration.st + "\n" + 
 	PropertyDeclaration.st + "\n" + 
+	KotlinStringTemplateExpression.st + "\n" + 
+	KotlinStringTemplateSingleValue.st + "\n" + 
 	ImportStatement.st + "\n" + 
 	ReturnStatement.st + "\n" + 
 	TodoStatement.st + "\n" + 
@@ -117,10 +118,6 @@ public class KotlinST {
 		return new CastExpression(stGroup);
 	} 
 
-	public static ComplexStringExpression newComplexStringExpression() {
-		return new ComplexStringExpression(stGroup);
-	} 
-
 	public static ConstructorCallExpression newConstructorCallExpression() {
 		return new ConstructorCallExpression(stGroup);
 	} 
@@ -149,12 +146,16 @@ public class KotlinST {
 		return new PairExpression(stGroup);
 	} 
 
-	public static ScopeExpression newScopeExpression() {
-		return new ScopeExpression(stGroup);
+	public static PropertyAccessorExpression newPropertyAccessorExpression() {
+		return new PropertyAccessorExpression(stGroup);
 	} 
 
-	public static SimpleStringExpression newSimpleStringExpression() {
-		return new SimpleStringExpression(stGroup);
+	public static ReferenceExpression newReferenceExpression() {
+		return new ReferenceExpression(stGroup);
+	} 
+
+	public static ScopeExpression newScopeExpression() {
+		return new ScopeExpression(stGroup);
 	} 
 
 	public static StringLiteralExpression newStringLiteralExpression() {
@@ -163,10 +164,6 @@ public class KotlinST {
 
 	public static ThisExpression newThisExpression() {
 		return new ThisExpression(stGroup);
-	} 
-
-	public static ToStringExpression newToStringExpression() {
-		return new ToStringExpression(stGroup);
 	} 
 
 	public static AnnotationDeclaration newAnnotationDeclaration() {
@@ -235,6 +232,14 @@ public class KotlinST {
 
 	public static PropertyDeclaration newPropertyDeclaration() {
 		return new PropertyDeclaration(stGroup);
+	} 
+
+	public static KotlinStringTemplateExpression newKotlinStringTemplateExpression() {
+		return new KotlinStringTemplateExpression(stGroup);
+	} 
+
+	public static KotlinStringTemplateSingleValue newKotlinStringTemplateSingleValue() {
+		return new KotlinStringTemplateSingleValue(stGroup);
 	} 
 
 	public static ImportStatement newImportStatement() {
