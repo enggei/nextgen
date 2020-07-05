@@ -1,13 +1,13 @@
 package nextgen.templates.kotlin;
 
-public class StringLiteralExpression implements Expression {
+public class StringValueExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _literal;
 
-	StringLiteralExpression(org.stringtemplate.v4.STGroup stGroup) {
+	StringValueExpression(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
@@ -17,12 +17,12 @@ public class StringLiteralExpression implements Expression {
 
 	@Override
 	public String toString() {
-		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("StringLiteralExpression");
+		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("StringValueExpression");
 		st.add("literal", _literal);
 		return st.render().trim();
 	}
 
-	public StringLiteralExpression setLiteral(Object value) {
+	public StringValueExpression setLiteral(Object value) {
 		this._literal = value;
 		return this;
 	}
@@ -39,7 +39,7 @@ public class StringLiteralExpression implements Expression {
 		return this._literal != null;
 	}
 
-	public StringLiteralExpression removeLiteral() {
+	public StringValueExpression removeLiteral() {
 		this._literal = null;
 		return this;
 	} 
@@ -50,7 +50,7 @@ public class StringLiteralExpression implements Expression {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		StringLiteralExpression that = (StringLiteralExpression) o;
+		StringValueExpression that = (StringValueExpression) o;
 		return uuid.equals(that.uuid);
 	}
 
@@ -59,5 +59,5 @@ public class StringLiteralExpression implements Expression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "StringLiteralExpression(literal) ::= <<\"~literal~\" >>";
+	static final String st = "StringValueExpression(literal) ::= <<\"~literal~\" >>";
 }  

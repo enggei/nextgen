@@ -86,7 +86,7 @@ public class KotlinTest {
         DataClassDeclaration thingClass = newDataClassDeclaration(dataClassName)
                 .setAnnotations(singletonList(newAnnotationDeclaration()
                         .addAnnotations("NodeEntity", singletonList(newAnnotationParam()
-                                .addParam("label", newStringLiteralExpression().setLiteral("NODE_THING"))
+                                .addParam("label", newStringValueExpression().setLiteral("NODE_THING"))
                         ))
                 ))
                 .setFields(asList(
@@ -186,7 +186,7 @@ public class KotlinTest {
                             .setInitializer(newMutableMapInitializer()),
                         newReturnStatement()
                             .setExpression(newPairExpression()
-                                .setFirst(newStringLiteralExpression("Test"))
+                                .setFirst(newStringValueExpression("Test"))
                                 .setSecond(newLiteralExpression("123")))
                 ));
 
@@ -217,5 +217,19 @@ public class KotlinTest {
                 ;
 
         System.out.println(objectDeclaration);
+    }
+
+    @Test
+    public void testRawStringExpression() {
+
+        VarDeclarationStatement rawStringTest = newVarDeclarationStatement()
+                .setName("raw")
+                .setInitializer(newRawStringExpression(
+                        "This is a raw \\unescaped\\ String\n" +
+                        "on multiple lines\n" +
+                        "$$$"
+                ));
+
+        System.out.println(rawStringTest);
     }
 }

@@ -22,7 +22,7 @@ PairExpression(first,second) ::= <<~first~ to ~second~  >>
 
 LiteralExpression(literal) ::= <<~literal~  >>
 
-StringLiteralExpression(literal) ::= <<"~literal~"  >>
+StringValueExpression(literal) ::= <<"~literal~"  >>
 
 AssignExpression(varName,expression) ::= <<~varName~ = ~expression~  >>
 
@@ -35,6 +35,8 @@ ObjectExpression(extends,fields,members) ::= <<object~if(extends)~ : ~extends:{i
 ReferenceExpression(scope,name,property) ::= <<~if(scope)~~scope~.~endif~~name~::~property~  >>
 
 PropertyAccessorExpression(object,property) ::= <<~object~.~property~  >>
+
+RawStringExpression(rawString) ::= <<"""~rawString~"""  >>
 
 Grammar() ::= << >>
 

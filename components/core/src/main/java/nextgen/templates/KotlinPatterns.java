@@ -169,9 +169,13 @@ public class KotlinPatterns extends KotlinST {
        return KotlinST.newLiteralExpression().setLiteral(literal);
    }
 
-   public static StringLiteralExpression newStringLiteralExpression(Object literal) {
-       return KotlinST.newStringLiteralExpression().setLiteral(literal);
+   public static StringValueExpression newStringValueExpression(Object literal) {
+       return KotlinST.newStringValueExpression().setLiteral(literal);
    }
+
+   public static RawStringExpression newRawStringExpression(Object rawString) {
+       return KotlinST.newRawStringExpression().setRawString(rawString);
+    }
 
    public static PropertyAccessorExpression newPropertyAccessorExpression(Expression object, Expression property) {
        return KotlinST.newPropertyAccessorExpression().setObject(object).setProperty(property);

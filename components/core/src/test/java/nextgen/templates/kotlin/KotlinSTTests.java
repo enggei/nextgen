@@ -20,9 +20,10 @@ public class KotlinSTTests {
 		testObjectExpression();
 		testPairExpression();
 		testPropertyAccessorExpression();
+		testRawStringExpression();
 		testReferenceExpression();
 		testScopeExpression();
-		testStringLiteralExpression();
+		testStringValueExpression();
 		testThisExpression();
 		testAnnotationDeclaration();
 		testAnnotationParam();
@@ -133,6 +134,11 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
+	public void testRawStringExpression() {
+		System.out.println("\n--- TEST RawStringExpression:\n" + newRawStringExpression());
+	} 
+
+	@org.junit.Test
 	public void testReferenceExpression() {
 		System.out.println("\n--- TEST ReferenceExpression:\n" + newReferenceExpression());
 	} 
@@ -143,8 +149,8 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
-	public void testStringLiteralExpression() {
-		System.out.println("\n--- TEST StringLiteralExpression:\n" + newStringLiteralExpression());
+	public void testStringValueExpression() {
+		System.out.println("\n--- TEST StringValueExpression:\n" + newStringValueExpression());
 	} 
 
 	@org.junit.Test

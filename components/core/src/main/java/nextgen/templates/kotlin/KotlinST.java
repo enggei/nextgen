@@ -16,9 +16,10 @@ public class KotlinST {
 	ObjectExpression.st + "\n" + 
 	PairExpression.st + "\n" + 
 	PropertyAccessorExpression.st + "\n" + 
+	RawStringExpression.st + "\n" + 
 	ReferenceExpression.st + "\n" + 
 	ScopeExpression.st + "\n" + 
-	StringLiteralExpression.st + "\n" + 
+	StringValueExpression.st + "\n" + 
 	ThisExpression.st + "\n" + 
 	AnnotationDeclaration.st + "\n" + 
 	AnnotationParam.st + "\n" + 
@@ -150,6 +151,10 @@ public class KotlinST {
 		return new PropertyAccessorExpression(stGroup);
 	} 
 
+	public static RawStringExpression newRawStringExpression() {
+		return new RawStringExpression(stGroup);
+	} 
+
 	public static ReferenceExpression newReferenceExpression() {
 		return new ReferenceExpression(stGroup);
 	} 
@@ -158,8 +163,8 @@ public class KotlinST {
 		return new ScopeExpression(stGroup);
 	} 
 
-	public static StringLiteralExpression newStringLiteralExpression() {
-		return new StringLiteralExpression(stGroup);
+	public static StringValueExpression newStringValueExpression() {
+		return new StringValueExpression(stGroup);
 	} 
 
 	public static ThisExpression newThisExpression() {

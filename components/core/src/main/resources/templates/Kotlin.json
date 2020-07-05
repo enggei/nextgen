@@ -948,9 +948,9 @@
       } ]
     }, {
       "uuid" : "1a25e66d-5abb-4724-b8e9-01f44172ee17",
-      "name" : "StringLiteralExpression",
+      "name" : "StringValueExpression",
       "text" : "\"~literal~\" ",
-      "implements" : [ "Expression" ],
+      "implements" : [ "Expression", "StringExpression" ],
       "parameters" : [ {
         "uuid" : "ebd36e16-e688-4304-af02-568fe0289461",
         "name" : "literal",
@@ -1030,6 +1030,17 @@
         "name" : "property",
         "type" : "SINGLE",
         "argumentType" : "Expression"
+      } ]
+    }, {
+      "uuid" : "d74751ca-323d-4874-bb74-140c1b838913",
+      "name" : "RawStringExpression",
+      "text" : "\"\"\"~rawString~\"\"\" ",
+      "implements" : [ "Expression", "StringExpression" ],
+      "parameters" : [ {
+        "uuid" : "a1ca80e9-8c9c-449b-826c-c08411cc8232",
+        "name" : "rawString",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       } ]
     } ]
   }, {
