@@ -2,6 +2,14 @@ package nextgen.st.domain;
 
 public class STJsonFactory {
 
+	public static io.vertx.core.json.JsonObject load(java.io.File file) throws java.io.IOException {
+		if (!file.exists() || !file.isFile()) {
+			throw new IllegalArgumentException("could not read " + file.getAbsolutePath());
+		}
+
+		return new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath())));
+	}
+
 	public static void save(io.vertx.core.json.JsonObject jsonObject, java.io.File file) throws java.io.IOException {
 
 		if (!file.getParentFile().exists() && !file.getParentFile().mkdirs())
@@ -11,6 +19,14 @@ public class STJsonFactory {
 			throw new IllegalStateException("could not create " + file.getAbsolutePath());
 
 		java.nio.file.Files.write(file.toPath(), jsonObject.toBuffer().getBytes());
+	}
+
+	public static io.vertx.core.json.JsonObject merge(io.vertx.core.json.JsonObject lhs, io.vertx.core.json.JsonObject rhs) {
+		return lhs.mergeIn(rhs);
+	}
+
+	public static STAppModel merge(STAppModel lhs, STAppModel rhs) {
+		return newSTAppModel(merge(lhs.getJsonObject(), rhs.getJsonObject()));
 	}
 
 	public static STAppModel newSTAppModel() { 
@@ -26,7 +42,7 @@ public class STJsonFactory {
 	}
 
 	public static STAppModel newSTAppModel(java.io.File file) throws java.io.IOException { 
-		return new STAppModel(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));
+		return new STAppModel(load(file));
 	}
 
 	public static STGDirectory newSTGDirectory() { 
@@ -42,7 +58,7 @@ public class STJsonFactory {
 	}
 
 	public static STGDirectory newSTGDirectory(java.io.File file) throws java.io.IOException { 
-		return new STGDirectory(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));
+		return new STGDirectory(load(file));
 	}
 
 	public static STGroupModel newSTGroupModel() { 
@@ -58,7 +74,7 @@ public class STJsonFactory {
 	}
 
 	public static STGroupModel newSTGroupModel(java.io.File file) throws java.io.IOException { 
-		return new STGroupModel(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));
+		return new STGroupModel(load(file));
 	}
 
 	public static STTemplate newSTTemplate() { 
@@ -74,7 +90,7 @@ public class STJsonFactory {
 	}
 
 	public static STTemplate newSTTemplate(java.io.File file) throws java.io.IOException { 
-		return new STTemplate(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));
+		return new STTemplate(load(file));
 	}
 
 	public static STParameter newSTParameter() { 
@@ -90,7 +106,7 @@ public class STJsonFactory {
 	}
 
 	public static STParameter newSTParameter(java.io.File file) throws java.io.IOException { 
-		return new STParameter(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));
+		return new STParameter(load(file));
 	}
 
 	public static STParameterKey newSTParameterKey() { 
@@ -106,7 +122,7 @@ public class STJsonFactory {
 	}
 
 	public static STParameterKey newSTParameterKey(java.io.File file) throws java.io.IOException { 
-		return new STParameterKey(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));
+		return new STParameterKey(load(file));
 	}
 
 	public static STInterface newSTInterface() { 
@@ -122,7 +138,7 @@ public class STJsonFactory {
 	}
 
 	public static STInterface newSTInterface(java.io.File file) throws java.io.IOException { 
-		return new STInterface(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));
+		return new STInterface(load(file));
 	}
 
 	public static STEnum newSTEnum() { 
@@ -138,7 +154,7 @@ public class STJsonFactory {
 	}
 
 	public static STEnum newSTEnum(java.io.File file) throws java.io.IOException { 
-		return new STEnum(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));
+		return new STEnum(load(file));
 	}
 
 	public static STEnumValue newSTEnumValue() { 
@@ -154,7 +170,7 @@ public class STJsonFactory {
 	}
 
 	public static STEnumValue newSTEnumValue(java.io.File file) throws java.io.IOException { 
-		return new STEnumValue(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));
+		return new STEnumValue(load(file));
 	}
 
 	public static STGParseResult newSTGParseResult() { 
@@ -170,7 +186,7 @@ public class STJsonFactory {
 	}
 
 	public static STGParseResult newSTGParseResult(java.io.File file) throws java.io.IOException { 
-		return new STGParseResult(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));
+		return new STGParseResult(load(file));
 	}
 
 	public static STGError newSTGError() { 
@@ -186,7 +202,7 @@ public class STJsonFactory {
 	}
 
 	public static STGError newSTGError(java.io.File file) throws java.io.IOException { 
-		return new STGError(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));
+		return new STGError(load(file));
 	}
 
 }
