@@ -507,6 +507,7 @@ public class STProject {
         writeJsonWrapper(javaMainSrc, stDomainPackage.getName(), newDomain("ST")
                 .addEntities(newEntity("STAppModel")
                         .addRelations(newStringField("modelDb"))
+                        .addRelations(newIntegerField("editorFontSize"))
                         .addRelations(newStringField("generatorRoot"))
                         .addRelations(newStringField("generatorPackage"))
                         .addRelations(newStringField("generatorName"))

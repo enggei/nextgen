@@ -59,6 +59,7 @@ public class STApp extends JFrame {
 
         SwingUtil.show(new STApp(STJsonFactory.newSTAppModel()
                 .setModelDb("./db")
+                .setEditorFontSize(12)
                 .setGeneratorRoot(javaMain.getAbsolutePath())
                 .setGeneratorPackage("nextgen.st")
                 .setGeneratorName("StringTemplate")

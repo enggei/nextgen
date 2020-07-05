@@ -35,13 +35,14 @@ public class STNavigator extends JPanel {
 
     private final JTabbedPane tabbedPane;
     private final DefaultTreeModel treeModel;
+    private final STAppModel appModel;
 
     STRenderer stRenderer;
     final STModelDB db;
 
     public STNavigator(STAppModel appModel, JTabbedPane contentPanel) {
         super(new BorderLayout());
-
+        this.appModel = appModel;
         final RootNode rootNode = new RootNode(appModel);
 
         tabbedPane = contentPanel;
@@ -152,7 +153,7 @@ public class STNavigator extends JPanel {
 
         final STEditor stEditor = findSTTemplateEditor(tabbedPane, stGroupTreeNode)
                 .orElseGet(() -> {
-                    final STEditor stEditor1 = new STEditor(stGroupTreeNode);
+                    final STEditor stEditor1 = new STEditor(stGroupTreeNode, appModel);
                     tabbedPane.addTab(stGroupTreeNode.getLabel(), stEditor1);
                     return stEditor1;
                 });
@@ -171,7 +172,7 @@ public class STNavigator extends JPanel {
 
                     final STEditor stEditor = findSTTemplateEditor(tabbedPane, parent)
                             .orElseGet(() -> {
-                                final STEditor stEditor1 = new STEditor(parent);
+                                final STEditor stEditor1 = new STEditor(parent, appModel);
                                 tabbedPane.addTab(parent.getLabel(), stEditor1);
                                 return stEditor1;
                             });
@@ -193,7 +194,7 @@ public class STNavigator extends JPanel {
 
                     final STEditor stEditor = findSTTemplateEditor(tabbedPane, parent)
                             .orElseGet(() -> {
-                                final STEditor stEditor1 = new STEditor(parent);
+                                final STEditor stEditor1 = new STEditor(parent, appModel);
                                 tabbedPane.addTab(parent.getLabel(), stEditor1);
                                 return stEditor1;
                             });
@@ -214,7 +215,7 @@ public class STNavigator extends JPanel {
 
                     final STEditor stEditor = findSTTemplateEditor(tabbedPane, parent)
                             .orElseGet(() -> {
-                                final STEditor stEditor1 = new STEditor(parent);
+                                final STEditor stEditor1 = new STEditor(parent, appModel);
                                 tabbedPane.addTab(parent.getLabel(), stEditor1);
                                 return stEditor1;
                             });

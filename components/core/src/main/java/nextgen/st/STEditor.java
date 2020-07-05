@@ -25,7 +25,7 @@ public class STEditor extends JPanel {
 
     private final RSyntaxTextArea txtEditor = new RSyntaxTextArea(20, 60);
     private final STEditorCommandPanel commandPanel = new STEditorCommandPanel();
-    private final STEditorInfoPanel infoPanel = new STEditorInfoPanel();
+    private final STEditorInfoPanel infoPanel;
 
     private final Color uneditedColor = txtEditor.getBackground();
     private final Color editedColor = Color.decode("#f0f0f0");
@@ -33,15 +33,17 @@ public class STEditor extends JPanel {
     private final Border defaultBorder = txtEditor.getBorder();
 
     private final STNavigator.RootNode.STGDirectoryTreeNode.STGroupTreeNode stGroupTreeNode;
+    private final STAppModel appModel;
 
     private String startText;
     private STNavigator.RootNode.STGDirectoryTreeNode.STGroupTreeNode.STTemplateTreeNode stTemplateTreeNode;
 
-    public STEditor(STNavigator.RootNode.STGDirectoryTreeNode.STGroupTreeNode stGroupTreeNode) {
+    public STEditor(STNavigator.RootNode.STGDirectoryTreeNode.STGroupTreeNode stGroupTreeNode, STAppModel appModel) {
         super(new BorderLayout());
 
+        this.appModel = appModel;
         this.stGroupTreeNode = stGroupTreeNode;
-
+        this.infoPanel = new STEditorInfoPanel();
         final JPopupMenu pop = this.txtEditor.getPopupMenu();
         pop.addSeparator();
         pop.add(newAction("Insert Single", actionEvent -> insertSingle()));
@@ -55,7 +57,7 @@ public class STEditor extends JPanel {
         pop.addSeparator();
         pop.add(newAction("Add Java method", actionEvent -> addJavaMethod()));
 
-        this.txtEditor.setFont(getPreferredFont());
+        this.txtEditor.setFont(getPreferredFont(appModel));
         this.txtEditor.setTabSize(3);
         this.txtEditor.setCodeFoldingEnabled(true);
         this.txtEditor.addKeyListener(new STTemplateEditorKeyListener());
@@ -139,12 +141,12 @@ public class STEditor extends JPanel {
         this.txtEditor.requestFocusInWindow();
     }
 
-    private Font getPreferredFont() {
+    private Font getPreferredFont(STAppModel appModel) {
         final Set<String> fonts = new HashSet<>(Arrays.asList(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
         return Stream
                 .of("Hack", "Fira Code", "Source Code Pro", "Monospaced")
                 .filter(fonts::contains)
-                .findFirst().map(s -> new Font(s, Font.PLAIN, 24))
+                .findFirst().map(s -> new Font(s, Font.PLAIN, appModel.getEditorFontSize(12)))
                 .orElse(null);
     }
 
@@ -477,7 +479,7 @@ public class STEditor extends JPanel {
         public STEditorInfoPanel() {
             super(new BorderLayout());
 
-            this.textArea.setFont(getPreferredFont());
+            this.textArea.setFont(getPreferredFont(appModel));
             this.textArea.setTabSize(3);
             this.textArea.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
@@ -533,6 +535,4 @@ public class STEditor extends JPanel {
             textArea.setCaretPosition(0);
         }
     }
-
-
 }

@@ -22,12 +22,12 @@
     }, {
       "uuid" : "c41ba352-9f52-4dca-a44a-ad9f3c035d14",
       "name" : "list",
-      "text" : "list : \n\t~value:{it|~it~};separator=\"\\n\"~ ",
+      "text" : "list : \nDette er verdiene:\n\t~value:{it|~it~};separator=\"\\n\"~ ",
       "parameters" : [ {
-        "uuid" : "22a67c79-8d90-4fa1-9451-fdb1e4005591",
+        "uuid" : "6546279d-a4bd-4f04-a5c7-23ba48a640ec",
         "name" : "value",
         "type" : "LIST",
-        "argumentType" : "Integer"
+        "argumentType" : "Object"
       } ],
       "implements" : [ "TestInterface" ]
     }, {

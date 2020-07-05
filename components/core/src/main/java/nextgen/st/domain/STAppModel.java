@@ -54,6 +54,19 @@ public class STAppModel {
 		return jsonObject.getString("modelDb", defaultValue);
 	}
 
+	public STAppModel setEditorFontSize(Integer value) { 
+		jsonObject.put("editorFontSize", value);
+		return this;
+	}
+
+	public Integer getEditorFontSize() { 
+		return jsonObject.getInteger("editorFontSize");
+	}
+
+	public Integer getEditorFontSize(Integer defaultValue) { 
+		return jsonObject.getInteger("editorFontSize", defaultValue);
+	}
+
 	public STAppModel setGeneratorRoot(String value) { 
 		jsonObject.put("generatorRoot", value);
 		return this;
