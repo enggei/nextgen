@@ -87,33 +87,35 @@ public class STFileNode extends STNode {
 
 		@Override
 		void actionPerformed(STFileNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			final Map<String, JTextField> fieldMap = new java.util.LinkedHashMap<>();
-			fieldMap.put("name", new JTextField(node.stFile.getName(), 15));
-			fieldMap.put("type", new JTextField(node.stFile.getType(), 15));
-			fieldMap.put("path", new JTextField(node.stFile.getPath(), 15));
-			fieldMap.put("package", new JTextField(node.stFile.getPackageName(), 15));
-			final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
-			inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
-			for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {
-				inputPanel.add(new JLabel(fieldEntry.getKey()));
-				inputPanel.add(fieldEntry.getValue());
-			}
-			com.generator.util.SwingUtil.showDialog(inputPanel, canvas, "Edit", new com.generator.util.SwingUtil.ConfirmAction() {
-				@Override
-				public void verifyAndCommit() throws Exception {
-					final String name = fieldMap.get("name").getText().trim();
-					final String type = fieldMap.get("type").getText().trim();
-					final String path = fieldMap.get("path").getText().trim();
-					final String packageName = fieldMap.get("package").getText().trim();
-					javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(tx -> {
-						node.stFile.setName(name);
-						node.stFile.setType(type);
-						node.stFile.setPath(path);
-						node.stFile.setPackageName(packageName);
-						node.setText(nextgen.st.STGenerator.asFile(node.stFile).getAbsolutePath());
-					}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable)));
+			canvas.modelDb.doInTransaction(tx -> {
+				final Map<String, JTextField> fieldMap = new java.util.LinkedHashMap<>();
+				fieldMap.put("name", new JTextField(node.stFile.getName(), 15));
+				fieldMap.put("type", new JTextField(node.stFile.getType(), 15));
+				fieldMap.put("path", new JTextField(node.stFile.getPath(), 15));
+				fieldMap.put("package", new JTextField(node.stFile.getPackageName(), 15));
+				final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
+				inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
+				for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {
+					inputPanel.add(new JLabel(fieldEntry.getKey()));
+					inputPanel.add(fieldEntry.getValue());
 				}
-			});
+				com.generator.util.SwingUtil.showDialog(inputPanel, canvas, "Edit", new com.generator.util.SwingUtil.ConfirmAction() {
+					@Override
+					public void verifyAndCommit() throws Exception {
+						final String name = fieldMap.get("name").getText().trim();
+						final String type = fieldMap.get("type").getText().trim();
+						final String path = fieldMap.get("path").getText().trim();
+						final String packageName = fieldMap.get("package").getText().trim();
+						javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(tx -> {
+							node.stFile.setName(name);
+							node.stFile.setType(type);
+							node.stFile.setPath(path);
+							node.stFile.setPackageName(packageName);
+							node.setText(nextgen.st.STGenerator.asFile(node.stFile).getAbsolutePath());
+						}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable)));
+					}
+				});
+			}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable));
 		}
 	}
 

@@ -56,7 +56,9 @@ public class STValueNode extends STNode {
 
 		@Override
 		void actionPerformed(STValueNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			com.generator.util.SwingUtil.toClipboard(node.stRenderer.render(node.stValue));
+			canvas.modelDb.doInTransaction(tx -> {
+				com.generator.util.SwingUtil.toClipboard(node.stRenderer.render(node.stValue));
+			}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable));
 		}
 	}
 

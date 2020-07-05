@@ -88,30 +88,32 @@ public class STProject {
                         "pop.add(sourceMenu);"));
 
         final NodeAction editFileSinkAction = newNodeAction(stFileNode, "EditFileSink", "Edit")
-                .addStatements("final Map<String, JTextField> fieldMap = new java.util.LinkedHashMap<>();")
-                .addStatements("fieldMap.put(\"name\", new JTextField(node.stFile.getName(), 15));")
-                .addStatements("fieldMap.put(\"type\", new JTextField(node.stFile.getType(), 15));")
-                .addStatements("fieldMap.put(\"path\", new JTextField(node.stFile.getPath(), 15));")
-                .addStatements("fieldMap.put(\"package\", new JTextField(node.stFile.getPackageName(), 15));")
-                .addStatements("final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));")
-                .addStatements("inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));")
-                .addStatements(newLine("for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {", "}")
-                        .addChildren("inputPanel.add(new JLabel(fieldEntry.getKey()));")
-                        .addChildren("inputPanel.add(fieldEntry.getValue());"))
-                .addStatements(newBlock()
-                        .addLines(newLine("com.generator.util.SwingUtil.showDialog(inputPanel, canvas, \"Edit\", new com.generator.util.SwingUtil.ConfirmAction() {", "});")
-                                .addChildren("@Override")
-                                .addChildren(newLine("public void verifyAndCommit() throws Exception {", "}")
-                                        .addChildren("final String name = fieldMap.get(\"name\").getText().trim();")
-                                        .addChildren("final String type = fieldMap.get(\"type\").getText().trim();")
-                                        .addChildren("final String path = fieldMap.get(\"path\").getText().trim();")
-                                        .addChildren("final String packageName = fieldMap.get(\"package\").getText().trim();")
-                                        .addChildren(newInvokeLaterInTransaction(
-                                                "node.stFile.setName(name);",
-                                                "node.stFile.setType(type);",
-                                                "node.stFile.setPath(path);",
-                                                "node.stFile.setPackageName(packageName);",
-                                                "node.setText(nextgen.st.STGenerator.asFile(node.stFile).getAbsolutePath());")))));
+                .addStatements(doInTransaction(
+                        "final Map<String, JTextField> fieldMap = new java.util.LinkedHashMap<>();",
+                        "fieldMap.put(\"name\", new JTextField(node.stFile.getName(), 15));",
+                        "fieldMap.put(\"type\", new JTextField(node.stFile.getType(), 15));",
+                        "fieldMap.put(\"path\", new JTextField(node.stFile.getPath(), 15));",
+                        "fieldMap.put(\"package\", new JTextField(node.stFile.getPackageName(), 15));",
+                        "final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));",
+                        "inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));",
+                        newLine("for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {", "}")
+                                .addChildren("inputPanel.add(new JLabel(fieldEntry.getKey()));")
+                                .addChildren("inputPanel.add(fieldEntry.getValue());"),
+                        newBlock()
+                                .addLines(newLine("com.generator.util.SwingUtil.showDialog(inputPanel, canvas, \"Edit\", new com.generator.util.SwingUtil.ConfirmAction() {", "});")
+                                        .addChildren("@Override")
+                                        .addChildren(newLine("public void verifyAndCommit() throws Exception {", "}")
+                                                .addChildren("final String name = fieldMap.get(\"name\").getText().trim();")
+                                                .addChildren("final String type = fieldMap.get(\"type\").getText().trim();")
+                                                .addChildren("final String path = fieldMap.get(\"path\").getText().trim();")
+                                                .addChildren("final String packageName = fieldMap.get(\"package\").getText().trim();")
+                                                .addChildren(newInvokeLaterInTransaction(
+                                                        "node.stFile.setName(name);",
+                                                        "node.stFile.setType(type);",
+                                                        "node.stFile.setPath(path);",
+                                                        "node.stFile.setPackageName(packageName);",
+                                                        "node.setText(nextgen.st.STGenerator.asFile(node.stFile).getAbsolutePath());"))))
+                ));
         registerRightClickAction(stFileNode, editFileSinkAction, editFileSinkAction.getName());
 
         final PNodeImpl stValueNode = newPNodeImpl(canvas, node)
@@ -124,7 +126,7 @@ public class STProject {
                 .setUuid("java.util.UUID.fromString(stValue.getUuid())");
 
         final NodeAction stValueToClipboard = newNodeAction(stValueNode, "ToClipboard", "To Clipboard")
-                .addStatements("com.generator.util.SwingUtil.toClipboard(node.stRenderer.render(node.stValue));");
+                .addStatements(doInTransaction("com.generator.util.SwingUtil.toClipboard(node.stRenderer.render(node.stValue));"));
         registerRightClickAction(stValueNode, stValueToClipboard, stValueToClipboard.getName());
 
         final PNodeImpl stModelNode = newPNodeImpl(canvas, node)
