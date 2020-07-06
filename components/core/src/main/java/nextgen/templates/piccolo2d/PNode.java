@@ -254,8 +254,8 @@ public class PNode {
 				"\n" + 
 				"	private PPath rectangle;\n" + 
 				"\n" + 
-				"	private final Set<UUID> outgoing = new LinkedHashSet<>();\n" + 
-				"	private final Set<UUID> incoming = new LinkedHashSet<>();\n" + 
+				"	protected final Set<UUID> outgoing = new LinkedHashSet<>();\n" + 
+				"	protected final Set<UUID> incoming = new LinkedHashSet<>();\n" + 
 				"\n" + 
 				"	public ~name~(~canvasName~ canvas, String text) {\n" + 
 				"		this(canvas, text, UUID.randomUUID());\n" + 
@@ -276,6 +276,10 @@ public class PNode {
 				"		addInputEventListener(nodeInputEventHandler);\n" + 
 				"\n" + 
 				"		this.addChild(this.child);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public Stream<UUID> getOutgoingReferences() {\n" + 
+				"		return Stream.empty();\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 

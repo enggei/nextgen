@@ -11,6 +11,7 @@ public class PNodeImpl {
 	private Object _canvasName;
 	private Object _initText;
 	private Object _uuid;
+	private Object _outgoingReferences;
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<Object> _rightClickStatements = new java.util.ArrayList<>();
@@ -39,6 +40,7 @@ public class PNodeImpl {
 		st.add("canvasName", _canvasName);
 		st.add("initText", _initText);
 		st.add("uuid", _uuid);
+		st.add("outgoingReferences", _outgoingReferences);
 		for (Object o : _constructorStatements) st.add("constructorStatements", o);
 		for (Object o : _methods) st.add("methods", o);
 		for (Object o : _rightClickStatements) st.add("rightClickStatements", o);
@@ -181,6 +183,28 @@ public class PNodeImpl {
 
 	public PNodeImpl removeUuid() {
 		this._uuid = null;
+		return this;
+	} 
+
+	public PNodeImpl setOutgoingReferences(Object value) {
+		this._outgoingReferences = value;
+		return this;
+	}
+
+	public Object getOutgoingReferences() {
+		return this._outgoingReferences;
+	}
+
+	public Object getOutgoingReferences(Object defaultValue) {
+		return this._outgoingReferences == null ? defaultValue : this._outgoingReferences;
+	}
+
+	public boolean hasOutgoingReferences() {
+		return this._outgoingReferences != null;
+	}
+
+	public PNodeImpl removeOutgoingReferences() {
+		this._outgoingReferences = null;
 		return this;
 	} 
 
@@ -527,7 +551,7 @@ public class PNodeImpl {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PNodeImpl(packageName,name,nodeName,fields,canvasName,initText,uuid,constructorStatements,methods,rightClickStatements,anonymousRightClickActions,onRightClick,onKeyPressed,onLeftClick,onPropertyChange,actions) ::= <<package ~packageName~;\n" + 
+	static final String st = "PNodeImpl(packageName,name,nodeName,fields,canvasName,initText,uuid,constructorStatements,methods,outgoingReferences,rightClickStatements,anonymousRightClickActions,onRightClick,onKeyPressed,onLeftClick,onPropertyChange,actions) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import com.generator.util.SwingUtil;\n" + 
 				"import nextgen.st.domain.STParameterKey;\n" + 
@@ -557,6 +581,11 @@ public class PNodeImpl {
 				"	}\n" + 
 				"\n" + 
 				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
+				"\n" + 
+				"	@Override\n" + 
+				"	public Stream<UUID> getOutgoingReferences() {\n" + 
+				"		return ~if(outgoingReferences)~~outgoingReferences~~else~super.getOutgoingReferences();~endif~\n" + 
+				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 
 				"	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {\n" + 

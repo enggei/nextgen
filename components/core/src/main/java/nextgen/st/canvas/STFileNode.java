@@ -10,11 +10,9 @@ import org.piccolo2d.event.PInputEvent;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class STFileNode extends STNode {
@@ -28,8 +26,11 @@ public class STFileNode extends STNode {
 		this.stFile = stFile;
 		this.stModel = stModel;
 		this.stRenderer = stRenderer;
-		stFile.getNode().getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(relationship -> addOutgoingRelation(java.util.UUID.fromString(relationship.getOtherNode(stFile.getNode()).getProperty("uuid").toString())));
-		stFile.getNode().getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(relationship -> addIncomingRelation(java.util.UUID.fromString(relationship.getOtherNode(stFile.getNode()).getProperty("uuid").toString())));
+	}
+
+	@Override
+	public java.util.stream.Stream<UUID> getOutgoingReferences() {
+		return java.util.stream.Stream.of(UUID.fromString(stModel.getUuid()));
 	}
 
 	public void setSTModel(nextgen.st.model.STModel stModel) {

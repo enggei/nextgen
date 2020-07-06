@@ -390,28 +390,35 @@ public class PCanvas {
 				"	}\n" + 
 				"\n" + 
 				"	public <N extends ~nodeName~> N addNode(N node, Point2D offset) {\n" + 
+				"		\n" + 
 				"		final N existing = getNode(node.getUuid());\n" + 
 				"		if (existing != null) {\n" + 
 				"			existing.refresh();\n" + 
 				"			return existing;\n" + 
 				"		}\n" + 
 				"		if (offset != null) node.setOffset(offset);\n" + 
+				"		\n" + 
 				"		SwingUtilities.invokeLater(() -> {\n" + 
-				"\n" + 
-				"		    node.select();\n" + 
-				"		    nodeMap.put(node.getUuid(), node);\n" + 
-				"		    nodeLayer.addChild(node);\n" + 
 				"		\n" + 
-				"		    node.outgoing().forEach(uuid -> {\n" + 
-				"		        if (nodeMap.containsKey(uuid))\n" + 
-				"		            addRelation(new STRelation(this, node, nodeMap.get(uuid), \"\"));\n" + 
-				"		    });\n" + 
-				"		\n" + 
-				"		    node.incoming().forEach(uuid -> {\n" + 
-				"		        if (nodeMap.containsKey(uuid))\n" + 
-				"		            addRelation(new STRelation(this, nodeMap.get(uuid), node, \"\"));\n" + 
-				"		    });\n" + 
+				"			node.select();\n" + 
+				"			nodeMap.put(node.getUuid(), node);\n" + 
+				"			nodeLayer.addChild(node);\n" + 
+				"			\n" + 
+				"			modelDb.doInTransaction(transaction -> {\n" + 
+				"				\n" + 
+				"				node.getOutgoingReferences().forEach(uuid -> {\n" + 
+				"					if (nodeMap.containsKey(uuid))\n" + 
+				"						addRelation(new STRelation(STCanvas.this, node, nodeMap.get(uuid), \"\"));\n" + 
+				"					});\n" + 
+				"				\n" + 
+				"				getAllNodes()\n" + 
+				"						.filter(stNode -> !stNode.getUuid().equals(node.getUuid()))\n" + 
+				"						.forEach(stNode -> stNode.getOutgoingReferences()\n" + 
+				"						.filter(uuid -> uuid.equals(node.getUuid()))\n" + 
+				"						.forEach(uuid -> addRelation(new STRelation(STCanvas.this, stNode, node, \"\"))));\n" + 
+				"			});\n" + 
 				"		});\n" + 
+				"		\n" + 
 				"		return node;\n" + 
 				"	}\n" + 
 				"\n" + 

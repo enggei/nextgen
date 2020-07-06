@@ -65,8 +65,7 @@ public class STProject {
                 .addFields("nextgen.st.STRenderer", "stRenderer")
                 .setInitText("nextgen.st.STGenerator.asFile(stFile).getAbsolutePath()")
                 .setUuid("java.util.UUID.fromString(stFile.getUuid())")
-                .addConstructorStatements("stFile.getNode().getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(relationship -> addOutgoingRelation(java.util.UUID.fromString(relationship.getOtherNode(stFile.getNode()).getProperty(\"uuid\").toString())));")
-                .addConstructorStatements("stFile.getNode().getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(relationship -> addIncomingRelation(java.util.UUID.fromString(relationship.getOtherNode(stFile.getNode()).getProperty(\"uuid\").toString())));")
+                .setOutgoingReferences("java.util.stream.Stream.of(UUID.fromString(stModel.getUuid()));")
                 .addMethods(newNodeMethod()
                         .setName("setSTModel")
                         .addParams("stModel", "nextgen.st.model.STModel")
@@ -126,9 +125,7 @@ public class STProject {
                 .addFields("nextgen.st.STRenderer", "stRenderer")
                 .setInitText("stRenderer.render(stValue)")
                 .setUuid("java.util.UUID.fromString(stValue.getUuid())")
-                        .addConstructorStatements("stValue.getNode().getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(relationship -> addOutgoingRelation(java.util.UUID.fromString(relationship.getOtherNode(stValue.getNode()).getProperty(\"uuid\").toString())));")
-                        .addConstructorStatements("stValue.getNode().getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(relationship -> addIncomingRelation(java.util.UUID.fromString(relationship.getOtherNode(stValue.getNode()).getProperty(\"uuid\").toString())));")
-                ;
+                .setOutgoingReferences("stValue.getType() == STValueType.STMODEL ? java.util.stream.Stream.of(UUID.fromString(stValue.getStModel().getUuid())) : java.util.stream.Stream.empty()");
 
         final NodeAction stValueToClipboard = newNodeAction(stValueNode, "ToClipboard", "To Clipboard")
                 .addStatements(doInTransaction("com.generator.util.SwingUtil.toClipboard(node.stRenderer.render(node.stValue));"));
@@ -142,8 +139,7 @@ public class STProject {
                 .addFields("nextgen.st.STRenderer", "stRenderer")
                 .setInitText("stRenderer.render(stModel)")
                 .setUuid("java.util.UUID.fromString(stModel.getUuid())")
-                .addConstructorStatements("stModel.getNode().getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(relationship -> addOutgoingRelation(java.util.UUID.fromString(relationship.getOtherNode(stModel.getNode()).getProperty(\"uuid\").toString())));")
-                .addConstructorStatements("stModel.getNode().getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(relationship -> addIncomingRelation(java.util.UUID.fromString(relationship.getOtherNode(stModel.getNode()).getProperty(\"uuid\").toString())));")
+                .setOutgoingReferences("stModel.getArguments().map(STArgument::getValue).map(stValue -> (stValue.getType().equals(STValueType.STMODEL)) ? UUID.fromString(stValue.getStModel().getUuid()) : UUID.fromString(stValue.getUuid()));")
                 .addMethods(newNodeMethod()
                         .setName("cut")
                         .addParams("text", "String")

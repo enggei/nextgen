@@ -103,26 +103,26 @@ public class STCanvas extends PCanvas implements PInputEventListener {
             return existing;
         }
         if (offset != null) node.setOffset(offset);
-        SwingUtilities.invokeLater(() -> {
+SwingUtilities.invokeLater(() -> {
 
-            node.select();
-            nodeMap.put(node.getUuid(), node);
-            nodeLayer.addChild(node);
+node.select();
+nodeMap.put(node.getUuid(), node);
+nodeLayer.addChild(node);
 
-            modelDb.doInTransaction(transaction -> {
-                node.getOutgoingReferences().forEach(uuid -> {
-                    if (nodeMap.containsKey(uuid))
-                        addRelation(new STRelation(STCanvas.this, node, nodeMap.get(uuid), ""));
-                });
+modelDb.doInTransaction(transaction -> {
+node.getOutgoingReferences().forEach(uuid -> {
+if (nodeMap.containsKey(uuid))
+addRelation(new STRelation(STCanvas.this, node, nodeMap.get(uuid), ""));
+});
 
-                getAllNodes()
-                        .filter(stNode -> !stNode.getUuid().equals(node.getUuid()))
-                        .forEach(stNode -> stNode.getOutgoingReferences()
-                                .filter(uuid -> uuid.equals(node.getUuid()))
-                                .forEach(uuid -> addRelation(new STRelation(STCanvas.this, stNode, node, ""))));
-            });
+getAllNodes()
+.filter(stNode -> !stNode.getUuid().equals(node.getUuid()))
+.forEach(stNode -> stNode.getOutgoingReferences()
+.filter(uuid -> uuid.equals(node.getUuid()))
+.forEach(uuid -> addRelation(new STRelation(STCanvas.this, stNode, node, ""))));
+});
 
-        });
+});
         return node;
     }
 

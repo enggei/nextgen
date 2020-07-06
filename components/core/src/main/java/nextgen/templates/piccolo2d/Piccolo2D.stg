@@ -97,28 +97,35 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 	}
 
 	public <N extends ~nodeName~> N addNode(N node, Point2D offset) {
+		
 		final N existing = getNode(node.getUuid());
 		if (existing != null) {
 			existing.refresh();
 			return existing;
 		}
 		if (offset != null) node.setOffset(offset);
+		
 		SwingUtilities.invokeLater(() -> {
-
-		    node.select();
-		    nodeMap.put(node.getUuid(), node);
-		    nodeLayer.addChild(node);
 		
-		    node.outgoing().forEach(uuid -> {
-		        if (nodeMap.containsKey(uuid))
-		            addRelation(new STRelation(this, node, nodeMap.get(uuid), ""));
-		    });
-		
-		    node.incoming().forEach(uuid -> {
-		        if (nodeMap.containsKey(uuid))
-		            addRelation(new STRelation(this, nodeMap.get(uuid), node, ""));
-		    });
+			node.select();
+			nodeMap.put(node.getUuid(), node);
+			nodeLayer.addChild(node);
+			
+			modelDb.doInTransaction(transaction -> {
+				
+				node.getOutgoingReferences().forEach(uuid -> {
+					if (nodeMap.containsKey(uuid))
+						addRelation(new STRelation(STCanvas.this, node, nodeMap.get(uuid), ""));
+					});
+				
+				getAllNodes()
+						.filter(stNode -> !stNode.getUuid().equals(node.getUuid()))
+						.forEach(stNode -> stNode.getOutgoingReferences()
+						.filter(uuid -> uuid.equals(node.getUuid()))
+						.forEach(uuid -> addRelation(new STRelation(STCanvas.this, stNode, node, ""))));
+			});
 		});
+		
 		return node;
 	}
 
@@ -396,8 +403,8 @@ public class ~name~ extends PNode implements PropertyChangeListener {
 
 	private PPath rectangle;
 
-	private final Set<UUID> outgoing = new LinkedHashSet<>();
-	private final Set<UUID> incoming = new LinkedHashSet<>();
+	protected final Set<UUID> outgoing = new LinkedHashSet<>();
+	protected final Set<UUID> incoming = new LinkedHashSet<>();
 
 	public ~name~(~canvasName~ canvas, String text) {
 		this(canvas, text, UUID.randomUUID());
@@ -418,6 +425,10 @@ public class ~name~ extends PNode implements PropertyChangeListener {
 		addInputEventListener(nodeInputEventHandler);
 
 		this.addChild(this.child);
+	}
+
+	public Stream<UUID> getOutgoingReferences() {
+		return Stream.empty();
 	}
 
 	@Override
@@ -762,7 +773,7 @@ AnonymousPNodeAction(nodeType,header,statements) ::= <<new STNode.NodeAction<~no
 	}
 }  >>
 
-PNodeImpl(packageName,name,nodeName,fields,canvasName,initText,uuid,constructorStatements,methods,rightClickStatements,anonymousRightClickActions,onRightClick,onKeyPressed,onLeftClick,onPropertyChange,actions) ::= <<package ~packageName~;
+PNodeImpl(packageName,name,nodeName,fields,canvasName,initText,uuid,constructorStatements,methods,outgoingReferences,rightClickStatements,anonymousRightClickActions,onRightClick,onKeyPressed,onLeftClick,onPropertyChange,actions) ::= <<package ~packageName~;
 
 import com.generator.util.SwingUtil;
 import nextgen.st.domain.STParameterKey;
@@ -792,6 +803,11 @@ public class ~name~ extends ~nodeName~ {
 	}
 
 	~methods:{it|~it~};separator="\n\n"~
+
+	@Override
+	public Stream<UUID> getOutgoingReferences() {
+		return ~if(outgoingReferences)~~outgoingReferences~~else~super.getOutgoingReferences();~endif~
+	}
 
 	@Override
 	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
