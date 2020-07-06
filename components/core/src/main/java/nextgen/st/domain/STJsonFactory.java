@@ -3,10 +3,7 @@ package nextgen.st.domain;
 public class STJsonFactory {
 
 	public static io.vertx.core.json.JsonObject load(java.io.File file) throws java.io.IOException {
-		if (!file.exists() || !file.isFile()) {
-			throw new IllegalArgumentException("could not read " + file.getAbsolutePath());
-		}
-
+		if (!file.exists() || !file.isFile()) throw new IllegalArgumentException("could not read " + file.getAbsolutePath());
 		return new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath())));
 	}
 
@@ -19,14 +16,6 @@ public class STJsonFactory {
 			throw new IllegalStateException("could not create " + file.getAbsolutePath());
 
 		java.nio.file.Files.write(file.toPath(), jsonObject.toBuffer().getBytes());
-	}
-
-	public static io.vertx.core.json.JsonObject merge(io.vertx.core.json.JsonObject lhs, io.vertx.core.json.JsonObject rhs) {
-		return lhs.mergeIn(rhs);
-	}
-
-	public static STAppModel merge(STAppModel lhs, STAppModel rhs) {
-		return newSTAppModel(merge(lhs.getJsonObject(), rhs.getJsonObject()));
 	}
 
 	public static STAppModel newSTAppModel() { 
@@ -45,6 +34,10 @@ public class STJsonFactory {
 		return new STAppModel(load(file));
 	}
 
+	public static STAppModel merge(STAppModel lhs, STAppModel rhs) {
+		return newSTAppModel(lhs.getJsonObject().mergeIn(rhs.getJsonObject()));
+	}
+
 	public static STGDirectory newSTGDirectory() { 
 		return new STGDirectory();
 	}
@@ -59,6 +52,10 @@ public class STJsonFactory {
 
 	public static STGDirectory newSTGDirectory(java.io.File file) throws java.io.IOException { 
 		return new STGDirectory(load(file));
+	}
+
+	public static STGDirectory merge(STGDirectory lhs, STGDirectory rhs) {
+		return newSTGDirectory(lhs.getJsonObject().mergeIn(rhs.getJsonObject()));
 	}
 
 	public static STGroupModel newSTGroupModel() { 
@@ -77,6 +74,10 @@ public class STJsonFactory {
 		return new STGroupModel(load(file));
 	}
 
+	public static STGroupModel merge(STGroupModel lhs, STGroupModel rhs) {
+		return newSTGroupModel(lhs.getJsonObject().mergeIn(rhs.getJsonObject()));
+	}
+
 	public static STTemplate newSTTemplate() { 
 		return new STTemplate();
 	}
@@ -91,6 +92,10 @@ public class STJsonFactory {
 
 	public static STTemplate newSTTemplate(java.io.File file) throws java.io.IOException { 
 		return new STTemplate(load(file));
+	}
+
+	public static STTemplate merge(STTemplate lhs, STTemplate rhs) {
+		return newSTTemplate(lhs.getJsonObject().mergeIn(rhs.getJsonObject()));
 	}
 
 	public static STParameter newSTParameter() { 
@@ -109,6 +114,10 @@ public class STJsonFactory {
 		return new STParameter(load(file));
 	}
 
+	public static STParameter merge(STParameter lhs, STParameter rhs) {
+		return newSTParameter(lhs.getJsonObject().mergeIn(rhs.getJsonObject()));
+	}
+
 	public static STParameterKey newSTParameterKey() { 
 		return new STParameterKey();
 	}
@@ -123,6 +132,10 @@ public class STJsonFactory {
 
 	public static STParameterKey newSTParameterKey(java.io.File file) throws java.io.IOException { 
 		return new STParameterKey(load(file));
+	}
+
+	public static STParameterKey merge(STParameterKey lhs, STParameterKey rhs) {
+		return newSTParameterKey(lhs.getJsonObject().mergeIn(rhs.getJsonObject()));
 	}
 
 	public static STInterface newSTInterface() { 
@@ -141,6 +154,10 @@ public class STJsonFactory {
 		return new STInterface(load(file));
 	}
 
+	public static STInterface merge(STInterface lhs, STInterface rhs) {
+		return newSTInterface(lhs.getJsonObject().mergeIn(rhs.getJsonObject()));
+	}
+
 	public static STEnum newSTEnum() { 
 		return new STEnum();
 	}
@@ -155,6 +172,10 @@ public class STJsonFactory {
 
 	public static STEnum newSTEnum(java.io.File file) throws java.io.IOException { 
 		return new STEnum(load(file));
+	}
+
+	public static STEnum merge(STEnum lhs, STEnum rhs) {
+		return newSTEnum(lhs.getJsonObject().mergeIn(rhs.getJsonObject()));
 	}
 
 	public static STEnumValue newSTEnumValue() { 
@@ -173,6 +194,10 @@ public class STJsonFactory {
 		return new STEnumValue(load(file));
 	}
 
+	public static STEnumValue merge(STEnumValue lhs, STEnumValue rhs) {
+		return newSTEnumValue(lhs.getJsonObject().mergeIn(rhs.getJsonObject()));
+	}
+
 	public static STGParseResult newSTGParseResult() { 
 		return new STGParseResult();
 	}
@@ -189,6 +214,10 @@ public class STJsonFactory {
 		return new STGParseResult(load(file));
 	}
 
+	public static STGParseResult merge(STGParseResult lhs, STGParseResult rhs) {
+		return newSTGParseResult(lhs.getJsonObject().mergeIn(rhs.getJsonObject()));
+	}
+
 	public static STGError newSTGError() { 
 		return new STGError();
 	}
@@ -203,6 +232,10 @@ public class STJsonFactory {
 
 	public static STGError newSTGError(java.io.File file) throws java.io.IOException { 
 		return new STGError(load(file));
+	}
+
+	public static STGError merge(STGError lhs, STGError rhs) {
+		return newSTGError(lhs.getJsonObject().mergeIn(rhs.getJsonObject()));
 	}
 
 }

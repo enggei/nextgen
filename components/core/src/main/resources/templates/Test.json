@@ -22,7 +22,7 @@
     }, {
       "uuid" : "c41ba352-9f52-4dca-a44a-ad9f3c035d14",
       "name" : "list",
-      "text" : "list : \nDette er verdiene:\n\t~value:{it|~it~};separator=\"\\n\"~ ",
+      "text" : "list : \n\t~value:{it|~it~};separator=\"\\n\"~ ",
       "parameters" : [ {
         "uuid" : "6546279d-a4bd-4f04-a5c7-23ba48a640ec",
         "name" : "value",

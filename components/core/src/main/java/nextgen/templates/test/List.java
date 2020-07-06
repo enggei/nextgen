@@ -5,7 +5,7 @@ public class List implements TestInterface {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private java.util.List<Integer> _value = new java.util.ArrayList<>();
+	private java.util.List<Object> _value = new java.util.ArrayList<>();
 
 	List(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -23,22 +23,22 @@ public class List implements TestInterface {
 	}
 
 
-	public List addValue(Integer value) {
+	public List addValue(Object value) {
 		this._value.add(value);
 		return this;
 	}
 
-	public List setValue(Integer[] value) {
+	public List setValue(Object[] value) {
 		this._value.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public List setValue(java.util.Collection<Integer> values) {
+	public List setValue(java.util.Collection<Object> values) {
 		this._value.addAll(values);
 		return this;
 	}
 
-	public List removeValue(Integer value) {
+	public List removeValue(Object value) {
 		this._value.remove(value);
 		return this;
 	}
@@ -48,7 +48,7 @@ public class List implements TestInterface {
 		return this;
 	}
 
-	public java.util.List<Integer> getValue() {
+	public java.util.List<Object> getValue() {
 		return this._value;
 	} 
 

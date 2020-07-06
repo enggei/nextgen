@@ -269,6 +269,11 @@ JsonFactory(package,name,entities) ::= <<package ~package~;
 
 public class ~name;format="capitalize"~ {
 
+	public static io.vertx.core.json.JsonObject load(java.io.File file) throws java.io.IOException {
+		if (!file.exists() || !file.isFile()) throw new IllegalArgumentException("could not read " + file.getAbsolutePath());
+		return new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath())));
+	}
+	
 	public static void save(io.vertx.core.json.JsonObject jsonObject, java.io.File file) throws java.io.IOException {
 
 		if (!file.getParentFile().exists() && !file.getParentFile().mkdirs())
@@ -294,10 +299,14 @@ public class ~name;format="capitalize"~ {
 	\}
 
 	public static ~it~ new~it~(java.io.File file) throws java.io.IOException { 
-		return new ~it~(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));
+		return new ~it~(load(file));
+	\}
+
+	public static ~it~ merge(~it~ lhs, ~it~ rhs) {
+		return new~it~(lhs.getJsonObject().mergeIn(rhs.getJsonObject()));
 	\}
 };separator="\n"~
-} >>
+}  >>
 
 WebVerticle(packageName,name,routes,rawRoutes) ::= <<package ~packageName~;
 

@@ -5,7 +5,7 @@ public class Single implements TestInterface {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private String _value;
+	private Object _value;
 
 	Single(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -22,16 +22,16 @@ public class Single implements TestInterface {
 		return st.render().trim();
 	}
 
-	public Single setValue(String value) {
+	public Single setValue(Object value) {
 		this._value = value;
 		return this;
 	}
 
-	public String getValue() {
+	public Object getValue() {
 		return this._value;
 	}
 
-	public String getValue(String defaultValue) {
+	public Object getValue(Object defaultValue) {
 		return this._value == null ? defaultValue : this._value;
 	}
 

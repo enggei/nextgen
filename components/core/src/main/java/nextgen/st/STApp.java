@@ -80,9 +80,7 @@ public class STApp extends JFrame {
 
         Optional.ofNullable(list(path, ".json"))
                 .ifPresent(files -> {
-                    for (File file : files) {
-                        root.addGroups(new STGroupModel(readJsonObject(file)));
-                    }
+                    for (File file : files) root.addGroups(new STGroupModel(readJsonObject(file)));
                 });
 
         return root;

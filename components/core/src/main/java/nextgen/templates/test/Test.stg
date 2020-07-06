@@ -27,7 +27,7 @@ If expression ~conditional(cond1,cond2)~ >>
 
 conditional(condition1,condition2) ::= <<~if(condition1)~condition1: ~condition1~~elseif(condition2)~isCondition2~else~~endif~ >>
 
-complex(list,condition1,condition2) ::= <<~if(list)~~list:{it|~it.name~ ~it.value~(~if(condition1)~1~elseif(condition2)~2~else~NULL~endif~)};separator="\n"~~endif~ >>
+complex(list,condition1,condition2) ::= <<test ~if(list)~~list:{it|~it.name~ ~it.value~(~if(condition1)~1~elseif(condition2)~2~else~NULL~endif~)};separator="\n"~~endif~  >>
 
 embeddedKVConditional(fields,PROP) ::= <<~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator="\n"~ >>
 

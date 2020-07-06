@@ -1,4 +1,5 @@
 {
   "uuid": "ffcc8914-c04c-4124-8ad4-31a78c789354",
-  "editorFontSize": 12
+  "editorFontSize": 24,
+  "setModelDb": "./db"
 }

@@ -117,6 +117,11 @@ public class JsonFactory {
 				"\n" + 
 				"public class ~name;format=\"capitalize\"~ {\n" + 
 				"\n" + 
+				"	public static io.vertx.core.json.JsonObject load(java.io.File file) throws java.io.IOException {\n" + 
+				"		if (!file.exists() || !file.isFile()) throw new IllegalArgumentException(\"could not read \" + file.getAbsolutePath());\n" + 
+				"		return new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath())));\n" + 
+				"	}\n" + 
+				"	\n" + 
 				"	public static void save(io.vertx.core.json.JsonObject jsonObject, java.io.File file) throws java.io.IOException {\n" + 
 				"\n" + 
 				"		if (!file.getParentFile().exists() && !file.getParentFile().mkdirs())\n" + 
@@ -142,7 +147,11 @@ public class JsonFactory {
 				"	\\}\n" + 
 				"\n" + 
 				"	public static ~it~ new~it~(java.io.File file) throws java.io.IOException { \n" + 
-				"		return new ~it~(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));\n" + 
+				"		return new ~it~(load(file));\n" + 
+				"	\\}\n" + 
+				"\n" + 
+				"	public static ~it~ merge(~it~ lhs, ~it~ rhs) {\n" + 
+				"		return new~it~(lhs.getJsonObject().mergeIn(rhs.getJsonObject()));\n" + 
 				"	\\}\n" + 
 				"};separator=\"\\n\"~\n" + 
 				"} >>";

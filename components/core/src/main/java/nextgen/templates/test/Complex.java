@@ -129,5 +129,5 @@ public class Complex {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "complex(list,condition1,condition2) ::= <<~if(list)~~list:{it|~it.name~ ~it.value~(~if(condition1)~1~elseif(condition2)~2~else~NULL~endif~)};separator=\"\\n\"~~endif~ >>";
+	static final String st = "complex(list,condition1,condition2) ::= <<test ~if(list)~~list:{it|~it.name~ ~it.value~(~if(condition1)~1~elseif(condition2)~2~else~NULL~endif~)};separator=\"\\n\"~~endif~ >>";
 }  
