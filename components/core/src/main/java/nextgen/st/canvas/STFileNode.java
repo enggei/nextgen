@@ -28,6 +28,8 @@ public class STFileNode extends STNode {
 		this.stFile = stFile;
 		this.stModel = stModel;
 		this.stRenderer = stRenderer;
+		stFile.getNode().getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(relationship -> addOutgoingRelation(java.util.UUID.fromString(relationship.getOtherNode(stFile.getNode()).getProperty("uuid").toString())));
+		stFile.getNode().getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(relationship -> addIncomingRelation(java.util.UUID.fromString(relationship.getOtherNode(stFile.getNode()).getProperty("uuid").toString())));
 	}
 
 	public void setSTModel(nextgen.st.model.STModel stModel) {

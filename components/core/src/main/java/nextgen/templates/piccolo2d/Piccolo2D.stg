@@ -103,9 +103,22 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 			return existing;
 		}
 		if (offset != null) node.setOffset(offset);
-		node.select();
-		nodeMap.put(node.getUuid(), node);
-		SwingUtilities.invokeLater(() -> nodeLayer.addChild(node));
+		SwingUtilities.invokeLater(() -> {
+
+		    node.select();
+		    nodeMap.put(node.getUuid(), node);
+		    nodeLayer.addChild(node);
+		
+		    node.outgoing().forEach(uuid -> {
+		        if (nodeMap.containsKey(uuid))
+		            addRelation(new STRelation(this, node, nodeMap.get(uuid), ""));
+		    });
+		
+		    node.incoming().forEach(uuid -> {
+		        if (nodeMap.containsKey(uuid))
+		            addRelation(new STRelation(this, nodeMap.get(uuid), node, ""));
+		    });
+		});
 		return node;
 	}
 
@@ -887,7 +900,8 @@ public class ~name~ extends PPath.Double implements Comparator<~name~> {
 	public String toString() {
 		return getUuid() + " " + getSrc() + " -> " + getType() + " -> " + getDst();
 	}
-			@Override
+	
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;

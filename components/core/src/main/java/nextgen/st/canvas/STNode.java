@@ -21,6 +21,10 @@ import static java.awt.event.KeyEvent.*;
 
 public class STNode extends PNode implements PropertyChangeListener {
 
+	public Stream<UUID> getOutgoingReferences() {
+		return Stream.empty();
+	}
+
 	protected enum Attributes {
 		_defaultColor, _selectedColor, _highlightedColor, _uuid, _text, _selected, _highlight
 	}

@@ -396,9 +396,22 @@ public class PCanvas {
 				"			return existing;\n" + 
 				"		}\n" + 
 				"		if (offset != null) node.setOffset(offset);\n" + 
-				"		node.select();\n" + 
-				"		nodeMap.put(node.getUuid(), node);\n" + 
-				"		SwingUtilities.invokeLater(() -> nodeLayer.addChild(node));\n" + 
+				"		SwingUtilities.invokeLater(() -> {\n" + 
+				"\n" + 
+				"		    node.select();\n" + 
+				"		    nodeMap.put(node.getUuid(), node);\n" + 
+				"		    nodeLayer.addChild(node);\n" + 
+				"		\n" + 
+				"		    node.outgoing().forEach(uuid -> {\n" + 
+				"		        if (nodeMap.containsKey(uuid))\n" + 
+				"		            addRelation(new STRelation(this, node, nodeMap.get(uuid), \"\"));\n" + 
+				"		    });\n" + 
+				"		\n" + 
+				"		    node.incoming().forEach(uuid -> {\n" + 
+				"		        if (nodeMap.containsKey(uuid))\n" + 
+				"		            addRelation(new STRelation(this, nodeMap.get(uuid), node, \"\"));\n" + 
+				"		    });\n" + 
+				"		});\n" + 
 				"		return node;\n" + 
 				"	}\n" + 
 				"\n" + 

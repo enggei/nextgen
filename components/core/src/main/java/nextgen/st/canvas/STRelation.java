@@ -58,7 +58,8 @@ public class STRelation extends PPath.Double implements Comparator<STRelation> {
 	public String toString() {
 		return getUuid() + " " + getSrc() + " -> " + getType() + " -> " + getDst();
 	}
-			@Override
+
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;

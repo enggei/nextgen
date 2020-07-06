@@ -237,7 +237,8 @@ public class PRelation {
 				"	public String toString() {\n" + 
 				"		return getUuid() + \" \" + getSrc() + \" -> \" + getType() + \" -> \" + getDst();\n" + 
 				"	}\n" + 
-				"			@Override\n" + 
+				"	\n" + 
+				"	@Override\n" + 
 				"	public boolean equals(Object o) {\n" + 
 				"		if (this == o) return true;\n" + 
 				"		if (o == null || getClass() != o.getClass()) return false;\n" + 
