@@ -8,6 +8,7 @@ public class PNode {
 	private String _packageName;
 	private String _name;
 	private String _canvasName;
+	private java.util.List<Object> _nodeActionmethods = new java.util.ArrayList<>();
 	private java.util.List<Object> _actions = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _onKeyPressed = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _onRightClick = new java.util.ArrayList<>();
@@ -26,6 +27,7 @@ public class PNode {
 		st.add("packageName", _packageName);
 		st.add("name", _name);
 		st.add("canvasName", _canvasName);
+		for (Object o : _nodeActionmethods) st.add("nodeActionmethods", o);
 		for (Object o : _actions) st.add("actions", o);
 		for (java.util.Map<String, Object> map : _onKeyPressed) st.addAggr("onKeyPressed.{key,name}", map.get("key"), map.get("name"));
 		for (java.util.Map<String, Object> map : _onRightClick) st.addAggr("onRightClick.{name}", map.get("name"));
@@ -96,6 +98,35 @@ public class PNode {
 	public PNode removeCanvasName() {
 		this._canvasName = null;
 		return this;
+	} 
+
+	public PNode addNodeActionmethods(Object value) {
+		this._nodeActionmethods.add(value);
+		return this;
+	}
+
+	public PNode setNodeActionmethods(Object[] value) {
+		this._nodeActionmethods.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public PNode setNodeActionmethods(java.util.Collection<Object> values) {
+		this._nodeActionmethods.addAll(values);
+		return this;
+	}
+
+	public PNode removeNodeActionmethods(Object value) {
+		this._nodeActionmethods.remove(value);
+		return this;
+	}
+
+	public PNode removeNodeActionmethods(int index) {
+		this._nodeActionmethods.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getNodeActionmethods() {
+		return this._nodeActionmethods;
 	} 
 
 	public PNode addActions(Object value) {
@@ -222,7 +253,7 @@ public class PNode {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PNode(packageName,name,canvasName,onKeyPressed,onRightClick,actions) ::= <<package ~packageName~;\n" + 
+	static final String st = "PNode(packageName,name,canvasName,onKeyPressed,onRightClick,nodeActionmethods,actions) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import org.piccolo2d.PNode;\n" + 
 				"import org.piccolo2d.event.PDragSequenceEventHandler;\n" + 
@@ -451,6 +482,8 @@ public class PNode {
 				"		}\n" + 
 				"	\n" + 
 				"		abstract void actionPerformed(N node, ~canvasName~ canvas, PInputEvent event, ActionEvent e);\n" + 
+				"\n" + 
+				"		~nodeActionmethods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"	}\n" + 
 				"	\n" + 
 				"	~actions:{it|~it~};separator=\"\\n\\n\"~\n" + 

@@ -107,17 +107,17 @@ public class LayoutTreeAction {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "LayoutTreeAction(name,nodeType,canvasName) ::= <<private static final class ~name~ extends NodeAction<~nodeType~> {\n" + 
+	static final String st = "LayoutTreeAction(name,nodeType,canvasName) ::= <<protected static final class ~name~ extends NodeAction<~nodeType~> {\n" + 
 				"\n" + 
 				"	private final Map<UUID, ~nodeType~> parentsMap = new LinkedHashMap<>();\n" + 
 				"	private final Map<UUID, java.util.List<~nodeType~~gt()~> childrensMap = new LinkedHashMap<>();\n" + 
 				"	private final org.abego.treelayout.util.DefaultConfiguration<~nodeType~> configuration;\n" + 
 				"\n" + 
-				"	private ~name~(~nodeType~ root, ~canvasName~ canvas, PInputEvent event) {\n" + 
+				"	protected ~name~(~nodeType~ root, ~canvasName~ canvas, PInputEvent event) {\n" + 
 				"		this(root, canvas, event, org.abego.treelayout.Configuration.Location.Left, org.abego.treelayout.Configuration.AlignmentInLevel.Center);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	private ~name~(~nodeType~ root, ~canvasName~ canvas, PInputEvent event, org.abego.treelayout.Configuration.Location location, org.abego.treelayout.Configuration.AlignmentInLevel alignmentInLevel) {\n" + 
+				"	protected ~name~(~nodeType~ root, ~canvasName~ canvas, PInputEvent event, org.abego.treelayout.Configuration.Location location, org.abego.treelayout.Configuration.AlignmentInLevel alignmentInLevel) {\n" + 
 				"		super(\"Layout Tree\", root, canvas, event);\n" + 
 				"		this.configuration = new org.abego.treelayout.util.DefaultConfiguration<>(100, 5, location, alignmentInLevel);\n" + 
 				"	}\n" + 
@@ -182,7 +182,8 @@ public class LayoutTreeAction {
 				"		childrensMap.put(node.getUuid(), new ArrayList<>());\n" + 
 				"\n" + 
 				"		node.outgoing()\n" + 
-				"				.map(aLong -> canvas.relationMap.get(aLong).getDst())\n" + 
+				"				.filter(canvas.relationMap::containsKey)\n" + 
+				"				.map(uuid -> canvas.relationMap.get(uuid).getDst())\n" + 
 				"				.filter(abstractNode -> !childrensMap.containsKey(abstractNode.getUuid()))\n" + 
 				"				.forEach(abstractNode -> {\n" + 
 				"						childrensMap.get(node.getUuid()).add(abstractNode);\n" + 

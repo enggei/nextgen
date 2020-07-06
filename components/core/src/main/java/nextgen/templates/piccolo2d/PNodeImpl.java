@@ -553,22 +553,13 @@ public class PNodeImpl {
 
 	static final String st = "PNodeImpl(packageName,name,nodeName,fields,canvasName,initText,uuid,constructorStatements,methods,outgoingReferences,rightClickStatements,anonymousRightClickActions,onRightClick,onKeyPressed,onLeftClick,onPropertyChange,actions) ::= <<package ~packageName~;\n" + 
 				"\n" + 
-				"import com.generator.util.SwingUtil;\n" + 
-				"import nextgen.st.domain.STParameterKey;\n" + 
-				"import nextgen.st.model.STArgumentKV;\n" + 
-				"import nextgen.st.model.STValue;\n" + 
-				"import nextgen.st.model.STValueType;\n" + 
 				"import org.piccolo2d.event.PInputEvent;\n" + 
 				"\n" + 
 				"import javax.swing.*;\n" + 
 				"import java.awt.*;\n" + 
 				"import java.awt.event.ActionEvent;\n" + 
-				"import java.util.ArrayList;\n" + 
-				"import java.util.Collection;\n" + 
-				"import java.util.LinkedHashMap;\n" + 
-				"import java.util.Map;\n" + 
-				"import java.util.stream.Collectors;\n" + 
-				"\n" + 
+				"import java.util.*;\n" + 
+				"import java.util.stream.Stream;\n" + 
 				"\n" + 
 				"public class ~name~ extends ~nodeName~ {\n" + 
 				"\n" + 
@@ -603,7 +594,7 @@ public class PNodeImpl {
 				"~if(onKeyPressed)~\n" + 
 				"		switch (event.getKeyCode()) {\n" + 
 				"			~onKeyPressed:{it|\n" + 
-				"case VK_~it.key~:\n" + 
+				"case java.awt.event.KeyEvent.VK_~it.key~:\n" + 
 				"	new ~it.name~(this, canvas, event).actionPerformed(null);\n" + 
 				"	return;\n" + 
 				"};separator=\"\\n\"~\n" + 

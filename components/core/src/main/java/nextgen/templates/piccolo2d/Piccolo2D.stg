@@ -1,6 +1,6 @@
 delimiters "~","~"
 
-PCanvas(packageName,name,nodeName,relationName,fields,onRightClick,onKeyPressed,actions) ::= <<package ~packageName~;
+PCanvas(packageName,name,nodeName,relationName,fields,onRightClick,onKeyPressed,canvasActionmethods,actions) ::= <<package ~packageName~;
 
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PCanvas;
@@ -105,26 +105,21 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 		}
 		if (offset != null) node.setOffset(offset);
 		
-		SwingUtilities.invokeLater(() -> {
+		node.select();
+		nodeMap.put(node.getUuid(), node);
+		nodeLayer.addChild(node);
 		
-			node.select();
-			nodeMap.put(node.getUuid(), node);
-			nodeLayer.addChild(node);
-			
-			modelDb.doInTransaction(transaction -> {
-				
-				node.getOutgoingReferences().forEach(uuid -> {
-					if (nodeMap.containsKey(uuid))
-						addRelation(new STRelation(STCanvas.this, node, nodeMap.get(uuid), ""));
-					});
-				
-				getAllNodes()
-						.filter(stNode -> !stNode.getUuid().equals(node.getUuid()))
-						.forEach(stNode -> stNode.getOutgoingReferences()
-						.filter(uuid -> uuid.equals(node.getUuid()))
-						.forEach(uuid -> addRelation(new STRelation(STCanvas.this, stNode, node, ""))));
+		node.getOutgoingReferences().forEach(uuid -> {
+			if (nodeMap.containsKey(uuid))
+				addRelation(new STRelation(STCanvas.this, node, nodeMap.get(uuid), ""));
 			});
-		});
+		
+		getAllNodes()
+				.filter(stNode -> !stNode.getUuid().equals(node.getUuid()))
+				.forEach(stNode -> stNode.getOutgoingReferences()
+				.filter(uuid -> uuid.equals(node.getUuid()))
+				.forEach(uuid -> addRelation(new STRelation(STCanvas.this, stNode, node, ""))));
+	
 		
 		return node;
 	}
@@ -197,6 +192,8 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 		}
 	
 		abstract void actionPerformed(~name~ canvas, PInputEvent event, ActionEvent e);
+
+		~canvasActionmethods:{it|~it~};separator="\n\n"~
 	}
 	
 	~actions:{it|~it~};separator="\n\n"~
@@ -371,7 +368,7 @@ LayoutVerticallyAction(name,canvasName,nodeType) ::= <<private static final clas
 	}
 }  >>
 
-PNode(packageName,name,canvasName,onKeyPressed,onRightClick,actions) ::= <<package ~packageName~;
+PNode(packageName,name,canvasName,onKeyPressed,onRightClick,nodeActionmethods,actions) ::= <<package ~packageName~;
 
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PDragSequenceEventHandler;
@@ -600,6 +597,8 @@ case VK_~it.key~:
 		}
 	
 		abstract void actionPerformed(N node, ~canvasName~ canvas, PInputEvent event, ActionEvent e);
+
+		~nodeActionmethods:{it|~it~};separator="\n\n"~
 	}
 	
 	~actions:{it|~it~};separator="\n\n"~
@@ -680,17 +679,17 @@ PNodeActions() ::= <<Contains complex actions for PNode:
 LayoutTreeAction
 Uses a root-node and layout outgoing relations in any NSEW direction.  >>
 
-LayoutTreeAction(name,nodeType,canvasName) ::= <<private static final class ~name~ extends NodeAction<~nodeType~> {
+LayoutTreeAction(name,nodeType,canvasName) ::= <<protected static final class ~name~ extends NodeAction<~nodeType~> {
 
 	private final Map<UUID, ~nodeType~> parentsMap = new LinkedHashMap<>();
 	private final Map<UUID, java.util.List<~nodeType~~gt()~> childrensMap = new LinkedHashMap<>();
 	private final org.abego.treelayout.util.DefaultConfiguration<~nodeType~> configuration;
 
-	private ~name~(~nodeType~ root, ~canvasName~ canvas, PInputEvent event) {
+	protected ~name~(~nodeType~ root, ~canvasName~ canvas, PInputEvent event) {
 		this(root, canvas, event, org.abego.treelayout.Configuration.Location.Left, org.abego.treelayout.Configuration.AlignmentInLevel.Center);
 	}
 
-	private ~name~(~nodeType~ root, ~canvasName~ canvas, PInputEvent event, org.abego.treelayout.Configuration.Location location, org.abego.treelayout.Configuration.AlignmentInLevel alignmentInLevel) {
+	protected ~name~(~nodeType~ root, ~canvasName~ canvas, PInputEvent event, org.abego.treelayout.Configuration.Location location, org.abego.treelayout.Configuration.AlignmentInLevel alignmentInLevel) {
 		super("Layout Tree", root, canvas, event);
 		this.configuration = new org.abego.treelayout.util.DefaultConfiguration<>(100, 5, location, alignmentInLevel);
 	}
@@ -755,7 +754,8 @@ LayoutTreeAction(name,nodeType,canvasName) ::= <<private static final class ~nam
 		childrensMap.put(node.getUuid(), new ArrayList<>());
 
 		node.outgoing()
-				.map(aLong -> canvas.relationMap.get(aLong).getDst())
+				.filter(canvas.relationMap::containsKey)
+				.map(uuid -> canvas.relationMap.get(uuid).getDst())
 				.filter(abstractNode -> !childrensMap.containsKey(abstractNode.getUuid()))
 				.forEach(abstractNode -> {
 						childrensMap.get(node.getUuid()).add(abstractNode);
@@ -775,22 +775,13 @@ AnonymousPNodeAction(nodeType,header,statements) ::= <<new STNode.NodeAction<~no
 
 PNodeImpl(packageName,name,nodeName,fields,canvasName,initText,uuid,constructorStatements,methods,outgoingReferences,rightClickStatements,anonymousRightClickActions,onRightClick,onKeyPressed,onLeftClick,onPropertyChange,actions) ::= <<package ~packageName~;
 
-import com.generator.util.SwingUtil;
-import nextgen.st.domain.STParameterKey;
-import nextgen.st.model.STArgumentKV;
-import nextgen.st.model.STValue;
-import nextgen.st.model.STValueType;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import java.util.*;
+import java.util.stream.Stream;
 
 public class ~name~ extends ~nodeName~ {
 
@@ -825,7 +816,7 @@ public class ~name~ extends ~nodeName~ {
 ~if(onKeyPressed)~
 		switch (event.getKeyCode()) {
 			~onKeyPressed:{it|
-case VK_~it.key~:
+case java.awt.event.KeyEvent.VK_~it.key~:
 	new ~it.name~(this, canvas, event).actionPerformed(null);
 	return;
 };separator="\n"~

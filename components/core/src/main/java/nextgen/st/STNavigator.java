@@ -727,10 +727,7 @@ public class STNavigator extends JPanel {
                             actions.add(newAction("New " + stEnumValue.getName() + " instance", actionEvent -> {
                                 findCanvas(tabbedPane).ifPresent(stCanvas -> {
                                     SwingUtilities.invokeLater(() -> {
-                                        db.doInTransaction(transaction -> {
-                                            final STValue stValue = db.newSTValue(stEnumValue);
-                                            stCanvas.addNode(new STValueNode(stCanvas, stValue, stRenderer));
-                                        });
+                                        db.doInTransaction(transaction -> stCanvas.addNode(new STValueNode(stCanvas, db.newSTValue(stEnumValue), stRenderer)));
                                         tabbedPane.setSelectedComponent(stCanvas);
                                         stCanvas.requestFocusInWindow();
                                     });
@@ -1043,11 +1040,7 @@ public class STNavigator extends JPanel {
                                 getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> {
                                     findCanvas(tabbedPane).ifPresent(stCanvas -> {
                                         SwingUtilities.invokeLater(() -> {
-                                            db.doInTransaction(transaction -> {
-                                                final STModel entityModel = db.newSTModel(getModel());
-                                                stCanvas.addNode(new STModelNode(stCanvas, getModel(), entityModel, stRenderer));
-
-                                            });
+                                            db.doInTransaction(transaction -> stCanvas.addNode(new STModelNode(stCanvas, getModel(), db.newSTModel(getModel()), stRenderer)));
                                             tabbedPane.setSelectedComponent(stCanvas);
                                             stCanvas.requestFocusInWindow();
                                         });

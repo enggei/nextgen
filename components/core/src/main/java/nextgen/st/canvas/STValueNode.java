@@ -1,90 +1,89 @@
 package nextgen.st.canvas;
 
-import nextgen.st.model.STValueType;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Stream;
-
 
 public class STValueNode extends STNode {
 
-    nextgen.st.model.STValue stValue;
-    nextgen.st.STRenderer stRenderer;
+	nextgen.st.model.STValue stValue;
+	nextgen.st.STRenderer stRenderer;
 
-    public STValueNode(STCanvas canvas, nextgen.st.model.STValue stValue, nextgen.st.STRenderer stRenderer) {
-        super(canvas, stRenderer.render(stValue), java.util.UUID.fromString(stValue.getUuid()));
-        this.stValue = stValue;
-        this.stRenderer = stRenderer;
-    }
-
-    @Override
-    public Stream<UUID> getOutgoingReferences() {
-        return stValue.getType() == STValueType.STMODEL ? Stream.of(UUID.fromString(stValue.getStModel().getUuid())) : Stream.empty();
-    }
-
-    @Override
-    protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
-        pop.add(new ToClipboard(this, canvas, event));
-        pop.add(new EditSTValue(this, canvas, event));
-        pop.addSeparator();
-        super.onNodeRightClick(event, pop);
-    }
-
-    @Override
-    protected void onNodeKeyPressed(PInputEvent event) {
-        super.onNodeKeyPressed(event);
-    }
-
-    @Override
-    protected void onNodeLeftClick(PInputEvent event) {
-        super.onNodeLeftClick(event);
-    }
-
-    private static final class ToClipboard extends NodeAction<STValueNode> {
+	public STValueNode(STCanvas canvas, nextgen.st.model.STValue stValue, nextgen.st.STRenderer stRenderer) {
+		super(canvas, stRenderer.render(stValue), java.util.UUID.fromString(stValue.getUuid()));
+		this.stValue = stValue;
+		this.stRenderer = stRenderer;
+	}
 
 
-        ToClipboard(STValueNode node, STCanvas canvas, PInputEvent event) {
-            super("To Clipboard", node, canvas, event);
-        }
+	@Override
+	public Stream<UUID> getOutgoingReferences() {
+		return stValue.getType() == nextgen.st.model.STValueType.STMODEL ? java.util.stream.Stream.of(UUID.fromString(stValue.getStModel().getUuid())) : java.util.stream.Stream.empty();
+	}
 
-        @Override
-        void actionPerformed(STValueNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-            canvas.modelDb.doInTransaction(tx -> {
-                com.generator.util.SwingUtil.toClipboard(node.stRenderer.render(node.stValue));
-            }, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable));
-        }
-    }
+	@Override
+	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
+		pop.add(new ToClipboard(this, canvas, event));
+		pop.add(new EditSTValue(this, canvas, event));
+		pop.addSeparator();
+		super.onNodeRightClick(event, pop);
+	}
 
-    private static final class EditSTValue extends NodeAction<STValueNode> {
+	@Override
+	protected void onNodeKeyPressed(PInputEvent event) {
+		super.onNodeKeyPressed(event);
+	}
+
+	@Override
+	protected void onNodeLeftClick(PInputEvent event) {
+		super.onNodeLeftClick(event);
+	}
+
+	private static final class ToClipboard extends NodeAction<STValueNode> {
 
 
-        EditSTValue(STValueNode node, STCanvas canvas, PInputEvent event) {
-            super("Edit", node, canvas, event);
-        }
+		ToClipboard(STValueNode node, STCanvas canvas, PInputEvent event) {
+			super("To Clipboard", node, canvas, event);
+		}
 
-        @Override
-        void actionPerformed(STValueNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-            final JTextArea textArea = new JTextArea(15, 40);
-            canvas.modelDb.doInTransaction(tx -> {
-                textArea.setText(node.stValue.getValue().toString());
-            }, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable));
-            final JPanel inputPanel = new JPanel(new BorderLayout());
-            inputPanel.add(textArea, BorderLayout.CENTER);
-            inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-            com.generator.util.SwingUtil.showDialog(inputPanel, canvas, "Edit", new com.generator.util.SwingUtil.ConfirmAction() {
-                @Override
-                public void verifyAndCommit() throws Exception {
-                    final String s = textArea.getText().trim();
-                    javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(tx -> {
-                        node.stValue.setValue(s);
-                        node.setText(node.stValue.getValue().toString());
-                    }, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable)));
-                }
-            });
-        }
-    }
+		@Override
+		void actionPerformed(STValueNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+			canvas.modelDb.doInTransaction(tx -> {
+				com.generator.util.SwingUtil.toClipboard(node.stRenderer.render(node.stValue));
+			}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable));
+		}
+	}
+
+	private static final class EditSTValue extends NodeAction<STValueNode> {
+
+
+		EditSTValue(STValueNode node, STCanvas canvas, PInputEvent event) {
+			super("Edit", node, canvas, event);
+		}
+
+		@Override
+		void actionPerformed(STValueNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+			final JTextArea textArea = new JTextArea(15,40);
+			canvas.modelDb.doInTransaction(tx -> {
+				textArea.setText(node.stValue.getValue().toString());
+			}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable));
+			final JPanel inputPanel = new JPanel(new BorderLayout());
+			inputPanel.add(textArea, BorderLayout.CENTER);
+			inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
+			com.generator.util.SwingUtil.showDialog(inputPanel, canvas, "Edit", new com.generator.util.SwingUtil.ConfirmAction() {
+				@Override
+				public void verifyAndCommit() throws Exception {
+					final String s = textArea.getText().trim();
+					javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(tx -> {
+						node.stValue.setValue(s);
+						node.setText(node.stValue.getValue().toString());
+					}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable)));
+				}
+			});
+		}
+	}
 }

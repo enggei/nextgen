@@ -1,19 +1,12 @@
 package nextgen.st.canvas;
 
-import com.generator.util.SwingUtil;
-import nextgen.st.domain.STParameterKey;
-import nextgen.st.model.STArgumentKV;
-import nextgen.st.model.STValue;
-import nextgen.st.model.STValueType;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 
 public class STFileNode extends STNode {
 
@@ -28,11 +21,6 @@ public class STFileNode extends STNode {
 		this.stRenderer = stRenderer;
 	}
 
-	@Override
-	public java.util.stream.Stream<UUID> getOutgoingReferences() {
-		return java.util.stream.Stream.of(UUID.fromString(stModel.getUuid()));
-	}
-
 	public void setSTModel(nextgen.st.model.STModel stModel) {
 		javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(tx -> {
 			this.stModel = stModel;
@@ -42,12 +30,17 @@ public class STFileNode extends STNode {
 	}
 
 	@Override
+	public Stream<UUID> getOutgoingReferences() {
+		return java.util.stream.Stream.of(UUID.fromString(stModel.getUuid()));
+	}
+
+	@Override
 	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
 		final java.util.List<STModelNode> stModelNodes = canvas.getSelectedNodes()
 				.filter(stNode -> stNode instanceof STModelNode)
 				.filter(stNode -> !stNode.getUuid().equals(getUuid()))
 				.map(stNode -> (STModelNode) stNode)
-				.collect(Collectors.toList());
+				.collect(java.util.stream.Collectors.toList());
 		javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(tx -> {
 			final JMenu sourceMenu = new JMenu("STModels");
 			stModelNodes.forEach(stNode -> {

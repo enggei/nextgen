@@ -21,10 +21,6 @@ import static java.awt.event.KeyEvent.*;
 
 public class STNode extends PNode implements PropertyChangeListener {
 
-public Stream<UUID> getOutgoingReferences() {
-	return Stream.empty();
-}
-
 	protected enum Attributes {
 		_defaultColor, _selectedColor, _highlightedColor, _uuid, _text, _selected, _highlight
 	}
@@ -34,8 +30,8 @@ public Stream<UUID> getOutgoingReferences() {
 
 	private PPath rectangle;
 
-	private final Set<UUID> outgoing = new LinkedHashSet<>();
-	private final Set<UUID> incoming = new LinkedHashSet<>();
+	protected final Set<UUID> outgoing = new LinkedHashSet<>();
+	protected final Set<UUID> incoming = new LinkedHashSet<>();
 
 	public STNode(STCanvas canvas, String text) {
 		this(canvas, text, UUID.randomUUID());
@@ -56,6 +52,10 @@ public Stream<UUID> getOutgoingReferences() {
 		addInputEventListener(nodeInputEventHandler);
 
 		this.addChild(this.child);
+	}
+
+	public Stream<UUID> getOutgoingReferences() {
+		return Stream.empty();
 	}
 
 	@Override
@@ -286,19 +286,23 @@ public Stream<UUID> getOutgoingReferences() {
 		}
 
 		abstract void actionPerformed(N node, STCanvas canvas, PInputEvent event, ActionEvent e);
+
+		protected void doLaterInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer){ 
+			javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(consumer, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable)));
+		}
 	}
 
-	private static final class LayoutTreeAction extends NodeAction<STNode> {
+	protected static final class LayoutTreeAction extends NodeAction<STNode> {
 
 		private final Map<UUID, STNode> parentsMap = new LinkedHashMap<>();
 		private final Map<UUID, java.util.List<STNode>> childrensMap = new LinkedHashMap<>();
 		private final org.abego.treelayout.util.DefaultConfiguration<STNode> configuration;
 
-		private LayoutTreeAction(STNode root, STCanvas canvas, PInputEvent event) {
+		protected LayoutTreeAction(STNode root, STCanvas canvas, PInputEvent event) {
 			this(root, canvas, event, org.abego.treelayout.Configuration.Location.Left, org.abego.treelayout.Configuration.AlignmentInLevel.Center);
 		}
 
-		private LayoutTreeAction(STNode root, STCanvas canvas, PInputEvent event, org.abego.treelayout.Configuration.Location location, org.abego.treelayout.Configuration.AlignmentInLevel alignmentInLevel) {
+		protected LayoutTreeAction(STNode root, STCanvas canvas, PInputEvent event, org.abego.treelayout.Configuration.Location location, org.abego.treelayout.Configuration.AlignmentInLevel alignmentInLevel) {
 			super("Layout Tree", root, canvas, event);
 			this.configuration = new org.abego.treelayout.util.DefaultConfiguration<>(100, 5, location, alignmentInLevel);
 		}
@@ -363,7 +367,8 @@ public Stream<UUID> getOutgoingReferences() {
 			childrensMap.put(node.getUuid(), new ArrayList<>());
 
 			node.outgoing()
-					.map(aLong -> canvas.relationMap.get(aLong).getDst())
+					.filter(canvas.relationMap::containsKey)
+					.map(uuid -> canvas.relationMap.get(uuid).getDst())
 					.filter(abstractNode -> !childrensMap.containsKey(abstractNode.getUuid()))
 					.forEach(abstractNode -> {
 							childrensMap.get(node.getUuid()).add(abstractNode);

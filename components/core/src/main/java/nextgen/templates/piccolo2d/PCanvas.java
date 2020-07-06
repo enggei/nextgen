@@ -9,6 +9,7 @@ public class PCanvas {
 	private String _name;
 	private String _nodeName;
 	private String _relationName;
+	private java.util.List<Object> _canvasActionmethods = new java.util.ArrayList<>();
 	private java.util.List<Object> _actions = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _onRightClick = new java.util.ArrayList<>();
@@ -29,6 +30,7 @@ public class PCanvas {
 		st.add("name", _name);
 		st.add("nodeName", _nodeName);
 		st.add("relationName", _relationName);
+		for (Object o : _canvasActionmethods) st.add("canvasActionmethods", o);
 		for (Object o : _actions) st.add("actions", o);
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
 		for (java.util.Map<String, Object> map : _onRightClick) st.addAggr("onRightClick.{name}", map.get("name"));
@@ -122,6 +124,35 @@ public class PCanvas {
 	public PCanvas removeRelationName() {
 		this._relationName = null;
 		return this;
+	} 
+
+	public PCanvas addCanvasActionmethods(Object value) {
+		this._canvasActionmethods.add(value);
+		return this;
+	}
+
+	public PCanvas setCanvasActionmethods(Object[] value) {
+		this._canvasActionmethods.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public PCanvas setCanvasActionmethods(java.util.Collection<Object> values) {
+		this._canvasActionmethods.addAll(values);
+		return this;
+	}
+
+	public PCanvas removeCanvasActionmethods(Object value) {
+		this._canvasActionmethods.remove(value);
+		return this;
+	}
+
+	public PCanvas removeCanvasActionmethods(int index) {
+		this._canvasActionmethods.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getCanvasActionmethods() {
+		return this._canvasActionmethods;
 	} 
 
 	public PCanvas addActions(Object value) {
@@ -293,7 +324,7 @@ public class PCanvas {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PCanvas(packageName,name,nodeName,relationName,fields,onRightClick,onKeyPressed,actions) ::= <<package ~packageName~;\n" + 
+	static final String st = "PCanvas(packageName,name,nodeName,relationName,fields,onRightClick,onKeyPressed,canvasActionmethods,actions) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import org.piccolo2d.PCamera;\n" + 
 				"import org.piccolo2d.PCanvas;\n" + 
@@ -398,26 +429,21 @@ public class PCanvas {
 				"		}\n" + 
 				"		if (offset != null) node.setOffset(offset);\n" + 
 				"		\n" + 
-				"		SwingUtilities.invokeLater(() -> {\n" + 
+				"		node.select();\n" + 
+				"		nodeMap.put(node.getUuid(), node);\n" + 
+				"		nodeLayer.addChild(node);\n" + 
 				"		\n" + 
-				"			node.select();\n" + 
-				"			nodeMap.put(node.getUuid(), node);\n" + 
-				"			nodeLayer.addChild(node);\n" + 
-				"			\n" + 
-				"			modelDb.doInTransaction(transaction -> {\n" + 
-				"				\n" + 
-				"				node.getOutgoingReferences().forEach(uuid -> {\n" + 
-				"					if (nodeMap.containsKey(uuid))\n" + 
-				"						addRelation(new STRelation(STCanvas.this, node, nodeMap.get(uuid), \"\"));\n" + 
-				"					});\n" + 
-				"				\n" + 
-				"				getAllNodes()\n" + 
-				"						.filter(stNode -> !stNode.getUuid().equals(node.getUuid()))\n" + 
-				"						.forEach(stNode -> stNode.getOutgoingReferences()\n" + 
-				"						.filter(uuid -> uuid.equals(node.getUuid()))\n" + 
-				"						.forEach(uuid -> addRelation(new STRelation(STCanvas.this, stNode, node, \"\"))));\n" + 
+				"		node.getOutgoingReferences().forEach(uuid -> {\n" + 
+				"			if (nodeMap.containsKey(uuid))\n" + 
+				"				addRelation(new STRelation(STCanvas.this, node, nodeMap.get(uuid), \"\"));\n" + 
 				"			});\n" + 
-				"		});\n" + 
+				"		\n" + 
+				"		getAllNodes()\n" + 
+				"				.filter(stNode -> !stNode.getUuid().equals(node.getUuid()))\n" + 
+				"				.forEach(stNode -> stNode.getOutgoingReferences()\n" + 
+				"				.filter(uuid -> uuid.equals(node.getUuid()))\n" + 
+				"				.forEach(uuid -> addRelation(new STRelation(STCanvas.this, stNode, node, \"\"))));\n" + 
+				"	\n" + 
 				"		\n" + 
 				"		return node;\n" + 
 				"	}\n" + 
@@ -490,6 +516,8 @@ public class PCanvas {
 				"		}\n" + 
 				"	\n" + 
 				"		abstract void actionPerformed(~name~ canvas, PInputEvent event, ActionEvent e);\n" + 
+				"\n" + 
+				"		~canvasActionmethods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"	}\n" + 
 				"	\n" + 
 				"	~actions:{it|~it~};separator=\"\\n\\n\"~\n" + 
