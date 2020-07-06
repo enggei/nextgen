@@ -6,12 +6,16 @@ public class KotlinST {
 	"eom() ::= \"}\"\n" +
 	"gt() ::= \">\"\n" +
 	ArrayEqualsExpression.st + "\n" + 
+	AssertNotNullExpression.st + "\n" + 
 	AssignExpression.st + "\n" + 
 	CastExpression.st + "\n" + 
 	ConstructorCallExpression.st + "\n" + 
 	EqualsExpression.st + "\n" + 
 	FunctionCallExpression.st + "\n" + 
+	GroupedExpression.st + "\n" + 
+	IfExpression.st + "\n" + 
 	LiteralExpression.st + "\n" + 
+	LogicalExpression.st + "\n" + 
 	NullExpression.st + "\n" + 
 	ObjectExpression.st + "\n" + 
 	PairExpression.st + "\n" + 
@@ -40,6 +44,7 @@ public class KotlinST {
 	PropertyDeclaration.st + "\n" + 
 	KotlinStringTemplateExpression.st + "\n" + 
 	KotlinStringTemplateSingleValue.st + "\n" + 
+	IfStatement.st + "\n" + 
 	ImportStatement.st + "\n" + 
 	ReturnStatement.st + "\n" + 
 	TodoStatement.st + "\n" + 
@@ -111,6 +116,10 @@ public class KotlinST {
 		return new ArrayEqualsExpression(stGroup);
 	} 
 
+	public static AssertNotNullExpression newAssertNotNullExpression() {
+		return new AssertNotNullExpression(stGroup);
+	} 
+
 	public static AssignExpression newAssignExpression() {
 		return new AssignExpression(stGroup);
 	} 
@@ -131,8 +140,20 @@ public class KotlinST {
 		return new FunctionCallExpression(stGroup);
 	} 
 
+	public static GroupedExpression newGroupedExpression() {
+		return new GroupedExpression(stGroup);
+	} 
+
+	public static IfExpression newIfExpression() {
+		return new IfExpression(stGroup);
+	} 
+
 	public static LiteralExpression newLiteralExpression() {
 		return new LiteralExpression(stGroup);
+	} 
+
+	public static LogicalExpression newLogicalExpression() {
+		return new LogicalExpression(stGroup);
 	} 
 
 	public static NullExpression newNullExpression() {
@@ -245,6 +266,10 @@ public class KotlinST {
 
 	public static KotlinStringTemplateSingleValue newKotlinStringTemplateSingleValue() {
 		return new KotlinStringTemplateSingleValue(stGroup);
+	} 
+
+	public static IfStatement newIfStatement() {
+		return new IfStatement(stGroup);
 	} 
 
 	public static ImportStatement newImportStatement() {

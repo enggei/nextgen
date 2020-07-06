@@ -232,4 +232,41 @@ public class KotlinTest {
 
         System.out.println(rawStringTest);
     }
+
+    @Test
+    public void testIfStatement() {
+
+        IfStatement ifStatement = newIfStatement()
+                .setLogicalExpression(
+                        newLogicalExpression(
+                                newLiteralExpression("a"),
+                                LogicalOperator.and,
+                                newLiteralExpression("b")
+                        )
+                ).setStatements(
+                        singletonList(newReturnStatement().setExpression(newNullExpression()))
+                );
+
+        System.out.println(ifStatement);
+    }
+
+    @Test
+    public void testIfExpression() {
+
+        IfExpression ifExpression = newIfExpression()
+                .setLogicalExpression(
+                        newLogicalExpression(
+                                newLiteralExpression("a"),
+                                LogicalOperator.and,
+                                newLiteralExpression("b")
+                        )
+                ).setWhenFalse(newStringValueExpression("FALSE"))
+                .setWhenTrue(newStringValueExpression("TRUE"));
+
+        VarDeclarationStatement varDeclarationStatement = newVarDeclarationStatement()
+                .setName("c")
+                .setInitializer(ifExpression);
+
+        System.out.println(varDeclarationStatement);
+    }
 }

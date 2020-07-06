@@ -24,7 +24,7 @@ LiteralExpression(literal) ::= <<~literal~  >>
 
 StringValueExpression(literal) ::= <<"~literal~"  >>
 
-AssignExpression(varName,expression) ::= <<~varName~ = ~expression~  >>
+AssignExpression(varName,operator,expression) ::= <<~varName~ ~operator~= ~expression~  >>
 
 ObjectExpression(extends,fields,members) ::= <<object~if(extends)~ : ~extends:{it|~it~};separator=", "~~endif~ {
 	~fields:{it|~it~};separator="\n"~
@@ -37,6 +37,14 @@ ReferenceExpression(scope,name,property) ::= <<~if(scope)~~scope~.~endif~~name~:
 PropertyAccessorExpression(object,property) ::= <<~object~.~property~  >>
 
 RawStringExpression(rawString) ::= <<"""~rawString~"""  >>
+
+AssertNotNullExpression(expression) ::= <<!!~expression~  >>
+
+GroupedExpression(expression) ::= <<(~expression~)  >>
+
+LogicalExpression(lhs,operator,rhs) ::= <<~lhs~ ~operator~ ~rhs~  >>
+
+IfExpression(logicalExpression,whenTrue,whenFalse) ::= <<if(~logicalExpression~) ~whenTrue~ else ~whenFalse~  >>
 
 Grammar() ::= << >>
 
@@ -126,6 +134,10 @@ TodoStatement(reason) ::= <<TODO("~reason~")  >>
 ReturnStatement(expression) ::= <<return ~expression~  >>
 
 VarDeclarationStatement(isMutable,name,type,initializer) ::= <<~if(isMutable)~var ~else~val ~endif~~name~~if(type)~: ~type~~endif~~if(initializer)~ = ~initializer~~endif~  >>
+
+IfStatement(logicalExpression,statements) ::= <<if(~logicalExpression~) {
+	~statements:{it|~it~};separator="\n"~
+}  >>
 
 KotlinStringTemplates() ::= << >>
 

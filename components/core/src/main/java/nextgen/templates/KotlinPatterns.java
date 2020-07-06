@@ -196,4 +196,11 @@ public class KotlinPatterns extends KotlinST {
    public static KotlinStringTemplateExpression newKotlinStringTemplateExpression(Expression expression) {
        return KotlinST.newKotlinStringTemplateExpression().setExpression(expression);
    }
+
+   public static LogicalExpression newLogicalExpression(Expression lhs, LogicalOperator operator, Expression rhs) {
+       return KotlinST.newLogicalExpression()
+               .setLhs(lhs)
+               .setOperator(operator)
+               .setRhs(rhs);
+   }
 }

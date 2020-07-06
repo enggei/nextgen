@@ -6,6 +6,7 @@ public class AssignExpression implements Expression {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Expression _varName;
+	private AssignmentOperator _operator;
 	private Expression _expression;
 
 	AssignExpression(org.stringtemplate.v4.STGroup stGroup) {
@@ -20,6 +21,7 @@ public class AssignExpression implements Expression {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("AssignExpression");
 		st.add("varName", _varName);
+		st.add("operator", _operator);
 		st.add("expression", _expression);
 		return st.render().trim();
 	}
@@ -43,6 +45,28 @@ public class AssignExpression implements Expression {
 
 	public AssignExpression removeVarName() {
 		this._varName = null;
+		return this;
+	} 
+
+	public AssignExpression setOperator(AssignmentOperator value) {
+		this._operator = value;
+		return this;
+	}
+
+	public AssignmentOperator getOperator() {
+		return this._operator;
+	}
+
+	public AssignmentOperator getOperator(AssignmentOperator defaultValue) {
+		return this._operator == null ? defaultValue : this._operator;
+	}
+
+	public boolean hasOperator() {
+		return this._operator != null;
+	}
+
+	public AssignExpression removeOperator() {
+		this._operator = null;
 		return this;
 	} 
 
@@ -83,5 +107,5 @@ public class AssignExpression implements Expression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AssignExpression(varName,expression) ::= <<~varName~ = ~expression~ >>";
+	static final String st = "AssignExpression(varName,operator,expression) ::= <<~varName~ ~operator~= ~expression~ >>";
 }  

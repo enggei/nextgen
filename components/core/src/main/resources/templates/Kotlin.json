@@ -478,6 +478,22 @@
           "type" : "SINGLE",
           "argumentType" : "Expression"
         } ]
+      }, {
+        "uuid" : "3d3a2974-9820-4dc6-baa6-96be65b6bdb6",
+        "name" : "IfStatement",
+        "text" : "if(~logicalExpression~) {\n\t~statements:{it|~it~};separator=\"\\n\"~\n} ",
+        "implements" : [ "Statement" ],
+        "parameters" : [ {
+          "uuid" : "49e0747b-53c1-4f3d-ab5d-8831e61419ec",
+          "name" : "logicalExpression",
+          "type" : "SINGLE",
+          "argumentType" : "LogicalExpression"
+        }, {
+          "uuid" : "f5f88ea3-0a6d-40ce-8e21-a9254cb69d77",
+          "name" : "statements",
+          "type" : "LIST",
+          "argumentType" : "Statement"
+        } ]
       } ]
     }, {
       "uuid" : "53692429-b08c-4ef5-a9b7-04186e79e6ee",
@@ -960,13 +976,18 @@
     }, {
       "uuid" : "e2a37f79-dc3e-4d3a-b31a-089b7f5442ba",
       "name" : "AssignExpression",
-      "text" : "~varName~ = ~expression~ ",
+      "text" : "~varName~ ~operator~= ~expression~ ",
       "implements" : [ "Expression" ],
       "parameters" : [ {
         "uuid" : "c9f4cb4f-be1c-41ae-813b-738fb71f21fb",
         "name" : "varName",
         "type" : "SINGLE",
         "argumentType" : "Expression"
+      }, {
+        "uuid" : "86f9b514-6c35-46dc-b9c9-dfd29a644dbe",
+        "name" : "operator",
+        "type" : "SINGLE",
+        "argumentType" : "AssignmentOperator"
       }, {
         "uuid" : "8064f1e7-302e-4b31-b3bc-497634f0e2b6",
         "name" : "expression",
@@ -1042,6 +1063,70 @@
         "type" : "SINGLE",
         "argumentType" : "Object"
       } ]
+    }, {
+      "uuid" : "3159502c-45d0-4e58-9694-8ed3eed8149b",
+      "name" : "AssertNotNullExpression",
+      "text" : "!!~expression~ ",
+      "implements" : [ "Expression" ],
+      "parameters" : [ {
+        "uuid" : "ae40ee7c-f087-4491-b726-884dd0b2dff0",
+        "name" : "expression",
+        "type" : "SINGLE",
+        "argumentType" : "Expression"
+      } ]
+    }, {
+      "uuid" : "506958d5-a17b-49ac-b595-483e4c7df3b0",
+      "name" : "GroupedExpression",
+      "text" : "(~expression~) ",
+      "implements" : [ "Expression" ],
+      "parameters" : [ {
+        "uuid" : "cececb2a-1557-4048-a170-15eb653ee0bc",
+        "name" : "expression",
+        "type" : "SINGLE",
+        "argumentType" : "Expression"
+      } ]
+    }, {
+      "uuid" : "d0b80e7d-92aa-480e-a25c-7cd9a5bf3553",
+      "name" : "LogicalExpression",
+      "text" : "~lhs~ ~operator~ ~rhs~ ",
+      "implements" : [ "Expression" ],
+      "parameters" : [ {
+        "uuid" : "4506c3f1-6126-47b0-9386-fccd0db62736",
+        "name" : "lhs",
+        "type" : "SINGLE",
+        "argumentType" : "Expression"
+      }, {
+        "uuid" : "4fc1ae3d-3fe4-4e0b-b215-c099cdb7c032",
+        "name" : "operator",
+        "type" : "SINGLE",
+        "argumentType" : "LogicalOperator"
+      }, {
+        "uuid" : "64edeca1-4bcb-495f-9faa-bc2e0caef448",
+        "name" : "rhs",
+        "type" : "SINGLE",
+        "argumentType" : "Expression"
+      } ]
+    }, {
+      "uuid" : "60539531-37f6-446d-b470-2514b3785c64",
+      "name" : "IfExpression",
+      "text" : "if(~logicalExpression~) ~whenTrue~ else ~whenFalse~ ",
+      "implements" : [ "Expression" ],
+      "parameters" : [ {
+        "uuid" : "d30ca385-8d13-498a-a3db-bdf9a7fa36d6",
+        "name" : "logicalExpression",
+        "type" : "SINGLE",
+        "argumentType" : "LogicalExpression"
+      }, {
+        "uuid" : "8ef23b31-0eaa-43d6-9ada-52ff139a78b7",
+        "name" : "whenTrue",
+        "type" : "SINGLE",
+        "argumentType" : "Expression"
+      }, {
+        "uuid" : "e47cdd33-2738-4859-8907-e1795bb1e082",
+        "name" : "whenFalse",
+        "type" : "SINGLE",
+        "argumentType" : "Expression"
+      } ]
     } ]
   }, {
     "uuid" : "7f297955-618e-40d3-a441-920c4f5ec56e",
@@ -1095,5 +1180,142 @@
     "uuid" : "572adfcc-0062-4005-8ce0-123bba76d679",
     "name" : "KotlinStringTemplate"
   } ],
-  "icon" : "language-kotlin"
+  "icon" : "language-kotlin",
+  "enums" : [ {
+    "uuid" : "203eba8c-0796-4a99-b258-e0b57d9c8c1b",
+    "name" : "AssignmentOperator",
+    "values" : [ {
+      "uuid" : "2c575142-cf1c-4227-bae9-d5506c2413fa",
+      "name" : "assign",
+      "lexical" : "="
+    }, {
+      "uuid" : "c8ffa89d-73cb-4fe0-8145-3faff6044f74",
+      "name" : "plusAssign",
+      "lexical" : "+="
+    }, {
+      "uuid" : "8324e100-f8f9-4fb3-9b34-df412f244d2d",
+      "name" : "minusAssign",
+      "lexical" : "-="
+    }, {
+      "uuid" : "971f918f-b8eb-46f9-ac80-0ed4a98f914a",
+      "name" : "timesAssign",
+      "lexical" : "*="
+    }, {
+      "uuid" : "77170349-0935-4e58-9972-be10eaf56035",
+      "name" : "divAssign",
+      "lexical" : "/="
+    }, {
+      "uuid" : "17f1ae51-32f3-4088-985f-ac68b04cd9b6",
+      "name" : "remAssign",
+      "lexical" : "%="
+    } ]
+  }, {
+    "uuid" : "1f12ec51-1fbe-4c90-b223-c90d04db17c8",
+    "name" : "UnaryPrefixOperator",
+    "values" : [ {
+      "uuid" : "0c2013e5-895c-44b9-a959-a00fd73c69e6",
+      "name" : "unaryPlus",
+      "lexical" : "+"
+    }, {
+      "uuid" : "5964b20a-68f6-4551-b421-ea463de26192",
+      "name" : "unaryMinus",
+      "lexical" : "-"
+    }, {
+      "uuid" : "0fcad173-c849-4066-a290-eddb9eeb65cf",
+      "name" : "not",
+      "lexical" : "!"
+    } ]
+  }, {
+    "uuid" : "00ea247d-d616-4f21-baa2-3ed03735cb8c",
+    "name" : "IncDecOperator",
+    "values" : [ {
+      "uuid" : "1b1612cf-656a-46c3-a09c-6156eede348d",
+      "name" : "inc",
+      "lexical" : "++"
+    }, {
+      "uuid" : "aa5f25d4-e11d-44fd-ab8b-e9f05d8a58cc",
+      "name" : "dec",
+      "lexical" : "--"
+    } ]
+  }, {
+    "uuid" : "0a834f85-4c1d-4f04-b59d-7b0176e0e758",
+    "name" : "ArithmeticOperator",
+    "values" : [ {
+      "uuid" : "2e2a462b-4945-4c25-acfe-5dd952afd3a9",
+      "name" : "plus",
+      "lexical" : "+"
+    }, {
+      "uuid" : "81e72921-38d2-45a1-b621-5f8678895dee",
+      "name" : "minus",
+      "lexical" : "-"
+    }, {
+      "uuid" : "dfef5273-8c6d-4f68-8936-e38558fd2324",
+      "name" : "times",
+      "lexical" : "*"
+    }, {
+      "uuid" : "5c40ce47-77cc-4803-a7a9-d5c2a1e03be4",
+      "name" : "div",
+      "lexical" : "/"
+    }, {
+      "uuid" : "1b619680-303d-4a91-9d12-0c6c1e98955b",
+      "name" : "rem",
+      "lexical" : "%"
+    }, {
+      "uuid" : "fd091377-9a0d-48cb-a450-4f82ae77adb2",
+      "name" : "rangeTo",
+      "lexical" : ".."
+    } ]
+  }, {
+    "uuid" : "8da3aa41-749a-41d3-ada8-4e00906e6687",
+    "name" : "ComparisonOperator",
+    "values" : [ {
+      "uuid" : "bedf5737-8a9b-4b4a-850c-4390ee88c431",
+      "name" : "equals",
+      "lexical" : "=="
+    }, {
+      "uuid" : "c091399d-2a33-453c-a6b7-99bd2f0414cd",
+      "name" : "notEquals",
+      "lexical" : "!="
+    }, {
+      "uuid" : "5af83c66-2c35-4422-b811-185819681914",
+      "name" : "gt",
+      "lexical" : ">"
+    }, {
+      "uuid" : "f3bc8594-2d41-4cf9-80b0-966b4848f599",
+      "name" : "lt",
+      "lexical" : "<"
+    }, {
+      "uuid" : "b066af9e-8c2e-4512-b871-71059eda0ca3",
+      "name" : "gte",
+      "lexical" : ">="
+    }, {
+      "uuid" : "54f2ba57-01ed-40da-a531-dc39fb3ebcc3",
+      "name" : "lte",
+      "lexical" : "<="
+    }, {
+      "uuid" : "20a53d4e-57b5-488b-88ce-b29f11bb9f1e",
+      "name" : "identity",
+      "lexical" : "==="
+    }, {
+      "uuid" : "dd347e5b-8dd3-4f32-9854-f204ac14b33c",
+      "name" : "notIdentity",
+      "lexical" : "!=="
+    } ]
+  }, {
+    "uuid" : "8be3d9ef-36b6-4bfd-9e2b-95facece1027",
+    "name" : "LogicalOperator",
+    "values" : [ {
+      "uuid" : "99a7c21c-ec1f-4d83-982e-3380cb2e99b2",
+      "name" : "and",
+      "lexical" : "&&"
+    }, {
+      "uuid" : "65abe8a5-f55a-42e6-8479-a87b5e68384c",
+      "name" : "or",
+      "lexical" : "||"
+    }, {
+      "uuid" : "2734fe77-bce5-4f26-969a-34791719598a",
+      "name" : "not",
+      "lexical" : "!"
+    } ]
+  } ]
 }

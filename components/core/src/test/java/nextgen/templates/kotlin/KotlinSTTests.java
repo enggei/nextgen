@@ -10,12 +10,16 @@ public class KotlinSTTests {
 	@org.junit.Test
 	public void testAll() {
 		testArrayEqualsExpression();
+		testAssertNotNullExpression();
 		testAssignExpression();
 		testCastExpression();
 		testConstructorCallExpression();
 		testEqualsExpression();
 		testFunctionCallExpression();
+		testGroupedExpression();
+		testIfExpression();
 		testLiteralExpression();
+		testLogicalExpression();
 		testNullExpression();
 		testObjectExpression();
 		testPairExpression();
@@ -44,6 +48,7 @@ public class KotlinSTTests {
 		testPropertyDeclaration();
 		testKotlinStringTemplateExpression();
 		testKotlinStringTemplateSingleValue();
+		testIfStatement();
 		testImportStatement();
 		testReturnStatement();
 		testTodoStatement();
@@ -84,6 +89,11 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
+	public void testAssertNotNullExpression() {
+		System.out.println("\n--- TEST AssertNotNullExpression:\n" + newAssertNotNullExpression());
+	} 
+
+	@org.junit.Test
 	public void testAssignExpression() {
 		System.out.println("\n--- TEST AssignExpression:\n" + newAssignExpression());
 	} 
@@ -109,8 +119,23 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
+	public void testGroupedExpression() {
+		System.out.println("\n--- TEST GroupedExpression:\n" + newGroupedExpression());
+	} 
+
+	@org.junit.Test
+	public void testIfExpression() {
+		System.out.println("\n--- TEST IfExpression:\n" + newIfExpression());
+	} 
+
+	@org.junit.Test
 	public void testLiteralExpression() {
 		System.out.println("\n--- TEST LiteralExpression:\n" + newLiteralExpression());
+	} 
+
+	@org.junit.Test
+	public void testLogicalExpression() {
+		System.out.println("\n--- TEST LogicalExpression:\n" + newLogicalExpression());
 	} 
 
 	@org.junit.Test
@@ -251,6 +276,11 @@ public class KotlinSTTests {
 	@org.junit.Test
 	public void testKotlinStringTemplateSingleValue() {
 		System.out.println("\n--- TEST KotlinStringTemplateSingleValue:\n" + newKotlinStringTemplateSingleValue());
+	} 
+
+	@org.junit.Test
+	public void testIfStatement() {
+		System.out.println("\n--- TEST IfStatement:\n" + newIfStatement());
 	} 
 
 	@org.junit.Test
