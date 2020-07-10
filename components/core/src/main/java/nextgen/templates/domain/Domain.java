@@ -13,6 +13,10 @@ public class Domain {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Domain");
@@ -109,7 +113,7 @@ public class Domain {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Domain(name,packageName,entities) ::= <<~name~\n" + 
-				"~packageName~\n" + 
+	static final String st = "Domain(name,packageName,entities) ::= <<Domain: ~name~ ~if(packageName)~(~packageName~)~endif~\n" + 
+				"Entities:\n" + 
 				"~entities:{it|~it~};separator=\"\\n\"~ >>";
-} 
+}  

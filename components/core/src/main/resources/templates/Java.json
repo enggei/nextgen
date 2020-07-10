@@ -132,7 +132,7 @@
     }, {
       "uuid" : "3b29b747-b53c-48f4-8217-ccb442b5a291",
       "name" : "Enum",
-      "text" : "package ~package~;\n\npublic enum ~name~ {\n\n\t~enumValues:{it|~it~};separator=\",\\n\"~\n}",
+      "text" : "package ~package~;\n\npublic enum ~name~ {\n\n\t~enumValues:{it|~it~};separator=\",\\n\"~\n} ",
       "parameters" : [ {
         "uuid" : "31acfb1b-f4e1-41cf-8d54-8ec9855c22c6",
         "name" : "package",
@@ -656,7 +656,7 @@
       }, {
         "uuid" : "4671b603-bc4e-4293-b408-56700d209efc",
         "name" : "MethodDeclaration",
-        "text" : "~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\r\n~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~if(type)~~if(typeParameters)~<~typeParameters:{it|~it~};separator=\", \"~> ~endif~~type~ ~else~void ~endif~~name~(~parameters:{it|~it~};separator=\", \"~)~if(thrownExceptions)~ throws ~thrownExceptions:{it|~it~};separator=\", \"~~endif~~if(isInterfaceDeclaration)~;~else~~if(blockStmt)~~blockStmt~~else~ { }~endif~~endif~",
+        "text" : "~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\n~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~if(type)~~if(typeParameters)~<~typeParameters:{it|~it~};separator=\", \"~>~endif~~type~ ~else~void ~endif~~name~(~parameters:{it|~it~};separator=\", \"~)~if(thrownExceptions)~ throws ~thrownExceptions:{it|~it~};separator=\", \"~~endif~~if(isInterfaceDeclaration)~;~else~~if(blockStmt)~~blockStmt~~else~ { }~endif~~endif~ ",
         "parameters" : [ {
           "uuid" : "4360326b-93de-4a1a-9267-459fb0e40b4b",
           "name" : "annotations",
@@ -1877,43 +1877,66 @@
   }, {
     "uuid" : "f1c854d3-1dac-4b91-b6c0-86f29a19cb0c",
     "name" : "ProjectTypes",
-    "text" : "Project ~projectName~\n\n~packages:{it|~it~};separator=\"\\n\"~ ",
+    "text" : "Project ~projectName~\n~root~\n~javaMain~\n~javaTest~\n~packages:{it|~it~};separator=\"\\n\"~\n\n~types:{it|~it.name~ ~it.variableName~};separator=\"\\n\"~\n~names:{it|~it~};separator=\"\\n\"~ ",
     "parameters" : [ {
       "uuid" : "f9a0f89c-1f68-4b86-95a5-41670f6141c6",
       "name" : "projectName",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "bf315912-83db-4eef-bf27-054c0048a2a5",
+      "uuid" : "521b06a6-9339-42f6-8ad8-bcb7e76b92f8",
+      "name" : "root",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "4603bd3a-280b-4534-80bd-750b043eb9de",
+      "name" : "javaMain",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "5d1b3222-8192-4026-aec3-e7bef91f4949",
+      "name" : "javaTest",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "3e22ffef-e29e-45c3-9681-8cb55362cde5",
       "name" : "packages",
       "type" : "LIST",
       "argumentType" : "Object"
-    } ],
-    "children" : [ {
-      "uuid" : "570ab6c2-8658-401f-afe9-0012739d9162",
-      "name" : "ProjectPackage",
-      "text" : "Package ~packageName~:\n\n\t~types:{it|~it~};separator=\"\\n\"~ ",
-      "parameters" : [ {
-        "uuid" : "686cf8f1-c743-4081-b45d-81108c8c2b58",
-        "name" : "packageName",
-        "type" : "SINGLE",
+    }, {
+      "uuid" : "0bd4a5f5-e249-482d-9547-d0c9d7a19e1d",
+      "name" : "types",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "3c7e224a-5e9c-4f7f-a018-53dc3f6bdd47",
+        "name" : "name",
         "argumentType" : "Object"
       }, {
-        "uuid" : "c70e85af-8abe-4f0c-a4ad-2ffd11043a83",
-        "name" : "types",
-        "type" : "LIST",
+        "uuid" : "dbc0851e-b82d-4c6a-a34f-1dbc6ea8febd",
+        "name" : "variableName",
         "argumentType" : "Object"
-      } ],
-      "children" : [ {
-        "uuid" : "dfcc8fa0-02ee-4070-a70f-5b4985c84424",
-        "name" : "ProjectType",
-        "text" : "Type ~typeName~ ",
-        "parameters" : [ {
-          "uuid" : "1f4055bf-810a-4268-b2b4-8ea1a8d2b1c5",
-          "name" : "typeName",
-          "type" : "SINGLE",
-          "argumentType" : "Object"
-        } ]
+      } ]
+    }, {
+      "uuid" : "09dc47a4-1e04-4492-baf7-afb4dfecb48a",
+      "name" : "names",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    } ],
+    "children" : [ ]
+  }, {
+    "uuid" : "f39b2eb2-1194-404a-a825-e643e0b02ef3",
+    "name" : "FunctionTypes",
+    "text" : "",
+    "children" : [ {
+      "uuid" : "0c7805a6-2e82-4bc1-a8d7-379ee13f5955",
+      "name" : "SupplierType",
+      "text" : "java.util.function.Supplier<~type~> ",
+      "parameters" : [ {
+        "uuid" : "4bfe9e0e-6aee-4b2d-bc7e-3f503fa7de2b",
+        "name" : "type",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       } ]
     } ]
   } ],

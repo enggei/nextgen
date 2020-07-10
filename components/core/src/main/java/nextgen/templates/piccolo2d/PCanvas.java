@@ -11,6 +11,7 @@ public class PCanvas {
 	private String _relationName;
 	private java.util.List<Object> _canvasActionmethods = new java.util.ArrayList<>();
 	private java.util.List<Object> _actions = new java.util.ArrayList<>();
+	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _onRightClick = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _onKeyPressed = new java.util.ArrayList<>();
@@ -32,6 +33,7 @@ public class PCanvas {
 		st.add("relationName", _relationName);
 		for (Object o : _canvasActionmethods) st.add("canvasActionmethods", o);
 		for (Object o : _actions) st.add("actions", o);
+		for (Object o : _methods) st.add("methods", o);
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
 		for (java.util.Map<String, Object> map : _onRightClick) st.addAggr("onRightClick.{name}", map.get("name"));
 		for (java.util.Map<String, Object> map : _onKeyPressed) st.addAggr("onKeyPressed.{key,name}", map.get("key"), map.get("name"));
@@ -184,6 +186,35 @@ public class PCanvas {
 		return this._actions;
 	} 
 
+	public PCanvas addMethods(Object value) {
+		this._methods.add(value);
+		return this;
+	}
+
+	public PCanvas setMethods(Object[] value) {
+		this._methods.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public PCanvas setMethods(java.util.Collection<Object> values) {
+		this._methods.addAll(values);
+		return this;
+	}
+
+	public PCanvas removeMethods(Object value) {
+		this._methods.remove(value);
+		return this;
+	}
+
+	public PCanvas removeMethods(int index) {
+		this._methods.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getMethods() {
+		return this._methods;
+	} 
+
 	public PCanvas addFields(Object _type, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("type", _type);
@@ -324,7 +355,7 @@ public class PCanvas {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PCanvas(packageName,name,nodeName,relationName,fields,onRightClick,onKeyPressed,canvasActionmethods,actions) ::= <<package ~packageName~;\n" + 
+	static final String st = "PCanvas(packageName,name,nodeName,relationName,fields,onRightClick,onKeyPressed,canvasActionmethods,actions,methods) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import org.piccolo2d.PCamera;\n" + 
 				"import org.piccolo2d.PCanvas;\n" + 
@@ -353,6 +384,8 @@ public class PCanvas {
 				"\n" + 
 				"public class ~name~ extends PCanvas implements PInputEventListener {\n" + 
 				"\n" + 
+				"	static boolean debug = true;\n" + 
+				"\n" + 
 				"	private final PLayer nodeLayer;\n" + 
 				"	private final PLayer relationLayer = new PLayer();\n" + 
 				"	\n" + 
@@ -365,7 +398,7 @@ public class PCanvas {
 				"	~fields:{it|~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
 				"	\n" + 
 				"	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=\",\"~) {\n" + 
-				"		this(~fields:{it|~it.name~};separator=\", \"~~if(fields)~, ~endif~Color.WHITE, new Dimension(1024, 768));\n" + 
+				"		this(~fields:{it|~it.name~};separator=\", \"~~if(fields)~, ~endif~Color.WHITE, new Dimension(1024, 1024));\n" + 
 				"	}\n" + 
 				"	\n" + 
 				"	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=\", \"~~if(fields)~, ~endif~Color background, Dimension preferredSize) {\n" + 
@@ -379,6 +412,8 @@ public class PCanvas {
 				"		addInputEventListener(new CanvasZoomHandler());\n" + 
 				"		addInputEventListener(canvasInputEventsHandler);\n" + 
 				"		~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
+				"\n" + 
+				"		//org.greenrobot.eventbus.EventBus.getDefault().register(this);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 
@@ -416,56 +451,83 @@ public class PCanvas {
 				"		return (Stream<R>) getAllRelations().filter(~relationName~::isSelected);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public <N extends ~nodeName~> N addNode(N node) {\n" + 
-				"		return addNode(node, getCenterPosition());\n" + 
+				"	public <N extends ~nodeName~> N addNode(String uuid, java.util.function.Supplier<N> supplier) {\n" + 
+				"		return addNode(java.util.UUID.fromString(uuid), supplier);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public <N extends ~nodeName~> N addNode(N node, Point2D offset) {\n" + 
+				"	public <N extends ~nodeName~> N addNode(N node) {\n" + 
+				"		return addNode(node.getUuid(), () -> node);\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	public <N extends ~nodeName~> N addNode(java.util.UUID uuid, java.util.function.Supplier<N> supplier) {\n" + 
 				"		\n" + 
-				"		final N existing = getNode(node.getUuid());\n" + 
+				"		final N existing = getNode(uuid);\n" + 
 				"		if (existing != null) {\n" + 
+				"			if (debug) System.out.println(\"N-\" + uuid + \" exists in canvas\");\n" + 
 				"			existing.refresh();\n" + 
+				"			existing.select();\n" + 
 				"			return existing;\n" + 
 				"		}\n" + 
-				"		if (offset != null) node.setOffset(offset);\n" + 
+				"		if (debug) System.out.println(\"N-\" + uuid + \" added to canvas\");\n" + 
 				"		\n" + 
+				"		final N node= supplier.get();\n" + 
 				"		node.select();\n" + 
 				"		nodeMap.put(node.getUuid(), node);\n" + 
 				"		nodeLayer.addChild(node);\n" + 
-				"		\n" + 
-				"		node.getOutgoingReferences().forEach(uuid -> {\n" + 
-				"			if (nodeMap.containsKey(uuid))\n" + 
-				"				addRelation(new STRelation(STCanvas.this, node, nodeMap.get(uuid), \"\"));\n" + 
-				"			});\n" + 
-				"		\n" + 
+				"\n" + 
+				"		node.addedToCanvas();\n" + 
+				"\n" + 
+				"		//org.greenrobot.eventbus.EventBus.getDefault().post(new NodeAdded(this, node));\n" + 
+				"\n" + 
 				"		getAllNodes()\n" + 
 				"				.filter(stNode -> !stNode.getUuid().equals(node.getUuid()))\n" + 
-				"				.forEach(stNode -> stNode.getOutgoingReferences()\n" + 
-				"				.filter(uuid -> uuid.equals(node.getUuid()))\n" + 
-				"				.forEach(uuid -> addRelation(new STRelation(STCanvas.this, stNode, node, \"\"))));\n" + 
-				"	\n" + 
+				"				.forEach(stNode -> stNode.newNodeAdded(node));\n" + 
 				"		\n" + 
 				"		return node;\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public <N extends ~nodeName~> N getNode(String uuid) {\n" + 
+				"		return getNode(java.util.UUID.fromString(uuid));\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public <N extends ~nodeName~> N getNode(UUID uuid) {\n" + 
 				"		return (N) nodeMap.get(uuid);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public <N extends ~nodeName~> N removeNode(UUID uuid) {\n" + 
+				"	<N extends ~nodeName~> N removeNode(UUID uuid) {\n" + 
 				"		final ~nodeName~ remove = nodeMap.remove(uuid);\n" + 
-				"		nodeLayer.removeChild(remove);\n" + 
+				"		final N old = (N) nodeLayer.removeChild(remove);\n" + 
+				"		if (debug) System.out.println(\"\\tN-\"+ uuid + \" removed from canvas : \" + (old == null ? \"null\" : old.getUuid()));\n" + 
 				"		return (N) remove;\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public <R extends ~relationName~> R addRelation(R relation) {\n" + 
+				"		return addRelation(relation.getUuid(), () -> relation);\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	public <R extends ~relationName~> R addRelation(String uuid, java.util.function.Supplier<R> supplier) {\n" + 
+				"		return addRelation(java.util.UUID.fromString(uuid), supplier);\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	public <R extends ~relationName~> R addRelation(java.util.UUID uuid, java.util.function.Supplier<R> supplier) {\n" + 
+				"\n" + 
+				"		final R existing = getRelation(uuid);\n" + 
+				"		if (existing != null) {\n" + 
+				"			if (debug) System.out.println(\"R-\"+ uuid + \" exists in canvas\");\n" + 
+				"			return existing;\n" + 
+				"		}\n" + 
+				"		if (debug) System.out.println(\"R-\"+ uuid + \" added to canvas\");\n" + 
+				"		\n" + 
+				"		final R relation = supplier.get();\n" + 
 				"		relationMap.put(relation.getUuid(), relation);\n" + 
 				"		relationLayer.addChild(relation);\n" + 
 				"		return relation;\n" + 
 				"	}\n" + 
-				"		public <R extends ~relationName~> R removeRelation(UUID uuid) {\n" + 
+				"		\n" + 
+				"	<R extends ~relationName~> R removeRelation(UUID uuid) {\n" + 
 				"		final ~relationName~ remove = relationMap.remove(uuid);\n" + 
-				"		relationLayer.removeChild(remove);\n" + 
+				"		final R old = (R) relationLayer.removeChild(remove);\n" + 
+				"		if (debug) System.out.println(\"\\tR-\"+ uuid + \" removed from canvas : \" + (old == null ? \"null\" : old.getUuid()));\n" + 
 				"		return (R) remove;\n" + 
 				"	}\n" + 
 				"\n" + 
@@ -521,5 +583,9 @@ public class PCanvas {
 				"	}\n" + 
 				"	\n" + 
 				"	~actions:{it|~it~};separator=\"\\n\\n\"~\n" + 
+				"\n" + 
+				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
+				"	\n" + 
+				"	~CanvasEvents(canvasName=name,nodeName=nodeName)~\n" + 
 				"} >>";
 }  

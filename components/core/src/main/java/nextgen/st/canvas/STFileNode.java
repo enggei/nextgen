@@ -21,17 +21,13 @@ public class STFileNode extends STNode {
 		this.stRenderer = stRenderer;
 	}
 
-	public void setSTModel(nextgen.st.model.STModel stModel) {
-		javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(tx -> {
-			this.stModel = stModel;
-			this.stModel.setFile(stFile);
-			setText(nextgen.st.STGenerator.asFile(stFile).getAbsolutePath());
-		}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable)));
+
+	@Override
+	public void addedToCanvas() {
 	}
 
 	@Override
-	public Stream<UUID> getOutgoingReferences() {
-		return java.util.stream.Stream.of(UUID.fromString(stModel.getUuid()));
+	public void newNodeAdded(STNode node) {
 	}
 
 	@Override
@@ -41,19 +37,14 @@ public class STFileNode extends STNode {
 				.filter(stNode -> !stNode.getUuid().equals(getUuid()))
 				.map(stNode -> (STModelNode) stNode)
 				.collect(java.util.stream.Collectors.toList());
-		javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(tx -> {
+		doLaterInTransaction(tx -> {
 			final JMenu sourceMenu = new JMenu("STModels");
-			stModelNodes.forEach(stNode -> {
-				final int end = Math.min(stNode.getText().length(), 50);
-				sourceMenu.add(new STNode.NodeAction<STFileNode>("Set source to " + stNode.getText().substring(0, end), this, canvas, event) {
-					@Override
-					void actionPerformed(STFileNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-						node.setSTModel(stNode.stModel);
-					}
-				});
+			stModelNodes.forEach(stModelNode -> {
+				final int end = Math.min(stModelNode.getText().length(), 50);
+				sourceMenu.add(new SetSource("Set source to " + stModelNode.getText().substring(0, end), STFileNode.this, canvas, event, stModelNode));
 			});
 			pop.add(sourceMenu);
-		}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable)));
+		});
 		pop.add(new EditFileSink(this, canvas, event));
 		pop.add(new OpenFile(this, canvas, event));
 		pop.addSeparator();
@@ -68,10 +59,31 @@ public class STFileNode extends STNode {
 	@Override
 	protected void onNodeLeftClick(PInputEvent event) {
 		super.onNodeLeftClick(event);
-		javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(tx -> {
+		doLaterInTransaction(tx -> {
 			if (stRenderer == null || stModel == null) return;
 			nextgen.st.STGenerator.writeToFile(stRenderer.render(stModel), stFile.getPackageName(), stFile.getName(), stFile.getType(), new java.io.File(stFile.getPath()));
-		}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable)));
+		});
+	}
+
+	private static final class SetSource extends NodeAction<STFileNode> {
+
+		STModelNode stModelNode;
+
+		SetSource(String name, STFileNode node, STCanvas canvas, PInputEvent event, STModelNode stModelNode) {
+			super(name, node, canvas, event);
+			this.stModelNode = stModelNode;
+		}
+
+		@Override
+		void actionPerformed(STFileNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+			doLaterInTransaction(tx -> {
+				if (node.stModel != null) canvas.removeRelation(node.getUuid());
+				node.stModel = stModelNode.stModel;
+				node.stModel.addFiles(node.stFile);
+				canvas.addRelation(new STSinkRelation(canvas, stModelNode, node));
+				node.setText(nextgen.st.STGenerator.asFile(node.stFile).getAbsolutePath());
+			});
+		}
 	}
 
 	private static final class EditFileSink extends NodeAction<STFileNode> {
@@ -102,16 +114,16 @@ public class STFileNode extends STNode {
 						final String type = fieldMap.get("type").getText().trim();
 						final String path = fieldMap.get("path").getText().trim();
 						final String packageName = fieldMap.get("package").getText().trim();
-						javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(tx -> {
+						doLaterInTransaction(tx -> {
 							node.stFile.setName(name);
 							node.stFile.setType(type);
 							node.stFile.setPath(path);
 							node.stFile.setPackageName(packageName);
 							node.setText(nextgen.st.STGenerator.asFile(node.stFile).getAbsolutePath());
-						}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable)));
+						});
 					}
 				});
-			}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable));
+			});
 		}
 	}
 
@@ -124,11 +136,11 @@ public class STFileNode extends STNode {
 
 		@Override
 		void actionPerformed(STFileNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(tx -> {
+			doLaterInTransaction(tx -> {
 				try {
 					java.awt.Desktop.getDesktop().open(nextgen.st.STGenerator.asFile(node.stFile));
 				} catch (Exception ex) { com.generator.util.SwingUtil.showException(canvas, ex); }
-			}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable)));
+			});
 		}
 	}
 }

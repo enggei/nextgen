@@ -27,6 +27,8 @@ import static java.awt.event.KeyEvent.*;
 
 public class STCanvas extends PCanvas implements PInputEventListener {
 
+	static boolean debug = true;
+
 	private final PLayer nodeLayer;
 	private final PLayer relationLayer = new PLayer();
 
@@ -40,7 +42,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	nextgen.st.model.STModelDB modelDb;
 
 	public STCanvas(nextgen.st.STRenderer stRenderer,nextgen.st.model.STModelDB modelDb) {
-		this(stRenderer, modelDb, Color.WHITE, new Dimension(1024, 768));
+		this(stRenderer, modelDb, Color.WHITE, new Dimension(1024, 1024));
 	}
 
 	public STCanvas(nextgen.st.STRenderer stRenderer, nextgen.st.model.STModelDB modelDb, Color background, Dimension preferredSize) {
@@ -55,6 +57,8 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		addInputEventListener(canvasInputEventsHandler);
 		this.stRenderer = stRenderer;
 		this.modelDb = modelDb;
+
+		//org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
 
 	@Override
@@ -92,56 +96,83 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		return (Stream<R>) getAllRelations().filter(STRelation::isSelected);
 	}
 
-	public <N extends STNode> N addNode(N node) {
-		return addNode(node, getCenterPosition());
+	public <N extends STNode> N addNode(String uuid, java.util.function.Supplier<N> supplier) {
+		return addNode(java.util.UUID.fromString(uuid), supplier);
 	}
 
-	public <N extends STNode> N addNode(N node, Point2D offset) {
+	public <N extends STNode> N addNode(N node) {
+		return addNode(node.getUuid(), () -> node);
+	}
 
-		final N existing = getNode(node.getUuid());
+	public <N extends STNode> N addNode(java.util.UUID uuid, java.util.function.Supplier<N> supplier) {
+
+		final N existing = getNode(uuid);
 		if (existing != null) {
+			if (debug) System.out.println("N-" + uuid + " exists in canvas");
 			existing.refresh();
+			existing.select();
 			return existing;
 		}
-		if (offset != null) node.setOffset(offset);
+		if (debug) System.out.println("N-" + uuid + " added to canvas");
 
+		final N node= supplier.get();
 		node.select();
 		nodeMap.put(node.getUuid(), node);
 		nodeLayer.addChild(node);
 
-		node.getOutgoingReferences().forEach(uuid -> {
-			if (nodeMap.containsKey(uuid))
-				addRelation(new STRelation(STCanvas.this, node, nodeMap.get(uuid), ""));
-			});
+		node.addedToCanvas();
+
+		//org.greenrobot.eventbus.EventBus.getDefault().post(new NodeAdded(this, node));
 
 		getAllNodes()
 				.filter(stNode -> !stNode.getUuid().equals(node.getUuid()))
-				.forEach(stNode -> stNode.getOutgoingReferences()
-				.filter(uuid -> uuid.equals(node.getUuid()))
-				.forEach(uuid -> addRelation(new STRelation(STCanvas.this, stNode, node, ""))));
-
+				.forEach(stNode -> stNode.newNodeAdded(node));
 
 		return node;
+	}
+
+	public <N extends STNode> N getNode(String uuid) {
+		return getNode(java.util.UUID.fromString(uuid));
 	}
 
 	public <N extends STNode> N getNode(UUID uuid) {
 		return (N) nodeMap.get(uuid);
 	}
 
-	public <N extends STNode> N removeNode(UUID uuid) {
+	<N extends STNode> N removeNode(UUID uuid) {
 		final STNode remove = nodeMap.remove(uuid);
-		nodeLayer.removeChild(remove);
+		final N old = (N) nodeLayer.removeChild(remove);
+		if (debug) System.out.println("\tN-"+ uuid + " removed from canvas : " + (old == null ? "null" : old.getUuid()));
 		return (N) remove;
 	}
 
 	public <R extends STRelation> R addRelation(R relation) {
+		return addRelation(relation.getUuid(), () -> relation);
+	}
+
+	public <R extends STRelation> R addRelation(String uuid, java.util.function.Supplier<R> supplier) {
+		return addRelation(java.util.UUID.fromString(uuid), supplier);
+	}
+
+	public <R extends STRelation> R addRelation(java.util.UUID uuid, java.util.function.Supplier<R> supplier) {
+
+		final R existing = getRelation(uuid);
+		if (existing != null) {
+			if (debug) System.out.println("R-"+ uuid + " exists in canvas");
+			return existing;
+		}
+		if (debug) System.out.println("R-"+ uuid + " added to canvas");
+
+		final R relation = supplier.get();
 		relationMap.put(relation.getUuid(), relation);
 		relationLayer.addChild(relation);
 		return relation;
 	}
-		public <R extends STRelation> R removeRelation(UUID uuid) {
+
+	<R extends STRelation> R removeRelation(UUID uuid) {
 		final STRelation remove = relationMap.remove(uuid);
-		relationLayer.removeChild(remove);
+		final R old = (R) relationLayer.removeChild(remove);
+		if (debug) System.out.println("\tR-"+ uuid + " removed from canvas : " + (old == null ? "null" : old.getUuid()));
 		return (R) remove;
 	}
 
@@ -153,7 +184,6 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		pop.add(new NewSTValueNode(this, event));
 		pop.add(new NewSTValueFromClipboard(this, event));
 		pop.add(new LoadAllModels(this, event));
-		pop.add(new NewSTFileNode(this, event));
 		pop.add(new SelectAllNodes(this, event));
 		pop.add(new UnselectAllNodes(this, event));
 		pop.add(new CloseSelectedNodes(this, event));
@@ -166,6 +196,10 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 	protected void onCanvasKeyPressed(PInputEvent event) {
 		switch (event.getKeyCode()) {
+			case VK_M:
+				new LoadAllModels(this, event).actionPerformed(null);
+				break;
+
 			case VK_1:
 				new LayoutVerticallyAction(this, event).actionPerformed(null);
 				break;
@@ -176,6 +210,10 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 			case VK_C:
 				new CloseSelectedNodes(this, event).actionPerformed(null);
+				break;
+
+			case VK_F:
+				new PopupAction(this, event).actionPerformed(null);
 				break;
 
 		}
@@ -321,7 +359,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		abstract void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e);
 
 		protected void doLaterInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer){ 
-			javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(consumer, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable)));
+			javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(consumer, throwable -> com.generator.util.SwingUtil.showException(canvas, throwable)));
 		}
 	}
 
@@ -335,7 +373,9 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
 			final String s = com.generator.util.SwingUtil.showInputDialog("Value", canvas);
 			if (s == null || s.trim().length() == 0) return;
-			doLaterInTransaction(transaction -> canvas.addNode(new STValueNode(canvas, canvas.modelDb.newSTValue(s), canvas.stRenderer)));
+			doLaterInTransaction(tx -> {
+				canvas.addNode(new STValueNode(canvas, canvas.modelDb.newSTValue(s), canvas.stRenderer));
+			});
 		}
 	}
 
@@ -349,10 +389,9 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
 			final String s = com.generator.util.SwingUtil.fromClipboard();
 			if (s == null || s.trim().length() == 0) return;
-			javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(tx -> {
-				final nextgen.st.model.STValue stValue = canvas.modelDb.newSTValue(s);
-				canvas.addNode(new STValueNode(canvas, stValue, canvas.stRenderer));
-			}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable)));
+			doLaterInTransaction(tx -> {
+				canvas.addNode(canvas.newSTNode(canvas.modelDb.newSTValue(s)).get());
+			});
 		}
 	}
 
@@ -364,45 +403,10 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 		@Override
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
-			javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(tx -> {
+			doLaterInTransaction(tx -> {
 				canvas.modelDb.findAllSTModel().forEach(stModel -> 
-					canvas.addNode(new STModelNode(canvas, canvas.modelDb.findSTTemplateByUuid(stModel.getStTemplate()), stModel, canvas.stRenderer))
+					canvas.addNode(stModel.getUuid(), canvas.newSTNode(stModel))
 				);
-			}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable)));
-		}
-	}
-
-	private static final class NewSTFileNode extends CanvasAction {
-
-		NewSTFileNode(STCanvas canvas, PInputEvent event) {
-			super("New Sink", canvas, event);
-		}
-
-		@Override
-		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
-			final Map<String, JTextField> fieldMap = new java.util.LinkedHashMap<>();
-			fieldMap.put("name", new JTextField(15));
-			fieldMap.put("type", new JTextField(15));
-			fieldMap.put("path", new JTextField(15));
-			fieldMap.put("package", new JTextField(15));
-			final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
-			inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
-			for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {
-				inputPanel.add(new JLabel(fieldEntry.getKey()));
-				inputPanel.add(fieldEntry.getValue());
-			}
-			com.generator.util.SwingUtil.showDialog(inputPanel, canvas, "New sink", new com.generator.util.SwingUtil.ConfirmAction() {
-				@Override
-				public void verifyAndCommit() throws Exception {
-					final String name = fieldMap.get("name").getText().trim();
-					final String type = fieldMap.get("type").getText().trim();
-					final String path = fieldMap.get("path").getText().trim();
-					final String packageName = fieldMap.get("package").getText().trim();
-					javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(tx -> {
-						final nextgen.st.model.STFile stFile = canvas.modelDb.newSTFile(name, type, path, packageName);
-						canvas.addNode(new STFileNode(canvas, stFile, null, null));
-					}, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable)));
-				}
 			});
 		}
 	}
@@ -476,4 +480,60 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 			}));
 		}
 	}
+
+	private static final class PopupAction extends CanvasAction {
+
+		PopupAction(STCanvas canvas, PInputEvent event) {
+			super("Popup", canvas, event);
+		}
+
+		@Override
+		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
+			javax.swing.SwingUtilities.invokeLater(() ->  {
+				final JPopupMenu pop = new JPopupMenu();
+				canvas.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				canvas.onCanvasRightClick(pop, event);
+				canvas.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());	
+			});
+		}
+	}
+
+	java.util.function.Supplier<STNode> newSTNode(nextgen.st.model.STModel stModel){ 
+		return () -> new STModelNode(this, modelDb.findSTTemplateByUuid(stModel.getStTemplate()), stModel, stRenderer);
+	}
+
+	java.util.function.Supplier<STNode> newSTNode(nextgen.st.model.STValue stValue){ 
+		return () -> new STValueNode(this, stValue, stRenderer);
+	}
+
+	java.util.function.Supplier<STNode> newSTNode(nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument){ 
+		return () -> new STKVNode(this, stParameter, stArgument, stRenderer);
+	}
+
+	java.util.function.Supplier<STNode> newSTNode(nextgen.st.model.STFile stFile, nextgen.st.model.STModel stModel){ 
+		return () -> new STFileNode(this, stFile, stModel, stRenderer);
+	}
+
+	public static final class NodeAdded {
+
+		public STCanvas canvas;
+		public STNode node;
+
+		public NodeAdded(STCanvas canvas, STNode node) {
+			this.canvas = canvas;
+			this.node = node;
+		}
+	}
+
+	public static final class NodeClosed {
+
+		public STCanvas canvas;
+		public STNode node;
+
+		public NodeClosed(STCanvas canvas, STNode node) {
+			this.canvas = canvas;
+			this.node = node;
+		}
+	} 
 }

@@ -40,7 +40,7 @@ public class STRenderer {
 
         stTemplate.getParameters()
                 .forEach(stParameter ->
-                        stModel.getArguments()
+                        stModel.getArgumentsSorted()
                                 .filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid()))
                                 .forEach(stArgument -> {
 
@@ -48,7 +48,7 @@ public class STRenderer {
 
                                         case SINGLE:
                                         case LIST:
-                                            st.add(stParameter.getName(), render(stArgument));
+                                            st.add(stParameter.getName(), render(stArgument.getValue()));
                                             break;
 
                                         case KVLIST:
@@ -69,7 +69,7 @@ public class STRenderer {
                                             break;
                                     }
                                 }));
-        return st.render();
+        return st.render().trim();
     }
 
     private STMapper findSTMapper(String stTemplate) {
@@ -88,17 +88,6 @@ public class STRenderer {
         return found == null ? null : render(found.getValue());
     }
 
-    public Object render(STArgument stArgument) {
-
-        final List<STArgumentKV> kvs = stArgument.getKeyValues().collect(Collectors.toList());
-        if (kvs.isEmpty()) return render(stArgument.getValue());
-
-        final StringBuilder kv = new StringBuilder();
-        for (STArgumentKV stArgumentKV : kvs)
-            kv.append(stArgumentKV.getStParameterKey()).append("=").append(render(stArgumentKV.getValue()));
-        return kv.toString();
-    }
-
     public String render(STValue value) {
         if (value == null) return null;
 
@@ -107,10 +96,10 @@ public class STRenderer {
                 return render(value.getStModel());
             case PRIMITIVE:
                 final String s = value.getValue();
-                return s == null || s.trim().length() == 0 ? null : s;
+                return s == null || s.trim().length() == 0 ? null : s.trim();
             case ENUM:
                 final Object enumValue = value.getValue();
-                return enumValue == null ? null : enumValue.toString();
+                return enumValue == null ? null : enumValue.toString().trim();
         }
         return null;
     }

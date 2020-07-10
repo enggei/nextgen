@@ -15,7 +15,6 @@ import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
-import java.util.stream.Stream;
 
 import static java.awt.event.KeyEvent.*;
 
@@ -52,10 +51,21 @@ public class STNode extends PNode implements PropertyChangeListener {
 		addInputEventListener(nodeInputEventHandler);
 
 		this.addChild(this.child);
+
+		org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
 
-	public Stream<UUID> getOutgoingReferences() {
-		return Stream.empty();
+	@org.greenrobot.eventbus.Subscribe
+	public void onNodeAdded(STCanvas.NodeAdded event) {
+		System.out.println("node added");
+	}
+
+	public void addedToCanvas() {
+
+	}
+
+	public void newNodeAdded(STNode node) {
+
 	}
 
 	@Override
@@ -117,11 +127,11 @@ public class STNode extends PNode implements PropertyChangeListener {
 		this.incoming.add(relation);
 	}
 
-	public Stream<UUID> outgoing() {
+	public java.util.stream.Stream<UUID> outgoing() {
 		return this.outgoing.stream();
 	}
 
-	public Stream<UUID> incoming() {
+	public java.util.stream.Stream<UUID> incoming() {
 		return this.incoming.stream();
 	}
 
@@ -188,6 +198,10 @@ public class STNode extends PNode implements PropertyChangeListener {
 				new RetainNode(this, canvas, event).actionPerformed(null);
 				break;
 
+			case VK_F:
+				new PopupAction(this, canvas, event).actionPerformed(null);
+				break;
+
 		}
 	}
 
@@ -201,6 +215,7 @@ public class STNode extends PNode implements PropertyChangeListener {
 		pop.add(new LayoutTreeAction(this, canvas, event));
 		pop.add(new RetainNode(this, canvas, event));
 		pop.add(new CloseNode(this, canvas, event));
+		pop.add(new PopupAction(this, canvas, event));
 
 	}
 
@@ -288,7 +303,7 @@ public class STNode extends PNode implements PropertyChangeListener {
 		abstract void actionPerformed(N node, STCanvas canvas, PInputEvent event, ActionEvent e);
 
 		protected void doLaterInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer){ 
-			javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(consumer, throwable -> com.generator.util.SwingUtil.showExceptionNoStack(canvas, throwable)));
+			node.doLaterInTransaction(consumer);
 		}
 	}
 
@@ -388,7 +403,10 @@ public class STNode extends PNode implements PropertyChangeListener {
 
 		@Override
 		void actionPerformed(STNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			javax.swing.SwingUtilities.invokeLater(() -> canvas.getAllNodes().filter(canvasNode -> !canvasNode.getUuid().equals(node.getUuid())).forEach(STNode::close));
+			javax.swing.SwingUtilities.invokeLater(() ->  {
+				canvas.getAllNodes().filter(canvasNode -> !canvasNode.getUuid().equals(node.getUuid())).forEach(STNode::close);
+				canvas.getAllRelations().forEach(relation -> canvas.removeRelation(relation.getUuid()));	
+			});
 		}
 	}
 
@@ -403,5 +421,32 @@ public class STNode extends PNode implements PropertyChangeListener {
 		void actionPerformed(STNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
 			javax.swing.SwingUtilities.invokeLater(node::close);
 		}
+	}
+
+	private static final class PopupAction extends NodeAction<STNode> {
+
+
+		PopupAction(STNode node, STCanvas canvas, PInputEvent event) {
+			super("Popup", node, canvas, event);
+		}
+
+		@Override
+		void actionPerformed(STNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+			javax.swing.SwingUtilities.invokeLater(() ->  {
+				final JPopupMenu pop = new JPopupMenu();
+				canvas.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				node.onNodeRightClick(event, pop);
+				canvas.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());	
+			});
+		}
+	}
+
+	public String cut(String text) {
+		return text.substring(0, Math.min(text.length(), 20));
+	}
+
+	protected void doLaterInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer){ 
+		javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(consumer, throwable -> com.generator.util.SwingUtil.showException(canvas, throwable)));
 	}
 }

@@ -285,6 +285,33 @@ public class ~name;format="capitalize"~ {
 	}
 
 	~accessors:{it|~it~};separator="\n\n"~
+
+	// ONLY delete this node and its relations
+	public void delete(org.neo4j.graphdb.Node node) {
+	
+		for (org.neo4j.graphdb.Relationship incoming : node.getRelationships(org.neo4j.graphdb.Direction.INCOMING))
+			incoming.delete();
+	
+		for (org.neo4j.graphdb.Relationship outgoing : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING))
+			outgoing.delete();
+	
+		node.delete();
+	}
+	
+	// deletes node and its outgoing relations (NOT if any node has other incoming dependencies)
+	public void deleteTree(org.neo4j.graphdb.Node node) {
+	
+		final java.util.Iterator<org.neo4j.graphdb.Relationship> incoming = node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).iterator();
+		if (incoming.hasNext()) return;
+	
+		for (org.neo4j.graphdb.Relationship outgoing : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING)) {
+			final org.neo4j.graphdb.Node otherNode = outgoing.getOtherNode(node);
+			outgoing.delete();
+			deleteTree(otherNode);
+		}
+	
+		node.delete();
+	}
 }  >>
 
 NeoFactoryAccessors(name,properties) ::= <<public ~name;format="capitalize"~ new~name;format="capitalize"~() { 
@@ -299,11 +326,11 @@ public java.util.stream.Stream<~name;format="capitalize"~> findAll~name;format="
 	return db.findNodes(org.neo4j.graphdb.Label.label("~name~")).stream().map(this::new~name;format="capitalize"~);
 }
 
-~properties:{it|~it~};separator="\n\n"~ >>
+~properties:{it|~it~};separator="\n\n"~  >>
 
 NeoFactoryPropertyAccessors(entity,propertyName,propertyType,isEnum) ::= <<public ~entity;format="capitalize"~ find~entity;format="capitalize"~By~propertyName;format="capitalize"~(~propertyType~ value) {
 	final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("~entity~"), "~propertyName~", value~if(isEnum)~.name()~endif~);
-	return node == null ? null : new ~entity;format="capitalize"~(node);
+	return node == null ? null : new~entity;format="capitalize"~(node);
 }
 
 public ~entity;format="capitalize"~ findOrCreate~entity;format="capitalize"~By~propertyName;format="capitalize"~(~propertyType~ value) {

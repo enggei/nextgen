@@ -4,11 +4,11 @@ import nextgen.st.domain.*;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.RelationshipType;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiConsumer;
 
 import static nextgen.st.model.STValueType.*;
 
@@ -19,10 +19,19 @@ public class STModelDB extends STModelNeoFactory {
     public STModelDB(String dir, Collection<STGroupModel> groupModels) {
         super(dir);
         this.groupModels = groupModels;
+        cleanup();
     }
 
     public STModelDB remove(STValue stValue) {
         final STValue found = findSTValueByUuid(stValue.getUuid());
+        if (found == null) return this;
+        found.getIncomingValue().forEach(this::remove);
+        delete(found.getNode());
+        return this;
+    }
+
+    public STModelDB remove(STArgument stArgument) {
+        final STArgument found = findSTArgumentByUuid(stArgument.getUuid());
         if (found == null) return this;
         delete(found.getNode());
         return this;
@@ -31,35 +40,9 @@ public class STModelDB extends STModelNeoFactory {
     public STModelDB remove(STModel stModel) {
         final STModel found = findSTModelByUuid(stModel.getUuid());
         if (found == null) return this;
-        deleteTree(found.getNode());
+        stModel.getArguments().forEach(this::remove);
+        delete(found.getNode());
         return this;
-    }
-
-    // ONLY delete this value-node and its relations
-    private void delete(Node node) {
-
-        for (Relationship incoming : node.getRelationships(Direction.INCOMING))
-            incoming.delete();
-
-        for (Relationship outgoing : node.getRelationships(Direction.OUTGOING))
-            outgoing.delete();
-
-        node.delete();
-    }
-
-    // deletes node and its outgoing relations (NOT if it has incoming dependencies)
-    private void deleteTree(Node node) {
-
-        final Iterator<Relationship> incoming = node.getRelationships(Direction.INCOMING).iterator();
-        if (incoming.hasNext()) return;
-
-        for (Relationship outgoing : node.getRelationships(Direction.OUTGOING)) {
-            final Node otherNode = outgoing.getOtherNode(node);
-            outgoing.delete();
-            deleteTree(otherNode);
-        }
-
-        node.delete();
     }
 
     public String getSTModelValue(STModel stModel, String parameterName, String defaultValue) {
@@ -86,14 +69,6 @@ public class STModelDB extends STModelNeoFactory {
         final String found = getSTModelValue(stModel, "package", null);
         if (found != null) return found;
         return getSTModelValue(stModel, "packageName", defaultValue);
-    }
-
-    public STTemplate findSTTemplateByName(String name) {
-        for (STGroupModel groupModel : groupModels) {
-            final STTemplate stTemplate = findSTTemplateByName(groupModel, name);
-            if (stTemplate != null) return stTemplate;
-        }
-        return null;
     }
 
     private STTemplate findSTTemplateByName(STGroupModel groupModel, String name) {
@@ -142,31 +117,6 @@ public class STModelDB extends STModelNeoFactory {
             if (child != null) return child;
         }
         return null;
-    }
-
-    public void addArgument(STModel stModel, STParameter stParameter, final Collection<STArgumentKV> kvs) {
-        stModel.addArguments(newSTArgument(stParameter, kvs));
-    }
-
-    public void addArgument(STModel stModel, STParameter stParameter, STValue value) {
-        stModel.addArguments(newSTArgument(stParameter, value));
-    }
-
-    public void addArgument(STModel stModel, STParameter stParameter, STModel value) {
-        stModel.addArguments(newSTArgument(stParameter, newSTValue(value)));
-    }
-
-    public void setArgument(STModel stModel, STParameter stParameter, STModel value) {
-        setArgument(stModel, stParameter, newSTValue(value));
-    }
-
-    public void setArgument(STModel stModel, STParameter stParameter, STValue value) {
-        stModel.getArguments()
-                .filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid()))
-                .findAny()
-                .ifPresent(stModel::removeArguments);
-
-        stModel.addArguments(newSTArgument(stParameter, value));
     }
 
     public STFile newSTFile(String name, String type, String path, String packageName) {
@@ -227,5 +177,91 @@ public class STModelDB extends STModelNeoFactory {
         return newSTArgument()
                 .setUuid(UUID.randomUUID().toString())
                 .setStParameter(stParameter.uuid());
+    }
+
+    public void cleanup() {
+        doInTransaction(transaction -> {
+
+            final Set<String> uuids = new LinkedHashSet<>();
+
+            findAllSTModel().forEach(stModel -> {
+
+                if (uuids.contains(stModel.getUuid())) {
+                    final String newUuid = UUID.randomUUID().toString();
+                    System.out.println("found duplicate uuid " + stModel.getUuid() + " -> new " + newUuid);
+                    stModel.setUuid(newUuid);
+                }
+                uuids.add(stModel.getUuid());
+
+                final STTemplate stTemplate = findSTTemplateByUuid(stModel.getStTemplate());
+                stModel.getArguments().forEach(stArgument -> {
+                    final Optional<STParameter> first = stTemplate.getParameters().filter(stParameter -> stArgument.getStParameter().equals(stParameter.uuid())).findFirst();
+                    if (!first.isPresent())
+                        remove(stArgument);
+                    else {
+                        switch (first.get().getType()) {
+                            case SINGLE:
+                            case LIST:
+                                final STValue value = stArgument.getValue();
+                                if (value == null)
+                                    remove(stArgument);
+                                else if (value.getType().equals(STValueType.STMODEL)) {
+
+                                    final AtomicBoolean duplicate = new AtomicBoolean(false);
+                                    java.util.stream.StreamSupport.stream(value.getNode().getRelationships(Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("stModel")).spliterator(), false)
+                                            .sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t", o.getId())))
+                                            .forEach(relationship -> {
+                                                if (duplicate.get()) {
+                                                    relationship.delete();
+                                                } else {
+                                                    duplicate.set(true);
+                                                }
+                                            });
+
+                                    if (value.getStModel() == null)
+                                        remove(stArgument);
+                                }
+                                break;
+                            case KVLIST:
+                                break;
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    public STModel clone(STModel stModel) {
+
+        final STTemplate stTemplate = findSTTemplateByUuid(stModel.getStTemplate());
+
+        final STModel clone = newSTModel(stTemplate);
+
+        forEachArgument(stTemplate, stModel, (stArgument, stParameter) -> {
+            switch (stParameter.getType()) {
+                case SINGLE:
+                    clone.addArguments(newSTArgument(stParameter, stArgument.getValue()));
+                    break;
+                case LIST:
+                    clone.addArguments(newSTArgument(stParameter, stArgument.getValue()));
+                    break;
+                case KVLIST:
+                    final Collection<STArgumentKV> kvs = new ArrayList<>();
+                    stParameter.getKeys().forEach(stParameterKey -> {
+                        stArgument.getKeyValues()
+                                .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.uuid()))
+                                .findAny()
+                                .ifPresent(stArgumentKV -> kvs.add(newSTArgumentKV(stParameterKey, stArgumentKV.getValue())));
+                    });
+                    clone.addArguments(newSTArgument(stParameter, kvs));
+                    break;
+            }
+        });
+
+        return clone;
+    }
+
+    protected void forEachArgument(STTemplate stTemplate, STModel stModel, java.util.function.BiConsumer<nextgen.st.model.STArgument, nextgen.st.domain.STParameter> consumer) {
+        stTemplate.getParameters().forEach(stParameter -> stModel.getArguments().filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid())).forEach(stArgument -> consumer.accept(stArgument, stParameter)));
     }
 }

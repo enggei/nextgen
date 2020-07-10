@@ -10,6 +10,7 @@ public class PNode {
 	private String _canvasName;
 	private java.util.List<Object> _nodeActionmethods = new java.util.ArrayList<>();
 	private java.util.List<Object> _actions = new java.util.ArrayList<>();
+	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _onKeyPressed = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _onRightClick = new java.util.ArrayList<>();
 
@@ -29,8 +30,9 @@ public class PNode {
 		st.add("canvasName", _canvasName);
 		for (Object o : _nodeActionmethods) st.add("nodeActionmethods", o);
 		for (Object o : _actions) st.add("actions", o);
+		for (Object o : _methods) st.add("methods", o);
 		for (java.util.Map<String, Object> map : _onKeyPressed) st.addAggr("onKeyPressed.{key,name}", map.get("key"), map.get("name"));
-		for (java.util.Map<String, Object> map : _onRightClick) st.addAggr("onRightClick.{name}", map.get("name"));
+		for (java.util.Map<String, Object> map : _onRightClick) st.addAggr("onRightClick.{name,isSeparator}", map.get("name"), map.get("isSeparator"));
 		return st.render().trim();
 	}
 
@@ -158,6 +160,35 @@ public class PNode {
 		return this._actions;
 	} 
 
+	public PNode addMethods(Object value) {
+		this._methods.add(value);
+		return this;
+	}
+
+	public PNode setMethods(Object[] value) {
+		this._methods.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public PNode setMethods(java.util.Collection<Object> values) {
+		this._methods.addAll(values);
+		return this;
+	}
+
+	public PNode removeMethods(Object value) {
+		this._methods.remove(value);
+		return this;
+	}
+
+	public PNode removeMethods(int index) {
+		this._methods.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getMethods() {
+		return this._methods;
+	} 
+
 	public PNode addOnKeyPressed(Object _key, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("key", _key);
@@ -203,9 +234,10 @@ public class PNode {
 
 	} 
 
-	public PNode addOnRightClick(Object _name) {
+	public PNode addOnRightClick(Object _name, Boolean _isSeparator) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("name", _name);
+		map.put("isSeparator", _isSeparator);
 		this._onRightClick.add(map);
 		return this;
 	}
@@ -215,7 +247,7 @@ public class PNode {
 	}
 
 	public PNode addOnRightClick(PNode_OnRightClick value) {
-		return addOnRightClick(value._name);
+		return addOnRightClick(value._name, value._isSeparator);
 	}
 
 	public java.util.stream.Stream<PNode_OnRightClick> streamOnRightClick() {
@@ -225,17 +257,24 @@ public class PNode {
 	public static final class PNode_OnRightClick {
 
 		Object _name;
+		Boolean _isSeparator;
 
-		public PNode_OnRightClick(Object _name) {
+		public PNode_OnRightClick(Object _name, Boolean _isSeparator) {
 			this._name = _name;
+			this._isSeparator = _isSeparator;
 		}
 
 		private PNode_OnRightClick(java.util.Map<String, Object> map) {
 			this._name = (Object) map.get("name");
+			this._isSeparator = (Boolean) map.get("isSeparator");
 		}
 
 		public Object getName() {
 			return this._name;
+		}
+
+		public Boolean getIsSeparator() {
+			return this._isSeparator;
 		}
 
 	} 
@@ -253,7 +292,7 @@ public class PNode {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PNode(packageName,name,canvasName,onKeyPressed,onRightClick,nodeActionmethods,actions) ::= <<package ~packageName~;\n" + 
+	static final String st = "PNode(packageName,name,canvasName,onKeyPressed,onRightClick,nodeActionmethods,actions,methods) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import org.piccolo2d.PNode;\n" + 
 				"import org.piccolo2d.event.PDragSequenceEventHandler;\n" + 
@@ -270,7 +309,6 @@ public class PNode {
 				"import java.beans.PropertyChangeEvent;\n" + 
 				"import java.beans.PropertyChangeListener;\n" + 
 				"import java.util.*;\n" + 
-				"import java.util.stream.Stream;\n" + 
 				"\n" + 
 				"import static java.awt.event.KeyEvent.*;\n" + 
 				"\n" + 
@@ -307,12 +345,23 @@ public class PNode {
 				"		addInputEventListener(nodeInputEventHandler);\n" + 
 				"\n" + 
 				"		this.addChild(this.child);\n" + 
+				"\n" + 
+				"		org.greenrobot.eventbus.EventBus.getDefault().register(this);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public Stream<UUID> getOutgoingReferences() {\n" + 
-				"		return Stream.empty();\n" + 
+				"	@org.greenrobot.eventbus.Subscribe\n" + 
+				"	public void onNodeAdded(~canvasName~.NodeAdded event) {\n" + 
+				"		System.out.println(\"node added\");\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	public void addedToCanvas() {\n" + 
+				"		\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public void newNodeAdded(~name~ node) {\n" + 
+				"		\n" + 
+				"	}\n" + 
+				"	\n" + 
 				"	@Override\n" + 
 				"	public double getHeight() {\n" + 
 				"		return child.getHeight();\n" + 
@@ -372,11 +421,11 @@ public class PNode {
 				"		this.incoming.add(relation);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public Stream<UUID> outgoing() {\n" + 
+				"	public java.util.stream.Stream<UUID> outgoing() {\n" + 
 				"		return this.outgoing.stream();\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public Stream<UUID> incoming() {\n" + 
+				"	public java.util.stream.Stream<UUID> incoming() {\n" + 
 				"		return this.incoming.stream();\n" + 
 				"	}\n" + 
 				"\n" + 
@@ -448,7 +497,7 @@ public class PNode {
 				"\n" + 
 				"	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {\n" + 
 				"\n" + 
-				"		~onRightClick:{it|pop.add(new ~it.name~(this, canvas, event));};separator=\"\\n\"~\n" + 
+				"		~onRightClick:{it|~if(it.isSeparator)~pop.addSeparator()~else~pop.add(new ~it.name~(this, canvas, event))~endif~;};separator=\"\\n\"~\n" + 
 				"		\n" + 
 				"	}\n" + 
 				"\n" + 
@@ -487,5 +536,7 @@ public class PNode {
 				"	}\n" + 
 				"	\n" + 
 				"	~actions:{it|~it~};separator=\"\\n\\n\"~\n" + 
+				"\n" + 
+				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"} >>";
 }  

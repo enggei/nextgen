@@ -11,6 +11,7 @@ public class DomainSTTests {
 	public void testAll() {
 		testDomain();
 		testEntity();
+		testJavaProject();
 		testRelation();
 	}
 
@@ -22,6 +23,11 @@ public class DomainSTTests {
 	@org.junit.Test
 	public void testEntity() {
 		System.out.println("\n--- TEST Entity:\n" + newEntity());
+	} 
+
+	@org.junit.Test
+	public void testJavaProject() {
+		System.out.println("\n--- TEST JavaProject:\n" + newJavaProject());
 	} 
 
 	@org.junit.Test

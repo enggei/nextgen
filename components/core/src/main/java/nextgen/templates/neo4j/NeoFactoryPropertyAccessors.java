@@ -133,7 +133,7 @@ public class NeoFactoryPropertyAccessors {
 
 	static final String st = "NeoFactoryPropertyAccessors(entity,propertyName,propertyType,isEnum) ::= <<public ~entity;format=\"capitalize\"~ find~entity;format=\"capitalize\"~By~propertyName;format=\"capitalize\"~(~propertyType~ value) {\n" + 
 				"	final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label(\"~entity~\"), \"~propertyName~\", value~if(isEnum)~.name()~endif~);\n" + 
-				"	return node == null ? null : new ~entity;format=\"capitalize\"~(node);\n" + 
+				"	return node == null ? null : new~entity;format=\"capitalize\"~(node);\n" + 
 				"}\n" + 
 				"\n" + 
 				"public ~entity;format=\"capitalize\"~ findOrCreate~entity;format=\"capitalize\"~By~propertyName;format=\"capitalize\"~(~propertyType~ value) {\n" + 

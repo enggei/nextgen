@@ -23,15 +23,15 @@ public class STRelation extends PPath.Double implements Comparator<STRelation> {
 		_defaultColor, _selectedColor, _highlightedColor, _uuid, _text, _selected, _highlight, _order, _type, _src, _dst
 	}
 
-	private STCanvas canvas;
+	protected STCanvas canvas;
 	final protected PText child;
 
-	public STRelation(STCanvas canvas, STNode src, STNode dst, String type) {
+	public STRelation(STCanvas canvas, STNode src, STNode dst, String type, UUID uuid) {
 		this.canvas = canvas;
 		this.addAttribute(Attributes._defaultColor, Color.decode("#bababa"));
 		this.addAttribute(Attributes._selectedColor, Color.decode("#b2182b"));
 		this.addAttribute(Attributes._highlightedColor, Color.decode("#f4a582"));
-		this.addAttribute(Attributes._uuid, UUID.randomUUID());
+		this.addAttribute(Attributes._uuid, uuid);
 		this.addAttribute(Attributes._type, type);
 		this.addAttribute(Attributes._src, src);
 		this.addAttribute(Attributes._dst, dst);
@@ -52,6 +52,8 @@ public class STRelation extends PPath.Double implements Comparator<STRelation> {
 		src.addPropertyChangeListener(nodeChangeListener);
 		dst.addPropertyChangeListener(nodeChangeListener);
 		addChild(this.child);
+
+		//org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
 
 	@Override
@@ -253,16 +255,15 @@ public class STRelation extends PPath.Double implements Comparator<STRelation> {
 	}
 
 	protected void onRelationKeyPressed(PInputEvent event) {
-
 	}
 
-	static abstract class RelationAction extends AbstractAction {
+	static abstract class RelationAction<N extends STRelation> extends AbstractAction {
 
-		final STRelation relation;
+		final N relation;
 		final STCanvas canvas;
 		final PInputEvent event;
 
-		RelationAction(String name, STRelation relation, STCanvas canvas, PInputEvent event) {
+		RelationAction(String name, N relation, STCanvas canvas, PInputEvent event) {
 			super(name);
 			this.relation = relation;
 			this.canvas = canvas;
@@ -274,7 +275,15 @@ public class STRelation extends PPath.Double implements Comparator<STRelation> {
 			actionPerformed(relation, canvas, event, e);
 		}
 
-		abstract void actionPerformed(STRelation relation, STCanvas canvas, PInputEvent event, ActionEvent e);
+		abstract void actionPerformed(N relation, STCanvas canvas, PInputEvent event, ActionEvent e);
+
+		protected void doLaterInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer){ 
+			relation.doLaterInTransaction(consumer);
+		}
 	}
 
+
+	protected void doLaterInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer){ 
+		javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(consumer, throwable -> com.generator.util.SwingUtil.showException(canvas, throwable)));
+	}
 }

@@ -1,0 +1,23 @@
+delimiters "~","~"
+
+event(name,fields) ::= <<public class ~name~ {
+
+	~fields:{it|public final ~it.type~ ~it.name~;};separator="\n"~
+
+	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=", "~) {
+		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+	}
+}  >>
+
+post(event) ::= <<org.greenrobot.eventbus.EventBus.getDefault().post(~event~);  >>
+
+register() ::= <<org.greenrobot.eventbus.EventBus.getDefault().register(this);  >>
+
+subscribe(threadMode,message,statements) ::= <<@org.greenrobot.eventbus.Subscribe(~if(threadMode)~threadMode = org.greenrobot.eventbus.ThreadMode.~threadMode~~endif~)
+public void on~message;format="capitalize"~(~message~ event) {
+	~statements:{it|~it~};separator="\n"~
+}  >>
+
+eom() ::= "}"
+
+gt() ::= ">"

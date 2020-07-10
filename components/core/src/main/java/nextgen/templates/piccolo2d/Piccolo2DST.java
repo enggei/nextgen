@@ -7,6 +7,7 @@ public class Piccolo2DST {
 	"gt() ::= \">\"\n" +
 	PCanvas.st + "\n" + 
 	CanvasAction.st + "\n" + 
+	CanvasEvents.st + "\n" + 
 	CanvasInputEventsHandler.st + "\n" + 
 	CanvasZoomHandler.st + "\n" + 
 	LayoutVerticallyAction.st + "\n" + 
@@ -21,6 +22,7 @@ public class Piccolo2DST {
 	PNodeInputEventHandler.st + "\n" + 
 	PRelation.st + "\n" + 
 	PNodeChangeListener.st + "\n" + 
+	PRelationImpl.st + "\n" + 
 	RelationAction.st + "\n" + 
 	RelationInputEventHandler.st + "\n" + 
 	Readme.st + "\n" ;
@@ -65,6 +67,10 @@ public class Piccolo2DST {
 
 	public static CanvasAction newCanvasAction() {
 		return new CanvasAction(stGroup);
+	} 
+
+	public static CanvasEvents newCanvasEvents() {
+		return new CanvasEvents(stGroup);
 	} 
 
 	public static CanvasInputEventsHandler newCanvasInputEventsHandler() {
@@ -121,6 +127,10 @@ public class Piccolo2DST {
 
 	public static PNodeChangeListener newPNodeChangeListener() {
 		return new PNodeChangeListener(stGroup);
+	} 
+
+	public static PRelationImpl newPRelationImpl() {
+		return new PRelationImpl(stGroup);
 	} 
 
 	public static RelationAction newRelationAction() {

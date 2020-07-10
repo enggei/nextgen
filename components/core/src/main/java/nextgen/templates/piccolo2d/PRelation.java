@@ -9,7 +9,11 @@ public class PRelation {
 	private String _name;
 	private String _canvasName;
 	private String _nodeName;
-	private java.util.List<java.util.Map<String, Object>> _onRightClickActions = new java.util.ArrayList<>();
+	private java.util.List<Object> _relationActionmethods = new java.util.ArrayList<>();
+	private java.util.List<Object> _actions = new java.util.ArrayList<>();
+	private java.util.List<Object> _methods = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _onRightClick = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _onKeyPressed = new java.util.ArrayList<>();
 
 	PRelation(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -26,7 +30,11 @@ public class PRelation {
 		st.add("name", _name);
 		st.add("canvasName", _canvasName);
 		st.add("nodeName", _nodeName);
-		for (java.util.Map<String, Object> map : _onRightClickActions) st.addAggr("onRightClickActions.{name,declaration}", map.get("name"), map.get("declaration"));
+		for (Object o : _relationActionmethods) st.add("relationActionmethods", o);
+		for (Object o : _actions) st.add("actions", o);
+		for (Object o : _methods) st.add("methods", o);
+		for (java.util.Map<String, Object> map : _onRightClick) st.addAggr("onRightClick.{name,isSeparator}", map.get("name"), map.get("isSeparator"));
+		for (java.util.Map<String, Object> map : _onKeyPressed) st.addAggr("onKeyPressed.{key,name}", map.get("key"), map.get("name"));
 		return st.render().trim();
 	}
 
@@ -118,48 +126,179 @@ public class PRelation {
 		return this;
 	} 
 
-
-	public PRelation addOnRightClickActions(Object _name, Object _declaration) {
-		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("name", _name);
-		map.put("declaration", _declaration);
-		this._onRightClickActions.add(map);
+	public PRelation addRelationActionmethods(Object value) {
+		this._relationActionmethods.add(value);
 		return this;
 	}
 
-	public java.util.List<java.util.Map<String, Object>> getOnRightClickActions() {
-		return this._onRightClickActions;
+	public PRelation setRelationActionmethods(Object[] value) {
+		this._relationActionmethods.addAll(java.util.Arrays.asList(value));
+		return this;
 	}
 
-	public PRelation addOnRightClickActions(PRelation_OnRightClickActions value) {
-		return addOnRightClickActions(value._name, value._declaration);
+	public PRelation setRelationActionmethods(java.util.Collection<Object> values) {
+		this._relationActionmethods.addAll(values);
+		return this;
 	}
 
-	public java.util.stream.Stream<PRelation_OnRightClickActions> streamOnRightClickActions() {
-		return this._onRightClickActions.stream().map(PRelation_OnRightClickActions::new);
+	public PRelation removeRelationActionmethods(Object value) {
+		this._relationActionmethods.remove(value);
+		return this;
 	}
 
-	public static final class PRelation_OnRightClickActions {
+	public PRelation removeRelationActionmethods(int index) {
+		this._relationActionmethods.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getRelationActionmethods() {
+		return this._relationActionmethods;
+	} 
+
+	public PRelation addActions(Object value) {
+		this._actions.add(value);
+		return this;
+	}
+
+	public PRelation setActions(Object[] value) {
+		this._actions.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public PRelation setActions(java.util.Collection<Object> values) {
+		this._actions.addAll(values);
+		return this;
+	}
+
+	public PRelation removeActions(Object value) {
+		this._actions.remove(value);
+		return this;
+	}
+
+	public PRelation removeActions(int index) {
+		this._actions.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getActions() {
+		return this._actions;
+	} 
+
+	public PRelation addMethods(Object value) {
+		this._methods.add(value);
+		return this;
+	}
+
+	public PRelation setMethods(Object[] value) {
+		this._methods.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public PRelation setMethods(java.util.Collection<Object> values) {
+		this._methods.addAll(values);
+		return this;
+	}
+
+	public PRelation removeMethods(Object value) {
+		this._methods.remove(value);
+		return this;
+	}
+
+	public PRelation removeMethods(int index) {
+		this._methods.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getMethods() {
+		return this._methods;
+	} 
+
+	public PRelation addOnRightClick(Object _name, Object _isSeparator) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("isSeparator", _isSeparator);
+		this._onRightClick.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getOnRightClick() {
+		return this._onRightClick;
+	}
+
+	public PRelation addOnRightClick(PRelation_OnRightClick value) {
+		return addOnRightClick(value._name, value._isSeparator);
+	}
+
+	public java.util.stream.Stream<PRelation_OnRightClick> streamOnRightClick() {
+		return this._onRightClick.stream().map(PRelation_OnRightClick::new);
+	}
+
+	public static final class PRelation_OnRightClick {
 
 		Object _name;
-		Object _declaration;
+		Object _isSeparator;
 
-		public PRelation_OnRightClickActions(Object _name, Object _declaration) {
+		public PRelation_OnRightClick(Object _name, Object _isSeparator) {
 			this._name = _name;
-			this._declaration = _declaration;
+			this._isSeparator = _isSeparator;
 		}
 
-		private PRelation_OnRightClickActions(java.util.Map<String, Object> map) {
+		private PRelation_OnRightClick(java.util.Map<String, Object> map) {
 			this._name = (Object) map.get("name");
-			this._declaration = (Object) map.get("declaration");
+			this._isSeparator = (Object) map.get("isSeparator");
 		}
 
 		public Object getName() {
 			return this._name;
 		}
 
-		public Object getDeclaration() {
-			return this._declaration;
+		public Object getIsSeparator() {
+			return this._isSeparator;
+		}
+
+	} 
+
+	public PRelation addOnKeyPressed(Object _key, Object _name) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("key", _key);
+		map.put("name", _name);
+		this._onKeyPressed.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getOnKeyPressed() {
+		return this._onKeyPressed;
+	}
+
+	public PRelation addOnKeyPressed(PRelation_OnKeyPressed value) {
+		return addOnKeyPressed(value._key, value._name);
+	}
+
+	public java.util.stream.Stream<PRelation_OnKeyPressed> streamOnKeyPressed() {
+		return this._onKeyPressed.stream().map(PRelation_OnKeyPressed::new);
+	}
+
+	public static final class PRelation_OnKeyPressed {
+
+		Object _key;
+		Object _name;
+
+		public PRelation_OnKeyPressed(Object _key, Object _name) {
+			this._key = _key;
+			this._name = _name;
+		}
+
+		private PRelation_OnKeyPressed(java.util.Map<String, Object> map) {
+			this._key = (Object) map.get("key");
+			this._name = (Object) map.get("name");
+		}
+
+		public Object getKey() {
+			return this._key;
+		}
+
+		public Object getName() {
+			return this._name;
 		}
 
 	} 
@@ -177,7 +316,7 @@ public class PRelation {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PRelation(packageName,name,canvasName,nodeName,onRightClickActions) ::= <<package ~packageName~;\n" + 
+	static final String st = "PRelation(packageName,name,canvasName,nodeName,onRightClick,onKeyPressed,relationActionmethods,actions,methods) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import org.piccolo2d.PNode;\n" + 
 				"import org.piccolo2d.event.PBasicInputEventHandler;\n" + 
@@ -202,15 +341,15 @@ public class PRelation {
 				"		_defaultColor, _selectedColor, _highlightedColor, _uuid, _text, _selected, _highlight, _order, _type, _src, _dst\n" + 
 				"	}\n" + 
 				"	\n" + 
-				"	private ~canvasName~ canvas;\n" + 
+				"	protected ~canvasName~ canvas;\n" + 
 				"	final protected PText child;\n" + 
 				"\n" + 
-				"	public ~name~(~canvasName~ canvas, ~nodeName~ src, ~nodeName~ dst, String type) {\n" + 
+				"	public ~name~(~canvasName~ canvas, ~nodeName~ src, ~nodeName~ dst, String type, UUID uuid) {\n" + 
 				"		this.canvas = canvas;\n" + 
 				"		this.addAttribute(Attributes._defaultColor, Color.decode(\"#bababa\"));\n" + 
 				"		this.addAttribute(Attributes._selectedColor, Color.decode(\"#b2182b\"));\n" + 
 				"		this.addAttribute(Attributes._highlightedColor, Color.decode(\"#f4a582\"));\n" + 
-				"		this.addAttribute(Attributes._uuid, UUID.randomUUID());\n" + 
+				"		this.addAttribute(Attributes._uuid, uuid);\n" + 
 				"		this.addAttribute(Attributes._type, type);\n" + 
 				"		this.addAttribute(Attributes._src, src);\n" + 
 				"		this.addAttribute(Attributes._dst, dst);\n" + 
@@ -231,6 +370,8 @@ public class PRelation {
 				"		src.addPropertyChangeListener(nodeChangeListener);\n" + 
 				"		dst.addPropertyChangeListener(nodeChangeListener);\n" + 
 				"		addChild(this.child);\n" + 
+				"\n" + 
+				"		//org.greenrobot.eventbus.EventBus.getDefault().register(this);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 
@@ -380,7 +521,7 @@ public class PRelation {
 				"	~RelationInputEventHandler()~\n" + 
 				"\n" + 
 				"	protected void onRelationRightClick(PInputEvent event, JPopupMenu pop) {\n" + 
-				"		~onRightClickActions:{it|pop.add(new ~it.name~(this, canvas, event));};separator=\"\\n\"~\n" + 
+				"		~onRightClick:{it|~if(it.isSeparator)~pop.addSeparator()~else~pop.add(new ~it.name~(this, canvas, event))~endif~;};separator=\"\\n\"~\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	protected void onRelationLeftClick(PInputEvent event) {\n" + 
@@ -389,16 +530,24 @@ public class PRelation {
 				"	}\n" + 
 				"\n" + 
 				"	protected void onRelationKeyPressed(PInputEvent event) {\n" + 
-				"\n" + 
+				"~if(onKeyPressed)~\n" + 
+				"		switch (event.getKeyCode()) {\n" + 
+				"			~onKeyPressed:{it|\n" + 
+				"case java.awt.event.KeyEvent.VK_~it.key~:\n" + 
+				"	new ~it.name~(this, canvas, event).actionPerformed(null);\n" + 
+				"	break;\n" + 
+				"};separator=\"\\n\"~\n" + 
+				"		}\n" + 
+				"~endif~\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	static abstract class RelationAction extends AbstractAction {\n" + 
+				"	static abstract class RelationAction<N extends ~name~> extends AbstractAction {\n" + 
 				"\n" + 
-				"		final ~name~ relation;\n" + 
+				"		final N relation;\n" + 
 				"		final ~canvasName~ canvas;\n" + 
 				"		final PInputEvent event;\n" + 
 				"	\n" + 
-				"		RelationAction(String name, ~name~ relation, ~canvasName~ canvas, PInputEvent event) {\n" + 
+				"		RelationAction(String name, N relation, ~canvasName~ canvas, PInputEvent event) {\n" + 
 				"			super(name);\n" + 
 				"			this.relation = relation;\n" + 
 				"			this.canvas = canvas;\n" + 
@@ -410,9 +559,13 @@ public class PRelation {
 				"			actionPerformed(relation, canvas, event, e);\n" + 
 				"		}\n" + 
 				"	\n" + 
-				"		abstract void actionPerformed(~name~ relation, ~canvasName~ canvas, PInputEvent event, ActionEvent e);\n" + 
+				"		abstract void actionPerformed(N relation, ~canvasName~ canvas, PInputEvent event, ActionEvent e);\n" + 
+				"\n" + 
+				"		~relationActionmethods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"	}\n" + 
 				"	\n" + 
-				"	~onRightClickActions:{it|~it.declaration~};separator=\"\\n\\n\"~\n" + 
+				"	~actions:{it|~it~};separator=\"\\n\\n\"~\n" + 
+				"\n" + 
+				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"} >>";
 }  

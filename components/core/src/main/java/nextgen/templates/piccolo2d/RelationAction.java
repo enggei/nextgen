@@ -10,6 +10,7 @@ public class RelationAction {
 	private Object _canvasName;
 	private Object _title;
 	private java.util.List<Object> _statements = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 
 	RelationAction(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -27,6 +28,7 @@ public class RelationAction {
 		st.add("canvasName", _canvasName);
 		st.add("title", _title);
 		for (Object o : _statements) st.add("statements", o);
+		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
 		return st.render().trim();
 	}
 
@@ -147,6 +149,50 @@ public class RelationAction {
 		return this._statements;
 	} 
 
+	public RelationAction addFields(Object _type, Object _name) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("type", _type);
+		map.put("name", _name);
+		this._fields.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getFields() {
+		return this._fields;
+	}
+
+	public RelationAction addFields(RelationAction_Fields value) {
+		return addFields(value._type, value._name);
+	}
+
+	public java.util.stream.Stream<RelationAction_Fields> streamFields() {
+		return this._fields.stream().map(RelationAction_Fields::new);
+	}
+
+	public static final class RelationAction_Fields {
+
+		Object _type;
+		Object _name;
+
+		public RelationAction_Fields(Object _type, Object _name) {
+			this._type = _type;
+			this._name = _name;
+		}
+
+		private RelationAction_Fields(java.util.Map<String, Object> map) {
+			this._type = (Object) map.get("type");
+			this._name = (Object) map.get("name");
+		}
+
+		public Object getType() {
+			return this._type;
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -161,10 +207,13 @@ public class RelationAction {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "RelationAction(name,relationType,canvasName,title,statements) ::= <<private static final class ~name~ extends RelationAction {\n" + 
+	static final String st = "RelationAction(name,relationType,fields,canvasName,title,statements) ::= <<private static final class ~name~ extends RelationAction<~relationType~> {\n" + 
 				"\n" + 
-				"	~name~(~relationType~ relation, ~canvasName~ canvas, PInputEvent event) {\n" + 
+				"	~fields:{it|~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
+				"	\n" + 
+				"	~name~(~relationType~ relation, ~canvasName~ canvas, PInputEvent event~if(fields)~, ~endif~~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
 				"		super(\"~title~\", relation, canvas, event);\n" + 
+				"		~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 

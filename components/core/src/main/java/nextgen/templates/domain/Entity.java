@@ -14,6 +14,10 @@ public class Entity {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Entity");
@@ -140,6 +144,6 @@ public class Entity {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Entity(name,isEnum,enumValues,relations) ::= <<~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~\n" + 
+	static final String st = "Entity(name,isEnum,enumValues,relations) ::= <<Entity: ~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~\n" + 
 				"~relations:{it|~it~};separator=\"\\n\"~ >>";
-} 
+}  

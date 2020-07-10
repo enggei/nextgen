@@ -164,5 +164,32 @@ public class NeoFactory {
 				"	}\n" + 
 				"\n" + 
 				"	~accessors:{it|~it~};separator=\"\\n\\n\"~\n" + 
+				"\n" + 
+				"	// ONLY delete this node and its relations\n" + 
+				"	public void delete(org.neo4j.graphdb.Node node) {\n" + 
+				"	\n" + 
+				"		for (org.neo4j.graphdb.Relationship incoming : node.getRelationships(org.neo4j.graphdb.Direction.INCOMING))\n" + 
+				"			incoming.delete();\n" + 
+				"	\n" + 
+				"		for (org.neo4j.graphdb.Relationship outgoing : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING))\n" + 
+				"			outgoing.delete();\n" + 
+				"	\n" + 
+				"		node.delete();\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	// deletes node and its outgoing relations (NOT if any node has other incoming dependencies)\n" + 
+				"	public void deleteTree(org.neo4j.graphdb.Node node) {\n" + 
+				"	\n" + 
+				"		final java.util.Iterator<org.neo4j.graphdb.Relationship> incoming = node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).iterator();\n" + 
+				"		if (incoming.hasNext()) return;\n" + 
+				"	\n" + 
+				"		for (org.neo4j.graphdb.Relationship outgoing : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING)) {\n" + 
+				"			final org.neo4j.graphdb.Node otherNode = outgoing.getOtherNode(node);\n" + 
+				"			outgoing.delete();\n" + 
+				"			deleteTree(otherNode);\n" + 
+				"		}\n" + 
+				"	\n" + 
+				"		node.delete();\n" + 
+				"	}\n" + 
 				"} >>";
 }  

@@ -6,9 +6,7 @@ import nextgen.st.canvas.STCanvas;
 import nextgen.st.canvas.STModelNode;
 import nextgen.st.canvas.STValueNode;
 import nextgen.st.domain.*;
-import nextgen.st.model.STModel;
 import nextgen.st.model.STModelDB;
-import nextgen.st.model.STValue;
 
 import javax.lang.model.SourceVersion;
 import javax.swing.*;
@@ -944,14 +942,14 @@ public class STNavigator extends JPanel {
                                         case LIST:
                                             final JTextField txtTypes = txtParameterMap.get(stParameter.getName());
                                             final String types = txtTypes.getText().trim();
-                                            stParameter.setArgumentType(types.length() == 0 ? "Object" : types);
+                                            stParameter.setArgumentType(types.length() == 0 ? (stParameter.getName().startsWith("is") ? "Boolean" : "Object") : types);
                                             break;
 
                                         case KVLIST:
                                             stParameter.getKeys().forEach(stParameterKey -> {
                                                 final JTextField txtKVTypes = txtParameterMap.get(stParameter.getName() + "." + stParameterKey.getName());
                                                 final String kvTypes = txtKVTypes.getText().trim();
-                                                stParameterKey.setArgumentType(kvTypes.length() == 0 ? "Object" : kvTypes);
+                                                stParameterKey.setArgumentType(kvTypes.length() == 0 ? (stParameterKey.getName().startsWith("is") ? "Boolean" : "Object") : kvTypes);
                                             });
                                             break;
                                     }

@@ -62,7 +62,7 @@ public class STModelNeoFactory {
 
 	public STModel findSTModelByUuid(String value) {
 		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STModel"), "uuid", value);
-		return node == null ? null : new STModel(node);
+		return node == null ? null : newSTModel(node);
 	}
 
 	public STModel findOrCreateSTModelByUuid(String value) {
@@ -76,7 +76,7 @@ public class STModelNeoFactory {
 
 	public STModel findSTModelByStTemplate(String value) {
 		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STModel"), "stTemplate", value);
-		return node == null ? null : new STModel(node);
+		return node == null ? null : newSTModel(node);
 	}
 
 	public STModel findOrCreateSTModelByStTemplate(String value) {
@@ -102,7 +102,7 @@ public class STModelNeoFactory {
 
 	public STFile findSTFileByUuid(String value) {
 		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STFile"), "uuid", value);
-		return node == null ? null : new STFile(node);
+		return node == null ? null : newSTFile(node);
 	}
 
 	public STFile findOrCreateSTFileByUuid(String value) {
@@ -116,7 +116,7 @@ public class STModelNeoFactory {
 
 	public STFile findSTFileByName(String value) {
 		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STFile"), "name", value);
-		return node == null ? null : new STFile(node);
+		return node == null ? null : newSTFile(node);
 	}
 
 	public STFile findOrCreateSTFileByName(String value) {
@@ -130,7 +130,7 @@ public class STModelNeoFactory {
 
 	public STFile findSTFileByType(String value) {
 		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STFile"), "type", value);
-		return node == null ? null : new STFile(node);
+		return node == null ? null : newSTFile(node);
 	}
 
 	public STFile findOrCreateSTFileByType(String value) {
@@ -144,7 +144,7 @@ public class STModelNeoFactory {
 
 	public STFile findSTFileByPackageName(String value) {
 		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STFile"), "packageName", value);
-		return node == null ? null : new STFile(node);
+		return node == null ? null : newSTFile(node);
 	}
 
 	public STFile findOrCreateSTFileByPackageName(String value) {
@@ -158,7 +158,7 @@ public class STModelNeoFactory {
 
 	public STFile findSTFileByPath(String value) {
 		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STFile"), "path", value);
-		return node == null ? null : new STFile(node);
+		return node == null ? null : newSTFile(node);
 	}
 
 	public STFile findOrCreateSTFileByPath(String value) {
@@ -184,7 +184,7 @@ public class STModelNeoFactory {
 
 	public STArgument findSTArgumentByUuid(String value) {
 		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STArgument"), "uuid", value);
-		return node == null ? null : new STArgument(node);
+		return node == null ? null : newSTArgument(node);
 	}
 
 	public STArgument findOrCreateSTArgumentByUuid(String value) {
@@ -198,7 +198,7 @@ public class STModelNeoFactory {
 
 	public STArgument findSTArgumentByStParameter(String value) {
 		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STArgument"), "stParameter", value);
-		return node == null ? null : new STArgument(node);
+		return node == null ? null : newSTArgument(node);
 	}
 
 	public STArgument findOrCreateSTArgumentByStParameter(String value) {
@@ -224,7 +224,7 @@ public class STModelNeoFactory {
 
 	public STValue findSTValueByUuid(String value) {
 		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STValue"), "uuid", value);
-		return node == null ? null : new STValue(node);
+		return node == null ? null : newSTValue(node);
 	}
 
 	public STValue findOrCreateSTValueByUuid(String value) {
@@ -238,7 +238,7 @@ public class STModelNeoFactory {
 
 	public STValue findSTValueByValue(String value) {
 		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STValue"), "value", value);
-		return node == null ? null : new STValue(node);
+		return node == null ? null : newSTValue(node);
 	}
 
 	public STValue findOrCreateSTValueByValue(String value) {
@@ -252,7 +252,7 @@ public class STModelNeoFactory {
 
 	public STValue findSTValueByType(STValueType value) {
 		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STValue"), "type", value.name());
-		return node == null ? null : new STValue(node);
+		return node == null ? null : newSTValue(node);
 	}
 
 	public STValue findOrCreateSTValueByType(STValueType value) {
@@ -278,7 +278,7 @@ public class STModelNeoFactory {
 
 	public STArgumentKV findSTArgumentKVByUuid(String value) {
 		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STArgumentKV"), "uuid", value);
-		return node == null ? null : new STArgumentKV(node);
+		return node == null ? null : newSTArgumentKV(node);
 	}
 
 	public STArgumentKV findOrCreateSTArgumentKVByUuid(String value) {
@@ -292,7 +292,7 @@ public class STModelNeoFactory {
 
 	public STArgumentKV findSTArgumentKVByStParameterKey(String value) {
 		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STArgumentKV"), "stParameterKey", value);
-		return node == null ? null : new STArgumentKV(node);
+		return node == null ? null : newSTArgumentKV(node);
 	}
 
 	public STArgumentKV findOrCreateSTArgumentKVByStParameterKey(String value) {
@@ -302,5 +302,32 @@ public class STModelNeoFactory {
 
 	public java.util.stream.Stream<STArgumentKV> findAllSTArgumentKVByStParameterKey(String value) {
 		return db.findNodes(org.neo4j.graphdb.Label.label("STArgumentKV"), "stParameterKey", value).stream().map(this::newSTArgumentKV);
+	}
+
+	// ONLY delete this node and its relations
+	public void delete(org.neo4j.graphdb.Node node) {
+
+		for (org.neo4j.graphdb.Relationship incoming : node.getRelationships(org.neo4j.graphdb.Direction.INCOMING))
+			incoming.delete();
+
+		for (org.neo4j.graphdb.Relationship outgoing : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING))
+			outgoing.delete();
+
+		node.delete();
+	}
+
+	// deletes node and its outgoing relations (NOT if any node has other incoming dependencies)
+	public void deleteTree(org.neo4j.graphdb.Node node) {
+
+		final java.util.Iterator<org.neo4j.graphdb.Relationship> incoming = node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).iterator();
+		if (incoming.hasNext()) return;
+
+		for (org.neo4j.graphdb.Relationship outgoing : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING)) {
+			final org.neo4j.graphdb.Node otherNode = outgoing.getOtherNode(node);
+			outgoing.delete();
+			deleteTree(otherNode);
+		}
+
+		node.delete();
 	}
 }

@@ -1,11 +1,34 @@
 delimiters "~","~"
 
-Domain(name,packageName,entities) ::= <<~name~
-~packageName~
-~entities:{it|~it~};separator="\n"~ >>
+Domain(name,packageName,entities) ::= <<Domain: ~name~ ~if(packageName)~(~packageName~)~endif~
+Entities:
+~entities:{it|~it~};separator="\n"~  >>
 
-Entity(name,isEnum,enumValues,relations) ::= <<~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=","~~endif~
+Entity(name,isEnum,enumValues,relations) ::= <<Entity: ~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=","~~endif~
 ~relations:{it|~it~};separator="\n"~  >>
+
+JavaProject(packageName,name,root,packageDeclarations,types,names) ::= <<package ~packageName~;
+
+import static nextgen.templates.DomainPatterns.*;
+import static nextgen.templates.JavaPatterns.*;
+
+public class ~name~ {
+
+	final java.io.File root = new java.io.File(~root~);
+	final java.io.File mainJava = new java.io.File(root, "src/main/java");
+	final java.io.File mainResources = new java.io.File(root, "src/main/resources");
+	
+	final java.io.File testJava = new java.io.File(root, "src/test/java");
+	final java.io.File testResources = new java.io.File(root, "src/test/resources");
+
+	~packageDeclarations:{it|final PackageDeclaration stPackage = newPackageDeclaration(~if(it.parent)~~it.parent~, ~endif~"~it.name~");};separator="\n"~
+
+	~types:{it|final String ~it.name~ = "~it.canonicalName~";};separator="\n"~
+
+	~names:{it|final String ~it~ = "~it~";};separator="\n"~
+
+
+}  >>
 
 Relation(name,type,dst,lexical,self) ::= <<~name~ ~type~ ~dst~~if(lexical)~ lexical~endif~~if(self)~ self-referential~endif~  >>
 

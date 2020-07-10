@@ -60,4 +60,26 @@ public class JavaPatterns extends JavaST {
             invokeLater.addStatements(statement);
         return invokeLater;
     }
+
+    public static MethodDeclaration newProtectedMethod(String name, BlockStmt blockStmt) {
+        return newMethodDeclaration()
+                .addModifiers("protected")
+                .setName(name)
+                .setBlockStmt(blockStmt);
+    }
+
+    public static Parameter newParameter(String type, String name) {
+        return newParameter().setType(type).setName(name);
+    }
+
+    public static MethodDeclaration newMethodDeclarationFrom(MethodDeclaration prototype) {
+
+        final MethodDeclaration methodDeclaration = newMethodDeclaration()
+                .setName(prototype.getName())
+                .setType(prototype.getType());
+
+        prototype.getModifiers().forEach(methodDeclaration::addModifiers);
+        prototype.getParameters().forEach(methodDeclaration::addParameters);
+        return methodDeclaration;
+    }
 }

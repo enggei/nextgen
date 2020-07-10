@@ -1,14 +1,14 @@
-package nextgen.templates.domain;
+package nextgen.templates.greenrobot;
 
-public class DomainST {
+public class GreenRobotST {
 
 	private static final String stg = "delimiters \"~\", \"~\"\n" +
 	"eom() ::= \"}\"\n" +
 	"gt() ::= \">\"\n" +
-	Domain.st + "\n" + 
-	Entity.st + "\n" + 
-	JavaProject.st + "\n" + 
-	Relation.st + "\n" ;
+	Event.st + "\n" + 
+	Post.st + "\n" + 
+	Register.st + "\n" + 
+	Subscribe.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -38,26 +38,26 @@ public class DomainST {
 		return stGroup;
 	}
 
-	private static org.stringtemplate.v4.STGroup stGroup = decorate(new org.stringtemplate.v4.STGroupString("DomainST", stg, '~', '~'));
+	private static org.stringtemplate.v4.STGroup stGroup = decorate(new org.stringtemplate.v4.STGroupString("GreenRobotST", stg, '~', '~'));
 
 	public static void setSTGroup(final String stgFile) {
 		stGroup = decorate(new org.stringtemplate.v4.STGroupFile(stgFile, '~', '~'));
 	}
 
-	public static Domain newDomain() {
-		return new Domain(stGroup);
+	public static Event newEvent() {
+		return new Event(stGroup);
 	} 
 
-	public static Entity newEntity() {
-		return new Entity(stGroup);
+	public static Post newPost() {
+		return new Post(stGroup);
 	} 
 
-	public static JavaProject newJavaProject() {
-		return new JavaProject(stGroup);
+	public static Register newRegister() {
+		return new Register(stGroup);
 	} 
 
-	public static Relation newRelation() {
-		return new Relation(stGroup);
+	public static Subscribe newSubscribe() {
+		return new Subscribe(stGroup);
 	} 
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {

@@ -106,7 +106,7 @@ Enum(package,name,enumValues) ::= <<package ~package~;
 public enum ~name~ {
 
 	~enumValues:{it|~it~};separator=",\n"~
-} >>
+}  >>
 
 EnumValue(name,lexical) ::= <<~name~~if(lexical)~() {
 	@Override
@@ -275,6 +275,10 @@ public ~className~ remove~name;format="capitalize"~(~type~ value) {
 	return this;
 }  >>
 
+FunctionTypes() ::= << >>
+
+SupplierType(type) ::= <<java.util.function.Supplier<~type~>  >>
+
 Grammar() ::= << >>
 
 CompilationUnit(packageDeclaration,types,importDeclaration) ::= <<~packageDeclaration~
@@ -327,7 +331,7 @@ AnnotationMemberDeclaration(name,type,defaultValue) ::= <<~type~ ~name~()~if(def
 FinalFieldDeclaration(initializer,name,type) ::= <<final ~VariableDeclaration(initializer,name,type)~; >>
 
 MethodDeclaration(annotations,modifiers,type,typeParameters,name,parameters,thrownExceptions,isInterfaceDeclaration,blockStmt) ::= <<~annotations:{it|~it~};separator="\n"~~if(annotations)~
-~endif~~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~~if(type)~~if(typeParameters)~<~typeParameters:{it|~it~};separator=", "~> ~endif~~type~ ~else~void ~endif~~name~(~parameters:{it|~it~};separator=", "~)~if(thrownExceptions)~ throws ~thrownExceptions:{it|~it~};separator=", "~~endif~~if(isInterfaceDeclaration)~;~else~~if(blockStmt)~~blockStmt~~else~ { }~endif~~endif~ >>
+~endif~~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~~if(type)~~if(typeParameters)~<~typeParameters:{it|~it~};separator=", "~>~endif~~type~ ~else~void ~endif~~name~(~parameters:{it|~it~};separator=", "~)~if(thrownExceptions)~ throws ~thrownExceptions:{it|~it~};separator=", "~~endif~~if(isInterfaceDeclaration)~;~else~~if(blockStmt)~~blockStmt~~else~ { }~endif~~endif~  >>
 
 Parameter(annotations,modifiers,type,isVarargs,name) ::= <<~annotations:{it|~it~};separator=" "~~if(annotations)~ ~endif~~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~~if(type)~~type~ ~endif~~if(isVarargs)~... ~endif~~name~ >>
 
@@ -514,6 +518,15 @@ case ~it.trigger~: {
 InvokeLater(methodReference,statement,statements) ::= <<javax.swing.SwingUtilities.invokeLater(~if(methodReference)~~methodReference~~else~() -> ~if(statement)~~statement~~else~ {
 	~statements:{it|~it~};separator="\n"~	
 }~endif~~endif~);  >>
+
+ProjectTypes(projectName,root,javaMain,javaTest,packages,types,names) ::= <<Project ~projectName~
+~root~
+~javaMain~
+~javaTest~
+~packages:{it|~it~};separator="\n"~
+
+~types:{it|~it.name~ ~it.variableName~};separator="\n"~
+~names:{it|~it~};separator="\n"~  >>
 
 eom() ::= "}"
 

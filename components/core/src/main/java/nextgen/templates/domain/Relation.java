@@ -15,6 +15,10 @@ public class Relation {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Relation");
@@ -152,4 +156,4 @@ public class Relation {
 	}
 
 	static final String st = "Relation(name,type,dst,lexical,self) ::= <<~name~ ~type~ ~dst~~if(lexical)~ lexical~endif~~if(self)~ self-referential~endif~ >>";
-} 
+}  

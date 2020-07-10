@@ -28,6 +28,11 @@
             <version>${slf4j.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.greenrobot</groupId>
+            <artifactId>eventbus</artifactId>
+            <version>3.2.0</version>
+        </dependency>
         <!-- JUNIT  -->
         <dependency>
             <groupId>io.vertx</groupId>

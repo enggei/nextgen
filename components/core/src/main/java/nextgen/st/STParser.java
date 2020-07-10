@@ -140,7 +140,7 @@ public class STParser {
 
                     if (astNode.getChildren().get(0).getType().equals(Name)) {
 
-                        stParameterMap.putIfAbsent(expressionName, new STParameter().setName(expressionName).setType(STParameterType.SINGLE).setArgumentType("Object"));
+                        stParameterMap.putIfAbsent(expressionName, newSTParameter(expressionName));
                         stParameters.push(stParameterMap.get(expressionName));
 
                         for (AstNode child : astNode.getChildren())
@@ -180,7 +180,7 @@ public class STParser {
 
                 } else {
                     final String ifName = condition.getAst().toString();
-                    stParameterMap.putIfAbsent(ifName, new STParameter().setName(ifName).setType(STParameterType.SINGLE).setArgumentType("Object"));
+                    stParameterMap.putIfAbsent(ifName, newSTParameter(ifName));
 
                     stParameters.push(stParameterMap.get(ifName));
                     for (AstNode child : astNode.getChildren())
@@ -200,7 +200,7 @@ public class STParser {
                 final AstNode assignment = astNode.getChildren().get(1);
                 if (assignment.getType().equals(Name)) {
                     final String assignName = assignment.getAst().toString();
-                    stParameterMap.putIfAbsent(assignName, new STParameter().setName(assignName).setType(STParameterType.SINGLE).setArgumentType("Object"));
+                    stParameterMap.putIfAbsent(assignName, newSTParameter(assignName));
                 }
 
                 for (AstNode child : astNode.getChildren())
@@ -214,7 +214,7 @@ public class STParser {
                     AstNode child = children.get(i);
                     if (child.getType().equals(Name)) {
                         final String assignName = child.getAst().toString();
-                        stParameterMap.putIfAbsent(assignName, new STParameter().setName(assignName).setType(STParameterType.SINGLE).setArgumentType("Object"));
+                        stParameterMap.putIfAbsent(assignName, newSTParameter(assignName));
                     } else
                         addParameters(stParameterMap, child, stParameters);
                 }
@@ -227,6 +227,10 @@ public class STParser {
                     addParameters(stParameterMap, child, stParameters);
                 break;
         }
+    }
+
+    private static STParameter newSTParameter(String name) {
+        return new STParameter().setName(name).setType(STParameterType.SINGLE).setArgumentType((name != null && name.startsWith("is")) ? "Boolean" : "Object");
     }
 
     private static char loadDelimiter(File stgFile) {

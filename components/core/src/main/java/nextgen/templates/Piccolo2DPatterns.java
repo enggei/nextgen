@@ -29,14 +29,25 @@ public class Piccolo2DPatterns extends Piccolo2DST {
                 .setCanvasName(canvas.getName())
                 .setNodeType(canvas.getNodeName());
 
+        final CanvasAction popupAction = newCanvasAction(canvas, "PopupAction", "Popup")
+                .addStatements(newInvokeLater()
+                        .addStatements("final JPopupMenu pop = new JPopupMenu();")
+                        .addStatements("canvas.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));")
+                        .addStatements("canvas.onCanvasRightClick(pop, event);")
+                        .addStatements("canvas.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));")
+                        .addStatements("pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());"));
+
+
         registerRightClickAction(canvas, selectAllNodesAction, selectAllNodesAction.getName());
         registerRightClickAction(canvas, unselectAllNodesAction, unselectAllNodesAction.getName());
         registerRightClickAction(canvas, closeSelectedNodesAction, closeSelectedNodesAction.getName());
         registerRightClickAction(canvas, layoutVerticallyAction, layoutVerticallyAction.getName());
+        canvas.addActions(popupAction);;
 
         canvas.addOnKeyPressed("1", layoutVerticallyAction.getName());
         canvas.addOnKeyPressed("A", selectAllNodesAction.getName());
         canvas.addOnKeyPressed("C", closeSelectedNodesAction.getName());
+        canvas.addOnKeyPressed("F", popupAction.getName());
     }
 
     public static void registerRightClickAction(PCanvas canvas, Object action, Object name) {
@@ -61,28 +72,38 @@ public class Piccolo2DPatterns extends Piccolo2DST {
         final NodeAction closeNodeAction = newNodeAction(node, "CloseNode", "Close")
                 .addStatements(newInvokeLater().setMethodReference("node::close"));
 
+        final NodeAction popupAction = newNodeAction(node, "PopupAction", "Popup")
+                .addStatements(newInvokeLater()
+                        .addStatements("final JPopupMenu pop = new JPopupMenu();")
+                        .addStatements("canvas.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));")
+                        .addStatements("node.onNodeRightClick(event, pop);")
+                        .addStatements("canvas.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));")
+                        .addStatements("pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());"));
+
         final NodeAction retainNodeAction = newNodeAction(node, "RetainNode", "Retain")
-                .addStatements(newInvokeLater("canvas.getAllNodes()" +
-                        ".filter(canvasNode -> !canvasNode.getUuid().equals(node.getUuid()))" +
-                        ".forEach(" + node.getName() + "::close)"));
+                .addStatements(newInvokeLater(
+                        "canvas.getAllNodes().filter(canvasNode -> !canvasNode.getUuid().equals(node.getUuid())).forEach(" + node.getName() + "::close);",
+                        "canvas.getAllRelations().forEach(relation -> canvas.removeRelation(relation.getUuid()));"));
 
         registerRightClickAction(node, layoutTreeAction, layoutTreeAction.getName());
         registerRightClickAction(node, retainNodeAction, retainNodeAction.getName());
         registerRightClickAction(node, closeNodeAction, closeNodeAction.getName());
+        registerRightClickAction(node, popupAction, popupAction.getName());
 
         node.addOnKeyPressed("1", layoutTreeAction.getName());
         node.addOnKeyPressed("C", closeNodeAction.getName());
         node.addOnKeyPressed("R", retainNodeAction.getName());
+        node.addOnKeyPressed("F", popupAction.getName());
     }
 
     public static void registerRightClickAction(PNodeImpl node, Object action, Object name) {
         node.addActions(action);
-        node.addOnRightClick(name);
+        node.addOnRightClick(name,false);
     }
 
     public static void registerRightClickAction(PNode node, Object action, Object name) {
         node.addActions(action);
-        node.addOnRightClick(name);
+        node.addOnRightClick(name, false);
     }
 
     public static NodeAction newNodeAction(PNode node, String name, String title) {

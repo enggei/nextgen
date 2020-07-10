@@ -1,6 +1,6 @@
 delimiters "~","~"
 
-PCanvas(packageName,name,nodeName,relationName,fields,onRightClick,onKeyPressed,canvasActionmethods,actions) ::= <<package ~packageName~;
+PCanvas(packageName,name,nodeName,relationName,fields,onRightClick,onKeyPressed,canvasActionmethods,actions,methods) ::= <<package ~packageName~;
 
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PCanvas;
@@ -29,6 +29,8 @@ import static java.awt.event.KeyEvent.*;
 
 public class ~name~ extends PCanvas implements PInputEventListener {
 
+	static boolean debug = true;
+
 	private final PLayer nodeLayer;
 	private final PLayer relationLayer = new PLayer();
 	
@@ -41,7 +43,7 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 	~fields:{it|~it.type~ ~it.name~;};separator="\n"~
 	
 	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=","~) {
-		this(~fields:{it|~it.name~};separator=", "~~if(fields)~, ~endif~Color.WHITE, new Dimension(1024, 768));
+		this(~fields:{it|~it.name~};separator=", "~~if(fields)~, ~endif~Color.WHITE, new Dimension(1024, 1024));
 	}
 	
 	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=", "~~if(fields)~, ~endif~Color background, Dimension preferredSize) {
@@ -55,6 +57,8 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 		addInputEventListener(new CanvasZoomHandler());
 		addInputEventListener(canvasInputEventsHandler);
 		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+
+		//org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
 
 	@Override
@@ -92,56 +96,83 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 		return (Stream<R>) getAllRelations().filter(~relationName~::isSelected);
 	}
 
-	public <N extends ~nodeName~> N addNode(N node) {
-		return addNode(node, getCenterPosition());
+	public <N extends ~nodeName~> N addNode(String uuid, java.util.function.Supplier<N> supplier) {
+		return addNode(java.util.UUID.fromString(uuid), supplier);
 	}
 
-	public <N extends ~nodeName~> N addNode(N node, Point2D offset) {
+	public <N extends ~nodeName~> N addNode(N node) {
+		return addNode(node.getUuid(), () -> node);
+	}
+	
+	public <N extends ~nodeName~> N addNode(java.util.UUID uuid, java.util.function.Supplier<N> supplier) {
 		
-		final N existing = getNode(node.getUuid());
+		final N existing = getNode(uuid);
 		if (existing != null) {
+			if (debug) System.out.println("N-" + uuid + " exists in canvas");
 			existing.refresh();
+			existing.select();
 			return existing;
 		}
-		if (offset != null) node.setOffset(offset);
+		if (debug) System.out.println("N-" + uuid + " added to canvas");
 		
+		final N node= supplier.get();
 		node.select();
 		nodeMap.put(node.getUuid(), node);
 		nodeLayer.addChild(node);
-		
-		node.getOutgoingReferences().forEach(uuid -> {
-			if (nodeMap.containsKey(uuid))
-				addRelation(new STRelation(STCanvas.this, node, nodeMap.get(uuid), ""));
-			});
-		
+
+		node.addedToCanvas();
+
+		//org.greenrobot.eventbus.EventBus.getDefault().post(new NodeAdded(this, node));
+
 		getAllNodes()
 				.filter(stNode -> !stNode.getUuid().equals(node.getUuid()))
-				.forEach(stNode -> stNode.getOutgoingReferences()
-				.filter(uuid -> uuid.equals(node.getUuid()))
-				.forEach(uuid -> addRelation(new STRelation(STCanvas.this, stNode, node, ""))));
-	
+				.forEach(stNode -> stNode.newNodeAdded(node));
 		
 		return node;
+	}
+
+	public <N extends ~nodeName~> N getNode(String uuid) {
+		return getNode(java.util.UUID.fromString(uuid));
 	}
 
 	public <N extends ~nodeName~> N getNode(UUID uuid) {
 		return (N) nodeMap.get(uuid);
 	}
 
-	public <N extends ~nodeName~> N removeNode(UUID uuid) {
+	<N extends ~nodeName~> N removeNode(UUID uuid) {
 		final ~nodeName~ remove = nodeMap.remove(uuid);
-		nodeLayer.removeChild(remove);
+		final N old = (N) nodeLayer.removeChild(remove);
+		if (debug) System.out.println("\tN-"+ uuid + " removed from canvas : " + (old == null ? "null" : old.getUuid()));
 		return (N) remove;
 	}
 
 	public <R extends ~relationName~> R addRelation(R relation) {
+		return addRelation(relation.getUuid(), () -> relation);
+	}
+	
+	public <R extends ~relationName~> R addRelation(String uuid, java.util.function.Supplier<R> supplier) {
+		return addRelation(java.util.UUID.fromString(uuid), supplier);
+	}
+	
+	public <R extends ~relationName~> R addRelation(java.util.UUID uuid, java.util.function.Supplier<R> supplier) {
+
+		final R existing = getRelation(uuid);
+		if (existing != null) {
+			if (debug) System.out.println("R-"+ uuid + " exists in canvas");
+			return existing;
+		}
+		if (debug) System.out.println("R-"+ uuid + " added to canvas");
+		
+		final R relation = supplier.get();
 		relationMap.put(relation.getUuid(), relation);
 		relationLayer.addChild(relation);
 		return relation;
 	}
-		public <R extends ~relationName~> R removeRelation(UUID uuid) {
+		
+	<R extends ~relationName~> R removeRelation(UUID uuid) {
 		final ~relationName~ remove = relationMap.remove(uuid);
-		relationLayer.removeChild(remove);
+		final R old = (R) relationLayer.removeChild(remove);
+		if (debug) System.out.println("\tR-"+ uuid + " removed from canvas : " + (old == null ? "null" : old.getUuid()));
 		return (R) remove;
 	}
 
@@ -197,6 +228,10 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 	}
 	
 	~actions:{it|~it~};separator="\n\n"~
+
+	~methods:{it|~it~};separator="\n\n"~
+	
+	~CanvasEvents(canvasName=name,nodeName=nodeName)~
 }  >>
 
 CanvasInputEventsHandler(canvasName) ::= <<private final class CanvasInputEventsHandler extends PBasicInputEventHandler {
@@ -368,7 +403,29 @@ LayoutVerticallyAction(name,canvasName,nodeType) ::= <<private static final clas
 	}
 }  >>
 
-PNode(packageName,name,canvasName,onKeyPressed,onRightClick,nodeActionmethods,actions) ::= <<package ~packageName~;
+CanvasEvents(canvasName,nodeName) ::= <<public static final class NodeAdded {
+
+	public ~canvasName~ canvas;
+	public ~nodeName~ node;
+	
+	public NodeAdded(~canvasName~ canvas, ~nodeName~ node) {
+		this.canvas = canvas;
+		this.node = node;
+	}
+}
+
+public static final class NodeClosed {
+
+	public ~canvasName~ canvas;
+	public ~nodeName~ node;
+	
+	public NodeClosed(~canvasName~ canvas, ~nodeName~ node) {
+		this.canvas = canvas;
+		this.node = node;
+	}
+}  >>
+
+PNode(packageName,name,canvasName,onKeyPressed,onRightClick,nodeActionmethods,actions,methods) ::= <<package ~packageName~;
 
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PDragSequenceEventHandler;
@@ -385,7 +442,6 @@ import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
-import java.util.stream.Stream;
 
 import static java.awt.event.KeyEvent.*;
 
@@ -422,12 +478,23 @@ public class ~name~ extends PNode implements PropertyChangeListener {
 		addInputEventListener(nodeInputEventHandler);
 
 		this.addChild(this.child);
+
+		org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
 
-	public Stream<UUID> getOutgoingReferences() {
-		return Stream.empty();
+	@org.greenrobot.eventbus.Subscribe
+	public void onNodeAdded(~canvasName~.NodeAdded event) {
+		System.out.println("node added");
 	}
 
+	public void addedToCanvas() {
+		
+	}
+
+	public void newNodeAdded(~name~ node) {
+		
+	}
+	
 	@Override
 	public double getHeight() {
 		return child.getHeight();
@@ -487,11 +554,11 @@ public class ~name~ extends PNode implements PropertyChangeListener {
 		this.incoming.add(relation);
 	}
 
-	public Stream<UUID> outgoing() {
+	public java.util.stream.Stream<UUID> outgoing() {
 		return this.outgoing.stream();
 	}
 
-	public Stream<UUID> incoming() {
+	public java.util.stream.Stream<UUID> incoming() {
 		return this.incoming.stream();
 	}
 
@@ -563,7 +630,7 @@ case VK_~it.key~:
 
 	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
 
-		~onRightClick:{it|pop.add(new ~it.name~(this, canvas, event));};separator="\n"~
+		~onRightClick:{it|~if(it.isSeparator)~pop.addSeparator()~else~pop.add(new ~it.name~(this, canvas, event))~endif~;};separator="\n"~
 		
 	}
 
@@ -602,6 +669,8 @@ case VK_~it.key~:
 	}
 	
 	~actions:{it|~it~};separator="\n\n"~
+
+	~methods:{it|~it~};separator="\n\n"~
 }  >>
 
 PNodeInputEventHandler() ::= <<private final class NodeInputEventHandler extends PDragSequenceEventHandler {
@@ -773,7 +842,7 @@ AnonymousPNodeAction(nodeType,header,statements) ::= <<new STNode.NodeAction<~no
 	}
 }  >>
 
-PNodeImpl(packageName,name,nodeName,fields,canvasName,initText,uuid,constructorStatements,methods,outgoingReferences,rightClickStatements,anonymousRightClickActions,onRightClick,onKeyPressed,onLeftClick,onPropertyChange,actions) ::= <<package ~packageName~;
+PNodeImpl(packageName,name,nodeName,fields,canvasName,initText,uuid,constructorStatements,methods,addedToCanvasStatements,newNodeAddedStatements,rightClickStatements,anonymousRightClickActions,onRightClick,onKeyPressed,onLeftClick,onPropertyChange,actions) ::= <<package ~packageName~;
 
 import org.piccolo2d.event.PInputEvent;
 
@@ -796,15 +865,20 @@ public class ~name~ extends ~nodeName~ {
 	~methods:{it|~it~};separator="\n\n"~
 
 	@Override
-	public Stream<UUID> getOutgoingReferences() {
-		return ~if(outgoingReferences)~~outgoingReferences~~else~super.getOutgoingReferences();~endif~
+	public void addedToCanvas() {
+		~addedToCanvasStatements:{it|~it~};separator="\n"~
 	}
 
+	@Override
+	public void newNodeAdded(~nodeName~ node) {
+		~newNodeAddedStatements:{it|~it~};separator="\n"~
+	}
+	
 	@Override
 	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
 		~rightClickStatements:{it|~it~};separator="\n"~
 		~anonymousRightClickActions:{it|pop.add(~it~);};separator="\n"~
-		~onRightClick:{it|pop.add(new ~it.name~(this, canvas, event));};separator="\n"~
+		~onRightClick:{it|~if(it.isSeparator)~pop.addSeparator()~else~pop.add(new ~it.name~(this, canvas, event))~endif~;};separator="\n"~
 		~if(onRightClick)~
 		pop.addSeparator();
 		~endif~
@@ -847,7 +921,7 @@ nodeMethod(type,name,params,statements,returnStatement) ::= <<public ~if(type)~~
 	
 }  >>
 
-PRelation(packageName,name,canvasName,nodeName,onRightClickActions) ::= <<package ~packageName~;
+PRelation(packageName,name,canvasName,nodeName,onRightClick,onKeyPressed,relationActionmethods,actions,methods) ::= <<package ~packageName~;
 
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PBasicInputEventHandler;
@@ -872,15 +946,15 @@ public class ~name~ extends PPath.Double implements Comparator<~name~> {
 		_defaultColor, _selectedColor, _highlightedColor, _uuid, _text, _selected, _highlight, _order, _type, _src, _dst
 	}
 	
-	private ~canvasName~ canvas;
+	protected ~canvasName~ canvas;
 	final protected PText child;
 
-	public ~name~(~canvasName~ canvas, ~nodeName~ src, ~nodeName~ dst, String type) {
+	public ~name~(~canvasName~ canvas, ~nodeName~ src, ~nodeName~ dst, String type, UUID uuid) {
 		this.canvas = canvas;
 		this.addAttribute(Attributes._defaultColor, Color.decode("#bababa"));
 		this.addAttribute(Attributes._selectedColor, Color.decode("#b2182b"));
 		this.addAttribute(Attributes._highlightedColor, Color.decode("#f4a582"));
-		this.addAttribute(Attributes._uuid, UUID.randomUUID());
+		this.addAttribute(Attributes._uuid, uuid);
 		this.addAttribute(Attributes._type, type);
 		this.addAttribute(Attributes._src, src);
 		this.addAttribute(Attributes._dst, dst);
@@ -901,6 +975,8 @@ public class ~name~ extends PPath.Double implements Comparator<~name~> {
 		src.addPropertyChangeListener(nodeChangeListener);
 		dst.addPropertyChangeListener(nodeChangeListener);
 		addChild(this.child);
+
+		//org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
 
 	@Override
@@ -1050,7 +1126,7 @@ public class ~name~ extends PPath.Double implements Comparator<~name~> {
 	~RelationInputEventHandler()~
 
 	protected void onRelationRightClick(PInputEvent event, JPopupMenu pop) {
-		~onRightClickActions:{it|pop.add(new ~it.name~(this, canvas, event));};separator="\n"~
+		~onRightClick:{it|~if(it.isSeparator)~pop.addSeparator()~else~pop.add(new ~it.name~(this, canvas, event))~endif~;};separator="\n"~
 	}
 
 	protected void onRelationLeftClick(PInputEvent event) {
@@ -1059,16 +1135,24 @@ public class ~name~ extends PPath.Double implements Comparator<~name~> {
 	}
 
 	protected void onRelationKeyPressed(PInputEvent event) {
-
+~if(onKeyPressed)~
+		switch (event.getKeyCode()) {
+			~onKeyPressed:{it|
+case java.awt.event.KeyEvent.VK_~it.key~:
+	new ~it.name~(this, canvas, event).actionPerformed(null);
+	break;
+};separator="\n"~
+		}
+~endif~
 	}
 
-	static abstract class RelationAction extends AbstractAction {
+	static abstract class RelationAction<N extends ~name~> extends AbstractAction {
 
-		final ~name~ relation;
+		final N relation;
 		final ~canvasName~ canvas;
 		final PInputEvent event;
 	
-		RelationAction(String name, ~name~ relation, ~canvasName~ canvas, PInputEvent event) {
+		RelationAction(String name, N relation, ~canvasName~ canvas, PInputEvent event) {
 			super(name);
 			this.relation = relation;
 			this.canvas = canvas;
@@ -1080,10 +1164,14 @@ public class ~name~ extends PPath.Double implements Comparator<~name~> {
 			actionPerformed(relation, canvas, event, e);
 		}
 	
-		abstract void actionPerformed(~name~ relation, ~canvasName~ canvas, PInputEvent event, ActionEvent e);
+		abstract void actionPerformed(N relation, ~canvasName~ canvas, PInputEvent event, ActionEvent e);
+
+		~relationActionmethods:{it|~it~};separator="\n\n"~
 	}
 	
-	~onRightClickActions:{it|~it.declaration~};separator="\n\n"~
+	~actions:{it|~it~};separator="\n\n"~
+
+	~methods:{it|~it~};separator="\n\n"~
 }  >>
 
 PNodeChangeListener() ::= <<private final class PNodeChangeListener implements PropertyChangeListener {
@@ -1134,16 +1222,59 @@ RelationInputEventHandler() ::= <<private final class RelationInputEventHandler 
 	}
 }  >>
 
-RelationAction(name,relationType,canvasName,title,statements) ::= <<private static final class ~name~ extends RelationAction {
+RelationAction(name,relationType,fields,canvasName,title,statements) ::= <<private static final class ~name~ extends RelationAction<~relationType~> {
 
-	~name~(~relationType~ relation, ~canvasName~ canvas, PInputEvent event) {
+	~fields:{it|~it.type~ ~it.name~;};separator="\n"~
+	
+	~name~(~relationType~ relation, ~canvasName~ canvas, PInputEvent event~if(fields)~, ~endif~~fields:{it|~it.type~ ~it.name~};separator=", "~) {
 		super("~title~", relation, canvas, event);
+		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
 	}
 
 	@Override
 	void actionPerformed(~relationType~ relation, ~canvasName~ canvas, PInputEvent event, ActionEvent e) {
 		~statements:{it|~it~};separator="\n"~
 	}
+}  >>
+
+PRelationImpl(packageName,name,relationName,fields,canvasName,srcNode,dstNode,nameExpression,uuidExpression,onRightClick,onKeyPressed,actions) ::= <<package ~packageName~;
+
+import org.piccolo2d.event.PInputEvent;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.*;
+
+public class ~name~ extends ~relationName~ {
+
+	~fields:{it|~it.type~ ~it.name~;};separator="\n"~
+	
+	public ~name~(~canvasName~ canvas, ~srcNode~ src, ~dstNode~ dst~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
+		super(canvas, src, dst, ~if(nameExpression)~~nameExpression~~else~"~name;format="lowFirst"~"~endif~, ~uuidExpression~);
+		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+	}
+
+	@Override
+	protected void onRelationRightClick(PInputEvent event, JPopupMenu pop) {
+		~onRightClick:{it|~if(it.isSeparator)~pop.addSeparator()~else~pop.add(new ~it.name~(this, canvas, event))~endif~;};separator="\n"~
+	}
+
+	@Override
+	protected void onRelationKeyPressed(PInputEvent event) {
+~if(onKeyPressed)~
+		switch (event.getKeyCode()) {
+			~onKeyPressed:{it|
+case java.awt.event.KeyEvent.VK_~it.key~:
+	new ~it.name~(this, canvas, event).actionPerformed(null);
+	break;
+};separator="\n"~
+		}
+~endif~
+		super.onRelationKeyPressed(event);
+	}
+	
+	~actions:{it|~it~};separator="\n\n"~
 }  >>
 
 readme() ::= <<http://piccolo2d.org/

@@ -77,6 +77,72 @@
       "type" : "SINGLE",
       "argumentType" : "Boolean"
     } ]
+  }, {
+    "uuid" : "482ae0e3-0000-41e0-8f17-0613430216b8",
+    "name" : "JavaProject",
+    "text" : "package ~packageName~;\n\nimport nextgen.templates.java.PackageDeclaration;\n\nimport static nextgen.st.STGenerator.*;\nimport static nextgen.templates.JavaPatterns.*;\n\t\npublic class ~name~ {\n\n\tfinal java.io.File root = new java.io.File(\"~root~\");\n\tfinal java.io.File mainJava = new java.io.File(root, \"src/main/java\");\n\tfinal java.io.File mainResources = new java.io.File(root, \"src/main/resources\");\n\t\n\tfinal java.io.File testJava = new java.io.File(root, \"src/test/java\");\n\tfinal java.io.File testResources = new java.io.File(root, \"src/test/resources\");\n\n\t~packageDeclarations:{it|final PackageDeclaration ~it.name~ = newPackageDeclaration(~if(it.parent)~~it.parent~, ~endif~\"~it.packageName~\");};separator=\"\\n\"~\n\n\t~types:{it|final String ~it.name~ = \"~it.canonicalName~\";};separator=\"\\n\"~\n\n\t~names:{it|final String ~it.name~ = \"~it.value~\";};separator=\"\\n\"~\n\n\tvoid writeToMainJava(NamedEntity entity) {\n\t\twriteJavaFile(entity.content, entity.packageDeclaration, entity.name, mainJava);\n\t}\n\n\n\tstatic class NamedEntity {\n\n\t\tfinal String name;\n\t\tObject content;\n\t\tPackageDeclaration packageDeclaration;\n\t\t\n\t\tNamedEntity(String name) {\n\t\t\tthis.name = name;\n\t\t}\n\n\t\tNamedEntity(String name, Object content) {\n\t\t\tthis(name);\n\t\t\tthis.content = content;\n\t\t}\n\n\t\tNamedEntity(String name, Object content, PackageDeclaration packageDeclaration) {\n\t\t\tthis(name);\n\t\t\tthis.content = content;\n\t\t\tthis.packageDeclaration = packageDeclaration;\n\t\t}\n\t}\n} ",
+    "parameters" : [ {
+      "uuid" : "566d195b-373f-4291-80d8-27ae7f9cce36",
+      "name" : "packageName",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "506bc5e1-a0e7-4fc3-857d-60d685b6d7d4",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "f4c44046-79e9-448d-aede-3ecc86c5e523",
+      "name" : "root",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "84f80147-c556-4778-a9f1-0542f7208e18",
+      "name" : "packageDeclarations",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "851d2fcf-5621-4bd1-bfb6-8fa65edc4843",
+        "name" : "parent",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "372f5d25-11b3-47e9-80f0-38bfa3ae49ef",
+        "name" : "name",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "46a52030-da74-4008-bfcf-ea498694d95a",
+        "name" : "packageName",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "2ef589b5-0b44-41e8-8fe8-2048553a7e65",
+      "name" : "types",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "d13ad690-8fe5-4c87-b8d8-6f8d80f372b9",
+        "name" : "name",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "2f405ac4-0290-45fc-a10e-ee134bd32927",
+        "name" : "canonicalName",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "5d76293c-352f-4093-a7e9-365c1526deb4",
+      "name" : "names",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "c5f90cc0-5f23-4ed1-9ca8-beddb015d7d5",
+        "name" : "name",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "294f16cb-a6cd-4967-a0c2-53c36df805d0",
+        "name" : "value",
+        "argumentType" : "Object"
+      } ]
+    } ]
   } ],
   "enums" : [ {
     "uuid" : "85f93ad0-6b67-41ac-9211-4f5c88ea666c",

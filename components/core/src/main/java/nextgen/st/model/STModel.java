@@ -75,30 +75,35 @@ public class STModel {
 		return this;
 	}
 
-	public STModel setFile(STFile dst) { 
-		final org.neo4j.graphdb.Relationship relationship = getFileRelation();
-		if (relationship != null)  { 
-			if (relationship.getOtherNode(node).equals(dst.getNode())) return this;
-			relationship.delete();
-		}
-		if (dst == null) return this;
-		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("file"));
+	public STModel addFiles(STFile dst) { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("files")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+		if (existing.isPresent()) return this;
+		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("files"));
+		relationship.setProperty("_t", System.nanoTime());
 		return this;
 	}
 
-	public STFile getFile() { 
-		final org.neo4j.graphdb.Relationship relationship = getFileRelation();
-		return relationship == null ? null : new STFile(relationship.getOtherNode(node));
+	public java.util.stream.Stream<STFile> getFiles() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("files")).spliterator(), false).map((relationship) -> new STFile(relationship.getOtherNode(node)));
 	}
 
-	public STModel removeFile() { 
-		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getFileRelation());
+	public java.util.stream.Stream<STFile> getFilesSorted() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("files")).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t", o.getId()))).map((relationship) -> new STFile(relationship.getOtherNode(node)));
+	}
+
+	public STModel removeFiles(STFile dst) { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("files")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
 		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
 		return this;
 	}
 
-	public org.neo4j.graphdb.Relationship getFileRelation() { 
-		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("file"), org.neo4j.graphdb.Direction.OUTGOING);
+	public STModel removeAllFiles() { 
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("files")).forEach(org.neo4j.graphdb.Relationship::delete);
+		return this;
+	}
+
+	public java.util.stream.Stream<STFile> getIncomingFiles() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("files")).spliterator(), false).map((relationship) -> new STFile(relationship.getOtherNode(node)));
 	}
 
 	public STModel addArguments(STArgument dst) { 
@@ -142,8 +147,9 @@ public class STModel {
 		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
 		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
 		if (node.hasProperty("stTemplate")) jsonObject.put("stTemplate", node.getProperty("stTemplate"));
-		final STFile _file = getFile();
-		if (_file != null) jsonObject.put("file", _file.toJsonObject());
+		final io.vertx.core.json.JsonArray _files = new io.vertx.core.json.JsonArray();
+		getFiles().forEach(element -> _files.add(element.toJsonObject()));
+		if (!_files.isEmpty()) jsonObject.put("files", _files);
 
 		final io.vertx.core.json.JsonArray _arguments = new io.vertx.core.json.JsonArray();
 		getArguments().forEach(element -> _arguments.add(element.toJsonObject()));
@@ -153,8 +159,7 @@ public class STModel {
 	}
 
 	public void deleteTree() {
-		final STFile _file = getFile();
-		if (_file != null) _file.deleteTree();
+		getFiles().forEach(element -> element.deleteTree());
 
 		getArguments().forEach(element -> element.deleteTree());
 
