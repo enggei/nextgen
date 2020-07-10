@@ -102,6 +102,7 @@ public class JavaST {
 	WhileStmt.st + "\n" + 
 	ClassOrInterfaceType.st + "\n" + 
 	TypeParameter.st + "\n" + 
+	JavaPatterns.st + "\n" + 
 	InvokeLater.st + "\n" + 
 	NewInstance.st + "\n" + 
 	Switch.st + "\n" + 
@@ -527,6 +528,10 @@ public class JavaST {
 
 	public static TypeParameter newTypeParameter() {
 		return new TypeParameter(stGroup);
+	} 
+
+	public static JavaPatterns newJavaPatterns() {
+		return new JavaPatterns(stGroup);
 	} 
 
 	public static InvokeLater newInvokeLater() {

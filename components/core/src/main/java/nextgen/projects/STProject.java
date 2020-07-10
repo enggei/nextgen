@@ -10,14 +10,12 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
+import static nextgen.projects.BaseSTProject.JavaPatterns.*;
 import static nextgen.st.STGenerator.writeJavaFile;
 import static nextgen.templates.DomainPatterns.newEnum;
 import static nextgen.templates.DomainPatterns.*;
-import static nextgen.templates.JavaPatterns.*;
 import static nextgen.templates.Piccolo2DPatterns.*;
 import static nextgen.templates.TextPatterns.*;
-import static nextgen.templates.java.JavaST.newMethodDeclaration;
-import static nextgen.templates.java.JavaST.newSwitch;
 
 public class STProject extends BaseSTProject {
 
@@ -50,6 +48,7 @@ public class STProject extends BaseSTProject {
                 .setCanvasName(canvas.getName())
                 .setPackageName(stCanvasPackage.getName())
                 .addMethods(newNodeMethod()
+                        .setIsStatic(true)
                         .setName("cut")
                         .addParams("text", "String")
                         .setType("String")
@@ -447,8 +446,8 @@ public class STProject extends BaseSTProject {
                 .addFields(STTemplate.type(), STTemplate.variableName())
                 .addFields(STModel.type(), STModel.variableName())
                 .addFields(STRenderer.type(), STRenderer.variableName())
-                .setInitText("stTemplate.getName() + \" : \\n\" + stRenderer.render(stModel)")
-                .setUuid("java.util.UUID.fromString(stModel.getUuid())")
+                .setInitText(STTemplate.methodCall("getName") + "" + asString(" : \\n") + "" + methodCallExpression("cut", STRenderer.methodCall("render", STModel.variableName())))
+                .setUuid(UUID.fromString(STModel.methodCall("getUuid")))
                 .addMethods(forEachArgument)
                 .addMethods(refersTo)
                 .addMethods(newProtectedMethod("removeArgument", newBlockStmt()

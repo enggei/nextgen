@@ -5,6 +5,7 @@ public class NodeMethod {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Boolean _isStatic;
 	private Object _type;
 	private Object _name;
 	private Object _returnStatement;
@@ -22,6 +23,7 @@ public class NodeMethod {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("nodeMethod");
+		st.add("isStatic", _isStatic);
 		st.add("type", _type);
 		st.add("name", _name);
 		st.add("returnStatement", _returnStatement);
@@ -29,6 +31,28 @@ public class NodeMethod {
 		for (java.util.Map<String, Object> map : _params) st.addAggr("params.{name,type}", map.get("name"), map.get("type"));
 		return st.render().trim();
 	}
+
+	public NodeMethod setIsStatic(Boolean value) {
+		this._isStatic = value;
+		return this;
+	}
+
+	public Boolean getIsStatic() {
+		return this._isStatic;
+	}
+
+	public Boolean getIsStatic(Boolean defaultValue) {
+		return this._isStatic == null ? defaultValue : this._isStatic;
+	}
+
+	public boolean hasIsStatic() {
+		return this._isStatic != null;
+	}
+
+	public NodeMethod removeIsStatic() {
+		this._isStatic = null;
+		return this;
+	} 
 
 	public NodeMethod setType(Object value) {
 		this._type = value;
@@ -183,7 +207,7 @@ public class NodeMethod {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "nodeMethod(type,name,params,statements,returnStatement) ::= <<public ~if(type)~~type~~else~void~endif~ ~name~(~params:{it|~it.type~ ~it.name~};separator=\",\"~) {\n" + 
+	static final String st = "nodeMethod(isStatic,type,name,params,statements,returnStatement) ::= <<public ~if(isStatic)~static ~endif~~if(type)~~type~~else~void~endif~ ~name~(~params:{it|~it.type~ ~it.name~};separator=\",\"~) {\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~~if(returnStatement)~\n" + 
 				"	return ~returnStatement~~endif~\n" + 
 				"	\n" + 

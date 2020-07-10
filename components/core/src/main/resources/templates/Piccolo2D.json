@@ -466,8 +466,13 @@
       "children" : [ {
         "uuid" : "e6b57149-c223-482e-a27c-f94bf7d19f3d",
         "name" : "nodeMethod",
-        "text" : "public ~if(type)~~type~~else~void~endif~ ~name~(~params:{it|~it.type~ ~it.name~};separator=\",\"~) {\n\t~statements:{it|~it~};separator=\"\\n\"~~if(returnStatement)~\n\treturn ~returnStatement~~endif~\n\t\n} ",
+        "text" : "public ~if(isStatic)~static ~endif~~if(type)~~type~~else~void~endif~ ~name~(~params:{it|~it.type~ ~it.name~};separator=\",\"~) {\n\t~statements:{it|~it~};separator=\"\\n\"~~if(returnStatement)~\n\treturn ~returnStatement~~endif~\n\t\n} ",
         "parameters" : [ {
+          "uuid" : "d0f41416-bbc4-46ca-949b-b05df9bee60e",
+          "name" : "isStatic",
+          "type" : "SINGLE",
+          "argumentType" : "Boolean"
+        }, {
           "uuid" : "2b549848-0f7e-49ef-83ec-82e51d415aa0",
           "name" : "type",
           "type" : "SINGLE",

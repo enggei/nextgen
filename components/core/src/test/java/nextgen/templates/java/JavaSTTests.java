@@ -106,6 +106,7 @@ public class JavaSTTests {
 		testWhileStmt();
 		testClassOrInterfaceType();
 		testTypeParameter();
+		testJavaPatterns();
 		testInvokeLater();
 		testNewInstance();
 		testSwitch();
@@ -595,6 +596,11 @@ public class JavaSTTests {
 	@org.junit.Test
 	public void testTypeParameter() {
 		System.out.println("\n--- TEST TypeParameter:\n" + newTypeParameter());
+	} 
+
+	@org.junit.Test
+	public void testJavaPatterns() {
+		System.out.println("\n--- TEST JavaPatterns:\n" + newJavaPatterns());
 	} 
 
 	@org.junit.Test

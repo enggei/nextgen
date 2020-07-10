@@ -442,7 +442,7 @@ public class STNode extends PNode implements PropertyChangeListener {
 		}
 	}
 
-	public String cut(String text) {
+	public static String cut(String text) {
 		return text.substring(0, Math.min(text.length(), 20));
 	}
 

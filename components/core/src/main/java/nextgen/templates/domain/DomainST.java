@@ -8,6 +8,13 @@ public class DomainST {
 	Domain.st + "\n" + 
 	Entity.st + "\n" + 
 	JavaProject.st + "\n" + 
+	JavaCorePackage.st + "\n" + 
+	JavaLibrary.st + "\n" + 
+	JavaPackage.st + "\n" + 
+	ExtendedNameEntity.st + "\n" + 
+	MethodCallExpression.st + "\n" + 
+	JavaSwingPackage.st + "\n" + 
+	Neo4JPackage.st + "\n" + 
 	Relation.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
@@ -54,6 +61,34 @@ public class DomainST {
 
 	public static JavaProject newJavaProject() {
 		return new JavaProject(stGroup);
+	} 
+
+	public static JavaCorePackage newJavaCorePackage() {
+		return new JavaCorePackage(stGroup);
+	} 
+
+	public static JavaLibrary newJavaLibrary() {
+		return new JavaLibrary(stGroup);
+	} 
+
+	public static JavaPackage newJavaPackage() {
+		return new JavaPackage(stGroup);
+	} 
+
+	public static ExtendedNameEntity newExtendedNameEntity() {
+		return new ExtendedNameEntity(stGroup);
+	} 
+
+	public static MethodCallExpression newMethodCallExpression() {
+		return new MethodCallExpression(stGroup);
+	} 
+
+	public static JavaSwingPackage newJavaSwingPackage() {
+		return new JavaSwingPackage(stGroup);
+	} 
+
+	public static Neo4JPackage newNeo4JPackage() {
+		return new Neo4JPackage(stGroup);
 	} 
 
 	public static Relation newRelation() {

@@ -80,10 +80,15 @@
   }, {
     "uuid" : "482ae0e3-0000-41e0-8f17-0613430216b8",
     "name" : "JavaProject",
-    "text" : "package ~packageName~;\n\nimport nextgen.templates.java.*;\n\nimport static nextgen.st.STGenerator.*;\nimport static nextgen.templates.JavaPatterns.*;\n\t\npublic class ~name~ {\n\n\tfinal java.io.File root = new java.io.File(\"~root~\");\n\tfinal java.io.File mainJava = new java.io.File(root, \"src/main/java\");\n\tfinal java.io.File mainResources = new java.io.File(root, \"src/main/resources\");\n\tfinal java.io.File testJava = new java.io.File(root, \"src/test/java\");\n\tfinal java.io.File testResources = new java.io.File(root, \"src/test/resources\");\n\n\t~names:{it|final String ~it.name~ = \"~it.value~\";};separator=\"\\n\"~\n\n\t~packageDeclarations:{it|~it~};separator=\"\\n\\n\"~\n\n\t~types:{it|final NamedEntity ~it.name~ = new NamedEntity(\"~it.typeName~\", newPackageDeclaration(\"~it.packageName~\"))~if(it.variableName)~.setVariableName(\"~it.variableName~\")~endif~;};separator=\"\\n\"~\n\n\tvoid writeToMainJava(NamedEntity entity) {\n\t\twriteJavaFile(entity.content, entity.packageDeclaration, entity.name, mainJava);\n\t}\n\n\tstatic Statement statement(Expression expression) {\n\t\treturn newExpressionStmt().setExpression(expression);\n\t}\n\n\tstatic MethodCallExpression methodCallExpression(Object scope, String name, Object... arguments) {\n\t\treturn newMethodCallExpression()\n\t\t\t\t\t.setScope(scope)\n\t\t\t\t\t.setName(name)\n\t\t\t\t\t.setArguments(arguments);\n\t}\n\t\n\tstatic Object asString(Object value) {\n\t\treturn \"\\\"\" + value + \"\\\"\";\n\t}\n\t\n\tstatic class NamedEntity {\n\n\t\tprivate final String name;\n\t\tprivate final PackageDeclaration packageDeclaration;\n\t\tObject content;\n\n\t\tprivate String variableName;\n\t\t\n\t\tNamedEntity(String name) {\n\t\t\tthis.name = name;\n\t\t\tthis.packageDeclaration = null;\n\t\t}\n\t\t\n\t\tNamedEntity(String name, PackageDeclaration packageDeclaration) {\n\t\t\tthis.name = name;\n\t\t\tthis.packageDeclaration = packageDeclaration;\n\t\t}\n\t\t\n\t\tNamedEntity(String name, PackageDeclaration packageDeclaration, Object content) {\n\t\t\tthis(name, packageDeclaration);\n\t\t\tthis.content = content;\n\t\t}\n\n\t\tNamedEntity setVariableName(String variableName) {\n\t\t\tthis.variableName = variableName;\n\t\t\treturn this;\n\t\t}\n\n\t\tString name() {\n\t\t\treturn name;\n\t\t}\n\n\t\tClassOrInterfaceType type(Object... typeArguments) {\n\t\t\treturn asClassOrInterfaceType(typeArguments);\n\t\t}\n\n\t\tString variableName() {\n\t\t\treturn variableName == null ? Character.toLowerCase(name.charAt(0)) + name.substring(1) : variableName;\n\t\t}\n\n\t\tParameter asParameter(Object... typeArguments) {\n\t\t\treturn newParameter().setType(asClassOrInterfaceType(typeArguments)).setName(variableName());\n\t\t}\n\t\t\n\t\tMethodCallExpression staticMethodCall(String name, Object... arguments) {\n\t\t\treturn methodCallExpression(type(), name, arguments);\n\t\t}\n\n\t\tMethodCallExpression methodCall(String name, Object... arguments) {\n\t\t\treturn methodCallExpression(variableName(), name, arguments);\n\t\t}\n\n\t\tStatement asVariable(Object initializer) {\n\t\t\treturn newExpressionStmt()\n\t\t\t\t\t.setExpression(newVariableDeclarationExpression()\n\t\t\t\t\t\t\t.addModifiers(\"final\")\n\t\t\t\t\t\t\t.addVariables(newVariableDeclaration()\n\t\t\t\t\t\t\t\t\t.setName(variableName())\n\t\t\t\t\t\t\t\t\t.setType(type())\n\t\t\t\t\t\t\t\t\t.setInitializer(initializer)));\n\t\t}\n\n\t\tClassOrInterfaceType asClassOrInterfaceType(Object... typeArguments) {\n\t\t\treturn newClassOrInterfaceType()\n\t\t\t\t\t.addNames(name())\n\t\t\t\t\t.setScope(packageDeclaration == null ? null : packageDeclaration.getName())\n\t\t\t\t\t.setTypeArguments(typeArguments);\n\t\t}\n\n\t\tObjectCreationExpression newInstance(Object... arguments) {\n\t\t\treturn newObjectCreationExpression()\n\t\t\t\t\t.setType(type())\n\t\t\t\t\t.setArguments(arguments);\n\t\t}\n\t}\n} ",
+    "text" : "package ~packageName~;\n\nimport nextgen.templates.java.*;\n\n~if(javaPatterns)~import static ~packageName~.~name~.JavaPatterns.*;~endif~\n\t\npublic class ~name~ {\n\n\tfinal java.io.File root = new java.io.File(\"~root~\");\n\tfinal java.io.File mainJava = new java.io.File(root, \"src/main/java\");\n\tfinal java.io.File mainResources = new java.io.File(root, \"src/main/resources\");\n\tfinal java.io.File testJava = new java.io.File(root, \"src/test/java\");\n\tfinal java.io.File testResources = new java.io.File(root, \"src/test/resources\");\n\n\t~libraries:{it|~it~};separator=\"\\n\\n\"~\n\t\n\t~packageDeclarations:{it|~it~};separator=\"\\n\\n\"~\n\n\t~javaPatterns~\n} ",
     "parameters" : [ {
       "uuid" : "566d195b-373f-4291-80d8-27ae7f9cce36",
       "name" : "packageName",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "fc6c1860-39ea-4a4a-a41c-dcb4ae792518",
+      "name" : "javaPatterns",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
@@ -97,51 +102,20 @@
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "5d76293c-352f-4093-a7e9-365c1526deb4",
-      "name" : "names",
-      "type" : "KVLIST",
-      "argumentType" : "Object",
-      "keys" : [ {
-        "uuid" : "c5f90cc0-5f23-4ed1-9ca8-beddb015d7d5",
-        "name" : "name",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "294f16cb-a6cd-4967-a0c2-53c36df805d0",
-        "name" : "value",
-        "argumentType" : "Object"
-      } ]
+      "uuid" : "9a944977-44db-4cda-b493-b031621ab793",
+      "name" : "libraries",
+      "type" : "LIST",
+      "argumentType" : "Object"
     }, {
       "uuid" : "f709faa9-e663-4a51-a7a1-366f90a6d9ef",
       "name" : "packageDeclarations",
       "type" : "LIST",
       "argumentType" : "Object"
-    }, {
-      "uuid" : "2ef589b5-0b44-41e8-8fe8-2048553a7e65",
-      "name" : "types",
-      "type" : "KVLIST",
-      "argumentType" : "Object",
-      "keys" : [ {
-        "uuid" : "d13ad690-8fe5-4c87-b8d8-6f8d80f372b9",
-        "name" : "name",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "4da35ebc-255a-4acb-9136-e2693c8db15d",
-        "name" : "variableName",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "cdbc991e-fec6-4df0-bd26-320cea4ce103",
-        "name" : "packageName",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "d5ada63f-2c61-4333-8f0b-84311bea5241",
-        "name" : "typeName",
-        "argumentType" : "Object"
-      } ]
     } ],
     "children" : [ {
       "uuid" : "581a326a-5c8c-47bb-9ce2-0cfd0e28a9f2",
-      "name" : "ProjectPackage",
-      "text" : "~if(comments)~\n// ~comments~\n~endif~\nfinal PackageDeclaration ~name~ = newPackageDeclaration(~if(parent)~~parent~, ~endif~\"~packageName~\");\n~entities:{it|final NamedEntity ~it.name~ = new NamedEntity(\"~it.name~\", ~name~)~if(it.variableName)~.setVariableName(\"~it.variableName~\")~endif~;};separator=\"\\n\"~ ",
+      "name" : "JavaPackage",
+      "text" : "~if(comments)~\n// ~comments~\n~endif~\nfinal PackageDeclaration ~name~ = newPackageDeclaration(~if(parent)~~parent~, ~endif~\"~packageName~\");\n\n~extendedEntities:{it|~it~};separator=\"\\n\"~\n~entities:{it|final NamedEntity ~it.name~ = new NamedEntity(\"~it.name~\", ~name~~if(it.variableName)~, \"~it.variableName~\"~endif~);};separator=\"\\n\"~\n\n~methods:{it|~it~};separator=\"\\n\\n\"~\n~subPackages:{it|~it~};separator=\"\\n\\n\"~ ",
       "parameters" : [ {
         "uuid" : "d854bc48-0d01-400e-bc44-e605449e7d49",
         "name" : "comments",
@@ -163,6 +137,11 @@
         "type" : "SINGLE",
         "argumentType" : "Object"
       }, {
+        "uuid" : "ff0f9b39-8004-4d7e-862e-8f6e0bc5aa19",
+        "name" : "extendedEntities",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
         "uuid" : "31d6d80f-8f36-41db-b75a-f8ce2480d316",
         "name" : "entities",
         "type" : "KVLIST",
@@ -176,22 +155,103 @@
           "name" : "variableName",
           "argumentType" : "Object"
         } ]
+      }, {
+        "uuid" : "fe9ef0a7-49b5-4c8a-bac7-956bce977753",
+        "name" : "methods",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "88d56227-9a67-411c-acfd-2a7c9171540a",
+        "name" : "subPackages",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ],
+      "children" : [ {
+        "uuid" : "42f89697-89b1-4159-b40a-f3e276c22304",
+        "name" : "ExtendedNameEntity",
+        "text" : "static final class ~name~Entity extends NamedEntity {\n\t~name~Entity(String name, PackageDeclaration packageDeclaration) {\n\t\tsuper(name, packageDeclaration);\n\t}\n\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n}\n\nfinal ~name~Entity ~name~ = new ~name~Entity(\"~name~\", ~packageName~~if(variableName)~, \"~variableName~\"~endif~); ",
+        "parameters" : [ {
+          "uuid" : "196f8a7e-76d3-4306-b893-374a780ca3eb",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "bb2e1468-8a92-479a-b762-f2da53c87cff",
+          "name" : "methods",
+          "type" : "LIST",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "fd3dc874-5d73-4bbc-8c91-85a194b34b2b",
+          "name" : "packageName",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "fbe54afe-117e-41f3-8225-d0d7ac41c360",
+          "name" : "variableName",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ],
+        "children" : [ {
+          "uuid" : "9a49602e-f39e-42fb-b981-6be4110c33b8",
+          "name" : "MethodCallExpression",
+          "text" : "MethodCallExpression ~name~(~arguments:{it|~it.type~ ~it.name~};separator=\", \"~) {\n\treturn ~if(isStatic)~static~endif~MethodCall(\"~name~\"~if(arguments)~, ~arguments:{it|~it.name~};separator=\", \"~~endif~);\n} ",
+          "parameters" : [ {
+            "uuid" : "aeaa9cb6-2c95-42cf-b297-6e7872d9cb39",
+            "name" : "name",
+            "type" : "SINGLE",
+            "argumentType" : "Object"
+          }, {
+            "uuid" : "fed26508-7381-4d43-9f6c-892f5a963ee7",
+            "name" : "arguments",
+            "type" : "KVLIST",
+            "argumentType" : "Object",
+            "keys" : [ {
+              "uuid" : "959ebb2e-a753-4dfe-871a-bb97450d3bd1",
+              "name" : "type",
+              "argumentType" : "Object"
+            }, {
+              "uuid" : "6d6b5d47-3c41-457a-98b2-b4289066868b",
+              "name" : "name",
+              "argumentType" : "Object"
+            } ]
+          }, {
+            "uuid" : "85b688d0-229b-4e48-bcf6-40d4fdf950ea",
+            "name" : "isStatic",
+            "type" : "SINGLE",
+            "argumentType" : "Boolean"
+          } ]
+        } ]
       } ]
     }, {
       "uuid" : "50b7c87b-fdbe-4e5c-a609-451921bdbb9c",
       "name" : "JavaCorePackage",
-      "text" : "// Java core --\nfinal NamedEntity String = new NamedEntity(\"String\");\nfinal NamedEntity intType = new NamedEntity(\"int\");\n\nfinal PackageDeclaration javaUtil = newPackageDeclaration(\"java.util\");\nfinal NamedEntity UUID = new NamedEntity(\"UUID\", javaUtil);\nfinal NamedEntity Map = new NamedEntity(\"Map\", javaUtil);\nfinal NamedEntity Set = new NamedEntity(\"Set\", javaUtil);\nfinal NamedEntity List = new NamedEntity(\"List\", javaUtil);\nfinal NamedEntity Collection = new NamedEntity(\"Collection\", javaUtil);\nfinal NamedEntity LinkedHashMap = new NamedEntity(\"LinkedHashMap\", javaUtil);\nfinal NamedEntity LinkedHashSet = new NamedEntity(\"LinkedHashSet\", javaUtil);\nfinal NamedEntity TreeSet = new NamedEntity(\"TreeSet\", javaUtil);\n\nfinal PackageDeclaration javaUtilFunction = newPackageDeclaration(\"java.util.function\");\nfinal NamedEntity Consumer = new NamedEntity(\"Consumer\", javaUtilFunction);\nfinal NamedEntity BiConsumer = new NamedEntity(\"BiConsumer\", javaUtilFunction).setVariableName(\"consumer\");\n\nStatement newLinkedHashMap(String variableName, Object keyType, Object valueType) {\n\treturn statement(newVariableDeclarationExpression()\n\t\t\t.addModifiers(\"final\")\n\t\t\t.addVariables(newVariableDeclaration()\n\t\t\t\t\t.setName(variableName)\n\t\t\t\t\t.setType(Map.asClassOrInterfaceType()\n\t\t\t\t\t\t\t.addTypeArguments(keyType)\n\t\t\t\t\t\t\t.addTypeArguments(valueType))\n\t\t\t\t\t.setInitializer(LinkedHashMap.newInstance()\n\t\t\t\t\t\t\t.addTypeArguments(\"\"))));\n}\n\nStatement put(String scope, Object key, Object value) {\n\treturn newExpressionStmt()\n\t\t.setExpression(newMethodCallExpression()\n\t\t.setScope(scope)\n\t\t.setName(\"put\")\n\t\t.addArguments(key)\n\t\t.addArguments(value));\n}\n// -- Java core ",
+      "text" : "// todo refactor away, into JavaPackage \"Java Core\"\n\nfinal NamedEntity String = new NamedEntity(\"String\");\nfinal NamedEntity intType = new NamedEntity(\"int\");\n\nfinal NamedEntity Map = new NamedEntity(\"Map\", javaUtil);\nfinal NamedEntity Set = new NamedEntity(\"Set\", javaUtil);\nfinal NamedEntity List = new NamedEntity(\"List\", javaUtil);\nfinal NamedEntity Collection = new NamedEntity(\"Collection\", javaUtil);\nfinal NamedEntity LinkedHashMap = new NamedEntity(\"LinkedHashMap\", javaUtil);\nfinal NamedEntity LinkedHashSet = new NamedEntity(\"LinkedHashSet\", javaUtil);\nfinal NamedEntity TreeSet = new NamedEntity(\"TreeSet\", javaUtil);\n\nfinal PackageDeclaration javaUtilFunction = newPackageDeclaration(\"java.util.function\");\nfinal NamedEntity Consumer = new NamedEntity(\"Consumer\", javaUtilFunction);\nfinal NamedEntity BiConsumer = new NamedEntity(\"BiConsumer\", javaUtilFunction, \"consumer\");\n\nStatement newLinkedHashMap(String variableName, Object keyType, Object valueType) {\n\treturn statement(newVariableDeclarationExpression()\n\t\t\t.addModifiers(\"final\")\n\t\t\t.addVariables(newVariableDeclaration()\n\t\t\t\t\t.setName(variableName)\n\t\t\t\t\t.setType(Map.asClassOrInterfaceType()\n\t\t\t\t\t\t\t.addTypeArguments(keyType)\n\t\t\t\t\t\t\t.addTypeArguments(valueType))\n\t\t\t\t\t.setInitializer(LinkedHashMap.newInstance()\n\t\t\t\t\t\t\t.addTypeArguments(\"\"))));\n}\n\nStatement put(String scope, Object key, Object value) {\n\treturn newExpressionStmt()\n\t\t.setExpression(newMethodCallExpression()\n\t\t.setScope(scope)\n\t\t.setName(\"put\")\n\t\t.addArguments(key)\n\t\t.addArguments(value));\n} ",
       "parameters" : [ ]
     }, {
       "uuid" : "552d7c62-d1d5-44aa-9d91-45300e2e6f86",
       "name" : "JavaSwingPackage",
-      "text" : "// Java swing --\nfinal PackageDeclaration javaxSwing = newPackageDeclaration(\"javax.swing\");\nfinal NamedEntity JTextField = new NamedEntity(\"JTextField\", javaxSwing);\n\n\nstatic Statement invokeLater(Expression expression) {\n\treturn statement(methodCallExpression(\"javax.swing.SwingUtilities\", \"invokeLater\")\n\t\t\t\t.addArguments(newLambdaExpression().setBody(expression)));\n}\n// -- Java swing ",
+      "text" : "final PackageDeclaration javaxSwing = newPackageDeclaration(\"javax.swing\");\nfinal NamedEntity JTextField = new NamedEntity(\"JTextField\", javaxSwing, \"textField\");\nfinal NamedEntity JTextArea = new NamedEntity(\"JTextArea\", javaxSwing, \"textArea\");\n\nstatic Statement invokeLater(Expression expression) {\n\treturn statement(methodCallExpression(\"javax.swing.SwingUtilities\", \"invokeLater\")\n\t\t\t\t.addArguments(newLambdaExpression().setBody(expression)));\n} ",
       "parameters" : [ ]
     }, {
       "uuid" : "cffd8d1c-04e5-428f-9e36-dff9288cc83b",
       "name" : "Neo4JPackage",
-      "text" : "// Neo4J --\nfinal PackageDeclaration neo4jGraphdb = newPackageDeclaration(\"org.neo4j.graphdb\");\nfinal NamedEntity NeoTransaction = new NamedEntity(\"Transaction\", neo4jGraphdb);\n\n\n// -- Neo4J ",
+      "text" : "final PackageDeclaration neo4jGraphdb = newPackageDeclaration(\"org.neo4j.graphdb\");\nfinal NamedEntity NeoTransaction = new NamedEntity(\"Transaction\", neo4jGraphdb); ",
       "parameters" : [ ]
+    }, {
+      "uuid" : "ae2892b7-da5f-464e-9d07-2ed65253888a",
+      "name" : "JavaLibrary",
+      "text" : "// ~name~\n~packages:{it|~it~};separator=\"\\n\\n\"~ ",
+      "parameters" : [ {
+        "uuid" : "871a9b10-a31d-493b-b9e0-f680b9a8b1ef",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "7840ae7b-4bc3-48dc-ac8d-d2f4b1dc50ce",
+        "name" : "packages",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
     } ]
   } ],
   "enums" : [ {
