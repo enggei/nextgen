@@ -62,7 +62,7 @@
       }, {
         "uuid" : "f05c4cbf-3b7e-4156-9906-99ae7e7c47a6",
         "name" : "ClassDeclaration",
-        "text" : "~annotations~~if(annotations)~\n~endif~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n\t~fields:{it|~it~};separator=\",\\n\"~\n)~if(extends)~: ~extends:{it|~it~};separator=\", \"~~endif~ {\n\n\t~companionObject~\n\n\t~overrideEquals~\n\n\t~overrideHashCode~\n\n\t~overrideToString~\n\n\t~members:{it|~it~};separator=\"\\n\"~\n\n\t~subclasses:{it|~it~};separator=\"\\n\"~\n} ",
+        "text" : "~annotations~~if(annotations)~\n~endif~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n\t~fields:{it|~it~};separator=\",\\n\"~\n)~if(extends)~: ~extends:{it|~it~};separator=\", \"~~endif~ {\n\n\t~properties:{it|~it~};separator=\"\\n\\n\"~\n\t~companionObject~\n\n\t~overrideEquals~\n\n\t~overrideHashCode~\n\n\t~overrideToString~\n\n\t~members:{it|~it~};separator=\"\\n\\n\"~\n\t~subclasses:{it|~it~};separator=\"\\n\\n\"~\n} ",
         "parameters" : [ {
           "uuid" : "cb459a2b-507a-49fb-b8e7-c9ca99bc0a0b",
           "name" : "annotations",
@@ -93,6 +93,11 @@
           "name" : "extends",
           "type" : "LIST",
           "argumentType" : "Extending"
+        }, {
+          "uuid" : "8aa8fc75-ad8d-4a55-bc49-21d708530138",
+          "name" : "properties",
+          "type" : "LIST",
+          "argumentType" : "PropertyDeclaration"
         }, {
           "uuid" : "105acc86-f675-4ce1-b6b5-b424cf633a30",
           "name" : "companionObject",
@@ -188,12 +193,17 @@
       }, {
         "uuid" : "653bb737-c5cb-401f-939f-6359a97fd7d6",
         "name" : "PropertyDeclaration",
-        "text" : "~annotations:{it|~it~};separator=\"\\n\"~\n~if(isPrivate)~private ~elseif(isProtected)~protected ~endif~~if(isMutable)~var ~else~val ~endif~~name~~if(type)~: ~type~~endif~~if(initializer)~ = ~initializer~~endif~ ",
+        "text" : "~annotations:{it|~it~};separator=\"\\n\"~\n~if(override)~override ~endif~~if(isPrivate)~private ~elseif(isProtected)~protected ~endif~~if(isMutable)~var ~else~val ~endif~~name~~if(type)~: ~type~~endif~~if(initializer)~ = ~initializer~~endif~~if(privateSetter)~\n\tprivate set~endif~ ",
         "parameters" : [ {
           "uuid" : "b3f43ef1-8777-4ffd-add4-c645a90d671f",
           "name" : "annotations",
           "type" : "LIST",
           "argumentType" : "AnnotationDeclaration"
+        }, {
+          "uuid" : "e8d744b8-56f6-485f-a47e-32f055459eaa",
+          "name" : "override",
+          "type" : "SINGLE",
+          "argumentType" : "Boolean"
         }, {
           "uuid" : "67c972d8-ecd3-4547-954b-a87464a45846",
           "name" : "isPrivate",
@@ -224,6 +234,11 @@
           "name" : "initializer",
           "type" : "SINGLE",
           "argumentType" : "Expression"
+        }, {
+          "uuid" : "9b0ef69b-ee0c-4043-9612-71ca18e25b19",
+          "name" : "privateSetter",
+          "type" : "SINGLE",
+          "argumentType" : "Boolean"
         } ],
         "implements" : [ "ParameterDefinition" ]
       }, {

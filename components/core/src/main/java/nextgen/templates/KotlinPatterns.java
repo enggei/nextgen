@@ -1,10 +1,13 @@
 package nextgen.templates;
 
+import nextgen.templates.javascript.Prop;
 import nextgen.templates.kotlin.*;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 public class KotlinPatterns extends KotlinST {
 
@@ -62,9 +65,8 @@ public class KotlinPatterns extends KotlinST {
 
    public static OverrideHashCode createHashCodeFunction(ParameterDefinition field) {
       return newOverrideHashCode()
-         .setReturnStatement(newReturnStatement()
-            .setExpression(newFunctionCallExpression().setScope("Objects").setFunctionName("hash")
-               .setArguments(Collections.singletonList(newLiteralExpression(getNameFromParameterDefinition(field))))));
+         .setReturnStatement(newReturnStatement(newFunctionCallExpression().setScope("Objects").setFunctionName("hash")
+                 .setArguments(singletonList(newLiteralExpression(getNameFromParameterDefinition(field))))));
    }
 
    public static OverrideToString createToStringFunction(String className, Collection<ParameterDefinition> fields) {
@@ -197,10 +199,111 @@ public class KotlinPatterns extends KotlinST {
        return KotlinST.newKotlinStringTemplateExpression().setExpression(expression);
    }
 
+   public static ReturnStatement newReturnStatement(Expression expression) {
+       return newReturnStatement().setExpression(expression);
+   }
+
+   public static PairType newPairType(TypeDeclaration first, TypeDeclaration second) {
+       return newPairType().setFirst(first).setSecond(second);
+   }
+
+   public static MapType newMapType(TypeDeclaration first, TypeDeclaration second) {
+       return newMapType().setFirst(first).setSecond(second);
+   }
+
+   public static MapType newMapType(PairType pairType) {
+       return newMapType().setFirst(pairType.getFirst()).setSecond(pairType.getSecond());
+   }
+
+   public static VarDeclarationStatement newVarDeclarationStatement(String name) {
+       return newVarDeclarationStatement().setName(name);
+   }
+
+   public static VarDeclarationStatement newVarDeclarationStatement(String name, Boolean mutable) {
+       return newVarDeclarationStatement().setName(name).setIsMutable(mutable);
+   }
+
+   public static VarDeclarationStatement newVarDeclarationStatement(String name, Expression initializer) {
+       return newVarDeclarationStatement().setName(name).setInitializer(initializer);
+   }
+
+   public static VarDeclarationStatement newVarDeclarationStatement(String name, Boolean mutable, Expression initializer) {
+       return newVarDeclarationStatement().setName(name).setIsMutable(mutable).setInitializer(initializer);
+   }
+
+   public static VarDeclarationStatement newVarDeclarationStatement(String name, TypeDeclaration type) {
+       return newVarDeclarationStatement().setName(name).setType(type);
+   }
+
+   public static VarDeclarationStatement newVarDeclarationStatement(String name, TypeDeclaration type, Boolean mutable) {
+       return newVarDeclarationStatement().setName(name).setType(type).setIsMutable(mutable);
+   }
+
+   public static VarDeclarationStatement newVarDeclarationStatement(String name, TypeDeclaration type, Expression initializer) {
+       return newVarDeclarationStatement().setName(name).setType(type).setInitializer(initializer);
+   }
+
+   public static VarDeclarationStatement newVarDeclarationStatement(String name, TypeDeclaration type, Expression initializer, Boolean mutable) {
+       return newVarDeclarationStatement().setName(name).setType(type).setInitializer(initializer).setIsMutable(mutable);
+   }
+
    public static LogicalExpression newLogicalExpression(Expression lhs, LogicalOperator operator, Expression rhs) {
        return KotlinST.newLogicalExpression()
                .setLhs(lhs)
                .setOperator(operator)
                .setRhs(rhs);
+   }
+
+   public static IfExpression newIfExpression(LogicalExpression logicalExpression, Expression whenTrue, Expression whenFalse) {
+       return newIfExpression()
+               .setLogicalExpression(logicalExpression)
+               .setWhenTrue(whenTrue)
+               .setWhenFalse(whenFalse);
+   }
+
+   public static ClassDeclaration createNeo4jOgmAbstractEntityClass() {
+       TypeDeclaration longType = newNamedType().setName("Long");
+       NullableType nullableLongType = newNullableType(longType);
+       TypeDeclaration uuidType = newNamedType().setName("UUID");
+//       ParameterDeclaration uuidField = newParameterDeclaration(uuidType, "uuid", newFunctionCallExpression().setScope("UUID").setFunctionName("randomUUID"));
+//       ParameterDeclaration idField = newParameterDeclaration(nullableLongType, "id", newNullExpression());
+
+       PropertyDeclaration idProperty = newPropertyDeclaration(nullableLongType, "id", newLiteralExpression("id"), true)
+               .setPrivateSetter(true)
+               .setAnnotations(asList(
+                       newAnnotationDeclaration().addAnnotations("Id", null),
+                       newAnnotationDeclaration().addAnnotations("GeneratedValue", null)
+               ));
+
+       PropertyDeclaration uuidProperty = newPropertyDeclaration(uuidType, "uuid", newLiteralExpression("uuid"), true)
+               .setPrivateSetter(true)
+               .setAnnotations(asList(
+                       newAnnotationDeclaration().addAnnotations("Property", singletonList(newAnnotationParam().addParam("value", "uuid"))),
+                       newAnnotationDeclaration().addAnnotations("Index", singletonList(newAnnotationParam().addParam("unique", "true"))),
+                       newAnnotationDeclaration().addAnnotations("Convert", singletonList(newAnnotationParam().addParam("value", "UUIDAttributeConverter::class")))
+               ));
+
+       List<PropertyDeclaration> properties = asList(
+               idProperty,
+               uuidProperty
+       );
+
+       List<ParameterDefinition> parameters = asList(
+               newParameterDeclaration(nullableLongType, "id", newNullExpression()),
+               newParameterDeclaration(uuidType, "uuid", newFunctionCallExpression().setScope("UUID").setFunctionName("randomUUID"))
+       );
+
+       String className = "Entity";
+
+       return newClassDeclaration(className)
+               .setIsAbstract(true)
+               .setFields(parameters)
+               .setProperties(properties)
+               .setOverrideEquals(createEqualsFunction(className,
+                       properties.stream().filter(fieldDeclaration -> !Objects.equals(getNameFromParameterDefinition(fieldDeclaration), "id")).collect(Collectors.toList()))
+               )
+               .setOverrideToString(createToStringFunction(className, new ArrayList<>(properties)))
+               .setOverrideHashCode(createHashCodeFunction(uuidProperty))
+               ;
    }
 }

@@ -15,6 +15,7 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 	private OverrideToString _overrideToString;
 	private java.util.List<ParameterDefinition> _fields = new java.util.ArrayList<>();
 	private java.util.List<Extending> _extends = new java.util.ArrayList<>();
+	private java.util.List<PropertyDeclaration> _properties = new java.util.ArrayList<>();
 	private java.util.List<FunctionDeclaration> _members = new java.util.ArrayList<>();
 	private java.util.List<ClassDefinition> _subclasses = new java.util.ArrayList<>();
 
@@ -39,6 +40,7 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 		st.add("overrideToString", _overrideToString);
 		for (Object o : _fields) st.add("fields", o);
 		for (Object o : _extends) st.add("extends", o);
+		for (Object o : _properties) st.add("properties", o);
 		for (Object o : _members) st.add("members", o);
 		for (Object o : _subclasses) st.add("subclasses", o);
 		return st.render().trim();
@@ -278,6 +280,35 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 		return this._extends;
 	} 
 
+	public ClassDeclaration addProperties(PropertyDeclaration value) {
+		this._properties.add(value);
+		return this;
+	}
+
+	public ClassDeclaration setProperties(PropertyDeclaration[] value) {
+		this._properties.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassDeclaration setProperties(java.util.Collection<PropertyDeclaration> values) {
+		this._properties.addAll(values);
+		return this;
+	}
+
+	public ClassDeclaration removeProperties(PropertyDeclaration value) {
+		this._properties.remove(value);
+		return this;
+	}
+
+	public ClassDeclaration removeProperties(int index) {
+		this._properties.remove(index);
+		return this;
+	}
+
+	public java.util.List<PropertyDeclaration> getProperties() {
+		return this._properties;
+	} 
+
 	public ClassDeclaration addMembers(FunctionDeclaration value) {
 		this._members.add(value);
 		return this;
@@ -350,11 +381,12 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,companionObject,overrideEquals,overrideHashCode,overrideToString,members,subclasses) ::= <<~annotations~~if(annotations)~\n" + 
+	static final String st = "ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,properties,companionObject,overrideEquals,overrideHashCode,overrideToString,members,subclasses) ::= <<~annotations~~if(annotations)~\n" + 
 				"~endif~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n" + 
 				"	~fields:{it|~it~};separator=\",\\n\"~\n" + 
 				")~if(extends)~: ~extends:{it|~it~};separator=\", \"~~endif~ {\n" + 
 				"\n" + 
+				"	~properties:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"	~companionObject~\n" + 
 				"\n" + 
 				"	~overrideEquals~\n" + 
@@ -363,8 +395,7 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 				"\n" + 
 				"	~overrideToString~\n" + 
 				"\n" + 
-				"	~members:{it|~it~};separator=\"\\n\"~\n" + 
-				"\n" + 
-				"	~subclasses:{it|~it~};separator=\"\\n\"~\n" + 
+				"	~members:{it|~it~};separator=\"\\n\\n\"~\n" + 
+				"	~subclasses:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"} >>";
 }  

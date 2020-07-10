@@ -173,19 +173,16 @@ public class KotlinTest {
     @Test
     public void testExpressions() {
 
-        PairType pairOfStringAndIntType = newPairType().setFirst(newStringType()).setSecond(newIntType());
+        PairType pairOfStringAndIntType = newPairType(newStringType(), newIntType());
         FunctionDeclaration testFunction = newFunctionDeclaration()
                 .setName("test")
                 .setReturnType(pairOfStringAndIntType)
                 .setStatements(asList(
-                        newVarDeclarationStatement()
-                            .setName("aMap")
-                            .setType(newMapType()
-                                .setFirst(pairOfStringAndIntType.getFirst())
-                                .setSecond(pairOfStringAndIntType.getSecond()))
-                            .setInitializer(newMutableMapInitializer()),
-                        newReturnStatement()
-                            .setExpression(newPairExpression()
+                        newVarDeclarationStatement(
+                                "aMap",
+                                newMapType(pairOfStringAndIntType),
+                                newMutableMapInitializer()),
+                        newReturnStatement(newPairExpression()
                                 .setFirst(newStringValueExpression("Test"))
                                 .setSecond(newLiteralExpression("123")))
                 ));
@@ -201,7 +198,7 @@ public class KotlinTest {
                 .addFields(
                         newPropertyDeclaration(newIntType(), "abc", newLiteralExpression("0")).setIsPrivate(true)
                 );
-        VarDeclarationStatement varDeclarationStatement = newVarDeclarationStatement().setName("a").setIsMutable(true).setInitializer(objectExpression);
+        VarDeclarationStatement varDeclarationStatement = newVarDeclarationStatement("a", true, objectExpression).setName("a");
 
         System.out.println(varDeclarationStatement);
     }
@@ -222,13 +219,11 @@ public class KotlinTest {
     @Test
     public void testRawStringExpression() {
 
-        VarDeclarationStatement rawStringTest = newVarDeclarationStatement()
-                .setName("raw")
-                .setInitializer(newRawStringExpression(
-                        "This is a raw \\unescaped\\ String\n" +
+        VarDeclarationStatement rawStringTest = newVarDeclarationStatement("raw", newRawStringExpression(
+                "This is a raw \\unescaped\\ String\n" +
                         "on multiple lines\n" +
                         "$$$"
-                ));
+        ));
 
         System.out.println(rawStringTest);
     }
@@ -244,7 +239,7 @@ public class KotlinTest {
                                 newLiteralExpression("b")
                         )
                 ).setStatements(
-                        singletonList(newReturnStatement().setExpression(newNullExpression()))
+                        singletonList(newReturnStatement(newNullExpression()))
                 );
 
         System.out.println(ifStatement);
@@ -253,20 +248,26 @@ public class KotlinTest {
     @Test
     public void testIfExpression() {
 
-        IfExpression ifExpression = newIfExpression()
-                .setLogicalExpression(
+        IfExpression ifExpression = newIfExpression(
                         newLogicalExpression(
                                 newLiteralExpression("a"),
                                 LogicalOperator.and,
                                 newLiteralExpression("b")
-                        )
-                ).setWhenFalse(newStringValueExpression("FALSE"))
-                .setWhenTrue(newStringValueExpression("TRUE"));
+                        ),
+                newStringValueExpression("FALSE"),
+                newStringValueExpression("TRUE")
+        );
 
-        VarDeclarationStatement varDeclarationStatement = newVarDeclarationStatement()
-                .setName("c")
-                .setInitializer(ifExpression);
+        VarDeclarationStatement varDeclarationStatement = newVarDeclarationStatement("c", ifExpression);
 
         System.out.println(varDeclarationStatement);
+    }
+
+    @Test
+    public void testNeo4jOgmAbstractEntity() {
+
+        ClassDeclaration neo4jAbstractEntityClass = createNeo4jOgmAbstractEntityClass();
+
+        System.out.println(neo4jAbstractEntityClass);
     }
 }

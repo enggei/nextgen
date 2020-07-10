@@ -56,11 +56,12 @@ AnnotationParam(param) ::= <<~param:{it|~it.key~ = ~it.value~};separator=", "~  
 
 PackageDeclaration(name) ::= <<package ~name~ >>
 
-ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,companionObject,overrideEquals,overrideHashCode,overrideToString,members,subclasses) ::= <<~annotations~~if(annotations)~
+ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,properties,companionObject,overrideEquals,overrideHashCode,overrideToString,members,subclasses) ::= <<~annotations~~if(annotations)~
 ~endif~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(
 	~fields:{it|~it~};separator=",\n"~
 )~if(extends)~: ~extends:{it|~it~};separator=", "~~endif~ {
 
+	~properties:{it|~it~};separator="\n\n"~
 	~companionObject~
 
 	~overrideEquals~
@@ -69,9 +70,8 @@ ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,companionObje
 
 	~overrideToString~
 
-	~members:{it|~it~};separator="\n"~
-
-	~subclasses:{it|~it~};separator="\n"~
+	~members:{it|~it~};separator="\n\n"~
+	~subclasses:{it|~it~};separator="\n\n"~
 }  >>
 
 OverrideEquals(className,fields) ::= <<override fun equals(other: Any?): Boolean {
@@ -91,8 +91,9 @@ OverrideToString(className,fields) ::= <<override fun toString(): String {
 
 CompanionObject(objectDeclaration) ::= <<companion ~objectDeclaration~  >>
 
-PropertyDeclaration(annotations,isPrivate,isProtected,isMutable,name,type,initializer) ::= <<~annotations:{it|~it~};separator="\n"~
-~if(isPrivate)~private ~elseif(isProtected)~protected ~endif~~if(isMutable)~var ~else~val ~endif~~name~~if(type)~: ~type~~endif~~if(initializer)~ = ~initializer~~endif~  >>
+PropertyDeclaration(annotations,override,isPrivate,isProtected,isMutable,name,type,initializer,privateSetter) ::= <<~annotations:{it|~it~};separator="\n"~
+~if(override)~override ~endif~~if(isPrivate)~private ~elseif(isProtected)~protected ~endif~~if(isMutable)~var ~else~val ~endif~~name~~if(type)~: ~type~~endif~~if(initializer)~ = ~initializer~~endif~~if(privateSetter)~
+	private set~endif~  >>
 
 FunctionDeclaration(annotations,override,name,params,returnType,expressionBody,statements) ::= <<~annotations~~if(override)~override ~endif~fun ~name~(~params:{it|~it~};separator=", "~)~if(returnType)~: ~returnType~~endif~~if(expressionBody)~ =
 	~expressionBody~~else~ {
