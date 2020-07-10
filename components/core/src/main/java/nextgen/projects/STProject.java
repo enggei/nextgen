@@ -42,9 +42,8 @@ public class STProject extends BaseSTProject {
                         "return () -> new STFileNode(this, stFile, stModel, stRenderer);")
                         .addParameters(STModel.asParameter()))
                 .addCanvasActionmethods(newProtectedMethod("doLaterInTransaction", newBlockStmt()
-                        .addStatements("javax.swing.SwingUtilities.invokeLater(() -> " +
-                                "canvas.modelDb.doInTransaction(consumer, throwable -> com.generator.util.SwingUtil.showException(canvas, throwable)));"))
-                        .addParameters(newParameter("java.util.function.Consumer<org.neo4j.graphdb.Transaction>", "consumer")));
+                        .addStatements(invokeLater(STCanvas.methodCall("modelDb.doInTransaction", "consumer", "throwable -> com.generator.util.SwingUtil.showException(canvas, throwable)"))))
+                        .addParameters(Consumer.asParameter(NeoTransaction.type())));
 
         final PNode node = newPNode()
                 .setName(STNode.name())
@@ -421,7 +420,7 @@ public class STProject extends BaseSTProject {
                         ".forEach(stParameter -> stModel.getArguments()" +
                         ".filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid()))" +
                         ".forEach(stArgument -> consumer.accept(stArgument, stParameter)));")))
-                .addParameters(newParameter("java.util.function.BiConsumer<nextgen.st.model.STArgument, nextgen.st.domain.STParameter>", "consumer"));
+                .addParameters(BiConsumer.asParameter(STArgument.type(), STParameter.type()));
 
         final MethodDeclaration refersTo = newProtectedMethod("refersTo", newBlockStmt()
                 .addStatements(newBlock(
@@ -439,7 +438,7 @@ public class STProject extends BaseSTProject {
                         .addLines("return false;")))
                 .addParameters(newParameter(STArgument.type(), STArgument.variableName()))
                 .addParameters(newParameter(STParameter.type(), STParameter.variableName()))
-                .addParameters(newParameter(STNode.name(), "node"))
+                .addParameters(newParameter(STNode.type(), "node"))
                 .setType("boolean");
 
         final PNodeImpl stModelNode = newPNodeImpl(canvas, node)

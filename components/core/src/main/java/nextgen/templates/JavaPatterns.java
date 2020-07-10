@@ -68,7 +68,7 @@ public class JavaPatterns extends JavaST {
                 .setBlockStmt(blockStmt);
     }
 
-    public static Parameter newParameter(String type, String name) {
+    public static Parameter newParameter(ClassOrInterfaceType type, String name) {
         return newParameter().setType(type).setName(name);
     }
 

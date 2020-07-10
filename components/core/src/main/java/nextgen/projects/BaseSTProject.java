@@ -10,7 +10,6 @@ public class BaseSTProject {
 	final java.io.File root = new java.io.File("/home/goe/projects/nextgen/components/core");
 	final java.io.File mainJava = new java.io.File(root, "src/main/java");
 	final java.io.File mainResources = new java.io.File(root, "src/main/resources");
-
 	final java.io.File testJava = new java.io.File(root, "src/test/java");
 	final java.io.File testResources = new java.io.File(root, "src/test/resources");
 
@@ -59,6 +58,10 @@ public class BaseSTProject {
 	final NamedEntity LinkedHashSet = new NamedEntity("LinkedHashSet", javaUtil);
 	final NamedEntity TreeSet = new NamedEntity("TreeSet", javaUtil);
 
+	final PackageDeclaration javaUtilFunction = newPackageDeclaration("java.util.function");
+	final NamedEntity Consumer = new NamedEntity("Consumer", javaUtilFunction);
+	final NamedEntity BiConsumer = new NamedEntity("BiConsumer", javaUtilFunction).setVariableName("consumer");
+
 	Statement newLinkedHashMap(String variableName, Object keyType, Object valueType) {
 		return statement(newVariableDeclarationExpression()
 				.addModifiers("final")
@@ -84,18 +87,38 @@ public class BaseSTProject {
 	// Java swing --
 	final PackageDeclaration javaxSwing = newPackageDeclaration("javax.swing");
 	final NamedEntity JTextField = new NamedEntity("JTextField", javaxSwing);
+
+
+	static Statement invokeLater(Expression expression) {
+		return statement(methodCallExpression("javax.swing.SwingUtilities", "invokeLater")
+					.addArguments(newLambdaExpression().setBody(expression)));
+	}
 	// -- Java swing
+
+	// Neo4J --
+	final PackageDeclaration neo4jGraphdb = newPackageDeclaration("org.neo4j.graphdb");
+	final NamedEntity NeoTransaction = new NamedEntity("Transaction", neo4jGraphdb);
+
+
+	// -- Neo4J
 
 
 	void writeToMainJava(NamedEntity entity) {
 		writeJavaFile(entity.content, entity.packageDeclaration, entity.name, mainJava);
 	}
 
-	Statement statement(Expression expression) {
+	static Statement statement(Expression expression) {
 		return newExpressionStmt().setExpression(expression);
 	}
 
-	Object asString(Object value) {
+	static MethodCallExpression methodCallExpression(Object scope, String name, Object... arguments) {
+		return newMethodCallExpression()
+					.setScope(scope)
+					.setName(name)
+					.setArguments(arguments);
+	}
+
+	static Object asString(Object value) {
 		return "\"" + value + "\"";
 	}
 
@@ -131,30 +154,24 @@ public class BaseSTProject {
 			return name;
 		}
 
-		String type() {
-			return packageDeclaration == null ? name : (packageDeclaration.getName() + "." + name);
+		ClassOrInterfaceType type(Object... typeArguments) {
+			return asClassOrInterfaceType(typeArguments);
 		}
 
 		String variableName() {
 			return variableName == null ? Character.toLowerCase(name.charAt(0)) + name.substring(1) : variableName;
 		}
 
-		Parameter asParameter() {
-			return newParameter(type(), variableName());
+		Parameter asParameter(Object... typeArguments) {
+			return newParameter().setType(asClassOrInterfaceType(typeArguments)).setName(variableName());
 		}
 
 		MethodCallExpression staticMethodCall(String name, Object... arguments) {
-			return newMethodCallExpression()
-					.setScope(type())
-					.setName(name)
-					.setArguments(arguments);
+			return methodCallExpression(type(), name, arguments);
 		}
 
 		MethodCallExpression methodCall(String name, Object... arguments) {
-			return newMethodCallExpression()
-					.setScope(variableName())
-					.setName(name)
-					.setArguments(arguments);
+			return methodCallExpression(variableName(), name, arguments);
 		}
 
 		Statement asVariable(Object initializer) {
@@ -167,10 +184,11 @@ public class BaseSTProject {
 									.setInitializer(initializer)));
 		}
 
-		ClassOrInterfaceType asClassOrInterfaceType() {
+		ClassOrInterfaceType asClassOrInterfaceType(Object... typeArguments) {
 			return newClassOrInterfaceType()
 					.addNames(name())
-					.setScope(packageDeclaration == null ? null : packageDeclaration.getName());
+					.setScope(packageDeclaration == null ? null : packageDeclaration.getName())
+					.setTypeArguments(typeArguments);
 		}
 
 		ObjectCreationExpression newInstance(Object... arguments) {
