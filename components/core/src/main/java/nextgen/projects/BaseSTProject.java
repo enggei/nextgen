@@ -15,28 +15,12 @@ public class BaseSTProject {
 	// Vertx
 	// core
 	final PackageDeclaration vertxCore = newPackageDeclaration("io.vertx.core");
-
 	final NamedEntity Future = new NamedEntity("Future", vertxCore, "future");
 
 	// Java Core
 	// Java Util
 	final PackageDeclaration javaUtil = newPackageDeclaration("java.util");
-
-	static final class UUIDEntity extends NamedEntity {
-		UUIDEntity(String name, PackageDeclaration packageDeclaration) {
-			super(name, packageDeclaration);
-		}
-
-		MethodCallExpression fromString(Object string) {
-			return staticMethodCall("fromString", string);
-		}
-
-		MethodCallExpression randomUUID() {
-			return staticMethodCall("randomUUID");
-		}
-	}
-
-	final UUIDEntity UUID = new UUIDEntity("UUID", javaUtil);
+	final NamedEntity UUID = new NamedEntity("UUID", javaUtil, "uuid");
 
 	// todo refactor away, into JavaPackage "Java Core"
 
@@ -78,19 +62,15 @@ public class BaseSTProject {
 
 	// ST App
 	final PackageDeclaration stPackage = newPackageDeclaration("nextgen.st");
-
 	final NamedEntity STRenderer = new NamedEntity("STRenderer", stPackage, "stRenderer");
-
 	// ST template domain
 	final PackageDeclaration stDomainPackage = newPackageDeclaration(stPackage, "domain");
-
 	final NamedEntity STTemplate = new NamedEntity("STTemplate", stDomainPackage, "stTemplate");
 	final NamedEntity STParameter = new NamedEntity("STParameter", stDomainPackage, "stParameter");
 	final NamedEntity STParameterKey = new NamedEntity("STParameterKey", stDomainPackage, "stParameterKey");
 
 	// ST value domain
 	final PackageDeclaration stModelPackage = newPackageDeclaration(stPackage, "model");
-
 	final NamedEntity STModelDB = new NamedEntity("STModelDB", stModelPackage, "modelDb");
 	final NamedEntity STModel = new NamedEntity("STModel", stModelPackage, "stModel");
 	final NamedEntity STValue = new NamedEntity("STValue", stModelPackage, "stValue");
@@ -99,7 +79,6 @@ public class BaseSTProject {
 	final NamedEntity STArgumentKV = new NamedEntity("STArgumentKV", stModelPackage, "stArgumentKV");
 
 	final PackageDeclaration stCanvasPackage = newPackageDeclaration(stPackage, "canvas");
-
 	final NamedEntity STModelNode = new NamedEntity("STModelNode", stCanvasPackage, "stModelNode");
 	final NamedEntity STValueNode = new NamedEntity("STValueNode", stCanvasPackage, "stValueNode");
 	final NamedEntity STArgumentRelation = new NamedEntity("STArgumentRelation", stCanvasPackage, "stArgumentRelation");
@@ -118,20 +97,12 @@ public class BaseSTProject {
 	// java Swing
 	// Java Swing
 	final PackageDeclaration javaxSwing = newPackageDeclaration("javax.swing");
-
-	static final class SwingUtilitiesEntity extends NamedEntity {
-		SwingUtilitiesEntity(String name, PackageDeclaration packageDeclaration) {
-			super(name, packageDeclaration);
-		}
-
-		MethodCallExpression invokeLater(Expression expression) {
-			return staticMethodCall("invokeLater", expression);
-		}
-	}
-
-	final SwingUtilitiesEntity SwingUtilities = new SwingUtilitiesEntity("SwingUtilities", javaxSwing);
 	final NamedEntity JTextField = new NamedEntity("JTextField", javaxSwing, "textField");
 	final NamedEntity JTextArea = new NamedEntity("JTextArea", javaxSwing, "textArea");
+	final NamedEntity SwingUtilities = new NamedEntity("SwingUtilities", javaxSwing);
+	public MethodCallExpression invokeLater(Expression expression) {
+	    	return newMethodCallExpression().setScope(SwingUtilities.type()).setName("invokeLater").addArguments(newLambdaExpression().setBody(expression));
+		}
 
 
 	public static class NamedEntity {
@@ -232,17 +203,6 @@ public class BaseSTProject {
 									.setName("invokeLater")
 									.addArguments(newLambdaExpression()
 											.setBody(body)));
-		}
-
-		public static Object newInvokeLater(Object statement) {
-			return newInvokeLater().setStatement(statement);
-		}
-
-		public static Object newInvokeLater(Object... statements) {
-			final InvokeLater invokeLater = newInvokeLater();
-			for (Object statement : statements)
-					invokeLater.addStatements(statement);
-			return invokeLater;
 		}
 
 		public static MethodDeclaration newProtectedMethod(String name, BlockStmt blockStmt) {

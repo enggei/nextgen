@@ -1,9 +1,9 @@
 package nextgen.projects;
 
-import nextgen.templates.JavaPatterns;
 import nextgen.templates.Piccolo2DPatterns;
 import nextgen.templates.domain.Entity;
-import nextgen.templates.java.*;
+import nextgen.templates.java.MethodDeclaration;
+import nextgen.templates.java.Parameter;
 import nextgen.templates.piccolo2d.*;
 import nextgen.templates.text.Line;
 import org.junit.Test;
@@ -446,8 +446,8 @@ public class STProject extends BaseSTProject {
                 .addFields(STTemplate.type(), STTemplate.variableName())
                 .addFields(STModel.type(), STModel.variableName())
                 .addFields(STRenderer.type(), STRenderer.variableName())
-                .setInitText(STTemplate.methodCall("getName") + "" + asString(" : \\n") + "" + methodCallExpression("cut", STRenderer.methodCall("render", STModel.variableName())))
-                .setUuid(UUID.fromString(STModel.methodCall("getUuid")))
+                .setInitText(STTemplate.methodCall("getName") + " + " + asString(" : \\n") + " + " + methodCallExpression("cut", STRenderer.methodCall("render", STModel.variableName())))
+                .setUuid(UUID.methodCall("fromString", STModel.methodCall("getUuid")))
                 .addMethods(forEachArgument)
                 .addMethods(refersTo)
                 .addMethods(newProtectedMethod("removeArgument", newBlockStmt()

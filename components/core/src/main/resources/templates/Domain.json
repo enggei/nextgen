@@ -115,7 +115,7 @@
     "children" : [ {
       "uuid" : "581a326a-5c8c-47bb-9ce2-0cfd0e28a9f2",
       "name" : "JavaPackage",
-      "text" : "~if(comments)~\n// ~comments~\n~endif~\nfinal PackageDeclaration ~name~ = newPackageDeclaration(~if(parent)~~parent~, ~endif~\"~packageName~\");\n\n~extendedEntities:{it|~it~};separator=\"\\n\"~\n~entities:{it|final NamedEntity ~it.name~ = new NamedEntity(\"~it.name~\", ~name~~if(it.variableName)~, \"~it.variableName~\"~endif~);};separator=\"\\n\"~\n\n~methods:{it|~it~};separator=\"\\n\\n\"~\n~subPackages:{it|~it~};separator=\"\\n\\n\"~ ",
+      "text" : "~if(comments)~\n// ~comments~\n~endif~\nfinal PackageDeclaration ~name~ = newPackageDeclaration(~if(parent)~~parent~, ~endif~\"~packageName~\");\n~entities:{it|final NamedEntity ~it.name~ = new NamedEntity(\"~it.name~\", ~name~~if(it.variableName)~, \"~it.variableName~\"~endif~);};separator=\"\\n\"~\n~methods:{it|~it~};separator=\"\\n\\n\"~\n~subPackages:{it|~it~};separator=\"\\n\\n\"~ ",
       "parameters" : [ {
         "uuid" : "d854bc48-0d01-400e-bc44-e605449e7d49",
         "name" : "comments",
@@ -135,11 +135,6 @@
         "uuid" : "8841ddc4-2f54-40e6-9443-819eeebd6551",
         "name" : "packageName",
         "type" : "SINGLE",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "ff0f9b39-8004-4d7e-862e-8f6e0bc5aa19",
-        "name" : "extendedEntities",
-        "type" : "LIST",
         "argumentType" : "Object"
       }, {
         "uuid" : "31d6d80f-8f36-41db-b75a-f8ce2480d316",
@@ -166,62 +161,7 @@
         "type" : "LIST",
         "argumentType" : "Object"
       } ],
-      "children" : [ {
-        "uuid" : "42f89697-89b1-4159-b40a-f3e276c22304",
-        "name" : "ExtendedNameEntity",
-        "text" : "static final class ~name~Entity extends NamedEntity {\n\t~name~Entity(String name, PackageDeclaration packageDeclaration) {\n\t\tsuper(name, packageDeclaration);\n\t}\n\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n}\n\nfinal ~name~Entity ~name~ = new ~name~Entity(\"~name~\", ~packageName~~if(variableName)~, \"~variableName~\"~endif~); ",
-        "parameters" : [ {
-          "uuid" : "196f8a7e-76d3-4306-b893-374a780ca3eb",
-          "name" : "name",
-          "type" : "SINGLE",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "bb2e1468-8a92-479a-b762-f2da53c87cff",
-          "name" : "methods",
-          "type" : "LIST",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "fd3dc874-5d73-4bbc-8c91-85a194b34b2b",
-          "name" : "packageName",
-          "type" : "SINGLE",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "fbe54afe-117e-41f3-8225-d0d7ac41c360",
-          "name" : "variableName",
-          "type" : "SINGLE",
-          "argumentType" : "Object"
-        } ],
-        "children" : [ {
-          "uuid" : "9a49602e-f39e-42fb-b981-6be4110c33b8",
-          "name" : "MethodCallExpression",
-          "text" : "MethodCallExpression ~name~(~arguments:{it|~it.type~ ~it.name~};separator=\", \"~) {\n\treturn ~if(isStatic)~static~endif~MethodCall(\"~name~\"~if(arguments)~, ~arguments:{it|~it.name~};separator=\", \"~~endif~);\n} ",
-          "parameters" : [ {
-            "uuid" : "aeaa9cb6-2c95-42cf-b297-6e7872d9cb39",
-            "name" : "name",
-            "type" : "SINGLE",
-            "argumentType" : "Object"
-          }, {
-            "uuid" : "fed26508-7381-4d43-9f6c-892f5a963ee7",
-            "name" : "arguments",
-            "type" : "KVLIST",
-            "argumentType" : "Object",
-            "keys" : [ {
-              "uuid" : "959ebb2e-a753-4dfe-871a-bb97450d3bd1",
-              "name" : "type",
-              "argumentType" : "Object"
-            }, {
-              "uuid" : "6d6b5d47-3c41-457a-98b2-b4289066868b",
-              "name" : "name",
-              "argumentType" : "Object"
-            } ]
-          }, {
-            "uuid" : "85b688d0-229b-4e48-bcf6-40d4fdf950ea",
-            "name" : "isStatic",
-            "type" : "SINGLE",
-            "argumentType" : "Boolean"
-          } ]
-        } ]
-      } ]
+      "children" : [ ]
     }, {
       "uuid" : "50b7c87b-fdbe-4e5c-a609-451921bdbb9c",
       "name" : "JavaCorePackage",

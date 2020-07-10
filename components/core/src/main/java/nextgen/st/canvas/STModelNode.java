@@ -15,7 +15,7 @@ public class STModelNode extends STNode {
 	nextgen.st.STRenderer stRenderer;
 
 	public STModelNode(STCanvas canvas, nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STModel stModel, nextgen.st.STRenderer stRenderer) {
-		super(canvas, stTemplate.getName() + " : \n" + cut(stRenderer.render(stModel)), UUID.fromString(stModel.getUuid()));
+		super(canvas, stTemplate.getName() + " : \n" + cut(stRenderer.render(stModel)), java.util.UUID.fromString(stModel.getUuid()));
 		this.stTemplate = stTemplate;
 		this.stModel = stModel;
 		this.stRenderer = stRenderer;
