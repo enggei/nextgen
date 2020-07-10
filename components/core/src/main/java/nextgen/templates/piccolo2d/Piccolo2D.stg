@@ -87,6 +87,10 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 		return (Stream<N>) getAllNodes().filter(~nodeName~::isSelected);
 	}
 
+	public <N extends STNode> Stream<N> getUnselectedNodes() {
+		return (Stream<N>) getAllNodes().filter(stNode -> !stNode.isSelected());
+	}
+	
 	@SuppressWarnings("unchecked")
 	public <R extends ~relationName~> Stream<R> getAllRelations() {
 		return relationLayer.getAllNodes().stream().filter((Predicate<PNode>) node -> node instanceof ~relationName~);

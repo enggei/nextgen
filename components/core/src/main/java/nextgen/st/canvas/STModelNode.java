@@ -124,7 +124,6 @@ public class STModelNode extends STNode {
 		pop.addSeparator();
 		pop.add(new AddFileSink(this, canvas, event));
 		pop.add(new OpenFileSink(this, canvas, event));
-		pop.add(new NewSTFileNode(this, canvas, event));
 		pop.addSeparator();
 		super.onNodeRightClick(event, pop);
 	}
@@ -529,8 +528,8 @@ public class STModelNode extends STNode {
 		@Override
 		void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
 			doLaterInTransaction(tx -> {
-				final Map<String, JTextField> fieldMap = new java.util.LinkedHashMap<>();
-				fieldMap.put("name", new JTextField(canvas.modelDb.getSTModelName(node.stModel, ""), 15));
+				final java.util.Map<String, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();
+				fieldMap.put("name", new javax.swing.JTextField(canvas.modelDb.getSTModelName(node.stModel, ""), 15));
 				fieldMap.put("type", new JTextField(15));
 				fieldMap.put("path", new JTextField(15));
 				fieldMap.put("package", new JTextField(canvas.modelDb.getSTModelPackage(node.stModel, ""), 15));
@@ -573,43 +572,6 @@ public class STModelNode extends STNode {
 					final STFileNode dstNode = (STFileNode) canvas.addNode(stFile.getUuid(), canvas.newSTNode(stFile, node.stModel));
 					canvas.addRelation(new STSinkRelation(canvas, node, dstNode));
 				});
-			});
-		}
-	}
-
-	private static final class NewSTFileNode extends NodeAction<STModelNode> {
-
-
-		NewSTFileNode(STModelNode node, STCanvas canvas, PInputEvent event) {
-			super("New Sink", node, canvas, event);
-		}
-
-		@Override
-		void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			final Map<String, JTextField> fieldMap = new java.util.LinkedHashMap<>();
-			fieldMap.put("name", new JTextField(15));
-			fieldMap.put("type", new JTextField(15));
-			fieldMap.put("path", new JTextField(15));
-			fieldMap.put("package", new JTextField(15));
-			final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
-			inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
-			for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {
-				inputPanel.add(new JLabel(fieldEntry.getKey()));
-				inputPanel.add(fieldEntry.getValue());
-			}
-			com.generator.util.SwingUtil.showDialog(inputPanel, canvas, "New sink", new com.generator.util.SwingUtil.ConfirmAction() {
-				@Override
-				public void verifyAndCommit() throws Exception {
-					final String name = fieldMap.get("name").getText().trim();
-					final String type = fieldMap.get("type").getText().trim();
-					final String path = fieldMap.get("path").getText().trim();
-					final String packageName = fieldMap.get("package").getText().trim();
-					doLaterInTransaction(tx -> {
-						final nextgen.st.model.STFile stFile = canvas.modelDb.newSTFile(name, type, path, packageName);
-						node.stModel.addFiles(stFile);
-						canvas.addNode(canvas.newSTNode(stFile, node.stModel).get());
-					});
-				}
 			});
 		}
 	}

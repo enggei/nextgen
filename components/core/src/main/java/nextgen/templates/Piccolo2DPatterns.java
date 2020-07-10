@@ -24,6 +24,9 @@ public class Piccolo2DPatterns extends Piccolo2DST {
         final CanvasAction closeSelectedNodesAction = newCanvasAction(canvas, "CloseSelectedNodes", "Close selected nodes")
                 .addStatements(invokeLater("canvas.getSelectedNodes().forEach(" + canvas.getNodeName() + "::close)"));
 
+        final CanvasAction retainSelectedNodesAction = newCanvasAction(canvas, "RetainSelectedNodes", "Retain selected nodes")
+                .addStatements(invokeLater("canvas.getUnselectedNodes().forEach(STNode::close)"));
+
         final LayoutVerticallyAction layoutVerticallyAction = newLayoutVerticallyAction()
                 .setName("LayoutVerticallyAction")
                 .setCanvasName(canvas.getName())
@@ -41,6 +44,7 @@ public class Piccolo2DPatterns extends Piccolo2DST {
         registerRightClickAction(canvas, selectAllNodesAction, selectAllNodesAction.getName());
         registerRightClickAction(canvas, unselectAllNodesAction, unselectAllNodesAction.getName());
         registerRightClickAction(canvas, closeSelectedNodesAction, closeSelectedNodesAction.getName());
+        registerRightClickAction(canvas, retainSelectedNodesAction, retainSelectedNodesAction.getName());
         registerRightClickAction(canvas, layoutVerticallyAction, layoutVerticallyAction.getName());
         canvas.addActions(popupAction);;
 
@@ -48,6 +52,7 @@ public class Piccolo2DPatterns extends Piccolo2DST {
         canvas.addOnKeyPressed("A", selectAllNodesAction.getName());
         canvas.addOnKeyPressed("C", closeSelectedNodesAction.getName());
         canvas.addOnKeyPressed("F", popupAction.getName());
+        canvas.addOnKeyPressed("R", retainSelectedNodesAction.getName());
     }
 
     public static void registerRightClickAction(PCanvas canvas, Object action, Object name) {

@@ -182,6 +182,12 @@ public class STModelDB extends STModelNeoFactory {
     public void cleanup() {
         doInTransaction(transaction -> {
 
+            getDatabaseService().getAllNodes().forEach(node -> {
+                if (node.getRelationships().iterator().hasNext()) return;
+                System.out.println("deleting unnused node " + node);
+                node.delete();
+            });
+
             final Set<String> uuids = new LinkedHashSet<>();
 
             findAllSTModel().forEach(stModel -> {
@@ -223,6 +229,12 @@ public class STModelDB extends STModelNeoFactory {
                                 }
                                 break;
                             case KVLIST:
+
+                                stArgument.getKeyValues().forEach(stArgumentKV -> {
+                                    final STValue stArgumentKVValue = stArgumentKV.getValue();
+                                    if (stArgumentKVValue == null) delete(stArgumentKV.getNode());
+                                });
+
                                 break;
                         }
                     }

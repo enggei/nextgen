@@ -306,6 +306,7 @@ public class STModelNeoFactory {
 
 	// ONLY delete this node and its relations
 	public void delete(org.neo4j.graphdb.Node node) {
+		System.out.println("deleting " + node);
 
 		for (org.neo4j.graphdb.Relationship incoming : node.getRelationships(org.neo4j.graphdb.Direction.INCOMING))
 			incoming.delete();

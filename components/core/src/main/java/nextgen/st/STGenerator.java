@@ -280,7 +280,7 @@ public class STGenerator {
     }
 
     public static void writeJavaFile(Object content, nextgen.templates.java.PackageDeclaration packageDeclaration, String name, File root) {
-        writeJavaFile(content, packageDeclaration.getName(), name, root);
+        writeJavaFile(content, packageDeclaration == null ? null : packageDeclaration.getName(), name, root);
     }
 
     public static void writeJavaFile(Object content, String packageDeclaration, String name, File root) {

@@ -87,6 +87,10 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		return (Stream<N>) getAllNodes().filter(STNode::isSelected);
 	}
 
+	public <N extends STNode> Stream<N> getUnselectedNodes() {
+		return (Stream<N>) getAllNodes().filter(stNode -> !stNode.isSelected());
+	}
+
 	@SuppressWarnings("unchecked")
 	public <R extends STRelation> Stream<R> getAllRelations() {
 		return relationLayer.getAllNodes().stream().filter((Predicate<PNode>) node -> node instanceof STRelation);
@@ -187,6 +191,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		pop.add(new SelectAllNodes(this, event));
 		pop.add(new UnselectAllNodes(this, event));
 		pop.add(new CloseSelectedNodes(this, event));
+		pop.add(new RetainSelectedNodes(this, event));
 		pop.add(new LayoutVerticallyAction(this, event));
 	}
 
@@ -214,6 +219,10 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 			case VK_F:
 				new PopupAction(this, event).actionPerformed(null);
+				break;
+
+			case VK_R:
+				new RetainSelectedNodes(this, event).actionPerformed(null);
 				break;
 
 		}
@@ -444,6 +453,18 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		@Override
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
 			javax.swing.SwingUtilities.invokeLater(() -> canvas.getSelectedNodes().forEach(STNode::close));
+		}
+	}
+
+	private static final class RetainSelectedNodes extends CanvasAction {
+
+		RetainSelectedNodes(STCanvas canvas, PInputEvent event) {
+			super("Retain selected nodes", canvas, event);
+		}
+
+		@Override
+		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
+			javax.swing.SwingUtilities.invokeLater(() -> canvas.getUnselectedNodes().forEach(STNode::close));
 		}
 	}
 

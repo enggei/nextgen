@@ -179,7 +179,7 @@ public class STKVNode extends STNode {
 			doLaterInTransaction(tx -> {
 				node.removeArgument(stParameterKey);
 				final nextgen.st.model.STValue stValue = canvas.modelDb.newSTValue(stModelNode.stModel);
-				final nextgen.st.model.STArgumentKV stArgumentKV = canvas.modelDb.newSTArgumentKV(stParameterKey, stValue);
+				final nextgen.st.model.STArgumentKV stArgumentKV = canvas.modelDb.newSTArgumentKV(stParameterKey, stValue);;
 				node.stArgument.addKeyValues(stArgumentKV);
 				canvas.addRelation(new STKVArgumentRelation(canvas, node, stModelNode, stArgument, stParameterKey, stArgumentKV));
 			});
@@ -210,33 +210,33 @@ public class STKVNode extends STNode {
 
 		nextgen.st.model.STArgument stArgument;
 		nextgen.st.domain.STParameterKey stParameterKey;
-		nextgen.st.model.STArgumentKV stArgumentKv;
+		nextgen.st.model.STArgumentKV stArgumentKV;
 
-		OpenArgument(String name, STKVNode node, STCanvas canvas, PInputEvent event, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey, nextgen.st.model.STArgumentKV stArgumentKv) {
+		OpenArgument(String name, STKVNode node, STCanvas canvas, PInputEvent event, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey, nextgen.st.model.STArgumentKV stArgumentKV) {
 			super(name, node, canvas, event);
 			this.stArgument = stArgument;
 			this.stParameterKey = stParameterKey;
-			this.stArgumentKv = stArgumentKv;
+			this.stArgumentKV = stArgumentKV;
 		}
 
 		@Override
 		void actionPerformed(STKVNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
 			doLaterInTransaction(tx -> {
-				final nextgen.st.model.STValue stValue = stArgumentKv.getValue();
+				final nextgen.st.model.STValue stValue = stArgumentKV.getValue();
 				switch (stValue.getType()) {
 					case STMODEL: {
 						canvas.addNode(stValue.getStModel().getUuid(), canvas.newSTNode(stValue.getStModel()));
-						canvas.addRelation(new STKVArgumentRelation(canvas, node, canvas.getNode(UUID.fromString(stValue.getStModel().getUuid())), node.stArgument, stParameterKey, stArgumentKv));
+						canvas.addRelation(new STKVArgumentRelation(canvas, node, canvas.getNode(UUID.fromString(stValue.getStModel().getUuid())), node.stArgument, stParameterKey, stArgumentKV));
 						break;
 					}
 					case PRIMITIVE: {
 						canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue));
-						canvas.addRelation(new STKVArgumentRelation(canvas, node, canvas.getNode(UUID.fromString(stValue.getUuid())), node.stArgument, stParameterKey, stArgumentKv));
+						canvas.addRelation(new STKVArgumentRelation(canvas, node, canvas.getNode(UUID.fromString(stValue.getUuid())), node.stArgument, stParameterKey, stArgumentKV));
 						break;
 					}
 					case ENUM: {
 						canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue));
-						canvas.addRelation(new STKVArgumentRelation(canvas, node, canvas.getNode(UUID.fromString(stValue.getUuid())), node.stArgument, stParameterKey, stArgumentKv));
+						canvas.addRelation(new STKVArgumentRelation(canvas, node, canvas.getNode(UUID.fromString(stValue.getUuid())), node.stArgument, stParameterKey, stArgumentKV));
 						break;
 					}
 				}
@@ -249,20 +249,20 @@ public class STKVNode extends STNode {
 
 		nextgen.st.model.STArgument stArgument;
 		nextgen.st.domain.STParameterKey stParameterKey;
-		nextgen.st.model.STArgumentKV stArgumentKv;
+		nextgen.st.model.STArgumentKV stArgumentKV;
 
-		RemoveArgument(String name, STKVNode node, STCanvas canvas, PInputEvent event, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey, nextgen.st.model.STArgumentKV stArgumentKv) {
+		RemoveArgument(String name, STKVNode node, STCanvas canvas, PInputEvent event, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey, nextgen.st.model.STArgumentKV stArgumentKV) {
 			super(name, node, canvas, event);
 			this.stArgument = stArgument;
 			this.stParameterKey = stParameterKey;
-			this.stArgumentKv = stArgumentKv;
+			this.stArgumentKV = stArgumentKV;
 		}
 
 		@Override
 		void actionPerformed(STKVNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
 			doLaterInTransaction(tx -> {
-				canvas.removeRelation(UUID.fromString(stArgumentKv.getUuid()));
-				stArgument.removeKeyValues(stArgumentKv);
+				canvas.removeRelation(java.util.UUID.fromString(stArgumentKV.getUuid()));
+				stArgument.removeKeyValues(stArgumentKV);
 			});
 		}
 	}

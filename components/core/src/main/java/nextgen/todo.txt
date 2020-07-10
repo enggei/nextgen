@@ -1,10 +1,12 @@
 
 Definetly:
-#1 expand tree
-#2 Add selected-nodes support for Key-Value STArguments
-# Add set/add argument from Clipboard
+# open incoming nodes
+# retain selected nodes
+# Add parameter-types, and use when selecting Set/Add values (only show the valid ones)
+# load previous canvas (saved on shutdown, loaded on startup)
+# Add-form for all single-values in STModel
 # Add Multiple values (5) in dialog
 # on delete tree- remove nodes from canvas too (Using Graph-listener ?)cc
-
-Maybe:
 # Use SwingUtil input dialog instead of SwingUtilities (support right-click field)
+Maybe:
+# tree-view for adding/seeing values (chained-method pattern look and feel)

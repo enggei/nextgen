@@ -442,6 +442,10 @@ public class PCanvas {
 				"		return (Stream<N>) getAllNodes().filter(~nodeName~::isSelected);\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	public <N extends STNode> Stream<N> getUnselectedNodes() {\n" + 
+				"		return (Stream<N>) getAllNodes().filter(stNode -> !stNode.isSelected());\n" + 
+				"	}\n" + 
+				"	\n" + 
 				"	@SuppressWarnings(\"unchecked\")\n" + 
 				"	public <R extends ~relationName~> Stream<R> getAllRelations() {\n" + 
 				"		return relationLayer.getAllNodes().stream().filter((Predicate<PNode>) node -> node instanceof ~relationName~);\n" + 
