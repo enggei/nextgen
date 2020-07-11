@@ -1,6 +1,5 @@
 package com.generator.kotlin;
 
-import nextgen.st.STGenerator;
 import nextgen.templates.DomainPatterns;
 import nextgen.templates.domain.Domain;
 import nextgen.templates.kotlin.*;
@@ -65,10 +64,9 @@ public class KotlinTest {
                 newPropertyDeclaration(stringType, "code", true),
                 newPropertyDeclaration(stringType, "name", true),
                 newPropertyDeclaration(countryIsPartOfContinentRelationshipTypeArray, "isPartOfContinent", newEmptyArrayInitializer(), true)
-                        .setAnnotations(singletonList(newAnnotationDeclaration()
-                                .addAnnotations("Relationship", singletonList(newAnnotationParam()
-                                        .addParam("type", "REL_IS_PART_OF")
-                                        .addParam("direction", "Relationship.OUTGOING")
+                        .setAnnotations(singletonList(newAnnotationDeclaration("Relationship",
+                                asList(newAssignExpression("type", "REL_IS_PART_OF"),
+                                        newAssignExpression("direction", "Relationship.OUTGOING")
                                 ))
                         ))
         );
@@ -84,10 +82,8 @@ public class KotlinTest {
 
         String dataClassName = "Thing";
         DataClassDeclaration thingClass = newDataClassDeclaration(dataClassName)
-                .setAnnotations(singletonList(newAnnotationDeclaration()
-                        .addAnnotations("NodeEntity", singletonList(newAnnotationParam()
-                                .addParam("label", newStringValueExpression().setLiteral("NODE_THING"))
-                        ))
+                .setAnnotations(singletonList(newAnnotationDeclaration("NodeEntity", singletonList(
+                        newAssignExpression("label", newStringValueExpression("NODE_THING"))))
                 ))
                 .setFields(asList(
                         newPropertyDeclaration(nullableLongType, "id").setInitializer(newNullExpression()),
@@ -118,11 +114,9 @@ public class KotlinTest {
                 );
 
         ClassDeclaration countryClass = newClassDeclaration(className)
-                .setAnnotations(singletonList(newAnnotationDeclaration()
-                        .addAnnotations("NodeEntity", singletonList(newAnnotationParam()
-                                .addParam("label", "NODE_COUNTRY")
-                        ))
-                ))
+                .setAnnotations(singletonList(newAnnotationDeclaration("NodeEntity", singletonList(
+                        newAssignExpression("label", "NODE_COUNTRY"))
+                )))
                 .setIsOpen(true)
                 .setFields(fields)
                 .setExtends(asList(
@@ -167,7 +161,7 @@ public class KotlinTest {
 
         System.out.println(kotlinFile);
 
-        STGenerator.writeKotlinFile(kotlinFile, packageDeclaration, "CodeGenTests", new File("/media/Storage/projects/tv2/sportsdata-api.tmp/libraries/sportdata-domain/src/main/kotlin"));
+//        STGenerator.writeKotlinFile(kotlinFile, packageDeclaration, "CodeGenTests", new File("/media/Storage/projects/tv2/sportsdata-api.tmp/libraries/sportdata-domain/src/main/kotlin"));
     }
 
     @Test

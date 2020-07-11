@@ -14,8 +14,6 @@ ConstructorCallExpression(className,params) ::= <<~className~(~params:{it|~it~};
 
 ArrayEqualsExpression(leftArray,rightArray) ::= <<~leftArray~.contentEquals(~rightArray~)  >>
 
-EqualsExpression(lhs,rhs) ::= <<~lhs~ == ~rhs~  >>
-
 ScopeExpression(scope,expression) ::= <<~scope~.~expression~  >>
 
 PairExpression(first,second) ::= <<~first~ to ~second~  >>
@@ -24,7 +22,7 @@ LiteralExpression(literal) ::= <<~literal~  >>
 
 StringValueExpression(literal) ::= <<"~literal~"  >>
 
-AssignExpression(varName,operator,expression) ::= <<~varName~ ~operator~= ~expression~  >>
+AssignExpression(varName,operator,expression) ::= <<~varName~ ~operator~ ~expression~  >>
 
 ObjectExpression(extends,fields,members) ::= <<object~if(extends)~ : ~extends:{it|~it~};separator=", "~~endif~ {
 	~fields:{it|~it~};separator="\n"~
@@ -46,18 +44,18 @@ LogicalExpression(lhs,operator,rhs) ::= <<~lhs~ ~operator~ ~rhs~  >>
 
 IfExpression(logicalExpression,whenTrue,whenFalse) ::= <<if(~logicalExpression~) ~whenTrue~ else ~whenFalse~  >>
 
+ComparisonExpression(lhs,operator,rhs) ::= <<~lhs~ ~operator~ ~rhs~  >>
+
 Grammar() ::= << >>
 
 Declarations() ::= << >>
 
-AnnotationDeclaration(annotations) ::= <<~annotations:{it|@~it.name~(~it.params~)};separator="\n"~  >>
-
-AnnotationParam(param) ::= <<~param:{it|~it.key~ = ~it.value~};separator=", "~  >>
+AnnotationDeclaration(name,params) ::= <<@~name~~if(params)~(~params:{it|~it~};separator=", "~)~endif~  >>
 
 PackageDeclaration(name) ::= <<package ~name~ >>
 
-ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,properties,companionObject,overrideEquals,overrideHashCode,overrideToString,members,subclasses) ::= <<~annotations~~if(annotations)~
-~endif~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(
+ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,properties,companionObject,overrideEquals,overrideHashCode,overrideToString,members,subclasses) ::= <<~annotations:{it|~it~};separator="\n"~
+~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(
 	~fields:{it|~it~};separator=",\n"~
 )~if(extends)~: ~extends:{it|~it~};separator=", "~~endif~ {
 
@@ -95,7 +93,8 @@ PropertyDeclaration(annotations,override,isPrivate,isProtected,isMutable,name,ty
 ~if(override)~override ~endif~~if(isPrivate)~private ~elseif(isProtected)~protected ~endif~~if(isMutable)~var ~else~val ~endif~~name~~if(type)~: ~type~~endif~~if(initializer)~ = ~initializer~~endif~~if(privateSetter)~
 	private set~endif~  >>
 
-FunctionDeclaration(annotations,override,name,params,returnType,expressionBody,statements) ::= <<~annotations~~if(override)~override ~endif~fun ~name~(~params:{it|~it~};separator=", "~)~if(returnType)~: ~returnType~~endif~~if(expressionBody)~ =
+FunctionDeclaration(annotations,override,name,params,returnType,expressionBody,statements) ::= <<~annotations:{it|~it~};separator="\n"~
+~if(override)~override ~endif~fun ~name~(~params:{it|~it~};separator=", "~)~if(returnType)~: ~returnType~~endif~~if(expressionBody)~ =
 	~expressionBody~~else~ {
 	~statements:{it|~it~};separator="\n"~
 }~endif~  >>

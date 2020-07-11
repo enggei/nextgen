@@ -5,7 +5,6 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private java.util.Collection<AnnotationDeclaration> _annotations;
 	private Boolean _isOpen;
 	private Boolean _isAbstract;
 	private String _name;
@@ -13,6 +12,7 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 	private OverrideEquals _overrideEquals;
 	private OverrideHashCode _overrideHashCode;
 	private OverrideToString _overrideToString;
+	private java.util.List<AnnotationDeclaration> _annotations = new java.util.ArrayList<>();
 	private java.util.List<ParameterDefinition> _fields = new java.util.ArrayList<>();
 	private java.util.List<Extending> _extends = new java.util.ArrayList<>();
 	private java.util.List<PropertyDeclaration> _properties = new java.util.ArrayList<>();
@@ -30,7 +30,6 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ClassDeclaration");
-		st.add("annotations", _annotations);
 		st.add("isOpen", _isOpen);
 		st.add("isAbstract", _isAbstract);
 		st.add("name", _name);
@@ -38,6 +37,7 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 		st.add("overrideEquals", _overrideEquals);
 		st.add("overrideHashCode", _overrideHashCode);
 		st.add("overrideToString", _overrideToString);
+		for (Object o : _annotations) st.add("annotations", o);
 		for (Object o : _fields) st.add("fields", o);
 		for (Object o : _extends) st.add("extends", o);
 		for (Object o : _properties) st.add("properties", o);
@@ -45,28 +45,6 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 		for (Object o : _subclasses) st.add("subclasses", o);
 		return st.render().trim();
 	}
-
-	public ClassDeclaration setAnnotations(java.util.Collection<AnnotationDeclaration> value) {
-		this._annotations = value;
-		return this;
-	}
-
-	public java.util.Collection<AnnotationDeclaration> getAnnotations() {
-		return this._annotations;
-	}
-
-	public java.util.Collection<AnnotationDeclaration> getAnnotations(java.util.Collection<AnnotationDeclaration> defaultValue) {
-		return this._annotations == null ? defaultValue : this._annotations;
-	}
-
-	public boolean hasAnnotations() {
-		return this._annotations != null;
-	}
-
-	public ClassDeclaration removeAnnotations() {
-		this._annotations = null;
-		return this;
-	} 
 
 	public ClassDeclaration setIsOpen(Boolean value) {
 		this._isOpen = value;
@@ -220,6 +198,35 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 	public ClassDeclaration removeOverrideToString() {
 		this._overrideToString = null;
 		return this;
+	} 
+
+	public ClassDeclaration addAnnotations(AnnotationDeclaration value) {
+		this._annotations.add(value);
+		return this;
+	}
+
+	public ClassDeclaration setAnnotations(AnnotationDeclaration[] value) {
+		this._annotations.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassDeclaration setAnnotations(java.util.Collection<AnnotationDeclaration> values) {
+		this._annotations.addAll(values);
+		return this;
+	}
+
+	public ClassDeclaration removeAnnotations(AnnotationDeclaration value) {
+		this._annotations.remove(value);
+		return this;
+	}
+
+	public ClassDeclaration removeAnnotations(int index) {
+		this._annotations.remove(index);
+		return this;
+	}
+
+	public java.util.List<AnnotationDeclaration> getAnnotations() {
+		return this._annotations;
 	} 
 
 	public ClassDeclaration addFields(ParameterDefinition value) {
@@ -381,8 +388,8 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,properties,companionObject,overrideEquals,overrideHashCode,overrideToString,members,subclasses) ::= <<~annotations~~if(annotations)~\n" + 
-				"~endif~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n" + 
+	static final String st = "ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,properties,companionObject,overrideEquals,overrideHashCode,overrideToString,members,subclasses) ::= <<~annotations:{it|~it~};separator=\"\\n\"~\n" + 
+				"~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n" + 
 				"	~fields:{it|~it~};separator=\",\\n\"~\n" + 
 				")~if(extends)~: ~extends:{it|~it~};separator=\", \"~~endif~ {\n" + 
 				"\n" + 

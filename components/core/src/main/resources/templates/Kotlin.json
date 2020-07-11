@@ -13,42 +13,19 @@
       "children" : [ {
         "uuid" : "cf797087-800a-45b5-9ef9-678e61e660c2",
         "name" : "AnnotationDeclaration",
-        "text" : "~annotations:{it|@~it.name~(~it.params~)};separator=\"\\n\"~ ",
+        "text" : "@~name~~if(params)~(~params:{it|~it~};separator=\", \"~)~endif~ ",
         "parameters" : [ {
-          "uuid" : "ecc5f990-872c-4f76-9672-e769de846d49",
-          "name" : "annotations",
-          "type" : "KVLIST",
-          "argumentType" : "Object",
-          "keys" : [ {
-            "uuid" : "21bbe173-16a7-46c1-a0fe-7ec7150a2a4f",
-            "name" : "name",
-            "argumentType" : "String"
-          }, {
-            "uuid" : "4f92e1f5-db34-4d27-9b1b-2745a91036e3",
-            "name" : "params",
-            "argumentType" : "java.util.Collection<AnnotationParam>"
-          } ]
+          "uuid" : "bc4e9638-2db7-461e-bdc6-d0bc08138ad4",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "String"
+        }, {
+          "uuid" : "58c694af-a4a9-43c2-b6ef-ef4d8357e221",
+          "name" : "params",
+          "type" : "LIST",
+          "argumentType" : "Expression"
         } ],
-        "children" : [ {
-          "uuid" : "0ef8b095-9c70-433b-b681-ded98a3544c4",
-          "name" : "AnnotationParam",
-          "text" : "~param:{it|~it.key~ = ~it.value~};separator=\", \"~ ",
-          "parameters" : [ {
-            "uuid" : "a6cfdd1c-2ea5-407a-b8fb-88d9e820ea17",
-            "name" : "param",
-            "type" : "KVLIST",
-            "argumentType" : "Object",
-            "keys" : [ {
-              "uuid" : "b9899c46-08b9-4c0d-917f-6383e8739b5c",
-              "name" : "key",
-              "argumentType" : "String"
-            }, {
-              "uuid" : "fae0e20c-354d-4617-a51d-875ba7bd9803",
-              "name" : "value",
-              "argumentType" : "Object"
-            } ]
-          } ]
-        } ]
+        "children" : [ ]
       }, {
         "uuid" : "3dd75d30-c836-427b-a771-6d4687f8c781",
         "name" : "PackageDeclaration",
@@ -62,12 +39,12 @@
       }, {
         "uuid" : "f05c4cbf-3b7e-4156-9906-99ae7e7c47a6",
         "name" : "ClassDeclaration",
-        "text" : "~annotations~~if(annotations)~\n~endif~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n\t~fields:{it|~it~};separator=\",\\n\"~\n)~if(extends)~: ~extends:{it|~it~};separator=\", \"~~endif~ {\n\n\t~properties:{it|~it~};separator=\"\\n\\n\"~\n\t~companionObject~\n\n\t~overrideEquals~\n\n\t~overrideHashCode~\n\n\t~overrideToString~\n\n\t~members:{it|~it~};separator=\"\\n\\n\"~\n\t~subclasses:{it|~it~};separator=\"\\n\\n\"~\n} ",
+        "text" : "~annotations:{it|~it~};separator=\"\\n\"~\n~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n\t~fields:{it|~it~};separator=\",\\n\"~\n)~if(extends)~: ~extends:{it|~it~};separator=\", \"~~endif~ {\n\n\t~properties:{it|~it~};separator=\"\\n\\n\"~\n\t~companionObject~\n\n\t~overrideEquals~\n\n\t~overrideHashCode~\n\n\t~overrideToString~\n\n\t~members:{it|~it~};separator=\"\\n\\n\"~\n\t~subclasses:{it|~it~};separator=\"\\n\\n\"~\n} ",
         "parameters" : [ {
-          "uuid" : "cb459a2b-507a-49fb-b8e7-c9ca99bc0a0b",
+          "uuid" : "00eae73a-0215-407e-ac1a-0ac7d3edcb93",
           "name" : "annotations",
-          "type" : "SINGLE",
-          "argumentType" : "java.util.Collection<AnnotationDeclaration>"
+          "type" : "LIST",
+          "argumentType" : "AnnotationDeclaration"
         }, {
           "uuid" : "376a5ec0-5aad-482b-96bb-b6f32aa7655d",
           "name" : "isOpen",
@@ -244,12 +221,12 @@
       }, {
         "uuid" : "927474a1-3d34-4a60-83ca-5025dbd47a19",
         "name" : "FunctionDeclaration",
-        "text" : "~annotations~~if(override)~override ~endif~fun ~name~(~params:{it|~it~};separator=\", \"~)~if(returnType)~: ~returnType~~endif~~if(expressionBody)~ =\n\t~expressionBody~~else~ {\n\t~statements:{it|~it~};separator=\"\\n\"~\n}~endif~ ",
+        "text" : "~annotations:{it|~it~};separator=\"\\n\"~\n~if(override)~override ~endif~fun ~name~(~params:{it|~it~};separator=\", \"~)~if(returnType)~: ~returnType~~endif~~if(expressionBody)~ =\n\t~expressionBody~~else~ {\n\t~statements:{it|~it~};separator=\"\\n\"~\n}~endif~ ",
         "parameters" : [ {
-          "uuid" : "ed95a44c-d9c2-44f1-b808-8cb242f3815e",
+          "uuid" : "ea1bd02f-d9aa-42ae-9e90-bc6ffd622cfc",
           "name" : "annotations",
-          "type" : "SINGLE",
-          "argumentType" : "java.util.Collection<AnnotationDeclaration>"
+          "type" : "LIST",
+          "argumentType" : "AnnotationDeclaration"
         }, {
           "uuid" : "b256a6c8-5f0f-4ffb-9321-da5dc0b07070",
           "name" : "override",
@@ -919,22 +896,6 @@
         "argumentType" : "Expression"
       } ]
     }, {
-      "uuid" : "1af81755-34e0-4d02-a879-f15f6e0221a2",
-      "name" : "EqualsExpression",
-      "text" : "~lhs~ == ~rhs~ ",
-      "implements" : [ "Expression" ],
-      "parameters" : [ {
-        "uuid" : "5b020b58-abd7-48b8-9a5b-d164be139fc3",
-        "name" : "lhs",
-        "type" : "SINGLE",
-        "argumentType" : "Expression"
-      }, {
-        "uuid" : "620d4a30-b0fd-45b5-85ba-dfe56e6d6fe8",
-        "name" : "rhs",
-        "type" : "SINGLE",
-        "argumentType" : "Expression"
-      } ]
-    }, {
       "uuid" : "d70e2290-4d42-4278-aff2-4996f197dc2f",
       "name" : "ScopeExpression",
       "text" : "~scope~.~expression~ ",
@@ -991,7 +952,7 @@
     }, {
       "uuid" : "e2a37f79-dc3e-4d3a-b31a-089b7f5442ba",
       "name" : "AssignExpression",
-      "text" : "~varName~ ~operator~= ~expression~ ",
+      "text" : "~varName~ ~operator~ ~expression~ ",
       "implements" : [ "Expression" ],
       "parameters" : [ {
         "uuid" : "c9f4cb4f-be1c-41ae-813b-738fb71f21fb",
@@ -1142,6 +1103,27 @@
         "type" : "SINGLE",
         "argumentType" : "Expression"
       } ]
+    }, {
+      "uuid" : "55eb491d-3f07-4086-be58-dc61f54d69c8",
+      "name" : "ComparisonExpression",
+      "text" : "~lhs~ ~operator~ ~rhs~ ",
+      "parameters" : [ {
+        "uuid" : "595f5e71-c42d-427e-85a3-7bad9ec86187",
+        "name" : "lhs",
+        "type" : "SINGLE",
+        "argumentType" : "Expression"
+      }, {
+        "uuid" : "62459c0f-49e0-4925-b65b-f163e6719a03",
+        "name" : "operator",
+        "type" : "SINGLE",
+        "argumentType" : "ComparisonOperator"
+      }, {
+        "uuid" : "77de6c3f-366d-425e-aa5a-201e5591c7ff",
+        "name" : "rhs",
+        "type" : "SINGLE",
+        "argumentType" : "Expression"
+      } ],
+      "implements" : [ "Expression" ]
     } ]
   }, {
     "uuid" : "7f297955-618e-40d3-a441-920c4f5ec56e",
@@ -1331,6 +1313,38 @@
       "uuid" : "2734fe77-bce5-4f26-969a-34791719598a",
       "name" : "not",
       "lexical" : "!"
+    } ]
+  }, {
+    "uuid" : "47c7905b-b52a-4c24-9580-500a6befce93",
+    "name" : "BitwiseOperator",
+    "values" : [ {
+      "uuid" : "58728823-167e-4dd0-8ca8-a96f05ea1543",
+      "name" : "signedShiftLeft",
+      "lexical" : "shl"
+    }, {
+      "uuid" : "75cdf14a-bd9c-4572-a8ea-80d5606ec06a",
+      "name" : "signedShiftRight",
+      "lexical" : "shr"
+    }, {
+      "uuid" : "7ab79285-b3dd-4071-9b42-7ae0df982a0b",
+      "name" : "unsignedShiftRight",
+      "lexical" : "ushr"
+    }, {
+      "uuid" : "6f0b920d-19d3-4153-8e59-3e56af38bfc4",
+      "name" : "bitwiseAnd",
+      "lexical" : "and"
+    }, {
+      "uuid" : "8861c050-b0a0-49eb-9c4f-593cc32d168c",
+      "name" : "bitwiseOr",
+      "lexical" : "or"
+    }, {
+      "uuid" : "cbdaa683-2355-4d92-a9ae-ed31ecfa552f",
+      "name" : "bitwiseXor",
+      "lexical" : "xor"
+    }, {
+      "uuid" : "f3589617-8565-4441-88f6-112cc17e052e",
+      "name" : "bitwiseInversion",
+      "lexical" : "inv"
     } ]
   } ]
 }

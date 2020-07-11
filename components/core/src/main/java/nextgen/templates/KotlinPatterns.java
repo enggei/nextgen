@@ -1,6 +1,5 @@
 package nextgen.templates;
 
-import nextgen.templates.javascript.Prop;
 import nextgen.templates.kotlin.*;
 
 import java.util.*;
@@ -45,13 +44,13 @@ public class KotlinPatterns extends KotlinST {
       return newFunctionCallExpression().setScope(scope).setFunctionName(functionName).setArguments(arguments);
    }
 
-   public static Expression createEqualsExpression(ParameterDefinition parameterDefinition) {
+   private static Expression createEqualsExpression(ParameterDefinition parameterDefinition) {
        if (getTypeFromParameterDefinition(parameterDefinition) instanceof ArrayType) {
            return newArrayEqualsExpression()
                .setLeftArray(asThisExpression(parameterDefinition))
                .setRightArray(asScopeExpression("other", parameterDefinition));
        } else {
-           return newEqualsExpression().setLhs(asThisExpression(parameterDefinition)).setRhs(asScopeExpression("other", parameterDefinition));
+           return newComparisonExpression(asThisExpression(parameterDefinition), ComparisonOperator.equals, asScopeExpression("other", parameterDefinition));
        }
    }
 
@@ -93,6 +92,29 @@ public class KotlinPatterns extends KotlinST {
       return new OverrideToString.OverrideToString_Fields(name, newKotlinStringTemplateSingleValue(name));
    }
 
+   public static AssignExpression newAssignExpression(String varName, Expression expression) {
+       return newAssignExpression(newLiteralExpression(varName), AssignmentOperator.assign, expression);
+   }
+
+   public static AssignExpression newAssignExpression(String varName, String literal) {
+       return newAssignExpression(varName, newLiteralExpression(literal));
+   }
+
+   public static AssignExpression newAssignExpression(String varName, StringValueExpression stringExpression) {
+       return newAssignExpression(newLiteralExpression(varName), AssignmentOperator.assign, stringExpression);
+   }
+
+   public static AssignExpression newAssignExpression(Expression varName, Expression expression) {
+       return newAssignExpression(varName, AssignmentOperator.assign, expression);
+   }
+
+   public static AssignExpression newAssignExpression(Expression varName, AssignmentOperator operator, Expression expression) {
+       return KotlinST.newAssignExpression()
+               .setVarName(varName)
+               .setOperator(operator)
+               .setExpression(expression);
+   }
+
    public static FunctionDeclaration createCopyFunction(String className, Collection<ParameterDefinition> fields) {
       return newFunctionDeclaration()
               .setName("copy")
@@ -108,9 +130,7 @@ public class KotlinPatterns extends KotlinST {
                       .setClassName(className)
                       .setParams(fields.stream()
                               .map(fieldDeclaration -> newLiteralExpression(getNameFromParameterDefinition(fieldDeclaration)))
-                              .map(fieldName -> newAssignExpression()
-                                  .setVarName(fieldName)
-                                  .setExpression(fieldName))
+                              .map(fieldName -> newAssignExpression(fieldName, fieldName))
                               .collect(Collectors.toList()))
               );
    }
@@ -191,6 +211,14 @@ public class KotlinPatterns extends KotlinST {
        return KotlinST.newReferenceExpression().setScope(scope).setName(name).setProperty(property);
    }
 
+   public static ReferenceExpression createClassReferenceExpression(String className) {
+       return newReferenceExpression(className, newLiteralExpression("class"));
+   }
+
+   public static ReferenceExpression createJavaClassReferenceExpression(String className) {
+       return newReferenceExpression(className, newFunctionCallExpression().setScope("class").setFunctionName("class"));
+   }
+
    public static KotlinStringTemplateSingleValue newKotlinStringTemplateSingleValue(String name) {
        return KotlinST.newKotlinStringTemplateSingleValue().setName(name);
    }
@@ -247,6 +275,13 @@ public class KotlinPatterns extends KotlinST {
        return newVarDeclarationStatement().setName(name).setType(type).setInitializer(initializer).setIsMutable(mutable);
    }
 
+   public static ComparisonExpression newComparisonExpression(Expression lhs, ComparisonOperator operator, Expression rhs) {
+       return KotlinST.newComparisonExpression()
+               .setLhs(lhs)
+               .setOperator(operator)
+               .setRhs(rhs);
+   }
+
    public static LogicalExpression newLogicalExpression(Expression lhs, LogicalOperator operator, Expression rhs) {
        return KotlinST.newLogicalExpression()
                .setLhs(lhs)
@@ -261,6 +296,17 @@ public class KotlinPatterns extends KotlinST {
                .setWhenFalse(whenFalse);
    }
 
+   public static AnnotationDeclaration newAnnotationDeclaration(String name) {
+       return KotlinST.newAnnotationDeclaration()
+               .setName(name);
+   }
+
+   public static AnnotationDeclaration newAnnotationDeclaration(String name, Collection<Expression> params) {
+       return KotlinST.newAnnotationDeclaration()
+               .setName(name)
+               .setParams(params);
+   }
+
    public static ClassDeclaration createNeo4jOgmAbstractEntityClass() {
        TypeDeclaration longType = newNamedType().setName("Long");
        NullableType nullableLongType = newNullableType(longType);
@@ -271,16 +317,16 @@ public class KotlinPatterns extends KotlinST {
        PropertyDeclaration idProperty = newPropertyDeclaration(nullableLongType, "id", newLiteralExpression("id"), true)
                .setPrivateSetter(true)
                .setAnnotations(asList(
-                       newAnnotationDeclaration().addAnnotations("Id", null),
-                       newAnnotationDeclaration().addAnnotations("GeneratedValue", null)
+                       newAnnotationDeclaration("Id"),
+                       newAnnotationDeclaration("GeneratedValue")
                ));
 
        PropertyDeclaration uuidProperty = newPropertyDeclaration(uuidType, "uuid", newLiteralExpression("uuid"), true)
                .setPrivateSetter(true)
                .setAnnotations(asList(
-                       newAnnotationDeclaration().addAnnotations("Property", singletonList(newAnnotationParam().addParam("value", "uuid"))),
-                       newAnnotationDeclaration().addAnnotations("Index", singletonList(newAnnotationParam().addParam("unique", "true"))),
-                       newAnnotationDeclaration().addAnnotations("Convert", singletonList(newAnnotationParam().addParam("value", "UUIDAttributeConverter::class")))
+                       newAnnotationDeclaration("Property", singletonList(newStringValueExpression("uuid"))),
+                       newAnnotationDeclaration("Index", singletonList(newAssignExpression("unique", "true"))),
+                       newAnnotationDeclaration("Convert", singletonList(createClassReferenceExpression("UUIDAttributeConverter")))
                ));
 
        List<PropertyDeclaration> properties = asList(

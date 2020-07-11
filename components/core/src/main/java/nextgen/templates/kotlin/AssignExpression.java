@@ -107,5 +107,5 @@ public class AssignExpression implements Expression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AssignExpression(varName,operator,expression) ::= <<~varName~ ~operator~= ~expression~ >>";
+	static final String st = "AssignExpression(varName,operator,expression) ::= <<~varName~ ~operator~ ~expression~ >>";
 }  

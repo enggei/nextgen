@@ -13,8 +13,8 @@ public class KotlinSTTests {
 		testAssertNotNullExpression();
 		testAssignExpression();
 		testCastExpression();
+		testComparisonExpression();
 		testConstructorCallExpression();
-		testEqualsExpression();
 		testFunctionCallExpression();
 		testGroupedExpression();
 		testIfExpression();
@@ -30,7 +30,6 @@ public class KotlinSTTests {
 		testStringValueExpression();
 		testThisExpression();
 		testAnnotationDeclaration();
-		testAnnotationParam();
 		testClassDeclaration();
 		testCompanionObject();
 		testOverrideEquals();
@@ -104,13 +103,13 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
-	public void testConstructorCallExpression() {
-		System.out.println("\n--- TEST ConstructorCallExpression:\n" + newConstructorCallExpression());
+	public void testComparisonExpression() {
+		System.out.println("\n--- TEST ComparisonExpression:\n" + newComparisonExpression());
 	} 
 
 	@org.junit.Test
-	public void testEqualsExpression() {
-		System.out.println("\n--- TEST EqualsExpression:\n" + newEqualsExpression());
+	public void testConstructorCallExpression() {
+		System.out.println("\n--- TEST ConstructorCallExpression:\n" + newConstructorCallExpression());
 	} 
 
 	@org.junit.Test
@@ -186,11 +185,6 @@ public class KotlinSTTests {
 	@org.junit.Test
 	public void testAnnotationDeclaration() {
 		System.out.println("\n--- TEST AnnotationDeclaration:\n" + newAnnotationDeclaration());
-	} 
-
-	@org.junit.Test
-	public void testAnnotationParam() {
-		System.out.println("\n--- TEST AnnotationParam:\n" + newAnnotationParam());
 	} 
 
 	@org.junit.Test

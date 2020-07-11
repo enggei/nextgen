@@ -9,8 +9,8 @@ public class KotlinST {
 	AssertNotNullExpression.st + "\n" + 
 	AssignExpression.st + "\n" + 
 	CastExpression.st + "\n" + 
+	ComparisonExpression.st + "\n" + 
 	ConstructorCallExpression.st + "\n" + 
-	EqualsExpression.st + "\n" + 
 	FunctionCallExpression.st + "\n" + 
 	GroupedExpression.st + "\n" + 
 	IfExpression.st + "\n" + 
@@ -26,7 +26,6 @@ public class KotlinST {
 	StringValueExpression.st + "\n" + 
 	ThisExpression.st + "\n" + 
 	AnnotationDeclaration.st + "\n" + 
-	AnnotationParam.st + "\n" + 
 	ClassDeclaration.st + "\n" + 
 	CompanionObject.st + "\n" + 
 	OverrideEquals.st + "\n" + 
@@ -128,12 +127,12 @@ public class KotlinST {
 		return new CastExpression(stGroup);
 	} 
 
-	public static ConstructorCallExpression newConstructorCallExpression() {
-		return new ConstructorCallExpression(stGroup);
+	public static ComparisonExpression newComparisonExpression() {
+		return new ComparisonExpression(stGroup);
 	} 
 
-	public static EqualsExpression newEqualsExpression() {
-		return new EqualsExpression(stGroup);
+	public static ConstructorCallExpression newConstructorCallExpression() {
+		return new ConstructorCallExpression(stGroup);
 	} 
 
 	public static FunctionCallExpression newFunctionCallExpression() {
@@ -194,10 +193,6 @@ public class KotlinST {
 
 	public static AnnotationDeclaration newAnnotationDeclaration() {
 		return new AnnotationDeclaration(stGroup);
-	} 
-
-	public static AnnotationParam newAnnotationParam() {
-		return new AnnotationParam(stGroup);
 	} 
 
 	public static ClassDeclaration newClassDeclaration() {
