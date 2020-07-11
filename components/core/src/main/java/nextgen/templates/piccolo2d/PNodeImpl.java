@@ -605,7 +605,6 @@ public class PNodeImpl {
 				"import java.awt.*;\n" + 
 				"import java.awt.event.ActionEvent;\n" + 
 				"import java.util.*;\n" + 
-				"import java.util.stream.Stream;\n" + 
 				"\n" + 
 				"public class ~name~ extends ~nodeName~ {\n" + 
 				"\n" + 

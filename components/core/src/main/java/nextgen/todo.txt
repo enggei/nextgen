@@ -1,7 +1,6 @@
 
 Definetly:
 # open incoming nodes
-# retain selected nodes
 # Add parameter-types, and use when selecting Set/Add values (only show the valid ones)
 # load previous canvas (saved on shutdown, loaded on startup)
 # Add-form for all single-values in STModel

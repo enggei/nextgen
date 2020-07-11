@@ -131,26 +131,26 @@ public class LayoutTreeAction {
 				"\n" + 
 				"			final org.abego.treelayout.TreeForTreeLayout<~nodeType~> tree = new org.abego.treelayout.util.AbstractTreeForTreeLayout<~nodeType~>(node) {\n" + 
 				"				@Override\n" + 
-				"				public ~nodeType~ getParent(~nodeType~ textNode) {\n" + 
-				"					return parentsMap.get(textNode.getUuid());\n" + 
+				"				public ~nodeType~ getParent(~nodeType~ node) {\n" + 
+				"					return parentsMap.get(node.getUuid());\n" + 
 				"				}\n" + 
 				"\n" + 
 				"				@Override\n" + 
-				"				public java.util.List<~nodeType~> getChildrenList(~nodeType~ textNode) {\n" + 
-				"					if (textNode == null) return Collections.emptyList();\n" + 
-				"					return childrensMap.get(textNode.getUuid());\n" + 
+				"				public java.util.List<~nodeType~> getChildrenList(~nodeType~ node) {\n" + 
+				"					if (node == null) return Collections.emptyList();\n" + 
+				"					return childrensMap.get(node.getUuid());\n" + 
 				"				}\n" + 
 				"			};\n" + 
 				"\n" + 
 				"			final org.abego.treelayout.NodeExtentProvider<~nodeType~> nodeExtendProvider = new org.abego.treelayout.NodeExtentProvider<~nodeType~>() {\n" + 
 				"				@Override\n" + 
-				"				public double getWidth(~nodeType~ textNode) {\n" + 
-				"					return textNode.getFullBounds().getWidth();\n" + 
+				"				public double getWidth(~nodeType~ node) {\n" + 
+				"					return node.getWidth();\n" + 
 				"				}\n" + 
 				"\n" + 
 				"				@Override\n" + 
-				"				public double getHeight(~nodeType~ textNode) {\n" + 
-				"					return textNode.getFullBounds().getHeight();\n" + 
+				"				public double getHeight(~nodeType~ node) {\n" + 
+				"					return node.getHeight();\n" + 
 				"				}\n" + 
 				"			};\n" + 
 				"\n" + 
@@ -160,8 +160,8 @@ public class LayoutTreeAction {
 				"			final Point2D rootLocation = node.getFullBoundsReference().getCenter2D();\n" + 
 				"			final Map<~nodeType~, Rectangle2D.Double> nodeBounds = layout.getNodeBounds();\n" + 
 				"			final Rectangle2D.Double rootBounds = nodeBounds.get(node);\n" + 
-				"			final double dX = rootLocation.getX() - rootBounds.getCenterX();\n" + 
-				"			final double dY = rootLocation.getY() - rootBounds.getCenterY();\n" + 
+				"			final double dX = rootLocation.getX() - (rootBounds.getCenterX());\n" + 
+				"			final double dY = rootLocation.getY() - (rootBounds.getCenterY() - ((int) rootBounds.getHeight() / 2d));\n" + 
 				"\n" + 
 				"			SwingUtilities.invokeLater(() -> {\n" + 
 				"				for (Map.Entry<~nodeType~, Rectangle2D.Double> nodeBound : nodeBounds.entrySet()) {\n" + 

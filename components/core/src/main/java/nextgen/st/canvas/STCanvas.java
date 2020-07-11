@@ -368,7 +368,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		abstract void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e);
 
 		protected void doLaterInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer){ 
-			javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(consumer, throwable -> com.generator.util.SwingUtil.showException(canvas, throwable)));
+			javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(consumer, (throwable) -> com.generator.util.SwingUtil.showException(canvas, throwable)));
 		}
 	}
 
@@ -521,19 +521,19 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	}
 
 	java.util.function.Supplier<STNode> newSTNode(nextgen.st.model.STModel stModel){ 
-		return () -> new STModelNode(this, modelDb.findSTTemplateByUuid(stModel.getStTemplate()), stModel, stRenderer);
+		return () -> new nextgen.st.canvas.STModelNode(this, modelDb.findSTTemplateByUuid(stModel.getStTemplate()), stModel, stRenderer);
 	}
 
 	java.util.function.Supplier<STNode> newSTNode(nextgen.st.model.STValue stValue){ 
-		return () -> new STValueNode(this, stValue, stRenderer);
+		return () -> new nextgen.st.canvas.STValueNode(this, stValue, stRenderer);
 	}
 
 	java.util.function.Supplier<STNode> newSTNode(nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument){ 
-		return () -> new STKVNode(this, stParameter, stArgument, stRenderer);
+		return () -> new nextgen.st.canvas.STKVNode(this, stParameter, stArgument, stRenderer);
 	}
 
 	java.util.function.Supplier<STNode> newSTNode(nextgen.st.model.STFile stFile, nextgen.st.model.STModel stModel){ 
-		return () -> new STFileNode(this, stFile, stModel, stRenderer);
+		return () -> new nextgen.st.canvas.STFileNode(this, stFile, stModel, stRenderer);
 	}
 
 	public static final class NodeAdded {

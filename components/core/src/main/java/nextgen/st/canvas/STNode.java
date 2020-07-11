@@ -331,26 +331,26 @@ public class STNode extends PNode implements PropertyChangeListener {
 
 				final org.abego.treelayout.TreeForTreeLayout<STNode> tree = new org.abego.treelayout.util.AbstractTreeForTreeLayout<STNode>(node) {
 					@Override
-					public STNode getParent(STNode textNode) {
-						return parentsMap.get(textNode.getUuid());
+					public STNode getParent(STNode node) {
+						return parentsMap.get(node.getUuid());
 					}
 
 					@Override
-					public java.util.List<STNode> getChildrenList(STNode textNode) {
-						if (textNode == null) return Collections.emptyList();
-						return childrensMap.get(textNode.getUuid());
+					public java.util.List<STNode> getChildrenList(STNode node) {
+						if (node == null) return Collections.emptyList();
+						return childrensMap.get(node.getUuid());
 					}
 				};
 
 				final org.abego.treelayout.NodeExtentProvider<STNode> nodeExtendProvider = new org.abego.treelayout.NodeExtentProvider<STNode>() {
 					@Override
-					public double getWidth(STNode textNode) {
-						return textNode.getFullBounds().getWidth();
+					public double getWidth(STNode node) {
+						return node.getWidth();
 					}
 
 					@Override
-					public double getHeight(STNode textNode) {
-						return textNode.getFullBounds().getHeight();
+					public double getHeight(STNode node) {
+						return node.getHeight();
 					}
 				};
 
@@ -360,8 +360,8 @@ public class STNode extends PNode implements PropertyChangeListener {
 				final Point2D rootLocation = node.getFullBoundsReference().getCenter2D();
 				final Map<STNode, Rectangle2D.Double> nodeBounds = layout.getNodeBounds();
 				final Rectangle2D.Double rootBounds = nodeBounds.get(node);
-				final double dX = rootLocation.getX() - rootBounds.getCenterX();
-				final double dY = rootLocation.getY() - rootBounds.getCenterY();
+				final double dX = rootLocation.getX() - (rootBounds.getCenterX());
+				final double dY = rootLocation.getY() - (rootBounds.getCenterY() - ((int) rootBounds.getHeight() / 2d));
 
 				SwingUtilities.invokeLater(() -> {
 					for (Map.Entry<STNode, Rectangle2D.Double> nodeBound : nodeBounds.entrySet()) {

@@ -7,14 +7,13 @@ public class Piccolo2DST {
 	"gt() ::= \">\"\n" +
 	PCanvas.st + "\n" + 
 	CanvasAction.st + "\n" + 
+	LayoutVerticallyAction.st + "\n" + 
 	CanvasEvents.st + "\n" + 
 	CanvasInputEventsHandler.st + "\n" + 
 	CanvasZoomHandler.st + "\n" + 
-	LayoutVerticallyAction.st + "\n" + 
 	SelectEventsHandler.st + "\n" + 
 	PNode.st + "\n" + 
 	NodeAction.st + "\n" + 
-	PNodeActions.st + "\n" + 
 	AnonymousPNodeAction.st + "\n" + 
 	LayoutTreeAction.st + "\n" + 
 	PNodeImpl.st + "\n" + 
@@ -69,6 +68,10 @@ public class Piccolo2DST {
 		return new CanvasAction(stGroup);
 	} 
 
+	public static LayoutVerticallyAction newLayoutVerticallyAction() {
+		return new LayoutVerticallyAction(stGroup);
+	} 
+
 	public static CanvasEvents newCanvasEvents() {
 		return new CanvasEvents(stGroup);
 	} 
@@ -81,10 +84,6 @@ public class Piccolo2DST {
 		return new CanvasZoomHandler(stGroup);
 	} 
 
-	public static LayoutVerticallyAction newLayoutVerticallyAction() {
-		return new LayoutVerticallyAction(stGroup);
-	} 
-
 	public static SelectEventsHandler newSelectEventsHandler() {
 		return new SelectEventsHandler(stGroup);
 	} 
@@ -95,10 +94,6 @@ public class Piccolo2DST {
 
 	public static NodeAction newNodeAction() {
 		return new NodeAction(stGroup);
-	} 
-
-	public static PNodeActions newPNodeActions() {
-		return new PNodeActions(stGroup);
 	} 
 
 	public static AnonymousPNodeAction newAnonymousPNodeAction() {

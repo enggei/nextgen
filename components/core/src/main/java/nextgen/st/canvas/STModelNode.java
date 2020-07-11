@@ -6,7 +6,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.*;
-import java.util.stream.Stream;
 
 public class STModelNode extends STNode {
 
@@ -528,7 +527,7 @@ public class STModelNode extends STNode {
 		@Override
 		void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
 			doLaterInTransaction(tx -> {
-				final java.util.Map<String, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();
+				final java.util.LinkedHashMap<java.lang.String, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();
 				fieldMap.put("name", new javax.swing.JTextField(canvas.modelDb.getSTModelName(node.stModel, ""), 15));
 				fieldMap.put("type", new JTextField(15));
 				fieldMap.put("path", new JTextField(15));

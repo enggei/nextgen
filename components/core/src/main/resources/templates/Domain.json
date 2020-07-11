@@ -115,7 +115,7 @@
     "children" : [ {
       "uuid" : "581a326a-5c8c-47bb-9ce2-0cfd0e28a9f2",
       "name" : "JavaPackage",
-      "text" : "~if(comments)~\n// ~comments~\n~endif~\nfinal PackageDeclaration ~name~ = newPackageDeclaration(~if(parent)~~parent~, ~endif~\"~packageName~\");\n~entities:{it|final NamedEntity ~it.name~ = new NamedEntity(\"~it.name~\", ~name~~if(it.variableName)~, \"~it.variableName~\"~endif~);};separator=\"\\n\"~\n~methods:{it|~it~};separator=\"\\n\\n\"~\n~subPackages:{it|~it~};separator=\"\\n\\n\"~ ",
+      "text" : "~if(comments)~\n// ~comments~\n~endif~\nfinal PackageDeclaration ~name~ = newPackageDeclaration(~if(parent)~~parent~, ~endif~\"~packageName~\");\n~entities:{it|final NamedEntity ~if(it.ref)~~it.ref~~else~~it.name~~endif~ = new NamedEntity(\"~it.name~\", ~name~~if(it.variableName)~, \"~it.variableName~\"~endif~);};separator=\"\\n\"~\n\n~methods:{it|~it~};separator=\"\\n\\n\"~\n\n~subPackages:{it|~it~};separator=\"\\n\\n\"~ ",
       "parameters" : [ {
         "uuid" : "d854bc48-0d01-400e-bc44-e605449e7d49",
         "name" : "comments",
@@ -149,6 +149,10 @@
           "uuid" : "6a599356-9092-4130-853f-c7193764884e",
           "name" : "variableName",
           "argumentType" : "Object"
+        }, {
+          "uuid" : "de1c963d-1d08-4dea-bc0b-63d0c255f9ed",
+          "name" : "ref",
+          "argumentType" : "Object"
         } ]
       }, {
         "uuid" : "fe9ef0a7-49b5-4c8a-bac7-956bce977753",
@@ -162,21 +166,6 @@
         "argumentType" : "Object"
       } ],
       "children" : [ ]
-    }, {
-      "uuid" : "50b7c87b-fdbe-4e5c-a609-451921bdbb9c",
-      "name" : "JavaCorePackage",
-      "text" : "// todo refactor away, into JavaPackage \"Java Core\"\n\nfinal NamedEntity String = new NamedEntity(\"String\");\nfinal NamedEntity intType = new NamedEntity(\"int\");\n\nfinal NamedEntity Map = new NamedEntity(\"Map\", javaUtil);\nfinal NamedEntity Set = new NamedEntity(\"Set\", javaUtil);\nfinal NamedEntity List = new NamedEntity(\"List\", javaUtil);\nfinal NamedEntity Collection = new NamedEntity(\"Collection\", javaUtil);\nfinal NamedEntity LinkedHashMap = new NamedEntity(\"LinkedHashMap\", javaUtil);\nfinal NamedEntity LinkedHashSet = new NamedEntity(\"LinkedHashSet\", javaUtil);\nfinal NamedEntity TreeSet = new NamedEntity(\"TreeSet\", javaUtil);\n\nfinal PackageDeclaration javaUtilFunction = newPackageDeclaration(\"java.util.function\");\nfinal NamedEntity Consumer = new NamedEntity(\"Consumer\", javaUtilFunction);\nfinal NamedEntity BiConsumer = new NamedEntity(\"BiConsumer\", javaUtilFunction, \"consumer\");\n\nStatement newLinkedHashMap(String variableName, Object keyType, Object valueType) {\n\treturn statement(newVariableDeclarationExpression()\n\t\t\t.addModifiers(\"final\")\n\t\t\t.addVariables(newVariableDeclaration()\n\t\t\t\t\t.setName(variableName)\n\t\t\t\t\t.setType(Map.asClassOrInterfaceType()\n\t\t\t\t\t\t\t.addTypeArguments(keyType)\n\t\t\t\t\t\t\t.addTypeArguments(valueType))\n\t\t\t\t\t.setInitializer(LinkedHashMap.newInstance()\n\t\t\t\t\t\t\t.addTypeArguments(\"\"))));\n}\n\nStatement put(String scope, Object key, Object value) {\n\treturn newExpressionStmt()\n\t\t.setExpression(newMethodCallExpression()\n\t\t.setScope(scope)\n\t\t.setName(\"put\")\n\t\t.addArguments(key)\n\t\t.addArguments(value));\n} ",
-      "parameters" : [ ]
-    }, {
-      "uuid" : "552d7c62-d1d5-44aa-9d91-45300e2e6f86",
-      "name" : "JavaSwingPackage",
-      "text" : "final PackageDeclaration javaxSwing = newPackageDeclaration(\"javax.swing\");\nfinal NamedEntity JTextField = new NamedEntity(\"JTextField\", javaxSwing, \"textField\");\nfinal NamedEntity JTextArea = new NamedEntity(\"JTextArea\", javaxSwing, \"textArea\");\n\nstatic Statement invokeLater(Expression expression) {\n\treturn statement(methodCallExpression(\"javax.swing.SwingUtilities\", \"invokeLater\")\n\t\t\t\t.addArguments(newLambdaExpression().setBody(expression)));\n} ",
-      "parameters" : [ ]
-    }, {
-      "uuid" : "cffd8d1c-04e5-428f-9e36-dff9288cc83b",
-      "name" : "Neo4JPackage",
-      "text" : "final PackageDeclaration neo4jGraphdb = newPackageDeclaration(\"org.neo4j.graphdb\");\nfinal NamedEntity NeoTransaction = new NamedEntity(\"Transaction\", neo4jGraphdb); ",
-      "parameters" : [ ]
     }, {
       "uuid" : "ae2892b7-da5f-464e-9d07-2ed65253888a",
       "name" : "JavaLibrary",

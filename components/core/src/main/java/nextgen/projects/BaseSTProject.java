@@ -18,15 +18,13 @@ public class BaseSTProject {
 	final NamedEntity Future = new NamedEntity("Future", vertxCore, "future");
 
 	// Java Core
+	final PackageDeclaration javaLang = newPackageDeclaration("java.lang");
+	final NamedEntity intType = new NamedEntity("int", javaLang);
+	final NamedEntity String = new NamedEntity("String", javaLang, "string");
+
 	// Java Util
 	final PackageDeclaration javaUtil = newPackageDeclaration("java.util");
 	final NamedEntity UUID = new NamedEntity("UUID", javaUtil, "uuid");
-
-	// todo refactor away, into JavaPackage "Java Core"
-
-	final NamedEntity String = new NamedEntity("String");
-	final NamedEntity intType = new NamedEntity("int");
-
 	final NamedEntity Map = new NamedEntity("Map", javaUtil);
 	final NamedEntity Set = new NamedEntity("Set", javaUtil);
 	final NamedEntity List = new NamedEntity("List", javaUtil);
@@ -35,34 +33,23 @@ public class BaseSTProject {
 	final NamedEntity LinkedHashSet = new NamedEntity("LinkedHashSet", javaUtil);
 	final NamedEntity TreeSet = new NamedEntity("TreeSet", javaUtil);
 
-	final PackageDeclaration javaUtilFunction = newPackageDeclaration("java.util.function");
-	final NamedEntity Consumer = new NamedEntity("Consumer", javaUtilFunction);
+	public Statement newLinkedHashMap(String name, ClassOrInterfaceType keyType, ClassOrInterfaceType valueType) {
+		return newExpressionStmt(newFinalVariableDeclarationExpression(newVariableDeclaration(LinkedHashMap.type(keyType, valueType), name, newObjectCreationExpression(LinkedHashMap.type().setIsTyped(Boolean.TRUE)))));
+	}
+
+	final PackageDeclaration javaUtilFunction = newPackageDeclaration(javaUtil, "function");
+	final NamedEntity Consumer = new NamedEntity("Consumer", javaUtilFunction, "consumer");
 	final NamedEntity BiConsumer = new NamedEntity("BiConsumer", javaUtilFunction, "consumer");
 
-	Statement newLinkedHashMap(String variableName, Object keyType, Object valueType) {
-		return statement(newVariableDeclarationExpression()
-				.addModifiers("final")
-				.addVariables(newVariableDeclaration()
-						.setName(variableName)
-						.setType(Map.asClassOrInterfaceType()
-								.addTypeArguments(keyType)
-								.addTypeArguments(valueType))
-						.setInitializer(LinkedHashMap.newInstance()
-								.addTypeArguments(""))));
-	}
-
-	Statement put(String scope, Object key, Object value) {
-		return newExpressionStmt()
-			.setExpression(newMethodCallExpression()
-			.setScope(scope)
-			.setName("put")
-			.addArguments(key)
-			.addArguments(value));
-	}
+	final PackageDeclaration javaIO = newPackageDeclaration("java.io");
+	final NamedEntity File = new NamedEntity("File", javaIO, "file");
 
 	// ST App
 	final PackageDeclaration stPackage = newPackageDeclaration("nextgen.st");
 	final NamedEntity STRenderer = new NamedEntity("STRenderer", stPackage, "stRenderer");
+	final NamedEntity STGenerator = new NamedEntity("STGenerator", stPackage, "stGenerator");
+
+
 	// ST template domain
 	final PackageDeclaration stDomainPackage = newPackageDeclaration(stPackage, "domain");
 	final NamedEntity STTemplate = new NamedEntity("STTemplate", stDomainPackage, "stTemplate");
@@ -91,8 +78,9 @@ public class BaseSTProject {
 	final NamedEntity STNode = new NamedEntity("STNode", stCanvasPackage, "stNode");
 
 	// Neo4J
-	final PackageDeclaration neo4jGraphdb = newPackageDeclaration("org.neo4j.graphdb");
-	final NamedEntity NeoTransaction = new NamedEntity("Transaction", neo4jGraphdb);
+	// graphdb
+	final PackageDeclaration graphdb = newPackageDeclaration("org.neo4j.graphdb");
+	final NamedEntity neoTransaction = new NamedEntity("Transaction", graphdb, "tx");
 
 	// java Swing
 	// Java Swing
@@ -100,23 +88,238 @@ public class BaseSTProject {
 	final NamedEntity JTextField = new NamedEntity("JTextField", javaxSwing, "textField");
 	final NamedEntity JTextArea = new NamedEntity("JTextArea", javaxSwing, "textArea");
 	final NamedEntity SwingUtilities = new NamedEntity("SwingUtilities", javaxSwing);
-	public MethodCallExpression invokeLater(Expression expression) {
-	    	return newMethodCallExpression().setScope(SwingUtilities.type()).setName("invokeLater").addArguments(newLambdaExpression().setBody(expression));
+	final NamedEntity JMenu = new NamedEntity("JMenu", javaxSwing, "jMenu");
+
+	public Statement invokeLater(Expression expression) {
+		return newExpressionStmt(newMethodCallExpression().setScope(SwingUtilities.type()).setName("invokeLater").addArguments(newLambdaExpression().setBody(expression)));
+	}
+
+	// Generator
+	final PackageDeclaration generatorUtil = newPackageDeclaration("com.generator.util");
+	final NamedEntity SwingUtil = new NamedEntity("SwingUtil", generatorUtil);
+
+
+	public static class JavaPatterns extends nextgen.templates.java.JavaST {
+
+		// declarations
+		public static PackageDeclaration newPackageDeclaration(String packageName) {
+			return newPackageDeclaration()
+					.setName(packageName);
 		}
 
+		public static PackageDeclaration newPackageDeclaration(PackageDeclaration parent, String packageName) {
+			return newPackageDeclaration()
+					.setName(parent.getName() + "." + packageName);
+		}
+
+		public static MethodDeclaration newPublicMethodDeclaration(String name, BlockStmt blockStmt) {
+			return newMethodDeclaration(name, blockStmt)
+					.addModifiers("public");
+		}
+
+		public static MethodDeclaration newPublicStaticMethodDeclaration(String name, BlockStmt blockStmt) {
+			return newPublicMethodDeclaration(name, blockStmt)
+					.addModifiers("static");
+		}
+
+		public static MethodDeclaration newPublicStaticFinalMethodDeclaration(String name, BlockStmt blockStmt) {
+			return newPublicStaticMethodDeclaration(name, blockStmt)
+					.addModifiers("final");
+		}
+
+		public static MethodDeclaration newPublicFinalMethodDeclaration(String name, BlockStmt blockStmt) {
+			return newPublicMethodDeclaration(name, blockStmt)
+					.addModifiers("final");
+		}
+
+		public static MethodDeclaration newProtectedMethodDeclaration(String name, BlockStmt blockStmt) {
+			return newMethodDeclaration(name, blockStmt)
+					.addModifiers("protected");
+		}
+
+		public static MethodDeclaration newProtectedStaticMethodDeclaration(String name, BlockStmt blockStmt) {
+			return newProtectedMethodDeclaration(name, blockStmt)
+					.addModifiers("static");
+		}
+
+		public static MethodDeclaration newPrivateMethodDeclaration(String name, BlockStmt blockStmt) {
+			return newMethodDeclaration(name, blockStmt)
+					.addModifiers("private");
+		}
+
+		public static MethodDeclaration newPrivateStaticMethodDeclaration(String name, BlockStmt blockStmt) {
+			return newPrivateMethodDeclaration(name, blockStmt)
+					.addModifiers("static");
+		}
+
+		public static MethodDeclaration newStaticMethodDeclaration(String name, BlockStmt blockStmt) {
+			return newMethodDeclaration(name, blockStmt)
+					.addModifiers("static");
+		}
+
+		public static MethodDeclaration newStaticFinalMethodDeclaration(String name, BlockStmt blockStmt) {
+			return newStaticMethodDeclaration(name, blockStmt)
+					.addModifiers("final");
+		}
+
+		public static MethodDeclaration newMethodDeclaration(String name, BlockStmt blockStmt) {
+			return newMethodDeclaration()
+					.setName(name)
+					.setBlockStmt(blockStmt);
+		}
+
+		public static VariableDeclaration newVariableDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, Object initializer) {
+			return newVariableDeclaration()
+					.setType(classOrInterfaceType)
+					.setName(name)
+					.setInitializer(initializer);
+		}
+
+		public static FieldDeclaration newPrivateFieldDeclaration(VariableDeclaration variableDeclaration) {
+			return newFieldDeclaration(variableDeclaration)
+					.addModifiers("private");
+		}
+
+		public static FieldDeclaration newProtectedFieldDeclaration(VariableDeclaration variableDeclaration) {
+			return newFieldDeclaration(variableDeclaration)
+					.addModifiers("protected");
+		}
+
+		public static FieldDeclaration newPublicFieldDeclaration(VariableDeclaration variableDeclaration) {
+			return newFieldDeclaration(variableDeclaration)
+					.addModifiers("public");
+		}
+
+		public static FieldDeclaration newFinalFieldDeclaration(VariableDeclaration variableDeclaration) {
+			return newFieldDeclaration(variableDeclaration)
+					.addModifiers("final");
+		}
+
+		public static FieldDeclaration newPrivateFinalFieldDeclaration(VariableDeclaration variableDeclaration) {
+			return newPrivateFieldDeclaration(variableDeclaration)
+					.addModifiers("final");
+		}
+
+		public static FieldDeclaration newProtectedFinalFieldDeclaration(VariableDeclaration variableDeclaration) {
+			return newProtectedFieldDeclaration(variableDeclaration)
+					.addModifiers("final");
+		}
+
+		public static FieldDeclaration newPublicFinalFieldDeclaration(VariableDeclaration variableDeclaration) {
+			return newPublicFieldDeclaration(variableDeclaration)
+					.addModifiers("final");
+		}
+
+		public static FieldDeclaration newFieldDeclaration(VariableDeclaration variableDeclaration) {
+			return newFieldDeclaration()
+					.addVariables(variableDeclaration);
+		}
+
+		public static ClassOrInterfaceType newClassOrInterfaceType(Object scope, String name) {
+			return newClassOrInterfaceType()
+					.setScope(scope)
+					.addNames(name);
+		}
+
+		public static Parameter newParameter(ClassOrInterfaceType type, String name) {
+			return newParameter()
+					.setType(type)
+					.setName(name);
+		}
+
+		// statements
+		public static Statement newExpressionStmt(Expression expression) {
+			return newExpressionStmt()
+					.setExpression(expression);
+		}
+
+		public static Statement newReturnStatement(Expression expression) {
+			return newReturnStmt()
+					.setExpression(expression);
+		}
+
+		// expressions
+		public static ObjectCreationExpression newObjectCreationExpression(ClassOrInterfaceType classOrInterfaceType) {
+			return newObjectCreationExpression()
+					.setType(classOrInterfaceType);
+		}
+
+		public static LambdaExpression newLambdaExpression(Expression expression) {
+			return newLambdaExpression()
+					.setBody(expression);
+		}
+
+		public static LambdaExpression newLambdaExpression(Statement... statements) {
+			return newLambdaExpression()
+					.setBody(newBlockStmt()
+						.setStatements(statements));
+		}
+
+		public static FieldAccessExpression newFieldAccessExpression(String scope, String name) {
+			return newFieldAccessExpression()
+					.setScope(scope)
+					.setName(name);
+		}
+
+		public static VariableDeclarationExpression newFinalVariableDeclarationExpression(VariableDeclaration variableDeclaration) {
+			return newVariableDeclarationExpression()
+					.addModifiers("final")
+					.addVariables(variableDeclaration);
+		}
+
+		public static MethodCallExpression newMethodCallExpression(FieldAccessExpression scope, String name, Object... arguments) {
+			return newMethodCallExpression()
+					.setScope(scope)
+					.setName(name)
+					.setArguments(arguments);
+		}
+
+		public static MethodCallExpression newMethodCallExpression(MethodCallExpression scope, String name, Object... arguments) {
+			return newMethodCallExpression()
+					.setScope(scope)
+					.setName(name)
+					.setArguments(arguments);
+		}
+
+		public static MethodCallExpression newMethodCallExpression(VariableDeclaration scope, String name, Object... arguments) {
+			return newMethodCallExpression()
+					.setScope(scope.getName())
+					.setName(name)
+					.setArguments(arguments);
+		}
+
+		public static MethodCallExpression newMethodCallExpression(ClassOrInterfaceType scope, String name, Object... arguments) {
+			return newMethodCallExpression()
+					.setScope(scope)
+					.setName(name)
+					.setArguments(arguments);
+		}
+
+		public static MethodCallExpression newMethodCallExpression(String scope, String name, Object... arguments) {
+			return newMethodCallExpression()
+					.setScope(scope)
+					.setName(name)
+					.setArguments(arguments);
+		}
+
+		public static MethodCallExpression newMethodCallExpression(String name, Object... arguments) {
+			return newMethodCallExpression()
+					.setName(name)
+					.setArguments(arguments);
+		}
+
+		// formatting
+		public static Object asString(Object value) {
+			return "\"" + value + "\"";
+		}
+	}
 
 	public static class NamedEntity {
 
 		private final String name;
 		private final PackageDeclaration packageDeclaration;
-		Object content;
 
 		private String variableName;
-
-		NamedEntity(String name) {
-			this.name = name;
-			this.packageDeclaration = null;
-		}
 
 		NamedEntity(String name, PackageDeclaration packageDeclaration) {
 			this.name = name;
@@ -141,99 +344,29 @@ public class BaseSTProject {
 		}
 
 		Parameter asParameter(Object... typeArguments) {
-			return newParameter().setType(asClassOrInterfaceType(typeArguments)).setName(variableName());
+			return newParameter(asClassOrInterfaceType(typeArguments), variableName());
 		}
 
 		MethodCallExpression staticMethodCall(String name, Object... arguments) {
-			return methodCallExpression(type(), name, arguments);
+			return newMethodCallExpression(type(), name, arguments);
 		}
 
 		MethodCallExpression methodCall(String name, Object... arguments) {
-			return methodCallExpression(variableName(), name, arguments);
+			return newMethodCallExpression(variableName(), name, arguments);
 		}
 
 		Statement asVariable(Object initializer) {
-			return newExpressionStmt()
-					.setExpression(newVariableDeclarationExpression()
-							.addModifiers("final")
-							.addVariables(newVariableDeclaration()
-									.setName(variableName())
-									.setType(type())
-									.setInitializer(initializer)));
+			return newExpressionStmt(newFinalVariableDeclarationExpression(newVariableDeclaration(type(), variableName(), initializer)));
 		}
 
 		ClassOrInterfaceType asClassOrInterfaceType(Object... typeArguments) {
-			return newClassOrInterfaceType()
-					.addNames(name())
-					.setScope(packageDeclaration == null ? null : packageDeclaration.getName())
+			return newClassOrInterfaceType(packageDeclaration == null ? null : packageDeclaration.getName(), name)
 					.setTypeArguments(typeArguments);
 		}
 
 		ObjectCreationExpression newInstance(Object... arguments) {
-			return newObjectCreationExpression()
-					.setType(type())
+			return newObjectCreationExpression(type())
 					.setArguments(arguments);
-		}
-	}
-
-	public static class JavaPatterns extends nextgen.templates.java.JavaST {
-
-		public static PackageDeclaration newPackageDeclaration(String packageName) {
-			return newPackageDeclaration().setName(packageName);
-		}
-
-		public static PackageDeclaration newPackageDeclaration(PackageDeclaration parent, String packageName) {
-			return newPackageDeclaration().setName(parent.getName() + "." + packageName);
-		}
-
-		public static ObjectCreationExpression newArrayListInstance() {
-			return newObjectCreationExpression().setType(newArrayListType());
-		}
-
-		public static ObjectCreationExpression newThread(Object body) {
-			return newObjectCreationExpression()
-						.setScope(CoreTypes.ThreadType)
-						.addArguments(newLambdaExpression().setBody(body));
-		}
-
-		public static Statement invokeLater(Object body) {
-			return newExpressionStmt()
-						.setExpression(newMethodCallExpression()
-									.setScope(SwingTypes.SwingUtilitiesType)
-									.setName("invokeLater")
-									.addArguments(newLambdaExpression()
-											.setBody(body)));
-		}
-
-		public static MethodDeclaration newProtectedMethod(String name, BlockStmt blockStmt) {
-			return newMethodDeclaration()
-						.addModifiers("protected")
-						.setName(name)
-						.setBlockStmt(blockStmt);
-		}
-
-		public static Parameter newParameter(ClassOrInterfaceType type, String name) {
-			return newParameter().setType(type).setName(name);
-		}
-
-		public static Statement statement(Expression expression) {
-			return newExpressionStmt()
-					.setExpression(expression);
-		}
-
-		public static MethodCallExpression methodCallExpression(Object scope, String name, Object... arguments) {
-			return newMethodCallExpression()
-						.setScope(scope)
-						.setName(name)
-						.setArguments(arguments);
-		}
-
-		public static MethodCallExpression methodCallExpression(String name, Object... arguments) {
-			return methodCallExpression(null, name, arguments);
-		}
-
-		public static Object asString(Object value) {
-			return "\"" + value + "\"";
 		}
 	}
 }

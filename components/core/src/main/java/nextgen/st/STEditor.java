@@ -385,21 +385,29 @@ public class STEditor extends JPanel {
         final StringBuilder formatted = new StringBuilder();
         for (String s : split) formatted.append(s.replace(spaces, "\t")).append("\n");
         split = formatted.toString().split("\n");
+        System.out.println(formatted.toString());
 
         final StringBuilder formatted2 = new StringBuilder();
         for (String s : split) {
+            if (s.trim().length() == 0) {
+                formatted2.append("\n");
+                continue;
+            }
+
             final char[] c = s.toCharArray();
-            if (c.length == 0) formatted2.append("\n");
             for (int i = 0; i < c.length; i++) {
                 if (c[i] == '\t') {
                     formatted2.append(c[i]);
                     continue;
                 }
                 if (c[i] == ' ') continue;
-                formatted2.append(s.substring(i)).append("\n");
+                formatted2.append(s.substring(i));
                 break;
             }
+
+            formatted2.append("\n");
         }
+        System.out.println(formatted2.toString());
 
         txtEditor.setText(formatted2.toString().trim());
         txtEditor.setCaretPosition(Math.min(formatted2.toString().trim().length(), caretPosition));
