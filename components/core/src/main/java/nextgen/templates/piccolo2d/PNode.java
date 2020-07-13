@@ -341,6 +341,7 @@ public class PNode {
 				"		final NodeInputEventHandler nodeInputEventHandler = new NodeInputEventHandler();\n" + 
 				"		nodeInputEventHandler.getEventFilter().setMarksAcceptedEventsAsHandled(true);\n" + 
 				"		addInputEventListener(nodeInputEventHandler);\n" + 
+				"		addInputEventListener(canvas.canvasZoomHandler);\n" + 
 				"\n" + 
 				"		this.addChild(this.child);\n" + 
 				"\n" + 

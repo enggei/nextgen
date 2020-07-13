@@ -15,12 +15,14 @@ public class BaseSTProject {
 	// Vertx
 	// core
 	final PackageDeclaration vertxCore = newPackageDeclaration("io.vertx.core");
-	final NamedEntity Future = new NamedEntity("Future", vertxCore, "future");
+	final NamedEntity VertxFuture = new NamedEntity("Future", vertxCore, "future");
 
 	// Java Core
 	final PackageDeclaration javaLang = newPackageDeclaration("java.lang");
-	final NamedEntity intType = new NamedEntity("int", javaLang);
-	final NamedEntity String = new NamedEntity("String", javaLang, "string");
+	final NamedEntity longType = new NamedEntity("long", null);
+	final NamedEntity doubleType = new NamedEntity("double", null);
+	final NamedEntity intType = new NamedEntity("int", null);
+	final NamedEntity String = new NamedEntity("String", null, "string");
 
 	// Java Util
 	final PackageDeclaration javaUtil = newPackageDeclaration("java.util");
@@ -36,6 +38,27 @@ public class BaseSTProject {
 	public Statement newLinkedHashMap(String name, ClassOrInterfaceType keyType, ClassOrInterfaceType valueType) {
 		return newExpressionStmt(newFinalVariableDeclarationExpression(newVariableDeclaration(LinkedHashMap.asClassOrInterfaceType(keyType, valueType), name, newObjectCreationExpression(LinkedHashMap.asClassOrInterfaceType().setIsTyped(Boolean.TRUE)))));
 	}
+
+	final PackageDeclaration javaUtilConcurrent = newPackageDeclaration(javaUtil, "concurrent");
+	final NamedEntity Executor = new NamedEntity("Executor", javaUtilConcurrent);
+	final NamedEntity ExecutorService = new NamedEntity("ExecutorService", javaUtilConcurrent);
+	final NamedEntity ScheduledExecutorService = new NamedEntity("ScheduledExecutorService", javaUtilConcurrent);
+	final NamedEntity Future = new NamedEntity("Future", javaUtilConcurrent);
+	final NamedEntity CountDownLatch = new NamedEntity("CountDownLatch", javaUtilConcurrent);
+	final NamedEntity CyclicBarrier = new NamedEntity("CyclicBarrier", javaUtilConcurrent);
+	final NamedEntity Semaphore = new NamedEntity("Semaphore", javaUtilConcurrent);
+	final NamedEntity ThreadFactory = new NamedEntity("ThreadFactory", javaUtilConcurrent);
+	final NamedEntity BlockingQueue = new NamedEntity("BlockingQueue", javaUtilConcurrent);
+	final NamedEntity DelayQueue = new NamedEntity("DelayQueue", javaUtilConcurrent);
+	final NamedEntity Locks = new NamedEntity("Locks", javaUtilConcurrent);
+	final NamedEntity Phaser = new NamedEntity("Phaser", javaUtilConcurrent);
+
+
+	final PackageDeclaration javaUtilConcurrentAtomic = newPackageDeclaration(javaUtilConcurrent, "atomic");
+	final NamedEntity AtomicBoolean = new NamedEntity("AtomicBoolean", javaUtilConcurrentAtomic);
+	final NamedEntity AtomicInteger = new NamedEntity("AtomicInteger", javaUtilConcurrentAtomic);
+	final NamedEntity AtomicLong = new NamedEntity("AtomicLong", javaUtilConcurrentAtomic);
+	final NamedEntity AtomicReference = new NamedEntity("AtomicReference", javaUtilConcurrentAtomic);
 
 	final PackageDeclaration javaUtilFunction = newPackageDeclaration(javaUtil, "function");
 	final NamedEntity Consumer = new NamedEntity("Consumer", javaUtilFunction, "consumer");
@@ -90,11 +113,18 @@ public class BaseSTProject {
 	final NamedEntity NeoRelation = new NamedEntity("Relationship", graphdb, "relation");
 	final NamedEntity NeoDirection = new NamedEntity("Direction", graphdb);
 	final NamedEntity NeoRelationType = new NamedEntity("RelationshipType", graphdb, "relationType");
-	final NamedEntity neoTransaction = new NamedEntity("Transaction", graphdb, "tx");
+	final NamedEntity NeoTransaction = new NamedEntity("Transaction", graphdb, "tx");
 
 	// java Swing
 	// Java Swing
 	final PackageDeclaration javaxSwing = newPackageDeclaration("javax.swing");
+	final NamedEntity BorderFactory = new NamedEntity("BorderFactory", javaxSwing);
+	final NamedEntity JButton = new NamedEntity("JButton", javaxSwing);
+	final NamedEntity JCheckBox = new NamedEntity("JCheckBox", javaxSwing);
+	final NamedEntity JComboBox = new NamedEntity("JComboBox", javaxSwing);
+	final NamedEntity JLabel = new NamedEntity("JLabel", javaxSwing);
+	final NamedEntity JPopupMenu = new NamedEntity("JPopupMenu", javaxSwing);
+	final NamedEntity JTree = new NamedEntity("JTree", javaxSwing);
 	final NamedEntity JTextField = new NamedEntity("JTextField", javaxSwing, "textField");
 	final NamedEntity JTextArea = new NamedEntity("JTextArea", javaxSwing, "textArea");
 	final NamedEntity SwingUtilities = new NamedEntity("SwingUtilities", javaxSwing);
@@ -104,7 +134,7 @@ public class BaseSTProject {
 	final NamedEntity JFrame = new NamedEntity("JFrame", javaxSwing, "frame");
 
 	public Statement invokeLater(Expression expression) {
-		return newExpressionStmt(newMethodCallExpression().setScope(SwingUtilities.asClassOrInterfaceType()).setName("invokeLater").addArguments(newLambdaExpression().setBody(expression)));
+		return newExpressionStmt(newMethodCallExpression().setScope(SwingUtilities.asClassOrInterfaceType()).setName("invokeLater").addArguments(newLambdaExpression(expression)));
 	}
 
 	// Generator
@@ -130,6 +160,11 @@ public class BaseSTProject {
 					.addModifiers(Modifiers.PUBLIC);
 		}
 
+		public static MethodDeclaration newPublicMethodDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, BlockStmt blockStmt) {
+			return newMethodDeclaration(classOrInterfaceType, name, blockStmt)
+					.addModifiers(Modifiers.PUBLIC);
+		}
+
 		public static MethodDeclaration newPublicStaticMethodDeclaration(String name, BlockStmt blockStmt) {
 			return newPublicMethodDeclaration(name, blockStmt)
 					.addModifiers(Modifiers.STATIC);
@@ -142,6 +177,11 @@ public class BaseSTProject {
 
 		public static MethodDeclaration newPublicFinalMethodDeclaration(String name, BlockStmt blockStmt) {
 			return newPublicMethodDeclaration(name, blockStmt)
+					.addModifiers(Modifiers.FINAL);
+		}
+
+		public static MethodDeclaration newPublicFinalMethodDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, BlockStmt blockStmt) {
+			return newPublicMethodDeclaration(classOrInterfaceType, name, blockStmt)
 					.addModifiers(Modifiers.FINAL);
 		}
 
@@ -177,6 +217,13 @@ public class BaseSTProject {
 
 		public static MethodDeclaration newMethodDeclaration(String name, BlockStmt blockStmt) {
 			return newMethodDeclaration()
+					.setName(name)
+					.setBlockStmt(blockStmt);
+		}
+
+		public static MethodDeclaration newMethodDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, BlockStmt blockStmt) {
+			return newMethodDeclaration()
+					.setType(classOrInterfaceType)
 					.setName(name)
 					.setBlockStmt(blockStmt);
 		}
@@ -384,6 +431,10 @@ public class BaseSTProject {
 			return newParameter(asClassOrInterfaceType(typeArguments), variableName());
 		}
 
+		Parameter asParameter(NamedEntity typeArguments) {
+			return newParameter(asClassOrInterfaceType(typeArguments.asClassOrInterfaceType()), variableName());
+		}
+
 		Statement asFinalVariableDeclaration(Object initializer) {
 			return newExpressionStmt(newFinalVariableDeclarationExpression(newVariableDeclaration(asClassOrInterfaceType(), variableName(), initializer)));
 		}
@@ -391,6 +442,10 @@ public class BaseSTProject {
 		ClassOrInterfaceType asClassOrInterfaceType(Object... typeArguments) {
 			return newClassOrInterfaceType(packageDeclaration == null ? null : packageDeclaration.getName(), name)
 					.setTypeArguments(typeArguments);
+		}
+
+		ClassOrInterfaceType asClassOrInterfaceType(NamedEntity typeArgument) {
+			return asClassOrInterfaceType(typeArgument.asClassOrInterfaceType());
 		}
 
 		ObjectCreationExpression asObjectCreationExpression(Object... arguments) {

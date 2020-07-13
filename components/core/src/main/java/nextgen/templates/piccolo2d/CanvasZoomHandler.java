@@ -54,7 +54,7 @@ public class CanvasZoomHandler {
 				"		final PCamera camera = event.getCamera();\n" + 
 				"		if ((camera.getViewScale() < minZomScale && event.getWheelRotation() < 0) || (camera.getViewScale() > maxZoomScale && event.getWheelRotation() > 0)) return;\n" + 
 				"		final double scale = 1.0d + event.getWheelRotation() * scaleFactor;\n" + 
-				"		final Point2D viewAboutPoint = event.getPosition();\n" + 
+				"		final java.awt.geom.Point2D viewAboutPoint = event.getPosition();\n" + 
 				"		camera.scaleViewAboutPoint(scale, viewAboutPoint.getX(), viewAboutPoint.getY());\n" + 
 				"	}\n" + 
 				"} >>";

@@ -403,7 +403,6 @@ public class PCanvas {
 				"import java.awt.*;\n" + 
 				"import java.awt.event.ActionEvent;\n" + 
 				"import java.awt.event.KeyEvent;\n" + 
-				"import java.awt.geom.Point2D;\n" + 
 				"import java.util.Map;\n" + 
 				"import java.util.UUID;\n" + 
 				"import java.util.concurrent.ConcurrentHashMap;\n" + 
@@ -425,7 +424,8 @@ public class PCanvas {
 				"	\n" + 
 				"	private final SelectEventsHandler selectEventHandler = new SelectEventsHandler();\n" + 
 				"	private final CanvasInputEventsHandler canvasInputEventsHandler = new CanvasInputEventsHandler();\n" + 
-				"\n" + 
+				"	final CanvasZoomHandler canvasZoomHandler = new CanvasZoomHandler();\n" + 
+				"	\n" + 
 				"	~fields:{it|~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
 				"	\n" + 
 				"	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=\",\"~) {\n" + 
@@ -440,7 +440,7 @@ public class PCanvas {
 				"		getCamera().addLayer(0, relationLayer);\n" + 
 				"\n" + 
 				"		removeInputEventListener(getZoomEventHandler());\n" + 
-				"		addInputEventListener(new CanvasZoomHandler());\n" + 
+				"		addInputEventListener(canvasZoomHandler);\n" + 
 				"		addInputEventListener(canvasInputEventsHandler);\n" + 
 				"		~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
 				"		~constructorStatements:{it|~it~};separator=\"\\n\"~\n" + 
@@ -453,14 +453,14 @@ public class PCanvas {
 				"	}\n" + 
 				"\n" + 
 				"	public Point getCenterPosition() {\n" + 
-				"		final Point2D center2D = getCamera().getViewBounds().getCenter2D();\n" + 
+				"		final java.awt.geom.Point2D center2D = getCamera().getViewBounds().getCenter2D();\n" + 
 				"		return new Point((int) center2D.getX(), (int) center2D.getY());\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public Point getCurrentMousePosition() {\n" + 
 				"		final Point mousePosition = getMousePosition();\n" + 
 				"		if (mousePosition == null) return getCenterPosition();\n" + 
-				"		final Point2D localToView = getCamera().localToView(mousePosition);\n" + 
+				"		final java.awt.geom.Point2D localToView = getCamera().localToView(mousePosition);\n" + 
 				"		return new Point((int) localToView.getX(), (int) localToView.getY());\n" + 
 				"	}\n" + 
 				"\n" + 

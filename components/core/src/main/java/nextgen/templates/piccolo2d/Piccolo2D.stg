@@ -17,7 +17,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Point2D;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,7 +38,8 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 	
 	private final SelectEventsHandler selectEventHandler = new SelectEventsHandler();
 	private final CanvasInputEventsHandler canvasInputEventsHandler = new CanvasInputEventsHandler();
-
+	final CanvasZoomHandler canvasZoomHandler = new CanvasZoomHandler();
+	
 	~fields:{it|~it.type~ ~it.name~;};separator="\n"~
 	
 	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=","~) {
@@ -54,7 +54,7 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 		getCamera().addLayer(0, relationLayer);
 
 		removeInputEventListener(getZoomEventHandler());
-		addInputEventListener(new CanvasZoomHandler());
+		addInputEventListener(canvasZoomHandler);
 		addInputEventListener(canvasInputEventsHandler);
 		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
 		~constructorStatements:{it|~it~};separator="\n"~
@@ -67,14 +67,14 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 	}
 
 	public Point getCenterPosition() {
-		final Point2D center2D = getCamera().getViewBounds().getCenter2D();
+		final java.awt.geom.Point2D center2D = getCamera().getViewBounds().getCenter2D();
 		return new Point((int) center2D.getX(), (int) center2D.getY());
 	}
 
 	public Point getCurrentMousePosition() {
 		final Point mousePosition = getMousePosition();
 		if (mousePosition == null) return getCenterPosition();
-		final Point2D localToView = getCamera().localToView(mousePosition);
+		final java.awt.geom.Point2D localToView = getCamera().localToView(mousePosition);
 		return new Point((int) localToView.getX(), (int) localToView.getY());
 	}
 
@@ -354,7 +354,7 @@ CanvasZoomHandler() ::= <<private static class CanvasZoomHandler extends PBasicI
 		final PCamera camera = event.getCamera();
 		if ((camera.getViewScale() < minZomScale && event.getWheelRotation() < 0) || (camera.getViewScale() > maxZoomScale && event.getWheelRotation() > 0)) return;
 		final double scale = 1.0d + event.getWheelRotation() * scaleFactor;
-		final Point2D viewAboutPoint = event.getPosition();
+		final java.awt.geom.Point2D viewAboutPoint = event.getPosition();
 		camera.scaleViewAboutPoint(scale, viewAboutPoint.getX(), viewAboutPoint.getY());
 	}
 }  >>
@@ -476,6 +476,7 @@ public class ~name~ extends PNode implements PropertyChangeListener {
 		final NodeInputEventHandler nodeInputEventHandler = new NodeInputEventHandler();
 		nodeInputEventHandler.getEventFilter().setMarksAcceptedEventsAsHandled(true);
 		addInputEventListener(nodeInputEventHandler);
+		addInputEventListener(canvas.canvasZoomHandler);
 
 		this.addChild(this.child);
 

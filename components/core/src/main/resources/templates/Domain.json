@@ -115,7 +115,7 @@
     "children" : [ {
       "uuid" : "581a326a-5c8c-47bb-9ce2-0cfd0e28a9f2",
       "name" : "JavaPackage",
-      "text" : "~if(comments)~\n// ~comments~\n~endif~\nfinal PackageDeclaration ~name~ = newPackageDeclaration(~if(parent)~~parent~, ~endif~\"~packageName~\");\n~entities:{it|final NamedEntity ~if(it.ref)~~it.ref~~else~~it.name~~endif~ = new NamedEntity(\"~it.name~\", ~name~~if(it.variableName)~, \"~it.variableName~\"~endif~);};separator=\"\\n\"~\n\n~methods:{it|~it~};separator=\"\\n\\n\"~\n\n~subPackages:{it|~it~};separator=\"\\n\\n\"~ ",
+      "text" : "~if(comments)~\n// ~comments~\n~endif~\nfinal PackageDeclaration ~name~ = newPackageDeclaration(~if(parent)~~parent~, ~endif~\"~packageName~\");\n~entities:{it|final NamedEntity ~if(it.ref)~~it.ref~~else~~it.name~~endif~ = new NamedEntity(\"~it.name~\", ~if(it.isPrimitive)~null~else~~name~~endif~~if(it.variableName)~, \"~it.variableName~\"~endif~);};separator=\"\\n\"~\n\n~methods:{it|~it~};separator=\"\\n\\n\"~\n\n~subPackages:{it|~it~};separator=\"\\n\\n\"~ ",
       "parameters" : [ {
         "uuid" : "d854bc48-0d01-400e-bc44-e605449e7d49",
         "name" : "comments",
@@ -153,6 +153,10 @@
           "uuid" : "de1c963d-1d08-4dea-bc0b-63d0c255f9ed",
           "name" : "ref",
           "argumentType" : "Object"
+        }, {
+          "uuid" : "f48fb2f8-c25a-4870-8803-38529c5cbc6c",
+          "name" : "isPrimitive",
+          "argumentType" : "Boolean"
         } ]
       }, {
         "uuid" : "fe9ef0a7-49b5-4c8a-bac7-956bce977753",

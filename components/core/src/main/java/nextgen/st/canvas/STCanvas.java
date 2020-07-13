@@ -15,7 +15,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Point2D;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,6 +36,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 	private final SelectEventsHandler selectEventHandler = new SelectEventsHandler();
 	private final CanvasInputEventsHandler canvasInputEventsHandler = new CanvasInputEventsHandler();
+	final CanvasZoomHandler canvasZoomHandler = new CanvasZoomHandler();
 
 	nextgen.st.STRenderer stRenderer;
 	nextgen.st.model.STModelDB modelDb;
@@ -53,7 +53,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		getCamera().addLayer(0, relationLayer);
 
 		removeInputEventListener(getZoomEventHandler());
-		addInputEventListener(new CanvasZoomHandler());
+		addInputEventListener(canvasZoomHandler);
 		addInputEventListener(canvasInputEventsHandler);
 		this.stRenderer = stRenderer;
 		this.modelDb = modelDb;
@@ -67,14 +67,14 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	}
 
 	public Point getCenterPosition() {
-		final Point2D center2D = getCamera().getViewBounds().getCenter2D();
+		final java.awt.geom.Point2D center2D = getCamera().getViewBounds().getCenter2D();
 		return new Point((int) center2D.getX(), (int) center2D.getY());
 	}
 
 	public Point getCurrentMousePosition() {
 		final Point mousePosition = getMousePosition();
 		if (mousePosition == null) return getCenterPosition();
-		final Point2D localToView = getCamera().localToView(mousePosition);
+		final java.awt.geom.Point2D localToView = getCamera().localToView(mousePosition);
 		return new Point((int) localToView.getX(), (int) localToView.getY());
 	}
 
@@ -346,7 +346,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 			final PCamera camera = event.getCamera();
 			if ((camera.getViewScale() < minZomScale && event.getWheelRotation() < 0) || (camera.getViewScale() > maxZoomScale && event.getWheelRotation() > 0)) return;
 			final double scale = 1.0d + event.getWheelRotation() * scaleFactor;
-			final Point2D viewAboutPoint = event.getPosition();
+			final java.awt.geom.Point2D viewAboutPoint = event.getPosition();
 			camera.scaleViewAboutPoint(scale, viewAboutPoint.getX(), viewAboutPoint.getY());
 		}
 	} 
@@ -454,20 +454,6 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 					last.addNodes(layoutNode);
 				});
-			});
-		}
-	}
-
-	private static final class LoadLastLayout extends CanvasAction {
-
-		LoadLastLayout(STCanvas canvas, PInputEvent event) {
-			super("Load last layout", canvas, event);
-		}
-
-		@Override
-		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
-			javax.swing.SwingUtilities.invokeLater(() ->  {
-
 			});
 		}
 	}
@@ -618,6 +604,45 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 	java.util.function.Supplier<STNode> newSTNode(nextgen.st.model.STFile stFile, nextgen.st.model.STModel stModel){ 
 		return () -> new nextgen.st.canvas.STFileNode(this, stFile, stModel, stRenderer);
+	}
+
+	public final javax.swing.JTextField newTextField(int columns){ 
+		return newTextField("", columns);
+	}
+
+	public final javax.swing.JTextField newTextField(String content, int columns){ 
+		javax.swing.JTextField textField = new javax.swing.JTextField(content, columns);
+		textField.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent e) {
+				if (javax.swing.SwingUtilities.isRightMouseButton(e))
+					javax.swing.SwingUtilities.invokeLater(() -> {
+						final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();
+						pop.add(new AbstractAction("Set from clipboard") {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								textField.setText(com.generator.util.SwingUtil.fromClipboard());
+							}
+						});
+						pop.show(textField, e.getX(), e.getY());
+					});
+			}
+		});
+		textField.addFocusListener(new java.awt.event.FocusAdapter() {
+			@Override
+			public void focusGained(java.awt.event.FocusEvent evt) {
+				javax.swing.SwingUtilities.invokeLater(() -> ((javax.swing.JTextField) evt.getSource()).selectAll());
+			}
+
+			@Override
+			public void focusLost(java.awt.event.FocusEvent evt) {
+				javax.swing.SwingUtilities.invokeLater(() -> {
+					((javax.swing.JTextField) evt.getSource()).setSelectionStart(0);
+					((javax.swing.JTextField) evt.getSource()).setSelectionEnd(0);
+				});
+			}
+		});
+		return textField;
 	}
 
 	public static final class NodeAdded {

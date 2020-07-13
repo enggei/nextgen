@@ -7,12 +7,11 @@ Entities:
 Entity(name,isEnum,enumValues,relations) ::= <<Entity: ~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=","~~endif~
 ~relations:{it|~it~};separator="\n"~  >>
 
-JavaProject(packageName,name,root,libraries,packageDeclarations,types) ::= <<package ~packageName~;
+JavaProject(packageName,javaPatterns,name,root,libraries,packageDeclarations) ::= <<package ~packageName~;
 
 import nextgen.templates.java.*;
 
-import static nextgen.st.STGenerator.*;
-import static nextgen.templates.JavaPatterns.*;
+~if(javaPatterns)~import static ~packageName~.~name~.JavaPatterns.*;~endif~
 	
 public class ~name~ {
 
@@ -26,170 +25,18 @@ public class ~name~ {
 	
 	~packageDeclarations:{it|~it~};separator="\n\n"~
 
-	~types:{it|final NamedEntity ~it.name~ = new NamedEntity("~it.typeName~", newPackageDeclaration("~it.packageName~"))~if(it.variableName)~.setVariableName("~it.variableName~")~endif~;};separator="\n"~
-
-	void writeToMainJava(NamedEntity entity) {
-		writeJavaFile(entity.content, entity.packageDeclaration, entity.name, mainJava);
-	}
-
-	static Statement statement(Expression expression) {
-		return newExpressionStmt().setExpression(expression);
-	}
-
-	static MethodCallExpression methodCallExpression(Object scope, String name, Object... arguments) {
-		return newMethodCallExpression()
-					.setScope(scope)
-					.setName(name)
-					.setArguments(arguments);
-	}
-	
-	static Object asString(Object value) {
-		return "\"" + value + "\"";
-	}
-	
-	static class NamedEntity {
-
-		private final String name;
-		private final PackageDeclaration packageDeclaration;
-		Object content;
-
-		private String variableName;
-		
-		NamedEntity(String name) {
-			this.name = name;
-			this.packageDeclaration = null;
-		}
-		
-		NamedEntity(String name, PackageDeclaration packageDeclaration) {
-			this.name = name;
-			this.packageDeclaration = packageDeclaration;
-		}
-		
-		NamedEntity(String name, PackageDeclaration packageDeclaration, String variableName) {
-			this(name, packageDeclaration);
-			this.variableName = variableName;
-		}
-
-		String name() {
-			return name;
-		}
-
-		ClassOrInterfaceType type(Object... typeArguments) {
-			return asClassOrInterfaceType(typeArguments);
-		}
-
-		String variableName() {
-			return variableName == null ? Character.toLowerCase(name.charAt(0)) + name.substring(1) : variableName;
-		}
-
-		Parameter asParameter(Object... typeArguments) {
-			return newParameter().setType(asClassOrInterfaceType(typeArguments)).setName(variableName());
-		}
-		
-		MethodCallExpression staticMethodCall(String name, Object... arguments) {
-			return methodCallExpression(type(), name, arguments);
-		}
-
-		MethodCallExpression methodCall(String name, Object... arguments) {
-			return methodCallExpression(variableName(), name, arguments);
-		}
-
-		Statement asVariable(Object initializer) {
-			return newExpressionStmt()
-					.setExpression(newVariableDeclarationExpression()
-							.addModifiers("final")
-							.addVariables(newVariableDeclaration()
-									.setName(variableName())
-									.setType(type())
-									.setInitializer(initializer)));
-		}
-
-		ClassOrInterfaceType asClassOrInterfaceType(Object... typeArguments) {
-			return newClassOrInterfaceType()
-					.addNames(name())
-					.setScope(packageDeclaration == null ? null : packageDeclaration.getName())
-					.setTypeArguments(typeArguments);
-		}
-
-		ObjectCreationExpression newInstance(Object... arguments) {
-			return newObjectCreationExpression()
-					.setType(type())
-					.setArguments(arguments);
-		}
-	}
+	~javaPatterns~
 }  >>
 
-JavaPackage(comments,name,parent,packageName,extendedEntities,entities,subPackages) ::= <<~if(comments)~
+JavaPackage(comments,name,parent,packageName,entities,methods,subPackages) ::= <<~if(comments)~
 // ~comments~
 ~endif~
 final PackageDeclaration ~name~ = newPackageDeclaration(~if(parent)~~parent~, ~endif~"~packageName~");
+~entities:{it|final NamedEntity ~if(it.ref)~~it.ref~~else~~it.name~~endif~ = new NamedEntity("~it.name~", ~if(it.isPrimitive)~null~else~~name~~endif~~if(it.variableName)~, "~it.variableName~"~endif~);};separator="\n"~
 
-~extendedEntities:{it|~it~};separator="\n"~
-~entities:{it|final NamedEntity ~it.name~ = new NamedEntity("~it.name~", ~name~~if(it.variableName)~, "~it.variableName~"~endif~);};separator="\n"~
+~methods:{it|~it~};separator="\n\n"~
 
 ~subPackages:{it|~it~};separator="\n\n"~  >>
-
-ExtendedNameEntity(name,methods,packageName,variableName) ::= <<static final class ~name~Entity extends NamedEntity {
-	~name~Entity(String name, PackageDeclaration packageDeclaration) {
-		super(name, packageDeclaration);
-	}
-
-	~methods:{it|~it~};separator="\n"~
-}
-
-final ~name~Entity ~name~ = new ~name~Entity("~name~", ~packageName~~if(variableName)~, "~variableName~"~endif~);  >>
-
-MethodCallExpression(name,isStatic) ::= <<MethodCallExpression ~name~(Object argument) {
-	return ~if(isStatic)~static~endif~MethodCall("~name~", argument);
-}  >>
-
-JavaCorePackage() ::= <<final NamedEntity String = new NamedEntity("String");
-final NamedEntity intType = new NamedEntity("int");
-
-final NamedEntity Map = new NamedEntity("Map", javaUtil);
-final NamedEntity Set = new NamedEntity("Set", javaUtil);
-final NamedEntity List = new NamedEntity("List", javaUtil);
-final NamedEntity Collection = new NamedEntity("Collection", javaUtil);
-final NamedEntity LinkedHashMap = new NamedEntity("LinkedHashMap", javaUtil);
-final NamedEntity LinkedHashSet = new NamedEntity("LinkedHashSet", javaUtil);
-final NamedEntity TreeSet = new NamedEntity("TreeSet", javaUtil);
-
-final PackageDeclaration javaUtilFunction = newPackageDeclaration("java.util.function");
-final NamedEntity Consumer = new NamedEntity("Consumer", javaUtilFunction);
-final NamedEntity BiConsumer = new NamedEntity("BiConsumer", javaUtilFunction, "consumer");
-
-Statement newLinkedHashMap(String variableName, Object keyType, Object valueType) {
-	return statement(newVariableDeclarationExpression()
-			.addModifiers("final")
-			.addVariables(newVariableDeclaration()
-					.setName(variableName)
-					.setType(Map.asClassOrInterfaceType()
-							.addTypeArguments(keyType)
-							.addTypeArguments(valueType))
-					.setInitializer(LinkedHashMap.newInstance()
-							.addTypeArguments(""))));
-}
-
-Statement put(String scope, Object key, Object value) {
-	return newExpressionStmt()
-		.setExpression(newMethodCallExpression()
-		.setScope(scope)
-		.setName("put")
-		.addArguments(key)
-		.addArguments(value));
-}  >>
-
-JavaSwingPackage() ::= <<final PackageDeclaration javaxSwing = newPackageDeclaration("javax.swing");
-final NamedEntity JTextField = new NamedEntity("JTextField", javaxSwing, "textField");
-final NamedEntity JTextArea = new NamedEntity("JTextArea", javaxSwing, "textArea");
-
-static Statement invokeLater(Expression expression) {
-	return statement(methodCallExpression("javax.swing.SwingUtilities", "invokeLater")
-				.addArguments(newLambdaExpression().setBody(expression)));
-}  >>
-
-Neo4JPackage() ::= <<final PackageDeclaration neo4jGraphdb = newPackageDeclaration("org.neo4j.graphdb");
-final NamedEntity NeoTransaction = new NamedEntity("Transaction", neo4jGraphdb);  >>
 
 JavaLibrary(name,packages) ::= <<// ~name~
 ~packages:{it|~it~};separator="\n\n"~  >>

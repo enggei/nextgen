@@ -54,6 +54,11 @@ public class JavaPatterns {
 				"				.addModifiers(Modifiers.PUBLIC);\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	public static MethodDeclaration newPublicMethodDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, BlockStmt blockStmt) {\n" + 
+				"		return newMethodDeclaration(classOrInterfaceType, name, blockStmt)\n" + 
+				"				.addModifiers(Modifiers.PUBLIC);\n" + 
+				"	}\n" + 
+				"\n" + 
 				"	public static MethodDeclaration newPublicStaticMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
 				"		return newPublicMethodDeclaration(name, blockStmt)\n" + 
 				"				.addModifiers(Modifiers.STATIC);\n" + 
@@ -66,6 +71,11 @@ public class JavaPatterns {
 				"\n" + 
 				"	public static MethodDeclaration newPublicFinalMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
 				"		return newPublicMethodDeclaration(name, blockStmt)\n" + 
+				"				.addModifiers(Modifiers.FINAL);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static MethodDeclaration newPublicFinalMethodDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, BlockStmt blockStmt) {\n" + 
+				"		return newPublicMethodDeclaration(classOrInterfaceType, name, blockStmt)\n" + 
 				"				.addModifiers(Modifiers.FINAL);\n" + 
 				"	}\n" + 
 				"\n" + 
@@ -105,6 +115,13 @@ public class JavaPatterns {
 				"				.setBlockStmt(blockStmt);\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	public static MethodDeclaration newMethodDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, BlockStmt blockStmt) {\n" + 
+				"		return newMethodDeclaration()\n" + 
+				"				.setType(classOrInterfaceType)\n" + 
+				"				.setName(name)\n" + 
+				"				.setBlockStmt(blockStmt);\n" + 
+				"	}\n" + 
+				"	\n" + 
 				"	public static VariableDeclaration newVariableDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, Object initializer) {\n" + 
 				"		return newVariableDeclaration()\n" + 
 				"				.setType(classOrInterfaceType)\n" + 
@@ -173,6 +190,22 @@ public class JavaPatterns {
 				"	public static Statement newReturnStatement(Expression expression) {\n" + 
 				"		return newReturnStmt()\n" + 
 				"				.setExpression(expression);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static SwitchStmt newSwitchStmt(Object selector) {\n" + 
+				"		return newSwitchStmt()\n" + 
+				"				.setSelector(selector);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static SwitchEntryStmt newSwitchEntryStmt(Object label, BlockStmt blockStmt) {\n" + 
+				"		return newSwitchEntryStmt()\n" + 
+				"				.addLabels(label)\n" + 
+				"				.addStatements(blockStmt);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static BlockStmt newBlockStmt(String ... statements) {\n" + 
+				"		return newBlockStmt()\n" + 
+				"				.setStatements(statements);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	// expressions\n" + 
@@ -292,6 +325,10 @@ public class JavaPatterns {
 				"		return newParameter(asClassOrInterfaceType(typeArguments), variableName());\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	Parameter asParameter(NamedEntity typeArguments) {\n" + 
+				"		return newParameter(asClassOrInterfaceType(typeArguments.asClassOrInterfaceType()), variableName());\n" + 
+				"	}\n" + 
+				"\n" + 
 				"	Statement asFinalVariableDeclaration(Object initializer) {\n" + 
 				"		return newExpressionStmt(newFinalVariableDeclarationExpression(newVariableDeclaration(asClassOrInterfaceType(), variableName(), initializer)));\n" + 
 				"	}\n" + 
@@ -299,6 +336,10 @@ public class JavaPatterns {
 				"	ClassOrInterfaceType asClassOrInterfaceType(Object... typeArguments) {\n" + 
 				"		return newClassOrInterfaceType(packageDeclaration == null ? null : packageDeclaration.getName(), name)\n" + 
 				"				.setTypeArguments(typeArguments);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	ClassOrInterfaceType asClassOrInterfaceType(NamedEntity typeArgument) {\n" + 
+				"		return asClassOrInterfaceType(typeArgument.asClassOrInterfaceType());\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	ObjectCreationExpression asObjectCreationExpression(Object... arguments) {\n" + 

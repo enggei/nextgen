@@ -12,7 +12,6 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
-import static nextgen.projects.BaseSTProject.JavaPatterns.newMethodCallExpression;
 import static nextgen.projects.BaseSTProject.JavaPatterns.*;
 import static nextgen.st.STGenerator.writeJavaFile;
 import static nextgen.templates.DomainPatterns.newEnum;
@@ -43,9 +42,47 @@ public class STProject extends BaseSTProject {
                 .addMethods(newNodeSupplierMethod(STFile.asParameter(),
                         newReturnStatement(newLambdaExpression(STFileNode.asObjectCreationExpression("this", STFile.variableName(), STModel.variableName(), STRenderer.variableName()))))
                         .addParameters(STModel.asParameter()))
+                .addMethods(newPublicFinalMethodDeclaration(JTextField.asClassOrInterfaceType(), "newTextField", newBlockStmt(
+                        "return newTextField(\"\", columns);"))
+                        .addParameters(intType.asParameter().setName("columns")))
+                .addMethods(newPublicFinalMethodDeclaration(JTextField.asClassOrInterfaceType(), "newTextField", newBlockStmt(
+                        "javax.swing.JTextField textField = new javax.swing.JTextField(content, columns);",
+                        "textField.addMouseListener(new java.awt.event.MouseAdapter() {\n" +
+                                "\t@Override\n" +
+                                "\tpublic void mouseClicked(java.awt.event.MouseEvent e) {\n" +
+                                "\t\tif (javax.swing.SwingUtilities.isRightMouseButton(e))\n" +
+                                "\t\t\tjavax.swing.SwingUtilities.invokeLater(() -> {\n" +
+                                "\t\t\t\tfinal javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();\n" +
+                                "\t\t\t\tpop.add(new AbstractAction(\"Set from clipboard\") {\n" +
+                                "\t\t\t\t\t@Override\n" +
+                                "\t\t\t\t\tpublic void actionPerformed(ActionEvent e) {\n" +
+                                "\t\t\t\t\t\ttextField.setText(com.generator.util.SwingUtil.fromClipboard());\n" +
+                                "\t\t\t\t\t}\n" +
+                                "\t\t\t\t});\n" +
+                                "\t\t\t\tpop.show(textField, e.getX(), e.getY());\n" +
+                                "\t\t\t});\n" +
+                                "\t}\n" +
+                                "});",
+                        "textField.addFocusListener(new java.awt.event.FocusAdapter() {\n" +
+                                "\t@Override\n" +
+                                "\tpublic void focusGained(java.awt.event.FocusEvent evt) {\n" +
+                                "\t\tjavax.swing.SwingUtilities.invokeLater(() -> ((javax.swing.JTextField) evt.getSource()).selectAll());\n" +
+                                "\t}\n" +
+                                "\n" +
+                                "\t@Override\n" +
+                                "\tpublic void focusLost(java.awt.event.FocusEvent evt) {\n" +
+                                "\t\tjavax.swing.SwingUtilities.invokeLater(() -> {\n" +
+                                "\t\t\t((javax.swing.JTextField) evt.getSource()).setSelectionStart(0);\n" +
+                                "\t\t\t((javax.swing.JTextField) evt.getSource()).setSelectionEnd(0);\n" +
+                                "\t\t});\n" +
+                                "\t}\n" +
+                                "});",
+                        "return textField;"))
+                        .addParameters(String.asParameter().setName("content"))
+                        .addParameters(intType.asParameter().setName("columns")))
                 .addCanvasActionmethods(newProtectedMethodDeclaration("doLaterInTransaction", newBlockStmt()
                         .addStatements(invokeLater(newMethodCallExpression(newFieldAccessExpression(STCanvas.variableName(), "modelDb"), "doInTransaction", "consumer", newLambdaExpression().addParameters("throwable").setBody(SwingUtil.staticMethodCall("showException", "canvas", "throwable"))))))
-                        .addParameters(Consumer.asParameter(neoTransaction.asClassOrInterfaceType())));
+                        .addParameters(Consumer.asParameter(NeoTransaction.asClassOrInterfaceType())));
 
         final PNode node = newPNode()
                 .setName(STNode.name())
@@ -59,14 +96,10 @@ public class STProject extends BaseSTProject {
                         .setReturnStatement("text.substring(0, Math.min(text.length(), 20));"))
                 .addMethods(newProtectedMethodDeclaration("doLaterInTransaction", newBlockStmt()
                         .addStatements("javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(consumer, throwable -> com.generator.util.SwingUtil.showException(canvas, throwable)));"))
-                        .addParameters(newParameter()
-                                .setType("java.util.function.Consumer<org.neo4j.graphdb.Transaction>")
-                                .setName("consumer")))
+                        .addParameters(Consumer.asParameter(NeoTransaction).setName("consumer")))
                 .addNodeActionmethods(newProtectedMethodDeclaration("doLaterInTransaction", newBlockStmt()
                         .addStatements("node.doLaterInTransaction(consumer);"))
-                        .addParameters(newParameter()
-                                .setType("java.util.function.Consumer<org.neo4j.graphdb.Transaction>")
-                                .setName("consumer")));
+                        .addParameters(Consumer.asParameter(NeoTransaction).setName("consumer")));
 
         final PRelation relation = newPRelation()
                 .setName(STRelation.name())
@@ -162,7 +195,7 @@ public class STProject extends BaseSTProject {
                 .setUuid(UUID.staticMethodCall("fromString", STFile.methodCall("getUuid")))
                 .addOnLeftClick(invokeLaterInTransaction(
                         "if (stRenderer == null || stModel == null || stFile.getPath() == null) return;",
-                        JavaPatterns.newExpressionStmt(STGenerator.staticMethodCall("writeToFile", STRenderer.methodCall("render", STModel.variableName()), STFile.methodCall("getPackageName"), STFile.methodCall("getName"), STFile.methodCall("getType"), File.asObjectCreationExpression(STFile.methodCall("getPath"))))))
+                        newExpressionStmt(STGenerator.staticMethodCall("writeToFile", STRenderer.methodCall("render", STModel.variableName()), STFile.methodCall("getPackageName"), STFile.methodCall("getName"), STFile.methodCall("getType"), File.asObjectCreationExpression(STFile.methodCall("getPath"))))))
                 .addRightClickStatements(getSelectedSTModelNodes("stModelNodes"))
                 .addRightClickStatements(invokeLaterInTransaction(
                         "final JMenu sourceMenu = new JMenu(\"STModels\");",
@@ -208,10 +241,10 @@ public class STProject extends BaseSTProject {
         final NodeAction editFileSinkAction = newNodeAction(stFileNode, "EditFileSink", "Edit")
                 .addStatements(doInTransaction(
                         fieldMapDeclaration,
-                        newExpressionStmt(newMethodCallExpression("fieldMap", "put", asString("name"), JTextField.asObjectCreationExpression(newMethodCallExpression(nodeStFileAccess, "getName"), "15"))),
-                        newExpressionStmt(newMethodCallExpression("fieldMap", "put", asString("type"), JTextField.asObjectCreationExpression(newMethodCallExpression(nodeStFileAccess, "getType"), "15"))),
-                        newExpressionStmt(newMethodCallExpression("fieldMap", "put", asString("path"), JTextField.asObjectCreationExpression(newMethodCallExpression(nodeStFileAccess, "getPath"), "15"))),
-                        newExpressionStmt(newMethodCallExpression("fieldMap", "put", asString("package"), JTextField.asObjectCreationExpression(newMethodCallExpression(nodeStFileAccess, "getPackageName"), "15"))),
+                        newExpressionStmt(newMethodCallExpression("fieldMap", "put", asString("name"), STCanvas.methodCall("newTextField", newMethodCallExpression(nodeStFileAccess, "getName"), "15"))),
+                        newExpressionStmt(newMethodCallExpression("fieldMap", "put", asString("type"), STCanvas.methodCall("newTextField",newMethodCallExpression(nodeStFileAccess, "getType"), "15"))),
+                        newExpressionStmt(newMethodCallExpression("fieldMap", "put", asString("path"), STCanvas.methodCall("newTextField",newMethodCallExpression(nodeStFileAccess, "getPath"), "15"))),
+                        newExpressionStmt(newMethodCallExpression("fieldMap", "put", asString("package"), STCanvas.methodCall("newTextField",newMethodCallExpression(nodeStFileAccess, "getPackageName"), "15"))),
                         "final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));",
                         "inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));",
                         newLine("for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {", "}")
@@ -271,13 +304,13 @@ public class STProject extends BaseSTProject {
                         .addChildren(newSwitchStmt("value.getType()")
                                 .addEntries(newSwitchEntryStmt().addLabels("STMODEL").addStatements(newBlock(
                                         "final nextgen.st.model.STModel stModel = value.getStModel();",
-                                        "if (node.getUuid().equals(UUID.fromString(stModel.getUuid()))) canvas.addRelation(new STKVArgumentRelation(canvas, STKVNode.this, node, stArgument, stParameterKey, stArgumentKV));"
+                                        "if (node.getUuid().equals(UUID.fromString(stModel.getUuid()))) canvas.addRelation(new STKVArgumentRelation(canvas, STKVNode.this, node, stArgument, stParameterKey, stArgumentKV));","break;"
                                 )))
                                 .addEntries(newSwitchEntryStmt().addLabels("PRIMITIVE").addStatements(newBlock(
-                                        "if (node.getUuid().equals(UUID.fromString(value.getUuid()))) canvas.addRelation(new STKVArgumentRelation(canvas, STKVNode.this, node, stArgument, stParameterKey, stArgumentKV));"
+                                        "if (node.getUuid().equals(UUID.fromString(value.getUuid()))) canvas.addRelation(new STKVArgumentRelation(canvas, STKVNode.this, node, stArgument, stParameterKey, stArgumentKV));","break;"
                                 )))
                                 .addEntries(newSwitchEntryStmt().addLabels("ENUM").addStatements(newBlock(
-                                        "if (node.getUuid().equals(UUID.fromString(value.getUuid()))) canvas.addRelation(new STKVArgumentRelation(canvas, STKVNode.this, node, stArgument, stParameterKey, stArgumentKV));"
+                                        "if (node.getUuid().equals(UUID.fromString(value.getUuid()))) canvas.addRelation(new STKVArgumentRelation(canvas, STKVNode.this, node, stArgument, stParameterKey, stArgumentKV));","break;"
                                 )))))
                 .setUuid("java.util.UUID.fromString(stArgument.getUuid())")
                 .addRightClickStatements(getSelectedSTValueNodes("stValueNodes"))
@@ -362,13 +395,13 @@ public class STProject extends BaseSTProject {
                         newSwitchStmt("stValue.getType()")
                                 .addEntries(newSwitchEntryStmt().addLabels("STMODEL").addStatements(newBlock(
                                         "canvas.addNode(stValue.getStModel().getUuid(), canvas.newSTNode(stValue.getStModel()));",
-                                        "canvas.addRelation(new STKVArgumentRelation(canvas, node, canvas.getNode(UUID.fromString(stValue.getStModel().getUuid())), node.stArgument, stParameterKey, stArgumentKV));")))
+                                        "canvas.addRelation(new STKVArgumentRelation(canvas, node, canvas.getNode(UUID.fromString(stValue.getStModel().getUuid())), node.stArgument, stParameterKey, stArgumentKV));","break;")))
                                 .addEntries(newSwitchEntryStmt().addLabels("PRIMITIVE").addStatements(newBlock(
                                         "canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue));",
-                                        "canvas.addRelation(new STKVArgumentRelation(canvas, node, canvas.getNode(UUID.fromString(stValue.getUuid())), node.stArgument, stParameterKey, stArgumentKV));")))
+                                        "canvas.addRelation(new STKVArgumentRelation(canvas, node, canvas.getNode(UUID.fromString(stValue.getUuid())), node.stArgument, stParameterKey, stArgumentKV));","break;")))
                                 .addEntries(newSwitchEntryStmt().addLabels("ENUM").addStatements(newBlock(
                                         "canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue));",
-                                        "canvas.addRelation(new STKVArgumentRelation(canvas, node, canvas.getNode(UUID.fromString(stValue.getUuid())), node.stArgument, stParameterKey, stArgumentKV));"))),
+                                        "canvas.addRelation(new STKVArgumentRelation(canvas, node, canvas.getNode(UUID.fromString(stValue.getUuid())), node.stArgument, stParameterKey, stArgumentKV));","break;"))),
                         "new LayoutTreeAction(node, canvas, event).actionPerformed(null);"));
         stKVNode.addActions(openKVArgument);
 
@@ -378,8 +411,8 @@ public class STProject extends BaseSTProject {
                 .addFields(STParameterKey.asClassOrInterfaceType(), STParameterKey.variableName())
                 .addFields(STArgumentKV.asClassOrInterfaceType(), STArgumentKV.variableName())
                 .addStatements(invokeLaterInTransaction(
-                        JavaPatterns.newExpressionStmt(STCanvas.methodCall("removeRelation", UUID.staticMethodCall("fromString", STArgumentKV.methodCall("getUuid")))),
-                        JavaPatterns.newExpressionStmt(STArgument.methodCall("removeKeyValues", STArgumentKV.variableName()))));
+                        newExpressionStmt(STCanvas.methodCall("removeRelation", UUID.staticMethodCall("fromString", STArgumentKV.methodCall("getUuid")))),
+                        newExpressionStmt(STArgument.methodCall("removeKeyValues", STArgumentKV.variableName()))));
         stKVNode.addActions(removeKVArgument);
 
         final NodeAction editSTValue = newNodeAction(stValueNode, "EditSTValue", "Edit")
@@ -425,12 +458,12 @@ public class STProject extends BaseSTProject {
                         newSwitchStmt("stParameter.getType()")
                                 .addEntries(newSwitchEntryStmt("SINGLE", newBlockStmt(
                                         "final nextgen.st.model.STValue value = stArgument.getValue();",
-                                        "if (value != null) return UUID.fromString(value.getUuid()).equals(node.getUuid()) || (value.getType().equals(nextgen.st.model.STValueType.STMODEL) && value.getStModel() != null && UUID.fromString(value.getStModel().getUuid()).equals(node.getUuid()));")))
+                                        "if (value != null) return UUID.fromString(value.getUuid()).equals(node.getUuid()) || (value.getType().equals(nextgen.st.model.STValueType.STMODEL) && value.getStModel() != null && UUID.fromString(value.getStModel().getUuid()).equals(node.getUuid()));","break;")))
                                 .addEntries(newSwitchEntryStmt("LIST", newBlockStmt(
                                         "final nextgen.st.model.STValue value = stArgument.getValue();",
-                                        "if (value != null) return UUID.fromString(value.getUuid()).equals(node.getUuid()) || (value.getType().equals(nextgen.st.model.STValueType.STMODEL) && value.getStModel() != null && UUID.fromString(value.getStModel().getUuid()).equals(node.getUuid()));")))
+                                        "if (value != null) return UUID.fromString(value.getUuid()).equals(node.getUuid()) || (value.getType().equals(nextgen.st.model.STValueType.STMODEL) && value.getStModel() != null && UUID.fromString(value.getStModel().getUuid()).equals(node.getUuid()));","break;")))
                                 .addEntries(newSwitchEntryStmt("KVLIST", newBlockStmt(
-                                        "if (UUID.fromString(stArgument.getUuid()).equals(node.getUuid())) return true;"))))
+                                        "if (UUID.fromString(stArgument.getUuid()).equals(node.getUuid())) return true;","break;"))))
                         .addLines("return false;")))
                 .addParameters(newParameter(STArgument.asClassOrInterfaceType(), STArgument.variableName()))
                 .addParameters(newParameter(STParameter.asClassOrInterfaceType(), STParameter.variableName()))
@@ -468,15 +501,15 @@ public class STProject extends BaseSTProject {
                                                 .addStatements(newLine("stModelNodes.forEach(stNode -> {", "});")
                                                         .addChildren(newLine("stParameterMenu.add(new SetSTModelArgumentAction(\"Set \" + stParameter.getName() + \" = \" + cut(stNode.getText()), STModelNode.this, canvas, event, stParameter, stNode));")))
                                                 .addStatements(newLine("stParameterMenu.add(new SetInputValueArgumentAction(\"Set \" + stParameter.getName(), STModelNode.this, canvas, event, stParameter));"))
-                                                .addStatements(newLine("stParameterMenu.add(new SetClipboardValueArgumentAction(\"Set from clipboard\" + stParameter.getName(), STModelNode.this, canvas, event, stParameter));"))))
+                                                .addStatements(newLine("stParameterMenu.add(new SetClipboardValueArgumentAction(\"Set from clipboard\" + stParameter.getName(), STModelNode.this, canvas, event, stParameter));","break;"))))
                                         .addEntries(newSwitchEntryStmt("LIST", newBlockStmt()
                                                 .addStatements(newLine("stValueNodes.forEach(stNode -> {", "});")
                                                         .addChildren(newLine("stParameterMenu.add(new AddSTValueArgumentAction(\"Add \" + stParameter.getName() + \" = \" + cut(stNode.getText()), STModelNode.this, canvas, event, stParameter, stNode));")))
                                                 .addStatements(newLine("stModelNodes.forEach(stNode -> {", "});")
                                                         .addChildren(newLine("stParameterMenu.add(new AddSTModelArgumentAction(\"Add \" + stParameter.getName() + \" = \" + cut(stNode.getText()), STModelNode.this, canvas, event, stParameter, stNode));")))
                                                 .addStatements(newLine("stParameterMenu.add(new AddInputValueArgumentAction(\"Add \" + stParameter.getName(), STModelNode.this, canvas, event, stParameter));"))
-                                                .addStatements(newLine("stParameterMenu.add(new AddClipboardValueArgumentAction(\"Add from clipboard \" + stParameter.getName(), STModelNode.this, canvas, event, stParameter));"))))
-                                        .addEntries(newSwitchEntryStmt("KVLIST", newBlockStmt("stParameterMenu.add(new AddKVInputValueArgumentAction(\"Add \" + stParameter.getName(), STModelNode.this, canvas, event, stParameter));"))))
+                                                .addStatements(newLine("stParameterMenu.add(new AddClipboardValueArgumentAction(\"Add from clipboard \" + stParameter.getName(), STModelNode.this, canvas, event, stParameter));","break;"))))
+                                        .addEntries(newSwitchEntryStmt("KVLIST", newBlockStmt("stParameterMenu.add(new AddKVInputValueArgumentAction(\"Add \" + stParameter.getName(), STModelNode.this, canvas, event, stParameter));","break;"))))
                                 .addChildren(newLine("stModel.getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid())).forEach(stArgument -> {", "});")
                                         .addChildren("stParameterMenu.add(new OpenArgument(\"Open \" + (stParameter.getType().equals(nextgen.st.domain.STParameterType.KVLIST) ? stParameter.getName() : cut(canvas.stRenderer.render(stArgument.getValue()))), STModelNode.this, canvas, event, stParameter, stArgument));")
                                         .addChildren("stParameterMenu.add(new RemoveArgument(\"Remove \" + (stParameter.getType().equals(nextgen.st.domain.STParameterType.KVLIST) ? stParameter.getName() : cut(canvas.stRenderer.render(stArgument.getValue()))), STModelNode.this, canvas, event, stParameter, stArgument));"))
@@ -594,7 +627,7 @@ public class STProject extends BaseSTProject {
                 .setTitleExpression(true)
                 .addStatements("final Map<nextgen.st.domain.STParameterKey, JTextField> fieldMap = new LinkedHashMap<>();")
                 .addStatements(invokeLaterInTransaction(newBlock()
-                        .addLines(newLine("stParameter.getKeys().forEach(stParameterKey -> ", "fieldMap.put(stParameterKey, new JTextField(15))", ");"))
+                        .addLines(newLine("stParameter.getKeys().forEach(stParameterKey -> ", "fieldMap.put(stParameterKey, canvas.newTextField(15))", ");"))
                         .addLines("final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));")
                         .addLines("inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));")
                         .addLines(newLine("for (Map.Entry<nextgen.st.domain.STParameterKey, JTextField> fieldEntry : fieldMap.entrySet()) {", "}")
@@ -632,15 +665,15 @@ public class STProject extends BaseSTProject {
                                         .addChildren(newSwitchStmt("stValue.getType()")
                                                 .addEntries(newSwitchEntryStmt("STMODEL", newBlockStmt(
                                                         "final STNode dstNode = canvas.addNode(stValue.getStModel().getUuid(), canvas.newSTNode(stValue.getStModel()));",
-                                                        "canvas.addRelation(new STArgumentRelation(canvas, node, dstNode, stArgument, stParameter));"
+                                                        "canvas.addRelation(new STArgumentRelation(canvas, node, dstNode, stArgument, stParameter));","break;"
                                                 )))
                                                 .addEntries(newSwitchEntryStmt("PRIMITIVE", newBlockStmt(
                                                         "final STNode dstNode = canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue));",
-                                                        "canvas.addRelation(new STArgumentRelation(canvas, node, dstNode, stArgument, stParameter));"
+                                                        "canvas.addRelation(new STArgumentRelation(canvas, node, dstNode, stArgument, stParameter));","break;"
                                                 )))
                                                 .addEntries(newSwitchEntryStmt("ENUM", newBlockStmt(
                                                         "final STNode dstNode = canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue));",
-                                                        "canvas.addRelation(new STArgumentRelation(canvas, node, dstNode, stArgument, stParameter));"
+                                                        "canvas.addRelation(new STArgumentRelation(canvas, node, dstNode, stArgument, stParameter));","break;"
                                                 ))))),
                         "new LayoutTreeAction(node, canvas, event).actionPerformed(null);")));
 
@@ -691,10 +724,10 @@ public class STProject extends BaseSTProject {
         final NodeAction addFileSink = newNodeAction(stModelNode, "AddFileSink", "Add File Sink")
                 .addStatements(invokeLaterInTransaction(newBlock(
                         fieldMapDeclaration,
-                        JavaPatterns.newExpressionStmt(newMethodCallExpression("fieldMap", "put", asString("name"), JTextField.asObjectCreationExpression(STCanvas.methodCall("modelDb.getSTModelName", "node.stModel", asString("")), "15"))),
-                        "fieldMap.put(\"type\", new JTextField(15));",
-                        "fieldMap.put(\"path\", new JTextField(15));",
-                        "fieldMap.put(\"package\", new JTextField(canvas.modelDb.getSTModelPackage(node.stModel, \"\"), 15));",
+                        newExpressionStmt(newMethodCallExpression("fieldMap", "put", asString("name"), STCanvas.methodCall("newTextField",STCanvas.methodCall("modelDb.getSTModelName", "node.stModel", asString("")), "15"))),
+                        newExpressionStmt(newMethodCallExpression("fieldMap", "put", asString("type"), STCanvas.methodCall("newTextField", "15"))),
+                        newExpressionStmt(newMethodCallExpression("fieldMap", "put", asString("path"), STCanvas.methodCall("newTextField", "15"))),
+                        newExpressionStmt(newMethodCallExpression("fieldMap", "put", asString("package"), STCanvas.methodCall("newTextField",STCanvas.methodCall("modelDb.getSTModelPackage", "node.stModel", asString("")), "15"))),
                         "final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));",
                         "inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));",
                         newForEachStmt()
@@ -832,7 +865,7 @@ public class STProject extends BaseSTProject {
                 .setName("newSTNode")
                 .setType("java.util.function.Supplier<STNode>")
                 .addParameters(parameter)
-                .setBlockStmt(JavaPatterns.newBlockStmt().setStatements(statements));
+                .setBlockStmt(newBlockStmt().setStatements(statements));
     }
 
     private Line invokeLaterInTransaction(Object... statements) {

@@ -47,6 +47,7 @@ public class STNode extends PNode implements PropertyChangeListener {
 		final NodeInputEventHandler nodeInputEventHandler = new NodeInputEventHandler();
 		nodeInputEventHandler.getEventFilter().setMarksAcceptedEventsAsHandled(true);
 		addInputEventListener(nodeInputEventHandler);
+		addInputEventListener(canvas.canvasZoomHandler);
 
 		this.addChild(this.child);
 

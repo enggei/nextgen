@@ -509,6 +509,11 @@ JavaPatterns() ::= <<public static class JavaPatterns extends nextgen.templates.
 				.addModifiers(Modifiers.PUBLIC);
 	}
 
+	public static MethodDeclaration newPublicMethodDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, BlockStmt blockStmt) {
+		return newMethodDeclaration(classOrInterfaceType, name, blockStmt)
+				.addModifiers(Modifiers.PUBLIC);
+	}
+
 	public static MethodDeclaration newPublicStaticMethodDeclaration(String name, BlockStmt blockStmt) {
 		return newPublicMethodDeclaration(name, blockStmt)
 				.addModifiers(Modifiers.STATIC);
@@ -521,6 +526,11 @@ JavaPatterns() ::= <<public static class JavaPatterns extends nextgen.templates.
 
 	public static MethodDeclaration newPublicFinalMethodDeclaration(String name, BlockStmt blockStmt) {
 		return newPublicMethodDeclaration(name, blockStmt)
+				.addModifiers(Modifiers.FINAL);
+	}
+
+	public static MethodDeclaration newPublicFinalMethodDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, BlockStmt blockStmt) {
+		return newPublicMethodDeclaration(classOrInterfaceType, name, blockStmt)
 				.addModifiers(Modifiers.FINAL);
 	}
 
@@ -560,6 +570,13 @@ JavaPatterns() ::= <<public static class JavaPatterns extends nextgen.templates.
 				.setBlockStmt(blockStmt);
 	}
 
+	public static MethodDeclaration newMethodDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, BlockStmt blockStmt) {
+		return newMethodDeclaration()
+				.setType(classOrInterfaceType)
+				.setName(name)
+				.setBlockStmt(blockStmt);
+	}
+	
 	public static VariableDeclaration newVariableDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, Object initializer) {
 		return newVariableDeclaration()
 				.setType(classOrInterfaceType)
@@ -628,6 +645,22 @@ JavaPatterns() ::= <<public static class JavaPatterns extends nextgen.templates.
 	public static Statement newReturnStatement(Expression expression) {
 		return newReturnStmt()
 				.setExpression(expression);
+	}
+
+	public static SwitchStmt newSwitchStmt(Object selector) {
+		return newSwitchStmt()
+				.setSelector(selector);
+	}
+
+	public static SwitchEntryStmt newSwitchEntryStmt(Object label, BlockStmt blockStmt) {
+		return newSwitchEntryStmt()
+				.addLabels(label)
+				.addStatements(blockStmt);
+	}
+
+	public static BlockStmt newBlockStmt(String ... statements) {
+		return newBlockStmt()
+				.setStatements(statements);
 	}
 
 	// expressions
@@ -747,6 +780,10 @@ public static class NamedEntity {
 		return newParameter(asClassOrInterfaceType(typeArguments), variableName());
 	}
 
+	Parameter asParameter(NamedEntity typeArguments) {
+		return newParameter(asClassOrInterfaceType(typeArguments.asClassOrInterfaceType()), variableName());
+	}
+
 	Statement asFinalVariableDeclaration(Object initializer) {
 		return newExpressionStmt(newFinalVariableDeclarationExpression(newVariableDeclaration(asClassOrInterfaceType(), variableName(), initializer)));
 	}
@@ -754,6 +791,10 @@ public static class NamedEntity {
 	ClassOrInterfaceType asClassOrInterfaceType(Object... typeArguments) {
 		return newClassOrInterfaceType(packageDeclaration == null ? null : packageDeclaration.getName(), name)
 				.setTypeArguments(typeArguments);
+	}
+
+	ClassOrInterfaceType asClassOrInterfaceType(NamedEntity typeArgument) {
+		return asClassOrInterfaceType(typeArgument.asClassOrInterfaceType());
 	}
 
 	ObjectCreationExpression asObjectCreationExpression(Object... arguments) {
