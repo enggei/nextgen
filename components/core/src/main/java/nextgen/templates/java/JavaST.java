@@ -98,8 +98,7 @@ public class JavaST {
 	WhileStmt.st + "\n" + 
 	ClassOrInterfaceType.st + "\n" + 
 	TypeParameter.st + "\n" + 
-	JavaPatterns.st + "\n" + 
-	InvokeLater.st + "\n" ;
+	JavaPatterns.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -509,10 +508,6 @@ public class JavaST {
 
 	public static JavaPatterns newJavaPatterns() {
 		return new JavaPatterns(stGroup);
-	} 
-
-	public static InvokeLater newInvokeLater() {
-		return new InvokeLater(stGroup);
 	} 
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {

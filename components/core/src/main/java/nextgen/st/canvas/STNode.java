@@ -401,9 +401,9 @@ public class STNode extends PNode implements PropertyChangeListener {
 
 		@Override
 		void actionPerformed(STNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			javax.swing.SwingUtilities.invokeLater(() ->  {
+			javax.swing.SwingUtilities.invokeLater(() -> { 
 				canvas.getAllNodes().filter(canvasNode -> !canvasNode.getUuid().equals(node.getUuid())).forEach(STNode::close);
-				canvas.getAllRelations().forEach(relation -> canvas.removeRelation(relation.getUuid()));	
+				canvas.getAllRelations().forEach(relation -> canvas.removeRelation(relation.getUuid()));
 			});
 		}
 	}
@@ -430,12 +430,12 @@ public class STNode extends PNode implements PropertyChangeListener {
 
 		@Override
 		void actionPerformed(STNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			javax.swing.SwingUtilities.invokeLater(() ->  {
+			javax.swing.SwingUtilities.invokeLater(() -> { 
 				final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();
 				canvas.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));
 				node.onNodeRightClick(event, pop);
 				canvas.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));
-				pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());	
+				pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
 			});
 		}
 	}
@@ -449,9 +449,9 @@ public class STNode extends PNode implements PropertyChangeListener {
 
 		@Override
 		void actionPerformed(STNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			javax.swing.SwingUtilities.invokeLater(() ->  {
+			javax.swing.SwingUtilities.invokeLater(() -> { 
 				final PBounds fullBounds = node.getFullBoundsReference();
-				System.out.println(fullBounds.getX() + "," + fullBounds.getY() + ", [" + fullBounds.getWidth() + "," + fullBounds.getHeight() + "]");	
+				System.out.println(fullBounds.getX() + "," + fullBounds.getY() + ", [" + fullBounds.getWidth() + "," + fullBounds.getHeight() + "]");
 			});
 		}
 	}

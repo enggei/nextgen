@@ -3,6 +3,7 @@ package nextgen.templates;
 import nextgen.st.STGenerator;
 import nextgen.templates.domain.*;
 import nextgen.templates.java.*;
+import nextgen.templates.java.Enum;
 import nextgen.templates.neo4j.*;
 import nextgen.templates.vertx.JsonFactory;
 import nextgen.templates.vertx.JsonWrapper;
@@ -12,7 +13,7 @@ import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static nextgen.templates.JavaPatterns.*;
+import static nextgen.templates.java.JavaST.*;
 import static nextgen.templates.domain.RelationType.*;
 import static nextgen.templates.neo4j.Neo4JST.newDeleteNode;
 
@@ -134,8 +135,28 @@ public class DomainPatterns extends DomainST {
         return newRef(name, entity).setLexical(lexical);
     }
 
+    public static ObjectCreationExpression newArrayListInstance() {
+        return newObjectCreationExpression().setType(newClassOrInterfaceType("java.util","ArrayList").setIsTyped(true));
+    }
+
+    public static PackageDeclaration newPackageDeclaration(String packageName) {
+        return JavaST.newPackageDeclaration().setName(packageName);
+    }
+
+    public static ClassOrInterfaceType newClassOrInterfaceType(String packageDeclaration, String name) {
+        return JavaST.newClassOrInterfaceType()
+                .setScope(packageDeclaration)
+                .addNames(name);
+    }
 
     // DOMAIN TO BEANS:
+
+    public static void writeEnum(File root, PackageDeclaration packageDeclaration, String name, Object[] enumValues) {
+        final Enum content = JavaST.newEnum().setName(name).setPackage(packageDeclaration.getName());
+        for (Object enumValue : enumValues)
+            content.addEnumValues(enumValue);
+        STGenerator.writeJavaFile(content, packageDeclaration.getName(), name, root);
+    }
 
     public static void writeBean(File root, String packageName, Domain domain) {
         writeBean(root, newPackageDeclaration(packageName), domain);
@@ -202,7 +223,7 @@ public class DomainPatterns extends DomainST {
                     break;
                 }
                 case EXT_LIST: {
-                    entityClass.addFields(newClassOrInterfaceType("java.util","List").addTypeArguments(getCanonicalName(o.getDst())), o.getName(), JavaPatterns.newArrayListInstance());
+                    entityClass.addFields(newClassOrInterfaceType("java.util","List").addTypeArguments(getCanonicalName(o.getDst())), o.getName(), newArrayListInstance());
                     entityClass.addAccessors(newBoundedExternalListAccessors().setClassName(entityName).setType(getCanonicalName(o.getDst())).setName(o.getName()));
                     break;
                 }
@@ -213,7 +234,7 @@ public class DomainPatterns extends DomainST {
                     break;
                 }
                 case PRIM_LIST: {
-                    entityClass.addFields(newClassOrInterfaceType("java.util","List").addTypeArguments(getSimpleName(o.getDst())), o.getName(), JavaPatterns.newArrayListInstance());
+                    entityClass.addFields(newClassOrInterfaceType("java.util","List").addTypeArguments(getSimpleName(o.getDst())), o.getName(), newArrayListInstance());
                     entityClass.addAccessors(newBoundedListAccessors().setClassName(entityName).setType(getSimpleName(o.getDst())).setName(o.getName()));
                     break;
                 }
@@ -227,7 +248,7 @@ public class DomainPatterns extends DomainST {
                 }
                 case LIST: {
                     final Entity dst = asEntity(o.getDst());
-                    entityClass.addFields(newClassOrInterfaceType("java.util","List").addTypeArguments(dst.getName()), o.getName(), JavaPatterns.newArrayListInstance());
+                    entityClass.addFields(newClassOrInterfaceType("java.util","List").addTypeArguments(dst.getName()), o.getName(), newArrayListInstance());
                     entityClass.addAccessors(newBoundedListReferenceAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
 
                     generateBean(root, packageDeclaration, dst, visited);
@@ -306,7 +327,7 @@ public class DomainPatterns extends DomainST {
                     break;
                 }
                 case EXT_LIST: {
-                    entityClass.addFields(newClassOrInterfaceType("java.util","List").addTypeArguments(getCanonicalName(o.getDst())), o.getName(), JavaPatterns.newArrayListInstance());
+                    entityClass.addFields(newClassOrInterfaceType("java.util","List").addTypeArguments(getCanonicalName(o.getDst())), o.getName(), newArrayListInstance());
                     entityClass.addAccessors(newListAccessors().setClassName(entityName).setType(getCanonicalName(o.getDst())).setName(o.getName()));
                     break;
                 }
@@ -317,7 +338,7 @@ public class DomainPatterns extends DomainST {
                     break;
                 }
                 case PRIM_LIST: {
-                    entityClass.addFields(newClassOrInterfaceType("java.util","List").addTypeArguments(getSimpleName(o.getDst())), o.getName(), JavaPatterns.newArrayListInstance());
+                    entityClass.addFields(newClassOrInterfaceType("java.util","List").addTypeArguments(getSimpleName(o.getDst())), o.getName(), newArrayListInstance());
                     entityClass.addAccessors(newListAccessors().setClassName(entityName).setType(getSimpleName(o.getDst())).setName(o.getName()));
                     break;
                 }
@@ -331,7 +352,7 @@ public class DomainPatterns extends DomainST {
                 }
                 case LIST: {
                     final Entity dst = asEntity(o.getDst());
-                    entityClass.addFields(newClassOrInterfaceType("java.util","List").addTypeArguments(dst.getName()), o.getName(), JavaPatterns.newArrayListInstance());
+                    entityClass.addFields(newClassOrInterfaceType("java.util","List").addTypeArguments(dst.getName()), o.getName(), newArrayListInstance());
                     entityClass.addAccessors(newListAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
 
                     generatePojo(root, packageDeclaration, dst, visited);
@@ -465,7 +486,7 @@ public class DomainPatterns extends DomainST {
                 }
                 case EXT_LIST: {
 
-                    entityClass.addExternalFields(newClassOrInterfaceType("java.util","List").addTypeArguments(getCanonicalName(o.getDst())), o.getName(), JavaPatterns.newArrayListInstance());
+                    entityClass.addExternalFields(newClassOrInterfaceType("java.util","List").addTypeArguments(getCanonicalName(o.getDst())), o.getName(), newArrayListInstance());
                     entityClass.addAccessors(newListAccessors().setClassName(entityName).setType(getCanonicalName(o.getDst())).setName(o.getName()));
                     break;
                 }

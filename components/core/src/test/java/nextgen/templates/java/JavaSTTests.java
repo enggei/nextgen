@@ -103,7 +103,6 @@ public class JavaSTTests {
 		testClassOrInterfaceType();
 		testTypeParameter();
 		testJavaPatterns();
-		testInvokeLater();
 	}
 
 	@org.junit.Test
@@ -574,10 +573,5 @@ public class JavaSTTests {
 	@org.junit.Test
 	public void testJavaPatterns() {
 		System.out.println("\n--- TEST JavaPatterns:\n" + newJavaPatterns());
-	} 
-
-	@org.junit.Test
-	public void testInvokeLater() {
-		System.out.println("\n--- TEST InvokeLater:\n" + newInvokeLater());
 	} 
 } 

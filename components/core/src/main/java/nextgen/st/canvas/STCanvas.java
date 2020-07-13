@@ -580,12 +580,12 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 		@Override
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
-			javax.swing.SwingUtilities.invokeLater(() ->  {
+			javax.swing.SwingUtilities.invokeLater(() -> { 
 				final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();
 				canvas.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));
 				canvas.onCanvasRightClick(pop, event);
 				canvas.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));
-				pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());	
+				pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
 			});
 		}
 	}
