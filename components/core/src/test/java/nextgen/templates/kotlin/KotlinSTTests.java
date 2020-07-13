@@ -36,6 +36,8 @@ public class KotlinSTTests {
 		testOverrideHashCode();
 		testOverrideToString();
 		testDataClassDeclaration();
+		testEnumClassDeclaration();
+		testEnumField();
 		testExtendingClass();
 		testFunctionDeclaration();
 		testFunctionParam();
@@ -47,9 +49,11 @@ public class KotlinSTTests {
 		testPropertyDeclaration();
 		testKotlinStringTemplateExpression();
 		testKotlinStringTemplateSingleValue();
+		testCommentBlock();
 		testIfStatement();
 		testImportStatement();
 		testReturnStatement();
+		testSingleLineComment();
 		testTodoStatement();
 		testVarDeclarationStatement();
 		testArrayInitializer();
@@ -78,7 +82,9 @@ public class KotlinSTTests {
 		testNullableType();
 		testPairType();
 		testSetType();
+		testStarType();
 		testStringType();
+		testTemplateType();
 		testUnitType();
 	}
 
@@ -218,6 +224,16 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
+	public void testEnumClassDeclaration() {
+		System.out.println("\n--- TEST EnumClassDeclaration:\n" + newEnumClassDeclaration());
+	} 
+
+	@org.junit.Test
+	public void testEnumField() {
+		System.out.println("\n--- TEST EnumField:\n" + newEnumField());
+	} 
+
+	@org.junit.Test
 	public void testExtendingClass() {
 		System.out.println("\n--- TEST ExtendingClass:\n" + newExtendingClass());
 	} 
@@ -273,6 +289,11 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
+	public void testCommentBlock() {
+		System.out.println("\n--- TEST CommentBlock:\n" + newCommentBlock());
+	} 
+
+	@org.junit.Test
 	public void testIfStatement() {
 		System.out.println("\n--- TEST IfStatement:\n" + newIfStatement());
 	} 
@@ -285,6 +306,11 @@ public class KotlinSTTests {
 	@org.junit.Test
 	public void testReturnStatement() {
 		System.out.println("\n--- TEST ReturnStatement:\n" + newReturnStatement());
+	} 
+
+	@org.junit.Test
+	public void testSingleLineComment() {
+		System.out.println("\n--- TEST SingleLineComment:\n" + newSingleLineComment());
 	} 
 
 	@org.junit.Test
@@ -428,8 +454,18 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
+	public void testStarType() {
+		System.out.println("\n--- TEST StarType:\n" + newStarType());
+	} 
+
+	@org.junit.Test
 	public void testStringType() {
 		System.out.println("\n--- TEST StringType:\n" + newStringType());
+	} 
+
+	@org.junit.Test
+	public void testTemplateType() {
+		System.out.println("\n--- TEST TemplateType:\n" + newTemplateType());
 	} 
 
 	@org.junit.Test

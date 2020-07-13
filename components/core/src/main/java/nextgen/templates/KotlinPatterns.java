@@ -4,6 +4,7 @@ import nextgen.templates.kotlin.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -64,7 +65,7 @@ public class KotlinPatterns extends KotlinST {
 
    public static OverrideHashCode createHashCodeFunction(ParameterDefinition field) {
       return newOverrideHashCode()
-         .setReturnStatement(newReturnStatement(newFunctionCallExpression().setScope("Objects").setFunctionName("hash")
+         .setReturnStatement(newReturnStatement(newFunctionCallExpression().setScope("java.util.Objects").setFunctionName("hash")
                  .setArguments(singletonList(newLiteralExpression(getNameFromParameterDefinition(field))))));
    }
 
@@ -115,15 +116,19 @@ public class KotlinPatterns extends KotlinST {
                .setExpression(expression);
    }
 
+   public static TodoStatement newTodoStatement(String reason) {
+       return KotlinST.newTodoStatement().setReason(reason);
+   }
+
    public static FunctionDeclaration createCopyFunction(String className, Collection<ParameterDefinition> fields) {
       return newFunctionDeclaration()
               .setName("copy")
               .setReturnType(newNamedType().setName(className))
               .setParams(fields.stream()
-                      .map(fieldDeclaration -> newFunctionParam()
-                              .setName(getNameFromParameterDefinition(fieldDeclaration))
-                              .setTypeDeclaration(getTypeFromParameterDefinition(fieldDeclaration))
-                              .setDefaultValue(asThisExpression(fieldDeclaration)))
+                      .map(fieldDeclaration -> newFunctionParam(
+                              getNameFromParameterDefinition(fieldDeclaration),
+                              getTypeFromParameterDefinition(fieldDeclaration),
+                              asThisExpression(fieldDeclaration)))
                       .collect(Collectors.toList())
               )
               .setExpressionBody(newConstructorCallExpression()
@@ -160,31 +165,51 @@ public class KotlinPatterns extends KotlinST {
    }
 
    public static ClassDeclaration newClassDeclaration(String name) {
-      return newClassDeclaration().setName(name);
+      return KotlinST.newClassDeclaration().setName(name);
    }
 
    public static DataClassDeclaration newDataClassDeclaration(String name) {
-      return newDataClassDeclaration().setName(name);
+      return KotlinST.newDataClassDeclaration().setName(name);
    }
 
    public static InterfaceDeclaration newInterfaceDeclaration(String name) {
-      return newInterfaceDeclaration().setName(name);
+      return KotlinST.newInterfaceDeclaration().setName(name);
+   }
+
+   public static EnumClassDeclaration newEnumClassDeclaration(String name) {
+       return KotlinST.newEnumClassDeclaration().setName(name);
+   }
+
+   public static EnumClassDeclaration newEnumClassDeclaration(String name, Collection<EnumField> values) {
+       return KotlinST.newEnumClassDeclaration().setName(name).setValues(values);
+   }
+
+   public static EnumField newEnumField(String name) {
+       return KotlinST.newEnumField().setName(name);
+   }
+
+   public static EnumField newEnumField(String name, Collection<Expression> inputs) {
+       return KotlinST.newEnumField().setName(name).setInputs(inputs);
+   }
+
+   public static List<EnumField> buildEnumFields(String... names) {
+       return Stream.of(names).map(KotlinPatterns::newEnumField).collect(Collectors.toList());
    }
 
    public static NullableType newNullableType(TypeDeclaration typeDeclaration) {
-      return newNullableType().setType(typeDeclaration);
+      return KotlinST.newNullableType().setType(typeDeclaration);
    }
 
-   public static Extending newImplementingInterface(String name) {
-       return newImplementingInterface().setInterfaceName(name);
+   public static Extending newImplementingInterface(TypeDeclaration typeDeclaration) {
+       return KotlinST.newImplementingInterface().setType(typeDeclaration);
    }
 
-   public static Extending newExtendingClass(String name) {
-       return KotlinST.newExtendingClass().setClassName(name);
+   public static Extending newExtendingClass(TypeDeclaration typeDeclaration) {
+       return KotlinST.newExtendingClass().setName(typeDeclaration);
    }
 
-   public static Extending newExtendingClass(String name, Collection<Expression> params) {
-       return KotlinST.newExtendingClass().setClassName(name).setParams(params);
+   public static Extending newExtendingClass(TypeDeclaration typeDeclaration, Collection<Expression> params) {
+       return KotlinST.newExtendingClass().setName(typeDeclaration).setParams(params);
    }
 
    public static LiteralExpression newLiteralExpression(Object literal) {
@@ -301,32 +326,116 @@ public class KotlinPatterns extends KotlinST {
                .setName(name);
    }
 
+   public static AnnotationDeclaration newAnnotationDeclaration(String scope, String name) {
+       return KotlinST.newAnnotationDeclaration()
+               .setScope(scope)
+               .setName(name);
+   }
+
    public static AnnotationDeclaration newAnnotationDeclaration(String name, Collection<Expression> params) {
        return KotlinST.newAnnotationDeclaration()
                .setName(name)
                .setParams(params);
    }
 
+   public static AnnotationDeclaration newAnnotationDeclaration(String scope, String name, Collection<Expression> params) {
+       return KotlinST.newAnnotationDeclaration()
+               .setScope(scope)
+               .setName(name)
+               .setParams(params);
+   }
+
+   public static FunctionDeclaration newFunctionDeclaration(String name) {
+       return KotlinST.newFunctionDeclaration().setName(name);
+   }
+
+   public static FunctionDeclaration newFunctionDeclaration(String name, TypeDeclaration returnType) {
+       return KotlinST.newFunctionDeclaration().setName(name).setReturnType(returnType);
+   }
+
+   public static FunctionDeclaration newFunctionDeclaration(String name, Collection<FunctionParam> params) {
+       return KotlinST.newFunctionDeclaration().setName(name).setParams(params);
+   }
+
+   public static FunctionDeclaration newFunctionDeclaration(String name, TypeDeclaration returnType, Collection<FunctionParam> params) {
+       return KotlinST.newFunctionDeclaration().setName(name).setReturnType(returnType).setParams(params);
+   }
+
+   public static FunctionParam newFunctionParam(String name, TypeDeclaration type) {
+       return KotlinST.newFunctionParam().setName(name).setTypeDeclaration(type);
+   }
+
+   public static FunctionParam newFunctionParam(String name, TypeDeclaration type, Expression defaultValue) {
+       return KotlinST.newFunctionParam().setName(name).setTypeDeclaration(type).setDefaultValue(defaultValue);
+   }
+
+   public static PackageDeclaration newPackageDeclaration(String name) {
+       return KotlinST.newPackageDeclaration().setName(name);
+   }
+
+   public static ImportStatement newImportStatement(String scope, String name) {
+       return KotlinST.newImportStatement().setScope(scope).setName(name);
+   }
+
+   public static KotlinFile newKotlinFile(PackageDeclaration packageDeclaration, Collection<CompilationUnit> compilationUnits) {
+       return KotlinST.newKotlinFile().setPackageDeclaration(packageDeclaration).setCompilationUnit(compilationUnits);
+   }
+
+   public static KotlinFile newKotlinFile(PackageDeclaration packageDeclaration, Collection<CompilationUnit> compilationUnits, Collection<ImportStatement> importStatements) {
+       return KotlinST.newKotlinFile().setPackageDeclaration(packageDeclaration).setCompilationUnit(compilationUnits).setImports(importStatements);
+   }
+
+   public static SingleLineComment newSingleLineComment(String comment) {
+       return KotlinST.newSingleLineComment().setComment(comment);
+   }
+
+   public static CommentBlock newCommentBlock(String comment) {
+       return KotlinST.newCommentBlock().setComment(comment);
+   }
+
+   public static ClassDeclaration createNeo4jOgmUuidAttributeConverterClass() {
+       final NamedType uuidType = newNamedType().setName("java.util.UUID");
+       final NamedType uuidAttributeConverterType = newNamedType().setName("UUIDAttributeConverter");
+       final StringType stringType = newStringType();
+       final TemplateType attributeConverter = newTemplateType().setName("org.neo4j.ogm.typeconversion.AttributeConverter")
+               .setTemplates(asList(
+                       uuidType,
+                       stringType
+               ));
+
+       return newClassDeclaration(uuidAttributeConverterType.getName())
+               .setExtends(singletonList(newImplementingInterface(attributeConverter)))
+               .setMembers(asList(
+                       newFunctionDeclaration("toGraphProperty", stringType, singletonList(newFunctionParam("value", uuidType)))
+                               .setOverride(true)
+                               .setExpressionBody(newFunctionCallExpression().setScope("value").setFunctionName("toString")),
+                       newFunctionDeclaration("toEntityAttribute", uuidType, singletonList(newFunctionParam("value", stringType)))
+                               .setOverride(true)
+                               .setExpressionBody(newFunctionCallExpression().setScope(uuidType.getName()).setFunctionName("fromString").setArguments(singletonList(newLiteralExpression("value"))))
+               ));
+   }
+
    public static ClassDeclaration createNeo4jOgmAbstractEntityClass() {
-       TypeDeclaration longType = newNamedType().setName("Long");
-       NullableType nullableLongType = newNullableType(longType);
-       TypeDeclaration uuidType = newNamedType().setName("UUID");
-//       ParameterDeclaration uuidField = newParameterDeclaration(uuidType, "uuid", newFunctionCallExpression().setScope("UUID").setFunctionName("randomUUID"));
-//       ParameterDeclaration idField = newParameterDeclaration(nullableLongType, "id", newNullExpression());
+       final TypeDeclaration longType = newNamedType().setName("Long");
+       final NullableType nullableLongType = newNullableType(longType);
+       final TypeDeclaration uuidType = newNamedType().setName("java.util.UUID");
+
+       final String annotationScopeOgm = "org.neo4j.ogm.annotation";
+       final String annotationScopeOgmTypeconversion = "org.neo4j.ogm.annotation.typeconversion";
 
        PropertyDeclaration idProperty = newPropertyDeclaration(nullableLongType, "id", newLiteralExpression("id"), true)
                .setPrivateSetter(true)
                .setAnnotations(asList(
-                       newAnnotationDeclaration("Id"),
-                       newAnnotationDeclaration("GeneratedValue")
+                       newAnnotationDeclaration(annotationScopeOgm, "Id"),
+                       newAnnotationDeclaration(annotationScopeOgm, "GeneratedValue")
                ));
 
        PropertyDeclaration uuidProperty = newPropertyDeclaration(uuidType, "uuid", newLiteralExpression("uuid"), true)
                .setPrivateSetter(true)
                .setAnnotations(asList(
-                       newAnnotationDeclaration("Property", singletonList(newStringValueExpression("uuid"))),
-                       newAnnotationDeclaration("Index", singletonList(newAssignExpression("unique", "true"))),
-                       newAnnotationDeclaration("Convert", singletonList(createClassReferenceExpression("UUIDAttributeConverter")))
+                       newAnnotationDeclaration(annotationScopeOgm, "Property", singletonList(newStringValueExpression("uuid"))),
+                       newAnnotationDeclaration(annotationScopeOgm, "Index", singletonList(newAssignExpression("unique", "true"))),
+                       newAnnotationDeclaration(annotationScopeOgmTypeconversion, "Convert", singletonList(createClassReferenceExpression("UUIDAttributeConverter")))
                ));
 
        List<PropertyDeclaration> properties = asList(
@@ -336,10 +445,10 @@ public class KotlinPatterns extends KotlinST {
 
        List<ParameterDefinition> parameters = asList(
                newParameterDeclaration(nullableLongType, "id", newNullExpression()),
-               newParameterDeclaration(uuidType, "uuid", newFunctionCallExpression().setScope("UUID").setFunctionName("randomUUID"))
+               newParameterDeclaration(uuidType, "uuid", newFunctionCallExpression().setScope("java.util.UUID").setFunctionName("randomUUID"))
        );
 
-       String className = "Entity";
+       final String className = "Entity";
 
        return newClassDeclaration(className)
                .setIsAbstract(true)
@@ -351,5 +460,26 @@ public class KotlinPatterns extends KotlinST {
                .setOverrideToString(createToStringFunction(className, new ArrayList<>(properties)))
                .setOverrideHashCode(createHashCodeFunction(uuidProperty))
                ;
+   }
+
+   public static InterfaceDeclaration createNeo4jOgmEnumNodeInterface() {
+
+       TypeDeclaration enumStarTemplate = newTemplateType()
+               .setName("Enum")
+               .setTemplates(singletonList(newStarType()));
+
+       return newInterfaceDeclaration("EnumNode")
+               .addMembers(newFunctionDeclaration("enumVal", enumStarTemplate));
+   }
+
+   public static InterfaceDeclaration createNeo4jOgmRelationshipInterface() {
+
+       TypeDeclaration entityType = newNamedType().setName("Entity");
+
+       return newInterfaceDeclaration("Relationship")
+               .setMembers(asList(
+                       newFunctionDeclaration("startNode", entityType),
+                       newFunctionDeclaration("endNode", entityType)
+               ));
    }
 }

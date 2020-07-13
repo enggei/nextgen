@@ -32,6 +32,8 @@ public class KotlinST {
 	OverrideHashCode.st + "\n" + 
 	OverrideToString.st + "\n" + 
 	DataClassDeclaration.st + "\n" + 
+	EnumClassDeclaration.st + "\n" + 
+	EnumField.st + "\n" + 
 	ExtendingClass.st + "\n" + 
 	FunctionDeclaration.st + "\n" + 
 	FunctionParam.st + "\n" + 
@@ -43,9 +45,11 @@ public class KotlinST {
 	PropertyDeclaration.st + "\n" + 
 	KotlinStringTemplateExpression.st + "\n" + 
 	KotlinStringTemplateSingleValue.st + "\n" + 
+	CommentBlock.st + "\n" + 
 	IfStatement.st + "\n" + 
 	ImportStatement.st + "\n" + 
 	ReturnStatement.st + "\n" + 
+	SingleLineComment.st + "\n" + 
 	TodoStatement.st + "\n" + 
 	VarDeclarationStatement.st + "\n" + 
 	ArrayInitializer.st + "\n" + 
@@ -74,7 +78,9 @@ public class KotlinST {
 	NullableType.st + "\n" + 
 	PairType.st + "\n" + 
 	SetType.st + "\n" + 
+	StarType.st + "\n" + 
 	StringType.st + "\n" + 
+	TemplateType.st + "\n" + 
 	UnitType.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
@@ -219,6 +225,14 @@ public class KotlinST {
 		return new DataClassDeclaration(stGroup);
 	} 
 
+	public static EnumClassDeclaration newEnumClassDeclaration() {
+		return new EnumClassDeclaration(stGroup);
+	} 
+
+	public static EnumField newEnumField() {
+		return new EnumField(stGroup);
+	} 
+
 	public static ExtendingClass newExtendingClass() {
 		return new ExtendingClass(stGroup);
 	} 
@@ -263,6 +277,10 @@ public class KotlinST {
 		return new KotlinStringTemplateSingleValue(stGroup);
 	} 
 
+	public static CommentBlock newCommentBlock() {
+		return new CommentBlock(stGroup);
+	} 
+
 	public static IfStatement newIfStatement() {
 		return new IfStatement(stGroup);
 	} 
@@ -273,6 +291,10 @@ public class KotlinST {
 
 	public static ReturnStatement newReturnStatement() {
 		return new ReturnStatement(stGroup);
+	} 
+
+	public static SingleLineComment newSingleLineComment() {
+		return new SingleLineComment(stGroup);
 	} 
 
 	public static TodoStatement newTodoStatement() {
@@ -387,8 +409,16 @@ public class KotlinST {
 		return new SetType(stGroup);
 	} 
 
+	public static StarType newStarType() {
+		return new StarType(stGroup);
+	} 
+
 	public static StringType newStringType() {
 		return new StringType(stGroup);
+	} 
+
+	public static TemplateType newTemplateType() {
+		return new TemplateType(stGroup);
 	} 
 
 	public static UnitType newUnitType() {

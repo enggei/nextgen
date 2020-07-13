@@ -5,6 +5,7 @@ public class PropertyDeclaration implements ParameterDefinition {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Boolean _isAbstract;
 	private Boolean _override;
 	private Boolean _isPrivate;
 	private Boolean _isProtected;
@@ -26,6 +27,7 @@ public class PropertyDeclaration implements ParameterDefinition {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("PropertyDeclaration");
+		st.add("isAbstract", _isAbstract);
 		st.add("override", _override);
 		st.add("isPrivate", _isPrivate);
 		st.add("isProtected", _isProtected);
@@ -37,6 +39,28 @@ public class PropertyDeclaration implements ParameterDefinition {
 		for (Object o : _annotations) st.add("annotations", o);
 		return st.render().trim();
 	}
+
+	public PropertyDeclaration setIsAbstract(Boolean value) {
+		this._isAbstract = value;
+		return this;
+	}
+
+	public Boolean getIsAbstract() {
+		return this._isAbstract;
+	}
+
+	public Boolean getIsAbstract(Boolean defaultValue) {
+		return this._isAbstract == null ? defaultValue : this._isAbstract;
+	}
+
+	public boolean hasIsAbstract() {
+		return this._isAbstract != null;
+	}
+
+	public PropertyDeclaration removeIsAbstract() {
+		this._isAbstract = null;
+		return this;
+	} 
 
 	public PropertyDeclaration setOverride(Boolean value) {
 		this._override = value;
@@ -257,7 +281,7 @@ public class PropertyDeclaration implements ParameterDefinition {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PropertyDeclaration(annotations,override,isPrivate,isProtected,isMutable,name,type,initializer,privateSetter) ::= <<~annotations:{it|~it~};separator=\"\\n\"~\n" + 
-				"~if(override)~override ~endif~~if(isPrivate)~private ~elseif(isProtected)~protected ~endif~~if(isMutable)~var ~else~val ~endif~~name~~if(type)~: ~type~~endif~~if(initializer)~ = ~initializer~~endif~~if(privateSetter)~\n" + 
+	static final String st = "PropertyDeclaration(annotations,isAbstract,override,isPrivate,isProtected,isMutable,name,type,initializer,privateSetter) ::= <<~annotations:{it|~it~};separator=\"\\n\"~\n" + 
+				"~if(isAbstract)~abstract ~endif~~if(override)~override ~endif~~if(isPrivate)~private ~elseif(isProtected)~protected ~endif~~if(isMutable)~var ~else~val ~endif~~name~~if(type)~: ~type~~endif~~if(initializer)~ = ~initializer~~endif~~if(privateSetter)~\n" + 
 				"	private set~endif~ >>";
 }  

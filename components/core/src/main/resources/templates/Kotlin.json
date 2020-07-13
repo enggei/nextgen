@@ -13,8 +13,13 @@
       "children" : [ {
         "uuid" : "cf797087-800a-45b5-9ef9-678e61e660c2",
         "name" : "AnnotationDeclaration",
-        "text" : "@~name~~if(params)~(~params:{it|~it~};separator=\", \"~)~endif~ ",
+        "text" : "@~if(scope)~~scope~.~endif~~name~~if(params)~(~params:{it|~it~};separator=\", \"~)~endif~ ",
         "parameters" : [ {
+          "uuid" : "647b7a0a-2b86-4c0b-8fe2-88e4647f5fc6",
+          "name" : "scope",
+          "type" : "SINGLE",
+          "argumentType" : "String"
+        }, {
           "uuid" : "bc4e9638-2db7-461e-bdc6-d0bc08138ad4",
           "name" : "name",
           "type" : "SINGLE",
@@ -39,8 +44,13 @@
       }, {
         "uuid" : "f05c4cbf-3b7e-4156-9906-99ae7e7c47a6",
         "name" : "ClassDeclaration",
-        "text" : "~annotations:{it|~it~};separator=\"\\n\"~\n~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n\t~fields:{it|~it~};separator=\",\\n\"~\n)~if(extends)~: ~extends:{it|~it~};separator=\", \"~~endif~ {\n\n\t~properties:{it|~it~};separator=\"\\n\\n\"~\n\t~companionObject~\n\n\t~overrideEquals~\n\n\t~overrideHashCode~\n\n\t~overrideToString~\n\n\t~members:{it|~it~};separator=\"\\n\\n\"~\n\t~subclasses:{it|~it~};separator=\"\\n\\n\"~\n} ",
+        "text" : "~comments~\n~annotations:{it|~it~};separator=\"\\n\"~\n~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~~if(fields)~(\n\t~fields:{it|~it~};separator=\",\\n\"~\n)~endif~~if(extends)~ : ~extends:{it|~it~};separator=\", \"~~endif~ {\n\n\t~properties:{it|~it~};separator=\"\\n\\n\"~\n\t~companionObject~\n\n\t~subclasses:{it|~it~};separator=\"\\n\\n\"~\n\n\t~overrideEquals~\n\n\t~overrideHashCode~\n\n\t~overrideToString~\n\n\t~members:{it|~it~};separator=\"\\n\\n\"~\n} ",
         "parameters" : [ {
+          "uuid" : "b257e632-d1ce-4dab-aae4-2b2762dbee54",
+          "name" : "comments",
+          "type" : "SINGLE",
+          "argumentType" : "Comment"
+        }, {
           "uuid" : "00eae73a-0215-407e-ac1a-0ac7d3edcb93",
           "name" : "annotations",
           "type" : "LIST",
@@ -81,6 +91,11 @@
           "type" : "SINGLE",
           "argumentType" : "CompanionObject"
         }, {
+          "uuid" : "c4a949c5-ba91-4c86-b94d-dee08916a932",
+          "name" : "subclasses",
+          "type" : "LIST",
+          "argumentType" : "ClassDefinition"
+        }, {
           "uuid" : "39366560-8979-4ea0-bc37-c93955ff538d",
           "name" : "overrideEquals",
           "type" : "SINGLE",
@@ -100,11 +115,6 @@
           "name" : "members",
           "type" : "LIST",
           "argumentType" : "FunctionDeclaration"
-        }, {
-          "uuid" : "c4a949c5-ba91-4c86-b94d-dee08916a932",
-          "name" : "subclasses",
-          "type" : "LIST",
-          "argumentType" : "ClassDefinition"
         } ],
         "children" : [ {
           "uuid" : "ac119cc9-31e2-48b0-822c-4fb713f7cbd4",
@@ -170,12 +180,17 @@
       }, {
         "uuid" : "653bb737-c5cb-401f-939f-6359a97fd7d6",
         "name" : "PropertyDeclaration",
-        "text" : "~annotations:{it|~it~};separator=\"\\n\"~\n~if(override)~override ~endif~~if(isPrivate)~private ~elseif(isProtected)~protected ~endif~~if(isMutable)~var ~else~val ~endif~~name~~if(type)~: ~type~~endif~~if(initializer)~ = ~initializer~~endif~~if(privateSetter)~\n\tprivate set~endif~ ",
+        "text" : "~annotations:{it|~it~};separator=\"\\n\"~\n~if(isAbstract)~abstract ~endif~~if(override)~override ~endif~~if(isPrivate)~private ~elseif(isProtected)~protected ~endif~~if(isMutable)~var ~else~val ~endif~~name~~if(type)~: ~type~~endif~~if(initializer)~ = ~initializer~~endif~~if(privateSetter)~\n\tprivate set~endif~ ",
         "parameters" : [ {
           "uuid" : "b3f43ef1-8777-4ffd-add4-c645a90d671f",
           "name" : "annotations",
           "type" : "LIST",
           "argumentType" : "AnnotationDeclaration"
+        }, {
+          "uuid" : "69d53ce3-2642-460b-a6c2-cae24f94217a",
+          "name" : "isAbstract",
+          "type" : "SINGLE",
+          "argumentType" : "Boolean"
         }, {
           "uuid" : "e8d744b8-56f6-485f-a47e-32f055459eaa",
           "name" : "override",
@@ -221,7 +236,7 @@
       }, {
         "uuid" : "927474a1-3d34-4a60-83ca-5025dbd47a19",
         "name" : "FunctionDeclaration",
-        "text" : "~annotations:{it|~it~};separator=\"\\n\"~\n~if(override)~override ~endif~fun ~name~(~params:{it|~it~};separator=\", \"~)~if(returnType)~: ~returnType~~endif~~if(expressionBody)~ =\n\t~expressionBody~~else~ {\n\t~statements:{it|~it~};separator=\"\\n\"~\n}~endif~ ",
+        "text" : "~annotations:{it|~it~};separator=\"\\n\"~\n~if(override)~override ~endif~fun ~name~(~params:{it|~it~};separator=\", \"~)~if(returnType)~: ~returnType~~endif~~if(expressionBody)~ =\n\t~expressionBody~~else~~if(statements)~ {\n\t~statements:{it|~it~};separator=\"\\n\"~\n}~endif~~endif~ ",
         "parameters" : [ {
           "uuid" : "ea1bd02f-d9aa-42ae-9e90-bc6ffd622cfc",
           "name" : "annotations",
@@ -283,12 +298,17 @@
       }, {
         "uuid" : "eb96b45e-7f6c-41c9-b12d-766f2518fb70",
         "name" : "DataClassDeclaration",
-        "text" : "~annotations~~if(annotations)~\n~endif~data class ~name~(\n\t~fields:{it|~it~};separator=\",\\n\"~\n)~if(members)~ {\n\n\t~members:{it|~it~};separator=\"\\n\"~\n\n\t~subclasses:{it|~it~};separator=\"\\n\"~\n}~endif~ ",
+        "text" : "~comments~\n~annotations:{it|~it~};separator=\"\\n\"~\ndata class ~name~(\n\t~fields:{it|~it~};separator=\",\\n\"~\n)~if(members)~ {\n\n\t~members:{it|~it~};separator=\"\\n\"~\n\n\t~subclasses:{it|~it~};separator=\"\\n\"~\n}~endif~ ",
         "parameters" : [ {
-          "uuid" : "3dcf35c1-5b47-4054-9b8d-7d2e3e702e82",
-          "name" : "annotations",
+          "uuid" : "aa0a7823-3f31-4867-8553-e39f72019f82",
+          "name" : "comments",
           "type" : "SINGLE",
-          "argumentType" : "java.util.Collection<AnnotationDeclaration>"
+          "argumentType" : "Comment"
+        }, {
+          "uuid" : "1c333376-28fe-4e85-9388-f114b6aede37",
+          "name" : "annotations",
+          "type" : "LIST",
+          "argumentType" : "AnnotationDeclaration"
         }, {
           "uuid" : "999529f1-ceb3-4d59-afb9-0de88f3c2438",
           "name" : "name",
@@ -314,12 +334,12 @@
       }, {
         "uuid" : "d8f6d617-8b70-4f6a-abed-0aeb744e10b8",
         "name" : "ExtendingClass",
-        "text" : "~className~(~params:{it|~it~};separator=\", \"~) ",
+        "text" : "~name~(~params:{it|~it~};separator=\", \"~) ",
         "parameters" : [ {
-          "uuid" : "90c6b1ea-a230-406b-9d73-a8dd32352b04",
-          "name" : "className",
+          "uuid" : "83286565-6fc0-4205-b7e5-e1dffe6dd0e4",
+          "name" : "name",
           "type" : "SINGLE",
-          "argumentType" : "String"
+          "argumentType" : "TypeDeclaration"
         }, {
           "uuid" : "b14ae99c-5030-43dc-a518-ed97a3349c33",
           "name" : "params",
@@ -330,19 +350,24 @@
       }, {
         "uuid" : "6c60ab16-ddb0-4390-8a97-e25b85612d33",
         "name" : "ImplementingInterface",
-        "text" : "~interfaceName~ ",
+        "text" : "~type~ ",
         "parameters" : [ {
-          "uuid" : "1c8da886-d691-4e6a-84d2-f0aafbe57a38",
-          "name" : "interfaceName",
+          "uuid" : "67311775-f959-4f3d-a0a2-f4fed0f6061c",
+          "name" : "type",
           "type" : "SINGLE",
-          "argumentType" : "String"
+          "argumentType" : "TypeDeclaration"
         } ],
         "implements" : [ "Extending" ]
       }, {
         "uuid" : "a9848c62-2342-4de7-87ce-73c9015fc16e",
         "name" : "InterfaceDeclaration",
-        "text" : "interface ~name~~if(extends)~: ~extends:{it|~it~};separator=\", \"~~endif~ ",
+        "text" : "~comments~\ninterface ~name~~if(extends)~: ~extends:{it|~it~};separator=\", \"~~endif~~if(members)~ { ~elseif(properties)~ {~endif~\n\n\t~properties:{it|~it~};separator=\"\\n\\n\"~\n\t~members:{it|~it~};separator=\"\\n\\n\"~\n~if(members)~}~elseif(properties)~}~endif~ ",
         "parameters" : [ {
+          "uuid" : "cf1c2f14-68f8-46c1-bb6b-0d2983311faa",
+          "name" : "comments",
+          "type" : "SINGLE",
+          "argumentType" : "Comment"
+        }, {
           "uuid" : "512aea3f-51d9-45e9-8030-b0c24a66fd82",
           "name" : "name",
           "type" : "SINGLE",
@@ -352,6 +377,16 @@
           "name" : "extends",
           "type" : "LIST",
           "argumentType" : "Extending"
+        }, {
+          "uuid" : "3af5629e-80e9-4f12-950a-0995024ce7e4",
+          "name" : "members",
+          "type" : "LIST",
+          "argumentType" : "FunctionDeclaration"
+        }, {
+          "uuid" : "6aed581d-4d63-4fce-8e30-36f7f4376fe4",
+          "name" : "properties",
+          "type" : "LIST",
+          "argumentType" : "PropertyDeclaration"
         } ],
         "implements" : [ "InterfaceDefinition", "CompilationUnit" ]
       }, {
@@ -401,6 +436,48 @@
           "argumentType" : "FunctionDeclaration"
         } ],
         "implements" : [ "CompilationUnit" ]
+      }, {
+        "uuid" : "a83e8fce-95d7-42a5-b6f1-8b81f7243187",
+        "name" : "EnumClassDeclaration",
+        "text" : "~comments~\nenum class ~name~~if(params)~(~params:{it|~it~};separator=\", \"~)~endif~ {\n\t~values:{it|~it~};separator=\",\\n\"~\n} ",
+        "implements" : [ "CompilationUnit", "ClassDefinition" ],
+        "parameters" : [ {
+          "uuid" : "004c79ac-84f5-4733-8921-2fd244f70485",
+          "name" : "comments",
+          "type" : "SINGLE",
+          "argumentType" : "Comment"
+        }, {
+          "uuid" : "2286758b-1fd6-431a-8425-0579bb4a24a8",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "String"
+        }, {
+          "uuid" : "625de2ca-6960-4560-8f09-213fd2ac01cc",
+          "name" : "params",
+          "type" : "LIST",
+          "argumentType" : "PropertyDeclaration"
+        }, {
+          "uuid" : "3593a038-b75e-4a86-8573-8168e0c218ab",
+          "name" : "values",
+          "type" : "LIST",
+          "argumentType" : "EnumField"
+        } ],
+        "children" : [ {
+          "uuid" : "16e1b082-0632-44ec-92c0-1b6dce637ce5",
+          "name" : "EnumField",
+          "text" : "~name~~if(inputs)~(~inputs:{it|~it~};separator=\", \"~)~endif~ ",
+          "parameters" : [ {
+            "uuid" : "4aea8bef-6b39-4434-8d37-900875b90d98",
+            "name" : "name",
+            "type" : "SINGLE",
+            "argumentType" : "String"
+          }, {
+            "uuid" : "52507b54-2cea-4353-abc3-be28a09eed95",
+            "name" : "inputs",
+            "type" : "LIST",
+            "argumentType" : "Expression"
+          } ]
+        } ]
       } ]
     }, {
       "uuid" : "6ba51d6b-19b3-48f8-8fa1-c51fe4874579",
@@ -485,6 +562,28 @@
           "name" : "statements",
           "type" : "LIST",
           "argumentType" : "Statement"
+        } ]
+      }, {
+        "uuid" : "fb87c3f7-95af-43f0-8dfc-652f52467577",
+        "name" : "CommentBlock",
+        "text" : "/*\n~comment~\n*/ ",
+        "implements" : [ "Statement", "Comment" ],
+        "parameters" : [ {
+          "uuid" : "5c9474a5-307c-4cb5-aecd-0131aef2d7dd",
+          "name" : "comment",
+          "type" : "SINGLE",
+          "argumentType" : "String"
+        } ]
+      }, {
+        "uuid" : "1a37294c-4755-42df-989d-fab2f247ad2e",
+        "name" : "SingleLineComment",
+        "text" : "//~comment~ ",
+        "implements" : [ "Statement", "Comment" ],
+        "parameters" : [ {
+          "uuid" : "9f72b7a6-091c-4a9b-acb4-d319df85a935",
+          "name" : "comment",
+          "type" : "SINGLE",
+          "argumentType" : "String"
         } ]
       } ]
     }, {
@@ -690,6 +789,28 @@
       "uuid" : "d4a0349b-4579-4434-b93d-63410e444468",
       "name" : "AnyType",
       "text" : "Any ",
+      "implements" : [ "TypeDeclaration" ],
+      "parameters" : [ ]
+    }, {
+      "uuid" : "9e058594-4cbe-4e0f-8d19-69e793edbcfd",
+      "name" : "TemplateType",
+      "text" : "~name~<~templates:{it|~it~};separator=\", \"~> ",
+      "parameters" : [ {
+        "uuid" : "9c567f42-2c21-4f68-8d46-c5989f206332",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "95d59eca-a063-4876-abab-7bbc7e6e170a",
+        "name" : "templates",
+        "type" : "LIST",
+        "argumentType" : "TypeDeclaration"
+      } ],
+      "implements" : [ "TypeDeclaration" ]
+    }, {
+      "uuid" : "10dca01e-06e0-4f3e-8eda-0e767a627f3e",
+      "name" : "StarType",
+      "text" : "* ",
       "implements" : [ "TypeDeclaration" ],
       "parameters" : [ ]
     } ]
@@ -1176,6 +1297,9 @@
   }, {
     "uuid" : "572adfcc-0062-4005-8ce0-123bba76d679",
     "name" : "KotlinStringTemplate"
+  }, {
+    "uuid" : "f1e8200d-7b17-432d-8f2a-e928acd964b9",
+    "name" : "Comment"
   } ],
   "icon" : "language-kotlin",
   "enums" : [ {

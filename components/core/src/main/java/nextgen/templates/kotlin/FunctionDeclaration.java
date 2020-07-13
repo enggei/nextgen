@@ -225,7 +225,7 @@ public class FunctionDeclaration implements CompilationUnit {
 
 	static final String st = "FunctionDeclaration(annotations,override,name,params,returnType,expressionBody,statements) ::= <<~annotations:{it|~it~};separator=\"\\n\"~\n" + 
 				"~if(override)~override ~endif~fun ~name~(~params:{it|~it~};separator=\", \"~)~if(returnType)~: ~returnType~~endif~~if(expressionBody)~ =\n" + 
-				"	~expressionBody~~else~ {\n" + 
+				"	~expressionBody~~else~~if(statements)~ {\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
-				"}~endif~ >>";
+				"}~endif~~endif~ >>";
 }  

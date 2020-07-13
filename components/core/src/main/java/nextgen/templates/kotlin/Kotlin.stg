@@ -50,17 +50,20 @@ Grammar() ::= << >>
 
 Declarations() ::= << >>
 
-AnnotationDeclaration(name,params) ::= <<@~name~~if(params)~(~params:{it|~it~};separator=", "~)~endif~  >>
+AnnotationDeclaration(scope,name,params) ::= <<@~if(scope)~~scope~.~endif~~name~~if(params)~(~params:{it|~it~};separator=", "~)~endif~  >>
 
 PackageDeclaration(name) ::= <<package ~name~ >>
 
-ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,properties,companionObject,overrideEquals,overrideHashCode,overrideToString,members,subclasses) ::= <<~annotations:{it|~it~};separator="\n"~
-~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(
+ClassDeclaration(comments,annotations,isOpen,isAbstract,name,fields,extends,properties,companionObject,subclasses,overrideEquals,overrideHashCode,overrideToString,members) ::= <<~comments~
+~annotations:{it|~it~};separator="\n"~
+~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~~if(fields)~(
 	~fields:{it|~it~};separator=",\n"~
-)~if(extends)~: ~extends:{it|~it~};separator=", "~~endif~ {
+)~endif~~if(extends)~ : ~extends:{it|~it~};separator=", "~~endif~ {
 
 	~properties:{it|~it~};separator="\n\n"~
 	~companionObject~
+
+	~subclasses:{it|~it~};separator="\n\n"~
 
 	~overrideEquals~
 
@@ -69,7 +72,6 @@ ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,properties,co
 	~overrideToString~
 
 	~members:{it|~it~};separator="\n\n"~
-	~subclasses:{it|~it~};separator="\n\n"~
 }  >>
 
 OverrideEquals(className,fields) ::= <<override fun equals(other: Any?): Boolean {
@@ -89,20 +91,21 @@ OverrideToString(className,fields) ::= <<override fun toString(): String {
 
 CompanionObject(objectDeclaration) ::= <<companion ~objectDeclaration~  >>
 
-PropertyDeclaration(annotations,override,isPrivate,isProtected,isMutable,name,type,initializer,privateSetter) ::= <<~annotations:{it|~it~};separator="\n"~
-~if(override)~override ~endif~~if(isPrivate)~private ~elseif(isProtected)~protected ~endif~~if(isMutable)~var ~else~val ~endif~~name~~if(type)~: ~type~~endif~~if(initializer)~ = ~initializer~~endif~~if(privateSetter)~
+PropertyDeclaration(annotations,isAbstract,override,isPrivate,isProtected,isMutable,name,type,initializer,privateSetter) ::= <<~annotations:{it|~it~};separator="\n"~
+~if(isAbstract)~abstract ~endif~~if(override)~override ~endif~~if(isPrivate)~private ~elseif(isProtected)~protected ~endif~~if(isMutable)~var ~else~val ~endif~~name~~if(type)~: ~type~~endif~~if(initializer)~ = ~initializer~~endif~~if(privateSetter)~
 	private set~endif~  >>
 
 FunctionDeclaration(annotations,override,name,params,returnType,expressionBody,statements) ::= <<~annotations:{it|~it~};separator="\n"~
 ~if(override)~override ~endif~fun ~name~(~params:{it|~it~};separator=", "~)~if(returnType)~: ~returnType~~endif~~if(expressionBody)~ =
-	~expressionBody~~else~ {
+	~expressionBody~~else~~if(statements)~ {
 	~statements:{it|~it~};separator="\n"~
-}~endif~  >>
+}~endif~~endif~  >>
 
 FunctionParam(name,typeDeclaration,defaultValue) ::= <<~name~: ~typeDeclaration~~if(defaultValue)~ = ~defaultValue~~endif~  >>
 
-DataClassDeclaration(annotations,name,fields,members,subclasses) ::= <<~annotations~~if(annotations)~
-~endif~data class ~name~(
+DataClassDeclaration(comments,annotations,name,fields,members,subclasses) ::= <<~comments~
+~annotations:{it|~it~};separator="\n"~
+data class ~name~(
 	~fields:{it|~it~};separator=",\n"~
 )~if(members)~ {
 
@@ -111,11 +114,16 @@ DataClassDeclaration(annotations,name,fields,members,subclasses) ::= <<~annotati
 	~subclasses:{it|~it~};separator="\n"~
 }~endif~  >>
 
-ExtendingClass(className,params) ::= <<~className~(~params:{it|~it~};separator=", "~)  >>
+ExtendingClass(name,params) ::= <<~name~(~params:{it|~it~};separator=", "~)  >>
 
-ImplementingInterface(interfaceName) ::= <<~interfaceName~  >>
+ImplementingInterface(type) ::= <<~type~  >>
 
-InterfaceDeclaration(name,extends) ::= <<interface ~name~~if(extends)~: ~extends:{it|~it~};separator=", "~~endif~  >>
+InterfaceDeclaration(comments,name,extends,members,properties) ::= <<~comments~
+interface ~name~~if(extends)~: ~extends:{it|~it~};separator=", "~~endif~~if(members)~ { ~elseif(properties)~ {~endif~
+
+	~properties:{it|~it~};separator="\n\n"~
+	~members:{it|~it~};separator="\n\n"~
+~if(members)~}~elseif(properties)~}~endif~  >>
 
 ParameterDeclaration(name,type,initializer) ::= <<~name~~if(type)~: ~type~~endif~~if(initializer)~ = ~initializer~~endif~  >>
 
@@ -124,6 +132,13 @@ ObjectDeclaration(name,extends,fields,members) ::= <<object~if(name)~ ~name~~end
 
 	~members:{it|~it~};separator="\n"~
 }  >>
+
+EnumClassDeclaration(comments,name,params,values) ::= <<~comments~
+enum class ~name~~if(params)~(~params:{it|~it~};separator=", "~)~endif~ {
+	~values:{it|~it~};separator=",\n"~
+}  >>
+
+EnumField(name,inputs) ::= <<~name~~if(inputs)~(~inputs:{it|~it~};separator=", "~)~endif~  >>
 
 Statements() ::= << >>
 
@@ -138,6 +153,12 @@ VarDeclarationStatement(isMutable,name,type,initializer) ::= <<~if(isMutable)~va
 IfStatement(logicalExpression,statements) ::= <<if(~logicalExpression~) {
 	~statements:{it|~it~};separator="\n"~
 }  >>
+
+CommentBlock(comment) ::= <</*
+~comment~
+*/  >>
+
+SingleLineComment(comment) ::= <<//~comment~  >>
 
 KotlinStringTemplates() ::= << >>
 
@@ -208,6 +229,10 @@ SetType(type) ::= <<Set<~type~>  >>
 MutableSetType(type) ::= <<MutableSet<~type~>  >>
 
 AnyType() ::= <<Any  >>
+
+TemplateType(name,templates) ::= <<~name~<~templates:{it|~it~};separator=", "~>  >>
+
+StarType() ::= <<*  >>
 
 eom() ::= "}"
 

@@ -5,6 +5,7 @@ public class AnnotationDeclaration {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private String _scope;
 	private String _name;
 	private java.util.List<Expression> _params = new java.util.ArrayList<>();
 
@@ -19,10 +20,33 @@ public class AnnotationDeclaration {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("AnnotationDeclaration");
+		st.add("scope", _scope);
 		st.add("name", _name);
 		for (Object o : _params) st.add("params", o);
 		return st.render().trim();
 	}
+
+	public AnnotationDeclaration setScope(String value) {
+		this._scope = value;
+		return this;
+	}
+
+	public String getScope() {
+		return this._scope;
+	}
+
+	public String getScope(String defaultValue) {
+		return this._scope == null ? defaultValue : this._scope;
+	}
+
+	public boolean hasScope() {
+		return this._scope != null;
+	}
+
+	public AnnotationDeclaration removeScope() {
+		this._scope = null;
+		return this;
+	} 
 
 	public AnnotationDeclaration setName(String value) {
 		this._name = value;
@@ -89,5 +113,5 @@ public class AnnotationDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AnnotationDeclaration(name,params) ::= <<@~name~~if(params)~(~params:{it|~it~};separator=\", \"~)~endif~ >>";
+	static final String st = "AnnotationDeclaration(scope,name,params) ::= <<@~if(scope)~~scope~.~endif~~name~~if(params)~(~params:{it|~it~};separator=\", \"~)~endif~ >>";
 }  
