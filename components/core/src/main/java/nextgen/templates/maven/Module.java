@@ -13,6 +13,10 @@ public class Module {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Module");
@@ -114,4 +118,4 @@ public class Module {
 				"\n" + 
 				"Modules:\n" + 
 				"~modules:{it|~it~};separator=\"\\n\"~ >>";
-} 
+}  

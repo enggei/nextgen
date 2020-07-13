@@ -16,6 +16,7 @@ public class MavenSTTests {
 		testModule();
 		testProject();
 		testExecution();
+		testMavenProject();
 		testParent();
 		testAntlr4();
 		testCopyPlugin();
@@ -23,6 +24,11 @@ public class MavenSTTests {
 		testPlugin();
 		testShadePlugin();
 		testPom();
+		testProperties();
+		testMavenCompilerSource();
+		testMavenCompilerTarget();
+		testProjectBuildSourceEncoding();
+		testProjectReportingOutputEncoding();
 		testPropertyReference();
 		testRepository();
 	}
@@ -63,6 +69,11 @@ public class MavenSTTests {
 	} 
 
 	@org.junit.Test
+	public void testMavenProject() {
+		System.out.println("\n--- TEST MavenProject:\n" + newMavenProject());
+	} 
+
+	@org.junit.Test
 	public void testParent() {
 		System.out.println("\n--- TEST Parent:\n" + newParent());
 	} 
@@ -95,6 +106,31 @@ public class MavenSTTests {
 	@org.junit.Test
 	public void testPom() {
 		System.out.println("\n--- TEST Pom:\n" + newPom());
+	} 
+
+	@org.junit.Test
+	public void testProperties() {
+		System.out.println("\n--- TEST Properties:\n" + newProperties());
+	} 
+
+	@org.junit.Test
+	public void testMavenCompilerSource() {
+		System.out.println("\n--- TEST MavenCompilerSource:\n" + newMavenCompilerSource());
+	} 
+
+	@org.junit.Test
+	public void testMavenCompilerTarget() {
+		System.out.println("\n--- TEST MavenCompilerTarget:\n" + newMavenCompilerTarget());
+	} 
+
+	@org.junit.Test
+	public void testProjectBuildSourceEncoding() {
+		System.out.println("\n--- TEST ProjectBuildSourceEncoding:\n" + newProjectBuildSourceEncoding());
+	} 
+
+	@org.junit.Test
+	public void testProjectReportingOutputEncoding() {
+		System.out.println("\n--- TEST ProjectReportingOutputEncoding:\n" + newProjectReportingOutputEncoding());
 	} 
 
 	@org.junit.Test

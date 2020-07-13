@@ -14,13 +14,17 @@ public class Pom {
 	private Object _build;
 	private DependencyManagement _dependencyManagement;
 	private java.util.List<Object> _modules = new java.util.ArrayList<>();
+	private java.util.List<Properties> _properties = new java.util.ArrayList<>();
 	private java.util.List<Object> _dependencies = new java.util.ArrayList<>();
 	private java.util.List<Object> _distributionManagement = new java.util.ArrayList<>();
 	private java.util.List<Object> _repositories = new java.util.ArrayList<>();
-	private java.util.List<java.util.Map<String, Object>> _properties = new java.util.ArrayList<>();
 
 	Pom(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
+	}
+
+	public java.util.UUID uuid() {
+		return uuid;
 	}
 
 	@Override
@@ -35,10 +39,10 @@ public class Pom {
 		st.add("build", _build);
 		st.add("dependencyManagement", _dependencyManagement);
 		for (Object o : _modules) st.add("modules", o);
+		for (Object o : _properties) st.add("properties", o);
 		for (Object o : _dependencies) st.add("dependencies", o);
 		for (Object o : _distributionManagement) st.add("distributionManagement", o);
 		for (Object o : _repositories) st.add("repositories", o);
-		for (java.util.Map<String, Object> map : _properties) st.addAggr("properties.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -247,6 +251,35 @@ public class Pom {
 		return this._modules;
 	} 
 
+	public Pom addProperties(Properties value) {
+		this._properties.add(value);
+		return this;
+	}
+
+	public Pom setProperties(Properties[] value) {
+		this._properties.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Pom setProperties(java.util.Collection<Properties> values) {
+		this._properties.addAll(values);
+		return this;
+	}
+
+	public Pom removeProperties(Properties value) {
+		this._properties.remove(value);
+		return this;
+	}
+
+	public Pom removeProperties(int index) {
+		this._properties.remove(index);
+		return this;
+	}
+
+	public java.util.List<Properties> getProperties() {
+		return this._properties;
+	} 
+
 	public Pom addDependencies(Object value) {
 		this._dependencies.add(value);
 		return this;
@@ -334,50 +367,6 @@ public class Pom {
 		return this._repositories;
 	} 
 
-	public Pom addProperties(Object _name, Object _value) {
-		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("name", _name);
-		map.put("value", _value);
-		this._properties.add(map);
-		return this;
-	}
-
-	public java.util.List<java.util.Map<String, Object>> getProperties() {
-		return this._properties;
-	}
-
-	public Pom addProperties(Pom_Properties value) {
-		return addProperties(value._name, value._value);
-	}
-
-	public java.util.stream.Stream<Pom_Properties> streamProperties() {
-		return this._properties.stream().map(Pom_Properties::new);
-	}
-
-	public static final class Pom_Properties {
-
-		Object _name;
-		Object _value;
-
-		public Pom_Properties(Object _name, Object _value) {
-			this._name = _name;
-			this._value = _value;
-		}
-
-		private Pom_Properties(java.util.Map<String, Object> map) {
-			this._name = (Object) map.get("name");
-			this._value = (Object) map.get("value");
-		}
-
-		public Object getName() {
-			return this._name;
-		}
-
-		public Object getValue() {
-			return this._value;
-		}
-
-	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -414,7 +403,7 @@ public class Pom {
 				"~endif~\n" + 
 				"~if(properties)~\n" + 
 				"	<properties>\n" + 
-				"		~properties:{it|<~it.name~>~it.value~</~it.name~>};separator=\"\\n\"~		\n" + 
+				"		~properties:{it|~it~};separator=\"\\n\"~		\n" + 
 				"	</properties>\n" + 
 				"~endif~\n" + 
 				"~if(build)~\n" + 
@@ -445,4 +434,4 @@ public class Pom {
 				"	</repositories>\n" + 
 				"~endif~\n" + 
 				"</project> >>";
-} 
+}  

@@ -94,7 +94,7 @@
   }, {
     "uuid" : "7a760f05-7071-4259-a27b-8abfbf1d6ce1",
     "name" : "pom",
-    "text" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n~if(parent)~\n\n\t~parent~\n~endif~\t \n\t<modelVersion>4.0.0</modelVersion>\n\n\t<name>~name~</name>\n\n\t~if(groupId)~<groupId>~groupId~</groupId>~endif~\n\t~if(artifactId)~<artifactId>~artifactId~</artifactId>~endif~\n\t~if(version)~<version>~version~</version>~endif~\n\t~if(packaging)~<packaging>~packaging~</packaging>~endif~\n\n~if(modules)~\n\t<modules>\n\t\t~modules:{it|<module>~it~</module>};separator=\"\\n\"~\n\t</modules>\n~endif~\n~if(properties)~\n\t<properties>\n\t\t~properties:{it|<~it.name~>~it.value~</~it.name~>};separator=\"\\n\"~\t\t\n\t</properties>\n~endif~\n~if(build)~\n\n\t~build~\n\n~endif~\n~if(dependencyManagement)~\n\t~dependencyManagement~\n~endif~\n~if(dependencies)~\n\n\t<dependencies>\n\t\t~dependencies:{it|~it~};separator=\"\\n\"~  \n\t</dependencies>\n\n~endif~\n~if(distributionManagement)~\n\n\t<distributionManagement>\n\t\t~distributionManagement:{it|~it~};separator=\"\\n\"~\n\t</distributionManagement>\n~endif~\n~if(repositories)~\n\n\t<repositories>\n\t\t~repositories:{it|~it~};separator=\"\\n\"~\n\t</repositories>\n~endif~\n</project> ",
+    "text" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n~if(parent)~\n\n\t~parent~\n~endif~\t \n\t<modelVersion>4.0.0</modelVersion>\n\n\t<name>~name~</name>\n\n\t~if(groupId)~<groupId>~groupId~</groupId>~endif~\n\t~if(artifactId)~<artifactId>~artifactId~</artifactId>~endif~\n\t~if(version)~<version>~version~</version>~endif~\n\t~if(packaging)~<packaging>~packaging~</packaging>~endif~\n\n~if(modules)~\n\t<modules>\n\t\t~modules:{it|<module>~it~</module>};separator=\"\\n\"~\n\t</modules>\n~endif~\n~if(properties)~\n\t<properties>\n\t\t~properties:{it|~it~};separator=\"\\n\"~\t\t\n\t</properties>\n~endif~\n~if(build)~\n\n\t~build~\n\n~endif~\n~if(dependencyManagement)~\n\t~dependencyManagement~\n~endif~\n~if(dependencies)~\n\n\t<dependencies>\n\t\t~dependencies:{it|~it~};separator=\"\\n\"~  \n\t</dependencies>\n\n~endif~\n~if(distributionManagement)~\n\n\t<distributionManagement>\n\t\t~distributionManagement:{it|~it~};separator=\"\\n\"~\n\t</distributionManagement>\n~endif~\n~if(repositories)~\n\n\t<repositories>\n\t\t~repositories:{it|~it~};separator=\"\\n\"~\n\t</repositories>\n~endif~\n</project> ",
     "parameters" : [ {
       "uuid" : "667f4d62-fd57-4121-babf-dd556e2cefec",
       "name" : "parent",
@@ -131,19 +131,10 @@
       "type" : "LIST",
       "argumentType" : "Object"
     }, {
-      "uuid" : "b8cb8f7c-6c59-44e8-a123-ce3ad696ddf0",
+      "uuid" : "e7297218-ca74-46ee-a776-74966876d3a7",
       "name" : "properties",
-      "type" : "KVLIST",
-      "argumentType" : "Object",
-      "keys" : [ {
-        "uuid" : "b11ad048-c214-4b70-89c3-8b5df571383f",
-        "name" : "name",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "4ade3152-88d9-49c6-834b-c6e9db8abb42",
-        "name" : "value",
-        "argumentType" : "Object"
-      } ]
+      "type" : "LIST",
+      "argumentType" : "Properties"
     }, {
       "uuid" : "e078cac5-a180-419b-b251-01ebd13a75cd",
       "name" : "build",
@@ -440,6 +431,62 @@
     }, {
       "uuid" : "f4aeceda-f358-41dd-837a-f2eacc9c1721",
       "name" : "testJava",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "7992114b-2959-4fbb-83f2-2d671c7b2ff0",
+    "name" : "Properties",
+    "text" : "<~name~>~value~</~name~> ",
+    "children" : [ {
+      "uuid" : "6afe1a71-6639-4971-8dbf-4f321b782f60",
+      "name" : "MavenCompilerSource",
+      "text" : "<maven.compiler.source>~value~</maven.compiler.source> ",
+      "parameters" : [ {
+        "uuid" : "cd7bf539-b764-4287-a213-4244d970f404",
+        "name" : "value",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "226b5a3d-3e90-4834-a344-04e63eb1ea35",
+      "name" : "ProjectBuildSourceEncoding",
+      "text" : "<project.build.sourceEncoding>~if(value)~~value~~else~UTF-8~endif~</project.build.sourceEncoding> ",
+      "parameters" : [ {
+        "uuid" : "81a52670-9594-4a93-9c26-ea139a44cda6",
+        "name" : "value",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "2cb6b09a-970e-4fe4-96ea-fa23e54d530b",
+      "name" : "MavenCompilerTarget",
+      "text" : "<maven.compiler.target>~value~</maven.compiler.target> ",
+      "parameters" : [ {
+        "uuid" : "b73f061e-526a-400e-8257-5598c097af2d",
+        "name" : "value",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "76543202-5f65-4838-a6dc-b129fc99bf0a",
+      "name" : "ProjectReportingOutputEncoding",
+      "text" : "<project.reporting.outputEncoding>~if(value)~~value~~else~UTF-8~endif~</project.reporting.outputEncoding> ",
+      "parameters" : [ {
+        "uuid" : "4b1b9250-3875-4262-9951-585e284d198a",
+        "name" : "value",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    } ],
+    "parameters" : [ {
+      "uuid" : "dc55c8cf-140b-46df-8cef-2cce64c532d6",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "a940c04c-d25d-4817-bad6-676f68cfee76",
+      "name" : "value",
       "type" : "SINGLE",
       "argumentType" : "Object"
     } ]

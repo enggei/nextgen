@@ -13,6 +13,10 @@ public class CopyPlugin {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("copyPlugin");
@@ -134,4 +138,4 @@ public class CopyPlugin {
 				"		</execution>\n" + 
 				"	</executions>\n" + 
 				"</plugin> >>";
-} 
+}  

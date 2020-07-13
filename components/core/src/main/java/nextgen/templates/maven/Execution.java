@@ -10,6 +10,10 @@ public class Execution {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("execution");
@@ -38,4 +42,4 @@ public class Execution {
 				"        <goal>shade</goal>\n" + 
 				"    </goals>\n" + 
 				"</execution> >>";
-} 
+}  

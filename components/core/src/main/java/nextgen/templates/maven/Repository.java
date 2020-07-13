@@ -13,6 +13,10 @@ public class Repository {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("repository");
@@ -108,4 +112,4 @@ public class Repository {
 				"	<name>~name~</name>\n" + 
 				"	<url>~url~</url>\n" + 
 				"</repository> >>";
-} 
+}  

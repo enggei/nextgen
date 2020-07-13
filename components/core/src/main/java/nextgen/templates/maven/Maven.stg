@@ -59,6 +59,12 @@ execution() ::= <<<execution>
     </goals>
 </execution>  >>
 
+MavenProject(projectName,root,mainJava,testJava) ::= <<~projectName~
+
+root : ~root~
+mainJava : ~mainJava~
+testJava : ~testJava~  >>
+
 parent(artifactId,groupId,version) ::= <<<parent>
 	<artifactId>~artifactId~</artifactId>
 	<groupId>~groupId~</groupId>
@@ -225,7 +231,7 @@ pom(parent,name,groupId,artifactId,version,packaging,modules,properties,build,de
 ~endif~
 ~if(properties)~
 	<properties>
-		~properties:{it|<~it.name~>~it.value~</~it.name~>};separator="\n"~		
+		~properties:{it|~it~};separator="\n"~		
 	</properties>
 ~endif~
 ~if(build)~
@@ -256,6 +262,16 @@ pom(parent,name,groupId,artifactId,version,packaging,modules,properties,build,de
 	</repositories>
 ~endif~
 </project>  >>
+
+Properties(name,value) ::= <<<~name~>~value~</~name~>  >>
+
+MavenCompilerSource(value) ::= <<<maven.compiler.source>~value~</maven.compiler.source>  >>
+
+ProjectBuildSourceEncoding(value) ::= <<<project.build.sourceEncoding>~if(value)~~value~~else~UTF-8~endif~</project.build.sourceEncoding>  >>
+
+MavenCompilerTarget(value) ::= <<<maven.compiler.target>~value~</maven.compiler.target>  >>
+
+ProjectReportingOutputEncoding(value) ::= <<<project.reporting.outputEncoding>~if(value)~~value~~else~UTF-8~endif~</project.reporting.outputEncoding>  >>
 
 propertyReference(name) ::= <<${~name~} >>
 

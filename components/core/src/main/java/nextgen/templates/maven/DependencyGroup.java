@@ -14,6 +14,10 @@ public class DependencyGroup {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("DependencyGroup");
@@ -138,4 +142,4 @@ public class DependencyGroup {
 				"Version ~version~\n" + 
 				"\n" + 
 				"~artifacts:{it|~it~};separator=\"\\n\"~ >>";
-} 
+}  

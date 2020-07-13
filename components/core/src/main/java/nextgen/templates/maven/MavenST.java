@@ -12,6 +12,7 @@ public class MavenST {
 	Module.st + "\n" + 
 	Project.st + "\n" + 
 	Execution.st + "\n" + 
+	MavenProject.st + "\n" + 
 	Parent.st + "\n" + 
 	Antlr4.st + "\n" + 
 	CopyPlugin.st + "\n" + 
@@ -19,6 +20,11 @@ public class MavenST {
 	Plugin.st + "\n" + 
 	ShadePlugin.st + "\n" + 
 	Pom.st + "\n" + 
+	Properties.st + "\n" + 
+	MavenCompilerSource.st + "\n" + 
+	MavenCompilerTarget.st + "\n" + 
+	ProjectBuildSourceEncoding.st + "\n" + 
+	ProjectReportingOutputEncoding.st + "\n" + 
 	PropertyReference.st + "\n" + 
 	Repository.st + "\n" ;
 
@@ -84,6 +90,10 @@ public class MavenST {
 		return new Execution(stGroup);
 	} 
 
+	public static MavenProject newMavenProject() {
+		return new MavenProject(stGroup);
+	} 
+
 	public static Parent newParent() {
 		return new Parent(stGroup);
 	} 
@@ -110,6 +120,26 @@ public class MavenST {
 
 	public static Pom newPom() {
 		return new Pom(stGroup);
+	} 
+
+	public static Properties newProperties() {
+		return new Properties(stGroup);
+	} 
+
+	public static MavenCompilerSource newMavenCompilerSource() {
+		return new MavenCompilerSource(stGroup);
+	} 
+
+	public static MavenCompilerTarget newMavenCompilerTarget() {
+		return new MavenCompilerTarget(stGroup);
+	} 
+
+	public static ProjectBuildSourceEncoding newProjectBuildSourceEncoding() {
+		return new ProjectBuildSourceEncoding(stGroup);
+	} 
+
+	public static ProjectReportingOutputEncoding newProjectReportingOutputEncoding() {
+		return new ProjectReportingOutputEncoding(stGroup);
 	} 
 
 	public static PropertyReference newPropertyReference() {

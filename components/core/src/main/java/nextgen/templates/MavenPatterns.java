@@ -2,6 +2,7 @@ package nextgen.templates;
 
 import com.generator.util.FileUtil;
 import nextgen.templates.maven.*;
+import nextgen.templates.maven.Properties;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,24 +54,24 @@ public class MavenPatterns extends MavenST {
         FileUtil.write(pom, new File(dir.toString(), "pom.xml"));
     }
 
-    public static Pom.Pom_Properties setMavenCompilerSource(String version) {
+    public static Properties setMavenCompilerSource(String version) {
         return newPomProperties("maven.compiler.source", version);
     }
 
-    public static Pom.Pom_Properties setMavenCompilerTarget(String version) {
+    public static Properties setMavenCompilerTarget(String version) {
         return newPomProperties("maven.compiler.target", version);
     }
 
-    public static Pom.Pom_Properties setProjectBuildSourceEncoding(String encoding) {
+    public static Properties setProjectBuildSourceEncoding(String encoding) {
         return newPomProperties("project.build.sourceEncoding", encoding);
     }
 
-    public static Pom.Pom_Properties setProjectReportingOutputEncoding(String encoding) {
+    public static Properties setProjectReportingOutputEncoding(String encoding) {
         return newPomProperties("project.reporting.outputEncoding", encoding);
     }
 
-    public static Pom.Pom_Properties newPomProperties(Object name, Object value) {
-        return new Pom.Pom_Properties(name, value);
+    public static Properties newPomProperties(Object name, Object value) {
+        return newProperties().setName(name).setValue(value);
     }
 
     public static PropertyReference newPropertyReference(String name) {
@@ -145,7 +146,7 @@ public class MavenPatterns extends MavenST {
 
     public static void addDependencyGroup(Pom pom, DependencyGroup dependencyGroup) {
         final String groupPropertyName = dependencyGroup.getName() + ".version";
-        if (pom.streamProperties().anyMatch(pom_Properties -> pom_Properties.getName().equals(groupPropertyName)))
+        if (pom.getProperties().stream().anyMatch(pom_Properties -> pom_Properties.getName().equals(groupPropertyName)))
             return;
         pom.addProperties(newPomProperties(groupPropertyName, dependencyGroup.getVersion()));
         dependencyGroup.getArtifacts().forEach(artifact -> pom.addDependencies(newDependency(dependencyGroup.getGroupId(), artifact, newPropertyReference(groupPropertyName))));

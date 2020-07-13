@@ -14,6 +14,10 @@ public class Project {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Project");
@@ -140,4 +144,4 @@ public class Project {
 				"\n" + 
 				"Modules :\n" + 
 				"~modules:{it|~it~};separator=\"\\n\"~ >>";
-} 
+}  
