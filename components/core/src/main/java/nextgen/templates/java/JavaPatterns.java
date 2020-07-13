@@ -51,52 +51,52 @@ public class JavaPatterns {
 				"\n" + 
 				"	public static MethodDeclaration newPublicMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
 				"		return newMethodDeclaration(name, blockStmt)\n" + 
-				"				.addModifiers(\"public\");\n" + 
+				"				.addModifiers(Modifiers.PUBLIC);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public static MethodDeclaration newPublicStaticMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
 				"		return newPublicMethodDeclaration(name, blockStmt)\n" + 
-				"				.addModifiers(\"static\");\n" + 
+				"				.addModifiers(Modifiers.STATIC);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public static MethodDeclaration newPublicStaticFinalMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
 				"		return newPublicStaticMethodDeclaration(name, blockStmt)\n" + 
-				"				.addModifiers(\"final\");\n" + 
+				"				.addModifiers(Modifiers.FINAL);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public static MethodDeclaration newPublicFinalMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
 				"		return newPublicMethodDeclaration(name, blockStmt)\n" + 
-				"				.addModifiers(\"final\");\n" + 
+				"				.addModifiers(Modifiers.FINAL);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public static MethodDeclaration newProtectedMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
 				"		return newMethodDeclaration(name, blockStmt)\n" + 
-				"				.addModifiers(\"protected\");\n" + 
+				"				.addModifiers(Modifiers.PROTECTED);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public static MethodDeclaration newProtectedStaticMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
 				"		return newProtectedMethodDeclaration(name, blockStmt)\n" + 
-				"				.addModifiers(\"static\");\n" + 
+				"				.addModifiers(Modifiers.STATIC);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public static MethodDeclaration newPrivateMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
 				"		return newMethodDeclaration(name, blockStmt)\n" + 
-				"				.addModifiers(\"private\");\n" + 
+				"				.addModifiers(Modifiers.PRIVATE);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public static MethodDeclaration newPrivateStaticMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
 				"		return newPrivateMethodDeclaration(name, blockStmt)\n" + 
-				"				.addModifiers(\"static\");\n" + 
+				"				.addModifiers(Modifiers.STATIC);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public static MethodDeclaration newStaticMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
 				"		return newMethodDeclaration(name, blockStmt)\n" + 
-				"				.addModifiers(\"static\");\n" + 
+				"				.addModifiers(Modifiers.STATIC);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public static MethodDeclaration newStaticFinalMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
 				"		return newStaticMethodDeclaration(name, blockStmt)\n" + 
-				"				.addModifiers(\"final\");\n" + 
+				"				.addModifiers(Modifiers.FINAL);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public static MethodDeclaration newMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
@@ -114,37 +114,37 @@ public class JavaPatterns {
 				"\n" + 
 				"	public static FieldDeclaration newPrivateFieldDeclaration(VariableDeclaration variableDeclaration) {\n" + 
 				"		return newFieldDeclaration(variableDeclaration)\n" + 
-				"				.addModifiers(\"private\");\n" + 
+				"				.addModifiers(Modifiers.PRIVATE);\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	public static FieldDeclaration newProtectedFieldDeclaration(VariableDeclaration variableDeclaration) {\n" + 
 				"		return newFieldDeclaration(variableDeclaration)\n" + 
-				"				.addModifiers(\"protected\");\n" + 
+				"				.addModifiers(Modifiers.PROTECTED);\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	public static FieldDeclaration newPublicFieldDeclaration(VariableDeclaration variableDeclaration) {\n" + 
 				"		return newFieldDeclaration(variableDeclaration)\n" + 
-				"				.addModifiers(\"public\");\n" + 
+				"				.addModifiers(Modifiers.PUBLIC);\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	public static FieldDeclaration newFinalFieldDeclaration(VariableDeclaration variableDeclaration) {\n" + 
 				"		return newFieldDeclaration(variableDeclaration)\n" + 
-				"				.addModifiers(\"final\");\n" + 
+				"				.addModifiers(Modifiers.FINAL);\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	public static FieldDeclaration newPrivateFinalFieldDeclaration(VariableDeclaration variableDeclaration) {\n" + 
 				"		return newPrivateFieldDeclaration(variableDeclaration)\n" + 
-				"				.addModifiers(\"final\");\n" + 
+				"				.addModifiers(Modifiers.FINAL);\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	public static FieldDeclaration newProtectedFinalFieldDeclaration(VariableDeclaration variableDeclaration) {\n" + 
 				"		return newProtectedFieldDeclaration(variableDeclaration)\n" + 
-				"				.addModifiers(\"final\");\n" + 
+				"				.addModifiers(Modifiers.FINAL);\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	public static FieldDeclaration newPublicFinalFieldDeclaration(VariableDeclaration variableDeclaration) {\n" + 
 				"		return newPublicFieldDeclaration(variableDeclaration)\n" + 
-				"				.addModifiers(\"final\");\n" + 
+				"				.addModifiers(Modifiers.FINAL);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public static FieldDeclaration newFieldDeclaration(VariableDeclaration variableDeclaration) {\n" + 
@@ -205,7 +205,7 @@ public class JavaPatterns {
 				"\n" + 
 				"	public static VariableDeclarationExpression newFinalVariableDeclarationExpression(VariableDeclaration variableDeclaration) {\n" + 
 				"		return newVariableDeclarationExpression()\n" + 
-				"				.addModifiers(\"final\")\n" + 
+				"				.addModifiers(Modifiers.FINAL)\n" + 
 				"				.addVariables(variableDeclaration);\n" + 
 				"	}\n" + 
 				"\n" + 
@@ -301,7 +301,7 @@ public class JavaPatterns {
 				"				.setTypeArguments(typeArguments);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	ObjectCreationExpression newObjectCreationExpression(Object... arguments) {\n" + 
+				"	ObjectCreationExpression asObjectCreationExpression(Object... arguments) {\n" + 
 				"		return newObjectCreationExpression(asClassOrInterfaceType())\n" + 
 				"				.setArguments(arguments);\n" + 
 				"	}\n" + 

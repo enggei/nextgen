@@ -23,7 +23,6 @@ public class JavaSTTests {
 		testPrimitiveAccessors();
 		testReferenceAccessors();
 		testPojoFactory();
-		testSupplierType();
 		testArrayCreationLevel();
 		testCompilationUnit();
 		testClassOrInterfaceDeclaration();
@@ -105,9 +104,6 @@ public class JavaSTTests {
 		testTypeParameter();
 		testJavaPatterns();
 		testInvokeLater();
-		testNewInstance();
-		testSwitch();
-		testProjectTypes();
 	}
 
 	@org.junit.Test
@@ -178,11 +174,6 @@ public class JavaSTTests {
 	@org.junit.Test
 	public void testPojoFactory() {
 		System.out.println("\n--- TEST PojoFactory:\n" + newPojoFactory());
-	} 
-
-	@org.junit.Test
-	public void testSupplierType() {
-		System.out.println("\n--- TEST SupplierType:\n" + newSupplierType());
 	} 
 
 	@org.junit.Test
@@ -588,20 +579,5 @@ public class JavaSTTests {
 	@org.junit.Test
 	public void testInvokeLater() {
 		System.out.println("\n--- TEST InvokeLater:\n" + newInvokeLater());
-	} 
-
-	@org.junit.Test
-	public void testNewInstance() {
-		System.out.println("\n--- TEST NewInstance:\n" + newNewInstance());
-	} 
-
-	@org.junit.Test
-	public void testSwitch() {
-		System.out.println("\n--- TEST Switch:\n" + newSwitch());
-	} 
-
-	@org.junit.Test
-	public void testProjectTypes() {
-		System.out.println("\n--- TEST ProjectTypes:\n" + newProjectTypes());
 	} 
 } 

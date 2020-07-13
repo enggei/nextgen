@@ -267,10 +267,6 @@ public ~className~ remove~name;format="capitalize"~(~type~ value) {
 	return this;
 }  >>
 
-FunctionTypes() ::= << >>
-
-SupplierType(type) ::= <<java.util.function.Supplier<~type~>  >>
-
 Grammar() ::= << >>
 
 CompilationUnit(packageDeclaration,types,importDeclaration) ::= <<~packageDeclaration~
@@ -510,52 +506,52 @@ JavaPatterns() ::= <<public static class JavaPatterns extends nextgen.templates.
 
 	public static MethodDeclaration newPublicMethodDeclaration(String name, BlockStmt blockStmt) {
 		return newMethodDeclaration(name, blockStmt)
-				.addModifiers("public");
+				.addModifiers(Modifiers.PUBLIC);
 	}
 
 	public static MethodDeclaration newPublicStaticMethodDeclaration(String name, BlockStmt blockStmt) {
 		return newPublicMethodDeclaration(name, blockStmt)
-				.addModifiers("static");
+				.addModifiers(Modifiers.STATIC);
 	}
 
 	public static MethodDeclaration newPublicStaticFinalMethodDeclaration(String name, BlockStmt blockStmt) {
 		return newPublicStaticMethodDeclaration(name, blockStmt)
-				.addModifiers("final");
+				.addModifiers(Modifiers.FINAL);
 	}
 
 	public static MethodDeclaration newPublicFinalMethodDeclaration(String name, BlockStmt blockStmt) {
 		return newPublicMethodDeclaration(name, blockStmt)
-				.addModifiers("final");
+				.addModifiers(Modifiers.FINAL);
 	}
 
 	public static MethodDeclaration newProtectedMethodDeclaration(String name, BlockStmt blockStmt) {
 		return newMethodDeclaration(name, blockStmt)
-				.addModifiers("protected");
+				.addModifiers(Modifiers.PROTECTED);
 	}
 
 	public static MethodDeclaration newProtectedStaticMethodDeclaration(String name, BlockStmt blockStmt) {
 		return newProtectedMethodDeclaration(name, blockStmt)
-				.addModifiers("static");
+				.addModifiers(Modifiers.STATIC);
 	}
 
 	public static MethodDeclaration newPrivateMethodDeclaration(String name, BlockStmt blockStmt) {
 		return newMethodDeclaration(name, blockStmt)
-				.addModifiers("private");
+				.addModifiers(Modifiers.PRIVATE);
 	}
 
 	public static MethodDeclaration newPrivateStaticMethodDeclaration(String name, BlockStmt blockStmt) {
 		return newPrivateMethodDeclaration(name, blockStmt)
-				.addModifiers("static");
+				.addModifiers(Modifiers.STATIC);
 	}
 
 	public static MethodDeclaration newStaticMethodDeclaration(String name, BlockStmt blockStmt) {
 		return newMethodDeclaration(name, blockStmt)
-				.addModifiers("static");
+				.addModifiers(Modifiers.STATIC);
 	}
 
 	public static MethodDeclaration newStaticFinalMethodDeclaration(String name, BlockStmt blockStmt) {
 		return newStaticMethodDeclaration(name, blockStmt)
-				.addModifiers("final");
+				.addModifiers(Modifiers.FINAL);
 	}
 
 	public static MethodDeclaration newMethodDeclaration(String name, BlockStmt blockStmt) {
@@ -573,37 +569,37 @@ JavaPatterns() ::= <<public static class JavaPatterns extends nextgen.templates.
 
 	public static FieldDeclaration newPrivateFieldDeclaration(VariableDeclaration variableDeclaration) {
 		return newFieldDeclaration(variableDeclaration)
-				.addModifiers("private");
+				.addModifiers(Modifiers.PRIVATE);
 	}
-	
+
 	public static FieldDeclaration newProtectedFieldDeclaration(VariableDeclaration variableDeclaration) {
 		return newFieldDeclaration(variableDeclaration)
-				.addModifiers("protected");
+				.addModifiers(Modifiers.PROTECTED);
 	}
-	
+
 	public static FieldDeclaration newPublicFieldDeclaration(VariableDeclaration variableDeclaration) {
 		return newFieldDeclaration(variableDeclaration)
-				.addModifiers("public");
+				.addModifiers(Modifiers.PUBLIC);
 	}
-	
+
 	public static FieldDeclaration newFinalFieldDeclaration(VariableDeclaration variableDeclaration) {
 		return newFieldDeclaration(variableDeclaration)
-				.addModifiers("final");
+				.addModifiers(Modifiers.FINAL);
 	}
-	
+
 	public static FieldDeclaration newPrivateFinalFieldDeclaration(VariableDeclaration variableDeclaration) {
 		return newPrivateFieldDeclaration(variableDeclaration)
-				.addModifiers("final");
+				.addModifiers(Modifiers.FINAL);
 	}
-	
+
 	public static FieldDeclaration newProtectedFinalFieldDeclaration(VariableDeclaration variableDeclaration) {
 		return newProtectedFieldDeclaration(variableDeclaration)
-				.addModifiers("final");
+				.addModifiers(Modifiers.FINAL);
 	}
-	
+
 	public static FieldDeclaration newPublicFinalFieldDeclaration(VariableDeclaration variableDeclaration) {
 		return newPublicFieldDeclaration(variableDeclaration)
-				.addModifiers("final");
+				.addModifiers(Modifiers.FINAL);
 	}
 
 	public static FieldDeclaration newFieldDeclaration(VariableDeclaration variableDeclaration) {
@@ -664,7 +660,7 @@ JavaPatterns() ::= <<public static class JavaPatterns extends nextgen.templates.
 
 	public static VariableDeclarationExpression newFinalVariableDeclarationExpression(VariableDeclaration variableDeclaration) {
 		return newVariableDeclarationExpression()
-				.addModifiers("final")
+				.addModifiers(Modifiers.FINAL)
 				.addVariables(variableDeclaration);
 	}
 
@@ -760,7 +756,7 @@ public static class NamedEntity {
 				.setTypeArguments(typeArguments);
 	}
 
-	ObjectCreationExpression newObjectCreationExpression(Object... arguments) {
+	ObjectCreationExpression asObjectCreationExpression(Object... arguments) {
 		return newObjectCreationExpression(asClassOrInterfaceType())
 				.setArguments(arguments);
 	}
@@ -768,28 +764,9 @@ public static class NamedEntity {
 
 Patterns() ::= << >>
 
-NewInstance(type,arguments) ::= <<new ~type~(~arguments:{it|~it~};separator=","~) >>
-
-Switch(selector,cases) ::= <<switch (~selector~) {
-	~cases:{it|
-case ~it.trigger~: {
-	~it.statement~
-	break;
-\}};separator="\n"~
-}  >>
-
 InvokeLater(methodReference,statement,statements) ::= <<javax.swing.SwingUtilities.invokeLater(~if(methodReference)~~methodReference~~else~() -> ~if(statement)~~statement~~else~ {
 	~statements:{it|~it~};separator="\n"~	
 }~endif~~endif~);  >>
-
-ProjectTypes(projectName,root,javaMain,javaTest,packages,types,names) ::= <<Project ~projectName~
-~root~
-~javaMain~
-~javaTest~
-~packages:{it|~it~};separator="\n"~
-
-~types:{it|~it.name~ ~it.variableName~};separator="\n"~
-~names:{it|~it~};separator="\n"~  >>
 
 eom() ::= "}"
 

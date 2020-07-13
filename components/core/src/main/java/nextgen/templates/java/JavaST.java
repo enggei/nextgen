@@ -19,7 +19,6 @@ public class JavaST {
 	PrimitiveAccessors.st + "\n" + 
 	ReferenceAccessors.st + "\n" + 
 	PojoFactory.st + "\n" + 
-	SupplierType.st + "\n" + 
 	ArrayCreationLevel.st + "\n" + 
 	CompilationUnit.st + "\n" + 
 	ClassOrInterfaceDeclaration.st + "\n" + 
@@ -100,10 +99,7 @@ public class JavaST {
 	ClassOrInterfaceType.st + "\n" + 
 	TypeParameter.st + "\n" + 
 	JavaPatterns.st + "\n" + 
-	InvokeLater.st + "\n" + 
-	NewInstance.st + "\n" + 
-	Switch.st + "\n" + 
-	ProjectTypes.st + "\n" ;
+	InvokeLater.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -193,10 +189,6 @@ public class JavaST {
 
 	public static PojoFactory newPojoFactory() {
 		return new PojoFactory(stGroup);
-	} 
-
-	public static SupplierType newSupplierType() {
-		return new SupplierType(stGroup);
 	} 
 
 	public static ArrayCreationLevel newArrayCreationLevel() {
@@ -521,18 +513,6 @@ public class JavaST {
 
 	public static InvokeLater newInvokeLater() {
 		return new InvokeLater(stGroup);
-	} 
-
-	public static NewInstance newNewInstance() {
-		return new NewInstance(stGroup);
-	} 
-
-	public static Switch newSwitch() {
-		return new Switch(stGroup);
-	} 
-
-	public static ProjectTypes newProjectTypes() {
-		return new ProjectTypes(stGroup);
 	} 
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {

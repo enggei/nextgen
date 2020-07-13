@@ -114,27 +114,27 @@ public class KotlinPatterns extends KotlinST {
    }
 
    public static ParameterDeclaration newParameterDeclaration(TypeDeclaration typeDeclaration, String name) {
-       return KotlinST.newParameterDeclaration().setName(name).setType(typeDeclaration);
+       return newParameterDeclaration().setName(name).setType(typeDeclaration);
    }
 
    public static ParameterDeclaration newParameterDeclaration(TypeDeclaration typeDeclaration, String name, Expression initializer) {
-       return KotlinST.newParameterDeclaration().setName(name).setType(typeDeclaration).setInitializer(initializer);
+       return newParameterDeclaration().setName(name).setType(typeDeclaration).setInitializer(initializer);
    }
 
    public static PropertyDeclaration newPropertyDeclaration(TypeDeclaration typeDeclaration, String name) {
-      return KotlinST.newPropertyDeclaration().setName(name).setType(typeDeclaration);
+      return newPropertyDeclaration().setName(name).setType(typeDeclaration);
    }
 
    public static PropertyDeclaration newPropertyDeclaration(TypeDeclaration typeDeclaration, String name, Boolean mutable) {
-      return KotlinST.newPropertyDeclaration().setName(name).setType(typeDeclaration).setIsMutable(mutable);
+      return newPropertyDeclaration().setName(name).setType(typeDeclaration).setIsMutable(mutable);
    }
 
    public static PropertyDeclaration newPropertyDeclaration(TypeDeclaration typeDeclaration, String name, Expression initializer, Boolean mutable) {
-      return KotlinST.newPropertyDeclaration().setName(name).setType(typeDeclaration).setInitializer(initializer).setIsMutable(mutable);
+      return newPropertyDeclaration().setName(name).setType(typeDeclaration).setInitializer(initializer).setIsMutable(mutable);
    }
 
    public static PropertyDeclaration newPropertyDeclaration(TypeDeclaration typeDeclaration, String name, Expression initializer) {
-      return KotlinST.newPropertyDeclaration().setName(name).setType(typeDeclaration).setInitializer(initializer);
+      return newPropertyDeclaration().setName(name).setType(typeDeclaration).setInitializer(initializer);
    }
 
    public static ClassDeclaration newClassDeclaration(String name) {
@@ -158,42 +158,42 @@ public class KotlinPatterns extends KotlinST {
    }
 
    public static Extending newExtendingClass(String name) {
-       return KotlinST.newExtendingClass().setClassName(name);
+       return newExtendingClass().setClassName(name);
    }
 
    public static Extending newExtendingClass(String name, Collection<Expression> params) {
-       return KotlinST.newExtendingClass().setClassName(name).setParams(params);
+       return newExtendingClass().setClassName(name).setParams(params);
    }
 
    public static LiteralExpression newLiteralExpression(Object literal) {
-       return KotlinST.newLiteralExpression().setLiteral(literal);
+       return newLiteralExpression().setLiteral(literal);
    }
 
    public static StringValueExpression newStringValueExpression(Object literal) {
-       return KotlinST.newStringValueExpression().setLiteral(literal);
+       return newStringValueExpression().setLiteral(literal);
    }
 
    public static RawStringExpression newRawStringExpression(Object rawString) {
-       return KotlinST.newRawStringExpression().setRawString(rawString);
+       return newRawStringExpression().setRawString(rawString);
     }
 
    public static PropertyAccessorExpression newPropertyAccessorExpression(Expression object, Expression property) {
-       return KotlinST.newPropertyAccessorExpression().setObject(object).setProperty(property);
+       return newPropertyAccessorExpression().setObject(object).setProperty(property);
    }
 
    public static ReferenceExpression newReferenceExpression(String name, Expression property) {
-       return KotlinST.newReferenceExpression().setName(name).setProperty(property);
+       return newReferenceExpression().setName(name).setProperty(property);
    }
 
    public static ReferenceExpression newReferenceExpression(String scope, String name, Expression property) {
-       return KotlinST.newReferenceExpression().setScope(scope).setName(name).setProperty(property);
+       return newReferenceExpression().setScope(scope).setName(name).setProperty(property);
    }
 
    public static KotlinStringTemplateSingleValue newKotlinStringTemplateSingleValue(String name) {
-       return KotlinST.newKotlinStringTemplateSingleValue().setName(name);
+       return newKotlinStringTemplateSingleValue().setName(name);
    }
 
    public static KotlinStringTemplateExpression newKotlinStringTemplateExpression(Expression expression) {
-       return KotlinST.newKotlinStringTemplateExpression().setExpression(expression);
+       return newKotlinStringTemplateExpression().setExpression(expression);
    }
 }

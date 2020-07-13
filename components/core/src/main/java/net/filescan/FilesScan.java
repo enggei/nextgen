@@ -1,115 +1,26 @@
-package nextgen.projects;
+package net.filescan;
 
 import nextgen.templates.java.*;
 
-import static nextgen.projects.BaseSTProject.JavaPatterns.*;
+import static net.filescan.FilesScan.JavaPatterns.*;
 
-public class BaseSTProject {
+public class FilesScan {
 
-	final java.io.File root = new java.io.File("/home/goe/projects/nextgen/components/core");
+	final java.io.File root = new java.io.File("/home/goe/projects/filescan");
 	final java.io.File mainJava = new java.io.File(root, "src/main/java");
 	final java.io.File mainResources = new java.io.File(root, "src/main/resources");
 	final java.io.File testJava = new java.io.File(root, "src/test/java");
 	final java.io.File testResources = new java.io.File(root, "src/test/resources");
 
-	// Vertx
-	// core
-	final PackageDeclaration vertxCore = newPackageDeclaration("io.vertx.core");
-	final NamedEntity Future = new NamedEntity("Future", vertxCore, "future");
+	// JSCH
+	final PackageDeclaration jsch = newPackageDeclaration("com.jcraft.jsch");
+	final NamedEntity JSch = new NamedEntity("JSch", jsch, "jsch");
+	final NamedEntity Session = new NamedEntity("Session", jsch, "session");
+	final NamedEntity UserInfo = new NamedEntity("UserInfo", jsch, "userInfo");
+	final NamedEntity Channel = new NamedEntity("Channel", jsch, "channel");
+	final NamedEntity ChannelExec = new NamedEntity("ChannelExec", jsch, "execChannel");
 
-	// Java Core
-	final PackageDeclaration javaLang = newPackageDeclaration("java.lang");
-	final NamedEntity intType = new NamedEntity("int", javaLang);
-	final NamedEntity String = new NamedEntity("String", javaLang, "string");
-
-	// Java Util
-	final PackageDeclaration javaUtil = newPackageDeclaration("java.util");
-	final NamedEntity UUID = new NamedEntity("UUID", javaUtil, "uuid");
-	final NamedEntity Map = new NamedEntity("Map", javaUtil);
-	final NamedEntity Set = new NamedEntity("Set", javaUtil);
-	final NamedEntity List = new NamedEntity("List", javaUtil);
-	final NamedEntity Collection = new NamedEntity("Collection", javaUtil);
-	final NamedEntity LinkedHashMap = new NamedEntity("LinkedHashMap", javaUtil);
-	final NamedEntity LinkedHashSet = new NamedEntity("LinkedHashSet", javaUtil);
-	final NamedEntity TreeSet = new NamedEntity("TreeSet", javaUtil);
-
-	public Statement newLinkedHashMap(String name, ClassOrInterfaceType keyType, ClassOrInterfaceType valueType) {
-		return newExpressionStmt(newFinalVariableDeclarationExpression(newVariableDeclaration(LinkedHashMap.asClassOrInterfaceType(keyType, valueType), name, newObjectCreationExpression(LinkedHashMap.asClassOrInterfaceType().setIsTyped(Boolean.TRUE)))));
-	}
-
-	final PackageDeclaration javaUtilFunction = newPackageDeclaration(javaUtil, "function");
-	final NamedEntity Consumer = new NamedEntity("Consumer", javaUtilFunction, "consumer");
-	final NamedEntity BiConsumer = new NamedEntity("BiConsumer", javaUtilFunction, "consumer");
-
-	final PackageDeclaration javaIO = newPackageDeclaration("java.io");
-	final NamedEntity File = new NamedEntity("File", javaIO, "file");
-
-	// ST App
-	final PackageDeclaration stPackage = newPackageDeclaration("nextgen.st");
-	final NamedEntity STRenderer = new NamedEntity("STRenderer", stPackage, "stRenderer");
-	final NamedEntity STGenerator = new NamedEntity("STGenerator", stPackage, "stGenerator");
-
-
-	// ST template domain
-	final PackageDeclaration stDomainPackage = newPackageDeclaration(stPackage, "domain");
-	final NamedEntity STTemplate = new NamedEntity("STTemplate", stDomainPackage, "stTemplate");
-	final NamedEntity STParameter = new NamedEntity("STParameter", stDomainPackage, "stParameter");
-	final NamedEntity STParameterKey = new NamedEntity("STParameterKey", stDomainPackage, "stParameterKey");
-
-	// ST value domain
-	final PackageDeclaration stModelPackage = newPackageDeclaration(stPackage, "model");
-	final NamedEntity STModelDB = new NamedEntity("STModelDB", stModelPackage, "modelDb");
-	final NamedEntity STModel = new NamedEntity("STModel", stModelPackage, "stModel");
-	final NamedEntity STValue = new NamedEntity("STValue", stModelPackage, "stValue");
-	final NamedEntity STArgument = new NamedEntity("STArgument", stModelPackage, "stArgument");
-	final NamedEntity STFile = new NamedEntity("STFile", stModelPackage, "stFile");
-	final NamedEntity STArgumentKV = new NamedEntity("STArgumentKV", stModelPackage, "stArgumentKV");
-
-	final PackageDeclaration stCanvasPackage = newPackageDeclaration(stPackage, "canvas");
-	final NamedEntity STModelNode = new NamedEntity("STModelNode", stCanvasPackage, "stModelNode");
-	final NamedEntity STValueNode = new NamedEntity("STValueNode", stCanvasPackage, "stValueNode");
-	final NamedEntity STArgumentRelation = new NamedEntity("STArgumentRelation", stCanvasPackage, "stArgumentRelation");
-	final NamedEntity STKVArgumentRelation = new NamedEntity("STKVArgumentRelation", stCanvasPackage, "stkArgumentRelation");
-	final NamedEntity STValueModelRelation = new NamedEntity("STValueModelRelation", stCanvasPackage, "stValueModelRelation");
-	final NamedEntity STKVNode = new NamedEntity("STKVNode", stCanvasPackage, "stKVNode");
-	final NamedEntity STFileNode = new NamedEntity("STFileNode", stCanvasPackage, "stFileNode");
-	final NamedEntity STCanvas = new NamedEntity("STCanvas", stCanvasPackage, "canvas");
-	final NamedEntity STRelation = new NamedEntity("STRelation", stCanvasPackage, "stRelation");
-	final NamedEntity STNode = new NamedEntity("STNode", stCanvasPackage, "stNode");
-	final NamedEntity STSinkRelation = new NamedEntity("STSinkRelation", stCanvasPackage, "stSinkRelation");
-
-
-	final PackageDeclaration layout = newPackageDeclaration(stCanvasPackage, "layout");
-	final NamedEntity Layout = new NamedEntity("Layout", layout, "layout");
-	final NamedEntity LayoutNode = new NamedEntity("LayoutNode", layout, "layoutNode");
-
-	// Neo4J
-	// graphdb
-	final PackageDeclaration graphdb = newPackageDeclaration("org.neo4j.graphdb");
-	final NamedEntity NeoNode = new NamedEntity("Node", graphdb, "node");
-	final NamedEntity NeoRelation = new NamedEntity("Relationship", graphdb, "relation");
-	final NamedEntity NeoDirection = new NamedEntity("Direction", graphdb);
-	final NamedEntity NeoRelationType = new NamedEntity("RelationshipType", graphdb, "relationType");
-	final NamedEntity neoTransaction = new NamedEntity("Transaction", graphdb, "tx");
-
-	// java Swing
-	// Java Swing
-	final PackageDeclaration javaxSwing = newPackageDeclaration("javax.swing");
-	final NamedEntity JTextField = new NamedEntity("JTextField", javaxSwing, "textField");
-	final NamedEntity JTextArea = new NamedEntity("JTextArea", javaxSwing, "textArea");
-	final NamedEntity SwingUtilities = new NamedEntity("SwingUtilities", javaxSwing);
-	final NamedEntity JMenu = new NamedEntity("JMenu", javaxSwing, "jMenu");
-	final NamedEntity JPanel = new NamedEntity("JPanel", javaxSwing, "panel");
-	final NamedEntity JTabbedPane = new NamedEntity("JTabbedPane", javaxSwing, "tabbedPane");
-	final NamedEntity JFrame = new NamedEntity("JFrame", javaxSwing, "frame");
-
-	public Statement invokeLater(Expression expression) {
-		return newExpressionStmt(newMethodCallExpression().setScope(SwingUtilities.asClassOrInterfaceType()).setName("invokeLater").addArguments(newLambdaExpression().setBody(expression)));
-	}
-
-	// Generator
-	final PackageDeclaration generatorUtil = newPackageDeclaration("com.generator.util");
-	final NamedEntity SwingUtil = new NamedEntity("SwingUtil", generatorUtil);
+	final PackageDeclaration domain = newPackageDeclaration("net.filescan.domain");
 
 
 	public static class JavaPatterns extends nextgen.templates.java.JavaST {
@@ -127,52 +38,52 @@ public class BaseSTProject {
 
 		public static MethodDeclaration newPublicMethodDeclaration(String name, BlockStmt blockStmt) {
 			return newMethodDeclaration(name, blockStmt)
-					.addModifiers(Modifiers.PUBLIC);
+					.addModifiers("public");
 		}
 
 		public static MethodDeclaration newPublicStaticMethodDeclaration(String name, BlockStmt blockStmt) {
 			return newPublicMethodDeclaration(name, blockStmt)
-					.addModifiers(Modifiers.STATIC);
+					.addModifiers("static");
 		}
 
 		public static MethodDeclaration newPublicStaticFinalMethodDeclaration(String name, BlockStmt blockStmt) {
 			return newPublicStaticMethodDeclaration(name, blockStmt)
-					.addModifiers(Modifiers.FINAL);
+					.addModifiers("final");
 		}
 
 		public static MethodDeclaration newPublicFinalMethodDeclaration(String name, BlockStmt blockStmt) {
 			return newPublicMethodDeclaration(name, blockStmt)
-					.addModifiers(Modifiers.FINAL);
+					.addModifiers("final");
 		}
 
 		public static MethodDeclaration newProtectedMethodDeclaration(String name, BlockStmt blockStmt) {
 			return newMethodDeclaration(name, blockStmt)
-					.addModifiers(Modifiers.PROTECTED);
+					.addModifiers("protected");
 		}
 
 		public static MethodDeclaration newProtectedStaticMethodDeclaration(String name, BlockStmt blockStmt) {
 			return newProtectedMethodDeclaration(name, blockStmt)
-					.addModifiers(Modifiers.STATIC);
+					.addModifiers("static");
 		}
 
 		public static MethodDeclaration newPrivateMethodDeclaration(String name, BlockStmt blockStmt) {
 			return newMethodDeclaration(name, blockStmt)
-					.addModifiers(Modifiers.PRIVATE);
+					.addModifiers("private");
 		}
 
 		public static MethodDeclaration newPrivateStaticMethodDeclaration(String name, BlockStmt blockStmt) {
 			return newPrivateMethodDeclaration(name, blockStmt)
-					.addModifiers(Modifiers.STATIC);
+					.addModifiers("static");
 		}
 
 		public static MethodDeclaration newStaticMethodDeclaration(String name, BlockStmt blockStmt) {
 			return newMethodDeclaration(name, blockStmt)
-					.addModifiers(Modifiers.STATIC);
+					.addModifiers("static");
 		}
 
 		public static MethodDeclaration newStaticFinalMethodDeclaration(String name, BlockStmt blockStmt) {
 			return newStaticMethodDeclaration(name, blockStmt)
-					.addModifiers(Modifiers.FINAL);
+					.addModifiers("final");
 		}
 
 		public static MethodDeclaration newMethodDeclaration(String name, BlockStmt blockStmt) {
@@ -190,37 +101,37 @@ public class BaseSTProject {
 
 		public static FieldDeclaration newPrivateFieldDeclaration(VariableDeclaration variableDeclaration) {
 			return newFieldDeclaration(variableDeclaration)
-					.addModifiers(Modifiers.PRIVATE);
+					.addModifiers("private");
 		}
 
 		public static FieldDeclaration newProtectedFieldDeclaration(VariableDeclaration variableDeclaration) {
 			return newFieldDeclaration(variableDeclaration)
-					.addModifiers(Modifiers.PROTECTED);
+					.addModifiers("protected");
 		}
 
 		public static FieldDeclaration newPublicFieldDeclaration(VariableDeclaration variableDeclaration) {
 			return newFieldDeclaration(variableDeclaration)
-					.addModifiers(Modifiers.PUBLIC);
+					.addModifiers("public");
 		}
 
 		public static FieldDeclaration newFinalFieldDeclaration(VariableDeclaration variableDeclaration) {
 			return newFieldDeclaration(variableDeclaration)
-					.addModifiers(Modifiers.FINAL);
+					.addModifiers("final");
 		}
 
 		public static FieldDeclaration newPrivateFinalFieldDeclaration(VariableDeclaration variableDeclaration) {
 			return newPrivateFieldDeclaration(variableDeclaration)
-					.addModifiers(Modifiers.FINAL);
+					.addModifiers("final");
 		}
 
 		public static FieldDeclaration newProtectedFinalFieldDeclaration(VariableDeclaration variableDeclaration) {
 			return newProtectedFieldDeclaration(variableDeclaration)
-					.addModifiers(Modifiers.FINAL);
+					.addModifiers("final");
 		}
 
 		public static FieldDeclaration newPublicFinalFieldDeclaration(VariableDeclaration variableDeclaration) {
 			return newPublicFieldDeclaration(variableDeclaration)
-					.addModifiers(Modifiers.FINAL);
+					.addModifiers("final");
 		}
 
 		public static FieldDeclaration newFieldDeclaration(VariableDeclaration variableDeclaration) {
@@ -251,22 +162,6 @@ public class BaseSTProject {
 					.setExpression(expression);
 		}
 
-		public static SwitchStmt newSwitchStmt(Object selector) {
-			return newSwitchStmt()
-					.setSelector(selector);
-		}
-
-		public static SwitchEntryStmt newSwitchEntryStmt(Object label, BlockStmt blockStmt) {
-			return newSwitchEntryStmt()
-					.addLabels(label)
-					.addStatements(blockStmt);
-		}
-
-		public static BlockStmt newBlockStmt(String ... statements) {
-			return newBlockStmt()
-					.setStatements(statements);
-		}
-
 		// expressions
 		public static ObjectCreationExpression newObjectCreationExpression(ClassOrInterfaceType classOrInterfaceType) {
 			return newObjectCreationExpression()
@@ -274,11 +169,6 @@ public class BaseSTProject {
 		}
 
 		public static LambdaExpression newLambdaExpression(Expression expression) {
-			return newLambdaExpression()
-					.setBody(expression);
-		}
-
-		public static LambdaExpression newLambdaExpression(String expression) {
 			return newLambdaExpression()
 					.setBody(expression);
 		}
@@ -297,7 +187,7 @@ public class BaseSTProject {
 
 		public static VariableDeclarationExpression newFinalVariableDeclarationExpression(VariableDeclaration variableDeclaration) {
 			return newVariableDeclarationExpression()
-					.addModifiers(Modifiers.FINAL)
+					.addModifiers("final")
 					.addVariables(variableDeclaration);
 		}
 
@@ -352,6 +242,7 @@ public class BaseSTProject {
 
 		private final String name;
 		private final PackageDeclaration packageDeclaration;
+
 		private String variableName;
 
 		NamedEntity(String name, PackageDeclaration packageDeclaration) {
@@ -368,24 +259,28 @@ public class BaseSTProject {
 			return name;
 		}
 
+		ClassOrInterfaceType type(Object... typeArguments) {
+			return asClassOrInterfaceType(typeArguments);
+		}
+
 		String variableName() {
 			return variableName == null ? Character.toLowerCase(name.charAt(0)) + name.substring(1) : variableName;
-		}
-
-		MethodCallExpression staticMethodCall(String name, Object... arguments) {
-			return newMethodCallExpression(asClassOrInterfaceType(), name, arguments);
-		}
-
-		MethodCallExpression methodCall(String name, Object... arguments) {
-			return newMethodCallExpression(variableName(), name, arguments);
 		}
 
 		Parameter asParameter(Object... typeArguments) {
 			return newParameter(asClassOrInterfaceType(typeArguments), variableName());
 		}
 
-		Statement asFinalVariableDeclaration(Object initializer) {
-			return newExpressionStmt(newFinalVariableDeclarationExpression(newVariableDeclaration(asClassOrInterfaceType(), variableName(), initializer)));
+		MethodCallExpression staticMethodCall(String name, Object... arguments) {
+			return newMethodCallExpression(type(), name, arguments);
+		}
+
+		MethodCallExpression methodCall(String name, Object... arguments) {
+			return newMethodCallExpression(variableName(), name, arguments);
+		}
+
+		Statement asVariable(Object initializer) {
+			return newExpressionStmt(newFinalVariableDeclarationExpression(newVariableDeclaration(type(), variableName(), initializer)));
 		}
 
 		ClassOrInterfaceType asClassOrInterfaceType(Object... typeArguments) {
@@ -393,8 +288,8 @@ public class BaseSTProject {
 					.setTypeArguments(typeArguments);
 		}
 
-		ObjectCreationExpression asObjectCreationExpression(Object... arguments) {
-			return newObjectCreationExpression(asClassOrInterfaceType())
+		ObjectCreationExpression newInstance(Object... arguments) {
+			return newObjectCreationExpression(type())
 					.setArguments(arguments);
 		}
 	}
