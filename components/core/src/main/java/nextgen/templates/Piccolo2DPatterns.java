@@ -2,8 +2,7 @@ package nextgen.templates;
 
 import nextgen.templates.piccolo2d.*;
 
-import static nextgen.templates.JavaPatterns.invokeLater;
-import static nextgen.templates.JavaPatterns.newInvokeLater;
+import static nextgen.templates.JavaPatterns.*;
 
 public class Piccolo2DPatterns extends Piccolo2DST {
 
@@ -11,6 +10,38 @@ public class Piccolo2DPatterns extends Piccolo2DST {
         return newPNodeImpl()
                 .setNodeName(node.getName())
                 .setCanvasName(canvas.getName());
+    }
+
+    public static NodeAction newNodeAction(PNode node, String name, String title) {
+        return newNodeAction()
+                .setCanvasName(node.getCanvasName())
+                .setNodeType(node.getName())
+                .setName(name)
+                .setTitle(title);
+    }
+
+    public static NodeAction newNodeAction(PNodeImpl node, String name, String title) {
+        return newNodeAction()
+                .setCanvasName(node.getCanvasName())
+                .setNodeType(node.getName())
+                .setName(name)
+                .setTitle(title);
+    }
+
+    public static RelationAction newRelationAction(PRelation relation, String name, String title) {
+        return newRelationAction()
+                .setCanvasName(relation.getCanvasName())
+                .setRelationType(relation.getName())
+                .setName(name)
+                .setTitle(title);
+    }
+
+    public static RelationAction newRelationAction(PRelationImpl relation, String name, String title) {
+        return newRelationAction()
+                .setCanvasName(relation.getCanvasName())
+                .setRelationType(relation.getName())
+                .setName(name)
+                .setTitle(title);
     }
 
     public static void addDefaultActionsToCanvas(PCanvas canvas) {
@@ -34,10 +65,10 @@ public class Piccolo2DPatterns extends Piccolo2DST {
 
         final CanvasAction popupAction = newCanvasAction(canvas, "PopupAction", "Popup")
                 .addStatements(newInvokeLater()
-                        .addStatements("final JPopupMenu pop = new JPopupMenu();")
-                        .addStatements("canvas.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));")
+                        .addStatements("final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();")
+                        .addStatements("canvas.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));")
                         .addStatements("canvas.onCanvasRightClick(pop, event);")
-                        .addStatements("canvas.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));")
+                        .addStatements("canvas.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));")
                         .addStatements("pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());"));
 
 
@@ -46,18 +77,14 @@ public class Piccolo2DPatterns extends Piccolo2DST {
         registerRightClickAction(canvas, closeSelectedNodesAction, closeSelectedNodesAction.getName());
         registerRightClickAction(canvas, retainSelectedNodesAction, retainSelectedNodesAction.getName());
         registerRightClickAction(canvas, layoutVerticallyAction, layoutVerticallyAction.getName());
-        canvas.addActions(popupAction);;
+        canvas.addActions(popupAction);
+        ;
 
         canvas.addOnKeyPressed("1", layoutVerticallyAction.getName());
         canvas.addOnKeyPressed("A", selectAllNodesAction.getName());
         canvas.addOnKeyPressed("C", closeSelectedNodesAction.getName());
         canvas.addOnKeyPressed("F", popupAction.getName());
         canvas.addOnKeyPressed("R", retainSelectedNodesAction.getName());
-    }
-
-    public static void registerRightClickAction(PCanvas canvas, Object action, Object name) {
-        canvas.addActions(action);
-        canvas.addOnRightClick(name);
     }
 
     public static CanvasAction newCanvasAction(PCanvas canvas, String name, String title) {
@@ -79,10 +106,10 @@ public class Piccolo2DPatterns extends Piccolo2DST {
 
         final NodeAction popupAction = newNodeAction(node, "PopupAction", "Popup")
                 .addStatements(newInvokeLater()
-                        .addStatements("final JPopupMenu pop = new JPopupMenu();")
-                        .addStatements("canvas.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));")
+                        .addStatements("final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();")
+                        .addStatements("canvas.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));")
                         .addStatements("node.onNodeRightClick(event, pop);")
-                        .addStatements("canvas.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));")
+                        .addStatements("canvas.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));")
                         .addStatements("pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());"));
 
         final NodeAction retainNodeAction = newNodeAction(node, "RetainNode", "Retain")
@@ -90,44 +117,37 @@ public class Piccolo2DPatterns extends Piccolo2DST {
                         "canvas.getAllNodes().filter(canvasNode -> !canvasNode.getUuid().equals(node.getUuid())).forEach(" + node.getName() + "::close);",
                         "canvas.getAllRelations().forEach(relation -> canvas.removeRelation(relation.getUuid()));"));
 
+        final NodeAction debugAction = newNodeAction(node, "DebugAction", "Debug")
+                .addStatements(newInvokeLater(
+                        "final PBounds fullBounds = node.getFullBoundsReference();",
+                        "System.out.println(fullBounds.getX() + \",\" + fullBounds.getY() + \", [\" + fullBounds.getWidth() + \",\" + fullBounds.getHeight() + \"]\");"
+                ));
+
         registerRightClickAction(node, layoutTreeAction, layoutTreeAction.getName());
         registerRightClickAction(node, retainNodeAction, retainNodeAction.getName());
         registerRightClickAction(node, closeNodeAction, closeNodeAction.getName());
-        registerRightClickAction(node, popupAction, popupAction.getName());
+        node.addActions(popupAction);
+        node.addActions(debugAction);
 
         node.addOnKeyPressed("1", layoutTreeAction.getName());
         node.addOnKeyPressed("C", closeNodeAction.getName());
         node.addOnKeyPressed("R", retainNodeAction.getName());
         node.addOnKeyPressed("F", popupAction.getName());
+        node.addOnKeyPressed("B", debugAction.getName());
+    }
+
+    public static void registerRightClickAction(PCanvas canvas, Object action, Object name) {
+        canvas.addActions(action);
+        canvas.addOnRightClick(name);
     }
 
     public static void registerRightClickAction(PNodeImpl node, Object action, Object name) {
         node.addActions(action);
-        node.addOnRightClick(name,false);
+        node.addOnRightClick(name, false);
     }
 
     public static void registerRightClickAction(PNode node, Object action, Object name) {
         node.addActions(action);
         node.addOnRightClick(name, false);
-    }
-
-    public static NodeAction newNodeAction(PNode node, String name, String title) {
-        return newNodeAction()
-                .setCanvasName(node.getCanvasName())
-                .setNodeType(node.getName())
-                .setName(name)
-                .setTitle(title);
-    }
-
-    public static NodeAction newNodeAction(PNodeImpl node, String name, String title) {
-        return newNodeAction()
-                .setCanvasName(node.getCanvasName())
-                .setNodeType(node.getName())
-                .setName(name)
-                .setTitle(title);
-    }
-
-    public static AnonymousPNodeAction newAnonymousPNodeAction(String nodeType) {
-        return newAnonymousPNodeAction().setNodeType(nodeType);
     }
 }

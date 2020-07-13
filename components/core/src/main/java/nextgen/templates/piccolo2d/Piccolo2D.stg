@@ -1,6 +1,6 @@
 delimiters "~","~"
 
-PCanvas(packageName,name,nodeName,relationName,fields,onRightClick,onKeyPressed,canvasActionmethods,actions,methods) ::= <<package ~packageName~;
+PCanvas(packageName,name,nodeName,relationName,fields,constructorStatements,onRightClick,onKeyPressed,canvasActionmethods,actions,methods) ::= <<package ~packageName~;
 
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PCanvas;
@@ -57,7 +57,7 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 		addInputEventListener(new CanvasZoomHandler());
 		addInputEventListener(canvasInputEventsHandler);
 		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
-
+		~constructorStatements:{it|~it~};separator="\n"~
 		//org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
 
@@ -439,8 +439,6 @@ import org.piccolo2d.util.PBounds;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
@@ -750,14 +748,14 @@ LayoutTreeAction(name,nodeType,canvasName) ::= <<protected static final class ~n
 	private final Map<UUID, ~nodeType~> parentsMap = new LinkedHashMap<>();
 	private final Map<UUID, java.util.List<~nodeType~~gt()~> childrensMap = new LinkedHashMap<>();
 	private final org.abego.treelayout.util.DefaultConfiguration<~nodeType~> configuration;
-
+	
 	protected ~name~(~nodeType~ root, ~canvasName~ canvas, PInputEvent event) {
-		this(root, canvas, event, org.abego.treelayout.Configuration.Location.Left, org.abego.treelayout.Configuration.AlignmentInLevel.Center);
+		this(root, canvas, event, org.abego.treelayout.Configuration.Location.Left, org.abego.treelayout.Configuration.AlignmentInLevel.TowardsRoot);
 	}
 
 	protected ~name~(~nodeType~ root, ~canvasName~ canvas, PInputEvent event, org.abego.treelayout.Configuration.Location location, org.abego.treelayout.Configuration.AlignmentInLevel alignmentInLevel) {
 		super("Layout Tree", root, canvas, event);
-		this.configuration = new org.abego.treelayout.util.DefaultConfiguration<>(100, 5, location, alignmentInLevel);
+		this.configuration = new org.abego.treelayout.util.DefaultConfiguration<>(100, 15, location, alignmentInLevel);
 	}
 
 	@Override
@@ -783,30 +781,26 @@ LayoutTreeAction(name,nodeType,canvasName) ::= <<protected static final class ~n
 			final org.abego.treelayout.NodeExtentProvider<~nodeType~> nodeExtendProvider = new org.abego.treelayout.NodeExtentProvider<~nodeType~>() {
 				@Override
 				public double getWidth(~nodeType~ node) {
-					return node.getWidth();
+					return node.getFullBounds().getWidth();
 				}
 
 				@Override
 				public double getHeight(~nodeType~ node) {
-					return node.getHeight();
+					return node.getFullBounds().getHeight();
 				}
 			};
 
 			final org.abego.treelayout.TreeLayout<~nodeType~> layout = new org.abego.treelayout.TreeLayout<>(tree, nodeExtendProvider, configuration);
 
-			// apply coordination-translation
-			final Point2D rootLocation = node.getFullBoundsReference().getCenter2D();
-			final Map<~nodeType~, Rectangle2D.Double> nodeBounds = layout.getNodeBounds();
-			final Rectangle2D.Double rootBounds = nodeBounds.get(node);
-			final double dX = rootLocation.getX() - (rootBounds.getCenterX());
-			final double dY = rootLocation.getY() - (rootBounds.getCenterY() - ((int) rootBounds.getHeight() / 2d));
+			// apply coordinate transforms in relation to root-node
+			final java.awt.geom.Rectangle2D.Double rootBounds = layout.getNodeBounds().get(node);
+			final double deltaX = node.getFullBounds().getX() - rootBounds.getX();
+			final double deltaY = node.getFullBounds().getY() - rootBounds.getY();
 
 			SwingUtilities.invokeLater(() -> {
-				for (Map.Entry<~nodeType~, Rectangle2D.Double> nodeBound : nodeBounds.entrySet()) {
-					if (node.equals(nodeBound.getKey())) continue;
-					final double centerX = nodeBound.getValue().getCenterX() + dX;
-					final double centerY = nodeBound.getValue().getCenterY() + dY;
-					nodeBound.getKey().setOffset(centerX, centerY);
+				for (Map.Entry<STNode, java.awt.geom.Rectangle2D.Double> nodeBound : layout.getNodeBounds().entrySet()) {
+					if (nodeBound.getKey().equals(node)) continue;	// root-node is transformation-root
+					nodeBound.getKey().setOffset(nodeBound.getValue().getX() + deltaX, nodeBound.getValue().getY() + deltaY);
 				}
 			});
 
@@ -1221,7 +1215,7 @@ RelationInputEventHandler() ::= <<private final class RelationInputEventHandler 
 RelationAction(name,relationType,fields,canvasName,title,statements) ::= <<private static final class ~name~ extends RelationAction<~relationType~> {
 
 	~fields:{it|~it.type~ ~it.name~;};separator="\n"~
-	
+
 	~name~(~relationType~ relation, ~canvasName~ canvas, PInputEvent event~if(fields)~, ~endif~~fields:{it|~it.type~ ~it.name~};separator=", "~) {
 		super("~title~", relation, canvas, event);
 		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
@@ -1245,7 +1239,7 @@ import java.util.*;
 public class ~name~ extends ~relationName~ {
 
 	~fields:{it|~it.type~ ~it.name~;};separator="\n"~
-	
+
 	public ~name~(~canvasName~ canvas, ~srcNode~ src, ~dstNode~ dst~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
 		super(canvas, src, dst, ~if(nameExpression)~~nameExpression~~else~"~name;format="lowFirst"~"~endif~, ~uuidExpression~);
 		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
@@ -1269,7 +1263,7 @@ case java.awt.event.KeyEvent.VK_~it.key~:
 ~endif~
 		super.onRelationKeyPressed(event);
 	}
-	
+
 	~actions:{it|~it~};separator="\n\n"~
 }  >>
 

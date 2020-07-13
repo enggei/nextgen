@@ -5,8 +5,6 @@ public class JavaPatterns {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _packageName;
-	private Object _name;
 
 	JavaPatterns(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -19,54 +17,9 @@ public class JavaPatterns {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("JavaPatterns");
-		st.add("packageName", _packageName);
-		st.add("name", _name);
 		return st.render().trim();
 	}
 
-	public JavaPatterns setPackageName(Object value) {
-		this._packageName = value;
-		return this;
-	}
-
-	public Object getPackageName() {
-		return this._packageName;
-	}
-
-	public Object getPackageName(Object defaultValue) {
-		return this._packageName == null ? defaultValue : this._packageName;
-	}
-
-	public boolean hasPackageName() {
-		return this._packageName != null;
-	}
-
-	public JavaPatterns removePackageName() {
-		this._packageName = null;
-		return this;
-	} 
-
-	public JavaPatterns setName(Object value) {
-		this._name = value;
-		return this;
-	}
-
-	public Object getName() {
-		return this._name;
-	}
-
-	public Object getName(Object defaultValue) {
-		return this._name == null ? defaultValue : this._name;
-	}
-
-	public boolean hasName() {
-		return this._name != null;
-	}
-
-	public JavaPatterns removeName() {
-		this._name = null;
-		return this;
-	} 
 
 
 
@@ -83,105 +36,274 @@ public class JavaPatterns {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "JavaPatterns(packageName,name) ::= <<package ~packageName~;\n" + 
+	static final String st = "JavaPatterns() ::= <<public static class JavaPatterns extends nextgen.templates.java.JavaST {\n" + 
 				"\n" + 
-				"import nextgen.st.STGenerator;\n" + 
-				"import nextgen.templates.java.Enum;\n" + 
-				"import nextgen.templates.java.*;\n" + 
-				"\n" + 
-				"import java.io.File;\n" + 
-				"import java.util.Collection;\n" + 
-				"\n" + 
-				"public class ~name~ extends JavaST {\n" + 
-				"\n" + 
-				"	public static void writeEnum(File root, PackageDeclaration packageDeclaration, String name, Object[] enumValues) {\n" + 
-				"		final Enum content = JavaST.newEnum().setName(name).setPackage(packageDeclaration.getName());\n" + 
-				"		for (Object enumValue : enumValues)\n" + 
-				"				content.addEnumValues(enumValue);\n" + 
-				"		STGenerator.writeJavaFile(content, packageDeclaration.getName(), name, root);\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	public static void writeEnum(File root, PackageDeclaration packageDeclaration, String name, Collection<EnumValue> enumValues) {\n" + 
-				"		final Enum content = JavaST.newEnum().setName(name).setPackage(packageDeclaration.getName());\n" + 
-				"		for (EnumValue enumValue : enumValues)\n" + 
-				"				content.addEnumValues(enumValue);\n" + 
-				"		STGenerator.writeJavaFile(content, packageDeclaration.getName(), name, root);\n" + 
-				"	}\n" + 
-				"\n" + 
+				"	// declarations\n" + 
 				"	public static PackageDeclaration newPackageDeclaration(String packageName) {\n" + 
-				"		return newPackageDeclaration().setName(packageName);\n" + 
+				"		return newPackageDeclaration()\n" + 
+				"				.setName(packageName);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public static PackageDeclaration newPackageDeclaration(PackageDeclaration parent, String packageName) {\n" + 
-				"		return newPackageDeclaration().setName(parent.getName() + \".\" + packageName);\n" + 
+				"		return newPackageDeclaration()\n" + 
+				"				.setName(parent.getName() + \".\" + packageName);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public static ObjectCreationExpression newArrayListInstance() {\n" + 
-				"		return newObjectCreationExpression().setType(newArrayListType());\n" + 
+				"	public static MethodDeclaration newPublicMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
+				"		return newMethodDeclaration(name, blockStmt)\n" + 
+				"				.addModifiers(\"public\");\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public static ObjectCreationExpression newThread(Object body) {\n" + 
-				"		return newObjectCreationExpression()\n" + 
-				"					.setScope(CoreTypes.ThreadType)\n" + 
-				"					.addArguments(newLambdaExpression().setBody(body));\n" + 
+				"	public static MethodDeclaration newPublicStaticMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
+				"		return newPublicMethodDeclaration(name, blockStmt)\n" + 
+				"				.addModifiers(\"static\");\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public static Statement invokeLater(Object body) {\n" + 
-				"		return newExpressionStmt()\n" + 
-				"					.setExpression(newMethodCallExpression()\n" + 
-				"								.setScope(SwingTypes.SwingUtilitiesType)\n" + 
-				"								.setName(\"invokeLater\")\n" + 
-				"								.addArguments(newLambdaExpression()\n" + 
-				"										.setBody(body)));\n" + 
+				"	public static MethodDeclaration newPublicStaticFinalMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
+				"		return newPublicStaticMethodDeclaration(name, blockStmt)\n" + 
+				"				.addModifiers(\"final\");\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public static Object newInvokeLater(Object statement) {\n" + 
-				"		return newInvokeLater().setStatement(statement);\n" + 
+				"	public static MethodDeclaration newPublicFinalMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
+				"		return newPublicMethodDeclaration(name, blockStmt)\n" + 
+				"				.addModifiers(\"final\");\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public static Object newInvokeLater(Object... statements) {\n" + 
-				"		final InvokeLater invokeLater = newInvokeLater();\n" + 
-				"		for (Object statement : statements)\n" + 
-				"				invokeLater.addStatements(statement);\n" + 
-				"		return invokeLater;\n" + 
+				"	public static MethodDeclaration newProtectedMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
+				"		return newMethodDeclaration(name, blockStmt)\n" + 
+				"				.addModifiers(\"protected\");\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public static MethodDeclaration newProtectedMethod(String name, BlockStmt blockStmt) {\n" + 
+				"	public static MethodDeclaration newProtectedStaticMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
+				"		return newProtectedMethodDeclaration(name, blockStmt)\n" + 
+				"				.addModifiers(\"static\");\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static MethodDeclaration newPrivateMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
+				"		return newMethodDeclaration(name, blockStmt)\n" + 
+				"				.addModifiers(\"private\");\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static MethodDeclaration newPrivateStaticMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
+				"		return newPrivateMethodDeclaration(name, blockStmt)\n" + 
+				"				.addModifiers(\"static\");\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static MethodDeclaration newStaticMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
+				"		return newMethodDeclaration(name, blockStmt)\n" + 
+				"				.addModifiers(\"static\");\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static MethodDeclaration newStaticFinalMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
+				"		return newStaticMethodDeclaration(name, blockStmt)\n" + 
+				"				.addModifiers(\"final\");\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static MethodDeclaration newMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
 				"		return newMethodDeclaration()\n" + 
-				"					.addModifiers(\"protected\")\n" + 
-				"					.setName(name)\n" + 
-				"					.setBlockStmt(blockStmt);\n" + 
+				"				.setName(name)\n" + 
+				"				.setBlockStmt(blockStmt);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static VariableDeclaration newVariableDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, Object initializer) {\n" + 
+				"		return newVariableDeclaration()\n" + 
+				"				.setType(classOrInterfaceType)\n" + 
+				"				.setName(name)\n" + 
+				"				.setInitializer(initializer);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static FieldDeclaration newPrivateFieldDeclaration(VariableDeclaration variableDeclaration) {\n" + 
+				"		return newFieldDeclaration(variableDeclaration)\n" + 
+				"				.addModifiers(\"private\");\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	public static FieldDeclaration newProtectedFieldDeclaration(VariableDeclaration variableDeclaration) {\n" + 
+				"		return newFieldDeclaration(variableDeclaration)\n" + 
+				"				.addModifiers(\"protected\");\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	public static FieldDeclaration newPublicFieldDeclaration(VariableDeclaration variableDeclaration) {\n" + 
+				"		return newFieldDeclaration(variableDeclaration)\n" + 
+				"				.addModifiers(\"public\");\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	public static FieldDeclaration newFinalFieldDeclaration(VariableDeclaration variableDeclaration) {\n" + 
+				"		return newFieldDeclaration(variableDeclaration)\n" + 
+				"				.addModifiers(\"final\");\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	public static FieldDeclaration newPrivateFinalFieldDeclaration(VariableDeclaration variableDeclaration) {\n" + 
+				"		return newPrivateFieldDeclaration(variableDeclaration)\n" + 
+				"				.addModifiers(\"final\");\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	public static FieldDeclaration newProtectedFinalFieldDeclaration(VariableDeclaration variableDeclaration) {\n" + 
+				"		return newProtectedFieldDeclaration(variableDeclaration)\n" + 
+				"				.addModifiers(\"final\");\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	public static FieldDeclaration newPublicFinalFieldDeclaration(VariableDeclaration variableDeclaration) {\n" + 
+				"		return newPublicFieldDeclaration(variableDeclaration)\n" + 
+				"				.addModifiers(\"final\");\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static FieldDeclaration newFieldDeclaration(VariableDeclaration variableDeclaration) {\n" + 
+				"		return newFieldDeclaration()\n" + 
+				"				.addVariables(variableDeclaration);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static ClassOrInterfaceType newClassOrInterfaceType(Object scope, String name) {\n" + 
+				"		return newClassOrInterfaceType()\n" + 
+				"				.setScope(scope)\n" + 
+				"				.addNames(name);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public static Parameter newParameter(ClassOrInterfaceType type, String name) {\n" + 
-				"		return newParameter().setType(type).setName(name);\n" + 
+				"		return newParameter()\n" + 
+				"				.setType(type)\n" + 
+				"				.setName(name);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public static MethodDeclaration newMethodDeclarationFrom(MethodDeclaration prototype) {\n" + 
-				"\n" + 
-				"		final MethodDeclaration methodDeclaration = newMethodDeclaration()\n" + 
-				"					.setName(prototype.getName())\n" + 
-				"					.setType(prototype.getType());\n" + 
-				"\n" + 
-				"		prototype.getModifiers().forEach(methodDeclaration::addModifiers);\n" + 
-				"		prototype.getParameters().forEach(methodDeclaration::addParameters);\n" + 
-				"		return methodDeclaration;\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	public Statement statement(Expression expression) {\n" + 
+				"	// statements\n" + 
+				"	public static Statement newExpressionStmt(Expression expression) {\n" + 
 				"		return newExpressionStmt()\n" + 
 				"				.setExpression(expression);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public static MethodCallExpression methodCallExpression(Object scope, String name, Object... arguments) {\n" + 
-				"		return newMethodCallExpression()\n" + 
-				"					.setScope(scope)\n" + 
-				"					.setName(name)\n" + 
-				"					.setArguments(arguments);\n" + 
+				"	public static Statement newReturnStatement(Expression expression) {\n" + 
+				"		return newReturnStmt()\n" + 
+				"				.setExpression(expression);\n" + 
 				"	}\n" + 
-				"	\n" + 
-				"	public static Object string(Object value) {\n" + 
+				"\n" + 
+				"	// expressions\n" + 
+				"	public static ObjectCreationExpression newObjectCreationExpression(ClassOrInterfaceType classOrInterfaceType) {\n" + 
+				"		return newObjectCreationExpression()\n" + 
+				"				.setType(classOrInterfaceType);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static LambdaExpression newLambdaExpression(Expression expression) {\n" + 
+				"		return newLambdaExpression()\n" + 
+				"				.setBody(expression);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static LambdaExpression newLambdaExpression(String expression) {\n" + 
+				"		return newLambdaExpression()\n" + 
+				"				.setBody(expression);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static LambdaExpression newLambdaExpression(Statement... statements) {\n" + 
+				"		return newLambdaExpression()\n" + 
+				"				.setBody(newBlockStmt()\n" + 
+				"					.setStatements(statements));\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static FieldAccessExpression newFieldAccessExpression(String scope, String name) {\n" + 
+				"		return newFieldAccessExpression()\n" + 
+				"				.setScope(scope)\n" + 
+				"				.setName(name);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static VariableDeclarationExpression newFinalVariableDeclarationExpression(VariableDeclaration variableDeclaration) {\n" + 
+				"		return newVariableDeclarationExpression()\n" + 
+				"				.addModifiers(\"final\")\n" + 
+				"				.addVariables(variableDeclaration);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static MethodCallExpression newMethodCallExpression(FieldAccessExpression scope, String name, Object... arguments) {\n" + 
+				"		return newMethodCallExpression()\n" + 
+				"				.setScope(scope)\n" + 
+				"				.setName(name)\n" + 
+				"				.setArguments(arguments);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static MethodCallExpression newMethodCallExpression(MethodCallExpression scope, String name, Object... arguments) {\n" + 
+				"		return newMethodCallExpression()\n" + 
+				"				.setScope(scope)\n" + 
+				"				.setName(name)\n" + 
+				"				.setArguments(arguments);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static MethodCallExpression newMethodCallExpression(VariableDeclaration scope, String name, Object... arguments) {\n" + 
+				"		return newMethodCallExpression()\n" + 
+				"				.setScope(scope.getName())\n" + 
+				"				.setName(name)\n" + 
+				"				.setArguments(arguments);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static MethodCallExpression newMethodCallExpression(ClassOrInterfaceType scope, String name, Object... arguments) {\n" + 
+				"		return newMethodCallExpression()\n" + 
+				"				.setScope(scope)\n" + 
+				"				.setName(name)\n" + 
+				"				.setArguments(arguments);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static MethodCallExpression newMethodCallExpression(String scope, String name, Object... arguments) {\n" + 
+				"		return newMethodCallExpression()\n" + 
+				"				.setScope(scope)\n" + 
+				"				.setName(name)\n" + 
+				"				.setArguments(arguments);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static MethodCallExpression newMethodCallExpression(String name, Object... arguments) {\n" + 
+				"		return newMethodCallExpression()\n" + 
+				"				.setName(name)\n" + 
+				"				.setArguments(arguments);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	// formatting\n" + 
+				"	public static Object asString(Object value) {\n" + 
 				"		return \"\\\"\" + value + \"\\\"\";\n" + 
+				"	}\n" + 
+				"}\n" + 
+				"\n" + 
+				"public static class NamedEntity {\n" + 
+				"\n" + 
+				"	private final String name;\n" + 
+				"	private final PackageDeclaration packageDeclaration;\n" + 
+				"	private String variableName;\n" + 
+				"\n" + 
+				"	NamedEntity(String name, PackageDeclaration packageDeclaration) {\n" + 
+				"		this.name = name;\n" + 
+				"		this.packageDeclaration = packageDeclaration;\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	NamedEntity(String name, PackageDeclaration packageDeclaration, String variableName) {\n" + 
+				"		this(name, packageDeclaration);\n" + 
+				"		this.variableName = variableName;\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	String name() {\n" + 
+				"		return name;\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	String variableName() {\n" + 
+				"		return variableName == null ? Character.toLowerCase(name.charAt(0)) + name.substring(1) : variableName;\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	MethodCallExpression staticMethodCall(String name, Object... arguments) {\n" + 
+				"		return newMethodCallExpression(asClassOrInterfaceType(), name, arguments);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	MethodCallExpression methodCall(String name, Object... arguments) {\n" + 
+				"		return newMethodCallExpression(variableName(), name, arguments);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	Parameter asParameter(Object... typeArguments) {\n" + 
+				"		return newParameter(asClassOrInterfaceType(typeArguments), variableName());\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	Statement asFinalVariableDeclaration(Object initializer) {\n" + 
+				"		return newExpressionStmt(newFinalVariableDeclarationExpression(newVariableDeclaration(asClassOrInterfaceType(), variableName(), initializer)));\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	ClassOrInterfaceType asClassOrInterfaceType(Object... typeArguments) {\n" + 
+				"		return newClassOrInterfaceType(packageDeclaration == null ? null : packageDeclaration.getName(), name)\n" + 
+				"				.setTypeArguments(typeArguments);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	ObjectCreationExpression newObjectCreationExpression(Object... arguments) {\n" + 
+				"		return newObjectCreationExpression(asClassOrInterfaceType())\n" + 
+				"				.setArguments(arguments);\n" + 
 				"	}\n" + 
 				"} >>";
 }  

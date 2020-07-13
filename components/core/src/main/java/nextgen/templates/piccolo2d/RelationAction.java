@@ -210,7 +210,7 @@ public class RelationAction {
 	static final String st = "RelationAction(name,relationType,fields,canvasName,title,statements) ::= <<private static final class ~name~ extends RelationAction<~relationType~> {\n" + 
 				"\n" + 
 				"	~fields:{it|~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
-				"	\n" + 
+				"\n" + 
 				"	~name~(~relationType~ relation, ~canvasName~ canvas, PInputEvent event~if(fields)~, ~endif~~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
 				"		super(\"~title~\", relation, canvas, event);\n" + 
 				"		~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 

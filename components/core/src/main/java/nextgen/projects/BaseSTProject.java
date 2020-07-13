@@ -34,7 +34,7 @@ public class BaseSTProject {
 	final NamedEntity TreeSet = new NamedEntity("TreeSet", javaUtil);
 
 	public Statement newLinkedHashMap(String name, ClassOrInterfaceType keyType, ClassOrInterfaceType valueType) {
-		return newExpressionStmt(newFinalVariableDeclarationExpression(newVariableDeclaration(LinkedHashMap.type(keyType, valueType), name, newObjectCreationExpression(LinkedHashMap.type().setIsTyped(Boolean.TRUE)))));
+		return newExpressionStmt(newFinalVariableDeclarationExpression(newVariableDeclaration(LinkedHashMap.asClassOrInterfaceType(keyType, valueType), name, newObjectCreationExpression(LinkedHashMap.asClassOrInterfaceType().setIsTyped(Boolean.TRUE)))));
 	}
 
 	final PackageDeclaration javaUtilFunction = newPackageDeclaration(javaUtil, "function");
@@ -76,10 +76,20 @@ public class BaseSTProject {
 	final NamedEntity STCanvas = new NamedEntity("STCanvas", stCanvasPackage, "canvas");
 	final NamedEntity STRelation = new NamedEntity("STRelation", stCanvasPackage, "stRelation");
 	final NamedEntity STNode = new NamedEntity("STNode", stCanvasPackage, "stNode");
+	final NamedEntity STSinkRelation = new NamedEntity("STSinkRelation", stCanvasPackage, "stSinkRelation");
+
+
+	final PackageDeclaration layout = newPackageDeclaration(stCanvasPackage, "layout");
+	final NamedEntity Layout = new NamedEntity("Layout", layout, "layout");
+	final NamedEntity LayoutNode = new NamedEntity("LayoutNode", layout, "layoutNode");
 
 	// Neo4J
 	// graphdb
 	final PackageDeclaration graphdb = newPackageDeclaration("org.neo4j.graphdb");
+	final NamedEntity NeoNode = new NamedEntity("Node", graphdb, "node");
+	final NamedEntity NeoRelation = new NamedEntity("Relationship", graphdb, "relation");
+	final NamedEntity NeoDirection = new NamedEntity("Direction", graphdb);
+	final NamedEntity NeoRelationType = new NamedEntity("RelationshipType", graphdb, "relationType");
 	final NamedEntity neoTransaction = new NamedEntity("Transaction", graphdb, "tx");
 
 	// java Swing
@@ -89,9 +99,12 @@ public class BaseSTProject {
 	final NamedEntity JTextArea = new NamedEntity("JTextArea", javaxSwing, "textArea");
 	final NamedEntity SwingUtilities = new NamedEntity("SwingUtilities", javaxSwing);
 	final NamedEntity JMenu = new NamedEntity("JMenu", javaxSwing, "jMenu");
+	final NamedEntity JPanel = new NamedEntity("JPanel", javaxSwing, "panel");
+	final NamedEntity JTabbedPane = new NamedEntity("JTabbedPane", javaxSwing, "tabbedPane");
+	final NamedEntity JFrame = new NamedEntity("JFrame", javaxSwing, "frame");
 
 	public Statement invokeLater(Expression expression) {
-		return newExpressionStmt(newMethodCallExpression().setScope(SwingUtilities.type()).setName("invokeLater").addArguments(newLambdaExpression().setBody(expression)));
+		return newExpressionStmt(newMethodCallExpression().setScope(SwingUtilities.asClassOrInterfaceType()).setName("invokeLater").addArguments(newLambdaExpression().setBody(expression)));
 	}
 
 	// Generator
@@ -249,6 +262,11 @@ public class BaseSTProject {
 					.setBody(expression);
 		}
 
+		public static LambdaExpression newLambdaExpression(String expression) {
+			return newLambdaExpression()
+					.setBody(expression);
+		}
+
 		public static LambdaExpression newLambdaExpression(Statement... statements) {
 			return newLambdaExpression()
 					.setBody(newBlockStmt()
@@ -318,7 +336,6 @@ public class BaseSTProject {
 
 		private final String name;
 		private final PackageDeclaration packageDeclaration;
-
 		private String variableName;
 
 		NamedEntity(String name, PackageDeclaration packageDeclaration) {
@@ -335,28 +352,24 @@ public class BaseSTProject {
 			return name;
 		}
 
-		ClassOrInterfaceType type(Object... typeArguments) {
-			return asClassOrInterfaceType(typeArguments);
-		}
-
 		String variableName() {
 			return variableName == null ? Character.toLowerCase(name.charAt(0)) + name.substring(1) : variableName;
 		}
 
-		Parameter asParameter(Object... typeArguments) {
-			return newParameter(asClassOrInterfaceType(typeArguments), variableName());
-		}
-
 		MethodCallExpression staticMethodCall(String name, Object... arguments) {
-			return newMethodCallExpression(type(), name, arguments);
+			return newMethodCallExpression(asClassOrInterfaceType(), name, arguments);
 		}
 
 		MethodCallExpression methodCall(String name, Object... arguments) {
 			return newMethodCallExpression(variableName(), name, arguments);
 		}
 
-		Statement asVariable(Object initializer) {
-			return newExpressionStmt(newFinalVariableDeclarationExpression(newVariableDeclaration(type(), variableName(), initializer)));
+		Parameter asParameter(Object... typeArguments) {
+			return newParameter(asClassOrInterfaceType(typeArguments), variableName());
+		}
+
+		Statement asFinalVariableDeclaration(Object initializer) {
+			return newExpressionStmt(newFinalVariableDeclarationExpression(newVariableDeclaration(asClassOrInterfaceType(), variableName(), initializer)));
 		}
 
 		ClassOrInterfaceType asClassOrInterfaceType(Object... typeArguments) {
@@ -364,8 +377,8 @@ public class BaseSTProject {
 					.setTypeArguments(typeArguments);
 		}
 
-		ObjectCreationExpression newInstance(Object... arguments) {
-			return newObjectCreationExpression(type())
+		ObjectCreationExpression newObjectCreationExpression(Object... arguments) {
+			return newObjectCreationExpression(asClassOrInterfaceType())
 					.setArguments(arguments);
 		}
 	}

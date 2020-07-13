@@ -409,7 +409,7 @@ public class PRelationImpl {
 				"public class ~name~ extends ~relationName~ {\n" + 
 				"\n" + 
 				"	~fields:{it|~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
-				"	\n" + 
+				"\n" + 
 				"	public ~name~(~canvasName~ canvas, ~srcNode~ src, ~dstNode~ dst~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n" + 
 				"		super(canvas, src, dst, ~if(nameExpression)~~nameExpression~~else~\"~name;format=\"lowFirst\"~\"~endif~, ~uuidExpression~);\n" + 
 				"		~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
@@ -433,7 +433,7 @@ public class PRelationImpl {
 				"~endif~\n" + 
 				"		super.onRelationKeyPressed(event);\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	~actions:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"} >>";
 }  

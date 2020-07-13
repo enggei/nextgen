@@ -5,9 +5,6 @@ public class JavaST {
 	private static final String stg = "delimiters \"~\", \"~\"\n" +
 	"eom() ::= \"}\"\n" +
 	"gt() ::= \">\"\n" +
-	ArrayListType.st + "\n" + 
-	ListType.st + "\n" + 
-	SetType.st + "\n" + 
 	Bean.st + "\n" + 
 	BoundedExternalListAccessors.st + "\n" + 
 	BoundedExternalReferenceAccessors.st + "\n" + 
@@ -141,18 +138,6 @@ public class JavaST {
 	public static void setSTGroup(final String stgFile) {
 		stGroup = decorate(new org.stringtemplate.v4.STGroupFile(stgFile, '~', '~'));
 	}
-
-	public static ArrayListType newArrayListType() {
-		return new ArrayListType(stGroup);
-	} 
-
-	public static ListType newListType() {
-		return new ListType(stGroup);
-	} 
-
-	public static SetType newSetType() {
-		return new SetType(stGroup);
-	} 
 
 	public static Bean newBean() {
 		return new Bean(stGroup);

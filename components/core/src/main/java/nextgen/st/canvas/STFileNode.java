@@ -59,7 +59,7 @@ public class STFileNode extends STNode {
 	protected void onNodeLeftClick(PInputEvent event) {
 		super.onNodeLeftClick(event);
 		doLaterInTransaction(tx -> {
-			if (stRenderer == null || stModel == null) return;
+			if (stRenderer == null || stModel == null || stFile.getPath() == null) return;
 			nextgen.st.STGenerator.writeToFile(stRenderer.render(stModel), stFile.getPackageName(), stFile.getName(), stFile.getType(), new java.io.File(stFile.getPath()));
 		});
 	}
@@ -95,11 +95,11 @@ public class STFileNode extends STNode {
 		@Override
 		void actionPerformed(STFileNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
 			canvas.modelDb.doInTransaction(tx -> {
-				final Map<String, JTextField> fieldMap = new java.util.LinkedHashMap<>();
-				fieldMap.put("name", new JTextField(node.stFile.getName(), 15));
-				fieldMap.put("type", new JTextField(node.stFile.getType(), 15));
-				fieldMap.put("path", new JTextField(node.stFile.getPath(), 15));
-				fieldMap.put("package", new JTextField(node.stFile.getPackageName(), 15));
+				final java.util.LinkedHashMap<java.lang.String, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();
+				fieldMap.put("name", new javax.swing.JTextField(node.stFile.getName(), 15));
+				fieldMap.put("type", new javax.swing.JTextField(node.stFile.getType(), 15));
+				fieldMap.put("path", new javax.swing.JTextField(node.stFile.getPath(), 15));
+				fieldMap.put("package", new javax.swing.JTextField(node.stFile.getPackageName(), 15));
 				final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
 				inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
 				for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {

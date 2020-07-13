@@ -57,7 +57,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		addInputEventListener(canvasInputEventsHandler);
 		this.stRenderer = stRenderer;
 		this.modelDb = modelDb;
-
+		javax.swing.SwingUtilities.invokeLater(() -> new LoadLastLayoutAction(this, null).actionPerformed(null));
 		//org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
 
@@ -188,6 +188,8 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		pop.add(new NewSTValueNode(this, event));
 		pop.add(new NewSTValueFromClipboard(this, event));
 		pop.add(new LoadAllModels(this, event));
+		pop.add(new SaveLastLayoutAction(this, event));
+		pop.add(new LoadLastLayoutAction(this, event));
 		pop.add(new SelectAllNodes(this, event));
 		pop.add(new UnselectAllNodes(this, event));
 		pop.add(new CloseSelectedNodes(this, event));
@@ -420,6 +422,88 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		}
 	}
 
+	private static final class SaveLastLayoutAction extends CanvasAction {
+
+		SaveLastLayoutAction(STCanvas canvas, PInputEvent event) {
+			super("Save last layout", canvas, event);
+		}
+
+		@Override
+		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
+			doLaterInTransaction(tx -> {
+				final nextgen.st.canvas.layout.CanvasLayoutNeoFactory canvasLayoutNeoFactory = new nextgen.st.canvas.layout.CanvasLayoutNeoFactory(canvas.modelDb.getDatabaseService());
+				final nextgen.st.canvas.layout.Layout last = canvasLayoutNeoFactory.findOrCreateLayoutByName("last");
+
+				last.getNodes().forEach(layoutNode -> {
+					layoutNode.getNode().getRelationships().forEach(org.neo4j.graphdb.Relationship::delete);
+					layoutNode.getNode().delete();
+				});
+
+				canvas.getAllNodes().forEach(stNode -> {
+					final nextgen.st.canvas.layout.LayoutNode layoutNode = canvasLayoutNeoFactory.newLayoutNode();
+					layoutNode.setX(stNode.getOffset().getX());
+					layoutNode.setY(stNode.getOffset().getY());
+
+					if (stNode instanceof STModelNode) {
+						final org.neo4j.graphdb.Node node = ((STModelNode) stNode).stModel.getNode();
+						layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
+					} else if (stNode instanceof STValueNode) {
+						final org.neo4j.graphdb.Node node = ((STValueNode) stNode).stValue.getNode();
+						layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
+					}
+
+					last.addNodes(layoutNode);
+				});
+			});
+		}
+	}
+
+	private static final class LoadLastLayout extends CanvasAction {
+
+		LoadLastLayout(STCanvas canvas, PInputEvent event) {
+			super("Load last layout", canvas, event);
+		}
+
+		@Override
+		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
+			javax.swing.SwingUtilities.invokeLater(() ->  {
+
+			});
+		}
+	}
+
+	private static final class LoadLastLayoutAction extends CanvasAction {
+
+		LoadLastLayoutAction(STCanvas canvas, PInputEvent event) {
+			super("Load last layout", canvas, event);
+		}
+
+		@Override
+		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
+			doLaterInTransaction(tx -> {
+				final nextgen.st.canvas.layout.CanvasLayoutNeoFactory canvasLayoutNeoFactory = new nextgen.st.canvas.layout.CanvasLayoutNeoFactory(canvas.modelDb.getDatabaseService());
+				final nextgen.st.canvas.layout.Layout last = canvasLayoutNeoFactory.findLayoutByName("last");
+				if (last == null) return;
+
+				last.getNodes().forEach(layoutNode -> {
+					final org.neo4j.graphdb.Node node = layoutNode.getNode();
+					node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("ref")).forEach(relationship -> {
+						final org.neo4j.graphdb.Node stNode = relationship.getOtherNode(node);
+						if (stNode.hasLabel(org.neo4j.graphdb.Label.label("STModel"))) {
+							final nextgen.st.model.STModel stModel = canvas.modelDb.newSTModel(stNode);
+							canvas.addNode(stModel.getUuid(), canvas.newSTNode(stModel));
+							canvas.getNode(stModel.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
+						} else if (stNode.hasLabel(org.neo4j.graphdb.Label.label("STValue"))) {
+							final nextgen.st.model.STValue stModel = canvas.modelDb.newSTValue(stNode);
+							canvas.addNode(stModel.getUuid(), canvas.newSTNode(stModel));
+							canvas.getNode(stModel.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
+						}
+					});
+				});
+			});
+		}
+	}
+
 	private static final class SelectAllNodes extends CanvasAction {
 
 		SelectAllNodes(STCanvas canvas, PInputEvent event) {
@@ -511,10 +595,10 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		@Override
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
 			javax.swing.SwingUtilities.invokeLater(() ->  {
-				final JPopupMenu pop = new JPopupMenu();
-				canvas.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();
+				canvas.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));
 				canvas.onCanvasRightClick(pop, event);
-				canvas.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				canvas.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));
 				pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());	
 			});
 		}

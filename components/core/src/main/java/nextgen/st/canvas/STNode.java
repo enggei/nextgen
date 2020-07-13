@@ -10,8 +10,6 @@ import org.piccolo2d.util.PBounds;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
@@ -202,6 +200,10 @@ public class STNode extends PNode implements PropertyChangeListener {
 				new PopupAction(this, canvas, event).actionPerformed(null);
 				break;
 
+			case VK_B:
+				new DebugAction(this, canvas, event).actionPerformed(null);
+				break;
+
 		}
 	}
 
@@ -215,7 +217,6 @@ public class STNode extends PNode implements PropertyChangeListener {
 		pop.add(new LayoutTreeAction(this, canvas, event));
 		pop.add(new RetainNode(this, canvas, event));
 		pop.add(new CloseNode(this, canvas, event));
-		pop.add(new PopupAction(this, canvas, event));
 
 	}
 
@@ -314,12 +315,12 @@ public class STNode extends PNode implements PropertyChangeListener {
 		private final org.abego.treelayout.util.DefaultConfiguration<STNode> configuration;
 
 		protected LayoutTreeAction(STNode root, STCanvas canvas, PInputEvent event) {
-			this(root, canvas, event, org.abego.treelayout.Configuration.Location.Left, org.abego.treelayout.Configuration.AlignmentInLevel.Center);
+			this(root, canvas, event, org.abego.treelayout.Configuration.Location.Left, org.abego.treelayout.Configuration.AlignmentInLevel.TowardsRoot);
 		}
 
 		protected LayoutTreeAction(STNode root, STCanvas canvas, PInputEvent event, org.abego.treelayout.Configuration.Location location, org.abego.treelayout.Configuration.AlignmentInLevel alignmentInLevel) {
 			super("Layout Tree", root, canvas, event);
-			this.configuration = new org.abego.treelayout.util.DefaultConfiguration<>(100, 5, location, alignmentInLevel);
+			this.configuration = new org.abego.treelayout.util.DefaultConfiguration<>(100, 15, location, alignmentInLevel);
 		}
 
 		@Override
@@ -345,30 +346,26 @@ public class STNode extends PNode implements PropertyChangeListener {
 				final org.abego.treelayout.NodeExtentProvider<STNode> nodeExtendProvider = new org.abego.treelayout.NodeExtentProvider<STNode>() {
 					@Override
 					public double getWidth(STNode node) {
-						return node.getWidth();
+						return node.getFullBounds().getWidth();
 					}
 
 					@Override
 					public double getHeight(STNode node) {
-						return node.getHeight();
+						return node.getFullBounds().getHeight();
 					}
 				};
 
 				final org.abego.treelayout.TreeLayout<STNode> layout = new org.abego.treelayout.TreeLayout<>(tree, nodeExtendProvider, configuration);
 
-				// apply coordination-translation
-				final Point2D rootLocation = node.getFullBoundsReference().getCenter2D();
-				final Map<STNode, Rectangle2D.Double> nodeBounds = layout.getNodeBounds();
-				final Rectangle2D.Double rootBounds = nodeBounds.get(node);
-				final double dX = rootLocation.getX() - (rootBounds.getCenterX());
-				final double dY = rootLocation.getY() - (rootBounds.getCenterY() - ((int) rootBounds.getHeight() / 2d));
+				// apply coordinate transforms in relation to root-node
+				final java.awt.geom.Rectangle2D.Double rootBounds = layout.getNodeBounds().get(node);
+				final double deltaX = node.getFullBounds().getX() - rootBounds.getX();
+				final double deltaY = node.getFullBounds().getY() - rootBounds.getY();
 
 				SwingUtilities.invokeLater(() -> {
-					for (Map.Entry<STNode, Rectangle2D.Double> nodeBound : nodeBounds.entrySet()) {
-						if (node.equals(nodeBound.getKey())) continue;
-						final double centerX = nodeBound.getValue().getCenterX() + dX;
-						final double centerY = nodeBound.getValue().getCenterY() + dY;
-						nodeBound.getKey().setOffset(centerX, centerY);
+					for (Map.Entry<STNode, java.awt.geom.Rectangle2D.Double> nodeBound : layout.getNodeBounds().entrySet()) {
+						if (nodeBound.getKey().equals(node)) continue;	// root-node is transformation-root
+						nodeBound.getKey().setOffset(nodeBound.getValue().getX() + deltaX, nodeBound.getValue().getY() + deltaY);
 					}
 				});
 
@@ -433,11 +430,27 @@ public class STNode extends PNode implements PropertyChangeListener {
 		@Override
 		void actionPerformed(STNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
 			javax.swing.SwingUtilities.invokeLater(() ->  {
-				final JPopupMenu pop = new JPopupMenu();
-				canvas.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();
+				canvas.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));
 				node.onNodeRightClick(event, pop);
-				canvas.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				canvas.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));
 				pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());	
+			});
+		}
+	}
+
+	private static final class DebugAction extends NodeAction<STNode> {
+
+
+		DebugAction(STNode node, STCanvas canvas, PInputEvent event) {
+			super("Debug", node, canvas, event);
+		}
+
+		@Override
+		void actionPerformed(STNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+			javax.swing.SwingUtilities.invokeLater(() ->  {
+				final PBounds fullBounds = node.getFullBoundsReference();
+				System.out.println(fullBounds.getX() + "," + fullBounds.getY() + ", [" + fullBounds.getWidth() + "," + fullBounds.getHeight() + "]");	
 			});
 		}
 	}

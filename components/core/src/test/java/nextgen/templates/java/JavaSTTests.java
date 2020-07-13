@@ -9,9 +9,6 @@ public class JavaSTTests {
 
 	@org.junit.Test
 	public void testAll() {
-		testArrayListType();
-		testListType();
-		testSetType();
 		testBean();
 		testBoundedExternalListAccessors();
 		testBoundedExternalReferenceAccessors();
@@ -112,21 +109,6 @@ public class JavaSTTests {
 		testSwitch();
 		testProjectTypes();
 	}
-
-	@org.junit.Test
-	public void testArrayListType() {
-		System.out.println("\n--- TEST ArrayListType:\n" + newArrayListType());
-	} 
-
-	@org.junit.Test
-	public void testListType() {
-		System.out.println("\n--- TEST ListType:\n" + newListType());
-	} 
-
-	@org.junit.Test
-	public void testSetType() {
-		System.out.println("\n--- TEST SetType:\n" + newSetType());
-	} 
 
 	@org.junit.Test
 	public void testBean() {

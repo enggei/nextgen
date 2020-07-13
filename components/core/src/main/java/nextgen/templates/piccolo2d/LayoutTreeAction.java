@@ -112,14 +112,14 @@ public class LayoutTreeAction {
 				"	private final Map<UUID, ~nodeType~> parentsMap = new LinkedHashMap<>();\n" + 
 				"	private final Map<UUID, java.util.List<~nodeType~~gt()~> childrensMap = new LinkedHashMap<>();\n" + 
 				"	private final org.abego.treelayout.util.DefaultConfiguration<~nodeType~> configuration;\n" + 
-				"\n" + 
+				"	\n" + 
 				"	protected ~name~(~nodeType~ root, ~canvasName~ canvas, PInputEvent event) {\n" + 
-				"		this(root, canvas, event, org.abego.treelayout.Configuration.Location.Left, org.abego.treelayout.Configuration.AlignmentInLevel.Center);\n" + 
+				"		this(root, canvas, event, org.abego.treelayout.Configuration.Location.Left, org.abego.treelayout.Configuration.AlignmentInLevel.TowardsRoot);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	protected ~name~(~nodeType~ root, ~canvasName~ canvas, PInputEvent event, org.abego.treelayout.Configuration.Location location, org.abego.treelayout.Configuration.AlignmentInLevel alignmentInLevel) {\n" + 
 				"		super(\"Layout Tree\", root, canvas, event);\n" + 
-				"		this.configuration = new org.abego.treelayout.util.DefaultConfiguration<>(100, 5, location, alignmentInLevel);\n" + 
+				"		this.configuration = new org.abego.treelayout.util.DefaultConfiguration<>(100, 15, location, alignmentInLevel);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 
@@ -145,30 +145,26 @@ public class LayoutTreeAction {
 				"			final org.abego.treelayout.NodeExtentProvider<~nodeType~> nodeExtendProvider = new org.abego.treelayout.NodeExtentProvider<~nodeType~>() {\n" + 
 				"				@Override\n" + 
 				"				public double getWidth(~nodeType~ node) {\n" + 
-				"					return node.getWidth();\n" + 
+				"					return node.getFullBounds().getWidth();\n" + 
 				"				}\n" + 
 				"\n" + 
 				"				@Override\n" + 
 				"				public double getHeight(~nodeType~ node) {\n" + 
-				"					return node.getHeight();\n" + 
+				"					return node.getFullBounds().getHeight();\n" + 
 				"				}\n" + 
 				"			};\n" + 
 				"\n" + 
 				"			final org.abego.treelayout.TreeLayout<~nodeType~> layout = new org.abego.treelayout.TreeLayout<>(tree, nodeExtendProvider, configuration);\n" + 
 				"\n" + 
-				"			// apply coordination-translation\n" + 
-				"			final Point2D rootLocation = node.getFullBoundsReference().getCenter2D();\n" + 
-				"			final Map<~nodeType~, Rectangle2D.Double> nodeBounds = layout.getNodeBounds();\n" + 
-				"			final Rectangle2D.Double rootBounds = nodeBounds.get(node);\n" + 
-				"			final double dX = rootLocation.getX() - (rootBounds.getCenterX());\n" + 
-				"			final double dY = rootLocation.getY() - (rootBounds.getCenterY() - ((int) rootBounds.getHeight() / 2d));\n" + 
+				"			// apply coordinate transforms in relation to root-node\n" + 
+				"			final java.awt.geom.Rectangle2D.Double rootBounds = layout.getNodeBounds().get(node);\n" + 
+				"			final double deltaX = node.getFullBounds().getX() - rootBounds.getX();\n" + 
+				"			final double deltaY = node.getFullBounds().getY() - rootBounds.getY();\n" + 
 				"\n" + 
 				"			SwingUtilities.invokeLater(() -> {\n" + 
-				"				for (Map.Entry<~nodeType~, Rectangle2D.Double> nodeBound : nodeBounds.entrySet()) {\n" + 
-				"					if (node.equals(nodeBound.getKey())) continue;\n" + 
-				"					final double centerX = nodeBound.getValue().getCenterX() + dX;\n" + 
-				"					final double centerY = nodeBound.getValue().getCenterY() + dY;\n" + 
-				"					nodeBound.getKey().setOffset(centerX, centerY);\n" + 
+				"				for (Map.Entry<STNode, java.awt.geom.Rectangle2D.Double> nodeBound : layout.getNodeBounds().entrySet()) {\n" + 
+				"					if (nodeBound.getKey().equals(node)) continue;	// root-node is transformation-root\n" + 
+				"					nodeBound.getKey().setOffset(nodeBound.getValue().getX() + deltaX, nodeBound.getValue().getY() + deltaY);\n" + 
 				"				}\n" + 
 				"			});\n" + 
 				"\n" + 

@@ -14,7 +14,7 @@ public class STModelNode extends STNode {
 	nextgen.st.STRenderer stRenderer;
 
 	public STModelNode(STCanvas canvas, nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STModel stModel, nextgen.st.STRenderer stRenderer) {
-		super(canvas, stTemplate.getName() + " : \n" + cut(stRenderer.render(stModel)), java.util.UUID.fromString(stModel.getUuid()));
+		super(canvas, stTemplate.getName() + " : \n" + stRenderer.render(stModel), java.util.UUID.fromString(stModel.getUuid()));
 		this.stTemplate = stTemplate;
 		this.stModel = stModel;
 		this.stRenderer = stRenderer;
@@ -108,8 +108,8 @@ public class STModelNode extends STNode {
 					}
 				}
 				stModel.getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid())).forEach(stArgument -> {
-					stParameterMenu.add(new OpenArgument("Open " + (stParameter.getType().equals(nextgen.st.domain.STParameterType.KVLIST) ? stParameter.getName() : canvas.stRenderer.render(stArgument.getValue())), STModelNode.this, canvas, event, stParameter, stArgument));
-					stParameterMenu.add(new RemoveArgument("Remove " + (stParameter.getType().equals(nextgen.st.domain.STParameterType.KVLIST) ? stParameter.getName() : canvas.stRenderer.render(stArgument.getValue())), STModelNode.this, canvas, event, stParameter, stArgument));
+					stParameterMenu.add(new OpenArgument("Open " + (stParameter.getType().equals(nextgen.st.domain.STParameterType.KVLIST) ? stParameter.getName() : cut(canvas.stRenderer.render(stArgument.getValue()))), STModelNode.this, canvas, event, stParameter, stArgument));
+					stParameterMenu.add(new RemoveArgument("Remove " + (stParameter.getType().equals(nextgen.st.domain.STParameterType.KVLIST) ? stParameter.getName() : cut(canvas.stRenderer.render(stArgument.getValue()))), STModelNode.this, canvas, event, stParameter, stArgument));
 				});
 				if (stParameterMenu.getMenuComponentCount() != 0) pop.add(stParameterMenu);
 			});
@@ -570,6 +570,7 @@ public class STModelNode extends STNode {
 				node.stModel.getFiles().forEach(stFile -> {
 					final STFileNode dstNode = (STFileNode) canvas.addNode(stFile.getUuid(), canvas.newSTNode(stFile, node.stModel));
 					canvas.addRelation(new STSinkRelation(canvas, node, dstNode));
+					new LayoutTreeAction(node, canvas, event).actionPerformed(null);
 				});
 			});
 		}

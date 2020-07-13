@@ -31,8 +31,18 @@ public class JavaPatterns extends JavaST {
         return newPackageDeclaration().setName(parent.getName() + "." + packageName);
     }
 
+    public static ClassOrInterfaceType newClassOrInterfaceType(String packageDeclaration, String name) {
+        return newClassOrInterfaceType()
+                .setScope(packageDeclaration)
+                .addNames(name);
+    }
+
+    public static ClassOrInterfaceType newClassOrInterfaceType(PackageDeclaration packageDeclaration, String name) {
+        return newClassOrInterfaceType(packageDeclaration.getName(), name);
+    }
+
     public static ObjectCreationExpression newArrayListInstance() {
-        return newObjectCreationExpression().setType(newArrayListType());
+        return newObjectCreationExpression().setType(newClassOrInterfaceType("java.util","ArrayList").setIsTyped(true));
     }
 
     public static ObjectCreationExpression newThread(Object body) {

@@ -304,8 +304,6 @@ public class PNode {
 				"import javax.swing.*;\n" + 
 				"import java.awt.*;\n" + 
 				"import java.awt.event.ActionEvent;\n" + 
-				"import java.awt.geom.Point2D;\n" + 
-				"import java.awt.geom.Rectangle2D;\n" + 
 				"import java.beans.PropertyChangeEvent;\n" + 
 				"import java.beans.PropertyChangeListener;\n" + 
 				"import java.util.*;\n" + 
