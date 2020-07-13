@@ -5,7 +5,7 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private java.util.Collection<AnnotationDeclaration> _annotations;
+	private Comment _comments;
 	private Boolean _isOpen;
 	private Boolean _isAbstract;
 	private String _name;
@@ -13,10 +13,12 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 	private OverrideEquals _overrideEquals;
 	private OverrideHashCode _overrideHashCode;
 	private OverrideToString _overrideToString;
+	private java.util.List<AnnotationDeclaration> _annotations = new java.util.ArrayList<>();
 	private java.util.List<ParameterDefinition> _fields = new java.util.ArrayList<>();
 	private java.util.List<Extending> _extends = new java.util.ArrayList<>();
-	private java.util.List<FunctionDeclaration> _members = new java.util.ArrayList<>();
+	private java.util.List<PropertyDeclaration> _properties = new java.util.ArrayList<>();
 	private java.util.List<ClassDefinition> _subclasses = new java.util.ArrayList<>();
+	private java.util.List<FunctionDeclaration> _members = new java.util.ArrayList<>();
 
 	ClassDeclaration(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -29,7 +31,7 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ClassDeclaration");
-		st.add("annotations", _annotations);
+		st.add("comments", _comments);
 		st.add("isOpen", _isOpen);
 		st.add("isAbstract", _isAbstract);
 		st.add("name", _name);
@@ -37,32 +39,34 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 		st.add("overrideEquals", _overrideEquals);
 		st.add("overrideHashCode", _overrideHashCode);
 		st.add("overrideToString", _overrideToString);
+		for (Object o : _annotations) st.add("annotations", o);
 		for (Object o : _fields) st.add("fields", o);
 		for (Object o : _extends) st.add("extends", o);
-		for (Object o : _members) st.add("members", o);
+		for (Object o : _properties) st.add("properties", o);
 		for (Object o : _subclasses) st.add("subclasses", o);
+		for (Object o : _members) st.add("members", o);
 		return st.render().trim();
 	}
 
-	public ClassDeclaration setAnnotations(java.util.Collection<AnnotationDeclaration> value) {
-		this._annotations = value;
+	public ClassDeclaration setComments(Comment value) {
+		this._comments = value;
 		return this;
 	}
 
-	public java.util.Collection<AnnotationDeclaration> getAnnotations() {
-		return this._annotations;
+	public Comment getComments() {
+		return this._comments;
 	}
 
-	public java.util.Collection<AnnotationDeclaration> getAnnotations(java.util.Collection<AnnotationDeclaration> defaultValue) {
-		return this._annotations == null ? defaultValue : this._annotations;
+	public Comment getComments(Comment defaultValue) {
+		return this._comments == null ? defaultValue : this._comments;
 	}
 
-	public boolean hasAnnotations() {
-		return this._annotations != null;
+	public boolean hasComments() {
+		return this._comments != null;
 	}
 
-	public ClassDeclaration removeAnnotations() {
-		this._annotations = null;
+	public ClassDeclaration removeComments() {
+		this._comments = null;
 		return this;
 	} 
 
@@ -220,6 +224,35 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 		return this;
 	} 
 
+	public ClassDeclaration addAnnotations(AnnotationDeclaration value) {
+		this._annotations.add(value);
+		return this;
+	}
+
+	public ClassDeclaration setAnnotations(AnnotationDeclaration[] value) {
+		this._annotations.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassDeclaration setAnnotations(java.util.Collection<AnnotationDeclaration> values) {
+		this._annotations.addAll(values);
+		return this;
+	}
+
+	public ClassDeclaration removeAnnotations(AnnotationDeclaration value) {
+		this._annotations.remove(value);
+		return this;
+	}
+
+	public ClassDeclaration removeAnnotations(int index) {
+		this._annotations.remove(index);
+		return this;
+	}
+
+	public java.util.List<AnnotationDeclaration> getAnnotations() {
+		return this._annotations;
+	} 
+
 	public ClassDeclaration addFields(ParameterDefinition value) {
 		this._fields.add(value);
 		return this;
@@ -278,33 +311,33 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 		return this._extends;
 	} 
 
-	public ClassDeclaration addMembers(FunctionDeclaration value) {
-		this._members.add(value);
+	public ClassDeclaration addProperties(PropertyDeclaration value) {
+		this._properties.add(value);
 		return this;
 	}
 
-	public ClassDeclaration setMembers(FunctionDeclaration[] value) {
-		this._members.addAll(java.util.Arrays.asList(value));
+	public ClassDeclaration setProperties(PropertyDeclaration[] value) {
+		this._properties.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public ClassDeclaration setMembers(java.util.Collection<FunctionDeclaration> values) {
-		this._members.addAll(values);
+	public ClassDeclaration setProperties(java.util.Collection<PropertyDeclaration> values) {
+		this._properties.addAll(values);
 		return this;
 	}
 
-	public ClassDeclaration removeMembers(FunctionDeclaration value) {
-		this._members.remove(value);
+	public ClassDeclaration removeProperties(PropertyDeclaration value) {
+		this._properties.remove(value);
 		return this;
 	}
 
-	public ClassDeclaration removeMembers(int index) {
-		this._members.remove(index);
+	public ClassDeclaration removeProperties(int index) {
+		this._properties.remove(index);
 		return this;
 	}
 
-	public java.util.List<FunctionDeclaration> getMembers() {
-		return this._members;
+	public java.util.List<PropertyDeclaration> getProperties() {
+		return this._properties;
 	} 
 
 	public ClassDeclaration addSubclasses(ClassDefinition value) {
@@ -336,6 +369,35 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 		return this._subclasses;
 	} 
 
+	public ClassDeclaration addMembers(FunctionDeclaration value) {
+		this._members.add(value);
+		return this;
+	}
+
+	public ClassDeclaration setMembers(FunctionDeclaration[] value) {
+		this._members.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassDeclaration setMembers(java.util.Collection<FunctionDeclaration> values) {
+		this._members.addAll(values);
+		return this;
+	}
+
+	public ClassDeclaration removeMembers(FunctionDeclaration value) {
+		this._members.remove(value);
+		return this;
+	}
+
+	public ClassDeclaration removeMembers(int index) {
+		this._members.remove(index);
+		return this;
+	}
+
+	public java.util.List<FunctionDeclaration> getMembers() {
+		return this._members;
+	} 
+
 
 	@Override
 	public boolean equals(Object o) {
@@ -350,12 +412,16 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ClassDeclaration(annotations,isOpen,isAbstract,name,fields,extends,companionObject,overrideEquals,overrideHashCode,overrideToString,members,subclasses) ::= <<~annotations~~if(annotations)~\n" + 
-				"~endif~~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~(\n" + 
+	static final String st = "ClassDeclaration(comments,annotations,isOpen,isAbstract,name,fields,extends,properties,companionObject,subclasses,overrideEquals,overrideHashCode,overrideToString,members) ::= <<~comments~\n" + 
+				"~annotations:{it|~it~};separator=\"\\n\"~\n" + 
+				"~if(isOpen)~open ~elseif(isAbstract)~abstract ~endif~class ~name~~if(fields)~(\n" + 
 				"	~fields:{it|~it~};separator=\",\\n\"~\n" + 
-				")~if(extends)~: ~extends:{it|~it~};separator=\", \"~~endif~ {\n" + 
+				")~endif~~if(extends)~ : ~extends:{it|~it~};separator=\", \"~~endif~ {\n" + 
 				"\n" + 
+				"	~properties:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"	~companionObject~\n" + 
+				"\n" + 
+				"	~subclasses:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
 				"	~overrideEquals~\n" + 
 				"\n" + 
@@ -363,8 +429,6 @@ public class ClassDeclaration implements CompilationUnit, ClassDefinition {
 				"\n" + 
 				"	~overrideToString~\n" + 
 				"\n" + 
-				"	~members:{it|~it~};separator=\"\\n\"~\n" + 
-				"\n" + 
-				"	~subclasses:{it|~it~};separator=\"\\n\"~\n" + 
+				"	~members:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"} >>";
 }  

@@ -1,6 +1,6 @@
 package nextgen.templates.kotlin;
 
-public class RawStringExpression implements Expression {
+public class RawStringExpression implements Expression, StringExpression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;

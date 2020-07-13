@@ -5,7 +5,7 @@ public class ImplementingInterface implements Extending {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private String _interfaceName;
+	private TypeDeclaration _type;
 
 	ImplementingInterface(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -18,29 +18,29 @@ public class ImplementingInterface implements Extending {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ImplementingInterface");
-		st.add("interfaceName", _interfaceName);
+		st.add("type", _type);
 		return st.render().trim();
 	}
 
-	public ImplementingInterface setInterfaceName(String value) {
-		this._interfaceName = value;
+	public ImplementingInterface setType(TypeDeclaration value) {
+		this._type = value;
 		return this;
 	}
 
-	public String getInterfaceName() {
-		return this._interfaceName;
+	public TypeDeclaration getType() {
+		return this._type;
 	}
 
-	public String getInterfaceName(String defaultValue) {
-		return this._interfaceName == null ? defaultValue : this._interfaceName;
+	public TypeDeclaration getType(TypeDeclaration defaultValue) {
+		return this._type == null ? defaultValue : this._type;
 	}
 
-	public boolean hasInterfaceName() {
-		return this._interfaceName != null;
+	public boolean hasType() {
+		return this._type != null;
 	}
 
-	public ImplementingInterface removeInterfaceName() {
-		this._interfaceName = null;
+	public ImplementingInterface removeType() {
+		this._type = null;
 		return this;
 	} 
 
@@ -59,5 +59,5 @@ public class ImplementingInterface implements Extending {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ImplementingInterface(interfaceName) ::= <<~interfaceName~ >>";
+	static final String st = "ImplementingInterface(type) ::= <<~type~ >>";
 }  

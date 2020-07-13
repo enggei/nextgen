@@ -10,12 +10,16 @@ public class KotlinSTTests {
 	@org.junit.Test
 	public void testAll() {
 		testArrayEqualsExpression();
+		testAssertNotNullExpression();
 		testAssignExpression();
 		testCastExpression();
+		testComparisonExpression();
 		testConstructorCallExpression();
-		testEqualsExpression();
 		testFunctionCallExpression();
+		testGroupedExpression();
+		testIfExpression();
 		testLiteralExpression();
+		testLogicalExpression();
 		testNullExpression();
 		testObjectExpression();
 		testPairExpression();
@@ -26,13 +30,14 @@ public class KotlinSTTests {
 		testStringValueExpression();
 		testThisExpression();
 		testAnnotationDeclaration();
-		testAnnotationParam();
 		testClassDeclaration();
 		testCompanionObject();
 		testOverrideEquals();
 		testOverrideHashCode();
 		testOverrideToString();
 		testDataClassDeclaration();
+		testEnumClassDeclaration();
+		testEnumField();
 		testExtendingClass();
 		testFunctionDeclaration();
 		testFunctionParam();
@@ -44,8 +49,11 @@ public class KotlinSTTests {
 		testPropertyDeclaration();
 		testKotlinStringTemplateExpression();
 		testKotlinStringTemplateSingleValue();
+		testCommentBlock();
+		testIfStatement();
 		testImportStatement();
 		testReturnStatement();
+		testSingleLineComment();
 		testTodoStatement();
 		testVarDeclarationStatement();
 		testArrayInitializer();
@@ -74,13 +82,20 @@ public class KotlinSTTests {
 		testNullableType();
 		testPairType();
 		testSetType();
+		testStarType();
 		testStringType();
+		testTemplateType();
 		testUnitType();
 	}
 
 	@org.junit.Test
 	public void testArrayEqualsExpression() {
 		System.out.println("\n--- TEST ArrayEqualsExpression:\n" + newArrayEqualsExpression());
+	} 
+
+	@org.junit.Test
+	public void testAssertNotNullExpression() {
+		System.out.println("\n--- TEST AssertNotNullExpression:\n" + newAssertNotNullExpression());
 	} 
 
 	@org.junit.Test
@@ -94,13 +109,13 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
-	public void testConstructorCallExpression() {
-		System.out.println("\n--- TEST ConstructorCallExpression:\n" + newConstructorCallExpression());
+	public void testComparisonExpression() {
+		System.out.println("\n--- TEST ComparisonExpression:\n" + newComparisonExpression());
 	} 
 
 	@org.junit.Test
-	public void testEqualsExpression() {
-		System.out.println("\n--- TEST EqualsExpression:\n" + newEqualsExpression());
+	public void testConstructorCallExpression() {
+		System.out.println("\n--- TEST ConstructorCallExpression:\n" + newConstructorCallExpression());
 	} 
 
 	@org.junit.Test
@@ -109,8 +124,23 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
+	public void testGroupedExpression() {
+		System.out.println("\n--- TEST GroupedExpression:\n" + newGroupedExpression());
+	} 
+
+	@org.junit.Test
+	public void testIfExpression() {
+		System.out.println("\n--- TEST IfExpression:\n" + newIfExpression());
+	} 
+
+	@org.junit.Test
 	public void testLiteralExpression() {
 		System.out.println("\n--- TEST LiteralExpression:\n" + newLiteralExpression());
+	} 
+
+	@org.junit.Test
+	public void testLogicalExpression() {
+		System.out.println("\n--- TEST LogicalExpression:\n" + newLogicalExpression());
 	} 
 
 	@org.junit.Test
@@ -164,11 +194,6 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
-	public void testAnnotationParam() {
-		System.out.println("\n--- TEST AnnotationParam:\n" + newAnnotationParam());
-	} 
-
-	@org.junit.Test
 	public void testClassDeclaration() {
 		System.out.println("\n--- TEST ClassDeclaration:\n" + newClassDeclaration());
 	} 
@@ -196,6 +221,16 @@ public class KotlinSTTests {
 	@org.junit.Test
 	public void testDataClassDeclaration() {
 		System.out.println("\n--- TEST DataClassDeclaration:\n" + newDataClassDeclaration());
+	} 
+
+	@org.junit.Test
+	public void testEnumClassDeclaration() {
+		System.out.println("\n--- TEST EnumClassDeclaration:\n" + newEnumClassDeclaration());
+	} 
+
+	@org.junit.Test
+	public void testEnumField() {
+		System.out.println("\n--- TEST EnumField:\n" + newEnumField());
 	} 
 
 	@org.junit.Test
@@ -254,6 +289,16 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
+	public void testCommentBlock() {
+		System.out.println("\n--- TEST CommentBlock:\n" + newCommentBlock());
+	} 
+
+	@org.junit.Test
+	public void testIfStatement() {
+		System.out.println("\n--- TEST IfStatement:\n" + newIfStatement());
+	} 
+
+	@org.junit.Test
 	public void testImportStatement() {
 		System.out.println("\n--- TEST ImportStatement:\n" + newImportStatement());
 	} 
@@ -261,6 +306,11 @@ public class KotlinSTTests {
 	@org.junit.Test
 	public void testReturnStatement() {
 		System.out.println("\n--- TEST ReturnStatement:\n" + newReturnStatement());
+	} 
+
+	@org.junit.Test
+	public void testSingleLineComment() {
+		System.out.println("\n--- TEST SingleLineComment:\n" + newSingleLineComment());
 	} 
 
 	@org.junit.Test
@@ -404,8 +454,18 @@ public class KotlinSTTests {
 	} 
 
 	@org.junit.Test
+	public void testStarType() {
+		System.out.println("\n--- TEST StarType:\n" + newStarType());
+	} 
+
+	@org.junit.Test
 	public void testStringType() {
 		System.out.println("\n--- TEST StringType:\n" + newStringType());
+	} 
+
+	@org.junit.Test
+	public void testTemplateType() {
+		System.out.println("\n--- TEST TemplateType:\n" + newTemplateType());
 	} 
 
 	@org.junit.Test

@@ -5,12 +5,15 @@ public class PropertyDeclaration implements ParameterDefinition {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Boolean _isAbstract;
+	private Boolean _override;
 	private Boolean _isPrivate;
 	private Boolean _isProtected;
 	private Boolean _isMutable;
 	private String _name;
 	private TypeDeclaration _type;
 	private Expression _initializer;
+	private Boolean _privateSetter;
 	private java.util.List<AnnotationDeclaration> _annotations = new java.util.ArrayList<>();
 
 	PropertyDeclaration(org.stringtemplate.v4.STGroup stGroup) {
@@ -24,15 +27,62 @@ public class PropertyDeclaration implements ParameterDefinition {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("PropertyDeclaration");
+		st.add("isAbstract", _isAbstract);
+		st.add("override", _override);
 		st.add("isPrivate", _isPrivate);
 		st.add("isProtected", _isProtected);
 		st.add("isMutable", _isMutable);
 		st.add("name", _name);
 		st.add("type", _type);
 		st.add("initializer", _initializer);
+		st.add("privateSetter", _privateSetter);
 		for (Object o : _annotations) st.add("annotations", o);
 		return st.render().trim();
 	}
+
+	public PropertyDeclaration setIsAbstract(Boolean value) {
+		this._isAbstract = value;
+		return this;
+	}
+
+	public Boolean getIsAbstract() {
+		return this._isAbstract;
+	}
+
+	public Boolean getIsAbstract(Boolean defaultValue) {
+		return this._isAbstract == null ? defaultValue : this._isAbstract;
+	}
+
+	public boolean hasIsAbstract() {
+		return this._isAbstract != null;
+	}
+
+	public PropertyDeclaration removeIsAbstract() {
+		this._isAbstract = null;
+		return this;
+	} 
+
+	public PropertyDeclaration setOverride(Boolean value) {
+		this._override = value;
+		return this;
+	}
+
+	public Boolean getOverride() {
+		return this._override;
+	}
+
+	public Boolean getOverride(Boolean defaultValue) {
+		return this._override == null ? defaultValue : this._override;
+	}
+
+	public boolean hasOverride() {
+		return this._override != null;
+	}
+
+	public PropertyDeclaration removeOverride() {
+		this._override = null;
+		return this;
+	} 
 
 	public PropertyDeclaration setIsPrivate(Boolean value) {
 		this._isPrivate = value;
@@ -166,6 +216,28 @@ public class PropertyDeclaration implements ParameterDefinition {
 		return this;
 	} 
 
+	public PropertyDeclaration setPrivateSetter(Boolean value) {
+		this._privateSetter = value;
+		return this;
+	}
+
+	public Boolean getPrivateSetter() {
+		return this._privateSetter;
+	}
+
+	public Boolean getPrivateSetter(Boolean defaultValue) {
+		return this._privateSetter == null ? defaultValue : this._privateSetter;
+	}
+
+	public boolean hasPrivateSetter() {
+		return this._privateSetter != null;
+	}
+
+	public PropertyDeclaration removePrivateSetter() {
+		this._privateSetter = null;
+		return this;
+	} 
+
 	public PropertyDeclaration addAnnotations(AnnotationDeclaration value) {
 		this._annotations.add(value);
 		return this;
@@ -209,6 +281,7 @@ public class PropertyDeclaration implements ParameterDefinition {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PropertyDeclaration(annotations,isPrivate,isProtected,isMutable,name,type,initializer) ::= <<~annotations:{it|~it~};separator=\"\\n\"~\n" + 
-				"~if(isPrivate)~private ~elseif(isProtected)~protected ~endif~~if(isMutable)~var ~else~val ~endif~~name~~if(type)~: ~type~~endif~~if(initializer)~ = ~initializer~~endif~ >>";
+	static final String st = "PropertyDeclaration(annotations,isAbstract,override,isPrivate,isProtected,isMutable,name,type,initializer,privateSetter) ::= <<~annotations:{it|~it~};separator=\"\\n\"~\n" + 
+				"~if(isAbstract)~abstract ~endif~~if(override)~override ~endif~~if(isPrivate)~private ~elseif(isProtected)~protected ~endif~~if(isMutable)~var ~else~val ~endif~~name~~if(type)~: ~type~~endif~~if(initializer)~ = ~initializer~~endif~~if(privateSetter)~\n" + 
+				"	private set~endif~ >>";
 }  

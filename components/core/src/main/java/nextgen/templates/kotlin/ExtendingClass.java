@@ -5,7 +5,7 @@ public class ExtendingClass implements Extending {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private String _className;
+	private TypeDeclaration _name;
 	private java.util.List<Expression> _params = new java.util.ArrayList<>();
 
 	ExtendingClass(org.stringtemplate.v4.STGroup stGroup) {
@@ -19,30 +19,30 @@ public class ExtendingClass implements Extending {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ExtendingClass");
-		st.add("className", _className);
+		st.add("name", _name);
 		for (Object o : _params) st.add("params", o);
 		return st.render().trim();
 	}
 
-	public ExtendingClass setClassName(String value) {
-		this._className = value;
+	public ExtendingClass setName(TypeDeclaration value) {
+		this._name = value;
 		return this;
 	}
 
-	public String getClassName() {
-		return this._className;
+	public TypeDeclaration getName() {
+		return this._name;
 	}
 
-	public String getClassName(String defaultValue) {
-		return this._className == null ? defaultValue : this._className;
+	public TypeDeclaration getName(TypeDeclaration defaultValue) {
+		return this._name == null ? defaultValue : this._name;
 	}
 
-	public boolean hasClassName() {
-		return this._className != null;
+	public boolean hasName() {
+		return this._name != null;
 	}
 
-	public ExtendingClass removeClassName() {
-		this._className = null;
+	public ExtendingClass removeName() {
+		this._name = null;
 		return this;
 	} 
 
@@ -89,5 +89,5 @@ public class ExtendingClass implements Extending {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ExtendingClass(className,params) ::= <<~className~(~params:{it|~it~};separator=\", \"~) >>";
+	static final String st = "ExtendingClass(name,params) ::= <<~name~(~params:{it|~it~};separator=\", \"~) >>";
 }  

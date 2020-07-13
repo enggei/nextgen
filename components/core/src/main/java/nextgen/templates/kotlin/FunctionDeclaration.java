@@ -5,11 +5,11 @@ public class FunctionDeclaration implements CompilationUnit {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private java.util.Collection<AnnotationDeclaration> _annotations;
 	private Boolean _override;
 	private String _name;
 	private TypeDeclaration _returnType;
 	private Expression _expressionBody;
+	private java.util.List<AnnotationDeclaration> _annotations = new java.util.ArrayList<>();
 	private java.util.List<FunctionParam> _params = new java.util.ArrayList<>();
 	private java.util.List<Statement> _statements = new java.util.ArrayList<>();
 
@@ -24,37 +24,15 @@ public class FunctionDeclaration implements CompilationUnit {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("FunctionDeclaration");
-		st.add("annotations", _annotations);
 		st.add("override", _override);
 		st.add("name", _name);
 		st.add("returnType", _returnType);
 		st.add("expressionBody", _expressionBody);
+		for (Object o : _annotations) st.add("annotations", o);
 		for (Object o : _params) st.add("params", o);
 		for (Object o : _statements) st.add("statements", o);
 		return st.render().trim();
 	}
-
-	public FunctionDeclaration setAnnotations(java.util.Collection<AnnotationDeclaration> value) {
-		this._annotations = value;
-		return this;
-	}
-
-	public java.util.Collection<AnnotationDeclaration> getAnnotations() {
-		return this._annotations;
-	}
-
-	public java.util.Collection<AnnotationDeclaration> getAnnotations(java.util.Collection<AnnotationDeclaration> defaultValue) {
-		return this._annotations == null ? defaultValue : this._annotations;
-	}
-
-	public boolean hasAnnotations() {
-		return this._annotations != null;
-	}
-
-	public FunctionDeclaration removeAnnotations() {
-		this._annotations = null;
-		return this;
-	} 
 
 	public FunctionDeclaration setOverride(Boolean value) {
 		this._override = value;
@@ -144,6 +122,35 @@ public class FunctionDeclaration implements CompilationUnit {
 		return this;
 	} 
 
+	public FunctionDeclaration addAnnotations(AnnotationDeclaration value) {
+		this._annotations.add(value);
+		return this;
+	}
+
+	public FunctionDeclaration setAnnotations(AnnotationDeclaration[] value) {
+		this._annotations.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public FunctionDeclaration setAnnotations(java.util.Collection<AnnotationDeclaration> values) {
+		this._annotations.addAll(values);
+		return this;
+	}
+
+	public FunctionDeclaration removeAnnotations(AnnotationDeclaration value) {
+		this._annotations.remove(value);
+		return this;
+	}
+
+	public FunctionDeclaration removeAnnotations(int index) {
+		this._annotations.remove(index);
+		return this;
+	}
+
+	public java.util.List<AnnotationDeclaration> getAnnotations() {
+		return this._annotations;
+	} 
+
 	public FunctionDeclaration addParams(FunctionParam value) {
 		this._params.add(value);
 		return this;
@@ -216,8 +223,9 @@ public class FunctionDeclaration implements CompilationUnit {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "FunctionDeclaration(annotations,override,name,params,returnType,expressionBody,statements) ::= <<~annotations~~if(override)~override ~endif~fun ~name~(~params:{it|~it~};separator=\", \"~)~if(returnType)~: ~returnType~~endif~~if(expressionBody)~ =\n" + 
-				"	~expressionBody~~else~ {\n" + 
+	static final String st = "FunctionDeclaration(annotations,override,name,params,returnType,expressionBody,statements) ::= <<~annotations:{it|~it~};separator=\"\\n\"~\n" + 
+				"~if(override)~override ~endif~fun ~name~(~params:{it|~it~};separator=\", \"~)~if(returnType)~: ~returnType~~endif~~if(expressionBody)~ =\n" + 
+				"	~expressionBody~~else~~if(statements)~ {\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
-				"}~endif~ >>";
+				"}~endif~~endif~ >>";
 }  

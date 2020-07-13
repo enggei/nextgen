@@ -1,14 +1,15 @@
 package nextgen.templates.kotlin;
 
-public class EqualsExpression implements Expression {
+public class LogicalExpression implements Expression {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Expression _lhs;
+	private LogicalOperator _operator;
 	private Expression _rhs;
 
-	EqualsExpression(org.stringtemplate.v4.STGroup stGroup) {
+	LogicalExpression(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
@@ -18,13 +19,14 @@ public class EqualsExpression implements Expression {
 
 	@Override
 	public String toString() {
-		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("EqualsExpression");
+		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("LogicalExpression");
 		st.add("lhs", _lhs);
+		st.add("operator", _operator);
 		st.add("rhs", _rhs);
 		return st.render().trim();
 	}
 
-	public EqualsExpression setLhs(Expression value) {
+	public LogicalExpression setLhs(Expression value) {
 		this._lhs = value;
 		return this;
 	}
@@ -41,12 +43,34 @@ public class EqualsExpression implements Expression {
 		return this._lhs != null;
 	}
 
-	public EqualsExpression removeLhs() {
+	public LogicalExpression removeLhs() {
 		this._lhs = null;
 		return this;
 	} 
 
-	public EqualsExpression setRhs(Expression value) {
+	public LogicalExpression setOperator(LogicalOperator value) {
+		this._operator = value;
+		return this;
+	}
+
+	public LogicalOperator getOperator() {
+		return this._operator;
+	}
+
+	public LogicalOperator getOperator(LogicalOperator defaultValue) {
+		return this._operator == null ? defaultValue : this._operator;
+	}
+
+	public boolean hasOperator() {
+		return this._operator != null;
+	}
+
+	public LogicalExpression removeOperator() {
+		this._operator = null;
+		return this;
+	} 
+
+	public LogicalExpression setRhs(Expression value) {
 		this._rhs = value;
 		return this;
 	}
@@ -63,7 +87,7 @@ public class EqualsExpression implements Expression {
 		return this._rhs != null;
 	}
 
-	public EqualsExpression removeRhs() {
+	public LogicalExpression removeRhs() {
 		this._rhs = null;
 		return this;
 	} 
@@ -74,7 +98,7 @@ public class EqualsExpression implements Expression {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		EqualsExpression that = (EqualsExpression) o;
+		LogicalExpression that = (LogicalExpression) o;
 		return uuid.equals(that.uuid);
 	}
 
@@ -83,5 +107,5 @@ public class EqualsExpression implements Expression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "EqualsExpression(lhs,rhs) ::= <<~lhs~ == ~rhs~ >>";
+	static final String st = "LogicalExpression(lhs,operator,rhs) ::= <<~lhs~ ~operator~ ~rhs~ >>";
 }  
