@@ -74,17 +74,17 @@ public class STValueNode extends STNode {
 
 		@Override
 		void actionPerformed(STValueNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			final JTextArea textArea = new JTextArea(15,40);
+			final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea rSyntaxTextArea = canvas.newTextArea();
 			canvas.modelDb.doInTransaction(tx -> {
-				textArea.setText(node.stValue.getValue());
+				rSyntaxTextArea.setText(node.stValue.getValue());
 			});
 			final JPanel inputPanel = new JPanel(new BorderLayout());
-			inputPanel.add(textArea, BorderLayout.CENTER);
+			inputPanel.add(rSyntaxTextArea, BorderLayout.CENTER);
 			inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
 			com.generator.util.SwingUtil.showDialog(inputPanel, canvas, "Edit", new com.generator.util.SwingUtil.ConfirmAction() {
 				@Override
 				public void verifyAndCommit() throws Exception {
-					final String s = textArea.getText().trim();
+					final String s = rSyntaxTextArea.getText().trim();
 					doLaterInTransaction(tx -> {
 						node.stValue.setValue(s);
 						node.setText(node.stValue.getValue());

@@ -1,15 +1,15 @@
 package nextgen.st.canvas.layout;
 
-public class CanvasLayoutNeoFactory {
+public class LayoutNeoFactory {
 
 	private final org.neo4j.graphdb.GraphDatabaseService db;
 
-	public CanvasLayoutNeoFactory(java.lang.String dir) { 
+	public LayoutNeoFactory(java.lang.String dir) { 
 		this(new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabaseBuilder(new java.io.File(dir)).setConfig(org.neo4j.graphdb.factory.GraphDatabaseSettings.allow_upgrade, "true").newGraphDatabase());
 		Runtime.getRuntime().addShutdownHook(new java.lang.Thread(db::shutdown));
 	}
 
-	public CanvasLayoutNeoFactory(org.neo4j.graphdb.GraphDatabaseService db) { 
+	public LayoutNeoFactory(org.neo4j.graphdb.GraphDatabaseService db) { 
 		this.db = db;
 	}
 

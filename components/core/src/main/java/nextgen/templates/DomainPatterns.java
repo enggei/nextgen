@@ -139,7 +139,7 @@ public class DomainPatterns extends DomainST {
         return newObjectCreationExpression().setType(newClassOrInterfaceType("java.util","ArrayList").setIsTyped(true));
     }
 
-    public static PackageDeclaration newPackageDeclaration(String packageName) {
+    private static PackageDeclaration newPackageDeclaration(String packageName) {
         return JavaST.newPackageDeclaration().setName(packageName);
     }
 
@@ -537,11 +537,7 @@ public class DomainPatterns extends DomainST {
         writeJsonWrapper(root, newPackageDeclaration(packageName), domain);
     }
 
-    public static void writeJsonWrapper(File root, PackageDeclaration packageDeclaration, Domain domain) {
-        writeJsonWrapper(root, packageDeclaration, domain, false);
-    }
-
-    public static void writeJsonWrapper(File root, PackageDeclaration packageDeclaration, Domain domain, boolean addNeoNodeMapper) {
+   public static void writeJsonWrapper(File root, PackageDeclaration packageDeclaration, Domain domain) {
 
         final Map<Entity, JsonWrapper> visited = new LinkedHashMap<>();
         domain.getEntities().forEach(entity -> {
@@ -639,11 +635,4 @@ public class DomainPatterns extends DomainST {
         return (Entity) type;
     }
 
-//    private static Class<?> asClass(Object type) {
-//        return (Class<?>) type;
-//    }
-
-    public static String newType(PackageDeclaration packageDeclaration, String name) {
-        return packageDeclaration.getName() + "." + name;
-    }
 }

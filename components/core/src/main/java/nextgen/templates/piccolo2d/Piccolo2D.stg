@@ -77,6 +77,10 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 		final java.awt.geom.Point2D localToView = getCamera().localToView(mousePosition);
 		return new Point((int) localToView.getX(), (int) localToView.getY());
 	}
+	
+	public <N extends ~nodeName~> void centerNode(N node) {
+		SwingUtilities.invokeLater(() -> getCamera().animateViewToCenterBounds(node.getGlobalFullBounds(), false, 500));
+	}
 
 	@SuppressWarnings("unchecked")
 	public <N extends ~nodeName~> Stream<N> getAllNodes() {

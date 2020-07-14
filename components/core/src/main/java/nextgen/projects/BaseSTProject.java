@@ -12,6 +12,19 @@ public class BaseSTProject {
 	final java.io.File testJava = new java.io.File(root, "src/test/java");
 	final java.io.File testResources = new java.io.File(root, "src/test/resources");
 
+	// RSyntaxTextArea
+	final PackageDeclaration orgFifeUi = newPackageDeclaration("org.fife.ui");
+
+
+	final PackageDeclaration rSyntaxtextArea = newPackageDeclaration(orgFifeUi, "rsyntaxtextarea");
+	final NamedEntity RSyntaxTextArea = new NamedEntity("RSyntaxTextArea", rSyntaxtextArea);
+	final NamedEntity SyntaxConstants = new NamedEntity("SyntaxConstants", rSyntaxtextArea);
+
+	final PackageDeclaration rTextArea = newPackageDeclaration(orgFifeUi, "rtextarea");
+	final NamedEntity RTextScrollPane = new NamedEntity("RTextScrollPane", rTextArea);
+	final NamedEntity SearchContext = new NamedEntity("SearchContext", rTextArea);
+	final NamedEntity SearchEngine = new NamedEntity("SearchEngine", rTextArea);
+
 	// Vertx
 	// core
 	final PackageDeclaration vertxCore = newPackageDeclaration("io.vertx.core");
@@ -137,6 +150,13 @@ public class BaseSTProject {
 		return newExpressionStmt(newMethodCallExpression().setScope(SwingUtilities.asClassOrInterfaceType()).setName("invokeLater").addArguments(newLambdaExpression(expression)));
 	}
 
+	final PackageDeclaration javaAwt = newPackageDeclaration("java.awt");
+
+
+	final PackageDeclaration javaAwtEvent = newPackageDeclaration(javaAwt, "event");
+	final NamedEntity KeyEvent = new NamedEntity("KeyEvent", javaAwtEvent);
+	final NamedEntity KeyAdapter = new NamedEntity("KeyAdapter", javaAwtEvent);
+
 	// Generator
 	final PackageDeclaration generatorUtil = newPackageDeclaration("com.generator.util");
 	final NamedEntity SwingUtil = new NamedEntity("SwingUtil", generatorUtil);
@@ -223,6 +243,21 @@ public class BaseSTProject {
 
 		public static MethodDeclaration newMethodDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, BlockStmt blockStmt) {
 			return newMethodDeclaration()
+					.setType(classOrInterfaceType)
+					.setName(name)
+					.setBlockStmt(blockStmt);
+		}
+
+		public static MethodDeclaration newOverriddenMethodDeclaration(String name, BlockStmt blockStmt) {
+			return newMethodDeclaration()
+					.addAnnotations(newSingleMemberAnnotationExpression().setName("Override"))
+					.setName(name)
+					.setBlockStmt(blockStmt);
+		}
+
+		public static MethodDeclaration newOverridenMethodDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, BlockStmt blockStmt) {
+			return newMethodDeclaration()
+					.addAnnotations(newSingleMemberAnnotationExpression().setName("Override"))
 					.setType(classOrInterfaceType)
 					.setName(name)
 					.setBlockStmt(blockStmt);
@@ -336,6 +371,18 @@ public class BaseSTProject {
 						.setStatements(statements));
 		}
 
+		public static FieldAccessExpression newFieldAccessExpression(ClassOrInterfaceType scope, String name) {
+			return newFieldAccessExpression()
+					.setScope(scope)
+					.setName(name);
+		}
+
+		public static FieldAccessExpression newFieldAccessExpression(Expression scope, String name) {
+			return newFieldAccessExpression()
+					.setScope(scope)
+					.setName(name);
+		}
+
 		public static FieldAccessExpression newFieldAccessExpression(String scope, String name) {
 			return newFieldAccessExpression()
 					.setScope(scope)
@@ -348,14 +395,7 @@ public class BaseSTProject {
 					.addVariables(variableDeclaration);
 		}
 
-		public static MethodCallExpression newMethodCallExpression(FieldAccessExpression scope, String name, Object... arguments) {
-			return newMethodCallExpression()
-					.setScope(scope)
-					.setName(name)
-					.setArguments(arguments);
-		}
-
-		public static MethodCallExpression newMethodCallExpression(MethodCallExpression scope, String name, Object... arguments) {
+		public static MethodCallExpression newMethodCallExpression(Expression scope, String name, Object... arguments) {
 			return newMethodCallExpression()
 					.setScope(scope)
 					.setName(name)
@@ -376,17 +416,14 @@ public class BaseSTProject {
 					.setArguments(arguments);
 		}
 
-		public static MethodCallExpression newMethodCallExpression(String scope, String name, Object... arguments) {
-			return newMethodCallExpression()
-					.setScope(scope)
-					.setName(name)
-					.setArguments(arguments);
-		}
-
 		public static MethodCallExpression newMethodCallExpression(String name, Object... arguments) {
 			return newMethodCallExpression()
 					.setName(name)
 					.setArguments(arguments);
+		}
+
+		public static Expression newExpression(String expression) {
+			return newNameExpression().setValue(expression);
 		}
 
 		// formatting
@@ -424,7 +461,7 @@ public class BaseSTProject {
 		}
 
 		MethodCallExpression methodCall(String name, Object... arguments) {
-			return newMethodCallExpression(variableName(), name, arguments);
+			return newMethodCallExpression(newExpression(variableName()), name, arguments);
 		}
 
 		Parameter asParameter(Object... typeArguments) {
@@ -451,6 +488,10 @@ public class BaseSTProject {
 		ObjectCreationExpression asObjectCreationExpression(Object... arguments) {
 			return newObjectCreationExpression(asClassOrInterfaceType())
 					.setArguments(arguments);
+		}
+
+		FieldAccessExpression asFieldAccessExpression(String fieldName) {
+			return newFieldAccessExpression(asClassOrInterfaceType(), fieldName);
 		}
 	}
 }

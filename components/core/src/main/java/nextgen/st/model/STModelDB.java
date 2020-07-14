@@ -96,7 +96,7 @@ public class STModelDB extends STModelNeoFactory {
             final STTemplate stTemplate = findSTTemplateByUuid(groupModel, uuid);
             if (stTemplate != null) return stTemplate;
         }
-        throw new IllegalStateException("Missing uuid " + uuid);
+        return null;
     }
 
     private STTemplate findSTTemplateByUuid(STGroupModel groupModel, String stTemplateUuid) {
@@ -201,49 +201,56 @@ public class STModelDB extends STModelNeoFactory {
 
                 try {
                     final STTemplate stTemplate = findSTTemplateByUuid(stModel.getStTemplate());
-                    stModel.getArguments().forEach(stArgument -> {
-                        final Optional<STParameter> first = stTemplate.getParameters().filter(stParameter -> stArgument.getStParameter().equals(stParameter.uuid())).findFirst();
-                        if (!first.isPresent())
-                            remove(stArgument);
-                        else {
-                            switch (first.get().getType()) {
-                                case SINGLE:
-                                case LIST:
-                                    final STValue value = stArgument.getValue();
-                                    if (value == null)
-                                        remove(stArgument);
-                                    else if (value.getType().equals(STValueType.STMODEL)) {
 
-                                        final AtomicBoolean duplicate = new AtomicBoolean(false);
-                                        java.util.stream.StreamSupport.stream(value.getNode().getRelationships(Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("stModel")).spliterator(), false)
-                                                .sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t", o.getId())))
-                                                .forEach(relationship -> {
-                                                    if (duplicate.get()) {
-                                                        relationship.delete();
-                                                    } else {
-                                                        duplicate.set(true);
-                                                    }
-                                                });
+                    if (stTemplate == null) {
+                        System.out.println("removing model " + stModel.getUuid() + ". Illegal template-reference (null)");
+                        remove(stModel);
+                    } else {
 
-                                        if (value.getStModel() == null)
+                        stModel.getArguments().forEach(stArgument -> {
+                            final Optional<STParameter> first = stTemplate.getParameters().filter(stParameter -> stArgument.getStParameter().equals(stParameter.uuid())).findFirst();
+                            if (!first.isPresent())
+                                remove(stArgument);
+                            else {
+                                switch (first.get().getType()) {
+                                    case SINGLE:
+                                    case LIST:
+                                        final STValue value = stArgument.getValue();
+                                        if (value == null)
                                             remove(stArgument);
-                                    }
-                                    break;
-                                case KVLIST:
+                                        else if (value.getType().equals(STValueType.STMODEL)) {
 
-                                    stArgument.getKeyValues().forEach(stArgumentKV -> {
-                                        final STValue stArgumentKVValue = stArgumentKV.getValue();
-                                        if (stArgumentKVValue == null) delete(stArgumentKV.getNode());
-                                    });
+                                            final AtomicBoolean duplicate = new AtomicBoolean(false);
+                                            java.util.stream.StreamSupport.stream(value.getNode().getRelationships(Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("stModel")).spliterator(), false)
+                                                    .sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t", o.getId())))
+                                                    .forEach(relationship -> {
+                                                        if (duplicate.get()) {
+                                                            relationship.delete();
+                                                        } else {
+                                                            duplicate.set(true);
+                                                        }
+                                                    });
 
-                                    break;
+                                            if (value.getStModel() == null)
+                                                remove(stArgument);
+                                        }
+                                        break;
+                                    case KVLIST:
+
+                                        stArgument.getKeyValues().forEach(stArgumentKV -> {
+                                            final STValue stArgumentKVValue = stArgumentKV.getValue();
+                                            if (stArgumentKVValue == null) delete(stArgumentKV.getNode());
+                                        });
+
+                                        break;
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 } catch (IllegalStateException ise) {
                     ise.printStackTrace();
 
-                    if(ise.getMessage().startsWith("Missing uuid")) {
+                    if (ise.getMessage().startsWith("Missing uuid")) {
                         remove(stModel);
                     }
                 }

@@ -85,7 +85,7 @@
       "uuid" : "566d195b-373f-4291-80d8-27ae7f9cce36",
       "name" : "packageName",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "String"
     }, {
       "uuid" : "fc6c1860-39ea-4a4a-a41c-dcb4ae792518",
       "name" : "javaPatterns",
@@ -95,22 +95,22 @@
       "uuid" : "506bc5e1-a0e7-4fc3-857d-60d685b6d7d4",
       "name" : "name",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "String"
     }, {
       "uuid" : "f4c44046-79e9-448d-aede-3ecc86c5e523",
       "name" : "root",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "String"
     }, {
       "uuid" : "9a944977-44db-4cda-b493-b031621ab793",
       "name" : "libraries",
       "type" : "LIST",
-      "argumentType" : "Object"
+      "argumentType" : "JavaLibrary"
     }, {
       "uuid" : "f709faa9-e663-4a51-a7a1-366f90a6d9ef",
       "name" : "packageDeclarations",
       "type" : "LIST",
-      "argumentType" : "Object"
+      "argumentType" : "JavaPackage"
     } ],
     "children" : [ {
       "uuid" : "581a326a-5c8c-47bb-9ce2-0cfd0e28a9f2",

@@ -207,7 +207,7 @@ public class Dependency {
 				"	<groupId>~groupId~</groupId>\n" + 
 				"	<artifactId>~artifactId~</artifactId>~if(version)~\n" + 
 				"	<version>~version~</version>~endif~~if(scope)~\n" + 
-				"	<scope>~scope;format=\"toLower\"~</scope>~endif~~if(systemPath)~\n" + 
+				"	<scope>~scope~</scope>~endif~~if(systemPath)~\n" + 
 				"	<systemPath>~systemPath~</systemPath>~endif~~if(classifier)~\n" + 
 				"	<classifier>~classifier~</classifier>~endif~~if(type)~\n" + 
 				"	<type>~type~</type>~endif~\n" + 

@@ -5,12 +5,12 @@ public class JavaProject {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _packageName;
+	private String _packageName;
 	private Object _javaPatterns;
-	private Object _name;
-	private Object _root;
-	private java.util.List<Object> _libraries = new java.util.ArrayList<>();
-	private java.util.List<Object> _packageDeclarations = new java.util.ArrayList<>();
+	private String _name;
+	private String _root;
+	private java.util.List<JavaLibrary> _libraries = new java.util.ArrayList<>();
+	private java.util.List<JavaPackage> _packageDeclarations = new java.util.ArrayList<>();
 
 	JavaProject(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -32,16 +32,16 @@ public class JavaProject {
 		return st.render().trim();
 	}
 
-	public JavaProject setPackageName(Object value) {
+	public JavaProject setPackageName(String value) {
 		this._packageName = value;
 		return this;
 	}
 
-	public Object getPackageName() {
+	public String getPackageName() {
 		return this._packageName;
 	}
 
-	public Object getPackageName(Object defaultValue) {
+	public String getPackageName(String defaultValue) {
 		return this._packageName == null ? defaultValue : this._packageName;
 	}
 
@@ -76,16 +76,16 @@ public class JavaProject {
 		return this;
 	} 
 
-	public JavaProject setName(Object value) {
+	public JavaProject setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Object getName(Object defaultValue) {
+	public String getName(String defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 
@@ -98,16 +98,16 @@ public class JavaProject {
 		return this;
 	} 
 
-	public JavaProject setRoot(Object value) {
+	public JavaProject setRoot(String value) {
 		this._root = value;
 		return this;
 	}
 
-	public Object getRoot() {
+	public String getRoot() {
 		return this._root;
 	}
 
-	public Object getRoot(Object defaultValue) {
+	public String getRoot(String defaultValue) {
 		return this._root == null ? defaultValue : this._root;
 	}
 
@@ -120,22 +120,22 @@ public class JavaProject {
 		return this;
 	} 
 
-	public JavaProject addLibraries(Object value) {
+	public JavaProject addLibraries(JavaLibrary value) {
 		this._libraries.add(value);
 		return this;
 	}
 
-	public JavaProject setLibraries(Object[] value) {
+	public JavaProject setLibraries(JavaLibrary[] value) {
 		this._libraries.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public JavaProject setLibraries(java.util.Collection<Object> values) {
+	public JavaProject setLibraries(java.util.Collection<JavaLibrary> values) {
 		this._libraries.addAll(values);
 		return this;
 	}
 
-	public JavaProject removeLibraries(Object value) {
+	public JavaProject removeLibraries(JavaLibrary value) {
 		this._libraries.remove(value);
 		return this;
 	}
@@ -145,26 +145,26 @@ public class JavaProject {
 		return this;
 	}
 
-	public java.util.List<Object> getLibraries() {
+	public java.util.List<JavaLibrary> getLibraries() {
 		return this._libraries;
 	} 
 
-	public JavaProject addPackageDeclarations(Object value) {
+	public JavaProject addPackageDeclarations(JavaPackage value) {
 		this._packageDeclarations.add(value);
 		return this;
 	}
 
-	public JavaProject setPackageDeclarations(Object[] value) {
+	public JavaProject setPackageDeclarations(JavaPackage[] value) {
 		this._packageDeclarations.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public JavaProject setPackageDeclarations(java.util.Collection<Object> values) {
+	public JavaProject setPackageDeclarations(java.util.Collection<JavaPackage> values) {
 		this._packageDeclarations.addAll(values);
 		return this;
 	}
 
-	public JavaProject removePackageDeclarations(Object value) {
+	public JavaProject removePackageDeclarations(JavaPackage value) {
 		this._packageDeclarations.remove(value);
 		return this;
 	}
@@ -174,7 +174,7 @@ public class JavaProject {
 		return this;
 	}
 
-	public java.util.List<Object> getPackageDeclarations() {
+	public java.util.List<JavaPackage> getPackageDeclarations() {
 		return this._packageDeclarations;
 	} 
 

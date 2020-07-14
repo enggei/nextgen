@@ -29,7 +29,7 @@
   }, {
     "uuid" : "68f2245d-08e1-42db-aafa-7245a5eda5b0",
     "name" : "dependency",
-    "text" : "<dependency>\n\t<groupId>~groupId~</groupId>\n\t<artifactId>~artifactId~</artifactId>~if(version)~\n\t<version>~version~</version>~endif~~if(scope)~\n\t<scope>~scope;format=\"toLower\"~</scope>~endif~~if(systemPath)~\n\t<systemPath>~systemPath~</systemPath>~endif~~if(classifier)~\n\t<classifier>~classifier~</classifier>~endif~~if(type)~\n\t<type>~type~</type>~endif~\n\t\n</dependency> ",
+    "text" : "<dependency>\n\t<groupId>~groupId~</groupId>\n\t<artifactId>~artifactId~</artifactId>~if(version)~\n\t<version>~version~</version>~endif~~if(scope)~\n\t<scope>~scope~</scope>~endif~~if(systemPath)~\n\t<systemPath>~systemPath~</systemPath>~endif~~if(classifier)~\n\t<classifier>~classifier~</classifier>~endif~~if(type)~\n\t<type>~type~</type>~endif~\n\t\n</dependency> ",
     "parameters" : [ {
       "uuid" : "b12643df-58cb-47d0-8ea0-77506ee70a0a",
       "name" : "groupId",
@@ -334,7 +334,7 @@
   }, {
     "uuid" : "cb5b0503-2209-492a-9e23-8b4d63e2d68f",
     "name" : "Entities",
-    "text" : "",
+    "text" : "// deprecated, use proper maven-templates ",
     "children" : [ {
       "uuid" : "38923b07-0e48-4289-b555-d8d8ddb357d6",
       "name" : "DependencyGroup",
@@ -398,7 +398,33 @@
         "name" : "modules",
         "type" : "LIST"
       } ]
-    } ]
+    }, {
+      "uuid" : "91b19c45-f3ae-457d-bfbd-dec7d697ba49",
+      "name" : "MavenProject",
+      "text" : "~projectName~\n\nroot : ~root~\nmainJava : ~mainJava~\ntestJava : ~testJava~ ",
+      "parameters" : [ {
+        "uuid" : "c2ecbab0-e2ef-422c-970c-91dc29259fc3",
+        "name" : "projectName",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "ccef079f-157e-4bf9-a4f4-bf2edecac7e1",
+        "name" : "root",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "ee6c97da-6f3d-49e0-b2ec-a805b438e0b3",
+        "name" : "mainJava",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "f4aeceda-f358-41dd-837a-f2eacc9c1721",
+        "name" : "testJava",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    } ],
+    "parameters" : [ ]
   }, {
     "uuid" : "ec3aaf4b-dc85-4bb4-b1e3-7a8ac732865f",
     "name" : "dependencyManagement",
@@ -408,31 +434,6 @@
       "name" : "dependencies",
       "type" : "LIST",
       "argumentType" : "Dependency"
-    } ]
-  }, {
-    "uuid" : "91b19c45-f3ae-457d-bfbd-dec7d697ba49",
-    "name" : "MavenProject",
-    "text" : "~projectName~\n\nroot : ~root~\nmainJava : ~mainJava~\ntestJava : ~testJava~ ",
-    "parameters" : [ {
-      "uuid" : "c2ecbab0-e2ef-422c-970c-91dc29259fc3",
-      "name" : "projectName",
-      "type" : "SINGLE",
-      "argumentType" : "Object"
-    }, {
-      "uuid" : "ccef079f-157e-4bf9-a4f4-bf2edecac7e1",
-      "name" : "root",
-      "type" : "SINGLE",
-      "argumentType" : "Object"
-    }, {
-      "uuid" : "ee6c97da-6f3d-49e0-b2ec-a805b438e0b3",
-      "name" : "mainJava",
-      "type" : "SINGLE",
-      "argumentType" : "Object"
-    }, {
-      "uuid" : "f4aeceda-f358-41dd-837a-f2eacc9c1721",
-      "name" : "testJava",
-      "type" : "SINGLE",
-      "argumentType" : "Object"
     } ]
   }, {
     "uuid" : "7992114b-2959-4fbb-83f2-2d671c7b2ff0",

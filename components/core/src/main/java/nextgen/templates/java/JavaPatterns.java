@@ -121,7 +121,7 @@ public class JavaPatterns {
 				"				.setName(name)\n" + 
 				"				.setBlockStmt(blockStmt);\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	public static VariableDeclaration newVariableDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, Object initializer) {\n" + 
 				"		return newVariableDeclaration()\n" + 
 				"				.setType(classOrInterfaceType)\n" + 
@@ -281,6 +281,10 @@ public class JavaPatterns {
 				"		return newMethodCallExpression()\n" + 
 				"				.setName(name)\n" + 
 				"				.setArguments(arguments);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static Expression newExpression(String expression) {\n" + 
+				"		return newNameExpression().setValue(expression);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	// formatting\n" + 

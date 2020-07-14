@@ -8,11 +8,12 @@ public class MavenST {
 	Build.st + "\n" + 
 	Dependency.st + "\n" + 
 	DependencyManagement.st + "\n" + 
+	Entities.st + "\n" + 
 	DependencyGroup.st + "\n" + 
+	MavenProject.st + "\n" + 
 	Module.st + "\n" + 
 	Project.st + "\n" + 
 	Execution.st + "\n" + 
-	MavenProject.st + "\n" + 
 	Parent.st + "\n" + 
 	Antlr4.st + "\n" + 
 	CopyPlugin.st + "\n" + 
@@ -74,8 +75,16 @@ public class MavenST {
 		return new DependencyManagement(stGroup);
 	} 
 
+	public static Entities newEntities() {
+		return new Entities(stGroup);
+	} 
+
 	public static DependencyGroup newDependencyGroup() {
 		return new DependencyGroup(stGroup);
+	} 
+
+	public static MavenProject newMavenProject() {
+		return new MavenProject(stGroup);
 	} 
 
 	public static Module newModule() {
@@ -88,10 +97,6 @@ public class MavenST {
 
 	public static Execution newExecution() {
 		return new Execution(stGroup);
-	} 
-
-	public static MavenProject newMavenProject() {
-		return new MavenProject(stGroup);
 	} 
 
 	public static Parent newParent() {

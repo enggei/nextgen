@@ -18,6 +18,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -1038,9 +1039,13 @@ public class STNavigator extends JPanel {
                                 getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> {
                                     findCanvas(tabbedPane).ifPresent(stCanvas -> {
                                         SwingUtilities.invokeLater(() -> {
-                                            db.doInTransaction(transaction -> stCanvas.addNode(new STModelNode(stCanvas, getModel(), db.newSTModel(getModel()), stRenderer)));
-                                            tabbedPane.setSelectedComponent(stCanvas);
-                                            stCanvas.requestFocusInWindow();
+                                            db.doInTransaction(transaction -> {
+                                                final STModelNode node = new STModelNode(stCanvas, getModel(), db.newSTModel(getModel()), stRenderer);
+                                                stCanvas.addNode(node);
+                                                tabbedPane.setSelectedComponent(stCanvas);
+                                                stCanvas.requestFocusInWindow();
+                                                stCanvas.centerNode(node);
+                                            });
                                         });
                                     });
                                 }));
@@ -1051,11 +1056,21 @@ public class STNavigator extends JPanel {
                             getParentNode(STGroupTreeNode.class)
                                     .flatMap(stGroupTreeNode -> findCanvas(tabbedPane))
                                     .ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> {
+
+                                        AtomicReference<STModelNode> last = new AtomicReference<>();
                                         db.doInTransaction(transaction ->
                                                 db.findAllSTModelByStTemplate(getModel().uuid())
-                                                        .forEach(stModel -> stCanvas.addNode(new STModelNode(stCanvas, getModel(), stModel, stRenderer))));
+                                                        .forEach(stModel -> {
+                                                            final STModelNode node = new STModelNode(stCanvas, getModel(), stModel, stRenderer);
+                                                            stCanvas.addNode(node);
+                                                            last.set(node);
+                                                        }));
+
                                         tabbedPane.setSelectedComponent(stCanvas);
                                         stCanvas.requestFocusInWindow();
+
+                                        final STModelNode stModelNode = last.get();
+                                        if(stModelNode!=null) stCanvas.centerNode(stModelNode);
                                     }));
                         });
                     }

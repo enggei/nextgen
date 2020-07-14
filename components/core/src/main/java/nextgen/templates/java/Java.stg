@@ -576,7 +576,7 @@ JavaPatterns() ::= <<public static class JavaPatterns extends nextgen.templates.
 				.setName(name)
 				.setBlockStmt(blockStmt);
 	}
-	
+
 	public static VariableDeclaration newVariableDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, Object initializer) {
 		return newVariableDeclaration()
 				.setType(classOrInterfaceType)
@@ -736,6 +736,10 @@ JavaPatterns() ::= <<public static class JavaPatterns extends nextgen.templates.
 		return newMethodCallExpression()
 				.setName(name)
 				.setArguments(arguments);
+	}
+
+	public static Expression newExpression(String expression) {
+		return newNameExpression().setValue(expression);
 	}
 
 	// formatting

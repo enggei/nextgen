@@ -17,7 +17,7 @@ dependency(groupId,artifactId,version,scope,systemPath,classifier,type) ::= <<<d
 	<groupId>~groupId~</groupId>
 	<artifactId>~artifactId~</artifactId>~if(version)~
 	<version>~version~</version>~endif~~if(scope)~
-	<scope>~scope;format="toLower"~</scope>~endif~~if(systemPath)~
+	<scope>~scope~</scope>~endif~~if(systemPath)~
 	<systemPath>~systemPath~</systemPath>~endif~~if(classifier)~
 	<classifier>~classifier~</classifier>~endif~~if(type)~
 	<type>~type~</type>~endif~
@@ -30,7 +30,7 @@ dependencyManagement(dependencies) ::= <<<dependencyManagement>
 	</dependencies>
 </dependencyManagement>  >>
 
-Entities() ::= << >>
+Entities() ::= <<// deprecated, use proper maven-templates  >>
 
 DependencyGroup(name,groupId,version,artifacts) ::= <<Name ~name~
 GroupId ~groupId~
@@ -52,18 +52,18 @@ Pom : ~pom~
 Modules:
 ~modules:{it|~it~};separator="\n"~ >>
 
+MavenProject(projectName,root,mainJava,testJava) ::= <<~projectName~
+
+root : ~root~
+mainJava : ~mainJava~
+testJava : ~testJava~  >>
+
 execution() ::= <<<execution>
     <phase>package</phase>
     <goals>
         <goal>shade</goal>
     </goals>
 </execution>  >>
-
-MavenProject(projectName,root,mainJava,testJava) ::= <<~projectName~
-
-root : ~root~
-mainJava : ~mainJava~
-testJava : ~testJava~  >>
 
 parent(artifactId,groupId,version) ::= <<<parent>
 	<artifactId>~artifactId~</artifactId>

@@ -1,7 +1,6 @@
 package com.generator.kotlin;
 
 import nextgen.templates.DomainPatterns;
-import nextgen.templates.KotlinPatterns;
 import nextgen.templates.domain.Domain;
 import nextgen.templates.kotlin.*;
 import org.junit.Test;

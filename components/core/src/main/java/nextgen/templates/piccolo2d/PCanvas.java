@@ -463,6 +463,10 @@ public class PCanvas {
 				"		final java.awt.geom.Point2D localToView = getCamera().localToView(mousePosition);\n" + 
 				"		return new Point((int) localToView.getX(), (int) localToView.getY());\n" + 
 				"	}\n" + 
+				"	\n" + 
+				"	public <N extends ~nodeName~> void centerNode(N node) {\n" + 
+				"		SwingUtilities.invokeLater(() -> getCamera().animateViewToCenterBounds(node.getGlobalFullBounds(), false, 500));\n" + 
+				"	}\n" + 
 				"\n" + 
 				"	@SuppressWarnings(\"unchecked\")\n" + 
 				"	public <N extends ~nodeName~> Stream<N> getAllNodes() {\n" + 

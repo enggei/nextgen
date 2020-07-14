@@ -12,11 +12,12 @@ public class MavenSTTests {
 		testBuild();
 		testDependency();
 		testDependencyManagement();
+		testEntities();
 		testDependencyGroup();
+		testMavenProject();
 		testModule();
 		testProject();
 		testExecution();
-		testMavenProject();
 		testParent();
 		testAntlr4();
 		testCopyPlugin();
@@ -49,8 +50,18 @@ public class MavenSTTests {
 	} 
 
 	@org.junit.Test
+	public void testEntities() {
+		System.out.println("\n--- TEST Entities:\n" + newEntities());
+	} 
+
+	@org.junit.Test
 	public void testDependencyGroup() {
 		System.out.println("\n--- TEST DependencyGroup:\n" + newDependencyGroup());
+	} 
+
+	@org.junit.Test
+	public void testMavenProject() {
+		System.out.println("\n--- TEST MavenProject:\n" + newMavenProject());
 	} 
 
 	@org.junit.Test
@@ -66,11 +77,6 @@ public class MavenSTTests {
 	@org.junit.Test
 	public void testExecution() {
 		System.out.println("\n--- TEST Execution:\n" + newExecution());
-	} 
-
-	@org.junit.Test
-	public void testMavenProject() {
-		System.out.println("\n--- TEST MavenProject:\n" + newMavenProject());
 	} 
 
 	@org.junit.Test

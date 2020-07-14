@@ -1,7 +1,6 @@
 package nextgen.templates;
 
-import nextgen.templates.java.Expression;
-import nextgen.templates.java.MethodCallExpression;
+import nextgen.templates.java.*;
 import nextgen.templates.piccolo2d.*;
 
 import static nextgen.templates.JavaPatterns.*;
@@ -49,16 +48,16 @@ public class Piccolo2DPatterns extends Piccolo2DST {
     public static void addDefaultActionsToCanvas(PCanvas canvas) {
 
         final CanvasAction selectAllNodesAction = newCanvasAction(canvas, "SelectAllNodes", "Select all nodes")
-                .addStatements(newInvokeLater().addArguments(newLambdaExpression().setBody(newExpressionStmt().setExpression(expression("canvas.getAllNodes().forEach(" + canvas.getNodeName() + "::select)")))));
+                .addStatements(newExpressionStmt().setExpression(newInvokeLater().addArguments(newLambdaExpression(expression("canvas.getAllNodes().forEach(" + canvas.getNodeName() + "::select)")))));
 
         final CanvasAction unselectAllNodesAction = newCanvasAction(canvas, "UnselectAllNodes", "Unselect all nodes")
-                .addStatements(newInvokeLater().addArguments(newLambdaExpression().setBody(newExpressionStmt().setExpression(expression("canvas.getSelectedNodes().forEach(" + canvas.getNodeName() + "::unselect)")))));
+                .addStatements(newExpressionStmt().setExpression(newInvokeLater().addArguments(newLambdaExpression(expression("canvas.getSelectedNodes().forEach(" + canvas.getNodeName() + "::unselect)")))));
 
         final CanvasAction closeSelectedNodesAction = newCanvasAction(canvas, "CloseSelectedNodes", "Close selected nodes")
-                .addStatements(newInvokeLater().addArguments(newLambdaExpression().setBody(newExpressionStmt().setExpression(expression("canvas.getSelectedNodes().forEach(" + canvas.getNodeName() + "::close)")))));
+                .addStatements(newExpressionStmt().setExpression(newInvokeLater().addArguments(newLambdaExpression(expression("canvas.getSelectedNodes().forEach(" + canvas.getNodeName() + "::close)")))));
 
         final CanvasAction retainSelectedNodesAction = newCanvasAction(canvas, "RetainSelectedNodes", "Retain selected nodes")
-                .addStatements(newInvokeLater().addArguments(newLambdaExpression().setBody(newExpressionStmt().setExpression(expression("canvas.getUnselectedNodes().forEach(STNode::close)")))));
+                .addStatements(newExpressionStmt().setExpression(newInvokeLater().addArguments(newLambdaExpression(expression("canvas.getUnselectedNodes().forEach(STNode::close)")))));
 
         final LayoutVerticallyAction layoutVerticallyAction = newLayoutVerticallyAction()
                 .setName("LayoutVerticallyAction")
@@ -67,13 +66,12 @@ public class Piccolo2DPatterns extends Piccolo2DST {
 
         final CanvasAction popupAction = newCanvasAction(canvas, "PopupAction", "Popup")
                 .addStatements(newExpressionStmt().setExpression(newInvokeLater()
-                        .addArguments(newLambdaExpression()
-                                .setBody(newBlockStmt()
-                                        .addStatements("final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();")
-                                        .addStatements("canvas.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));")
-                                        .addStatements("canvas.onCanvasRightClick(pop, event);")
-                                        .addStatements("canvas.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));")
-                                        .addStatements("pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());")))));
+                        .addArguments(newLambdaExpression(newBlockStmt()
+                                .addStatements("final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();")
+                                .addStatements("canvas.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));")
+                                .addStatements("canvas.onCanvasRightClick(pop, event);")
+                                .addStatements("canvas.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));")
+                                .addStatements("pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());")))));
 
 
         registerRightClickAction(canvas, selectAllNodesAction, selectAllNodesAction.getName());
@@ -114,27 +112,24 @@ public class Piccolo2DPatterns extends Piccolo2DST {
 
         final NodeAction popupAction = newNodeAction(node, "PopupAction", "Popup")
                 .addStatements(newExpressionStmt().setExpression(newInvokeLater()
-                        .addArguments(newLambdaExpression()
-                                .setBody(newBlockStmt()
-                                        .addStatements("final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();")
-                                        .addStatements("canvas.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));")
-                                        .addStatements("node.onNodeRightClick(event, pop);")
-                                        .addStatements("canvas.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));")
-                                        .addStatements("pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());")))));
+                        .addArguments(newLambdaExpression(newBlockStmt()
+                                .addStatements("final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();")
+                                .addStatements("canvas.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));")
+                                .addStatements("node.onNodeRightClick(event, pop);")
+                                .addStatements("canvas.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));")
+                                .addStatements("pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());")))));
 
         final NodeAction retainNodeAction = newNodeAction(node, "RetainNode", "Retain")
                 .addStatements(newExpressionStmt().setExpression(newInvokeLater()
-                        .addArguments(newLambdaExpression()
-                                .setBody(newBlockStmt()
-                                        .addStatements("canvas.getAllNodes().filter(canvasNode -> !canvasNode.getUuid().equals(node.getUuid())).forEach(" + node.getName() + "::close);")
-                                        .addStatements("canvas.getAllRelations().forEach(relation -> canvas.removeRelation(relation.getUuid()));")))));
+                        .addArguments(newLambdaExpression(newBlockStmt()
+                                .addStatements("canvas.getAllNodes().filter(canvasNode -> !canvasNode.getUuid().equals(node.getUuid())).forEach(" + node.getName() + "::close);")
+                                .addStatements("canvas.getAllRelations().forEach(relation -> canvas.removeRelation(relation.getUuid()));")))));
 
         final NodeAction debugAction = newNodeAction(node, "DebugAction", "Debug")
                 .addStatements(newExpressionStmt().setExpression(newInvokeLater()
-                        .addArguments(newLambdaExpression()
-                                .setBody(newBlockStmt()
-                                        .addStatements("final PBounds fullBounds = node.getFullBoundsReference();")
-                                        .addStatements("System.out.println(fullBounds.getX() + \",\" + fullBounds.getY() + \", [\" + fullBounds.getWidth() + \",\" + fullBounds.getHeight() + \"]\");")))));
+                        .addArguments(newLambdaExpression(newBlockStmt()
+                                .addStatements("final PBounds fullBounds = node.getFullBoundsReference();")
+                                .addStatements("System.out.println(fullBounds.getX() + \",\" + fullBounds.getY() + \", [\" + fullBounds.getWidth() + \",\" + fullBounds.getHeight() + \"]\");")))));
 
         registerRightClickAction(node, layoutTreeAction, layoutTreeAction.getName());
         registerRightClickAction(node, retainNodeAction, retainNodeAction.getName());
@@ -149,10 +144,20 @@ public class Piccolo2DPatterns extends Piccolo2DST {
         node.addOnKeyPressed("B", debugAction.getName());
     }
 
-    public static MethodCallExpression newInvokeLater() {
+    private static MethodCallExpression newInvokeLater() {
         return newMethodCallExpression()
                 .setScope("javax.swing.SwingUtilities")
                 .setName("invokeLater");
+    }
+
+    private static LambdaExpression newLambdaExpression(Expression expression) {
+        return JavaST.newLambdaExpression()
+                .setBody(expression);
+    }
+
+    private static LambdaExpression newLambdaExpression(Statement statement) {
+        return JavaST.newLambdaExpression()
+                .setBody(statement);
     }
 
     public static void registerRightClickAction(PCanvas canvas, Object action, Object name) {
