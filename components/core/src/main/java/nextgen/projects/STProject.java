@@ -544,7 +544,7 @@ public class STProject extends BaseSTProject {
                                                 .addStatements(newLine("stModelNodes.forEach(stNode -> {", "});")
                                                         .addChildren(newLine("stParameterMenu.add(new SetSTModelArgumentAction(\"Set \" + stParameter.getName() + \" = \" + cut(stNode.getText()), STModelNode.this, canvas, event, stParameter, stNode));")))
                                                 .addStatements(newLine("stParameterMenu.add(new SetInputValueArgumentAction(\"Set \" + stParameter.getName(), STModelNode.this, canvas, event, stParameter));"))
-                                                .addStatements(newLine("stParameterMenu.add(new SetClipboardValueArgumentAction(\"Set from clipboard\" + stParameter.getName(), STModelNode.this, canvas, event, stParameter));", "break;"))))
+                                                .addStatements(newLine("stParameterMenu.add(new SetClipboardValueArgumentAction(\"Set \" + stParameter.getName() + \" from clipboard\", STModelNode.this, canvas, event, stParameter));", "break;"))))
                                         .addEntries(newSwitchEntryStmt("LIST", newBlockStmt()
                                                 .addStatements(newLine("stValueNodes.forEach(stNode -> {", "});")
                                                         .addChildren(newLine("stParameterMenu.add(new AddSTValueArgumentAction(\"Add \" + stParameter.getName() + \" = \" + cut(stNode.getText()), STModelNode.this, canvas, event, stParameter, stNode));")))
