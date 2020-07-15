@@ -18,7 +18,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -370,7 +369,7 @@ public class STNavigator extends JPanel {
         final Set<STGroupModel> stGroups = new LinkedHashSet<>();
 
         public RootNode(STAppModel appModel) {
-            super("App", "RootNode");
+            super("Templates", "RootNode");
 
             final File jsonFileDir = new File(appModel.getGeneratorRoot(), STGenerator.packageToPath(appModel.getGeneratorPackage()));
             add(generatorTreeNode = new STGDirectoryTreeNode(STJsonFactory.newSTGDirectory()
@@ -869,7 +868,7 @@ public class STNavigator extends JPanel {
                             actions.add(newSetInterfacesAction(childTemplates));
 
                         actions.add(newModelAction());
-                        actions.add(openAllModelsAction());
+
                         actions.add(newChildTemplateAction());
                         actions.add(newSetParameterTypesAction());
                         actions.add(newSetInterfacesAction());
@@ -1040,7 +1039,7 @@ public class STNavigator extends JPanel {
                                     findCanvas(tabbedPane).ifPresent(stCanvas -> {
                                         SwingUtilities.invokeLater(() -> {
                                             db.doInTransaction(transaction -> {
-                                                final STModelNode node = new STModelNode(stCanvas, getModel(), db.newSTModel(getModel()), stRenderer);
+                                                final STModelNode node = new STModelNode(stCanvas, getModel(), db.newSTModel(stGroupTreeNode.getModel().uuid(), getModel()), stRenderer);
                                                 stCanvas.addNode(node);
                                                 tabbedPane.setSelectedComponent(stCanvas);
                                                 stCanvas.requestFocusInWindow();
@@ -1051,29 +1050,7 @@ public class STNavigator extends JPanel {
                                 }));
                     }
 
-                    private Action openAllModelsAction() {
-                        return newAction("Open all instances", actionEvent -> {
-                            getParentNode(STGroupTreeNode.class)
-                                    .flatMap(stGroupTreeNode -> findCanvas(tabbedPane))
-                                    .ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> {
 
-                                        AtomicReference<STModelNode> last = new AtomicReference<>();
-                                        db.doInTransaction(transaction ->
-                                                db.findAllSTModelByStTemplate(getModel().uuid())
-                                                        .forEach(stModel -> {
-                                                            final STModelNode node = new STModelNode(stCanvas, getModel(), stModel, stRenderer);
-                                                            stCanvas.addNode(node);
-                                                            last.set(node);
-                                                        }));
-
-                                        tabbedPane.setSelectedComponent(stCanvas);
-                                        stCanvas.requestFocusInWindow();
-
-                                        final STModelNode stModelNode = last.get();
-                                        if(stModelNode!=null) stCanvas.centerNode(stModelNode);
-                                    }));
-                        });
-                    }
 
                     private Action newChildTemplateAction() {
                         return newAction("New Child-template", actionEvent -> getNameFromUser()

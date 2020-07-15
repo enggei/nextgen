@@ -11,9 +11,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.generator.util.FileUtil.tryToCreateDirIfNotExists;
-import static com.generator.util.FileUtil.tryToCreateFileIfNotExists;
-
 public class MavenPatterns extends MavenST {
 
     public static void generate(Project project) {
@@ -40,6 +37,30 @@ public class MavenPatterns extends MavenST {
         tryToCreateFileIfNotExists(newFile(project.getRoot(), "README.txt"));
 
         writePom(project.getPom(), project.getRoot());
+    }
+
+    private static File tryToCreateFileIfNotExists(File f) {
+        if (!f.exists()) {
+            tryToCreateDirIfNotExists(f.getParentFile());
+            try {
+                if (!f.createNewFile()) throw new RuntimeException("Could not create file " + f.getName());
+            } catch (IOException e) {
+                throw new RuntimeException("Could not create file " + f.getName());
+            }
+        }
+        return f;
+    }
+
+    private static File tryToCreateDirIfNotExists(File f) {
+
+        if (f == null) throw new RuntimeException("File cannot be null");
+
+        if (!f.exists()) {
+            if (f.getParentFile() != null && !f.getParentFile().exists() && !f.getParentFile().mkdirs())
+                throw new RuntimeException("Could not create parent dirs for " + f.getAbsolutePath());
+            if (!f.mkdir()) throw new RuntimeException("Could not create directory " + f.getName());
+        }
+        return f;
     }
 
     private static File newFile(Object path) {

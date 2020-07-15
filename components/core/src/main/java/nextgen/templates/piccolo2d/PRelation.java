@@ -365,7 +365,8 @@ public class PRelation {
 				"		final RelationInputEventHandler relationInputEventHandler = new RelationInputEventHandler();\n" + 
 				"		relationInputEventHandler.getEventFilter().setMarksAcceptedEventsAsHandled(true);\n" + 
 				"		addInputEventListener(relationInputEventHandler);\n" + 
-				"\n" + 
+				"		addInputEventListener(canvas.canvasZoomHandler);\n" + 
+				"		\n" + 
 				"		final PNodeChangeListener nodeChangeListener = new PNodeChangeListener();\n" + 
 				"		src.addPropertyChangeListener(nodeChangeListener);\n" + 
 				"		dst.addPropertyChangeListener(nodeChangeListener);\n" + 

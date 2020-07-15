@@ -47,6 +47,7 @@ public class STRelation extends PPath.Double implements Comparator<STRelation> {
 		final RelationInputEventHandler relationInputEventHandler = new RelationInputEventHandler();
 		relationInputEventHandler.getEventFilter().setMarksAcceptedEventsAsHandled(true);
 		addInputEventListener(relationInputEventHandler);
+		addInputEventListener(canvas.canvasZoomHandler);
 
 		final PNodeChangeListener nodeChangeListener = new PNodeChangeListener();
 		src.addPropertyChangeListener(nodeChangeListener);

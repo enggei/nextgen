@@ -6,6 +6,7 @@ public class GreenRobotST {
 	"eom() ::= \"}\"\n" +
 	"gt() ::= \">\"\n" +
 	Event.st + "\n" + 
+	Maven.st + "\n" + 
 	Post.st + "\n" + 
 	Register.st + "\n" + 
 	Subscribe.st + "\n" ;
@@ -46,6 +47,10 @@ public class GreenRobotST {
 
 	public static Event newEvent() {
 		return new Event(stGroup);
+	} 
+
+	public static Maven newMaven() {
+		return new Maven(stGroup);
 	} 
 
 	public static Post newPost() {

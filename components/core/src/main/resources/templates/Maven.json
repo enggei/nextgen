@@ -491,6 +491,10 @@
       "type" : "SINGLE",
       "argumentType" : "Object"
     } ]
+  }, {
+    "uuid" : "b7a1cf86-16b6-4983-adf5-dd6ca5448d25",
+    "name" : "MavenPatterns",
+    "text" : ""
   } ],
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Maven.stg",
   "enums" : [ {

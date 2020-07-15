@@ -276,17 +276,14 @@ public class Bean {
 				"\n" + 
 				"	@Override\n" + 
 				"	public void propertyChange(java.beans.PropertyChangeEvent evt) {\n" + 
-				"		System.out.println(\"~name~ updated\");\n" + 
 				"		this.pcs.firePropertyChange(\"~name~\", null, this);\n" + 
 				"	}\n" + 
 				"	\n" + 
 				"	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {\n" + 
-				"		System.out.println(\"~name~ add \" + listener.getClass().getSimpleName());\n" + 
 				"		this.pcs.addPropertyChangeListener(listener);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {\n" + 
-				"		System.out.println(\"~name~ del \" + listener.getClass().getSimpleName());\n" + 
 				"		this.pcs.removePropertyChangeListener(listener);\n" + 
 				"	}\n" + 
 				"} >>";

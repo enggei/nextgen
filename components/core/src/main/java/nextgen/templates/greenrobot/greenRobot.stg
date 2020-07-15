@@ -9,6 +9,12 @@ event(name,fields) ::= <<public class ~name~ {
 	}
 }  >>
 
+maven() ::= <<<dependency>
+	<groupId>org.greenrobot</groupId>
+	<artifactId>eventbus</artifactId>
+	<version>3.2.0</version>
+</dependency>  >>
+
 post(event) ::= <<org.greenrobot.eventbus.EventBus.getDefault().post(~event~);  >>
 
 register() ::= <<org.greenrobot.eventbus.EventBus.getDefault().register(this);  >>

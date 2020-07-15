@@ -125,6 +125,7 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 		
 		final N node= supplier.get();
 		node.select();
+		node.setOffset(getCenterPosition());
 		nodeMap.put(node.getUuid(), node);
 		nodeLayer.addChild(node);
 
@@ -965,7 +966,8 @@ public class ~name~ extends PPath.Double implements Comparator<~name~> {
 		final RelationInputEventHandler relationInputEventHandler = new RelationInputEventHandler();
 		relationInputEventHandler.getEventFilter().setMarksAcceptedEventsAsHandled(true);
 		addInputEventListener(relationInputEventHandler);
-
+		addInputEventListener(canvas.canvasZoomHandler);
+		
 		final PNodeChangeListener nodeChangeListener = new PNodeChangeListener();
 		src.addPropertyChangeListener(nodeChangeListener);
 		dst.addPropertyChangeListener(nodeChangeListener);

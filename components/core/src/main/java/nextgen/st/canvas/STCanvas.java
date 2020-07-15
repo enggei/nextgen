@@ -31,8 +31,8 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	private final PLayer nodeLayer;
 	private final PLayer relationLayer = new PLayer();
 
-	final Map<UUID, STNode> nodeMap = new ConcurrentHashMap<>();
-	final Map<UUID, STRelation> relationMap = new ConcurrentHashMap<>();
+	final Map<UUID, nextgen.st.canvas.STNode> nodeMap = new ConcurrentHashMap<>();
+	final Map<UUID, nextgen.st.canvas.STRelation> relationMap = new ConcurrentHashMap<>();
 
 	private final SelectEventsHandler selectEventHandler = new SelectEventsHandler();
 	private final CanvasInputEventsHandler canvasInputEventsHandler = new CanvasInputEventsHandler();
@@ -78,17 +78,17 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		return new Point((int) localToView.getX(), (int) localToView.getY());
 	}
 
-	public <N extends STNode> void centerNode(N node) {
+	public <N extends nextgen.st.canvas.STNode> void centerNode(N node) {
 		SwingUtilities.invokeLater(() -> getCamera().animateViewToCenterBounds(node.getGlobalFullBounds(), false, 500));
 	}
 
 	@SuppressWarnings("unchecked")
-	public <N extends STNode> Stream<N> getAllNodes() {
-		return nodeLayer.getAllNodes().stream().filter((Predicate<PNode>) node -> node instanceof STNode);
+	public <N extends nextgen.st.canvas.STNode> Stream<N> getAllNodes() {
+		return nodeLayer.getAllNodes().stream().filter((Predicate<PNode>) node -> node instanceof nextgen.st.canvas.STNode);
 	}
 
-	public <N extends STNode> Stream<N> getSelectedNodes() {
-		return (Stream<N>) getAllNodes().filter(STNode::isSelected);
+	public <N extends nextgen.st.canvas.STNode> Stream<N> getSelectedNodes() {
+		return (Stream<N>) getAllNodes().filter(nextgen.st.canvas.STNode::isSelected);
 	}
 
 	public <N extends STNode> Stream<N> getUnselectedNodes() {
@@ -96,23 +96,23 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <R extends STRelation> Stream<R> getAllRelations() {
-		return relationLayer.getAllNodes().stream().filter((Predicate<PNode>) node -> node instanceof STRelation);
+	public <R extends nextgen.st.canvas.STRelation> Stream<R> getAllRelations() {
+		return relationLayer.getAllNodes().stream().filter((Predicate<PNode>) node -> node instanceof nextgen.st.canvas.STRelation);
 	}
 
-	public <R extends STRelation> Stream<R> getSelectedRelations() {
-		return (Stream<R>) getAllRelations().filter(STRelation::isSelected);
+	public <R extends nextgen.st.canvas.STRelation> Stream<R> getSelectedRelations() {
+		return (Stream<R>) getAllRelations().filter(nextgen.st.canvas.STRelation::isSelected);
 	}
 
-	public <N extends STNode> N addNode(String uuid, java.util.function.Supplier<N> supplier) {
+	public <N extends nextgen.st.canvas.STNode> N addNode(String uuid, java.util.function.Supplier<N> supplier) {
 		return addNode(java.util.UUID.fromString(uuid), supplier);
 	}
 
-	public <N extends STNode> N addNode(N node) {
+	public <N extends nextgen.st.canvas.STNode> N addNode(N node) {
 		return addNode(node.getUuid(), () -> node);
 	}
 
-	public <N extends STNode> N addNode(java.util.UUID uuid, java.util.function.Supplier<N> supplier) {
+	public <N extends nextgen.st.canvas.STNode> N addNode(java.util.UUID uuid, java.util.function.Supplier<N> supplier) {
 
 		final N existing = getNode(uuid);
 		if (existing != null) {
@@ -125,6 +125,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 		final N node= supplier.get();
 		node.select();
+		node.setOffset(getCenterPosition());
 		nodeMap.put(node.getUuid(), node);
 		nodeLayer.addChild(node);
 
@@ -139,30 +140,30 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		return node;
 	}
 
-	public <N extends STNode> N getNode(String uuid) {
+	public <N extends nextgen.st.canvas.STNode> N getNode(String uuid) {
 		return getNode(java.util.UUID.fromString(uuid));
 	}
 
-	public <N extends STNode> N getNode(UUID uuid) {
+	public <N extends nextgen.st.canvas.STNode> N getNode(UUID uuid) {
 		return (N) nodeMap.get(uuid);
 	}
 
-	<N extends STNode> N removeNode(UUID uuid) {
-		final STNode remove = nodeMap.remove(uuid);
+	<N extends nextgen.st.canvas.STNode> N removeNode(UUID uuid) {
+		final nextgen.st.canvas.STNode remove = nodeMap.remove(uuid);
 		final N old = (N) nodeLayer.removeChild(remove);
 		if (debug) System.out.println("\tN-"+ uuid + " removed from canvas : " + (old == null ? "null" : old.getUuid()));
 		return (N) remove;
 	}
 
-	public <R extends STRelation> R addRelation(R relation) {
+	public <R extends nextgen.st.canvas.STRelation> R addRelation(R relation) {
 		return addRelation(relation.getUuid(), () -> relation);
 	}
 
-	public <R extends STRelation> R addRelation(String uuid, java.util.function.Supplier<R> supplier) {
+	public <R extends nextgen.st.canvas.STRelation> R addRelation(String uuid, java.util.function.Supplier<R> supplier) {
 		return addRelation(java.util.UUID.fromString(uuid), supplier);
 	}
 
-	public <R extends STRelation> R addRelation(java.util.UUID uuid, java.util.function.Supplier<R> supplier) {
+	public <R extends nextgen.st.canvas.STRelation> R addRelation(java.util.UUID uuid, java.util.function.Supplier<R> supplier) {
 
 		final R existing = getRelation(uuid);
 		if (existing != null) {
@@ -177,14 +178,14 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		return relation;
 	}
 
-	<R extends STRelation> R removeRelation(UUID uuid) {
-		final STRelation remove = relationMap.remove(uuid);
+	<R extends nextgen.st.canvas.STRelation> R removeRelation(UUID uuid) {
+		final nextgen.st.canvas.STRelation remove = relationMap.remove(uuid);
 		final R old = (R) relationLayer.removeChild(remove);
 		if (debug) System.out.println("\tR-"+ uuid + " removed from canvas : " + (old == null ? "null" : old.getUuid()));
 		return (R) remove;
 	}
 
-	public <R extends STRelation> R getRelation(UUID uuid) {
+	public <R extends nextgen.st.canvas.STRelation> R getRelation(UUID uuid) {
 		return (R) relationMap.get(uuid);
 	}
 
@@ -201,7 +202,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	}
 
 	protected void onCanvasLeftClick(PInputEvent event) {
-		SwingUtilities.invokeLater(() -> getSelectedNodes().forEach(STNode::unselect));
+		SwingUtilities.invokeLater(() -> getSelectedNodes().forEach(nextgen.st.canvas.STNode::unselect));
 	}
 
 	protected void onCanvasKeyPressed(PInputEvent event) {
@@ -313,7 +314,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 				selectionRectangle.setHeight(top ? (startY - eventY) : (eventY - startY));
 				final PBounds fullBounds = selectionRectangle.getFullBounds();
 				SwingUtilities.invokeLater(() -> getAllNodes()
-					.filter(STNode::isSelected)
+					.filter(nextgen.st.canvas.STNode::isSelected)
 					.forEach(node -> {
 						if (fullBounds.contains(node.getFullBounds())) node.select();
 					}));
@@ -481,7 +482,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 		@Override
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
-			javax.swing.SwingUtilities.invokeLater(() -> canvas.getAllNodes().forEach(STNode::select));
+			javax.swing.SwingUtilities.invokeLater(() -> canvas.getAllNodes().forEach(nextgen.st.canvas.STNode::select));
 		}
 	}
 
@@ -493,7 +494,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 		@Override
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
-			javax.swing.SwingUtilities.invokeLater(() -> canvas.getSelectedNodes().forEach(STNode::unselect));
+			javax.swing.SwingUtilities.invokeLater(() -> canvas.getSelectedNodes().forEach(nextgen.st.canvas.STNode::unselect));
 		}
 	}
 
@@ -505,7 +506,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 		@Override
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
-			javax.swing.SwingUtilities.invokeLater(() -> canvas.getSelectedNodes().forEach(STNode::close));
+			javax.swing.SwingUtilities.invokeLater(() -> canvas.getSelectedNodes().forEach(nextgen.st.canvas.STNode::close));
 		}
 	}
 
@@ -534,14 +535,14 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		@Override
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
 
-			SwingUtilities.invokeLater(() -> canvas.getSelectedNodes().forEach(new Consumer<STNode>() {
+			SwingUtilities.invokeLater(() -> canvas.getSelectedNodes().forEach(new Consumer<nextgen.st.canvas.STNode>() {
 
 				double x = position.getX();
 				double y = position.getY();
 				double height = -1d;
 
 				@Override
-				public void accept(STNode abstractNode) {
+				public void accept(nextgen.st.canvas.STNode abstractNode) {
 					if (height == -1) {
 						abstractNode.setOffset(x, y);
 						height = abstractNode.getHeight();
@@ -683,9 +684,9 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	public static final class NodeAdded {
 
 		public STCanvas canvas;
-		public STNode node;
+		public nextgen.st.canvas.STNode node;
 
-		public NodeAdded(STCanvas canvas, STNode node) {
+		public NodeAdded(STCanvas canvas, nextgen.st.canvas.STNode node) {
 			this.canvas = canvas;
 			this.node = node;
 		}
@@ -694,9 +695,9 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	public static final class NodeClosed {
 
 		public STCanvas canvas;
-		public STNode node;
+		public nextgen.st.canvas.STNode node;
 
-		public NodeClosed(STCanvas canvas, STNode node) {
+		public NodeClosed(STCanvas canvas, nextgen.st.canvas.STNode node) {
 			this.canvas = canvas;
 			this.node = node;
 		}

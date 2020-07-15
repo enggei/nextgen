@@ -1,5 +1,6 @@
 package nextgen.st;
 
+import com.generator.util.MultiLineToolTipUI;
 import com.generator.util.SwingUtil;
 import nextgen.st.domain.STAppModel;
 import nextgen.st.domain.STGDirectory;
@@ -12,7 +13,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import static nextgen.st.STParser.readJsonObject;
 import static nextgen.st.domain.STJsonFactory.newSTGDirectory;
@@ -32,6 +37,7 @@ public class STApp extends JFrame {
         contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         contentPanel.add(navigator, BorderLayout.WEST);
         contentPanel.add(tabbedPane, BorderLayout.CENTER);
+        contentPanel.add(new STModelNavigator(navigator.db, navigator.stRenderer, tabbedPane), BorderLayout.EAST);
         add(contentPanel, BorderLayout.CENTER);
 
         tabbedPane.addTab("Canvas", new nextgen.st.canvas.STCanvas(navigator.stRenderer, navigator.db));
@@ -40,16 +46,6 @@ public class STApp extends JFrame {
     }
 
     public static void main(String[] args) {
-
-        for (UIManager.LookAndFeelInfo laf : UIManager.getInstalledLookAndFeels()) {
-            if ("Nimbus".equals(laf.getName())) {
-                try {
-                    UIManager.setLookAndFeel(laf.getClassName());
-                } catch (Exception e) {
-                    System.err.println("Could not set look and feel '" + "Nimbus" + "': " + e.getMessage());
-                }
-            }
-        }
 
         final File root = new File("./components/core");
         final File srcMain = new File(root, "src/main");
@@ -66,6 +62,27 @@ public class STApp extends JFrame {
                 .setGeneratorPackage("nextgen.st")
                 .setGeneratorName("StringTemplate")
         );
+
+        for (UIManager.LookAndFeelInfo laf : UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(laf.getName())) {
+                try {
+                    UIManager.setLookAndFeel(laf.getClassName());
+                    UIManager.put("ToolTip.background", Color.WHITE);
+                    UIManager.put("ToolTip.foreground", Color.BLACK);
+
+                    final Set<String> fonts = new HashSet<>(Arrays.asList(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
+                    Stream.of("Hack", "Fira Code", "Source Code Pro", "Monospaced")
+                            .filter(fonts::contains)
+                            .findFirst()
+                            .map(fontName -> UIManager.put("ToolTip.font", new Font(fontName, Font.PLAIN, config.getEditorFontSize(12))));
+
+                    MultiLineToolTipUI.installUI();
+                    ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
+                } catch (Exception e) {
+                    System.err.println("Could not set look and feel '" + "Nimbus" + "': " + e.getMessage());
+                }
+            }
+        }
 
         SwingUtil.show(new STApp(config
                 .addDirectories(load(templates, javaMain, "nextgen.templates"))));

@@ -122,6 +122,21 @@ public class JavaPatterns {
 				"				.setBlockStmt(blockStmt);\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	public static MethodDeclaration newOverriddenMethodDeclaration(String name, BlockStmt blockStmt) {\n" + 
+				"		return newMethodDeclaration()\n" + 
+				"				.addAnnotations(newSingleMemberAnnotationExpression().setName(\"Override\"))\n" + 
+				"				.setName(name)\n" + 
+				"				.setBlockStmt(blockStmt);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static MethodDeclaration newOverridenMethodDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, BlockStmt blockStmt) {\n" + 
+				"		return newMethodDeclaration()\n" + 
+				"				.addAnnotations(newSingleMemberAnnotationExpression().setName(\"Override\"))\n" + 
+				"				.setType(classOrInterfaceType)\n" + 
+				"				.setName(name)\n" + 
+				"				.setBlockStmt(blockStmt);\n" + 
+				"	}\n" + 
+				"\n" + 
 				"	public static VariableDeclaration newVariableDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, Object initializer) {\n" + 
 				"		return newVariableDeclaration()\n" + 
 				"				.setType(classOrInterfaceType)\n" + 
@@ -230,6 +245,18 @@ public class JavaPatterns {
 				"					.setStatements(statements));\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	public static FieldAccessExpression newFieldAccessExpression(ClassOrInterfaceType scope, String name) {\n" + 
+				"		return newFieldAccessExpression()\n" + 
+				"				.setScope(scope)\n" + 
+				"				.setName(name);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static FieldAccessExpression newFieldAccessExpression(Expression scope, String name) {\n" + 
+				"		return newFieldAccessExpression()\n" + 
+				"				.setScope(scope)\n" + 
+				"				.setName(name);\n" + 
+				"	}\n" + 
+				"\n" + 
 				"	public static FieldAccessExpression newFieldAccessExpression(String scope, String name) {\n" + 
 				"		return newFieldAccessExpression()\n" + 
 				"				.setScope(scope)\n" + 
@@ -242,14 +269,7 @@ public class JavaPatterns {
 				"				.addVariables(variableDeclaration);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public static MethodCallExpression newMethodCallExpression(FieldAccessExpression scope, String name, Object... arguments) {\n" + 
-				"		return newMethodCallExpression()\n" + 
-				"				.setScope(scope)\n" + 
-				"				.setName(name)\n" + 
-				"				.setArguments(arguments);\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	public static MethodCallExpression newMethodCallExpression(MethodCallExpression scope, String name, Object... arguments) {\n" + 
+				"	public static MethodCallExpression newMethodCallExpression(Expression scope, String name, Object... arguments) {\n" + 
 				"		return newMethodCallExpression()\n" + 
 				"				.setScope(scope)\n" + 
 				"				.setName(name)\n" + 
@@ -264,13 +284,6 @@ public class JavaPatterns {
 				"	}\n" + 
 				"\n" + 
 				"	public static MethodCallExpression newMethodCallExpression(ClassOrInterfaceType scope, String name, Object... arguments) {\n" + 
-				"		return newMethodCallExpression()\n" + 
-				"				.setScope(scope)\n" + 
-				"				.setName(name)\n" + 
-				"				.setArguments(arguments);\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	public static MethodCallExpression newMethodCallExpression(String scope, String name, Object... arguments) {\n" + 
 				"		return newMethodCallExpression()\n" + 
 				"				.setScope(scope)\n" + 
 				"				.setName(name)\n" + 
@@ -322,7 +335,7 @@ public class JavaPatterns {
 				"	}\n" + 
 				"\n" + 
 				"	MethodCallExpression methodCall(String name, Object... arguments) {\n" + 
-				"		return newMethodCallExpression(variableName(), name, arguments);\n" + 
+				"		return newMethodCallExpression(newExpression(variableName()), name, arguments);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	Parameter asParameter(Object... typeArguments) {\n" + 
@@ -349,6 +362,10 @@ public class JavaPatterns {
 				"	ObjectCreationExpression asObjectCreationExpression(Object... arguments) {\n" + 
 				"		return newObjectCreationExpression(asClassOrInterfaceType())\n" + 
 				"				.setArguments(arguments);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	FieldAccessExpression asFieldAccessExpression(String fieldName) {\n" + 
+				"		return newFieldAccessExpression(asClassOrInterfaceType(), fieldName);\n" + 
 				"	}\n" + 
 				"} >>";
 }  

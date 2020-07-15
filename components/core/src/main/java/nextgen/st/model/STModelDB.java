@@ -1,18 +1,17 @@
 package nextgen.st.model;
 
+import nextgen.st.STModelNavigator;
 import nextgen.st.domain.*;
 import org.neo4j.graphdb.Direction;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.RelationshipType;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.BiConsumer;
 
 import static nextgen.st.model.STValueType.*;
 
 public class STModelDB extends STModelNeoFactory {
+
+    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STModel.class);
 
     private final Collection<STGroupModel> groupModels;
 
@@ -20,6 +19,10 @@ public class STModelDB extends STModelNeoFactory {
         super(dir);
         this.groupModels = groupModels;
         cleanup();
+    }
+
+    public Collection<STGroupModel> getGroupModels() {
+        return groupModels;
     }
 
     public STModelDB remove(STValue stValue) {
@@ -91,6 +94,14 @@ public class STModelDB extends STModelNeoFactory {
         return null;
     }
 
+    public STGroupModel findSTGroupModelByTemplateUuid(String uuid) {
+        for (STGroupModel groupModel : groupModels) {
+            final STTemplate stTemplate = findSTTemplateByUuid(groupModel, uuid);
+            if (stTemplate != null) return groupModel;
+        }
+        return null;
+    }
+
     public STTemplate findSTTemplateByUuid(String uuid) {
         for (STGroupModel groupModel : groupModels) {
             final STTemplate stTemplate = findSTTemplateByUuid(groupModel, uuid);
@@ -128,10 +139,11 @@ public class STModelDB extends STModelNeoFactory {
                 .setPackageName(packageName);
     }
 
-    public STModel newSTModel(STTemplate stTemplate) {
+    public STModel newSTModel(String stGroupModel, STTemplate stTemplate) {
         return newSTModel()
                 .setUuid(UUID.randomUUID().toString())
-                .setStTemplate(stTemplate.uuid());
+                .setStTemplate(stTemplate.uuid())
+                .setStGroup(stGroupModel);
     }
 
     public STArgument newSTArgument(STParameter stParameter, final Collection<STArgumentKV> kvs) {
@@ -184,7 +196,7 @@ public class STModelDB extends STModelNeoFactory {
 
             getDatabaseService().getAllNodes().forEach(node -> {
                 if (node.getRelationships().iterator().hasNext()) return;
-                System.out.println("deleting unnused node " + node);
+                log.info("deleting unnused node " + node);
                 node.delete();
             });
 
@@ -194,7 +206,7 @@ public class STModelDB extends STModelNeoFactory {
 
                 if (uuids.contains(stModel.getUuid())) {
                     final String newUuid = UUID.randomUUID().toString();
-                    System.out.println("found duplicate uuid " + stModel.getUuid() + " -> new " + newUuid);
+                    log.info("found duplicate uuid " + stModel.getUuid() + " -> new " + newUuid);
                     stModel.setUuid(newUuid);
                 }
                 uuids.add(stModel.getUuid());
@@ -203,7 +215,7 @@ public class STModelDB extends STModelNeoFactory {
                     final STTemplate stTemplate = findSTTemplateByUuid(stModel.getStTemplate());
 
                     if (stTemplate == null) {
-                        System.out.println("removing model " + stModel.getUuid() + ". Illegal template-reference (null)");
+                        log.info("removing model " + stModel.getUuid() + ". Illegal template-reference (null)");
                         remove(stModel);
                     } else {
 
@@ -246,6 +258,15 @@ public class STModelDB extends STModelNeoFactory {
                                 }
                             }
                         });
+
+                        if (stModel.getStGroup() == null) {
+                            log.info("STModel " + stModel.getUuid() + " missing STGroup");
+                            final STGroupModel stGroupModel = findSTGroupModelByTemplateUuid(stTemplate.uuid());
+                            if (stGroupModel != null) {
+                                stModel.setStGroup(stGroupModel.uuid());
+                                log.info("\tsetting group " + stGroupModel.uuid());
+                            }
+                        }
                     }
                 } catch (IllegalStateException ise) {
                     ise.printStackTrace();
@@ -262,7 +283,7 @@ public class STModelDB extends STModelNeoFactory {
 
         final STTemplate stTemplate = findSTTemplateByUuid(stModel.getStTemplate());
 
-        final STModel clone = newSTModel(stTemplate);
+        final STModel clone = newSTModel(stModel.getStGroup(), stTemplate);
 
         forEachArgument(stTemplate, stModel, (stArgument, stParameter) -> {
             switch (stParameter.getType()) {

@@ -50,6 +50,31 @@ public class STModel {
 		return this;
 	}
 
+	public STModel setStGroup(String value) { 
+		if (value == null) node.removeProperty("stGroup"); 
+		else node.setProperty("stGroup", value);
+		return this;
+	}
+
+	public String getStGroup() { 
+		if (node.hasProperty("stGroup")) return (String) node.getProperty("stGroup");
+		return null;
+	}
+
+	public String getStGroup(String defaultValue) { 
+		if (node.hasProperty("stGroup")) return (String) node.getProperty("stGroup");
+		return defaultValue;
+	}
+
+	public boolean hasStGroup() { 
+		return node.hasProperty("stGroup");
+	}
+
+	public STModel removeStGroup() { 
+		node.removeProperty("stGroup");
+		return this;
+	}
+
 	public STModel setStTemplate(String value) { 
 		if (value == null) node.removeProperty("stTemplate"); 
 		else node.setProperty("stTemplate", value);
@@ -146,6 +171,7 @@ public class STModel {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
 		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
 		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
+		if (node.hasProperty("stGroup")) jsonObject.put("stGroup", node.getProperty("stGroup"));
 		if (node.hasProperty("stTemplate")) jsonObject.put("stTemplate", node.getProperty("stTemplate"));
 		final io.vertx.core.json.JsonArray _files = new io.vertx.core.json.JsonArray();
 		getFiles().forEach(element -> _files.add(element.toJsonObject()));

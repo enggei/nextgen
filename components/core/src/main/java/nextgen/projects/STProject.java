@@ -24,8 +24,8 @@ public class STProject extends BaseSTProject {
         final PCanvas canvas = newPCanvas()
                 .setName(STCanvas.name())
                 .setPackageName(stCanvasPackage.getName())
-                .setNodeName(STNode.name())
-                .setRelationName(STRelation.name())
+                .setNodeName(STNode.asClassOrInterfaceType())
+                .setRelationName(STRelation.asClassOrInterfaceType())
                 .addFields(STRenderer.asClassOrInterfaceType(), STRenderer.variableName())
                 .addFields(STModelDB.asClassOrInterfaceType(), STModelDB.variableName())
                 .addConstructorStatements(newExpressionStmt(SwingUtilities.staticMethodCall("invokeLater", newLambdaExpression("new LoadLastLayoutAction(this, null).actionPerformed(null)"))))
@@ -946,6 +946,7 @@ public class STProject extends BaseSTProject {
 
         final Entity stModelNeo = newEntity("STModel")
                 .addRelations(newStringField("uuid"))
+                .addRelations(newStringField("stGroup"))
                 .addRelations(newStringField("stTemplate"))
                 .addRelations(newOneToMany("files", newEntity("STFile")
                         .addRelations(newStringField("uuid"))

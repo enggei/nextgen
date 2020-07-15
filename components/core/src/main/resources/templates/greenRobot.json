@@ -61,5 +61,10 @@
       "type" : "SINGLE",
       "argumentType" : "Object"
     } ]
+  }, {
+    "uuid" : "df872eb5-94d3-4cbf-adee-8d04644f9e23",
+    "name" : "maven",
+    "text" : "<dependency>\n\t<groupId>org.greenrobot</groupId>\n\t<artifactId>eventbus</artifactId>\n\t<version>3.2.0</version>\n</dependency> ",
+    "parameters" : [ ]
   } ]
 }

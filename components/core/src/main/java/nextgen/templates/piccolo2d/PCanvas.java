@@ -7,8 +7,8 @@ public class PCanvas {
 
 	private String _packageName;
 	private String _name;
-	private String _nodeName;
-	private String _relationName;
+	private Object _nodeName;
+	private Object _relationName;
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _canvasActionmethods = new java.util.ArrayList<>();
 	private java.util.List<Object> _actions = new java.util.ArrayList<>();
@@ -86,16 +86,16 @@ public class PCanvas {
 		return this;
 	} 
 
-	public PCanvas setNodeName(String value) {
+	public PCanvas setNodeName(Object value) {
 		this._nodeName = value;
 		return this;
 	}
 
-	public String getNodeName() {
+	public Object getNodeName() {
 		return this._nodeName;
 	}
 
-	public String getNodeName(String defaultValue) {
+	public Object getNodeName(Object defaultValue) {
 		return this._nodeName == null ? defaultValue : this._nodeName;
 	}
 
@@ -108,16 +108,16 @@ public class PCanvas {
 		return this;
 	} 
 
-	public PCanvas setRelationName(String value) {
+	public PCanvas setRelationName(Object value) {
 		this._relationName = value;
 		return this;
 	}
 
-	public String getRelationName() {
+	public Object getRelationName() {
 		return this._relationName;
 	}
 
-	public String getRelationName(String defaultValue) {
+	public Object getRelationName(Object defaultValue) {
 		return this._relationName == null ? defaultValue : this._relationName;
 	}
 
@@ -511,6 +511,7 @@ public class PCanvas {
 				"		\n" + 
 				"		final N node= supplier.get();\n" + 
 				"		node.select();\n" + 
+				"		node.setOffset(getCenterPosition());\n" + 
 				"		nodeMap.put(node.getUuid(), node);\n" + 
 				"		nodeLayer.addChild(node);\n" + 
 				"\n" + 

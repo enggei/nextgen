@@ -74,6 +74,20 @@ public class STModelNeoFactory {
 		return db.findNodes(org.neo4j.graphdb.Label.label("STModel"), "uuid", value).stream().map(this::newSTModel);
 	}
 
+	public STModel findSTModelByStGroup(String value) {
+		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STModel"), "stGroup", value);
+		return node == null ? null : newSTModel(node);
+	}
+
+	public STModel findOrCreateSTModelByStGroup(String value) {
+		final STModel existing = findSTModelByStGroup(value);
+		return existing == null ? newSTModel().setStGroup(value) : existing;
+	}
+
+	public java.util.stream.Stream<STModel> findAllSTModelByStGroup(String value) {
+		return db.findNodes(org.neo4j.graphdb.Label.label("STModel"), "stGroup", value).stream().map(this::newSTModel);
+	}
+
 	public STModel findSTModelByStTemplate(String value) {
 		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STModel"), "stTemplate", value);
 		return node == null ? null : newSTModel(node);

@@ -152,17 +152,14 @@ public class ~name~ implements java.beans.PropertyChangeListener {
 
 	@Override
 	public void propertyChange(java.beans.PropertyChangeEvent evt) {
-		System.out.println("~name~ updated");
 		this.pcs.firePropertyChange("~name~", null, this);
 	}
 	
 	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
-		System.out.println("~name~ add " + listener.getClass().getSimpleName());
 		this.pcs.addPropertyChangeListener(listener);
 	}
 
 	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
-		System.out.println("~name~ del " + listener.getClass().getSimpleName());
 		this.pcs.removePropertyChangeListener(listener);
 	}
 }  >>
@@ -577,6 +574,21 @@ JavaPatterns() ::= <<public static class JavaPatterns extends nextgen.templates.
 				.setBlockStmt(blockStmt);
 	}
 
+	public static MethodDeclaration newOverriddenMethodDeclaration(String name, BlockStmt blockStmt) {
+		return newMethodDeclaration()
+				.addAnnotations(newSingleMemberAnnotationExpression().setName("Override"))
+				.setName(name)
+				.setBlockStmt(blockStmt);
+	}
+
+	public static MethodDeclaration newOverridenMethodDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, BlockStmt blockStmt) {
+		return newMethodDeclaration()
+				.addAnnotations(newSingleMemberAnnotationExpression().setName("Override"))
+				.setType(classOrInterfaceType)
+				.setName(name)
+				.setBlockStmt(blockStmt);
+	}
+
 	public static VariableDeclaration newVariableDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, Object initializer) {
 		return newVariableDeclaration()
 				.setType(classOrInterfaceType)
@@ -685,6 +697,18 @@ JavaPatterns() ::= <<public static class JavaPatterns extends nextgen.templates.
 					.setStatements(statements));
 	}
 
+	public static FieldAccessExpression newFieldAccessExpression(ClassOrInterfaceType scope, String name) {
+		return newFieldAccessExpression()
+				.setScope(scope)
+				.setName(name);
+	}
+
+	public static FieldAccessExpression newFieldAccessExpression(Expression scope, String name) {
+		return newFieldAccessExpression()
+				.setScope(scope)
+				.setName(name);
+	}
+
 	public static FieldAccessExpression newFieldAccessExpression(String scope, String name) {
 		return newFieldAccessExpression()
 				.setScope(scope)
@@ -697,14 +721,7 @@ JavaPatterns() ::= <<public static class JavaPatterns extends nextgen.templates.
 				.addVariables(variableDeclaration);
 	}
 
-	public static MethodCallExpression newMethodCallExpression(FieldAccessExpression scope, String name, Object... arguments) {
-		return newMethodCallExpression()
-				.setScope(scope)
-				.setName(name)
-				.setArguments(arguments);
-	}
-
-	public static MethodCallExpression newMethodCallExpression(MethodCallExpression scope, String name, Object... arguments) {
+	public static MethodCallExpression newMethodCallExpression(Expression scope, String name, Object... arguments) {
 		return newMethodCallExpression()
 				.setScope(scope)
 				.setName(name)
@@ -719,13 +736,6 @@ JavaPatterns() ::= <<public static class JavaPatterns extends nextgen.templates.
 	}
 
 	public static MethodCallExpression newMethodCallExpression(ClassOrInterfaceType scope, String name, Object... arguments) {
-		return newMethodCallExpression()
-				.setScope(scope)
-				.setName(name)
-				.setArguments(arguments);
-	}
-
-	public static MethodCallExpression newMethodCallExpression(String scope, String name, Object... arguments) {
 		return newMethodCallExpression()
 				.setScope(scope)
 				.setName(name)
@@ -777,7 +787,7 @@ public static class NamedEntity {
 	}
 
 	MethodCallExpression methodCall(String name, Object... arguments) {
-		return newMethodCallExpression(variableName(), name, arguments);
+		return newMethodCallExpression(newExpression(variableName()), name, arguments);
 	}
 
 	Parameter asParameter(Object... typeArguments) {
@@ -804,6 +814,10 @@ public static class NamedEntity {
 	ObjectCreationExpression asObjectCreationExpression(Object... arguments) {
 		return newObjectCreationExpression(asClassOrInterfaceType())
 				.setArguments(arguments);
+	}
+
+	FieldAccessExpression asFieldAccessExpression(String fieldName) {
+		return newFieldAccessExpression(asClassOrInterfaceType(), fieldName);
 	}
 }  >>
 
