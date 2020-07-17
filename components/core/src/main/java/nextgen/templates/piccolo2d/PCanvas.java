@@ -10,6 +10,7 @@ public class PCanvas {
 	private Object _nodeName;
 	private Object _relationName;
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
+	private java.util.List<Object> _nodeAddedStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _canvasActionmethods = new java.util.ArrayList<>();
 	private java.util.List<Object> _actions = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
@@ -33,6 +34,7 @@ public class PCanvas {
 		st.add("nodeName", _nodeName);
 		st.add("relationName", _relationName);
 		for (Object o : _constructorStatements) st.add("constructorStatements", o);
+		for (Object o : _nodeAddedStatements) st.add("nodeAddedStatements", o);
 		for (Object o : _canvasActionmethods) st.add("canvasActionmethods", o);
 		for (Object o : _actions) st.add("actions", o);
 		for (Object o : _methods) st.add("methods", o);
@@ -157,6 +159,35 @@ public class PCanvas {
 
 	public java.util.List<Object> getConstructorStatements() {
 		return this._constructorStatements;
+	} 
+
+	public PCanvas addNodeAddedStatements(Object value) {
+		this._nodeAddedStatements.add(value);
+		return this;
+	}
+
+	public PCanvas setNodeAddedStatements(Object[] value) {
+		this._nodeAddedStatements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public PCanvas setNodeAddedStatements(java.util.Collection<Object> values) {
+		this._nodeAddedStatements.addAll(values);
+		return this;
+	}
+
+	public PCanvas removeNodeAddedStatements(Object value) {
+		this._nodeAddedStatements.remove(value);
+		return this;
+	}
+
+	public PCanvas removeNodeAddedStatements(int index) {
+		this._nodeAddedStatements.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getNodeAddedStatements() {
+		return this._nodeAddedStatements;
 	} 
 
 	public PCanvas addCanvasActionmethods(Object value) {
@@ -386,7 +417,7 @@ public class PCanvas {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PCanvas(packageName,name,nodeName,relationName,fields,constructorStatements,onRightClick,onKeyPressed,canvasActionmethods,actions,methods) ::= <<package ~packageName~;\n" + 
+	static final String st = "PCanvas(packageName,name,nodeName,relationName,fields,constructorStatements,nodeAddedStatements,onRightClick,onKeyPressed,canvasActionmethods,actions,methods) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import org.piccolo2d.PCamera;\n" + 
 				"import org.piccolo2d.PCanvas;\n" + 
@@ -444,7 +475,6 @@ public class PCanvas {
 				"		addInputEventListener(canvasInputEventsHandler);\n" + 
 				"		~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
 				"		~constructorStatements:{it|~it~};separator=\"\\n\"~\n" + 
-				"		//org.greenrobot.eventbus.EventBus.getDefault().register(this);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 
@@ -514,6 +544,8 @@ public class PCanvas {
 				"		node.setOffset(getCenterPosition());\n" + 
 				"		nodeMap.put(node.getUuid(), node);\n" + 
 				"		nodeLayer.addChild(node);\n" + 
+				"\n" + 
+				"		~nodeAddedStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"		node.addedToCanvas();\n" + 
 				"\n" + 
@@ -625,7 +657,5 @@ public class PCanvas {
 				"	~actions:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
 				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
-				"	\n" + 
-				"	~CanvasEvents(canvasName=name,nodeName=nodeName)~\n" + 
 				"} >>";
 }  

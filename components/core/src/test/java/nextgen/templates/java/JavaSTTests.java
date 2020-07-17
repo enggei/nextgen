@@ -102,6 +102,8 @@ public class JavaSTTests {
 		testWhileStmt();
 		testClassOrInterfaceType();
 		testTypeParameter();
+		testJavaLibrary();
+		testJavaPackage();
 		testJavaPatterns();
 	}
 
@@ -568,6 +570,16 @@ public class JavaSTTests {
 	@org.junit.Test
 	public void testTypeParameter() {
 		System.out.println("\n--- TEST TypeParameter:\n" + newTypeParameter());
+	} 
+
+	@org.junit.Test
+	public void testJavaLibrary() {
+		System.out.println("\n--- TEST JavaLibrary:\n" + newJavaLibrary());
+	} 
+
+	@org.junit.Test
+	public void testJavaPackage() {
+		System.out.println("\n--- TEST JavaPackage:\n" + newJavaPackage());
 	} 
 
 	@org.junit.Test

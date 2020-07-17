@@ -1044,6 +1044,7 @@ public class STNavigator extends JPanel {
                                                 tabbedPane.setSelectedComponent(stCanvas);
                                                 stCanvas.requestFocusInWindow();
                                                 stCanvas.centerNode(node);
+
                                             });
                                         });
                                     });

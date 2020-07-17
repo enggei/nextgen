@@ -8,7 +8,6 @@ public class Piccolo2DST {
 	PCanvas.st + "\n" + 
 	CanvasAction.st + "\n" + 
 	LayoutVerticallyAction.st + "\n" + 
-	CanvasEvents.st + "\n" + 
 	CanvasInputEventsHandler.st + "\n" + 
 	CanvasZoomHandler.st + "\n" + 
 	SelectEventsHandler.st + "\n" + 
@@ -70,10 +69,6 @@ public class Piccolo2DST {
 
 	public static LayoutVerticallyAction newLayoutVerticallyAction() {
 		return new LayoutVerticallyAction(stGroup);
-	} 
-
-	public static CanvasEvents newCanvasEvents() {
-		return new CanvasEvents(stGroup);
 	} 
 
 	public static CanvasInputEventsHandler newCanvasInputEventsHandler() {

@@ -26,6 +26,8 @@ import static java.awt.event.KeyEvent.*;
 
 public class STCanvas extends PCanvas implements PInputEventListener {
 
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STCanvas.class);
+
 	static boolean debug = true;
 
 	private final PLayer nodeLayer;
@@ -58,7 +60,6 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		this.stRenderer = stRenderer;
 		this.modelDb = modelDb;
 		javax.swing.SwingUtilities.invokeLater(() -> new LoadLastLayoutAction(this, null).actionPerformed(null));
-		//org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
 
 	@Override
@@ -116,12 +117,12 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 		final N existing = getNode(uuid);
 		if (existing != null) {
-			if (debug) System.out.println("N-" + uuid + " exists in canvas");
+			if (debug) log.debug("N-" + uuid + " exists in canvas");
 			existing.refresh();
 			existing.select();
 			return existing;
 		}
-		if (debug) System.out.println("N-" + uuid + " added to canvas");
+		if (debug) log.debug("N-" + uuid + " added to canvas");
 
 		final N node= supplier.get();
 		node.select();
@@ -129,9 +130,9 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		nodeMap.put(node.getUuid(), node);
 		nodeLayer.addChild(node);
 
-		node.addedToCanvas();
+		nextgen.st.STAppEvents.postNodeAdded(this, node);
 
-		//org.greenrobot.eventbus.EventBus.getDefault().post(new NodeAdded(this, node));
+		node.addedToCanvas();
 
 		getAllNodes()
 				.filter(stNode -> !stNode.getUuid().equals(node.getUuid()))
@@ -151,11 +152,19 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	<N extends nextgen.st.canvas.STNode> N removeNode(UUID uuid) {
 		final nextgen.st.canvas.STNode remove = nodeMap.remove(uuid);
 		final N old = (N) nodeLayer.removeChild(remove);
-		if (debug) System.out.println("\tN-"+ uuid + " removed from canvas : " + (old == null ? "null" : old.getUuid()));
+		if (debug) log.debug("\tN-"+ uuid + " removed from canvas : " + (old == null ? "null" : old.getUuid()));
 		return (N) remove;
 	}
 
+	// temporary
 	public <R extends nextgen.st.canvas.STRelation> R addRelation(R relation) {
+
+		final R exists = getRelation(relation.getUuid());
+		if (exists != null) {
+			relation.close();
+			return exists;
+		}
+
 		return addRelation(relation.getUuid(), () -> relation);
 	}
 
@@ -167,10 +176,10 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 		final R existing = getRelation(uuid);
 		if (existing != null) {
-			if (debug) System.out.println("R-"+ uuid + " exists in canvas");
+			if (debug) log.debug("R-"+ uuid + " exists in canvas");
 			return existing;
 		}
-		if (debug) System.out.println("R-"+ uuid + " added to canvas");
+		if (debug) log.debug("R-"+ uuid + " added to canvas");
 
 		final R relation = supplier.get();
 		relationMap.put(relation.getUuid(), relation);
@@ -180,8 +189,11 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 	<R extends nextgen.st.canvas.STRelation> R removeRelation(UUID uuid) {
 		final nextgen.st.canvas.STRelation remove = relationMap.remove(uuid);
+		if (remove == null) return null;
+
+		remove.close();
 		final R old = (R) relationLayer.removeChild(remove);
-		if (debug) System.out.println("\tR-"+ uuid + " removed from canvas : " + (old == null ? "null" : old.getUuid()));
+		if (debug) log.debug("\tR-"+ uuid + " removed from canvas : " + (old == null ? "null" : old.getUuid()));
 		return (R) remove;
 	}
 
@@ -281,7 +293,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 			invalidate();
 			repaint();
 		}
-	} 
+	}  
 
 	private final class SelectEventsHandler extends PBasicInputEventHandler {
 
@@ -326,12 +338,12 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 			if (selectionRectangle != null) nodeLayer.removeChild(selectionRectangle);
 			return this;
 		}
-	} 
+	}  
 
 	private static class CanvasZoomHandler extends PBasicInputEventHandler {
 
 		final private static double maxZoomScale = 2.5d;
-		final private static double minZomScale = 0.025d;
+		final private static double minZomScale = 0.25d;
 		private double scaleFactor = 0.05d;
 
 		CanvasZoomHandler() {
@@ -349,7 +361,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 			final java.awt.geom.Point2D viewAboutPoint = event.getPosition();
 			camera.scaleViewAboutPoint(scale, viewAboutPoint.getX(), viewAboutPoint.getY());
 		}
-	} 
+	}  
 
 	static abstract class CanvasAction extends AbstractAction {
 
@@ -376,6 +388,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 	private static final class NewSTValueNode extends CanvasAction {
 
+
 		NewSTValueNode(STCanvas canvas, PInputEvent event) {
 			super("New Value", canvas, event);
 		}
@@ -384,13 +397,12 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
 			final String s = com.generator.util.SwingUtil.showInputDialog("Value", canvas);
 			if (s == null || s.trim().length() == 0) return;
-			doLaterInTransaction(tx -> {
-				canvas.addNode(new STValueNode(canvas, canvas.modelDb.newSTValue(s), canvas.stRenderer));
-			});
+			doLaterInTransaction(tx -> canvas.addNode(new STValueNode(canvas, canvas.modelDb.newSTValue(s), canvas.stRenderer)));
 		}
 	}
 
 	private static final class NewSTValueFromClipboard extends CanvasAction {
+
 
 		NewSTValueFromClipboard(STCanvas canvas, PInputEvent event) {
 			super("New Value from Clipboard", canvas, event);
@@ -400,13 +412,12 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
 			final String s = com.generator.util.SwingUtil.fromClipboard();
 			if (s == null || s.trim().length() == 0) return;
-			doLaterInTransaction(tx -> {
-				canvas.addNode(canvas.newSTNode(canvas.modelDb.newSTValue(s)).get());
-			});
+			doLaterInTransaction(tx -> canvas.addNode(canvas.newSTNode(canvas.modelDb.newSTValue(s)).get()));
 		}
 	}
 
 	private static final class SaveLastLayoutAction extends CanvasAction {
+
 
 		SaveLastLayoutAction(STCanvas canvas, PInputEvent event) {
 			super("Save last layout", canvas, event);
@@ -442,7 +453,34 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		}
 	}
 
+	private static final class UnselectAllNodes extends CanvasAction {
+
+
+		UnselectAllNodes(STCanvas canvas, PInputEvent event) {
+			super("Unselect all nodes", canvas, event);
+		}
+
+		@Override
+		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
+			javax.swing.SwingUtilities.invokeLater(() -> canvas.getSelectedNodes().forEach(nextgen.st.canvas.STNode::unselect));
+		}
+	}
+
+	private static final class CloseSelectedNodes extends CanvasAction {
+
+
+		CloseSelectedNodes(STCanvas canvas, PInputEvent event) {
+			super("Close selected nodes", canvas, event);
+		}
+
+		@Override
+		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
+			javax.swing.SwingUtilities.invokeLater(() -> canvas.getSelectedNodes().forEach(nextgen.st.canvas.STNode::close));
+		}
+	}
+
 	private static final class LoadLastLayoutAction extends CanvasAction {
+
 
 		LoadLastLayoutAction(STCanvas canvas, PInputEvent event) {
 			super("Load last layout", canvas, event);
@@ -476,6 +514,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 	private static final class SelectAllNodes extends CanvasAction {
 
+
 		SelectAllNodes(STCanvas canvas, PInputEvent event) {
 			super("Select all nodes", canvas, event);
 		}
@@ -486,31 +525,8 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		}
 	}
 
-	private static final class UnselectAllNodes extends CanvasAction {
-
-		UnselectAllNodes(STCanvas canvas, PInputEvent event) {
-			super("Unselect all nodes", canvas, event);
-		}
-
-		@Override
-		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
-			javax.swing.SwingUtilities.invokeLater(() -> canvas.getSelectedNodes().forEach(nextgen.st.canvas.STNode::unselect));
-		}
-	}
-
-	private static final class CloseSelectedNodes extends CanvasAction {
-
-		CloseSelectedNodes(STCanvas canvas, PInputEvent event) {
-			super("Close selected nodes", canvas, event);
-		}
-
-		@Override
-		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
-			javax.swing.SwingUtilities.invokeLater(() -> canvas.getSelectedNodes().forEach(nextgen.st.canvas.STNode::close));
-		}
-	}
-
 	private static final class RetainSelectedNodes extends CanvasAction {
+
 
 		RetainSelectedNodes(STCanvas canvas, PInputEvent event) {
 			super("Retain selected nodes", canvas, event);
@@ -524,17 +540,17 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 	private static final class LayoutVerticallyAction extends CanvasAction {
 
-		private final Point position;
-		private final int heightPadding = 20;
+		private java.awt.Point position;
+		private int heightPadding;
 
 		LayoutVerticallyAction(STCanvas canvas, PInputEvent event) {
 			super("Layout selected nodes vertically", canvas, event);
 			this.position = canvas.getCurrentMousePosition();
+			this.heightPadding = 20;
 		}
 
 		@Override
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
-
 			SwingUtilities.invokeLater(() -> canvas.getSelectedNodes().forEach(new Consumer<nextgen.st.canvas.STNode>() {
 
 				double x = position.getX();
@@ -558,6 +574,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 	private static final class PopupAction extends CanvasAction {
 
+
 		PopupAction(STCanvas canvas, PInputEvent event) {
 			super("Popup", canvas, event);
 		}
@@ -574,70 +591,54 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		}
 	}
 
-	java.util.function.Supplier<STNode> newSTNode(nextgen.st.model.STModel stModel){ 
-		return () -> new nextgen.st.canvas.STModelNode(this, modelDb.findSTTemplateByUuid(stModel.getStTemplate()), stModel, stRenderer);
-	}
-
-	java.util.function.Supplier<STNode> newSTNode(nextgen.st.model.STValue stValue){ 
-		return () -> new nextgen.st.canvas.STValueNode(this, stValue, stRenderer);
-	}
-
-	java.util.function.Supplier<STNode> newSTNode(nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument){ 
-		return () -> new nextgen.st.canvas.STKVNode(this, stParameter, stArgument, stRenderer);
-	}
-
-	java.util.function.Supplier<STNode> newSTNode(nextgen.st.model.STFile stFile, nextgen.st.model.STModel stModel){ 
-		return () -> new nextgen.st.canvas.STFileNode(this, stFile, stModel, stRenderer);
-	}
-
 	public final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea newTextArea(){ 
 		final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea rSyntaxTextArea = new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea(10, 80);
 		rSyntaxTextArea.setTabSize(3);
 		rSyntaxTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
 
 			@Override
-			public void keyPressed(java.awt.event.KeyEvent keyEvent){ 
+			public void keyPressed(java.awt.event.KeyEvent keyEvent) {
 				if (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_F) {
 					format(rSyntaxTextArea);
-					}
+				}
 			}
+
 			private void format(JTextArea txtEditor) {
-			                final int caretPosition = txtEditor.getCaretPosition();
-			                final StringBuilder spaces = new StringBuilder();
-			                for (int i = 0; i < txtEditor.getTabSize(); i++) spaces.append(" ");
+				final int caretPosition = txtEditor.getCaretPosition();
+				final StringBuilder spaces = new StringBuilder();
+				for (int i = 0; i < txtEditor.getTabSize(); i++) spaces.append(" ");
 
-			                String[] split = txtEditor.getText().split("\n");
-			                final StringBuilder formatted = new StringBuilder();
-			                for (String s : split) formatted.append(s.replace(spaces, "\t")).append("\n");
-			                split = formatted.toString().split("\n");
-			                System.out.println(formatted.toString());
+				String[] split = txtEditor.getText().split("\n");
+				final StringBuilder formatted = new StringBuilder();
+				for (String s : split) formatted.append(s.replace(spaces, "\t")).append("\n");
+				split = formatted.toString().split("\n");
+				System.out.println(formatted.toString());
 
-			                final StringBuilder formatted2 = new StringBuilder();
-			                for (String s : split) {
-			                    if (s.trim().length() == 0) {
-			                        formatted2.append("\n");
-			                        continue;
-			                    }
+				final StringBuilder formatted2 = new StringBuilder();
+				for (String s : split) {
+					if (s.trim().length() == 0) {
+							formatted2.append("\n");
+							continue;
+					}
 
-			                    final char[] c = s.toCharArray();
-			                    for (int i = 0; i < c.length; i++) {
-			                        if (c[i] == '\t') {
-			                            formatted2.append(c[i]);
-			                            continue;
-			                        }
-			                        if (c[i] == ' ') continue;
-			                        formatted2.append(s.substring(i));
-			                        break;
-			                    }
+					final char[] c = s.toCharArray();
+					for (int i = 0; i < c.length; i++) {
+							if (c[i] == '\t') {
+								formatted2.append(c[i]);
+								continue;
+							}
+							if (c[i] == ' ') continue;
+							formatted2.append(s.substring(i));
+							break;
+					}
 
-			                    formatted2.append("\n");
-			                }
-			                System.out.println(formatted2.toString());
+					formatted2.append("\n");
+				}
+				System.out.println(formatted2.toString());
 
-			                txtEditor.setText(formatted2.toString().trim());
-			                txtEditor.setCaretPosition(Math.min(formatted2.toString().trim().length(), caretPosition));
-			            }
-
+				txtEditor.setText(formatted2.toString().trim());
+				txtEditor.setCaretPosition(Math.min(formatted2.toString().trim().length(), caretPosition));
+			}
 		});
 		return rSyntaxTextArea;
 	}
@@ -653,14 +654,14 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 			public void mouseClicked(java.awt.event.MouseEvent e) {
 				if (javax.swing.SwingUtilities.isRightMouseButton(e))
 					javax.swing.SwingUtilities.invokeLater(() -> {
-						final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();
-						pop.add(new AbstractAction("Set from clipboard") {
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								textField.setText(com.generator.util.SwingUtil.fromClipboard());
-							}
-						});
-						pop.show(textField, e.getX(), e.getY());
+							final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();
+							pop.add(new AbstractAction("Set from clipboard") {
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									textField.setText(com.generator.util.SwingUtil.fromClipboard());
+								}
+							});
+							pop.show(textField, e.getX(), e.getY());
 					});
 			}
 		});
@@ -681,25 +682,31 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		return textField;
 	}
 
-	public static final class NodeAdded {
-
-		public STCanvas canvas;
-		public nextgen.st.canvas.STNode node;
-
-		public NodeAdded(STCanvas canvas, nextgen.st.canvas.STNode node) {
-			this.canvas = canvas;
-			this.node = node;
-		}
+	java.util.function.Supplier<nextgen.st.canvas.STArgumentRelation> newSTArgumentRelation(nextgen.st.canvas.STModelNode src, nextgen.st.canvas.STNode dst, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameter stParameter){ 
+		return () -> new STArgumentRelation(this, src, dst, stArgument, stParameter);
 	}
 
-	public static final class NodeClosed {
+	java.util.function.Supplier<nextgen.st.canvas.STSinkRelation> newSinkRelation(nextgen.st.canvas.STModelNode src, nextgen.st.canvas.STFileNode stFileNode){ 
+		return () ->  new STSinkRelation(this, src, stFileNode);
+	}
 
-		public STCanvas canvas;
-		public nextgen.st.canvas.STNode node;
+	java.util.function.Supplier<nextgen.st.canvas.STKVArgumentRelation> newSTKVArgumentRelation(nextgen.st.canvas.STKVNode src, nextgen.st.canvas.STNode dst, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey, nextgen.st.model.STArgumentKV stArgumentKV){ 
+		return () -> new STKVArgumentRelation(this, src, dst, stArgument, stParameterKey, stArgumentKV);
+	}
 
-		public NodeClosed(STCanvas canvas, nextgen.st.canvas.STNode node) {
-			this.canvas = canvas;
-			this.node = node;
-		}
-	} 
+	java.util.function.Supplier<nextgen.st.canvas.STNode> newSTNode(nextgen.st.model.STValue stValue){ 
+		return () -> new STValueNode(this, stValue, stRenderer);
+	}
+
+	java.util.function.Supplier<nextgen.st.canvas.STNode> newSTNode(nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument){ 
+		return () -> new STKVNode(this, stParameter, stArgument, stRenderer);
+	}
+
+	java.util.function.Supplier<nextgen.st.canvas.STNode> newSTNode(nextgen.st.model.STFile stFile, nextgen.st.model.STModel stModel){ 
+		return () -> new STFileNode(this, stFile, stModel, stRenderer);
+	}
+
+	java.util.function.Supplier<nextgen.st.canvas.STNode> newSTNode(nextgen.st.model.STModel stModel){ 
+		return () -> new nextgen.st.canvas.STModelNode(this, modelDb.findSTTemplateByUuid(stModel.getStTemplate()), stModel, stRenderer);
+	}
 }

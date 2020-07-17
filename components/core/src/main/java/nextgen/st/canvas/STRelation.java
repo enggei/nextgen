@@ -19,12 +19,15 @@ import java.util.UUID;
 
 public class STRelation extends PPath.Double implements Comparator<STRelation> {
 
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STRelation.class);
+
 	protected enum Attributes {
 		_defaultColor, _selectedColor, _highlightedColor, _uuid, _text, _selected, _highlight, _order, _type, _src, _dst
 	}
 
 	protected STCanvas canvas;
 	final protected PText child;
+	private final PNodeChangeListener nodeChangeListener = new PNodeChangeListener();
 
 	public STRelation(STCanvas canvas, STNode src, STNode dst, String type, UUID uuid) {
 		this.canvas = canvas;
@@ -49,7 +52,6 @@ public class STRelation extends PPath.Double implements Comparator<STRelation> {
 		addInputEventListener(relationInputEventHandler);
 		addInputEventListener(canvas.canvasZoomHandler);
 
-		final PNodeChangeListener nodeChangeListener = new PNodeChangeListener();
 		src.addPropertyChangeListener(nodeChangeListener);
 		dst.addPropertyChangeListener(nodeChangeListener);
 		addChild(this.child);
@@ -60,6 +62,16 @@ public class STRelation extends PPath.Double implements Comparator<STRelation> {
 	@Override
 	public String toString() {
 		return getUuid() + " " + getSrc() + " -> " + getType() + " -> " + getDst();
+	}
+
+	public void close() {
+		SwingUtilities.invokeLater(() -> {
+			log.info("R-" + getUuid() + " closed");
+			getSrc().outgoing.remove(getUuid());
+			getDst().incoming.remove(getUuid());
+			getSrc().removePropertyChangeListener(nodeChangeListener);
+			getDst().removePropertyChangeListener(nodeChangeListener);
+		});
 	}
 
 	@Override
@@ -122,12 +134,15 @@ public class STRelation extends PPath.Double implements Comparator<STRelation> {
 	}
 
 	private void updatePath(Color color) {
-		setPaint(color);
 		child.setTextPaint(color);
-		updatePath(getSrc(), getDst());
+		setPaint(color);
+		setStrokePaint(color);
+		setPaintInvalid(true);
+		validateFullPaint();
 	}
 
 	private void updatePath(STNode source, STNode target) {
+		log.info(getUuid() + " updatePath");
 		final PBounds src = source.getFullBoundsReference();
 		final PBounds dst = target.getFullBoundsReference();
 		final boolean horizontalOverlap = !(src.getMaxX() < dst.getMinX() || src.getMinX() > dst.getMaxX());
@@ -201,10 +216,26 @@ public class STRelation extends PPath.Double implements Comparator<STRelation> {
 
 	private final class PNodeChangeListener implements PropertyChangeListener {
 
+		private final java.util.UUID uuid = java.util.UUID.randomUUID();
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			PNodeChangeListener that = (PNodeChangeListener) o;
+			return uuid.equals(that.uuid);
+		}
+
+		@Override
+		public int hashCode() {
+			return java.util.Objects.hash(uuid);
+		}
+
 		@Override
 		public void propertyChange(PropertyChangeEvent evt) {
 			switch (evt.getPropertyName()) {
 				case PNode.PROPERTY_FULL_BOUNDS:
+					break;
 				case PNode.PROPERTY_TRANSFORM:
 					SwingUtilities.invokeLater(() -> updatePath((getSrc()), getDst()));
 					break;
@@ -212,7 +243,7 @@ public class STRelation extends PPath.Double implements Comparator<STRelation> {
 					break;
 			}
 		}
-	} 
+	}  
 
 	private final class RelationInputEventHandler extends PBasicInputEventHandler {
 
@@ -245,7 +276,7 @@ public class STRelation extends PPath.Double implements Comparator<STRelation> {
 		public void keyPressed(PInputEvent event) {
 			onRelationKeyPressed(event);
 		}
-	} 
+	}  
 
 	protected void onRelationRightClick(PInputEvent event, JPopupMenu pop) {
 	}

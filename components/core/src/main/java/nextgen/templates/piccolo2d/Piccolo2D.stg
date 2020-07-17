@@ -1,6 +1,6 @@
 delimiters "~","~"
 
-PCanvas(packageName,name,nodeName,relationName,fields,constructorStatements,onRightClick,onKeyPressed,canvasActionmethods,actions,methods) ::= <<package ~packageName~;
+PCanvas(packageName,name,nodeName,relationName,fields,constructorStatements,nodeAddedStatements,onRightClick,onKeyPressed,canvasActionmethods,actions,methods) ::= <<package ~packageName~;
 
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PCanvas;
@@ -58,7 +58,6 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 		addInputEventListener(canvasInputEventsHandler);
 		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
 		~constructorStatements:{it|~it~};separator="\n"~
-		//org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
 
 	@Override
@@ -128,6 +127,8 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 		node.setOffset(getCenterPosition());
 		nodeMap.put(node.getUuid(), node);
 		nodeLayer.addChild(node);
+
+		~nodeAddedStatements:{it|~it~};separator="\n"~
 
 		node.addedToCanvas();
 
@@ -239,8 +240,6 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 	~actions:{it|~it~};separator="\n\n"~
 
 	~methods:{it|~it~};separator="\n\n"~
-	
-	~CanvasEvents(canvasName=name,nodeName=nodeName)~
 }  >>
 
 CanvasInputEventsHandler(canvasName) ::= <<private final class CanvasInputEventsHandler extends PBasicInputEventHandler {
@@ -407,28 +406,6 @@ LayoutVerticallyAction(name,canvasName,nodeType) ::= <<private static final clas
 				}
 			}
 		}));
-	}
-}  >>
-
-CanvasEvents(canvasName,nodeName) ::= <<public static final class NodeAdded {
-
-	public ~canvasName~ canvas;
-	public ~nodeName~ node;
-	
-	public NodeAdded(~canvasName~ canvas, ~nodeName~ node) {
-		this.canvas = canvas;
-		this.node = node;
-	}
-}
-
-public static final class NodeClosed {
-
-	public ~canvasName~ canvas;
-	public ~nodeName~ node;
-	
-	public NodeClosed(~canvasName~ canvas, ~nodeName~ node) {
-		this.canvas = canvas;
-		this.node = node;
 	}
 }  >>
 

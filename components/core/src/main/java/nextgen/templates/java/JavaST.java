@@ -98,6 +98,8 @@ public class JavaST {
 	WhileStmt.st + "\n" + 
 	ClassOrInterfaceType.st + "\n" + 
 	TypeParameter.st + "\n" + 
+	JavaLibrary.st + "\n" + 
+	JavaPackage.st + "\n" + 
 	JavaPatterns.st + "\n" ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
@@ -504,6 +506,14 @@ public class JavaST {
 
 	public static TypeParameter newTypeParameter() {
 		return new TypeParameter(stGroup);
+	} 
+
+	public static JavaLibrary newJavaLibrary() {
+		return new JavaLibrary(stGroup);
+	} 
+
+	public static JavaPackage newJavaPackage() {
+		return new JavaPackage(stGroup);
 	} 
 
 	public static JavaPatterns newJavaPatterns() {

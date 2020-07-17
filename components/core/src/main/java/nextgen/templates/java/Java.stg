@@ -488,6 +488,16 @@ classes:
 
 MemberValuePair(name,value) ::= <<~name~ = ~value~ >>
 
+JavaLibrary(name,packages) ::= <<// java library
+~name~
+
+~packages:{it|~it~};separator="\n"~  >>
+
+JavaPackage(name,types) ::= <<// java package 
+~name~
+
+~types:{it|~it~};separator="\n"~  >>
+
 JavaPatterns() ::= <<public static class JavaPatterns extends nextgen.templates.java.JavaST {
 
 	// declarations

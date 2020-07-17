@@ -285,31 +285,33 @@ public class STModelDB extends STModelNeoFactory {
 
         final STModel clone = newSTModel(stModel.getStGroup(), stTemplate);
 
-        forEachArgument(stTemplate, stModel, (stArgument, stParameter) -> {
-            switch (stParameter.getType()) {
-                case SINGLE:
-                    clone.addArguments(newSTArgument(stParameter, stArgument.getValue()));
-                    break;
-                case LIST:
-                    clone.addArguments(newSTArgument(stParameter, stArgument.getValue()));
-                    break;
-                case KVLIST:
-                    final Collection<STArgumentKV> kvs = new ArrayList<>();
-                    stParameter.getKeys().forEach(stParameterKey -> {
-                        stArgument.getKeyValues()
-                                .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.uuid()))
-                                .findAny()
-                                .ifPresent(stArgumentKV -> kvs.add(newSTArgumentKV(stParameterKey, stArgumentKV.getValue())));
-                    });
-                    clone.addArguments(newSTArgument(stParameter, kvs));
-                    break;
-            }
-        });
+        // ensure cloned-arguments are in same order as stModel-arguments:
+        stModel.getArgumentsSorted()
+                .forEach(stArgument -> stTemplate.getParameters()
+                        .filter(stParameter -> stArgument.getStParameter().equals(stParameter.uuid()))
+                        .findFirst()
+                        .ifPresent(stParameter -> {
+                            switch (stParameter.getType()) {
+                                case SINGLE:
+                                    clone.addArguments(newSTArgument(stParameter, stArgument.getValue()));
+                                    break;
+                                case LIST:
+                                    clone.addArguments(newSTArgument(stParameter, stArgument.getValue()));
+                                    break;
+                                case KVLIST:
+                                    final Collection<STArgumentKV> kvs = new ArrayList<>();
+                                    stParameter.getKeys().forEach(stParameterKey -> {
+                                        stArgument.getKeyValues()
+                                                .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.uuid()))
+                                                .findAny()
+                                                .ifPresent(stArgumentKV -> kvs.add(newSTArgumentKV(stParameterKey, stArgumentKV.getValue())));
+                                    });
+                                    clone.addArguments(newSTArgument(stParameter, kvs));
+                                    break;
+                            }
+
+                        }));
 
         return clone;
-    }
-
-    protected void forEachArgument(STTemplate stTemplate, STModel stModel, java.util.function.BiConsumer<nextgen.st.model.STArgument, nextgen.st.domain.STParameter> consumer) {
-        stTemplate.getParameters().forEach(stParameter -> stModel.getArguments().filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid())).forEach(stArgument -> consumer.accept(stArgument, stParameter)));
     }
 }

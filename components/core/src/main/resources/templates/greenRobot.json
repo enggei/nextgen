@@ -5,8 +5,13 @@
   "templates" : [ {
     "uuid" : "56afaa61-e68a-4ded-9563-4e9c38e6320d",
     "name" : "event",
-    "text" : "public class ~name~ {\n\n\t~fields:{it|public final ~it.type~ ~it.name~;};separator=\"\\n\"~\n\n\tpublic ~name~(~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n\t\t~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n\t}\n} ",
+    "text" : "public ~if(isStatic)~static ~endif~class ~name~ {\n\n\t~fields:{it|public final ~it.type~ ~it.name~;};separator=\"\\n\"~\n\n\tpublic ~name~(~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n\t\t~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n\t}\n} ",
     "parameters" : [ {
+      "uuid" : "b362d005-d62f-4743-8b03-92648a7d26a3",
+      "name" : "isStatic",
+      "type" : "SINGLE",
+      "argumentType" : "Boolean"
+    }, {
       "uuid" : "b8517fb6-3686-419f-82fc-8018b50ebe82",
       "name" : "name",
       "type" : "SINGLE",
@@ -29,15 +34,20 @@
   }, {
     "uuid" : "cd296481-8ea7-40f4-bb63-e85017f87f13",
     "name" : "subscribe",
-    "text" : "@org.greenrobot.eventbus.Subscribe(~if(threadMode)~threadMode = org.greenrobot.eventbus.ThreadMode.~threadMode~~endif~)\npublic void on~message;format=\"capitalize\"~(~message~ event) {\n\t~statements:{it|~it~};separator=\"\\n\"~\n} ",
+    "text" : "@org.greenrobot.eventbus.Subscribe(~if(threadMode)~threadMode = org.greenrobot.eventbus.ThreadMode.~threadMode~~endif~)\npublic void on~eventName;format=\"capitalize\"~(~eventType~ event) {\n\t~statements:{it|~it~};separator=\"\\n\"~\n} ",
     "parameters" : [ {
       "uuid" : "d09a46f3-3b87-4a08-a68b-2567ec9cd7df",
       "name" : "threadMode",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "5b70ec77-d875-451e-8238-540218e34001",
-      "name" : "message",
+      "uuid" : "30189964-c2bd-411a-872f-250cea4dc184",
+      "name" : "eventName",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "3b5f78a3-1e92-4558-bc38-c3a9e218560b",
+      "name" : "eventType",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
@@ -66,5 +76,59 @@
     "name" : "maven",
     "text" : "<dependency>\n\t<groupId>org.greenrobot</groupId>\n\t<artifactId>eventbus</artifactId>\n\t<version>3.2.0</version>\n</dependency> ",
     "parameters" : [ ]
+  }, {
+    "uuid" : "1342b32f-faf1-4ae7-8163-93e52f758c16",
+    "name" : "EventManager",
+    "text" : "package ~package~;\n\npublic class ~name~ {\n\n\tprivate final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n\n\t~events:{it|~it.postMethod~};separator=\"\\n\\n\"~\n\n\t~events:{it|~it.declaration~};separator=\"\\n\\n\"~\n} ",
+    "parameters" : [ {
+      "uuid" : "2f81fb0d-aeb9-4709-9871-6a3133f24d9f",
+      "name" : "package",
+      "type" : "SINGLE",
+      "argumentType" : "String"
+    }, {
+      "uuid" : "d936f2cb-68cd-4754-abe6-b0ebd80f3651",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "String"
+    }, {
+      "uuid" : "6c261827-353d-4113-8df7-f5c21d09f29e",
+      "name" : "events",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "56f29d46-aa82-4a14-9238-34868421325a",
+        "name" : "declaration",
+        "argumentType" : "event"
+      }, {
+        "uuid" : "c135cf5f-86be-4716-9d63-73b567738a07",
+        "name" : "postMethod",
+        "argumentType" : "postMethod"
+      } ]
+    } ],
+    "children" : [ {
+      "uuid" : "88b5e3c2-9692-453a-a35e-c630a41c10f7",
+      "name" : "PostEventMethod",
+      "text" : "public static void post~eventName~(~parameters:{it|~it.type~ ~it.name~};separator=\", \"~) {\n\tlog.info(\"post ~eventName~\");\n\torg.greenrobot.eventbus.EventBus.getDefault().post(new ~eventName~(~parameters:{it|~it.name~};separator=\", \"~));\n} ",
+      "parameters" : [ {
+        "uuid" : "440c8335-a7f1-496f-9d97-0bc9af62d240",
+        "name" : "eventName",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "c70b9c11-f5bc-443e-ac8e-ab3cd3d9eb57",
+        "name" : "parameters",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "5e8547e3-9fdc-497d-b0ca-0c945bb29ba3",
+          "name" : "type",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "4b71de14-ca98-4353-b181-f2c131252935",
+          "name" : "name",
+          "argumentType" : "Object"
+        } ]
+      } ]
+    } ]
   } ]
 }

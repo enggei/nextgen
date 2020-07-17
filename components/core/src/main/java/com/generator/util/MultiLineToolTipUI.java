@@ -6,9 +6,8 @@ import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.ToolTipUI;
-import java.awt.Dimension;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
+import java.awt.*;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -71,18 +70,26 @@ public final class MultiLineToolTipUI extends ToolTipUI {
 
     @Override
     public void paint(Graphics g, JComponent c) {
+
+        Map<?, ?> desktopHints =
+                (Map<?, ?>) Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
+
+        Graphics2D g2d = (Graphics2D) g;
+        if (desktopHints != null) {
+            g2d.setRenderingHints(desktopHints);
+        }
         int w = c.getWidth(), h = c.getHeight();
-        g.setColor(c.getBackground());
-        g.fillRect(0, 0, w, h);
-        g.setColor(c.getForeground());
-        g.drawRect(0, 0, w, h);
+        g2d.setColor(c.getBackground());
+        g2d.fillRect(0, 0, w, h);
+        g2d.setColor(c.getForeground());
+        //g2d.drawRect(0, 0, w, h);
         String[] lines = getSplit((JToolTip) c);
         if (lines.length != 0) {
             FontMetrics metrics = c.getFontMetrics(c.getFont());
             int height = metrics.getHeight();
             int y = INSET + metrics.getAscent();
             for (String line : lines) {
-                g.drawString(line, INSET, y);
+                g2d.drawString(line, INSET, y);
                 y += height;
             }
         }

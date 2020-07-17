@@ -18,6 +18,8 @@ import static java.awt.event.KeyEvent.*;
 
 public class STNode extends PNode implements PropertyChangeListener {
 
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STNode.class);
+
 	protected enum Attributes {
 		_defaultColor, _selectedColor, _highlightedColor, _uuid, _text, _selected, _highlight
 	}
@@ -54,11 +56,6 @@ public class STNode extends PNode implements PropertyChangeListener {
 		org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
 
-	@org.greenrobot.eventbus.Subscribe
-	public void onNodeAdded(STCanvas.NodeAdded event) {
-		System.out.println("node added");
-	}
-
 	public void addedToCanvas() {
 
 	}
@@ -79,6 +76,7 @@ public class STNode extends PNode implements PropertyChangeListener {
 
 	@Override
 	public String toString() {
+		log.info(getUuid() + " toString");
 		return getUuid() + " " + getText();
 	}
 
@@ -175,11 +173,10 @@ public class STNode extends PNode implements PropertyChangeListener {
 
 	public void close() {
 		SwingUtilities.invokeLater(() -> {
-
 			for (UUID uuid : incoming) canvas.removeRelation(uuid);
 			for (UUID uuid : outgoing) canvas.removeRelation(uuid);
-			canvas.removeNode(getUuid());
-
+			org.greenrobot.eventbus.EventBus.getDefault().unregister(STNode.this);
+			canvas.removeNode(getUuid());			
 		});
 	}
 
@@ -278,7 +275,7 @@ public class STNode extends PNode implements PropertyChangeListener {
 		public void keyPressed(PInputEvent event) {
 			onNodeKeyPressed(event);
 		}
-	} 	
+	}  	
 
 	static abstract class NodeAction<N extends STNode> extends AbstractAction {
 
@@ -401,7 +398,7 @@ public class STNode extends PNode implements PropertyChangeListener {
 
 		@Override
 		void actionPerformed(STNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			javax.swing.SwingUtilities.invokeLater(() -> { 
+			javax.swing.SwingUtilities.invokeLater(() -> {
 				canvas.getAllNodes().filter(canvasNode -> !canvasNode.getUuid().equals(node.getUuid())).forEach(STNode::close);
 				canvas.getAllRelations().forEach(relation -> canvas.removeRelation(relation.getUuid()));
 			});
@@ -430,7 +427,7 @@ public class STNode extends PNode implements PropertyChangeListener {
 
 		@Override
 		void actionPerformed(STNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			javax.swing.SwingUtilities.invokeLater(() -> { 
+			javax.swing.SwingUtilities.invokeLater(() -> {
 				final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();
 				canvas.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));
 				node.onNodeRightClick(event, pop);
@@ -449,18 +446,26 @@ public class STNode extends PNode implements PropertyChangeListener {
 
 		@Override
 		void actionPerformed(STNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			javax.swing.SwingUtilities.invokeLater(() -> { 
+			javax.swing.SwingUtilities.invokeLater(() -> {
 				final PBounds fullBounds = node.getFullBoundsReference();
-				System.out.println(fullBounds.getX() + "," + fullBounds.getY() + ", [" + fullBounds.getWidth() + "," + fullBounds.getHeight() + "]");
+				log.info(node.getUuid() + " : " + node.getText());
+				log.info(fullBounds.getX() + "," + fullBounds.getY() + ", [" + fullBounds.getWidth() + "," + fullBounds.getHeight() + "]");
+				node.outgoing().forEach(uuid -> log.info(" -> " + uuid));
+				node.incoming().forEach(uuid -> log.info(" <- " + uuid));
 			});
 		}
 	}
 
-	public static String cut(String text) {
-		return text.substring(0, Math.min(text.length(), 20));
+	public static String cut(String text){ 
+		return text.substring(0, Math.min(text.length(), 40));
 	}
 
 	protected void doLaterInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer){ 
 		javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(consumer, throwable -> com.generator.util.SwingUtil.showException(canvas, throwable)));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNodeAdded(nextgen.st.STAppEvents.NodeAdded event) {
+		log.info(getUuid() + " : node added " + event.node.getUuid());
 	}
 }

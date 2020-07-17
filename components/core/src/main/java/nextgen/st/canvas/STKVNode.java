@@ -38,13 +38,13 @@ public class STKVNode extends STNode {
 			switch(value.getType()) {
 				case STMODEL :
 					final nextgen.st.model.STModel stModel = value.getStModel();
-					if (node.getUuid().equals(UUID.fromString(stModel.getUuid()))) canvas.addRelation(new STKVArgumentRelation(canvas, STKVNode.this, node, stArgument, stParameterKey, stArgumentKV));
+					if (node.getUuid().equals(UUID.fromString(stModel.getUuid()))) canvas.addRelation(stArgumentKV.getUuid(), canvas.newSTKVArgumentRelation(STKVNode.this, node, stArgument, stParameterKey, stArgumentKV));
 					break;
 				case PRIMITIVE :
-					if (node.getUuid().equals(UUID.fromString(value.getUuid()))) canvas.addRelation(new STKVArgumentRelation(canvas, STKVNode.this, node, stArgument, stParameterKey, stArgumentKV));
+					if (node.getUuid().equals(UUID.fromString(value.getUuid()))) canvas.addRelation(stArgumentKV.getUuid(), canvas.newSTKVArgumentRelation(STKVNode.this, node, stArgument, stParameterKey, stArgumentKV));
 					break;
 				case ENUM :
-					if (node.getUuid().equals(UUID.fromString(value.getUuid()))) canvas.addRelation(new STKVArgumentRelation(canvas, STKVNode.this, node, stArgument, stParameterKey, stArgumentKV));
+					if (node.getUuid().equals(UUID.fromString(value.getUuid()))) canvas.addRelation(stArgumentKV.getUuid(), canvas.newSTKVArgumentRelation( STKVNode.this, node, stArgument, stParameterKey, stArgumentKV));
 					break;
 			}
 		}));
