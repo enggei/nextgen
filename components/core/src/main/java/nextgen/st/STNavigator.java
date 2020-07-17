@@ -840,7 +840,7 @@ public class STNavigator extends JPanel {
                     public STTemplateTreeNode(STTemplate model) {
                         super(model, "STTemplate");
 
-                        model.getChildren().forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
+                        model.getChildren().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
                     }
 
                     @Override

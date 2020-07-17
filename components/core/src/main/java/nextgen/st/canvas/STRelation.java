@@ -142,7 +142,7 @@ public class STRelation extends PPath.Double implements Comparator<STRelation> {
 	}
 
 	private void updatePath(STNode source, STNode target) {
-		log.info(getUuid() + " updatePath");
+		//log.info(getUuid() + " updatePath");
 		final PBounds src = source.getFullBoundsReference();
 		final PBounds dst = target.getFullBoundsReference();
 		final boolean horizontalOverlap = !(src.getMaxX() < dst.getMinX() || src.getMinX() > dst.getMaxX());

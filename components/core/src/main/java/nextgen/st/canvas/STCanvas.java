@@ -156,18 +156,6 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		return (N) remove;
 	}
 
-	// temporary
-	public <R extends nextgen.st.canvas.STRelation> R addRelation(R relation) {
-
-		final R exists = getRelation(relation.getUuid());
-		if (exists != null) {
-			relation.close();
-			return exists;
-		}
-
-		return addRelation(relation.getUuid(), () -> relation);
-	}
-
 	public <R extends nextgen.st.canvas.STRelation> R addRelation(String uuid, java.util.function.Supplier<R> supplier) {
 		return addRelation(java.util.UUID.fromString(uuid), supplier);
 	}
@@ -326,7 +314,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 				selectionRectangle.setHeight(top ? (startY - eventY) : (eventY - startY));
 				final PBounds fullBounds = selectionRectangle.getFullBounds();
 				SwingUtilities.invokeLater(() -> getAllNodes()
-					.filter(nextgen.st.canvas.STNode::isSelected)
+					.filter(node -> !node.isSelected())
 					.forEach(node -> {
 						if (fullBounds.contains(node.getFullBounds())) node.select();
 					}));
@@ -342,8 +330,8 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 	private static class CanvasZoomHandler extends PBasicInputEventHandler {
 
-		final private static double maxZoomScale = 2.5d;
-		final private static double minZomScale = 0.25d;
+		final private static double maxZoomScale = 2.0d;
+		final private static double minZomScale = 0.025d;
 		private double scaleFactor = 0.05d;
 
 		CanvasZoomHandler() {
@@ -489,11 +477,13 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		@Override
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
 			doLaterInTransaction(tx -> {
+
 				final nextgen.st.canvas.layout.LayoutNeoFactory layoutNeoFactory = new nextgen.st.canvas.layout.LayoutNeoFactory(canvas.modelDb.getDatabaseService());
 				final nextgen.st.canvas.layout.Layout last = layoutNeoFactory.findLayoutByName("last");
 				if (last == null) return;
 
-				last.getNodes().forEach(layoutNode -> {
+				final java.util.concurrent.atomic.AtomicReference<STNode> centerNodeRef = new java.util.concurrent.atomic.AtomicReference<>();
+				last.getNodesSorted().forEach(layoutNode -> {
 					final org.neo4j.graphdb.Node node = layoutNode.getNode();
 					node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("ref")).forEach(relationship -> {
 						final org.neo4j.graphdb.Node stNode = relationship.getOtherNode(node);
@@ -501,13 +491,17 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 							final nextgen.st.model.STModel stModel = canvas.modelDb.newSTModel(stNode);
 							canvas.addNode(stModel.getUuid(), canvas.newSTNode(stModel));
 							canvas.getNode(stModel.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
+							if (centerNodeRef.get() == null) centerNodeRef.set(canvas.getNode(stModel.getUuid()));
 						} else if (stNode.hasLabel(org.neo4j.graphdb.Label.label("STValue"))) {
-							final nextgen.st.model.STValue stModel = canvas.modelDb.newSTValue(stNode);
-							canvas.addNode(stModel.getUuid(), canvas.newSTNode(stModel));
-							canvas.getNode(stModel.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
+							final nextgen.st.model.STValue stValue = canvas.modelDb.newSTValue(stNode);
+							canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue));
+							canvas.getNode(stValue.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
+							if (centerNodeRef.get() == null) centerNodeRef.set(canvas.getNode(stValue.getUuid()));
 						}
 					});
 				});
+
+				if (centerNodeRef.get() != null) canvas.centerNode(centerNodeRef.get());
 			});
 		}
 	}
@@ -692,6 +686,10 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 	java.util.function.Supplier<nextgen.st.canvas.STKVArgumentRelation> newSTKVArgumentRelation(nextgen.st.canvas.STKVNode src, nextgen.st.canvas.STNode dst, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey, nextgen.st.model.STArgumentKV stArgumentKV){ 
 		return () -> new STKVArgumentRelation(this, src, dst, stArgument, stParameterKey, stArgumentKV);
+	}
+
+	java.util.function.Supplier<nextgen.st.canvas.STValueModelRelation> newSTValueModelRelation(nextgen.st.canvas.STValueNode src, nextgen.st.canvas.STModelNode dst){ 
+		return () -> new STValueModelRelation(this, src, dst);
 	}
 
 	java.util.function.Supplier<nextgen.st.canvas.STNode> newSTNode(nextgen.st.model.STValue stValue){ 

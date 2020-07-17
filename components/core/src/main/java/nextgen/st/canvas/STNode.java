@@ -248,14 +248,16 @@ public class STNode extends PNode implements PropertyChangeListener {
 
 		@Override
 		public void mouseEntered(PInputEvent event) {
-			event.getInputManager().setKeyboardFocus(this);
+			if (!event.isControlDown()) 
+				event.getInputManager().setKeyboardFocus(this);
 			highlight();
 		}
 
 		@Override
 		public void mouseExited(PInputEvent event) {
 			unhighlight();
-			event.getInputManager().setKeyboardFocus(canvas);
+			if (!event.isControlDown()) 
+				event.getInputManager().setKeyboardFocus(canvas);
 		}
 
 		@Override
@@ -457,7 +459,7 @@ public class STNode extends PNode implements PropertyChangeListener {
 	}
 
 	public static String cut(String text){ 
-		return text.substring(0, Math.min(text.length(), 40));
+		return text.substring(0, Math.min(text.length(), 80));
 	}
 
 	protected void doLaterInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer){ 
