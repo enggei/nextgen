@@ -50,104 +50,108 @@ public class STFile {
 		return this;
 	}
 
-	public STFile setName(String value) { 
-		if (value == null) node.removeProperty("name"); 
-		else node.setProperty("name", value);
+	public STFile setName(STValue dst) { 
+		final org.neo4j.graphdb.Relationship relationship = getNameRelation();
+		if (relationship != null)  { 
+			if (relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			relationship.delete();
+		}
+		if (dst == null) return this;
+		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("name"));
 		return this;
 	}
 
-	public String getName() { 
-		if (node.hasProperty("name")) return (String) node.getProperty("name");
-		return null;
-	}
-
-	public String getName(String defaultValue) { 
-		if (node.hasProperty("name")) return (String) node.getProperty("name");
-		return defaultValue;
-	}
-
-	public boolean hasName() { 
-		return node.hasProperty("name");
+	public STValue getName() { 
+		final org.neo4j.graphdb.Relationship relationship = getNameRelation();
+		return relationship == null ? null : new STValue(relationship.getOtherNode(node));
 	}
 
 	public STFile removeName() { 
-		node.removeProperty("name");
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getNameRelation());
+		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
 		return this;
 	}
 
-	public STFile setType(String value) { 
-		if (value == null) node.removeProperty("type"); 
-		else node.setProperty("type", value);
+	public org.neo4j.graphdb.Relationship getNameRelation() { 
+		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("name"), org.neo4j.graphdb.Direction.OUTGOING);
+	}
+
+	public STFile setType(STValue dst) { 
+		final org.neo4j.graphdb.Relationship relationship = getTypeRelation();
+		if (relationship != null)  { 
+			if (relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			relationship.delete();
+		}
+		if (dst == null) return this;
+		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("type"));
 		return this;
 	}
 
-	public String getType() { 
-		if (node.hasProperty("type")) return (String) node.getProperty("type");
-		return null;
-	}
-
-	public String getType(String defaultValue) { 
-		if (node.hasProperty("type")) return (String) node.getProperty("type");
-		return defaultValue;
-	}
-
-	public boolean hasType() { 
-		return node.hasProperty("type");
+	public STValue getType() { 
+		final org.neo4j.graphdb.Relationship relationship = getTypeRelation();
+		return relationship == null ? null : new STValue(relationship.getOtherNode(node));
 	}
 
 	public STFile removeType() { 
-		node.removeProperty("type");
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getTypeRelation());
+		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
 		return this;
 	}
 
-	public STFile setPackageName(String value) { 
-		if (value == null) node.removeProperty("packageName"); 
-		else node.setProperty("packageName", value);
+	public org.neo4j.graphdb.Relationship getTypeRelation() { 
+		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("type"), org.neo4j.graphdb.Direction.OUTGOING);
+	}
+
+	public STFile setPackageName(STValue dst) { 
+		final org.neo4j.graphdb.Relationship relationship = getPackageNameRelation();
+		if (relationship != null)  { 
+			if (relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			relationship.delete();
+		}
+		if (dst == null) return this;
+		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("packageName"));
 		return this;
 	}
 
-	public String getPackageName() { 
-		if (node.hasProperty("packageName")) return (String) node.getProperty("packageName");
-		return null;
-	}
-
-	public String getPackageName(String defaultValue) { 
-		if (node.hasProperty("packageName")) return (String) node.getProperty("packageName");
-		return defaultValue;
-	}
-
-	public boolean hasPackageName() { 
-		return node.hasProperty("packageName");
+	public STValue getPackageName() { 
+		final org.neo4j.graphdb.Relationship relationship = getPackageNameRelation();
+		return relationship == null ? null : new STValue(relationship.getOtherNode(node));
 	}
 
 	public STFile removePackageName() { 
-		node.removeProperty("packageName");
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getPackageNameRelation());
+		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
 		return this;
 	}
 
-	public STFile setPath(String value) { 
-		if (value == null) node.removeProperty("path"); 
-		else node.setProperty("path", value);
+	public org.neo4j.graphdb.Relationship getPackageNameRelation() { 
+		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("packageName"), org.neo4j.graphdb.Direction.OUTGOING);
+	}
+
+	public STFile setPath(STValue dst) { 
+		final org.neo4j.graphdb.Relationship relationship = getPathRelation();
+		if (relationship != null)  { 
+			if (relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			relationship.delete();
+		}
+		if (dst == null) return this;
+		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("path"));
 		return this;
 	}
 
-	public String getPath() { 
-		if (node.hasProperty("path")) return (String) node.getProperty("path");
-		return null;
-	}
-
-	public String getPath(String defaultValue) { 
-		if (node.hasProperty("path")) return (String) node.getProperty("path");
-		return defaultValue;
-	}
-
-	public boolean hasPath() { 
-		return node.hasProperty("path");
+	public STValue getPath() { 
+		final org.neo4j.graphdb.Relationship relationship = getPathRelation();
+		return relationship == null ? null : new STValue(relationship.getOtherNode(node));
 	}
 
 	public STFile removePath() { 
-		node.removeProperty("path");
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getPathRelation());
+		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
 		return this;
+	}
+
+	public org.neo4j.graphdb.Relationship getPathRelation() { 
+		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("path"), org.neo4j.graphdb.Direction.OUTGOING);
 	}
 
 	public java.util.stream.Stream<STModel> getIncomingFiles() { 
@@ -163,14 +167,34 @@ public class STFile {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
 		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
 		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
-		if (node.hasProperty("name")) jsonObject.put("name", node.getProperty("name"));
-		if (node.hasProperty("type")) jsonObject.put("type", node.getProperty("type"));
-		if (node.hasProperty("packageName")) jsonObject.put("packageName", node.getProperty("packageName"));
-		if (node.hasProperty("path")) jsonObject.put("path", node.getProperty("path"));
+		final STValue _name = getName();
+		if (_name != null) jsonObject.put("name", _name.toJsonObject());
+
+		final STValue _type = getType();
+		if (_type != null) jsonObject.put("type", _type.toJsonObject());
+
+		final STValue _packageName = getPackageName();
+		if (_packageName != null) jsonObject.put("packageName", _packageName.toJsonObject());
+
+		final STValue _path = getPath();
+		if (_path != null) jsonObject.put("path", _path.toJsonObject());
+
 		return jsonObject;
 	}
 
 	public void deleteTree() {
+		final STValue _name = getName();
+		if (_name != null) _name.deleteTree();
+
+		final STValue _type = getType();
+		if (_type != null) _type.deleteTree();
+
+		final STValue _packageName = getPackageName();
+		if (_packageName != null) _packageName.deleteTree();
+
+		final STValue _path = getPath();
+		if (_path != null) _path.deleteTree();
+
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();
 	}

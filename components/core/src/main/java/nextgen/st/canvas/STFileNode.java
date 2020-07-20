@@ -58,9 +58,9 @@ public class STFileNode extends nextgen.st.canvas.STNode {
 	protected void onNodeLeftClick(PInputEvent event) {
 		super.onNodeLeftClick(event);
 		doLaterInTransaction(tx -> {
-		            if (stRenderer == null || stModel == null || stFile.getPath() == null) return;
-		            nextgen.st.STGenerator.writeToFile(stRenderer.render(stModel), stFile.getPackageName(), stFile.getName(), stFile.getType(), new java.io.File(stFile.getPath()));
-		        });
+			if (stRenderer == null || stModel == null || stFile.getPath() == null) return;
+			nextgen.st.STGenerator.writeToFile(stRenderer.render(stModel), stFile.getPackageName().getValue(), stFile.getName().getValue(), stFile.getType().getValue(), new java.io.File(stFile.getPath().getValue()));
+		});
 	}
 
 	private static final class EditFileSink extends NodeAction<STFileNode> {
@@ -74,10 +74,10 @@ public class STFileNode extends nextgen.st.canvas.STNode {
 		void actionPerformed(STFileNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
 			canvas.modelDb.doInTransaction(tx -> {
 				final java.util.LinkedHashMap<String, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();
-				fieldMap.put("name", canvas.newTextField(node.stFile.getName(), 15));
-				fieldMap.put("type", canvas.newTextField(node.stFile.getType(), 15));
-				fieldMap.put("path", canvas.newTextField(node.stFile.getPath(), 15));
-				fieldMap.put("package", canvas.newTextField(node.stFile.getPackageName(), 15));
+				fieldMap.put("name", canvas.newTextField(node.stFile.getName() == null ? "" : node.stFile.getName().getValue(), 15));
+				fieldMap.put("type", canvas.newTextField(node.stFile.getType() == null ? "" : node.stFile.getType().getValue(), 15));
+				fieldMap.put("path", canvas.newTextField(node.stFile.getPath() == null ? "" : node.stFile.getPath().getValue(), 15));
+				fieldMap.put("package", canvas.newTextField(node.stFile.getPackageName() == null ? "" : node.stFile.getPackageName().getValue(), 15));
 				final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
 				inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 				for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {
@@ -92,10 +92,19 @@ public class STFileNode extends nextgen.st.canvas.STNode {
 							final String path = fieldMap.get("path").getText().trim();
 							final String packageName = fieldMap.get("package").getText().trim();
 							doLaterInTransaction(tx -> {
-								node.stFile.setName(name);
-								node.stFile.setType(type);
-								node.stFile.setPath(path);
-								node.stFile.setPackageName(packageName);
+
+								if (node.stFile.getName() == null || (node.stFile.getName().getValue() == null || !node.stFile.getName().getValue().equals(name)))
+									node.stFile.setName(canvas.modelDb.newSTValue(name));
+
+								if (node.stFile.getType() == null || (node.stFile.getType().getValue() == null || !node.stFile.getType().getValue().equals(type)))
+									node.stFile.setType(canvas.modelDb.newSTValue(type));
+
+								if (node.stFile.getPath() == null || (node.stFile.getPath().getValue() == null || !node.stFile.getPath().getValue().equals(path)))
+									node.stFile.setPath(canvas.modelDb.newSTValue(path));
+
+								if (node.stFile.getPackageName() == null || (node.stFile.getPackageName().getValue() == null || !node.stFile.getPackageName().getValue().equals(packageName)))
+									node.stFile.setPackageName(canvas.modelDb.newSTValue(packageName));
+
 								node.setText(nextgen.st.STGenerator.asFile(node.stFile).getAbsolutePath());
 							});
 					}

@@ -38,7 +38,7 @@ public class STGenerator {
     }
 
     public static File asFile(STFile stFile) {
-        return new java.io.File(new java.io.File(stFile.getPath(), nextgen.st.STGenerator.packageToPath(stFile.getPackageName())), stFile.getName() + (stFile.getType() == null ? "" : ("." + stFile.getType())));
+        return new java.io.File(new java.io.File(stFile.getPath().getValue(), nextgen.st.STGenerator.packageToPath(stFile.getPackageName() == null ? null : stFile.getPackageName().getValue())), stFile.getName().getValue() + (stFile.getType() == null || stFile.getType().getValue() == null ? "" : ("." + stFile.getType().getValue())));
     }
 
     public void generateSTGroup(STGroupModel stGroupModel, String packageName, String rootPath) {

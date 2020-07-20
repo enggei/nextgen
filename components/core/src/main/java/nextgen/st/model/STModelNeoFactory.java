@@ -128,102 +128,6 @@ public class STModelNeoFactory {
 		return db.findNodes(org.neo4j.graphdb.Label.label("STFile"), "uuid", value).stream().map(this::newSTFile);
 	}
 
-	public STFile findSTFileByName(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STFile"), "name", value);
-		return node == null ? null : newSTFile(node);
-	}
-
-	public STFile findOrCreateSTFileByName(String value) {
-		final STFile existing = findSTFileByName(value);
-		return existing == null ? newSTFile().setName(value) : existing;
-	}
-
-	public java.util.stream.Stream<STFile> findAllSTFileByName(String value) {
-		return db.findNodes(org.neo4j.graphdb.Label.label("STFile"), "name", value).stream().map(this::newSTFile);
-	}
-
-	public STFile findSTFileByType(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STFile"), "type", value);
-		return node == null ? null : newSTFile(node);
-	}
-
-	public STFile findOrCreateSTFileByType(String value) {
-		final STFile existing = findSTFileByType(value);
-		return existing == null ? newSTFile().setType(value) : existing;
-	}
-
-	public java.util.stream.Stream<STFile> findAllSTFileByType(String value) {
-		return db.findNodes(org.neo4j.graphdb.Label.label("STFile"), "type", value).stream().map(this::newSTFile);
-	}
-
-	public STFile findSTFileByPackageName(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STFile"), "packageName", value);
-		return node == null ? null : newSTFile(node);
-	}
-
-	public STFile findOrCreateSTFileByPackageName(String value) {
-		final STFile existing = findSTFileByPackageName(value);
-		return existing == null ? newSTFile().setPackageName(value) : existing;
-	}
-
-	public java.util.stream.Stream<STFile> findAllSTFileByPackageName(String value) {
-		return db.findNodes(org.neo4j.graphdb.Label.label("STFile"), "packageName", value).stream().map(this::newSTFile);
-	}
-
-	public STFile findSTFileByPath(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STFile"), "path", value);
-		return node == null ? null : newSTFile(node);
-	}
-
-	public STFile findOrCreateSTFileByPath(String value) {
-		final STFile existing = findSTFileByPath(value);
-		return existing == null ? newSTFile().setPath(value) : existing;
-	}
-
-	public java.util.stream.Stream<STFile> findAllSTFileByPath(String value) {
-		return db.findNodes(org.neo4j.graphdb.Label.label("STFile"), "path", value).stream().map(this::newSTFile);
-	}
-
-	public STArgument newSTArgument() { 
-		return newSTArgument(db.createNode(org.neo4j.graphdb.Label.label("STArgument")));
-	}
-
-	public STArgument newSTArgument(org.neo4j.graphdb.Node node) { 
-		return new STArgument(node);
-	}
-
-	public java.util.stream.Stream<STArgument> findAllSTArgument() { 
-		return db.findNodes(org.neo4j.graphdb.Label.label("STArgument")).stream().map(this::newSTArgument);
-	}
-
-	public STArgument findSTArgumentByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STArgument"), "uuid", value);
-		return node == null ? null : newSTArgument(node);
-	}
-
-	public STArgument findOrCreateSTArgumentByUuid(String value) {
-		final STArgument existing = findSTArgumentByUuid(value);
-		return existing == null ? newSTArgument().setUuid(value) : existing;
-	}
-
-	public java.util.stream.Stream<STArgument> findAllSTArgumentByUuid(String value) {
-		return db.findNodes(org.neo4j.graphdb.Label.label("STArgument"), "uuid", value).stream().map(this::newSTArgument);
-	}
-
-	public STArgument findSTArgumentByStParameter(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STArgument"), "stParameter", value);
-		return node == null ? null : newSTArgument(node);
-	}
-
-	public STArgument findOrCreateSTArgumentByStParameter(String value) {
-		final STArgument existing = findSTArgumentByStParameter(value);
-		return existing == null ? newSTArgument().setStParameter(value) : existing;
-	}
-
-	public java.util.stream.Stream<STArgument> findAllSTArgumentByStParameter(String value) {
-		return db.findNodes(org.neo4j.graphdb.Label.label("STArgument"), "stParameter", value).stream().map(this::newSTArgument);
-	}
-
 	public STValue newSTValue() { 
 		return newSTValue(db.createNode(org.neo4j.graphdb.Label.label("STValue")));
 	}
@@ -276,6 +180,46 @@ public class STModelNeoFactory {
 
 	public java.util.stream.Stream<STValue> findAllSTValueByType(STValueType value) {
 		return db.findNodes(org.neo4j.graphdb.Label.label("STValue"), "type", value.name()).stream().map(this::newSTValue);
+	}
+
+	public STArgument newSTArgument() { 
+		return newSTArgument(db.createNode(org.neo4j.graphdb.Label.label("STArgument")));
+	}
+
+	public STArgument newSTArgument(org.neo4j.graphdb.Node node) { 
+		return new STArgument(node);
+	}
+
+	public java.util.stream.Stream<STArgument> findAllSTArgument() { 
+		return db.findNodes(org.neo4j.graphdb.Label.label("STArgument")).stream().map(this::newSTArgument);
+	}
+
+	public STArgument findSTArgumentByUuid(String value) {
+		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STArgument"), "uuid", value);
+		return node == null ? null : newSTArgument(node);
+	}
+
+	public STArgument findOrCreateSTArgumentByUuid(String value) {
+		final STArgument existing = findSTArgumentByUuid(value);
+		return existing == null ? newSTArgument().setUuid(value) : existing;
+	}
+
+	public java.util.stream.Stream<STArgument> findAllSTArgumentByUuid(String value) {
+		return db.findNodes(org.neo4j.graphdb.Label.label("STArgument"), "uuid", value).stream().map(this::newSTArgument);
+	}
+
+	public STArgument findSTArgumentByStParameter(String value) {
+		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STArgument"), "stParameter", value);
+		return node == null ? null : newSTArgument(node);
+	}
+
+	public STArgument findOrCreateSTArgumentByStParameter(String value) {
+		final STArgument existing = findSTArgumentByStParameter(value);
+		return existing == null ? newSTArgument().setStParameter(value) : existing;
+	}
+
+	public java.util.stream.Stream<STArgument> findAllSTArgumentByStParameter(String value) {
+		return db.findNodes(org.neo4j.graphdb.Label.label("STArgument"), "stParameter", value).stream().map(this::newSTArgument);
 	}
 
 	public STArgumentKV newSTArgumentKV() { 

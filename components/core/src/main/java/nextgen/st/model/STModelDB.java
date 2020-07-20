@@ -29,7 +29,7 @@ public class STModelDB extends STModelNeoFactory {
     public STModelDB remove(STValue stValue) {
         final STValue found = findSTValueByUuid(stValue.getUuid());
         if (found == null) return this;
-        found.getIncomingValue().forEach(this::remove);
+        //found.getIncomingValue().forEach(this::remove);
         delete(found.getNode());
         return this;
     }
@@ -134,10 +134,10 @@ public class STModelDB extends STModelNeoFactory {
     public STFile newSTFile(String name, String type, String path, String packageName) {
         return newSTFile()
                 .setUuid(UUID.randomUUID().toString())
-                .setName(name)
-                .setType(type)
-                .setPath(path)
-                .setPackageName(packageName);
+                .setName(newSTValue(name))
+                .setType(findOrCreateSTValueByValue(type))
+                .setPath(newSTValue(path))
+                .setPackageName(newSTValue(packageName));
     }
 
     public STModel newSTModel(String stGroupModel, STTemplate stTemplate) {
@@ -196,6 +196,35 @@ public class STModelDB extends STModelNeoFactory {
 
     public void cleanup() {
         doInTransaction(transaction -> {
+
+            findAllSTFile().forEach(stFile -> {
+
+                final Node node = stFile.getNode();
+                log.info("STFile." + node.getProperty("uuid"));
+                if (node.hasProperty("name")) {
+                    log.info("refactoring stFile.name " + node.getProperty("name"));
+                    stFile.setName(newSTValue(node.getProperty("name").toString()));
+                    node.removeProperty("name");
+                }
+
+                if (node.hasProperty("type")) {
+                    log.info("refactoring stFile.type " + node.getProperty("type"));
+                    stFile.setType(findOrCreateSTValueByValue(node.getProperty("type").toString()));
+                    node.removeProperty("type");
+                }
+
+                if (node.hasProperty("packageName")) {
+                    log.info("refactoring stFile.packageName " + node.getProperty("packageName"));
+                    stFile.setPackageName(newSTValue(node.getProperty("packageName").toString()));
+                    node.removeProperty("packageName");
+                }
+
+                if (node.hasProperty("path")) {
+                    log.info("refactoring stFile.path " + node.getProperty("path"));
+                    stFile.setPath(newSTValue(node.getProperty("path").toString()));
+                    node.removeProperty("path");
+                }
+            });
 
             getDatabaseService().getAllNodes().forEach(node -> {
                 if (node.getRelationships().iterator().hasNext()) return;

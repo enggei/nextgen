@@ -454,17 +454,7 @@ public class STNode extends PNode implements PropertyChangeListener {
 		}
 	}
 
-	private static final class SelectAllOf extends CanvasAction {
 
-
-		SelectAllOf(String name, STCanvas canvas, PInputEvent event) {
-			super(name, canvas, event);
-		}
-
-		@Override
-		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
-		}
-	}
 
 	public static String cut(String text){ 
 		return text.substring(0, Math.min(text.length(), 80));

@@ -126,8 +126,20 @@ public class STValue {
 		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("stModel"), org.neo4j.graphdb.Direction.OUTGOING);
 	}
 
-	public java.util.stream.Stream<STArgument> getIncomingValue() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("value")).spliterator(), false).map((relationship) -> new STArgument(relationship.getOtherNode(node)));
+	public java.util.stream.Stream<STFile> getIncomingName() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("name")).spliterator(), false).map((relationship) -> new STFile(relationship.getOtherNode(node)));
+	}
+
+	public java.util.stream.Stream<STFile> getIncomingType() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("type")).spliterator(), false).map((relationship) -> new STFile(relationship.getOtherNode(node)));
+	}
+
+	public java.util.stream.Stream<STFile> getIncomingPackageName() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("packageName")).spliterator(), false).map((relationship) -> new STFile(relationship.getOtherNode(node)));
+	}
+
+	public java.util.stream.Stream<STFile> getIncomingPath() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("path")).spliterator(), false).map((relationship) -> new STFile(relationship.getOtherNode(node)));
 	}
 
 	@Override
