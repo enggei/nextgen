@@ -174,7 +174,7 @@ public class STModelNode extends STNode {
 	}
 
 	protected void forEachArgument(java.util.function.BiConsumer<nextgen.st.model.STArgument, nextgen.st.domain.STParameter> consumer){ 
-		stTemplate.getParameters().forEach(stParameter -> stModel.getArguments().filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid())).forEach(stArgument -> consumer.accept(stArgument, stParameter)));
+		stTemplate.getParameters().forEach(stParameter -> stModel.getArgumentsSorted().filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid())).forEach(stArgument -> consumer.accept(stArgument, stParameter)));
 	}
 
 	protected boolean refersTo(nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameter stParameter, nextgen.st.canvas.STNode node){ 

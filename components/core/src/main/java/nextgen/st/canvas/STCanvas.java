@@ -28,8 +28,6 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STCanvas.class);
 
-	static boolean debug = true;
-
 	private final PLayer nodeLayer;
 	private final PLayer relationLayer = new PLayer();
 
@@ -117,12 +115,12 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 		final N existing = getNode(uuid);
 		if (existing != null) {
-			if (debug) log.debug("N-" + uuid + " exists in canvas");
+			log.debug("N-" + uuid + " exists in canvas");
 			existing.refresh();
 			existing.select();
 			return existing;
 		}
-		if (debug) log.debug("N-" + uuid + " added to canvas");
+		log.debug("N-" + uuid + " added to canvas");
 
 		final N node= supplier.get();
 		node.select();
@@ -152,7 +150,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	<N extends nextgen.st.canvas.STNode> N removeNode(UUID uuid) {
 		final nextgen.st.canvas.STNode remove = nodeMap.remove(uuid);
 		final N old = (N) nodeLayer.removeChild(remove);
-		if (debug) log.debug("\tN-"+ uuid + " removed from canvas : " + (old == null ? "null" : old.getUuid()));
+		log.debug("\tN-"+ uuid + " removed from canvas : " + (old == null ? "null" : old.getUuid()));
 		return (N) remove;
 	}
 
@@ -164,10 +162,10 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 		final R existing = getRelation(uuid);
 		if (existing != null) {
-			if (debug) log.debug("R-"+ uuid + " exists in canvas");
+			log.debug("R-"+ uuid + " exists in canvas");
 			return existing;
 		}
-		if (debug) log.debug("R-"+ uuid + " added to canvas");
+		log.debug("R-"+ uuid + " added to canvas");
 
 		final R relation = supplier.get();
 		relationMap.put(relation.getUuid(), relation);
@@ -181,7 +179,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 		remove.close();
 		final R old = (R) relationLayer.removeChild(remove);
-		if (debug) log.debug("\tR-"+ uuid + " removed from canvas : " + (old == null ? "null" : old.getUuid()));
+		log.debug("\tR-"+ uuid + " removed from canvas : " + (old == null ? "null" : old.getUuid()));
 		return (R) remove;
 	}
 

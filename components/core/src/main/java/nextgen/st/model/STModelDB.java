@@ -1,8 +1,9 @@
 package nextgen.st.model;
 
-import nextgen.st.STModelNavigator;
+import nextgen.st.STAppEvents;
 import nextgen.st.domain.*;
 import org.neo4j.graphdb.Direction;
+import org.neo4j.graphdb.Node;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -140,10 +141,12 @@ public class STModelDB extends STModelNeoFactory {
     }
 
     public STModel newSTModel(String stGroupModel, STTemplate stTemplate) {
-        return newSTModel()
+        final STModel stModel = newSTModel()
                 .setUuid(UUID.randomUUID().toString())
                 .setStTemplate(stTemplate.uuid())
                 .setStGroup(stGroupModel);
+        STAppEvents.postSTModelCreated(stModel);
+        return stModel;
     }
 
     public STArgument newSTArgument(STParameter stParameter, final Collection<STArgumentKV> kvs) {
@@ -196,7 +199,7 @@ public class STModelDB extends STModelNeoFactory {
 
             getDatabaseService().getAllNodes().forEach(node -> {
                 if (node.getRelationships().iterator().hasNext()) return;
-                log.info("deleting unnused node " + node);
+                log.info("deleting unnused node " + node + " " + labelsFor(node));
                 node.delete();
             });
 
@@ -313,5 +316,15 @@ public class STModelDB extends STModelNeoFactory {
                         }));
 
         return clone;
+    }
+
+    public static String labelsFor(Node node) {
+        return labelsFor(node, " ");
+    }
+
+    public static String labelsFor(Node node, String delimiter) {
+        final StringBuilder lbl = new StringBuilder();
+        for (org.neo4j.graphdb.Label label : node.getLabels()) lbl.append(label).append(delimiter);
+        return lbl.toString().trim();
     }
 }

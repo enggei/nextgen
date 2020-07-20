@@ -26,6 +26,8 @@ public class STModelNavigator extends JPanel {
     private final JTree tree = new JTree();
     private final DefaultTreeModel treeModel;
     private final JTabbedPane tabbedPane;
+    private final RootNode rootNode;
+
     final STModelDB db;
     final STRenderer stRenderer;
 
@@ -36,7 +38,7 @@ public class STModelNavigator extends JPanel {
         this.db = db;
         this.stRenderer = stRenderer;
 
-        final RootNode rootNode = new RootNode(db);
+        rootNode = new RootNode(db);
         treeModel = new DefaultTreeModel(rootNode);
         tree.setModel(treeModel);
         ToolTipManager.sharedInstance().registerComponent(tree);
@@ -113,6 +115,29 @@ public class STModelNavigator extends JPanel {
 
         setPreferredSize(new Dimension(300, 600));
         add(new JScrollPane(tree), BorderLayout.CENTER);
+
+        org.greenrobot.eventbus.EventBus.getDefault().register(this);
+    }
+
+    @org.greenrobot.eventbus.Subscribe()
+    public void onSTModelCreated(STAppEvents.STModelCreated event) {
+        log.info("STModelCreated " + event.stModel.getUuid());
+        SwingUtilities.invokeLater(() -> db.doInTransaction(transaction -> {
+            rootNode.getChildren(RootNode.STGroupModelTreeNode.class).forEach(stGroupModelTreeNode -> {
+                final STGroupModel stGroupModel = stGroupModelTreeNode.getModel();
+                if (stGroupModel.uuid().equals(event.stModel.getStGroup())) {
+                    log.info("\t" + stGroupModel.getName());
+                    stGroupModelTreeNode.getChildren(RootNode.STGroupModelTreeNode.STTemplateTreeNode.class).forEach(stTemplateTreeNode -> {
+                        final STTemplate stTemplate = stTemplateTreeNode.getModel();
+                        if (stTemplate.uuid().equals(event.stModel.getStTemplate())) {
+                            log.info("\t\t" + stTemplate.getName());
+
+                            stTemplateTreeNode.addSTModel(event.stModel);
+                        }
+                    });
+                }
+            });
+        }));
     }
 
     private class BaseTreeNode<T> extends DefaultMutableTreeNode {
@@ -247,6 +272,8 @@ public class STModelNavigator extends JPanel {
                     add(new STGroupModelTreeNode(stGroupModel));
                 });
             });
+
+
         }
 
         class STGroupModelTreeNode extends BaseTreeNode<STGroupModel> {
@@ -281,6 +308,12 @@ public class STModelNavigator extends JPanel {
                 @Override
                 public String getLabel() {
                     return getModel().getName();
+                }
+
+                public void addSTModel(STModel stModel) {
+                    final STModelTreeNode newChild = new STModelTreeNode(stModel);
+                    insert(newChild, getChildCount());
+                    tree.expandPath(new TreePath(getPath()));
                 }
 
                 class STModelTreeNode extends BaseTreeNode<STModel> {

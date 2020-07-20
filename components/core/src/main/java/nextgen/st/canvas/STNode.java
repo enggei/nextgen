@@ -18,7 +18,7 @@ import static java.awt.event.KeyEvent.*;
 
 public class STNode extends PNode implements PropertyChangeListener {
 
-	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STNode.class);
+	protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STNode.class);
 
 	protected enum Attributes {
 		_defaultColor, _selectedColor, _highlightedColor, _uuid, _text, _selected, _highlight
@@ -76,7 +76,6 @@ public class STNode extends PNode implements PropertyChangeListener {
 
 	@Override
 	public String toString() {
-		log.info(getUuid() + " toString");
 		return getUuid() + " " + getText();
 	}
 
@@ -149,17 +148,14 @@ public class STNode extends PNode implements PropertyChangeListener {
 	public void unhighlight() {
 		addAttribute(Attributes._highlight, Boolean.FALSE);
 		SwingUtilities.invokeLater(() -> {
-
 			child.setTextPaint(isSelected() ? (Color) getAttribute(Attributes._selectedColor) : (Color) getAttribute(Attributes._defaultColor));
-			if (rectangle != null) STNode.this.removeChild(rectangle);
-
+			if (rectangle != null) STNode.this.removeChild(rectangle);	
 		});
 	}
 
 	public void highlight() {
 		addAttribute(Attributes._highlight, Boolean.TRUE);
 		SwingUtilities.invokeLater(() -> {
-
 			final PBounds fullBounds = child.getFullBoundsReference();
 			rectangle = PPath.createRectangle(fullBounds.getX(), fullBounds.getY(), fullBounds.getWidth(), fullBounds.getHeight());
 			final Color green = new Color(0, 255, 0, 50);
@@ -458,6 +454,18 @@ public class STNode extends PNode implements PropertyChangeListener {
 		}
 	}
 
+	private static final class SelectAllOf extends CanvasAction {
+
+
+		SelectAllOf(String name, STCanvas canvas, PInputEvent event) {
+			super(name, canvas, event);
+		}
+
+		@Override
+		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
+		}
+	}
+
 	public static String cut(String text){ 
 		return text.substring(0, Math.min(text.length(), 80));
 	}
@@ -468,6 +476,6 @@ public class STNode extends PNode implements PropertyChangeListener {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNodeAdded(nextgen.st.STAppEvents.NodeAdded event) {
-		log.info(getUuid() + " : node added " + event.node.getUuid());
+		log.debug(getUuid() + " : node added " + event.node.getUuid());
 	}
 }

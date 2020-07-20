@@ -887,7 +887,7 @@ public class STProject extends BaseSTProject {
 
         writeJavaFile(stFileNode, stCanvasPackage, stFileNode.getName(), mainJava);
         writeJavaFile(stValueNode, stCanvasPackage, stValueNode.getName(), mainJava);
-        writeJavaFile(stModelNode, stCanvasPackage, stModelNode.getName(), mainJava);
+//        writeJavaFile(stModelNode, stCanvasPackage, stModelNode.getName(), mainJava);
         writeJavaFile(stKVNode, stCanvasPackage, stKVNode.getName(), mainJava);
         writeJavaFile(stArgumentRelation, stCanvasPackage, stArgumentRelation.getName(), mainJava);
         writeJavaFile(stKVArgumentRelation, stCanvasPackage, stKVArgumentRelation.getName(), mainJava);
@@ -950,6 +950,10 @@ public class STProject extends BaseSTProject {
                 .addRelations(newStringField("stTemplate"))
                 .addRelations(newOneToMany("files", newEntity("STFile")
                         .addRelations(newStringField("uuid"))
+                        .addRelations(newOneToOne("name", stValueNeo))
+                        .addRelations(newOneToOne("type", stValueNeo))
+                        .addRelations(newOneToOne("packageName", stValueNeo))
+                        .addRelations(newOneToOne("path", stValueNeo))
                         .addRelations(newStringField("name"))
                         .addRelations(newStringField("type"))
                         .addRelations(newStringField("packageName"))

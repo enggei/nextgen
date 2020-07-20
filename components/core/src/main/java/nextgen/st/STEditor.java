@@ -4,6 +4,7 @@ import com.generator.util.SwingUtil;
 import nextgen.st.domain.*;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rsyntaxtextarea.Theme;
 import org.fife.ui.rtextarea.RTextScrollPane;
 import org.fife.ui.rtextarea.SearchContext;
 import org.fife.ui.rtextarea.SearchEngine;
@@ -15,6 +16,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
@@ -75,6 +77,16 @@ public class STEditor extends JPanel {
         setPreferredSize(new Dimension(800, 600));
     }
 
+    private void changeStyleViaThemeXml() {
+        try {
+            Theme theme = Theme.load(getClass().getResourceAsStream(
+                    "/org/fife/ui/rsyntaxtextarea/themes/eclipse.xml"));
+            theme.apply(this.txtEditor);
+        } catch (IOException ioe) { // Never happens
+            ioe.printStackTrace();
+        }
+    }
+
     public STNavigator.RootNode.STGDirectoryTreeNode.STGroupTreeNode getStGroupTreeNode() {
         return stGroupTreeNode;
     }
@@ -94,7 +106,7 @@ public class STEditor extends JPanel {
         this.txtEditor.setCaretPosition(0);
         this.txtEditor.setEditable(false);
         this.commandPanel.setEditable(false);
-
+        changeStyleViaThemeXml();
         this.txtEditor.discardAllEdits();
         this.txtEditor.setBackground(uneditedColor);
         this.infoPanel.clear();
