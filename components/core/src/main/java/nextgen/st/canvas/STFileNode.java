@@ -22,6 +22,12 @@ public class STFileNode extends nextgen.st.canvas.STNode {
 
 	@Override
 	public void addedToCanvas() {
+		canvas.getAllNodes()
+				.filter(stNode -> stNode instanceof STModelNode)
+				.map(stNode -> (STModelNode) stNode)
+				.filter(stModelNode -> stModelNode.stModel.getUuid().equals(stModel.getUuid()))
+				.findAny()
+				.ifPresent(stModelNode -> canvas.addRelation(getUuid(), canvas.newSinkRelation(stModelNode, STFileNode.this)));
 	}
 
 	@Override
@@ -31,18 +37,41 @@ public class STFileNode extends nextgen.st.canvas.STNode {
 	@Override
 	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
 		final java.util.List<STModelNode> stModelNodes = canvas.getSelectedNodes()
-		                .filter(stNode -> stNode instanceof STModelNode)
-		                .filter(stNode -> !stNode.getUuid().equals(getUuid()))
-		                .map(stNode -> (STModelNode) stNode)
-		                .collect(java.util.stream.Collectors.toList());
-		doLaterInTransaction(tx -> {
-		            final JMenu sourceMenu = new JMenu("STModels");
-		            stModelNodes.forEach(stModelNode -> {
-		                final int end = Math.min(stModelNode.getText().length(), 50);
-		                sourceMenu.add(new SetSource("Set source to " + stModelNode.getText().substring(0, end), STFileNode.this, canvas, event, stModelNode));
-		            });
-		            pop.add(sourceMenu);
-		        });
+				.filter(stNode -> stNode instanceof STModelNode)
+				.filter(stNode -> !stNode.getUuid().equals(getUuid()))
+				.map(stNode -> (STModelNode) stNode)
+				.collect(java.util.stream.Collectors.toList());
+		final java.util.List<STValueNode> stValueNodes = canvas.getSelectedNodes()
+				.filter(stNode -> stNode instanceof STValueNode)
+				.filter(stNode -> !stNode.getUuid().equals(getUuid()))
+				.map(stNode -> (STValueNode) stNode)
+				.collect(java.util.stream.Collectors.toList());
+		canvas.modelDb.doInTransaction(tx -> {
+			final JMenu sourceMenu = new JMenu("STModels");
+			stModelNodes.forEach(stModelNode -> {
+				final int end = Math.min(stModelNode.getText().length(), 50);
+				sourceMenu.add(new SetSource("Set source to " + stModelNode.getText().substring(0, end), STFileNode.this, canvas, event, stModelNode));
+			});
+			if (!stModelNodes.isEmpty())
+				pop.add(sourceMenu);
+
+			final JMenu setNameMenu = new JMenu("Set Name");
+			final JMenu setPathMenu = new JMenu("Set Path");
+			final JMenu setTypeMenu = new JMenu("Set Type");
+			final JMenu setPackageName = new JMenu("Set Package name");
+			stValueNodes.stream().filter(stNode -> stNode.stValue.getType().equals(nextgen.st.model.STValueType.PRIMITIVE)).forEach(stValueNode -> {
+				setPathMenu.add(new SetPathTo(stValueNode.stValue.getValue(), STFileNode.this, canvas, event, stValueNode.stValue));
+				setNameMenu.add(new SetNameTo(stValueNode.stValue.getValue(), STFileNode.this, canvas, event, stValueNode.stValue));
+				setPackageName.add(new SetPackageNameTo(stValueNode.stValue.getValue(), STFileNode.this, canvas, event, stValueNode.stValue));
+				setTypeMenu.add(new SetTypeTo(stValueNode.stValue.getValue(), STFileNode.this, canvas, event, stValueNode.stValue));
+			});
+			if (setNameMenu.getMenuComponentCount() != 0) {
+				pop.add(setNameMenu);
+				pop.add(setPathMenu);
+				pop.add(setTypeMenu);
+				pop.add(setPackageName);
+			}
+		});
 		pop.add(new EditFileSink(this, canvas, event));
 		pop.add(new OpenFile(this, canvas, event));
 		pop.addSeparator();
@@ -164,6 +193,64 @@ public class STFileNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(STFileNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+			doLaterInTransaction(transaction -> {
+				node.stFile.setPath(stValue);
+				node.setText(nextgen.st.STGenerator.asFile(node.stFile).getAbsolutePath());				
+			});
+		}
+	}
+
+	private static final class SetNameTo extends NodeAction<STFileNode> {
+
+		nextgen.st.model.STValue stValue;
+
+		SetNameTo(String name, STFileNode node, STCanvas canvas, PInputEvent event, nextgen.st.model.STValue stValue) {
+			super(name, node, canvas, event);
+			this.stValue = stValue;
+		}
+
+		@Override
+		void actionPerformed(STFileNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+			doLaterInTransaction(transaction -> {
+				node.stFile.setName(stValue);
+				node.setText(nextgen.st.STGenerator.asFile(node.stFile).getAbsolutePath());				
+			});
+		}
+	}
+
+	private static final class SetTypeTo extends NodeAction<STFileNode> {
+
+		nextgen.st.model.STValue stValue;
+
+		SetTypeTo(String name, STFileNode node, STCanvas canvas, PInputEvent event, nextgen.st.model.STValue stValue) {
+			super(name, node, canvas, event);
+			this.stValue = stValue;
+		}
+
+		@Override
+		void actionPerformed(STFileNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+			doLaterInTransaction(transaction -> {
+				node.stFile.setType(stValue);
+				node.setText(nextgen.st.STGenerator.asFile(node.stFile).getAbsolutePath());				
+			});
+		}
+	}
+
+	private static final class SetPackageNameTo extends NodeAction<STFileNode> {
+
+		nextgen.st.model.STValue stValue;
+
+		SetPackageNameTo(String name, STFileNode node, STCanvas canvas, PInputEvent event, nextgen.st.model.STValue stValue) {
+			super(name, node, canvas, event);
+			this.stValue = stValue;
+		}
+
+		@Override
+		void actionPerformed(STFileNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+			doLaterInTransaction(transaction -> {
+				node.stFile.setPackageName(stValue);
+				node.setText(nextgen.st.STGenerator.asFile(node.stFile).getAbsolutePath());				
+			});
 		}
 	}
 }
