@@ -9,22 +9,23 @@ public class MavenSTTests {
 
 	@org.junit.Test
 	public void testAll() {
-		testBuild();
-		testDependency();
 		testDependencyManagement();
 		testEntities();
 		testDependencyGroup();
 		testMavenProject();
 		testModule();
 		testProject();
-		testExecution();
-		testParent();
 		testAntlr4();
 		testCopyPlugin();
 		testFrontEndMavenPlugin();
+		testNpmScript();
 		testPlugin();
 		testShadePlugin();
 		testPom();
+		testBuild();
+		testDependency();
+		testExecution();
+		testParent();
 		testProperties();
 		testMavenCompilerSource();
 		testMavenCompilerTarget();
@@ -33,16 +34,6 @@ public class MavenSTTests {
 		testPropertyReference();
 		testRepository();
 	}
-
-	@org.junit.Test
-	public void testBuild() {
-		System.out.println("\n--- TEST Build:\n" + newBuild());
-	} 
-
-	@org.junit.Test
-	public void testDependency() {
-		System.out.println("\n--- TEST Dependency:\n" + newDependency());
-	} 
 
 	@org.junit.Test
 	public void testDependencyManagement() {
@@ -75,16 +66,6 @@ public class MavenSTTests {
 	} 
 
 	@org.junit.Test
-	public void testExecution() {
-		System.out.println("\n--- TEST Execution:\n" + newExecution());
-	} 
-
-	@org.junit.Test
-	public void testParent() {
-		System.out.println("\n--- TEST Parent:\n" + newParent());
-	} 
-
-	@org.junit.Test
 	public void testAntlr4() {
 		System.out.println("\n--- TEST Antlr4:\n" + newAntlr4());
 	} 
@@ -100,6 +81,11 @@ public class MavenSTTests {
 	} 
 
 	@org.junit.Test
+	public void testNpmScript() {
+		System.out.println("\n--- TEST NpmScript:\n" + newNpmScript());
+	} 
+
+	@org.junit.Test
 	public void testPlugin() {
 		System.out.println("\n--- TEST Plugin:\n" + newPlugin());
 	} 
@@ -112,6 +98,26 @@ public class MavenSTTests {
 	@org.junit.Test
 	public void testPom() {
 		System.out.println("\n--- TEST Pom:\n" + newPom());
+	} 
+
+	@org.junit.Test
+	public void testBuild() {
+		System.out.println("\n--- TEST Build:\n" + newBuild());
+	} 
+
+	@org.junit.Test
+	public void testDependency() {
+		System.out.println("\n--- TEST Dependency:\n" + newDependency());
+	} 
+
+	@org.junit.Test
+	public void testExecution() {
+		System.out.println("\n--- TEST Execution:\n" + newExecution());
+	} 
+
+	@org.junit.Test
+	public void testParent() {
+		System.out.println("\n--- TEST Parent:\n" + newParent());
 	} 
 
 	@org.junit.Test

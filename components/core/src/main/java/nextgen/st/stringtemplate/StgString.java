@@ -66,8 +66,9 @@ public class StgString {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "stgString(templates) ::= <<\"delimiters \\\"\\~\\\", \\\"\\~\\\"\\\\n\" +\n" + 
-				"	\"eom() ::= \\\"}\\\"\\\\n\" +\n" + 
-				"	\"gt() ::= \\\">\\\"\\\\n\"~if(templates)~ +\n" + 
-				"	~templates:{it|~it~.st + \"\\\\n\"};separator=\" + \\n\"~~else~~endif~ >>";
+	static final String st = "stgString(templates) ::= <<new StringBuilder(\"delimiters \\\"\\~\\\", \\\"\\~\\\"\\\\n\")\n" + 
+				"	.append(\"eom() ::= \\\"}\\\"\\\\n\")\n" + 
+				"	.append(\"gt() ::= \\\">\\\"\\\\n\")\n" + 
+				"	~templates:{it|.append(~it~.st + \"\\\\n\")};separator=\"\\n\"~\n" + 
+				"	.toString() >>";
 }  

@@ -1,0 +1,11 @@
+delimiters "~","~"
+
+elements() ::= << >>
+
+ul(className,children) ::= <<<ul ~if(className)~className=~className~~endif~>
+	~children:{it|};separator="\n"~
+</ul>  >>
+
+eom() ::= "}"
+
+gt() ::= ">"

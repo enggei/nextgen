@@ -3,95 +3,6 @@
   "name" : "Maven",
   "delimiter" : "~",
   "templates" : [ {
-    "uuid" : "74ebc0f1-a6ef-409f-b207-4190ef252c72",
-    "name" : "build",
-    "text" : "<build>\n~if(testResources)~\n\t<testResources>\n\t\t<testResource>\n\t\t\t~testResources:{it|<~it.name~>~it.value~</~it.name~>};separator=\"\\n\"~\n\t\t</testResource>\n\t</testResources>\n~endif~\n\t<plugins>\n\t\t~plugin:{it|~it~};separator=\"\\n\"~\n\t</plugins>\n</build> ",
-    "parameters" : [ {
-      "uuid" : "c020c315-170c-4a71-8352-140b698d29b8",
-      "name" : "testResources",
-      "type" : "KVLIST",
-      "argumentType" : "Object",
-      "keys" : [ {
-        "uuid" : "ee445638-17e6-4332-b9cf-dd73c6de987e",
-        "name" : "name",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "e131cf6e-f617-439b-883d-f794585dc2fe",
-        "name" : "value",
-        "argumentType" : "Object"
-      } ]
-    }, {
-      "uuid" : "e8a0727f-4dbe-4cc0-8cad-39906f6eacb5",
-      "name" : "plugin",
-      "type" : "LIST",
-      "argumentType" : "Object"
-    } ]
-  }, {
-    "uuid" : "68f2245d-08e1-42db-aafa-7245a5eda5b0",
-    "name" : "dependency",
-    "text" : "<dependency>\n\t<groupId>~groupId~</groupId>\n\t<artifactId>~artifactId~</artifactId>~if(version)~\n\t<version>~version~</version>~endif~~if(scope)~\n\t<scope>~scope~</scope>~endif~~if(systemPath)~\n\t<systemPath>~systemPath~</systemPath>~endif~~if(classifier)~\n\t<classifier>~classifier~</classifier>~endif~~if(type)~\n\t<type>~type~</type>~endif~\n\t\n</dependency> ",
-    "parameters" : [ {
-      "uuid" : "b12643df-58cb-47d0-8ea0-77506ee70a0a",
-      "name" : "groupId",
-      "type" : "SINGLE",
-      "argumentType" : "Object"
-    }, {
-      "uuid" : "71053f05-5114-4394-9fc7-b9f578175b58",
-      "name" : "artifactId",
-      "type" : "SINGLE",
-      "argumentType" : "Object"
-    }, {
-      "uuid" : "c5d1e261-e5d3-46c1-af07-ad0fa149fcdb",
-      "name" : "version",
-      "type" : "SINGLE",
-      "argumentType" : "Object"
-    }, {
-      "uuid" : "17d38e23-c22b-4f2b-8a75-7da19dfe1a0c",
-      "name" : "scope",
-      "type" : "SINGLE",
-      "argumentType" : "DependencyScope"
-    }, {
-      "uuid" : "13bbe556-03e5-497d-a80b-314439b73de2",
-      "name" : "systemPath",
-      "type" : "SINGLE",
-      "argumentType" : "Object"
-    }, {
-      "uuid" : "2b654cca-0719-4a66-af07-0bd1675d7b51",
-      "name" : "classifier",
-      "type" : "SINGLE",
-      "argumentType" : "Object"
-    }, {
-      "uuid" : "938744f6-0f4e-4adb-bf3c-4fe7fbb10e79",
-      "name" : "type",
-      "type" : "SINGLE",
-      "argumentType" : "Object"
-    } ]
-  }, {
-    "uuid" : "cb7743c2-f332-4f36-81e9-21d2aa69c103",
-    "name" : "execution",
-    "text" : "<execution>\n    <phase>package</phase>\n    <goals>\n        <goal>shade</goal>\n    </goals>\n</execution> ",
-    "parameters" : [ ]
-  }, {
-    "uuid" : "9b6aa1aa-6074-4744-823d-ad9edf0f1e0f",
-    "name" : "parent",
-    "text" : "<parent>\n\t<artifactId>~artifactId~</artifactId>\n\t<groupId>~groupId~</groupId>\n\t<version>~version~</version>\n</parent> ",
-    "parameters" : [ {
-      "uuid" : "31f79fc6-fbf9-4bec-9a35-1bf26568ba2e",
-      "name" : "artifactId",
-      "type" : "SINGLE",
-      "argumentType" : "Object"
-    }, {
-      "uuid" : "6f88ee1d-bed7-4905-9971-e21770387fcc",
-      "name" : "groupId",
-      "type" : "SINGLE",
-      "argumentType" : "Object"
-    }, {
-      "uuid" : "b0948cee-73e2-41c5-bac7-bed081aa87e6",
-      "name" : "version",
-      "type" : "SINGLE",
-      "argumentType" : "Object"
-    } ]
-  }, {
     "uuid" : "7a760f05-7071-4259-a27b-8abfbf1d6ce1",
     "name" : "pom",
     "text" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n~if(parent)~\n\n\t~parent~\n~endif~\t \n\t<modelVersion>4.0.0</modelVersion>\n\n\t<name>~name~</name>\n\n\t~if(groupId)~<groupId>~groupId~</groupId>~endif~\n\t~if(artifactId)~<artifactId>~artifactId~</artifactId>~endif~\n\t~if(version)~<version>~version~</version>~endif~\n\t~if(packaging)~<packaging>~packaging~</packaging>~endif~\n\n~if(modules)~\n\t<modules>\n\t\t~modules:{it|<module>~it~</module>};separator=\"\\n\"~\n\t</modules>\n~endif~\n~if(properties)~\n\t<properties>\n\t\t~properties:{it|~it~};separator=\"\\n\"~\t\t\n\t</properties>\n~endif~\n~if(build)~\n\n\t~build~\n\n~endif~\n~if(dependencyManagement)~\n\t~dependencyManagement~\n~endif~\n~if(dependencies)~\n\n\t<dependencies>\n\t\t~dependencies:{it|~it~};separator=\"\\n\"~  \n\t</dependencies>\n\n~endif~\n~if(distributionManagement)~\n\n\t<distributionManagement>\n\t\t~distributionManagement:{it|~it~};separator=\"\\n\"~\n\t</distributionManagement>\n~endif~\n~if(repositories)~\n\n\t<repositories>\n\t\t~repositories:{it|~it~};separator=\"\\n\"~\n\t</repositories>\n~endif~\n</project> ",
@@ -160,32 +71,178 @@
       "name" : "repositories",
       "type" : "LIST",
       "argumentType" : "Object"
-    } ]
-  }, {
-    "uuid" : "f3f8b1f9-6567-4061-a2ff-6166b425734f",
-    "name" : "propertyReference",
-    "text" : "${~name~}",
-    "parameters" : [ {
-      "uuid" : "ce37ea76-feaf-4b44-810f-4756471f073d",
-      "name" : "name",
-      "type" : "SINGLE"
-    } ]
-  }, {
-    "uuid" : "20a1b770-609a-4146-8339-3b25b74fab7c",
-    "name" : "repository",
-    "text" : "<repository>\r\n\t<id>~id~</id>\r\n\t<name>~name~</name>\r\n\t<url>~url~</url>\r\n</repository>",
-    "parameters" : [ {
-      "uuid" : "4fe3d3a3-7408-45b3-80dc-289208ffff43",
-      "name" : "id",
-      "type" : "SINGLE"
+    } ],
+    "children" : [ {
+      "uuid" : "74ebc0f1-a6ef-409f-b207-4190ef252c72",
+      "name" : "build",
+      "text" : "<build>\n~if(testResources)~\n\t<testResources>\n\t\t<testResource>\n\t\t\t~testResources:{it|<~it.name~>~it.value~</~it.name~>};separator=\"\\n\"~\n\t\t</testResource>\n\t</testResources>\n~endif~\n\t<plugins>\n\t\t~plugin:{it|~it~};separator=\"\\n\"~\n\t</plugins>\n</build> ",
+      "parameters" : [ {
+        "uuid" : "c020c315-170c-4a71-8352-140b698d29b8",
+        "name" : "testResources",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "ee445638-17e6-4332-b9cf-dd73c6de987e",
+          "name" : "name",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "e131cf6e-f617-439b-883d-f794585dc2fe",
+          "name" : "value",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "e8a0727f-4dbe-4cc0-8cad-39906f6eacb5",
+        "name" : "plugin",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
     }, {
-      "uuid" : "514f570e-4a23-4e74-96ce-ce354d956341",
-      "name" : "name",
-      "type" : "SINGLE"
+      "uuid" : "9b6aa1aa-6074-4744-823d-ad9edf0f1e0f",
+      "name" : "parent",
+      "text" : "<parent>\n\t<artifactId>~artifactId~</artifactId>\n\t<groupId>~groupId~</groupId>\n\t<version>~version~</version>\n</parent> ",
+      "parameters" : [ {
+        "uuid" : "31f79fc6-fbf9-4bec-9a35-1bf26568ba2e",
+        "name" : "artifactId",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "6f88ee1d-bed7-4905-9971-e21770387fcc",
+        "name" : "groupId",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "b0948cee-73e2-41c5-bac7-bed081aa87e6",
+        "name" : "version",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
     }, {
-      "uuid" : "28a110af-d411-4e8c-835f-b412d67a8d1d",
-      "name" : "url",
-      "type" : "SINGLE"
+      "uuid" : "7992114b-2959-4fbb-83f2-2d671c7b2ff0",
+      "name" : "Properties",
+      "text" : "<~name~>~value~</~name~> ",
+      "children" : [ {
+        "uuid" : "6afe1a71-6639-4971-8dbf-4f321b782f60",
+        "name" : "MavenCompilerSource",
+        "text" : "<maven.compiler.source>~value~</maven.compiler.source> ",
+        "parameters" : [ {
+          "uuid" : "cd7bf539-b764-4287-a213-4244d970f404",
+          "name" : "value",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "226b5a3d-3e90-4834-a344-04e63eb1ea35",
+        "name" : "ProjectBuildSourceEncoding",
+        "text" : "<project.build.sourceEncoding>~if(value)~~value~~else~UTF-8~endif~</project.build.sourceEncoding> ",
+        "parameters" : [ {
+          "uuid" : "81a52670-9594-4a93-9c26-ea139a44cda6",
+          "name" : "value",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "2cb6b09a-970e-4fe4-96ea-fa23e54d530b",
+        "name" : "MavenCompilerTarget",
+        "text" : "<maven.compiler.target>~value~</maven.compiler.target> ",
+        "parameters" : [ {
+          "uuid" : "b73f061e-526a-400e-8257-5598c097af2d",
+          "name" : "value",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "76543202-5f65-4838-a6dc-b129fc99bf0a",
+        "name" : "ProjectReportingOutputEncoding",
+        "text" : "<project.reporting.outputEncoding>~if(value)~~value~~else~UTF-8~endif~</project.reporting.outputEncoding> ",
+        "parameters" : [ {
+          "uuid" : "4b1b9250-3875-4262-9951-585e284d198a",
+          "name" : "value",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "f3f8b1f9-6567-4061-a2ff-6166b425734f",
+        "name" : "propertyReference",
+        "text" : "${~name~}",
+        "parameters" : [ {
+          "uuid" : "ce37ea76-feaf-4b44-810f-4756471f073d",
+          "name" : "name",
+          "type" : "SINGLE"
+        } ]
+      } ],
+      "parameters" : [ {
+        "uuid" : "dc55c8cf-140b-46df-8cef-2cce64c532d6",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "a940c04c-d25d-4817-bad6-676f68cfee76",
+        "name" : "value",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "68f2245d-08e1-42db-aafa-7245a5eda5b0",
+      "name" : "dependency",
+      "text" : "<dependency>\n\t<groupId>~groupId~</groupId>\n\t<artifactId>~artifactId~</artifactId>~if(version)~\n\t<version>~version~</version>~endif~~if(scope)~\n\t<scope>~scope~</scope>~endif~~if(systemPath)~\n\t<systemPath>~systemPath~</systemPath>~endif~~if(classifier)~\n\t<classifier>~classifier~</classifier>~endif~~if(type)~\n\t<type>~type~</type>~endif~\n\t\n</dependency> ",
+      "parameters" : [ {
+        "uuid" : "b12643df-58cb-47d0-8ea0-77506ee70a0a",
+        "name" : "groupId",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "71053f05-5114-4394-9fc7-b9f578175b58",
+        "name" : "artifactId",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "c5d1e261-e5d3-46c1-af07-ad0fa149fcdb",
+        "name" : "version",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "17d38e23-c22b-4f2b-8a75-7da19dfe1a0c",
+        "name" : "scope",
+        "type" : "SINGLE",
+        "argumentType" : "DependencyScope"
+      }, {
+        "uuid" : "13bbe556-03e5-497d-a80b-314439b73de2",
+        "name" : "systemPath",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "2b654cca-0719-4a66-af07-0bd1675d7b51",
+        "name" : "classifier",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "938744f6-0f4e-4adb-bf3c-4fe7fbb10e79",
+        "name" : "type",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "20a1b770-609a-4146-8339-3b25b74fab7c",
+      "name" : "repository",
+      "text" : "<repository>\r\n\t<id>~id~</id>\r\n\t<name>~name~</name>\r\n\t<url>~url~</url>\r\n</repository>",
+      "parameters" : [ {
+        "uuid" : "4fe3d3a3-7408-45b3-80dc-289208ffff43",
+        "name" : "id",
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "514f570e-4a23-4e74-96ce-ce354d956341",
+        "name" : "name",
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "28a110af-d411-4e8c-835f-b412d67a8d1d",
+        "name" : "url",
+        "type" : "SINGLE"
+      } ]
+    }, {
+      "uuid" : "cb7743c2-f332-4f36-81e9-21d2aa69c103",
+      "name" : "execution",
+      "text" : "<execution>\n    <phase>package</phase>\n    <goals>\n        <goal>shade</goal>\n    </goals>\n</execution> ",
+      "parameters" : [ ]
     } ]
   }, {
     "uuid" : "f5dc53d8-bbf6-4b8e-9cc8-b1e9a5fd17b0",
@@ -210,6 +267,12 @@
         "name" : "nodeVersion",
         "type" : "SINGLE",
         "argumentType" : "Object"
+      } ],
+      "children" : [ {
+        "uuid" : "4c836d81-bdfb-4625-b450-931af6b4742d",
+        "name" : "npmScript",
+        "text" : "#!/bin/sh\nPATH=\"$PWD/target/node/\":$PATH\nnode \"target/node/node_modules/npm/bin/npm-cli.js\" \"$@\" ",
+        "parameters" : [ ]
       } ]
     }, {
       "uuid" : "e2949dab-710d-40d6-86ac-8f08b63ca5ce",
@@ -434,62 +497,6 @@
       "name" : "dependencies",
       "type" : "LIST",
       "argumentType" : "Dependency"
-    } ]
-  }, {
-    "uuid" : "7992114b-2959-4fbb-83f2-2d671c7b2ff0",
-    "name" : "Properties",
-    "text" : "<~name~>~value~</~name~> ",
-    "children" : [ {
-      "uuid" : "6afe1a71-6639-4971-8dbf-4f321b782f60",
-      "name" : "MavenCompilerSource",
-      "text" : "<maven.compiler.source>~value~</maven.compiler.source> ",
-      "parameters" : [ {
-        "uuid" : "cd7bf539-b764-4287-a213-4244d970f404",
-        "name" : "value",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      } ]
-    }, {
-      "uuid" : "226b5a3d-3e90-4834-a344-04e63eb1ea35",
-      "name" : "ProjectBuildSourceEncoding",
-      "text" : "<project.build.sourceEncoding>~if(value)~~value~~else~UTF-8~endif~</project.build.sourceEncoding> ",
-      "parameters" : [ {
-        "uuid" : "81a52670-9594-4a93-9c26-ea139a44cda6",
-        "name" : "value",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      } ]
-    }, {
-      "uuid" : "2cb6b09a-970e-4fe4-96ea-fa23e54d530b",
-      "name" : "MavenCompilerTarget",
-      "text" : "<maven.compiler.target>~value~</maven.compiler.target> ",
-      "parameters" : [ {
-        "uuid" : "b73f061e-526a-400e-8257-5598c097af2d",
-        "name" : "value",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      } ]
-    }, {
-      "uuid" : "76543202-5f65-4838-a6dc-b129fc99bf0a",
-      "name" : "ProjectReportingOutputEncoding",
-      "text" : "<project.reporting.outputEncoding>~if(value)~~value~~else~UTF-8~endif~</project.reporting.outputEncoding> ",
-      "parameters" : [ {
-        "uuid" : "4b1b9250-3875-4262-9951-585e284d198a",
-        "name" : "value",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      } ]
-    } ],
-    "parameters" : [ {
-      "uuid" : "dc55c8cf-140b-46df-8cef-2cce64c532d6",
-      "name" : "name",
-      "type" : "SINGLE",
-      "argumentType" : "Object"
-    }, {
-      "uuid" : "a940c04c-d25d-4817-bad6-676f68cfee76",
-      "name" : "value",
-      "type" : "SINGLE",
-      "argumentType" : "Object"
     } ]
   }, {
     "uuid" : "b7a1cf86-16b6-4983-adf5-dd6ca5448d25",

@@ -79,10 +79,11 @@ newEntityInstance(entityName) ::= <<public static ~entityName~ new~entityName~()
 	return new ~entityName~(stGroup);
 } >>
 
-stgString(templates) ::= <<"delimiters \"\~\", \"\~\"\\n" +
-	"eom() ::= \"}\"\\n" +
-	"gt() ::= \">\"\\n"~if(templates)~ +
-	~templates:{it|~it~.st + "\\n"};separator=" + \n"~~else~~endif~ >>
+stgString(templates) ::= <<new StringBuilder("delimiters \"\~\", \"\~\"\\n")
+	.append("eom() ::= \"}\"\\n")
+	.append("gt() ::= \">\"\\n")
+	~templates:{it|.append(~it~.st + "\\n")};separator="\n"~
+	.toString()  >>
 
 STDomainTests(packageName,domainName,name,testcases) ::= <<package ~packageName~;
 

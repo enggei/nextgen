@@ -2,32 +2,34 @@ package nextgen.templates.maven;
 
 public class MavenST {
 
-	private static final String stg = "delimiters \"~\", \"~\"\n" +
-	"eom() ::= \"}\"\n" +
-	"gt() ::= \">\"\n" +
-	Build.st + "\n" + 
-	Dependency.st + "\n" + 
-	DependencyManagement.st + "\n" + 
-	Entities.st + "\n" + 
-	DependencyGroup.st + "\n" + 
-	MavenProject.st + "\n" + 
-	Module.st + "\n" + 
-	Project.st + "\n" + 
-	Execution.st + "\n" + 
-	Parent.st + "\n" + 
-	Antlr4.st + "\n" + 
-	CopyPlugin.st + "\n" + 
-	FrontEndMavenPlugin.st + "\n" + 
-	Plugin.st + "\n" + 
-	ShadePlugin.st + "\n" + 
-	Pom.st + "\n" + 
-	Properties.st + "\n" + 
-	MavenCompilerSource.st + "\n" + 
-	MavenCompilerTarget.st + "\n" + 
-	ProjectBuildSourceEncoding.st + "\n" + 
-	ProjectReportingOutputEncoding.st + "\n" + 
-	PropertyReference.st + "\n" + 
-	Repository.st + "\n" ;
+	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
+	.append("eom() ::= \"}\"\n")
+	.append("gt() ::= \">\"\n")
+	.append(DependencyManagement.st + "\n")
+	.append(Entities.st + "\n")
+	.append(DependencyGroup.st + "\n")
+	.append(MavenProject.st + "\n")
+	.append(Module.st + "\n")
+	.append(Project.st + "\n")
+	.append(Antlr4.st + "\n")
+	.append(CopyPlugin.st + "\n")
+	.append(FrontEndMavenPlugin.st + "\n")
+	.append(NpmScript.st + "\n")
+	.append(Plugin.st + "\n")
+	.append(ShadePlugin.st + "\n")
+	.append(Pom.st + "\n")
+	.append(Build.st + "\n")
+	.append(Dependency.st + "\n")
+	.append(Execution.st + "\n")
+	.append(Parent.st + "\n")
+	.append(Properties.st + "\n")
+	.append(MavenCompilerSource.st + "\n")
+	.append(MavenCompilerTarget.st + "\n")
+	.append(ProjectBuildSourceEncoding.st + "\n")
+	.append(ProjectReportingOutputEncoding.st + "\n")
+	.append(PropertyReference.st + "\n")
+	.append(Repository.st + "\n")
+	.toString()  ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -63,14 +65,6 @@ public class MavenST {
 		stGroup = decorate(new org.stringtemplate.v4.STGroupFile(stgFile, '~', '~'));
 	}
 
-	public static Build newBuild() {
-		return new Build(stGroup);
-	} 
-
-	public static Dependency newDependency() {
-		return new Dependency(stGroup);
-	} 
-
 	public static DependencyManagement newDependencyManagement() {
 		return new DependencyManagement(stGroup);
 	} 
@@ -95,14 +89,6 @@ public class MavenST {
 		return new Project(stGroup);
 	} 
 
-	public static Execution newExecution() {
-		return new Execution(stGroup);
-	} 
-
-	public static Parent newParent() {
-		return new Parent(stGroup);
-	} 
-
 	public static Antlr4 newAntlr4() {
 		return new Antlr4(stGroup);
 	} 
@@ -115,6 +101,10 @@ public class MavenST {
 		return new FrontEndMavenPlugin(stGroup);
 	} 
 
+	public static NpmScript newNpmScript() {
+		return new NpmScript(stGroup);
+	} 
+
 	public static Plugin newPlugin() {
 		return new Plugin(stGroup);
 	} 
@@ -125,6 +115,22 @@ public class MavenST {
 
 	public static Pom newPom() {
 		return new Pom(stGroup);
+	} 
+
+	public static Build newBuild() {
+		return new Build(stGroup);
+	} 
+
+	public static Dependency newDependency() {
+		return new Dependency(stGroup);
+	} 
+
+	public static Execution newExecution() {
+		return new Execution(stGroup);
+	} 
+
+	public static Parent newParent() {
+		return new Parent(stGroup);
 	} 
 
 	public static Properties newProperties() {

@@ -3,31 +3,6 @@
   "name" : "Domain",
   "delimiter" : "~",
   "templates" : [ {
-    "uuid" : "c4c6caaf-84a5-4975-8782-311476c8742c",
-    "name" : "Entity",
-    "text" : "Entity: ~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~\n~relations:{it|~it~};separator=\"\\n\"~ ",
-    "parameters" : [ {
-      "uuid" : "df812852-1a4b-4e82-b4e1-31196c9b948f",
-      "name" : "name",
-      "type" : "SINGLE",
-      "argumentType" : "String"
-    }, {
-      "uuid" : "b786761b-cdbb-4ea2-a0de-487a429da4f4",
-      "name" : "isEnum",
-      "type" : "SINGLE",
-      "argumentType" : "Boolean"
-    }, {
-      "uuid" : "ed6201f0-575e-4cff-8393-6deb1e2b8283",
-      "name" : "enumValues",
-      "type" : "LIST",
-      "argumentType" : "String"
-    }, {
-      "uuid" : "b082416f-6627-4868-8709-6e1d5ffaddbe",
-      "name" : "relations",
-      "type" : "LIST",
-      "argumentType" : "Relation"
-    } ]
-  }, {
     "uuid" : "27fe2ba6-f50a-4f07-bc4b-12872efe17ad",
     "name" : "Domain",
     "text" : "Domain: ~name~ ~if(packageName)~(~packageName~)~endif~\nEntities:\n~entities:{it|~it~};separator=\"\\n\"~ ",
@@ -46,36 +21,62 @@
       "name" : "entities",
       "type" : "LIST",
       "argumentType" : "Entity"
-    } ]
-  }, {
-    "uuid" : "6b160e63-6f7a-46c1-b128-db8e15f2d184",
-    "name" : "Relation",
-    "text" : "~name~ ~type~ ~dst~~if(lexical)~ lexical~endif~~if(self)~ self-referential~endif~ ",
-    "parameters" : [ {
-      "uuid" : "6e9a1856-7da1-4ef9-b422-f3b990eef6d6",
-      "name" : "name",
-      "type" : "SINGLE",
-      "argumentType" : "String"
+    } ],
+    "children" : [ {
+      "uuid" : "c4c6caaf-84a5-4975-8782-311476c8742c",
+      "name" : "Entity",
+      "text" : "Entity: ~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~\n~relations:{it|~it~};separator=\"\\n\"~ ",
+      "parameters" : [ {
+        "uuid" : "df812852-1a4b-4e82-b4e1-31196c9b948f",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "b786761b-cdbb-4ea2-a0de-487a429da4f4",
+        "name" : "isEnum",
+        "type" : "SINGLE",
+        "argumentType" : "Boolean"
+      }, {
+        "uuid" : "ed6201f0-575e-4cff-8393-6deb1e2b8283",
+        "name" : "enumValues",
+        "type" : "LIST",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "b082416f-6627-4868-8709-6e1d5ffaddbe",
+        "name" : "relations",
+        "type" : "LIST",
+        "argumentType" : "Relation"
+      } ]
     }, {
-      "uuid" : "be034db9-ef54-4d8d-b4f0-281ca65d0a23",
-      "name" : "type",
-      "type" : "SINGLE",
-      "argumentType" : "RelationType"
-    }, {
-      "uuid" : "ed35b23a-3a4c-4a3c-b315-9ef52a90f736",
-      "name" : "dst",
-      "type" : "SINGLE",
-      "argumentType" : "Object"
-    }, {
-      "uuid" : "bdc441f7-1a34-4fc5-baa3-66ac94e19b2e",
-      "name" : "lexical",
-      "type" : "SINGLE",
-      "argumentType" : "Boolean"
-    }, {
-      "uuid" : "3293f726-fb4b-4194-b7c5-f5bea01a09c2",
-      "name" : "self",
-      "type" : "SINGLE",
-      "argumentType" : "Boolean"
+      "uuid" : "6b160e63-6f7a-46c1-b128-db8e15f2d184",
+      "name" : "Relation",
+      "text" : "~name~ ~type~ ~dst~~if(lexical)~ lexical~endif~~if(self)~ self-referential~endif~ ",
+      "parameters" : [ {
+        "uuid" : "6e9a1856-7da1-4ef9-b422-f3b990eef6d6",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "be034db9-ef54-4d8d-b4f0-281ca65d0a23",
+        "name" : "type",
+        "type" : "SINGLE",
+        "argumentType" : "RelationType"
+      }, {
+        "uuid" : "ed35b23a-3a4c-4a3c-b315-9ef52a90f736",
+        "name" : "dst",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "bdc441f7-1a34-4fc5-baa3-66ac94e19b2e",
+        "name" : "lexical",
+        "type" : "SINGLE",
+        "argumentType" : "Boolean"
+      }, {
+        "uuid" : "3293f726-fb4b-4194-b7c5-f5bea01a09c2",
+        "name" : "self",
+        "type" : "SINGLE",
+        "argumentType" : "Boolean"
+      } ]
     } ]
   }, {
     "uuid" : "482ae0e3-0000-41e0-8f17-0613430216b8",

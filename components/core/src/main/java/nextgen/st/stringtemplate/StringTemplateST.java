@@ -2,21 +2,22 @@ package nextgen.st.stringtemplate;
 
 public class StringTemplateST {
 
-	private static final String stg = "delimiters \"~\", \"~\"\n" +
-	"eom() ::= \"}\"\n" +
-	"gt() ::= \">\"\n" +
-	STDomain.st + "\n" + 
-	NewEntityInstance.st + "\n" + 
-	StgString.st + "\n" + 
-	STDomainTests.st + "\n" + 
-	TemplateTestMethod.st + "\n" + 
-	STEntity.st + "\n" + 
-	EntityKVListAccessors.st + "\n" + 
-	EntityListAccessors.st + "\n" + 
-	EntitySingleAccessors.st + "\n" + 
-	STEnum.st + "\n" + 
-	STEnumValue.st + "\n" + 
-	STInterface.st + "\n" ;
+	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
+	.append("eom() ::= \"}\"\n")
+	.append("gt() ::= \">\"\n")
+	.append(STDomain.st + "\n")
+	.append(NewEntityInstance.st + "\n")
+	.append(StgString.st + "\n")
+	.append(STDomainTests.st + "\n")
+	.append(TemplateTestMethod.st + "\n")
+	.append(STEntity.st + "\n")
+	.append(EntityKVListAccessors.st + "\n")
+	.append(EntityListAccessors.st + "\n")
+	.append(EntitySingleAccessors.st + "\n")
+	.append(STEnum.st + "\n")
+	.append(STEnumValue.st + "\n")
+	.append(STInterface.st + "\n")
+	.toString()  ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());

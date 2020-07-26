@@ -5,8 +5,12 @@ public class PaperElement {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _key;
+	private Object _classes;
 	private Object _className;
+	private Object _component;
+	private Object _elevation;
+	private Object _square;
+	private Object _variant;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
 	PaperElement(org.stringtemplate.v4.STGroup stGroup) {
@@ -20,31 +24,35 @@ public class PaperElement {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("PaperElement");
-		st.add("key", _key);
+		st.add("classes", _classes);
 		st.add("className", _className);
+		st.add("component", _component);
+		st.add("elevation", _elevation);
+		st.add("square", _square);
+		st.add("variant", _variant);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
 	}
 
-	public PaperElement setKey(Object value) {
-		this._key = value;
+	public PaperElement setClasses(Object value) {
+		this._classes = value;
 		return this;
 	}
 
-	public Object getKey() {
-		return this._key;
+	public Object getClasses() {
+		return this._classes;
 	}
 
-	public Object getKey(Object defaultValue) {
-		return this._key == null ? defaultValue : this._key;
+	public Object getClasses(Object defaultValue) {
+		return this._classes == null ? defaultValue : this._classes;
 	}
 
-	public boolean hasKey() {
-		return this._key != null;
+	public boolean hasClasses() {
+		return this._classes != null;
 	}
 
-	public PaperElement removeKey() {
-		this._key = null;
+	public PaperElement removeClasses() {
+		this._classes = null;
 		return this;
 	} 
 
@@ -67,6 +75,94 @@ public class PaperElement {
 
 	public PaperElement removeClassName() {
 		this._className = null;
+		return this;
+	} 
+
+	public PaperElement setComponent(Object value) {
+		this._component = value;
+		return this;
+	}
+
+	public Object getComponent() {
+		return this._component;
+	}
+
+	public Object getComponent(Object defaultValue) {
+		return this._component == null ? defaultValue : this._component;
+	}
+
+	public boolean hasComponent() {
+		return this._component != null;
+	}
+
+	public PaperElement removeComponent() {
+		this._component = null;
+		return this;
+	} 
+
+	public PaperElement setElevation(Object value) {
+		this._elevation = value;
+		return this;
+	}
+
+	public Object getElevation() {
+		return this._elevation;
+	}
+
+	public Object getElevation(Object defaultValue) {
+		return this._elevation == null ? defaultValue : this._elevation;
+	}
+
+	public boolean hasElevation() {
+		return this._elevation != null;
+	}
+
+	public PaperElement removeElevation() {
+		this._elevation = null;
+		return this;
+	} 
+
+	public PaperElement setSquare(Object value) {
+		this._square = value;
+		return this;
+	}
+
+	public Object getSquare() {
+		return this._square;
+	}
+
+	public Object getSquare(Object defaultValue) {
+		return this._square == null ? defaultValue : this._square;
+	}
+
+	public boolean hasSquare() {
+		return this._square != null;
+	}
+
+	public PaperElement removeSquare() {
+		this._square = null;
+		return this;
+	} 
+
+	public PaperElement setVariant(Object value) {
+		this._variant = value;
+		return this;
+	}
+
+	public Object getVariant() {
+		return this._variant;
+	}
+
+	public Object getVariant(Object defaultValue) {
+		return this._variant == null ? defaultValue : this._variant;
+	}
+
+	public boolean hasVariant() {
+		return this._variant != null;
+	}
+
+	public PaperElement removeVariant() {
+		this._variant = null;
 		return this;
 	} 
 
@@ -113,7 +209,13 @@ public class PaperElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PaperElement(key,className,children) ::= <<<Paper~if(key)~ key=~key~~endif~~if(className)~ className={classes.~className~}~endif~>\n" + 
+	static final String st = "PaperElement(classes,className,component,elevation,square,variant,children) ::= <<<Paper~if(classes)~\n" + 
+				"	classes=~classes~~endif~~if(className)~\n" + 
+				"	className=~className~~endif~~if(component)~\n" + 
+				"	component=~component~~endif~~if(elevation)~\n" + 
+				"	elevation=~elevation~~endif~~if(square)~\n" + 
+				"	square~endif~~if(variant)~\n" + 
+				"	variant=\"~variant~\"~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
-				"</Paper> >>";
+				"</Paper>~else~ />~endif~ >>";
 }  

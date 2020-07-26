@@ -1,7 +1,9 @@
 package nextgen.st;
 
 import com.generator.util.SwingUtil;
-import nextgen.st.domain.*;
+import nextgen.st.domain.STAppModel;
+import nextgen.st.domain.STGError;
+import nextgen.st.domain.STGParseResult;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rsyntaxtextarea.Theme;
@@ -17,10 +19,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.util.*;
-import java.util.List;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class STEditor extends JPanel {
@@ -77,15 +79,6 @@ public class STEditor extends JPanel {
         setPreferredSize(new Dimension(800, 600));
     }
 
-    private void changeStyleViaThemeXml() {
-        try {
-            Theme theme = Theme.load(getClass().getResourceAsStream(
-                    "/org/fife/ui/rsyntaxtextarea/themes/eclipse.xml"));
-            theme.apply(this.txtEditor);
-        } catch (IOException ioe) { // Never happens
-            ioe.printStackTrace();
-        }
-    }
 
     public STNavigator.RootNode.STGDirectoryTreeNode.STGroupTreeNode getStGroupTreeNode() {
         return stGroupTreeNode;
@@ -126,7 +119,7 @@ public class STEditor extends JPanel {
         this.txtEditor.setCaretPosition(0);
         this.txtEditor.setEditable(false);
         this.commandPanel.setEditable(false);
-
+        changeStyleViaThemeXml();
         this.txtEditor.discardAllEdits();
         this.txtEditor.setBackground(uneditedColor);
         this.infoPanel.clear();
@@ -146,11 +139,20 @@ public class STEditor extends JPanel {
         this.txtEditor.setEditable(stTemplateTreeNode != null);
         this.txtEditor.discardAllEdits();
         this.txtEditor.setBackground(uneditedColor);
-
+        changeStyleViaThemeXml();
         this.commandPanel.setEditable(stTemplateTreeNode != null);
         this.infoPanel.clear();
 
         this.txtEditor.requestFocusInWindow();
+    }
+
+    private void changeStyleViaThemeXml() {
+        try {
+            Theme theme = Theme.load(getClass().getResourceAsStream("/org/fife/ui/rsyntaxtextarea/themes/idea.xml"));
+            theme.apply(txtEditor);
+        } catch (IOException ioe) { // Never happens
+            ioe.printStackTrace();
+        }
     }
 
     private Font getPreferredFont(STAppModel appModel) {
@@ -230,69 +232,7 @@ public class STEditor extends JPanel {
             final STGParseResult parseResult = STParser.parseTemplate(text);
 
             if (parseResult.getErrors().count() == 0) {
-                parseResult.getParsed().getTemplates().findFirst().ifPresent(stTemplate -> {
-
-                    final STTemplate model = stTemplateTreeNode.getModel();
-                    model.setText(stTemplate.getText());
-
-                    final List<STParameter> existingParameters = model.getParameters().collect(Collectors.toList());
-                    final List<STParameter> parsedParameters = stTemplate.getParameters().collect(Collectors.toList());
-
-                    final Map<String, STParameter> newParameters = new LinkedHashMap<>();
-                    for (STParameter parsedParameter : parsedParameters) {
-
-                        boolean foundExisting = false;
-                        for (STParameter existingParameter : existingParameters) {
-                            if (parsedParameter.getName().equals(existingParameter.getName()) && parsedParameter.getType().equals(existingParameter.getType())) {
-                                newParameters.put(existingParameter.getName(), existingParameter);
-
-                                if (existingParameter.getType().equals(STParameterType.KVLIST)) {
-
-                                    final List<STParameterKey> existingKeys = existingParameter.getKeys().collect(Collectors.toList());
-                                    final List<STParameterKey> parsedKeys = parsedParameter.getKeys().collect(Collectors.toList());
-
-                                    for (int i = existingKeys.size() - 1; i >= 0; i--) {
-                                        STParameterKey existingKey = existingKeys.get(i);
-                                        boolean foundExistingKey = false;
-                                        for (STParameterKey parsedKey : parsedKeys) {
-                                            if (parsedKey.getName().equals(existingKey.getName())) {
-                                                foundExistingKey = true;
-                                                break;
-                                            }
-                                        }
-                                        if (!foundExistingKey)
-                                            existingParameter.removeKeys(existingKey);
-                                    }
-
-                                    for (STParameterKey parsedKey : parsedKeys) {
-
-                                        boolean foundExistingKey = false;
-                                        for (STParameterKey existingKey : existingKeys) {
-                                            if (existingKey.getName().equals(parsedKey.getName())) {
-                                                foundExistingKey = true;
-                                                break;
-                                            }
-                                        }
-
-                                        if (!foundExistingKey)
-                                            existingParameter.addKeys(parsedKey);
-                                    }
-                                }
-
-                                foundExisting = true;
-                                break;
-                            }
-                        }
-
-                        if (!foundExisting) {
-                            newParameters.put(parsedParameter.getName(), parsedParameter);
-                        }
-                    }
-
-                    model.clearParameters();
-                    newParameters.values().forEach(model::addParameters);
-                });
-
+                STParser.mergeTemplate(parseResult.getParsed().getTemplates().findFirst().get(), stTemplateTreeNode.getModel());
                 startText = text.trim();
                 stGroupTreeNode.save();
 

@@ -66,6 +66,7 @@ public class STModelNode extends STNode {
 							stValueNodes.forEach(stNode -> addstParameterMenu.add(new SetSTValueArgumentAction(cut(stNode.getText()), STModelNode.this, canvas, event, stParameter, stNode)));
 							stModelNodes.forEach(stNode -> addstParameterMenu.add(new SetSTModelArgumentAction(cut(stNode.getText()), STModelNode.this, canvas, event, stParameter, stNode)));
 							addstParameterMenu.add(new SetInputValueArgumentAction("From input", STModelNode.this, canvas, event, stParameter));
+							addstParameterMenu.add(new SetBooleanValue("Set TRUE", STModelNode.this, canvas, event, stParameter));
 							addstParameterMenu.add(new SetClipboardValueArgumentAction("From clipboard " + clipboardValue, STModelNode.this, canvas, event, stParameter));
 
 							final JMenu openstParameterMenu = new JMenu("Open");
@@ -124,8 +125,8 @@ public class STModelNode extends STNode {
 						}
 				}
 			});
-			if (pop.getComponents().length != 0) pop.addSeparator();
 		});
+		pop.add(new OpenUsages(this, canvas, event));
 		pop.add(new OpenAllArguments(this, canvas, event));
 		pop.add(new ToClipboard(this, canvas, event));
 		pop.add(new Delete(this, canvas, event));
@@ -141,6 +142,10 @@ public class STModelNode extends STNode {
 	@Override
 	protected void onNodeKeyPressed(PInputEvent event) {
 		switch (event.getKeyCode()) {
+			case java.awt.event.KeyEvent.VK_W:
+				new WriteToFile(this, canvas, event).actionPerformed(null);
+				return;
+
 			case java.awt.event.KeyEvent.VK_E:
 				new OpenAllArguments(this, canvas, event).actionPerformed(null);
 				return;
@@ -207,6 +212,36 @@ public class STModelNode extends STNode {
 			stModel.removeArguments(existing);
 		});
 	}
+	private static final class OpenUsages extends NodeAction<STModelNode> {
+
+
+		OpenUsages(STModelNode node, STCanvas canvas, PInputEvent event) {
+			super("Open usages", node, canvas, event);
+		}
+
+		@Override
+		void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+		}
+	}
+
+	private static final class WriteToFile extends NodeAction<STModelNode> {
+
+
+		WriteToFile(STModelNode node, STCanvas canvas, PInputEvent event) {
+			super("Write To File", node, canvas, event);
+		}
+
+		@Override
+		void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+			doLaterInTransaction(tx -> {
+				node.stModel.getFiles().forEach(stFile -> {
+					if (stFile.getPath() == null) return;
+					nextgen.st.STGenerator.writeToFile(canvas.stRenderer.render(node.stModel), stFile.getPackageName().getValue(), stFile.getName().getValue(), stFile.getType().getValue(), new java.io.File(stFile.getPath().getValue()));
+				});
+			});
+		}
+	}
+
 	private static final class OpenAllArguments extends NodeAction<STModelNode> {
 
 
@@ -354,6 +389,27 @@ public class STModelNode extends STNode {
 					canvas.addRelation(dstNode.getUuid(), canvas.newSinkRelation(node, dstNode));
 					new LayoutTreeAction(node, canvas, event).actionPerformed(null);
 				});
+			});
+		}
+	}
+
+	private static final class SetBooleanValue extends NodeAction<nextgen.st.canvas.STModelNode> {
+
+		nextgen.st.domain.STParameter stParameter;
+
+		SetBooleanValue(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
+			super(name, node, canvas, event);
+			this.stParameter = stParameter;
+		}
+
+		@Override
+		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+			doLaterInTransaction(tx -> {
+				node.removeArgument(stParameter);
+				final nextgen.st.model.STValue stValue = canvas.modelDb.newSTValue("true");
+				final nextgen.st.model.STArgument stArgument = canvas.modelDb.newSTArgument(stParameter, stValue);
+				node.stModel.addArguments(stArgument);
+				node.setText(node.stRenderer.render(node.stModel));
 			});
 		}
 	}

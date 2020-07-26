@@ -188,6 +188,8 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	}
 
 	protected void onCanvasRightClick(JPopupMenu pop, PInputEvent event) {
+		pop.add(new NewScript(this, event));
+		pop.add(new CloseAll(this, event));
 		pop.add(new NewSTValueNode(this, event));
 		pop.add(new NewSTValueFromClipboard(this, event));
 		pop.add(new SaveLastLayoutAction(this, event));
@@ -205,6 +207,10 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 	protected void onCanvasKeyPressed(PInputEvent event) {
 		switch (event.getKeyCode()) {
+			case VK_W:
+				new CloseAll(this, event).actionPerformed(null);
+				break;
+
 			case VK_1:
 				new LayoutVerticallyAction(this, event).actionPerformed(null);
 				break;
@@ -372,6 +378,21 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		}
 	}
 
+	private static final class NewScript extends CanvasAction {
+
+
+		NewScript(STCanvas canvas, PInputEvent event) {
+			super("New Script", canvas, event);
+		}
+
+		@Override
+		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
+			final String s = com.generator.util.SwingUtil.showInputDialog("Name", canvas);
+			if (s == null || s.trim().length() == 0) return;
+			doLaterInTransaction(tx -> canvas.addNode(new ScriptNode(canvas, canvas.modelDb.newScript(s), canvas.stRenderer)));
+		}
+	}
+
 	private static final class NewSTValueNode extends CanvasAction {
 
 
@@ -430,6 +451,12 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 						layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
 					} else if (stNode instanceof STValueNode) {
 						final org.neo4j.graphdb.Node node = ((STValueNode) stNode).stValue.getNode();
+						layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
+					} else if (stNode instanceof ScriptNode) {
+						final org.neo4j.graphdb.Node node = ((ScriptNode) stNode).script.getNode();
+						layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
+					} else if (stNode instanceof STFileNode) {
+						final org.neo4j.graphdb.Node node = ((STFileNode) stNode).stFile.getNode();
 						layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
 					}
 
@@ -495,6 +522,18 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 							canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue));
 							canvas.getNode(stValue.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
 							if (centerNodeRef.get() == null) centerNodeRef.set(canvas.getNode(stValue.getUuid()));
+						} else if (stNode.hasLabel(org.neo4j.graphdb.Label.label("Script"))) {
+							final nextgen.st.script.Script script = canvas.modelDb.newScript(stNode);
+							canvas.addNode(script.getUuid(), canvas.newScriptNode(script, canvas.stRenderer));
+							canvas.getNode(script.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
+							if (centerNodeRef.get() == null) centerNodeRef.set(canvas.getNode(script.getUuid()));
+						} else if (stNode.hasLabel(org.neo4j.graphdb.Label.label("STFile"))) {
+							final nextgen.st.model.STFile stFile = canvas.modelDb.newSTFile(stNode);
+							stFile.getIncomingFiles().findFirst().ifPresent(stModel -> {
+								canvas.addNode(stFile.getUuid(), canvas.newSTNode(stFile, stModel));
+								canvas.getNode(stFile.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
+								if (centerNodeRef.get() == null) centerNodeRef.set(canvas.getNode(stFile.getUuid()));	 
+							});
 						}
 					});
 				});
@@ -581,6 +620,24 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 				pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
 			});
 		}
+	}
+
+	private static final class CloseAll extends CanvasAction {
+
+
+		CloseAll(STCanvas canvas, PInputEvent event) {
+			super("Close all", canvas, event);
+		}
+
+		@Override
+		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
+			canvas.getAllRelations().forEach(relation -> canvas.removeRelation(relation.getUuid()));
+			canvas.getAllNodes().forEach(node -> canvas.removeNode(node.getUuid()));
+		}
+	}
+
+	java.util.function.Supplier<nextgen.st.canvas.ScriptNode> newScriptNode(nextgen.st.script.Script script, nextgen.st.STRenderer stRenderer){ 
+		return () -> new nextgen.st.canvas.ScriptNode(this, script, stRenderer);
 	}
 
 	public final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea newTextArea(){ 
@@ -674,6 +731,10 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		return textField;
 	}
 
+	java.util.function.Supplier<nextgen.st.canvas.ScriptRelation> newScriptRelation(nextgen.st.canvas.ScriptNode src, nextgen.st.canvas.STNode dst){ 
+		return () -> new ScriptRelation(this, src, dst);
+	}
+
 	java.util.function.Supplier<nextgen.st.canvas.STArgumentRelation> newSTArgumentRelation(nextgen.st.canvas.STModelNode src, nextgen.st.canvas.STNode dst, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameter stParameter){ 
 		return () -> new STArgumentRelation(this, src, dst, stArgument, stParameter);
 	}
@@ -690,19 +751,19 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		return () -> new STValueModelRelation(this, src, dst);
 	}
 
-	java.util.function.Supplier<nextgen.st.canvas.STNode> newSTNode(nextgen.st.model.STValue stValue){ 
+	java.util.function.Supplier<nextgen.st.canvas.STValueNode> newSTNode(nextgen.st.model.STValue stValue){ 
 		return () -> new STValueNode(this, stValue, stRenderer);
 	}
 
-	java.util.function.Supplier<nextgen.st.canvas.STNode> newSTNode(nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument){ 
+	java.util.function.Supplier<nextgen.st.canvas.STKVNode> newSTNode(nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument){ 
 		return () -> new STKVNode(this, stParameter, stArgument, stRenderer);
 	}
 
-	java.util.function.Supplier<nextgen.st.canvas.STNode> newSTNode(nextgen.st.model.STFile stFile, nextgen.st.model.STModel stModel){ 
+	java.util.function.Supplier<nextgen.st.canvas.STFileNode> newSTNode(nextgen.st.model.STFile stFile, nextgen.st.model.STModel stModel){ 
 		return () -> new STFileNode(this, stFile, stModel, stRenderer);
 	}
 
-	java.util.function.Supplier<nextgen.st.canvas.STNode> newSTNode(nextgen.st.model.STModel stModel){ 
+	java.util.function.Supplier<nextgen.st.canvas.STModelNode> newSTNode(nextgen.st.model.STModel stModel){ 
 		return () -> new nextgen.st.canvas.STModelNode(this, modelDb.findSTTemplateByUuid(stModel.getStTemplate()), stModel, stRenderer);
 	}
 }

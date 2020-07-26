@@ -73,100 +73,13 @@
       "type" : "LIST"
     } ]
   }, {
-    "uuid" : "4be9f985-38bf-4afe-b1bc-e4b899d32516",
-    "name" : "MaterialUI",
-    "text" : " ",
-    "children" : [ {
-      "uuid" : "4c470834-253b-458f-aa48-4105d9e6a117",
-      "name" : "GlobalStyle",
-      "text" : "'@global': {\n\t~name~: {\n\t\t~properties:{it|~it.key~: ~it.value~};separator=\",\\n\"~\n\t}\n} ",
-      "parameters" : [ {
-        "uuid" : "826b8c3e-a7df-494e-8f58-2db652d7aaec",
-        "name" : "properties",
-        "argumentType" : "Object",
-        "type" : "KVLIST",
-        "keys" : [ {
-          "uuid" : "ed2e1f35-23db-4919-8637-44862c0f281b",
-          "name" : "key",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "916ea709-05b8-4a17-8312-da3e26d910e8",
-          "name" : "value",
-          "argumentType" : "Object"
-        } ]
-      }, {
-        "uuid" : "2acc126a-d4b3-4ecc-accd-a32350196942",
-        "name" : "name",
-        "argumentType" : "Object",
-        "type" : "SINGLE"
-      } ]
-    }, {
-      "uuid" : "022d0d31-a515-4889-928e-012644896434",
-      "name" : "withStyles",
-      "text" : "@withStyles(useStyles) "
-    }, {
-      "uuid" : "9655c591-3736-422a-b69f-af15db91780e",
-      "name" : "StyleComponent",
-      "text" : "const useStyles = theme => ({\n\t~elements:{it|~it~};separator=\",\\n\"~\n\t}); ",
-      "parameters" : [ {
-        "uuid" : "292a0b89-e846-433f-852e-88df072ea7de",
-        "name" : "elements",
-        "argumentType" : "Object",
-        "type" : "LIST"
-      } ]
-    }, {
-      "uuid" : "8bef7efc-9073-4430-ba0d-4bfa6c45bb86",
-      "name" : "Style",
-      "text" : "~name~: {\n\t~properties:{it|~it.key~: ~it.value~};separator=\",\\n\"~\n} ",
-      "parameters" : [ {
-        "uuid" : "b6f38c06-f09f-4872-a396-909d576687cd",
-        "name" : "name",
-        "argumentType" : "Object",
-        "type" : "SINGLE"
-      }, {
-        "uuid" : "5ea85cf9-70e4-442a-aeec-07f87aa6d5c6",
-        "name" : "properties",
-        "argumentType" : "Object",
-        "type" : "KVLIST",
-        "keys" : [ {
-          "uuid" : "444bb55a-8796-41bc-bb8a-72aed36366a1",
-          "name" : "key",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "88cbb2b2-9b36-4c28-8634-fbff4731699e",
-          "name" : "value",
-          "argumentType" : "Object"
-        } ]
-      } ]
-    }, {
-      "uuid" : "c6854148-dd6f-465c-9093-c893c46e51bf",
-      "name" : "MenuItem",
-      "text" : "<MenuItem component={ ~name~ } onClick={handleClose}> ~title~ </MenuItem> ",
-      "parameters" : [ {
-        "uuid" : "8504b5a0-e14d-476c-a69d-7aeda7d74838",
-        "name" : "title",
-        "argumentType" : "Object",
-        "type" : "SINGLE"
-      }, {
-        "uuid" : "ec21cdb4-92ac-4636-be4d-82dbac811cc7",
-        "name" : "name",
-        "argumentType" : "Object",
-        "type" : "SINGLE"
-      } ]
-    }, {
-      "uuid" : "14e02927-2155-4d49-aab9-b241ebbb129b",
-      "name" : "CenteredGrid",
-      "text" : "import React from 'react';\nimport { makeStyles } from '@material-ui/core/styles';\nimport Paper from '@material-ui/core/Paper';\nimport Grid from '@material-ui/core/Grid';\n\nimport Loading from './Loading';\n\nconst useStyles = makeStyles((theme) => ({\n  root: {\n    flexGrow: 1,\n  },\n  paper: {\n    padding: theme.spacing(2),\n    textAlign: 'center',\n    color: theme.palette.text.secondary,\n  },\n}));\n\nexport default function CenteredGrid(props) {\n  const classes = useStyles();\n\n  return (\n    <div className={classes.root}>\n      <Grid container spacing={3}>\n        <Grid item xs={12}>\n          <Paper className={classes.paper}>{props.status ? props.status.header : <Loading/> }</Paper>\n        </Grid>\n        <Grid item xs={6}>\n          <Paper className={classes.paper}>xs=6</Paper>\n        </Grid>\n        <Grid item xs={6}>\n          <Paper className={classes.paper}>xs=6</Paper>\n        </Grid>\n        <Grid item xs={3}>\n          <Paper className={classes.paper}>xs=3</Paper>\n        </Grid>\n        <Grid item xs={3}>\n          <Paper className={classes.paper}>xs=3</Paper>\n        </Grid>\n        <Grid item xs={3}>\n          <Paper className={classes.paper}>xs=3</Paper>\n        </Grid>\n        <Grid item xs={3}>\n          <Paper className={classes.paper}>xs=3</Paper>\n        </Grid>\n      </Grid>\n    </div>\n  );\n} ",
-      "parameters" : [ ]
-    } ]
-  }, {
     "uuid" : "a8c30331-4406-45ce-9f9f-b3d7b6b75862",
     "name" : "MobX",
     "text" : "MobX constructs ",
     "children" : [ {
       "uuid" : "dd7b5a3d-8f3f-4909-8792-67a6c94565d2",
       "name" : "MobXStore",
-      "text" : "import { ~if(observables)~observable~endif~~if(actions)~~if(observables)~, ~endif~action, ~endif~ reaction } from 'mobx';\n~imports:{it|import ~it.ref~ from '~it.path~';};separator=\"\\n\"~\n\nclass ~name;format=\"capitalize\"~ {\n\n\t~observables:{it|~it~};separator=\"\\n\"~\n\n\tconstructor() {\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t}\n\n\t~actions:{it|~it~};separator=\"\\n\\n\"~\n}\n\nexport default new ~name;format=\"capitalize\"~(); ",
+      "text" : "import { ~if(observables)~observable~endif~~if(actions)~~if(observables)~, ~endif~action, ~endif~reaction } from 'mobx';\n~imports:{it|import ~it.ref~ from '~it.path~';};separator=\"\\n\"~\n\nclass ~name;format=\"capitalize\"~ {\n\n\t~observables:{it|~it~};separator=\"\\n\"~\n\n\tconstructor() {\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t}\n\n\t~actions:{it|~it~};separator=\"\\n\\n\"~\n}\n\nexport default new ~name;format=\"capitalize\"~(); ",
       "parameters" : [ {
         "uuid" : "907a59c0-3e2f-49a6-8814-7e3d2f719e98",
         "name" : "observables",
@@ -287,7 +200,7 @@
   }, {
     "uuid" : "774f9a05-c6ea-4af8-878c-1932ef5e0906",
     "name" : "JSX",
-    "text" : "",
+    "text" : "// deprecated, use JSX-group ",
     "children" : [ {
       "uuid" : "31602a2d-7462-44cb-8305-76cb7a9e5222",
       "name" : "FunctionalComponent",
@@ -484,7 +397,7 @@
     }, {
       "uuid" : "ef2c7e87-4fb4-497b-afe3-ed22271f2076",
       "name" : "MethodDeclaration",
-      "text" : "~if(const)~const ~endif~~name~ = ~if(parameter)~~parameter~~else~()~endif~ \\=\\> {\n\t~statements:{it|~it~};separator=\"\\n\"~\n}",
+      "text" : "~if(const)~const ~endif~~name~ = (~parameter~) => {\n\t~statements:{it|~it~};separator=\"\\n\"~\n} ",
       "parameters" : [ {
         "uuid" : "08cc0e28-fcd5-47f4-8106-e5518badd6ac",
         "name" : "const",
@@ -527,7 +440,8 @@
         "type" : "SINGLE",
         "argumentType" : "Object"
       } ]
-    } ]
+    } ],
+    "parameters" : [ ]
   }, {
     "uuid" : "14e250cf-b417-4fb7-b512-a54f6ba8fe58",
     "name" : "App",
@@ -696,8 +610,13 @@
       }, {
         "uuid" : "223cb889-17f9-48d9-8dbe-9892c0c59003",
         "name" : "StoreComponent",
-        "text" : "import React from 'react';\nimport { inject, observer } from 'mobx-react';\n~imports:{it|import ~it.name~ from '~it.path~';};separator=\"\\n\"~\n~components:{it|~it~};separator=\"\\n\\n\"~\n\n@inject(~stores:{it|'~it~'};separator=\",\"~)\n@observer\n~decorators:{it|~it~};separator=\"\\n\"~\nclass ~name~ extends React.Component {\n\n\tconstructor(props) {\n\t\tsuper(props);\n~if(debug)~\n\t\tconsole.log(\"new ~name~ : \" +  this.props);\n~endif~\n~if(state)~\n\t\tthis.state = {\n\t\t\t~state:{it|~it~};separator=\",\\n\"~;\n\t\t}\n~endif~\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t\t~events:{it|this.~it.methodName~ = this.~it.methodName~.bind(this);};separator=\"\\n\"~\n\t}\n\n\tcomponentDidMount() {\n~if(debug)~\n\t\tconsole.log(\"mount ~name~ : \" +  this.props);\n~endif~\n\t\t~componentDidMountStatements:{it|~it~};separator=\"\\n\"~\n\t}\n~if(events)~\n\n\t~events:{it|~it.declaration~};separator=\"\\n\\n\"~\n~endif~\n~if(methods)~\n\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n~endif~\n\t\n\trender() {\n~if(debug)~\n\t\tconsole.log(\"render ~name~ : \" +  this.props);\n~endif~\n\t\t~renderStatements:{it|~it~};separator=\"\\n\"~\n\t\t~const:{it|const ~it.name~ = ~it.declaration~;};separator=\"\\n\"~\n\n~if(renderCondition)~\n\t\t~renderCondition:{it|if (~it.condition~) \n\treturn (\n\t\t~it.element~\n\t);};separator=\"\\n\\nelse \"~\n\t\n\t\telse\n\t\t\treturn (\n\t\t\t\t~renderElement~\n\t\t\t);\n~else~\n\t\treturn (\n\t\t\t~renderElement~\n\t\t);\n~endif~\n\t}\n}\n\nexport default (~name~); ",
+        "text" : "import React from 'react';~if(hasRouter)~\nimport { withRouter } from 'react-router-dom';~endif~\n\nimport { inject, observer } from 'mobx-react';\n~imports:{it|import ~it.name~ from '~it.path~';};separator=\"\\n\"~\n\n~if(hasRouter)~@withRouter\n~endif~\n@inject(~stores:{it|'~it~'};separator=\",\"~)\n@observer\nclass ~name~ extends React.Component {\n\n\tconstructor(props) {\n\t\tsuper(props);\n~if(debug)~\n\t\tconsole.log(\"new ~name~ : \" +  this.props);\n~endif~\n~if(state)~\n\t\tthis.state = {\n\t\t\t~state:{it|~it~};separator=\",\\n\"~;\n\t\t}\n~endif~\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t}\n\n\tcomponentDidMount() {\n~if(debug)~\n\t\tconsole.log(\"mount ~name~ : \" +  this.props);\n~endif~\n\t\t~componentDidMountStatements:{it|~it~};separator=\"\\n\"~\n\t}\n~if(methods)~\n\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n~endif~\n\t\n\trender() {\n~if(debug)~\n\t\tconsole.log(\"render ~name~ : \" +  this.props);\n~endif~\n\t\t~renderStatements:{it|~it~};separator=\"\\n\"~\n\t\t~const:{it|const ~it.name~ = ~it.declaration~;};separator=\"\\n\"~\n\n~if(renderCondition)~\n\t\tif(~renderCondition~)\n\t\t\treturn ( \n\t\t\t\t~renderTrue~\n\t\t\t);\n\t\telse\n\t\t\treturn (\n\t\t\t\t~renderFalse~\n\t\t\t);\n~else~\n\t\treturn (\n\t\t\t~renderElement~\n\t\t);\n~endif~\n\t}\n}\nexport default (~name~); ",
         "parameters" : [ {
+          "uuid" : "7758fe31-b0a4-48a7-bde3-197148f18996",
+          "name" : "hasRouter",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
           "uuid" : "880b8f3f-d2de-40bd-b025-69c04cde447e",
           "name" : "imports",
           "type" : "KVLIST",
@@ -712,18 +631,8 @@
             "argumentType" : "Object"
           } ]
         }, {
-          "uuid" : "01341dac-755f-4a4e-beb5-9d7826723dbd",
-          "name" : "components",
-          "type" : "LIST",
-          "argumentType" : "Object"
-        }, {
           "uuid" : "db45a44a-bd35-450c-970c-9ad397aaa8ae",
           "name" : "stores",
-          "type" : "LIST",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "28e46dcf-4e68-4f8e-9fa5-96b526130508",
-          "name" : "decorators",
           "type" : "LIST",
           "argumentType" : "Object"
         }, {
@@ -746,20 +655,6 @@
           "name" : "constructorStatements",
           "type" : "LIST",
           "argumentType" : "Object"
-        }, {
-          "uuid" : "e03a7896-0d20-45f2-8473-06f7e07a1849",
-          "name" : "events",
-          "type" : "KVLIST",
-          "argumentType" : "Object",
-          "keys" : [ {
-            "uuid" : "c327c777-0c4b-4beb-8b0c-b3bb68deed72",
-            "name" : "methodName",
-            "argumentType" : "Object"
-          }, {
-            "uuid" : "3dffca13-00b1-47fb-9e48-dd920d2f3bc6",
-            "name" : "declaration",
-            "argumentType" : "Object"
-          } ]
         }, {
           "uuid" : "00da661f-e29f-4762-a656-922c9c8072ed",
           "name" : "componentDidMountStatements",
@@ -790,19 +685,20 @@
             "argumentType" : "Object"
           } ]
         }, {
-          "uuid" : "d3a49f8b-ccf4-4361-a0a2-9461999c8fbe",
+          "uuid" : "f50aa954-d4fb-4a36-a709-2fa4a02d85e3",
           "name" : "renderCondition",
-          "type" : "KVLIST",
-          "argumentType" : "Object",
-          "keys" : [ {
-            "uuid" : "98c67c03-5330-4be2-a698-634b55f1663f",
-            "name" : "condition",
-            "argumentType" : "Object"
-          }, {
-            "uuid" : "bef30cfb-7b60-4754-a527-9288bba55392",
-            "name" : "element",
-            "argumentType" : "Object"
-          } ]
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "99251ba6-3751-4477-bb66-cf86f3738f8d",
+          "name" : "renderTrue",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "23fb1cab-5b7d-4c0a-8f73-de7afd2bb3b0",
+          "name" : "renderFalse",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
         }, {
           "uuid" : "cf6aa685-b9f6-4012-8b3f-a6c5833d944b",
           "name" : "renderElement",

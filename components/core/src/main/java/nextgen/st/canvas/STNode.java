@@ -198,6 +198,10 @@ public class STNode extends PNode implements PropertyChangeListener {
 				new DebugAction(this, canvas, event).actionPerformed(null);
 				break;
 
+			case VK_W:
+				new WriteToFile(this, canvas, event).actionPerformed(null);
+				break;
+
 		}
 	}
 
@@ -454,7 +458,17 @@ public class STNode extends PNode implements PropertyChangeListener {
 		}
 	}
 
+	private static final class WriteToFile extends NodeAction<STNode> {
 
+
+		WriteToFile(STNode node, STCanvas canvas, PInputEvent event) {
+			super("", node, canvas, event);
+		}
+
+		@Override
+		void actionPerformed(STNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+		}
+	}
 
 	public static String cut(String text){ 
 		return text.substring(0, Math.min(text.length(), 80));

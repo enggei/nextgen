@@ -1,0 +1,36 @@
+{
+  "uuid" : "1777fa8d-23b5-4669-be7b-1d521c6ce8e0",
+  "name" : "Projects",
+  "delimiter" : "~",
+  "templates" : [ {
+    "uuid" : "3a28789f-018e-47c1-8216-ed2f307d0615",
+    "name" : "JavaMavenProject",
+    "text" : "~name~\n~root~\n~mainSrc~\n~testSrc~\n\n~pom~ ",
+    "parameters" : [ {
+      "uuid" : "9686e194-1c3e-43f7-bb2e-1a0c846f8e2c",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "e0840645-c0a4-4283-be21-2cb7a17a14c8",
+      "name" : "root",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "fea5bf08-cc14-403b-9c3c-e95ee6392c97",
+      "name" : "mainSrc",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "5398ebe9-829f-4fbc-bf5c-765aa00bcc4c",
+      "name" : "testSrc",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "5db827a5-0033-449c-8513-01150f62adb8",
+      "name" : "pom",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
+  } ]
+}

@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static nextgen.st.STGenerator.toStg;
 import static nextgen.st.parser.AstNodeType.*;
@@ -35,6 +36,14 @@ public class STParser {
         final STGParseResult parseResult = parse(new STGroupFile(stgFile.getAbsolutePath(), delimiter, delimiter));
         if (parseResult.getErrors().count() == 0) parseResult.getParsed();
         return parseResult;
+    }
+
+    public static Optional<STTemplate> parseTemplateAndGet(String text) {
+        return STParser
+                .parseTemplate(text)
+                .getParsed()
+                .getTemplates()
+                .findFirst();
     }
 
     public static STGParseResult parseTemplate(String text) {
@@ -227,6 +236,68 @@ public class STParser {
                     addParameters(stParameterMap, child, stParameters);
                 break;
         }
+    }
+
+    public static void mergeTemplate(STTemplate parsed, STTemplate model) {
+
+        model.setText(parsed.getText());
+
+        final List<STParameter> existingParameters = model.getParameters().collect(Collectors.toList());
+        final List<STParameter> parsedParameters = parsed.getParameters().collect(Collectors.toList());
+
+        final Map<String, STParameter> newParameters = new LinkedHashMap<>();
+        for (STParameter parsedParameter : parsedParameters) {
+
+            boolean foundExisting = false;
+            for (STParameter existingParameter : existingParameters) {
+                if (parsedParameter.getName().equals(existingParameter.getName()) && parsedParameter.getType().equals(existingParameter.getType())) {
+                    newParameters.put(existingParameter.getName(), existingParameter);
+
+                    if (existingParameter.getType().equals(STParameterType.KVLIST)) {
+
+                        final List<STParameterKey> existingKeys = existingParameter.getKeys().collect(Collectors.toList());
+                        final List<STParameterKey> parsedKeys = parsedParameter.getKeys().collect(Collectors.toList());
+
+                        for (int i = existingKeys.size() - 1; i >= 0; i--) {
+                            STParameterKey existingKey = existingKeys.get(i);
+                            boolean foundExistingKey = false;
+                            for (STParameterKey parsedKey : parsedKeys) {
+                                if (parsedKey.getName().equals(existingKey.getName())) {
+                                    foundExistingKey = true;
+                                    break;
+                                }
+                            }
+                            if (!foundExistingKey)
+                                existingParameter.removeKeys(existingKey);
+                        }
+
+                        for (STParameterKey parsedKey : parsedKeys) {
+
+                            boolean foundExistingKey = false;
+                            for (STParameterKey existingKey : existingKeys) {
+                                if (existingKey.getName().equals(parsedKey.getName())) {
+                                    foundExistingKey = true;
+                                    break;
+                                }
+                            }
+
+                            if (!foundExistingKey)
+                                existingParameter.addKeys(parsedKey);
+                        }
+                    }
+
+                    foundExisting = true;
+                    break;
+                }
+            }
+
+            if (!foundExisting) {
+                newParameters.put(parsedParameter.getName(), parsedParameter);
+            }
+        }
+
+        model.clearParameters();
+        newParameters.values().forEach(model::addParameters);
     }
 
     private static STParameter newSTParameter(String name) {

@@ -1,6 +1,5 @@
 package nextgen.st.canvas;
 
-import org.fife.ui.rtextarea.RTextScrollPane;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
@@ -8,7 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.*;
 
-public class STValueNode extends STNode {
+public class STValueNode extends nextgen.st.canvas.STNode {
 
     nextgen.st.model.STValue stValue;
     nextgen.st.STRenderer stRenderer;
@@ -18,8 +17,6 @@ public class STValueNode extends STNode {
         this.stValue = stValue;
         this.stRenderer = stRenderer;
     }
-
-
 
     @Override
     public void addedToCanvas() {
@@ -33,7 +30,7 @@ public class STValueNode extends STNode {
     }
 
     @Override
-    public void newNodeAdded(STNode node) {
+    public void newNodeAdded(nextgen.st.canvas.STNode node) {
         if (stValue.getType().equals(nextgen.st.model.STValueType.STMODEL)) {
             final UUID uuid = UUID.fromString(stValue.getStModel().getUuid());
             if (uuid.equals(node.getUuid())) {
@@ -47,18 +44,13 @@ public class STValueNode extends STNode {
         pop.add(new EditSTValue(this, canvas, event));
         pop.add(new ToClipboard(this, canvas, event));
         pop.add(new Delete(this, canvas, event));
+        pop.add(new OpenIncoming(this, canvas, event));
         pop.addSeparator();
         super.onNodeRightClick(event, pop);
     }
 
     @Override
     protected void onNodeKeyPressed(PInputEvent event) {
-        switch (event.getKeyCode()) {
-            case java.awt.event.KeyEvent.VK_D:
-                new Delete(this, canvas, event).actionPerformed(null);
-                return;
-
-        }
         super.onNodeKeyPressed(event);
     }
 
@@ -70,18 +62,18 @@ public class STValueNode extends STNode {
     private static final class EditSTValue extends NodeAction<STValueNode> {
 
 
-        EditSTValue(STValueNode node, STCanvas canvas, PInputEvent event) {
+        EditSTValue(STValueNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
             super("Edit", node, canvas, event);
         }
 
         @Override
-        void actionPerformed(STValueNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(STValueNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
             final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea rSyntaxTextArea = canvas.newTextArea();
             canvas.modelDb.doInTransaction(tx -> {
                 rSyntaxTextArea.setText(node.stValue.getValue());
             });
             final JPanel inputPanel = new JPanel(new BorderLayout());
-            inputPanel.add(new RTextScrollPane(rSyntaxTextArea), BorderLayout.CENTER);
+            inputPanel.add(new org.fife.ui.rtextarea.RTextScrollPane(rSyntaxTextArea), BorderLayout.CENTER);
             inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
             inputPanel.setPreferredSize(new Dimension(800, 600));
             com.generator.util.SwingUtil.showDialog(inputPanel, canvas, "Edit", new com.generator.util.SwingUtil.ConfirmAction() {
@@ -125,6 +117,40 @@ public class STValueNode extends STNode {
             doLaterInTransaction(tx -> {
                 node.close();
                 canvas.modelDb.remove(node.stValue);
+            });
+        }
+    }
+
+    private static final class OpenIncoming extends NodeAction<STValueNode> {
+
+
+        OpenIncoming(STValueNode node, STCanvas canvas, PInputEvent event) {
+            super("Open Incoming", node, canvas, event);
+        }
+
+        @Override
+        void actionPerformed(STValueNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+            doLaterInTransaction(transaction -> {
+                canvas.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                final org.neo4j.graphdb.Node neoNode = node.stValue.getNode();
+                neoNode.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(relationship -> {
+                    final org.neo4j.graphdb.Node otherNode = relationship.getOtherNode(neoNode);
+                    if (otherNode.hasLabel(org.neo4j.graphdb.Label.label("STArgument"))) {
+                        final nextgen.st.model.STArgument stArgument = new nextgen.st.model.STArgument(otherNode);
+                        stArgument.getIncomingArguments().forEach(stModel -> {
+                            final nextgen.st.domain.STTemplate stTemplateByUuid = canvas.modelDb.findSTTemplateByUuid(stModel.getStTemplate());
+                            if (stTemplateByUuid == null) return;
+                            stTemplateByUuid.getParameters()
+                                    .filter(stParameter -> stParameter.uuid().equals(stArgument.getStParameter()))
+                                    .findFirst()
+                                    .ifPresent(stParameter -> {
+                                        final STModelNode stModelNode = canvas.addNode(stModel.getUuid(), canvas.newSTNode(stModel));
+                                        canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(stModelNode, node, stArgument, stParameter));
+                                    });
+                        });
+                    }
+                });
+                canvas.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             });
         }
     }

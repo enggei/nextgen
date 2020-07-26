@@ -334,6 +334,40 @@
           "argumentType" : "Object"
         } ]
       } ]
+    }, {
+      "uuid" : "cce99ce1-81ea-4b41-a407-5f273c03b8dc",
+      "name" : "Script",
+      "text" : "package ~if(packageName)~~packageName~~else~tmp~endif~;\n\npublic class ~name~ implements Runnable {\n\n\t~fields:{it|private final ~it.type~ ~it.name~;};separator=\"\\n\"~\n\t\n\tpublic ~name~(~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\t\n\t\t~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n\t}\n\t\n\t@Override\n\tpublic void run() {\n\t\t~statements:{it|~it~};separator=\"\\n\"~\n\t}\n} ",
+      "parameters" : [ {
+        "uuid" : "4f5743a6-1ab7-4f4d-b670-1dbf70034495",
+        "name" : "packageName",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "d8e0fe55-a025-43c7-bcb3-fac63112ea14",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "4f5c7164-2a64-4843-862c-03868c7f3830",
+        "name" : "fields",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "56d2a460-f22d-4c71-ad1a-95fcd37cace3",
+          "name" : "type",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "6d72b70c-797f-4842-a0a1-f146974d3d92",
+          "name" : "name",
+          "argumentType" : "String"
+        } ]
+      }, {
+        "uuid" : "646e28b0-35d2-4092-842e-19ea7e8356f2",
+        "name" : "statements",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
     } ]
   }, {
     "uuid" : "98bc23df-822a-437b-ba27-15f621ddc970",

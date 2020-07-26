@@ -5,12 +5,18 @@ public class TypographyElement {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _key;
+	private Object _align;
+	private Object _classes;
 	private Object _className;
-	private Object _variant;
+	private Object _color;
 	private Object _component;
-	private Object _gutter;
-	private Object _text;
+	private Object _display;
+	private Object _gutterBottom;
+	private Object _noWrap;
+	private Object _paragraph;
+	private Object _variant;
+	private Object _variantMapping;
+	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
 	TypographyElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -23,34 +29,62 @@ public class TypographyElement {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("TypographyElement");
-		st.add("key", _key);
+		st.add("align", _align);
+		st.add("classes", _classes);
 		st.add("className", _className);
-		st.add("variant", _variant);
+		st.add("color", _color);
 		st.add("component", _component);
-		st.add("gutter", _gutter);
-		st.add("text", _text);
+		st.add("display", _display);
+		st.add("gutterBottom", _gutterBottom);
+		st.add("noWrap", _noWrap);
+		st.add("paragraph", _paragraph);
+		st.add("variant", _variant);
+		st.add("variantMapping", _variantMapping);
+		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
 	}
 
-	public TypographyElement setKey(Object value) {
-		this._key = value;
+	public TypographyElement setAlign(Object value) {
+		this._align = value;
 		return this;
 	}
 
-	public Object getKey() {
-		return this._key;
+	public Object getAlign() {
+		return this._align;
 	}
 
-	public Object getKey(Object defaultValue) {
-		return this._key == null ? defaultValue : this._key;
+	public Object getAlign(Object defaultValue) {
+		return this._align == null ? defaultValue : this._align;
 	}
 
-	public boolean hasKey() {
-		return this._key != null;
+	public boolean hasAlign() {
+		return this._align != null;
 	}
 
-	public TypographyElement removeKey() {
-		this._key = null;
+	public TypographyElement removeAlign() {
+		this._align = null;
+		return this;
+	} 
+
+	public TypographyElement setClasses(Object value) {
+		this._classes = value;
+		return this;
+	}
+
+	public Object getClasses() {
+		return this._classes;
+	}
+
+	public Object getClasses(Object defaultValue) {
+		return this._classes == null ? defaultValue : this._classes;
+	}
+
+	public boolean hasClasses() {
+		return this._classes != null;
+	}
+
+	public TypographyElement removeClasses() {
+		this._classes = null;
 		return this;
 	} 
 
@@ -76,25 +110,25 @@ public class TypographyElement {
 		return this;
 	} 
 
-	public TypographyElement setVariant(Object value) {
-		this._variant = value;
+	public TypographyElement setColor(Object value) {
+		this._color = value;
 		return this;
 	}
 
-	public Object getVariant() {
-		return this._variant;
+	public Object getColor() {
+		return this._color;
 	}
 
-	public Object getVariant(Object defaultValue) {
-		return this._variant == null ? defaultValue : this._variant;
+	public Object getColor(Object defaultValue) {
+		return this._color == null ? defaultValue : this._color;
 	}
 
-	public boolean hasVariant() {
-		return this._variant != null;
+	public boolean hasColor() {
+		return this._color != null;
 	}
 
-	public TypographyElement removeVariant() {
-		this._variant = null;
+	public TypographyElement removeColor() {
+		this._color = null;
 		return this;
 	} 
 
@@ -120,50 +154,166 @@ public class TypographyElement {
 		return this;
 	} 
 
-	public TypographyElement setGutter(Object value) {
-		this._gutter = value;
+	public TypographyElement setDisplay(Object value) {
+		this._display = value;
 		return this;
 	}
 
-	public Object getGutter() {
-		return this._gutter;
+	public Object getDisplay() {
+		return this._display;
 	}
 
-	public Object getGutter(Object defaultValue) {
-		return this._gutter == null ? defaultValue : this._gutter;
+	public Object getDisplay(Object defaultValue) {
+		return this._display == null ? defaultValue : this._display;
 	}
 
-	public boolean hasGutter() {
-		return this._gutter != null;
+	public boolean hasDisplay() {
+		return this._display != null;
 	}
 
-	public TypographyElement removeGutter() {
-		this._gutter = null;
-		return this;
-	} 
-
-	public TypographyElement setText(Object value) {
-		this._text = value;
-		return this;
-	}
-
-	public Object getText() {
-		return this._text;
-	}
-
-	public Object getText(Object defaultValue) {
-		return this._text == null ? defaultValue : this._text;
-	}
-
-	public boolean hasText() {
-		return this._text != null;
-	}
-
-	public TypographyElement removeText() {
-		this._text = null;
+	public TypographyElement removeDisplay() {
+		this._display = null;
 		return this;
 	} 
 
+	public TypographyElement setGutterBottom(Object value) {
+		this._gutterBottom = value;
+		return this;
+	}
+
+	public Object getGutterBottom() {
+		return this._gutterBottom;
+	}
+
+	public Object getGutterBottom(Object defaultValue) {
+		return this._gutterBottom == null ? defaultValue : this._gutterBottom;
+	}
+
+	public boolean hasGutterBottom() {
+		return this._gutterBottom != null;
+	}
+
+	public TypographyElement removeGutterBottom() {
+		this._gutterBottom = null;
+		return this;
+	} 
+
+	public TypographyElement setNoWrap(Object value) {
+		this._noWrap = value;
+		return this;
+	}
+
+	public Object getNoWrap() {
+		return this._noWrap;
+	}
+
+	public Object getNoWrap(Object defaultValue) {
+		return this._noWrap == null ? defaultValue : this._noWrap;
+	}
+
+	public boolean hasNoWrap() {
+		return this._noWrap != null;
+	}
+
+	public TypographyElement removeNoWrap() {
+		this._noWrap = null;
+		return this;
+	} 
+
+	public TypographyElement setParagraph(Object value) {
+		this._paragraph = value;
+		return this;
+	}
+
+	public Object getParagraph() {
+		return this._paragraph;
+	}
+
+	public Object getParagraph(Object defaultValue) {
+		return this._paragraph == null ? defaultValue : this._paragraph;
+	}
+
+	public boolean hasParagraph() {
+		return this._paragraph != null;
+	}
+
+	public TypographyElement removeParagraph() {
+		this._paragraph = null;
+		return this;
+	} 
+
+	public TypographyElement setVariant(Object value) {
+		this._variant = value;
+		return this;
+	}
+
+	public Object getVariant() {
+		return this._variant;
+	}
+
+	public Object getVariant(Object defaultValue) {
+		return this._variant == null ? defaultValue : this._variant;
+	}
+
+	public boolean hasVariant() {
+		return this._variant != null;
+	}
+
+	public TypographyElement removeVariant() {
+		this._variant = null;
+		return this;
+	} 
+
+	public TypographyElement setVariantMapping(Object value) {
+		this._variantMapping = value;
+		return this;
+	}
+
+	public Object getVariantMapping() {
+		return this._variantMapping;
+	}
+
+	public Object getVariantMapping(Object defaultValue) {
+		return this._variantMapping == null ? defaultValue : this._variantMapping;
+	}
+
+	public boolean hasVariantMapping() {
+		return this._variantMapping != null;
+	}
+
+	public TypographyElement removeVariantMapping() {
+		this._variantMapping = null;
+		return this;
+	} 
+
+	public TypographyElement addChildren(Object value) {
+		this._children.add(value);
+		return this;
+	}
+
+	public TypographyElement setChildren(Object[] value) {
+		this._children.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public TypographyElement setChildren(java.util.Collection<Object> values) {
+		this._children.addAll(values);
+		return this;
+	}
+
+	public TypographyElement removeChildren(Object value) {
+		this._children.remove(value);
+		return this;
+	}
+
+	public TypographyElement removeChildren(int index) {
+		this._children.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getChildren() {
+		return this._children;
+	} 
 
 
 	@Override
@@ -179,7 +329,18 @@ public class TypographyElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TypographyElement(key,className,variant,component,gutter,text) ::= <<<Typography~if(key)~ key=~key~~endif~~if(className)~ className={classes.~className~}~endif~~if(variant)~ variant=\"~variant~\"~endif~~if(component)~ component=\"~component~\"~endif~~if(gutter)~ ~gutter~~endif~>\n" + 
-				"	~text~\n" + 
-				"</Typography> >>";
+	static final String st = "TypographyElement(align,classes,className,color,component,display,gutterBottom,noWrap,paragraph,variant,variantMapping,children) ::= <<<Typography~if(align)~\n" + 
+				"	align=\"~align~\"~endif~~if(classes)~\n" + 
+				"	classes=~classes~~endif~~if(className)~\n" + 
+				"	className=~className~~endif~~if(color)~\n" + 
+				"	color=\"~color~\"~endif~~if(component)~\n" + 
+				"	component=~component~~endif~~if(display)~\n" + 
+				"	display=\"~display~\"~endif~~if(gutterBottom)~\n" + 
+				"	gutterBottom~endif~~if(noWrap)~\n" + 
+				"	noWrap~endif~~if(paragraph)~\n" + 
+				"	paragraph~endif~~if(variant)~\n" + 
+				"	variant=\"~variant~\"~endif~~if(variantMapping)~\n" + 
+				"	variantMapping=~variantMapping~~endif~~if(children)~>\n" + 
+				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
+				"</Typography>~else~ />~endif~ >>";
 }  

@@ -1,29 +1,5 @@
 delimiters "~","~"
 
-build(testResources,plugin) ::= <<<build>
-~if(testResources)~
-	<testResources>
-		<testResource>
-			~testResources:{it|<~it.name~>~it.value~</~it.name~>};separator="\n"~
-		</testResource>
-	</testResources>
-~endif~
-	<plugins>
-		~plugin:{it|~it~};separator="\n"~
-	</plugins>
-</build>  >>
-
-dependency(groupId,artifactId,version,scope,systemPath,classifier,type) ::= <<<dependency>
-	<groupId>~groupId~</groupId>
-	<artifactId>~artifactId~</artifactId>~if(version)~
-	<version>~version~</version>~endif~~if(scope)~
-	<scope>~scope~</scope>~endif~~if(systemPath)~
-	<systemPath>~systemPath~</systemPath>~endif~~if(classifier)~
-	<classifier>~classifier~</classifier>~endif~~if(type)~
-	<type>~type~</type>~endif~
-	
-</dependency>  >>
-
 dependencyManagement(dependencies) ::= <<<dependencyManagement>
 	<dependencies>
 		~dependencies:{it|~it~};separator="\n"~
@@ -58,18 +34,7 @@ root : ~root~
 mainJava : ~mainJava~
 testJava : ~testJava~  >>
 
-execution() ::= <<<execution>
-    <phase>package</phase>
-    <goals>
-        <goal>shade</goal>
-    </goals>
-</execution>  >>
-
-parent(artifactId,groupId,version) ::= <<<parent>
-	<artifactId>~artifactId~</artifactId>
-	<groupId>~groupId~</groupId>
-	<version>~version~</version>
-</parent>  >>
+MavenPatterns() ::= << >>
 
 Plugins() ::= << >>
 
@@ -106,6 +71,10 @@ frontEndMavenPlugin(pluginVersion,installDirectory,nodeVersion) ::= <<<!-- https
         </execution>
     </executions>
 </plugin~gt()~  >>
+
+npmScript() ::= <<#!/bin/sh
+PATH="$PWD/target/node/":$PATH
+node "target/node/node_modules/npm/bin/npm-cli.js" "$@"  >>
 
 shadePlugin(packageName,className) ::= <<<!-- https://maven.apache.org/plugins/maven-shade-plugin/ -->
 <plugin>
@@ -263,6 +232,25 @@ pom(parent,name,groupId,artifactId,version,packaging,modules,properties,build,de
 ~endif~
 </project>  >>
 
+build(testResources,plugin) ::= <<<build>
+~if(testResources)~
+	<testResources>
+		<testResource>
+			~testResources:{it|<~it.name~>~it.value~</~it.name~>};separator="\n"~
+		</testResource>
+	</testResources>
+~endif~
+	<plugins>
+		~plugin:{it|~it~};separator="\n"~
+	</plugins>
+</build>  >>
+
+parent(artifactId,groupId,version) ::= <<<parent>
+	<artifactId>~artifactId~</artifactId>
+	<groupId>~groupId~</groupId>
+	<version>~version~</version>
+</parent>  >>
+
 Properties(name,value) ::= <<<~name~>~value~</~name~>  >>
 
 MavenCompilerSource(value) ::= <<<maven.compiler.source>~value~</maven.compiler.source>  >>
@@ -275,11 +263,29 @@ ProjectReportingOutputEncoding(value) ::= <<<project.reporting.outputEncoding>~i
 
 propertyReference(name) ::= <<${~name~} >>
 
+dependency(groupId,artifactId,version,scope,systemPath,classifier,type) ::= <<<dependency>
+	<groupId>~groupId~</groupId>
+	<artifactId>~artifactId~</artifactId>~if(version)~
+	<version>~version~</version>~endif~~if(scope)~
+	<scope>~scope~</scope>~endif~~if(systemPath)~
+	<systemPath>~systemPath~</systemPath>~endif~~if(classifier)~
+	<classifier>~classifier~</classifier>~endif~~if(type)~
+	<type>~type~</type>~endif~
+	
+</dependency>  >>
+
 repository(id,name,url) ::= <<<repository>
 	<id>~id~</id>
 	<name>~name~</name>
 	<url>~url~</url>
 </repository> >>
+
+execution() ::= <<<execution>
+    <phase>package</phase>
+    <goals>
+        <goal>shade</goal>
+    </goals>
+</execution>  >>
 
 eom() ::= "}"
 

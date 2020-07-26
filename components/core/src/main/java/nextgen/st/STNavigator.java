@@ -879,24 +879,28 @@ public class STNavigator extends JPanel {
                     }
 
                     private Action reparentAction(Set<STTemplateTreeNode> candidateChildren) {
-                        return newAction("Add " + candidateChildren.size() + " nodes as children", actionEvent ->
-                                SwingUtilities.invokeLater(() -> {
-                                    for (STTemplateTreeNode stTemplateTreeNode : candidateChildren) {
+                        return newAction("Add " + candidateChildren.size() + " nodes as children", actionEvent -> {
 
-                                        final TreeNode parent = stTemplateTreeNode.getParent();
-                                        if (parent instanceof STGroupTreeNode)
-                                            ((STGroupTreeNode) parent).getModel().removeTemplates(stTemplateTreeNode.getModel());
-                                        else if (parent instanceof STTemplateTreeNode)
-                                            ((STTemplateTreeNode) parent).getModel().removeChildren(stTemplateTreeNode.getModel());
-                                        getModel().addChildren(stTemplateTreeNode.getModel());
+                            if (!SwingUtil.showConfirmDialog(tree, "Sure to move ?")) return;
 
-                                        treeModel.removeNodeFromParent(stTemplateTreeNode);
-                                        treeModel.insertNodeInto(stTemplateTreeNode, STTemplateTreeNode.this, getChildCount());
-                                    }
+                            SwingUtilities.invokeLater(() -> {
+                                for (STTemplateTreeNode stTemplateTreeNode : candidateChildren) {
 
-                                    save();
-                                    treeModel.nodeStructureChanged(getParent());
-                                }));
+                                    final TreeNode parent = stTemplateTreeNode.getParent();
+                                    if (parent instanceof STGroupTreeNode)
+                                        ((STGroupTreeNode) parent).getModel().removeTemplates(stTemplateTreeNode.getModel());
+                                    else if (parent instanceof STTemplateTreeNode)
+                                        ((STTemplateTreeNode) parent).getModel().removeChildren(stTemplateTreeNode.getModel());
+                                    getModel().addChildren(stTemplateTreeNode.getModel());
+
+                                    treeModel.removeNodeFromParent(stTemplateTreeNode);
+                                    treeModel.insertNodeInto(stTemplateTreeNode, STTemplateTreeNode.this, getChildCount());
+                                }
+
+                                save();
+                                treeModel.nodeStructureChanged(getParent());
+                            });
+                        });
                     }
 
                     private Action newSetParameterTypesAction() {

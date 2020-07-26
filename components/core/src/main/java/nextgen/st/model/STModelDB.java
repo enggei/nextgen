@@ -2,7 +2,9 @@ package nextgen.st.model;
 
 import nextgen.st.STAppEvents;
 import nextgen.st.domain.*;
+import nextgen.st.script.Script;
 import org.neo4j.graphdb.Direction;
+import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 
 import java.util.*;
@@ -24,6 +26,11 @@ public class STModelDB extends STModelNeoFactory {
 
     public Collection<STGroupModel> getGroupModels() {
         return groupModels;
+    }
+
+    public STModelDB remove(Script script) {
+        delete(script.getNode());
+        return this;
     }
 
     public STModelDB remove(STValue stValue) {
@@ -75,16 +82,16 @@ public class STModelDB extends STModelNeoFactory {
         return getSTModelValue(stModel, "packageName", defaultValue);
     }
 
-    private STTemplate findSTTemplateByName(STGroupModel groupModel, String name) {
+    public static Optional<STTemplate> findSTTemplateByName(STGroupModel groupModel, String name) {
         final Iterator<STTemplate> iterator = groupModel.getTemplates().iterator();
         while (iterator.hasNext()) {
             final STTemplate stTemplate = findSTTemplateByName(iterator.next(), name);
-            if (stTemplate != null) return stTemplate;
+            if (stTemplate != null) return Optional.of(stTemplate);
         }
-        return null;
+        return Optional.empty();
     }
 
-    private STTemplate findSTTemplateByName(STTemplate stTemplate, String name) {
+    public static STTemplate findSTTemplateByName(STTemplate stTemplate, String name) {
         if (name.equals(stTemplate.getName())) return stTemplate;
 
         final Iterator<STTemplate> iterator = stTemplate.getChildren().iterator();
@@ -129,6 +136,13 @@ public class STModelDB extends STModelNeoFactory {
             if (child != null) return child;
         }
         return null;
+    }
+
+    public Script newScript(String name) {
+        return new Script(getDatabaseService().createNode(Label.label("Script")))
+                .setName(name)
+                //.setScript("")
+                .setUuid(UUID.randomUUID().toString());
     }
 
     public STFile newSTFile(String name, String type, String path, String packageName) {
@@ -200,8 +214,9 @@ public class STModelDB extends STModelNeoFactory {
             findAllSTFile().forEach(stFile -> {
 
                 final Node node = stFile.getNode();
-                log.info("STFile." + node.getProperty("uuid"));
+
                 if (node.hasProperty("name")) {
+                    log.info("STFile." + node.getProperty("uuid"));
                     log.info("refactoring stFile.name " + node.getProperty("name"));
                     stFile.setName(newSTValue(node.getProperty("name").toString()));
                     node.removeProperty("name");
@@ -228,6 +243,7 @@ public class STModelDB extends STModelNeoFactory {
 
             getDatabaseService().getAllNodes().forEach(node -> {
                 if (node.getRelationships().iterator().hasNext()) return;
+                if(node.hasLabel(Label.label("Script"))) return;
                 log.info("deleting unnused node " + node + " " + labelsFor(node));
                 node.delete();
             });
@@ -356,4 +372,10 @@ public class STModelDB extends STModelNeoFactory {
         for (org.neo4j.graphdb.Label label : node.getLabels()) lbl.append(label).append(delimiter);
         return lbl.toString().trim();
     }
+
+    public Script newScript(Node node) {
+        return new Script(node);
+    }
+
+
 }

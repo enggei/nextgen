@@ -280,7 +280,9 @@ public class SwingUtil {
 
     public static void showException(Component parent, Throwable t) {
         t.printStackTrace();
-        JOptionPane.showMessageDialog(parent, t.getMessage(), "Exception", JOptionPane.ERROR_MESSAGE);
+        final StringWriter stackTrace = new StringWriter();
+        t.printStackTrace(new PrintWriter(stackTrace));
+        JOptionPane.showMessageDialog(parent, t.getMessage() + "\n" + stackTrace, "Exception", JOptionPane.ERROR_MESSAGE);
     }
 
     public static void showExceptionNoStack(Component parent, Throwable t) {

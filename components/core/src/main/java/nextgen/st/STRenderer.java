@@ -29,6 +29,8 @@ public class STRenderer {
 
     public String render(STModel stModel) {
 
+        if (stModel == null) return null;
+
         final STMapper stMapper = findSTMapper(stModel.getStTemplate());
         if (stMapper == null) return null;
 
@@ -89,7 +91,7 @@ public class STRenderer {
     }
 
     public String render(STValue value) {
-        if (value == null) return null;
+        if (value == null || value.getType() == null) return null;
 
         switch (value.getType()) {
             case STMODEL:
