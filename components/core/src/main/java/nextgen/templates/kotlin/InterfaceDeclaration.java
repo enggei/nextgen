@@ -1,6 +1,6 @@
 package nextgen.templates.kotlin;
 
-public class InterfaceDeclaration implements InterfaceDefinition, CompilationUnit {
+public class InterfaceDeclaration implements ClassDefinition, CompilationUnit {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;

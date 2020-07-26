@@ -15,6 +15,7 @@ public class KotlinSTTests {
 		testCastExpression();
 		testComparisonExpression();
 		testConstructorCallExpression();
+		testEscapedLiteralExpression();
 		testFunctionCallExpression();
 		testGroupedExpression();
 		testIfExpression();
@@ -116,6 +117,11 @@ public class KotlinSTTests {
 	@org.junit.Test
 	public void testConstructorCallExpression() {
 		System.out.println("\n--- TEST ConstructorCallExpression:\n" + newConstructorCallExpression());
+	} 
+
+	@org.junit.Test
+	public void testEscapedLiteralExpression() {
+		System.out.println("\n--- TEST EscapedLiteralExpression:\n" + newEscapedLiteralExpression());
 	} 
 
 	@org.junit.Test

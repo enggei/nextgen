@@ -11,6 +11,7 @@ public class KotlinST {
 	CastExpression.st + "\n" + 
 	ComparisonExpression.st + "\n" + 
 	ConstructorCallExpression.st + "\n" + 
+	EscapedLiteralExpression.st + "\n" + 
 	FunctionCallExpression.st + "\n" + 
 	GroupedExpression.st + "\n" + 
 	IfExpression.st + "\n" + 
@@ -139,6 +140,10 @@ public class KotlinST {
 
 	public static ConstructorCallExpression newConstructorCallExpression() {
 		return new ConstructorCallExpression(stGroup);
+	} 
+
+	public static EscapedLiteralExpression newEscapedLiteralExpression() {
+		return new EscapedLiteralExpression(stGroup);
 	} 
 
 	public static FunctionCallExpression newFunctionCallExpression() {

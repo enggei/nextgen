@@ -388,7 +388,7 @@
           "type" : "LIST",
           "argumentType" : "PropertyDeclaration"
         } ],
-        "implements" : [ "InterfaceDefinition", "CompilationUnit" ]
+        "implements" : [ "ClassDefinition", "CompilationUnit" ]
       }, {
         "uuid" : "39a53af3-04c1-4ffa-9fcd-c263cd542d8e",
         "name" : "ParameterDeclaration",
@@ -577,7 +577,7 @@
       }, {
         "uuid" : "1a37294c-4755-42df-989d-fab2f247ad2e",
         "name" : "SingleLineComment",
-        "text" : "//~comment~ ",
+        "text" : "// ~comment~ ",
         "implements" : [ "Statement", "Comment" ],
         "parameters" : [ {
           "uuid" : "9f72b7a6-091c-4a9b-acb4-d319df85a935",
@@ -1245,6 +1245,17 @@
         "argumentType" : "Expression"
       } ],
       "implements" : [ "Expression" ]
+    }, {
+      "uuid" : "d63c96e3-3044-45c4-87e2-e9d8ade53682",
+      "name" : "EscapedLiteralExpression",
+      "text" : "`~literal~` ",
+      "parameters" : [ {
+        "uuid" : "1888b450-7bfe-46c0-a4b8-b9f3db8fdccc",
+        "name" : "literal",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ],
+      "implements" : [ "Expression" ]
     } ]
   }, {
     "uuid" : "7f297955-618e-40d3-a441-920c4f5ec56e",
@@ -1288,9 +1299,6 @@
   }, {
     "uuid" : "71783458-e863-4ac3-84a4-baa515132047",
     "name" : "Extending"
-  }, {
-    "uuid" : "2d7c8fc7-0268-48ae-adce-dc352efb439d",
-    "name" : "InterfaceDefinition"
   }, {
     "uuid" : "3054347c-8dc6-4b28-8312-c1b26e238bdf",
     "name" : "ParameterDefinition"

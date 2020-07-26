@@ -393,7 +393,7 @@ public class KotlinTest {
                         "Contraction",
                         "CardinalNumber"
                 ))
-                .setComments(newSingleLineComment(" From https://en.wikipedia.org/wiki/Part_of_speech#Functional_classification"));
+                .setComments(newSingleLineComment("From https://en.wikipedia.org/wiki/Part_of_speech#Functional_classification"));
 
         List<PropertyDeclaration> lexicalClassificationProperties = singletonList(
                 newPropertyDeclaration(functionalClassificationType, "classification", true)
@@ -414,7 +414,7 @@ public class KotlinTest {
                 .setMembers(singletonList(
                         newFunctionDeclaration("enumVal", enumStarTemplate)
                                 .setOverride(true)
-                                .setStatements(singletonList(newTodoStatement("not implemented")))
+                                .addStatements(newReturnStatement(newLiteralExpression("classification")))
                 ))
                 .setFields(lexicalClassificationFields)
                 .setExtends(asList(

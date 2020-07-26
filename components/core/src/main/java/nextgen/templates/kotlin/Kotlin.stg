@@ -46,6 +46,8 @@ IfExpression(logicalExpression,whenTrue,whenFalse) ::= <<if(~logicalExpression~)
 
 ComparisonExpression(lhs,operator,rhs) ::= <<~lhs~ ~operator~ ~rhs~  >>
 
+EscapedLiteralExpression(literal) ::= <<`~literal~`  >>
+
 Grammar() ::= << >>
 
 Declarations() ::= << >>
@@ -158,7 +160,7 @@ CommentBlock(comment) ::= <</*
 ~comment~
 */  >>
 
-SingleLineComment(comment) ::= <<//~comment~  >>
+SingleLineComment(comment) ::= <<// ~comment~  >>
 
 KotlinStringTemplates() ::= << >>
 
