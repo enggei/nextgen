@@ -59,5 +59,5 @@ public class SingleLineComment implements Statement, Comment {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SingleLineComment(comment) ::= <<//~comment~ >>";
+	static final String st = "SingleLineComment(comment) ::= <<// ~comment~ >>";
 }  
