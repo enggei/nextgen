@@ -67,6 +67,7 @@ public class STEditor extends JPanel {
 
         this.startText = STGenerator.toStg(stGroupModel).trim();
 
+        this.txtEditor.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
         this.txtEditor.setText(startText);
         this.txtEditor.setEditable(false);
         this.txtEditor.setCaretPosition(0);

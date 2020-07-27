@@ -691,7 +691,7 @@ public class STNavigator extends JPanel {
                             actions.add(newAction("New " + stEnumValue.getName() + " instance", actionEvent -> {
                                 findCanvas(workspace).ifPresent(stCanvas -> {
                                     SwingUtilities.invokeLater(() -> {
-                                        presentationModel.db.doInTransaction(transaction -> stCanvas.addNode(new STValueNode(stCanvas, presentationModel.db.newSTValue(stEnumValue), presentationModel.stRenderer)));
+                                        presentationModel.db.doInTransaction(transaction -> stCanvas.addNode(new STValueNode(stCanvas, presentationModel.db.newSTValue(stEnumValue))));
                                         workspace.setSelectedComponent(stCanvas);
                                         stCanvas.requestFocusInWindow();
                                     });
@@ -1009,7 +1009,7 @@ public class STNavigator extends JPanel {
                                     findCanvas(workspace).ifPresent(stCanvas -> {
                                         SwingUtilities.invokeLater(() -> {
                                             presentationModel.db.doInTransaction(transaction -> {
-                                                final STModelNode node = new STModelNode(stCanvas, getModel(), presentationModel.db.newSTModel(stGroupTreeNode.getModel().uuid(), getModel()), presentationModel.stRenderer);
+                                                final STModelNode node = new STModelNode(stCanvas, getModel(), presentationModel.db.newSTModel(stGroupTreeNode.getModel().uuid(), getModel()));
                                                 stCanvas.addNode(node);
                                                 workspace.setSelectedComponent(stCanvas);
                                                 stCanvas.requestFocusInWindow();

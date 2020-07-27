@@ -183,7 +183,7 @@
   }, {
     "uuid" : "0af8d340-e141-49c5-aa67-678e0ae2ae06",
     "name" : "Temp",
-    "text" : "lol ~yolo~\n\n\nxxxxx ~yys:{it|~it~};separator=\",\"~ ",
+    "text" : "lol ~yolo~\n\nclass test\n\nxxxxx ~yys:{it|~it~};separator=\",\"~ ",
     "parameters" : [ {
       "uuid" : "0cf28cba-5fbe-4c0d-a3ae-95db1928b8a7",
       "name" : "yolo",

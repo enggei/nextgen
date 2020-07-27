@@ -344,7 +344,7 @@ public class STModelNavigator extends JPanel {
                             getParentNode(STTemplateTreeNode.class)
                                     .ifPresent(stTemplateTreeNode -> findCanvas(tabbedPane)
                                             .ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> db.doInTransaction(transaction -> {
-                                                final STModelNode node = new STModelNode(stCanvas, stTemplateTreeNode.getModel(), getModel(), stRenderer);
+                                                final STModelNode node = new STModelNode(stCanvas, stTemplateTreeNode.getModel(), getModel());
                                                 stCanvas.addNode(node);
 
                                                 tabbedPane.setSelectedComponent(stCanvas);

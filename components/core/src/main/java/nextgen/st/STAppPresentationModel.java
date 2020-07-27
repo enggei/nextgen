@@ -2,15 +2,14 @@ package nextgen.st;
 
 import io.vertx.core.json.JsonObject;
 import nextgen.st.domain.*;
-import nextgen.st.model.STModel;
-import nextgen.st.model.STModelDB;
-import nextgen.st.model.STValue;
+import nextgen.st.model.*;
 
 import java.awt.*;
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -106,5 +105,37 @@ public class STAppPresentationModel {
 
     public String render(STValue stValue) {
         return stRenderer.render(stValue);
+    }
+
+    public STValue newSTValue(String s) {
+        return db.newSTValue(s);
+    }
+
+    public STArgument newSTArgument(STParameter stParameter, STValue stValue) {
+        return db.newSTArgument(stParameter, stValue);
+    }
+
+    public STValue newSTValue(STModel stModel) {
+        return db.newSTValue(stModel);
+    }
+
+    public STArgumentKV newSTArgumentKV(STParameterKey stParameterKey, STValue stValue) {
+        return db.newSTArgumentKV(stParameterKey, stValue);
+    }
+
+    public STArgument newSTArgument(STParameter stParameter, List<STArgumentKV> kvs) {
+        return db.newSTArgument(stParameter, kvs);
+    }
+
+    public String getSTModelName(STModel stModel, String defaultName) {
+        return db.getSTModelName(stModel, defaultName);
+    }
+
+    public String getSTModelPackage(STModel stModel, String defaultName) {
+        return db.getSTModelPackage(stModel, defaultName);
+    }
+
+    public STFile newSTFile(String name, String type, String path, String packageName) {
+        return db.newSTFile(name, type, path, packageName);
     }
 }
