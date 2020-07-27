@@ -58,17 +58,21 @@ public class STEditor extends JPanel {
         pop.addSeparator();
         pop.add(newAction("Add Java method", actionEvent -> addJavaMethod()));
 
+        changeStyleViaThemeXml();
+
         this.txtEditor.setFont(presentationModel.getPreferredFont());
         this.txtEditor.setTabSize(3);
         this.txtEditor.setCodeFoldingEnabled(true);
         this.txtEditor.addKeyListener(new STTemplateEditorKeyListener());
 
         this.startText = STGenerator.toStg(stGroupModel).trim();
+
         this.txtEditor.setText(startText);
         this.txtEditor.setEditable(false);
-        this.commandPanel.setEditable(false);
         this.txtEditor.setCaretPosition(0);
         this.txtEditor.discardAllEdits();
+
+        this.commandPanel.setEditable(false);
 
         add(new RTextScrollPane(txtEditor), BorderLayout.CENTER);
         add(commandPanel, BorderLayout.NORTH);
@@ -77,64 +81,41 @@ public class STEditor extends JPanel {
     }
 
     public void setSTEnum(STEnum stEnum) {
-
         stTemplate = null;
-
         final StringBuilder text = new StringBuilder();
         text.append(stEnum.getName());
         stEnum.getValues().forEach(stEnumValue -> text.append("\n\t").append(stEnumValue.getName()).append(stEnumValue.getLexical() == null ? "" : (" -> \"" + stEnumValue.getLexical() + "\"")));
-
-        this.startText = text.toString().trim();
-
-        this.txtEditor.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
-        this.txtEditor.setText(startText);
-        this.txtEditor.setCaretPosition(0);
-        this.txtEditor.setEditable(false);
-        this.commandPanel.setEditable(false);
-        changeStyleViaThemeXml();
-        this.txtEditor.discardAllEdits();
-        this.txtEditor.setBackground(uneditedColor);
-        this.infoPanel.clear();
+        reset(text.toString());
     }
 
     public void setSTInterface(STInterface stInterface) {
-
         stTemplate = null;
-        final StringBuilder text = new StringBuilder();
-        text.append(stInterface.getName());
-
-        this.startText = text.toString().trim();
-
-        this.txtEditor.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
-        this.txtEditor.setText(startText);
-        this.txtEditor.setCaretPosition(0);
-        this.txtEditor.setEditable(false);
-        this.commandPanel.setEditable(false);
-        changeStyleViaThemeXml();
-        this.txtEditor.discardAllEdits();
-        this.txtEditor.setBackground(uneditedColor);
-        this.infoPanel.clear();
+        reset(stInterface.getName());
     }
 
     public void setSTTemplate(STTemplate stTemplate) {
-
         this.stTemplate = stTemplate;
-
         this.startText = stTemplate == null ?
                 this.startText = STGenerator.toStg(stGroupModel).trim() :
                 stTemplate.getText().trim();
+
+        reset(startText);
+        this.txtEditor.requestFocusInWindow();
+    }
+
+    public void reset(String string) {
+
+        this.startText = string.trim();
 
         this.txtEditor.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
         this.txtEditor.setText(startText);
         this.txtEditor.setCaretPosition(0);
         this.txtEditor.setEditable(stTemplate != null);
+        this.commandPanel.setEditable(stTemplate != null);
+
         this.txtEditor.discardAllEdits();
         this.txtEditor.setBackground(uneditedColor);
-        changeStyleViaThemeXml();
-        this.commandPanel.setEditable(stTemplate != null);
         this.infoPanel.clear();
-
-        this.txtEditor.requestFocusInWindow();
     }
 
     private void changeStyleViaThemeXml() {
