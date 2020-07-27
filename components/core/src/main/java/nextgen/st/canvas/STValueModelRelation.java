@@ -43,7 +43,7 @@ public class STValueModelRelation extends STRelation {
 			doLaterInTransaction(tx -> {
 				final STValueNode src = (STValueNode) relation.getSrc();
 				src.close();
-				canvas.modelDb.remove(src.stValue);
+				canvas.presentationModel.db.remove(src.stValue);
 			});
 		}
 	}

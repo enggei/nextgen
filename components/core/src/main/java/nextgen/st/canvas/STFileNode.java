@@ -46,7 +46,7 @@ public class STFileNode extends nextgen.st.canvas.STNode {
 				.filter(stNode -> !stNode.getUuid().equals(getUuid()))
 				.map(stNode -> (STValueNode) stNode)
 				.collect(java.util.stream.Collectors.toList());
-		canvas.modelDb.doInTransaction(tx -> {
+		canvas.presentationModel.db.doInTransaction(tx -> {
 			final JMenu sourceMenu = new JMenu("STModels");
 			stModelNodes.forEach(stModelNode -> {
 				final int end = Math.min(stModelNode.getText().length(), 50);
@@ -101,7 +101,7 @@ public class STFileNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(STFileNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			canvas.modelDb.doInTransaction(tx -> {
+			canvas.presentationModel.db.doInTransaction(tx -> {
 				final java.util.LinkedHashMap<String, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();
 				fieldMap.put("name", canvas.newTextField(node.stFile.getName() == null ? "" : node.stFile.getName().getValue(), 15));
 				fieldMap.put("type", canvas.newTextField(node.stFile.getType() == null ? "" : node.stFile.getType().getValue(), 15));
@@ -123,16 +123,16 @@ public class STFileNode extends nextgen.st.canvas.STNode {
 							doLaterInTransaction(tx -> {
 
 								if (node.stFile.getName() == null || (node.stFile.getName().getValue() == null || !node.stFile.getName().getValue().equals(name)))
-									node.stFile.setName(canvas.modelDb.newSTValue(name));
+									node.stFile.setName(canvas.presentationModel.db.newSTValue(name));
 
 								if (node.stFile.getType() == null || (node.stFile.getType().getValue() == null || !node.stFile.getType().getValue().equals(type)))
-									node.stFile.setType(canvas.modelDb.newSTValue(type));
+									node.stFile.setType(canvas.presentationModel.db.newSTValue(type));
 
 								if (node.stFile.getPath() == null || (node.stFile.getPath().getValue() == null || !node.stFile.getPath().getValue().equals(path)))
-									node.stFile.setPath(canvas.modelDb.newSTValue(path));
+									node.stFile.setPath(canvas.presentationModel.db.newSTValue(path));
 
 								if (node.stFile.getPackageName() == null || (node.stFile.getPackageName().getValue() == null || !node.stFile.getPackageName().getValue().equals(packageName)))
-									node.stFile.setPackageName(canvas.modelDb.newSTValue(packageName));
+									node.stFile.setPackageName(canvas.presentationModel.db.newSTValue(packageName));
 
 								node.setText(nextgen.st.STGenerator.asFile(node.stFile).getAbsolutePath());
 							});

@@ -64,7 +64,7 @@
   }, {
     "uuid" : "dc9d4f1e-29a6-43fb-97bb-1356c6d7805a",
     "name" : "post",
-    "text" : "org.greenrobot.eventbus.EventBus.getDefault().post(~event~); ",
+    "text" : "org.greenrobot.eventbus.EventBus.getDefault().post(new ~event~); ",
     "parameters" : [ {
       "uuid" : "e0a84f59-e6a3-49e5-b554-7daba9c62fc4",
       "name" : "event",

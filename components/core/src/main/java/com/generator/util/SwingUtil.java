@@ -3,6 +3,7 @@ package com.generator.util;
 import com.jgoodies.forms.builder.FormBuilder;
 import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.layout.CellConstraints;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -25,6 +26,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -56,6 +58,10 @@ public class SwingUtil {
         }
 
         protected abstract void onActionPerformed(ActionEvent e);
+    }
+
+    public static JTextField newTextField() {
+        return new JTextField();
     }
 
     public static JTextArea newTextArea() {
@@ -271,6 +277,35 @@ public class SwingUtil {
     public static String showInputDialog(String message, Component owner) {
         final String s = JOptionPane.showInputDialog(owner, message);
         return s == null ? null : s.trim();
+    }
+
+    public static void showInputDialog(String message, Component owner, Consumer<String> onConfirm) {
+        showInputDialog(message, owner, new Dimension(800, 600), onConfirm);
+    }
+
+    public static void showInputDialog(String message, Component owner, String startValue, Consumer<String> onConfirm) {
+        showInputDialog(message, owner, new Dimension(800, 600), startValue, onConfirm);
+    }
+
+    public static void showInputDialog(String message, Component owner, Dimension dimension, Consumer<String> onConfirm) {
+        showInputDialog(message, owner, dimension, null, onConfirm);
+    }
+
+    public static void showInputDialog(String message, Component owner, Dimension dimension, String startValue, Consumer<String> onConfirm) {
+        final RSyntaxTextArea rSyntaxTextArea = newRSyntaxTextArea();
+        rSyntaxTextArea.setText(startValue == null ? "" : startValue);
+        final JPanel inputPanel = new JPanel(new BorderLayout());
+        inputPanel.add(new org.fife.ui.rtextarea.RTextScrollPane(rSyntaxTextArea), BorderLayout.CENTER);
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        inputPanel.setPreferredSize(dimension);
+        com.generator.util.SwingUtil.showDialog(inputPanel, owner, message, new com.generator.util.SwingUtil.ConfirmAction() {
+            @Override
+            public void verifyAndCommit() throws Exception {
+                final String s = rSyntaxTextArea.getText().trim();
+                if (s.trim().length() == 0) return;
+                onConfirm.accept(s.trim());
+            }
+        });
     }
 
     public static String showInputDialog(String message, Component owner, String defaultValue) {
@@ -672,5 +707,61 @@ public class SwingUtil {
                 highlighter.removeHighlight(highlight);
             }
         }
+    }
+
+    public static org.fife.ui.rsyntaxtextarea.RSyntaxTextArea newRSyntaxTextArea() {
+        return newRSyntaxTextArea(10, 80);
+    }
+
+    public static org.fife.ui.rsyntaxtextarea.RSyntaxTextArea newRSyntaxTextArea(int rows, int cols) {
+        final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea rSyntaxTextArea = new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea(rows, cols);
+        rSyntaxTextArea.setTabSize(3);
+        rSyntaxTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+
+            @Override
+            public void keyPressed(java.awt.event.KeyEvent keyEvent) {
+                if (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_F) {
+                    format(rSyntaxTextArea);
+                }
+            }
+        });
+        return rSyntaxTextArea;
+    }
+
+    private static void format(JTextArea txtEditor) {
+        final int caretPosition = txtEditor.getCaretPosition();
+        final StringBuilder spaces = new StringBuilder();
+        for (int i = 0; i < txtEditor.getTabSize(); i++) spaces.append(" ");
+
+        String[] split = txtEditor.getText().split("\n");
+        final StringBuilder formatted = new StringBuilder();
+        for (String s : split) formatted.append(s.replace(spaces, "\t")).append("\n");
+        split = formatted.toString().split("\n");
+        System.out.println(formatted.toString());
+
+        final StringBuilder formatted2 = new StringBuilder();
+        for (String s : split) {
+            if (s.trim().length() == 0) {
+                formatted2.append("\n");
+                continue;
+            }
+
+            final char[] c = s.toCharArray();
+            for (int i = 0; i < c.length; i++) {
+                if (c[i] == '\t') {
+                    formatted2.append(c[i]);
+                    continue;
+                }
+                if (c[i] == ' ') continue;
+                formatted2.append(s.substring(i));
+                break;
+            }
+
+            formatted2.append("\n");
+        }
+        System.out.println(formatted2.toString());
+
+        txtEditor.setText(formatted2.toString().trim());
+        txtEditor.setCaretPosition(Math.min(formatted2.toString().trim().length(), caretPosition));
     }
 }

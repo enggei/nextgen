@@ -18,6 +18,7 @@ public class TestSTTests {
 		testList();
 		testSingle();
 		testPatterns();
+		testTemp();
 	}
 
 	@org.junit.Test
@@ -63,5 +64,10 @@ public class TestSTTests {
 	@org.junit.Test
 	public void testPatterns() {
 		System.out.println("\n--- TEST Patterns:\n" + newPatterns());
+	} 
+
+	@org.junit.Test
+	public void testTemp() {
+		System.out.println("\n--- TEST Temp:\n" + newTemp());
 	} 
 } 

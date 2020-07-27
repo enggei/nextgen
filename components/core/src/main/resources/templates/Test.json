@@ -180,6 +180,21 @@
       "type" : "SINGLE",
       "argumentType" : "Object"
     } ]
+  }, {
+    "uuid" : "0af8d340-e141-49c5-aa67-678e0ae2ae06",
+    "name" : "Temp",
+    "text" : "lol ~yolo~\n\n\nxxxxx ~yys:{it|~it~};separator=\",\"~ ",
+    "parameters" : [ {
+      "uuid" : "0cf28cba-5fbe-4c0d-a3ae-95db1928b8a7",
+      "name" : "yolo",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "ddf45f20-fdf6-46a3-a7c7-c0a01b864ae7",
+      "name" : "yys",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    } ]
   } ],
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Test.stg",
   "enums" : [ {

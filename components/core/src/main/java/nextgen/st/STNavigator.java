@@ -1,12 +1,10 @@
 package nextgen.st;
 
 import com.generator.util.SwingUtil;
-import io.vertx.core.json.JsonObject;
 import nextgen.st.canvas.STCanvas;
 import nextgen.st.canvas.STModelNode;
 import nextgen.st.canvas.STValueNode;
 import nextgen.st.domain.*;
-import nextgen.st.model.STModelDB;
 
 import javax.lang.model.SourceVersion;
 import javax.swing.*;
@@ -31,23 +29,17 @@ public class STNavigator extends JPanel {
 
     private final JTree tree = new JTree();
 
-    private final JTabbedPane tabbedPane;
+    private final STWorkspace workspace;
     private final DefaultTreeModel treeModel;
-    private final STAppModel appModel;
+    private final STAppPresentationModel presentationModel;
 
-    STRenderer stRenderer;
-    final STModelDB db;
-
-    public STNavigator(STAppModel appModel, JTabbedPane contentPanel) {
+    public STNavigator(STAppPresentationModel presentationModel, STWorkspace workspace) {
         super(new BorderLayout());
-        this.appModel = appModel;
-        final RootNode rootNode = new RootNode(appModel);
 
-        tabbedPane = contentPanel;
-        stRenderer = new STRenderer(rootNode.stGroups);
-        db = new STModelDB(appModel.getModelDb("./db"), rootNode.stGroups);
+        this.presentationModel = presentationModel;
+        this.workspace = workspace;
 
-        treeModel = new DefaultTreeModel(rootNode);
+        treeModel = new DefaultTreeModel(new RootNode());
         tree.setModel(treeModel);
         tree.setCellRenderer(new DefaultTreeCellRenderer() {
 
@@ -149,17 +141,17 @@ public class STNavigator extends JPanel {
 
     public void show(RootNode.STGDirectoryTreeNode.STGroupTreeNode stGroupTreeNode) {
 
-        final STEditor stEditor = findSTTemplateEditor(tabbedPane, stGroupTreeNode)
+        final STEditor stEditor = findSTTemplateEditor(workspace, stGroupTreeNode)
                 .orElseGet(() -> {
-                    final STEditor stEditor1 = new STEditor(stGroupTreeNode, appModel);
-                    tabbedPane.addTab(stGroupTreeNode.getLabel(), stEditor1);
+                    final STEditor stEditor1 = new STEditor(stGroupTreeNode.getModel(), presentationModel);
+                    workspace.addTab(stGroupTreeNode.getLabel(), stEditor1);
                     return stEditor1;
                 });
 
         SwingUtilities.invokeLater(() -> {
             stEditor.setSTTemplate(null);
-            tabbedPane.setTitleAt(tabbedPane.indexOfComponent(stEditor), stGroupTreeNode.getModel().getName());
-            tabbedPane.setSelectedComponent(stEditor);
+            workspace.setTitleAt(workspace.indexOfComponent(stEditor), stGroupTreeNode.getModel().getName());
+            workspace.setSelectedComponent(stEditor);
         });
     }
 
@@ -168,17 +160,17 @@ public class STNavigator extends JPanel {
                 .getParentNode(RootNode.STGDirectoryTreeNode.STGroupTreeNode.class)
                 .ifPresent(parent -> {
 
-                    final STEditor stEditor = findSTTemplateEditor(tabbedPane, parent)
+                    final STEditor stEditor = findSTTemplateEditor(workspace, parent)
                             .orElseGet(() -> {
-                                final STEditor stEditor1 = new STEditor(parent, appModel);
-                                tabbedPane.addTab(parent.getLabel(), stEditor1);
+                                final STEditor stEditor1 = new STEditor(parent.getModel(), presentationModel);
+                                workspace.addTab(parent.getLabel(), stEditor1);
                                 return stEditor1;
                             });
 
                     SwingUtilities.invokeLater(() -> {
-                        stEditor.setSTTemplate(stTemplateTreeNode);
-                        tabbedPane.setTitleAt(tabbedPane.indexOfComponent(stEditor), parent.getModel().getName() + " - " + stTemplateTreeNode.getModel().getName());
-                        tabbedPane.setSelectedComponent(stEditor);
+                        stEditor.setSTTemplate(stTemplateTreeNode.getModel());
+                        workspace.setTitleAt(workspace.indexOfComponent(stEditor), parent.getModel().getName() + " - " + stTemplateTreeNode.getModel().getName());
+                        workspace.setSelectedComponent(stEditor);
                         stEditor.requestFocusInWindow();
                     });
                 });
@@ -190,17 +182,17 @@ public class STNavigator extends JPanel {
                 .getParentNode(RootNode.STGDirectoryTreeNode.STGroupTreeNode.class)
                 .ifPresent(parent -> {
 
-                    final STEditor stEditor = findSTTemplateEditor(tabbedPane, parent)
+                    final STEditor stEditor = findSTTemplateEditor(workspace, parent)
                             .orElseGet(() -> {
-                                final STEditor stEditor1 = new STEditor(parent, appModel);
-                                tabbedPane.addTab(parent.getLabel(), stEditor1);
+                                final STEditor stEditor1 = new STEditor(parent.getModel(), presentationModel);
+                                workspace.addTab(parent.getLabel(), stEditor1);
                                 return stEditor1;
                             });
 
                     SwingUtilities.invokeLater(() -> parent.getParentNode(RootNode.class).ifPresent(rootNode -> {
-                        stEditor.setSTEnum(stEnumTreeNode);
-                        tabbedPane.setTitleAt(tabbedPane.indexOfComponent(stEditor), parent.getModel().getName() + " - " + stEnumTreeNode.getModel().getName());
-                        tabbedPane.setSelectedComponent(stEditor);
+                        stEditor.setSTEnum(stEnumTreeNode.getModel());
+                        workspace.setTitleAt(workspace.indexOfComponent(stEditor), parent.getModel().getName() + " - " + stEnumTreeNode.getModel().getName());
+                        workspace.setSelectedComponent(stEditor);
                     }));
                 });
     }
@@ -211,36 +203,36 @@ public class STNavigator extends JPanel {
                 .getParentNode(RootNode.STGDirectoryTreeNode.STGroupTreeNode.class)
                 .ifPresent(parent -> {
 
-                    final STEditor stEditor = findSTTemplateEditor(tabbedPane, parent)
+                    final STEditor stEditor = findSTTemplateEditor(workspace, parent)
                             .orElseGet(() -> {
-                                final STEditor stEditor1 = new STEditor(parent, appModel);
-                                tabbedPane.addTab(parent.getLabel(), stEditor1);
+                                final STEditor stEditor1 = new STEditor(parent.getModel(), presentationModel);
+                                workspace.addTab(parent.getLabel(), stEditor1);
                                 return stEditor1;
                             });
 
                     SwingUtilities.invokeLater(() -> parent.getParentNode(RootNode.class).ifPresent(rootNode -> {
-                        stEditor.setSTInterface(stInterfaceTreeNode);
-                        tabbedPane.setTitleAt(tabbedPane.indexOfComponent(stEditor), parent.getModel().getName() + " - " + stInterfaceTreeNode.getModel().getName());
-                        tabbedPane.setSelectedComponent(stEditor);
+                        stEditor.setSTInterface(stInterfaceTreeNode.getModel());
+                        workspace.setTitleAt(workspace.indexOfComponent(stEditor), parent.getModel().getName() + " - " + stInterfaceTreeNode.getModel().getName());
+                        workspace.setSelectedComponent(stEditor);
                     }));
                 });
     }
 
-    public Optional<STEditor> findSTTemplateEditor(JTabbedPane tabbedPane, RootNode.STGDirectoryTreeNode.STGroupTreeNode stGroupTreeNode) {
-        for (int i = 0; i < tabbedPane.getTabCount(); i++) {
-            final Component tabComponentAt = tabbedPane.getComponentAt(i);
+    public Optional<STEditor> findSTTemplateEditor(STWorkspace workspace, RootNode.STGDirectoryTreeNode.STGroupTreeNode stGroupTreeNode) {
+        for (int i = 0; i < workspace.getTabCount(); i++) {
+            final Component tabComponentAt = workspace.getComponentAt(i);
             if (tabComponentAt instanceof STEditor) {
                 final STEditor stEditor = (STEditor) tabComponentAt;
-                if (stEditor.getStGroupTreeNode().equals(stGroupTreeNode))
+                if (stEditor.stGroupModel.uuid().equals(stGroupTreeNode.getModel().uuid()))
                     return Optional.of(stEditor);
             }
         }
         return Optional.empty();
     }
 
-    public Optional<STCanvas> findCanvas(JTabbedPane tabbedPane) {
-        for (int i = 0; i < tabbedPane.getTabCount(); i++) {
-            final Component tabComponentAt = tabbedPane.getComponentAt(i);
+    public Optional<STCanvas> findCanvas(STWorkspace workspace) {
+        for (int i = 0; i < workspace.getTabCount(); i++) {
+            final Component tabComponentAt = workspace.getComponentAt(i);
             if (tabComponentAt instanceof STCanvas)
                 return Optional.of((STCanvas) tabComponentAt);
         }
@@ -365,42 +357,20 @@ public class STNavigator extends JPanel {
 
     class RootNode extends BaseTreeNode<String> {
 
-        private final STGDirectoryTreeNode generatorTreeNode;
-        final Set<STGroupModel> stGroups = new LinkedHashSet<>();
-
-        public RootNode(STAppModel appModel) {
+        public RootNode() {
             super("Templates", "RootNode");
-
-            final File jsonFileDir = new File(appModel.getGeneratorRoot(), STGenerator.packageToPath(appModel.getGeneratorPackage()));
-            add(generatorTreeNode = new STGDirectoryTreeNode(STJsonFactory.newSTGDirectory()
-                    .setOutputPath(appModel.getGeneratorRoot())
-                    .setOutputPackage(appModel.getGeneratorPackage())
-                    .setPath(jsonFileDir.getAbsolutePath())
-                    .addGroups(new STGroupModel(new JsonObject(STParser.read(new File(jsonFileDir, appModel.getGeneratorName() + ".json")))))
-            ));
-
-            appModel.getDirectories().forEach(stgDirectory -> {
-                final STGDirectoryTreeNode stgDirectoryTreeNode = new STGDirectoryTreeNode(stgDirectory);
-                add(stgDirectoryTreeNode);
-                stGroups.addAll(stgDirectoryTreeNode.stGroups);
-            });
-        }
-
-        public STGroupModel getGenerator() {
-            return generatorTreeNode.getModel().getGroups().iterator().next();
+            add(new STGDirectoryTreeNode(presentationModel.generatorSTGDirectory));
+            presentationModel.stgDirectories.forEach(stgDirectory -> add(new STGDirectoryTreeNode(stgDirectory)));
         }
 
         class STGDirectoryTreeNode extends BaseTreeNode<STGDirectory> {
 
-            final Set<STGroupModel> stGroups = new LinkedHashSet<>();
-
             public STGDirectoryTreeNode(STGDirectory model) {
                 super(model, "STGDirectory");
 
-                model.getGroups().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stGroupModel -> {
-                    stGroups.add(stGroupModel);
-                    add(new STGroupTreeNode(stGroupModel));
-                });
+                model.getGroups()
+                        .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
+                        .forEach(stGroupModel -> add(new STGroupTreeNode(stGroupModel)));
             }
 
             @Override
@@ -432,12 +402,10 @@ public class STNavigator extends JPanel {
                             .setDelimiter(STGenerator.DELIMITER);
 
                     getModel().addGroups(stGroupModel);
-                    stGroups.add(stGroupModel);
 
                     SwingUtilities.invokeLater(() -> {
                         final STGroupTreeNode stGroupTreeNode = new STGroupTreeNode(stGroupModel);
                         stGroupTreeNode.save();
-
                         treeModel.insertNodeInto(stGroupTreeNode, STGDirectoryTreeNode.this, getChildCount());
                         show(stGroupTreeNode);
                     });
@@ -450,9 +418,7 @@ public class STNavigator extends JPanel {
             }
 
             private void generate(STGroupModel stGroupModel) {
-                final String outputPackage = getModel().getOutputPackage();
-                final String outputPath = getModel().getOutputPath();
-                new STGenerator(getGenerator()).generateSTGroup(stGroupModel, outputPackage, outputPath);
+                presentationModel.generateSTGroup(stGroupModel);
             }
 
             class STGroupTreeNode extends BaseTreeNode<STGroupModel> {
@@ -575,8 +541,8 @@ public class STNavigator extends JPanel {
 
                                                 SwingUtilities.invokeLater(() -> {
                                                     treeModel.nodeChanged(STGroupTreeNode.this);
-                                                    findSTTemplateEditor(tabbedPane, STGroupTreeNode.this)
-                                                            .ifPresent(stEditor1 -> tabbedPane.setTitleAt(tabbedPane.indexOfComponent(stEditor1), getModel().getName()));
+                                                    findSTTemplateEditor(workspace, STGroupTreeNode.this)
+                                                            .ifPresent(stEditor1 -> workspace.setTitleAt(workspace.indexOfComponent(stEditor1), getModel().getName()));
                                                     deleteSTGFile(parent, oldName);
                                                 });
                                             })));
@@ -608,7 +574,7 @@ public class STNavigator extends JPanel {
 
                                         SwingUtilities.invokeLater(() -> {
                                             treeModel.removeNodeFromParent(STGroupTreeNode.this);
-                                            findSTTemplateEditor(tabbedPane, STGroupTreeNode.this).ifPresent(tabbedPane::remove);
+                                            findSTTemplateEditor(workspace, STGroupTreeNode.this).ifPresent(workspace::remove);
                                             deleteSTGFile(parent, getModel().getName());
                                         });
                                     }));
@@ -723,10 +689,10 @@ public class STNavigator extends JPanel {
 
                         getModel().getValues().forEach(stEnumValue -> {
                             actions.add(newAction("New " + stEnumValue.getName() + " instance", actionEvent -> {
-                                findCanvas(tabbedPane).ifPresent(stCanvas -> {
+                                findCanvas(workspace).ifPresent(stCanvas -> {
                                     SwingUtilities.invokeLater(() -> {
-                                        db.doInTransaction(transaction -> stCanvas.addNode(new STValueNode(stCanvas, db.newSTValue(stEnumValue), stRenderer)));
-                                        tabbedPane.setSelectedComponent(stCanvas);
+                                        presentationModel.db.doInTransaction(transaction -> stCanvas.addNode(new STValueNode(stCanvas, presentationModel.db.newSTValue(stEnumValue), presentationModel.stRenderer)));
+                                        workspace.setSelectedComponent(stCanvas);
                                         stCanvas.requestFocusInWindow();
                                     });
                                 });
@@ -1040,12 +1006,12 @@ public class STNavigator extends JPanel {
                     private Action newModelAction() {
                         return newAction("New Instance", actionEvent ->
                                 getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> {
-                                    findCanvas(tabbedPane).ifPresent(stCanvas -> {
+                                    findCanvas(workspace).ifPresent(stCanvas -> {
                                         SwingUtilities.invokeLater(() -> {
-                                            db.doInTransaction(transaction -> {
-                                                final STModelNode node = new STModelNode(stCanvas, getModel(), db.newSTModel(stGroupTreeNode.getModel().uuid(), getModel()), stRenderer);
+                                            presentationModel.db.doInTransaction(transaction -> {
+                                                final STModelNode node = new STModelNode(stCanvas, getModel(), presentationModel.db.newSTModel(stGroupTreeNode.getModel().uuid(), getModel()), presentationModel.stRenderer);
                                                 stCanvas.addNode(node);
-                                                tabbedPane.setSelectedComponent(stCanvas);
+                                                workspace.setSelectedComponent(stCanvas);
                                                 stCanvas.requestFocusInWindow();
                                                 stCanvas.centerNode(node);
                                             });
@@ -1087,8 +1053,8 @@ public class STNavigator extends JPanel {
 
                                                             SwingUtilities.invokeLater(() -> {
                                                                 treeModel.nodeChanged(STTemplateTreeNode.this);
-                                                                findSTTemplateEditor(tabbedPane, parent)
-                                                                        .ifPresent(stEditor1 -> tabbedPane.setTitleAt(tabbedPane.indexOfComponent(stEditor1), getModel().getName()));
+                                                                findSTTemplateEditor(workspace, parent)
+                                                                        .ifPresent(stEditor1 -> workspace.setTitleAt(workspace.indexOfComponent(stEditor1), getModel().getName()));
                                                             });
                                                         }))));
                     }
@@ -1105,7 +1071,7 @@ public class STNavigator extends JPanel {
 
                                         SwingUtilities.invokeLater(() -> {
                                             treeModel.removeNodeFromParent(STTemplateTreeNode.this);
-                                            findSTTemplateEditor(tabbedPane, parent).ifPresent(tabbedPane::remove);
+                                            findSTTemplateEditor(workspace, parent).ifPresent(workspace::remove);
                                         });
 
                                     } else if (getParent() instanceof STTemplateTreeNode) {
@@ -1117,8 +1083,8 @@ public class STNavigator extends JPanel {
                                         SwingUtilities.invokeLater(() -> {
                                             treeModel.removeNodeFromParent(STTemplateTreeNode.this);
                                             getParentNode(STGroupTreeNode.class)
-                                                    .flatMap(stGroupTreeNode -> findSTTemplateEditor(tabbedPane, stGroupTreeNode))
-                                                    .ifPresent(tabbedPane::remove);
+                                                    .flatMap(stGroupTreeNode -> findSTTemplateEditor(workspace, stGroupTreeNode))
+                                                    .ifPresent(workspace::remove);
                                         });
                                     }
                                 }));

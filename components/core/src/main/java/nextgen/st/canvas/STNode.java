@@ -475,7 +475,7 @@ public class STNode extends PNode implements PropertyChangeListener {
 	}
 
 	protected void doLaterInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer){ 
-		javax.swing.SwingUtilities.invokeLater(() -> canvas.modelDb.doInTransaction(consumer, throwable -> com.generator.util.SwingUtil.showException(canvas, throwable)));
+		javax.swing.SwingUtilities.invokeLater(() -> canvas.presentationModel.db.doInTransaction(consumer, throwable -> com.generator.util.SwingUtil.showException(canvas, throwable)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()

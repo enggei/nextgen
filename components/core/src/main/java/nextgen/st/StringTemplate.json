@@ -30,7 +30,7 @@
     "children" : [ {
       "uuid" : "5a5ffd3b-8338-449a-bb45-67e0f2ca0ec2",
       "name" : "newEntityInstance",
-      "text" : "public static ~entityName~ new~entityName~() {\n\treturn new ~entityName~(stGroup);\n}",
+      "text" : "public static ~entityName~ new~entityName~() {\n\treturn new ~entityName~(stGroup);\n} ",
       "parameters" : [ {
         "uuid" : "98cf4905-1132-4a0f-997a-5774cf663633",
         "name" : "entityName",

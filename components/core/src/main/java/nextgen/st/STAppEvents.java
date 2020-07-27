@@ -4,6 +4,11 @@ public class STAppEvents {
 
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STAppEvents.class);
 
+	public static void postOpenSTModel(String uuid) {
+		log.info("post OpenSTModel");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new OpenSTModel(uuid));
+	}
+
 	public static void postSTModelCreated(nextgen.st.model.STModel stModel) {
 		log.info("post STModelCreated");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new STModelCreated(stModel));
@@ -17,6 +22,15 @@ public class STAppEvents {
 	public static void postNodeAdded(nextgen.st.canvas.STCanvas canvas, nextgen.st.canvas.STNode node) {
 		log.info("post NodeAdded");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new NodeAdded(canvas, node));
+	}
+
+	public static class OpenSTModel {
+
+		public final String uuid;
+
+		public OpenSTModel(String uuid) {
+			this.uuid = uuid;
+		}
 	}
 
 	public static class STModelCreated {

@@ -24,23 +24,25 @@ import static nextgen.st.domain.STJsonFactory.newSTGDirectory;
 
 public class STApp extends JFrame {
 
+    final STAppPresentationModel presentationModel;
     final STNavigator navigator;
-    final JTabbedPane tabbedPane = new JTabbedPane();
 
     public STApp(STAppModel appModel) throws HeadlessException {
         super("ST Editor");
 
-        navigator = new STNavigator(appModel, tabbedPane);
-        tabbedPane.setPreferredSize(new Dimension(800, 600));
+        presentationModel = new STAppPresentationModel(appModel);
+
+        final STWorkspace workspace = new STWorkspace();
+        navigator = new STNavigator(presentationModel, workspace);
+        workspace.setPreferredSize(new Dimension(800, 600));
 
         final JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         contentPanel.add(navigator, BorderLayout.WEST);
-        contentPanel.add(tabbedPane, BorderLayout.CENTER);
-        contentPanel.add(new STModelNavigator(navigator.db, navigator.stRenderer, tabbedPane), BorderLayout.EAST);
+        contentPanel.add(workspace, BorderLayout.CENTER);
+        contentPanel.add(new STModelNavigator(presentationModel.db, presentationModel.stRenderer, workspace), BorderLayout.EAST);
         add(contentPanel, BorderLayout.CENTER);
-
-        tabbedPane.addTab("Canvas", new nextgen.st.canvas.STCanvas(navigator.stRenderer, navigator.db));
+        workspace.addTab("Canvas", new nextgen.st.canvas.STCanvas(presentationModel));
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }

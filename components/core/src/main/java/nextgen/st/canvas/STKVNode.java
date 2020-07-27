@@ -66,7 +66,7 @@ public class STKVNode extends STNode {
                 .filter(stNode -> !stNode.getUuid().equals(getUuid()))
                 .map(stNode -> (STModelNode) stNode)
                 .collect(java.util.stream.Collectors.toList());
-        canvas.modelDb.doInTransaction(tx -> {
+        canvas.presentationModel.db.doInTransaction(tx -> {
             stParameter.getKeys().forEach(stParameterKey -> {
                 final JMenu stParameterMenu = new JMenu(stParameterKey.getName());
                 stValueNodes.forEach(stNode -> {
@@ -123,9 +123,9 @@ public class STKVNode extends STNode {
             final String s = com.generator.util.SwingUtil.showInputDialog(stParameter.getName(), canvas);
             if (s == null || s.trim().length() == 0) return;
             doLaterInTransaction(tx -> {
-                final nextgen.st.model.STValue stValue = canvas.modelDb.newSTValue(s.trim());
+                final nextgen.st.model.STValue stValue = canvas.presentationModel.db.newSTValue(s.trim());
                 node.removeArgument(stParameterKey);
-                final nextgen.st.model.STArgumentKV stArgumentKV = canvas.modelDb.newSTArgumentKV(stParameterKey, stValue);
+                final nextgen.st.model.STArgumentKV stArgumentKV = canvas.presentationModel.db.newSTArgumentKV(stParameterKey, stValue);
                 node.stArgument.addKeyValues(stArgumentKV);
                 final STNode stValueNode = canvas.addNode(canvas.newSTNode(stValue).get());
                 canvas.addRelation(stArgumentKV.getUuid(), canvas.newSTKVArgumentRelation(node, stValueNode, stArgument, stParameterKey, stArgumentKV));
@@ -152,7 +152,7 @@ public class STKVNode extends STNode {
         void actionPerformed(STKVNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
             doLaterInTransaction(tx -> {
                 node.removeArgument(stParameterKey);
-                final nextgen.st.model.STArgumentKV stArgumentKV = canvas.modelDb.newSTArgumentKV(stParameterKey, stValueNode.stValue);
+                final nextgen.st.model.STArgumentKV stArgumentKV = canvas.presentationModel.db.newSTArgumentKV(stParameterKey, stValueNode.stValue);
                 node.stArgument.addKeyValues(stArgumentKV);
                 canvas.addRelation(stArgumentKV.getUuid(), canvas.newSTKVArgumentRelation(node, stValueNode, stArgument, stParameterKey, stArgumentKV));
             });
@@ -178,8 +178,8 @@ public class STKVNode extends STNode {
         void actionPerformed(STKVNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
             doLaterInTransaction(tx -> {
                 node.removeArgument(stParameterKey);
-                final nextgen.st.model.STValue stValue = canvas.modelDb.newSTValue(stModelNode.stModel);
-                final nextgen.st.model.STArgumentKV stArgumentKV = canvas.modelDb.newSTArgumentKV(stParameterKey, stValue);
+                final nextgen.st.model.STValue stValue = canvas.presentationModel.db.newSTValue(stModelNode.stModel);
+                final nextgen.st.model.STArgumentKV stArgumentKV = canvas.presentationModel.db.newSTArgumentKV(stParameterKey, stValue);
                 ;
                 node.stArgument.addKeyValues(stArgumentKV);
                 canvas.addRelation(stArgumentKV.getUuid(), canvas.newSTKVArgumentRelation(node, stModelNode, stArgument, stParameterKey, stArgumentKV));

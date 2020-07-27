@@ -51,6 +51,11 @@ With static imports:
 
 classDeclaration.addModifiers(PUBLIC).addModifiers(PRIVATE)  >>
 
+Temp(yolo,yys) ::= <<lol ~yolo~
+
+
+xxxxx ~yys:{it|~it~};separator=","~  >>
+
 eom() ::= "}"
 
 gt() ::= ">"

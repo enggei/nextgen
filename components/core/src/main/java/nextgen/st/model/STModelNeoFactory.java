@@ -21,6 +21,17 @@ public class STModelNeoFactory {
         doInTransaction(action, java.lang.Throwable::printStackTrace);
     }
 
+    public <T> T get(java.util.function.Supplier<T> supplier) {
+        try (org.neo4j.graphdb.Transaction tx = db.beginTx()) {
+            final T t = supplier.get();
+            tx.success();
+            return t;
+        } catch (java.lang.Throwable t) {
+            t.printStackTrace();
+            return null;
+        }
+    }
+
     public void doInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> action, java.util.function.Consumer<java.lang.Throwable> onException) {
         try (org.neo4j.graphdb.Transaction tx = db.beginTx()) {
             action.accept(tx);

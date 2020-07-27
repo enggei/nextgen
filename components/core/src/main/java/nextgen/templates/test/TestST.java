@@ -2,18 +2,20 @@ package nextgen.templates.test;
 
 public class TestST {
 
-	private static final String stg = "delimiters \"~\", \"~\"\n" +
-	"eom() ::= \"}\"\n" +
-	"gt() ::= \">\"\n" +
-	ParameterTests.st + "\n" + 
-	AllTypes.st + "\n" + 
-	Complex.st + "\n" + 
-	Conditional.st + "\n" + 
-	EmbeddedKVConditional.st + "\n" + 
-	Kv.st + "\n" + 
-	List.st + "\n" + 
-	Single.st + "\n" + 
-	Patterns.st + "\n" ;
+	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
+	.append("eom() ::= \"}\"\n")
+	.append("gt() ::= \">\"\n")
+	.append(ParameterTests.st + "\n")
+	.append(AllTypes.st + "\n")
+	.append(Complex.st + "\n")
+	.append(Conditional.st + "\n")
+	.append(EmbeddedKVConditional.st + "\n")
+	.append(Kv.st + "\n")
+	.append(List.st + "\n")
+	.append(Single.st + "\n")
+	.append(Patterns.st + "\n")
+	.append(Temp.st + "\n")
+	.toString()  ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -51,39 +53,43 @@ public class TestST {
 
 	public static ParameterTests newParameterTests() {
 		return new ParameterTests(stGroup);
-	} 
+	}  
 
 	public static AllTypes newAllTypes() {
 		return new AllTypes(stGroup);
-	} 
+	}  
 
 	public static Complex newComplex() {
 		return new Complex(stGroup);
-	} 
+	}  
 
 	public static Conditional newConditional() {
 		return new Conditional(stGroup);
-	} 
+	}  
 
 	public static EmbeddedKVConditional newEmbeddedKVConditional() {
 		return new EmbeddedKVConditional(stGroup);
-	} 
+	}  
 
 	public static Kv newKv() {
 		return new Kv(stGroup);
-	} 
+	}  
 
 	public static List newList() {
 		return new List(stGroup);
-	} 
+	}  
 
 	public static Single newSingle() {
 		return new Single(stGroup);
-	} 
+	}  
 
 	public static Patterns newPatterns() {
 		return new Patterns(stGroup);
-	} 
+	}  
+
+	public static Temp newTemp() {
+		return new Temp(stGroup);
+	}  
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
 

@@ -266,9 +266,10 @@ public class ExcelPlugin extends ExcelDomainPlugin {
       pop.add(new App.TransactionAction("Set value", app) {
          @Override
          protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-            final String value = SwingUtil.showInputDialog("Value", app, getValueProperty(cellNode.getNode()));
-            if (value == null || value.equals(getValueProperty(cellNode.getNode()))) return;
-            setValueProperty(cellNode.getNode(), value);
+            SwingUtil.showInputDialog("Value", app, (String)getValueProperty(cellNode.getNode()), s -> {
+               if (s.equals(getValueProperty(cellNode.getNode()))) return;
+               setValueProperty(cellNode.getNode(), s);
+            });
          }
       });
    }

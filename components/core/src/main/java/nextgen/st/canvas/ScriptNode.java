@@ -48,7 +48,7 @@ public class ScriptNode extends nextgen.st.canvas.STNode {
 				.filter(stNode -> !stNode.getUuid().equals(getUuid()))
 				.map(stNode -> (STModelNode) stNode)
 				.collect(java.util.stream.Collectors.toList());
-		canvas.modelDb.doInTransaction(tx -> {
+		canvas.presentationModel.db.doInTransaction(tx -> {
 			
 			stModelNodes.forEach(stNode -> pop.add(new SetScriptModelAction("Set Script to " + cut(stNode.getText()), ScriptNode.this, canvas, event, stNode)));
 			stValueNodes.forEach(stNode -> pop.add(new SetScriptValueAction("Set Script to " + cut(stNode.getText()), ScriptNode.this, canvas, event, stNode)));				
@@ -125,7 +125,7 @@ public class ScriptNode extends nextgen.st.canvas.STNode {
 					final Class<?> aClass = net.openhft.compiler.CompilerUtils.CACHED_COMPILER.loadFromJava(packageDeclaration.getName() + "." + className, compilationUnit.toString());
 					final Runnable runner = (Runnable) aClass.getConstructor(
 								nextgen.st.model.STModelDB.class, nextgen.st.STRenderer.class)
-								.newInstance(canvas.modelDb, canvas.stRenderer);
+								.newInstance(canvas.presentationModel.db, canvas.presentationModel.stRenderer);
 					runner.run();
 				} catch (Throwable ex) {
 					com.generator.util.SwingUtil.showException(canvas, ex);
@@ -146,7 +146,7 @@ public class ScriptNode extends nextgen.st.canvas.STNode {
 			if (!com.generator.util.SwingUtil.showConfirmDialog(canvas, "Delete script ?")) return;
 			doLaterInTransaction(tx -> {
 				node.close();
-				canvas.modelDb.remove(node.script);
+				canvas.presentationModel.db.remove(node.script);
 			});
 		}
 	}
@@ -182,7 +182,7 @@ public class ScriptNode extends nextgen.st.canvas.STNode {
 		@Override
 		void actionPerformed(ScriptNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
 			doLaterInTransaction(transaction -> {
-				final nextgen.st.model.STValue dst = canvas.modelDb.newSTValue(stModelNode.stModel);
+				final nextgen.st.model.STValue dst = canvas.presentationModel.db.newSTValue(stModelNode.stModel);
 				node.script.setScript(dst);
 				canvas.removeRelation(node.getUuid());
 				final STValueNode stValueNode = canvas.addNode(dst.getUuid(), canvas.newSTNode(dst));
