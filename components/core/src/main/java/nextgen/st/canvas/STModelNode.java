@@ -14,7 +14,7 @@ public class STModelNode extends STNode {
     nextgen.st.model.STModel stModel;
 
     public STModelNode(STCanvas canvas, nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STModel stModel) {
-        super(canvas, stTemplate.getName() + " : \n" + canvas.presentationModel.stRenderer.render(stModel), java.util.UUID.fromString(stModel.getUuid()));
+        super(canvas, stTemplate.getName() + " : \n" + canvas.presentationModel.render(stModel), java.util.UUID.fromString(stModel.getUuid()));
         this.stTemplate = stTemplate;
         this.stModel = stModel;
     }
@@ -80,8 +80,8 @@ public class STModelNode extends STNode {
                         stParameterMenu.add(removestParameterMenu);
 
                         stModel.getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid())).forEach(stArgument -> {
-                            openstParameterMenu.add(new OpenArgument(cut(canvas.presentationModel.stRenderer.render(stArgument.getValue())), STModelNode.this, canvas, event, stParameter, stArgument));
-                            removestParameterMenu.add(new RemoveArgument(cut(canvas.presentationModel.stRenderer.render(stArgument.getValue())), STModelNode.this, canvas, event, stParameter, stArgument));
+                            openstParameterMenu.add(new OpenArgument(cut(canvas.presentationModel.render(stArgument.getValue())), STModelNode.this, canvas, event, stParameter, stArgument));
+                            removestParameterMenu.add(new RemoveArgument(cut(canvas.presentationModel.render(stArgument.getValue())), STModelNode.this, canvas, event, stParameter, stArgument));
                         });
 
                         if (stParameter.getArgumentType() != null && stParameter.getArgumentType().equals("String")) {
@@ -105,8 +105,8 @@ public class STModelNode extends STNode {
                         stParameterMenu.add(removestParameterMenu);
 
                         stModel.getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid())).forEach(stArgument -> {
-                            openstParameterMenu.add(new OpenArgument(cut(canvas.presentationModel.stRenderer.render(stArgument.getValue())), STModelNode.this, canvas, event, stParameter, stArgument));
-                            removestParameterMenu.add(new RemoveArgument(cut(canvas.presentationModel.stRenderer.render(stArgument.getValue())), STModelNode.this, canvas, event, stParameter, stArgument));
+                            openstParameterMenu.add(new OpenArgument(cut(canvas.presentationModel.render(stArgument.getValue())), STModelNode.this, canvas, event, stParameter, stArgument));
+                            removestParameterMenu.add(new RemoveArgument(cut(canvas.presentationModel.render(stArgument.getValue())), STModelNode.this, canvas, event, stParameter, stArgument));
                         });
                         break;
                     }
@@ -123,8 +123,8 @@ public class STModelNode extends STNode {
                         stParameterMenu.add(removestParameterMenu);
 
                         stModel.getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid())).forEach(stArgument -> {
-                            openstParameterMenu.add(new OpenArgument("Open " + (stParameter.getType().equals(nextgen.st.domain.STParameterType.KVLIST) ? stParameter.getName() : cut(canvas.presentationModel.stRenderer.render(stArgument.getValue()))), STModelNode.this, canvas, event, stParameter, stArgument));
-                            removestParameterMenu.add(new RemoveArgument("Remove " + (stParameter.getType().equals(nextgen.st.domain.STParameterType.KVLIST) ? stParameter.getName() : cut(canvas.presentationModel.stRenderer.render(stArgument.getValue()))), STModelNode.this, canvas, event, stParameter, stArgument));
+                            openstParameterMenu.add(new OpenArgument("Open " + (stParameter.getType().equals(nextgen.st.domain.STParameterType.KVLIST) ? stParameter.getName() : cut(canvas.presentationModel.render(stArgument.getValue()))), STModelNode.this, canvas, event, stParameter, stArgument));
+                            removestParameterMenu.add(new RemoveArgument("Remove " + (stParameter.getType().equals(nextgen.st.domain.STParameterType.KVLIST) ? stParameter.getName() : cut(canvas.presentationModel.render(stArgument.getValue()))), STModelNode.this, canvas, event, stParameter, stArgument));
                         });
                         break;
                     }
@@ -267,7 +267,7 @@ public class STModelNode extends STNode {
         void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
             doLaterInTransaction(tx -> node.stModel.getFiles().forEach(stFile -> {
 				if (stFile.getPath() == null) return;
-				nextgen.st.STGenerator.writeToFile(canvas.presentationModel.stRenderer.render(node.stModel), stFile.getPackageName().getValue(), stFile.getName().getValue(), stFile.getType().getValue(), new java.io.File(stFile.getPath().getValue()));
+				nextgen.st.STGenerator.writeToFile(canvas.presentationModel.render(node.stModel), stFile.getPackageName().getValue(), stFile.getName().getValue(), stFile.getType().getValue(), new java.io.File(stFile.getPath().getValue()));
 			}));
         }
     }
