@@ -10,12 +10,10 @@ import java.util.*;
 public class STValueNode extends nextgen.st.canvas.STNode {
 
 	nextgen.st.model.STValue stValue;
-	nextgen.st.STRenderer stRenderer;
 
-	public STValueNode(STCanvas canvas, nextgen.st.model.STValue stValue, nextgen.st.STRenderer stRenderer) {
-		super(canvas, stRenderer.render(stValue), java.util.UUID.fromString(stValue.getUuid()));
+	public STValueNode(STCanvas canvas, nextgen.st.model.STValue stValue) {
+		super(canvas, canvas.presentationModel.render(stValue), java.util.UUID.fromString(stValue.getUuid()));
 		this.stValue = stValue;
-		this.stRenderer = stRenderer;
 	}
 
 	@Override
@@ -85,7 +83,7 @@ public class STValueNode extends nextgen.st.canvas.STNode {
 		@Override
 		void actionPerformed(STValueNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
 			canvas.presentationModel.db.doInTransaction(tx -> {
-				com.generator.util.SwingUtil.toClipboard(node.stRenderer.render(node.stValue));
+				com.generator.util.SwingUtil.toClipboard(canvas.presentationModel.render(node.stValue));
 			});
 		}
 	}

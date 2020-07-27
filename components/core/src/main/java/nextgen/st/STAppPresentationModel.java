@@ -2,7 +2,9 @@ package nextgen.st;
 
 import io.vertx.core.json.JsonObject;
 import nextgen.st.domain.*;
+import nextgen.st.model.STModel;
 import nextgen.st.model.STModelDB;
+import nextgen.st.model.STValue;
 
 import java.awt.*;
 import java.io.File;
@@ -96,5 +98,13 @@ public class STAppPresentationModel {
             log.error(stGroupModel.getName() + " has errors: ");
             parseResult.getErrors().forEach(stgError -> log.error("\t" + stgError.getType() + " " + stgError.getCharPosition() + " at line " + stgError.getLine()));
         }
+    }
+
+    public String render(STModel stModel) {
+        return stRenderer.render(stModel);
+    }
+
+    public String render(STValue stValue) {
+        return stRenderer.render(stValue);
     }
 }

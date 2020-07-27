@@ -388,7 +388,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 		@Override
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
-			com.generator.util.SwingUtil.showInputDialog("Name", canvas,s -> doLaterInTransaction(tx -> canvas.addNode(new ScriptNode(canvas, canvas.presentationModel.db.newScript(s), canvas.presentationModel.stRenderer))));
+			com.generator.util.SwingUtil.showInputDialog("Name", canvas,s -> doLaterInTransaction(tx -> canvas.addNode(new ScriptNode(canvas, canvas.presentationModel.db.newScript(s)))));
 		}
 	}
 
@@ -401,7 +401,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 		@Override
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
-			com.generator.util.SwingUtil.showInputDialog("Value", canvas, s -> doLaterInTransaction(tx -> canvas.addNode(new STValueNode(canvas, canvas.presentationModel.db.newSTValue(s), canvas.presentationModel.stRenderer))));
+			com.generator.util.SwingUtil.showInputDialog("Value", canvas, s -> doLaterInTransaction(tx -> canvas.addNode(new STValueNode(canvas, canvas.presentationModel.db.newSTValue(s)))));
 		}
 	}
 
@@ -521,7 +521,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 							if (centerNodeRef.get() == null) centerNodeRef.set(canvas.getNode(stValue.getUuid()));
 						} else if (stNode.hasLabel(org.neo4j.graphdb.Label.label("Script"))) {
 							final nextgen.st.script.Script script = canvas.presentationModel.db.newScript(stNode);
-							canvas.addNode(script.getUuid(), canvas.newScriptNode(script, canvas.presentationModel.stRenderer));
+							canvas.addNode(script.getUuid(), canvas.newScriptNode(script));
 							canvas.getNode(script.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
 							if (centerNodeRef.get() == null) centerNodeRef.set(canvas.getNode(script.getUuid()));
 						} else if (stNode.hasLabel(org.neo4j.graphdb.Label.label("STFile"))) {
@@ -633,8 +633,8 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		}
 	}
 
-	java.util.function.Supplier<nextgen.st.canvas.ScriptNode> newScriptNode(nextgen.st.script.Script script, nextgen.st.STRenderer stRenderer){ 
-		return () -> new nextgen.st.canvas.ScriptNode(this, script, stRenderer);
+	java.util.function.Supplier<nextgen.st.canvas.ScriptNode> newScriptNode(nextgen.st.script.Script script){
+		return () -> new nextgen.st.canvas.ScriptNode(this, script);
 	}
 
 	public final javax.swing.JTextField newTextField(int columns){ 
@@ -697,18 +697,18 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	}
 
 	java.util.function.Supplier<nextgen.st.canvas.STValueNode> newSTNode(nextgen.st.model.STValue stValue){ 
-		return () -> new STValueNode(this, stValue, presentationModel.stRenderer);
+		return () -> new STValueNode(this, stValue);
 	}
 
 	java.util.function.Supplier<nextgen.st.canvas.STKVNode> newSTNode(nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument){ 
-		return () -> new STKVNode(this, stParameter, stArgument, presentationModel.stRenderer);
+		return () -> new STKVNode(this, stParameter, stArgument);
 	}
 
 	java.util.function.Supplier<nextgen.st.canvas.STFileNode> newSTNode(nextgen.st.model.STFile stFile, nextgen.st.model.STModel stModel){ 
-		return () -> new STFileNode(this, stFile, stModel, presentationModel.stRenderer);
+		return () -> new STFileNode(this, stFile, stModel);
 	}
 
 	java.util.function.Supplier<nextgen.st.canvas.STModelNode> newSTNode(nextgen.st.model.STModel stModel){ 
-		return () -> new nextgen.st.canvas.STModelNode(this, presentationModel.db.findSTTemplateByUuid(stModel.getStTemplate()), stModel, presentationModel.stRenderer);
+		return () -> new nextgen.st.canvas.STModelNode(this, presentationModel.db.findSTTemplateByUuid(stModel.getStTemplate()), stModel);
 	}
 }

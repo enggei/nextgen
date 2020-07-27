@@ -12,13 +12,11 @@ public class STModelNode extends STNode {
 
     nextgen.st.domain.STTemplate stTemplate;
     nextgen.st.model.STModel stModel;
-    nextgen.st.STRenderer stRenderer;
 
-    public STModelNode(STCanvas canvas, nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STModel stModel, nextgen.st.STRenderer stRenderer) {
-        super(canvas, stTemplate.getName() + " : \n" + stRenderer.render(stModel), java.util.UUID.fromString(stModel.getUuid()));
+    public STModelNode(STCanvas canvas, nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STModel stModel) {
+        super(canvas, stTemplate.getName() + " : \n" + canvas.presentationModel.stRenderer.render(stModel), java.util.UUID.fromString(stModel.getUuid()));
         this.stTemplate = stTemplate;
         this.stModel = stModel;
-        this.stRenderer = stRenderer;
     }
 
     @Override
@@ -200,9 +198,7 @@ public class STModelNode extends STNode {
     @Override
     protected void onNodeLeftClick(PInputEvent event) {
         super.onNodeLeftClick(event);
-        canvas.presentationModel.db.doInTransaction(tx -> {
-            setText(stRenderer.render(stModel));
-        });
+        canvas.presentationModel.db.doInTransaction(tx -> setText(canvas.presentationModel.render(stModel)));
     }
 
     @Override
@@ -269,12 +265,10 @@ public class STModelNode extends STNode {
 
         @Override
         void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-            doLaterInTransaction(tx -> {
-                node.stModel.getFiles().forEach(stFile -> {
-                    if (stFile.getPath() == null) return;
-                    nextgen.st.STGenerator.writeToFile(canvas.presentationModel.stRenderer.render(node.stModel), stFile.getPackageName().getValue(), stFile.getName().getValue(), stFile.getType().getValue(), new java.io.File(stFile.getPath().getValue()));
-                });
-            });
+            doLaterInTransaction(tx -> node.stModel.getFiles().forEach(stFile -> {
+				if (stFile.getPath() == null) return;
+				nextgen.st.STGenerator.writeToFile(canvas.presentationModel.stRenderer.render(node.stModel), stFile.getPackageName().getValue(), stFile.getName().getValue(), stFile.getType().getValue(), new java.io.File(stFile.getPath().getValue()));
+			}));
         }
     }
 
@@ -288,9 +282,7 @@ public class STModelNode extends STNode {
         @Override
         void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
             doLaterInTransaction(tx -> {
-                node.forEachArgument((stArgument, stParameter) -> {
-                    new OpenArgument("", node, canvas, event, stParameter, stArgument).actionPerformed(null);
-                });
+                node.forEachArgument((stArgument, stParameter) -> new OpenArgument("", node, canvas, event, stParameter, stArgument).actionPerformed(null));
                 new LayoutTreeAction(node, canvas, event).actionPerformed(null);
             });
         }
@@ -313,7 +305,7 @@ public class STModelNode extends STNode {
             doLaterInTransaction(tx -> {
                 canvas.removeRelation(UUID.fromString(stArgument.getUuid()));
                 node.stModel.removeArguments(stArgument);
-                node.setText(node.stRenderer.render(node.stModel));
+                node.setText(canvas.presentationModel.render(node.stModel));
             });
         }
     }
@@ -327,9 +319,7 @@ public class STModelNode extends STNode {
 
         @Override
         void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-            doLaterInTransaction(tx -> {
-                com.generator.util.SwingUtil.toClipboard(node.stRenderer.render(node.stModel));
-            });
+            doLaterInTransaction(tx -> SwingUtil.toClipboard(canvas.presentationModel.render(node.stModel)));
         }
     }
 
@@ -361,9 +351,9 @@ public class STModelNode extends STNode {
         void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
             doLaterInTransaction(tx -> {
                 final nextgen.st.model.STModel clone = canvas.presentationModel.db.clone(node.stModel);
-                final STModelNode stModelNode = (STModelNode) canvas.newSTNode(clone).get();
+                final STModelNode stModelNode = canvas.newSTNode(clone).get();
                 canvas.addNode(stModelNode);
-                stModelNode.setText(stModelNode.stRenderer.render(stModelNode.stModel));
+                stModelNode.setText(canvas.presentationModel.render(stModelNode.stModel));
             });
         }
     }
@@ -399,7 +389,7 @@ public class STModelNode extends STNode {
                         doLaterInTransaction(tx -> {
                             final nextgen.st.model.STFile stFile = canvas.presentationModel.db.newSTFile(name, type, path, packageName);
                             node.stModel.addFiles(stFile);
-                            final STFileNode dstNode = canvas.addNode(new STFileNode(canvas, stFile, node.stModel, node.stRenderer));
+                            final STFileNode dstNode = canvas.addNode(new STFileNode(canvas, stFile, node.stModel));
                             //canvas.addRelation(new STSinkRelation(canvas, node, dstNode));
                             canvas.addRelation(dstNode.getUuid(), canvas.newSinkRelation(node, dstNode));
                         });
@@ -418,14 +408,12 @@ public class STModelNode extends STNode {
 
         @Override
         void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-            doLaterInTransaction(tx -> {
-                node.stModel.getFiles().forEach(stFile -> {
-                    final STFileNode dstNode = (STFileNode) canvas.addNode(stFile.getUuid(), canvas.newSTNode(stFile, node.stModel));
-                    //canvas.addRelation(new STSinkRelation(canvas, node, dstNode));
-                    canvas.addRelation(dstNode.getUuid(), canvas.newSinkRelation(node, dstNode));
-                    new LayoutTreeAction(node, canvas, event).actionPerformed(null);
-                });
-            });
+            doLaterInTransaction(tx -> node.stModel.getFiles().forEach(stFile -> {
+				final STFileNode dstNode = canvas.addNode(stFile.getUuid(), canvas.newSTNode(stFile, node.stModel));
+				//canvas.addRelation(new STSinkRelation(canvas, node, dstNode));
+				canvas.addRelation(dstNode.getUuid(), canvas.newSinkRelation(node, dstNode));
+				new LayoutTreeAction(node, canvas, event).actionPerformed(null);
+			}));
         }
     }
 
@@ -445,7 +433,7 @@ public class STModelNode extends STNode {
                 final nextgen.st.model.STValue stValue = canvas.presentationModel.db.newSTValue("true");
                 final nextgen.st.model.STArgument stArgument = canvas.presentationModel.db.newSTArgument(stParameter, stValue);
                 node.stModel.addArguments(stArgument);
-                node.setText(node.stRenderer.render(node.stModel));
+                node.setText(canvas.presentationModel.render(node.stModel));
             });
         }
     }
@@ -469,7 +457,7 @@ public class STModelNode extends STNode {
                 canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue));
                 //canvas.addRelation(new STArgumentRelation(canvas, node, canvas.getNode(stValue.getUuid()), stArgument, stParameter));
                 canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, canvas.getNode(stValue.getUuid()), stArgument, stParameter));
-                node.setText(node.stRenderer.render(node.stModel));
+                node.setText(canvas.presentationModel.render(node.stModel));
             }));
         }
     }
@@ -495,7 +483,7 @@ public class STModelNode extends STNode {
                 canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue));
                 //canvas.addRelation(new STArgumentRelation(canvas, node, canvas.getNode(stValue.getUuid()), stArgument, stParameter));
                 canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, canvas.getNode(stValue.getUuid()), stArgument, stParameter));
-                node.setText(node.stRenderer.render(node.stModel));
+                node.setText(canvas.presentationModel.render(node.stModel));
             });
         }
     }
@@ -519,7 +507,7 @@ public class STModelNode extends STNode {
                 node.stModel.addArguments(stArgument);
                 // canvas.addRelation(new STArgumentRelation(canvas, node, stValueNode, stArgument, stParameter));
                 canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stValueNode, stArgument, stParameter));
-                node.setText(node.stRenderer.render(node.stModel));
+                node.setText(canvas.presentationModel.render(node.stModel));
             });
         }
     }
@@ -544,7 +532,7 @@ public class STModelNode extends STNode {
                 node.stModel.addArguments(stArgument);
                 //canvas.addRelation(new STArgumentRelation(canvas, node, stModelNode, stArgument, stParameter));
                 canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stModelNode, stArgument, stParameter));
-                node.setText(node.stRenderer.render(node.stModel));
+                node.setText(canvas.presentationModel.render(node.stModel));
             });
         }
     }
@@ -567,7 +555,7 @@ public class STModelNode extends STNode {
 				final STNode stValueNode = canvas.addNode(canvas.newSTNode(stValue).get());
 				// canvas.addRelation(new STArgumentRelation(canvas, node, stValueNode, stArgument, stParameter));
 				canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stValueNode, stArgument, stParameter));
-				node.setText(node.stRenderer.render(node.stModel));
+				node.setText(canvas.presentationModel.render(node.stModel));
 			}));
         }
     }
@@ -592,7 +580,7 @@ public class STModelNode extends STNode {
                 final STNode stValueNode = canvas.addNode(canvas.newSTNode(stValue).get());
                 //canvas.addRelation(new STArgumentRelation(canvas, node, stValueNode, stArgument, stParameter));
                 canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stValueNode, stArgument, stParameter));
-                node.setText(node.stRenderer.render(node.stModel));
+                node.setText(canvas.presentationModel.render(node.stModel));
             });
         }
     }
@@ -615,7 +603,7 @@ public class STModelNode extends STNode {
                 node.stModel.addArguments(stArgument);
                 //canvas.addRelation(new STArgumentRelation(canvas, node, stValueNode, stArgument, stParameter));
                 canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stValueNode, stArgument, stParameter));
-                node.setText(node.stRenderer.render(node.stModel));
+                node.setText(canvas.presentationModel.render(node.stModel));
             });
         }
     }
@@ -639,7 +627,7 @@ public class STModelNode extends STNode {
                 node.stModel.addArguments(stArgument);
                 //canvas.addRelation(new STArgumentRelation(canvas, node, stModelNode, stArgument, stParameter));
                 canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stModelNode, stArgument, stParameter));
-                node.setText(node.stRenderer.render(node.stModel));
+                node.setText(canvas.presentationModel.render(node.stModel));
             });
         }
     }
@@ -679,7 +667,7 @@ public class STModelNode extends STNode {
                             final STNode stkvNode = canvas.addNode(canvas.newSTNode(stParameter, stArgument).get());
                             // canvas.addRelation(new STArgumentRelation(canvas, node, stkvNode, stArgument, stParameter));
                             canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stkvNode, stArgument, stParameter));
-                            node.setText(node.stRenderer.render(node.stModel));
+                            node.setText(canvas.presentationModel.render(node.stModel));
                         });
                     }
                 });

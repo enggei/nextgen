@@ -3,19 +3,15 @@ package nextgen.st.canvas;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.*;
 
 public class ScriptNode extends nextgen.st.canvas.STNode {
 
 	nextgen.st.script.Script script;
-	nextgen.st.STRenderer stRenderer;
 
-	public ScriptNode(nextgen.st.canvas.STCanvas canvas, nextgen.st.script.Script script, nextgen.st.STRenderer stRenderer) {
+	public ScriptNode(nextgen.st.canvas.STCanvas canvas, nextgen.st.script.Script script) {
 		super(canvas, script.getName(), java.util.UUID.fromString(script.getUuid()));
 		this.script = script;
-		this.stRenderer = stRenderer;
 	}
 
 	@Override
@@ -81,7 +77,7 @@ public class ScriptNode extends nextgen.st.canvas.STNode {
 			doLaterInTransaction(tx -> {
 				try {
 					final String className = "Runner" + System.currentTimeMillis();
-					final String script = node.stRenderer.render(node.script.getScript());
+					final String script = canvas.presentationModel.render(node.script.getScript());
 					log.info(script);
 
 					final nextgen.templates.java.PackageDeclaration packageDeclaration = nextgen.templates.java.JavaST.newPackageDeclaration()

@@ -3,21 +3,18 @@ package nextgen.st.canvas;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.*;
+import java.util.UUID;
 
 public class STKVNode extends STNode {
 
     nextgen.st.domain.STParameter stParameter;
     nextgen.st.model.STArgument stArgument;
-    nextgen.st.STRenderer stRenderer;
 
-    public STKVNode(STCanvas canvas, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument, nextgen.st.STRenderer stRenderer) {
+    public STKVNode(STCanvas canvas, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument) {
         super(canvas, stParameter.getName(), java.util.UUID.fromString(stArgument.getUuid()));
         this.stParameter = stParameter;
         this.stArgument = stArgument;
-        this.stRenderer = stRenderer;
     }
 
     protected void removeArgument(nextgen.st.domain.STParameterKey stParameterKey) {
@@ -69,12 +66,8 @@ public class STKVNode extends STNode {
         canvas.presentationModel.db.doInTransaction(tx -> {
             stParameter.getKeys().forEach(stParameterKey -> {
                 final JMenu stParameterMenu = new JMenu(stParameterKey.getName());
-                stValueNodes.forEach(stNode -> {
-                    stParameterMenu.add(new SetSTValueArgumentAction("Set " + stParameterKey.getName() + " = " + cut(stNode.getText()), STKVNode.this, canvas, event, stParameter, stParameterKey, stArgument, stNode));
-                });
-                stModelNodes.forEach(stNode -> {
-                    stParameterMenu.add(new SetSTModelArgumentAction("Set " + stParameterKey.getName() + " = " + cut(stNode.getText()), STKVNode.this, canvas, event, stParameter, stParameterKey, stArgument, stNode));
-                });
+                stValueNodes.forEach(stNode -> stParameterMenu.add(new SetSTValueArgumentAction("Set " + stParameterKey.getName() + " = " + cut(stNode.getText()), STKVNode.this, canvas, event, stParameter, stParameterKey, stArgument, stNode)));
+                stModelNodes.forEach(stNode -> stParameterMenu.add(new SetSTModelArgumentAction("Set " + stParameterKey.getName() + " = " + cut(stNode.getText()), STKVNode.this, canvas, event, stParameter, stParameterKey, stArgument, stNode)));
                 stParameterMenu.add(new SetInputValueArgumentAction("Set " + stParameterKey.getName(), STKVNode.this, canvas, event, stParameter, stParameterKey, stArgument));
                 stArgument.getKeyValues().filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.uuid())).forEach(stArgumentKV -> {
                     stParameterMenu.add(new OpenArgument("Open " + stParameterKey.getName(), STKVNode.this, canvas, event, stArgument, stParameterKey, stArgumentKV));
@@ -180,7 +173,6 @@ public class STKVNode extends STNode {
                 node.removeArgument(stParameterKey);
                 final nextgen.st.model.STValue stValue = canvas.presentationModel.db.newSTValue(stModelNode.stModel);
                 final nextgen.st.model.STArgumentKV stArgumentKV = canvas.presentationModel.db.newSTArgumentKV(stParameterKey, stValue);
-                ;
                 node.stArgument.addKeyValues(stArgumentKV);
                 canvas.addRelation(stArgumentKV.getUuid(), canvas.newSTKVArgumentRelation(node, stModelNode, stArgument, stParameterKey, stArgumentKV));
             });
@@ -197,11 +189,7 @@ public class STKVNode extends STNode {
         @Override
         void actionPerformed(STKVNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
             doLaterInTransaction(tx -> {
-                node.stParameter.getKeys().forEach(stParameterKey -> {
-                    node.stArgument.getKeyValues().filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.uuid())).findFirst().ifPresent(stArgumentKV -> {
-                        new OpenArgument("", node, canvas, event, node.stArgument, stParameterKey, stArgumentKV).actionPerformed(null);
-                    });
-                });
+                node.stParameter.getKeys().forEach(stParameterKey -> node.stArgument.getKeyValues().filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.uuid())).findFirst().ifPresent(stArgumentKV -> new OpenArgument("", node, canvas, event, node.stArgument, stParameterKey, stArgumentKV).actionPerformed(null)));
                 new LayoutTreeAction(node, canvas, event).actionPerformed(null);
             });
         }

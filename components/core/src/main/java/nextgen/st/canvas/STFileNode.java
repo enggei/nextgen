@@ -11,13 +11,11 @@ public class STFileNode extends nextgen.st.canvas.STNode {
 
 	nextgen.st.model.STFile stFile;
 	nextgen.st.model.STModel stModel;
-	nextgen.st.STRenderer stRenderer;
 
-	public STFileNode(STCanvas canvas, nextgen.st.model.STFile stFile, nextgen.st.model.STModel stModel, nextgen.st.STRenderer stRenderer) {
+	public STFileNode(STCanvas canvas, nextgen.st.model.STFile stFile, nextgen.st.model.STModel stModel) {
 		super(canvas, nextgen.st.STGenerator.asFile(stFile).getAbsolutePath(), java.util.UUID.fromString(stFile.getUuid()));
 		this.stFile = stFile;
 		this.stModel = stModel;
-		this.stRenderer = stRenderer;
 	}
 
 	@Override
@@ -87,8 +85,8 @@ public class STFileNode extends nextgen.st.canvas.STNode {
 	protected void onNodeLeftClick(PInputEvent event) {
 		super.onNodeLeftClick(event);
 		doLaterInTransaction(tx -> {
-			if (stRenderer == null || stModel == null || stFile.getPath() == null) return;
-			nextgen.st.STGenerator.writeToFile(stRenderer.render(stModel), stFile.getPackageName().getValue(), stFile.getName().getValue(), stFile.getType().getValue(), new java.io.File(stFile.getPath().getValue()));
+			if (stModel == null || stFile.getPath() == null) return;
+			nextgen.st.STGenerator.writeToFile(canvas.presentationModel.render(stModel), stFile.getPackageName().getValue(), stFile.getName().getValue(), stFile.getType().getValue(), new java.io.File(stFile.getPath().getValue()));
 		});
 	}
 
