@@ -3,7 +3,9 @@ package nextgen.st.canvas;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.*;
 
 public class ScriptNode extends nextgen.st.canvas.STNode {
 
@@ -178,7 +180,7 @@ public class ScriptNode extends nextgen.st.canvas.STNode {
 		@Override
 		void actionPerformed(ScriptNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
 			doLaterInTransaction(transaction -> {
-				final nextgen.st.model.STValue dst = canvas.presentationModel.db.newSTValue(stModelNode.stModel);
+				final nextgen.st.model.STValue dst = canvas.presentationModel.newSTValue(stModelNode.stModel);
 				node.script.setScript(dst);
 				canvas.removeRelation(node.getUuid());
 				final STValueNode stValueNode = canvas.addNode(dst.getUuid(), canvas.newSTNode(dst));

@@ -40,10 +40,8 @@ public class STSinkRelation extends STRelation {
 		@Override
 		void actionPerformed(STSinkRelation relation, STCanvas canvas, PInputEvent event, ActionEvent e) {
 			if (!com.generator.util.SwingUtil.showConfirmDialog(canvas, "Delete ?")) return;
-			final STModelNode src = (STModelNode) relation.getSrc();
-			final STFileNode dst = (STFileNode) relation.getDst();
 			doLaterInTransaction(tx -> {
-				src.stModel.removeFiles(dst.stFile);
+				((STModelNode) relation.getSrc()).stModel.removeFiles(((STFileNode) relation.getDst()).stFile);
 				canvas.removeRelation(relation.getUuid());
 			});
 		}

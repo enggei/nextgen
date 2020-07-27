@@ -198,10 +198,6 @@ public class STNode extends PNode implements PropertyChangeListener {
 				new DebugAction(this, canvas, event).actionPerformed(null);
 				break;
 
-			case VK_W:
-				new WriteToFile(this, canvas, event).actionPerformed(null);
-				break;
-
 		}
 	}
 
@@ -455,18 +451,6 @@ public class STNode extends PNode implements PropertyChangeListener {
 				node.outgoing().forEach(uuid -> log.info(" -> " + uuid));
 				node.incoming().forEach(uuid -> log.info(" <- " + uuid));
 			});
-		}
-	}
-
-	private static final class WriteToFile extends NodeAction<STNode> {
-
-
-		WriteToFile(STNode node, STCanvas canvas, PInputEvent event) {
-			super("", node, canvas, event);
-		}
-
-		@Override
-		void actionPerformed(STNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
 		}
 	}
 

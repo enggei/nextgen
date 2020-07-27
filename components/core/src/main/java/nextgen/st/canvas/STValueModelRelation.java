@@ -11,7 +11,7 @@ public class STValueModelRelation extends STRelation {
 
 
 	public STValueModelRelation(STCanvas canvas, STValueNode src, STModelNode dst) {
-		super(canvas, src, dst, "sTValueModelRelation", UUID.fromString(src.stValue.getUuid()));
+		super(canvas, src, dst, "Value", dst.getUuid());
 	}
 
 	@Override

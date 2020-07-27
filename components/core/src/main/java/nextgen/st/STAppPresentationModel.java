@@ -3,6 +3,8 @@ package nextgen.st;
 import io.vertx.core.json.JsonObject;
 import nextgen.st.domain.*;
 import nextgen.st.model.*;
+import nextgen.st.script.Script;
+import org.neo4j.graphdb.Node;
 
 import java.awt.*;
 import java.io.File;
@@ -137,5 +139,29 @@ public class STAppPresentationModel {
 
     public STFile newSTFile(String name, String type, String path, String packageName) {
         return db.newSTFile(name, type, path, packageName);
+    }
+
+    public Script newScript(String name) {
+        return db.newScript(name);
+    }
+
+    public STModel newSTModel(Node node) {
+        return db.newSTModel(node);
+    }
+
+    public STValue newSTValue(Node node) {
+        return db.newSTValue(node);
+    }
+
+    public Script newScript(Node node) {
+        return db.newScript(node);
+    }
+
+    public STFile newSTFile(Node node) {
+        return db.newSTFile(node);
+    }
+
+    public STTemplate findSTTemplateByUuid(String stTemplate) {
+        return db.findSTTemplateByUuid(stTemplate);
     }
 }

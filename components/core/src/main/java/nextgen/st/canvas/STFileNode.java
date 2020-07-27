@@ -121,16 +121,16 @@ public class STFileNode extends nextgen.st.canvas.STNode {
 							doLaterInTransaction(tx -> {
 
 								if (node.stFile.getName() == null || (node.stFile.getName().getValue() == null || !node.stFile.getName().getValue().equals(name)))
-									node.stFile.setName(canvas.presentationModel.db.newSTValue(name));
+									node.stFile.setName(canvas.presentationModel.newSTValue(name));
 
 								if (node.stFile.getType() == null || (node.stFile.getType().getValue() == null || !node.stFile.getType().getValue().equals(type)))
-									node.stFile.setType(canvas.presentationModel.db.newSTValue(type));
+									node.stFile.setType(canvas.presentationModel.newSTValue(type));
 
 								if (node.stFile.getPath() == null || (node.stFile.getPath().getValue() == null || !node.stFile.getPath().getValue().equals(path)))
-									node.stFile.setPath(canvas.presentationModel.db.newSTValue(path));
+									node.stFile.setPath(canvas.presentationModel.newSTValue(path));
 
 								if (node.stFile.getPackageName() == null || (node.stFile.getPackageName().getValue() == null || !node.stFile.getPackageName().getValue().equals(packageName)))
-									node.stFile.setPackageName(canvas.presentationModel.db.newSTValue(packageName));
+									node.stFile.setPackageName(canvas.presentationModel.newSTValue(packageName));
 
 								node.setText(nextgen.st.STGenerator.asFile(node.stFile).getAbsolutePath());
 							});

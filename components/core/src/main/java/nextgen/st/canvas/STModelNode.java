@@ -695,33 +695,23 @@ public class STModelNode extends STNode {
 		void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
 			doLaterInTransaction(tx -> {
 				if (stParameter.getType().equals(nextgen.st.domain.STParameterType.KVLIST)) {
-					final STNode dstNode = canvas.addNode(stArgument.getUuid(), canvas.newSTNode(stParameter, stArgument));
-					//canvas.addRelation(new STArgumentRelation(canvas, node, dstNode, stArgument, stParameter));
-					canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, dstNode, stArgument, stParameter));
+					canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, canvas.addNode(stArgument.getUuid(), canvas.newSTNode(stParameter, stArgument)), stArgument, stParameter));
 				} else {
 					final nextgen.st.model.STValue stValue = stArgument.getValue();
 					switch(stValue.getType()) {
 						case STMODEL :
 						{
-							final STNode dstNode = canvas.addNode(stValue.getStModel().getUuid(), canvas.newSTNode(stValue.getStModel()));
-							//canvas.addRelation(new STArgumentRelation(canvas, node, dstNode, stArgument, stParameter));
-							canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, dstNode, stArgument, stParameter));
+							canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, canvas.addNode(stValue.getStModel().getUuid(), canvas.newSTNode(stValue.getStModel())), stArgument, stParameter));
 							break;
 						}
 						case PRIMITIVE :
 						{
-							final STNode dstNode = canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue));
-							//canvas.addRelation(new STArgumentRelation(canvas, node, dstNode, stArgument, stParameter));
-							canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, dstNode, stArgument, stParameter));
-							
+							canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue)), stArgument, stParameter));
 							break;
 						}
 						case ENUM :
 						{
-							final STNode dstNode = canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue));
-							//canvas.addRelation(new STArgumentRelation(canvas, node, dstNode, stArgument, stParameter));
-							canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, dstNode, stArgument, stParameter));
-							
+							canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue)), stArgument, stParameter));				
 							break;
 						}
 					}

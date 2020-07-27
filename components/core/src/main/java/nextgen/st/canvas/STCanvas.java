@@ -1,6 +1,5 @@
 package nextgen.st.canvas;
 
-import nextgen.st.STAppPresentationModel;
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.PLayer;
@@ -38,18 +37,15 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	private final SelectEventsHandler selectEventHandler = new SelectEventsHandler();
 	private final CanvasInputEventsHandler canvasInputEventsHandler = new CanvasInputEventsHandler();
 	final CanvasZoomHandler canvasZoomHandler = new CanvasZoomHandler();
-	
-	final STAppPresentationModel presentationModel;
 
-	public STCanvas(STAppPresentationModel presentationModel) {
+	nextgen.st.STAppPresentationModel presentationModel;
+
+	public STCanvas(nextgen.st.STAppPresentationModel presentationModel) {
 		this(presentationModel, Color.WHITE, new Dimension(1024, 1024));
 	}
 
-	public STCanvas(STAppPresentationModel presentationModel, Color background, Dimension preferredSize) {
+	public STCanvas(nextgen.st.STAppPresentationModel presentationModel, Color background, Dimension preferredSize) {
 		super();
-		
-		this.presentationModel = presentationModel;
-		
 		setBackground(background);
 		setPreferredSize(preferredSize);
 		nodeLayer = getLayer();
@@ -58,6 +54,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		removeInputEventListener(getZoomEventHandler());
 		addInputEventListener(canvasZoomHandler);
 		addInputEventListener(canvasInputEventsHandler);
+		this.presentationModel = presentationModel;
 		javax.swing.SwingUtilities.invokeLater(() -> new LoadLastLayoutAction(this, null).actionPerformed(null));
 	}
 
@@ -388,7 +385,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 		@Override
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
-			com.generator.util.SwingUtil.showInputDialog("Name", canvas,s -> doLaterInTransaction(tx -> canvas.addNode(new ScriptNode(canvas, canvas.presentationModel.db.newScript(s)))));
+			com.generator.util.SwingUtil.showInputDialog("Name", canvas, s -> doLaterInTransaction(tx -> canvas.addNode(new ScriptNode(canvas, canvas.presentationModel.newScript(s)))));
 		}
 	}
 
@@ -401,7 +398,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 		@Override
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
-			com.generator.util.SwingUtil.showInputDialog("Value", canvas, s -> doLaterInTransaction(tx -> canvas.addNode(new STValueNode(canvas, canvas.presentationModel.db.newSTValue(s)))));
+			com.generator.util.SwingUtil.showInputDialog("Value", canvas, s -> doLaterInTransaction(tx -> canvas.addNode(new STValueNode(canvas, canvas.presentationModel.newSTValue(s)))));
 		}
 	}
 
@@ -416,7 +413,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
 			final String s = com.generator.util.SwingUtil.fromClipboard();
 			if (s == null || s.trim().length() == 0) return;
-			doLaterInTransaction(tx -> canvas.addNode(canvas.newSTNode(canvas.presentationModel.db.newSTValue(s)).get()));
+			doLaterInTransaction(tx -> canvas.addNode(canvas.newSTNode(canvas.presentationModel.newSTValue(s)).get()));
 		}
 	}
 
@@ -510,22 +507,22 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 					node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("ref")).forEach(relationship -> {
 						final org.neo4j.graphdb.Node stNode = relationship.getOtherNode(node);
 						if (stNode.hasLabel(org.neo4j.graphdb.Label.label("STModel"))) {
-							final nextgen.st.model.STModel stModel = canvas.presentationModel.db.newSTModel(stNode);
+							final nextgen.st.model.STModel stModel = canvas.presentationModel.newSTModel(stNode);
 							canvas.addNode(stModel.getUuid(), canvas.newSTNode(stModel));
 							canvas.getNode(stModel.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
 							if (centerNodeRef.get() == null) centerNodeRef.set(canvas.getNode(stModel.getUuid()));
 						} else if (stNode.hasLabel(org.neo4j.graphdb.Label.label("STValue"))) {
-							final nextgen.st.model.STValue stValue = canvas.presentationModel.db.newSTValue(stNode);
+							final nextgen.st.model.STValue stValue = canvas.presentationModel.newSTValue(stNode);
 							canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue));
 							canvas.getNode(stValue.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
 							if (centerNodeRef.get() == null) centerNodeRef.set(canvas.getNode(stValue.getUuid()));
 						} else if (stNode.hasLabel(org.neo4j.graphdb.Label.label("Script"))) {
-							final nextgen.st.script.Script script = canvas.presentationModel.db.newScript(stNode);
+							final nextgen.st.script.Script script = canvas.presentationModel.newScript(stNode);
 							canvas.addNode(script.getUuid(), canvas.newScriptNode(script));
 							canvas.getNode(script.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
 							if (centerNodeRef.get() == null) centerNodeRef.set(canvas.getNode(script.getUuid()));
 						} else if (stNode.hasLabel(org.neo4j.graphdb.Label.label("STFile"))) {
-							final nextgen.st.model.STFile stFile = canvas.presentationModel.db.newSTFile(stNode);
+							final nextgen.st.model.STFile stFile = canvas.presentationModel.newSTFile(stNode);
 							stFile.getIncomingFiles().findFirst().ifPresent(stModel -> {
 								canvas.addNode(stFile.getUuid(), canvas.newSTNode(stFile, stModel));
 								canvas.getNode(stFile.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
@@ -633,7 +630,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		}
 	}
 
-	java.util.function.Supplier<nextgen.st.canvas.ScriptNode> newScriptNode(nextgen.st.script.Script script){
+	java.util.function.Supplier<nextgen.st.canvas.ScriptNode> newScriptNode(nextgen.st.script.Script script){ 
 		return () -> new nextgen.st.canvas.ScriptNode(this, script);
 	}
 
@@ -709,6 +706,6 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	}
 
 	java.util.function.Supplier<nextgen.st.canvas.STModelNode> newSTNode(nextgen.st.model.STModel stModel){ 
-		return () -> new nextgen.st.canvas.STModelNode(this, presentationModel.db.findSTTemplateByUuid(stModel.getStTemplate()), stModel);
+		return () -> new nextgen.st.canvas.STModelNode(this, presentationModel.findSTTemplateByUuid(stModel.getStTemplate()), stModel);
 	}
 }

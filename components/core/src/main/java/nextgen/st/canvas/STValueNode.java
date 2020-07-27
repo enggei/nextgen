@@ -19,22 +19,22 @@ public class STValueNode extends nextgen.st.canvas.STNode {
 	@Override
 	public void addedToCanvas() {
 		if (stValue.getType().equals(nextgen.st.model.STValueType.STMODEL)) {
-		            final nextgen.st.model.STModel stModel = stValue.getStModel();
-		            final STNode stModelNode = canvas.getNode(UUID.fromString(stModel.getUuid()));
-		            if (stModelNode instanceof STModelNode) {
-		                canvas.addRelation(stModelNode.getUuid(), canvas.newSTValueModelRelation(STValueNode.this, (STModelNode) stModelNode));
-		            }
-		        }
+			final nextgen.st.model.STModel stModel = stValue.getStModel();
+			final STNode stModelNode = canvas.getNode(UUID.fromString(stModel.getUuid()));
+			if (stModelNode instanceof STModelNode) {
+				canvas.addRelation(stModelNode.getUuid(), canvas.newSTValueModelRelation(STValueNode.this, (STModelNode) stModelNode));
+			}
+		}
 	}
 
 	@Override
 	public void newNodeAdded(nextgen.st.canvas.STNode node) {
 		if (stValue.getType().equals(nextgen.st.model.STValueType.STMODEL)) {
-		            final UUID uuid = UUID.fromString(stValue.getStModel().getUuid());
-		            if (uuid.equals(node.getUuid())) {
-		                canvas.addRelation(node.getUuid(), canvas.newSTValueModelRelation(STValueNode.this, (STModelNode) node));
-		            }
-		        }
+			final UUID uuid = UUID.fromString(stValue.getStModel().getUuid());
+			if (uuid.equals(node.getUuid())) {
+				canvas.addRelation(node.getUuid(), canvas.newSTValueModelRelation(STValueNode.this, (STModelNode) node));
+			}
+		}
 	}
 
 	@Override
@@ -82,9 +82,7 @@ public class STValueNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(STValueNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			canvas.presentationModel.db.doInTransaction(tx -> {
-				com.generator.util.SwingUtil.toClipboard(canvas.presentationModel.render(node.stValue));
-			});
+			canvas.presentationModel.db.doInTransaction(tx -> com.generator.util.SwingUtil.toClipboard(canvas.presentationModel.render(node.stValue)));
 		}
 	}
 
@@ -122,7 +120,7 @@ public class STValueNode extends nextgen.st.canvas.STNode {
 					if (otherNode.hasLabel(org.neo4j.graphdb.Label.label("STArgument"))) {
 						final nextgen.st.model.STArgument stArgument = new nextgen.st.model.STArgument(otherNode);
 						stArgument.getIncomingArguments().forEach(stModel -> {
-							final nextgen.st.domain.STTemplate stTemplateByUuid = canvas.presentationModel.db.findSTTemplateByUuid(stModel.getStTemplate());
+							final nextgen.st.domain.STTemplate stTemplateByUuid = canvas.presentationModel.findSTTemplateByUuid(stModel.getStTemplate());
 							if (stTemplateByUuid == null) return;
 							stTemplateByUuid.getParameters()
 									.filter(stParameter -> stParameter.uuid().equals(stArgument.getStParameter()))
