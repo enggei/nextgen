@@ -716,6 +716,7 @@ public class SwingUtil {
     public static org.fife.ui.rsyntaxtextarea.RSyntaxTextArea newRSyntaxTextArea(int rows, int cols) {
         final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea rSyntaxTextArea = new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea(rows, cols);
         rSyntaxTextArea.setTabSize(3);
+        rSyntaxTextArea.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
         rSyntaxTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
 
             @Override

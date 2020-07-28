@@ -1,757 +1,839 @@
 package nextgen.st.canvas;
 
+import nextgen.st.domain.STParameter;
+import nextgen.st.model.STValue;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class STModelNode extends STNode {
 
-	nextgen.st.domain.STTemplate stTemplate;
-	nextgen.st.model.STModel stModel;
-
-	public STModelNode(STCanvas canvas, nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STModel stModel) {
-		super(canvas, stTemplate.getName() + " : \n" + canvas.presentationModel.render(stModel), java.util.UUID.fromString(stModel.getUuid()));
-		this.stTemplate = stTemplate;
-		this.stModel = stModel;
-	}
-
-	@Override
-	public void setText(String text) {
-		super.setText(stTemplate.getName() + " : \n" + text);
-	}
-
-	@Override
-	public void addedToCanvas() {
-		canvas.getAllNodes().forEach(this::newNodeAdded);
-	}
-
-	@Override
-	public void newNodeAdded(STNode node) {
-		forEachArgument((stArgument, stParameter) -> {
-			if (refersTo(stArgument, stParameter, node)) canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(STModelNode.this, node, stArgument, stParameter));
-		});
-	}
-
-	@Override
-	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
-		final java.util.List<STValueNode> stValueNodes = canvas.getSelectedNodes()
-				.filter(stNode -> stNode instanceof STValueNode)
-				.filter(stNode -> !stNode.getUuid().equals(getUuid()))
-				.map(stNode -> (STValueNode) stNode)
-				.collect(java.util.stream.Collectors.toList());
-		final java.util.List<STModelNode> stModelNodes = canvas.getSelectedNodes()
-				.filter(stNode -> stNode instanceof STModelNode)
-				.filter(stNode -> !stNode.getUuid().equals(getUuid()))
-				.map(stNode -> (STModelNode) stNode)
-				.collect(java.util.stream.Collectors.toList());
-		canvas.presentationModel.db.doInTransaction(tx -> {
-
-			final String clipboardValue = cut(com.generator.util.SwingUtil.fromClipboard());
-			final java.util.LinkedHashMap<nextgen.st.domain.STParameter, org.fife.ui.rsyntaxtextarea.RSyntaxTextArea> fieldMap = new java.util.LinkedHashMap<>();
-
-			final JMenu parametersMenu = new JMenu("Parameters");
-			pop.add(parametersMenu);
-
-			stTemplate.getParameters().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stParameter -> {
-
-				final JMenu stParameterMenu = new JMenu(stParameter.getName());
-				parametersMenu.add(stParameterMenu);
-
-				switch(stParameter.getType()) {
-					case SINGLE :
-						{ 
-							final JMenu addstParameterMenu = new JMenu("Set");
-							stParameterMenu.add(addstParameterMenu);
-							stValueNodes.forEach(stNode -> addstParameterMenu.add(new SetSTValueArgumentAction(cut(stNode.getText()), STModelNode.this, canvas, event, stParameter, stNode)));
-							stModelNodes.forEach(stNode -> addstParameterMenu.add(new SetSTModelArgumentAction(cut(stNode.getText()), STModelNode.this, canvas, event, stParameter, stNode)));
-							addstParameterMenu.add(new SetInputValueArgumentAction("From input", STModelNode.this, canvas, event, stParameter));
-							addstParameterMenu.add(new SetBooleanValue("Set TRUE", STModelNode.this, canvas, event, stParameter));
-							addstParameterMenu.add(new SetClipboardValueArgumentAction("From clipboard " + clipboardValue, STModelNode.this, canvas, event, stParameter));
-
-							final JMenu openstParameterMenu = new JMenu("Open");
-							stParameterMenu.add(openstParameterMenu);
-							openstParameterMenu.add(new OpenAllOf("All", STModelNode.this, canvas, event, stParameter));
-
-							final JMenu removestParameterMenu = new JMenu("Remove");
-							stParameterMenu.add(removestParameterMenu);
-
-							stModel.getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid())).forEach(stArgument -> {
-								openstParameterMenu.add(new OpenArgument(cut(canvas.presentationModel.render(stArgument.getValue())), STModelNode.this, canvas, event, stParameter, stArgument));
-								removestParameterMenu.add(new RemoveArgument(cut(canvas.presentationModel.render(stArgument.getValue())), STModelNode.this, canvas, event, stParameter, stArgument));
-							});
-
-							if (stParameter.getArgumentType() != null && stParameter.getArgumentType().equals("String")) {
-								fieldMap.put(stParameter, com.generator.util.SwingUtil.newRSyntaxTextArea(1, 40));
-							}
-							break;
-						}
-					case LIST :
-						{ 
-							final JMenu addstParameterMenu = new JMenu("Add");
-							stParameterMenu.add(addstParameterMenu);
-							stValueNodes.forEach(stNode -> addstParameterMenu.add(new AddSTValueArgumentAction(cut(stNode.getText()), STModelNode.this, canvas, event, stParameter, stNode)));
-							stModelNodes.forEach(stNode -> addstParameterMenu.add(new AddSTModelArgumentAction(cut(stNode.getText()), STModelNode.this, canvas, event, stParameter, stNode)));
-							addstParameterMenu.add(new AddInputValueArgumentAction("From input", STModelNode.this, canvas, event, stParameter));
-							addstParameterMenu.add(new AddClipboardValueArgumentAction("From clipboard " + clipboardValue, STModelNode.this, canvas, event, stParameter));
-
-							final JMenu openstParameterMenu = new JMenu("Open");
-							stParameterMenu.add(openstParameterMenu);
-							openstParameterMenu.add(new OpenAllOf("All", STModelNode.this, canvas, event, stParameter));
-
-							final JMenu removestParameterMenu = new JMenu("Remove");
-							stParameterMenu.add(removestParameterMenu);
-
-							stModel.getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid())).forEach(stArgument -> {
-								openstParameterMenu.add(new OpenArgument(cut(canvas.presentationModel.render(stArgument.getValue())), STModelNode.this, canvas, event, stParameter, stArgument));
-								removestParameterMenu.add(new RemoveArgument(cut(canvas.presentationModel.render(stArgument.getValue())), STModelNode.this, canvas, event, stParameter, stArgument));
-							});
-							break;
-						}
-					case KVLIST :
-						{
-							final JMenu addstParameterMenu = new JMenu("Add");
-							stParameterMenu.add(addstParameterMenu);
-							addstParameterMenu.add(new AddKVInputValueArgumentAction("Add " + stParameter.getName(), STModelNode.this, canvas, event, stParameter));
-
-							final JMenu openstParameterMenu = new JMenu("Open");
-							stParameterMenu.add(openstParameterMenu);
-							openstParameterMenu.add(new OpenAllOf("All", STModelNode.this, canvas, event, stParameter));
-
-							final JMenu removestParameterMenu = new JMenu("Remove");
-							stParameterMenu.add(removestParameterMenu);
-
-							stModel.getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid())).forEach(stArgument -> {
-								openstParameterMenu.add(new OpenArgument("Open " + (stParameter.getType().equals(nextgen.st.domain.STParameterType.KVLIST) ? stParameter.getName() : cut(canvas.presentationModel.render(stArgument.getValue()))), STModelNode.this, canvas, event, stParameter, stArgument));
-								removestParameterMenu.add(new RemoveArgument("Remove " + (stParameter.getType().equals(nextgen.st.domain.STParameterType.KVLIST) ? stParameter.getName() : cut(canvas.presentationModel.render(stArgument.getValue()))), STModelNode.this, canvas, event, stParameter, stArgument));
-							});
-							break;
-						}
-				}
-			});
-
-			final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
-			inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-
-			for (Map.Entry<nextgen.st.domain.STParameter, org.fife.ui.rsyntaxtextarea.RSyntaxTextArea> fieldEntry : fieldMap.entrySet()) {
-				inputPanel.add(new JLabel(fieldEntry.getKey().getName()));
-				inputPanel.add(fieldEntry.getValue());
-			}
-
-			if (!fieldMap.isEmpty()) {
-				pop.add(new NodeAction<STModelNode>("Set Multiple", this, canvas, event) {
-					@Override
-					void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-						com.generator.util.SwingUtil.showDialog(inputPanel, canvas, "Set Multiple", new com.generator.util.SwingUtil.ConfirmAction() {
-							@Override
-							public void verifyAndCommit() throws Exception {
-								for (Map.Entry<nextgen.st.domain.STParameter, org.fife.ui.rsyntaxtextarea.RSyntaxTextArea> entry : fieldMap.entrySet()) {
-									final String text = entry.getValue().getText();
-									if (text.trim().length() == 0) continue;
-									final nextgen.st.model.STValue stValue = canvas.presentationModel.db.newSTValue(text.trim());
-									final STValueNode stValueNode = canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue));
-									new SetSTValueArgumentAction("Set " + entry.getKey(), STModelNode.this, canvas, event, entry.getKey(), stValueNode).actionPerformed(STModelNode.this, canvas, event, null);
-								}
-							}
-						});
-					}
-				});
-			}
-		});
-		pop.add(new OpenUsages(this, canvas, event));
-		pop.add(new OpenAllArguments(this, canvas, event));
-		pop.add(new ToClipboard(this, canvas, event));
-		pop.add(new Delete(this, canvas, event));
-		pop.addSeparator();
-		pop.add(new Clone(this, canvas, event));
-		pop.addSeparator();
-		pop.add(new AddFileSink(this, canvas, event));
-		pop.add(new OpenFileSink(this, canvas, event));
-		pop.addSeparator();
-		super.onNodeRightClick(event, pop);
-	}
-
-	@Override
-	protected void onNodeKeyPressed(PInputEvent event) {
-		switch (event.getKeyCode()) {
-			case java.awt.event.KeyEvent.VK_W:
-				new WriteToFile(this, canvas, event).actionPerformed(null);
-				return;
-
-			case java.awt.event.KeyEvent.VK_E:
-				new OpenAllArguments(this, canvas, event).actionPerformed(null);
-				return;
-
-			case java.awt.event.KeyEvent.VK_D:
-				new Delete(this, canvas, event).actionPerformed(null);
-				return;
-
-			case java.awt.event.KeyEvent.VK_S:
-				new OpenFileSink(this, canvas, event).actionPerformed(null);
-				return;
-
-		}
-		super.onNodeKeyPressed(event);
-	}
-
-	@Override
-	protected void onNodeLeftClick(PInputEvent event) {
-		super.onNodeLeftClick(event);
-		canvas.presentationModel.db.doInTransaction(tx -> setText(canvas.presentationModel.render(stModel)));
-	}
-
-	@Override
-	public void onNodeAdded(nextgen.st.STAppEvents.NodeAdded event){ 
-		super.onNodeAdded(event);
-		forEachArgument((stArgument, stParameter) -> {
-			if (refersTo(stArgument, stParameter, event.node)) canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(STModelNode.this, event.node, stArgument, stParameter));
-		});
-	}
-
-	protected void forEachArgument(java.util.function.BiConsumer<nextgen.st.model.STArgument, nextgen.st.domain.STParameter> consumer){ 
-		stTemplate.getParameters().forEach(stParameter -> stModel.getArgumentsSorted().filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid())).forEach(stArgument -> consumer.accept(stArgument, stParameter)));
-	}
-
-	protected boolean refersTo(nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameter stParameter, nextgen.st.canvas.STNode node){ 
-		if (stArgument == null || stParameter == null || node == null) return false;
-		switch(stParameter.getType()) {
-			case SINGLE :
-				{ 
-					final nextgen.st.model.STValue value = stArgument.getValue();
-					if (value != null) return UUID.fromString(value.getUuid()).equals(node.getUuid()) || (value.getType().equals(nextgen.st.model.STValueType.STMODEL) && value.getStModel() != null && UUID.fromString(value.getStModel().getUuid()).equals(node.getUuid()));
-					break;
-				}
-			case LIST :
-				{ 
-					final nextgen.st.model.STValue value = stArgument.getValue();
-					if (value != null) return UUID.fromString(value.getUuid()).equals(node.getUuid()) || (value.getType().equals(nextgen.st.model.STValueType.STMODEL) && value.getStModel() != null && UUID.fromString(value.getStModel().getUuid()).equals(node.getUuid()));
-					break;
-				}
-			case KVLIST :
-				{ 
-					if (UUID.fromString(stArgument.getUuid()).equals(node.getUuid())) return true;
-					break;
-				}
-		}
-		return false;
-	}
-
-	protected void removeArgument(nextgen.st.domain.STParameter stParameter){ 
-		stModel.getArguments().filter(existing -> existing.getStParameter().equals(stParameter.uuid())).findAny().ifPresent(existing -> {
-			canvas.removeRelation(UUID.fromString(existing.getUuid()));
-			stModel.removeArguments(existing);
-		});
-	}
-	private static final class OpenUsages extends NodeAction<STModelNode> {
-
-
-		OpenUsages(STModelNode node, STCanvas canvas, PInputEvent event) {
-			super("Open usages", node, canvas, event);
-		}
-
-		@Override
-		void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-		}
-	}
-
-	private static final class WriteToFile extends NodeAction<STModelNode> {
-
-
-		WriteToFile(STModelNode node, STCanvas canvas, PInputEvent event) {
-			super("Write To File", node, canvas, event);
-		}
-
-		@Override
-		void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> node.stModel.getFiles().forEach(stFile -> {
-				if (stFile.getPath() == null) return;
-				nextgen.st.STGenerator.writeToFile(canvas.presentationModel.render(node.stModel), stFile.getPackageName().getValue(), stFile.getName().getValue(), stFile.getType().getValue(), new java.io.File(stFile.getPath().getValue()));
-			}));
-		}
-	}
-
-	private static final class OpenAllArguments extends NodeAction<STModelNode> {
-
-
-		OpenAllArguments(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
-			super("Open All", node, canvas, event);
-		}
-
-		@Override
-		void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> {
-				node.forEachArgument((stArgument, stParameter) -> new OpenArgument("", node, canvas, event, stParameter, stArgument).actionPerformed(null));
-				new LayoutTreeAction(node, canvas, event).actionPerformed(null);
-			});
-		}
-	}
-
-	private static final class RemoveArgument extends NodeAction<STModelNode> {
-
-		nextgen.st.domain.STParameter stParameter;
-		nextgen.st.model.STArgument stArgument;
-
-		RemoveArgument(String name, STModelNode node, STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument) {
-			super(name, node, canvas, event);
-			this.stParameter = stParameter;
-			this.stArgument = stArgument;
-		}
-
-		@Override
-		void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			if (!com.generator.util.SwingUtil.showConfirmDialog(canvas, "Remove argument ?")) return;
-			doLaterInTransaction(tx -> {
-				canvas.removeRelation(UUID.fromString(stArgument.getUuid()));
-				node.stModel.removeArguments(stArgument);
-				node.setText(canvas.presentationModel.render(node.stModel));
-			});
-		}
-	}
-
-	private static final class ToClipboard extends NodeAction<STModelNode> {
-
-
-		ToClipboard(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
-			super("To Clipboard", node, canvas, event);
-		}
-
-		@Override
-		void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> com.generator.util.SwingUtil.toClipboard(canvas.presentationModel.render(node.stModel)));
-		}
-	}
-
-	private static final class Delete extends NodeAction<STModelNode> {
-
-
-		Delete(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
-			super("Delete", node, canvas, event);
-		}
-
-		@Override
-		void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			if (!com.generator.util.SwingUtil.showConfirmDialog(canvas, "Delete model ?")) return;
-			doLaterInTransaction(tx -> {
-				node.close();
-				canvas.presentationModel.db.remove(node.stModel);
-			});
-		}
-	}
-
-	private static final class Clone extends NodeAction<STModelNode> {
-
-
-		Clone(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
-			super("Clone", node, canvas, event);
-		}
-
-		@Override
-		void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> {
-				final nextgen.st.model.STModel clone = canvas.presentationModel.db.clone(node.stModel);
-				final STModelNode stModelNode = canvas.newSTNode(clone).get();
-				canvas.addNode(stModelNode);
-				stModelNode.setText(canvas.presentationModel.render(stModelNode.stModel));
-			});
-		}
-	}
-
-	private static final class AddFileSink extends NodeAction<STModelNode> {
-
-
-		AddFileSink(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
-			super("Add File Sink", node, canvas, event);
-		}
-
-		@Override
-		void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> {
-				final java.util.LinkedHashMap<String, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();
-				fieldMap.put("name", canvas.newTextField(canvas.presentationModel.getSTModelName(node.stModel, ""), 15));
-				fieldMap.put("type", canvas.newTextField(15));
-				fieldMap.put("path", canvas.newTextField(15));
-				fieldMap.put("package", canvas.newTextField(canvas.presentationModel.getSTModelPackage(node.stModel, ""), 15));
-				final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
-				inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
-				for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) { 
-					inputPanel.add(new JLabel(fieldEntry.getKey()));
-					inputPanel.add(fieldEntry.getValue());
-				}
-				com.generator.util.SwingUtil.showDialog(inputPanel, canvas, "New File sink", new com.generator.util.SwingUtil.ConfirmAction() {
-					@Override
-					public void verifyAndCommit() throws Exception {
-						final String name = fieldMap.get("name").getText().trim();
-						final String type = fieldMap.get("type").getText().trim();
-						final String path = fieldMap.get("path").getText().trim();
-						final String packageName = fieldMap.get("package").getText().trim();
-						doLaterInTransaction(tx -> {
-							final nextgen.st.model.STFile stFile = canvas.presentationModel.newSTFile(name, type, path, packageName);
-							node.stModel.addFiles(stFile);
-							final STFileNode dstNode = canvas.addNode(new STFileNode(canvas, stFile, node.stModel));
-							//canvas.addRelation(new STSinkRelation(canvas, node, dstNode));
-							canvas.addRelation(dstNode.getUuid(), canvas.newSinkRelation(node, dstNode));
-						});
-					}
-				});
-			});
-		}
-	}
-
-	private static final class OpenFileSink extends NodeAction<STModelNode> {
-
-
-		OpenFileSink(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
-			super("Open File Sink", node, canvas, event);
-		}
-
-		@Override
-		void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> 
-				node.stModel.getFiles().forEach(stFile -> {
-					final STFileNode dstNode = canvas.addNode(stFile.getUuid(), canvas.newSTNode(stFile, node.stModel));
-					canvas.addRelation(dstNode.getUuid(), canvas.newSinkRelation(node, dstNode));
-					new LayoutTreeAction(node, canvas, event).actionPerformed(null);
-				})
-			);
-		}
-	}
-
-	private static final class SetBooleanValue extends NodeAction<nextgen.st.canvas.STModelNode> {
-
-		nextgen.st.domain.STParameter stParameter;
-
-		SetBooleanValue(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
-			super(name, node, canvas, event);
-			this.stParameter = stParameter;
-		}
-
-		@Override
-		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> {
-				node.removeArgument(stParameter);
-				final nextgen.st.model.STValue stValue = canvas.presentationModel.db.newSTValue("true");
-				final nextgen.st.model.STArgument stArgument = canvas.presentationModel.db.newSTArgument(stParameter, stValue);
-				node.stModel.addArguments(stArgument);
-				node.setText(canvas.presentationModel.render(node.stModel));
-			});
-		}
-	}
-
-	private static final class SetInputValueArgumentAction extends NodeAction<nextgen.st.canvas.STModelNode> {
-
-		nextgen.st.domain.STParameter stParameter;
-
-		SetInputValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
-			super(name, node, canvas, event);
-			this.stParameter = stParameter;
-		}
-
-		@Override
-		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			final String s = com.generator.util.SwingUtil.showInputDialog(stParameter.getName(), canvas);
-			if (s == null || s.trim().length() == 0) return;
-			doLaterInTransaction(tx -> {
-				node.removeArgument(stParameter);
-				final nextgen.st.model.STValue stValue = canvas.presentationModel.db.newSTValue(s.trim());
-				final nextgen.st.model.STArgument stArgument = canvas.presentationModel.db.newSTArgument(stParameter, stValue);
-				node.stModel.addArguments(stArgument);
-				canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue));
-				//canvas.addRelation(new STArgumentRelation(canvas, node, canvas.getNode(stValue.getUuid()), stArgument, stParameter));
-				canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, canvas.getNode(stValue.getUuid()), stArgument, stParameter));
-				node.setText(canvas.presentationModel.render(node.stModel));
-			});
-		}
-	}
-
-	private static final class SetClipboardValueArgumentAction extends NodeAction<nextgen.st.canvas.STModelNode> {
-
-		nextgen.st.domain.STParameter stParameter;
-
-		SetClipboardValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
-			super(name, node, canvas, event);
-			this.stParameter = stParameter;
-		}
-
-		@Override
-		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			final String s = com.generator.util.SwingUtil.fromClipboard();
-			if (s == null || s.trim().length() == 0) return;
-			doLaterInTransaction(tx -> {
-				node.removeArgument(stParameter);
-				final nextgen.st.model.STValue stValue = canvas.presentationModel.newSTValue(s.trim());
-				final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValue);
-				node.stModel.addArguments(stArgument);
-				canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue));
-				//canvas.addRelation(new STArgumentRelation(canvas, node, canvas.getNode(stValue.getUuid()), stArgument, stParameter));
-				canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, canvas.getNode(stValue.getUuid()), stArgument, stParameter));
-				node.setText(canvas.presentationModel.render(node.stModel));
-			});
-		}
-	}
-
-	private static final class SetSTValueArgumentAction extends NodeAction<nextgen.st.canvas.STModelNode> {
-
-		nextgen.st.domain.STParameter stParameter;
-		nextgen.st.canvas.STValueNode stValueNode;
-
-		SetSTValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.canvas.STValueNode stValueNode) {
-			super(name, node, canvas, event);
-			this.stParameter = stParameter;
-			this.stValueNode = stValueNode;
-		}
-
-		@Override
-		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> {
-				node.removeArgument(stParameter);
-				final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValueNode.stValue);
-				node.stModel.addArguments(stArgument);
-				// canvas.addRelation(new STArgumentRelation(canvas, node, stValueNode, stArgument, stParameter));
-				canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stValueNode, stArgument, stParameter));
-				node.setText(canvas.presentationModel.render(node.stModel));
-			});
-		}
-	}
-
-	private static final class SetSTModelArgumentAction extends NodeAction<nextgen.st.canvas.STModelNode> {
-
-		nextgen.st.domain.STParameter stParameter;
-		nextgen.st.canvas.STModelNode stModelNode;
-
-		SetSTModelArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.canvas.STModelNode stModelNode) {
-			super(name, node, canvas, event);
-			this.stParameter = stParameter;
-			this.stModelNode = stModelNode;
-		}
-
-		@Override
-		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> {
-				node.removeArgument(stParameter);
-				final nextgen.st.model.STValue stValue = canvas.presentationModel.newSTValue(stModelNode.stModel);
-				final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValue);
-				node.stModel.addArguments(stArgument);
-				//canvas.addRelation(new STArgumentRelation(canvas, node, stModelNode, stArgument, stParameter));
-				canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stModelNode, stArgument, stParameter));
-				node.setText(canvas.presentationModel.render(node.stModel));
-			});
-		}
-	}
-
-	private static final class AddInputValueArgumentAction extends NodeAction<nextgen.st.canvas.STModelNode> {
-
-		nextgen.st.domain.STParameter stParameter;
-
-		AddInputValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
-			super(name, node, canvas, event);
-			this.stParameter = stParameter;
-		}
-
-		@Override
-		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			final String s = com.generator.util.SwingUtil.showInputDialog(stParameter.getName(), canvas);
-			if (s == null || s.trim().length() == 0) return;
-			doLaterInTransaction(tx -> {
-				final nextgen.st.model.STValue stValue = canvas.presentationModel.newSTValue(s.trim());
-				final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValue);
-				node.stModel.addArguments(stArgument);
-				final STNode stValueNode = canvas.addNode(canvas.newSTNode(stValue).get());
-				// canvas.addRelation(new STArgumentRelation(canvas, node, stValueNode, stArgument, stParameter));
-				canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stValueNode, stArgument, stParameter));
-				node.setText(canvas.presentationModel.render(node.stModel));
-			});
-		}
-	}
-
-	private static final class AddClipboardValueArgumentAction extends NodeAction<nextgen.st.canvas.STModelNode> {
-
-		nextgen.st.domain.STParameter stParameter;
-
-		AddClipboardValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
-			super(name, node, canvas, event);
-			this.stParameter = stParameter;
-		}
-
-		@Override
-		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			final String s = com.generator.util.SwingUtil.fromClipboard();
-			if (s == null || s.trim().length() == 0) return;
-			doLaterInTransaction(tx -> {
-				final nextgen.st.model.STValue stValue = canvas.presentationModel.newSTValue(s.trim());
-				final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValue);
-				node.stModel.addArguments(stArgument);
-				final STNode stValueNode = canvas.addNode(canvas.newSTNode(stValue).get());
-				//canvas.addRelation(new STArgumentRelation(canvas, node, stValueNode, stArgument, stParameter));
-				canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stValueNode, stArgument, stParameter));
-				node.setText(canvas.presentationModel.render(node.stModel));
-			});
-		}
-	}
-
-	private static final class AddSTValueArgumentAction extends NodeAction<nextgen.st.canvas.STModelNode> {
-
-		nextgen.st.domain.STParameter stParameter;
-		nextgen.st.canvas.STValueNode stValueNode;
-
-		AddSTValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.canvas.STValueNode stValueNode) {
-			super(name, node, canvas, event);
-			this.stParameter = stParameter;
-			this.stValueNode = stValueNode;
-		}
-
-		@Override
-		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> {
-				final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValueNode.stValue);
-				node.stModel.addArguments(stArgument);
-				//canvas.addRelation(new STArgumentRelation(canvas, node, stValueNode, stArgument, stParameter));
-				canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stValueNode, stArgument, stParameter));
-				node.setText(canvas.presentationModel.render(node.stModel));
-			});
-		}
-	}
-
-	private static final class AddSTModelArgumentAction extends NodeAction<nextgen.st.canvas.STModelNode> {
-
-		nextgen.st.domain.STParameter stParameter;
-		nextgen.st.canvas.STModelNode stModelNode;
-
-		AddSTModelArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.canvas.STModelNode stModelNode) {
-			super(name, node, canvas, event);
-			this.stParameter = stParameter;
-			this.stModelNode = stModelNode;
-		}
-
-		@Override
-		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> {
-				final nextgen.st.model.STValue stValue = canvas.presentationModel.newSTValue(stModelNode.stModel);
-				final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValue);
-				node.stModel.addArguments(stArgument);
-				//canvas.addRelation(new STArgumentRelation(canvas, node, stModelNode, stArgument, stParameter));
-				canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stModelNode, stArgument, stParameter));
-				node.setText(canvas.presentationModel.render(node.stModel));
-			});
-		}
-	}
-
-	private static final class AddKVInputValueArgumentAction extends NodeAction<nextgen.st.canvas.STModelNode> {
-
-		nextgen.st.domain.STParameter stParameter;
-
-		AddKVInputValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
-			super(name, node, canvas, event);
-			this.stParameter = stParameter;
-		}
-
-		@Override
-		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			final Map<nextgen.st.domain.STParameterKey, JTextField> fieldMap = new LinkedHashMap<>();
-			doLaterInTransaction(tx -> {
-				stParameter.getKeys().forEach(stParameterKey -> fieldMap.put(stParameterKey, canvas.newTextField(15)));
-				final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
-				inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
-				for (Map.Entry<nextgen.st.domain.STParameterKey, JTextField> fieldEntry : fieldMap.entrySet()) {
-					inputPanel.add(new JLabel(fieldEntry.getKey().getName()));
-					inputPanel.add(fieldEntry.getValue());
-				}
-				com.generator.util.SwingUtil.showDialog(inputPanel, canvas, stParameter.getName(), new com.generator.util.SwingUtil.ConfirmAction() {
-					@Override
-					public void verifyAndCommit() throws Exception {
-						doLaterInTransaction(tx -> {
-							final java.util.List<nextgen.st.model.STArgumentKV> kvs = new ArrayList<>();
-							for (Map.Entry<nextgen.st.domain.STParameterKey, JTextField> fieldEntry : fieldMap.entrySet()) {
-								final String value = fieldEntry.getValue().getText().trim();
-								if (value.length() == 0) continue;
-								kvs.add(canvas.presentationModel.newSTArgumentKV(fieldEntry.getKey(), canvas.presentationModel.newSTValue(value)));
-							}
-							final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, kvs);
-							node.stModel.addArguments(stArgument);
-							final STNode stkvNode = canvas.addNode(canvas.newSTNode(stParameter, stArgument).get());
-							// canvas.addRelation(new STArgumentRelation(canvas, node, stkvNode, stArgument, stParameter));
-							canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stkvNode, stArgument, stParameter));
-							node.setText(canvas.presentationModel.render(node.stModel));
-						});
-					}
-				});
-			});
-		}
-	}
-
-	private static final class OpenArgument extends NodeAction<STModelNode> {
-
-		nextgen.st.domain.STParameter stParameter;
-		nextgen.st.model.STArgument stArgument;
-
-		OpenArgument(String name, STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument) {
-			super(name, node, canvas, event);
-			this.stParameter = stParameter;
-			this.stArgument = stArgument;
-		}
-
-		@Override
-		void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> {
-				if (stParameter.getType().equals(nextgen.st.domain.STParameterType.KVLIST)) {
-					canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, canvas.addNode(stArgument.getUuid(), canvas.newSTNode(stParameter, stArgument)), stArgument, stParameter));
-				} else {
-					final nextgen.st.model.STValue stValue = stArgument.getValue();
-					switch(stValue.getType()) {
-						case STMODEL :
-						{
-							canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, canvas.addNode(stValue.getStModel().getUuid(), canvas.newSTNode(stValue.getStModel())), stArgument, stParameter));
-							break;
-						}
-						case PRIMITIVE :
-						{
-							canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue)), stArgument, stParameter));
-							break;
-						}
-						case ENUM :
-						{
-							canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue)), stArgument, stParameter));				
-							break;
-						}
-					}
-				}
-				new LayoutTreeAction(node, canvas, event).actionPerformed(null);
-			});
-		}
-	}
-
-	private static final class OpenTemplateAction extends NodeAction<STModelNode> {
-
-
-		OpenTemplateAction(STModelNode node, STCanvas canvas, PInputEvent event) {
-			super("Open template", node, canvas, event);
-		}
-
-		@Override
-		void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(transaction -> nextgen.st.STAppEvents.postOpenSTModel(node.stTemplate.uuid()));
-		}
-	}
-
-	private static final class OpenAllOf extends NodeAction<STModelNode> {
-
-		nextgen.st.domain.STParameter stParameter;
-
-		OpenAllOf(String name, STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
-			super(name, node, canvas, event);
-			this.stParameter = stParameter;
-		}
-
-		@Override
-		void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> {
-				node.forEachArgument((stArgument, stParameter) -> {
-					if (this.stParameter.equals(stParameter))
-						new OpenArgument("", node, canvas, event, stParameter, stArgument).actionPerformed(null);
-				});
-				new LayoutTreeAction(node, canvas, event).actionPerformed(null);
-			});
-		}
-	}
+    nextgen.st.domain.STTemplate stTemplate;
+    nextgen.st.model.STModel stModel;
+
+    public STModelNode(STCanvas canvas, nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STModel stModel) {
+        super(canvas, stTemplate.getName() + " : \n" + canvas.presentationModel.render(stModel), java.util.UUID.fromString(stModel.getUuid()));
+        this.stTemplate = stTemplate;
+        this.stModel = stModel;
+    }
+
+    @Override
+    public void setText(String text) {
+        super.setText(stTemplate.getName() + " : \n" + text);
+    }
+
+    @Override
+    public void addedToCanvas() {
+        canvas.getAllNodes().forEach(this::newNodeAdded);
+    }
+
+    @Override
+    public void newNodeAdded(STNode node) {
+        forEachArgument((stArgument, stParameter) -> {
+            if (refersTo(stArgument, stParameter, node))
+                canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(STModelNode.this, node, stArgument, stParameter));
+        });
+    }
+
+    @Override
+    protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
+        final java.util.List<STValueNode> stValueNodes = canvas.getSelectedNodes()
+                .filter(stNode -> stNode instanceof STValueNode)
+                .filter(stNode -> !stNode.getUuid().equals(getUuid()))
+                .map(stNode -> (STValueNode) stNode)
+                .collect(java.util.stream.Collectors.toList());
+        final java.util.List<STModelNode> stModelNodes = canvas.getSelectedNodes()
+                .filter(stNode -> stNode instanceof STModelNode)
+                .filter(stNode -> !stNode.getUuid().equals(getUuid()))
+                .map(stNode -> (STModelNode) stNode)
+                .collect(java.util.stream.Collectors.toList());
+        canvas.presentationModel.db.doInTransaction(tx -> {
+
+            final String clipboardValue = cut(com.generator.util.SwingUtil.fromClipboard());
+            final java.util.LinkedHashMap<nextgen.st.domain.STParameter, org.fife.ui.rsyntaxtextarea.RSyntaxTextArea> fieldMap = new java.util.LinkedHashMap<>();
+
+            final JMenu parametersMenu = new JMenu("Parameters");
+            pop.add(parametersMenu);
+            final Map<String, nextgen.st.model.STValue> existingSelections = new LinkedHashMap<>();
+            stTemplate.getParameters().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stParameter -> {
+
+                final JMenu stParameterMenu = new JMenu(stParameter.getName());
+                parametersMenu.add(stParameterMenu);
+
+
+                switch (stParameter.getType()) {
+                    case SINGLE: {
+                        final JMenu addstParameterMenu = new JMenu("Set");
+                        stParameterMenu.add(addstParameterMenu);
+                        stValueNodes.forEach(stNode -> addstParameterMenu.add(new SetSTValueArgumentAction(cut(stNode.getText()), STModelNode.this, canvas, event, stParameter, stNode)));
+                        stModelNodes.forEach(stNode -> addstParameterMenu.add(new SetSTModelArgumentAction(cut(stNode.getText()), STModelNode.this, canvas, event, stParameter, stNode)));
+                        addstParameterMenu.add(new SetInputValueArgumentAction("From input", STModelNode.this, canvas, event, stParameter));
+                        addstParameterMenu.add(new SetBooleanValue("Set TRUE", STModelNode.this, canvas, event, stParameter));
+                        addstParameterMenu.add(new SetClipboardValueArgumentAction("From clipboard " + clipboardValue, STModelNode.this, canvas, event, stParameter));
+
+                        final JMenu openstParameterMenu = new JMenu("Open");
+                        stParameterMenu.add(openstParameterMenu);
+                        openstParameterMenu.add(new OpenAllOf("All", STModelNode.this, canvas, event, stParameter));
+
+                        final JMenu removestParameterMenu = new JMenu("Remove");
+                        stParameterMenu.add(removestParameterMenu);
+
+                        stModel.getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid())).forEach(stArgument -> {
+                            openstParameterMenu.add(new OpenArgument(cut(canvas.presentationModel.render(stArgument.getValue())), STModelNode.this, canvas, event, stParameter, stArgument));
+                            removestParameterMenu.add(new RemoveArgument(cut(canvas.presentationModel.render(stArgument.getValue())), STModelNode.this, canvas, event, stParameter, stArgument));
+                            existingSelections.put(stParameter.uuid(), stArgument.getValue());
+                        });
+
+                        if (stParameter.getArgumentType() != null && (stParameter.getArgumentType().equals("String") || stParameter.getArgumentType().equals("Object"))) {
+                            fieldMap.put(stParameter, com.generator.util.SwingUtil.newRSyntaxTextArea(1, 40));
+                        }
+                        break;
+                    }
+                    case LIST: {
+                        final JMenu addstParameterMenu = new JMenu("Add");
+                        stParameterMenu.add(addstParameterMenu);
+                        stValueNodes.forEach(stNode -> addstParameterMenu.add(new AddSTValueArgumentAction(cut(stNode.getText()), STModelNode.this, canvas, event, stParameter, stNode)));
+                        stModelNodes.forEach(stNode -> addstParameterMenu.add(new AddSTModelArgumentAction(cut(stNode.getText()), STModelNode.this, canvas, event, stParameter, stNode)));
+                        addstParameterMenu.add(new AddInputValueArgumentAction("From input", STModelNode.this, canvas, event, stParameter));
+                        addstParameterMenu.add(new AddClipboardValueArgumentAction("From clipboard " + clipboardValue, STModelNode.this, canvas, event, stParameter));
+
+                        final JMenu openstParameterMenu = new JMenu("Open");
+                        stParameterMenu.add(openstParameterMenu);
+                        openstParameterMenu.add(new OpenAllOf("All", STModelNode.this, canvas, event, stParameter));
+
+                        final JMenu removestParameterMenu = new JMenu("Remove");
+                        stParameterMenu.add(removestParameterMenu);
+
+                        stModel.getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid())).forEach(stArgument -> {
+                            openstParameterMenu.add(new OpenArgument(cut(canvas.presentationModel.render(stArgument.getValue())), STModelNode.this, canvas, event, stParameter, stArgument));
+                            removestParameterMenu.add(new RemoveArgument(cut(canvas.presentationModel.render(stArgument.getValue())), STModelNode.this, canvas, event, stParameter, stArgument));
+                        });
+                        break;
+                    }
+                    case KVLIST: {
+                        final JMenu addstParameterMenu = new JMenu("Add");
+                        stParameterMenu.add(addstParameterMenu);
+                        addstParameterMenu.add(new AddKVInputValueArgumentAction("Add " + stParameter.getName(), STModelNode.this, canvas, event, stParameter));
+
+                        final JMenu openstParameterMenu = new JMenu("Open");
+                        stParameterMenu.add(openstParameterMenu);
+                        openstParameterMenu.add(new OpenAllOf("All", STModelNode.this, canvas, event, stParameter));
+
+                        final JMenu removestParameterMenu = new JMenu("Remove");
+                        stParameterMenu.add(removestParameterMenu);
+
+                        stModel.getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid())).forEach(stArgument -> {
+                            openstParameterMenu.add(new OpenArgument("Open " + (stParameter.getType().equals(nextgen.st.domain.STParameterType.KVLIST) ? stParameter.getName() : cut(canvas.presentationModel.render(stArgument.getValue()))), STModelNode.this, canvas, event, stParameter, stArgument));
+                            removestParameterMenu.add(new RemoveArgument("Remove " + (stParameter.getType().equals(nextgen.st.domain.STParameterType.KVLIST) ? stParameter.getName() : cut(canvas.presentationModel.render(stArgument.getValue()))), STModelNode.this, canvas, event, stParameter, stArgument));
+                        });
+                        break;
+                    }
+                }
+            });
+
+            final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
+            inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
+            for (Map.Entry<nextgen.st.domain.STParameter, org.fife.ui.rsyntaxtextarea.RSyntaxTextArea> fieldEntry : fieldMap.entrySet()) {
+                inputPanel.add(new JLabel(fieldEntry.getKey().getName()));
+                inputPanel.add(fieldEntry.getValue());
+            }
+
+            if (!fieldMap.isEmpty()) {
+                pop.add(new NodeAction<STModelNode>("Set Multiple", this, canvas, event) {
+                    @Override
+                    void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+
+                        final Map<String, Vector<String>> selections = new LinkedHashMap<>();                // stParameter.uuid -> stArgument.uuid
+                        final Map<String, String> labels = new LinkedHashMap<>();                            // stArgument.uuid -> stValue.rendered
+                        final Map<String, nextgen.st.model.STValue> valueMap = new LinkedHashMap<>();        // stArgument.uuid -> stValue
+                        final Map<String, nextgen.st.model.STValue> selectionMap = new LinkedHashMap<>();    // stParameter.name -> stValue
+                        final Map<String, String> preSelected = new LinkedHashMap<>();                        // stParameter.uuid -> stValue.rendered
+
+                        final Set<nextgen.st.model.STValue> distinct = new LinkedHashSet<>();
+                        canvas.presentationModel.db.doInTransaction(transaction -> {
+                            canvas.presentationModel.db.findAllSTModelByStTemplate(node.stTemplate.uuid())
+                                    .forEach(stModel1 -> {
+                                        stModel1.getArguments()
+                                                .filter(stArgument -> stArgument.getValue() != null)
+                                                .forEach(stArgument -> {
+                                                    final nextgen.st.model.STValue stArgumentValue = stArgument.getValue();
+                                                    if (distinct.contains(stArgumentValue)) return;
+                                                    distinct.add(stArgumentValue);
+                                                    final String stArgumentStParameter = stArgument.getStParameter();
+                                                    selections.putIfAbsent(stArgumentStParameter, new Vector<>());
+                                                    selections.get(stArgumentStParameter).add(stArgumentValue.getUuid());
+                                                    labels.put(stArgumentValue.getUuid(), canvas.presentationModel.render(stArgumentValue));
+                                                    valueMap.putIfAbsent(stArgumentValue.getUuid(), stArgumentValue);
+
+                                                    if (existingSelections.containsKey(stArgumentStParameter)) {
+                                                        preSelected.put(stArgumentStParameter, labels.get(stArgumentValue.getUuid()));
+                                                    }
+                                                });
+                                    });
+
+                            final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 3));
+                            inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
+                            for (Map.Entry<nextgen.st.domain.STParameter, org.fife.ui.rsyntaxtextarea.RSyntaxTextArea> fieldEntry : fieldMap.entrySet()) {
+                                inputPanel.add(new JLabel(fieldEntry.getKey().getName()));
+                                inputPanel.add(fieldEntry.getValue());
+                                final Vector<String> vector = selections.get(fieldEntry.getKey().uuid());
+                                final JComboBox<String> jComboBox = vector == null ? new JComboBox<>() : new JComboBox<>(vector);
+                                jComboBox.setEnabled(vector != null);
+                                jComboBox.setRenderer(new DefaultListCellRenderer() {
+                                    @Override
+                                    public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                                        return super.getListCellRendererComponent(list, labels.get(value), index, isSelected, cellHasFocus);
+                                    }
+                                });
+
+                                if (preSelected.containsKey(fieldEntry.getKey().uuid())) {
+                                    jComboBox.setSelectedItem(preSelected.get(fieldEntry.getKey().uuid()));
+                                    fieldEntry.getValue().setText(labels.get(jComboBox.getSelectedItem().toString()));
+                                    selectionMap.put(fieldEntry.getKey().getName(), valueMap.get(jComboBox.getSelectedItem().toString()));
+                                }
+
+                                jComboBox.addActionListener(e1 -> {
+                                    if (jComboBox.getSelectedItem() == null) return;
+                                    fieldEntry.getValue().setText(labels.get(jComboBox.getSelectedItem().toString()));
+                                    selectionMap.put(fieldEntry.getKey().getName(), valueMap.get(jComboBox.getSelectedItem().toString()));
+                                });
+                                jComboBox.setPrototypeDisplayValue("This is the proper length, with some extra");
+                                inputPanel.add(jComboBox);
+                            }
+
+                            com.generator.util.SwingUtil.showDialog(inputPanel, canvas, "Set Multiple", new com.generator.util.SwingUtil.ConfirmAction() {
+                                @Override
+                                public void verifyAndCommit() throws Exception {
+
+                                    canvas.presentationModel.db.doInTransaction(transaction1 -> {
+                                        for (Map.Entry<nextgen.st.domain.STParameter, org.fife.ui.rsyntaxtextarea.RSyntaxTextArea> entry : fieldMap.entrySet()) {
+                                            final String text = entry.getValue().getText();
+                                            if (text.trim().length() == 0) continue;
+
+                                            if (selectionMap.containsKey(entry.getKey().getName())) {
+                                                final nextgen.st.model.STValue stValue = selectionMap.get(entry.getKey().getName());
+                                                final STValueNode stValueNode = canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue));
+                                                new SetSTValueArgumentAction("Set " + entry.getKey(), STModelNode.this, canvas, event, entry.getKey(), stValueNode).actionPerformed(STModelNode.this, canvas, event, null);
+                                            } else {
+                                                final nextgen.st.model.STValue stValue = canvas.presentationModel.db.newSTValue(text.trim());
+                                                final STValueNode stValueNode = canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue));
+                                                new SetSTValueArgumentAction("Set " + entry.getKey(), STModelNode.this, canvas, event, entry.getKey(), stValueNode).actionPerformed(STModelNode.this, canvas, event, null);
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        });
+                    }
+                });
+            }
+        });
+        pop.add(new OpenUsages(this, canvas, event));
+        pop.add(new OpenAllArguments(this, canvas, event));
+        pop.add(new ToClipboard(this, canvas, event));
+        pop.add(new Delete(this, canvas, event));
+        pop.addSeparator();
+        pop.add(new Clone(this, canvas, event));
+        pop.addSeparator();
+        pop.add(new AddFileSink(this, canvas, event));
+        pop.add(new OpenFileSink(this, canvas, event));
+        pop.addSeparator();
+        super.onNodeRightClick(event, pop);
+    }
+
+    @Override
+    protected void onNodeKeyPressed(PInputEvent event) {
+        switch (event.getKeyCode()) {
+            case java.awt.event.KeyEvent.VK_W:
+                new WriteToFile(this, canvas, event).actionPerformed(null);
+                return;
+
+            case java.awt.event.KeyEvent.VK_E:
+                new OpenAllArguments(this, canvas, event).actionPerformed(null);
+                return;
+
+            case java.awt.event.KeyEvent.VK_D:
+                new Delete(this, canvas, event).actionPerformed(null);
+                return;
+
+            case java.awt.event.KeyEvent.VK_S:
+                new OpenFileSink(this, canvas, event).actionPerformed(null);
+                return;
+
+        }
+        super.onNodeKeyPressed(event);
+    }
+
+    @Override
+    protected void onNodeLeftClick(PInputEvent event) {
+        super.onNodeLeftClick(event);
+        canvas.presentationModel.db.doInTransaction(tx -> setText(canvas.presentationModel.render(stModel)));
+    }
+
+    @Override
+    public void onNodeAdded(nextgen.st.STAppEvents.NodeAdded event) {
+        super.onNodeAdded(event);
+        forEachArgument((stArgument, stParameter) -> {
+            if (refersTo(stArgument, stParameter, event.node))
+                canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(STModelNode.this, event.node, stArgument, stParameter));
+        });
+    }
+
+    protected void forEachArgument(java.util.function.BiConsumer<nextgen.st.model.STArgument, nextgen.st.domain.STParameter> consumer) {
+        stTemplate.getParameters().forEach(stParameter -> stModel.getArgumentsSorted().filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid())).forEach(stArgument -> consumer.accept(stArgument, stParameter)));
+    }
+
+    protected boolean refersTo(nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameter stParameter, nextgen.st.canvas.STNode node) {
+        if (stArgument == null || stParameter == null || node == null) return false;
+        switch (stParameter.getType()) {
+            case SINGLE: {
+                final nextgen.st.model.STValue value = stArgument.getValue();
+                if (value != null)
+                    return UUID.fromString(value.getUuid()).equals(node.getUuid()) || (value.getType().equals(nextgen.st.model.STValueType.STMODEL) && value.getStModel() != null && UUID.fromString(value.getStModel().getUuid()).equals(node.getUuid()));
+                break;
+            }
+            case LIST: {
+                final nextgen.st.model.STValue value = stArgument.getValue();
+                if (value != null)
+                    return UUID.fromString(value.getUuid()).equals(node.getUuid()) || (value.getType().equals(nextgen.st.model.STValueType.STMODEL) && value.getStModel() != null && UUID.fromString(value.getStModel().getUuid()).equals(node.getUuid()));
+                break;
+            }
+            case KVLIST: {
+                if (UUID.fromString(stArgument.getUuid()).equals(node.getUuid())) return true;
+                break;
+            }
+        }
+        return false;
+    }
+
+    protected boolean sameArgumentValue(STParameter stParameter, STValue stValue) {
+        final AtomicBoolean exists = new AtomicBoolean(false);
+        stModel.getArguments().filter(existing -> existing.getStParameter().equals(stParameter.uuid())).forEach(existing -> {
+            if (existing.getValue() != null && existing.getValue().getUuid().equals(stValue.getUuid()))
+                exists.set(true);
+        });
+        return exists.get();
+    }
+
+    protected void removeArgument(nextgen.st.domain.STParameter stParameter) {
+        stModel.getArguments().filter(existing -> existing.getStParameter().equals(stParameter.uuid())).findAny().ifPresent(existing -> {
+            canvas.removeRelation(UUID.fromString(existing.getUuid()));
+            stModel.removeArguments(existing);
+        });
+    }
+
+    private static final class OpenUsages extends NodeAction<STModelNode> {
+
+
+        OpenUsages(STModelNode node, STCanvas canvas, PInputEvent event) {
+            super("Open usages", node, canvas, event);
+        }
+
+        @Override
+        void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+        }
+    }
+
+    private static final class WriteToFile extends NodeAction<STModelNode> {
+
+
+        WriteToFile(STModelNode node, STCanvas canvas, PInputEvent event) {
+            super("Write To File", node, canvas, event);
+        }
+
+        @Override
+        void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+            doLaterInTransaction(tx -> node.stModel.getFiles().forEach(stFile -> {
+                if (stFile.getPath() == null) return;
+                nextgen.st.STGenerator.writeToFile(canvas.presentationModel.render(node.stModel), stFile.getPackageName().getValue(), stFile.getName().getValue(), stFile.getType().getValue(), new java.io.File(stFile.getPath().getValue()));
+            }));
+        }
+    }
+
+    private static final class OpenAllArguments extends NodeAction<STModelNode> {
+
+
+        OpenAllArguments(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+            super("Open All", node, canvas, event);
+        }
+
+        @Override
+        void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+            doLaterInTransaction(tx -> {
+                node.forEachArgument((stArgument, stParameter) -> new OpenArgument("", node, canvas, event, stParameter, stArgument).actionPerformed(null));
+                new LayoutTreeAction(node, canvas, event).actionPerformed(null);
+            });
+        }
+    }
+
+    private static final class RemoveArgument extends NodeAction<STModelNode> {
+
+        nextgen.st.domain.STParameter stParameter;
+        nextgen.st.model.STArgument stArgument;
+
+        RemoveArgument(String name, STModelNode node, STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument) {
+            super(name, node, canvas, event);
+            this.stParameter = stParameter;
+            this.stArgument = stArgument;
+        }
+
+        @Override
+        void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+            if (!com.generator.util.SwingUtil.showConfirmDialog(canvas, "Remove argument ?")) return;
+            doLaterInTransaction(tx -> {
+                canvas.removeRelation(UUID.fromString(stArgument.getUuid()));
+                node.stModel.removeArguments(stArgument);
+                node.setText(canvas.presentationModel.render(node.stModel));
+            });
+        }
+    }
+
+    private static final class ToClipboard extends NodeAction<STModelNode> {
+
+
+        ToClipboard(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+            super("To Clipboard", node, canvas, event);
+        }
+
+        @Override
+        void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+            doLaterInTransaction(tx -> com.generator.util.SwingUtil.toClipboard(canvas.presentationModel.render(node.stModel)));
+        }
+    }
+
+    private static final class Delete extends NodeAction<STModelNode> {
+
+
+        Delete(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+            super("Delete", node, canvas, event);
+        }
+
+        @Override
+        void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+            if (!com.generator.util.SwingUtil.showConfirmDialog(canvas, "Delete model ?")) return;
+            doLaterInTransaction(tx -> {
+                node.close();
+                canvas.presentationModel.db.remove(node.stModel);
+            });
+        }
+    }
+
+    private static final class Clone extends NodeAction<STModelNode> {
+
+
+        Clone(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+            super("Clone", node, canvas, event);
+        }
+
+        @Override
+        void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+            doLaterInTransaction(tx -> {
+                final nextgen.st.model.STModel clone = canvas.presentationModel.db.clone(node.stModel);
+                final STModelNode stModelNode = canvas.newSTNode(clone).get();
+                canvas.addNode(stModelNode);
+                stModelNode.setText(canvas.presentationModel.render(stModelNode.stModel));
+            });
+        }
+    }
+
+    private static final class AddFileSink extends NodeAction<STModelNode> {
+
+
+        AddFileSink(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+            super("Add File Sink", node, canvas, event);
+        }
+
+        @Override
+        void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+            doLaterInTransaction(tx -> {
+                final java.util.LinkedHashMap<String, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();
+                fieldMap.put("name", canvas.newTextField(canvas.presentationModel.getSTModelName(node.stModel, ""), 15));
+                fieldMap.put("type", canvas.newTextField(15));
+                fieldMap.put("path", canvas.newTextField(15));
+                fieldMap.put("package", canvas.newTextField(canvas.presentationModel.getSTModelPackage(node.stModel, ""), 15));
+                final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
+                inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+                for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {
+                    inputPanel.add(new JLabel(fieldEntry.getKey()));
+                    inputPanel.add(fieldEntry.getValue());
+                }
+                com.generator.util.SwingUtil.showDialog(inputPanel, canvas, "New File sink", new com.generator.util.SwingUtil.ConfirmAction() {
+                    @Override
+                    public void verifyAndCommit() throws Exception {
+                        final String name = fieldMap.get("name").getText().trim();
+                        final String type = fieldMap.get("type").getText().trim();
+                        final String path = fieldMap.get("path").getText().trim();
+                        final String packageName = fieldMap.get("package").getText().trim();
+                        doLaterInTransaction(tx -> {
+                            final nextgen.st.model.STFile stFile = canvas.presentationModel.newSTFile(name, type, path, packageName);
+                            node.stModel.addFiles(stFile);
+                            final STFileNode dstNode = canvas.addNode(new STFileNode(canvas, stFile, node.stModel));
+                            //canvas.addRelation(new STSinkRelation(canvas, node, dstNode));
+                            canvas.addRelation(dstNode.getUuid(), canvas.newSinkRelation(node, dstNode));
+                        });
+                    }
+                });
+            });
+        }
+    }
+
+    private static final class OpenFileSink extends NodeAction<STModelNode> {
+
+
+        OpenFileSink(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+            super("Open File Sink", node, canvas, event);
+        }
+
+        @Override
+        void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+            doLaterInTransaction(tx ->
+                    node.stModel.getFiles().forEach(stFile -> {
+                        final STFileNode dstNode = canvas.addNode(stFile.getUuid(), canvas.newSTNode(stFile, node.stModel));
+                        canvas.addRelation(dstNode.getUuid(), canvas.newSinkRelation(node, dstNode));
+                        new LayoutTreeAction(node, canvas, event).actionPerformed(null);
+                    })
+            );
+        }
+    }
+
+    private static final class SetBooleanValue extends NodeAction<nextgen.st.canvas.STModelNode> {
+
+        nextgen.st.domain.STParameter stParameter;
+
+        SetBooleanValue(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
+            super(name, node, canvas, event);
+            this.stParameter = stParameter;
+        }
+
+        @Override
+        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+            doLaterInTransaction(tx -> {
+                node.removeArgument(stParameter);
+                final nextgen.st.model.STValue stValue = canvas.presentationModel.db.newSTValue("true");
+                final nextgen.st.model.STArgument stArgument = canvas.presentationModel.db.newSTArgument(stParameter, stValue);
+                node.stModel.addArguments(stArgument);
+                node.setText(canvas.presentationModel.render(node.stModel));
+            });
+        }
+    }
+
+    private static final class SetInputValueArgumentAction extends NodeAction<nextgen.st.canvas.STModelNode> {
+
+        nextgen.st.domain.STParameter stParameter;
+
+        SetInputValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
+            super(name, node, canvas, event);
+            this.stParameter = stParameter;
+        }
+
+        @Override
+        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+            final String s = com.generator.util.SwingUtil.showInputDialog(stParameter.getName(), canvas);
+            if (s == null || s.trim().length() == 0) return;
+            doLaterInTransaction(tx -> {
+                node.removeArgument(stParameter);
+                final nextgen.st.model.STValue stValue = canvas.presentationModel.db.newSTValue(s.trim());
+                final nextgen.st.model.STArgument stArgument = canvas.presentationModel.db.newSTArgument(stParameter, stValue);
+                node.stModel.addArguments(stArgument);
+                canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue));
+                //canvas.addRelation(new STArgumentRelation(canvas, node, canvas.getNode(stValue.getUuid()), stArgument, stParameter));
+                canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, canvas.getNode(stValue.getUuid()), stArgument, stParameter));
+                node.setText(canvas.presentationModel.render(node.stModel));
+            });
+        }
+    }
+
+    private static final class SetClipboardValueArgumentAction extends NodeAction<nextgen.st.canvas.STModelNode> {
+
+        nextgen.st.domain.STParameter stParameter;
+
+        SetClipboardValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
+            super(name, node, canvas, event);
+            this.stParameter = stParameter;
+        }
+
+        @Override
+        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+            final String s = com.generator.util.SwingUtil.fromClipboard();
+            if (s == null || s.trim().length() == 0) return;
+            doLaterInTransaction(tx -> {
+                node.removeArgument(stParameter);
+                final nextgen.st.model.STValue stValue = canvas.presentationModel.newSTValue(s.trim());
+                final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValue);
+                node.stModel.addArguments(stArgument);
+                canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue));
+                //canvas.addRelation(new STArgumentRelation(canvas, node, canvas.getNode(stValue.getUuid()), stArgument, stParameter));
+                canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, canvas.getNode(stValue.getUuid()), stArgument, stParameter));
+                node.setText(canvas.presentationModel.render(node.stModel));
+            });
+        }
+    }
+
+    private static final class SetSTValueArgumentAction extends NodeAction<nextgen.st.canvas.STModelNode> {
+
+        nextgen.st.domain.STParameter stParameter;
+        nextgen.st.canvas.STValueNode stValueNode;
+
+        SetSTValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.canvas.STValueNode stValueNode) {
+            super(name, node, canvas, event);
+            this.stParameter = stParameter;
+            this.stValueNode = stValueNode;
+        }
+
+        @Override
+        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+            doLaterInTransaction(tx -> {
+                if (node.sameArgumentValue(stParameter, stValueNode.stValue)) return;
+                node.removeArgument(stParameter);
+                final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValueNode.stValue);
+                node.stModel.addArguments(stArgument);
+                // canvas.addRelation(new STArgumentRelation(canvas, node, stValueNode, stArgument, stParameter));
+                canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stValueNode, stArgument, stParameter));
+                node.setText(canvas.presentationModel.render(node.stModel));
+            });
+        }
+    }
+
+    private static final class SetSTModelArgumentAction extends NodeAction<nextgen.st.canvas.STModelNode> {
+
+        nextgen.st.domain.STParameter stParameter;
+        nextgen.st.canvas.STModelNode stModelNode;
+
+        SetSTModelArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.canvas.STModelNode stModelNode) {
+            super(name, node, canvas, event);
+            this.stParameter = stParameter;
+            this.stModelNode = stModelNode;
+        }
+
+        @Override
+        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+            doLaterInTransaction(tx -> {
+                node.removeArgument(stParameter);
+                final nextgen.st.model.STValue stValue = canvas.presentationModel.newSTValue(stModelNode.stModel);
+                final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValue);
+                node.stModel.addArguments(stArgument);
+                //canvas.addRelation(new STArgumentRelation(canvas, node, stModelNode, stArgument, stParameter));
+                canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stModelNode, stArgument, stParameter));
+                node.setText(canvas.presentationModel.render(node.stModel));
+            });
+        }
+    }
+
+    private static final class AddInputValueArgumentAction extends NodeAction<nextgen.st.canvas.STModelNode> {
+
+        nextgen.st.domain.STParameter stParameter;
+
+        AddInputValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
+            super(name, node, canvas, event);
+            this.stParameter = stParameter;
+        }
+
+        @Override
+        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+            final String s = com.generator.util.SwingUtil.showInputDialog(stParameter.getName(), canvas);
+            if (s == null || s.trim().length() == 0) return;
+            doLaterInTransaction(tx -> {
+                final nextgen.st.model.STValue stValue = canvas.presentationModel.newSTValue(s.trim());
+                final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValue);
+                node.stModel.addArguments(stArgument);
+                final STNode stValueNode = canvas.addNode(canvas.newSTNode(stValue).get());
+                // canvas.addRelation(new STArgumentRelation(canvas, node, stValueNode, stArgument, stParameter));
+                canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stValueNode, stArgument, stParameter));
+                node.setText(canvas.presentationModel.render(node.stModel));
+            });
+        }
+    }
+
+    private static final class AddClipboardValueArgumentAction extends NodeAction<nextgen.st.canvas.STModelNode> {
+
+        nextgen.st.domain.STParameter stParameter;
+
+        AddClipboardValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
+            super(name, node, canvas, event);
+            this.stParameter = stParameter;
+        }
+
+        @Override
+        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+            final String s = com.generator.util.SwingUtil.fromClipboard();
+            if (s == null || s.trim().length() == 0) return;
+            doLaterInTransaction(tx -> {
+                final nextgen.st.model.STValue stValue = canvas.presentationModel.newSTValue(s.trim());
+                final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValue);
+                node.stModel.addArguments(stArgument);
+                final STNode stValueNode = canvas.addNode(canvas.newSTNode(stValue).get());
+                //canvas.addRelation(new STArgumentRelation(canvas, node, stValueNode, stArgument, stParameter));
+                canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stValueNode, stArgument, stParameter));
+                node.setText(canvas.presentationModel.render(node.stModel));
+            });
+        }
+    }
+
+    private static final class AddSTValueArgumentAction extends NodeAction<nextgen.st.canvas.STModelNode> {
+
+        nextgen.st.domain.STParameter stParameter;
+        nextgen.st.canvas.STValueNode stValueNode;
+
+        AddSTValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.canvas.STValueNode stValueNode) {
+            super(name, node, canvas, event);
+            this.stParameter = stParameter;
+            this.stValueNode = stValueNode;
+        }
+
+        @Override
+        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+            doLaterInTransaction(tx -> {
+                final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValueNode.stValue);
+                node.stModel.addArguments(stArgument);
+                //canvas.addRelation(new STArgumentRelation(canvas, node, stValueNode, stArgument, stParameter));
+                canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stValueNode, stArgument, stParameter));
+                node.setText(canvas.presentationModel.render(node.stModel));
+            });
+        }
+    }
+
+    private static final class AddSTModelArgumentAction extends NodeAction<nextgen.st.canvas.STModelNode> {
+
+        nextgen.st.domain.STParameter stParameter;
+        nextgen.st.canvas.STModelNode stModelNode;
+
+        AddSTModelArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.canvas.STModelNode stModelNode) {
+            super(name, node, canvas, event);
+            this.stParameter = stParameter;
+            this.stModelNode = stModelNode;
+        }
+
+        @Override
+        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+            doLaterInTransaction(tx -> {
+                final nextgen.st.model.STValue stValue = canvas.presentationModel.newSTValue(stModelNode.stModel);
+                final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValue);
+                node.stModel.addArguments(stArgument);
+                //canvas.addRelation(new STArgumentRelation(canvas, node, stModelNode, stArgument, stParameter));
+                canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stModelNode, stArgument, stParameter));
+                node.setText(canvas.presentationModel.render(node.stModel));
+            });
+        }
+    }
+
+    private static final class AddKVInputValueArgumentAction extends NodeAction<nextgen.st.canvas.STModelNode> {
+
+        nextgen.st.domain.STParameter stParameter;
+
+        AddKVInputValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
+            super(name, node, canvas, event);
+            this.stParameter = stParameter;
+        }
+
+        @Override
+        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+            final Map<nextgen.st.domain.STParameterKey, JTextField> fieldMap = new LinkedHashMap<>();
+            doLaterInTransaction(tx -> {
+                stParameter.getKeys().forEach(stParameterKey -> fieldMap.put(stParameterKey, canvas.newTextField(15)));
+                final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
+                inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+                for (Map.Entry<nextgen.st.domain.STParameterKey, JTextField> fieldEntry : fieldMap.entrySet()) {
+                    inputPanel.add(new JLabel(fieldEntry.getKey().getName()));
+                    inputPanel.add(fieldEntry.getValue());
+                }
+                com.generator.util.SwingUtil.showDialog(inputPanel, canvas, stParameter.getName(), new com.generator.util.SwingUtil.ConfirmAction() {
+                    @Override
+                    public void verifyAndCommit() throws Exception {
+                        doLaterInTransaction(tx -> {
+                            final java.util.List<nextgen.st.model.STArgumentKV> kvs = new ArrayList<>();
+                            for (Map.Entry<nextgen.st.domain.STParameterKey, JTextField> fieldEntry : fieldMap.entrySet()) {
+                                final String value = fieldEntry.getValue().getText().trim();
+                                if (value.length() == 0) continue;
+                                kvs.add(canvas.presentationModel.newSTArgumentKV(fieldEntry.getKey(), canvas.presentationModel.newSTValue(value)));
+                            }
+                            final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, kvs);
+                            node.stModel.addArguments(stArgument);
+                            final STNode stkvNode = canvas.addNode(canvas.newSTNode(stParameter, stArgument).get());
+                            // canvas.addRelation(new STArgumentRelation(canvas, node, stkvNode, stArgument, stParameter));
+                            canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stkvNode, stArgument, stParameter));
+                            node.setText(canvas.presentationModel.render(node.stModel));
+                        });
+                    }
+                });
+            });
+        }
+    }
+
+    private static final class OpenArgument extends NodeAction<STModelNode> {
+
+        nextgen.st.domain.STParameter stParameter;
+        nextgen.st.model.STArgument stArgument;
+
+        OpenArgument(String name, STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument) {
+            super(name, node, canvas, event);
+            this.stParameter = stParameter;
+            this.stArgument = stArgument;
+        }
+
+        @Override
+        void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+            doLaterInTransaction(tx -> {
+                if (stParameter.getType().equals(nextgen.st.domain.STParameterType.KVLIST)) {
+                    canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, canvas.addNode(stArgument.getUuid(), canvas.newSTNode(stParameter, stArgument)), stArgument, stParameter));
+                } else {
+                    final nextgen.st.model.STValue stValue = stArgument.getValue();
+                    switch (stValue.getType()) {
+                        case STMODEL: {
+                            canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, canvas.addNode(stValue.getStModel().getUuid(), canvas.newSTNode(stValue.getStModel())), stArgument, stParameter));
+                            break;
+                        }
+                        case PRIMITIVE: {
+                            canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue)), stArgument, stParameter));
+                            break;
+                        }
+                        case ENUM: {
+                            canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue)), stArgument, stParameter));
+                            break;
+                        }
+                    }
+                }
+                new LayoutTreeAction(node, canvas, event).actionPerformed(null);
+            });
+        }
+    }
+
+    private static final class OpenTemplateAction extends NodeAction<STModelNode> {
+
+
+        OpenTemplateAction(STModelNode node, STCanvas canvas, PInputEvent event) {
+            super("Open template", node, canvas, event);
+        }
+
+        @Override
+        void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+            doLaterInTransaction(transaction -> nextgen.st.STAppEvents.postOpenSTModel(node.stTemplate.uuid()));
+        }
+    }
+
+    private static final class OpenAllOf extends NodeAction<STModelNode> {
+
+        nextgen.st.domain.STParameter stParameter;
+
+        OpenAllOf(String name, STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
+            super(name, node, canvas, event);
+            this.stParameter = stParameter;
+        }
+
+        @Override
+        void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+            doLaterInTransaction(tx -> {
+                node.forEachArgument((stArgument, stParameter) -> {
+                    if (this.stParameter.equals(stParameter))
+                        new OpenArgument("", node, canvas, event, stParameter, stArgument).actionPerformed(null);
+                });
+                new LayoutTreeAction(node, canvas, event).actionPerformed(null);
+            });
+        }
+    }
 }

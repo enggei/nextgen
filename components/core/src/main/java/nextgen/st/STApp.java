@@ -26,23 +26,24 @@ public class STApp extends JFrame {
 
     final STAppPresentationModel presentationModel;
     final STNavigator navigator;
+    final STModelNavigator stModelNavigator;
+    final STWorkspace workspace;
 
     public STApp(STAppModel appModel) throws HeadlessException {
         super("ST Editor");
 
         presentationModel = new STAppPresentationModel(appModel);
 
-        final STWorkspace workspace = new STWorkspace();
+        workspace = new STWorkspace(presentationModel);
         navigator = new STNavigator(presentationModel, workspace);
-        workspace.setPreferredSize(new Dimension(800, 600));
+        stModelNavigator = new STModelNavigator(presentationModel, workspace);
 
         final JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         contentPanel.add(navigator, BorderLayout.WEST);
         contentPanel.add(workspace, BorderLayout.CENTER);
-        contentPanel.add(new STModelNavigator(presentationModel.db, presentationModel.stRenderer, workspace), BorderLayout.EAST);
+        contentPanel.add(stModelNavigator, BorderLayout.EAST);
         add(contentPanel, BorderLayout.CENTER);
-        workspace.addTab("Canvas", new nextgen.st.canvas.STCanvas(presentationModel));
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }

@@ -1,12 +1,16 @@
 package nextgen.st;
 
+import com.generator.util.NeoUtil;
 import com.generator.util.SwingUtil;
-import nextgen.st.canvas.STCanvas;
 import nextgen.st.canvas.STModelNode;
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STTemplate;
 import nextgen.st.model.STModel;
-import nextgen.st.model.STModelDB;
+import nextgen.st.model.STValue;
+import nextgen.st.model.STValueType;
+import org.neo4j.graphdb.Direction;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 
 import javax.swing.*;
 import javax.swing.tree.*;
@@ -23,22 +27,21 @@ import java.util.stream.StreamSupport;
 public class STModelNavigator extends JPanel {
 
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STModelNavigator.class);
+
     private final JTree tree = new JTree();
-    private final DefaultTreeModel treeModel;
-    private final JTabbedPane tabbedPane;
+    private final STWorkspace workspace;
     private final RootNode rootNode;
+    private final STAppPresentationModel presentationModel;
+    private final DefaultTreeModel treeModel;
 
-    final STModelDB db;
-    final STRenderer stRenderer;
-
-    public STModelNavigator(STModelDB db, STRenderer stRenderer, JTabbedPane contentPanel) {
+    public STModelNavigator(STAppPresentationModel presentationModel, STWorkspace workspace) {
         super(new BorderLayout());
 
-        this.tabbedPane = contentPanel;
-        this.db = db;
-        this.stRenderer = stRenderer;
+        this.presentationModel = presentationModel;
+        this.workspace = workspace;
 
-        rootNode = new RootNode(db);
+        rootNode = new RootNode();
+
         treeModel = new DefaultTreeModel(rootNode);
         tree.setModel(treeModel);
         ToolTipManager.sharedInstance().registerComponent(tree);
@@ -50,10 +53,11 @@ public class STModelNavigator extends JPanel {
                 final boolean isBaseTreeNode = value instanceof BaseTreeNode;
                 if (isBaseTreeNode) {
                     final BaseTreeNode<?> baseTreeNode = (BaseTreeNode<?>) value;
-                    setIcon(baseTreeNode.getIcon());
-                    setOpenIcon(baseTreeNode.getIcon());
-                    setClosedIcon(baseTreeNode.getIcon());
-                    setLeafIcon(baseTreeNode.getIcon());
+                    final ImageIcon icon = baseTreeNode.getIcon();
+                    setIcon(icon);
+                    setOpenIcon(icon);
+                    setClosedIcon(icon);
+                    setLeafIcon(icon);
                     setToolTipText(baseTreeNode.getTooltip());
                     return super.getTreeCellRendererComponent(tree, baseTreeNode.getLabel(), sel, expanded, leaf, row, hasFocus);
                 }
@@ -122,7 +126,7 @@ public class STModelNavigator extends JPanel {
     @org.greenrobot.eventbus.Subscribe()
     public void onSTModelCreated(STAppEvents.STModelCreated event) {
         log.info("STModelCreated " + event.stModel.getUuid());
-        SwingUtilities.invokeLater(() -> db.doInTransaction(transaction -> {
+        SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
             rootNode.getChildren(RootNode.STGroupModelTreeNode.class).forEach(stGroupModelTreeNode -> {
                 final STGroupModel stGroupModel = stGroupModelTreeNode.getModel();
                 if (stGroupModel.uuid().equals(event.stModel.getStGroup())) {
@@ -264,16 +268,83 @@ public class STModelNavigator extends JPanel {
 
     class RootNode extends BaseTreeNode<String> {
 
-        public RootNode(STModelDB db) {
+        public RootNode() {
             super("DB", "RootNode");
 
-            db.doInTransaction(transaction -> {
-                db.getGroupModels().forEach(stGroupModel -> {
+            presentationModel.db.doInTransaction(transaction -> {
+                presentationModel.db.getGroupModels().forEach(stGroupModel -> {
                     add(new STGroupModelTreeNode(stGroupModel));
                 });
+                add(new STValuesRootNode());
             });
+        }
 
+        class STValuesRootNode extends BaseTreeNode<String> {
 
+            public STValuesRootNode() {
+                super("Values", null);
+                presentationModel.db.findAllSTValue()
+                        .filter(stValue -> stValue.getType() != null)
+                        .filter(stValue -> stValue.getType().equals(STValueType.PRIMITIVE))
+                        .sorted((o1, o2) -> o1.getValue().compareToIgnoreCase(o2.getValue()))
+                        .forEach(stValue -> {
+                            add(new STValueTreeNode(stValue));
+                        });
+            }
+
+            @Override
+            protected List<Action> getActions() {
+                final List<Action> actions = new ArrayList<>();
+                actions.add(new AbstractAction("Reconcile") {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        SwingUtilities.invokeLater(() -> {
+
+                            final Set<Node> delete = new LinkedHashSet<>();
+
+                            presentationModel.db.doInTransaction(transaction -> {
+                                presentationModel.db.findAllSTValue()
+                                        .filter(stValue -> stValue.getType() != null)
+                                        .filter(stValue -> stValue.getValue() != null)
+                                        .filter(stValue -> stValue.getType().equals(STValueType.PRIMITIVE))
+                                        .forEach(stValue -> {
+                                            log.info(stValue.getValue());
+                                            presentationModel.db.findAllSTValueByValue(stValue.getValue())
+                                                    .filter(stValue1 -> !stValue1.getUuid().equals(stValue.getUuid()))
+                                                    .filter(stValue1 -> stValue1.getType() != null)
+                                                    .filter(stValue1 -> stValue1.getType().equals(STValueType.PRIMITIVE))
+                                                    .forEach(stValue1 -> {
+                                                        log.info("\t" + stValue1.getValue());
+
+                                                        final Node node = stValue1.getNode();
+                                                        node.getRelationships(Direction.INCOMING).forEach(relationship -> {
+                                                            final Node src = relationship.getOtherNode(node);
+                                                            final Relationship newRelation = src.createRelationshipTo(stValue.getNode(), relationship.getType());
+                                                            relationship.getPropertyKeys().forEach(s -> newRelation.setProperty(s, relationship.getProperty(s)));
+                                                            relationship.delete();
+                                                        });
+                                                        node.getRelationships().forEach(Relationship::delete);
+                                                        delete.add(node);
+                                                    });
+                                        });
+
+                            });
+
+                            presentationModel.db.doInTransaction(transaction -> {
+                                for (Node node : delete) {
+                                    log.info(NeoUtil.getNameAndLabelsFrom(node));
+
+                                    node.delete();
+                                }
+
+                                treeModel.nodeStructureChanged(STValuesRootNode.this);
+                            });
+                        });
+                    }
+                });
+
+                return actions;
+            }
         }
 
         class STGroupModelTreeNode extends BaseTreeNode<STGroupModel> {
@@ -296,7 +367,7 @@ public class STModelNavigator extends JPanel {
                 public STTemplateTreeNode(STTemplate model) {
                     super(model, "STTemplate");
 
-                    db.findAllSTModelByStTemplate(model.uuid()).forEach(stModel -> {
+                    presentationModel.db.findAllSTModelByStTemplate(model.uuid()).forEach(stModel -> {
                         add(new STModelTreeNode(stModel));
                     });
 
@@ -323,7 +394,7 @@ public class STModelNavigator extends JPanel {
                     public STModelTreeNode(STModel model) {
                         super(model, "STGDirectory");
 
-                        tooltip = stRenderer.render(model);
+                        tooltip = presentationModel.render(model);
                         label = cut(tooltip);
                     }
 
@@ -342,18 +413,33 @@ public class STModelNavigator extends JPanel {
                     private Action openModelAction() {
                         return newAction("Open", actionEvent -> {
                             getParentNode(STTemplateTreeNode.class)
-                                    .ifPresent(stTemplateTreeNode -> findCanvas(tabbedPane)
-                                            .ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> db.doInTransaction(transaction -> {
+                                    .ifPresent(stTemplateTreeNode -> workspace.findCanvas()
+                                            .ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
                                                 final STModelNode node = new STModelNode(stCanvas, stTemplateTreeNode.getModel(), getModel());
                                                 stCanvas.addNode(node);
 
-                                                tabbedPane.setSelectedComponent(stCanvas);
+                                                workspace.setSelectedComponent(stCanvas);
                                                 stCanvas.requestFocusInWindow();
                                                 stCanvas.centerNode(node);
                                             }))));
                         });
                     }
                 }
+            }
+        }
+
+        private class STValueTreeNode extends BaseTreeNode<STValue> {
+
+            private String label;
+
+            STValueTreeNode(STValue stValue) {
+                super(stValue, null);
+                this.label = stValue.getValue();
+            }
+
+            @Override
+            public String getLabel() {
+                return this.label;
             }
         }
     }
@@ -370,6 +456,8 @@ public class STModelNavigator extends JPanel {
     private static final Map<String, ImageIcon> cache = new LinkedHashMap<>();
 
     private ImageIcon loadIcon(String iconName) {
+
+        if (iconName == null) return null;
 
         if (cache.containsKey(iconName)) return cache.get(iconName);
 
@@ -394,14 +482,5 @@ public class STModelNavigator extends JPanel {
 
     public static String cut(String text) {
         return text.substring(0, Math.min(text.length(), 20));
-    }
-
-    public Optional<STCanvas> findCanvas(JTabbedPane tabbedPane) {
-        for (int i = 0; i < tabbedPane.getTabCount(); i++) {
-            final Component tabComponentAt = tabbedPane.getComponentAt(i);
-            if (tabComponentAt instanceof STCanvas)
-                return Optional.of((STCanvas) tabComponentAt);
-        }
-        return Optional.empty();
     }
 }

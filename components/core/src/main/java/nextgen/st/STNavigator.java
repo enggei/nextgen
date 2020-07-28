@@ -230,15 +230,6 @@ public class STNavigator extends JPanel {
         return Optional.empty();
     }
 
-    public Optional<STCanvas> findCanvas(STWorkspace workspace) {
-        for (int i = 0; i < workspace.getTabCount(); i++) {
-            final Component tabComponentAt = workspace.getComponentAt(i);
-            if (tabComponentAt instanceof STCanvas)
-                return Optional.of((STCanvas) tabComponentAt);
-        }
-        return Optional.empty();
-    }
-
     private class BaseTreeNode<T> extends DefaultMutableTreeNode {
 
         protected ImageIcon icon;
@@ -689,7 +680,7 @@ public class STNavigator extends JPanel {
 
                         getModel().getValues().forEach(stEnumValue -> {
                             actions.add(newAction("New " + stEnumValue.getName() + " instance", actionEvent -> {
-                                findCanvas(workspace).ifPresent(stCanvas -> {
+                                workspace.findCanvas().ifPresent(stCanvas -> {
                                     SwingUtilities.invokeLater(() -> {
                                         presentationModel.db.doInTransaction(transaction -> stCanvas.addNode(new STValueNode(stCanvas, presentationModel.db.newSTValue(stEnumValue))));
                                         workspace.setSelectedComponent(stCanvas);
@@ -1006,7 +997,7 @@ public class STNavigator extends JPanel {
                     private Action newModelAction() {
                         return newAction("New Instance", actionEvent ->
                                 getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> {
-                                    findCanvas(workspace).ifPresent(stCanvas -> {
+                                    workspace.findCanvas().ifPresent(stCanvas -> {
                                         SwingUtilities.invokeLater(() -> {
                                             presentationModel.db.doInTransaction(transaction -> {
                                                 final STModelNode node = new STModelNode(stCanvas, getModel(), presentationModel.db.newSTModel(stGroupTreeNode.getModel().uuid(), getModel()));

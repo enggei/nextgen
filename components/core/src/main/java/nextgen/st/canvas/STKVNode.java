@@ -29,8 +29,7 @@ public class STKVNode extends STNode {
 			final nextgen.st.model.STValue value = stArgumentKV.getValue();
 			switch (value.getType()) {
 				case STMODEL:
-					final nextgen.st.model.STModel stModel = value.getStModel();
-					if (node.getUuid().equals(UUID.fromString(stModel.getUuid())))
+					if (node.getUuid().equals(UUID.fromString(value.getStModel().getUuid())))
 						canvas.addRelation(stArgumentKV.getUuid(), canvas.newSTKVArgumentRelation(STKVNode.this, node, stArgument, stParameterKey, stArgumentKV));
 					break;
 				case PRIMITIVE:
@@ -118,8 +117,7 @@ public class STKVNode extends STNode {
 				node.removeArgument(stParameterKey);
 				final nextgen.st.model.STArgumentKV stArgumentKV = canvas.presentationModel.db.newSTArgumentKV(stParameterKey, stValue);
 				node.stArgument.addKeyValues(stArgumentKV);
-				final STNode stValueNode = canvas.addNode(canvas.newSTNode(stValue).get());
-				canvas.addRelation(stArgumentKV.getUuid(), canvas.newSTKVArgumentRelation(node, stValueNode, stArgument, stParameterKey, stArgumentKV));
+				canvas.addRelation(stArgumentKV.getUuid(), canvas.newSTKVArgumentRelation(node, canvas.addNode(canvas.newSTNode(stValue).get()), stArgument, stParameterKey, stArgumentKV));
 			}));
 		}
 	}
@@ -245,8 +243,8 @@ public class STKVNode extends STNode {
 		@Override
 		void actionPerformed(STKVNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
 			doLaterInTransaction(tx -> {
-				canvas.removeRelation(java.util.UUID.fromString(stArgumentKV.getUuid()));
 				stArgument.removeKeyValues(stArgumentKV);
+				canvas.removeRelation(java.util.UUID.fromString(stArgumentKV.getUuid()));
 			});
 		}
 	}
