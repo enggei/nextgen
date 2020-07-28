@@ -233,6 +233,10 @@ public class STModelNeoFactory {
         return db.findNodes(org.neo4j.graphdb.Label.label("STArgument"), "stParameter", value).stream().map(this::newSTArgument);
     }
 
+    public boolean isSTArgumentKV(org.neo4j.graphdb.Node node) {
+        return node != null && node.hasLabel(org.neo4j.graphdb.Label.label("STArgumentKV"));
+    }
+
     public STArgumentKV newSTArgumentKV() {
         return newSTArgumentKV(db.createNode(org.neo4j.graphdb.Label.label("STArgumentKV")));
     }

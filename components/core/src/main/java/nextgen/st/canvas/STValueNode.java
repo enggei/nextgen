@@ -130,6 +130,22 @@ public class STValueNode extends nextgen.st.canvas.STNode {
 										canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(stModelNode, node, stArgument, stParameter));
 									});
 						});
+					} else if (otherNode.hasLabel(org.neo4j.graphdb.Label.label("STArgumentKV"))) {
+						final nextgen.st.model.STArgumentKV stArgumentKV = new nextgen.st.model.STArgumentKV(otherNode);
+
+						stArgumentKV.getIncomingKeyValues().forEach(stArgument -> {
+							stArgument.getIncomingArguments().forEach(stModel -> {
+								final nextgen.st.domain.STTemplate stTemplateByUuid = canvas.presentationModel.findSTTemplateByUuid(stModel.getStTemplate());
+								if (stTemplateByUuid == null) return;
+								stTemplateByUuid.getParameters()
+										.filter(stParameter -> stParameter.uuid().equals(stArgument.getStParameter()))
+										.findFirst()
+										.ifPresent(stParameter -> {
+											final STModelNode stModelNode = canvas.addNode(stModel.getUuid(), canvas.newSTNode(stModel));
+											canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(stModelNode, canvas.addNode(stArgument.getUuid(), canvas.newSTNode(stParameter, stArgument)), stArgument, stParameter));
+										});
+							});
+						});
 					}
 				});
 				canvas.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));

@@ -311,7 +311,7 @@
       "children" : [ {
         "uuid" : "75d8bdac-df70-443b-8b8a-ce3456b1aae1",
         "name" : "NeoFactoryAccessors",
-        "text" : "public ~name;format=\"capitalize\"~ new~name;format=\"capitalize\"~() { \n\treturn new~name;format=\"capitalize\"~(db.createNode(org.neo4j.graphdb.Label.label(\"~name~\")));\n}\n\npublic ~name;format=\"capitalize\"~ new~name;format=\"capitalize\"~(org.neo4j.graphdb.Node node) { \n\treturn new ~name;format=\"capitalize\"~(node);\n}\n\npublic java.util.stream.Stream<~name;format=\"capitalize\"~> findAll~name;format=\"capitalize\"~() { \n\treturn db.findNodes(org.neo4j.graphdb.Label.label(\"~name~\")).stream().map(this::new~name;format=\"capitalize\"~);\n}\n\n~properties:{it|~it~};separator=\"\\n\\n\"~ ",
+        "text" : "private static final org.neo4j.graphdb.Label ~name~Label = org.neo4j.graphdb.Label.label(\"~name~\");\n\npublic boolean isSTArgumentKV(org.neo4j.graphdb.Node node) {\n\treturn node != null && node.hasLabel(~name~Label);\n}\n\npublic ~name;format=\"capitalize\"~ new~name;format=\"capitalize\"~() { \n\treturn new~name;format=\"capitalize\"~(db.createNode(~name~Label));\n}\n\npublic ~name;format=\"capitalize\"~ new~name;format=\"capitalize\"~(org.neo4j.graphdb.Node node) { \n\treturn new ~name;format=\"capitalize\"~(node);\n}\n\npublic java.util.stream.Stream<~name;format=\"capitalize\"~> findAll~name;format=\"capitalize\"~() { \n\treturn db.findNodes(~name~Label).stream().map(this::new~name;format=\"capitalize\"~);\n}\n\n~properties:{it|~it~};separator=\"\\n\\n\"~ ",
         "parameters" : [ {
           "uuid" : "cda5f5bd-9a40-4fdb-a97b-e8a19d3757e2",
           "name" : "name",

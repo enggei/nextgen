@@ -314,8 +314,14 @@ public class ~name;format="capitalize"~ {
 	}
 }  >>
 
-NeoFactoryAccessors(name,properties) ::= <<public ~name;format="capitalize"~ new~name;format="capitalize"~() { 
-	return new~name;format="capitalize"~(db.createNode(org.neo4j.graphdb.Label.label("~name~")));
+NeoFactoryAccessors(name,properties) ::= <<private static final org.neo4j.graphdb.Label ~name~Label = org.neo4j.graphdb.Label.label("~name~");
+
+public boolean isSTArgumentKV(org.neo4j.graphdb.Node node) {
+	return node != null && node.hasLabel(~name~Label);
+}
+
+public ~name;format="capitalize"~ new~name;format="capitalize"~() { 
+	return new~name;format="capitalize"~(db.createNode(~name~Label));
 }
 
 public ~name;format="capitalize"~ new~name;format="capitalize"~(org.neo4j.graphdb.Node node) { 
@@ -323,7 +329,7 @@ public ~name;format="capitalize"~ new~name;format="capitalize"~(org.neo4j.graphd
 }
 
 public java.util.stream.Stream<~name;format="capitalize"~> findAll~name;format="capitalize"~() { 
-	return db.findNodes(org.neo4j.graphdb.Label.label("~name~")).stream().map(this::new~name;format="capitalize"~);
+	return db.findNodes(~name~Label).stream().map(this::new~name;format="capitalize"~);
 }
 
 ~properties:{it|~it~};separator="\n\n"~  >>

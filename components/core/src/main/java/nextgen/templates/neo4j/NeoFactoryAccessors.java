@@ -89,8 +89,14 @@ public class NeoFactoryAccessors {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NeoFactoryAccessors(name,properties) ::= <<public ~name;format=\"capitalize\"~ new~name;format=\"capitalize\"~() { \n" + 
-				"	return new~name;format=\"capitalize\"~(db.createNode(org.neo4j.graphdb.Label.label(\"~name~\")));\n" + 
+	static final String st = "NeoFactoryAccessors(name,properties) ::= <<private static final org.neo4j.graphdb.Label ~name~Label = org.neo4j.graphdb.Label.label(\"~name~\");\n" + 
+				"\n" + 
+				"public boolean isSTArgumentKV(org.neo4j.graphdb.Node node) {\n" + 
+				"	return node != null && node.hasLabel(~name~Label);\n" + 
+				"}\n" + 
+				"\n" + 
+				"public ~name;format=\"capitalize\"~ new~name;format=\"capitalize\"~() { \n" + 
+				"	return new~name;format=\"capitalize\"~(db.createNode(~name~Label));\n" + 
 				"}\n" + 
 				"\n" + 
 				"public ~name;format=\"capitalize\"~ new~name;format=\"capitalize\"~(org.neo4j.graphdb.Node node) { \n" + 
@@ -98,7 +104,7 @@ public class NeoFactoryAccessors {
 				"}\n" + 
 				"\n" + 
 				"public java.util.stream.Stream<~name;format=\"capitalize\"~> findAll~name;format=\"capitalize\"~() { \n" + 
-				"	return db.findNodes(org.neo4j.graphdb.Label.label(\"~name~\")).stream().map(this::new~name;format=\"capitalize\"~);\n" + 
+				"	return db.findNodes(~name~Label).stream().map(this::new~name;format=\"capitalize\"~);\n" + 
 				"}\n" + 
 				"\n" + 
 				"~properties:{it|~it~};separator=\"\\n\\n\"~ >>";

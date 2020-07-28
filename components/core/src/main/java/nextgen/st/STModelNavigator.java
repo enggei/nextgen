@@ -3,6 +3,7 @@ package nextgen.st;
 import com.generator.util.NeoUtil;
 import com.generator.util.SwingUtil;
 import nextgen.st.canvas.STModelNode;
+import nextgen.st.canvas.STValueNode;
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STTemplate;
 import nextgen.st.model.STModel;
@@ -295,7 +296,12 @@ public class STModelNavigator extends JPanel {
             @Override
             protected List<Action> getActions() {
                 final List<Action> actions = new ArrayList<>();
-                actions.add(new AbstractAction("Reconcile") {
+                actions.add(newReconcileAction());
+                return actions;
+            }
+
+            private Action newReconcileAction() {
+                return new AbstractAction("Reconcile") {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         SwingUtilities.invokeLater(() -> {
@@ -314,16 +320,15 @@ public class STModelNavigator extends JPanel {
                                                     .filter(stValue1 -> stValue1.getType() != null)
                                                     .filter(stValue1 -> stValue1.getType().equals(STValueType.PRIMITIVE))
                                                     .forEach(stValue1 -> {
-                                                        log.info("\t" + stValue1.getValue());
+                                                        log.info("\t duplicate " + stValue1.getValue());
 
                                                         final Node node = stValue1.getNode();
                                                         node.getRelationships(Direction.INCOMING).forEach(relationship -> {
                                                             final Node src = relationship.getOtherNode(node);
                                                             final Relationship newRelation = src.createRelationshipTo(stValue.getNode(), relationship.getType());
                                                             relationship.getPropertyKeys().forEach(s -> newRelation.setProperty(s, relationship.getProperty(s)));
-                                                            relationship.delete();
                                                         });
-                                                        node.getRelationships().forEach(Relationship::delete);
+
                                                         delete.add(node);
                                                     });
                                         });
@@ -333,7 +338,7 @@ public class STModelNavigator extends JPanel {
                             presentationModel.db.doInTransaction(transaction -> {
                                 for (Node node : delete) {
                                     log.info(NeoUtil.getNameAndLabelsFrom(node));
-
+                                    node.getRelationships().forEach(Relationship::delete);
                                     node.delete();
                                 }
 
@@ -341,10 +346,9 @@ public class STModelNavigator extends JPanel {
                             });
                         });
                     }
-                });
-
-                return actions;
+                };
             }
+
         }
 
         class STGroupModelTreeNode extends BaseTreeNode<STGroupModel> {
@@ -440,6 +444,26 @@ public class STModelNavigator extends JPanel {
             @Override
             public String getLabel() {
                 return this.label;
+            }
+
+            @Override
+            protected List<Action> getActions() {
+                final List<Action> actions = new ArrayList<>();
+                actions.add(openValueAction());
+                return actions;
+            }
+
+            private Action openValueAction() {
+                return newAction("Open", actionEvent -> {
+                    workspace.findCanvas().ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
+                                final STValueNode node = new STValueNode(stCanvas, getModel());
+                                stCanvas.addNode(node);
+
+                                workspace.setSelectedComponent(stCanvas);
+                                stCanvas.requestFocusInWindow();
+                                stCanvas.centerNode(node);
+                            })));
+                });
             }
         }
     }

@@ -2,23 +2,24 @@ package nextgen.templates.neo4j;
 
 public class Neo4JST {
 
-	private static final String stg = "delimiters \"~\", \"~\"\n" +
-	"eom() ::= \"}\"\n" +
-	"gt() ::= \">\"\n" +
-	NeoFactory.st + "\n" + 
-	NeoFactoryAccessors.st + "\n" + 
-	NeoFactoryPropertyAccessors.st + "\n" + 
-	NodeWrapper.st + "\n" + 
-	DeleteNode.st + "\n" + 
-	EnumAccessors.st + "\n" + 
-	EnumListAccessors.st + "\n" + 
-	ExternalAccessors.st + "\n" + 
-	IncomingReferenceStream.st + "\n" + 
-	ListPrimitiveAccessors.st + "\n" + 
-	ListReferenceAccessors.st + "\n" + 
-	NodeToJsonObject.st + "\n" + 
-	PrimitiveAccessors.st + "\n" + 
-	ReferenceAccessors.st + "\n" ;
+	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
+	.append("eom() ::= \"}\"\n")
+	.append("gt() ::= \">\"\n")
+	.append(NeoFactory.st + "\n")
+	.append(NeoFactoryAccessors.st + "\n")
+	.append(NeoFactoryPropertyAccessors.st + "\n")
+	.append(NodeWrapper.st + "\n")
+	.append(DeleteNode.st + "\n")
+	.append(EnumAccessors.st + "\n")
+	.append(EnumListAccessors.st + "\n")
+	.append(ExternalAccessors.st + "\n")
+	.append(IncomingReferenceStream.st + "\n")
+	.append(ListPrimitiveAccessors.st + "\n")
+	.append(ListReferenceAccessors.st + "\n")
+	.append(NodeToJsonObject.st + "\n")
+	.append(PrimitiveAccessors.st + "\n")
+	.append(ReferenceAccessors.st + "\n")
+	.toString()  ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -56,59 +57,59 @@ public class Neo4JST {
 
 	public static NeoFactory newNeoFactory() {
 		return new NeoFactory(stGroup);
-	} 
+	}  
 
 	public static NeoFactoryAccessors newNeoFactoryAccessors() {
 		return new NeoFactoryAccessors(stGroup);
-	} 
+	}  
 
 	public static NeoFactoryPropertyAccessors newNeoFactoryPropertyAccessors() {
 		return new NeoFactoryPropertyAccessors(stGroup);
-	} 
+	}  
 
 	public static NodeWrapper newNodeWrapper() {
 		return new NodeWrapper(stGroup);
-	} 
+	}  
 
 	public static DeleteNode newDeleteNode() {
 		return new DeleteNode(stGroup);
-	} 
+	}  
 
 	public static EnumAccessors newEnumAccessors() {
 		return new EnumAccessors(stGroup);
-	} 
+	}  
 
 	public static EnumListAccessors newEnumListAccessors() {
 		return new EnumListAccessors(stGroup);
-	} 
+	}  
 
 	public static ExternalAccessors newExternalAccessors() {
 		return new ExternalAccessors(stGroup);
-	} 
+	}  
 
 	public static IncomingReferenceStream newIncomingReferenceStream() {
 		return new IncomingReferenceStream(stGroup);
-	} 
+	}  
 
 	public static ListPrimitiveAccessors newListPrimitiveAccessors() {
 		return new ListPrimitiveAccessors(stGroup);
-	} 
+	}  
 
 	public static ListReferenceAccessors newListReferenceAccessors() {
 		return new ListReferenceAccessors(stGroup);
-	} 
+	}  
 
 	public static NodeToJsonObject newNodeToJsonObject() {
 		return new NodeToJsonObject(stGroup);
-	} 
+	}  
 
 	public static PrimitiveAccessors newPrimitiveAccessors() {
 		return new PrimitiveAccessors(stGroup);
-	} 
+	}  
 
 	public static ReferenceAccessors newReferenceAccessors() {
 		return new ReferenceAccessors(stGroup);
-	} 
+	}  
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
 
