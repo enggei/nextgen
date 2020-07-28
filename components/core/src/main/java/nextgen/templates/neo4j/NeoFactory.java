@@ -136,6 +136,17 @@ public class NeoFactory {
 				"		doInTransaction(action, java.lang.Throwable::printStackTrace);\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	public <T> T get(java.util.function.Supplier<T> supplier) {\n" + 
+				"		try (org.neo4j.graphdb.Transaction tx = db.beginTx()) {\n" + 
+				"			final T t = supplier.get();\n" + 
+				"			tx.success();\n" + 
+				"			return t;\n" + 
+				"		} catch (java.lang.Throwable t) {\n" + 
+				"			t.printStackTrace();\n" + 
+				"			return null;\n" + 
+				"		}\n" + 
+				"	}\n" + 
+				"\n" + 
 				"	public void doInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> action, java.util.function.Consumer<java.lang.Throwable> onException) { \n" + 
 				"		try (org.neo4j.graphdb.Transaction tx = db.beginTx())  { \n" + 
 				"			action.accept(tx);\n" + 
@@ -167,28 +178,28 @@ public class NeoFactory {
 				"\n" + 
 				"	// ONLY delete this node and its relations\n" + 
 				"	public void delete(org.neo4j.graphdb.Node node) {\n" + 
-				"	\n" + 
+				"\n" + 
 				"		for (org.neo4j.graphdb.Relationship incoming : node.getRelationships(org.neo4j.graphdb.Direction.INCOMING))\n" + 
 				"			incoming.delete();\n" + 
-				"	\n" + 
+				"\n" + 
 				"		for (org.neo4j.graphdb.Relationship outgoing : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING))\n" + 
 				"			outgoing.delete();\n" + 
-				"	\n" + 
+				"\n" + 
 				"		node.delete();\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	// deletes node and its outgoing relations (NOT if any node has other incoming dependencies)\n" + 
 				"	public void deleteTree(org.neo4j.graphdb.Node node) {\n" + 
-				"	\n" + 
+				"\n" + 
 				"		final java.util.Iterator<org.neo4j.graphdb.Relationship> incoming = node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).iterator();\n" + 
 				"		if (incoming.hasNext()) return;\n" + 
-				"	\n" + 
+				"\n" + 
 				"		for (org.neo4j.graphdb.Relationship outgoing : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING)) {\n" + 
 				"			final org.neo4j.graphdb.Node otherNode = outgoing.getOtherNode(node);\n" + 
 				"			outgoing.delete();\n" + 
 				"			deleteTree(otherNode);\n" + 
 				"		}\n" + 
-				"	\n" + 
+				"\n" + 
 				"		node.delete();\n" + 
 				"	}\n" + 
 				"} >>";

@@ -91,7 +91,7 @@ public class NeoFactoryAccessors {
 
 	static final String st = "NeoFactoryAccessors(name,properties) ::= <<private static final org.neo4j.graphdb.Label ~name~Label = org.neo4j.graphdb.Label.label(\"~name~\");\n" + 
 				"\n" + 
-				"public boolean isSTArgumentKV(org.neo4j.graphdb.Node node) {\n" + 
+				"public boolean is~name;format=\"capitalize\"~(org.neo4j.graphdb.Node node) {\n" + 
 				"	return node != null && node.hasLabel(~name~Label);\n" + 
 				"}\n" + 
 				"\n" + 
