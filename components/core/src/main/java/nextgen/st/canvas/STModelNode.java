@@ -234,6 +234,7 @@ public class STModelNode extends STNode {
 			}
 		});
 		pop.add(new OpenUsages(this, canvas, event));
+		pop.add(new OpenIncoming(this, canvas, event));
 		pop.add(new OpenAllArguments(this, canvas, event));
 		pop.add(new ToClipboard(this, canvas, event));
 		pop.add(new Delete(this, canvas, event));
@@ -249,6 +250,10 @@ public class STModelNode extends STNode {
 	@Override
 	protected void onNodeKeyPressed(PInputEvent event) {
 		switch (event.getKeyCode()) {
+			case java.awt.event.KeyEvent.VK_Q:
+				new OpenIncoming(this, canvas, event).actionPerformed(null);
+				return;
+
 			case java.awt.event.KeyEvent.VK_W:
 				new WriteToFile(this, canvas, event).actionPerformed(null);
 				return;
@@ -335,6 +340,61 @@ public class STModelNode extends STNode {
 
 		@Override
 		void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+		}
+	}
+
+	private static final class OpenIncoming extends NodeAction<STModelNode> {
+
+
+		OpenIncoming(STModelNode node, STCanvas canvas, PInputEvent event) {
+			super("Open Incoming", node, canvas, event);
+		}
+
+		@Override
+		void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+			doLaterInTransaction(transaction -> {
+				canvas.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				final org.neo4j.graphdb.Node stModelNode = node.stModel.getNode();
+				stModelNode.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(relationship -> {
+					if (nextgen.st.model.STModelNeoFactory.isSTValue(relationship.getOtherNode(stModelNode))) {
+						final org.neo4j.graphdb.Node stValueNode = relationship.getOtherNode(stModelNode);
+						stValueNode.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(relationship2 -> {
+							final org.neo4j.graphdb.Node otherNode = relationship2.getOtherNode(stValueNode);
+							if (nextgen.st.model.STModelNeoFactory.isSTArgument(otherNode)) {
+								final nextgen.st.model.STArgument stArgument = new nextgen.st.model.STArgument(otherNode);
+								stArgument.getIncomingArguments().forEach(stModel -> {
+									final nextgen.st.domain.STTemplate stTemplateByUuid = canvas.presentationModel.findSTTemplateByUuid(stModel.getStTemplate());
+									if (stTemplateByUuid == null) return;
+									stTemplateByUuid.getParameters()
+										.filter(stParameter -> stParameter.uuid().equals(stArgument.getStParameter()))
+										.findFirst()
+										.ifPresent(stParameter -> {
+												final STModelNode refstModelNode = canvas.addNode(stModel.getUuid(), canvas.newSTNode(stModel));
+												canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(refstModelNode, node, stArgument, stParameter));
+										});
+								});
+							} else if (nextgen.st.model.STModelNeoFactory.isSTArgumentKV(otherNode)) {
+								final nextgen.st.model.STArgumentKV stArgumentKV = new nextgen.st.model.STArgumentKV(otherNode);
+
+								stArgumentKV.getIncomingKeyValues().forEach(stArgument -> {
+									stArgument.getIncomingArguments().forEach(stModel -> {
+										final nextgen.st.domain.STTemplate stTemplateByUuid = canvas.presentationModel.findSTTemplateByUuid(stModel.getStTemplate());
+										if (stTemplateByUuid == null) return;
+										stTemplateByUuid.getParameters()
+											.filter(stParameter -> stParameter.uuid().equals(stArgument.getStParameter()))
+											.findFirst()
+											.ifPresent(stParameter -> {
+												final STModelNode refstModelNode = canvas.addNode(stModel.getUuid(), canvas.newSTNode(stModel));
+												canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(refstModelNode, canvas.addNode(stArgument.getUuid(), canvas.newSTNode(stParameter, stArgument)), stArgument, stParameter));
+											});
+									});
+								});
+							}
+						});
+					}
+				});
+				canvas.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			});
 		}
 	}
 

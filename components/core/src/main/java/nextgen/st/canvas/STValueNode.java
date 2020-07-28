@@ -49,6 +49,12 @@ public class STValueNode extends nextgen.st.canvas.STNode {
 
 	@Override
 	protected void onNodeKeyPressed(PInputEvent event) {
+		switch (event.getKeyCode()) {
+			case java.awt.event.KeyEvent.VK_Q:
+				new OpenIncoming(this, canvas, event).actionPerformed(null);
+				return;
+
+		}
 		super.onNodeKeyPressed(event);
 	}
 
@@ -117,7 +123,7 @@ public class STValueNode extends nextgen.st.canvas.STNode {
 				final org.neo4j.graphdb.Node neoNode = node.stValue.getNode();
 				neoNode.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(relationship -> {
 					final org.neo4j.graphdb.Node otherNode = relationship.getOtherNode(neoNode);
-					if (otherNode.hasLabel(org.neo4j.graphdb.Label.label("STArgument"))) {
+					if (nextgen.st.model.STModelNeoFactory.isSTArgument(otherNode)) {
 						final nextgen.st.model.STArgument stArgument = new nextgen.st.model.STArgument(otherNode);
 						stArgument.getIncomingArguments().forEach(stModel -> {
 							final nextgen.st.domain.STTemplate stTemplateByUuid = canvas.presentationModel.findSTTemplateByUuid(stModel.getStTemplate());
@@ -126,11 +132,11 @@ public class STValueNode extends nextgen.st.canvas.STNode {
 									.filter(stParameter -> stParameter.uuid().equals(stArgument.getStParameter()))
 									.findFirst()
 									.ifPresent(stParameter -> {
-										final STModelNode stModelNode = canvas.addNode(stModel.getUuid(), canvas.newSTNode(stModel));
-										canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(stModelNode, node, stArgument, stParameter));
-									});
+											final STModelNode stModelNode = canvas.addNode(stModel.getUuid(), canvas.newSTNode(stModel));
+											canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(stModelNode, node, stArgument, stParameter));
+										});
 						});
-					} else if (otherNode.hasLabel(org.neo4j.graphdb.Label.label("STArgumentKV"))) {
+					} else if (nextgen.st.model.STModelNeoFactory.isSTArgumentKV(otherNode)) {
 						final nextgen.st.model.STArgumentKV stArgumentKV = new nextgen.st.model.STArgumentKV(otherNode);
 
 						stArgumentKV.getIncomingKeyValues().forEach(stArgument -> {

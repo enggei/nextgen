@@ -21,11 +21,22 @@ public class LayoutNeoFactory {
 		doInTransaction(action, java.lang.Throwable::printStackTrace);
 	}
 
-	public void doInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> action, java.util.function.Consumer<java.lang.Throwable> onException) {
-		try (org.neo4j.graphdb.Transaction tx = db.beginTx())  {
+	public <T> T get(java.util.function.Supplier<T> supplier) {
+		try (org.neo4j.graphdb.Transaction tx = db.beginTx()) {
+			final T t = supplier.get();
+			tx.success();
+			return t;
+		} catch (java.lang.Throwable t) {
+			t.printStackTrace();
+			return null;
+		}
+	}
+
+	public void doInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> action, java.util.function.Consumer<java.lang.Throwable> onException) { 
+		try (org.neo4j.graphdb.Transaction tx = db.beginTx())  { 
 			action.accept(tx);
 			tx.success();
-		} catch (java.lang.Throwable t)  {
+		} catch (java.lang.Throwable t)  { 
 			onException.accept(t);
 		}
 	}
@@ -50,24 +61,24 @@ public class LayoutNeoFactory {
 
 	private static final org.neo4j.graphdb.Label LayoutLabel = org.neo4j.graphdb.Label.label("Layout");
 
-	public boolean isLayout(org.neo4j.graphdb.Node node) {
+	public static boolean isLayout(org.neo4j.graphdb.Node node) {
 		return node != null && node.hasLabel(LayoutLabel);
 	}
 
-	public Layout newLayout() {
+	public Layout newLayout() { 
 		return newLayout(db.createNode(LayoutLabel));
 	}
 
-	public Layout newLayout(org.neo4j.graphdb.Node node) {
+	public Layout newLayout(org.neo4j.graphdb.Node node) { 
 		return new Layout(node);
 	}
 
-	public java.util.stream.Stream<Layout> findAllLayout() {
+	public java.util.stream.Stream<Layout> findAllLayout() { 
 		return db.findNodes(LayoutLabel).stream().map(this::newLayout);
 	}
 
 	public Layout findLayoutByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("Layout"), "uuid", value);
+		final org.neo4j.graphdb.Node node = db.findNode(LayoutLabel, "uuid", value);
 		return node == null ? null : newLayout(node);
 	}
 
@@ -77,11 +88,11 @@ public class LayoutNeoFactory {
 	}
 
 	public java.util.stream.Stream<Layout> findAllLayoutByUuid(String value) {
-		return db.findNodes(org.neo4j.graphdb.Label.label("Layout"), "uuid", value).stream().map(this::newLayout);
+		return db.findNodes(LayoutLabel, "uuid", value).stream().map(this::newLayout);
 	}
 
 	public Layout findLayoutByName(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("Layout"), "name", value);
+		final org.neo4j.graphdb.Node node = db.findNode(LayoutLabel, "name", value);
 		return node == null ? null : newLayout(node);
 	}
 
@@ -91,29 +102,29 @@ public class LayoutNeoFactory {
 	}
 
 	public java.util.stream.Stream<Layout> findAllLayoutByName(String value) {
-		return db.findNodes(org.neo4j.graphdb.Label.label("Layout"), "name", value).stream().map(this::newLayout);
+		return db.findNodes(LayoutLabel, "name", value).stream().map(this::newLayout);
 	}
 
 	private static final org.neo4j.graphdb.Label LayoutNodeLabel = org.neo4j.graphdb.Label.label("LayoutNode");
 
-	public boolean isLayoutNode(org.neo4j.graphdb.Node node) {
+	public static boolean isLayoutNode(org.neo4j.graphdb.Node node) {
 		return node != null && node.hasLabel(LayoutNodeLabel);
 	}
 
-	public LayoutNode newLayoutNode() {
+	public LayoutNode newLayoutNode() { 
 		return newLayoutNode(db.createNode(LayoutNodeLabel));
 	}
 
-	public LayoutNode newLayoutNode(org.neo4j.graphdb.Node node) {
+	public LayoutNode newLayoutNode(org.neo4j.graphdb.Node node) { 
 		return new LayoutNode(node);
 	}
 
-	public java.util.stream.Stream<LayoutNode> findAllLayoutNode() {
+	public java.util.stream.Stream<LayoutNode> findAllLayoutNode() { 
 		return db.findNodes(LayoutNodeLabel).stream().map(this::newLayoutNode);
 	}
 
 	public LayoutNode findLayoutNodeByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("LayoutNode"), "uuid", value);
+		final org.neo4j.graphdb.Node node = db.findNode(LayoutNodeLabel, "uuid", value);
 		return node == null ? null : newLayoutNode(node);
 	}
 
@@ -123,11 +134,11 @@ public class LayoutNeoFactory {
 	}
 
 	public java.util.stream.Stream<LayoutNode> findAllLayoutNodeByUuid(String value) {
-		return db.findNodes(org.neo4j.graphdb.Label.label("LayoutNode"), "uuid", value).stream().map(this::newLayoutNode);
+		return db.findNodes(LayoutNodeLabel, "uuid", value).stream().map(this::newLayoutNode);
 	}
 
 	public LayoutNode findLayoutNodeByX(Double value) {
-		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("LayoutNode"), "x", value);
+		final org.neo4j.graphdb.Node node = db.findNode(LayoutNodeLabel, "x", value);
 		return node == null ? null : newLayoutNode(node);
 	}
 
@@ -137,11 +148,11 @@ public class LayoutNeoFactory {
 	}
 
 	public java.util.stream.Stream<LayoutNode> findAllLayoutNodeByX(Double value) {
-		return db.findNodes(org.neo4j.graphdb.Label.label("LayoutNode"), "x", value).stream().map(this::newLayoutNode);
+		return db.findNodes(LayoutNodeLabel, "x", value).stream().map(this::newLayoutNode);
 	}
 
 	public LayoutNode findLayoutNodeByY(Double value) {
-		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("LayoutNode"), "y", value);
+		final org.neo4j.graphdb.Node node = db.findNode(LayoutNodeLabel, "y", value);
 		return node == null ? null : newLayoutNode(node);
 	}
 
@@ -151,7 +162,7 @@ public class LayoutNeoFactory {
 	}
 
 	public java.util.stream.Stream<LayoutNode> findAllLayoutNodeByY(Double value) {
-		return db.findNodes(org.neo4j.graphdb.Label.label("LayoutNode"), "y", value).stream().map(this::newLayoutNode);
+		return db.findNodes(LayoutNodeLabel, "y", value).stream().map(this::newLayoutNode);
 	}
 
 	// ONLY delete this node and its relations

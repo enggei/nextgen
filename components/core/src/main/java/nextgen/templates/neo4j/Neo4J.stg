@@ -327,7 +327,7 @@ public class ~name;format="capitalize"~ {
 
 NeoFactoryAccessors(name,properties) ::= <<private static final org.neo4j.graphdb.Label ~name~Label = org.neo4j.graphdb.Label.label("~name~");
 
-public boolean is~name;format="capitalize"~(org.neo4j.graphdb.Node node) {
+public static boolean is~name;format="capitalize"~(org.neo4j.graphdb.Node node) {
 	return node != null && node.hasLabel(~name~Label);
 }
 
@@ -345,8 +345,8 @@ public java.util.stream.Stream<~name;format="capitalize"~> findAll~name;format="
 
 ~properties:{it|~it~};separator="\n\n"~  >>
 
-NeoFactoryPropertyAccessors(entity,propertyName,propertyType,name,isEnum) ::= <<public ~entity;format="capitalize"~ find~entity;format="capitalize"~By~propertyName;format="capitalize"~(~propertyType~ value) {
-	final org.neo4j.graphdb.Node node = db.findNode(~name~Label, "~propertyName~", value~if(isEnum)~.name()~endif~);
+NeoFactoryPropertyAccessors(entity,propertyName,propertyType,isEnum) ::= <<public ~entity;format="capitalize"~ find~entity;format="capitalize"~By~propertyName;format="capitalize"~(~propertyType~ value) {
+	final org.neo4j.graphdb.Node node = db.findNode(~entity;format="capitalize"~Label, "~propertyName~", value~if(isEnum)~.name()~endif~);
 	return node == null ? null : new~entity;format="capitalize"~(node);
 }
 
@@ -356,7 +356,7 @@ public ~entity;format="capitalize"~ findOrCreate~entity;format="capitalize"~By~p
 }
 
 public java.util.stream.Stream<~entity;format="capitalize"~> findAll~entity;format="capitalize"~By~propertyName;format="capitalize"~(~propertyType~ value) {
-	return db.findNodes(~name~Label, "~propertyName~", value~if(isEnum)~.name()~endif~).stream().map(this::new~entity;format="capitalize"~);
+	return db.findNodes(~entity;format="capitalize"~Label, "~propertyName~", value~if(isEnum)~.name()~endif~).stream().map(this::new~entity;format="capitalize"~);
 }  >>
 
 eom() ::= "}"

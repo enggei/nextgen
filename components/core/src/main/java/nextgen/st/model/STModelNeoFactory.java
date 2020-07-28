@@ -21,25 +21,25 @@ public class STModelNeoFactory {
 		doInTransaction(action, java.lang.Throwable::printStackTrace);
 	}
 
-    public <T> T get(java.util.function.Supplier<T> supplier) {
-        try (org.neo4j.graphdb.Transaction tx = db.beginTx()) {
-            final T t = supplier.get();
-            tx.success();
-            return t;
-        } catch (java.lang.Throwable t) {
-            t.printStackTrace();
-            return null;
-        }
-    }
+	public <T> T get(java.util.function.Supplier<T> supplier) {
+		try (org.neo4j.graphdb.Transaction tx = db.beginTx()) {
+			final T t = supplier.get();
+			tx.success();
+			return t;
+		} catch (java.lang.Throwable t) {
+			t.printStackTrace();
+			return null;
+		}
+	}
 
-    public void doInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> action, java.util.function.Consumer<java.lang.Throwable> onException) {
-        try (org.neo4j.graphdb.Transaction tx = db.beginTx()) {
-            action.accept(tx);
-            tx.success();
-        } catch (java.lang.Throwable t) {
-            onException.accept(t);
-        }
-    }
+	public void doInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> action, java.util.function.Consumer<java.lang.Throwable> onException) { 
+		try (org.neo4j.graphdb.Transaction tx = db.beginTx())  { 
+			action.accept(tx);
+			tx.success();
+		} catch (java.lang.Throwable t)  { 
+			onException.accept(t);
+		}
+	}
 
 	public <T> T getInTransaction(java.util.function.Function<org.neo4j.graphdb.Transaction, T> action) {
 		return getInTransaction(action, throwable -> {
@@ -61,24 +61,24 @@ public class STModelNeoFactory {
 
 	private static final org.neo4j.graphdb.Label STModelLabel = org.neo4j.graphdb.Label.label("STModel");
 
-	public boolean isSTModel(org.neo4j.graphdb.Node node) {
+	public static boolean isSTModel(org.neo4j.graphdb.Node node) {
 		return node != null && node.hasLabel(STModelLabel);
 	}
 
-	public STModel newSTModel() {
+	public STModel newSTModel() { 
 		return newSTModel(db.createNode(STModelLabel));
 	}
 
-	public STModel newSTModel(org.neo4j.graphdb.Node node) {
+	public STModel newSTModel(org.neo4j.graphdb.Node node) { 
 		return new STModel(node);
 	}
 
-	public java.util.stream.Stream<STModel> findAllSTModel() {
+	public java.util.stream.Stream<STModel> findAllSTModel() { 
 		return db.findNodes(STModelLabel).stream().map(this::newSTModel);
 	}
 
 	public STModel findSTModelByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STModel"), "uuid", value);
+		final org.neo4j.graphdb.Node node = db.findNode(STModelLabel, "uuid", value);
 		return node == null ? null : newSTModel(node);
 	}
 
@@ -88,11 +88,11 @@ public class STModelNeoFactory {
 	}
 
 	public java.util.stream.Stream<STModel> findAllSTModelByUuid(String value) {
-		return db.findNodes(org.neo4j.graphdb.Label.label("STModel"), "uuid", value).stream().map(this::newSTModel);
+		return db.findNodes(STModelLabel, "uuid", value).stream().map(this::newSTModel);
 	}
 
 	public STModel findSTModelByStGroup(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STModel"), "stGroup", value);
+		final org.neo4j.graphdb.Node node = db.findNode(STModelLabel, "stGroup", value);
 		return node == null ? null : newSTModel(node);
 	}
 
@@ -102,11 +102,11 @@ public class STModelNeoFactory {
 	}
 
 	public java.util.stream.Stream<STModel> findAllSTModelByStGroup(String value) {
-		return db.findNodes(org.neo4j.graphdb.Label.label("STModel"), "stGroup", value).stream().map(this::newSTModel);
+		return db.findNodes(STModelLabel, "stGroup", value).stream().map(this::newSTModel);
 	}
 
 	public STModel findSTModelByStTemplate(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STModel"), "stTemplate", value);
+		final org.neo4j.graphdb.Node node = db.findNode(STModelLabel, "stTemplate", value);
 		return node == null ? null : newSTModel(node);
 	}
 
@@ -116,29 +116,29 @@ public class STModelNeoFactory {
 	}
 
 	public java.util.stream.Stream<STModel> findAllSTModelByStTemplate(String value) {
-		return db.findNodes(org.neo4j.graphdb.Label.label("STModel"), "stTemplate", value).stream().map(this::newSTModel);
+		return db.findNodes(STModelLabel, "stTemplate", value).stream().map(this::newSTModel);
 	}
 
 	private static final org.neo4j.graphdb.Label STFileLabel = org.neo4j.graphdb.Label.label("STFile");
 
-	public boolean isSTFile(org.neo4j.graphdb.Node node) {
+	public static boolean isSTFile(org.neo4j.graphdb.Node node) {
 		return node != null && node.hasLabel(STFileLabel);
 	}
 
-	public STFile newSTFile() {
+	public STFile newSTFile() { 
 		return newSTFile(db.createNode(STFileLabel));
 	}
 
-	public STFile newSTFile(org.neo4j.graphdb.Node node) {
+	public STFile newSTFile(org.neo4j.graphdb.Node node) { 
 		return new STFile(node);
 	}
 
-	public java.util.stream.Stream<STFile> findAllSTFile() {
+	public java.util.stream.Stream<STFile> findAllSTFile() { 
 		return db.findNodes(STFileLabel).stream().map(this::newSTFile);
 	}
 
 	public STFile findSTFileByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STFile"), "uuid", value);
+		final org.neo4j.graphdb.Node node = db.findNode(STFileLabel, "uuid", value);
 		return node == null ? null : newSTFile(node);
 	}
 
@@ -148,29 +148,29 @@ public class STModelNeoFactory {
 	}
 
 	public java.util.stream.Stream<STFile> findAllSTFileByUuid(String value) {
-		return db.findNodes(org.neo4j.graphdb.Label.label("STFile"), "uuid", value).stream().map(this::newSTFile);
+		return db.findNodes(STFileLabel, "uuid", value).stream().map(this::newSTFile);
 	}
 
 	private static final org.neo4j.graphdb.Label STValueLabel = org.neo4j.graphdb.Label.label("STValue");
 
-	public boolean isSTValue(org.neo4j.graphdb.Node node) {
+	public static boolean isSTValue(org.neo4j.graphdb.Node node) {
 		return node != null && node.hasLabel(STValueLabel);
 	}
 
-	public STValue newSTValue() {
+	public STValue newSTValue() { 
 		return newSTValue(db.createNode(STValueLabel));
 	}
 
-	public STValue newSTValue(org.neo4j.graphdb.Node node) {
+	public STValue newSTValue(org.neo4j.graphdb.Node node) { 
 		return new STValue(node);
 	}
 
-	public java.util.stream.Stream<STValue> findAllSTValue() {
+	public java.util.stream.Stream<STValue> findAllSTValue() { 
 		return db.findNodes(STValueLabel).stream().map(this::newSTValue);
 	}
 
 	public STValue findSTValueByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STValue"), "uuid", value);
+		final org.neo4j.graphdb.Node node = db.findNode(STValueLabel, "uuid", value);
 		return node == null ? null : newSTValue(node);
 	}
 
@@ -180,11 +180,11 @@ public class STModelNeoFactory {
 	}
 
 	public java.util.stream.Stream<STValue> findAllSTValueByUuid(String value) {
-		return db.findNodes(org.neo4j.graphdb.Label.label("STValue"), "uuid", value).stream().map(this::newSTValue);
+		return db.findNodes(STValueLabel, "uuid", value).stream().map(this::newSTValue);
 	}
 
 	public STValue findSTValueByValue(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STValue"), "value", value);
+		final org.neo4j.graphdb.Node node = db.findNode(STValueLabel, "value", value);
 		return node == null ? null : newSTValue(node);
 	}
 
@@ -194,11 +194,11 @@ public class STModelNeoFactory {
 	}
 
 	public java.util.stream.Stream<STValue> findAllSTValueByValue(String value) {
-		return db.findNodes(org.neo4j.graphdb.Label.label("STValue"), "value", value).stream().map(this::newSTValue);
+		return db.findNodes(STValueLabel, "value", value).stream().map(this::newSTValue);
 	}
 
 	public STValue findSTValueByType(STValueType value) {
-		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STValue"), "type", value.name());
+		final org.neo4j.graphdb.Node node = db.findNode(STValueLabel, "type", value.name());
 		return node == null ? null : newSTValue(node);
 	}
 
@@ -208,29 +208,29 @@ public class STModelNeoFactory {
 	}
 
 	public java.util.stream.Stream<STValue> findAllSTValueByType(STValueType value) {
-		return db.findNodes(org.neo4j.graphdb.Label.label("STValue"), "type", value.name()).stream().map(this::newSTValue);
+		return db.findNodes(STValueLabel, "type", value.name()).stream().map(this::newSTValue);
 	}
 
 	private static final org.neo4j.graphdb.Label STArgumentLabel = org.neo4j.graphdb.Label.label("STArgument");
 
-	public boolean isSTArgument(org.neo4j.graphdb.Node node) {
+	public static boolean isSTArgument(org.neo4j.graphdb.Node node) {
 		return node != null && node.hasLabel(STArgumentLabel);
 	}
 
-	public STArgument newSTArgument() {
+	public STArgument newSTArgument() { 
 		return newSTArgument(db.createNode(STArgumentLabel));
 	}
 
-	public STArgument newSTArgument(org.neo4j.graphdb.Node node) {
+	public STArgument newSTArgument(org.neo4j.graphdb.Node node) { 
 		return new STArgument(node);
 	}
 
-	public java.util.stream.Stream<STArgument> findAllSTArgument() {
+	public java.util.stream.Stream<STArgument> findAllSTArgument() { 
 		return db.findNodes(STArgumentLabel).stream().map(this::newSTArgument);
 	}
 
 	public STArgument findSTArgumentByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STArgument"), "uuid", value);
+		final org.neo4j.graphdb.Node node = db.findNode(STArgumentLabel, "uuid", value);
 		return node == null ? null : newSTArgument(node);
 	}
 
@@ -240,11 +240,11 @@ public class STModelNeoFactory {
 	}
 
 	public java.util.stream.Stream<STArgument> findAllSTArgumentByUuid(String value) {
-		return db.findNodes(org.neo4j.graphdb.Label.label("STArgument"), "uuid", value).stream().map(this::newSTArgument);
+		return db.findNodes(STArgumentLabel, "uuid", value).stream().map(this::newSTArgument);
 	}
 
 	public STArgument findSTArgumentByStParameter(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STArgument"), "stParameter", value);
+		final org.neo4j.graphdb.Node node = db.findNode(STArgumentLabel, "stParameter", value);
 		return node == null ? null : newSTArgument(node);
 	}
 
@@ -254,29 +254,29 @@ public class STModelNeoFactory {
 	}
 
 	public java.util.stream.Stream<STArgument> findAllSTArgumentByStParameter(String value) {
-		return db.findNodes(org.neo4j.graphdb.Label.label("STArgument"), "stParameter", value).stream().map(this::newSTArgument);
+		return db.findNodes(STArgumentLabel, "stParameter", value).stream().map(this::newSTArgument);
 	}
 
 	private static final org.neo4j.graphdb.Label STArgumentKVLabel = org.neo4j.graphdb.Label.label("STArgumentKV");
 
-	public boolean isSTArgumentKV(org.neo4j.graphdb.Node node) {
+	public static boolean isSTArgumentKV(org.neo4j.graphdb.Node node) {
 		return node != null && node.hasLabel(STArgumentKVLabel);
 	}
 
-	public STArgumentKV newSTArgumentKV() {
+	public STArgumentKV newSTArgumentKV() { 
 		return newSTArgumentKV(db.createNode(STArgumentKVLabel));
 	}
 
-	public STArgumentKV newSTArgumentKV(org.neo4j.graphdb.Node node) {
+	public STArgumentKV newSTArgumentKV(org.neo4j.graphdb.Node node) { 
 		return new STArgumentKV(node);
 	}
 
-	public java.util.stream.Stream<STArgumentKV> findAllSTArgumentKV() {
+	public java.util.stream.Stream<STArgumentKV> findAllSTArgumentKV() { 
 		return db.findNodes(STArgumentKVLabel).stream().map(this::newSTArgumentKV);
 	}
 
 	public STArgumentKV findSTArgumentKVByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STArgumentKV"), "uuid", value);
+		final org.neo4j.graphdb.Node node = db.findNode(STArgumentKVLabel, "uuid", value);
 		return node == null ? null : newSTArgumentKV(node);
 	}
 
@@ -286,11 +286,11 @@ public class STModelNeoFactory {
 	}
 
 	public java.util.stream.Stream<STArgumentKV> findAllSTArgumentKVByUuid(String value) {
-		return db.findNodes(org.neo4j.graphdb.Label.label("STArgumentKV"), "uuid", value).stream().map(this::newSTArgumentKV);
+		return db.findNodes(STArgumentKVLabel, "uuid", value).stream().map(this::newSTArgumentKV);
 	}
 
 	public STArgumentKV findSTArgumentKVByStParameterKey(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(org.neo4j.graphdb.Label.label("STArgumentKV"), "stParameterKey", value);
+		final org.neo4j.graphdb.Node node = db.findNode(STArgumentKVLabel, "stParameterKey", value);
 		return node == null ? null : newSTArgumentKV(node);
 	}
 
@@ -300,7 +300,7 @@ public class STModelNeoFactory {
 	}
 
 	public java.util.stream.Stream<STArgumentKV> findAllSTArgumentKVByStParameterKey(String value) {
-		return db.findNodes(org.neo4j.graphdb.Label.label("STArgumentKV"), "stParameterKey", value).stream().map(this::newSTArgumentKV);
+		return db.findNodes(STArgumentKVLabel, "stParameterKey", value).stream().map(this::newSTArgumentKV);
 	}
 
 	// ONLY delete this node and its relations

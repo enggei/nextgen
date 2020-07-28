@@ -8,7 +8,6 @@ public class NeoFactoryPropertyAccessors {
 	private Object _entity;
 	private String _propertyName;
 	private Object _propertyType;
-	private Object _name;
 	private Boolean _isEnum;
 
 	NeoFactoryPropertyAccessors(org.stringtemplate.v4.STGroup stGroup) {
@@ -25,7 +24,6 @@ public class NeoFactoryPropertyAccessors {
 		st.add("entity", _entity);
 		st.add("propertyName", _propertyName);
 		st.add("propertyType", _propertyType);
-		st.add("name", _name);
 		st.add("isEnum", _isEnum);
 		return st.render().trim();
 	}
@@ -96,28 +94,6 @@ public class NeoFactoryPropertyAccessors {
 		return this;
 	} 
 
-	public NeoFactoryPropertyAccessors setName(Object value) {
-		this._name = value;
-		return this;
-	}
-
-	public Object getName() {
-		return this._name;
-	}
-
-	public Object getName(Object defaultValue) {
-		return this._name == null ? defaultValue : this._name;
-	}
-
-	public boolean hasName() {
-		return this._name != null;
-	}
-
-	public NeoFactoryPropertyAccessors removeName() {
-		this._name = null;
-		return this;
-	} 
-
 	public NeoFactoryPropertyAccessors setIsEnum(Boolean value) {
 		this._isEnum = value;
 		return this;
@@ -155,8 +131,8 @@ public class NeoFactoryPropertyAccessors {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NeoFactoryPropertyAccessors(entity,propertyName,propertyType,name,isEnum) ::= <<public ~entity;format=\"capitalize\"~ find~entity;format=\"capitalize\"~By~propertyName;format=\"capitalize\"~(~propertyType~ value) {\n" + 
-				"	final org.neo4j.graphdb.Node node = db.findNode(~name~Label, \"~propertyName~\", value~if(isEnum)~.name()~endif~);\n" + 
+	static final String st = "NeoFactoryPropertyAccessors(entity,propertyName,propertyType,isEnum) ::= <<public ~entity;format=\"capitalize\"~ find~entity;format=\"capitalize\"~By~propertyName;format=\"capitalize\"~(~propertyType~ value) {\n" + 
+				"	final org.neo4j.graphdb.Node node = db.findNode(~entity;format=\"capitalize\"~Label, \"~propertyName~\", value~if(isEnum)~.name()~endif~);\n" + 
 				"	return node == null ? null : new~entity;format=\"capitalize\"~(node);\n" + 
 				"}\n" + 
 				"\n" + 
@@ -166,6 +142,6 @@ public class NeoFactoryPropertyAccessors {
 				"}\n" + 
 				"\n" + 
 				"public java.util.stream.Stream<~entity;format=\"capitalize\"~> findAll~entity;format=\"capitalize\"~By~propertyName;format=\"capitalize\"~(~propertyType~ value) {\n" + 
-				"	return db.findNodes(~name~Label, \"~propertyName~\", value~if(isEnum)~.name()~endif~).stream().map(this::new~entity;format=\"capitalize\"~);\n" + 
+				"	return db.findNodes(~entity;format=\"capitalize\"~Label, \"~propertyName~\", value~if(isEnum)~.name()~endif~).stream().map(this::new~entity;format=\"capitalize\"~);\n" + 
 				"} >>";
 }  
