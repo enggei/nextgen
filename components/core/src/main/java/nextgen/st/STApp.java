@@ -1,6 +1,5 @@
 package nextgen.st;
 
-import nextgen.utils.MultiLineToolTipUI;
 import nextgen.utils.SwingUtil;
 import nextgen.st.domain.STAppModel;
 import nextgen.st.domain.STGDirectory;
@@ -79,7 +78,7 @@ public class STApp extends JFrame {
                             .findFirst()
                             .map(fontName -> UIManager.put("ToolTip.font", new Font(fontName, Font.PLAIN, config.getEditorFontSize(12))));
 
-                    MultiLineToolTipUI.installUI();
+                    SwingUtil.MultiLineToolTipUI.installUI();
                     ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
                 } catch (Exception e) {
                     System.err.println("Could not set look and feel '" + "Nimbus" + "': " + e.getMessage());
