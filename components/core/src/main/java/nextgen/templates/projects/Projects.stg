@@ -1,0 +1,12 @@
+delimiters "~","~"
+
+JavaMavenProject(name,root,mainSrc,testSrc,pom) ::= <<~name~
+~root~
+~mainSrc~
+~testSrc~
+
+~pom~  >>
+
+eom() ::= "}"
+
+gt() ::= ">"
