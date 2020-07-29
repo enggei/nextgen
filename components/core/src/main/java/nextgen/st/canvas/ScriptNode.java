@@ -30,7 +30,7 @@ public class ScriptNode extends nextgen.st.canvas.STNode {
 
 	@Override
 	public void newNodeAdded(nextgen.st.canvas.STNode node) {
-		if (script.getScript() != null || !node.getUuid().toString().equals(script.getScript().getUuid())) return;
+		if (script.getScript() == null || !node.getUuid().toString().equals(script.getScript().getUuid())) return;
 		canvas.addRelation(script.getUuid(), canvas.newScriptRelation(ScriptNode.this, node));
 	}
 
@@ -51,7 +51,9 @@ public class ScriptNode extends nextgen.st.canvas.STNode {
 			stModelNodes.forEach(stNode -> pop.add(new SetScriptModelAction("Set Script to " + cut(stNode.getText()), ScriptNode.this, canvas, event, stNode)));
 			stValueNodes.forEach(stNode -> pop.add(new SetScriptValueAction("Set Script to " + cut(stNode.getText()), ScriptNode.this, canvas, event, stNode)));				
 		});
+		pop.add(new OpenScript(this, canvas, event));
 		pop.add(new Run(this, canvas, event));
+		pop.add(new SetName(this, canvas, event));
 		pop.add(new Delete(this, canvas, event));
 		pop.addSeparator();
 		super.onNodeRightClick(event, pop);
@@ -67,6 +69,24 @@ public class ScriptNode extends nextgen.st.canvas.STNode {
 		super.onNodeLeftClick(event);
 	}
 
+	private static final class OpenScript extends NodeAction<ScriptNode> {
+
+
+		OpenScript(ScriptNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+			super("Open Script", node, canvas, event);
+		}
+
+		@Override
+		void actionPerformed(ScriptNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+			canvas.presentationModel.db.doInTransaction(transaction -> {
+				final nextgen.st.model.STValue stValue = node.script.getScript();
+				if (stValue == null) return;
+				canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue));
+			//					 canvas.addRelation(node.script.getUuid(), canvas.newScriptRelation(node, stValueNode));
+			});
+		}
+	}
+
 	private static final class Run extends NodeAction<ScriptNode> {
 
 
@@ -78,56 +98,40 @@ public class ScriptNode extends nextgen.st.canvas.STNode {
 		void actionPerformed(ScriptNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
 			doLaterInTransaction(tx -> {
 				try {
-					final String className = "Runner" + System.currentTimeMillis();
-					final String script = canvas.presentationModel.render(node.script.getScript());
-					log.info(script);
 
-					final nextgen.templates.java.PackageDeclaration packageDeclaration = nextgen.templates.java.JavaST.newPackageDeclaration()
-							.setName("tmp");
+					final nextgen.st.STAppPresentationModel.CompilationResult compilationResult = canvas.presentationModel.generateScriptCode(node.script);
 
-					final nextgen.templates.java.CompilationUnit compilationUnit = nextgen.templates.java.JavaST.newCompilationUnit()
-						.setPackageDeclaration(packageDeclaration)
-						.addTypes(nextgen.templates.java.JavaST.newClassOrInterfaceDeclaration()
-								.setName(className)
-								.addModifiers("public")
-								.addImplementedTypes("Runnable")
-								.addMembers(nextgen.templates.java.JavaST.newFieldDeclaration()
-										.addVariables(nextgen.templates.java.JavaST.newVariableDeclaration()
-												.setName("db")
-												.setType(nextgen.st.model.STModelDB.class.getCanonicalName())))
-								.addMembers(nextgen.templates.java.JavaST.newFieldDeclaration()
-										.addVariables(nextgen.templates.java.JavaST.newVariableDeclaration()
-												.setName("renderer")
-												.setType(nextgen.st.STRenderer.class.getCanonicalName())))
-								.addMembers(nextgen.templates.java.JavaST.newConstructorDeclaration()
-										.setName(className)
-										.addModifiers("public")
-										.addParameters(nextgen.templates.java.JavaST.newParameter()
-												.setName("db")
-												.setType(nextgen.st.model.STModelDB.class.getCanonicalName()))
-										.addParameters(nextgen.templates.java.JavaST.newParameter()
-												.setName("renderer")
-												.setType(nextgen.st.STRenderer.class.getCanonicalName()))
-										.setBlockStmt(nextgen.templates.java.JavaST.newBlockStmt()
-												.addStatements("this.db = db;")
-												.addStatements("this.renderer = renderer;")))
-								.addMembers(nextgen.templates.java.JavaST.newMethodDeclaration()
-										.addAnnotations(nextgen.templates.java.JavaST.newSingleMemberAnnotationExpression().setName("Override"))
-										.setName("run")
-										.addModifiers("public")
-										.setBlockStmt(nextgen.templates.java.JavaST.newBlockStmt()
-												.addStatements("db.doInTransaction(transaction -> {")
-												.addStatements("\t" + script)
-												.addStatements("});"))));
+					if (compilationResult.aClass == null) {
+						JOptionPane.showMessageDialog(canvas, compilationResult.compilerOutput, "Compilation Exception", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
 
-					final Class<?> aClass = net.openhft.compiler.CompilerUtils.CACHED_COMPILER.loadFromJava(packageDeclaration.getName() + "." + className, compilationUnit.toString());
-					final Runnable runner = (Runnable) aClass.getConstructor(
-								nextgen.st.model.STModelDB.class, nextgen.st.STRenderer.class)
-								.newInstance(canvas.presentationModel.db, canvas.presentationModel.stRenderer);
-					runner.run();
+					((Runnable) compilationResult.aClass
+							.getConstructor(nextgen.st.model.STModelDB.class, nextgen.st.STRenderer.class)
+							.newInstance(canvas.presentationModel.db, canvas.presentationModel.stRenderer))
+							.run();
+
 				} catch (Throwable ex) {
 					com.generator.util.SwingUtil.showException(canvas, ex);
 				}
+			});
+		}
+	}
+
+	private static final class SetName extends NodeAction<ScriptNode> {
+
+
+		SetName(ScriptNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+			super("Set Name", node, canvas, event);
+		}
+
+		@Override
+		void actionPerformed(ScriptNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+			canvas.presentationModel.db.doInTransaction(transaction -> {
+				com.generator.util.SwingUtil.showInputDialog("Name", canvas, node.script.getName(), s -> doLaterInTransaction(tx -> {
+					node.script.setName(s);
+					node.setText(node.script.getName());					
+				}));
 			});
 		}
 	}

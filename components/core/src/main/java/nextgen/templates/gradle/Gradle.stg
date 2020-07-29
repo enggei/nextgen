@@ -1,0 +1,9 @@
+delimiters "~","~"
+
+init() ::= <<gradle init  >>
+
+install() ::= <<sudo apt-get install gradle  >>
+
+eom() ::= "}"
+
+gt() ::= ">"

@@ -4,11 +4,15 @@ import com.generator.util.NeoUtil;
 import com.generator.util.SwingUtil;
 import nextgen.st.canvas.STModelNode;
 import nextgen.st.canvas.STValueNode;
+import nextgen.st.canvas.ScriptNode;
 import nextgen.st.domain.STGroupModel;
+import nextgen.st.domain.STParameter;
 import nextgen.st.domain.STTemplate;
+import nextgen.st.model.STArgument;
 import nextgen.st.model.STModel;
 import nextgen.st.model.STValue;
 import nextgen.st.model.STValueType;
+import nextgen.st.script.Script;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
@@ -276,13 +280,63 @@ public class STModelNavigator extends JPanel {
                 presentationModel.db.getGroupModels().forEach(stGroupModel -> {
                     add(new STGroupModelTreeNode(stGroupModel));
                 });
+                add(new ScriptsRootNode());
                 add(new STValuesRootNode());
             });
         }
 
+        class ScriptsRootNode extends BaseTreeNode<String> {
+
+            public ScriptsRootNode() {
+                super("Scripts", null);
+
+                presentationModel.scripts.findAllScript().forEach(script -> {
+                    add(new ScriptTreeNode(script));
+                });
+            }
+
+            private class ScriptTreeNode extends BaseTreeNode<Script> {
+
+                private String label;
+
+                public ScriptTreeNode(Script script) {
+                    super(script, "language-java");
+                    tooltip = presentationModel.render(script.getScript());
+                    label = script.getName();
+                }
+
+                @Override
+                protected List<Action> getActions() {
+                    final List<Action> actions = new ArrayList<>();
+
+                    actions.add(newAction("Open", new Consumer<ActionEvent>() {
+                        @Override
+                        public void accept(ActionEvent actionEvent) {
+                            workspace.findCanvas()
+                                    .ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
+                                        final ScriptNode node = new ScriptNode(stCanvas, getModel());
+                                        stCanvas.addNode(node);
+
+                                        workspace.setSelectedComponent(stCanvas);
+                                        stCanvas.requestFocusInWindow();
+                                        stCanvas.centerNode(node);
+                                    })));
+                        }
+                    }));
+
+                    return actions;
+                }
+
+                @Override
+                public String getLabel() {
+                    return label;
+                }
+            }
+        }
+
         class STValuesRootNode extends BaseTreeNode<String> {
 
-            public STValuesRootNode() {
+            STValuesRootNode() {
                 super("Values", null);
                 presentationModel.db.findAllSTValue()
                         .filter(stValue -> stValue.getType() != null)
@@ -372,7 +426,7 @@ public class STModelNavigator extends JPanel {
                     super(model, "STTemplate");
 
                     presentationModel.db.findAllSTModelByStTemplate(model.uuid()).forEach(stModel -> {
-                        add(new STModelTreeNode(stModel));
+                        add(new STModelTreeNode(stModel, model));
                     });
 
                     model.getChildren().forEach(stTemplate -> {
@@ -386,7 +440,7 @@ public class STModelNavigator extends JPanel {
                 }
 
                 public void addSTModel(STModel stModel) {
-                    final STModelTreeNode newChild = new STModelTreeNode(stModel);
+                    final STModelTreeNode newChild = new STModelTreeNode(stModel, getModel());
                     insert(newChild, getChildCount());
                     tree.expandPath(new TreePath(getPath()));
                 }
@@ -395,11 +449,16 @@ public class STModelNavigator extends JPanel {
 
                     private String label;
 
-                    public STModelTreeNode(STModel model) {
+                    public STModelTreeNode(STModel model, STTemplate stTemplate) {
                         super(model, "STGDirectory");
 
                         tooltip = presentationModel.render(model);
-                        label = cut(tooltip);
+                        final Optional<STParameter> parameter = stTemplate.getParameters().filter(stParameter -> stParameter.getName().equals("name")).findFirst();
+                        if (parameter.isPresent()) {
+                            final Optional<STArgument> argument = model.getArguments().filter(stArgument -> stArgument.getStParameter().equals(parameter.get().uuid())).findFirst();
+                            label = argument.isPresent() ? presentationModel.render(argument.get().getValue()) : cut(tooltip);
+                        } else
+                            label = cut(tooltip);
                     }
 
                     @Override
@@ -456,13 +515,13 @@ public class STModelNavigator extends JPanel {
             private Action openValueAction() {
                 return newAction("Open", actionEvent -> {
                     workspace.findCanvas().ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
-                                final STValueNode node = new STValueNode(stCanvas, getModel());
-                                stCanvas.addNode(node);
+                        final STValueNode node = new STValueNode(stCanvas, getModel());
+                        stCanvas.addNode(node);
 
-                                workspace.setSelectedComponent(stCanvas);
-                                stCanvas.requestFocusInWindow();
-                                stCanvas.centerNode(node);
-                            })));
+                        workspace.setSelectedComponent(stCanvas);
+                        stCanvas.requestFocusInWindow();
+                        stCanvas.centerNode(node);
+                    })));
                 });
             }
         }

@@ -234,6 +234,7 @@ public class STModelNode extends STNode {
 			}
 		});
 		pop.add(new OpenUsages(this, canvas, event));
+		pop.add(new WriteToFile(this, canvas, event));
 		pop.add(new OpenIncoming(this, canvas, event));
 		pop.add(new OpenAllArguments(this, canvas, event));
 		pop.add(new ToClipboard(this, canvas, event));
@@ -510,6 +511,10 @@ public class STModelNode extends STNode {
 		@Override
 		void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
 			doLaterInTransaction(tx -> {
+
+				final java.util.concurrent.atomic.AtomicInteger typeIndex = new java.util.concurrent.atomic.AtomicInteger(0);
+				final String[] fileTypes = new String[]{"html", "java", "js"};
+
 				final java.util.LinkedHashMap<String, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();
 				fieldMap.put("name", canvas.newTextField(canvas.presentationModel.getSTModelName(node.stModel, ""), 15));
 				fieldMap.put("type", canvas.newTextField(15));
@@ -520,6 +525,15 @@ public class STModelNode extends STNode {
 				for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) { 
 					inputPanel.add(new JLabel(fieldEntry.getKey()));
 					inputPanel.add(fieldEntry.getValue());
+
+					if (fieldEntry.getKey().equals("type")) {
+						fieldEntry.getValue().addMouseListener(new java.awt.event.MouseAdapter() {
+							@Override
+							public void mouseClicked(java.awt.event.MouseEvent e) {
+								fieldEntry.getValue().setText(fileTypes[typeIndex.incrementAndGet() % fileTypes.length]);
+							}
+						});
+					}
 				}
 				com.generator.util.SwingUtil.showDialog(inputPanel, canvas, "New File sink", new com.generator.util.SwingUtil.ConfirmAction() {
 					@Override
