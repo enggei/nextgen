@@ -1,9 +1,9 @@
 package nextgen.st.canvas;
 
+import nextgen.utils.SwingUtil;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.*;
 
@@ -45,7 +45,7 @@ public class STKVArgumentRelation extends STRelation {
 
 		@Override
 		void actionPerformed(STKVArgumentRelation relation, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			if (!com.generator.util.SwingUtil.showConfirmDialog(canvas, "Delete ?")) return;
+			if (!SwingUtil.showConfirmDialog(canvas, "Delete ?")) return;
 			doLaterInTransaction(tx -> {
 				canvas.removeRelation(relation.getUuid());
 				relation.stArgument.removeKeyValues(relation.stArgumentKV);

@@ -1,6 +1,6 @@
 package nextgen.templates;
 
-import com.generator.util.FileUtil;
+import nextgen.utils.FileUtil;
 import nextgen.templates.maven.*;
 import nextgen.templates.maven.Properties;
 

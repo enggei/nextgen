@@ -1,11 +1,10 @@
 package nextgen.st.canvas;
 
+import nextgen.utils.SwingUtil;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.*;
 
 public class STValueModelRelation extends STRelation {
 
@@ -39,7 +38,7 @@ public class STValueModelRelation extends STRelation {
 
 		@Override
 		void actionPerformed(STValueModelRelation relation, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			if (!com.generator.util.SwingUtil.showConfirmDialog(canvas, "Delete ?")) return;
+			if (!SwingUtil.showConfirmDialog(canvas, "Delete ?")) return;
 			doLaterInTransaction(tx -> {
 				final STValueNode src = (STValueNode) relation.getSrc();
 				src.close();

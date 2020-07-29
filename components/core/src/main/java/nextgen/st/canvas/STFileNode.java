@@ -1,5 +1,6 @@
 package nextgen.st.canvas;
 
+import nextgen.utils.SwingUtil;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
@@ -111,7 +112,7 @@ public class STFileNode extends nextgen.st.canvas.STNode {
 					inputPanel.add(new JLabel(fieldEntry.getKey()));
 					inputPanel.add(fieldEntry.getValue());
 				}
-				com.generator.util.SwingUtil.showDialog(inputPanel, canvas, "Edit", new com.generator.util.SwingUtil.ConfirmAction() {
+				SwingUtil.showDialog(inputPanel, canvas, "Edit", new SwingUtil.ConfirmAction() {
 					@Override
 					public void verifyAndCommit() throws Exception {
 							final String name = fieldMap.get("name").getText().trim();
@@ -153,7 +154,7 @@ public class STFileNode extends nextgen.st.canvas.STNode {
 				try {
 					java.awt.Desktop.getDesktop().open(nextgen.st.STGenerator.asFile(node.stFile));
 				} catch (Exception ex) {
-					com.generator.util.SwingUtil.showException(canvas, ex);
+					SwingUtil.showException(canvas, ex);
 				}
 			});
 		}

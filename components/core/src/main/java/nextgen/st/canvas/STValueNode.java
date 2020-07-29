@@ -1,5 +1,6 @@
 package nextgen.st.canvas;
 
+import nextgen.utils.SwingUtil;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
@@ -72,7 +73,7 @@ public class STValueNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(STValueNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			com.generator.util.SwingUtil.showInputDialog("Edit", canvas, canvas.presentationModel.db.get(() -> node.stValue.getValue()), s -> doLaterInTransaction(tx -> {
+			SwingUtil.showInputDialog("Edit", canvas, canvas.presentationModel.db.get(() -> node.stValue.getValue()), s -> doLaterInTransaction(tx -> {
 				node.stValue.setValue(s);
 				node.setText(node.stValue.getValue());
 			}));
@@ -88,7 +89,7 @@ public class STValueNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(STValueNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			canvas.presentationModel.db.doInTransaction(tx -> com.generator.util.SwingUtil.toClipboard(canvas.presentationModel.render(node.stValue)));
+			canvas.presentationModel.db.doInTransaction(tx -> SwingUtil.toClipboard(canvas.presentationModel.render(node.stValue)));
 		}
 	}
 
@@ -101,7 +102,7 @@ public class STValueNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(STValueNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			if (!com.generator.util.SwingUtil.showConfirmDialog(canvas, "Delete value ?")) return;
+			if (!SwingUtil.showConfirmDialog(canvas, "Delete value ?")) return;
 			doLaterInTransaction(tx -> {
 				node.close();
 				canvas.presentationModel.db.remove(node.stValue);

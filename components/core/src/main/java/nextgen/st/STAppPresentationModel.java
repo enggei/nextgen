@@ -15,7 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.generator.util.StringUtil.capitalize;
+import static nextgen.utils.StringUtil.capitalize;
 import static nextgen.st.STGenerator.toSTGroup;
 
 public class STAppPresentationModel {

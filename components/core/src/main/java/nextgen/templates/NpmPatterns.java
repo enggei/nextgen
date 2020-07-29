@@ -1,6 +1,6 @@
 package nextgen.templates;
 
-import com.generator.util.FileUtil;
+import nextgen.utils.FileUtil;
 import nextgen.templates.npm.*;
 import nextgen.templates.npm.WebpackConfig;
 import nextgen.templates.npm.Dependency;
@@ -8,7 +8,7 @@ import nextgen.templates.npm.NpmST;
 
 import java.io.File;
 
-import static com.generator.util.FileUtil.tryToCreateDirIfNotExists;
+import static nextgen.utils.FileUtil.tryToCreateDirIfNotExists;
 
 public class NpmPatterns extends NpmST {
 

@@ -1,7 +1,7 @@
 package nextgen.st.importers;
 
-import com.generator.util.FileUtil;
-import com.generator.util.StringUtil;
+import nextgen.utils.FileUtil;
+import nextgen.utils.StringUtil;
 import com.github.kklisura.cdt.launch.ChromeLauncher;
 import com.github.kklisura.cdt.protocol.commands.Page;
 import com.github.kklisura.cdt.protocol.commands.Runtime;

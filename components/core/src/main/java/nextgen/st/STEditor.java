@@ -1,6 +1,6 @@
 package nextgen.st;
 
-import com.generator.util.SwingUtil;
+import nextgen.utils.SwingUtil;
 import nextgen.st.domain.*;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;

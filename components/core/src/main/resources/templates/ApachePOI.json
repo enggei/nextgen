@@ -1,0 +1,21 @@
+{
+  "uuid" : "788b568d-34e7-4a00-9a63-15e6d2fedd40",
+  "name" : "ApachePOI",
+  "delimiter" : "~",
+  "templates" : [ {
+    "uuid" : "13b6234a-ca3c-47f1-ad9e-f0595765b1c7",
+    "name" : "pptx",
+    "text" : "",
+    "children" : [ {
+      "uuid" : "f5a3d503-c394-4ae0-827d-2ee9c9184b8d",
+      "name" : "dependency",
+      "text" : "<dependency>\n\t<groupId>org.apache.poi</groupId>\n\t<artifactId>poi</artifactId>\n\t<version>~if(version)~~version~~else~3.17~endif~</version>\n</dependency>\n<dependency>\n\t<groupId>org.apache.poi</groupId>\n\t<artifactId>poi-ooxml</artifactId>\n\t<version>~if(version)~~version~~else~3.17~endif~</version>\n</dependency> ",
+      "parameters" : [ {
+        "uuid" : "cfb2b814-3c17-4b66-ac47-6ed8336e63c1",
+        "name" : "version",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    } ]
+  } ]
+}

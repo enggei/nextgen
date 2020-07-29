@@ -1,11 +1,10 @@
 package nextgen.st.canvas;
 
+import nextgen.utils.SwingUtil;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.*;
 
 public class ScriptNode extends nextgen.st.canvas.STNode {
 
@@ -112,7 +111,7 @@ public class ScriptNode extends nextgen.st.canvas.STNode {
 							.run();
 
 				} catch (Throwable ex) {
-					com.generator.util.SwingUtil.showException(canvas, ex);
+					SwingUtil.showException(canvas, ex);
 				}
 			});
 		}
@@ -128,7 +127,7 @@ public class ScriptNode extends nextgen.st.canvas.STNode {
 		@Override
 		void actionPerformed(ScriptNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
 			canvas.presentationModel.db.doInTransaction(transaction -> {
-				com.generator.util.SwingUtil.showInputDialog("Name", canvas, node.script.getName(), s -> doLaterInTransaction(tx -> {
+				SwingUtil.showInputDialog("Name", canvas, node.script.getName(), s -> doLaterInTransaction(tx -> {
 					node.script.setName(s);
 					node.setText(node.script.getName());					
 				}));
@@ -145,7 +144,7 @@ public class ScriptNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(ScriptNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			if (!com.generator.util.SwingUtil.showConfirmDialog(canvas, "Delete script ?")) return;
+			if (!SwingUtil.showConfirmDialog(canvas, "Delete script ?")) return;
 			doLaterInTransaction(tx -> {
 				node.close();
 				canvas.presentationModel.db.remove(node.script);

@@ -1,5 +1,6 @@
 package nextgen.st.canvas;
 
+import nextgen.utils.SwingUtil;
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.PLayer;
@@ -372,7 +373,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		abstract void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e);
 
 		protected void doLaterInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer){ 
-			javax.swing.SwingUtilities.invokeLater(() -> canvas.presentationModel.db.doInTransaction(consumer, (throwable) -> com.generator.util.SwingUtil.showException(canvas, throwable)));
+			javax.swing.SwingUtilities.invokeLater(() -> canvas.presentationModel.db.doInTransaction(consumer, (throwable) -> SwingUtil.showException(canvas, throwable)));
 		}
 	}
 
@@ -385,7 +386,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 		@Override
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
-			com.generator.util.SwingUtil.showInputDialog("Name", canvas, s -> doLaterInTransaction(tx -> canvas.addNode(new ScriptNode(canvas, canvas.presentationModel.newScript(s)))));
+			SwingUtil.showInputDialog("Name", canvas, s -> doLaterInTransaction(tx -> canvas.addNode(new ScriptNode(canvas, canvas.presentationModel.newScript(s)))));
 		}
 	}
 
@@ -398,7 +399,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 		@Override
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
-			com.generator.util.SwingUtil.showInputDialog("Value", canvas, s -> doLaterInTransaction(tx -> canvas.addNode(new STValueNode(canvas, canvas.presentationModel.newSTValue(s)))));
+			SwingUtil.showInputDialog("Value", canvas, s -> doLaterInTransaction(tx -> canvas.addNode(new STValueNode(canvas, canvas.presentationModel.newSTValue(s)))));
 		}
 	}
 
@@ -411,7 +412,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 		@Override
 		void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e) {
-			final String s = com.generator.util.SwingUtil.fromClipboard();
+			final String s = SwingUtil.fromClipboard();
 			if (s == null || s.trim().length() == 0) return;
 			doLaterInTransaction(tx -> canvas.addNode(canvas.newSTNode(canvas.presentationModel.newSTValue(s)).get()));
 		}
@@ -649,7 +650,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 							pop.add(new AbstractAction("Set from clipboard") {
 								@Override
 								public void actionPerformed(ActionEvent e) {
-									textField.setText(com.generator.util.SwingUtil.fromClipboard());
+									textField.setText(SwingUtil.fromClipboard());
 								}
 							});
 							pop.show(textField, e.getX(), e.getY());

@@ -1,5 +1,6 @@
 package nextgen.st.canvas;
 
+import nextgen.utils.SwingUtil;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
@@ -49,7 +50,7 @@ public class STModelNode extends STNode {
 				.collect(java.util.stream.Collectors.toList());
 		canvas.presentationModel.db.doInTransaction(tx -> {
 
-			final String clipboardValue = cut(com.generator.util.SwingUtil.fromClipboard());
+			final String clipboardValue = cut(SwingUtil.fromClipboard());
 			final java.util.LinkedHashMap<nextgen.st.domain.STParameter, org.fife.ui.rsyntaxtextarea.RSyntaxTextArea> fieldMap = new java.util.LinkedHashMap<>();
 
 			final JMenu parametersMenu = new JMenu("Parameters");
@@ -86,7 +87,7 @@ public class STModelNode extends STNode {
 							});
 
 							if (stParameter.getArgumentType() != null && (stParameter.getArgumentType().equals("String") || stParameter.getArgumentType().equals("Object"))) {
-								fieldMap.put(stParameter, com.generator.util.SwingUtil.newRSyntaxTextArea(1, 40));
+								fieldMap.put(stParameter, SwingUtil.newRSyntaxTextArea(1, 40));
 							}
 							break;
 						}
@@ -206,7 +207,7 @@ public class STModelNode extends STNode {
 								inputPanel.add(jComboBox);
 							}
 
-							com.generator.util.SwingUtil.showDialog(inputPanel, canvas, "Set Multiple", new com.generator.util.SwingUtil.ConfirmAction() {
+							SwingUtil.showDialog(inputPanel, canvas, "Set Multiple", new SwingUtil.ConfirmAction() {
 								@Override
 								public void verifyAndCommit() throws Exception {
 
@@ -444,7 +445,7 @@ public class STModelNode extends STNode {
 
 		@Override
 		void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			if (!com.generator.util.SwingUtil.showConfirmDialog(canvas, "Remove argument ?")) return;
+			if (!SwingUtil.showConfirmDialog(canvas, "Remove argument ?")) return;
 			doLaterInTransaction(tx -> {
 				canvas.removeRelation(UUID.fromString(stArgument.getUuid()));
 				node.stModel.removeArguments(stArgument);
@@ -462,7 +463,7 @@ public class STModelNode extends STNode {
 
 		@Override
 		void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> com.generator.util.SwingUtil.toClipboard(canvas.presentationModel.render(node.stModel)));
+			doLaterInTransaction(tx -> SwingUtil.toClipboard(canvas.presentationModel.render(node.stModel)));
 		}
 	}
 
@@ -475,7 +476,7 @@ public class STModelNode extends STNode {
 
 		@Override
 		void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			if (!com.generator.util.SwingUtil.showConfirmDialog(canvas, "Delete model ?")) return;
+			if (!SwingUtil.showConfirmDialog(canvas, "Delete model ?")) return;
 			doLaterInTransaction(tx -> {
 				node.close();
 				canvas.presentationModel.db.remove(node.stModel);
@@ -535,7 +536,7 @@ public class STModelNode extends STNode {
 						});
 					}
 				}
-				com.generator.util.SwingUtil.showDialog(inputPanel, canvas, "New File sink", new com.generator.util.SwingUtil.ConfirmAction() {
+				SwingUtil.showDialog(inputPanel, canvas, "New File sink", new SwingUtil.ConfirmAction() {
 					@Override
 					public void verifyAndCommit() throws Exception {
 						final String name = fieldMap.get("name").getText().trim();
@@ -606,7 +607,7 @@ public class STModelNode extends STNode {
 
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			final String s = com.generator.util.SwingUtil.showInputDialog(stParameter.getName(), canvas);
+			final String s = SwingUtil.showInputDialog(stParameter.getName(), canvas);
 			if (s == null || s.trim().length() == 0) return;
 			doLaterInTransaction(tx -> {
 				node.removeArgument(stParameter);
@@ -632,7 +633,7 @@ public class STModelNode extends STNode {
 
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			final String s = com.generator.util.SwingUtil.fromClipboard();
+			final String s = SwingUtil.fromClipboard();
 			if (s == null || s.trim().length() == 0) return;
 			doLaterInTransaction(tx -> {
 				node.removeArgument(stParameter);
@@ -708,7 +709,7 @@ public class STModelNode extends STNode {
 
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			final String s = com.generator.util.SwingUtil.showInputDialog(stParameter.getName(), canvas);
+			final String s = SwingUtil.showInputDialog(stParameter.getName(), canvas);
 			if (s == null || s.trim().length() == 0) return;
 			doLaterInTransaction(tx -> {
 				final nextgen.st.model.STValue stValue = canvas.presentationModel.newSTValue(s.trim());
@@ -733,7 +734,7 @@ public class STModelNode extends STNode {
 
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			final String s = com.generator.util.SwingUtil.fromClipboard();
+			final String s = SwingUtil.fromClipboard();
 			if (s == null || s.trim().length() == 0) return;
 			doLaterInTransaction(tx -> {
 				final nextgen.st.model.STValue stValue = canvas.presentationModel.newSTValue(s.trim());
@@ -814,7 +815,7 @@ public class STModelNode extends STNode {
 					inputPanel.add(new JLabel(fieldEntry.getKey().getName()));
 					inputPanel.add(fieldEntry.getValue());
 				}
-				com.generator.util.SwingUtil.showDialog(inputPanel, canvas, stParameter.getName(), new com.generator.util.SwingUtil.ConfirmAction() {
+				SwingUtil.showDialog(inputPanel, canvas, stParameter.getName(), new SwingUtil.ConfirmAction() {
 					@Override
 					public void verifyAndCommit() throws Exception {
 						doLaterInTransaction(tx -> {

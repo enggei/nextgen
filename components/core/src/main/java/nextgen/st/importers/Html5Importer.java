@@ -1,6 +1,6 @@
 package nextgen.st.importers;
 
-import com.generator.util.FileUtil;
+import nextgen.utils.FileUtil;
 import nextgen.st.STGenerator;
 import nextgen.st.STParser;
 import nextgen.st.domain.STGParseResult;

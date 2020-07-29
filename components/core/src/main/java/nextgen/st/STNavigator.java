@@ -1,7 +1,6 @@
 package nextgen.st;
 
-import com.generator.util.SwingUtil;
-import nextgen.st.canvas.STCanvas;
+import nextgen.utils.SwingUtil;
 import nextgen.st.canvas.STModelNode;
 import nextgen.st.canvas.STValueNode;
 import nextgen.st.domain.*;

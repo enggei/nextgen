@@ -1,7 +1,7 @@
 package nextgen.st;
 
-import com.generator.util.MultiLineToolTipUI;
-import com.generator.util.SwingUtil;
+import nextgen.utils.MultiLineToolTipUI;
+import nextgen.utils.SwingUtil;
 import nextgen.st.domain.STAppModel;
 import nextgen.st.domain.STGDirectory;
 import nextgen.st.domain.STGroupModel;

@@ -1,7 +1,6 @@
 package nextgen.st;
 
-import com.generator.util.NeoUtil;
-import com.generator.util.SwingUtil;
+import nextgen.utils.SwingUtil;
 import nextgen.st.canvas.STModelNode;
 import nextgen.st.canvas.STValueNode;
 import nextgen.st.canvas.ScriptNode;
@@ -391,7 +390,6 @@ public class STModelNavigator extends JPanel {
 
                             presentationModel.db.doInTransaction(transaction -> {
                                 for (Node node : delete) {
-                                    log.info(NeoUtil.getNameAndLabelsFrom(node));
                                     node.getRelationships().forEach(Relationship::delete);
                                     node.delete();
                                 }
@@ -410,9 +408,7 @@ public class STModelNavigator extends JPanel {
             public STGroupModelTreeNode(STGroupModel model) {
                 super(model, model.getIcon());
 
-                model.getTemplates().forEach(stTemplate -> {
-                    add(new STTemplateTreeNode(stTemplate));
-                });
+                model.getTemplates().forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
             }
 
             @Override
@@ -566,4 +562,5 @@ public class STModelNavigator extends JPanel {
     public static String cut(String text) {
         return text.substring(0, Math.min(text.length(), 20));
     }
+
 }

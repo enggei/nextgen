@@ -1,5 +1,6 @@
 package nextgen.st.canvas;
 
+import nextgen.utils.SwingUtil;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PBasicInputEventHandler;
 import org.piccolo2d.event.PInputEvent;
@@ -316,6 +317,6 @@ public class STRelation extends PPath.Double implements Comparator<STRelation> {
 
 
 	protected void doLaterInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer){ 
-		javax.swing.SwingUtilities.invokeLater(() -> canvas.presentationModel.db.doInTransaction(consumer, throwable -> com.generator.util.SwingUtil.showException(canvas, throwable)));
+		javax.swing.SwingUtilities.invokeLater(() -> canvas.presentationModel.db.doInTransaction(consumer, throwable -> SwingUtil.showException(canvas, throwable)));
 	}
 }

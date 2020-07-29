@@ -1,9 +1,9 @@
 package nextgen.st.canvas;
 
+import nextgen.utils.SwingUtil;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.*;
 
@@ -112,7 +112,7 @@ public class STKVNode extends STNode {
 
 		@Override
 		void actionPerformed(STKVNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			com.generator.util.SwingUtil.showInputDialog(stParameter.getName(), canvas, s -> doLaterInTransaction(tx -> {
+			SwingUtil.showInputDialog(stParameter.getName(), canvas, s -> doLaterInTransaction(tx -> {
 				final nextgen.st.model.STValue stValue = canvas.presentationModel.db.newSTValue(s.trim());
 				node.removeArgument(stParameterKey);
 				final nextgen.st.model.STArgumentKV stArgumentKV = canvas.presentationModel.db.newSTArgumentKV(stParameterKey, stValue);
