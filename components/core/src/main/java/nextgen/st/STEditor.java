@@ -51,6 +51,7 @@ public class STEditor extends JPanel {
         pop.add(newAction("Insert Single Capitalized", actionEvent -> insertCapitalized()));
         pop.add(newAction("Insert List", actionEvent -> insertList()));
         pop.add(newAction("Insert If", actionEvent -> insertIf()));
+        pop.add(newAction("Insert If-else", actionEvent -> insertIfElse()));
         pop.add(newAction("Replace text and insert Single", actionEvent -> replaceAndInsertSingle()));
         pop.add(newAction("Save", actionEvent -> commit()));
         pop.add(newAction("Generate", actionEvent -> generate()));
@@ -154,6 +155,8 @@ public class STEditor extends JPanel {
                 insertList();
             } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_I) {
                 insertIf();
+            } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_E) {
+                insertIfElse();
             } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_1) {
                 insertCapitalized();
             } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_P) {
@@ -224,7 +227,7 @@ public class STEditor extends JPanel {
         SwingUtilities.invokeLater(() -> {
             removeSelectedTextIfAny();
             final int caretPosition = txtEditor.getCaretPosition();
-            txtEditor.insert(stGroupModel.getDelimiter() + ";format=\"capitalize\"" + stGroupModel.getDelimiter(), caretPosition);
+            txtEditor.insert(delim(";format=\"capitalize\""), caretPosition);
             txtEditor.setCaretPosition(caretPosition + 1);
             txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
         });
@@ -238,10 +241,10 @@ public class STEditor extends JPanel {
         SwingUtilities.invokeLater(() -> {
             removeSelectedTextIfAny();
             final int caretPosition = txtEditor.getCaretPosition();
-            final String pre = stGroupModel.getDelimiter() + name + ":{it|";
+            final String pre = name + ":{it|";
             final String sep = separator == null ? "" : ";separator=\"" + separator + "\"";
-            final String list = pre + "}" + sep + stGroupModel.getDelimiter();
-            txtEditor.insert(list, caretPosition);
+            final String list = pre + "}" + sep;
+            txtEditor.insert(delim(list), caretPosition);
             txtEditor.setCaretPosition(caretPosition + pre.length());
             txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
         });
@@ -254,8 +257,23 @@ public class STEditor extends JPanel {
         SwingUtilities.invokeLater(() -> {
             removeSelectedTextIfAny();
             final int caretPosition = txtEditor.getCaretPosition();
-            final String pre = stGroupModel.getDelimiter() + "if(" + name + ")" + stGroupModel.getDelimiter();
-            final String list = pre + stGroupModel.getDelimiter() + "endif" + stGroupModel.getDelimiter();
+            final String pre = delim("if(" + name + ")");
+            final String list = pre + delim("endif");
+            txtEditor.insert(list, caretPosition);
+            txtEditor.setCaretPosition(caretPosition + pre.length());
+            txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
+        });
+    }
+
+    private void insertIfElse() {
+        final String input = SwingUtil.showInputDialog("condition", txtEditor);
+        if (input == null) return;
+        final String name = input.trim();
+        SwingUtilities.invokeLater(() -> {
+            removeSelectedTextIfAny();
+            final int caretPosition = txtEditor.getCaretPosition();
+            final String pre = delim("if(" + name + ")");
+            final String list = pre + delim("else") + delim("endif");
             txtEditor.insert(list, caretPosition);
             txtEditor.setCaretPosition(caretPosition + pre.length());
             txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
@@ -266,7 +284,7 @@ public class STEditor extends JPanel {
         SwingUtilities.invokeLater(() -> {
             removeSelectedTextIfAny();
             final int caretPosition = txtEditor.getCaretPosition();
-            txtEditor.insert(stGroupModel.getDelimiter() + "" + stGroupModel.getDelimiter(), caretPosition);
+            txtEditor.insert(delim(""), caretPosition);
             txtEditor.setCaretPosition(caretPosition + 1);
             txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
         });
@@ -279,7 +297,7 @@ public class STEditor extends JPanel {
         if (propertyName == null || propertyName.trim().length() == 0) return;
 
         SwingUtilities.invokeLater(() -> {
-            final String replacement = stGroupModel.getDelimiter() + propertyName + stGroupModel.getDelimiter();
+            final String replacement = delim(propertyName);
             final SearchContext context = new SearchContext();
             context.setSearchFor(selected);
             context.setReplaceWith(replacement);
@@ -371,6 +389,10 @@ public class STEditor extends JPanel {
                 insertIf();
                 txtEditor.requestFocusInWindow();
             })));
+            add(new JButton(newAction("Insert If-else", actionEvent -> {
+                insertIfElse();
+                txtEditor.requestFocusInWindow();
+            })));
             add(new JButton(newAction("Replace text and insert Single", actionEvent -> {
                 replaceAndInsertSingle();
                 txtEditor.requestFocusInWindow();
@@ -457,5 +479,9 @@ public class STEditor extends JPanel {
             textArea.setText(info.toString().trim());
             textArea.setCaretPosition(0);
         }
+    }
+
+    private String delim(String expression) {
+        return stGroupModel.getDelimiter() + expression + stGroupModel.getDelimiter();
     }
 }
