@@ -1,4 +1,4 @@
-package nextgen.templates.neo4j;
+package nextgen.templates.javaneo4jembedded;
 
 public class NodeToJsonObject {
 

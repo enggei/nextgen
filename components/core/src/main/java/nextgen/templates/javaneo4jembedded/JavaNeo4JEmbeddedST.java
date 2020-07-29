@@ -1,6 +1,6 @@
-package nextgen.templates.neo4j;
+package nextgen.templates.javaneo4jembedded;
 
-public class Neo4JST {
+public class JavaNeo4JEmbeddedST {
 
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 	.append("eom() ::= \"}\"\n")
@@ -49,7 +49,7 @@ public class Neo4JST {
 		return stGroup;
 	}
 
-	private static org.stringtemplate.v4.STGroup stGroup = decorate(new org.stringtemplate.v4.STGroupString("Neo4JST", stg, '~', '~'));
+	private static org.stringtemplate.v4.STGroup stGroup = decorate(new org.stringtemplate.v4.STGroupString("JavaNeo4JEmbeddedST", stg, '~', '~'));
 
 	public static void setSTGroup(final String stgFile) {
 		stGroup = decorate(new org.stringtemplate.v4.STGroupFile(stgFile, '~', '~'));

@@ -1,6 +1,6 @@
-package nextgen.templates.neo4j;
+package nextgen.templates.javaneo4jembedded;
 
-public class ExternalAccessors {
+public class EnumAccessors {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -9,7 +9,7 @@ public class ExternalAccessors {
 	private Object _name;
 	private Object _type;
 
-	ExternalAccessors(org.stringtemplate.v4.STGroup stGroup) {
+	EnumAccessors(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
@@ -19,14 +19,14 @@ public class ExternalAccessors {
 
 	@Override
 	public String toString() {
-		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("externalAccessors");
+		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("enumAccessors");
 		st.add("className", _className);
 		st.add("name", _name);
 		st.add("type", _type);
 		return st.render().trim();
 	}
 
-	public ExternalAccessors setClassName(Object value) {
+	public EnumAccessors setClassName(Object value) {
 		this._className = value;
 		return this;
 	}
@@ -43,12 +43,12 @@ public class ExternalAccessors {
 		return this._className != null;
 	}
 
-	public ExternalAccessors removeClassName() {
+	public EnumAccessors removeClassName() {
 		this._className = null;
 		return this;
 	} 
 
-	public ExternalAccessors setName(Object value) {
+	public EnumAccessors setName(Object value) {
 		this._name = value;
 		return this;
 	}
@@ -65,12 +65,12 @@ public class ExternalAccessors {
 		return this._name != null;
 	}
 
-	public ExternalAccessors removeName() {
+	public EnumAccessors removeName() {
 		this._name = null;
 		return this;
 	} 
 
-	public ExternalAccessors setType(Object value) {
+	public EnumAccessors setType(Object value) {
 		this._type = value;
 		return this;
 	}
@@ -87,7 +87,7 @@ public class ExternalAccessors {
 		return this._type != null;
 	}
 
-	public ExternalAccessors removeType() {
+	public EnumAccessors removeType() {
 		this._type = null;
 		return this;
 	} 
@@ -98,7 +98,7 @@ public class ExternalAccessors {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		ExternalAccessors that = (ExternalAccessors) o;
+		EnumAccessors that = (EnumAccessors) o;
 		return uuid.equals(that.uuid);
 	}
 
@@ -107,16 +107,28 @@ public class ExternalAccessors {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "externalAccessors(className,name,type) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n" + 
-				"	this._~name~ = value;\n" + 
+	static final String st = "enumAccessors(className,name,type) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n" + 
+				"	if (value == null) node.removeProperty(\"~name~\"); \n" + 
+				"	else node.setProperty(\"~name~\", value.name());\n" + 
 				"	return this;\n" + 
 				"}\n" + 
 				"\n" + 
 				"public ~type~ get~name;format=\"capitalize\"~() { \n" + 
-				"	return this._~name~;\n" + 
+				"	if (node.hasProperty(\"~name~\")) return ~type~.valueOf((java.lang.String) node.getProperty(\"~name~\"));\n" + 
+				"	return null;\n" + 
 				"}\n" + 
 				"\n" + 
 				"public ~type~ get~name;format=\"capitalize\"~(~type~ defaultValue) { \n" + 
-				"	return this._~name~ == null ? defaultValue : this._~name~;\n" + 
+				"	if (node.hasProperty(\"~name~\")) return ~type~.valueOf((java.lang.String) node.getProperty(\"~name~\"));\n" + 
+				"	return defaultValue;\n" + 
+				"}\n" + 
+				"\n" + 
+				"public boolean has~name;format=\"capitalize\"~() { \n" + 
+				"	return node.hasProperty(\"~name~\");\n" + 
+				"}\n" + 
+				"\n" + 
+				"public ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() { \n" + 
+				"	node.removeProperty(\"~name~\");\n" + 
+				"	return this;\n" + 
 				"} >>";
 }  

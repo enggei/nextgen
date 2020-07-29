@@ -1,6 +1,6 @@
 {
   "uuid" : "78736754-0769-45f5-b4e4-eec7df6f03bc",
-  "name" : "Neo4J",
+  "name" : "JavaNeo4JEmbedded",
   "delimiter" : "~",
   "templates" : [ {
     "uuid" : "36bdedab-d23c-4c1e-9111-21b71e362a10",

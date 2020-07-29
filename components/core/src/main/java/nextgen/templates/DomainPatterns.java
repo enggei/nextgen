@@ -4,7 +4,7 @@ import nextgen.st.STGenerator;
 import nextgen.templates.domain.*;
 import nextgen.templates.java.*;
 import nextgen.templates.java.Enum;
-import nextgen.templates.neo4j.*;
+import nextgen.templates.javaneo4jembedded.*;
 import nextgen.templates.vertx.JsonFactory;
 import nextgen.templates.vertx.JsonWrapper;
 import nextgen.templates.vertx.VertxST;
@@ -15,7 +15,6 @@ import java.util.Map;
 
 import static nextgen.templates.java.JavaST.*;
 import static nextgen.templates.domain.RelationType.*;
-import static nextgen.templates.neo4j.Neo4JST.newDeleteNode;
 
 public class DomainPatterns extends DomainST {
 
@@ -398,20 +397,20 @@ public class DomainPatterns extends DomainST {
 
         // create incoming relations, AND neo-factory class
 
-        final NeoFactory factory = Neo4JST.newNeoFactory()
+        final NeoFactory factory = JavaNeo4JEmbeddedST.newNeoFactory()
                 .setPackage(packageDeclaration.getName())
                 .setName(domain.getName() + "NeoFactory");
 
         visited.forEach((key, value) -> {
 
-            final NeoFactoryAccessors factoryAccessors = Neo4JST.newNeoFactoryAccessors()
+            final NeoFactoryAccessors factoryAccessors = JavaNeo4JEmbeddedST.newNeoFactoryAccessors()
                     .setName(key.getName());
 
             key.getRelations().forEach(o -> {
                 switch (o.getType()) {
                     case ENUM: {
                         final Entity dst = asEntity(o.getDst());
-                        factoryAccessors.addProperties(Neo4JST.newNeoFactoryPropertyAccessors()
+                        factoryAccessors.addProperties(JavaNeo4JEmbeddedST.newNeoFactoryPropertyAccessors()
                                 .setEntity(key.getName())
                                 .setPropertyName(o.getName())
                                 .setPropertyType(dst.getName())
@@ -420,7 +419,7 @@ public class DomainPatterns extends DomainST {
                     }
 
                     case PRIM_REF: {
-                        factoryAccessors.addProperties(Neo4JST.newNeoFactoryPropertyAccessors()
+                        factoryAccessors.addProperties(JavaNeo4JEmbeddedST.newNeoFactoryPropertyAccessors()
                                 .setEntity(key.getName())
                                 .setPropertyName(o.getName())
                                 .setPropertyType(getSimpleName(o.getDst())));
@@ -430,7 +429,7 @@ public class DomainPatterns extends DomainST {
                     case REF:
                     case LIST: {
                         final Entity dst = asEntity(o.getDst());
-                        visited.get(dst).addAccessors(Neo4JST.newIncomingReferenceStream().setName(o.getName()).setType(key.getName()));
+                        visited.get(dst).addAccessors(JavaNeo4JEmbeddedST.newIncomingReferenceStream().setName(o.getName()).setType(key.getName()));
                         break;
                     }
                 }
@@ -453,14 +452,14 @@ public class DomainPatterns extends DomainST {
 
         final String entityName = entity.getName();
 
-        final NodeWrapper entityClass = Neo4JST.newNodeWrapper()
+        final NodeWrapper entityClass = JavaNeo4JEmbeddedST.newNodeWrapper()
                 .setPackage(packageDeclaration.getName())
                 .setName(entityName);
 
         visited.put(entity, entityClass);
 
-        final NodeToJsonObject nodeToJsonObject = Neo4JST.newNodeToJsonObject();
-        final DeleteNode deleteNode = newDeleteNode();
+        final NodeToJsonObject nodeToJsonObject = JavaNeo4JEmbeddedST.newNodeToJsonObject();
+        final DeleteNode deleteNode = JavaNeo4JEmbeddedST.newDeleteNode();
 
         entity.getRelations().forEach(o -> {
 
@@ -468,7 +467,7 @@ public class DomainPatterns extends DomainST {
 
                 case ENUM: {
                     final Entity dst = asEntity(o.getDst());
-                    entityClass.addAccessors(Neo4JST.newEnumAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
+                    entityClass.addAccessors(JavaNeo4JEmbeddedST.newEnumAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
                     writeEnum(root, packageDeclaration, dst.getName(), dst.getEnumValues().toArray());
 
                     nodeToJsonObject.addProperties(o.getName());
@@ -476,7 +475,7 @@ public class DomainPatterns extends DomainST {
                 }
                 case ENUM_LIST: {
                     final Entity dst = asEntity(o.getDst());
-                    entityClass.addAccessors(Neo4JST.newEnumListAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
+                    entityClass.addAccessors(JavaNeo4JEmbeddedST.newEnumListAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
                     writeEnum(root, packageDeclaration, dst.getName(), dst.getEnumValues().toArray());
 
                     nodeToJsonObject.addPrimitiveList(o.getName());
@@ -485,7 +484,7 @@ public class DomainPatterns extends DomainST {
                 case EXT_REF: {
 
                     entityClass.addExternalFields(getCanonicalName(o.getDst()), o.getName(), null);
-                    entityClass.addAccessors(Neo4JST.newExternalAccessors().setClassName(entityName).setType(getCanonicalName(o.getDst())).setName(o.getName()));
+                    entityClass.addAccessors(JavaNeo4JEmbeddedST.newExternalAccessors().setClassName(entityName).setType(getCanonicalName(o.getDst())).setName(o.getName()));
                     break;
                 }
                 case EXT_LIST: {
@@ -495,20 +494,20 @@ public class DomainPatterns extends DomainST {
                     break;
                 }
                 case PRIM_REF: {
-                    entityClass.addAccessors(Neo4JST.newPrimitiveAccessors().setClassName(entityName).setType(getSimpleName(o.getDst())).setName(o.getName()));
+                    entityClass.addAccessors(JavaNeo4JEmbeddedST.newPrimitiveAccessors().setClassName(entityName).setType(getSimpleName(o.getDst())).setName(o.getName()));
                     if (o.getLexical(false)) entityClass.addLexical(o.getName());
 
                     nodeToJsonObject.addProperties(o.getName());
                     break;
                 }
                 case PRIM_LIST: {
-                    entityClass.addAccessors(Neo4JST.newListPrimitiveAccessors().setClassName(entityName).setType(getSimpleName(o.getDst())).setName(o.getName()));
+                    entityClass.addAccessors(JavaNeo4JEmbeddedST.newListPrimitiveAccessors().setClassName(entityName).setType(getSimpleName(o.getDst())).setName(o.getName()));
                     nodeToJsonObject.addPrimitiveList(o.getName());
                     break;
                 }
                 case REF: {
                     final Entity dst = asEntity(o.getDst());
-                    entityClass.addAccessors(Neo4JST.newReferenceAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
+                    entityClass.addAccessors(JavaNeo4JEmbeddedST.newReferenceAccessors().setClassName(entityName).setType(dst.getName()).setName(o.getName()));
                     generateNeoWrapper(root, packageDeclaration, dst, visited);
 
                     nodeToJsonObject.addRefs(dst.getName(), o.getName());
@@ -517,8 +516,8 @@ public class DomainPatterns extends DomainST {
                 }
                 case LIST: {
                     final Entity dst = asEntity(o.getDst());
-                    entityClass.addAccessors(Neo4JST.newListReferenceAccessors().setClassName(entityName).setType(o.getSelf(false) ? entityName : dst.getName()).setName(o.getName()));
-                    entityClass.addAccessors(Neo4JST.newIncomingReferenceStream().setName(o.getName()).setType(o.getSelf(false) ? entityName : dst.getName()));
+                    entityClass.addAccessors(JavaNeo4JEmbeddedST.newListReferenceAccessors().setClassName(entityName).setType(o.getSelf(false) ? entityName : dst.getName()).setName(o.getName()));
+                    entityClass.addAccessors(JavaNeo4JEmbeddedST.newIncomingReferenceStream().setName(o.getName()).setType(o.getSelf(false) ? entityName : dst.getName()));
                     generateNeoWrapper(root, packageDeclaration, dst, visited);
 
                     nodeToJsonObject.addRefList(o.getName());
