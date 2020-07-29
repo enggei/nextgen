@@ -1,7 +1,7 @@
 package com.generator.generators.easyFlow;
 
+import com.generator.util.GeneratedFile;
 import com.generator.util.StringUtil;
-import com.nextgen.core.GeneratedFile;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
