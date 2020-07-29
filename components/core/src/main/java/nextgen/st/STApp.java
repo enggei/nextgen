@@ -60,6 +60,7 @@ public class STApp extends JFrame {
         STAppModel config = loadConfig("appconfig.json", STJsonFactory.newSTAppModel()
                 .setModelDb("./db")
                 .setEditorFontSize(12)
+                .setRootDir(javaMain.getAbsolutePath())
                 .setGeneratorRoot(javaMain.getAbsolutePath())
                 .setGeneratorPackage("nextgen.st")
                 .setGeneratorName("StringTemplate")

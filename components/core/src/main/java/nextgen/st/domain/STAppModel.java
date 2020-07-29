@@ -54,6 +54,19 @@ public class STAppModel {
 		return jsonObject.getString("modelDb", defaultValue);
 	}
 
+	public STAppModel setRootDir(String value) { 
+		jsonObject.put("rootDir", value);
+		return this;
+	}
+
+	public String getRootDir() { 
+		return jsonObject.getString("rootDir");
+	}
+
+	public String getRootDir(String defaultValue) { 
+		return jsonObject.getString("rootDir", defaultValue);
+	}
+
 	public STAppModel setEditorFontSize(Integer value) { 
 		jsonObject.put("editorFontSize", value);
 		return this;

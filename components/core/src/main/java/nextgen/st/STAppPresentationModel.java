@@ -22,6 +22,7 @@ public class STAppPresentationModel {
 
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STAppPresentationModel.class);
 
+    private final STAppModel appModel;
     public final STRenderer stRenderer;
     public final STModelDB db;
     public final ScriptNeoFactory scripts;
@@ -32,6 +33,8 @@ public class STAppPresentationModel {
     private Font preferredFont;
 
     STAppPresentationModel(STAppModel appModel) {
+
+        this.appModel = appModel;
 
         final File jsonFileDir = new File(appModel.getGeneratorRoot(), STGenerator.packageToPath(appModel.getGeneratorPackage()));
         this.generatorSTGroup = new STGroupModel(new JsonObject(STParser.read(new File(jsonFileDir, appModel.getGeneratorName() + ".json"))));
@@ -169,7 +172,7 @@ public class STAppPresentationModel {
 
     public CompilationResult generateScriptCode(Script script) {
 
-        final File srcRoot = new File("components/core/src/main/java");
+        final File srcRoot = new File(appModel.getRootDir());
 
         final nextgen.templates.java.PackageDeclaration packageDeclaration = nextgen.templates.java.JavaST.newPackageDeclaration()
                 .setName("tmp");
