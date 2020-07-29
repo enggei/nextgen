@@ -375,6 +375,10 @@ public class DomainPatterns extends DomainST {
 
     // DOMAIN TO NEO4J wrappers:
 
+    public static void writeNeo(String root, String packageName, Domain domain) {
+        writeNeo(new File(root), newPackageDeclaration(packageName), domain);
+    }
+
     public static void writeNeo(File root, String packageName, Domain domain) {
         writeNeo(root, newPackageDeclaration(packageName), domain);
     }
