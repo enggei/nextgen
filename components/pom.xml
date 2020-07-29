@@ -13,8 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>core</module>
-        <module>vertx-test</module>
-        <module>vertx-fatjar-test</module>
+
     </modules>
 
     <name>Components</name>
@@ -40,11 +39,7 @@
             <version>${vertx.unit.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-        </dependency>
+
 
     </dependencies>
 </project>
