@@ -536,6 +536,9 @@ public class DomainPatterns extends DomainST {
 
     // DOMAIN TO Vertx JsonObject wrappers:
 
+    public static void writeJsonWrapper(String root, String packageName, Domain domain) {
+        writeJsonWrapper(new File(root), packageName, domain);
+    }
     public static void writeJsonWrapper(File root, String packageName, Domain domain) {
         writeJsonWrapper(root, newPackageDeclaration(packageName), domain);
     }

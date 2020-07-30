@@ -5,6 +5,7 @@ public class StringTemplateST {
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 	.append("eom() ::= \"}\"\n")
 	.append("gt() ::= \">\"\n")
+	.append(ScriptRunner.st + "\n")
 	.append(STDomain.st + "\n")
 	.append(NewEntityInstance.st + "\n")
 	.append(StgString.st + "\n")
@@ -53,53 +54,57 @@ public class StringTemplateST {
 		stGroup = decorate(new org.stringtemplate.v4.STGroupFile(stgFile, '~', '~'));
 	}
 
+	public static ScriptRunner newScriptRunner() {
+		return new ScriptRunner(stGroup);
+	}  
+
 	public static STDomain newSTDomain() {
 		return new STDomain(stGroup);
-	} 
+	}  
 
 	public static NewEntityInstance newNewEntityInstance() {
 		return new NewEntityInstance(stGroup);
-	} 
+	}  
 
 	public static StgString newStgString() {
 		return new StgString(stGroup);
-	} 
+	}  
 
 	public static STDomainTests newSTDomainTests() {
 		return new STDomainTests(stGroup);
-	} 
+	}  
 
 	public static TemplateTestMethod newTemplateTestMethod() {
 		return new TemplateTestMethod(stGroup);
-	} 
+	}  
 
 	public static STEntity newSTEntity() {
 		return new STEntity(stGroup);
-	} 
+	}  
 
 	public static EntityKVListAccessors newEntityKVListAccessors() {
 		return new EntityKVListAccessors(stGroup);
-	} 
+	}  
 
 	public static EntityListAccessors newEntityListAccessors() {
 		return new EntityListAccessors(stGroup);
-	} 
+	}  
 
 	public static EntitySingleAccessors newEntitySingleAccessors() {
 		return new EntitySingleAccessors(stGroup);
-	} 
+	}  
 
 	public static STEnum newSTEnum() {
 		return new STEnum(stGroup);
-	} 
+	}  
 
 	public static STEnumValue newSTEnumValue() {
 		return new STEnumValue(stGroup);
-	} 
+	}  
 
 	public static STInterface newSTInterface() {
 		return new STInterface(stGroup);
-	} 
+	}  
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
 

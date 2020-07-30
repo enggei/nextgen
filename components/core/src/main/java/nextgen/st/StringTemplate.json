@@ -298,6 +298,51 @@
       "type" : "SINGLE",
       "argumentType" : "String"
     } ]
+  }, {
+    "uuid" : "06ee0aa9-0256-4eec-bd46-ba8d8348fa97",
+    "name" : "ScriptRunner",
+    "text" : "package ~packageName~;\n~templates:{it|\nimport static nextgen.templates.~templatePackage~.~templateName~ST.*;\nimport nextgen.templates.~templatePackage~.*;\n};separator=\"\\n\"~\n\npublic class ~name~ implements Runnable {\n\n\tprivate final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n\tprivate final nextgen.st.model.STModelDB db;\n\tprivate final nextgen.st.STRenderer renderer;\n\n\tpublic ~name~(nextgen.st.model.STModelDB db, nextgen.st.STRenderer renderer) {\n\t\tthis.db = db;\n\t\tthis.renderer = renderer;\n\t}\n\n\t@Override\n\tpublic void run() {\n\t\tdb.doInTransaction(transaction -> {\n\t\t\t~script~\n\t\t});\n\t}\n\t\n\tpublic static void main(String[] args) {\n\t\tfinal java.util.Collection<nextgen.st.domain.STGroupModel> stGroups = new java.util.ArrayList<>();\n\t\tfinal java.io.File templatesDir = new java.io.File(\"~templatesDir~\");\n\t\tjava.util.Optional.ofNullable(templatesDir.listFiles(pathname -> pathname.isFile() && pathname.getName().toLowerCase().endsWith(\".json\")))\n\t\t\t.ifPresent(files -> {\n\t\t\t\tfor (java.io.File file : files)\n\t\t\t\t\t\tstGroups.add(new nextgen.st.domain.STGroupModel(nextgen.st.STParser.readJsonObject(file)));\n\t\t\t});\n\t\tnew Thread(new ~name~(new nextgen.st.model.STModelDB(\"~dbDir~\", stGroups), new nextgen.st.STRenderer(stGroups))).start();\n\t}\n} ",
+    "parameters" : [ {
+      "uuid" : "ccbb026a-ae96-42c0-a4cd-0b76c6e39fe8",
+      "name" : "packageName",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "776432d8-7a4c-4ba4-a496-d06929484b80",
+      "name" : "templates",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "7dca1254-941e-42b6-8023-2e8dbe8ec576",
+      "name" : "templatePackage",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "f39dd3d6-f424-47cc-b1ac-01df57d688d2",
+      "name" : "templateName",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "1036a097-6046-48da-ae8b-8c7ee89e8f6c",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "a767d112-a04d-4467-b499-34f6b52f0f67",
+      "name" : "script",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "ac34844b-913b-41f5-89a7-f0bcdda66572",
+      "name" : "templatesDir",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "1017d531-0820-4f23-bd63-b590c55d19e8",
+      "name" : "dbDir",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
   } ],
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/StringTemplate.stg",
   "icon" : "language-stringtemplate"

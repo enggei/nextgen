@@ -6,7 +6,9 @@ import nextgen.st.domain.*;
 import nextgen.st.model.*;
 import nextgen.st.script.Script;
 import nextgen.st.script.ScriptNeoFactory;
-import nextgen.templates.java.CompilationUnit;
+import nextgen.st.stringtemplate.ScriptRunner;
+import nextgen.st.stringtemplate.StringTemplateST;
+import nextgen.templates.java.ImportDeclaration;
 import nextgen.templates.java.PackageDeclaration;
 import org.neo4j.graphdb.Node;
 
@@ -52,9 +54,9 @@ public class STAppPresentationModel {
             stGroups.addAll(stgDirectory.getGroups().collect(Collectors.toSet()));
         });
 
+        this.stRenderer = new STRenderer(stGroups);
         this.db = new STModelDB(appModel.getModelDb("./db"), stGroups);
         this.scripts = new ScriptNeoFactory(this.db.getDatabaseService());
-        this.stRenderer = new STRenderer(stGroups);
 
         final Set<String> fonts = new HashSet<>(Arrays.asList(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
         this.preferredFont = Stream
@@ -73,16 +75,23 @@ public class STAppPresentationModel {
 
         final STGParseResult parseResult = STParser.parse(toSTGroup(stGroupModel));
 
-        if (parseResult.getErrors().count() == 0)
-            stgDirectories
-                    .stream()
-                    .filter(directory -> directory.getGroups().anyMatch(stGroupModel1 -> stGroupModel1.uuid().equals(stGroupModel.uuid())))
-                    .findFirst()
-                    .ifPresent(directory -> {
-                        log.info("generating stGroup " + stGroupModel.getName() + " to " + directory.getOutputPath() + " " + directory.getOutputPackage());
-                        new STGenerator(generatorSTGroup).generateSTGroup(stGroupModel, directory.getOutputPackage(), directory.getOutputPath());
-                    });
-        else {
+        if (parseResult.getErrors().count() == 0) {
+
+            final Optional<STGroupModel> found = generatorSTGDirectory.getGroups().filter(stGroupModel1 -> stGroupModel1.uuid().equals(stGroupModel.uuid())).findFirst();
+            if (found.isPresent()) {
+                log.info("generating stGroup " + stGroupModel.getName() + " to " + generatorSTGDirectory.getOutputPath() + " " + generatorSTGDirectory.getOutputPackage());
+                new STGenerator(generatorSTGroup).generateSTGroup(stGroupModel, generatorSTGDirectory.getOutputPackage(), generatorSTGDirectory.getOutputPath());
+            } else {
+                stgDirectories
+                        .stream()
+                        .filter(directory -> directory.getGroups().anyMatch(stGroupModel1 -> stGroupModel1.uuid().equals(stGroupModel.uuid())))
+                        .findFirst()
+                        .ifPresent(directory -> {
+                            log.info("generating stGroup " + stGroupModel.getName() + " to " + directory.getOutputPath() + " " + directory.getOutputPackage());
+                            new STGenerator(generatorSTGroup).generateSTGroup(stGroupModel, directory.getOutputPackage(), directory.getOutputPath());
+                        });
+            }
+        } else {
             log.error(stGroupModel.getName() + " has errors: ");
             parseResult.getErrors().forEach(stgError -> log.error("\t" + stgError.getType() + " " + stgError.getCharPosition() + " at line " + stgError.getLine()));
         }
@@ -179,7 +188,7 @@ public class STAppPresentationModel {
         final nextgen.templates.java.PackageDeclaration packageDeclaration = nextgen.templates.java.JavaST.newPackageDeclaration()
                 .setName("tmp");
 
-        final Collection<Object> imports = new ArrayList<>();
+        final Collection<ImportDeclaration> imports = new ArrayList<>();
         stgDirectories.forEach(directory -> {
             final String outputPackage = directory.getOutputPackage();
             final File templateClassDir = new File(srcRoot, STGenerator.packageToPath(outputPackage));
@@ -205,7 +214,7 @@ public class STAppPresentationModel {
         final java.io.PrintWriter compilerOutput = new java.io.PrintWriter(sr);
         try {
             final String cacheClassname = className + System.currentTimeMillis();
-            final nextgen.templates.java.CompilationUnit compilationUnit = getRunner(script, packageDeclaration, imports, cacheClassname);
+            final Object compilationUnit = getRunner(script, packageDeclaration, imports, cacheClassname);
             final Class<?> aClass = CompilerUtils.CACHED_COMPILER.loadFromJava(getClass().getClassLoader(), packageDeclaration.getName() + "." + cacheClassname, compilationUnit.toString(), compilerOutput);
             return new CompilationResult(sr.toString(), aClass);
         } catch (Throwable t) {
@@ -213,43 +222,17 @@ public class STAppPresentationModel {
         }
     }
 
-    public CompilationUnit getRunner(Script script, PackageDeclaration packageDeclaration, Collection<Object> imports, String className) {
-        return nextgen.templates.java.JavaST.newCompilationUnit()
-                .setPackageDeclaration(packageDeclaration)
-                .setImportDeclaration(imports)
-                .addTypes(nextgen.templates.java.JavaST.newClassOrInterfaceDeclaration()
-                        .setName(className)
-                        .addModifiers("public")
-                        .addImplementedTypes("Runnable")
-                        .addMembers("private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(" + className + ".class);")
-                        .addMembers(nextgen.templates.java.JavaST.newFieldDeclaration()
-                                .addVariables(nextgen.templates.java.JavaST.newVariableDeclaration()
-                                        .setName("db")
-                                        .setType(STModelDB.class.getCanonicalName())))
-                        .addMembers(nextgen.templates.java.JavaST.newFieldDeclaration()
-                                .addVariables(nextgen.templates.java.JavaST.newVariableDeclaration()
-                                        .setName("renderer")
-                                        .setType(STRenderer.class.getCanonicalName())))
-                        .addMembers(nextgen.templates.java.JavaST.newConstructorDeclaration()
-                                .setName(className)
-                                .addModifiers("public")
-                                .addParameters(nextgen.templates.java.JavaST.newParameter()
-                                        .setName("db")
-                                        .setType(STModelDB.class.getCanonicalName()))
-                                .addParameters(nextgen.templates.java.JavaST.newParameter()
-                                        .setName("renderer")
-                                        .setType(STRenderer.class.getCanonicalName()))
-                                .setBlockStmt(nextgen.templates.java.JavaST.newBlockStmt()
-                                        .addStatements("this.db = db;")
-                                        .addStatements("this.renderer = renderer;")))
-                        .addMembers(nextgen.templates.java.JavaST.newMethodDeclaration()
-                                .addAnnotations(nextgen.templates.java.JavaST.newSingleMemberAnnotationExpression().setName("Override"))
-                                .setName("run")
-                                .addModifiers("public")
-                                .setBlockStmt(nextgen.templates.java.JavaST.newBlockStmt()
-                                        .addStatements("db.doInTransaction(transaction -> {")
-                                        .addStatements("\t" + render(script.getScript()))
-                                        .addStatements("});"))));
+    public Object getRunner(Script script, PackageDeclaration packageDeclaration, Collection<ImportDeclaration> imports, String className) {
+
+        final ScriptRunner scriptRunner = StringTemplateST.newScriptRunner();
+        scriptRunner.setPackageName(packageDeclaration.getName());
+        scriptRunner.setName(className);
+        scriptRunner.setTemplatesDir(appModel.getDirectories().findFirst().get().getPath());
+        scriptRunner.setDbDir(appModel.getModelDb("./db"));
+        scriptRunner.setScript(render(script.getScript()));
+        for (Object anImport : imports)
+            scriptRunner.addImports(anImport);
+        return scriptRunner;
     }
 
     public static final class CompilationResult {

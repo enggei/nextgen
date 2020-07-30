@@ -1,5 +1,39 @@
 delimiters "~","~"
 
+ScriptRunner(packageName,imports,name,script,templatesDir,dbDir) ::= <<package ~packageName~;
+
+~imports:{it|~it~};separator="\n"~
+
+public class ~name~ implements Runnable {
+
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);
+	private final nextgen.st.model.STModelDB db;
+	private final nextgen.st.STRenderer renderer;
+
+	public ~name~(nextgen.st.model.STModelDB db, nextgen.st.STRenderer renderer) {
+		this.db = db;
+		this.renderer = renderer;
+	}
+
+	@Override
+	public void run() {
+		db.doInTransaction(transaction -> {
+			~script~
+		});
+	}
+	
+	public static void main(String[] args) {
+		final java.util.Collection<nextgen.st.domain.STGroupModel> stGroups = new java.util.ArrayList<>();
+		final java.io.File templatesDir = new java.io.File("~templatesDir~");
+		java.util.Optional.ofNullable(templatesDir.listFiles(pathname -> pathname.isFile() && pathname.getName().toLowerCase().endsWith(".json")))
+			.ifPresent(files -> {
+				for (java.io.File file : files)
+						stGroups.add(new nextgen.st.domain.STGroupModel(nextgen.st.STParser.readJsonObject(file)));
+			});
+		new Thread(new ~name~(new nextgen.st.model.STModelDB("~dbDir~", stGroups), new nextgen.st.STRenderer(stGroups))).start();
+	}
+}  >>
+
 STDomain(packageName,name,stgString,entities) ::= <<package ~packageName~;
 
 public class ~name~ {
@@ -77,7 +111,7 @@ public class ~name~ {
 
 newEntityInstance(entityName) ::= <<public static ~entityName~ new~entityName~() {
 	return new ~entityName~(stGroup);
-} >>
+}  >>
 
 stgString(templates) ::= <<new StringBuilder("delimiters \"\~\", \"\~\"\\n")
 	.append("eom() ::= \"}\"\\n")
