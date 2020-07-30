@@ -1,4 +1,4 @@
-// Generated from STGParser.g4 by ANTLR 4.7
+// Generated from STGParser.g4 by ANTLR 4.8
 package org.antlr.parser.st4;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
@@ -17,75 +17,86 @@ public class STGParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> impleme
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitGroup(STGParser.GroupContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitGroup(STGParser.GroupContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitDelimiters(STGParser.DelimitersContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitDelimiters(STGParser.DelimitersContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitImports(STGParser.ImportsContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitImports(STGParser.ImportsContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitTemplate(STGParser.TemplateContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitTemplate(STGParser.TemplateContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitFormalArgs(STGParser.FormalArgsContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitFormalArgs(STGParser.FormalArgsContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitFormalArg(STGParser.FormalArgContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitFormalArg(STGParser.FormalArgContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitDict(STGParser.DictContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitDict(STGParser.DictContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitDictPairs(STGParser.DictPairsContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitDictPairs(STGParser.DictPairsContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitKeyValuePair(STGParser.KeyValuePairContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitKeyValuePair(STGParser.KeyValuePairContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitDefaultValuePair(STGParser.DefaultValuePairContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitDefaultValuePair(STGParser.DefaultValuePairContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitKeyValue(STGParser.KeyValueContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitKeyValue(STGParser.KeyValueContext ctx) { return visitChildren(ctx); }
 }

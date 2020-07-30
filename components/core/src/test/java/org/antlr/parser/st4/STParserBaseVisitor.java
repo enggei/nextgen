@@ -1,4 +1,4 @@
-// Generated from STParser.g4 by ANTLR 4.7
+// Generated from STParser.g4 by ANTLR 4.8
 package org.antlr.parser.st4;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
@@ -17,173 +17,198 @@ public class STParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> implemen
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitTemplate(STParser.TemplateContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitTemplate(STParser.TemplateContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitElements(STParser.ElementsContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitElements(STParser.ElementsContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitElement(STParser.ElementContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitElement(STParser.ElementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitSingleElement(STParser.SingleElementContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitSingleElement(STParser.SingleElementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitCompoundElement(STParser.CompoundElementContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitCompoundElement(STParser.CompoundElementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitExprTag(STParser.ExprTagContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitExprTag(STParser.ExprTagContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitRegion(STParser.RegionContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitRegion(STParser.RegionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitSubtemplate(STParser.SubtemplateContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitSubtemplate(STParser.SubtemplateContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitIfstat(STParser.IfstatContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitIfstat(STParser.IfstatContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitConditional(STParser.ConditionalContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitConditional(STParser.ConditionalContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitAndConditional(STParser.AndConditionalContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitAndConditional(STParser.AndConditionalContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitNotConditional(STParser.NotConditionalContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitNotConditional(STParser.NotConditionalContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitNotConditionalExpr(STParser.NotConditionalExprContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitNotConditionalExpr(STParser.NotConditionalExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitExprOptions(STParser.ExprOptionsContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitExprOptions(STParser.ExprOptionsContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitOption(STParser.OptionContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitOption(STParser.OptionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitExpr(STParser.ExprContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitExpr(STParser.ExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitMapExpr(STParser.MapExprContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitMapExpr(STParser.MapExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitMemberExpr(STParser.MemberExprContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitMemberExpr(STParser.MemberExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitMapTemplateRef(STParser.MapTemplateRefContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitMapTemplateRef(STParser.MapTemplateRefContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitIncludeExpr(STParser.IncludeExprContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitIncludeExpr(STParser.IncludeExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitPrimary(STParser.PrimaryContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitPrimary(STParser.PrimaryContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitList(STParser.ListContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitList(STParser.ListContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitArgs(STParser.ArgsContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitArgs(STParser.ArgsContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitArgExprList(STParser.ArgExprListContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitArgExprList(STParser.ArgExprListContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitNamedArg(STParser.NamedArgContext ctx) { return visitChildren(ctx); }
+	@Override
+    public T visitNamedArg(STParser.NamedArgContext ctx) { return visitChildren(ctx); }
 }

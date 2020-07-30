@@ -1,17 +1,21 @@
-// Generated from STParser.g4 by ANTLR 4.7
+// Generated from STParser.g4 by ANTLR 4.8
 package org.antlr.parser.st4;
-import org.antlr.v4.runtime.atn.*;
-import org.antlr.v4.runtime.dfa.DFA;
+
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.*;
-import org.antlr.v4.runtime.tree.*;
+import org.antlr.v4.runtime.atn.ATN;
+import org.antlr.v4.runtime.atn.ATNDeserializer;
+import org.antlr.v4.runtime.atn.ParserATNSimulator;
+import org.antlr.v4.runtime.atn.PredictionContextCache;
+import org.antlr.v4.runtime.dfa.DFA;
+import org.antlr.v4.runtime.tree.ParseTreeListener;
+import org.antlr.v4.runtime.tree.ParseTreeVisitor;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class STParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.7", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -31,26 +35,35 @@ public class STParser extends Parser {
 		RULE_expr = 15, RULE_mapExpr = 16, RULE_memberExpr = 17, RULE_mapTemplateRef = 18, 
 		RULE_includeExpr = 19, RULE_primary = 20, RULE_list = 21, RULE_args = 22, 
 		RULE_argExprList = 23, RULE_namedArg = 24;
-	public static final String[] ruleNames = {
-		"template", "elements", "element", "singleElement", "compoundElement", 
-		"exprTag", "region", "subtemplate", "ifstat", "conditional", "andConditional", 
-		"notConditional", "notConditionalExpr", "exprOptions", "option", "expr", 
-		"mapExpr", "memberExpr", "mapTemplateRef", "includeExpr", "primary", "list", 
-		"args", "argExprList", "namedArg"
-	};
+	private static String[] makeRuleNames() {
+		return new String[] {
+			"template", "elements", "element", "singleElement", "compoundElement", 
+			"exprTag", "region", "subtemplate", "ifstat", "conditional", "andConditional", 
+			"notConditional", "notConditionalExpr", "exprOptions", "option", "expr", 
+			"mapExpr", "memberExpr", "mapTemplateRef", "includeExpr", "primary", 
+			"list", "args", "argExprList", "namedArg"
+		};
+	}
+	public static final String[] ruleNames = makeRuleNames();
 
-	private static final String[] _LITERAL_NAMES = {
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, "'if'", "'elseif'", "'else'", "'endif'", "'super'", "'@end'"
-	};
-	private static final String[] _SYMBOLIC_NAMES = {
-		null, "DOC_COMMENT", "BLOCK_COMMENT", "LINE_COMMENT", "TMPL_COMMENT", 
-		"HORZ_WS", "VERT_WS", "ESCAPE", "LDELIM", "RBRACE", "TEXT", "LBRACE", 
-		"RDELIM", "STRING", "IF", "ELSEIF", "ELSE", "ENDIF", "SUPER", "END", "TRUE", 
-		"FALSE", "AT", "ELLIPSIS", "DOT", "COMMA", "COLON", "SEMI", "AND", "OR", 
-		"LPAREN", "RPAREN", "LBRACK", "RBRACK", "EQUALS", "BANG", "ERR_CHAR", 
-		"ID", "PIPE"
-	};
+	private static String[] makeLiteralNames() {
+		return new String[] {
+			null, null, null, null, null, null, null, null, null, null, null, null, 
+			null, null, "'if'", "'elseif'", "'else'", "'endif'", "'super'", "'@end'"
+		};
+	}
+	private static final String[] _LITERAL_NAMES = makeLiteralNames();
+	private static String[] makeSymbolicNames() {
+		return new String[] {
+			null, "DOC_COMMENT", "BLOCK_COMMENT", "LINE_COMMENT", "TMPL_COMMENT", 
+			"HORZ_WS", "VERT_WS", "ESCAPE", "LDELIM", "RBRACE", "TEXT", "LBRACE", 
+			"RDELIM", "STRING", "IF", "ELSEIF", "ELSE", "ENDIF", "SUPER", "END", 
+			"TRUE", "FALSE", "AT", "ELLIPSIS", "DOT", "COMMA", "COLON", "SEMI", "AND", 
+			"OR", "LPAREN", "RPAREN", "LBRACK", "RBRACK", "EQUALS", "BANG", "ERR_CHAR", 
+			"ID", "PIPE"
+		};
+	}
+	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
 	/**
@@ -100,6 +113,7 @@ public class STParser extends Parser {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
+
 	public static class TemplateContext extends ParserRuleContext {
 		public ElementsContext elements() {
 			return getRuleContext(ElementsContext.class,0);
@@ -108,18 +122,19 @@ public class STParser extends Parser {
 		public TemplateContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_template; }
+		@Override
+        public int getRuleIndex() { return RULE_template; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterTemplate(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterTemplate(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitTemplate(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitTemplate(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitTemplate(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitTemplate(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -157,18 +172,19 @@ public class STParser extends Parser {
 		public ElementsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_elements; }
+		@Override
+        public int getRuleIndex() { return RULE_elements; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterElements(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterElements(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitElements(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitElements(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitElements(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitElements(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -190,7 +206,7 @@ public class STParser extends Parser {
 					setState(53);
 					element();
 					}
-					} 
+					}
 				}
 				setState(58);
 				_errHandler.sync(this);
@@ -219,18 +235,19 @@ public class STParser extends Parser {
 		public ElementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_element; }
+		@Override
+        public int getRuleIndex() { return RULE_element; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterElement(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterElement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitElement(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitElement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitElement(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitElement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -280,18 +297,19 @@ public class STParser extends Parser {
 		public SingleElementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_singleElement; }
+		@Override
+        public int getRuleIndex() { return RULE_singleElement; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterSingleElement(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterSingleElement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitSingleElement(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitSingleElement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitSingleElement(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitSingleElement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -314,7 +332,7 @@ public class STParser extends Parser {
 			case TEXT:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(65); 
+				setState(65);
 				_errHandler.sync(this);
 				_alt = 1;
 				do {
@@ -330,7 +348,7 @@ public class STParser extends Parser {
 					default:
 						throw new NoViableAltException(this);
 					}
-					setState(67); 
+					setState(67);
 					_errHandler.sync(this);
 					_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
 				} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
@@ -361,18 +379,19 @@ public class STParser extends Parser {
 		public CompoundElementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_compoundElement; }
+		@Override
+        public int getRuleIndex() { return RULE_compoundElement; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterCompoundElement(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterCompoundElement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitCompoundElement(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitCompoundElement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitCompoundElement(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitCompoundElement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -424,18 +443,19 @@ public class STParser extends Parser {
 		public ExprTagContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_exprTag; }
+		@Override
+        public int getRuleIndex() { return RULE_exprTag; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterExprTag(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterExprTag(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitExprTag(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitExprTag(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitExprTag(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitExprTag(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -496,18 +516,19 @@ public class STParser extends Parser {
 		public RegionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_region; }
+		@Override
+        public int getRuleIndex() { return RULE_region; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterRegion(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterRegion(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitRegion(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitRegion(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitRegion(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitRegion(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -565,18 +586,19 @@ public class STParser extends Parser {
 		public SubtemplateContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_subtemplate; }
+		@Override
+        public int getRuleIndex() { return RULE_subtemplate; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterSubtemplate(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterSubtemplate(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitSubtemplate(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitSubtemplate(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitSubtemplate(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitSubtemplate(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -674,18 +696,19 @@ public class STParser extends Parser {
 		public IfstatContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_ifstat; }
+		@Override
+        public int getRuleIndex() { return RULE_ifstat; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterIfstat(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterIfstat(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitIfstat(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitIfstat(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitIfstat(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitIfstat(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -733,7 +756,7 @@ public class STParser extends Parser {
 					setState(120);
 					elements();
 					}
-					} 
+					}
 				}
 				setState(126);
 				_errHandler.sync(this);
@@ -788,18 +811,19 @@ public class STParser extends Parser {
 		public ConditionalContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_conditional; }
+		@Override
+        public int getRuleIndex() { return RULE_conditional; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterConditional(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterConditional(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitConditional(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitConditional(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitConditional(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitConditional(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -856,18 +880,19 @@ public class STParser extends Parser {
 		public AndConditionalContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_andConditional; }
+		@Override
+        public int getRuleIndex() { return RULE_andConditional; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterAndConditional(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterAndConditional(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitAndConditional(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitAndConditional(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitAndConditional(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitAndConditional(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -921,18 +946,19 @@ public class STParser extends Parser {
 		public NotConditionalContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_notConditional; }
+		@Override
+        public int getRuleIndex() { return RULE_notConditional; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterNotConditional(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterNotConditional(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitNotConditional(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitNotConditional(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitNotConditional(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitNotConditional(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1009,18 +1035,19 @@ public class STParser extends Parser {
 		public NotConditionalExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_notConditionalExpr; }
+		@Override
+        public int getRuleIndex() { return RULE_notConditionalExpr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterNotConditionalExpr(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterNotConditionalExpr(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitNotConditionalExpr(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitNotConditionalExpr(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitNotConditionalExpr(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitNotConditionalExpr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1095,18 +1122,19 @@ public class STParser extends Parser {
 		public ExprOptionsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_exprOptions; }
+		@Override
+        public int getRuleIndex() { return RULE_exprOptions; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterExprOptions(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterExprOptions(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitExprOptions(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitExprOptions(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitExprOptions(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitExprOptions(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1158,18 +1186,19 @@ public class STParser extends Parser {
 		public OptionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_option; }
+		@Override
+        public int getRuleIndex() { return RULE_option; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterOption(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterOption(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitOption(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitOption(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitOption(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitOption(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1219,18 +1248,19 @@ public class STParser extends Parser {
 		public ExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_expr; }
+		@Override
+        public int getRuleIndex() { return RULE_expr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterExpr(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterExpr(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitExpr(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitExpr(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitExpr(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitExpr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1293,18 +1323,19 @@ public class STParser extends Parser {
 		public MapExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_mapExpr; }
+		@Override
+        public int getRuleIndex() { return RULE_mapExpr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterMapExpr(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterMapExpr(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitMapExpr(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitMapExpr(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitMapExpr(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitMapExpr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1323,7 +1354,7 @@ public class STParser extends Parser {
 			_la = _input.LA(1);
 			if (_la==COMMA) {
 				{
-				setState(192); 
+				setState(192);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
@@ -1335,7 +1366,7 @@ public class STParser extends Parser {
 					memberExpr();
 					}
 					}
-					setState(194); 
+					setState(194);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				} while ( _la==COMMA );
@@ -1420,18 +1451,19 @@ public class STParser extends Parser {
 		public MemberExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_memberExpr; }
+		@Override
+        public int getRuleIndex() { return RULE_memberExpr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterMemberExpr(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterMemberExpr(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitMemberExpr(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitMemberExpr(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitMemberExpr(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitMemberExpr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1517,18 +1549,19 @@ public class STParser extends Parser {
 		public MapTemplateRefContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_mapTemplateRef; }
+		@Override
+        public int getRuleIndex() { return RULE_mapTemplateRef; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterMapTemplateRef(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterMapTemplateRef(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitMapTemplateRef(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitMapTemplateRef(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitMapTemplateRef(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitMapTemplateRef(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1628,18 +1661,19 @@ public class STParser extends Parser {
 		public IncludeExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_includeExpr; }
+		@Override
+        public int getRuleIndex() { return RULE_includeExpr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterIncludeExpr(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterIncludeExpr(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitIncludeExpr(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitIncludeExpr(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitIncludeExpr(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitIncludeExpr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1800,18 +1834,19 @@ public class STParser extends Parser {
 		public PrimaryContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_primary; }
+		@Override
+        public int getRuleIndex() { return RULE_primary; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterPrimary(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterPrimary(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitPrimary(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitPrimary(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitPrimary(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitPrimary(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1932,18 +1967,19 @@ public class STParser extends Parser {
 		public ListContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_list; }
+		@Override
+        public int getRuleIndex() { return RULE_list; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterList(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterList(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitList(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitList(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitList(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitList(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2000,18 +2036,19 @@ public class STParser extends Parser {
 		public ArgsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_args; }
+		@Override
+        public int getRuleIndex() { return RULE_args; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterArgs(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterArgs(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitArgs(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitArgs(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitArgs(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitArgs(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2103,18 +2140,19 @@ public class STParser extends Parser {
 		public ArgExprListContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_argExprList; }
+		@Override
+        public int getRuleIndex() { return RULE_argExprList; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterArgExprList(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterArgExprList(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitArgExprList(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitArgExprList(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitArgExprList(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitArgExprList(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2166,18 +2204,19 @@ public class STParser extends Parser {
 		public NamedArgContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_namedArg; }
+		@Override
+        public int getRuleIndex() { return RULE_namedArg; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).enterNamedArg(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).enterNamedArg(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STParserListener ) ((STParserListener)listener).exitNamedArg(this);
+			if ( listener instanceof STParserListener) ((STParserListener)listener).exitNamedArg(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STParserVisitor ) return ((STParserVisitor<? extends T>)visitor).visitNamedArg(this);
+			if ( visitor instanceof STParserVisitor) return ((STParserVisitor<? extends T>)visitor).visitNamedArg(this);
 			else return visitor.visitChildren(this);
 		}
 	}

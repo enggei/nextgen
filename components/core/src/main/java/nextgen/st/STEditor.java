@@ -245,7 +245,7 @@ public class STEditor extends JPanel {
             final String sep = separator == null ? "" : ";separator=\"" + separator + "\"";
             final String list = pre + "}" + sep;
             txtEditor.insert(delim(list), caretPosition);
-            txtEditor.setCaretPosition(caretPosition + pre.length());
+            txtEditor.setCaretPosition(caretPosition + pre.length() + 1);
             txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
         });
     }

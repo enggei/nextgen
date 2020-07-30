@@ -368,6 +368,44 @@
         "type" : "LIST",
         "argumentType" : "Object"
       } ]
+    }, {
+      "uuid" : "5a8f5512-0d01-4955-b284-9d969a36eb79",
+      "name" : "ValueObject",
+      "text" : "package ~package~;\n\npublic class ~name~ {\n\n\tprivate final java.util.UUID uuid;\n\t~fields:{it|public ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\n\tpublic ~name~() {\n\t\tthis.uuid = java.util.UUID.randomUUID();\n\t}\n\n\tpublic ~name~(java.util.UUID uuid) {\n\t\tthis.uuid = uuid;\n\t}\n\n\tpublic java.util.UUID getUuid() {\n\t\treturn this.uuid;\n\t}\t\n\t\n~if(lexical)~\n\n\t@Override\n\tpublic String toString() {\n\t\treturn ~lexical:{it|_~it~};separator=\" + \\\" \\\" + \"~;\n\t}\n~endif~\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn uuid.equals(that.uuid);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(uuid);\n\t}\n} ",
+      "parameters" : [ {
+        "uuid" : "2f8768f0-5cb5-4538-8f3c-410aba0229e0",
+        "name" : "package",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "d8b4a2b5-7714-4c7e-bd8f-a52276d0dfac",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "d7c39e84-f290-4716-9d3f-a0aa2b1c7076",
+        "name" : "fields",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "fd6e279c-d950-4959-904d-b146ff98eef9",
+          "name" : "type",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "45518a06-8a6c-45ee-ba4f-89765f221d33",
+          "name" : "name",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "c0dbcea4-48b9-4d67-80da-9bcba9d3f83e",
+          "name" : "initializer",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "6533f039-fe34-4304-84be-c728856aca5e",
+        "name" : "lexical",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
     } ]
   }, {
     "uuid" : "98bc23df-822a-437b-ba27-15f621ddc970",

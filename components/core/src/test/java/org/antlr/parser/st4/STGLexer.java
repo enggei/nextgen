@@ -1,17 +1,16 @@
-// Generated from STGLexer.g4 by ANTLR 4.7
+// Generated from STGLexer.g4 by ANTLR 4.8
 package org.antlr.parser.st4;
-import org.antlr.v4.runtime.Lexer;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.TokenStream;
+
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.atn.*;
+import org.antlr.v4.runtime.atn.ATN;
+import org.antlr.v4.runtime.atn.ATNDeserializer;
+import org.antlr.v4.runtime.atn.LexerATNSimulator;
+import org.antlr.v4.runtime.atn.PredictionContextCache;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class STGLexer extends Lexer {
-	static { RuntimeMetaData.checkVersion("4.7", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -34,50 +33,60 @@ public class STGLexer extends Lexer {
 		"DEFAULT_MODE"
 	};
 
-	public static final String[] ruleNames = {
-		"DOC_COMMENT", "BLOCK_COMMENT", "LINE_COMMENT", "TMPL_COMMENT", "HORZ_WS", 
-		"VERT_WS", "ID", "STRING", "BIGSTRING", "BIGSTRING_NO_NL", "ANON_TEMPLATE", 
-		"TMPL_ASSIGN", "ASSIGN", "DOT", "COMMA", "COLON", "LPAREN", "RPAREN", 
-		"LBRACK", "RBRACK", "AT", "TRUE", "FALSE", "ELLIPSIS", "DELIMITERS", "IMPORT", 
-		"DEFAULT", "KEY", "VALUE", "FIRST", "LAST", "REST", "TRUNC", "STRIP", 
-		"TRIM", "LENGTH", "STRLEN", "REVERSE", "GROUP", "WRAP", "ANCHOR", "SEPARATOR", 
-		"TmplAssign", "LBang", "RBang", "LPct", "RPct", "LDAngle", "RDAngle", 
-		"Ws", "Hws", "Vws", "DocComment", "BlockComment", "LineComment", "LineCommentExt", 
-		"EscSeq", "EscAny", "UnicodeEsc", "OctalEscape", "HexNumeral", "OctalNumeral", 
-		"DecimalNumeral", "BinaryNumeral", "HexDigits", "DecDigits", "OctalDigits", 
-		"BinaryDigits", "HexDigit", "DecDigit", "OctalDigit", "BinaryDigit", "BoolLiteral", 
-		"CharLiteral", "SQuoteLiteral", "DQuoteLiteral", "USQuoteLiteral", "DecimalFloatingPointLiteral", 
-		"ExponentPart", "FloatTypeSuffix", "HexadecimalFloatingPointLiteral", 
-		"HexSignificand", "BinaryExponent", "NameChar", "NameStartChar", "JavaLetter", 
-		"JavaLetterOrDigit", "JavaUnicodeChars", "Boolean", "Byte", "Short", "Int", 
-		"Long", "Char", "Float", "Double", "True", "False", "Esc", "Colon", "DColon", 
-		"SQuote", "DQuote", "BQuote", "LParen", "RParen", "LBrace", "RBrace", 
-		"LBrack", "RBrack", "RArrow", "Lt", "Gt", "Lte", "Gte", "Equal", "NotEqual", 
-		"Question", "Bang", "Star", "Slash", "Percent", "Caret", "Plus", "Minus", 
-		"PlusAssign", "MinusAssign", "MulAssign", "DivAssign", "AndAssign", "OrAssign", 
-		"XOrAssign", "ModAssign", "LShiftAssign", "RShiftAssign", "URShiftAssign", 
-		"Underscore", "Pipe", "Amp", "And", "Or", "Inc", "Dec", "LShift", "RShift", 
-		"Dollar", "Comma", "Semi", "Dot", "Range", "Ellipsis", "At", "Pound", 
-		"Tilde", "UnicodeLetter", "UnicodeClass_LU", "UnicodeClass_LL", "UnicodeClass_LT", 
-		"UnicodeClass_LM", "UnicodeClass_LO", "UnicodeDigit"
-	};
+	private static String[] makeRuleNames() {
+		return new String[] {
+			"DOC_COMMENT", "BLOCK_COMMENT", "LINE_COMMENT", "TMPL_COMMENT", "HORZ_WS", 
+			"VERT_WS", "ID", "STRING", "BIGSTRING", "BIGSTRING_NO_NL", "ANON_TEMPLATE", 
+			"TMPL_ASSIGN", "ASSIGN", "DOT", "COMMA", "COLON", "LPAREN", "RPAREN", 
+			"LBRACK", "RBRACK", "AT", "TRUE", "FALSE", "ELLIPSIS", "DELIMITERS", 
+			"IMPORT", "DEFAULT", "KEY", "VALUE", "FIRST", "LAST", "REST", "TRUNC", 
+			"STRIP", "TRIM", "LENGTH", "STRLEN", "REVERSE", "GROUP", "WRAP", "ANCHOR", 
+			"SEPARATOR", "TmplAssign", "LBang", "RBang", "LPct", "RPct", "LDAngle", 
+			"RDAngle", "Ws", "Hws", "Vws", "DocComment", "BlockComment", "LineComment", 
+			"LineCommentExt", "EscSeq", "EscAny", "UnicodeEsc", "OctalEscape", "HexNumeral", 
+			"OctalNumeral", "DecimalNumeral", "BinaryNumeral", "HexDigits", "DecDigits", 
+			"OctalDigits", "BinaryDigits", "HexDigit", "DecDigit", "OctalDigit", 
+			"BinaryDigit", "BoolLiteral", "CharLiteral", "SQuoteLiteral", "DQuoteLiteral", 
+			"USQuoteLiteral", "DecimalFloatingPointLiteral", "ExponentPart", "FloatTypeSuffix", 
+			"HexadecimalFloatingPointLiteral", "HexSignificand", "BinaryExponent", 
+			"NameChar", "NameStartChar", "JavaLetter", "JavaLetterOrDigit", "JavaUnicodeChars", 
+			"Boolean", "Byte", "Short", "Int", "Long", "Char", "Float", "Double", 
+			"True", "False", "Esc", "Colon", "DColon", "SQuote", "DQuote", "BQuote", 
+			"LParen", "RParen", "LBrace", "RBrace", "LBrack", "RBrack", "RArrow", 
+			"Lt", "Gt", "Lte", "Gte", "Equal", "NotEqual", "Question", "Bang", "Star", 
+			"Slash", "Percent", "Caret", "Plus", "Minus", "PlusAssign", "MinusAssign", 
+			"MulAssign", "DivAssign", "AndAssign", "OrAssign", "XOrAssign", "ModAssign", 
+			"LShiftAssign", "RShiftAssign", "URShiftAssign", "Underscore", "Pipe", 
+			"Amp", "And", "Or", "Inc", "Dec", "LShift", "RShift", "Dollar", "Comma", 
+			"Semi", "Dot", "Range", "Ellipsis", "At", "Pound", "Tilde", "UnicodeLetter", 
+			"UnicodeClass_LU", "UnicodeClass_LL", "UnicodeClass_LT", "UnicodeClass_LM", 
+			"UnicodeClass_LO", "UnicodeDigit"
+		};
+	}
+	public static final String[] ruleNames = makeRuleNames();
 
-	private static final String[] _LITERAL_NAMES = {
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, "'delimiters'", "'import'", "'default'", "'key'", "'value'", "'first'", 
-		"'last'", "'rest'", "'trunc'", "'strip'", "'trim'", "'length'", "'strlen'", 
-		"'reverse'", "'group'", "'wrap'", "'anchor'", "'separator'"
-	};
-	private static final String[] _SYMBOLIC_NAMES = {
-		null, "DOC_COMMENT", "BLOCK_COMMENT", "LINE_COMMENT", "TMPL_COMMENT", 
-		"HORZ_WS", "VERT_WS", "ID", "STRING", "BIGSTRING", "BIGSTRING_NO_NL", 
-		"ANON_TEMPLATE", "TMPL_ASSIGN", "ASSIGN", "DOT", "COMMA", "COLON", "LPAREN", 
-		"RPAREN", "LBRACK", "RBRACK", "AT", "TRUE", "FALSE", "ELLIPSIS", "DELIMITERS", 
-		"IMPORT", "DEFAULT", "KEY", "VALUE", "FIRST", "LAST", "REST", "TRUNC", 
-		"STRIP", "TRIM", "LENGTH", "STRLEN", "REVERSE", "GROUP", "WRAP", "ANCHOR", 
-		"SEPARATOR"
-	};
+	private static String[] makeLiteralNames() {
+		return new String[] {
+			null, null, null, null, null, null, null, null, null, null, null, null, 
+			null, null, null, null, null, null, null, null, null, null, null, null, 
+			null, "'delimiters'", "'import'", "'default'", "'key'", "'value'", "'first'", 
+			"'last'", "'rest'", "'trunc'", "'strip'", "'trim'", "'length'", "'strlen'", 
+			"'reverse'", "'group'", "'wrap'", "'anchor'", "'separator'"
+		};
+	}
+	private static final String[] _LITERAL_NAMES = makeLiteralNames();
+	private static String[] makeSymbolicNames() {
+		return new String[] {
+			null, "DOC_COMMENT", "BLOCK_COMMENT", "LINE_COMMENT", "TMPL_COMMENT", 
+			"HORZ_WS", "VERT_WS", "ID", "STRING", "BIGSTRING", "BIGSTRING_NO_NL", 
+			"ANON_TEMPLATE", "TMPL_ASSIGN", "ASSIGN", "DOT", "COMMA", "COLON", "LPAREN", 
+			"RPAREN", "LBRACK", "RBRACK", "AT", "TRUE", "FALSE", "ELLIPSIS", "DELIMITERS", 
+			"IMPORT", "DEFAULT", "KEY", "VALUE", "FIRST", "LAST", "REST", "TRUNC", 
+			"STRIP", "TRIM", "LENGTH", "STRLEN", "REVERSE", "GROUP", "WRAP", "ANCHOR", 
+			"SEPARATOR"
+		};
+	}
+	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
 	/**

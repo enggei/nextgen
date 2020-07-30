@@ -6,6 +6,8 @@ import nextgen.st.domain.*;
 import nextgen.st.model.*;
 import nextgen.st.script.Script;
 import nextgen.st.script.ScriptNeoFactory;
+import nextgen.templates.java.CompilationUnit;
+import nextgen.templates.java.PackageDeclaration;
 import org.neo4j.graphdb.Node;
 
 import java.awt.*;
@@ -196,30 +198,47 @@ public class STAppPresentationModel {
         });
 
         final String className = script.getName().replaceAll("[ ]", "");
-        final nextgen.templates.java.CompilationUnit compilationUnit = nextgen.templates.java.JavaST.newCompilationUnit()
+
+        STGenerator.writeJavaFile(getRunner(script, packageDeclaration, imports, className), packageDeclaration.getName(), className, srcRoot);
+
+        final java.io.StringWriter sr = new java.io.StringWriter();
+        final java.io.PrintWriter compilerOutput = new java.io.PrintWriter(sr);
+        try {
+            final String cacheClassname = className + System.currentTimeMillis();
+            final nextgen.templates.java.CompilationUnit compilationUnit = getRunner(script, packageDeclaration, imports, cacheClassname);
+            final Class<?> aClass = CompilerUtils.CACHED_COMPILER.loadFromJava(getClass().getClassLoader(), packageDeclaration.getName() + "." + cacheClassname, compilationUnit.toString(), compilerOutput);
+            return new CompilationResult(sr.toString(), aClass);
+        } catch (Throwable t) {
+            return new CompilationResult(sr.toString(), null);
+        }
+    }
+
+    public CompilationUnit getRunner(Script script, PackageDeclaration packageDeclaration, Collection<Object> imports, String className) {
+        return nextgen.templates.java.JavaST.newCompilationUnit()
                 .setPackageDeclaration(packageDeclaration)
                 .setImportDeclaration(imports)
                 .addTypes(nextgen.templates.java.JavaST.newClassOrInterfaceDeclaration()
                         .setName(className)
                         .addModifiers("public")
                         .addImplementedTypes("Runnable")
+                        .addMembers("private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(" + className + ".class);")
                         .addMembers(nextgen.templates.java.JavaST.newFieldDeclaration()
                                 .addVariables(nextgen.templates.java.JavaST.newVariableDeclaration()
                                         .setName("db")
-                                        .setType(nextgen.st.model.STModelDB.class.getCanonicalName())))
+                                        .setType(STModelDB.class.getCanonicalName())))
                         .addMembers(nextgen.templates.java.JavaST.newFieldDeclaration()
                                 .addVariables(nextgen.templates.java.JavaST.newVariableDeclaration()
                                         .setName("renderer")
-                                        .setType(nextgen.st.STRenderer.class.getCanonicalName())))
+                                        .setType(STRenderer.class.getCanonicalName())))
                         .addMembers(nextgen.templates.java.JavaST.newConstructorDeclaration()
                                 .setName(className)
                                 .addModifiers("public")
                                 .addParameters(nextgen.templates.java.JavaST.newParameter()
                                         .setName("db")
-                                        .setType(nextgen.st.model.STModelDB.class.getCanonicalName()))
+                                        .setType(STModelDB.class.getCanonicalName()))
                                 .addParameters(nextgen.templates.java.JavaST.newParameter()
                                         .setName("renderer")
-                                        .setType(nextgen.st.STRenderer.class.getCanonicalName()))
+                                        .setType(STRenderer.class.getCanonicalName()))
                                 .setBlockStmt(nextgen.templates.java.JavaST.newBlockStmt()
                                         .addStatements("this.db = db;")
                                         .addStatements("this.renderer = renderer;")))
@@ -231,17 +250,6 @@ public class STAppPresentationModel {
                                         .addStatements("db.doInTransaction(transaction -> {")
                                         .addStatements("\t" + render(script.getScript()))
                                         .addStatements("});"))));
-
-        STGenerator.writeJavaFile(compilationUnit, packageDeclaration.getName(), className, srcRoot);
-
-        final java.io.StringWriter sr = new java.io.StringWriter();
-        final java.io.PrintWriter compilerOutput = new java.io.PrintWriter(sr);
-        try {
-            final Class<?> aClass = CompilerUtils.CACHED_COMPILER.loadFromJava(getClass().getClassLoader(), packageDeclaration.getName() + "." + className, compilationUnit.toString(), compilerOutput);
-            return new CompilationResult(sr.toString(), aClass);
-        } catch (Throwable t) {
-            return new CompilationResult(sr.toString(), null);
-        }
     }
 
     public static final class CompilationResult {

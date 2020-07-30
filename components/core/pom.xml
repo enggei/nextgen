@@ -14,34 +14,34 @@
     <name>Core</name>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.jooq/joor -->
-        <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>joor-java-8</artifactId>
-            <version>0.9.12</version>
-        </dependency>
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.jooq/joor &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.jooq</groupId>-->
+<!--            <artifactId>joor-java-8</artifactId>-->
+<!--            <version>0.9.12</version>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.j2html</groupId>
-            <artifactId>j2html</artifactId>
-            <version>1.4.0</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.mvel/mvel2 -->
-        <dependency>
-            <groupId>org.mvel</groupId>
-            <artifactId>mvel2</artifactId>
-            <version>2.4.7.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jeasy</groupId>
-            <artifactId>easy-rules-core</artifactId>
-            <version>3.4.0</version>
-        </dependency><!-- https://mvnrepository.com/artifact/org.jeasy/easy-rules-mvel -->
-        <dependency>
-            <groupId>org.jeasy</groupId>
-            <artifactId>easy-rules-mvel</artifactId>
-            <version>3.4.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.j2html</groupId>-->
+<!--            <artifactId>j2html</artifactId>-->
+<!--            <version>1.4.0</version>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.mvel/mvel2 &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.mvel</groupId>-->
+<!--            <artifactId>mvel2</artifactId>-->
+<!--            <version>2.4.7.Final</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.jeasy</groupId>-->
+<!--            <artifactId>easy-rules-core</artifactId>-->
+<!--            <version>3.4.0</version>-->
+<!--        </dependency>&lt;!&ndash; https://mvnrepository.com/artifact/org.jeasy/easy-rules-mvel &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.jeasy</groupId>-->
+<!--            <artifactId>easy-rules-mvel</artifactId>-->
+<!--            <version>3.4.0</version>-->
+<!--        </dependency>-->
 
         <!-- GRAPH DATABASES -->
         <!--NEO4J-->
@@ -50,21 +50,21 @@
             <artifactId>neo4j</artifactId>
             <version>${neo4j.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-cypher</artifactId>
-            <version>${neo4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-bolt</artifactId>
-            <version>${neo4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.neo4j.driver</groupId>
-            <artifactId>neo4j-java-driver</artifactId>
-            <version>${neo4j.driver.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.neo4j</groupId>-->
+<!--            <artifactId>neo4j-cypher</artifactId>-->
+<!--            <version>${neo4j.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.neo4j</groupId>-->
+<!--            <artifactId>neo4j-bolt</artifactId>-->
+<!--            <version>${neo4j.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.neo4j.driver</groupId>-->
+<!--            <artifactId>neo4j-java-driver</artifactId>-->
+<!--            <version>${neo4j.driver.version}</version>-->
+<!--        </dependency>-->
 
         <!--STARDOG-->
         <!--<dependency>-->
@@ -73,17 +73,17 @@
         <!--<version>${stardog.version}</version>-->
         <!--</dependency>-->
 
-        <dependency>
-            <groupId>com.complexible.stardog.sesame</groupId>
-            <artifactId>stardog-sesame-core</artifactId>
-            <version>${stardog.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.complexible.stardog.sesame</groupId>-->
+<!--            <artifactId>stardog-sesame-core</artifactId>-->
+<!--            <version>${stardog.version}</version>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.fifesoft</groupId>
-            <artifactId>autocomplete</artifactId>
-            <version>3.0.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.fifesoft</groupId>-->
+<!--            <artifactId>autocomplete</artifactId>-->
+<!--            <version>3.0.0</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.fifesoft</groupId>
             <artifactId>rsyntaxtextarea</artifactId>
@@ -99,25 +99,25 @@
         </dependency>
 
         <!--Java source operation libraries-->
-        <dependency>
-            <groupId>com.github.javaparser</groupId>
-            <artifactId>javaparser-core</artifactId>
-            <version>${javaparser.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.github.javaparser</groupId>-->
+<!--            <artifactId>javaparser-core</artifactId>-->
+<!--            <version>${javaparser.version}</version>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.squareup</groupId>
-            <artifactId>javapoet</artifactId>
-            <version>1.8.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.squareup</groupId>-->
+<!--            <artifactId>javapoet</artifactId>-->
+<!--            <version>1.8.0</version>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>fr.inria.gforge.spoon</groupId>
-            <artifactId>spoon-core</artifactId>
-            <version>6.2.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>fr.inria.gforge.spoon</groupId>-->
+<!--            <artifactId>spoon-core</artifactId>-->
+<!--            <version>6.2.0</version>-->
+<!--        </dependency>-->
 
-        <!-- user interface -->
+<!--        &lt;!&ndash; user interface &ndash;&gt;-->
         <dependency>
             <groupId>com.jgoodies</groupId>
             <artifactId>jgoodies-forms</artifactId>
@@ -143,17 +143,17 @@
         </dependency>
 
         <!--ssh-->
-        <dependency>
-            <groupId>net.sf.expectit</groupId>
-            <artifactId>expectit-core</artifactId>
-            <version>${expectit.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>net.sf.expectit</groupId>-->
+<!--            <artifactId>expectit-core</artifactId>-->
+<!--            <version>${expectit.version}</version>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-            <version>${jsch.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.jcraft</groupId>-->
+<!--            <artifactId>jsch</artifactId>-->
+<!--            <version>${jsch.version}</version>-->
+<!--        </dependency>-->
 
         <!--support-libraries-->
 
@@ -163,138 +163,138 @@
             <artifactId>vertx-core</artifactId>
             <version>${vertx.version}</version>
         </dependency>
-        <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-web</artifactId>
-            <version>${vertx.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-tcp-eventbus-bridge</artifactId>
-            <version>${vertx.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.dropwizard.metrics</groupId>
-            <artifactId>metrics-core</artifactId>
-            <version>${metrics.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-dropwizard-metrics</artifactId>
-            <version>${vertx.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-web-client</artifactId>
-            <version>${vertx.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>io.vertx</groupId>-->
+<!--            <artifactId>vertx-web</artifactId>-->
+<!--            <version>${vertx.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>io.vertx</groupId>-->
+<!--            <artifactId>vertx-tcp-eventbus-bridge</artifactId>-->
+<!--            <version>${vertx.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>io.dropwizard.metrics</groupId>-->
+<!--            <artifactId>metrics-core</artifactId>-->
+<!--            <version>${metrics.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>io.vertx</groupId>-->
+<!--            <artifactId>vertx-dropwizard-metrics</artifactId>-->
+<!--            <version>${vertx.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>io.vertx</groupId>-->
+<!--            <artifactId>vertx-web-client</artifactId>-->
+<!--            <version>${vertx.version}</version>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-auth-jwt</artifactId>
-            <version>${vertx.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>io.vertx</groupId>-->
+<!--            <artifactId>vertx-auth-jwt</artifactId>-->
+<!--            <version>${vertx.version}</version>-->
+<!--        </dependency>-->
 
-        <!-- CHRONICLE -->
-        <dependency>
-            <groupId>net.openhft</groupId>
-            <artifactId>chronicle-queue</artifactId>
-            <version>${chronicle.version}</version>
-        </dependency>
+<!--        &lt;!&ndash; CHRONICLE &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>net.openhft</groupId>-->
+<!--            <artifactId>chronicle-queue</artifactId>-->
+<!--            <version>${chronicle.version}</version>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.google.guava</groupId>-->
+<!--            <artifactId>guava</artifactId>-->
+<!--            <version>${guava.version}</version>-->
+<!--        </dependency>-->
 
-        <!--FSM-->
-        <dependency>
-            <groupId>au.com.datasymphony</groupId>
-            <artifactId>EasyFlow</artifactId>
-            <version>${easyflow.version}</version>
-        </dependency>
+<!--        &lt;!&ndash;FSM&ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>au.com.datasymphony</groupId>-->
+<!--            <artifactId>EasyFlow</artifactId>-->
+<!--            <version>${easyflow.version}</version>-->
+<!--        </dependency>-->
 
-        <!--PROCESS-EXECUTION-->
-        <dependency>
-            <groupId>org.zeroturnaround</groupId>
-            <artifactId>zt-exec</artifactId>
-            <version>1.10</version>
-        </dependency>
+<!--        &lt;!&ndash;PROCESS-EXECUTION&ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.zeroturnaround</groupId>-->
+<!--            <artifactId>zt-exec</artifactId>-->
+<!--            <version>1.10</version>-->
+<!--        </dependency>-->
 
-        <!--zip-utils-->
-        <!--https://github.com/zeroturnaround/zt-zip-->
-        <dependency>
-            <groupId>org.zeroturnaround</groupId>
-            <artifactId>zt-zip</artifactId>
-            <version>1.12</version>
-            <type>jar</type>
-        </dependency>
+<!--        &lt;!&ndash;zip-utils&ndash;&gt;-->
+<!--        &lt;!&ndash;https://github.com/zeroturnaround/zt-zip&ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.zeroturnaround</groupId>-->
+<!--            <artifactId>zt-zip</artifactId>-->
+<!--            <version>1.12</version>-->
+<!--            <type>jar</type>-->
+<!--        </dependency>-->
 
-        <!--COMBINATORICS-->
-        <dependency>
-            <groupId>com.github.dpaukov</groupId>
-            <artifactId>combinatoricslib3</artifactId>
-            <version>3.3.0</version>
-        </dependency>
+<!--        &lt;!&ndash;COMBINATORICS&ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.github.dpaukov</groupId>-->
+<!--            <artifactId>combinatoricslib3</artifactId>-->
+<!--            <version>3.3.0</version>-->
+<!--        </dependency>-->
 
-        <!--regexp-generator-->
-        <dependency>
-            <groupId>com.github.mifmif</groupId>
-            <artifactId>generex</artifactId>
-            <version>1.0.2</version>
-        </dependency>
+<!--        &lt;!&ndash;regexp-generator&ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.github.mifmif</groupId>-->
+<!--            <artifactId>generex</artifactId>-->
+<!--            <version>1.0.2</version>-->
+<!--        </dependency>-->
 
-        <!--MYSQL-->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.6</version>
-        </dependency>
+<!--        &lt;!&ndash;MYSQL&ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>mysql</groupId>-->
+<!--            <artifactId>mysql-connector-java</artifactId>-->
+<!--            <version>5.1.6</version>-->
+<!--        </dependency>-->
 
-        <!--BERKELEY-DB-->
-        <dependency>
-            <groupId>com.sleepycat</groupId>
-            <artifactId>je</artifactId>
-            <version>5.0.73</version>
-            <scope>test</scope>
-        </dependency>
+<!--        &lt;!&ndash;BERKELEY-DB&ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.sleepycat</groupId>-->
+<!--            <artifactId>je</artifactId>-->
+<!--            <version>5.0.73</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
 
-        <!-- REFLECTION-->
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>0.9.11</version>
-        </dependency>
+<!--        &lt;!&ndash; REFLECTION&ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.reflections</groupId>-->
+<!--            <artifactId>reflections</artifactId>-->
+<!--            <version>0.9.11</version>-->
+<!--        </dependency>-->
 
-        <!--chat-test-->
-        <!--https://github.com/aichaos/rivescript-java-->
-        <dependency>
-            <groupId>com.rivescript</groupId>
-            <artifactId>rivescript-core</artifactId>
-            <version>0.10.0</version>
-        </dependency>
+<!--        &lt;!&ndash;chat-test&ndash;&gt;-->
+<!--        &lt;!&ndash;https://github.com/aichaos/rivescript-java&ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.rivescript</groupId>-->
+<!--            <artifactId>rivescript-core</artifactId>-->
+<!--            <version>0.10.0</version>-->
+<!--        </dependency>-->
 
-        <!--clojure support-->
-        <!-- https://mvnrepository.com/artifact/org.clojure/clojure -->
-        <dependency>
-            <groupId>org.clojure</groupId>
-            <artifactId>clojure</artifactId>
-            <version>${clojure.version}</version>
-        </dependency>
+<!--        &lt;!&ndash;clojure support&ndash;&gt;-->
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.clojure/clojure &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.clojure</groupId>-->
+<!--            <artifactId>clojure</artifactId>-->
+<!--            <version>${clojure.version}</version>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.javax0</groupId>
-            <artifactId>jscc</artifactId>
-            <version>1.0.1</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.javax0</groupId>-->
+<!--            <artifactId>jscc</artifactId>-->
+<!--            <version>1.0.1</version>-->
+<!--        </dependency>-->
 
-        <!-- https://mvnrepository.com/artifact/org.codehaus.janino/janino -->
-        <dependency>
-            <groupId>org.codehaus.janino</groupId>
-            <artifactId>janino</artifactId>
-            <version>3.1.2</version>
-        </dependency>
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.codehaus.janino/janino &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.codehaus.janino</groupId>-->
+<!--            <artifactId>janino</artifactId>-->
+<!--            <version>3.1.2</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
@@ -311,30 +311,30 @@
             <artifactId>compiler</artifactId>
             <version>2.3.1</version>
         </dependency>
-        <dependency>
-            <groupId>com.github.wumpz</groupId>
-            <artifactId>diffutils</artifactId>
-            <version>2.2</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.github.wumpz</groupId>-->
+<!--            <artifactId>diffutils</artifactId>-->
+<!--            <version>2.2</version>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>org.tensorflow</groupId>
-            <artifactId>tensorflow</artifactId>
-            <version>${tensorflow.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.tensorflow</groupId>-->
+<!--            <artifactId>tensorflow</artifactId>-->
+<!--            <version>${tensorflow.version}</version>-->
+<!--        </dependency>-->
 
-        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>${apache.poi.version}</version>
-        </dependency>
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.poi/poi &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.poi</groupId>-->
+<!--            <artifactId>poi-ooxml</artifactId>-->
+<!--            <version>${apache.poi.version}</version>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>org.everit.json</groupId>
-            <artifactId>org.everit.json.schema</artifactId>
-            <version>1.3.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.everit.json</groupId>-->
+<!--            <artifactId>org.everit.json.schema</artifactId>-->
+<!--            <version>1.3.0</version>-->
+<!--        </dependency>-->
 
         <!--Test-->
         <dependency>
@@ -342,6 +342,8 @@
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
         </dependency>
+
+
     </dependencies>
 
     <build>

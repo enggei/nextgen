@@ -1,17 +1,21 @@
-// Generated from STGParser.g4 by ANTLR 4.7
+// Generated from STGParser.g4 by ANTLR 4.8
 package org.antlr.parser.st4;
-import org.antlr.v4.runtime.atn.*;
-import org.antlr.v4.runtime.dfa.DFA;
+
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.*;
-import org.antlr.v4.runtime.tree.*;
+import org.antlr.v4.runtime.atn.ATN;
+import org.antlr.v4.runtime.atn.ATNDeserializer;
+import org.antlr.v4.runtime.atn.ParserATNSimulator;
+import org.antlr.v4.runtime.atn.PredictionContextCache;
+import org.antlr.v4.runtime.dfa.DFA;
+import org.antlr.v4.runtime.tree.ParseTreeListener;
+import org.antlr.v4.runtime.tree.ParseTreeVisitor;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class STGParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.7", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -28,27 +32,36 @@ public class STGParser extends Parser {
 		RULE_group = 0, RULE_delimiters = 1, RULE_imports = 2, RULE_template = 3, 
 		RULE_formalArgs = 4, RULE_formalArg = 5, RULE_dict = 6, RULE_dictPairs = 7, 
 		RULE_keyValuePair = 8, RULE_defaultValuePair = 9, RULE_keyValue = 10;
-	public static final String[] ruleNames = {
-		"group", "delimiters", "imports", "template", "formalArgs", "formalArg", 
-		"dict", "dictPairs", "keyValuePair", "defaultValuePair", "keyValue"
-	};
+	private static String[] makeRuleNames() {
+		return new String[] {
+			"group", "delimiters", "imports", "template", "formalArgs", "formalArg", 
+			"dict", "dictPairs", "keyValuePair", "defaultValuePair", "keyValue"
+		};
+	}
+	public static final String[] ruleNames = makeRuleNames();
 
-	private static final String[] _LITERAL_NAMES = {
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, "'delimiters'", "'import'", "'default'", "'key'", "'value'", "'first'", 
-		"'last'", "'rest'", "'trunc'", "'strip'", "'trim'", "'length'", "'strlen'", 
-		"'reverse'", "'group'", "'wrap'", "'anchor'", "'separator'"
-	};
-	private static final String[] _SYMBOLIC_NAMES = {
-		null, "DOC_COMMENT", "BLOCK_COMMENT", "LINE_COMMENT", "TMPL_COMMENT", 
-		"HORZ_WS", "VERT_WS", "ID", "STRING", "BIGSTRING", "BIGSTRING_NO_NL", 
-		"ANON_TEMPLATE", "TMPL_ASSIGN", "ASSIGN", "DOT", "COMMA", "COLON", "LPAREN", 
-		"RPAREN", "LBRACK", "RBRACK", "AT", "TRUE", "FALSE", "ELLIPSIS", "DELIMITERS", 
-		"IMPORT", "DEFAULT", "KEY", "VALUE", "FIRST", "LAST", "REST", "TRUNC", 
-		"STRIP", "TRIM", "LENGTH", "STRLEN", "REVERSE", "GROUP", "WRAP", "ANCHOR", 
-		"SEPARATOR"
-	};
+	private static String[] makeLiteralNames() {
+		return new String[] {
+			null, null, null, null, null, null, null, null, null, null, null, null, 
+			null, null, null, null, null, null, null, null, null, null, null, null, 
+			null, "'delimiters'", "'import'", "'default'", "'key'", "'value'", "'first'", 
+			"'last'", "'rest'", "'trunc'", "'strip'", "'trim'", "'length'", "'strlen'", 
+			"'reverse'", "'group'", "'wrap'", "'anchor'", "'separator'"
+		};
+	}
+	private static final String[] _LITERAL_NAMES = makeLiteralNames();
+	private static String[] makeSymbolicNames() {
+		return new String[] {
+			null, "DOC_COMMENT", "BLOCK_COMMENT", "LINE_COMMENT", "TMPL_COMMENT", 
+			"HORZ_WS", "VERT_WS", "ID", "STRING", "BIGSTRING", "BIGSTRING_NO_NL", 
+			"ANON_TEMPLATE", "TMPL_ASSIGN", "ASSIGN", "DOT", "COMMA", "COLON", "LPAREN", 
+			"RPAREN", "LBRACK", "RBRACK", "AT", "TRUE", "FALSE", "ELLIPSIS", "DELIMITERS", 
+			"IMPORT", "DEFAULT", "KEY", "VALUE", "FIRST", "LAST", "REST", "TRUNC", 
+			"STRIP", "TRIM", "LENGTH", "STRLEN", "REVERSE", "GROUP", "WRAP", "ANCHOR", 
+			"SEPARATOR"
+		};
+	}
+	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
 	/**
@@ -98,6 +111,7 @@ public class STGParser extends Parser {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
+
 	public static class GroupContext extends ParserRuleContext {
 		public TerminalNode EOF() { return getToken(STGParser.EOF, 0); }
 		public DelimitersContext delimiters() {
@@ -121,14 +135,15 @@ public class STGParser extends Parser {
 		public GroupContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_group; }
+		@Override
+        public int getRuleIndex() { return RULE_group; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STGParserListener ) ((STGParserListener)listener).enterGroup(this);
+			if ( listener instanceof STGParserListener) ((STGParserListener)listener).enterGroup(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STGParserListener ) ((STGParserListener)listener).exitGroup(this);
+			if ( listener instanceof STGParserListener) ((STGParserListener)listener).exitGroup(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
@@ -215,14 +230,15 @@ public class STGParser extends Parser {
 		public DelimitersContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_delimiters; }
+		@Override
+        public int getRuleIndex() { return RULE_delimiters; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STGParserListener ) ((STGParserListener)listener).enterDelimiters(this);
+			if ( listener instanceof STGParserListener) ((STGParserListener)listener).enterDelimiters(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STGParserListener ) ((STGParserListener)listener).exitDelimiters(this);
+			if ( listener instanceof STGParserListener) ((STGParserListener)listener).exitDelimiters(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
@@ -270,14 +286,15 @@ public class STGParser extends Parser {
 		public ImportsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_imports; }
+		@Override
+        public int getRuleIndex() { return RULE_imports; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STGParserListener ) ((STGParserListener)listener).enterImports(this);
+			if ( listener instanceof STGParserListener) ((STGParserListener)listener).enterImports(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STGParserListener ) ((STGParserListener)listener).exitImports(this);
+			if ( listener instanceof STGParserListener) ((STGParserListener)listener).exitImports(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
@@ -341,14 +358,15 @@ public class STGParser extends Parser {
 		public TemplateContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_template; }
+		@Override
+        public int getRuleIndex() { return RULE_template; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STGParserListener ) ((STGParserListener)listener).enterTemplate(this);
+			if ( listener instanceof STGParserListener) ((STGParserListener)listener).enterTemplate(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STGParserListener ) ((STGParserListener)listener).exitTemplate(this);
+			if ( listener instanceof STGParserListener) ((STGParserListener)listener).exitTemplate(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
@@ -418,7 +436,7 @@ public class STGParser extends Parser {
 				_errHandler.recoverInline(this);
 				}
 				else {
-					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+					if ( _input.LA(1)== Token.EOF ) matchedEOF = true;
 					_errHandler.reportMatch(this);
 					consume();
 				}
@@ -462,14 +480,15 @@ public class STGParser extends Parser {
 		public FormalArgsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_formalArgs; }
+		@Override
+        public int getRuleIndex() { return RULE_formalArgs; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STGParserListener ) ((STGParserListener)listener).enterFormalArgs(this);
+			if ( listener instanceof STGParserListener) ((STGParserListener)listener).enterFormalArgs(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STGParserListener ) ((STGParserListener)listener).exitFormalArgs(this);
+			if ( listener instanceof STGParserListener) ((STGParserListener)listener).exitFormalArgs(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
@@ -528,14 +547,15 @@ public class STGParser extends Parser {
 		public FormalArgContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_formalArg; }
+		@Override
+        public int getRuleIndex() { return RULE_formalArg; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STGParserListener ) ((STGParserListener)listener).enterFormalArg(this);
+			if ( listener instanceof STGParserListener) ((STGParserListener)listener).enterFormalArg(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STGParserListener ) ((STGParserListener)listener).exitFormalArg(this);
+			if ( listener instanceof STGParserListener) ((STGParserListener)listener).exitFormalArg(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
@@ -622,14 +642,15 @@ public class STGParser extends Parser {
 		public DictContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_dict; }
+		@Override
+        public int getRuleIndex() { return RULE_dict; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STGParserListener ) ((STGParserListener)listener).enterDict(this);
+			if ( listener instanceof STGParserListener) ((STGParserListener)listener).enterDict(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STGParserListener ) ((STGParserListener)listener).exitDict(this);
+			if ( listener instanceof STGParserListener) ((STGParserListener)listener).exitDict(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
@@ -684,14 +705,15 @@ public class STGParser extends Parser {
 		public DictPairsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_dictPairs; }
+		@Override
+        public int getRuleIndex() { return RULE_dictPairs; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STGParserListener ) ((STGParserListener)listener).enterDictPairs(this);
+			if ( listener instanceof STGParserListener) ((STGParserListener)listener).enterDictPairs(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STGParserListener ) ((STGParserListener)listener).exitDictPairs(this);
+			if ( listener instanceof STGParserListener) ((STGParserListener)listener).exitDictPairs(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
@@ -777,14 +799,15 @@ public class STGParser extends Parser {
 		public KeyValuePairContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_keyValuePair; }
+		@Override
+        public int getRuleIndex() { return RULE_keyValuePair; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STGParserListener ) ((STGParserListener)listener).enterKeyValuePair(this);
+			if ( listener instanceof STGParserListener) ((STGParserListener)listener).enterKeyValuePair(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STGParserListener ) ((STGParserListener)listener).exitKeyValuePair(this);
+			if ( listener instanceof STGParserListener) ((STGParserListener)listener).exitKeyValuePair(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
@@ -827,14 +850,15 @@ public class STGParser extends Parser {
 		public DefaultValuePairContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_defaultValuePair; }
+		@Override
+        public int getRuleIndex() { return RULE_defaultValuePair; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STGParserListener ) ((STGParserListener)listener).enterDefaultValuePair(this);
+			if ( listener instanceof STGParserListener) ((STGParserListener)listener).enterDefaultValuePair(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STGParserListener ) ((STGParserListener)listener).exitDefaultValuePair(this);
+			if ( listener instanceof STGParserListener) ((STGParserListener)listener).exitDefaultValuePair(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
@@ -881,14 +905,15 @@ public class STGParser extends Parser {
 		public KeyValueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_keyValue; }
+		@Override
+        public int getRuleIndex() { return RULE_keyValue; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STGParserListener ) ((STGParserListener)listener).enterKeyValue(this);
+			if ( listener instanceof STGParserListener) ((STGParserListener)listener).enterKeyValue(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STGParserListener ) ((STGParserListener)listener).exitKeyValue(this);
+			if ( listener instanceof STGParserListener) ((STGParserListener)listener).exitKeyValue(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {

@@ -1,4 +1,4 @@
-// Generated from STGParser.g4 by ANTLR 4.7
+// Generated from STGParser.g4 by ANTLR 4.8
 package org.antlr.parser.st4;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 

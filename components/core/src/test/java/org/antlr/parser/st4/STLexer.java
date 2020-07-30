@@ -1,17 +1,16 @@
-// Generated from STLexer.g4 by ANTLR 4.7
+// Generated from STLexer.g4 by ANTLR 4.8
 package org.antlr.parser.st4;
-import org.antlr.v4.runtime.Lexer;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.TokenStream;
+
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.atn.*;
+import org.antlr.v4.runtime.atn.ATN;
+import org.antlr.v4.runtime.atn.ATNDeserializer;
+import org.antlr.v4.runtime.atn.LexerATNSimulator;
+import org.antlr.v4.runtime.atn.PredictionContextCache;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class STLexer extends LexerAdaptor {
-	static { RuntimeMetaData.checkVersion("4.7", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -35,46 +34,55 @@ public class STLexer extends LexerAdaptor {
 		"DEFAULT_MODE", "Inside", "SubTemplate"
 	};
 
-	public static final String[] ruleNames = {
-		"DOC_COMMENT", "BLOCK_COMMENT", "LINE_COMMENT", "TMPL_COMMENT", "HORZ_WS", 
-		"VERT_WS", "ESCAPE", "LDELIM", "RBRACE", "TEXT", "Ws", "Hws", "Vws", "DocComment", 
-		"BlockComment", "LineComment", "LineCommentExt", "EscSeq", "EscAny", "UnicodeEsc", 
-		"OctalEscape", "HexNumeral", "OctalNumeral", "DecimalNumeral", "BinaryNumeral", 
-		"HexDigits", "DecDigits", "OctalDigits", "BinaryDigits", "HexDigit", "DecDigit", 
-		"OctalDigit", "BinaryDigit", "BoolLiteral", "CharLiteral", "SQuoteLiteral", 
-		"DQuoteLiteral", "USQuoteLiteral", "DecimalFloatingPointLiteral", "ExponentPart", 
-		"FloatTypeSuffix", "HexadecimalFloatingPointLiteral", "HexSignificand", 
-		"BinaryExponent", "NameChar", "NameStartChar", "JavaLetter", "JavaLetterOrDigit", 
-		"JavaUnicodeChars", "Boolean", "Byte", "Short", "Int", "Long", "Char", 
-		"Float", "Double", "True", "False", "Esc", "Colon", "DColon", "SQuote", 
-		"DQuote", "BQuote", "LParen", "RParen", "LBrace", "RBrace", "LBrack", 
-		"RBrack", "RArrow", "Lt", "Gt", "Lte", "Gte", "Equal", "NotEqual", "Question", 
-		"Bang", "Star", "Slash", "Percent", "Caret", "Plus", "Minus", "PlusAssign", 
-		"MinusAssign", "MulAssign", "DivAssign", "AndAssign", "OrAssign", "XOrAssign", 
-		"ModAssign", "LShiftAssign", "RShiftAssign", "URShiftAssign", "Underscore", 
-		"Pipe", "Amp", "And", "Or", "Inc", "Dec", "LShift", "RShift", "Dollar", 
-		"Comma", "Semi", "Dot", "Range", "Ellipsis", "At", "Pound", "Tilde", "UnicodeLetter", 
-		"UnicodeClass_LU", "UnicodeClass_LL", "UnicodeClass_LT", "UnicodeClass_LM", 
-		"UnicodeClass_LO", "UnicodeDigit", "INS_HORZ_WS", "INS_VERT_WS", "LBRACE", 
-		"RDELIM", "STRING", "IF", "ELSEIF", "ELSE", "ENDIF", "SUPER", "END", "TRUE", 
-		"FALSE", "AT", "ELLIPSIS", "DOT", "COMMA", "COLON", "SEMI", "AND", "OR", 
-		"LPAREN", "RPAREN", "LBRACK", "RBRACK", "EQUALS", "BANG", "ERR_CHAR", 
-		"SUB_HORZ_WS", "SUB_VERT_WS", "ID", "SUB_COMMA", "PIPE", "TmplComment", 
-		"LTmplMark", "RTmplMark"
-	};
+	private static String[] makeRuleNames() {
+		return new String[] {
+			"DOC_COMMENT", "BLOCK_COMMENT", "LINE_COMMENT", "TMPL_COMMENT", "HORZ_WS", 
+			"VERT_WS", "ESCAPE", "LDELIM", "RBRACE", "TEXT", "Ws", "Hws", "Vws", 
+			"DocComment", "BlockComment", "LineComment", "LineCommentExt", "EscSeq", 
+			"EscAny", "UnicodeEsc", "OctalEscape", "HexNumeral", "OctalNumeral", 
+			"DecimalNumeral", "BinaryNumeral", "HexDigits", "DecDigits", "OctalDigits", 
+			"BinaryDigits", "HexDigit", "DecDigit", "OctalDigit", "BinaryDigit", 
+			"BoolLiteral", "CharLiteral", "SQuoteLiteral", "DQuoteLiteral", "USQuoteLiteral", 
+			"DecimalFloatingPointLiteral", "ExponentPart", "FloatTypeSuffix", "HexadecimalFloatingPointLiteral", 
+			"HexSignificand", "BinaryExponent", "NameChar", "NameStartChar", "JavaLetter", 
+			"JavaLetterOrDigit", "JavaUnicodeChars", "Boolean", "Byte", "Short", 
+			"Int", "Long", "Char", "Float", "Double", "True", "False", "Esc", "Colon", 
+			"DColon", "SQuote", "DQuote", "BQuote", "LParen", "RParen", "LBrace", 
+			"RBrace", "LBrack", "RBrack", "RArrow", "Lt", "Gt", "Lte", "Gte", "Equal", 
+			"NotEqual", "Question", "Bang", "Star", "Slash", "Percent", "Caret", 
+			"Plus", "Minus", "PlusAssign", "MinusAssign", "MulAssign", "DivAssign", 
+			"AndAssign", "OrAssign", "XOrAssign", "ModAssign", "LShiftAssign", "RShiftAssign", 
+			"URShiftAssign", "Underscore", "Pipe", "Amp", "And", "Or", "Inc", "Dec", 
+			"LShift", "RShift", "Dollar", "Comma", "Semi", "Dot", "Range", "Ellipsis", 
+			"At", "Pound", "Tilde", "UnicodeLetter", "UnicodeClass_LU", "UnicodeClass_LL", 
+			"UnicodeClass_LT", "UnicodeClass_LM", "UnicodeClass_LO", "UnicodeDigit", 
+			"INS_HORZ_WS", "INS_VERT_WS", "LBRACE", "RDELIM", "STRING", "IF", "ELSEIF", 
+			"ELSE", "ENDIF", "SUPER", "END", "TRUE", "FALSE", "AT", "ELLIPSIS", "DOT", 
+			"COMMA", "COLON", "SEMI", "AND", "OR", "LPAREN", "RPAREN", "LBRACK", 
+			"RBRACK", "EQUALS", "BANG", "ERR_CHAR", "SUB_HORZ_WS", "SUB_VERT_WS", 
+			"ID", "SUB_COMMA", "PIPE", "TmplComment", "LTmplMark", "RTmplMark"
+		};
+	}
+	public static final String[] ruleNames = makeRuleNames();
 
-	private static final String[] _LITERAL_NAMES = {
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, "'if'", "'elseif'", "'else'", "'endif'", "'super'", "'@end'"
-	};
-	private static final String[] _SYMBOLIC_NAMES = {
-		null, "DOC_COMMENT", "BLOCK_COMMENT", "LINE_COMMENT", "TMPL_COMMENT", 
-		"HORZ_WS", "VERT_WS", "ESCAPE", "LDELIM", "RBRACE", "TEXT", "LBRACE", 
-		"RDELIM", "STRING", "IF", "ELSEIF", "ELSE", "ENDIF", "SUPER", "END", "TRUE", 
-		"FALSE", "AT", "ELLIPSIS", "DOT", "COMMA", "COLON", "SEMI", "AND", "OR", 
-		"LPAREN", "RPAREN", "LBRACK", "RBRACK", "EQUALS", "BANG", "ERR_CHAR", 
-		"ID", "PIPE"
-	};
+	private static String[] makeLiteralNames() {
+		return new String[] {
+			null, null, null, null, null, null, null, null, null, null, null, null, 
+			null, null, "'if'", "'elseif'", "'else'", "'endif'", "'super'", "'@end'"
+		};
+	}
+	private static final String[] _LITERAL_NAMES = makeLiteralNames();
+	private static String[] makeSymbolicNames() {
+		return new String[] {
+			null, "DOC_COMMENT", "BLOCK_COMMENT", "LINE_COMMENT", "TMPL_COMMENT", 
+			"HORZ_WS", "VERT_WS", "ESCAPE", "LDELIM", "RBRACE", "TEXT", "LBRACE", 
+			"RDELIM", "STRING", "IF", "ELSEIF", "ELSE", "ENDIF", "SUPER", "END", 
+			"TRUE", "FALSE", "AT", "ELLIPSIS", "DOT", "COMMA", "COLON", "SEMI", "AND", 
+			"OR", "LPAREN", "RPAREN", "LBRACK", "RBRACK", "EQUALS", "BANG", "ERR_CHAR", 
+			"ID", "PIPE"
+		};
+	}
+	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
 	/**
