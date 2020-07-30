@@ -1,5 +1,6 @@
 package nextgen.st;
 
+import nextgen.utils.Neo4JUtil;
 import nextgen.utils.SwingUtil;
 import nextgen.st.canvas.STModelNode;
 import nextgen.st.canvas.STValueNode;
@@ -377,9 +378,13 @@ public class STModelNavigator extends JPanel {
 
                                                         final Node node = stValue1.getNode();
                                                         node.getRelationships(Direction.INCOMING).forEach(relationship -> {
+                                                            if (relationship.getType().equals(org.neo4j.graphdb.RelationshipType.withName("ref")))
+                                                                relationship.delete();
+
                                                             final Node src = relationship.getOtherNode(node);
                                                             final Relationship newRelation = src.createRelationshipTo(stValue.getNode(), relationship.getType());
                                                             relationship.getPropertyKeys().forEach(s -> newRelation.setProperty(s, relationship.getProperty(s)));
+                                                            relationship.delete();
                                                         });
 
                                                         delete.add(node);
@@ -390,7 +395,9 @@ public class STModelNavigator extends JPanel {
 
                             presentationModel.db.doInTransaction(transaction -> {
                                 for (Node node : delete) {
-                                    node.getRelationships().forEach(Relationship::delete);
+                                    if (node.getRelationships().iterator().hasNext()) continue;
+                                    log.info("deleting node ");
+                                    log.info(Neo4JUtil.toString(node));
                                     node.delete();
                                 }
 

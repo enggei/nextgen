@@ -211,36 +211,6 @@ public class STModelDB extends STModelNeoFactory {
     public void cleanup() {
         doInTransaction(transaction -> {
 
-            findAllSTFile().forEach(stFile -> {
-
-                final Node node = stFile.getNode();
-
-                if (node.hasProperty("name")) {
-                    log.info("STFile." + node.getProperty("uuid"));
-                    log.info("refactoring stFile.name " + node.getProperty("name"));
-                    stFile.setName(newSTValue(node.getProperty("name").toString()));
-                    node.removeProperty("name");
-                }
-
-                if (node.hasProperty("type")) {
-                    log.info("refactoring stFile.type " + node.getProperty("type"));
-                    stFile.setType(findOrCreateSTValueByValue(node.getProperty("type").toString()));
-                    node.removeProperty("type");
-                }
-
-                if (node.hasProperty("packageName")) {
-                    log.info("refactoring stFile.packageName " + node.getProperty("packageName"));
-                    stFile.setPackageName(newSTValue(node.getProperty("packageName").toString()));
-                    node.removeProperty("packageName");
-                }
-
-                if (node.hasProperty("path")) {
-                    log.info("refactoring stFile.path " + node.getProperty("path"));
-                    stFile.setPath(newSTValue(node.getProperty("path").toString()));
-                    node.removeProperty("path");
-                }
-            });
-
             getDatabaseService().getAllNodes().forEach(node -> {
                 if (node.getRelationships().iterator().hasNext()) return;
                 if(node.hasLabel(Label.label("Script"))) return;
@@ -259,70 +229,70 @@ public class STModelDB extends STModelNeoFactory {
                 }
                 uuids.add(stModel.getUuid());
 
-                try {
-                    final STTemplate stTemplate = findSTTemplateByUuid(stModel.getStTemplate());
-
-                    if (stTemplate == null) {
-                        log.info("removing model " + stModel.getUuid() + ". Illegal template-reference (null)");
-                        remove(stModel);
-                    } else {
-
-                        stModel.getArguments().forEach(stArgument -> {
-                            final Optional<STParameter> first = stTemplate.getParameters().filter(stParameter -> stArgument.getStParameter().equals(stParameter.uuid())).findFirst();
-                            if (!first.isPresent())
-                                remove(stArgument);
-                            else {
-                                switch (first.get().getType()) {
-                                    case SINGLE:
-                                    case LIST:
-                                        final STValue value = stArgument.getValue();
-                                        if (value == null)
-                                            remove(stArgument);
-                                        else if (value.getType().equals(STValueType.STMODEL)) {
-
-                                            final AtomicBoolean duplicate = new AtomicBoolean(false);
-                                            java.util.stream.StreamSupport.stream(value.getNode().getRelationships(Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("stModel")).spliterator(), false)
-                                                    .sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t", o.getId())))
-                                                    .forEach(relationship -> {
-                                                        if (duplicate.get()) {
-                                                            relationship.delete();
-                                                        } else {
-                                                            duplicate.set(true);
-                                                        }
-                                                    });
-
-                                            if (value.getStModel() == null)
-                                                remove(stArgument);
-                                        }
-                                        break;
-                                    case KVLIST:
-
-                                        stArgument.getKeyValues().forEach(stArgumentKV -> {
-                                            final STValue stArgumentKVValue = stArgumentKV.getValue();
-                                            if (stArgumentKVValue == null) delete(stArgumentKV.getNode());
-                                        });
-
-                                        break;
-                                }
-                            }
-                        });
-
-                        if (stModel.getStGroup() == null) {
-                            log.info("STModel " + stModel.getUuid() + " missing STGroup");
-                            final STGroupModel stGroupModel = findSTGroupModelByTemplateUuid(stTemplate.uuid());
-                            if (stGroupModel != null) {
-                                stModel.setStGroup(stGroupModel.uuid());
-                                log.info("\tsetting group " + stGroupModel.uuid());
-                            }
-                        }
-                    }
-                } catch (IllegalStateException ise) {
-                    ise.printStackTrace();
-
-                    if (ise.getMessage().startsWith("Missing uuid")) {
-                        remove(stModel);
-                    }
-                }
+//                try {
+//                    final STTemplate stTemplate = findSTTemplateByUuid(stModel.getStTemplate());
+//
+//                    if (stTemplate == null) {
+//                        log.info("removing model " + stModel.getUuid() + ". Illegal template-reference (null)");
+//                        remove(stModel);
+//                    } else {
+//
+//                        stModel.getArguments().forEach(stArgument -> {
+//                            final Optional<STParameter> first = stTemplate.getParameters().filter(stParameter -> stArgument.getStParameter().equals(stParameter.uuid())).findFirst();
+//                            if (!first.isPresent())
+//                                remove(stArgument);
+//                            else {
+//                                switch (first.get().getType()) {
+//                                    case SINGLE:
+//                                    case LIST:
+//                                        final STValue value = stArgument.getValue();
+//                                        if (value == null)
+//                                            remove(stArgument);
+//                                        else if (value.getType().equals(STValueType.STMODEL)) {
+//
+//                                            final AtomicBoolean duplicate = new AtomicBoolean(false);
+//                                            java.util.stream.StreamSupport.stream(value.getNode().getRelationships(Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("stModel")).spliterator(), false)
+//                                                    .sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t", o.getId())))
+//                                                    .forEach(relationship -> {
+//                                                        if (duplicate.get()) {
+//                                                            relationship.delete();
+//                                                        } else {
+//                                                            duplicate.set(true);
+//                                                        }
+//                                                    });
+//
+//                                            if (value.getStModel() == null)
+//                                                remove(stArgument);
+//                                        }
+//                                        break;
+//                                    case KVLIST:
+//
+//                                        stArgument.getKeyValues().forEach(stArgumentKV -> {
+//                                            final STValue stArgumentKVValue = stArgumentKV.getValue();
+//                                            if (stArgumentKVValue == null) delete(stArgumentKV.getNode());
+//                                        });
+//
+//                                        break;
+//                                }
+//                            }
+//                        });
+//
+//                        if (stModel.getStGroup() == null) {
+//                            log.info("STModel " + stModel.getUuid() + " missing STGroup");
+//                            final STGroupModel stGroupModel = findSTGroupModelByTemplateUuid(stTemplate.uuid());
+//                            if (stGroupModel != null) {
+//                                stModel.setStGroup(stGroupModel.uuid());
+//                                log.info("\tsetting group " + stGroupModel.uuid());
+//                            }
+//                        }
+//                    }
+//                } catch (IllegalStateException ise) {
+//                    ise.printStackTrace();
+//
+//                    if (ise.getMessage().startsWith("Missing uuid")) {
+//                        remove(stModel);
+//                    }
+//                }
             });
         });
     }

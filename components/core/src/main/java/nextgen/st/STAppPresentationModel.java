@@ -223,7 +223,6 @@ public class STAppPresentationModel {
     }
 
     public Object getRunner(Script script, PackageDeclaration packageDeclaration, Collection<ImportDeclaration> imports, String className) {
-
         final ScriptRunner scriptRunner = StringTemplateST.newScriptRunner();
         scriptRunner.setPackageName(packageDeclaration.getName());
         scriptRunner.setName(className);
