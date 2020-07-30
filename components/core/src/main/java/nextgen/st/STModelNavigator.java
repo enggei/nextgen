@@ -448,6 +448,23 @@ public class STModelNavigator extends JPanel {
                     tree.expandPath(new TreePath(getPath()));
                 }
 
+                @Override
+                protected List<Action> getActions() {
+                    final List<Action> actions = new ArrayList<>();
+                    actions.add(newEditModelsAction());
+                    return actions;
+                }
+
+                private Action newEditModelsAction() {
+                    return newAction("Edit Models", actionEvent -> {
+                        SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
+                            final STModelGrid stModelGrid = workspace.getModelGrid(getModel());
+                            workspace.setSelectedComponent(stModelGrid);
+                            stModelGrid.requestFocusInWindow();
+                        }));
+                    });
+                }
+
                 class STModelTreeNode extends BaseTreeNode<STModel> {
 
                     private String label;

@@ -3,9 +3,12 @@ package nextgen.st.model;
 import nextgen.st.STAppEvents;
 import nextgen.st.domain.*;
 import nextgen.st.script.Script;
+import nextgen.utils.Neo4JUtil;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.event.TransactionData;
+import org.neo4j.graphdb.event.TransactionEventHandler;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -21,6 +24,35 @@ public class STModelDB extends STModelNeoFactory {
     public STModelDB(String dir, Collection<STGroupModel> groupModels) {
         super(dir);
         this.groupModels = groupModels;
+
+        getDatabaseService().registerTransactionEventHandler(new TransactionEventHandler.Adapter<Object>() {
+            @Override
+            public Object beforeCommit(TransactionData data) throws Exception {
+
+//                System.out.println("deletedNodes");
+//                data.deletedNodes().forEach(node -> System.out.println(Neo4JUtil.toString(node)));
+//                System.out.println("deletedRelationships");
+//                data.deletedRelationships().forEach(relationship -> System.out.println(Neo4JUtil.toString(relationship)));
+//
+//                System.out.println("createdNodes");
+//                data.createdNodes().forEach(node -> System.out.println(Neo4JUtil.toString(node)));
+//                System.out.println("createdRelationships");
+//                data.createdRelationships().forEach(relationship -> System.out.println(Neo4JUtil.toString(relationship)));
+
+                return super.beforeCommit(data);
+            }
+
+            @Override
+            public void afterCommit(TransactionData data, Object state) {
+                super.afterCommit(data, state);
+            }
+
+            @Override
+            public void afterRollback(TransactionData data, Object state) {
+                super.afterRollback(data, state);
+            }
+        });
+
         cleanup();
     }
 
@@ -182,6 +214,11 @@ public class STModelDB extends STModelNeoFactory {
     }
 
     public STValue newSTValue(String value) {
+
+        final Optional<STValue> exists = findAllSTValueByValue(value).findAny();
+        if (exists.isPresent() && exists.get().getType() != null && exists.get().getType().equals(PRIMITIVE))
+            return exists.get();
+
         return newSTValue()
                 .setUuid(UUID.randomUUID().toString())
                 .setType(PRIMITIVE)
@@ -213,7 +250,7 @@ public class STModelDB extends STModelNeoFactory {
 
             getDatabaseService().getAllNodes().forEach(node -> {
                 if (node.getRelationships().iterator().hasNext()) return;
-                if(node.hasLabel(Label.label("Script"))) return;
+                if (node.hasLabel(Label.label("Script"))) return;
                 log.info("deleting unnused node " + node + " " + labelsFor(node));
                 node.delete();
             });
