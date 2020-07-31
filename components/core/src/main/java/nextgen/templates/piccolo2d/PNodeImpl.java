@@ -11,14 +11,15 @@ public class PNodeImpl {
 	private Object _canvasName;
 	private Object _initText;
 	private Object _uuid;
+	private Object _overrideSetTextExpression;
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
-	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<Object> _addedToCanvasStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _newNodeAddedStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _rightClickStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _anonymousRightClickActions = new java.util.ArrayList<>();
 	private java.util.List<Object> _onLeftClick = new java.util.ArrayList<>();
 	private java.util.List<Object> _onPropertyChange = new java.util.ArrayList<>();
+	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<Object> _actions = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _onRightClick = new java.util.ArrayList<>();
@@ -41,14 +42,15 @@ public class PNodeImpl {
 		st.add("canvasName", _canvasName);
 		st.add("initText", _initText);
 		st.add("uuid", _uuid);
+		st.add("overrideSetTextExpression", _overrideSetTextExpression);
 		for (Object o : _constructorStatements) st.add("constructorStatements", o);
-		for (Object o : _methods) st.add("methods", o);
 		for (Object o : _addedToCanvasStatements) st.add("addedToCanvasStatements", o);
 		for (Object o : _newNodeAddedStatements) st.add("newNodeAddedStatements", o);
 		for (Object o : _rightClickStatements) st.add("rightClickStatements", o);
 		for (Object o : _anonymousRightClickActions) st.add("anonymousRightClickActions", o);
 		for (Object o : _onLeftClick) st.add("onLeftClick", o);
 		for (Object o : _onPropertyChange) st.add("onPropertyChange", o);
+		for (Object o : _methods) st.add("methods", o);
 		for (Object o : _actions) st.add("actions", o);
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
 		for (java.util.Map<String, Object> map : _onRightClick) st.addAggr("onRightClick.{name,isSeparator}", map.get("name"), map.get("isSeparator"));
@@ -188,6 +190,28 @@ public class PNodeImpl {
 		return this;
 	} 
 
+	public PNodeImpl setOverrideSetTextExpression(Object value) {
+		this._overrideSetTextExpression = value;
+		return this;
+	}
+
+	public Object getOverrideSetTextExpression() {
+		return this._overrideSetTextExpression;
+	}
+
+	public Object getOverrideSetTextExpression(Object defaultValue) {
+		return this._overrideSetTextExpression == null ? defaultValue : this._overrideSetTextExpression;
+	}
+
+	public boolean hasOverrideSetTextExpression() {
+		return this._overrideSetTextExpression != null;
+	}
+
+	public PNodeImpl removeOverrideSetTextExpression() {
+		this._overrideSetTextExpression = null;
+		return this;
+	} 
+
 	public PNodeImpl addConstructorStatements(Object value) {
 		this._constructorStatements.add(value);
 		return this;
@@ -215,35 +239,6 @@ public class PNodeImpl {
 
 	public java.util.List<Object> getConstructorStatements() {
 		return this._constructorStatements;
-	} 
-
-	public PNodeImpl addMethods(Object value) {
-		this._methods.add(value);
-		return this;
-	}
-
-	public PNodeImpl setMethods(Object[] value) {
-		this._methods.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public PNodeImpl setMethods(java.util.Collection<Object> values) {
-		this._methods.addAll(values);
-		return this;
-	}
-
-	public PNodeImpl removeMethods(Object value) {
-		this._methods.remove(value);
-		return this;
-	}
-
-	public PNodeImpl removeMethods(int index) {
-		this._methods.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getMethods() {
-		return this._methods;
 	} 
 
 	public PNodeImpl addAddedToCanvasStatements(Object value) {
@@ -418,6 +413,35 @@ public class PNodeImpl {
 
 	public java.util.List<Object> getOnPropertyChange() {
 		return this._onPropertyChange;
+	} 
+
+	public PNodeImpl addMethods(Object value) {
+		this._methods.add(value);
+		return this;
+	}
+
+	public PNodeImpl setMethods(Object[] value) {
+		this._methods.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public PNodeImpl setMethods(java.util.Collection<Object> values) {
+		this._methods.addAll(values);
+		return this;
+	}
+
+	public PNodeImpl removeMethods(Object value) {
+		this._methods.remove(value);
+		return this;
+	}
+
+	public PNodeImpl removeMethods(int index) {
+		this._methods.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getMethods() {
+		return this._methods;
 	} 
 
 	public PNodeImpl addActions(Object value) {
@@ -597,7 +621,7 @@ public class PNodeImpl {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PNodeImpl(packageName,name,nodeName,fields,canvasName,initText,uuid,constructorStatements,methods,addedToCanvasStatements,newNodeAddedStatements,rightClickStatements,anonymousRightClickActions,onRightClick,onKeyPressed,onLeftClick,onPropertyChange,actions) ::= <<package ~packageName~;\n" + 
+	static final String st = "PNodeImpl(packageName,name,nodeName,fields,canvasName,initText,uuid,constructorStatements,overrideSetTextExpression,addedToCanvasStatements,newNodeAddedStatements,rightClickStatements,anonymousRightClickActions,onRightClick,onKeyPressed,onLeftClick,onPropertyChange,methods,actions) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import org.piccolo2d.event.PInputEvent;\n" + 
 				"\n" + 
@@ -609,15 +633,20 @@ public class PNodeImpl {
 				"public class ~name~ extends ~nodeName~ {\n" + 
 				"\n" + 
 				"	~fields:{it|~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
-				"		\n" + 
+				"\n" + 
 				"	public ~name~(~canvasName~ canvas~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n" + 
 				"		super(canvas, ~initText~, ~uuid~);\n" + 
 				"		~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
 				"		~constructorStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"	}\n" + 
-				"\n" + 
-				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
-				"\n" + 
+				"	\n" + 
+				"~if(overrideSetTextExpression)~\n" + 
+				"	@Override\n" + 
+				"	public void setText(String text) {\n" + 
+				"		super.setText(~overrideSetTextExpression~);\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"~endif~\n" + 
 				"	@Override\n" + 
 				"	public void addedToCanvas() {\n" + 
 				"		~addedToCanvasStatements:{it|~it~};separator=\"\\n\"~\n" + 
@@ -627,7 +656,7 @@ public class PNodeImpl {
 				"	public void newNodeAdded(~nodeName~ node) {\n" + 
 				"		~newNodeAddedStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	@Override\n" + 
 				"	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {\n" + 
 				"		~rightClickStatements:{it|~it~};separator=\"\\n\"~\n" + 
@@ -666,6 +695,7 @@ public class PNodeImpl {
 				"	}\n" + 
 				"~endif~\n" + 
 				"\n" + 
+				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"	~actions:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"} >>";
 }  

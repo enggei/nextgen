@@ -312,6 +312,8 @@ public class PNode {
 				"\n" + 
 				"public class ~name~ extends PNode implements PropertyChangeListener {\n" + 
 				"\n" + 
+				"	protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" + 
+				"\n" + 
 				"	protected enum Attributes {\n" + 
 				"		_defaultColor, _selectedColor, _highlightedColor, _uuid, _text, _selected, _highlight\n" + 
 				"	}\n" + 
@@ -346,11 +348,6 @@ public class PNode {
 				"		this.addChild(this.child);\n" + 
 				"\n" + 
 				"		org.greenrobot.eventbus.EventBus.getDefault().register(this);\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	@org.greenrobot.eventbus.Subscribe\n" + 
-				"	public void onNodeAdded(~canvasName~.NodeAdded event) {\n" + 
-				"		System.out.println(\"node added\");\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public void addedToCanvas() {\n" + 
@@ -445,17 +442,14 @@ public class PNode {
 				"	public void unhighlight() {\n" + 
 				"		addAttribute(Attributes._highlight, Boolean.FALSE);\n" + 
 				"		SwingUtilities.invokeLater(() -> {\n" + 
-				"			\n" + 
 				"			child.setTextPaint(isSelected() ? (Color) getAttribute(Attributes._selectedColor) : (Color) getAttribute(Attributes._defaultColor));\n" + 
-				"			if (rectangle != null) ~name~.this.removeChild(rectangle);\n" + 
-				"			\n" + 
+				"			if (rectangle != null) ~name~.this.removeChild(rectangle);	\n" + 
 				"		});\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public void highlight() {\n" + 
 				"		addAttribute(Attributes._highlight, Boolean.TRUE);\n" + 
 				"		SwingUtilities.invokeLater(() -> {\n" + 
-				"\n" + 
 				"			final PBounds fullBounds = child.getFullBoundsReference();\n" + 
 				"			rectangle = PPath.createRectangle(fullBounds.getX(), fullBounds.getY(), fullBounds.getWidth(), fullBounds.getHeight());\n" + 
 				"			final Color green = new Color(0, 255, 0, 50);\n" + 
@@ -469,11 +463,10 @@ public class PNode {
 				"\n" + 
 				"	public void close() {\n" + 
 				"		SwingUtilities.invokeLater(() -> {\n" + 
-				"			\n" + 
 				"			for (UUID uuid : incoming) canvas.removeRelation(uuid);\n" + 
 				"			for (UUID uuid : outgoing) canvas.removeRelation(uuid);\n" + 
-				"			canvas.removeNode(getUuid());\n" + 
-				"			\n" + 
+				"			org.greenrobot.eventbus.EventBus.getDefault().unregister(STNode.this);\n" + 
+				"			canvas.removeNode(getUuid());			\n" + 
 				"		});\n" + 
 				"	}\n" + 
 				"\n" + 

@@ -337,12 +337,15 @@ public class PRelation {
 				"\n" + 
 				"public class ~name~ extends PPath.Double implements Comparator<~name~> {\n" + 
 				"\n" + 
+				"	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" + 
+				"\n" + 
 				"	protected enum Attributes {\n" + 
 				"		_defaultColor, _selectedColor, _highlightedColor, _uuid, _text, _selected, _highlight, _order, _type, _src, _dst\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	protected ~canvasName~ canvas;\n" + 
 				"	final protected PText child;\n" + 
+				"	private final PNodeChangeListener nodeChangeListener = new PNodeChangeListener();\n" + 
 				"\n" + 
 				"	public ~name~(~canvasName~ canvas, ~nodeName~ src, ~nodeName~ dst, String type, UUID uuid) {\n" + 
 				"		this.canvas = canvas;\n" + 
@@ -366,8 +369,7 @@ public class PRelation {
 				"		relationInputEventHandler.getEventFilter().setMarksAcceptedEventsAsHandled(true);\n" + 
 				"		addInputEventListener(relationInputEventHandler);\n" + 
 				"		addInputEventListener(canvas.canvasZoomHandler);\n" + 
-				"		\n" + 
-				"		final PNodeChangeListener nodeChangeListener = new PNodeChangeListener();\n" + 
+				"\n" + 
 				"		src.addPropertyChangeListener(nodeChangeListener);\n" + 
 				"		dst.addPropertyChangeListener(nodeChangeListener);\n" + 
 				"		addChild(this.child);\n" + 
@@ -379,7 +381,17 @@ public class PRelation {
 				"	public String toString() {\n" + 
 				"		return getUuid() + \" \" + getSrc() + \" -> \" + getType() + \" -> \" + getDst();\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
+				"	public void close() {\n" + 
+				"		SwingUtilities.invokeLater(() -> {\n" + 
+				"			log.info(\"R-\" + getUuid() + \" closed\");\n" + 
+				"			getSrc().outgoing.remove(getUuid());\n" + 
+				"			getDst().incoming.remove(getUuid());\n" + 
+				"			getSrc().removePropertyChangeListener(nodeChangeListener);\n" + 
+				"			getDst().removePropertyChangeListener(nodeChangeListener);\n" + 
+				"		});\n" + 
+				"	}\n" + 
+				"\n" + 
 				"	@Override\n" + 
 				"	public boolean equals(Object o) {\n" + 
 				"		if (this == o) return true;\n" + 
@@ -440,12 +452,15 @@ public class PRelation {
 				"	}\n" + 
 				"\n" + 
 				"	private void updatePath(Color color) {\n" + 
-				"		setPaint(color);\n" + 
 				"		child.setTextPaint(color);\n" + 
-				"		updatePath(getSrc(), getDst());\n" + 
+				"		setPaint(color);\n" + 
+				"		setStrokePaint(color);\n" + 
+				"		setPaintInvalid(true);\n" + 
+				"		validateFullPaint();\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	private void updatePath(~nodeName~ source, ~nodeName~ target) {\n" + 
+				"		//log.info(getUuid() + \" updatePath\");\n" + 
 				"		final PBounds src = source.getFullBoundsReference();\n" + 
 				"		final PBounds dst = target.getFullBoundsReference();\n" + 
 				"		final boolean horizontalOverlap = !(src.getMaxX() < dst.getMinX() || src.getMinX() > dst.getMaxX());\n" + 
@@ -547,24 +562,24 @@ public class PRelation {
 				"		final N relation;\n" + 
 				"		final ~canvasName~ canvas;\n" + 
 				"		final PInputEvent event;\n" + 
-				"	\n" + 
+				"\n" + 
 				"		RelationAction(String name, N relation, ~canvasName~ canvas, PInputEvent event) {\n" + 
 				"			super(name);\n" + 
 				"			this.relation = relation;\n" + 
 				"			this.canvas = canvas;\n" + 
 				"			this.event = event;\n" + 
 				"		}\n" + 
-				"	\n" + 
+				"\n" + 
 				"		@Override\n" + 
 				"		public void actionPerformed(ActionEvent e) {\n" + 
 				"			actionPerformed(relation, canvas, event, e);\n" + 
 				"		}\n" + 
-				"	\n" + 
+				"\n" + 
 				"		abstract void actionPerformed(N relation, ~canvasName~ canvas, PInputEvent event, ActionEvent e);\n" + 
 				"\n" + 
 				"		~relationActionmethods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	~actions:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
 				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 

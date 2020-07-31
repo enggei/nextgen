@@ -16,6 +16,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -31,7 +32,6 @@ public class STModelGrid extends JPanel {
         super(new BorderLayout());
 
         this.model = stTemplate;
-        System.out.println(stTemplate.uuid());
 
         // columns
         final Map<String, JPanel> columns = new TreeMap<>();
@@ -59,10 +59,14 @@ public class STModelGrid extends JPanel {
             for (Map.Entry<String, JPanel> columnEntry : columns.entrySet()) {
                 final JPanel parameterColumn = columnEntry.getValue();
                 parameterColumn.add(Box.createRigidArea(new Dimension(0, 10)));
-                final RSyntaxTextArea txtValue = SwingUtil.newRSyntaxTextArea(5, 40);
+                final RSyntaxTextArea txtValue = SwingUtil.newRSyntaxTextArea(3, 40);
+                txtValue.setHighlightCurrentLine(false);
                 final RTextScrollPane scrollPane = new RTextScrollPane(txtValue);
-                scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-                scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+                scrollPane.setLineNumbersEnabled(false);
+                scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+                scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+                for (MouseWheelListener mouseWheelListener : scrollPane.getMouseWheelListeners())
+                    scrollPane.removeMouseWheelListener(mouseWheelListener);
                 parameterColumn.add(scrollPane);
                 txtMap.put(columnEntry.getKey(), txtValue);
 
@@ -112,12 +116,17 @@ public class STModelGrid extends JPanel {
         grid.setLayout(new BoxLayout(grid, BoxLayout.X_AXIS));
         grid.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        for (JPanel value : columns.values()) {
-            value.add(Box.createVerticalGlue());
-            grid.add(value);
-        }
+        stTemplate.getParameters().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
+                .filter(stParameter -> stParameter.getType().equals(STParameterType.SINGLE))
+                .forEach(stParameter -> {
+                    JPanel value = columns.get(stParameter.uuid());
+                    value.add(Box.createVerticalGlue());
+                    grid.add(value);
+                });
 
-        add(new JScrollPane(grid), BorderLayout.CENTER);
+        final JScrollPane jScrollPane = new JScrollPane(grid);
+        jScrollPane.getVerticalScrollBar().setUnitIncrement(20);
+        add(jScrollPane, BorderLayout.CENTER);
     }
 
     public JPanel getColumnPanel(String header) {
@@ -142,7 +151,7 @@ public class STModelGrid extends JPanel {
             pop.addSeparator();
             pop.add(newAction("Save", actionEvent -> save(stModel, presentationModel, txtValue, stParameter)));
             pop.addSeparator();
-            pop.add(newAction("Set value from Clipboard", actionEvent -> {
+            pop.add(newAction("From Clipboard", actionEvent -> {
                 txtValue.setText(SwingUtil.fromClipboard().trim());
                 save(stModel, presentationModel, txtValue, stParameter);
             }));

@@ -28,24 +28,24 @@ import static java.awt.event.KeyEvent.*;
 
 public class ~name~ extends PCanvas implements PInputEventListener {
 
-	static boolean debug = true;
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);
 
 	private final PLayer nodeLayer;
 	private final PLayer relationLayer = new PLayer();
-	
+
 	final Map<UUID, ~nodeName~> nodeMap = new ConcurrentHashMap<>();
 	final Map<UUID, ~relationName~> relationMap = new ConcurrentHashMap<>();
-	
+
 	private final SelectEventsHandler selectEventHandler = new SelectEventsHandler();
 	private final CanvasInputEventsHandler canvasInputEventsHandler = new CanvasInputEventsHandler();
 	final CanvasZoomHandler canvasZoomHandler = new CanvasZoomHandler();
-	
+
 	~fields:{it|~it.type~ ~it.name~;};separator="\n"~
-	
+
 	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=","~) {
 		this(~fields:{it|~it.name~};separator=", "~~if(fields)~, ~endif~Color.WHITE, new Dimension(1024, 1024));
 	}
-	
+
 	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=", "~~if(fields)~, ~endif~Color background, Dimension preferredSize) {
 		super();
 		setBackground(background);
@@ -76,7 +76,7 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 		final java.awt.geom.Point2D localToView = getCamera().localToView(mousePosition);
 		return new Point((int) localToView.getX(), (int) localToView.getY());
 	}
-	
+
 	public <N extends ~nodeName~> void centerNode(N node) {
 		SwingUtilities.invokeLater(() -> getCamera().animateViewToCenterBounds(node.getGlobalFullBounds(), false, 500));
 	}
@@ -93,7 +93,7 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 	public <N extends STNode> Stream<N> getUnselectedNodes() {
 		return (Stream<N>) getAllNodes().filter(stNode -> !stNode.isSelected());
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public <R extends ~relationName~> Stream<R> getAllRelations() {
 		return relationLayer.getAllNodes().stream().filter((Predicate<PNode>) node -> node instanceof ~relationName~);
@@ -110,18 +110,18 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 	public <N extends ~nodeName~> N addNode(N node) {
 		return addNode(node.getUuid(), () -> node);
 	}
-	
+
 	public <N extends ~nodeName~> N addNode(java.util.UUID uuid, java.util.function.Supplier<N> supplier) {
-		
+
 		final N existing = getNode(uuid);
 		if (existing != null) {
-			if (debug) System.out.println("N-" + uuid + " exists in canvas");
+			log.debug("N-" + uuid + " exists in canvas");
 			existing.refresh();
 			existing.select();
 			return existing;
 		}
-		if (debug) System.out.println("N-" + uuid + " added to canvas");
-		
+		log.debug("N-" + uuid + " added to canvas");
+
 		final N node= supplier.get();
 		node.select();
 		node.setOffset(getCenterPosition());
@@ -132,12 +132,10 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 
 		node.addedToCanvas();
 
-		//org.greenrobot.eventbus.EventBus.getDefault().post(new NodeAdded(this, node));
-
 		getAllNodes()
 				.filter(stNode -> !stNode.getUuid().equals(node.getUuid()))
 				.forEach(stNode -> stNode.newNodeAdded(node));
-		
+
 		return node;
 	}
 
@@ -152,37 +150,36 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 	<N extends ~nodeName~> N removeNode(UUID uuid) {
 		final ~nodeName~ remove = nodeMap.remove(uuid);
 		final N old = (N) nodeLayer.removeChild(remove);
-		if (debug) System.out.println("\tN-"+ uuid + " removed from canvas : " + (old == null ? "null" : old.getUuid()));
+		log.debug("\tN-"+ uuid + " removed from canvas : " + (old == null ? "null" : old.getUuid()));
 		return (N) remove;
 	}
 
-	public <R extends ~relationName~> R addRelation(R relation) {
-		return addRelation(relation.getUuid(), () -> relation);
-	}
-	
 	public <R extends ~relationName~> R addRelation(String uuid, java.util.function.Supplier<R> supplier) {
 		return addRelation(java.util.UUID.fromString(uuid), supplier);
 	}
-	
+
 	public <R extends ~relationName~> R addRelation(java.util.UUID uuid, java.util.function.Supplier<R> supplier) {
 
 		final R existing = getRelation(uuid);
 		if (existing != null) {
-			if (debug) System.out.println("R-"+ uuid + " exists in canvas");
+			log.debug("R-"+ uuid + " exists in canvas");
 			return existing;
 		}
-		if (debug) System.out.println("R-"+ uuid + " added to canvas");
-		
+		log.debug("R-"+ uuid + " added to canvas");
+
 		final R relation = supplier.get();
 		relationMap.put(relation.getUuid(), relation);
 		relationLayer.addChild(relation);
 		return relation;
 	}
-		
+
 	<R extends ~relationName~> R removeRelation(UUID uuid) {
 		final ~relationName~ remove = relationMap.remove(uuid);
+		if (remove == null) return null;
+
+		remove.close();
 		final R old = (R) relationLayer.removeChild(remove);
-		if (debug) System.out.println("\tR-"+ uuid + " removed from canvas : " + (old == null ? "null" : old.getUuid()));
+		log.debug("\tR-"+ uuid + " removed from canvas : " + (old == null ? "null" : old.getUuid()));
 		return (R) remove;
 	}
 
@@ -211,32 +208,32 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 	}
 
 	~CanvasInputEventsHandler(canvasName=name)~
-	
-	~SelectEventsHandler(nodeName=nodeName)~
-	
+
+	~SelectEventsHandler()~
+
 	~CanvasZoomHandler()~
 
 	static abstract class CanvasAction extends AbstractAction {
 
 		final ~name~ canvas;
 		final PInputEvent event;
-	
+
 		CanvasAction(String name, ~name~ canvas, PInputEvent event) {
 			super(name);
 			this.canvas = canvas;
 			this.event = event;
 		}
-	
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			actionPerformed(canvas, event, e);
 		}
-	
+
 		abstract void actionPerformed(~name~ canvas, PInputEvent event, ActionEvent e);
 
 		~canvasActionmethods:{it|~it~};separator="\n\n"~
 	}
-	
+
 	~actions:{it|~it~};separator="\n\n"~
 
 	~methods:{it|~it~};separator="\n\n"~
@@ -295,7 +292,7 @@ CanvasInputEventsHandler(canvasName) ::= <<private final class CanvasInputEvents
 	}
 }  >>
 
-SelectEventsHandler(nodeName) ::= <<private final class SelectEventsHandler extends PBasicInputEventHandler {
+SelectEventsHandler() ::= <<private final class SelectEventsHandler extends PBasicInputEventHandler {
 
 	private PPath selectionRectangle;
 	private boolean isDragging = true;
@@ -326,7 +323,7 @@ SelectEventsHandler(nodeName) ::= <<private final class SelectEventsHandler exte
 			selectionRectangle.setHeight(top ? (startY - eventY) : (eventY - startY));
 			final PBounds fullBounds = selectionRectangle.getFullBounds();
 			SwingUtilities.invokeLater(() -> getAllNodes()
-				.filter(~nodeName~::isSelected)
+				.filter(node -> !node.isSelected())
 				.forEach(node -> {
 					if (fullBounds.contains(node.getFullBounds())) node.select();
 				}));
@@ -342,7 +339,7 @@ SelectEventsHandler(nodeName) ::= <<private final class SelectEventsHandler exte
 
 CanvasZoomHandler() ::= <<private static class CanvasZoomHandler extends PBasicInputEventHandler {
 
-	final private static double maxZoomScale = 2.5d;
+	final private static double maxZoomScale = 2.0d;
 	final private static double minZomScale = 0.025d;
 	private double scaleFactor = 0.05d;
 
@@ -363,10 +360,13 @@ CanvasZoomHandler() ::= <<private static class CanvasZoomHandler extends PBasicI
 	}
 }  >>
 
-CanvasAction(name,canvasName,title,statements) ::= <<private static final class ~name~ extends CanvasAction {
+CanvasAction(name,fields,canvasName,title,statements) ::= <<private static final class ~name~ extends CanvasAction {
 
+	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
+	
 	~name~(~canvasName~ canvas, PInputEvent event) {
 		super("~title~", canvas, event);
+		~fields:{it|this.~it.name~ = ~it.value~;};separator="\n"~
 	}
 
 	@Override
@@ -429,6 +429,8 @@ import static java.awt.event.KeyEvent.*;
 
 public class ~name~ extends PNode implements PropertyChangeListener {
 
+	protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);
+
 	protected enum Attributes {
 		_defaultColor, _selectedColor, _highlightedColor, _uuid, _text, _selected, _highlight
 	}
@@ -463,11 +465,6 @@ public class ~name~ extends PNode implements PropertyChangeListener {
 		this.addChild(this.child);
 
 		org.greenrobot.eventbus.EventBus.getDefault().register(this);
-	}
-
-	@org.greenrobot.eventbus.Subscribe
-	public void onNodeAdded(~canvasName~.NodeAdded event) {
-		System.out.println("node added");
 	}
 
 	public void addedToCanvas() {
@@ -562,17 +559,14 @@ public class ~name~ extends PNode implements PropertyChangeListener {
 	public void unhighlight() {
 		addAttribute(Attributes._highlight, Boolean.FALSE);
 		SwingUtilities.invokeLater(() -> {
-			
 			child.setTextPaint(isSelected() ? (Color) getAttribute(Attributes._selectedColor) : (Color) getAttribute(Attributes._defaultColor));
-			if (rectangle != null) ~name~.this.removeChild(rectangle);
-			
+			if (rectangle != null) ~name~.this.removeChild(rectangle);	
 		});
 	}
 
 	public void highlight() {
 		addAttribute(Attributes._highlight, Boolean.TRUE);
 		SwingUtilities.invokeLater(() -> {
-
 			final PBounds fullBounds = child.getFullBoundsReference();
 			rectangle = PPath.createRectangle(fullBounds.getX(), fullBounds.getY(), fullBounds.getWidth(), fullBounds.getHeight());
 			final Color green = new Color(0, 255, 0, 50);
@@ -586,11 +580,10 @@ public class ~name~ extends PNode implements PropertyChangeListener {
 
 	public void close() {
 		SwingUtilities.invokeLater(() -> {
-			
 			for (UUID uuid : incoming) canvas.removeRelation(uuid);
 			for (UUID uuid : outgoing) canvas.removeRelation(uuid);
-			canvas.removeNode(getUuid());
-			
+			org.greenrobot.eventbus.EventBus.getDefault().unregister(STNode.this);
+			canvas.removeNode(getUuid());			
 		});
 	}
 
@@ -681,14 +674,16 @@ PNodeInputEventHandler() ::= <<private final class NodeInputEventHandler extends
 
 	@Override
 	public void mouseEntered(PInputEvent event) {
-		event.getInputManager().setKeyboardFocus(this);
+		if (!event.isControlDown()) 
+			event.getInputManager().setKeyboardFocus(this);
 		highlight();
 	}
 
 	@Override
 	public void mouseExited(PInputEvent event) {
 		unhighlight();
-		event.getInputManager().setKeyboardFocus(canvas);
+		if (!event.isControlDown()) 
+			event.getInputManager().setKeyboardFocus(canvas);
 	}
 
 	@Override
@@ -710,12 +705,12 @@ PNodeInputEventHandler() ::= <<private final class NodeInputEventHandler extends
 	}
 }  >>
 
-NodeAction(name,nodeType,fields,titleExpression,canvasName,title,constructorStatements,statements) ::= <<private static final class ~name~ extends NodeAction<~nodeType~> {
+NodeAction(name,nodeType,fields,title,canvasName,constructorStatements,statements) ::= <<private static final class ~name~ extends NodeAction<~nodeType~> {
 
 	~fields:{it|~it.type~ ~it.name~;};separator="\n"~
 	
-	~name~(~if(titleExpression)~String name, ~endif~~nodeType~ node, ~canvasName~ canvas, PInputEvent event~if(fields)~, ~endif~~fields:{it|~it.type~ ~it.name~};separator=", "~) {
-		super(~if(titleExpression)~name~else~"~title~"~endif~, node, canvas, event);
+	~name~(~if(title)~~else~String name, ~endif~~nodeType~ node, ~canvasName~ canvas, PInputEvent event~if(fields)~, ~endif~~fields:{it|~it.type~ ~it.name~};separator=", "~) {
+		super(~if(title)~"~title~"~else~~name~~endif~, node, canvas, event);
 		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
 		~constructorStatements:{it|~it~};separator="\n"~
 	}
@@ -816,7 +811,7 @@ AnonymousPNodeAction(nodeType,header,statements) ::= <<new STNode.NodeAction<~no
 	}
 }  >>
 
-PNodeImpl(packageName,name,nodeName,fields,canvasName,initText,uuid,constructorStatements,methods,addedToCanvasStatements,newNodeAddedStatements,rightClickStatements,anonymousRightClickActions,onRightClick,onKeyPressed,onLeftClick,onPropertyChange,actions) ::= <<package ~packageName~;
+PNodeImpl(packageName,name,nodeName,fields,canvasName,initText,uuid,constructorStatements,overrideSetTextExpression,addedToCanvasStatements,newNodeAddedStatements,rightClickStatements,anonymousRightClickActions,onRightClick,onKeyPressed,onLeftClick,onPropertyChange,methods,actions) ::= <<package ~packageName~;
 
 import org.piccolo2d.event.PInputEvent;
 
@@ -828,15 +823,20 @@ import java.util.*;
 public class ~name~ extends ~nodeName~ {
 
 	~fields:{it|~it.type~ ~it.name~;};separator="\n"~
-		
+
 	public ~name~(~canvasName~ canvas~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
 		super(canvas, ~initText~, ~uuid~);
 		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
 		~constructorStatements:{it|~it~};separator="\n"~
 	}
-
-	~methods:{it|~it~};separator="\n\n"~
-
+	
+~if(overrideSetTextExpression)~
+	@Override
+	public void setText(String text) {
+		super.setText(~overrideSetTextExpression~);
+	}
+	
+~endif~
 	@Override
 	public void addedToCanvas() {
 		~addedToCanvasStatements:{it|~it~};separator="\n"~
@@ -846,7 +846,7 @@ public class ~name~ extends ~nodeName~ {
 	public void newNodeAdded(~nodeName~ node) {
 		~newNodeAddedStatements:{it|~it~};separator="\n"~
 	}
-	
+
 	@Override
 	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
 		~rightClickStatements:{it|~it~};separator="\n"~
@@ -885,6 +885,7 @@ case java.awt.event.KeyEvent.VK_~it.key~:
 	}
 ~endif~
 
+	~methods:{it|~it~};separator="\n\n"~
 	~actions:{it|~it~};separator="\n\n"~
 }  >>
 
@@ -915,12 +916,15 @@ import java.util.UUID;
 
 public class ~name~ extends PPath.Double implements Comparator<~name~> {
 
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);
+
 	protected enum Attributes {
 		_defaultColor, _selectedColor, _highlightedColor, _uuid, _text, _selected, _highlight, _order, _type, _src, _dst
 	}
-	
+
 	protected ~canvasName~ canvas;
 	final protected PText child;
+	private final PNodeChangeListener nodeChangeListener = new PNodeChangeListener();
 
 	public ~name~(~canvasName~ canvas, ~nodeName~ src, ~nodeName~ dst, String type, UUID uuid) {
 		this.canvas = canvas;
@@ -944,8 +948,7 @@ public class ~name~ extends PPath.Double implements Comparator<~name~> {
 		relationInputEventHandler.getEventFilter().setMarksAcceptedEventsAsHandled(true);
 		addInputEventListener(relationInputEventHandler);
 		addInputEventListener(canvas.canvasZoomHandler);
-		
-		final PNodeChangeListener nodeChangeListener = new PNodeChangeListener();
+
 		src.addPropertyChangeListener(nodeChangeListener);
 		dst.addPropertyChangeListener(nodeChangeListener);
 		addChild(this.child);
@@ -957,7 +960,17 @@ public class ~name~ extends PPath.Double implements Comparator<~name~> {
 	public String toString() {
 		return getUuid() + " " + getSrc() + " -> " + getType() + " -> " + getDst();
 	}
-	
+
+	public void close() {
+		SwingUtilities.invokeLater(() -> {
+			log.info("R-" + getUuid() + " closed");
+			getSrc().outgoing.remove(getUuid());
+			getDst().incoming.remove(getUuid());
+			getSrc().removePropertyChangeListener(nodeChangeListener);
+			getDst().removePropertyChangeListener(nodeChangeListener);
+		});
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -1018,12 +1031,15 @@ public class ~name~ extends PPath.Double implements Comparator<~name~> {
 	}
 
 	private void updatePath(Color color) {
-		setPaint(color);
 		child.setTextPaint(color);
-		updatePath(getSrc(), getDst());
+		setPaint(color);
+		setStrokePaint(color);
+		setPaintInvalid(true);
+		validateFullPaint();
 	}
 
 	private void updatePath(~nodeName~ source, ~nodeName~ target) {
+		//log.info(getUuid() + " updatePath");
 		final PBounds src = source.getFullBoundsReference();
 		final PBounds dst = target.getFullBoundsReference();
 		final boolean horizontalOverlap = !(src.getMaxX() < dst.getMinX() || src.getMinX() > dst.getMaxX());
@@ -1125,35 +1141,51 @@ case java.awt.event.KeyEvent.VK_~it.key~:
 		final N relation;
 		final ~canvasName~ canvas;
 		final PInputEvent event;
-	
+
 		RelationAction(String name, N relation, ~canvasName~ canvas, PInputEvent event) {
 			super(name);
 			this.relation = relation;
 			this.canvas = canvas;
 			this.event = event;
 		}
-	
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			actionPerformed(relation, canvas, event, e);
 		}
-	
+
 		abstract void actionPerformed(N relation, ~canvasName~ canvas, PInputEvent event, ActionEvent e);
 
 		~relationActionmethods:{it|~it~};separator="\n\n"~
 	}
-	
+
 	~actions:{it|~it~};separator="\n\n"~
 
 	~methods:{it|~it~};separator="\n\n"~
 }  >>
 
 PNodeChangeListener() ::= <<private final class PNodeChangeListener implements PropertyChangeListener {
-	
+
+	private final java.util.UUID uuid = java.util.UUID.randomUUID();
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		PNodeChangeListener that = (PNodeChangeListener) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		switch (evt.getPropertyName()) {
 			case PNode.PROPERTY_FULL_BOUNDS:
+				break;
 			case PNode.PROPERTY_TRANSFORM:
 				SwingUtilities.invokeLater(() -> updatePath((getSrc()), getDst()));
 				break;

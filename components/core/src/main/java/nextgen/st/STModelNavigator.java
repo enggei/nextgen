@@ -350,8 +350,19 @@ public class STModelNavigator extends JPanel {
             @Override
             protected List<Action> getActions() {
                 final List<Action> actions = new ArrayList<>();
+                actions.add(newEditValuesAction());
                 actions.add(newReconcileAction());
                 return actions;
+            }
+
+            private Action newEditValuesAction() {
+                return newAction("Edit Values", actionEvent -> {
+                    SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
+                        final STValueGrid valueGrid = workspace.getValueGrid();
+                        workspace.setSelectedComponent(valueGrid);
+                        valueGrid.requestFocusInWindow();
+                    }));
+                });
             }
 
             private Action newReconcileAction() {

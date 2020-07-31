@@ -37,11 +37,27 @@ public class PNodeChangeListener {
 	}
 
 	static final String st = "PNodeChangeListener() ::= <<private final class PNodeChangeListener implements PropertyChangeListener {\n" + 
-				"	\n" + 
+				"\n" + 
+				"	private final java.util.UUID uuid = java.util.UUID.randomUUID();\n" + 
+				"\n" + 
+				"	@Override\n" + 
+				"	public boolean equals(Object o) {\n" + 
+				"		if (this == o) return true;\n" + 
+				"		if (o == null || getClass() != o.getClass()) return false;\n" + 
+				"		PNodeChangeListener that = (PNodeChangeListener) o;\n" + 
+				"		return uuid.equals(that.uuid);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	@Override\n" + 
+				"	public int hashCode() {\n" + 
+				"		return java.util.Objects.hash(uuid);\n" + 
+				"	}\n" + 
+				"\n" + 
 				"	@Override\n" + 
 				"	public void propertyChange(PropertyChangeEvent evt) {\n" + 
 				"		switch (evt.getPropertyName()) {\n" + 
 				"			case PNode.PROPERTY_FULL_BOUNDS:\n" + 
+				"				break;\n" + 
 				"			case PNode.PROPERTY_TRANSFORM:\n" + 
 				"				SwingUtilities.invokeLater(() -> updatePath((getSrc()), getDst()));\n" + 
 				"				break;\n" + 

@@ -2,28 +2,29 @@ package nextgen.templates.piccolo2d;
 
 public class Piccolo2DST {
 
-	private static final String stg = "delimiters \"~\", \"~\"\n" +
-	"eom() ::= \"}\"\n" +
-	"gt() ::= \">\"\n" +
-	PCanvas.st + "\n" + 
-	CanvasAction.st + "\n" + 
-	LayoutVerticallyAction.st + "\n" + 
-	CanvasInputEventsHandler.st + "\n" + 
-	CanvasZoomHandler.st + "\n" + 
-	SelectEventsHandler.st + "\n" + 
-	PNode.st + "\n" + 
-	NodeAction.st + "\n" + 
-	AnonymousPNodeAction.st + "\n" + 
-	LayoutTreeAction.st + "\n" + 
-	PNodeImpl.st + "\n" + 
-	NodeMethod.st + "\n" + 
-	PNodeInputEventHandler.st + "\n" + 
-	PRelation.st + "\n" + 
-	PNodeChangeListener.st + "\n" + 
-	PRelationImpl.st + "\n" + 
-	RelationAction.st + "\n" + 
-	RelationInputEventHandler.st + "\n" + 
-	Readme.st + "\n" ;
+	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
+	.append("eom() ::= \"}\"\n")
+	.append("gt() ::= \">\"\n")
+	.append(PCanvas.st + "\n")
+	.append(CanvasAction.st + "\n")
+	.append(LayoutVerticallyAction.st + "\n")
+	.append(CanvasInputEventsHandler.st + "\n")
+	.append(CanvasZoomHandler.st + "\n")
+	.append(SelectEventsHandler.st + "\n")
+	.append(PNode.st + "\n")
+	.append(NodeAction.st + "\n")
+	.append(AnonymousPNodeAction.st + "\n")
+	.append(LayoutTreeAction.st + "\n")
+	.append(PNodeImpl.st + "\n")
+	.append(NodeMethod.st + "\n")
+	.append(PNodeInputEventHandler.st + "\n")
+	.append(PRelation.st + "\n")
+	.append(PNodeChangeListener.st + "\n")
+	.append(PRelationImpl.st + "\n")
+	.append(RelationAction.st + "\n")
+	.append(RelationInputEventHandler.st + "\n")
+	.append(Readme.st + "\n")
+	.toString()  ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -61,79 +62,79 @@ public class Piccolo2DST {
 
 	public static PCanvas newPCanvas() {
 		return new PCanvas(stGroup);
-	} 
+	}  
 
 	public static CanvasAction newCanvasAction() {
 		return new CanvasAction(stGroup);
-	} 
+	}  
 
 	public static LayoutVerticallyAction newLayoutVerticallyAction() {
 		return new LayoutVerticallyAction(stGroup);
-	} 
+	}  
 
 	public static CanvasInputEventsHandler newCanvasInputEventsHandler() {
 		return new CanvasInputEventsHandler(stGroup);
-	} 
+	}  
 
 	public static CanvasZoomHandler newCanvasZoomHandler() {
 		return new CanvasZoomHandler(stGroup);
-	} 
+	}  
 
 	public static SelectEventsHandler newSelectEventsHandler() {
 		return new SelectEventsHandler(stGroup);
-	} 
+	}  
 
 	public static PNode newPNode() {
 		return new PNode(stGroup);
-	} 
+	}  
 
 	public static NodeAction newNodeAction() {
 		return new NodeAction(stGroup);
-	} 
+	}  
 
 	public static AnonymousPNodeAction newAnonymousPNodeAction() {
 		return new AnonymousPNodeAction(stGroup);
-	} 
+	}  
 
 	public static LayoutTreeAction newLayoutTreeAction() {
 		return new LayoutTreeAction(stGroup);
-	} 
+	}  
 
 	public static PNodeImpl newPNodeImpl() {
 		return new PNodeImpl(stGroup);
-	} 
+	}  
 
 	public static NodeMethod newNodeMethod() {
 		return new NodeMethod(stGroup);
-	} 
+	}  
 
 	public static PNodeInputEventHandler newPNodeInputEventHandler() {
 		return new PNodeInputEventHandler(stGroup);
-	} 
+	}  
 
 	public static PRelation newPRelation() {
 		return new PRelation(stGroup);
-	} 
+	}  
 
 	public static PNodeChangeListener newPNodeChangeListener() {
 		return new PNodeChangeListener(stGroup);
-	} 
+	}  
 
 	public static PRelationImpl newPRelationImpl() {
 		return new PRelationImpl(stGroup);
-	} 
+	}  
 
 	public static RelationAction newRelationAction() {
 		return new RelationAction(stGroup);
-	} 
+	}  
 
 	public static RelationInputEventHandler newRelationInputEventHandler() {
 		return new RelationInputEventHandler(stGroup);
-	} 
+	}  
 
 	public static Readme newReadme() {
 		return new Readme(stGroup);
-	} 
+	}  
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
 

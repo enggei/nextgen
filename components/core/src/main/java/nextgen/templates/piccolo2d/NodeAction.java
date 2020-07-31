@@ -7,9 +7,8 @@ public class NodeAction {
 
 	private Object _name;
 	private Object _nodeType;
-	private Boolean _titleExpression;
-	private Object _canvasName;
 	private Object _title;
+	private Object _canvasName;
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _statements = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
@@ -27,9 +26,8 @@ public class NodeAction {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("NodeAction");
 		st.add("name", _name);
 		st.add("nodeType", _nodeType);
-		st.add("titleExpression", _titleExpression);
-		st.add("canvasName", _canvasName);
 		st.add("title", _title);
+		st.add("canvasName", _canvasName);
 		for (Object o : _constructorStatements) st.add("constructorStatements", o);
 		for (Object o : _statements) st.add("statements", o);
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
@@ -80,25 +78,25 @@ public class NodeAction {
 		return this;
 	} 
 
-	public NodeAction setTitleExpression(Boolean value) {
-		this._titleExpression = value;
+	public NodeAction setTitle(Object value) {
+		this._title = value;
 		return this;
 	}
 
-	public Boolean getTitleExpression() {
-		return this._titleExpression;
+	public Object getTitle() {
+		return this._title;
 	}
 
-	public Boolean getTitleExpression(Boolean defaultValue) {
-		return this._titleExpression == null ? defaultValue : this._titleExpression;
+	public Object getTitle(Object defaultValue) {
+		return this._title == null ? defaultValue : this._title;
 	}
 
-	public boolean hasTitleExpression() {
-		return this._titleExpression != null;
+	public boolean hasTitle() {
+		return this._title != null;
 	}
 
-	public NodeAction removeTitleExpression() {
-		this._titleExpression = null;
+	public NodeAction removeTitle() {
+		this._title = null;
 		return this;
 	} 
 
@@ -121,28 +119,6 @@ public class NodeAction {
 
 	public NodeAction removeCanvasName() {
 		this._canvasName = null;
-		return this;
-	} 
-
-	public NodeAction setTitle(Object value) {
-		this._title = value;
-		return this;
-	}
-
-	public Object getTitle() {
-		return this._title;
-	}
-
-	public Object getTitle(Object defaultValue) {
-		return this._title == null ? defaultValue : this._title;
-	}
-
-	public boolean hasTitle() {
-		return this._title != null;
-	}
-
-	public NodeAction removeTitle() {
-		this._title = null;
 		return this;
 	} 
 
@@ -262,12 +238,12 @@ public class NodeAction {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NodeAction(name,nodeType,fields,titleExpression,canvasName,title,constructorStatements,statements) ::= <<private static final class ~name~ extends NodeAction<~nodeType~> {\n" + 
+	static final String st = "NodeAction(name,nodeType,fields,title,canvasName,constructorStatements,statements) ::= <<private static final class ~name~ extends NodeAction<~nodeType~> {\n" + 
 				"\n" + 
 				"	~fields:{it|~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
 				"	\n" + 
-				"	~name~(~if(titleExpression)~String name, ~endif~~nodeType~ node, ~canvasName~ canvas, PInputEvent event~if(fields)~, ~endif~~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
-				"		super(~if(titleExpression)~name~else~\"~title~\"~endif~, node, canvas, event);\n" + 
+				"	~name~(~if(title)~~else~String name, ~endif~~nodeType~ node, ~canvasName~ canvas, PInputEvent event~if(fields)~, ~endif~~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
+				"		super(~if(title)~\"~title~\"~else~~name~~endif~, node, canvas, event);\n" + 
 				"		~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
 				"		~constructorStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"	}\n" + 

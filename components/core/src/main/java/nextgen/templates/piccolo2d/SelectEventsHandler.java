@@ -5,7 +5,6 @@ public class SelectEventsHandler {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _nodeName;
 
 	SelectEventsHandler(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -18,31 +17,9 @@ public class SelectEventsHandler {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("SelectEventsHandler");
-		st.add("nodeName", _nodeName);
 		return st.render().trim();
 	}
 
-	public SelectEventsHandler setNodeName(Object value) {
-		this._nodeName = value;
-		return this;
-	}
-
-	public Object getNodeName() {
-		return this._nodeName;
-	}
-
-	public Object getNodeName(Object defaultValue) {
-		return this._nodeName == null ? defaultValue : this._nodeName;
-	}
-
-	public boolean hasNodeName() {
-		return this._nodeName != null;
-	}
-
-	public SelectEventsHandler removeNodeName() {
-		this._nodeName = null;
-		return this;
-	} 
 
 
 
@@ -59,7 +36,7 @@ public class SelectEventsHandler {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SelectEventsHandler(nodeName) ::= <<private final class SelectEventsHandler extends PBasicInputEventHandler {\n" + 
+	static final String st = "SelectEventsHandler() ::= <<private final class SelectEventsHandler extends PBasicInputEventHandler {\n" + 
 				"\n" + 
 				"	private PPath selectionRectangle;\n" + 
 				"	private boolean isDragging = true;\n" + 
@@ -90,7 +67,7 @@ public class SelectEventsHandler {
 				"			selectionRectangle.setHeight(top ? (startY - eventY) : (eventY - startY));\n" + 
 				"			final PBounds fullBounds = selectionRectangle.getFullBounds();\n" + 
 				"			SwingUtilities.invokeLater(() -> getAllNodes()\n" + 
-				"				.filter(~nodeName~::isSelected)\n" + 
+				"				.filter(node -> !node.isSelected())\n" + 
 				"				.forEach(node -> {\n" + 
 				"					if (fullBounds.contains(node.getFullBounds())) node.select();\n" + 
 				"				}));\n" + 

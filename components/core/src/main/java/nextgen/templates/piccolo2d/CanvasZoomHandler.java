@@ -38,7 +38,7 @@ public class CanvasZoomHandler {
 
 	static final String st = "CanvasZoomHandler() ::= <<private static class CanvasZoomHandler extends PBasicInputEventHandler {\n" + 
 				"\n" + 
-				"	final private static double maxZoomScale = 2.5d;\n" + 
+				"	final private static double maxZoomScale = 2.0d;\n" + 
 				"	final private static double minZomScale = 0.025d;\n" + 
 				"	private double scaleFactor = 0.05d;\n" + 
 				"\n" + 

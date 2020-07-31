@@ -61,14 +61,16 @@ public class PNodeInputEventHandler {
 				"\n" + 
 				"	@Override\n" + 
 				"	public void mouseEntered(PInputEvent event) {\n" + 
-				"		event.getInputManager().setKeyboardFocus(this);\n" + 
+				"		if (!event.isControlDown()) \n" + 
+				"			event.getInputManager().setKeyboardFocus(this);\n" + 
 				"		highlight();\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 
 				"	public void mouseExited(PInputEvent event) {\n" + 
 				"		unhighlight();\n" + 
-				"		event.getInputManager().setKeyboardFocus(canvas);\n" + 
+				"		if (!event.isControlDown()) \n" + 
+				"			event.getInputManager().setKeyboardFocus(canvas);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 

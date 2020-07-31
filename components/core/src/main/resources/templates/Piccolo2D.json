@@ -246,7 +246,7 @@
     }, {
       "uuid" : "6d808c89-9fcd-4a47-99c9-519afb19a83f",
       "name" : "NodeAction",
-      "text" : "private static final class ~name~ extends NodeAction<~nodeType~> {\n\n\t~fields:{it|~it.type~ ~it.name~;};separator=\"\\n\"~\n\t\n\t~name~(~if(titleExpression)~String name, ~endif~~nodeType~ node, ~canvasName~ canvas, PInputEvent event~if(fields)~, ~endif~~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n\t\tsuper(~if(titleExpression)~name~else~\"~title~\"~endif~, node, canvas, event);\n\t\t~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t}\n\n\t@Override\n\tvoid actionPerformed(~nodeType~ node, ~canvasName~ canvas, PInputEvent event, ActionEvent e) {\n\t\t~statements:{it|~it~};separator=\"\\n\"~\n\t}\n} ",
+      "text" : "private static final class ~name~ extends NodeAction<~nodeType~> {\n\n\t~fields:{it|~it.type~ ~it.name~;};separator=\"\\n\"~\n\t\n\t~name~(~if(title)~~else~String name, ~endif~~nodeType~ node, ~canvasName~ canvas, PInputEvent event~if(fields)~, ~endif~~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n\t\tsuper(~if(title)~\"~title~\"~else~name~endif~, node, canvas, event);\n\t\t~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t}\n\n\t@Override\n\tvoid actionPerformed(~nodeType~ node, ~canvasName~ canvas, PInputEvent event, ActionEvent e) {\n\t\t~statements:{it|~it~};separator=\"\\n\"~\n\t}\n} ",
       "parameters" : [ {
         "uuid" : "6c421274-0193-48a6-bd9f-ddc3fc84cc61",
         "name" : "name",
@@ -272,18 +272,13 @@
           "argumentType" : "Object"
         } ]
       }, {
-        "uuid" : "f1f5221f-8bef-47b7-8613-c4d7d7d83b70",
-        "name" : "titleExpression",
-        "type" : "SINGLE",
-        "argumentType" : "Boolean"
-      }, {
-        "uuid" : "dd0df0f6-7ddf-49bf-ad74-5e7dcd065504",
-        "name" : "canvasName",
+        "uuid" : "16760a5d-f4c7-4bc5-af73-58d4b431d7c7",
+        "name" : "title",
         "type" : "SINGLE",
         "argumentType" : "Object"
       }, {
-        "uuid" : "16760a5d-f4c7-4bc5-af73-58d4b431d7c7",
-        "name" : "title",
+        "uuid" : "dd0df0f6-7ddf-49bf-ad74-5e7dcd065504",
+        "name" : "canvasName",
         "type" : "SINGLE",
         "argumentType" : "Object"
       }, {
