@@ -419,6 +419,58 @@ public class STModelNavigator extends JPanel {
                 };
             }
 
+            private class STValueTreeNode extends BaseTreeNode<STValue> {
+
+                private String label;
+
+                STValueTreeNode(STValue stValue) {
+                    super(stValue, null);
+                    this.label = stValue.getValue();
+                }
+
+                @Override
+                public String getLabel() {
+                    return this.label;
+                }
+
+                @Override
+                protected List<Action> getActions() {
+                    final List<Action> actions = new ArrayList<>();
+                    actions.add(openValueAction());
+                    actions.add(toClipboardAction());
+                    actions.add(fromClipboardAction());
+                    return actions;
+                }
+
+                private Action toClipboardAction() {
+                    return newAction("To Clipboard", actionEvent -> {
+                        presentationModel.db.doInTransaction(transaction -> {
+                            SwingUtil.toClipboard(presentationModel.render(getModel()).trim());
+                        });
+                    });
+                }
+
+                private Action fromClipboardAction() {
+                    return newAction("Set From Clipboard", actionEvent -> {
+                        presentationModel.db.doInTransaction(transaction -> {
+                            getModel().setValue(SwingUtil.fromClipboard().trim());
+                        });
+                    });
+                }
+
+                private Action openValueAction() {
+                    return newAction("Open", actionEvent -> {
+                        workspace.findCanvas().ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
+                            final STValueNode node = new STValueNode(stCanvas, getModel());
+                            stCanvas.addNode(node);
+
+                            workspace.setSelectedComponent(stCanvas);
+                            stCanvas.requestFocusInWindow();
+                            stCanvas.centerNode(node);
+                        })));
+                    });
+                }
+            }
         }
 
         class STGroupModelTreeNode extends BaseTreeNode<STGroupModel> {
@@ -522,40 +574,7 @@ public class STModelNavigator extends JPanel {
             }
         }
 
-        private class STValueTreeNode extends BaseTreeNode<STValue> {
 
-            private String label;
-
-            STValueTreeNode(STValue stValue) {
-                super(stValue, null);
-                this.label = stValue.getValue();
-            }
-
-            @Override
-            public String getLabel() {
-                return this.label;
-            }
-
-            @Override
-            protected List<Action> getActions() {
-                final List<Action> actions = new ArrayList<>();
-                actions.add(openValueAction());
-                return actions;
-            }
-
-            private Action openValueAction() {
-                return newAction("Open", actionEvent -> {
-                    workspace.findCanvas().ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
-                        final STValueNode node = new STValueNode(stCanvas, getModel());
-                        stCanvas.addNode(node);
-
-                        workspace.setSelectedComponent(stCanvas);
-                        stCanvas.requestFocusInWindow();
-                        stCanvas.centerNode(node);
-                    })));
-                });
-            }
-        }
     }
 
     private Action newAction(String name, Consumer<ActionEvent> actionEventConsumer) {

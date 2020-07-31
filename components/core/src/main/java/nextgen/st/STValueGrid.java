@@ -11,8 +11,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseWheelListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,7 +32,7 @@ public class STValueGrid extends JPanel {
         searchPanel.setBackground(Color.WHITE);
         searchPanel.add(new JLabel("Search"));
         final JTextField txtSearch = new JTextField(30);
-        txtSearch.setText("com.generator.util.SwingUtil");
+        txtSearch.addMouseListener(getSearchFieldMouseListener(txtSearch));
         searchPanel.add(txtSearch);
         final JButton btnSearch = new JButton(getSearchAction(txtSearch));
         searchPanel.add(btnSearch);
@@ -64,6 +63,24 @@ public class STValueGrid extends JPanel {
         add(jScrollPane, BorderLayout.CENTER);
     }
 
+    private MouseListener getSearchFieldMouseListener(JTextField txtSearch) {
+        return new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    final JPopupMenu pop = new JPopupMenu();
+                    pop.add(new AbstractAction("From clipboard") {
+                        @Override
+                        public void actionPerformed(ActionEvent ae) {
+                            txtSearch.setText(SwingUtil.fromClipboard().trim());
+                        }
+                    });
+                    SwingUtil.showPopup(pop, txtSearch, e);
+                }
+            }
+        };
+    }
+
     public AbstractAction getSearchAction(JTextField txtSearch) {
         return new AbstractAction("Search") {
             @Override
@@ -92,8 +109,8 @@ public class STValueGrid extends JPanel {
                 SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
                     resultsModel.content.forEach(stValueElement -> {
                         final String replaceAll = stValueElement.text.replaceAll(txtSearch.getText(), txtReplace.getText());
-                        stValueElement.text = replaceAll;
                         stValueElement.stValue.setValue(replaceAll);
+                        stValueElement.text = presentationModel.render(stValueElement.stValue);
                     });
 
                     resultsModel.fireTableDataChanged();
@@ -159,8 +176,8 @@ public class STValueGrid extends JPanel {
 
         @Override
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-            final STValueElement stValueElement = content.get(rowIndex);
             presentationModel.db.doInTransaction(transaction -> {
+                final STValueElement stValueElement = content.get(rowIndex);
                 stValueElement.text = aValue.toString().trim();
                 stValueElement.stValue.setValue(stValueElement.text);
                 fireTableCellUpdated(rowIndex, columnIndex);
