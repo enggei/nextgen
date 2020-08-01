@@ -116,12 +116,14 @@ public class STKVNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(STKVNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> {
-				final nextgen.st.model.STValue stValue = canvas.presentationModel.db.newSTValue(nextgen.utils.SwingUtil.fromClipboard());
-				node.removeArgument(stParameterKey);
-				final nextgen.st.model.STArgumentKV stArgumentKV = canvas.presentationModel.db.newSTArgumentKV(stParameterKey, stValue);
-				node.stArgument.addKeyValues(stArgumentKV);
-				canvas.addRelation(stArgumentKV.getUuid(), canvas.newSTKVArgumentRelation(node, canvas.addNode(canvas.newSTNode(stValue).get()), stArgument, stParameterKey, stArgumentKV));
+			nextgen.utils.SwingUtil.showInputDialog(stParameterKey.getName(), canvas, s -> {
+				doLaterInTransaction(tx -> {
+					final nextgen.st.model.STValue stValue = canvas.presentationModel.db.newSTValue(s);
+					node.removeArgument(stParameterKey);
+					final nextgen.st.model.STArgumentKV stArgumentKV = canvas.presentationModel.db.newSTArgumentKV(stParameterKey, stValue);
+					node.stArgument.addKeyValues(stArgumentKV);
+					canvas.addRelation(stArgumentKV.getUuid(), canvas.newSTKVArgumentRelation(node, canvas.addNode(canvas.newSTNode(stValue).get()), stArgument, stParameterKey, stArgumentKV));
+				});
 			});
 		}
 	}

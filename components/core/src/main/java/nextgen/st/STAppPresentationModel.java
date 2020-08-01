@@ -123,6 +123,7 @@ public class STAppPresentationModel {
         return stRenderer.render(stValue);
     }
 
+
     public STValue newSTValue(String s) {
         return db.newSTValue(s);
     }
@@ -173,6 +174,14 @@ public class STAppPresentationModel {
 
     public STFile newSTFile(Node node) {
         return db.newSTFile(node);
+    }
+
+    public Project newProject(Node node) {
+        return db.newProject(node);
+    }
+
+    public Project newProject(String name) {
+        return db.newProject(name);
     }
 
     public STTemplate findSTTemplateByUuid(String stTemplate) {
@@ -236,6 +245,14 @@ public class STAppPresentationModel {
         if (stWorkspace == null)
             stWorkspace = new STWorkspace(this);
         return stWorkspace;
+    }
+
+    public void doInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer) {
+        db.doInTransaction(consumer);
+    }
+
+    public void doInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer, java.util.function.Consumer<Throwable> throwableConsumer) {
+        db.doInTransaction(consumer, throwableConsumer);
     }
 
     public static final class CompilationResult {

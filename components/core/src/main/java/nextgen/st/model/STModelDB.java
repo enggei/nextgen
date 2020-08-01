@@ -168,10 +168,16 @@ public class STModelDB extends STModelNeoFactory {
         return null;
     }
 
+    public Project newProject(String name) {
+        return newProject()
+                .setUuid(UUID.randomUUID().toString())
+                .setName(name);
+    }
+
     public Script newScript(String name) {
-        return new Script(getDatabaseService().createNode(Label.label("Script")))
-                .setName(name)
-                .setUuid(UUID.randomUUID().toString());
+        return newScript()
+                .setUuid(UUID.randomUUID().toString())
+                .setName(name);
     }
 
     public STFile newSTFile(String name, String type, String path, String packageName) {

@@ -54,7 +54,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 				.map(stNode -> (STModelNode) stNode)
 				.filter(stModelNode -> stModelNode.stTemplate.equals(STModelNode.this.stTemplate))
 				.collect(java.util.stream.Collectors.toList());
-		canvas.presentationModel.db.doInTransaction(tx -> {
+		canvas.presentationModel.doInTransaction(tx -> {
 
 			final String clipboardValue = cut(nextgen.utils.SwingUtil.fromClipboard());
 			final java.util.LinkedHashMap<nextgen.st.domain.STParameter, org.fife.ui.rsyntaxtextarea.RSyntaxTextArea> fieldMap = new java.util.LinkedHashMap<>();
@@ -163,7 +163,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 						final Map<String, String> preSelected = new LinkedHashMap<>();								// stParameter.uuid -> stValue.rendered
 
 						final Set<nextgen.st.model.STValue> distinct = new LinkedHashSet<>();
-						canvas.presentationModel.db.doInTransaction(transaction -> {
+						canvas.presentationModel.doInTransaction(transaction -> {
 							canvas.presentationModel.db.findAllSTModelByStTemplate(node.stTemplate.uuid())
 										.forEach(stModel1 -> {
 											stModel1.getArguments()
@@ -219,7 +219,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 								@Override
 								public void verifyAndCommit() throws Exception {
 
-										canvas.presentationModel.db.doInTransaction(transaction1 -> {
+										canvas.presentationModel.doInTransaction(transaction1 -> {
 											for (Map.Entry<nextgen.st.domain.STParameter, org.fife.ui.rsyntaxtextarea.RSyntaxTextArea> entry : fieldMap.entrySet()) {
 												final String text = entry.getValue().getText();
 												if (text.trim().length() == 0) continue;
@@ -287,7 +287,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 	@Override
 	protected void onNodeLeftClick(PInputEvent event) {
 		super.onNodeLeftClick(event);
-		canvas.presentationModel.db.doInTransaction(tx -> setText(canvas.presentationModel.render(stModel)));
+		canvas.presentationModel.doInTransaction(tx -> setText(canvas.presentationModel.render(stModel)));
 	}
 
 	@Override
@@ -309,10 +309,10 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 		});
 	}
 
-	public boolean sameArgumentValue(nextgen.st.domain.STParameter stParameter,nextgen.st.model.STValue stValue) {
+	public boolean sameArgumentValue(nextgen.st.domain.STParameter stParameter,nextgen.st.model.STValue model) {
 		final java.util.concurrent.atomic.AtomicBoolean exists = new java.util.concurrent.atomic.AtomicBoolean(false);
 		stModel.getArguments().filter(existing -> existing.getStParameter().equals(stParameter.uuid())).forEach(existing -> {
-			if (existing.getValue() != null && existing.getValue().getUuid().equals(stValue.getUuid()))
+			if (existing.getValue() != null && existing.getValue().getUuid().equals(model.getUuid()))
 				exists.set(true);
 		});
 		return exists.get();
@@ -320,27 +320,28 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
 	public boolean refersTo(nextgen.st.model.STArgument stArgument,nextgen.st.domain.STParameter stParameter,nextgen.st.canvas.STNode node) {
 		if (stArgument == null || stParameter == null || node == null) return false;
-				switch(stParameter.getType()) {
-					case SINGLE :
-						{ 
-							final nextgen.st.model.STValue value = stArgument.getValue();
-							if (value != null) return UUID.fromString(value.getUuid()).equals(node.getUuid()) || (value.getType().equals(nextgen.st.model.STValueType.STMODEL) && value.getStModel() != null && UUID.fromString(value.getStModel().getUuid()).equals(node.getUuid()));
-							break;
-						}
-					case LIST :
-						{ 
-							final nextgen.st.model.STValue value = stArgument.getValue();
-							if (value != null) return UUID.fromString(value.getUuid()).equals(node.getUuid()) || (value.getType().equals(nextgen.st.model.STValueType.STMODEL) && value.getStModel() != null && UUID.fromString(value.getStModel().getUuid()).equals(node.getUuid()));
-							break;
-						}
-					case KVLIST :
-						{ 
-							if (UUID.fromString(stArgument.getUuid()).equals(node.getUuid())) return true;
-							break;
-						}
+		switch(stParameter.getType()) {
+			case SINGLE :
+				{ 
+					final nextgen.st.model.STValue value = stArgument.getValue();
+					if (value != null) return UUID.fromString(value.getUuid()).equals(node.getUuid()) || (value.getType().equals(nextgen.st.model.STValueType.STMODEL) && value.getStModel() != null && UUID.fromString(value.getStModel().getUuid()).equals(node.getUuid()));
+					break;
 				}
+			case LIST :
+				{ 
+					final nextgen.st.model.STValue value = stArgument.getValue();
+					if (value != null) return UUID.fromString(value.getUuid()).equals(node.getUuid()) || (value.getType().equals(nextgen.st.model.STValueType.STMODEL) && value.getStModel() != null && UUID.fromString(value.getStModel().getUuid()).equals(node.getUuid()));
+					break;
+				}
+			case KVLIST :
+				{ 
+					if (UUID.fromString(stArgument.getUuid()).equals(node.getUuid())) return true;
+					break;
+				}
+		}
 		return false;
 	}
+
 	private static final class OpenUsages extends NodeAction<nextgen.st.canvas.STModelNode> {
 
 
@@ -366,7 +367,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			canvas.presentationModel.db.doInTransaction(transaction -> stModelNode.stModel.getArguments()
+			canvas.presentationModel.doInTransaction(transaction -> stModelNode.stModel.getArguments()
 				.filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid()))
 				.filter(stArgument -> stArgument.getValue() != null)
 				.findFirst()
@@ -659,17 +660,16 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			final String s = nextgen.utils.SwingUtil.showInputDialog(stParameter.getName(), canvas);
-			if (s == null || s.trim().length() == 0) return;
-			doLaterInTransaction(tx -> {
-				node.removeArgument(stParameter);
-				final nextgen.st.model.STValue stValue = canvas.presentationModel.db.newSTValue(s.trim());
-				final nextgen.st.model.STArgument stArgument = canvas.presentationModel.db.newSTArgument(stParameter, stValue);
-				node.stModel.addArguments(stArgument);
-				canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue));
-				//canvas.addRelation(new STArgumentRelation(canvas, node, canvas.getNode(stValue.getUuid()), stArgument, stParameter));
-				canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, canvas.getNode(stValue.getUuid()), stArgument, stParameter));
-				node.setText(canvas.presentationModel.render(node.stModel));
+			nextgen.utils.SwingUtil.showInputDialog(stParameter.getName(), canvas, s -> {
+				doLaterInTransaction(tx -> {
+					node.removeArgument(stParameter);
+					final nextgen.st.model.STValue stValue = canvas.presentationModel.db.newSTValue(s.trim());
+					final nextgen.st.model.STArgument stArgument = canvas.presentationModel.db.newSTArgument(stParameter, stValue);
+					node.stModel.addArguments(stArgument);
+					canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue));
+					canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, canvas.getNode(stValue.getUuid()), stArgument, stParameter));
+					node.setText(canvas.presentationModel.render(node.stModel));
+				});
 			});
 		}
 	}
@@ -761,16 +761,15 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			final String s = nextgen.utils.SwingUtil.showInputDialog(stParameter.getName(), canvas);
-			if (s == null || s.trim().length() == 0) return;
-			doLaterInTransaction(tx -> {
-				final nextgen.st.model.STValue stValue = canvas.presentationModel.newSTValue(s.trim());
-				final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValue);
-				node.stModel.addArguments(stArgument);
-				final STNode stValueNode = canvas.addNode(canvas.newSTNode(stValue).get());
-				// canvas.addRelation(new STArgumentRelation(canvas, node, stValueNode, stArgument, stParameter));
-				canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stValueNode, stArgument, stParameter));
-				node.setText(canvas.presentationModel.render(node.stModel));
+			nextgen.utils.SwingUtil.showInputDialog(stParameter.getName(), canvas, s -> {
+				doLaterInTransaction(tx -> {
+					final nextgen.st.model.STValue stValue = canvas.presentationModel.newSTValue(s.trim());
+					final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValue);
+					node.stModel.addArguments(stArgument);
+					final STNode stValueNode = canvas.addNode(canvas.newSTNode(stValue).get());
+					canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stValueNode, stArgument, stParameter));
+					node.setText(canvas.presentationModel.render(node.stModel));
+				});
 			});
 		}
 	}
