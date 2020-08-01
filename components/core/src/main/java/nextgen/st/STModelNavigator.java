@@ -12,7 +12,7 @@ import nextgen.st.model.STArgument;
 import nextgen.st.model.STModel;
 import nextgen.st.model.STValue;
 import nextgen.st.model.STValueType;
-import nextgen.st.script.Script;
+import nextgen.st.model.Script;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
@@ -290,9 +290,7 @@ public class STModelNavigator extends JPanel {
             public ScriptsRootNode() {
                 super("Scripts", null);
 
-                presentationModel.scripts.findAllScript().forEach(script -> {
-                    add(new ScriptTreeNode(script));
-                });
+                presentationModel.db.findAllScript().forEach(script -> add(new ScriptTreeNode(script)));
             }
 
             private class ScriptTreeNode extends BaseTreeNode<Script> {
@@ -515,6 +513,7 @@ public class STModelNavigator extends JPanel {
                 protected List<Action> getActions() {
                     final List<Action> actions = new ArrayList<>();
                     actions.add(newEditModelsAction());
+                    actions.add(newInstanceAction());
                     return actions;
                 }
 
@@ -525,6 +524,22 @@ public class STModelNavigator extends JPanel {
                             workspace.setSelectedComponent(stModelGrid);
                             stModelGrid.requestFocusInWindow();
                         }));
+                    });
+                }
+
+                private Action newInstanceAction() {
+                    return newAction("New instance", actionEvent -> {
+                        workspace.findCanvas().ifPresent(stCanvas -> {
+                            SwingUtilities.invokeLater(() -> {
+                                presentationModel.db.doInTransaction(transaction -> {
+                                    final STModelNode node = new STModelNode(stCanvas, getModel(), presentationModel.db.newSTModel(getModel().uuid(), getModel()));
+                                    stCanvas.addNode(node);
+                                    workspace.setSelectedComponent(stCanvas);
+                                    stCanvas.requestFocusInWindow();
+                                    stCanvas.centerNode(node);
+                                });
+                            });
+                        });
                     });
                 }
 
@@ -557,18 +572,16 @@ public class STModelNavigator extends JPanel {
                     }
 
                     private Action openModelAction() {
-                        return newAction("Open", actionEvent -> {
-                            getParentNode(STTemplateTreeNode.class)
-                                    .ifPresent(stTemplateTreeNode -> workspace.findCanvas()
-                                            .ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
-                                                final STModelNode node = new STModelNode(stCanvas, stTemplateTreeNode.getModel(), getModel());
-                                                stCanvas.addNode(node);
+                        return newAction("Open", actionEvent -> getParentNode(STTemplateTreeNode.class)
+                                .ifPresent(stTemplateTreeNode -> workspace.findCanvas()
+                                        .ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
+                                            final STModelNode node = new STModelNode(stCanvas, stTemplateTreeNode.getModel(), getModel());
+                                            stCanvas.addNode(node);
 
-                                                workspace.setSelectedComponent(stCanvas);
-                                                stCanvas.requestFocusInWindow();
-                                                stCanvas.centerNode(node);
-                                            }))));
-                        });
+                                            workspace.setSelectedComponent(stCanvas);
+                                            stCanvas.requestFocusInWindow();
+                                            stCanvas.centerNode(node);
+                                        })))));
                     }
                 }
             }

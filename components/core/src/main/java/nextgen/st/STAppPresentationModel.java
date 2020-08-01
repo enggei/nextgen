@@ -4,8 +4,7 @@ import io.vertx.core.json.JsonObject;
 import net.openhft.compiler.CompilerUtils;
 import nextgen.st.domain.*;
 import nextgen.st.model.*;
-import nextgen.st.script.Script;
-import nextgen.st.script.ScriptNeoFactory;
+import nextgen.st.model.Script;
 import nextgen.st.stringtemplate.ScriptRunner;
 import nextgen.st.stringtemplate.StringTemplateST;
 import nextgen.templates.java.ImportDeclaration;
@@ -29,12 +28,12 @@ public class STAppPresentationModel {
     private final STAppModel appModel;
     public final STRenderer stRenderer;
     public final STModelDB db;
-    public final ScriptNeoFactory scripts;
 
     final STGDirectory generatorSTGDirectory;
     final STGroupModel generatorSTGroup;
     final Set<STGDirectory> stgDirectories = new LinkedHashSet<>();
     private Font preferredFont;
+    private STWorkspace stWorkspace;
 
     STAppPresentationModel(STAppModel appModel) {
 
@@ -56,7 +55,6 @@ public class STAppPresentationModel {
 
         this.stRenderer = new STRenderer(stGroups);
         this.db = new STModelDB(appModel.getModelDb("./db"), stGroups);
-        this.scripts = new ScriptNeoFactory(this.db.getDatabaseService());
 
         final Set<String> fonts = new HashSet<>(Arrays.asList(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
         this.preferredFont = Stream
@@ -232,6 +230,12 @@ public class STAppPresentationModel {
         for (Object anImport : imports)
             scriptRunner.addImports(anImport);
         return scriptRunner;
+    }
+
+    public STWorkspace getWorkspace() {
+        if (stWorkspace == null)
+            stWorkspace = new STWorkspace(this);
+        return stWorkspace;
     }
 
     public static final class CompilationResult {

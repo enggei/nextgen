@@ -4,6 +4,7 @@ import nextgen.st.domain.STEnum;
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STTemplate;
 import nextgen.st.model.STFile;
+import nextgen.st.model.STValue;
 import org.jetbrains.annotations.NotNull;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -38,7 +39,19 @@ public class STGenerator {
     }
 
     public static File asFile(STFile stFile) {
-        return new java.io.File(new java.io.File(stFile.getPath().getValue(), nextgen.st.STGenerator.packageToPath(stFile.getPackageName() == null ? null : stFile.getPackageName().getValue())), stFile.getName().getValue() + (stFile.getType() == null || stFile.getType().getValue() == null ? "" : ("." + stFile.getType().getValue())));
+
+        final STValue path = stFile.getPath();
+        final STValue packageName = stFile.getPackageName();
+        final STValue stFileName = stFile.getName();
+        final STValue stFileType = stFile.getType();
+
+        final String pathValue = path == null ? null : path.getValue("");
+        final String fileNameValue = stFileName == null ? null : stFileName.getValue("");
+        final String stFileTypeValue = stFileType == null ? null : stFileType.getValue();
+
+        final String fileType = stFileTypeValue == null ? "" : "." + stFileTypeValue;
+        final File parent = new File(pathValue, STGenerator.packageToPath(packageName.getValue("")));
+        return new java.io.File(parent, fileNameValue + fileType);
     }
 
     public void generateSTGroup(STGroupModel stGroupModel, String packageName, String rootPath) {
@@ -314,7 +327,7 @@ public class STGenerator {
     }
 
     public static String packageToPath(String packageName) {
-        return packageName.replaceAll("[.]", "/");
+        return packageName == null ? "" : (packageName.replaceAll("[.]", "/"));
     }
 
     public static File makeRelative(File file, File root) {

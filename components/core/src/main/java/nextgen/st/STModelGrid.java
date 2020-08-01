@@ -1,7 +1,7 @@
 package nextgen.st;
 
+import nextgen.st.canvas.STModelNode;
 import nextgen.st.domain.STParameter;
-import nextgen.st.domain.STParameterKey;
 import nextgen.st.domain.STParameterType;
 import nextgen.st.domain.STTemplate;
 import nextgen.st.model.STArgument;
@@ -18,9 +18,11 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class STModelGrid extends JPanel {
 
@@ -33,55 +35,40 @@ public class STModelGrid extends JPanel {
 
         this.model = stTemplate;
 
+        final List<STParameter> stParameters = stTemplate.getParameters()
+                .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
+                .filter(stParameter -> stParameter.getType().equals(STParameterType.SINGLE))
+                .collect(Collectors.toList());
+
+        final JPanel grid = new JPanel();
+        grid.setLayout(new BoxLayout(grid, BoxLayout.X_AXIS));
+        grid.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
         // columns
         final Map<String, JPanel> columns = new TreeMap<>();
         final Map<String, STParameter> stParameterMap = new TreeMap<>();
-        final Map<String, STParameterKey> stParameterKeyMap = new TreeMap<>();
-        final Map<String, STParameter> reverseMap = new TreeMap<>();
-        stTemplate.getParameters().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
-                .filter(stParameter -> stParameter.getType().equals(STParameterType.SINGLE))
-                .forEach(stParameter -> {
-                    columns.put(stParameter.uuid(), getColumnPanel(stParameter.getName()));
-                    stParameterMap.put(stParameter.uuid(), stParameter);
-                    stParameter.getKeys()
-                            .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
-                            .forEach(stParameterKey -> {
-                                columns.put(stParameterKey.uuid(), getColumnPanel(stParameter.getName() + "." + stParameterKey.getName()));
-                                stParameterKeyMap.put(stParameterKey.uuid(), stParameterKey);
-                                reverseMap.put(stParameterKey.uuid(), stParameter);
-                            });
-                });
+        stParameters.forEach(stParameter -> {
+            columns.put(stParameter.uuid(), getColumnPanel(stParameter.getName()));
+            stParameterMap.put(stParameter.uuid(), stParameter);
+        });
 
         // rows
         presentationModel.db.findAllSTModelByStTemplate(stTemplate.uuid()).forEach(stModel -> {
             final Map<String, RSyntaxTextArea> txtMap = new LinkedHashMap<>();
             final Map<String, SingleHandler> singleHandlerMap = new LinkedHashMap<>();
             for (Map.Entry<String, JPanel> columnEntry : columns.entrySet()) {
+
                 final JPanel parameterColumn = columnEntry.getValue();
                 parameterColumn.add(Box.createRigidArea(new Dimension(0, 10)));
+
                 final RSyntaxTextArea txtValue = SwingUtil.newRSyntaxTextArea(3, 40);
                 txtValue.setHighlightCurrentLine(false);
-                final RTextScrollPane scrollPane = new RTextScrollPane(txtValue);
-                scrollPane.setLineNumbersEnabled(false);
-                scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-                scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-                for (MouseWheelListener mouseWheelListener : scrollPane.getMouseWheelListeners())
-                    scrollPane.removeMouseWheelListener(mouseWheelListener);
-                parameterColumn.add(scrollPane);
+                parameterColumn.add(decorate(txtValue));
+
                 txtMap.put(columnEntry.getKey(), txtValue);
 
-                final STParameter stParameter = stParameterMap.containsKey(columnEntry.getKey()) ? stParameterMap.get(columnEntry.getKey()) : reverseMap.get(columnEntry.getKey());
-                switch (stParameter.getType()) {
-                    case SINGLE:
-                        singleHandlerMap.put(stParameter.uuid(), new SingleHandler(stModel, txtValue, stParameter, presentationModel));
-                        break;
-                    case LIST:
-                        txtValue.setEditable(false);
-                        break;
-                    case KVLIST:
-                        txtValue.setEditable(false);
-                        break;
-                }
+                final STParameter stParameter = stParameterMap.get(columnEntry.getKey());
+                singleHandlerMap.put(stParameter.uuid(), new SingleHandler(stTemplate, stModel, txtValue, stParameter, presentationModel));
             }
 
             stModel.getArguments()
@@ -89,44 +76,31 @@ public class STModelGrid extends JPanel {
                     .filter(stArgument -> stParameterMap.containsKey(stArgument.getStParameter()))
                     .forEach(stArgument -> {
                         final RSyntaxTextArea txtValue = txtMap.get(stArgument.getStParameter());
-
                         final STParameter stParameter = stParameterMap.get(stArgument.getStParameter());
-                        switch (stParameter.getType()) {
-                            case SINGLE:
-                                txtValue.setText(presentationModel.render(stArgument.getValue()));
-                                singleHandlerMap.get(stParameter.uuid()).stArgument = stArgument;
-                                break;
-                            case LIST:
-                                txtValue.append(presentationModel.render(stArgument.getValue()));
-                                txtValue.setEditable(false);
-                                break;
-                            case KVLIST:
-                                stArgument.getKeyValues().forEach(stArgumentKV -> {
-                                    final STParameterKey stParameterKey = stParameterKeyMap.get(stArgumentKV.getStParameterKey());
-                                    txtValue.append(stParameterKey.getName() + ":\n");
-                                    txtValue.append(presentationModel.render(stArgumentKV.getValue()));
-                                });
-                                txtValue.setEditable(false);
-                                break;
-                        }
+                        txtValue.setText(presentationModel.render(stArgument.getValue()));
+                        singleHandlerMap.get(stParameter.uuid()).stArgument = stArgument;
                     });
         });
 
-        final JPanel grid = new JPanel();
-        grid.setLayout(new BoxLayout(grid, BoxLayout.X_AXIS));
-        grid.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-        stTemplate.getParameters().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
-                .filter(stParameter -> stParameter.getType().equals(STParameterType.SINGLE))
-                .forEach(stParameter -> {
-                    JPanel value = columns.get(stParameter.uuid());
-                    value.add(Box.createVerticalGlue());
-                    grid.add(value);
-                });
+        stParameters.forEach(stParameter -> {
+            final JPanel value = columns.get(stParameter.uuid());
+            value.add(Box.createVerticalGlue());
+            grid.add(value);
+        });
 
         final JScrollPane jScrollPane = new JScrollPane(grid);
         jScrollPane.getVerticalScrollBar().setUnitIncrement(20);
         add(jScrollPane, BorderLayout.CENTER);
+    }
+
+    public RTextScrollPane decorate(RSyntaxTextArea txtValue) {
+        final RTextScrollPane scrollPane = new RTextScrollPane(txtValue);
+        scrollPane.setLineNumbersEnabled(false);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        for (MouseWheelListener mouseWheelListener : scrollPane.getMouseWheelListeners())
+            scrollPane.removeMouseWheelListener(mouseWheelListener);
+        return scrollPane;
     }
 
     public JPanel getColumnPanel(String header) {
@@ -146,13 +120,29 @@ public class STModelGrid extends JPanel {
 
         STArgument stArgument;
 
-        public SingleHandler(STModel stModel, RSyntaxTextArea txtValue, STParameter stParameter, STAppPresentationModel presentationModel) {
+        public SingleHandler(STTemplate stTemplate, STModel stModel, RSyntaxTextArea txtValue, STParameter stParameter, STAppPresentationModel presentationModel) {
             final JPopupMenu pop = txtValue.getPopupMenu();
             pop.addSeparator();
             pop.add(newAction("Save", actionEvent -> save(stModel, presentationModel, txtValue, stParameter)));
             pop.addSeparator();
-            pop.add(newAction("From Clipboard", actionEvent -> {
+            pop.add(newAction("Open", actionEvent -> presentationModel.getWorkspace().findCanvas().ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
+                final STModelNode node = new STModelNode(stCanvas, stTemplate, stModel);
+                stCanvas.addNode(node);
+
+                presentationModel.getWorkspace().setSelectedComponent(stCanvas);
+                stCanvas.requestFocusInWindow();
+                stCanvas.centerNode(node);
+            })))));
+            pop.add(newAction("Set From Clipboard", actionEvent -> {
                 txtValue.setText(SwingUtil.fromClipboard().trim());
+                save(stModel, presentationModel, txtValue, stParameter);
+            }));
+            pop.add(newAction("Append From Clipboard", actionEvent -> {
+                txtValue.append(SwingUtil.fromClipboard().trim());
+                save(stModel, presentationModel, txtValue, stParameter);
+            }));
+            pop.add(newAction("Prepend From Clipboard", actionEvent -> {
+                txtValue.setText(SwingUtil.fromClipboard().trim() + txtValue.getText());
                 save(stModel, presentationModel, txtValue, stParameter);
             }));
             pop.add(newAction("Set TRUE", actionEvent -> {
@@ -160,13 +150,10 @@ public class STModelGrid extends JPanel {
                 save(stModel, presentationModel, txtValue, stParameter);
             }));
             pop.addSeparator();
-            pop.add(newAction("To Clipboard", actionEvent -> {
-                SwingUtil.toClipboard(txtValue.getText().trim());
-            }));
+            pop.add(newAction("To Clipboard", actionEvent -> SwingUtil.toClipboard(txtValue.getText().trim())));
             pop.addSeparator();
-            pop.add(newAction("Remove", actionEvent -> {
-                remove(stModel, presentationModel, txtValue);
-            }));
+            pop.add(newAction("Remove", actionEvent -> remove(stModel, presentationModel, txtValue)));
+
             txtValue.addKeyListener(new KeyAdapter() {
                 @Override
                 public void keyPressed(KeyEvent keyEvent) {

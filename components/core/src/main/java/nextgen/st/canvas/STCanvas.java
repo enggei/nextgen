@@ -1,5 +1,6 @@
 package nextgen.st.canvas;
 
+import nextgen.st.model.Script;
 import nextgen.utils.SwingUtil;
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PCanvas;
@@ -518,7 +519,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 							canvas.getNode(stValue.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
 							if (centerNodeRef.get() == null) centerNodeRef.set(canvas.getNode(stValue.getUuid()));
 						} else if (stNode.hasLabel(org.neo4j.graphdb.Label.label("Script"))) {
-							final nextgen.st.script.Script script = canvas.presentationModel.newScript(stNode);
+							final Script script = canvas.presentationModel.newScript(stNode);
 							canvas.addNode(script.getUuid(), canvas.newScriptNode(script));
 							canvas.getNode(script.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
 							if (centerNodeRef.get() == null) centerNodeRef.set(canvas.getNode(script.getUuid()));
@@ -631,7 +632,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		}
 	}
 
-	java.util.function.Supplier<nextgen.st.canvas.ScriptNode> newScriptNode(nextgen.st.script.Script script){ 
+	java.util.function.Supplier<nextgen.st.canvas.ScriptNode> newScriptNode(Script script){
 		return () -> new nextgen.st.canvas.ScriptNode(this, script);
 	}
 

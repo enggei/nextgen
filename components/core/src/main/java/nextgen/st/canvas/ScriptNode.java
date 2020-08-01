@@ -1,5 +1,6 @@
 package nextgen.st.canvas;
 
+import nextgen.st.model.Script;
 import nextgen.utils.SwingUtil;
 import org.piccolo2d.event.PInputEvent;
 
@@ -8,9 +9,9 @@ import java.awt.event.ActionEvent;
 
 public class ScriptNode extends nextgen.st.canvas.STNode {
 
-	nextgen.st.script.Script script;
+	Script script;
 
-	public ScriptNode(nextgen.st.canvas.STCanvas canvas, nextgen.st.script.Script script) {
+	public ScriptNode(nextgen.st.canvas.STCanvas canvas, Script script) {
 		super(canvas, script.getName(), java.util.UUID.fromString(script.getUuid()));
 		this.script = script;
 	}

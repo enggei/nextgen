@@ -33,7 +33,7 @@ public class STApp extends JFrame {
 
         presentationModel = new STAppPresentationModel(appModel);
 
-        workspace = new STWorkspace(presentationModel);
+        workspace = presentationModel.getWorkspace();
         navigator = new STNavigator(presentationModel, workspace);
         stModelNavigator = new STModelNavigator(presentationModel, workspace);
 

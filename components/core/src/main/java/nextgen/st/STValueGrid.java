@@ -23,33 +23,35 @@ public class STValueGrid extends JPanel {
 
     public STValueGrid(STAppPresentationModel presentationModel) {
         super(new BorderLayout());
+
         this.presentationModel = presentationModel;
+        this.resultsModel = new ResultsTableModel();
+
         setBackground(Color.WHITE);
 
-        final JPanel north = new JPanel(new GridLayout(2, 1));
-
         final JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        final JTextField txtSearch = new JTextField(30);
+        final JButton btnSearch = new JButton(getSearchAction(txtSearch));
         searchPanel.setBackground(Color.WHITE);
         searchPanel.add(new JLabel("Search"));
-        final JTextField txtSearch = new JTextField(30);
-        txtSearch.addMouseListener(getSearchFieldMouseListener(txtSearch));
         searchPanel.add(txtSearch);
-        final JButton btnSearch = new JButton(getSearchAction(txtSearch));
         searchPanel.add(btnSearch);
-        north.add(searchPanel);
+        txtSearch.addMouseListener(getSearchFieldMouseListener(txtSearch));
 
         final JPanel replacePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        final JTextField txtReplace = new JTextField(30);
+        final JButton btnReplace = new JButton(getReplaceAction(txtSearch, txtReplace));
         replacePanel.setBackground(Color.WHITE);
         replacePanel.add(new JLabel("Replace with"));
-        final JTextField txtReplace = new JTextField(30);
         replacePanel.add(txtReplace);
-        final JButton btnReplace = new JButton(getReplaceAction(txtSearch, txtReplace));
         replacePanel.add(btnReplace);
-        north.add(replacePanel);
+        txtReplace.addMouseListener(getSearchFieldMouseListener(txtReplace));
 
+        final JPanel north = new JPanel(new GridLayout(2, 1));
+        north.add(searchPanel);
+        north.add(replacePanel);
         add(north, BorderLayout.NORTH);
 
-        this.resultsModel = new ResultsTableModel();
         final JTable results = new JTable(resultsModel);
         results.setIntercellSpacing(new Dimension(0, 5));
         results.setShowGrid(false);
@@ -81,14 +83,12 @@ public class STValueGrid extends JPanel {
         };
     }
 
-    public AbstractAction getSearchAction(JTextField txtSearch) {
+    private Action getSearchAction(JTextField txtSearch) {
         return new AbstractAction("Search") {
             @Override
             public void actionPerformed(ActionEvent e) {
                 SwingUtilities.invokeLater(() -> {
-
                     resultsModel.clear();
-
                     presentationModel.db.doInTransaction(transaction ->
                             resultsModel.setResult(presentationModel.db.findAllSTValue()
                                     .filter(stValue -> stValue.getType() != null)
@@ -102,7 +102,7 @@ public class STValueGrid extends JPanel {
         };
     }
 
-    public AbstractAction getReplaceAction(JTextField txtSearch, JTextField txtReplace) {
+    private Action getReplaceAction(JTextField txtSearch, JTextField txtReplace) {
         return new AbstractAction("Replace") {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -112,7 +112,6 @@ public class STValueGrid extends JPanel {
                         stValueElement.stValue.setValue(replaceAll);
                         stValueElement.text = presentationModel.render(stValueElement.stValue);
                     });
-
                     resultsModel.fireTableDataChanged();
                 }));
             }
@@ -184,13 +183,13 @@ public class STValueGrid extends JPanel {
             });
         }
 
-        public void clear() {
+        private void clear() {
             content.clear();
             fireTableDataChanged();
         }
 
-        public void setResult(List<STValueElement> result) {
-            this.content.addAll(result);
+        private void setResult(List<STValueElement> result) {
+            content.addAll(result);
             fireTableDataChanged();
         }
     }

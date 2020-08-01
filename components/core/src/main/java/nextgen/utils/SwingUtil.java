@@ -281,6 +281,10 @@ public class SwingUtil {
         return s == null ? null : s.trim();
     }
 
+    public static void showNameDialog(String message, Component owner, Consumer<String> onConfirm) {
+        showInputDialog(message, owner, new Dimension(800, 600), onConfirm);
+    }
+
     public static void showInputDialog(String message, Component owner, Consumer<String> onConfirm) {
         showInputDialog(message, owner, new Dimension(800, 600), onConfirm);
     }

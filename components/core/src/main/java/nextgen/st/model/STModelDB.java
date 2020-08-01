@@ -2,16 +2,14 @@ package nextgen.st.model;
 
 import nextgen.st.STAppEvents;
 import nextgen.st.domain.*;
-import nextgen.st.script.Script;
 import nextgen.utils.Neo4JUtil;
-import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.event.TransactionData;
 import org.neo4j.graphdb.event.TransactionEventHandler;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static nextgen.st.model.STValueType.*;
 
@@ -173,7 +171,6 @@ public class STModelDB extends STModelNeoFactory {
     public Script newScript(String name) {
         return new Script(getDatabaseService().createNode(Label.label("Script")))
                 .setName(name)
-                //.setScript("")
                 .setUuid(UUID.randomUUID().toString());
     }
 
@@ -213,12 +210,11 @@ public class STModelDB extends STModelNeoFactory {
                 .setStModel(stModel);
     }
 
+    public Script newScript(Node node) {
+        return new Script(node);
+    }
+
     public STValue newSTValue(String value) {
-
-        final Optional<STValue> exists = findAllSTValueByValue(value).findAny();
-        if (exists.isPresent() && exists.get().getType() != null && exists.get().getType().equals(PRIMITIVE))
-            return exists.get();
-
         return newSTValue()
                 .setUuid(UUID.randomUUID().toString())
                 .setType(PRIMITIVE)
@@ -247,90 +243,28 @@ public class STModelDB extends STModelNeoFactory {
 
     public void cleanup() {
         doInTransaction(transaction -> {
+            deleteUnnusedNodes();
+            deleteUnnusedFiles();
+        });
+    }
 
-            getDatabaseService().getAllNodes().forEach(node -> {
-                if (node.getRelationships().iterator().hasNext()) return;
-                if (node.hasLabel(Label.label("Script"))) return;
-                log.info("deleting unnused node " + node + " " + labelsFor(node));
-                node.delete();
-            });
+    public void deleteUnnusedFiles() {
+        findAllSTFile().forEach(stFile -> {
+            if (stFile.getIncomingFiles().iterator().hasNext()) return;
+            log.info("deleting unnused stFile-" + stFile.getUuid());
+            log.info(Neo4JUtil.toString(stFile.getNode()));
+            stFile.getNode().getRelationships().forEach(Relationship::delete);
+            stFile.getNode().delete();
+        });
+    }
 
-            final Set<String> uuids = new LinkedHashSet<>();
-
-            findAllSTModel().forEach(stModel -> {
-
-                if (uuids.contains(stModel.getUuid())) {
-                    final String newUuid = UUID.randomUUID().toString();
-                    log.info("found duplicate uuid " + stModel.getUuid() + " -> new " + newUuid);
-                    stModel.setUuid(newUuid);
-                }
-                uuids.add(stModel.getUuid());
-
-//                try {
-//                    final STTemplate stTemplate = findSTTemplateByUuid(stModel.getStTemplate());
-//
-//                    if (stTemplate == null) {
-//                        log.info("removing model " + stModel.getUuid() + ". Illegal template-reference (null)");
-//                        remove(stModel);
-//                    } else {
-//
-//                        stModel.getArguments().forEach(stArgument -> {
-//                            final Optional<STParameter> first = stTemplate.getParameters().filter(stParameter -> stArgument.getStParameter().equals(stParameter.uuid())).findFirst();
-//                            if (!first.isPresent())
-//                                remove(stArgument);
-//                            else {
-//                                switch (first.get().getType()) {
-//                                    case SINGLE:
-//                                    case LIST:
-//                                        final STValue value = stArgument.getValue();
-//                                        if (value == null)
-//                                            remove(stArgument);
-//                                        else if (value.getType().equals(STValueType.STMODEL)) {
-//
-//                                            final AtomicBoolean duplicate = new AtomicBoolean(false);
-//                                            java.util.stream.StreamSupport.stream(value.getNode().getRelationships(Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("stModel")).spliterator(), false)
-//                                                    .sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t", o.getId())))
-//                                                    .forEach(relationship -> {
-//                                                        if (duplicate.get()) {
-//                                                            relationship.delete();
-//                                                        } else {
-//                                                            duplicate.set(true);
-//                                                        }
-//                                                    });
-//
-//                                            if (value.getStModel() == null)
-//                                                remove(stArgument);
-//                                        }
-//                                        break;
-//                                    case KVLIST:
-//
-//                                        stArgument.getKeyValues().forEach(stArgumentKV -> {
-//                                            final STValue stArgumentKVValue = stArgumentKV.getValue();
-//                                            if (stArgumentKVValue == null) delete(stArgumentKV.getNode());
-//                                        });
-//
-//                                        break;
-//                                }
-//                            }
-//                        });
-//
-//                        if (stModel.getStGroup() == null) {
-//                            log.info("STModel " + stModel.getUuid() + " missing STGroup");
-//                            final STGroupModel stGroupModel = findSTGroupModelByTemplateUuid(stTemplate.uuid());
-//                            if (stGroupModel != null) {
-//                                stModel.setStGroup(stGroupModel.uuid());
-//                                log.info("\tsetting group " + stGroupModel.uuid());
-//                            }
-//                        }
-//                    }
-//                } catch (IllegalStateException ise) {
-//                    ise.printStackTrace();
-//
-//                    if (ise.getMessage().startsWith("Missing uuid")) {
-//                        remove(stModel);
-//                    }
-//                }
-            });
+    public void deleteUnnusedNodes() {
+        getDatabaseService().getAllNodes().forEach(node -> {
+            if (node.getRelationships().iterator().hasNext()) return;
+            if (node.hasLabel(Label.label("Script"))) return;
+            log.info("deleting unnused node");
+            log.info(Neo4JUtil.toString(node));
+            node.delete();
         });
     }
 
@@ -369,20 +303,5 @@ public class STModelDB extends STModelNeoFactory {
 
         return clone;
     }
-
-    public static String labelsFor(Node node) {
-        return labelsFor(node, " ");
-    }
-
-    public static String labelsFor(Node node, String delimiter) {
-        final StringBuilder lbl = new StringBuilder();
-        for (org.neo4j.graphdb.Label label : node.getLabels()) lbl.append(label).append(delimiter);
-        return lbl.toString().trim();
-    }
-
-    public Script newScript(Node node) {
-        return new Script(node);
-    }
-
 
 }

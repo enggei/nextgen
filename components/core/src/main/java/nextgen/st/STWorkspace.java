@@ -18,6 +18,7 @@ public class STWorkspace extends JTabbedPane {
     public STWorkspace(STAppPresentationModel presentationModel) {
         this.presentationModel = presentationModel;
         setPreferredSize(new Dimension(800, 600));
+        findCanvas();
     }
 
     public Optional<STCanvas> findCanvas() {
