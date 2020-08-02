@@ -40,17 +40,18 @@ public class STGenerator {
 
     public static File asFile(STFile stFile) {
 
-        final STValue path = stFile.getPath();
-        final STValue packageName = stFile.getPackageName();
+        final STValue stPath = stFile.getPath();
+        final STValue stPackageName = stFile.getPackageName();
         final STValue stFileName = stFile.getName();
         final STValue stFileType = stFile.getType();
 
-        final String pathValue = path == null ? null : path.getValue("");
+        final String pathValue = stPath == null ? null : stPath.getValue("");
+        final String packageName = stPackageName == null ? "" : stPackageName.getValue("");
         final String fileNameValue = stFileName == null ? null : stFileName.getValue("");
         final String stFileTypeValue = stFileType == null ? null : stFileType.getValue();
 
         final String fileType = stFileTypeValue == null ? "" : "." + stFileTypeValue;
-        final File parent = new File(pathValue, STGenerator.packageToPath(packageName.getValue("")));
+        final File parent = new File(pathValue, STGenerator.packageToPath(packageName));
         return new java.io.File(parent, fileNameValue + fileType);
     }
 

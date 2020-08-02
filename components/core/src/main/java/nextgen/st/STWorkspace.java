@@ -2,6 +2,7 @@ package nextgen.st;
 
 import nextgen.st.canvas.STCanvas;
 import nextgen.st.domain.STTemplate;
+import nextgen.st.model.STModel;
 import nextgen.utils.SwingUtil;
 
 import javax.swing.*;
@@ -46,6 +47,21 @@ public class STWorkspace extends JTabbedPane {
         addTab(stTemplate.getName() + "-Models", stModelGrid);
         setTabComponentAt(indexOfComponent(stModelGrid), new ButtonTabComponent(this));
         return stModelGrid;
+    }
+
+    public STModelEditor getModelEditor(STTemplate stTemplate, STModel stModel) {
+        for (int i = 0; i < getTabCount(); i++) {
+            final Component tabComponentAt = getComponentAt(i);
+            if (tabComponentAt instanceof STModelEditor) {
+                if (((STModelEditor) tabComponentAt).getModel().equals(stModel))
+                    return (STModelEditor) tabComponentAt;
+            }
+        }
+
+        final STModelEditor component = new STModelEditor(presentationModel, stTemplate, stModel);
+        addTab(stTemplate.getName() + "Model", component);
+        setTabComponentAt(indexOfComponent(component), new ButtonTabComponent(this));
+        return component;
     }
 
     public STValueGrid getValueGrid() {

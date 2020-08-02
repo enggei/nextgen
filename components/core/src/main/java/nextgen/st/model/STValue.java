@@ -25,53 +25,57 @@ public class STValue {
 		return java.util.Objects.hash(node);
 	}
 
+	private static final String _uuid = "uuid";
+
 	public STValue setUuid(String value) { 
-		if (value == null) node.removeProperty("uuid"); 
-		else node.setProperty("uuid", value);
+		if (value == null) node.removeProperty(_uuid); 
+		else node.setProperty(_uuid, value);
 		return this;
 	}
 
 	public String getUuid() { 
-		if (node.hasProperty("uuid")) return (String) node.getProperty("uuid");
+		if (node.hasProperty(_uuid)) return (String) node.getProperty(_uuid);
 		return null;
 	}
 
 	public String getUuid(String defaultValue) { 
-		if (node.hasProperty("uuid")) return (String) node.getProperty("uuid");
+		if (node.hasProperty(_uuid)) return (String) node.getProperty(_uuid);
 		return defaultValue;
 	}
 
 	public boolean hasUuid() { 
-		return node.hasProperty("uuid");
+		return node.hasProperty(_uuid);
 	}
 
 	public STValue removeUuid() { 
-		node.removeProperty("uuid");
+		node.removeProperty(_uuid);
 		return this;
 	}
 
+	private static final String _value = "value";
+
 	public STValue setValue(String value) { 
-		if (value == null) node.removeProperty("value"); 
-		else node.setProperty("value", value);
+		if (value == null) node.removeProperty(_value); 
+		else node.setProperty(_value, value);
 		return this;
 	}
 
 	public String getValue() { 
-		if (node.hasProperty("value")) return (String) node.getProperty("value");
+		if (node.hasProperty(_value)) return (String) node.getProperty(_value);
 		return null;
 	}
 
 	public String getValue(String defaultValue) { 
-		if (node.hasProperty("value")) return (String) node.getProperty("value");
+		if (node.hasProperty(_value)) return (String) node.getProperty(_value);
 		return defaultValue;
 	}
 
 	public boolean hasValue() { 
-		return node.hasProperty("value");
+		return node.hasProperty(_value);
 	}
 
 	public STValue removeValue() { 
-		node.removeProperty("value");
+		node.removeProperty(_value);
 		return this;
 	}
 

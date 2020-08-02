@@ -25,53 +25,57 @@ public class Script {
 		return java.util.Objects.hash(node);
 	}
 
+	private static final String _uuid = "uuid";
+
 	public Script setUuid(String value) { 
-		if (value == null) node.removeProperty("uuid"); 
-		else node.setProperty("uuid", value);
+		if (value == null) node.removeProperty(_uuid); 
+		else node.setProperty(_uuid, value);
 		return this;
 	}
 
 	public String getUuid() { 
-		if (node.hasProperty("uuid")) return (String) node.getProperty("uuid");
+		if (node.hasProperty(_uuid)) return (String) node.getProperty(_uuid);
 		return null;
 	}
 
 	public String getUuid(String defaultValue) { 
-		if (node.hasProperty("uuid")) return (String) node.getProperty("uuid");
+		if (node.hasProperty(_uuid)) return (String) node.getProperty(_uuid);
 		return defaultValue;
 	}
 
 	public boolean hasUuid() { 
-		return node.hasProperty("uuid");
+		return node.hasProperty(_uuid);
 	}
 
 	public Script removeUuid() { 
-		node.removeProperty("uuid");
+		node.removeProperty(_uuid);
 		return this;
 	}
 
+	private static final String _name = "name";
+
 	public Script setName(String value) { 
-		if (value == null) node.removeProperty("name"); 
-		else node.setProperty("name", value);
+		if (value == null) node.removeProperty(_name); 
+		else node.setProperty(_name, value);
 		return this;
 	}
 
 	public String getName() { 
-		if (node.hasProperty("name")) return (String) node.getProperty("name");
+		if (node.hasProperty(_name)) return (String) node.getProperty(_name);
 		return null;
 	}
 
 	public String getName(String defaultValue) { 
-		if (node.hasProperty("name")) return (String) node.getProperty("name");
+		if (node.hasProperty(_name)) return (String) node.getProperty(_name);
 		return defaultValue;
 	}
 
 	public boolean hasName() { 
-		return node.hasProperty("name");
+		return node.hasProperty(_name);
 	}
 
 	public Script removeName() { 
-		node.removeProperty("name");
+		node.removeProperty(_name);
 		return this;
 	}
 

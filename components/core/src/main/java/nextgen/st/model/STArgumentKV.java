@@ -25,53 +25,57 @@ public class STArgumentKV {
 		return java.util.Objects.hash(node);
 	}
 
+	private static final String _uuid = "uuid";
+
 	public STArgumentKV setUuid(String value) { 
-		if (value == null) node.removeProperty("uuid"); 
-		else node.setProperty("uuid", value);
+		if (value == null) node.removeProperty(_uuid); 
+		else node.setProperty(_uuid, value);
 		return this;
 	}
 
 	public String getUuid() { 
-		if (node.hasProperty("uuid")) return (String) node.getProperty("uuid");
+		if (node.hasProperty(_uuid)) return (String) node.getProperty(_uuid);
 		return null;
 	}
 
 	public String getUuid(String defaultValue) { 
-		if (node.hasProperty("uuid")) return (String) node.getProperty("uuid");
+		if (node.hasProperty(_uuid)) return (String) node.getProperty(_uuid);
 		return defaultValue;
 	}
 
 	public boolean hasUuid() { 
-		return node.hasProperty("uuid");
+		return node.hasProperty(_uuid);
 	}
 
 	public STArgumentKV removeUuid() { 
-		node.removeProperty("uuid");
+		node.removeProperty(_uuid);
 		return this;
 	}
 
+	private static final String _stParameterKey = "stParameterKey";
+
 	public STArgumentKV setStParameterKey(String value) { 
-		if (value == null) node.removeProperty("stParameterKey"); 
-		else node.setProperty("stParameterKey", value);
+		if (value == null) node.removeProperty(_stParameterKey); 
+		else node.setProperty(_stParameterKey, value);
 		return this;
 	}
 
 	public String getStParameterKey() { 
-		if (node.hasProperty("stParameterKey")) return (String) node.getProperty("stParameterKey");
+		if (node.hasProperty(_stParameterKey)) return (String) node.getProperty(_stParameterKey);
 		return null;
 	}
 
 	public String getStParameterKey(String defaultValue) { 
-		if (node.hasProperty("stParameterKey")) return (String) node.getProperty("stParameterKey");
+		if (node.hasProperty(_stParameterKey)) return (String) node.getProperty(_stParameterKey);
 		return defaultValue;
 	}
 
 	public boolean hasStParameterKey() { 
-		return node.hasProperty("stParameterKey");
+		return node.hasProperty(_stParameterKey);
 	}
 
 	public STArgumentKV removeStParameterKey() { 
-		node.removeProperty("stParameterKey");
+		node.removeProperty(_stParameterKey);
 		return this;
 	}
 

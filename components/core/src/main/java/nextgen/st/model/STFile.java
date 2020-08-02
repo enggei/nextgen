@@ -25,28 +25,30 @@ public class STFile {
 		return java.util.Objects.hash(node);
 	}
 
+	private static final String _uuid = "uuid";
+
 	public STFile setUuid(String value) { 
-		if (value == null) node.removeProperty("uuid"); 
-		else node.setProperty("uuid", value);
+		if (value == null) node.removeProperty(_uuid); 
+		else node.setProperty(_uuid, value);
 		return this;
 	}
 
 	public String getUuid() { 
-		if (node.hasProperty("uuid")) return (String) node.getProperty("uuid");
+		if (node.hasProperty(_uuid)) return (String) node.getProperty(_uuid);
 		return null;
 	}
 
 	public String getUuid(String defaultValue) { 
-		if (node.hasProperty("uuid")) return (String) node.getProperty("uuid");
+		if (node.hasProperty(_uuid)) return (String) node.getProperty(_uuid);
 		return defaultValue;
 	}
 
 	public boolean hasUuid() { 
-		return node.hasProperty("uuid");
+		return node.hasProperty(_uuid);
 	}
 
 	public STFile removeUuid() { 
-		node.removeProperty("uuid");
+		node.removeProperty(_uuid);
 		return this;
 	}
 

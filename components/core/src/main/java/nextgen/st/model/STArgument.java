@@ -25,53 +25,57 @@ public class STArgument {
 		return java.util.Objects.hash(node);
 	}
 
+	private static final String _uuid = "uuid";
+
 	public STArgument setUuid(String value) { 
-		if (value == null) node.removeProperty("uuid"); 
-		else node.setProperty("uuid", value);
+		if (value == null) node.removeProperty(_uuid); 
+		else node.setProperty(_uuid, value);
 		return this;
 	}
 
 	public String getUuid() { 
-		if (node.hasProperty("uuid")) return (String) node.getProperty("uuid");
+		if (node.hasProperty(_uuid)) return (String) node.getProperty(_uuid);
 		return null;
 	}
 
 	public String getUuid(String defaultValue) { 
-		if (node.hasProperty("uuid")) return (String) node.getProperty("uuid");
+		if (node.hasProperty(_uuid)) return (String) node.getProperty(_uuid);
 		return defaultValue;
 	}
 
 	public boolean hasUuid() { 
-		return node.hasProperty("uuid");
+		return node.hasProperty(_uuid);
 	}
 
 	public STArgument removeUuid() { 
-		node.removeProperty("uuid");
+		node.removeProperty(_uuid);
 		return this;
 	}
 
+	private static final String _stParameter = "stParameter";
+
 	public STArgument setStParameter(String value) { 
-		if (value == null) node.removeProperty("stParameter"); 
-		else node.setProperty("stParameter", value);
+		if (value == null) node.removeProperty(_stParameter); 
+		else node.setProperty(_stParameter, value);
 		return this;
 	}
 
 	public String getStParameter() { 
-		if (node.hasProperty("stParameter")) return (String) node.getProperty("stParameter");
+		if (node.hasProperty(_stParameter)) return (String) node.getProperty(_stParameter);
 		return null;
 	}
 
 	public String getStParameter(String defaultValue) { 
-		if (node.hasProperty("stParameter")) return (String) node.getProperty("stParameter");
+		if (node.hasProperty(_stParameter)) return (String) node.getProperty(_stParameter);
 		return defaultValue;
 	}
 
 	public boolean hasStParameter() { 
-		return node.hasProperty("stParameter");
+		return node.hasProperty(_stParameter);
 	}
 
 	public STArgument removeStParameter() { 
-		node.removeProperty("stParameter");
+		node.removeProperty(_stParameter);
 		return this;
 	}
 
@@ -101,30 +105,32 @@ public class STArgument {
 		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("value"), org.neo4j.graphdb.Direction.OUTGOING);
 	}
 
+	private static final org.neo4j.graphdb.RelationshipType _keyValues = org.neo4j.graphdb.RelationshipType.withName("keyValues");
+
 	public STArgument addKeyValues(STArgumentKV dst) { 
-		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("keyValues")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _keyValues).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
 		if (existing.isPresent()) return this;
-		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("keyValues"));
+		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _keyValues);
 		relationship.setProperty("_t", System.nanoTime());
 		return this;
 	}
 
 	public java.util.stream.Stream<STArgumentKV> getKeyValues() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("keyValues")).spliterator(), false).map((relationship) -> new STArgumentKV(relationship.getOtherNode(node)));
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _keyValues).spliterator(), false).map((relationship) -> new STArgumentKV(relationship.getOtherNode(node)));
 	}
 
 	public java.util.stream.Stream<STArgumentKV> getKeyValuesSorted() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("keyValues")).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t", o.getId()))).map((relationship) -> new STArgumentKV(relationship.getOtherNode(node)));
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _keyValues).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t", o.getId()))).map((relationship) -> new STArgumentKV(relationship.getOtherNode(node)));
 	}
 
 	public STArgument removeKeyValues(STArgumentKV dst) { 
-		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("keyValues")).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _keyValues).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
 		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
 		return this;
 	}
 
 	public STArgument removeAllKeyValues() { 
-		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("keyValues")).forEach(org.neo4j.graphdb.Relationship::delete);
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _keyValues).forEach(org.neo4j.graphdb.Relationship::delete);
 		return this;
 	}
 

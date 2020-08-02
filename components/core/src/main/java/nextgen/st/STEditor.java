@@ -53,6 +53,7 @@ public class STEditor extends JPanel {
         pop.add(newAction("Insert If", actionEvent -> insertIf()));
         pop.add(newAction("Insert If-else", actionEvent -> insertIfElse()));
         pop.add(newAction("Replace text and insert Single", actionEvent -> replaceAndInsertSingle()));
+        pop.add(newAction("Replace text", actionEvent -> replace()));
         pop.add(newAction("Save", actionEvent -> commit()));
         pop.add(newAction("Generate", actionEvent -> generate()));
         pop.add(newAction("Debug Template", actionEvent -> debug()));
@@ -301,6 +302,24 @@ public class STEditor extends JPanel {
             final SearchContext context = new SearchContext();
             context.setSearchFor(selected);
             context.setReplaceWith(replacement);
+            context.setMatchCase(true);
+            context.setSearchForward(true);
+            context.setWholeWord(false);
+            SearchEngine.replaceAll(txtEditor, context);
+            txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
+        });
+    }
+
+    private void replace() {
+        final String selected = txtEditor.getSelectedText();
+        if (selected == null || selected.length() < 1) return;
+        final String replaceWith = SwingUtil.showInputDialog("value", txtEditor);
+        if (replaceWith == null || replaceWith.trim().length() == 0) return;
+
+        SwingUtilities.invokeLater(() -> {
+            final SearchContext context = new SearchContext();
+            context.setSearchFor(selected);
+            context.setReplaceWith(replaceWith);
             context.setMatchCase(true);
             context.setSearchForward(true);
             context.setWholeWord(false);

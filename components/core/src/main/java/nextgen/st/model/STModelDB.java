@@ -267,7 +267,8 @@ public class STModelDB extends STModelNeoFactory {
     public void deleteUnnusedNodes() {
         getDatabaseService().getAllNodes().forEach(node -> {
             if (node.getRelationships().iterator().hasNext()) return;
-            if (node.hasLabel(Label.label("Script"))) return;
+            if (isScript(node)) return;
+            if (isProject(node)) return;
             log.info("deleting unnused node");
             log.info(Neo4JUtil.toString(node));
             node.delete();

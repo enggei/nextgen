@@ -11,10 +11,13 @@ import nextgen.templates.java.ImportDeclaration;
 import nextgen.templates.java.PackageDeclaration;
 import org.neo4j.graphdb.Node;
 
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -264,5 +267,23 @@ public class STAppPresentationModel {
             this.compilerOutput = compilerOutput;
             this.aClass = aClass;
         }
+    }
+
+    public static Action newAction(String name, Consumer<ActionEvent> consumer) {
+        return new AbstractAction(name) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                consumer.accept(e);
+            }
+        };
+    }
+
+    public Action newTransactionAction(String name, Consumer<ActionEvent> consumer) {
+        return new AbstractAction(name) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(() -> doInTransaction(transaction -> consumer.accept(e)));
+            }
+        };
     }
 }

@@ -13,7 +13,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 	nextgen.st.model.STModel stModel;
 
 	public STModelNode(nextgen.st.canvas.STCanvas canvas, nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STModel stModel) {
-		super(canvas, stTemplate.getName() + " : \n" + canvas.presentationModel.render(stModel), java.util.UUID.fromString(stModel.getUuid()));
+		super(canvas, stTemplate.getName() + " :\n" + canvas.presentationModel.render(stModel), java.util.UUID.fromString(stModel.getUuid()));
 		this.stTemplate = stTemplate;
 		this.stModel = stModel;
 	}
@@ -25,6 +25,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
 	@Override
 	public void addedToCanvas() {
+		// getting all nodes and notifying them of this
 		canvas.getAllNodes().forEach(this::newNodeAdded);
 	}
 
@@ -276,7 +277,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 				new Delete(this, canvas, event).actionPerformed(null);
 				return;
 
-			case java.awt.event.KeyEvent.VK_S:
+			case java.awt.event.KeyEvent.VK_O:
 				new OpenFileSink(this, canvas, event).actionPerformed(null);
 				return;
 
