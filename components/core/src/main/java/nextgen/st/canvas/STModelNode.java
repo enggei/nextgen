@@ -392,7 +392,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(transaction -> {
+			canvas.presentationModel.doLaterInTransaction(transaction -> {
 				canvas.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				final org.neo4j.graphdb.Node stModelNode = node.stModel.getNode();
 				stModelNode.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(relationship -> {
@@ -447,7 +447,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> node.stModel.getFiles().forEach(stFile -> {
+			canvas.presentationModel.doLaterInTransaction(tx -> node.stModel.getFiles().forEach(stFile -> {
 				if (stFile.getPath() == null) return;
 				nextgen.st.STGenerator.writeToFile(canvas.presentationModel.render(node.stModel), stFile.getPackageName().getValue(), stFile.getName().getValue(), stFile.getType().getValue(), new java.io.File(stFile.getPath().getValue()));
 			}));
@@ -463,7 +463,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> {
+			canvas.presentationModel.doLaterInTransaction(tx -> {
 				node.forEachArgument((stArgument, stParameter) -> new OpenArgument("", node, canvas, event, stParameter, stArgument).actionPerformed(null));
 				new LayoutTreeAction(node, canvas, event).actionPerformed(null);
 			});
@@ -484,7 +484,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
 			if (!nextgen.utils.SwingUtil.showConfirmDialog(canvas, "Remove argument ?")) return;
-			doLaterInTransaction(tx -> {
+			canvas.presentationModel.doLaterInTransaction(tx -> {
 				canvas.removeRelation(UUID.fromString(stArgument.getUuid()));
 				node.stModel.removeArguments(stArgument);
 				node.setText(canvas.presentationModel.render(node.stModel));
@@ -501,7 +501,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> nextgen.utils.SwingUtil.toClipboard(canvas.presentationModel.render(node.stModel)));
+			canvas.presentationModel.doLaterInTransaction(tx -> nextgen.utils.SwingUtil.toClipboard(canvas.presentationModel.render(node.stModel)));
 		}
 	}
 
@@ -515,7 +515,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
 			if (!nextgen.utils.SwingUtil.showConfirmDialog(canvas, "Delete model ?")) return;
-			doLaterInTransaction(tx -> {
+			canvas.presentationModel.doLaterInTransaction(tx -> {
 				node.close();
 				canvas.presentationModel.db.remove(node.stModel);
 			});
@@ -531,7 +531,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> {
+			canvas.presentationModel.doLaterInTransaction(tx -> {
 				final nextgen.st.model.STModel clone = canvas.presentationModel.db.clone(node.stModel);
 				final STModelNode stModelNode = canvas.newSTNode(clone).get();
 				canvas.addNode(stModelNode);
@@ -549,7 +549,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> {
+			canvas.presentationModel.doLaterInTransaction(tx -> {
 
 				final java.util.concurrent.atomic.AtomicInteger typeIndex = new java.util.concurrent.atomic.AtomicInteger(0);
 				final String[] fileTypes = new String[]{"html", "java", "js"};
@@ -597,7 +597,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 						final String type = fieldMap.get("type").getText().trim();
 						final String path = fieldMap.get("path").getText().trim();
 						final String packageName = fieldMap.get("package").getText().trim();
-						doLaterInTransaction(tx -> {
+						canvas.presentationModel.doLaterInTransaction(tx -> {
 							final nextgen.st.model.STFile stFile = canvas.presentationModel.newSTFile(name, type, path, packageName);
 							node.stModel.addFiles(stFile);
 							final STFileNode dstNode = canvas.addNode(new STFileNode(canvas, stFile, node.stModel));
@@ -619,7 +619,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> 
+			canvas.presentationModel.doLaterInTransaction(tx -> 
 				node.stModel.getFiles().forEach(stFile -> {
 					final STFileNode dstNode = canvas.addNode(stFile.getUuid(), canvas.newSTNode(stFile, node.stModel));
 					canvas.addRelation(dstNode.getUuid(), canvas.newSinkRelation(node, dstNode));
@@ -640,7 +640,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> {
+			canvas.presentationModel.doLaterInTransaction(tx -> {
 				node.removeArgument(stParameter);
 				final nextgen.st.model.STValue stValue = canvas.presentationModel.db.newSTValue("true");
 				final nextgen.st.model.STArgument stArgument = canvas.presentationModel.db.newSTArgument(stParameter, stValue);
@@ -662,7 +662,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
 			nextgen.utils.SwingUtil.showInputDialog(stParameter.getName(), canvas, s -> {
-				doLaterInTransaction(tx -> {
+				canvas.presentationModel.doLaterInTransaction(tx -> {
 					node.removeArgument(stParameter);
 					final nextgen.st.model.STValue stValue = canvas.presentationModel.db.newSTValue(s.trim());
 					final nextgen.st.model.STArgument stArgument = canvas.presentationModel.db.newSTArgument(stParameter, stValue);
@@ -688,7 +688,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
 			final String s = nextgen.utils.SwingUtil.fromClipboard();
 			if (s == null || s.trim().length() == 0) return;
-			doLaterInTransaction(tx -> {
+			canvas.presentationModel.doLaterInTransaction(tx -> {
 				node.removeArgument(stParameter);
 				final nextgen.st.model.STValue stValue = canvas.presentationModel.newSTValue(s.trim());
 				final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValue);
@@ -714,7 +714,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> {
+			canvas.presentationModel.doLaterInTransaction(tx -> {
 				if (node.sameArgumentValue(stParameter, stValueNode.stValue)) return;
 				node.removeArgument(stParameter);
 				final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValueNode.stValue);
@@ -739,7 +739,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> {
+			canvas.presentationModel.doLaterInTransaction(tx -> {
 				node.removeArgument(stParameter);
 				final nextgen.st.model.STValue stValue = canvas.presentationModel.newSTValue(stModelNode.stModel);
 				final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValue);
@@ -763,7 +763,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
 			nextgen.utils.SwingUtil.showInputDialog(stParameter.getName(), canvas, s -> {
-				doLaterInTransaction(tx -> {
+				canvas.presentationModel.doLaterInTransaction(tx -> {
 					final nextgen.st.model.STValue stValue = canvas.presentationModel.newSTValue(s.trim());
 					final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValue);
 					node.stModel.addArguments(stArgument);
@@ -788,7 +788,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
 			final String s = nextgen.utils.SwingUtil.fromClipboard();
 			if (s == null || s.trim().length() == 0) return;
-			doLaterInTransaction(tx -> {
+			canvas.presentationModel.doLaterInTransaction(tx -> {
 				final nextgen.st.model.STValue stValue = canvas.presentationModel.newSTValue(s.trim());
 				final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValue);
 				node.stModel.addArguments(stArgument);
@@ -813,7 +813,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> {
+			canvas.presentationModel.doLaterInTransaction(tx -> {
 				final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValueNode.stValue);
 				node.stModel.addArguments(stArgument);
 				//canvas.addRelation(new STArgumentRelation(canvas, node, stValueNode, stArgument, stParameter));
@@ -836,7 +836,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> {
+			canvas.presentationModel.doLaterInTransaction(tx -> {
 				final nextgen.st.model.STValue stValue = canvas.presentationModel.newSTValue(stModelNode.stModel);
 				final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValue);
 				node.stModel.addArguments(stArgument);
@@ -859,7 +859,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
 			final Map<nextgen.st.domain.STParameterKey, JTextField> fieldMap = new LinkedHashMap<>();
-			doLaterInTransaction(tx -> {
+			canvas.presentationModel.doLaterInTransaction(tx -> {
 				stParameter.getKeys().forEach(stParameterKey -> fieldMap.put(stParameterKey, canvas.newTextField(15)));
 				final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
 				inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
@@ -870,7 +870,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 				nextgen.utils.SwingUtil.showDialog(inputPanel, canvas, stParameter.getName(), new nextgen.utils.SwingUtil.ConfirmAction() {
 					@Override
 					public void verifyAndCommit() throws Exception {
-						doLaterInTransaction(tx -> {
+						canvas.presentationModel.doLaterInTransaction(tx -> {
 							final java.util.List<nextgen.st.model.STArgumentKV> kvs = new ArrayList<>();
 							for (Map.Entry<nextgen.st.domain.STParameterKey, JTextField> fieldEntry : fieldMap.entrySet()) {
 								final String value = fieldEntry.getValue().getText().trim();
@@ -903,7 +903,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> {
+			canvas.presentationModel.doLaterInTransaction(tx -> {
 				if (stParameter.getType().equals(nextgen.st.domain.STParameterType.KVLIST)) {
 					canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, canvas.addNode(stArgument.getUuid(), canvas.newSTNode(stParameter, stArgument)), stArgument, stParameter));
 				} else {
@@ -940,7 +940,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(transaction -> nextgen.st.STAppEvents.postOpenSTModel(node.stTemplate.uuid()));
+			canvas.presentationModel.doLaterInTransaction(transaction -> nextgen.st.STAppEvents.postOpenSTModel(node.stTemplate.uuid()));
 		}
 	}
 
@@ -955,7 +955,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> {
+			canvas.presentationModel.doLaterInTransaction(tx -> {
 				node.forEachArgument((stArgument, stParameter) -> {
 					if (this.stParameter.equals(stParameter))
 						new OpenArgument("", node, canvas, event, stParameter, stArgument).actionPerformed(null);

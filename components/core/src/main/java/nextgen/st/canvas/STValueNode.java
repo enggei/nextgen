@@ -1,6 +1,5 @@
 package nextgen.st.canvas;
 
-import nextgen.utils.SwingUtil;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
@@ -12,7 +11,7 @@ public class STValueNode extends nextgen.st.canvas.STNode {
 
 	nextgen.st.model.STValue stValue;
 
-	public STValueNode(STCanvas canvas, nextgen.st.model.STValue stValue) {
+	public STValueNode(nextgen.st.canvas.STCanvas canvas, nextgen.st.model.STValue stValue) {
 		super(canvas, canvas.presentationModel.render(stValue), java.util.UUID.fromString(stValue.getUuid()));
 		this.stValue = stValue;
 	}
@@ -50,12 +49,6 @@ public class STValueNode extends nextgen.st.canvas.STNode {
 
 	@Override
 	protected void onNodeKeyPressed(PInputEvent event) {
-		switch (event.getKeyCode()) {
-			case java.awt.event.KeyEvent.VK_Q:
-				new OpenIncoming(this, canvas, event).actionPerformed(null);
-				return;
-
-		}
 		super.onNodeKeyPressed(event);
 	}
 
@@ -63,6 +56,7 @@ public class STValueNode extends nextgen.st.canvas.STNode {
 	protected void onNodeLeftClick(PInputEvent event) {
 		super.onNodeLeftClick(event);
 	}
+
 
 	private static final class EditSTValue extends NodeAction<STValueNode> {
 
@@ -73,7 +67,7 @@ public class STValueNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(STValueNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			SwingUtil.showInputDialog("Edit", canvas, canvas.presentationModel.db.get(() -> node.stValue.getValue()), s -> doLaterInTransaction(tx -> {
+			nextgen.utils.SwingUtil.showInputDialog("Edit", canvas, canvas.presentationModel.db.get(() -> node.stValue.getValue()), s -> canvas.presentationModel.doLaterInTransaction(tx -> {
 				node.stValue.setValue(s);
 				node.setText(node.stValue.getValue());
 			}));
@@ -83,27 +77,27 @@ public class STValueNode extends nextgen.st.canvas.STNode {
 	private static final class ToClipboard extends NodeAction<STValueNode> {
 
 
-		ToClipboard(STValueNode node, STCanvas canvas, PInputEvent event) {
+		ToClipboard(STValueNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
 			super("To Clipboard", node, canvas, event);
 		}
 
 		@Override
-		void actionPerformed(STValueNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			canvas.presentationModel.db.doInTransaction(tx -> SwingUtil.toClipboard(canvas.presentationModel.render(node.stValue)));
+		void actionPerformed(STValueNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+			canvas.presentationModel.doInTransaction(tx -> nextgen.utils.SwingUtil.toClipboard(canvas.presentationModel.render(node.stValue)));
 		}
 	}
 
 	private static final class Delete extends NodeAction<STValueNode> {
 
 
-		Delete(STValueNode node, STCanvas canvas, PInputEvent event) {
+		Delete(STValueNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
 			super("Delete", node, canvas, event);
 		}
 
 		@Override
-		void actionPerformed(STValueNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			if (!SwingUtil.showConfirmDialog(canvas, "Delete value ?")) return;
-			doLaterInTransaction(tx -> {
+		void actionPerformed(STValueNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+			if (!nextgen.utils.SwingUtil.showConfirmDialog(canvas, "Delete value ?")) return;
+			canvas.presentationModel.doLaterInTransaction(tx -> {
 				node.close();
 				canvas.presentationModel.db.remove(node.stValue);
 			});
@@ -113,13 +107,13 @@ public class STValueNode extends nextgen.st.canvas.STNode {
 	private static final class OpenIncoming extends NodeAction<STValueNode> {
 
 
-		OpenIncoming(STValueNode node, STCanvas canvas, PInputEvent event) {
+		OpenIncoming(STValueNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
 			super("Open Incoming", node, canvas, event);
 		}
 
 		@Override
-		void actionPerformed(STValueNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(transaction -> {
+		void actionPerformed(STValueNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+			canvas.presentationModel.doLaterInTransaction(transaction -> {
 				canvas.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				final org.neo4j.graphdb.Node neoNode = node.stValue.getNode();
 				neoNode.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(relationship -> {

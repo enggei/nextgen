@@ -250,6 +250,10 @@ public class STAppPresentationModel {
         return stWorkspace;
     }
 
+    public void doLaterInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer) {
+        SwingUtilities.invokeLater(() -> doInTransaction(consumer));
+    }
+
     public void doInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer) {
         db.doInTransaction(consumer);
     }

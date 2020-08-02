@@ -1,17 +1,17 @@
 package nextgen.st.canvas;
 
-import nextgen.st.model.Script;
-import nextgen.utils.SwingUtil;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.*;
 
 public class ScriptNode extends nextgen.st.canvas.STNode {
 
-	Script script;
+	nextgen.st.model.Script script;
 
-	public ScriptNode(nextgen.st.canvas.STCanvas canvas, Script script) {
+	public ScriptNode(nextgen.st.canvas.STCanvas canvas, nextgen.st.model.Script script) {
 		super(canvas, script.getName(), java.util.UUID.fromString(script.getUuid()));
 		this.script = script;
 	}
@@ -46,7 +46,7 @@ public class ScriptNode extends nextgen.st.canvas.STNode {
 				.filter(stNode -> !stNode.getUuid().equals(getUuid()))
 				.map(stNode -> (STModelNode) stNode)
 				.collect(java.util.stream.Collectors.toList());
-		canvas.presentationModel.db.doInTransaction(tx -> {
+		canvas.presentationModel.doInTransaction(tx -> {
 			
 			stModelNodes.forEach(stNode -> pop.add(new SetScriptModelAction("Set Script to " + cut(stNode.getText()), ScriptNode.this, canvas, event, stNode)));
 			stValueNodes.forEach(stNode -> pop.add(new SetScriptValueAction("Set Script to " + cut(stNode.getText()), ScriptNode.this, canvas, event, stNode)));				
@@ -69,16 +69,17 @@ public class ScriptNode extends nextgen.st.canvas.STNode {
 		super.onNodeLeftClick(event);
 	}
 
-	private static final class OpenScript extends NodeAction<ScriptNode> {
+
+	private static final class OpenScript extends NodeAction<nextgen.st.canvas.ScriptNode> {
 
 
-		OpenScript(ScriptNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+		OpenScript(nextgen.st.canvas.ScriptNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
 			super("Open Script", node, canvas, event);
 		}
 
 		@Override
-		void actionPerformed(ScriptNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			canvas.presentationModel.db.doInTransaction(transaction -> {
+		void actionPerformed(nextgen.st.canvas.ScriptNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+			canvas.presentationModel.doInTransaction(transaction -> {
 				final nextgen.st.model.STValue stValue = node.script.getScript();
 				if (stValue == null) return;
 				canvas.addNode(stValue.getUuid(), canvas.newSTNode(stValue));
@@ -96,7 +97,7 @@ public class ScriptNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(ScriptNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(tx -> {
+			canvas.presentationModel.doLaterInTransaction(tx -> {
 				try {
 
 					final nextgen.st.STAppPresentationModel.CompilationResult compilationResult = canvas.presentationModel.generateScriptCode(node.script);
@@ -112,7 +113,7 @@ public class ScriptNode extends nextgen.st.canvas.STNode {
 							.run();
 
 				} catch (Throwable ex) {
-					SwingUtil.showException(canvas, ex);
+					nextgen.utils.SwingUtil.showException(canvas, ex);
 				}
 			});
 		}
@@ -127,8 +128,8 @@ public class ScriptNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(ScriptNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			canvas.presentationModel.db.doInTransaction(transaction -> {
-				SwingUtil.showInputDialog("Name", canvas, node.script.getName(), s -> doLaterInTransaction(tx -> {
+			canvas.presentationModel.doInTransaction(transaction -> {
+				nextgen.utils.SwingUtil.showInputDialog("Name", canvas, node.script.getName(), s -> canvas.presentationModel.doLaterInTransaction(tx -> {
 					node.script.setName(s);
 					node.setText(node.script.getName());					
 				}));
@@ -145,8 +146,8 @@ public class ScriptNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(ScriptNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			if (!SwingUtil.showConfirmDialog(canvas, "Delete script ?")) return;
-			doLaterInTransaction(tx -> {
+			if (!nextgen.utils.SwingUtil.showConfirmDialog(canvas, "Delete script ?")) return;
+			canvas.presentationModel.doLaterInTransaction(tx -> {
 				node.close();
 				canvas.presentationModel.db.remove(node.script);
 			});
@@ -155,19 +156,19 @@ public class ScriptNode extends nextgen.st.canvas.STNode {
 
 	private static final class SetScriptValueAction extends NodeAction<ScriptNode> {
 
-		nextgen.st.canvas.STValueNode stValue;
+		nextgen.st.canvas.STValueNode model;
 
-		SetScriptValueAction(String name, ScriptNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.canvas.STValueNode stValue) {
+		SetScriptValueAction(String name, ScriptNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.canvas.STValueNode model) {
 			super(name, node, canvas, event);
-			this.stValue = stValue;
+			this.model = model;
 		}
 
 		@Override
 		void actionPerformed(ScriptNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(transaction -> {
-				node.script.setScript(stValue.stValue);
+			canvas.presentationModel.doLaterInTransaction(transaction -> {
+				node.script.setScript(model.stValue);
 				canvas.removeRelation(node.getUuid());
-				canvas.addRelation(node.getUuid(), canvas.newScriptRelation(node, stValue));
+				canvas.addRelation(node.getUuid(), canvas.newScriptRelation(node, model));
 			});
 		}
 	}
@@ -183,7 +184,7 @@ public class ScriptNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(ScriptNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			doLaterInTransaction(transaction -> {
+			canvas.presentationModel.doLaterInTransaction(transaction -> {
 				final nextgen.st.model.STValue dst = canvas.presentationModel.newSTValue(stModelNode.stModel);
 				node.script.setScript(dst);
 				canvas.removeRelation(node.getUuid());

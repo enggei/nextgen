@@ -1,6 +1,5 @@
 package nextgen.st.canvas;
 
-import nextgen.utils.SwingUtil;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PDragSequenceEventHandler;
 import org.piccolo2d.event.PInputEvent;
@@ -25,7 +24,7 @@ public class STNode extends PNode implements PropertyChangeListener {
 		_defaultColor, _selectedColor, _highlightedColor, _uuid, _text, _selected, _highlight
 	}
 
-	protected final STCanvas canvas;
+	protected final nextgen.st.canvas.STCanvas canvas;
 	protected final PText child;
 
 	private PPath rectangle;
@@ -33,11 +32,11 @@ public class STNode extends PNode implements PropertyChangeListener {
 	protected final Set<UUID> outgoing = new LinkedHashSet<>();
 	protected final Set<UUID> incoming = new LinkedHashSet<>();
 
-	public STNode(STCanvas canvas, String text) {
+	public STNode(nextgen.st.canvas.STCanvas canvas, String text) {
 		this(canvas, text, UUID.randomUUID());
 	}
 
-	public STNode(STCanvas canvas, String text, UUID uuid) {
+	public STNode(nextgen.st.canvas.STCanvas canvas, String text, UUID uuid) {
 		this.canvas = canvas;
 
 		this.addAttribute(Attributes._defaultColor, Color.decode("#000000"));
@@ -279,10 +278,10 @@ public class STNode extends PNode implements PropertyChangeListener {
 	static abstract class NodeAction<N extends STNode> extends AbstractAction {
 
 		final N node;
-		final STCanvas canvas;
+		final nextgen.st.canvas.STCanvas canvas;
 		final PInputEvent event;
 
-		NodeAction(String name, N node, STCanvas canvas, PInputEvent event) {
+		NodeAction(String name, N node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
 			super(name);
 			this.node = node;
 			this.canvas = canvas;
@@ -298,11 +297,8 @@ public class STNode extends PNode implements PropertyChangeListener {
 			actionPerformed(node, canvas, event, e);
 		}
 
-		abstract void actionPerformed(N node, STCanvas canvas, PInputEvent event, ActionEvent e);
+		abstract void actionPerformed(N node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e);
 
-		protected void doLaterInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer){ 
-			node.doLaterInTransaction(consumer);
-		}
 	}
 
 	protected static final class LayoutTreeAction extends NodeAction<STNode> {
@@ -311,17 +307,17 @@ public class STNode extends PNode implements PropertyChangeListener {
 		private final Map<UUID, java.util.List<STNode>> childrensMap = new LinkedHashMap<>();
 		private final org.abego.treelayout.util.DefaultConfiguration<STNode> configuration;
 
-		protected LayoutTreeAction(STNode root, STCanvas canvas, PInputEvent event) {
+		protected LayoutTreeAction(STNode root, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
 			this(root, canvas, event, org.abego.treelayout.Configuration.Location.Left, org.abego.treelayout.Configuration.AlignmentInLevel.TowardsRoot);
 		}
 
-		protected LayoutTreeAction(STNode root, STCanvas canvas, PInputEvent event, org.abego.treelayout.Configuration.Location location, org.abego.treelayout.Configuration.AlignmentInLevel alignmentInLevel) {
+		protected LayoutTreeAction(STNode root, nextgen.st.canvas.STCanvas canvas, PInputEvent event, org.abego.treelayout.Configuration.Location location, org.abego.treelayout.Configuration.AlignmentInLevel alignmentInLevel) {
 			super("Layout Tree", root, canvas, event);
 			this.configuration = new org.abego.treelayout.util.DefaultConfiguration<>(100, 15, location, alignmentInLevel);
 		}
 
 		@Override
-		void actionPerformed(STNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(STNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
 
 			new Thread(() -> {
 
@@ -388,15 +384,15 @@ public class STNode extends PNode implements PropertyChangeListener {
 		}
 	}
 
-	private static final class RetainNode extends NodeAction<STNode> {
+	private static final class RetainNode extends NodeAction<nextgen.st.canvas.STNode> {
 
 
-		RetainNode(STNode node, STCanvas canvas, PInputEvent event) {
+		RetainNode(nextgen.st.canvas.STNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
 			super("Retain", node, canvas, event);
 		}
 
 		@Override
-		void actionPerformed(STNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(nextgen.st.canvas.STNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
 			javax.swing.SwingUtilities.invokeLater(() -> {
 				canvas.getAllNodes().filter(canvasNode -> !canvasNode.getUuid().equals(node.getUuid())).forEach(STNode::close);
 				canvas.getAllRelations().forEach(relation -> canvas.removeRelation(relation.getUuid()));
@@ -404,28 +400,28 @@ public class STNode extends PNode implements PropertyChangeListener {
 		}
 	}
 
-	private static final class CloseNode extends NodeAction<STNode> {
+	private static final class CloseNode extends NodeAction<nextgen.st.canvas.STNode> {
 
 
-		CloseNode(STNode node, STCanvas canvas, PInputEvent event) {
+		CloseNode(nextgen.st.canvas.STNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
 			super("Close", node, canvas, event);
 		}
 
 		@Override
-		void actionPerformed(STNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(nextgen.st.canvas.STNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
 			javax.swing.SwingUtilities.invokeLater(node::close);
 		}
 	}
 
-	private static final class PopupAction extends NodeAction<STNode> {
+	private static final class PopupAction extends NodeAction<nextgen.st.canvas.STNode> {
 
 
-		PopupAction(STNode node, STCanvas canvas, PInputEvent event) {
+		PopupAction(nextgen.st.canvas.STNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
 			super("Popup", node, canvas, event);
 		}
 
 		@Override
-		void actionPerformed(STNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(nextgen.st.canvas.STNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
 			javax.swing.SwingUtilities.invokeLater(() -> {
 				final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();
 				canvas.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));
@@ -436,15 +432,15 @@ public class STNode extends PNode implements PropertyChangeListener {
 		}
 	}
 
-	private static final class DebugAction extends NodeAction<STNode> {
+	private static final class DebugAction extends NodeAction<nextgen.st.canvas.STNode> {
 
 
-		DebugAction(STNode node, STCanvas canvas, PInputEvent event) {
+		DebugAction(nextgen.st.canvas.STNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
 			super("Debug", node, canvas, event);
 		}
 
 		@Override
-		void actionPerformed(STNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(nextgen.st.canvas.STNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
 			javax.swing.SwingUtilities.invokeLater(() -> {
 				final PBounds fullBounds = node.getFullBoundsReference();
 				log.info(node.getUuid() + " : " + node.getText());
@@ -457,10 +453,6 @@ public class STNode extends PNode implements PropertyChangeListener {
 
 	public static String cut(String text){ 
 		return text.substring(0, Math.min(text.length(), 80));
-	}
-
-	protected void doLaterInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer){ 
-		javax.swing.SwingUtilities.invokeLater(() -> canvas.presentationModel.db.doInTransaction(consumer, throwable -> SwingUtil.showException(canvas, throwable)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
