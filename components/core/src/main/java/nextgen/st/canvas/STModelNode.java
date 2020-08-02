@@ -48,13 +48,12 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 				.filter(stNode -> !stNode.getUuid().equals(getUuid()))
 				.map(stNode -> (STModelNode) stNode)
 				.collect(java.util.stream.Collectors.toList());
-
 		final java.util.List<STModelNode> sameModelNodes = canvas.getSelectedNodes()
-				.filter(stNode -> stNode instanceof STModelNode)
-				.filter(stNode -> !stNode.getUuid().equals(getUuid()))
-				.map(stNode -> (STModelNode) stNode)
-				.filter(stModelNode -> stModelNode.stTemplate.equals(STModelNode.this.stTemplate))
-				.collect(java.util.stream.Collectors.toList());
+						.filter(stNode -> stNode instanceof STModelNode)
+						.filter(stNode -> !stNode.getUuid().equals(getUuid()))
+						.map(stNode -> (STModelNode) stNode)
+						.filter(stModelNode -> stModelNode.stTemplate.equals(STModelNode.this.stTemplate))
+						.collect(java.util.stream.Collectors.toList());
 		canvas.presentationModel.doInTransaction(tx -> {
 
 			final String clipboardValue = cut(nextgen.utils.SwingUtil.fromClipboard());

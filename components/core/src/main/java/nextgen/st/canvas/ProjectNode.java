@@ -39,4 +39,5 @@ public class ProjectNode extends nextgen.st.canvas.STNode {
 		super.onNodeLeftClick(event);
 	}
 
+
 }
