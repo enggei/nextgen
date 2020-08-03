@@ -17,7 +17,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -413,18 +412,14 @@ public class STModelEditor extends JPanel {
                     @Override
                     protected List<Action> getActions() {
                         final List<Action> actions = new ArrayList<>();
-                        getAvailableValues().forEach(stValue -> actions.add(newSetValueAction(stValue)));
-                        actions.add(presentationModel.newTransactionAction("Set from clipboard : " + cut(SwingUtil.fromClipboard()), actionEvent ->
-                                newSetValueAction(presentationModel.newSTValue(SwingUtil.fromClipboard())).actionPerformed(actionEvent)));
-                        return actions;
-                    }
-
-                    private Action newSetValueAction(STValue stValue) {
-                        return presentationModel.newTransactionAction("Set to " + stValue.getValue(), actionEvent -> {
+                        getAvailableValues().forEach(stValue -> actions.add(presentationModel.newTransactionAction("Set to " + stValue.getValue(), actionEvent -> {
                             getModel().setValue(stValue);
                             label = cut(presentationModel.render(getModel().getValue()));
                             treeModel.nodesChanged(getParent(), new int[]{getParent().getIndex(STArgumentNode.this)});
-                        });
+                        })));
+                        actions.add(presentationModel.newTransactionAction("Set from clipboard : " + cut(SwingUtil.fromClipboard()), actionEvent ->
+                                newSetValueAction(presentationModel.newSTValue(SwingUtil.fromClipboard())).actionPerformed(actionEvent)));
+                        return actions;
                     }
                 }
             }

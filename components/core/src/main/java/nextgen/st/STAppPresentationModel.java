@@ -262,6 +262,13 @@ public class STAppPresentationModel {
         db.doInTransaction(consumer, throwableConsumer);
     }
 
+    public void writeToFile(STModel stModel) {
+        doLaterInTransaction(tx -> stModel.getFiles().forEach(stFile -> {
+            if (stFile.getPath() == null) return;
+            nextgen.st.STGenerator.writeToFile(render(stModel), stFile.getPackageName().getValue(), stFile.getName().getValue(), stFile.getType().getValue(), new java.io.File(stFile.getPath().getValue()));
+        }));
+    }
+
     public static final class CompilationResult {
 
         public final String compilerOutput;

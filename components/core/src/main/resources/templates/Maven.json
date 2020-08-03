@@ -393,6 +393,11 @@
         "type" : "SINGLE",
         "argumentType" : "Object"
       } ]
+    }, {
+      "uuid" : "2e69b6b9-46b6-4867-96e1-cf34935ee362",
+      "name" : "antlr4Simple",
+      "text" : "<plugin>\n\t<groupId>org.antlr</groupId>\n\t<artifactId>antlr4-maven-plugin</artifactId>\n\t<version>4.3</version>\n\t<configuration>\n\t\t<outputDirectory>${basedir}/src/main/java</outputDirectory>\n\t\t<visitor>true</visitor>\n\t</configuration>\n\t<executions>\n\t\t<execution>\n\t\t\t<goals>\n\t\t\t\t<goal>antlr4</goal>\n\t\t\t</goals>\n\t\t</execution>\n\t</executions>\n</plugin> ",
+      "parameters" : [ ]
     } ]
   }, {
     "uuid" : "cb5b0503-2209-492a-9e23-8b4d63e2d68f",

@@ -446,10 +446,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			canvas.presentationModel.doLaterInTransaction(tx -> node.stModel.getFiles().forEach(stFile -> {
-				if (stFile.getPath() == null) return;
-				nextgen.st.STGenerator.writeToFile(canvas.presentationModel.render(node.stModel), stFile.getPackageName().getValue(), stFile.getName().getValue(), stFile.getType().getValue(), new java.io.File(stFile.getPath().getValue()));
-			}));
+			canvas.presentationModel.writeToFile(node.stModel);
 		}
 	}
 
