@@ -5,7 +5,7 @@
   "templates" : [ {
     "uuid" : "27fe2ba6-f50a-4f07-bc4b-12872efe17ad",
     "name" : "Domain",
-    "text" : "Domain: ~name~ ~if(packageName)~(~packageName~)~endif~\nEntities:\n~entities:{it|~it~};separator=\"\\n\"~ ",
+    "text" : "Domain: ~name~ ~if(packageName)~(~packageName~)~endif~ ~if(observable)~observable~endif~\nEntities:\n~entities:{it|~it~};separator=\"\\n\"~ ",
     "parameters" : [ {
       "uuid" : "21f95d9b-5310-43e9-9865-9be1fc951308",
       "name" : "name",
@@ -17,6 +17,11 @@
       "type" : "SINGLE",
       "argumentType" : "String"
     }, {
+      "uuid" : "0f8739ef-5188-4140-8a51-72aff4d37ea9",
+      "name" : "observable",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
       "uuid" : "525f7437-e801-4a26-96ae-ebae456054e0",
       "name" : "entities",
       "type" : "LIST",
@@ -25,7 +30,7 @@
     "children" : [ {
       "uuid" : "c4c6caaf-84a5-4975-8782-311476c8742c",
       "name" : "Entity",
-      "text" : "Entity: ~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~\n~relations:{it|~it~};separator=\"\\n\"~ ",
+      "text" : "Entity: ~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~ ~if(observable)~observable~endif~\n~relations:{it|~it~};separator=\"\\n\"~ ",
       "parameters" : [ {
         "uuid" : "df812852-1a4b-4e82-b4e1-31196c9b948f",
         "name" : "name",
@@ -41,6 +46,11 @@
         "name" : "enumValues",
         "type" : "LIST",
         "argumentType" : "String"
+      }, {
+        "uuid" : "e7124aa5-53e3-490e-9834-e12fa7f8bd0c",
+        "name" : "observable",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       }, {
         "uuid" : "b082416f-6627-4868-8709-6e1d5ffaddbe",
         "name" : "relations",

@@ -1,15 +1,17 @@
 package nextgen.st.model;
 
 import nextgen.st.STAppEvents;
+import nextgen.st.STModelEditor;
 import nextgen.st.domain.*;
 import nextgen.utils.Neo4JUtil;
-import org.neo4j.graphdb.Label;
+import org.jetbrains.annotations.NotNull;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.event.TransactionData;
 import org.neo4j.graphdb.event.TransactionEventHandler;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 import static nextgen.st.model.STValueType.*;
 
@@ -18,6 +20,7 @@ public class STModelDB extends STModelNeoFactory {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STModel.class);
 
     private final Collection<STGroupModel> groupModels;
+    private final Map<String, STTemplate> templateMap = new LinkedHashMap<>();
 
     public STModelDB(String dir, Collection<STGroupModel> groupModels) {
         super(dir);
@@ -132,18 +135,16 @@ public class STModelDB extends STModelNeoFactory {
         return null;
     }
 
-    public STGroupModel findSTGroupModelByTemplateUuid(String uuid) {
-        for (STGroupModel groupModel : groupModels) {
-            final STTemplate stTemplate = findSTTemplateByUuid(groupModel, uuid);
-            if (stTemplate != null) return groupModel;
-        }
-        return null;
-    }
-
     public STTemplate findSTTemplateByUuid(String uuid) {
+
+        if (templateMap.containsKey(uuid)) return templateMap.get(uuid);
+
         for (STGroupModel groupModel : groupModels) {
             final STTemplate stTemplate = findSTTemplateByUuid(groupModel, uuid);
-            if (stTemplate != null) return stTemplate;
+            if (stTemplate != null) {
+                templateMap.putIfAbsent(uuid, stTemplate);
+                return stTemplate;
+            }
         }
         return null;
     }
@@ -310,5 +311,4 @@ public class STModelDB extends STModelNeoFactory {
 
         return clone;
     }
-
 }

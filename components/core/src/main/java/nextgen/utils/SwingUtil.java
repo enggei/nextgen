@@ -735,7 +735,7 @@ public class SwingUtil {
         return rSyntaxTextArea;
     }
 
-    private static void format(JTextArea txtEditor) {
+    public static void format(JTextArea txtEditor) {
         final int caretPosition = txtEditor.getCaretPosition();
         final StringBuilder spaces = new StringBuilder();
         for (int i = 0; i < txtEditor.getTabSize(); i++) spaces.append(" ");
@@ -744,7 +744,6 @@ public class SwingUtil {
         final StringBuilder formatted = new StringBuilder();
         for (String s : split) formatted.append(s.replace(spaces, "\t")).append("\n");
         split = formatted.toString().split("\n");
-        System.out.println(formatted.toString());
 
         final StringBuilder formatted2 = new StringBuilder();
         for (String s : split) {
@@ -766,8 +765,6 @@ public class SwingUtil {
 
             formatted2.append("\n");
         }
-        System.out.println(formatted2.toString());
-
         txtEditor.setText(formatted2.toString().trim());
         txtEditor.setCaretPosition(Math.min(formatted2.toString().trim().length(), caretPosition));
     }
@@ -858,5 +855,44 @@ public class SwingUtil {
         public void uninstallUI(JComponent c) {
             LookAndFeel.uninstallBorder(c);
         }
+    }
+
+    public static final javax.swing.JTextField newTextField(int columns){
+        return newTextField("", columns);
+    }
+
+    public static final javax.swing.JTextField newTextField(String content, int columns){
+        javax.swing.JTextField textField = new javax.swing.JTextField(content, columns);
+        textField.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (javax.swing.SwingUtilities.isRightMouseButton(e))
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();
+                        pop.add(new AbstractAction("Set from clipboard") {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                textField.setText(nextgen.utils.SwingUtil.fromClipboard());
+                            }
+                        });
+                        pop.show(textField, e.getX(), e.getY());
+                    });
+            }
+        });
+        textField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                javax.swing.SwingUtilities.invokeLater(() -> ((javax.swing.JTextField) evt.getSource()).selectAll());
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    ((javax.swing.JTextField) evt.getSource()).setSelectionStart(0);
+                    ((javax.swing.JTextField) evt.getSource()).setSelectionEnd(0);
+                });
+            }
+        });
+        return textField;
     }
 }

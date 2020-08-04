@@ -2,6 +2,7 @@ package nextgen.st.model;
 
 public class STArgument {
 
+	private final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);
 	private final org.neo4j.graphdb.Node node;
 
 	public STArgument(org.neo4j.graphdb.Node node) { 
@@ -30,6 +31,7 @@ public class STArgument {
 	public STArgument setUuid(String value) { 
 		if (value == null) node.removeProperty(_uuid); 
 		else node.setProperty(_uuid, value);
+		this.pcs.firePropertyChange("set.uuid", null, value);
 		return this;
 	}
 
@@ -49,6 +51,7 @@ public class STArgument {
 
 	public STArgument removeUuid() { 
 		node.removeProperty(_uuid);
+		this.pcs.firePropertyChange("remove.uuid", true, false);
 		return this;
 	}
 
@@ -57,6 +60,7 @@ public class STArgument {
 	public STArgument setStParameter(String value) { 
 		if (value == null) node.removeProperty(_stParameter); 
 		else node.setProperty(_stParameter, value);
+		this.pcs.firePropertyChange("set.stParameter", null, value);
 		return this;
 	}
 
@@ -76,6 +80,7 @@ public class STArgument {
 
 	public STArgument removeStParameter() { 
 		node.removeProperty(_stParameter);
+		this.pcs.firePropertyChange("remove.stParameter", true, false);
 		return this;
 	}
 
@@ -87,6 +92,7 @@ public class STArgument {
 		}
 		if (dst == null) return this;
 		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("value"));
+		this.pcs.firePropertyChange("set.value", null, dst);
 		return this;
 	}
 
@@ -98,6 +104,7 @@ public class STArgument {
 	public STArgument removeValue() { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getValueRelation());
 		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		this.pcs.firePropertyChange("remove.value", true, false);
 		return this;
 	}
 
@@ -112,6 +119,7 @@ public class STArgument {
 		if (existing.isPresent()) return this;
 		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _keyValues);
 		relationship.setProperty("_t", System.nanoTime());
+		this.pcs.firePropertyChange("set.keyValues", null, dst);
 		return this;
 	}
 
@@ -126,11 +134,13 @@ public class STArgument {
 	public STArgument removeKeyValues(STArgumentKV dst) { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _keyValues).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
 		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		this.pcs.firePropertyChange("remove.keyValues", true, false);
 		return this;
 	}
 
 	public STArgument removeAllKeyValues() { 
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _keyValues).forEach(org.neo4j.graphdb.Relationship::delete);
+		this.pcs.firePropertyChange("removeAll.keyValues", true, false);
 		return this;
 	}
 
@@ -170,5 +180,13 @@ public class STArgument {
 
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();
+	}
+
+	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
+		this.pcs.addPropertyChangeListener(listener);
+	}
+
+	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
+		this.pcs.removePropertyChangeListener(listener);
 	}
 }

@@ -1,455 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>components</artifactId>
-        <groupId>com.nextgen</groupId>
-        <version>1.0</version>
-    </parent>
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <artifactId>core</artifactId>
+	<parent>
+	        <artifactId>components</artifactId>
+	        <groupId>com.nextgen</groupId>
+	        <version>1.0</version>
+	    </parent>
+	 
+	<modelVersion>4.0.0</modelVersion>
 
-    <name>Core</name>
+	<name>Core</name>
 
-    <dependencies>
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.jooq/joor &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.jooq</groupId>-->
-<!--            <artifactId>joor-java-8</artifactId>-->
-<!--            <version>0.9.12</version>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>com.j2html</groupId>-->
-<!--            <artifactId>j2html</artifactId>-->
-<!--            <version>1.4.0</version>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.mvel/mvel2 &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.mvel</groupId>-->
-<!--            <artifactId>mvel2</artifactId>-->
-<!--            <version>2.4.7.Final</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.jeasy</groupId>-->
-<!--            <artifactId>easy-rules-core</artifactId>-->
-<!--            <version>3.4.0</version>-->
-<!--        </dependency>&lt;!&ndash; https://mvnrepository.com/artifact/org.jeasy/easy-rules-mvel &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.jeasy</groupId>-->
-<!--            <artifactId>easy-rules-mvel</artifactId>-->
-<!--            <version>3.4.0</version>-->
-<!--        </dependency>-->
-
-        <!-- GRAPH DATABASES -->
-        <!--NEO4J-->
-        <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j</artifactId>
-            <version>${neo4j.version}</version>
-        </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.neo4j</groupId>-->
-<!--            <artifactId>neo4j-cypher</artifactId>-->
-<!--            <version>${neo4j.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.neo4j</groupId>-->
-<!--            <artifactId>neo4j-bolt</artifactId>-->
-<!--            <version>${neo4j.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.neo4j.driver</groupId>-->
-<!--            <artifactId>neo4j-java-driver</artifactId>-->
-<!--            <version>${neo4j.driver.version}</version>-->
-<!--        </dependency>-->
-
-        <!--STARDOG-->
-        <!--<dependency>-->
-        <!--<groupId>com.complexible.stardog</groupId>-->
-        <!--<artifactId>client-http</artifactId>-->
-        <!--<version>${stardog.version}</version>-->
-        <!--</dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>com.complexible.stardog.sesame</groupId>-->
-<!--            <artifactId>stardog-sesame-core</artifactId>-->
-<!--            <version>${stardog.version}</version>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>com.fifesoft</groupId>-->
-<!--            <artifactId>autocomplete</artifactId>-->
-<!--            <version>3.0.0</version>-->
-<!--        </dependency>-->
-        <dependency>
-            <groupId>com.fifesoft</groupId>
-            <artifactId>rsyntaxtextarea</artifactId>
-            <version>3.0.3</version>
-        </dependency>
-
-        <!-- PARSERS -->
-        <!-- ANTLR / Stringtemplate -->
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4</artifactId>
-            <version>${antlr.version}</version>
-        </dependency>
-
-        <!--Java source operation libraries-->
-<!--        <dependency>-->
-<!--            <groupId>com.github.javaparser</groupId>-->
-<!--            <artifactId>javaparser-core</artifactId>-->
-<!--            <version>${javaparser.version}</version>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>com.squareup</groupId>-->
-<!--            <artifactId>javapoet</artifactId>-->
-<!--            <version>1.8.0</version>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>fr.inria.gforge.spoon</groupId>-->
-<!--            <artifactId>spoon-core</artifactId>-->
-<!--            <version>6.2.0</version>-->
-<!--        </dependency>-->
-
-<!--        &lt;!&ndash; user interface &ndash;&gt;-->
-        <dependency>
-            <groupId>com.jgoodies</groupId>
-            <artifactId>jgoodies-forms</artifactId>
-            <version>${jgoodies.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.piccolo2d</groupId>
-            <artifactId>piccolo2d-core</artifactId>
-            <version>${piccolo2d.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.piccolo2d</groupId>
-            <artifactId>piccolo2d-extras</artifactId>
-            <version>${piccolo2d.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.abego.treelayout</groupId>
-            <artifactId>org.abego.treelayout.core</artifactId>
-            <version>1.0.3</version>
-        </dependency>
-
-        <!--ssh-->
-<!--        <dependency>-->
-<!--            <groupId>net.sf.expectit</groupId>-->
-<!--            <artifactId>expectit-core</artifactId>-->
-<!--            <version>${expectit.version}</version>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>com.jcraft</groupId>-->
-<!--            <artifactId>jsch</artifactId>-->
-<!--            <version>${jsch.version}</version>-->
-<!--        </dependency>-->
-
-        <!--support-libraries-->
-
-        <!--VERTX-->
-        <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-core</artifactId>
-            <version>${vertx.version}</version>
-        </dependency>
-<!--        <dependency>-->
-<!--            <groupId>io.vertx</groupId>-->
-<!--            <artifactId>vertx-web</artifactId>-->
-<!--            <version>${vertx.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>io.vertx</groupId>-->
-<!--            <artifactId>vertx-tcp-eventbus-bridge</artifactId>-->
-<!--            <version>${vertx.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>io.dropwizard.metrics</groupId>-->
-<!--            <artifactId>metrics-core</artifactId>-->
-<!--            <version>${metrics.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>io.vertx</groupId>-->
-<!--            <artifactId>vertx-dropwizard-metrics</artifactId>-->
-<!--            <version>${vertx.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>io.vertx</groupId>-->
-<!--            <artifactId>vertx-web-client</artifactId>-->
-<!--            <version>${vertx.version}</version>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>io.vertx</groupId>-->
-<!--            <artifactId>vertx-auth-jwt</artifactId>-->
-<!--            <version>${vertx.version}</version>-->
-<!--        </dependency>-->
-
-<!--        &lt;!&ndash; CHRONICLE &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>net.openhft</groupId>-->
-<!--            <artifactId>chronicle-queue</artifactId>-->
-<!--            <version>${chronicle.version}</version>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>com.google.guava</groupId>-->
-<!--            <artifactId>guava</artifactId>-->
-<!--            <version>${guava.version}</version>-->
-<!--        </dependency>-->
-
-<!--        &lt;!&ndash;FSM&ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>au.com.datasymphony</groupId>-->
-<!--            <artifactId>EasyFlow</artifactId>-->
-<!--            <version>${easyflow.version}</version>-->
-<!--        </dependency>-->
-
-<!--        &lt;!&ndash;PROCESS-EXECUTION&ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.zeroturnaround</groupId>-->
-<!--            <artifactId>zt-exec</artifactId>-->
-<!--            <version>1.10</version>-->
-<!--        </dependency>-->
-
-<!--        &lt;!&ndash;zip-utils&ndash;&gt;-->
-<!--        &lt;!&ndash;https://github.com/zeroturnaround/zt-zip&ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.zeroturnaround</groupId>-->
-<!--            <artifactId>zt-zip</artifactId>-->
-<!--            <version>1.12</version>-->
-<!--            <type>jar</type>-->
-<!--        </dependency>-->
-
-<!--        &lt;!&ndash;COMBINATORICS&ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>com.github.dpaukov</groupId>-->
-<!--            <artifactId>combinatoricslib3</artifactId>-->
-<!--            <version>3.3.0</version>-->
-<!--        </dependency>-->
-
-<!--        &lt;!&ndash;regexp-generator&ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>com.github.mifmif</groupId>-->
-<!--            <artifactId>generex</artifactId>-->
-<!--            <version>1.0.2</version>-->
-<!--        </dependency>-->
-
-<!--        &lt;!&ndash;MYSQL&ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>mysql</groupId>-->
-<!--            <artifactId>mysql-connector-java</artifactId>-->
-<!--            <version>5.1.6</version>-->
-<!--        </dependency>-->
-
-<!--        &lt;!&ndash;BERKELEY-DB&ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>com.sleepycat</groupId>-->
-<!--            <artifactId>je</artifactId>-->
-<!--            <version>5.0.73</version>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
-
-<!--        &lt;!&ndash; REFLECTION&ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.reflections</groupId>-->
-<!--            <artifactId>reflections</artifactId>-->
-<!--            <version>0.9.11</version>-->
-<!--        </dependency>-->
-
-<!--        &lt;!&ndash;chat-test&ndash;&gt;-->
-<!--        &lt;!&ndash;https://github.com/aichaos/rivescript-java&ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>com.rivescript</groupId>-->
-<!--            <artifactId>rivescript-core</artifactId>-->
-<!--            <version>0.10.0</version>-->
-<!--        </dependency>-->
-
-<!--        &lt;!&ndash;clojure support&ndash;&gt;-->
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.clojure/clojure &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.clojure</groupId>-->
-<!--            <artifactId>clojure</artifactId>-->
-<!--            <version>${clojure.version}</version>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>com.javax0</groupId>-->
-<!--            <artifactId>jscc</artifactId>-->
-<!--            <version>1.0.1</version>-->
-<!--        </dependency>-->
-
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.codehaus.janino/janino &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.codehaus.janino</groupId>-->
-<!--            <artifactId>janino</artifactId>-->
-<!--            <version>3.1.2</version>-->
-<!--        </dependency>-->
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.12.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.kklisura.cdt</groupId>
-            <artifactId>cdt-java-client</artifactId>
-            <version>2.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>net.openhft</groupId>
-            <artifactId>compiler</artifactId>
-            <version>2.3.1</version>
-        </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.github.wumpz</groupId>-->
-<!--            <artifactId>diffutils</artifactId>-->
-<!--            <version>2.2</version>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>org.tensorflow</groupId>-->
-<!--            <artifactId>tensorflow</artifactId>-->
-<!--            <version>${tensorflow.version}</version>-->
-<!--        </dependency>-->
-
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.poi/poi &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.poi</groupId>-->
-<!--            <artifactId>poi-ooxml</artifactId>-->
-<!--            <version>${apache.poi.version}</version>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>org.everit.json</groupId>-->
-<!--            <artifactId>org.everit.json.schema</artifactId>-->
-<!--            <version>1.3.0</version>-->
-<!--        </dependency>-->
-
-        <!--Test-->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-        </dependency>
+	<artifactId>core</artifactId>
 
 
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.antlr</groupId>
-                <artifactId>antlr4-maven-plugin</artifactId>
-                <version>${antlr.version}</version>
-                <configuration>
-                    <sourceDirectory>src/test/java/grammars/antlr</sourceDirectory>
-                    <includes>
-                        <include>ANTLRv4Lexer.g4</include>
-                        <include>ANTLRv4Parser.g4</include>
-                        <include>LexBasic.g4</include>
-
-                    </includes>
-                    <arguments>
-                        <argument>-package</argument>
-                        <argument>org.antlr.parser.antlr4</argument>
-                    </arguments>
-                    <outputDirectory>src/test/java/org/antlr/parser/antlr4</outputDirectory>
-                    <visitor>true</visitor>
-                    <listener>true</listener>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>antlr4</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.antlr</groupId>
-                <artifactId>antlr4-maven-plugin</artifactId>
-                <version>${antlr.version}</version>
-                <configuration>
-                    <sourceDirectory>src/test/java/grammars/stringtemplate</sourceDirectory>
-                    <includes>
-                        <include>LexUnicode.g4</include>
-                        <include>LexBasic.g4</include>
-                        <include>STGLexer.g4</include>
-                        <include>STGParser.g4</include>
-                        <include>STLexer.g4</include>
-                        <include>STParser.g4</include>
-                    </includes>
-                    <arguments>
-                        <argument>-package</argument>
-                        <argument>org.antlr.parser.st4</argument>
-                    </arguments>
-                    <outputDirectory>src/test/java/org/antlr/parser/st4</outputDirectory>
-                    <visitor>true</visitor>
-                    <listener>true</listener>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>antlr4</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!--fat-jar plugin for single-file server package-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.3</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-
-                            <filters>
-                                <filter>
-                                    <artifact>*:*</artifact>
-                                    <excludes>
-                                        <exclude>META-INF/*.SF</exclude>
-                                        <exclude>META-INF/*.DSA</exclude>
-                                        <exclude>META-INF/*.RSA</exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
-
-                            <transformers>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <manifestEntries>
-                                        <Main-Class>io.vertx.core.Launcher</Main-Class>
-                                        <Main-Verticle>com.nextgen.core.GeneratorServer</Main-Verticle>
-                                    </manifestEntries>
-                                </transformer>
-                            </transformers>
-                            <artifactSet/>
-                            <outputFile>target/${project.artifactId}-${project.version}-fat.jar
-                            </outputFile>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-
-    </build>
+	<dependencies>
+		<dependency>
+			<groupId>com.fifesoft</groupId>
+			<artifactId>rsyntaxtextarea</artifactId>
+			<version>3.0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j</artifactId>
+			<version>${neo4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr4</artifactId>
+			<version>${antlr.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jgoodies</groupId>
+			<artifactId>jgoodies-forms</artifactId>
+			<version>${jgoodies.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.piccolo2d</groupId>
+			<artifactId>piccolo2d-core</artifactId>
+			<version>${piccolo2d.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.piccolo2d</groupId>
+			<artifactId>piccolo2d-extras</artifactId>
+			<version>${piccolo2d.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.abego.treelayout</groupId>
+			<artifactId>org.abego.treelayout.core</artifactId>
+			<version>1.0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-core</artifactId>
+			<version>${vertx.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.12.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.kklisura.cdt</groupId>
+			<artifactId>cdt-java-client</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>net.openhft</groupId>
+			<artifactId>compiler</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.javatuples</groupId>
+			<artifactId>javatuples</artifactId>
+			<version>1.2</version>
+		</dependency>  
+	</dependencies>
 
 </project>

@@ -2,15 +2,16 @@ package nextgen.templates.domain;
 
 public class DomainST {
 
-	private static final String stg = "delimiters \"~\", \"~\"\n" +
-	"eom() ::= \"}\"\n" +
-	"gt() ::= \">\"\n" +
-	Domain.st + "\n" + 
-	Entity.st + "\n" + 
-	JavaProject.st + "\n" + 
-	JavaLibrary.st + "\n" + 
-	JavaPackage.st + "\n" + 
-	Relation.st + "\n" ;
+	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
+	.append("eom() ::= \"}\"\n")
+	.append("gt() ::= \">\"\n")
+	.append(Domain.st + "\n")
+	.append(Entity.st + "\n")
+	.append(Relation.st + "\n")
+	.append(JavaProject.st + "\n")
+	.append(JavaLibrary.st + "\n")
+	.append(JavaPackage.st + "\n")
+	.toString()  ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -48,27 +49,27 @@ public class DomainST {
 
 	public static Domain newDomain() {
 		return new Domain(stGroup);
-	} 
+	}  
 
 	public static Entity newEntity() {
 		return new Entity(stGroup);
-	} 
-
-	public static JavaProject newJavaProject() {
-		return new JavaProject(stGroup);
-	} 
-
-	public static JavaLibrary newJavaLibrary() {
-		return new JavaLibrary(stGroup);
-	} 
-
-	public static JavaPackage newJavaPackage() {
-		return new JavaPackage(stGroup);
-	} 
+	}  
 
 	public static Relation newRelation() {
 		return new Relation(stGroup);
-	} 
+	}  
+
+	public static JavaProject newJavaProject() {
+		return new JavaProject(stGroup);
+	}  
+
+	public static JavaLibrary newJavaLibrary() {
+		return new JavaLibrary(stGroup);
+	}  
+
+	public static JavaPackage newJavaPackage() {
+		return new JavaPackage(stGroup);
+	}  
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
 

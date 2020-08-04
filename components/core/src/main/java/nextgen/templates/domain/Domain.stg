@@ -1,11 +1,13 @@
 delimiters "~","~"
 
-Domain(name,packageName,entities) ::= <<Domain: ~name~ ~if(packageName)~(~packageName~)~endif~
+Domain(name,packageName,observable,entities) ::= <<Domain: ~name~ ~if(packageName)~(~packageName~)~endif~ ~if(observable)~observable~endif~
 Entities:
 ~entities:{it|~it~};separator="\n"~  >>
 
-Entity(name,isEnum,enumValues,relations) ::= <<Entity: ~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=","~~endif~
+Entity(name,isEnum,enumValues,observable,relations) ::= <<Entity: ~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=","~~endif~ ~if(observable)~observable~endif~
 ~relations:{it|~it~};separator="\n"~  >>
+
+Relation(name,type,dst,lexical,self) ::= <<~name~ ~type~ ~dst~~if(lexical)~ lexical~endif~~if(self)~ self-referential~endif~  >>
 
 JavaProject(packageName,javaPatterns,name,root,libraries,packageDeclarations) ::= <<package ~packageName~;
 
@@ -40,8 +42,6 @@ final PackageDeclaration ~name~ = newPackageDeclaration(~if(parent)~~parent~, ~e
 
 JavaLibrary(name,packages) ::= <<// ~name~
 ~packages:{it|~it~};separator="\n\n"~  >>
-
-Relation(name,type,dst,lexical,self) ::= <<~name~ ~type~ ~dst~~if(lexical)~ lexical~endif~~if(self)~ self-referential~endif~  >>
 
 eom() ::= "}"
 

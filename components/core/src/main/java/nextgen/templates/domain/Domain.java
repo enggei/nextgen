@@ -7,6 +7,7 @@ public class Domain {
 
 	private String _name;
 	private String _packageName;
+	private Object _observable;
 	private java.util.List<Entity> _entities = new java.util.ArrayList<>();
 
 	Domain(org.stringtemplate.v4.STGroup stGroup) {
@@ -22,6 +23,7 @@ public class Domain {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Domain");
 		st.add("name", _name);
 		st.add("packageName", _packageName);
+		st.add("observable", _observable);
 		for (Object o : _entities) st.add("entities", o);
 		return st.render().trim();
 	}
@@ -70,6 +72,28 @@ public class Domain {
 		return this;
 	} 
 
+	public Domain setObservable(Object value) {
+		this._observable = value;
+		return this;
+	}
+
+	public Object getObservable() {
+		return this._observable;
+	}
+
+	public Object getObservable(Object defaultValue) {
+		return this._observable == null ? defaultValue : this._observable;
+	}
+
+	public boolean hasObservable() {
+		return this._observable != null;
+	}
+
+	public Domain removeObservable() {
+		this._observable = null;
+		return this;
+	} 
+
 	public Domain addEntities(Entity value) {
 		this._entities.add(value);
 		return this;
@@ -113,7 +137,7 @@ public class Domain {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Domain(name,packageName,entities) ::= <<Domain: ~name~ ~if(packageName)~(~packageName~)~endif~\n" + 
+	static final String st = "Domain(name,packageName,observable,entities) ::= <<Domain: ~name~ ~if(packageName)~(~packageName~)~endif~ ~if(observable)~observable~endif~\n" + 
 				"Entities:\n" + 
 				"~entities:{it|~it~};separator=\"\\n\"~ >>";
 }  

@@ -329,40 +329,7 @@ public class STEditor extends JPanel {
     }
 
     private void format(JTextArea txtEditor) {
-        final int caretPosition = txtEditor.getCaretPosition();
-        final StringBuilder spaces = new StringBuilder();
-        for (int i = 0; i < txtEditor.getTabSize(); i++) spaces.append(" ");
-
-        String[] split = txtEditor.getText().split("\n");
-        final StringBuilder formatted = new StringBuilder();
-        for (String s : split) formatted.append(s.replace(spaces, "\t")).append("\n");
-        split = formatted.toString().split("\n");
-        System.out.println(formatted.toString());
-
-        final StringBuilder formatted2 = new StringBuilder();
-        for (String s : split) {
-            if (s.trim().length() == 0) {
-                formatted2.append("\n");
-                continue;
-            }
-
-            final char[] c = s.toCharArray();
-            for (int i = 0; i < c.length; i++) {
-                if (c[i] == '\t') {
-                    formatted2.append(c[i]);
-                    continue;
-                }
-                if (c[i] == ' ') continue;
-                formatted2.append(s.substring(i));
-                break;
-            }
-
-            formatted2.append("\n");
-        }
-        System.out.println(formatted2.toString());
-
-        txtEditor.setText(formatted2.toString().trim());
-        txtEditor.setCaretPosition(Math.min(formatted2.toString().trim().length(), caretPosition));
+        SwingUtil.format(txtEditor);
         txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
     }
 

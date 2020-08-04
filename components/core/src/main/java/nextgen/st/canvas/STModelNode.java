@@ -260,10 +260,6 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 	@Override
 	protected void onNodeKeyPressed(PInputEvent event) {
 		switch (event.getKeyCode()) {
-			case java.awt.event.KeyEvent.VK_Q:
-				new OpenIncoming(this, canvas, event).actionPerformed(null);
-				return;
-
 			case java.awt.event.KeyEvent.VK_W:
 				new WriteToFile(this, canvas, event).actionPerformed(null);
 				return;
@@ -854,33 +850,11 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
 		@Override
 		void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
-			final Map<nextgen.st.domain.STParameterKey, JTextField> fieldMap = new LinkedHashMap<>();
 			canvas.presentationModel.doLaterInTransaction(tx -> {
-				stParameter.getKeys().forEach(stParameterKey -> fieldMap.put(stParameterKey, canvas.newTextField(15)));
-				final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
-				inputPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
-				for (Map.Entry<nextgen.st.domain.STParameterKey, JTextField> fieldEntry : fieldMap.entrySet()) {
-					inputPanel.add(new JLabel(fieldEntry.getKey().getName()));
-					inputPanel.add(fieldEntry.getValue());
-				}
-				nextgen.utils.SwingUtil.showDialog(inputPanel, canvas, stParameter.getName(), new nextgen.utils.SwingUtil.ConfirmAction() {
-					@Override
-					public void verifyAndCommit() throws Exception {
-						canvas.presentationModel.doLaterInTransaction(tx -> {
-							final java.util.List<nextgen.st.model.STArgumentKV> kvs = new ArrayList<>();
-							for (Map.Entry<nextgen.st.domain.STParameterKey, JTextField> fieldEntry : fieldMap.entrySet()) {
-								final String value = fieldEntry.getValue().getText().trim();
-								if (value.length() == 0) continue;
-								kvs.add(canvas.presentationModel.newSTArgumentKV(fieldEntry.getKey(), canvas.presentationModel.newSTValue(value)));
-							}
-							final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, kvs);
-							node.stModel.addArguments(stArgument);
-							final STNode stkvNode = canvas.addNode(canvas.newSTNode(stParameter, stArgument).get());
-							// canvas.addRelation(new STArgumentRelation(canvas, node, stkvNode, stArgument, stParameter));
-							canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stkvNode, stArgument, stParameter));
-							node.setText(canvas.presentationModel.render(node.stModel));
-						});
-					}
+				canvas.presentationModel.addKVArgument(node.stModel, stParameter, canvas, stArgument -> {
+					final STNode stkvNode = canvas.addNode(canvas.newSTNode(stParameter, stArgument).get());
+					canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, stkvNode, stArgument, stParameter));
+					node.setText(canvas.presentationModel.render(node.stModel));
 				});
 			});
 		}

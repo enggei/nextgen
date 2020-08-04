@@ -8,6 +8,7 @@ public class PrimitiveAccessors {
 	private Object _name;
 	private Object _className;
 	private Object _type;
+	private Object _observable;
 
 	PrimitiveAccessors(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -23,6 +24,7 @@ public class PrimitiveAccessors {
 		st.add("name", _name);
 		st.add("className", _className);
 		st.add("type", _type);
+		st.add("observable", _observable);
 		return st.render().trim();
 	}
 
@@ -92,6 +94,28 @@ public class PrimitiveAccessors {
 		return this;
 	} 
 
+	public PrimitiveAccessors setObservable(Object value) {
+		this._observable = value;
+		return this;
+	}
+
+	public Object getObservable() {
+		return this._observable;
+	}
+
+	public Object getObservable(Object defaultValue) {
+		return this._observable == null ? defaultValue : this._observable;
+	}
+
+	public boolean hasObservable() {
+		return this._observable != null;
+	}
+
+	public PrimitiveAccessors removeObservable() {
+		this._observable = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -107,11 +131,12 @@ public class PrimitiveAccessors {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "primitiveAccessors(name,className,type) ::= <<private static final String _~name~ = \"~name~\";\n" + 
+	static final String st = "primitiveAccessors(name,className,type,observable) ::= <<private static final String _~name~ = \"~name~\";\n" + 
 				"\n" + 
 				"public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n" + 
 				"	if (value == null) node.removeProperty(_~name~); \n" + 
 				"	else node.setProperty(_~name~, value);\n" + 
+				"	~if(observable)~this.pcs.firePropertyChange(\"set.~name~\", null, value);~endif~\n" + 
 				"	return this;\n" + 
 				"}\n" + 
 				"\n" + 
@@ -131,6 +156,7 @@ public class PrimitiveAccessors {
 				"\n" + 
 				"public ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() { \n" + 
 				"	node.removeProperty(_~name~);\n" + 
+				"	~if(observable)~this.pcs.firePropertyChange(\"remove.~name~\", true, false);~endif~\n" + 
 				"	return this;\n" + 
 				"} >>";
 }  

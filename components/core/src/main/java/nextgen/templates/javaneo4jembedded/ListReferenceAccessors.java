@@ -8,6 +8,7 @@ public class ListReferenceAccessors {
 	private Object _name;
 	private Object _className;
 	private Object _type;
+	private Object _observable;
 
 	ListReferenceAccessors(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -23,6 +24,7 @@ public class ListReferenceAccessors {
 		st.add("name", _name);
 		st.add("className", _className);
 		st.add("type", _type);
+		st.add("observable", _observable);
 		return st.render().trim();
 	}
 
@@ -92,6 +94,28 @@ public class ListReferenceAccessors {
 		return this;
 	} 
 
+	public ListReferenceAccessors setObservable(Object value) {
+		this._observable = value;
+		return this;
+	}
+
+	public Object getObservable() {
+		return this._observable;
+	}
+
+	public Object getObservable(Object defaultValue) {
+		return this._observable == null ? defaultValue : this._observable;
+	}
+
+	public boolean hasObservable() {
+		return this._observable != null;
+	}
+
+	public ListReferenceAccessors removeObservable() {
+		this._observable = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -107,13 +131,14 @@ public class ListReferenceAccessors {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "listReferenceAccessors(name,className,type) ::= <<private static final org.neo4j.graphdb.RelationshipType _~name~ = org.neo4j.graphdb.RelationshipType.withName(\"~name~\");\n" + 
+	static final String st = "listReferenceAccessors(name,className,type,observable) ::= <<private static final org.neo4j.graphdb.RelationshipType _~name~ = org.neo4j.graphdb.RelationshipType.withName(\"~name~\");\n" + 
 				"\n" + 
 				"public ~className;format=\"capitalize\"~ add~name;format=\"capitalize\"~(~type~ dst) { \n" + 
 				"	final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _~name~).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();\n" + 
 				"	if (existing.isPresent()) return this;\n" + 
 				"	final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _~name~);\n" + 
 				"	relationship.setProperty(\"_t\", System.nanoTime());\n" + 
+				"	~if(observable)~this.pcs.firePropertyChange(\"set.~name~\", null, dst);~endif~\n" + 
 				"	return this;\n" + 
 				"}\n" + 
 				"\n" + 
@@ -128,11 +153,13 @@ public class ListReferenceAccessors {
 				"public ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~(~type~ dst) { \n" + 
 				"	final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _~name~).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();\n" + 
 				"	existing.ifPresent(org.neo4j.graphdb.Relationship::delete);\n" + 
+				"	~if(observable)~this.pcs.firePropertyChange(\"remove.~name~\", true, false);~endif~\n" + 
 				"	return this;\n" + 
 				"}\n" + 
 				"\n" + 
 				"public ~className;format=\"capitalize\"~ removeAll~name;format=\"capitalize\"~() { \n" + 
 				"	node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _~name~).forEach(org.neo4j.graphdb.Relationship::delete);\n" + 
+				"	~if(observable)~this.pcs.firePropertyChange(\"removeAll.~name~\", true, false);~endif~\n" + 
 				"	return this;\n" + 
 				"} >>";
 }  

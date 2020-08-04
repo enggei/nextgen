@@ -11,10 +11,10 @@ public class DomainSTTests {
 	public void testAll() {
 		testDomain();
 		testEntity();
+		testRelation();
 		testJavaProject();
 		testJavaLibrary();
 		testJavaPackage();
-		testRelation();
 	}
 
 	@org.junit.Test
@@ -25,6 +25,11 @@ public class DomainSTTests {
 	@org.junit.Test
 	public void testEntity() {
 		System.out.println("\n--- TEST Entity:\n" + newEntity());
+	} 
+
+	@org.junit.Test
+	public void testRelation() {
+		System.out.println("\n--- TEST Relation:\n" + newRelation());
 	} 
 
 	@org.junit.Test
@@ -40,10 +45,5 @@ public class DomainSTTests {
 	@org.junit.Test
 	public void testJavaPackage() {
 		System.out.println("\n--- TEST JavaPackage:\n" + newJavaPackage());
-	} 
-
-	@org.junit.Test
-	public void testRelation() {
-		System.out.println("\n--- TEST Relation:\n" + newRelation());
 	} 
 } 

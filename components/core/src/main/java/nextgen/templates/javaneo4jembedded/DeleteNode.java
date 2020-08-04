@@ -5,6 +5,8 @@ public class DeleteNode {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Object _observable;
+	private Object _name;
 	private java.util.List<java.util.Map<String, Object>> _refs = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _refList = new java.util.ArrayList<>();
 
@@ -19,11 +21,56 @@ public class DeleteNode {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("deleteNode");
+		st.add("observable", _observable);
+		st.add("name", _name);
 		for (java.util.Map<String, Object> map : _refs) st.addAggr("refs.{type,name}", map.get("type"), map.get("name"));
 		for (java.util.Map<String, Object> map : _refList) st.addAggr("refList.{name}", map.get("name"));
 		return st.render().trim();
 	}
 
+	public DeleteNode setObservable(Object value) {
+		this._observable = value;
+		return this;
+	}
+
+	public Object getObservable() {
+		return this._observable;
+	}
+
+	public Object getObservable(Object defaultValue) {
+		return this._observable == null ? defaultValue : this._observable;
+	}
+
+	public boolean hasObservable() {
+		return this._observable != null;
+	}
+
+	public DeleteNode removeObservable() {
+		this._observable = null;
+		return this;
+	} 
+
+	public DeleteNode setName(Object value) {
+		this._name = value;
+		return this;
+	}
+
+	public Object getName() {
+		return this._name;
+	}
+
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
+	public boolean hasName() {
+		return this._name != null;
+	}
+
+	public DeleteNode removeName() {
+		this._name = null;
+		return this;
+	} 
 
 
 	public DeleteNode addRefs(Object _type, Object _name) {
@@ -121,7 +168,7 @@ public class DeleteNode {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "deleteNode(refs,refList) ::= <<public void deleteTree() {\n" + 
+	static final String st = "deleteNode(refs,refList,observable,name) ::= <<public void deleteTree() {\n" + 
 				"~refs:{it|\n" + 
 				"	final ~it.type~ _~it.name~ = get~it.name;format=\"capitalize\"~();\n" + 
 				"	if (_~it.name~ != null) _~it.name~.deleteTree();\n" + 
@@ -131,5 +178,6 @@ public class DeleteNode {
 				"};separator=\"\\n\"~\n" + 
 				"	node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);\n" + 
 				"	node.delete();\n" + 
+				"	~if(observable)~this.pcs.firePropertyChange(\"delete.~name~\", true, false);~endif~\n" + 
 				"} >>";
 }  

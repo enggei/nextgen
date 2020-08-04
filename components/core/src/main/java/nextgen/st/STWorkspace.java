@@ -58,7 +58,7 @@ public class STWorkspace extends JTabbedPane {
             }
         }
 
-        final STModelEditor component = new STModelEditor(presentationModel, stTemplate, stModel);
+        final STModelEditor component = new STModelEditor(presentationModel, stModel);
         addTab(stTemplate.getName() + "Model", component);
         setTabComponentAt(indexOfComponent(component), new ButtonTabComponent(this));
         return component;

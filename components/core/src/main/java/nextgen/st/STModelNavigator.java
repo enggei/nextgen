@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -497,14 +498,8 @@ public class STModelNavigator extends JPanel {
 
                     public STModelTreeNode(STModel model, STTemplate stTemplate) {
                         super(model, "STGDirectory");
-
                         tooltip = presentationModel.render(model);
-                        final Optional<STParameter> parameter = stTemplate.getParameters().filter(stParameter -> stParameter.getName().equals("name")).findFirst();
-                        if (parameter.isPresent()) {
-                            final Optional<STArgument> argument = model.getArguments().filter(stArgument -> stArgument.getStParameter().equals(parameter.get().uuid())).findFirst();
-                            label = argument.isPresent() ? presentationModel.render(argument.get().getValue()) : cut(tooltip);
-                        } else
-                            label = cut(tooltip);
+                        label = presentationModel.tryToFindArgument(model, "name", () -> cut(tooltip));
                     }
 
                     @Override

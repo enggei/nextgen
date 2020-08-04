@@ -8,6 +8,7 @@ public class ReferenceAccessors {
 	private Object _className;
 	private Object _name;
 	private Object _type;
+	private Object _observable;
 
 	ReferenceAccessors(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -23,6 +24,7 @@ public class ReferenceAccessors {
 		st.add("className", _className);
 		st.add("name", _name);
 		st.add("type", _type);
+		st.add("observable", _observable);
 		return st.render().trim();
 	}
 
@@ -92,6 +94,28 @@ public class ReferenceAccessors {
 		return this;
 	} 
 
+	public ReferenceAccessors setObservable(Object value) {
+		this._observable = value;
+		return this;
+	}
+
+	public Object getObservable() {
+		return this._observable;
+	}
+
+	public Object getObservable(Object defaultValue) {
+		return this._observable == null ? defaultValue : this._observable;
+	}
+
+	public boolean hasObservable() {
+		return this._observable != null;
+	}
+
+	public ReferenceAccessors removeObservable() {
+		this._observable = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -107,7 +131,7 @@ public class ReferenceAccessors {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "referenceAccessors(className,name,type) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ dst) { \n" + 
+	static final String st = "referenceAccessors(className,name,type,observable) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ dst) { \n" + 
 				"	final org.neo4j.graphdb.Relationship relationship = get~name;format=\"capitalize\"~Relation();\n" + 
 				"	if (relationship != null)  { \n" + 
 				"		if (relationship.getOtherNode(node).equals(dst.getNode())) return this;\n" + 
@@ -115,6 +139,7 @@ public class ReferenceAccessors {
 				"	}\n" + 
 				"	if (dst == null) return this;\n" + 
 				"	node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName(\"~name~\"));\n" + 
+				"	~if(observable)~this.pcs.firePropertyChange(\"set.~name~\", null, dst);~endif~\n" + 
 				"	return this;\n" + 
 				"}\n" + 
 				"\n" + 
@@ -126,6 +151,7 @@ public class ReferenceAccessors {
 				"public ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() { \n" + 
 				"	final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(get~name;format=\"capitalize\"~Relation());\n" + 
 				"	existing.ifPresent(org.neo4j.graphdb.Relationship::delete);\n" + 
+				"	~if(observable)~this.pcs.firePropertyChange(\"remove.~name~\", true, false);~endif~\n" + 
 				"	return this;\n" + 
 				"}\n" + 
 				"\n" + 

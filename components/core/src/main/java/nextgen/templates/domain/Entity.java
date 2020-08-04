@@ -7,6 +7,7 @@ public class Entity {
 
 	private String _name;
 	private Boolean _isEnum;
+	private Object _observable;
 	private java.util.List<String> _enumValues = new java.util.ArrayList<>();
 	private java.util.List<Relation> _relations = new java.util.ArrayList<>();
 
@@ -23,6 +24,7 @@ public class Entity {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Entity");
 		st.add("name", _name);
 		st.add("isEnum", _isEnum);
+		st.add("observable", _observable);
 		for (Object o : _enumValues) st.add("enumValues", o);
 		for (Object o : _relations) st.add("relations", o);
 		return st.render().trim();
@@ -69,6 +71,28 @@ public class Entity {
 
 	public Entity removeIsEnum() {
 		this._isEnum = null;
+		return this;
+	} 
+
+	public Entity setObservable(Object value) {
+		this._observable = value;
+		return this;
+	}
+
+	public Object getObservable() {
+		return this._observable;
+	}
+
+	public Object getObservable(Object defaultValue) {
+		return this._observable == null ? defaultValue : this._observable;
+	}
+
+	public boolean hasObservable() {
+		return this._observable != null;
+	}
+
+	public Entity removeObservable() {
+		this._observable = null;
 		return this;
 	} 
 
@@ -144,6 +168,6 @@ public class Entity {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Entity(name,isEnum,enumValues,relations) ::= <<Entity: ~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~\n" + 
+	static final String st = "Entity(name,isEnum,enumValues,observable,relations) ::= <<Entity: ~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~ ~if(observable)~observable~endif~\n" + 
 				"~relations:{it|~it~};separator=\"\\n\"~ >>";
 }  

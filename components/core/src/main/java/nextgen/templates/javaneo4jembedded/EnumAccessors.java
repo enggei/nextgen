@@ -8,6 +8,7 @@ public class EnumAccessors {
 	private Object _className;
 	private Object _name;
 	private Object _type;
+	private Object _observable;
 
 	EnumAccessors(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -23,6 +24,7 @@ public class EnumAccessors {
 		st.add("className", _className);
 		st.add("name", _name);
 		st.add("type", _type);
+		st.add("observable", _observable);
 		return st.render().trim();
 	}
 
@@ -92,6 +94,28 @@ public class EnumAccessors {
 		return this;
 	} 
 
+	public EnumAccessors setObservable(Object value) {
+		this._observable = value;
+		return this;
+	}
+
+	public Object getObservable() {
+		return this._observable;
+	}
+
+	public Object getObservable(Object defaultValue) {
+		return this._observable == null ? defaultValue : this._observable;
+	}
+
+	public boolean hasObservable() {
+		return this._observable != null;
+	}
+
+	public EnumAccessors removeObservable() {
+		this._observable = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -107,9 +131,10 @@ public class EnumAccessors {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "enumAccessors(className,name,type) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n" + 
+	static final String st = "enumAccessors(className,name,type,observable) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n" + 
 				"	if (value == null) node.removeProperty(\"~name~\"); \n" + 
 				"	else node.setProperty(\"~name~\", value.name());\n" + 
+				"	~if(observable)~this.pcs.firePropertyChange(\"set.~name~\", null, value);~endif~\n" + 
 				"	return this;\n" + 
 				"}\n" + 
 				"\n" + 
@@ -129,6 +154,7 @@ public class EnumAccessors {
 				"\n" + 
 				"public ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() { \n" + 
 				"	node.removeProperty(\"~name~\");\n" + 
+				"	~if(observable)~this.pcs.firePropertyChange(\"remove.~name~\", true, false);~endif~\n" + 
 				"	return this;\n" + 
 				"} >>";
 }  

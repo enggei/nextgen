@@ -9,20 +9,25 @@ import nextgen.st.stringtemplate.ScriptRunner;
 import nextgen.st.stringtemplate.StringTemplateST;
 import nextgen.templates.java.ImportDeclaration;
 import nextgen.templates.java.PackageDeclaration;
+import nextgen.utils.SwingUtil;
 import org.neo4j.graphdb.Node;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.util.List;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static nextgen.utils.StringUtil.capitalize;
 import static nextgen.st.STGenerator.toSTGroup;
+import static nextgen.utils.SwingUtil.newTextField;
 
 public class STAppPresentationModel {
 
@@ -254,6 +259,13 @@ public class STAppPresentationModel {
         SwingUtilities.invokeLater(() -> doInTransaction(consumer));
     }
 
+    public void doLaterInTransaction(PropertyChangeEvent evt, String type, java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer) {
+        SwingUtilities.invokeLater(() -> {
+            if (type.equals(evt.getPropertyName().split(".")[0]))
+                doInTransaction(consumer);
+        });
+    }
+
     public void doInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer) {
         db.doInTransaction(consumer);
     }
@@ -267,6 +279,206 @@ public class STAppPresentationModel {
             if (stFile.getPath() == null) return;
             nextgen.st.STGenerator.writeToFile(render(stModel), stFile.getPackageName().getValue(), stFile.getName().getValue(), stFile.getType().getValue(), new java.io.File(stFile.getPath().getValue()));
         }));
+    }
+
+    public String tryToFindArgument(Collection<STArgumentKV> set, STParameter stParameter, String kvName, Supplier<String> defaultValue) {
+
+        final Optional<STParameterKey> kvNameFound = stParameter.getKeys().filter(stParameterKey -> stParameterKey.getName().equals(kvName)).findFirst();
+        if (!kvNameFound.isPresent()) return defaultValue.get();
+
+        for (STArgumentKV stArgumentKV : set)
+            if (stArgumentKV.getStParameterKey().equals(kvNameFound.get().uuid()))
+                return render(stArgumentKV.getValue());
+
+        return defaultValue.get();
+    }
+
+    public String tryToFindArgument(STModel stModel, String parameterName, Supplier<String> defaultValue) {
+        final Optional<STParameter> parameter = findSTTemplateByUuid(stModel.getStTemplate()).getParameters().filter(stParameter -> stParameter.getName().equals(parameterName)).findFirst();
+        if (parameter.isPresent()) {
+            final Optional<STArgument> argument = stModel.getArguments().filter(stArgument -> stArgument.getStParameter().equals(parameter.get().uuid())).findFirst();
+            return argument.isPresent() ? render(argument.get().getValue()) : defaultValue.get();
+        }
+        return defaultValue.get();
+    }
+
+    public STArgumentConsumer stArgumentConsumer(STParameter stParameter) {
+        return new STArgumentConsumer(stParameter);
+    }
+
+    public Collection<STArgumentKV> getStArgumentKVS(STParameter stParameter, STArgument stArgument) {
+        final Collection<STArgumentKV> kvSet = new LinkedHashSet<>();
+        stParameter.getKeys().forEach(stParameterKey -> stArgument.getKeyValues()
+                .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.uuid()))
+                .forEach(kvSet::add));
+        return kvSet;
+    }
+
+    public void addKVArgument(STModel stModel, STParameter stParameter, Component owner, Consumer<STArgument> stArgumentConsumer) {
+        final Map<STParameterKey, JTextField> fieldMap = new LinkedHashMap<>();
+        stParameter.getKeys().forEach(stParameterKey -> fieldMap.put(stParameterKey, newTextField(15)));
+        final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        for (Map.Entry<STParameterKey, JTextField> fieldEntry : fieldMap.entrySet()) {
+            inputPanel.add(new JLabel(fieldEntry.getKey().getName()));
+            inputPanel.add(fieldEntry.getValue());
+        }
+        SwingUtil.showDialog(inputPanel, owner, stParameter.getName(), new SwingUtil.ConfirmAction() {
+            @Override
+            public void verifyAndCommit() throws Exception {
+                doLaterInTransaction(tx -> {
+                    final List<STArgumentKV> kvs = new ArrayList<>();
+                    for (Map.Entry<STParameterKey, JTextField> fieldEntry : fieldMap.entrySet()) {
+                        final String value = fieldEntry.getValue().getText().trim();
+                        if (value.length() == 0) continue;
+                        kvs.add(newSTArgumentKV(fieldEntry.getKey(), newSTValue(value)));
+                    }
+                    final STArgument newSTArgument = newSTArgument(stParameter, kvs);
+                    stModel.addArguments(newSTArgument);
+                    stArgumentConsumer.accept(newSTArgument);
+                });
+            }
+        });
+    }
+
+    public final class STArgumentConsumer implements Consumer<STArgument> {
+
+        private final STParameter stParameter;
+
+        private BiConsumer<STArgument, STValue> onSingleSTValueConsumer = (stArgument, stValue) -> {
+        };
+        private BiConsumer<STArgument, STValue> onSingleSTModelConsumer = (stArgument, stValue) -> {
+        };
+        private BiConsumer<STArgument, STValue> onSingleEnumConsumer = (stArgument, stValue) -> {
+        };
+
+        private BiConsumer<STArgument, STValue> onListSTValueConsumer = (stArgument, stValue) -> {
+        };
+        private BiConsumer<STArgument, STValue> onListSTModelConsumer = (stArgument, stValue) -> {
+        };
+        private BiConsumer<STArgument, STValue> onListEnumConsumer = (stArgument, stValue) -> {
+        };
+
+        private BiConsumer<STArgument, Collection<STArgumentKV>> onKVListConsumer = (stArgument, stArgumentKVS) -> {
+        };
+        private BiConsumer<STArgumentKV, STValue> onKVListSTValueConsumer = (stArgumentKV, stValue) -> {
+
+        };
+        private BiConsumer<STArgumentKV, STValue> onKVListSTModelConsumer = (stArgumentKV, stValue) -> {
+
+        };
+        private BiConsumer<STArgumentKV, STValue> onKVListEnumConsumer = (stArgumentKV, stValue) -> {
+
+        };
+
+        private STArgumentConsumer(STParameter stParameter) {
+            this.stParameter = stParameter;
+        }
+
+        @Override
+        public void accept(STArgument stArgument) {
+            final STValue value = stArgument.getValue();
+            switch (stParameter.getType()) {
+                case SINGLE:
+                    switch (value.getType()) {
+                        case STMODEL:
+                            onSingleSTModelConsumer.accept(stArgument, value);
+                            break;
+                        case PRIMITIVE:
+                            onSingleSTValueConsumer.accept(stArgument, value);
+                            break;
+                        case ENUM:
+                            onSingleEnumConsumer.accept(stArgument, value);
+                            break;
+                    }
+                    break;
+                case LIST:
+                    switch (value.getType()) {
+                        case STMODEL:
+                            onListSTModelConsumer.accept(stArgument, value);
+                            break;
+                        case PRIMITIVE:
+                            onListSTValueConsumer.accept(stArgument, value);
+                            break;
+                        case ENUM:
+                            onListEnumConsumer.accept(stArgument, value);
+                            break;
+                    }
+                    break;
+                case KVLIST:
+
+                    onKVListConsumer.accept(stArgument, getStArgumentKVS(stParameter, stArgument));
+
+                    stParameter.getKeys().forEach(stParameterKey -> stArgument.getKeyValues()
+                            .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.uuid()))
+                            .forEach(stArgumentKV -> {
+                                final STValue kvValue = stArgumentKV.getValue();
+                                switch (kvValue.getType()) {
+                                    case STMODEL:
+                                        onKVListSTModelConsumer.accept(stArgumentKV, kvValue);
+                                        break;
+                                    case PRIMITIVE:
+                                        onKVListSTValueConsumer.accept(stArgumentKV, kvValue);
+                                        break;
+                                    case ENUM:
+                                        onKVListEnumConsumer.accept(stArgumentKV, kvValue);
+                                        break;
+                                }
+                            }));
+
+                    break;
+            }
+        }
+
+        public STArgumentConsumer onSingleSTModel(BiConsumer<STArgument, STValue> consumer) {
+            this.onSingleSTModelConsumer = consumer;
+            return this;
+        }
+
+        public STArgumentConsumer onSingleSTValue(BiConsumer<STArgument, STValue> consumer) {
+            this.onSingleSTValueConsumer = consumer;
+            return this;
+        }
+
+        public STArgumentConsumer onSingleEnum(BiConsumer<STArgument, STValue> consumer) {
+            this.onSingleEnumConsumer = consumer;
+            return this;
+        }
+
+        public STArgumentConsumer onListSTModel(BiConsumer<STArgument, STValue> consumer) {
+            this.onListSTModelConsumer = consumer;
+            return this;
+        }
+
+        public STArgumentConsumer onListSTValue(BiConsumer<STArgument, STValue> consumer) {
+            this.onListSTValueConsumer = consumer;
+            return this;
+        }
+
+        public STArgumentConsumer onListEnum(BiConsumer<STArgument, STValue> consumer) {
+            this.onListEnumConsumer = consumer;
+            return this;
+        }
+
+        public STArgumentConsumer onKVListConsumer(BiConsumer<STArgument, Collection<STArgumentKV>> consumer) {
+            this.onKVListConsumer = consumer;
+            return this;
+        }
+
+        public STArgumentConsumer onKVListSTModel(BiConsumer<STArgumentKV, STValue> consumer) {
+            this.onKVListSTModelConsumer = consumer;
+            return this;
+        }
+
+        public STArgumentConsumer onKVListSTValue(BiConsumer<STArgumentKV, STValue> consumer) {
+            this.onKVListSTValueConsumer = consumer;
+            return this;
+        }
+
+        public STArgumentConsumer onKVListEnum(BiConsumer<STArgumentKV, STValue> consumer) {
+            this.onKVListEnumConsumer = consumer;
+            return this;
+        }
     }
 
     public static final class CompilationResult {
@@ -297,4 +509,5 @@ public class STAppPresentationModel {
             }
         };
     }
+
 }
