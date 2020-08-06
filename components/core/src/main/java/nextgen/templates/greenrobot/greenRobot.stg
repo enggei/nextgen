@@ -1,6 +1,6 @@
 delimiters "~","~"
 
-event(name,fields) ::= <<public class ~name~ {
+event(isStatic,name,fields) ::= <<public ~if(isStatic)~static ~endif~class ~name~ {
 
 	~fields:{it|public final ~it.type~ ~it.name~;};separator="\n"~
 
@@ -9,18 +9,34 @@ event(name,fields) ::= <<public class ~name~ {
 	}
 }  >>
 
+EventManager(package,name,events) ::= <<package ~package~;
+
+public class ~name~ {
+
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);
+
+	~events:{it|~it.postMethod~};separator="\n\n"~
+
+	~events:{it|~it.declaration~};separator="\n\n"~
+}  >>
+
+PostEventMethod(eventName,parameters) ::= <<public static void post~eventName~(~parameters:{it|~it.type~ ~it.name~};separator=", "~) {
+	log.info("post ~eventName~");
+	org.greenrobot.eventbus.EventBus.getDefault().post(new ~eventName~(~parameters:{it|~it.name~};separator=", "~));
+}  >>
+
 maven() ::= <<<dependency>
 	<groupId>org.greenrobot</groupId>
 	<artifactId>eventbus</artifactId>
 	<version>3.2.0</version>
 </dependency>  >>
 
-post(event) ::= <<org.greenrobot.eventbus.EventBus.getDefault().post(~event~);  >>
+post(event) ::= <<org.greenrobot.eventbus.EventBus.getDefault().post(new ~event~);  >>
 
 register() ::= <<org.greenrobot.eventbus.EventBus.getDefault().register(this);  >>
 
-subscribe(threadMode,message,statements) ::= <<@org.greenrobot.eventbus.Subscribe(~if(threadMode)~threadMode = org.greenrobot.eventbus.ThreadMode.~threadMode~~endif~)
-public void on~message;format="capitalize"~(~message~ event) {
+subscribe(threadMode,eventName,eventType,statements) ::= <<@org.greenrobot.eventbus.Subscribe(~if(threadMode)~threadMode = org.greenrobot.eventbus.ThreadMode.~threadMode~~endif~)
+public void on~eventName;format="capitalize"~(~eventType~ event) {
 	~statements:{it|~it~};separator="\n"~
 }  >>
 

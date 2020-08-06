@@ -67,25 +67,29 @@ public class STModelDB extends STModelNeoFactory {
     }
 
     public STModelDB remove(STValue stValue) {
-        final STValue found = findSTValueByUuid(stValue.getUuid());
+        final String uuid = stValue.getUuid();
+        final STValue found = findSTValueByUuid(uuid);
         if (found == null) return this;
-        //found.getIncomingValue().forEach(this::remove);
         delete(found.getNode());
+        STAppEvents.postRemovedSTValue(uuid);
         return this;
     }
 
     public STModelDB remove(STArgument stArgument) {
-        final STArgument found = findSTArgumentByUuid(stArgument.getUuid());
+        final String uuid = stArgument.getUuid();
+        final STArgument found = findSTArgumentByUuid(uuid);
         if (found == null) return this;
         delete(found.getNode());
         return this;
     }
 
     public STModelDB remove(STModel stModel) {
-        final STModel found = findSTModelByUuid(stModel.getUuid());
+        final String uuid = stModel.getUuid();
+        final STModel found = findSTModelByUuid(uuid);
         if (found == null) return this;
         stModel.getArguments().forEach(this::remove);
         delete(found.getNode());
+        STAppEvents.postRemovedSTModel(uuid);
         return this;
     }
 
@@ -170,15 +174,20 @@ public class STModelDB extends STModelNeoFactory {
     }
 
     public Project newProject(String name) {
-        return newProject()
+        final Project project = newProject()
                 .setUuid(UUID.randomUUID().toString())
                 .setName(name);
+
+        STAppEvents.postNewProject(project);
+        return project;
     }
 
     public Script newScript(String name) {
-        return newScript()
+        final Script script = newScript()
                 .setUuid(UUID.randomUUID().toString())
                 .setName(name);
+        STAppEvents.postNewScript(script);
+        return script;
     }
 
     public STFile newSTFile(String name, String type, String path, String packageName) {
@@ -195,7 +204,7 @@ public class STModelDB extends STModelNeoFactory {
                 .setUuid(UUID.randomUUID().toString())
                 .setStTemplate(stTemplate.uuid())
                 .setStGroup(stGroupModel);
-        STAppEvents.postSTModelCreated(stModel);
+        STAppEvents.postNewSTModel(stModel);
         return stModel;
     }
 
@@ -211,10 +220,12 @@ public class STModelDB extends STModelNeoFactory {
     }
 
     public STValue newSTValue(STModel stModel) {
-        return newSTValue()
+        final STValue stValue = newSTValue()
                 .setUuid(UUID.randomUUID().toString())
                 .setType(STMODEL)
                 .setStModel(stModel);
+        STAppEvents.postNewSTValue(stValue);
+        return stValue;
     }
 
     public Script newScript(Node node) {
@@ -222,17 +233,21 @@ public class STModelDB extends STModelNeoFactory {
     }
 
     public STValue newSTValue(String value) {
-        return newSTValue()
+        final STValue stValue = newSTValue()
                 .setUuid(UUID.randomUUID().toString())
                 .setType(PRIMITIVE)
                 .setValue(value);
+        STAppEvents.postNewSTValue(stValue);
+        return stValue;
     }
 
     public STValue newSTValue(STEnumValue stEnumValue) {
-        return newSTValue()
+        final STValue stValue = newSTValue()
                 .setUuid(UUID.randomUUID().toString())
                 .setType(ENUM)
                 .setValue(stEnumValue.getLexical() == null || stEnumValue.getLexical().trim().length() == 0 ? stEnumValue.getName() : stEnumValue.getLexical());
+        STAppEvents.postNewSTValue(stValue);
+        return stValue;
     }
 
     public STArgumentKV newSTArgumentKV(STParameterKey key, STValue stValue) {

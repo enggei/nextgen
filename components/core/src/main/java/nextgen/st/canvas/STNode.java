@@ -1,5 +1,6 @@
 package nextgen.st.canvas;
 
+import nextgen.st.STAppEvents;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PDragSequenceEventHandler;
 import org.piccolo2d.event.PInputEvent;
@@ -456,7 +457,7 @@ public class STNode extends PNode implements PropertyChangeListener {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onNodeAdded(nextgen.st.STAppEvents.NodeAdded event) {
+	public void onNodeAdded(STAppEvents.NodeAddedToCanvas event) {
 		log.debug(getUuid() + " : node added " + event.node.getUuid());
 	}
 }

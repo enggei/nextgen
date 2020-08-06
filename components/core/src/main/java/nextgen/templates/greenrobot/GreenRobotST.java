@@ -2,14 +2,17 @@ package nextgen.templates.greenrobot;
 
 public class GreenRobotST {
 
-	private static final String stg = "delimiters \"~\", \"~\"\n" +
-	"eom() ::= \"}\"\n" +
-	"gt() ::= \">\"\n" +
-	Event.st + "\n" + 
-	Maven.st + "\n" + 
-	Post.st + "\n" + 
-	Register.st + "\n" + 
-	Subscribe.st + "\n" ;
+	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
+	.append("eom() ::= \"}\"\n")
+	.append("gt() ::= \">\"\n")
+	.append(Event.st + "\n")
+	.append(EventManager.st + "\n")
+	.append(PostEventMethod.st + "\n")
+	.append(Maven.st + "\n")
+	.append(Post.st + "\n")
+	.append(Register.st + "\n")
+	.append(Subscribe.st + "\n")
+	.toString()  ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -47,23 +50,31 @@ public class GreenRobotST {
 
 	public static Event newEvent() {
 		return new Event(stGroup);
-	} 
+	}  
+
+	public static EventManager newEventManager() {
+		return new EventManager(stGroup);
+	}  
+
+	public static PostEventMethod newPostEventMethod() {
+		return new PostEventMethod(stGroup);
+	}  
 
 	public static Maven newMaven() {
 		return new Maven(stGroup);
-	} 
+	}  
 
 	public static Post newPost() {
 		return new Post(stGroup);
-	} 
+	}  
 
 	public static Register newRegister() {
 		return new Register(stGroup);
-	} 
+	}  
 
 	public static Subscribe newSubscribe() {
 		return new Subscribe(stGroup);
-	} 
+	}  
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
 

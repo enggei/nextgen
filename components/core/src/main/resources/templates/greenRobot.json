@@ -98,11 +98,11 @@
       "keys" : [ {
         "uuid" : "56f29d46-aa82-4a14-9238-34868421325a",
         "name" : "declaration",
-        "argumentType" : "event"
+        "argumentType" : "Event"
       }, {
         "uuid" : "c135cf5f-86be-4716-9d63-73b567738a07",
         "name" : "postMethod",
-        "argumentType" : "postMethod"
+        "argumentType" : "PostEventMethod"
       } ]
     } ],
     "children" : [ {

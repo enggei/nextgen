@@ -2,11 +2,14 @@ package nextgen.templates.text;
 
 public class TextST {
 
-	private static final String stg = "delimiters \"~\", \"~\"\n" +
-	"eom() ::= \"}\"\n" +
-	"gt() ::= \">\"\n" +
-	Block.st + "\n" + 
-	Line.st + "\n" ;
+	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
+	.append("eom() ::= \"}\"\n")
+	.append("gt() ::= \">\"\n")
+	.append(Block.st + "\n")
+	.append(Encapsulation.st + "\n")
+	.append(Line.st + "\n")
+	.append(Sequence.st + "\n")
+	.toString()  ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -44,11 +47,19 @@ public class TextST {
 
 	public static Block newBlock() {
 		return new Block(stGroup);
-	} 
+	}  
+
+	public static Encapsulation newEncapsulation() {
+		return new Encapsulation(stGroup);
+	}  
 
 	public static Line newLine() {
 		return new Line(stGroup);
-	} 
+	}  
+
+	public static Sequence newSequence() {
+		return new Sequence(stGroup);
+	}  
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
 

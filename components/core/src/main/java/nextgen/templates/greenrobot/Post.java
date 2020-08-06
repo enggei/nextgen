@@ -59,5 +59,5 @@ public class Post {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "post(event) ::= <<org.greenrobot.eventbus.EventBus.getDefault().post(~event~); >>";
+	static final String st = "post(event) ::= <<org.greenrobot.eventbus.EventBus.getDefault().post(new ~event~); >>";
 }  

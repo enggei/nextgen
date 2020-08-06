@@ -126,7 +126,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		nodeMap.put(node.getUuid(), node);
 		nodeLayer.addChild(node);
 
-		nextgen.st.STAppEvents.postNodeAdded(this, node);
+		nextgen.st.STAppEvents.postNodeAddedToCanvas(this, node);
 
 		node.addedToCanvas();
 

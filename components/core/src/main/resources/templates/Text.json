@@ -37,5 +37,35 @@
       "type" : "SINGLE",
       "argumentType" : "Object"
     } ]
+  }, {
+    "uuid" : "10d90517-ab35-4090-b245-2a4063f03c6d",
+    "name" : "Sequence",
+    "text" : "~items:{it|~it~};separator=\" \"~ ",
+    "parameters" : [ {
+      "uuid" : "c61747ba-a4f2-4e14-80fa-89fd43a65217",
+      "name" : "items",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "f865d8f7-0e1d-4ece-b02a-cb1773bf9ae1",
+    "name" : "Encapsulation",
+    "text" : "~prefix~~content~~postfix~ ",
+    "parameters" : [ {
+      "uuid" : "524624de-a305-427f-866b-e150e44021b6",
+      "name" : "prefix",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "e3987abb-a9cb-4f5f-8454-5d2110d02e8e",
+      "name" : "content",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "1b2b53cd-8934-4fb3-8d74-203c8ce64a21",
+      "name" : "postfix",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
   } ]
 }
