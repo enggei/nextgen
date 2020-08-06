@@ -9,17 +9,32 @@ public class TestSTTests {
 
 	@org.junit.Test
 	public void testAll() {
+		testKv();
+		testList();
+		testSingle();
 		testParameterTests();
 		testAllTypes();
 		testComplex();
 		testConditional();
 		testEmbeddedKVConditional();
-		testKv();
-		testList();
-		testSingle();
 		testPatterns();
 		testTemp();
 	}
+
+	@org.junit.Test
+	public void testKv() {
+		System.out.println("\n--- TEST Kv:\n" + newKv());
+	} 
+
+	@org.junit.Test
+	public void testList() {
+		System.out.println("\n--- TEST List:\n" + newList());
+	} 
+
+	@org.junit.Test
+	public void testSingle() {
+		System.out.println("\n--- TEST Single:\n" + newSingle());
+	} 
 
 	@org.junit.Test
 	public void testParameterTests() {
@@ -44,21 +59,6 @@ public class TestSTTests {
 	@org.junit.Test
 	public void testEmbeddedKVConditional() {
 		System.out.println("\n--- TEST EmbeddedKVConditional:\n" + newEmbeddedKVConditional());
-	} 
-
-	@org.junit.Test
-	public void testKv() {
-		System.out.println("\n--- TEST Kv:\n" + newKv());
-	} 
-
-	@org.junit.Test
-	public void testList() {
-		System.out.println("\n--- TEST List:\n" + newList());
-	} 
-
-	@org.junit.Test
-	public void testSingle() {
-		System.out.println("\n--- TEST Single:\n" + newSingle());
 	} 
 
 	@org.junit.Test

@@ -11,7 +11,12 @@ public class Kv implements TestInterface {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -83,5 +88,7 @@ public class Kv implements TestInterface {
 	}
 
 	static final String st = "kv(value) ::= <<kv : \n" + 
-				"	~value:{it|~it.key~ : ~it.value~};separator=\"\\n\"~ >>";
+				"	~value:{it|~it.key~ : ~it.value~};separator=\"\\n\"~\n" + 
+				"\n" + 
+				"	asdf >>";
 }  

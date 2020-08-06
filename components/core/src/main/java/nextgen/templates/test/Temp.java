@@ -12,7 +12,12 @@ public class Temp {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -91,6 +96,7 @@ public class Temp {
 
 	static final String st = "Temp(yolo,yys) ::= <<lol ~yolo~\n" + 
 				"\n" + 
+				"class test\n" + 
 				"\n" + 
 				"xxxxx ~yys:{it|~it~};separator=\",\"~ >>";
 }  

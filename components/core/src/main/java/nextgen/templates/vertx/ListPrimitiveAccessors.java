@@ -126,7 +126,7 @@ public class ListPrimitiveAccessors {
 				"public ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~(~type~ value) { \n" + 
 				"	final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray(\"~name~\", new io.vertx.core.json.JsonArray());\n" + 
 				"	for (int i = 0; i < jsonArray.size(); i++)  { \n" + 
-				"		final io.vertx.core.json.JsonObject o = jsonArray.getJsonObject(i);\n" + 
+				"		final ~type~ o = jsonArray.get~type~(i);\n" + 
 				"		if (value.equals(o))  { \n" + 
 				"			jsonArray.remove(i);\n" + 
 				"			return this;\n" + 

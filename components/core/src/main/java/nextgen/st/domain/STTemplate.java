@@ -86,7 +86,7 @@ public class STTemplate {
 	public STTemplate removeImplements(String value) { 
 		final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("implements", new io.vertx.core.json.JsonArray());
 		for (int i = 0; i < jsonArray.size(); i++)  { 
-			final io.vertx.core.json.JsonObject o = jsonArray.getJsonObject(i);
+			final String o = jsonArray.getString(i);
 			if (value.equals(o))  { 
 				jsonArray.remove(i);
 				return this;

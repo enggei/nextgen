@@ -1,5 +1,18 @@
 delimiters "~","~"
 
+basics() ::= << >>
+
+kv(value) ::= <<kv : 
+	~value:{it|~it.key~ : ~it.value~};separator="\n"~
+
+	asdf  >>
+
+list(value) ::= <<list : 
+	~value:{it|~it~};separator="\n"~  >>
+
+single(value) ::= <<single : 
+	~value~  >>
+
 ParameterTests() ::= <<Test the 3 types of parameters:
 
 * Single value 
@@ -9,15 +22,6 @@ ParameterTests() ::= <<Test the 3 types of parameters:
 Test conditional parsing
 
 Test complex combination of all types >>
-
-single(value) ::= <<single : 
-	~value~  >>
-
-list(value) ::= <<list : 
-	~value:{it|~it~};separator="\n"~  >>
-
-kv(value) ::= <<kv : 
-	~value:{it|~it.key~ : ~it.value~};separator="\n"~  >>
 
 allTypes(single,list,kvList,cond1,cond2) ::= <<A single value, ~single~, 
 then a list ~list:{it|~it~};separator=","~, 
@@ -53,6 +57,7 @@ classDeclaration.addModifiers(PUBLIC).addModifiers(PRIVATE)  >>
 
 Temp(yolo,yys) ::= <<lol ~yolo~
 
+class test
 
 xxxxx ~yys:{it|~it~};separator=","~  >>
 

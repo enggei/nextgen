@@ -82,6 +82,16 @@ public class STModelNavigator extends JPanel {
 			}
 		});
 
+		tree.addTreeSelectionListener(e -> {
+			if (e.getNewLeadSelectionPath() == null) return;
+
+			if (tree.getSelectionCount() == 1) {
+				final TreePath path = e.getPath();
+				final Object lastPathComponent = path.getLastPathComponent();
+
+			}
+		});
+
 		setPreferredSize(new Dimension(300, 600));
 		add(new JScrollPane(tree), BorderLayout.CENTER);
 	}
@@ -562,7 +572,7 @@ public class STModelNavigator extends JPanel {
 		return Arrays.stream(selectionPaths)
 				.filter(treePath -> treePath.getLastPathComponent() != null)
 				.filter(treePath -> treePath.getLastPathComponent().getClass().isAssignableFrom(type))
-				.map(treePath -> (T) tree.getLastSelectedPathComponent());
+				.map(treePath -> (T) treePath.getLastPathComponent());
 	}
 
 	public Set<nextgen.st.model.STValue> getSelectedValues() {

@@ -8,49 +8,6 @@
     "text" : "Test the 3 types of parameters:\n\n* Single value \n* List values\n* Key-Value list values\n\nTest conditional parsing\n\nTest complex combination of all types",
     "parameters" : [ ],
     "children" : [ {
-      "uuid" : "2acee399-79fc-46ff-b0c2-89f23ae0651b",
-      "name" : "single",
-      "text" : "single : \n\t~value~ ",
-      "parameters" : [ {
-        "uuid" : "421b3f1e-32db-4e53-8f70-2424fd019e1c",
-        "name" : "value",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      } ],
-      "children" : [ ],
-      "implements" : [ "TestInterface" ]
-    }, {
-      "uuid" : "c41ba352-9f52-4dca-a44a-ad9f3c035d14",
-      "name" : "list",
-      "text" : "list : \n\t~value:{it|~it~};separator=\"\\n\"~ ",
-      "parameters" : [ {
-        "uuid" : "6546279d-a4bd-4f04-a5c7-23ba48a640ec",
-        "name" : "value",
-        "type" : "LIST",
-        "argumentType" : "Object"
-      } ],
-      "implements" : [ "TestInterface" ]
-    }, {
-      "uuid" : "3e4cd3ac-b36a-48c9-9197-00e3ca022235",
-      "name" : "kv",
-      "text" : "kv : \n\t~value:{it|~it.key~ : ~it.value~};separator=\"\\n\"~\n\n\tasdf ",
-      "parameters" : [ {
-        "uuid" : "fcfc3dee-4878-45ce-ab82-53ecebb9b3c5",
-        "name" : "value",
-        "type" : "KVLIST",
-        "argumentType" : "Object",
-        "keys" : [ {
-          "uuid" : "41e12bb7-1622-4264-a6fd-701d660c4fa3",
-          "name" : "key",
-          "argumentType" : "Integer"
-        }, {
-          "uuid" : "56059869-e621-4075-941c-da80226ff096",
-          "name" : "value",
-          "argumentType" : "Long"
-        } ]
-      } ],
-      "implements" : [ "TestInterface" ]
-    }, {
       "uuid" : "820f5783-7219-4e86-85c4-1888882e7c8c",
       "name" : "allTypes",
       "text" : "A single value, ~single~, \nthen a list ~list:{it|~it~};separator=\",\"~, \nand a kv-list : ~kvList:{it|~it.name~:~it.value~};separator=\",\"~\n\nIf expression ~conditional(cond1,cond2)~",
@@ -87,7 +44,8 @@
         "name" : "cond2",
         "type" : "SINGLE",
         "argumentType" : "Object"
-      } ]
+      } ],
+      "children" : [ ]
     }, {
       "uuid" : "ec05cc7e-4786-4ef8-98af-7c42c1ec546a",
       "name" : "conditional",
@@ -194,6 +152,54 @@
       "name" : "yys",
       "type" : "LIST",
       "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "2ac19095-256c-49cd-a87d-8dcbf8f47c38",
+    "name" : "basics",
+    "text" : "",
+    "children" : [ {
+      "uuid" : "3e4cd3ac-b36a-48c9-9197-00e3ca022235",
+      "name" : "kv",
+      "text" : "kv : \n\t~value:{it|~it.key~ : ~it.value~};separator=\"\\n\"~\n\n\tasdf ",
+      "parameters" : [ {
+        "uuid" : "fcfc3dee-4878-45ce-ab82-53ecebb9b3c5",
+        "name" : "value",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "41e12bb7-1622-4264-a6fd-701d660c4fa3",
+          "name" : "key",
+          "argumentType" : "Integer"
+        }, {
+          "uuid" : "56059869-e621-4075-941c-da80226ff096",
+          "name" : "value",
+          "argumentType" : "Long"
+        } ]
+      } ],
+      "implements" : [ "TestInterface" ]
+    }, {
+      "uuid" : "c41ba352-9f52-4dca-a44a-ad9f3c035d14",
+      "name" : "list",
+      "text" : "list : \n\t~value:{it|~it~};separator=\"\\n\"~ ",
+      "parameters" : [ {
+        "uuid" : "6546279d-a4bd-4f04-a5c7-23ba48a640ec",
+        "name" : "value",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ],
+      "implements" : [ "TestInterface" ]
+    }, {
+      "uuid" : "2acee399-79fc-46ff-b0c2-89f23ae0651b",
+      "name" : "single",
+      "text" : "single : \n\t~value~ ",
+      "parameters" : [ {
+        "uuid" : "421b3f1e-32db-4e53-8f70-2424fd019e1c",
+        "name" : "value",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ],
+      "children" : [ ],
+      "implements" : [ "TestInterface" ]
     } ]
   } ],
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Test.stg",

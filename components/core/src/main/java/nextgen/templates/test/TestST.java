@@ -5,14 +5,14 @@ public class TestST {
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 	.append("eom() ::= \"}\"\n")
 	.append("gt() ::= \">\"\n")
+	.append(Kv.st + "\n")
+	.append(List.st + "\n")
+	.append(Single.st + "\n")
 	.append(ParameterTests.st + "\n")
 	.append(AllTypes.st + "\n")
 	.append(Complex.st + "\n")
 	.append(Conditional.st + "\n")
 	.append(EmbeddedKVConditional.st + "\n")
-	.append(Kv.st + "\n")
-	.append(List.st + "\n")
-	.append(Single.st + "\n")
 	.append(Patterns.st + "\n")
 	.append(Temp.st + "\n")
 	.toString()  ;
@@ -51,6 +51,18 @@ public class TestST {
 		stGroup = decorate(new org.stringtemplate.v4.STGroupFile(stgFile, '~', '~'));
 	}
 
+	public static Kv newKv() {
+		return new Kv(stGroup);
+	}  
+
+	public static List newList() {
+		return new List(stGroup);
+	}  
+
+	public static Single newSingle() {
+		return new Single(stGroup);
+	}  
+
 	public static ParameterTests newParameterTests() {
 		return new ParameterTests(stGroup);
 	}  
@@ -69,18 +81,6 @@ public class TestST {
 
 	public static EmbeddedKVConditional newEmbeddedKVConditional() {
 		return new EmbeddedKVConditional(stGroup);
-	}  
-
-	public static Kv newKv() {
-		return new Kv(stGroup);
-	}  
-
-	public static List newList() {
-		return new List(stGroup);
-	}  
-
-	public static Single newSingle() {
-		return new Single(stGroup);
 	}  
 
 	public static Patterns newPatterns() {

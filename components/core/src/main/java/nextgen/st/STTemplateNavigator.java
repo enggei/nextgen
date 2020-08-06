@@ -1,1018 +1,828 @@
 package nextgen.st;
 
 import nextgen.utils.SwingUtil;
-import nextgen.st.canvas.STModelNode;
-import nextgen.st.canvas.STValueNode;
 import nextgen.st.domain.*;
+import nextgen.st.canvas.*;
 
-import javax.lang.model.SourceVersion;
 import javax.swing.*;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
-
-import static nextgen.st.STAppPresentationModel.deleteSTGFile;
-import static nextgen.st.STGenerator.toSTGroup;
 
 public class STTemplateNavigator extends JPanel {
 
-    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STTemplateNavigator.class);
-
-    private final JTree tree = new JTree();
-
-    private final STWorkspace workspace;
-    private final DefaultTreeModel treeModel;
-    private final STAppPresentationModel presentationModel;
-
-    public STTemplateNavigator(STAppPresentationModel presentationModel, STWorkspace workspace) {
-        super(new BorderLayout());
-
-        this.presentationModel = presentationModel;
-        this.workspace = workspace;
-
-        treeModel = new DefaultTreeModel(new RootNode());
-        tree.setModel(treeModel);
-        tree.setCellRenderer(new DefaultTreeCellRenderer() {
-
-            @Override
-            public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-                final boolean isBaseTreeNode = value instanceof BaseTreeNode;
-                if (isBaseTreeNode) {
-                    final BaseTreeNode<?> baseTreeNode = (BaseTreeNode<?>) value;
-                    setIcon(baseTreeNode.getIcon());
-                    setOpenIcon(baseTreeNode.getIcon());
-                    setClosedIcon(baseTreeNode.getIcon());
-                    setLeafIcon(baseTreeNode.getIcon());
-                    return super.getTreeCellRendererComponent(tree, baseTreeNode.getLabel(), sel, expanded, leaf, row, hasFocus);
-                }
-                return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-            }
-        });
-
-        tree.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (SwingUtilities.isRightMouseButton(e)) {
-
-                    final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());
-                    if (selectionPath == null) return;
-                    final Object lastPathComponent = selectionPath.getLastPathComponent();
-                    if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
-
-                    showPopup((BaseTreeNode<?>) lastPathComponent, e.getX(), e.getY());
-                }
-            }
-        });
-
-        tree.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-
-                if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-                    final TreePath selectionPath = tree.getSelectionPath();
-                    if (selectionPath == null) return;
-                    final Object lastPathComponent = selectionPath.getLastPathComponent();
-                    if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
-
-                    final Rectangle bounds = tree.getPathBounds(selectionPath);
-                    if (bounds == null) return;
-
-                    showPopup((BaseTreeNode<?>) lastPathComponent, (int) bounds.getX(), (int) bounds.getY());
-                }
-            }
-        });
-
-        tree.addTreeSelectionListener(e -> {
-            if (e.getNewLeadSelectionPath() == null) return;
-
-            if (tree.getSelectionCount() == 1) {
-                final TreePath path = e.getPath();
-                final Object lastPathComponent = path.getLastPathComponent();
-
-                if (lastPathComponent instanceof RootNode.STGDirectoryTreeNode.STGroupTreeNode) {
-                    workspace.getSTEditor(((RootNode.STGDirectoryTreeNode.STGroupTreeNode) lastPathComponent).getModel());
-                } else if (lastPathComponent instanceof RootNode.STGDirectoryTreeNode.STGroupTreeNode.STTemplateTreeNode) {
-                    show((RootNode.STGDirectoryTreeNode.STGroupTreeNode.STTemplateTreeNode) lastPathComponent);
-                } else if (lastPathComponent instanceof RootNode.STGDirectoryTreeNode.STGroupTreeNode.STEnumTreeNode) {
-                    show((RootNode.STGDirectoryTreeNode.STGroupTreeNode.STEnumTreeNode) lastPathComponent);
-                } else if (lastPathComponent instanceof RootNode.STGDirectoryTreeNode.STGroupTreeNode.STInterfaceTreeNode) {
-                    show((RootNode.STGDirectoryTreeNode.STGroupTreeNode.STInterfaceTreeNode) lastPathComponent);
-                }
-            }
-        });
-
-        setPreferredSize(new Dimension(300, 600));
-        add(new JScrollPane(tree), BorderLayout.CENTER);
-    }
-
-    private static final Map<String, ImageIcon> cache = new LinkedHashMap<>();
-
-    private ImageIcon loadIcon(String iconName) {
-
-        if (cache.containsKey(iconName)) return cache.get(iconName);
-
-        URL resource = getClass().getClassLoader().getResource("icons/" + iconName + "16x16.png");
-        if (resource == null) resource = getClass().getClassLoader().getResource("icons/STGroup16x16.png");
-
-        cache.put(iconName, new ImageIcon(Objects.requireNonNull(resource)));
-        return cache.get(iconName);
-    }
-
-    public void showPopup(BaseTreeNode<?> lastPathComponent, int x, int y) {
-        final List<Action> actions = lastPathComponent.getActions();
-        if (actions.isEmpty()) return;
-
-        final JPopupMenu pop = new JPopupMenu();
-        pop.add("With " + lastPathComponent.getLabel() + " :");
-        for (Action action : actions)
-            pop.add(action);
-
-        SwingUtilities.invokeLater(() -> pop.show(tree, x, y));
-    }
-
-    public void show(RootNode.STGDirectoryTreeNode.STGroupTreeNode.STTemplateTreeNode stTemplateTreeNode) {
-        stTemplateTreeNode
-                .getParentNode(RootNode.STGDirectoryTreeNode.STGroupTreeNode.class)
-                .ifPresent(parent -> {
-
-                    final STEditor stEditor = findSTTemplateEditor(workspace, parent)
-                            .orElseGet(() -> {
-                                final STEditor stEditor1 = new STEditor(parent.getModel(), presentationModel);
-                                workspace.addTab(parent.getLabel(), stEditor1);
-                                return stEditor1;
-                            });
-
-                    SwingUtilities.invokeLater(() -> {
-                        stEditor.setSTTemplate(stTemplateTreeNode.getModel());
-                        workspace.setTitleAt(workspace.indexOfComponent(stEditor), parent.getModel().getName() + " - " + stTemplateTreeNode.getModel().getName());
-                        workspace.setSelectedComponent(stEditor);
-                        stEditor.requestFocusInWindow();
-                    });
-                });
-    }
-
-    public void show(RootNode.STGDirectoryTreeNode.STGroupTreeNode.STEnumTreeNode stEnumTreeNode) {
-
-        stEnumTreeNode
-                .getParentNode(RootNode.STGDirectoryTreeNode.STGroupTreeNode.class)
-                .ifPresent(parent -> {
-
-                    final STEditor stEditor = findSTTemplateEditor(workspace, parent)
-                            .orElseGet(() -> {
-                                final STEditor stEditor1 = new STEditor(parent.getModel(), presentationModel);
-                                workspace.addTab(parent.getLabel(), stEditor1);
-                                return stEditor1;
-                            });
-
-                    SwingUtilities.invokeLater(() -> parent.getParentNode(RootNode.class).ifPresent(rootNode -> {
-                        stEditor.setSTEnum(stEnumTreeNode.getModel());
-                        workspace.setTitleAt(workspace.indexOfComponent(stEditor), parent.getModel().getName() + " - " + stEnumTreeNode.getModel().getName());
-                        workspace.setSelectedComponent(stEditor);
-                    }));
-                });
-    }
-
-    public void show(RootNode.STGDirectoryTreeNode.STGroupTreeNode.STInterfaceTreeNode stInterfaceTreeNode) {
-
-        stInterfaceTreeNode
-                .getParentNode(RootNode.STGDirectoryTreeNode.STGroupTreeNode.class)
-                .ifPresent(parent -> {
-
-                    final STEditor stEditor = findSTTemplateEditor(workspace, parent)
-                            .orElseGet(() -> {
-                                final STEditor stEditor1 = new STEditor(parent.getModel(), presentationModel);
-                                workspace.addTab(parent.getLabel(), stEditor1);
-                                return stEditor1;
-                            });
-
-                    SwingUtilities.invokeLater(() -> parent.getParentNode(RootNode.class).ifPresent(rootNode -> {
-                        stEditor.setSTInterface(stInterfaceTreeNode.getModel());
-                        workspace.setTitleAt(workspace.indexOfComponent(stEditor), parent.getModel().getName() + " - " + stInterfaceTreeNode.getModel().getName());
-                        workspace.setSelectedComponent(stEditor);
-                    }));
-                });
-    }
-
-    public Optional<STEditor> findSTTemplateEditor(STWorkspace workspace, RootNode.STGDirectoryTreeNode.STGroupTreeNode stGroupTreeNode) {
-        for (int i = 0; i < workspace.getTabCount(); i++) {
-            final Component tabComponentAt = workspace.getComponentAt(i);
-            if (tabComponentAt instanceof STEditor) {
-                final STEditor stEditor = (STEditor) tabComponentAt;
-                if (stEditor.stGroupModel.getUuid().equals(stGroupTreeNode.getModel().getUuid()))
-                    return Optional.of(stEditor);
-            }
-        }
-        return Optional.empty();
-    }
-
-    private class BaseTreeNode<T> extends DefaultMutableTreeNode {
-
-        protected ImageIcon icon;
-
-        public BaseTreeNode(T model, String icon) {
-            setUserObject(model);
-            this.icon = loadIcon(icon);
-        }
-
-        @SuppressWarnings("unchecked")
-        public T getModel() {
-            return (T) getUserObject();
-        }
-
-        public String getLabel() {
-            return getUserObject().toString();
-        }
-
-        public ImageIcon getIcon() {
-            return icon;
-        }
-
-        protected List<Action> getActions() {
-            return Collections.emptyList();
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (!(obj instanceof BaseTreeNode)) return false;
-            return getModel().equals(((BaseTreeNode<?>) obj).getModel());
-        }
-
-        @Override
-        public int hashCode() {
-            return getModel().hashCode();
-        }
-
-        @SuppressWarnings("unchecked")
-        public <T> Optional<T> getParentNode(Class<T> type) {
-            if (getClass().equals(type)) return (Optional<T>) Optional.of(this);
-
-            final TreeNode parent = getParent();
-            if (!(parent instanceof BaseTreeNode)) return Optional.empty();
-
-            return ((BaseTreeNode<?>) parent).getParentNode(type);
-        }
-
-        @SuppressWarnings("unchecked")
-        protected <T> Stream<T> getChildren(Class<T> type) {
-            final Iterator<BaseTreeNode<?>> iterator = new Iterator<BaseTreeNode<?>>() {
-                final Enumeration<BaseTreeNode<?>> e = breadthFirstEnumeration();
-
-                public BaseTreeNode<?> next() {
-                    return e.nextElement();
-                }
-
-                public boolean hasNext() {
-                    return e.hasMoreElements();
-                }
-            };
-
-            return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED), false)
-                    .filter(baseTreeNode -> baseTreeNode.getClass().equals(type))
-                    .map(baseTreeNode -> (T) baseTreeNode);
-        }
-
-
-        protected Action newExpandAction() {
-            return newAction("Expand", actionEvent ->
-                    SwingUtilities.invokeLater(() -> {
-
-                        final List<Object> nodes = new ArrayList<>();
-                        nodes.add(this);
-                        TreeNode treeNode = getParent();
-                        while (treeNode != null) {
-                            nodes.add(0, treeNode);
-                            treeNode = treeNode.getParent();
-                        }
-
-                        final TreePath treePath = new TreePath(nodes.toArray());
-                        final int rowForPath = tree.getRowForPath(treePath);
-
-                        final AtomicInteger childCount = new AtomicInteger(0);
-                        getAllChildCount(this, childCount);
-
-                        final int childOffset = rowForPath + childCount.get();
-                        for (int i = rowForPath; i < childOffset; i++) {
-                            tree.expandRow(i);
-                        }
-                    }));
-        }
-
-        private void getAllChildCount(TreeNode treeNode, AtomicInteger childCount) {
-            for (int i = 0; i < treeNode.getChildCount(); i++) {
-                childCount.incrementAndGet();
-                final TreeNode childAt = treeNode.getChildAt(i);
-                getAllChildCount(childAt, childCount);
-            }
-        }
-    }
-
-    class RootNode extends BaseTreeNode<String> {
-
-        public RootNode() {
-            super("Templates", "RootNode");
-            add(new STGDirectoryTreeNode(presentationModel.generatorSTGDirectory));
-            presentationModel.stgDirectories.forEach(stgDirectory -> add(new STGDirectoryTreeNode(stgDirectory)));
-        }
-
-        class STGDirectoryTreeNode extends BaseTreeNode<STGDirectory> {
-
-            public STGDirectoryTreeNode(STGDirectory model) {
-                super(model, "STGDirectory");
-
-                model.getGroups()
-                        .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
-                        .forEach(stGroupModel -> add(new STGroupTreeNode(stGroupModel)));
-            }
-
-            @Override
-            public String getLabel() {
-                return getModel().getPath();
-            }
-
-            @Override
-            protected List<Action> getActions() {
-                return Arrays.asList(newSTGroupAction(), generateAllGroupsAction());
-            }
-
-            private Action newSTGroupAction() {
-                return newAction("New STGroup", actionEvent -> SwingUtil.getInputFromUser(tree, "Name").ifPresent(name -> {
-
-                    final Optional<STGroupModel> existing = getModel().getGroups().filter(groupModel -> groupModel.getName().toLowerCase().equals(name)).findAny();
-                    if (existing.isPresent()) {
-                        SwingUtil.showMessage(name + " group already exists in this directory", tree);
-                        return;
-                    }
-
-                    if (!SourceVersion.isIdentifier(name)) {
-                        SwingUtil.showMessage(name + " is a reserved java keyword", tree);
-                        return;
-                    }
-
-                    final STGroupModel stGroupModel = presentationModel.newSTGroupModel(name);
-
-                    getModel().addGroups(stGroupModel);
-
-                    SwingUtilities.invokeLater(() -> {
-                        final STGroupTreeNode stGroupTreeNode = new STGroupTreeNode(stGroupModel);
-                        stGroupTreeNode.save();
-                        treeModel.insertNodeInto(stGroupTreeNode, STGDirectoryTreeNode.this, getChildCount());
-                        workspace.getSTEditor(stGroupTreeNode.getModel());
-                    });
-                }));
-            }
-
-            private Action generateAllGroupsAction() {
-                return newAction("Generate All groups", actionEvent ->
-                        SwingUtilities.invokeLater(() -> getChildren(STGroupTreeNode.class).forEach(STGroupTreeNode::generate)));
-            }
-
-            private void generate(STGroupModel stGroupModel) {
-                presentationModel.generateSTGroup(stGroupModel);
-            }
-
-            class STGroupTreeNode extends BaseTreeNode<STGroupModel> {
-
-                public STGroupTreeNode(STGroupModel model) {
-                    super(model, model.getIcon());
-
-                    model.getEnums().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stEnum -> add(new STEnumTreeNode(stEnum)));
-                    model.getTemplates().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
-                    model.getInterfaces().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stInterface -> add(new STInterfaceTreeNode(stInterface)));
-                }
-
-                public void save() {
-                    getParentNode(STGDirectoryTreeNode.class)
-                            .ifPresent(stgDirectoryTreeNode -> {
-                                final File dir = new File(stgDirectoryTreeNode.getModel().getPath());
-                                final STGroupModel model = getModel();
-                                STGenerator.write(new File(dir, model.getName() + ".json"), model.getJsonObject().encodePrettily());
-                            });
-                }
-
-                @Override
-                public String getLabel() {
-                    return getModel().getName();
-                }
-
-                @Override
-                protected List<Action> getActions() {
-                    return Arrays.asList(
-                            generateAction(),
-                            newTemplateAction(),
-                            newEnumAction(),
-                            newInterfaceAction(),
-                            newExpandAction(),
-                            setIconNameAction(),
-                            renameSTGroupAction(),
-                            deleteGroupAction());
-                }
-
-                private Action generateAction() {
-                    return newAction("Generate", actionEvent -> generate());
-                }
-
-                private Action newTemplateAction() {
-                    return newAction("New template", actionEvent ->
-                            SwingUtil.getInputFromUser(tree, "Name").ifPresent(name ->
-                                    STAppPresentationModel.isValidTemplateName(tree, getModel(), name).ifPresent(s -> {
-
-                                        final STTemplate stTemplate = presentationModel.newSTTemplate(name);
-                                        getModel().addTemplates(stTemplate);
-                                        save();
-
-                                        SwingUtilities.invokeLater(() -> {
-                                            final STTemplateTreeNode stTemplateTreeNode = new STTemplateTreeNode(stTemplate);
-                                            treeModel.insertNodeInto(stTemplateTreeNode, STGroupTreeNode.this, getChildCount());
-                                            show(stTemplateTreeNode);
-                                        });
-                                    })));
-                }
-
-                private Action newEnumAction() {
-                    return newAction("New enum", actionEvent ->
-                            SwingUtil.getInputFromUser(tree, "Name").ifPresent(name ->
-                                    STAppPresentationModel.isValidTemplateName(tree, getModel(), name).ifPresent(s -> {
-
-                                        final STEnum stEnum = STJsonFactory.newSTEnum()
-                                                .setName(name);
-
-                                        getModel().addEnums(stEnum);
-                                        save();
-
-                                        SwingUtilities.invokeLater(() -> {
-                                            final STEnumTreeNode stTemplateTreeNode = new STEnumTreeNode(stEnum);
-                                            treeModel.insertNodeInto(stTemplateTreeNode, STGroupTreeNode.this, getChildCount());
-                                        });
-                                    })));
-                }
-
-                private Action newInterfaceAction() {
-                    return newAction("New interface", actionEvent ->
-                            SwingUtil.getInputFromUser(tree, "Name").ifPresent(name ->
-                                    STAppPresentationModel.isValidTemplateName(tree, getModel(), name).ifPresent(s -> {
-
-                                        final STInterface stInterface = STJsonFactory.newSTInterface()
-                                                .setName(name);
-
-                                        getModel().addInterfaces(stInterface);
-                                        save();
-
-                                        SwingUtilities.invokeLater(() -> {
-                                            final STInterfaceTreeNode stTemplateTreeNode = new STInterfaceTreeNode(stInterface);
-                                            treeModel.insertNodeInto(stTemplateTreeNode, STGroupTreeNode.this, getChildCount());
-                                        });
-                                    })));
-                }
-
-                private Action renameSTGroupAction() {
-                    return newAction("Rename", actionEvent ->
-                            SwingUtil.getInputFromUser(tree, "Name").ifPresent(name ->
-                                    getParentNode(STGDirectoryTreeNode.class)
-                                            .ifPresent(parent -> {
-
-                                                final Optional<STGroupModel> existing = parent.getModel()
-                                                        .getGroups()
-                                                        .filter(groupModel -> !groupModel.equals(getModel()))
-                                                        .filter(groupModel -> groupModel.getName().toLowerCase().equals(name))
-                                                        .findAny();
-
-                                                if (existing.isPresent()) {
-                                                    SwingUtil.showMessage(name + " group already exists", tree);
-                                                    return;
-                                                }
-
-                                                final String oldName = getModel().getName();
-                                                getModel().setName(name);
-                                                save();
-
-                                                SwingUtilities.invokeLater(() -> {
-                                                    treeModel.nodeChanged(STGroupTreeNode.this);
-                                                    findSTTemplateEditor(workspace, STGroupTreeNode.this)
-                                                            .ifPresent(stEditor1 -> workspace.setTitleAt(workspace.indexOfComponent(stEditor1), getModel().getName()));
-                                                    deleteSTGFile(parent.getModel(), oldName);
-                                                });
-                                            })));
-                }
-
-                private Action setIconNameAction() {
-                    return newAction("Set Icon name", actionEvent ->
-                            SwingUtil.getInputFromUser(tree, "Icon name").ifPresent(iconName ->
-                                    getParentNode(STGDirectoryTreeNode.class)
-                                            .ifPresent(parent -> {
-
-                                                getModel().setIcon(iconName);
-                                                save();
-
-                                                SwingUtilities.invokeLater(() -> {
-                                                    this.icon = loadIcon(iconName);
-                                                    treeModel.nodeChanged(STGroupTreeNode.this);
-                                                });
-                                            })));
-                }
-
-                private Action deleteGroupAction() {
-                    return newAction("Delete", actionEvent ->
-                            SwingUtil.confirm(tree, "Delete " + getModel().getName())
-                                    .flatMap(aBoolean -> getParentNode(STGDirectoryTreeNode.class))
-                                    .ifPresent(parent -> {
-
-                                        parent.getModel().removeGroups(getModel());
-
-                                        SwingUtilities.invokeLater(() -> {
-                                            treeModel.removeNodeFromParent(STGroupTreeNode.this);
-                                            findSTTemplateEditor(workspace, STGroupTreeNode.this).ifPresent(workspace::remove);
-                                            deleteSTGFile(parent.getModel(), getModel().getName());
-                                        });
-                                    }));
-                }
-
-
-                public void generate() {
-                    SwingUtilities.invokeLater(() ->
-                            getParentNode(STGDirectoryTreeNode.class).ifPresent(parent -> {
-                                final STGParseResult parseResult = STParser.parse(toSTGroup(getModel()));
-                                if (parseResult.getErrors().count() == 0) {
-                                    save();
-                                    parent.generate(getModel());
-                                } else {
-                                    log.info(getModel().getName() + " has errors: ");
-                                    parseResult.getErrors().forEach(stgError -> log.info("\t" + stgError.getType() + " " + stgError.getCharPosition() + " at line " + stgError.getLine()));
-                                }
-                            }));
-                }
-
-                class STInterfaceTreeNode extends BaseTreeNode<STInterface> {
-
-                    public STInterfaceTreeNode(STInterface model) {
-                        super(model, "STInterface");
-                    }
-
-                    @Override
-                    public String getLabel() {
-                        return getModel().getName();
-                    }
-
-                    @Override
-                    protected List<Action> getActions() {
-                        return Arrays.asList(
-                                renameSTInterfaceAction(),
-                                removeSTInterfaceAction());
-                    }
-
-                    private Action renameSTInterfaceAction() {
-                        return newAction("Rename", actionEvent ->
-                                SwingUtil.getInputFromUser(tree, "Name")
-                                        .flatMap(name -> getParentNode(STGroupTreeNode.class)
-                                                .flatMap(parent -> STAppPresentationModel.isValidTemplateName(tree, parent.getModel(), name)))
-                                        .ifPresent(s -> {
-
-                                            getModel().setName(s);
-                                            save();
-
-                                            SwingUtilities.invokeLater(() -> treeModel.nodeChanged(STInterfaceTreeNode.this));
-                                        }));
-                    }
-
-                    private Action removeSTInterfaceAction() {
-                        return newAction("Remove", actionEvent ->
-                                SwingUtil.confirm(tree, "Delete " + getModel().getName()).ifPresent(aBoolean -> {
-
-                                    final STGroupTreeNode parent = (STGroupTreeNode) getParent();
-
-                                    parent.getModel().removeInterfaces(getModel());
-                                    save();
-
-                                    SwingUtilities.invokeLater(() -> treeModel.removeNodeFromParent(STInterfaceTreeNode.this));
-                                }));
-                    }
-                }
-
-                class STEnumTreeNode extends BaseTreeNode<STEnum> {
-
-                    public STEnumTreeNode(STEnum model) {
-                        super(model, "STEnum");
-                    }
-
-                    @Override
-                    public String getLabel() {
-                        return getModel().getName();
-                    }
-
-                    @Override
-                    protected List<Action> getActions() {
-
-                        final List<Action> actions = new ArrayList<>();
-                        actions.add(newEditSTEnumValueAction());
-                        actions.add(renameSTEnumAction());
-                        actions.add(removeSTEnumAction());
-
-                        getModel().getValues().forEach(stEnumValue -> actions.add(newAction("New " + stEnumValue.getName() + " instance", actionEvent -> {
-                            workspace.findCanvas().ifPresent(stCanvas -> {
-                                SwingUtilities.invokeLater(() -> {
-                                    presentationModel.db.doInTransaction(transaction -> stCanvas.addNode(new STValueNode(stCanvas, presentationModel.db.newSTValue(stEnumValue))));
-                                    workspace.setSelectedComponent(stCanvas);
-                                    stCanvas.requestFocusInWindow();
-                                });
-                            });
-                        })));
-
-                        return actions;
-                    }
-
-                    private Action newEditSTEnumValueAction() {
-                        return newAction("Edit", actionEvent -> {
-
-                            final int newFields = 5;
-
-                            final JPanel contentPanel = new JPanel(new GridLayout((int) getModel().getValues().count() + newFields + 1, 2));
-                            contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
-                            contentPanel.add(new JLabel("Name"));
-                            contentPanel.add(new JLabel("Lexical"));
-
-                            // existing values:
-                            final Map<STEnumValue, JTextField> txtEnumValuesName = new LinkedHashMap<>();
-                            final Map<STEnumValue, JTextField> txtEnumLexical = new LinkedHashMap<>();
-                            getModel().getValues().forEach(stEnumValue -> {
-                                txtEnumValuesName.put(stEnumValue, SwingUtil.newTextField(stEnumValue.getName(), 10));
-                                txtEnumLexical.put(stEnumValue, SwingUtil.newTextField(stEnumValue.getLexical(), 10));
-                                contentPanel.add(txtEnumValuesName.get(stEnumValue));
-                                contentPanel.add(txtEnumLexical.get(stEnumValue));
-                            });
-
-                            // allow adding new values:
-                            final Map<Integer, JTextField> newTxtEnumValuesName = new LinkedHashMap<>();
-                            final Map<Integer, JTextField> newTxtEnumLexical = new LinkedHashMap<>();
-                            for (int i = 0; i < newFields; i++) {
-                                newTxtEnumValuesName.put(i, SwingUtil.newTextField("", 10));
-                                newTxtEnumLexical.put(i, SwingUtil.newTextField("", 10));
-
-                                contentPanel.add(newTxtEnumValuesName.get(i));
-                                contentPanel.add(newTxtEnumLexical.get(i));
-                            }
-
-                            final JDialog dialog = new JDialog((Frame) SwingUtilities.getAncestorOfClass(JFrame.class, tree), "Edit Enum", true);
-                            dialog.add(contentPanel, BorderLayout.CENTER);
-
-                            final JButton btnSave = new JButton(newAction("Save", actionEvent1 -> {
-
-                                for (STEnumValue stEnumValue : txtEnumValuesName.keySet()) {
-                                    final String txtEnumValueName = txtEnumValuesName.get(stEnumValue).getText().trim();
-                                    final String txtEnumValueLexical = txtEnumLexical.get(stEnumValue).getText().trim();
-
-                                    stEnumValue.setName(txtEnumValueName);
-                                    stEnumValue.setLexical(txtEnumValueLexical.length() == 0 ? null : txtEnumValueLexical);
-                                }
-
-                                for (int i = 0; i < newFields; i++) {
-                                    final String newEnumValue = newTxtEnumValuesName.get(i).getText().trim();
-                                    final String newEnumLexical = newTxtEnumLexical.get(i).getText().trim();
-                                    if (newEnumValue.length() == 0) continue;
-
-                                    getModel().addValues(STJsonFactory.newSTEnumValue()
-                                            .setName(newEnumValue)
-                                            .setLexical(newEnumLexical.length() == 0 ? null : newEnumLexical));
-                                }
-
-                                save();
-
-                                SwingUtilities.invokeLater(dialog::dispose);
-                            }));
-
-                            SwingUtil.showDialog(tree, dialog, btnSave);
-                        });
-                    }
-
-                    private Action renameSTEnumAction() {
-                        return newAction("Rename", actionEvent ->
-                                SwingUtil.getInputFromUser(tree, "Name")
-                                        .flatMap(name -> getParentNode(STGroupTreeNode.class)
-                                                .flatMap(parent -> STAppPresentationModel.isValidTemplateName(tree, parent.getModel(), name)))
-                                        .ifPresent(s -> {
-
-                                            getModel().setName(s);
-                                            save();
-
-                                            SwingUtilities.invokeLater(() -> treeModel.nodeChanged(STEnumTreeNode.this));
-                                        }));
-                    }
-
-                    private Action removeSTEnumAction() {
-                        return newAction("Remove", actionEvent ->
-                                SwingUtil.confirm(tree, "Delete " + getModel().getName()).ifPresent(aBoolean -> {
-
-                                    final STGroupTreeNode parent = (STGroupTreeNode) getParent();
-
-                                    parent.getModel().removeEnums(getModel());
-                                    save();
-
-                                    SwingUtilities.invokeLater(() -> treeModel.removeNodeFromParent(STEnumTreeNode.this));
-                                }));
-                    }
-                }
-
-                class STTemplateTreeNode extends BaseTreeNode<STTemplate> {
-
-                    public STTemplateTreeNode(STTemplate model) {
-                        super(model, "STTemplate");
-
-                        model.getChildren().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
-                    }
-
-                    @Override
-                    public String getLabel() {
-                        return getModel().getName();
-                    }
-
-                    @Override
-                    protected List<Action> getActions() {
-
-                        final List<Action> actions = new ArrayList<>();
-
-                        final Set<STTemplateTreeNode> candidateChildren = getSelectedTemplateTreeNodes();
-                        if (!candidateChildren.isEmpty())
-                            actions.add(reparentAction(candidateChildren));
-
-                        final List<STTemplate> childTemplates = getModel().getChildren().collect(Collectors.toList());
-                        if (!childTemplates.isEmpty())
-                            actions.add(newSetInterfacesAction(childTemplates));
-
-                        actions.add(newModelAction());
-
-                        actions.add(newChildTemplateAction());
-                        actions.add(newSetParameterTypesAction());
-                        actions.add(newSetInterfacesAction());
-                        actions.add(renameSTTemplateAction());
-                        actions.add(removeSTTemplateAction());
-
-                        return actions;
-                    }
-
-                    private Set<STTemplateTreeNode> getSelectedTemplateTreeNodes() {
-                        final Set<STTemplateTreeNode> candidateChildren = new LinkedHashSet<>();
-                        final TreePath[] selectionPaths = tree.getSelectionPaths();
-                        if (selectionPaths != null)
-                            for (TreePath selectionPath : selectionPaths)
-                                if (selectionPath.getLastPathComponent() != null && (selectionPath.getLastPathComponent() instanceof STTemplateTreeNode) && !(STTemplateTreeNode.this.equals(selectionPath.getLastPathComponent())))
-                                    candidateChildren.add((STTemplateTreeNode) selectionPath.getLastPathComponent());
-                        return candidateChildren;
-                    }
-
-                    private Action reparentAction(Set<STTemplateTreeNode> candidateChildren) {
-                        return newAction("Add " + candidateChildren.size() + " nodes as children", actionEvent -> {
-
-                            if (!SwingUtil.showConfirmDialog(tree, "Sure to move ?")) return;
-
-                            SwingUtilities.invokeLater(() -> {
-                                for (STTemplateTreeNode stTemplateTreeNode : candidateChildren) {
-
-                                    final TreeNode parent = stTemplateTreeNode.getParent();
-                                    if (parent instanceof STGroupTreeNode)
-                                        ((STGroupTreeNode) parent).getModel().removeTemplates(stTemplateTreeNode.getModel());
-                                    else if (parent instanceof STTemplateTreeNode)
-                                        ((STTemplateTreeNode) parent).getModel().removeChildren(stTemplateTreeNode.getModel());
-                                    getModel().addChildren(stTemplateTreeNode.getModel());
-
-                                    treeModel.removeNodeFromParent(stTemplateTreeNode);
-                                    treeModel.insertNodeInto(stTemplateTreeNode, STTemplateTreeNode.this, getChildCount());
-                                }
-
-                                save();
-                                treeModel.nodeStructureChanged(getParent());
-                            });
-                        });
-                    }
-
-                    private Action newSetParameterTypesAction() {
-                        return newAction("Set parameter types", actionEvent -> {
-
-                            final Map<String, JTextField> txtParameterMap = new TreeMap<>();
-                            getModel().getParameters().forEach(stParameter -> {
-
-                                switch (stParameter.getType()) {
-
-                                    case SINGLE:
-                                    case LIST:
-                                        final String key = stParameter.getName();
-                                        txtParameterMap.put(key, SwingUtil.newTextField(stParameter.getArgumentType("Object"), 15));
-
-                                        break;
-                                    case KVLIST:
-                                        stParameter.getKeys().forEach(stParameterKey -> {
-                                            final String kvListKey = stParameter.getName() + "." + stParameterKey.getName();
-                                            txtParameterMap.put(kvListKey, SwingUtil.newTextField(stParameterKey.getArgumentType("Object"), 15));
-                                        });
-                                        break;
-                                }
-                            });
-
-                            final JDialog dialog = new JDialog((Frame) SwingUtilities.getAncestorOfClass(JFrame.class, tree), "Set Parameter types", true);
-                            final JPanel contentPanel = new JPanel(new GridLayout(txtParameterMap.size(), 2));
-                            contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
-                            txtParameterMap.forEach((key, value) -> {
-                                contentPanel.add(new JLabel(key));
-                                contentPanel.add(value);
-                            });
-                            dialog.add(contentPanel, BorderLayout.CENTER);
-
-                            final JButton btnSave = new JButton(newAction("Save", actionEvent1 -> {
-                                getModel().getParameters().forEach(stParameter -> {
-
-                                    switch (stParameter.getType()) {
-
-                                        case SINGLE:
-                                        case LIST:
-                                            final JTextField txtTypes = txtParameterMap.get(stParameter.getName());
-                                            final String types = txtTypes.getText().trim();
-                                            stParameter.setArgumentType(types.length() == 0 ? (stParameter.getName().startsWith("is") ? "Boolean" : "Object") : types);
-                                            break;
-
-                                        case KVLIST:
-                                            stParameter.getKeys().forEach(stParameterKey -> {
-                                                final JTextField txtKVTypes = txtParameterMap.get(stParameter.getName() + "." + stParameterKey.getName());
-                                                final String kvTypes = txtKVTypes.getText().trim();
-                                                stParameterKey.setArgumentType(kvTypes.length() == 0 ? (stParameterKey.getName().startsWith("is") ? "Boolean" : "Object") : kvTypes);
-                                            });
-                                            break;
-                                    }
-                                });
-
-                                save();
-
-                                SwingUtilities.invokeLater(dialog::dispose);
-                            }));
-
-                            SwingUtil.showDialog(tree, dialog, btnSave);
-                        });
-                    }
-
-                    private Action newSetInterfacesAction() {
-                        return newAction("Set interfaces", actionEvent -> {
-
-                            final List<JTextField> txtImplements = new ArrayList<>();
-                            getModel().getImplements().forEach(implement -> {
-                                final JTextField textField = SwingUtil.newTextField(implement, 15);
-                                txtImplements.add(textField);
-                            });
-                            txtImplements.add(new JTextField("", 15));
-                            txtImplements.add(new JTextField("", 15));
-
-                            final JDialog dialog = new JDialog((Frame) SwingUtilities.getAncestorOfClass(JFrame.class, tree), "Edit interfaces", true);
-                            final JPanel contentPanel = new JPanel(new GridLayout(txtImplements.size(), 1));
-                            contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
-                            for (JTextField txtImplement : txtImplements) {
-                                contentPanel.add(txtImplement);
-                            }
-                            dialog.add(contentPanel, BorderLayout.CENTER);
-
-                            final JButton btnSave = new JButton(newAction("Save", actionEvent1 -> {
-
-                                getModel().clearImplements();
-                                for (JTextField txtImplement : txtImplements) {
-                                    final String trim = txtImplement.getText().trim();
-                                    if (trim.length() == 0) continue;
-                                    getModel().addImplements(trim);
-                                }
-                                save();
-
-                                SwingUtilities.invokeLater(dialog::dispose);
-                            }));
-
-                            SwingUtil.showDialog(tree, dialog, btnSave);
-                        });
-                    }
-
-                    private Action newSetInterfacesAction(List<STTemplate> children) {
-                        return newAction("Set interfaces on " + children.size() + " children", actionEvent -> {
-
-                            final JTextField txtImplements = new JTextField("", 15);
-
-                            final JDialog dialog = new JDialog((Frame) SwingUtilities.getAncestorOfClass(JFrame.class, tree), "Edit interfaces", true);
-                            final JPanel contentPanel = new JPanel(new GridLayout(1, 1));
-                            contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
-                            contentPanel.add(txtImplements);
-                            dialog.add(contentPanel, BorderLayout.CENTER);
-
-                            final JButton btnSave = new JButton(newAction("Save", actionEvent1 -> {
-
-                                final String interfaceName = txtImplements.getText().trim();
-
-                                children.forEach(stTemplate -> stTemplate.getImplements()
-                                        .filter(s -> s.equalsIgnoreCase(interfaceName))
-                                        .findAny()
-                                        .orElseGet(() -> {
-                                            stTemplate.addImplements(interfaceName);
-                                            return interfaceName;
-                                        }));
-
-                                save();
-
-                                SwingUtilities.invokeLater(dialog::dispose);
-                            }));
-
-                            SwingUtil.showDialog(tree, dialog, btnSave);
-                        });
-                    }
-
-                    private Action newModelAction() {
-                        return newAction("New Instance", actionEvent ->
-                                getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> workspace.findCanvas().ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
-                                    final STModelNode node = new STModelNode(stCanvas, getModel(), presentationModel.db.newSTModel(stGroupTreeNode.getModel().getUuid(), getModel()));
-                                    stCanvas.addNode(node);
-                                    workspace.setSelectedComponent(stCanvas);
-                                    stCanvas.requestFocusInWindow();
-                                    stCanvas.centerNode(node);
-                                })))));
-                    }
-
-
-                    private Action newChildTemplateAction() {
-                        return newAction("New Child-template", actionEvent -> SwingUtil.getInputFromUser(tree, "Name")
-                                .ifPresent(name -> getParentNode(STGroupTreeNode.class)
-                                        .flatMap(parent -> STAppPresentationModel.isValidTemplateName(tree, parent.getModel(), name))
-                                        .ifPresent(s -> {
-                                            final STTemplate stTemplate = STJsonFactory.newSTTemplate()
-                                                    .setName(name)
-                                                    .setText("");
-
-                                            getModel().addChildren(stTemplate);
-                                            save();
-
-                                            SwingUtilities.invokeLater(() -> {
-                                                final STTemplateTreeNode stTemplateTreeNode = new STTemplateTreeNode(stTemplate);
-                                                treeModel.insertNodeInto(stTemplateTreeNode, STTemplateTreeNode.this, getChildCount());
-                                                show(stTemplateTreeNode);
-                                            });
-                                        })));
-                    }
-
-                    private Action renameSTTemplateAction() {
-                        return newAction("Rename", actionEvent ->
-                                SwingUtil.getInputFromUser(tree, "Name").ifPresent(name ->
-                                        getParentNode(STGroupTreeNode.class)
-                                                .ifPresent(parent -> STAppPresentationModel.isValidTemplateName(tree, parent.getModel(), name)
-                                                        .ifPresent(s -> {
-
-                                                            getModel().setName(name);
-                                                            save();
-
-                                                            SwingUtilities.invokeLater(() -> {
-                                                                treeModel.nodeChanged(STTemplateTreeNode.this);
-                                                                findSTTemplateEditor(workspace, parent)
-                                                                        .ifPresent(stEditor1 -> workspace.setTitleAt(workspace.indexOfComponent(stEditor1), getModel().getName()));
-                                                            });
-                                                        }))));
-                    }
-
-                    private Action removeSTTemplateAction() {
-                        return newAction("Remove", actionEvent ->
-                                SwingUtil.confirm(tree, "Delete " + getModel().getName()).ifPresent(aBoolean -> {
-
-                                    if (getParent() instanceof STGroupTreeNode) {
-                                        final STGroupTreeNode parent = (STGroupTreeNode) getParent();
-
-                                        parent.getModel().removeTemplates(getModel());
-                                        save();
-
-                                        SwingUtilities.invokeLater(() -> {
-                                            treeModel.removeNodeFromParent(STTemplateTreeNode.this);
-                                            findSTTemplateEditor(workspace, parent).ifPresent(workspace::remove);
-                                        });
-
-                                    } else if (getParent() instanceof STTemplateTreeNode) {
-                                        final STTemplateTreeNode parent = (STTemplateTreeNode) getParent();
-
-                                        parent.getModel().removeChildren(getModel());
-                                        save();
-
-                                        SwingUtilities.invokeLater(() -> {
-                                            treeModel.removeNodeFromParent(STTemplateTreeNode.this);
-                                            getParentNode(STGroupTreeNode.class)
-                                                    .flatMap(stGroupTreeNode -> findSTTemplateEditor(workspace, stGroupTreeNode))
-                                                    .ifPresent(workspace::remove);
-                                        });
-                                    }
-                                }));
-                    }
-                }
-            }
-        }
-    }
-
-    private Action newAction(String name, Consumer<ActionEvent> actionEventConsumer) {
-        return new AbstractAction(name) {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionEventConsumer.accept(e);
-            }
-        };
-    }
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STTemplateNavigator.class);
+
+	private final JTree tree = new JTree();
+	private final STWorkspace workspace;
+	private final STAppPresentationModel presentationModel;
+	private final DefaultTreeModel treeModel;
+
+	public STTemplateNavigator(STAppPresentationModel presentationModel, STWorkspace workspace) {
+		super(new BorderLayout());
+
+		this.presentationModel = presentationModel;
+		this.workspace = workspace;
+
+		treeModel = new DefaultTreeModel(new RootNode("Models"));
+		tree.setModel(treeModel);
+		ToolTipManager.sharedInstance().registerComponent(tree);
+
+		tree.setCellRenderer(new DefaultTreeCellRenderer() {
+
+			@Override
+			public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+				final boolean isBaseTreeNode = value instanceof BaseTreeNode;
+				if (isBaseTreeNode) {
+					final BaseTreeNode<?> baseTreeNode = (BaseTreeNode<?>) value;
+					final ImageIcon icon = baseTreeNode.getIcon();
+					setIcon(icon);
+					setOpenIcon(icon);
+					setClosedIcon(icon);
+					setLeafIcon(icon);
+					setToolTipText(baseTreeNode.getTooltip());
+					return super.getTreeCellRendererComponent(tree, baseTreeNode.getLabel(), sel, expanded, leaf, row, hasFocus);
+				}
+				return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+			}
+		});
+
+		tree.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (SwingUtilities.isRightMouseButton(e)) {
+
+					final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());
+					if (selectionPath == null) return;
+					final Object lastPathComponent = selectionPath.getLastPathComponent();
+					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
+
+					showPopup((BaseTreeNode<?>) lastPathComponent, e.getX(), e.getY());
+				}
+			}
+		});
+
+		tree.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+
+				if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+					final TreePath selectionPath = tree.getSelectionPath();
+					if (selectionPath == null) return;
+					final Object lastPathComponent = selectionPath.getLastPathComponent();
+					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
+
+					final Rectangle bounds = tree.getPathBounds(selectionPath);
+					if (bounds == null) return;
+
+					showPopup((BaseTreeNode<?>) lastPathComponent, (int) bounds.getX(), (int) bounds.getY());
+				}
+			}
+		});
+
+		tree.addTreeSelectionListener(e -> {
+			if (e.getNewLeadSelectionPath() == null) return;
+
+			if (tree.getSelectionCount() == 1) {
+				final TreePath path = e.getPath();
+				final Object lastPathComponent = path.getLastPathComponent();
+
+				if (lastPathComponent instanceof STGroupTreeNode) {
+					final STGroupTreeNode selectedNode = (STGroupTreeNode) lastPathComponent;
+					workspace.getSTEditor(selectedNode.getModel());
+				} else if (lastPathComponent instanceof STTemplateTreeNode) {
+					final STTemplateTreeNode selectedNode = (STTemplateTreeNode) lastPathComponent;
+					selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> workspace.getSTEditor(stGroupTreeNode.getModel()).setSTTemplate(selectedNode.getModel()));
+				} else if (lastPathComponent instanceof STEnumTreeNode) {
+					final STEnumTreeNode selectedNode = (STEnumTreeNode) lastPathComponent;
+					selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> workspace.getSTEditor(stGroupTreeNode.getModel()).setSTEnum(selectedNode.getModel()));
+				} else if (lastPathComponent instanceof STInterfaceTreeNode) {
+					final STInterfaceTreeNode selectedNode = (STInterfaceTreeNode) lastPathComponent;
+					selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> workspace.getSTEditor(stGroupTreeNode.getModel()).setSTInterface(selectedNode.getModel()));
+				}
+			}
+		});
+
+		setPreferredSize(new Dimension(300, 600));
+		add(new JScrollPane(tree), BorderLayout.CENTER);
+	}
+
+	public class BaseTreeNode<T> extends DefaultMutableTreeNode {
+
+		protected String label;
+		protected ImageIcon icon;
+		protected String tooltip;
+
+		public BaseTreeNode(T model, String icon) {
+			setUserObject(model);
+			this.label = model.toString();
+			this.icon = loadIcon(icon);
+			this.tooltip = "";
+		}
+
+		@SuppressWarnings("unchecked")
+		public T getModel() {
+			return (T) getUserObject();
+		}
+
+		public String getLabel() {
+			return label;
+		}
+
+		public ImageIcon getIcon() {
+			return icon;
+		}
+
+		protected java.util.List<Action> getActions() {
+			return new ArrayList<>();
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (!(obj instanceof BaseTreeNode)) return false;
+			return getModel().equals(((BaseTreeNode<?>) obj).getModel());
+		}
+
+		@Override
+		public int hashCode() {
+			return getModel().hashCode();
+		}
+
+		@SuppressWarnings("unchecked")
+		public <T> Optional<T> getParentNode(Class<T> type) {
+			if (getClass().equals(type)) return (Optional<T>) Optional.of(this);
+
+			final TreeNode parent = getParent();
+			if (!(parent instanceof BaseTreeNode)) return Optional.empty();
+
+			return ((BaseTreeNode<?>) parent).getParentNode(type);
+		}
+
+		public String getTooltip() {
+			return tooltip;
+		}
+
+		protected TreePath addChild(BaseTreeNode<?> child) {
+			add(child);
+			final TreePath path = new TreePath(child.getPath());
+			treeModel.nodesWereInserted(BaseTreeNode.this, new int[]{getIndex(child)});
+			return path;
+		}
+
+		protected void addAndSelectChild(BaseTreeNode<?> child) {
+			final TreePath path = addChild(child);
+			tree.scrollPathToVisible(path);
+			tree.setSelectionPath(path);
+		}
+
+		protected <T> java.util.stream.Stream<T> getChildren(Class<T> type) {
+			final java.util.Set<T> set = new java.util.LinkedHashSet<>();
+			final int childCount = getChildCount();
+			for (int i = 0; i < childCount; i++) {
+				if (getChildAt(i).getClass().isAssignableFrom(type))
+					set.add((T) getChildAt(i));
+			}
+
+			return set.stream();
+		}
+
+		protected TreePath getThisPath() {
+			return new TreePath(getPath());
+		}
+
+		protected void expandTreeNodesRecursive(TreePath parent, boolean expand) {
+			TreeModel model = tree.getModel();
+
+			Object node = parent.getLastPathComponent();
+			int childCount = model.getChildCount(node);
+			for (int j = 0; j < childCount; j++) 
+				expandTreeNodesRecursive(parent.pathByAddingChild(model.getChild(node, j)), expand);
+
+			if (expand) 
+				tree.expandPath(parent);
+			else 
+				tree.collapsePath(parent);
+		}
+	}
+
+	// RootNode
+	public class RootNode extends BaseTreeNode<String> {
+
+		RootNode(String model) {
+			super(model, "RootNode");
+			this.label = model;
+			add(new STGDirectoryTreeNode(presentationModel.generatorSTGDirectory));
+			presentationModel.stgDirectories.forEach(stgDirectory -> add(new STGDirectoryTreeNode(stgDirectory)));
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+			return actions;
+		}
+
+	}
+
+	// STGDirectoryTreeNode
+	public class STGDirectoryTreeNode extends BaseTreeNode<nextgen.st.domain.STGDirectory> {
+
+		private String uuid;
+
+		STGDirectoryTreeNode(nextgen.st.domain.STGDirectory model) {
+			super(model, "STGDirectory");
+			this.label = model.getPath();
+			this.uuid = model.getUuid();
+			model.getGroups()
+				.sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
+				.forEach(stGroupModel -> add(new STGroupTreeNode(stGroupModel)));
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+			actions.add(newAction("New STGroup", actionEvent -> {
+				SwingUtil.getInputFromUser(tree, "Name").ifPresent(name -> {
+
+					final Optional<nextgen.st.domain.STGroupModel> existing = getModel().getGroups().filter(groupModel -> groupModel.getName().toLowerCase().equals(name)).findAny();
+					if (existing.isPresent()) {
+						SwingUtil.showMessage(name + " group already exists in this directory", tree);
+						return;
+					}
+
+					if (!javax.lang.model.SourceVersion.isIdentifier(name)) {
+						SwingUtil.showMessage(name + " is a reserved java keyword", tree);
+						return;
+					}
+
+					final nextgen.st.domain.STGroupModel stGroupModel = presentationModel.newSTGroupModel(name);
+					getModel().addGroups(stGroupModel);
+
+					SwingUtilities.invokeLater(() -> {
+						final STGroupTreeNode stGroupTreeNode = new STGroupTreeNode(stGroupModel);
+						stGroupTreeNode.save();
+						addAndSelectChild(stGroupTreeNode);
+						workspace.getSTEditor(stGroupTreeNode.getModel());
+					});
+				});
+			}));
+			actions.add(newAction("Generate All", actionEvent -> {
+				SwingUtilities.invokeLater(() -> getChildren(STGroupTreeNode.class).forEach(stGroupTreeNode -> presentationModel.generateSTGroup(stGroupTreeNode.getModel())));
+			}));
+			return actions;
+		}
+
+		public void save(nextgen.st.domain.STGroupModel model) {
+			final java.io.File dir = new java.io.File(getModel().getPath());
+			STGenerator.write(new java.io.File(dir, model.getName() + ".json"), model.getJsonObject().encodePrettily());
+		}
+	}
+
+	// STGroupTreeNode
+	public class STGroupTreeNode extends BaseTreeNode<nextgen.st.domain.STGroupModel> {
+
+		private String uuid;
+
+		STGroupTreeNode(nextgen.st.domain.STGroupModel model) {
+			super(model, model.getIcon());
+			this.label = model.getName();
+			this.uuid = model.getUuid();
+			model.getEnums().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stEnum -> add(new STEnumTreeNode(stEnum)));
+			model.getTemplates().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
+			model.getInterfaces().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stInterface -> add(new STInterfaceTreeNode(stInterface)));
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+			actions.add(newAction("Generate", actionEvent -> {
+				presentationModel.generateSTGroup(getModel());
+			}));
+			actions.add(newAction("New template", actionEvent -> {
+				SwingUtil.getInputFromUser(tree, "Name").ifPresent(name ->
+						STAppPresentationModel.isValidTemplateName(tree, getModel(), name).ifPresent(s -> {
+
+							final STTemplate stTemplate = presentationModel.newSTTemplate(name);
+							getModel().addTemplates(stTemplate);
+							save();
+
+							SwingUtilities.invokeLater(() -> {
+								addAndSelectChild(new STTemplateTreeNode(stTemplate));
+								workspace.getSTEditor(getModel()).setSTTemplate(stTemplate);
+							});
+						}));
+			}));
+			actions.add(newAction("New enum", actionEvent -> {
+				SwingUtil.getInputFromUser(tree, "Name").ifPresent(name ->
+					STAppPresentationModel.isValidTemplateName(tree, getModel(), name).ifPresent(s -> {
+
+						final STEnum stEnum = presentationModel.newSTEnum(name);
+						getModel().addEnums(stEnum);
+						save();
+
+						SwingUtilities.invokeLater(() -> addAndSelectChild(new STEnumTreeNode(stEnum)));
+					}));
+			}));
+			actions.add(newAction("New interface", actionEvent -> {
+				SwingUtil.getInputFromUser(tree, "Name").ifPresent(name ->
+					STAppPresentationModel.isValidTemplateName(tree, getModel(), name).ifPresent(s -> {
+
+						final STInterface stInterface = presentationModel.newSTInterface(name);
+						getModel().addInterfaces(stInterface);
+						save();
+
+						SwingUtilities.invokeLater(() -> addAndSelectChild(new STInterfaceTreeNode(stInterface)));
+					}));
+			}));
+			actions.add(newAction("Rename", actionEvent -> {
+				SwingUtil.getInputFromUser(tree, "Name").ifPresent(name ->
+					getParentNode(STGDirectoryTreeNode.class)
+						.ifPresent(parent -> {
+					
+								final Optional<STGroupModel> existing = parent.getModel()
+									.getGroups()
+									.filter(groupModel -> !groupModel.equals(getModel()))
+									.filter(groupModel -> groupModel.getName().toLowerCase().equals(name))
+									.findAny();
+					
+								if (existing.isPresent()) {
+									SwingUtil.showMessage(name + " group already exists", tree);
+									return;
+								}
+					
+								final String oldName = getModel().getName();
+								getModel().setName(name);
+								save();
+					
+								SwingUtilities.invokeLater(() -> {
+									this.label = getModel().getName();
+									treeModel.nodeChanged(STGroupTreeNode.this);
+									STAppPresentationModel.deleteSTGFile(parent.getModel(), oldName);
+								});
+					}));
+			}));
+			actions.add(newAction("Expand", actionEvent -> {
+				SwingUtilities.invokeLater(() -> expandTreeNodesRecursive(getThisPath(), true));
+			}));
+			actions.add(newAction("Delete", actionEvent -> {
+				SwingUtil.confirm(tree,"Delete " + getModel().getName())
+					.flatMap(aBoolean -> getParentNode(STGDirectoryTreeNode.class))
+					.ifPresent(parent -> SwingUtilities.invokeLater(() -> {
+						treeModel.removeNodeFromParent(STGroupTreeNode.this);
+						workspace.removeSTEditor(getModel());
+						parent.getModel().removeGroups(getModel());
+						STAppPresentationModel.deleteSTGFile(parent.getModel(), getModel().getName());
+					}));
+			}));
+			actions.add(newAction("Set Icon name", actionEvent -> {
+				SwingUtil.getInputFromUser(tree, "Icon name").ifPresent(iconName -> {
+
+					getModel().setIcon(iconName);
+					save();
+
+					SwingUtilities.invokeLater(() -> {
+							this.icon = loadIcon(iconName);
+							treeModel.nodeChanged(STGroupTreeNode.this);
+					});
+				});
+			}));
+			return actions;
+		}
+
+		public void save() {
+			getParentNode(STGDirectoryTreeNode.class).ifPresent(stGroupTreeNode -> stGroupTreeNode.save(getModel()));
+		}
+	}
+
+	// STEnumTreeNode
+	public class STEnumTreeNode extends BaseTreeNode<nextgen.st.domain.STEnum> {
+
+		private String uuid;
+
+		STEnumTreeNode(nextgen.st.domain.STEnum model) {
+			super(model, "STEnum");
+			this.label = model.getName();
+			this.uuid = model.getUuid();
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+			getModel().getValues().forEach(stEnumValue -> {
+				actions.add(newAction("New " + stEnumValue.getName() + " instance", actionEvent -> {
+					workspace.findCanvas().ifPresent(stCanvas -> {
+							SwingUtilities.invokeLater(() -> {
+								presentationModel.db.doInTransaction(transaction -> stCanvas.addNode(new STValueNode(stCanvas, presentationModel.db.newSTValue(stEnumValue))));
+								workspace.setSelectedComponent(stCanvas);
+								stCanvas.requestFocusInWindow();
+							});
+					});
+				}));
+			});
+			actions.add(newAction("Edit", actionEvent -> {
+				final int newFields = 5;
+
+				final JPanel contentPanel = new JPanel(new GridLayout((int) getModel().getValues().count() + newFields + 1, 2));
+				contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
+				contentPanel.add(new JLabel("Name"));
+				contentPanel.add(new JLabel("Lexical"));
+
+				// existing values:
+				final Map<STEnumValue, JTextField> txtEnumValuesName = new LinkedHashMap<>();
+				final Map<STEnumValue, JTextField> txtEnumLexical = new LinkedHashMap<>();
+				getModel().getValues().forEach(stEnumValue -> {
+					txtEnumValuesName.put(stEnumValue, SwingUtil.newTextField(stEnumValue.getName(), 10));
+					txtEnumLexical.put(stEnumValue, SwingUtil.newTextField(stEnumValue.getLexical(), 10));
+					contentPanel.add(txtEnumValuesName.get(stEnumValue));
+					contentPanel.add(txtEnumLexical.get(stEnumValue));
+				});
+
+				// allow adding new values:
+				final Map<Integer, JTextField> newTxtEnumValuesName = new LinkedHashMap<>();
+				final Map<Integer, JTextField> newTxtEnumLexical = new LinkedHashMap<>();
+				for (int i = 0; i < newFields; i++) {
+					newTxtEnumValuesName.put(i, SwingUtil.newTextField("", 10));
+					newTxtEnumLexical.put(i, SwingUtil.newTextField("", 10));
+
+					contentPanel.add(newTxtEnumValuesName.get(i));
+					contentPanel.add(newTxtEnumLexical.get(i));
+				}
+
+				final JDialog dialog = new JDialog((Frame) SwingUtilities.getAncestorOfClass(JFrame.class, tree), "Edit Enum", true);
+				dialog.add(contentPanel, BorderLayout.CENTER);
+
+				final JButton btnSave = new JButton(newAction("Save", actionEvent1 -> {
+
+					for (STEnumValue stEnumValue : txtEnumValuesName.keySet()) {
+							final String txtEnumValueName = txtEnumValuesName.get(stEnumValue).getText().trim();
+							final String txtEnumValueLexical = txtEnumLexical.get(stEnumValue).getText().trim();
+
+							stEnumValue.setName(txtEnumValueName);
+							stEnumValue.setLexical(txtEnumValueLexical.length() == 0 ? null : txtEnumValueLexical);
+					}
+
+					for (int i = 0; i < newFields; i++) {
+							final String newEnumValue = newTxtEnumValuesName.get(i).getText().trim();
+							final String newEnumLexical = newTxtEnumLexical.get(i).getText().trim();
+							if (newEnumValue.length() == 0) continue;
+
+							getModel().addValues(STJsonFactory.newSTEnumValue()
+									.setName(newEnumValue)
+									.setLexical(newEnumLexical.length() == 0 ? null : newEnumLexical));
+					}
+
+					getParentNode(STGroupTreeNode.class).ifPresent(STGroupTreeNode::save);
+
+					SwingUtilities.invokeLater(dialog::dispose);
+				}));
+
+				SwingUtil.showDialog(tree, dialog, btnSave);
+			}));
+			actions.add(newAction("Rename", actionEvent -> {
+				SwingUtil.getInputFromUser(tree, "Name")
+					.ifPresent(candidateName -> getParentNode(STGroupTreeNode.class)
+					.ifPresent(stGroupTreeNode -> STAppPresentationModel.isValidTemplateName(tree, stGroupTreeNode.getModel(), candidateName)
+						.ifPresent(name -> {
+							getModel().setName(name);
+							stGroupTreeNode.save();
+							SwingUtilities.invokeLater(() -> {
+									this.label = getModel().getName();
+									treeModel.nodeChanged(STEnumTreeNode.this);
+							});
+					})));
+			}));
+			actions.add(newAction("Remove", actionEvent -> {
+				SwingUtil.confirm(tree, "Delete " + getModel().getName())
+					.flatMap(aBoolean -> getParentNode(STGroupTreeNode.class))
+					.ifPresent(stGroupTreeNode -> {
+						stGroupTreeNode.getModel().removeEnums(getModel());
+						SwingUtilities.invokeLater(() -> treeModel.removeNodeFromParent(STEnumTreeNode.this));
+					});
+			}));
+			return actions;
+		}
+
+	}
+
+	// STTemplateTreeNode
+	public class STTemplateTreeNode extends BaseTreeNode<nextgen.st.domain.STTemplate> {
+
+		private String uuid;
+
+		STTemplateTreeNode(nextgen.st.domain.STTemplate model) {
+			super(model, "STTemplate");
+			this.label = model.getName();
+			this.uuid = model.getUuid();
+			model.getChildren().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+			final Set<STTemplateTreeNode> candidateChildren = getSelectedNodes(STTemplateTreeNode.class).filter(stTemplateTreeNode -> !stTemplateTreeNode.equals(this)).collect(java.util.stream.Collectors.toSet());
+			if (!candidateChildren.isEmpty())
+				actions.add(newAction("Add " + candidateChildren.size() + " nodes as children", actionEvent -> {
+
+					if (!SwingUtil.showConfirmDialog(tree, "Sure to move ?")) return;
+
+					SwingUtilities.invokeLater(() -> {
+						for (STTemplateTreeNode stTemplateTreeNode : candidateChildren) {
+
+								final TreeNode parent = stTemplateTreeNode.getParent();
+								if (parent instanceof STGroupTreeNode)
+									((STGroupTreeNode) parent).getModel().removeTemplates(stTemplateTreeNode.getModel());
+								else if (parent instanceof STTemplateTreeNode)
+									((STTemplateTreeNode) parent).getModel().removeChildren(stTemplateTreeNode.getModel());
+								getModel().addChildren(stTemplateTreeNode.getModel());
+
+								treeModel.removeNodeFromParent(stTemplateTreeNode);
+								treeModel.insertNodeInto(stTemplateTreeNode, STTemplateTreeNode.this, getChildCount());
+						}
+
+						getParentNode(STGroupTreeNode.class).ifPresent(STGroupTreeNode::save);
+						treeModel.nodeStructureChanged(getParent());
+					});
+				}));
+			final List<nextgen.st.domain.STTemplate> childTemplates = getModel().getChildren().collect(java.util.stream.Collectors.toList());
+			if (!childTemplates.isEmpty())
+				actions.add(newAction("Set interfaces on " + childTemplates.size() + " children", actionEvent -> {
+
+					final JTextField txtImplements = new JTextField("", 15);
+
+					final JDialog dialog = new JDialog((Frame) SwingUtilities.getAncestorOfClass(JFrame.class, tree), "Edit interfaces", true);
+					final JPanel contentPanel = new JPanel(new GridLayout(1, 1));
+					contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
+					contentPanel.add(txtImplements);
+					dialog.add(contentPanel, BorderLayout.CENTER);
+
+					final JButton btnSave = new JButton(newAction("Save", actionEvent1 -> {
+
+						final String interfaceName = txtImplements.getText().trim();
+
+						childTemplates.forEach(stTemplate -> stTemplate.getImplements()
+									.filter(s -> s.equalsIgnoreCase(interfaceName))
+									.findAny()
+									.orElseGet(() -> {
+										stTemplate.addImplements(interfaceName);
+										return interfaceName;
+									}));
+
+						getParentNode(STGroupTreeNode.class).ifPresent(STGroupTreeNode::save);
+
+						SwingUtilities.invokeLater(dialog::dispose);
+					}));
+
+					nextgen.utils.SwingUtil.showDialog(tree, dialog, btnSave);
+				}));
+			getModel().getImplements().forEach(implement -> actions.add(newAction("Remove interface '" + implement + "'", actionEvent -> {
+				getModel().removeImplements(implement);
+				getParentNode(STGroupTreeNode.class).ifPresent(STGroupTreeNode::save);
+			})));
+			actions.add(newAction("New Instance", actionEvent -> {
+				getParentNode(STGroupTreeNode.class)
+					.ifPresent(stGroupTreeNode -> workspace.findCanvas()
+							.ifPresent(stCanvas -> presentationModel.doLaterInTransaction(transaction -> {
+									final STModelNode node = new STModelNode(stCanvas, getModel(), presentationModel.db.newSTModel(stGroupTreeNode.getModel().getUuid(), getModel()));
+									stCanvas.addNode(node);
+									workspace.setSelectedComponent(stCanvas);
+									stCanvas.requestFocusInWindow();
+									stCanvas.centerNode(node);
+					})));
+			}));
+			actions.add(newAction("New Child-template", actionEvent -> {
+				SwingUtil.getInputFromUser(tree, "Name")
+					.ifPresent(candidateName -> getParentNode(STGroupTreeNode.class)
+							.ifPresent(stGroupTreeNode -> STAppPresentationModel.isValidTemplateName(tree, stGroupTreeNode.getModel(), candidateName)
+									.ifPresent(name -> {
+										final STTemplate stTemplate = presentationModel.newSTTemplate(name);
+					
+										getModel().addChildren(stTemplate);
+										stGroupTreeNode.save();
+					
+										SwingUtilities.invokeLater(() -> {
+												addAndSelectChild(new STTemplateTreeNode(stTemplate));
+												workspace.getSTEditor(stGroupTreeNode.getModel()).setSTTemplate(stTemplate);
+										});
+					})));
+			}));
+			actions.add(newAction("Set parameter types", actionEvent -> {
+				final Map<String, JTextField> txtParameterMap = new TreeMap<>();
+				getModel().getParameters().forEach(stParameter -> {
+
+					switch (stParameter.getType()) {
+
+						case SINGLE:
+						case LIST:
+							final String key = stParameter.getName();
+							txtParameterMap.put(key, SwingUtil.newTextField(stParameter.getArgumentType("Object"), 15));
+
+							break;
+						case KVLIST:
+							stParameter.getKeys().forEach(stParameterKey -> {
+								final String kvListKey = stParameter.getName() + "." + stParameterKey.getName();
+								txtParameterMap.put(kvListKey, SwingUtil.newTextField(stParameterKey.getArgumentType("Object"), 15));
+							});
+							break;
+					}
+				});
+
+				final JDialog dialog = new JDialog((Frame) SwingUtilities.getAncestorOfClass(JFrame.class, tree), "Set Parameter types", true);
+				final JPanel contentPanel = new JPanel(new GridLayout(txtParameterMap.size(), 2));
+				contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
+				txtParameterMap.forEach((key, value) -> {
+					contentPanel.add(new JLabel(key));
+					contentPanel.add(value);
+				});
+				dialog.add(contentPanel, BorderLayout.CENTER);
+
+				final JButton btnSave = new JButton(newAction("Save", actionEvent1 -> {
+					getModel().getParameters().forEach(stParameter -> {
+
+						switch (stParameter.getType()) {
+
+							case SINGLE:
+							case LIST:
+								final JTextField txtTypes = txtParameterMap.get(stParameter.getName());
+								final String types = txtTypes.getText().trim();
+								stParameter.setArgumentType(types.length() == 0 ? (stParameter.getName().startsWith("is") ? "Boolean" : "Object") : types);
+								break;
+
+							case KVLIST:
+								stParameter.getKeys().forEach(stParameterKey -> {
+										final JTextField txtKVTypes = txtParameterMap.get(stParameter.getName() + "." + stParameterKey.getName());
+										final String kvTypes = txtKVTypes.getText().trim();
+										stParameterKey.setArgumentType(kvTypes.length() == 0 ? (stParameterKey.getName().startsWith("is") ? "Boolean" : "Object") : kvTypes);
+								});
+								break;
+						}
+					});
+
+					getParentNode(STGroupTreeNode.class).ifPresent(STGroupTreeNode::save);
+
+					SwingUtilities.invokeLater(dialog::dispose);
+				}));
+
+				SwingUtil.showDialog(tree, dialog, btnSave);
+			}));
+			actions.add(newAction("Set interfaces", actionEvent -> {
+				final List<JTextField> txtImplements = new ArrayList<>();
+				getModel().getImplements().forEach(implement -> {
+					final JTextField textField = SwingUtil.newTextField(implement, 15);
+					txtImplements.add(textField);
+				});
+				txtImplements.add(SwingUtil.newTextField("", 15));
+				txtImplements.add(SwingUtil.newTextField("", 15));
+
+				final JDialog dialog = new JDialog((Frame) SwingUtilities.getAncestorOfClass(JFrame.class, tree), "Edit interfaces", true);
+				final JPanel contentPanel = new JPanel(new GridLayout(txtImplements.size(), 1));
+				contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
+				for (JTextField txtImplement : txtImplements) {
+					contentPanel.add(txtImplement);
+				}
+				dialog.add(contentPanel, BorderLayout.CENTER);
+
+				final JButton btnSave = new JButton(newAction("Save", actionEvent1 -> {
+
+					getModel().clearImplements();
+					for (JTextField txtImplement : txtImplements) {
+						final String trim = txtImplement.getText().trim();
+						if (trim.length() == 0) continue;
+						getModel().addImplements(trim);
+					}
+					getParentNode(STGroupTreeNode.class).ifPresent(STGroupTreeNode::save);
+
+					SwingUtilities.invokeLater(dialog::dispose);
+				}));
+
+				SwingUtil.showDialog(tree, dialog, btnSave);
+			}));
+			actions.add(newAction("Rename", actionEvent -> {
+				SwingUtil.getInputFromUser(tree, "Name")
+					.ifPresent(candidateName -> getParentNode(STGroupTreeNode.class)
+						.ifPresent(stGroupTreeNode -> STAppPresentationModel.isValidTemplateName(tree, stGroupTreeNode.getModel(), candidateName)
+								.ifPresent(name -> {
+									getModel().setName(name);
+									stGroupTreeNode.save();
+									SwingUtilities.invokeLater(() -> {
+											this.label = getModel().getName();
+											treeModel.nodeChanged(STTemplateTreeNode.this);
+									});
+					})));
+			}));
+			actions.add(newAction("Remove", actionEvent -> {
+				SwingUtil.confirm(tree, "Delete " + getModel().getName())
+						.ifPresent(aBoolean -> {
+							if (getParent() instanceof STGroupTreeNode) {
+								final STGroupTreeNode parent = (STGroupTreeNode) getParent();
+								parent.getModel().removeTemplates(getModel());
+							} else if (getParent() instanceof STTemplateTreeNode) {
+								final STTemplateTreeNode parent = (STTemplateTreeNode) getParent();
+								parent.getModel().removeChildren(getModel());
+							}
+
+							getParentNode(STGroupTreeNode.class).ifPresent(STGroupTreeNode::save);
+
+							SwingUtilities.invokeLater(() -> {
+								treeModel.removeNodeFromParent(STTemplateTreeNode.this);
+								getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> workspace.getSTEditor(stGroupTreeNode.getModel()).setSTTemplate(null));
+							});
+						});
+			}));
+			return actions;
+		}
+
+	}
+
+	// STInterfaceTreeNode
+	public class STInterfaceTreeNode extends BaseTreeNode<nextgen.st.domain.STInterface> {
+
+		private String uuid;
+
+		STInterfaceTreeNode(nextgen.st.domain.STInterface model) {
+			super(model, "STInterface");
+			this.label = model.getName();
+			this.uuid = model.getUuid();
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+			actions.add(newAction("Rename", actionEvent -> {
+				SwingUtil.getInputFromUser(tree, "Name")
+					.ifPresent(candidateName -> getParentNode(STGroupTreeNode.class)
+						.ifPresent(stGroupTreeNode -> STAppPresentationModel.isValidTemplateName(tree, stGroupTreeNode.getModel(), candidateName)
+									.ifPresent(name -> {
+										getModel().setName(name);
+										stGroupTreeNode.save();
+										SwingUtilities.invokeLater(() -> {
+											this.label = getModel().getName();
+											treeModel.nodeChanged(STInterfaceTreeNode.this);
+										});
+					})));
+			}));
+			actions.add(newAction("Remove", actionEvent -> {
+				SwingUtil.confirm(tree, "Delete " + getModel().getName())
+					.flatMap(aBoolean -> getParentNode(STGroupTreeNode.class))
+					.ifPresent(stGroupTreeNode -> {
+						stGroupTreeNode.getModel().removeInterfaces(getModel());
+						SwingUtilities.invokeLater(() -> treeModel.removeNodeFromParent(STInterfaceTreeNode.this));
+					});
+			}));
+			return actions;
+		}
+
+	}	
+
+	private Action newAction(String name, Consumer<ActionEvent> actionEventConsumer) {
+		return new AbstractAction(name) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				actionEventConsumer.accept(e);
+			}
+		};
+	}
+
+	private static final Map<String, ImageIcon> cache = new LinkedHashMap<>();
+
+	private ImageIcon loadIcon(String iconName) {
+
+		if (iconName == null) return null;
+
+		if (cache.containsKey(iconName)) return cache.get(iconName);
+
+		URL resource = getClass().getClassLoader().getResource("icons/" + iconName + "16x16.png");
+		if (resource == null) resource = getClass().getClassLoader().getResource("icons/STGroup16x16.png");
+
+		cache.put(iconName, new ImageIcon(Objects.requireNonNull(resource)));
+		return cache.get(iconName);
+	}
+
+	private void showPopup(BaseTreeNode<?> lastPathComponent, int x, int y) {
+		final List<Action> actions = lastPathComponent.getActions();
+		if (actions.isEmpty()) return;
+
+		final JPopupMenu pop = new JPopupMenu();
+		pop.add("With " + cut(lastPathComponent.getLabel()) + " :");
+		for (Action action : actions)
+			pop.add(action);
+
+		SwingUtilities.invokeLater(() -> pop.show(tree, x, y));
+	}
+
+	public static String cut(String text) {
+		return text.substring(0, Math.min(text.length(), 20));
+	}
+
+	private <T> java.util.stream.Stream<T> getSelectedNodes(Class<T> type) {
+		final TreePath[] selectionPaths = tree.getSelectionPaths();
+		if (selectionPaths == null || selectionPaths.length == 0) return java.util.stream.Stream.empty();
+		return Arrays.stream(selectionPaths)
+				.filter(treePath -> treePath.getLastPathComponent() != null)
+				.filter(treePath -> treePath.getLastPathComponent().getClass().isAssignableFrom(type))
+				.map(treePath -> (T) treePath.getLastPathComponent());
+	}
+
 }

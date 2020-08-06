@@ -207,7 +207,7 @@ public java.util.stream.Stream<~type~> get~name;format="capitalize"~() {
 public ~className;format="capitalize"~ remove~name;format="capitalize"~(~type~ value) { 
 	final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("~name~", new io.vertx.core.json.JsonArray());
 	for (int i = 0; i < jsonArray.size(); i++)  { 
-		final io.vertx.core.json.JsonObject o = jsonArray.getJsonObject(i);
+		final ~type~ o = jsonArray.get~type~(i);
 		if (value.equals(o))  { 
 			jsonArray.remove(i);
 			return this;
@@ -219,7 +219,7 @@ public ~className;format="capitalize"~ remove~name;format="capitalize"~(~type~ v
 public ~className;format="capitalize"~ clear~name;format="capitalize"~() { 
 	jsonObject.put("~name~", new io.vertx.core.json.JsonArray());
 	return this;
-} >>
+}  >>
 
 externalAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
 	this._~name~ = value;
