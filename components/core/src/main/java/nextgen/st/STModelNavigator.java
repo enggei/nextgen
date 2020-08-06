@@ -1,10 +1,6 @@
 package nextgen.st;
 
-import nextgen.utils.Neo4JUtil;
 import nextgen.utils.SwingUtil;
-import org.neo4j.graphdb.Direction;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
 
 import javax.swing.*;
 import javax.swing.tree.*;
@@ -90,27 +86,15 @@ public class STModelNavigator extends JPanel {
 		add(new JScrollPane(tree), BorderLayout.CENTER);
 	}
 
-	public Set<nextgen.st.model.STValue> getSelectedValues() {
-		final Set<nextgen.st.model.STValue> values = new TreeSet<>((o1, o2) -> o1.getValue().compareToIgnoreCase(o2.getValue()));
-
-		final TreePath[] selectionPaths = tree.getSelectionPaths();
-		if (selectionPaths == null) return values;
-		for (TreePath selectionPath : selectionPaths) {
-				if (selectionPath.getLastPathComponent() instanceof STValueTreeNode) {
-					final STValueTreeNode stValuesRootNode = (STValueTreeNode) selectionPath.getLastPathComponent();
-					values.add(stValuesRootNode.getModel());
-				}
-		}
-		return values;
-	}
-
 	public class BaseTreeNode<T> extends DefaultMutableTreeNode {
 
+		protected String label;
 		protected ImageIcon icon;
 		protected String tooltip;
 
 		public BaseTreeNode(T model, String icon) {
 			setUserObject(model);
+			this.label = model.toString();
 			this.icon = loadIcon(icon);
 			this.tooltip = "";
 		}
@@ -121,7 +105,7 @@ public class STModelNavigator extends JPanel {
 		}
 
 		public String getLabel() {
-			return getUserObject().toString();
+			return label;
 		}
 
 		public ImageIcon getIcon() {
@@ -169,12 +153,40 @@ public class STModelNavigator extends JPanel {
 			tree.scrollPathToVisible(path);
 			tree.setSelectionPath(path);
 		}
+
+		protected <T> java.util.stream.Stream<T> getChildren(Class<T> type) {
+			final java.util.Set<T> set = new java.util.LinkedHashSet<>();
+			final int childCount = getChildCount();
+			for (int i = 0; i < childCount; i++) {
+				if (getChildAt(i).getClass().isAssignableFrom(type))
+					set.add((T) getChildAt(i));
+			}
+
+			return set.stream();
+		}
+
+		protected TreePath getThisPath() {
+			return new TreePath(getPath());
+		}
+
+		protected void expandTreeNodesRecursive(TreePath parent, boolean expand) {
+			TreeModel model = tree.getModel();
+
+			Object node = parent.getLastPathComponent();
+			int childCount = model.getChildCount(node);
+			for (int j = 0; j < childCount; j++) 
+				expandTreeNodesRecursive(parent.pathByAddingChild(model.getChild(node, j)), expand);
+
+			if (expand) 
+				tree.expandPath(parent);
+			else 
+				tree.collapsePath(parent);
+		}
 	}
 
 	// STValueTreeNode
 	public class STValueTreeNode extends BaseTreeNode<nextgen.st.model.STValue> {
 
-		private String label;
 		private String uuid;
 
 		STValueTreeNode(nextgen.st.model.STValue model) {
@@ -182,11 +194,6 @@ public class STModelNavigator extends JPanel {
 			this.label = model.getValue() == null || model.getValue().trim().length() == 0 ? "[EMPTY]" : model.getValue();
 			this.uuid = model.getUuid();
 			org.greenrobot.eventbus.EventBus.getDefault().register(this);
-		}
-
-		@Override
-		public String getLabel() {
-			return this.label;
 		}
 
 		@Override
@@ -225,18 +232,12 @@ public class STModelNavigator extends JPanel {
 	// ProjectTreeNode
 	public class ProjectTreeNode extends BaseTreeNode<nextgen.st.model.Project> {
 
-		private String label;
 		private String uuid;
 
 		ProjectTreeNode(nextgen.st.model.Project model) {
 			super(model, null);
-			this.label = model.getName();;
+			this.label = model.getName();
 			this.uuid = model.getUuid();
-		}
-
-		@Override
-		public String getLabel() {
-			return this.label;
 		}
 
 		@Override
@@ -250,18 +251,11 @@ public class STModelNavigator extends JPanel {
 	// ProjectsRootNode
 	public class ProjectsRootNode extends BaseTreeNode<String> {
 
-		private String label;
-
 		ProjectsRootNode(String model) {
 			super(model, null);
 			this.label = model;
 			presentationModel.db.findAllProject().forEach(project -> add(new ProjectTreeNode(project)));
 			org.greenrobot.eventbus.EventBus.getDefault().register(this);
-		}
-
-		@Override
-		public String getLabel() {
-			return this.label;
 		}
 
 		@Override
@@ -281,8 +275,6 @@ public class STModelNavigator extends JPanel {
 	// RootNode
 	public class RootNode extends BaseTreeNode<String> {
 
-		private String label;
-
 		RootNode(String model) {
 			super(model, null);
 			this.label = model;
@@ -292,11 +284,6 @@ public class STModelNavigator extends JPanel {
 				add(new ScriptsRootNode("Scripts"));
 				add(new STValuesRootNode("Values"));
 			});
-		}
-
-		@Override
-		public String getLabel() {
-			return this.label;
 		}
 
 		@Override
@@ -310,18 +297,11 @@ public class STModelNavigator extends JPanel {
 	// ScriptsRootNode
 	public class ScriptsRootNode extends BaseTreeNode<String> {
 
-		private String label;
-
 		ScriptsRootNode(String model) {
 			super(model, null);
 			this.label = model;
 			presentationModel.db.findAllScript().forEach(script -> add(new ScriptTreeNode(script)));
 			org.greenrobot.eventbus.EventBus.getDefault().register(this);
-		}
-
-		@Override
-		public String getLabel() {
-			return this.label;
 		}
 
 		@Override
@@ -341,18 +321,12 @@ public class STModelNavigator extends JPanel {
 	// ScriptTreeNode
 	public class ScriptTreeNode extends BaseTreeNode<nextgen.st.model.Script> {
 
-		private String label;
 		private String uuid;
 
 		ScriptTreeNode(nextgen.st.model.Script model) {
 			super(model, null);
-			this.label = model.getName();;
+			this.label = model.getName();
 			this.uuid = model.getUuid();
-		}
-
-		@Override
-		public String getLabel() {
-			return this.label;
 		}
 
 		@Override
@@ -381,8 +355,6 @@ public class STModelNavigator extends JPanel {
 	// STValuesRootNode
 	public class STValuesRootNode extends BaseTreeNode<String> {
 
-		private String label;
-
 		STValuesRootNode(String model) {
 			super(model, null);
 			this.label = model;
@@ -392,11 +364,6 @@ public class STModelNavigator extends JPanel {
 				.sorted((o1, o2) -> o1.getValue().compareToIgnoreCase(o2.getValue()))
 				.forEach(stValue -> add(new STValueTreeNode(stValue)));
 			org.greenrobot.eventbus.EventBus.getDefault().register(this);
-		}
-
-		@Override
-		public String getLabel() {
-			return this.label;
 		}
 
 		@Override
@@ -410,47 +377,9 @@ public class STModelNavigator extends JPanel {
 				}));
 			}));
 			actions.add(newAction("Reconcile", actionEvent -> {
-				SwingUtilities.invokeLater(() -> {
-
-					final Set<Node> delete = new LinkedHashSet<>();
-
-					presentationModel.db.doInTransaction(transaction -> presentationModel.db.findAllSTValue()
-						.filter(stValue -> stValue.getType() != null)
-						.filter(stValue -> stValue.getValue() != null)
-						.filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.PRIMITIVE))
-						.forEach(stValue -> {
-							presentationModel.db.findAllSTValueByValue(stValue.getValue())
-								.filter(stValue1 -> !stValue1.getUuid().equals(stValue.getUuid()))
-								.filter(stValue1 -> stValue1.getType() != null)
-								.filter(stValue1 -> stValue1.getType().equals(nextgen.st.model.STValueType.PRIMITIVE))
-								.forEach(stValue1 -> {
-									log.info("\t duplicate " + stValue1.getValue());
-
-									final Node node = stValue1.getNode();
-									node.getRelationships(Direction.INCOMING).forEach(relationship -> {
-										if (relationship.getType().equals(org.neo4j.graphdb.RelationshipType.withName("ref")))
-											relationship.delete();
-
-										final Node src = relationship.getOtherNode(node);
-										final Relationship newRelation = src.createRelationshipTo(stValue.getNode(), relationship.getType());
-										relationship.getPropertyKeys().forEach(s -> newRelation.setProperty(s, relationship.getProperty(s)));
-										relationship.delete();
-									});
-
-									delete.add(node);
-							});
-					}));
-
-					presentationModel.db.doInTransaction(transaction -> {
-						for (Node node : delete) {
-							if (node.getRelationships().iterator().hasNext()) continue;
-							log.info("deleting node ");
-							log.info(Neo4JUtil.toString(node));
-							node.delete();
-						}
-
-						treeModel.nodeStructureChanged(STValuesRootNode.this);
-					});
+				presentationModel.doLaterInTransaction(transaction -> {
+					presentationModel.reconcileValues();
+					treeModel.nodeStructureChanged(STModelNavigator.STValuesRootNode.this);
 				});
 			}));
 			return actions;
@@ -467,7 +396,6 @@ public class STModelNavigator extends JPanel {
 	// STGroupModelTreeNode
 	public class STGroupModelTreeNode extends BaseTreeNode<nextgen.st.domain.STGroupModel> {
 
-		private String label;
 		private String uuid;
 
 		STGroupModelTreeNode(nextgen.st.domain.STGroupModel model) {
@@ -475,11 +403,6 @@ public class STModelNavigator extends JPanel {
 			this.label = model.getName();
 			this.uuid = model.getUuid();
 			model.getTemplates().forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
-		}
-
-		@Override
-		public String getLabel() {
-			return this.label;
 		}
 
 		@Override
@@ -493,7 +416,6 @@ public class STModelNavigator extends JPanel {
 	// STTemplateTreeNode
 	public class STTemplateTreeNode extends BaseTreeNode<nextgen.st.domain.STTemplate> {
 
-		private String label;
 		private String uuid;
 
 		STTemplateTreeNode(nextgen.st.domain.STTemplate model) {
@@ -503,11 +425,6 @@ public class STModelNavigator extends JPanel {
 			presentationModel.db.findAllSTModelByStTemplate(model.uuid()).forEach(stModel -> add(new STModelTreeNode(stModel)));
 			model.getChildren().forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
 			org.greenrobot.eventbus.EventBus.getDefault().register(this);
-		}
-
-		@Override
-		public String getLabel() {
-			return this.label;
 		}
 
 		@Override
@@ -544,19 +461,13 @@ public class STModelNavigator extends JPanel {
 	// STModelTreeNode
 	public class STModelTreeNode extends BaseTreeNode<nextgen.st.model.STModel> {
 
-		private String label;
 		private String uuid;
 
 		STModelTreeNode(nextgen.st.model.STModel model) {
 			super(model, "STGDirectory");
-			this.label = presentationModel.tryToFindArgument(model, "name", () -> cut(tooltip));;
+			this.label = presentationModel.tryToFindArgument(model, "name", model::getUuid);;
 			this.uuid = model.getUuid();
 			org.greenrobot.eventbus.EventBus.getDefault().register(this);
-		}
-
-		@Override
-		public String getLabel() {
-			return this.label;
 		}
 
 		@Override
@@ -605,7 +516,6 @@ public class STModelNavigator extends JPanel {
 		}
 	}	
 
-
 	private Action newAction(String name, Consumer<ActionEvent> actionEventConsumer) {
 		return new AbstractAction(name) {
 			@Override
@@ -646,4 +556,26 @@ public class STModelNavigator extends JPanel {
 		return text.substring(0, Math.min(text.length(), 20));
 	}
 
+	private <T> java.util.stream.Stream<T> getSelectedNodes(Class<T> type) {
+		final TreePath[] selectionPaths = tree.getSelectionPaths();
+		if (selectionPaths == null || selectionPaths.length == 0) return java.util.stream.Stream.empty();
+		return Arrays.stream(selectionPaths)
+				.filter(treePath -> treePath.getLastPathComponent() != null)
+				.filter(treePath -> treePath.getLastPathComponent().getClass().isAssignableFrom(type))
+				.map(treePath -> (T) tree.getLastSelectedPathComponent());
+	}
+
+	public Set<nextgen.st.model.STValue> getSelectedValues() {
+		final Set<nextgen.st.model.STValue> values = new TreeSet<>((o1, o2) -> o1.getValue().compareToIgnoreCase(o2.getValue()));
+
+		final TreePath[] selectionPaths = tree.getSelectionPaths();
+		if (selectionPaths == null) return values;
+		for (TreePath selectionPath : selectionPaths) {
+				if (selectionPath.getLastPathComponent() instanceof STValueTreeNode) {
+					final STValueTreeNode stValuesRootNode = (STValueTreeNode) selectionPath.getLastPathComponent();
+					values.add(stValuesRootNode.getModel());
+				}
+		}
+		return values;
+	}
 }

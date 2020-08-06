@@ -9,9 +9,13 @@ import nextgen.st.stringtemplate.ScriptRunner;
 import nextgen.st.stringtemplate.StringTemplateST;
 import nextgen.templates.java.ImportDeclaration;
 import nextgen.templates.java.PackageDeclaration;
+import nextgen.utils.Neo4JUtil;
 import nextgen.utils.SwingUtil;
+import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 
+import javax.lang.model.SourceVersion;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -363,6 +367,69 @@ public class STAppPresentationModel {
         });
     }
 
+    public STGroupModel newSTGroupModel(String name) {
+        return STJsonFactory.newSTGroupModel()
+                .setName(name)
+                .setDelimiter(STGenerator.DELIMITER);
+    }
+
+    public STTemplate newSTTemplate(String name) {
+        final STTemplate stTemplate = STJsonFactory.newSTTemplate()
+                .setName(name)
+                .setText("");
+        return stTemplate;
+    }
+
+    public STEnum newSTEnum(String name) {
+        return STJsonFactory.newSTEnum()
+                .setName(name);
+    }
+
+    public STInterface newSTInterface(String name) {
+        return STJsonFactory.newSTInterface()
+                .setName(name);
+    }
+
+    public void reconcileValues() {
+        final Set<Node> delete = new LinkedHashSet<>();
+
+        db.doInTransaction(transaction -> db.findAllSTValue()
+                .filter(stValue -> stValue.getType() != null)
+                .filter(stValue -> stValue.getValue() != null)
+                .filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.PRIMITIVE))
+                .forEach(stValue -> {
+                    db.findAllSTValueByValue(stValue.getValue())
+                            .filter(stValue1 -> !stValue1.getUuid().equals(stValue.getUuid()))
+                            .filter(stValue1 -> stValue1.getType() != null)
+                            .filter(stValue1 -> stValue1.getType().equals(nextgen.st.model.STValueType.PRIMITIVE))
+                            .forEach(stValue1 -> {
+                                log.info("\t duplicate " + stValue1.getValue());
+
+                                final Node node = stValue1.getNode();
+                                node.getRelationships(Direction.INCOMING).forEach(relationship -> {
+                                    if (relationship.getType().equals(org.neo4j.graphdb.RelationshipType.withName("ref")))
+                                        relationship.delete();
+
+                                    final Node src = relationship.getOtherNode(node);
+                                    final Relationship newRelation = src.createRelationshipTo(stValue.getNode(), relationship.getType());
+                                    relationship.getPropertyKeys().forEach(s -> newRelation.setProperty(s, relationship.getProperty(s)));
+                                    relationship.delete();
+                                });
+
+                                delete.add(node);
+                            });
+                }));
+
+        db.doInTransaction(transaction -> {
+            for (Node node : delete) {
+                if (node.getRelationships().iterator().hasNext()) continue;
+                log.info("deleting node ");
+                log.info(Neo4JUtil.toString(node));
+                node.delete();
+            }
+        });
+    }
+
     public final class STArgumentConsumer implements Consumer<STArgument> {
 
         private final STParameter stParameter;
@@ -531,6 +598,34 @@ public class STAppPresentationModel {
                 SwingUtilities.invokeLater(() -> doInTransaction(transaction -> consumer.accept(e)));
             }
         };
+    }
+
+    public static Optional<String> isValidTemplateName(JComponent parent, STGroupModel stGroupModel, String name) {
+
+        final Optional<STTemplate> existing = stGroupModel.getTemplates().filter(stTemplate -> stTemplate.getName().toLowerCase().equals(name.toLowerCase())).findAny();
+
+        if (existing.isPresent()) {
+            SwingUtil.showMessage(name + " already in use in this group", parent);
+            return Optional.empty();
+        }
+
+        if (name.toLowerCase().equals("eom") || name.toLowerCase().equals("gt")) {
+            SwingUtil.showMessage(name + " is a reserved name", parent);
+            return Optional.empty();
+        }
+
+        if (!SourceVersion.isIdentifier(name)) {
+            SwingUtil.showMessage(name + " is a reserved java keyword", parent);
+            return Optional.empty();
+        }
+
+        return Optional.of(name);
+    }
+
+    public static void deleteSTGFile(STGDirectory stgDirectory, String name) {
+        final File stgFile = new File(stgDirectory.getPath(), name + ".json");
+        if (stgFile.exists())
+            stgFile.renameTo(new File(stgDirectory.getPath(), name + ".json.deleted"));
     }
 
 }

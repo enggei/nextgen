@@ -24,7 +24,7 @@ import static nextgen.st.domain.STJsonFactory.newSTGDirectory;
 public class STApp extends JFrame {
 
     final STAppPresentationModel presentationModel;
-    final STNavigator navigator;
+    final STTemplateNavigator navigator;
     final STModelNavigator stModelNavigator;
     final STWorkspace workspace;
 
@@ -34,7 +34,7 @@ public class STApp extends JFrame {
         presentationModel = new STAppPresentationModel(appModel);
 
         workspace = presentationModel.getWorkspace();
-        navigator = new STNavigator(presentationModel, workspace);
+        navigator = new STTemplateNavigator(presentationModel, workspace);
         stModelNavigator = new STModelNavigator(presentationModel, workspace);
 
         final JPanel contentPanel = new JPanel(new BorderLayout());

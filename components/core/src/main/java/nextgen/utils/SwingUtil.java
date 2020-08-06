@@ -18,10 +18,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -894,5 +891,52 @@ public class SwingUtil {
             }
         });
         return textField;
+    }
+
+    public static void showDialog(JComponent parent, JDialog dialog, JButton btnSave) {
+
+        dialog.getRootPane().setDefaultButton(btnSave);
+
+        final JPanel commandPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        commandPanel.add(btnSave);
+        commandPanel.add(new JButton(new AbstractAction("Cancel") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(dialog::dispose);
+            }
+        }));
+        dialog.add(commandPanel, BorderLayout.SOUTH);
+
+        SwingUtilities.invokeLater(() -> {
+            dialog.pack();
+            dialog.setLocationRelativeTo(parent);
+            dialog.setVisible(true);
+        });
+    }
+
+    public static Optional<String> getInputFromUser(JComponent parent, String message) {
+        final String s = SwingUtil.showInputDialog(message, parent);
+        return Optional.ofNullable(s == null || s.trim().length() == 0 ? null : s);
+    }
+
+    public static Optional<Boolean> confirm(JComponent parent, String description) {
+        final boolean b = SwingUtil.showConfirmDialog(parent, description + "?");
+        return Optional.ofNullable(b ? Boolean.TRUE : null);
+    }
+
+    private static class SelectFocusAdapter extends FocusAdapter {
+
+        @Override
+        public void focusGained(java.awt.event.FocusEvent evt) {
+            SwingUtilities.invokeLater(() -> ((JTextField) evt.getSource()).selectAll());
+        }
+
+        @Override
+        public void focusLost(FocusEvent evt) {
+            SwingUtilities.invokeLater(() -> {
+                ((JTextField) evt.getSource()).setSelectionStart(0);
+                ((JTextField) evt.getSource()).setSelectionEnd(0);
+            });
+        }
     }
 }

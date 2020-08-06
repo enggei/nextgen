@@ -20,11 +20,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import static nextgen.st.STAppPresentationModel.deleteSTGFile;
 import static nextgen.st.STGenerator.toSTGroup;
 
-public class STNavigator extends JPanel {
+public class STTemplateNavigator extends JPanel {
 
-    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STNavigator.class);
+    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STTemplateNavigator.class);
 
     private final JTree tree = new JTree();
 
@@ -32,7 +33,7 @@ public class STNavigator extends JPanel {
     private final DefaultTreeModel treeModel;
     private final STAppPresentationModel presentationModel;
 
-    public STNavigator(STAppPresentationModel presentationModel, STWorkspace workspace) {
+    public STTemplateNavigator(STAppPresentationModel presentationModel, STWorkspace workspace) {
         super(new BorderLayout());
 
         this.presentationModel = presentationModel;
@@ -98,7 +99,7 @@ public class STNavigator extends JPanel {
                 final Object lastPathComponent = path.getLastPathComponent();
 
                 if (lastPathComponent instanceof RootNode.STGDirectoryTreeNode.STGroupTreeNode) {
-                    show((RootNode.STGDirectoryTreeNode.STGroupTreeNode) lastPathComponent);
+                    workspace.getSTEditor(((RootNode.STGDirectoryTreeNode.STGroupTreeNode) lastPathComponent).getModel());
                 } else if (lastPathComponent instanceof RootNode.STGDirectoryTreeNode.STGroupTreeNode.STTemplateTreeNode) {
                     show((RootNode.STGDirectoryTreeNode.STGroupTreeNode.STTemplateTreeNode) lastPathComponent);
                 } else if (lastPathComponent instanceof RootNode.STGDirectoryTreeNode.STGroupTreeNode.STEnumTreeNode) {
@@ -136,22 +137,6 @@ public class STNavigator extends JPanel {
             pop.add(action);
 
         SwingUtilities.invokeLater(() -> pop.show(tree, x, y));
-    }
-
-    public void show(RootNode.STGDirectoryTreeNode.STGroupTreeNode stGroupTreeNode) {
-
-        final STEditor stEditor = findSTTemplateEditor(workspace, stGroupTreeNode)
-                .orElseGet(() -> {
-                    final STEditor stEditor1 = new STEditor(stGroupTreeNode.getModel(), presentationModel);
-                    workspace.addTab(stGroupTreeNode.getLabel(), stEditor1);
-                    return stEditor1;
-                });
-
-        SwingUtilities.invokeLater(() -> {
-            stEditor.setSTTemplate(null);
-            workspace.setTitleAt(workspace.indexOfComponent(stEditor), stGroupTreeNode.getModel().getName());
-            workspace.setSelectedComponent(stEditor);
-        });
     }
 
     public void show(RootNode.STGDirectoryTreeNode.STGroupTreeNode.STTemplateTreeNode stTemplateTreeNode) {
@@ -222,7 +207,7 @@ public class STNavigator extends JPanel {
             final Component tabComponentAt = workspace.getComponentAt(i);
             if (tabComponentAt instanceof STEditor) {
                 final STEditor stEditor = (STEditor) tabComponentAt;
-                if (stEditor.stGroupModel.uuid().equals(stGroupTreeNode.getModel().uuid()))
+                if (stEditor.stGroupModel.getUuid().equals(stGroupTreeNode.getModel().getUuid()))
                     return Optional.of(stEditor);
             }
         }
@@ -278,9 +263,7 @@ public class STNavigator extends JPanel {
 
         @SuppressWarnings("unchecked")
         protected <T> Stream<T> getChildren(Class<T> type) {
-
             final Iterator<BaseTreeNode<?>> iterator = new Iterator<BaseTreeNode<?>>() {
-
                 final Enumeration<BaseTreeNode<?>> e = breadthFirstEnumeration();
 
                 public BaseTreeNode<?> next() {
@@ -297,19 +280,6 @@ public class STNavigator extends JPanel {
                     .map(baseTreeNode -> (T) baseTreeNode);
         }
 
-        protected Optional<String> getInputFromUser(String message) {
-            final String s = SwingUtil.showInputDialog(message, tree);
-            return Optional.ofNullable(s == null || s.trim().length() == 0 ? null : s);
-        }
-
-        protected Optional<String> getNameFromUser() {
-            return getInputFromUser("Name");
-        }
-
-        protected Optional<Boolean> confirm(String description) {
-            final boolean b = SwingUtil.showConfirmDialog(tree, description + "?");
-            return Optional.ofNullable(b ? Boolean.TRUE : null);
-        }
 
         protected Action newExpandAction() {
             return newAction("Expand", actionEvent ->
@@ -374,7 +344,7 @@ public class STNavigator extends JPanel {
             }
 
             private Action newSTGroupAction() {
-                return newAction("New STGroup", actionEvent -> getNameFromUser().ifPresent(name -> {
+                return newAction("New STGroup", actionEvent -> SwingUtil.getInputFromUser(tree, "Name").ifPresent(name -> {
 
                     final Optional<STGroupModel> existing = getModel().getGroups().filter(groupModel -> groupModel.getName().toLowerCase().equals(name)).findAny();
                     if (existing.isPresent()) {
@@ -387,9 +357,7 @@ public class STNavigator extends JPanel {
                         return;
                     }
 
-                    final STGroupModel stGroupModel = STJsonFactory.newSTGroupModel()
-                            .setName(name)
-                            .setDelimiter(STGenerator.DELIMITER);
+                    final STGroupModel stGroupModel = presentationModel.newSTGroupModel(name);
 
                     getModel().addGroups(stGroupModel);
 
@@ -397,7 +365,7 @@ public class STNavigator extends JPanel {
                         final STGroupTreeNode stGroupTreeNode = new STGroupTreeNode(stGroupModel);
                         stGroupTreeNode.save();
                         treeModel.insertNodeInto(stGroupTreeNode, STGDirectoryTreeNode.this, getChildCount());
-                        show(stGroupTreeNode);
+                        workspace.getSTEditor(stGroupTreeNode.getModel());
                     });
                 }));
             }
@@ -454,13 +422,10 @@ public class STNavigator extends JPanel {
 
                 private Action newTemplateAction() {
                     return newAction("New template", actionEvent ->
-                            getNameFromUser().ifPresent(name ->
-                                    isValidTemplateName(name).ifPresent(s -> {
+                            SwingUtil.getInputFromUser(tree, "Name").ifPresent(name ->
+                                    STAppPresentationModel.isValidTemplateName(tree, getModel(), name).ifPresent(s -> {
 
-                                        final STTemplate stTemplate = STJsonFactory.newSTTemplate()
-                                                .setName(name)
-                                                .setText("");
-
+                                        final STTemplate stTemplate = presentationModel.newSTTemplate(name);
                                         getModel().addTemplates(stTemplate);
                                         save();
 
@@ -474,8 +439,8 @@ public class STNavigator extends JPanel {
 
                 private Action newEnumAction() {
                     return newAction("New enum", actionEvent ->
-                            getNameFromUser().ifPresent(name ->
-                                    isValidTemplateName(name).ifPresent(s -> {
+                            SwingUtil.getInputFromUser(tree, "Name").ifPresent(name ->
+                                    STAppPresentationModel.isValidTemplateName(tree, getModel(), name).ifPresent(s -> {
 
                                         final STEnum stEnum = STJsonFactory.newSTEnum()
                                                 .setName(name);
@@ -492,8 +457,8 @@ public class STNavigator extends JPanel {
 
                 private Action newInterfaceAction() {
                     return newAction("New interface", actionEvent ->
-                            getNameFromUser().ifPresent(name ->
-                                    isValidTemplateName(name).ifPresent(s -> {
+                            SwingUtil.getInputFromUser(tree, "Name").ifPresent(name ->
+                                    STAppPresentationModel.isValidTemplateName(tree, getModel(), name).ifPresent(s -> {
 
                                         final STInterface stInterface = STJsonFactory.newSTInterface()
                                                 .setName(name);
@@ -510,7 +475,7 @@ public class STNavigator extends JPanel {
 
                 private Action renameSTGroupAction() {
                     return newAction("Rename", actionEvent ->
-                            getNameFromUser().ifPresent(name ->
+                            SwingUtil.getInputFromUser(tree, "Name").ifPresent(name ->
                                     getParentNode(STGDirectoryTreeNode.class)
                                             .ifPresent(parent -> {
 
@@ -533,14 +498,14 @@ public class STNavigator extends JPanel {
                                                     treeModel.nodeChanged(STGroupTreeNode.this);
                                                     findSTTemplateEditor(workspace, STGroupTreeNode.this)
                                                             .ifPresent(stEditor1 -> workspace.setTitleAt(workspace.indexOfComponent(stEditor1), getModel().getName()));
-                                                    deleteSTGFile(parent, oldName);
+                                                    deleteSTGFile(parent.getModel(), oldName);
                                                 });
                                             })));
                 }
 
                 private Action setIconNameAction() {
                     return newAction("Set Icon name", actionEvent ->
-                            getInputFromUser("Icon name").ifPresent(iconName ->
+                            SwingUtil.getInputFromUser(tree, "Icon name").ifPresent(iconName ->
                                     getParentNode(STGDirectoryTreeNode.class)
                                             .ifPresent(parent -> {
 
@@ -556,7 +521,7 @@ public class STNavigator extends JPanel {
 
                 private Action deleteGroupAction() {
                     return newAction("Delete", actionEvent ->
-                            confirm("Delete " + getModel().getName())
+                            SwingUtil.confirm(tree, "Delete " + getModel().getName())
                                     .flatMap(aBoolean -> getParentNode(STGDirectoryTreeNode.class))
                                     .ifPresent(parent -> {
 
@@ -565,38 +530,11 @@ public class STNavigator extends JPanel {
                                         SwingUtilities.invokeLater(() -> {
                                             treeModel.removeNodeFromParent(STGroupTreeNode.this);
                                             findSTTemplateEditor(workspace, STGroupTreeNode.this).ifPresent(workspace::remove);
-                                            deleteSTGFile(parent, getModel().getName());
+                                            deleteSTGFile(parent.getModel(), getModel().getName());
                                         });
                                     }));
                 }
 
-                private void deleteSTGFile(STGDirectoryTreeNode parent, String name) {
-                    final File stgFile = new File(parent.getModel().getPath(), name + ".json");
-                    if (stgFile.exists())
-                        stgFile.renameTo(new File(parent.getModel().getPath(), name + ".json.deleted"));
-                }
-
-                private Optional<String> isValidTemplateName(String name) {
-
-                    final Optional<STTemplate> existing = getModel().getTemplates().filter(stTemplate -> stTemplate.getName().toLowerCase().equals(name.toLowerCase())).findAny();
-
-                    if (existing.isPresent()) {
-                        SwingUtil.showMessage(name + " already in use in this group", tree);
-                        return Optional.empty();
-                    }
-
-                    if (name.toLowerCase().equals("eom") || name.toLowerCase().equals("gt")) {
-                        SwingUtil.showMessage(name + " is a reserved name", tree);
-                        return Optional.empty();
-                    }
-
-                    if (!SourceVersion.isIdentifier(name)) {
-                        SwingUtil.showMessage(name + " is a reserved java keyword", tree);
-                        return Optional.empty();
-                    }
-
-                    return Optional.of(name);
-                }
 
                 public void generate() {
                     SwingUtilities.invokeLater(() ->
@@ -632,9 +570,9 @@ public class STNavigator extends JPanel {
 
                     private Action renameSTInterfaceAction() {
                         return newAction("Rename", actionEvent ->
-                                getNameFromUser()
+                                SwingUtil.getInputFromUser(tree, "Name")
                                         .flatMap(name -> getParentNode(STGroupTreeNode.class)
-                                                .flatMap(parent -> parent.isValidTemplateName(name)))
+                                                .flatMap(parent -> STAppPresentationModel.isValidTemplateName(tree, parent.getModel(), name)))
                                         .ifPresent(s -> {
 
                                             getModel().setName(s);
@@ -646,7 +584,7 @@ public class STNavigator extends JPanel {
 
                     private Action removeSTInterfaceAction() {
                         return newAction("Remove", actionEvent ->
-                                confirm("Delete " + getModel().getName()).ifPresent(aBoolean -> {
+                                SwingUtil.confirm(tree, "Delete " + getModel().getName()).ifPresent(aBoolean -> {
 
                                     final STGroupTreeNode parent = (STGroupTreeNode) getParent();
 
@@ -677,17 +615,15 @@ public class STNavigator extends JPanel {
                         actions.add(renameSTEnumAction());
                         actions.add(removeSTEnumAction());
 
-                        getModel().getValues().forEach(stEnumValue -> {
-                            actions.add(newAction("New " + stEnumValue.getName() + " instance", actionEvent -> {
-                                workspace.findCanvas().ifPresent(stCanvas -> {
-                                    SwingUtilities.invokeLater(() -> {
-                                        presentationModel.db.doInTransaction(transaction -> stCanvas.addNode(new STValueNode(stCanvas, presentationModel.db.newSTValue(stEnumValue))));
-                                        workspace.setSelectedComponent(stCanvas);
-                                        stCanvas.requestFocusInWindow();
-                                    });
+                        getModel().getValues().forEach(stEnumValue -> actions.add(newAction("New " + stEnumValue.getName() + " instance", actionEvent -> {
+                            workspace.findCanvas().ifPresent(stCanvas -> {
+                                SwingUtilities.invokeLater(() -> {
+                                    presentationModel.db.doInTransaction(transaction -> stCanvas.addNode(new STValueNode(stCanvas, presentationModel.db.newSTValue(stEnumValue))));
+                                    workspace.setSelectedComponent(stCanvas);
+                                    stCanvas.requestFocusInWindow();
                                 });
-                            }));
-                        });
+                            });
+                        })));
 
                         return actions;
                     }
@@ -706,29 +642,21 @@ public class STNavigator extends JPanel {
                             final Map<STEnumValue, JTextField> txtEnumValuesName = new LinkedHashMap<>();
                             final Map<STEnumValue, JTextField> txtEnumLexical = new LinkedHashMap<>();
                             getModel().getValues().forEach(stEnumValue -> {
-                                txtEnumValuesName.put(stEnumValue, new JTextField(stEnumValue.getName(), 10));
-                                txtEnumLexical.put(stEnumValue, new JTextField(stEnumValue.getLexical(), 10));
-
+                                txtEnumValuesName.put(stEnumValue, SwingUtil.newTextField(stEnumValue.getName(), 10));
+                                txtEnumLexical.put(stEnumValue, SwingUtil.newTextField(stEnumValue.getLexical(), 10));
                                 contentPanel.add(txtEnumValuesName.get(stEnumValue));
                                 contentPanel.add(txtEnumLexical.get(stEnumValue));
-
-                                txtEnumValuesName.get(stEnumValue).addFocusListener(new SelectFocusAdapter());
-                                txtEnumLexical.get(stEnumValue).addFocusListener(new SelectFocusAdapter());
                             });
 
                             // allow adding new values:
                             final Map<Integer, JTextField> newTxtEnumValuesName = new LinkedHashMap<>();
                             final Map<Integer, JTextField> newTxtEnumLexical = new LinkedHashMap<>();
                             for (int i = 0; i < newFields; i++) {
-                                newTxtEnumValuesName.put(i, new JTextField("", 10));
-                                newTxtEnumLexical.put(i, new JTextField("", 10));
+                                newTxtEnumValuesName.put(i, SwingUtil.newTextField("", 10));
+                                newTxtEnumLexical.put(i, SwingUtil.newTextField("", 10));
 
                                 contentPanel.add(newTxtEnumValuesName.get(i));
                                 contentPanel.add(newTxtEnumLexical.get(i));
-
-                                newTxtEnumValuesName.get(i).addFocusListener(new SelectFocusAdapter());
-                                newTxtEnumLexical.get(i).addFocusListener(new SelectFocusAdapter());
-
                             }
 
                             final JDialog dialog = new JDialog((Frame) SwingUtilities.getAncestorOfClass(JFrame.class, tree), "Edit Enum", true);
@@ -759,15 +687,15 @@ public class STNavigator extends JPanel {
                                 SwingUtilities.invokeLater(dialog::dispose);
                             }));
 
-                            showDialog(dialog, btnSave);
+                            SwingUtil.showDialog(tree, dialog, btnSave);
                         });
                     }
 
                     private Action renameSTEnumAction() {
                         return newAction("Rename", actionEvent ->
-                                getNameFromUser()
+                                SwingUtil.getInputFromUser(tree, "Name")
                                         .flatMap(name -> getParentNode(STGroupTreeNode.class)
-                                                .flatMap(parent -> parent.isValidTemplateName(name)))
+                                                .flatMap(parent -> STAppPresentationModel.isValidTemplateName(tree, parent.getModel(), name)))
                                         .ifPresent(s -> {
 
                                             getModel().setName(s);
@@ -779,7 +707,7 @@ public class STNavigator extends JPanel {
 
                     private Action removeSTEnumAction() {
                         return newAction("Remove", actionEvent ->
-                                confirm("Delete " + getModel().getName()).ifPresent(aBoolean -> {
+                                SwingUtil.confirm(tree, "Delete " + getModel().getName()).ifPresent(aBoolean -> {
 
                                     final STGroupTreeNode parent = (STGroupTreeNode) getParent();
 
@@ -809,13 +737,7 @@ public class STNavigator extends JPanel {
 
                         final List<Action> actions = new ArrayList<>();
 
-                        final Set<STTemplateTreeNode> candidateChildren = new LinkedHashSet<>();
-                        final TreePath[] selectionPaths = tree.getSelectionPaths();
-                        if (selectionPaths != null)
-                            for (TreePath selectionPath : selectionPaths)
-                                if (selectionPath.getLastPathComponent() != null && (selectionPath.getLastPathComponent() instanceof STTemplateTreeNode) && !(STTemplateTreeNode.this.equals(selectionPath.getLastPathComponent())))
-                                    candidateChildren.add((STTemplateTreeNode) selectionPath.getLastPathComponent());
-
+                        final Set<STTemplateTreeNode> candidateChildren = getSelectedTemplateTreeNodes();
                         if (!candidateChildren.isEmpty())
                             actions.add(reparentAction(candidateChildren));
 
@@ -832,6 +754,16 @@ public class STNavigator extends JPanel {
                         actions.add(removeSTTemplateAction());
 
                         return actions;
+                    }
+
+                    private Set<STTemplateTreeNode> getSelectedTemplateTreeNodes() {
+                        final Set<STTemplateTreeNode> candidateChildren = new LinkedHashSet<>();
+                        final TreePath[] selectionPaths = tree.getSelectionPaths();
+                        if (selectionPaths != null)
+                            for (TreePath selectionPath : selectionPaths)
+                                if (selectionPath.getLastPathComponent() != null && (selectionPath.getLastPathComponent() instanceof STTemplateTreeNode) && !(STTemplateTreeNode.this.equals(selectionPath.getLastPathComponent())))
+                                    candidateChildren.add((STTemplateTreeNode) selectionPath.getLastPathComponent());
+                        return candidateChildren;
                     }
 
                     private Action reparentAction(Set<STTemplateTreeNode> candidateChildren) {
@@ -870,15 +802,13 @@ public class STNavigator extends JPanel {
                                     case SINGLE:
                                     case LIST:
                                         final String key = stParameter.getName();
-                                        txtParameterMap.put(key, new JTextField(stParameter.getArgumentType("Object"), 15));
-                                        txtParameterMap.get(key).addFocusListener(new SelectFocusAdapter());
+                                        txtParameterMap.put(key, SwingUtil.newTextField(stParameter.getArgumentType("Object"), 15));
 
                                         break;
                                     case KVLIST:
                                         stParameter.getKeys().forEach(stParameterKey -> {
                                             final String kvListKey = stParameter.getName() + "." + stParameterKey.getName();
-                                            txtParameterMap.put(kvListKey, new JTextField(stParameterKey.getArgumentType("Object"), 15));
-                                            txtParameterMap.get(kvListKey).addFocusListener(new SelectFocusAdapter());
+                                            txtParameterMap.put(kvListKey, SwingUtil.newTextField(stParameterKey.getArgumentType("Object"), 15));
                                         });
                                         break;
                                 }
@@ -920,7 +850,7 @@ public class STNavigator extends JPanel {
                                 SwingUtilities.invokeLater(dialog::dispose);
                             }));
 
-                            showDialog(dialog, btnSave);
+                            SwingUtil.showDialog(tree, dialog, btnSave);
                         });
                     }
 
@@ -929,9 +859,8 @@ public class STNavigator extends JPanel {
 
                             final List<JTextField> txtImplements = new ArrayList<>();
                             getModel().getImplements().forEach(implement -> {
-                                final JTextField textField = new JTextField(implement, 15);
+                                final JTextField textField = SwingUtil.newTextField(implement, 15);
                                 txtImplements.add(textField);
-                                textField.addFocusListener(new SelectFocusAdapter());
                             });
                             txtImplements.add(new JTextField("", 15));
                             txtImplements.add(new JTextField("", 15));
@@ -957,7 +886,7 @@ public class STNavigator extends JPanel {
                                 SwingUtilities.invokeLater(dialog::dispose);
                             }));
 
-                            showDialog(dialog, btnSave);
+                            SwingUtil.showDialog(tree, dialog, btnSave);
                         });
                     }
 
@@ -989,32 +918,26 @@ public class STNavigator extends JPanel {
                                 SwingUtilities.invokeLater(dialog::dispose);
                             }));
 
-                            showDialog(dialog, btnSave);
+                            SwingUtil.showDialog(tree, dialog, btnSave);
                         });
                     }
 
                     private Action newModelAction() {
                         return newAction("New Instance", actionEvent ->
-                                getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> {
-                                    workspace.findCanvas().ifPresent(stCanvas -> {
-                                        SwingUtilities.invokeLater(() -> {
-                                            presentationModel.db.doInTransaction(transaction -> {
-                                                final STModelNode node = new STModelNode(stCanvas, getModel(), presentationModel.db.newSTModel(stGroupTreeNode.getModel().uuid(), getModel()));
-                                                stCanvas.addNode(node);
-                                                workspace.setSelectedComponent(stCanvas);
-                                                stCanvas.requestFocusInWindow();
-                                                stCanvas.centerNode(node);
-                                            });
-                                        });
-                                    });
-                                }));
+                                getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> workspace.findCanvas().ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
+                                    final STModelNode node = new STModelNode(stCanvas, getModel(), presentationModel.db.newSTModel(stGroupTreeNode.getModel().getUuid(), getModel()));
+                                    stCanvas.addNode(node);
+                                    workspace.setSelectedComponent(stCanvas);
+                                    stCanvas.requestFocusInWindow();
+                                    stCanvas.centerNode(node);
+                                })))));
                     }
 
 
                     private Action newChildTemplateAction() {
-                        return newAction("New Child-template", actionEvent -> getNameFromUser()
+                        return newAction("New Child-template", actionEvent -> SwingUtil.getInputFromUser(tree, "Name")
                                 .ifPresent(name -> getParentNode(STGroupTreeNode.class)
-                                        .flatMap(parent -> parent.isValidTemplateName(name))
+                                        .flatMap(parent -> STAppPresentationModel.isValidTemplateName(tree, parent.getModel(), name))
                                         .ifPresent(s -> {
                                             final STTemplate stTemplate = STJsonFactory.newSTTemplate()
                                                     .setName(name)
@@ -1033,9 +956,9 @@ public class STNavigator extends JPanel {
 
                     private Action renameSTTemplateAction() {
                         return newAction("Rename", actionEvent ->
-                                getNameFromUser().ifPresent(name ->
+                                SwingUtil.getInputFromUser(tree, "Name").ifPresent(name ->
                                         getParentNode(STGroupTreeNode.class)
-                                                .ifPresent(parent -> parent.isValidTemplateName(name)
+                                                .ifPresent(parent -> STAppPresentationModel.isValidTemplateName(tree, parent.getModel(), name)
                                                         .ifPresent(s -> {
 
                                                             getModel().setName(name);
@@ -1051,7 +974,7 @@ public class STNavigator extends JPanel {
 
                     private Action removeSTTemplateAction() {
                         return newAction("Remove", actionEvent ->
-                                confirm("Delete " + getModel().getName()).ifPresent(aBoolean -> {
+                                SwingUtil.confirm(tree, "Delete " + getModel().getName()).ifPresent(aBoolean -> {
 
                                     if (getParent() instanceof STGroupTreeNode) {
                                         final STGroupTreeNode parent = (STGroupTreeNode) getParent();
@@ -1091,37 +1014,5 @@ public class STNavigator extends JPanel {
                 actionEventConsumer.accept(e);
             }
         };
-    }
-
-    private void showDialog(JDialog dialog, JButton btnSave) {
-
-        dialog.getRootPane().setDefaultButton(btnSave);
-
-        final JPanel commandPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        commandPanel.add(btnSave);
-        commandPanel.add(new JButton(newAction("Cancel", actionEvent1 -> SwingUtilities.invokeLater(dialog::dispose))));
-        dialog.add(commandPanel, BorderLayout.SOUTH);
-
-        SwingUtilities.invokeLater(() -> {
-            dialog.pack();
-            dialog.setLocationRelativeTo(tree);
-            dialog.setVisible(true);
-        });
-    }
-
-    private static class SelectFocusAdapter extends FocusAdapter {
-
-        @Override
-        public void focusGained(java.awt.event.FocusEvent evt) {
-            SwingUtilities.invokeLater(() -> ((JTextField) evt.getSource()).selectAll());
-        }
-
-        @Override
-        public void focusLost(FocusEvent evt) {
-            SwingUtilities.invokeLater(() -> {
-                ((JTextField) evt.getSource()).setSelectionStart(0);
-                ((JTextField) evt.getSource()).setSelectionEnd(0);
-            });
-        }
     }
 }

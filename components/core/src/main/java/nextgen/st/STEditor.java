@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -83,6 +84,10 @@ public class STEditor extends JPanel {
         setPreferredSize(new Dimension(800, 600));
     }
 
+    public STGroupModel getModel() {
+        return stGroupModel;
+    }
+
     public void setSTEnum(STEnum stEnum) {
         stTemplate = null;
         final StringBuilder text = new StringBuilder();
@@ -142,6 +147,10 @@ public class STEditor extends JPanel {
                 consumer.accept(e);
             }
         };
+    }
+
+    public Optional<STTemplate> getSTTemplate() {
+        return Optional.ofNullable(stTemplate);
     }
 
     private class STTemplateEditorKeyListener extends KeyAdapter {
