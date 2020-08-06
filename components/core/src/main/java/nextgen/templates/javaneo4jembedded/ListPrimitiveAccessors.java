@@ -8,13 +8,17 @@ public class ListPrimitiveAccessors {
 	private Object _name;
 	private Object _className;
 	private Object _type;
-	private Object _observable;
 
 	ListPrimitiveAccessors(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -24,7 +28,6 @@ public class ListPrimitiveAccessors {
 		st.add("name", _name);
 		st.add("className", _className);
 		st.add("type", _type);
-		st.add("observable", _observable);
 		return st.render().trim();
 	}
 
@@ -94,28 +97,6 @@ public class ListPrimitiveAccessors {
 		return this;
 	} 
 
-	public ListPrimitiveAccessors setObservable(Object value) {
-		this._observable = value;
-		return this;
-	}
-
-	public Object getObservable() {
-		return this._observable;
-	}
-
-	public Object getObservable(Object defaultValue) {
-		return this._observable == null ? defaultValue : this._observable;
-	}
-
-	public boolean hasObservable() {
-		return this._observable != null;
-	}
-
-	public ListPrimitiveAccessors removeObservable() {
-		this._observable = null;
-		return this;
-	} 
-
 
 
 	@Override
@@ -131,7 +112,7 @@ public class ListPrimitiveAccessors {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "listPrimitiveAccessors(name,className,type,observable) ::= <<private static final org.neo4j.graphdb.RelationshipType _~name~ = org.neo4j.graphdb.RelationshipType.withName(\"~name~\");\n" + 
+	static final String st = "listPrimitiveAccessors(name,className,type) ::= <<private static final org.neo4j.graphdb.RelationshipType _~name~ = org.neo4j.graphdb.RelationshipType.withName(\"~name~\");\n" + 
 				"\n" + 
 				"public ~className;format=\"capitalize\"~ add~name;format=\"capitalize\"~(~type~ dst) { \n" + 
 				"	final java.util.Optional<org.neo4j.graphdb.Node> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _~name~).spliterator(), false).map((r) -> r.getOtherNode(node)).filter((n) -> dst.equals(n.getProperty(\"value\"))).findAny();\n" + 
@@ -140,7 +121,6 @@ public class ListPrimitiveAccessors {
 				"	newNode.setProperty(\"value\", dst);\n" + 
 				"	final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(newNode, _~name~);\n" + 
 				"	relationship.setProperty(\"_t\", System.nanoTime());\n" + 
-				"	~if(observable)~this.pcs.firePropertyChange(\"add.~name~\", null, dst);~endif~\n" + 
 				"	return this;\n" + 
 				"}\n" + 
 				"\n" + 
@@ -154,7 +134,6 @@ public class ListPrimitiveAccessors {
 				"\n" + 
 				"public ~className;format=\"capitalize\"~ removeAll~name;format=\"capitalize\"~() { \n" + 
 				"	node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _~name~).forEach(org.neo4j.graphdb.Relationship::delete);\n" + 
-				"	~if(observable)~this.pcs.firePropertyChange(\"removeAll.~name~\", true, false);~endif~\n" + 
 				"	return this;\n" + 
 				"} >>";
 }  

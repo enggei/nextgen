@@ -7,7 +7,6 @@ public class NodeWrapper {
 
 	private Object _package;
 	private Object _name;
-	private Object _observable;
 	private java.util.List<Object> _accessors = new java.util.ArrayList<>();
 	private java.util.List<Object> _lexical = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
@@ -17,7 +16,12 @@ public class NodeWrapper {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -26,7 +30,6 @@ public class NodeWrapper {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("NodeWrapper");
 		st.add("package", _package);
 		st.add("name", _name);
-		st.add("observable", _observable);
 		for (Object o : _accessors) st.add("accessors", o);
 		for (Object o : _lexical) st.add("lexical", o);
 		for (Object o : _methods) st.add("methods", o);
@@ -75,28 +78,6 @@ public class NodeWrapper {
 
 	public NodeWrapper removeName() {
 		this._name = null;
-		return this;
-	} 
-
-	public NodeWrapper setObservable(Object value) {
-		this._observable = value;
-		return this;
-	}
-
-	public Object getObservable() {
-		return this._observable;
-	}
-
-	public Object getObservable(Object defaultValue) {
-		return this._observable == null ? defaultValue : this._observable;
-	}
-
-	public boolean hasObservable() {
-		return this._observable != null;
-	}
-
-	public NodeWrapper removeObservable() {
-		this._observable = null;
 		return this;
 	} 
 
@@ -253,11 +234,10 @@ public class NodeWrapper {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NodeWrapper(package,name,observable,externalFields,accessors,lexical,methods) ::= <<package ~package~;\n" + 
+	static final String st = "NodeWrapper(package,name,externalFields,accessors,lexical,methods) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public class ~name;format=\"capitalize\"~ {\n" + 
 				"\n" + 
-				"	~if(observable)~private final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);~endif~\n" + 
 				"	private final org.neo4j.graphdb.Node node;\n" + 
 				"	~externalFields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n" + 
 				"\n" + 
@@ -290,15 +270,6 @@ public class NodeWrapper {
 				"	}\n" + 
 				"\n" + 
 				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
-				"~if(observable)~\n" + 
 				"\n" + 
-				"	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {\n" + 
-				"		this.pcs.addPropertyChangeListener(listener);\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {\n" + 
-				"		this.pcs.removePropertyChangeListener(listener);\n" + 
-				"	}\n" + 
-				"~endif~\n" + 
 				"} >>";
 }  

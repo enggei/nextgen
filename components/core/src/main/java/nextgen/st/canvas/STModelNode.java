@@ -1,6 +1,5 @@
 package nextgen.st.canvas;
 
-import nextgen.st.STAppEvents;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
@@ -288,8 +287,8 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 	}
 
 	@Override
-	public void onNodeAdded(STAppEvents.NodeAddedToCanvas event){
-		super.onNodeAdded(event);
+	public void onNodeAddedToCanvas(nextgen.st.STAppEvents.NodeAddedToCanvas event){ 
+		super.onNodeAddedToCanvas(event);
 		forEachArgument((stArgument, stParameter) -> {
 			if (refersTo(stArgument, stParameter, event.node)) canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(STModelNode.this, event.node, stArgument, stParameter));
 		});

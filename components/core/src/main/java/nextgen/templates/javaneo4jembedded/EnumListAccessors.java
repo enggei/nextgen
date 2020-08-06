@@ -8,13 +8,17 @@ public class EnumListAccessors {
 	private Object _className;
 	private Object _name;
 	private Object _type;
-	private Object _observable;
 
 	EnumListAccessors(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -24,7 +28,6 @@ public class EnumListAccessors {
 		st.add("className", _className);
 		st.add("name", _name);
 		st.add("type", _type);
-		st.add("observable", _observable);
 		return st.render().trim();
 	}
 
@@ -94,28 +97,6 @@ public class EnumListAccessors {
 		return this;
 	} 
 
-	public EnumListAccessors setObservable(Object value) {
-		this._observable = value;
-		return this;
-	}
-
-	public Object getObservable() {
-		return this._observable;
-	}
-
-	public Object getObservable(Object defaultValue) {
-		return this._observable == null ? defaultValue : this._observable;
-	}
-
-	public boolean hasObservable() {
-		return this._observable != null;
-	}
-
-	public EnumListAccessors removeObservable() {
-		this._observable = null;
-		return this;
-	} 
-
 
 
 	@Override
@@ -131,13 +112,12 @@ public class EnumListAccessors {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "enumListAccessors(className,name,type,observable) ::= <<public ~className;format=\"capitalize\"~ add~name;format=\"capitalize\"~(~type~ dst) { \n" + 
+	static final String st = "enumListAccessors(className,name,type) ::= <<public ~className;format=\"capitalize\"~ add~name;format=\"capitalize\"~(~type~ dst) { \n" + 
 				"	final java.util.Optional<org.neo4j.graphdb.Node> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).spliterator(), false).map((r) -> r.getOtherNode(node)).filter((n) -> dst.equals(n.getProperty(\"value\"))).findAny();\n" + 
 				"	if (existing.isPresent()) return this;\n" + 
 				"	final org.neo4j.graphdb.Node newNode = node.getGraphDatabase().createNode(org.neo4j.graphdb.Label.label(\"~type~\"));\n" + 
 				"	newNode.setProperty(\"value\", dst.name());\n" + 
 				"	node.createRelationshipTo(newNode, org.neo4j.graphdb.RelationshipType.withName(\"~name~\"));\n" + 
-				"	~if(observable)~this.pcs.firePropertyChange(\"add.~name~\", null, dst);~endif~\n" + 
 				"	return this;\n" + 
 				"}\n" + 
 				"\n" + 
@@ -147,7 +127,6 @@ public class EnumListAccessors {
 				"\n" + 
 				"public ~className;format=\"capitalize\"~ removeAll~name;format=\"capitalize\"~() { \n" + 
 				"	node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).forEach(org.neo4j.graphdb.Relationship::delete);\n" + 
-				"	~if(observable)~this.pcs.firePropertyChange(\"removeAll.~name~\", true, false);~endif~\n" + 
 				"	return this;\n" + 
 				"} >>";
 }  

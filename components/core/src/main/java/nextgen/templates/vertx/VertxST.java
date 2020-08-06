@@ -2,23 +2,24 @@ package nextgen.templates.vertx;
 
 public class VertxST {
 
-	private static final String stg = "delimiters \"~\", \"~\"\n" +
-	"eom() ::= \"}\"\n" +
-	"gt() ::= \">\"\n" +
-	DomainVerticle.st + "\n" + 
-	DomainAction.st + "\n" + 
-	JsonFactory.st + "\n" + 
-	JsonWrapper.st + "\n" + 
-	EnumAccessors.st + "\n" + 
-	ExternalAccessors.st + "\n" + 
-	ListEnumAccessors.st + "\n" + 
-	ListPrimitiveAccessors.st + "\n" + 
-	ListReferenceAccessors.st + "\n" + 
-	PrimitiveAccessors.st + "\n" + 
-	ReferenceAccessors.st + "\n" + 
-	WebVerticle.st + "\n" + 
-	RouteHandler.st + "\n" + 
-	SendEventBusAction.st + "\n" ;
+	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
+	.append("eom() ::= \"}\"\n")
+	.append("gt() ::= \">\"\n")
+	.append(DomainVerticle.st + "\n")
+	.append(DomainAction.st + "\n")
+	.append(JsonFactory.st + "\n")
+	.append(JsonWrapper.st + "\n")
+	.append(EnumAccessors.st + "\n")
+	.append(ExternalAccessors.st + "\n")
+	.append(ListEnumAccessors.st + "\n")
+	.append(ListPrimitiveAccessors.st + "\n")
+	.append(ListReferenceAccessors.st + "\n")
+	.append(PrimitiveAccessors.st + "\n")
+	.append(ReferenceAccessors.st + "\n")
+	.append(WebVerticle.st + "\n")
+	.append(RouteHandler.st + "\n")
+	.append(SendEventBusAction.st + "\n")
+	.toString()  ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -56,59 +57,59 @@ public class VertxST {
 
 	public static DomainVerticle newDomainVerticle() {
 		return new DomainVerticle(stGroup);
-	} 
+	}  
 
 	public static DomainAction newDomainAction() {
 		return new DomainAction(stGroup);
-	} 
+	}  
 
 	public static JsonFactory newJsonFactory() {
 		return new JsonFactory(stGroup);
-	} 
+	}  
 
 	public static JsonWrapper newJsonWrapper() {
 		return new JsonWrapper(stGroup);
-	} 
+	}  
 
 	public static EnumAccessors newEnumAccessors() {
 		return new EnumAccessors(stGroup);
-	} 
+	}  
 
 	public static ExternalAccessors newExternalAccessors() {
 		return new ExternalAccessors(stGroup);
-	} 
+	}  
 
 	public static ListEnumAccessors newListEnumAccessors() {
 		return new ListEnumAccessors(stGroup);
-	} 
+	}  
 
 	public static ListPrimitiveAccessors newListPrimitiveAccessors() {
 		return new ListPrimitiveAccessors(stGroup);
-	} 
+	}  
 
 	public static ListReferenceAccessors newListReferenceAccessors() {
 		return new ListReferenceAccessors(stGroup);
-	} 
+	}  
 
 	public static PrimitiveAccessors newPrimitiveAccessors() {
 		return new PrimitiveAccessors(stGroup);
-	} 
+	}  
 
 	public static ReferenceAccessors newReferenceAccessors() {
 		return new ReferenceAccessors(stGroup);
-	} 
+	}  
 
 	public static WebVerticle newWebVerticle() {
 		return new WebVerticle(stGroup);
-	} 
+	}  
 
 	public static RouteHandler newRouteHandler() {
 		return new RouteHandler(stGroup);
-	} 
+	}  
 
 	public static SendEventBusAction newSendEventBusAction() {
 		return new SendEventBusAction(stGroup);
-	} 
+	}  
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
 

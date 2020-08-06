@@ -89,7 +89,7 @@
   }, {
     "uuid" : "8f38f099-b784-4fbd-996f-8be16beb6d28",
     "name" : "STEntity",
-    "text" : "package ~packageName~;\n\npublic class ~name~~if(interfaces)~ implements ~endif~~interfaces:{it|~it~};separator=\", \"~ {\n\n\tprivate final java.util.UUID uuid = java.util.UUID.randomUUID();\n\tprivate final org.stringtemplate.v4.STGroup stGroup;\n\t\n\t~singleFields:{it|private ~it.type~ _~it.name~;};separator=\"\\n\"~\n\t~listFields:{it|private java.util.List<~it.type~> _~it.name~ = new java.util.ArrayList<>();};separator=\"\\n\"~\n\t~kvListFields:{it|private java.util.List<java.util.Map<String, Object~gt()~> _~it.name~ = new java.util.ArrayList<>();};separator=\"\\n\"~\n\t\n\t~name~(org.stringtemplate.v4.STGroup stGroup) {\n\t\tthis.stGroup = stGroup;\n\t}\n\n\tpublic java.util.UUID uuid() {\n\t\treturn uuid;\n\t}\n\n\t@Override\n\tpublic String toString() {\n\t\tfinal org.stringtemplate.v4.ST st = stGroup.getInstanceOf(\"~template~\");\n\t\t~singleFields:{it|st.add(\"~it.name~\", _~it.name~);};separator=\"\\n\"~\n\t\t~listFields:{it|for (Object o : _~it.name~) st.add(\"~it.name~\", o);};separator=\"\\n\"~\n\t\t~kvListFields:{it|for (java.util.Map<String, Object> map : _~it.name~) st.addAggr(\"~it.aggrSpec~\", ~it.aggrValues~);};separator=\"\\n\"~\n\t\treturn st.render().trim();\n\t}\n\t\n\t~singleAccessors:{it|~it~};separator=\"\\n\\n\"~\n\t\n\t~listAccessors:{it|~it~};separator=\"\\n\\n\"~\n\t\n\t~kvListAccessors:{it|~it~};separator=\"\\n\\n\"~\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn uuid.equals(that.uuid);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(uuid);\n\t}\n\t\n\t~if(stString)~static final String st = \"~stString~\";~endif~\n} ",
+    "text" : "package ~packageName~;\n\npublic class ~name~~if(interfaces)~ implements ~endif~~interfaces:{it|~it~};separator=\", \"~ {\n\n\tprivate final java.util.UUID uuid = java.util.UUID.randomUUID();\n\tprivate final org.stringtemplate.v4.STGroup stGroup;\n\t\n\t~singleFields:{it|private ~it.type~ _~it.name~;};separator=\"\\n\"~\n\t~listFields:{it|private java.util.List<~it.type~> _~it.name~ = new java.util.ArrayList<>();};separator=\"\\n\"~\n\t~kvListFields:{it|private java.util.List<java.util.Map<String, Object~gt()~> _~it.name~ = new java.util.ArrayList<>();};separator=\"\\n\"~\n\t\n\t~name~(org.stringtemplate.v4.STGroup stGroup) {\n\t\tthis.stGroup = stGroup;\n\t}\n\n\t@Deprecated\n\tpublic java.util.UUID uuid() {\n\t\treturn uuid;\n\t}\n\n\tpublic java.util.UUID getUuid() {\n\t\treturn uuid;\n\t}\n\n\t@Override\n\tpublic String toString() {\n\t\tfinal org.stringtemplate.v4.ST st = stGroup.getInstanceOf(\"~template~\");\n\t\t~singleFields:{it|st.add(\"~it.name~\", _~it.name~);};separator=\"\\n\"~\n\t\t~listFields:{it|for (Object o : _~it.name~) st.add(\"~it.name~\", o);};separator=\"\\n\"~\n\t\t~kvListFields:{it|for (java.util.Map<String, Object> map : _~it.name~) st.addAggr(\"~it.aggrSpec~\", ~it.aggrValues~);};separator=\"\\n\"~\n\t\treturn st.render().trim();\n\t}\n\t\n\t~singleAccessors:{it|~it~};separator=\"\\n\\n\"~\n\t\n\t~listAccessors:{it|~it~};separator=\"\\n\\n\"~\n\t\n\t~kvListAccessors:{it|~it~};separator=\"\\n\\n\"~\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn uuid.equals(that.uuid);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(uuid);\n\t}\n\t\n\t~if(stString)~static final String st = \"~stString~\";~endif~\n} ",
     "parameters" : [ {
       "uuid" : "40d7a4f3-3266-4295-915a-85f06d79b819",
       "name" : "packageName",
@@ -301,26 +301,16 @@
   }, {
     "uuid" : "06ee0aa9-0256-4eec-bd46-ba8d8348fa97",
     "name" : "ScriptRunner",
-    "text" : "package ~packageName~;\n~templates:{it|\nimport static nextgen.templates.~templatePackage~.~templateName~ST.*;\nimport nextgen.templates.~templatePackage~.*;\n};separator=\"\\n\"~\n\npublic class ~name~ implements Runnable {\n\n\tprivate final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n\tprivate final nextgen.st.model.STModelDB db;\n\tprivate final nextgen.st.STRenderer renderer;\n\n\tpublic ~name~(nextgen.st.model.STModelDB db, nextgen.st.STRenderer renderer) {\n\t\tthis.db = db;\n\t\tthis.renderer = renderer;\n\t}\n\n\t@Override\n\tpublic void run() {\n\t\tdb.doInTransaction(transaction -> {\n\t\t\t~script~\n\t\t});\n\t}\n\t\n\tpublic static void main(String[] args) {\n\t\tfinal java.util.Collection<nextgen.st.domain.STGroupModel> stGroups = new java.util.ArrayList<>();\n\t\tfinal java.io.File templatesDir = new java.io.File(\"~templatesDir~\");\n\t\tjava.util.Optional.ofNullable(templatesDir.listFiles(pathname -> pathname.isFile() && pathname.getName().toLowerCase().endsWith(\".json\")))\n\t\t\t.ifPresent(files -> {\n\t\t\t\tfor (java.io.File file : files)\n\t\t\t\t\t\tstGroups.add(new nextgen.st.domain.STGroupModel(nextgen.st.STParser.readJsonObject(file)));\n\t\t\t});\n\t\tnew Thread(new ~name~(new nextgen.st.model.STModelDB(\"~dbDir~\", stGroups), new nextgen.st.STRenderer(stGroups))).start();\n\t}\n} ",
+    "text" : "package ~packageName~;\n\n~imports:{it|~it~};separator=\"\\n\"~\n\npublic class ~name~ implements Runnable {\n\n\tprivate final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n\tprivate final nextgen.st.model.STModelDB db;\n\tprivate final nextgen.st.STRenderer renderer;\n\n\tpublic ~name~(nextgen.st.model.STModelDB db, nextgen.st.STRenderer renderer) {\n\t\tthis.db = db;\n\t\tthis.renderer = renderer;\n\t}\n\n\t@Override\n\tpublic void run() {\n\t\tdb.doInTransaction(transaction -> {\n\t\t\t~script~\n\t\t});\n\t}\n\t\n\tpublic static void main(String[] args) {\n\t\tfinal java.util.Collection<nextgen.st.domain.STGroupModel> stGroups = new java.util.ArrayList<>();\n\t\tfinal java.io.File templatesDir = new java.io.File(\"~templatesDir~\");\n\t\tjava.util.Optional.ofNullable(templatesDir.listFiles(pathname -> pathname.isFile() && pathname.getName().toLowerCase().endsWith(\".json\")))\n\t\t\t.ifPresent(files -> {\n\t\t\t\tfor (java.io.File file : files)\n\t\t\t\t\t\tstGroups.add(new nextgen.st.domain.STGroupModel(nextgen.st.STParser.readJsonObject(file)));\n\t\t\t});\n\t\tnew Thread(new ~name~(new nextgen.st.model.STModelDB(\"~dbDir~\", stGroups), new nextgen.st.STRenderer(stGroups))).start();\n\t}\n} ",
     "parameters" : [ {
       "uuid" : "ccbb026a-ae96-42c0-a4cd-0b76c6e39fe8",
       "name" : "packageName",
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "776432d8-7a4c-4ba4-a496-d06929484b80",
-      "name" : "templates",
+      "uuid" : "9167ba40-1d36-4db6-9d83-81ec18605091",
+      "name" : "imports",
       "type" : "LIST",
-      "argumentType" : "Object"
-    }, {
-      "uuid" : "7dca1254-941e-42b6-8023-2e8dbe8ec576",
-      "name" : "templatePackage",
-      "type" : "SINGLE",
-      "argumentType" : "Object"
-    }, {
-      "uuid" : "f39dd3d6-f424-47cc-b1ac-01df57d688d2",
-      "name" : "templateName",
-      "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
       "uuid" : "1036a097-6046-48da-ae8b-8c7ee89e8f6c",

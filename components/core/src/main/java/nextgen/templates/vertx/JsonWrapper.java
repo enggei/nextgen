@@ -16,7 +16,12 @@ public class JsonWrapper {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -237,10 +242,15 @@ public class JsonWrapper {
 				"		return this.jsonObject;\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	@Deprecated\n" + 
 				"	public String uuid() {\n" + 
 				"		return this.jsonObject.getString(\"uuid\");\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	public String getUuid() {\n" + 
+				"		return this.jsonObject.getString(\"uuid\");\n" + 
+				"	}\n" + 
+				"	\n" + 
 				"	public ~name;format=\"capitalize\"~ removeUuid() {\n" + 
 				"		this.jsonObject.remove(\"uuid\");\n" + 
 				"		return this;\n" + 

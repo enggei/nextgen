@@ -21,7 +21,12 @@ public class STEntity {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -417,7 +422,12 @@ public class STEntity {
 				"		this.stGroup = stGroup;\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	@Deprecated\n" + 
 				"	public java.util.UUID uuid() {\n" + 
+				"		return uuid;\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public java.util.UUID getUuid() {\n" + 
 				"		return uuid;\n" + 
 				"	}\n" + 
 				"\n" + 

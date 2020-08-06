@@ -341,6 +341,28 @@ public class STAppPresentationModel {
         });
     }
 
+    public void runScript(JComponent canvas, Script script) {
+        doLaterInTransaction(tx -> {
+            try {
+
+                final nextgen.st.STAppPresentationModel.CompilationResult compilationResult = generateScriptCode(script);
+
+                if (compilationResult.aClass == null) {
+                    JOptionPane.showMessageDialog(canvas, compilationResult.compilerOutput, "Compilation Exception", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                ((Runnable) compilationResult.aClass
+                        .getConstructor(nextgen.st.model.STModelDB.class, nextgen.st.STRenderer.class)
+                        .newInstance(db, stRenderer))
+                        .run();
+
+            } catch (Throwable ex) {
+                nextgen.utils.SwingUtil.showException(canvas, ex);
+            }
+        });
+    }
+
     public final class STArgumentConsumer implements Consumer<STArgument> {
 
         private final STParameter stParameter;
@@ -378,6 +400,7 @@ public class STAppPresentationModel {
         @Override
         public void accept(STArgument stArgument) {
             final STValue value = stArgument.getValue();
+            if (value == null || value.getType() == null) return;
             switch (stParameter.getType()) {
                 case SINGLE:
                     switch (value.getType()) {

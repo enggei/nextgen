@@ -8,13 +8,17 @@ public class ExternalAccessors {
 	private Object _className;
 	private Object _name;
 	private Object _type;
-	private Object _observable;
 
 	ExternalAccessors(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -24,7 +28,6 @@ public class ExternalAccessors {
 		st.add("className", _className);
 		st.add("name", _name);
 		st.add("type", _type);
-		st.add("observable", _observable);
 		return st.render().trim();
 	}
 
@@ -94,28 +97,6 @@ public class ExternalAccessors {
 		return this;
 	} 
 
-	public ExternalAccessors setObservable(Object value) {
-		this._observable = value;
-		return this;
-	}
-
-	public Object getObservable() {
-		return this._observable;
-	}
-
-	public Object getObservable(Object defaultValue) {
-		return this._observable == null ? defaultValue : this._observable;
-	}
-
-	public boolean hasObservable() {
-		return this._observable != null;
-	}
-
-	public ExternalAccessors removeObservable() {
-		this._observable = null;
-		return this;
-	} 
-
 
 
 	@Override
@@ -131,9 +112,8 @@ public class ExternalAccessors {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "externalAccessors(className,name,type,observable) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n" + 
+	static final String st = "externalAccessors(className,name,type) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n" + 
 				"	this._~name~ = value;\n" + 
-				"	~if(observable)~this.pcs.firePropertyChange(\"set.~name~\", null, value);~endif~\n" + 
 				"	return this;\n" + 
 				"}\n" + 
 				"\n" + 

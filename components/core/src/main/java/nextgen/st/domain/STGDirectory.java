@@ -19,7 +19,12 @@ public class STGDirectory {
 		return this.jsonObject;
 	}
 
+	@Deprecated
 	public String uuid() {
+		return this.jsonObject.getString("uuid");
+	}
+
+	public String getUuid() {
 		return this.jsonObject.getString("uuid");
 	}
 

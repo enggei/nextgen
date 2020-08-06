@@ -1,6 +1,5 @@
 package nextgen.st.canvas;
 
-import nextgen.st.STAppEvents;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PDragSequenceEventHandler;
 import org.piccolo2d.event.PInputEvent;
@@ -453,11 +452,11 @@ public class STNode extends PNode implements PropertyChangeListener {
 	}
 
 	public static String cut(String text){ 
-		return text.substring(0, Math.min(text.length(), 80));
+		return text == null ? "[EMPTY]" : text.substring(0, Math.min(text.length(), 80));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onNodeAdded(STAppEvents.NodeAddedToCanvas event) {
+	public void onNodeAddedToCanvas(nextgen.st.STAppEvents.NodeAddedToCanvas event) {
 		log.debug(getUuid() + " : node added " + event.node.getUuid());
 	}
 }

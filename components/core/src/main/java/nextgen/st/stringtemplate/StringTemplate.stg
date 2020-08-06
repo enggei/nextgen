@@ -156,7 +156,12 @@ public class ~name~~if(interfaces)~ implements ~endif~~interfaces:{it|~it~};sepa
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 

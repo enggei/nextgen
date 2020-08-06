@@ -2,11 +2,10 @@ delimiters "~","~"
 
 Entities() ::= << >>
 
-NodeWrapper(package,name,observable,externalFields,accessors,lexical,methods) ::= <<package ~package~;
+NodeWrapper(package,name,externalFields,accessors,lexical,methods) ::= <<package ~package~;
 
 public class ~name;format="capitalize"~ {
 
-	~if(observable)~private final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);~endif~
 	private final org.neo4j.graphdb.Node node;
 	~externalFields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator="\n"~
 
@@ -39,24 +38,14 @@ public class ~name;format="capitalize"~ {
 	}
 
 	~methods:{it|~it~};separator="\n\n"~
-~if(observable)~
 
-	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
-		this.pcs.addPropertyChangeListener(listener);
-	}
-
-	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
-		this.pcs.removePropertyChangeListener(listener);
-	}
-~endif~
 }  >>
 
-primitiveAccessors(name,className,type,observable) ::= <<private static final String _~name~ = "~name~";
+primitiveAccessors(name,className,type) ::= <<private static final String _~name~ = "~name~";
 
 public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
 	if (value == null) node.removeProperty(_~name~); 
 	else node.setProperty(_~name~, value);
-	~if(observable)~this.pcs.firePropertyChange("set.~name~", null, value);~endif~
 	return this;
 }
 
@@ -76,18 +65,16 @@ public boolean has~name;format="capitalize"~() {
 
 public ~className;format="capitalize"~ remove~name;format="capitalize"~() { 
 	node.removeProperty(_~name~);
-	~if(observable)~this.pcs.firePropertyChange("remove.~name~", true, false);~endif~
 	return this;
 }  >>
 
-listReferenceAccessors(name,className,type,observable) ::= <<private static final org.neo4j.graphdb.RelationshipType _~name~ = org.neo4j.graphdb.RelationshipType.withName("~name~");
+listReferenceAccessors(name,className,type) ::= <<private static final org.neo4j.graphdb.RelationshipType _~name~ = org.neo4j.graphdb.RelationshipType.withName("~name~");
 
 public ~className;format="capitalize"~ add~name;format="capitalize"~(~type~ dst) { 
 	final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _~name~).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
 	if (existing.isPresent()) return this;
 	final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _~name~);
 	relationship.setProperty("_t", System.nanoTime());
-	~if(observable)~this.pcs.firePropertyChange("set.~name~", null, dst);~endif~
 	return this;
 }
 
@@ -102,17 +89,15 @@ public java.util.stream.Stream<~type~> get~name;format="capitalize"~Sorted() {
 public ~className;format="capitalize"~ remove~name;format="capitalize"~(~type~ dst) { 
 	final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _~name~).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
 	existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
-	~if(observable)~this.pcs.firePropertyChange("remove.~name~", true, false);~endif~
 	return this;
 }
 
 public ~className;format="capitalize"~ removeAll~name;format="capitalize"~() { 
 	node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _~name~).forEach(org.neo4j.graphdb.Relationship::delete);
-	~if(observable)~this.pcs.firePropertyChange("removeAll.~name~", true, false);~endif~
 	return this;
 }  >>
 
-listPrimitiveAccessors(name,className,type,observable) ::= <<private static final org.neo4j.graphdb.RelationshipType _~name~ = org.neo4j.graphdb.RelationshipType.withName("~name~");
+listPrimitiveAccessors(name,className,type) ::= <<private static final org.neo4j.graphdb.RelationshipType _~name~ = org.neo4j.graphdb.RelationshipType.withName("~name~");
 
 public ~className;format="capitalize"~ add~name;format="capitalize"~(~type~ dst) { 
 	final java.util.Optional<org.neo4j.graphdb.Node> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _~name~).spliterator(), false).map((r) -> r.getOtherNode(node)).filter((n) -> dst.equals(n.getProperty("value"))).findAny();
@@ -121,7 +106,6 @@ public ~className;format="capitalize"~ add~name;format="capitalize"~(~type~ dst)
 	newNode.setProperty("value", dst);
 	final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(newNode, _~name~);
 	relationship.setProperty("_t", System.nanoTime());
-	~if(observable)~this.pcs.firePropertyChange("add.~name~", null, dst);~endif~
 	return this;
 }
 
@@ -135,14 +119,12 @@ public java.util.stream.Stream<~type~> get~name;format="capitalize"~Sorted() {
 
 public ~className;format="capitalize"~ removeAll~name;format="capitalize"~() { 
 	node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _~name~).forEach(org.neo4j.graphdb.Relationship::delete);
-	~if(observable)~this.pcs.firePropertyChange("removeAll.~name~", true, false);~endif~
 	return this;
 }  >>
 
-enumAccessors(className,name,type,observable) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
+enumAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
 	if (value == null) node.removeProperty("~name~"); 
 	else node.setProperty("~name~", value.name());
-	~if(observable)~this.pcs.firePropertyChange("set.~name~", null, value);~endif~
 	return this;
 }
 
@@ -162,11 +144,10 @@ public boolean has~name;format="capitalize"~() {
 
 public ~className;format="capitalize"~ remove~name;format="capitalize"~() { 
 	node.removeProperty("~name~");
-	~if(observable)~this.pcs.firePropertyChange("remove.~name~", true, false);~endif~
 	return this;
 }  >>
 
-referenceAccessors(className,name,type,observable) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ dst) { 
+referenceAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ dst) { 
 	final org.neo4j.graphdb.Relationship relationship = get~name;format="capitalize"~Relation();
 	if (relationship != null)  { 
 		if (relationship.getOtherNode(node).equals(dst.getNode())) return this;
@@ -174,7 +155,6 @@ referenceAccessors(className,name,type,observable) ::= <<public ~className;forma
 	}
 	if (dst == null) return this;
 	node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("~name~"));
-	~if(observable)~this.pcs.firePropertyChange("set.~name~", null, dst);~endif~
 	return this;
 }
 
@@ -186,7 +166,6 @@ public ~type~ get~name;format="capitalize"~() {
 public ~className;format="capitalize"~ remove~name;format="capitalize"~() { 
 	final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(get~name;format="capitalize"~Relation());
 	existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
-	~if(observable)~this.pcs.firePropertyChange("remove.~name~", true, false);~endif~
 	return this;
 }
 
@@ -194,9 +173,8 @@ public org.neo4j.graphdb.Relationship get~name;format="capitalize"~Relation() {
 	return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("~name~"), org.neo4j.graphdb.Direction.OUTGOING);
 }  >>
 
-externalAccessors(className,name,type,observable) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
+externalAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
 	this._~name~ = value;
-	~if(observable)~this.pcs.firePropertyChange("set.~name~", null, value);~endif~
 	return this;
 }
 
@@ -212,13 +190,12 @@ incomingReferenceStream(type,name) ::= <<public java.util.stream.Stream<~type~> 
 	return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("~name~")).spliterator(), false).map((relationship) -> new ~type~(relationship.getOtherNode(node)));
 } >>
 
-enumListAccessors(className,name,type,observable) ::= <<public ~className;format="capitalize"~ add~name;format="capitalize"~(~type~ dst) { 
+enumListAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ add~name;format="capitalize"~(~type~ dst) { 
 	final java.util.Optional<org.neo4j.graphdb.Node> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("~name~")).spliterator(), false).map((r) -> r.getOtherNode(node)).filter((n) -> dst.equals(n.getProperty("value"))).findAny();
 	if (existing.isPresent()) return this;
 	final org.neo4j.graphdb.Node newNode = node.getGraphDatabase().createNode(org.neo4j.graphdb.Label.label("~type~"));
 	newNode.setProperty("value", dst.name());
 	node.createRelationshipTo(newNode, org.neo4j.graphdb.RelationshipType.withName("~name~"));
-	~if(observable)~this.pcs.firePropertyChange("add.~name~", null, dst);~endif~
 	return this;
 }
 
@@ -228,7 +205,6 @@ public java.util.stream.Stream<~type~> get~name;format="capitalize"~() {
 
 public ~className;format="capitalize"~ removeAll~name;format="capitalize"~() { 
 	node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("~name~")).forEach(org.neo4j.graphdb.Relationship::delete);
-	~if(observable)~this.pcs.firePropertyChange("removeAll.~name~", true, false);~endif~
 	return this;
 }  >>
 
