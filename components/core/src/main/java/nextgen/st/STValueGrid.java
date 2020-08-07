@@ -61,6 +61,7 @@ public class STValueGrid extends JPanel {
         results.getColumn("Result").setCellEditor(new STValueElementEditor());
 
         final JScrollPane jScrollPane = new JScrollPane(results);
+        jScrollPane.setBackground(Color.WHITE);
         jScrollPane.getVerticalScrollBar().setUnitIncrement(5);
         add(jScrollPane, BorderLayout.CENTER);
     }

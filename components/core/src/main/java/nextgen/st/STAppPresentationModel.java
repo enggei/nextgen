@@ -11,6 +11,7 @@ import nextgen.templates.java.ImportDeclaration;
 import nextgen.templates.java.PackageDeclaration;
 import nextgen.utils.Neo4JUtil;
 import nextgen.utils.SwingUtil;
+import org.javatuples.Pair;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
@@ -21,6 +22,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -127,6 +129,7 @@ public class STAppPresentationModel {
         }
     }
 
+
     public String render(STModel stModel) {
         return stRenderer.render(stModel);
     }
@@ -136,8 +139,23 @@ public class STAppPresentationModel {
     }
 
 
+    public String renderInTransaction(STModel stModel) {
+        return db.getInTransaction(transaction -> stRenderer.render(stModel));
+    }
+
+    public String renderInTransaction(STValue stValue) {
+        return db.getInTransaction(transaction -> stRenderer.render(stValue));
+    }
+
+
     public STValue newSTValue(String s) {
         return db.newSTValue(s);
+    }
+
+    public Pair<STArgument, STValue> newSTArgument(STParameter stParameter, String value) {
+        final STValue stValue = newSTValue(value);
+        final STArgument stArgument = db.newSTArgument(stParameter, stValue);
+        return new Pair<>(stArgument, stValue);
     }
 
     public STArgument newSTArgument(STParameter stParameter, STValue stValue) {
@@ -291,8 +309,10 @@ public class STAppPresentationModel {
         if (!kvNameFound.isPresent()) return defaultValue.get();
 
         for (STArgumentKV stArgumentKV : set)
-            if (stArgumentKV.getStParameterKey().equals(kvNameFound.get().uuid()))
-                return render(stArgumentKV.getValue());
+            if (stArgumentKV.getStParameterKey().equals(kvNameFound.get().uuid())) {
+                final String render = render(stArgumentKV.getValue());
+                return render == null || render.length() == 0 ? "[EMPTY]" : render;
+            }
 
         return defaultValue.get();
     }
@@ -430,6 +450,51 @@ public class STAppPresentationModel {
         });
     }
 
+    public String cut(String text) {
+        return cut(text, 50);
+    }
+
+    public String cut(String text, int max) {
+        return text == null ? "[EMPTY]" : text.substring(0, Math.min(text.length(), max));
+    }
+
+    private static final Map<String, ImageIcon> cache = new LinkedHashMap<>();
+
+    public ImageIcon loadIcon(String iconName) {
+
+        if (iconName == null) return null;
+
+        if (cache.containsKey(iconName)) return cache.get(iconName);
+
+        URL resource = getClass().getClassLoader().getResource("icons/" + iconName + "16x16.png");
+        if (resource == null) resource = getClass().getClassLoader().getResource("icons/STGroup16x16.png");
+
+        cache.put(iconName, new ImageIcon(Objects.requireNonNull(resource)));
+        return cache.get(iconName);
+    }
+
+    public String renderInTransaction(Collection<STArgumentKV> stArgumentKV, STParameter stParameter) {
+        return db.getInTransaction(transaction -> {
+            final StringBuilder out = new StringBuilder();
+
+            stParameter.getKeys().forEach(stParameterKey -> {
+                out.append("--- ").append(stParameterKey.getName()).append(" ---\n");
+                stArgumentKV.stream()
+                        .filter(stArgumentKV1 -> stArgumentKV1.getStParameterKey().equals(stParameterKey.getUuid()))
+                        .forEach(stArgumentKV1 -> out.append(render(stArgumentKV1.getValue())));
+                out.append("\n");
+            });
+
+            return out.toString();
+        });
+    }
+
+    public void removeArgument(STModel stModel, STParameter stParameter) {
+        stModel.getArguments()
+                .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+                .forEach(stModel::removeArguments);
+    }
+
     public final class STArgumentConsumer implements Consumer<STArgument> {
 
         private final STParameter stParameter;
@@ -467,12 +532,14 @@ public class STAppPresentationModel {
         @Override
         public void accept(STArgument stArgument) {
             final STValue value = stArgument.getValue();
-            if (value == null || value.getType() == null) return;
             switch (stParameter.getType()) {
                 case SINGLE:
+                    if (value == null || value.getType() == null)
+                        break;
                     switch (value.getType()) {
                         case STMODEL:
-                            onSingleSTModelConsumer.accept(stArgument, value);
+                            if (value.getStModel() != null)
+                                onSingleSTModelConsumer.accept(stArgument, value);
                             break;
                         case PRIMITIVE:
                             onSingleSTValueConsumer.accept(stArgument, value);
@@ -483,9 +550,12 @@ public class STAppPresentationModel {
                     }
                     break;
                 case LIST:
+                    if (value == null || value.getType() == null)
+                        break;
                     switch (value.getType()) {
                         case STMODEL:
-                            onListSTModelConsumer.accept(stArgument, value);
+                            if (value.getStModel() != null)
+                                onListSTModelConsumer.accept(stArgument, value);
                             break;
                         case PRIMITIVE:
                             onListSTValueConsumer.accept(stArgument, value);
@@ -505,7 +575,8 @@ public class STAppPresentationModel {
                                 final STValue kvValue = stArgumentKV.getValue();
                                 switch (kvValue.getType()) {
                                     case STMODEL:
-                                        onKVListSTModelConsumer.accept(stArgumentKV, kvValue);
+                                        if (kvValue.getStModel() != null)
+                                            onKVListSTModelConsumer.accept(stArgumentKV, kvValue);
                                         break;
                                     case PRIMITIVE:
                                         onKVListSTValueConsumer.accept(stArgumentKV, kvValue);

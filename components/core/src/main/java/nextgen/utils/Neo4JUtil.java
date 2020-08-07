@@ -8,7 +8,7 @@ public class Neo4JUtil {
 
     public static String toString(Node node) {
         final StringBuilder out = new StringBuilder();
-        out.append("Node : ");
+        out.append("Node : ").append(node.getId()).append(" ");
         node.getLabels().forEach(label -> out.append(label.name()).append(" "));
         out.append("(");
         node.getPropertyKeys().forEach(s -> out.append(" ").append(s).append(":").append(node.getProperty(s)));

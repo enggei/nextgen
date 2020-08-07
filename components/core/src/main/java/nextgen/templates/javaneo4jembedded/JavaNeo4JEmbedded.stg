@@ -2,7 +2,7 @@ delimiters "~","~"
 
 Entities() ::= << >>
 
-NodeWrapper(package,name,externalFields,accessors,lexical,methods) ::= <<package ~package~;
+NodeWrapper(package,name,externalFields,accessors,methods) ::= <<package ~package~;
 
 public class ~name;format="capitalize"~ {
 
@@ -34,7 +34,23 @@ public class ~name;format="capitalize"~ {
 
 	@Override
 	public String toString() {
-		return ""~if(lexical)~ + ~endif~~lexical:{it|node.getProperty("~it~")};separator=" + \" \" + "~;
+		final StringBuilder out = new StringBuilder();
+		out.append("Node : ").append(node.getId()).append(" ");
+		node.getLabels().forEach(label -> out.append(label.name()).append(" "));
+		out.append("(");
+		node.getPropertyKeys().forEach(s -> out.append(" ").append(s).append(":").append(node.getProperty(s)));
+		out.append(")");
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(relationship -> {
+			out.append("\n\t -> ").append(relationship.getType()).append(" (");
+			relationship.getPropertyKeys().forEach(s -> out.append(" ").append(s).append(":").append(relationship.getProperty(s)));
+			out.append(")");
+		});
+		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(relationship -> {
+			out.append("\n\t <- ").append(relationship.getType()).append(" (");
+			relationship.getPropertyKeys().forEach(s -> out.append(" ").append(s).append(":").append(relationship.getProperty(s)));
+			out.append(")");
+		});
+		return out.toString().trim();
 	}
 
 	~methods:{it|~it~};separator="\n\n"~
@@ -210,7 +226,6 @@ public ~className;format="capitalize"~ removeAll~name;format="capitalize"~() {
 
 nodeToJsonObject(properties,refs,refList,primitiveList) ::= <<public io.vertx.core.json.JsonObject toJsonObject() {
 	io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
-	if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
 	~properties:{it|if (node.hasProperty("~it.name~")) jsonObject.put("~it.name~", node.getProperty("~it.name~"));};separator="\n"~
 ~refs:{it|
 	final ~it.type~ _~it.name~ = get~it.name;format="capitalize"~();

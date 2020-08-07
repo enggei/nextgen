@@ -18,14 +18,14 @@ public class STEvents {
                 .setPackage("nextgen.st")
                 .setName("STAppEvents");
 
-        Class[] modelEntities = {
+        final Class<?>[] modelEntities = {
                 nextgen.st.model.Project.class,
                 nextgen.st.model.STModel.class,
                 nextgen.st.model.STValue.class,
                 nextgen.st.model.Script.class
         };
 
-        for (Class modelEntity : modelEntities) {
+        for (Class<?> modelEntity : modelEntities) {
             addEvent(eventManager, newEvent()
                     .setName("New" + modelEntity.getSimpleName())
                     .addFields(modelEntity.getCanonicalName(), StringUtil.lowFirst(modelEntity.getSimpleName()))
@@ -38,16 +38,23 @@ public class STEvents {
         }
 
         addEvent(eventManager, newEvent()
-                .setName("NodeAddedToCanvas")
-                .addFields(nextgen.st.canvas.STCanvas.class.getCanonicalName(), "canvas")
-                .addFields(nextgen.st.canvas.STNode.class.getCanonicalName(), "node")
+                .setName("STModelArgumentRemoved")
+                .addFields(nextgen.st.model.STModel.class.getCanonicalName(), "stModel")
+                .addFields(nextgen.st.model.STArgument.class.getCanonicalName(), "stArgument")
         );
 
-        addEvent(eventManager, newEvent()
-                .setName("NodeClosed")
-                .addFields(nextgen.st.canvas.STCanvas.class.getCanonicalName(), "canvas")
-                .addFields(nextgen.st.canvas.STNode.class.getCanonicalName(), "node")
-        );
+        final String[] canvasEvents = {
+                "NodeAddedToCanvas",
+                "NodeClosed"
+        };
+
+        for (String canvasEvent : canvasEvents) {
+            addEvent(eventManager, newEvent()
+                    .setName("NodeAddedToCanvas")
+                    .addFields(nextgen.st.canvas.STCanvas.class.getCanonicalName(), "canvas")
+                    .addFields(nextgen.st.canvas.STNode.class.getCanonicalName(), "node")
+            );
+        }
 
         addEvent(eventManager, newEvent()
                 .setName("OpenSTModel")

@@ -8,7 +8,6 @@ public class NodeWrapper {
 	private Object _package;
 	private Object _name;
 	private java.util.List<Object> _accessors = new java.util.ArrayList<>();
-	private java.util.List<Object> _lexical = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _externalFields = new java.util.ArrayList<>();
 
@@ -31,7 +30,6 @@ public class NodeWrapper {
 		st.add("package", _package);
 		st.add("name", _name);
 		for (Object o : _accessors) st.add("accessors", o);
-		for (Object o : _lexical) st.add("lexical", o);
 		for (Object o : _methods) st.add("methods", o);
 		for (java.util.Map<String, Object> map : _externalFields) st.addAggr("externalFields.{type,name,initializer}", map.get("type"), map.get("name"), map.get("initializer"));
 		return st.render().trim();
@@ -108,35 +106,6 @@ public class NodeWrapper {
 
 	public java.util.List<Object> getAccessors() {
 		return this._accessors;
-	} 
-
-	public NodeWrapper addLexical(Object value) {
-		this._lexical.add(value);
-		return this;
-	}
-
-	public NodeWrapper setLexical(Object[] value) {
-		this._lexical.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public NodeWrapper setLexical(java.util.Collection<Object> values) {
-		this._lexical.addAll(values);
-		return this;
-	}
-
-	public NodeWrapper removeLexical(Object value) {
-		this._lexical.remove(value);
-		return this;
-	}
-
-	public NodeWrapper removeLexical(int index) {
-		this._lexical.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getLexical() {
-		return this._lexical;
 	} 
 
 	public NodeWrapper addMethods(Object value) {
@@ -234,7 +203,7 @@ public class NodeWrapper {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NodeWrapper(package,name,externalFields,accessors,lexical,methods) ::= <<package ~package~;\n" + 
+	static final String st = "NodeWrapper(package,name,externalFields,accessors,methods) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public class ~name;format=\"capitalize\"~ {\n" + 
 				"\n" + 
@@ -266,7 +235,23 @@ public class NodeWrapper {
 				"\n" + 
 				"	@Override\n" + 
 				"	public String toString() {\n" + 
-				"		return \"\"~if(lexical)~ + ~endif~~lexical:{it|node.getProperty(\"~it~\")};separator=\" + \\\" \\\" + \"~;\n" + 
+				"		final StringBuilder out = new StringBuilder();\n" + 
+				"		out.append(\"Node : \").append(node.getId()).append(\" \");\n" + 
+				"		node.getLabels().forEach(label -> out.append(label.name()).append(\" \"));\n" + 
+				"		out.append(\"(\");\n" + 
+				"		node.getPropertyKeys().forEach(s -> out.append(\" \").append(s).append(\":\").append(node.getProperty(s)));\n" + 
+				"		out.append(\")\");\n" + 
+				"		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(relationship -> {\n" + 
+				"			out.append(\"\\n\\t -> \").append(relationship.getType()).append(\" (\");\n" + 
+				"			relationship.getPropertyKeys().forEach(s -> out.append(\" \").append(s).append(\":\").append(relationship.getProperty(s)));\n" + 
+				"			out.append(\")\");\n" + 
+				"		});\n" + 
+				"		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(relationship -> {\n" + 
+				"			out.append(\"\\n\\t <- \").append(relationship.getType()).append(\" (\");\n" + 
+				"			relationship.getPropertyKeys().forEach(s -> out.append(\" \").append(s).append(\":\").append(relationship.getProperty(s)));\n" + 
+				"			out.append(\")\");\n" + 
+				"		});\n" + 
+				"		return out.toString().trim();\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 

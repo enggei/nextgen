@@ -160,7 +160,7 @@
     "children" : [ {
       "uuid" : "3e4cd3ac-b36a-48c9-9197-00e3ca022235",
       "name" : "kv",
-      "text" : "kv : \n\t~value:{it|~it.key~ : ~it.value~};separator=\"\\n\"~\n\n\tasdf ",
+      "text" : "~value:{it|~it.key~ : ~it.value~};separator=\"\\n\"~ ",
       "parameters" : [ {
         "uuid" : "fcfc3dee-4878-45ce-ab82-53ecebb9b3c5",
         "name" : "value",
@@ -180,7 +180,7 @@
     }, {
       "uuid" : "c41ba352-9f52-4dca-a44a-ad9f3c035d14",
       "name" : "list",
-      "text" : "list : \n\t~value:{it|~it~};separator=\"\\n\"~ ",
+      "text" : "~value:{it|~it~};separator=\"\\n\"~ ",
       "parameters" : [ {
         "uuid" : "6546279d-a4bd-4f04-a5c7-23ba48a640ec",
         "name" : "value",
@@ -191,7 +191,7 @@
     }, {
       "uuid" : "2acee399-79fc-46ff-b0c2-89f23ae0651b",
       "name" : "single",
-      "text" : "single : \n\t~value~ ",
+      "text" : "~value~ ",
       "parameters" : [ {
         "uuid" : "421b3f1e-32db-4e53-8f70-2424fd019e1c",
         "name" : "value",

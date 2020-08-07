@@ -495,7 +495,7 @@ public class DomainPatterns extends DomainST {
                 }
                 case PRIM_REF: {
                     entityClass.addAccessors(JavaNeo4JEmbeddedST.newPrimitiveAccessors().setClassName(entityName).setType(getSimpleName(o.getDst())).setName(o.getName()));
-                    if (o.getLexical(false)) entityClass.addLexical(o.getName());
+                    //if (o.getLexical(false)) entityClass.addLexical(o.getName());
 
                     nodeToJsonObject.addProperties(o.getName());
                     break;

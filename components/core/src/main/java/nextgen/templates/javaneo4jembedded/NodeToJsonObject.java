@@ -206,7 +206,6 @@ public class NodeToJsonObject {
 
 	static final String st = "nodeToJsonObject(properties,refs,refList,primitiveList) ::= <<public io.vertx.core.json.JsonObject toJsonObject() {\n" + 
 				"	io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();\n" + 
-				"	if (node.hasProperty(\"uuid\")) jsonObject.put(\"uuid\", node.getProperty(\"uuid\"));\n" + 
 				"	~properties:{it|if (node.hasProperty(\"~it.name~\")) jsonObject.put(\"~it.name~\", node.getProperty(\"~it.name~\"));};separator=\"\\n\"~\n" + 
 				"~refs:{it|\n" + 
 				"	final ~it.type~ _~it.name~ = get~it.name;format=\"capitalize\"~();\n" + 

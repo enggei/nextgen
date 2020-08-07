@@ -2,7 +2,6 @@ package nextgen.st.model;
 
 public class Project {
 
-	private final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);
 	private final org.neo4j.graphdb.Node node;
 
 	public Project(org.neo4j.graphdb.Node node) { 
@@ -31,7 +30,6 @@ public class Project {
 	public Project setUuid(String value) { 
 		if (value == null) node.removeProperty(_uuid); 
 		else node.setProperty(_uuid, value);
-		this.pcs.firePropertyChange("set.uuid", null, value);
 		return this;
 	}
 
@@ -51,7 +49,6 @@ public class Project {
 
 	public Project removeUuid() { 
 		node.removeProperty(_uuid);
-		this.pcs.firePropertyChange("remove.uuid", true, false);
 		return this;
 	}
 
@@ -60,7 +57,6 @@ public class Project {
 	public Project setName(String value) { 
 		if (value == null) node.removeProperty(_name); 
 		else node.setProperty(_name, value);
-		this.pcs.firePropertyChange("set.name", null, value);
 		return this;
 	}
 
@@ -80,7 +76,6 @@ public class Project {
 
 	public Project removeName() { 
 		node.removeProperty(_name);
-		this.pcs.firePropertyChange("remove.name", true, false);
 		return this;
 	}
 
@@ -91,7 +86,6 @@ public class Project {
 		if (existing.isPresent()) return this;
 		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _files);
 		relationship.setProperty("_t", System.nanoTime());
-		this.pcs.firePropertyChange("set.files", null, dst);
 		return this;
 	}
 
@@ -106,13 +100,11 @@ public class Project {
 	public Project removeFiles(STFile dst) { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _files).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
 		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
-		this.pcs.firePropertyChange("remove.files", true, false);
 		return this;
 	}
 
 	public Project removeAllFiles() { 
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _files).forEach(org.neo4j.graphdb.Relationship::delete);
-		this.pcs.firePropertyChange("removeAll.files", true, false);
 		return this;
 	}
 
@@ -127,7 +119,6 @@ public class Project {
 		if (existing.isPresent()) return this;
 		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _models);
 		relationship.setProperty("_t", System.nanoTime());
-		this.pcs.firePropertyChange("set.models", null, dst);
 		return this;
 	}
 
@@ -142,13 +133,11 @@ public class Project {
 	public Project removeModels(STModel dst) { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _models).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
 		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
-		this.pcs.firePropertyChange("remove.models", true, false);
 		return this;
 	}
 
 	public Project removeAllModels() { 
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _models).forEach(org.neo4j.graphdb.Relationship::delete);
-		this.pcs.firePropertyChange("removeAll.models", true, false);
 		return this;
 	}
 
@@ -163,7 +152,6 @@ public class Project {
 		if (existing.isPresent()) return this;
 		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _values);
 		relationship.setProperty("_t", System.nanoTime());
-		this.pcs.firePropertyChange("set.values", null, dst);
 		return this;
 	}
 
@@ -178,13 +166,11 @@ public class Project {
 	public Project removeValues(STValue dst) { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _values).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
 		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
-		this.pcs.firePropertyChange("remove.values", true, false);
 		return this;
 	}
 
 	public Project removeAllValues() { 
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _values).forEach(org.neo4j.graphdb.Relationship::delete);
-		this.pcs.firePropertyChange("removeAll.values", true, false);
 		return this;
 	}
 
@@ -199,7 +185,6 @@ public class Project {
 		if (existing.isPresent()) return this;
 		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _scripts);
 		relationship.setProperty("_t", System.nanoTime());
-		this.pcs.firePropertyChange("set.scripts", null, dst);
 		return this;
 	}
 
@@ -214,13 +199,11 @@ public class Project {
 	public Project removeScripts(Script dst) { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _scripts).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
 		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
-		this.pcs.firePropertyChange("remove.scripts", true, false);
 		return this;
 	}
 
 	public Project removeAllScripts() { 
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _scripts).forEach(org.neo4j.graphdb.Relationship::delete);
-		this.pcs.firePropertyChange("removeAll.scripts", true, false);
 		return this;
 	}
 
@@ -230,7 +213,23 @@ public class Project {
 
 	@Override
 	public String toString() {
-		return "";
+		final StringBuilder out = new StringBuilder();
+		out.append("Node : ").append(node.getId()).append(" ");
+		node.getLabels().forEach(label -> out.append(label.name()).append(" "));
+		out.append("(");
+		node.getPropertyKeys().forEach(s -> out.append(" ").append(s).append(":").append(node.getProperty(s)));
+		out.append(")");
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(relationship -> {
+			out.append("\n\t -> ").append(relationship.getType()).append(" (");
+			relationship.getPropertyKeys().forEach(s -> out.append(" ").append(s).append(":").append(relationship.getProperty(s)));
+			out.append(")");
+		});
+		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(relationship -> {
+			out.append("\n\t <- ").append(relationship.getType()).append(" (");
+			relationship.getPropertyKeys().forEach(s -> out.append(" ").append(s).append(":").append(relationship.getProperty(s)));
+			out.append(")");
+		});
+		return out.toString().trim();
 	}
 
 	public io.vertx.core.json.JsonObject toJsonObject() {
@@ -270,11 +269,4 @@ public class Project {
 		node.delete();
 	}
 
-	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
-		this.pcs.addPropertyChangeListener(listener);
-	}
-
-	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
-		this.pcs.removePropertyChangeListener(listener);
-	}
 }

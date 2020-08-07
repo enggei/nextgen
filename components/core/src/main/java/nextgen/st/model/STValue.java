@@ -2,7 +2,6 @@ package nextgen.st.model;
 
 public class STValue {
 
-	private final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);
 	private final org.neo4j.graphdb.Node node;
 
 	public STValue(org.neo4j.graphdb.Node node) { 
@@ -31,7 +30,6 @@ public class STValue {
 	public STValue setUuid(String value) { 
 		if (value == null) node.removeProperty(_uuid); 
 		else node.setProperty(_uuid, value);
-		this.pcs.firePropertyChange("set.uuid", null, value);
 		return this;
 	}
 
@@ -51,7 +49,6 @@ public class STValue {
 
 	public STValue removeUuid() { 
 		node.removeProperty(_uuid);
-		this.pcs.firePropertyChange("remove.uuid", true, false);
 		return this;
 	}
 
@@ -60,7 +57,6 @@ public class STValue {
 	public STValue setValue(String value) { 
 		if (value == null) node.removeProperty(_value); 
 		else node.setProperty(_value, value);
-		this.pcs.firePropertyChange("set.value", null, value);
 		return this;
 	}
 
@@ -80,14 +76,12 @@ public class STValue {
 
 	public STValue removeValue() { 
 		node.removeProperty(_value);
-		this.pcs.firePropertyChange("remove.value", true, false);
 		return this;
 	}
 
 	public STValue setType(STValueType value) { 
 		if (value == null) node.removeProperty("type"); 
 		else node.setProperty("type", value.name());
-		this.pcs.firePropertyChange("set.type", null, value);
 		return this;
 	}
 
@@ -107,7 +101,6 @@ public class STValue {
 
 	public STValue removeType() { 
 		node.removeProperty("type");
-		this.pcs.firePropertyChange("remove.type", true, false);
 		return this;
 	}
 
@@ -119,7 +112,6 @@ public class STValue {
 		}
 		if (dst == null) return this;
 		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("stModel"));
-		this.pcs.firePropertyChange("set.stModel", null, dst);
 		return this;
 	}
 
@@ -131,7 +123,6 @@ public class STValue {
 	public STValue removeStModel() { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getStModelRelation());
 		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
-		this.pcs.firePropertyChange("remove.stModel", true, false);
 		return this;
 	}
 
@@ -157,7 +148,23 @@ public class STValue {
 
 	@Override
 	public String toString() {
-		return "";
+		final StringBuilder out = new StringBuilder();
+		out.append("Node : ").append(node.getId()).append(" ");
+		node.getLabels().forEach(label -> out.append(label.name()).append(" "));
+		out.append("(");
+		node.getPropertyKeys().forEach(s -> out.append(" ").append(s).append(":").append(node.getProperty(s)));
+		out.append(")");
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(relationship -> {
+			out.append("\n\t -> ").append(relationship.getType()).append(" (");
+			relationship.getPropertyKeys().forEach(s -> out.append(" ").append(s).append(":").append(relationship.getProperty(s)));
+			out.append(")");
+		});
+		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(relationship -> {
+			out.append("\n\t <- ").append(relationship.getType()).append(" (");
+			relationship.getPropertyKeys().forEach(s -> out.append(" ").append(s).append(":").append(relationship.getProperty(s)));
+			out.append(")");
+		});
+		return out.toString().trim();
 	}
 
 	public io.vertx.core.json.JsonObject toJsonObject() {
@@ -180,11 +187,4 @@ public class STValue {
 		node.delete();
 	}
 
-	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
-		this.pcs.addPropertyChangeListener(listener);
-	}
-
-	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
-		this.pcs.removePropertyChangeListener(listener);
-	}
 }

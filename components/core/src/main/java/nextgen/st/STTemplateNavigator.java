@@ -8,7 +8,6 @@ import javax.swing.*;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.net.URL;
 import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
@@ -18,15 +17,17 @@ public class STTemplateNavigator extends JPanel {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STTemplateNavigator.class);
 
 	private final JTree tree = new JTree();
-	private final STWorkspace workspace;
 	private final STAppPresentationModel presentationModel;
 	private final DefaultTreeModel treeModel;
+
+	private STWorkspace workspace;
 
 	public STTemplateNavigator(STAppPresentationModel presentationModel, STWorkspace workspace) {
 		super(new BorderLayout());
 
-		this.presentationModel = presentationModel;
 		this.workspace = workspace;
+
+		this.presentationModel = presentationModel;
 
 		treeModel = new DefaultTreeModel(new RootNode("Models"));
 		tree.setModel(treeModel);
@@ -120,7 +121,7 @@ public class STTemplateNavigator extends JPanel {
 		public BaseTreeNode(T model, String icon) {
 			setUserObject(model);
 			this.label = model.toString();
-			this.icon = loadIcon(icon);
+			this.icon = presentationModel.loadIcon(icon);
 			this.tooltip = "";
 		}
 
@@ -138,7 +139,14 @@ public class STTemplateNavigator extends JPanel {
 		}
 
 		protected java.util.List<Action> getActions() {
-			return new ArrayList<>();
+			java.util.List<Action> actions = new ArrayList<>();
+			actions.add(newAction("Expand", actionEvent -> {
+				SwingUtilities.invokeLater(() -> expandTreeNodesRecursive(getThisPath(), true));
+			}));
+			actions.add(newAction("Collapse", actionEvent -> {
+				SwingUtilities.invokeLater(() -> expandTreeNodesRecursive(getThisPath(), false));
+			}));
+			return actions;
 		}
 
 		@Override
@@ -164,6 +172,10 @@ public class STTemplateNavigator extends JPanel {
 
 		public String getTooltip() {
 			return tooltip;
+		}
+
+		public void nodeChanged() {
+			treeModel.nodeChanged(this);
 		}
 
 		protected TreePath addChild(BaseTreeNode<?> child) {
@@ -214,9 +226,19 @@ public class STTemplateNavigator extends JPanel {
 
 		RootNode(String model) {
 			super(model, "RootNode");
-			this.label = model;
+
+			this.label = getModel();
+			this.tooltip = "";
+
 			add(new STGDirectoryTreeNode(presentationModel.generatorSTGDirectory));
 			presentationModel.stgDirectories.forEach(stgDirectory -> add(new STGDirectoryTreeNode(stgDirectory)));
+		}
+
+		@Override
+		public void nodeChanged() {
+			this.label = getModel();
+			this.tooltip = "";
+			super.nodeChanged();
 		}
 
 		@Override
@@ -234,11 +256,21 @@ public class STTemplateNavigator extends JPanel {
 
 		STGDirectoryTreeNode(nextgen.st.domain.STGDirectory model) {
 			super(model, "STGDirectory");
-			this.label = model.getPath();
+
+			this.label = getModel().getPath();
+			this.tooltip = "";
 			this.uuid = model.getUuid();
+
 			model.getGroups()
 				.sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
 				.forEach(stGroupModel -> add(new STGroupTreeNode(stGroupModel)));
+		}
+
+		@Override
+		public void nodeChanged() {
+			this.label = getModel().getPath();
+			this.tooltip = "";
+			super.nodeChanged();
 		}
 
 		@Override
@@ -272,6 +304,12 @@ public class STTemplateNavigator extends JPanel {
 			actions.add(newAction("Generate All", actionEvent -> {
 				SwingUtilities.invokeLater(() -> getChildren(STGroupTreeNode.class).forEach(stGroupTreeNode -> presentationModel.generateSTGroup(stGroupTreeNode.getModel())));
 			}));
+			actions.add(newAction("Expand", actionEvent -> {
+				SwingUtilities.invokeLater(() -> expandTreeNodesRecursive(getThisPath(), true));
+			}));
+			actions.add(newAction("Collapse", actionEvent -> {
+				SwingUtilities.invokeLater(() -> expandTreeNodesRecursive(getThisPath(), false));
+			}));
 			return actions;
 		}
 
@@ -288,11 +326,21 @@ public class STTemplateNavigator extends JPanel {
 
 		STGroupTreeNode(nextgen.st.domain.STGroupModel model) {
 			super(model, model.getIcon());
-			this.label = model.getName();
+
+			this.label = getModel().getName();
+			this.tooltip = "";
 			this.uuid = model.getUuid();
+
 			model.getEnums().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stEnum -> add(new STEnumTreeNode(stEnum)));
 			model.getTemplates().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
 			model.getInterfaces().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stInterface -> add(new STInterfaceTreeNode(stInterface)));
+		}
+
+		@Override
+		public void nodeChanged() {
+			this.label = getModel().getName();
+			this.tooltip = "";
+			super.nodeChanged();
 		}
 
 		@Override
@@ -384,10 +432,13 @@ public class STTemplateNavigator extends JPanel {
 					save();
 
 					SwingUtilities.invokeLater(() -> {
-							this.icon = loadIcon(iconName);
+							this.icon = presentationModel.loadIcon(iconName);
 							treeModel.nodeChanged(STGroupTreeNode.this);
 					});
 				});
+			}));
+			actions.add(newAction("Collapse", actionEvent -> {
+				SwingUtilities.invokeLater(() -> expandTreeNodesRecursive(getThisPath(), false));
 			}));
 			return actions;
 		}
@@ -404,8 +455,18 @@ public class STTemplateNavigator extends JPanel {
 
 		STEnumTreeNode(nextgen.st.domain.STEnum model) {
 			super(model, "STEnum");
-			this.label = model.getName();
+
+			this.label = getModel().getName();
+			this.tooltip = "";
 			this.uuid = model.getUuid();
+
+		}
+
+		@Override
+		public void nodeChanged() {
+			this.label = getModel().getName();
+			this.tooltip = "";
+			super.nodeChanged();
 		}
 
 		@Override
@@ -514,9 +575,19 @@ public class STTemplateNavigator extends JPanel {
 
 		STTemplateTreeNode(nextgen.st.domain.STTemplate model) {
 			super(model, "STTemplate");
-			this.label = model.getName();
+
+			this.label = getModel().getName();
+			this.tooltip = "";
 			this.uuid = model.getUuid();
+
 			model.getChildren().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
+		}
+
+		@Override
+		public void nodeChanged() {
+			this.label = getModel().getName();
+			this.tooltip = "";
+			super.nodeChanged();
 		}
 
 		@Override
@@ -743,8 +814,18 @@ public class STTemplateNavigator extends JPanel {
 
 		STInterfaceTreeNode(nextgen.st.domain.STInterface model) {
 			super(model, "STInterface");
-			this.label = model.getName();
+
+			this.label = getModel().getName();
+			this.tooltip = "";
 			this.uuid = model.getUuid();
+
+		}
+
+		@Override
+		public void nodeChanged() {
+			this.label = getModel().getName();
+			this.tooltip = "";
+			super.nodeChanged();
 		}
 
 		@Override
@@ -785,38 +866,19 @@ public class STTemplateNavigator extends JPanel {
 		};
 	}
 
-	private static final Map<String, ImageIcon> cache = new LinkedHashMap<>();
-
-	private ImageIcon loadIcon(String iconName) {
-
-		if (iconName == null) return null;
-
-		if (cache.containsKey(iconName)) return cache.get(iconName);
-
-		URL resource = getClass().getClassLoader().getResource("icons/" + iconName + "16x16.png");
-		if (resource == null) resource = getClass().getClassLoader().getResource("icons/STGroup16x16.png");
-
-		cache.put(iconName, new ImageIcon(Objects.requireNonNull(resource)));
-		return cache.get(iconName);
-	}
-
 	private void showPopup(BaseTreeNode<?> lastPathComponent, int x, int y) {
 		final List<Action> actions = lastPathComponent.getActions();
 		if (actions.isEmpty()) return;
 
 		final JPopupMenu pop = new JPopupMenu();
-		pop.add("With " + cut(lastPathComponent.getLabel()) + " :");
+		pop.add("With " + presentationModel.cut(lastPathComponent.getLabel()) + " :");
 		for (Action action : actions)
 			pop.add(action);
 
 		SwingUtilities.invokeLater(() -> pop.show(tree, x, y));
 	}
 
-	public static String cut(String text) {
-		return text.substring(0, Math.min(text.length(), 20));
-	}
-
-	private <T> java.util.stream.Stream<T> getSelectedNodes(Class<T> type) {
+	public <T> java.util.stream.Stream<T> getSelectedNodes(Class<T> type) {
 		final TreePath[] selectionPaths = tree.getSelectionPaths();
 		if (selectionPaths == null || selectionPaths.length == 0) return java.util.stream.Stream.empty();
 		return Arrays.stream(selectionPaths)
