@@ -6,7 +6,6 @@ import javax.swing.*;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.net.URL;
 import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
@@ -16,15 +15,17 @@ public class STModelNavigator extends JPanel {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STModelNavigator.class);
 
 	private final JTree tree = new JTree();
-	private final STWorkspace workspace;
 	private final STAppPresentationModel presentationModel;
 	private final DefaultTreeModel treeModel;
+
+	private STWorkspace workspace;
 
 	public STModelNavigator(STAppPresentationModel presentationModel, STWorkspace workspace) {
 		super(new BorderLayout());
 
-		this.presentationModel = presentationModel;
 		this.workspace = workspace;
+
+		this.presentationModel = presentationModel;
 
 		treeModel = new DefaultTreeModel(new RootNode("Models"));
 		tree.setModel(treeModel);
@@ -105,7 +106,7 @@ public class STModelNavigator extends JPanel {
 		public BaseTreeNode(T model, String icon) {
 			setUserObject(model);
 			this.label = model.toString();
-			this.icon = loadIcon(icon);
+			this.icon = presentationModel.loadIcon(icon);
 			this.tooltip = "";
 		}
 
@@ -123,7 +124,14 @@ public class STModelNavigator extends JPanel {
 		}
 
 		protected java.util.List<Action> getActions() {
-			return new ArrayList<>();
+			java.util.List<Action> actions = new ArrayList<>();
+			actions.add(newAction("Expand", actionEvent -> {
+				SwingUtilities.invokeLater(() -> expandTreeNodesRecursive(getThisPath(), true));
+			}));
+			actions.add(newAction("Collapse", actionEvent -> {
+				SwingUtilities.invokeLater(() -> expandTreeNodesRecursive(getThisPath(), false));
+			}));
+			return actions;
 		}
 
 		@Override
@@ -149,6 +157,10 @@ public class STModelNavigator extends JPanel {
 
 		public String getTooltip() {
 			return tooltip;
+		}
+
+		public void nodeChanged() {
+			treeModel.nodeChanged(this);
 		}
 
 		protected TreePath addChild(BaseTreeNode<?> child) {
@@ -201,9 +213,19 @@ public class STModelNavigator extends JPanel {
 
 		STValueTreeNode(nextgen.st.model.STValue model) {
 			super(model, null);
-			this.label = model.getValue() == null || model.getValue().trim().length() == 0 ? "[EMPTY]" : model.getValue();
+
+			this.label = getModel().getValue() == null || getModel().getValue().trim().length() == 0 ? "[EMPTY]" : getModel().getValue();
+			this.tooltip = presentationModel.cut(presentationModel.render(getModel()), 300);
 			this.uuid = model.getUuid();
+
 			org.greenrobot.eventbus.EventBus.getDefault().register(this);
+		}
+
+		@Override
+		public void nodeChanged() {
+			this.label = getModel().getValue() == null || getModel().getValue().trim().length() == 0 ? "[EMPTY]" : getModel().getValue();
+			this.tooltip = presentationModel.cut(presentationModel.render(getModel()), 300);
+			super.nodeChanged();
 		}
 
 		@Override
@@ -246,8 +268,18 @@ public class STModelNavigator extends JPanel {
 
 		ProjectTreeNode(nextgen.st.model.Project model) {
 			super(model, null);
-			this.label = model.getName();
+
+			this.label = getModel().getName();
+			this.tooltip = "";
 			this.uuid = model.getUuid();
+
+		}
+
+		@Override
+		public void nodeChanged() {
+			this.label = getModel().getName();
+			this.tooltip = "";
+			super.nodeChanged();
 		}
 
 		@Override
@@ -263,9 +295,19 @@ public class STModelNavigator extends JPanel {
 
 		ProjectsRootNode(String model) {
 			super(model, null);
-			this.label = model;
+
+			this.label = getModel();
+			this.tooltip = "";
+
 			presentationModel.db.findAllProject().forEach(project -> add(new ProjectTreeNode(project)));
 			org.greenrobot.eventbus.EventBus.getDefault().register(this);
+		}
+
+		@Override
+		public void nodeChanged() {
+			this.label = getModel();
+			this.tooltip = "";
+			super.nodeChanged();
 		}
 
 		@Override
@@ -287,13 +329,23 @@ public class STModelNavigator extends JPanel {
 
 		RootNode(String model) {
 			super(model, null);
-			this.label = model;
+
+			this.label = getModel();
+			this.tooltip = "";
+
 			presentationModel.db.doInTransaction(transaction -> {
 				add(new ProjectsRootNode("Projects"));
 				presentationModel.db.getGroupModels().forEach(stGroupModel -> add(new STGroupModelTreeNode(stGroupModel)));
 				add(new ScriptsRootNode("Scripts"));
 				add(new STValuesRootNode("Values"));
 			});
+		}
+
+		@Override
+		public void nodeChanged() {
+			this.label = getModel();
+			this.tooltip = "";
+			super.nodeChanged();
 		}
 
 		@Override
@@ -309,9 +361,19 @@ public class STModelNavigator extends JPanel {
 
 		ScriptsRootNode(String model) {
 			super(model, null);
-			this.label = model;
+
+			this.label = getModel();
+			this.tooltip = "";
+
 			presentationModel.db.findAllScript().forEach(script -> add(new ScriptTreeNode(script)));
 			org.greenrobot.eventbus.EventBus.getDefault().register(this);
+		}
+
+		@Override
+		public void nodeChanged() {
+			this.label = getModel();
+			this.tooltip = "";
+			super.nodeChanged();
 		}
 
 		@Override
@@ -335,8 +397,18 @@ public class STModelNavigator extends JPanel {
 
 		ScriptTreeNode(nextgen.st.model.Script model) {
 			super(model, null);
-			this.label = model.getName();
+
+			this.label = getModel().getName();
+			this.tooltip = "";
 			this.uuid = model.getUuid();
+
+		}
+
+		@Override
+		public void nodeChanged() {
+			this.label = getModel().getName();
+			this.tooltip = "";
+			super.nodeChanged();
 		}
 
 		@Override
@@ -367,13 +439,23 @@ public class STModelNavigator extends JPanel {
 
 		STValuesRootNode(String model) {
 			super(model, null);
-			this.label = model;
+
+			this.label = getModel();
+			this.tooltip = "";
+
 			presentationModel.db.findAllSTValue()
 				.filter(stValue -> stValue.getType() != null)
 				.filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.PRIMITIVE))
 				.sorted((o1, o2) -> o1.getValue().compareToIgnoreCase(o2.getValue()))
 				.forEach(stValue -> add(new STValueTreeNode(stValue)));
 			org.greenrobot.eventbus.EventBus.getDefault().register(this);
+		}
+
+		@Override
+		public void nodeChanged() {
+			this.label = getModel();
+			this.tooltip = "";
+			super.nodeChanged();
 		}
 
 		@Override
@@ -410,9 +492,19 @@ public class STModelNavigator extends JPanel {
 
 		STGroupModelTreeNode(nextgen.st.domain.STGroupModel model) {
 			super(model, model.getIcon());
-			this.label = model.getName();
+
+			this.label = getModel().getName();
+			this.tooltip = "";
 			this.uuid = model.getUuid();
+
 			model.getTemplates().forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
+		}
+
+		@Override
+		public void nodeChanged() {
+			this.label = getModel().getName();
+			this.tooltip = "";
+			super.nodeChanged();
 		}
 
 		@Override
@@ -430,11 +522,21 @@ public class STModelNavigator extends JPanel {
 
 		STTemplateTreeNode(nextgen.st.domain.STTemplate model) {
 			super(model, null);
-			this.label = model.getName();
+
+			this.label = getModel().getName();
+			this.tooltip = "";
 			this.uuid = model.getUuid();
+
 			presentationModel.db.findAllSTModelByStTemplate(model.uuid()).forEach(stModel -> add(new STModelTreeNode(stModel)));
 			model.getChildren().forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
 			org.greenrobot.eventbus.EventBus.getDefault().register(this);
+		}
+
+		@Override
+		public void nodeChanged() {
+			this.label = getModel().getName();
+			this.tooltip = "";
+			super.nodeChanged();
 		}
 
 		@Override
@@ -475,9 +577,19 @@ public class STModelNavigator extends JPanel {
 
 		STModelTreeNode(nextgen.st.model.STModel model) {
 			super(model, "STGDirectory");
-			this.label = presentationModel.tryToFindArgument(model, "name", model::getUuid);;
+
+			this.label = presentationModel.tryToFindArgument(getModel(), "name", () -> getModel().getUuid());
+			this.tooltip = presentationModel.cut(presentationModel.render(getModel()), 100);
 			this.uuid = model.getUuid();
+
 			org.greenrobot.eventbus.EventBus.getDefault().register(this);
+		}
+
+		@Override
+		public void nodeChanged() {
+			this.label = presentationModel.tryToFindArgument(getModel(), "name", () -> getModel().getUuid());
+			this.tooltip = presentationModel.cut(presentationModel.render(getModel()), 100);
+			super.nodeChanged();
 		}
 
 		@Override
@@ -500,7 +612,7 @@ public class STModelNavigator extends JPanel {
 				getParentNode(STTemplateTreeNode.class)
 					.ifPresent(stTemplateTreeNode -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
 						final STModelEditor modelEditor = workspace.getModelEditor(stTemplateTreeNode.getModel(), getModel());
-						modelEditor.setModelNavigator(STModelNavigator.this);
+						//modelEditor.setModelNavigator(STModelNavigator.this);
 						workspace.setSelectedComponent(modelEditor);
 					})));
 			}));
@@ -535,38 +647,19 @@ public class STModelNavigator extends JPanel {
 		};
 	}
 
-	private static final Map<String, ImageIcon> cache = new LinkedHashMap<>();
-
-	private ImageIcon loadIcon(String iconName) {
-
-		if (iconName == null) return null;
-
-		if (cache.containsKey(iconName)) return cache.get(iconName);
-
-		URL resource = getClass().getClassLoader().getResource("icons/" + iconName + "16x16.png");
-		if (resource == null) resource = getClass().getClassLoader().getResource("icons/STGroup16x16.png");
-
-		cache.put(iconName, new ImageIcon(Objects.requireNonNull(resource)));
-		return cache.get(iconName);
-	}
-
 	private void showPopup(BaseTreeNode<?> lastPathComponent, int x, int y) {
 		final List<Action> actions = lastPathComponent.getActions();
 		if (actions.isEmpty()) return;
 
 		final JPopupMenu pop = new JPopupMenu();
-		pop.add("With " + cut(lastPathComponent.getLabel()) + " :");
+		pop.add("With " + presentationModel.cut(lastPathComponent.getLabel()) + " :");
 		for (Action action : actions)
 			pop.add(action);
 
 		SwingUtilities.invokeLater(() -> pop.show(tree, x, y));
 	}
 
-	public static String cut(String text) {
-		return text.substring(0, Math.min(text.length(), 20));
-	}
-
-	private <T> java.util.stream.Stream<T> getSelectedNodes(Class<T> type) {
+	public <T> java.util.stream.Stream<T> getSelectedNodes(Class<T> type) {
 		final TreePath[] selectionPaths = tree.getSelectionPaths();
 		if (selectionPaths == null || selectionPaths.length == 0) return java.util.stream.Stream.empty();
 		return Arrays.stream(selectionPaths)
