@@ -1,562 +1,1311 @@
 delimiters "~","~"
 
-STModelNavigator(packageName,name) ::= <<package ~packageName~;
+Canvas(packageName,name,fields,constructorStatements,rightClickStatements,rightClickActions,keyPressActions,baseCanvasRelation,actions,canvasNodes,canvasRelations) ::= <<package ~packageName~;
 
-import ~packageName~.canvas.STModelNode;
-import ~packageName~.canvas.STValueNode;
-import ~packageName~.canvas.ScriptNode;
-import ~packageName~.domain.STGroupModel;
-import ~packageName~.domain.STTemplate;
-import ~packageName~.model.*;
-import nextgen.utils.Neo4JUtil;
+import nextgen.st.canvas.*;
 import nextgen.utils.SwingUtil;
-import org.neo4j.graphdb.Direction;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
+import org.piccolo2d.PCamera;
+import org.piccolo2d.PCanvas;
+import org.piccolo2d.PLayer;
+import org.piccolo2d.PNode;
+import org.piccolo2d.event.*;
+import org.piccolo2d.nodes.PPath;
+import org.piccolo2d.nodes.PText;
+import org.piccolo2d.util.PBounds;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
+import static java.awt.event.KeyEvent.*;
+
+public class ~name~ extends PCanvas implements PInputEventListener {
+
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);
+
+	private final PLayer nodeLayer;
+	private final PLayer relationLayer = new PLayer();
+
+	final Map<UUID, BaseCanvasNode> nodeMap = new ConcurrentHashMap<>();
+	final Map<UUID, BaseCanvasRelation> relationMap = new ConcurrentHashMap<>();
+
+	private final SelectEventsHandler selectEventHandler = new SelectEventsHandler();
+	private final CanvasInputEventsHandler canvasInputEventsHandler = new CanvasInputEventsHandler();
+	final CanvasZoomHandler canvasZoomHandler = new CanvasZoomHandler();
+
+	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
+
+	public ~name~(Color background, Dimension preferredSize~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
+		super();
+
+		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+
+		setBackground(background);
+		setPreferredSize(preferredSize);
+		nodeLayer = getLayer();
+		getCamera().addLayer(0, relationLayer);
+
+		removeInputEventListener(getZoomEventHandler());
+		addInputEventListener(canvasZoomHandler);
+		addInputEventListener(canvasInputEventsHandler);
+		~constructorStatements:{it|~it~};separator="\n"~
+	}
+
+	@Override
+	public void processEvent(PInputEvent pInputEvent, int i) {
+		canvasInputEventsHandler.processEvent(pInputEvent, i);
+	}
+
+	public Point getCenterPosition() {
+		final java.awt.geom.Point2D center2D = getCamera().getViewBounds().getCenter2D();
+		return new Point((int) center2D.getX(), (int) center2D.getY());
+	}
+
+	public Point getCurrentMousePosition() {
+		final Point mousePosition = getMousePosition();
+		if (mousePosition == null) return getCenterPosition();
+		final java.awt.geom.Point2D localToView = getCamera().localToView(mousePosition);
+		return new Point((int) localToView.getX(), (int) localToView.getY());
+	}
+
+	public <N extends BaseCanvasNode> void centerNode(N node) {
+		SwingUtilities.invokeLater(() -> getCamera().animateViewToCenterBounds(node.getGlobalFullBounds(), false, 500));
+	}
+
+	@SuppressWarnings("unchecked")
+	public <N extends BaseCanvasNode> Stream<N> getAllNodes() {
+		return nodeLayer.getAllNodes().stream().filter((Predicate<PNode>) node -> node instanceof BaseCanvasNode);
+	}
+
+	public <N extends BaseCanvasNode> Stream<N> getSelectedNodes() {
+		return (Stream<N>) getAllNodes().filter(BaseCanvasNode::isSelected);
+	}
+
+	public <N extends BaseCanvasNode> Stream<N> getUnselectedNodes() {
+		return (Stream<N>) getAllNodes().filter(stNode -> !stNode.isSelected());
+	}
+
+	@SuppressWarnings("unchecked")
+	public <R extends BaseCanvasRelation> Stream<R> getAllRelations() {
+		return relationLayer.getAllNodes().stream().filter((Predicate<PNode>) node -> node instanceof BaseCanvasRelation);
+	}
+
+	public <R extends BaseCanvasRelation> Stream<R> getSelectedRelations() {
+		return (Stream<R>) getAllRelations().filter(BaseCanvasRelation::isSelected);
+	}
+
+	public <N extends BaseCanvasNode> N addNode(String uuid, java.util.function.Supplier<N> supplier) {
+		return addNode(java.util.UUID.fromString(uuid), supplier);
+	}
+
+	public <N extends BaseCanvasNode> N addNode(N node) {
+		return addNode(node.getUuid(), () -> node);
+	}
+
+	public <N extends BaseCanvasNode> N addNode(java.util.UUID uuid, java.util.function.Supplier<N> supplier) {
+
+		final N existing = getNode(uuid);
+		if (existing != null) {
+			log.debug("N-" + uuid + " exists in canvas");
+			existing.refresh();
+			existing.select();
+			return existing;
+		}
+		log.debug("N-" + uuid + " added to canvas");
+
+		final N node= supplier.get();
+		node.select();
+		node.setOffset(getCenterPosition());
+		nodeMap.put(node.getUuid(), node);
+		nodeLayer.addChild(node);
+
+		//nextgen.st.STAppEvents.postNodeAddedToCanvas(this, node);
+
+		node.addedToCanvas();
+
+		getAllNodes()
+				.filter(stNode -> !stNode.getUuid().equals(node.getUuid()))
+				.forEach(stNode -> stNode.newNodeAdded(node));
+
+		return node;
+	}
+
+	public <N extends BaseCanvasNode> N getNode(String uuid) {
+		return getNode(java.util.UUID.fromString(uuid));
+	}
+
+	public <N extends BaseCanvasNode> N getNode(UUID uuid) {
+		return (N) nodeMap.get(uuid);
+	}
+
+	<N extends BaseCanvasNode> N removeNode(UUID uuid) {
+		final BaseCanvasNode remove = nodeMap.remove(uuid);
+		final N old = (N) nodeLayer.removeChild(remove);
+		log.debug("\tN-"+ uuid + " removed from canvas : " + (old == null ? "null" : old.getUuid()));
+		return (N) remove;
+	}
+
+	public <R extends BaseCanvasRelation> R addRelation(String uuid, java.util.function.Supplier<R> supplier) {
+		return addRelation(java.util.UUID.fromString(uuid), supplier);
+	}
+
+	public <R extends BaseCanvasRelation> R addRelation(java.util.UUID uuid, java.util.function.Supplier<R> supplier) {
+
+		final R existing = getRelation(uuid);
+		if (existing != null) {
+			log.debug("R-"+ uuid + " exists in canvas");
+			return existing;
+		}
+		log.debug("R-"+ uuid + " added to canvas");
+
+		final R relation = supplier.get();
+		relationMap.put(relation.getUuid(), relation);
+		relationLayer.addChild(relation);
+		return relation;
+	}
+
+	<R extends BaseCanvasRelation> R removeRelation(UUID uuid) {
+		final BaseCanvasRelation remove = relationMap.remove(uuid);
+		if (remove == null) return null;
+
+		remove.close();
+		final R old = (R) relationLayer.removeChild(remove);
+		log.debug("\tR-"+ uuid + " removed from canvas : " + (old == null ? "null" : old.getUuid()));
+		return (R) remove;
+	}
+
+	public <R extends BaseCanvasRelation> R getRelation(UUID uuid) {
+		return (R) relationMap.get(uuid);
+	}
+
+	protected void onCanvasRightClick(JPopupMenu pop, PInputEvent event) {
+
+		~rightClickStatements:{it|~it~};separator="\n"~
+
+		~rightClickActions:{it|pop.add(new ~it.name~(this, event));};separator="\n"~
+		pop.addSeparator();
+		pop.add(new SelectAllNodes(event));
+		pop.add(new UnselectAllNodes(event));
+		pop.add(new RetainSelectedNodes(event));
+		pop.add(new CloseSelectedNodes(event));
+		pop.add(new CloseAllAction(event));
+		pop.addSeparator();
+		pop.add(new LayoutVerticallyAction(event, getCurrentMousePosition(), 20));
+	}
+
+	protected void onCanvasLeftClick(PInputEvent event) {
+		SwingUtilities.invokeLater(() -> getSelectedNodes().forEach(BaseCanvasNode::unselect));
+	}
+
+	protected void onCanvasKeyPressed(PInputEvent event) {
+		switch (event.getKeyCode()) {
+~keyPressActions:{it|
+			case VK_~it.key~:
+				new ~it.name~(this, event).actionPerformed(null);
+				break;
+};separator="\n"~
+			case VK_A:
+				new SelectAllNodes(event).actionPerformed(null);
+				break;
+
+			case VK_ESCAPE:
+				new UnselectAllNodes(event).actionPerformed(null);
+				break;
+
+			case VK_R:
+				new RetainSelectedNodes(event).actionPerformed(null);
+				break;
+
+			case VK_C:
+				if (event.isControlDown())
+					new CloseAllAction(event).actionPerformed(null);
+				else
+					new CloseSelectedNodes(event).actionPerformed(null);
+				break;
+
+			case VK_1:
+				new LayoutVerticallyAction(event, getCurrentMousePosition(), 20).actionPerformed(null);
+				break;
+
+			case VK_SPACE:
+				new PopupAction(event).actionPerformed(null);
+				break;
+		}
+	}
+
+	private final class CanvasInputEventsHandler extends PBasicInputEventHandler {
+
+		@Override
+		public void mouseEntered(PInputEvent event) {
+			if (!this.equals(event.getInputManager().getKeyboardFocus())) {
+				event.getInputManager().setKeyboardFocus(this);
+				requestFocusInWindow();
+			}
+		}
+
+		@Override
+		public void mouseExited(PInputEvent event) {
+			event.getInputManager().setKeyboardFocus(null);
+		}
+
+		@Override
+		public void mouseClicked(PInputEvent event) {
+			removeInputEventListener(selectEventHandler);
+			if (!this.equals(event.getInputManager().getKeyboardFocus())) event.getInputManager().setKeyboardFocus(this);
+			if (event.isRightMouseButton()) {
+				SwingUtilities.invokeLater(() -> {
+					final JPopupMenu pop = new JPopupMenu();
+					setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+					onCanvasRightClick(pop, event);
+					setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+					pop.show(~name~.this, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
+				});
+			} else if (event.isLeftMouseButton()) SwingUtilities.invokeLater(() -> onCanvasLeftClick(event));
+		}
+
+		@Override
+		public void keyPressed(PInputEvent event) {
+			if (event.isControlDown()) {
+				removeInputEventListener(selectEventHandler);
+				addInputEventListener(selectEventHandler.init(event));
+			} else {
+				onCanvasKeyPressed(event);
+			}
+		}
+
+		@Override
+		public void keyReleased(PInputEvent event) {
+			if (event.getKeyCode() == KeyEvent.VK_CONTROL) removeInputEventListener(selectEventHandler.end());
+		}
+
+		@Override
+		public void mouseMoved(PInputEvent event) {
+			if (!event.isControlDown()) removeInputEventListener(selectEventHandler.end());
+			invalidate();
+			repaint();
+		}
+	}  
+
+	private final class SelectEventsHandler extends PBasicInputEventHandler {
+
+		private PPath selectionRectangle;
+		private boolean isDragging = true;
+		private double startX;
+		private double startY;
+
+		PInputEventListener init(PInputEvent event) {
+			isDragging = event.isControlDown();
+			if (selectionRectangle != null) nodeLayer.removeChild(selectionRectangle);
+			startX = getCamera().localToView(event.getCanvasPosition()).getX();
+			startY = getCamera().localToView(event.getCanvasPosition()).getY();
+			selectionRectangle = PPath.createRectangle(startX, startY, 1, 1);
+			selectionRectangle.setTransparency(.5f);
+			nodeLayer.addChild(selectionRectangle);
+			return this;
+		}
+
+		@Override
+		public void mouseMoved(PInputEvent event) {
+			if (isDragging) {
+				final double eventX = getCamera().localToView(event.getCanvasPosition()).getX();
+				final double eventY = getCamera().localToView(event.getCanvasPosition()).getY();
+				final boolean left = eventX < startX;
+				selectionRectangle.setX(left ? eventX : startX);
+				selectionRectangle.setWidth(left ? (startX - eventX) : (eventX - startX));
+				final boolean top = eventY < startY;
+				selectionRectangle.setY(top ? eventY : startY);
+				selectionRectangle.setHeight(top ? (startY - eventY) : (eventY - startY));
+				final PBounds fullBounds = selectionRectangle.getFullBounds();
+				SwingUtilities.invokeLater(() -> getAllNodes()
+					.filter(node -> !node.isSelected())
+					.forEach(node -> {
+						if (fullBounds.contains(node.getFullBounds())) node.select();
+					}));
+			}
+		}
+
+		public PInputEventListener end() {
+			isDragging = false;
+			if (selectionRectangle != null) nodeLayer.removeChild(selectionRectangle);
+			return this;
+		}
+	}  
+
+	private static class CanvasZoomHandler extends PBasicInputEventHandler {
+
+		final private static double maxZoomScale = 2.0d;
+		final private static double minZomScale = 0.025d;
+		private double scaleFactor = 0.05d;
+
+		CanvasZoomHandler() {
+			super();
+			final PInputEventFilter eventFilter = new PInputEventFilter();
+			eventFilter.rejectAllEventTypes();
+			eventFilter.setAcceptsMouseWheelRotated(true);
+			setEventFilter(eventFilter);
+		}
+
+		public void mouseWheelRotated(final PInputEvent event) {
+			final PCamera camera = event.getCamera();
+			if ((camera.getViewScale() < minZomScale && event.getWheelRotation() < 0) || (camera.getViewScale() > maxZoomScale && event.getWheelRotation() > 0)) return;
+			final double scale = 1.0d + event.getWheelRotation() * scaleFactor;
+			final java.awt.geom.Point2D viewAboutPoint = event.getPosition();
+			camera.scaleViewAboutPoint(scale, viewAboutPoint.getX(), viewAboutPoint.getY());
+		}
+	}  
+
+	abstract class CanvasAction extends AbstractAction {
+
+		final PInputEvent event;
+
+		CanvasAction(String name, PInputEvent event) {
+			super(name);
+			this.event = event;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			actionPerformed(event, e);
+		}
+
+		abstract void actionPerformed(PInputEvent event, ActionEvent e);
+	}
+
+	~baseCanvasNode(canvasName=name)~
+
+	~baseCanvasRelation~
+
+	~actions:{it|~it~};separator="\n"~
+
+	~canvasNodes:{it|~it~};separator="\n\n"~
+
+	~canvasRelations:{it|~it~};separator="\n\n"~
+}  >>
+
+BaseCanvasNode(canvasName) ::= <<protected class BaseCanvasNode<T> extends PNode {
+
+	protected final ~canvasName~ canvas = ~canvasName~.this;
+	protected PText child;
+	protected final Set<UUID> outgoing = new LinkedHashSet<>();
+	protected final Set<UUID> incoming = new LinkedHashSet<>();
+
+	private PPath rectangle;
+
+	public BaseCanvasNode(T model, UUID uuid, String label) {
+		this.addAttribute("_defaultColor", Color.decode("#000000"));
+		this.addAttribute("_selectedColor", Color.decode("#f33"));
+		this.addAttribute("_highlightedColor", Color.decode("#f33"));
+		this.addAttribute("_rectangleColor", Color.decode("#43a2ca"));
+		this.addAttribute("_model", model);
+		this.addAttribute("_uuid", uuid);
+		this.addAttribute("_text", label);
+		this.child = new PText(getText() == null ? getUuid().toString() : getText());
+		this.addChild(this.child);
+
+		final NodeInputEventHandler nodeInputEventHandler = new NodeInputEventHandler();
+		nodeInputEventHandler.getEventFilter().setMarksAcceptedEventsAsHandled(true);
+		addInputEventListener(nodeInputEventHandler);
+		addInputEventListener(canvasZoomHandler);
+
+		//org.greenrobot.eventbus.EventBus.getDefault().register(this);
+	}
+
+	@SuppressWarnings("unchecked")
+	public T getModel() {
+		return (T) getAttribute("_model");
+	}
+	
+	public void addedToCanvas() {
+
+	}
+
+	public void newNodeAdded(BaseCanvasNode<?> node) {
+
+	}
+
+	@Override
+	public double getHeight() {
+		return child.getHeight();
+	}
+
+	@Override
+	public double getWidth() {
+		return child.getWidth();
+	}
+
+	@Override
+	public String toString() {
+		return getUuid() + " " + getText();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		BaseCanvasNode<?> other = (BaseCanvasNode<?>) o;
+
+		return getUuid().equals(other.getUuid());
+	}
+
+	@Override
+	public int hashCode() {
+		return getUuid().hashCode();
+	}
+
+	public UUID getUuid() {
+		return (UUID) getAttribute("_uuid");
+	}
+
+	public String getText() {
+		return (String) getAttribute("_text");
+	}
+
+	public void setText(String text) {
+		addAttribute("_text", text == null || text.trim().length() == 0 ? getUuid().toString() : text);
+		child.setText(getText());
+		refresh();
+	}
+
+	public void refresh() {
+		SwingUtilities.invokeLater(() -> {
+			setPaintInvalid(true);
+			repaint();
+		});
+	}
+
+	public void addOutgoingRelation(UUID relation) {
+		this.outgoing.add(relation);
+	}
+
+	public void addIncomingRelation(UUID relation) {
+		this.incoming.add(relation);
+	}
+
+	public java.util.stream.Stream<UUID> outgoing() {
+		return this.outgoing.stream();
+	}
+
+	public java.util.stream.Stream<UUID> incoming() {
+		return this.incoming.stream();
+	}
+
+	public void unselect() {
+		addAttribute("_selected", Boolean.FALSE);
+		SwingUtilities.invokeLater(() -> child.setTextPaint((Color) getAttribute("_defaultColor")));
+	}
+
+	public void select() {
+		addAttribute("_selected", Boolean.TRUE);
+		SwingUtilities.invokeLater(() -> child.setTextPaint((Color) getAttribute("_selectedColor")));
+	}
+
+	public boolean isSelected() {
+		return getBooleanAttribute("_selected", false);
+	}
+
+	public void unhighlight() {
+		addAttribute("_highlight", Boolean.FALSE);
+		SwingUtilities.invokeLater(() -> {
+			child.setTextPaint(isSelected() ? (Color) getAttribute("_selectedColor") : (Color) getAttribute("_defaultColor"));
+			if (rectangle != null) BaseCanvasNode.this.removeChild(rectangle);	
+		});
+	}
+
+	public void highlight() {
+		addAttribute("_highlight", Boolean.TRUE);
+		SwingUtilities.invokeLater(() -> {
+			final PBounds fullBounds = child.getFullBoundsReference();
+			rectangle = PPath.createRectangle(fullBounds.getX(), fullBounds.getY(), fullBounds.getWidth(), fullBounds.getHeight());
+			rectangle.setPaint((Color) getAttribute("_rectangleColor"));
+			rectangle.setStroke(new BasicStroke());
+			BaseCanvasNode.this.addChild(rectangle);
+
+			child.setTextPaint((Color) getAttribute("_highlightedColor"));
+		});
+	}
+
+	public void close() {
+		SwingUtilities.invokeLater(() -> {
+			for (UUID uuid : incoming) removeRelation(uuid);
+			for (UUID uuid : outgoing) removeRelation(uuid);
+			org.greenrobot.eventbus.EventBus.getDefault().unregister(BaseCanvasNode.this);
+			removeNode(getUuid());			
+		});
+	}
+
+	protected void onNodeKeyPressed(PInputEvent event) {
+		switch (event.getKeyCode()) {
+			case VK_1:
+				new LayoutTreeAction(BaseCanvasNode.this, event).actionPerformed(null);
+				break;
+
+			case VK_C:
+				new CloseNode(event).actionPerformed(null);
+				break;
+
+			case VK_R:
+				new RetainNode(event).actionPerformed(null);
+				break;
+
+			case VK_F:
+				new PopupAction(event).actionPerformed(null);
+				break;
+
+			case VK_B:
+				new DebugAction(event).actionPerformed(null);
+				break;
+
+		}
+	}
+
+	protected void onNodeLeftClick(PInputEvent event) {
+		if (isSelected()) unselect();
+		else select();
+	}
+
+	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
+
+		pop.add(new LayoutTreeAction(BaseCanvasNode.this, event));
+		pop.add(new RetainNode(event));
+		pop.add(new CloseNode(event));
+		pop.add(new DebugAction(event));
+
+	}
+
+	private final class NodeInputEventHandler extends PDragSequenceEventHandler {
+
+		@Override
+		final protected void startDrag(PInputEvent event) {
+			super.startDrag(event);
+		}
+
+		@Override
+		final protected void drag(PInputEvent event) {
+			super.drag(event);
+			translate(event.getDelta().width, event.getDelta().height);
+		}
+
+		@Override
+		final protected void endDrag(PInputEvent event) {
+			super.endDrag(event);
+		}
+
+		@Override
+		final protected boolean shouldStartDragInteraction(PInputEvent event) {
+			return super.shouldStartDragInteraction(event);
+		}
+
+		@Override
+		public void mouseEntered(PInputEvent event) {
+			if (!event.isControlDown()) 
+				event.getInputManager().setKeyboardFocus(this);
+			highlight();
+		}
+
+		@Override
+		public void mouseExited(PInputEvent event) {
+			unhighlight();
+			if (!event.isControlDown()) 
+				event.getInputManager().setKeyboardFocus(canvas);
+		}
+
+		@Override
+		public void mouseClicked(PInputEvent event) {
+			if (event.isRightMouseButton()) {
+				final JPopupMenu pop = new JPopupMenu();
+				canvas.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				onNodeRightClick(event, pop);
+				canvas.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
+			} else if (event.isLeftMouseButton()) {
+				SwingUtilities.invokeLater(() -> onNodeLeftClick(event));
+			}
+		}
+
+		@Override
+		public void keyPressed(PInputEvent event) {
+			onNodeKeyPressed(event);
+		}
+	}  	
+
+	abstract class NodeAction extends AbstractAction {
+
+		final PInputEvent event;
+
+		NodeAction(String name, PInputEvent event) {
+			super(name);
+			this.event = event;
+		}
+
+		protected void setName(String name) {
+			putValue(Action.NAME, name);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			actionPerformed(event, e);
+		}
+
+		abstract void actionPerformed(PInputEvent event, ActionEvent e);
+
+	}
+
+	protected final class LayoutTreeAction extends NodeAction {
+
+		private final Map<UUID, BaseCanvasNode<?>~gt()~ parentsMap = new LinkedHashMap<>();
+		private final Map<UUID, java.util.List<BaseCanvasNode<?>~gt()~~gt()~ childrensMap = new LinkedHashMap<>();
+		private final org.abego.treelayout.util.DefaultConfiguration<BaseCanvasNode<?~gt()~> configuration;
+
+		protected LayoutTreeAction(BaseCanvasNode<?> root, PInputEvent event) {
+			this(root, event, org.abego.treelayout.Configuration.Location.Left, org.abego.treelayout.Configuration.AlignmentInLevel.TowardsRoot);
+		}
+
+		protected LayoutTreeAction(BaseCanvasNode<?> root, PInputEvent event, org.abego.treelayout.Configuration.Location location, org.abego.treelayout.Configuration.AlignmentInLevel alignmentInLevel) {
+			super("Layout Tree", event);
+			this.configuration = new org.abego.treelayout.util.DefaultConfiguration<>(100, 15, location, alignmentInLevel);
+		}
+
+		@Override
+		void actionPerformed(PInputEvent event, ActionEvent e) {
+
+			new Thread(() -> {
+
+				findChildren(BaseCanvasNode.this);
+
+				final org.abego.treelayout.TreeForTreeLayout<BaseCanvasNode<?>~gt()~ tree = new org.abego.treelayout.util.AbstractTreeForTreeLayout<BaseCanvasNode<?>~gt()~(BaseCanvasNode.this) {
+					@Override
+					public BaseCanvasNode<?> getParent(BaseCanvasNode<?> node) {
+						return parentsMap.get(node.getUuid());
+					}
+
+					@Override
+					public java.util.List<BaseCanvasNode<?>~gt()~ getChildrenList(BaseCanvasNode<?> node) {
+						if (node == null) return Collections.emptyList();
+						return childrensMap.get(node.getUuid());
+					}
+				};
+
+				final org.abego.treelayout.NodeExtentProvider<BaseCanvasNode<?>~gt()~ nodeExtendProvider = new org.abego.treelayout.NodeExtentProvider<BaseCanvasNode<?>~gt()~() {
+					@Override
+					public double getWidth(BaseCanvasNode<?> node) {
+						return node.getFullBounds().getWidth();
+					}
+
+					@Override
+					public double getHeight(BaseCanvasNode<?> node) {
+						return node.getFullBounds().getHeight();
+					}
+				};
+
+				final org.abego.treelayout.TreeLayout<BaseCanvasNode<?>~gt()~ layout = new org.abego.treelayout.TreeLayout<>(tree, nodeExtendProvider, configuration);
+
+				// apply coordinate transforms in relation to root-node
+				final java.awt.geom.Rectangle2D.Double rootBounds = layout.getNodeBounds().get(BaseCanvasNode.this);
+				final double deltaX = getFullBounds().getX() - rootBounds.getX();
+				final double deltaY = getFullBounds().getY() - rootBounds.getY();
+
+				SwingUtilities.invokeLater(() -> {
+					for (Map.Entry<BaseCanvasNode<?>, java.awt.geom.Rectangle2D.Double> nodeBound : layout.getNodeBounds().entrySet()) {
+						if (nodeBound.getKey().equals(BaseCanvasNode.this)) continue;	// root-node is transformation-root
+						nodeBound.getKey().setOffset(nodeBound.getValue().getX() + deltaX, nodeBound.getValue().getY() + deltaY);
+					}
+				});
+
+			}).start();
+		}
+
+		private void findChildren(BaseCanvasNode<?> node) {
+
+			if (childrensMap.containsKey(node.getUuid())) return;
+
+			childrensMap.put(node.getUuid(), new ArrayList<>());
+
+			node.outgoing()
+					.filter(canvas.relationMap::containsKey)
+					.map(uuid -> canvas.relationMap.get(uuid).getDst())
+					.filter(abstractNode -> !childrensMap.containsKey(abstractNode.getUuid()))
+					.forEach(abstractNode -> {
+							childrensMap.get(node.getUuid()).add(abstractNode);
+							parentsMap.put(abstractNode.getUuid(), node);
+					});
+
+			childrensMap.get(node.getUuid()).forEach(this::findChildren);
+		}
+	}
+
+	private final class RetainNode extends NodeAction {
+
+		RetainNode(PInputEvent event) {
+			super("Retain", event);
+		}
+
+		@Override
+		void actionPerformed(PInputEvent event, ActionEvent e) {
+			javax.swing.SwingUtilities.invokeLater(() -> {
+				canvas.getAllRelations().forEach(relation -> canvas.removeRelation(relation.getUuid()));
+				canvas.getAllNodes().filter(canvasNode -> !canvasNode.getUuid().equals(getUuid())).forEach(BaseCanvasNode::close);
+			});
+		}
+	}
+
+	private final class CloseNode extends NodeAction {
+
+		CloseNode(PInputEvent event) {
+			super("Close", event);
+		}
+
+		@Override
+		void actionPerformed(PInputEvent event, ActionEvent e) {
+			javax.swing.SwingUtilities.invokeLater(BaseCanvasNode.this::close);
+		}
+	}
+
+	private final class PopupAction extends NodeAction {
+
+		PopupAction(PInputEvent event) {
+			super("Popup", event);
+		}
+
+		@Override
+		void actionPerformed( PInputEvent event, ActionEvent e) {
+			javax.swing.SwingUtilities.invokeLater(() -> {
+				final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();
+				setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));
+				onNodeRightClick(event, pop);
+				setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));
+				pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
+			});
+		}
+	}
+
+	private final class DebugAction extends NodeAction {
+
+		DebugAction(PInputEvent event) {
+			super("Debug", event);
+		}
+
+		@Override
+		void actionPerformed(PInputEvent event, ActionEvent e) {
+			javax.swing.SwingUtilities.invokeLater(() -> {
+				final PBounds fullBounds = getFullBoundsReference();
+				log.info(getUuid() + " : " + getText());
+				log.info(fullBounds.getX() + "," + fullBounds.getY() + ", [" + fullBounds.getWidth() + "," + fullBounds.getHeight() + "]");
+				outgoing().forEach(uuid -> log.info(" -> " + uuid));
+				incoming().forEach(uuid -> log.info(" <- " + uuid));
+			});
+		}
+	}
+}  >>
+
+CanvasNode(modelType,fields,onNodeRightClick,actions) ::= <<final class ~modelType~Node extends BaseCanvasNode<~modelType~> {
+
+	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
+
+	public ProjectNode(~modelType~ model, UUID uuid, String label~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
+		super(model, uuid, label);
+	}
+
+	@Override
+	public void addedToCanvas() {
+	}
+
+	@Override
+	public void newNodeAdded(BaseCanvasNode<?> node) {
+	}
+
+	@Override
+	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
+		~onNodeRightClick:{it|~it~};separator="\n"~
+		super.onNodeRightClick(event, pop);
+	}
+
+	@Override
+	protected void onNodeKeyPressed(PInputEvent event) {
+		super.onNodeKeyPressed(event);
+	}
+
+	@Override
+	protected void onNodeLeftClick(PInputEvent event) {
+		super.onNodeLeftClick(event);
+	}
+
+	~actions:{it|~it~};separator="\n\n"~
+}  >>
+
+CanvasNodeAction(name,fields,title,statements) ::= <<final class ~name~ extends NodeAction {
+
+	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
+	
+	~name~(PInputEvent event~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=","~~endif~) {
+		super("~title~", event);
+		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+	}
+
+	@Override
+	void actionPerformed(PInputEvent event, ActionEvent e) {
+		~statements:{it|~it~};separator="\n"~
+	}
+}  >>
+
+BaseCanvasRelation() ::= <<protected class BaseCanvasRelation extends PPath.Double implements Comparator<BaseCanvasRelation> {
+
+	final protected PText child;
+	private final PNodeChangeListener nodeChangeListener = new PNodeChangeListener();
+
+	public BaseCanvasRelation(BaseCanvasNode src, BaseCanvasNode dst, String type, UUID uuid) {
+		this.addAttribute("_defaultColor", Color.decode("#bababa"));
+		this.addAttribute("_selectedColor", Color.decode("#b2182b"));
+		this.addAttribute("_highlightedColor", Color.decode("#f4a582"));
+		this.addAttribute("_uuid", uuid);
+		this.addAttribute("_type", type);
+		this.addAttribute("_src", src);
+		this.addAttribute("_dst", dst);
+
+		src.addOutgoingRelation(getUuid());
+		dst.addIncomingRelation(getUuid());
+
+		this.child = new PText(type);
+
+		setPaint((Color) getAttribute("_defaultColor"));
+		child.setTextPaint((Color) getAttribute("_defaultColor"));
+
+		final RelationInputEventHandler relationInputEventHandler = new RelationInputEventHandler();
+		relationInputEventHandler.getEventFilter().setMarksAcceptedEventsAsHandled(true);
+		addInputEventListener(relationInputEventHandler);
+		addInputEventListener(canvasZoomHandler);
+
+		src.addPropertyChangeListener(nodeChangeListener);
+		dst.addPropertyChangeListener(nodeChangeListener);
+		addChild(this.child);
+
+		//org.greenrobot.eventbus.EventBus.getDefault().register(this);
+	}
+
+	@Override
+	public String toString() {
+		return getUuid() + " " + getSrc() + " -> " + getType() + " -> " + getDst();
+	}
+
+	public void close() {
+		SwingUtilities.invokeLater(() -> {
+			log.info("R-" + getUuid() + " closed");
+			getSrc().outgoing.remove(getUuid());
+			getDst().incoming.remove(getUuid());
+			getSrc().removePropertyChangeListener(nodeChangeListener);
+			getDst().removePropertyChangeListener(nodeChangeListener);
+		});
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		BaseCanvasRelation other = (BaseCanvasRelation) o;
+
+		return getUuid().equals(other.getUuid());
+	}
+
+	@Override
+	public int hashCode() {
+		return getUuid().hashCode();
+	}
+
+	public UUID getUuid() {
+		return (UUID) getAttribute("_uuid");
+	}
+
+	public String getType() {
+		return (String) getAttribute("_type");
+	}
+
+	public void unselect() {
+		addAttribute("_selected", Boolean.FALSE);
+		SwingUtilities.invokeLater(() -> updatePath((Color) getAttribute("_defaultColor")));
+	}
+
+	public void select() {
+		addAttribute("_selected", Boolean.TRUE);
+		SwingUtilities.invokeLater(() -> updatePath((Color) getAttribute("_selectedColor")));
+	}
+
+	public boolean isSelected() {
+		return getBooleanAttribute("_selected", false);
+	}
+
+	protected void unhighlight() {
+		addAttribute("_highlight", Boolean.FALSE);
+		SwingUtilities.invokeLater(() -> updatePath(isSelected() ? (Color) getAttribute("_selectedColor") : (Color) getAttribute("_defaultColor")));
+	}
+
+	protected void highlight() {
+		addAttribute("_highlight", Boolean.TRUE);
+		SwingUtilities.invokeLater(() -> updatePath((Color) getAttribute("_highlightedColor")));
+	}
+
+	protected BaseCanvasNode getSrc() {
+		return (BaseCanvasNode) getAttribute("_src");
+	}
+
+	protected BaseCanvasNode getDst() {
+		return (BaseCanvasNode) getAttribute("_dst");
+	}
+
+	public Long getOrder() {
+		return (Long) getAttribute("_order");
+	}
+
+	private void updatePath(Color color) {
+		child.setTextPaint(color);
+		setPaint(color);
+		setStrokePaint(color);
+		setPaintInvalid(true);
+		validateFullPaint();
+	}
+
+	private void updatePath(BaseCanvasNode source, BaseCanvasNode target) {
+		//log.info(getUuid() + " updatePath");
+		final PBounds src = source.getFullBoundsReference();
+		final PBounds dst = target.getFullBoundsReference();
+		final boolean horizontalOverlap = !(src.getMaxX() < dst.getMinX() || src.getMinX() > dst.getMaxX());
+		final Point2D.Double startCenterBottom = new Point2D.Double(src.getCenterX(), src.getMaxY());
+		final Point2D.Double endCenterTop = new Point2D.Double(dst.getCenterX(), dst.getMinY());
+		final Point2D.Double startCenterTop = new Point2D.Double(src.getCenterX(), src.getMinY());
+		final Point2D.Double endCenterBottom = new Point2D.Double(dst.getCenterX(), dst.getMaxY());
+		if (src.getCenterX() < dst.getCenterX()) {
+			final Point2D.Double startRightCenter = new Point2D.Double(src.getMaxX(), src.getCenterY());
+			final Point2D.Double endRightCenter = new Point2D.Double(dst.getMinX(), dst.getCenterY());
+			if (src.getCenterY() < dst.getCenterY()) {
+				if (!horizontalOverlap) {
+					drawStraightPath(startRightCenter, endRightCenter);
+				} else {
+					drawStraightPath(startCenterBottom, endCenterTop);
+				}
+			} else {
+				if (!horizontalOverlap) {
+					drawStraightPath(startRightCenter, endRightCenter);
+				} else {
+					drawStraightPath(startCenterTop, endCenterBottom);
+				}
+			}
+		} else {
+			final Point2D.Double startLeftCenter = new Point2D.Double(src.getMinX(), src.getCenterY());
+			final Point2D.Double endLeftCenter = new Point2D.Double(dst.getMaxX(), dst.getCenterY());
+			if (src.getCenterY() < dst.getCenterY()) {
+				if (!horizontalOverlap) {
+					drawStraightPath(startLeftCenter, endLeftCenter);
+				} else {
+					drawStraightPath(startCenterBottom, endCenterTop);
+				}
+			} else {
+				if (!horizontalOverlap) {
+					drawStraightPath(startLeftCenter, endLeftCenter);
+				} else {
+					drawStraightPath(startCenterTop, endCenterBottom);
+				}
+			}
+		}
+	}
+
+	private void drawStraightPath(Point2D start, Point2D end) {
+		reset();
+		setStrokePaint(child.getTextPaint());
+		moveTo(start.getX(), start.getY());
+		lineTo(end.getX(), end.getY());
+		child.setOffset(getBounds().getCenter2D());
+		final int ARR_SIZE = 4;
+		final double dx = end.getX() - start.getX();
+		final double dy = end.getY() - start.getY();
+		final double angle = Math.atan2(dy, dx);
+		final int len = (int) (Math.sqrt(dx * dx + dy * dy) - 10);
+		final AffineTransform at = AffineTransform.getTranslateInstance(start.getX(), start.getY());
+		at.concatenate(AffineTransform.getRotateInstance(angle));
+		append(new Polygon(new int[]{len,
+					len - ARR_SIZE,
+					len - ARR_SIZE,
+					len}, new int[]{0,
+					-ARR_SIZE,
+					ARR_SIZE,
+					0}, 4).getPathIterator(at), false);
+		setPaintInvalid(true);
+		validateFullPaint();
+	}
+
+	@Override
+	public int compare(BaseCanvasRelation o1, BaseCanvasRelation o2) {
+		return o1.getOrder().compareTo(o2.getOrder());
+	}
+
+	private final class PNodeChangeListener implements PropertyChangeListener {
+
+		private final java.util.UUID uuid = java.util.UUID.randomUUID();
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			PNodeChangeListener that = (PNodeChangeListener) o;
+			return uuid.equals(that.uuid);
+		}
+
+		@Override
+		public int hashCode() {
+			return java.util.Objects.hash(uuid);
+		}
+
+		@Override
+		public void propertyChange(PropertyChangeEvent evt) {
+			switch (evt.getPropertyName()) {
+				case PNode.PROPERTY_FULL_BOUNDS:
+					break;
+				case PNode.PROPERTY_TRANSFORM:
+					SwingUtilities.invokeLater(() -> updatePath((getSrc()), getDst()));
+					break;
+				case PNode.PROPERTY_PARENT:
+					break;
+			}
+		}
+	}  
+
+	private final class RelationInputEventHandler extends PBasicInputEventHandler {
+
+		@Override
+		public void mouseEntered(PInputEvent event) {
+			event.getInputManager().setKeyboardFocus(this);
+			highlight();
+		}
+
+		@Override
+		public void mouseExited(PInputEvent event) {
+			unhighlight();
+			event.getInputManager().setKeyboardFocus(STModelCanvas.this);
+		}
+
+		@Override
+		public void mouseClicked(PInputEvent event) {
+			if (event.isRightMouseButton()) {
+				final JPopupMenu pop = new JPopupMenu();
+				STModelCanvas.this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				onRelationRightClick(event, pop);
+				STModelCanvas.this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				pop.show(STModelCanvas.this, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
+			} else if (event.isLeftMouseButton()) {
+				SwingUtilities.invokeLater(() -> onRelationLeftClick(event));
+			}
+		}
+
+		@Override
+		public void keyPressed(PInputEvent event) {
+			onRelationKeyPressed(event);
+		}
+	}  
+
+	protected void onRelationRightClick(PInputEvent event, JPopupMenu pop) {
+	}
+
+	protected void onRelationLeftClick(PInputEvent event) {
+		if (isSelected()) unselect();
+		else select();
+	}
+
+	protected void onRelationKeyPressed(PInputEvent event) {
+	}
+
+	abstract class RelationAction extends AbstractAction {
+
+		final PInputEvent event;
+
+		RelationAction(String name, PInputEvent event) {
+			super(name);
+			this.event = event;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			actionPerformed(event, e);
+		}
+
+		abstract void actionPerformed(PInputEvent event, ActionEvent e);
+	}
+}  >>
+
+CanvasRelation(name,fields,onRelationRightClick,actions) ::= <<final class ~name~ extends BaseCanvasRelation {
+
+	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
+
+	public ~name~(BaseCanvasNode src, BaseCanvasNode dst, String type, UUID uuid~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
+		super(src, dst, type, uuid);
+		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+	}
+
+	@Override
+	protected void onRelationRightClick(PInputEvent event, JPopupMenu pop) {
+		~onRelationRightClick:{it|~it~};separator="\n"~
+		super.onRelationRightClick(event, pop);
+	}
+
+	@Override
+	protected void onRelationKeyPressed(PInputEvent event) {
+		super.onRelationKeyPressed(event);
+	}
+
+	~actions:{it|~it~};separator="\n\n"~
+}  >>
+
+CanvasRelationAction(name,fields,title,statements) ::= <<final class ~name~ extends RelationAction {
+
+	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
+	
+	~name~(PInputEvent event~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=","~~endif~) {
+		super("~title~", event);
+		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+	}
+
+	@Override
+	void actionPerformed(PInputEvent event, ActionEvent e) {
+		~statements:{it|~it~};separator="\n"~
+	}
+}  >>
+
+CanvasAction(name,fields,title,statements) ::= <<final class ~name~ extends CanvasAction {
+
+	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
+	
+	~name~(PInputEvent event~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=","~~endif~) {
+		super("~title~", event);
+		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+	}
+
+	@Override
+	void actionPerformed(PInputEvent event, ActionEvent e) {
+		~statements:{it|~it~};separator="\n"~
+	}
+}  >>
+
+TreeNavigator(packageName,imports,name,fields,constructorStatements,rootNodeExpression,onSelectionStatements,baseTreeNode,treeNodes,methods) ::= <<package ~packageName~;
+
+import nextgen.utils.SwingUtil;
+~imports:{it|import ~it~;};separator="\n"~
 
 import javax.swing.*;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.net.URL;
 import java.util.List;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 public class ~name~ extends JPanel {
 
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);
 
 	private final JTree tree = new JTree();
-	private final STWorkspace workspace;
 	private final STAppPresentationModel presentationModel;
 	private final DefaultTreeModel treeModel;
 
-	public ~name~(STAppPresentationModel presentationModel, STWorkspace workspace) {
+	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
+
+	public ~name~(STAppPresentationModel presentationModel~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
 		super(new BorderLayout());
 
-		this.presentationModel = presentationModel;
-		this.workspace = workspace;
+		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+		~constructorStatements:{it|~it~};separator="\n"~
 
-		RootNode rootNode = new RootNode();
-		treeModel = new DefaultTreeModel(rootNode);
+		this.presentationModel = presentationModel;
+
+		treeModel = new DefaultTreeModel(~rootNodeExpression~);
 		tree.setModel(treeModel);
 		ToolTipManager.sharedInstance().registerComponent(tree);
 
 		tree.setCellRenderer(new DefaultTreeCellRenderer() {
 
-				@Override
-				public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-					final boolean isBaseTreeNode = value instanceof BaseTreeNode;
-					if (isBaseTreeNode) {
-						final BaseTreeNode<?> baseTreeNode = (BaseTreeNode<?>) value;
-						final ImageIcon icon = baseTreeNode.getIcon();
-						setIcon(icon);
-						setOpenIcon(icon);
-						setClosedIcon(icon);
-						setLeafIcon(icon);
-						setToolTipText(baseTreeNode.getTooltip());
-						return super.getTreeCellRendererComponent(tree, baseTreeNode.getLabel(), sel, expanded, leaf, row, hasFocus);
-					}
-					return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+			@Override
+			public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+				final boolean isBaseTreeNode = value instanceof BaseTreeNode;
+				if (isBaseTreeNode) {
+					final BaseTreeNode<?> baseTreeNode = (BaseTreeNode<?>) value;
+					final ImageIcon icon = baseTreeNode.getIcon();
+					setIcon(icon);
+					setOpenIcon(icon);
+					setClosedIcon(icon);
+					setLeafIcon(icon);
+					setToolTipText(baseTreeNode.getTooltip());
+					return super.getTreeCellRendererComponent(tree, baseTreeNode.getLabel(), sel, expanded, leaf, row, hasFocus);
 				}
+				return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+			}
 		});
 
 		tree.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					if (SwingUtilities.isRightMouseButton(e)) {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (SwingUtilities.isRightMouseButton(e)) {
 
-						final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());
-						if (selectionPath == null) return;
-						final Object lastPathComponent = selectionPath.getLastPathComponent();
-						if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
+					final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());
+					if (selectionPath == null) return;
+					final Object lastPathComponent = selectionPath.getLastPathComponent();
+					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
 
-						showPopup((BaseTreeNode<?>) lastPathComponent, e.getX(), e.getY());
-					}
+					showPopup((BaseTreeNode<?>) lastPathComponent, e.getX(), e.getY());
 				}
+			}
 		});
 
 		tree.addKeyListener(new KeyAdapter() {
-				@Override
-				public void keyPressed(KeyEvent e) {
+			@Override
+			public void keyPressed(KeyEvent e) {
 
-					if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-						final TreePath selectionPath = tree.getSelectionPath();
-						if (selectionPath == null) return;
-						final Object lastPathComponent = selectionPath.getLastPathComponent();
-						if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
+				if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+					final TreePath selectionPath = tree.getSelectionPath();
+					if (selectionPath == null) return;
+					final Object lastPathComponent = selectionPath.getLastPathComponent();
+					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
 
-						final Rectangle bounds = tree.getPathBounds(selectionPath);
-						if (bounds == null) return;
+					final Rectangle bounds = tree.getPathBounds(selectionPath);
+					if (bounds == null) return;
 
-						showPopup((BaseTreeNode<?>) lastPathComponent, (int) bounds.getX(), (int) bounds.getY());
-					}
+					showPopup((BaseTreeNode<?>) lastPathComponent, (int) bounds.getX(), (int) bounds.getY());
 				}
+			}
+		});
+
+		tree.addTreeSelectionListener(e -> {
+			if (e.getNewLeadSelectionPath() == null) return;
+
+			if (tree.getSelectionCount() == 1) {
+				final TreePath path = e.getPath();
+				final Object lastPathComponent = path.getLastPathComponent();
+
+				~onSelectionStatements:{it|~it~};separator="\n"~
+			}
 		});
 
 		setPreferredSize(new Dimension(300, 600));
 		add(new JScrollPane(tree), BorderLayout.CENTER);
 	}
 
-	public Set<STValue> getSelectedValues() {
-		final Set<STValue> values = new TreeSet<>((o1, o2) -> o1.getValue().compareToIgnoreCase(o2.getValue()));
+	~baseTreeNode~
 
-		final TreePath[] selectionPaths = tree.getSelectionPaths();
-		if (selectionPaths == null) return values;
-		for (TreePath selectionPath : selectionPaths) {
-				if (selectionPath.getLastPathComponent() instanceof STValueTreeNode) {
-					final STValueTreeNode stValuesRootNode = (STValueTreeNode) selectionPath.getLastPathComponent();
-					values.add(stValuesRootNode.getModel());
-				}
-		}
-		return values;
-	}
-
-	public class BaseTreeNode<T> extends DefaultMutableTreeNode {
-
-		protected ImageIcon icon;
-		protected String tooltip;
-
-		public BaseTreeNode(T model, String icon) {
-				setUserObject(model);
-				this.icon = loadIcon(icon);
-				this.tooltip = "";
-		}
-
-		@SuppressWarnings("unchecked")
-		public T getModel() {
-				return (T) getUserObject();
-		}
-
-		public String getLabel() {
-				return getUserObject().toString();
-		}
-
-		public ImageIcon getIcon() {
-				return icon;
-		}
-
-		protected java.util.List<Action> getActions() {
-				return new ArrayList<>();
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-				if (!(obj instanceof BaseTreeNode)) return false;
-				return getModel().equals(((BaseTreeNode<?>) obj).getModel());
-		}
-
-		@Override
-		public int hashCode() {
-				return getModel().hashCode();
-		}
-
-		@SuppressWarnings("unchecked")
-		public <T> Optional<T> getParentNode(Class<T> type) {
-				if (getClass().equals(type)) return (Optional<T>) Optional.of(this);
-
-				final TreeNode parent = getParent();
-				if (!(parent instanceof BaseTreeNode)) return Optional.empty();
-
-				return ((BaseTreeNode<?>) parent).getParentNode(type);
-		}
-		
-
-		public String getTooltip() {
-				return tooltip;
-		}
-
-		protected void nodesWhereInserted() {
-				treeModel.nodesWereInserted(BaseTreeNode.this, new int[]{getChildCount() - 1});
-		}
-	}
-
-	class RootNode extends BaseTreeNode<String> {
-
-		public RootNode() {
-				super("DB", "RootNode");
-
-				presentationModel.db.doInTransaction(transaction -> {
-					add(new ProjectsRootNode());
-					presentationModel.db.getGroupModels().forEach(stGroupModel -> add(new STGroupModelTreeNode(stGroupModel)));
-					add(new ScriptsRootNode());
-					add(new STValuesRootNode());
-				});
-		}
-	}
-
-	public class ProjectsRootNode extends BaseTreeNode<String> {
-
-		public ProjectsRootNode() {
-				super("Projects", null);
-
-				presentationModel.db.findAllProject().forEach(project -> add(new ProjectTreeNode(project)));
-				org.greenrobot.eventbus.EventBus.getDefault().register(this);
-		}
-
-		@org.greenrobot.eventbus.Subscribe()
-		public void onNewProject(~packageName~.STAppEvents.NewProject event) {
-				presentationModel.doLaterInTransaction(transaction -> {
-					add(new ProjectTreeNode(event.project));
-					nodesWhereInserted();
-				});
-		}
-
-		private class ProjectTreeNode extends BaseTreeNode<Project> {
-
-				private final String label;
-
-				public ProjectTreeNode(Project project) {
-					super(project, null);
-					tooltip = project.getName();
-					label = project.getName();
-				}
-
-				@Override
-				protected List<Action> getActions() {
-					final List<Action> actions = super.getActions();
-
-					return actions;
-				}
-
-				@Override
-				public String getLabel() {
-					return label;
-				}
-		}
-	}
-
-	class ScriptsRootNode extends BaseTreeNode<String> {
-
-		public ScriptsRootNode() {
-				super("Scripts", null);
-
-				presentationModel.db.findAllScript().forEach(script -> add(new ScriptTreeNode(script)));
-				org.greenrobot.eventbus.EventBus.getDefault().register(this);
-		}
-
-		@org.greenrobot.eventbus.Subscribe()
-		public void onNewScript(~packageName~.STAppEvents.NewScript event) {
-				presentationModel.doLaterInTransaction(transaction -> {
-					add(new ScriptsRootNode.ScriptTreeNode(event.script));
-					nodesWhereInserted();
-				});
-		}
-
-		private class ScriptTreeNode extends BaseTreeNode<Script> {
-
-				private String label;
-
-				public ScriptTreeNode(Script script) {
-					super(script, "language-java");
-					tooltip = presentationModel.render(script.getScript());
-					label = script.getName();
-				}
-
-				@Override
-				protected List<Action> getActions() {
-					final List<Action> actions = super.getActions();
-
-					actions.add(newAction("Open", new Consumer<ActionEvent>() {
-						@Override
-						public void accept(ActionEvent actionEvent) {
-								workspace.findCanvas()
-										.ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
-												final ScriptNode node = new ScriptNode(stCanvas, getModel());
-												stCanvas.addNode(node);
-
-												workspace.setSelectedComponent(stCanvas);
-												stCanvas.requestFocusInWindow();
-												stCanvas.centerNode(node);
-										})));
-						}
-					}));
-
-					return actions;
-				}
-
-				@Override
-				public String getLabel() {
-					return label;
-				}
-		}
-	}
-
-	public class STValuesRootNode extends BaseTreeNode<String> {
-
-		STValuesRootNode() {
-				super("Values", null);
-				presentationModel.db.findAllSTValue()
-						.filter(stValue -> stValue.getType() != null)
-						.filter(stValue -> stValue.getType().equals(STValueType.PRIMITIVE))
-						.sorted((o1, o2) -> o1.getValue().compareToIgnoreCase(o2.getValue()))
-						.forEach(stValue -> add(new STValueTreeNode(stValue)));
-				org.greenrobot.eventbus.EventBus.getDefault().register(this);
-		}
-
-		@org.greenrobot.eventbus.Subscribe()
-		public void onNewSTValue(~packageName~.STAppEvents.NewSTValue event) {
-				presentationModel.doLaterInTransaction(transaction -> {
-					add(new STValueTreeNode(event.sTValue));
-					nodesWhereInserted();
-				});
-		}
-
-		@Override
-		protected List<Action> getActions() {
-				final List<Action> actions = super.getActions();
-				actions.add(newEditValuesAction());
-				actions.add(newReconcileAction());
-				return actions;
-		}
-
-		private Action newEditValuesAction() {
-				return newAction("Edit Values", actionEvent -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
-					final STValueGrid valueGrid = workspace.getValueGrid();
-					workspace.setSelectedComponent(valueGrid);
-					valueGrid.requestFocusInWindow();
-				})));
-		}
-
-		private Action newReconcileAction() {
-				return new AbstractAction("Reconcile") {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						SwingUtilities.invokeLater(() -> {
-
-								final Set<Node> delete = new LinkedHashSet<>();
-
-								presentationModel.db.doInTransaction(transaction -> presentationModel.db.findAllSTValue()
-										.filter(stValue -> stValue.getType() != null)
-										.filter(stValue -> stValue.getValue() != null)
-										.filter(stValue -> stValue.getType().equals(STValueType.PRIMITIVE))
-										.forEach(stValue -> {
-												log.info(stValue.getValue());
-												presentationModel.db.findAllSTValueByValue(stValue.getValue())
-														.filter(stValue1 -> !stValue1.getUuid().equals(stValue.getUuid()))
-														.filter(stValue1 -> stValue1.getType() != null)
-														.filter(stValue1 -> stValue1.getType().equals(STValueType.PRIMITIVE))
-														.forEach(stValue1 -> {
-																log.info("\t duplicate " + stValue1.getValue());
-
-																final Node node = stValue1.getNode();
-																node.getRelationships(Direction.INCOMING).forEach(relationship -> {
-																	if (relationship.getType().equals(org.neo4j.graphdb.RelationshipType.withName("ref")))
-																		relationship.delete();
-
-																	final Node src = relationship.getOtherNode(node);
-																	final Relationship newRelation = src.createRelationshipTo(stValue.getNode(), relationship.getType());
-																	relationship.getPropertyKeys().forEach(s -> newRelation.setProperty(s, relationship.getProperty(s)));
-																	relationship.delete();
-																});
-
-																delete.add(node);
-														});
-										}));
-
-								presentationModel.db.doInTransaction(transaction -> {
-									for (Node node : delete) {
-										if (node.getRelationships().iterator().hasNext()) continue;
-										log.info("deleting node ");
-										log.info(Neo4JUtil.toString(node));
-										node.delete();
-									}
-
-									treeModel.nodeStructureChanged(STValuesRootNode.this);
-								});
-						});
-					}
-				};
-		}
-	}
-
-	public class STValueTreeNode extends BaseTreeNode<STValue> {
-
-		private String label;
-
-		STValueTreeNode(STValue stValue) {
-				super(stValue, null);
-				this.label = stValue.getValue();
-		}
-
-		@Override
-		public String getLabel() {
-				return this.label;
-		}
-
-		@Override
-		protected List<Action> getActions() {
-				final List<Action> actions = super.getActions();
-				actions.add(openValueAction());
-				actions.add(toClipboardAction());
-				actions.add(fromClipboardAction());
-				return actions;
-		}
-
-		private Action toClipboardAction() {
-				return newAction("To Clipboard", actionEvent -> presentationModel.db.doInTransaction(transaction -> SwingUtil.toClipboard(presentationModel.render(getModel()).trim())));
-		}
-
-		private Action fromClipboardAction() {
-				return newAction("Set From Clipboard", actionEvent -> presentationModel.db.doInTransaction(transaction -> getModel().setValue(SwingUtil.fromClipboard().trim())));
-		}
-
-		private Action openValueAction() {
-				return newAction("Open", actionEvent -> workspace.findCanvas().ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
-					final STValueNode node = new STValueNode(stCanvas, getModel());
-					stCanvas.addNode(node);
-
-					workspace.setSelectedComponent(stCanvas);
-					stCanvas.requestFocusInWindow();
-					stCanvas.centerNode(node);
-				}))));
-		}
-	}
-
-	class STGroupModelTreeNode extends BaseTreeNode<STGroupModel> {
-
-		public STGroupModelTreeNode(STGroupModel model) {
-				super(model, model.getIcon());
-
-				model.getTemplates().forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
-		}
-
-		@Override
-		public String getLabel() {
-				return getModel().getName();
-		}
-
-		class STTemplateTreeNode extends BaseTreeNode<STTemplate> {
-
-				public STTemplateTreeNode(STTemplate model) {
-					super(model, "STTemplate");
-
-					presentationModel.db.findAllSTModelByStTemplate(model.uuid()).forEach(stModel -> add(new STModelTreeNode(stModel, model)));
-
-					model.getChildren().forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
-				}
-
-				@Override
-				public String getLabel() {
-					return getModel().getName();
-				}
-
-				public void addSTModel(STModel stModel) {
-					final STModelTreeNode newChild = new STModelTreeNode(stModel, getModel());
-					insert(newChild, getChildCount());
-					tree.expandPath(new TreePath(getPath()));
-				}
-
-				@Override
-				protected List<Action> getActions() {
-					final List<Action> actions = super.getActions();
-					actions.add(newEditModelsAction());
-					actions.add(newInstanceAction());
-					return actions;
-				}
-
-				private Action newEditModelsAction() {
-					return newAction("Edit Models", actionEvent -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
-						final STModelGrid stModelGrid = workspace.getModelGrid(getModel());
-						workspace.setSelectedComponent(stModelGrid);
-						stModelGrid.requestFocusInWindow();
-					})));
-				}
-
-				private Action newInstanceAction() {
-					return newAction("New instance", actionEvent -> workspace.findCanvas().ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
-						final STModelNode node = new STModelNode(stCanvas, getModel(), presentationModel.db.newSTModel(getModel().uuid(), getModel()));
-						stCanvas.addNode(node);
-						workspace.setSelectedComponent(stCanvas);
-						stCanvas.requestFocusInWindow();
-						stCanvas.centerNode(node);
-					}))));
-				}
-
-				class STModelTreeNode extends BaseTreeNode<STModel> {
-
-					private String label;
-
-					public STModelTreeNode(STModel model, STTemplate stTemplate) {
-						super(model, "STGDirectory");
-						tooltip = presentationModel.render(model);
-						label = presentationModel.tryToFindArgument(model, "name", () -> cut(tooltip));
-					}
-
-					@Override
-					public String getLabel() {
-						return label;
-					}
-
-					@Override
-					protected List<Action> getActions() {
-						final List<Action> actions = super.getActions();
-						actions.add(openModelAction());
-						actions.add(editModelAction());
-						actions.add(generateAction());
-						return actions;
-					}
-
-					private Action openModelAction() {
-						return newAction("Open", actionEvent -> getParentNode(STTemplateTreeNode.class)
-									.ifPresent(stTemplateTreeNode -> workspace.findCanvas()
-												.ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
-													final STModelNode node = new STModelNode(stCanvas, stTemplateTreeNode.getModel(), getModel());
-													stCanvas.addNode(node);
-
-													workspace.setSelectedComponent(stCanvas);
-													stCanvas.requestFocusInWindow();
-													stCanvas.centerNode(node);
-												})))));
-					}
-
-					private Action editModelAction() {
-						return newAction("Edit", actionEvent -> getParentNode(STTemplateTreeNode.class)
-									.ifPresent(stTemplateTreeNode -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
-										final STModelEditor modelEditor = workspace.getModelEditor(stTemplateTreeNode.getModel(), getModel());
-										modelEditor.setModelNavigator(~name~.this);
-										workspace.setSelectedComponent(modelEditor);
-									}))));
-					}
-
-					private Action generateAction() {
-						return newAction("Generate", actionEvent -> SwingUtilities.invokeLater(() -> {
-								presentationModel.doLaterInTransaction(tx -> getModel().getFiles().forEach(stFile -> {
-									if (stFile.getPath() == null) return;
-									~packageName~.STGenerator.writeToFile(presentationModel.render(getModel()), stFile.getPackageName().getValue(), stFile.getName().getValue(), stFile.getType().getValue(), new java.io.File(stFile.getPath().getValue()));
-								}));
-						}));
-					}
-				}
-		}
-	}
+	~treeNodes:{it|~it~};separator="\n\n"~	
 
 	private Action newAction(String name, Consumer<ActionEvent> actionEventConsumer) {
 		return new AbstractAction(name) {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					actionEventConsumer.accept(e);
-				}
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				actionEventConsumer.accept(e);
+			}
 		};
-	}
-
-	private static final Map<String, ImageIcon> cache = new LinkedHashMap<>();
-
-	private ImageIcon loadIcon(String iconName) {
-
-		if (iconName == null) return null;
-
-		if (cache.containsKey(iconName)) return cache.get(iconName);
-
-		URL resource = getClass().getClassLoader().getResource("icons/" + iconName + "16x16.png");
-		if (resource == null) resource = getClass().getClassLoader().getResource("icons/STGroup16x16.png");
-
-		cache.put(iconName, new ImageIcon(Objects.requireNonNull(resource)));
-		return cache.get(iconName);
 	}
 
 	private void showPopup(BaseTreeNode<?> lastPathComponent, int x, int y) {
@@ -564,18 +1313,174 @@ public class ~name~ extends JPanel {
 		if (actions.isEmpty()) return;
 
 		final JPopupMenu pop = new JPopupMenu();
-		pop.add("With " + lastPathComponent.getLabel() + " :");
+		pop.add("With " + presentationModel.cut(lastPathComponent.getLabel()) + " :");
 		for (Action action : actions)
-				pop.add(action);
+			pop.add(action);
 
 		SwingUtilities.invokeLater(() -> pop.show(tree, x, y));
 	}
 
-	public static String cut(String text) {
-		return text.substring(0, Math.min(text.length(), 20));
+	public <T> java.util.stream.Stream<T> getSelectedNodes(Class<T> type) {
+		final TreePath[] selectionPaths = tree.getSelectionPaths();
+		if (selectionPaths == null || selectionPaths.length == 0) return java.util.stream.Stream.empty();
+		return Arrays.stream(selectionPaths)
+				.filter(treePath -> treePath.getLastPathComponent() != null)
+				.filter(treePath -> treePath.getLastPathComponent().getClass().isAssignableFrom(type))
+				.map(treePath -> (T) treePath.getLastPathComponent());
 	}
 
+	~methods:{it|~it~};separator="\n\n"~
 }  >>
+
+BaseTreeNode() ::= <<public class BaseTreeNode<T> extends DefaultMutableTreeNode {
+
+	protected String label;
+	protected ImageIcon icon;
+	protected String tooltip;
+
+	public BaseTreeNode(T model, String icon) {
+		setUserObject(model);
+		this.label = model.toString();
+		this.icon = presentationModel.loadIcon(icon);
+		this.tooltip = "";
+	}
+
+	@SuppressWarnings("unchecked")
+	public T getModel() {
+		return (T) getUserObject();
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public ImageIcon getIcon() {
+		return icon;
+	}
+
+	protected java.util.List<Action> getActions() {
+		java.util.List<Action> actions = new ArrayList<>();
+		actions.add(newAction("Expand", actionEvent -> {
+			SwingUtilities.invokeLater(() -> expandTreeNodesRecursive(getThisPath(), true));
+		}));
+		actions.add(newAction("Collapse", actionEvent -> {
+			SwingUtilities.invokeLater(() -> expandTreeNodesRecursive(getThisPath(), false));
+		}));
+		return actions;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof BaseTreeNode)) return false;
+		return getModel().equals(((BaseTreeNode<?>) obj).getModel());
+	}
+
+	@Override
+	public int hashCode() {
+		return getModel().hashCode();
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> Optional<T> getParentNode(Class<T> type) {
+		if (getClass().equals(type)) return (Optional<T>) Optional.of(this);
+
+		final TreeNode parent = getParent();
+		if (!(parent instanceof BaseTreeNode)) return Optional.empty();
+
+		return ((BaseTreeNode<?>) parent).getParentNode(type);
+	}
+
+	public String getTooltip() {
+		return tooltip;
+	}
+
+	public void nodeChanged() {
+		treeModel.nodeChanged(this);
+	}
+
+	protected TreePath addChild(BaseTreeNode<?> child) {
+		add(child);
+		final TreePath path = new TreePath(child.getPath());
+		treeModel.nodesWereInserted(BaseTreeNode.this, new int[]{getIndex(child)});
+		return path;
+	}
+
+	protected void addAndSelectChild(BaseTreeNode<?> child) {
+		final TreePath path = addChild(child);
+		tree.scrollPathToVisible(path);
+		tree.setSelectionPath(path);
+	}
+
+	protected <T> java.util.stream.Stream<T> getChildren(Class<T> type) {
+		final java.util.Set<T> set = new java.util.LinkedHashSet<>();
+		final int childCount = getChildCount();
+		for (int i = 0; i < childCount; i++) {
+			if (getChildAt(i).getClass().isAssignableFrom(type))
+				set.add((T) getChildAt(i));
+		}
+
+		return set.stream();
+	}
+
+	protected TreePath getThisPath() {
+		return new TreePath(getPath());
+	}
+
+	protected void expandTreeNodesRecursive(TreePath parent, boolean expand) {
+		TreeModel model = tree.getModel();
+
+		Object node = parent.getLastPathComponent();
+		int childCount = model.getChildCount(node);
+		for (int j = 0; j < childCount; j++) 
+			expandTreeNodesRecursive(parent.pathByAddingChild(model.getChild(node, j)), expand);
+
+		if (expand) 
+			tree.expandPath(parent);
+		else 
+			tree.collapsePath(parent);
+	}
+}  >>
+
+TreeNode(name,modelType,hasUuid,fields,parameters,icon,labelExpression,tooltipExpression,constructorStatements,getActionsStatements,actions,methods) ::= <<// ~name~
+public class ~name~ extends BaseTreeNode<~modelType~> {
+~if(hasUuid)~
+
+	private String uuid;
+~endif~
+	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
+
+	~name~(~modelType~ model~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~~if(parameters)~, ~parameters:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
+		super(model, ~if(icon)~~icon~~else~null~endif~);
+
+		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+		this.label = ~if(labelExpression)~~labelExpression~~else~model.toString();~endif~
+		this.tooltip = ~if(tooltipExpression)~~tooltipExpression~~else~"";~endif~
+		~if(hasUuid)~this.uuid = model.getUuid();~endif~
+
+		~constructorStatements:{it|~it~};separator="\n"~
+	}
+
+	@Override
+	public void nodeChanged() {
+		this.label = ~if(labelExpression)~~labelExpression~~else~model.toString();~endif~
+		this.tooltip = ~if(tooltipExpression)~~tooltipExpression~~else~"";~endif~
+		super.nodeChanged();
+	}
+
+	@Override
+	protected List<Action> getActions() {
+		final List<Action> actions = super.getActions();
+		~getActionsStatements:{it|~it~};separator="\n"~
+		~actions:{it|actions.add(~it~);};separator="\n"~
+		return actions;
+	}
+
+	~methods:{it|~it~};separator="\n\n"~
+}  >>
+
+TreeNodeAction(title,statements) ::= <<newAction("~title~", actionEvent -> {
+	~statements:{it|~it~};separator="\n"~
+})  >>
 
 eom() ::= "}"
 

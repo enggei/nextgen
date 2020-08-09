@@ -320,27 +320,25 @@ public class STModelEditorNavigator extends JPanel {
 	}
 
 	// STKVArgumentTreeNode
-	public class STKVArgumentTreeNode extends BaseTreeNode<Collection<STArgumentKV>> {
-		private STArgument stArgument;
+	public class STKVArgumentTreeNode extends BaseTreeNode<STArgument> {
 		private STParameter stParameter;
 
-		STKVArgumentTreeNode(Collection<STArgumentKV> model, STArgument stArgument, STParameter stParameter) {
+		STKVArgumentTreeNode(STArgument model, STParameter stParameter) {
 			super(model, null);
 
-			this.stArgument = stArgument;
 			this.stParameter = stParameter;
-			this.label = presentationModel.tryToFindArgument(getModel(), stParameter, "name", stParameter::getName);
+			this.label = presentationModel.tryToFindArgument(getModel().getKeyValues(), stParameter, "name", stParameter::getName);
 			this.tooltip = "";
 
-			stParameter.getKeys().forEach(stParameterKey -> {
-				final Optional<STArgumentKV> argumentKV = getModel().stream().filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid())).findFirst();
-				add(new STKVTreeNode(argumentKV.get(), stArgument, stParameterKey));
-			});
+			stParameter.getKeys().forEach(stParameterKey -> getModel().getKeyValues()
+					.filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))
+					.findFirst()
+					.ifPresent(stArgumentKV -> add(new STKVTreeNode(stArgumentKV, getModel(), stParameterKey))));
 		}
 
 		@Override
 		public void nodeChanged() {
-			this.label = presentationModel.tryToFindArgument(getModel(), stParameter, "name", stParameter::getName);
+			this.label = presentationModel.tryToFindArgument(getModel().getKeyValues(), stParameter, "name", stParameter::getName);
 			this.tooltip = "";
 			super.nodeChanged();
 		}
@@ -348,6 +346,60 @@ public class STModelEditorNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
+			presentationModel.doInTransaction(transaction -> {
+				stParameter.getKeys().forEach(stParameterKey -> {
+					actions.add(newAction(stParameterKey.getName() + " from input", actionEvent -> {
+							SwingUtil.showInputDialog(stParameterKey.getName(), tree, inputValue ->
+									presentationModel.doLaterInTransaction(transaction1 -> {
+											int childCount = getChildCount();
+											final STValue stValue = presentationModel.newSTValue(inputValue);
+											for (int i = 0; i < childCount; i++) {
+												final STKVTreeNode stkvTreeNode = (STKVTreeNode) getChildAt(i);
+												final STArgumentKV stArgumentKV = stkvTreeNode.getModel();
+												if (stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid())) {
+													stArgumentKV.setValue(stValue);
+													while (stkvTreeNode.getChildCount() != 0)
+															treeModel.removeNodeFromParent((MutableTreeNode) stkvTreeNode.getChildAt(0));
+													stkvTreeNode.addAndSelectChild(new STValueTreeNode(stValue, stArgumentKV));
+													return;
+												}
+											}
+
+											final STArgumentKV stArgumentKV = presentationModel.newSTArgumentKV(stParameterKey, stValue);
+											getModel().addKeyValues(stArgumentKV);
+											addAndSelectChild(new STKVTreeNode(stArgumentKV, getModel(), stParameterKey));
+									}));
+					}));
+					actions.add(newAction(stParameterKey.getName() + " from Clipboard " + presentationModel.cut(SwingUtil.fromClipboard(), 30), actionEvent -> {
+							presentationModel.doLaterInTransaction(transaction1 -> {
+								int childCount = getChildCount();
+								final STValue stValue = presentationModel.newSTValue(SwingUtil.fromClipboard());
+								for (int i = 0; i < childCount; i++) {
+									final STKVTreeNode stkvTreeNode = (STKVTreeNode) getChildAt(i);
+									final STArgumentKV stArgumentKV = stkvTreeNode.getModel();
+									if (stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid())) {
+											stArgumentKV.setValue(stValue);
+											while (stkvTreeNode.getChildCount() != 0)
+												treeModel.removeNodeFromParent((MutableTreeNode) stkvTreeNode.getChildAt(0));
+											stkvTreeNode.addAndSelectChild(new STValueTreeNode(stValue, stArgumentKV));
+											return;
+									}
+								}
+
+								final STArgumentKV stArgumentKV = presentationModel.newSTArgumentKV(stParameterKey, stValue);
+								getModel().addKeyValues(stArgumentKV);
+								addAndSelectChild(new STKVTreeNode(stArgumentKV, getModel(), stParameterKey));
+							});
+					}));
+				});
+			});
+			actions.add(newAction("Remove", actionEvent -> {
+				presentationModel.doLaterInTransaction(transaction -> {
+					getModel().getIncomingArguments().findFirst().ifPresent(stModel -> stModel.removeArguments(getModel()));
+					treeModel.removeNodeFromParent(this);
+					editor.setText("", null);
+				});
+			}));
 			return actions;
 		}
 
@@ -393,6 +445,38 @@ public class STModelEditorNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
+			presentationModel.doInTransaction(transaction -> {
+
+				actions.add(newAction("Set from input", actionEvent -> {
+					SwingUtil.showInputDialog(stParameterKey.getName(), tree, inputValue ->
+								presentationModel.doLaterInTransaction(transaction1 -> {
+									final STValue stValue = presentationModel.newSTValue(inputValue);
+									getModel().setValue(stValue);
+									while (getChildCount() != 0)
+											treeModel.removeNodeFromParent((MutableTreeNode) getChildAt(0));
+									addAndSelectChild(new STValueTreeNode(stValue, getModel()));
+									nodeChanged();
+								}));
+				}));
+
+				actions.add(newAction("Set from Clipboard " + presentationModel.cut(SwingUtil.fromClipboard(), 30), actionEvent -> {
+					presentationModel.doLaterInTransaction(transaction1 -> {
+							final STValue stValue = presentationModel.newSTValue(SwingUtil.fromClipboard());
+							getModel().setValue(stValue);
+							while (getChildCount() != 0)
+								treeModel.removeNodeFromParent((MutableTreeNode) getChildAt(0));
+							addAndSelectChild(new STValueTreeNode(stValue, getModel()));
+							nodeChanged();
+					});
+				}));
+			});
+			actions.add(newAction("Remove", actionEvent -> {
+				presentationModel.doLaterInTransaction(transaction1 -> {
+					stArgument.removeKeyValues(getModel());
+					treeModel.removeNodeFromParent(this);
+					editor.setText("", null);
+				});
+			}));
 			return actions;
 		}
 
@@ -419,7 +503,7 @@ public class STModelEditorNavigator extends JPanel {
 						.onSingleSTModel((stArgument, stValue) -> add(new STModelTreeNode(stValue.getStModel(), presentationModel.findSTTemplateByUuid(stValue.getStModel().getStTemplate()), stArgument)))
 						.onListSTValue((stArgument, stValue) -> add(new STValueTreeNode(stValue, stArgument)))
 						.onListSTModel((stArgument, stValue) -> add(new STModelTreeNode(stValue.getStModel(), presentationModel.findSTTemplateByUuid(stValue.getStModel().getStTemplate()), stArgument)))
-						.onKVListConsumer((stArgument, stKVValues) -> add(new STKVArgumentTreeNode(stKVValues, stArgument, model))));
+						.onKVListConsumer((stArgument, stKVValues) -> add(new STKVArgumentTreeNode(stArgument, model))));
 		}
 
 		@Override
@@ -491,10 +575,9 @@ public class STModelEditorNavigator extends JPanel {
 				case KVLIST:
 					actions.add(newAction("Add " + getModel().getName(), actionEvent -> {
 						presentationModel.doLaterInTransaction(transaction -> {
-							presentationModel.addKVArgument(stModel, getModel(), tree, stArgument -> {
-								final Set<STArgumentKV> stKVValues = stArgument.getKeyValues().collect(java.util.stream.Collectors.toSet());
-								addAndSelectChild(new STKVArgumentTreeNode(stKVValues, stArgument, getModel()));
-							});
+							presentationModel.addKVArgument(stModel, getModel(), tree, stArgument -> 
+								addAndSelectChild(new STKVArgumentTreeNode(stArgument, getModel()))
+							);
 						});
 					}));
 					break;

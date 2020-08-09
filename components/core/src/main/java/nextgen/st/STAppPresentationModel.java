@@ -89,14 +89,14 @@ public class STAppPresentationModel {
 
         if (parseResult.getErrors().count() == 0) {
 
-            final Optional<STGroupModel> found = generatorSTGDirectory.getGroups().filter(stGroupModel1 -> stGroupModel1.uuid().equals(stGroupModel.uuid())).findFirst();
+            final Optional<STGroupModel> found = generatorSTGDirectory.getGroups().filter(stGroupModel1 -> stGroupModel1.getUuid().equals(stGroupModel.getUuid())).findFirst();
             if (found.isPresent()) {
                 log.info("generating stGroup " + stGroupModel.getName() + " to " + generatorSTGDirectory.getOutputPath() + " " + generatorSTGDirectory.getOutputPackage());
                 new STGenerator(generatorSTGroup).generateSTGroup(stGroupModel, generatorSTGDirectory.getOutputPackage(), generatorSTGDirectory.getOutputPath());
             } else {
                 stgDirectories
                         .stream()
-                        .filter(directory -> directory.getGroups().anyMatch(stGroupModel1 -> stGroupModel1.uuid().equals(stGroupModel.uuid())))
+                        .filter(directory -> directory.getGroups().anyMatch(stGroupModel1 -> stGroupModel1.getUuid().equals(stGroupModel.getUuid())))
                         .findFirst()
                         .ifPresent(directory -> {
                             log.info("generating stGroup " + stGroupModel.getName() + " to " + directory.getOutputPath() + " " + directory.getOutputPackage());
@@ -116,7 +116,7 @@ public class STAppPresentationModel {
         if (parseResult.getErrors().count() == 0)
             stgDirectories
                     .stream()
-                    .filter(directory -> directory.getGroups().anyMatch(stGroupModel1 -> stGroupModel1.uuid().equals(stGroupModel.uuid())))
+                    .filter(directory -> directory.getGroups().anyMatch(stGroupModel1 -> stGroupModel1.getUuid().equals(stGroupModel.getUuid())))
                     .findFirst()
                     .ifPresent(directory -> {
                         final File file = new File(new File(directory.getPath()), stGroupModel.getName() + ".json");
@@ -303,16 +303,16 @@ public class STAppPresentationModel {
         }));
     }
 
-    public String tryToFindArgument(Collection<STArgumentKV> set, STParameter stParameter, String kvName, Supplier<String> defaultValue) {
+    public String tryToFindArgument(Stream<STArgumentKV> set, STParameter stParameter, String kvName, Supplier<String> defaultValue) {
 
         final Optional<STParameterKey> kvNameFound = stParameter.getKeys().filter(stParameterKey -> stParameterKey.getName().equals(kvName)).findFirst();
         if (!kvNameFound.isPresent()) return defaultValue.get();
 
-        for (STArgumentKV stArgumentKV : set)
-            if (stArgumentKV.getStParameterKey().equals(kvNameFound.get().uuid())) {
-                final String render = render(stArgumentKV.getValue());
-                return render == null || render.length() == 0 ? "[EMPTY]" : render;
-            }
+        final Optional<STArgumentKV> found = set.filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(kvNameFound.get().getUuid())).findFirst();
+        if (found.isPresent()) {
+            final String render = render(found.get().getValue());
+            return render == null || render.length() == 0 ? "[EMPTY]" : render;
+        }
 
         return defaultValue.get();
     }
@@ -320,7 +320,7 @@ public class STAppPresentationModel {
     public String tryToFindArgument(STModel stModel, String parameterName, Supplier<String> defaultValue) {
         final Optional<STParameter> parameter = findSTTemplateByUuid(stModel.getStTemplate()).getParameters().filter(stParameter -> stParameter.getName().equals(parameterName)).findFirst();
         if (parameter.isPresent()) {
-            final Optional<STArgument> argument = stModel.getArguments().filter(stArgument -> stArgument.getStParameter().equals(parameter.get().uuid())).findFirst();
+            final Optional<STArgument> argument = stModel.getArguments().filter(stArgument -> stArgument.getStParameter().equals(parameter.get().getUuid())).findFirst();
             return argument.isPresent() ? render(argument.get().getValue()) : defaultValue.get();
         }
         return defaultValue.get();
@@ -333,7 +333,7 @@ public class STAppPresentationModel {
     public Collection<STArgumentKV> getStArgumentKVS(STParameter stParameter, STArgument stArgument) {
         final Collection<STArgumentKV> kvSet = new LinkedHashSet<>();
         stParameter.getKeys().forEach(stParameterKey -> stArgument.getKeyValues()
-                .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.uuid()))
+                .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))
                 .forEach(kvSet::add));
         return kvSet;
     }
@@ -461,25 +461,29 @@ public class STAppPresentationModel {
     private static final Map<String, ImageIcon> cache = new LinkedHashMap<>();
 
     public ImageIcon loadIcon(String iconName) {
+        return loadIcon(iconName, "16x16");
+    }
+
+    public ImageIcon loadIcon(String iconName, String dimension) {
 
         if (iconName == null) return null;
 
         if (cache.containsKey(iconName)) return cache.get(iconName);
 
-        URL resource = getClass().getClassLoader().getResource("icons/" + iconName + "16x16.png");
+        URL resource = getClass().getClassLoader().getResource("icons/" + iconName + dimension + ".png");
         if (resource == null) resource = getClass().getClassLoader().getResource("icons/STGroup16x16.png");
 
         cache.put(iconName, new ImageIcon(Objects.requireNonNull(resource)));
         return cache.get(iconName);
     }
 
-    public String renderInTransaction(Collection<STArgumentKV> stArgumentKV, STParameter stParameter) {
+    public String renderInTransaction(STArgument kvArgument, STParameter stParameter) {
         return db.getInTransaction(transaction -> {
             final StringBuilder out = new StringBuilder();
 
             stParameter.getKeys().forEach(stParameterKey -> {
                 out.append("--- ").append(stParameterKey.getName()).append(" ---\n");
-                stArgumentKV.stream()
+                kvArgument.getKeyValues()
                         .filter(stArgumentKV1 -> stArgumentKV1.getStParameterKey().equals(stParameterKey.getUuid()))
                         .forEach(stArgumentKV1 -> out.append(render(stArgumentKV1.getValue())));
                 out.append("\n");
@@ -493,6 +497,68 @@ public class STAppPresentationModel {
         stModel.getArguments()
                 .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
                 .forEach(stModel::removeArguments);
+    }
+
+    public void removeArgument(STArgument stArgument, STParameterKey stParameterKey) {
+        stArgument.getKeyValues()
+                .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))
+                .forEach(stArgument::removeKeyValues);
+    }
+
+    public Optional<STModel> getSTModel(STValue stValue) {
+        return stValue.getType().equals(nextgen.st.model.STValueType.STMODEL) ? Optional.of(stValue.getStModel()) : Optional.empty();
+    }
+
+    public Stream<STArgument> getIncomingSTArguments(STValue stValue) {
+        final org.neo4j.graphdb.Node node = stValue.getNode();
+        return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).spliterator(), false)
+                .map(relationship -> relationship.getOtherNode(node))
+                .filter(STModelNeoFactory::isSTArgument)
+                .map(db::newSTArgument);
+    }
+
+    public Stream<STArgumentKV> getIncomingSTArgumentKVs(STValue stValue) {
+        final org.neo4j.graphdb.Node node = stValue.getNode();
+        return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).spliterator(), false)
+                .map(relationship -> relationship.getOtherNode(node))
+                .filter(STModelNeoFactory::isSTArgumentKV)
+                .map(db::newSTArgumentKV);
+    }
+
+    public Stream<STArgument> getIncomingSTArguments(STModel stValue) {
+        final org.neo4j.graphdb.Node node = stValue.getNode();
+        return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).spliterator(), false)
+                .map(relationship -> relationship.getOtherNode(node))
+                .filter(STModelNeoFactory::isSTArgument)
+                .map(db::newSTArgument);
+    }
+
+    public Stream<STArgumentKV> getIncomingSTArgumentKVs(STModel stValue) {
+        final org.neo4j.graphdb.Node node = stValue.getNode();
+        return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).spliterator(), false)
+                .map(relationship -> relationship.getOtherNode(node))
+                .filter(STModelNeoFactory::isSTArgumentKV)
+                .map(db::newSTArgumentKV);
+    }
+
+    public void forEachArgument(STTemplate stTemplate, STModel stModel, java.util.function.BiConsumer<nextgen.st.model.STArgument, nextgen.st.domain.STParameter> consumer) {
+        stTemplate.getParameters().forEach(stParameter -> stModel.getArgumentsSorted().filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid())).forEach(stArgument -> consumer.accept(stArgument, stParameter)));
+    }
+
+//    protected void removeArgument(STModel stModel, nextgen.st.domain.STParameter stParameter) {
+//        stModel.getArguments().filter(existing -> existing.getStParameter().equals(stParameter.uuid())).findAny().ifPresent(existing -> {
+//            //canvas.removeRelation(UUID.fromString(existing.getUuid()));
+//            stModel.removeArguments(existing);
+//        });
+//    }
+
+    public boolean sameArgumentValue(STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STValue model) {
+        final java.util.concurrent.atomic.AtomicBoolean exists = new java.util.concurrent.atomic.AtomicBoolean(false);
+        stModel.getArguments().filter(existing -> existing.getStParameter().equals(stParameter.uuid())).forEach(existing -> {
+            if (existing.getValue() != null && existing.getValue().getUuid().equals(model.getUuid()))
+                exists.set(true);
+        });
+        return exists.get();
     }
 
     public final class STArgumentConsumer implements Consumer<STArgument> {
@@ -570,7 +636,8 @@ public class STAppPresentationModel {
                     onKVListConsumer.accept(stArgument, getStArgumentKVS(stParameter, stArgument));
 
                     stParameter.getKeys().forEach(stParameterKey -> stArgument.getKeyValues()
-                            .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.uuid()))
+                            .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))
+                            .filter(stArgumentKV -> stArgumentKV.getValue() != null)
                             .forEach(stArgumentKV -> {
                                 final STValue kvValue = stArgumentKV.getValue();
                                 switch (kvValue.getType()) {
@@ -699,4 +766,7 @@ public class STAppPresentationModel {
             stgFile.renameTo(new File(stgDirectory.getPath(), name + ".json.deleted"));
     }
 
+    public <T> T getInTransaction(java.util.function.Supplier<T> supplier) {
+        return db.get(supplier);
+    }
 }

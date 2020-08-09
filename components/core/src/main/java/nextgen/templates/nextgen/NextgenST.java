@@ -5,7 +5,18 @@ public class NextgenST {
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 	.append("eom() ::= \"}\"\n")
 	.append("gt() ::= \">\"\n")
-	.append(STModelNavigator.st + "\n")
+	.append(Canvas.st + "\n")
+	.append(BaseCanvasNode.st + "\n")
+	.append(CanvasNode.st + "\n")
+	.append(CanvasNodeAction.st + "\n")
+	.append(BaseCanvasRelation.st + "\n")
+	.append(CanvasRelation.st + "\n")
+	.append(CanvasRelationAction.st + "\n")
+	.append(CanvasAction.st + "\n")
+	.append(TreeNavigator.st + "\n")
+	.append(BaseTreeNode.st + "\n")
+	.append(TreeNode.st + "\n")
+	.append(TreeNodeAction.st + "\n")
 	.toString()  ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
@@ -42,8 +53,52 @@ public class NextgenST {
 		stGroup = decorate(new org.stringtemplate.v4.STGroupFile(stgFile, '~', '~'));
 	}
 
-	public static STModelNavigator newSTModelNavigator() {
-		return new STModelNavigator(stGroup);
+	public static Canvas newCanvas() {
+		return new Canvas(stGroup);
+	}  
+
+	public static BaseCanvasNode newBaseCanvasNode() {
+		return new BaseCanvasNode(stGroup);
+	}  
+
+	public static CanvasNode newCanvasNode() {
+		return new CanvasNode(stGroup);
+	}  
+
+	public static CanvasNodeAction newCanvasNodeAction() {
+		return new CanvasNodeAction(stGroup);
+	}  
+
+	public static BaseCanvasRelation newBaseCanvasRelation() {
+		return new BaseCanvasRelation(stGroup);
+	}  
+
+	public static CanvasRelation newCanvasRelation() {
+		return new CanvasRelation(stGroup);
+	}  
+
+	public static CanvasRelationAction newCanvasRelationAction() {
+		return new CanvasRelationAction(stGroup);
+	}  
+
+	public static CanvasAction newCanvasAction() {
+		return new CanvasAction(stGroup);
+	}  
+
+	public static TreeNavigator newTreeNavigator() {
+		return new TreeNavigator(stGroup);
+	}  
+
+	public static BaseTreeNode newBaseTreeNode() {
+		return new BaseTreeNode(stGroup);
+	}  
+
+	public static TreeNode newTreeNode() {
+		return new TreeNode(stGroup);
+	}  
+
+	public static TreeNodeAction newTreeNodeAction() {
+		return new TreeNodeAction(stGroup);
 	}  
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
