@@ -26,11 +26,11 @@ public class STRelation extends PPath.Double implements Comparator<STRelation> {
 		_defaultColor, _selectedColor, _highlightedColor, _uuid, _text, _selected, _highlight, _order, _type, _src, _dst
 	}
 
-	protected STCanvas canvas;
+	protected STModelCanvas canvas;
 	final protected PText child;
 	private final PNodeChangeListener nodeChangeListener = new PNodeChangeListener();
 
-	public STRelation(STCanvas canvas, STNode src, STNode dst, String type, UUID uuid) {
+	public STRelation(STModelCanvas canvas, STNode src, STNode dst, String type, UUID uuid) {
 		this.canvas = canvas;
 		this.addAttribute(Attributes._defaultColor, Color.decode("#bababa"));
 		this.addAttribute(Attributes._selectedColor, Color.decode("#b2182b"));
@@ -293,10 +293,10 @@ public class STRelation extends PPath.Double implements Comparator<STRelation> {
 	static abstract class RelationAction<N extends STRelation> extends AbstractAction {
 
 		final N relation;
-		final STCanvas canvas;
+		final STModelCanvas canvas;
 		final PInputEvent event;
 
-		RelationAction(String name, N relation, STCanvas canvas, PInputEvent event) {
+		RelationAction(String name, N relation, STModelCanvas canvas, PInputEvent event) {
 			super(name);
 			this.relation = relation;
 			this.canvas = canvas;
@@ -308,7 +308,7 @@ public class STRelation extends PPath.Double implements Comparator<STRelation> {
 			actionPerformed(relation, canvas, event, e);
 		}
 
-		abstract void actionPerformed(N relation, STCanvas canvas, PInputEvent event, ActionEvent e);
+		abstract void actionPerformed(N relation, STModelCanvas canvas, PInputEvent event, ActionEvent e);
 
 		protected void doLaterInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer){ 
 			relation.doLaterInTransaction(consumer);

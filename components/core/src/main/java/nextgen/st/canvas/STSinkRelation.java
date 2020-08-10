@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 public class STSinkRelation extends STRelation {
 
 
-	public STSinkRelation(STCanvas canvas, STModelNode src, STFileNode dst) {
+	public STSinkRelation(STModelCanvas canvas, STModelNode src, STFileNode dst) {
 		super(canvas, src, dst, "SINK", dst.getUuid());
 	}
 
@@ -32,12 +32,12 @@ public class STSinkRelation extends STRelation {
 	private static final class Delete extends RelationAction<STSinkRelation> {
 
 
-		Delete(STSinkRelation relation, STCanvas canvas, PInputEvent event) {
+		Delete(STSinkRelation relation, STModelCanvas canvas, PInputEvent event) {
 			super("Delete", relation, canvas, event);
 		}
 
 		@Override
-		void actionPerformed(STSinkRelation relation, STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(STSinkRelation relation, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 			if (!SwingUtil.showConfirmDialog(canvas, "Delete ?")) return;
 			doLaterInTransaction(tx -> {
 				((STModelNode) relation.getSrc()).stModel.removeFiles(((STFileNode) relation.getDst()).stFile);

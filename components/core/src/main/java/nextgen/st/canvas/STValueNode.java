@@ -3,7 +3,6 @@ package nextgen.st.canvas;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.*;
 
@@ -11,7 +10,7 @@ public class STValueNode extends nextgen.st.canvas.STNode {
 
     nextgen.st.model.STValue stValue;
 
-    public STValueNode(nextgen.st.canvas.STCanvas canvas, nextgen.st.model.STValue stValue) {
+    public STValueNode(STModelCanvas canvas, nextgen.st.model.STValue stValue) {
         super(canvas, canvas.presentationModel.render(stValue), java.util.UUID.fromString(stValue.getUuid()));
         this.stValue = stValue;
     }
@@ -60,12 +59,12 @@ public class STValueNode extends nextgen.st.canvas.STNode {
     private static final class EditSTValue extends NodeAction<STValueNode> {
 
 
-        EditSTValue(STValueNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+        EditSTValue(STValueNode node, STModelCanvas canvas, PInputEvent event) {
             super("Edit", node, canvas, event);
         }
 
         @Override
-        void actionPerformed(STValueNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(STValueNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             nextgen.utils.SwingUtil.showInputDialog("Edit", canvas, canvas.presentationModel.db.get(() -> node.stValue.getValue()), s -> canvas.presentationModel.doLaterInTransaction(tx -> {
                 node.stValue.setValue(s);
                 node.setText(node.stValue.getValue());
@@ -76,12 +75,12 @@ public class STValueNode extends nextgen.st.canvas.STNode {
     private static final class ToClipboard extends NodeAction<STValueNode> {
 
 
-        ToClipboard(STValueNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+        ToClipboard(STValueNode node, STModelCanvas canvas, PInputEvent event) {
             super("To Clipboard", node, canvas, event);
         }
 
         @Override
-        void actionPerformed(STValueNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(STValueNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             canvas.presentationModel.doInTransaction(tx -> nextgen.utils.SwingUtil.toClipboard(canvas.presentationModel.render(node.stValue)));
         }
     }
@@ -89,12 +88,12 @@ public class STValueNode extends nextgen.st.canvas.STNode {
     private static final class Delete extends NodeAction<STValueNode> {
 
 
-        Delete(STValueNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+        Delete(STValueNode node, STModelCanvas canvas, PInputEvent event) {
             super("Delete", node, canvas, event);
         }
 
         @Override
-        void actionPerformed(STValueNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(STValueNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             if (!nextgen.utils.SwingUtil.showConfirmDialog(canvas, "Delete value ?")) return;
             canvas.presentationModel.doLaterInTransaction(tx -> {
                 node.close();
@@ -106,12 +105,12 @@ public class STValueNode extends nextgen.st.canvas.STNode {
     private static final class OpenIncoming extends NodeAction<STValueNode> {
 
 
-        OpenIncoming(STValueNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+        OpenIncoming(STValueNode node, STModelCanvas canvas, PInputEvent event) {
             super("Open Incoming", node, canvas, event);
         }
 
         @Override
-        void actionPerformed(STValueNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(STValueNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             canvas.presentationModel.doLaterInTransaction(transaction -> {
 
                 canvas.presentationModel.getIncomingSTArguments(node.stValue)

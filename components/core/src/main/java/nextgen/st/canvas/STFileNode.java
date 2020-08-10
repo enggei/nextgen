@@ -12,7 +12,7 @@ public class STFileNode extends nextgen.st.canvas.STNode {
 	nextgen.st.model.STFile stFile;
 	nextgen.st.model.STModel stModel;
 
-	public STFileNode(nextgen.st.canvas.STCanvas canvas, nextgen.st.model.STFile stFile, nextgen.st.model.STModel stModel) {
+	public STFileNode(STModelCanvas canvas, nextgen.st.model.STFile stFile, nextgen.st.model.STModel stModel) {
 		super(canvas, nextgen.st.STGenerator.asFile(stFile).getAbsolutePath(), java.util.UUID.fromString(stFile.getUuid()));
 		this.stFile = stFile;
 		this.stModel = stModel;
@@ -94,12 +94,12 @@ public class STFileNode extends nextgen.st.canvas.STNode {
 	private static final class EditFileSink extends NodeAction<nextgen.st.canvas.STFileNode> {
 
 
-		EditFileSink(nextgen.st.canvas.STFileNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+		EditFileSink(nextgen.st.canvas.STFileNode node, STModelCanvas canvas, PInputEvent event) {
 			super("Edit", node, canvas, event);
 		}
 
 		@Override
-		void actionPerformed(nextgen.st.canvas.STFileNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(nextgen.st.canvas.STFileNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 			canvas.presentationModel.doInTransaction(tx -> {
 				final java.util.LinkedHashMap<String, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();
 				fieldMap.put("name", canvas.newTextField(node.stFile.getName() == null ? "" : node.stFile.getName().getValue(), 15));
@@ -144,12 +144,12 @@ public class STFileNode extends nextgen.st.canvas.STNode {
 	private static final class OpenFile extends NodeAction<nextgen.st.canvas.STFileNode> {
 
 
-		OpenFile(nextgen.st.canvas.STFileNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+		OpenFile(nextgen.st.canvas.STFileNode node, STModelCanvas canvas, PInputEvent event) {
 			super("Open", node, canvas, event);
 		}
 
 		@Override
-		void actionPerformed(nextgen.st.canvas.STFileNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(nextgen.st.canvas.STFileNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 			canvas.presentationModel.doLaterInTransaction(tx -> {
 				try {
 					java.awt.Desktop.getDesktop().open(nextgen.st.STGenerator.asFile(node.stFile));
@@ -164,13 +164,13 @@ public class STFileNode extends nextgen.st.canvas.STNode {
 
 		STModelNode stModelNode;
 
-		SetSource(String name, nextgen.st.canvas.STFileNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, STModelNode stModelNode) {
+		SetSource(String name, nextgen.st.canvas.STFileNode node, STModelCanvas canvas, PInputEvent event, STModelNode stModelNode) {
 			super(name, node, canvas, event);
 			this.stModelNode = stModelNode;
 		}
 
 		@Override
-		void actionPerformed(nextgen.st.canvas.STFileNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(nextgen.st.canvas.STFileNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 			canvas.presentationModel.doLaterInTransaction(tx -> {
 				if (node.stModel != null) canvas.removeRelation(node.getUuid());
 				node.stModel = stModelNode.stModel;
@@ -185,13 +185,13 @@ public class STFileNode extends nextgen.st.canvas.STNode {
 
 		nextgen.st.model.STValue model;
 
-		SetPathTo(String name, nextgen.st.canvas.STFileNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.model.STValue model) {
+		SetPathTo(String name, nextgen.st.canvas.STFileNode node, STModelCanvas canvas, PInputEvent event, nextgen.st.model.STValue model) {
 			super(name, node, canvas, event);
 			this.model = model;
 		}
 
 		@Override
-		void actionPerformed(nextgen.st.canvas.STFileNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(nextgen.st.canvas.STFileNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 			canvas.presentationModel.doLaterInTransaction(transaction -> {
 				node.stFile.setPath(model);
 				node.setText(nextgen.st.STGenerator.asFile(node.stFile).getAbsolutePath());				
@@ -203,13 +203,13 @@ public class STFileNode extends nextgen.st.canvas.STNode {
 
 		nextgen.st.model.STValue model;
 
-		SetNameTo(String name, nextgen.st.canvas.STFileNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.model.STValue model) {
+		SetNameTo(String name, nextgen.st.canvas.STFileNode node, STModelCanvas canvas, PInputEvent event, nextgen.st.model.STValue model) {
 			super(name, node, canvas, event);
 			this.model = model;
 		}
 
 		@Override
-		void actionPerformed(nextgen.st.canvas.STFileNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(nextgen.st.canvas.STFileNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 			canvas.presentationModel.doLaterInTransaction(transaction -> {
 				node.stFile.setName(model);
 				node.setText(nextgen.st.STGenerator.asFile(node.stFile).getAbsolutePath());				
@@ -221,13 +221,13 @@ public class STFileNode extends nextgen.st.canvas.STNode {
 
 		nextgen.st.model.STValue model;
 
-		SetTypeTo(String name, nextgen.st.canvas.STFileNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.model.STValue model) {
+		SetTypeTo(String name, nextgen.st.canvas.STFileNode node, STModelCanvas canvas, PInputEvent event, nextgen.st.model.STValue model) {
 			super(name, node, canvas, event);
 			this.model = model;
 		}
 
 		@Override
-		void actionPerformed(nextgen.st.canvas.STFileNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(nextgen.st.canvas.STFileNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 			canvas.presentationModel.doLaterInTransaction(transaction -> {
 				node.stFile.setType(model);
 				node.setText(nextgen.st.STGenerator.asFile(node.stFile).getAbsolutePath());				
@@ -239,13 +239,13 @@ public class STFileNode extends nextgen.st.canvas.STNode {
 
 		nextgen.st.model.STValue model;
 
-		SetPackageNameTo(String name, nextgen.st.canvas.STFileNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.model.STValue model) {
+		SetPackageNameTo(String name, nextgen.st.canvas.STFileNode node, STModelCanvas canvas, PInputEvent event, nextgen.st.model.STValue model) {
 			super(name, node, canvas, event);
 			this.model = model;
 		}
 
 		@Override
-		void actionPerformed(nextgen.st.canvas.STFileNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(nextgen.st.canvas.STFileNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 			canvas.presentationModel.doLaterInTransaction(transaction -> {
 				node.stFile.setPackageName(model);
 				node.setText(nextgen.st.STGenerator.asFile(node.stFile).getAbsolutePath());				

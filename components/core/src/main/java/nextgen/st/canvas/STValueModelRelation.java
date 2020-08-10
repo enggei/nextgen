@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 public class STValueModelRelation extends STRelation {
 
 
-	public STValueModelRelation(STCanvas canvas, STValueNode src, STModelNode dst) {
+	public STValueModelRelation(STModelCanvas canvas, STValueNode src, STModelNode dst) {
 		super(canvas, src, dst, "Value", dst.getUuid());
 	}
 
@@ -32,12 +32,12 @@ public class STValueModelRelation extends STRelation {
 	private static final class Delete extends RelationAction<STValueModelRelation> {
 
 
-		Delete(STValueModelRelation relation, STCanvas canvas, PInputEvent event) {
+		Delete(STValueModelRelation relation, STModelCanvas canvas, PInputEvent event) {
 			super("Delete", relation, canvas, event);
 		}
 
 		@Override
-		void actionPerformed(STValueModelRelation relation, STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(STValueModelRelation relation, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 			if (!SwingUtil.showConfirmDialog(canvas, "Delete ?")) return;
 			doLaterInTransaction(tx -> {
 				final STValueNode src = (STValueNode) relation.getSrc();

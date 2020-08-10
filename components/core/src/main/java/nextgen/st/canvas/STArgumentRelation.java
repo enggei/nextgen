@@ -12,7 +12,7 @@ public class STArgumentRelation extends STRelation {
 	nextgen.st.model.STArgument stArgument;
 	nextgen.st.domain.STParameter stParameter;
 
-	public STArgumentRelation(STCanvas canvas, STModelNode src, STNode dst, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameter stParameter) {
+	public STArgumentRelation(STModelCanvas canvas, STModelNode src, STNode dst, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameter stParameter) {
 		super(canvas, src, dst, stParameter.getName(), UUID.fromString(stArgument.getUuid()));
 		this.stArgument = stArgument;
 		this.stParameter = stParameter;
@@ -37,12 +37,12 @@ public class STArgumentRelation extends STRelation {
 	private static final class Delete extends RelationAction<STArgumentRelation> {
 
 
-		Delete(STArgumentRelation relation, STCanvas canvas, PInputEvent event) {
+		Delete(STArgumentRelation relation, STModelCanvas canvas, PInputEvent event) {
 			super("Delete", relation, canvas, event);
 		}
 
 		@Override
-		void actionPerformed(STArgumentRelation relation, STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(STArgumentRelation relation, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 			if (!SwingUtil.showConfirmDialog(canvas, "Delete ?")) return;
 			final STModelNode src = (STModelNode) relation.getSrc();
 			doLaterInTransaction(tx -> {

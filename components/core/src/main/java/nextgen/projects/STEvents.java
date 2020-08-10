@@ -1,6 +1,7 @@
 package nextgen.projects;
 
 import nextgen.st.STGenerator;
+import nextgen.st.canvas.STModelCanvas;
 import nextgen.templates.greenrobot.Event;
 import nextgen.templates.greenrobot.EventManager;
 import nextgen.templates.greenrobot.PostEventMethod;
@@ -51,7 +52,7 @@ public class STEvents {
         for (String canvasEvent : canvasEvents) {
             addEvent(eventManager, newEvent()
                     .setName("NodeAddedToCanvas")
-                    .addFields(nextgen.st.canvas.STCanvas.class.getCanonicalName(), "canvas")
+                    .addFields(STModelCanvas.class.getCanonicalName(), "canvas")
                     .addFields(nextgen.st.canvas.STNode.class.getCanonicalName(), "node")
             );
         }

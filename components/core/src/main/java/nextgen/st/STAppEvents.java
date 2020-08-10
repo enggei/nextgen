@@ -1,5 +1,7 @@
 package nextgen.st;
 
+import nextgen.st.canvas.STModelCanvas;
+
 public class STAppEvents {
 
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STAppEvents.class);
@@ -44,12 +46,12 @@ public class STAppEvents {
 		org.greenrobot.eventbus.EventBus.getDefault().post(new RemovedScript(uuid));
 	}
 
-	public static void postNodeAddedToCanvas(nextgen.st.canvas.STCanvas canvas, nextgen.st.canvas.STNode node) {
+	public static void postNodeAddedToCanvas(STModelCanvas canvas, nextgen.st.canvas.STNode node) {
 		log.info("post NodeAddedToCanvas");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new NodeAddedToCanvas(canvas, node));
 	}
 
-	public static void postNodeClosed(nextgen.st.canvas.STCanvas canvas, nextgen.st.canvas.STNode node) {
+	public static void postNodeClosed(STModelCanvas canvas, nextgen.st.canvas.STNode node) {
 		log.info("post NodeClosed");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new NodeClosed(canvas, node));
 	}
@@ -133,10 +135,10 @@ public class STAppEvents {
 
 	public static class NodeAddedToCanvas {
 
-		public final nextgen.st.canvas.STCanvas canvas;
+		public final STModelCanvas canvas;
 		public final nextgen.st.canvas.STNode node;
 
-		public NodeAddedToCanvas(nextgen.st.canvas.STCanvas canvas, nextgen.st.canvas.STNode node) {
+		public NodeAddedToCanvas(STModelCanvas canvas, nextgen.st.canvas.STNode node) {
 			this.canvas = canvas;
 			this.node = node;
 		}
@@ -144,10 +146,10 @@ public class STAppEvents {
 
 	public static class NodeClosed {
 
-		public final nextgen.st.canvas.STCanvas canvas;
+		public final STModelCanvas canvas;
 		public final nextgen.st.canvas.STNode node;
 
-		public NodeClosed(nextgen.st.canvas.STCanvas canvas, nextgen.st.canvas.STNode node) {
+		public NodeClosed(STModelCanvas canvas, nextgen.st.canvas.STNode node) {
 			this.canvas = canvas;
 			this.node = node;
 		}

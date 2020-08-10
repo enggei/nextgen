@@ -12,7 +12,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
     nextgen.st.domain.STTemplate stTemplate;
     nextgen.st.model.STModel stModel;
 
-    public STModelNode(nextgen.st.canvas.STCanvas canvas, nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STModel stModel) {
+    public STModelNode(STModelCanvas canvas, nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STModel stModel) {
         super(canvas, stTemplate.getName() + " :\n" + canvas.presentationModel.render(stModel), java.util.UUID.fromString(stModel.getUuid()));
         this.stTemplate = stTemplate;
         this.stModel = stModel;
@@ -152,7 +152,7 @@ public class STModelNode extends nextgen.st.canvas.STNode {
             if (!fieldMap.isEmpty()) {
                 pop.add(new NodeAction<STModelNode>("Set Multiple", this, canvas, event) {
                     @Override
-                    void actionPerformed(STModelNode node, STCanvas canvas, PInputEvent event, ActionEvent e) {
+                    void actionPerformed(STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 
                         final Map<String, Vector<String>> selections = new LinkedHashMap<>();                     // stParameter.uuid -> stArgument.uuid
                         final Map<String, String> labels = new LinkedHashMap<>();                                     // stArgument.uuid -> stValue.rendered
@@ -339,12 +339,12 @@ public class STModelNode extends nextgen.st.canvas.STNode {
     private static final class OpenUsages extends NodeAction<nextgen.st.canvas.STModelNode> {
 
 
-        OpenUsages(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+        OpenUsages(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event) {
             super("Open usages", node, canvas, event);
         }
 
         @Override
-        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
         }
     }
 
@@ -353,14 +353,14 @@ public class STModelNode extends nextgen.st.canvas.STNode {
         nextgen.st.domain.STParameter stParameter;
         nextgen.st.canvas.STModelNode stModelNode;
 
-        SetToSameAsArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.canvas.STModelNode stModelNode) {
+        SetToSameAsArgumentAction(String name, nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.canvas.STModelNode stModelNode) {
             super(name, node, canvas, event);
             this.stParameter = stParameter;
             this.stModelNode = stModelNode;
         }
 
         @Override
-        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             canvas.presentationModel.doInTransaction(transaction -> stModelNode.stModel.getArguments()
                     .filter(stArgument -> stArgument.getStParameter().equals(stParameter.uuid()))
                     .filter(stArgument -> stArgument.getValue() != null)
@@ -379,12 +379,12 @@ public class STModelNode extends nextgen.st.canvas.STNode {
     private static final class OpenIncoming extends NodeAction<STModelNode> {
 
 
-        OpenIncoming(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+        OpenIncoming(STModelNode node, STModelCanvas canvas, PInputEvent event) {
             super("Open Incoming", node, canvas, event);
         }
 
         @Override
-        void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             canvas.presentationModel.doLaterInTransaction(transaction -> {
                 canvas.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                 final org.neo4j.graphdb.Node stModelNode = node.stModel.getNode();
@@ -434,12 +434,12 @@ public class STModelNode extends nextgen.st.canvas.STNode {
     private static final class WriteToFile extends NodeAction<STModelNode> {
 
 
-        WriteToFile(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+        WriteToFile(STModelNode node, STModelCanvas canvas, PInputEvent event) {
             super("Write To File", node, canvas, event);
         }
 
         @Override
-        void actionPerformed(STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             canvas.presentationModel.writeToFile(node.stModel);
         }
     }
@@ -447,12 +447,12 @@ public class STModelNode extends nextgen.st.canvas.STNode {
     private static final class OpenAllArguments extends NodeAction<nextgen.st.canvas.STModelNode> {
 
 
-        OpenAllArguments(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+        OpenAllArguments(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event) {
             super("Open All", node, canvas, event);
         }
 
         @Override
-        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             canvas.presentationModel.doLaterInTransaction(tx -> {
                 node.forEachArgument((stArgument, stParameter) -> new OpenArgument("", node, canvas, event, stParameter, stArgument).actionPerformed(null));
                 new LayoutTreeAction(node, canvas, event).actionPerformed(null);
@@ -465,14 +465,14 @@ public class STModelNode extends nextgen.st.canvas.STNode {
         nextgen.st.domain.STParameter stParameter;
         nextgen.st.model.STArgument stArgument;
 
-        RemoveArgument(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument) {
+        RemoveArgument(String name, nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument) {
             super(name, node, canvas, event);
             this.stParameter = stParameter;
             this.stArgument = stArgument;
         }
 
         @Override
-        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             if (!nextgen.utils.SwingUtil.showConfirmDialog(canvas, "Remove argument ?")) return;
             canvas.presentationModel.doLaterInTransaction(tx -> {
                 canvas.removeRelation(UUID.fromString(stArgument.getUuid()));
@@ -485,12 +485,12 @@ public class STModelNode extends nextgen.st.canvas.STNode {
     private static final class ToClipboard extends NodeAction<nextgen.st.canvas.STModelNode> {
 
 
-        ToClipboard(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+        ToClipboard(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event) {
             super("To Clipboard", node, canvas, event);
         }
 
         @Override
-        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             canvas.presentationModel.doLaterInTransaction(tx -> nextgen.utils.SwingUtil.toClipboard(canvas.presentationModel.render(node.stModel)));
         }
     }
@@ -498,12 +498,12 @@ public class STModelNode extends nextgen.st.canvas.STNode {
     private static final class Delete extends NodeAction<nextgen.st.canvas.STModelNode> {
 
 
-        Delete(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+        Delete(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event) {
             super("Delete", node, canvas, event);
         }
 
         @Override
-        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             if (!nextgen.utils.SwingUtil.showConfirmDialog(canvas, "Delete model ?")) return;
             canvas.presentationModel.doLaterInTransaction(tx -> {
                 node.close();
@@ -515,12 +515,12 @@ public class STModelNode extends nextgen.st.canvas.STNode {
     private static final class Clone extends NodeAction<nextgen.st.canvas.STModelNode> {
 
 
-        Clone(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+        Clone(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event) {
             super("Clone", node, canvas, event);
         }
 
         @Override
-        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             canvas.presentationModel.doLaterInTransaction(tx -> {
                 final nextgen.st.model.STModel clone = canvas.presentationModel.db.clone(node.stModel);
                 final STModelNode stModelNode = canvas.newSTNode(clone).get();
@@ -533,12 +533,12 @@ public class STModelNode extends nextgen.st.canvas.STNode {
     private static final class AddFileSink extends NodeAction<nextgen.st.canvas.STModelNode> {
 
 
-        AddFileSink(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+        AddFileSink(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event) {
             super("Add File Sink", node, canvas, event);
         }
 
         @Override
-        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             canvas.presentationModel.doLaterInTransaction(tx -> {
 
                 final java.util.concurrent.atomic.AtomicInteger typeIndex = new java.util.concurrent.atomic.AtomicInteger(0);
@@ -603,12 +603,12 @@ public class STModelNode extends nextgen.st.canvas.STNode {
     private static final class OpenFileSink extends NodeAction<nextgen.st.canvas.STModelNode> {
 
 
-        OpenFileSink(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+        OpenFileSink(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event) {
             super("Open File Sink", node, canvas, event);
         }
 
         @Override
-        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             canvas.presentationModel.doLaterInTransaction(tx ->
                     node.stModel.getFiles().forEach(stFile -> {
                         final STFileNode dstNode = canvas.addNode(stFile.getUuid(), canvas.newSTNode(stFile, node.stModel));
@@ -623,13 +623,13 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
         nextgen.st.domain.STParameter stParameter;
 
-        SetBooleanValue(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
+        SetBooleanValue(String name, nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
             super(name, node, canvas, event);
             this.stParameter = stParameter;
         }
 
         @Override
-        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             canvas.presentationModel.doLaterInTransaction(tx -> {
                 node.removeArgument(stParameter);
                 final nextgen.st.model.STValue stValue = canvas.presentationModel.db.newSTValue("true");
@@ -644,13 +644,13 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
         nextgen.st.domain.STParameter stParameter;
 
-        SetInputValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
+        SetInputValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
             super(name, node, canvas, event);
             this.stParameter = stParameter;
         }
 
         @Override
-        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             nextgen.utils.SwingUtil.showInputDialog(stParameter.getName(), canvas, s -> {
                 canvas.presentationModel.doLaterInTransaction(tx -> {
                     node.removeArgument(stParameter);
@@ -669,13 +669,13 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
         nextgen.st.domain.STParameter stParameter;
 
-        SetClipboardValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
+        SetClipboardValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
             super(name, node, canvas, event);
             this.stParameter = stParameter;
         }
 
         @Override
-        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             final String s = nextgen.utils.SwingUtil.fromClipboard();
             if (s == null || s.trim().length() == 0) return;
             canvas.presentationModel.doLaterInTransaction(tx -> {
@@ -696,14 +696,14 @@ public class STModelNode extends nextgen.st.canvas.STNode {
         nextgen.st.domain.STParameter stParameter;
         nextgen.st.canvas.STValueNode stValueNode;
 
-        SetSTValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.canvas.STValueNode stValueNode) {
+        SetSTValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.canvas.STValueNode stValueNode) {
             super(name, node, canvas, event);
             this.stParameter = stParameter;
             this.stValueNode = stValueNode;
         }
 
         @Override
-        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             canvas.presentationModel.doLaterInTransaction(tx -> {
                 if (node.sameArgumentValue(stParameter, stValueNode.stValue)) return;
                 node.removeArgument(stParameter);
@@ -721,14 +721,14 @@ public class STModelNode extends nextgen.st.canvas.STNode {
         nextgen.st.domain.STParameter stParameter;
         nextgen.st.canvas.STModelNode stModelNode;
 
-        SetSTModelArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.canvas.STModelNode stModelNode) {
+        SetSTModelArgumentAction(String name, nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.canvas.STModelNode stModelNode) {
             super(name, node, canvas, event);
             this.stParameter = stParameter;
             this.stModelNode = stModelNode;
         }
 
         @Override
-        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             canvas.presentationModel.doLaterInTransaction(tx -> {
                 node.removeArgument(stParameter);
                 final nextgen.st.model.STValue stValue = canvas.presentationModel.newSTValue(stModelNode.stModel);
@@ -745,13 +745,13 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
         nextgen.st.domain.STParameter stParameter;
 
-        AddInputValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
+        AddInputValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
             super(name, node, canvas, event);
             this.stParameter = stParameter;
         }
 
         @Override
-        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             nextgen.utils.SwingUtil.showInputDialog(stParameter.getName(), canvas, s -> {
                 canvas.presentationModel.doLaterInTransaction(tx -> {
                     final nextgen.st.model.STValue stValue = canvas.presentationModel.newSTValue(s.trim());
@@ -769,13 +769,13 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
         nextgen.st.domain.STParameter stParameter;
 
-        AddClipboardValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
+        AddClipboardValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
             super(name, node, canvas, event);
             this.stParameter = stParameter;
         }
 
         @Override
-        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             final String s = nextgen.utils.SwingUtil.fromClipboard();
             if (s == null || s.trim().length() == 0) return;
             canvas.presentationModel.doLaterInTransaction(tx -> {
@@ -795,14 +795,14 @@ public class STModelNode extends nextgen.st.canvas.STNode {
         nextgen.st.domain.STParameter stParameter;
         nextgen.st.canvas.STValueNode stValueNode;
 
-        AddSTValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.canvas.STValueNode stValueNode) {
+        AddSTValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.canvas.STValueNode stValueNode) {
             super(name, node, canvas, event);
             this.stParameter = stParameter;
             this.stValueNode = stValueNode;
         }
 
         @Override
-        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             canvas.presentationModel.doLaterInTransaction(tx -> {
                 final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValueNode.stValue);
                 node.stModel.addArguments(stArgument);
@@ -818,14 +818,14 @@ public class STModelNode extends nextgen.st.canvas.STNode {
         nextgen.st.domain.STParameter stParameter;
         nextgen.st.canvas.STModelNode stModelNode;
 
-        AddSTModelArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.canvas.STModelNode stModelNode) {
+        AddSTModelArgumentAction(String name, nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.canvas.STModelNode stModelNode) {
             super(name, node, canvas, event);
             this.stParameter = stParameter;
             this.stModelNode = stModelNode;
         }
 
         @Override
-        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             canvas.presentationModel.doLaterInTransaction(tx -> {
                 final nextgen.st.model.STValue stValue = canvas.presentationModel.newSTValue(stModelNode.stModel);
                 final nextgen.st.model.STArgument stArgument = canvas.presentationModel.newSTArgument(stParameter, stValue);
@@ -841,13 +841,13 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
         nextgen.st.domain.STParameter stParameter;
 
-        AddKVInputValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
+        AddKVInputValueArgumentAction(String name, nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
             super(name, node, canvas, event);
             this.stParameter = stParameter;
         }
 
         @Override
-        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             canvas.presentationModel.doLaterInTransaction(tx -> {
                 canvas.presentationModel.addKVArgument(node.stModel, stParameter, canvas, stArgument -> {
                     final STNode stkvNode = canvas.addNode(canvas.newSTNode(stParameter, stArgument).get());
@@ -863,14 +863,14 @@ public class STModelNode extends nextgen.st.canvas.STNode {
         nextgen.st.domain.STParameter stParameter;
         nextgen.st.model.STArgument stArgument;
 
-        OpenArgument(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument) {
+        OpenArgument(String name, nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument) {
             super(name, node, canvas, event);
             this.stParameter = stParameter;
             this.stArgument = stArgument;
         }
 
         @Override
-        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             canvas.presentationModel.doLaterInTransaction(tx -> {
                 if (stParameter.getType().equals(nextgen.st.domain.STParameterType.KVLIST)) {
                     canvas.addRelation(stArgument.getUuid(), canvas.newSTArgumentRelation(node, canvas.addNode(stArgument.getUuid(), canvas.newSTNode(stParameter, stArgument)), stArgument, stParameter));
@@ -899,12 +899,12 @@ public class STModelNode extends nextgen.st.canvas.STNode {
     private static final class OpenTemplateAction extends NodeAction<nextgen.st.canvas.STModelNode> {
 
 
-        OpenTemplateAction(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+        OpenTemplateAction(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event) {
             super("Open template", node, canvas, event);
         }
 
         @Override
-        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             canvas.presentationModel.doLaterInTransaction(transaction -> nextgen.st.STAppEvents.postOpenSTModel(node.stTemplate.getUuid()));
         }
     }
@@ -913,13 +913,13 @@ public class STModelNode extends nextgen.st.canvas.STNode {
 
         nextgen.st.domain.STParameter stParameter;
 
-        OpenAllOf(String name, nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
+        OpenAllOf(String name, nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, nextgen.st.domain.STParameter stParameter) {
             super(name, node, canvas, event);
             this.stParameter = stParameter;
         }
 
         @Override
-        void actionPerformed(nextgen.st.canvas.STModelNode node, nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+        void actionPerformed(nextgen.st.canvas.STModelNode node, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
             canvas.presentationModel.doLaterInTransaction(tx -> {
                 node.forEachArgument((stArgument, stParameter) -> {
                     if (this.stParameter.equals(stParameter))

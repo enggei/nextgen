@@ -13,7 +13,7 @@ public class STKVArgumentRelation extends STRelation {
 	nextgen.st.domain.STParameterKey stParameterKey;
 	nextgen.st.model.STArgumentKV stArgumentKV;
 
-	public STKVArgumentRelation(STCanvas canvas, STKVNode src, STNode dst, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey, nextgen.st.model.STArgumentKV stArgumentKV) {
+	public STKVArgumentRelation(STModelCanvas canvas, STKVNode src, STNode dst, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey, nextgen.st.model.STArgumentKV stArgumentKV) {
 		super(canvas, src, dst, stParameterKey.getName(), UUID.fromString(stArgumentKV.getUuid()));
 		this.stArgument = stArgument;
 		this.stParameterKey = stParameterKey;
@@ -39,12 +39,12 @@ public class STKVArgumentRelation extends STRelation {
 	private static final class Delete extends RelationAction<STKVArgumentRelation> {
 
 
-		Delete(STKVArgumentRelation relation, STCanvas canvas, PInputEvent event) {
+		Delete(STKVArgumentRelation relation, STModelCanvas canvas, PInputEvent event) {
 			super("Delete", relation, canvas, event);
 		}
 
 		@Override
-		void actionPerformed(STKVArgumentRelation relation, STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(STKVArgumentRelation relation, STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 			if (!SwingUtil.showConfirmDialog(canvas, "Delete ?")) return;
 			doLaterInTransaction(tx -> {
 				canvas.removeRelation(relation.getUuid());

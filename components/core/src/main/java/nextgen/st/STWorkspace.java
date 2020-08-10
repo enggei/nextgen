@@ -1,6 +1,6 @@
 package nextgen.st;
 
-import nextgen.st.canvas.STCanvas;
+import nextgen.st.canvas.STModelCanvas;
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STTemplate;
 import nextgen.st.model.STModel;
@@ -19,16 +19,16 @@ public class STWorkspace extends JTabbedPane {
         findCanvas();
     }
 
-    public Optional<STCanvas> findCanvas() {
+    public Optional<STModelCanvas> findCanvas() {
         for (int i = 0; i < getTabCount(); i++) {
             final Component tabComponentAt = getComponentAt(i);
-            if (tabComponentAt instanceof STCanvas)
-                return Optional.of((STCanvas) tabComponentAt);
+            if (tabComponentAt instanceof STModelCanvas)
+                return Optional.of((STModelCanvas) tabComponentAt);
         }
 
-        final STCanvas stCanvas = new STCanvas(presentationModel);
-        addPane("Canvas", stCanvas);
-        return Optional.of(stCanvas);
+        final STModelCanvas stModelCanvas = new STModelCanvas(presentationModel);
+        addPane("Canvas", stModelCanvas);
+        return Optional.of(stModelCanvas);
     }
 
     public STModelGrid getModelGrid(STTemplate stTemplate) {

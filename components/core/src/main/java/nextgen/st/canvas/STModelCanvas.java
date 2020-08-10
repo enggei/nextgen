@@ -24,9 +24,9 @@ import java.util.stream.Stream;
 
 import static java.awt.event.KeyEvent.*;
 
-public class STCanvas extends PCanvas implements PInputEventListener {
+public class STModelCanvas extends PCanvas implements PInputEventListener {
 
-	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STCanvas.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STModelCanvas.class);
 
 	private final PLayer nodeLayer;
 	private final PLayer relationLayer = new PLayer();
@@ -40,11 +40,11 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 	nextgen.st.STAppPresentationModel presentationModel;
 
-	public STCanvas(nextgen.st.STAppPresentationModel presentationModel) {
+	public STModelCanvas(nextgen.st.STAppPresentationModel presentationModel) {
 		this(presentationModel, Color.WHITE, new Dimension(1024, 1024));
 	}
 
-	public STCanvas(nextgen.st.STAppPresentationModel presentationModel, Color background, Dimension preferredSize) {
+	public STModelCanvas(nextgen.st.STAppPresentationModel presentationModel, Color background, Dimension preferredSize) {
 		super();
 		setBackground(background);
 		setPreferredSize(preferredSize);
@@ -255,10 +255,10 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 			if (event.isRightMouseButton()) {
 				SwingUtilities.invokeLater(() -> {
 					final JPopupMenu pop = new JPopupMenu();
-					STCanvas.this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+					STModelCanvas.this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 					onCanvasRightClick(pop, event);
-					STCanvas.this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-					pop.show(STCanvas.this, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
+					STModelCanvas.this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+					pop.show(STModelCanvas.this, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
 				});
 			} else if (event.isLeftMouseButton()) SwingUtilities.invokeLater(() -> onCanvasLeftClick(event));
 		}
@@ -356,10 +356,10 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 	static abstract class CanvasAction extends AbstractAction {
 
-		final STCanvas canvas;
+		final STModelCanvas canvas;
 		final PInputEvent event;
 
-		CanvasAction(String name, STCanvas canvas, PInputEvent event) {
+		CanvasAction(String name, STModelCanvas canvas, PInputEvent event) {
 			super(name);
 			this.canvas = canvas;
 			this.event = event;
@@ -370,7 +370,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 			actionPerformed(canvas, event, e);
 		}
 
-		abstract void actionPerformed(STCanvas canvas, PInputEvent event, ActionEvent e);
+		abstract void actionPerformed(STModelCanvas canvas, PInputEvent event, ActionEvent e);
 
 		protected void doLaterInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer){ 
 			javax.swing.SwingUtilities.invokeLater(() -> canvas.presentationModel.doInTransaction(consumer, (throwable) -> nextgen.utils.SwingUtil.showException(canvas, throwable)));
@@ -380,12 +380,12 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	private static final class NewScript extends CanvasAction {
 
 
-		NewScript(nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+		NewScript(STModelCanvas canvas, PInputEvent event) {
 			super("New Script", canvas, event);
 		}
 
 		@Override
-		void actionPerformed(nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 			final String name = nextgen.utils.SwingUtil.showInputDialog("Name", canvas);
 			if (name == null || name.length() == 0) return;
 
@@ -396,12 +396,12 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	private static final class NewSTValueNode extends CanvasAction {
 
 
-		NewSTValueNode(nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+		NewSTValueNode(STModelCanvas canvas, PInputEvent event) {
 			super("New Value", canvas, event);
 		}
 
 		@Override
-		void actionPerformed(nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 			nextgen.utils.SwingUtil.showInputDialog("Value", canvas, s -> doLaterInTransaction(tx -> canvas.addNode(new STValueNode(canvas, canvas.presentationModel.newSTValue(s)))));
 		}
 	}
@@ -409,12 +409,12 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	private static final class NewSTValueFromClipboard extends CanvasAction {
 
 
-		NewSTValueFromClipboard(nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+		NewSTValueFromClipboard(STModelCanvas canvas, PInputEvent event) {
 			super("New Value from Clipboard", canvas, event);
 		}
 
 		@Override
-		void actionPerformed(nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 			final String s = nextgen.utils.SwingUtil.fromClipboard();
 			if (s == null || s.trim().length() == 0) return;
 			doLaterInTransaction(tx -> canvas.addNode(canvas.newSTNode(canvas.presentationModel.newSTValue(s)).get()));
@@ -424,12 +424,12 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	private static final class SaveLastLayoutAction extends CanvasAction {
 
 
-		SaveLastLayoutAction(nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+		SaveLastLayoutAction(STModelCanvas canvas, PInputEvent event) {
 			super("Save last layout", canvas, event);
 		}
 
 		@Override
-		void actionPerformed(nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 			doLaterInTransaction(tx -> {
 				final nextgen.st.canvas.layout.LayoutNeoFactory layoutNeoFactory = new nextgen.st.canvas.layout.LayoutNeoFactory(canvas.presentationModel.db.getDatabaseService());
 				final nextgen.st.canvas.layout.Layout last = layoutNeoFactory.findOrCreateLayoutByName("last");
@@ -467,12 +467,12 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	private static final class UnselectAllNodes extends CanvasAction {
 
 
-		UnselectAllNodes(nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+		UnselectAllNodes(STModelCanvas canvas, PInputEvent event) {
 			super("Unselect all nodes", canvas, event);
 		}
 
 		@Override
-		void actionPerformed(nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 			javax.swing.SwingUtilities.invokeLater(() -> canvas.getSelectedNodes().forEach(nextgen.st.canvas.STNode::unselect));
 		}
 	}
@@ -480,12 +480,12 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	private static final class CloseSelectedNodes extends CanvasAction {
 
 
-		CloseSelectedNodes(nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+		CloseSelectedNodes(STModelCanvas canvas, PInputEvent event) {
 			super("Close selected nodes", canvas, event);
 		}
 
 		@Override
-		void actionPerformed(nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 			javax.swing.SwingUtilities.invokeLater(() -> canvas.getSelectedNodes().forEach(nextgen.st.canvas.STNode::close));
 		}
 	}
@@ -493,12 +493,12 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	private static final class LoadLastLayoutAction extends CanvasAction {
 
 
-		LoadLastLayoutAction(nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+		LoadLastLayoutAction(STModelCanvas canvas, PInputEvent event) {
 			super("Load last layout", canvas, event);
 		}
 
 		@Override
-		void actionPerformed(nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 			doLaterInTransaction(tx -> {
 
 				final nextgen.st.canvas.layout.LayoutNeoFactory layoutNeoFactory = new nextgen.st.canvas.layout.LayoutNeoFactory(canvas.presentationModel.db.getDatabaseService());
@@ -549,12 +549,12 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	private static final class SelectAllNodes extends CanvasAction {
 
 
-		SelectAllNodes(nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+		SelectAllNodes(STModelCanvas canvas, PInputEvent event) {
 			super("Select all nodes", canvas, event);
 		}
 
 		@Override
-		void actionPerformed(nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 			javax.swing.SwingUtilities.invokeLater(() -> canvas.getAllNodes().forEach(nextgen.st.canvas.STNode::select));
 		}
 	}
@@ -562,12 +562,12 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	private static final class RetainSelectedNodes extends CanvasAction {
 
 
-		RetainSelectedNodes(nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+		RetainSelectedNodes(STModelCanvas canvas, PInputEvent event) {
 			super("Retain selected nodes", canvas, event);
 		}
 
 		@Override
-		void actionPerformed(nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 			javax.swing.SwingUtilities.invokeLater(() -> canvas.getUnselectedNodes().forEach(STNode::close));
 		}
 	}
@@ -577,14 +577,14 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		private java.awt.Point position;
 		private int heightPadding;
 
-		LayoutVerticallyAction(nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+		LayoutVerticallyAction(STModelCanvas canvas, PInputEvent event) {
 			super("Layout selected nodes vertically", canvas, event);
 			this.position = canvas.getCurrentMousePosition();
 			this.heightPadding = 20;
 		}
 
 		@Override
-		void actionPerformed(nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 			SwingUtilities.invokeLater(() -> canvas.getSelectedNodes().forEach(new Consumer<nextgen.st.canvas.STNode>() {
 
 				double x = position.getX();
@@ -609,12 +609,12 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	private static final class PopupAction extends CanvasAction {
 
 
-		PopupAction(nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+		PopupAction(STModelCanvas canvas, PInputEvent event) {
 			super("Popup", canvas, event);
 		}
 
 		@Override
-		void actionPerformed(nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 			javax.swing.SwingUtilities.invokeLater(() -> { 
 				final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();
 				canvas.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));
@@ -628,12 +628,12 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	private static final class NewProject extends CanvasAction {
 
 
-		NewProject(nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+		NewProject(STModelCanvas canvas, PInputEvent event) {
 			super("New Project", canvas, event);
 		}
 
 		@Override
-		void actionPerformed(nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 			final String name = nextgen.utils.SwingUtil.showInputDialog("Name", canvas); 
 			if (name == null || name.length() == 0) return;  
 			doLaterInTransaction(tx -> canvas.addNode(new ProjectNode(canvas, canvas.presentationModel.newProject(name))));
@@ -643,12 +643,12 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	private static final class CloseAll extends CanvasAction {
 
 
-		CloseAll(nextgen.st.canvas.STCanvas canvas, PInputEvent event) {
+		CloseAll(STModelCanvas canvas, PInputEvent event) {
 			super("Close all", canvas, event);
 		}
 
 		@Override
-		void actionPerformed(nextgen.st.canvas.STCanvas canvas, PInputEvent event, ActionEvent e) {
+		void actionPerformed(STModelCanvas canvas, PInputEvent event, ActionEvent e) {
 			canvas.getAllRelations().forEach(relation -> canvas.removeRelation(relation.getUuid()));
 			canvas.getAllNodes().forEach(node -> canvas.removeNode(node.getUuid()));
 		}
