@@ -1,6 +1,5 @@
 package nextgen.st;
 
-import nextgen.st.canvas.STModelNode;
 import nextgen.st.domain.STParameter;
 import nextgen.st.domain.STParameterType;
 import nextgen.st.domain.STTemplate;
@@ -125,14 +124,7 @@ public class STModelGrid extends JPanel {
             pop.addSeparator();
             pop.add(newAction("Save", actionEvent -> save(stModel, presentationModel, txtValue, stParameter)));
             pop.addSeparator();
-            pop.add(newAction("Open", actionEvent -> presentationModel.getWorkspace().findCanvas().ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
-                final STModelNode node = new STModelNode(stCanvas, stTemplate, stModel);
-                stCanvas.addNode(node);
-
-                presentationModel.getWorkspace().setSelectedComponent(stCanvas);
-                stCanvas.requestFocusInWindow();
-                stCanvas.centerNode(node);
-            })))));
+            pop.add(newAction("Open", actionEvent -> presentationModel.getWorkspace().findCanvas().ifPresent(stCanvas -> presentationModel.doLaterInTransaction(transaction -> STAppEvents.postOpenSTModel(stModel)))));
             pop.add(newAction("Set From Clipboard", actionEvent -> {
                 txtValue.setText(SwingUtil.fromClipboard().trim());
                 save(stModel, presentationModel, txtValue, stParameter);

@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static nextgen.st.STAppPresentationModel.newAction;
+
 public class STValueGrid extends JPanel {
 
     private final STAppPresentationModel presentationModel;
@@ -109,7 +111,7 @@ public class STValueGrid extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
                     resultsModel.content.forEach(stValueElement -> {
-                        final String replaceAll = stValueElement.text.replaceAll(txtSearch.getText(), txtReplace.getText());
+                        final String replaceAll = stValueElement.text.replace(txtSearch.getText(), txtReplace.getText());
                         stValueElement.stValue.setValue(replaceAll);
                         stValueElement.text = presentationModel.render(stValueElement.stValue);
                     });
@@ -199,12 +201,50 @@ public class STValueGrid extends JPanel {
 
         private final RSyntaxTextArea component;
         private final RTextScrollPane scrollPane;
+        private STValueElement element;
 
         STValueElementEditor() {
             this.component = SwingUtil.newRSyntaxTextArea(5, 40);
+            this.component.addKeyListener(getEditorKeyListener());
             this.scrollPane = new RTextScrollPane(component);
             for (MouseWheelListener mouseWheelListener : scrollPane.getMouseWheelListeners())
                 scrollPane.removeMouseWheelListener(mouseWheelListener);
+
+            final JPopupMenu pop = component.getPopupMenu();
+            pop.addSeparator();
+            pop.add(newAction("Save", actionEvent -> tryToSave()));
+            pop.add(newAction("Append From Clipboard", actionEvent -> {
+                if (!component.isEditable()) return;
+                component.append(SwingUtil.fromClipboard().trim());
+                component.setCaretPosition(0);
+                tryToSave();
+            }));
+            pop.add(newAction("Prepend From Clipboard", actionEvent -> {
+                if (!component.isEditable()) return;
+                component.setText(SwingUtil.fromClipboard().trim() + component.getText());
+                component.setCaretPosition(0);
+                tryToSave();
+            }));
+            pop.addSeparator();
+            pop.add(newAction("To Clipboard", actionEvent -> SwingUtil.toClipboard(component.getText().trim())));
+        }
+
+        private KeyListener getEditorKeyListener() {
+            return new KeyAdapter() {
+                @Override
+                public void keyPressed(KeyEvent keyEvent) {
+                    if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_S) {
+                        tryToSave();
+                    }
+                }
+            };
+        }
+
+        private void tryToSave() {
+            if (element != null) {
+                System.out.println("tryToSave : ");
+                presentationModel.doInTransaction(transaction -> element.stValue.setValue(component.getText()));
+            }
         }
 
         @Override
@@ -214,7 +254,7 @@ public class STValueGrid extends JPanel {
 
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            final STValueElement element = (STValueElement) value;
+            this.element = (STValueElement) value;
             this.component.setText(element.text);
             this.component.setCaretPosition(0);
             return scrollPane;

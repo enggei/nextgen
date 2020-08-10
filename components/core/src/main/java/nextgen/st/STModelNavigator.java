@@ -238,14 +238,7 @@ public class STModelNavigator extends JPanel {
 				presentationModel.db.doInTransaction(transaction -> getModel().setValue(SwingUtil.fromClipboard().trim()));
 			}));
 			actions.add(newAction("Open", actionEvent -> {
-				workspace.findCanvas().ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
-					final nextgen.st.canvas.STValueNode node = new nextgen.st.canvas.STValueNode(stCanvas, getModel());
-					stCanvas.addNode(node);
-
-					workspace.setSelectedComponent(stCanvas);
-					stCanvas.requestFocusInWindow();
-					stCanvas.centerNode(node);
-				})));
+				workspace.findCanvas().ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> STAppEvents.postOpenSTValue(getModel()))));
 			}));
 			actions.add(newAction("Delete", actionEvent -> {
 				presentationModel.doLaterInTransaction(transaction -> presentationModel.db.remove(getModel()));
@@ -416,14 +409,7 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 			actions.add(newAction("Open", actionEvent -> {
 				workspace.findCanvas()
-					.ifPresent(stCanvas -> presentationModel.doLaterInTransaction(transaction -> {
-								final nextgen.st.canvas.ScriptNode node = new nextgen.st.canvas.ScriptNode(stCanvas, getModel());
-								stCanvas.addNode(node);
-
-								workspace.setSelectedComponent(stCanvas);
-								stCanvas.requestFocusInWindow();
-								stCanvas.centerNode(node);
-							})
+					.ifPresent(stCanvas -> presentationModel.doLaterInTransaction(transaction -> STAppEvents.postOpenScript(getModel()))
 					);
 			}));
 			actions.add(newAction("Run Script", actionEvent -> {
@@ -544,11 +530,7 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 			actions.add(newAction("New instance", actionEvent -> {
 				workspace.findCanvas().ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
-					final nextgen.st.canvas.STModelNode node = new nextgen.st.canvas.STModelNode(stCanvas, getModel(), presentationModel.db.newSTModel(getModel().uuid(), getModel()));
-					stCanvas.addNode(node);
-					workspace.setSelectedComponent(stCanvas);
-					stCanvas.requestFocusInWindow();
-					stCanvas.centerNode(node);
+					presentationModel.db.newSTModel(getModel().getUuid(), getModel());
 				})));
 			}));
 			actions.add(newAction("Edit Models", actionEvent -> {
@@ -598,14 +580,7 @@ public class STModelNavigator extends JPanel {
 			actions.add(newAction("Open", actionEvent -> {
 				getParentNode(STTemplateTreeNode.class)
 					.ifPresent(stTemplateTreeNode -> workspace.findCanvas()
-						.ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
-							final nextgen.st.canvas.STModelNode node = new nextgen.st.canvas.STModelNode(stCanvas, stTemplateTreeNode.getModel(), getModel());
-							stCanvas.addNode(node);
-
-							workspace.setSelectedComponent(stCanvas);
-							stCanvas.requestFocusInWindow();
-							stCanvas.centerNode(node);
-						})))
+						.ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> STAppEvents.postOpenSTModel(getModel()))))
 				);
 			}));
 			actions.add(newAction("Edit", actionEvent -> {

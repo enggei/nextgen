@@ -475,11 +475,10 @@ public class STTemplateNavigator extends JPanel {
 			getModel().getValues().forEach(stEnumValue -> {
 				actions.add(newAction("New " + stEnumValue.getName() + " instance", actionEvent -> {
 					workspace.findCanvas().ifPresent(stCanvas -> {
-							SwingUtilities.invokeLater(() -> {
-								presentationModel.db.doInTransaction(transaction -> stCanvas.addNode(new STValueNode(stCanvas, presentationModel.db.newSTValue(stEnumValue))));
-								workspace.setSelectedComponent(stCanvas);
-								stCanvas.requestFocusInWindow();
-							});
+						presentationModel.doLaterInTransaction(transaction -> {
+							presentationModel.db.newSTValue(stEnumValue);
+							workspace.setSelectedComponent(stCanvas);
+						});
 					});
 				}));
 			});
@@ -656,11 +655,8 @@ public class STTemplateNavigator extends JPanel {
 				getParentNode(STGroupTreeNode.class)
 					.ifPresent(stGroupTreeNode -> workspace.findCanvas()
 							.ifPresent(stCanvas -> presentationModel.doLaterInTransaction(transaction -> {
-									final STModelNode node = new STModelNode(stCanvas, getModel(), presentationModel.db.newSTModel(stGroupTreeNode.getModel().getUuid(), getModel()));
-									stCanvas.addNode(node);
-									workspace.setSelectedComponent(stCanvas);
-									stCanvas.requestFocusInWindow();
-									stCanvas.centerNode(node);
+										presentationModel.db.newSTModel(stGroupTreeNode.getModel().getUuid(), getModel());
+										workspace.setSelectedComponent(stCanvas);
 					})));
 			}));
 			actions.add(newAction("New Child-template", actionEvent -> {

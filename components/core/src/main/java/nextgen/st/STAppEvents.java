@@ -1,7 +1,5 @@
 package nextgen.st;
 
-import nextgen.st.canvas.STModelCanvas;
-
 public class STAppEvents {
 
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STAppEvents.class);
@@ -16,6 +14,11 @@ public class STAppEvents {
 		org.greenrobot.eventbus.EventBus.getDefault().post(new RemovedProject(uuid));
 	}
 
+	public static void postOpenProject(nextgen.st.model.Project project) {
+		log.info("post OpenProject");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new OpenProject(project));
+	}
+
 	public static void postNewSTModel(nextgen.st.model.STModel sTModel) {
 		log.info("post NewSTModel");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new NewSTModel(sTModel));
@@ -24,6 +27,11 @@ public class STAppEvents {
 	public static void postRemovedSTModel(java.lang.String uuid) {
 		log.info("post RemovedSTModel");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new RemovedSTModel(uuid));
+	}
+
+	public static void postOpenSTModel(nextgen.st.model.STModel sTModel) {
+		log.info("post OpenSTModel");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new OpenSTModel(sTModel));
 	}
 
 	public static void postNewSTValue(nextgen.st.model.STValue sTValue) {
@@ -36,6 +44,11 @@ public class STAppEvents {
 		org.greenrobot.eventbus.EventBus.getDefault().post(new RemovedSTValue(uuid));
 	}
 
+	public static void postOpenSTValue(nextgen.st.model.STValue sTValue) {
+		log.info("post OpenSTValue");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new OpenSTValue(sTValue));
+	}
+
 	public static void postNewScript(nextgen.st.model.Script script) {
 		log.info("post NewScript");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new NewScript(script));
@@ -46,19 +59,39 @@ public class STAppEvents {
 		org.greenrobot.eventbus.EventBus.getDefault().post(new RemovedScript(uuid));
 	}
 
-	public static void postNodeAddedToCanvas(STModelCanvas canvas, nextgen.st.canvas.STNode node) {
+	public static void postOpenScript(nextgen.st.model.Script script) {
+		log.info("post OpenScript");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new OpenScript(script));
+	}
+
+	public static void postNewSTTemplate(nextgen.st.domain.STTemplate sTTemplate) {
+		log.info("post NewSTTemplate");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new NewSTTemplate(sTTemplate));
+	}
+
+	public static void postRemovedSTTemplate(java.lang.String uuid) {
+		log.info("post RemovedSTTemplate");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new RemovedSTTemplate(uuid));
+	}
+
+	public static void postOpenSTTemplate(nextgen.st.domain.STTemplate sTTemplate) {
+		log.info("post OpenSTTemplate");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new OpenSTTemplate(sTTemplate));
+	}
+
+	public static void postSTModelArgumentRemoved(nextgen.st.model.STModel stModel, nextgen.st.model.STArgument stArgument) {
+		log.info("post STModelArgumentRemoved");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new STModelArgumentRemoved(stModel, stArgument));
+	}
+
+	public static void postNodeAddedToCanvas(nextgen.st.canvas.STModelCanvas canvas, java.lang.String node) {
 		log.info("post NodeAddedToCanvas");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new NodeAddedToCanvas(canvas, node));
 	}
 
-	public static void postNodeClosed(STModelCanvas canvas, nextgen.st.canvas.STNode node) {
+	public static void postNodeClosed(nextgen.st.canvas.STModelCanvas canvas, java.lang.String node) {
 		log.info("post NodeClosed");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new NodeClosed(canvas, node));
-	}
-
-	public static void postOpenSTModel(java.lang.String uuid) {
-		log.info("post OpenSTModel");
-		org.greenrobot.eventbus.EventBus.getDefault().post(new OpenSTModel(uuid));
 	}
 
 	public static class NewProject {
@@ -76,6 +109,15 @@ public class STAppEvents {
 
 		public RemovedProject(java.lang.String uuid) {
 			this.uuid = uuid;
+		}
+	}
+
+	public static class OpenProject {
+
+		public final nextgen.st.model.Project project;
+
+		public OpenProject(nextgen.st.model.Project project) {
+			this.project = project;
 		}
 	}
 
@@ -97,6 +139,15 @@ public class STAppEvents {
 		}
 	}
 
+	public static class OpenSTModel {
+
+		public final nextgen.st.model.STModel sTModel;
+
+		public OpenSTModel(nextgen.st.model.STModel sTModel) {
+			this.sTModel = sTModel;
+		}
+	}
+
 	public static class NewSTValue {
 
 		public final nextgen.st.model.STValue sTValue;
@@ -112,6 +163,15 @@ public class STAppEvents {
 
 		public RemovedSTValue(java.lang.String uuid) {
 			this.uuid = uuid;
+		}
+	}
+
+	public static class OpenSTValue {
+
+		public final nextgen.st.model.STValue sTValue;
+
+		public OpenSTValue(nextgen.st.model.STValue sTValue) {
+			this.sTValue = sTValue;
 		}
 	}
 
@@ -133,12 +193,59 @@ public class STAppEvents {
 		}
 	}
 
+	public static class OpenScript {
+
+		public final nextgen.st.model.Script script;
+
+		public OpenScript(nextgen.st.model.Script script) {
+			this.script = script;
+		}
+	}
+
+	public static class NewSTTemplate {
+
+		public final nextgen.st.domain.STTemplate sTTemplate;
+
+		public NewSTTemplate(nextgen.st.domain.STTemplate sTTemplate) {
+			this.sTTemplate = sTTemplate;
+		}
+	}
+
+	public static class RemovedSTTemplate {
+
+		public final java.lang.String uuid;
+
+		public RemovedSTTemplate(java.lang.String uuid) {
+			this.uuid = uuid;
+		}
+	}
+
+	public static class OpenSTTemplate {
+
+		public final nextgen.st.domain.STTemplate sTTemplate;
+
+		public OpenSTTemplate(nextgen.st.domain.STTemplate sTTemplate) {
+			this.sTTemplate = sTTemplate;
+		}
+	}
+
+	public static class STModelArgumentRemoved {
+
+		public final nextgen.st.model.STModel stModel;
+		public final nextgen.st.model.STArgument stArgument;
+
+		public STModelArgumentRemoved(nextgen.st.model.STModel stModel, nextgen.st.model.STArgument stArgument) {
+			this.stModel = stModel;
+			this.stArgument = stArgument;
+		}
+	}
+
 	public static class NodeAddedToCanvas {
 
-		public final STModelCanvas canvas;
-		public final nextgen.st.canvas.STNode node;
+		public final nextgen.st.canvas.STModelCanvas canvas;
+		public final java.lang.String node;
 
-		public NodeAddedToCanvas(STModelCanvas canvas, nextgen.st.canvas.STNode node) {
+		public NodeAddedToCanvas(nextgen.st.canvas.STModelCanvas canvas, java.lang.String node) {
 			this.canvas = canvas;
 			this.node = node;
 		}
@@ -146,21 +253,12 @@ public class STAppEvents {
 
 	public static class NodeClosed {
 
-		public final STModelCanvas canvas;
-		public final nextgen.st.canvas.STNode node;
+		public final nextgen.st.canvas.STModelCanvas canvas;
+		public final java.lang.String node;
 
-		public NodeClosed(STModelCanvas canvas, nextgen.st.canvas.STNode node) {
+		public NodeClosed(nextgen.st.canvas.STModelCanvas canvas, java.lang.String node) {
 			this.canvas = canvas;
 			this.node = node;
-		}
-	}
-
-	public static class OpenSTModel {
-
-		public final java.lang.String uuid;
-
-		public OpenSTModel(java.lang.String uuid) {
-			this.uuid = uuid;
 		}
 	}
 }

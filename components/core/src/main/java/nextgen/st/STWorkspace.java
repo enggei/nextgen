@@ -26,7 +26,7 @@ public class STWorkspace extends JTabbedPane {
                 return Optional.of((STModelCanvas) tabComponentAt);
         }
 
-        final STModelCanvas stModelCanvas = new STModelCanvas(presentationModel);
+        final STModelCanvas stModelCanvas = new STModelCanvas(Color.WHITE, new Dimension(800,600),presentationModel);
         addPane("Canvas", stModelCanvas);
         return Optional.of(stModelCanvas);
     }

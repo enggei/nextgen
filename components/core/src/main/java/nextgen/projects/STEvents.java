@@ -23,7 +23,8 @@ public class STEvents {
                 nextgen.st.model.Project.class,
                 nextgen.st.model.STModel.class,
                 nextgen.st.model.STValue.class,
-                nextgen.st.model.Script.class
+                nextgen.st.model.Script.class,
+                nextgen.st.domain.STTemplate.class
         };
 
         for (Class<?> modelEntity : modelEntities) {
@@ -35,6 +36,11 @@ public class STEvents {
             addEvent(eventManager, newEvent()
                     .setName("Removed" + modelEntity.getSimpleName())
                     .addFields(String.class.getCanonicalName(), "uuid")
+            );
+
+            addEvent(eventManager, newEvent()
+                    .setName("Open" + modelEntity.getSimpleName())
+                    .addFields(modelEntity.getCanonicalName(), StringUtil.lowFirst(modelEntity.getSimpleName()))
             );
         }
 
@@ -51,16 +57,11 @@ public class STEvents {
 
         for (String canvasEvent : canvasEvents) {
             addEvent(eventManager, newEvent()
-                    .setName("NodeAddedToCanvas")
+                    .setName(canvasEvent)
                     .addFields(STModelCanvas.class.getCanonicalName(), "canvas")
-                    .addFields(nextgen.st.canvas.STNode.class.getCanonicalName(), "node")
+                    .addFields(String.class.getCanonicalName(), "node")
             );
         }
-
-        addEvent(eventManager, newEvent()
-                .setName("OpenSTModel")
-                .addFields(String.class.getCanonicalName(), "uuid")
-        );
 
         STGenerator.writeJavaFile(eventManager, eventManager.getPackage(), eventManager.getName(), new File("/home/goe/projects/nextgen/components/core/src/main/java"));
     }
