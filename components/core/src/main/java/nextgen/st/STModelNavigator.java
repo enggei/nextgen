@@ -68,7 +68,10 @@ public class STModelNavigator extends JPanel {
 					if (selectionPath == null) return;
 					final Object lastPathComponent = selectionPath.getLastPathComponent();
 					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
-
+					if (lastPathComponent instanceof STModelTreeNode) {
+						final STModelTreeNode selectedNode = (STModelTreeNode) lastPathComponent;
+						STAppEvents.postSTModelTreeNodeClicked(selectedNode.getModel());
+					}
 				}
 			}
 		});

@@ -227,4 +227,18 @@ public class STAppEvents {
 			this.stModel = stModel;
 		}
 	}
+
+	public static void postSTModelTreeNodeClicked(nextgen.st.model.STModel stModel) {
+		log.info("post STModelTreeNodeClicked");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new STModelTreeNodeClicked(stModel));
+	}
+
+	public static class STModelTreeNodeClicked {
+
+		public final nextgen.st.model.STModel stModel;
+
+		public STModelTreeNodeClicked(nextgen.st.model.STModel stModel) {
+			this.stModel = stModel;
+		}
+	}
 }

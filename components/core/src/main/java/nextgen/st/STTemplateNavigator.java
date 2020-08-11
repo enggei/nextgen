@@ -920,4 +920,17 @@ public class STTemplateNavigator extends JPanel {
 			}
 		});
 	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTModelTreeNodeClicked(nextgen.st.STAppEvents.STModelTreeNodeClicked event) {
+		presentationModel.doLaterInTransaction(transaction -> {
+			final STTemplate stTemplate = presentationModel.findSTTemplateByUuid(event.stModel.getStTemplate());
+			final RootNode rootNode = (RootNode) treeModel.getRoot();
+			final TreePath path = rootNode.find(baseTreeNode -> (baseTreeNode instanceof STTemplateTreeNode) && ((STTemplateTreeNode) baseTreeNode).getModel().equals(stTemplate));
+			if (path != null) {
+				tree.scrollPathToVisible(path);
+				tree.setSelectionPath(path);
+			}
+		});
+	}
 }
