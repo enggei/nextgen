@@ -1,4 +1,4 @@
-package nextgen.st.canvas;
+package nextgen.st;
 
 import nextgen.utils.SwingUtil;
 import org.piccolo2d.PCamera;
@@ -2187,6 +2187,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		protected void onNodeLeftClick(PInputEvent event) {
 			super.onNodeLeftClick(event);
 			presentationModel.doLaterInTransaction(tx -> setText(stTemplate.getName() + " : \n" + presentationModel.render(getModel())));
+			nextgen.st.STAppEvents.postCanvasSTModelClicked(getModel());
 		}
 
 		@Override
@@ -2636,7 +2637,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
 				nextgen.utils.SwingUtil.confirm(thisCanvas(), "Remove argument ?")
-						.ifPresent(confirm -> presentationModel.doLaterInTransaction(tx -> {
+						.ifPresent(confirm -> thisCanvas().presentationModel.doLaterInTransaction(tx -> {
 							thisCanvas().removeRelation(UUID.fromString(stArgument.getUuid()));
 							getModel().removeArguments(stArgument);
 							setText(thisCanvas().presentationModel.render(getModel()));

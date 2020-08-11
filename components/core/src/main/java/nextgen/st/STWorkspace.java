@@ -1,6 +1,5 @@
 package nextgen.st;
 
-import nextgen.st.canvas.STModelCanvas;
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STTemplate;
 import nextgen.st.model.STModel;

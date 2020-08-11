@@ -61,6 +61,14 @@ public class STModelNavigator extends JPanel {
 					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
 
 					showPopup((BaseTreeNode<?>) lastPathComponent, e.getX(), e.getY());
+
+				} else {
+
+					final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());
+					if (selectionPath == null) return;
+					final Object lastPathComponent = selectionPath.getLastPathComponent();
+					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
+
 				}
 			}
 		});
@@ -83,18 +91,10 @@ public class STModelNavigator extends JPanel {
 			}
 		});
 
-		tree.addTreeSelectionListener(e -> {
-			if (e.getNewLeadSelectionPath() == null) return;
-
-			if (tree.getSelectionCount() == 1) {
-				final TreePath path = e.getPath();
-				final Object lastPathComponent = path.getLastPathComponent();
-
-			}
-		});
-
 		setPreferredSize(new Dimension(300, 600));
 		add(new JScrollPane(tree), BorderLayout.CENTER);
+
+		org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
 
 	public class BaseTreeNode<T> extends DefaultMutableTreeNode {
@@ -187,6 +187,20 @@ public class STModelNavigator extends JPanel {
 			return set.stream();
 		}
 
+		protected TreePath find(java.util.function.Predicate<BaseTreeNode<?>> predicate) {
+			final int childCount = getChildCount();
+			for (int i = 0; i < childCount; i++) {
+				final BaseTreeNode<?> childAt = (BaseTreeNode<?>) getChildAt(i);
+				if (predicate.test(childAt))
+					return (childAt).getThisPath();
+				else {
+					final TreePath treePath = childAt.find(predicate);
+					if (treePath != null) return treePath;
+				}
+			}
+			return null;
+		}
+
 		protected TreePath getThisPath() {
 			return new TreePath(getPath());
 		}
@@ -196,12 +210,12 @@ public class STModelNavigator extends JPanel {
 
 			Object node = parent.getLastPathComponent();
 			int childCount = model.getChildCount(node);
-			for (int j = 0; j < childCount; j++)
+			for (int j = 0; j < childCount; j++) 
 				expandTreeNodesRecursive(parent.pathByAddingChild(model.getChild(node, j)), expand);
 
-			if (expand)
+			if (expand) 
 				tree.expandPath(parent);
-			else
+			else 
 				tree.collapsePath(parent);
 		}
 	}
@@ -311,7 +325,7 @@ public class STModelNavigator extends JPanel {
 
 		@org.greenrobot.eventbus.Subscribe()
 		public void onNewProject(nextgen.st.STAppEvents.NewProject event) {
-			presentationModel.doLaterInTransaction(transaction ->
+			presentationModel.doLaterInTransaction(transaction -> 
 				addAndSelectChild(new ProjectTreeNode(event.project))
 			);
 		}
@@ -377,7 +391,7 @@ public class STModelNavigator extends JPanel {
 
 		@org.greenrobot.eventbus.Subscribe()
 		public void onNewScript(nextgen.st.STAppEvents.NewScript event) {
-			presentationModel.doLaterInTransaction(transaction ->
+			presentationModel.doLaterInTransaction(transaction -> 
 				addAndSelectChild(new ScriptTreeNode(event.script))
 			);
 		}
@@ -408,9 +422,7 @@ public class STModelNavigator extends JPanel {
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
 			actions.add(newAction("Open", actionEvent -> {
-				workspace.findCanvas()
-					.ifPresent(stCanvas -> presentationModel.doLaterInTransaction(transaction -> STAppEvents.postOpenScript(getModel()))
-					);
+				workspace.findCanvas().ifPresent(stCanvas -> presentationModel.doLaterInTransaction(transaction -> STAppEvents.postOpenScript(getModel())));
 			}));
 			actions.add(newAction("Run Script", actionEvent -> {
 				presentationModel.runScript(tree, getModel());
@@ -448,16 +460,16 @@ public class STModelNavigator extends JPanel {
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
 			actions.add(newAction("Edit Values", actionEvent -> {
-				SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
+				presentationModel.doLaterInTransaction(transaction -> {
 					final STValueGrid valueGrid = workspace.getValueGrid();
 					workspace.setSelectedComponent(valueGrid);
 					valueGrid.requestFocusInWindow();
-				}));
+				});
 			}));
 			actions.add(newAction("Reconcile", actionEvent -> {
 				presentationModel.doLaterInTransaction(transaction -> {
 					presentationModel.reconcileValues();
-					treeModel.nodeStructureChanged(STModelNavigator.STValuesRootNode.this);
+					nodeChanged();
 				});
 			}));
 			return actions;
@@ -465,7 +477,7 @@ public class STModelNavigator extends JPanel {
 
 		@org.greenrobot.eventbus.Subscribe()
 		public void onNewSTValue(nextgen.st.STAppEvents.NewSTValue event) {
-			presentationModel.doLaterInTransaction(transaction ->
+			presentationModel.doLaterInTransaction(transaction -> 
 				addChild(new STValueTreeNode(event.sTValue))
 			);
 		}
@@ -529,9 +541,9 @@ public class STModelNavigator extends JPanel {
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
 			actions.add(newAction("New instance", actionEvent -> {
-				workspace.findCanvas().ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
+				workspace.findCanvas().ifPresent(stCanvas -> presentationModel.doLaterInTransaction(transaction -> {
 					presentationModel.db.newSTModel(getModel().getUuid(), getModel());
-				})));
+				}));
 			}));
 			actions.add(newAction("Edit Models", actionEvent -> {
 				SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
@@ -546,7 +558,7 @@ public class STModelNavigator extends JPanel {
 		@org.greenrobot.eventbus.Subscribe()
 		public void onNewSTModel(nextgen.st.STAppEvents.NewSTModel event) {
 			presentationModel.doLaterInTransaction(transaction -> {
-				if (getModel().getUuid().equals(event.sTModel.getStTemplate()))
+				if (getModel().getUuid().equals(event.sTModel.getStTemplate())) 
 					addAndSelectChild(new STModelTreeNode(event.sTModel));
 			});
 		}
@@ -580,8 +592,7 @@ public class STModelNavigator extends JPanel {
 			actions.add(newAction("Open", actionEvent -> {
 				getParentNode(STTemplateTreeNode.class)
 					.ifPresent(stTemplateTreeNode -> workspace.findCanvas()
-						.ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> STAppEvents.postOpenSTModel(getModel()))))
-				);
+						.ifPresent(stCanvas -> presentationModel.doLaterInTransaction(transaction -> STAppEvents.postOpenSTModel(getModel()))));
 			}));
 			actions.add(newAction("Edit", actionEvent -> {
 				getParentNode(STTemplateTreeNode.class)
@@ -611,7 +622,7 @@ public class STModelNavigator extends JPanel {
 				if (event.uuid.equals(uuid)) treeModel.removeNodeFromParent(this);
 			});
 		}
-	}
+	}	
 
 	private Action newAction(String name, Consumer<ActionEvent> actionEventConsumer) {
 		return new AbstractAction(name) {
@@ -655,5 +666,17 @@ public class STModelNavigator extends JPanel {
 				}
 		}
 		return values;
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onCanvasSTModelClicked(nextgen.st.STAppEvents.CanvasSTModelClicked event) {
+		SwingUtilities.invokeLater(() -> {
+			final RootNode rootNode = (RootNode) treeModel.getRoot();
+			final TreePath path = rootNode.find(baseTreeNode -> (baseTreeNode instanceof STModelTreeNode) && ((STModelTreeNode) baseTreeNode).getModel().equals(event.stModel));
+			if (path != null) {
+				tree.scrollPathToVisible(path);
+				tree.setSelectionPath(path);
+			}
+		});
 	}
 }

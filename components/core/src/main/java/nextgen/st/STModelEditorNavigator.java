@@ -65,6 +65,26 @@ public class STModelEditorNavigator extends JPanel {
 					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
 
 					showPopup((BaseTreeNode<?>) lastPathComponent, e.getX(), e.getY());
+
+				} else {
+
+					final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());
+					if (selectionPath == null) return;
+					final Object lastPathComponent = selectionPath.getLastPathComponent();
+					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
+
+					if (lastPathComponent instanceof STModelTreeNode) {
+						final STModelTreeNode selectedNode = (STModelTreeNode) lastPathComponent;
+						editor.setText(presentationModel.renderInTransaction(selectedNode.getModel()), null);
+					} else if (lastPathComponent instanceof STValueTreeNode) {
+						final STValueTreeNode selectedNode = (STValueTreeNode) lastPathComponent;
+						editor.setText(presentationModel.renderInTransaction(selectedNode.getModel()), selectedNode);
+					} else if (lastPathComponent instanceof STKVArgumentTreeNode) {
+						final STKVArgumentTreeNode selectedNode = (STKVArgumentTreeNode) lastPathComponent;
+						editor.setText(presentationModel.renderInTransaction(selectedNode.getModel(), selectedNode.stParameter), null);
+					} else {
+						editor.setText("", null);
+					}
 				}
 			}
 		});
@@ -87,30 +107,9 @@ public class STModelEditorNavigator extends JPanel {
 			}
 		});
 
-		tree.addTreeSelectionListener(e -> {
-			if (e.getNewLeadSelectionPath() == null) return;
-
-			if (tree.getSelectionCount() == 1) {
-				final TreePath path = e.getPath();
-				final Object lastPathComponent = path.getLastPathComponent();
-
-				if (lastPathComponent instanceof STModelTreeNode) {
-					final STModelTreeNode selectedNode = (STModelTreeNode) lastPathComponent;
-					editor.setText(presentationModel.renderInTransaction(selectedNode.getModel()), null);
-				} else if (lastPathComponent instanceof STValueTreeNode) {
-					final STValueTreeNode selectedNode = (STValueTreeNode) lastPathComponent;
-					editor.setText(presentationModel.renderInTransaction(selectedNode.getModel()), selectedNode);
-				} else if (lastPathComponent instanceof STKVArgumentTreeNode) {
-					final STKVArgumentTreeNode selectedNode = (STKVArgumentTreeNode) lastPathComponent;
-					editor.setText(presentationModel.renderInTransaction(selectedNode.getModel(), selectedNode.stParameter), null);
-				} else {
-					editor.setText("", null);
-				}
-			}
-		});
-
 		setPreferredSize(new Dimension(300, 600));
 		add(new JScrollPane(tree), BorderLayout.CENTER);
+
 	}
 
 	public class BaseTreeNode<T> extends DefaultMutableTreeNode {
@@ -201,6 +200,20 @@ public class STModelEditorNavigator extends JPanel {
 			}
 
 			return set.stream();
+		}
+
+		protected TreePath find(java.util.function.Predicate<BaseTreeNode<?>> predicate) {
+			final int childCount = getChildCount();
+			for (int i = 0; i < childCount; i++) {
+				final BaseTreeNode<?> childAt = (BaseTreeNode<?>) getChildAt(i);
+				if (predicate.test(childAt))
+					return (childAt).getThisPath();
+				else {
+					final TreePath treePath = childAt.find(predicate);
+					if (treePath != null) return treePath;
+				}
+			}
+			return null;
 		}
 
 		protected TreePath getThisPath() {

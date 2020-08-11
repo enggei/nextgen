@@ -28,7 +28,7 @@ public class STTemplateNavigator extends JPanel {
 
 		this.presentationModel = presentationModel;
 
-		treeModel = new DefaultTreeModel(new RootNode("Models"));
+		treeModel = new DefaultTreeModel(new RootNode("Templates"));
 		tree.setModel(treeModel);
 		ToolTipManager.sharedInstance().registerComponent(tree);
 
@@ -62,6 +62,27 @@ public class STTemplateNavigator extends JPanel {
 					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
 
 					showPopup((BaseTreeNode<?>) lastPathComponent, e.getX(), e.getY());
+
+				} else {
+
+					final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());
+					if (selectionPath == null) return;
+					final Object lastPathComponent = selectionPath.getLastPathComponent();
+					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
+
+					if (lastPathComponent instanceof STGroupTreeNode) {
+						final STGroupTreeNode selectedNode = (STGroupTreeNode) lastPathComponent;
+						workspace.getSTEditor(selectedNode.getModel());
+					} else if (lastPathComponent instanceof STTemplateTreeNode) {
+						final STTemplateTreeNode selectedNode = (STTemplateTreeNode) lastPathComponent;
+						selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> workspace.getSTEditor(stGroupTreeNode.getModel()).setSTTemplate(selectedNode.getModel()));
+					} else if (lastPathComponent instanceof STEnumTreeNode) {
+						final STEnumTreeNode selectedNode = (STEnumTreeNode) lastPathComponent;
+						selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> workspace.getSTEditor(stGroupTreeNode.getModel()).setSTEnum(selectedNode.getModel()));
+					} else if (lastPathComponent instanceof STInterfaceTreeNode) {
+						final STInterfaceTreeNode selectedNode = (STInterfaceTreeNode) lastPathComponent;
+						selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> workspace.getSTEditor(stGroupTreeNode.getModel()).setSTInterface(selectedNode.getModel()));
+					}
 				}
 			}
 		});
@@ -80,29 +101,6 @@ public class STTemplateNavigator extends JPanel {
 					if (bounds == null) return;
 
 					showPopup((BaseTreeNode<?>) lastPathComponent, (int) bounds.getX(), (int) bounds.getY());
-				}
-			}
-		});
-
-		tree.addTreeSelectionListener(e -> {
-			if (e.getNewLeadSelectionPath() == null) return;
-
-			if (tree.getSelectionCount() == 1) {
-				final TreePath path = e.getPath();
-				final Object lastPathComponent = path.getLastPathComponent();
-
-				if (lastPathComponent instanceof STGroupTreeNode) {
-					final STGroupTreeNode selectedNode = (STGroupTreeNode) lastPathComponent;
-					workspace.getSTEditor(selectedNode.getModel());
-				} else if (lastPathComponent instanceof STTemplateTreeNode) {
-					final STTemplateTreeNode selectedNode = (STTemplateTreeNode) lastPathComponent;
-					selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> workspace.getSTEditor(stGroupTreeNode.getModel()).setSTTemplate(selectedNode.getModel()));
-				} else if (lastPathComponent instanceof STEnumTreeNode) {
-					final STEnumTreeNode selectedNode = (STEnumTreeNode) lastPathComponent;
-					selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> workspace.getSTEditor(stGroupTreeNode.getModel()).setSTEnum(selectedNode.getModel()));
-				} else if (lastPathComponent instanceof STInterfaceTreeNode) {
-					final STInterfaceTreeNode selectedNode = (STInterfaceTreeNode) lastPathComponent;
-					selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> workspace.getSTEditor(stGroupTreeNode.getModel()).setSTInterface(selectedNode.getModel()));
 				}
 			}
 		});
@@ -903,6 +901,19 @@ public class STTemplateNavigator extends JPanel {
 		SwingUtilities.invokeLater(() -> {
 			final RootNode rootNode = (RootNode) treeModel.getRoot();
 			final TreePath path = rootNode.find(baseTreeNode -> (baseTreeNode instanceof STTemplateTreeNode) && ((STTemplateTreeNode) baseTreeNode).getModel().equals(event.sTTemplate));
+			if (path != null) {
+				tree.scrollPathToVisible(path);
+				tree.setSelectionPath(path);
+			}
+		});
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onCanvasSTModelClicked(nextgen.st.STAppEvents.CanvasSTModelClicked event) {
+		presentationModel.doLaterInTransaction(transaction -> {
+			final STTemplate stTemplate = presentationModel.findSTTemplateByUuid(event.stModel.getStTemplate());
+			final RootNode rootNode = (RootNode) treeModel.getRoot();
+			final TreePath path = rootNode.find(baseTreeNode -> (baseTreeNode instanceof STTemplateTreeNode) && ((STTemplateTreeNode) baseTreeNode).getModel().equals(stTemplate));
 			if (path != null) {
 				tree.scrollPathToVisible(path);
 				tree.setSelectionPath(path);

@@ -1,7 +1,7 @@
 package nextgen.projects;
 
 import nextgen.st.STGenerator;
-import nextgen.st.canvas.STModelCanvas;
+import nextgen.st.STModelCanvas;
 import nextgen.templates.greenrobot.Event;
 import nextgen.templates.greenrobot.EventManager;
 import nextgen.templates.greenrobot.PostEventMethod;
