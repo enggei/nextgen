@@ -208,6 +208,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 	protected void onCanvasRightClick(JPopupMenu pop, PInputEvent event) {
 
 
+		pop.add(new SaveLastLayoutAction(event));
+		pop.add(new LoadLastLayoutAction(event));
 		pop.addSeparator();
 		pop.add(new SelectAllNodes(event));
 		pop.add(new UnselectAllNodes(event));
@@ -304,7 +306,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			invalidate();
 			repaint();
 		}
-	}
+	}  
 
 	private final class SelectEventsHandler extends PBasicInputEventHandler {
 
@@ -349,7 +351,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			if (selectionRectangle != null) nodeLayer.removeChild(selectionRectangle);
 			return this;
 		}
-	}
+	}  
 
 	private static class CanvasZoomHandler extends PBasicInputEventHandler {
 
@@ -372,7 +374,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			final java.awt.geom.Point2D viewAboutPoint = event.getPosition();
 			camera.scaleViewAboutPoint(scale, viewAboutPoint.getX(), viewAboutPoint.getY());
 		}
-	}
+	}  
 
 	abstract class CanvasAction extends AbstractAction {
 
@@ -405,9 +407,9 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 		public BaseCanvasNode(T model, UUID uuid, String label) {
 			this.addAttribute("_defaultColor", Color.decode("#000000"));
-			this.addAttribute("_selectedColor", Color.decode("#f33"));
-			this.addAttribute("_highlightedColor", Color.decode("#f33"));
-			this.addAttribute("_rectangleColor", Color.decode("#43a2ca"));
+			this.addAttribute("_selectedColor", new Color(174, 1, 126));
+			this.addAttribute("_highlightedColor", new Color(240, 59, 32));
+			this.addAttribute("_rectangleColor", new Color(67, 162, 202, 50));
 			this.addAttribute("_model", model);
 			this.addAttribute("_uuid", uuid);
 			this.addAttribute("_text", label);
@@ -524,7 +526,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			addAttribute("_highlight", Boolean.FALSE);
 			SwingUtilities.invokeLater(() -> {
 				child.setTextPaint(isSelected() ? (Color) getAttribute("_selectedColor") : (Color) getAttribute("_defaultColor"));
-				if (rectangle != null) BaseCanvasNode.this.removeChild(rectangle);
+				if (rectangle != null) BaseCanvasNode.this.removeChild(rectangle);	
 			});
 		}
 
@@ -546,7 +548,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 				for (UUID uuid : incoming) removeRelation(uuid);
 				for (UUID uuid : outgoing) removeRelation(uuid);
 				org.greenrobot.eventbus.EventBus.getDefault().unregister(BaseCanvasNode.this);
-				removeNode(getUuid());
+				removeNode(getUuid());			
 			});
 		}
 
@@ -614,7 +616,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			public void mouseEntered(PInputEvent event) {
-				if (!event.isControlDown())
+				if (!event.isControlDown()) 
 					event.getInputManager().setKeyboardFocus(this);
 				highlight();
 			}
@@ -622,7 +624,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			@Override
 			public void mouseExited(PInputEvent event) {
 				unhighlight();
-				if (!event.isControlDown())
+				if (!event.isControlDown()) 
 					event.getInputManager().setKeyboardFocus(thisCanvas());
 			}
 
@@ -643,7 +645,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			public void keyPressed(PInputEvent event) {
 				onNodeKeyPressed(event);
 			}
-		}
+		}  	
 
 		abstract class NodeAction extends AbstractAction {
 
@@ -812,7 +814,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 				});
 			}
 		}
-	}
+	}  
 
 	protected class BaseCanvasRelation extends PPath.Double implements Comparator<BaseCanvasRelation> {
 
@@ -1036,7 +1038,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 						break;
 				}
 			}
-		}
+		}  
 
 		private final class RelationInputEventHandler extends PBasicInputEventHandler {
 
@@ -1069,7 +1071,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			public void keyPressed(PInputEvent event) {
 				onRelationKeyPressed(event);
 			}
-		}
+		}  
 
 		protected void onRelationRightClick(PInputEvent event, JPopupMenu pop) {
 		}
@@ -1098,7 +1100,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			abstract void actionPerformed(PInputEvent event, ActionEvent e);
 		}
-	}
+	}  
 
 	final class SaveLastLayoutAction extends CanvasAction {
 
@@ -1110,36 +1112,34 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		@Override
 		void actionPerformed(PInputEvent event, ActionEvent e) {
 			presentationModel.doLaterInTransaction(tx -> {
-				final nextgen.st.canvas.layout.LayoutNeoFactory layoutNeoFactory = new nextgen.st.canvas.layout.LayoutNeoFactory(presentationModel.db.getDatabaseService());
-				final nextgen.st.canvas.layout.Layout last = layoutNeoFactory.findOrCreateLayoutByName("last");
+					final nextgen.st.canvas.layout.LayoutNeoFactory layoutNeoFactory = new nextgen.st.canvas.layout.LayoutNeoFactory(presentationModel.db.getDatabaseService());
+					final nextgen.st.canvas.layout.Layout last = layoutNeoFactory.findOrCreateLayoutByName("last");
 
-				last.getNodes().forEach(layoutNode -> {
-					layoutNode.getNode().getRelationships().forEach(org.neo4j.graphdb.Relationship::delete);
-					layoutNode.getNode().delete();
-				});
+					last.getNodes().forEach(layoutNode -> {
+						layoutNode.getNode().getRelationships().forEach(org.neo4j.graphdb.Relationship::delete);
+						layoutNode.getNode().delete();
+					});
 
-				getAllNodes().forEach(stNode -> {
-					final nextgen.st.canvas.layout.LayoutNode layoutNode = layoutNeoFactory.newLayoutNode();
-					layoutNode.setX(stNode.getOffset().getX());
-					layoutNode.setY(stNode.getOffset().getY());
-			/*
-					if (stNode instanceof STModelNode) {
-						final org.neo4j.graphdb.Node node = ((STModelNode) stNode).stModel.getNode();
-						layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
-					} else if (stNode instanceof STValueNode) {
-						final org.neo4j.graphdb.Node node = ((STValueNode) stNode).stValue.getNode();
-						layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
-					} else if (stNode instanceof ScriptNode) {
-						final org.neo4j.graphdb.Node node = ((ScriptNode) stNode).script.getNode();
-						layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
-					} else if (stNode instanceof STFileNode) {
-						final org.neo4j.graphdb.Node node = ((STFileNode) stNode).stFile.getNode();
-						layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
-					}
-			*/
-					last.addNodes(layoutNode);
+					getAllNodes().forEach(stNode -> {
+						final nextgen.st.canvas.layout.LayoutNode layoutNode = layoutNeoFactory.newLayoutNode();
+						layoutNode.setX(stNode.getOffset().getX());
+						layoutNode.setY(stNode.getOffset().getY());
+						if (stNode instanceof STModelNode) {
+							final org.neo4j.graphdb.Node node = ((STModelNode) stNode).getModel().getNode();
+							layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
+						} else if (stNode instanceof STValueNode) {
+							final org.neo4j.graphdb.Node node = ((STValueNode) stNode).getModel().getNode();
+							layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
+						} else if (stNode instanceof ScriptNode) {
+							final org.neo4j.graphdb.Node node = ((ScriptNode) stNode).getModel().getNode();
+							layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
+						} else if (stNode instanceof STFileNode) {
+							final org.neo4j.graphdb.Node node = ((STFileNode) stNode).getModel().getNode();
+							layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
+						}
+						last.addNodes(layoutNode);
+					});
 				});
-			});
 		}
 	}
 	final class UnselectAllNodes extends CanvasAction {
@@ -1181,42 +1181,40 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 				final nextgen.st.canvas.layout.Layout last = layoutNeoFactory.findLayoutByName("last");
 				if (last == null) return;
 
-				final java.util.concurrent.atomic.AtomicReference<BaseCanvasNode> centerNodeRef = new java.util.concurrent.atomic.AtomicReference<>();
+				final java.util.concurrent.atomic.AtomicReference<BaseCanvasNode<?>> centerNodeRef = new java.util.concurrent.atomic.AtomicReference<>();
 				last.getNodesSorted().forEach(layoutNode -> {
 					final org.neo4j.graphdb.Node node = layoutNode.getNode();
-			/*
 					node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("ref")).forEach(relationship -> {
-						final org.neo4j.graphdb.Node stNode = relationship.getOtherNode(node);
-						if (nextgen.st.model.STModelNeoFactory.isSTModel(stNode)) {
-							final nextgen.st.model.STModel stModel = presentationModel.newSTModel(stNode);
-							addNode(stModel.getUuid(), newSTNode(stModel));
-							getNode(stModel.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
-							if (centerNodeRef.get() == null) centerNodeRef.set(getNode(stModel.getUuid()));
-						} else if (nextgen.st.model.STModelNeoFactory.isSTValue(stNode)) {
-							final nextgen.st.model.STValue stValue = presentationModel.newSTValue(stNode);
-							addNode(stValue.getUuid(), newSTNode(stValue));
-							getNode(stValue.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
-							if (centerNodeRef.get() == null) centerNodeRef.set(getNode(stValue.getUuid()));
-						} else if (nextgen.st.model.STModelNeoFactory.isScript(stNode)) {
-							final nextgen.st.model.Script script = presentationModel.newScript(stNode);
-							addNode(script.getUuid(), newScriptNode(script));
-							getNode(script.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
-							if (centerNodeRef.get() == null) centerNodeRef.set(getNode(script.getUuid()));
-						} else if (nextgen.st.model.STModelNeoFactory.isProject(stNode)) {
-							final nextgen.st.model.Project project = presentationModel.newProject(stNode);
-							addNode(project.getUuid(), newSTNode(project));
-							getNode(project.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
-							if (centerNodeRef.get() == null) centerNodeRef.set(getNode(project.getUuid()));
-						} else if (nextgen.st.model.STModelNeoFactory.isSTFile(stNode)) {
-							final nextgen.st.model.STFile stFile = presentationModel.newSTFile(stNode);
-							stFile.getIncomingFiles().findFirst().ifPresent(stModel -> {
-								addNode(stFile.getUuid(), newSTNode(stFile, stModel));
-								getNode(stFile.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
-								if (centerNodeRef.get() == null) centerNodeRef.set(getNode(stFile.getUuid()));
-							});
-						}
+							final org.neo4j.graphdb.Node stNode = relationship.getOtherNode(node);
+							if (nextgen.st.model.STModelNeoFactory.isSTModel(stNode)) {
+								final nextgen.st.model.STModel stModel = presentationModel.newSTModel(stNode);
+								addNode(stModel.getUuid(), () -> new STModelNode(stModel, presentationModel.findSTTemplateByUuid(stModel.getStTemplate())));
+								getNode(stModel.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
+								if (centerNodeRef.get() == null) centerNodeRef.set(getNode(stModel.getUuid()));
+							} else if (nextgen.st.model.STModelNeoFactory.isSTValue(stNode)) {
+								final nextgen.st.model.STValue stValue = presentationModel.newSTValue(stNode);
+								addNode(stValue.getUuid(), () -> new STValueNode(stValue));
+								getNode(stValue.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
+								if (centerNodeRef.get() == null) centerNodeRef.set(getNode(stValue.getUuid()));
+							} else if (nextgen.st.model.STModelNeoFactory.isScript(stNode)) {
+								final nextgen.st.model.Script script = presentationModel.newScript(stNode);
+								addNode(script.getUuid(), () -> new ScriptNode(script));
+								getNode(script.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
+								if (centerNodeRef.get() == null) centerNodeRef.set(getNode(script.getUuid()));
+							} else if (nextgen.st.model.STModelNeoFactory.isProject(stNode)) {
+								final nextgen.st.model.Project project = presentationModel.newProject(stNode);
+								addNode(project.getUuid(), () -> new ProjectNode(project));
+								getNode(project.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
+								if (centerNodeRef.get() == null) centerNodeRef.set(getNode(project.getUuid()));
+							} else if (nextgen.st.model.STModelNeoFactory.isSTFile(stNode)) {
+								final nextgen.st.model.STFile stFile = presentationModel.newSTFile(stNode);
+								stFile.getIncomingFiles().findFirst().ifPresent(stModel -> {
+									addNode(stFile.getUuid(), () -> new STFileNode(stFile, stModel));
+									getNode(stFile.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
+									if (centerNodeRef.get() == null) centerNodeRef.set(getNode(stFile.getUuid()));
+								});
+							}
 					});
-			*/
 				});
 
 				if (centerNodeRef.get() != null) centerNode(centerNodeRef.get());
@@ -1289,7 +1287,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 		@Override
 		void actionPerformed(PInputEvent event, ActionEvent e) {
-			javax.swing.SwingUtilities.invokeLater(() -> {
+			javax.swing.SwingUtilities.invokeLater(() -> { 
 				final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();
 				setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));
 				onCanvasRightClick(pop, event);
@@ -1315,8 +1313,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 	final class ProjectNode extends BaseCanvasNode<nextgen.st.model.Project> {
 
 
-		public ProjectNode(nextgen.st.model.Project model, UUID uuid, String label) {
-			super(model, uuid, label);
+		public ProjectNode(nextgen.st.model.Project model) {
+			super(model, model.getUuid(), model.getName());
 		}
 
 		@Override
@@ -1345,13 +1343,14 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			super.onNodeKeyPressed(event);
 		}
 
+
 	}
 
 	final class ScriptNode extends BaseCanvasNode<nextgen.st.model.Script> {
 
 
-		public ScriptNode(nextgen.st.model.Script model, UUID uuid, String label) {
-			super(model, uuid, label);
+		public ScriptNode(nextgen.st.model.Script model) {
+			super(model, model.getUuid(), model.getName());
 		}
 
 		@Override
@@ -1535,6 +1534,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 					});
 			}
 		}
+
 	}
 
 	final class STFileNode extends BaseCanvasNode<nextgen.st.model.STFile> {
@@ -1781,6 +1781,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 					});
 			}
 		}
+
 	}
 
 	final class STKVNode extends BaseCanvasNode<nextgen.st.model.STArgument> {
@@ -2042,6 +2043,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 					});
 			}
 		}
+
 	}
 
 	final class STModelNode extends BaseCanvasNode<nextgen.st.model.STModel> {
@@ -2055,10 +2057,15 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 		@Override
 		public void addedToCanvas() {
+			thisCanvas().getAllNodes().forEach(this::newNodeAdded);
 		}
 
 		@Override
 		public void newNodeAdded(BaseCanvasNode<?> node) {
+			presentationModel.forEachArgument(stTemplate, getModel(), (stArgument, stParameter) -> {
+				if (refersTo(stArgument, stParameter, node))
+					addRelation(stArgument.getUuid(), () -> new STArgumentRelation(STModelNode.this, node, stArgument, stParameter));
+			});
 		}
 
 		@Override
@@ -2082,7 +2089,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			thisCanvas().presentationModel.doInTransaction(tx -> {
 
 				final String clipboardValue = presentationModel.cut(nextgen.utils.SwingUtil.fromClipboard());
-
+				
 				final JMenu parametersMenu = new JMenu("Parameters");
 				pop.add(parametersMenu);
 				final Map<String, nextgen.st.model.STValue> existingSelections = new LinkedHashMap<>();
@@ -2117,7 +2124,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 							if (openstParameterMenu.getMenuComponentCount() > 1)
 								openstParameterMenu.add(new OpenAllOf(event, stParameter));
 
-
+							
 							break;
 						}
 						case LIST: {
@@ -2171,12 +2178,15 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			pop.add(new Clone(event));
 			pop.add(new AddFileSink(event));
 			pop.add(new OpenFileSink(event));
+			pop.add(new OpenTemplate(event));
+			pop.add(new WriteToFile(event));
 			super.onNodeRightClick(event, pop);
 		}
 
 		@Override
 		protected void onNodeLeftClick(PInputEvent event) {
 			super.onNodeLeftClick(event);
+			presentationModel.doLaterInTransaction(tx -> setText(stTemplate.getName() + " : \n" + presentationModel.render(getModel())));
 		}
 
 		@Override
@@ -2188,6 +2198,14 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 				case VK_I:
 					new OpenIncoming(event).actionPerformed(null);
+					break;
+
+				case VK_T:
+					new OpenTemplate(event).actionPerformed(null);
+					break;
+
+				case VK_E:
+					new OpenAllArguments(event).actionPerformed(null);
 					break;
 
 			}
@@ -2785,6 +2803,29 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 				presentationModel.doLaterInTransaction(transaction -> nextgen.st.STAppEvents.postOpenSTTemplate(stTemplate));
 			}
 		}
+
+		public boolean refersTo(nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameter stParameter, BaseCanvasNode<?> node) {
+			if (stArgument == null || stParameter == null || node == null) return false;
+			switch (stParameter.getType()) {
+				case SINGLE: {
+					final nextgen.st.model.STValue value = stArgument.getValue();
+					if (value != null)
+						return UUID.fromString(value.getUuid()).equals(node.getUuid()) || (value.getType().equals(nextgen.st.model.STValueType.STMODEL) && value.getStModel() != null && UUID.fromString(value.getStModel().getUuid()).equals(node.getUuid()));
+					break;
+				}
+				case LIST: {
+					final nextgen.st.model.STValue value = stArgument.getValue();
+					if (value != null)
+						return UUID.fromString(value.getUuid()).equals(node.getUuid()) || (value.getType().equals(nextgen.st.model.STValueType.STMODEL) && value.getStModel() != null && UUID.fromString(value.getStModel().getUuid()).equals(node.getUuid()));
+					break;
+				}
+				case KVLIST: {
+					if (UUID.fromString(stArgument.getUuid()).equals(node.getUuid())) return true;
+					break;
+				}
+			}
+			return false;
+		}
 	}
 
 	final class STValueNode extends BaseCanvasNode<nextgen.st.model.STValue> {
@@ -2926,6 +2967,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 				});
 			}
 		}
+
 	}
 
 	final class ScriptRelation extends BaseCanvasRelation {
@@ -2955,6 +2997,35 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		@Override
 		protected void onRelationRightClick(PInputEvent event, JPopupMenu pop) {
 
+			pop.add(new Delete(event));
+		}
+
+		@Override
+		protected void onRelationKeyPressed(PInputEvent event) {
+			switch (event.getKeyCode()) {
+				case VK_D:
+					new Delete(event).actionPerformed(null);
+					break;
+
+			}
+			super.onRelationKeyPressed(event);
+		}
+		final class Delete extends RelationAction {
+
+
+			Delete(PInputEvent event) {
+				super("Delete", event);
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+				nextgen.utils.SwingUtil.confirm(thisCanvas(), "Delete " + stParameter.getName() + " ?")
+						.ifPresent(confirm -> presentationModel.doLaterInTransaction(tx -> {
+							final STModelNode src = (STModelNode) getSrc();
+							src.getModel().removeArguments(stArgument);
+							removeRelation(getUuid());
+						}));
+			}
 		}
 	}
 
