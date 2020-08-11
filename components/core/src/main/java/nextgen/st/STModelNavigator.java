@@ -196,12 +196,12 @@ public class STModelNavigator extends JPanel {
 
 			Object node = parent.getLastPathComponent();
 			int childCount = model.getChildCount(node);
-			for (int j = 0; j < childCount; j++) 
+			for (int j = 0; j < childCount; j++)
 				expandTreeNodesRecursive(parent.pathByAddingChild(model.getChild(node, j)), expand);
 
-			if (expand) 
+			if (expand)
 				tree.expandPath(parent);
-			else 
+			else
 				tree.collapsePath(parent);
 		}
 	}
@@ -311,7 +311,7 @@ public class STModelNavigator extends JPanel {
 
 		@org.greenrobot.eventbus.Subscribe()
 		public void onNewProject(nextgen.st.STAppEvents.NewProject event) {
-			presentationModel.doLaterInTransaction(transaction -> 
+			presentationModel.doLaterInTransaction(transaction ->
 				addAndSelectChild(new ProjectTreeNode(event.project))
 			);
 		}
@@ -377,7 +377,7 @@ public class STModelNavigator extends JPanel {
 
 		@org.greenrobot.eventbus.Subscribe()
 		public void onNewScript(nextgen.st.STAppEvents.NewScript event) {
-			presentationModel.doLaterInTransaction(transaction -> 
+			presentationModel.doLaterInTransaction(transaction ->
 				addAndSelectChild(new ScriptTreeNode(event.script))
 			);
 		}
@@ -465,7 +465,7 @@ public class STModelNavigator extends JPanel {
 
 		@org.greenrobot.eventbus.Subscribe()
 		public void onNewSTValue(nextgen.st.STAppEvents.NewSTValue event) {
-			presentationModel.doLaterInTransaction(transaction -> 
+			presentationModel.doLaterInTransaction(transaction ->
 				addChild(new STValueTreeNode(event.sTValue))
 			);
 		}
@@ -546,7 +546,7 @@ public class STModelNavigator extends JPanel {
 		@org.greenrobot.eventbus.Subscribe()
 		public void onNewSTModel(nextgen.st.STAppEvents.NewSTModel event) {
 			presentationModel.doLaterInTransaction(transaction -> {
-				if (getModel().getUuid().equals(event.sTModel.getStTemplate())) 
+				if (getModel().getUuid().equals(event.sTModel.getStTemplate()))
 					addAndSelectChild(new STModelTreeNode(event.sTModel));
 			});
 		}
@@ -611,7 +611,7 @@ public class STModelNavigator extends JPanel {
 				if (event.uuid.equals(uuid)) treeModel.removeNodeFromParent(this);
 			});
 		}
-	}	
+	}
 
 	private Action newAction(String name, Consumer<ActionEvent> actionEventConsumer) {
 		return new AbstractAction(name) {

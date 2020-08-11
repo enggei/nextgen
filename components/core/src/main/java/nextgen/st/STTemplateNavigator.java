@@ -2,7 +2,6 @@ package nextgen.st;
 
 import nextgen.utils.SwingUtil;
 import nextgen.st.domain.*;
-import nextgen.st.canvas.*;
 
 import javax.swing.*;
 import javax.swing.tree.*;
@@ -110,6 +109,8 @@ public class STTemplateNavigator extends JPanel {
 
 		setPreferredSize(new Dimension(300, 600));
 		add(new JScrollPane(tree), BorderLayout.CENTER);
+
+		org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
 
 	public class BaseTreeNode<T> extends DefaultMutableTreeNode {
@@ -200,6 +201,20 @@ public class STTemplateNavigator extends JPanel {
 			}
 
 			return set.stream();
+		}
+
+		protected TreePath find(java.util.function.Predicate<BaseTreeNode<?>> predicate) {
+			final int childCount = getChildCount();
+			for (int i = 0; i < childCount; i++) {
+				final BaseTreeNode<?> childAt = (BaseTreeNode<?>) getChildAt(i);
+				if (predicate.test(childAt))
+					return (childAt).getThisPath();
+				else {
+					final TreePath treePath = childAt.find(predicate);
+					if (treePath != null) return treePath;
+				}
+			}
+			return null;
 		}
 
 		protected TreePath getThisPath() {
@@ -883,4 +898,15 @@ public class STTemplateNavigator extends JPanel {
 				.map(treePath -> (T) treePath.getLastPathComponent());
 	}
 
+	@org.greenrobot.eventbus.Subscribe()
+	public void onOpenTemplate(nextgen.st.STAppEvents.OpenSTTemplate event) {
+		SwingUtilities.invokeLater(() -> {
+			final RootNode rootNode = (RootNode) treeModel.getRoot();
+			final TreePath path = rootNode.find(baseTreeNode -> (baseTreeNode instanceof STTemplateTreeNode) && ((STTemplateTreeNode) baseTreeNode).getModel().equals(event.sTTemplate));
+			if (path != null) {
+				tree.scrollPathToVisible(path);
+				tree.setSelectionPath(path);
+			}
+		});
+	}
 }

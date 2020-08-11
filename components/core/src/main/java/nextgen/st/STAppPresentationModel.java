@@ -138,6 +138,9 @@ public class STAppPresentationModel {
         return stRenderer.render(stValue);
     }
 
+    public String render(STArgument stArgument) {
+        return render(stArgument.getValue());
+    }
 
     public String renderInTransaction(STModel stModel) {
         return db.getInTransaction(transaction -> stRenderer.render(stModel));

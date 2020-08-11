@@ -2493,7 +2493,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			private STModelNode stModelNode;
 
 			SetToSameAsArgumentAction(PInputEvent event, nextgen.st.domain.STParameter stParameter, STModelNode stModelNode) {
-				super("Same as " + presentationModel.cut(stModelNode.getText()), event);
+				super("Same as " + presentationModel.cut(stModelNode.getText(), 30), event);
 				this.stParameter = stParameter;
 				this.stModelNode = stModelNode;
 			}
@@ -2592,7 +2592,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			private nextgen.st.model.STArgument stArgument;
 
 			OpenArgument(PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument) {
-				super("Open", event);
+				super(presentationModel.cut(presentationModel.render(stArgument), 30), event);
 				this.stParameter = stParameter;
 				this.stArgument = stArgument;
 			}
@@ -2629,14 +2629,14 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			private nextgen.st.model.STArgument stArgument;
 
 			RemoveArgument(PInputEvent event, nextgen.st.model.STArgument stArgument) {
-				super("Remove", event);
+				super(presentationModel.cut(presentationModel.render(stArgument), 30), event);
 				this.stArgument = stArgument;
 			}
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
 				nextgen.utils.SwingUtil.confirm(thisCanvas(), "Remove argument ?")
-						.ifPresent(confirm -> thisCanvas().presentationModel.doLaterInTransaction(tx -> {
+						.ifPresent(confirm -> presentationModel.doLaterInTransaction(tx -> {
 							thisCanvas().removeRelation(UUID.fromString(stArgument.getUuid()));
 							getModel().removeArguments(stArgument);
 							setText(thisCanvas().presentationModel.render(getModel()));

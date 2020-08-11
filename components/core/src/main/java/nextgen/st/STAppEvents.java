@@ -213,4 +213,18 @@ public class STAppEvents {
 			this.sTTemplate = sTTemplate;
 		}
 	}
+
+	public static void postCanvasSTModelClicked(nextgen.st.model.STModel stModel) {
+		log.info("post CanvasSTModelClicked");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new CanvasSTModelClicked(stModel));
+	}
+
+	public static class CanvasSTModelClicked {
+
+		public final nextgen.st.model.STModel stModel;
+
+		public CanvasSTModelClicked(nextgen.st.model.STModel stModel) {
+			this.stModel = stModel;
+		}
+	}
 }
