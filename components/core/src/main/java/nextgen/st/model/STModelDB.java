@@ -22,6 +22,16 @@ public class STModelDB extends STModelNeoFactory {
     private final Collection<STGroupModel> groupModels;
     private final Map<String, STTemplate> templateMap = new LinkedHashMap<>();
 
+    public STModelDB(String dbDir, String templatesDir) {
+        super(dbDir);
+        groupModels = new ArrayList<>();
+        java.util.Optional.ofNullable(new java.io.File(templatesDir).listFiles(pathname -> pathname.isFile() && pathname.getName().toLowerCase().endsWith(".json")))
+                .ifPresent(files -> {
+                    for (java.io.File file : files)
+                        groupModels.add(new nextgen.st.domain.STGroupModel(nextgen.st.STParser.readJsonObject(file)));
+                });
+    }
+
     public STModelDB(String dir, Collection<STGroupModel> groupModels) {
         super(dir);
         this.groupModels = groupModels;

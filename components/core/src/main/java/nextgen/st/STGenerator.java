@@ -148,7 +148,6 @@ public class STGenerator {
 
         String content = escape(stTemplate.getText()).replaceAll("\n", "\\\\n\" + \n\t\t\t\"");
         content = content.replaceAll(">>", ">~gt()~");
-//        content = content.trim().endsWith(">") ? (content.trim() + " ") : content.trim();
         content = content.trim();
 
         final ST template = newTemplateGroup().getInstanceOf("STTemplate")

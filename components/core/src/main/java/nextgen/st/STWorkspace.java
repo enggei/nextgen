@@ -106,6 +106,10 @@ public class STWorkspace extends JTabbedPane {
         setTabComponentAt(indexOfComponent(component), new ButtonTabComponent(this, title, component));
     }
 
+    public void showCanvas() {
+        findCanvas().ifPresent(stModelCanvas -> SwingUtilities.invokeLater(() -> setSelectedComponent(stModelCanvas)));
+    }
+
     class ButtonTabComponent extends JPanel {
 
         ButtonTabComponent(final JTabbedPane pane, String title, JComponent component) {

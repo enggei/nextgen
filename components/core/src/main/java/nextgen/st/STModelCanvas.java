@@ -70,7 +70,10 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onOpenSTModel(nextgen.st.STAppEvents.OpenSTModel event) {
-		presentationModel.doLaterInTransaction(transaction -> addNode(event.sTModel.getUuid(), () -> new STModelNode(event.sTModel, presentationModel.findSTTemplateByUuid(event.sTModel.getStTemplate()))));
+		presentationModel.doLaterInTransaction(transaction -> {
+			addNode(event.sTModel.getUuid(), () -> new STModelNode(event.sTModel, presentationModel.findSTTemplateByUuid(event.sTModel.getStTemplate())));
+			presentationModel.getWorkspace().showCanvas();
+		});
 	}
 
 	@Override
@@ -90,21 +93,21 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		return new Point((int) localToView.getX(), (int) localToView.getY());
 	}
 
-	public <N extends BaseCanvasNode> void centerNode(N node) {
+	public void centerNode(BaseCanvasNode<?> node) {
 		SwingUtilities.invokeLater(() -> getCamera().animateViewToCenterBounds(node.getGlobalFullBounds(), false, 500));
 	}
 
 	@SuppressWarnings("unchecked")
-	public <N extends BaseCanvasNode> Stream<N> getAllNodes() {
+	public Stream<BaseCanvasNode<?>> getAllNodes() {
 		return nodeLayer.getAllNodes().stream().filter((Predicate<PNode>) node -> node instanceof BaseCanvasNode);
 	}
 
-	public <N extends BaseCanvasNode> Stream<N> getSelectedNodes() {
-		return (Stream<N>) getAllNodes().filter(BaseCanvasNode::isSelected);
+	public Stream<BaseCanvasNode<?>> getSelectedNodes() {
+		return getAllNodes().filter(BaseCanvasNode::isSelected);
 	}
 
-	public <N extends BaseCanvasNode> Stream<N> getUnselectedNodes() {
-		return (Stream<N>) getAllNodes().filter(stNode -> !stNode.isSelected());
+	public Stream<BaseCanvasNode<?>> getUnselectedNodes() {
+		return getAllNodes().filter(stNode -> !stNode.isSelected());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -116,15 +119,15 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		return (Stream<R>) getAllRelations().filter(BaseCanvasRelation::isSelected);
 	}
 
-	public <N extends BaseCanvasNode> N addNode(String uuid, java.util.function.Supplier<N> supplier) {
+	public <N extends BaseCanvasNode<?>> N addNode(String uuid, java.util.function.Supplier<N> supplier) {
 		return addNode(java.util.UUID.fromString(uuid), supplier);
 	}
 
-	public <N extends BaseCanvasNode> N addNode(N node) {
+	public <N extends BaseCanvasNode<?>> N addNode(N node) {
 		return addNode(node.getUuid(), () -> node);
 	}
 
-	public <N extends BaseCanvasNode> N addNode(java.util.UUID uuid, java.util.function.Supplier<N> supplier) {
+	public <N extends BaseCanvasNode<?>> N addNode(java.util.UUID uuid, java.util.function.Supplier<N> supplier) {
 
 		final N existing = getNode(uuid);
 		if (existing != null) {
@@ -157,15 +160,15 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		return node;
 	}
 
-	public <N extends BaseCanvasNode> N getNode(String uuid) {
+	public <N extends BaseCanvasNode<?>> N getNode(String uuid) {
 		return getNode(java.util.UUID.fromString(uuid));
 	}
 
-	public <N extends BaseCanvasNode> N getNode(UUID uuid) {
+	public <N extends BaseCanvasNode<?>> N getNode(UUID uuid) {
 		return (N) nodeMap.get(uuid);
 	}
 
-	<N extends BaseCanvasNode> N removeNode(UUID uuid) {
+	<N extends BaseCanvasNode<?>> N removeNode(UUID uuid) {
 		final BaseCanvasNode remove = nodeMap.remove(uuid);
 		final N old = (N) nodeLayer.removeChild(remove);
 		log.debug("\tN-"+ uuid + " removed from canvas : " + (old == null ? "null" : old.getUuid()));
@@ -1104,7 +1107,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 	final class SaveLastLayoutAction extends CanvasAction {
 
-
 		SaveLastLayoutAction(PInputEvent event) {
 			super("Save last layout", event);
 		}
@@ -1142,8 +1144,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 				});
 		}
 	}
-	final class UnselectAllNodes extends CanvasAction {
 
+	final class UnselectAllNodes extends CanvasAction {
 
 		UnselectAllNodes(PInputEvent event) {
 			super("Unselect all nodes", event);
@@ -1154,8 +1156,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			javax.swing.SwingUtilities.invokeLater(() -> getSelectedNodes().forEach(BaseCanvasNode::unselect));
 		}
 	}
-	final class CloseSelectedNodes extends CanvasAction {
 
+	final class CloseSelectedNodes extends CanvasAction {
 
 		CloseSelectedNodes(PInputEvent event) {
 			super("Close selected nodes", event);
@@ -1166,8 +1168,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			javax.swing.SwingUtilities.invokeLater(() -> getSelectedNodes().forEach(BaseCanvasNode::close));
 		}
 	}
-	final class LoadLastLayoutAction extends CanvasAction {
 
+	final class LoadLastLayoutAction extends CanvasAction {
 
 		LoadLastLayoutAction(PInputEvent event) {
 			super("Load last layout", event);
@@ -1221,8 +1223,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			});
 		}
 	}
-	final class SelectAllNodes extends CanvasAction {
 
+	final class SelectAllNodes extends CanvasAction {
 
 		SelectAllNodes(PInputEvent event) {
 			super("Select all nodes", event);
@@ -1233,8 +1235,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			javax.swing.SwingUtilities.invokeLater(() -> getAllNodes().forEach(BaseCanvasNode::select));
 		}
 	}
-	final class RetainSelectedNodes extends CanvasAction {
 
+	final class RetainSelectedNodes extends CanvasAction {
 
 		RetainSelectedNodes(PInputEvent event) {
 			super("Retain selected nodes", event);
@@ -1245,6 +1247,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			javax.swing.SwingUtilities.invokeLater(() -> getUnselectedNodes().forEach(BaseCanvasNode::close));
 		}
 	}
+
 	final class LayoutVerticallyAction extends CanvasAction {
 
 		private java.awt.Point position;
@@ -1278,8 +1281,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			}));
 		}
 	}
-	final class PopupAction extends CanvasAction {
 
+	final class PopupAction extends CanvasAction {
 
 		PopupAction(PInputEvent event) {
 			super("Popup", event);
@@ -1296,8 +1299,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			});
 		}
 	}
-	final class CloseAllAction extends CanvasAction {
 
+	final class CloseAllAction extends CanvasAction {
 
 		CloseAllAction(PInputEvent event) {
 			super("Close all", event);
@@ -1306,7 +1309,12 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		@Override
 		void actionPerformed(PInputEvent event, ActionEvent e) {
 			getAllRelations().forEach(relation -> removeRelation(relation.getUuid()));
-						getAllNodes().forEach(node -> removeNode(node.getUuid()));
+			getAllNodes().forEach(node -> removeNode(node.getUuid()));
+			relationLayer.removeAllChildren();
+			SwingUtilities.invokeLater(() -> {
+				invalidate();
+				repaint();
+			});
 		}
 	}
 

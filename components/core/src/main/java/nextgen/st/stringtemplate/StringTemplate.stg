@@ -1,6 +1,6 @@
 delimiters "~","~"
 
-ScriptRunner(packageName,imports,name,script,templatesDir,dbDir) ::= <<package ~packageName~;
+ScriptRunner(packageName,imports,name,script,dbDir,templatesDir) ::= <<package ~packageName~;
 
 ~imports:{it|~it~};separator="\n"~
 
@@ -23,14 +23,9 @@ public class ~name~ implements Runnable {
 	}
 	
 	public static void main(String[] args) {
-		final java.util.Collection<nextgen.st.domain.STGroupModel> stGroups = new java.util.ArrayList<>();
-		final java.io.File templatesDir = new java.io.File("~templatesDir~");
-		java.util.Optional.ofNullable(templatesDir.listFiles(pathname -> pathname.isFile() && pathname.getName().toLowerCase().endsWith(".json")))
-			.ifPresent(files -> {
-				for (java.io.File file : files)
-						stGroups.add(new nextgen.st.domain.STGroupModel(nextgen.st.STParser.readJsonObject(file)));
-			});
-		new Thread(new ~name~(new nextgen.st.model.STModelDB("~dbDir~", stGroups), new nextgen.st.STRenderer(stGroups))).start();
+		final nextgen.st.model.STModelDB db = new nextgen.st.model.STModelDB("~dbDir~", "~templatesDir~");
+		final nextgen.st.STRenderer renderer = new nextgen.st.STRenderer(db.getGroupModels());
+		new Thread(new ~name~(db, renderer)).start();
 	}
 }  >>
 
