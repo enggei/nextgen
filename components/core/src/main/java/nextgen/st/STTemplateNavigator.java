@@ -359,6 +359,25 @@ public class STTemplateNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
+			actions.add(newAction("Import From File", actionEvent -> {
+				SwingUtil.showOpenFile(tree, presentationModel.getLastDir())
+					.ifPresent(file -> {
+						presentationModel.setLastDir(file.getParentFile());
+						presentationModel.doLaterInTransaction(transaction -> {
+							final String fileName = file.getName();
+							final String name = fileName.substring(0, fileName.indexOf("."));
+							final STTemplate stTemplate = presentationModel.newSTTemplate(name);
+							stTemplate.setText(nextgen.utils.FileUtil.readIntact(file));
+							getModel().addTemplates(stTemplate);
+							save();
+
+							SwingUtilities.invokeLater(() -> {
+									addAndSelectChild(new STTemplateTreeNode(stTemplate));
+									workspace.getSTEditor(getModel()).setSTTemplate(stTemplate);
+							});
+						});
+					});
+			}));
 			actions.add(newAction("Generate", actionEvent -> {
 				presentationModel.generateSTGroup(getModel());
 			}));

@@ -48,6 +48,7 @@ public class STAppPresentationModel {
     final Set<STGDirectory> stgDirectories = new LinkedHashSet<>();
     private Font preferredFont;
     private STWorkspace stWorkspace;
+    private String lastDir;
 
     STAppPresentationModel(STAppModel appModel) {
 
@@ -562,6 +563,14 @@ public class STAppPresentationModel {
                 exists.set(true);
         });
         return exists.get();
+    }
+
+    public String getLastDir() {
+        return lastDir == null ? System.getProperty("user.home") : lastDir;
+    }
+
+    public void setLastDir(File dir) {
+        this.lastDir = lastDir;
     }
 
     public final class STArgumentConsumer implements Consumer<STArgument> {

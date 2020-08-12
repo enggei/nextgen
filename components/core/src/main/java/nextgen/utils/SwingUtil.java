@@ -109,10 +109,10 @@ public class SwingUtil {
         return JFileChooser.APPROVE_OPTION == result ? fc.getSelectedFile() : null;
     }
 
-    public static File showOpenFile(Component parent, String dir) {
+    public static Optional<File> showOpenFile(Component parent, String dir) {
         final JFileChooser fc = dir == null ? new JFileChooser() : new JFileChooser(new File(dir).isDirectory() ? new File(dir) : new File(dir).getParentFile());
         final int result = fc.showOpenDialog(parent);
-        return JFileChooser.APPROVE_OPTION == result ? fc.getSelectedFile() : null;
+        return Optional.ofNullable(JFileChooser.APPROVE_OPTION == result ? fc.getSelectedFile() : null);
     }
 
     public static void showTextResult(String title, String text, Component parentComponent) {

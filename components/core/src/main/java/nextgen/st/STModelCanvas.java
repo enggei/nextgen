@@ -2193,6 +2193,10 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		@Override
 		protected void onNodeKeyPressed(PInputEvent event) {
 			switch (event.getKeyCode()) {
+				case VK_D:
+					new Delete(event).actionPerformed(null);
+					break;
+
 				case VK_W:
 					new WriteToFile(event).actionPerformed(null);
 					break;
