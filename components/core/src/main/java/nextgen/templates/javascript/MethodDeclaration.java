@@ -7,14 +7,19 @@ public class MethodDeclaration {
 
 	private Object _const;
 	private Object _name;
-	private Object _parameter;
+	private java.util.List<Object> _parameters = new java.util.ArrayList<>();
 	private java.util.List<Object> _statements = new java.util.ArrayList<>();
 
 	MethodDeclaration(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -23,7 +28,7 @@ public class MethodDeclaration {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("MethodDeclaration");
 		st.add("const", _const);
 		st.add("name", _name);
-		st.add("parameter", _parameter);
+		for (Object o : _parameters) st.add("parameters", o);
 		for (Object o : _statements) st.add("statements", o);
 		return st.render().trim();
 	}
@@ -72,26 +77,33 @@ public class MethodDeclaration {
 		return this;
 	} 
 
-	public MethodDeclaration setParameter(Object value) {
-		this._parameter = value;
+	public MethodDeclaration addParameters(Object value) {
+		this._parameters.add(value);
 		return this;
 	}
 
-	public Object getParameter() {
-		return this._parameter;
-	}
-
-	public Object getParameter(Object defaultValue) {
-		return this._parameter == null ? defaultValue : this._parameter;
-	}
-
-	public boolean hasParameter() {
-		return this._parameter != null;
-	}
-
-	public MethodDeclaration removeParameter() {
-		this._parameter = null;
+	public MethodDeclaration setParameters(Object[] value) {
+		this._parameters.addAll(java.util.Arrays.asList(value));
 		return this;
+	}
+
+	public MethodDeclaration setParameters(java.util.Collection<Object> values) {
+		this._parameters.addAll(values);
+		return this;
+	}
+
+	public MethodDeclaration removeParameters(Object value) {
+		this._parameters.remove(value);
+		return this;
+	}
+
+	public MethodDeclaration removeParameters(int index) {
+		this._parameters.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getParameters() {
+		return this._parameters;
 	} 
 
 	public MethodDeclaration addStatements(Object value) {
@@ -137,7 +149,8 @@ public class MethodDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MethodDeclaration(const,name,parameter,statements) ::= <<~if(const)~const ~endif~~name~ = ~if(parameter)~~parameter~~else~()~endif~ \\=\\> {\n" + 
+	static final String st = "MethodDeclaration(const,name,parameters,statements) ::= <<~if(const)~const ~endif~~name~ = (~parameters:{it|~it~};separator=\",\"~) => {\n" + 
+				"	console.info(\"call ~name~\");\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
 				"} >>";
 }  

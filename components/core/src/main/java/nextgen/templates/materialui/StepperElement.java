@@ -10,6 +10,7 @@ public class StepperElement {
 	private Object _classes;
 	private Object _className;
 	private Object _connector;
+	private Object _id;
 	private Object _nonLinear;
 	private Object _orientation;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -18,7 +19,12 @@ public class StepperElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -30,6 +36,7 @@ public class StepperElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("connector", _connector);
+		st.add("id", _id);
 		st.add("nonLinear", _nonLinear);
 		st.add("orientation", _orientation);
 		for (Object o : _children) st.add("children", o);
@@ -146,6 +153,28 @@ public class StepperElement {
 		return this;
 	} 
 
+	public StepperElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public StepperElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public StepperElement setNonLinear(Object value) {
 		this._nonLinear = value;
 		return this;
@@ -233,12 +262,13 @@ public class StepperElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "StepperElement(activeStep,alternativeLabel,classes,className,connector,nonLinear,orientation,children) ::= <<<Stepper~if(activeStep)~\n" + 
+	static final String st = "StepperElement(activeStep,alternativeLabel,classes,className,connector,id,nonLinear,orientation,children) ::= <<<Stepper~if(activeStep)~\n" + 
 				"	activeStep=~activeStep~~endif~~if(alternativeLabel)~\n" + 
 				"	alternativeLabel~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(connector)~\n" + 
-				"	connector=~connector~~endif~~if(nonLinear)~\n" + 
+				"	connector=~connector~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(nonLinear)~\n" + 
 				"	nonLinear~endif~~if(orientation)~\n" + 
 				"	orientation=\"~orientation~\"~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 

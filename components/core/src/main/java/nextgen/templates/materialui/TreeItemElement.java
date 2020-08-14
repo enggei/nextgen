@@ -11,6 +11,7 @@ public class TreeItemElement {
 	private Object _endIcon;
 	private Object _expandIcon;
 	private Object _icon;
+	private Object _id;
 	private Object _label;
 	private Object _nodeId;
 	private Object _onIconClick;
@@ -23,7 +24,12 @@ public class TreeItemElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -36,6 +42,7 @@ public class TreeItemElement {
 		st.add("endIcon", _endIcon);
 		st.add("expandIcon", _expandIcon);
 		st.add("icon", _icon);
+		st.add("id", _id);
 		st.add("label", _label);
 		st.add("nodeId", _nodeId);
 		st.add("onIconClick", _onIconClick);
@@ -175,6 +182,28 @@ public class TreeItemElement {
 
 	public TreeItemElement removeIcon() {
 		this._icon = null;
+		return this;
+	} 
+
+	public TreeItemElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public TreeItemElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -353,13 +382,14 @@ public class TreeItemElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TreeItemElement(classes,className,collapseIcon,endIcon,expandIcon,icon,label,nodeId,onIconClick,onLabelClick,TransitionComponent,TransitionProps,children) ::= <<<TreeItem~if(classes)~\n" + 
+	static final String st = "TreeItemElement(classes,className,collapseIcon,endIcon,expandIcon,icon,id,label,nodeId,onIconClick,onLabelClick,TransitionComponent,TransitionProps,children) ::= <<<TreeItem~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(collapseIcon)~\n" + 
 				"	collapseIcon=~collapseIcon~~endif~~if(endIcon)~\n" + 
 				"	endIcon=~endIcon~~endif~~if(expandIcon)~\n" + 
 				"	expandIcon=~expandIcon~~endif~~if(icon)~\n" + 
-				"	icon=~icon~~endif~~if(label)~\n" + 
+				"	icon=~icon~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(label)~\n" + 
 				"	label=~label~~endif~\n" + 
 				"	nodeId=\"~nodeId~\"~if(onIconClick)~\n" + 
 				"	onIconClick=~onIconClick~~endif~~if(onLabelClick)~\n" + 

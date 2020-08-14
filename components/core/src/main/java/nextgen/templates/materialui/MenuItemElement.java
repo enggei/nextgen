@@ -10,14 +10,21 @@ public class MenuItemElement {
 	private Object _component;
 	private Object _dense;
 	private Object _disableGutters;
+	private Object _id;
 	private Object _ListItemClasses;
+	private Object _onClick;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
 	MenuItemElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -29,7 +36,9 @@ public class MenuItemElement {
 		st.add("component", _component);
 		st.add("dense", _dense);
 		st.add("disableGutters", _disableGutters);
+		st.add("id", _id);
 		st.add("ListItemClasses", _ListItemClasses);
+		st.add("onClick", _onClick);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
 	}
@@ -144,6 +153,28 @@ public class MenuItemElement {
 		return this;
 	} 
 
+	public MenuItemElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public MenuItemElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public MenuItemElement setListItemClasses(Object value) {
 		this._ListItemClasses = value;
 		return this;
@@ -163,6 +194,28 @@ public class MenuItemElement {
 
 	public MenuItemElement removeListItemClasses() {
 		this._ListItemClasses = null;
+		return this;
+	} 
+
+	public MenuItemElement setOnClick(Object value) {
+		this._onClick = value;
+		return this;
+	}
+
+	public Object getOnClick() {
+		return this._onClick;
+	}
+
+	public Object getOnClick(Object defaultValue) {
+		return this._onClick == null ? defaultValue : this._onClick;
+	}
+
+	public boolean hasOnClick() {
+		return this._onClick != null;
+	}
+
+	public MenuItemElement removeOnClick() {
+		this._onClick = null;
 		return this;
 	} 
 
@@ -209,13 +262,15 @@ public class MenuItemElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MenuItemElement(classes,className,component,dense,disableGutters,ListItemClasses,children) ::= <<<MenuItem~if(classes)~\n" + 
+	static final String st = "MenuItemElement(classes,className,component,dense,disableGutters,id,ListItemClasses,onClick,children) ::= <<<MenuItem~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(dense)~\n" + 
 				"	dense~endif~~if(disableGutters)~\n" + 
-				"	disableGutters~endif~~if(ListItemClasses)~\n" + 
-				"	ListItemClasses=~ListItemClasses~~endif~~if(children)~>\n" + 
+				"	disableGutters~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(ListItemClasses)~\n" + 
+				"	ListItemClasses=~ListItemClasses~~endif~~if(onClick)~\n" + 
+				"	onClick=~onClick~~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</MenuItem>~else~ />~endif~ >>";
 }  

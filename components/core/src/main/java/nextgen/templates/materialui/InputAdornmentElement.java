@@ -10,6 +10,7 @@ public class InputAdornmentElement {
 	private Object _component;
 	private Object _disablePointerEvents;
 	private Object _disableTypography;
+	private Object _id;
 	private Object _position;
 	private Object _variant;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -18,7 +19,12 @@ public class InputAdornmentElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -30,6 +36,7 @@ public class InputAdornmentElement {
 		st.add("component", _component);
 		st.add("disablePointerEvents", _disablePointerEvents);
 		st.add("disableTypography", _disableTypography);
+		st.add("id", _id);
 		st.add("position", _position);
 		st.add("variant", _variant);
 		for (Object o : _children) st.add("children", o);
@@ -146,6 +153,28 @@ public class InputAdornmentElement {
 		return this;
 	} 
 
+	public InputAdornmentElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public InputAdornmentElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public InputAdornmentElement setPosition(Object value) {
 		this._position = value;
 		return this;
@@ -233,12 +262,13 @@ public class InputAdornmentElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "InputAdornmentElement(classes,className,component,disablePointerEvents,disableTypography,position,variant,children) ::= <<<InputAdornment~if(classes)~\n" + 
+	static final String st = "InputAdornmentElement(classes,className,component,disablePointerEvents,disableTypography,id,position,variant,children) ::= <<<InputAdornment~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(disablePointerEvents)~\n" + 
 				"	disablePointerEvents~endif~~if(disableTypography)~\n" + 
-				"	disableTypography~endif~~if(position)~\n" + 
+				"	disableTypography~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(position)~\n" + 
 				"	position=\"~position~\"~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 

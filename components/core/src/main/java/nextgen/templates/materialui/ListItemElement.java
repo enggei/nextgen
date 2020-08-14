@@ -17,6 +17,7 @@ public class ListItemElement {
 	private Object _disabled;
 	private Object _disableGutters;
 	private Object _divider;
+	private Object _id;
 	private Object _selected;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
@@ -24,7 +25,12 @@ public class ListItemElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -43,6 +49,7 @@ public class ListItemElement {
 		st.add("disabled", _disabled);
 		st.add("disableGutters", _disableGutters);
 		st.add("divider", _divider);
+		st.add("id", _id);
 		st.add("selected", _selected);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
@@ -312,6 +319,28 @@ public class ListItemElement {
 		return this;
 	} 
 
+	public ListItemElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public ListItemElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public ListItemElement setSelected(Object value) {
 		this._selected = value;
 		return this;
@@ -377,7 +406,7 @@ public class ListItemElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ListItemElement(alignItems,autoFocus,button,classes,className,component,ContainerComponent,ContainerProps,dense,disabled,disableGutters,divider,selected,children) ::= <<<ListItem~if(alignItems)~\n" + 
+	static final String st = "ListItemElement(alignItems,autoFocus,button,classes,className,component,ContainerComponent,ContainerProps,dense,disabled,disableGutters,divider,id,selected,children) ::= <<<ListItem~if(alignItems)~\n" + 
 				"	alignItems=\"~alignItems~\"~endif~~if(autoFocus)~\n" + 
 				"	autoFocus~endif~~if(button)~\n" + 
 				"	button~endif~~if(classes)~\n" + 
@@ -389,7 +418,8 @@ public class ListItemElement {
 				"	dense~endif~~if(disabled)~\n" + 
 				"	disabled~endif~~if(disableGutters)~\n" + 
 				"	disableGutters~endif~~if(divider)~\n" + 
-				"	divider~endif~~if(selected)~\n" + 
+				"	divider~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(selected)~\n" + 
 				"	selected~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</ListItem>~else~ />~endif~ >>";

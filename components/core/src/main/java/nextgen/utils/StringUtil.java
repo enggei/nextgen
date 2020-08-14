@@ -37,7 +37,15 @@ public final class StringUtil {
       return result.toArray(new String[result.size()]);
    }
 
-   public interface LineHandler {
+   public static Object sq(String s) {
+      return "'" + s + "'";
+   }
+
+   public static Object dq(String s) {
+      return "\"" + s + "\"";
+   }
+
+    public interface LineHandler {
 
       boolean handleLine(String line);
 

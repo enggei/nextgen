@@ -1,0 +1,94 @@
+package nextgen.templates.materialui;
+
+public class LockOutlinedIconElement {
+
+	private final java.util.UUID uuid = java.util.UUID.randomUUID();
+	private final org.stringtemplate.v4.STGroup stGroup;
+
+	private Object _className;
+	private Object _id;
+
+	LockOutlinedIconElement(org.stringtemplate.v4.STGroup stGroup) {
+		this.stGroup = stGroup;
+	}
+
+	@Deprecated
+	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
+		return uuid;
+	}
+
+	@Override
+	public String toString() {
+		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("LockOutlinedIconElement");
+		st.add("className", _className);
+		st.add("id", _id);
+		return st.render().trim();
+	}
+
+	public LockOutlinedIconElement setClassName(Object value) {
+		this._className = value;
+		return this;
+	}
+
+	public Object getClassName() {
+		return this._className;
+	}
+
+	public Object getClassName(Object defaultValue) {
+		return this._className == null ? defaultValue : this._className;
+	}
+
+	public boolean hasClassName() {
+		return this._className != null;
+	}
+
+	public LockOutlinedIconElement removeClassName() {
+		this._className = null;
+		return this;
+	} 
+
+	public LockOutlinedIconElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public LockOutlinedIconElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		LockOutlinedIconElement that = (LockOutlinedIconElement) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
+	static final String st = "LockOutlinedIconElement(className,id) ::= <<<LockOutlinedIcon~if(className)~\n" + 
+				"	className=~className~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~ /> >>";
+}  

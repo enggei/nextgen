@@ -10,6 +10,7 @@ public class GridListElement {
 	private Object _className;
 	private Object _cols;
 	private Object _component;
+	private Object _id;
 	private Object _spacing;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
@@ -17,7 +18,12 @@ public class GridListElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -29,6 +35,7 @@ public class GridListElement {
 		st.add("className", _className);
 		st.add("cols", _cols);
 		st.add("component", _component);
+		st.add("id", _id);
 		st.add("spacing", _spacing);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
@@ -144,6 +151,28 @@ public class GridListElement {
 		return this;
 	} 
 
+	public GridListElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public GridListElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public GridListElement setSpacing(Object value) {
 		this._spacing = value;
 		return this;
@@ -209,12 +238,13 @@ public class GridListElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "GridListElement(cellHeight,classes,className,cols,component,spacing,children) ::= <<<GridList~if(cellHeight)~\n" + 
+	static final String st = "GridListElement(cellHeight,classes,className,cols,component,id,spacing,children) ::= <<<GridList~if(cellHeight)~\n" + 
 				"	cellHeight=\"~cellHeight~\"~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(cols)~\n" + 
 				"	cols=~cols~~endif~~if(component)~\n" + 
-				"	component=~component~~endif~~if(spacing)~\n" + 
+				"	component=~component~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(spacing)~\n" + 
 				"	spacing=~spacing~~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</GridList>~else~ />~endif~ >>";

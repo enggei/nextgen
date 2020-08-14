@@ -7,6 +7,7 @@ public class StepContentElement {
 
 	private Object _classes;
 	private Object _className;
+	private Object _id;
 	private Object _TransitionComponent;
 	private Object _transitionDuration;
 	private Object _TransitionProps;
@@ -16,7 +17,12 @@ public class StepContentElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -25,6 +31,7 @@ public class StepContentElement {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("StepContentElement");
 		st.add("classes", _classes);
 		st.add("className", _className);
+		st.add("id", _id);
 		st.add("TransitionComponent", _TransitionComponent);
 		st.add("transitionDuration", _transitionDuration);
 		st.add("TransitionProps", _TransitionProps);
@@ -73,6 +80,28 @@ public class StepContentElement {
 
 	public StepContentElement removeClassName() {
 		this._className = null;
+		return this;
+	} 
+
+	public StepContentElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public StepContentElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -185,9 +214,10 @@ public class StepContentElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "StepContentElement(classes,className,TransitionComponent,transitionDuration,TransitionProps,children) ::= <<<StepContent~if(classes)~\n" + 
+	static final String st = "StepContentElement(classes,className,id,TransitionComponent,transitionDuration,TransitionProps,children) ::= <<<StepContent~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
-				"	className=~className~~endif~~if(TransitionComponent)~\n" + 
+				"	className=~className~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(TransitionComponent)~\n" + 
 				"	TransitionComponent=~TransitionComponent~~endif~~if(transitionDuration)~\n" + 
 				"	transitionDuration=\"~transitionDuration~\"~endif~~if(TransitionProps)~\n" + 
 				"	TransitionProps=~TransitionProps~~endif~~if(children)~>\n" + 

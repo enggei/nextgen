@@ -12,6 +12,7 @@ public class AlertElement {
 	private Object _color;
 	private Object _icon;
 	private Object _iconMapping;
+	private Object _id;
 	private Object _onClose;
 	private Object _role;
 	private Object _severity;
@@ -22,7 +23,12 @@ public class AlertElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -36,6 +42,7 @@ public class AlertElement {
 		st.add("color", _color);
 		st.add("icon", _icon);
 		st.add("iconMapping", _iconMapping);
+		st.add("id", _id);
 		st.add("onClose", _onClose);
 		st.add("role", _role);
 		st.add("severity", _severity);
@@ -198,6 +205,28 @@ public class AlertElement {
 		return this;
 	} 
 
+	public AlertElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public AlertElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public AlertElement setOnClose(Object value) {
 		this._onClose = value;
 		return this;
@@ -329,14 +358,15 @@ public class AlertElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AlertElement(action,classes,className,closeText,color,icon,iconMapping,onClose,role,severity,variant,children) ::= <<<Alert~if(action)~\n" + 
+	static final String st = "AlertElement(action,classes,className,closeText,color,icon,iconMapping,id,onClose,role,severity,variant,children) ::= <<<Alert~if(action)~\n" + 
 				"	action=~action~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(closeText)~\n" + 
 				"	closeText=\"~closeText~\"~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(icon)~\n" + 
 				"	icon=~icon~~endif~~if(iconMapping)~\n" + 
-				"	iconMapping=~iconMapping~~endif~~if(onClose)~\n" + 
+				"	iconMapping=~iconMapping~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(onClose)~\n" + 
 				"	onClose=~onClose~~endif~~if(role)~\n" + 
 				"	role=\"~role~\"~endif~~if(severity)~\n" + 
 				"	severity=\"~severity~\"~endif~~if(variant)~\n" + 

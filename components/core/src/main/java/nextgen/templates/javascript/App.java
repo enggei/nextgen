@@ -5,42 +5,70 @@ public class App {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private java.util.List<String> _stores = new java.util.ArrayList<>();
+	private Object _theme;
+	private java.util.List<Object> _stores = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _routes = new java.util.ArrayList<>();
 
 	App(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("App");
+		st.add("theme", _theme);
 		for (Object o : _stores) st.add("stores", o);
 		for (java.util.Map<String, Object> map : _routes) st.addAggr("routes.{component,filename,path}", map.get("component"), map.get("filename"), map.get("path"));
 		return st.render().trim();
 	}
 
+	public App setTheme(Object value) {
+		this._theme = value;
+		return this;
+	}
 
-	public App addStores(String value) {
+	public Object getTheme() {
+		return this._theme;
+	}
+
+	public Object getTheme(Object defaultValue) {
+		return this._theme == null ? defaultValue : this._theme;
+	}
+
+	public boolean hasTheme() {
+		return this._theme != null;
+	}
+
+	public App removeTheme() {
+		this._theme = null;
+		return this;
+	} 
+
+	public App addStores(Object value) {
 		this._stores.add(value);
 		return this;
 	}
 
-	public App setStores(String[] value) {
+	public App setStores(Object[] value) {
 		this._stores.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public App setStores(java.util.Collection<String> values) {
+	public App setStores(java.util.Collection<Object> values) {
 		this._stores.addAll(values);
 		return this;
 	}
 
-	public App removeStores(String value) {
+	public App removeStores(Object value) {
 		this._stores.remove(value);
 		return this;
 	}
@@ -50,7 +78,7 @@ public class App {
 		return this;
 	}
 
-	public java.util.List<String> getStores() {
+	public java.util.List<Object> getStores() {
 		return this._stores;
 	} 
 
@@ -120,7 +148,7 @@ public class App {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "App(routes,stores) ::= <<import React, { Component } from 'react';\n" + 
+	static final String st = "App(routes,theme,stores) ::= <<import React, { Component } from 'react';\n" + 
 				"import { Switch, Route, withRouter } from 'react-router-dom';\n" + 
 				"\n" + 
 				"import { Provider } from 'mobx-react';\n" + 
@@ -129,15 +157,14 @@ public class App {
 				"~routes:{it|import ~it.component~ from './pages/~it.filename~';};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"import NavigationBar from './components/NavigationBar.js';\n" + 
-				"import LoginForm from './pages/LoginForm.js';\n" + 
-				"import LogoutForm from './pages/LogoutForm.js';\n" + 
 				"\n" + 
 				"import CssBaseline from '@material-ui/core/CssBaseline';\n" + 
 				"import { ThemeProvider } from '@material-ui/styles';\n" + 
 				"import { createMuiTheme } from '@material-ui/core/styles';\n" + 
 				"\n" + 
 				"// https://in-your-saas.github.io/material-ui-theme-editor/\n" + 
-				"const theme = createMuiTheme({\"palette\":{\"common\":{\"black\":\"#000\",\"white\":\"#fff\"},\"background\":{\"paper\":\"#fff\",\"default\":\"#fafafa\"},\"primary\":{\"light\":\"rgba(255, 255, 255, 1)\",\"main\":\"rgba(22, 22, 23, 1)\",\"dark\":\"rgba(74, 74, 74, 1)\",\"contrastText\":\"#fff\"},\"secondary\":{\"light\":\"#ff4081\",\"main\":\"rgba(245, 166, 35, 1)\",\"dark\":\"#c51162\",\"contrastText\":\"#fff\"},\"error\":{\"light\":\"#e57373\",\"main\":\"#f44336\",\"dark\":\"#d32f2f\",\"contrastText\":\"#fff\"},\"text\":{\"primary\":\"rgba(0, 0, 0, 0.87)\",\"secondary\":\"rgba(0, 0, 0, 0.54)\",\"disabled\":\"rgba(0, 0, 0, 0.38)\",\"hint\":\"rgba(0, 0, 0, 0.38)\"}}});\n" + 
+				"//const theme = createMuiTheme({\"palette\":{\"common\":{\"black\":\"#000\",\"white\":\"#fff\"},\"background\":{\"paper\":\"#fff\",\"default\":\"#fafafa\"},\"primary\":{\"light\":\"rgba(255, 255, 255, 1)\",\"main\":\"rgba(22, 22, 23, 1)\",\"dark\":\"rgba(74, 74, 74, 1)\",\"contrastText\":\"#fff\"},\"secondary\":{\"light\":\"#ff4081\",\"main\":\"rgba(245, 166, 35, 1)\",\"dark\":\"#c51162\",\"contrastText\":\"#fff\"},\"error\":{\"light\":\"#e57373\",\"main\":\"#f44336\",\"dark\":\"#d32f2f\",\"contrastText\":\"#fff\"},\"text\":{\"primary\":\"rgba(0, 0, 0, 0.87)\",\"secondary\":\"rgba(0, 0, 0, 0.54)\",\"disabled\":\"rgba(0, 0, 0, 0.38)\",\"hint\":\"rgba(0, 0, 0, 0.38)\"}}});\n" + 
+				"const theme = createMuiTheme(~theme~);\n" + 
 				"\n" + 
 				"@inject(~stores:{it|'~it~'};separator=\", \"~)\n" + 
 				"@withRouter\n" + 
@@ -165,12 +192,10 @@ public class App {
 				"				<ThemeProvider theme={theme}>\n" + 
 				"					<CssBaseline />\n" + 
 				"					<div>\n" + 
-				"						<NavigationBar></NavigationBar>\n" + 
+				"						<NavigationBar userStore={ this.props.userStore }></NavigationBar>\n" + 
 				"					</div>\n" + 
 				"					<Switch>\n" + 
-				"						<Route path=\"/login\" component={LoginForm} />\n" + 
-				"						<Route path=\"/logout\" component={LogoutForm} />\n" + 
-				"						~routes:{it|<Route path=\"/~it.path~\" component={~it.component~\\} />};separator=\"\\n\"~\n" + 
+				"						~routes:{it|<Route path=\"~it.path~\" component={~it.component~\\} />};separator=\"\\n\"~\n" + 
 				"					</Switch>\n" + 
 				"				</ThemeProvider>);\n" + 
 				"		} else return null;\n" + 

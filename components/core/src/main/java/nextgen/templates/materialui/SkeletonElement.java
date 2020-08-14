@@ -10,6 +10,7 @@ public class SkeletonElement {
 	private Object _className;
 	private Object _component;
 	private Object _height;
+	private Object _id;
 	private Object _variant;
 	private Object _width;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -18,7 +19,12 @@ public class SkeletonElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -30,6 +36,7 @@ public class SkeletonElement {
 		st.add("className", _className);
 		st.add("component", _component);
 		st.add("height", _height);
+		st.add("id", _id);
 		st.add("variant", _variant);
 		st.add("width", _width);
 		for (Object o : _children) st.add("children", o);
@@ -146,6 +153,28 @@ public class SkeletonElement {
 		return this;
 	} 
 
+	public SkeletonElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public SkeletonElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public SkeletonElement setVariant(Object value) {
 		this._variant = value;
 		return this;
@@ -233,12 +262,13 @@ public class SkeletonElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SkeletonElement(animation,classes,className,component,height,variant,width,children) ::= <<<Skeleton~if(animation)~\n" + 
+	static final String st = "SkeletonElement(animation,classes,className,component,height,id,variant,width,children) ::= <<<Skeleton~if(animation)~\n" + 
 				"	animation=\"~animation~\"~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(height)~\n" + 
-				"	height=~height~~endif~~if(variant)~\n" + 
+				"	height=~height~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~if(width)~\n" + 
 				"	width=~width~~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 

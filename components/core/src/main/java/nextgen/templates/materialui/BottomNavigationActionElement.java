@@ -8,6 +8,7 @@ public class BottomNavigationActionElement {
 	private Object _classes;
 	private Object _className;
 	private Object _icon;
+	private Object _id;
 	private Object _label;
 	private Object _showLabel;
 	private Object _value;
@@ -17,7 +18,12 @@ public class BottomNavigationActionElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -27,6 +33,7 @@ public class BottomNavigationActionElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("icon", _icon);
+		st.add("id", _id);
 		st.add("label", _label);
 		st.add("showLabel", _showLabel);
 		st.add("value", _value);
@@ -97,6 +104,28 @@ public class BottomNavigationActionElement {
 
 	public BottomNavigationActionElement removeIcon() {
 		this._icon = null;
+		return this;
+	} 
+
+	public BottomNavigationActionElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public BottomNavigationActionElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -209,10 +238,11 @@ public class BottomNavigationActionElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "BottomNavigationActionElement(classes,className,icon,label,showLabel,value,children) ::= <<<BottomNavigationAction~if(classes)~\n" + 
+	static final String st = "BottomNavigationActionElement(classes,className,icon,id,label,showLabel,value,children) ::= <<<BottomNavigationAction~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(icon)~\n" + 
-				"	icon=~icon~~endif~~if(label)~\n" + 
+				"	icon=~icon~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(label)~\n" + 
 				"	label=~label~~endif~~if(showLabel)~\n" + 
 				"	showLabel~endif~~if(value)~\n" + 
 				"	value=~value~~endif~~if(children)~>\n" + 

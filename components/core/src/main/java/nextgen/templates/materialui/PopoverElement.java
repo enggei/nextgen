@@ -15,6 +15,7 @@ public class PopoverElement {
 	private Object _container;
 	private Object _elevation;
 	private Object _getContentAnchorEl;
+	private Object _id;
 	private Object _marginThreshold;
 	private Object _onClose;
 	private Object _onEnter;
@@ -34,7 +35,12 @@ public class PopoverElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -51,6 +57,7 @@ public class PopoverElement {
 		st.add("container", _container);
 		st.add("elevation", _elevation);
 		st.add("getContentAnchorEl", _getContentAnchorEl);
+		st.add("id", _id);
 		st.add("marginThreshold", _marginThreshold);
 		st.add("onClose", _onClose);
 		st.add("onEnter", _onEnter);
@@ -285,6 +292,28 @@ public class PopoverElement {
 
 	public PopoverElement removeGetContentAnchorEl() {
 		this._getContentAnchorEl = null;
+		return this;
+	} 
+
+	public PopoverElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public PopoverElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -617,7 +646,7 @@ public class PopoverElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PopoverElement(action,anchorEl,anchorOrigin,anchorPosition,anchorReference,classes,className,container,elevation,getContentAnchorEl,marginThreshold,onClose,onEnter,onEntered,onEntering,onExit,onExited,onExiting,PaperProps,transformOrigin,TransitionComponent,transitionDuration,TransitionProps,children) ::= <<<Popover~if(action)~\n" + 
+	static final String st = "PopoverElement(action,anchorEl,anchorOrigin,anchorPosition,anchorReference,classes,className,container,elevation,getContentAnchorEl,id,marginThreshold,onClose,onEnter,onEntered,onEntering,onExit,onExited,onExiting,PaperProps,transformOrigin,TransitionComponent,transitionDuration,TransitionProps,children) ::= <<<Popover~if(action)~\n" + 
 				"	action=~action~~endif~~if(anchorEl)~\n" + 
 				"	anchorEl=~anchorEl~~endif~~if(anchorOrigin)~\n" + 
 				"	anchorOrigin=\"~anchorOrigin~\"~endif~~if(anchorPosition)~\n" + 
@@ -627,7 +656,8 @@ public class PopoverElement {
 				"	className=~className~~endif~~if(container)~\n" + 
 				"	container=~container~~endif~~if(elevation)~\n" + 
 				"	elevation=~elevation~~endif~~if(getContentAnchorEl)~\n" + 
-				"	getContentAnchorEl=~getContentAnchorEl~~endif~~if(marginThreshold)~\n" + 
+				"	getContentAnchorEl=~getContentAnchorEl~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(marginThreshold)~\n" + 
 				"	marginThreshold=~marginThreshold~~endif~~if(onClose)~\n" + 
 				"	onClose=~onClose~~endif~~if(onEnter)~\n" + 
 				"	onEnter=~onEnter~~endif~~if(onEntered)~\n" + 

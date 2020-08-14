@@ -7,6 +7,7 @@ public class FadeElement {
 
 	private Object _className;
 	private Object _disableStrictModeCompat;
+	private Object _id;
 	private Object _in;
 	private Object _timeout;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -15,7 +16,12 @@ public class FadeElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -24,6 +30,7 @@ public class FadeElement {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("FadeElement");
 		st.add("className", _className);
 		st.add("disableStrictModeCompat", _disableStrictModeCompat);
+		st.add("id", _id);
 		st.add("in", _in);
 		st.add("timeout", _timeout);
 		for (Object o : _children) st.add("children", o);
@@ -71,6 +78,28 @@ public class FadeElement {
 
 	public FadeElement removeDisableStrictModeCompat() {
 		this._disableStrictModeCompat = null;
+		return this;
+	} 
+
+	public FadeElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public FadeElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -161,9 +190,10 @@ public class FadeElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "FadeElement(className,disableStrictModeCompat,in,timeout,children) ::= <<<Fade~if(className)~\n" + 
+	static final String st = "FadeElement(className,disableStrictModeCompat,id,in,timeout,children) ::= <<<Fade~if(className)~\n" + 
 				"	className=~className~~endif~~if(disableStrictModeCompat)~\n" + 
-				"	disableStrictModeCompat~endif~~if(in)~\n" + 
+				"	disableStrictModeCompat~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(in)~\n" + 
 				"	in~endif~~if(timeout)~\n" + 
 				"	timeout=~timeout~~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 

@@ -7,6 +7,7 @@ public class AvatarGroupElement {
 
 	private Object _classes;
 	private Object _className;
+	private Object _id;
 	private Object _max;
 	private Object _spacing;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -15,7 +16,12 @@ public class AvatarGroupElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -24,6 +30,7 @@ public class AvatarGroupElement {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("AvatarGroupElement");
 		st.add("classes", _classes);
 		st.add("className", _className);
+		st.add("id", _id);
 		st.add("max", _max);
 		st.add("spacing", _spacing);
 		for (Object o : _children) st.add("children", o);
@@ -71,6 +78,28 @@ public class AvatarGroupElement {
 
 	public AvatarGroupElement removeClassName() {
 		this._className = null;
+		return this;
+	} 
+
+	public AvatarGroupElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public AvatarGroupElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -161,9 +190,10 @@ public class AvatarGroupElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AvatarGroupElement(classes,className,max,spacing,children) ::= <<<AvatarGroup~if(classes)~\n" + 
+	static final String st = "AvatarGroupElement(classes,className,id,max,spacing,children) ::= <<<AvatarGroup~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
-				"	className=~className~~endif~~if(max)~\n" + 
+				"	className=~className~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(max)~\n" + 
 				"	max=~max~~endif~~if(spacing)~\n" + 
 				"	spacing=\"~spacing~\"~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 

@@ -11,6 +11,7 @@ public class TabElement {
 	private Object _disableFocusRipple;
 	private Object _disableRipple;
 	private Object _icon;
+	private Object _id;
 	private Object _label;
 	private Object _value;
 	private Object _wrapped;
@@ -20,7 +21,12 @@ public class TabElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -33,6 +39,7 @@ public class TabElement {
 		st.add("disableFocusRipple", _disableFocusRipple);
 		st.add("disableRipple", _disableRipple);
 		st.add("icon", _icon);
+		st.add("id", _id);
 		st.add("label", _label);
 		st.add("value", _value);
 		st.add("wrapped", _wrapped);
@@ -172,6 +179,28 @@ public class TabElement {
 		return this;
 	} 
 
+	public TabElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public TabElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public TabElement setLabel(Object value) {
 		this._label = value;
 		return this;
@@ -281,13 +310,14 @@ public class TabElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TabElement(classes,className,disabled,disableFocusRipple,disableRipple,icon,label,value,wrapped,children) ::= <<<Tab~if(classes)~\n" + 
+	static final String st = "TabElement(classes,className,disabled,disableFocusRipple,disableRipple,icon,id,label,value,wrapped,children) ::= <<<Tab~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(disabled)~\n" + 
 				"	disabled~endif~~if(disableFocusRipple)~\n" + 
 				"	disableFocusRipple~endif~~if(disableRipple)~\n" + 
 				"	disableRipple~endif~~if(icon)~\n" + 
-				"	icon=~icon~~endif~~if(label)~\n" + 
+				"	icon=~icon~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(label)~\n" + 
 				"	label=~label~~endif~~if(value)~\n" + 
 				"	value=~value~~endif~~if(wrapped)~\n" + 
 				"	wrapped~endif~~if(children)~>\n" + 

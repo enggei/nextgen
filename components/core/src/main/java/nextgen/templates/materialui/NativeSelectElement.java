@@ -8,6 +8,7 @@ public class NativeSelectElement {
 	private Object _classes;
 	private Object _className;
 	private Object _IconComponent;
+	private Object _id;
 	private Object _input;
 	private Object _inputProps;
 	private Object _onChange;
@@ -19,7 +20,12 @@ public class NativeSelectElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -29,6 +35,7 @@ public class NativeSelectElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("IconComponent", _IconComponent);
+		st.add("id", _id);
 		st.add("input", _input);
 		st.add("inputProps", _inputProps);
 		st.add("onChange", _onChange);
@@ -101,6 +108,28 @@ public class NativeSelectElement {
 
 	public NativeSelectElement removeIconComponent() {
 		this._IconComponent = null;
+		return this;
+	} 
+
+	public NativeSelectElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public NativeSelectElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -257,10 +286,11 @@ public class NativeSelectElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NativeSelectElement(classes,className,IconComponent,input,inputProps,onChange,value,variant,children) ::= <<<NativeSelect~if(classes)~\n" + 
+	static final String st = "NativeSelectElement(classes,className,IconComponent,id,input,inputProps,onChange,value,variant,children) ::= <<<NativeSelect~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(IconComponent)~\n" + 
-				"	IconComponent=~IconComponent~~endif~~if(input)~\n" + 
+				"	IconComponent=~IconComponent~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(input)~\n" + 
 				"	input=~input~~endif~~if(inputProps)~\n" + 
 				"	inputProps=~inputProps~~endif~~if(onChange)~\n" + 
 				"	onChange=~onChange~~endif~~if(value)~\n" + 

@@ -8,6 +8,7 @@ public class AppBarElement {
 	private Object _classes;
 	private Object _className;
 	private Object _color;
+	private Object _id;
 	private Object _position;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
@@ -15,7 +16,12 @@ public class AppBarElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -25,6 +31,7 @@ public class AppBarElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("color", _color);
+		st.add("id", _id);
 		st.add("position", _position);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
@@ -96,6 +103,28 @@ public class AppBarElement {
 		return this;
 	} 
 
+	public AppBarElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public AppBarElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public AppBarElement setPosition(Object value) {
 		this._position = value;
 		return this;
@@ -161,10 +190,11 @@ public class AppBarElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AppBarElement(classes,className,color,position,children) ::= <<<AppBar~if(classes)~\n" + 
+	static final String st = "AppBarElement(classes,className,color,id,position,children) ::= <<<AppBar~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
-				"	color=\"~color~\"~endif~~if(position)~\n" + 
+				"	color=\"~color~\"~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(position)~\n" + 
 				"	position=\"~position~\"~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</AppBar>~else~ />~endif~ >>";

@@ -10,6 +10,7 @@ public class ContainerElement {
 	private Object _component;
 	private Object _disableGutters;
 	private Object _fixed;
+	private Object _id;
 	private Object _maxWidth;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
@@ -17,7 +18,12 @@ public class ContainerElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -29,6 +35,7 @@ public class ContainerElement {
 		st.add("component", _component);
 		st.add("disableGutters", _disableGutters);
 		st.add("fixed", _fixed);
+		st.add("id", _id);
 		st.add("maxWidth", _maxWidth);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
@@ -144,6 +151,28 @@ public class ContainerElement {
 		return this;
 	} 
 
+	public ContainerElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public ContainerElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public ContainerElement setMaxWidth(Object value) {
 		this._maxWidth = value;
 		return this;
@@ -209,12 +238,13 @@ public class ContainerElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ContainerElement(classes,className,component,disableGutters,fixed,maxWidth,children) ::= <<<Container~if(classes)~\n" + 
+	static final String st = "ContainerElement(classes,className,component,disableGutters,fixed,id,maxWidth,children) ::= <<<Container~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(disableGutters)~\n" + 
 				"	disableGutters~endif~~if(fixed)~\n" + 
-				"	fixed~endif~~if(maxWidth)~\n" + 
+				"	fixed~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(maxWidth)~\n" + 
 				"	maxWidth=\"~maxWidth~\"~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Container>~else~ />~endif~ >>";

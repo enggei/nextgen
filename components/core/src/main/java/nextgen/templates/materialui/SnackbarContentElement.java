@@ -8,6 +8,7 @@ public class SnackbarContentElement {
 	private Object _action;
 	private Object _classes;
 	private Object _className;
+	private Object _id;
 	private Object _message;
 	private Object _role;
 
@@ -15,7 +16,12 @@ public class SnackbarContentElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -25,6 +31,7 @@ public class SnackbarContentElement {
 		st.add("action", _action);
 		st.add("classes", _classes);
 		st.add("className", _className);
+		st.add("id", _id);
 		st.add("message", _message);
 		st.add("role", _role);
 		return st.render().trim();
@@ -96,6 +103,28 @@ public class SnackbarContentElement {
 		return this;
 	} 
 
+	public SnackbarContentElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public SnackbarContentElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public SnackbarContentElement setMessage(Object value) {
 		this._message = value;
 		return this;
@@ -155,10 +184,11 @@ public class SnackbarContentElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SnackbarContentElement(action,classes,className,message,role) ::= <<<SnackbarContent~if(action)~\n" + 
+	static final String st = "SnackbarContentElement(action,classes,className,id,message,role) ::= <<<SnackbarContent~if(action)~\n" + 
 				"	action=~action~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
-				"	className=~className~~endif~~if(message)~\n" + 
+				"	className=~className~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(message)~\n" + 
 				"	message=~message~~endif~~if(role)~\n" + 
 				"	role=\"~role~\"~endif~ /> >>";
 }  

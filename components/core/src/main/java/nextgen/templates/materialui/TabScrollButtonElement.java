@@ -9,6 +9,7 @@ public class TabScrollButtonElement {
 	private Object _className;
 	private Object _direction;
 	private Object _disabled;
+	private Object _id;
 	private Object _orientation;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
@@ -16,7 +17,12 @@ public class TabScrollButtonElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -27,6 +33,7 @@ public class TabScrollButtonElement {
 		st.add("className", _className);
 		st.add("direction", _direction);
 		st.add("disabled", _disabled);
+		st.add("id", _id);
 		st.add("orientation", _orientation);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
@@ -120,6 +127,28 @@ public class TabScrollButtonElement {
 		return this;
 	} 
 
+	public TabScrollButtonElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public TabScrollButtonElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public TabScrollButtonElement setOrientation(Object value) {
 		this._orientation = value;
 		return this;
@@ -185,11 +214,12 @@ public class TabScrollButtonElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TabScrollButtonElement(classes,className,direction,disabled,orientation,children) ::= <<<TabScrollButton~if(classes)~\n" + 
+	static final String st = "TabScrollButtonElement(classes,className,direction,disabled,id,orientation,children) ::= <<<TabScrollButton~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~\n" + 
 				"	direction=\"~direction~\"~if(disabled)~\n" + 
-				"	disabled~endif~\n" + 
+				"	disabled~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~\n" + 
 				"	orientation=\"~orientation~\"~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</TabScrollButton>~else~ />~endif~ >>";

@@ -8,6 +8,7 @@ public class TableElement {
 	private Object _classes;
 	private Object _className;
 	private Object _component;
+	private Object _id;
 	private Object _padding;
 	private Object _size;
 	private Object _stickyHeader;
@@ -17,7 +18,12 @@ public class TableElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -27,6 +33,7 @@ public class TableElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("component", _component);
+		st.add("id", _id);
 		st.add("padding", _padding);
 		st.add("size", _size);
 		st.add("stickyHeader", _stickyHeader);
@@ -97,6 +104,28 @@ public class TableElement {
 
 	public TableElement removeComponent() {
 		this._component = null;
+		return this;
+	} 
+
+	public TableElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public TableElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -209,10 +238,11 @@ public class TableElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TableElement(classes,className,component,padding,size,stickyHeader,children) ::= <<<Table~if(classes)~\n" + 
+	static final String st = "TableElement(classes,className,component,id,padding,size,stickyHeader,children) ::= <<<Table~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
-				"	component=~component~~endif~~if(padding)~\n" + 
+				"	component=~component~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(padding)~\n" + 
 				"	padding=\"~padding~\"~endif~~if(size)~\n" + 
 				"	size=\"~size~\"~endif~~if(stickyHeader)~\n" + 
 				"	stickyHeader~endif~~if(children)~>\n" + 

@@ -10,13 +10,19 @@ public class IconElement {
 	private Object _color;
 	private Object _component;
 	private Object _fontSize;
+	private Object _id;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
 	IconElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -28,6 +34,7 @@ public class IconElement {
 		st.add("color", _color);
 		st.add("component", _component);
 		st.add("fontSize", _fontSize);
+		st.add("id", _id);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
 	}
@@ -142,6 +149,28 @@ public class IconElement {
 		return this;
 	} 
 
+	public IconElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public IconElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public IconElement addChildren(Object value) {
 		this._children.add(value);
 		return this;
@@ -185,12 +214,13 @@ public class IconElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "IconElement(classes,className,color,component,fontSize,children) ::= <<<Icon~if(classes)~\n" + 
+	static final String st = "IconElement(classes,className,color,component,fontSize,id,children) ::= <<<Icon~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(fontSize)~\n" + 
-				"	fontSize=\"~fontSize~\"~endif~~if(children)~>\n" + 
+				"	fontSize=\"~fontSize~\"~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Icon>~else~ />~endif~ >>";
 }  

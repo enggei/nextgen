@@ -9,6 +9,7 @@ public class GridListTileBarElement {
 	private Object _actionPosition;
 	private Object _classes;
 	private Object _className;
+	private Object _id;
 	private Object _subtitle;
 	private Object _title;
 	private Object _titlePosition;
@@ -17,7 +18,12 @@ public class GridListTileBarElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -28,6 +34,7 @@ public class GridListTileBarElement {
 		st.add("actionPosition", _actionPosition);
 		st.add("classes", _classes);
 		st.add("className", _className);
+		st.add("id", _id);
 		st.add("subtitle", _subtitle);
 		st.add("title", _title);
 		st.add("titlePosition", _titlePosition);
@@ -122,6 +129,28 @@ public class GridListTileBarElement {
 		return this;
 	} 
 
+	public GridListTileBarElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public GridListTileBarElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public GridListTileBarElement setSubtitle(Object value) {
 		this._subtitle = value;
 		return this;
@@ -203,11 +232,12 @@ public class GridListTileBarElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "GridListTileBarElement(actionIcon,actionPosition,classes,className,subtitle,title,titlePosition) ::= <<<GridListTileBar~if(actionIcon)~\n" + 
+	static final String st = "GridListTileBarElement(actionIcon,actionPosition,classes,className,id,subtitle,title,titlePosition) ::= <<<GridListTileBar~if(actionIcon)~\n" + 
 				"	actionIcon=~actionIcon~~endif~~if(actionPosition)~\n" + 
 				"	actionPosition=\"~actionPosition~\"~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
-				"	className=~className~~endif~~if(subtitle)~\n" + 
+				"	className=~className~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(subtitle)~\n" + 
 				"	subtitle=~subtitle~~endif~~if(title)~\n" + 
 				"	title=~title~~endif~~if(titlePosition)~\n" + 
 				"	titlePosition=\"~titlePosition~\"~endif~ /> >>";

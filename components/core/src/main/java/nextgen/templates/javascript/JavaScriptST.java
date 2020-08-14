@@ -2,65 +2,61 @@ package nextgen.templates.javascript;
 
 public class JavaScriptST {
 
-	private static final String stg = "delimiters \"~\", \"~\"\n" +
-	"eom() ::= \"}\"\n" +
-	"gt() ::= \">\"\n" +
-	App.st + "\n" + 
-	Copyright.st + "\n" + 
-	Loading.st + "\n" + 
-	SignIn.st + "\n" + 
-	SignOut.st + "\n" + 
-	StoreComponent.st + "\n" + 
-	IndexJS.st + "\n" + 
-	ListErrors.st + "\n" + 
-	LoginForm.st + "\n" + 
-	LogoutForm.st + "\n" + 
-	NavigationBar.st + "\n" + 
-	SimpleMenu.st + "\n" + 
-	Superagent.st + "\n" + 
-	AgentDeclaration.st + "\n" + 
-	AgentEndpoint.st + "\n" + 
-	Usecase.st + "\n" + 
-	UserMenu.st + "\n" + 
-	BlockStmt.st + "\n" + 
-	Conditional.st + "\n" + 
-	Decorator.st + "\n" + 
-	ExpressionStmt.st + "\n" + 
-	ArrowFunction.st + "\n" + 
-	Function.st + "\n" + 
-	FunctionExpression.st + "\n" + 
-	If.st + "\n" + 
-	IndexHtml.st + "\n" + 
-	Inject.st + "\n" + 
-	JsonObject.st + "\n" + 
-	ClassComponent.st + "\n" + 
-	Dependency.st + "\n" + 
-	DestructorProp.st + "\n" + 
-	Element.st + "\n" + 
-	FunctionalComponent.st + "\n" + 
-	MapProperty.st + "\n" + 
-	MethodDeclaration.st + "\n" + 
-	NamedImport.st + "\n" + 
-	Prop.st + "\n" + 
-	ReturnStatement.st + "\n" + 
-	State.st + "\n" + 
-	CenteredGrid.st + "\n" + 
-	GlobalStyle.st + "\n" + 
-	MenuItem.st + "\n" + 
-	Style.st + "\n" + 
-	StyleComponent.st + "\n" + 
-	WithStyles.st + "\n" + 
-	MethodCall.st + "\n" + 
-	MobX.st + "\n" + 
-	Action.st + "\n" + 
-	MobXStore.st + "\n" + 
-	Observable.st + "\n" + 
-	Reaction.st + "\n" + 
-	NameArray.st + "\n" + 
-	NameValue.st + "\n" + 
-	ForwardRef.st + "\n" + 
-	Link.st + "\n" + 
-	ReturnStmt.st + "\n" ;
+	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
+	.append("eom() ::= \"}\"\n")
+	.append("gt() ::= \">\"\n")
+	.append(App.st + "\n")
+	.append(ListErrors.st + "\n")
+	.append(LogoutForm.st + "\n")
+	.append(NavigationBar.st + "\n")
+	.append(SimpleMenu.st + "\n")
+	.append(Superagent.st + "\n")
+	.append(AgentDeclaration.st + "\n")
+	.append(AgentEndpoint.st + "\n")
+	.append(AgentRequest.st + "\n")
+	.append(Usecase.st + "\n")
+	.append(UserMenu.st + "\n")
+	.append(BlockStmt.st + "\n")
+	.append(Conditional.st + "\n")
+	.append(If.st + "\n")
+	.append(Decorator.st + "\n")
+	.append(ArrowFunction.st + "\n")
+	.append(Function.st + "\n")
+	.append(FunctionCall.st + "\n")
+	.append(FunctionExpression.st + "\n")
+	.append(ReturnStmt.st + "\n")
+	.append(Inject.st + "\n")
+	.append(JsonObject.st + "\n")
+	.append(MobX.st + "\n")
+	.append(Action.st + "\n")
+	.append(MobXStore.st + "\n")
+	.append(Observable.st + "\n")
+	.append(Reaction.st + "\n")
+	.append(NameArray.st + "\n")
+	.append(NameValue.st + "\n")
+	.append(IndexCSS.st + "\n")
+	.append(IndexHtml.st + "\n")
+	.append(IndexJS.st + "\n")
+	.append(JSX.st + "\n")
+	.append(ClassComponent.st + "\n")
+	.append(Dependency.st + "\n")
+	.append(DestructorProp.st + "\n")
+	.append(Element.st + "\n")
+	.append(Div.st + "\n")
+	.append(Form.st + "\n")
+	.append(Ul.st + "\n")
+	.append(FunctionalComponent.st + "\n")
+	.append(MapProperty.st + "\n")
+	.append(MethodDeclaration.st + "\n")
+	.append(NamedImport.st + "\n")
+	.append(Prop.st + "\n")
+	.append(ReturnStatement.st + "\n")
+	.append(State.st + "\n")
+	.append(ForwardRef.st + "\n")
+	.append(Link.st + "\n")
+	.append(ReactRouterLinkImport.st + "\n")
+	.append(WithRouterImport.st + "\n")
+	.toString()  ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -98,227 +94,207 @@ public class JavaScriptST {
 
 	public static App newApp() {
 		return new App(stGroup);
-	} 
-
-	public static Copyright newCopyright() {
-		return new Copyright(stGroup);
-	} 
-
-	public static Loading newLoading() {
-		return new Loading(stGroup);
-	} 
-
-	public static SignIn newSignIn() {
-		return new SignIn(stGroup);
-	} 
-
-	public static SignOut newSignOut() {
-		return new SignOut(stGroup);
-	} 
-
-	public static StoreComponent newStoreComponent() {
-		return new StoreComponent(stGroup);
-	} 
-
-	public static IndexJS newIndexJS() {
-		return new IndexJS(stGroup);
-	} 
+	}  
 
 	public static ListErrors newListErrors() {
 		return new ListErrors(stGroup);
-	} 
-
-	public static LoginForm newLoginForm() {
-		return new LoginForm(stGroup);
-	} 
+	}  
 
 	public static LogoutForm newLogoutForm() {
 		return new LogoutForm(stGroup);
-	} 
+	}  
 
 	public static NavigationBar newNavigationBar() {
 		return new NavigationBar(stGroup);
-	} 
+	}  
 
 	public static SimpleMenu newSimpleMenu() {
 		return new SimpleMenu(stGroup);
-	} 
+	}  
 
 	public static Superagent newSuperagent() {
 		return new Superagent(stGroup);
-	} 
+	}  
 
 	public static AgentDeclaration newAgentDeclaration() {
 		return new AgentDeclaration(stGroup);
-	} 
+	}  
 
 	public static AgentEndpoint newAgentEndpoint() {
 		return new AgentEndpoint(stGroup);
-	} 
+	}  
+
+	public static AgentRequest newAgentRequest() {
+		return new AgentRequest(stGroup);
+	}  
 
 	public static Usecase newUsecase() {
 		return new Usecase(stGroup);
-	} 
+	}  
 
 	public static UserMenu newUserMenu() {
 		return new UserMenu(stGroup);
-	} 
+	}  
 
 	public static BlockStmt newBlockStmt() {
 		return new BlockStmt(stGroup);
-	} 
+	}  
 
 	public static Conditional newConditional() {
 		return new Conditional(stGroup);
-	} 
-
-	public static Decorator newDecorator() {
-		return new Decorator(stGroup);
-	} 
-
-	public static ExpressionStmt newExpressionStmt() {
-		return new ExpressionStmt(stGroup);
-	} 
-
-	public static ArrowFunction newArrowFunction() {
-		return new ArrowFunction(stGroup);
-	} 
-
-	public static Function newFunction() {
-		return new Function(stGroup);
-	} 
-
-	public static FunctionExpression newFunctionExpression() {
-		return new FunctionExpression(stGroup);
-	} 
+	}  
 
 	public static If newIf() {
 		return new If(stGroup);
-	} 
+	}  
 
-	public static IndexHtml newIndexHtml() {
-		return new IndexHtml(stGroup);
-	} 
+	public static Decorator newDecorator() {
+		return new Decorator(stGroup);
+	}  
 
-	public static Inject newInject() {
-		return new Inject(stGroup);
-	} 
+	public static ArrowFunction newArrowFunction() {
+		return new ArrowFunction(stGroup);
+	}  
 
-	public static JsonObject newJsonObject() {
-		return new JsonObject(stGroup);
-	} 
+	public static Function newFunction() {
+		return new Function(stGroup);
+	}  
 
-	public static ClassComponent newClassComponent() {
-		return new ClassComponent(stGroup);
-	} 
+	public static FunctionCall newFunctionCall() {
+		return new FunctionCall(stGroup);
+	}  
 
-	public static Dependency newDependency() {
-		return new Dependency(stGroup);
-	} 
-
-	public static DestructorProp newDestructorProp() {
-		return new DestructorProp(stGroup);
-	} 
-
-	public static Element newElement() {
-		return new Element(stGroup);
-	} 
-
-	public static FunctionalComponent newFunctionalComponent() {
-		return new FunctionalComponent(stGroup);
-	} 
-
-	public static MapProperty newMapProperty() {
-		return new MapProperty(stGroup);
-	} 
-
-	public static MethodDeclaration newMethodDeclaration() {
-		return new MethodDeclaration(stGroup);
-	} 
-
-	public static NamedImport newNamedImport() {
-		return new NamedImport(stGroup);
-	} 
-
-	public static Prop newProp() {
-		return new Prop(stGroup);
-	} 
-
-	public static ReturnStatement newReturnStatement() {
-		return new ReturnStatement(stGroup);
-	} 
-
-	public static State newState() {
-		return new State(stGroup);
-	} 
-
-	public static CenteredGrid newCenteredGrid() {
-		return new CenteredGrid(stGroup);
-	} 
-
-	public static GlobalStyle newGlobalStyle() {
-		return new GlobalStyle(stGroup);
-	} 
-
-	public static MenuItem newMenuItem() {
-		return new MenuItem(stGroup);
-	} 
-
-	public static Style newStyle() {
-		return new Style(stGroup);
-	} 
-
-	public static StyleComponent newStyleComponent() {
-		return new StyleComponent(stGroup);
-	} 
-
-	public static WithStyles newWithStyles() {
-		return new WithStyles(stGroup);
-	} 
-
-	public static MethodCall newMethodCall() {
-		return new MethodCall(stGroup);
-	} 
-
-	public static MobX newMobX() {
-		return new MobX(stGroup);
-	} 
-
-	public static Action newAction() {
-		return new Action(stGroup);
-	} 
-
-	public static MobXStore newMobXStore() {
-		return new MobXStore(stGroup);
-	} 
-
-	public static Observable newObservable() {
-		return new Observable(stGroup);
-	} 
-
-	public static Reaction newReaction() {
-		return new Reaction(stGroup);
-	} 
-
-	public static NameArray newNameArray() {
-		return new NameArray(stGroup);
-	} 
-
-	public static NameValue newNameValue() {
-		return new NameValue(stGroup);
-	} 
-
-	public static ForwardRef newForwardRef() {
-		return new ForwardRef(stGroup);
-	} 
-
-	public static Link newLink() {
-		return new Link(stGroup);
-	} 
+	public static FunctionExpression newFunctionExpression() {
+		return new FunctionExpression(stGroup);
+	}  
 
 	public static ReturnStmt newReturnStmt() {
 		return new ReturnStmt(stGroup);
-	} 
+	}  
+
+	public static Inject newInject() {
+		return new Inject(stGroup);
+	}  
+
+	public static JsonObject newJsonObject() {
+		return new JsonObject(stGroup);
+	}  
+
+	public static MobX newMobX() {
+		return new MobX(stGroup);
+	}  
+
+	public static Action newAction() {
+		return new Action(stGroup);
+	}  
+
+	public static MobXStore newMobXStore() {
+		return new MobXStore(stGroup);
+	}  
+
+	public static Observable newObservable() {
+		return new Observable(stGroup);
+	}  
+
+	public static Reaction newReaction() {
+		return new Reaction(stGroup);
+	}  
+
+	public static NameArray newNameArray() {
+		return new NameArray(stGroup);
+	}  
+
+	public static NameValue newNameValue() {
+		return new NameValue(stGroup);
+	}  
+
+	public static IndexCSS newIndexCSS() {
+		return new IndexCSS(stGroup);
+	}  
+
+	public static IndexHtml newIndexHtml() {
+		return new IndexHtml(stGroup);
+	}  
+
+	public static IndexJS newIndexJS() {
+		return new IndexJS(stGroup);
+	}  
+
+	public static JSX newJSX() {
+		return new JSX(stGroup);
+	}  
+
+	public static ClassComponent newClassComponent() {
+		return new ClassComponent(stGroup);
+	}  
+
+	public static Dependency newDependency() {
+		return new Dependency(stGroup);
+	}  
+
+	public static DestructorProp newDestructorProp() {
+		return new DestructorProp(stGroup);
+	}  
+
+	public static Element newElement() {
+		return new Element(stGroup);
+	}  
+
+	public static Div newDiv() {
+		return new Div(stGroup);
+	}  
+
+	public static Form newForm() {
+		return new Form(stGroup);
+	}  
+
+	public static Ul newUl() {
+		return new Ul(stGroup);
+	}  
+
+	public static FunctionalComponent newFunctionalComponent() {
+		return new FunctionalComponent(stGroup);
+	}  
+
+	public static MapProperty newMapProperty() {
+		return new MapProperty(stGroup);
+	}  
+
+	public static MethodDeclaration newMethodDeclaration() {
+		return new MethodDeclaration(stGroup);
+	}  
+
+	public static NamedImport newNamedImport() {
+		return new NamedImport(stGroup);
+	}  
+
+	public static Prop newProp() {
+		return new Prop(stGroup);
+	}  
+
+	public static ReturnStatement newReturnStatement() {
+		return new ReturnStatement(stGroup);
+	}  
+
+	public static State newState() {
+		return new State(stGroup);
+	}  
+
+	public static ForwardRef newForwardRef() {
+		return new ForwardRef(stGroup);
+	}  
+
+	public static Link newLink() {
+		return new Link(stGroup);
+	}  
+
+	public static ReactRouterLinkImport newReactRouterLinkImport() {
+		return new ReactRouterLinkImport(stGroup);
+	}  
+
+	public static WithRouterImport newWithRouterImport() {
+		return new WithRouterImport(stGroup);
+	}  
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
 

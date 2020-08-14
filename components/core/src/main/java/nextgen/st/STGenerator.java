@@ -320,6 +320,10 @@ public class STGenerator {
         writeToFile(content, packageDeclaration, name, "html", root);
     }
 
+    public static void writeFile(Object content, String packageDeclaration, String name, File root) {
+        writeToFile(content, packageDeclaration, name.substring(0, name.indexOf(".")), name.substring(name.indexOf(".") + 1), root);
+    }
+
     public static void writeToFile(Object content, String packageDeclaration, String name, String filetype, File root) {
         final File directory = packageDeclaration == null ? root : new File(root, packageToPath(packageDeclaration));
         final File file = new File(directory, name + (filetype == null ? "" : ("." + filetype)));

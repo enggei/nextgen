@@ -8,6 +8,7 @@ public class ToggleButtonGroupElement {
 	private Object _classes;
 	private Object _className;
 	private Object _exclusive;
+	private Object _id;
 	private Object _onChange;
 	private Object _orientation;
 	private Object _size;
@@ -18,7 +19,12 @@ public class ToggleButtonGroupElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -28,6 +34,7 @@ public class ToggleButtonGroupElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("exclusive", _exclusive);
+		st.add("id", _id);
 		st.add("onChange", _onChange);
 		st.add("orientation", _orientation);
 		st.add("size", _size);
@@ -99,6 +106,28 @@ public class ToggleButtonGroupElement {
 
 	public ToggleButtonGroupElement removeExclusive() {
 		this._exclusive = null;
+		return this;
+	} 
+
+	public ToggleButtonGroupElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public ToggleButtonGroupElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -233,10 +262,11 @@ public class ToggleButtonGroupElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ToggleButtonGroupElement(classes,className,exclusive,onChange,orientation,size,value,children) ::= <<<ToggleButtonGroup~if(classes)~\n" + 
+	static final String st = "ToggleButtonGroupElement(classes,className,exclusive,id,onChange,orientation,size,value,children) ::= <<<ToggleButtonGroup~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(exclusive)~\n" + 
-				"	exclusive~endif~~if(onChange)~\n" + 
+				"	exclusive~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(onChange)~\n" + 
 				"	onChange=~onChange~~endif~~if(orientation)~\n" + 
 				"	orientation=\"~orientation~\"~endif~~if(size)~\n" + 
 				"	size=\"~size~\"~endif~~if(value)~\n" + 

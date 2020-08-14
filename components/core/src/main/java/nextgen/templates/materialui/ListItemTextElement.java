@@ -8,6 +8,7 @@ public class ListItemTextElement {
 	private Object _classes;
 	private Object _className;
 	private Object _disableTypography;
+	private Object _id;
 	private Object _inset;
 	private Object _primary;
 	private Object _primaryTypographyProps;
@@ -19,7 +20,12 @@ public class ListItemTextElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -29,6 +35,7 @@ public class ListItemTextElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("disableTypography", _disableTypography);
+		st.add("id", _id);
 		st.add("inset", _inset);
 		st.add("primary", _primary);
 		st.add("primaryTypographyProps", _primaryTypographyProps);
@@ -101,6 +108,28 @@ public class ListItemTextElement {
 
 	public ListItemTextElement removeDisableTypography() {
 		this._disableTypography = null;
+		return this;
+	} 
+
+	public ListItemTextElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public ListItemTextElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -257,10 +286,11 @@ public class ListItemTextElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ListItemTextElement(classes,className,disableTypography,inset,primary,primaryTypographyProps,secondary,secondaryTypographyProps,children) ::= <<<ListItemText~if(classes)~\n" + 
+	static final String st = "ListItemTextElement(classes,className,disableTypography,id,inset,primary,primaryTypographyProps,secondary,secondaryTypographyProps,children) ::= <<<ListItemText~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(disableTypography)~\n" + 
-				"	disableTypography~endif~~if(inset)~\n" + 
+				"	disableTypography~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(inset)~\n" + 
 				"	inset~endif~~if(primary)~\n" + 
 				"	primary=~primary~~endif~~if(primaryTypographyProps)~\n" + 
 				"	primaryTypographyProps=~primaryTypographyProps~~endif~~if(secondary)~\n" + 

@@ -16,6 +16,7 @@ public class SliderElement {
 	private Object _disabled;
 	private Object _getAriaLabel;
 	private Object _getAriaValueText;
+	private Object _id;
 	private Object _marks;
 	private Object _max;
 	private Object _min;
@@ -36,7 +37,12 @@ public class SliderElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -54,6 +60,7 @@ public class SliderElement {
 		st.add("disabled", _disabled);
 		st.add("getAriaLabel", _getAriaLabel);
 		st.add("getAriaValueText", _getAriaValueText);
+		st.add("id", _id);
 		st.add("marks", _marks);
 		st.add("max", _max);
 		st.add("min", _min);
@@ -311,6 +318,28 @@ public class SliderElement {
 
 	public SliderElement removeGetAriaValueText() {
 		this._getAriaValueText = null;
+		return this;
+	} 
+
+	public SliderElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public SliderElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -659,7 +688,7 @@ public class SliderElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SliderElement(ariaLabel,ariaLabelledby,ariaValuetext,classes,className,color,component,defaultValue,disabled,getAriaLabel,getAriaValueText,marks,max,min,name,onChange,onChangeCommitted,orientation,scale,step,ThumbComponent,track,value,ValueLabelComponent,valueLabelDisplay,valueLabelFormat) ::= <<<Slider~if(ariaLabel)~\n" + 
+	static final String st = "SliderElement(ariaLabel,ariaLabelledby,ariaValuetext,classes,className,color,component,defaultValue,disabled,getAriaLabel,getAriaValueText,id,marks,max,min,name,onChange,onChangeCommitted,orientation,scale,step,ThumbComponent,track,value,ValueLabelComponent,valueLabelDisplay,valueLabelFormat) ::= <<<Slider~if(ariaLabel)~\n" + 
 				"	ariaLabel=\"~ariaLabel~\"~endif~~if(ariaLabelledby)~\n" + 
 				"	ariaLabelledby=\"~ariaLabelledby~\"~endif~~if(ariaValuetext)~\n" + 
 				"	ariaValuetext=\"~ariaValuetext~\"~endif~~if(classes)~\n" + 
@@ -670,7 +699,8 @@ public class SliderElement {
 				"	defaultValue=~defaultValue~~endif~~if(disabled)~\n" + 
 				"	disabled~endif~~if(getAriaLabel)~\n" + 
 				"	getAriaLabel=~getAriaLabel~~endif~~if(getAriaValueText)~\n" + 
-				"	getAriaValueText=~getAriaValueText~~endif~~if(marks)~\n" + 
+				"	getAriaValueText=~getAriaValueText~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(marks)~\n" + 
 				"	marks=~marks~~endif~~if(max)~\n" + 
 				"	max=~max~~endif~~if(min)~\n" + 
 				"	min=~min~~endif~~if(name)~\n" + 

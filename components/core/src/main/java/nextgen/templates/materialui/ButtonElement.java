@@ -16,6 +16,7 @@ public class ButtonElement {
 	private Object _endIcon;
 	private Object _fullWidth;
 	private Object _href;
+	private Object _id;
 	private Object _size;
 	private Object _startIcon;
 	private Object _type;
@@ -26,7 +27,12 @@ public class ButtonElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -44,6 +50,7 @@ public class ButtonElement {
 		st.add("endIcon", _endIcon);
 		st.add("fullWidth", _fullWidth);
 		st.add("href", _href);
+		st.add("id", _id);
 		st.add("size", _size);
 		st.add("startIcon", _startIcon);
 		st.add("type", _type);
@@ -294,6 +301,28 @@ public class ButtonElement {
 		return this;
 	} 
 
+	public ButtonElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public ButtonElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public ButtonElement setSize(Object value) {
 		this._size = value;
 		return this;
@@ -425,7 +454,7 @@ public class ButtonElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ButtonElement(classes,className,color,component,disabled,disableElevation,disableFocusRipple,disableRipple,endIcon,fullWidth,href,size,startIcon,type,variant,children) ::= <<<Button~if(classes)~\n" + 
+	static final String st = "ButtonElement(classes,className,color,component,disabled,disableElevation,disableFocusRipple,disableRipple,endIcon,fullWidth,href,id,size,startIcon,type,variant,children) ::= <<<Button~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(component)~\n" + 
@@ -436,7 +465,8 @@ public class ButtonElement {
 				"	disableRipple~endif~~if(endIcon)~\n" + 
 				"	endIcon=~endIcon~~endif~~if(fullWidth)~\n" + 
 				"	fullWidth~endif~~if(href)~\n" + 
-				"	href=\"~href~\"~endif~~if(size)~\n" + 
+				"	href=\"~href~\"~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(size)~\n" + 
 				"	size=\"~size~\"~endif~~if(startIcon)~\n" + 
 				"	startIcon=~startIcon~~endif~~if(type)~\n" + 
 				"	type=\"~type~\"~endif~~if(variant)~\n" + 

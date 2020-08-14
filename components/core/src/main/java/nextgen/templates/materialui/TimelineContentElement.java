@@ -7,13 +7,19 @@ public class TimelineContentElement {
 
 	private Object _classes;
 	private Object _className;
+	private Object _id;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
 	TimelineContentElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -22,6 +28,7 @@ public class TimelineContentElement {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("TimelineContentElement");
 		st.add("classes", _classes);
 		st.add("className", _className);
+		st.add("id", _id);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
 	}
@@ -70,6 +77,28 @@ public class TimelineContentElement {
 		return this;
 	} 
 
+	public TimelineContentElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public TimelineContentElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public TimelineContentElement addChildren(Object value) {
 		this._children.add(value);
 		return this;
@@ -113,9 +142,10 @@ public class TimelineContentElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TimelineContentElement(classes,className,children) ::= <<<TimelineContent~if(classes)~\n" + 
+	static final String st = "TimelineContentElement(classes,className,id,children) ::= <<<TimelineContent~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
-				"	className=~className~~endif~~if(children)~>\n" + 
+				"	className=~className~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</TimelineContent>~else~ />~endif~ >>";
 }  

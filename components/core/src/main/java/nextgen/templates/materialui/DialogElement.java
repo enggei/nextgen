@@ -13,6 +13,7 @@ public class DialogElement {
 	private Object _disableEscapeKeyDown;
 	private Object _fullScreen;
 	private Object _fullWidth;
+	private Object _id;
 	private Object _maxWidth;
 	private Object _onBackdropClick;
 	private Object _onClose;
@@ -35,7 +36,12 @@ public class DialogElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -50,6 +56,7 @@ public class DialogElement {
 		st.add("disableEscapeKeyDown", _disableEscapeKeyDown);
 		st.add("fullScreen", _fullScreen);
 		st.add("fullWidth", _fullWidth);
+		st.add("id", _id);
 		st.add("maxWidth", _maxWidth);
 		st.add("onBackdropClick", _onBackdropClick);
 		st.add("onClose", _onClose);
@@ -243,6 +250,28 @@ public class DialogElement {
 
 	public DialogElement removeFullWidth() {
 		this._fullWidth = null;
+		return this;
+	} 
+
+	public DialogElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public DialogElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -641,7 +670,7 @@ public class DialogElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "DialogElement(ariaDescribedby,ariaLabelledby,classes,className,disableBackdropClick,disableEscapeKeyDown,fullScreen,fullWidth,maxWidth,onBackdropClick,onClose,onEnter,onEntered,onEntering,onEscapeKeyDown,onExit,onExited,onExiting,PaperComponent,PaperProps,scroll,TransitionComponent,transitionDuration,TransitionProps,children) ::= <<<Dialog~if(ariaDescribedby)~\n" + 
+	static final String st = "DialogElement(ariaDescribedby,ariaLabelledby,classes,className,disableBackdropClick,disableEscapeKeyDown,fullScreen,fullWidth,id,maxWidth,onBackdropClick,onClose,onEnter,onEntered,onEntering,onEscapeKeyDown,onExit,onExited,onExiting,PaperComponent,PaperProps,scroll,TransitionComponent,transitionDuration,TransitionProps,children) ::= <<<Dialog~if(ariaDescribedby)~\n" + 
 				"	ariaDescribedby=\"~ariaDescribedby~\"~endif~~if(ariaLabelledby)~\n" + 
 				"	ariaLabelledby=\"~ariaLabelledby~\"~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
@@ -649,7 +678,8 @@ public class DialogElement {
 				"	disableBackdropClick~endif~~if(disableEscapeKeyDown)~\n" + 
 				"	disableEscapeKeyDown~endif~~if(fullScreen)~\n" + 
 				"	fullScreen~endif~~if(fullWidth)~\n" + 
-				"	fullWidth~endif~~if(maxWidth)~\n" + 
+				"	fullWidth~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(maxWidth)~\n" + 
 				"	maxWidth=\"~maxWidth~\"~endif~~if(onBackdropClick)~\n" + 
 				"	onBackdropClick=~onBackdropClick~~endif~~if(onClose)~\n" + 
 				"	onClose=~onClose~~endif~~if(onEnter)~\n" + 

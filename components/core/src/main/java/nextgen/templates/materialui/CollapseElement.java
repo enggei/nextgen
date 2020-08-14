@@ -10,6 +10,7 @@ public class CollapseElement {
 	private Object _collapsedHeight;
 	private Object _component;
 	private Object _disableStrictModeCompat;
+	private Object _id;
 	private Object _in;
 	private Object _timeout;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -18,7 +19,12 @@ public class CollapseElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -30,6 +36,7 @@ public class CollapseElement {
 		st.add("collapsedHeight", _collapsedHeight);
 		st.add("component", _component);
 		st.add("disableStrictModeCompat", _disableStrictModeCompat);
+		st.add("id", _id);
 		st.add("in", _in);
 		st.add("timeout", _timeout);
 		for (Object o : _children) st.add("children", o);
@@ -146,6 +153,28 @@ public class CollapseElement {
 		return this;
 	} 
 
+	public CollapseElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public CollapseElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public CollapseElement setIn(Object value) {
 		this._in = value;
 		return this;
@@ -233,12 +262,13 @@ public class CollapseElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "CollapseElement(classes,className,collapsedHeight,component,disableStrictModeCompat,in,timeout,children) ::= <<<Collapse~if(classes)~\n" + 
+	static final String st = "CollapseElement(classes,className,collapsedHeight,component,disableStrictModeCompat,id,in,timeout,children) ::= <<<Collapse~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(collapsedHeight)~\n" + 
 				"	collapsedHeight=~collapsedHeight~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(disableStrictModeCompat)~\n" + 
-				"	disableStrictModeCompat~endif~~if(in)~\n" + 
+				"	disableStrictModeCompat~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(in)~\n" + 
 				"	in~endif~~if(timeout)~\n" + 
 				"	timeout=\"~timeout~\"~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 

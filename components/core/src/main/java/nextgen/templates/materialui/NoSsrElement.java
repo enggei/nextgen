@@ -8,13 +8,19 @@ public class NoSsrElement {
 	private Object _className;
 	private Object _defer;
 	private Object _fallback;
+	private Object _id;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
 	NoSsrElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -24,6 +30,7 @@ public class NoSsrElement {
 		st.add("className", _className);
 		st.add("defer", _defer);
 		st.add("fallback", _fallback);
+		st.add("id", _id);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
 	}
@@ -94,6 +101,28 @@ public class NoSsrElement {
 		return this;
 	} 
 
+	public NoSsrElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public NoSsrElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public NoSsrElement addChildren(Object value) {
 		this._children.add(value);
 		return this;
@@ -137,10 +166,11 @@ public class NoSsrElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NoSsrElement(className,defer,fallback,children) ::= <<<NoSsr~if(className)~\n" + 
+	static final String st = "NoSsrElement(className,defer,fallback,id,children) ::= <<<NoSsr~if(className)~\n" + 
 				"	className=~className~~endif~~if(defer)~\n" + 
 				"	defer~endif~~if(fallback)~\n" + 
-				"	fallback=~fallback~~endif~~if(children)~>\n" + 
+				"	fallback=~fallback~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</NoSsr>~else~ />~endif~ >>";
 }  

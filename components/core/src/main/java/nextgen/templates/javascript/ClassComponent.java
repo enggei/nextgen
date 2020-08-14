@@ -14,13 +14,19 @@ public class ClassComponent {
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<Object> _renderConstants = new java.util.ArrayList<>();
 	private java.util.List<Object> _returnStatements = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _imports = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _events = new java.util.ArrayList<>();
 
 	ClassComponent(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -36,6 +42,7 @@ public class ClassComponent {
 		for (Object o : _methods) st.add("methods", o);
 		for (Object o : _renderConstants) st.add("renderConstants", o);
 		for (Object o : _returnStatements) st.add("returnStatements", o);
+		for (java.util.Map<String, Object> map : _imports) st.addAggr("imports.{ref,path}", map.get("ref"), map.get("path"));
 		for (java.util.Map<String, Object> map : _events) st.addAggr("events.{methodName,declaration}", map.get("methodName"), map.get("declaration"));
 		return st.render().trim();
 	}
@@ -294,6 +301,51 @@ public class ClassComponent {
 		return this._returnStatements;
 	} 
 
+	public ClassComponent addImports(Object _ref, Object _path) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("ref", _ref);
+		map.put("path", _path);
+		this._imports.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getImports() {
+		return this._imports;
+	}
+
+	public ClassComponent addImports(ClassComponent_Imports value) {
+		return addImports(value._ref, value._path);
+	}
+
+	public java.util.stream.Stream<ClassComponent_Imports> streamImports() {
+		return this._imports.stream().map(ClassComponent_Imports::new);
+	}
+
+	public static final class ClassComponent_Imports {
+
+		Object _ref;
+		Object _path;
+
+		public ClassComponent_Imports(Object _ref, Object _path) {
+			this._ref = _ref;
+			this._path = _path;
+		}
+
+		private ClassComponent_Imports(java.util.Map<String, Object> map) {
+			this._ref = (Object) map.get("ref");
+			this._path = (Object) map.get("path");
+		}
+
+		public Object getRef() {
+			return this._ref;
+		}
+
+		public Object getPath() {
+			return this._path;
+		}
+
+	} 
+
 	public ClassComponent addEvents(Object _methodName, Object _declaration) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("methodName", _methodName);
@@ -352,7 +404,8 @@ public class ClassComponent {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ClassComponent(dependencies,components,decorators,name,state,constructorStatements,events,methods,renderConstants,returnStatements) ::= <<import React from 'react';\n" + 
+	static final String st = "ClassComponent(imports,dependencies,components,decorators,name,state,constructorStatements,events,methods,renderConstants,returnStatements) ::= <<import React from 'react';\n" + 
+				"~imports:{it|import ~it.ref~ from '~it.path~';};separator=\"\\n\"~\n" + 
 				"~dependencies:{it|~it~};separator=\"\\n\"~\n" + 
 				"~components:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
@@ -374,10 +427,13 @@ public class ClassComponent {
 				"\n" + 
 				"~if(events)~\n" + 
 				"	~events:{it|~it.declaration~};separator=\"\\n\\n\"~\n" + 
+				"	\n" + 
 				"~endif~\n" + 
 				"~if(methods)~\n" + 
 				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
+				"	\n" + 
 				"~endif~\n" + 
+				"\n" + 
 				"	render() {\n" + 
 				"		console.log(\"render ~name~ : \" +  this.props);\n" + 
 				"		~if(renderConstants)~const { ~renderConstants:{it|~it~};separator=\", \"~ } = this.state;~endif~\n" + 

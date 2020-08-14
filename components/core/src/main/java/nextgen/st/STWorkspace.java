@@ -10,126 +10,147 @@ import java.util.Optional;
 
 public class STWorkspace extends JTabbedPane {
 
-    private final STAppPresentationModel presentationModel;
+	private final STAppPresentationModel presentationModel;
 
-    public STWorkspace(STAppPresentationModel presentationModel) {
-        this.presentationModel = presentationModel;
-        setPreferredSize(new Dimension(800, 600));
-        findCanvas();
-    }
+	public STWorkspace(STAppPresentationModel presentationModel) {
+		this.presentationModel = presentationModel;
+		setPreferredSize(new Dimension(800, 600));
+		findCanvas();
+		org.greenrobot.eventbus.EventBus.getDefault().register(this);
+	}
 
-    public Optional<STModelCanvas> findCanvas() {
-        for (int i = 0; i < getTabCount(); i++) {
-            final Component tabComponentAt = getComponentAt(i);
-            if (tabComponentAt instanceof STModelCanvas)
-                return Optional.of((STModelCanvas) tabComponentAt);
-        }
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTModelTreeNodeClicked(STAppEvents.STModelTreeNodeClicked event) {
+		presentationModel.doLaterInTransaction(transaction -> findRenderer().ifPresent(stRenderPanel -> {
+			stRenderPanel.setText(event.stModel);
+			setSelectedComponent(stRenderPanel);
+		}));
+	}
 
-        final STModelCanvas stModelCanvas = new STModelCanvas(Color.WHITE, new Dimension(800,600),presentationModel);
-        addPane("Canvas", stModelCanvas);
-        return Optional.of(stModelCanvas);
-    }
+	public Optional<STRenderPanel> findRenderer() {
+		for (int i = 0; i < getTabCount(); i++) {
+			final Component tabComponentAt = getComponentAt(i);
+			if (tabComponentAt instanceof STRenderPanel)
+				return Optional.of((STRenderPanel) tabComponentAt);
+		}
 
-    public STModelGrid getModelGrid(STTemplate stTemplate) {
-        for (int i = 0; i < getTabCount(); i++) {
-            final Component tabComponentAt = getComponentAt(i);
-            if (tabComponentAt instanceof STModelGrid) {
-                if (((STModelGrid) tabComponentAt).getModel().equals(stTemplate))
-                    return (STModelGrid) tabComponentAt;
-            }
-        }
+		final STRenderPanel stRenderPanel = new STRenderPanel(presentationModel);
+		addPane("Renderer", stRenderPanel);
+		return Optional.of(stRenderPanel);
+	}
 
-        final STModelGrid stModelGrid = new STModelGrid(presentationModel, stTemplate);
-        addPane(stTemplate.getName() + "-Models", stModelGrid);
-        return stModelGrid;
-    }
+	public Optional<STModelCanvas> findCanvas() {
+		for (int i = 0; i < getTabCount(); i++) {
+				final Component tabComponentAt = getComponentAt(i);
+				if (tabComponentAt instanceof STModelCanvas)
+					return Optional.of((STModelCanvas) tabComponentAt);
+		}
 
-    public STModelEditor getModelEditor(STTemplate stTemplate, STModel stModel) {
-        for (int i = 0; i < getTabCount(); i++) {
-            final Component tabComponentAt = getComponentAt(i);
-            if (tabComponentAt instanceof STModelEditor) {
-                if (((STModelEditor) tabComponentAt).getModel().equals(stModel))
-                    return (STModelEditor) tabComponentAt;
-            }
-        }
+		final STModelCanvas stModelCanvas = new STModelCanvas(Color.WHITE, new Dimension(800,600),presentationModel);
+		addPane("Canvas", stModelCanvas);
+		return Optional.of(stModelCanvas);
+	}
 
-        final STModelEditor component = new STModelEditor(presentationModel, stModel);
-        addPane(stTemplate.getName() + "Model", component);
-        return component;
-    }
+	public STModelGrid getModelGrid(STTemplate stTemplate) {
+		for (int i = 0; i < getTabCount(); i++) {
+				final Component tabComponentAt = getComponentAt(i);
+				if (tabComponentAt instanceof STModelGrid) {
+					if (((STModelGrid) tabComponentAt).getModel().equals(stTemplate))
+						return (STModelGrid) tabComponentAt;
+				}
+		}
 
-    public void removeSTEditor(STGroupModel stGroup) {
-        for (int i = 0; i < getTabCount(); i++) {
-            final Component tabComponentAt = getComponentAt(i);
-            if (tabComponentAt instanceof STEditor) {
-                if (((STEditor) tabComponentAt).getModel().equals(stGroup)) {
-                    remove(i);
-                }
-            }
-        }
-    }
+		final STModelGrid stModelGrid = new STModelGrid(presentationModel, stTemplate);
+		addPane(stTemplate.getName() + "-Models", stModelGrid);
+		return stModelGrid;
+	}
 
-    public STEditor getSTEditor(STGroupModel stGroup) {
-        for (int i = 0; i < getTabCount(); i++) {
-            final Component tabComponentAt = getComponentAt(i);
-            if (tabComponentAt instanceof STEditor) {
-                if (((STEditor) tabComponentAt).getModel().equals(stGroup)) {
-                    final STEditor stEditor = (STEditor) tabComponentAt;
-                    stEditor.setSTTemplate(null);
-                    setSelectedComponent(stEditor);
-                    return stEditor;
-                }
-            }
-        }
+	public STModelEditor getModelEditor(STTemplate stTemplate, STModel stModel) {
+		for (int i = 0; i < getTabCount(); i++) {
+				final Component tabComponentAt = getComponentAt(i);
+				if (tabComponentAt instanceof STModelEditor) {
+					if (((STModelEditor) tabComponentAt).getModel().equals(stModel))
+						return (STModelEditor) tabComponentAt;
+				}
+		}
 
-        final STEditor component = new STEditor(stGroup, presentationModel);
-        component.setSTTemplate(null);
-        addPane(stGroup.getName(), component);
-        setSelectedComponent(component);
-        return component;
-    }
+		final STModelEditor component = new STModelEditor(presentationModel, stModel);
+		addPane(stTemplate.getName() + "Model", component);
+		return component;
+	}
 
-    public STValueGrid getValueGrid() {
-        for (int i = 0; i < getTabCount(); i++) {
-            final Component tabComponentAt = getComponentAt(i);
-            if (tabComponentAt instanceof STValueGrid)
-                return (STValueGrid) tabComponentAt;
-        }
+	public void removeSTEditor(STGroupModel stGroup) {
+		for (int i = 0; i < getTabCount(); i++) {
+				final Component tabComponentAt = getComponentAt(i);
+				if (tabComponentAt instanceof STEditor) {
+					if (((STEditor) tabComponentAt).getModel().equals(stGroup)) {
+						remove(i);
+					}
+				}
+		}
+	}
 
-        final STValueGrid component = new STValueGrid(presentationModel);
-        addPane("Values", component);
-        return component;
-    }
+	public STEditor getSTEditor(STGroupModel stGroup) {
+		for (int i = 0; i < getTabCount(); i++) {
+				final Component tabComponentAt = getComponentAt(i);
+				if (tabComponentAt instanceof STEditor) {
+					if (((STEditor) tabComponentAt).getModel().equals(stGroup)) {
+						final STEditor stEditor = (STEditor) tabComponentAt;
+						stEditor.setSTTemplate(null);
+						setSelectedComponent(stEditor);
+						return stEditor;
+					}
+				}
+		}
 
-    private void addPane(String title, JComponent component) {
-        addTab(title, component);
-        setTabComponentAt(indexOfComponent(component), new ButtonTabComponent(this, title, component));
-    }
+		final STEditor component = new STEditor(stGroup, presentationModel);
+		component.setSTTemplate(null);
+		addPane(stGroup.getName(), component);
+		setSelectedComponent(component);
+		return component;
+	}
 
-    public void showCanvas() {
-        findCanvas().ifPresent(stModelCanvas -> SwingUtilities.invokeLater(() -> setSelectedComponent(stModelCanvas)));
-    }
+	public STValueGrid getValueGrid() {
+		for (int i = 0; i < getTabCount(); i++) {
+				final Component tabComponentAt = getComponentAt(i);
+				if (tabComponentAt instanceof STValueGrid)
+					return (STValueGrid) tabComponentAt;
+		}
 
-    class ButtonTabComponent extends JPanel {
+		final STValueGrid component = new STValueGrid(presentationModel);
+		addPane("Values", component);
+		return component;
+	}
 
-        ButtonTabComponent(final JTabbedPane pane, String title, JComponent component) {
-            super(new FlowLayout(FlowLayout.LEFT, 0, 0));
-            setOpaque(false);
+	private void addPane(String title, JComponent component) {
+		addTab(title, component);
+		setTabComponentAt(indexOfComponent(component), new ButtonTabComponent(this, title, component));
+	}
 
-            final JLabel label = new JLabel(title);
-            label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
-            add(label);
+	public void showCanvas() {
+		findCanvas().ifPresent(stModelCanvas -> SwingUtilities.invokeLater(() -> setSelectedComponent(stModelCanvas)));
+	}
 
-            final JButton btnClose = new JButton(presentationModel.loadIcon("close", "12x12"));
-            final Dimension dimension = new Dimension(12, 16);
-            btnClose.setMaximumSize(dimension);
-            btnClose.setPreferredSize(dimension);
-            btnClose.setMinimumSize(dimension);
-            btnClose.setOpaque(false);
-            btnClose.setContentAreaFilled(false);
-            btnClose.setBorderPainted(false);
-            btnClose.addActionListener(e -> SwingUtilities.invokeLater(() -> pane.remove(component)));
-            add(btnClose);
-        }
-    }
+	class ButtonTabComponent extends JPanel {
+
+		ButtonTabComponent(final JTabbedPane pane, String title, JComponent component) {
+				super(new FlowLayout(FlowLayout.LEFT, 0, 0));
+				setOpaque(false);
+
+				final JLabel label = new JLabel(title);
+				label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+				add(label);
+
+				final JButton btnClose = new JButton(presentationModel.loadIcon("close", "12x12"));
+				final Dimension dimension = new Dimension(12, 16);
+				btnClose.setMaximumSize(dimension);
+				btnClose.setPreferredSize(dimension);
+				btnClose.setMinimumSize(dimension);
+				btnClose.setOpaque(false);
+				btnClose.setContentAreaFilled(false);
+				btnClose.setBorderPainted(false);
+				btnClose.addActionListener(e -> SwingUtilities.invokeLater(() -> pane.remove(component)));
+				add(btnClose);
+		}
+	}
 }

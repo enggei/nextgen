@@ -11,6 +11,7 @@ public class SvgIconElement {
 	private Object _component;
 	private Object _fontSize;
 	private Object _htmlColor;
+	private Object _id;
 	private Object _shapeRendering;
 	private Object _titleAccess;
 	private Object _viewBox;
@@ -20,7 +21,12 @@ public class SvgIconElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -33,6 +39,7 @@ public class SvgIconElement {
 		st.add("component", _component);
 		st.add("fontSize", _fontSize);
 		st.add("htmlColor", _htmlColor);
+		st.add("id", _id);
 		st.add("shapeRendering", _shapeRendering);
 		st.add("titleAccess", _titleAccess);
 		st.add("viewBox", _viewBox);
@@ -172,6 +179,28 @@ public class SvgIconElement {
 		return this;
 	} 
 
+	public SvgIconElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public SvgIconElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public SvgIconElement setShapeRendering(Object value) {
 		this._shapeRendering = value;
 		return this;
@@ -281,13 +310,14 @@ public class SvgIconElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SvgIconElement(classes,className,color,component,fontSize,htmlColor,shapeRendering,titleAccess,viewBox,children) ::= <<<SvgIcon~if(classes)~\n" + 
+	static final String st = "SvgIconElement(classes,className,color,component,fontSize,htmlColor,id,shapeRendering,titleAccess,viewBox,children) ::= <<<SvgIcon~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(fontSize)~\n" + 
 				"	fontSize=\"~fontSize~\"~endif~~if(htmlColor)~\n" + 
-				"	htmlColor=\"~htmlColor~\"~endif~~if(shapeRendering)~\n" + 
+				"	htmlColor=\"~htmlColor~\"~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(shapeRendering)~\n" + 
 				"	shapeRendering=\"~shapeRendering~\"~endif~~if(titleAccess)~\n" + 
 				"	titleAccess=\"~titleAccess~\"~endif~~if(viewBox)~\n" + 
 				"	viewBox=\"~viewBox~\"~endif~~if(children)~>\n" + 

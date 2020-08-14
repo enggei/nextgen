@@ -12,6 +12,8 @@ public class IconButtonElement {
 	private Object _disableFocusRipple;
 	private Object _disableRipple;
 	private Object _edge;
+	private Object _id;
+	private Object _onClick;
 	private Object _size;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
@@ -19,7 +21,12 @@ public class IconButtonElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -33,6 +40,8 @@ public class IconButtonElement {
 		st.add("disableFocusRipple", _disableFocusRipple);
 		st.add("disableRipple", _disableRipple);
 		st.add("edge", _edge);
+		st.add("id", _id);
+		st.add("onClick", _onClick);
 		st.add("size", _size);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
@@ -192,6 +201,50 @@ public class IconButtonElement {
 		return this;
 	} 
 
+	public IconButtonElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public IconButtonElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
+	public IconButtonElement setOnClick(Object value) {
+		this._onClick = value;
+		return this;
+	}
+
+	public Object getOnClick() {
+		return this._onClick;
+	}
+
+	public Object getOnClick(Object defaultValue) {
+		return this._onClick == null ? defaultValue : this._onClick;
+	}
+
+	public boolean hasOnClick() {
+		return this._onClick != null;
+	}
+
+	public IconButtonElement removeOnClick() {
+		this._onClick = null;
+		return this;
+	} 
+
 	public IconButtonElement setSize(Object value) {
 		this._size = value;
 		return this;
@@ -257,14 +310,16 @@ public class IconButtonElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "IconButtonElement(classes,className,color,disabled,disableFocusRipple,disableRipple,edge,size,children) ::= <<<IconButton~if(classes)~\n" + 
+	static final String st = "IconButtonElement(classes,className,color,disabled,disableFocusRipple,disableRipple,edge,id,onClick,size,children) ::= <<<IconButton~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(disabled)~\n" + 
 				"	disabled~endif~~if(disableFocusRipple)~\n" + 
 				"	disableFocusRipple~endif~~if(disableRipple)~\n" + 
 				"	disableRipple~endif~~if(edge)~\n" + 
-				"	edge=\"~edge~\"~endif~~if(size)~\n" + 
+				"	edge=\"~edge~\"~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(onClick)~\n" + 
+				"	onClick=~onClick~~endif~~if(size)~\n" + 
 				"	size=\"~size~\"~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</IconButton>~else~ />~endif~ >>";

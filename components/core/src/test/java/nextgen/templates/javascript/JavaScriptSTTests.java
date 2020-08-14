@@ -10,51 +10,27 @@ public class JavaScriptSTTests {
 	@org.junit.Test
 	public void testAll() {
 		testApp();
-		testCopyright();
-		testLoading();
-		testSignIn();
-		testSignOut();
-		testStoreComponent();
-		testIndexJS();
 		testListErrors();
-		testLoginForm();
 		testLogoutForm();
 		testNavigationBar();
 		testSimpleMenu();
 		testSuperagent();
 		testAgentDeclaration();
 		testAgentEndpoint();
+		testAgentRequest();
 		testUsecase();
 		testUserMenu();
 		testBlockStmt();
 		testConditional();
+		testIf();
 		testDecorator();
-		testExpressionStmt();
 		testArrowFunction();
 		testFunction();
+		testFunctionCall();
 		testFunctionExpression();
-		testIf();
-		testIndexHtml();
+		testReturnStmt();
 		testInject();
 		testJsonObject();
-		testClassComponent();
-		testDependency();
-		testDestructorProp();
-		testElement();
-		testFunctionalComponent();
-		testMapProperty();
-		testMethodDeclaration();
-		testNamedImport();
-		testProp();
-		testReturnStatement();
-		testState();
-		testCenteredGrid();
-		testGlobalStyle();
-		testMenuItem();
-		testStyle();
-		testStyleComponent();
-		testWithStyles();
-		testMethodCall();
 		testMobX();
 		testAction();
 		testMobXStore();
@@ -62,9 +38,28 @@ public class JavaScriptSTTests {
 		testReaction();
 		testNameArray();
 		testNameValue();
+		testIndexCSS();
+		testIndexHtml();
+		testIndexJS();
+		testJSX();
+		testClassComponent();
+		testDependency();
+		testDestructorProp();
+		testElement();
+		testDiv();
+		testForm();
+		testUl();
+		testFunctionalComponent();
+		testMapProperty();
+		testMethodDeclaration();
+		testNamedImport();
+		testProp();
+		testReturnStatement();
+		testState();
 		testForwardRef();
 		testLink();
-		testReturnStmt();
+		testReactRouterLinkImport();
+		testWithRouterImport();
 	}
 
 	@org.junit.Test
@@ -73,43 +68,8 @@ public class JavaScriptSTTests {
 	} 
 
 	@org.junit.Test
-	public void testCopyright() {
-		System.out.println("\n--- TEST Copyright:\n" + newCopyright());
-	} 
-
-	@org.junit.Test
-	public void testLoading() {
-		System.out.println("\n--- TEST Loading:\n" + newLoading());
-	} 
-
-	@org.junit.Test
-	public void testSignIn() {
-		System.out.println("\n--- TEST SignIn:\n" + newSignIn());
-	} 
-
-	@org.junit.Test
-	public void testSignOut() {
-		System.out.println("\n--- TEST SignOut:\n" + newSignOut());
-	} 
-
-	@org.junit.Test
-	public void testStoreComponent() {
-		System.out.println("\n--- TEST StoreComponent:\n" + newStoreComponent());
-	} 
-
-	@org.junit.Test
-	public void testIndexJS() {
-		System.out.println("\n--- TEST IndexJS:\n" + newIndexJS());
-	} 
-
-	@org.junit.Test
 	public void testListErrors() {
 		System.out.println("\n--- TEST ListErrors:\n" + newListErrors());
-	} 
-
-	@org.junit.Test
-	public void testLoginForm() {
-		System.out.println("\n--- TEST LoginForm:\n" + newLoginForm());
 	} 
 
 	@org.junit.Test
@@ -143,6 +103,11 @@ public class JavaScriptSTTests {
 	} 
 
 	@org.junit.Test
+	public void testAgentRequest() {
+		System.out.println("\n--- TEST AgentRequest:\n" + newAgentRequest());
+	} 
+
+	@org.junit.Test
 	public void testUsecase() {
 		System.out.println("\n--- TEST Usecase:\n" + newUsecase());
 	} 
@@ -163,13 +128,13 @@ public class JavaScriptSTTests {
 	} 
 
 	@org.junit.Test
-	public void testDecorator() {
-		System.out.println("\n--- TEST Decorator:\n" + newDecorator());
+	public void testIf() {
+		System.out.println("\n--- TEST If:\n" + newIf());
 	} 
 
 	@org.junit.Test
-	public void testExpressionStmt() {
-		System.out.println("\n--- TEST ExpressionStmt:\n" + newExpressionStmt());
+	public void testDecorator() {
+		System.out.println("\n--- TEST Decorator:\n" + newDecorator());
 	} 
 
 	@org.junit.Test
@@ -183,18 +148,18 @@ public class JavaScriptSTTests {
 	} 
 
 	@org.junit.Test
+	public void testFunctionCall() {
+		System.out.println("\n--- TEST FunctionCall:\n" + newFunctionCall());
+	} 
+
+	@org.junit.Test
 	public void testFunctionExpression() {
 		System.out.println("\n--- TEST FunctionExpression:\n" + newFunctionExpression());
 	} 
 
 	@org.junit.Test
-	public void testIf() {
-		System.out.println("\n--- TEST If:\n" + newIf());
-	} 
-
-	@org.junit.Test
-	public void testIndexHtml() {
-		System.out.println("\n--- TEST IndexHtml:\n" + newIndexHtml());
+	public void testReturnStmt() {
+		System.out.println("\n--- TEST ReturnStmt:\n" + newReturnStmt());
 	} 
 
 	@org.junit.Test
@@ -205,96 +170,6 @@ public class JavaScriptSTTests {
 	@org.junit.Test
 	public void testJsonObject() {
 		System.out.println("\n--- TEST JsonObject:\n" + newJsonObject());
-	} 
-
-	@org.junit.Test
-	public void testClassComponent() {
-		System.out.println("\n--- TEST ClassComponent:\n" + newClassComponent());
-	} 
-
-	@org.junit.Test
-	public void testDependency() {
-		System.out.println("\n--- TEST Dependency:\n" + newDependency());
-	} 
-
-	@org.junit.Test
-	public void testDestructorProp() {
-		System.out.println("\n--- TEST DestructorProp:\n" + newDestructorProp());
-	} 
-
-	@org.junit.Test
-	public void testElement() {
-		System.out.println("\n--- TEST Element:\n" + newElement());
-	} 
-
-	@org.junit.Test
-	public void testFunctionalComponent() {
-		System.out.println("\n--- TEST FunctionalComponent:\n" + newFunctionalComponent());
-	} 
-
-	@org.junit.Test
-	public void testMapProperty() {
-		System.out.println("\n--- TEST MapProperty:\n" + newMapProperty());
-	} 
-
-	@org.junit.Test
-	public void testMethodDeclaration() {
-		System.out.println("\n--- TEST MethodDeclaration:\n" + newMethodDeclaration());
-	} 
-
-	@org.junit.Test
-	public void testNamedImport() {
-		System.out.println("\n--- TEST NamedImport:\n" + newNamedImport());
-	} 
-
-	@org.junit.Test
-	public void testProp() {
-		System.out.println("\n--- TEST Prop:\n" + newProp());
-	} 
-
-	@org.junit.Test
-	public void testReturnStatement() {
-		System.out.println("\n--- TEST ReturnStatement:\n" + newReturnStatement());
-	} 
-
-	@org.junit.Test
-	public void testState() {
-		System.out.println("\n--- TEST State:\n" + newState());
-	} 
-
-	@org.junit.Test
-	public void testCenteredGrid() {
-		System.out.println("\n--- TEST CenteredGrid:\n" + newCenteredGrid());
-	} 
-
-	@org.junit.Test
-	public void testGlobalStyle() {
-		System.out.println("\n--- TEST GlobalStyle:\n" + newGlobalStyle());
-	} 
-
-	@org.junit.Test
-	public void testMenuItem() {
-		System.out.println("\n--- TEST MenuItem:\n" + newMenuItem());
-	} 
-
-	@org.junit.Test
-	public void testStyle() {
-		System.out.println("\n--- TEST Style:\n" + newStyle());
-	} 
-
-	@org.junit.Test
-	public void testStyleComponent() {
-		System.out.println("\n--- TEST StyleComponent:\n" + newStyleComponent());
-	} 
-
-	@org.junit.Test
-	public void testWithStyles() {
-		System.out.println("\n--- TEST WithStyles:\n" + newWithStyles());
-	} 
-
-	@org.junit.Test
-	public void testMethodCall() {
-		System.out.println("\n--- TEST MethodCall:\n" + newMethodCall());
 	} 
 
 	@org.junit.Test
@@ -333,6 +208,96 @@ public class JavaScriptSTTests {
 	} 
 
 	@org.junit.Test
+	public void testIndexCSS() {
+		System.out.println("\n--- TEST IndexCSS:\n" + newIndexCSS());
+	} 
+
+	@org.junit.Test
+	public void testIndexHtml() {
+		System.out.println("\n--- TEST IndexHtml:\n" + newIndexHtml());
+	} 
+
+	@org.junit.Test
+	public void testIndexJS() {
+		System.out.println("\n--- TEST IndexJS:\n" + newIndexJS());
+	} 
+
+	@org.junit.Test
+	public void testJSX() {
+		System.out.println("\n--- TEST JSX:\n" + newJSX());
+	} 
+
+	@org.junit.Test
+	public void testClassComponent() {
+		System.out.println("\n--- TEST ClassComponent:\n" + newClassComponent());
+	} 
+
+	@org.junit.Test
+	public void testDependency() {
+		System.out.println("\n--- TEST Dependency:\n" + newDependency());
+	} 
+
+	@org.junit.Test
+	public void testDestructorProp() {
+		System.out.println("\n--- TEST DestructorProp:\n" + newDestructorProp());
+	} 
+
+	@org.junit.Test
+	public void testElement() {
+		System.out.println("\n--- TEST Element:\n" + newElement());
+	} 
+
+	@org.junit.Test
+	public void testDiv() {
+		System.out.println("\n--- TEST Div:\n" + newDiv());
+	} 
+
+	@org.junit.Test
+	public void testForm() {
+		System.out.println("\n--- TEST Form:\n" + newForm());
+	} 
+
+	@org.junit.Test
+	public void testUl() {
+		System.out.println("\n--- TEST Ul:\n" + newUl());
+	} 
+
+	@org.junit.Test
+	public void testFunctionalComponent() {
+		System.out.println("\n--- TEST FunctionalComponent:\n" + newFunctionalComponent());
+	} 
+
+	@org.junit.Test
+	public void testMapProperty() {
+		System.out.println("\n--- TEST MapProperty:\n" + newMapProperty());
+	} 
+
+	@org.junit.Test
+	public void testMethodDeclaration() {
+		System.out.println("\n--- TEST MethodDeclaration:\n" + newMethodDeclaration());
+	} 
+
+	@org.junit.Test
+	public void testNamedImport() {
+		System.out.println("\n--- TEST NamedImport:\n" + newNamedImport());
+	} 
+
+	@org.junit.Test
+	public void testProp() {
+		System.out.println("\n--- TEST Prop:\n" + newProp());
+	} 
+
+	@org.junit.Test
+	public void testReturnStatement() {
+		System.out.println("\n--- TEST ReturnStatement:\n" + newReturnStatement());
+	} 
+
+	@org.junit.Test
+	public void testState() {
+		System.out.println("\n--- TEST State:\n" + newState());
+	} 
+
+	@org.junit.Test
 	public void testForwardRef() {
 		System.out.println("\n--- TEST ForwardRef:\n" + newForwardRef());
 	} 
@@ -343,7 +308,12 @@ public class JavaScriptSTTests {
 	} 
 
 	@org.junit.Test
-	public void testReturnStmt() {
-		System.out.println("\n--- TEST ReturnStmt:\n" + newReturnStmt());
+	public void testReactRouterLinkImport() {
+		System.out.println("\n--- TEST ReactRouterLinkImport:\n" + newReactRouterLinkImport());
+	} 
+
+	@org.junit.Test
+	public void testWithRouterImport() {
+		System.out.println("\n--- TEST WithRouterImport:\n" + newWithRouterImport());
 	} 
 } 

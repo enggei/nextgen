@@ -10,6 +10,7 @@ public class UnstableTrapFocusElement {
 	private Object _disableEnforceFocus;
 	private Object _disableRestoreFocus;
 	private Object _getDoc;
+	private Object _id;
 	private Boolean _isEnabled;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
@@ -17,7 +18,12 @@ public class UnstableTrapFocusElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -29,6 +35,7 @@ public class UnstableTrapFocusElement {
 		st.add("disableEnforceFocus", _disableEnforceFocus);
 		st.add("disableRestoreFocus", _disableRestoreFocus);
 		st.add("getDoc", _getDoc);
+		st.add("id", _id);
 		st.add("isEnabled", _isEnabled);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
@@ -144,6 +151,28 @@ public class UnstableTrapFocusElement {
 		return this;
 	} 
 
+	public UnstableTrapFocusElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public UnstableTrapFocusElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public UnstableTrapFocusElement setIsEnabled(Boolean value) {
 		this._isEnabled = value;
 		return this;
@@ -209,12 +238,13 @@ public class UnstableTrapFocusElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "UnstableTrapFocusElement(className,disableAutoFocus,disableEnforceFocus,disableRestoreFocus,getDoc,isEnabled,children) ::= <<<UnstableTrapFocus~if(className)~\n" + 
+	static final String st = "UnstableTrapFocusElement(className,disableAutoFocus,disableEnforceFocus,disableRestoreFocus,getDoc,id,isEnabled,children) ::= <<<UnstableTrapFocus~if(className)~\n" + 
 				"	className=~className~~endif~~if(disableAutoFocus)~\n" + 
 				"	disableAutoFocus~endif~~if(disableEnforceFocus)~\n" + 
 				"	disableEnforceFocus~endif~~if(disableRestoreFocus)~\n" + 
 				"	disableRestoreFocus~endif~\n" + 
-				"	getDoc=~getDoc~\n" + 
+				"	getDoc=~getDoc~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~\n" + 
 				"	isEnabled=~isEnabled~\n" + 
 				"	open~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 

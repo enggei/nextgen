@@ -9,6 +9,7 @@ public class CircularProgressElement {
 	private Object _className;
 	private Object _color;
 	private Object _disableShrink;
+	private Object _id;
 	private Object _size;
 	private Object _thickness;
 	private Object _value;
@@ -18,7 +19,12 @@ public class CircularProgressElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -29,6 +35,7 @@ public class CircularProgressElement {
 		st.add("className", _className);
 		st.add("color", _color);
 		st.add("disableShrink", _disableShrink);
+		st.add("id", _id);
 		st.add("size", _size);
 		st.add("thickness", _thickness);
 		st.add("value", _value);
@@ -121,6 +128,28 @@ public class CircularProgressElement {
 
 	public CircularProgressElement removeDisableShrink() {
 		this._disableShrink = null;
+		return this;
+	} 
+
+	public CircularProgressElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public CircularProgressElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -227,11 +256,12 @@ public class CircularProgressElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "CircularProgressElement(classes,className,color,disableShrink,size,thickness,value,variant) ::= <<<CircularProgress~if(classes)~\n" + 
+	static final String st = "CircularProgressElement(classes,className,color,disableShrink,id,size,thickness,value,variant) ::= <<<CircularProgress~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(disableShrink)~\n" + 
-				"	disableShrink~endif~~if(size)~\n" + 
+				"	disableShrink~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(size)~\n" + 
 				"	size=~size~~endif~~if(thickness)~\n" + 
 				"	thickness=~thickness~~endif~~if(value)~\n" + 
 				"	value=~value~~endif~~if(variant)~\n" + 

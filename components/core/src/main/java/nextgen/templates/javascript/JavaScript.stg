@@ -1,6 +1,6 @@
 delimiters "~","~"
 
-App(routes,stores) ::= <<import React, { Component } from 'react';
+App(routes,theme,stores) ::= <<import React, { Component } from 'react';
 import { Switch, Route, withRouter } from 'react-router-dom';
 
 import { Provider } from 'mobx-react';
@@ -9,15 +9,14 @@ import { inject, observer } from 'mobx-react';
 ~routes:{it|import ~it.component~ from './pages/~it.filename~';};separator="\n"~
 
 import NavigationBar from './components/NavigationBar.js';
-import LoginForm from './pages/LoginForm.js';
-import LogoutForm from './pages/LogoutForm.js';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/styles';
 import { createMuiTheme } from '@material-ui/core/styles';
 
 // https://in-your-saas.github.io/material-ui-theme-editor/
-const theme = createMuiTheme({"palette":{"common":{"black":"#000","white":"#fff"},"background":{"paper":"#fff","default":"#fafafa"},"primary":{"light":"rgba(255, 255, 255, 1)","main":"rgba(22, 22, 23, 1)","dark":"rgba(74, 74, 74, 1)","contrastText":"#fff"},"secondary":{"light":"#ff4081","main":"rgba(245, 166, 35, 1)","dark":"#c51162","contrastText":"#fff"},"error":{"light":"#e57373","main":"#f44336","dark":"#d32f2f","contrastText":"#fff"},"text":{"primary":"rgba(0, 0, 0, 0.87)","secondary":"rgba(0, 0, 0, 0.54)","disabled":"rgba(0, 0, 0, 0.38)","hint":"rgba(0, 0, 0, 0.38)"}}});
+//const theme = createMuiTheme({"palette":{"common":{"black":"#000","white":"#fff"},"background":{"paper":"#fff","default":"#fafafa"},"primary":{"light":"rgba(255, 255, 255, 1)","main":"rgba(22, 22, 23, 1)","dark":"rgba(74, 74, 74, 1)","contrastText":"#fff"},"secondary":{"light":"#ff4081","main":"rgba(245, 166, 35, 1)","dark":"#c51162","contrastText":"#fff"},"error":{"light":"#e57373","main":"#f44336","dark":"#d32f2f","contrastText":"#fff"},"text":{"primary":"rgba(0, 0, 0, 0.87)","secondary":"rgba(0, 0, 0, 0.54)","disabled":"rgba(0, 0, 0, 0.38)","hint":"rgba(0, 0, 0, 0.38)"}}});
+const theme = createMuiTheme(~theme~);
 
 @inject(~stores:{it|'~it~'};separator=", "~)
 @withRouter
@@ -45,12 +44,10 @@ class App extends Component {
 				<ThemeProvider theme={theme}>
 					<CssBaseline />
 					<div>
-						<NavigationBar></NavigationBar>
+						<NavigationBar userStore={ this.props.userStore }></NavigationBar>
 					</div>
 					<Switch>
-						<Route path="/login" component={LoginForm} />
-						<Route path="/logout" component={LogoutForm} />
-						~routes:{it|<Route path="/~it.path~" component={~it.component~\} />};separator="\n"~
+						~routes:{it|<Route path="~it.path~" component={~it.component~\} />};separator="\n"~
 					</Switch>
 				</ThemeProvider>);
 		} else return null;
@@ -58,28 +55,6 @@ class App extends Component {
 }
 
 export default App;  >>
-
-indexJS(name,stores) ::= <<import ReactDOM from 'react-dom';
-import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import { useStrict } from 'mobx';
-import { Provider } from 'mobx-react';
-
-import ~name~ from './~name~';
-
-~stores:{it|import ~it~ from './stores/~it;format="capitalize"~'};separator="\n"~
-
-const stores = {
-	~stores:{it|~it~};separator=",\n"~
-};
-
-ReactDOM.render((
-	<Provider {...stores}>
-		<BrowserRouter>
-			<~name~ />
-		</BrowserRouter>
-	</Provider>
-), document.getElementById('root'));  >>
 
 SimpleMenu(menuItems,menuComponents) ::= <<import React from 'react';
 
@@ -189,17 +164,8 @@ const requests = {
 
 ~agentDeclarations:{it|~it.declaration~};separator="\n"~
 
-const Auth = { 
-	current: () => requests.get('/user'),
-	login: (username, password) => requests.post('/login', { username, password }),
-	save: (user) => requests.put('/user', { user })
-}
-
 export default {
-	Auth~if(agentDeclarations)~,
-	
-	~agentDeclarations:{it|~it.name~};separator=",\n"~~endif~
-	
+	~agentDeclarations:{it|~it.name~};separator=",\n"~
 };  >>
 
 agentEndpoint(name,urlParam,parameters,action,url) ::= <<~name~: (~if(urlParam)~~urlParam~~if(parameters)~, ~endif~~endif~~parameters:{it|~it~};separator=","~) => requests.~action~('/~url~'~if(urlParam)~ + ~urlParam~~endif~~if(parameters)~, { ~parameters:{it|~it~};separator=","~ }~endif~)  >>
@@ -207,6 +173,15 @@ agentEndpoint(name,urlParam,parameters,action,url) ::= <<~name~: (~if(urlParam)~
 agentDeclaration(name,agentEndpoint) ::= <<const ~name~ = { 
 	~agentEndpoint:{it|~it~};separator=",\n"~
 }  >>
+
+agentRequest(endpoint,method,params,then,finally) ::= <<agent.~endpoint~.~method~(~params:{it|~it~};separator=","~)
+	~then:{it|.then(~it~)};separator="\n"~
+	.catch(action((err) => {
+		console.info("error ~endpoint~.~method~ : " + err);
+		this.errors = err.response && err.response.body && err.response.body.errors;
+		throw err;
+	}))
+	.finally(~finally~)  >>
 
 NavigationBar() ::= <<import React from 'react';
 import { Link } from 'react-router-dom';
@@ -333,45 +308,6 @@ export default function UserMenu(props) {
 	}
 }  >>
 
-LoginForm() ::= <<import { withRouter } from 'react-router-dom';
-import React from 'react';
-
-import { inject, observer } from 'mobx-react';
-
-import SignIn from '../components/SignIn.js';
-
-@withRouter
-@inject('authStore')
-@observer
-class LoginForm extends React.Component {
-
-	constructor(){
-		super();
-		this.handleSubmitForm = this.handleSubmitForm.bind(this);
-		this.handleUsernameChange = this.handleUsernameChange.bind(this);
-		this.handlePasswordChange = this.handlePasswordChange.bind(this);
-	}
-
-	handleSubmitForm = (e) => {
-		e.preventDefault();
-		this.props.authStore.login().then(() => this.props.history.replace('/')).catch(e => {});
-	}
-
-	handleUsernameChange = (e) => {
-		this.props.authStore.setUsername(e.target.value);
-	}
-
-	handlePasswordChange = (e) => {
-		this.props.authStore.setPassword(e.target.value);
-	}
-
-	render() {
-		return (<SignIn authStore={ this.props.authStore } onSubmit={ this.handleSubmitForm } />);
-	}
-}
-
-export default (LoginForm);  >>
-
 LogoutForm() ::= <<import { withRouter } from 'react-router-dom';
 import React from 'react';
 
@@ -431,270 +367,6 @@ class ListErrors extends React.Component {
 
 export default ListErrors;  >>
 
-Components() ::= << >>
-
-SignIn() ::= <<import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-
-import ListErrors from '../components/ListErrors.js';
-import Copyright from '../components/Copyright.js';
-
-const useStyles = makeStyles((theme) => ({
-	paper: {
-		marginTop: theme.spacing(8),
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'center',
-	},
-		avatar: {
-		margin: theme.spacing(1),
-		backgroundColor: theme.palette.secondary.main,
-	},
-	form: {
-		width: '100%', // Fix IE 11 issue.
-		marginTop: theme.spacing(1),
-	},
-	submit: {
-		margin: theme.spacing(3, 0, 2),
-	},
-}));
-
-export default function SignIn(props) {
-
-	const classes = useStyles();
-	const { values, errors, inProgress } = props.authStore;
-	const { onSubmit } = props;
-
-	return (
-
-		<Container component="main" maxWidth="xs">
-			<ListErrors errors={errors} />
-			<div className={classes.paper}>
-				<Avatar className={classes.avatar}>
-					<LockOutlinedIcon />
-				</Avatar>
-				<Typography component="h1" variant="h5">
-					Log in
-				</Typography>
-				<form className={ classes.form } onSubmit={ onSubmit } noValidate>
-					<TextField
-						value={ values.username }
-						variant="outlined"
-						margin="normal"
-						required
-						fullWidth
-						id="email"
-						label="Email Address"
-						name="email"
-						autoComplete="email"
-						autoFocus />
-					<TextField
-						value={ values.password }
-						variant="outlined"
-						margin="normal"
-						required
-						fullWidth
-						name="password"
-						label="Password"
-						type="password"
-						id="password"
-						autoComplete="current-password" />
-					<Button
-						className={classes.submit}
-						type="submit"
-						fullWidth
-						variant="contained"
-						color="primary">
-						Log in
-					</Button>
-				</form>
-			</div>
-			<Box mt={8}>
-				<Copyright />
-			</Box>
-		</Container>
-	);
-}  >>
-
-SignOut() ::= <<import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-
-const useStyles = makeStyles((theme) => ({
-	paper: {
-		marginTop: theme.spacing(8),
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'center',
-	},
-	form: {
-		width: '100%', // Fix IE 11 issue.
-		marginTop: theme.spacing(1),
-	},
-	submit: {
-		margin: theme.spacing(3, 0, 2),
-	},
-}));
-
-export default function SignOut(props) {
-
-	const classes = useStyles();
-	const { onSubmit } = props;
-
-	return (
-		<Container component="main" maxWidth="xs">
-			<div className={classes.paper}>
-				<form className={classes.form} noValidate onSubmit={ onSubmit }>					
-					<Button
-						type="submit"
-						fullWidth
-						variant="contained"
-						color="primary"
-						className={classes.submit} >
-						Logout
-					</Button>
-				</form>
-			</div>
-		</Container>
-	);
-}  >>
-
-Copyright(name) ::= <<import React from 'react';
-import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
-
-export default function Copyright() {
-
-	return (
-		<Typography variant="body2" color="textSecondary" align="center">
-			{'Copyright © ~name~ '}
-			{new Date().getFullYear()}
-		</Typography>
-	);
-}  >>
-
-StoreComponent(imports,components,stores,decorators,name,debug,state,constructorStatements,events,componentDidMountStatements,methods,renderStatements,const,renderCondition,renderElement) ::= <<import React from 'react';
-import { inject, observer } from 'mobx-react';
-~imports:{it|import ~it.name~ from '~it.path~';};separator="\n"~
-~components:{it|~it~};separator="\n\n"~
-
-@inject(~stores:{it|'~it~'};separator=","~)
-@observer
-~decorators:{it|~it~};separator="\n"~
-class ~name~ extends React.Component {
-
-	constructor(props) {
-		super(props);
-~if(debug)~
-		console.log("new ~name~ : " +  this.props);
-~endif~
-~if(state)~
-		this.state = {
-			~state:{it|~it~};separator=",\n"~;
-		}
-~endif~
-		~constructorStatements:{it|~it~};separator="\n"~
-		~events:{it|this.~it.methodName~ = this.~it.methodName~.bind(this);};separator="\n"~
-	}
-
-	componentDidMount() {
-~if(debug)~
-		console.log("mount ~name~ : " +  this.props);
-~endif~
-		~componentDidMountStatements:{it|~it~};separator="\n"~
-	}
-~if(events)~
-
-	~events:{it|~it.declaration~};separator="\n\n"~
-~endif~
-~if(methods)~
-
-	~methods:{it|~it~};separator="\n\n"~
-~endif~
-	
-	render() {
-~if(debug)~
-		console.log("render ~name~ : " +  this.props);
-~endif~
-		~renderStatements:{it|~it~};separator="\n"~
-		~const:{it|const ~it.name~ = ~it.declaration~;};separator="\n"~
-
-~if(renderCondition)~
-		~renderCondition:{it|if (~it.condition~) 
-	return (
-		~it.element~
-	);};separator="\n\nelse "~
-	
-		else
-			return (
-				~renderElement~
-			);
-~else~
-		return (
-			~renderElement~
-		);
-~endif~
-	}
-}
-
-export default (~name~);  >>
-
-Loading() ::= <<import React from 'react';
-
-const style  = {
-	borderRadius: '50%',
-	width: '20px',
-	height: '20px',
-	margin: '10px auto',
-	position: 'relative',
-	borderTop: '3px solid rgba(0, 0, 0, 0.1)',
-	borderRight: '3px solid rgba(0, 0, 0, 0.1)',
-	borderBottom: '3px solid rgba(0, 0, 0, 0.1)',
-	borderLeft: '3px solid #818a91',
-	transform: 'translateZ(0)',
-	animation: 'loading-spinner 0.5s infinite linear'
-};
-
-export default class Loading extends React.Component {
-	
-	render() {
-	
-		return (
-			<div className="loading-spinner" style={style}>
-				<style>
-				{`
-					@keyframes loading-spinner {
-						0% { transform : rotate(0deg); }
-						100% { transform : rotate(360deg); }
-					}
-				`}
-				</style>
-			</div>
-		);
-	}
-}  >>
-
 Usecase(module,name,description,url,parameterName,parameterType,action,successStatements,failStatements,domainStatements,returnValue) ::= <<~module~
 
 ~name~
@@ -715,11 +387,14 @@ BlockStmt(stmt,statements) ::= <<~stmt~ {
 	~statements:{it|~it~};separator="\n"~
 }  >>
 
+ControlFlow() ::= << >>
+
+If(condition,then,otherwise) ::= <<if (~condition~) ~then~~if(otherwise)~
+else ~otherwise~~endif~  >>
+
 Conditional(condition,then,otherwise) ::= <<~condition~ ? ~then~ : ~otherwise~  >>
 
 Decorator(name,parameters) ::= <<@~name~~if(parameters)~(~parameters:{it|~it~};separator=", "~)~endif~  >>
-
-ExpressionStmt(expression) ::= <<~expression~;  >>
 
 Functions() ::= << >>
 
@@ -733,10 +408,70 @@ Function(name,parameters,statements) ::= <<function ~name~(~parameters:{it|~it~}
 
 FunctionExpression(name,function) ::= <<let ~name~ = ~function~;  >>
 
-If(condition,then,otherwise) ::= <<if (~condition~) ~then~~if(otherwise)~
-else ~otherwise~~endif~  >>
+functionCall(name,parameters) ::= <<~name~(~parameters:{it|~it~};separator=","~)  >>
 
-indexHtml(title,src) ::= <<<!DOCTYPE html>
+returnStmt(returnValue) ::= <<return ~returnValue~;  >>
+
+Inject(values) ::= <<@inject(~values:{it|~it~};separator=", "~)  >>
+
+JsonObject(values) ::= <<{ ~values:{it|~it~};separator=", "~ }  >>
+
+MobX() ::= <<MobX constructs  >>
+
+MobXStore(imports,name,observables,constructorStatements,actions) ::= <<import { observable, action, reaction } from 'mobx';
+~imports:{it|import ~it.ref~ from '~it.path~';};separator="\n"~
+
+class ~name;format="capitalize"~ {
+
+	~observables:{it|~it~};separator="\n"~
+
+	constructor() {
+		~constructorStatements:{it|~it~};separator="\n"~
+	}
+
+	~actions:{it|~it~};separator="\n\n"~
+}
+
+export default new ~name;format="capitalize"~();  >>
+
+Observable(name,initializer) ::= <<@observable ~name~~if(initializer)~ = ~initializer~~endif~;  >>
+
+Action(name,params,statements) ::= <<@action ~name~(~params:{it|~it~};separator=","~) {
+	console.info("action ~name~");
+	~statements:{it|~it~};separator="\n"~
+}  >>
+
+reaction(dataFunction,effectFunction) ::= <<reaction(~dataFunction~, ~effectFunction~);  >>
+
+NameArray(values,name) ::= <<~name~ : [ ~values:{it|~it~};separator=", "~ ]  >>
+
+NameValue(name,value) ::= <<~name~: ~value~  >>
+
+React() ::= << >>
+
+indexJS(stores) ::= <<import ReactDOM from 'react-dom';
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { useStrict } from 'mobx';
+import { Provider } from 'mobx-react';
+
+import App from './App';
+
+~stores:{it|import ~it;format="lowFirst"~ from './stores/~it;format="capitalize"~.js';};separator="\n"~
+
+const stores = {
+	~stores:{it|~it;format="lowFirst"~};separator=",\n"~
+};
+
+ReactDOM.render((
+	<Provider {...stores}>
+		<BrowserRouter>
+			<App />
+		</BrowserRouter>
+	</Provider>
+), document.getElementById('root'));  >>
+
+indexHtml(title) ::= <<<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -752,15 +487,29 @@ indexHtml(title,src) ::= <<<!DOCTYPE html>
     You need to enable JavaScript to run ~title~.
 </noscript>
 <div id="root"></div>
-<script type="text/javascript" src="~src~.js"></script>
+<script type="text/javascript" src="main.js"></script>
 </body>
 </html>  >>
 
-Inject(values) ::= <<@inject(~values:{it|~it~};separator=", "~)  >>
+indexCSS() ::= <<body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}  >>
 
-JsonObject(values) ::= <<{ ~values:{it|~it~};separator=", "~ }  >>
+ReactRouter() ::= << >>
 
-JSX() ::= << >>
+Link(to) ::= <<<Link innerRef={ ref } to="~to~" { ...props } />  >>
+
+ForwardRef(to,argument,target) ::= <<React.forwardRef((props, ref) => (
+	<RouterLink ref={ref} to={'~to~~if(argument)~/~endif~'~if(argument)~ + ~argument~~endif~}~if(target)~ target="~target~"~endif~ {...props} />
+));  >>
+
+withRouterImport() ::= <<import { withRouter } from 'react-router-dom';  >>
+
+ReactRouterLinkImport() ::= <<import { Link } from 'react-router-dom';  >>
+
+JSX() ::= <<// deprecated, use JSX-group  >>
 
 FunctionalComponent(dependencies,name,element) ::= <<~dependencies:{it|~it~};separator="\n"~
 
@@ -789,7 +538,8 @@ State(values) ::= <<{
 	~values:{it|~it.name~: ~it.value~};separator=",\n"~
 }  >>
 
-ClassComponent(dependencies,components,decorators,name,state,constructorStatements,events,methods,renderConstants,returnStatements) ::= <<import React from 'react';
+ClassComponent(imports,dependencies,components,decorators,name,state,constructorStatements,events,methods,renderConstants,returnStatements) ::= <<import React from 'react';
+~imports:{it|import ~it.ref~ from '~it.path~';};separator="\n"~
 ~dependencies:{it|~it~};separator="\n"~
 ~components:{it|~it~};separator="\n\n"~
 
@@ -811,10 +561,13 @@ class ~name~ extends React.Component {
 
 ~if(events)~
 	~events:{it|~it.declaration~};separator="\n\n"~
+	
 ~endif~
 ~if(methods)~
 	~methods:{it|~it~};separator="\n\n"~
+	
 ~endif~
+
 	render() {
 		console.log("render ~name~ : " +  this.props);
 		~if(renderConstants)~const { ~renderConstants:{it|~it~};separator=", "~ } = this.state;~endif~
@@ -827,9 +580,10 @@ export default (~name~);  >>
 
 Dependency(value,packageName) ::= <<import ~value~ from '~packageName~';  >>
 
-MethodDeclaration(const,name,parameter,statements) ::= <<~if(const)~const ~endif~~name~ = ~if(parameter)~~parameter~~else~()~endif~ \=\> {
+MethodDeclaration(const,name,parameters,statements) ::= <<~if(const)~const ~endif~~name~ = (~parameters:{it|~it~};separator=","~) => {
+	console.info("call ~name~");
 	~statements:{it|~it~};separator="\n"~
-} >>
+}  >>
 
 namedImport(names) ::= <<{ ~names:{it|~it~};separator=", "~ }  >>
 
@@ -839,123 +593,21 @@ MapProperty(property,forEach) ::= <<{
 	)) 
 }  >>
 
-MaterialUI() ::= <<  >>
+elements() ::= << >>
 
-GlobalStyle(properties,name) ::= <<'@global': {
-	~name~: {
-		~properties:{it|~it.key~: ~it.value~};separator=",\n"~
-	}
-}  >>
+ul(className,attributes,children) ::= <<<ul ~if(className)~className=~className~~endif~~attributes:{it|~it.name~=~it.value~};separator=" "~~if(children)~>
+	~children:{it|~it~};separator="\n"~
+</ul>~else~ />~endif~  >>
 
-withStyles() ::= <<@withStyles(useStyles)  >>
+div(className,attributes,children) ::= <<<div ~if(className)~className=~className~~endif~~attributes:{it|~it.name~=~it.value~};separator=" "~~if(children)~>
+	~children:{it|~it~};separator="\n"~
+</div>~else~ />~endif~  >>
 
-StyleComponent(elements) ::= <<const useStyles = theme => ({
-	~elements:{it|~it~};separator=",\n"~
-	});  >>
+form(className,onSubmit,noValidate,children) ::= <<<form ~if(className)~className=~className~ ~endif~onSubmit=~onSubmit~~if(noValidate)~ noValidate~endif~~if(children)~>
+	~children:{it|~it~};separator="\n"~
+</form>~else~ />~endif~  >>
 
-Style(name,properties) ::= <<~name~: {
-	~properties:{it|~it.key~: ~it.value~};separator=",\n"~
-}  >>
-
-MenuItem(title,name) ::= <<<MenuItem component={ ~name~ } onClick={handleClose}> ~title~ </MenuItem>  >>
-
-CenteredGrid() ::= <<import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-
-import Loading from './Loading';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
-}));
-
-export default function CenteredGrid(props) {
-  const classes = useStyles();
-
-  return (
-    <div className={classes.root}>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Paper className={classes.paper}>{props.status ? props.status.header : <Loading/> }</Paper>
-        </Grid>
-        <Grid item xs={6}>
-          <Paper className={classes.paper}>xs=6</Paper>
-        </Grid>
-        <Grid item xs={6}>
-          <Paper className={classes.paper}>xs=6</Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper className={classes.paper}>xs=3</Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper className={classes.paper}>xs=3</Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper className={classes.paper}>xs=3</Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper className={classes.paper}>xs=3</Paper>
-        </Grid>
-      </Grid>
-    </div>
-  );
-}  >>
-
-methodCall(scope,name,arguments,then,catch,finally) ::= <<~if(scope)~~scope~.~endif~~name~(~arguments:{it|~it~};separator=", "~)
-	~then:{it|.then(~it~)};separator="\n"~
-~if(catch)~
-	.catch(~catch~)~endif~
-~if(finally)~
-	.finally(~finally~)
-~endif~  >>
-
-MobX() ::= <<MobX constructs  >>
-
-MobXStore(observables,actions,imports,name,constructorStatements) ::= <<import { ~if(observables)~observable~endif~~if(actions)~~if(observables)~, ~endif~action, ~endif~ reaction } from 'mobx';
-~imports:{it|import ~it.ref~ from '~it.path~';};separator="\n"~
-
-class ~name;format="capitalize"~ {
-
-	~observables:{it|~it~};separator="\n"~
-
-	constructor() {
-		~constructorStatements:{it|~it~};separator="\n"~
-	}
-
-	~actions:{it|~it~};separator="\n\n"~
-}
-
-export default new ~name;format="capitalize"~();  >>
-
-Observable(name,initializer) ::= <<@observable ~name~~if(initializer)~ = ~initializer~~endif~;  >>
-
-Action(name,params,statements) ::= <<@action ~name~(~params:{it|~it~};separator=","~) {
-	~statements:{it|~it~};separator="\n"~
-}  >>
-
-reaction(dataFunction,effectFunction) ::= <<reaction(~dataFunction~, ~effectFunction~);  >>
-
-NameArray(values,name) ::= <<~name~ : [ ~values:{it|~it~};separator=", "~ ]  >>
-
-NameValue(name,value) ::= <<~name~: ~value~  >>
-
-ReactRouter() ::= << >>
-
-Link(to) ::= <<<Link innerRef={ ref } to="~to~" { ...props } />  >>
-
-ForwardRef(to,argument,target) ::= <<React.forwardRef((props, ref) => (
-	<RouterLink ref={ref} to={'~to~~if(argument)~/~endif~'~if(argument)~ + ~argument~~endif~}~if(target)~ target="~target~"~endif~ {...props} />
-));  >>
-
-returnStmt(returnValue) ::= <<return ~returnValue~;  >>
+VictoryCharts() ::= << >>
 
 eom() ::= "}"
 

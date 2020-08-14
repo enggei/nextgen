@@ -8,13 +8,19 @@ public class SpeedDialIconElement {
 	private Object _classes;
 	private Object _className;
 	private Object _icon;
+	private Object _id;
 	private Object _openIcon;
 
 	SpeedDialIconElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -24,6 +30,7 @@ public class SpeedDialIconElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("icon", _icon);
+		st.add("id", _id);
 		st.add("openIcon", _openIcon);
 		return st.render().trim();
 	}
@@ -94,6 +101,28 @@ public class SpeedDialIconElement {
 		return this;
 	} 
 
+	public SpeedDialIconElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public SpeedDialIconElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public SpeedDialIconElement setOpenIcon(Object value) {
 		this._openIcon = value;
 		return this;
@@ -131,9 +160,10 @@ public class SpeedDialIconElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SpeedDialIconElement(classes,className,icon,openIcon) ::= <<<SpeedDialIcon~if(classes)~\n" + 
+	static final String st = "SpeedDialIconElement(classes,className,icon,id,openIcon) ::= <<<SpeedDialIcon~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(icon)~\n" + 
-				"	icon=~icon~~endif~~if(openIcon)~\n" + 
+				"	icon=~icon~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(openIcon)~\n" + 
 				"	openIcon=~openIcon~~endif~ /> >>";
 }  

@@ -9,6 +9,7 @@ public class TableCellElement {
 	private Object _classes;
 	private Object _className;
 	private Object _component;
+	private Object _id;
 	private Object _padding;
 	private Object _scope;
 	private Object _size;
@@ -20,7 +21,12 @@ public class TableCellElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -31,6 +37,7 @@ public class TableCellElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("component", _component);
+		st.add("id", _id);
 		st.add("padding", _padding);
 		st.add("scope", _scope);
 		st.add("size", _size);
@@ -125,6 +132,28 @@ public class TableCellElement {
 
 	public TableCellElement removeComponent() {
 		this._component = null;
+		return this;
+	} 
+
+	public TableCellElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public TableCellElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -281,11 +310,12 @@ public class TableCellElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TableCellElement(align,classes,className,component,padding,scope,size,sortDirection,variant,children) ::= <<<TableCell~if(align)~\n" + 
+	static final String st = "TableCellElement(align,classes,className,component,id,padding,scope,size,sortDirection,variant,children) ::= <<<TableCell~if(align)~\n" + 
 				"	align=\"~align~\"~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
-				"	component=~component~~endif~~if(padding)~\n" + 
+				"	component=~component~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(padding)~\n" + 
 				"	padding=\"~padding~\"~endif~~if(scope)~\n" + 
 				"	scope=\"~scope~\"~endif~~if(size)~\n" + 
 				"	size=\"~size~\"~endif~~if(sortDirection)~\n" + 

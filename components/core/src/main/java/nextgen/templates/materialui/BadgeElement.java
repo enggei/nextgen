@@ -11,6 +11,7 @@ public class BadgeElement {
 	private Object _className;
 	private Object _color;
 	private Object _component;
+	private Object _id;
 	private Object _invisible;
 	private Object _max;
 	private Object _overlap;
@@ -22,7 +23,12 @@ public class BadgeElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -35,6 +41,7 @@ public class BadgeElement {
 		st.add("className", _className);
 		st.add("color", _color);
 		st.add("component", _component);
+		st.add("id", _id);
 		st.add("invisible", _invisible);
 		st.add("max", _max);
 		st.add("overlap", _overlap);
@@ -173,6 +180,28 @@ public class BadgeElement {
 
 	public BadgeElement removeComponent() {
 		this._component = null;
+		return this;
+	} 
+
+	public BadgeElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public BadgeElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -329,13 +358,14 @@ public class BadgeElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "BadgeElement(anchorOrigin,badgeContent,classes,className,color,component,invisible,max,overlap,showZero,variant,children) ::= <<<Badge~if(anchorOrigin)~\n" + 
+	static final String st = "BadgeElement(anchorOrigin,badgeContent,classes,className,color,component,id,invisible,max,overlap,showZero,variant,children) ::= <<<Badge~if(anchorOrigin)~\n" + 
 				"	anchorOrigin=\"~anchorOrigin~\"~endif~~if(badgeContent)~\n" + 
 				"	badgeContent=~badgeContent~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(component)~\n" + 
-				"	component=~component~~endif~~if(invisible)~\n" + 
+				"	component=~component~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(invisible)~\n" + 
 				"	invisible~endif~~if(max)~\n" + 
 				"	max=~max~~endif~~if(overlap)~\n" + 
 				"	overlap=\"~overlap~\"~endif~~if(showZero)~\n" + 

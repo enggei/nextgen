@@ -8,13 +8,19 @@ public class CardActionsElement {
 	private Object _classes;
 	private Object _className;
 	private Object _disableSpacing;
+	private Object _id;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
 	CardActionsElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -24,6 +30,7 @@ public class CardActionsElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("disableSpacing", _disableSpacing);
+		st.add("id", _id);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
 	}
@@ -94,6 +101,28 @@ public class CardActionsElement {
 		return this;
 	} 
 
+	public CardActionsElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public CardActionsElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public CardActionsElement addChildren(Object value) {
 		this._children.add(value);
 		return this;
@@ -137,10 +166,11 @@ public class CardActionsElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "CardActionsElement(classes,className,disableSpacing,children) ::= <<<CardActions~if(classes)~\n" + 
+	static final String st = "CardActionsElement(classes,className,disableSpacing,id,children) ::= <<<CardActions~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(disableSpacing)~\n" + 
-				"	disableSpacing~endif~~if(children)~>\n" + 
+				"	disableSpacing~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</CardActions>~else~ />~endif~ >>";
 }  

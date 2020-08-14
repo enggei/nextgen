@@ -10,6 +10,7 @@ public class AccordionElement {
 	private Object _defaultExpanded;
 	private Object _disabled;
 	private Object _expanded;
+	private Object _id;
 	private Object _onChange;
 	private Object _square;
 	private Object _TransitionComponent;
@@ -20,7 +21,12 @@ public class AccordionElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -32,6 +38,7 @@ public class AccordionElement {
 		st.add("defaultExpanded", _defaultExpanded);
 		st.add("disabled", _disabled);
 		st.add("expanded", _expanded);
+		st.add("id", _id);
 		st.add("onChange", _onChange);
 		st.add("square", _square);
 		st.add("TransitionComponent", _TransitionComponent);
@@ -147,6 +154,28 @@ public class AccordionElement {
 
 	public AccordionElement removeExpanded() {
 		this._expanded = null;
+		return this;
+	} 
+
+	public AccordionElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public AccordionElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -281,12 +310,13 @@ public class AccordionElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AccordionElement(classes,className,defaultExpanded,disabled,expanded,onChange,square,TransitionComponent,TransitionProps,children) ::= <<<Accordion~if(classes)~\n" + 
+	static final String st = "AccordionElement(classes,className,defaultExpanded,disabled,expanded,id,onChange,square,TransitionComponent,TransitionProps,children) ::= <<<Accordion~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(defaultExpanded)~\n" + 
 				"	defaultExpanded~endif~~if(disabled)~\n" + 
 				"	disabled~endif~~if(expanded)~\n" + 
-				"	expanded~endif~~if(onChange)~\n" + 
+				"	expanded~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(onChange)~\n" + 
 				"	onChange=~onChange~~endif~~if(square)~\n" + 
 				"	square~endif~~if(TransitionComponent)~\n" + 
 				"	TransitionComponent=~TransitionComponent~~endif~~if(TransitionProps)~\n" + 

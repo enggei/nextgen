@@ -11,12 +11,18 @@ public class StepIconElement {
 	private Object _completed;
 	private Object _error;
 	private Object _icon;
+	private Object _id;
 
 	StepIconElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -29,6 +35,7 @@ public class StepIconElement {
 		st.add("completed", _completed);
 		st.add("error", _error);
 		st.add("icon", _icon);
+		st.add("id", _id);
 		return st.render().trim();
 	}
 
@@ -164,6 +171,28 @@ public class StepIconElement {
 		return this;
 	} 
 
+	public StepIconElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public StepIconElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -179,11 +208,12 @@ public class StepIconElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "StepIconElement(active,classes,className,completed,error,icon) ::= <<<StepIcon~if(active)~\n" + 
+	static final String st = "StepIconElement(active,classes,className,completed,error,icon,id) ::= <<<StepIcon~if(active)~\n" + 
 				"	active~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(completed)~\n" + 
 				"	completed~endif~~if(error)~\n" + 
 				"	error~endif~~if(icon)~\n" + 
-				"	icon=~icon~~endif~ /> >>";
+				"	icon=~icon~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~ /> >>";
 }  

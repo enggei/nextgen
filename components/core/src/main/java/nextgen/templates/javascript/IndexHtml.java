@@ -6,13 +6,17 @@ public class IndexHtml {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _title;
-	private Object _src;
 
 	IndexHtml(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -20,7 +24,6 @@ public class IndexHtml {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("indexHtml");
 		st.add("title", _title);
-		st.add("src", _src);
 		return st.render().trim();
 	}
 
@@ -46,28 +49,6 @@ public class IndexHtml {
 		return this;
 	} 
 
-	public IndexHtml setSrc(Object value) {
-		this._src = value;
-		return this;
-	}
-
-	public Object getSrc() {
-		return this._src;
-	}
-
-	public Object getSrc(Object defaultValue) {
-		return this._src == null ? defaultValue : this._src;
-	}
-
-	public boolean hasSrc() {
-		return this._src != null;
-	}
-
-	public IndexHtml removeSrc() {
-		this._src = null;
-		return this;
-	} 
-
 
 
 	@Override
@@ -83,7 +64,7 @@ public class IndexHtml {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "indexHtml(title,src) ::= <<<!DOCTYPE html>\n" + 
+	static final String st = "indexHtml(title) ::= <<<!DOCTYPE html>\n" + 
 				"<html lang=\"en\">\n" + 
 				"<head>\n" + 
 				"    <meta charset=\"UTF-8\">\n" + 
@@ -99,7 +80,7 @@ public class IndexHtml {
 				"    You need to enable JavaScript to run ~title~.\n" + 
 				"</noscript>\n" + 
 				"<div id=\"root\"></div>\n" + 
-				"<script type=\"text/javascript\" src=\"~src~.js\"></script>\n" + 
+				"<script type=\"text/javascript\" src=\"main.js\"></script>\n" + 
 				"</body>\n" + 
 				"</html> >>";
 }  

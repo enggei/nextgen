@@ -8,13 +8,19 @@ public class ExpansionPanelActionsElement {
 	private Object _classes;
 	private Object _className;
 	private Object _disableSpacing;
+	private Object _id;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
 	ExpansionPanelActionsElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -24,6 +30,7 @@ public class ExpansionPanelActionsElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("disableSpacing", _disableSpacing);
+		st.add("id", _id);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
 	}
@@ -94,6 +101,28 @@ public class ExpansionPanelActionsElement {
 		return this;
 	} 
 
+	public ExpansionPanelActionsElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public ExpansionPanelActionsElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public ExpansionPanelActionsElement addChildren(Object value) {
 		this._children.add(value);
 		return this;
@@ -137,10 +166,11 @@ public class ExpansionPanelActionsElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ExpansionPanelActionsElement(classes,className,disableSpacing,children) ::= <<<ExpansionPanelActions~if(classes)~\n" + 
+	static final String st = "ExpansionPanelActionsElement(classes,className,disableSpacing,id,children) ::= <<<ExpansionPanelActions~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(disableSpacing)~\n" + 
-				"	disableSpacing~endif~~if(children)~>\n" + 
+				"	disableSpacing~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</ExpansionPanelActions>~else~ />~endif~ >>";
 }  

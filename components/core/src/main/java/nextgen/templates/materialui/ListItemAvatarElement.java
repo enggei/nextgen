@@ -7,13 +7,19 @@ public class ListItemAvatarElement {
 
 	private Object _classes;
 	private Object _className;
+	private Object _id;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
 	ListItemAvatarElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -22,6 +28,7 @@ public class ListItemAvatarElement {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ListItemAvatarElement");
 		st.add("classes", _classes);
 		st.add("className", _className);
+		st.add("id", _id);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
 	}
@@ -70,6 +77,28 @@ public class ListItemAvatarElement {
 		return this;
 	} 
 
+	public ListItemAvatarElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public ListItemAvatarElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public ListItemAvatarElement addChildren(Object value) {
 		this._children.add(value);
 		return this;
@@ -113,9 +142,10 @@ public class ListItemAvatarElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ListItemAvatarElement(classes,className,children) ::= <<<ListItemAvatar~if(classes)~\n" + 
+	static final String st = "ListItemAvatarElement(classes,className,id,children) ::= <<<ListItemAvatar~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
-				"	className=~className~~endif~~if(children)~>\n" + 
+				"	className=~className~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</ListItemAvatar>~else~ />~endif~ >>";
 }  

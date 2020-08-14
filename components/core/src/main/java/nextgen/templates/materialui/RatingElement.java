@@ -14,6 +14,7 @@ public class RatingElement {
 	private Object _getLabelText;
 	private Object _icon;
 	private Object _IconContainerComponent;
+	private Object _id;
 	private Object _max;
 	private Object _name;
 	private Object _onChange;
@@ -27,7 +28,12 @@ public class RatingElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -43,6 +49,7 @@ public class RatingElement {
 		st.add("getLabelText", _getLabelText);
 		st.add("icon", _icon);
 		st.add("IconContainerComponent", _IconContainerComponent);
+		st.add("id", _id);
 		st.add("max", _max);
 		st.add("name", _name);
 		st.add("onChange", _onChange);
@@ -252,6 +259,28 @@ public class RatingElement {
 		return this;
 	} 
 
+	public RatingElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public RatingElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public RatingElement setMax(Object value) {
 		this._max = value;
 		return this;
@@ -443,7 +472,7 @@ public class RatingElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "RatingElement(classes,className,defaultValue,disabled,emptyIcon,emptyLabelText,getLabelText,icon,IconContainerComponent,max,name,onChange,onChangeActive,precision,readOnly,size,value) ::= <<<Rating~if(classes)~\n" + 
+	static final String st = "RatingElement(classes,className,defaultValue,disabled,emptyIcon,emptyLabelText,getLabelText,icon,IconContainerComponent,id,max,name,onChange,onChangeActive,precision,readOnly,size,value) ::= <<<Rating~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(defaultValue)~\n" + 
 				"	defaultValue=~defaultValue~~endif~~if(disabled)~\n" + 
@@ -452,7 +481,8 @@ public class RatingElement {
 				"	emptyLabelText=~emptyLabelText~~endif~~if(getLabelText)~\n" + 
 				"	getLabelText=~getLabelText~~endif~~if(icon)~\n" + 
 				"	icon=~icon~~endif~~if(IconContainerComponent)~\n" + 
-				"	IconContainerComponent=~IconContainerComponent~~endif~~if(max)~\n" + 
+				"	IconContainerComponent=~IconContainerComponent~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(max)~\n" + 
 				"	max=~max~~endif~~if(name)~\n" + 
 				"	name=\"~name~\"~endif~~if(onChange)~\n" + 
 				"	onChange=~onChange~~endif~~if(onChangeActive)~\n" + 

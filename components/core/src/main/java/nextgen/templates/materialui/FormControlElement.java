@@ -14,6 +14,7 @@ public class FormControlElement {
 	private Object _focused;
 	private Object _fullWidth;
 	private Object _hiddenLabel;
+	private Object _id;
 	private Object _margin;
 	private Object _required;
 	private Object _size;
@@ -24,7 +25,12 @@ public class FormControlElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -40,6 +46,7 @@ public class FormControlElement {
 		st.add("focused", _focused);
 		st.add("fullWidth", _fullWidth);
 		st.add("hiddenLabel", _hiddenLabel);
+		st.add("id", _id);
 		st.add("margin", _margin);
 		st.add("required", _required);
 		st.add("size", _size);
@@ -246,6 +253,28 @@ public class FormControlElement {
 		return this;
 	} 
 
+	public FormControlElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public FormControlElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public FormControlElement setMargin(Object value) {
 		this._margin = value;
 		return this;
@@ -377,7 +406,7 @@ public class FormControlElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "FormControlElement(classes,className,color,component,disabled,error,focused,fullWidth,hiddenLabel,margin,required,size,variant,children) ::= <<<FormControl~if(classes)~\n" + 
+	static final String st = "FormControlElement(classes,className,color,component,disabled,error,focused,fullWidth,hiddenLabel,id,margin,required,size,variant,children) ::= <<<FormControl~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(component)~\n" + 
@@ -386,7 +415,8 @@ public class FormControlElement {
 				"	error~endif~~if(focused)~\n" + 
 				"	focused~endif~~if(fullWidth)~\n" + 
 				"	fullWidth~endif~~if(hiddenLabel)~\n" + 
-				"	hiddenLabel~endif~~if(margin)~\n" + 
+				"	hiddenLabel~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(margin)~\n" + 
 				"	margin=\"~margin~\"~endif~~if(required)~\n" + 
 				"	required~endif~~if(size)~\n" + 
 				"	size=\"~size~\"~endif~~if(variant)~\n" + 

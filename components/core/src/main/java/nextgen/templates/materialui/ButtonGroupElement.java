@@ -14,6 +14,7 @@ public class ButtonGroupElement {
 	private Object _disableFocusRipple;
 	private Object _disableRipple;
 	private Object _fullWidth;
+	private Object _id;
 	private Object _orientation;
 	private Object _size;
 	private Object _variant;
@@ -23,7 +24,12 @@ public class ButtonGroupElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -39,6 +45,7 @@ public class ButtonGroupElement {
 		st.add("disableFocusRipple", _disableFocusRipple);
 		st.add("disableRipple", _disableRipple);
 		st.add("fullWidth", _fullWidth);
+		st.add("id", _id);
 		st.add("orientation", _orientation);
 		st.add("size", _size);
 		st.add("variant", _variant);
@@ -244,6 +251,28 @@ public class ButtonGroupElement {
 		return this;
 	} 
 
+	public ButtonGroupElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public ButtonGroupElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public ButtonGroupElement setOrientation(Object value) {
 		this._orientation = value;
 		return this;
@@ -353,7 +382,7 @@ public class ButtonGroupElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ButtonGroupElement(classes,className,color,component,disabled,disableElevation,disableFocusRipple,disableRipple,fullWidth,orientation,size,variant,children) ::= <<<ButtonGroup~if(classes)~\n" + 
+	static final String st = "ButtonGroupElement(classes,className,color,component,disabled,disableElevation,disableFocusRipple,disableRipple,fullWidth,id,orientation,size,variant,children) ::= <<<ButtonGroup~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(component)~\n" + 
@@ -362,7 +391,8 @@ public class ButtonGroupElement {
 				"	disableElevation~endif~~if(disableFocusRipple)~\n" + 
 				"	disableFocusRipple~endif~~if(disableRipple)~\n" + 
 				"	disableRipple~endif~~if(fullWidth)~\n" + 
-				"	fullWidth~endif~~if(orientation)~\n" + 
+				"	fullWidth~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(orientation)~\n" + 
 				"	orientation=\"~orientation~\"~endif~~if(size)~\n" + 
 				"	size=\"~size~\"~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~if(children)~>\n" + 

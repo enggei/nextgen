@@ -12,6 +12,7 @@ public class FormHelperTextElement {
 	private Object _error;
 	private Object _filled;
 	private Object _focused;
+	private Object _id;
 	private Object _margin;
 	private Object _required;
 	private Object _variant;
@@ -21,7 +22,12 @@ public class FormHelperTextElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -35,6 +41,7 @@ public class FormHelperTextElement {
 		st.add("error", _error);
 		st.add("filled", _filled);
 		st.add("focused", _focused);
+		st.add("id", _id);
 		st.add("margin", _margin);
 		st.add("required", _required);
 		st.add("variant", _variant);
@@ -196,6 +203,28 @@ public class FormHelperTextElement {
 		return this;
 	} 
 
+	public FormHelperTextElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public FormHelperTextElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public FormHelperTextElement setMargin(Object value) {
 		this._margin = value;
 		return this;
@@ -305,14 +334,15 @@ public class FormHelperTextElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "FormHelperTextElement(classes,className,component,disabled,error,filled,focused,margin,required,variant,children) ::= <<<FormHelperText~if(classes)~\n" + 
+	static final String st = "FormHelperTextElement(classes,className,component,disabled,error,filled,focused,id,margin,required,variant,children) ::= <<<FormHelperText~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(disabled)~\n" + 
 				"	disabled~endif~~if(error)~\n" + 
 				"	error~endif~~if(filled)~\n" + 
 				"	filled~endif~~if(focused)~\n" + 
-				"	focused~endif~~if(margin)~\n" + 
+				"	focused~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(margin)~\n" + 
 				"	margin=\"~margin~\"~endif~~if(required)~\n" + 
 				"	required~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~if(children)~>\n" + 

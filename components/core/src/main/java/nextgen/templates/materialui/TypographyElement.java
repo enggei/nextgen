@@ -12,6 +12,7 @@ public class TypographyElement {
 	private Object _component;
 	private Object _display;
 	private Object _gutterBottom;
+	private Object _id;
 	private Object _noWrap;
 	private Object _paragraph;
 	private Object _variant;
@@ -22,7 +23,12 @@ public class TypographyElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -36,6 +42,7 @@ public class TypographyElement {
 		st.add("component", _component);
 		st.add("display", _display);
 		st.add("gutterBottom", _gutterBottom);
+		st.add("id", _id);
 		st.add("noWrap", _noWrap);
 		st.add("paragraph", _paragraph);
 		st.add("variant", _variant);
@@ -198,6 +205,28 @@ public class TypographyElement {
 		return this;
 	} 
 
+	public TypographyElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public TypographyElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public TypographyElement setNoWrap(Object value) {
 		this._noWrap = value;
 		return this;
@@ -329,14 +358,15 @@ public class TypographyElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TypographyElement(align,classes,className,color,component,display,gutterBottom,noWrap,paragraph,variant,variantMapping,children) ::= <<<Typography~if(align)~\n" + 
+	static final String st = "TypographyElement(align,classes,className,color,component,display,gutterBottom,id,noWrap,paragraph,variant,variantMapping,children) ::= <<<Typography~if(align)~\n" + 
 				"	align=\"~align~\"~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(display)~\n" + 
 				"	display=\"~display~\"~endif~~if(gutterBottom)~\n" + 
-				"	gutterBottom~endif~~if(noWrap)~\n" + 
+				"	gutterBottom~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(noWrap)~\n" + 
 				"	noWrap~endif~~if(paragraph)~\n" + 
 				"	paragraph~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~if(variantMapping)~\n" + 

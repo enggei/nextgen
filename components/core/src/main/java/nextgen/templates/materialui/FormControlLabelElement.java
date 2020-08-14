@@ -10,6 +10,7 @@ public class FormControlLabelElement {
 	private Object _className;
 	private Object _control;
 	private Object _disabled;
+	private Object _id;
 	private Object _inputRef;
 	private Object _label;
 	private Object _labelPlacement;
@@ -20,7 +21,12 @@ public class FormControlLabelElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -32,6 +38,7 @@ public class FormControlLabelElement {
 		st.add("className", _className);
 		st.add("control", _control);
 		st.add("disabled", _disabled);
+		st.add("id", _id);
 		st.add("inputRef", _inputRef);
 		st.add("label", _label);
 		st.add("labelPlacement", _labelPlacement);
@@ -147,6 +154,28 @@ public class FormControlLabelElement {
 
 	public FormControlLabelElement removeDisabled() {
 		this._disabled = null;
+		return this;
+	} 
+
+	public FormControlLabelElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public FormControlLabelElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -275,12 +304,13 @@ public class FormControlLabelElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "FormControlLabelElement(checked,classes,className,control,disabled,inputRef,label,labelPlacement,onChange,value) ::= <<<FormControlLabel~if(checked)~\n" + 
+	static final String st = "FormControlLabelElement(checked,classes,className,control,disabled,id,inputRef,label,labelPlacement,onChange,value) ::= <<<FormControlLabel~if(checked)~\n" + 
 				"	checked~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~\n" + 
 				"	control=~control~~if(disabled)~\n" + 
-				"	disabled~endif~~if(inputRef)~\n" + 
+				"	disabled~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(inputRef)~\n" + 
 				"	inputRef=~inputRef~~endif~~if(label)~\n" + 
 				"	label=~label~~endif~~if(labelPlacement)~\n" + 
 				"	labelPlacement=\"~labelPlacement~\"~endif~~if(onChange)~\n" + 

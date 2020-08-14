@@ -8,6 +8,7 @@ public class CardMediaElement {
 	private Object _classes;
 	private Object _className;
 	private Object _component;
+	private Object _id;
 	private Object _image;
 	private Object _src;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -16,7 +17,12 @@ public class CardMediaElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -26,6 +32,7 @@ public class CardMediaElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("component", _component);
+		st.add("id", _id);
 		st.add("image", _image);
 		st.add("src", _src);
 		for (Object o : _children) st.add("children", o);
@@ -95,6 +102,28 @@ public class CardMediaElement {
 
 	public CardMediaElement removeComponent() {
 		this._component = null;
+		return this;
+	} 
+
+	public CardMediaElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public CardMediaElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -185,10 +214,11 @@ public class CardMediaElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "CardMediaElement(classes,className,component,image,src,children) ::= <<<CardMedia~if(classes)~\n" + 
+	static final String st = "CardMediaElement(classes,className,component,id,image,src,children) ::= <<<CardMedia~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
-				"	component=~component~~endif~~if(image)~\n" + 
+				"	component=~component~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(image)~\n" + 
 				"	image=\"~image~\"~endif~~if(src)~\n" + 
 				"	src=\"~src~\"~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 

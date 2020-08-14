@@ -8,6 +8,7 @@ public class PortalElement {
 	private Object _className;
 	private Object _container;
 	private Object _disablePortal;
+	private Object _id;
 	private Object _onRendered;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
@@ -15,7 +16,12 @@ public class PortalElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -25,6 +31,7 @@ public class PortalElement {
 		st.add("className", _className);
 		st.add("container", _container);
 		st.add("disablePortal", _disablePortal);
+		st.add("id", _id);
 		st.add("onRendered", _onRendered);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
@@ -96,6 +103,28 @@ public class PortalElement {
 		return this;
 	} 
 
+	public PortalElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public PortalElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public PortalElement setOnRendered(Object value) {
 		this._onRendered = value;
 		return this;
@@ -161,10 +190,11 @@ public class PortalElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PortalElement(className,container,disablePortal,onRendered,children) ::= <<<Portal~if(className)~\n" + 
+	static final String st = "PortalElement(className,container,disablePortal,id,onRendered,children) ::= <<<Portal~if(className)~\n" + 
 				"	className=~className~~endif~~if(container)~\n" + 
 				"	container=~container~~endif~~if(disablePortal)~\n" + 
-				"	disablePortal~endif~~if(onRendered)~\n" + 
+				"	disablePortal~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(onRendered)~\n" + 
 				"	onRendered=~onRendered~~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Portal>~else~ />~endif~ >>";

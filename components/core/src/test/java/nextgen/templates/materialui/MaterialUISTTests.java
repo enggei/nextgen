@@ -51,6 +51,9 @@ public class MaterialUISTTests {
 		testBottomNavigationAction();
 		testBottomNavigationActionElement();
 		testBottomNavigationActionImport();
+		testBox();
+		testBoxElement();
+		testBoxImport();
 		testBreadcrumbs();
 		testBreadcrumbsElement();
 		testBreadcrumbsImport();
@@ -222,11 +225,17 @@ public class MaterialUISTTests {
 		testListSubheader();
 		testListSubheaderElement();
 		testListSubheaderImport();
+		testLockOutlinedIcon();
+		testLockOutlinedIconElement();
+		testLockOutlinedIconImport();
 		testMaterialUIComponent();
 		testStyleClass();
 		testMenu();
 		testMenuElement();
 		testMenuImport();
+		testMenuIcon();
+		testMenuIconElement();
+		testMenuIconImport();
 		testMenuItem();
 		testMenuItemElement();
 		testMenuItemImport();
@@ -647,6 +656,21 @@ public class MaterialUISTTests {
 	@org.junit.Test
 	public void testBottomNavigationActionImport() {
 		System.out.println("\n--- TEST BottomNavigationActionImport:\n" + newBottomNavigationActionImport());
+	} 
+
+	@org.junit.Test
+	public void testBox() {
+		System.out.println("\n--- TEST Box:\n" + newBox());
+	} 
+
+	@org.junit.Test
+	public void testBoxElement() {
+		System.out.println("\n--- TEST BoxElement:\n" + newBoxElement());
+	} 
+
+	@org.junit.Test
+	public void testBoxImport() {
+		System.out.println("\n--- TEST BoxImport:\n" + newBoxImport());
 	} 
 
 	@org.junit.Test
@@ -1505,6 +1529,21 @@ public class MaterialUISTTests {
 	} 
 
 	@org.junit.Test
+	public void testLockOutlinedIcon() {
+		System.out.println("\n--- TEST LockOutlinedIcon:\n" + newLockOutlinedIcon());
+	} 
+
+	@org.junit.Test
+	public void testLockOutlinedIconElement() {
+		System.out.println("\n--- TEST LockOutlinedIconElement:\n" + newLockOutlinedIconElement());
+	} 
+
+	@org.junit.Test
+	public void testLockOutlinedIconImport() {
+		System.out.println("\n--- TEST LockOutlinedIconImport:\n" + newLockOutlinedIconImport());
+	} 
+
+	@org.junit.Test
 	public void testMaterialUIComponent() {
 		System.out.println("\n--- TEST MaterialUIComponent:\n" + newMaterialUIComponent());
 	} 
@@ -1527,6 +1566,21 @@ public class MaterialUISTTests {
 	@org.junit.Test
 	public void testMenuImport() {
 		System.out.println("\n--- TEST MenuImport:\n" + newMenuImport());
+	} 
+
+	@org.junit.Test
+	public void testMenuIcon() {
+		System.out.println("\n--- TEST MenuIcon:\n" + newMenuIcon());
+	} 
+
+	@org.junit.Test
+	public void testMenuIconElement() {
+		System.out.println("\n--- TEST MenuIconElement:\n" + newMenuIconElement());
+	} 
+
+	@org.junit.Test
+	public void testMenuIconImport() {
+		System.out.println("\n--- TEST MenuIconImport:\n" + newMenuIconImport());
 	} 
 
 	@org.junit.Test

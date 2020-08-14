@@ -7,15 +7,20 @@ public class MobXStore {
 
 	private String _name;
 	private java.util.List<Observable> _observables = new java.util.ArrayList<>();
-	private java.util.List<Action> _actions = new java.util.ArrayList<>();
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
+	private java.util.List<Action> _actions = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _imports = new java.util.ArrayList<>();
 
 	MobXStore(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -24,8 +29,8 @@ public class MobXStore {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("MobXStore");
 		st.add("name", _name);
 		for (Object o : _observables) st.add("observables", o);
-		for (Object o : _actions) st.add("actions", o);
 		for (Object o : _constructorStatements) st.add("constructorStatements", o);
+		for (Object o : _actions) st.add("actions", o);
 		for (java.util.Map<String, Object> map : _imports) st.addAggr("imports.{ref,path}", map.get("ref"), map.get("path"));
 		return st.render().trim();
 	}
@@ -81,35 +86,6 @@ public class MobXStore {
 		return this._observables;
 	} 
 
-	public MobXStore addActions(Action value) {
-		this._actions.add(value);
-		return this;
-	}
-
-	public MobXStore setActions(Action[] value) {
-		this._actions.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public MobXStore setActions(java.util.Collection<Action> values) {
-		this._actions.addAll(values);
-		return this;
-	}
-
-	public MobXStore removeActions(Action value) {
-		this._actions.remove(value);
-		return this;
-	}
-
-	public MobXStore removeActions(int index) {
-		this._actions.remove(index);
-		return this;
-	}
-
-	public java.util.List<Action> getActions() {
-		return this._actions;
-	} 
-
 	public MobXStore addConstructorStatements(Object value) {
 		this._constructorStatements.add(value);
 		return this;
@@ -137,6 +113,35 @@ public class MobXStore {
 
 	public java.util.List<Object> getConstructorStatements() {
 		return this._constructorStatements;
+	} 
+
+	public MobXStore addActions(Action value) {
+		this._actions.add(value);
+		return this;
+	}
+
+	public MobXStore setActions(Action[] value) {
+		this._actions.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public MobXStore setActions(java.util.Collection<Action> values) {
+		this._actions.addAll(values);
+		return this;
+	}
+
+	public MobXStore removeActions(Action value) {
+		this._actions.remove(value);
+		return this;
+	}
+
+	public MobXStore removeActions(int index) {
+		this._actions.remove(index);
+		return this;
+	}
+
+	public java.util.List<Action> getActions() {
+		return this._actions;
 	} 
 
 	public MobXStore addImports(Object _ref, Object _path) {
@@ -197,7 +202,7 @@ public class MobXStore {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MobXStore(observables,actions,imports,name,constructorStatements) ::= <<import { ~if(observables)~observable~endif~~if(actions)~~if(observables)~, ~endif~action, ~endif~ reaction } from 'mobx';\n" + 
+	static final String st = "MobXStore(imports,name,observables,constructorStatements,actions) ::= <<import { observable, action, reaction } from 'mobx';\n" + 
 				"~imports:{it|import ~it.ref~ from '~it.path~';};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"class ~name;format=\"capitalize\"~ {\n" + 

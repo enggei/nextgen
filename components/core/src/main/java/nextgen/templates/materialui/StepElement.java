@@ -11,13 +11,19 @@ public class StepElement {
 	private Object _completed;
 	private Object _disabled;
 	private Object _expanded;
+	private Object _id;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
 	StepElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -30,6 +36,7 @@ public class StepElement {
 		st.add("completed", _completed);
 		st.add("disabled", _disabled);
 		st.add("expanded", _expanded);
+		st.add("id", _id);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
 	}
@@ -166,6 +173,28 @@ public class StepElement {
 		return this;
 	} 
 
+	public StepElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public StepElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public StepElement addChildren(Object value) {
 		this._children.add(value);
 		return this;
@@ -209,13 +238,14 @@ public class StepElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "StepElement(active,classes,className,completed,disabled,expanded,children) ::= <<<Step~if(active)~\n" + 
+	static final String st = "StepElement(active,classes,className,completed,disabled,expanded,id,children) ::= <<<Step~if(active)~\n" + 
 				"	active~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(completed)~\n" + 
 				"	completed~endif~~if(disabled)~\n" + 
 				"	disabled~endif~~if(expanded)~\n" + 
-				"	expanded~endif~~if(children)~>\n" + 
+				"	expanded~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Step>~else~ />~endif~ >>";
 }  

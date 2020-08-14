@@ -8,13 +8,19 @@ public class TimelineElement {
 	private Object _align;
 	private Object _classes;
 	private Object _className;
+	private Object _id;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
 	TimelineElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -24,6 +30,7 @@ public class TimelineElement {
 		st.add("align", _align);
 		st.add("classes", _classes);
 		st.add("className", _className);
+		st.add("id", _id);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
 	}
@@ -94,6 +101,28 @@ public class TimelineElement {
 		return this;
 	} 
 
+	public TimelineElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public TimelineElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public TimelineElement addChildren(Object value) {
 		this._children.add(value);
 		return this;
@@ -137,10 +166,11 @@ public class TimelineElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TimelineElement(align,classes,className,children) ::= <<<Timeline~if(align)~\n" + 
+	static final String st = "TimelineElement(align,classes,className,id,children) ::= <<<Timeline~if(align)~\n" + 
 				"	align=\"~align~\"~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
-				"	className=~className~~endif~~if(children)~>\n" + 
+				"	className=~className~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Timeline>~else~ />~endif~ >>";
 }  

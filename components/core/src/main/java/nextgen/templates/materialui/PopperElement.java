@@ -9,6 +9,7 @@ public class PopperElement {
 	private Object _className;
 	private Object _container;
 	private Object _disablePortal;
+	private Object _id;
 	private Object _keepMounted;
 	private Object _modifiers;
 	private Object _placement;
@@ -21,7 +22,12 @@ public class PopperElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -32,6 +38,7 @@ public class PopperElement {
 		st.add("className", _className);
 		st.add("container", _container);
 		st.add("disablePortal", _disablePortal);
+		st.add("id", _id);
 		st.add("keepMounted", _keepMounted);
 		st.add("modifiers", _modifiers);
 		st.add("placement", _placement);
@@ -127,6 +134,28 @@ public class PopperElement {
 
 	public PopperElement removeDisablePortal() {
 		this._disablePortal = null;
+		return this;
+	} 
+
+	public PopperElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public PopperElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -305,11 +334,12 @@ public class PopperElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PopperElement(anchorEl,className,container,disablePortal,keepMounted,modifiers,placement,popperOptions,popperRef,transition,children) ::= <<<Popper~if(anchorEl)~\n" + 
+	static final String st = "PopperElement(anchorEl,className,container,disablePortal,id,keepMounted,modifiers,placement,popperOptions,popperRef,transition,children) ::= <<<Popper~if(anchorEl)~\n" + 
 				"	anchorEl=~anchorEl~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(container)~\n" + 
 				"	container=~container~~endif~~if(disablePortal)~\n" + 
-				"	disablePortal~endif~~if(keepMounted)~\n" + 
+				"	disablePortal~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(keepMounted)~\n" + 
 				"	keepMounted~endif~~if(modifiers)~\n" + 
 				"	modifiers=~modifiers~~endif~\n" + 
 				"	open~if(placement)~\n" + 

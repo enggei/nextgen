@@ -295,20 +295,66 @@ public class SwingUtil {
     }
 
     public static void showInputDialog(String message, Component owner, Dimension dimension, String startValue, Consumer<String> onConfirm) {
+
         final RSyntaxTextArea rSyntaxTextArea = newRSyntaxTextArea();
         rSyntaxTextArea.setText(startValue == null ? "" : startValue);
-        final JPanel inputPanel = new JPanel(new BorderLayout());
-        inputPanel.add(new org.fife.ui.rtextarea.RTextScrollPane(rSyntaxTextArea), BorderLayout.CENTER);
-        inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-        inputPanel.setPreferredSize(dimension);
-        SwingUtil.showDialog(inputPanel, owner, message, new SwingUtil.ConfirmAction() {
+
+        final JPanel content = new JPanel(new BorderLayout());
+        content.add(new org.fife.ui.rtextarea.RTextScrollPane(rSyntaxTextArea), BorderLayout.CENTER);
+        content.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        content.setPreferredSize(dimension);
+
+        final JDialog dialog = new JDialog(SwingUtil.getFrame(owner), message, true);
+        dialog.add(content, BorderLayout.CENTER);
+        final JPanel commandPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+        final ConfirmAction onSave = new ConfirmAction() {
             @Override
             public void verifyAndCommit() throws Exception {
                 final String s = rSyntaxTextArea.getText().trim();
                 if (s.trim().length() == 0) return;
                 onConfirm.accept(s.trim());
             }
+        };
+
+        rSyntaxTextArea.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.isControlDown() && KeyEvent.VK_S == e.getKeyCode()) {
+                    try {
+                        onSave.verifyAndCommit();
+                        dialog.dispose();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
         });
+        JButton btnSave;
+        commandPanel.add(btnSave = new JButton(new AbstractAction(onSave.getConfirmTitle()) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    onSave.verifyAndCommit();
+                    dialog.dispose();
+                } catch (Exception e1) {
+                    SwingUtil.showExceptionNoStack(content, e1);
+                }
+            }
+        }));
+        dialog.getRootPane().setDefaultButton(btnSave);
+
+        commandPanel.add(new JButton(new AbstractAction(onSave.getCancelTitle()) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(dialog::dispose);
+            }
+        }));
+        dialog.add(commandPanel, BorderLayout.SOUTH);
+
+        showDialog(dialog, owner);
+
+
     }
 
     public static String showInputDialog(String message, Component owner, String defaultValue) {

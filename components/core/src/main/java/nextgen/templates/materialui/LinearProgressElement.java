@@ -8,6 +8,7 @@ public class LinearProgressElement {
 	private Object _classes;
 	private Object _className;
 	private Object _color;
+	private Object _id;
 	private Object _value;
 	private Object _valueBuffer;
 	private Object _variant;
@@ -16,7 +17,12 @@ public class LinearProgressElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -26,6 +32,7 @@ public class LinearProgressElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("color", _color);
+		st.add("id", _id);
 		st.add("value", _value);
 		st.add("valueBuffer", _valueBuffer);
 		st.add("variant", _variant);
@@ -95,6 +102,28 @@ public class LinearProgressElement {
 
 	public LinearProgressElement removeColor() {
 		this._color = null;
+		return this;
+	} 
+
+	public LinearProgressElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public LinearProgressElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -179,10 +208,11 @@ public class LinearProgressElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "LinearProgressElement(classes,className,color,value,valueBuffer,variant) ::= <<<LinearProgress~if(classes)~\n" + 
+	static final String st = "LinearProgressElement(classes,className,color,id,value,valueBuffer,variant) ::= <<<LinearProgress~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
-				"	color=\"~color~\"~endif~~if(value)~\n" + 
+				"	color=\"~color~\"~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(value)~\n" + 
 				"	value=~value~~endif~~if(valueBuffer)~\n" + 
 				"	valueBuffer=~valueBuffer~~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~ /> >>";

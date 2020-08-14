@@ -10,6 +10,7 @@ public class DividerElement {
 	private Object _className;
 	private Object _component;
 	private Object _flexItem;
+	private Object _id;
 	private Object _light;
 	private Object _orientation;
 	private Object _variant;
@@ -18,7 +19,12 @@ public class DividerElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -30,6 +36,7 @@ public class DividerElement {
 		st.add("className", _className);
 		st.add("component", _component);
 		st.add("flexItem", _flexItem);
+		st.add("id", _id);
 		st.add("light", _light);
 		st.add("orientation", _orientation);
 		st.add("variant", _variant);
@@ -146,6 +153,28 @@ public class DividerElement {
 		return this;
 	} 
 
+	public DividerElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public DividerElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public DividerElement setLight(Object value) {
 		this._light = value;
 		return this;
@@ -227,12 +256,13 @@ public class DividerElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "DividerElement(absolute,classes,className,component,flexItem,light,orientation,variant) ::= <<<Divider~if(absolute)~\n" + 
+	static final String st = "DividerElement(absolute,classes,className,component,flexItem,id,light,orientation,variant) ::= <<<Divider~if(absolute)~\n" + 
 				"	absolute~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(flexItem)~\n" + 
-				"	flexItem~endif~~if(light)~\n" + 
+				"	flexItem~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(light)~\n" + 
 				"	light~endif~~if(orientation)~\n" + 
 				"	orientation=\"~orientation~\"~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~ /> >>";

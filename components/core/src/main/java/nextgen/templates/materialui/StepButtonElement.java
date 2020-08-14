@@ -8,6 +8,7 @@ public class StepButtonElement {
 	private Object _classes;
 	private Object _className;
 	private Object _icon;
+	private Object _id;
 	private Object _optional;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
@@ -15,7 +16,12 @@ public class StepButtonElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -25,6 +31,7 @@ public class StepButtonElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("icon", _icon);
+		st.add("id", _id);
 		st.add("optional", _optional);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
@@ -96,6 +103,28 @@ public class StepButtonElement {
 		return this;
 	} 
 
+	public StepButtonElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public StepButtonElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public StepButtonElement setOptional(Object value) {
 		this._optional = value;
 		return this;
@@ -161,10 +190,11 @@ public class StepButtonElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "StepButtonElement(classes,className,icon,optional,children) ::= <<<StepButton~if(classes)~\n" + 
+	static final String st = "StepButtonElement(classes,className,icon,id,optional,children) ::= <<<StepButton~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(icon)~\n" + 
-				"	icon=~icon~~endif~~if(optional)~\n" + 
+				"	icon=~icon~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(optional)~\n" + 
 				"	optional=~optional~~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</StepButton>~else~ />~endif~ >>";

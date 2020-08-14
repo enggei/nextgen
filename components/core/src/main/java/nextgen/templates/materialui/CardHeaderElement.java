@@ -11,6 +11,7 @@ public class CardHeaderElement {
 	private Object _className;
 	private Object _component;
 	private Object _disableTypography;
+	private Object _id;
 	private Object _subheader;
 	private Object _subheaderTypographyProps;
 	private Object _title;
@@ -20,7 +21,12 @@ public class CardHeaderElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -33,6 +39,7 @@ public class CardHeaderElement {
 		st.add("className", _className);
 		st.add("component", _component);
 		st.add("disableTypography", _disableTypography);
+		st.add("id", _id);
 		st.add("subheader", _subheader);
 		st.add("subheaderTypographyProps", _subheaderTypographyProps);
 		st.add("title", _title);
@@ -172,6 +179,28 @@ public class CardHeaderElement {
 		return this;
 	} 
 
+	public CardHeaderElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public CardHeaderElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public CardHeaderElement setSubheader(Object value) {
 		this._subheader = value;
 		return this;
@@ -275,13 +304,14 @@ public class CardHeaderElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "CardHeaderElement(action,avatar,classes,className,component,disableTypography,subheader,subheaderTypographyProps,title,titleTypographyProps) ::= <<<CardHeader~if(action)~\n" + 
+	static final String st = "CardHeaderElement(action,avatar,classes,className,component,disableTypography,id,subheader,subheaderTypographyProps,title,titleTypographyProps) ::= <<<CardHeader~if(action)~\n" + 
 				"	action=~action~~endif~~if(avatar)~\n" + 
 				"	avatar=~avatar~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(disableTypography)~\n" + 
-				"	disableTypography~endif~~if(subheader)~\n" + 
+				"	disableTypography~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(subheader)~\n" + 
 				"	subheader=~subheader~~endif~~if(subheaderTypographyProps)~\n" + 
 				"	subheaderTypographyProps=~subheaderTypographyProps~~endif~~if(title)~\n" + 
 				"	title=~title~~endif~~if(titleTypographyProps)~\n" + 

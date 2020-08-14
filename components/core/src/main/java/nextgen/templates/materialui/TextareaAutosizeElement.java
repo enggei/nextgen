@@ -6,6 +6,7 @@ public class TextareaAutosizeElement {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _className;
+	private Object _id;
 	private Object _rows;
 	private Object _rowsMax;
 	private Object _rowsMin;
@@ -14,7 +15,12 @@ public class TextareaAutosizeElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -22,6 +28,7 @@ public class TextareaAutosizeElement {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("TextareaAutosizeElement");
 		st.add("className", _className);
+		st.add("id", _id);
 		st.add("rows", _rows);
 		st.add("rowsMax", _rowsMax);
 		st.add("rowsMin", _rowsMin);
@@ -47,6 +54,28 @@ public class TextareaAutosizeElement {
 
 	public TextareaAutosizeElement removeClassName() {
 		this._className = null;
+		return this;
+	} 
+
+	public TextareaAutosizeElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public TextareaAutosizeElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -131,8 +160,9 @@ public class TextareaAutosizeElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TextareaAutosizeElement(className,rows,rowsMax,rowsMin) ::= <<<TextareaAutosize~if(className)~\n" + 
-				"	className=~className~~endif~~if(rows)~\n" + 
+	static final String st = "TextareaAutosizeElement(className,id,rows,rowsMax,rowsMin) ::= <<<TextareaAutosize~if(className)~\n" + 
+				"	className=~className~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(rows)~\n" + 
 				"	rows=~rows~~endif~~if(rowsMax)~\n" + 
 				"	rowsMax=~rowsMax~~endif~~if(rowsMin)~\n" + 
 				"	rowsMin=~rowsMin~~endif~ /> >>";

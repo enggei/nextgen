@@ -10,6 +10,7 @@ public class ToggleButtonElement {
 	private Object _disabled;
 	private Object _disableFocusRipple;
 	private Object _disableRipple;
+	private Object _id;
 	private Object _selected;
 	private Object _value;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -18,7 +19,12 @@ public class ToggleButtonElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -30,6 +36,7 @@ public class ToggleButtonElement {
 		st.add("disabled", _disabled);
 		st.add("disableFocusRipple", _disableFocusRipple);
 		st.add("disableRipple", _disableRipple);
+		st.add("id", _id);
 		st.add("selected", _selected);
 		st.add("value", _value);
 		for (Object o : _children) st.add("children", o);
@@ -146,6 +153,28 @@ public class ToggleButtonElement {
 		return this;
 	} 
 
+	public ToggleButtonElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public ToggleButtonElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public ToggleButtonElement setSelected(Object value) {
 		this._selected = value;
 		return this;
@@ -233,12 +262,13 @@ public class ToggleButtonElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ToggleButtonElement(classes,className,disabled,disableFocusRipple,disableRipple,selected,value,children) ::= <<<ToggleButton~if(classes)~\n" + 
+	static final String st = "ToggleButtonElement(classes,className,disabled,disableFocusRipple,disableRipple,id,selected,value,children) ::= <<<ToggleButton~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(disabled)~\n" + 
 				"	disabled~endif~~if(disableFocusRipple)~\n" + 
 				"	disableFocusRipple~endif~~if(disableRipple)~\n" + 
-				"	disableRipple~endif~~if(selected)~\n" + 
+				"	disableRipple~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(selected)~\n" + 
 				"	selected~endif~\n" + 
 				"	value=~value~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 

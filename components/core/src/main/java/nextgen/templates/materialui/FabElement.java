@@ -13,6 +13,7 @@ public class FabElement {
 	private Object _disableFocusRipple;
 	private Object _disableRipple;
 	private Object _href;
+	private Object _id;
 	private Object _size;
 	private Object _variant;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -21,7 +22,12 @@ public class FabElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -36,6 +42,7 @@ public class FabElement {
 		st.add("disableFocusRipple", _disableFocusRipple);
 		st.add("disableRipple", _disableRipple);
 		st.add("href", _href);
+		st.add("id", _id);
 		st.add("size", _size);
 		st.add("variant", _variant);
 		for (Object o : _children) st.add("children", o);
@@ -218,6 +225,28 @@ public class FabElement {
 		return this;
 	} 
 
+	public FabElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public FabElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public FabElement setSize(Object value) {
 		this._size = value;
 		return this;
@@ -305,7 +334,7 @@ public class FabElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "FabElement(classes,className,color,component,disabled,disableFocusRipple,disableRipple,href,size,variant,children) ::= <<<Fab~if(classes)~\n" + 
+	static final String st = "FabElement(classes,className,color,component,disabled,disableFocusRipple,disableRipple,href,id,size,variant,children) ::= <<<Fab~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(component)~\n" + 
@@ -313,7 +342,8 @@ public class FabElement {
 				"	disabled~endif~~if(disableFocusRipple)~\n" + 
 				"	disableFocusRipple~endif~~if(disableRipple)~\n" + 
 				"	disableRipple~endif~~if(href)~\n" + 
-				"	href=\"~href~\"~endif~~if(size)~\n" + 
+				"	href=\"~href~\"~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(size)~\n" + 
 				"	size=\"~size~\"~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 

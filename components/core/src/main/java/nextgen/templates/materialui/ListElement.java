@@ -10,6 +10,7 @@ public class ListElement {
 	private Object _component;
 	private Object _dense;
 	private Object _disablePadding;
+	private Object _id;
 	private Object _subheader;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
@@ -17,7 +18,12 @@ public class ListElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -29,6 +35,7 @@ public class ListElement {
 		st.add("component", _component);
 		st.add("dense", _dense);
 		st.add("disablePadding", _disablePadding);
+		st.add("id", _id);
 		st.add("subheader", _subheader);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
@@ -144,6 +151,28 @@ public class ListElement {
 		return this;
 	} 
 
+	public ListElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public ListElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public ListElement setSubheader(Object value) {
 		this._subheader = value;
 		return this;
@@ -209,12 +238,13 @@ public class ListElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ListElement(classes,className,component,dense,disablePadding,subheader,children) ::= <<<List~if(classes)~\n" + 
+	static final String st = "ListElement(classes,className,component,dense,disablePadding,id,subheader,children) ::= <<<List~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(dense)~\n" + 
 				"	dense~endif~~if(disablePadding)~\n" + 
-				"	disablePadding~endif~~if(subheader)~\n" + 
+				"	disablePadding~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(subheader)~\n" + 
 				"	subheader=~subheader~~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</List>~else~ />~endif~ >>";

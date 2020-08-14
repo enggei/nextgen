@@ -18,6 +18,7 @@ public class ModalElement {
 	private Object _disableRestoreFocus;
 	private Object _disableScrollLock;
 	private Object _hideBackdrop;
+	private Object _id;
 	private Object _keepMounted;
 	private Object _onBackdropClick;
 	private Object _onClose;
@@ -29,7 +30,12 @@ public class ModalElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -49,6 +55,7 @@ public class ModalElement {
 		st.add("disableRestoreFocus", _disableRestoreFocus);
 		st.add("disableScrollLock", _disableScrollLock);
 		st.add("hideBackdrop", _hideBackdrop);
+		st.add("id", _id);
 		st.add("keepMounted", _keepMounted);
 		st.add("onBackdropClick", _onBackdropClick);
 		st.add("onClose", _onClose);
@@ -344,6 +351,28 @@ public class ModalElement {
 		return this;
 	} 
 
+	public ModalElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public ModalElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public ModalElement setKeepMounted(Object value) {
 		this._keepMounted = value;
 		return this;
@@ -497,7 +526,7 @@ public class ModalElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ModalElement(BackdropComponent,BackdropProps,className,closeAfterTransition,container,disableAutoFocus,disableBackdropClick,disableEnforceFocus,disableEscapeKeyDown,disablePortal,disableRestoreFocus,disableScrollLock,hideBackdrop,keepMounted,onBackdropClick,onClose,onEscapeKeyDown,onRendered,children) ::= <<<Modal~if(BackdropComponent)~\n" + 
+	static final String st = "ModalElement(BackdropComponent,BackdropProps,className,closeAfterTransition,container,disableAutoFocus,disableBackdropClick,disableEnforceFocus,disableEscapeKeyDown,disablePortal,disableRestoreFocus,disableScrollLock,hideBackdrop,id,keepMounted,onBackdropClick,onClose,onEscapeKeyDown,onRendered,children) ::= <<<Modal~if(BackdropComponent)~\n" + 
 				"	BackdropComponent=~BackdropComponent~~endif~~if(BackdropProps)~\n" + 
 				"	BackdropProps=~BackdropProps~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(closeAfterTransition)~\n" + 
@@ -510,7 +539,8 @@ public class ModalElement {
 				"	disablePortal~endif~~if(disableRestoreFocus)~\n" + 
 				"	disableRestoreFocus~endif~~if(disableScrollLock)~\n" + 
 				"	disableScrollLock~endif~~if(hideBackdrop)~\n" + 
-				"	hideBackdrop~endif~~if(keepMounted)~\n" + 
+				"	hideBackdrop~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(keepMounted)~\n" + 
 				"	keepMounted~endif~~if(onBackdropClick)~\n" + 
 				"	onBackdropClick=~onBackdropClick~~endif~~if(onClose)~\n" + 
 				"	onClose=~onClose~~endif~~if(onEscapeKeyDown)~\n" + 

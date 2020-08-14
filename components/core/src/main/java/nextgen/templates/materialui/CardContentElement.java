@@ -8,13 +8,19 @@ public class CardContentElement {
 	private Object _classes;
 	private Object _className;
 	private Object _component;
+	private Object _id;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
 	CardContentElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -24,6 +30,7 @@ public class CardContentElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("component", _component);
+		st.add("id", _id);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
 	}
@@ -94,6 +101,28 @@ public class CardContentElement {
 		return this;
 	} 
 
+	public CardContentElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public CardContentElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public CardContentElement addChildren(Object value) {
 		this._children.add(value);
 		return this;
@@ -137,10 +166,11 @@ public class CardContentElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "CardContentElement(classes,className,component,children) ::= <<<CardContent~if(classes)~\n" + 
+	static final String st = "CardContentElement(classes,className,component,id,children) ::= <<<CardContent~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
-				"	component=~component~~endif~~if(children)~>\n" + 
+				"	component=~component~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</CardContent>~else~ />~endif~ >>";
 }  

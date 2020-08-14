@@ -11,7 +11,12 @@ public class Superagent {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -134,16 +139,7 @@ public class Superagent {
 				"\n" + 
 				"~agentDeclarations:{it|~it.declaration~};separator=\"\\n\"~\n" + 
 				"\n" + 
-				"const Auth = { \n" + 
-				"	current: () => requests.get('/user'),\n" + 
-				"	login: (username, password) => requests.post('/login', { username, password }),\n" + 
-				"	save: (user) => requests.put('/user', { user })\n" + 
-				"}\n" + 
-				"\n" + 
 				"export default {\n" + 
-				"	Auth~if(agentDeclarations)~,\n" + 
-				"	\n" + 
-				"	~agentDeclarations:{it|~it.name~};separator=\",\\n\"~~endif~\n" + 
-				"	\n" + 
+				"	~agentDeclarations:{it|~it.name~};separator=\",\\n\"~\n" + 
 				"}; >>";
 }  

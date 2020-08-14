@@ -12,6 +12,7 @@ public class TabsElement {
 	private Object _classes;
 	private Object _className;
 	private Object _component;
+	private Object _id;
 	private Object _indicatorColor;
 	private Object _onChange;
 	private Object _orientation;
@@ -29,7 +30,12 @@ public class TabsElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -43,6 +49,7 @@ public class TabsElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("component", _component);
+		st.add("id", _id);
 		st.add("indicatorColor", _indicatorColor);
 		st.add("onChange", _onChange);
 		st.add("orientation", _orientation);
@@ -209,6 +216,28 @@ public class TabsElement {
 
 	public TabsElement removeComponent() {
 		this._component = null;
+		return this;
+	} 
+
+	public TabsElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public TabsElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -497,14 +526,15 @@ public class TabsElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TabsElement(action,ariaLabel,ariaLabelledby,centered,classes,className,component,indicatorColor,onChange,orientation,ScrollButtonComponent,scrollButtons,selectionFollowsFocus,TabIndicatorProps,TabScrollButtonProps,textColor,value,variant,children) ::= <<<Tabs~if(action)~\n" + 
+	static final String st = "TabsElement(action,ariaLabel,ariaLabelledby,centered,classes,className,component,id,indicatorColor,onChange,orientation,ScrollButtonComponent,scrollButtons,selectionFollowsFocus,TabIndicatorProps,TabScrollButtonProps,textColor,value,variant,children) ::= <<<Tabs~if(action)~\n" + 
 				"	action=~action~~endif~~if(ariaLabel)~\n" + 
 				"	ariaLabel=\"~ariaLabel~\"~endif~~if(ariaLabelledby)~\n" + 
 				"	ariaLabelledby=\"~ariaLabelledby~\"~endif~~if(centered)~\n" + 
 				"	centered~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
-				"	component=~component~~endif~~if(indicatorColor)~\n" + 
+				"	component=~component~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(indicatorColor)~\n" + 
 				"	indicatorColor=\"~indicatorColor~\"~endif~~if(onChange)~\n" + 
 				"	onChange=~onChange~~endif~~if(orientation)~\n" + 
 				"	orientation=\"~orientation~\"~endif~~if(ScrollButtonComponent)~\n" + 

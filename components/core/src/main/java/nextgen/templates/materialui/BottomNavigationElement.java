@@ -8,6 +8,7 @@ public class BottomNavigationElement {
 	private Object _classes;
 	private Object _className;
 	private Object _component;
+	private Object _id;
 	private Object _onChange;
 	private Object _showLabels;
 	private Object _value;
@@ -17,7 +18,12 @@ public class BottomNavigationElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -27,6 +33,7 @@ public class BottomNavigationElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("component", _component);
+		st.add("id", _id);
 		st.add("onChange", _onChange);
 		st.add("showLabels", _showLabels);
 		st.add("value", _value);
@@ -97,6 +104,28 @@ public class BottomNavigationElement {
 
 	public BottomNavigationElement removeComponent() {
 		this._component = null;
+		return this;
+	} 
+
+	public BottomNavigationElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public BottomNavigationElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -209,10 +238,11 @@ public class BottomNavigationElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "BottomNavigationElement(classes,className,component,onChange,showLabels,value,children) ::= <<<BottomNavigation~if(classes)~\n" + 
+	static final String st = "BottomNavigationElement(classes,className,component,id,onChange,showLabels,value,children) ::= <<<BottomNavigation~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
-				"	component=~component~~endif~~if(onChange)~\n" + 
+				"	component=~component~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(onChange)~\n" + 
 				"	onChange=~onChange~~endif~~if(showLabels)~\n" + 
 				"	showLabels~endif~~if(value)~\n" + 
 				"	value=~value~~endif~~if(children)~>\n" + 

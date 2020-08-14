@@ -11,6 +11,7 @@ public class ListSubheaderElement {
 	private Object _component;
 	private Object _disableGutters;
 	private Object _disableSticky;
+	private Object _id;
 	private Object _inset;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
@@ -18,7 +19,12 @@ public class ListSubheaderElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -31,6 +37,7 @@ public class ListSubheaderElement {
 		st.add("component", _component);
 		st.add("disableGutters", _disableGutters);
 		st.add("disableSticky", _disableSticky);
+		st.add("id", _id);
 		st.add("inset", _inset);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
@@ -168,6 +175,28 @@ public class ListSubheaderElement {
 		return this;
 	} 
 
+	public ListSubheaderElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public ListSubheaderElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public ListSubheaderElement setInset(Object value) {
 		this._inset = value;
 		return this;
@@ -233,13 +262,14 @@ public class ListSubheaderElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ListSubheaderElement(classes,className,color,component,disableGutters,disableSticky,inset,children) ::= <<<ListSubheader~if(classes)~\n" + 
+	static final String st = "ListSubheaderElement(classes,className,color,component,disableGutters,disableSticky,id,inset,children) ::= <<<ListSubheader~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(disableGutters)~\n" + 
 				"	disableGutters~endif~~if(disableSticky)~\n" + 
-				"	disableSticky~endif~~if(inset)~\n" + 
+				"	disableSticky~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(inset)~\n" + 
 				"	inset~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</ListSubheader>~else~ />~endif~ >>";

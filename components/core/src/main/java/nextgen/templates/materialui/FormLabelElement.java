@@ -13,6 +13,7 @@ public class FormLabelElement {
 	private Object _error;
 	private Object _filled;
 	private Object _focused;
+	private Object _id;
 	private Object _required;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
@@ -20,7 +21,12 @@ public class FormLabelElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -35,6 +41,7 @@ public class FormLabelElement {
 		st.add("error", _error);
 		st.add("filled", _filled);
 		st.add("focused", _focused);
+		st.add("id", _id);
 		st.add("required", _required);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
@@ -216,6 +223,28 @@ public class FormLabelElement {
 		return this;
 	} 
 
+	public FormLabelElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public FormLabelElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public FormLabelElement setRequired(Object value) {
 		this._required = value;
 		return this;
@@ -281,7 +310,7 @@ public class FormLabelElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "FormLabelElement(classes,className,color,component,disabled,error,filled,focused,required,children) ::= <<<FormLabel~if(classes)~\n" + 
+	static final String st = "FormLabelElement(classes,className,color,component,disabled,error,filled,focused,id,required,children) ::= <<<FormLabel~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(component)~\n" + 
@@ -289,7 +318,8 @@ public class FormLabelElement {
 				"	disabled~endif~~if(error)~\n" + 
 				"	error~endif~~if(filled)~\n" + 
 				"	filled~endif~~if(focused)~\n" + 
-				"	focused~endif~~if(required)~\n" + 
+				"	focused~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(required)~\n" + 
 				"	required~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</FormLabel>~else~ />~endif~ >>";

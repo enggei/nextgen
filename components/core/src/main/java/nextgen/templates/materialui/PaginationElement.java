@@ -15,6 +15,7 @@ public class PaginationElement {
 	private Object _getItemAriaLabel;
 	private Object _hideNextButton;
 	private Object _hidePrevButton;
+	private Object _id;
 	private Object _onChange;
 	private Object _page;
 	private Object _renderItem;
@@ -29,7 +30,12 @@ public class PaginationElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -46,6 +52,7 @@ public class PaginationElement {
 		st.add("getItemAriaLabel", _getItemAriaLabel);
 		st.add("hideNextButton", _hideNextButton);
 		st.add("hidePrevButton", _hidePrevButton);
+		st.add("id", _id);
 		st.add("onChange", _onChange);
 		st.add("page", _page);
 		st.add("renderItem", _renderItem);
@@ -278,6 +285,28 @@ public class PaginationElement {
 		return this;
 	} 
 
+	public PaginationElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public PaginationElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public PaginationElement setOnChange(Object value) {
 		this._onChange = value;
 		return this;
@@ -491,7 +520,7 @@ public class PaginationElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PaginationElement(boundaryCount,classes,className,color,count,defaultPage,disabled,getItemAriaLabel,hideNextButton,hidePrevButton,onChange,page,renderItem,shape,showFirstButton,showLastButton,siblingCount,size,variant) ::= <<<Pagination~if(boundaryCount)~\n" + 
+	static final String st = "PaginationElement(boundaryCount,classes,className,color,count,defaultPage,disabled,getItemAriaLabel,hideNextButton,hidePrevButton,id,onChange,page,renderItem,shape,showFirstButton,showLastButton,siblingCount,size,variant) ::= <<<Pagination~if(boundaryCount)~\n" + 
 				"	boundaryCount=~boundaryCount~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
@@ -501,7 +530,8 @@ public class PaginationElement {
 				"	disabled~endif~~if(getItemAriaLabel)~\n" + 
 				"	getItemAriaLabel=~getItemAriaLabel~~endif~~if(hideNextButton)~\n" + 
 				"	hideNextButton~endif~~if(hidePrevButton)~\n" + 
-				"	hidePrevButton~endif~~if(onChange)~\n" + 
+				"	hidePrevButton~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(onChange)~\n" + 
 				"	onChange=~onChange~~endif~~if(page)~\n" + 
 				"	page=~page~~endif~~if(renderItem)~\n" + 
 				"	renderItem=~renderItem~~endif~~if(shape)~\n" + 

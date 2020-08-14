@@ -10,6 +10,8 @@ public class MenuElement {
 	private Object _classes;
 	private Object _className;
 	private Object _disableAutoFocusItem;
+	private Object _id;
+	private Object _keepMounted;
 	private Object _MenuListProps;
 	private Object _onClose;
 	private Object _onEnter;
@@ -18,6 +20,7 @@ public class MenuElement {
 	private Object _onExit;
 	private Object _onExited;
 	private Object _onExiting;
+	private Object _open;
 	private Object _PopoverClasses;
 	private Object _transitionDuration;
 	private Object _variant;
@@ -27,7 +30,12 @@ public class MenuElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -39,6 +47,8 @@ public class MenuElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("disableAutoFocusItem", _disableAutoFocusItem);
+		st.add("id", _id);
+		st.add("keepMounted", _keepMounted);
 		st.add("MenuListProps", _MenuListProps);
 		st.add("onClose", _onClose);
 		st.add("onEnter", _onEnter);
@@ -47,6 +57,7 @@ public class MenuElement {
 		st.add("onExit", _onExit);
 		st.add("onExited", _onExited);
 		st.add("onExiting", _onExiting);
+		st.add("open", _open);
 		st.add("PopoverClasses", _PopoverClasses);
 		st.add("transitionDuration", _transitionDuration);
 		st.add("variant", _variant);
@@ -161,6 +172,50 @@ public class MenuElement {
 
 	public MenuElement removeDisableAutoFocusItem() {
 		this._disableAutoFocusItem = null;
+		return this;
+	} 
+
+	public MenuElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public MenuElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
+	public MenuElement setKeepMounted(Object value) {
+		this._keepMounted = value;
+		return this;
+	}
+
+	public Object getKeepMounted() {
+		return this._keepMounted;
+	}
+
+	public Object getKeepMounted(Object defaultValue) {
+		return this._keepMounted == null ? defaultValue : this._keepMounted;
+	}
+
+	public boolean hasKeepMounted() {
+		return this._keepMounted != null;
+	}
+
+	public MenuElement removeKeepMounted() {
+		this._keepMounted = null;
 		return this;
 	} 
 
@@ -340,6 +395,28 @@ public class MenuElement {
 		return this;
 	} 
 
+	public MenuElement setOpen(Object value) {
+		this._open = value;
+		return this;
+	}
+
+	public Object getOpen() {
+		return this._open;
+	}
+
+	public Object getOpen(Object defaultValue) {
+		return this._open == null ? defaultValue : this._open;
+	}
+
+	public boolean hasOpen() {
+		return this._open != null;
+	}
+
+	public MenuElement removeOpen() {
+		this._open = null;
+		return this;
+	} 
+
 	public MenuElement setPopoverClasses(Object value) {
 		this._PopoverClasses = value;
 		return this;
@@ -449,12 +526,14 @@ public class MenuElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MenuElement(anchorEl,autoFocus,classes,className,disableAutoFocusItem,MenuListProps,onClose,onEnter,onEntered,onEntering,onExit,onExited,onExiting,PopoverClasses,transitionDuration,variant,children) ::= <<<Menu~if(anchorEl)~\n" + 
+	static final String st = "MenuElement(anchorEl,autoFocus,classes,className,disableAutoFocusItem,id,keepMounted,MenuListProps,onClose,onEnter,onEntered,onEntering,onExit,onExited,onExiting,open,PopoverClasses,transitionDuration,variant,children) ::= <<<Menu~if(anchorEl)~\n" + 
 				"	anchorEl=~anchorEl~~endif~~if(autoFocus)~\n" + 
 				"	autoFocus~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(disableAutoFocusItem)~\n" + 
-				"	disableAutoFocusItem~endif~~if(MenuListProps)~\n" + 
+				"	disableAutoFocusItem~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(keepMounted)~\n" + 
+				"	keepMounted~endif~~if(MenuListProps)~\n" + 
 				"	MenuListProps=~MenuListProps~~endif~~if(onClose)~\n" + 
 				"	onClose=~onClose~~endif~~if(onEnter)~\n" + 
 				"	onEnter=~onEnter~~endif~~if(onEntered)~\n" + 
@@ -462,8 +541,8 @@ public class MenuElement {
 				"	onEntering=~onEntering~~endif~~if(onExit)~\n" + 
 				"	onExit=~onExit~~endif~~if(onExited)~\n" + 
 				"	onExited=~onExited~~endif~~if(onExiting)~\n" + 
-				"	onExiting=~onExiting~~endif~\n" + 
-				"	open~if(PopoverClasses)~\n" + 
+				"	onExiting=~onExiting~~endif~~if(open)~\n" + 
+				"	open=~open~~endif~~if(PopoverClasses)~\n" + 
 				"	PopoverClasses=~PopoverClasses~~endif~~if(transitionDuration)~\n" + 
 				"	transitionDuration=\"~transitionDuration~\"~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~if(children)~>\n" + 

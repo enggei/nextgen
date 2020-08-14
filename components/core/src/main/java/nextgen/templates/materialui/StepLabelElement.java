@@ -10,6 +10,7 @@ public class StepLabelElement {
 	private Object _disabled;
 	private Object _error;
 	private Object _icon;
+	private Object _id;
 	private Object _optional;
 	private Object _StepIconComponent;
 	private Object _StepIconProps;
@@ -19,7 +20,12 @@ public class StepLabelElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -31,6 +37,7 @@ public class StepLabelElement {
 		st.add("disabled", _disabled);
 		st.add("error", _error);
 		st.add("icon", _icon);
+		st.add("id", _id);
 		st.add("optional", _optional);
 		st.add("StepIconComponent", _StepIconComponent);
 		st.add("StepIconProps", _StepIconProps);
@@ -148,6 +155,28 @@ public class StepLabelElement {
 		return this;
 	} 
 
+	public StepLabelElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public StepLabelElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public StepLabelElement setOptional(Object value) {
 		this._optional = value;
 		return this;
@@ -257,12 +286,13 @@ public class StepLabelElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "StepLabelElement(classes,className,disabled,error,icon,optional,StepIconComponent,StepIconProps,children) ::= <<<StepLabel~if(classes)~\n" + 
+	static final String st = "StepLabelElement(classes,className,disabled,error,icon,id,optional,StepIconComponent,StepIconProps,children) ::= <<<StepLabel~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(disabled)~\n" + 
 				"	disabled~endif~~if(error)~\n" + 
 				"	error~endif~~if(icon)~\n" + 
-				"	icon=~icon~~endif~~if(optional)~\n" + 
+				"	icon=~icon~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(optional)~\n" + 
 				"	optional=~optional~~endif~~if(StepIconComponent)~\n" + 
 				"	StepIconComponent=~StepIconComponent~~endif~~if(StepIconProps)~\n" + 
 				"	StepIconProps=~StepIconProps~~endif~~if(children)~>\n" + 

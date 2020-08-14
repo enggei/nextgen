@@ -9,6 +9,7 @@ public class ToolbarElement {
 	private Object _className;
 	private Object _component;
 	private Object _disableGutters;
+	private Object _id;
 	private Object _variant;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
@@ -16,7 +17,12 @@ public class ToolbarElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -27,6 +33,7 @@ public class ToolbarElement {
 		st.add("className", _className);
 		st.add("component", _component);
 		st.add("disableGutters", _disableGutters);
+		st.add("id", _id);
 		st.add("variant", _variant);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
@@ -120,6 +127,28 @@ public class ToolbarElement {
 		return this;
 	} 
 
+	public ToolbarElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public ToolbarElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public ToolbarElement setVariant(Object value) {
 		this._variant = value;
 		return this;
@@ -185,11 +214,12 @@ public class ToolbarElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ToolbarElement(classes,className,component,disableGutters,variant,children) ::= <<<Toolbar~if(classes)~\n" + 
+	static final String st = "ToolbarElement(classes,className,component,disableGutters,id,variant,children) ::= <<<Toolbar~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(disableGutters)~\n" + 
-				"	disableGutters~endif~~if(variant)~\n" + 
+				"	disableGutters~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Toolbar>~else~ />~endif~ >>";

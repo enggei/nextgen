@@ -12,6 +12,7 @@ public class GridElement {
 	private Object _component;
 	private Object _container;
 	private Object _direction;
+	private Object _id;
 	private Object _item;
 	private Object _justify;
 	private Object _lg;
@@ -28,7 +29,12 @@ public class GridElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -42,6 +48,7 @@ public class GridElement {
 		st.add("component", _component);
 		st.add("container", _container);
 		st.add("direction", _direction);
+		st.add("id", _id);
 		st.add("item", _item);
 		st.add("justify", _justify);
 		st.add("lg", _lg);
@@ -207,6 +214,28 @@ public class GridElement {
 
 	public GridElement removeDirection() {
 		this._direction = null;
+		return this;
+	} 
+
+	public GridElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public GridElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -473,14 +502,15 @@ public class GridElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "GridElement(alignContent,alignItems,classes,className,component,container,direction,item,justify,lg,md,sm,spacing,wrap,xl,xs,zeroMinWidth,children) ::= <<<Grid~if(alignContent)~\n" + 
+	static final String st = "GridElement(alignContent,alignItems,classes,className,component,container,direction,id,item,justify,lg,md,sm,spacing,wrap,xl,xs,zeroMinWidth,children) ::= <<<Grid~if(alignContent)~\n" + 
 				"	alignContent=\"~alignContent~\"~endif~~if(alignItems)~\n" + 
 				"	alignItems=\"~alignItems~\"~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(container)~\n" + 
 				"	container~endif~~if(direction)~\n" + 
-				"	direction=\"~direction~\"~endif~~if(item)~\n" + 
+				"	direction=\"~direction~\"~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(item)~\n" + 
 				"	item~endif~~if(justify)~\n" + 
 				"	justify=\"~justify~\"~endif~~if(lg)~\n" + 
 				"	lg=\"~lg~\"~endif~~if(md)~\n" + 

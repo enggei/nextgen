@@ -12,6 +12,7 @@ public class SpeedDialElement {
 	private Object _FabProps;
 	private Object _hidden;
 	private Object _icon;
+	private Object _id;
 	private Object _onClose;
 	private Object _onOpen;
 	private Object _openIcon;
@@ -24,7 +25,12 @@ public class SpeedDialElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -38,6 +44,7 @@ public class SpeedDialElement {
 		st.add("FabProps", _FabProps);
 		st.add("hidden", _hidden);
 		st.add("icon", _icon);
+		st.add("id", _id);
 		st.add("onClose", _onClose);
 		st.add("onOpen", _onOpen);
 		st.add("openIcon", _openIcon);
@@ -199,6 +206,28 @@ public class SpeedDialElement {
 
 	public SpeedDialElement removeIcon() {
 		this._icon = null;
+		return this;
+	} 
+
+	public SpeedDialElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public SpeedDialElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -377,14 +406,15 @@ public class SpeedDialElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SpeedDialElement(ariaLabel,classes,className,direction,FabProps,hidden,icon,onClose,onOpen,openIcon,TransitionComponent,transitionDuration,TransitionProps,children) ::= <<<SpeedDial\n" + 
+	static final String st = "SpeedDialElement(ariaLabel,classes,className,direction,FabProps,hidden,icon,id,onClose,onOpen,openIcon,TransitionComponent,transitionDuration,TransitionProps,children) ::= <<<SpeedDial\n" + 
 				"	ariaLabel=\"~ariaLabel~\"~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(direction)~\n" + 
 				"	direction=\"~direction~\"~endif~~if(FabProps)~\n" + 
 				"	FabProps=~FabProps~~endif~~if(hidden)~\n" + 
 				"	hidden~endif~~if(icon)~\n" + 
-				"	icon=~icon~~endif~~if(onClose)~\n" + 
+				"	icon=~icon~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(onClose)~\n" + 
 				"	onClose=~onClose~~endif~~if(onOpen)~\n" + 
 				"	onOpen=~onOpen~~endif~\n" + 
 				"	open~if(openIcon)~\n" + 

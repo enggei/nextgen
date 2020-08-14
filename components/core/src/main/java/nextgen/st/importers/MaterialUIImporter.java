@@ -1,5 +1,8 @@
 package nextgen.st.importers;
 
+import io.vertx.core.json.JsonObject;
+import nextgen.st.STGenerator;
+import nextgen.st.domain.STGParseResult;
 import nextgen.utils.FileUtil;
 import nextgen.utils.StringUtil;
 import com.github.kklisura.cdt.launch.ChromeLauncher;
@@ -23,6 +26,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import static nextgen.st.STGenerator.toSTGroup;
+
 public class MaterialUIImporter extends BaseImporter {
 
     public static void main(String[] args) throws IOException {
@@ -36,11 +41,12 @@ public class MaterialUIImporter extends BaseImporter {
         final String[] components = getApiUrls();
         final Set<File> htmlFiles = tryToDownloadApiPages(downloadDir, components);
         final List<ApiComponent> apiComponents = parseHtmlFiles(htmlFiles);
+        apiComponents.addAll(manualComponents());
 
         final String groupName = "MaterialUI";
         final File stGroupFile = new File(templatesDir, groupName + ".json");
         final STGroupModel stGroupModel = stGroupFile.exists()
-                ? STJsonFactory.newSTGroupModel(stGroupFile)
+                ? STJsonFactory.newSTGroupModel(stGroupFile).setName(groupName).setDelimiter("~")
                 : STJsonFactory.newSTGroupModel().setName(groupName).setDelimiter("~");
 
         for (ApiComponent apiComponent : apiComponents) {
@@ -50,6 +56,29 @@ public class MaterialUIImporter extends BaseImporter {
         }
 
         FileUtil.write(stGroupModel.getJsonObject().encodePrettily(), stGroupFile);
+
+        STGroupModel generatorSTGroup = new STGroupModel(new JsonObject(STParser.read(new File("/home/goe/projects/nextgen/components/core/src/main/java/nextgen/st/StringTemplate.json"))));
+        new STGenerator(toSTGroup(generatorSTGroup)).generateSTGroup(stGroupModel, "nextgen.templates", "/home/goe/projects/nextgen/components/core/src/main/java");
+    }
+
+    private Set<ApiComponent> manualComponents() {
+        final Set<ApiComponent> set = new LinkedHashSet<>();
+
+        final ApiComponent box = new ApiComponent("Box");
+        box.importStatement = "import Box from '@material-ui/core/Box';";
+        box.apiElements.add(new ApiElement("mt", "string", null, "Box"));
+        box.canHaveChildrenElements = true;
+        set.add(box);
+
+        final ApiComponent lockOutlinedIcon = new ApiComponent("LockOutlinedIcon");
+        lockOutlinedIcon.importStatement = "import LockOutlinedIcon from '@material-ui/icons/LockOutlined';";
+        set.add(lockOutlinedIcon);
+
+        final ApiComponent menuIcon = new ApiComponent("MenuIcon");
+        menuIcon.importStatement = "import MenuIcon from '@material-ui/icons/Menu';";
+        set.add(menuIcon);
+
+        return set;
     }
 
     public static STTemplate getComponentTemplate(STGroupModel stGroupModel, ApiComponent apiComponent) {
@@ -263,8 +292,21 @@ public class MaterialUIImporter extends BaseImporter {
 
             // add some api elements missing in api
             apiElements.add(new ApiElement("className", "object", null, "component style"));
+            apiElements.add(new ApiElement("id", "string", null, "component id"));
 
             if (templateName.equals("Button")) apiElements.add(new ApiElement("type", "string", null, "button type"));
+            if (templateName.equals("IconButton")) {
+                apiElements.add(new ApiElement("onClick", "node", null, "on click"));
+            }
+
+            if (templateName.equals("Menu")) {
+                apiElements.add(new ApiElement("keepMounted", "bool", null, ""));
+                apiElements.add(new ApiElement("open", "node", null, ""));
+            }
+
+            if (templateName.equals("MenuItem")) {
+                apiElements.add(new ApiElement("onClick", "node", null, ""));
+            }
         }
 
         public String elementTemplateText() {

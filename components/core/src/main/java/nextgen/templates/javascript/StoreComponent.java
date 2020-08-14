@@ -5,50 +5,77 @@ public class StoreComponent {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Object _hasRouter;
 	private Object _name;
 	private Object _debug;
+	private Object _renderCondition;
+	private Object _renderTrue;
+	private Object _renderFalse;
 	private Object _renderElement;
-	private java.util.List<Object> _components = new java.util.ArrayList<>();
 	private java.util.List<Object> _stores = new java.util.ArrayList<>();
-	private java.util.List<Object> _decorators = new java.util.ArrayList<>();
 	private java.util.List<Object> _state = new java.util.ArrayList<>();
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _componentDidMountStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<Object> _renderStatements = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _imports = new java.util.ArrayList<>();
-	private java.util.List<java.util.Map<String, Object>> _events = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _const = new java.util.ArrayList<>();
-	private java.util.List<java.util.Map<String, Object>> _renderCondition = new java.util.ArrayList<>();
 
 	StoreComponent(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("StoreComponent");
+		st.add("hasRouter", _hasRouter);
 		st.add("name", _name);
 		st.add("debug", _debug);
+		st.add("renderCondition", _renderCondition);
+		st.add("renderTrue", _renderTrue);
+		st.add("renderFalse", _renderFalse);
 		st.add("renderElement", _renderElement);
-		for (Object o : _components) st.add("components", o);
 		for (Object o : _stores) st.add("stores", o);
-		for (Object o : _decorators) st.add("decorators", o);
 		for (Object o : _state) st.add("state", o);
 		for (Object o : _constructorStatements) st.add("constructorStatements", o);
 		for (Object o : _componentDidMountStatements) st.add("componentDidMountStatements", o);
 		for (Object o : _methods) st.add("methods", o);
 		for (Object o : _renderStatements) st.add("renderStatements", o);
 		for (java.util.Map<String, Object> map : _imports) st.addAggr("imports.{name,path}", map.get("name"), map.get("path"));
-		for (java.util.Map<String, Object> map : _events) st.addAggr("events.{methodName,declaration}", map.get("methodName"), map.get("declaration"));
 		for (java.util.Map<String, Object> map : _const) st.addAggr("const.{name,declaration}", map.get("name"), map.get("declaration"));
-		for (java.util.Map<String, Object> map : _renderCondition) st.addAggr("renderCondition.{condition,element}", map.get("condition"), map.get("element"));
 		return st.render().trim();
 	}
+
+	public StoreComponent setHasRouter(Object value) {
+		this._hasRouter = value;
+		return this;
+	}
+
+	public Object getHasRouter() {
+		return this._hasRouter;
+	}
+
+	public Object getHasRouter(Object defaultValue) {
+		return this._hasRouter == null ? defaultValue : this._hasRouter;
+	}
+
+	public boolean hasHasRouter() {
+		return this._hasRouter != null;
+	}
+
+	public StoreComponent removeHasRouter() {
+		this._hasRouter = null;
+		return this;
+	} 
 
 	public StoreComponent setName(Object value) {
 		this._name = value;
@@ -94,6 +121,72 @@ public class StoreComponent {
 		return this;
 	} 
 
+	public StoreComponent setRenderCondition(Object value) {
+		this._renderCondition = value;
+		return this;
+	}
+
+	public Object getRenderCondition() {
+		return this._renderCondition;
+	}
+
+	public Object getRenderCondition(Object defaultValue) {
+		return this._renderCondition == null ? defaultValue : this._renderCondition;
+	}
+
+	public boolean hasRenderCondition() {
+		return this._renderCondition != null;
+	}
+
+	public StoreComponent removeRenderCondition() {
+		this._renderCondition = null;
+		return this;
+	} 
+
+	public StoreComponent setRenderTrue(Object value) {
+		this._renderTrue = value;
+		return this;
+	}
+
+	public Object getRenderTrue() {
+		return this._renderTrue;
+	}
+
+	public Object getRenderTrue(Object defaultValue) {
+		return this._renderTrue == null ? defaultValue : this._renderTrue;
+	}
+
+	public boolean hasRenderTrue() {
+		return this._renderTrue != null;
+	}
+
+	public StoreComponent removeRenderTrue() {
+		this._renderTrue = null;
+		return this;
+	} 
+
+	public StoreComponent setRenderFalse(Object value) {
+		this._renderFalse = value;
+		return this;
+	}
+
+	public Object getRenderFalse() {
+		return this._renderFalse;
+	}
+
+	public Object getRenderFalse(Object defaultValue) {
+		return this._renderFalse == null ? defaultValue : this._renderFalse;
+	}
+
+	public boolean hasRenderFalse() {
+		return this._renderFalse != null;
+	}
+
+	public StoreComponent removeRenderFalse() {
+		this._renderFalse = null;
+		return this;
+	} 
+
 	public StoreComponent setRenderElement(Object value) {
 		this._renderElement = value;
 		return this;
@@ -114,35 +207,6 @@ public class StoreComponent {
 	public StoreComponent removeRenderElement() {
 		this._renderElement = null;
 		return this;
-	} 
-
-	public StoreComponent addComponents(Object value) {
-		this._components.add(value);
-		return this;
-	}
-
-	public StoreComponent setComponents(Object[] value) {
-		this._components.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public StoreComponent setComponents(java.util.Collection<Object> values) {
-		this._components.addAll(values);
-		return this;
-	}
-
-	public StoreComponent removeComponents(Object value) {
-		this._components.remove(value);
-		return this;
-	}
-
-	public StoreComponent removeComponents(int index) {
-		this._components.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getComponents() {
-		return this._components;
 	} 
 
 	public StoreComponent addStores(Object value) {
@@ -172,35 +236,6 @@ public class StoreComponent {
 
 	public java.util.List<Object> getStores() {
 		return this._stores;
-	} 
-
-	public StoreComponent addDecorators(Object value) {
-		this._decorators.add(value);
-		return this;
-	}
-
-	public StoreComponent setDecorators(Object[] value) {
-		this._decorators.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public StoreComponent setDecorators(java.util.Collection<Object> values) {
-		this._decorators.addAll(values);
-		return this;
-	}
-
-	public StoreComponent removeDecorators(Object value) {
-		this._decorators.remove(value);
-		return this;
-	}
-
-	public StoreComponent removeDecorators(int index) {
-		this._decorators.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getDecorators() {
-		return this._decorators;
 	} 
 
 	public StoreComponent addState(Object value) {
@@ -393,51 +428,6 @@ public class StoreComponent {
 
 	} 
 
-	public StoreComponent addEvents(Object _methodName, Object _declaration) {
-		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("methodName", _methodName);
-		map.put("declaration", _declaration);
-		this._events.add(map);
-		return this;
-	}
-
-	public java.util.List<java.util.Map<String, Object>> getEvents() {
-		return this._events;
-	}
-
-	public StoreComponent addEvents(StoreComponent_Events value) {
-		return addEvents(value._methodName, value._declaration);
-	}
-
-	public java.util.stream.Stream<StoreComponent_Events> streamEvents() {
-		return this._events.stream().map(StoreComponent_Events::new);
-	}
-
-	public static final class StoreComponent_Events {
-
-		Object _methodName;
-		Object _declaration;
-
-		public StoreComponent_Events(Object _methodName, Object _declaration) {
-			this._methodName = _methodName;
-			this._declaration = _declaration;
-		}
-
-		private StoreComponent_Events(java.util.Map<String, Object> map) {
-			this._methodName = (Object) map.get("methodName");
-			this._declaration = (Object) map.get("declaration");
-		}
-
-		public Object getMethodName() {
-			return this._methodName;
-		}
-
-		public Object getDeclaration() {
-			return this._declaration;
-		}
-
-	} 
-
 	public StoreComponent addConst(Object _name, Object _declaration) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("name", _name);
@@ -483,51 +473,6 @@ public class StoreComponent {
 
 	} 
 
-	public StoreComponent addRenderCondition(Object _condition, Object _element) {
-		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("condition", _condition);
-		map.put("element", _element);
-		this._renderCondition.add(map);
-		return this;
-	}
-
-	public java.util.List<java.util.Map<String, Object>> getRenderCondition() {
-		return this._renderCondition;
-	}
-
-	public StoreComponent addRenderCondition(StoreComponent_RenderCondition value) {
-		return addRenderCondition(value._condition, value._element);
-	}
-
-	public java.util.stream.Stream<StoreComponent_RenderCondition> streamRenderCondition() {
-		return this._renderCondition.stream().map(StoreComponent_RenderCondition::new);
-	}
-
-	public static final class StoreComponent_RenderCondition {
-
-		Object _condition;
-		Object _element;
-
-		public StoreComponent_RenderCondition(Object _condition, Object _element) {
-			this._condition = _condition;
-			this._element = _element;
-		}
-
-		private StoreComponent_RenderCondition(java.util.Map<String, Object> map) {
-			this._condition = (Object) map.get("condition");
-			this._element = (Object) map.get("element");
-		}
-
-		public Object getCondition() {
-			return this._condition;
-		}
-
-		public Object getElement() {
-			return this._element;
-		}
-
-	} 
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -541,14 +486,16 @@ public class StoreComponent {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "StoreComponent(imports,components,stores,decorators,name,debug,state,constructorStatements,events,componentDidMountStatements,methods,renderStatements,const,renderCondition,renderElement) ::= <<import React from 'react';\n" + 
+	static final String st = "StoreComponent(hasRouter,imports,stores,name,debug,state,constructorStatements,componentDidMountStatements,methods,renderStatements,const,renderCondition,renderTrue,renderFalse,renderElement) ::= <<import React from 'react';~if(hasRouter)~\n" + 
+				"import { withRouter } from 'react-router-dom';~endif~\n" + 
+				"\n" + 
 				"import { inject, observer } from 'mobx-react';\n" + 
 				"~imports:{it|import ~it.name~ from '~it.path~';};separator=\"\\n\"~\n" + 
-				"~components:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
+				"~if(hasRouter)~@withRouter\n" + 
+				"~endif~\n" + 
 				"@inject(~stores:{it|'~it~'};separator=\",\"~)\n" + 
 				"@observer\n" + 
-				"~decorators:{it|~it~};separator=\"\\n\"~\n" + 
 				"class ~name~ extends React.Component {\n" + 
 				"\n" + 
 				"	constructor(props) {\n" + 
@@ -562,7 +509,6 @@ public class StoreComponent {
 				"		}\n" + 
 				"~endif~\n" + 
 				"		~constructorStatements:{it|~it~};separator=\"\\n\"~\n" + 
-				"		~events:{it|this.~it.methodName~ = this.~it.methodName~.bind(this);};separator=\"\\n\"~\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	componentDidMount() {\n" + 
@@ -571,10 +517,6 @@ public class StoreComponent {
 				"~endif~\n" + 
 				"		~componentDidMountStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"	}\n" + 
-				"~if(events)~\n" + 
-				"\n" + 
-				"	~events:{it|~it.declaration~};separator=\"\\n\\n\"~\n" + 
-				"~endif~\n" + 
 				"~if(methods)~\n" + 
 				"\n" + 
 				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
@@ -588,14 +530,13 @@ public class StoreComponent {
 				"		~const:{it|const ~it.name~ = ~it.declaration~;};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"~if(renderCondition)~\n" + 
-				"		~renderCondition:{it|if (~it.condition~) \n" + 
-				"	return (\n" + 
-				"		~it.element~\n" + 
-				"	);};separator=\"\\n\\nelse \"~\n" + 
-				"	\n" + 
+				"		if(~renderCondition~)\n" + 
+				"			return ( \n" + 
+				"				~renderTrue~\n" + 
+				"			);\n" + 
 				"		else\n" + 
 				"			return (\n" + 
-				"				~renderElement~\n" + 
+				"				~renderFalse~\n" + 
 				"			);\n" + 
 				"~else~\n" + 
 				"		return (\n" + 
@@ -604,6 +545,5 @@ public class StoreComponent {
 				"~endif~\n" + 
 				"	}\n" + 
 				"}\n" + 
-				"\n" + 
 				"export default (~name~); >>";
 }  

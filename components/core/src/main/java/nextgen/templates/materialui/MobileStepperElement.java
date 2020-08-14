@@ -9,6 +9,7 @@ public class MobileStepperElement {
 	private Object _backButton;
 	private Object _classes;
 	private Object _className;
+	private Object _id;
 	private Object _LinearProgressProps;
 	private Object _nextButton;
 	private Object _position;
@@ -19,7 +20,12 @@ public class MobileStepperElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -30,6 +36,7 @@ public class MobileStepperElement {
 		st.add("backButton", _backButton);
 		st.add("classes", _classes);
 		st.add("className", _className);
+		st.add("id", _id);
 		st.add("LinearProgressProps", _LinearProgressProps);
 		st.add("nextButton", _nextButton);
 		st.add("position", _position);
@@ -123,6 +130,28 @@ public class MobileStepperElement {
 
 	public MobileStepperElement removeClassName() {
 		this._className = null;
+		return this;
+	} 
+
+	public MobileStepperElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public MobileStepperElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -251,11 +280,12 @@ public class MobileStepperElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MobileStepperElement(activeStep,backButton,classes,className,LinearProgressProps,nextButton,position,steps,variant) ::= <<<MobileStepper~if(activeStep)~\n" + 
+	static final String st = "MobileStepperElement(activeStep,backButton,classes,className,id,LinearProgressProps,nextButton,position,steps,variant) ::= <<<MobileStepper~if(activeStep)~\n" + 
 				"	activeStep=~activeStep~~endif~~if(backButton)~\n" + 
 				"	backButton=~backButton~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
-				"	className=~className~~endif~~if(LinearProgressProps)~\n" + 
+				"	className=~className~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(LinearProgressProps)~\n" + 
 				"	LinearProgressProps=~LinearProgressProps~~endif~~if(nextButton)~\n" + 
 				"	nextButton=~nextButton~~endif~~if(position)~\n" + 
 				"	position=\"~position~\"~endif~\n" + 

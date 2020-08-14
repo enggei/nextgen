@@ -11,13 +11,19 @@ public class TableSortLabelElement {
 	private Object _direction;
 	private Object _hideSortIcon;
 	private Object _IconComponent;
+	private Object _id;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
 	TableSortLabelElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -30,6 +36,7 @@ public class TableSortLabelElement {
 		st.add("direction", _direction);
 		st.add("hideSortIcon", _hideSortIcon);
 		st.add("IconComponent", _IconComponent);
+		st.add("id", _id);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
 	}
@@ -166,6 +173,28 @@ public class TableSortLabelElement {
 		return this;
 	} 
 
+	public TableSortLabelElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public TableSortLabelElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public TableSortLabelElement addChildren(Object value) {
 		this._children.add(value);
 		return this;
@@ -209,13 +238,14 @@ public class TableSortLabelElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TableSortLabelElement(active,classes,className,direction,hideSortIcon,IconComponent,children) ::= <<<TableSortLabel~if(active)~\n" + 
+	static final String st = "TableSortLabelElement(active,classes,className,direction,hideSortIcon,IconComponent,id,children) ::= <<<TableSortLabel~if(active)~\n" + 
 				"	active~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(direction)~\n" + 
 				"	direction=\"~direction~\"~endif~~if(hideSortIcon)~\n" + 
 				"	hideSortIcon~endif~~if(IconComponent)~\n" + 
-				"	IconComponent=~IconComponent~~endif~~if(children)~>\n" + 
+				"	IconComponent=~IconComponent~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</TableSortLabel>~else~ />~endif~ >>";
 }  

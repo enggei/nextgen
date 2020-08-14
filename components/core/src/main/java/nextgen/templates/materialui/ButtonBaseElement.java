@@ -15,6 +15,7 @@ public class ButtonBaseElement {
 	private Object _disableTouchRipple;
 	private Object _focusRipple;
 	private Object _focusVisibleClassName;
+	private Object _id;
 	private Object _onFocusVisible;
 	private Object _TouchRippleProps;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -23,7 +24,12 @@ public class ButtonBaseElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -40,6 +46,7 @@ public class ButtonBaseElement {
 		st.add("disableTouchRipple", _disableTouchRipple);
 		st.add("focusRipple", _focusRipple);
 		st.add("focusVisibleClassName", _focusVisibleClassName);
+		st.add("id", _id);
 		st.add("onFocusVisible", _onFocusVisible);
 		st.add("TouchRippleProps", _TouchRippleProps);
 		for (Object o : _children) st.add("children", o);
@@ -266,6 +273,28 @@ public class ButtonBaseElement {
 		return this;
 	} 
 
+	public ButtonBaseElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public ButtonBaseElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public ButtonBaseElement setOnFocusVisible(Object value) {
 		this._onFocusVisible = value;
 		return this;
@@ -353,7 +382,7 @@ public class ButtonBaseElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ButtonBaseElement(action,centerRipple,classes,className,component,disabled,disableRipple,disableTouchRipple,focusRipple,focusVisibleClassName,onFocusVisible,TouchRippleProps,children) ::= <<<ButtonBase~if(action)~\n" + 
+	static final String st = "ButtonBaseElement(action,centerRipple,classes,className,component,disabled,disableRipple,disableTouchRipple,focusRipple,focusVisibleClassName,id,onFocusVisible,TouchRippleProps,children) ::= <<<ButtonBase~if(action)~\n" + 
 				"	action=~action~~endif~~if(centerRipple)~\n" + 
 				"	centerRipple~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
@@ -363,7 +392,8 @@ public class ButtonBaseElement {
 				"	disableRipple~endif~~if(disableTouchRipple)~\n" + 
 				"	disableTouchRipple~endif~~if(focusRipple)~\n" + 
 				"	focusRipple~endif~~if(focusVisibleClassName)~\n" + 
-				"	focusVisibleClassName=\"~focusVisibleClassName~\"~endif~~if(onFocusVisible)~\n" + 
+				"	focusVisibleClassName=\"~focusVisibleClassName~\"~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(onFocusVisible)~\n" + 
 				"	onFocusVisible=~onFocusVisible~~endif~~if(TouchRippleProps)~\n" + 
 				"	TouchRippleProps=~TouchRippleProps~~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 

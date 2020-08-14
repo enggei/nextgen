@@ -9,6 +9,7 @@ public class LinkElement {
 	private Object _className;
 	private Object _color;
 	private Object _component;
+	private Object _id;
 	private Object _TypographyClasses;
 	private Object _underline;
 	private Object _variant;
@@ -18,7 +19,12 @@ public class LinkElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -29,6 +35,7 @@ public class LinkElement {
 		st.add("className", _className);
 		st.add("color", _color);
 		st.add("component", _component);
+		st.add("id", _id);
 		st.add("TypographyClasses", _TypographyClasses);
 		st.add("underline", _underline);
 		st.add("variant", _variant);
@@ -121,6 +128,28 @@ public class LinkElement {
 
 	public LinkElement removeComponent() {
 		this._component = null;
+		return this;
+	} 
+
+	public LinkElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public LinkElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -233,11 +262,12 @@ public class LinkElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "LinkElement(classes,className,color,component,TypographyClasses,underline,variant,children) ::= <<<Link~if(classes)~\n" + 
+	static final String st = "LinkElement(classes,className,color,component,id,TypographyClasses,underline,variant,children) ::= <<<Link~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(component)~\n" + 
-				"	component=~component~~endif~~if(TypographyClasses)~\n" + 
+				"	component=~component~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(TypographyClasses)~\n" + 
 				"	TypographyClasses=~TypographyClasses~~endif~~if(underline)~\n" + 
 				"	underline=\"~underline~\"~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~if(children)~>\n" + 

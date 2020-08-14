@@ -10,6 +10,7 @@ public class MenuListElement {
 	private Object _className;
 	private Object _disabledItemsFocusable;
 	private Object _disableListWrap;
+	private Object _id;
 	private Object _variant;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
@@ -17,7 +18,12 @@ public class MenuListElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -29,6 +35,7 @@ public class MenuListElement {
 		st.add("className", _className);
 		st.add("disabledItemsFocusable", _disabledItemsFocusable);
 		st.add("disableListWrap", _disableListWrap);
+		st.add("id", _id);
 		st.add("variant", _variant);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
@@ -144,6 +151,28 @@ public class MenuListElement {
 		return this;
 	} 
 
+	public MenuListElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public MenuListElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public MenuListElement setVariant(Object value) {
 		this._variant = value;
 		return this;
@@ -209,12 +238,13 @@ public class MenuListElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MenuListElement(autoFocus,autoFocusItem,className,disabledItemsFocusable,disableListWrap,variant,children) ::= <<<MenuList~if(autoFocus)~\n" + 
+	static final String st = "MenuListElement(autoFocus,autoFocusItem,className,disabledItemsFocusable,disableListWrap,id,variant,children) ::= <<<MenuList~if(autoFocus)~\n" + 
 				"	autoFocus~endif~~if(autoFocusItem)~\n" + 
 				"	autoFocusItem~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(disabledItemsFocusable)~\n" + 
 				"	disabledItemsFocusable~endif~~if(disableListWrap)~\n" + 
-				"	disableListWrap~endif~~if(variant)~\n" + 
+				"	disableListWrap~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</MenuList>~else~ />~endif~ >>";

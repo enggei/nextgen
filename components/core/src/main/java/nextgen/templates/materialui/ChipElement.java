@@ -14,6 +14,7 @@ public class ChipElement {
 	private Object _deleteIcon;
 	private Object _disabled;
 	private Object _icon;
+	private Object _id;
 	private Object _label;
 	private Object _onDelete;
 	private Object _size;
@@ -24,7 +25,12 @@ public class ChipElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -40,6 +46,7 @@ public class ChipElement {
 		st.add("deleteIcon", _deleteIcon);
 		st.add("disabled", _disabled);
 		st.add("icon", _icon);
+		st.add("id", _id);
 		st.add("label", _label);
 		st.add("onDelete", _onDelete);
 		st.add("size", _size);
@@ -246,6 +253,28 @@ public class ChipElement {
 		return this;
 	} 
 
+	public ChipElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public ChipElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public ChipElement setLabel(Object value) {
 		this._label = value;
 		return this;
@@ -377,7 +406,7 @@ public class ChipElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ChipElement(avatar,classes,className,clickable,color,component,deleteIcon,disabled,icon,label,onDelete,size,variant,children) ::= <<<Chip~if(avatar)~\n" + 
+	static final String st = "ChipElement(avatar,classes,className,clickable,color,component,deleteIcon,disabled,icon,id,label,onDelete,size,variant,children) ::= <<<Chip~if(avatar)~\n" + 
 				"	avatar=~avatar~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(clickable)~\n" + 
@@ -386,7 +415,8 @@ public class ChipElement {
 				"	component=~component~~endif~~if(deleteIcon)~\n" + 
 				"	deleteIcon=~deleteIcon~~endif~~if(disabled)~\n" + 
 				"	disabled~endif~~if(icon)~\n" + 
-				"	icon=~icon~~endif~~if(label)~\n" + 
+				"	icon=~icon~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(label)~\n" + 
 				"	label=~label~~endif~~if(onDelete)~\n" + 
 				"	onDelete=~onDelete~~endif~~if(size)~\n" + 
 				"	size=\"~size~\"~endif~~if(variant)~\n" + 

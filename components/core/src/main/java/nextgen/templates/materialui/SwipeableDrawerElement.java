@@ -10,6 +10,7 @@ public class SwipeableDrawerElement {
 	private Object _disableDiscovery;
 	private Object _disableSwipeToOpen;
 	private Object _hysteresis;
+	private Object _id;
 	private Object _minFlingVelocity;
 	private Object _onClose;
 	private Object _onOpen;
@@ -22,7 +23,12 @@ public class SwipeableDrawerElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -34,6 +40,7 @@ public class SwipeableDrawerElement {
 		st.add("disableDiscovery", _disableDiscovery);
 		st.add("disableSwipeToOpen", _disableSwipeToOpen);
 		st.add("hysteresis", _hysteresis);
+		st.add("id", _id);
 		st.add("minFlingVelocity", _minFlingVelocity);
 		st.add("onClose", _onClose);
 		st.add("onOpen", _onOpen);
@@ -151,6 +158,28 @@ public class SwipeableDrawerElement {
 
 	public SwipeableDrawerElement removeHysteresis() {
 		this._hysteresis = null;
+		return this;
+	} 
+
+	public SwipeableDrawerElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public SwipeableDrawerElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -329,12 +358,13 @@ public class SwipeableDrawerElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SwipeableDrawerElement(className,disableBackdropTransition,disableDiscovery,disableSwipeToOpen,hysteresis,minFlingVelocity,onClose,onOpen,SwipeAreaProps,swipeAreaWidth,transitionDuration,children) ::= <<<SwipeableDrawer~if(className)~\n" + 
+	static final String st = "SwipeableDrawerElement(className,disableBackdropTransition,disableDiscovery,disableSwipeToOpen,hysteresis,id,minFlingVelocity,onClose,onOpen,SwipeAreaProps,swipeAreaWidth,transitionDuration,children) ::= <<<SwipeableDrawer~if(className)~\n" + 
 				"	className=~className~~endif~~if(disableBackdropTransition)~\n" + 
 				"	disableBackdropTransition~endif~~if(disableDiscovery)~\n" + 
 				"	disableDiscovery~endif~~if(disableSwipeToOpen)~\n" + 
 				"	disableSwipeToOpen~endif~~if(hysteresis)~\n" + 
-				"	hysteresis=~hysteresis~~endif~~if(minFlingVelocity)~\n" + 
+				"	hysteresis=~hysteresis~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(minFlingVelocity)~\n" + 
 				"	minFlingVelocity=~minFlingVelocity~~endif~\n" + 
 				"	onClose=~onClose~\n" + 
 				"	onOpen=~onOpen~\n" + 

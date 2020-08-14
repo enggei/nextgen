@@ -13,6 +13,7 @@ public class SnackbarElement {
 	private Object _ClickAwayListenerProps;
 	private Object _ContentProps;
 	private Object _disableWindowBlurListener;
+	private Object _id;
 	private Object _key;
 	private Object _message;
 	private Object _onClose;
@@ -33,7 +34,12 @@ public class SnackbarElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -48,6 +54,7 @@ public class SnackbarElement {
 		st.add("ClickAwayListenerProps", _ClickAwayListenerProps);
 		st.add("ContentProps", _ContentProps);
 		st.add("disableWindowBlurListener", _disableWindowBlurListener);
+		st.add("id", _id);
 		st.add("key", _key);
 		st.add("message", _message);
 		st.add("onClose", _onClose);
@@ -239,6 +246,28 @@ public class SnackbarElement {
 
 	public SnackbarElement removeDisableWindowBlurListener() {
 		this._disableWindowBlurListener = null;
+		return this;
+	} 
+
+	public SnackbarElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public SnackbarElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -593,7 +622,7 @@ public class SnackbarElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SnackbarElement(action,anchorOrigin,autoHideDuration,classes,className,ClickAwayListenerProps,ContentProps,disableWindowBlurListener,key,message,onClose,onEnter,onEntered,onEntering,onExit,onExited,onExiting,open,resumeHideDuration,TransitionComponent,transitionDuration,TransitionProps,children) ::= <<<Snackbar~if(action)~\n" + 
+	static final String st = "SnackbarElement(action,anchorOrigin,autoHideDuration,classes,className,ClickAwayListenerProps,ContentProps,disableWindowBlurListener,id,key,message,onClose,onEnter,onEntered,onEntering,onExit,onExited,onExiting,open,resumeHideDuration,TransitionComponent,transitionDuration,TransitionProps,children) ::= <<<Snackbar~if(action)~\n" + 
 				"	action=~action~~endif~~if(anchorOrigin)~\n" + 
 				"	anchorOrigin=\"~anchorOrigin~\"~endif~~if(autoHideDuration)~\n" + 
 				"	autoHideDuration=~autoHideDuration~~endif~~if(classes)~\n" + 
@@ -601,7 +630,8 @@ public class SnackbarElement {
 				"	className=~className~~endif~~if(ClickAwayListenerProps)~\n" + 
 				"	ClickAwayListenerProps=~ClickAwayListenerProps~~endif~~if(ContentProps)~\n" + 
 				"	ContentProps=~ContentProps~~endif~~if(disableWindowBlurListener)~\n" + 
-				"	disableWindowBlurListener~endif~~if(key)~\n" + 
+				"	disableWindowBlurListener~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
 				"	key=~key~~endif~~if(message)~\n" + 
 				"	message=~message~~endif~~if(onClose)~\n" + 
 				"	onClose=~onClose~~endif~~if(onEnter)~\n" + 

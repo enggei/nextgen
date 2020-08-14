@@ -9,6 +9,7 @@ public class AvatarElement {
 	private Object _classes;
 	private Object _className;
 	private Object _component;
+	private Object _id;
 	private Object _imgProps;
 	private Object _sizes;
 	private Object _src;
@@ -20,7 +21,12 @@ public class AvatarElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -31,6 +37,7 @@ public class AvatarElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("component", _component);
+		st.add("id", _id);
 		st.add("imgProps", _imgProps);
 		st.add("sizes", _sizes);
 		st.add("src", _src);
@@ -125,6 +132,28 @@ public class AvatarElement {
 
 	public AvatarElement removeComponent() {
 		this._component = null;
+		return this;
+	} 
+
+	public AvatarElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public AvatarElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -281,11 +310,12 @@ public class AvatarElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AvatarElement(alt,classes,className,component,imgProps,sizes,src,srcSet,variant,children) ::= <<<Avatar~if(alt)~\n" + 
+	static final String st = "AvatarElement(alt,classes,className,component,id,imgProps,sizes,src,srcSet,variant,children) ::= <<<Avatar~if(alt)~\n" + 
 				"	alt=\"~alt~\"~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
-				"	component=~component~~endif~~if(imgProps)~\n" + 
+				"	component=~component~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(imgProps)~\n" + 
 				"	imgProps=~imgProps~~endif~~if(sizes)~\n" + 
 				"	sizes=\"~sizes~\"~endif~~if(src)~\n" + 
 				"	src=\"~src~\"~endif~~if(srcSet)~\n" + 

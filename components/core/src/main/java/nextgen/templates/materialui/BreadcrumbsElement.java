@@ -9,6 +9,7 @@ public class BreadcrumbsElement {
 	private Object _className;
 	private Object _component;
 	private Object _expandText;
+	private Object _id;
 	private Object _itemsAfterCollapse;
 	private Object _itemsBeforeCollapse;
 	private Object _maxItems;
@@ -19,7 +20,12 @@ public class BreadcrumbsElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -30,6 +36,7 @@ public class BreadcrumbsElement {
 		st.add("className", _className);
 		st.add("component", _component);
 		st.add("expandText", _expandText);
+		st.add("id", _id);
 		st.add("itemsAfterCollapse", _itemsAfterCollapse);
 		st.add("itemsBeforeCollapse", _itemsBeforeCollapse);
 		st.add("maxItems", _maxItems);
@@ -123,6 +130,28 @@ public class BreadcrumbsElement {
 
 	public BreadcrumbsElement removeExpandText() {
 		this._expandText = null;
+		return this;
+	} 
+
+	public BreadcrumbsElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public BreadcrumbsElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -257,11 +286,12 @@ public class BreadcrumbsElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "BreadcrumbsElement(classes,className,component,expandText,itemsAfterCollapse,itemsBeforeCollapse,maxItems,separator,children) ::= <<<Breadcrumbs~if(classes)~\n" + 
+	static final String st = "BreadcrumbsElement(classes,className,component,expandText,id,itemsAfterCollapse,itemsBeforeCollapse,maxItems,separator,children) ::= <<<Breadcrumbs~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(expandText)~\n" + 
-				"	expandText=\"~expandText~\"~endif~~if(itemsAfterCollapse)~\n" + 
+				"	expandText=\"~expandText~\"~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(itemsAfterCollapse)~\n" + 
 				"	itemsAfterCollapse=~itemsAfterCollapse~~endif~~if(itemsBeforeCollapse)~\n" + 
 				"	itemsBeforeCollapse=~itemsBeforeCollapse~~endif~~if(maxItems)~\n" + 
 				"	maxItems=~maxItems~~endif~~if(separator)~\n" + 

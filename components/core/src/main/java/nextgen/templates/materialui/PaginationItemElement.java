@@ -9,6 +9,7 @@ public class PaginationItemElement {
 	private Object _color;
 	private Object _component;
 	private Object _disabled;
+	private Object _id;
 	private Object _page;
 	private Object _selected;
 	private Object _shape;
@@ -20,7 +21,12 @@ public class PaginationItemElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -31,6 +37,7 @@ public class PaginationItemElement {
 		st.add("color", _color);
 		st.add("component", _component);
 		st.add("disabled", _disabled);
+		st.add("id", _id);
 		st.add("page", _page);
 		st.add("selected", _selected);
 		st.add("shape", _shape);
@@ -125,6 +132,28 @@ public class PaginationItemElement {
 
 	public PaginationItemElement removeDisabled() {
 		this._disabled = null;
+		return this;
+	} 
+
+	public PaginationItemElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public PaginationItemElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -275,11 +304,12 @@ public class PaginationItemElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PaginationItemElement(className,color,component,disabled,page,selected,shape,size,type,variant) ::= <<<PaginationItem~if(className)~\n" + 
+	static final String st = "PaginationItemElement(className,color,component,disabled,id,page,selected,shape,size,type,variant) ::= <<<PaginationItem~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(disabled)~\n" + 
-				"	disabled~endif~~if(page)~\n" + 
+				"	disabled~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(page)~\n" + 
 				"	page=~page~~endif~~if(selected)~\n" + 
 				"	selected~endif~~if(shape)~\n" + 
 				"	shape=\"~shape~\"~endif~~if(size)~\n" + 

@@ -6,6 +6,7 @@ public class HiddenElement {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _className;
+	private Object _id;
 	private Object _implementation;
 	private Object _initialWidth;
 	private Object _lgDown;
@@ -25,7 +26,12 @@ public class HiddenElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -33,6 +39,7 @@ public class HiddenElement {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("HiddenElement");
 		st.add("className", _className);
+		st.add("id", _id);
 		st.add("implementation", _implementation);
 		st.add("initialWidth", _initialWidth);
 		st.add("lgDown", _lgDown);
@@ -69,6 +76,28 @@ public class HiddenElement {
 
 	public HiddenElement removeClassName() {
 		this._className = null;
+		return this;
+	} 
+
+	public HiddenElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public HiddenElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -401,8 +430,9 @@ public class HiddenElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "HiddenElement(className,implementation,initialWidth,lgDown,lgUp,mdDown,mdUp,only,smDown,smUp,xlDown,xlUp,xsDown,xsUp,children) ::= <<<Hidden~if(className)~\n" + 
-				"	className=~className~~endif~~if(implementation)~\n" + 
+	static final String st = "HiddenElement(className,id,implementation,initialWidth,lgDown,lgUp,mdDown,mdUp,only,smDown,smUp,xlDown,xlUp,xsDown,xsUp,children) ::= <<<Hidden~if(className)~\n" + 
+				"	className=~className~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(implementation)~\n" + 
 				"	implementation=\"~implementation~\"~endif~~if(initialWidth)~\n" + 
 				"	initialWidth=\"~initialWidth~\"~endif~~if(lgDown)~\n" + 
 				"	lgDown~endif~~if(lgUp)~\n" + 

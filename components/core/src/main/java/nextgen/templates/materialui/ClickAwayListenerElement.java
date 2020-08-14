@@ -7,6 +7,7 @@ public class ClickAwayListenerElement {
 
 	private Object _className;
 	private Object _disableReactTree;
+	private Object _id;
 	private Object _mouseEvent;
 	private Object _onClickAway;
 	private Object _touchEvent;
@@ -16,7 +17,12 @@ public class ClickAwayListenerElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -25,6 +31,7 @@ public class ClickAwayListenerElement {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ClickAwayListenerElement");
 		st.add("className", _className);
 		st.add("disableReactTree", _disableReactTree);
+		st.add("id", _id);
 		st.add("mouseEvent", _mouseEvent);
 		st.add("onClickAway", _onClickAway);
 		st.add("touchEvent", _touchEvent);
@@ -73,6 +80,28 @@ public class ClickAwayListenerElement {
 
 	public ClickAwayListenerElement removeDisableReactTree() {
 		this._disableReactTree = null;
+		return this;
+	} 
+
+	public ClickAwayListenerElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public ClickAwayListenerElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -185,9 +214,10 @@ public class ClickAwayListenerElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ClickAwayListenerElement(className,disableReactTree,mouseEvent,onClickAway,touchEvent,children) ::= <<<ClickAwayListener~if(className)~\n" + 
+	static final String st = "ClickAwayListenerElement(className,disableReactTree,id,mouseEvent,onClickAway,touchEvent,children) ::= <<<ClickAwayListener~if(className)~\n" + 
 				"	className=~className~~endif~~if(disableReactTree)~\n" + 
-				"	disableReactTree~endif~~if(mouseEvent)~\n" + 
+				"	disableReactTree~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(mouseEvent)~\n" + 
 				"	mouseEvent=\"~mouseEvent~\"~endif~\n" + 
 				"	onClickAway=~onClickAway~~if(touchEvent)~\n" + 
 				"	touchEvent=\"~touchEvent~\"~endif~~if(children)~>\n" + 

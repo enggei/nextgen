@@ -7,6 +7,7 @@ public class BackdropElement {
 
 	private Object _classes;
 	private Object _className;
+	private Object _id;
 	private Object _invisible;
 	private Object _transitionDuration;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -15,7 +16,12 @@ public class BackdropElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -24,6 +30,7 @@ public class BackdropElement {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("BackdropElement");
 		st.add("classes", _classes);
 		st.add("className", _className);
+		st.add("id", _id);
 		st.add("invisible", _invisible);
 		st.add("transitionDuration", _transitionDuration);
 		for (Object o : _children) st.add("children", o);
@@ -71,6 +78,28 @@ public class BackdropElement {
 
 	public BackdropElement removeClassName() {
 		this._className = null;
+		return this;
+	} 
+
+	public BackdropElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public BackdropElement removeId() {
+		this._id = null;
 		return this;
 	} 
 
@@ -161,9 +190,10 @@ public class BackdropElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "BackdropElement(classes,className,invisible,transitionDuration,children) ::= <<<Backdrop~if(classes)~\n" + 
+	static final String st = "BackdropElement(classes,className,id,invisible,transitionDuration,children) ::= <<<Backdrop~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
-				"	className=~className~~endif~~if(invisible)~\n" + 
+				"	className=~className~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(invisible)~\n" + 
 				"	invisible~endif~\n" + 
 				"	open~if(transitionDuration)~\n" + 
 				"	transitionDuration=~transitionDuration~~endif~~if(children)~>\n" + 

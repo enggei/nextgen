@@ -9,6 +9,7 @@ public class ExpansionPanelSummaryElement {
 	private Object _className;
 	private Object _expandIcon;
 	private Object _IconButtonProps;
+	private Object _id;
 	private Object _onFocusVisible;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 
@@ -16,7 +17,12 @@ public class ExpansionPanelSummaryElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -27,6 +33,7 @@ public class ExpansionPanelSummaryElement {
 		st.add("className", _className);
 		st.add("expandIcon", _expandIcon);
 		st.add("IconButtonProps", _IconButtonProps);
+		st.add("id", _id);
 		st.add("onFocusVisible", _onFocusVisible);
 		for (Object o : _children) st.add("children", o);
 		return st.render().trim();
@@ -120,6 +127,28 @@ public class ExpansionPanelSummaryElement {
 		return this;
 	} 
 
+	public ExpansionPanelSummaryElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public ExpansionPanelSummaryElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public ExpansionPanelSummaryElement setOnFocusVisible(Object value) {
 		this._onFocusVisible = value;
 		return this;
@@ -185,11 +214,12 @@ public class ExpansionPanelSummaryElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ExpansionPanelSummaryElement(classes,className,expandIcon,IconButtonProps,onFocusVisible,children) ::= <<<ExpansionPanelSummary~if(classes)~\n" + 
+	static final String st = "ExpansionPanelSummaryElement(classes,className,expandIcon,IconButtonProps,id,onFocusVisible,children) ::= <<<ExpansionPanelSummary~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(expandIcon)~\n" + 
 				"	expandIcon=~expandIcon~~endif~~if(IconButtonProps)~\n" + 
-				"	IconButtonProps=~IconButtonProps~~endif~~if(onFocusVisible)~\n" + 
+				"	IconButtonProps=~IconButtonProps~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(onFocusVisible)~\n" + 
 				"	onFocusVisible=~onFocusVisible~~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</ExpansionPanelSummary>~else~ />~endif~ >>";

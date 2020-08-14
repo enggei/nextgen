@@ -15,6 +15,7 @@ public class TreeViewElement {
 	private Object _defaultSelected;
 	private Object _disableSelection;
 	private Object _expanded;
+	private Object _id;
 	private Object _multiSelect;
 	private Object _onNodeSelect;
 	private Object _onNodeToggle;
@@ -25,7 +26,12 @@ public class TreeViewElement {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -42,6 +48,7 @@ public class TreeViewElement {
 		st.add("defaultSelected", _defaultSelected);
 		st.add("disableSelection", _disableSelection);
 		st.add("expanded", _expanded);
+		st.add("id", _id);
 		st.add("multiSelect", _multiSelect);
 		st.add("onNodeSelect", _onNodeSelect);
 		st.add("onNodeToggle", _onNodeToggle);
@@ -270,6 +277,28 @@ public class TreeViewElement {
 		return this;
 	} 
 
+	public TreeViewElement setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public TreeViewElement removeId() {
+		this._id = null;
+		return this;
+	} 
+
 	public TreeViewElement setMultiSelect(Object value) {
 		this._multiSelect = value;
 		return this;
@@ -401,7 +430,7 @@ public class TreeViewElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TreeViewElement(classes,className,defaultCollapseIcon,defaultEndIcon,defaultExpanded,defaultExpandIcon,defaultParentIcon,defaultSelected,disableSelection,expanded,multiSelect,onNodeSelect,onNodeToggle,selected,children) ::= <<<TreeView~if(classes)~\n" + 
+	static final String st = "TreeViewElement(classes,className,defaultCollapseIcon,defaultEndIcon,defaultExpanded,defaultExpandIcon,defaultParentIcon,defaultSelected,disableSelection,expanded,id,multiSelect,onNodeSelect,onNodeToggle,selected,children) ::= <<<TreeView~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(defaultCollapseIcon)~\n" + 
 				"	defaultCollapseIcon=~defaultCollapseIcon~~endif~~if(defaultEndIcon)~\n" + 
@@ -411,7 +440,8 @@ public class TreeViewElement {
 				"	defaultParentIcon=~defaultParentIcon~~endif~~if(defaultSelected)~\n" + 
 				"	defaultSelected=~defaultSelected~~endif~~if(disableSelection)~\n" + 
 				"	disableSelection~endif~~if(expanded)~\n" + 
-				"	expanded=~expanded~~endif~~if(multiSelect)~\n" + 
+				"	expanded=~expanded~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(multiSelect)~\n" + 
 				"	multiSelect~endif~~if(onNodeSelect)~\n" + 
 				"	onNodeSelect=~onNodeSelect~~endif~~if(onNodeToggle)~\n" + 
 				"	onNodeToggle=~onNodeToggle~~endif~~if(selected)~\n" + 
