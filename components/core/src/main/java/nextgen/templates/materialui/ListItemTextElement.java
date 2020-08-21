@@ -10,11 +10,14 @@ public class ListItemTextElement {
 	private Object _disableTypography;
 	private Object _id;
 	private Object _inset;
+	private Object _key;
 	private Object _primary;
 	private Object _primaryTypographyProps;
 	private Object _secondary;
 	private Object _secondaryTypographyProps;
+	private Object _style;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	ListItemTextElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -37,11 +40,14 @@ public class ListItemTextElement {
 		st.add("disableTypography", _disableTypography);
 		st.add("id", _id);
 		st.add("inset", _inset);
+		st.add("key", _key);
 		st.add("primary", _primary);
 		st.add("primaryTypographyProps", _primaryTypographyProps);
 		st.add("secondary", _secondary);
 		st.add("secondaryTypographyProps", _secondaryTypographyProps);
+		st.add("style", _style);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -155,6 +161,28 @@ public class ListItemTextElement {
 		return this;
 	} 
 
+	public ListItemTextElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public ListItemTextElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public ListItemTextElement setPrimary(Object value) {
 		this._primary = value;
 		return this;
@@ -243,6 +271,28 @@ public class ListItemTextElement {
 		return this;
 	} 
 
+	public ListItemTextElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public ListItemTextElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public ListItemTextElement addChildren(Object value) {
 		this._children.add(value);
 		return this;
@@ -272,6 +322,50 @@ public class ListItemTextElement {
 		return this._children;
 	} 
 
+	public ListItemTextElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public ListItemTextElement addAttribute(ListItemTextElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<ListItemTextElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(ListItemTextElement_Attribute::new);
+	}
+
+	public static final class ListItemTextElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public ListItemTextElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private ListItemTextElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -286,16 +380,20 @@ public class ListItemTextElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ListItemTextElement(classes,className,disableTypography,id,inset,primary,primaryTypographyProps,secondary,secondaryTypographyProps,children) ::= <<<ListItemText~if(classes)~\n" + 
+	static final String st = "ListItemTextElement(classes,className,disableTypography,id,inset,key,primary,primaryTypographyProps,secondary,secondaryTypographyProps,style,attribute,children) ::= <<<ListItemText~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(disableTypography)~\n" + 
 				"	disableTypography~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(inset)~\n" + 
-				"	inset~endif~~if(primary)~\n" + 
+				"	inset~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(primary)~\n" + 
 				"	primary=~primary~~endif~~if(primaryTypographyProps)~\n" + 
 				"	primaryTypographyProps=~primaryTypographyProps~~endif~~if(secondary)~\n" + 
 				"	secondary=~secondary~~endif~~if(secondaryTypographyProps)~\n" + 
-				"	secondaryTypographyProps=~secondaryTypographyProps~~endif~~if(children)~>\n" + 
+				"	secondaryTypographyProps=~secondaryTypographyProps~~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</ListItemText>~else~ />~endif~ >>";
 }  

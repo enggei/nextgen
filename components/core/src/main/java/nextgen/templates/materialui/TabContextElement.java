@@ -7,8 +7,10 @@ public class TabContextElement {
 
 	private Object _className;
 	private Object _id;
+	private Object _style;
 	private Object _value;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	TabContextElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -28,8 +30,10 @@ public class TabContextElement {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("TabContextElement");
 		st.add("className", _className);
 		st.add("id", _id);
+		st.add("style", _style);
 		st.add("value", _value);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -74,6 +78,28 @@ public class TabContextElement {
 
 	public TabContextElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public TabContextElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public TabContextElement removeStyle() {
+		this._style = null;
 		return this;
 	} 
 
@@ -128,6 +154,50 @@ public class TabContextElement {
 		return this._children;
 	} 
 
+	public TabContextElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public TabContextElement addAttribute(TabContextElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<TabContextElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(TabContextElement_Attribute::new);
+	}
+
+	public static final class TabContextElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public TabContextElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private TabContextElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -142,10 +212,13 @@ public class TabContextElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TabContextElement(className,id,value,children) ::= <<<TabContext~if(className)~\n" + 
+	static final String st = "TabContextElement(className,id,style,value,attribute,children) ::= <<<TabContext~if(className)~\n" + 
 				"	className=~className~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~\n" + 
-				"	value=\"~value~\"~if(children)~>\n" + 
+				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	style=~style~~endif~\n" + 
+				"	value=\"~value~\"~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</TabContext>~else~ />~endif~ >>";
 }  

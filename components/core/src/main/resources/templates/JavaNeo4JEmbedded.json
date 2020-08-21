@@ -172,7 +172,7 @@
       }, {
         "uuid" : "4c1bf0fd-081b-4e21-942f-4b6b543661da",
         "name" : "incomingReferenceStream",
-        "text" : "public java.util.stream.Stream<~type~> getIncoming~name;format=\"capitalize\"~() { \n\treturn java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).spliterator(), false).map((relationship) -> new ~type~(relationship.getOtherNode(node)));\n}",
+        "text" : "public java.util.stream.Stream<~type~> getIncoming~name;format=\"capitalize\"~~type;format=\"capitalize\"~() { \n\treturn java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).spliterator(), false).map((relationship) -> new ~type~(relationship.getOtherNode(node)));\n} ",
         "parameters" : [ {
           "uuid" : "f97c9a28-d899-4837-8db2-159c2b6bd38e",
           "name" : "type",
@@ -256,42 +256,8 @@
       }, {
         "uuid" : "7704c494-fa83-4f9b-b1bb-741a72088738",
         "name" : "deleteNode",
-        "text" : "public void deleteTree() {\n~refs:{it|\n\tfinal ~it.type~ _~it.name~ = get~it.name;format=\"capitalize\"~();\n\tif (_~it.name~ != null) _~it.name~.deleteTree();\n};separator=\"\\n\"~\n~refList:{it|\n\tget~it.name;format=\"capitalize\"~().forEach(element -> element.deleteTree());\n};separator=\"\\n\"~\n\tnode.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);\n\tnode.delete();\n\t~if(observable)~this.pcs.firePropertyChange(\"delete.~name~\", true, false);~endif~\n} ",
-        "parameters" : [ {
-          "uuid" : "c4cb3511-441a-4f0e-9655-1bd6a30c2ece",
-          "name" : "refs",
-          "type" : "KVLIST",
-          "argumentType" : "Object",
-          "keys" : [ {
-            "uuid" : "2422ecad-192e-424c-bc01-61cf8c7bb8f8",
-            "name" : "type",
-            "argumentType" : "Object"
-          }, {
-            "uuid" : "6cb4a753-27eb-4638-aab9-a09cb491fb90",
-            "name" : "name",
-            "argumentType" : "Object"
-          } ]
-        }, {
-          "uuid" : "682f21cf-ba86-4a64-b046-1ce0de0adfaa",
-          "name" : "refList",
-          "type" : "KVLIST",
-          "argumentType" : "Object",
-          "keys" : [ {
-            "uuid" : "1b98cbe9-b072-4013-aa3a-4e9bfcc2cb83",
-            "name" : "name",
-            "argumentType" : "Object"
-          } ]
-        }, {
-          "uuid" : "3e1df947-0560-4e55-a4ab-ea991ac91377",
-          "name" : "observable",
-          "type" : "SINGLE",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "18acc576-3da6-476e-bc5b-94de2711a137",
-          "name" : "name",
-          "type" : "SINGLE",
-          "argumentType" : "Object"
-        } ]
+        "text" : "public void delete() {\n\tnode.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);\n\tnode.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);\n\tnode.delete();\n} ",
+        "parameters" : [ ]
       } ]
     }, {
       "uuid" : "041dcc81-91db-41c1-bacd-ac90f635b371",

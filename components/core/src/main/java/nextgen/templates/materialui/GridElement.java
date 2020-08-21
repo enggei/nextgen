@@ -19,11 +19,13 @@ public class GridElement {
 	private Object _md;
 	private Object _sm;
 	private Object _spacing;
+	private Object _style;
 	private Object _wrap;
 	private Object _xl;
 	private Object _xs;
 	private Object _zeroMinWidth;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	GridElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -55,11 +57,13 @@ public class GridElement {
 		st.add("md", _md);
 		st.add("sm", _sm);
 		st.add("spacing", _spacing);
+		st.add("style", _style);
 		st.add("wrap", _wrap);
 		st.add("xl", _xl);
 		st.add("xs", _xs);
 		st.add("zeroMinWidth", _zeroMinWidth);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -371,6 +375,28 @@ public class GridElement {
 		return this;
 	} 
 
+	public GridElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public GridElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public GridElement setWrap(Object value) {
 		this._wrap = value;
 		return this;
@@ -488,6 +514,50 @@ public class GridElement {
 		return this._children;
 	} 
 
+	public GridElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public GridElement addAttribute(GridElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<GridElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(GridElement_Attribute::new);
+	}
+
+	public static final class GridElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public GridElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private GridElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -502,7 +572,7 @@ public class GridElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "GridElement(alignContent,alignItems,classes,className,component,container,direction,id,item,justify,lg,md,sm,spacing,wrap,xl,xs,zeroMinWidth,children) ::= <<<Grid~if(alignContent)~\n" + 
+	static final String st = "GridElement(alignContent,alignItems,classes,className,component,container,direction,id,item,justify,lg,md,sm,spacing,style,wrap,xl,xs,zeroMinWidth,attribute,children) ::= <<<Grid~if(alignContent)~\n" + 
 				"	alignContent=\"~alignContent~\"~endif~~if(alignItems)~\n" + 
 				"	alignItems=\"~alignItems~\"~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
@@ -516,11 +586,14 @@ public class GridElement {
 				"	lg=\"~lg~\"~endif~~if(md)~\n" + 
 				"	md=\"~md~\"~endif~~if(sm)~\n" + 
 				"	sm=\"~sm~\"~endif~~if(spacing)~\n" + 
-				"	spacing=\"~spacing~\"~endif~~if(wrap)~\n" + 
+				"	spacing=\"~spacing~\"~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(wrap)~\n" + 
 				"	wrap=\"~wrap~\"~endif~~if(xl)~\n" + 
 				"	xl=\"~xl~\"~endif~~if(xs)~\n" + 
 				"	xs=\"~xs~\"~endif~~if(zeroMinWidth)~\n" + 
-				"	zeroMinWidth~endif~~if(children)~>\n" + 
+				"	zeroMinWidth~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Grid>~else~ />~endif~ >>";
 }  

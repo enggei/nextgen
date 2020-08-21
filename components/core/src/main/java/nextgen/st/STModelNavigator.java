@@ -68,6 +68,7 @@ public class STModelNavigator extends JPanel {
 					if (selectionPath == null) return;
 					final Object lastPathComponent = selectionPath.getLastPathComponent();
 					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
+
 					if (lastPathComponent instanceof STModelTreeNode) {
 						final STModelTreeNode selectedNode = (STModelTreeNode) lastPathComponent;
 						STAppEvents.postSTModelTreeNodeClicked(selectedNode.getModel());
@@ -344,6 +345,7 @@ public class STModelNavigator extends JPanel {
 			this.tooltip = "";
 
 			presentationModel.db.doInTransaction(transaction -> {
+				add(new DomainsTreeNode("Domains"));
 				add(new ProjectsRootNode("Projects"));
 				presentationModel.db.getGroupModels().forEach(stGroupModel -> add(new STGroupModelTreeNode(stGroupModel)));
 				add(new ScriptsRootNode("Scripts"));
@@ -625,6 +627,175 @@ public class STModelNavigator extends JPanel {
 				if (event.uuid.equals(uuid)) treeModel.removeNodeFromParent(this);
 			});
 		}
+	}
+
+	// DomainsTreeNode
+	public class DomainsTreeNode extends BaseTreeNode<String> {
+
+		DomainsTreeNode(String model) {
+			super(model, null);
+
+			this.label = model.toString();
+			this.tooltip = "";
+
+			presentationModel.metaDb.findAllMetaDomain().forEach(metaDomain -> add(new MetaDomainTreeNode(metaDomain)));
+		}
+
+		@Override
+		public void nodeChanged() {
+			this.label = getModel().toString();
+			this.tooltip = "";
+			super.nodeChanged();
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+			return actions;
+		}
+
+	}
+
+	// MetaDomainTreeNode
+	public class MetaDomainTreeNode extends BaseTreeNode<nextgen.domains.meta.MetaDomain> {
+
+		MetaDomainTreeNode(nextgen.domains.meta.MetaDomain model) {
+			super(model, null);
+
+			this.label = getModel().getName();
+			this.tooltip = "";
+
+			getModel().getRoots().forEach(metaEntity -> add(new MetaEntityTreeNode(metaEntity)));
+		}
+
+		@Override
+		public void nodeChanged() {
+			this.label = getModel().getName();
+			this.tooltip = "";
+			super.nodeChanged();
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+			actions.add(newAction("Open", actionEvent -> {
+				workspace.findCanvas()
+						.ifPresent(stCanvas -> presentationModel.doLaterInTransaction(transaction -> STAppEvents.postOpenMetaDomain(getModel())));
+			}));
+			return actions;
+		}
+
+	}
+
+	// MetaEntityTreeNode
+	public class MetaEntityTreeNode extends BaseTreeNode<nextgen.domains.meta.MetaEntity> {
+
+		MetaEntityTreeNode(nextgen.domains.meta.MetaEntity model) {
+			super(model, null);
+
+			this.label = getModel().getName();
+			this.tooltip = "";
+
+			getModel().getProperties().forEach(metaProperty -> add(new MetaPropertyTreeNode(metaProperty)));
+			getModel().getRelations().forEach(metaRelation -> add(new MetaRelationTreeNode(metaRelation)));
+
+			getModel().getNode().getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("_meta")).forEach(relationship -> {
+				add(new DomainEntityTreeNode(new nextgen.domains.meta.DomainEntity(relationship.getStartNode())));
+			});
+		}
+
+		@Override
+		public void nodeChanged() {
+			this.label = getModel().getName();
+			this.tooltip = "";
+			super.nodeChanged();
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+			return actions;
+		}
+
+	}
+
+	// MetaRelationTreeNode
+	public class MetaRelationTreeNode extends BaseTreeNode<nextgen.domains.meta.MetaRelation> {
+
+		MetaRelationTreeNode(nextgen.domains.meta.MetaRelation model) {
+			super(model, null);
+
+			this.label = getModel().getName();
+			this.tooltip = "";
+
+			getModel().getProperties().forEach(metaProperty -> add(new MetaPropertyTreeNode(metaProperty)));
+		}
+
+		@Override
+		public void nodeChanged() {
+			this.label = getModel().getName();
+			this.tooltip = "";
+			super.nodeChanged();
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+			return actions;
+		}
+
+	}
+
+	// DomainEntityTreeNode
+	public class DomainEntityTreeNode extends BaseTreeNode<nextgen.domains.meta.DomainEntity> {
+
+		DomainEntityTreeNode(nextgen.domains.meta.DomainEntity model) {
+			super(model, null);
+
+			this.label = model.toString();
+			this.tooltip = "";
+
+		}
+
+		@Override
+		public void nodeChanged() {
+			this.label = getModel().toString();
+			this.tooltip = "";
+			super.nodeChanged();
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+			return actions;
+		}
+
+	}
+
+	// MetaPropertyTreeNode
+	public class MetaPropertyTreeNode extends BaseTreeNode<nextgen.domains.meta.MetaProperty> {
+
+		MetaPropertyTreeNode(nextgen.domains.meta.MetaProperty model) {
+			super(model, null);
+
+			this.label = getModel().getName();
+			this.tooltip = "";
+
+		}
+
+		@Override
+		public void nodeChanged() {
+			this.label = getModel().getName();
+			this.tooltip = "";
+			super.nodeChanged();
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+			return actions;
+		}
+
 	}	
 
 	private Action newAction(String name, Consumer<ActionEvent> actionEventConsumer) {
@@ -672,7 +843,7 @@ public class STModelNavigator extends JPanel {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onCanvasSTModelClicked(nextgen.st.STAppEvents.CanvasSTModelClicked event) {
+	public void onSTModelTreeNodeClicked(nextgen.st.STAppEvents.CanvasSTModelClicked event) {
 		SwingUtilities.invokeLater(() -> {
 			final RootNode rootNode = (RootNode) treeModel.getRoot();
 			final TreePath path = rootNode.find(baseTreeNode -> (baseTreeNode instanceof STModelTreeNode) && ((STModelTreeNode) baseTreeNode).getModel().equals(event.stModel));

@@ -14,7 +14,9 @@ public class MobileStepperElement {
 	private Object _nextButton;
 	private Object _position;
 	private Object _steps;
+	private Object _style;
 	private Object _variant;
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	MobileStepperElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -41,7 +43,9 @@ public class MobileStepperElement {
 		st.add("nextButton", _nextButton);
 		st.add("position", _position);
 		st.add("steps", _steps);
+		st.add("style", _style);
 		st.add("variant", _variant);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -243,6 +247,28 @@ public class MobileStepperElement {
 		return this;
 	} 
 
+	public MobileStepperElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public MobileStepperElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public MobileStepperElement setVariant(Object value) {
 		this._variant = value;
 		return this;
@@ -266,6 +292,50 @@ public class MobileStepperElement {
 	} 
 
 
+	public MobileStepperElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public MobileStepperElement addAttribute(MobileStepperElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<MobileStepperElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(MobileStepperElement_Attribute::new);
+	}
+
+	public static final class MobileStepperElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public MobileStepperElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private MobileStepperElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -280,7 +350,7 @@ public class MobileStepperElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MobileStepperElement(activeStep,backButton,classes,className,id,LinearProgressProps,nextButton,position,steps,variant) ::= <<<MobileStepper~if(activeStep)~\n" + 
+	static final String st = "MobileStepperElement(activeStep,backButton,classes,className,id,LinearProgressProps,nextButton,position,steps,style,variant,attribute) ::= <<<MobileStepper~if(activeStep)~\n" + 
 				"	activeStep=~activeStep~~endif~~if(backButton)~\n" + 
 				"	backButton=~backButton~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
@@ -289,6 +359,9 @@ public class MobileStepperElement {
 				"	LinearProgressProps=~LinearProgressProps~~endif~~if(nextButton)~\n" + 
 				"	nextButton=~nextButton~~endif~~if(position)~\n" + 
 				"	position=\"~position~\"~endif~\n" + 
-				"	steps=~steps~~if(variant)~\n" + 
-				"	variant=\"~variant~\"~endif~ /> >>";
+				"	steps=~steps~~if(style)~\n" + 
+				"	style=~style~~endif~~if(variant)~\n" + 
+				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~ /> >>";
 }  

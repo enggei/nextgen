@@ -16,6 +16,10 @@ public class MaterialUIPatterns extends MaterialUIST {
     }
 
     public static PaperElement newPaperElement(String className) {
-        return newPaperElement().setClassName("{ this.props.classes." + className + " }");
+        return newPaperElement().setClassName(styleClass(className));
+    }
+
+    public static Object styleClass(String name) {
+        return "{classes." + name + "}";
     }
 }

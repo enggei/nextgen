@@ -312,7 +312,10 @@ public class SwingUtil {
             @Override
             public void verifyAndCommit() throws Exception {
                 final String s = rSyntaxTextArea.getText().trim();
-                if (s.trim().length() == 0) return;
+                if (s.trim().length() == 0) {
+                    dialog.dispose();
+                    return;
+                }
                 onConfirm.accept(s.trim());
             }
         };
@@ -320,7 +323,7 @@ public class SwingUtil {
         rSyntaxTextArea.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if(e.isControlDown() && KeyEvent.VK_S == e.getKeyCode()) {
+                if (e.isControlDown() && KeyEvent.VK_S == e.getKeyCode()) {
                     try {
                         onSave.verifyAndCommit();
                         dialog.dispose();
@@ -516,6 +519,10 @@ public class SwingUtil {
 
     public static <T extends Object> JComboBox<T> newComboBox(Set<T> enumValues) {
         return newComboBox(enumValues, null);
+    }
+
+    public static <T extends Object> JComboBox<T> newComboBox(T[] enumValues, T selected) {
+        return newComboBox(new LinkedHashSet<>(Arrays.asList(enumValues)), selected);
     }
 
     public static <T extends Object> JComboBox<T> newComboBox(Set<T> enumValues, T selected) {
@@ -900,11 +907,11 @@ public class SwingUtil {
         }
     }
 
-    public static final javax.swing.JTextField newTextField(int columns){
+    public static final javax.swing.JTextField newTextField(int columns) {
         return newTextField("", columns);
     }
 
-    public static final javax.swing.JTextField newTextField(String content, int columns){
+    public static final javax.swing.JTextField newTextField(String content, int columns) {
         javax.swing.JTextField textField = new javax.swing.JTextField(content, columns);
         textField.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -966,7 +973,7 @@ public class SwingUtil {
     }
 
     public static Optional<Boolean> confirm(JComponent parent, String description) {
-        final boolean b = SwingUtil.showConfirmDialog(parent, description + "?");
+        final boolean b = SwingUtil.showConfirmDialog(parent, description);
         return Optional.ofNullable(b ? Boolean.TRUE : null);
     }
 

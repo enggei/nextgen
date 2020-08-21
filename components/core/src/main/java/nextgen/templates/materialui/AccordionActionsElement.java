@@ -9,7 +9,9 @@ public class AccordionActionsElement {
 	private Object _className;
 	private Object _disableSpacing;
 	private Object _id;
+	private Object _style;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	AccordionActionsElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -31,7 +33,9 @@ public class AccordionActionsElement {
 		st.add("className", _className);
 		st.add("disableSpacing", _disableSpacing);
 		st.add("id", _id);
+		st.add("style", _style);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -123,6 +127,28 @@ public class AccordionActionsElement {
 		return this;
 	} 
 
+	public AccordionActionsElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public AccordionActionsElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public AccordionActionsElement addChildren(Object value) {
 		this._children.add(value);
 		return this;
@@ -152,6 +178,50 @@ public class AccordionActionsElement {
 		return this._children;
 	} 
 
+	public AccordionActionsElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public AccordionActionsElement addAttribute(AccordionActionsElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<AccordionActionsElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(AccordionActionsElement_Attribute::new);
+	}
+
+	public static final class AccordionActionsElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public AccordionActionsElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private AccordionActionsElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -166,11 +236,14 @@ public class AccordionActionsElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AccordionActionsElement(classes,className,disableSpacing,id,children) ::= <<<AccordionActions~if(classes)~\n" + 
+	static final String st = "AccordionActionsElement(classes,className,disableSpacing,id,style,attribute,children) ::= <<<AccordionActions~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(disableSpacing)~\n" + 
 				"	disableSpacing~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(children)~>\n" + 
+				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</AccordionActions>~else~ />~endif~ >>";
 }  

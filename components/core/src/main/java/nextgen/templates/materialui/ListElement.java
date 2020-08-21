@@ -11,8 +11,10 @@ public class ListElement {
 	private Object _dense;
 	private Object _disablePadding;
 	private Object _id;
+	private Object _style;
 	private Object _subheader;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	ListElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -36,8 +38,10 @@ public class ListElement {
 		st.add("dense", _dense);
 		st.add("disablePadding", _disablePadding);
 		st.add("id", _id);
+		st.add("style", _style);
 		st.add("subheader", _subheader);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -173,6 +177,28 @@ public class ListElement {
 		return this;
 	} 
 
+	public ListElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public ListElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public ListElement setSubheader(Object value) {
 		this._subheader = value;
 		return this;
@@ -224,6 +250,50 @@ public class ListElement {
 		return this._children;
 	} 
 
+	public ListElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public ListElement addAttribute(ListElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<ListElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(ListElement_Attribute::new);
+	}
+
+	public static final class ListElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public ListElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private ListElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -238,14 +308,17 @@ public class ListElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ListElement(classes,className,component,dense,disablePadding,id,subheader,children) ::= <<<List~if(classes)~\n" + 
+	static final String st = "ListElement(classes,className,component,dense,disablePadding,id,style,subheader,attribute,children) ::= <<<List~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(dense)~\n" + 
 				"	dense~endif~~if(disablePadding)~\n" + 
 				"	disablePadding~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(subheader)~\n" + 
-				"	subheader=~subheader~~endif~~if(children)~>\n" + 
+				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(subheader)~\n" + 
+				"	subheader=~subheader~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</List>~else~ />~endif~ >>";
 }  

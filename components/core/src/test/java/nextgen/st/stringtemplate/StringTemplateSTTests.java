@@ -9,6 +9,7 @@ public class StringTemplateSTTests {
 
 	@org.junit.Test
 	public void testAll() {
+		testDomainVisitorRunner();
 		testScriptRunner();
 		testSTDomain();
 		testNewEntityInstance();
@@ -23,6 +24,11 @@ public class StringTemplateSTTests {
 		testSTEnumValue();
 		testSTInterface();
 	}
+
+	@org.junit.Test
+	public void testDomainVisitorRunner() {
+		System.out.println("\n--- TEST DomainVisitorRunner:\n" + newDomainVisitorRunner());
+	} 
 
 	@org.junit.Test
 	public void testScriptRunner() {

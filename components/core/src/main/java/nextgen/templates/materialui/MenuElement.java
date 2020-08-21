@@ -22,9 +22,11 @@ public class MenuElement {
 	private Object _onExiting;
 	private Object _open;
 	private Object _PopoverClasses;
+	private Object _style;
 	private Object _transitionDuration;
 	private Object _variant;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	MenuElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -59,9 +61,11 @@ public class MenuElement {
 		st.add("onExiting", _onExiting);
 		st.add("open", _open);
 		st.add("PopoverClasses", _PopoverClasses);
+		st.add("style", _style);
 		st.add("transitionDuration", _transitionDuration);
 		st.add("variant", _variant);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -439,6 +443,28 @@ public class MenuElement {
 		return this;
 	} 
 
+	public MenuElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public MenuElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public MenuElement setTransitionDuration(Object value) {
 		this._transitionDuration = value;
 		return this;
@@ -512,6 +538,50 @@ public class MenuElement {
 		return this._children;
 	} 
 
+	public MenuElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public MenuElement addAttribute(MenuElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<MenuElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(MenuElement_Attribute::new);
+	}
+
+	public static final class MenuElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public MenuElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private MenuElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -526,7 +596,7 @@ public class MenuElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MenuElement(anchorEl,autoFocus,classes,className,disableAutoFocusItem,id,keepMounted,MenuListProps,onClose,onEnter,onEntered,onEntering,onExit,onExited,onExiting,open,PopoverClasses,transitionDuration,variant,children) ::= <<<Menu~if(anchorEl)~\n" + 
+	static final String st = "MenuElement(anchorEl,autoFocus,classes,className,disableAutoFocusItem,id,keepMounted,MenuListProps,onClose,onEnter,onEntered,onEntering,onExit,onExited,onExiting,open,PopoverClasses,style,transitionDuration,variant,attribute,children) ::= <<<Menu~if(anchorEl)~\n" + 
 				"	anchorEl=~anchorEl~~endif~~if(autoFocus)~\n" + 
 				"	autoFocus~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
@@ -543,9 +613,12 @@ public class MenuElement {
 				"	onExited=~onExited~~endif~~if(onExiting)~\n" + 
 				"	onExiting=~onExiting~~endif~~if(open)~\n" + 
 				"	open=~open~~endif~~if(PopoverClasses)~\n" + 
-				"	PopoverClasses=~PopoverClasses~~endif~~if(transitionDuration)~\n" + 
+				"	PopoverClasses=~PopoverClasses~~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(transitionDuration)~\n" + 
 				"	transitionDuration=\"~transitionDuration~\"~endif~~if(variant)~\n" + 
-				"	variant=\"~variant~\"~endif~~if(children)~>\n" + 
+				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Menu>~else~ />~endif~ >>";
 }  

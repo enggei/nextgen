@@ -202,9 +202,9 @@ public ~type~ get~name;format="capitalize"~(~type~ defaultValue) {
 	return this._~name~ == null ? defaultValue : this._~name~;
 }  >>
 
-incomingReferenceStream(type,name) ::= <<public java.util.stream.Stream<~type~> getIncoming~name;format="capitalize"~() { 
+incomingReferenceStream(type,name) ::= <<public java.util.stream.Stream<~type~> getIncoming~name;format="capitalize"~~type;format="capitalize"~() { 
 	return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("~name~")).spliterator(), false).map((relationship) -> new ~type~(relationship.getOtherNode(node)));
-} >>
+}  >>
 
 enumListAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ add~name;format="capitalize"~(~type~ dst) { 
 	final java.util.Optional<org.neo4j.graphdb.Node> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("~name~")).spliterator(), false).map((r) -> r.getOtherNode(node)).filter((n) -> dst.equals(n.getProperty("value"))).findAny();
@@ -244,17 +244,10 @@ nodeToJsonObject(properties,refs,refList,primitiveList) ::= <<public io.vertx.co
 	return jsonObject;
 }  >>
 
-deleteNode(refs,refList,observable,name) ::= <<public void deleteTree() {
-~refs:{it|
-	final ~it.type~ _~it.name~ = get~it.name;format="capitalize"~();
-	if (_~it.name~ != null) _~it.name~.deleteTree();
-};separator="\n"~
-~refList:{it|
-	get~it.name;format="capitalize"~().forEach(element -> element.deleteTree());
-};separator="\n"~
+deleteNode() ::= <<public void delete() {
+	node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 	node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 	node.delete();
-	~if(observable)~this.pcs.firePropertyChange("delete.~name~", true, false);~endif~
 }  >>
 
 NeoFactory(package,name,accessors) ::= <<package ~package~;

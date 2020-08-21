@@ -19,12 +19,14 @@ public class TabsElement {
 	private Object _ScrollButtonComponent;
 	private Object _scrollButtons;
 	private Object _selectionFollowsFocus;
+	private Object _style;
 	private Object _TabIndicatorProps;
 	private Object _TabScrollButtonProps;
 	private Object _textColor;
 	private Object _value;
 	private Object _variant;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	TabsElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -56,12 +58,14 @@ public class TabsElement {
 		st.add("ScrollButtonComponent", _ScrollButtonComponent);
 		st.add("scrollButtons", _scrollButtons);
 		st.add("selectionFollowsFocus", _selectionFollowsFocus);
+		st.add("style", _style);
 		st.add("TabIndicatorProps", _TabIndicatorProps);
 		st.add("TabScrollButtonProps", _TabScrollButtonProps);
 		st.add("textColor", _textColor);
 		st.add("value", _value);
 		st.add("variant", _variant);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -373,6 +377,28 @@ public class TabsElement {
 		return this;
 	} 
 
+	public TabsElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public TabsElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public TabsElement setTabIndicatorProps(Object value) {
 		this._TabIndicatorProps = value;
 		return this;
@@ -512,6 +538,50 @@ public class TabsElement {
 		return this._children;
 	} 
 
+	public TabsElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public TabsElement addAttribute(TabsElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<TabsElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(TabsElement_Attribute::new);
+	}
+
+	public static final class TabsElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public TabsElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private TabsElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -526,7 +596,7 @@ public class TabsElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TabsElement(action,ariaLabel,ariaLabelledby,centered,classes,className,component,id,indicatorColor,onChange,orientation,ScrollButtonComponent,scrollButtons,selectionFollowsFocus,TabIndicatorProps,TabScrollButtonProps,textColor,value,variant,children) ::= <<<Tabs~if(action)~\n" + 
+	static final String st = "TabsElement(action,ariaLabel,ariaLabelledby,centered,classes,className,component,id,indicatorColor,onChange,orientation,ScrollButtonComponent,scrollButtons,selectionFollowsFocus,style,TabIndicatorProps,TabScrollButtonProps,textColor,value,variant,attribute,children) ::= <<<Tabs~if(action)~\n" + 
 				"	action=~action~~endif~~if(ariaLabel)~\n" + 
 				"	ariaLabel=\"~ariaLabel~\"~endif~~if(ariaLabelledby)~\n" + 
 				"	ariaLabelledby=\"~ariaLabelledby~\"~endif~~if(centered)~\n" + 
@@ -540,12 +610,15 @@ public class TabsElement {
 				"	orientation=\"~orientation~\"~endif~~if(ScrollButtonComponent)~\n" + 
 				"	ScrollButtonComponent=~ScrollButtonComponent~~endif~~if(scrollButtons)~\n" + 
 				"	scrollButtons=\"~scrollButtons~\"~endif~~if(selectionFollowsFocus)~\n" + 
-				"	selectionFollowsFocus~endif~~if(TabIndicatorProps)~\n" + 
+				"	selectionFollowsFocus~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(TabIndicatorProps)~\n" + 
 				"	TabIndicatorProps=~TabIndicatorProps~~endif~~if(TabScrollButtonProps)~\n" + 
 				"	TabScrollButtonProps=~TabScrollButtonProps~~endif~~if(textColor)~\n" + 
 				"	textColor=\"~textColor~\"~endif~~if(value)~\n" + 
 				"	value=~value~~endif~~if(variant)~\n" + 
-				"	variant=\"~variant~\"~endif~~if(children)~>\n" + 
+				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Tabs>~else~ />~endif~ >>";
 }  

@@ -33,16 +33,6 @@
       "type" : "LIST"
     } ]
   }, {
-    "uuid" : "fdce873c-54a0-4c29-9e6e-9999b00cf2b1",
-    "name" : "Inject",
-    "text" : "@inject(~values:{it|~it~};separator=\", \"~) ",
-    "parameters" : [ {
-      "uuid" : "682a2f9d-7430-44c2-860d-2d256bfe217b",
-      "name" : "values",
-      "argumentType" : "Object",
-      "type" : "LIST"
-    } ]
-  }, {
     "uuid" : "31e86568-78ff-454a-96e3-9dce9b673ea8",
     "name" : "JsonObject",
     "text" : "{ ~values:{it|~it~};separator=\", \"~ } ",
@@ -113,7 +103,7 @@
     }, {
       "uuid" : "61f68070-a4a3-4495-a3e1-c35f7fcd035d",
       "name" : "Action",
-      "text" : "@action ~name~(~params:{it|~it~};separator=\",\"~) {\n\tconsole.info(\"action ~name~\");\n\t~statements:{it|~it~};separator=\"\\n\"~\n} ",
+      "text" : "@action ~name~(~params:{it|~it~};separator=\",\"~) {\n\tconsole.info(\"action ~name~ \" ~params:{it| + \" ~it~ \" + ~it~}~);\n\t~statements:{it|~it~};separator=\"\\n\"~\n} ",
       "parameters" : [ {
         "uuid" : "c6b5ccba-d6d7-4cf9-ab69-65e2f79863b9",
         "name" : "name",
@@ -145,6 +135,16 @@
         "type" : "SINGLE",
         "argumentType" : "Object"
       } ]
+    }, {
+      "uuid" : "fdce873c-54a0-4c29-9e6e-9999b00cf2b1",
+      "name" : "Inject",
+      "text" : "@inject(~values:{it|~it~};separator=\", \"~) ",
+      "parameters" : [ {
+        "uuid" : "682a2f9d-7430-44c2-860d-2d256bfe217b",
+        "name" : "values",
+        "argumentType" : "Object",
+        "type" : "LIST"
+      } ]
     } ],
     "parameters" : [ ]
   }, {
@@ -175,247 +175,6 @@
       "uuid" : "3bbf4604-4fb9-47f2-96b7-f3afdc9d35df",
       "name" : "value",
       "type" : "SINGLE",
-      "argumentType" : "Object"
-    } ]
-  }, {
-    "uuid" : "14e250cf-b417-4fb7-b512-a54f6ba8fe58",
-    "name" : "App",
-    "text" : "import React, { Component } from 'react';\nimport { Switch, Route, withRouter } from 'react-router-dom';\n\nimport { Provider } from 'mobx-react';\nimport { inject, observer } from 'mobx-react';\n\n~routes:{it|import ~it.component~ from './pages/~it.filename~';};separator=\"\\n\"~\n\nimport NavigationBar from './components/NavigationBar.js';\n\nimport CssBaseline from '@material-ui/core/CssBaseline';\nimport { ThemeProvider } from '@material-ui/styles';\nimport { createMuiTheme } from '@material-ui/core/styles';\n\n// https://in-your-saas.github.io/material-ui-theme-editor/\n//const theme = createMuiTheme({\"palette\":{\"common\":{\"black\":\"#000\",\"white\":\"#fff\"},\"background\":{\"paper\":\"#fff\",\"default\":\"#fafafa\"},\"primary\":{\"light\":\"rgba(255, 255, 255, 1)\",\"main\":\"rgba(22, 22, 23, 1)\",\"dark\":\"rgba(74, 74, 74, 1)\",\"contrastText\":\"#fff\"},\"secondary\":{\"light\":\"#ff4081\",\"main\":\"rgba(245, 166, 35, 1)\",\"dark\":\"#c51162\",\"contrastText\":\"#fff\"},\"error\":{\"light\":\"#e57373\",\"main\":\"#f44336\",\"dark\":\"#d32f2f\",\"contrastText\":\"#fff\"},\"text\":{\"primary\":\"rgba(0, 0, 0, 0.87)\",\"secondary\":\"rgba(0, 0, 0, 0.54)\",\"disabled\":\"rgba(0, 0, 0, 0.38)\",\"hint\":\"rgba(0, 0, 0, 0.38)\"}}});\nconst theme = createMuiTheme(~theme~);\n\n@inject(~stores:{it|'~it~'};separator=\", \"~)\n@withRouter\n@observer\nclass App extends Component {\n\n\tconstructor(props) {\n\t\tsuper(props);\n\t\t\n\t\tif (!this.props.appStore.token) \n\t\t\tthis.props.appStore.setAppLoaded();\n\t\t\n\t}\n\n\tcomponentDidMount() {\n\t\t\n\t\tif (this.props.appStore.token) \n\t\t\tthis.props.userStore.pullUser().finally(() => this.props.appStore.setAppLoaded());\n\t}\n\n\trender() {\n\n\t\tif (this.props.appStore.appLoaded) {\n\t\t\treturn (\n\t\t\t\t<ThemeProvider theme={theme}>\n\t\t\t\t\t<CssBaseline />\n\t\t\t\t\t<div>\n\t\t\t\t\t\t<NavigationBar userStore={ this.props.userStore }></NavigationBar>\n\t\t\t\t\t</div>\n\t\t\t\t\t<Switch>\n\t\t\t\t\t\t~routes:{it|<Route path=\"~it.path~\" component={~it.component~\\} />};separator=\"\\n\"~\n\t\t\t\t\t</Switch>\n\t\t\t\t</ThemeProvider>);\n\t\t} else return null;\n\t}\n}\n\nexport default App; ",
-    "children" : [ {
-      "uuid" : "c1d2b469-a811-44b5-b3ff-b081d54ce53b",
-      "name" : "SimpleMenu",
-      "text" : "import React from 'react';\n\nimport Button from '@material-ui/core/Button';\nimport Menu from '@material-ui/core/Menu';\nimport MenuItem from '@material-ui/core/MenuItem';\nimport MenuList from '@material-ui/core/MenuList';\nimport IconButton from '@material-ui/core/IconButton';\nimport MenuIcon from '@material-ui/icons/Menu';\nimport { Link } from 'react-router-dom';\n\nconst LoginLink = React.forwardRef( (props, ref) => (\n\t<Link innerRef={ ref } to=\"/login\" { ...props } />\n));\n\n~menuItems:{it|\nconst ~it.name~ = React.forwardRef( (props, ref) => (\n\t<Link innerRef={ ref ~eom()~ to=\"/~it.to~\"~if(it.target)~ target=\"~it.target~\" ~endif~ { ...props ~eom()~ />\n));\n};separator=\"\\n\\n\"~\n\nexport default function SimpleMenu(props) {\n\n\tconst [anchorEl, setAnchorEl] = React.useState(null);\n\n\tfunction handleClick(event) {\n\t\tsetAnchorEl(event.currentTarget);\n\t}\n\t\n\tfunction handleClose() {\n\t\tsetAnchorEl(null);\n\t}\n\n\tif (!props.currentUser)  {\n\t\treturn (\n\t\t\t\t<div>\n\t\t\t\t\t<IconButton edge=\"start\" color=\"inherit\" aria-label=\"Menu\" onClick={handleClick}>\n\t\t\t\t\t\t<MenuIcon />\n\t\t\t\t\t</IconButton>\n\t\t\t\t\t<Menu id=\"simple-menu\" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>\n\t\t\t\t\t\t<MenuItem component={ LoginLink } onClick={handleClose}>Login</MenuItem>\n\t\t\t\t\t</Menu>\n\t\t\t\t</div>);\n\t} else {\n\t\treturn (\n\t\t\t<div>\n\t\t\t\t<IconButton edge=\"start\" color=\"inherit\" aria-label=\"Menu\" onClick={handleClick}>\n\t\t\t\t\t<MenuIcon />\n\t\t\t\t</IconButton>\n\t\t\t\t<Menu id=\"simple-menu\" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>\n\t\t\t\t\t~menuItems:{it|~it.element~};separator=\"\\n\"~\n\t\t\t\t\t~menuComponents:{it|~it~};separator=\"\\n\"~\n\t\t\t\t</Menu>\n\t\t\t</div>);\n\t}\n} ",
-      "parameters" : [ {
-        "uuid" : "8ae5d3ef-6e9d-45ea-a2d3-1f9776b9c595",
-        "name" : "menuItems",
-        "type" : "KVLIST",
-        "argumentType" : "Object",
-        "keys" : [ {
-          "uuid" : "f5ff7f33-5096-4df9-b864-da4bf0ae7951",
-          "name" : "name",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "a8245f81-471b-4dbe-ad04-c952b36a16a2",
-          "name" : "to",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "e73e734f-a1a5-48fb-b46b-1ab4b19d4e5c",
-          "name" : "target",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "50133e35-ec5e-444b-9106-1115fa27e3d4",
-          "name" : "element",
-          "argumentType" : "Object"
-        } ]
-      }, {
-        "uuid" : "fe7e5c58-5f28-42f1-b483-5feddacc053c",
-        "name" : "menuComponents",
-        "type" : "LIST",
-        "argumentType" : "Object"
-      } ]
-    }, {
-      "uuid" : "538e35d7-4d4c-4f24-b283-a72a18145154",
-      "name" : "Superagent",
-      "text" : "import superagentPromise from 'superagent-promise';\nimport _superagent from 'superagent';\n\nimport appStore from './stores/AppStore';\nimport authStore from './stores/AuthStore';\n\nconst superagent = superagentPromise(_superagent, global.Promise);\n\nconst handleErrors = err => {\n\tif (err && err.response && err.response.status === 401) {\n\t\tauthStore.logout();\n\t}\n\treturn err;\n};\n\nconst responseBody = res => res.body;\n\nconst tokenPlugin = req => {\n\tif (appStore.token) {\n\t\treq.set('Authorization', `Bearer ${appStore.token}`);\n\t}\n};\n\nconst requests = {\n\tdel: url =>\n\t\tsuperagent\n\t\t\t.del(`${url}`)\n\t\t\t.use(tokenPlugin)\n\t\t\t.end(handleErrors)\n\t\t\t.then(responseBody),\n\tget: url =>\n\t\tsuperagent\n\t\t\t.get(`${url}`)\n\t\t\t.use(tokenPlugin)\n\t\t\t.end(handleErrors)\n\t\t\t.then(responseBody),\n\tput: (url, body) =>\n\t\tsuperagent\n\t\t\t.put(`${url}`, body)\n\t\t\t.use(tokenPlugin)\n\t\t\t.end(handleErrors)\n\t\t\t.then(responseBody),\n\tpost: (url, body) =>\n\t\tsuperagent\n\t\t\t.post(`${url}`, body)\n\t\t\t.use(tokenPlugin)\n\t\t\t.end(handleErrors)\n\t\t\t.then(responseBody)\n};\n\n~agentDeclarations:{it|~it.declaration~};separator=\"\\n\"~\n\nexport default {\n\t~agentDeclarations:{it|~it.name~};separator=\",\\n\"~\n}; ",
-      "parameters" : [ {
-        "uuid" : "2ce57895-bddf-4eeb-92ce-fc7f128ef790",
-        "name" : "agentDeclarations",
-        "type" : "KVLIST",
-        "argumentType" : "Object",
-        "keys" : [ {
-          "uuid" : "38e564b8-e940-490c-9960-2f6715da385e",
-          "name" : "declaration",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "ea078493-b4ae-4a7a-9567-2bf3c9754e47",
-          "name" : "name",
-          "argumentType" : "Object"
-        } ]
-      } ],
-      "children" : [ {
-        "uuid" : "6c458cfe-4e20-4668-b4fa-855460ef2fba",
-        "name" : "agentEndpoint",
-        "text" : "~name~: (~if(urlParam)~~urlParam~~if(parameters)~, ~endif~~endif~~parameters:{it|~it~};separator=\",\"~) => requests.~action~('/~url~'~if(urlParam)~ + ~urlParam~~endif~~if(parameters)~, { ~parameters:{it|~it~};separator=\",\"~ }~endif~) ",
-        "parameters" : [ {
-          "uuid" : "f015e1ac-3367-40bc-9635-e332b430d8e9",
-          "name" : "name",
-          "type" : "SINGLE",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "d3e4fbb7-1970-4328-8931-258cb6cddf1b",
-          "name" : "urlParam",
-          "type" : "SINGLE",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "2ef5b4d3-1eba-4ede-a268-e1832bc9d11b",
-          "name" : "parameters",
-          "type" : "LIST",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "3d56afd1-2666-49b3-b618-83e3c0354d42",
-          "name" : "action",
-          "type" : "SINGLE",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "c715b828-e4b3-4a37-a246-536ba3f7a0d1",
-          "name" : "url",
-          "type" : "SINGLE",
-          "argumentType" : "Object"
-        } ]
-      }, {
-        "uuid" : "b029cde7-43af-4ba8-bec5-119e51e9a460",
-        "name" : "agentDeclaration",
-        "text" : "const ~name~ = { \n\t~agentEndpoint:{it|~it~};separator=\",\\n\"~\n} ",
-        "parameters" : [ {
-          "uuid" : "b49848db-b2dd-4702-8fe6-1f36e6e82f53",
-          "name" : "name",
-          "type" : "SINGLE",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "093e4406-1915-4d29-bf66-38cc90bac993",
-          "name" : "agentEndpoint",
-          "type" : "LIST",
-          "argumentType" : "Object"
-        } ]
-      }, {
-        "uuid" : "11411a9d-db8a-4c28-9b71-3b135e55e198",
-        "name" : "agentRequest",
-        "text" : "agent.~endpoint~.~method~(~params:{it|~it~};separator=\",\"~)\n\t~then:{it|.then(~it~)};separator=\"\\n\"~\n\t.catch(action((err) => {\n\t\tconsole.info(\"error ~endpoint~.~method~ : \" + err);\n\t\tthis.errors = err.response && err.response.body && err.response.body.errors;\n\t\tthrow err;\n\t}))\n\t.finally(~finally~) ",
-        "parameters" : [ {
-          "uuid" : "06016b93-26a6-4a67-8a4a-55d3101aa143",
-          "name" : "endpoint",
-          "type" : "SINGLE",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "f37b75bd-72e4-4092-a919-bb60a72ae4fd",
-          "name" : "method",
-          "type" : "SINGLE",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "501c0d20-e4f1-49f2-9a28-8d9115dd3a65",
-          "name" : "params",
-          "type" : "LIST",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "3c7db85a-e04c-4295-b022-401e6b802d68",
-          "name" : "then",
-          "type" : "LIST",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "127b6e37-7b95-45c4-a198-f8bbb474f267",
-          "name" : "finally",
-          "type" : "SINGLE",
-          "argumentType" : "Object"
-        } ]
-      } ]
-    }, {
-      "uuid" : "4b2e76b8-7758-449e-a536-aad1e41c6a97",
-      "name" : "NavigationBar",
-      "text" : "import React from 'react';\nimport { Link } from 'react-router-dom';\nimport { inject, observer } from 'mobx-react';\n\nimport AppBar from '@material-ui/core/AppBar';\nimport Toolbar from '@material-ui/core/Toolbar';\nimport Typography from '@material-ui/core/Typography';\nimport Button from '@material-ui/core/Button';\nimport { withStyles } from '@material-ui/core/styles';\n\nimport UserMenu  from './UserMenu.js';\n\nconst useStyles = theme => ({\n\tnews: {\n\t\tflex: 1\n\t}\n});\n\nconst LoginLink = React.forwardRef( (props, ref) => (\n\t<Link innerRef={ ref } to=\"/login\" { ...props } />\n));\n\nconst LogoutLink = React.forwardRef( (props, ref) => (\n\t<Link innerRef={ ref } to=\"/logout\" { ...props } />\n));\n\nconst LoggedOutView = props => {\n\tif (!props.currentUser)  {\n\t\treturn (<Button color=\"inherit\" component={ LoginLink }>\n\t\t\tLogin\n\t\t</Button>);\n\t}\n\treturn null;\n}\n\nconst LoggedInView = props => {\n\tif (props.currentUser)  {\n\t\treturn (<Button color=\"inherit\" component={ LogoutLink }>\n\t\t\tLogout\n\t\t</Button>);\n\t}\n\treturn null;\n}\n\n@inject('userStore', 'appStore')\n@observer\n@withStyles(useStyles)\nclass NavigationBar extends React.Component {\n\n\tconstructor(){\n\t\tsuper();\n\t}\n\n\trender() {\n\t\treturn ( \n\t\t\t<div>\n\t\t\t\t<AppBar color='primary' position='static'>\n\t\t\t\t\t<Toolbar>\n\t\t\t\t\t\t<UserMenu currentUser={ this.props.userStore.currentUser } />\n\t\t\t\t\t\t<Typography variant=\"h6\" className={ this.props.classes.news }>S E C U R I T Y - X</Typography>\n\t\t\t\t\t\t<LoggedOutView currentUser={ this.props.userStore.currentUser } />\n\t\t\t\t\t\t<LoggedInView currentUser={ this.props.userStore.currentUser } />\n\t\t\t\t\t</Toolbar>\n\t\t\t\t</AppBar>\n\t\t\t</div>\n\t\t)\n\t}\n}\n\nexport default (NavigationBar); ",
-      "parameters" : [ ]
-    }, {
-      "uuid" : "9d68d4ca-e1a0-41ce-9795-79844bb9d379",
-      "name" : "UserMenu",
-      "text" : "import React from 'react';\nimport { Link } from 'react-router-dom';\n\nimport Button from '@material-ui/core/Button';\nimport Menu from '@material-ui/core/Menu';\nimport MenuItem from '@material-ui/core/MenuItem';\nimport MenuList from '@material-ui/core/MenuList';\nimport IconButton from '@material-ui/core/IconButton';\nimport MenuIcon from '@material-ui/icons/Menu';\n\nconst LoginLink = React.forwardRef( (props, ref) => (\n\t<Link innerRef={ ref } to=\"/login\" { ...props } />\n));\n\nconst LogoutLink = React.forwardRef( (props, ref) => (\n\t<Link innerRef={ ref } to=\"/logout\" { ...props } />\n));\n\nexport default function UserMenu(props) {\n\n\tconst [anchorEl, setAnchorEl] = React.useState(null);\n\n\tfunction handleClick(event) {\n\t\tsetAnchorEl(event.currentTarget);\n\t}\n\t\n\tfunction handleClose() {\n\t\tsetAnchorEl(null);\n\t}\n\n\tif (!props.currentUser)  {\n\t\treturn (\n\t\t\t<div>\n\t\t\t\t<IconButton edge=\"start\" color=\"inherit\" aria-label=\"Menu\" onClick={handleClick}>\n\t\t\t\t\t<MenuIcon />\n\t\t\t\t</IconButton>\n\t\t\t\t<Menu id=\"simple-menu\" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>\n\t\t\t\t\t<MenuItem component={ LoginLink } onClick={handleClose}>Login</MenuItem>\n\t\t\t\t</Menu>\n\t\t\t</div>);\n\t} else {\n\t\treturn (\n\t\t\t<div>\n\t\t\t\t<IconButton edge=\"start\" color=\"inherit\" aria-label=\"Menu\" onClick={handleClick}>\n\t\t\t\t\t\t<MenuIcon />\n\t\t\t\t</IconButton>\n\t\t\t\t<Menu id=\"simple-menu\" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>\n\t\t\t\t\t{props.currentUser.menus.map((e, i) => (<MenuItem key={e.key} component={ React.forwardRef( (props, ref) => (<Link innerRef={ ref } to={e.url} { ...props } />)) } onClick={handleClose}> {e.label} </MenuItem>))}\n\t\t\t\t\t<MenuItem component={ LogoutLink } onClick={handleClose}> Logout </MenuItem> \n\t\t\t\t</Menu>\n\t\t\t</div>);\n\t}\n} ",
-      "parameters" : [ ]
-    }, {
-      "uuid" : "b26f163f-b701-4078-8b3d-7b984d504dfd",
-      "name" : "LogoutForm",
-      "text" : "import { withRouter } from 'react-router-dom';\nimport React from 'react';\n\nimport { inject, observer } from 'mobx-react';\n\nimport SignOut from '../components/SignOut.js';\n\n@withRouter\n@inject('authStore')\n@observer\nclass LogoutForm extends React.Component {\n\n\tconstructor(){\n\t\tsuper();\n\t\tthis.handleSubmitForm = this.handleSubmitForm.bind(this);\n\t}\n\n\thandleSubmitForm = (e) => {\n\t\te.preventDefault();\n\t\tthis.props.authStore.logout().then(() => this.props.history.replace('/')).catch(e => {});\n\t}\n\n\trender() {\n\t\treturn (<SignOut authStore={ this.props.authStore } onSubmit={ this.handleSubmitForm } />);\n\t}\n}\n\nexport default (LogoutForm); ",
-      "parameters" : [ ]
-    }, {
-      "uuid" : "ea1f014c-d298-41a6-a22a-ecf4c1a4528a",
-      "name" : "ListErrors",
-      "text" : "import React from 'react';\nimport { withStyles } from '@material-ui/core/styles';\nimport Typography from '@material-ui/core/Typography';\n\nconst useStyles = theme => ({\n\terrors: {\n\t\tcolor: 'red'\n\t},\n\n});\n\n@withStyles(useStyles)\nclass ListErrors extends React.Component {\n\n\trender() {\n\n\t\tconst errors = this.props.errors;\n\n\t\tif (errors) \n\t\t\treturn (\n\t\t\t\t<ul className={ this.props.classes.errors }> { Object.keys(errors).map(key => { return (<li key={key}><Typography>{errors[key]}</Typography></li>);}) }\n\t\t\t\t</ul>\n\t\t\t);\n\n\t\treturn null;\n\t}\n}\n\nexport default ListErrors; ",
-      "parameters" : [ ]
-    }, {
-      "uuid" : "84bd2ae0-2777-4bb3-832f-753e4e276509",
-      "name" : "Usecase",
-      "text" : "~module~\n\n~name~\n~description~\n\n~url~\n~parameterName~ ~parameterType~\n~action~\n\n~successStatements:{it|~it~};separator=\"\\n\"~\n~failStatements:{it|~it~};separator=\"\\n\"~\n\n~domainStatements:{it|~it~};separator=\"\\n\"~\n\n~returnValue~ ",
-      "parameters" : [ {
-        "uuid" : "d77b1baa-7067-44e6-8efe-c165c0a8a430",
-        "name" : "module",
-        "type" : "SINGLE",
-        "argumentType" : "String"
-      }, {
-        "uuid" : "5325367f-ba40-4070-9088-24bf6c78a434",
-        "name" : "name",
-        "type" : "SINGLE",
-        "argumentType" : "String"
-      }, {
-        "uuid" : "7184bb58-cd3c-4fb3-a123-3a07831d62e3",
-        "name" : "description",
-        "type" : "SINGLE",
-        "argumentType" : "String"
-      }, {
-        "uuid" : "02fdf7f2-d62b-440f-b362-ea282996bb0d",
-        "name" : "url",
-        "type" : "SINGLE",
-        "argumentType" : "String"
-      }, {
-        "uuid" : "20c860b5-8010-4e77-99e4-7c5c36230a0e",
-        "name" : "parameterName",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "7413e303-0804-4ecc-a5b8-3dc9ff6a6d66",
-        "name" : "parameterType",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "289d4977-5573-41c0-b4a0-d72b4a22dc21",
-        "name" : "action",
-        "type" : "SINGLE",
-        "argumentType" : "String"
-      }, {
-        "uuid" : "1ce4a605-fbf3-4de3-b727-e4b81a04700b",
-        "name" : "successStatements",
-        "type" : "LIST",
-        "argumentType" : "String"
-      }, {
-        "uuid" : "c00765cf-8a05-4649-8b3b-ed7ddc6d5954",
-        "name" : "failStatements",
-        "type" : "LIST",
-        "argumentType" : "String"
-      }, {
-        "uuid" : "80b4dbc0-81f6-41a2-8910-73d993ece0e1",
-        "name" : "domainStatements",
-        "type" : "LIST",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "7bb5dd73-fe5b-4828-8a40-9160ba101e9d",
-        "name" : "returnValue",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      } ]
-    } ],
-    "parameters" : [ {
-      "uuid" : "cc92bfe7-515c-40b4-a306-4812f53b72d3",
-      "name" : "routes",
-      "type" : "KVLIST",
-      "argumentType" : "Object",
-      "keys" : [ {
-        "uuid" : "de6131f7-c83c-442e-90c1-f629c73cc81d",
-        "name" : "component",
-        "argumentType" : "String"
-      }, {
-        "uuid" : "d9fa7f3b-e4d3-4396-a24a-7762b50fd4ef",
-        "name" : "filename",
-        "argumentType" : "String"
-      }, {
-        "uuid" : "9ad5f37c-6768-4cb8-ba4d-93b11343a626",
-        "name" : "path",
-        "argumentType" : "String"
-      } ]
-    }, {
-      "uuid" : "9148ab79-ad82-49c2-b833-2926650c54c2",
-      "name" : "theme",
-      "type" : "SINGLE",
-      "argumentType" : "Object"
-    }, {
-      "uuid" : "776d4803-5982-41e1-997a-615c23f69a0f",
-      "name" : "stores",
-      "type" : "LIST",
       "argumentType" : "Object"
     } ]
   }, {
@@ -480,8 +239,13 @@
     }, {
       "uuid" : "15d942fc-60ab-4895-b34e-796207fa1718",
       "name" : "functionCall",
-      "text" : "~name~(~parameters:{it|~it~};separator=\",\"~) ",
+      "text" : "~if(scope)~~scope~.~endif~~name~(~parameters:{it|~it~};separator=\",\"~) ",
       "parameters" : [ {
+        "uuid" : "ff9afa71-8e9b-4524-a535-30b18e513d9c",
+        "name" : "scope",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
         "uuid" : "db052219-877b-4e95-905e-676ab895fb4e",
         "name" : "name",
         "type" : "SINGLE",
@@ -602,26 +366,6 @@
           "argumentType" : "Object"
         } ]
       }, {
-        "uuid" : "562c6189-0000-4cce-b64d-2a4594b462b2",
-        "name" : "Element",
-        "text" : "<~name~~if(props)~ ~props:{it|~it~};separator=\" \"~~endif~~if(children)~>\n\t~children:{it|~it~};separator=\"\\n\"~\n</~name~>~else~ />~endif~ ",
-        "parameters" : [ {
-          "uuid" : "4b634c2b-c83f-4c9d-9dc8-7e2ac576e507",
-          "name" : "name",
-          "type" : "SINGLE",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "1f285e4d-9995-4266-9c29-dc1778962fa6",
-          "name" : "props",
-          "type" : "LIST",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "fb108dfe-4cec-4bfa-ae1d-ea0172334eb7",
-          "name" : "children",
-          "type" : "LIST",
-          "argumentType" : "Object"
-        } ]
-      }, {
         "uuid" : "59814359-6f01-4138-9900-c11839c56461",
         "name" : "DestructorProp",
         "text" : "const { ~prop:{it|~it~};separator=\", \"~ } = this.props~if(child)~.~child~~endif~; ",
@@ -698,7 +442,7 @@
       }, {
         "uuid" : "9752d4ad-2141-445a-9a80-3a79072db167",
         "name" : "ClassComponent",
-        "text" : "import React from 'react';\n~imports:{it|import ~it.ref~ from '~it.path~';};separator=\"\\n\"~\n~dependencies:{it|~it~};separator=\"\\n\"~\n~components:{it|~it~};separator=\"\\n\\n\"~\n\n~decorators:{it|~it~};separator=\"\\n\"~\nclass ~name~ extends React.Component {\n\n\tconstructor(props) {\n\t\tsuper(props);\n\t\tconsole.log(\"new ~name~ : \" +  this.props);\n~if(state)~\n\t\tthis.state = {\n\t\t\t~state:{it|~it~};separator=\",\\n\"~;\n\t\t}\n~endif~\n\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t\t~events:{it|this.~it.methodName~ = this.~it.methodName~.bind(this);};separator=\"\\n\"~\n\t}\n\n~if(events)~\n\t~events:{it|~it.declaration~};separator=\"\\n\\n\"~\n\t\n~endif~\n~if(methods)~\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n\t\n~endif~\n\n\trender() {\n\t\tconsole.log(\"render ~name~ : \" +  this.props);\n\t\t~if(renderConstants)~const { ~renderConstants:{it|~it~};separator=\", \"~ } = this.state;~endif~\n\t\t\n\t\t~if(returnStatements)~return (~returnStatements:{it|~it~};separator=\"\\n\\n\"~)~else~return null;~endif~\n\t}\n}\n\nexport default (~name~); ",
+        "text" : "import React from 'react';\n~imports:{it|import ~it.ref~ from '~it.path~';};separator=\"\\n\"~\n~componentImports:{it|~it~};separator=\"\\n\"~\n~dependencies:{it|~it~};separator=\"\\n\"~\n\n~decorators:{it|~it~};separator=\"\\n\"~\nclass ~name~ extends React.Component {\n\n\tconstructor(props) {\n\t\tsuper(props);\n\t\tconsole.log(\"new ~name~ : \" +  this.props);\n~if(state)~\n\t\tthis.state = {\n\t\t\t~state:{it|~it~};separator=\",\\n\"~;\n\t\t}\n~endif~\n\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t\t~events:{it|this.~it.methodName~ = this.~it.methodName~.bind(this);};separator=\"\\n\"~\n\t}\n\n~if(events)~\n\t~events:{it|~it.declaration~};separator=\"\\n\\n\"~\n\n~endif~\n~if(methods)~\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n\n~endif~\n\n\tstatic getDerivedStateFromError(error) {\n\t\t// Update state so the next render will show the fallback UI.\n\t\treturn { hasError: true };\n\t}\n\n\tcomponentDidCatch(error, errorInfo) {\n\t\t// You can also log the error to an error reporting service\n\t\tconsole.info(error);\n\t\tconsole.info(errorInfo);\n\t}\n\n\trender() {\n\t\tconsole.log(\"render ~name~ : \" +  this.props);\n~if(renderCondition)~\n\t\tif(~renderCondition~) {\n\t\t\tconsole.info(\"~name~.~renderCondition~ TRUE\");\n\t\t\treturn ( \n\t\t\t\t~renderTrue~\n\t\t\t);\n\t\t} else {\n\t\t\tconsole.info(\"~name~.~renderCondition~ FALSE\");\n\t\t\treturn (\n\t\t\t\t~renderFalse~\n\t\t\t);\n\t\t}\n~else~\n\t\treturn (\n\t\t\t~if(renderElement)~~renderElement~~else~null~endif~\n\t\t);\n~endif~\n\t}\n}\n\nexport default (~name~); ",
         "parameters" : [ {
           "uuid" : "4b461799-67b0-4758-bc6b-d3f04c7b826a",
           "name" : "imports",
@@ -714,13 +458,13 @@
             "argumentType" : "Object"
           } ]
         }, {
-          "uuid" : "5774b4ed-f9d0-4fd5-b2ab-6ed1c3b1e0b5",
-          "name" : "dependencies",
+          "uuid" : "bd1fa7c3-bb9e-48a9-995b-d4a6e246bff9",
+          "name" : "componentImports",
           "type" : "LIST",
           "argumentType" : "Object"
         }, {
-          "uuid" : "fb6099e9-64f5-49aa-9bc1-0360d75b872b",
-          "name" : "components",
+          "uuid" : "5774b4ed-f9d0-4fd5-b2ab-6ed1c3b1e0b5",
+          "name" : "dependencies",
           "type" : "LIST",
           "argumentType" : "Object"
         }, {
@@ -763,14 +507,24 @@
           "type" : "LIST",
           "argumentType" : "Object"
         }, {
-          "uuid" : "d317ae3e-0ab1-4e01-8c06-270aa9af4ef0",
-          "name" : "renderConstants",
-          "type" : "LIST",
+          "uuid" : "3d800881-78e0-4544-95dc-ddf2bfdb691d",
+          "name" : "renderCondition",
+          "type" : "SINGLE",
           "argumentType" : "Object"
         }, {
-          "uuid" : "1850bca0-cb2a-4c71-a9f6-185027773f9f",
-          "name" : "returnStatements",
-          "type" : "LIST",
+          "uuid" : "9f1acf8e-bdeb-4a23-ae3b-fc4418e3bb1b",
+          "name" : "renderTrue",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "feb5a78a-f21f-4ffd-9fea-d9992672757d",
+          "name" : "renderFalse",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "46c39a02-967d-4022-bef3-93d165ec564f",
+          "name" : "renderElement",
+          "type" : "SINGLE",
           "argumentType" : "Object"
         } ]
       }, {
@@ -922,13 +676,67 @@
             "type" : "LIST",
             "argumentType" : "Object"
           } ]
+        }, {
+          "uuid" : "562c6189-0000-4cce-b64d-2a4594b462b2",
+          "name" : "Element",
+          "text" : "<~name~~if(props)~ ~props:{it|~it~};separator=\" \"~~endif~~if(children)~>\n\t~children:{it|~it~};separator=\"\\n\"~\n</~name~>~else~ />~endif~ ",
+          "parameters" : [ {
+            "uuid" : "4b634c2b-c83f-4c9d-9dc8-7e2ac576e507",
+            "name" : "name",
+            "type" : "SINGLE",
+            "argumentType" : "Object"
+          }, {
+            "uuid" : "1f285e4d-9995-4266-9c29-dc1778962fa6",
+            "name" : "props",
+            "type" : "LIST",
+            "argumentType" : "Object"
+          }, {
+            "uuid" : "fb108dfe-4cec-4bfa-ae1d-ea0172334eb7",
+            "name" : "children",
+            "type" : "LIST",
+            "argumentType" : "Object"
+          } ]
         } ]
       } ],
       "parameters" : [ ]
     }, {
-      "uuid" : "52258f11-6ae3-4b33-ac98-e28cdc0a0daf",
-      "name" : "VictoryCharts",
-      "text" : ""
+      "uuid" : "14e250cf-b417-4fb7-b512-a54f6ba8fe58",
+      "name" : "App",
+      "text" : "import React, { Component } from 'react';\nimport { Switch, Route, withRouter } from 'react-router-dom';\n\nimport { Provider } from 'mobx-react';\nimport { inject, observer } from 'mobx-react';\n\n~routes:{it|import ~it.component~ from './pages/~it.filename~';};separator=\"\\n\"~\n\nimport NavigationBar from './components/NavigationBar.js';\n\nimport CssBaseline from '@material-ui/core/CssBaseline';\nimport { ThemeProvider } from '@material-ui/styles';\nimport { createMuiTheme } from '@material-ui/core/styles';\n\n// https://in-your-saas.github.io/material-ui-theme-editor/\n//const theme = createMuiTheme({\"palette\":{\"common\":{\"black\":\"#000\",\"white\":\"#fff\"},\"background\":{\"paper\":\"#fff\",\"default\":\"#fafafa\"},\"primary\":{\"light\":\"rgba(255, 255, 255, 1)\",\"main\":\"rgba(22, 22, 23, 1)\",\"dark\":\"rgba(74, 74, 74, 1)\",\"contrastText\":\"#fff\"},\"secondary\":{\"light\":\"#ff4081\",\"main\":\"rgba(245, 166, 35, 1)\",\"dark\":\"#c51162\",\"contrastText\":\"#fff\"},\"error\":{\"light\":\"#e57373\",\"main\":\"#f44336\",\"dark\":\"#d32f2f\",\"contrastText\":\"#fff\"},\"text\":{\"primary\":\"rgba(0, 0, 0, 0.87)\",\"secondary\":\"rgba(0, 0, 0, 0.54)\",\"disabled\":\"rgba(0, 0, 0, 0.38)\",\"hint\":\"rgba(0, 0, 0, 0.38)\"}}});\nconst theme = createMuiTheme(~theme~);\n\n@inject(~stores:{it|'~it~'};separator=\", \"~)\n@withRouter\n@observer\nclass App extends Component {\n\n\tconstructor(props) {\n\t\tsuper(props);\n\t\t\n\t\tif (!this.props.appStore.token) \n\t\t\tthis.props.appStore.setAppLoaded();\n\t\t\n\t}\n\n\tcomponentDidMount() {\n\t\t\n\t\tif (this.props.appStore.token) \n\t\t\tthis.props.userStore.pullUser().finally(() => this.props.appStore.setAppLoaded());\n\t}\n\n\trender() {\n\n\t\tif (this.props.appStore.appLoaded) {\n\t\t\treturn (\n\t\t\t\t<ThemeProvider theme={theme}>\n\t\t\t\t\t<CssBaseline />\n\t\t\t\t\t<div>\n\t\t\t\t\t\t<NavigationBar userStore={ this.props.userStore }></NavigationBar>\n\t\t\t\t\t</div>\n\t\t\t\t\t<Switch>\n\t\t\t\t\t\t~routes:{it|<Route path=\"~it.path~\" ~if(it.render)~render=~it.render~~else~component={~it.component~\\}~endif~ />};separator=\"\\n\"~\n\t\t\t\t\t</Switch>\n\t\t\t\t</ThemeProvider>);\n\t\t} else return null;\n\t}\n}\n\nexport default App; ",
+      "children" : [ ],
+      "parameters" : [ {
+        "uuid" : "cc92bfe7-515c-40b4-a306-4812f53b72d3",
+        "name" : "routes",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "de6131f7-c83c-442e-90c1-f629c73cc81d",
+          "name" : "component",
+          "argumentType" : "String"
+        }, {
+          "uuid" : "d9fa7f3b-e4d3-4396-a24a-7762b50fd4ef",
+          "name" : "filename",
+          "argumentType" : "String"
+        }, {
+          "uuid" : "9ad5f37c-6768-4cb8-ba4d-93b11343a626",
+          "name" : "path",
+          "argumentType" : "String"
+        }, {
+          "uuid" : "14483225-9549-4c2a-b9e2-f479148f09bc",
+          "name" : "render",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "9148ab79-ad82-49c2-b833-2926650c54c2",
+        "name" : "theme",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "776d4803-5982-41e1-997a-615c23f69a0f",
+        "name" : "stores",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
     } ]
   }, {
     "uuid" : "f1578428-b77d-4405-aee9-f75c4f317c92",
@@ -971,6 +779,101 @@
       }, {
         "uuid" : "82d85fd0-2b9c-45f3-831a-e48f10f4919b",
         "name" : "otherwise",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    } ]
+  }, {
+    "uuid" : "18493e33-7099-4c6e-a20c-000e1cfede29",
+    "name" : "Superagent",
+    "text" : "import superagentPromise from 'superagent-promise';\nimport _superagent from 'superagent';\n\nimport appStore from './stores/AppStore';\nimport authStore from './stores/AuthStore';\n\nconst superagent = superagentPromise(_superagent, global.Promise);\n\nconst handleErrors = err => {\n\tif (err && err.response && err.response.status === 401) {\n\t\tauthStore.logout();\n\t}\n\treturn err;\n};\n\nconst responseBody = res => res.body;\n\nconst tokenPlugin = req => {\n\tif (appStore.token) {\n\t\treq.set('Authorization', `Bearer ${appStore.token}`);\n\t}\n};\n\nconst requests = {\n\tdel: url =>\n\t\tsuperagent\n\t\t\t.del(`${url}`)\n\t\t\t.use(tokenPlugin)\n\t\t\t.end(handleErrors)\n\t\t\t.then(responseBody),\n\tget: url =>\n\t\tsuperagent\n\t\t\t.get(`${url}`)\n\t\t\t.use(tokenPlugin)\n\t\t\t.end(handleErrors)\n\t\t\t.then(responseBody),\n\tput: (url, body) =>\n\t\tsuperagent\n\t\t\t.put(`${url}`, body)\n\t\t\t.use(tokenPlugin)\n\t\t\t.end(handleErrors)\n\t\t\t.then(responseBody),\n\tpost: (url, body) =>\n\t\tsuperagent\n\t\t\t.post(`${url}`, body)\n\t\t\t.use(tokenPlugin)\n\t\t\t.end(handleErrors)\n\t\t\t.then(responseBody)\n};\n\n~agentDeclarations:{it|~it.declaration~};separator=\"\\n\"~\n\nexport default {\n\t~agentDeclarations:{it|~it.name~};separator=\",\\n\"~\n}; ",
+    "parameters" : [ {
+      "uuid" : "038c1527-25ec-44cc-83e5-3898a8463c40",
+      "name" : "agentDeclarations",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "0901de84-7cb0-40df-87f7-e6c771c8edc3",
+        "name" : "declaration",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "67ce8b88-4767-4ff9-b1a6-3f8fa722b116",
+        "name" : "name",
+        "argumentType" : "Object"
+      } ]
+    } ],
+    "children" : [ {
+      "uuid" : "6c458cfe-4e20-4668-b4fa-855460ef2fba",
+      "name" : "agentEndpoint",
+      "text" : "~name~: (~if(urlParam)~~urlParam~~if(parameters)~, ~endif~~endif~~parameters:{it|~it~};separator=\",\"~) => requests.~action~('/~url~'~if(urlParam)~ + ~urlParam~~endif~~if(parameters)~, { ~parameters:{it|~it~};separator=\",\"~ }~endif~) ",
+      "parameters" : [ {
+        "uuid" : "f015e1ac-3367-40bc-9635-e332b430d8e9",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "d3e4fbb7-1970-4328-8931-258cb6cddf1b",
+        "name" : "urlParam",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "2ef5b4d3-1eba-4ede-a268-e1832bc9d11b",
+        "name" : "parameters",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "3d56afd1-2666-49b3-b618-83e3c0354d42",
+        "name" : "action",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "c715b828-e4b3-4a37-a246-536ba3f7a0d1",
+        "name" : "url",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "b029cde7-43af-4ba8-bec5-119e51e9a460",
+      "name" : "agentDeclaration",
+      "text" : "const ~name~ = { \n\t~agentEndpoint:{it|~it~};separator=\",\\n\"~\n} ",
+      "parameters" : [ {
+        "uuid" : "b49848db-b2dd-4702-8fe6-1f36e6e82f53",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "093e4406-1915-4d29-bf66-38cc90bac993",
+        "name" : "agentEndpoint",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "11411a9d-db8a-4c28-9b71-3b135e55e198",
+      "name" : "agentRequest",
+      "text" : "agent.~endpoint~.~method~(~params:{it|~it~};separator=\",\"~)\n\t~then:{it|.then(~it~)};separator=\"\\n\"~\n\t.catch(action((err) => {\n\t\tconsole.info(\"error ~endpoint~.~method~ : \" + err.rawResponse);\n\t\tthis.setErrors(err.response && err.response.body && err.response.body.errors);\n\t\tthrow err;\n\t}))\n\t.finally(~finally~) ",
+      "parameters" : [ {
+        "uuid" : "06016b93-26a6-4a67-8a4a-55d3101aa143",
+        "name" : "endpoint",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "f37b75bd-72e4-4092-a919-bb60a72ae4fd",
+        "name" : "method",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "501c0d20-e4f1-49f2-9a28-8d9115dd3a65",
+        "name" : "params",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "3c7db85a-e04c-4295-b022-401e6b802d68",
+        "name" : "then",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "127b6e37-7b95-45c4-a198-f8bbb474f267",
+        "name" : "finally",
         "type" : "SINGLE",
         "argumentType" : "Object"
       } ]

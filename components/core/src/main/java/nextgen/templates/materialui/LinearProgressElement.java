@@ -9,9 +9,11 @@ public class LinearProgressElement {
 	private Object _className;
 	private Object _color;
 	private Object _id;
+	private Object _style;
 	private Object _value;
 	private Object _valueBuffer;
 	private Object _variant;
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	LinearProgressElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -33,9 +35,11 @@ public class LinearProgressElement {
 		st.add("className", _className);
 		st.add("color", _color);
 		st.add("id", _id);
+		st.add("style", _style);
 		st.add("value", _value);
 		st.add("valueBuffer", _valueBuffer);
 		st.add("variant", _variant);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -127,6 +131,28 @@ public class LinearProgressElement {
 		return this;
 	} 
 
+	public LinearProgressElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public LinearProgressElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public LinearProgressElement setValue(Object value) {
 		this._value = value;
 		return this;
@@ -194,6 +220,50 @@ public class LinearProgressElement {
 	} 
 
 
+	public LinearProgressElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public LinearProgressElement addAttribute(LinearProgressElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<LinearProgressElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(LinearProgressElement_Attribute::new);
+	}
+
+	public static final class LinearProgressElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public LinearProgressElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private LinearProgressElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -208,12 +278,15 @@ public class LinearProgressElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "LinearProgressElement(classes,className,color,id,value,valueBuffer,variant) ::= <<<LinearProgress~if(classes)~\n" + 
+	static final String st = "LinearProgressElement(classes,className,color,id,style,value,valueBuffer,variant,attribute) ::= <<<LinearProgress~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(value)~\n" + 
+				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(value)~\n" + 
 				"	value=~value~~endif~~if(valueBuffer)~\n" + 
 				"	valueBuffer=~valueBuffer~~endif~~if(variant)~\n" + 
-				"	variant=\"~variant~\"~endif~ /> >>";
+				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~ /> >>";
 }  

@@ -12,6 +12,8 @@ public class StepIconElement {
 	private Object _error;
 	private Object _icon;
 	private Object _id;
+	private Object _style;
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	StepIconElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -36,6 +38,8 @@ public class StepIconElement {
 		st.add("error", _error);
 		st.add("icon", _icon);
 		st.add("id", _id);
+		st.add("style", _style);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -193,7 +197,73 @@ public class StepIconElement {
 		return this;
 	} 
 
+	public StepIconElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
 
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public StepIconElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
+
+	public StepIconElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public StepIconElement addAttribute(StepIconElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<StepIconElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(StepIconElement_Attribute::new);
+	}
+
+	public static final class StepIconElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public StepIconElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private StepIconElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -208,12 +278,15 @@ public class StepIconElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "StepIconElement(active,classes,className,completed,error,icon,id) ::= <<<StepIcon~if(active)~\n" + 
+	static final String st = "StepIconElement(active,classes,className,completed,error,icon,id,style,attribute) ::= <<<StepIcon~if(active)~\n" + 
 				"	active~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(completed)~\n" + 
 				"	completed~endif~~if(error)~\n" + 
 				"	error~endif~~if(icon)~\n" + 
 				"	icon=~icon~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~ /> >>";
+				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~ /> >>";
 }  

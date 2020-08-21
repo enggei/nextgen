@@ -1,12 +1,12 @@
-package nextgen.templates.javascript;
+package nextgen.templates.materialui;
 
-public class LinkImport {
+public class BoxImport {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 
-	LinkImport(org.stringtemplate.v4.STGroup stGroup) {
+	BoxImport(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
@@ -21,7 +21,7 @@ public class LinkImport {
 
 	@Override
 	public String toString() {
-		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("LinkImport");
+		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("BoxImport");
 		return st.render().trim();
 	}
 
@@ -32,7 +32,7 @@ public class LinkImport {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		LinkImport that = (LinkImport) o;
+		BoxImport that = (BoxImport) o;
 		return uuid.equals(that.uuid);
 	}
 
@@ -41,5 +41,5 @@ public class LinkImport {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "LinkImport() ::= <<import { Link } from 'react-router-dom'; >>";
+	static final String st = "BoxImport() ::= <<import Box from '@material-ui/core/Box'; >>";
 }  

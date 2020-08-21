@@ -11,7 +11,9 @@ public class CardMediaElement {
 	private Object _id;
 	private Object _image;
 	private Object _src;
+	private Object _style;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	CardMediaElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -35,7 +37,9 @@ public class CardMediaElement {
 		st.add("id", _id);
 		st.add("image", _image);
 		st.add("src", _src);
+		st.add("style", _style);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -171,6 +175,28 @@ public class CardMediaElement {
 		return this;
 	} 
 
+	public CardMediaElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public CardMediaElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public CardMediaElement addChildren(Object value) {
 		this._children.add(value);
 		return this;
@@ -200,6 +226,50 @@ public class CardMediaElement {
 		return this._children;
 	} 
 
+	public CardMediaElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public CardMediaElement addAttribute(CardMediaElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<CardMediaElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(CardMediaElement_Attribute::new);
+	}
+
+	public static final class CardMediaElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public CardMediaElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private CardMediaElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -214,13 +284,16 @@ public class CardMediaElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "CardMediaElement(classes,className,component,id,image,src,children) ::= <<<CardMedia~if(classes)~\n" + 
+	static final String st = "CardMediaElement(classes,className,component,id,image,src,style,attribute,children) ::= <<<CardMedia~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(image)~\n" + 
 				"	image=\"~image~\"~endif~~if(src)~\n" + 
-				"	src=\"~src~\"~endif~~if(children)~>\n" + 
+				"	src=\"~src~\"~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</CardMedia>~else~ />~endif~ >>";
 }  

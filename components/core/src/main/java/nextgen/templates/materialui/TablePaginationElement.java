@@ -23,6 +23,8 @@ public class TablePaginationElement {
 	private Object _rowsPerPage;
 	private Object _rowsPerPageOptions;
 	private Object _SelectProps;
+	private Object _style;
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	TablePaginationElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -58,6 +60,8 @@ public class TablePaginationElement {
 		st.add("rowsPerPage", _rowsPerPage);
 		st.add("rowsPerPageOptions", _rowsPerPageOptions);
 		st.add("SelectProps", _SelectProps);
+		st.add("style", _style);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -457,7 +461,73 @@ public class TablePaginationElement {
 		return this;
 	} 
 
+	public TablePaginationElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
 
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public TablePaginationElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
+
+	public TablePaginationElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public TablePaginationElement addAttribute(TablePaginationElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<TablePaginationElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(TablePaginationElement_Attribute::new);
+	}
+
+	public static final class TablePaginationElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public TablePaginationElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private TablePaginationElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -472,7 +542,7 @@ public class TablePaginationElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TablePaginationElement(ActionsComponent,backIconButtonProps,backIconButtonText,classes,className,component,count,id,labelDisplayedRows,labelRowsPerPage,nextIconButtonProps,nextIconButtonText,onChangePage,onChangeRowsPerPage,page,rowsPerPage,rowsPerPageOptions,SelectProps) ::= <<<TablePagination~if(ActionsComponent)~\n" + 
+	static final String st = "TablePaginationElement(ActionsComponent,backIconButtonProps,backIconButtonText,classes,className,component,count,id,labelDisplayedRows,labelRowsPerPage,nextIconButtonProps,nextIconButtonText,onChangePage,onChangeRowsPerPage,page,rowsPerPage,rowsPerPageOptions,SelectProps,style,attribute) ::= <<<TablePagination~if(ActionsComponent)~\n" + 
 				"	ActionsComponent=~ActionsComponent~~endif~~if(backIconButtonProps)~\n" + 
 				"	backIconButtonProps=~backIconButtonProps~~endif~~if(backIconButtonText)~\n" + 
 				"	backIconButtonText=\"~backIconButtonText~\"~endif~~if(classes)~\n" + 
@@ -490,5 +560,8 @@ public class TablePaginationElement {
 				"	page=~page~\n" + 
 				"	rowsPerPage=~rowsPerPage~~if(rowsPerPageOptions)~\n" + 
 				"	rowsPerPageOptions=~rowsPerPageOptions~~endif~~if(SelectProps)~\n" + 
-				"	SelectProps=~SelectProps~~endif~ /> >>";
+				"	SelectProps=~SelectProps~~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~ /> >>";
 }  

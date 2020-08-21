@@ -10,8 +10,11 @@ public class TableRowElement {
 	private Object _component;
 	private Object _hover;
 	private Object _id;
+	private Object _key;
 	private Object _selected;
+	private Object _style;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	TableRowElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -34,8 +37,11 @@ public class TableRowElement {
 		st.add("component", _component);
 		st.add("hover", _hover);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("selected", _selected);
+		st.add("style", _style);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -149,6 +155,28 @@ public class TableRowElement {
 		return this;
 	} 
 
+	public TableRowElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public TableRowElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public TableRowElement setSelected(Object value) {
 		this._selected = value;
 		return this;
@@ -168,6 +196,28 @@ public class TableRowElement {
 
 	public TableRowElement removeSelected() {
 		this._selected = null;
+		return this;
+	} 
+
+	public TableRowElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public TableRowElement removeStyle() {
+		this._style = null;
 		return this;
 	} 
 
@@ -200,6 +250,50 @@ public class TableRowElement {
 		return this._children;
 	} 
 
+	public TableRowElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public TableRowElement addAttribute(TableRowElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<TableRowElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(TableRowElement_Attribute::new);
+	}
+
+	public static final class TableRowElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public TableRowElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private TableRowElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -214,13 +308,17 @@ public class TableRowElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TableRowElement(classes,className,component,hover,id,selected,children) ::= <<<TableRow~if(classes)~\n" + 
+	static final String st = "TableRowElement(classes,className,component,hover,id,key,selected,style,attribute,children) ::= <<<TableRow~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(hover)~\n" + 
 				"	hover~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(selected)~\n" + 
-				"	selected~endif~~if(children)~>\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(selected)~\n" + 
+				"	selected~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</TableRow>~else~ />~endif~ >>";
 }  

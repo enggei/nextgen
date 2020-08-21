@@ -5,6 +5,7 @@ public class FunctionCall {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Object _scope;
 	private Object _name;
 	private java.util.List<Object> _parameters = new java.util.ArrayList<>();
 
@@ -24,10 +25,33 @@ public class FunctionCall {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("functionCall");
+		st.add("scope", _scope);
 		st.add("name", _name);
 		for (Object o : _parameters) st.add("parameters", o);
 		return st.render().trim();
 	}
+
+	public FunctionCall setScope(Object value) {
+		this._scope = value;
+		return this;
+	}
+
+	public Object getScope() {
+		return this._scope;
+	}
+
+	public Object getScope(Object defaultValue) {
+		return this._scope == null ? defaultValue : this._scope;
+	}
+
+	public boolean hasScope() {
+		return this._scope != null;
+	}
+
+	public FunctionCall removeScope() {
+		this._scope = null;
+		return this;
+	} 
 
 	public FunctionCall setName(Object value) {
 		this._name = value;
@@ -94,5 +118,5 @@ public class FunctionCall {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "functionCall(name,parameters) ::= <<~name~(~parameters:{it|~it~};separator=\",\"~) >>";
+	static final String st = "functionCall(scope,name,parameters) ::= <<~if(scope)~~scope~.~endif~~name~(~parameters:{it|~it~};separator=\",\"~) >>";
 }  

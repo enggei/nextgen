@@ -9,17 +9,6 @@ public class JavaScriptSTTests {
 
 	@org.junit.Test
 	public void testAll() {
-		testApp();
-		testListErrors();
-		testLogoutForm();
-		testNavigationBar();
-		testSimpleMenu();
-		testSuperagent();
-		testAgentDeclaration();
-		testAgentEndpoint();
-		testAgentRequest();
-		testUsecase();
-		testUserMenu();
 		testBlockStmt();
 		testConditional();
 		testIf();
@@ -29,15 +18,16 @@ public class JavaScriptSTTests {
 		testFunctionCall();
 		testFunctionExpression();
 		testReturnStmt();
-		testInject();
 		testJsonObject();
 		testMobX();
 		testAction();
+		testInject();
 		testMobXStore();
 		testObservable();
 		testReaction();
 		testNameArray();
 		testNameValue();
+		testApp();
 		testIndexCSS();
 		testIndexHtml();
 		testIndexJS();
@@ -45,8 +35,8 @@ public class JavaScriptSTTests {
 		testClassComponent();
 		testDependency();
 		testDestructorProp();
-		testElement();
 		testDiv();
+		testElement();
 		testForm();
 		testUl();
 		testFunctionalComponent();
@@ -60,62 +50,11 @@ public class JavaScriptSTTests {
 		testLink();
 		testReactRouterLinkImport();
 		testWithRouterImport();
+		testSuperagent();
+		testAgentDeclaration();
+		testAgentEndpoint();
+		testAgentRequest();
 	}
-
-	@org.junit.Test
-	public void testApp() {
-		System.out.println("\n--- TEST App:\n" + newApp());
-	} 
-
-	@org.junit.Test
-	public void testListErrors() {
-		System.out.println("\n--- TEST ListErrors:\n" + newListErrors());
-	} 
-
-	@org.junit.Test
-	public void testLogoutForm() {
-		System.out.println("\n--- TEST LogoutForm:\n" + newLogoutForm());
-	} 
-
-	@org.junit.Test
-	public void testNavigationBar() {
-		System.out.println("\n--- TEST NavigationBar:\n" + newNavigationBar());
-	} 
-
-	@org.junit.Test
-	public void testSimpleMenu() {
-		System.out.println("\n--- TEST SimpleMenu:\n" + newSimpleMenu());
-	} 
-
-	@org.junit.Test
-	public void testSuperagent() {
-		System.out.println("\n--- TEST Superagent:\n" + newSuperagent());
-	} 
-
-	@org.junit.Test
-	public void testAgentDeclaration() {
-		System.out.println("\n--- TEST AgentDeclaration:\n" + newAgentDeclaration());
-	} 
-
-	@org.junit.Test
-	public void testAgentEndpoint() {
-		System.out.println("\n--- TEST AgentEndpoint:\n" + newAgentEndpoint());
-	} 
-
-	@org.junit.Test
-	public void testAgentRequest() {
-		System.out.println("\n--- TEST AgentRequest:\n" + newAgentRequest());
-	} 
-
-	@org.junit.Test
-	public void testUsecase() {
-		System.out.println("\n--- TEST Usecase:\n" + newUsecase());
-	} 
-
-	@org.junit.Test
-	public void testUserMenu() {
-		System.out.println("\n--- TEST UserMenu:\n" + newUserMenu());
-	} 
 
 	@org.junit.Test
 	public void testBlockStmt() {
@@ -163,11 +102,6 @@ public class JavaScriptSTTests {
 	} 
 
 	@org.junit.Test
-	public void testInject() {
-		System.out.println("\n--- TEST Inject:\n" + newInject());
-	} 
-
-	@org.junit.Test
 	public void testJsonObject() {
 		System.out.println("\n--- TEST JsonObject:\n" + newJsonObject());
 	} 
@@ -180,6 +114,11 @@ public class JavaScriptSTTests {
 	@org.junit.Test
 	public void testAction() {
 		System.out.println("\n--- TEST Action:\n" + newAction());
+	} 
+
+	@org.junit.Test
+	public void testInject() {
+		System.out.println("\n--- TEST Inject:\n" + newInject());
 	} 
 
 	@org.junit.Test
@@ -205,6 +144,11 @@ public class JavaScriptSTTests {
 	@org.junit.Test
 	public void testNameValue() {
 		System.out.println("\n--- TEST NameValue:\n" + newNameValue());
+	} 
+
+	@org.junit.Test
+	public void testApp() {
+		System.out.println("\n--- TEST App:\n" + newApp());
 	} 
 
 	@org.junit.Test
@@ -243,13 +187,13 @@ public class JavaScriptSTTests {
 	} 
 
 	@org.junit.Test
-	public void testElement() {
-		System.out.println("\n--- TEST Element:\n" + newElement());
+	public void testDiv() {
+		System.out.println("\n--- TEST Div:\n" + newDiv());
 	} 
 
 	@org.junit.Test
-	public void testDiv() {
-		System.out.println("\n--- TEST Div:\n" + newDiv());
+	public void testElement() {
+		System.out.println("\n--- TEST Element:\n" + newElement());
 	} 
 
 	@org.junit.Test
@@ -315,5 +259,25 @@ public class JavaScriptSTTests {
 	@org.junit.Test
 	public void testWithRouterImport() {
 		System.out.println("\n--- TEST WithRouterImport:\n" + newWithRouterImport());
+	} 
+
+	@org.junit.Test
+	public void testSuperagent() {
+		System.out.println("\n--- TEST Superagent:\n" + newSuperagent());
+	} 
+
+	@org.junit.Test
+	public void testAgentDeclaration() {
+		System.out.println("\n--- TEST AgentDeclaration:\n" + newAgentDeclaration());
+	} 
+
+	@org.junit.Test
+	public void testAgentEndpoint() {
+		System.out.println("\n--- TEST AgentEndpoint:\n" + newAgentEndpoint());
+	} 
+
+	@org.junit.Test
+	public void testAgentRequest() {
+		System.out.println("\n--- TEST AgentRequest:\n" + newAgentRequest());
 	} 
 } 

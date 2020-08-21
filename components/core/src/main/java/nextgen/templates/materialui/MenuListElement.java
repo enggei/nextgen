@@ -11,8 +11,10 @@ public class MenuListElement {
 	private Object _disabledItemsFocusable;
 	private Object _disableListWrap;
 	private Object _id;
+	private Object _style;
 	private Object _variant;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	MenuListElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -36,8 +38,10 @@ public class MenuListElement {
 		st.add("disabledItemsFocusable", _disabledItemsFocusable);
 		st.add("disableListWrap", _disableListWrap);
 		st.add("id", _id);
+		st.add("style", _style);
 		st.add("variant", _variant);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -173,6 +177,28 @@ public class MenuListElement {
 		return this;
 	} 
 
+	public MenuListElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public MenuListElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public MenuListElement setVariant(Object value) {
 		this._variant = value;
 		return this;
@@ -224,6 +250,50 @@ public class MenuListElement {
 		return this._children;
 	} 
 
+	public MenuListElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public MenuListElement addAttribute(MenuListElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<MenuListElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(MenuListElement_Attribute::new);
+	}
+
+	public static final class MenuListElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public MenuListElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private MenuListElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -238,14 +308,17 @@ public class MenuListElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MenuListElement(autoFocus,autoFocusItem,className,disabledItemsFocusable,disableListWrap,id,variant,children) ::= <<<MenuList~if(autoFocus)~\n" + 
+	static final String st = "MenuListElement(autoFocus,autoFocusItem,className,disabledItemsFocusable,disableListWrap,id,style,variant,attribute,children) ::= <<<MenuList~if(autoFocus)~\n" + 
 				"	autoFocus~endif~~if(autoFocusItem)~\n" + 
 				"	autoFocusItem~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(disabledItemsFocusable)~\n" + 
 				"	disabledItemsFocusable~endif~~if(disableListWrap)~\n" + 
 				"	disableListWrap~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(variant)~\n" + 
-				"	variant=\"~variant~\"~endif~~if(children)~>\n" + 
+				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(variant)~\n" + 
+				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</MenuList>~else~ />~endif~ >>";
 }  

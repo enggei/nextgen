@@ -14,7 +14,9 @@ public class StepLabelElement {
 	private Object _optional;
 	private Object _StepIconComponent;
 	private Object _StepIconProps;
+	private Object _style;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	StepLabelElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -41,7 +43,9 @@ public class StepLabelElement {
 		st.add("optional", _optional);
 		st.add("StepIconComponent", _StepIconComponent);
 		st.add("StepIconProps", _StepIconProps);
+		st.add("style", _style);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -243,6 +247,28 @@ public class StepLabelElement {
 		return this;
 	} 
 
+	public StepLabelElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public StepLabelElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public StepLabelElement addChildren(Object value) {
 		this._children.add(value);
 		return this;
@@ -272,6 +298,50 @@ public class StepLabelElement {
 		return this._children;
 	} 
 
+	public StepLabelElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public StepLabelElement addAttribute(StepLabelElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<StepLabelElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(StepLabelElement_Attribute::new);
+	}
+
+	public static final class StepLabelElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public StepLabelElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private StepLabelElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -286,7 +356,7 @@ public class StepLabelElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "StepLabelElement(classes,className,disabled,error,icon,id,optional,StepIconComponent,StepIconProps,children) ::= <<<StepLabel~if(classes)~\n" + 
+	static final String st = "StepLabelElement(classes,className,disabled,error,icon,id,optional,StepIconComponent,StepIconProps,style,attribute,children) ::= <<<StepLabel~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(disabled)~\n" + 
 				"	disabled~endif~~if(error)~\n" + 
@@ -295,7 +365,10 @@ public class StepLabelElement {
 				"	id=\"~id~\"~endif~~if(optional)~\n" + 
 				"	optional=~optional~~endif~~if(StepIconComponent)~\n" + 
 				"	StepIconComponent=~StepIconComponent~~endif~~if(StepIconProps)~\n" + 
-				"	StepIconProps=~StepIconProps~~endif~~if(children)~>\n" + 
+				"	StepIconProps=~StepIconProps~~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</StepLabel>~else~ />~endif~ >>";
 }  

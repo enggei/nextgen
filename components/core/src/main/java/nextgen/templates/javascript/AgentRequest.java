@@ -176,8 +176,8 @@ public class AgentRequest {
 	static final String st = "agentRequest(endpoint,method,params,then,finally) ::= <<agent.~endpoint~.~method~(~params:{it|~it~};separator=\",\"~)\n" + 
 				"	~then:{it|.then(~it~)};separator=\"\\n\"~\n" + 
 				"	.catch(action((err) => {\n" + 
-				"		console.info(\"error ~endpoint~.~method~ : \" + err);\n" + 
-				"		this.errors = err.response && err.response.body && err.response.body.errors;\n" + 
+				"		console.info(\"error ~endpoint~.~method~ : \" + err.rawResponse);\n" + 
+				"		this.setErrors(err.response && err.response.body && err.response.body.errors);\n" + 
 				"		throw err;\n" + 
 				"	}))\n" + 
 				"	.finally(~finally~) >>";

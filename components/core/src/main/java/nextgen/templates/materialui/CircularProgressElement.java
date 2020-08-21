@@ -11,9 +11,11 @@ public class CircularProgressElement {
 	private Object _disableShrink;
 	private Object _id;
 	private Object _size;
+	private Object _style;
 	private Object _thickness;
 	private Object _value;
 	private Object _variant;
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	CircularProgressElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -37,9 +39,11 @@ public class CircularProgressElement {
 		st.add("disableShrink", _disableShrink);
 		st.add("id", _id);
 		st.add("size", _size);
+		st.add("style", _style);
 		st.add("thickness", _thickness);
 		st.add("value", _value);
 		st.add("variant", _variant);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -175,6 +179,28 @@ public class CircularProgressElement {
 		return this;
 	} 
 
+	public CircularProgressElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public CircularProgressElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public CircularProgressElement setThickness(Object value) {
 		this._thickness = value;
 		return this;
@@ -242,6 +268,50 @@ public class CircularProgressElement {
 	} 
 
 
+	public CircularProgressElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public CircularProgressElement addAttribute(CircularProgressElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<CircularProgressElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(CircularProgressElement_Attribute::new);
+	}
+
+	public static final class CircularProgressElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public CircularProgressElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private CircularProgressElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -256,14 +326,17 @@ public class CircularProgressElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "CircularProgressElement(classes,className,color,disableShrink,id,size,thickness,value,variant) ::= <<<CircularProgress~if(classes)~\n" + 
+	static final String st = "CircularProgressElement(classes,className,color,disableShrink,id,size,style,thickness,value,variant,attribute) ::= <<<CircularProgress~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(disableShrink)~\n" + 
 				"	disableShrink~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(size)~\n" + 
-				"	size=~size~~endif~~if(thickness)~\n" + 
+				"	size=~size~~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(thickness)~\n" + 
 				"	thickness=~thickness~~endif~~if(value)~\n" + 
 				"	value=~value~~endif~~if(variant)~\n" + 
-				"	variant=\"~variant~\"~endif~ /> >>";
+				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~ /> >>";
 }  

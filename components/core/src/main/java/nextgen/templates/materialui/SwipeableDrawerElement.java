@@ -14,10 +14,12 @@ public class SwipeableDrawerElement {
 	private Object _minFlingVelocity;
 	private Object _onClose;
 	private Object _onOpen;
+	private Object _style;
 	private Object _SwipeAreaProps;
 	private Object _swipeAreaWidth;
 	private Object _transitionDuration;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	SwipeableDrawerElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -44,10 +46,12 @@ public class SwipeableDrawerElement {
 		st.add("minFlingVelocity", _minFlingVelocity);
 		st.add("onClose", _onClose);
 		st.add("onOpen", _onOpen);
+		st.add("style", _style);
 		st.add("SwipeAreaProps", _SwipeAreaProps);
 		st.add("swipeAreaWidth", _swipeAreaWidth);
 		st.add("transitionDuration", _transitionDuration);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -249,6 +253,28 @@ public class SwipeableDrawerElement {
 		return this;
 	} 
 
+	public SwipeableDrawerElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public SwipeableDrawerElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public SwipeableDrawerElement setSwipeAreaProps(Object value) {
 		this._SwipeAreaProps = value;
 		return this;
@@ -344,6 +370,50 @@ public class SwipeableDrawerElement {
 		return this._children;
 	} 
 
+	public SwipeableDrawerElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public SwipeableDrawerElement addAttribute(SwipeableDrawerElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<SwipeableDrawerElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(SwipeableDrawerElement_Attribute::new);
+	}
+
+	public static final class SwipeableDrawerElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public SwipeableDrawerElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private SwipeableDrawerElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -358,7 +428,7 @@ public class SwipeableDrawerElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SwipeableDrawerElement(className,disableBackdropTransition,disableDiscovery,disableSwipeToOpen,hysteresis,id,minFlingVelocity,onClose,onOpen,SwipeAreaProps,swipeAreaWidth,transitionDuration,children) ::= <<<SwipeableDrawer~if(className)~\n" + 
+	static final String st = "SwipeableDrawerElement(className,disableBackdropTransition,disableDiscovery,disableSwipeToOpen,hysteresis,id,minFlingVelocity,onClose,onOpen,style,SwipeAreaProps,swipeAreaWidth,transitionDuration,attribute,children) ::= <<<SwipeableDrawer~if(className)~\n" + 
 				"	className=~className~~endif~~if(disableBackdropTransition)~\n" + 
 				"	disableBackdropTransition~endif~~if(disableDiscovery)~\n" + 
 				"	disableDiscovery~endif~~if(disableSwipeToOpen)~\n" + 
@@ -368,10 +438,13 @@ public class SwipeableDrawerElement {
 				"	minFlingVelocity=~minFlingVelocity~~endif~\n" + 
 				"	onClose=~onClose~\n" + 
 				"	onOpen=~onOpen~\n" + 
-				"	open~if(SwipeAreaProps)~\n" + 
+				"	open~if(style)~\n" + 
+				"	style=~style~~endif~~if(SwipeAreaProps)~\n" + 
 				"	SwipeAreaProps=~SwipeAreaProps~~endif~~if(swipeAreaWidth)~\n" + 
 				"	swipeAreaWidth=~swipeAreaWidth~~endif~~if(transitionDuration)~\n" + 
-				"	transitionDuration=~transitionDuration~~endif~~if(children)~>\n" + 
+				"	transitionDuration=~transitionDuration~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</SwipeableDrawer>~else~ />~endif~ >>";
 }  

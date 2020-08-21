@@ -5,17 +5,6 @@ public class JavaScriptST {
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 	.append("eom() ::= \"}\"\n")
 	.append("gt() ::= \">\"\n")
-	.append(App.st + "\n")
-	.append(ListErrors.st + "\n")
-	.append(LogoutForm.st + "\n")
-	.append(NavigationBar.st + "\n")
-	.append(SimpleMenu.st + "\n")
-	.append(Superagent.st + "\n")
-	.append(AgentDeclaration.st + "\n")
-	.append(AgentEndpoint.st + "\n")
-	.append(AgentRequest.st + "\n")
-	.append(Usecase.st + "\n")
-	.append(UserMenu.st + "\n")
 	.append(BlockStmt.st + "\n")
 	.append(Conditional.st + "\n")
 	.append(If.st + "\n")
@@ -25,15 +14,16 @@ public class JavaScriptST {
 	.append(FunctionCall.st + "\n")
 	.append(FunctionExpression.st + "\n")
 	.append(ReturnStmt.st + "\n")
-	.append(Inject.st + "\n")
 	.append(JsonObject.st + "\n")
 	.append(MobX.st + "\n")
 	.append(Action.st + "\n")
+	.append(Inject.st + "\n")
 	.append(MobXStore.st + "\n")
 	.append(Observable.st + "\n")
 	.append(Reaction.st + "\n")
 	.append(NameArray.st + "\n")
 	.append(NameValue.st + "\n")
+	.append(App.st + "\n")
 	.append(IndexCSS.st + "\n")
 	.append(IndexHtml.st + "\n")
 	.append(IndexJS.st + "\n")
@@ -41,8 +31,8 @@ public class JavaScriptST {
 	.append(ClassComponent.st + "\n")
 	.append(Dependency.st + "\n")
 	.append(DestructorProp.st + "\n")
-	.append(Element.st + "\n")
 	.append(Div.st + "\n")
+	.append(Element.st + "\n")
 	.append(Form.st + "\n")
 	.append(Ul.st + "\n")
 	.append(FunctionalComponent.st + "\n")
@@ -56,6 +46,10 @@ public class JavaScriptST {
 	.append(Link.st + "\n")
 	.append(ReactRouterLinkImport.st + "\n")
 	.append(WithRouterImport.st + "\n")
+	.append(Superagent.st + "\n")
+	.append(AgentDeclaration.st + "\n")
+	.append(AgentEndpoint.st + "\n")
+	.append(AgentRequest.st + "\n")
 	.toString()  ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
@@ -91,50 +85,6 @@ public class JavaScriptST {
 	public static void setSTGroup(final String stgFile) {
 		stGroup = decorate(new org.stringtemplate.v4.STGroupFile(stgFile, '~', '~'));
 	}
-
-	public static App newApp() {
-		return new App(stGroup);
-	}  
-
-	public static ListErrors newListErrors() {
-		return new ListErrors(stGroup);
-	}  
-
-	public static LogoutForm newLogoutForm() {
-		return new LogoutForm(stGroup);
-	}  
-
-	public static NavigationBar newNavigationBar() {
-		return new NavigationBar(stGroup);
-	}  
-
-	public static SimpleMenu newSimpleMenu() {
-		return new SimpleMenu(stGroup);
-	}  
-
-	public static Superagent newSuperagent() {
-		return new Superagent(stGroup);
-	}  
-
-	public static AgentDeclaration newAgentDeclaration() {
-		return new AgentDeclaration(stGroup);
-	}  
-
-	public static AgentEndpoint newAgentEndpoint() {
-		return new AgentEndpoint(stGroup);
-	}  
-
-	public static AgentRequest newAgentRequest() {
-		return new AgentRequest(stGroup);
-	}  
-
-	public static Usecase newUsecase() {
-		return new Usecase(stGroup);
-	}  
-
-	public static UserMenu newUserMenu() {
-		return new UserMenu(stGroup);
-	}  
 
 	public static BlockStmt newBlockStmt() {
 		return new BlockStmt(stGroup);
@@ -172,10 +122,6 @@ public class JavaScriptST {
 		return new ReturnStmt(stGroup);
 	}  
 
-	public static Inject newInject() {
-		return new Inject(stGroup);
-	}  
-
 	public static JsonObject newJsonObject() {
 		return new JsonObject(stGroup);
 	}  
@@ -186,6 +132,10 @@ public class JavaScriptST {
 
 	public static Action newAction() {
 		return new Action(stGroup);
+	}  
+
+	public static Inject newInject() {
+		return new Inject(stGroup);
 	}  
 
 	public static MobXStore newMobXStore() {
@@ -206,6 +156,10 @@ public class JavaScriptST {
 
 	public static NameValue newNameValue() {
 		return new NameValue(stGroup);
+	}  
+
+	public static App newApp() {
+		return new App(stGroup);
 	}  
 
 	public static IndexCSS newIndexCSS() {
@@ -236,12 +190,12 @@ public class JavaScriptST {
 		return new DestructorProp(stGroup);
 	}  
 
-	public static Element newElement() {
-		return new Element(stGroup);
-	}  
-
 	public static Div newDiv() {
 		return new Div(stGroup);
+	}  
+
+	public static Element newElement() {
+		return new Element(stGroup);
 	}  
 
 	public static Form newForm() {
@@ -294,6 +248,22 @@ public class JavaScriptST {
 
 	public static WithRouterImport newWithRouterImport() {
 		return new WithRouterImport(stGroup);
+	}  
+
+	public static Superagent newSuperagent() {
+		return new Superagent(stGroup);
+	}  
+
+	public static AgentDeclaration newAgentDeclaration() {
+		return new AgentDeclaration(stGroup);
+	}  
+
+	public static AgentEndpoint newAgentEndpoint() {
+		return new AgentEndpoint(stGroup);
+	}  
+
+	public static AgentRequest newAgentRequest() {
+		return new AgentRequest(stGroup);
 	}  
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {

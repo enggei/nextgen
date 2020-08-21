@@ -10,8 +10,8 @@ public class MaterialUIComponent {
 	private Object _renderTrue;
 	private Object _renderFalse;
 	private Object _renderElement;
-	private java.util.List<Object> _componentImports = new java.util.ArrayList<>();
 	private java.util.List<StyleClass> _styleClasses = new java.util.ArrayList<>();
+	private java.util.List<Object> _componentImports = new java.util.ArrayList<>();
 	private java.util.List<Object> _functions = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _imports = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _const = new java.util.ArrayList<>();
@@ -37,8 +37,8 @@ public class MaterialUIComponent {
 		st.add("renderTrue", _renderTrue);
 		st.add("renderFalse", _renderFalse);
 		st.add("renderElement", _renderElement);
-		for (Object o : _componentImports) st.add("componentImports", o);
 		for (Object o : _styleClasses) st.add("styleClasses", o);
+		for (Object o : _componentImports) st.add("componentImports", o);
 		for (Object o : _functions) st.add("functions", o);
 		for (java.util.Map<String, Object> map : _imports) st.addAggr("imports.{name,path}", map.get("name"), map.get("path"));
 		for (java.util.Map<String, Object> map : _const) st.addAggr("const.{name,declaration}", map.get("name"), map.get("declaration"));
@@ -155,35 +155,6 @@ public class MaterialUIComponent {
 		return this;
 	} 
 
-	public MaterialUIComponent addComponentImports(Object value) {
-		this._componentImports.add(value);
-		return this;
-	}
-
-	public MaterialUIComponent setComponentImports(Object[] value) {
-		this._componentImports.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public MaterialUIComponent setComponentImports(java.util.Collection<Object> values) {
-		this._componentImports.addAll(values);
-		return this;
-	}
-
-	public MaterialUIComponent removeComponentImports(Object value) {
-		this._componentImports.remove(value);
-		return this;
-	}
-
-	public MaterialUIComponent removeComponentImports(int index) {
-		this._componentImports.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getComponentImports() {
-		return this._componentImports;
-	} 
-
 	public MaterialUIComponent addStyleClasses(StyleClass value) {
 		this._styleClasses.add(value);
 		return this;
@@ -211,6 +182,35 @@ public class MaterialUIComponent {
 
 	public java.util.List<StyleClass> getStyleClasses() {
 		return this._styleClasses;
+	} 
+
+	public MaterialUIComponent addComponentImports(Object value) {
+		this._componentImports.add(value);
+		return this;
+	}
+
+	public MaterialUIComponent setComponentImports(Object[] value) {
+		this._componentImports.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public MaterialUIComponent setComponentImports(java.util.Collection<Object> values) {
+		this._componentImports.addAll(values);
+		return this;
+	}
+
+	public MaterialUIComponent removeComponentImports(Object value) {
+		this._componentImports.remove(value);
+		return this;
+	}
+
+	public MaterialUIComponent removeComponentImports(int index) {
+		this._componentImports.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getComponentImports() {
+		return this._componentImports;
 	} 
 
 	public MaterialUIComponent addFunctions(Object value) {
@@ -345,36 +345,46 @@ public class MaterialUIComponent {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MaterialUIComponent(componentImports,imports,styleClasses,name,const,functions,renderCondition,renderTrue,renderFalse,renderElement) ::= <<import React from 'react';\n" + 
+	static final String st = "MaterialUIComponent(styleClasses,componentImports,imports,name,const,functions,renderCondition,renderTrue,renderFalse,renderElement) ::= <<import React from 'react';\n" + 
+				"~if(styleClasses)~\n" + 
 				"import { makeStyles } from '@material-ui/core/styles';\n" + 
+				"\n" + 
+				"~endif~\n" + 
 				"~componentImports:{it|~it~};separator=\"\\n\"~\n" + 
 				"~imports:{it|import ~it.name~ from '~it.path~';};separator=\"\\n\"~\n" + 
+				"~if(styleClasses)~\n" + 
 				"\n" + 
 				"const useStyles = makeStyles((theme) => ({\n" + 
 				"	~styleClasses:{it|~it~};separator=\",\\n\"~\n" + 
 				"}));\n" + 
+				"~endif~\n" + 
 				"\n" + 
 				"export default function ~name~(props) {\n" + 
 				"\n" + 
+				"~if(styleClasses)~\n" + 
 				"	const classes = useStyles();\n" + 
+				"	\n" + 
+				"~endif~\n" + 
 				"	~const:{it|const ~it.name~ = ~it.declaration~;};separator=\"\\n\"~\n" + 
-				"\n" + 
+				"~if(functions)~\n" + 
+				"	\n" + 
 				"	~functions:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"	\n" + 
+				"~endif~\n" + 
 				"~if(renderCondition)~\n" + 
 				"	if(~renderCondition~) {\n" + 
-				"		console.info(\"~renderCondition~ TRUE\");\n" + 
+				"		console.info(\"~name~.~renderCondition~ TRUE\");\n" + 
 				"		return ( \n" + 
 				"			~renderTrue~\n" + 
 				"		);\n" + 
 				"	} else {\n" + 
-				"		console.info(\"~renderCondition~ FALSE\");\n" + 
+				"		console.info(\"~name~.~renderCondition~ FALSE\");\n" + 
 				"		return (\n" + 
 				"			~renderFalse~\n" + 
 				"		);\n" + 
 				"	}\n" + 
 				"~else~\n" + 
-				"	console.info(\"render\");\n" + 
+				"	console.info(\"render ~name~\");\n" + 
 				"	return (\n" + 
 				"		~renderElement~\n" + 
 				"	);\n" + 

@@ -20,7 +20,9 @@ public class SwitchElement {
 	private Object _onChange;
 	private Object _required;
 	private Object _size;
+	private Object _style;
 	private Object _value;
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	SwitchElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -53,7 +55,9 @@ public class SwitchElement {
 		st.add("onChange", _onChange);
 		st.add("required", _required);
 		st.add("size", _size);
+		st.add("style", _style);
 		st.add("value", _value);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -387,6 +391,28 @@ public class SwitchElement {
 		return this;
 	} 
 
+	public SwitchElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public SwitchElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public SwitchElement setValue(Object value) {
 		this._value = value;
 		return this;
@@ -410,6 +436,50 @@ public class SwitchElement {
 	} 
 
 
+	public SwitchElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public SwitchElement addAttribute(SwitchElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<SwitchElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(SwitchElement_Attribute::new);
+	}
+
+	public static final class SwitchElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public SwitchElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private SwitchElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -424,7 +494,7 @@ public class SwitchElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SwitchElement(checked,checkedIcon,classes,className,color,disabled,disableRipple,edge,icon,id,inputProps,inputRef,onChange,required,size,value) ::= <<<Switch~if(checked)~\n" + 
+	static final String st = "SwitchElement(checked,checkedIcon,classes,className,color,disabled,disableRipple,edge,icon,id,inputProps,inputRef,onChange,required,size,style,value,attribute) ::= <<<Switch~if(checked)~\n" + 
 				"	checked~endif~~if(checkedIcon)~\n" + 
 				"	checkedIcon=~checkedIcon~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
@@ -439,6 +509,9 @@ public class SwitchElement {
 				"	inputRef=~inputRef~~endif~~if(onChange)~\n" + 
 				"	onChange=~onChange~~endif~~if(required)~\n" + 
 				"	required~endif~~if(size)~\n" + 
-				"	size=\"~size~\"~endif~~if(value)~\n" + 
-				"	value=~value~~endif~ /> >>";
+				"	size=\"~size~\"~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(value)~\n" + 
+				"	value=~value~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~ /> >>";
 }  

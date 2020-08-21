@@ -10,10 +10,12 @@ public class LinkElement {
 	private Object _color;
 	private Object _component;
 	private Object _id;
+	private Object _style;
 	private Object _TypographyClasses;
 	private Object _underline;
 	private Object _variant;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	LinkElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -36,10 +38,12 @@ public class LinkElement {
 		st.add("color", _color);
 		st.add("component", _component);
 		st.add("id", _id);
+		st.add("style", _style);
 		st.add("TypographyClasses", _TypographyClasses);
 		st.add("underline", _underline);
 		st.add("variant", _variant);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -153,6 +157,28 @@ public class LinkElement {
 		return this;
 	} 
 
+	public LinkElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public LinkElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public LinkElement setTypographyClasses(Object value) {
 		this._TypographyClasses = value;
 		return this;
@@ -248,6 +274,50 @@ public class LinkElement {
 		return this._children;
 	} 
 
+	public LinkElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public LinkElement addAttribute(LinkElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<LinkElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(LinkElement_Attribute::new);
+	}
+
+	public static final class LinkElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public LinkElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private LinkElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -262,15 +332,18 @@ public class LinkElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "LinkElement(classes,className,color,component,id,TypographyClasses,underline,variant,children) ::= <<<Link~if(classes)~\n" + 
+	static final String st = "LinkElement(classes,className,color,component,id,style,TypographyClasses,underline,variant,attribute,children) ::= <<<Link~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(TypographyClasses)~\n" + 
+				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(TypographyClasses)~\n" + 
 				"	TypographyClasses=~TypographyClasses~~endif~~if(underline)~\n" + 
 				"	underline=\"~underline~\"~endif~~if(variant)~\n" + 
-				"	variant=\"~variant~\"~endif~~if(children)~>\n" + 
+				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Link>~else~ />~endif~ >>";
 }  

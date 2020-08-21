@@ -15,9 +15,11 @@ public class DrawerElement {
 	private Object _open;
 	private Object _PaperProps;
 	private Object _SlideProps;
+	private Object _style;
 	private Object _transitionDuration;
 	private Object _variant;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	DrawerElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -45,9 +47,11 @@ public class DrawerElement {
 		st.add("open", _open);
 		st.add("PaperProps", _PaperProps);
 		st.add("SlideProps", _SlideProps);
+		st.add("style", _style);
 		st.add("transitionDuration", _transitionDuration);
 		st.add("variant", _variant);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -271,6 +275,28 @@ public class DrawerElement {
 		return this;
 	} 
 
+	public DrawerElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public DrawerElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public DrawerElement setTransitionDuration(Object value) {
 		this._transitionDuration = value;
 		return this;
@@ -344,6 +370,50 @@ public class DrawerElement {
 		return this._children;
 	} 
 
+	public DrawerElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public DrawerElement addAttribute(DrawerElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<DrawerElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(DrawerElement_Attribute::new);
+	}
+
+	public static final class DrawerElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public DrawerElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private DrawerElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -358,7 +428,7 @@ public class DrawerElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "DrawerElement(anchor,classes,className,elevation,id,ModalProps,onClose,open,PaperProps,SlideProps,transitionDuration,variant,children) ::= <<<Drawer~if(anchor)~\n" + 
+	static final String st = "DrawerElement(anchor,classes,className,elevation,id,ModalProps,onClose,open,PaperProps,SlideProps,style,transitionDuration,variant,attribute,children) ::= <<<Drawer~if(anchor)~\n" + 
 				"	anchor=\"~anchor~\"~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(elevation)~\n" + 
@@ -368,9 +438,12 @@ public class DrawerElement {
 				"	onClose=~onClose~~endif~~if(open)~\n" + 
 				"	open~endif~~if(PaperProps)~\n" + 
 				"	PaperProps=~PaperProps~~endif~~if(SlideProps)~\n" + 
-				"	SlideProps=~SlideProps~~endif~~if(transitionDuration)~\n" + 
+				"	SlideProps=~SlideProps~~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(transitionDuration)~\n" + 
 				"	transitionDuration=~transitionDuration~~endif~~if(variant)~\n" + 
-				"	variant=\"~variant~\"~endif~~if(children)~>\n" + 
+				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Drawer>~else~ />~endif~ >>";
 }  

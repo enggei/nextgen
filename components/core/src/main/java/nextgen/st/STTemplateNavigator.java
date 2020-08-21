@@ -444,9 +444,6 @@ public class STTemplateNavigator extends JPanel {
 								});
 					}));
 			}));
-			actions.add(newAction("Expand", actionEvent -> {
-				SwingUtilities.invokeLater(() -> expandTreeNodesRecursive(getThisPath(), true));
-			}));
 			actions.add(newAction("Delete", actionEvent -> {
 				SwingUtil.confirm(tree,"Delete " + getModel().getName())
 					.flatMap(aBoolean -> getParentNode(STGDirectoryTreeNode.class))

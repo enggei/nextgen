@@ -24,10 +24,12 @@ public class TooltipElement {
 	private Object _placement;
 	private Object _PopperComponent;
 	private Object _PopperProps;
+	private Object _style;
 	private Object _title;
 	private Object _TransitionComponent;
 	private Object _TransitionProps;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	TooltipElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -64,10 +66,12 @@ public class TooltipElement {
 		st.add("placement", _placement);
 		st.add("PopperComponent", _PopperComponent);
 		st.add("PopperProps", _PopperProps);
+		st.add("style", _style);
 		st.add("title", _title);
 		st.add("TransitionComponent", _TransitionComponent);
 		st.add("TransitionProps", _TransitionProps);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -489,6 +493,28 @@ public class TooltipElement {
 		return this;
 	} 
 
+	public TooltipElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public TooltipElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public TooltipElement setTitle(Object value) {
 		this._title = value;
 		return this;
@@ -584,6 +610,50 @@ public class TooltipElement {
 		return this._children;
 	} 
 
+	public TooltipElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public TooltipElement addAttribute(TooltipElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<TooltipElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(TooltipElement_Attribute::new);
+	}
+
+	public static final class TooltipElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public TooltipElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private TooltipElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -598,7 +668,7 @@ public class TooltipElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TooltipElement(arrow,classes,className,disableFocusListener,disableHoverListener,disableTouchListener,enterDelay,enterNextDelay,enterTouchDelay,id,interactive,leaveDelay,leaveTouchDelay,onClose,onOpen,open,placement,PopperComponent,PopperProps,title,TransitionComponent,TransitionProps,children) ::= <<<Tooltip~if(arrow)~\n" + 
+	static final String st = "TooltipElement(arrow,classes,className,disableFocusListener,disableHoverListener,disableTouchListener,enterDelay,enterNextDelay,enterTouchDelay,id,interactive,leaveDelay,leaveTouchDelay,onClose,onOpen,open,placement,PopperComponent,PopperProps,style,title,TransitionComponent,TransitionProps,attribute,children) ::= <<<Tooltip~if(arrow)~\n" + 
 				"	arrow~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(disableFocusListener)~\n" + 
@@ -617,10 +687,13 @@ public class TooltipElement {
 				"	open~endif~~if(placement)~\n" + 
 				"	placement=\"~placement~\"~endif~~if(PopperComponent)~\n" + 
 				"	PopperComponent=~PopperComponent~~endif~~if(PopperProps)~\n" + 
-				"	PopperProps=~PopperProps~~endif~\n" + 
+				"	PopperProps=~PopperProps~~endif~~if(style)~\n" + 
+				"	style=~style~~endif~\n" + 
 				"	title=~title~~if(TransitionComponent)~\n" + 
 				"	TransitionComponent=~TransitionComponent~~endif~~if(TransitionProps)~\n" + 
-				"	TransitionProps=~TransitionProps~~endif~~if(children)~>\n" + 
+				"	TransitionProps=~TransitionProps~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Tooltip>~else~ />~endif~ >>";
 }  

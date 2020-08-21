@@ -362,12 +362,26 @@
     }, {
       "uuid" : "4cdbdd18-0766-4344-b2d8-89e89c8d5612",
       "name" : "RouteHandler",
-      "text" : "private void ~name~(RoutingContext routingContext) {\n\tWebUtils.debug(\"~name~\", routingContext);\n\t~statements:{it|~it~};separator=\"\\n\"~\n} ",
+      "text" : "private void ~name~(RoutingContext routingContext~if(params)~, ~params:{it|~it.type~ ~it.name~};separator=\",\"~~endif~) {\n\tWebUtils.debug(\"~name~\", routingContext);\n\t~statements:{it|~it~};separator=\"\\n\"~\n} ",
       "parameters" : [ {
         "uuid" : "e649b7e7-2141-4832-a65f-4e762c5894a9",
         "name" : "name",
         "type" : "SINGLE",
         "argumentType" : "Object"
+      }, {
+        "uuid" : "349ba544-a38b-4d65-bf3e-badcd3ab1c7b",
+        "name" : "params",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "5b3b4f84-8a09-488a-a747-3240a970d7dd",
+          "name" : "type",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "679c364c-6be9-4da1-91e7-58430c1ba516",
+          "name" : "name",
+          "argumentType" : "Object"
+        } ]
       }, {
         "uuid" : "0271e395-252b-48de-934d-ced7d7b5a01b",
         "name" : "statements",

@@ -13,9 +13,11 @@ public class TabElement {
 	private Object _icon;
 	private Object _id;
 	private Object _label;
+	private Object _style;
 	private Object _value;
 	private Object _wrapped;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	TabElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -41,9 +43,11 @@ public class TabElement {
 		st.add("icon", _icon);
 		st.add("id", _id);
 		st.add("label", _label);
+		st.add("style", _style);
 		st.add("value", _value);
 		st.add("wrapped", _wrapped);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -223,6 +227,28 @@ public class TabElement {
 		return this;
 	} 
 
+	public TabElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public TabElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public TabElement setValue(Object value) {
 		this._value = value;
 		return this;
@@ -296,6 +322,50 @@ public class TabElement {
 		return this._children;
 	} 
 
+	public TabElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public TabElement addAttribute(TabElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<TabElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(TabElement_Attribute::new);
+	}
+
+	public static final class TabElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public TabElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private TabElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -310,7 +380,7 @@ public class TabElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TabElement(classes,className,disabled,disableFocusRipple,disableRipple,icon,id,label,value,wrapped,children) ::= <<<Tab~if(classes)~\n" + 
+	static final String st = "TabElement(classes,className,disabled,disableFocusRipple,disableRipple,icon,id,label,style,value,wrapped,attribute,children) ::= <<<Tab~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(disabled)~\n" + 
 				"	disabled~endif~~if(disableFocusRipple)~\n" + 
@@ -318,9 +388,12 @@ public class TabElement {
 				"	disableRipple~endif~~if(icon)~\n" + 
 				"	icon=~icon~~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(label)~\n" + 
-				"	label=~label~~endif~~if(value)~\n" + 
+				"	label=~label~~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(value)~\n" + 
 				"	value=~value~~endif~~if(wrapped)~\n" + 
-				"	wrapped~endif~~if(children)~>\n" + 
+				"	wrapped~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Tab>~else~ />~endif~ >>";
 }  

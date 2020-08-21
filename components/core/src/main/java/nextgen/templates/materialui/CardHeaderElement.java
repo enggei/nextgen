@@ -12,10 +12,12 @@ public class CardHeaderElement {
 	private Object _component;
 	private Object _disableTypography;
 	private Object _id;
+	private Object _style;
 	private Object _subheader;
 	private Object _subheaderTypographyProps;
 	private Object _title;
 	private Object _titleTypographyProps;
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	CardHeaderElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -40,10 +42,12 @@ public class CardHeaderElement {
 		st.add("component", _component);
 		st.add("disableTypography", _disableTypography);
 		st.add("id", _id);
+		st.add("style", _style);
 		st.add("subheader", _subheader);
 		st.add("subheaderTypographyProps", _subheaderTypographyProps);
 		st.add("title", _title);
 		st.add("titleTypographyProps", _titleTypographyProps);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -201,6 +205,28 @@ public class CardHeaderElement {
 		return this;
 	} 
 
+	public CardHeaderElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public CardHeaderElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public CardHeaderElement setSubheader(Object value) {
 		this._subheader = value;
 		return this;
@@ -290,6 +316,50 @@ public class CardHeaderElement {
 	} 
 
 
+	public CardHeaderElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public CardHeaderElement addAttribute(CardHeaderElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<CardHeaderElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(CardHeaderElement_Attribute::new);
+	}
+
+	public static final class CardHeaderElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public CardHeaderElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private CardHeaderElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -304,16 +374,19 @@ public class CardHeaderElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "CardHeaderElement(action,avatar,classes,className,component,disableTypography,id,subheader,subheaderTypographyProps,title,titleTypographyProps) ::= <<<CardHeader~if(action)~\n" + 
+	static final String st = "CardHeaderElement(action,avatar,classes,className,component,disableTypography,id,style,subheader,subheaderTypographyProps,title,titleTypographyProps,attribute) ::= <<<CardHeader~if(action)~\n" + 
 				"	action=~action~~endif~~if(avatar)~\n" + 
 				"	avatar=~avatar~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(disableTypography)~\n" + 
 				"	disableTypography~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(subheader)~\n" + 
+				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(subheader)~\n" + 
 				"	subheader=~subheader~~endif~~if(subheaderTypographyProps)~\n" + 
 				"	subheaderTypographyProps=~subheaderTypographyProps~~endif~~if(title)~\n" + 
 				"	title=~title~~endif~~if(titleTypographyProps)~\n" + 
-				"	titleTypographyProps=~titleTypographyProps~~endif~ /> >>";
+				"	titleTypographyProps=~titleTypographyProps~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~ /> >>";
 }  

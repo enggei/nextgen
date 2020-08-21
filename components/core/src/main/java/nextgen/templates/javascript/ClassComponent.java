@@ -6,14 +6,16 @@ public class ClassComponent {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private String _name;
+	private Object _renderCondition;
+	private Object _renderTrue;
+	private Object _renderFalse;
+	private Object _renderElement;
+	private java.util.List<Object> _componentImports = new java.util.ArrayList<>();
 	private java.util.List<Object> _dependencies = new java.util.ArrayList<>();
-	private java.util.List<Object> _components = new java.util.ArrayList<>();
 	private java.util.List<Object> _decorators = new java.util.ArrayList<>();
 	private java.util.List<Object> _state = new java.util.ArrayList<>();
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
-	private java.util.List<Object> _renderConstants = new java.util.ArrayList<>();
-	private java.util.List<Object> _returnStatements = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _imports = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _events = new java.util.ArrayList<>();
 
@@ -34,14 +36,16 @@ public class ClassComponent {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ClassComponent");
 		st.add("name", _name);
+		st.add("renderCondition", _renderCondition);
+		st.add("renderTrue", _renderTrue);
+		st.add("renderFalse", _renderFalse);
+		st.add("renderElement", _renderElement);
+		for (Object o : _componentImports) st.add("componentImports", o);
 		for (Object o : _dependencies) st.add("dependencies", o);
-		for (Object o : _components) st.add("components", o);
 		for (Object o : _decorators) st.add("decorators", o);
 		for (Object o : _state) st.add("state", o);
 		for (Object o : _constructorStatements) st.add("constructorStatements", o);
 		for (Object o : _methods) st.add("methods", o);
-		for (Object o : _renderConstants) st.add("renderConstants", o);
-		for (Object o : _returnStatements) st.add("returnStatements", o);
 		for (java.util.Map<String, Object> map : _imports) st.addAggr("imports.{ref,path}", map.get("ref"), map.get("path"));
 		for (java.util.Map<String, Object> map : _events) st.addAggr("events.{methodName,declaration}", map.get("methodName"), map.get("declaration"));
 		return st.render().trim();
@@ -67,6 +71,123 @@ public class ClassComponent {
 	public ClassComponent removeName() {
 		this._name = null;
 		return this;
+	} 
+
+	public ClassComponent setRenderCondition(Object value) {
+		this._renderCondition = value;
+		return this;
+	}
+
+	public Object getRenderCondition() {
+		return this._renderCondition;
+	}
+
+	public Object getRenderCondition(Object defaultValue) {
+		return this._renderCondition == null ? defaultValue : this._renderCondition;
+	}
+
+	public boolean hasRenderCondition() {
+		return this._renderCondition != null;
+	}
+
+	public ClassComponent removeRenderCondition() {
+		this._renderCondition = null;
+		return this;
+	} 
+
+	public ClassComponent setRenderTrue(Object value) {
+		this._renderTrue = value;
+		return this;
+	}
+
+	public Object getRenderTrue() {
+		return this._renderTrue;
+	}
+
+	public Object getRenderTrue(Object defaultValue) {
+		return this._renderTrue == null ? defaultValue : this._renderTrue;
+	}
+
+	public boolean hasRenderTrue() {
+		return this._renderTrue != null;
+	}
+
+	public ClassComponent removeRenderTrue() {
+		this._renderTrue = null;
+		return this;
+	} 
+
+	public ClassComponent setRenderFalse(Object value) {
+		this._renderFalse = value;
+		return this;
+	}
+
+	public Object getRenderFalse() {
+		return this._renderFalse;
+	}
+
+	public Object getRenderFalse(Object defaultValue) {
+		return this._renderFalse == null ? defaultValue : this._renderFalse;
+	}
+
+	public boolean hasRenderFalse() {
+		return this._renderFalse != null;
+	}
+
+	public ClassComponent removeRenderFalse() {
+		this._renderFalse = null;
+		return this;
+	} 
+
+	public ClassComponent setRenderElement(Object value) {
+		this._renderElement = value;
+		return this;
+	}
+
+	public Object getRenderElement() {
+		return this._renderElement;
+	}
+
+	public Object getRenderElement(Object defaultValue) {
+		return this._renderElement == null ? defaultValue : this._renderElement;
+	}
+
+	public boolean hasRenderElement() {
+		return this._renderElement != null;
+	}
+
+	public ClassComponent removeRenderElement() {
+		this._renderElement = null;
+		return this;
+	} 
+
+	public ClassComponent addComponentImports(Object value) {
+		this._componentImports.add(value);
+		return this;
+	}
+
+	public ClassComponent setComponentImports(Object[] value) {
+		this._componentImports.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassComponent setComponentImports(java.util.Collection<Object> values) {
+		this._componentImports.addAll(values);
+		return this;
+	}
+
+	public ClassComponent removeComponentImports(Object value) {
+		this._componentImports.remove(value);
+		return this;
+	}
+
+	public ClassComponent removeComponentImports(int index) {
+		this._componentImports.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getComponentImports() {
+		return this._componentImports;
 	} 
 
 	public ClassComponent addDependencies(Object value) {
@@ -96,35 +217,6 @@ public class ClassComponent {
 
 	public java.util.List<Object> getDependencies() {
 		return this._dependencies;
-	} 
-
-	public ClassComponent addComponents(Object value) {
-		this._components.add(value);
-		return this;
-	}
-
-	public ClassComponent setComponents(Object[] value) {
-		this._components.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public ClassComponent setComponents(java.util.Collection<Object> values) {
-		this._components.addAll(values);
-		return this;
-	}
-
-	public ClassComponent removeComponents(Object value) {
-		this._components.remove(value);
-		return this;
-	}
-
-	public ClassComponent removeComponents(int index) {
-		this._components.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getComponents() {
-		return this._components;
 	} 
 
 	public ClassComponent addDecorators(Object value) {
@@ -243,64 +335,6 @@ public class ClassComponent {
 		return this._methods;
 	} 
 
-	public ClassComponent addRenderConstants(Object value) {
-		this._renderConstants.add(value);
-		return this;
-	}
-
-	public ClassComponent setRenderConstants(Object[] value) {
-		this._renderConstants.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public ClassComponent setRenderConstants(java.util.Collection<Object> values) {
-		this._renderConstants.addAll(values);
-		return this;
-	}
-
-	public ClassComponent removeRenderConstants(Object value) {
-		this._renderConstants.remove(value);
-		return this;
-	}
-
-	public ClassComponent removeRenderConstants(int index) {
-		this._renderConstants.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getRenderConstants() {
-		return this._renderConstants;
-	} 
-
-	public ClassComponent addReturnStatements(Object value) {
-		this._returnStatements.add(value);
-		return this;
-	}
-
-	public ClassComponent setReturnStatements(Object[] value) {
-		this._returnStatements.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public ClassComponent setReturnStatements(java.util.Collection<Object> values) {
-		this._returnStatements.addAll(values);
-		return this;
-	}
-
-	public ClassComponent removeReturnStatements(Object value) {
-		this._returnStatements.remove(value);
-		return this;
-	}
-
-	public ClassComponent removeReturnStatements(int index) {
-		this._returnStatements.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getReturnStatements() {
-		return this._returnStatements;
-	} 
-
 	public ClassComponent addImports(Object _ref, Object _path) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("ref", _ref);
@@ -404,10 +438,10 @@ public class ClassComponent {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ClassComponent(imports,dependencies,components,decorators,name,state,constructorStatements,events,methods,renderConstants,returnStatements) ::= <<import React from 'react';\n" + 
+	static final String st = "ClassComponent(imports,componentImports,dependencies,decorators,name,state,constructorStatements,events,methods,renderCondition,renderTrue,renderFalse,renderElement) ::= <<import React from 'react';\n" + 
 				"~imports:{it|import ~it.ref~ from '~it.path~';};separator=\"\\n\"~\n" + 
+				"~componentImports:{it|~it~};separator=\"\\n\"~\n" + 
 				"~dependencies:{it|~it~};separator=\"\\n\"~\n" + 
-				"~components:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
 				"~decorators:{it|~it~};separator=\"\\n\"~\n" + 
 				"class ~name~ extends React.Component {\n" + 
@@ -427,18 +461,43 @@ public class ClassComponent {
 				"\n" + 
 				"~if(events)~\n" + 
 				"	~events:{it|~it.declaration~};separator=\"\\n\\n\"~\n" + 
-				"	\n" + 
+				"\n" + 
 				"~endif~\n" + 
 				"~if(methods)~\n" + 
 				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
-				"	\n" + 
+				"\n" + 
 				"~endif~\n" + 
+				"\n" + 
+				"	static getDerivedStateFromError(error) {\n" + 
+				"		// Update state so the next render will show the fallback UI.\n" + 
+				"		return { hasError: true };\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	componentDidCatch(error, errorInfo) {\n" + 
+				"		// You can also log the error to an error reporting service\n" + 
+				"		console.info(error);\n" + 
+				"		console.info(errorInfo);\n" + 
+				"	}\n" + 
 				"\n" + 
 				"	render() {\n" + 
 				"		console.log(\"render ~name~ : \" +  this.props);\n" + 
-				"		~if(renderConstants)~const { ~renderConstants:{it|~it~};separator=\", \"~ } = this.state;~endif~\n" + 
-				"		\n" + 
-				"		~if(returnStatements)~return (~returnStatements:{it|~it~};separator=\"\\n\\n\"~)~else~return null;~endif~\n" + 
+				"~if(renderCondition)~\n" + 
+				"		if(~renderCondition~) {\n" + 
+				"			console.info(\"~name~.~renderCondition~ TRUE\");\n" + 
+				"			return ( \n" + 
+				"				~renderTrue~\n" + 
+				"			);\n" + 
+				"		} else {\n" + 
+				"			console.info(\"~name~.~renderCondition~ FALSE\");\n" + 
+				"			return (\n" + 
+				"				~renderFalse~\n" + 
+				"			);\n" + 
+				"		}\n" + 
+				"~else~\n" + 
+				"		return (\n" + 
+				"			~if(renderElement)~~renderElement~~else~null~endif~\n" + 
+				"		);\n" + 
+				"~endif~\n" + 
 				"	}\n" + 
 				"}\n" + 
 				"\n" + 

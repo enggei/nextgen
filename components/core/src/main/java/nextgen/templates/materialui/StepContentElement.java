@@ -8,10 +8,12 @@ public class StepContentElement {
 	private Object _classes;
 	private Object _className;
 	private Object _id;
+	private Object _style;
 	private Object _TransitionComponent;
 	private Object _transitionDuration;
 	private Object _TransitionProps;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	StepContentElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -32,10 +34,12 @@ public class StepContentElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("id", _id);
+		st.add("style", _style);
 		st.add("TransitionComponent", _TransitionComponent);
 		st.add("transitionDuration", _transitionDuration);
 		st.add("TransitionProps", _TransitionProps);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -102,6 +106,28 @@ public class StepContentElement {
 
 	public StepContentElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public StepContentElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public StepContentElement removeStyle() {
+		this._style = null;
 		return this;
 	} 
 
@@ -200,6 +226,50 @@ public class StepContentElement {
 		return this._children;
 	} 
 
+	public StepContentElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public StepContentElement addAttribute(StepContentElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<StepContentElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(StepContentElement_Attribute::new);
+	}
+
+	public static final class StepContentElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public StepContentElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private StepContentElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -214,13 +284,16 @@ public class StepContentElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "StepContentElement(classes,className,id,TransitionComponent,transitionDuration,TransitionProps,children) ::= <<<StepContent~if(classes)~\n" + 
+	static final String st = "StepContentElement(classes,className,id,style,TransitionComponent,transitionDuration,TransitionProps,attribute,children) ::= <<<StepContent~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(TransitionComponent)~\n" + 
+				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(TransitionComponent)~\n" + 
 				"	TransitionComponent=~TransitionComponent~~endif~~if(transitionDuration)~\n" + 
 				"	transitionDuration=\"~transitionDuration~\"~endif~~if(TransitionProps)~\n" + 
-				"	TransitionProps=~TransitionProps~~endif~~if(children)~>\n" + 
+				"	TransitionProps=~TransitionProps~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</StepContent>~else~ />~endif~ >>";
 }  

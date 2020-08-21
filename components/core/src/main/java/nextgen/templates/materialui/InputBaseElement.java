@@ -31,8 +31,10 @@ public class InputBaseElement {
 	private Object _rowsMax;
 	private Object _rowsMin;
 	private Object _startAdornment;
+	private Object _style;
 	private Object _type;
 	private Object _value;
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	InputBaseElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -76,8 +78,10 @@ public class InputBaseElement {
 		st.add("rowsMax", _rowsMax);
 		st.add("rowsMin", _rowsMin);
 		st.add("startAdornment", _startAdornment);
+		st.add("style", _style);
 		st.add("type", _type);
 		st.add("value", _value);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -653,6 +657,28 @@ public class InputBaseElement {
 		return this;
 	} 
 
+	public InputBaseElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public InputBaseElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public InputBaseElement setType(Object value) {
 		this._type = value;
 		return this;
@@ -698,6 +724,50 @@ public class InputBaseElement {
 	} 
 
 
+	public InputBaseElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public InputBaseElement addAttribute(InputBaseElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<InputBaseElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(InputBaseElement_Attribute::new);
+	}
+
+	public static final class InputBaseElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public InputBaseElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private InputBaseElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -712,7 +782,7 @@ public class InputBaseElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "InputBaseElement(autoComplete,autoFocus,classes,className,color,defaultValue,disabled,endAdornment,error,fullWidth,id,inputComponent,inputProps,inputRef,margin,multiline,name,onBlur,onChange,placeholder,readOnly,required,rows,rowsMax,rowsMin,startAdornment,type,value) ::= <<<InputBase~if(autoComplete)~\n" + 
+	static final String st = "InputBaseElement(autoComplete,autoFocus,classes,className,color,defaultValue,disabled,endAdornment,error,fullWidth,id,inputComponent,inputProps,inputRef,margin,multiline,name,onBlur,onChange,placeholder,readOnly,required,rows,rowsMax,rowsMin,startAdornment,style,type,value,attribute) ::= <<<InputBase~if(autoComplete)~\n" + 
 				"	autoComplete=\"~autoComplete~\"~endif~~if(autoFocus)~\n" + 
 				"	autoFocus~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
@@ -738,7 +808,10 @@ public class InputBaseElement {
 				"	rows=~rows~~endif~~if(rowsMax)~\n" + 
 				"	rowsMax=~rowsMax~~endif~~if(rowsMin)~\n" + 
 				"	rowsMin=~rowsMin~~endif~~if(startAdornment)~\n" + 
-				"	startAdornment=~startAdornment~~endif~~if(type)~\n" + 
+				"	startAdornment=~startAdornment~~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(type)~\n" + 
 				"	type=\"~type~\"~endif~~if(value)~\n" + 
-				"	value=~value~~endif~ /> >>";
+				"	value=~value~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~ /> >>";
 }  

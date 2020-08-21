@@ -16,11 +16,13 @@ public class HiddenElement {
 	private Object _only;
 	private Object _smDown;
 	private Object _smUp;
+	private Object _style;
 	private Object _xlDown;
 	private Object _xlUp;
 	private Object _xsDown;
 	private Object _xsUp;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	HiddenElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -49,11 +51,13 @@ public class HiddenElement {
 		st.add("only", _only);
 		st.add("smDown", _smDown);
 		st.add("smUp", _smUp);
+		st.add("style", _style);
 		st.add("xlDown", _xlDown);
 		st.add("xlUp", _xlUp);
 		st.add("xsDown", _xsDown);
 		st.add("xsUp", _xsUp);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -299,6 +303,28 @@ public class HiddenElement {
 		return this;
 	} 
 
+	public HiddenElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public HiddenElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public HiddenElement setXlDown(Object value) {
 		this._xlDown = value;
 		return this;
@@ -416,6 +442,50 @@ public class HiddenElement {
 		return this._children;
 	} 
 
+	public HiddenElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public HiddenElement addAttribute(HiddenElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<HiddenElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(HiddenElement_Attribute::new);
+	}
+
+	public static final class HiddenElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public HiddenElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private HiddenElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -430,7 +500,7 @@ public class HiddenElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "HiddenElement(className,id,implementation,initialWidth,lgDown,lgUp,mdDown,mdUp,only,smDown,smUp,xlDown,xlUp,xsDown,xsUp,children) ::= <<<Hidden~if(className)~\n" + 
+	static final String st = "HiddenElement(className,id,implementation,initialWidth,lgDown,lgUp,mdDown,mdUp,only,smDown,smUp,style,xlDown,xlUp,xsDown,xsUp,attribute,children) ::= <<<Hidden~if(className)~\n" + 
 				"	className=~className~~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(implementation)~\n" + 
 				"	implementation=\"~implementation~\"~endif~~if(initialWidth)~\n" + 
@@ -441,11 +511,14 @@ public class HiddenElement {
 				"	mdUp~endif~~if(only)~\n" + 
 				"	only=\"~only~\"~endif~~if(smDown)~\n" + 
 				"	smDown~endif~~if(smUp)~\n" + 
-				"	smUp~endif~~if(xlDown)~\n" + 
+				"	smUp~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(xlDown)~\n" + 
 				"	xlDown~endif~~if(xlUp)~\n" + 
 				"	xlUp~endif~~if(xsDown)~\n" + 
 				"	xsDown~endif~~if(xsUp)~\n" + 
-				"	xsUp~endif~~if(children)~>\n" + 
+				"	xsUp~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Hidden>~else~ />~endif~ >>";
 }  

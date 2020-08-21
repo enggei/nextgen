@@ -64,7 +64,9 @@ public class AutocompleteElement {
 	private Object _renderTags;
 	private Object _selectOnFocus;
 	private Object _size;
+	private Object _style;
 	private Object _value;
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	AutocompleteElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -141,7 +143,9 @@ public class AutocompleteElement {
 		st.add("renderTags", _renderTags);
 		st.add("selectOnFocus", _selectOnFocus);
 		st.add("size", _size);
+		st.add("style", _style);
 		st.add("value", _value);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -1443,6 +1447,28 @@ public class AutocompleteElement {
 		return this;
 	} 
 
+	public AutocompleteElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public AutocompleteElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public AutocompleteElement setValue(Object value) {
 		this._value = value;
 		return this;
@@ -1466,6 +1492,50 @@ public class AutocompleteElement {
 	} 
 
 
+	public AutocompleteElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public AutocompleteElement addAttribute(AutocompleteElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<AutocompleteElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(AutocompleteElement_Attribute::new);
+	}
+
+	public static final class AutocompleteElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public AutocompleteElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private AutocompleteElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -1480,7 +1550,7 @@ public class AutocompleteElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AutocompleteElement(autoComplete,autoHighlight,autoSelect,blurOnSelect,ChipProps,classes,className,clearOnBlur,clearOnEscape,clearText,closeIcon,closeText,debug,defaultValue,disableClearable,disableCloseOnSelect,disabled,disabledItemsFocusable,disableListWrap,disablePortal,filterOptions,filterSelectedOptions,forcePopupIcon,freeSolo,fullWidth,getLimitTagsText,getOptionDisabled,getOptionLabel,getOptionSelected,groupBy,handleHomeEndKeys,id,includeInputInList,inputValue,limitTags,ListboxComponent,ListboxProps,loading,loadingText,multiple,noOptionsText,onChange,onClose,onHighlightChange,onInputChange,onOpen,open,openOnFocus,openText,options,PaperComponent,PopperComponent,popupIcon,renderGroup,renderInput,renderOption,renderTags,selectOnFocus,size,value) ::= <<<Autocomplete~if(autoComplete)~\n" + 
+	static final String st = "AutocompleteElement(autoComplete,autoHighlight,autoSelect,blurOnSelect,ChipProps,classes,className,clearOnBlur,clearOnEscape,clearText,closeIcon,closeText,debug,defaultValue,disableClearable,disableCloseOnSelect,disabled,disabledItemsFocusable,disableListWrap,disablePortal,filterOptions,filterSelectedOptions,forcePopupIcon,freeSolo,fullWidth,getLimitTagsText,getOptionDisabled,getOptionLabel,getOptionSelected,groupBy,handleHomeEndKeys,id,includeInputInList,inputValue,limitTags,ListboxComponent,ListboxProps,loading,loadingText,multiple,noOptionsText,onChange,onClose,onHighlightChange,onInputChange,onOpen,open,openOnFocus,openText,options,PaperComponent,PopperComponent,popupIcon,renderGroup,renderInput,renderOption,renderTags,selectOnFocus,size,style,value,attribute) ::= <<<Autocomplete~if(autoComplete)~\n" + 
 				"	autoComplete~endif~~if(autoHighlight)~\n" + 
 				"	autoHighlight~endif~~if(autoSelect)~\n" + 
 				"	autoSelect~endif~~if(blurOnSelect)~\n" + 
@@ -1539,6 +1609,9 @@ public class AutocompleteElement {
 				"	renderOption=~renderOption~~endif~~if(renderTags)~\n" + 
 				"	renderTags=~renderTags~~endif~~if(selectOnFocus)~\n" + 
 				"	selectOnFocus~endif~~if(size)~\n" + 
-				"	size=\"~size~\"~endif~~if(value)~\n" + 
-				"	value=~value~~endif~ /> >>";
+				"	size=\"~size~\"~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(value)~\n" + 
+				"	value=~value~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~ /> >>";
 }  

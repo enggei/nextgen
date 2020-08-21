@@ -13,7 +13,9 @@ public class DividerElement {
 	private Object _id;
 	private Object _light;
 	private Object _orientation;
+	private Object _style;
 	private Object _variant;
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	DividerElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -39,7 +41,9 @@ public class DividerElement {
 		st.add("id", _id);
 		st.add("light", _light);
 		st.add("orientation", _orientation);
+		st.add("style", _style);
 		st.add("variant", _variant);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -219,6 +223,28 @@ public class DividerElement {
 		return this;
 	} 
 
+	public DividerElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public DividerElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public DividerElement setVariant(Object value) {
 		this._variant = value;
 		return this;
@@ -242,6 +268,50 @@ public class DividerElement {
 	} 
 
 
+	public DividerElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public DividerElement addAttribute(DividerElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<DividerElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(DividerElement_Attribute::new);
+	}
+
+	public static final class DividerElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public DividerElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private DividerElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -256,7 +326,7 @@ public class DividerElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "DividerElement(absolute,classes,className,component,flexItem,id,light,orientation,variant) ::= <<<Divider~if(absolute)~\n" + 
+	static final String st = "DividerElement(absolute,classes,className,component,flexItem,id,light,orientation,style,variant,attribute) ::= <<<Divider~if(absolute)~\n" + 
 				"	absolute~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
@@ -264,6 +334,9 @@ public class DividerElement {
 				"	flexItem~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(light)~\n" + 
 				"	light~endif~~if(orientation)~\n" + 
-				"	orientation=\"~orientation~\"~endif~~if(variant)~\n" + 
-				"	variant=\"~variant~\"~endif~ /> >>";
+				"	orientation=\"~orientation~\"~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(variant)~\n" + 
+				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~ /> >>";
 }  

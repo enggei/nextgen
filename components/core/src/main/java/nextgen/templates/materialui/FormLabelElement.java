@@ -15,7 +15,9 @@ public class FormLabelElement {
 	private Object _focused;
 	private Object _id;
 	private Object _required;
+	private Object _style;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	FormLabelElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -43,7 +45,9 @@ public class FormLabelElement {
 		st.add("focused", _focused);
 		st.add("id", _id);
 		st.add("required", _required);
+		st.add("style", _style);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -267,6 +271,28 @@ public class FormLabelElement {
 		return this;
 	} 
 
+	public FormLabelElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public FormLabelElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public FormLabelElement addChildren(Object value) {
 		this._children.add(value);
 		return this;
@@ -296,6 +322,50 @@ public class FormLabelElement {
 		return this._children;
 	} 
 
+	public FormLabelElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public FormLabelElement addAttribute(FormLabelElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<FormLabelElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(FormLabelElement_Attribute::new);
+	}
+
+	public static final class FormLabelElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public FormLabelElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private FormLabelElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -310,7 +380,7 @@ public class FormLabelElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "FormLabelElement(classes,className,color,component,disabled,error,filled,focused,id,required,children) ::= <<<FormLabel~if(classes)~\n" + 
+	static final String st = "FormLabelElement(classes,className,color,component,disabled,error,filled,focused,id,required,style,attribute,children) ::= <<<FormLabel~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(component)~\n" + 
@@ -320,7 +390,10 @@ public class FormLabelElement {
 				"	filled~endif~~if(focused)~\n" + 
 				"	focused~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(required)~\n" + 
-				"	required~endif~~if(children)~>\n" + 
+				"	required~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</FormLabel>~else~ />~endif~ >>";
 }  

@@ -5,6 +5,7 @@ public class StringTemplateST {
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 	.append("eom() ::= \"}\"\n")
 	.append("gt() ::= \">\"\n")
+	.append(DomainVisitorRunner.st + "\n")
 	.append(ScriptRunner.st + "\n")
 	.append(STDomain.st + "\n")
 	.append(NewEntityInstance.st + "\n")
@@ -53,6 +54,10 @@ public class StringTemplateST {
 	public static void setSTGroup(final String stgFile) {
 		stGroup = decorate(new org.stringtemplate.v4.STGroupFile(stgFile, '~', '~'));
 	}
+
+	public static DomainVisitorRunner newDomainVisitorRunner() {
+		return new DomainVisitorRunner(stGroup);
+	}  
 
 	public static ScriptRunner newScriptRunner() {
 		return new ScriptRunner(stGroup);

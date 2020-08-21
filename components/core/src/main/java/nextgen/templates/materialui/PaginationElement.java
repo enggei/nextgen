@@ -24,7 +24,9 @@ public class PaginationElement {
 	private Object _showLastButton;
 	private Object _siblingCount;
 	private Object _size;
+	private Object _style;
 	private Object _variant;
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	PaginationElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -61,7 +63,9 @@ public class PaginationElement {
 		st.add("showLastButton", _showLastButton);
 		st.add("siblingCount", _siblingCount);
 		st.add("size", _size);
+		st.add("style", _style);
 		st.add("variant", _variant);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -483,6 +487,28 @@ public class PaginationElement {
 		return this;
 	} 
 
+	public PaginationElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public PaginationElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public PaginationElement setVariant(Object value) {
 		this._variant = value;
 		return this;
@@ -506,6 +532,50 @@ public class PaginationElement {
 	} 
 
 
+	public PaginationElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public PaginationElement addAttribute(PaginationElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<PaginationElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(PaginationElement_Attribute::new);
+	}
+
+	public static final class PaginationElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public PaginationElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private PaginationElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -520,7 +590,7 @@ public class PaginationElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PaginationElement(boundaryCount,classes,className,color,count,defaultPage,disabled,getItemAriaLabel,hideNextButton,hidePrevButton,id,onChange,page,renderItem,shape,showFirstButton,showLastButton,siblingCount,size,variant) ::= <<<Pagination~if(boundaryCount)~\n" + 
+	static final String st = "PaginationElement(boundaryCount,classes,className,color,count,defaultPage,disabled,getItemAriaLabel,hideNextButton,hidePrevButton,id,onChange,page,renderItem,shape,showFirstButton,showLastButton,siblingCount,size,style,variant,attribute) ::= <<<Pagination~if(boundaryCount)~\n" + 
 				"	boundaryCount=~boundaryCount~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
@@ -539,6 +609,9 @@ public class PaginationElement {
 				"	showFirstButton~endif~~if(showLastButton)~\n" + 
 				"	showLastButton~endif~~if(siblingCount)~\n" + 
 				"	siblingCount=~siblingCount~~endif~~if(size)~\n" + 
-				"	size=\"~size~\"~endif~~if(variant)~\n" + 
-				"	variant=\"~variant~\"~endif~ /> >>";
+				"	size=\"~size~\"~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(variant)~\n" + 
+				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~ /> >>";
 }  

@@ -15,7 +15,9 @@ public class FormControlLabelElement {
 	private Object _label;
 	private Object _labelPlacement;
 	private Object _onChange;
+	private Object _style;
 	private Object _value;
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	FormControlLabelElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -43,7 +45,9 @@ public class FormControlLabelElement {
 		st.add("label", _label);
 		st.add("labelPlacement", _labelPlacement);
 		st.add("onChange", _onChange);
+		st.add("style", _style);
 		st.add("value", _value);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -267,6 +271,28 @@ public class FormControlLabelElement {
 		return this;
 	} 
 
+	public FormControlLabelElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public FormControlLabelElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public FormControlLabelElement setValue(Object value) {
 		this._value = value;
 		return this;
@@ -290,6 +316,50 @@ public class FormControlLabelElement {
 	} 
 
 
+	public FormControlLabelElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public FormControlLabelElement addAttribute(FormControlLabelElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<FormControlLabelElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(FormControlLabelElement_Attribute::new);
+	}
+
+	public static final class FormControlLabelElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public FormControlLabelElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private FormControlLabelElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -304,7 +374,7 @@ public class FormControlLabelElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "FormControlLabelElement(checked,classes,className,control,disabled,id,inputRef,label,labelPlacement,onChange,value) ::= <<<FormControlLabel~if(checked)~\n" + 
+	static final String st = "FormControlLabelElement(checked,classes,className,control,disabled,id,inputRef,label,labelPlacement,onChange,style,value,attribute) ::= <<<FormControlLabel~if(checked)~\n" + 
 				"	checked~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~\n" + 
@@ -314,6 +384,9 @@ public class FormControlLabelElement {
 				"	inputRef=~inputRef~~endif~~if(label)~\n" + 
 				"	label=~label~~endif~~if(labelPlacement)~\n" + 
 				"	labelPlacement=\"~labelPlacement~\"~endif~~if(onChange)~\n" + 
-				"	onChange=~onChange~~endif~~if(value)~\n" + 
-				"	value=~value~~endif~ /> >>";
+				"	onChange=~onChange~~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(value)~\n" + 
+				"	value=~value~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~ /> >>";
 }  

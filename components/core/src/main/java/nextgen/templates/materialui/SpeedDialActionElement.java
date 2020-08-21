@@ -12,10 +12,12 @@ public class SpeedDialActionElement {
 	private Object _icon;
 	private Object _id;
 	private Object _open;
+	private Object _style;
 	private Object _TooltipClasses;
 	private Object _tooltipOpen;
 	private Object _tooltipPlacement;
 	private Object _tooltipTitle;
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	SpeedDialActionElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -40,10 +42,12 @@ public class SpeedDialActionElement {
 		st.add("icon", _icon);
 		st.add("id", _id);
 		st.add("open", _open);
+		st.add("style", _style);
 		st.add("TooltipClasses", _TooltipClasses);
 		st.add("tooltipOpen", _tooltipOpen);
 		st.add("tooltipPlacement", _tooltipPlacement);
 		st.add("tooltipTitle", _tooltipTitle);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -201,6 +205,28 @@ public class SpeedDialActionElement {
 		return this;
 	} 
 
+	public SpeedDialActionElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public SpeedDialActionElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public SpeedDialActionElement setTooltipClasses(Object value) {
 		this._TooltipClasses = value;
 		return this;
@@ -290,6 +316,50 @@ public class SpeedDialActionElement {
 	} 
 
 
+	public SpeedDialActionElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public SpeedDialActionElement addAttribute(SpeedDialActionElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<SpeedDialActionElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(SpeedDialActionElement_Attribute::new);
+	}
+
+	public static final class SpeedDialActionElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public SpeedDialActionElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private SpeedDialActionElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -304,16 +374,19 @@ public class SpeedDialActionElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SpeedDialActionElement(classes,className,delay,FabProps,icon,id,open,TooltipClasses,tooltipOpen,tooltipPlacement,tooltipTitle) ::= <<<SpeedDialAction~if(classes)~\n" + 
+	static final String st = "SpeedDialActionElement(classes,className,delay,FabProps,icon,id,open,style,TooltipClasses,tooltipOpen,tooltipPlacement,tooltipTitle,attribute) ::= <<<SpeedDialAction~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(delay)~\n" + 
 				"	delay=~delay~~endif~~if(FabProps)~\n" + 
 				"	FabProps=~FabProps~~endif~~if(icon)~\n" + 
 				"	icon=~icon~~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(open)~\n" + 
-				"	open~endif~~if(TooltipClasses)~\n" + 
+				"	open~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(TooltipClasses)~\n" + 
 				"	TooltipClasses=~TooltipClasses~~endif~~if(tooltipOpen)~\n" + 
 				"	tooltipOpen~endif~~if(tooltipPlacement)~\n" + 
 				"	tooltipPlacement=\"~tooltipPlacement~\"~endif~~if(tooltipTitle)~\n" + 
-				"	tooltipTitle=~tooltipTitle~~endif~ /> >>";
+				"	tooltipTitle=~tooltipTitle~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~ /> >>";
 }  

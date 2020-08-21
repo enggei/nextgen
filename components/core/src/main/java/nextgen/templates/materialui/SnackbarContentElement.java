@@ -11,6 +11,8 @@ public class SnackbarContentElement {
 	private Object _id;
 	private Object _message;
 	private Object _role;
+	private Object _style;
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	SnackbarContentElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -34,6 +36,8 @@ public class SnackbarContentElement {
 		st.add("id", _id);
 		st.add("message", _message);
 		st.add("role", _role);
+		st.add("style", _style);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -169,7 +173,73 @@ public class SnackbarContentElement {
 		return this;
 	} 
 
+	public SnackbarContentElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
 
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public SnackbarContentElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
+
+	public SnackbarContentElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public SnackbarContentElement addAttribute(SnackbarContentElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<SnackbarContentElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(SnackbarContentElement_Attribute::new);
+	}
+
+	public static final class SnackbarContentElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public SnackbarContentElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private SnackbarContentElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -184,11 +254,14 @@ public class SnackbarContentElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SnackbarContentElement(action,classes,className,id,message,role) ::= <<<SnackbarContent~if(action)~\n" + 
+	static final String st = "SnackbarContentElement(action,classes,className,id,message,role,style,attribute) ::= <<<SnackbarContent~if(action)~\n" + 
 				"	action=~action~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(message)~\n" + 
 				"	message=~message~~endif~~if(role)~\n" + 
-				"	role=\"~role~\"~endif~ /> >>";
+				"	role=\"~role~\"~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~ /> >>";
 }  

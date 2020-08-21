@@ -26,9 +26,11 @@ public class SelectElement {
 	private Object _open;
 	private Object _renderValue;
 	private Object _SelectDisplayProps;
+	private Object _style;
 	private Object _value;
 	private Object _variant;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	SelectElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -67,9 +69,11 @@ public class SelectElement {
 		st.add("open", _open);
 		st.add("renderValue", _renderValue);
 		st.add("SelectDisplayProps", _SelectDisplayProps);
+		st.add("style", _style);
 		st.add("value", _value);
 		st.add("variant", _variant);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -535,6 +539,28 @@ public class SelectElement {
 		return this;
 	} 
 
+	public SelectElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public SelectElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public SelectElement setValue(Object value) {
 		this._value = value;
 		return this;
@@ -608,6 +634,50 @@ public class SelectElement {
 		return this._children;
 	} 
 
+	public SelectElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public SelectElement addAttribute(SelectElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<SelectElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(SelectElement_Attribute::new);
+	}
+
+	public static final class SelectElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public SelectElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private SelectElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -622,7 +692,7 @@ public class SelectElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SelectElement(autoWidth,classes,className,defaultValue,displayEmpty,IconComponent,id,input,inputProps,label,labelId,labelWidth,MenuProps,multiple,native,onChange,onClose,onOpen,open,renderValue,SelectDisplayProps,value,variant,children) ::= <<<Select~if(autoWidth)~\n" + 
+	static final String st = "SelectElement(autoWidth,classes,className,defaultValue,displayEmpty,IconComponent,id,input,inputProps,label,labelId,labelWidth,MenuProps,multiple,native,onChange,onClose,onOpen,open,renderValue,SelectDisplayProps,style,value,variant,attribute,children) ::= <<<Select~if(autoWidth)~\n" + 
 				"	autoWidth~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(defaultValue)~\n" + 
@@ -643,9 +713,12 @@ public class SelectElement {
 				"	onOpen=~onOpen~~endif~~if(open)~\n" + 
 				"	open~endif~~if(renderValue)~\n" + 
 				"	renderValue=~renderValue~~endif~~if(SelectDisplayProps)~\n" + 
-				"	SelectDisplayProps=~SelectDisplayProps~~endif~~if(value)~\n" + 
+				"	SelectDisplayProps=~SelectDisplayProps~~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(value)~\n" + 
 				"	value=~value~~endif~~if(variant)~\n" + 
-				"	variant=\"~variant~\"~endif~~if(children)~>\n" + 
+				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Select>~else~ />~endif~ >>";
 }  

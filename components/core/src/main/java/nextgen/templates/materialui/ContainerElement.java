@@ -12,7 +12,9 @@ public class ContainerElement {
 	private Object _fixed;
 	private Object _id;
 	private Object _maxWidth;
+	private Object _style;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	ContainerElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -37,7 +39,9 @@ public class ContainerElement {
 		st.add("fixed", _fixed);
 		st.add("id", _id);
 		st.add("maxWidth", _maxWidth);
+		st.add("style", _style);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -195,6 +199,28 @@ public class ContainerElement {
 		return this;
 	} 
 
+	public ContainerElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public ContainerElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public ContainerElement addChildren(Object value) {
 		this._children.add(value);
 		return this;
@@ -224,6 +250,50 @@ public class ContainerElement {
 		return this._children;
 	} 
 
+	public ContainerElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public ContainerElement addAttribute(ContainerElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<ContainerElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(ContainerElement_Attribute::new);
+	}
+
+	public static final class ContainerElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public ContainerElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private ContainerElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -238,14 +308,17 @@ public class ContainerElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ContainerElement(classes,className,component,disableGutters,fixed,id,maxWidth,children) ::= <<<Container~if(classes)~\n" + 
+	static final String st = "ContainerElement(classes,className,component,disableGutters,fixed,id,maxWidth,style,attribute,children) ::= <<<Container~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(disableGutters)~\n" + 
 				"	disableGutters~endif~~if(fixed)~\n" + 
 				"	fixed~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(maxWidth)~\n" + 
-				"	maxWidth=\"~maxWidth~\"~endif~~if(children)~>\n" + 
+				"	maxWidth=\"~maxWidth~\"~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Container>~else~ />~endif~ >>";
 }  

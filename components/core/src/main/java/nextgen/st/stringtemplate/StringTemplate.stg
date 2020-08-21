@@ -1,6 +1,50 @@
 delimiters "~","~"
 
-ScriptRunner(packageName,imports,name,script,dbDir,templatesDir) ::= <<package ~packageName~;
+DomainVisitorRunner(packageName,imports,name,script,templatesDir,dbDir) ::= <<package ~packageName~;
+import nextgen.domains.meta.DomainEntity;
+import nextgen.st.STRenderer;
+import nextgen.st.domain.STGroupModel;
+import nextgen.st.model.STModelDB;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Optional;
+~imports:{it|~it~};separator="\n"~
+
+public class ~name~ implements Runnable {
+
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);
+	private final nextgen.st.model.STModelDB db;
+	private final nextgen.st.STRenderer renderer;
+	private final nextgen.domains.meta.DomainEntity domainEntity;
+
+	public ~name~(nextgen.st.model.STModelDB db, nextgen.st.STRenderer renderer, nextgen.domains.meta.DomainEntity domainEntity) {
+		this.db = db;
+		this.renderer = renderer;
+		this.domainEntity = domainEntity;
+	}
+
+	@Override
+	public void run() {
+		db.doInTransaction(transaction -> {
+			~script~
+		});
+	}
+	
+	public static void main(String[] args) {
+		final java.util.Collection<nextgen.st.domain.STGroupModel> stGroups = new java.util.ArrayList<>();
+		final java.io.File templatesDir = new java.io.File("~templatesDir~");
+		java.util.Optional.ofNullable(templatesDir.listFiles(pathname -> pathname.isFile() && pathname.getName().toLowerCase().endsWith(".json")))
+			.ifPresent(files -> {
+				for (java.io.File file : files)
+						stGroups.add(new nextgen.st.domain.STGroupModel(nextgen.st.STParser.readJsonObject(file)));
+			});
+		nextgen.domains.meta.DomainEntity domainEntity = null;	// todo-lookup from db, in transaction
+		new Thread(new ~name~(new nextgen.st.model.STModelDB("~dbDir~", stGroups), new nextgen.st.STRenderer(stGroups)), domainEntity).start();
+	}
+}  >>
+
+ScriptRunner(packageName,imports,name,script,templatesDir,dbDir) ::= <<package ~packageName~;
 
 ~imports:{it|~it~};separator="\n"~
 
@@ -23,9 +67,14 @@ public class ~name~ implements Runnable {
 	}
 	
 	public static void main(String[] args) {
-		final nextgen.st.model.STModelDB db = new nextgen.st.model.STModelDB("~dbDir~", "~templatesDir~");
-		final nextgen.st.STRenderer renderer = new nextgen.st.STRenderer(db.getGroupModels());
-		new Thread(new ~name~(db, renderer)).start();
+		final java.util.Collection<nextgen.st.domain.STGroupModel> stGroups = new java.util.ArrayList<>();
+		final java.io.File templatesDir = new java.io.File("~templatesDir~");
+		java.util.Optional.ofNullable(templatesDir.listFiles(pathname -> pathname.isFile() && pathname.getName().toLowerCase().endsWith(".json")))
+			.ifPresent(files -> {
+				for (java.io.File file : files)
+						stGroups.add(new nextgen.st.domain.STGroupModel(nextgen.st.STParser.readJsonObject(file)));
+			});
+		new Thread(new ~name~(new nextgen.st.model.STModelDB("~dbDir~", stGroups), new nextgen.st.STRenderer(stGroups))).start();
 	}
 }  >>
 

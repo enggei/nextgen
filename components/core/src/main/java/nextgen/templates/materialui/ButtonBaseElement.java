@@ -17,8 +17,10 @@ public class ButtonBaseElement {
 	private Object _focusVisibleClassName;
 	private Object _id;
 	private Object _onFocusVisible;
+	private Object _style;
 	private Object _TouchRippleProps;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	ButtonBaseElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -48,8 +50,10 @@ public class ButtonBaseElement {
 		st.add("focusVisibleClassName", _focusVisibleClassName);
 		st.add("id", _id);
 		st.add("onFocusVisible", _onFocusVisible);
+		st.add("style", _style);
 		st.add("TouchRippleProps", _TouchRippleProps);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -317,6 +321,28 @@ public class ButtonBaseElement {
 		return this;
 	} 
 
+	public ButtonBaseElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public ButtonBaseElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public ButtonBaseElement setTouchRippleProps(Object value) {
 		this._TouchRippleProps = value;
 		return this;
@@ -368,6 +394,50 @@ public class ButtonBaseElement {
 		return this._children;
 	} 
 
+	public ButtonBaseElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public ButtonBaseElement addAttribute(ButtonBaseElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<ButtonBaseElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(ButtonBaseElement_Attribute::new);
+	}
+
+	public static final class ButtonBaseElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public ButtonBaseElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private ButtonBaseElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -382,7 +452,7 @@ public class ButtonBaseElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ButtonBaseElement(action,centerRipple,classes,className,component,disabled,disableRipple,disableTouchRipple,focusRipple,focusVisibleClassName,id,onFocusVisible,TouchRippleProps,children) ::= <<<ButtonBase~if(action)~\n" + 
+	static final String st = "ButtonBaseElement(action,centerRipple,classes,className,component,disabled,disableRipple,disableTouchRipple,focusRipple,focusVisibleClassName,id,onFocusVisible,style,TouchRippleProps,attribute,children) ::= <<<ButtonBase~if(action)~\n" + 
 				"	action=~action~~endif~~if(centerRipple)~\n" + 
 				"	centerRipple~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
@@ -394,8 +464,11 @@ public class ButtonBaseElement {
 				"	focusRipple~endif~~if(focusVisibleClassName)~\n" + 
 				"	focusVisibleClassName=\"~focusVisibleClassName~\"~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(onFocusVisible)~\n" + 
-				"	onFocusVisible=~onFocusVisible~~endif~~if(TouchRippleProps)~\n" + 
-				"	TouchRippleProps=~TouchRippleProps~~endif~~if(children)~>\n" + 
+				"	onFocusVisible=~onFocusVisible~~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(TouchRippleProps)~\n" + 
+				"	TouchRippleProps=~TouchRippleProps~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</ButtonBase>~else~ />~endif~ >>";
 }  

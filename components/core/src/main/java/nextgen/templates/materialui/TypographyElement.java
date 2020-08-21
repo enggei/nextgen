@@ -15,9 +15,11 @@ public class TypographyElement {
 	private Object _id;
 	private Object _noWrap;
 	private Object _paragraph;
+	private Object _style;
 	private Object _variant;
 	private Object _variantMapping;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	TypographyElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -45,9 +47,11 @@ public class TypographyElement {
 		st.add("id", _id);
 		st.add("noWrap", _noWrap);
 		st.add("paragraph", _paragraph);
+		st.add("style", _style);
 		st.add("variant", _variant);
 		st.add("variantMapping", _variantMapping);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -271,6 +275,28 @@ public class TypographyElement {
 		return this;
 	} 
 
+	public TypographyElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public TypographyElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public TypographyElement setVariant(Object value) {
 		this._variant = value;
 		return this;
@@ -344,6 +370,50 @@ public class TypographyElement {
 		return this._children;
 	} 
 
+	public TypographyElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public TypographyElement addAttribute(TypographyElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<TypographyElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(TypographyElement_Attribute::new);
+	}
+
+	public static final class TypographyElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public TypographyElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private TypographyElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -358,7 +428,7 @@ public class TypographyElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TypographyElement(align,classes,className,color,component,display,gutterBottom,id,noWrap,paragraph,variant,variantMapping,children) ::= <<<Typography~if(align)~\n" + 
+	static final String st = "TypographyElement(align,classes,className,color,component,display,gutterBottom,id,noWrap,paragraph,style,variant,variantMapping,attribute,children) ::= <<<Typography~if(align)~\n" + 
 				"	align=\"~align~\"~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
@@ -368,9 +438,12 @@ public class TypographyElement {
 				"	gutterBottom~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(noWrap)~\n" + 
 				"	noWrap~endif~~if(paragraph)~\n" + 
-				"	paragraph~endif~~if(variant)~\n" + 
+				"	paragraph~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~if(variantMapping)~\n" + 
-				"	variantMapping=~variantMapping~~endif~~if(children)~>\n" + 
+				"	variantMapping=~variantMapping~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Typography>~else~ />~endif~ >>";
 }  

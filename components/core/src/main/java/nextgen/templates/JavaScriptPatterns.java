@@ -21,22 +21,22 @@ public class JavaScriptPatterns extends JavaScriptST {
     }
 
     public static App.App_Routes newAppRoute(String name) {
-        return new App.App_Routes(name, name + ".js", Character.toLowerCase(name.charAt(0)) + name.substring(1));
+        return new App.App_Routes(name, name + ".js", Character.toLowerCase(name.charAt(0)) + name.substring(1), null);
     }
 
     public static App.App_Routes newAppRoute(String name, String param) {
-        return new App.App_Routes(name, name + ".js", Character.toLowerCase(name.charAt(0)) + name.substring(1) + "/:" + param);
+        return new App.App_Routes(name, name + ".js", Character.toLowerCase(name.charAt(0)) + name.substring(1) + "/:" + param, null);
     }
 
     public static ArrowFunction newArrowFunction(Object expression) {
         return newArrowFunction().setExpression(expression);
     }
 
-    public static ArrowFunction newArrowFunction(String parameter, Object expression) {
+    public static ArrowFunction newArrowFunction(Object parameter, Object expression) {
         return newArrowFunction().addParams(parameter).setExpression(expression);
     }
 
-    public static AgentRequest newAgentRequest(String endpoint, String method) {
+    public static AgentRequest newAgentRequest(Object endpoint, Object method) {
         return newAgentRequest().setEndpoint(endpoint).setMethod(method);
     }
 
@@ -70,5 +70,17 @@ public class JavaScriptPatterns extends JavaScriptST {
 
     public static JsonObject newJsonObject(Object... values) {
         return newJsonObject().setValues(values);
+    }
+
+    public static Element newElement(String name) {
+        return newElement().setName(name);
+    }
+
+    public static Object debug(String here) {
+        return "console.info(\"" + here + "\");";
+    }
+
+    public static NameValue newNameValue(String name, Object value) {
+        return newNameValue().setName(name).setValue(value);
     }
 }

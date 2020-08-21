@@ -19,9 +19,11 @@ public class ButtonElement {
 	private Object _id;
 	private Object _size;
 	private Object _startIcon;
+	private Object _style;
 	private Object _type;
 	private Object _variant;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	ButtonElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -53,9 +55,11 @@ public class ButtonElement {
 		st.add("id", _id);
 		st.add("size", _size);
 		st.add("startIcon", _startIcon);
+		st.add("style", _style);
 		st.add("type", _type);
 		st.add("variant", _variant);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -367,6 +371,28 @@ public class ButtonElement {
 		return this;
 	} 
 
+	public ButtonElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public ButtonElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public ButtonElement setType(Object value) {
 		this._type = value;
 		return this;
@@ -440,6 +466,50 @@ public class ButtonElement {
 		return this._children;
 	} 
 
+	public ButtonElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public ButtonElement addAttribute(ButtonElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<ButtonElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(ButtonElement_Attribute::new);
+	}
+
+	public static final class ButtonElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public ButtonElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private ButtonElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -454,7 +524,7 @@ public class ButtonElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ButtonElement(classes,className,color,component,disabled,disableElevation,disableFocusRipple,disableRipple,endIcon,fullWidth,href,id,size,startIcon,type,variant,children) ::= <<<Button~if(classes)~\n" + 
+	static final String st = "ButtonElement(classes,className,color,component,disabled,disableElevation,disableFocusRipple,disableRipple,endIcon,fullWidth,href,id,size,startIcon,style,type,variant,attribute,children) ::= <<<Button~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(component)~\n" + 
@@ -468,9 +538,12 @@ public class ButtonElement {
 				"	href=\"~href~\"~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(size)~\n" + 
 				"	size=\"~size~\"~endif~~if(startIcon)~\n" + 
-				"	startIcon=~startIcon~~endif~~if(type)~\n" + 
+				"	startIcon=~startIcon~~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(type)~\n" + 
 				"	type=\"~type~\"~endif~~if(variant)~\n" + 
-				"	variant=\"~variant~\"~endif~~if(children)~>\n" + 
+				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Button>~else~ />~endif~ >>";
 }  

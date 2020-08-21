@@ -88,7 +88,7 @@ public class IncomingReferenceStream {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "incomingReferenceStream(type,name) ::= <<public java.util.stream.Stream<~type~> getIncoming~name;format=\"capitalize\"~() { \n" + 
+	static final String st = "incomingReferenceStream(type,name) ::= <<public java.util.stream.Stream<~type~> getIncoming~name;format=\"capitalize\"~~type;format=\"capitalize\"~() { \n" + 
 				"	return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).spliterator(), false).map((relationship) -> new ~type~(relationship.getOtherNode(node)));\n" + 
 				"} >>";
 }  

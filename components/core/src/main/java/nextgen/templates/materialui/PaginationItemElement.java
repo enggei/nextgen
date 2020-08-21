@@ -10,12 +10,15 @@ public class PaginationItemElement {
 	private Object _component;
 	private Object _disabled;
 	private Object _id;
+	private Object _key;
 	private Object _page;
 	private Object _selected;
 	private Object _shape;
 	private Object _size;
+	private Object _style;
 	private Object _type;
 	private Object _variant;
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	PaginationItemElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -38,12 +41,15 @@ public class PaginationItemElement {
 		st.add("component", _component);
 		st.add("disabled", _disabled);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("page", _page);
 		st.add("selected", _selected);
 		st.add("shape", _shape);
 		st.add("size", _size);
+		st.add("style", _style);
 		st.add("type", _type);
 		st.add("variant", _variant);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -157,6 +163,28 @@ public class PaginationItemElement {
 		return this;
 	} 
 
+	public PaginationItemElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public PaginationItemElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public PaginationItemElement setPage(Object value) {
 		this._page = value;
 		return this;
@@ -245,6 +273,28 @@ public class PaginationItemElement {
 		return this;
 	} 
 
+	public PaginationItemElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public PaginationItemElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public PaginationItemElement setType(Object value) {
 		this._type = value;
 		return this;
@@ -290,6 +340,50 @@ public class PaginationItemElement {
 	} 
 
 
+	public PaginationItemElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public PaginationItemElement addAttribute(PaginationItemElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<PaginationItemElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(PaginationItemElement_Attribute::new);
+	}
+
+	public static final class PaginationItemElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public PaginationItemElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private PaginationItemElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -304,16 +398,20 @@ public class PaginationItemElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PaginationItemElement(className,color,component,disabled,id,page,selected,shape,size,type,variant) ::= <<<PaginationItem~if(className)~\n" + 
+	static final String st = "PaginationItemElement(className,color,component,disabled,id,key,page,selected,shape,size,style,type,variant,attribute) ::= <<<PaginationItem~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(disabled)~\n" + 
 				"	disabled~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(page)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(page)~\n" + 
 				"	page=~page~~endif~~if(selected)~\n" + 
 				"	selected~endif~~if(shape)~\n" + 
 				"	shape=\"~shape~\"~endif~~if(size)~\n" + 
-				"	size=\"~size~\"~endif~~if(type)~\n" + 
+				"	size=\"~size~\"~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(type)~\n" + 
 				"	type=\"~type~\"~endif~~if(variant)~\n" + 
-				"	variant=\"~variant~\"~endif~ /> >>";
+				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~ /> >>";
 }  

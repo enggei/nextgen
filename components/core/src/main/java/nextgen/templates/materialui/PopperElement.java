@@ -15,8 +15,10 @@ public class PopperElement {
 	private Object _placement;
 	private Object _popperOptions;
 	private Object _popperRef;
+	private Object _style;
 	private Object _transition;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	PopperElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -44,8 +46,10 @@ public class PopperElement {
 		st.add("placement", _placement);
 		st.add("popperOptions", _popperOptions);
 		st.add("popperRef", _popperRef);
+		st.add("style", _style);
 		st.add("transition", _transition);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -269,6 +273,28 @@ public class PopperElement {
 		return this;
 	} 
 
+	public PopperElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public PopperElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public PopperElement setTransition(Object value) {
 		this._transition = value;
 		return this;
@@ -320,6 +346,50 @@ public class PopperElement {
 		return this._children;
 	} 
 
+	public PopperElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public PopperElement addAttribute(PopperElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<PopperElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(PopperElement_Attribute::new);
+	}
+
+	public static final class PopperElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public PopperElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private PopperElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -334,7 +404,7 @@ public class PopperElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PopperElement(anchorEl,className,container,disablePortal,id,keepMounted,modifiers,placement,popperOptions,popperRef,transition,children) ::= <<<Popper~if(anchorEl)~\n" + 
+	static final String st = "PopperElement(anchorEl,className,container,disablePortal,id,keepMounted,modifiers,placement,popperOptions,popperRef,style,transition,attribute,children) ::= <<<Popper~if(anchorEl)~\n" + 
 				"	anchorEl=~anchorEl~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(container)~\n" + 
 				"	container=~container~~endif~~if(disablePortal)~\n" + 
@@ -345,8 +415,11 @@ public class PopperElement {
 				"	open~if(placement)~\n" + 
 				"	placement=\"~placement~\"~endif~~if(popperOptions)~\n" + 
 				"	popperOptions=~popperOptions~~endif~~if(popperRef)~\n" + 
-				"	popperRef=~popperRef~~endif~~if(transition)~\n" + 
-				"	transition~endif~~if(children)~>\n" + 
+				"	popperRef=~popperRef~~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(transition)~\n" + 
+				"	transition~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Popper>~else~ />~endif~ >>";
 }  

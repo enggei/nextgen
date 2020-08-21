@@ -12,8 +12,10 @@ public class CollapseElement {
 	private Object _disableStrictModeCompat;
 	private Object _id;
 	private Object _in;
+	private Object _style;
 	private Object _timeout;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	CollapseElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -38,8 +40,10 @@ public class CollapseElement {
 		st.add("disableStrictModeCompat", _disableStrictModeCompat);
 		st.add("id", _id);
 		st.add("in", _in);
+		st.add("style", _style);
 		st.add("timeout", _timeout);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -197,6 +201,28 @@ public class CollapseElement {
 		return this;
 	} 
 
+	public CollapseElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public CollapseElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public CollapseElement setTimeout(Object value) {
 		this._timeout = value;
 		return this;
@@ -248,6 +274,50 @@ public class CollapseElement {
 		return this._children;
 	} 
 
+	public CollapseElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public CollapseElement addAttribute(CollapseElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<CollapseElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(CollapseElement_Attribute::new);
+	}
+
+	public static final class CollapseElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public CollapseElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private CollapseElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -262,15 +332,18 @@ public class CollapseElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "CollapseElement(classes,className,collapsedHeight,component,disableStrictModeCompat,id,in,timeout,children) ::= <<<Collapse~if(classes)~\n" + 
+	static final String st = "CollapseElement(classes,className,collapsedHeight,component,disableStrictModeCompat,id,in,style,timeout,attribute,children) ::= <<<Collapse~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(collapsedHeight)~\n" + 
 				"	collapsedHeight=~collapsedHeight~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(disableStrictModeCompat)~\n" + 
 				"	disableStrictModeCompat~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(in)~\n" + 
-				"	in~endif~~if(timeout)~\n" + 
-				"	timeout=\"~timeout~\"~endif~~if(children)~>\n" + 
+				"	in~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(timeout)~\n" + 
+				"	timeout=\"~timeout~\"~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Collapse>~else~ />~endif~ >>";
 }  

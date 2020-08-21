@@ -8,8 +8,8 @@ public class ScriptRunner {
 	private Object _packageName;
 	private Object _name;
 	private Object _script;
-	private Object _dbDir;
 	private Object _templatesDir;
+	private Object _dbDir;
 	private java.util.List<Object> _imports = new java.util.ArrayList<>();
 
 	ScriptRunner(org.stringtemplate.v4.STGroup stGroup) {
@@ -31,8 +31,8 @@ public class ScriptRunner {
 		st.add("packageName", _packageName);
 		st.add("name", _name);
 		st.add("script", _script);
-		st.add("dbDir", _dbDir);
 		st.add("templatesDir", _templatesDir);
+		st.add("dbDir", _dbDir);
 		for (Object o : _imports) st.add("imports", o);
 		return st.render().trim();
 	}
@@ -103,28 +103,6 @@ public class ScriptRunner {
 		return this;
 	} 
 
-	public ScriptRunner setDbDir(Object value) {
-		this._dbDir = value;
-		return this;
-	}
-
-	public Object getDbDir() {
-		return this._dbDir;
-	}
-
-	public Object getDbDir(Object defaultValue) {
-		return this._dbDir == null ? defaultValue : this._dbDir;
-	}
-
-	public boolean hasDbDir() {
-		return this._dbDir != null;
-	}
-
-	public ScriptRunner removeDbDir() {
-		this._dbDir = null;
-		return this;
-	} 
-
 	public ScriptRunner setTemplatesDir(Object value) {
 		this._templatesDir = value;
 		return this;
@@ -144,6 +122,28 @@ public class ScriptRunner {
 
 	public ScriptRunner removeTemplatesDir() {
 		this._templatesDir = null;
+		return this;
+	} 
+
+	public ScriptRunner setDbDir(Object value) {
+		this._dbDir = value;
+		return this;
+	}
+
+	public Object getDbDir() {
+		return this._dbDir;
+	}
+
+	public Object getDbDir(Object defaultValue) {
+		return this._dbDir == null ? defaultValue : this._dbDir;
+	}
+
+	public boolean hasDbDir() {
+		return this._dbDir != null;
+	}
+
+	public ScriptRunner removeDbDir() {
+		this._dbDir = null;
 		return this;
 	} 
 
@@ -190,7 +190,7 @@ public class ScriptRunner {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ScriptRunner(packageName,imports,name,script,dbDir,templatesDir) ::= <<package ~packageName~;\n" + 
+	static final String st = "ScriptRunner(packageName,imports,name,script,templatesDir,dbDir) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"~imports:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
@@ -213,9 +213,14 @@ public class ScriptRunner {
 				"	}\n" + 
 				"	\n" + 
 				"	public static void main(String[] args) {\n" + 
-				"		final nextgen.st.model.STModelDB db = new nextgen.st.model.STModelDB(\"~dbDir~\", \"~templatesDir~\");\n" + 
-				"		final nextgen.st.STRenderer renderer = new nextgen.st.STRenderer(db.getGroupModels());\n" + 
-				"		new Thread(new ~name~(db, renderer)).start();\n" + 
+				"		final java.util.Collection<nextgen.st.domain.STGroupModel> stGroups = new java.util.ArrayList<>();\n" + 
+				"		final java.io.File templatesDir = new java.io.File(\"~templatesDir~\");\n" + 
+				"		java.util.Optional.ofNullable(templatesDir.listFiles(pathname -> pathname.isFile() && pathname.getName().toLowerCase().endsWith(\".json\")))\n" + 
+				"			.ifPresent(files -> {\n" + 
+				"				for (java.io.File file : files)\n" + 
+				"						stGroups.add(new nextgen.st.domain.STGroupModel(nextgen.st.STParser.readJsonObject(file)));\n" + 
+				"			});\n" + 
+				"		new Thread(new ~name~(new nextgen.st.model.STModelDB(\"~dbDir~\", stGroups), new nextgen.st.STRenderer(stGroups))).start();\n" + 
 				"	}\n" + 
 				"} >>";
 }  

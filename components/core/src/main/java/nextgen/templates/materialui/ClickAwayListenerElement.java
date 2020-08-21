@@ -10,8 +10,10 @@ public class ClickAwayListenerElement {
 	private Object _id;
 	private Object _mouseEvent;
 	private Object _onClickAway;
+	private Object _style;
 	private Object _touchEvent;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	ClickAwayListenerElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -34,8 +36,10 @@ public class ClickAwayListenerElement {
 		st.add("id", _id);
 		st.add("mouseEvent", _mouseEvent);
 		st.add("onClickAway", _onClickAway);
+		st.add("style", _style);
 		st.add("touchEvent", _touchEvent);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -149,6 +153,28 @@ public class ClickAwayListenerElement {
 		return this;
 	} 
 
+	public ClickAwayListenerElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public ClickAwayListenerElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public ClickAwayListenerElement setTouchEvent(Object value) {
 		this._touchEvent = value;
 		return this;
@@ -200,6 +226,50 @@ public class ClickAwayListenerElement {
 		return this._children;
 	} 
 
+	public ClickAwayListenerElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public ClickAwayListenerElement addAttribute(ClickAwayListenerElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<ClickAwayListenerElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(ClickAwayListenerElement_Attribute::new);
+	}
+
+	public static final class ClickAwayListenerElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public ClickAwayListenerElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private ClickAwayListenerElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -214,13 +284,16 @@ public class ClickAwayListenerElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ClickAwayListenerElement(className,disableReactTree,id,mouseEvent,onClickAway,touchEvent,children) ::= <<<ClickAwayListener~if(className)~\n" + 
+	static final String st = "ClickAwayListenerElement(className,disableReactTree,id,mouseEvent,onClickAway,style,touchEvent,attribute,children) ::= <<<ClickAwayListener~if(className)~\n" + 
 				"	className=~className~~endif~~if(disableReactTree)~\n" + 
 				"	disableReactTree~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(mouseEvent)~\n" + 
 				"	mouseEvent=\"~mouseEvent~\"~endif~\n" + 
-				"	onClickAway=~onClickAway~~if(touchEvent)~\n" + 
-				"	touchEvent=\"~touchEvent~\"~endif~~if(children)~>\n" + 
+				"	onClickAway=~onClickAway~~if(style)~\n" + 
+				"	style=~style~~endif~~if(touchEvent)~\n" + 
+				"	touchEvent=\"~touchEvent~\"~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</ClickAwayListener>~else~ />~endif~ >>";
 }  

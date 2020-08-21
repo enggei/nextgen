@@ -26,12 +26,14 @@ public class SliderElement {
 	private Object _orientation;
 	private Object _scale;
 	private Object _step;
+	private Object _style;
 	private Object _ThumbComponent;
 	private Object _track;
 	private Object _value;
 	private Object _ValueLabelComponent;
 	private Object _valueLabelDisplay;
 	private Object _valueLabelFormat;
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	SliderElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -70,12 +72,14 @@ public class SliderElement {
 		st.add("orientation", _orientation);
 		st.add("scale", _scale);
 		st.add("step", _step);
+		st.add("style", _style);
 		st.add("ThumbComponent", _ThumbComponent);
 		st.add("track", _track);
 		st.add("value", _value);
 		st.add("ValueLabelComponent", _ValueLabelComponent);
 		st.add("valueLabelDisplay", _valueLabelDisplay);
 		st.add("valueLabelFormat", _valueLabelFormat);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -541,6 +545,28 @@ public class SliderElement {
 		return this;
 	} 
 
+	public SliderElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public SliderElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public SliderElement setThumbComponent(Object value) {
 		this._ThumbComponent = value;
 		return this;
@@ -674,6 +700,50 @@ public class SliderElement {
 	} 
 
 
+	public SliderElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public SliderElement addAttribute(SliderElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<SliderElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(SliderElement_Attribute::new);
+	}
+
+	public static final class SliderElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public SliderElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private SliderElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -688,7 +758,7 @@ public class SliderElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SliderElement(ariaLabel,ariaLabelledby,ariaValuetext,classes,className,color,component,defaultValue,disabled,getAriaLabel,getAriaValueText,id,marks,max,min,name,onChange,onChangeCommitted,orientation,scale,step,ThumbComponent,track,value,ValueLabelComponent,valueLabelDisplay,valueLabelFormat) ::= <<<Slider~if(ariaLabel)~\n" + 
+	static final String st = "SliderElement(ariaLabel,ariaLabelledby,ariaValuetext,classes,className,color,component,defaultValue,disabled,getAriaLabel,getAriaValueText,id,marks,max,min,name,onChange,onChangeCommitted,orientation,scale,step,style,ThumbComponent,track,value,ValueLabelComponent,valueLabelDisplay,valueLabelFormat,attribute) ::= <<<Slider~if(ariaLabel)~\n" + 
 				"	ariaLabel=\"~ariaLabel~\"~endif~~if(ariaLabelledby)~\n" + 
 				"	ariaLabelledby=\"~ariaLabelledby~\"~endif~~if(ariaValuetext)~\n" + 
 				"	ariaValuetext=\"~ariaValuetext~\"~endif~~if(classes)~\n" + 
@@ -709,11 +779,14 @@ public class SliderElement {
 				"	onChangeCommitted=~onChangeCommitted~~endif~~if(orientation)~\n" + 
 				"	orientation=\"~orientation~\"~endif~~if(scale)~\n" + 
 				"	scale=~scale~~endif~~if(step)~\n" + 
-				"	step=~step~~endif~~if(ThumbComponent)~\n" + 
+				"	step=~step~~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(ThumbComponent)~\n" + 
 				"	ThumbComponent=~ThumbComponent~~endif~~if(track)~\n" + 
 				"	track=\"~track~\"~endif~~if(value)~\n" + 
 				"	value=~value~~endif~~if(ValueLabelComponent)~\n" + 
 				"	ValueLabelComponent=~ValueLabelComponent~~endif~~if(valueLabelDisplay)~\n" + 
 				"	valueLabelDisplay=\"~valueLabelDisplay~\"~endif~~if(valueLabelFormat)~\n" + 
-				"	valueLabelFormat=~valueLabelFormat~~endif~ /> >>";
+				"	valueLabelFormat=~valueLabelFormat~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~ /> >>";
 }  

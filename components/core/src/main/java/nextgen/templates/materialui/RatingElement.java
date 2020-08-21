@@ -22,7 +22,9 @@ public class RatingElement {
 	private Object _precision;
 	private Object _readOnly;
 	private Object _size;
+	private Object _style;
 	private Object _value;
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	RatingElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -57,7 +59,9 @@ public class RatingElement {
 		st.add("precision", _precision);
 		st.add("readOnly", _readOnly);
 		st.add("size", _size);
+		st.add("style", _style);
 		st.add("value", _value);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -435,6 +439,28 @@ public class RatingElement {
 		return this;
 	} 
 
+	public RatingElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public RatingElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public RatingElement setValue(Object value) {
 		this._value = value;
 		return this;
@@ -458,6 +484,50 @@ public class RatingElement {
 	} 
 
 
+	public RatingElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public RatingElement addAttribute(RatingElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<RatingElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(RatingElement_Attribute::new);
+	}
+
+	public static final class RatingElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public RatingElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private RatingElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -472,7 +542,7 @@ public class RatingElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "RatingElement(classes,className,defaultValue,disabled,emptyIcon,emptyLabelText,getLabelText,icon,IconContainerComponent,id,max,name,onChange,onChangeActive,precision,readOnly,size,value) ::= <<<Rating~if(classes)~\n" + 
+	static final String st = "RatingElement(classes,className,defaultValue,disabled,emptyIcon,emptyLabelText,getLabelText,icon,IconContainerComponent,id,max,name,onChange,onChangeActive,precision,readOnly,size,style,value,attribute) ::= <<<Rating~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(defaultValue)~\n" + 
 				"	defaultValue=~defaultValue~~endif~~if(disabled)~\n" + 
@@ -489,6 +559,9 @@ public class RatingElement {
 				"	onChangeActive=~onChangeActive~~endif~~if(precision)~\n" + 
 				"	precision=~precision~~endif~~if(readOnly)~\n" + 
 				"	readOnly~endif~~if(size)~\n" + 
-				"	size=\"~size~\"~endif~~if(value)~\n" + 
-				"	value=~value~~endif~ /> >>";
+				"	size=\"~size~\"~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(value)~\n" + 
+				"	value=~value~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~ /> >>";
 }  

@@ -12,7 +12,9 @@ public class UnstableTrapFocusElement {
 	private Object _getDoc;
 	private Object _id;
 	private Boolean _isEnabled;
+	private Object _style;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	UnstableTrapFocusElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -37,7 +39,9 @@ public class UnstableTrapFocusElement {
 		st.add("getDoc", _getDoc);
 		st.add("id", _id);
 		st.add("isEnabled", _isEnabled);
+		st.add("style", _style);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -195,6 +199,28 @@ public class UnstableTrapFocusElement {
 		return this;
 	} 
 
+	public UnstableTrapFocusElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public UnstableTrapFocusElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public UnstableTrapFocusElement addChildren(Object value) {
 		this._children.add(value);
 		return this;
@@ -224,6 +250,50 @@ public class UnstableTrapFocusElement {
 		return this._children;
 	} 
 
+	public UnstableTrapFocusElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public UnstableTrapFocusElement addAttribute(UnstableTrapFocusElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<UnstableTrapFocusElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(UnstableTrapFocusElement_Attribute::new);
+	}
+
+	public static final class UnstableTrapFocusElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public UnstableTrapFocusElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private UnstableTrapFocusElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -238,7 +308,7 @@ public class UnstableTrapFocusElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "UnstableTrapFocusElement(className,disableAutoFocus,disableEnforceFocus,disableRestoreFocus,getDoc,id,isEnabled,children) ::= <<<UnstableTrapFocus~if(className)~\n" + 
+	static final String st = "UnstableTrapFocusElement(className,disableAutoFocus,disableEnforceFocus,disableRestoreFocus,getDoc,id,isEnabled,style,attribute,children) ::= <<<UnstableTrapFocus~if(className)~\n" + 
 				"	className=~className~~endif~~if(disableAutoFocus)~\n" + 
 				"	disableAutoFocus~endif~~if(disableEnforceFocus)~\n" + 
 				"	disableEnforceFocus~endif~~if(disableRestoreFocus)~\n" + 
@@ -246,7 +316,10 @@ public class UnstableTrapFocusElement {
 				"	getDoc=~getDoc~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~\n" + 
 				"	isEnabled=~isEnabled~\n" + 
-				"	open~if(children)~>\n" + 
+				"	open~if(style)~\n" + 
+				"	style=~style~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</UnstableTrapFocus>~else~ />~endif~ >>";
 }  

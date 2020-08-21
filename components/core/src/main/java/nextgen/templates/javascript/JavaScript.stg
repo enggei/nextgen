@@ -1,388 +1,5 @@
 delimiters "~","~"
 
-App(routes,theme,stores) ::= <<import React, { Component } from 'react';
-import { Switch, Route, withRouter } from 'react-router-dom';
-
-import { Provider } from 'mobx-react';
-import { inject, observer } from 'mobx-react';
-
-~routes:{it|import ~it.component~ from './pages/~it.filename~';};separator="\n"~
-
-import NavigationBar from './components/NavigationBar.js';
-
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { ThemeProvider } from '@material-ui/styles';
-import { createMuiTheme } from '@material-ui/core/styles';
-
-// https://in-your-saas.github.io/material-ui-theme-editor/
-//const theme = createMuiTheme({"palette":{"common":{"black":"#000","white":"#fff"},"background":{"paper":"#fff","default":"#fafafa"},"primary":{"light":"rgba(255, 255, 255, 1)","main":"rgba(22, 22, 23, 1)","dark":"rgba(74, 74, 74, 1)","contrastText":"#fff"},"secondary":{"light":"#ff4081","main":"rgba(245, 166, 35, 1)","dark":"#c51162","contrastText":"#fff"},"error":{"light":"#e57373","main":"#f44336","dark":"#d32f2f","contrastText":"#fff"},"text":{"primary":"rgba(0, 0, 0, 0.87)","secondary":"rgba(0, 0, 0, 0.54)","disabled":"rgba(0, 0, 0, 0.38)","hint":"rgba(0, 0, 0, 0.38)"}}});
-const theme = createMuiTheme(~theme~);
-
-@inject(~stores:{it|'~it~'};separator=", "~)
-@withRouter
-@observer
-class App extends Component {
-
-	constructor(props) {
-		super(props);
-		
-		if (!this.props.appStore.token) 
-			this.props.appStore.setAppLoaded();
-		
-	}
-
-	componentDidMount() {
-		
-		if (this.props.appStore.token) 
-			this.props.userStore.pullUser().finally(() => this.props.appStore.setAppLoaded());
-	}
-
-	render() {
-
-		if (this.props.appStore.appLoaded) {
-			return (
-				<ThemeProvider theme={theme}>
-					<CssBaseline />
-					<div>
-						<NavigationBar userStore={ this.props.userStore }></NavigationBar>
-					</div>
-					<Switch>
-						~routes:{it|<Route path="~it.path~" component={~it.component~\} />};separator="\n"~
-					</Switch>
-				</ThemeProvider>);
-		} else return null;
-	}
-}
-
-export default App;  >>
-
-SimpleMenu(menuItems,menuComponents) ::= <<import React from 'react';
-
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import { Link } from 'react-router-dom';
-
-const LoginLink = React.forwardRef( (props, ref) => (
-	<Link innerRef={ ref } to="/login" { ...props } />
-));
-
-~menuItems:{it|
-const ~it.name~ = React.forwardRef( (props, ref) => (
-	<Link innerRef={ ref ~eom()~ to="/~it.to~"~if(it.target)~ target="~it.target~" ~endif~ { ...props ~eom()~ />
-));
-};separator="\n\n"~
-
-export default function SimpleMenu(props) {
-
-	const [anchorEl, setAnchorEl] = React.useState(null);
-
-	function handleClick(event) {
-		setAnchorEl(event.currentTarget);
-	}
-	
-	function handleClose() {
-		setAnchorEl(null);
-	}
-
-	if (!props.currentUser)  {
-		return (
-				<div>
-					<IconButton edge="start" color="inherit" aria-label="Menu" onClick={handleClick}>
-						<MenuIcon />
-					</IconButton>
-					<Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
-						<MenuItem component={ LoginLink } onClick={handleClose}>Login</MenuItem>
-					</Menu>
-				</div>);
-	} else {
-		return (
-			<div>
-				<IconButton edge="start" color="inherit" aria-label="Menu" onClick={handleClick}>
-					<MenuIcon />
-				</IconButton>
-				<Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
-					~menuItems:{it|~it.element~};separator="\n"~
-					~menuComponents:{it|~it~};separator="\n"~
-				</Menu>
-			</div>);
-	}
-}  >>
-
-Superagent(agentDeclarations) ::= <<import superagentPromise from 'superagent-promise';
-import _superagent from 'superagent';
-
-import appStore from './stores/AppStore';
-import authStore from './stores/AuthStore';
-
-const superagent = superagentPromise(_superagent, global.Promise);
-
-const handleErrors = err => {
-	if (err && err.response && err.response.status === 401) {
-		authStore.logout();
-	}
-	return err;
-};
-
-const responseBody = res => res.body;
-
-const tokenPlugin = req => {
-	if (appStore.token) {
-		req.set('Authorization', `Bearer ${appStore.token}`);
-	}
-};
-
-const requests = {
-	del: url =>
-		superagent
-			.del(`${url}`)
-			.use(tokenPlugin)
-			.end(handleErrors)
-			.then(responseBody),
-	get: url =>
-		superagent
-			.get(`${url}`)
-			.use(tokenPlugin)
-			.end(handleErrors)
-			.then(responseBody),
-	put: (url, body) =>
-		superagent
-			.put(`${url}`, body)
-			.use(tokenPlugin)
-			.end(handleErrors)
-			.then(responseBody),
-	post: (url, body) =>
-		superagent
-			.post(`${url}`, body)
-			.use(tokenPlugin)
-			.end(handleErrors)
-			.then(responseBody)
-};
-
-~agentDeclarations:{it|~it.declaration~};separator="\n"~
-
-export default {
-	~agentDeclarations:{it|~it.name~};separator=",\n"~
-};  >>
-
-agentEndpoint(name,urlParam,parameters,action,url) ::= <<~name~: (~if(urlParam)~~urlParam~~if(parameters)~, ~endif~~endif~~parameters:{it|~it~};separator=","~) => requests.~action~('/~url~'~if(urlParam)~ + ~urlParam~~endif~~if(parameters)~, { ~parameters:{it|~it~};separator=","~ }~endif~)  >>
-
-agentDeclaration(name,agentEndpoint) ::= <<const ~name~ = { 
-	~agentEndpoint:{it|~it~};separator=",\n"~
-}  >>
-
-agentRequest(endpoint,method,params,then,finally) ::= <<agent.~endpoint~.~method~(~params:{it|~it~};separator=","~)
-	~then:{it|.then(~it~)};separator="\n"~
-	.catch(action((err) => {
-		console.info("error ~endpoint~.~method~ : " + err);
-		this.errors = err.response && err.response.body && err.response.body.errors;
-		throw err;
-	}))
-	.finally(~finally~)  >>
-
-NavigationBar() ::= <<import React from 'react';
-import { Link } from 'react-router-dom';
-import { inject, observer } from 'mobx-react';
-
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import { withStyles } from '@material-ui/core/styles';
-
-import UserMenu  from './UserMenu.js';
-
-const useStyles = theme => ({
-	news: {
-		flex: 1
-	}
-});
-
-const LoginLink = React.forwardRef( (props, ref) => (
-	<Link innerRef={ ref } to="/login" { ...props } />
-));
-
-const LogoutLink = React.forwardRef( (props, ref) => (
-	<Link innerRef={ ref } to="/logout" { ...props } />
-));
-
-const LoggedOutView = props => {
-	if (!props.currentUser)  {
-		return (<Button color="inherit" component={ LoginLink }>
-			Login
-		</Button>);
-	}
-	return null;
-}
-
-const LoggedInView = props => {
-	if (props.currentUser)  {
-		return (<Button color="inherit" component={ LogoutLink }>
-			Logout
-		</Button>);
-	}
-	return null;
-}
-
-@inject('userStore', 'appStore')
-@observer
-@withStyles(useStyles)
-class NavigationBar extends React.Component {
-
-	constructor(){
-		super();
-	}
-
-	render() {
-		return ( 
-			<div>
-				<AppBar color='primary' position='static'>
-					<Toolbar>
-						<UserMenu currentUser={ this.props.userStore.currentUser } />
-						<Typography variant="h6" className={ this.props.classes.news }>S E C U R I T Y - X</Typography>
-						<LoggedOutView currentUser={ this.props.userStore.currentUser } />
-						<LoggedInView currentUser={ this.props.userStore.currentUser } />
-					</Toolbar>
-				</AppBar>
-			</div>
-		)
-	}
-}
-
-export default (NavigationBar);  >>
-
-UserMenu() ::= <<import React from 'react';
-import { Link } from 'react-router-dom';
-
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-
-const LoginLink = React.forwardRef( (props, ref) => (
-	<Link innerRef={ ref } to="/login" { ...props } />
-));
-
-const LogoutLink = React.forwardRef( (props, ref) => (
-	<Link innerRef={ ref } to="/logout" { ...props } />
-));
-
-export default function UserMenu(props) {
-
-	const [anchorEl, setAnchorEl] = React.useState(null);
-
-	function handleClick(event) {
-		setAnchorEl(event.currentTarget);
-	}
-	
-	function handleClose() {
-		setAnchorEl(null);
-	}
-
-	if (!props.currentUser)  {
-		return (
-			<div>
-				<IconButton edge="start" color="inherit" aria-label="Menu" onClick={handleClick}>
-					<MenuIcon />
-				</IconButton>
-				<Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
-					<MenuItem component={ LoginLink } onClick={handleClose}>Login</MenuItem>
-				</Menu>
-			</div>);
-	} else {
-		return (
-			<div>
-				<IconButton edge="start" color="inherit" aria-label="Menu" onClick={handleClick}>
-						<MenuIcon />
-				</IconButton>
-				<Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
-					{props.currentUser.menus.map((e, i) => (<MenuItem key={e.key} component={ React.forwardRef( (props, ref) => (<Link innerRef={ ref } to={e.url} { ...props } />)) } onClick={handleClose}> {e.label} </MenuItem>))}
-					<MenuItem component={ LogoutLink } onClick={handleClose}> Logout </MenuItem> 
-				</Menu>
-			</div>);
-	}
-}  >>
-
-LogoutForm() ::= <<import { withRouter } from 'react-router-dom';
-import React from 'react';
-
-import { inject, observer } from 'mobx-react';
-
-import SignOut from '../components/SignOut.js';
-
-@withRouter
-@inject('authStore')
-@observer
-class LogoutForm extends React.Component {
-
-	constructor(){
-		super();
-		this.handleSubmitForm = this.handleSubmitForm.bind(this);
-	}
-
-	handleSubmitForm = (e) => {
-		e.preventDefault();
-		this.props.authStore.logout().then(() => this.props.history.replace('/')).catch(e => {});
-	}
-
-	render() {
-		return (<SignOut authStore={ this.props.authStore } onSubmit={ this.handleSubmitForm } />);
-	}
-}
-
-export default (LogoutForm);  >>
-
-ListErrors() ::= <<import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
-const useStyles = theme => ({
-	errors: {
-		color: 'red'
-	},
-
-});
-
-@withStyles(useStyles)
-class ListErrors extends React.Component {
-
-	render() {
-
-		const errors = this.props.errors;
-
-		if (errors) 
-			return (
-				<ul className={ this.props.classes.errors }> { Object.keys(errors).map(key => { return (<li key={key}><Typography>{errors[key]}</Typography></li>);}) }
-				</ul>
-			);
-
-		return null;
-	}
-}
-
-export default ListErrors;  >>
-
-Usecase(module,name,description,url,parameterName,parameterType,action,successStatements,failStatements,domainStatements,returnValue) ::= <<~module~
-
-~name~
-~description~
-
-~url~
-~parameterName~ ~parameterType~
-~action~
-
-~successStatements:{it|~it~};separator="\n"~
-~failStatements:{it|~it~};separator="\n"~
-
-~domainStatements:{it|~it~};separator="\n"~
-
-~returnValue~  >>
-
 BlockStmt(stmt,statements) ::= <<~stmt~ {
 	~statements:{it|~it~};separator="\n"~
 }  >>
@@ -408,11 +25,9 @@ Function(name,parameters,statements) ::= <<function ~name~(~parameters:{it|~it~}
 
 FunctionExpression(name,function) ::= <<let ~name~ = ~function~;  >>
 
-functionCall(name,parameters) ::= <<~name~(~parameters:{it|~it~};separator=","~)  >>
+functionCall(scope,name,parameters) ::= <<~if(scope)~~scope~.~endif~~name~(~parameters:{it|~it~};separator=","~)  >>
 
 returnStmt(returnValue) ::= <<return ~returnValue~;  >>
-
-Inject(values) ::= <<@inject(~values:{it|~it~};separator=", "~)  >>
 
 JsonObject(values) ::= <<{ ~values:{it|~it~};separator=", "~ }  >>
 
@@ -437,11 +52,13 @@ export default new ~name;format="capitalize"~();  >>
 Observable(name,initializer) ::= <<@observable ~name~~if(initializer)~ = ~initializer~~endif~;  >>
 
 Action(name,params,statements) ::= <<@action ~name~(~params:{it|~it~};separator=","~) {
-	console.info("action ~name~");
+	console.info("action ~name~ " ~params:{it| + " ~it~ " + ~it~}~);
 	~statements:{it|~it~};separator="\n"~
 }  >>
 
 reaction(dataFunction,effectFunction) ::= <<reaction(~dataFunction~, ~effectFunction~);  >>
+
+Inject(values) ::= <<@inject(~values:{it|~it~};separator=", "~)  >>
 
 NameArray(values,name) ::= <<~name~ : [ ~values:{it|~it~};separator=", "~ ]  >>
 
@@ -522,10 +139,6 @@ function ~name~(props) {
 
 export default ~name~;  >>
 
-Element(name,props,children) ::= <<<~name~~if(props)~ ~props:{it|~it~};separator=" "~~endif~~if(children)~>
-	~children:{it|~it~};separator="\n"~
-</~name~>~else~ />~endif~  >>
-
 DestructorProp(child,prop) ::= <<const { ~prop:{it|~it~};separator=", "~ } = this.props~if(child)~.~child~~endif~;  >>
 
 returnStatement(condition,element) ::= <<~if(condition)~if (~condition~) ~endif~return (
@@ -538,10 +151,10 @@ State(values) ::= <<{
 	~values:{it|~it.name~: ~it.value~};separator=",\n"~
 }  >>
 
-ClassComponent(imports,dependencies,components,decorators,name,state,constructorStatements,events,methods,renderConstants,returnStatements) ::= <<import React from 'react';
+ClassComponent(imports,componentImports,dependencies,decorators,name,state,constructorStatements,events,methods,renderCondition,renderTrue,renderFalse,renderElement) ::= <<import React from 'react';
 ~imports:{it|import ~it.ref~ from '~it.path~';};separator="\n"~
+~componentImports:{it|~it~};separator="\n"~
 ~dependencies:{it|~it~};separator="\n"~
-~components:{it|~it~};separator="\n\n"~
 
 ~decorators:{it|~it~};separator="\n"~
 class ~name~ extends React.Component {
@@ -561,18 +174,43 @@ class ~name~ extends React.Component {
 
 ~if(events)~
 	~events:{it|~it.declaration~};separator="\n\n"~
-	
+
 ~endif~
 ~if(methods)~
 	~methods:{it|~it~};separator="\n\n"~
-	
+
 ~endif~
+
+	static getDerivedStateFromError(error) {
+		// Update state so the next render will show the fallback UI.
+		return { hasError: true };
+	}
+
+	componentDidCatch(error, errorInfo) {
+		// You can also log the error to an error reporting service
+		console.info(error);
+		console.info(errorInfo);
+	}
 
 	render() {
 		console.log("render ~name~ : " +  this.props);
-		~if(renderConstants)~const { ~renderConstants:{it|~it~};separator=", "~ } = this.state;~endif~
-		
-		~if(returnStatements)~return (~returnStatements:{it|~it~};separator="\n\n"~)~else~return null;~endif~
+~if(renderCondition)~
+		if(~renderCondition~) {
+			console.info("~name~.~renderCondition~ TRUE");
+			return ( 
+				~renderTrue~
+			);
+		} else {
+			console.info("~name~.~renderCondition~ FALSE");
+			return (
+				~renderFalse~
+			);
+		}
+~else~
+		return (
+			~if(renderElement)~~renderElement~~else~null~endif~
+		);
+~endif~
 	}
 }
 
@@ -607,7 +245,136 @@ form(className,onSubmit,noValidate,children) ::= <<<form ~if(className)~classNam
 	~children:{it|~it~};separator="\n"~
 </form>~else~ />~endif~  >>
 
-VictoryCharts() ::= << >>
+Element(name,props,children) ::= <<<~name~~if(props)~ ~props:{it|~it~};separator=" "~~endif~~if(children)~>
+	~children:{it|~it~};separator="\n"~
+</~name~>~else~ />~endif~  >>
+
+App(routes,theme,stores) ::= <<import React, { Component } from 'react';
+import { Switch, Route, withRouter } from 'react-router-dom';
+
+import { Provider } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
+
+~routes:{it|import ~it.component~ from './pages/~it.filename~';};separator="\n"~
+
+import NavigationBar from './components/NavigationBar.js';
+
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { ThemeProvider } from '@material-ui/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
+
+// https://in-your-saas.github.io/material-ui-theme-editor/
+//const theme = createMuiTheme({"palette":{"common":{"black":"#000","white":"#fff"},"background":{"paper":"#fff","default":"#fafafa"},"primary":{"light":"rgba(255, 255, 255, 1)","main":"rgba(22, 22, 23, 1)","dark":"rgba(74, 74, 74, 1)","contrastText":"#fff"},"secondary":{"light":"#ff4081","main":"rgba(245, 166, 35, 1)","dark":"#c51162","contrastText":"#fff"},"error":{"light":"#e57373","main":"#f44336","dark":"#d32f2f","contrastText":"#fff"},"text":{"primary":"rgba(0, 0, 0, 0.87)","secondary":"rgba(0, 0, 0, 0.54)","disabled":"rgba(0, 0, 0, 0.38)","hint":"rgba(0, 0, 0, 0.38)"}}});
+const theme = createMuiTheme(~theme~);
+
+@inject(~stores:{it|'~it~'};separator=", "~)
+@withRouter
+@observer
+class App extends Component {
+
+	constructor(props) {
+		super(props);
+		
+		if (!this.props.appStore.token) 
+			this.props.appStore.setAppLoaded();
+		
+	}
+
+	componentDidMount() {
+		
+		if (this.props.appStore.token) 
+			this.props.userStore.pullUser().finally(() => this.props.appStore.setAppLoaded());
+	}
+
+	render() {
+
+		if (this.props.appStore.appLoaded) {
+			return (
+				<ThemeProvider theme={theme}>
+					<CssBaseline />
+					<div>
+						<NavigationBar userStore={ this.props.userStore }></NavigationBar>
+					</div>
+					<Switch>
+						~routes:{it|<Route path="~it.path~" ~if(it.render)~render=~it.render~~else~component={~it.component~\}~endif~ />};separator="\n"~
+					</Switch>
+				</ThemeProvider>);
+		} else return null;
+	}
+}
+
+export default App;  >>
+
+Superagent(agentDeclarations) ::= <<import superagentPromise from 'superagent-promise';
+import _superagent from 'superagent';
+
+import appStore from './stores/AppStore';
+import authStore from './stores/AuthStore';
+
+const superagent = superagentPromise(_superagent, global.Promise);
+
+const handleErrors = err => {
+	if (err && err.response && err.response.status === 401) {
+		authStore.logout();
+	}
+	return err;
+};
+
+const responseBody = res => res.body;
+
+const tokenPlugin = req => {
+	if (appStore.token) {
+		req.set('Authorization', `Bearer ${appStore.token}`);
+	}
+};
+
+const requests = {
+	del: url =>
+		superagent
+			.del(`${url}`)
+			.use(tokenPlugin)
+			.end(handleErrors)
+			.then(responseBody),
+	get: url =>
+		superagent
+			.get(`${url}`)
+			.use(tokenPlugin)
+			.end(handleErrors)
+			.then(responseBody),
+	put: (url, body) =>
+		superagent
+			.put(`${url}`, body)
+			.use(tokenPlugin)
+			.end(handleErrors)
+			.then(responseBody),
+	post: (url, body) =>
+		superagent
+			.post(`${url}`, body)
+			.use(tokenPlugin)
+			.end(handleErrors)
+			.then(responseBody)
+};
+
+~agentDeclarations:{it|~it.declaration~};separator="\n"~
+
+export default {
+	~agentDeclarations:{it|~it.name~};separator=",\n"~
+};  >>
+
+agentEndpoint(name,urlParam,parameters,action,url) ::= <<~name~: (~if(urlParam)~~urlParam~~if(parameters)~, ~endif~~endif~~parameters:{it|~it~};separator=","~) => requests.~action~('/~url~'~if(urlParam)~ + ~urlParam~~endif~~if(parameters)~, { ~parameters:{it|~it~};separator=","~ }~endif~)  >>
+
+agentDeclaration(name,agentEndpoint) ::= <<const ~name~ = { 
+	~agentEndpoint:{it|~it~};separator=",\n"~
+}  >>
+
+agentRequest(endpoint,method,params,then,finally) ::= <<agent.~endpoint~.~method~(~params:{it|~it~};separator=","~)
+	~then:{it|.then(~it~)};separator="\n"~
+	.catch(action((err) => {
+		console.info("error ~endpoint~.~method~ : " + err.rawResponse);
+		this.setErrors(err.response && err.response.body && err.response.body.errors);
+		throw err;
+	}))
+	.finally(~finally~)  >>
 
 eom() ::= "}"
 

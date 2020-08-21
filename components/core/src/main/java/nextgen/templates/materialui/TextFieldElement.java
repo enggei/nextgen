@@ -32,9 +32,11 @@ public class TextFieldElement {
 	private Object _select;
 	private Object _SelectProps;
 	private Object _size;
+	private Object _style;
 	private Object _type;
 	private Object _value;
 	private Object _variant;
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	TextFieldElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -79,9 +81,11 @@ public class TextFieldElement {
 		st.add("select", _select);
 		st.add("SelectProps", _SelectProps);
 		st.add("size", _size);
+		st.add("style", _style);
 		st.add("type", _type);
 		st.add("value", _value);
 		st.add("variant", _variant);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -679,6 +683,28 @@ public class TextFieldElement {
 		return this;
 	} 
 
+	public TextFieldElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public TextFieldElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public TextFieldElement setType(Object value) {
 		this._type = value;
 		return this;
@@ -746,6 +772,50 @@ public class TextFieldElement {
 	} 
 
 
+	public TextFieldElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public TextFieldElement addAttribute(TextFieldElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<TextFieldElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(TextFieldElement_Attribute::new);
+	}
+
+	public static final class TextFieldElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public TextFieldElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private TextFieldElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -760,7 +830,7 @@ public class TextFieldElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TextFieldElement(autoComplete,autoFocus,classes,className,color,defaultValue,disabled,error,FormHelperTextProps,fullWidth,helperText,id,InputLabelProps,inputProps,inputRef,label,margin,multiline,name,onChange,placeholder,required,rows,rowsMax,select,SelectProps,size,type,value,variant) ::= <<<TextField~if(autoComplete)~\n" + 
+	static final String st = "TextFieldElement(autoComplete,autoFocus,classes,className,color,defaultValue,disabled,error,FormHelperTextProps,fullWidth,helperText,id,InputLabelProps,inputProps,inputRef,label,margin,multiline,name,onChange,placeholder,required,rows,rowsMax,select,SelectProps,size,style,type,value,variant,attribute) ::= <<<TextField~if(autoComplete)~\n" + 
 				"	autoComplete=\"~autoComplete~\"~endif~~if(autoFocus)~\n" + 
 				"	autoFocus~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
@@ -787,8 +857,11 @@ public class TextFieldElement {
 				"	rowsMax=~rowsMax~~endif~~if(select)~\n" + 
 				"	select~endif~~if(SelectProps)~\n" + 
 				"	SelectProps=~SelectProps~~endif~~if(size)~\n" + 
-				"	size=\"~size~\"~endif~~if(type)~\n" + 
+				"	size=\"~size~\"~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(type)~\n" + 
 				"	type=\"~type~\"~endif~~if(value)~\n" + 
 				"	value=~value~~endif~~if(variant)~\n" + 
-				"	variant=\"~variant~\"~endif~ /> >>";
+				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~ /> >>";
 }  

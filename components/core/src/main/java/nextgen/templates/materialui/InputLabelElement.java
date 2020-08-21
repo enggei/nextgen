@@ -16,8 +16,10 @@ public class InputLabelElement {
 	private Object _margin;
 	private Object _required;
 	private Object _shrink;
+	private Object _style;
 	private Object _variant;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	InputLabelElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -46,8 +48,10 @@ public class InputLabelElement {
 		st.add("margin", _margin);
 		st.add("required", _required);
 		st.add("shrink", _shrink);
+		st.add("style", _style);
 		st.add("variant", _variant);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -293,6 +297,28 @@ public class InputLabelElement {
 		return this;
 	} 
 
+	public InputLabelElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public InputLabelElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public InputLabelElement setVariant(Object value) {
 		this._variant = value;
 		return this;
@@ -344,6 +370,50 @@ public class InputLabelElement {
 		return this._children;
 	} 
 
+	public InputLabelElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public InputLabelElement addAttribute(InputLabelElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<InputLabelElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(InputLabelElement_Attribute::new);
+	}
+
+	public static final class InputLabelElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public InputLabelElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private InputLabelElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -358,7 +428,7 @@ public class InputLabelElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "InputLabelElement(classes,className,color,disableAnimation,disabled,error,focused,id,margin,required,shrink,variant,children) ::= <<<InputLabel~if(classes)~\n" + 
+	static final String st = "InputLabelElement(classes,className,color,disableAnimation,disabled,error,focused,id,margin,required,shrink,style,variant,attribute,children) ::= <<<InputLabel~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(disableAnimation)~\n" + 
@@ -369,8 +439,11 @@ public class InputLabelElement {
 				"	id=\"~id~\"~endif~~if(margin)~\n" + 
 				"	margin=\"~margin~\"~endif~~if(required)~\n" + 
 				"	required~endif~~if(shrink)~\n" + 
-				"	shrink~endif~~if(variant)~\n" + 
-				"	variant=\"~variant~\"~endif~~if(children)~>\n" + 
+				"	shrink~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(variant)~\n" + 
+				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</InputLabel>~else~ />~endif~ >>";
 }  

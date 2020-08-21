@@ -12,8 +12,10 @@ public class ToggleButtonElement {
 	private Object _disableRipple;
 	private Object _id;
 	private Object _selected;
+	private Object _style;
 	private Object _value;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	ToggleButtonElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -38,8 +40,10 @@ public class ToggleButtonElement {
 		st.add("disableRipple", _disableRipple);
 		st.add("id", _id);
 		st.add("selected", _selected);
+		st.add("style", _style);
 		st.add("value", _value);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -197,6 +201,28 @@ public class ToggleButtonElement {
 		return this;
 	} 
 
+	public ToggleButtonElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public ToggleButtonElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public ToggleButtonElement setValue(Object value) {
 		this._value = value;
 		return this;
@@ -248,6 +274,50 @@ public class ToggleButtonElement {
 		return this._children;
 	} 
 
+	public ToggleButtonElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public ToggleButtonElement addAttribute(ToggleButtonElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<ToggleButtonElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(ToggleButtonElement_Attribute::new);
+	}
+
+	public static final class ToggleButtonElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public ToggleButtonElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private ToggleButtonElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -262,15 +332,18 @@ public class ToggleButtonElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ToggleButtonElement(classes,className,disabled,disableFocusRipple,disableRipple,id,selected,value,children) ::= <<<ToggleButton~if(classes)~\n" + 
+	static final String st = "ToggleButtonElement(classes,className,disabled,disableFocusRipple,disableRipple,id,selected,style,value,attribute,children) ::= <<<ToggleButton~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(disabled)~\n" + 
 				"	disabled~endif~~if(disableFocusRipple)~\n" + 
 				"	disableFocusRipple~endif~~if(disableRipple)~\n" + 
 				"	disableRipple~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(selected)~\n" + 
-				"	selected~endif~\n" + 
-				"	value=~value~~if(children)~>\n" + 
+				"	selected~endif~~if(style)~\n" + 
+				"	style=~style~~endif~\n" + 
+				"	value=~value~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</ToggleButton>~else~ />~endif~ >>";
 }  

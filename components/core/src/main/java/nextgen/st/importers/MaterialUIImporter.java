@@ -293,6 +293,7 @@ public class MaterialUIImporter extends BaseImporter {
             // add some api elements missing in api
             apiElements.add(new ApiElement("className", "object", null, "component style"));
             apiElements.add(new ApiElement("id", "string", null, "component id"));
+            apiElements.add(new ApiElement("style", "node", null, "component style"));
 
             if (templateName.equals("Button")) apiElements.add(new ApiElement("type", "string", null, "button type"));
             if (templateName.equals("IconButton")) {
@@ -307,6 +308,10 @@ public class MaterialUIImporter extends BaseImporter {
             if (templateName.equals("MenuItem")) {
                 apiElements.add(new ApiElement("onClick", "node", null, ""));
             }
+
+            if (templateName.contains("Item") || templateName.equals("TableRow") || templateName.equals("TableCell")) {
+                apiElements.add(new ApiElement("key", "node", null, ""));
+            }
         }
 
         public String elementTemplateText() {
@@ -320,6 +325,10 @@ public class MaterialUIImporter extends BaseImporter {
                 else
                     elementTemplateText.append("~if(").append(apiElement.parameterName).append(")~\n\t").append(apiElement.name).append(elementValue(apiElement)).append("~endif~");
             }
+
+            elementTemplateText.append("~attribute:{it|\n" +
+                    "\t\n" +
+                    "\t~it.name~=~it.value~}~");
 
             if (canHaveChildrenElements)
                 elementTemplateText.append("~if(children)~>\n\t~children:{it|~it~};separator=\"\\n\"~\n</").append(componentName).append(">~else~ />~endif~");

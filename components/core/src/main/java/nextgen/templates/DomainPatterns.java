@@ -511,7 +511,6 @@ public class DomainPatterns extends DomainST {
                     generateNeoWrapper(root, packageDeclaration, dst, visited);
 
                     nodeToJsonObject.addRefs(dst.getName(), o.getName());
-                    deleteNode.addRefs(dst.getName(), o.getName());
                     break;
                 }
                 case LIST: {
@@ -521,7 +520,6 @@ public class DomainPatterns extends DomainST {
                     generateNeoWrapper(root, packageDeclaration, dst, visited);
 
                     nodeToJsonObject.addRefList(o.getName());
-                    deleteNode.addRefList(o.getName());
                     break;
                 }
             }

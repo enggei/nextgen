@@ -478,7 +478,7 @@ public class ~name;format="capitalize"~ extends AbstractVerticle {
 
 SendEventBusAction(actionName,params) ::= <<getFromDomainDB(vertx, routingContext, "~actionName~", new JsonObject()~if(params)~.~params:{it|put("~it.name~", routingContext.request().getParam("~it.name~"))}~~endif~);  >>
 
-RouteHandler(name,statements) ::= <<private void ~name~(RoutingContext routingContext) {
+RouteHandler(name,params,statements) ::= <<private void ~name~(RoutingContext routingContext~if(params)~, ~params:{it|~it.type~ ~it.name~};separator=","~~endif~) {
 	WebUtils.debug("~name~", routingContext);
 	~statements:{it|~it~};separator="\n"~
 }  >>

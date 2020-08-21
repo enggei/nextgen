@@ -25,11 +25,13 @@ public class PopoverElement {
 	private Object _onExited;
 	private Object _onExiting;
 	private Object _PaperProps;
+	private Object _style;
 	private Object _transformOrigin;
 	private Object _TransitionComponent;
 	private Object _transitionDuration;
 	private Object _TransitionProps;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	PopoverElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -67,11 +69,13 @@ public class PopoverElement {
 		st.add("onExited", _onExited);
 		st.add("onExiting", _onExiting);
 		st.add("PaperProps", _PaperProps);
+		st.add("style", _style);
 		st.add("transformOrigin", _transformOrigin);
 		st.add("TransitionComponent", _TransitionComponent);
 		st.add("transitionDuration", _transitionDuration);
 		st.add("TransitionProps", _TransitionProps);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -515,6 +519,28 @@ public class PopoverElement {
 		return this;
 	} 
 
+	public PopoverElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public PopoverElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public PopoverElement setTransformOrigin(Object value) {
 		this._transformOrigin = value;
 		return this;
@@ -632,6 +658,50 @@ public class PopoverElement {
 		return this._children;
 	} 
 
+	public PopoverElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public PopoverElement addAttribute(PopoverElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<PopoverElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(PopoverElement_Attribute::new);
+	}
+
+	public static final class PopoverElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public PopoverElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private PopoverElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -646,7 +716,7 @@ public class PopoverElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PopoverElement(action,anchorEl,anchorOrigin,anchorPosition,anchorReference,classes,className,container,elevation,getContentAnchorEl,id,marginThreshold,onClose,onEnter,onEntered,onEntering,onExit,onExited,onExiting,PaperProps,transformOrigin,TransitionComponent,transitionDuration,TransitionProps,children) ::= <<<Popover~if(action)~\n" + 
+	static final String st = "PopoverElement(action,anchorEl,anchorOrigin,anchorPosition,anchorReference,classes,className,container,elevation,getContentAnchorEl,id,marginThreshold,onClose,onEnter,onEntered,onEntering,onExit,onExited,onExiting,PaperProps,style,transformOrigin,TransitionComponent,transitionDuration,TransitionProps,attribute,children) ::= <<<Popover~if(action)~\n" + 
 				"	action=~action~~endif~~if(anchorEl)~\n" + 
 				"	anchorEl=~anchorEl~~endif~~if(anchorOrigin)~\n" + 
 				"	anchorOrigin=\"~anchorOrigin~\"~endif~~if(anchorPosition)~\n" + 
@@ -667,11 +737,14 @@ public class PopoverElement {
 				"	onExited=~onExited~~endif~~if(onExiting)~\n" + 
 				"	onExiting=~onExiting~~endif~\n" + 
 				"	open~if(PaperProps)~\n" + 
-				"	PaperProps=~PaperProps~~endif~~if(transformOrigin)~\n" + 
+				"	PaperProps=~PaperProps~~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(transformOrigin)~\n" + 
 				"	transformOrigin=\"~transformOrigin~\"~endif~~if(TransitionComponent)~\n" + 
 				"	TransitionComponent=~TransitionComponent~~endif~~if(transitionDuration)~\n" + 
 				"	transitionDuration=\"~transitionDuration~\"~endif~~if(TransitionProps)~\n" + 
-				"	TransitionProps=~TransitionProps~~endif~~if(children)~>\n" + 
+				"	TransitionProps=~TransitionProps~~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Popover>~else~ />~endif~ >>";
 }  

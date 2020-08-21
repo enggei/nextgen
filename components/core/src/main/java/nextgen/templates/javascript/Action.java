@@ -13,7 +13,12 @@ public class Action {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -121,6 +126,7 @@ public class Action {
 	}
 
 	static final String st = "Action(name,params,statements) ::= <<@action ~name~(~params:{it|~it~};separator=\",\"~) {\n" + 
+				"	console.info(\"action ~name~ \" ~params:{it| + \" ~it~ \" + ~it~}~);\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
 				"} >>";
 }  

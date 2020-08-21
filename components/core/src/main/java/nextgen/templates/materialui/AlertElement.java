@@ -16,8 +16,10 @@ public class AlertElement {
 	private Object _onClose;
 	private Object _role;
 	private Object _severity;
+	private Object _style;
 	private Object _variant;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	AlertElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -46,8 +48,10 @@ public class AlertElement {
 		st.add("onClose", _onClose);
 		st.add("role", _role);
 		st.add("severity", _severity);
+		st.add("style", _style);
 		st.add("variant", _variant);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -293,6 +297,28 @@ public class AlertElement {
 		return this;
 	} 
 
+	public AlertElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public AlertElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public AlertElement setVariant(Object value) {
 		this._variant = value;
 		return this;
@@ -344,6 +370,50 @@ public class AlertElement {
 		return this._children;
 	} 
 
+	public AlertElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public AlertElement addAttribute(AlertElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<AlertElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(AlertElement_Attribute::new);
+	}
+
+	public static final class AlertElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public AlertElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private AlertElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -358,7 +428,7 @@ public class AlertElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AlertElement(action,classes,className,closeText,color,icon,iconMapping,id,onClose,role,severity,variant,children) ::= <<<Alert~if(action)~\n" + 
+	static final String st = "AlertElement(action,classes,className,closeText,color,icon,iconMapping,id,onClose,role,severity,style,variant,attribute,children) ::= <<<Alert~if(action)~\n" + 
 				"	action=~action~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(closeText)~\n" + 
@@ -369,8 +439,11 @@ public class AlertElement {
 				"	id=\"~id~\"~endif~~if(onClose)~\n" + 
 				"	onClose=~onClose~~endif~~if(role)~\n" + 
 				"	role=\"~role~\"~endif~~if(severity)~\n" + 
-				"	severity=\"~severity~\"~endif~~if(variant)~\n" + 
-				"	variant=\"~variant~\"~endif~~if(children)~>\n" + 
+				"	severity=\"~severity~\"~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(variant)~\n" + 
+				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Alert>~else~ />~endif~ >>";
 }  

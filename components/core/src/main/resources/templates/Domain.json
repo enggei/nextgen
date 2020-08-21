@@ -91,7 +91,7 @@
   }, {
     "uuid" : "482ae0e3-0000-41e0-8f17-0613430216b8",
     "name" : "JavaProject",
-    "text" : "package ~packageName~;\n\nimport nextgen.templates.java.*;\n\n~if(javaPatterns)~import static ~packageName~.~name~.JavaPatterns.*;~endif~\n\t\npublic class ~name~ {\n\n\tfinal java.io.File root = new java.io.File(\"~root~\");\n\tfinal java.io.File mainJava = new java.io.File(root, \"src/main/java\");\n\tfinal java.io.File mainResources = new java.io.File(root, \"src/main/resources\");\n\tfinal java.io.File testJava = new java.io.File(root, \"src/test/java\");\n\tfinal java.io.File testResources = new java.io.File(root, \"src/test/resources\");\n\n\t~libraries:{it|~it~};separator=\"\\n\\n\"~\n\t\n\t~packageDeclarations:{it|~it~};separator=\"\\n\\n\"~\n\n\t~javaPatterns~\n} ",
+    "text" : "package ~packageName~;\n\nimport nextgen.templates.java.*;\n\n~if(javaPatterns)~import static ~packageName~.~name~.JavaPatterns.*;~endif~\n\npublic class ~name~ {\n\n\tfinal java.io.File root = new java.io.File(\"~root~\");\n\tfinal java.io.File mainJava = new java.io.File(root, \"src/main/java\");\n\tfinal java.io.File mainResources = new java.io.File(root, \"src/main/resources\");\n\tfinal java.io.File testJava = new java.io.File(root, \"src/test/java\");\n\tfinal java.io.File testResources = new java.io.File(root, \"src/test/resources\");\n\n\t~libraries:{it|~it~};separator=\"\\n\\n\"~\n\n\t~packageDeclarations:{it|~it~};separator=\"\\n\\n\"~\n\n\t~javaPatterns~\n\n\t~models:{it|~it~}~\n\n\tprotected static void log(Object log) {\n\t\tSystem.out.println(log);\n\t}\n} ",
     "parameters" : [ {
       "uuid" : "566d195b-373f-4291-80d8-27ae7f9cce36",
       "name" : "packageName",
@@ -122,6 +122,11 @@
       "name" : "packageDeclarations",
       "type" : "LIST",
       "argumentType" : "JavaPackage"
+    }, {
+      "uuid" : "45dfcc7e-028b-450a-b4b6-79d6aa2d4b7f",
+      "name" : "models",
+      "type" : "LIST",
+      "argumentType" : "Object"
     } ],
     "children" : [ {
       "uuid" : "581a326a-5c8c-47bb-9ce2-0cfd0e28a9f2",
@@ -195,6 +200,30 @@
         "name" : "packages",
         "type" : "LIST",
         "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "2be60be4-e81c-4303-8a85-ccac265cb76c",
+      "name" : "Model",
+      "text" : "protected ~name~ new~name;format=\"capitalize\"~() { return new ~name~(); }\n\nprotected class ~name~ {\n\n\tprivate final java.util.UUID uuid = java.util.UUID.randomUUID();\n\t~fields:{it|protected ~it.type~ _~it.name~;};separator=\"\\n\"~\n\n\tprotected ~name~() {\n\n\t}\n~fields:{it|\n\n\tprotected ~name~ set~it.name;format=\"capitalize\"~(~it.type~ _~it.name~) {\n\t\tthis._~it.name~ = _~it.name~;\n\t\treturn this;\n\t\\}\n\n\tprotected ~it.type~ get~it.name;format=\"capitalize\"~() {\n\t\treturn this._~it.name~;\n\t\\}\n};separator=\"\\n\\n\"~\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\tUseCase useCase = (UseCase) o;\n\t\treturn uuid.equals(useCase.uuid);\n\t}\n\t\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(uuid);\n\t}\n} ",
+      "parameters" : [ {
+        "uuid" : "1db259dc-2ffd-48ff-a81e-a1f7fcbda89c",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "8da2badd-79b3-4efb-97f6-a80904fcb516",
+        "name" : "fields",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "9e2f03f9-0a3b-4b09-810f-d72772f75574",
+          "name" : "type",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "f66b85ff-6829-42d5-9d0d-daabbdf2b48b",
+          "name" : "name",
+          "argumentType" : "Object"
+        } ]
       } ]
     } ]
   } ],

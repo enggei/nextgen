@@ -33,8 +33,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 	private final PLayer nodeLayer;
 	private final PLayer relationLayer = new PLayer();
 
-	final Map<UUID, BaseCanvasNode<?>> nodeMap = new ConcurrentHashMap<>();
-	final Map<UUID, BaseCanvasRelation> relationMap = new ConcurrentHashMap<>();
+	final Map<String, BaseCanvasNode<?>> nodeMap = new ConcurrentHashMap<>();
+	final Map<String, BaseCanvasRelation> relationMap = new ConcurrentHashMap<>();
 
 	private final SelectEventsHandler selectEventHandler = new SelectEventsHandler();
 	private final CanvasInputEventsHandler canvasInputEventsHandler = new CanvasInputEventsHandler();
@@ -64,16 +64,70 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
+	public void onNewMetaDomain(nextgen.st.STAppEvents.NewMetaDomain event) {
+		presentationModel.doLaterInTransaction(transaction -> addMetaDomainNode(event.metaDomain));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewMetaEntity(nextgen.st.STAppEvents.NewMetaEntity event) {
+		presentationModel.doLaterInTransaction(transaction -> addMetaEntityNode(event.metaEntity));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewMetaRelation(nextgen.st.STAppEvents.NewMetaRelation event) {
+		presentationModel.doLaterInTransaction(transaction -> addMetaRelationNode(event.metaRelation));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewMetaProperty(nextgen.st.STAppEvents.NewMetaProperty event) {
+		presentationModel.doLaterInTransaction(transaction -> addMetaPropertyNode(event.metaProperty));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewDomainEntity(nextgen.st.STAppEvents.NewDomainEntity event) {
+		presentationModel.doLaterInTransaction(transaction -> addDomainEntityNode(event.domainEntity));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onOpenMetaDomain(nextgen.st.STAppEvents.OpenMetaDomain event) {
+		presentationModel.doLaterInTransaction(transaction -> addMetaDomainNode(event.metaDomain));
+		presentationModel.getWorkspace().showCanvas();
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onOpenMetaEntity(nextgen.st.STAppEvents.OpenMetaEntity event) {
+		presentationModel.doLaterInTransaction(transaction -> addMetaEntityNode(event.metaEntity));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onOpenMetaProperty(nextgen.st.STAppEvents.OpenMetaProperty event) {
+		presentationModel.doLaterInTransaction(transaction -> addMetaPropertyNode(event.metaProperty));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onOpenMetaRelation(nextgen.st.STAppEvents.OpenMetaRelation event) {
+		presentationModel.doLaterInTransaction(transaction -> addMetaRelationNode(event.metaRelation));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewDomainVisitor(nextgen.st.STAppEvents.NewDomainVisitor event) {
+		presentationModel.doLaterInTransaction(transaction -> addDomainVisitorNode(event.domainVisitor));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onOpenDomainVisitor(nextgen.st.STAppEvents.OpenDomainVisitor event) {
+		presentationModel.doLaterInTransaction(transaction -> addDomainVisitorNode(event.domainVisitor));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTModel(nextgen.st.STAppEvents.NewSTModel event) {
-		presentationModel.doLaterInTransaction(transaction -> addNode(event.sTModel.getUuid(), () -> new STModelNode(event.sTModel, presentationModel.findSTTemplateByUuid(event.sTModel.getStTemplate()))));
+		presentationModel.doLaterInTransaction(transaction -> addSTModelNode(event.sTModel, presentationModel.findSTTemplateByUuid(event.sTModel.getStTemplate())));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onOpenSTModel(nextgen.st.STAppEvents.OpenSTModel event) {
-		presentationModel.doLaterInTransaction(transaction -> {
-			addNode(event.sTModel.getUuid(), () -> new STModelNode(event.sTModel, presentationModel.findSTTemplateByUuid(event.sTModel.getStTemplate())));
-			presentationModel.getWorkspace().showCanvas();
-		});
+		presentationModel.doLaterInTransaction(transaction -> addSTModelNode(event.sTModel, presentationModel.findSTTemplateByUuid(event.sTModel.getStTemplate())));
+		presentationModel.getWorkspace().showCanvas();
 	}
 
 	@Override
@@ -119,15 +173,11 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		return (Stream<R>) getAllRelations().filter(BaseCanvasRelation::isSelected);
 	}
 
-	public <N extends BaseCanvasNode<?>> N addNode(String uuid, java.util.function.Supplier<N> supplier) {
-		return addNode(java.util.UUID.fromString(uuid), supplier);
-	}
-
 	public <N extends BaseCanvasNode<?>> N addNode(N node) {
 		return addNode(node.getUuid(), () -> node);
 	}
 
-	public <N extends BaseCanvasNode<?>> N addNode(java.util.UUID uuid, java.util.function.Supplier<N> supplier) {
+	public <N extends BaseCanvasNode<?>> N addNode(String uuid, java.util.function.Supplier<N> supplier) {
 
 		final N existing = getNode(uuid);
 		if (existing != null) {
@@ -161,14 +211,10 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 	}
 
 	public <N extends BaseCanvasNode<?>> N getNode(String uuid) {
-		return getNode(java.util.UUID.fromString(uuid));
-	}
-
-	public <N extends BaseCanvasNode<?>> N getNode(UUID uuid) {
 		return (N) nodeMap.get(uuid);
 	}
 
-	<N extends BaseCanvasNode<?>> N removeNode(UUID uuid) {
+	<N extends BaseCanvasNode<?>> N removeNode(String uuid) {
 		final BaseCanvasNode remove = nodeMap.remove(uuid);
 		final N old = (N) nodeLayer.removeChild(remove);
 		log.debug("\tN-"+ uuid + " removed from canvas : " + (old == null ? "null" : old.getUuid()));
@@ -176,10 +222,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 	}
 
 	public <R extends BaseCanvasRelation> R addRelation(String uuid, java.util.function.Supplier<R> supplier) {
-		return addRelation(java.util.UUID.fromString(uuid), supplier);
-	}
-
-	public <R extends BaseCanvasRelation> R addRelation(java.util.UUID uuid, java.util.function.Supplier<R> supplier) {
 
 		final R existing = getRelation(uuid);
 		if (existing != null) {
@@ -194,7 +236,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		return relation;
 	}
 
-	<R extends BaseCanvasRelation> R removeRelation(UUID uuid) {
+	<R extends BaseCanvasRelation> R removeRelation(String uuid) {
 		final BaseCanvasRelation remove = relationMap.remove(uuid);
 		if (remove == null) return null;
 
@@ -204,13 +246,14 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		return (R) remove;
 	}
 
-	public <R extends BaseCanvasRelation> R getRelation(UUID uuid) {
+	public <R extends BaseCanvasRelation> R getRelation(String uuid) {
 		return (R) relationMap.get(uuid);
 	}
 
 	protected void onCanvasRightClick(JPopupMenu pop, PInputEvent event) {
 
 
+		pop.add(new NewDomainAction(event));
 		pop.add(new SaveLastLayoutAction(event));
 		pop.add(new LoadLastLayoutAction(event));
 		pop.addSeparator();
@@ -399,16 +442,12 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 	protected class BaseCanvasNode<T> extends PNode {
 
 		protected PText child;
-		protected final Set<UUID> outgoing = new LinkedHashSet<>();
-		protected final Set<UUID> incoming = new LinkedHashSet<>();
+		protected final Set<String> outgoing = new LinkedHashSet<>();
+		protected final Set<String> incoming = new LinkedHashSet<>();
 
 		private PPath rectangle;
 
 		public BaseCanvasNode(T model, String uuid, String label) {
-			this(model, UUID.fromString(uuid), label);
-		}
-
-		public BaseCanvasNode(T model, UUID uuid, String label) {
 			this.addAttribute("_defaultColor", Color.decode("#000000"));
 			this.addAttribute("_selectedColor", new Color(174, 1, 126));
 			this.addAttribute("_highlightedColor", new Color(240, 59, 32));
@@ -416,7 +455,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			this.addAttribute("_model", model);
 			this.addAttribute("_uuid", uuid);
 			this.addAttribute("_text", label);
-			this.child = new PText(getText() == null ? getUuid().toString() : getText());
+			this.child = new PText(getText() == null ? getUuid() : getText());
 			this.addChild(this.child);
 
 			final NodeInputEventHandler nodeInputEventHandler = new NodeInputEventHandler();
@@ -474,8 +513,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			return getUuid().hashCode();
 		}
 
-		public UUID getUuid() {
-			return (UUID) getAttribute("_uuid");
+		public String getUuid() {
+			return (String) getAttribute("_uuid");
 		}
 
 		public String getText() {
@@ -495,19 +534,19 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			});
 		}
 
-		public void addOutgoingRelation(UUID relation) {
+		public void addOutgoingRelation(String relation) {
 			this.outgoing.add(relation);
 		}
 
-		public void addIncomingRelation(UUID relation) {
+		public void addIncomingRelation(String relation) {
 			this.incoming.add(relation);
 		}
 
-		public java.util.stream.Stream<UUID> outgoing() {
+		public java.util.stream.Stream<String> outgoing() {
 			return this.outgoing.stream();
 		}
 
-		public java.util.stream.Stream<UUID> incoming() {
+		public java.util.stream.Stream<String> incoming() {
 			return this.incoming.stream();
 		}
 
@@ -548,8 +587,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 		public void close() {
 			SwingUtilities.invokeLater(() -> {
-				for (UUID uuid : incoming) removeRelation(uuid);
-				for (UUID uuid : outgoing) removeRelation(uuid);
+				for (String uuid : incoming) removeRelation(uuid);
+				for (String uuid : outgoing) removeRelation(uuid);
 				org.greenrobot.eventbus.EventBus.getDefault().unregister(BaseCanvasNode.this);
 				removeNode(getUuid());			
 			});
@@ -674,8 +713,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 		protected final class LayoutTreeAction extends NodeAction {
 
-			private final Map<UUID, BaseCanvasNode<?>> parentsMap = new LinkedHashMap<>();
-			private final Map<UUID, java.util.List<BaseCanvasNode<?>>> childrensMap = new LinkedHashMap<>();
+			private final Map<String, BaseCanvasNode<?>> parentsMap = new LinkedHashMap<>();
+			private final Map<String, java.util.List<BaseCanvasNode<?>>> childrensMap = new LinkedHashMap<>();
 			private final org.abego.treelayout.util.DefaultConfiguration<BaseCanvasNode<?>> configuration;
 
 			protected LayoutTreeAction(BaseCanvasNode<?> root, PInputEvent event) {
@@ -825,10 +864,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		private final PNodeChangeListener nodeChangeListener = new PNodeChangeListener();
 
 		public BaseCanvasRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst, String uuid, String type) {
-			this(src, dst, UUID.fromString(uuid), type);
-		}
-
-		public BaseCanvasRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst, UUID uuid, String type) {
 			this.addAttribute("_defaultColor", Color.decode("#bababa"));
 			this.addAttribute("_selectedColor", Color.decode("#b2182b"));
 			this.addAttribute("_highlightedColor", Color.decode("#f4a582"));
@@ -854,7 +889,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			dst.addPropertyChangeListener(nodeChangeListener);
 			addChild(this.child);
 
-			//org.greenrobot.eventbus.EventBus.getDefault().register(this);
+			SwingUtilities.invokeLater(() -> updatePath((getSrc()), getDst()));
 		}
 
 		@Override
@@ -887,8 +922,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			return getUuid().hashCode();
 		}
 
-		public UUID getUuid() {
-			return (UUID) getAttribute("_uuid");
+		public String getUuid() {
+			return (String) getAttribute("_uuid");
 		}
 
 		public String getType() {
@@ -1105,6 +1140,20 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		}
 	}  
 
+	final class NewDomainAction extends CanvasAction {
+
+		NewDomainAction(PInputEvent event) {
+			super("New Domain", event);
+		}
+
+		@Override
+		void actionPerformed(PInputEvent event, ActionEvent e) {
+			nextgen.utils.SwingUtil.showInputDialog("Name", thisCanvas(), "", s -> thisCanvas().presentationModel.doLaterInTransaction(tx -> {
+				presentationModel.metaDb.newMetaDomain(s);
+			}));
+		}
+	}
+
 	final class SaveLastLayoutAction extends CanvasAction {
 
 		SaveLastLayoutAction(PInputEvent event) {
@@ -1137,6 +1186,24 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 							layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
 						} else if (stNode instanceof STFileNode) {
 							final org.neo4j.graphdb.Node node = ((STFileNode) stNode).getModel().getNode();
+							layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
+						} else if (stNode instanceof MetaDomainNode) {
+							final org.neo4j.graphdb.Node node = ((MetaDomainNode) stNode).getModel().getNode();
+							layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
+						} else if (stNode instanceof MetaEntityNode) {
+							final org.neo4j.graphdb.Node node = ((MetaEntityNode) stNode).getModel().getNode();
+							layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
+						} else if (stNode instanceof MetaRelationNode) {
+							final org.neo4j.graphdb.Node node = ((MetaRelationNode) stNode).getModel().getNode();
+							layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
+						} else if (stNode instanceof MetaPropertyNode) {
+							final org.neo4j.graphdb.Node node = ((MetaPropertyNode) stNode).getModel().getNode();
+							layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
+						} else if (stNode instanceof DomainEntityNode) {
+							final org.neo4j.graphdb.Node node = ((DomainEntityNode) stNode).getModel().getNode();
+							layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
+						} else if (stNode instanceof DomainVisitorNode) {
+							final org.neo4j.graphdb.Node node = ((DomainVisitorNode) stNode).getModel().getNode();
 							layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
 						}
 						last.addNodes(layoutNode);
@@ -1215,6 +1282,36 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 									getNode(stFile.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
 									if (centerNodeRef.get() == null) centerNodeRef.set(getNode(stFile.getUuid()));
 								});
+							} else if (nextgen.domains.meta.MetaDomainNeoFactory.isMetaDomain(stNode)) {
+								final nextgen.domains.meta.MetaDomain project = presentationModel.newMetaDomain(stNode);
+								addNode(project.getUuid(), () -> new MetaDomainNode(project));
+								getNode(project.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
+								if (centerNodeRef.get() == null) centerNodeRef.set(getNode(project.getUuid()));
+							} else if (nextgen.domains.meta.MetaDomainNeoFactory.isMetaEntity(stNode)) {
+								final nextgen.domains.meta.MetaEntity project = presentationModel.newMetaEntity(stNode);
+								addNode(project.getUuid(), () -> new MetaEntityNode(project));
+								getNode(project.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
+								if (centerNodeRef.get() == null) centerNodeRef.set(getNode(project.getUuid()));
+							} else if (nextgen.domains.meta.MetaDomainNeoFactory.isMetaRelation(stNode)) {
+								final nextgen.domains.meta.MetaRelation project = presentationModel.newMetaRelation(stNode);
+								addNode(project.getUuid(), () -> new MetaRelationNode(project));
+								getNode(project.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
+								if (centerNodeRef.get() == null) centerNodeRef.set(getNode(project.getUuid()));
+							} else if (nextgen.domains.meta.MetaDomainNeoFactory.isMetaProperty(stNode)) {
+								final nextgen.domains.meta.MetaProperty project = presentationModel.newMetaProperty(stNode);
+								addNode(project.getUuid(), () -> new MetaPropertyNode(project));
+								getNode(project.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
+								if (centerNodeRef.get() == null) centerNodeRef.set(getNode(project.getUuid()));
+							} else if (nextgen.domains.meta.MetaDomainNeoFactory.isDomainEntity(stNode)) {
+								final nextgen.domains.meta.DomainEntity project = presentationModel.newDomainEntity(stNode);
+								addNode(project.getUuid(), () -> new DomainEntityNode(project));
+								getNode(project.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
+								if (centerNodeRef.get() == null) centerNodeRef.set(getNode(project.getUuid()));
+							} else if (nextgen.domains.meta.MetaDomainNeoFactory.isDomainVisitor(stNode)) {
+								final nextgen.domains.meta.DomainVisitor project = presentationModel.newDomainVisitor(stNode);
+								addNode(project.getUuid(), () -> new DomainVisitorNode(project));
+								getNode(project.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
+								if (centerNodeRef.get() == null) centerNodeRef.set(getNode(project.getUuid()));
 							}
 					});
 				});
@@ -1318,40 +1415,735 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		}
 	}
 
+	final class MetaEntityNode extends BaseCanvasNode<nextgen.domains.meta.MetaEntity> {
+
+
+		public MetaEntityNode(nextgen.domains.meta.MetaEntity model) {
+			super(model, model.getUuid(), model.getName());
+		}
+
+		@Override
+		public void addedToCanvas() {
+			getAllMetaPropertyNode()
+					.filter(metaPropertyNode -> getModel().getProperties().anyMatch(metaProperty -> metaProperty.getUuid().equals(metaPropertyNode.getUuid())))
+					.forEach(metaPropertyNode -> addMetaEntityPropertyRelation(thisNode(), metaPropertyNode));
+
+			getAllMetaRelationNode()
+					.filter(metaRelationNode -> metaRelationNode.getModel().getDst().anyMatch(metaEntity -> metaEntity.getUuid().equals(getUuid())))
+					.forEach(metaRelationNode -> addMetaEntityDstRelation(metaRelationNode, thisNode()));
+
+			getAllMetaRelationNode()
+					.filter(metaRelationNode -> getModel().getRelations().anyMatch(metaRelation -> metaRelation.getUuid().equals(metaRelationNode.getUuid())))
+					.forEach(metaRelationNode -> addMetaEntitySrcRelation(thisNode(), metaRelationNode));
+
+			getAllMetaDomainNode()
+					.filter(metaDomainNode -> metaDomainNode.getModel().getRoots().anyMatch(metaEntity -> metaEntity.getUuid().equals(getUuid())))
+					.forEach(metaDomainNode -> addMetaDomainEntityRelation(metaDomainNode, thisNode()));
+		}
+
+
+		@Override
+		public void newNodeAdded(BaseCanvasNode<?> node) {
+			isInstanceOfMetaPropertyNode(node)
+					.ifPresent(metaPropertyNode -> getModel().getProperties().filter(metaProperty -> metaProperty.getUuid().equals(metaPropertyNode.getUuid())).forEach(metaProperty -> addMetaEntityPropertyRelation(thisNode(), metaPropertyNode)));
+		}
+
+		@Override
+		protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
+			pop.add(new NewMetaRelation(event));
+			pop.add(new NewMetaProperty(event));
+			pop.add(new NewInstance(event));
+			super.onNodeRightClick(event, pop);
+		}
+
+		@Override
+		protected void onNodeKeyPressed(PInputEvent event) {
+			switch (event.getKeyCode()) {
+				case VK_E:
+					new ExpandAction(event).actionPerformed(null);
+					break;
+
+				case VK_D:
+					new Delete(event).actionPerformed(null);
+					break;
+
+			}
+			super.onNodeKeyPressed(event);
+		}
+
+
+		final class NewMetaRelation extends NodeAction {
+
+
+			NewMetaRelation(PInputEvent event) {
+				super("New Relation", event);
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+				presentationModel.doLaterInTransaction(transaction -> presentationModel.newMetaRelation(thisCanvas(), getModel()));
+			}
+		}
+
+		final class NewMetaProperty extends NodeAction {
+
+
+			NewMetaProperty(PInputEvent event) {
+				super("New Property", event);
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+				presentationModel.doLaterInTransaction(transaction -> {
+					presentationModel.newMetaProperty(thisCanvas(), metaProperty -> {
+						getModel().addProperties(metaProperty);
+						STAppEvents.postNewMetaProperty(metaProperty);
+					});
+				});
+			}
+		}
+
+		final class NewInstance extends NodeAction {
+
+
+			NewInstance(PInputEvent event) {
+				super("New Instance", event);
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+				presentationModel.doLaterInTransaction(transaction -> presentationModel.newDomainEntity(getModel()));
+			}
+		}
+
+		final class ExpandAction extends NodeAction {
+
+
+			ExpandAction(PInputEvent event) {
+				super("Expand", event);
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+				presentationModel.doLaterInTransaction(transaction -> {
+					getModel().getProperties().forEach(STAppEvents::postOpenMetaProperty);
+					getModel().getRelations().forEach(STAppEvents::postOpenMetaRelation);
+				});
+			}
+		}
+
+		final class Delete extends NodeAction {
+
+
+			Delete(PInputEvent event) {
+				super("Delete", event);
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+				nextgen.utils.SwingUtil.confirm(thisCanvas(), "Delete entity ?")
+					.ifPresent(confirm -> thisCanvas().presentationModel.doLaterInTransaction(tx -> {
+						close();
+						thisCanvas().presentationModel.metaDb.remove(getModel());
+					}));
+			}
+		}
+
+	}
+
+	private void addMetaEntityNode(nextgen.domains.meta.MetaEntity model) {
+		addNode(model.getUuid(), newMetaEntityNode(model));
+	}
+
+	public java.util.function.Supplier<STModelCanvas.MetaEntityNode> newMetaEntityNode(nextgen.domains.meta.MetaEntity model) {
+		return () -> new STModelCanvas.MetaEntityNode(model);
+	}
+
+	public Stream<MetaEntityNode> getAllMetaEntityNode() {
+		return getAllNodes()
+					.filter(baseCanvasNode -> baseCanvasNode instanceof MetaEntityNode)
+					.map(baseCanvasNode -> (MetaEntityNode) baseCanvasNode);
+	}
+
+	public void forEachMetaEntityNode(java.util.function.Consumer<MetaEntityNode> consumer) {
+		getAllNodes()
+				.filter(baseCanvasNode -> baseCanvasNode instanceof MetaEntityNode)
+				.map(baseCanvasNode -> (MetaEntityNode) baseCanvasNode)
+				.forEach(consumer);
+	}
+
+	public Optional<MetaEntityNode> isInstanceOfMetaEntityNode(BaseCanvasNode<?> canvasNode) {
+		return Optional.ofNullable((canvasNode instanceof MetaEntityNode) ? (MetaEntityNode) canvasNode : null);
+	}
+
+	final class MetaRelationNode extends BaseCanvasNode<nextgen.domains.meta.MetaRelation> {
+
+
+		public MetaRelationNode(nextgen.domains.meta.MetaRelation model) {
+			super(model, model.getUuid(), model.getName());
+		}
+
+		@Override
+		public void addedToCanvas() {
+			thisCanvas().forEachMetaPropertyNode(metaPropertyNode -> getModel().getProperties()
+					.filter(metaProperty -> metaProperty.getUuid().equals(metaPropertyNode.getUuid()))
+					.forEach(metaEntity -> addMetaRelationPropertyRelation(thisNode(), metaPropertyNode)));
+
+			thisCanvas().forEachMetaEntityNode(metaEntityNode -> {
+
+				metaEntityNode.getModel().getRelations()
+							.filter(metaRelation -> metaRelation.equals(getModel()))
+							.forEach(metaRelation -> addMetaEntitySrcRelation(metaEntityNode, thisNode()));
+
+				getModel().getDst()
+							.filter(dstEntity -> dstEntity.equals(metaEntityNode.getModel()))
+							.forEach(dstEntity -> addMetaEntityDstRelation(thisNode(), metaEntityNode));
+			});
+		}
+
+
+		@Override
+		public void newNodeAdded(BaseCanvasNode<?> node) {
+			getModel().getProperties()
+					.filter(metaProperty -> metaProperty.getUuid().equals(node.getUuid()))
+					.forEach(metaEntity -> addMetaRelationPropertyRelation(thisNode(), node));
+
+			presentationModel.isInstanceOf(node, MetaEntityNode.class)
+					.ifPresent(metaEntityNode -> {
+							metaEntityNode.getModel().getRelations()
+									.filter(metaRelation -> metaRelation.equals(getModel()))
+									.forEach(metaRelation -> addMetaEntitySrcRelation(metaEntityNode, thisNode()));
+
+							getModel().getDst()
+									.filter(dstEntity -> dstEntity.equals(metaEntityNode.getModel()))
+									.forEach(dstEntity -> addMetaEntityDstRelation(thisNode(), metaEntityNode));
+					});
+		}
+
+		@Override
+		protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
+			pop.add(new NewMetaProperty(event));
+			pop.add(new AddDstAction(event));
+			pop.add(new Delete(event));
+			super.onNodeRightClick(event, pop);
+		}
+
+		@Override
+		protected void onNodeKeyPressed(PInputEvent event) {
+			switch (event.getKeyCode()) {
+				case VK_E:
+					new ExpandAction(event).actionPerformed(null);
+					break;
+
+				case VK_D:
+					new Delete(event).actionPerformed(null);
+					break;
+
+			}
+			super.onNodeKeyPressed(event);
+		}
+
+
+		final class NewMetaProperty extends NodeAction {
+
+
+			NewMetaProperty(PInputEvent event) {
+				super("New Property", event);
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+				presentationModel.doLaterInTransaction(transaction -> {
+					presentationModel.newMetaProperty(thisCanvas(), metaProperty -> {
+						getModel().addProperties(metaProperty);
+						STAppEvents.postNewMetaProperty(metaProperty);
+					});
+				});
+			}
+		}
+
+		final class AddDstAction extends NodeAction {
+
+
+			AddDstAction(PInputEvent event) {
+				super("Add Entity", event);
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+				nextgen.utils.SwingUtil.showInputDialog("Name", thisCanvas(), "", s -> thisCanvas().presentationModel.doLaterInTransaction(tx -> {
+					presentationModel.metaDb.newMetaEntity(getModel(), s);
+				}));
+			}
+		}
+
+		final class ExpandAction extends NodeAction {
+
+
+			ExpandAction(PInputEvent event) {
+				super("Expand", event);
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+				presentationModel.doLaterInTransaction(transaction -> {
+					getModel().getProperties().forEach(STAppEvents::postOpenMetaProperty);
+					getModel().getDst().forEach(STAppEvents::postNewMetaEntity);
+				});
+			}
+		}
+
+		final class Delete extends NodeAction {
+
+
+			Delete(PInputEvent event) {
+				super("Delete", event);
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+				nextgen.utils.SwingUtil.confirm(thisCanvas(), "Delete relation ?")
+					.ifPresent(confirm -> thisCanvas().presentationModel.doLaterInTransaction(tx -> {
+						close();
+						thisCanvas().presentationModel.metaDb.remove(getModel());
+					}));
+			}
+		}
+
+	}
+
+	private void addMetaRelationNode(nextgen.domains.meta.MetaRelation model) {
+		addNode(model.getUuid(), newMetaRelationNode(model));
+	}
+
+	public java.util.function.Supplier<STModelCanvas.MetaRelationNode> newMetaRelationNode(nextgen.domains.meta.MetaRelation model) {
+		return () -> new STModelCanvas.MetaRelationNode(model);
+	}
+
+	public Stream<MetaRelationNode> getAllMetaRelationNode() {
+		return getAllNodes()
+					.filter(baseCanvasNode -> baseCanvasNode instanceof MetaRelationNode)
+					.map(baseCanvasNode -> (MetaRelationNode) baseCanvasNode);
+	}
+
+	public void forEachMetaRelationNode(java.util.function.Consumer<MetaRelationNode> consumer) {
+		getAllNodes()
+				.filter(baseCanvasNode -> baseCanvasNode instanceof MetaRelationNode)
+				.map(baseCanvasNode -> (MetaRelationNode) baseCanvasNode)
+				.forEach(consumer);
+	}
+
+	public Optional<MetaRelationNode> isInstanceOfMetaRelationNode(BaseCanvasNode<?> canvasNode) {
+		return Optional.ofNullable((canvasNode instanceof MetaRelationNode) ? (MetaRelationNode) canvasNode : null);
+	}
+
+	final class MetaPropertyNode extends BaseCanvasNode<nextgen.domains.meta.MetaProperty> {
+
+
+		public MetaPropertyNode(nextgen.domains.meta.MetaProperty model) {
+			super(model, model.getUuid(), model.getName());
+		}
+		@Override
+		protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
+			pop.add(new Delete(event));
+			super.onNodeRightClick(event, pop);
+		}
+
+		@Override
+		protected void onNodeKeyPressed(PInputEvent event) {
+			switch (event.getKeyCode()) {
+				case VK_D:
+					new Delete(event).actionPerformed(null);
+					break;
+
+			}
+			super.onNodeKeyPressed(event);
+		}
+
+
+		final class Delete extends NodeAction {
+
+
+			Delete(PInputEvent event) {
+				super("Delete", event);
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+				nextgen.utils.SwingUtil.confirm(thisCanvas(), "Delete property ?")
+					.ifPresent(confirm -> thisCanvas().presentationModel.doLaterInTransaction(tx -> {
+						close();
+						thisCanvas().presentationModel.metaDb.remove(getModel());
+					}));
+			}
+		}
+
+	}
+
+	private void addMetaPropertyNode(nextgen.domains.meta.MetaProperty model) {
+		addNode(model.getUuid(), newMetaPropertyNode(model));
+	}
+
+	public java.util.function.Supplier<STModelCanvas.MetaPropertyNode> newMetaPropertyNode(nextgen.domains.meta.MetaProperty model) {
+		return () -> new STModelCanvas.MetaPropertyNode(model);
+	}
+
+	public Stream<MetaPropertyNode> getAllMetaPropertyNode() {
+		return getAllNodes()
+					.filter(baseCanvasNode -> baseCanvasNode instanceof MetaPropertyNode)
+					.map(baseCanvasNode -> (MetaPropertyNode) baseCanvasNode);
+	}
+
+	public void forEachMetaPropertyNode(java.util.function.Consumer<MetaPropertyNode> consumer) {
+		getAllNodes()
+				.filter(baseCanvasNode -> baseCanvasNode instanceof MetaPropertyNode)
+				.map(baseCanvasNode -> (MetaPropertyNode) baseCanvasNode)
+				.forEach(consumer);
+	}
+
+	public Optional<MetaPropertyNode> isInstanceOfMetaPropertyNode(BaseCanvasNode<?> canvasNode) {
+		return Optional.ofNullable((canvasNode instanceof MetaPropertyNode) ? (MetaPropertyNode) canvasNode : null);
+	}
+
+	final class MetaDomainNode extends BaseCanvasNode<nextgen.domains.meta.MetaDomain> {
+
+
+		public MetaDomainNode(nextgen.domains.meta.MetaDomain model) {
+			super(model, model.getUuid(), model.getName());
+		}
+
+		@Override
+		public void addedToCanvas() {
+			getAllMetaEntityNode()
+					.filter(metaEntityNode -> getModel().getRoots().anyMatch(metaEntity -> metaEntity.getUuid().equals(metaEntity.getUuid())))
+					.forEach(metaEntityNode -> addMetaDomainEntityRelation(thisNode(), metaEntityNode));
+		}
+
+
+		@Override
+		public void newNodeAdded(BaseCanvasNode<?> node) {
+			getModel().getRoots()
+					.filter(metaEntity -> metaEntity.getUuid().equals(node.getUuid()))
+					.forEach(metaEntity -> addMetaDomainEntityRelation(thisNode(), node));
+
+			getModel().getVisitors()
+					.filter(domainVisitor -> domainVisitor.getUuid().equals(node.getUuid()))
+					.forEach(domainVisitor -> addDomainVisitorRelation(thisNode(), node));
+		}
+
+		@Override
+		protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
+			pop.add(new NewEntityAction(event));
+			pop.add(new AddVisitor(event));
+			super.onNodeRightClick(event, pop);
+		}
+
+		@Override
+		protected void onNodeKeyPressed(PInputEvent event) {
+			switch (event.getKeyCode()) {
+				case VK_E:
+					new ExpandAction(event).actionPerformed(null);
+					break;
+
+			}
+			super.onNodeKeyPressed(event);
+		}
+
+
+		final class NewEntityAction extends NodeAction {
+
+
+			NewEntityAction(PInputEvent event) {
+				super("New Entity", event);
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+				nextgen.utils.SwingUtil.showInputDialog("Name", thisCanvas(), "", s -> thisCanvas().presentationModel.doLaterInTransaction(tx -> {
+					presentationModel.metaDb.newMetaEntity(getModel(), s);
+				}));
+			}
+		}
+
+		final class ExpandAction extends NodeAction {
+
+
+			ExpandAction(PInputEvent event) {
+				super("Expand", event);
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+				presentationModel.doLaterInTransaction(transaction -> {
+					getModel().getRoots().forEach(STAppEvents::postOpenMetaEntity);
+					getModel().getVisitors().forEach(STAppEvents::postOpenDomainVisitor);
+				});
+			}
+		}
+
+		final class AddVisitor extends NodeAction {
+
+
+			AddVisitor(PInputEvent event) {
+				super("Add Visitor", event);
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+				presentationModel.doLaterInTransaction(transaction -> {
+					nextgen.utils.SwingUtil.showInputDialog("Name", thisCanvas(), getModel().getName(), s -> thisCanvas().presentationModel.doLaterInTransaction(tx -> {
+							presentationModel.newDomainVisitor(getModel(), s);
+						}));
+				});
+			}
+		}
+
+	}
+
+	private void addMetaDomainNode(nextgen.domains.meta.MetaDomain model) {
+		addNode(model.getUuid(), newMetaDomainNode(model));
+	}
+
+	public java.util.function.Supplier<STModelCanvas.MetaDomainNode> newMetaDomainNode(nextgen.domains.meta.MetaDomain model) {
+		return () -> new STModelCanvas.MetaDomainNode(model);
+	}
+
+	public Stream<MetaDomainNode> getAllMetaDomainNode() {
+		return getAllNodes()
+					.filter(baseCanvasNode -> baseCanvasNode instanceof MetaDomainNode)
+					.map(baseCanvasNode -> (MetaDomainNode) baseCanvasNode);
+	}
+
+	public void forEachMetaDomainNode(java.util.function.Consumer<MetaDomainNode> consumer) {
+		getAllNodes()
+				.filter(baseCanvasNode -> baseCanvasNode instanceof MetaDomainNode)
+				.map(baseCanvasNode -> (MetaDomainNode) baseCanvasNode)
+				.forEach(consumer);
+	}
+
+	public Optional<MetaDomainNode> isInstanceOfMetaDomainNode(BaseCanvasNode<?> canvasNode) {
+		return Optional.ofNullable((canvasNode instanceof MetaDomainNode) ? (MetaDomainNode) canvasNode : null);
+	}
+
+	final class DomainEntityNode extends BaseCanvasNode<nextgen.domains.meta.DomainEntity> {
+
+
+		public DomainEntityNode(nextgen.domains.meta.DomainEntity model) {
+			super(model, model.getUuid(), presentationModel.render(model));
+		}
+
+		@Override
+		public void newNodeAdded(BaseCanvasNode<?> node) {
+			isInstanceOfDomainEntityNode(node)
+					.ifPresent(domainEntityNode -> {
+						final org.neo4j.graphdb.Node endNode = ((DomainEntityNode) node).getModel().getNode();
+						getModel().getNode()
+								.getRelationships(org.neo4j.graphdb.Direction.OUTGOING)
+								.forEach(relationship -> {
+									if (relationship.getEndNode().equals(endNode))
+										addDomainRelation(thisNode(), node, relationship);
+								});
+					});
+		}
+
+		@Override
+		protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
+			presentationModel.doInTransaction(transaction -> {
+
+				final JMenu runMenu = new JMenu("Run");
+				getModel().get_meta().getIncomingRootsMetaDomain().forEach(metaDomain -> metaDomain.getVisitors().forEach(domainVisitor -> runMenu.add(new RunAction(event, getModel(), domainVisitor))));
+				if (runMenu.getMenuComponentCount() != 0) pop.add(runMenu);
+
+				getModel().get_meta().getRelations().forEach(metaRelation -> metaRelation.getDst().forEach(dst -> pop.add(new AddRelationAction(event, metaRelation, dst))));
+				getModel().get_meta().getProperties().forEach(metaProperty -> pop.add(new SetPropertyAction(event, metaProperty)));
+			});
+			super.onNodeRightClick(event, pop);
+		}
+
+		final class SetPropertyAction extends NodeAction {
+
+			private nextgen.domains.meta.MetaProperty metaProperty;
+
+			SetPropertyAction(PInputEvent event, nextgen.domains.meta.MetaProperty metaProperty) {
+				super("Set " + metaProperty.getName(), event);
+				this.metaProperty = metaProperty;
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+				presentationModel.doLaterInTransaction(transaction -> {
+					presentationModel.setEntityProperty(thisCanvas(), getModel(), metaProperty, value -> {
+						getModel().getNode().setProperty(metaProperty.getName(), value);
+						setText(presentationModel.render(getModel()));
+					});
+				});
+			}
+		}
+
+		final class AddRelationAction extends NodeAction {
+
+			private nextgen.domains.meta.MetaRelation metaRelation;
+			private nextgen.domains.meta.MetaEntity metaEntity;
+
+			AddRelationAction(PInputEvent event, nextgen.domains.meta.MetaRelation metaRelation, nextgen.domains.meta.MetaEntity metaEntity) {
+				super("Add " + metaRelation.getName(), event);
+				this.metaRelation = metaRelation;
+				this.metaEntity = metaEntity;
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+				presentationModel.doLaterInTransaction(transaction -> presentationModel.addEntityRelation(getModel(), metaRelation, metaEntity));
+			}
+		}
+
+		final class RunAction extends NodeAction {
+
+			private nextgen.domains.meta.DomainEntity domainEntity;
+			private nextgen.domains.meta.DomainVisitor domainVisitor;
+
+			RunAction(PInputEvent event, nextgen.domains.meta.DomainEntity domainEntity, nextgen.domains.meta.DomainVisitor domainVisitor) {
+				super("Run " + domainVisitor.getName(), event);
+				this.domainEntity = domainEntity;
+				this.domainVisitor = domainVisitor;
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+				presentationModel.runVisitor(thisCanvas(), domainEntity, domainVisitor);
+			}
+		}
+
+	}
+
+	private void addDomainEntityNode(nextgen.domains.meta.DomainEntity model) {
+		addNode(model.getUuid(), newDomainEntityNode(model));
+	}
+
+	public java.util.function.Supplier<STModelCanvas.DomainEntityNode> newDomainEntityNode(nextgen.domains.meta.DomainEntity model) {
+		return () -> new STModelCanvas.DomainEntityNode(model);
+	}
+
+	public Stream<DomainEntityNode> getAllDomainEntityNode() {
+		return getAllNodes()
+					.filter(baseCanvasNode -> baseCanvasNode instanceof DomainEntityNode)
+					.map(baseCanvasNode -> (DomainEntityNode) baseCanvasNode);
+	}
+
+	public void forEachDomainEntityNode(java.util.function.Consumer<DomainEntityNode> consumer) {
+		getAllNodes()
+				.filter(baseCanvasNode -> baseCanvasNode instanceof DomainEntityNode)
+				.map(baseCanvasNode -> (DomainEntityNode) baseCanvasNode)
+				.forEach(consumer);
+	}
+
+	public Optional<DomainEntityNode> isInstanceOfDomainEntityNode(BaseCanvasNode<?> canvasNode) {
+		return Optional.ofNullable((canvasNode instanceof DomainEntityNode) ? (DomainEntityNode) canvasNode : null);
+	}
+
+	final class DomainVisitorNode extends BaseCanvasNode<nextgen.domains.meta.DomainVisitor> {
+
+
+		public DomainVisitorNode(nextgen.domains.meta.DomainVisitor model) {
+			super(model, model.getUuid(), model.getName());
+		}
+		@Override
+		protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
+			pop.add(new EditAction(event));
+			super.onNodeRightClick(event, pop);
+		}
+
+		@Override
+		protected void onNodeKeyPressed(PInputEvent event) {
+			switch (event.getKeyCode()) {
+				case VK_E:
+					new EditAction(event).actionPerformed(null);
+					break;
+
+			}
+			super.onNodeKeyPressed(event);
+		}
+
+
+		final class EditAction extends NodeAction {
+
+
+			EditAction(PInputEvent event) {
+				super("Edit", event);
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+				presentationModel.doLaterInTransaction(transaction -> {
+					presentationModel.edit(getModel());
+				});
+			}
+		}
+
+	}
+
+	private void addDomainVisitorNode(nextgen.domains.meta.DomainVisitor model) {
+		addNode(model.getUuid(), newDomainVisitorNode(model));
+	}
+
+	public java.util.function.Supplier<STModelCanvas.DomainVisitorNode> newDomainVisitorNode(nextgen.domains.meta.DomainVisitor model) {
+		return () -> new STModelCanvas.DomainVisitorNode(model);
+	}
+
+	public Stream<DomainVisitorNode> getAllDomainVisitorNode() {
+		return getAllNodes()
+					.filter(baseCanvasNode -> baseCanvasNode instanceof DomainVisitorNode)
+					.map(baseCanvasNode -> (DomainVisitorNode) baseCanvasNode);
+	}
+
+	public void forEachDomainVisitorNode(java.util.function.Consumer<DomainVisitorNode> consumer) {
+		getAllNodes()
+				.filter(baseCanvasNode -> baseCanvasNode instanceof DomainVisitorNode)
+				.map(baseCanvasNode -> (DomainVisitorNode) baseCanvasNode)
+				.forEach(consumer);
+	}
+
+	public Optional<DomainVisitorNode> isInstanceOfDomainVisitorNode(BaseCanvasNode<?> canvasNode) {
+		return Optional.ofNullable((canvasNode instanceof DomainVisitorNode) ? (DomainVisitorNode) canvasNode : null);
+	}
+
 	final class ProjectNode extends BaseCanvasNode<nextgen.st.model.Project> {
 
 
 		public ProjectNode(nextgen.st.model.Project model) {
 			super(model, model.getUuid(), model.getName());
 		}
-
-		@Override
-		public void addedToCanvas() {
-		}
-
-		@Override
-		public void newNodeAdded(BaseCanvasNode<?> node) {
-		}
-
 		@Override
 		protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
-
 			super.onNodeRightClick(event, pop);
 		}
 
-		@Override
-		protected void onNodeLeftClick(PInputEvent event) {
-			super.onNodeLeftClick(event);
-		}
 
-		@Override
-		protected void onNodeKeyPressed(PInputEvent event) {
-			switch (event.getKeyCode()) {
-			}
-			super.onNodeKeyPressed(event);
-		}
+	}
 
+	private void addProjectNode(nextgen.st.model.Project model) {
+		addNode(model.getUuid(), newProjectNode(model));
+	}
 
+	public java.util.function.Supplier<STModelCanvas.ProjectNode> newProjectNode(nextgen.st.model.Project model) {
+		return () -> new STModelCanvas.ProjectNode(model);
+	}
+
+	public Stream<ProjectNode> getAllProjectNode() {
+		return getAllNodes()
+					.filter(baseCanvasNode -> baseCanvasNode instanceof ProjectNode)
+					.map(baseCanvasNode -> (ProjectNode) baseCanvasNode);
+	}
+
+	public void forEachProjectNode(java.util.function.Consumer<ProjectNode> consumer) {
+		getAllNodes()
+				.filter(baseCanvasNode -> baseCanvasNode instanceof ProjectNode)
+				.map(baseCanvasNode -> (ProjectNode) baseCanvasNode)
+				.forEach(consumer);
+	}
+
+	public Optional<ProjectNode> isInstanceOfProjectNode(BaseCanvasNode<?> canvasNode) {
+		return Optional.ofNullable((canvasNode instanceof ProjectNode) ? (ProjectNode) canvasNode : null);
 	}
 
 	final class ScriptNode extends BaseCanvasNode<nextgen.st.model.Script> {
@@ -1372,6 +2164,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 							thisCanvas().addRelation(getModel().getUuid(), () -> new ScriptRelation(ScriptNode.this, stValueNode));
 					});
 		}
+
 
 		@Override
 		public void newNodeAdded(BaseCanvasNode<?> node) {
@@ -1396,17 +2189,11 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 					stModelNodes.forEach(stNode -> pop.add(new SetScriptModelAction(event, stNode)));
 					stValueNodes.forEach(stNode -> pop.add(new SetScriptValueAction(event, stNode)));
 				});
-
 			pop.add(new OpenScript(event));
 			pop.add(new Run(event));
 			pop.add(new SetName(event));
 			pop.add(new Delete(event));
 			super.onNodeRightClick(event, pop);
-		}
-
-		@Override
-		protected void onNodeLeftClick(PInputEvent event) {
-			super.onNodeLeftClick(event);
 		}
 
 		@Override
@@ -1419,6 +2206,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			}
 			super.onNodeKeyPressed(event);
 		}
+
 
 		final class OpenScript extends NodeAction {
 
@@ -1545,6 +2333,31 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 	}
 
+	private void addScriptNode(nextgen.st.model.Script model) {
+		addNode(model.getUuid(), newScriptNode(model));
+	}
+
+	public java.util.function.Supplier<STModelCanvas.ScriptNode> newScriptNode(nextgen.st.model.Script model) {
+		return () -> new STModelCanvas.ScriptNode(model);
+	}
+
+	public Stream<ScriptNode> getAllScriptNode() {
+		return getAllNodes()
+					.filter(baseCanvasNode -> baseCanvasNode instanceof ScriptNode)
+					.map(baseCanvasNode -> (ScriptNode) baseCanvasNode);
+	}
+
+	public void forEachScriptNode(java.util.function.Consumer<ScriptNode> consumer) {
+		getAllNodes()
+				.filter(baseCanvasNode -> baseCanvasNode instanceof ScriptNode)
+				.map(baseCanvasNode -> (ScriptNode) baseCanvasNode)
+				.forEach(consumer);
+	}
+
+	public Optional<ScriptNode> isInstanceOfScriptNode(BaseCanvasNode<?> canvasNode) {
+		return Optional.ofNullable((canvasNode instanceof ScriptNode) ? (ScriptNode) canvasNode : null);
+	}
+
 	final class STFileNode extends BaseCanvasNode<nextgen.st.model.STFile> {
 
 		private nextgen.st.model.STModel stModel;
@@ -1562,10 +2375,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 					.filter(stModelNode -> stModelNode.getModel().getUuid().equals(getUuid().toString()))
 					.findAny()
 					.ifPresent(stModelNode -> thisCanvas().addRelation(getUuid(), () -> new STSinkRelation(stModelNode, STFileNode.this)));
-		}
-
-		@Override
-		public void newNodeAdded(BaseCanvasNode<?> node) {
 		}
 
 		@Override
@@ -1606,7 +2415,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 						pop.add(setPackageName);
 					}
 				});
-
 			pop.add(new EditFileSink(event));
 			pop.add(new OpenFile(event));
 			super.onNodeRightClick(event, pop);
@@ -1621,12 +2429,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 				});
 		}
 
-		@Override
-		protected void onNodeKeyPressed(PInputEvent event) {
-			switch (event.getKeyCode()) {
-			}
-			super.onNodeKeyPressed(event);
-		}
 
 		final class EditFileSink extends NodeAction {
 
@@ -1792,6 +2594,31 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 	}
 
+	private void addSTFileNode(nextgen.st.model.STFile model, nextgen.st.model.STModel stModel) {
+		addNode(model.getUuid(), newSTFileNode(model, stModel));
+	}
+
+	public java.util.function.Supplier<STModelCanvas.STFileNode> newSTFileNode(nextgen.st.model.STFile model, nextgen.st.model.STModel stModel) {
+		return () -> new STModelCanvas.STFileNode(model, stModel);
+	}
+
+	public Stream<STFileNode> getAllSTFileNode() {
+		return getAllNodes()
+					.filter(baseCanvasNode -> baseCanvasNode instanceof STFileNode)
+					.map(baseCanvasNode -> (STFileNode) baseCanvasNode);
+	}
+
+	public void forEachSTFileNode(java.util.function.Consumer<STFileNode> consumer) {
+		getAllNodes()
+				.filter(baseCanvasNode -> baseCanvasNode instanceof STFileNode)
+				.map(baseCanvasNode -> (STFileNode) baseCanvasNode)
+				.forEach(consumer);
+	}
+
+	public Optional<STFileNode> isInstanceOfSTFileNode(BaseCanvasNode<?> canvasNode) {
+		return Optional.ofNullable((canvasNode instanceof STFileNode) ? (STFileNode) canvasNode : null);
+	}
+
 	final class STKVNode extends BaseCanvasNode<nextgen.st.model.STArgument> {
 
 		private nextgen.st.domain.STParameter stParameter;
@@ -1806,6 +2633,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			thisCanvas().getAllNodes().forEach(this::newNodeAdded);
 		}
 
+
 		@Override
 		public void newNodeAdded(BaseCanvasNode<?> node) {
 			stParameter.getKeys()
@@ -1815,15 +2643,15 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 							final nextgen.st.model.STValue value = stArgumentKV.getValue();
 							switch (value.getType()) {
 								case STMODEL:
-									if (getUuid().equals(UUID.fromString(value.getStModel().getUuid())))
+									if (getUuid().equals(value.getStModel().getUuid()))
 										thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(thisNode(), node, getModel(), stParameterKey, stArgumentKV));
 									break;
 								case PRIMITIVE:
-									if (getUuid().equals(UUID.fromString(value.getUuid())))
+									if (getUuid().equals(value.getUuid()))
 										thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(thisNode(), node, getModel(), stParameterKey, stArgumentKV));
 									break;
 								case ENUM:
-									if (getUuid().equals(UUID.fromString(value.getUuid())))
+									if (getUuid().equals(value.getUuid()))
 										thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(thisNode(), node, getModel(), stParameterKey, stArgumentKV));
 									break;
 							}
@@ -1857,14 +2685,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 					});
 					if (pop.getComponents().length != 0) pop.addSeparator();
 				});
-
 			pop.add(new OpenAllArguments(event));
 			super.onNodeRightClick(event, pop);
-		}
-
-		@Override
-		protected void onNodeLeftClick(PInputEvent event) {
-			super.onNodeLeftClick(event);
 		}
 
 		@Override
@@ -1877,6 +2699,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			}
 			super.onNodeKeyPressed(event);
 		}
+
 
 		final class OpenAllArguments extends NodeAction {
 
@@ -1993,15 +2816,15 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 							switch (stValue.getType()) {
 								case STMODEL:
 									thisCanvas().addNode(stValue.getStModel().getUuid(), () -> new STModelNode(stValue.getStModel(), presentationModel.findSTTemplateByUuid(stValue.getStModel().getStTemplate())));
-									thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(thisNode(), thisCanvas().getNode(UUID.fromString(stValue.getStModel().getUuid())), stArgument, stParameterKey, stArgumentKV));
+									thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(thisNode(), thisCanvas().getNode(stValue.getStModel().getUuid()), stArgument, stParameterKey, stArgumentKV));
 									break;
 								case PRIMITIVE:
 									thisCanvas().addNode(stValue.getUuid(), () -> new STValueNode(stValue));
-									thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(thisNode(), thisCanvas().getNode(UUID.fromString(stValue.getUuid())), stArgument, stParameterKey, stArgumentKV));
+									thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(thisNode(), thisCanvas().getNode(stValue.getUuid()), stArgument, stParameterKey, stArgumentKV));
 									break;
 								case ENUM:
 									thisCanvas().addNode(stValue.getUuid(), () -> new STValueNode(stValue));
-									thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(thisNode(), thisCanvas().getNode(UUID.fromString(stValue.getUuid())), stArgument, stParameterKey, stArgumentKV));
+									thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(thisNode(), thisCanvas().getNode(stValue.getUuid()), stArgument, stParameterKey, stArgumentKV));
 									break;
 							}
 							new LayoutTreeAction(thisNode(), event).actionPerformed(null);
@@ -2024,7 +2847,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			void actionPerformed(PInputEvent event, ActionEvent e) {
 				presentationModel.doLaterInTransaction(tx -> {
 						stArgument.removeKeyValues(stArgumentKV);
-						thisCanvas().removeRelation(java.util.UUID.fromString(stArgumentKV.getUuid()));
+						thisCanvas().removeRelation(stArgumentKV.getUuid());
 					});
 			}
 		}
@@ -2054,6 +2877,31 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 	}
 
+	private void addSTKVNode(nextgen.st.model.STArgument model, nextgen.st.domain.STParameter stParameter) {
+		addNode(model.getUuid(), newSTKVNode(model, stParameter));
+	}
+
+	public java.util.function.Supplier<STModelCanvas.STKVNode> newSTKVNode(nextgen.st.model.STArgument model, nextgen.st.domain.STParameter stParameter) {
+		return () -> new STModelCanvas.STKVNode(model, stParameter);
+	}
+
+	public Stream<STKVNode> getAllSTKVNode() {
+		return getAllNodes()
+					.filter(baseCanvasNode -> baseCanvasNode instanceof STKVNode)
+					.map(baseCanvasNode -> (STKVNode) baseCanvasNode);
+	}
+
+	public void forEachSTKVNode(java.util.function.Consumer<STKVNode> consumer) {
+		getAllNodes()
+				.filter(baseCanvasNode -> baseCanvasNode instanceof STKVNode)
+				.map(baseCanvasNode -> (STKVNode) baseCanvasNode)
+				.forEach(consumer);
+	}
+
+	public Optional<STKVNode> isInstanceOfSTKVNode(BaseCanvasNode<?> canvasNode) {
+		return Optional.ofNullable((canvasNode instanceof STKVNode) ? (STKVNode) canvasNode : null);
+	}
+
 	final class STModelNode extends BaseCanvasNode<nextgen.st.model.STModel> {
 
 		private nextgen.st.domain.STTemplate stTemplate;
@@ -2067,6 +2915,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		public void addedToCanvas() {
 			thisCanvas().getAllNodes().forEach(this::newNodeAdded);
 		}
+
 
 		@Override
 		public void newNodeAdded(BaseCanvasNode<?> node) {
@@ -2180,7 +3029,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 				pop.add(new SetMultipleFields(event));
 
 			});
-
 			pop.add(new ToClipboard(event));
 			pop.add(new Delete(event));
 			pop.add(new Clone(event));
@@ -2197,6 +3045,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			presentationModel.doLaterInTransaction(tx -> setText(stTemplate.getName() + " : \n" + presentationModel.render(getModel())));
 			nextgen.st.STAppEvents.postCanvasSTModelClicked(getModel());
 		}
+
 
 		@Override
 		protected void onNodeKeyPressed(PInputEvent event) {
@@ -2224,6 +3073,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			}
 			super.onNodeKeyPressed(event);
 		}
+
 
 		final class OpenUsages extends NodeAction {
 
@@ -2650,7 +3500,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			void actionPerformed(PInputEvent event, ActionEvent e) {
 				nextgen.utils.SwingUtil.confirm(thisCanvas(), "Remove argument ?")
 						.ifPresent(confirm -> thisCanvas().presentationModel.doLaterInTransaction(tx -> {
-							thisCanvas().removeRelation(UUID.fromString(stArgument.getUuid()));
+							thisCanvas().removeRelation(stArgument.getUuid());
 							getModel().removeArguments(stArgument);
 							setText(thisCanvas().presentationModel.render(getModel()));
 						}));
@@ -2823,22 +3673,47 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 				case SINGLE: {
 					final nextgen.st.model.STValue value = stArgument.getValue();
 					if (value != null)
-						return UUID.fromString(value.getUuid()).equals(node.getUuid()) || (value.getType().equals(nextgen.st.model.STValueType.STMODEL) && value.getStModel() != null && UUID.fromString(value.getStModel().getUuid()).equals(node.getUuid()));
+						return value.getUuid().equals(node.getUuid()) || (value.getType().equals(nextgen.st.model.STValueType.STMODEL) && value.getStModel() != null && value.getStModel().getUuid().equals(node.getUuid()));
 					break;
 				}
 				case LIST: {
 					final nextgen.st.model.STValue value = stArgument.getValue();
 					if (value != null)
-						return UUID.fromString(value.getUuid()).equals(node.getUuid()) || (value.getType().equals(nextgen.st.model.STValueType.STMODEL) && value.getStModel() != null && UUID.fromString(value.getStModel().getUuid()).equals(node.getUuid()));
+						return value.getUuid().equals(node.getUuid()) || (value.getType().equals(nextgen.st.model.STValueType.STMODEL) && value.getStModel() != null && value.getStModel().getUuid().equals(node.getUuid()));
 					break;
 				}
 				case KVLIST: {
-					if (UUID.fromString(stArgument.getUuid()).equals(node.getUuid())) return true;
+					if (stArgument.getUuid().equals(node.getUuid())) return true;
 					break;
 				}
 			}
 			return false;
 		}
+	}
+
+	private void addSTModelNode(nextgen.st.model.STModel model, nextgen.st.domain.STTemplate stTemplate) {
+		addNode(model.getUuid(), newSTModelNode(model, stTemplate));
+	}
+
+	public java.util.function.Supplier<STModelCanvas.STModelNode> newSTModelNode(nextgen.st.model.STModel model, nextgen.st.domain.STTemplate stTemplate) {
+		return () -> new STModelCanvas.STModelNode(model, stTemplate);
+	}
+
+	public Stream<STModelNode> getAllSTModelNode() {
+		return getAllNodes()
+					.filter(baseCanvasNode -> baseCanvasNode instanceof STModelNode)
+					.map(baseCanvasNode -> (STModelNode) baseCanvasNode);
+	}
+
+	public void forEachSTModelNode(java.util.function.Consumer<STModelNode> consumer) {
+		getAllNodes()
+				.filter(baseCanvasNode -> baseCanvasNode instanceof STModelNode)
+				.map(baseCanvasNode -> (STModelNode) baseCanvasNode)
+				.forEach(consumer);
+	}
+
+	public Optional<STModelNode> isInstanceOfSTModelNode(BaseCanvasNode<?> canvasNode) {
+		return Optional.ofNullable((canvasNode instanceof STModelNode) ? (STModelNode) canvasNode : null);
 	}
 
 	final class STValueNode extends BaseCanvasNode<nextgen.st.model.STValue> {
@@ -2851,39 +3726,27 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		@Override
 		public void addedToCanvas() {
 			presentationModel.getSTModel(getModel())
-					.filter(stModel -> thisCanvas().getNode(UUID.fromString(stModel.getUuid())) != null)
-					.map(stModel -> (STModelNode) thisCanvas().getNode(UUID.fromString(stModel.getUuid())))
+					.filter(stModel -> thisCanvas().getNode(stModel.getUuid()) != null)
+					.map(stModel -> (STModelNode) thisCanvas().getNode(stModel.getUuid()))
 					.ifPresent(stModelNode -> thisCanvas().addRelation(stModelNode.getUuid(), () -> new STValueModelRelation(STValueNode.this, stModelNode)));
 		}
+
 
 		@Override
 		public void newNodeAdded(BaseCanvasNode<?> node) {
 			presentationModel.getSTModel(getModel())
-					.map(stModel -> UUID.fromString(stModel.getUuid()))
+					.map(stModel -> stModel.getUuid())
 					.filter(uuid -> uuid.equals(node.getUuid()))
 					.ifPresent(uuid -> thisCanvas().addRelation(node.getUuid(), () -> new STValueModelRelation(STValueNode.this, node)));
 		}
 
 		@Override
 		protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
-
 			pop.add(new EditSTValue(event));
 			pop.add(new ToClipboard(event));
 			pop.add(new Delete(event));
 			pop.add(new OpenIncoming(event));
 			super.onNodeRightClick(event, pop);
-		}
-
-		@Override
-		protected void onNodeLeftClick(PInputEvent event) {
-			super.onNodeLeftClick(event);
-		}
-
-		@Override
-		protected void onNodeKeyPressed(PInputEvent event) {
-			switch (event.getKeyCode()) {
-			}
-			super.onNodeKeyPressed(event);
 		}
 
 		final class EditSTValue extends NodeAction {
@@ -2983,6 +3846,219 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 	}
 
+	private void addSTValueNode(nextgen.st.model.STValue model) {
+		addNode(model.getUuid(), newSTValueNode(model));
+	}
+
+	public java.util.function.Supplier<STModelCanvas.STValueNode> newSTValueNode(nextgen.st.model.STValue model) {
+		return () -> new STModelCanvas.STValueNode(model);
+	}
+
+	public Stream<STValueNode> getAllSTValueNode() {
+		return getAllNodes()
+					.filter(baseCanvasNode -> baseCanvasNode instanceof STValueNode)
+					.map(baseCanvasNode -> (STValueNode) baseCanvasNode);
+	}
+
+	public void forEachSTValueNode(java.util.function.Consumer<STValueNode> consumer) {
+		getAllNodes()
+				.filter(baseCanvasNode -> baseCanvasNode instanceof STValueNode)
+				.map(baseCanvasNode -> (STValueNode) baseCanvasNode)
+				.forEach(consumer);
+	}
+
+	public Optional<STValueNode> isInstanceOfSTValueNode(BaseCanvasNode<?> canvasNode) {
+		return Optional.ofNullable((canvasNode instanceof STValueNode) ? (STValueNode) canvasNode : null);
+	}
+
+	public java.util.function.Supplier<STModelCanvas.MetaDomainEntityRelation> newMetaDomainEntityRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst, String uuid) {
+		return () -> new STModelCanvas.MetaDomainEntityRelation(src, dst, uuid);
+	}
+
+	public void addMetaDomainEntityRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst) {
+		addRelation(src.getUuid() + dst.getUuid(), newMetaDomainEntityRelation(src, dst, src.getUuid() + dst.getUuid()));
+	}
+
+	final class MetaDomainEntityRelation extends BaseCanvasRelation {
+
+
+		public MetaDomainEntityRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst, String uuid) {
+			super(src, dst, uuid, "ROOT");
+		}
+
+		@Override
+		protected void onRelationRightClick(PInputEvent event, JPopupMenu pop) {
+
+			pop.add(new Delete(event));
+		}
+
+		@Override
+		protected void onRelationKeyPressed(PInputEvent event) {
+			switch (event.getKeyCode()) {
+				case VK_D:
+					new Delete(event).actionPerformed(null);
+					break;
+
+			}
+			super.onRelationKeyPressed(event);
+		}
+
+		final class Delete extends RelationAction {
+
+
+			Delete(PInputEvent event) {
+				super("Delete", event);
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+				nextgen.utils.SwingUtil.confirm(thisCanvas(), "Delete " + getType() + " ?")
+					.ifPresent(confirm -> presentationModel.doLaterInTransaction(tx -> {
+						final MetaDomainNode src = (MetaDomainNode) getSrc();
+						final MetaEntityNode dst = (MetaEntityNode) getDst();
+						removeRelation(getUuid());
+						src.getModel().removeRoots(dst.getModel());
+					}));
+			}
+		}
+	}
+
+	public java.util.function.Supplier<STModelCanvas.MetaEntityDstRelation> newMetaEntityDstRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst) {
+		return () -> new STModelCanvas.MetaEntityDstRelation(src, dst);
+	}
+
+	public void addMetaEntityDstRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst) {
+		addRelation(src.getUuid() + dst.getUuid(), newMetaEntityDstRelation(src, dst));
+	}
+
+	final class MetaEntityDstRelation extends BaseCanvasRelation {
+
+
+		public MetaEntityDstRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst) {
+			super(src, dst, src.getUuid() + dst.getUuid(), "DST");
+		}
+
+		@Override
+		protected void onRelationRightClick(PInputEvent event, JPopupMenu pop) {
+
+		}
+	}
+
+	public java.util.function.Supplier<STModelCanvas.MetaEntitySrcRelation> newMetaEntitySrcRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst) {
+		return () -> new STModelCanvas.MetaEntitySrcRelation(src, dst);
+	}
+
+	public void addMetaEntitySrcRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst) {
+		addRelation(src.getUuid()+dst.getUuid(), newMetaEntitySrcRelation(src, dst));
+	}
+
+	final class MetaEntitySrcRelation extends BaseCanvasRelation {
+
+
+		public MetaEntitySrcRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst) {
+			super(src, dst, src.getUuid()+dst.getUuid(), "SRC");
+		}
+
+		@Override
+		protected void onRelationRightClick(PInputEvent event, JPopupMenu pop) {
+
+		}
+	}
+
+	public java.util.function.Supplier<STModelCanvas.MetaEntityPropertyRelation> newMetaEntityPropertyRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst, String uuid) {
+		return () -> new STModelCanvas.MetaEntityPropertyRelation(src, dst, uuid);
+	}
+
+	public void addMetaEntityPropertyRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst) {
+		addRelation(src.getUuid() + dst.getUuid(), newMetaEntityPropertyRelation(src, dst, src.getUuid() + dst.getUuid()));
+	}
+
+	final class MetaEntityPropertyRelation extends BaseCanvasRelation {
+
+
+		public MetaEntityPropertyRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst, String uuid) {
+			super(src, dst, uuid, "Property");
+		}
+
+		@Override
+		protected void onRelationRightClick(PInputEvent event, JPopupMenu pop) {
+
+		}
+	}
+
+	public java.util.function.Supplier<STModelCanvas.MetaRelationPropertyRelation> newMetaRelationPropertyRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst) {
+		return () -> new STModelCanvas.MetaRelationPropertyRelation(src, dst);
+	}
+
+	public void addMetaRelationPropertyRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst) {
+		addRelation(src.getUuid() + dst.getUuid(), newMetaRelationPropertyRelation(src, dst));
+	}
+
+	final class MetaRelationPropertyRelation extends BaseCanvasRelation {
+
+
+		public MetaRelationPropertyRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst) {
+			super(src, dst, src.getUuid() + dst.getUuid(), "PROPERTY");
+		}
+
+		@Override
+		protected void onRelationRightClick(PInputEvent event, JPopupMenu pop) {
+
+		}
+	}
+
+	public java.util.function.Supplier<STModelCanvas.DomainRelation> newDomainRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst, org.neo4j.graphdb.Relationship relationship) {
+		return () -> new STModelCanvas.DomainRelation(src, dst, relationship);
+	}
+
+	public void addDomainRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst, org.neo4j.graphdb.Relationship relationship) {
+		addRelation(relationship.getProperty("_uuid").toString(), newDomainRelation(src, dst, relationship));
+	}
+
+	final class DomainRelation extends BaseCanvasRelation {
+
+		private org.neo4j.graphdb.Relationship relationship;
+
+		public DomainRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst, org.neo4j.graphdb.Relationship relationship) {
+			super(src, dst, relationship.getProperty("_uuid").toString(), relationship.getType().name());
+			this.relationship = relationship;
+		}
+
+		@Override
+		protected void onRelationRightClick(PInputEvent event, JPopupMenu pop) {
+
+		}
+	}
+
+	public java.util.function.Supplier<STModelCanvas.DomainVisitorRelation> newDomainVisitorRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst, String uuid) {
+		return () -> new STModelCanvas.DomainVisitorRelation(src, dst, uuid);
+	}
+
+	public void addDomainVisitorRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst) {
+		addRelation(src.getUuid() + dst.getUuid(), newDomainVisitorRelation(src, dst, src.getUuid() + dst.getUuid()));
+	}
+
+	final class DomainVisitorRelation extends BaseCanvasRelation {
+
+
+		public DomainVisitorRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst, String uuid) {
+			super(src, dst, uuid, "VISITOR");
+		}
+
+		@Override
+		protected void onRelationRightClick(PInputEvent event, JPopupMenu pop) {
+
+		}
+	}
+
+	public java.util.function.Supplier<STModelCanvas.ScriptRelation> newScriptRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst) {
+		return () -> new STModelCanvas.ScriptRelation(src, dst);
+	}
+
+	public void addScriptRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst) {
+		addRelation(src.getUuid(), newScriptRelation(src, dst));
+	}
+
 	final class ScriptRelation extends BaseCanvasRelation {
 
 
@@ -2994,6 +4070,14 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		protected void onRelationRightClick(PInputEvent event, JPopupMenu pop) {
 
 		}
+	}
+
+	public java.util.function.Supplier<STModelCanvas.STArgumentRelation> newSTArgumentRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameter stParameter) {
+		return () -> new STModelCanvas.STArgumentRelation(src, dst, stArgument, stParameter);
+	}
+
+	public void addSTArgumentRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameter stParameter) {
+		addRelation(stArgument.getUuid(), newSTArgumentRelation(src, dst, stArgument, stParameter));
 	}
 
 	final class STArgumentRelation extends BaseCanvasRelation {
@@ -3023,6 +4107,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			}
 			super.onRelationKeyPressed(event);
 		}
+
 		final class Delete extends RelationAction {
 
 
@@ -3040,6 +4125,14 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 						}));
 			}
 		}
+	}
+
+	public java.util.function.Supplier<STModelCanvas.STKVArgumentRelation> newSTKVArgumentRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey, nextgen.st.model.STArgumentKV stArgumentKV) {
+		return () -> new STModelCanvas.STKVArgumentRelation(src, dst, stArgument, stParameterKey, stArgumentKV);
+	}
+
+	public void addSTKVArgumentRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey, nextgen.st.model.STArgumentKV stArgumentKV) {
+		addRelation(stArgumentKV.getUuid(), newSTKVArgumentRelation(src, dst, stArgument, stParameterKey, stArgumentKV));
 	}
 
 	final class STKVArgumentRelation extends BaseCanvasRelation {
@@ -3061,6 +4154,14 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		}
 	}
 
+	public java.util.function.Supplier<STModelCanvas.STSinkRelation> newSTSinkRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst) {
+		return () -> new STModelCanvas.STSinkRelation(src, dst);
+	}
+
+	public void addSTSinkRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst) {
+		addRelation(dst.getUuid(), newSTSinkRelation(src, dst));
+	}
+
 	final class STSinkRelation extends BaseCanvasRelation {
 
 
@@ -3072,6 +4173,14 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		protected void onRelationRightClick(PInputEvent event, JPopupMenu pop) {
 
 		}
+	}
+
+	public java.util.function.Supplier<STModelCanvas.STValueModelRelation> newSTValueModelRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst) {
+		return () -> new STModelCanvas.STValueModelRelation(src, dst);
+	}
+
+	public void addSTValueModelRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst) {
+		addRelation(dst.getUuid(), newSTValueModelRelation(src, dst));
 	}
 
 	final class STValueModelRelation extends BaseCanvasRelation {

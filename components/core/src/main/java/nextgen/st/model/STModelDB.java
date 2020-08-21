@@ -1,5 +1,6 @@
 package nextgen.st.model;
 
+import nextgen.domains.meta.MetaEntity;
 import nextgen.st.STAppEvents;
 import nextgen.st.STModelEditor;
 import nextgen.st.domain.*;
@@ -336,4 +337,6 @@ public class STModelDB extends STModelNeoFactory {
 
         return clone;
     }
+
+
 }

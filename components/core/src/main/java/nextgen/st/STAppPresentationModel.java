@@ -2,9 +2,10 @@ package nextgen.st;
 
 import io.vertx.core.json.JsonObject;
 import net.openhft.compiler.CompilerUtils;
+import nextgen.domains.meta.*;
 import nextgen.st.domain.*;
 import nextgen.st.model.*;
-import nextgen.st.model.Script;
+import nextgen.st.stringtemplate.DomainVisitorRunner;
 import nextgen.st.stringtemplate.ScriptRunner;
 import nextgen.st.stringtemplate.StringTemplateST;
 import nextgen.templates.java.ImportDeclaration;
@@ -15,6 +16,7 @@ import org.javatuples.Pair;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.RelationshipType;
 
 import javax.lang.model.SourceVersion;
 import javax.swing.*;
@@ -31,8 +33,9 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static nextgen.utils.StringUtil.capitalize;
 import static nextgen.st.STGenerator.toSTGroup;
+import static nextgen.utils.StringUtil.capitalize;
+import static nextgen.utils.SwingUtil.newComboBox;
 import static nextgen.utils.SwingUtil.newTextField;
 
 public class STAppPresentationModel {
@@ -42,6 +45,7 @@ public class STAppPresentationModel {
     private final STAppModel appModel;
     public final STRenderer stRenderer;
     public final STModelDB db;
+    public final MetaDomainDB metaDb;
 
     final STGDirectory generatorSTGDirectory;
     final STGroupModel generatorSTGroup;
@@ -70,6 +74,7 @@ public class STAppPresentationModel {
 
         this.stRenderer = new STRenderer(stGroups);
         this.db = new STModelDB(appModel.getModelDb("./db"), stGroups);
+        this.metaDb = new MetaDomainDB(db.getDatabaseService());
 
         final Set<String> fonts = new HashSet<>(Arrays.asList(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
         this.preferredFont = Stream
@@ -222,6 +227,62 @@ public class STAppPresentationModel {
         return db.findSTTemplateByUuid(stTemplate);
     }
 
+    public CompilationResult generateVisitorCode(DomainVisitor visitor) {
+
+        final File srcRoot = new File(appModel.getRootDir());
+
+        final nextgen.templates.java.PackageDeclaration packageDeclaration = nextgen.templates.java.JavaST.newPackageDeclaration()
+                .setName("tmp");
+
+        final Collection<ImportDeclaration> imports = new ArrayList<>();
+        stgDirectories.forEach(directory -> {
+            final String outputPackage = directory.getOutputPackage();
+            final File templateClassDir = new File(srcRoot, STGenerator.packageToPath(outputPackage));
+
+            directory.getGroups().forEach(stGroupModel -> {
+                final String packageName = outputPackage + "." + stGroupModel.getName().toLowerCase();
+                if (new File(srcRoot, STGenerator.packageToPath(packageName)).exists()) {
+                    imports.add(nextgen.templates.java.JavaST.newImportDeclaration().setName(packageName + "." + capitalize(stGroupModel.getName() + "ST")).setIsAsterisk(true).setIsStatic(true));
+                    imports.add(nextgen.templates.java.JavaST.newImportDeclaration().setName(packageName).setIsAsterisk(true));
+                }
+            });
+
+            Arrays.stream(Objects.requireNonNull(templateClassDir.listFiles()))
+                    .filter(file -> file.isFile() && file.getName().endsWith("Patterns.java"))
+                    .forEach(file -> imports.add(nextgen.templates.java.JavaST.newImportDeclaration().setName(directory.getOutputPackage() + "." + capitalize(file.getName().substring(0, file.getName().length() - 5))).setIsAsterisk(true).setIsStatic(true)));
+        });
+
+        final String className = visitor.getName().replaceAll("[ ]", "");
+
+        final String scriptCode = new DomainVisitorGenerator(visitor).generate();
+        STGenerator.writeJavaFile(getVisitorRunner(scriptCode, packageDeclaration, imports, className), packageDeclaration.getName(), className, srcRoot);
+
+        final java.io.StringWriter sr = new java.io.StringWriter();
+        final java.io.PrintWriter compilerOutput = new java.io.PrintWriter(sr);
+        try {
+            final String cacheClassname = className + System.currentTimeMillis();
+            final Object compilationUnit = getVisitorRunner(scriptCode, packageDeclaration, imports, cacheClassname);
+            final Class<?> aClass = CompilerUtils.CACHED_COMPILER.loadFromJava(getClass().getClassLoader(), packageDeclaration.getName() + "." + cacheClassname, compilationUnit.toString(), compilerOutput);
+            return new CompilationResult(sr.toString(), aClass);
+        } catch (Throwable t) {
+            return new CompilationResult(sr.toString(), null);
+        }
+    }
+
+    public Object getVisitorRunner(String script, PackageDeclaration packageDeclaration, Collection<ImportDeclaration> imports, String className) {
+        final DomainVisitorRunner scriptRunner = StringTemplateST.newDomainVisitorRunner();
+        scriptRunner.setPackageName(packageDeclaration.getName());
+        scriptRunner.setName(className);
+        scriptRunner.setTemplatesDir(appModel.getDirectories().findFirst().get().getPath());
+//        scriptRunner.setDbDir(appModel.getModelDb("./db"));
+        scriptRunner.setScript(script);
+        for (Object anImport : imports)
+            scriptRunner.addImports(anImport);
+        return scriptRunner;
+    }
+
+
+
     public CompilationResult generateScriptCode(Script script) {
 
         final File srcRoot = new File(appModel.getRootDir());
@@ -249,13 +310,13 @@ public class STAppPresentationModel {
 
         final String className = script.getName().replaceAll("[ ]", "");
 
-        STGenerator.writeJavaFile(getRunner(script, packageDeclaration, imports, className), packageDeclaration.getName(), className, srcRoot);
+        STGenerator.writeJavaFile(getScriptRunner(script, packageDeclaration, imports, className), packageDeclaration.getName(), className, srcRoot);
 
         final java.io.StringWriter sr = new java.io.StringWriter();
         final java.io.PrintWriter compilerOutput = new java.io.PrintWriter(sr);
         try {
             final String cacheClassname = className + System.currentTimeMillis();
-            final Object compilationUnit = getRunner(script, packageDeclaration, imports, cacheClassname);
+            final Object compilationUnit = getScriptRunner(script, packageDeclaration, imports, cacheClassname);
             final Class<?> aClass = CompilerUtils.CACHED_COMPILER.loadFromJava(getClass().getClassLoader(), packageDeclaration.getName() + "." + cacheClassname, compilationUnit.toString(), compilerOutput);
             return new CompilationResult(sr.toString(), aClass);
         } catch (Throwable t) {
@@ -263,7 +324,7 @@ public class STAppPresentationModel {
         }
     }
 
-    public Object getRunner(Script script, PackageDeclaration packageDeclaration, Collection<ImportDeclaration> imports, String className) {
+    public Object getScriptRunner(Script script, PackageDeclaration packageDeclaration, Collection<ImportDeclaration> imports, String className) {
         final ScriptRunner scriptRunner = StringTemplateST.newScriptRunner();
         scriptRunner.setPackageName(packageDeclaration.getName());
         scriptRunner.setName(className);
@@ -367,6 +428,93 @@ public class STAppPresentationModel {
                 });
             }
         });
+    }
+
+    public void setEntityProperty(Component owner, DomainEntity domainEntity, MetaProperty metaProperty, Consumer<Object> valueConsumer) {
+
+        final Map<String, JTextField> fieldMap = new LinkedHashMap<>();
+        fieldMap.put("Value", newTextField(15));
+        final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {
+            inputPanel.add(new JLabel(fieldEntry.getKey()));
+            inputPanel.add(fieldEntry.getValue());
+            if (domainEntity.getNode().hasProperty(metaProperty.getName()))
+                fieldEntry.getValue().setText(domainEntity.getNode().getProperty(metaProperty.getName()).toString());
+        }
+        SwingUtil.showDialog(inputPanel, owner, metaProperty.getName(), new SwingUtil.ConfirmAction() {
+            @Override
+            public void verifyAndCommit() throws Exception {
+                doLaterInTransaction(tx -> valueConsumer.accept(fieldMap.get("Value").getText().trim()));
+            }
+        });
+    }
+
+    public void newMetaRelation(Component owner, MetaEntity src) {
+        final Map<String, JComponent> fieldMap = new LinkedHashMap<>();
+        fieldMap.put("Name", newTextField(15));
+        fieldMap.put("Type", newComboBox(Cardinality.values(), Cardinality.ONE_TO_MANY));
+        final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        for (Map.Entry<String, JComponent> fieldEntry : fieldMap.entrySet()) {
+            inputPanel.add(new JLabel(fieldEntry.getKey()));
+            inputPanel.add(fieldEntry.getValue());
+        }
+        SwingUtil.showDialog(inputPanel, owner, "New Property", new SwingUtil.ConfirmAction() {
+            @Override
+            public void verifyAndCommit() throws Exception {
+                doLaterInTransaction(tx -> {
+                    final String name = ((JTextField) fieldMap.get("Name")).getText().trim();
+                    final Cardinality type = (Cardinality) ((JComboBox<Cardinality>) fieldMap.get("Type")).getSelectedItem();
+                    metaDb.newMetaRelation(src, name, type);
+                });
+            }
+        });
+    }
+
+    public void newMetaProperty(Component owner, Consumer<MetaProperty> metaPropertyConsumer) {
+        final Map<String, JTextField> fieldMap = new LinkedHashMap<>();
+        fieldMap.put("Name", newTextField(15));
+        fieldMap.put("Type", newTextField(15));
+        final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {
+            inputPanel.add(new JLabel(fieldEntry.getKey()));
+            inputPanel.add(fieldEntry.getValue());
+        }
+        SwingUtil.showDialog(inputPanel, owner, "New Property", new SwingUtil.ConfirmAction() {
+            @Override
+            public void verifyAndCommit() throws Exception {
+                doLaterInTransaction(tx -> {
+                    final String name = fieldMap.get("Name").getText().trim();
+                    final String type = fieldMap.get("Type").getText().trim();
+                    metaPropertyConsumer.accept(metaDb.newMetaProperty().setName(name).setUuid(UUID.randomUUID().toString()).setType(type));
+                });
+            }
+        });
+    }
+
+    public void runVisitor(JComponent canvas, DomainEntity domainEntity, DomainVisitor visitor) {
+        doLaterInTransaction(tx -> {
+            try {
+
+                final nextgen.st.STAppPresentationModel.CompilationResult compilationResult = generateVisitorCode(visitor);
+
+                if (compilationResult.aClass == null) {
+                    JOptionPane.showMessageDialog(canvas, compilationResult.compilerOutput, "Compilation Exception", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                ((Runnable) compilationResult.aClass
+                        .getConstructor(nextgen.st.model.STModelDB.class, nextgen.st.STRenderer.class, nextgen.domains.meta.DomainEntity.class)
+                        .newInstance(db, stRenderer, domainEntity))
+                        .run();
+
+            } catch (Throwable ex) {
+                nextgen.utils.SwingUtil.showException(canvas, ex);
+            }
+        });
+
     }
 
     public void runScript(JComponent canvas, Script script) {
@@ -571,6 +719,93 @@ public class STAppPresentationModel {
 
     public void setLastDir(File dir) {
         this.lastDir = lastDir;
+    }
+
+    public MetaDomain newMetaDomain(Node node) {
+        return metaDb.newMetaDomain(node);
+    }
+
+    public MetaEntity newMetaEntity(Node node) {
+        return metaDb.newMetaEntity(node);
+    }
+
+    public MetaRelation newMetaRelation(Node node) {
+        return metaDb.newMetaRelation(node);
+    }
+
+    public MetaProperty newMetaProperty(Node node) {
+        return metaDb.newMetaProperty(node);
+    }
+
+    public DomainEntity newDomainEntity(MetaEntity metaEntity) {
+        return metaDb.newDomainEntity(metaEntity);
+    }
+
+    public DomainEntity newDomainEntity(Node node) {
+        return metaDb.newDomainEntity(node);
+    }
+
+    public DomainVisitor newDomainVisitor(Node node) {
+        return metaDb.newDomainVisitor(node);
+    }
+
+    public DomainVisitor newDomainVisitor(MetaDomain model, String name) {
+        return metaDb.newDomainVisitor(model, name);
+    }
+
+    public String render(DomainEntity domainEntity) {
+        final StringBuilder out = new StringBuilder("[" + domainEntity.get_meta().getName() + "]");
+        domainEntity.get_meta().getProperties().forEach(metaProperty -> out.append("\n").append(metaProperty.getName()).append(":").append(domainEntity.getNode().hasProperty(metaProperty.getName()) ? domainEntity.getNode().getProperty(metaProperty.getName()) : ""));
+        return out.toString();
+    }
+
+    public void addEntityRelation(DomainEntity domainEntity, MetaRelation metaRelation, MetaEntity metaEntity) {
+
+        if (metaRelation.getCardinality().equals(Cardinality.ONE_TO_ONE))
+            domainEntity.getNode().getRelationships(RelationshipType.withName(metaRelation.getName())).forEach(Relationship::delete);
+
+        final DomainEntity dst = newDomainEntity(metaEntity);
+        final Relationship relationshipTo = domainEntity.getNode().createRelationshipTo(dst.getNode(), RelationshipType.withName(metaRelation.getName()));
+        relationshipTo.setProperty("_uuid", UUID.randomUUID().toString());
+    }
+
+    public <T> Optional<T> isInstanceOf(Object object, Class<T> type) {
+        return Optional.ofNullable(object.getClass().isAssignableFrom(type) ? (T) object : null);
+    }
+
+    public void edit(DomainVisitor model) {
+        final DomainVisitorEditor domainVisitorEditor = getWorkspace().getDomainVisitorEditor(model);
+        getWorkspace().setSelectedComponent(domainVisitorEditor);
+    }
+
+    public String render(DomainVisitor model) {
+        return null;
+    }
+
+    public EntityVisitorMethod newEntityVisitorMethod(DomainVisitor model, MetaEntity metaEntity) {
+        return metaDb.newEntityVisitorMethod(model, metaEntity);
+    }
+
+    public RelationVisitorMethod newRelationVisitorMethod(DomainVisitor model, MetaRelation metaRelation) {
+        return metaDb.newRelationVisitorMethod(model, metaRelation);
+    }
+
+    public String renderInTransaction(DomainVisitor model) {
+        return db.getInTransaction(transaction -> {
+            final StringBuilder out = new StringBuilder();
+            model.getFields().forEach(visitorField -> out.append("\n").append(visitorField.getType()).append(" ").append(visitorField.getName()));
+            model.getEntityVisitors().forEach(entityVisitorMethod -> out.append("\n").append(entityVisitorMethod.get_meta().getName()).append("\n").append(entityVisitorMethod.getStatements()).append("\n"));
+            model.getRelationVisitors().forEach(relationVisitorMethod -> out.append("\n").append(relationVisitorMethod.get_meta().getName()).append("\n").append(relationVisitorMethod.getStatements()).append("\n"));
+            return out.toString();
+        });
+    }
+
+    public String renderInTransaction(EntityVisitorMethod model) {
+        return db.getInTransaction(transaction -> model.getStatements());
+    }
+
+    public String renderInTransaction(RelationVisitorMethod model) {
+        return db.getInTransaction(transaction -> model.getStatements());
     }
 
     public final class STArgumentConsumer implements Consumer<STArgument> {
@@ -778,7 +1013,4 @@ public class STAppPresentationModel {
             stgFile.renameTo(new File(stgDirectory.getPath(), name + ".json.deleted"));
     }
 
-    public <T> T getInTransaction(java.util.function.Supplier<T> supplier) {
-        return db.get(supplier);
-    }
 }

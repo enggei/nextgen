@@ -27,7 +27,7 @@ public class App {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("App");
 		st.add("theme", _theme);
 		for (Object o : _stores) st.add("stores", o);
-		for (java.util.Map<String, Object> map : _routes) st.addAggr("routes.{component,filename,path}", map.get("component"), map.get("filename"), map.get("path"));
+		for (java.util.Map<String, Object> map : _routes) st.addAggr("routes.{component,filename,path,render}", map.get("component"), map.get("filename"), map.get("path"), map.get("render"));
 		return st.render().trim();
 	}
 
@@ -82,11 +82,12 @@ public class App {
 		return this._stores;
 	} 
 
-	public App addRoutes(String _component, String _filename, String _path) {
+	public App addRoutes(String _component, String _filename, String _path, Object _render) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("component", _component);
 		map.put("filename", _filename);
 		map.put("path", _path);
+		map.put("render", _render);
 		this._routes.add(map);
 		return this;
 	}
@@ -96,7 +97,7 @@ public class App {
 	}
 
 	public App addRoutes(App_Routes value) {
-		return addRoutes(value._component, value._filename, value._path);
+		return addRoutes(value._component, value._filename, value._path, value._render);
 	}
 
 	public java.util.stream.Stream<App_Routes> streamRoutes() {
@@ -108,17 +109,20 @@ public class App {
 		String _component;
 		String _filename;
 		String _path;
+		Object _render;
 
-		public App_Routes(String _component, String _filename, String _path) {
+		public App_Routes(String _component, String _filename, String _path, Object _render) {
 			this._component = _component;
 			this._filename = _filename;
 			this._path = _path;
+			this._render = _render;
 		}
 
 		private App_Routes(java.util.Map<String, Object> map) {
 			this._component = (String) map.get("component");
 			this._filename = (String) map.get("filename");
 			this._path = (String) map.get("path");
+			this._render = (Object) map.get("render");
 		}
 
 		public String getComponent() {
@@ -131,6 +135,10 @@ public class App {
 
 		public String getPath() {
 			return this._path;
+		}
+
+		public Object getRender() {
+			return this._render;
 		}
 
 	} 
@@ -195,7 +203,7 @@ public class App {
 				"						<NavigationBar userStore={ this.props.userStore }></NavigationBar>\n" + 
 				"					</div>\n" + 
 				"					<Switch>\n" + 
-				"						~routes:{it|<Route path=\"~it.path~\" component={~it.component~\\} />};separator=\"\\n\"~\n" + 
+				"						~routes:{it|<Route path=\"~it.path~\" ~if(it.render)~render=~it.render~~else~component={~it.component~\\}~endif~ />};separator=\"\\n\"~\n" + 
 				"					</Switch>\n" + 
 				"				</ThemeProvider>);\n" + 
 				"		} else return null;\n" + 

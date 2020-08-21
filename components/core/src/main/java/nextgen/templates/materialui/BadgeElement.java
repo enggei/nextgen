@@ -16,8 +16,10 @@ public class BadgeElement {
 	private Object _max;
 	private Object _overlap;
 	private Object _showZero;
+	private Object _style;
 	private Object _variant;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	BadgeElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -46,8 +48,10 @@ public class BadgeElement {
 		st.add("max", _max);
 		st.add("overlap", _overlap);
 		st.add("showZero", _showZero);
+		st.add("style", _style);
 		st.add("variant", _variant);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -293,6 +297,28 @@ public class BadgeElement {
 		return this;
 	} 
 
+	public BadgeElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public BadgeElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public BadgeElement setVariant(Object value) {
 		this._variant = value;
 		return this;
@@ -344,6 +370,50 @@ public class BadgeElement {
 		return this._children;
 	} 
 
+	public BadgeElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public BadgeElement addAttribute(BadgeElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<BadgeElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(BadgeElement_Attribute::new);
+	}
+
+	public static final class BadgeElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public BadgeElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private BadgeElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -358,7 +428,7 @@ public class BadgeElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "BadgeElement(anchorOrigin,badgeContent,classes,className,color,component,id,invisible,max,overlap,showZero,variant,children) ::= <<<Badge~if(anchorOrigin)~\n" + 
+	static final String st = "BadgeElement(anchorOrigin,badgeContent,classes,className,color,component,id,invisible,max,overlap,showZero,style,variant,attribute,children) ::= <<<Badge~if(anchorOrigin)~\n" + 
 				"	anchorOrigin=\"~anchorOrigin~\"~endif~~if(badgeContent)~\n" + 
 				"	badgeContent=~badgeContent~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
@@ -369,8 +439,11 @@ public class BadgeElement {
 				"	invisible~endif~~if(max)~\n" + 
 				"	max=~max~~endif~~if(overlap)~\n" + 
 				"	overlap=\"~overlap~\"~endif~~if(showZero)~\n" + 
-				"	showZero~endif~~if(variant)~\n" + 
-				"	variant=\"~variant~\"~endif~~if(children)~>\n" + 
+				"	showZero~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(variant)~\n" + 
+				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</Badge>~else~ />~endif~ >>";
 }  

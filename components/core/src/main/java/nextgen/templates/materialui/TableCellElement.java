@@ -10,12 +10,15 @@ public class TableCellElement {
 	private Object _className;
 	private Object _component;
 	private Object _id;
+	private Object _key;
 	private Object _padding;
 	private Object _scope;
 	private Object _size;
 	private Object _sortDirection;
+	private Object _style;
 	private Object _variant;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	TableCellElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -38,12 +41,15 @@ public class TableCellElement {
 		st.add("className", _className);
 		st.add("component", _component);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("padding", _padding);
 		st.add("scope", _scope);
 		st.add("size", _size);
 		st.add("sortDirection", _sortDirection);
+		st.add("style", _style);
 		st.add("variant", _variant);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -157,6 +163,28 @@ public class TableCellElement {
 		return this;
 	} 
 
+	public TableCellElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public TableCellElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public TableCellElement setPadding(Object value) {
 		this._padding = value;
 		return this;
@@ -245,6 +273,28 @@ public class TableCellElement {
 		return this;
 	} 
 
+	public TableCellElement setStyle(Object value) {
+		this._style = value;
+		return this;
+	}
+
+	public Object getStyle() {
+		return this._style;
+	}
+
+	public Object getStyle(Object defaultValue) {
+		return this._style == null ? defaultValue : this._style;
+	}
+
+	public boolean hasStyle() {
+		return this._style != null;
+	}
+
+	public TableCellElement removeStyle() {
+		this._style = null;
+		return this;
+	} 
+
 	public TableCellElement setVariant(Object value) {
 		this._variant = value;
 		return this;
@@ -296,6 +346,50 @@ public class TableCellElement {
 		return this._children;
 	} 
 
+	public TableCellElement addAttribute(Object _name, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("value", _value);
+		this._attribute.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttribute() {
+		return this._attribute;
+	}
+
+	public TableCellElement addAttribute(TableCellElement_Attribute value) {
+		return addAttribute(value._name, value._value);
+	}
+
+	public java.util.stream.Stream<TableCellElement_Attribute> streamAttribute() {
+		return this._attribute.stream().map(TableCellElement_Attribute::new);
+	}
+
+	public static final class TableCellElement_Attribute {
+
+		Object _name;
+		Object _value;
+
+		public TableCellElement_Attribute(Object _name, Object _value) {
+			this._name = _name;
+			this._value = _value;
+		}
+
+		private TableCellElement_Attribute(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -310,17 +404,21 @@ public class TableCellElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TableCellElement(align,classes,className,component,id,padding,scope,size,sortDirection,variant,children) ::= <<<TableCell~if(align)~\n" + 
+	static final String st = "TableCellElement(align,classes,className,component,id,key,padding,scope,size,sortDirection,style,variant,attribute,children) ::= <<<TableCell~if(align)~\n" + 
 				"	align=\"~align~\"~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(padding)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(padding)~\n" + 
 				"	padding=\"~padding~\"~endif~~if(scope)~\n" + 
 				"	scope=\"~scope~\"~endif~~if(size)~\n" + 
 				"	size=\"~size~\"~endif~~if(sortDirection)~\n" + 
-				"	sortDirection=\"~sortDirection~\"~endif~~if(variant)~\n" + 
-				"	variant=\"~variant~\"~endif~~if(children)~>\n" + 
+				"	sortDirection=\"~sortDirection~\"~endif~~if(style)~\n" + 
+				"	style=~style~~endif~~if(variant)~\n" + 
+				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
+				"	\n" + 
+				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</TableCell>~else~ />~endif~ >>";
 }  
