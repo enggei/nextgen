@@ -25,9 +25,8 @@ public class MetaDomainVisitor {
         if (visitedEntities.contains(metaEntity)) return;
         visitedEntities.add(metaEntity);
 
-        beforeEntity(metaEntity);
+        visitEntity(metaEntity);
         metaEntity.getRelations().forEach(this::visit);
-        afterEntity(metaEntity);
     }
 
     private void visit(MetaRelation metaRelation) {
@@ -35,24 +34,15 @@ public class MetaDomainVisitor {
         if (visitedRelations.contains(metaRelation)) return;
         visitedRelations.add(metaRelation);
 
-        beforeRelation(metaRelation);
+        visitRelation(metaRelation);
         metaRelation.getDst().forEach(this::visit);
-        afterRelation(metaRelation);
     }
 
-    public void beforeEntity(MetaEntity metaEntity) {
-        System.out.println("before metaEntity " + metaEntity.getName());
+    public void visitEntity(MetaEntity metaEntity) {
+
     }
 
-    public void afterEntity(MetaEntity metaEntity) {
-        System.out.println("after metaEntity " + metaEntity.getName());
+    public void visitRelation(MetaRelation metaRelation) {
     }
 
-    public void beforeRelation(MetaRelation metaRelation) {
-        System.out.println("before metaRelation" + metaRelation.getName());
-    }
-
-    public void afterRelation(MetaRelation metaRelation) {
-        System.out.println("after metaRelation" + metaRelation.getName());
-    }
 }

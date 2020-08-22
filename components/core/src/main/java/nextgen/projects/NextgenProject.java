@@ -20,7 +20,8 @@ public class NextgenProject extends BaseNextgenProject {
         final Entity metaProperty = newEntity("MetaProperty")
                 .addRelations(newStringField("uuid"))
                 .addRelations(newStringField("name"))
-                .addRelations(newStringField("type"));
+                .addRelations(newStringField("type"))
+                .addRelations(newStringField("defaultValue"));
 
 
         final Entity metaEntity = newEntity("MetaEntity")

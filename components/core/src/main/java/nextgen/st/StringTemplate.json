@@ -336,7 +336,7 @@
   }, {
     "uuid" : "e7ca4718-14cf-4410-b594-051d6a070270",
     "name" : "DomainVisitorRunner",
-    "text" : "package ~packageName~;\n\n~imports:{it|~it~};separator=\"\\n\"~\n\npublic class ~name~ implements Runnable {\n\n\tprivate final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n\tprivate final nextgen.st.model.STModelDB db;\n\tprivate final nextgen.st.STRenderer renderer;\n\tprivate final nextgen.domains.meta.DomainEntity domainEntity;\n\n\tpublic ~name~(nextgen.st.model.STModelDB db, nextgen.st.STRenderer renderer, nextgen.domains.meta.DomainEntity domainEntity) {\n\t\tthis.db = db;\n\t\tthis.renderer = renderer;\n\t\tthis.domainEntity = domainEntity;\n\t}\n\n\t@Override\n\tpublic void run() {\n\t\tdb.doInTransaction(transaction -> {\n\t\t\t~script~\n\t\t});\n\t}\n\t\n\tpublic static void main(String[] args) {\n\t\tfinal java.util.Collection<nextgen.st.domain.STGroupModel> stGroups = new java.util.ArrayList<>();\n\t\tfinal java.io.File templatesDir = new java.io.File(\"~templatesDir~\");\n\t\tjava.util.Optional.ofNullable(templatesDir.listFiles(pathname -> pathname.isFile() && pathname.getName().toLowerCase().endsWith(\".json\")))\n\t\t\t.ifPresent(files -> {\n\t\t\t\tfor (java.io.File file : files)\n\t\t\t\t\t\tstGroups.add(new nextgen.st.domain.STGroupModel(nextgen.st.STParser.readJsonObject(file)));\n\t\t\t});\n\t\tnextgen.domains.meta.DomainEntity domainEntity = null;\t// todo-lookup from db, in transaction\n\t\tnew Thread(new ~name~(new nextgen.st.model.STModelDB(\"~dbDir~\", stGroups), new nextgen.st.STRenderer(stGroups)), domainEntity).start();\n\t}\n} ",
+    "text" : "package ~packageName~;\n\nimport nextgen.domains.meta.DomainEntity;\nimport nextgen.st.STRenderer;\nimport nextgen.st.domain.STGroupModel;\nimport nextgen.st.model.STModelDB;\nimport org.neo4j.graphdb.*;\n\nimport java.util.ArrayList;\nimport java.util.Collection;\nimport java.util.Optional;\nimport java.io.File;\n\n~imports:{it|~it~};separator=\"\\n\"~\n\npublic class ~name~ implements Runnable {\n\n\tprivate final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n\tprivate final STModelDB db;\n\tprivate final STRenderer renderer;\n\tprivate final DomainEntity domainEntity;\n\n\tpublic ~name~(STModelDB db, STRenderer renderer, DomainEntity domainEntity) {\n\t\tthis.db = db;\n\t\tthis.renderer = renderer;\n\t\tthis.domainEntity = domainEntity;\n\t}\n\n\t@Override\n\tpublic void run() {\n\t\tdb.doInTransaction(transaction -> {\n\t\t\tnew Visitor().visit~rootNode;format=\"capitalize\"~(domainEntity.getNode());\n\t\t});\n\t}\n\n\tprivate static final class Visitor {\n\n\t\t~entityVisitors:{it|~it~};separator=\"\\n\\n\"~\n\n\t\t~relationVisitors:{it|~it~};separator=\"\\n\\n\"~\n\n\t\tprivate Iterable<Relationship> get(Node node, String components) {\n\t\t\treturn node.getRelationships(Direction.OUTGOING, RelationshipType.withName(components));\n\t\t}\n\t\t\n\t\tprivate String getProperty(PropertyContainer propertyContainer, String name, String defaultValue) {\n\t\t\treturn propertyContainer.hasProperty(name) ? (String) propertyContainer.getProperty(name) : defaultValue;\n\t\t}\n\t}\n\n\tpublic static void main(String[] args) {\n\t\tfinal Collection<nextgen.st.domain.STGroupModel> stGroups = new ArrayList<>();\n\t\tfinal File templatesDir = new java.io.File(\"~templatesDir~\");\n\t\tOptional.ofNullable(templatesDir.listFiles(pathname -> pathname.isFile() && pathname.getName().toLowerCase().endsWith(\".json\")))\n\t\t\t.ifPresent(files -> {\n\t\t\t\tfor (java.io.File file : files)\n\t\t\t\t\tstGroups.add(new STGroupModel(nextgen.st.STParser.readJsonObject(file)));\n\t\t\t});\n\t\tfinal STModelDB db = new STModelDB(\"~dbDir~\", stGroups);\n\t\tfinal STRenderer renderer = new STRenderer(stGroups);\n\t\tfinal DomainEntity domainEntity = db.getInTransaction(transaction -> new DomainEntity(db.getDatabaseService().findNode(org.neo4j.graphdb.Label.label(\"DomainEntity\"), \"uuid\", \"~entityUuid~\")));\n\n\t\tnew Thread(new PettyAnalyticsVisitor(db, renderer, domainEntity)).start();\n\t}\n} ",
     "parameters" : [ {
       "uuid" : "4b9c24be-1aa9-4bcc-8582-525dd993437f",
       "name" : "packageName",
@@ -353,9 +353,19 @@
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
-      "uuid" : "48c54437-efe6-47f2-b253-11e688a40f53",
-      "name" : "script",
+      "uuid" : "56876627-8851-4173-8780-605e2e9b6da5",
+      "name" : "rootNode",
       "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "81d5d77b-8a58-4d2d-9379-aedbf8314e39",
+      "name" : "entityVisitors",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "63f852ef-c9c4-4cac-8f73-d9b2b519a347",
+      "name" : "relationVisitors",
+      "type" : "LIST",
       "argumentType" : "Object"
     }, {
       "uuid" : "23ba4680-e444-4e21-97ee-2e006102c987",
@@ -367,6 +377,90 @@
       "name" : "dbDir",
       "type" : "SINGLE",
       "argumentType" : "Object"
+    }, {
+      "uuid" : "8b2c873a-8d29-4d3f-be2f-003543ef63d8",
+      "name" : "entityUuid",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ],
+    "children" : [ {
+      "uuid" : "4c1f71a4-c5b7-4aa4-911e-228049a52dca",
+      "name" : "VisitNodeMethod",
+      "text" : "void visit~name;format=\"capitalize\"~(Node node) {\n\tlog.info(\"on node ~name;format=\"capitalize\"~\");\n\t~properties:{it|final String ~it.name~ = getProperty(node, \"~it.name~\", ~if(it.defaultValue)~~it.defaultValue~~else~null~endif~);};separator=\"\\n\"~\n\t\n\t~statements~\n\t\n\t~relations:{it|get(node, \"~it.name~\").forEach(this::visit~it.name;format=\"capitalize\"~);};separator=\"\\n\"~\n} ",
+      "parameters" : [ {
+        "uuid" : "023734df-75fe-4e96-b25a-59a98b6d3726",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "b9a634d3-47f9-4ede-89f6-236a483df6e5",
+        "name" : "properties",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "754d112d-06bf-4cdc-a0d3-fa8ec942ac66",
+          "name" : "name",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "f157aa23-cc9b-4493-b14a-453923a35451",
+          "name" : "defaultValue",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "68ddaae8-84f0-43cc-977d-c915a8759840",
+        "name" : "statements",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "e385c82f-cb58-450a-84f1-d524085b21b7",
+        "name" : "relations",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "83d202d5-8dec-4c64-b975-a8ccd9f0fb4b",
+          "name" : "name",
+          "argumentType" : "Object"
+        } ]
+      } ]
+    }, {
+      "uuid" : "147ff4f4-1de1-4366-878f-242479539ea2",
+      "name" : "VisitRelationMethod",
+      "text" : "void visit~name;format=\"capitalize\"~(Relationship relationship) {\n\tlog.info(\"on relation ~name;format=\"capitalize\"~\");\n\t~properties:{it|final String ~it.name~ = getProperty(node, \"~it.name~\", ~if(it.defaultValue)~~it.defaultValue~~else~null~endif~);};separator=\"\\n\"~\n\t\t\n\t~statements~\n\t\n\t~dst:{it|visit~it.name;format=\"capitalize\"~(relationship.getEndNode());};separator=\"\\n\"~\n} ",
+      "parameters" : [ {
+        "uuid" : "4d987c2c-6d3a-4bc9-803a-88610636dfb1",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "66bad0f4-7b69-494e-94e2-4e2b075997e8",
+        "name" : "properties",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "87e0c616-a2d8-4fd3-a569-4337af7eadbc",
+          "name" : "name",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "2d7c2173-47fc-47d8-b2e6-70f3a933b1c4",
+          "name" : "defaultValue",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "d98abbb0-356c-48d1-8a19-b019a9e66db0",
+        "name" : "statements",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "1dedfbde-e57a-4f8c-a435-16fbaea36dd4",
+        "name" : "dst",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "ba081fb9-6b52-4808-a521-efde6f48582e",
+          "name" : "name",
+          "argumentType" : "Object"
+        } ]
+      } ]
     } ]
   } ],
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/StringTemplate.stg",

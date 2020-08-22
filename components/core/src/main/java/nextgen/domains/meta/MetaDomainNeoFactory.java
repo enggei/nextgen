@@ -211,6 +211,20 @@ public class MetaDomainNeoFactory {
 		return db.findNodes(MetaPropertyLabel, "type", value).stream().map(this::newMetaProperty);
 	}
 
+	public MetaProperty findMetaPropertyByDefaultValue(String value) {
+		final org.neo4j.graphdb.Node node = db.findNode(MetaPropertyLabel, "defaultValue", value);
+		return node == null ? null : newMetaProperty(node);
+	}
+
+	public MetaProperty findOrCreateMetaPropertyByDefaultValue(String value) {
+		final MetaProperty existing = findMetaPropertyByDefaultValue(value);
+		return existing == null ? newMetaProperty().setDefaultValue(value) : existing;
+	}
+
+	public java.util.stream.Stream<MetaProperty> findAllMetaPropertyByDefaultValue(String value) {
+		return db.findNodes(MetaPropertyLabel, "defaultValue", value).stream().map(this::newMetaProperty);
+	}
+
 	private static final org.neo4j.graphdb.Label MetaRelationLabel = org.neo4j.graphdb.Label.label("MetaRelation");
 
 	public static boolean isMetaRelation(org.neo4j.graphdb.Node node) {

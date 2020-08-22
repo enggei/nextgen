@@ -6,6 +6,8 @@ public class StringTemplateST {
 	.append("eom() ::= \"}\"\n")
 	.append("gt() ::= \">\"\n")
 	.append(DomainVisitorRunner.st + "\n")
+	.append(VisitNodeMethod.st + "\n")
+	.append(VisitRelationMethod.st + "\n")
 	.append(ScriptRunner.st + "\n")
 	.append(STDomain.st + "\n")
 	.append(NewEntityInstance.st + "\n")
@@ -57,6 +59,14 @@ public class StringTemplateST {
 
 	public static DomainVisitorRunner newDomainVisitorRunner() {
 		return new DomainVisitorRunner(stGroup);
+	}  
+
+	public static VisitNodeMethod newVisitNodeMethod() {
+		return new VisitNodeMethod(stGroup);
+	}  
+
+	public static VisitRelationMethod newVisitRelationMethod() {
+		return new VisitRelationMethod(stGroup);
 	}  
 
 	public static ScriptRunner newScriptRunner() {

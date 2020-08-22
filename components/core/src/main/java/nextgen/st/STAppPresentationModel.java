@@ -119,17 +119,25 @@ public class STAppPresentationModel {
 
         final STGParseResult parseResult = STParser.parse(toSTGroup(stGroupModel));
 
-        if (parseResult.getErrors().count() == 0)
-            stgDirectories
-                    .stream()
-                    .filter(directory -> directory.getGroups().anyMatch(stGroupModel1 -> stGroupModel1.getUuid().equals(stGroupModel.getUuid())))
-                    .findFirst()
-                    .ifPresent(directory -> {
-                        final File file = new File(new File(directory.getPath()), stGroupModel.getName() + ".json");
-                        log.info("saving stGroup " + stGroupModel.getName() + " to " + file.getAbsolutePath());
-                        STGenerator.write(file, stGroupModel.getJsonObject().encodePrettily());
-                    });
-        else {
+        if (parseResult.getErrors().count() == 0) {
+
+            final Optional<STGroupModel> found = generatorSTGDirectory.getGroups().filter(stGroupModel1 -> stGroupModel1.getUuid().equals(stGroupModel.getUuid())).findFirst();
+            if (found.isPresent()) {
+                final File file = new File(new File(generatorSTGDirectory.getPath()), stGroupModel.getName() + ".json");
+                log.info("saving stGroup " + stGroupModel.getName() + " to " + file.getAbsolutePath());
+                STGenerator.write(file, stGroupModel.getJsonObject().encodePrettily());
+            } else {
+                stgDirectories
+                        .stream()
+                        .filter(directory -> directory.getGroups().anyMatch(stGroupModel1 -> stGroupModel1.getUuid().equals(stGroupModel.getUuid())))
+                        .findFirst()
+                        .ifPresent(directory -> {
+                            final File file = new File(new File(directory.getPath()), stGroupModel.getName() + ".json");
+                            log.info("saving stGroup " + stGroupModel.getName() + " to " + file.getAbsolutePath());
+                            STGenerator.write(file, stGroupModel.getJsonObject().encodePrettily());
+                        });
+            }
+        } else {
             log.error(stGroupModel.getName() + " has errors: ");
             parseResult.getErrors().forEach(stgError -> log.error("\t" + stgError.getType() + " " + stgError.getCharPosition() + " at line " + stgError.getLine()));
         }
@@ -227,7 +235,7 @@ public class STAppPresentationModel {
         return db.findSTTemplateByUuid(stTemplate);
     }
 
-    public CompilationResult generateVisitorCode(DomainVisitor visitor) {
+    public CompilationResult generateVisitorCode(DomainVisitor visitor, DomainEntity domainEntity) {
 
         final File srcRoot = new File(appModel.getRootDir());
 
@@ -254,33 +262,33 @@ public class STAppPresentationModel {
 
         final String className = visitor.getName().replaceAll("[ ]", "");
 
-        final String scriptCode = new DomainVisitorGenerator(visitor).generate();
-        STGenerator.writeJavaFile(getVisitorRunner(scriptCode, packageDeclaration, imports, className), packageDeclaration.getName(), className, srcRoot);
+
+        STGenerator.writeJavaFile(getDomainVisitorRunner(visitor, domainEntity, packageDeclaration, imports, className), packageDeclaration.getName(), className, srcRoot);
 
         final java.io.StringWriter sr = new java.io.StringWriter();
         final java.io.PrintWriter compilerOutput = new java.io.PrintWriter(sr);
         try {
             final String cacheClassname = className + System.currentTimeMillis();
-            final Object compilationUnit = getVisitorRunner(scriptCode, packageDeclaration, imports, cacheClassname);
-            final Class<?> aClass = CompilerUtils.CACHED_COMPILER.loadFromJava(getClass().getClassLoader(), packageDeclaration.getName() + "." + cacheClassname, compilationUnit.toString(), compilerOutput);
+            final Class<?> aClass = CompilerUtils.CACHED_COMPILER.loadFromJava(getClass().getClassLoader(), packageDeclaration.getName() + "." + cacheClassname, getDomainVisitorRunner(visitor, domainEntity, packageDeclaration, imports, cacheClassname).toString(), compilerOutput);
             return new CompilationResult(sr.toString(), aClass);
         } catch (Throwable t) {
             return new CompilationResult(sr.toString(), null);
         }
     }
 
-    public Object getVisitorRunner(String script, PackageDeclaration packageDeclaration, Collection<ImportDeclaration> imports, String className) {
+    public DomainVisitorRunner getDomainVisitorRunner(DomainVisitor visitor, DomainEntity domainEntity, PackageDeclaration packageDeclaration, Collection<ImportDeclaration> imports, String className) {
         final DomainVisitorRunner scriptRunner = StringTemplateST.newDomainVisitorRunner();
         scriptRunner.setPackageName(packageDeclaration.getName());
         scriptRunner.setName(className);
         scriptRunner.setTemplatesDir(appModel.getDirectories().findFirst().get().getPath());
-//        scriptRunner.setDbDir(appModel.getModelDb("./db"));
-        scriptRunner.setScript(script);
+        scriptRunner.setDbDir(appModel.getModelDb("./db"));
+        scriptRunner.setEntityUuid(domainEntity.getUuid());
         for (Object anImport : imports)
             scriptRunner.addImports(anImport);
+
+        new DomainVisitorGenerator(visitor, scriptRunner).generate();
         return scriptRunner;
     }
-
 
 
     public CompilationResult generateScriptCode(Script script) {
@@ -472,10 +480,35 @@ public class STAppPresentationModel {
         });
     }
 
+    public void edit(JComponent owner, MetaProperty model, Consumer<MetaProperty> metaPropertyConsumer) {
+        final Map<String, JTextField> fieldMap = new LinkedHashMap<>();
+        fieldMap.put("Name", newTextField(model.getName(""), 15));
+        fieldMap.put("Type", newTextField(model.getType(""), 15));
+        fieldMap.put("Default Value", newTextField(model.getDefaultValue(""), 15));
+        final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {
+            inputPanel.add(new JLabel(fieldEntry.getKey()));
+            inputPanel.add(fieldEntry.getValue());
+        }
+        SwingUtil.showDialog(inputPanel, owner, "Edit Property", new SwingUtil.ConfirmAction() {
+            @Override
+            public void verifyAndCommit() throws Exception {
+                doLaterInTransaction(tx -> {
+                    final String name = fieldMap.get("Name").getText().trim();
+                    final String type = fieldMap.get("Type").getText().trim();
+                    final String defaultValue = fieldMap.get("Default Value").getText().trim();
+                    metaPropertyConsumer.accept(model.setName(name).setType(type).setDefaultValue(defaultValue.length() == 0 ? null : defaultValue));
+                });
+            }
+        });
+    }
+
     public void newMetaProperty(Component owner, Consumer<MetaProperty> metaPropertyConsumer) {
         final Map<String, JTextField> fieldMap = new LinkedHashMap<>();
         fieldMap.put("Name", newTextField(15));
         fieldMap.put("Type", newTextField(15));
+        fieldMap.put("Default Value", newTextField(15));
         final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
         inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {
@@ -488,7 +521,8 @@ public class STAppPresentationModel {
                 doLaterInTransaction(tx -> {
                     final String name = fieldMap.get("Name").getText().trim();
                     final String type = fieldMap.get("Type").getText().trim();
-                    metaPropertyConsumer.accept(metaDb.newMetaProperty().setName(name).setUuid(UUID.randomUUID().toString()).setType(type));
+                    final String defaultValue = fieldMap.get("Default Value").getText().trim();
+                    metaPropertyConsumer.accept(metaDb.newMetaProperty().setName(name).setUuid(UUID.randomUUID().toString()).setType(type).setDefaultValue(defaultValue));
                 });
             }
         });
@@ -498,7 +532,7 @@ public class STAppPresentationModel {
         doLaterInTransaction(tx -> {
             try {
 
-                final nextgen.st.STAppPresentationModel.CompilationResult compilationResult = generateVisitorCode(visitor);
+                final nextgen.st.STAppPresentationModel.CompilationResult compilationResult = generateVisitorCode(visitor, domainEntity);
 
                 if (compilationResult.aClass == null) {
                     JOptionPane.showMessageDialog(canvas, compilationResult.compilerOutput, "Compilation Exception", JOptionPane.ERROR_MESSAGE);

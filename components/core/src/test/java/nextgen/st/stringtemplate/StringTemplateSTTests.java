@@ -10,6 +10,8 @@ public class StringTemplateSTTests {
 	@org.junit.Test
 	public void testAll() {
 		testDomainVisitorRunner();
+		testVisitNodeMethod();
+		testVisitRelationMethod();
 		testScriptRunner();
 		testSTDomain();
 		testNewEntityInstance();
@@ -28,6 +30,16 @@ public class StringTemplateSTTests {
 	@org.junit.Test
 	public void testDomainVisitorRunner() {
 		System.out.println("\n--- TEST DomainVisitorRunner:\n" + newDomainVisitorRunner());
+	} 
+
+	@org.junit.Test
+	public void testVisitNodeMethod() {
+		System.out.println("\n--- TEST VisitNodeMethod:\n" + newVisitNodeMethod());
+	} 
+
+	@org.junit.Test
+	public void testVisitRelationMethod() {
+		System.out.println("\n--- TEST VisitRelationMethod:\n" + newVisitRelationMethod());
 	} 
 
 	@org.junit.Test

@@ -1746,6 +1746,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		@Override
 		protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
 			pop.add(new Delete(event));
+			pop.add(new Edit(event));
 			super.onNodeRightClick(event, pop);
 		}
 
@@ -1754,6 +1755,10 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			switch (event.getKeyCode()) {
 				case VK_D:
 					new Delete(event).actionPerformed(null);
+					break;
+
+				case VK_E:
+					new Edit(event).actionPerformed(null);
 					break;
 
 			}
@@ -1775,6 +1780,21 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 						close();
 						thisCanvas().presentationModel.metaDb.remove(getModel());
 					}));
+			}
+		}
+
+		final class Edit extends NodeAction {
+
+
+			Edit(PInputEvent event) {
+				super("Edit", event);
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+				presentationModel.doLaterInTransaction(transaction -> {
+					presentationModel.edit(thisCanvas(), getModel(), metaProperty -> setText(metaProperty.getName()));
+				});
 			}
 		}
 
@@ -1957,8 +1977,21 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 				getModel().get_meta().getRelations().forEach(metaRelation -> metaRelation.getDst().forEach(dst -> pop.add(new AddRelationAction(event, metaRelation, dst))));
 				getModel().get_meta().getProperties().forEach(metaProperty -> pop.add(new SetPropertyAction(event, metaProperty)));
 			});
+			pop.add(new Expand(event));
 			super.onNodeRightClick(event, pop);
 		}
+
+		@Override
+		protected void onNodeKeyPressed(PInputEvent event) {
+			switch (event.getKeyCode()) {
+				case VK_E:
+					new Expand(event).actionPerformed(null);
+					break;
+
+			}
+			super.onNodeKeyPressed(event);
+		}
+
 
 		final class SetPropertyAction extends NodeAction {
 
@@ -2011,6 +2044,23 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
 				presentationModel.runVisitor(thisCanvas(), domainEntity, domainVisitor);
+			}
+		}
+
+		final class Expand extends NodeAction {
+
+
+			Expand(PInputEvent event) {
+				super("Expand", event);
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+				presentationModel.doLaterInTransaction(transaction -> {
+					getModel().get_meta().getRelations().forEach(metaRelation -> metaRelation.getDst().forEach(dst -> {
+						getModel().getNode().getRelationships(org.neo4j.graphdb.RelationshipType.withName(metaRelation.getName())).forEach(relationship -> addDomainEntityNode(new nextgen.domains.meta.DomainEntity(relationship.getEndNode())));
+					}));
+				});
 			}
 		}
 

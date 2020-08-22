@@ -106,6 +106,33 @@ public class MetaProperty {
 		return this;
 	}
 
+	private static final String _defaultValue = "defaultValue";
+
+	public MetaProperty setDefaultValue(String value) { 
+		if (value == null) node.removeProperty(_defaultValue); 
+		else node.setProperty(_defaultValue, value);
+		return this;
+	}
+
+	public String getDefaultValue() { 
+		if (node.hasProperty(_defaultValue)) return (String) node.getProperty(_defaultValue);
+		return null;
+	}
+
+	public String getDefaultValue(String defaultValue) { 
+		if (node.hasProperty(_defaultValue)) return (String) node.getProperty(_defaultValue);
+		return defaultValue;
+	}
+
+	public boolean hasDefaultValue() { 
+		return node.hasProperty(_defaultValue);
+	}
+
+	public MetaProperty removeDefaultValue() { 
+		node.removeProperty(_defaultValue);
+		return this;
+	}
+
 	public java.util.stream.Stream<MetaDomain> getIncomingPropertiesMetaDomain() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("properties")).spliterator(), false).map((relationship) -> new MetaDomain(relationship.getOtherNode(node)));
 	}
@@ -140,6 +167,7 @@ public class MetaProperty {
 		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
 		if (node.hasProperty("name")) jsonObject.put("name", node.getProperty("name"));
 		if (node.hasProperty("type")) jsonObject.put("type", node.getProperty("type"));
+		if (node.hasProperty("defaultValue")) jsonObject.put("defaultValue", node.getProperty("defaultValue"));
 		return jsonObject;
 	}
 

@@ -1,24 +1,28 @@
 delimiters "~","~"
 
-DomainVisitorRunner(packageName,imports,name,script,templatesDir,dbDir) ::= <<package ~packageName~;
+DomainVisitorRunner(packageName,imports,name,rootNode,entityVisitors,relationVisitors,templatesDir,dbDir,entityUuid) ::= <<package ~packageName~;
+
 import nextgen.domains.meta.DomainEntity;
 import nextgen.st.STRenderer;
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.model.STModelDB;
+import org.neo4j.graphdb.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
+import java.io.File;
+
 ~imports:{it|~it~};separator="\n"~
 
 public class ~name~ implements Runnable {
 
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);
-	private final nextgen.st.model.STModelDB db;
-	private final nextgen.st.STRenderer renderer;
-	private final nextgen.domains.meta.DomainEntity domainEntity;
+	private final STModelDB db;
+	private final STRenderer renderer;
+	private final DomainEntity domainEntity;
 
-	public ~name~(nextgen.st.model.STModelDB db, nextgen.st.STRenderer renderer, nextgen.domains.meta.DomainEntity domainEntity) {
+	public ~name~(STModelDB db, STRenderer renderer, DomainEntity domainEntity) {
 		this.db = db;
 		this.renderer = renderer;
 		this.domainEntity = domainEntity;
@@ -27,21 +31,57 @@ public class ~name~ implements Runnable {
 	@Override
 	public void run() {
 		db.doInTransaction(transaction -> {
-			~script~
+			new Visitor().visit~rootNode;format="capitalize"~(domainEntity.getNode());
 		});
 	}
-	
+
+	private static final class Visitor {
+
+		~entityVisitors:{it|~it~};separator="\n\n"~
+
+		~relationVisitors:{it|~it~};separator="\n\n"~
+
+		private Iterable<Relationship> get(Node node, String components) {
+			return node.getRelationships(Direction.OUTGOING, RelationshipType.withName(components));
+		}
+		
+		private String getProperty(PropertyContainer propertyContainer, String name, String defaultValue) {
+			return propertyContainer.hasProperty(name) ? (String) propertyContainer.getProperty(name) : defaultValue;
+		}
+	}
+
 	public static void main(String[] args) {
-		final java.util.Collection<nextgen.st.domain.STGroupModel> stGroups = new java.util.ArrayList<>();
-		final java.io.File templatesDir = new java.io.File("~templatesDir~");
-		java.util.Optional.ofNullable(templatesDir.listFiles(pathname -> pathname.isFile() && pathname.getName().toLowerCase().endsWith(".json")))
+		final Collection<nextgen.st.domain.STGroupModel> stGroups = new ArrayList<>();
+		final File templatesDir = new java.io.File("~templatesDir~");
+		Optional.ofNullable(templatesDir.listFiles(pathname -> pathname.isFile() && pathname.getName().toLowerCase().endsWith(".json")))
 			.ifPresent(files -> {
 				for (java.io.File file : files)
-						stGroups.add(new nextgen.st.domain.STGroupModel(nextgen.st.STParser.readJsonObject(file)));
+					stGroups.add(new STGroupModel(nextgen.st.STParser.readJsonObject(file)));
 			});
-		nextgen.domains.meta.DomainEntity domainEntity = null;	// todo-lookup from db, in transaction
-		new Thread(new ~name~(new nextgen.st.model.STModelDB("~dbDir~", stGroups), new nextgen.st.STRenderer(stGroups)), domainEntity).start();
+		final STModelDB db = new STModelDB("~dbDir~", stGroups);
+		final STRenderer renderer = new STRenderer(stGroups);
+		final DomainEntity domainEntity = db.getInTransaction(transaction -> new DomainEntity(db.getDatabaseService().findNode(org.neo4j.graphdb.Label.label("DomainEntity"), "uuid", "~entityUuid~")));
+
+		new Thread(new PettyAnalyticsVisitor(db, renderer, domainEntity)).start();
 	}
+}  >>
+
+VisitNodeMethod(name,properties,statements,relations) ::= <<void visit~name;format="capitalize"~(Node node) {
+	log.info("on node ~name;format="capitalize"~");
+	~properties:{it|final String ~it.name~ = getProperty(node, "~it.name~", ~if(it.defaultValue)~~it.defaultValue~~else~null~endif~);};separator="\n"~
+	
+	~statements~
+	
+	~relations:{it|get(node, "~it.name~").forEach(this::visit~it.name;format="capitalize"~);};separator="\n"~
+}  >>
+
+VisitRelationMethod(name,properties,statements,dst) ::= <<void visit~name;format="capitalize"~(Relationship relationship) {
+	log.info("on relation ~name;format="capitalize"~");
+	~properties:{it|final String ~it.name~ = getProperty(node, "~it.name~", ~if(it.defaultValue)~~it.defaultValue~~else~null~endif~);};separator="\n"~
+		
+	~statements~
+	
+	~dst:{it|visit~it.name;format="capitalize"~(relationship.getEndNode());};separator="\n"~
 }  >>
 
 ScriptRunner(packageName,imports,name,script,templatesDir,dbDir) ::= <<package ~packageName~;
