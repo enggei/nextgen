@@ -102,20 +102,30 @@ public class DomainVisitorEditor extends JPanel {
         }
 
         public String render() {
-            if (node instanceof DomainVisitorEditorNavigator.DomainVisitorTreeNode)
-                return presentationModel.renderInTransaction(((DomainVisitorEditorNavigator.DomainVisitorTreeNode) node).getModel());
-            if (node instanceof DomainVisitorEditorNavigator.EntityVisitorTreeNode)
-                return presentationModel.renderInTransaction(((DomainVisitorEditorNavigator.EntityVisitorTreeNode) node).getModel());
-            if (node instanceof DomainVisitorEditorNavigator.RelationVisitorTreeNode)
-                return presentationModel.renderInTransaction(((DomainVisitorEditorNavigator.RelationVisitorTreeNode) node).getModel());
-            return "";
+            return presentationModel.getInTransaction(transaction -> {
+                if (node instanceof DomainVisitorEditorNavigator.DomainVisitorTreeNode)
+                    return presentationModel.render(((DomainVisitorEditorNavigator.DomainVisitorTreeNode) node).getModel());
+                else if (node instanceof DomainVisitorEditorNavigator.EntityVisitorTreeNode)
+                    return presentationModel.render(((DomainVisitorEditorNavigator.EntityVisitorTreeNode) node).getModel());
+                else if (node instanceof DomainVisitorEditorNavigator.RelationVisitorTreeNode)
+                    return presentationModel.render(((DomainVisitorEditorNavigator.RelationVisitorTreeNode) node).getModel());
+                else if (node instanceof DomainVisitorEditorNavigator.InitStatementsTreeNode)
+                    return ((DomainVisitorEditorNavigator.InitStatementsTreeNode) node).getModel();
+                else if (node instanceof DomainVisitorEditorNavigator.EndStatementsTreeNode)
+                    return ((DomainVisitorEditorNavigator.EndStatementsTreeNode) node).getModel();
+                return "";
+            });
         }
 
         public void save(String statements) {
             if (node instanceof DomainVisitorEditorNavigator.EntityVisitorTreeNode)
                 presentationModel.doInTransaction(transaction -> ((DomainVisitorEditorNavigator.EntityVisitorTreeNode) node).getModel().setStatements(statements));
-            if (node instanceof DomainVisitorEditorNavigator.RelationVisitorTreeNode)
+            else if (node instanceof DomainVisitorEditorNavigator.RelationVisitorTreeNode)
                 presentationModel.doInTransaction(transaction -> ((DomainVisitorEditorNavigator.RelationVisitorTreeNode) node).getModel().setStatements(statements));
+            else if (node instanceof DomainVisitorEditorNavigator.InitStatementsTreeNode)
+                presentationModel.doInTransaction(transaction -> getModel().setInitStatements(statements));
+            else if (node instanceof DomainVisitorEditorNavigator.EndStatementsTreeNode)
+                presentationModel.doInTransaction(transaction -> getModel().setEndStatements(statements));
         }
 
         public void nodeChanged() {
@@ -123,7 +133,10 @@ public class DomainVisitorEditor extends JPanel {
         }
 
         public boolean isEditable() {
-            return (node instanceof DomainVisitorEditorNavigator.RelationVisitorTreeNode) || (node instanceof DomainVisitorEditorNavigator.EntityVisitorTreeNode);
+            return (node instanceof DomainVisitorEditorNavigator.RelationVisitorTreeNode)
+                    || (node instanceof DomainVisitorEditorNavigator.EntityVisitorTreeNode)
+                    || (node instanceof DomainVisitorEditorNavigator.InitStatementsTreeNode)
+                    || (node instanceof DomainVisitorEditorNavigator.EndStatementsTreeNode);
         }
     }
 }

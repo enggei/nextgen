@@ -421,7 +421,7 @@ public class TreeNode {
 				"\n" + 
 				"	@Override\n" + 
 				"	public void nodeChanged() {\n" + 
-				"		this.label = ~if(labelExpression)~~labelExpression~~else~model.toString();~endif~\n" + 
+				"		this.label = ~if(labelExpression)~~labelExpression~~else~getModel().toString();~endif~\n" + 
 				"		this.tooltip = ~if(tooltipExpression)~~tooltipExpression~~else~\"\";~endif~\n" + 
 				"		super.nodeChanged();\n" + 
 				"	}\n" + 

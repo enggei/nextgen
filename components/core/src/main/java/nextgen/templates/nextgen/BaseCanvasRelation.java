@@ -46,7 +46,7 @@ public class BaseCanvasRelation {
 				"	final protected PText child;\n" + 
 				"	private final PNodeChangeListener nodeChangeListener = new PNodeChangeListener();\n" + 
 				"\n" + 
-				"	public BaseCanvasRelation(BaseCanvasNode src, BaseCanvasNode dst, String type, UUID uuid) {\n" + 
+				"	public BaseCanvasRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst, String uuid, String type) {\n" + 
 				"		this.addAttribute(\"_defaultColor\", Color.decode(\"#bababa\"));\n" + 
 				"		this.addAttribute(\"_selectedColor\", Color.decode(\"#b2182b\"));\n" + 
 				"		this.addAttribute(\"_highlightedColor\", Color.decode(\"#f4a582\"));\n" + 
@@ -72,7 +72,7 @@ public class BaseCanvasRelation {
 				"		dst.addPropertyChangeListener(nodeChangeListener);\n" + 
 				"		addChild(this.child);\n" + 
 				"\n" + 
-				"		//org.greenrobot.eventbus.EventBus.getDefault().register(this);\n" + 
+				"		SwingUtilities.invokeLater(() -> updatePath((getSrc()), getDst()));\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 
@@ -105,8 +105,8 @@ public class BaseCanvasRelation {
 				"		return getUuid().hashCode();\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public UUID getUuid() {\n" + 
-				"		return (UUID) getAttribute(\"_uuid\");\n" + 
+				"	public String getUuid() {\n" + 
+				"		return (String) getAttribute(\"_uuid\");\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public String getType() {\n" + 
@@ -137,12 +137,12 @@ public class BaseCanvasRelation {
 				"		SwingUtilities.invokeLater(() -> updatePath((Color) getAttribute(\"_highlightedColor\")));\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	protected BaseCanvasNode getSrc() {\n" + 
-				"		return (BaseCanvasNode) getAttribute(\"_src\");\n" + 
+				"	protected BaseCanvasNode<?> getSrc() {\n" + 
+				"		return (BaseCanvasNode<?>) getAttribute(\"_src\");\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	protected BaseCanvasNode getDst() {\n" + 
-				"		return (BaseCanvasNode) getAttribute(\"_dst\");\n" + 
+				"	protected BaseCanvasNode<?> getDst() {\n" + 
+				"		return (BaseCanvasNode<?>) getAttribute(\"_dst\");\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public Long getOrder() {\n" + 
@@ -157,7 +157,7 @@ public class BaseCanvasRelation {
 				"		validateFullPaint();\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	private void updatePath(BaseCanvasNode source, BaseCanvasNode target) {\n" + 
+				"	private void updatePath(BaseCanvasNode<?> source, BaseCanvasNode<?> target) {\n" + 
 				"		//log.info(getUuid() + \" updatePath\");\n" + 
 				"		final PBounds src = source.getFullBoundsReference();\n" + 
 				"		final PBounds dst = target.getFullBoundsReference();\n" + 
@@ -272,17 +272,17 @@ public class BaseCanvasRelation {
 				"		@Override\n" + 
 				"		public void mouseExited(PInputEvent event) {\n" + 
 				"			unhighlight();\n" + 
-				"			event.getInputManager().setKeyboardFocus(STModelCanvas.this);\n" + 
+				"			event.getInputManager().setKeyboardFocus(thisCanvas());\n" + 
 				"		}\n" + 
 				"\n" + 
 				"		@Override\n" + 
 				"		public void mouseClicked(PInputEvent event) {\n" + 
 				"			if (event.isRightMouseButton()) {\n" + 
 				"				final JPopupMenu pop = new JPopupMenu();\n" + 
-				"				STModelCanvas.this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));\n" + 
+				"				thisCanvas().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));\n" + 
 				"				onRelationRightClick(event, pop);\n" + 
-				"				STModelCanvas.this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));\n" + 
-				"				pop.show(STModelCanvas.this, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());\n" + 
+				"				thisCanvas().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));\n" + 
+				"				pop.show(thisCanvas(), (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());\n" + 
 				"			} else if (event.isLeftMouseButton()) {\n" + 
 				"				SwingUtilities.invokeLater(() -> onRelationLeftClick(event));\n" + 
 				"			}\n" + 

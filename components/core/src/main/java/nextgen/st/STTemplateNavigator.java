@@ -105,7 +105,7 @@ public class STTemplateNavigator extends JPanel {
 			}
 		});
 
-		setPreferredSize(new Dimension(300, 600));
+		setPreferredSize(new Dimension(400, 500));
 		add(new JScrollPane(tree), BorderLayout.CENTER);
 
 		org.greenrobot.eventbus.EventBus.getDefault().register(this);

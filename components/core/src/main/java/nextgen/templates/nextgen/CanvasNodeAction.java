@@ -6,7 +6,9 @@ public class CanvasNodeAction {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _name;
+	private Object _titleExpression;
 	private Object _title;
+	private Object _transactional;
 	private java.util.List<Object> _statements = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 
@@ -27,7 +29,9 @@ public class CanvasNodeAction {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("CanvasNodeAction");
 		st.add("name", _name);
+		st.add("titleExpression", _titleExpression);
 		st.add("title", _title);
+		st.add("transactional", _transactional);
 		for (Object o : _statements) st.add("statements", o);
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
 		return st.render().trim();
@@ -55,6 +59,28 @@ public class CanvasNodeAction {
 		return this;
 	} 
 
+	public CanvasNodeAction setTitleExpression(Object value) {
+		this._titleExpression = value;
+		return this;
+	}
+
+	public Object getTitleExpression() {
+		return this._titleExpression;
+	}
+
+	public Object getTitleExpression(Object defaultValue) {
+		return this._titleExpression == null ? defaultValue : this._titleExpression;
+	}
+
+	public boolean hasTitleExpression() {
+		return this._titleExpression != null;
+	}
+
+	public CanvasNodeAction removeTitleExpression() {
+		this._titleExpression = null;
+		return this;
+	} 
+
 	public CanvasNodeAction setTitle(Object value) {
 		this._title = value;
 		return this;
@@ -74,6 +100,28 @@ public class CanvasNodeAction {
 
 	public CanvasNodeAction removeTitle() {
 		this._title = null;
+		return this;
+	} 
+
+	public CanvasNodeAction setTransactional(Object value) {
+		this._transactional = value;
+		return this;
+	}
+
+	public Object getTransactional() {
+		return this._transactional;
+	}
+
+	public Object getTransactional(Object defaultValue) {
+		return this._transactional == null ? defaultValue : this._transactional;
+	}
+
+	public boolean hasTransactional() {
+		return this._transactional != null;
+	}
+
+	public CanvasNodeAction removeTransactional() {
+		this._transactional = null;
 		return this;
 	} 
 
@@ -164,18 +212,24 @@ public class CanvasNodeAction {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "CanvasNodeAction(name,fields,title,statements) ::= <<final class ~name~ extends NodeAction {\n" + 
+	static final String st = "CanvasNodeAction(name,fields,titleExpression,title,transactional,statements) ::= <<final class ~name~ extends NodeAction {\n" + 
 				"\n" + 
 				"	~fields:{it|private ~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
-				"	\n" + 
-				"	~name~(PInputEvent event~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\",\"~~endif~) {\n" + 
-				"		super(\"~title~\", event);\n" + 
+				"\n" + 
+				"	~name~(PInputEvent event~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n" + 
+				"		super(~if(titleExpression)~~titleExpression~~else~\"~title~\"~endif~, event);\n" + 
 				"		~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 
 				"	void actionPerformed(PInputEvent event, ActionEvent e) {\n" + 
+				"~if(transactional)~\n" + 
+				"		presentationModel.doLaterInTransaction(transaction -> {\n" + 
+				"			~statements:{it|~it~};separator=\"\\n\"~\n" + 
+				"		});\n" + 
+				"~else~\n" + 
 				"		~statements:{it|~it~};separator=\"\\n\"~\n" + 
+				"~endif~\n" + 
 				"	}\n" + 
 				"} >>";
 }  

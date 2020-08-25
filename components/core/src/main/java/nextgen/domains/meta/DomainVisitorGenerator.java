@@ -4,15 +4,28 @@ import nextgen.st.stringtemplate.DomainVisitorRunner;
 import nextgen.st.stringtemplate.StringTemplateST;
 import nextgen.st.stringtemplate.VisitNodeMethod;
 import nextgen.st.stringtemplate.VisitRelationMethod;
+import nextgen.templates.java.ImportDeclaration;
+import nextgen.templates.java.PackageDeclaration;
+
+import java.util.Collection;
 
 public class DomainVisitorGenerator extends MetaDomainVisitor {
 
     private final DomainVisitor visitor;
     private final DomainVisitorRunner scriptRunner;
 
-    public DomainVisitorGenerator(DomainVisitor visitor, DomainVisitorRunner scriptRunner) {
+    public DomainVisitorGenerator(DomainVisitor visitor, DomainEntity domainEntity, PackageDeclaration packageDeclaration, Collection<ImportDeclaration> imports, String className, String templatesDir, String dbDir) {
         this.visitor = visitor;
-        this.scriptRunner = scriptRunner;
+        scriptRunner = StringTemplateST.newDomainVisitorRunner();
+        scriptRunner.setPackageName(packageDeclaration.getName());
+        scriptRunner.setName(className);
+        scriptRunner.setTemplatesDir(templatesDir);
+        scriptRunner.setDbDir(dbDir);
+        scriptRunner.setEntityUuid(domainEntity.getUuid());
+        for (Object anImport : imports)
+            scriptRunner.addImports(anImport);
+        scriptRunner.setInitStatements(visitor.getInitStatements());
+        scriptRunner.setEndStatements(visitor.getEndStatements());
         visitor.getIncomingVisitorsMetaDomain().forEach(this::visit);
     }
 
@@ -48,7 +61,7 @@ public class DomainVisitorGenerator extends MetaDomainVisitor {
                 .ifPresent(relationVisitorMethod -> method.setStatements(relationVisitorMethod.getStatements()));
     }
 
-    public String generate() {
-        return scriptRunner.toString();
+    public DomainVisitorRunner generate() {
+        return scriptRunner;
     }
 }

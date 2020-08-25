@@ -331,6 +331,34 @@ public class MetaDomainNeoFactory {
 		return db.findNodes(DomainVisitorLabel, "name", value).stream().map(this::newDomainVisitor);
 	}
 
+	public DomainVisitor findDomainVisitorByInitStatements(String value) {
+		final org.neo4j.graphdb.Node node = db.findNode(DomainVisitorLabel, "initStatements", value);
+		return node == null ? null : newDomainVisitor(node);
+	}
+
+	public DomainVisitor findOrCreateDomainVisitorByInitStatements(String value) {
+		final DomainVisitor existing = findDomainVisitorByInitStatements(value);
+		return existing == null ? newDomainVisitor().setInitStatements(value) : existing;
+	}
+
+	public java.util.stream.Stream<DomainVisitor> findAllDomainVisitorByInitStatements(String value) {
+		return db.findNodes(DomainVisitorLabel, "initStatements", value).stream().map(this::newDomainVisitor);
+	}
+
+	public DomainVisitor findDomainVisitorByEndStatements(String value) {
+		final org.neo4j.graphdb.Node node = db.findNode(DomainVisitorLabel, "endStatements", value);
+		return node == null ? null : newDomainVisitor(node);
+	}
+
+	public DomainVisitor findOrCreateDomainVisitorByEndStatements(String value) {
+		final DomainVisitor existing = findDomainVisitorByEndStatements(value);
+		return existing == null ? newDomainVisitor().setEndStatements(value) : existing;
+	}
+
+	public java.util.stream.Stream<DomainVisitor> findAllDomainVisitorByEndStatements(String value) {
+		return db.findNodes(DomainVisitorLabel, "endStatements", value).stream().map(this::newDomainVisitor);
+	}
+
 	private static final org.neo4j.graphdb.Label VisitorFieldLabel = org.neo4j.graphdb.Label.label("VisitorField");
 
 	public static boolean isVisitorField(org.neo4j.graphdb.Node node) {

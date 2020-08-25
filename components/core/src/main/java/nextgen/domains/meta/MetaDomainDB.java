@@ -48,10 +48,11 @@ public class MetaDomainDB extends MetaDomainNeoFactory {
         STAppEvents.postNewMetaEntity(dst);
     }
 
-    public void newMetaRelation(MetaEntity src, String name, Cardinality cardinality) {
+    public MetaRelation newMetaRelation(MetaEntity src, String name, Cardinality cardinality) {
         final MetaRelation metaRelation = newMetaRelation().setName(name).setUuid(UUID.randomUUID().toString()).setCardinality(cardinality);
         src.addRelations(metaRelation);
         STAppEvents.postNewMetaRelation(metaRelation);
+        return metaRelation;
     }
 
     public DomainEntity newDomainEntity(MetaEntity metaEntity) {

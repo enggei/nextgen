@@ -79,6 +79,60 @@ public class DomainVisitor {
 		return this;
 	}
 
+	private static final String _initStatements = "initStatements";
+
+	public DomainVisitor setInitStatements(String value) { 
+		if (value == null) node.removeProperty(_initStatements); 
+		else node.setProperty(_initStatements, value);
+		return this;
+	}
+
+	public String getInitStatements() { 
+		if (node.hasProperty(_initStatements)) return (String) node.getProperty(_initStatements);
+		return null;
+	}
+
+	public String getInitStatements(String defaultValue) { 
+		if (node.hasProperty(_initStatements)) return (String) node.getProperty(_initStatements);
+		return defaultValue;
+	}
+
+	public boolean hasInitStatements() { 
+		return node.hasProperty(_initStatements);
+	}
+
+	public DomainVisitor removeInitStatements() { 
+		node.removeProperty(_initStatements);
+		return this;
+	}
+
+	private static final String _endStatements = "endStatements";
+
+	public DomainVisitor setEndStatements(String value) { 
+		if (value == null) node.removeProperty(_endStatements); 
+		else node.setProperty(_endStatements, value);
+		return this;
+	}
+
+	public String getEndStatements() { 
+		if (node.hasProperty(_endStatements)) return (String) node.getProperty(_endStatements);
+		return null;
+	}
+
+	public String getEndStatements(String defaultValue) { 
+		if (node.hasProperty(_endStatements)) return (String) node.getProperty(_endStatements);
+		return defaultValue;
+	}
+
+	public boolean hasEndStatements() { 
+		return node.hasProperty(_endStatements);
+	}
+
+	public DomainVisitor removeEndStatements() { 
+		node.removeProperty(_endStatements);
+		return this;
+	}
+
 	private static final org.neo4j.graphdb.RelationshipType _fields = org.neo4j.graphdb.RelationshipType.withName("fields");
 
 	public DomainVisitor addFields(VisitorField dst) { 
@@ -207,6 +261,8 @@ public class DomainVisitor {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
 		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
 		if (node.hasProperty("name")) jsonObject.put("name", node.getProperty("name"));
+		if (node.hasProperty("initStatements")) jsonObject.put("initStatements", node.getProperty("initStatements"));
+		if (node.hasProperty("endStatements")) jsonObject.put("endStatements", node.getProperty("endStatements"));
 		final io.vertx.core.json.JsonArray _fields = new io.vertx.core.json.JsonArray();
 		getFields().forEach(element -> _fields.add(element.toJsonObject()));
 		if (!_fields.isEmpty()) jsonObject.put("fields", _fields);

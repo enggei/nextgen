@@ -165,8 +165,10 @@ public class CanvasAction {
 	}
 
 	static final String st = "CanvasAction(name,fields,title,statements) ::= <<final class ~name~ extends CanvasAction {\n" + 
+				"~if(fields)~\n" + 
 				"\n" + 
 				"	~fields:{it|private ~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
+				"~endif~\n" + 
 				"	\n" + 
 				"	~name~(PInputEvent event~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\",\"~~endif~) {\n" + 
 				"		super(\"~title~\", event);\n" + 

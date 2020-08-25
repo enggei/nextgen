@@ -1,8 +1,77 @@
 delimiters "~","~"
 
-Canvas(packageName,name,fields,constructorStatements,rightClickStatements,rightClickActions,keyPressActions,baseCanvasRelation,actions,canvasNodes,canvasRelations) ::= <<package ~packageName~;
+AppEvents(packageName,name,events) ::= <<package ~packageName~;
 
-import nextgen.st.canvas.*;
+public class ~name~ {
+
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);
+
+	~events:{it|~it~};separator="\n\n"~
+}  >>
+
+AppEvent(name,fields) ::= <<public static void post~name~(~fields:{it|~it.type~ ~it.name~};separator=", "~) {
+	log.info("post ~name~");
+	org.greenrobot.eventbus.EventBus.getDefault().post(new ~name~(~fields:{it|~it.name~};separator=", "~));
+}
+
+public static class ~name~ {
+
+	~fields:{it|public final ~it.type~ ~it.name~;};separator="\n"~
+	
+	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=", "~) {
+		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+	}
+}  >>
+
+NewOpenRemovedEvents(name,type) ::= <<public static void postNew~name~(~type~ ~name;format="lowFirst"~) {
+	log.info("post New~name~");
+	org.greenrobot.eventbus.EventBus.getDefault().post(new New~name~(~name;format="lowFirst"~));
+}
+
+public static void postRemoved~name~(java.lang.String uuid) {
+	log.info("post Removed~name~");
+	org.greenrobot.eventbus.EventBus.getDefault().post(new Removed~name~(uuid));
+}
+
+public static void postOpen~name~(~type~ ~name;format="lowFirst"~) {
+	log.info("post Open~name~");
+	org.greenrobot.eventbus.EventBus.getDefault().post(new Open~name~(~name;format="lowFirst"~));
+}
+
+public static class New~name~ {
+
+	public final ~type~ ~name;format="lowFirst"~;
+
+	public New~name~(~type~ ~name;format="lowFirst"~) {
+		this.~name;format="lowFirst"~ = ~name;format="lowFirst"~;
+	}
+}
+
+public static class Removed~name~ {
+
+	public final java.lang.String uuid;
+
+	public Removed~name~(java.lang.String uuid) {
+		this.uuid = uuid;
+	}
+}
+
+public static class Open~name~ {
+
+	public final ~type~ ~name;format="lowFirst"~;
+
+	public Open~name~(~type~ ~name;format="lowFirst"~) {
+		this.~name;format="lowFirst"~ = ~name;format="lowFirst"~;
+	}
+}  >>
+
+EventSubscriber(eventName,eventType,statements) ::= <<@org.greenrobot.eventbus.Subscribe()
+public void on~eventName~(~eventType~ event) {
+	~statements:{it|~it~};separator="\n"~
+}  >>
+
+Canvas(packageName,name,fields,constructorStatements,methods,rightClickStatements,rightClickActions,keyPressActions,actions,canvasNodes,canvasRelations) ::= <<package ~packageName~;
+
 import nextgen.utils.SwingUtil;
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PCanvas;
@@ -36,8 +105,8 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 	private final PLayer nodeLayer;
 	private final PLayer relationLayer = new PLayer();
 
-	final Map<UUID, BaseCanvasNode> nodeMap = new ConcurrentHashMap<>();
-	final Map<UUID, BaseCanvasRelation> relationMap = new ConcurrentHashMap<>();
+	final Map<String, BaseCanvasNode<?~gt()~> nodeMap = new ConcurrentHashMap<>();
+	final Map<String, BaseCanvasRelation> relationMap = new ConcurrentHashMap<>();
 
 	private final SelectEventsHandler selectEventHandler = new SelectEventsHandler();
 	private final CanvasInputEventsHandler canvasInputEventsHandler = new CanvasInputEventsHandler();
@@ -61,6 +130,12 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 		~constructorStatements:{it|~it~};separator="\n"~
 	}
 
+	public ~name~ thisCanvas() {
+		return this;
+	}
+
+	~methods:{it|~it~};separator="\n\n"~
+
 	@Override
 	public void processEvent(PInputEvent pInputEvent, int i) {
 		canvasInputEventsHandler.processEvent(pInputEvent, i);
@@ -78,21 +153,21 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 		return new Point((int) localToView.getX(), (int) localToView.getY());
 	}
 
-	public <N extends BaseCanvasNode> void centerNode(N node) {
+	public void centerNode(BaseCanvasNode<?> node) {
 		SwingUtilities.invokeLater(() -> getCamera().animateViewToCenterBounds(node.getGlobalFullBounds(), false, 500));
 	}
 
 	@SuppressWarnings("unchecked")
-	public <N extends BaseCanvasNode> Stream<N> getAllNodes() {
+	public Stream<BaseCanvasNode<?~gt()~> getAllNodes() {
 		return nodeLayer.getAllNodes().stream().filter((Predicate<PNode>) node -> node instanceof BaseCanvasNode);
 	}
 
-	public <N extends BaseCanvasNode> Stream<N> getSelectedNodes() {
-		return (Stream<N>) getAllNodes().filter(BaseCanvasNode::isSelected);
+	public Stream<BaseCanvasNode<?~gt()~> getSelectedNodes() {
+		return getAllNodes().filter(BaseCanvasNode::isSelected);
 	}
 
-	public <N extends BaseCanvasNode> Stream<N> getUnselectedNodes() {
-		return (Stream<N>) getAllNodes().filter(stNode -> !stNode.isSelected());
+	public Stream<BaseCanvasNode<?~gt()~> getUnselectedNodes() {
+		return getAllNodes().filter(stNode -> !stNode.isSelected());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -104,15 +179,11 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 		return (Stream<R>) getAllRelations().filter(BaseCanvasRelation::isSelected);
 	}
 
-	public <N extends BaseCanvasNode> N addNode(String uuid, java.util.function.Supplier<N> supplier) {
-		return addNode(java.util.UUID.fromString(uuid), supplier);
-	}
-
-	public <N extends BaseCanvasNode> N addNode(N node) {
+	public <N extends BaseCanvasNode<?~gt()~> N addNode(N node) {
 		return addNode(node.getUuid(), () -> node);
 	}
 
-	public <N extends BaseCanvasNode> N addNode(java.util.UUID uuid, java.util.function.Supplier<N> supplier) {
+	public <N extends BaseCanvasNode<?~gt()~> N addNode(String uuid, java.util.function.Supplier<N> supplier) {
 
 		final N existing = getNode(uuid);
 		if (existing != null) {
@@ -137,18 +208,19 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 				.filter(stNode -> !stNode.getUuid().equals(node.getUuid()))
 				.forEach(stNode -> stNode.newNodeAdded(node));
 
+		SwingUtilities.invokeLater(() -> {
+			node.refresh();
+			centerNode(node);
+		});
+
 		return node;
 	}
 
-	public <N extends BaseCanvasNode> N getNode(String uuid) {
-		return getNode(java.util.UUID.fromString(uuid));
-	}
-
-	public <N extends BaseCanvasNode> N getNode(UUID uuid) {
+	public <N extends BaseCanvasNode<?~gt()~> N getNode(String uuid) {
 		return (N) nodeMap.get(uuid);
 	}
 
-	<N extends BaseCanvasNode> N removeNode(UUID uuid) {
+	<N extends BaseCanvasNode<?~gt()~> N removeNode(String uuid) {
 		final BaseCanvasNode remove = nodeMap.remove(uuid);
 		final N old = (N) nodeLayer.removeChild(remove);
 		log.debug("\tN-"+ uuid + " removed from canvas : " + (old == null ? "null" : old.getUuid()));
@@ -156,10 +228,6 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 	}
 
 	public <R extends BaseCanvasRelation> R addRelation(String uuid, java.util.function.Supplier<R> supplier) {
-		return addRelation(java.util.UUID.fromString(uuid), supplier);
-	}
-
-	public <R extends BaseCanvasRelation> R addRelation(java.util.UUID uuid, java.util.function.Supplier<R> supplier) {
 
 		final R existing = getRelation(uuid);
 		if (existing != null) {
@@ -174,7 +242,7 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 		return relation;
 	}
 
-	<R extends BaseCanvasRelation> R removeRelation(UUID uuid) {
+	<R extends BaseCanvasRelation> R removeRelation(String uuid) {
 		final BaseCanvasRelation remove = relationMap.remove(uuid);
 		if (remove == null) return null;
 
@@ -184,7 +252,7 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 		return (R) remove;
 	}
 
-	public <R extends BaseCanvasRelation> R getRelation(UUID uuid) {
+	public <R extends BaseCanvasRelation> R getRelation(String uuid) {
 		return (R) relationMap.get(uuid);
 	}
 
@@ -192,7 +260,7 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 
 		~rightClickStatements:{it|~it~};separator="\n"~
 
-		~rightClickActions:{it|pop.add(new ~it.name~(this, event));};separator="\n"~
+		~rightClickActions:{it|pop.add(new ~it.name~(event));};separator="\n"~
 		pop.addSeparator();
 		pop.add(new SelectAllNodes(event));
 		pop.add(new UnselectAllNodes(event));
@@ -268,7 +336,7 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 					setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 					onCanvasRightClick(pop, event);
 					setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-					pop.show(~name~.this, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
+					pop.show(thisCanvas(), (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
 				});
 			} else if (event.isLeftMouseButton()) SwingUtilities.invokeLater(() -> onCanvasLeftClick(event));
 		}
@@ -381,35 +449,34 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 		abstract void actionPerformed(PInputEvent event, ActionEvent e);
 	}
 
-	~baseCanvasNode(canvasName=name)~
+	~BaseCanvasNode()~
 
-	~baseCanvasRelation~
+	~BaseCanvasRelation()~
 
-	~actions:{it|~it~};separator="\n"~
+	~actions:{it|~it~};separator="\n\n"~
 
 	~canvasNodes:{it|~it~};separator="\n\n"~
 
 	~canvasRelations:{it|~it~};separator="\n\n"~
 }  >>
 
-BaseCanvasNode(canvasName) ::= <<protected class BaseCanvasNode<T> extends PNode {
+BaseCanvasNode() ::= <<protected class BaseCanvasNode<T> extends PNode {
 
-	protected final ~canvasName~ canvas = ~canvasName~.this;
 	protected PText child;
-	protected final Set<UUID> outgoing = new LinkedHashSet<>();
-	protected final Set<UUID> incoming = new LinkedHashSet<>();
+	protected final Set<String> outgoing = new LinkedHashSet<>();
+	protected final Set<String> incoming = new LinkedHashSet<>();
 
 	private PPath rectangle;
 
-	public BaseCanvasNode(T model, UUID uuid, String label) {
+	public BaseCanvasNode(T model, String uuid, String label) {
 		this.addAttribute("_defaultColor", Color.decode("#000000"));
-		this.addAttribute("_selectedColor", Color.decode("#f33"));
-		this.addAttribute("_highlightedColor", Color.decode("#f33"));
-		this.addAttribute("_rectangleColor", Color.decode("#43a2ca"));
+		this.addAttribute("_selectedColor", new Color(174, 1, 126));
+		this.addAttribute("_highlightedColor", new Color(240, 59, 32));
+		this.addAttribute("_rectangleColor", new Color(67, 162, 202, 50));
 		this.addAttribute("_model", model);
 		this.addAttribute("_uuid", uuid);
 		this.addAttribute("_text", label);
-		this.child = new PText(getText() == null ? getUuid().toString() : getText());
+		this.child = new PText(getText() == null ? getUuid() : getText());
 		this.addChild(this.child);
 
 		final NodeInputEventHandler nodeInputEventHandler = new NodeInputEventHandler();
@@ -420,11 +487,15 @@ BaseCanvasNode(canvasName) ::= <<protected class BaseCanvasNode<T> extends PNode
 		//org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
 
+	protected BaseCanvasNode<T> thisNode() {
+		return this;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public T getModel() {
 		return (T) getAttribute("_model");
 	}
-	
+
 	public void addedToCanvas() {
 
 	}
@@ -463,8 +534,8 @@ BaseCanvasNode(canvasName) ::= <<protected class BaseCanvasNode<T> extends PNode
 		return getUuid().hashCode();
 	}
 
-	public UUID getUuid() {
-		return (UUID) getAttribute("_uuid");
+	public String getUuid() {
+		return (String) getAttribute("_uuid");
 	}
 
 	public String getText() {
@@ -484,19 +555,19 @@ BaseCanvasNode(canvasName) ::= <<protected class BaseCanvasNode<T> extends PNode
 		});
 	}
 
-	public void addOutgoingRelation(UUID relation) {
+	public void addOutgoingRelation(String relation) {
 		this.outgoing.add(relation);
 	}
 
-	public void addIncomingRelation(UUID relation) {
+	public void addIncomingRelation(String relation) {
 		this.incoming.add(relation);
 	}
 
-	public java.util.stream.Stream<UUID> outgoing() {
+	public java.util.stream.Stream<String> outgoing() {
 		return this.outgoing.stream();
 	}
 
-	public java.util.stream.Stream<UUID> incoming() {
+	public java.util.stream.Stream<String> incoming() {
 		return this.incoming.stream();
 	}
 
@@ -537,8 +608,8 @@ BaseCanvasNode(canvasName) ::= <<protected class BaseCanvasNode<T> extends PNode
 
 	public void close() {
 		SwingUtilities.invokeLater(() -> {
-			for (UUID uuid : incoming) removeRelation(uuid);
-			for (UUID uuid : outgoing) removeRelation(uuid);
+			for (String uuid : incoming) removeRelation(uuid);
+			for (String uuid : outgoing) removeRelation(uuid);
 			org.greenrobot.eventbus.EventBus.getDefault().unregister(BaseCanvasNode.this);
 			removeNode(getUuid());			
 		});
@@ -617,17 +688,17 @@ BaseCanvasNode(canvasName) ::= <<protected class BaseCanvasNode<T> extends PNode
 		public void mouseExited(PInputEvent event) {
 			unhighlight();
 			if (!event.isControlDown()) 
-				event.getInputManager().setKeyboardFocus(canvas);
+				event.getInputManager().setKeyboardFocus(thisCanvas());
 		}
 
 		@Override
 		public void mouseClicked(PInputEvent event) {
 			if (event.isRightMouseButton()) {
 				final JPopupMenu pop = new JPopupMenu();
-				canvas.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				thisCanvas().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				onNodeRightClick(event, pop);
-				canvas.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-				pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
+				thisCanvas().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				pop.show(thisCanvas(), (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
 			} else if (event.isLeftMouseButton()) {
 				SwingUtilities.invokeLater(() -> onNodeLeftClick(event));
 			}
@@ -663,8 +734,8 @@ BaseCanvasNode(canvasName) ::= <<protected class BaseCanvasNode<T> extends PNode
 
 	protected final class LayoutTreeAction extends NodeAction {
 
-		private final Map<UUID, BaseCanvasNode<?>~gt()~ parentsMap = new LinkedHashMap<>();
-		private final Map<UUID, java.util.List<BaseCanvasNode<?>~gt()~~gt()~ childrensMap = new LinkedHashMap<>();
+		private final Map<String, BaseCanvasNode<?>~gt()~ parentsMap = new LinkedHashMap<>();
+		private final Map<String, java.util.List<BaseCanvasNode<?>~gt()~~gt()~ childrensMap = new LinkedHashMap<>();
 		private final org.abego.treelayout.util.DefaultConfiguration<BaseCanvasNode<?~gt()~> configuration;
 
 		protected LayoutTreeAction(BaseCanvasNode<?> root, PInputEvent event) {
@@ -732,8 +803,8 @@ BaseCanvasNode(canvasName) ::= <<protected class BaseCanvasNode<T> extends PNode
 			childrensMap.put(node.getUuid(), new ArrayList<>());
 
 			node.outgoing()
-					.filter(canvas.relationMap::containsKey)
-					.map(uuid -> canvas.relationMap.get(uuid).getDst())
+					.filter(thisCanvas().relationMap::containsKey)
+					.map(uuid -> thisCanvas().relationMap.get(uuid).getDst())
 					.filter(abstractNode -> !childrensMap.containsKey(abstractNode.getUuid()))
 					.forEach(abstractNode -> {
 							childrensMap.get(node.getUuid()).add(abstractNode);
@@ -753,8 +824,8 @@ BaseCanvasNode(canvasName) ::= <<protected class BaseCanvasNode<T> extends PNode
 		@Override
 		void actionPerformed(PInputEvent event, ActionEvent e) {
 			javax.swing.SwingUtilities.invokeLater(() -> {
-				canvas.getAllRelations().forEach(relation -> canvas.removeRelation(relation.getUuid()));
-				canvas.getAllNodes().filter(canvasNode -> !canvasNode.getUuid().equals(getUuid())).forEach(BaseCanvasNode::close);
+				thisCanvas().getAllRelations().forEach(relation -> thisCanvas().removeRelation(relation.getUuid()));
+				thisCanvas().getAllNodes().filter(canvasNode -> !canvasNode.getUuid().equals(getUuid())).forEach(BaseCanvasNode::close);
 			});
 		}
 	}
@@ -767,7 +838,7 @@ BaseCanvasNode(canvasName) ::= <<protected class BaseCanvasNode<T> extends PNode
 
 		@Override
 		void actionPerformed(PInputEvent event, ActionEvent e) {
-			javax.swing.SwingUtilities.invokeLater(BaseCanvasNode.this::close);
+			javax.swing.SwingUtilities.invokeLater(() -> thisNode().close());
 		}
 	}
 
@@ -784,7 +855,7 @@ BaseCanvasNode(canvasName) ::= <<protected class BaseCanvasNode<T> extends PNode
 				setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));
 				onNodeRightClick(event, pop);
 				setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));
-				pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
+				pop.show(thisCanvas(), (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
 			});
 		}
 	}
@@ -808,53 +879,109 @@ BaseCanvasNode(canvasName) ::= <<protected class BaseCanvasNode<T> extends PNode
 	}
 }  >>
 
-CanvasNode(modelType,fields,onNodeRightClick,actions) ::= <<final class ~modelType~Node extends BaseCanvasNode<~modelType~> {
+CanvasNode(name,modelType,fields,uuidExpression,labelExpression,addedToCanvasStatements,newNodeAddedStatements,rightClickStatements,rightClickActions,leftClickStatements,keyPressActions,actions,methods) ::= <<final class ~name~ extends BaseCanvasNode<~modelType~> {
 
 	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
 
-	public ProjectNode(~modelType~ model, UUID uuid, String label~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
-		super(model, uuid, label);
+	public ~name~(~modelType~ model~if(uuidExpression)~~else~, String uuid~endif~~if(labelExpression)~~else~, String label~endif~~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
+		super(model, ~if(uuidExpression)~~uuidExpression~~else~uuid~endif~, ~if(labelExpression)~~labelExpression~~else~label~endif~);
+		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
 	}
-
+~if(addedToCanvasStatements)~
+	
 	@Override
 	public void addedToCanvas() {
+		~addedToCanvasStatements:{it|~it~};separator="\n"~
 	}
-
+	
+~endif~
+~if(newNodeAddedStatements)~
+	
 	@Override
 	public void newNodeAdded(BaseCanvasNode<?> node) {
+		~newNodeAddedStatements:{it|~it~};separator="\n"~
 	}
-
+	
+~endif~
 	@Override
 	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
-		~onNodeRightClick:{it|~it~};separator="\n"~
+		~rightClickStatements:{it|~it~};separator="\n"~
+		~rightClickActions:{it|pop.add(new ~it.name~(event));};separator="\n"~
 		super.onNodeRightClick(event, pop);
 	}
-
-	@Override
-	protected void onNodeKeyPressed(PInputEvent event) {
-		super.onNodeKeyPressed(event);
-	}
+~if(leftClickStatements)~
 
 	@Override
 	protected void onNodeLeftClick(PInputEvent event) {
 		super.onNodeLeftClick(event);
+		~leftClickStatements:{it|~it~};separator="\n"~
 	}
+	
+~endif~
+~if(keyPressActions)~
 
+	@Override
+	protected void onNodeKeyPressed(PInputEvent event) {
+		switch (event.getKeyCode()) {
+~keyPressActions:{it|
+			case VK_~it.key~:
+				new ~it.name~(event).actionPerformed(null);
+				break;
+};separator="\n"~
+		}
+		super.onNodeKeyPressed(event);
+	}
+	
+~endif~
+	
 	~actions:{it|~it~};separator="\n\n"~
+
+	~methods:{it|~it~};separator="\n\n"~
+}
+
+private void add~name~(~modelType~ model~if(uuidExpression)~~else~, String uuid~endif~~if(labelExpression)~~else~, String label~endif~~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
+	addNode(~if(uuidExpression)~~uuidExpression~~else~uuid~endif~, new~name~(model~if(uuidExpression)~~else~, uuid~endif~~if(labelExpression)~~else~, label~endif~~if(fields)~, ~fields:{it|~it.name~};separator=", "~~endif~));
+}
+
+public java.util.function.Supplier<STModelCanvas.~name~> new~name~(~modelType~ model~if(uuidExpression)~~else~, String uuid~endif~~if(labelExpression)~~else~, String label~endif~~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
+	return () -> new STModelCanvas.~name~(model~if(uuidExpression)~~else~, String uuid~endif~~if(labelExpression)~~else~, String label~endif~~if(fields)~, ~fields:{it|~it.name~};separator=", "~~endif~);
+}
+
+public Stream<~name~> getAll~name;format="capitalize"~() {
+	return getAllNodes()
+				.filter(baseCanvasNode -> baseCanvasNode instanceof ~name~)
+				.map(baseCanvasNode -> (~name~) baseCanvasNode);
+}
+
+public void forEach~name;format="capitalize"~(java.util.function.Consumer<~name~> consumer) {
+	getAllNodes()
+			.filter(baseCanvasNode -> baseCanvasNode instanceof ~name~)
+			.map(baseCanvasNode -> (~name~) baseCanvasNode)
+			.forEach(consumer);
+}
+
+public Optional<~name~> isInstanceOf~name~(BaseCanvasNode<?> canvasNode) {
+	return Optional.ofNullable((canvasNode instanceof ~name~) ? (~name~) canvasNode : null);
 }  >>
 
-CanvasNodeAction(name,fields,title,statements) ::= <<final class ~name~ extends NodeAction {
+CanvasNodeAction(name,fields,titleExpression,title,transactional,statements) ::= <<final class ~name~ extends NodeAction {
 
 	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
-	
-	~name~(PInputEvent event~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=","~~endif~) {
-		super("~title~", event);
+
+	~name~(PInputEvent event~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
+		super(~if(titleExpression)~~titleExpression~~else~"~title~"~endif~, event);
 		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
 	}
 
 	@Override
 	void actionPerformed(PInputEvent event, ActionEvent e) {
+~if(transactional)~
+		presentationModel.doLaterInTransaction(transaction -> {
+			~statements:{it|~it~};separator="\n"~
+		});
+~else~
 		~statements:{it|~it~};separator="\n"~
+~endif~
 	}
 }  >>
 
@@ -863,7 +990,7 @@ BaseCanvasRelation() ::= <<protected class BaseCanvasRelation extends PPath.Doub
 	final protected PText child;
 	private final PNodeChangeListener nodeChangeListener = new PNodeChangeListener();
 
-	public BaseCanvasRelation(BaseCanvasNode src, BaseCanvasNode dst, String type, UUID uuid) {
+	public BaseCanvasRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst, String uuid, String type) {
 		this.addAttribute("_defaultColor", Color.decode("#bababa"));
 		this.addAttribute("_selectedColor", Color.decode("#b2182b"));
 		this.addAttribute("_highlightedColor", Color.decode("#f4a582"));
@@ -889,7 +1016,7 @@ BaseCanvasRelation() ::= <<protected class BaseCanvasRelation extends PPath.Doub
 		dst.addPropertyChangeListener(nodeChangeListener);
 		addChild(this.child);
 
-		//org.greenrobot.eventbus.EventBus.getDefault().register(this);
+		SwingUtilities.invokeLater(() -> updatePath((getSrc()), getDst()));
 	}
 
 	@Override
@@ -922,8 +1049,8 @@ BaseCanvasRelation() ::= <<protected class BaseCanvasRelation extends PPath.Doub
 		return getUuid().hashCode();
 	}
 
-	public UUID getUuid() {
-		return (UUID) getAttribute("_uuid");
+	public String getUuid() {
+		return (String) getAttribute("_uuid");
 	}
 
 	public String getType() {
@@ -954,12 +1081,12 @@ BaseCanvasRelation() ::= <<protected class BaseCanvasRelation extends PPath.Doub
 		SwingUtilities.invokeLater(() -> updatePath((Color) getAttribute("_highlightedColor")));
 	}
 
-	protected BaseCanvasNode getSrc() {
-		return (BaseCanvasNode) getAttribute("_src");
+	protected BaseCanvasNode<?> getSrc() {
+		return (BaseCanvasNode<?>) getAttribute("_src");
 	}
 
-	protected BaseCanvasNode getDst() {
-		return (BaseCanvasNode) getAttribute("_dst");
+	protected BaseCanvasNode<?> getDst() {
+		return (BaseCanvasNode<?>) getAttribute("_dst");
 	}
 
 	public Long getOrder() {
@@ -974,7 +1101,7 @@ BaseCanvasRelation() ::= <<protected class BaseCanvasRelation extends PPath.Doub
 		validateFullPaint();
 	}
 
-	private void updatePath(BaseCanvasNode source, BaseCanvasNode target) {
+	private void updatePath(BaseCanvasNode<?> source, BaseCanvasNode<?> target) {
 		//log.info(getUuid() + " updatePath");
 		final PBounds src = source.getFullBoundsReference();
 		final PBounds dst = target.getFullBoundsReference();
@@ -1089,17 +1216,17 @@ BaseCanvasRelation() ::= <<protected class BaseCanvasRelation extends PPath.Doub
 		@Override
 		public void mouseExited(PInputEvent event) {
 			unhighlight();
-			event.getInputManager().setKeyboardFocus(STModelCanvas.this);
+			event.getInputManager().setKeyboardFocus(thisCanvas());
 		}
 
 		@Override
 		public void mouseClicked(PInputEvent event) {
 			if (event.isRightMouseButton()) {
 				final JPopupMenu pop = new JPopupMenu();
-				STModelCanvas.this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				thisCanvas().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				onRelationRightClick(event, pop);
-				STModelCanvas.this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-				pop.show(STModelCanvas.this, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
+				thisCanvas().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				pop.show(thisCanvas(), (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
 			} else if (event.isLeftMouseButton()) {
 				SwingUtilities.invokeLater(() -> onRelationLeftClick(event));
 			}
@@ -1140,25 +1267,43 @@ BaseCanvasRelation() ::= <<protected class BaseCanvasRelation extends PPath.Doub
 	}
 }  >>
 
-CanvasRelation(name,fields,onRelationRightClick,actions) ::= <<final class ~name~ extends BaseCanvasRelation {
+CanvasRelation(name,uuidExpression,labelExpression,fields,rightClickStatements,rightClickActions,keyPressActions,actions) ::= <<public java.util.function.Supplier<STModelCanvas.~name~> new~name~(BaseCanvasNode<?> src, BaseCanvasNode<?> dst~if(uuidExpression)~~else~, String uuid~endif~~if(labelExpression)~~else~, String label~endif~~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
+	return () -> new STModelCanvas.~name~(src, dst~if(uuidExpression)~~else~, uuid~endif~~if(labelExpression)~~else~, label~endif~~if(fields)~, ~fields:{it|~it.name~};separator=", "~~endif~);
+}
+
+public void add~name~(BaseCanvasNode<?> src, BaseCanvasNode<?> dst~if(labelExpression)~~else~, String label~endif~~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
+	addRelation(~if(uuidExpression)~~uuidExpression~~else~src.getUuid() + dst.getUuid()~endif~, new~name~(src, dst~if(uuidExpression)~~else~, src.getUuid() + dst.getUuid()~endif~~if(labelExpression)~~else~, label~endif~~if(fields)~, ~fields:{it|~it.name~};separator=", "~~endif~));
+}
+
+final class ~name~ extends BaseCanvasRelation {
 
 	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
 
-	public ~name~(BaseCanvasNode src, BaseCanvasNode dst, String type, UUID uuid~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
-		super(src, dst, type, uuid);
+	public ~name~(BaseCanvasNode<?> src, BaseCanvasNode<?> dst~if(uuidExpression)~~else~, String uuid~endif~~if(labelExpression)~~else~, String label~endif~~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
+		super(src, dst, ~if(uuidExpression)~~uuidExpression~~else~uuid~endif~, ~if(labelExpression)~~labelExpression~~else~label~endif~);
 		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
 	}
 
 	@Override
 	protected void onRelationRightClick(PInputEvent event, JPopupMenu pop) {
-		~onRelationRightClick:{it|~it~};separator="\n"~
-		super.onRelationRightClick(event, pop);
-	}
+		~rightClickStatements:{it|~it~};separator="\n"~
 
+		~rightClickActions:{it|pop.add(new ~it.name~(event));};separator="\n"~
+	}
+~if(keyPressActions)~
+	
 	@Override
 	protected void onRelationKeyPressed(PInputEvent event) {
+		switch (event.getKeyCode()) {
+~keyPressActions:{it|
+			case VK_~it.key~:
+				new ~it.name~(event).actionPerformed(null);
+				break;
+};separator="\n"~
+		}
 		super.onRelationKeyPressed(event);
 	}
+~endif~
 
 	~actions:{it|~it~};separator="\n\n"~
 }  >>
@@ -1179,8 +1324,10 @@ CanvasRelationAction(name,fields,title,statements) ::= <<final class ~name~ exte
 }  >>
 
 CanvasAction(name,fields,title,statements) ::= <<final class ~name~ extends CanvasAction {
+~if(fields)~
 
 	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
+~endif~
 	
 	~name~(PInputEvent event~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=","~~endif~) {
 		super("~title~", event);
@@ -1193,7 +1340,145 @@ CanvasAction(name,fields,title,statements) ::= <<final class ~name~ extends Canv
 	}
 }  >>
 
-TreeNavigator(packageName,imports,name,fields,constructorStatements,rootNodeExpression,onSelectionStatements,baseTreeNode,treeNodes,methods) ::= <<package ~packageName~;
+STWorkspace(packageName,name,constructorParameters,methods) ::= <<package ~packageName~;
+
+import ~packageName~.domain.STGroupModel;
+import ~packageName~.domain.STTemplate;
+import ~packageName~.model.STModel;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.Optional;
+
+public class ~name~ extends JTabbedPane {
+
+	private final STAppPresentationModel presentationModel;
+
+	public ~name~(STAppPresentationModel presentationModel) {
+		this.presentationModel = presentationModel;
+		setPreferredSize(new Dimension(800, 600));
+		~constructorParameters:{it|~it~};separator="\n"~
+	}
+
+	~methods:{it|~it~};separator="\n\n"~
+
+	public Optional<STModelCanvas> findCanvas() {
+		for (int i = 0; i < getTabCount(); i++) {
+				final Component tabComponentAt = getComponentAt(i);
+				if (tabComponentAt instanceof STModelCanvas)
+					return Optional.of((STModelCanvas) tabComponentAt);
+		}
+
+		final STModelCanvas stModelCanvas = new STModelCanvas(Color.WHITE, new Dimension(800,600),presentationModel);
+		addPane("Canvas", stModelCanvas);
+		return Optional.of(stModelCanvas);
+	}
+
+	public STModelGrid getModelGrid(STTemplate stTemplate) {
+		for (int i = 0; i < getTabCount(); i++) {
+				final Component tabComponentAt = getComponentAt(i);
+				if (tabComponentAt instanceof STModelGrid) {
+					if (((STModelGrid) tabComponentAt).getModel().equals(stTemplate))
+						return (STModelGrid) tabComponentAt;
+				}
+		}
+
+		final STModelGrid stModelGrid = new STModelGrid(presentationModel, stTemplate);
+		addPane(stTemplate.getName() + "-Models", stModelGrid);
+		return stModelGrid;
+	}
+
+	public STModelEditor getModelEditor(STTemplate stTemplate, STModel stModel) {
+		for (int i = 0; i < getTabCount(); i++) {
+				final Component tabComponentAt = getComponentAt(i);
+				if (tabComponentAt instanceof STModelEditor) {
+					if (((STModelEditor) tabComponentAt).getModel().equals(stModel))
+						return (STModelEditor) tabComponentAt;
+				}
+		}
+
+		final STModelEditor component = new STModelEditor(presentationModel, stModel);
+		addPane(stTemplate.getName() + "Model", component);
+		return component;
+	}
+
+	public void removeSTEditor(STGroupModel stGroup) {
+		for (int i = 0; i < getTabCount(); i++) {
+				final Component tabComponentAt = getComponentAt(i);
+				if (tabComponentAt instanceof STEditor) {
+					if (((STEditor) tabComponentAt).getModel().equals(stGroup)) {
+						remove(i);
+					}
+				}
+		}
+	}
+
+	public STEditor getSTEditor(STGroupModel stGroup) {
+		for (int i = 0; i < getTabCount(); i++) {
+				final Component tabComponentAt = getComponentAt(i);
+				if (tabComponentAt instanceof STEditor) {
+					if (((STEditor) tabComponentAt).getModel().equals(stGroup)) {
+						final STEditor stEditor = (STEditor) tabComponentAt;
+						stEditor.setSTTemplate(null);
+						setSelectedComponent(stEditor);
+						return stEditor;
+					}
+				}
+		}
+
+		final STEditor component = new STEditor(stGroup, presentationModel);
+		component.setSTTemplate(null);
+		addPane(stGroup.getName(), component);
+		setSelectedComponent(component);
+		return component;
+	}
+
+	public STValueGrid getValueGrid() {
+		for (int i = 0; i < getTabCount(); i++) {
+				final Component tabComponentAt = getComponentAt(i);
+				if (tabComponentAt instanceof STValueGrid)
+					return (STValueGrid) tabComponentAt;
+		}
+
+		final STValueGrid component = new STValueGrid(presentationModel);
+		addPane("Values", component);
+		return component;
+	}
+
+	private void addPane(String title, JComponent component) {
+		addTab(title, component);
+		setTabComponentAt(indexOfComponent(component), new ButtonTabComponent(this, title, component));
+	}
+
+	public void showCanvas() {
+		findCanvas().ifPresent(stModelCanvas -> SwingUtilities.invokeLater(() -> setSelectedComponent(stModelCanvas)));
+	}
+
+	class ButtonTabComponent extends JPanel {
+
+		ButtonTabComponent(final JTabbedPane pane, String title, JComponent component) {
+				super(new FlowLayout(FlowLayout.LEFT, 0, 0));
+				setOpaque(false);
+
+				final JLabel label = new JLabel(title);
+				label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+				add(label);
+
+				final JButton btnClose = new JButton(presentationModel.loadIcon("close", "12x12"));
+				final Dimension dimension = new Dimension(12, 16);
+				btnClose.setMaximumSize(dimension);
+				btnClose.setPreferredSize(dimension);
+				btnClose.setMinimumSize(dimension);
+				btnClose.setOpaque(false);
+				btnClose.setContentAreaFilled(false);
+				btnClose.setBorderPainted(false);
+				btnClose.addActionListener(e -> SwingUtilities.invokeLater(() -> pane.remove(component)));
+				add(btnClose);
+		}
+	}
+}  >>
+
+TreeNavigator(packageName,imports,name,fields,rootNodeExpression,onSelectionStatements,preferredWidth,preferredHeight,constructorStatements,baseTreeNode,treeNodes,methods) ::= <<package ~packageName~;
 
 import nextgen.utils.SwingUtil;
 ~imports:{it|import ~it~;};separator="\n"~
@@ -1220,7 +1505,7 @@ public class ~name~ extends JPanel {
 		super(new BorderLayout());
 
 		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
-		~constructorStatements:{it|~it~};separator="\n"~
+		
 
 		this.presentationModel = presentationModel;
 
@@ -1258,6 +1543,15 @@ public class ~name~ extends JPanel {
 					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
 
 					showPopup((BaseTreeNode<?>) lastPathComponent, e.getX(), e.getY());
+				
+				} else {
+
+					final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());
+					if (selectionPath == null) return;
+					final Object lastPathComponent = selectionPath.getLastPathComponent();
+					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
+
+					~onSelectionStatements:{it|~it~};separator="\n"~
 				}
 			}
 		});
@@ -1280,19 +1574,10 @@ public class ~name~ extends JPanel {
 			}
 		});
 
-		tree.addTreeSelectionListener(e -> {
-			if (e.getNewLeadSelectionPath() == null) return;
-
-			if (tree.getSelectionCount() == 1) {
-				final TreePath path = e.getPath();
-				final Object lastPathComponent = path.getLastPathComponent();
-
-				~onSelectionStatements:{it|~it~};separator="\n"~
-			}
-		});
-
-		setPreferredSize(new Dimension(300, 600));
+		setPreferredSize(new Dimension(~if(preferredWidth)~~preferredWidth~~else~400~endif~, ~if(preferredHeight)~~preferredHeight~~else~600~endif~));
 		add(new JScrollPane(tree), BorderLayout.CENTER);
+
+		~constructorStatements:{it|~it~};separator="\n"~
 	}
 
 	~baseTreeNode~
@@ -1422,6 +1707,20 @@ BaseTreeNode() ::= <<public class BaseTreeNode<T> extends DefaultMutableTreeNode
 		return set.stream();
 	}
 
+	protected TreePath find(java.util.function.Predicate<BaseTreeNode<?>~gt()~ predicate) {
+		final int childCount = getChildCount();
+		for (int i = 0; i < childCount; i++) {
+			final BaseTreeNode<?> childAt = (BaseTreeNode<?>) getChildAt(i);
+			if (predicate.test(childAt))
+				return (childAt).getThisPath();
+			else {
+				final TreePath treePath = childAt.find(predicate);
+				if (treePath != null) return treePath;
+			}
+		}
+		return null;
+	}
+	
 	protected TreePath getThisPath() {
 		return new TreePath(getPath());
 	}
@@ -1462,7 +1761,7 @@ public class ~name~ extends BaseTreeNode<~modelType~> {
 
 	@Override
 	public void nodeChanged() {
-		this.label = ~if(labelExpression)~~labelExpression~~else~model.toString();~endif~
+		this.label = ~if(labelExpression)~~labelExpression~~else~getModel().toString();~endif~
 		this.tooltip = ~if(tooltipExpression)~~tooltipExpression~~else~"";~endif~
 		super.nodeChanged();
 	}

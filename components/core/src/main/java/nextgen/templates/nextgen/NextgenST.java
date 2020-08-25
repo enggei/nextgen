@@ -5,6 +5,10 @@ public class NextgenST {
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 	.append("eom() ::= \"}\"\n")
 	.append("gt() ::= \">\"\n")
+	.append(AppEvents.st + "\n")
+	.append(AppEvent.st + "\n")
+	.append(EventSubscriber.st + "\n")
+	.append(NewOpenRemovedEvents.st + "\n")
 	.append(Canvas.st + "\n")
 	.append(BaseCanvasNode.st + "\n")
 	.append(CanvasNode.st + "\n")
@@ -13,6 +17,7 @@ public class NextgenST {
 	.append(CanvasRelation.st + "\n")
 	.append(CanvasRelationAction.st + "\n")
 	.append(CanvasAction.st + "\n")
+	.append(STWorkspace.st + "\n")
 	.append(TreeNavigator.st + "\n")
 	.append(BaseTreeNode.st + "\n")
 	.append(TreeNode.st + "\n")
@@ -53,6 +58,22 @@ public class NextgenST {
 		stGroup = decorate(new org.stringtemplate.v4.STGroupFile(stgFile, '~', '~'));
 	}
 
+	public static AppEvents newAppEvents() {
+		return new AppEvents(stGroup);
+	}  
+
+	public static AppEvent newAppEvent() {
+		return new AppEvent(stGroup);
+	}  
+
+	public static EventSubscriber newEventSubscriber() {
+		return new EventSubscriber(stGroup);
+	}  
+
+	public static NewOpenRemovedEvents newNewOpenRemovedEvents() {
+		return new NewOpenRemovedEvents(stGroup);
+	}  
+
 	public static Canvas newCanvas() {
 		return new Canvas(stGroup);
 	}  
@@ -83,6 +104,10 @@ public class NextgenST {
 
 	public static CanvasAction newCanvasAction() {
 		return new CanvasAction(stGroup);
+	}  
+
+	public static STWorkspace newSTWorkspace() {
+		return new STWorkspace(stGroup);
 	}  
 
 	public static TreeNavigator newTreeNavigator() {

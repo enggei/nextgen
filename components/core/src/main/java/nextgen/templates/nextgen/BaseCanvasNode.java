@@ -5,7 +5,6 @@ public class BaseCanvasNode {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _canvasName;
 
 	BaseCanvasNode(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -23,31 +22,9 @@ public class BaseCanvasNode {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("BaseCanvasNode");
-		st.add("canvasName", _canvasName);
 		return st.render().trim();
 	}
 
-	public BaseCanvasNode setCanvasName(Object value) {
-		this._canvasName = value;
-		return this;
-	}
-
-	public Object getCanvasName() {
-		return this._canvasName;
-	}
-
-	public Object getCanvasName(Object defaultValue) {
-		return this._canvasName == null ? defaultValue : this._canvasName;
-	}
-
-	public boolean hasCanvasName() {
-		return this._canvasName != null;
-	}
-
-	public BaseCanvasNode removeCanvasName() {
-		this._canvasName = null;
-		return this;
-	} 
 
 
 
@@ -64,24 +41,23 @@ public class BaseCanvasNode {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "BaseCanvasNode(canvasName) ::= <<protected class BaseCanvasNode<T> extends PNode {\n" + 
+	static final String st = "BaseCanvasNode() ::= <<protected class BaseCanvasNode<T> extends PNode {\n" + 
 				"\n" + 
-				"	protected final ~canvasName~ canvas = ~canvasName~.this;\n" + 
 				"	protected PText child;\n" + 
-				"	protected final Set<UUID> outgoing = new LinkedHashSet<>();\n" + 
-				"	protected final Set<UUID> incoming = new LinkedHashSet<>();\n" + 
+				"	protected final Set<String> outgoing = new LinkedHashSet<>();\n" + 
+				"	protected final Set<String> incoming = new LinkedHashSet<>();\n" + 
 				"\n" + 
 				"	private PPath rectangle;\n" + 
 				"\n" + 
-				"	public BaseCanvasNode(T model, UUID uuid, String label) {\n" + 
+				"	public BaseCanvasNode(T model, String uuid, String label) {\n" + 
 				"		this.addAttribute(\"_defaultColor\", Color.decode(\"#000000\"));\n" + 
-				"		this.addAttribute(\"_selectedColor\", Color.decode(\"#f33\"));\n" + 
-				"		this.addAttribute(\"_highlightedColor\", Color.decode(\"#f33\"));\n" + 
-				"		this.addAttribute(\"_rectangleColor\", Color.decode(\"#43a2ca\"));\n" + 
+				"		this.addAttribute(\"_selectedColor\", new Color(174, 1, 126));\n" + 
+				"		this.addAttribute(\"_highlightedColor\", new Color(240, 59, 32));\n" + 
+				"		this.addAttribute(\"_rectangleColor\", new Color(67, 162, 202, 50));\n" + 
 				"		this.addAttribute(\"_model\", model);\n" + 
 				"		this.addAttribute(\"_uuid\", uuid);\n" + 
 				"		this.addAttribute(\"_text\", label);\n" + 
-				"		this.child = new PText(getText() == null ? getUuid().toString() : getText());\n" + 
+				"		this.child = new PText(getText() == null ? getUuid() : getText());\n" + 
 				"		this.addChild(this.child);\n" + 
 				"\n" + 
 				"		final NodeInputEventHandler nodeInputEventHandler = new NodeInputEventHandler();\n" + 
@@ -92,11 +68,15 @@ public class BaseCanvasNode {
 				"		//org.greenrobot.eventbus.EventBus.getDefault().register(this);\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	protected BaseCanvasNode<T> thisNode() {\n" + 
+				"		return this;\n" + 
+				"	}\n" + 
+				"	\n" + 
 				"	@SuppressWarnings(\"unchecked\")\n" + 
 				"	public T getModel() {\n" + 
 				"		return (T) getAttribute(\"_model\");\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	public void addedToCanvas() {\n" + 
 				"\n" + 
 				"	}\n" + 
@@ -135,8 +115,8 @@ public class BaseCanvasNode {
 				"		return getUuid().hashCode();\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public UUID getUuid() {\n" + 
-				"		return (UUID) getAttribute(\"_uuid\");\n" + 
+				"	public String getUuid() {\n" + 
+				"		return (String) getAttribute(\"_uuid\");\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public String getText() {\n" + 
@@ -156,19 +136,19 @@ public class BaseCanvasNode {
 				"		});\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public void addOutgoingRelation(UUID relation) {\n" + 
+				"	public void addOutgoingRelation(String relation) {\n" + 
 				"		this.outgoing.add(relation);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public void addIncomingRelation(UUID relation) {\n" + 
+				"	public void addIncomingRelation(String relation) {\n" + 
 				"		this.incoming.add(relation);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public java.util.stream.Stream<UUID> outgoing() {\n" + 
+				"	public java.util.stream.Stream<String> outgoing() {\n" + 
 				"		return this.outgoing.stream();\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public java.util.stream.Stream<UUID> incoming() {\n" + 
+				"	public java.util.stream.Stream<String> incoming() {\n" + 
 				"		return this.incoming.stream();\n" + 
 				"	}\n" + 
 				"\n" + 
@@ -209,8 +189,8 @@ public class BaseCanvasNode {
 				"\n" + 
 				"	public void close() {\n" + 
 				"		SwingUtilities.invokeLater(() -> {\n" + 
-				"			for (UUID uuid : incoming) removeRelation(uuid);\n" + 
-				"			for (UUID uuid : outgoing) removeRelation(uuid);\n" + 
+				"			for (String uuid : incoming) removeRelation(uuid);\n" + 
+				"			for (String uuid : outgoing) removeRelation(uuid);\n" + 
 				"			org.greenrobot.eventbus.EventBus.getDefault().unregister(BaseCanvasNode.this);\n" + 
 				"			removeNode(getUuid());			\n" + 
 				"		});\n" + 
@@ -289,17 +269,17 @@ public class BaseCanvasNode {
 				"		public void mouseExited(PInputEvent event) {\n" + 
 				"			unhighlight();\n" + 
 				"			if (!event.isControlDown()) \n" + 
-				"				event.getInputManager().setKeyboardFocus(canvas);\n" + 
+				"				event.getInputManager().setKeyboardFocus(thisCanvas());\n" + 
 				"		}\n" + 
 				"\n" + 
 				"		@Override\n" + 
 				"		public void mouseClicked(PInputEvent event) {\n" + 
 				"			if (event.isRightMouseButton()) {\n" + 
 				"				final JPopupMenu pop = new JPopupMenu();\n" + 
-				"				canvas.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));\n" + 
+				"				thisCanvas().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));\n" + 
 				"				onNodeRightClick(event, pop);\n" + 
-				"				canvas.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));\n" + 
-				"				pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());\n" + 
+				"				thisCanvas().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));\n" + 
+				"				pop.show(thisCanvas(), (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());\n" + 
 				"			} else if (event.isLeftMouseButton()) {\n" + 
 				"				SwingUtilities.invokeLater(() -> onNodeLeftClick(event));\n" + 
 				"			}\n" + 
@@ -335,8 +315,8 @@ public class BaseCanvasNode {
 				"\n" + 
 				"	protected final class LayoutTreeAction extends NodeAction {\n" + 
 				"\n" + 
-				"		private final Map<UUID, BaseCanvasNode<?>~gt()~ parentsMap = new LinkedHashMap<>();\n" + 
-				"		private final Map<UUID, java.util.List<BaseCanvasNode<?>~gt()~~gt()~ childrensMap = new LinkedHashMap<>();\n" + 
+				"		private final Map<String, BaseCanvasNode<?>~gt()~ parentsMap = new LinkedHashMap<>();\n" + 
+				"		private final Map<String, java.util.List<BaseCanvasNode<?>~gt()~~gt()~ childrensMap = new LinkedHashMap<>();\n" + 
 				"		private final org.abego.treelayout.util.DefaultConfiguration<BaseCanvasNode<?~gt()~> configuration;\n" + 
 				"\n" + 
 				"		protected LayoutTreeAction(BaseCanvasNode<?> root, PInputEvent event) {\n" + 
@@ -404,8 +384,8 @@ public class BaseCanvasNode {
 				"			childrensMap.put(node.getUuid(), new ArrayList<>());\n" + 
 				"\n" + 
 				"			node.outgoing()\n" + 
-				"					.filter(canvas.relationMap::containsKey)\n" + 
-				"					.map(uuid -> canvas.relationMap.get(uuid).getDst())\n" + 
+				"					.filter(thisCanvas().relationMap::containsKey)\n" + 
+				"					.map(uuid -> thisCanvas().relationMap.get(uuid).getDst())\n" + 
 				"					.filter(abstractNode -> !childrensMap.containsKey(abstractNode.getUuid()))\n" + 
 				"					.forEach(abstractNode -> {\n" + 
 				"							childrensMap.get(node.getUuid()).add(abstractNode);\n" + 
@@ -425,8 +405,8 @@ public class BaseCanvasNode {
 				"		@Override\n" + 
 				"		void actionPerformed(PInputEvent event, ActionEvent e) {\n" + 
 				"			javax.swing.SwingUtilities.invokeLater(() -> {\n" + 
-				"				canvas.getAllRelations().forEach(relation -> canvas.removeRelation(relation.getUuid()));\n" + 
-				"				canvas.getAllNodes().filter(canvasNode -> !canvasNode.getUuid().equals(getUuid())).forEach(BaseCanvasNode::close);\n" + 
+				"				thisCanvas().getAllRelations().forEach(relation -> thisCanvas().removeRelation(relation.getUuid()));\n" + 
+				"				thisCanvas().getAllNodes().filter(canvasNode -> !canvasNode.getUuid().equals(getUuid())).forEach(BaseCanvasNode::close);\n" + 
 				"			});\n" + 
 				"		}\n" + 
 				"	}\n" + 
@@ -439,7 +419,7 @@ public class BaseCanvasNode {
 				"\n" + 
 				"		@Override\n" + 
 				"		void actionPerformed(PInputEvent event, ActionEvent e) {\n" + 
-				"			javax.swing.SwingUtilities.invokeLater(BaseCanvasNode.this::close);\n" + 
+				"			javax.swing.SwingUtilities.invokeLater(() -> thisNode().close());\n" + 
 				"		}\n" + 
 				"	}\n" + 
 				"\n" + 
@@ -456,7 +436,7 @@ public class BaseCanvasNode {
 				"				setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));\n" + 
 				"				onNodeRightClick(event, pop);\n" + 
 				"				setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));\n" + 
-				"				pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());\n" + 
+				"				pop.show(thisCanvas(), (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());\n" + 
 				"			});\n" + 
 				"		}\n" + 
 				"	}\n" + 

@@ -313,10 +313,8 @@ public class ~name;format="capitalize"~ {
 };separator="\n"~
 }  >>
 
-WebVerticle(packageName,name,routes,rawRoutes) ::= <<package ~packageName~;
+WebVerticle(packageName,imports,name,fields,startStatements,routes,rawRoutes) ::= <<package ~packageName~;
 
-import com.securityx.web.api.LoginRequest;
-import com.securityx.web.domain.*;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
@@ -339,40 +337,29 @@ import io.vertx.ext.web.sstore.LocalSessionStore;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.securityx.web.PasswordUtils.verifyUserPassword;
-import static com.securityx.web.WebUtils.sendErrors;
-import static com.securityx.web.WebUtils.sendResponse;
-import static com.securityx.web.api.WebApiJsonFactory.newJWTPayload;
-import static com.securityx.web.api.WebApiJsonFactory.newLoginRequest;
-import static com.securityx.web.domain.ServerJsonFactory.newUserMenu;
-import static com.securityx.web.domain.ServerJsonFactory.newUserSession;
 import static io.netty.handler.codec.http.HttpResponseStatus.*;
+
+~imports:{it|~it~};separator="\n"~
 
 public class ~name;format="capitalize"~ extends AbstractVerticle {
 
 	protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name;format="capitalize"~.class);
 
+	~fields:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
+	
 	@Override
 	public void start(Future<Void> startFuture) throws Exception {
-		log.info("starting");
+		log.info("starting ~name;format="capitalize"~");
 
-		final ~name;format="capitalize"~Config config = new ~name;format="capitalize"~Config(config());
-
-		final KeyStoreOptions keyStoreOptions = new KeyStoreOptions().
-					setPath(config.getJwt().getPath()).
-					setPassword(config.getJwt().getPassword()).
-					setType(config.getJwt().getType());
-
-		final JWTAuthOptions jwtAuthOptions = new JWTAuthOptions().setKeyStore(keyStoreOptions);
-		final JWTAuth auth = JWTAuth.create(vertx, jwtAuthOptions);
-
+		~startStatements:{it|~it~};separator="\n"~
+		
 		final Router router = Router.router(vertx);
 		router.route().handler(BodyHandler.create());
 		router.route().handler(SessionHandler.create(LocalSessionStore.create(vertx)));
 		router.post("/login").handler(routingContext -> login(routingContext, auth, config));
 		router.route("/api/*").handler(JWTAuthHandler.create(auth, "/login"));
 		router.get("/user").handler(routingContext -> getUser(routingContext, config));
-		~routes:{it|router.~it.action~("/api/~it.url~").handler(this::~it.methodName~);};separator="\n"~
+		~routes:{it|router.~it.action~("/~it.url~").handler(this::~it.methodName~);};separator="\n"~
 		~rawRoutes:{it|router.~it.action~("~it.url~").handler(this::~it.methodName~);};separator="\n"~
 		
 		final HttpServerOptions serverOptions = new HttpServerOptions();

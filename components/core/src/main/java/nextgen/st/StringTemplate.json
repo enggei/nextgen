@@ -336,7 +336,7 @@
   }, {
     "uuid" : "e7ca4718-14cf-4410-b594-051d6a070270",
     "name" : "DomainVisitorRunner",
-    "text" : "package ~packageName~;\n\nimport nextgen.domains.meta.DomainEntity;\nimport nextgen.st.STRenderer;\nimport nextgen.st.domain.STGroupModel;\nimport nextgen.st.model.STModelDB;\nimport org.neo4j.graphdb.*;\n\nimport java.util.ArrayList;\nimport java.util.Collection;\nimport java.util.Optional;\nimport java.io.File;\n\n~imports:{it|~it~};separator=\"\\n\"~\n\npublic class ~name~ implements Runnable {\n\n\tprivate final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n\tprivate final STModelDB db;\n\tprivate final STRenderer renderer;\n\tprivate final DomainEntity domainEntity;\n\n\tpublic ~name~(STModelDB db, STRenderer renderer, DomainEntity domainEntity) {\n\t\tthis.db = db;\n\t\tthis.renderer = renderer;\n\t\tthis.domainEntity = domainEntity;\n\t}\n\n\t@Override\n\tpublic void run() {\n\t\tdb.doInTransaction(transaction -> {\n\t\t\tnew Visitor().visit~rootNode;format=\"capitalize\"~(domainEntity.getNode());\n\t\t});\n\t}\n\n\tprivate static final class Visitor {\n\n\t\t~entityVisitors:{it|~it~};separator=\"\\n\\n\"~\n\n\t\t~relationVisitors:{it|~it~};separator=\"\\n\\n\"~\n\n\t\tprivate Iterable<Relationship> get(Node node, String components) {\n\t\t\treturn node.getRelationships(Direction.OUTGOING, RelationshipType.withName(components));\n\t\t}\n\t\t\n\t\tprivate String getProperty(PropertyContainer propertyContainer, String name, String defaultValue) {\n\t\t\treturn propertyContainer.hasProperty(name) ? (String) propertyContainer.getProperty(name) : defaultValue;\n\t\t}\n\t}\n\n\tpublic static void main(String[] args) {\n\t\tfinal Collection<nextgen.st.domain.STGroupModel> stGroups = new ArrayList<>();\n\t\tfinal File templatesDir = new java.io.File(\"~templatesDir~\");\n\t\tOptional.ofNullable(templatesDir.listFiles(pathname -> pathname.isFile() && pathname.getName().toLowerCase().endsWith(\".json\")))\n\t\t\t.ifPresent(files -> {\n\t\t\t\tfor (java.io.File file : files)\n\t\t\t\t\tstGroups.add(new STGroupModel(nextgen.st.STParser.readJsonObject(file)));\n\t\t\t});\n\t\tfinal STModelDB db = new STModelDB(\"~dbDir~\", stGroups);\n\t\tfinal STRenderer renderer = new STRenderer(stGroups);\n\t\tfinal DomainEntity domainEntity = db.getInTransaction(transaction -> new DomainEntity(db.getDatabaseService().findNode(org.neo4j.graphdb.Label.label(\"DomainEntity\"), \"uuid\", \"~entityUuid~\")));\n\n\t\tnew Thread(new PettyAnalyticsVisitor(db, renderer, domainEntity)).start();\n\t}\n} ",
+    "text" : "package ~packageName~;\n\nimport nextgen.domains.meta.DomainEntity;\nimport nextgen.st.STRenderer;\nimport nextgen.st.domain.STGroupModel;\nimport nextgen.st.model.STModelDB;\nimport org.neo4j.graphdb.*;\n\nimport java.util.*;\nimport java.io.File;\n\n~imports:{it|~it~};separator=\"\\n\"~\n\npublic class ~name~ implements Runnable {\n\n\tprivate final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n\tprivate final STModelDB db;\n\tprivate final STRenderer renderer;\n\tprivate final DomainEntity domainEntity;\n\n\tpublic ~name~(STModelDB db, STRenderer renderer, DomainEntity domainEntity) {\n\t\tthis.db = db;\n\t\tthis.renderer = renderer;\n\t\tthis.domainEntity = domainEntity;\n\t}\n\n\t@Override\n\tpublic void run() {\n\t\tdb.doInTransaction(transaction -> {\n\t\t\tfinal Visitor visitor = new Visitor();\n\t\t\tvisitor.visit~rootNode;format=\"capitalize\"~(domainEntity.getNode());\n\t\t\tvisitor.end();\n\t\t});\n\t}\n\n\tprivate static final class Visitor {\n\t\t\n\t\tprivate final Set<Node> visitedNodes = new LinkedHashSet<>();\n\n\t\tVisitor() {\n\t\t\t~initStatements~\n\t\t}\n\t\t\n\t\t~entityVisitors:{it|~it~};separator=\"\\n\\n\"~\n\n\t\t~relationVisitors:{it|~it~};separator=\"\\n\\n\"~\n\n\t\tvoid end() {\n\t\t\t~endStatements~\n\t\t}\n\n\t\tprivate Iterable<Relationship> get(Node node, String components) {\n\t\t\treturn node.getRelationships(Direction.OUTGOING, RelationshipType.withName(components));\n\t\t}\n\n\t\tprivate String getProperty(PropertyContainer propertyContainer, String name, String defaultValue) {\n\t\t\treturn propertyContainer.hasProperty(name) ? (String) propertyContainer.getProperty(name) : defaultValue;\n\t\t}\n\t}\n\n\tpublic static void main(String[] args) {\n\t\tfinal Collection<nextgen.st.domain.STGroupModel> stGroups = new ArrayList<>();\n\t\tfinal File templatesDir = new java.io.File(\"~templatesDir~\");\n\t\tOptional.ofNullable(templatesDir.listFiles(pathname -> pathname.isFile() && pathname.getName().toLowerCase().endsWith(\".json\")))\n\t\t\t.ifPresent(files -> {\n\t\t\t\tfor (java.io.File file : files)\n\t\t\t\t\tstGroups.add(new STGroupModel(nextgen.st.STParser.readJsonObject(file)));\n\t\t\t});\n\t\tfinal STModelDB db = new STModelDB(\"~dbDir~\", stGroups);\n\t\tfinal STRenderer renderer = new STRenderer(stGroups);\n\t\tfinal DomainEntity domainEntity = db.getInTransaction(transaction -> new DomainEntity(db.getDatabaseService().findNode(org.neo4j.graphdb.Label.label(\"DomainEntity\"), \"uuid\", \"~entityUuid~\")));\n\n\t\tnew Thread(new ~name~(db, renderer, domainEntity)).start();\n\t}\n} ",
     "parameters" : [ {
       "uuid" : "4b9c24be-1aa9-4bcc-8582-525dd993437f",
       "name" : "packageName",
@@ -358,6 +358,11 @@
       "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
+      "uuid" : "f5411379-5e21-4285-9b26-77a32215afa0",
+      "name" : "initStatements",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
       "uuid" : "81d5d77b-8a58-4d2d-9379-aedbf8314e39",
       "name" : "entityVisitors",
       "type" : "LIST",
@@ -366,6 +371,11 @@
       "uuid" : "63f852ef-c9c4-4cac-8f73-d9b2b519a347",
       "name" : "relationVisitors",
       "type" : "LIST",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "c7f25659-ade1-41f3-817e-e29d9c3e8f0e",
+      "name" : "endStatements",
+      "type" : "SINGLE",
       "argumentType" : "Object"
     }, {
       "uuid" : "23ba4680-e444-4e21-97ee-2e006102c987",
@@ -386,7 +396,7 @@
     "children" : [ {
       "uuid" : "4c1f71a4-c5b7-4aa4-911e-228049a52dca",
       "name" : "VisitNodeMethod",
-      "text" : "void visit~name;format=\"capitalize\"~(Node node) {\n\tlog.info(\"on node ~name;format=\"capitalize\"~\");\n\t~properties:{it|final String ~it.name~ = getProperty(node, \"~it.name~\", ~if(it.defaultValue)~~it.defaultValue~~else~null~endif~);};separator=\"\\n\"~\n\t\n\t~statements~\n\t\n\t~relations:{it|get(node, \"~it.name~\").forEach(this::visit~it.name;format=\"capitalize\"~);};separator=\"\\n\"~\n} ",
+      "text" : "void visit~name;format=\"capitalize\"~(Node node) {\n\tif (visitedNodes.contains(node)) return;\n\tvisitedNodes.add(node);\n\tlog.info(\"on node ~name;format=\"capitalize\"~\");\n\t~properties:{it|final String ~it.name~ = getProperty(node, \"~it.name~\", ~if(it.defaultValue)~~it.defaultValue~~else~null~endif~);};separator=\"\\n\"~\n~if(statements)~\n\t\n\t~statements~\n\t\n~endif~\t\n\t~relations:{it|get(node, \"~it.name~\").forEach(this::visit~it.name;format=\"capitalize\"~);};separator=\"\\n\"~\n} ",
       "parameters" : [ {
         "uuid" : "023734df-75fe-4e96-b25a-59a98b6d3726",
         "name" : "name",
@@ -425,7 +435,7 @@
     }, {
       "uuid" : "147ff4f4-1de1-4366-878f-242479539ea2",
       "name" : "VisitRelationMethod",
-      "text" : "void visit~name;format=\"capitalize\"~(Relationship relationship) {\n\tlog.info(\"on relation ~name;format=\"capitalize\"~\");\n\t~properties:{it|final String ~it.name~ = getProperty(node, \"~it.name~\", ~if(it.defaultValue)~~it.defaultValue~~else~null~endif~);};separator=\"\\n\"~\n\t\t\n\t~statements~\n\t\n\t~dst:{it|visit~it.name;format=\"capitalize\"~(relationship.getEndNode());};separator=\"\\n\"~\n} ",
+      "text" : "void visit~name;format=\"capitalize\"~(Relationship relationship) {\n\tlog.info(\"on relation ~name;format=\"capitalize\"~\");\n\t~properties:{it|final String ~it.name~ = getProperty(relationship, \"~it.name~\", ~if(it.defaultValue)~~it.defaultValue~~else~null~endif~);};separator=\"\\n\"~\n~if(statements)~\n\t\n\t~statements~\n\t\n~endif~\n\t~dst:{it|visit~it.name;format=\"capitalize\"~(relationship.getEndNode());};separator=\"\\n\"~\n} ",
       "parameters" : [ {
         "uuid" : "4d987c2c-6d3a-4bc9-803a-88610636dfb1",
         "name" : "name",

@@ -8,6 +8,8 @@ public class DomainVisitorRunner {
 	private Object _packageName;
 	private Object _name;
 	private Object _rootNode;
+	private Object _initStatements;
+	private Object _endStatements;
 	private Object _templatesDir;
 	private Object _dbDir;
 	private Object _entityUuid;
@@ -34,6 +36,8 @@ public class DomainVisitorRunner {
 		st.add("packageName", _packageName);
 		st.add("name", _name);
 		st.add("rootNode", _rootNode);
+		st.add("initStatements", _initStatements);
+		st.add("endStatements", _endStatements);
 		st.add("templatesDir", _templatesDir);
 		st.add("dbDir", _dbDir);
 		st.add("entityUuid", _entityUuid);
@@ -106,6 +110,50 @@ public class DomainVisitorRunner {
 
 	public DomainVisitorRunner removeRootNode() {
 		this._rootNode = null;
+		return this;
+	} 
+
+	public DomainVisitorRunner setInitStatements(Object value) {
+		this._initStatements = value;
+		return this;
+	}
+
+	public Object getInitStatements() {
+		return this._initStatements;
+	}
+
+	public Object getInitStatements(Object defaultValue) {
+		return this._initStatements == null ? defaultValue : this._initStatements;
+	}
+
+	public boolean hasInitStatements() {
+		return this._initStatements != null;
+	}
+
+	public DomainVisitorRunner removeInitStatements() {
+		this._initStatements = null;
+		return this;
+	} 
+
+	public DomainVisitorRunner setEndStatements(Object value) {
+		this._endStatements = value;
+		return this;
+	}
+
+	public Object getEndStatements() {
+		return this._endStatements;
+	}
+
+	public Object getEndStatements(Object defaultValue) {
+		return this._endStatements == null ? defaultValue : this._endStatements;
+	}
+
+	public boolean hasEndStatements() {
+		return this._endStatements != null;
+	}
+
+	public DomainVisitorRunner removeEndStatements() {
+		this._endStatements = null;
 		return this;
 	} 
 
@@ -276,7 +324,7 @@ public class DomainVisitorRunner {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "DomainVisitorRunner(packageName,imports,name,rootNode,entityVisitors,relationVisitors,templatesDir,dbDir,entityUuid) ::= <<package ~packageName~;\n" + 
+	static final String st = "DomainVisitorRunner(packageName,imports,name,rootNode,initStatements,entityVisitors,relationVisitors,endStatements,templatesDir,dbDir,entityUuid) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import nextgen.domains.meta.DomainEntity;\n" + 
 				"import nextgen.st.STRenderer;\n" + 
@@ -284,9 +332,7 @@ public class DomainVisitorRunner {
 				"import nextgen.st.model.STModelDB;\n" + 
 				"import org.neo4j.graphdb.*;\n" + 
 				"\n" + 
-				"import java.util.ArrayList;\n" + 
-				"import java.util.Collection;\n" + 
-				"import java.util.Optional;\n" + 
+				"import java.util.*;\n" + 
 				"import java.io.File;\n" + 
 				"\n" + 
 				"~imports:{it|~it~};separator=\"\\n\"~\n" + 
@@ -307,20 +353,32 @@ public class DomainVisitorRunner {
 				"	@Override\n" + 
 				"	public void run() {\n" + 
 				"		db.doInTransaction(transaction -> {\n" + 
-				"			new Visitor().visit~rootNode;format=\"capitalize\"~(domainEntity.getNode());\n" + 
+				"			final Visitor visitor = new Visitor();\n" + 
+				"			visitor.visit~rootNode;format=\"capitalize\"~(domainEntity.getNode());\n" + 
+				"			visitor.end();\n" + 
 				"		});\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	private static final class Visitor {\n" + 
+				"		\n" + 
+				"		private final Set<Node> visitedNodes = new LinkedHashSet<>();\n" + 
 				"\n" + 
+				"		Visitor() {\n" + 
+				"			~initStatements~\n" + 
+				"		}\n" + 
+				"		\n" + 
 				"		~entityVisitors:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
 				"		~relationVisitors:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
+				"		void end() {\n" + 
+				"			~endStatements~\n" + 
+				"		}\n" + 
+				"\n" + 
 				"		private Iterable<Relationship> get(Node node, String components) {\n" + 
 				"			return node.getRelationships(Direction.OUTGOING, RelationshipType.withName(components));\n" + 
 				"		}\n" + 
-				"		\n" + 
+				"\n" + 
 				"		private String getProperty(PropertyContainer propertyContainer, String name, String defaultValue) {\n" + 
 				"			return propertyContainer.hasProperty(name) ? (String) propertyContainer.getProperty(name) : defaultValue;\n" + 
 				"		}\n" + 

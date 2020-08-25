@@ -131,6 +131,20 @@ public class BaseTreeNode {
 				"		return set.stream();\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	protected TreePath find(java.util.function.Predicate<BaseTreeNode<?>~gt()~ predicate) {\n" + 
+				"		final int childCount = getChildCount();\n" + 
+				"		for (int i = 0; i < childCount; i++) {\n" + 
+				"			final BaseTreeNode<?> childAt = (BaseTreeNode<?>) getChildAt(i);\n" + 
+				"			if (predicate.test(childAt))\n" + 
+				"				return (childAt).getThisPath();\n" + 
+				"			else {\n" + 
+				"				final TreePath treePath = childAt.find(predicate);\n" + 
+				"				if (treePath != null) return treePath;\n" + 
+				"			}\n" + 
+				"		}\n" + 
+				"		return null;\n" + 
+				"	}\n" + 
+				"	\n" + 
 				"	protected TreePath getThisPath() {\n" + 
 				"		return new TreePath(getPath());\n" + 
 				"	}\n" + 

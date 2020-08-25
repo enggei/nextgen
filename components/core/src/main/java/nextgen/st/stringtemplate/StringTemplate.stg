@@ -1,6 +1,6 @@
 delimiters "~","~"
 
-DomainVisitorRunner(packageName,imports,name,rootNode,entityVisitors,relationVisitors,templatesDir,dbDir,entityUuid) ::= <<package ~packageName~;
+DomainVisitorRunner(packageName,imports,name,rootNode,initStatements,entityVisitors,relationVisitors,endStatements,templatesDir,dbDir,entityUuid) ::= <<package ~packageName~;
 
 import nextgen.domains.meta.DomainEntity;
 import nextgen.st.STRenderer;
@@ -8,9 +8,7 @@ import nextgen.st.domain.STGroupModel;
 import nextgen.st.model.STModelDB;
 import org.neo4j.graphdb.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 import java.io.File;
 
 ~imports:{it|~it~};separator="\n"~
@@ -31,20 +29,32 @@ public class ~name~ implements Runnable {
 	@Override
 	public void run() {
 		db.doInTransaction(transaction -> {
-			new Visitor().visit~rootNode;format="capitalize"~(domainEntity.getNode());
+			final Visitor visitor = new Visitor();
+			visitor.visit~rootNode;format="capitalize"~(domainEntity.getNode());
+			visitor.end();
 		});
 	}
 
 	private static final class Visitor {
+		
+		private final Set<Node> visitedNodes = new LinkedHashSet<>();
 
+		Visitor() {
+			~initStatements~
+		}
+		
 		~entityVisitors:{it|~it~};separator="\n\n"~
 
 		~relationVisitors:{it|~it~};separator="\n\n"~
 
+		void end() {
+			~endStatements~
+		}
+
 		private Iterable<Relationship> get(Node node, String components) {
 			return node.getRelationships(Direction.OUTGOING, RelationshipType.withName(components));
 		}
-		
+
 		private String getProperty(PropertyContainer propertyContainer, String name, String defaultValue) {
 			return propertyContainer.hasProperty(name) ? (String) propertyContainer.getProperty(name) : defaultValue;
 		}
@@ -67,20 +77,26 @@ public class ~name~ implements Runnable {
 }  >>
 
 VisitNodeMethod(name,properties,statements,relations) ::= <<void visit~name;format="capitalize"~(Node node) {
+	if (visitedNodes.contains(node)) return;
+	visitedNodes.add(node);
 	log.info("on node ~name;format="capitalize"~");
 	~properties:{it|final String ~it.name~ = getProperty(node, "~it.name~", ~if(it.defaultValue)~~it.defaultValue~~else~null~endif~);};separator="\n"~
+~if(statements)~
 	
 	~statements~
 	
+~endif~	
 	~relations:{it|get(node, "~it.name~").forEach(this::visit~it.name;format="capitalize"~);};separator="\n"~
 }  >>
 
 VisitRelationMethod(name,properties,statements,dst) ::= <<void visit~name;format="capitalize"~(Relationship relationship) {
 	log.info("on relation ~name;format="capitalize"~");
-	~properties:{it|final String ~it.name~ = getProperty(node, "~it.name~", ~if(it.defaultValue)~~it.defaultValue~~else~null~endif~);};separator="\n"~
-		
+	~properties:{it|final String ~it.name~ = getProperty(relationship, "~it.name~", ~if(it.defaultValue)~~it.defaultValue~~else~null~endif~);};separator="\n"~
+~if(statements)~
+	
 	~statements~
 	
+~endif~
 	~dst:{it|visit~it.name;format="capitalize"~(relationship.getEndNode());};separator="\n"~
 }  >>
 

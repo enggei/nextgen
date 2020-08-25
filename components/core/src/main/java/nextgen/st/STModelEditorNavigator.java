@@ -73,18 +73,20 @@ public class STModelEditorNavigator extends JPanel {
 					final Object lastPathComponent = selectionPath.getLastPathComponent();
 					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
 
-					if (lastPathComponent instanceof STModelTreeNode) {
-						final STModelTreeNode selectedNode = (STModelTreeNode) lastPathComponent;
-						editor.setText(presentationModel.renderInTransaction(selectedNode.getModel()), null);
-					} else if (lastPathComponent instanceof STValueTreeNode) {
-						final STValueTreeNode selectedNode = (STValueTreeNode) lastPathComponent;
-						editor.setText(presentationModel.renderInTransaction(selectedNode.getModel()), selectedNode);
-					} else if (lastPathComponent instanceof STKVArgumentTreeNode) {
-						final STKVArgumentTreeNode selectedNode = (STKVArgumentTreeNode) lastPathComponent;
-						editor.setText(presentationModel.renderInTransaction(selectedNode.getModel(), selectedNode.stParameter), null);
-					} else {
-						editor.setText("", null);
-					}
+					presentationModel.doInTransaction(transaction -> {
+						if (lastPathComponent instanceof STModelTreeNode) {
+							final STModelTreeNode selectedNode = (STModelTreeNode) lastPathComponent;
+							editor.setText(presentationModel.render(selectedNode.getModel()), null);
+						} else if (lastPathComponent instanceof STValueTreeNode) {
+							final STValueTreeNode selectedNode = (STValueTreeNode) lastPathComponent;
+							editor.setText(presentationModel.render(selectedNode.getModel()), selectedNode);
+						} else if (lastPathComponent instanceof STKVArgumentTreeNode) {
+							final STKVArgumentTreeNode selectedNode = (STKVArgumentTreeNode) lastPathComponent;
+							editor.setText(presentationModel.render(selectedNode.getModel(), selectedNode.stParameter), null);
+						} else {
+							editor.setText("", null);
+						}
+					});
 				}
 			}
 		});

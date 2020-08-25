@@ -7,8 +7,8 @@ public class Canvas {
 
 	private Object _packageName;
 	private Object _name;
-	private Object _baseCanvasRelation;
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
+	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<Object> _rightClickStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _actions = new java.util.ArrayList<>();
 	private java.util.List<Object> _canvasNodes = new java.util.ArrayList<>();
@@ -35,8 +35,8 @@ public class Canvas {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Canvas");
 		st.add("packageName", _packageName);
 		st.add("name", _name);
-		st.add("baseCanvasRelation", _baseCanvasRelation);
 		for (Object o : _constructorStatements) st.add("constructorStatements", o);
+		for (Object o : _methods) st.add("methods", o);
 		for (Object o : _rightClickStatements) st.add("rightClickStatements", o);
 		for (Object o : _actions) st.add("actions", o);
 		for (Object o : _canvasNodes) st.add("canvasNodes", o);
@@ -91,28 +91,6 @@ public class Canvas {
 		return this;
 	} 
 
-	public Canvas setBaseCanvasRelation(Object value) {
-		this._baseCanvasRelation = value;
-		return this;
-	}
-
-	public Object getBaseCanvasRelation() {
-		return this._baseCanvasRelation;
-	}
-
-	public Object getBaseCanvasRelation(Object defaultValue) {
-		return this._baseCanvasRelation == null ? defaultValue : this._baseCanvasRelation;
-	}
-
-	public boolean hasBaseCanvasRelation() {
-		return this._baseCanvasRelation != null;
-	}
-
-	public Canvas removeBaseCanvasRelation() {
-		this._baseCanvasRelation = null;
-		return this;
-	} 
-
 	public Canvas addConstructorStatements(Object value) {
 		this._constructorStatements.add(value);
 		return this;
@@ -140,6 +118,35 @@ public class Canvas {
 
 	public java.util.List<Object> getConstructorStatements() {
 		return this._constructorStatements;
+	} 
+
+	public Canvas addMethods(Object value) {
+		this._methods.add(value);
+		return this;
+	}
+
+	public Canvas setMethods(Object[] value) {
+		this._methods.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Canvas setMethods(java.util.Collection<Object> values) {
+		this._methods.addAll(values);
+		return this;
+	}
+
+	public Canvas removeMethods(Object value) {
+		this._methods.remove(value);
+		return this;
+	}
+
+	public Canvas removeMethods(int index) {
+		this._methods.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getMethods() {
+		return this._methods;
 	} 
 
 	public Canvas addRightClickStatements(Object value) {
@@ -398,9 +405,8 @@ public class Canvas {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Canvas(packageName,name,fields,constructorStatements,rightClickStatements,rightClickActions,keyPressActions,baseCanvasRelation,actions,canvasNodes,canvasRelations) ::= <<package ~packageName~;\n" + 
+	static final String st = "Canvas(packageName,name,fields,constructorStatements,methods,rightClickStatements,rightClickActions,keyPressActions,actions,canvasNodes,canvasRelations) ::= <<package ~packageName~;\n" + 
 				"\n" + 
-				"import nextgen.st.canvas.*;\n" + 
 				"import nextgen.utils.SwingUtil;\n" + 
 				"import org.piccolo2d.PCamera;\n" + 
 				"import org.piccolo2d.PCanvas;\n" + 
@@ -434,8 +440,8 @@ public class Canvas {
 				"	private final PLayer nodeLayer;\n" + 
 				"	private final PLayer relationLayer = new PLayer();\n" + 
 				"\n" + 
-				"	final Map<UUID, BaseCanvasNode> nodeMap = new ConcurrentHashMap<>();\n" + 
-				"	final Map<UUID, BaseCanvasRelation> relationMap = new ConcurrentHashMap<>();\n" + 
+				"	final Map<String, BaseCanvasNode<?~gt()~> nodeMap = new ConcurrentHashMap<>();\n" + 
+				"	final Map<String, BaseCanvasRelation> relationMap = new ConcurrentHashMap<>();\n" + 
 				"\n" + 
 				"	private final SelectEventsHandler selectEventHandler = new SelectEventsHandler();\n" + 
 				"	private final CanvasInputEventsHandler canvasInputEventsHandler = new CanvasInputEventsHandler();\n" + 
@@ -459,6 +465,12 @@ public class Canvas {
 				"		~constructorStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	public ~name~ thisCanvas() {\n" + 
+				"		return this;\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
+				"\n" + 
 				"	@Override\n" + 
 				"	public void processEvent(PInputEvent pInputEvent, int i) {\n" + 
 				"		canvasInputEventsHandler.processEvent(pInputEvent, i);\n" + 
@@ -476,21 +488,21 @@ public class Canvas {
 				"		return new Point((int) localToView.getX(), (int) localToView.getY());\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public <N extends BaseCanvasNode> void centerNode(N node) {\n" + 
+				"	public void centerNode(BaseCanvasNode<?> node) {\n" + 
 				"		SwingUtilities.invokeLater(() -> getCamera().animateViewToCenterBounds(node.getGlobalFullBounds(), false, 500));\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@SuppressWarnings(\"unchecked\")\n" + 
-				"	public <N extends BaseCanvasNode> Stream<N> getAllNodes() {\n" + 
+				"	public Stream<BaseCanvasNode<?~gt()~> getAllNodes() {\n" + 
 				"		return nodeLayer.getAllNodes().stream().filter((Predicate<PNode>) node -> node instanceof BaseCanvasNode);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public <N extends BaseCanvasNode> Stream<N> getSelectedNodes() {\n" + 
-				"		return (Stream<N>) getAllNodes().filter(BaseCanvasNode::isSelected);\n" + 
+				"	public Stream<BaseCanvasNode<?~gt()~> getSelectedNodes() {\n" + 
+				"		return getAllNodes().filter(BaseCanvasNode::isSelected);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public <N extends BaseCanvasNode> Stream<N> getUnselectedNodes() {\n" + 
-				"		return (Stream<N>) getAllNodes().filter(stNode -> !stNode.isSelected());\n" + 
+				"	public Stream<BaseCanvasNode<?~gt()~> getUnselectedNodes() {\n" + 
+				"		return getAllNodes().filter(stNode -> !stNode.isSelected());\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@SuppressWarnings(\"unchecked\")\n" + 
@@ -502,15 +514,11 @@ public class Canvas {
 				"		return (Stream<R>) getAllRelations().filter(BaseCanvasRelation::isSelected);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public <N extends BaseCanvasNode> N addNode(String uuid, java.util.function.Supplier<N> supplier) {\n" + 
-				"		return addNode(java.util.UUID.fromString(uuid), supplier);\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	public <N extends BaseCanvasNode> N addNode(N node) {\n" + 
+				"	public <N extends BaseCanvasNode<?~gt()~> N addNode(N node) {\n" + 
 				"		return addNode(node.getUuid(), () -> node);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public <N extends BaseCanvasNode> N addNode(java.util.UUID uuid, java.util.function.Supplier<N> supplier) {\n" + 
+				"	public <N extends BaseCanvasNode<?~gt()~> N addNode(String uuid, java.util.function.Supplier<N> supplier) {\n" + 
 				"\n" + 
 				"		final N existing = getNode(uuid);\n" + 
 				"		if (existing != null) {\n" + 
@@ -535,18 +543,19 @@ public class Canvas {
 				"				.filter(stNode -> !stNode.getUuid().equals(node.getUuid()))\n" + 
 				"				.forEach(stNode -> stNode.newNodeAdded(node));\n" + 
 				"\n" + 
+				"		SwingUtilities.invokeLater(() -> {\n" + 
+				"			node.refresh();\n" + 
+				"			centerNode(node);\n" + 
+				"		});\n" + 
+				"\n" + 
 				"		return node;\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public <N extends BaseCanvasNode> N getNode(String uuid) {\n" + 
-				"		return getNode(java.util.UUID.fromString(uuid));\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	public <N extends BaseCanvasNode> N getNode(UUID uuid) {\n" + 
+				"	public <N extends BaseCanvasNode<?~gt()~> N getNode(String uuid) {\n" + 
 				"		return (N) nodeMap.get(uuid);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	<N extends BaseCanvasNode> N removeNode(UUID uuid) {\n" + 
+				"	<N extends BaseCanvasNode<?~gt()~> N removeNode(String uuid) {\n" + 
 				"		final BaseCanvasNode remove = nodeMap.remove(uuid);\n" + 
 				"		final N old = (N) nodeLayer.removeChild(remove);\n" + 
 				"		log.debug(\"\\tN-\"+ uuid + \" removed from canvas : \" + (old == null ? \"null\" : old.getUuid()));\n" + 
@@ -554,10 +563,6 @@ public class Canvas {
 				"	}\n" + 
 				"\n" + 
 				"	public <R extends BaseCanvasRelation> R addRelation(String uuid, java.util.function.Supplier<R> supplier) {\n" + 
-				"		return addRelation(java.util.UUID.fromString(uuid), supplier);\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	public <R extends BaseCanvasRelation> R addRelation(java.util.UUID uuid, java.util.function.Supplier<R> supplier) {\n" + 
 				"\n" + 
 				"		final R existing = getRelation(uuid);\n" + 
 				"		if (existing != null) {\n" + 
@@ -572,7 +577,7 @@ public class Canvas {
 				"		return relation;\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	<R extends BaseCanvasRelation> R removeRelation(UUID uuid) {\n" + 
+				"	<R extends BaseCanvasRelation> R removeRelation(String uuid) {\n" + 
 				"		final BaseCanvasRelation remove = relationMap.remove(uuid);\n" + 
 				"		if (remove == null) return null;\n" + 
 				"\n" + 
@@ -582,7 +587,7 @@ public class Canvas {
 				"		return (R) remove;\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public <R extends BaseCanvasRelation> R getRelation(UUID uuid) {\n" + 
+				"	public <R extends BaseCanvasRelation> R getRelation(String uuid) {\n" + 
 				"		return (R) relationMap.get(uuid);\n" + 
 				"	}\n" + 
 				"\n" + 
@@ -590,7 +595,7 @@ public class Canvas {
 				"\n" + 
 				"		~rightClickStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
-				"		~rightClickActions:{it|pop.add(new ~it.name~(this, event));};separator=\"\\n\"~\n" + 
+				"		~rightClickActions:{it|pop.add(new ~it.name~(event));};separator=\"\\n\"~\n" + 
 				"		pop.addSeparator();\n" + 
 				"		pop.add(new SelectAllNodes(event));\n" + 
 				"		pop.add(new UnselectAllNodes(event));\n" + 
@@ -666,7 +671,7 @@ public class Canvas {
 				"					setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));\n" + 
 				"					onCanvasRightClick(pop, event);\n" + 
 				"					setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));\n" + 
-				"					pop.show(~name~.this, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());\n" + 
+				"					pop.show(thisCanvas(), (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());\n" + 
 				"				});\n" + 
 				"			} else if (event.isLeftMouseButton()) SwingUtilities.invokeLater(() -> onCanvasLeftClick(event));\n" + 
 				"		}\n" + 
@@ -779,11 +784,11 @@ public class Canvas {
 				"		abstract void actionPerformed(PInputEvent event, ActionEvent e);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	~baseCanvasNode(canvasName=name)~\n" + 
+				"	~BaseCanvasNode()~\n" + 
 				"\n" + 
-				"	~baseCanvasRelation~\n" + 
+				"	~BaseCanvasRelation()~\n" + 
 				"\n" + 
-				"	~actions:{it|~it~};separator=\"\\n\"~\n" + 
+				"	~actions:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
 				"	~canvasNodes:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 

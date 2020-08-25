@@ -7,6 +7,9 @@ public class WebVerticle {
 
 	private String _packageName;
 	private String _name;
+	private java.util.List<Object> _imports = new java.util.ArrayList<>();
+	private java.util.List<Object> _startStatements = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _routes = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _rawRoutes = new java.util.ArrayList<>();
 
@@ -28,6 +31,9 @@ public class WebVerticle {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("WebVerticle");
 		st.add("packageName", _packageName);
 		st.add("name", _name);
+		for (Object o : _imports) st.add("imports", o);
+		for (Object o : _startStatements) st.add("startStatements", o);
+		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name,init}", map.get("type"), map.get("name"), map.get("init"));
 		for (java.util.Map<String, Object> map : _routes) st.addAggr("routes.{action,url,methodName,declaration}", map.get("action"), map.get("url"), map.get("methodName"), map.get("declaration"));
 		for (java.util.Map<String, Object> map : _rawRoutes) st.addAggr("rawRoutes.{action,url,methodName,declaration}", map.get("action"), map.get("url"), map.get("methodName"), map.get("declaration"));
 		return st.render().trim();
@@ -77,6 +83,116 @@ public class WebVerticle {
 		return this;
 	} 
 
+	public WebVerticle addImports(Object value) {
+		this._imports.add(value);
+		return this;
+	}
+
+	public WebVerticle setImports(Object[] value) {
+		this._imports.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public WebVerticle setImports(java.util.Collection<Object> values) {
+		this._imports.addAll(values);
+		return this;
+	}
+
+	public WebVerticle removeImports(Object value) {
+		this._imports.remove(value);
+		return this;
+	}
+
+	public WebVerticle removeImports(int index) {
+		this._imports.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getImports() {
+		return this._imports;
+	} 
+
+	public WebVerticle addStartStatements(Object value) {
+		this._startStatements.add(value);
+		return this;
+	}
+
+	public WebVerticle setStartStatements(Object[] value) {
+		this._startStatements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public WebVerticle setStartStatements(java.util.Collection<Object> values) {
+		this._startStatements.addAll(values);
+		return this;
+	}
+
+	public WebVerticle removeStartStatements(Object value) {
+		this._startStatements.remove(value);
+		return this;
+	}
+
+	public WebVerticle removeStartStatements(int index) {
+		this._startStatements.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getStartStatements() {
+		return this._startStatements;
+	} 
+
+	public WebVerticle addFields(Object _type, Object _name, Object _init) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("type", _type);
+		map.put("name", _name);
+		map.put("init", _init);
+		this._fields.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getFields() {
+		return this._fields;
+	}
+
+	public WebVerticle addFields(WebVerticle_Fields value) {
+		return addFields(value._type, value._name, value._init);
+	}
+
+	public java.util.stream.Stream<WebVerticle_Fields> streamFields() {
+		return this._fields.stream().map(WebVerticle_Fields::new);
+	}
+
+	public static final class WebVerticle_Fields {
+
+		Object _type;
+		Object _name;
+		Object _init;
+
+		public WebVerticle_Fields(Object _type, Object _name, Object _init) {
+			this._type = _type;
+			this._name = _name;
+			this._init = _init;
+		}
+
+		private WebVerticle_Fields(java.util.Map<String, Object> map) {
+			this._type = (Object) map.get("type");
+			this._name = (Object) map.get("name");
+			this._init = (Object) map.get("init");
+		}
+
+		public Object getType() {
+			return this._type;
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getInit() {
+			return this._init;
+		}
+
+	} 
 
 	public WebVerticle addRoutes(String _action, String _url, String _methodName, RouteHandler _declaration) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -213,10 +329,8 @@ public class WebVerticle {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "WebVerticle(packageName,name,routes,rawRoutes) ::= <<package ~packageName~;\n" + 
+	static final String st = "WebVerticle(packageName,imports,name,fields,startStatements,routes,rawRoutes) ::= <<package ~packageName~;\n" + 
 				"\n" + 
-				"import com.securityx.web.api.LoginRequest;\n" + 
-				"import com.securityx.web.domain.*;\n" + 
 				"import io.vertx.core.AbstractVerticle;\n" + 
 				"import io.vertx.core.Future;\n" + 
 				"import io.vertx.core.Vertx;\n" + 
@@ -239,40 +353,29 @@ public class WebVerticle {
 				"import java.util.Optional;\n" + 
 				"import java.util.concurrent.atomic.AtomicInteger;\n" + 
 				"\n" + 
-				"import static com.securityx.web.PasswordUtils.verifyUserPassword;\n" + 
-				"import static com.securityx.web.WebUtils.sendErrors;\n" + 
-				"import static com.securityx.web.WebUtils.sendResponse;\n" + 
-				"import static com.securityx.web.api.WebApiJsonFactory.newJWTPayload;\n" + 
-				"import static com.securityx.web.api.WebApiJsonFactory.newLoginRequest;\n" + 
-				"import static com.securityx.web.domain.ServerJsonFactory.newUserMenu;\n" + 
-				"import static com.securityx.web.domain.ServerJsonFactory.newUserSession;\n" + 
 				"import static io.netty.handler.codec.http.HttpResponseStatus.*;\n" + 
+				"\n" + 
+				"~imports:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"public class ~name;format=\"capitalize\"~ extends AbstractVerticle {\n" + 
 				"\n" + 
 				"	protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name;format=\"capitalize\"~.class);\n" + 
 				"\n" + 
+				"	~fields:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
+				"	\n" + 
 				"	@Override\n" + 
 				"	public void start(Future<Void> startFuture) throws Exception {\n" + 
-				"		log.info(\"starting\");\n" + 
+				"		log.info(\"starting ~name;format=\"capitalize\"~\");\n" + 
 				"\n" + 
-				"		final ~name;format=\"capitalize\"~Config config = new ~name;format=\"capitalize\"~Config(config());\n" + 
-				"\n" + 
-				"		final KeyStoreOptions keyStoreOptions = new KeyStoreOptions().\n" + 
-				"					setPath(config.getJwt().getPath()).\n" + 
-				"					setPassword(config.getJwt().getPassword()).\n" + 
-				"					setType(config.getJwt().getType());\n" + 
-				"\n" + 
-				"		final JWTAuthOptions jwtAuthOptions = new JWTAuthOptions().setKeyStore(keyStoreOptions);\n" + 
-				"		final JWTAuth auth = JWTAuth.create(vertx, jwtAuthOptions);\n" + 
-				"\n" + 
+				"		~startStatements:{it|~it~};separator=\"\\n\"~\n" + 
+				"		\n" + 
 				"		final Router router = Router.router(vertx);\n" + 
 				"		router.route().handler(BodyHandler.create());\n" + 
 				"		router.route().handler(SessionHandler.create(LocalSessionStore.create(vertx)));\n" + 
 				"		router.post(\"/login\").handler(routingContext -> login(routingContext, auth, config));\n" + 
 				"		router.route(\"/api/*\").handler(JWTAuthHandler.create(auth, \"/login\"));\n" + 
 				"		router.get(\"/user\").handler(routingContext -> getUser(routingContext, config));\n" + 
-				"		~routes:{it|router.~it.action~(\"/api/~it.url~\").handler(this::~it.methodName~);};separator=\"\\n\"~\n" + 
+				"		~routes:{it|router.~it.action~(\"/~it.url~\").handler(this::~it.methodName~);};separator=\"\\n\"~\n" + 
 				"		~rawRoutes:{it|router.~it.action~(\"~it.url~\").handler(this::~it.methodName~);};separator=\"\\n\"~\n" + 
 				"		\n" + 
 				"		final HttpServerOptions serverOptions = new HttpServerOptions();\n" + 

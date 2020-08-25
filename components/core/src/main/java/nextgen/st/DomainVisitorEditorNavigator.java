@@ -223,6 +223,58 @@ public class DomainVisitorEditorNavigator extends JPanel {
 		}
 	}
 
+	// InitStatementsTreeNode
+	public class InitStatementsTreeNode extends BaseTreeNode<String> {
+
+		InitStatementsTreeNode(String model) {
+			super(model, null);
+
+			this.label = "Init";
+			this.tooltip = "";
+
+		}
+
+		@Override
+		public void nodeChanged() {
+			this.label = "Init";
+			this.tooltip = "";
+			super.nodeChanged();
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+			return actions;
+		}
+
+	}
+
+	// EndStatementsTreeNode
+	public class EndStatementsTreeNode extends BaseTreeNode<String> {
+
+		EndStatementsTreeNode(String model) {
+			super(model, null);
+
+			this.label = "End";
+			this.tooltip = "";
+
+		}
+
+		@Override
+		public void nodeChanged() {
+			this.label = "End";
+			this.tooltip = "";
+			super.nodeChanged();
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+			return actions;
+		}
+
+	}
+
 	// EntityVisitorTreeNode
 	public class EntityVisitorTreeNode extends BaseTreeNode<nextgen.domains.meta.EntityVisitorMethod> {
 
@@ -283,6 +335,9 @@ public class DomainVisitorEditorNavigator extends JPanel {
 
 			this.label = getModel().getName();
 			this.tooltip = "";
+
+			add(new InitStatementsTreeNode(model.getInitStatements("")));
+			add(new EndStatementsTreeNode(model.getEndStatements("")));
 
 			model.getIncomingVisitorsMetaDomain().forEach(metaDomain -> {
 				final MetaDomainVisitor metaDomainVisitor = new MetaDomainVisitor();
