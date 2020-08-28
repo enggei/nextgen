@@ -1943,5 +1943,6 @@
     "uuid" : "49ff2457-f2d9-4b42-b4ce-6d0c91bb85db",
     "name" : "Statement"
   } ],
-  "icon" : "language-java"
+  "icon" : "language-java",
+  "tags" : "java"
 }

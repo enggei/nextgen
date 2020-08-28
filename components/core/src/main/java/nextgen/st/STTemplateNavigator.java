@@ -105,7 +105,7 @@ public class STTemplateNavigator extends JPanel {
 			}
 		});
 
-		setPreferredSize(new Dimension(400, 500));
+		setPreferredSize(new Dimension(450, 500));
 		add(new JScrollPane(tree), BorderLayout.CENTER);
 
 		org.greenrobot.eventbus.EventBus.getDefault().register(this);
@@ -359,6 +359,9 @@ public class STTemplateNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
+			actions.add(newAction("Set Tags", actionEvent -> {
+				presentationModel.doLaterInTransaction(transaction -> presentationModel.editSTGroupTags(tree, getModel()));
+			}));
 			actions.add(newAction("Import From File", actionEvent -> {
 				SwingUtil.showOpenFile(tree, presentationModel.getLastDir())
 					.ifPresent(file -> {

@@ -13,5 +13,6 @@
       "text" : "sudo utserver -settingspath /opt/utorrent-server-alpha-v3_3/ &",
       "parameters" : [ ]
     } ]
-  } ]
+  } ],
+  "tags" : "test,demo"
 }

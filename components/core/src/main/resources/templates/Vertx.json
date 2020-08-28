@@ -414,5 +414,6 @@
       "name" : "JsonObjectType",
       "lexical" : "io.vertx.core.json.JsonObject"
     } ]
-  } ]
+  } ],
+  "tags" : "java"
 }

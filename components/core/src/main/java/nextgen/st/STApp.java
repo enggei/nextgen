@@ -71,10 +71,10 @@ public class STApp extends JFrame {
                UIManager.put("ToolTip.foreground", Color.BLACK);
 
                final Set<String> fonts = new HashSet<>(Arrays.asList(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
-               Stream.of("Hack", "Fira Code", "Source Code Pro", "Monospaced")
+               Stream.of("InputMono", "Hack", "Fira Code", "Source Code Pro", "Monospaced")
                      .filter(fonts::contains)
                      .findFirst()
-                     .map(fontName -> UIManager.put("ToolTip.font", new Font(fontName, Font.PLAIN, config.getEditorFontSize(12))));
+                     .map(fontName -> UIManager.put("ToolTip.font", new Font(fontName, Font.PLAIN, config.getEditorFontSize(14))));
 
             } catch (Exception e) {
                System.err.println("Could not set look and feel '" + "Nimbus" + "': " + e.getMessage());

@@ -23,7 +23,6 @@ public class NextgenProject extends BaseNextgenProject {
                 .addRelations(newStringField("type"))
                 .addRelations(newStringField("defaultValue"));
 
-
         final Entity metaEntity = newEntity("MetaEntity")
                 .addRelations(newStringField("uuid"))
                 .addRelations(newStringField("name"))
@@ -61,12 +60,10 @@ public class NextgenProject extends BaseNextgenProject {
                 .addRelations(newOneToMany("properties", metaProperty))
                 .addRelations(newOneToMany("visitors", domainVisitor));
 
-
         // models
         final Entity domainEntity = newEntity("DomainEntity")
                 .addRelations(newStringField("uuid"))
                 .addRelations(newRef("_meta", metaEntity));
-
 
         return newDomain("MetaDomain")
                 .addEntities(metaDomain)

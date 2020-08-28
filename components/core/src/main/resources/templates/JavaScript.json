@@ -881,5 +881,6 @@
   } ],
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/React.stg",
   "icon" : "language-javascript",
-  "enums" : [ ]
+  "enums" : [ ],
+  "tags" : "javascript"
 }

@@ -132,6 +132,13 @@ public class STAppPresentationModel {
       relationshipTo.setProperty("_uuid", UUID.randomUUID().toString());
    }
 
+   public void editSTGroupTags(JComponent parent, STGroupModel model) {
+      nextgen.utils.SwingUtil.showInputDialog("Tags", parent, model.getTags(""), tags -> {
+         model.setTags(tags);
+         save(model);
+      });
+   }
+
    public void addKVArgument(STModel stModel, STParameter stParameter, Component owner, Consumer<STArgument> stArgumentConsumer) {
       final Map<STParameterKey, JTextField> fieldMap = new LinkedHashMap<>();
       stParameter.getKeys().forEach(stParameterKey -> fieldMap.put(stParameterKey, newTextField(15)));
