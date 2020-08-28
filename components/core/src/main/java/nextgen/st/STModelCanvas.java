@@ -64,6 +64,11 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
+	public void onOpenScript(nextgen.st.STAppEvents.OpenScript event) {
+		presentationModel.doLaterInTransaction(transaction -> addScriptNode(event.script));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
 	public void onNewMetaDomain(nextgen.st.STAppEvents.NewMetaDomain event) {
 		presentationModel.doLaterInTransaction(transaction -> addMetaDomainNode(event.metaDomain));
 	}
@@ -804,6 +809,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			void actionPerformed(PInputEvent event, ActionEvent e) {
 				javax.swing.SwingUtilities.invokeLater(() -> {
 					thisCanvas().getAllRelations().forEach(relation -> thisCanvas().removeRelation(relation.getUuid()));
+					thisCanvas().relationLayer.removeAllChildren();
 					thisCanvas().getAllNodes().filter(canvasNode -> !canvasNode.getUuid().equals(getUuid())).forEach(BaseCanvasNode::close);
 				});
 			}
@@ -1622,6 +1628,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 		@Override
 		protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
+			pop.add(new Edit(event));
 			pop.add(new NewMetaProperty(event));
 			pop.add(new AddDstAction(event));
 			pop.add(new Delete(event));
@@ -1643,6 +1650,24 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			super.onNodeKeyPressed(event);
 		}
 
+
+		final class Edit extends NodeAction {
+
+
+			Edit(PInputEvent event) {
+				super("Edit", event);
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+				presentationModel.doLaterInTransaction(transaction -> {
+					nextgen.utils.SwingUtil.showInputDialog("Name", thisCanvas(), getModel().getName(), s -> thisCanvas().presentationModel.doLaterInTransaction(tx -> {
+						getModel().setName(s);
+						thisNode().setText(getModel().getName());
+					}));
+				});
+			}
+		}
 
 		final class NewMetaProperty extends NodeAction {
 
@@ -1980,6 +2005,13 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			pop.add(new Expand(event));
 			super.onNodeRightClick(event, pop);
 		}
+
+		@Override
+		protected void onNodeLeftClick(PInputEvent event) {
+			super.onNodeLeftClick(event);
+			presentationModel.doLaterInTransaction(tx -> setText(presentationModel.render(getModel())));
+		}
+
 
 		@Override
 		protected void onNodeKeyPressed(PInputEvent event) {
@@ -3701,6 +3733,9 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
+				presentationModel.doLaterInTransaction(transaction -> presentationModel.setMultiple(thisCanvas(), getModel(), stTemplate, stModel -> {
+					setText(presentationModel.render(getModel()));
+				}));
 			}
 		}
 

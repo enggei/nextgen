@@ -85,6 +85,19 @@ public class STGroupModel {
 		return jsonObject.getString("icon", defaultValue);
 	}
 
+	public STGroupModel setTags(String value) { 
+		jsonObject.put("tags", value);
+		return this;
+	}
+
+	public String getTags() { 
+		return jsonObject.getString("tags");
+	}
+
+	public String getTags(String defaultValue) { 
+		return jsonObject.getString("tags", defaultValue);
+	}
+
 	public STGroupModel addTemplates(STTemplate value) { 
 		io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("templates");
 		if (jsonArray == null) jsonObject.put("templates", jsonArray = new io.vertx.core.json.JsonArray());

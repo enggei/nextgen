@@ -283,89 +283,73 @@
   }, {
     "uuid" : "d128bcda-0d12-4d30-ab1b-6534a3c38e4e",
     "name" : "WebVerticle",
-    "text" : "package ~packageName~;\n\nimport io.vertx.core.AbstractVerticle;\nimport io.vertx.core.Future;\nimport io.vertx.core.Vertx;\nimport io.vertx.core.eventbus.DeliveryOptions;\nimport io.vertx.core.http.HttpServerOptions;\nimport io.vertx.core.json.JsonObject;\nimport io.vertx.core.net.PemKeyCertOptions;\nimport io.vertx.ext.auth.KeyStoreOptions;\nimport io.vertx.ext.auth.jwt.JWTAuth;\nimport io.vertx.ext.auth.jwt.JWTAuthOptions;\nimport io.vertx.ext.jwt.JWTOptions;\nimport io.vertx.ext.web.Router;\nimport io.vertx.ext.web.RoutingContext;\nimport io.vertx.ext.web.handler.BodyHandler;\nimport io.vertx.ext.web.handler.JWTAuthHandler;\nimport io.vertx.ext.web.handler.SessionHandler;\nimport io.vertx.ext.web.handler.StaticHandler;\nimport io.vertx.ext.web.sstore.LocalSessionStore;\n\nimport java.util.Optional;\nimport java.util.concurrent.atomic.AtomicInteger;\n\nimport static io.netty.handler.codec.http.HttpResponseStatus.*;\n\n~imports:{it|~it~};separator=\"\\n\"~\n\npublic class ~name;format=\"capitalize\"~ extends AbstractVerticle {\n\n\tprotected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name;format=\"capitalize\"~.class);\n\n\t~fields:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n\t\n\t@Override\n\tpublic void start(Future<Void> startFuture) throws Exception {\n\t\tlog.info(\"starting ~name;format=\"capitalize\"~\");\n\n\t\t~startStatements:{it|~it~};separator=\"\\n\"~\n\t\t\n\t\tfinal Router router = Router.router(vertx);\n\t\trouter.route().handler(BodyHandler.create());\n\t\trouter.route().handler(SessionHandler.create(LocalSessionStore.create(vertx)));\n\t\trouter.post(\"/login\").handler(routingContext -> login(routingContext, auth, config));\n\t\trouter.route(\"/api/*\").handler(JWTAuthHandler.create(auth, \"/login\"));\n\t\trouter.get(\"/user\").handler(routingContext -> getUser(routingContext, config));\n\t\t~routes:{it|router.~it.action~(\"/~it.url~\").handler(this::~it.methodName~);};separator=\"\\n\"~\n\t\t~rawRoutes:{it|router.~it.action~(\"~it.url~\").handler(this::~it.methodName~);};separator=\"\\n\"~\n\t\t\n\t\tfinal HttpServerOptions serverOptions = new HttpServerOptions();\n\t\tfinal Optional<SSLConfig> ssl = Optional.ofNullable(config.getSsl());\n\n\t\tssl.ifPresent(sslConfig ->\n\t\t\t\tserverOptions\n\t\t\t\t\t\t.setSsl(true)\n\t\t\t\t\t\t.setPemKeyCertOptions(\n\t\t\t\t\t\t\t\tnew PemKeyCertOptions().\n\t\t\t\t\t\t\t\t\t\t\tsetKeyPath(sslConfig.getKey()).\n\t\t\t\t\t\t\t\t\t\t\tsetCertPath(sslConfig.getCert())));\n\n\t\tfinal StaticHandler staticHandler = StaticHandler.create();\n\t\tstaticHandler.setWebRoot(config.getWebRoot());\n\t\tstaticHandler.setCachingEnabled(false);\n\t\tstaticHandler.setIndexPage(\"index.html\");\n\t\trouter.route(\"/*\").handler(staticHandler);\n\n\t\tvertx.createHttpServer(serverOptions).requestHandler(router::accept).listen(config.getPort());\n\n\t\tlog.info(\"server running on \" + (ssl.isPresent() ? \"https\" : \"http\") + \"://\" + config.getTcpHost() + \":\" + config.getPort());\n\t\tlog.info(\"server running on \" + (ssl.isPresent() ? \"https\" : \"http\") + \"://\" + config.getTcpName(\"securityxresidential.info\") + \":\" + config.getPort());\n\n\t\tstartFuture.succeeded();\n\t}\n\n\tprivate void login(RoutingContext routingContext, JWTAuth auth, ~name;format=\"capitalize\"~Config deploymentOptions) {\n\t\tWebUtils.debug(\"login\", routingContext);\n\n\t\tfinal LoginRequest loginRequest = newLoginRequest(routingContext.getBodyAsJson());\n\n\t\tfinal Optional<UserConfig> foundUserConfig = deploymentOptions.getJwt().getUsers()\n\t\t\t\t.filter(userConfig -> userConfig.getUsername() != null && userConfig.getPassword() != null)\n\t\t\t\t.filter(userConfig -> userConfig.getUsername().equals(loginRequest.getUsername()))\n\t\t\t\t.findFirst();\n\n\t\tif (!foundUserConfig.isPresent()) {\n\t\t\tsendErrors(routingContext, UNAUTHORIZED, \"User credentials not found\");\n\t\t\treturn;\n\t\t}\n\n\t\tfinal boolean passwordMatch = verifyUserPassword(loginRequest.getPassword(), foundUserConfig.get().getPassword(), foundUserConfig.get().getSalt());\n\n\t\tif (!passwordMatch) {\n\t\t\tsendErrors(routingContext, UNAUTHORIZED, \"User credentials not found\");\n\t\t\treturn;\n\t\t}\n\n\t\tfinal UserSession userSession = newUserSession()\n\t\t\t.setToken(auth.generateToken(\n\t\t\t\t\tnewJWTPayload()\n\t\t\t\t\t\t\t.setSub(foundUserConfig.get().getUsername())\n\t\t\t\t\t\t\t.getJsonObject(),\n\t\t\t\t\tnew JWTOptions()\n\t\t\t\t\t\t\t.setExpiresInMinutes(deploymentOptions.getJwt().getExpiresInMinutes())\n\t\t\t\t\t\t\t.setSubject(foundUserConfig.get().getUsername())))\n\t\t\t.setUsername(foundUserConfig.get().getUsername());\n\n\t\tfinal AtomicInteger id = new AtomicInteger(0);\n\t\tfoundUserConfig.get().getAccess()\n\t\t\t.forEach(webPageAccessSettings -> userSession.addMenus(newUserMenu()\n\t\t\t\t\t\t.setKey(id.incrementAndGet())\n\t\t\t\t\t\t.setLabel(webPageAccessSettings.getLabel())\n\t\t\t\t\t\t.setUrl(webPageAccessSettings.getUrl())));\n\n\t\tfoundUserConfig.get().setSession(userSession);\n\n\t\tsendResponse(routingContext, OK, new JsonObject().put(\"user\", userSession.getJsonObject()));\n\t}\n\n\tprivate void getUser(RoutingContext routingContext, ~name;format=\"capitalize\"~Config deploymentOptions) {\n\t\tWebUtils.debug(\"getUser\", routingContext);\n\n\t\tfinal String authorization = routingContext.request().getHeader(\"Authorization\");\n\t\tfinal String token = authorization == null ? null : authorization.substring(7).trim();\n\n\t\tfinal Optional<UserSession> userSession = deploymentOptions.getJwt().getUsers()\n\t\t\t\t.filter(userConfig -> userConfig.getSession() != null)\n\t\t\t\t.map(UserConfig::getSession)\n\t\t\t\t.filter(session -> session.getToken().equals(token))\n\t\t\t\t.findFirst();\n\n\t\tif (!userSession.isPresent())\n\t\t\tsendErrors(routingContext, UNAUTHORIZED,\t\"User session not found\");\n\t\telse\n\t\t\tsendResponse(routingContext, OK, new JsonObject().put(\"user\", userSession.get().getJsonObject()));\n\t}\n\n\t~routes:{it|~it.declaration~};separator=\"\\n\\n\"~\n\t~rawRoutes:{it|~it.declaration~};separator=\"\\n\\n\"~\n\n\tprivate static void getFromDomainDB(Vertx vertx, RoutingContext routingContext, String action, JsonObject params) {\n\t\tvertx.eventBus().request(\"domain.db\", params, new DeliveryOptions().addHeader(\"action\", action), reply -> {\n\t\t\tif (reply.succeeded()) {\n\t\t\t\tsendResponse(routingContext, OK, (JsonObject) reply.result().body());\n\t\t\t} else {\n\t\t\t\tsendErrors(routingContext, INTERNAL_SERVER_ERROR,\t\"Server Error\");\n\t\t\t}\n\t\t});\n\t}\n} ",
+    "text" : "package ~packageName~;\n\nimport io.netty.handler.codec.http.HttpResponseStatus;\nimport io.vertx.core.AbstractVerticle;\nimport io.vertx.core.Future;\nimport io.vertx.core.http.HttpServerOptions;\nimport io.vertx.core.json.JsonObject;\nimport io.vertx.core.net.PemKeyCertOptions;\nimport io.vertx.ext.auth.KeyStoreOptions;\nimport io.vertx.ext.auth.jwt.JWTAuth;\nimport io.vertx.ext.auth.jwt.JWTAuthOptions;\nimport io.vertx.ext.jwt.JWTOptions;\nimport io.vertx.ext.web.Router;\nimport io.vertx.ext.web.RoutingContext;\nimport io.vertx.ext.web.handler.BodyHandler;\nimport io.vertx.ext.web.handler.JWTAuthHandler;\nimport io.vertx.ext.web.handler.SessionHandler;\nimport io.vertx.ext.web.handler.StaticHandler;\nimport io.vertx.ext.web.sstore.LocalSessionStore;\n\nimport java.io.File;\nimport java.util.Optional;\nimport java.util.concurrent.atomic.AtomicInteger;\n\nimport static io.netty.handler.codec.http.HttpResponseStatus.*;\n\n~imports:{it|~it~};separator=\"\\n\"~\n\npublic class ~name;format=\"capitalize\"~ extends AbstractVerticle {\n\n\tprotected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name;format=\"capitalize\"~.class);\n\n\t~fields:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n\n\t@Override\n\tpublic void start(Future<Void> startFuture) throws Exception {\n\t\tlog.info(\"starting ~name;format=\"capitalize\"~\");\n\n\t\t~startStatements:{it|~it~};separator=\"\\n\"~\n\n\t\tfinal Router router = Router.router(vertx);\n\t\trouter.route().handler(BodyHandler.create());\n\t\trouter.route().handler(SessionHandler.create(LocalSessionStore.create(vertx)));\n\t\t~routes:{it|router.~it.action~(\"/~it.url~\").handler(~it.handler~);};separator=\"\\n\"~\n\n\t\tfinal HttpServerOptions serverOptions = new HttpServerOptions();\n\n\t\tssl.ifPresent(sslDeploymentSettings ->\n\t\t\t\tserverOptions\n\t\t\t\t\t\t.setSsl(true)\n\t\t\t\t\t\t.setPemKeyCertOptions(\n\t\t\t\t\t\t\t\tnew PemKeyCertOptions().\n\t\t\t\t\t\t\t\t\t\tsetKeyPath(sslDeploymentSettings.getKey()).\n\t\t\t\t\t\t\t\t\t\tsetCertPath(sslDeploymentSettings.getCert())));\n\n\t\tfinal StaticHandler staticHandler = StaticHandler.create();\n\t\tstaticHandler.setWebRoot(deploymentOptions.getWebRoot());\n\t\tstaticHandler.setCachingEnabled(false);\n\t\trouter.route(\"/*\").handler(staticHandler);\n\n\t\tvertx.createHttpServer(serverOptions).requestHandler(router::accept).listen(deploymentOptions.getPort());\n\n\t\tlog.info(\"server running on \" + (ssl.isPresent() ? \"https\" : \"http\") + \"://\" + deploymentOptions.getTcpHost() + \":\" + deploymentOptions.getPort());\n\t\tlog.info(\"server running on \" + (ssl.isPresent() ? \"https\" : \"http\") + \"://\" + deploymentOptions.getTcpName() + \":\" + deploymentOptions.getPort());\n\n\t\tstartFuture.succeeded();\n\t}\n\n\t~handlers:{it|~it~};separator=\"\\n\\n\"~\n\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n} ",
     "parameters" : [ {
-      "uuid" : "06af0996-5d3e-4622-abbd-33c503632c97",
+      "uuid" : "f220e70d-6a40-42e4-b5c8-4338329e7b3f",
       "name" : "packageName",
       "type" : "SINGLE",
-      "argumentType" : "String"
+      "argumentType" : "Object"
     }, {
-      "uuid" : "fc3a3a32-b3b6-45da-95ec-f4c4829f1fba",
+      "uuid" : "10e7a768-cc87-4a54-8976-168a96843e36",
       "name" : "imports",
       "type" : "LIST",
       "argumentType" : "Object"
     }, {
-      "uuid" : "4e2e36d7-f273-469c-938f-bcc1a0a0391f",
+      "uuid" : "f730c1db-3ddb-4078-93e6-2a04ea474d2b",
       "name" : "name",
       "type" : "SINGLE",
-      "argumentType" : "String"
+      "argumentType" : "Object"
     }, {
-      "uuid" : "1e09058a-ee8f-4392-9bd5-784047e2adc9",
+      "uuid" : "cfc514c6-0695-407f-b502-87c9809e503a",
       "name" : "fields",
       "type" : "KVLIST",
       "argumentType" : "Object",
       "keys" : [ {
-        "uuid" : "462cd130-07bc-421b-a05b-82d39c92dd33",
+        "uuid" : "4f63670f-1ccc-4097-9f22-3321f1a06ce9",
         "name" : "type",
         "argumentType" : "Object"
       }, {
-        "uuid" : "1ffea78a-b434-45c5-8c2a-55f0bea58733",
+        "uuid" : "3eb3198f-a7de-4a4c-834c-de5fc420024d",
         "name" : "name",
         "argumentType" : "Object"
       }, {
-        "uuid" : "fcce9989-f0b3-4978-8c8d-0d6c32c2083c",
+        "uuid" : "897ecbef-20c6-46eb-98cf-b051106a9dcc",
         "name" : "init",
         "argumentType" : "Object"
       } ]
     }, {
-      "uuid" : "4b176434-2eb9-43bf-bdea-3ff92b84b048",
+      "uuid" : "a357b773-345e-4f43-a369-b8511d9fc439",
       "name" : "startStatements",
       "type" : "LIST",
       "argumentType" : "Object"
     }, {
-      "uuid" : "0296696d-cb74-4b7e-821f-6d7eb982f37f",
+      "uuid" : "6ece534f-7413-4118-912d-18088acbbc3c",
       "name" : "routes",
       "type" : "KVLIST",
       "argumentType" : "Object",
       "keys" : [ {
-        "uuid" : "3dad238e-9944-4c56-a5d6-fa7c493fcdb5",
+        "uuid" : "7755f1d4-5737-4812-8996-9107d36b1424",
         "name" : "action",
-        "argumentType" : "String"
+        "argumentType" : "Object"
       }, {
-        "uuid" : "16a03ddb-0ff9-428f-aa74-5ea670a86621",
+        "uuid" : "02b6da77-586b-45da-915e-92a951ef64c1",
         "name" : "url",
-        "argumentType" : "String"
+        "argumentType" : "Object"
       }, {
-        "uuid" : "ab50dbae-46d6-4df9-a944-d1377316409b",
-        "name" : "methodName",
-        "argumentType" : "String"
-      }, {
-        "uuid" : "ce5c8852-bfad-45f5-a503-893df1ad67d6",
-        "name" : "declaration",
-        "argumentType" : "RouteHandler"
+        "uuid" : "e03faa80-b92b-4f5b-aad6-3501206aadd5",
+        "name" : "handler",
+        "argumentType" : "Object"
       } ]
     }, {
-      "uuid" : "2489f645-ca0b-44bb-964e-53daf4b85eef",
-      "name" : "rawRoutes",
-      "type" : "KVLIST",
-      "argumentType" : "Object",
-      "keys" : [ {
-        "uuid" : "bfd289f0-3ec7-4da2-8684-ddd0b58dd011",
-        "name" : "action",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "b5afea6e-146f-46f6-a4e9-7b7f3869ad73",
-        "name" : "url",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "15185fba-aeec-4aee-9d26-9db476d0648b",
-        "name" : "methodName",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "cbf8c98f-c898-4c30-814f-486b9e751e3f",
-        "name" : "declaration",
-        "argumentType" : "Object"
-      } ]
+      "uuid" : "cf6f226a-25a4-4c3e-af7c-7258007a6f07",
+      "name" : "handlers",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "1bdfc29d-3e79-415a-ac96-7bb074e2f64c",
+      "name" : "methods",
+      "type" : "LIST",
+      "argumentType" : "Object"
     } ],
     "children" : [ {
       "uuid" : "6b7bd0cc-b106-4da6-8dcf-1076b9dd4ea1",
