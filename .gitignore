@@ -30,3 +30,5 @@ logs
 db_template
 db_domain
 /db/
+
+components/core/target
