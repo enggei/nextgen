@@ -15,6 +15,7 @@ public class DomainSTTests {
 		testJavaProject();
 		testJavaLibrary();
 		testJavaPackage();
+		testModel();
 	}
 
 	@org.junit.Test
@@ -45,5 +46,10 @@ public class DomainSTTests {
 	@org.junit.Test
 	public void testJavaPackage() {
 		System.out.println("\n--- TEST JavaPackage:\n" + newJavaPackage());
+	} 
+
+	@org.junit.Test
+	public void testModel() {
+		System.out.println("\n--- TEST Model:\n" + newModel());
 	} 
 } 

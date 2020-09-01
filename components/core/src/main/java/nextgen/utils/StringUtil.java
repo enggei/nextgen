@@ -19,6 +19,10 @@ import java.util.stream.Collectors;
 public final class StringUtil {
    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(StringUtil.class);
 
+   public static String escape(String text) {
+      return text.replaceAll("\\\\", "\\\\\\\\").replaceAll("\"", "\\\\\"");
+   }
+
    private static final Random random = new Random(System.currentTimeMillis());
 
    public static void main(String[] args) {

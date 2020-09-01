@@ -9,12 +9,12 @@ Entity(name,isEnum,enumValues,observable,relations) ::= <<Entity: ~name~ ~if(isE
 
 Relation(name,type,dst,lexical,self) ::= <<~name~ ~type~ ~dst~~if(lexical)~ lexical~endif~~if(self)~ self-referential~endif~  >>
 
-JavaProject(packageName,javaPatterns,name,root,libraries,packageDeclarations) ::= <<package ~packageName~;
+JavaProject(packageName,javaPatterns,name,root,libraries,packageDeclarations,models) ::= <<package ~packageName~;
 
 import nextgen.templates.java.*;
 
 ~if(javaPatterns)~import static ~packageName~.~name~.JavaPatterns.*;~endif~
-	
+
 public class ~name~ {
 
 	final java.io.File root = new java.io.File("~root~");
@@ -24,10 +24,16 @@ public class ~name~ {
 	final java.io.File testResources = new java.io.File(root, "src/test/resources");
 
 	~libraries:{it|~it~};separator="\n\n"~
-	
+
 	~packageDeclarations:{it|~it~};separator="\n\n"~
 
 	~javaPatterns~
+
+	~models:{it|~it~}~
+
+	protected static void log(Object log) {
+		System.out.println(log);
+	}
 }  >>
 
 JavaPackage(comments,name,parent,packageName,entities,methods,subPackages) ::= <<~if(comments)~
@@ -42,6 +48,42 @@ final PackageDeclaration ~name~ = newPackageDeclaration(~if(parent)~~parent~, ~e
 
 JavaLibrary(name,packages) ::= <<// ~name~
 ~packages:{it|~it~};separator="\n\n"~  >>
+
+Model(name,fields) ::= <<protected ~name~ new~name;format="capitalize"~() { return new ~name~(); }
+
+protected class ~name~ {
+
+	private final java.util.UUID uuid = java.util.UUID.randomUUID();
+	~fields:{it|protected ~it.type~ _~it.name~;};separator="\n"~
+
+	protected ~name~() {
+
+	}
+~fields:{it|
+
+	protected ~name~ set~it.name;format="capitalize"~(~it.type~ _~it.name~) {
+		this._~it.name~ = _~it.name~;
+		return this;
+	\}
+
+	protected ~it.type~ get~it.name;format="capitalize"~() {
+		return this._~it.name~;
+	\}
+};separator="\n\n"~
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		UseCase useCase = (UseCase) o;
+		return uuid.equals(useCase.uuid);
+	}
+	
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+}  >>
 
 eom() ::= "}"
 

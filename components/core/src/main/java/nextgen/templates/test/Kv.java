@@ -29,7 +29,7 @@ public class Kv implements TestInterface {
 
 
 
-	public Kv addValue(Integer _key, Long _value) {
+	public Kv addValue(String _key, Object _value) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("key", _key);
 		map.put("value", _value);
@@ -51,24 +51,24 @@ public class Kv implements TestInterface {
 
 	public static final class Kv_Value {
 
-		Integer _key;
-		Long _value;
+		String _key;
+		Object _value;
 
-		public Kv_Value(Integer _key, Long _value) {
+		public Kv_Value(String _key, Object _value) {
 			this._key = _key;
 			this._value = _value;
 		}
 
 		private Kv_Value(java.util.Map<String, Object> map) {
-			this._key = (Integer) map.get("key");
-			this._value = (Long) map.get("value");
+			this._key = (String) map.get("key");
+			this._value = (Object) map.get("value");
 		}
 
-		public Integer getKey() {
+		public String getKey() {
 			return this._key;
 		}
 
-		public Long getValue() {
+		public Object getValue() {
 			return this._value;
 		}
 
@@ -87,8 +87,5 @@ public class Kv implements TestInterface {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "kv(value) ::= <<kv : \n" + 
-				"	~value:{it|~it.key~ : ~it.value~};separator=\"\\n\"~\n" + 
-				"\n" + 
-				"	asdf >>";
+	static final String st = "kv(value) ::= <<~value:{it|~it.key~ : ~it.value~};separator=\"\\n\"~ >>";
 }  

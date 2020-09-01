@@ -1,6 +1,6 @@
 package nextgen.templates.maven;
 
-public class MavenCompilerTarget {
+public class MavenCompilerTarget implements PomProperty {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;

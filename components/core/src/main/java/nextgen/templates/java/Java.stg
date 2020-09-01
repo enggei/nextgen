@@ -264,6 +264,60 @@ public ~className~ remove~name;format="capitalize"~(~type~ value) {
 	return this;
 }  >>
 
+Script(packageName,name,fields,statements) ::= <<package ~if(packageName)~~packageName~~else~tmp~endif~;
+
+public class ~name~ implements Runnable {
+
+	~fields:{it|private final ~it.type~ ~it.name~;};separator="\n"~
+	
+	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=", "~) {	
+		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+	}
+	
+	@Override
+	public void run() {
+		~statements:{it|~it~};separator="\n"~
+	}
+}  >>
+
+ValueObject(package,name,fields,lexical) ::= <<package ~package~;
+
+public class ~name~ {
+
+	private final java.util.UUID uuid;
+	~fields:{it|public ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator="\n"~
+
+	public ~name~() {
+		this.uuid = java.util.UUID.randomUUID();
+	}
+
+	public ~name~(java.util.UUID uuid) {
+		this.uuid = uuid;
+	}
+
+	public java.util.UUID getUuid() {
+		return this.uuid;
+	}	
+	
+	@Override
+	public String toString() {
+		return ~if(lexical)~~lexical:{it|_~it~};separator=" + \" \" + "~~else~this.uuid.toString()~endif~;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		~name~ that = (~name~) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+}  >>
+
 Grammar() ::= << >>
 
 CompilationUnit(packageDeclaration,types,importDeclaration) ::= <<~packageDeclaration~
@@ -488,14 +542,11 @@ classes:
 
 MemberValuePair(name,value) ::= <<~name~ = ~value~ >>
 
-JavaLibrary(name,packages) ::= <<// java library
-~name~
+JavaLibrary(name,packages) ::= <<~name~
 
-~packages:{it|~it~};separator="\n"~  >>
+~packages:{it|~it~};separator="\n\n"~  >>
 
-JavaPackage(name,types) ::= <<// java package 
-~name~
-
+JavaPackage(name,types) ::= <<~name~
 ~types:{it|~it~};separator="\n"~  >>
 
 JavaPatterns() ::= <<public static class JavaPatterns extends nextgen.templates.java.JavaST {

@@ -1,6 +1,6 @@
 package nextgen.templates.maven;
 
-public class ProjectReportingOutputEncoding {
+public class ProjectReportingOutputEncoding implements PomProperty {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;

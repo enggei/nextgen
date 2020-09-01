@@ -169,11 +169,11 @@
         "keys" : [ {
           "uuid" : "41e12bb7-1622-4264-a6fd-701d660c4fa3",
           "name" : "key",
-          "argumentType" : "Integer"
+          "argumentType" : "String"
         }, {
           "uuid" : "56059869-e621-4075-941c-da80226ff096",
           "name" : "value",
-          "argumentType" : "Long"
+          "argumentType" : "Object"
         } ]
       } ],
       "implements" : [ "TestInterface" ]

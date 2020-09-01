@@ -41,6 +41,7 @@ public class NextgenProject {
    }
 
    private static Domain stTemplateDomain() {
+
       final Entity stGroupModel = newEntity("STGroupModel")
             .addRelations(newStringField("name", true))
             .addRelations(newStringField("delimiter"))
@@ -66,7 +67,7 @@ public class NextgenProject {
                         .addRelations(newStringField("name", true))
                         .addRelations(newStringField("lexical"))))));
 
-      Domain domain = newDomain("ST")
+      return newDomain("ST")
             .addEntities(newEntity("STAppModel")
                   .addRelations(newStringField("modelDb"))
                   .addRelations(newStringField("rootDir"))
@@ -86,7 +87,6 @@ public class NextgenProject {
                         .addRelations(newStringField("message"))
                         .addRelations(newIntegerField("line"))
                         .addRelations(newIntegerField("charPosition")))));
-      return domain;
    }
 
    private Domain metaDomain() {

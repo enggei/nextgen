@@ -607,13 +607,8 @@ public class STModelNavigator extends JPanel {
 						workspace.setSelectedComponent(modelEditor);
 					})));
 			}));
-			actions.add(newAction("Generate", actionEvent -> {
-				SwingUtilities.invokeLater(() -> {
-					presentationModel.doLaterInTransaction(tx -> getModel().getFiles().forEach(stFile -> {
-						if (stFile.getPath() == null) return;
-						nextgen.st.STGenerator.writeToFile(presentationModel.render(getModel()), stFile.getPackageName().getValue(), stFile.getName().getValue(), stFile.getType().getValue(), new java.io.File(stFile.getPath().getValue()));
-					}));
-				});
+			actions.add(newAction("As Script", actionEvent -> {
+				presentationModel.generateSource(getModel());
 			}));
 			actions.add(newAction("Write To File", actionEvent -> {
 				presentationModel.writeToFile(getModel());

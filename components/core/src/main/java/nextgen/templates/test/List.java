@@ -71,6 +71,5 @@ public class List implements TestInterface {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "list(value) ::= <<list : \n" + 
-				"	~value:{it|~it~};separator=\"\\n\"~ >>";
+	static final String st = "list(value) ::= <<~value:{it|~it~};separator=\"\\n\"~ >>";
 }  

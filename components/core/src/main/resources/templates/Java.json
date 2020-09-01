@@ -1867,7 +1867,7 @@
       "uuid" : "aadecc17-0e20-487e-949d-c198e962b62b",
       "name" : "packages",
       "type" : "LIST",
-      "argumentType" : "JavaPackage"
+      "argumentType" : "Object"
     } ],
     "children" : [ {
       "uuid" : "6c2bbf37-2208-4993-bbc6-a27a2fabf40d",

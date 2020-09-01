@@ -12,7 +12,12 @@ public class JavaPackage {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -89,8 +94,6 @@ public class JavaPackage {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "JavaPackage(name,types) ::= <<// java package \n" + 
-				"~name~\n" + 
-				"\n" + 
+	static final String st = "JavaPackage(name,types) ::= <<~name~\n" + 
 				"~types:{it|~it~};separator=\"\\n\"~ >>";
 }  

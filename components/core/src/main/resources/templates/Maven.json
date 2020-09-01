@@ -45,7 +45,7 @@
       "uuid" : "e7297218-ca74-46ee-a776-74966876d3a7",
       "name" : "properties",
       "type" : "LIST",
-      "argumentType" : "Properties"
+      "argumentType" : "PomProperty"
     }, {
       "uuid" : "e078cac5-a180-419b-b251-01ebd13a75cd",
       "name" : "build",
@@ -129,7 +129,8 @@
           "name" : "value",
           "type" : "SINGLE",
           "argumentType" : "Object"
-        } ]
+        } ],
+        "implements" : [ "PomProperty" ]
       }, {
         "uuid" : "226b5a3d-3e90-4834-a344-04e63eb1ea35",
         "name" : "ProjectBuildSourceEncoding",
@@ -139,7 +140,8 @@
           "name" : "value",
           "type" : "SINGLE",
           "argumentType" : "Object"
-        } ]
+        } ],
+        "implements" : [ "PomProperty" ]
       }, {
         "uuid" : "2cb6b09a-970e-4fe4-96ea-fa23e54d530b",
         "name" : "MavenCompilerTarget",
@@ -149,7 +151,8 @@
           "name" : "value",
           "type" : "SINGLE",
           "argumentType" : "Object"
-        } ]
+        } ],
+        "implements" : [ "PomProperty" ]
       }, {
         "uuid" : "76543202-5f65-4838-a6dc-b129fc99bf0a",
         "name" : "ProjectReportingOutputEncoding",
@@ -159,7 +162,8 @@
           "name" : "value",
           "type" : "SINGLE",
           "argumentType" : "Object"
-        } ]
+        } ],
+        "implements" : [ "PomProperty" ]
       }, {
         "uuid" : "f3f8b1f9-6567-4061-a2ff-6166b425734f",
         "name" : "propertyReference",
@@ -168,7 +172,8 @@
           "uuid" : "ce37ea76-feaf-4b44-810f-4756471f073d",
           "name" : "name",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "PomProperty" ]
       } ],
       "parameters" : [ {
         "uuid" : "dc55c8cf-140b-46df-8cef-2cce64c532d6",
@@ -180,7 +185,8 @@
         "name" : "value",
         "type" : "SINGLE",
         "argumentType" : "Object"
-      } ]
+      } ],
+      "implements" : [ "PomProperty" ]
     }, {
       "uuid" : "68f2245d-08e1-42db-aafa-7245a5eda5b0",
       "name" : "dependency",
@@ -553,5 +559,9 @@
       "name" : "War",
       "lexical" : "war"
     } ]
+  } ],
+  "interfaces" : [ {
+    "uuid" : "251d2d98-7714-4821-9b1a-d90d4f70250d",
+    "name" : "PomProperty"
   } ]
 }

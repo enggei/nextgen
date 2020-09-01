@@ -11,6 +11,7 @@ public class DomainST {
 	.append(JavaProject.st + "\n")
 	.append(JavaLibrary.st + "\n")
 	.append(JavaPackage.st + "\n")
+	.append(Model.st + "\n")
 	.toString()  ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
@@ -69,6 +70,10 @@ public class DomainST {
 
 	public static JavaPackage newJavaPackage() {
 		return new JavaPackage(stGroup);
+	}  
+
+	public static Model newModel() {
+		return new Model(stGroup);
 	}  
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {

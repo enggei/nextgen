@@ -258,6 +258,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 	protected void onCanvasRightClick(JPopupMenu pop, PInputEvent event) {
 
 
+		pop.add(new MakeGeneratorScript(event));
 		pop.add(new NewDomainAction(event));
 		pop.add(new SaveLastLayoutAction(event));
 		pop.add(new LoadLastLayoutAction(event));
@@ -1145,6 +1146,22 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			abstract void actionPerformed(PInputEvent event, ActionEvent e);
 		}
 	}  
+
+	final class MakeGeneratorScript extends CanvasAction {
+
+		MakeGeneratorScript(PInputEvent event) {
+			super("Make Script", event);
+		}
+
+		@Override
+		void actionPerformed(PInputEvent event, ActionEvent e) {
+			presentationModel.generateSources(getSelectedNodes()
+					.filter(baseCanvasNode -> baseCanvasNode instanceof STModelNode)
+					.map(baseCanvasNode -> (STModelNode) baseCanvasNode)
+					.map(stModelNode -> stModelNode.getModel())
+					.collect(java.util.stream.Collectors.toSet()), "Test");
+		}
+	}
 
 	final class NewDomainAction extends CanvasAction {
 
@@ -2989,7 +3006,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		private nextgen.st.domain.STTemplate stTemplate;
 
 		public STModelNode(nextgen.st.model.STModel model, nextgen.st.domain.STTemplate stTemplate) {
-			super(model, model.getUuid(), stTemplate.getName() + " :\n" + presentationModel.render(model));
+			super(model, model.getUuid(), stTemplate.getName() + " :\n" + presentationModel.render(model, 1500));
 			this.stTemplate = stTemplate;
 		}
 
@@ -3750,6 +3767,11 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			void actionPerformed(PInputEvent event, ActionEvent e) {
 				presentationModel.doLaterInTransaction(transaction -> nextgen.st.STAppEvents.postOpenSTTemplate(stTemplate));
 			}
+		}
+
+		@Override
+		public void setText(String text) {
+			super.setText(text.substring(0, Math.min(text.length(), 2000)));
 		}
 
 		public boolean refersTo(nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameter stParameter, BaseCanvasNode<?> node) {

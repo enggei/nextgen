@@ -23,6 +23,8 @@ public class JavaSTTests {
 		testPrimitiveAccessors();
 		testReferenceAccessors();
 		testPojoFactory();
+		testScript();
+		testValueObject();
 		testArrayCreationLevel();
 		testCompilationUnit();
 		testClassOrInterfaceDeclaration();
@@ -175,6 +177,16 @@ public class JavaSTTests {
 	@org.junit.Test
 	public void testPojoFactory() {
 		System.out.println("\n--- TEST PojoFactory:\n" + newPojoFactory());
+	} 
+
+	@org.junit.Test
+	public void testScript() {
+		System.out.println("\n--- TEST Script:\n" + newScript());
+	} 
+
+	@org.junit.Test
+	public void testValueObject() {
+		System.out.println("\n--- TEST ValueObject:\n" + newValueObject());
 	} 
 
 	@org.junit.Test

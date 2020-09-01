@@ -64,6 +64,5 @@ public class Single implements TestInterface {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "single(value) ::= <<single : \n" + 
-				"	~value~ >>";
+	static final String st = "single(value) ::= <<~value~ >>";
 }  

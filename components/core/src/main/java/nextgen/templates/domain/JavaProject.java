@@ -9,14 +9,20 @@ public class JavaProject {
 	private Object _javaPatterns;
 	private String _name;
 	private String _root;
-	private java.util.List<JavaLibrary> _libraries = new java.util.ArrayList<>();
+	private java.util.List<Object> _libraries = new java.util.ArrayList<>();
 	private java.util.List<JavaPackage> _packageDeclarations = new java.util.ArrayList<>();
+	private java.util.List<Object> _models = new java.util.ArrayList<>();
 
 	JavaProject(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -29,6 +35,7 @@ public class JavaProject {
 		st.add("root", _root);
 		for (Object o : _libraries) st.add("libraries", o);
 		for (Object o : _packageDeclarations) st.add("packageDeclarations", o);
+		for (Object o : _models) st.add("models", o);
 		return st.render().trim();
 	}
 
@@ -120,22 +127,22 @@ public class JavaProject {
 		return this;
 	} 
 
-	public JavaProject addLibraries(JavaLibrary value) {
+	public JavaProject addLibraries(Object value) {
 		this._libraries.add(value);
 		return this;
 	}
 
-	public JavaProject setLibraries(JavaLibrary[] value) {
+	public JavaProject setLibraries(Object[] value) {
 		this._libraries.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public JavaProject setLibraries(java.util.Collection<JavaLibrary> values) {
+	public JavaProject setLibraries(java.util.Collection<Object> values) {
 		this._libraries.addAll(values);
 		return this;
 	}
 
-	public JavaProject removeLibraries(JavaLibrary value) {
+	public JavaProject removeLibraries(Object value) {
 		this._libraries.remove(value);
 		return this;
 	}
@@ -145,7 +152,7 @@ public class JavaProject {
 		return this;
 	}
 
-	public java.util.List<JavaLibrary> getLibraries() {
+	public java.util.List<Object> getLibraries() {
 		return this._libraries;
 	} 
 
@@ -178,6 +185,35 @@ public class JavaProject {
 		return this._packageDeclarations;
 	} 
 
+	public JavaProject addModels(Object value) {
+		this._models.add(value);
+		return this;
+	}
+
+	public JavaProject setModels(Object[] value) {
+		this._models.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public JavaProject setModels(java.util.Collection<Object> values) {
+		this._models.addAll(values);
+		return this;
+	}
+
+	public JavaProject removeModels(Object value) {
+		this._models.remove(value);
+		return this;
+	}
+
+	public JavaProject removeModels(int index) {
+		this._models.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getModels() {
+		return this._models;
+	} 
+
 
 	@Override
 	public boolean equals(Object o) {
@@ -192,12 +228,12 @@ public class JavaProject {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "JavaProject(packageName,javaPatterns,name,root,libraries,packageDeclarations) ::= <<package ~packageName~;\n" + 
+	static final String st = "JavaProject(packageName,javaPatterns,name,root,libraries,packageDeclarations,models) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import nextgen.templates.java.*;\n" + 
 				"\n" + 
 				"~if(javaPatterns)~import static ~packageName~.~name~.JavaPatterns.*;~endif~\n" + 
-				"	\n" + 
+				"\n" + 
 				"public class ~name~ {\n" + 
 				"\n" + 
 				"	final java.io.File root = new java.io.File(\"~root~\");\n" + 
@@ -207,9 +243,15 @@ public class JavaProject {
 				"	final java.io.File testResources = new java.io.File(root, \"src/test/resources\");\n" + 
 				"\n" + 
 				"	~libraries:{it|~it~};separator=\"\\n\\n\"~\n" + 
-				"	\n" + 
+				"\n" + 
 				"	~packageDeclarations:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
 				"	~javaPatterns~\n" + 
+				"\n" + 
+				"	~models:{it|~it~}~\n" + 
+				"\n" + 
+				"	protected static void log(Object log) {\n" + 
+				"		System.out.println(log);\n" + 
+				"	}\n" + 
 				"} >>";
 }  

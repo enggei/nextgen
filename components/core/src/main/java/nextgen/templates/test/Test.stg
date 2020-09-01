@@ -2,16 +2,11 @@ delimiters "~","~"
 
 basics() ::= << >>
 
-kv(value) ::= <<kv : 
-	~value:{it|~it.key~ : ~it.value~};separator="\n"~
+kv(value) ::= <<~value:{it|~it.key~ : ~it.value~};separator="\n"~  >>
 
-	asdf  >>
+list(value) ::= <<~value:{it|~it~};separator="\n"~  >>
 
-list(value) ::= <<list : 
-	~value:{it|~it~};separator="\n"~  >>
-
-single(value) ::= <<single : 
-	~value~  >>
+single(value) ::= <<~value~  >>
 
 ParameterTests() ::= <<Test the 3 types of parameters:
 

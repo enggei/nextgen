@@ -1,6 +1,6 @@
 package nextgen.templates.maven;
 
-public class PropertyReference {
+public class PropertyReference implements PomProperty {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;

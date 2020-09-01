@@ -5,6 +5,7 @@ import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STTemplate;
 import nextgen.st.model.STFile;
 import nextgen.st.model.STValue;
+import nextgen.utils.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -146,7 +147,7 @@ public class STGenerator {
 
         stTemplate.getImplements().forEach(s -> stEntity.add("interfaces", s));
 
-        String content = escape(stTemplate.getText()).replaceAll("\n", "\\\\n\" + \n\t\t\t\"");
+        String content = StringUtil.escape(stTemplate.getText()).replaceAll("\n", "\\\\n\" + \n\t\t\t\"");
         content = content.replaceAll(">>", ">~gt()~");
         content = content.trim();
 
@@ -380,9 +381,4 @@ public class STGenerator {
     private static String capitalize(String str) {
         return Character.toUpperCase(str.charAt(0)) + (str.length() > 1 ? str.substring(1) : "");
     }
-
-    private static String escape(String text) {
-        return text.replaceAll("\\\\", "\\\\\\\\").replaceAll("\"", "\\\\\"");
-    }
-
 }

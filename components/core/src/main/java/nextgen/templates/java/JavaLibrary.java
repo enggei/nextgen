@@ -5,14 +5,19 @@ public class JavaLibrary {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _name;
+	private String _name;
 	private java.util.List<Object> _packages = new java.util.ArrayList<>();
 
 	JavaLibrary(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -24,16 +29,16 @@ public class JavaLibrary {
 		return st.render().trim();
 	}
 
-	public JavaLibrary setName(Object value) {
+	public JavaLibrary setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Object getName(Object defaultValue) {
+	public String getName(String defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 
@@ -89,8 +94,7 @@ public class JavaLibrary {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "JavaLibrary(name,packages) ::= <<// java library\n" + 
-				"~name~\n" + 
+	static final String st = "JavaLibrary(name,packages) ::= <<~name~\n" + 
 				"\n" + 
-				"~packages:{it|~it~};separator=\"\\n\"~ >>";
+				"~packages:{it|~it~};separator=\"\\n\\n\"~ >>";
 }  

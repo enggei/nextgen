@@ -116,7 +116,7 @@
       "uuid" : "9a944977-44db-4cda-b493-b031621ab793",
       "name" : "libraries",
       "type" : "LIST",
-      "argumentType" : "JavaLibrary"
+      "argumentType" : "Object"
     }, {
       "uuid" : "f709faa9-e663-4a51-a7a1-366f90a6d9ef",
       "name" : "packageDeclarations",

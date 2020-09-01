@@ -14,7 +14,7 @@ public class Pom {
 	private Object _build;
 	private DependencyManagement _dependencyManagement;
 	private java.util.List<Object> _modules = new java.util.ArrayList<>();
-	private java.util.List<Properties> _properties = new java.util.ArrayList<>();
+	private java.util.List<PomProperty> _properties = new java.util.ArrayList<>();
 	private java.util.List<Object> _dependencies = new java.util.ArrayList<>();
 	private java.util.List<Object> _distributionManagement = new java.util.ArrayList<>();
 	private java.util.List<Object> _repositories = new java.util.ArrayList<>();
@@ -256,22 +256,22 @@ public class Pom {
 		return this._modules;
 	} 
 
-	public Pom addProperties(Properties value) {
+	public Pom addProperties(PomProperty value) {
 		this._properties.add(value);
 		return this;
 	}
 
-	public Pom setProperties(Properties[] value) {
+	public Pom setProperties(PomProperty[] value) {
 		this._properties.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public Pom setProperties(java.util.Collection<Properties> values) {
+	public Pom setProperties(java.util.Collection<PomProperty> values) {
 		this._properties.addAll(values);
 		return this;
 	}
 
-	public Pom removeProperties(Properties value) {
+	public Pom removeProperties(PomProperty value) {
 		this._properties.remove(value);
 		return this;
 	}
@@ -281,7 +281,7 @@ public class Pom {
 		return this;
 	}
 
-	public java.util.List<Properties> getProperties() {
+	public java.util.List<PomProperty> getProperties() {
 		return this._properties;
 	} 
 
