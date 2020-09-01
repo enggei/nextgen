@@ -16,6 +16,7 @@ public class MavenSTTests {
 		testModule();
 		testProject();
 		testAntlr4();
+		testAntlr4Simple();
 		testCopyPlugin();
 		testFrontEndMavenPlugin();
 		testNpmScript();
@@ -68,6 +69,11 @@ public class MavenSTTests {
 	@org.junit.Test
 	public void testAntlr4() {
 		System.out.println("\n--- TEST Antlr4:\n" + newAntlr4());
+	} 
+
+	@org.junit.Test
+	public void testAntlr4Simple() {
+		System.out.println("\n--- TEST Antlr4Simple:\n" + newAntlr4Simple());
 	} 
 
 	@org.junit.Test

@@ -278,6 +278,19 @@ public class ~name;format="capitalize"~ {
 		if (!file.exists() || !file.isFile()) throw new IllegalArgumentException("could not read " + file.getAbsolutePath());
 		return new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath())));
 	}
+
+	public static io.vertx.core.json.JsonObject load(java.io.InputStream inputStream) throws java.io.IOException {
+		if (inputStream == null) throw new java.io.IOException("inputStream is null");
+		java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
+		int read;
+		byte[] data = new byte[2048];
+		while ((read = inputStream.read(data, 0, data.length)) != -1)
+			buffer.write(data, 0, read);
+		inputStream.close();
+		final byte[] content = buffer.toByteArray();
+		buffer.close();
+		return new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(content));
+	}
 	
 	public static void save(io.vertx.core.json.JsonObject jsonObject, java.io.File file) throws java.io.IOException {
 
@@ -289,16 +302,16 @@ public class ~name;format="capitalize"~ {
 
 		java.nio.file.Files.write(file.toPath(), jsonObject.toBuffer().getBytes());
 	}
-	
+
 ~entities:{it|
 	public static ~it~ new~it~() { 
 		return new ~it~();
 	\}
-	
+
 	public static ~it~ new~it~NoUuid() { 
 		return new ~it~().removeUuid();
 	\}
-	
+
 	public static ~it~ new~it~(io.vertx.core.json.JsonObject jsonObject) { 
 		return new ~it~(jsonObject);
 	\}
@@ -313,13 +326,8 @@ public class ~name;format="capitalize"~ {
 };separator="\n"~
 }  >>
 
-WebVerticle(packageName,imports,fields,name,startStatements,routes) ::= <<package ~packageName~;
+WebVerticle(packageName,imports,name,fields,startStatements,routes,handlers,methods) ::= <<package ~packageName~;
 
-import com.petty.web.api.LoginRequest;
-import com.petty.web.api.UserSession;
-import com.petty.web.domain.SSLDeploymentSettings;
-import com.petty.web.domain.ServerDeploymentOptions;
-import com.petty.web.domain.UserDeploymentSettings;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
@@ -339,21 +347,16 @@ import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.sstore.LocalSessionStore;
 
 import java.io.File;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.petty.web.PasswordUtils.verifyUserPassword;
-import static com.petty.web.WebUtils.*;
-import static com.petty.web.api.WebApiJsonFactory.*;
 import static io.netty.handler.codec.http.HttpResponseStatus.*;
 
 ~imports:{it|~it~};separator="\n"~
 
-public class WebVerticle extends AbstractVerticle {
+public class ~name;format="capitalize"~ extends AbstractVerticle {
 
-	protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(WebVerticle.class);
+	protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name;format="capitalize"~.class);
 
 	~fields:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
 
@@ -363,31 +366,10 @@ public class WebVerticle extends AbstractVerticle {
 
 		~startStatements:{it|~it~};separator="\n"~
 
-		deploymentOptions = new ServerDeploymentOptions(config());
-		final Optional<SSLDeploymentSettings> ssl = Optional.ofNullable(deploymentOptions.getSsl());
-
-		final KeyStoreOptions keyStoreOptions = new KeyStoreOptions().
-				setPath(deploymentOptions.getJwt().getPath()).
-				setPassword(deploymentOptions.getJwt().getPassword()).
-				setType(deploymentOptions.getJwt().getType());
-
-		final JWTAuthOptions jwtAuthOptions = new JWTAuthOptions().setKeyStore(keyStoreOptions);
-		final JWTAuth auth = JWTAuth.create(vertx, jwtAuthOptions);
-
 		final Router router = Router.router(vertx);
 		router.route().handler(BodyHandler.create());
 		router.route().handler(SessionHandler.create(LocalSessionStore.create(vertx)));
-		router.post("/login").handler(routingContext -> login(routingContext, auth));
-		router.route("/api/*").handler(JWTAuthHandler.create(auth, "/login"));
-		router.get("/user").handler(this::getUser);
-		~routes:{it|router.~it.action~("/~it.url~").handler(this::~it.methodName~);};separator="\n"~
-		router.get("/images/:name").handler(this::getImage);
-		router.get("/api/currentTrends").handler(this::onCurrentTrends);
-		router.get("/api/prime/:id").handler(this::getPrime);
-		router.get("/api/rent/:id").handler(this::getRent);
-		router.get("/api/branch/:id").handler(this::getBranch);
-		router.get("/api/agent/:id").handler(this::getAgent);
-		router.get("/report/current").handler(this::getReport);
+		~routes:{it|router.~it.action~("/~it.url~").handler(~it.handler~);};separator="\n"~
 
 		final HttpServerOptions serverOptions = new HttpServerOptions();
 
@@ -407,195 +389,14 @@ public class WebVerticle extends AbstractVerticle {
 		vertx.createHttpServer(serverOptions).requestHandler(router::accept).listen(deploymentOptions.getPort());
 
 		log.info("server running on " + (ssl.isPresent() ? "https" : "http") + "://" + deploymentOptions.getTcpHost() + ":" + deploymentOptions.getPort());
-		log.info("server running on " + (ssl.isPresent() ? "https" : "http") + "://" + deploymentOptions.getTcpName("pettyresidential.info") + ":" + deploymentOptions.getPort());
+		log.info("server running on " + (ssl.isPresent() ? "https" : "http") + "://" + deploymentOptions.getTcpName() + ":" + deploymentOptions.getPort());
 
 		startFuture.succeeded();
 	}
 
-	private void login(RoutingContext routingContext, JWTAuth auth) {
-		WebUtils.debug("login", routingContext);
+	~handlers:{it|~it~};separator="\n\n"~
 
-		final LoginRequest loginRequest = newLoginRequest(routingContext.getBodyAsJson());
-
-		final Optional<UserDeploymentSettings> userFound = deploymentOptions.getJwt().getUsers()
-				.filter(userDeploymentSettings -> userDeploymentSettings.getUsername().equals(loginRequest.getUsername()))
-				.findFirst();
-
-		if (!userFound.isPresent()) {
-			sendErrors(routingContext, UNAUTHORIZED, "User credentials not found");
-			return;
-		}
-
-		final boolean passwordMatch = verifyUserPassword(loginRequest.getPassword(), userFound.get().getPassword(), userFound.get().getSalt());
-		if (!passwordMatch) {
-			sendErrors(routingContext, BAD_REQUEST, "User credentials not found");
-			return;
-		}
-
-		final String token = auth.generateToken(
-				newJWTPayload()
-						.setSub(userFound.get().getUsername())
-						.getJsonObject(),
-				new JWTOptions()
-						.setExpiresInMinutes(deploymentOptions.getJwt().getExpiresInMinutes())
-						.setSubject(userFound.get().getUsername()));
-
-		log.info("login user token " + userFound.get().getToken());
-
-
-		final UserSession userSession = newUserSession()
-				.setToken(token)
-				.setUsername(userFound.get().getUsername());
-		sessionMap.put(token, userSession);
-
-		sendResponse(routingContext, OK, new JsonObject().put("user", userSession.getJsonObject()));
-	}
-
-	private void getUser(RoutingContext routingContext) {
-
-		final String authorization = routingContext.request().getHeader("Authorization");
-		final String token = authorization == null ? null : authorization.substring(7).trim();
-		log.info("request token " + token);
-
-		final UserSession userSession = sessionMap.get(token);
-
-		if (userSession == null) {
-			sendErrors(routingContext, BAD_REQUEST, "User session not found");
-			return;
-		}
-
-		final Optional<UserDeploymentSettings> userFound = deploymentOptions.getJwt().getUsers()
-				.filter(userDeploymentSettings -> userDeploymentSettings.getUsername().equals(userSession.getUsername()))
-				.findFirst();
-
-		if (!userFound.isPresent()) {
-			sendErrors(routingContext, BAD_REQUEST, "User session not found");
-			return;
-		}
-
-		setUserMenus(userFound.get(), userSession);
-
-		sendResponse(routingContext, OK, new JsonObject().put("user", userSession.getJsonObject()));
-	}
-
-	private void getImage(RoutingContext routingContext) {
-		routingContext.response()
-				.putHeader("Content-Type", "image/jpg")
-				.sendFile(new File(".", routingContext.pathParam("name")).getAbsolutePath());
-	}
-
-	private void getPrime(RoutingContext routingContext) {
-
-		final String id = routingContext.request().getParam("id");
-		log.info("handle getPrime " + id);
-
-		sendJsonFile(routingContext, "./prime_" + id + ".json");
-	}
-
-	private void getRent(RoutingContext routingContext) {
-
-		final String id = routingContext.request().getParam("id");
-		log.info("handle getRent " + id);
-
-		sendJsonFile(routingContext, "./rent_" + id + ".json");
-	}
-
-	private void getBranch(RoutingContext routingContext) {
-
-		final String id = routingContext.request().getParam("id");
-		log.info("handle getBranch " + id);
-
-		sendJsonFile(routingContext, "./branch_" + id + ".json");
-	}
-
-	private void getAgent(RoutingContext routingContext) {
-
-		final String id = routingContext.request().getParam("id");
-		log.info("handle getAgent " + id);
-
-		sendJsonFile(routingContext, "./agent_" + id + ".json");
-	}
-
-	private void onCurrentTrends(RoutingContext routingContext) {
-		log.info("handle onCurrentTrends");
-		sendJsonFile(routingContext, "./currentTrends.json");
-	}
-
-	private void getReport(RoutingContext routingContext) {
-		routingContext.response()
-				.putHeader("Content-Type", "application/pdf")
-				.setStatusCode(HttpResponseStatus.OK.code())
-				.sendFile("./report.pdf");
-	}
-
-	private void setUserMenus(UserDeploymentSettings settings, UserSession session) {
-
-		if (session.getMenus().count() != 0L) return;
-
-		final AtomicInteger key = new AtomicInteger(0);
-
-		session.addMenus(newUserMenu()
-				.setLabel("Trends")
-				.setUrl("/currentTrends")
-				.setKey(key.incrementAndGet()));
-
-		for (String prime : new String[]{
-				"Barnoldswick",
-				"Barrowford",
-				"Burnley",
-				"Buxton",
-				"Chester",
-				"Clitheroe",
-				"Colne",
-				"Crewe",
-				"Knutsford",
-				"Nantwich",
-				"Northwich",
-				"Skipton",
-				"Tarporley"}) {
-			session.addMenus(newUserMenu()
-					.setLabel("Prime " + prime)
-					.setUrl("/primeReport/" + prime)
-					.setKey(key.incrementAndGet()));
-		}
-		for (String rent : new String[]{
-				"Barnoldswick",
-				"Barrowford",
-				"Burnley",
-				"Buxton",
-				"Chester",
-				"Colne",
-				"Crewe",
-				"Knutsford",
-				"Nantwich",
-				"Northwich",
-				"Tarporley"}) {
-			session.addMenus(newUserMenu()
-					.setLabel("Rent " + rent)
-					.setUrl("/rentReport/" + rent)
-					.setKey(key.incrementAndGet()));
-		}
-
-		for (String branch : new String[]{
-				"Barnoldswick",
-				"Barrowford",
-				"Burnley",
-				"Buxton",
-				"Chester",
-				"Colne",
-				"Crewe",
-				"Knutsford",
-				"Nantwich",
-				"Northwich",
-				"Tarporley"}) {
-			session.addMenus(newUserMenu()
-					.setLabel("Branch " + branch)
-					.setUrl("/branch/" + branch)
-					.setKey(key.incrementAndGet()));
-		}
-
-		settings.getAccess().forEach(userAccess -> session.addMenus(newUserMenu().setKey(key.incrementAndGet()).setUrl(userAccess.getUrl()).setLabel(userAccess.getLabel())));
-	}
+	~methods:{it|~it~};separator="\n\n"~
 }  >>
 
 SendEventBusAction(actionName,params) ::= <<getFromDomainDB(vertx, routingContext, "~actionName~", new JsonObject()~if(params)~.~params:{it|put("~it.name~", routingContext.request().getParam("~it.name~"))}~~endif~);  >>

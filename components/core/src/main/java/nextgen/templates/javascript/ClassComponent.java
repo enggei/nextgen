@@ -12,6 +12,7 @@ public class ClassComponent {
 	private Object _renderElement;
 	private java.util.List<Object> _componentImports = new java.util.ArrayList<>();
 	private java.util.List<Object> _dependencies = new java.util.ArrayList<>();
+	private java.util.List<Object> _constDeclarations = new java.util.ArrayList<>();
 	private java.util.List<Object> _decorators = new java.util.ArrayList<>();
 	private java.util.List<Object> _state = new java.util.ArrayList<>();
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
@@ -42,6 +43,7 @@ public class ClassComponent {
 		st.add("renderElement", _renderElement);
 		for (Object o : _componentImports) st.add("componentImports", o);
 		for (Object o : _dependencies) st.add("dependencies", o);
+		for (Object o : _constDeclarations) st.add("constDeclarations", o);
 		for (Object o : _decorators) st.add("decorators", o);
 		for (Object o : _state) st.add("state", o);
 		for (Object o : _constructorStatements) st.add("constructorStatements", o);
@@ -217,6 +219,35 @@ public class ClassComponent {
 
 	public java.util.List<Object> getDependencies() {
 		return this._dependencies;
+	} 
+
+	public ClassComponent addConstDeclarations(Object value) {
+		this._constDeclarations.add(value);
+		return this;
+	}
+
+	public ClassComponent setConstDeclarations(Object[] value) {
+		this._constDeclarations.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassComponent setConstDeclarations(java.util.Collection<Object> values) {
+		this._constDeclarations.addAll(values);
+		return this;
+	}
+
+	public ClassComponent removeConstDeclarations(Object value) {
+		this._constDeclarations.remove(value);
+		return this;
+	}
+
+	public ClassComponent removeConstDeclarations(int index) {
+		this._constDeclarations.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getConstDeclarations() {
+		return this._constDeclarations;
 	} 
 
 	public ClassComponent addDecorators(Object value) {
@@ -438,10 +469,12 @@ public class ClassComponent {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ClassComponent(imports,componentImports,dependencies,decorators,name,state,constructorStatements,events,methods,renderCondition,renderTrue,renderFalse,renderElement) ::= <<import React from 'react';\n" + 
+	static final String st = "ClassComponent(imports,componentImports,dependencies,constDeclarations,decorators,name,state,constructorStatements,events,methods,renderCondition,renderTrue,renderFalse,renderElement) ::= <<import React from 'react';\n" + 
 				"~imports:{it|import ~it.ref~ from '~it.path~';};separator=\"\\n\"~\n" + 
 				"~componentImports:{it|~it~};separator=\"\\n\"~\n" + 
 				"~dependencies:{it|~it~};separator=\"\\n\"~\n" + 
+				"\n" + 
+				"~constDeclarations:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
 				"~decorators:{it|~it~};separator=\"\\n\"~\n" + 
 				"class ~name~ extends React.Component {\n" + 

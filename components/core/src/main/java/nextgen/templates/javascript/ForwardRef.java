@@ -6,7 +6,6 @@ public class ForwardRef {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _to;
-	private Object _argument;
 	private Object _target;
 
 	ForwardRef(org.stringtemplate.v4.STGroup stGroup) {
@@ -26,7 +25,6 @@ public class ForwardRef {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ForwardRef");
 		st.add("to", _to);
-		st.add("argument", _argument);
 		st.add("target", _target);
 		return st.render().trim();
 	}
@@ -50,28 +48,6 @@ public class ForwardRef {
 
 	public ForwardRef removeTo() {
 		this._to = null;
-		return this;
-	} 
-
-	public ForwardRef setArgument(Object value) {
-		this._argument = value;
-		return this;
-	}
-
-	public Object getArgument() {
-		return this._argument;
-	}
-
-	public Object getArgument(Object defaultValue) {
-		return this._argument == null ? defaultValue : this._argument;
-	}
-
-	public boolean hasArgument() {
-		return this._argument != null;
-	}
-
-	public ForwardRef removeArgument() {
-		this._argument = null;
 		return this;
 	} 
 
@@ -112,7 +88,7 @@ public class ForwardRef {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ForwardRef(to,argument,target) ::= <<React.forwardRef((props, ref) => (\n" + 
-				"	<RouterLink ref={ref} to={'~to~~if(argument)~/~endif~'~if(argument)~ + ~argument~~endif~}~if(target)~ target=\"~target~\"~endif~ {...props} />\n" + 
+	static final String st = "ForwardRef(to,target) ::= <<React.forwardRef((props, ref) => (\n" + 
+				"	<RouterLink ref={ref} to=~to~~if(target)~ target=\"~target~\"~endif~ {...props} />\n" + 
 				")); >>";
 }  

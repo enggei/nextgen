@@ -18,6 +18,7 @@ public class JavaScriptSTTests {
 		testFunctionCall();
 		testFunctionExpression();
 		testReturnStmt();
+		testJsonArray();
 		testJsonObject();
 		testMobX();
 		testAction();
@@ -54,6 +55,7 @@ public class JavaScriptSTTests {
 		testAgentDeclaration();
 		testAgentEndpoint();
 		testAgentRequest();
+		testConstVariable();
 	}
 
 	@org.junit.Test
@@ -99,6 +101,11 @@ public class JavaScriptSTTests {
 	@org.junit.Test
 	public void testReturnStmt() {
 		System.out.println("\n--- TEST ReturnStmt:\n" + newReturnStmt());
+	} 
+
+	@org.junit.Test
+	public void testJsonArray() {
+		System.out.println("\n--- TEST JsonArray:\n" + newJsonArray());
 	} 
 
 	@org.junit.Test
@@ -279,5 +286,10 @@ public class JavaScriptSTTests {
 	@org.junit.Test
 	public void testAgentRequest() {
 		System.out.println("\n--- TEST AgentRequest:\n" + newAgentRequest());
+	} 
+
+	@org.junit.Test
+	public void testConstVariable() {
+		System.out.println("\n--- TEST ConstVariable:\n" + newConstVariable());
 	} 
 } 

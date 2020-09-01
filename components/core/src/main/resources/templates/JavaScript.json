@@ -313,15 +313,10 @@
       }, {
         "uuid" : "cb0c96ee-1562-44a1-ac14-7cb96f535c93",
         "name" : "ForwardRef",
-        "text" : "React.forwardRef((props, ref) => (\n\t<RouterLink ref={ref} to={'~to~~if(argument)~/~endif~'~if(argument)~ + ~argument~~endif~}~if(target)~ target=\"~target~\"~endif~ {...props} />\n)); ",
+        "text" : "React.forwardRef((props, ref) => (\n\t<RouterLink ref={ref} to=~to~~if(target)~ target=\"~target~\"~endif~ {...props} />\n)); ",
         "parameters" : [ {
           "uuid" : "2f41389d-2eef-41cf-ba9c-8d414d82ba79",
           "name" : "to",
-          "type" : "SINGLE",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "cddb47d0-b031-42da-b810-9cff0a469026",
-          "name" : "argument",
           "type" : "SINGLE",
           "argumentType" : "Object"
         }, {
@@ -442,7 +437,7 @@
       }, {
         "uuid" : "9752d4ad-2141-445a-9a80-3a79072db167",
         "name" : "ClassComponent",
-        "text" : "import React from 'react';\n~imports:{it|import ~it.ref~ from '~it.path~';};separator=\"\\n\"~\n~componentImports:{it|~it~};separator=\"\\n\"~\n~dependencies:{it|~it~};separator=\"\\n\"~\n\n~decorators:{it|~it~};separator=\"\\n\"~\nclass ~name~ extends React.Component {\n\n\tconstructor(props) {\n\t\tsuper(props);\n\t\tconsole.log(\"new ~name~ : \" +  this.props);\n~if(state)~\n\t\tthis.state = {\n\t\t\t~state:{it|~it~};separator=\",\\n\"~;\n\t\t}\n~endif~\n\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t\t~events:{it|this.~it.methodName~ = this.~it.methodName~.bind(this);};separator=\"\\n\"~\n\t}\n\n~if(events)~\n\t~events:{it|~it.declaration~};separator=\"\\n\\n\"~\n\n~endif~\n~if(methods)~\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n\n~endif~\n\n\tstatic getDerivedStateFromError(error) {\n\t\t// Update state so the next render will show the fallback UI.\n\t\treturn { hasError: true };\n\t}\n\n\tcomponentDidCatch(error, errorInfo) {\n\t\t// You can also log the error to an error reporting service\n\t\tconsole.info(error);\n\t\tconsole.info(errorInfo);\n\t}\n\n\trender() {\n\t\tconsole.log(\"render ~name~ : \" +  this.props);\n~if(renderCondition)~\n\t\tif(~renderCondition~) {\n\t\t\tconsole.info(\"~name~.~renderCondition~ TRUE\");\n\t\t\treturn ( \n\t\t\t\t~renderTrue~\n\t\t\t);\n\t\t} else {\n\t\t\tconsole.info(\"~name~.~renderCondition~ FALSE\");\n\t\t\treturn (\n\t\t\t\t~renderFalse~\n\t\t\t);\n\t\t}\n~else~\n\t\treturn (\n\t\t\t~if(renderElement)~~renderElement~~else~null~endif~\n\t\t);\n~endif~\n\t}\n}\n\nexport default (~name~); ",
+        "text" : "import React from 'react';\n~imports:{it|import ~it.ref~ from '~it.path~';};separator=\"\\n\"~\n~componentImports:{it|~it~};separator=\"\\n\"~\n~dependencies:{it|~it~};separator=\"\\n\"~\n\n~constDeclarations:{it|~it~};separator=\"\\n\\n\"~\n\n~decorators:{it|~it~};separator=\"\\n\"~\nclass ~name~ extends React.Component {\n\n\tconstructor(props) {\n\t\tsuper(props);\n\t\tconsole.log(\"new ~name~ : \" +  this.props);\n~if(state)~\n\t\tthis.state = {\n\t\t\t~state:{it|~it~};separator=\",\\n\"~;\n\t\t}\n~endif~\n\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t\t~events:{it|this.~it.methodName~ = this.~it.methodName~.bind(this);};separator=\"\\n\"~\n\t}\n\n~if(events)~\n\t~events:{it|~it.declaration~};separator=\"\\n\\n\"~\n\n~endif~\n~if(methods)~\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n\n~endif~\n\n\tstatic getDerivedStateFromError(error) {\n\t\t// Update state so the next render will show the fallback UI.\n\t\treturn { hasError: true };\n\t}\n\n\tcomponentDidCatch(error, errorInfo) {\n\t\t// You can also log the error to an error reporting service\n\t\tconsole.info(error);\n\t\tconsole.info(errorInfo);\n\t}\n\n\trender() {\n\t\tconsole.log(\"render ~name~ : \" +  this.props);\n~if(renderCondition)~\n\t\tif(~renderCondition~) {\n\t\t\tconsole.info(\"~name~.~renderCondition~ TRUE\");\n\t\t\treturn ( \n\t\t\t\t~renderTrue~\n\t\t\t);\n\t\t} else {\n\t\t\tconsole.info(\"~name~.~renderCondition~ FALSE\");\n\t\t\treturn (\n\t\t\t\t~renderFalse~\n\t\t\t);\n\t\t}\n~else~\n\t\treturn (\n\t\t\t~if(renderElement)~~renderElement~~else~null~endif~\n\t\t);\n~endif~\n\t}\n}\n\nexport default (~name~); ",
         "parameters" : [ {
           "uuid" : "4b461799-67b0-4758-bc6b-d3f04c7b826a",
           "name" : "imports",
@@ -465,6 +460,11 @@
         }, {
           "uuid" : "5774b4ed-f9d0-4fd5-b2ab-6ed1c3b1e0b5",
           "name" : "dependencies",
+          "type" : "LIST",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "d431a89b-77bb-4990-827d-99dd069bebe1",
+          "name" : "constDeclarations",
           "type" : "LIST",
           "argumentType" : "Object"
         }, {
@@ -679,12 +679,26 @@
         }, {
           "uuid" : "562c6189-0000-4cce-b64d-2a4594b462b2",
           "name" : "Element",
-          "text" : "<~name~~if(props)~ ~props:{it|~it~};separator=\" \"~~endif~~if(children)~>\n\t~children:{it|~it~};separator=\"\\n\"~\n</~name~>~else~ />~endif~ ",
+          "text" : "<~name~~if(attributes)~ ~attributes:{it|\n\n\t~it.key~=~it.value~}~~endif~~if(props)~ ~props:{it|~it~};separator=\" \"~~endif~~if(children)~>\n\t~children:{it|~it~};separator=\"\\n\"~\n</~name~>~else~ />~endif~ ",
           "parameters" : [ {
             "uuid" : "4b634c2b-c83f-4c9d-9dc8-7e2ac576e507",
             "name" : "name",
             "type" : "SINGLE",
             "argumentType" : "Object"
+          }, {
+            "uuid" : "81d7ac69-a3aa-49f5-8708-dd3f655a1ae9",
+            "name" : "attributes",
+            "type" : "KVLIST",
+            "argumentType" : "Object",
+            "keys" : [ {
+              "uuid" : "36c36974-9ae3-4cbf-88ba-8a11ffdf0221",
+              "name" : "key",
+              "argumentType" : "Object"
+            }, {
+              "uuid" : "ad5ae6c1-9b04-4107-8b3f-1eb58f310046",
+              "name" : "value",
+              "argumentType" : "Object"
+            } ]
           }, {
             "uuid" : "1f285e4d-9995-4266-9c29-dc1778962fa6",
             "name" : "props",
@@ -874,6 +888,36 @@
       }, {
         "uuid" : "127b6e37-7b95-45c4-a198-f8bbb474f267",
         "name" : "finally",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    } ]
+  }, {
+    "uuid" : "5c3f387e-20bd-4a51-8409-dd9a1b0ec4cc",
+    "name" : "jsonArray",
+    "text" : "[ ~items:{it|~it~};separator=\"\\n\"~ ] ",
+    "parameters" : [ {
+      "uuid" : "e1a96640-ba46-4d81-92e8-cfba5606ac78",
+      "name" : "items",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "fba464a5-18c1-4251-a4e4-a451634c6c91",
+    "name" : "variables",
+    "text" : "",
+    "children" : [ {
+      "uuid" : "0ea7db1d-c907-46b3-a41f-319d644c2a35",
+      "name" : "constVariable",
+      "text" : "const ~name~ = ~value~; ",
+      "parameters" : [ {
+        "uuid" : "7f82cb73-443b-4c7e-858a-984470fd16f4",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "c7f0f24c-e463-4734-9243-a6adf3a58f17",
+        "name" : "value",
         "type" : "SINGLE",
         "argumentType" : "Object"
       } ]

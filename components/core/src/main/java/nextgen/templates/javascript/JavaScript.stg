@@ -29,6 +29,8 @@ functionCall(scope,name,parameters) ::= <<~if(scope)~~scope~.~endif~~name~(~para
 
 returnStmt(returnValue) ::= <<return ~returnValue~;  >>
 
+jsonArray(items) ::= <<[ ~items:{it|~it~};separator="\n"~ ]  >>
+
 JsonObject(values) ::= <<{ ~values:{it|~it~};separator=", "~ }  >>
 
 MobX() ::= <<MobX constructs  >>
@@ -118,8 +120,8 @@ ReactRouter() ::= << >>
 
 Link(to) ::= <<<Link innerRef={ ref } to="~to~" { ...props } />  >>
 
-ForwardRef(to,argument,target) ::= <<React.forwardRef((props, ref) => (
-	<RouterLink ref={ref} to={'~to~~if(argument)~/~endif~'~if(argument)~ + ~argument~~endif~}~if(target)~ target="~target~"~endif~ {...props} />
+ForwardRef(to,target) ::= <<React.forwardRef((props, ref) => (
+	<RouterLink ref={ref} to=~to~~if(target)~ target="~target~"~endif~ {...props} />
 ));  >>
 
 withRouterImport() ::= <<import { withRouter } from 'react-router-dom';  >>
@@ -151,10 +153,12 @@ State(values) ::= <<{
 	~values:{it|~it.name~: ~it.value~};separator=",\n"~
 }  >>
 
-ClassComponent(imports,componentImports,dependencies,decorators,name,state,constructorStatements,events,methods,renderCondition,renderTrue,renderFalse,renderElement) ::= <<import React from 'react';
+ClassComponent(imports,componentImports,dependencies,constDeclarations,decorators,name,state,constructorStatements,events,methods,renderCondition,renderTrue,renderFalse,renderElement) ::= <<import React from 'react';
 ~imports:{it|import ~it.ref~ from '~it.path~';};separator="\n"~
 ~componentImports:{it|~it~};separator="\n"~
 ~dependencies:{it|~it~};separator="\n"~
+
+~constDeclarations:{it|~it~};separator="\n\n"~
 
 ~decorators:{it|~it~};separator="\n"~
 class ~name~ extends React.Component {
@@ -245,7 +249,9 @@ form(className,onSubmit,noValidate,children) ::= <<<form ~if(className)~classNam
 	~children:{it|~it~};separator="\n"~
 </form>~else~ />~endif~  >>
 
-Element(name,props,children) ::= <<<~name~~if(props)~ ~props:{it|~it~};separator=" "~~endif~~if(children)~>
+Element(name,attributes,props,children) ::= <<<~name~~if(attributes)~ ~attributes:{it|
+
+	~it.key~=~it.value~}~~endif~~if(props)~ ~props:{it|~it~};separator=" "~~endif~~if(children)~>
 	~children:{it|~it~};separator="\n"~
 </~name~>~else~ />~endif~  >>
 
@@ -375,6 +381,10 @@ agentRequest(endpoint,method,params,then,finally) ::= <<agent.~endpoint~.~method
 		throw err;
 	}))
 	.finally(~finally~)  >>
+
+variables() ::= << >>
+
+constVariable(name,value) ::= <<const ~name~ = ~value~;  >>
 
 eom() ::= "}"
 

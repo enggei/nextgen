@@ -12,6 +12,7 @@ public class MavenST {
 	.append(Module.st + "\n")
 	.append(Project.st + "\n")
 	.append(Antlr4.st + "\n")
+	.append(Antlr4Simple.st + "\n")
 	.append(CopyPlugin.st + "\n")
 	.append(FrontEndMavenPlugin.st + "\n")
 	.append(NpmScript.st + "\n")
@@ -67,99 +68,103 @@ public class MavenST {
 
 	public static DependencyManagement newDependencyManagement() {
 		return new DependencyManagement(stGroup);
-	} 
+	}  
 
 	public static Entities newEntities() {
 		return new Entities(stGroup);
-	} 
+	}  
 
 	public static DependencyGroup newDependencyGroup() {
 		return new DependencyGroup(stGroup);
-	} 
+	}  
 
 	public static MavenProject newMavenProject() {
 		return new MavenProject(stGroup);
-	} 
+	}  
 
 	public static Module newModule() {
 		return new Module(stGroup);
-	} 
+	}  
 
 	public static Project newProject() {
 		return new Project(stGroup);
-	} 
+	}  
 
 	public static Antlr4 newAntlr4() {
 		return new Antlr4(stGroup);
-	} 
+	}  
+
+	public static Antlr4Simple newAntlr4Simple() {
+		return new Antlr4Simple(stGroup);
+	}  
 
 	public static CopyPlugin newCopyPlugin() {
 		return new CopyPlugin(stGroup);
-	} 
+	}  
 
 	public static FrontEndMavenPlugin newFrontEndMavenPlugin() {
 		return new FrontEndMavenPlugin(stGroup);
-	} 
+	}  
 
 	public static NpmScript newNpmScript() {
 		return new NpmScript(stGroup);
-	} 
+	}  
 
 	public static Plugin newPlugin() {
 		return new Plugin(stGroup);
-	} 
+	}  
 
 	public static ShadePlugin newShadePlugin() {
 		return new ShadePlugin(stGroup);
-	} 
+	}  
 
 	public static Pom newPom() {
 		return new Pom(stGroup);
-	} 
+	}  
 
 	public static Build newBuild() {
 		return new Build(stGroup);
-	} 
+	}  
 
 	public static Dependency newDependency() {
 		return new Dependency(stGroup);
-	} 
+	}  
 
 	public static Execution newExecution() {
 		return new Execution(stGroup);
-	} 
+	}  
 
 	public static Parent newParent() {
 		return new Parent(stGroup);
-	} 
+	}  
 
 	public static Properties newProperties() {
 		return new Properties(stGroup);
-	} 
+	}  
 
 	public static MavenCompilerSource newMavenCompilerSource() {
 		return new MavenCompilerSource(stGroup);
-	} 
+	}  
 
 	public static MavenCompilerTarget newMavenCompilerTarget() {
 		return new MavenCompilerTarget(stGroup);
-	} 
+	}  
 
 	public static ProjectBuildSourceEncoding newProjectBuildSourceEncoding() {
 		return new ProjectBuildSourceEncoding(stGroup);
-	} 
+	}  
 
 	public static ProjectReportingOutputEncoding newProjectReportingOutputEncoding() {
 		return new ProjectReportingOutputEncoding(stGroup);
-	} 
+	}  
 
 	public static PropertyReference newPropertyReference() {
 		return new PropertyReference(stGroup);
-	} 
+	}  
 
 	public static Repository newRepository() {
 		return new Repository(stGroup);
-	} 
+	}  
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
 

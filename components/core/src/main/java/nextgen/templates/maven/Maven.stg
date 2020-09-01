@@ -102,8 +102,7 @@ shadePlugin(packageName,className) ::= <<<!-- https://maven.apache.org/plugins/m
 					<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
 					<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 						<manifestEntries>
-							<Main-Class>io.vertx.core.Launcher</Main-Class>
-							<Main-Verticle>~packageName~.~className~</Main-Verticle>
+							<Main-Class>~packageName~.~className~</Main-Class>
 						</manifestEntries>
 					</transformer>
 				</transformers>
@@ -129,7 +128,7 @@ plugin(groupId,artifactId,version,configuration,executions) ::= <<<plugin>
 copyPlugin(outputDirectory,directory,include) ::= <<<!-- https://maven.apache.org/plugins/maven-resources-plugin/ -->
 <plugin>
 	<artifactId>maven-resources-plugin</artifactId>
-	<version>3.1.0</version>
+	<version>3.2.0</version>
 	<executions>
 		<execution>
 			<id>copy-resources</id>
@@ -174,6 +173,23 @@ antlr4(version,sourceDirectory,grammars,includes,arguments,outputDirectory,visit
 			<goals>
 				<goal>~if(goal)~~goal~~else~antlr4~endif~</goal>
 		</goals>
+		</execution>
+	</executions>
+</plugin>  >>
+
+antlr4Simple() ::= <<<plugin>
+	<groupId>org.antlr</groupId>
+	<artifactId>antlr4-maven-plugin</artifactId>
+	<version>4.3</version>
+	<configuration>
+		<outputDirectory>${basedir}/src/main/java</outputDirectory>
+		<visitor>true</visitor>
+	</configuration>
+	<executions>
+		<execution>
+			<goals>
+				<goal>antlr4</goal>
+			</goals>
 		</execution>
 	</executions>
 </plugin>  >>

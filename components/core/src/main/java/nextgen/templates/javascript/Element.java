@@ -8,6 +8,7 @@ public class Element {
 	private Object _name;
 	private java.util.List<Object> _props = new java.util.ArrayList<>();
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _attributes = new java.util.ArrayList<>();
 
 	Element(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -28,6 +29,7 @@ public class Element {
 		st.add("name", _name);
 		for (Object o : _props) st.add("props", o);
 		for (Object o : _children) st.add("children", o);
+		for (java.util.Map<String, Object> map : _attributes) st.addAggr("attributes.{key,value}", map.get("key"), map.get("value"));
 		return st.render().trim();
 	}
 
@@ -111,6 +113,50 @@ public class Element {
 		return this._children;
 	} 
 
+	public Element addAttributes(Object _key, Object _value) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("key", _key);
+		map.put("value", _value);
+		this._attributes.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getAttributes() {
+		return this._attributes;
+	}
+
+	public Element addAttributes(Element_Attributes value) {
+		return addAttributes(value._key, value._value);
+	}
+
+	public java.util.stream.Stream<Element_Attributes> streamAttributes() {
+		return this._attributes.stream().map(Element_Attributes::new);
+	}
+
+	public static final class Element_Attributes {
+
+		Object _key;
+		Object _value;
+
+		public Element_Attributes(Object _key, Object _value) {
+			this._key = _key;
+			this._value = _value;
+		}
+
+		private Element_Attributes(java.util.Map<String, Object> map) {
+			this._key = (Object) map.get("key");
+			this._value = (Object) map.get("value");
+		}
+
+		public Object getKey() {
+			return this._key;
+		}
+
+		public Object getValue() {
+			return this._value;
+		}
+
+	} 
 
 	@Override
 	public boolean equals(Object o) {
@@ -125,7 +171,9 @@ public class Element {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Element(name,props,children) ::= <<<~name~~if(props)~ ~props:{it|~it~};separator=\" \"~~endif~~if(children)~>\n" + 
+	static final String st = "Element(name,attributes,props,children) ::= <<<~name~~if(attributes)~ ~attributes:{it|\n" + 
+				"\n" + 
+				"	~it.key~=~it.value~}~~endif~~if(props)~ ~props:{it|~it~};separator=\" \"~~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 				"</~name~>~else~ />~endif~ >>";
 }  

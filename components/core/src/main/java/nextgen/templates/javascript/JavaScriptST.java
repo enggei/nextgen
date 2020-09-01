@@ -14,6 +14,7 @@ public class JavaScriptST {
 	.append(FunctionCall.st + "\n")
 	.append(FunctionExpression.st + "\n")
 	.append(ReturnStmt.st + "\n")
+	.append(JsonArray.st + "\n")
 	.append(JsonObject.st + "\n")
 	.append(MobX.st + "\n")
 	.append(Action.st + "\n")
@@ -50,6 +51,7 @@ public class JavaScriptST {
 	.append(AgentDeclaration.st + "\n")
 	.append(AgentEndpoint.st + "\n")
 	.append(AgentRequest.st + "\n")
+	.append(ConstVariable.st + "\n")
 	.toString()  ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
@@ -120,6 +122,10 @@ public class JavaScriptST {
 
 	public static ReturnStmt newReturnStmt() {
 		return new ReturnStmt(stGroup);
+	}  
+
+	public static JsonArray newJsonArray() {
+		return new JsonArray(stGroup);
 	}  
 
 	public static JsonObject newJsonObject() {
@@ -264,6 +270,10 @@ public class JavaScriptST {
 
 	public static AgentRequest newAgentRequest() {
 		return new AgentRequest(stGroup);
+	}  
+
+	public static ConstVariable newConstVariable() {
+		return new ConstVariable(stGroup);
 	}  
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {

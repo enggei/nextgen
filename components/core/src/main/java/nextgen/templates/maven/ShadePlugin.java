@@ -12,7 +12,12 @@ public class ShadePlugin {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -109,8 +114,7 @@ public class ShadePlugin {
 				"					<transformer implementation=\"org.apache.maven.plugins.shade.resource.ServicesResourceTransformer\"/>\n" + 
 				"					<transformer implementation=\"org.apache.maven.plugins.shade.resource.ManifestResourceTransformer\">\n" + 
 				"						<manifestEntries>\n" + 
-				"							<Main-Class>io.vertx.core.Launcher</Main-Class>\n" + 
-				"							<Main-Verticle>~packageName~.~className~</Main-Verticle>\n" + 
+				"							<Main-Class>~packageName~.~className~</Main-Class>\n" + 
 				"						</manifestEntries>\n" + 
 				"					</transformer>\n" + 
 				"				</transformers>\n" + 

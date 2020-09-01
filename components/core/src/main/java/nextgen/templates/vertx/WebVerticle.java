@@ -9,6 +9,8 @@ public class WebVerticle {
 	private Object _name;
 	private java.util.List<Object> _imports = new java.util.ArrayList<>();
 	private java.util.List<Object> _startStatements = new java.util.ArrayList<>();
+	private java.util.List<Object> _handlers = new java.util.ArrayList<>();
+	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _routes = new java.util.ArrayList<>();
 
@@ -32,8 +34,10 @@ public class WebVerticle {
 		st.add("name", _name);
 		for (Object o : _imports) st.add("imports", o);
 		for (Object o : _startStatements) st.add("startStatements", o);
+		for (Object o : _handlers) st.add("handlers", o);
+		for (Object o : _methods) st.add("methods", o);
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name,init}", map.get("type"), map.get("name"), map.get("init"));
-		for (java.util.Map<String, Object> map : _routes) st.addAggr("routes.{action,url,methodName}", map.get("action"), map.get("url"), map.get("methodName"));
+		for (java.util.Map<String, Object> map : _routes) st.addAggr("routes.{action,url,handler}", map.get("action"), map.get("url"), map.get("handler"));
 		return st.render().trim();
 	}
 
@@ -139,6 +143,64 @@ public class WebVerticle {
 		return this._startStatements;
 	} 
 
+	public WebVerticle addHandlers(Object value) {
+		this._handlers.add(value);
+		return this;
+	}
+
+	public WebVerticle setHandlers(Object[] value) {
+		this._handlers.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public WebVerticle setHandlers(java.util.Collection<Object> values) {
+		this._handlers.addAll(values);
+		return this;
+	}
+
+	public WebVerticle removeHandlers(Object value) {
+		this._handlers.remove(value);
+		return this;
+	}
+
+	public WebVerticle removeHandlers(int index) {
+		this._handlers.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getHandlers() {
+		return this._handlers;
+	} 
+
+	public WebVerticle addMethods(Object value) {
+		this._methods.add(value);
+		return this;
+	}
+
+	public WebVerticle setMethods(Object[] value) {
+		this._methods.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public WebVerticle setMethods(java.util.Collection<Object> values) {
+		this._methods.addAll(values);
+		return this;
+	}
+
+	public WebVerticle removeMethods(Object value) {
+		this._methods.remove(value);
+		return this;
+	}
+
+	public WebVerticle removeMethods(int index) {
+		this._methods.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getMethods() {
+		return this._methods;
+	} 
+
 	public WebVerticle addFields(Object _type, Object _name, Object _init) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("type", _type);
@@ -192,11 +254,11 @@ public class WebVerticle {
 
 	} 
 
-	public WebVerticle addRoutes(Object _action, Object _url, Object _methodName) {
+	public WebVerticle addRoutes(Object _action, Object _url, Object _handler) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("action", _action);
 		map.put("url", _url);
-		map.put("methodName", _methodName);
+		map.put("handler", _handler);
 		this._routes.add(map);
 		return this;
 	}
@@ -206,7 +268,7 @@ public class WebVerticle {
 	}
 
 	public WebVerticle addRoutes(WebVerticle_Routes value) {
-		return addRoutes(value._action, value._url, value._methodName);
+		return addRoutes(value._action, value._url, value._handler);
 	}
 
 	public java.util.stream.Stream<WebVerticle_Routes> streamRoutes() {
@@ -217,18 +279,18 @@ public class WebVerticle {
 
 		Object _action;
 		Object _url;
-		Object _methodName;
+		Object _handler;
 
-		public WebVerticle_Routes(Object _action, Object _url, Object _methodName) {
+		public WebVerticle_Routes(Object _action, Object _url, Object _handler) {
 			this._action = _action;
 			this._url = _url;
-			this._methodName = _methodName;
+			this._handler = _handler;
 		}
 
 		private WebVerticle_Routes(java.util.Map<String, Object> map) {
 			this._action = (Object) map.get("action");
 			this._url = (Object) map.get("url");
-			this._methodName = (Object) map.get("methodName");
+			this._handler = (Object) map.get("handler");
 		}
 
 		public Object getAction() {
@@ -239,8 +301,8 @@ public class WebVerticle {
 			return this._url;
 		}
 
-		public Object getMethodName() {
-			return this._methodName;
+		public Object getHandler() {
+			return this._handler;
 		}
 
 	} 
@@ -258,13 +320,8 @@ public class WebVerticle {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "WebVerticle(packageName,imports,fields,name,startStatements,routes) ::= <<package ~packageName~;\n" + 
+	static final String st = "WebVerticle(packageName,imports,name,fields,startStatements,routes,handlers,methods) ::= <<package ~packageName~;\n" + 
 				"\n" + 
-				"import com.petty.web.api.LoginRequest;\n" + 
-				"import com.petty.web.api.UserSession;\n" + 
-				"import com.petty.web.domain.SSLDeploymentSettings;\n" + 
-				"import com.petty.web.domain.ServerDeploymentOptions;\n" + 
-				"import com.petty.web.domain.UserDeploymentSettings;\n" + 
 				"import io.netty.handler.codec.http.HttpResponseStatus;\n" + 
 				"import io.vertx.core.AbstractVerticle;\n" + 
 				"import io.vertx.core.Future;\n" + 
@@ -284,21 +341,16 @@ public class WebVerticle {
 				"import io.vertx.ext.web.sstore.LocalSessionStore;\n" + 
 				"\n" + 
 				"import java.io.File;\n" + 
-				"import java.util.Map;\n" + 
 				"import java.util.Optional;\n" + 
-				"import java.util.concurrent.ConcurrentHashMap;\n" + 
 				"import java.util.concurrent.atomic.AtomicInteger;\n" + 
 				"\n" + 
-				"import static com.petty.web.PasswordUtils.verifyUserPassword;\n" + 
-				"import static com.petty.web.WebUtils.*;\n" + 
-				"import static com.petty.web.api.WebApiJsonFactory.*;\n" + 
 				"import static io.netty.handler.codec.http.HttpResponseStatus.*;\n" + 
 				"\n" + 
 				"~imports:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
-				"public class WebVerticle extends AbstractVerticle {\n" + 
+				"public class ~name;format=\"capitalize\"~ extends AbstractVerticle {\n" + 
 				"\n" + 
-				"	protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(WebVerticle.class);\n" + 
+				"	protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name;format=\"capitalize\"~.class);\n" + 
 				"\n" + 
 				"	~fields:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
 				"\n" + 
@@ -308,31 +360,10 @@ public class WebVerticle {
 				"\n" + 
 				"		~startStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
-				"		deploymentOptions = new ServerDeploymentOptions(config());\n" + 
-				"		final Optional<SSLDeploymentSettings> ssl = Optional.ofNullable(deploymentOptions.getSsl());\n" + 
-				"\n" + 
-				"		final KeyStoreOptions keyStoreOptions = new KeyStoreOptions().\n" + 
-				"				setPath(deploymentOptions.getJwt().getPath()).\n" + 
-				"				setPassword(deploymentOptions.getJwt().getPassword()).\n" + 
-				"				setType(deploymentOptions.getJwt().getType());\n" + 
-				"\n" + 
-				"		final JWTAuthOptions jwtAuthOptions = new JWTAuthOptions().setKeyStore(keyStoreOptions);\n" + 
-				"		final JWTAuth auth = JWTAuth.create(vertx, jwtAuthOptions);\n" + 
-				"\n" + 
 				"		final Router router = Router.router(vertx);\n" + 
 				"		router.route().handler(BodyHandler.create());\n" + 
 				"		router.route().handler(SessionHandler.create(LocalSessionStore.create(vertx)));\n" + 
-				"		router.post(\"/login\").handler(routingContext -> login(routingContext, auth));\n" + 
-				"		router.route(\"/api/*\").handler(JWTAuthHandler.create(auth, \"/login\"));\n" + 
-				"		router.get(\"/user\").handler(this::getUser);\n" + 
-				"		~routes:{it|router.~it.action~(\"/~it.url~\").handler(this::~it.methodName~);};separator=\"\\n\"~\n" + 
-				"		router.get(\"/images/:name\").handler(this::getImage);\n" + 
-				"		router.get(\"/api/currentTrends\").handler(this::onCurrentTrends);\n" + 
-				"		router.get(\"/api/prime/:id\").handler(this::getPrime);\n" + 
-				"		router.get(\"/api/rent/:id\").handler(this::getRent);\n" + 
-				"		router.get(\"/api/branch/:id\").handler(this::getBranch);\n" + 
-				"		router.get(\"/api/agent/:id\").handler(this::getAgent);\n" + 
-				"		router.get(\"/report/current\").handler(this::getReport);\n" + 
+				"		~routes:{it|router.~it.action~(\"/~it.url~\").handler(~it.handler~);};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"		final HttpServerOptions serverOptions = new HttpServerOptions();\n" + 
 				"\n" + 
@@ -352,194 +383,13 @@ public class WebVerticle {
 				"		vertx.createHttpServer(serverOptions).requestHandler(router::accept).listen(deploymentOptions.getPort());\n" + 
 				"\n" + 
 				"		log.info(\"server running on \" + (ssl.isPresent() ? \"https\" : \"http\") + \"://\" + deploymentOptions.getTcpHost() + \":\" + deploymentOptions.getPort());\n" + 
-				"		log.info(\"server running on \" + (ssl.isPresent() ? \"https\" : \"http\") + \"://\" + deploymentOptions.getTcpName(\"pettyresidential.info\") + \":\" + deploymentOptions.getPort());\n" + 
+				"		log.info(\"server running on \" + (ssl.isPresent() ? \"https\" : \"http\") + \"://\" + deploymentOptions.getTcpName() + \":\" + deploymentOptions.getPort());\n" + 
 				"\n" + 
 				"		startFuture.succeeded();\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	private void login(RoutingContext routingContext, JWTAuth auth) {\n" + 
-				"		WebUtils.debug(\"login\", routingContext);\n" + 
+				"	~handlers:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
-				"		final LoginRequest loginRequest = newLoginRequest(routingContext.getBodyAsJson());\n" + 
-				"\n" + 
-				"		final Optional<UserDeploymentSettings> userFound = deploymentOptions.getJwt().getUsers()\n" + 
-				"				.filter(userDeploymentSettings -> userDeploymentSettings.getUsername().equals(loginRequest.getUsername()))\n" + 
-				"				.findFirst();\n" + 
-				"\n" + 
-				"		if (!userFound.isPresent()) {\n" + 
-				"			sendErrors(routingContext, UNAUTHORIZED, \"User credentials not found\");\n" + 
-				"			return;\n" + 
-				"		}\n" + 
-				"\n" + 
-				"		final boolean passwordMatch = verifyUserPassword(loginRequest.getPassword(), userFound.get().getPassword(), userFound.get().getSalt());\n" + 
-				"		if (!passwordMatch) {\n" + 
-				"			sendErrors(routingContext, BAD_REQUEST, \"User credentials not found\");\n" + 
-				"			return;\n" + 
-				"		}\n" + 
-				"\n" + 
-				"		final String token = auth.generateToken(\n" + 
-				"				newJWTPayload()\n" + 
-				"						.setSub(userFound.get().getUsername())\n" + 
-				"						.getJsonObject(),\n" + 
-				"				new JWTOptions()\n" + 
-				"						.setExpiresInMinutes(deploymentOptions.getJwt().getExpiresInMinutes())\n" + 
-				"						.setSubject(userFound.get().getUsername()));\n" + 
-				"\n" + 
-				"		log.info(\"login user token \" + userFound.get().getToken());\n" + 
-				"\n" + 
-				"\n" + 
-				"		final UserSession userSession = newUserSession()\n" + 
-				"				.setToken(token)\n" + 
-				"				.setUsername(userFound.get().getUsername());\n" + 
-				"		sessionMap.put(token, userSession);\n" + 
-				"\n" + 
-				"		sendResponse(routingContext, OK, new JsonObject().put(\"user\", userSession.getJsonObject()));\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	private void getUser(RoutingContext routingContext) {\n" + 
-				"\n" + 
-				"		final String authorization = routingContext.request().getHeader(\"Authorization\");\n" + 
-				"		final String token = authorization == null ? null : authorization.substring(7).trim();\n" + 
-				"		log.info(\"request token \" + token);\n" + 
-				"\n" + 
-				"		final UserSession userSession = sessionMap.get(token);\n" + 
-				"\n" + 
-				"		if (userSession == null) {\n" + 
-				"			sendErrors(routingContext, BAD_REQUEST, \"User session not found\");\n" + 
-				"			return;\n" + 
-				"		}\n" + 
-				"\n" + 
-				"		final Optional<UserDeploymentSettings> userFound = deploymentOptions.getJwt().getUsers()\n" + 
-				"				.filter(userDeploymentSettings -> userDeploymentSettings.getUsername().equals(userSession.getUsername()))\n" + 
-				"				.findFirst();\n" + 
-				"\n" + 
-				"		if (!userFound.isPresent()) {\n" + 
-				"			sendErrors(routingContext, BAD_REQUEST, \"User session not found\");\n" + 
-				"			return;\n" + 
-				"		}\n" + 
-				"\n" + 
-				"		setUserMenus(userFound.get(), userSession);\n" + 
-				"\n" + 
-				"		sendResponse(routingContext, OK, new JsonObject().put(\"user\", userSession.getJsonObject()));\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	private void getImage(RoutingContext routingContext) {\n" + 
-				"		routingContext.response()\n" + 
-				"				.putHeader(\"Content-Type\", \"image/jpg\")\n" + 
-				"				.sendFile(new File(\".\", routingContext.pathParam(\"name\")).getAbsolutePath());\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	private void getPrime(RoutingContext routingContext) {\n" + 
-				"\n" + 
-				"		final String id = routingContext.request().getParam(\"id\");\n" + 
-				"		log.info(\"handle getPrime \" + id);\n" + 
-				"\n" + 
-				"		sendJsonFile(routingContext, \"./prime_\" + id + \".json\");\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	private void getRent(RoutingContext routingContext) {\n" + 
-				"\n" + 
-				"		final String id = routingContext.request().getParam(\"id\");\n" + 
-				"		log.info(\"handle getRent \" + id);\n" + 
-				"\n" + 
-				"		sendJsonFile(routingContext, \"./rent_\" + id + \".json\");\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	private void getBranch(RoutingContext routingContext) {\n" + 
-				"\n" + 
-				"		final String id = routingContext.request().getParam(\"id\");\n" + 
-				"		log.info(\"handle getBranch \" + id);\n" + 
-				"\n" + 
-				"		sendJsonFile(routingContext, \"./branch_\" + id + \".json\");\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	private void getAgent(RoutingContext routingContext) {\n" + 
-				"\n" + 
-				"		final String id = routingContext.request().getParam(\"id\");\n" + 
-				"		log.info(\"handle getAgent \" + id);\n" + 
-				"\n" + 
-				"		sendJsonFile(routingContext, \"./agent_\" + id + \".json\");\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	private void onCurrentTrends(RoutingContext routingContext) {\n" + 
-				"		log.info(\"handle onCurrentTrends\");\n" + 
-				"		sendJsonFile(routingContext, \"./currentTrends.json\");\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	private void getReport(RoutingContext routingContext) {\n" + 
-				"		routingContext.response()\n" + 
-				"				.putHeader(\"Content-Type\", \"application/pdf\")\n" + 
-				"				.setStatusCode(HttpResponseStatus.OK.code())\n" + 
-				"				.sendFile(\"./report.pdf\");\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	private void setUserMenus(UserDeploymentSettings settings, UserSession session) {\n" + 
-				"\n" + 
-				"		if (session.getMenus().count() != 0L) return;\n" + 
-				"\n" + 
-				"		final AtomicInteger key = new AtomicInteger(0);\n" + 
-				"\n" + 
-				"		session.addMenus(newUserMenu()\n" + 
-				"				.setLabel(\"Trends\")\n" + 
-				"				.setUrl(\"/currentTrends\")\n" + 
-				"				.setKey(key.incrementAndGet()));\n" + 
-				"\n" + 
-				"		for (String prime : new String[]{\n" + 
-				"				\"Barnoldswick\",\n" + 
-				"				\"Barrowford\",\n" + 
-				"				\"Burnley\",\n" + 
-				"				\"Buxton\",\n" + 
-				"				\"Chester\",\n" + 
-				"				\"Clitheroe\",\n" + 
-				"				\"Colne\",\n" + 
-				"				\"Crewe\",\n" + 
-				"				\"Knutsford\",\n" + 
-				"				\"Nantwich\",\n" + 
-				"				\"Northwich\",\n" + 
-				"				\"Skipton\",\n" + 
-				"				\"Tarporley\"}) {\n" + 
-				"			session.addMenus(newUserMenu()\n" + 
-				"					.setLabel(\"Prime \" + prime)\n" + 
-				"					.setUrl(\"/primeReport/\" + prime)\n" + 
-				"					.setKey(key.incrementAndGet()));\n" + 
-				"		}\n" + 
-				"		for (String rent : new String[]{\n" + 
-				"				\"Barnoldswick\",\n" + 
-				"				\"Barrowford\",\n" + 
-				"				\"Burnley\",\n" + 
-				"				\"Buxton\",\n" + 
-				"				\"Chester\",\n" + 
-				"				\"Colne\",\n" + 
-				"				\"Crewe\",\n" + 
-				"				\"Knutsford\",\n" + 
-				"				\"Nantwich\",\n" + 
-				"				\"Northwich\",\n" + 
-				"				\"Tarporley\"}) {\n" + 
-				"			session.addMenus(newUserMenu()\n" + 
-				"					.setLabel(\"Rent \" + rent)\n" + 
-				"					.setUrl(\"/rentReport/\" + rent)\n" + 
-				"					.setKey(key.incrementAndGet()));\n" + 
-				"		}\n" + 
-				"\n" + 
-				"		for (String branch : new String[]{\n" + 
-				"				\"Barnoldswick\",\n" + 
-				"				\"Barrowford\",\n" + 
-				"				\"Burnley\",\n" + 
-				"				\"Buxton\",\n" + 
-				"				\"Chester\",\n" + 
-				"				\"Colne\",\n" + 
-				"				\"Crewe\",\n" + 
-				"				\"Knutsford\",\n" + 
-				"				\"Nantwich\",\n" + 
-				"				\"Northwich\",\n" + 
-				"				\"Tarporley\"}) {\n" + 
-				"			session.addMenus(newUserMenu()\n" + 
-				"					.setLabel(\"Branch \" + branch)\n" + 
-				"					.setUrl(\"/branch/\" + branch)\n" + 
-				"					.setKey(key.incrementAndGet()));\n" + 
-				"		}\n" + 
-				"\n" + 
-				"		settings.getAccess().forEach(userAccess -> session.addMenus(newUserMenu().setKey(key.incrementAndGet()).setUrl(userAccess.getUrl()).setLabel(userAccess.getLabel())));\n" + 
-				"	}\n" + 
+				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"} >>";
 }  

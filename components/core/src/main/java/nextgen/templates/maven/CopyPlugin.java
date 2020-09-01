@@ -13,7 +13,12 @@ public class CopyPlugin {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -116,7 +121,7 @@ public class CopyPlugin {
 	static final String st = "copyPlugin(outputDirectory,directory,include) ::= <<<!-- https://maven.apache.org/plugins/maven-resources-plugin/ -->\n" + 
 				"<plugin>\n" + 
 				"	<artifactId>maven-resources-plugin</artifactId>\n" + 
-				"	<version>3.1.0</version>\n" + 
+				"	<version>3.2.0</version>\n" + 
 				"	<executions>\n" + 
 				"		<execution>\n" + 
 				"			<id>copy-resources</id>\n" + 

@@ -21,5 +21,9 @@ public enum DependencyScope {
 	Import() {
 		@Override
 		public String toString() { return "import"; }
+	},
+	Compile() {
+		@Override
+		public String toString() { return "compile"; }
 	}
 }  

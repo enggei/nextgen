@@ -277,7 +277,7 @@
     }, {
       "uuid" : "e2949dab-710d-40d6-86ac-8f08b63ca5ce",
       "name" : "shadePlugin",
-      "text" : "<!-- https://maven.apache.org/plugins/maven-shade-plugin/ -->\n<plugin>\n\t<groupId>org.apache.maven.plugins</groupId>\n\t<artifactId>maven-shade-plugin</artifactId>\n\t<version>2.4.3</version>\n\t<executions>\n\t\t<execution>\n\t\t\t<phase>package</phase>\n\t\t\t<goals>\n\t\t\t\t<goal>shade</goal>\n\t\t\t</goals>\n\t\t\t<configuration>\n\t\t\t\t<filters>\n\t\t\t\t\t<filter>\n\t\t\t\t\t\t<artifact>*:*</artifact>\n\t\t\t\t\t\t<excludes>\n\t\t\t\t\t\t\t<exclude>META-INF/*.SF</exclude>\n\t\t\t\t\t\t\t<exclude>META-INF/*.DSA</exclude>\n\t\t\t\t\t\t\t<exclude>META-INF/*.RSA</exclude>\n\t\t\t\t\t\t</excludes>\n\t\t\t\t\t</filter>\n\t\t\t\t</filters>\n\t\t\t\t<transformers>\n\t\t\t\t\t<transformer implementation=\"org.apache.maven.plugins.shade.resource.ServicesResourceTransformer\"/>\n\t\t\t\t\t<transformer implementation=\"org.apache.maven.plugins.shade.resource.ManifestResourceTransformer\">\n\t\t\t\t\t\t<manifestEntries>\n\t\t\t\t\t\t\t<Main-Class>io.vertx.core.Launcher</Main-Class>\n\t\t\t\t\t\t\t<Main-Verticle>~packageName~.~className~</Main-Verticle>\n\t\t\t\t\t\t</manifestEntries>\n\t\t\t\t\t</transformer>\n\t\t\t\t</transformers>\n\t\t\t\t<artifactSet/>\n\t\t\t\t<outputFile>target/${project.artifactId}-${project.version}-fat.jar</outputFile>\n\t\t\t</configuration>\n\t\t</execution>\n\t</executions>\n</plugin> ",
+      "text" : "<!-- https://maven.apache.org/plugins/maven-shade-plugin/ -->\n<plugin>\n\t<groupId>org.apache.maven.plugins</groupId>\n\t<artifactId>maven-shade-plugin</artifactId>\n\t<version>2.4.3</version>\n\t<executions>\n\t\t<execution>\n\t\t\t<phase>package</phase>\n\t\t\t<goals>\n\t\t\t\t<goal>shade</goal>\n\t\t\t</goals>\n\t\t\t<configuration>\n\t\t\t\t<filters>\n\t\t\t\t\t<filter>\n\t\t\t\t\t\t<artifact>*:*</artifact>\n\t\t\t\t\t\t<excludes>\n\t\t\t\t\t\t\t<exclude>META-INF/*.SF</exclude>\n\t\t\t\t\t\t\t<exclude>META-INF/*.DSA</exclude>\n\t\t\t\t\t\t\t<exclude>META-INF/*.RSA</exclude>\n\t\t\t\t\t\t</excludes>\n\t\t\t\t\t</filter>\n\t\t\t\t</filters>\n\t\t\t\t<transformers>\n\t\t\t\t\t<transformer implementation=\"org.apache.maven.plugins.shade.resource.ServicesResourceTransformer\"/>\n\t\t\t\t\t<transformer implementation=\"org.apache.maven.plugins.shade.resource.ManifestResourceTransformer\">\n\t\t\t\t\t\t<manifestEntries>\n\t\t\t\t\t\t\t<Main-Class>~packageName~.~className~</Main-Class>\n\t\t\t\t\t\t</manifestEntries>\n\t\t\t\t\t</transformer>\n\t\t\t\t</transformers>\n\t\t\t\t<artifactSet/>\n\t\t\t\t<outputFile>target/${project.artifactId}-${project.version}-fat.jar</outputFile>\n\t\t\t</configuration>\n\t\t</execution>\n\t</executions>\n</plugin> ",
       "parameters" : [ {
         "uuid" : "bafeb6b2-944f-4d95-af56-d14dbdd7d0c8",
         "name" : "packageName",
@@ -326,7 +326,7 @@
     }, {
       "uuid" : "f425a49a-40ef-4799-99d7-584e57d7bb40",
       "name" : "copyPlugin",
-      "text" : "<!-- https://maven.apache.org/plugins/maven-resources-plugin/ -->\n<plugin>\n\t<artifactId>maven-resources-plugin</artifactId>\n\t<version>3.1.0</version>\n\t<executions>\n\t\t<execution>\n\t\t\t<id>copy-resources</id>\n\t\t\t<phase>validate</phase>\n\t\t\t<goals>\n\t\t\t\t<goal>copy-resources</goal>\n\t\t\t</goals>\n\t\t\t<configuration>\n\t\t\t\t<outputDirectory>~outputDirectory~</outputDirectory>\n\t\t\t\t<resources>\t\t\t \n\t\t\t\t\t<resource>\n\t\t\t\t\t\t<directory>~directory~</directory>\n\t\t\t\t\t\t<includes>\n\t\t\t\t\t\t\t~include:{it|<include>~it~</include>};separator=\"\\n\"~\n\t\t\t\t\t\t</includes>\n\t\t\t\t\t</resource>\n\t\t\t\t</resources>\t\t\t\t  \n\t\t\t</configuration>\t\t\t\t\n\t\t</execution>\n\t</executions>\n</plugin> ",
+      "text" : "<!-- https://maven.apache.org/plugins/maven-resources-plugin/ -->\n<plugin>\n\t<artifactId>maven-resources-plugin</artifactId>\n\t<version>3.2.0</version>\n\t<executions>\n\t\t<execution>\n\t\t\t<id>copy-resources</id>\n\t\t\t<phase>validate</phase>\n\t\t\t<goals>\n\t\t\t\t<goal>copy-resources</goal>\n\t\t\t</goals>\n\t\t\t<configuration>\n\t\t\t\t<outputDirectory>~outputDirectory~</outputDirectory>\n\t\t\t\t<resources>\t\t\t \n\t\t\t\t\t<resource>\n\t\t\t\t\t\t<directory>~directory~</directory>\n\t\t\t\t\t\t<includes>\n\t\t\t\t\t\t\t~include:{it|<include>~it~</include>};separator=\"\\n\"~\n\t\t\t\t\t\t</includes>\n\t\t\t\t\t</resource>\n\t\t\t\t</resources>\t\t\t\t  \n\t\t\t</configuration>\t\t\t\t\n\t\t</execution>\n\t</executions>\n</plugin> ",
       "parameters" : [ {
         "uuid" : "f1d6f054-c19a-43ca-858a-174c5b54e922",
         "name" : "outputDirectory",
@@ -532,6 +532,10 @@
       "uuid" : "dd03edfc-511b-4cdd-8c8c-96e1a41b513a",
       "name" : "Import",
       "lexical" : "import"
+    }, {
+      "uuid" : "a644d92d-3b59-4b8e-8ba9-eca39b2ea4f8",
+      "name" : "Compile",
+      "lexical" : "compile"
     } ]
   }, {
     "uuid" : "59c76de1-72d0-4a6f-a2bb-c497eb042e36",

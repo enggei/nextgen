@@ -126,6 +126,19 @@ public class JsonFactory {
 				"		if (!file.exists() || !file.isFile()) throw new IllegalArgumentException(\"could not read \" + file.getAbsolutePath());\n" + 
 				"		return new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath())));\n" + 
 				"	}\n" + 
+				"\n" + 
+				"	public static io.vertx.core.json.JsonObject load(java.io.InputStream inputStream) throws java.io.IOException {\n" + 
+				"		if (inputStream == null) throw new java.io.IOException(\"inputStream is null\");\n" + 
+				"		java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();\n" + 
+				"		int read;\n" + 
+				"		byte[] data = new byte[2048];\n" + 
+				"		while ((read = inputStream.read(data, 0, data.length)) != -1)\n" + 
+				"			buffer.write(data, 0, read);\n" + 
+				"		inputStream.close();\n" + 
+				"		final byte[] content = buffer.toByteArray();\n" + 
+				"		buffer.close();\n" + 
+				"		return new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(content));\n" + 
+				"	}\n" + 
 				"	\n" + 
 				"	public static void save(io.vertx.core.json.JsonObject jsonObject, java.io.File file) throws java.io.IOException {\n" + 
 				"\n" + 
@@ -137,16 +150,16 @@ public class JsonFactory {
 				"\n" + 
 				"		java.nio.file.Files.write(file.toPath(), jsonObject.toBuffer().getBytes());\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"~entities:{it|\n" + 
 				"	public static ~it~ new~it~() { \n" + 
 				"		return new ~it~();\n" + 
 				"	\\}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	public static ~it~ new~it~NoUuid() { \n" + 
 				"		return new ~it~().removeUuid();\n" + 
 				"	\\}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	public static ~it~ new~it~(io.vertx.core.json.JsonObject jsonObject) { \n" + 
 				"		return new ~it~(jsonObject);\n" + 
 				"	\\}\n" + 
