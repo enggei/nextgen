@@ -17,7 +17,12 @@ public class NodeAction {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -243,7 +248,7 @@ public class NodeAction {
 				"	~fields:{it|~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
 				"	\n" + 
 				"	~name~(~if(title)~~else~String name, ~endif~~nodeType~ node, ~canvasName~ canvas, PInputEvent event~if(fields)~, ~endif~~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
-				"		super(~if(title)~\"~title~\"~else~~name~~endif~, node, canvas, event);\n" + 
+				"		super(~if(title)~\"~title~\"~else~name~endif~, node, canvas, event);\n" + 
 				"		~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
 				"		~constructorStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"	}\n" + 

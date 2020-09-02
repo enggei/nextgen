@@ -43,7 +43,7 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 	~fields:{it|~it.type~ ~it.name~;};separator="\n"~
 
 	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=","~) {
-		this(~fields:{it|~it.name~};separator=", "~~if(fields)~, ~endif~Color.WHITE, new Dimension(1024, 1024));
+		this(~fields:{it|~it.name~};separator=", "~~if(fields)~, ~endif~UIManager.getColor("Panel.background"), new Dimension(1024, 1024));
 	}
 
 	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=", "~~if(fields)~, ~endif~Color background, Dimension preferredSize) {
@@ -710,7 +710,7 @@ NodeAction(name,nodeType,fields,title,canvasName,constructorStatements,statement
 	~fields:{it|~it.type~ ~it.name~;};separator="\n"~
 	
 	~name~(~if(title)~~else~String name, ~endif~~nodeType~ node, ~canvasName~ canvas, PInputEvent event~if(fields)~, ~endif~~fields:{it|~it.type~ ~it.name~};separator=", "~) {
-		super(~if(title)~"~title~"~else~~name~~endif~, node, canvas, event);
+		super(~if(title)~"~title~"~else~name~endif~, node, canvas, event);
 		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
 		~constructorStatements:{it|~it~};separator="\n"~
 	}
@@ -886,6 +886,7 @@ case java.awt.event.KeyEvent.VK_~it.key~:
 ~endif~
 
 	~methods:{it|~it~};separator="\n\n"~
+	
 	~actions:{it|~it~};separator="\n\n"~
 }  >>
 

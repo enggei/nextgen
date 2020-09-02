@@ -29,7 +29,12 @@ public class PNodeImpl {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -171,10 +176,6 @@ public class PNodeImpl {
 	public PNodeImpl setUuid(Object value) {
 		this._uuid = value;
 		return this;
-	}
-
-	public Object getUuid() {
-		return this._uuid;
 	}
 
 	public Object getUuid(Object defaultValue) {
@@ -696,6 +697,7 @@ public class PNodeImpl {
 				"~endif~\n" + 
 				"\n" + 
 				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
+				"	\n" + 
 				"	~actions:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"} >>";
 }  

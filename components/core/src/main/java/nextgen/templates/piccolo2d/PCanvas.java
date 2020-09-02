@@ -22,7 +22,12 @@ public class PCanvas {
 		this.stGroup = stGroup;
 	}
 
+	@Deprecated
 	public java.util.UUID uuid() {
+		return uuid;
+	}
+
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -460,7 +465,7 @@ public class PCanvas {
 				"	~fields:{it|~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=\",\"~) {\n" + 
-				"		this(~fields:{it|~it.name~};separator=\", \"~~if(fields)~, ~endif~Color.WHITE, new Dimension(1024, 1024));\n" + 
+				"		this(~fields:{it|~it.name~};separator=\", \"~~if(fields)~, ~endif~UIManager.getColor(\"Panel.background\"), new Dimension(1024, 1024));\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=\", \"~~if(fields)~, ~endif~Color background, Dimension preferredSize) {\n" + 

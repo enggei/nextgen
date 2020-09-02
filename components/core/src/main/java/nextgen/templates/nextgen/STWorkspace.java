@@ -178,7 +178,7 @@ public class STWorkspace {
 				"					return Optional.of((STModelCanvas) tabComponentAt);\n" + 
 				"		}\n" + 
 				"\n" + 
-				"		final STModelCanvas stModelCanvas = new STModelCanvas(Color.WHITE, new Dimension(800,600),presentationModel);\n" + 
+				"		final STModelCanvas stModelCanvas = new STModelCanvas(UIManager.getColor(\"Panel.background\"), new Dimension(800,600),presentationModel);\n" + 
 				"		addPane(\"Canvas\", stModelCanvas);\n" + 
 				"		return Optional.of(stModelCanvas);\n" + 
 				"	}\n" + 

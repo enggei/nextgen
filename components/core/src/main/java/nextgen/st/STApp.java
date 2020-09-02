@@ -12,8 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
-import java.util.*;
-import java.util.stream.Stream;
+import java.util.Optional;
 
 import static nextgen.st.STParser.readJsonObject;
 import static nextgen.st.domain.STJsonFactory.newSTGDirectory;
@@ -55,35 +54,20 @@ public class STApp extends JFrame {
       final File templates = new File(resources, "templates");
 
       STAppModel config = loadConfig("appconfig.json", STJsonFactory.newSTAppModel()
-            .setModelDb("./db")
-            .setEditorFontSize(12)
-            .setRootDir(javaMain.getAbsolutePath())
-            .setGeneratorRoot(javaMain.getAbsolutePath())
-            .setGeneratorPackage("nextgen.st")
-            .setGeneratorName("StringTemplate")
+                                                                    .setModelDb("./db")
+                                                                    .setEditorFontSize(12)
+                                                                    .setRootDir(javaMain.getAbsolutePath())
+                                                                    .setGeneratorRoot(javaMain.getAbsolutePath())
+                                                                    .setGeneratorPackage("nextgen.st")
+                                                                    .setGeneratorName("StringTemplate")
       );
 
-      for (UIManager.LookAndFeelInfo laf : UIManager.getInstalledLookAndFeels()) {
-         if ("Nimbus".equals(laf.getName())) {
-            try {
-               UIManager.setLookAndFeel(laf.getClassName());
-               UIManager.put("ToolTip.background", Color.WHITE);
-               UIManager.put("ToolTip.foreground", Color.BLACK);
+      com.formdev.flatlaf.FlatDarculaLaf.install();
+      SwingUtil.printSwingDefaults(System.out);
+      UIManager.put("TextField.font", new Font("InputMono", Font.PLAIN, UIManager.getFont("Tree.font").getSize()));
+      UIManager.put("TextArea.font", new Font("InputMono", Font.PLAIN, UIManager.getFont("Tree.font").getSize()));
 
-               final Set<String> fonts = new HashSet<>(Arrays.asList(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
-               Stream.of("InputMono", "Hack", "Fira Code", "Source Code Pro", "Monospaced")
-                     .filter(fonts::contains)
-                     .findFirst()
-                     .map(fontName -> UIManager.put("ToolTip.font", new Font(fontName, Font.PLAIN, config.getEditorFontSize(14))));
-
-            } catch (Exception e) {
-               System.err.println("Could not set look and feel '" + "Nimbus" + "': " + e.getMessage());
-            }
-         }
-      }
-
-      SwingUtil.show(new STApp(config
-            .addDirectories(load(templates, javaMain, "nextgen.templates"))));
+      SwingUtil.show(new STApp(config.addDirectories(load(templates, javaMain, "nextgen.templates"))));
    }
 
    public static STGDirectory load(File path, File outputRoot, String outputPackage) {
@@ -94,9 +78,9 @@ public class STApp extends JFrame {
             .setOutputPath(outputRoot.getAbsolutePath());
 
       Optional.ofNullable(list(path, ".json"))
-            .ifPresent(files -> {
-               for (File file : files) root.addGroups(new STGroupModel(readJsonObject(file)));
-            });
+              .ifPresent(files -> {
+                 for (File file : files) root.addGroups(new STGroupModel(readJsonObject(file)));
+              });
 
       return root;
    }

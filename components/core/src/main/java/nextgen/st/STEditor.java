@@ -21,15 +21,17 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import static nextgen.utils.SwingUtil.newRSyntaxTextArea;
+
 public class STEditor extends JPanel {
 
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STEditor.class);
 
-    private final RSyntaxTextArea txtEditor = new RSyntaxTextArea(20, 60);
+    private final RSyntaxTextArea txtEditor = newRSyntaxTextArea(20, 60);
     private final STEditorCommandPanel commandPanel = new STEditorCommandPanel();
     private final STEditorInfoPanel infoPanel;
 
-    private final Color uneditedColor = txtEditor.getBackground();
+    private final Color uneditedColor = UIManager.getColor("Panel.background");
     private final Color editedColor = Color.decode("#f0f0f0");
     private final Color errorColor = Color.decode("#fbb4ae");
     private final Border defaultBorder = txtEditor.getBorder();
@@ -61,16 +63,12 @@ public class STEditor extends JPanel {
         pop.addSeparator();
         pop.add(newAction("Add Java method", actionEvent -> addJavaMethod()));
 
-        changeStyleViaThemeXml();
-
-        this.txtEditor.setFont(presentationModel.getPreferredFont());
         this.txtEditor.setTabSize(3);
         this.txtEditor.setCodeFoldingEnabled(true);
         this.txtEditor.addKeyListener(new STTemplateEditorKeyListener());
 
         this.startText = STGenerator.toStg(stGroupModel).trim();
 
-        this.txtEditor.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
         this.txtEditor.setText(startText);
         this.txtEditor.setEditable(false);
         this.txtEditor.setCaretPosition(0);
@@ -78,7 +76,7 @@ public class STEditor extends JPanel {
 
         this.commandPanel.setEditable(false);
 
-        add(new RTextScrollPane(txtEditor), BorderLayout.CENTER);
+        add(SwingUtil.newRTextScrollPane(txtEditor), BorderLayout.CENTER);
         add(commandPanel, BorderLayout.NORTH);
         add(infoPanel, BorderLayout.SOUTH);
         setPreferredSize(new Dimension(800, 600));
@@ -115,7 +113,6 @@ public class STEditor extends JPanel {
 
         this.startText = string.trim();
 
-        this.txtEditor.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
         this.txtEditor.setText(startText);
         this.txtEditor.setCaretPosition(0);
         this.txtEditor.setEditable(stTemplate != null);
@@ -124,15 +121,6 @@ public class STEditor extends JPanel {
         this.txtEditor.discardAllEdits();
         this.txtEditor.setBackground(uneditedColor);
         this.infoPanel.clear();
-    }
-
-    private void changeStyleViaThemeXml() {
-        try {
-            Theme theme = Theme.load(getClass().getResourceAsStream("/org/fife/ui/rsyntaxtextarea/themes/idea.xml"));
-            theme.apply(txtEditor);
-        } catch (IOException ioe) { // Never happens
-            ioe.printStackTrace();
-        }
     }
 
     private void generate() {
@@ -419,7 +407,6 @@ public class STEditor extends JPanel {
         public STEditorInfoPanel() {
             super(new BorderLayout());
 
-            this.textArea.setFont(presentationModel.getPreferredFont());
             this.textArea.setTabSize(3);
             this.textArea.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 

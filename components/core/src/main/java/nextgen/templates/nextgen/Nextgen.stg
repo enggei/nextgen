@@ -469,10 +469,10 @@ BaseCanvasNode() ::= <<protected class BaseCanvasNode<T> extends PNode {
 	private PPath rectangle;
 
 	public BaseCanvasNode(T model, String uuid, String label) {
-		this.addAttribute("_defaultColor", Color.decode("#000000"));
-		this.addAttribute("_selectedColor", new Color(174, 1, 126));
-		this.addAttribute("_highlightedColor", new Color(240, 59, 32));
-		this.addAttribute("_rectangleColor", new Color(67, 162, 202, 50));
+		this.addAttribute("_defaultColor", UIManager.getColor("TextField.foreground"));
+		this.addAttribute("_selectedColor", Color.decode("#2b8cbe));
+		this.addAttribute("_highlightedColor", Color.decode("#e66101));
+		this.addAttribute("_rectangleColor", Color.decode("#2b8cbe));
 		this.addAttribute("_model", model);
 		this.addAttribute("_uuid", uuid);
 		this.addAttribute("_text", label);
@@ -825,6 +825,7 @@ BaseCanvasNode() ::= <<protected class BaseCanvasNode<T> extends PNode {
 		void actionPerformed(PInputEvent event, ActionEvent e) {
 			javax.swing.SwingUtilities.invokeLater(() -> {
 				thisCanvas().getAllRelations().forEach(relation -> thisCanvas().removeRelation(relation.getUuid()));
+				thisCanvas().relationLayer.removeAllChildren();
 				thisCanvas().getAllNodes().filter(canvasNode -> !canvasNode.getUuid().equals(getUuid())).forEach(BaseCanvasNode::close);
 			});
 		}
@@ -1369,7 +1370,7 @@ public class ~name~ extends JTabbedPane {
 					return Optional.of((STModelCanvas) tabComponentAt);
 		}
 
-		final STModelCanvas stModelCanvas = new STModelCanvas(Color.WHITE, new Dimension(800,600),presentationModel);
+		final STModelCanvas stModelCanvas = new STModelCanvas(UIManager.getColor("Panel.background"), new Dimension(800,600),presentationModel);
 		addPane("Canvas", stModelCanvas);
 		return Optional.of(stModelCanvas);
 	}

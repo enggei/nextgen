@@ -50,10 +50,10 @@ public class BaseCanvasNode {
 				"	private PPath rectangle;\n" + 
 				"\n" + 
 				"	public BaseCanvasNode(T model, String uuid, String label) {\n" + 
-				"		this.addAttribute(\"_defaultColor\", Color.decode(\"#000000\"));\n" + 
-				"		this.addAttribute(\"_selectedColor\", new Color(174, 1, 126));\n" + 
-				"		this.addAttribute(\"_highlightedColor\", new Color(240, 59, 32));\n" + 
-				"		this.addAttribute(\"_rectangleColor\", new Color(67, 162, 202, 50));\n" + 
+				"		this.addAttribute(\"_defaultColor\", UIManager.getColor(\"TextField.foreground\"));\n" + 
+				"		this.addAttribute(\"_selectedColor\", Color.decode(\"#2b8cbe));\n" + 
+				"		this.addAttribute(\"_highlightedColor\", Color.decode(\"#e66101));\n" + 
+				"		this.addAttribute(\"_rectangleColor\", Color.decode(\"#2b8cbe));\n" + 
 				"		this.addAttribute(\"_model\", model);\n" + 
 				"		this.addAttribute(\"_uuid\", uuid);\n" + 
 				"		this.addAttribute(\"_text\", label);\n" + 
@@ -406,6 +406,7 @@ public class BaseCanvasNode {
 				"		void actionPerformed(PInputEvent event, ActionEvent e) {\n" + 
 				"			javax.swing.SwingUtilities.invokeLater(() -> {\n" + 
 				"				thisCanvas().getAllRelations().forEach(relation -> thisCanvas().removeRelation(relation.getUuid()));\n" + 
+				"				thisCanvas().relationLayer.removeAllChildren();\n" + 
 				"				thisCanvas().getAllNodes().filter(canvasNode -> !canvasNode.getUuid().equals(getUuid())).forEach(BaseCanvasNode::close);\n" + 
 				"			});\n" + 
 				"		}\n" + 

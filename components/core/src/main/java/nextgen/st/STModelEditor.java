@@ -28,7 +28,7 @@ public class STModelEditor extends JPanel {
 
         this.stModel = stModel;
         this.presentationModel = presentationModel;
-        setBackground(Color.WHITE);
+        setBackground(UIManager.getColor("Panel.background"));
 
         txtEditor.setEditable(false);
         txtEditor.addKeyListener(getEditorKeyListener());

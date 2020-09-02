@@ -104,7 +104,7 @@ public class STModelGrid extends JPanel {
 
     public JPanel getColumnPanel(String header) {
         final JPanel headerPanel = new JPanel();
-        headerPanel.setBackground(Color.WHITE);
+        headerPanel.setBackground(UIManager.getColor("Panel.background"));
         headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
         headerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         headerPanel.add(new JLabel(header, SwingConstants.LEFT));
@@ -165,7 +165,7 @@ public class STModelGrid extends JPanel {
                 } else
                     stArgument.setValue(stValue);
                 log.info("saving " + presentationModel.render(stValue));
-                txtValue.setBackground(Color.WHITE);
+                txtValue.setBackground(UIManager.getColor("Panel.background"));
             });
         }
 
@@ -174,7 +174,7 @@ public class STModelGrid extends JPanel {
             presentationModel.db.doInTransaction(transaction -> {
                 stModel.removeArguments(stArgument);
                 txtValue.setText("");
-                txtValue.setBackground(Color.WHITE);
+                txtValue.setBackground(UIManager.getColor("Panel.background"));
             });
         }
     }

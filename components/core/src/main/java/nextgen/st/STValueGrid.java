@@ -29,12 +29,12 @@ public class STValueGrid extends JPanel {
         this.presentationModel = presentationModel;
         this.resultsModel = new ResultsTableModel();
 
-        setBackground(Color.WHITE);
+        setBackground(UIManager.getColor("Panel.background"));
 
         final JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         final JTextField txtSearch = new JTextField(30);
         final JButton btnSearch = new JButton(getSearchAction(txtSearch));
-        searchPanel.setBackground(Color.WHITE);
+        searchPanel.setBackground(UIManager.getColor("Panel.background"));
         searchPanel.add(new JLabel("Search"));
         searchPanel.add(txtSearch);
         searchPanel.add(btnSearch);
@@ -43,7 +43,7 @@ public class STValueGrid extends JPanel {
         final JPanel replacePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         final JTextField txtReplace = new JTextField(30);
         final JButton btnReplace = new JButton(getReplaceAction(txtSearch, txtReplace));
-        replacePanel.setBackground(Color.WHITE);
+        replacePanel.setBackground(UIManager.getColor("Panel.background"));
         replacePanel.add(new JLabel("Replace with"));
         replacePanel.add(txtReplace);
         replacePanel.add(btnReplace);
@@ -63,7 +63,7 @@ public class STValueGrid extends JPanel {
         results.getColumn("Result").setCellEditor(new STValueElementEditor());
 
         final JScrollPane jScrollPane = new JScrollPane(results);
-        jScrollPane.setBackground(Color.WHITE);
+        jScrollPane.setBackground(UIManager.getColor("Panel.background"));
         jScrollPane.getVerticalScrollBar().setUnitIncrement(5);
         add(jScrollPane, BorderLayout.CENTER);
     }
