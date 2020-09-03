@@ -32,8 +32,8 @@ public class STEditor extends JPanel {
     private final STEditorInfoPanel infoPanel;
 
     private final Color uneditedColor = UIManager.getColor("Panel.background");
-    private final Color editedColor = Color.decode("#f0f0f0");
-    private final Color errorColor = Color.decode("#fbb4ae");
+    private final Color editedColor = UIManager.getColor("Panel.background").brighter();
+    private final Color errorColor = Color.decode("#e66101");
     private final Border defaultBorder = txtEditor.getBorder();
 
     private final STAppPresentationModel presentationModel;
@@ -417,7 +417,6 @@ public class STEditor extends JPanel {
         public void clear() {
             SwingUtilities.invokeLater(() -> {
                 textArea.setText("");
-                textArea.setBackground(uneditedColor);
                 textArea.setToolTipText("");
             });
         }
@@ -457,7 +456,6 @@ public class STEditor extends JPanel {
                 }
             });
 
-            textArea.setBackground(errorColor);
             textArea.setText(info.toString().trim());
             textArea.setCaretPosition(0);
         }

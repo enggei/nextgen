@@ -109,7 +109,7 @@ public class STModelEditorNavigator extends JPanel {
 			}
 		});
 
-		setPreferredSize(new Dimension(300, 600));
+		setPreferredSize(new Dimension(600, 600));
 		add(new JScrollPane(tree), BorderLayout.CENTER);
 
 	}

@@ -636,10 +636,13 @@ public class SwingUtil {
    }
 
    public static org.fife.ui.rsyntaxtextarea.RSyntaxTextArea newRSyntaxTextArea(int rows, int cols) {
-      final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea rSyntaxTextArea = new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea(rows, cols);
+      return decorate(new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea(rows, cols));
+   }
+
+   public static org.fife.ui.rsyntaxtextarea.RSyntaxTextArea decorate(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea rSyntaxTextArea) {
+
       rSyntaxTextArea.setTabSize(3);
       rSyntaxTextArea.setHighlightCurrentLine(false);
-//      rSyntaxTextArea.setSelectedTextColor(Color.decode("#2b8cbe"));
       rSyntaxTextArea.setSelectionColor(Color.decode("#2b8cbe"));
       rSyntaxTextArea.setBackground(UIManager.getColor("Panel.background"));
       rSyntaxTextArea.setForeground(UIManager.getColor("Tree.foreground"));
@@ -653,6 +656,7 @@ public class SwingUtil {
             }
          }
       });
+
       return rSyntaxTextArea;
    }
 

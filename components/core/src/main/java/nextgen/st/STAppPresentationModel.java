@@ -14,10 +14,7 @@ import nextgen.templates.java.PackageDeclaration;
 import nextgen.utils.Neo4JUtil;
 import nextgen.utils.SwingUtil;
 import org.javatuples.Pair;
-import org.neo4j.graphdb.Direction;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.RelationshipType;
+import org.neo4j.graphdb.*;
 
 import javax.lang.model.SourceVersion;
 import javax.swing.*;
@@ -30,6 +27,7 @@ import java.util.List;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -62,8 +60,10 @@ public class STAppPresentationModel {
 
       this.appModel = appModel;
 
-      final File jsonFileDir = new File(appModel.getGeneratorRoot(), STGenerator.packageToPath(appModel.getGeneratorPackage()));
-      this.generatorSTGroup = new STGroupModel(new JsonObject(STParser.read(new File(jsonFileDir, appModel.getGeneratorName() + ".json"))));
+      final File jsonFileDir = new File(appModel.getGeneratorRoot(), STGenerator
+            .packageToPath(appModel.getGeneratorPackage()));
+      this.generatorSTGroup = new STGroupModel(new JsonObject(STParser
+            .read(new File(jsonFileDir, appModel.getGeneratorName() + ".json"))));
       this.generatorSTGDirectory = STJsonFactory.newSTGDirectory()
                                                 .setOutputPath(appModel.getGeneratorRoot())
                                                 .setOutputPackage(appModel.getGeneratorPackage())
@@ -94,6 +94,15 @@ public class STAppPresentationModel {
          @Override
          public void actionPerformed(ActionEvent e) {
             consumer.accept(e);
+         }
+      };
+   }
+
+   public Action newTransactionAction(String name, Consumer<Transaction> consumer) {
+      return new AbstractAction(name) {
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            doLaterInTransaction(consumer);
          }
       };
    }
@@ -139,8 +148,9 @@ public class STAppPresentationModel {
 
       final DomainEntity dst = newDomainEntity(metaEntity);
       final Relationship relationshipTo = domainEntity.getNode()
-                                                      .createRelationshipTo(dst.getNode(), RelationshipType.withName(metaRelation
-                                                            .getName()));
+                                                      .createRelationshipTo(dst.getNode(), RelationshipType
+                                                            .withName(metaRelation
+                                                                  .getName()));
       relationshipTo.setProperty("_uuid", UUID.randomUUID().toString());
    }
 
@@ -260,29 +270,35 @@ public class STAppPresentationModel {
                                                                                                                .getUuid()))
                                                                    .findFirst();
          if (found.isPresent()) {
-            log.info("generating stGroup " + stGroupModel.getName() + " to " + generatorSTGDirectory.getOutputPath() + " " + generatorSTGDirectory
+            log.info("generating stGroup " + stGroupModel.getName() + " to " + generatorSTGDirectory
+                  .getOutputPath() + " " + generatorSTGDirectory
                   .getOutputPackage());
-            new STGenerator(generatorSTGroup).generateSTGroup(stGroupModel, generatorSTGDirectory.getOutputPackage(), generatorSTGDirectory
-                  .getOutputPath());
+            new STGenerator(generatorSTGroup)
+                  .generateSTGroup(stGroupModel, generatorSTGDirectory.getOutputPackage(), generatorSTGDirectory
+                        .getOutputPath());
          } else {
             stgDirectories
                   .stream()
                   .filter(directory -> directory.getGroups()
                                                 .anyMatch(stGroupModel1 -> stGroupModel1.getUuid()
-                                                                                        .equals(stGroupModel.getUuid())))
+                                                                                        .equals(stGroupModel
+                                                                                              .getUuid())))
                   .findFirst()
                   .ifPresent(directory -> {
-                     log.info("generating stGroup " + stGroupModel.getName() + " to " + directory.getOutputPath() + " " + directory
+                     log.info("generating stGroup " + stGroupModel.getName() + " to " + directory
+                           .getOutputPath() + " " + directory
                            .getOutputPackage());
-                     new STGenerator(generatorSTGroup).generateSTGroup(stGroupModel, directory.getOutputPackage(), directory
-                           .getOutputPath());
+                     new STGenerator(generatorSTGroup)
+                           .generateSTGroup(stGroupModel, directory.getOutputPackage(), directory
+                                 .getOutputPath());
                   });
          }
       } else {
          log.error(stGroupModel.getName() + " has errors: ");
          parseResult.getErrors()
-                    .forEach(stgError -> log.error("\t" + stgError.getType() + " " + stgError.getCharPosition() + " at line " + stgError
-                          .getLine()));
+                    .forEach(stgError -> log
+                          .error("\t" + stgError.getType() + " " + stgError.getCharPosition() + " at line " + stgError
+                                .getLine()));
       }
    }
 
@@ -290,8 +306,9 @@ public class STAppPresentationModel {
 
       final File srcRoot = new File(appModel.getRootDir());
 
-      final nextgen.templates.java.PackageDeclaration packageDeclaration = nextgen.templates.java.JavaST.newPackageDeclaration()
-                                                                                                        .setName("tmp");
+      final nextgen.templates.java.PackageDeclaration packageDeclaration = nextgen.templates.java.JavaST
+            .newPackageDeclaration()
+            .setName("tmp");
 
       final Collection<ImportDeclaration> imports = new ArrayList<>();
       stgDirectories.forEach(directory -> {
@@ -302,7 +319,8 @@ public class STAppPresentationModel {
             final String packageName = outputPackage + "." + stGroupModel.getName().toLowerCase();
             if (new File(srcRoot, STGenerator.packageToPath(packageName)).exists()) {
                imports.add(nextgen.templates.java.JavaST.newImportDeclaration()
-                                                        .setName(packageName + "." + capitalize(stGroupModel.getName() + "ST"))
+                                                        .setName(packageName + "." + capitalize(stGroupModel
+                                                              .getName() + "ST"))
                                                         .setIsAsterisk(true)
                                                         .setIsStatic(true));
                imports.add(nextgen.templates.java.JavaST.newImportDeclaration()
@@ -314,7 +332,8 @@ public class STAppPresentationModel {
          Arrays.stream(Objects.requireNonNull(templateClassDir.listFiles()))
                .filter(file -> file.isFile() && file.getName().endsWith("Patterns.java"))
                .forEach(file -> imports.add(nextgen.templates.java.JavaST.newImportDeclaration()
-                                                                         .setName(directory.getOutputPackage() + "." + capitalize(file
+                                                                         .setName(directory
+                                                                               .getOutputPackage() + "." + capitalize(file
                                                                                .getName()
                                                                                .substring(0, file.getName()
                                                                                                  .length() - 5)))
@@ -324,15 +343,17 @@ public class STAppPresentationModel {
 
       final String className = script.getName().replaceAll("[ ]", "");
 
-      STGenerator.writeJavaFile(getScriptRunner(script, packageDeclaration, imports, className), packageDeclaration.getName(), className, srcRoot);
+      STGenerator.writeJavaFile(getScriptRunner(script, packageDeclaration, imports, className), packageDeclaration
+            .getName(), className, srcRoot);
 
       final java.io.StringWriter sr = new java.io.StringWriter();
       final java.io.PrintWriter compilerOutput = new java.io.PrintWriter(sr);
       try {
          final String cacheClassname = className + System.currentTimeMillis();
          final Object compilationUnit = getScriptRunner(script, packageDeclaration, imports, cacheClassname);
-         final Class<?> aClass = CompilerUtils.CACHED_COMPILER.loadFromJava(getClass().getClassLoader(), packageDeclaration
-               .getName() + "." + cacheClassname, compilationUnit.toString(), compilerOutput);
+         final Class<?> aClass = CompilerUtils.CACHED_COMPILER
+               .loadFromJava(getClass().getClassLoader(), packageDeclaration
+                     .getName() + "." + cacheClassname, compilationUnit.toString(), compilerOutput);
          return new CompilationResult(sr.toString(), aClass);
       } catch (Throwable t) {
          return new CompilationResult(sr.toString(), null);
@@ -343,8 +364,9 @@ public class STAppPresentationModel {
 
       final File srcRoot = new File(appModel.getRootDir());
 
-      final nextgen.templates.java.PackageDeclaration packageDeclaration = nextgen.templates.java.JavaST.newPackageDeclaration()
-                                                                                                        .setName("tmp");
+      final nextgen.templates.java.PackageDeclaration packageDeclaration = nextgen.templates.java.JavaST
+            .newPackageDeclaration()
+            .setName("tmp");
 
       final Collection<ImportDeclaration> imports = new ArrayList<>();
       stgDirectories.forEach(directory -> {
@@ -355,7 +377,8 @@ public class STAppPresentationModel {
             final String packageName = outputPackage + "." + stGroupModel.getName().toLowerCase();
             if (new File(srcRoot, STGenerator.packageToPath(packageName)).exists()) {
                imports.add(nextgen.templates.java.JavaST.newImportDeclaration()
-                                                        .setName(packageName + "." + capitalize(stGroupModel.getName() + "ST"))
+                                                        .setName(packageName + "." + capitalize(stGroupModel
+                                                              .getName() + "ST"))
                                                         .setIsAsterisk(true)
                                                         .setIsStatic(true));
                imports.add(nextgen.templates.java.JavaST.newImportDeclaration()
@@ -367,7 +390,8 @@ public class STAppPresentationModel {
          Arrays.stream(Objects.requireNonNull(templateClassDir.listFiles()))
                .filter(file -> file.isFile() && file.getName().endsWith("Patterns.java"))
                .forEach(file -> imports.add(nextgen.templates.java.JavaST.newImportDeclaration()
-                                                                         .setName(directory.getOutputPackage() + "." + capitalize(file
+                                                                         .setName(directory
+                                                                               .getOutputPackage() + "." + capitalize(file
                                                                                .getName()
                                                                                .substring(0, file.getName()
                                                                                                  .length() - 5)))
@@ -377,16 +401,18 @@ public class STAppPresentationModel {
 
       final String className = visitor.getName().replaceAll("[ ]", "");
 
-      STGenerator.writeJavaFile(getDomainVisitorRunner(visitor, domainEntity, packageDeclaration, imports, className), packageDeclaration
-            .getName(), className, srcRoot);
+      STGenerator
+            .writeJavaFile(getDomainVisitorRunner(visitor, domainEntity, packageDeclaration, imports, className), packageDeclaration
+                  .getName(), className, srcRoot);
 
       final java.io.StringWriter sr = new java.io.StringWriter();
       final java.io.PrintWriter compilerOutput = new java.io.PrintWriter(sr);
       try {
          final String cacheClassname = className + System.currentTimeMillis();
-         final Class<?> aClass = CompilerUtils.CACHED_COMPILER.loadFromJava(getClass().getClassLoader(), packageDeclaration
-               .getName() + "." + cacheClassname, getDomainVisitorRunner(visitor, domainEntity, packageDeclaration, imports, cacheClassname)
-               .toString(), compilerOutput);
+         final Class<?> aClass = CompilerUtils.CACHED_COMPILER
+               .loadFromJava(getClass().getClassLoader(), packageDeclaration
+                     .getName() + "." + cacheClassname, getDomainVisitorRunner(visitor, domainEntity, packageDeclaration, imports, cacheClassname)
+                     .toString(), compilerOutput);
          return new CompilationResult(sr.toString(), aClass);
       } catch (Throwable t) {
          return new CompilationResult(sr.toString(), null);
@@ -394,10 +420,11 @@ public class STAppPresentationModel {
    }
 
    public DomainVisitorRunner getDomainVisitorRunner(DomainVisitor visitor, DomainEntity domainEntity, PackageDeclaration packageDeclaration, Collection<ImportDeclaration> imports, String className) {
-      return new DomainVisitorGenerator(visitor, domainEntity, packageDeclaration, imports, className, appModel.getDirectories()
-                                                                                                               .findFirst()
-                                                                                                               .get()
-                                                                                                               .getPath(), appModel
+      return new DomainVisitorGenerator(visitor, domainEntity, packageDeclaration, imports, className, appModel
+            .getDirectories()
+            .findFirst()
+            .get()
+            .getPath(), appModel
             .getModelDb("./db")).generate();
    }
 
@@ -451,7 +478,8 @@ public class STAppPresentationModel {
 
    public Optional<STModel> getSTModel(STValue stValue) {
       return stValue.getType()
-                    .equals(nextgen.st.model.STValueType.STMODEL) ? Optional.of(stValue.getStModel()) : Optional.empty();
+                    .equals(nextgen.st.model.STValueType.STMODEL) ? Optional.of(stValue.getStModel()) : Optional
+            .empty();
    }
 
    public String getSTModelName(STModel stModel, String defaultName) {
@@ -689,46 +717,47 @@ public class STAppPresentationModel {
    public void reconcileValues() {
       final Set<Node> delete = new LinkedHashSet<>();
 
-      db.doInTransaction(transaction -> db.findAllSTValue()
-                                          .filter(stValue -> stValue.getType() != null)
-                                          .filter(stValue -> stValue.getValue() != null)
-                                          .filter(stValue -> stValue.getType()
-                                                                    .equals(nextgen.st.model.STValueType.PRIMITIVE))
-                                          .forEach(stValue -> {
-                                             db.findAllSTValueByValue(stValue.getValue())
-                                               .filter(stValue1 -> !stValue1.getUuid().equals(stValue.getUuid()))
-                                               .filter(stValue1 -> stValue1.getType() != null)
-                                               .filter(stValue1 -> stValue1.getType()
-                                                                           .equals(nextgen.st.model.STValueType.PRIMITIVE))
-                                               .forEach(stValue1 -> {
-                                                  log.info("\t duplicate " + stValue1.getValue());
+      db.doInTransaction(transaction ->
+            db.findAllSTValue()
+              .filter(stValue -> !delete.contains(stValue.getNode()))
+              .filter(this::isValidPrimitive)
+              .forEach(stValue -> db.findAllSTValueByValue(stValue.getValue())
+                                    .filter(duplicate -> !duplicate.getUuid().equals(stValue.getUuid()))
+                                    .filter(duplicate -> !delete.contains(duplicate.getNode()))
+                                    .filter(this::isValidPrimitive)
+                                    .forEach(duplicate -> {
 
-                                                  final Node node = stValue1.getNode();
-                                                  node.getRelationships(Direction.INCOMING).forEach(relationship -> {
-                                                     if (relationship.getType()
-                                                                     .equals(org.neo4j.graphdb.RelationshipType.withName("ref")))
-                                                        relationship.delete();
+                                       log.info("\t duplicate " + duplicate.getValue());
 
-                                                     final Node src = relationship.getOtherNode(node);
-                                                     final Relationship newRelation = src.createRelationshipTo(stValue.getNode(), relationship
-                                                           .getType());
-                                                     relationship.getPropertyKeys()
-                                                                 .forEach(s -> newRelation.setProperty(s, relationship.getProperty(s)));
-                                                     relationship.delete();
-                                                  });
+                                       final Node duplicateNode = duplicate.getNode();
+                                       duplicateNode.getRelationships(Direction.INCOMING)
+                                                    .forEach(relationship -> {
+                                                       final Node src = relationship.getOtherNode(duplicateNode);
+                                                       final Relationship newRelation = src.createRelationshipTo(stValue
+                                                             .getNode(), relationship
+                                                             .getType());
+                                                       relationship
+                                                             .getPropertyKeys()
+                                                             .forEach(s -> newRelation.setProperty(s, relationship
+                                                                   .getProperty(s)));
+                                                    });
 
-                                                  delete.add(node);
-                                               });
-                                          }));
+                                       delete.add(duplicateNode);
+                                    })));
 
       db.doInTransaction(transaction -> {
          for (Node node : delete) {
-            if (node.getRelationships().iterator().hasNext()) continue;
-            log.info("deleting node ");
-            log.info(Neo4JUtil.toString(node));
-            node.delete();
+            node.getRelationships().forEach(Relationship::delete);
          }
       });
+   }
+
+   public boolean isValidPrimitive(STValue stValue) {
+      return stValue.getType() != null &&
+            stValue.getValue() != null &&
+            stValue
+                  .getType()
+                  .equals(STValueType.PRIMITIVE);
    }
 
    public void removeArgument(STModel stModel, STParameter stParameter) {
@@ -768,9 +797,10 @@ public class STAppPresentationModel {
                                               .append(metaProperty.getName())
                                               .append(":")
                                               .append(domainEntity.getNode()
-                                                                  .hasProperty(metaProperty.getName()) ? domainEntity.getNode()
-                                                                                                                     .getProperty(metaProperty
-                                                                                                                           .getName()) : ""));
+                                                                  .hasProperty(metaProperty.getName()) ? domainEntity
+                                                    .getNode()
+                                                    .getProperty(metaProperty
+                                                          .getName()) : ""));
       return out.toString();
    }
 
@@ -802,11 +832,11 @@ public class STAppPresentationModel {
       final StringBuilder out = new StringBuilder();
 
       stParameter.getKeys().forEach(stParameterKey -> {
-         out.append("--- ").append(stParameterKey.getName()).append(" ---\n");
+         out.append(stParameterKey.getName()).append(":\n");
          kvArgument.getKeyValues()
                    .filter(stArgumentKV1 -> stArgumentKV1.getStParameterKey().equals(stParameterKey.getUuid()))
                    .forEach(stArgumentKV1 -> out.append(render(stArgumentKV1.getValue())));
-         out.append("\n");
+         out.append("\n\n");
       });
 
       return out.toString();
@@ -827,7 +857,8 @@ public class STAppPresentationModel {
             final nextgen.st.STAppPresentationModel.CompilationResult compilationResult = generateScriptCode(script);
 
             if (compilationResult.aClass == null) {
-               JOptionPane.showMessageDialog(canvas, compilationResult.compilerOutput, "Compilation Exception", JOptionPane.ERROR_MESSAGE);
+               JOptionPane
+                     .showMessageDialog(canvas, compilationResult.compilerOutput, "Compilation Exception", JOptionPane.ERROR_MESSAGE);
                return;
             }
 
@@ -849,7 +880,8 @@ public class STAppPresentationModel {
             final nextgen.st.STAppPresentationModel.CompilationResult compilationResult = generateVisitorCode(visitor, domainEntity);
 
             if (compilationResult.aClass == null) {
-               JOptionPane.showMessageDialog(canvas, compilationResult.compilerOutput, "Compilation Exception", JOptionPane.ERROR_MESSAGE);
+               JOptionPane
+                     .showMessageDialog(canvas, compilationResult.compilerOutput, "Compilation Exception", JOptionPane.ERROR_MESSAGE);
                return;
             }
 
@@ -896,7 +928,8 @@ public class STAppPresentationModel {
                   .stream()
                   .filter(directory -> directory.getGroups()
                                                 .anyMatch(stGroupModel1 -> stGroupModel1.getUuid()
-                                                                                        .equals(stGroupModel.getUuid())))
+                                                                                        .equals(stGroupModel
+                                                                                              .getUuid())))
                   .findFirst()
                   .ifPresent(directory -> {
                      final File file = new File(new File(directory.getPath()), stGroupModel.getName() + ".json");
@@ -907,8 +940,9 @@ public class STAppPresentationModel {
       } else {
          log.error(stGroupModel.getName() + " has errors: ");
          parseResult.getErrors()
-                    .forEach(stgError -> log.error("\t" + stgError.getType() + " " + stgError.getCharPosition() + " at line " + stgError
-                          .getLine()));
+                    .forEach(stgError -> log
+                          .error("\t" + stgError.getType() + " " + stgError.getCharPosition() + " at line " + stgError
+                                .getLine()));
       }
    }
 
@@ -996,7 +1030,8 @@ public class STAppPresentationModel {
                 .forEach(stParameter -> {
                    final Optional<STArgument> argument = model.getArguments()
                                                               .filter(stArgument -> stArgument.getStParameter()
-                                                                                              .equals(stParameter.getUuid()))
+                                                                                              .equals(stParameter
+                                                                                                    .getUuid()))
                                                               .findFirst();
                    final String content = argument.isPresent() ? render(argument.get().getValue().getStModel()) : "";
                    fieldMap.put(stParameter.getName(), newTextField(content, 15));
@@ -1165,22 +1200,28 @@ public class STAppPresentationModel {
                onKVListConsumer.accept(stArgument, getStArgumentKVS(stParameter, stArgument));
 
                stParameter.getKeys().forEach(stParameterKey -> stArgument.getKeyValues()
-                                                                         .filter(stArgumentKV -> stArgumentKV.getStParameterKey()
-                                                                                                             .equals(stParameterKey
-                                                                                                                   .getUuid()))
-                                                                         .filter(stArgumentKV -> stArgumentKV.getValue() != null)
+                                                                         .filter(stArgumentKV -> stArgumentKV
+                                                                               .getStParameterKey()
+                                                                               .equals(stParameterKey
+                                                                                     .getUuid()))
+                                                                         .filter(stArgumentKV -> stArgumentKV
+                                                                               .getValue() != null)
                                                                          .forEach(stArgumentKV -> {
-                                                                            final STValue kvValue = stArgumentKV.getValue();
+                                                                            final STValue kvValue = stArgumentKV
+                                                                                  .getValue();
                                                                             switch (kvValue.getType()) {
                                                                                case STMODEL:
                                                                                   if (kvValue.getStModel() != null)
-                                                                                     onKVListSTModelConsumer.accept(stArgumentKV, kvValue);
+                                                                                     onKVListSTModelConsumer
+                                                                                           .accept(stArgumentKV, kvValue);
                                                                                   break;
                                                                                case PRIMITIVE:
-                                                                                  onKVListSTValueConsumer.accept(stArgumentKV, kvValue);
+                                                                                  onKVListSTValueConsumer
+                                                                                        .accept(stArgumentKV, kvValue);
                                                                                   break;
                                                                                case ENUM:
-                                                                                  onKVListEnumConsumer.accept(stArgumentKV, kvValue);
+                                                                                  onKVListEnumConsumer
+                                                                                        .accept(stArgumentKV, kvValue);
                                                                                   break;
                                                                             }
                                                                          }));

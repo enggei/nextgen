@@ -265,6 +265,7 @@ public class STValueGrid extends JPanel {
 
         STValueElementRenderer() {
             super(5, 40);
+            SwingUtil.decorate(this);
             setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
         }
 
