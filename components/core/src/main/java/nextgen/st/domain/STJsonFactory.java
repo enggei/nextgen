@@ -7,6 +7,19 @@ public class STJsonFactory {
 		return new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath())));
 	}
 
+	public static io.vertx.core.json.JsonObject load(java.io.InputStream inputStream) throws java.io.IOException {
+		if (inputStream == null) throw new java.io.IOException("inputStream is null");
+		java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
+		int read;
+		byte[] data = new byte[2048];
+		while ((read = inputStream.read(data, 0, data.length)) != -1)
+			buffer.write(data, 0, read);
+		inputStream.close();
+		final byte[] content = buffer.toByteArray();
+		buffer.close();
+		return new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(content));
+	}
+
 	public static void save(io.vertx.core.json.JsonObject jsonObject, java.io.File file) throws java.io.IOException {
 
 		if (!file.getParentFile().exists() && !file.getParentFile().mkdirs())

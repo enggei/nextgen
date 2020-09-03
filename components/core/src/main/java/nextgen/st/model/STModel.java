@@ -135,7 +135,7 @@ public class STModel {
 		return this;
 	}
 
-	public java.util.stream.Stream<STFile> getIncomingFiles() { 
+	public java.util.stream.Stream<STFile> getIncomingFilesSTFile() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("files")).spliterator(), false).map((relationship) -> new STFile(relationship.getOtherNode(node)));
 	}
 
@@ -168,7 +168,7 @@ public class STModel {
 		return this;
 	}
 
-	public java.util.stream.Stream<STArgument> getIncomingArguments() { 
+	public java.util.stream.Stream<STArgument> getIncomingArgumentsSTArgument() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("arguments")).spliterator(), false).map((relationship) -> new STArgument(relationship.getOtherNode(node)));
 	}
 
@@ -196,7 +196,6 @@ public class STModel {
 	public io.vertx.core.json.JsonObject toJsonObject() {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
 		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
-		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
 		if (node.hasProperty("stGroup")) jsonObject.put("stGroup", node.getProperty("stGroup"));
 		if (node.hasProperty("stTemplate")) jsonObject.put("stTemplate", node.getProperty("stTemplate"));
 		final io.vertx.core.json.JsonArray _files = new io.vertx.core.json.JsonArray();
@@ -210,11 +209,8 @@ public class STModel {
 		return jsonObject;
 	}
 
-	public void deleteTree() {
-		getFiles().forEach(element -> element.deleteTree());
-
-		getArguments().forEach(element -> element.deleteTree());
-
+	public void delete() {
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();
 	}

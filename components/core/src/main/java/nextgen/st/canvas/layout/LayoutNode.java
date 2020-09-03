@@ -106,7 +106,7 @@ public class LayoutNode {
 		return this;
 	}
 
-	public java.util.stream.Stream<Layout> getIncomingNodes() { 
+	public java.util.stream.Stream<Layout> getIncomingNodesLayout() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("nodes")).spliterator(), false).map((relationship) -> new Layout(relationship.getOtherNode(node)));
 	}
 
@@ -134,13 +134,13 @@ public class LayoutNode {
 	public io.vertx.core.json.JsonObject toJsonObject() {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
 		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
-		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
 		if (node.hasProperty("x")) jsonObject.put("x", node.getProperty("x"));
 		if (node.hasProperty("y")) jsonObject.put("y", node.getProperty("y"));
 		return jsonObject;
 	}
 
-	public void deleteTree() {
+	public void delete() {
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();
 	}

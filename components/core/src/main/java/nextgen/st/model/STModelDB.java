@@ -283,7 +283,7 @@ public class STModelDB extends STModelNeoFactory {
 
     public void deleteUnnusedFiles() {
         findAllSTFile().forEach(stFile -> {
-            if (stFile.getIncomingFiles().iterator().hasNext()) return;
+            if (stFile.getIncomingFilesSTModel().iterator().hasNext()) return;
             log.info("deleting unnused stFile-" + stFile.getUuid());
             log.info(Neo4JUtil.toString(stFile.getNode()));
             stFile.getNode().getRelationships().forEach(Relationship::delete);

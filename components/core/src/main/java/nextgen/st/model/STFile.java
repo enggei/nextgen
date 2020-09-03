@@ -156,7 +156,7 @@ public class STFile {
 		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("path"), org.neo4j.graphdb.Direction.OUTGOING);
 	}
 
-	public java.util.stream.Stream<STModel> getIncomingFiles() { 
+	public java.util.stream.Stream<STModel> getIncomingFilesSTModel() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("files")).spliterator(), false).map((relationship) -> new STModel(relationship.getOtherNode(node)));
 	}
 
@@ -184,7 +184,6 @@ public class STFile {
 	public io.vertx.core.json.JsonObject toJsonObject() {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
 		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
-		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
 		final STValue _name = getName();
 		if (_name != null) jsonObject.put("name", _name.toJsonObject());
 
@@ -200,19 +199,8 @@ public class STFile {
 		return jsonObject;
 	}
 
-	public void deleteTree() {
-		final STValue _name = getName();
-		if (_name != null) _name.deleteTree();
-
-		final STValue _type = getType();
-		if (_type != null) _type.deleteTree();
-
-		final STValue _packageName = getPackageName();
-		if (_packageName != null) _packageName.deleteTree();
-
-		final STValue _path = getPath();
-		if (_path != null) _path.deleteTree();
-
+	public void delete() {
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();
 	}

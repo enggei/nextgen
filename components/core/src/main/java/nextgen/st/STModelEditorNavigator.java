@@ -272,12 +272,12 @@ public class STModelEditorNavigator extends JPanel {
 				presentationModel.doLaterInTransaction(transaction -> {
 					if (stArgument instanceof STArgument) {
 						STArgument argument = (STArgument) stArgument;
-						argument.getIncomingArguments().findFirst().ifPresent(stModel -> stModel.removeArguments(argument));
+						argument.getIncomingArgumentsSTModel().findFirst().ifPresent(stModel -> stModel.removeArguments(argument));
 						treeModel.removeNodeFromParent(this);
 						editor.setText("", null);
 					} else if (stArgument instanceof STArgumentKV) {
 						STArgumentKV argumentKV = (STArgumentKV) stArgument;
-						argumentKV.getIncomingKeyValues().findFirst().ifPresent(stArgument -> stArgument.removeKeyValues(argumentKV));
+						argumentKV.getIncomingKeyValuesSTArgument().findFirst().ifPresent(stArgument -> stArgument.removeKeyValues(argumentKV));
 						treeModel.removeNodeFromParent(this);
 						editor.setText("", null);
 					}
@@ -318,12 +318,12 @@ public class STModelEditorNavigator extends JPanel {
 				presentationModel.doLaterInTransaction(transaction -> {
 					if (stArgument instanceof STArgument) {
 						STArgument argument = (STArgument) stArgument;
-						argument.getIncomingArguments().findFirst().ifPresent(stModel -> stModel.removeArguments(argument));
+						argument.getIncomingArgumentsSTModel().findFirst().ifPresent(stModel -> stModel.removeArguments(argument));
 						treeModel.removeNodeFromParent(this);
 						editor.setText("", null);
 					} else if (stArgument instanceof STArgumentKV) {
 						STArgumentKV argumentKV = (STArgumentKV) stArgument;
-						argumentKV.getIncomingKeyValues().findFirst().ifPresent(stArgument -> stArgument.removeKeyValues(argumentKV));
+						argumentKV.getIncomingKeyValuesSTArgument().findFirst().ifPresent(stArgument -> stArgument.removeKeyValues(argumentKV));
 						treeModel.removeNodeFromParent(this);
 						editor.setText("", null);
 					}
@@ -410,7 +410,7 @@ public class STModelEditorNavigator extends JPanel {
 			});
 			actions.add(newAction("Remove", actionEvent -> {
 				presentationModel.doLaterInTransaction(transaction -> {
-					getModel().getIncomingArguments().findFirst().ifPresent(stModel -> stModel.removeArguments(getModel()));
+					getModel().getIncomingArgumentsSTModel().findFirst().ifPresent(stModel -> stModel.removeArguments(getModel()));
 					treeModel.removeNodeFromParent(this);
 					editor.setText("", null);
 				});

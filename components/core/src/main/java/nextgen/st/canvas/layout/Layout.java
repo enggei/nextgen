@@ -108,7 +108,7 @@ public class Layout {
 		return this;
 	}
 
-	public java.util.stream.Stream<LayoutNode> getIncomingNodes() { 
+	public java.util.stream.Stream<LayoutNode> getIncomingNodesLayoutNode() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("nodes")).spliterator(), false).map((relationship) -> new LayoutNode(relationship.getOtherNode(node)));
 	}
 
@@ -136,7 +136,6 @@ public class Layout {
 	public io.vertx.core.json.JsonObject toJsonObject() {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
 		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
-		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
 		if (node.hasProperty("name")) jsonObject.put("name", node.getProperty("name"));
 		final io.vertx.core.json.JsonArray _nodes = new io.vertx.core.json.JsonArray();
 		getNodes().forEach(element -> _nodes.add(element.toJsonObject()));
@@ -145,9 +144,8 @@ public class Layout {
 		return jsonObject;
 	}
 
-	public void deleteTree() {
-		getNodes().forEach(element -> element.deleteTree());
-
+	public void delete() {
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();
 	}

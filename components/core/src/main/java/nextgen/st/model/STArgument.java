@@ -134,11 +134,11 @@ public class STArgument {
 		return this;
 	}
 
-	public java.util.stream.Stream<STArgumentKV> getIncomingKeyValues() { 
+	public java.util.stream.Stream<STArgumentKV> getIncomingKeyValuesSTArgumentKV() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("keyValues")).spliterator(), false).map((relationship) -> new STArgumentKV(relationship.getOtherNode(node)));
 	}
 
-	public java.util.stream.Stream<STModel> getIncomingArguments() { 
+	public java.util.stream.Stream<STModel> getIncomingArgumentsSTModel() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("arguments")).spliterator(), false).map((relationship) -> new STModel(relationship.getOtherNode(node)));
 	}
 
@@ -166,7 +166,6 @@ public class STArgument {
 	public io.vertx.core.json.JsonObject toJsonObject() {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
 		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
-		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
 		if (node.hasProperty("stParameter")) jsonObject.put("stParameter", node.getProperty("stParameter"));
 		final STValue _value = getValue();
 		if (_value != null) jsonObject.put("value", _value.toJsonObject());
@@ -178,12 +177,8 @@ public class STArgument {
 		return jsonObject;
 	}
 
-	public void deleteTree() {
-		final STValue _value = getValue();
-		if (_value != null) _value.deleteTree();
-
-		getKeyValues().forEach(element -> element.deleteTree());
-
+	public void delete() {
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();
 	}

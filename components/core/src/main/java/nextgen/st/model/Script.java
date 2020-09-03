@@ -129,7 +129,6 @@ public class Script {
 	public io.vertx.core.json.JsonObject toJsonObject() {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
 		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
-		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
 		if (node.hasProperty("name")) jsonObject.put("name", node.getProperty("name"));
 		final STValue _script = getScript();
 		if (_script != null) jsonObject.put("script", _script.toJsonObject());
@@ -137,10 +136,8 @@ public class Script {
 		return jsonObject;
 	}
 
-	public void deleteTree() {
-		final STValue _script = getScript();
-		if (_script != null) _script.deleteTree();
-
+	public void delete() {
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();
 	}

@@ -130,19 +130,19 @@ public class STValue {
 		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("stModel"), org.neo4j.graphdb.Direction.OUTGOING);
 	}
 
-	public java.util.stream.Stream<STFile> getIncomingName() { 
+	public java.util.stream.Stream<STFile> getIncomingNameSTFile() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("name")).spliterator(), false).map((relationship) -> new STFile(relationship.getOtherNode(node)));
 	}
 
-	public java.util.stream.Stream<STFile> getIncomingType() { 
+	public java.util.stream.Stream<STFile> getIncomingTypeSTFile() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("type")).spliterator(), false).map((relationship) -> new STFile(relationship.getOtherNode(node)));
 	}
 
-	public java.util.stream.Stream<STFile> getIncomingPackageName() { 
+	public java.util.stream.Stream<STFile> getIncomingPackageNameSTFile() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("packageName")).spliterator(), false).map((relationship) -> new STFile(relationship.getOtherNode(node)));
 	}
 
-	public java.util.stream.Stream<STFile> getIncomingPath() { 
+	public java.util.stream.Stream<STFile> getIncomingPathSTFile() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("path")).spliterator(), false).map((relationship) -> new STFile(relationship.getOtherNode(node)));
 	}
 
@@ -170,7 +170,6 @@ public class STValue {
 	public io.vertx.core.json.JsonObject toJsonObject() {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
 		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
-		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
 		if (node.hasProperty("value")) jsonObject.put("value", node.getProperty("value"));
 		if (node.hasProperty("type")) jsonObject.put("type", node.getProperty("type"));
 		final STModel _stModel = getStModel();
@@ -179,10 +178,8 @@ public class STValue {
 		return jsonObject;
 	}
 
-	public void deleteTree() {
-		final STModel _stModel = getStModel();
-		if (_stModel != null) _stModel.deleteTree();
-
+	public void delete() {
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();
 	}

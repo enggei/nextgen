@@ -115,6 +115,8 @@ public class NextgenProject {
       final Entity domainVisitor = newEntity("DomainVisitor")
             .addRelations(newStringField("uuid"))
             .addRelations(newStringField("name"))
+            .addRelations(newStringField("initStatements"))
+            .addRelations(newStringField("endStatements"))
             .addRelations(newOneToMany("fields", newEntity("VisitorField")
                   .addRelations(newStringField("uuid"))
                   .addRelations(newStringField("name"))

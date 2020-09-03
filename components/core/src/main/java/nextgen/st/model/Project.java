@@ -108,7 +108,7 @@ public class Project {
 		return this;
 	}
 
-	public java.util.stream.Stream<STFile> getIncomingFiles() { 
+	public java.util.stream.Stream<STFile> getIncomingFilesSTFile() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("files")).spliterator(), false).map((relationship) -> new STFile(relationship.getOtherNode(node)));
 	}
 
@@ -141,7 +141,7 @@ public class Project {
 		return this;
 	}
 
-	public java.util.stream.Stream<STModel> getIncomingModels() { 
+	public java.util.stream.Stream<STModel> getIncomingModelsSTModel() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("models")).spliterator(), false).map((relationship) -> new STModel(relationship.getOtherNode(node)));
 	}
 
@@ -174,7 +174,7 @@ public class Project {
 		return this;
 	}
 
-	public java.util.stream.Stream<STValue> getIncomingValues() { 
+	public java.util.stream.Stream<STValue> getIncomingValuesSTValue() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("values")).spliterator(), false).map((relationship) -> new STValue(relationship.getOtherNode(node)));
 	}
 
@@ -207,7 +207,7 @@ public class Project {
 		return this;
 	}
 
-	public java.util.stream.Stream<Script> getIncomingScripts() { 
+	public java.util.stream.Stream<Script> getIncomingScriptsScript() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("scripts")).spliterator(), false).map((relationship) -> new Script(relationship.getOtherNode(node)));
 	}
 
@@ -235,7 +235,6 @@ public class Project {
 	public io.vertx.core.json.JsonObject toJsonObject() {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
 		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
-		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
 		if (node.hasProperty("name")) jsonObject.put("name", node.getProperty("name"));
 		final io.vertx.core.json.JsonArray _files = new io.vertx.core.json.JsonArray();
 		getFiles().forEach(element -> _files.add(element.toJsonObject()));
@@ -256,15 +255,8 @@ public class Project {
 		return jsonObject;
 	}
 
-	public void deleteTree() {
-		getFiles().forEach(element -> element.deleteTree());
-
-		getModels().forEach(element -> element.deleteTree());
-
-		getValues().forEach(element -> element.deleteTree());
-
-		getScripts().forEach(element -> element.deleteTree());
-
+	public void delete() {
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();
 	}

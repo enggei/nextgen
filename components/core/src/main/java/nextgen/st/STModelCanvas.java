@@ -1384,7 +1384,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 								if (centerNodeRef.get() == null) centerNodeRef.set(getNode(project.getUuid()));
 							} else if (nextgen.st.model.STModelNeoFactory.isSTFile(stNode)) {
 								final nextgen.st.model.STFile stFile = presentationModel.newSTFile(stNode);
-								stFile.getIncomingFiles().findFirst().ifPresent(stModel -> {
+								stFile.getIncomingFilesSTModel().findFirst().ifPresent(stModel -> {
 									addNode(stFile.getUuid(), () -> new STFileNode(stFile, stModel));
 									getNode(stFile.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
 									if (centerNodeRef.get() == null) centerNodeRef.set(getNode(stFile.getUuid()));
@@ -3300,7 +3300,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 					thisCanvas().presentationModel.getIncomingSTArguments(getModel())
 								.forEach(stArgument -> {
-									stArgument.getIncomingArguments().forEach(stModel -> {
+									stArgument.getIncomingArgumentsSTModel().forEach(stModel -> {
 											final nextgen.st.domain.STTemplate stTemplateByUuid = thisCanvas().presentationModel.findSTTemplateByUuid(stModel.getStTemplate());
 											if (stTemplateByUuid == null) return;
 											stTemplateByUuid.getParameters()
@@ -3315,8 +3315,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 					thisCanvas().presentationModel.getIncomingSTArgumentKVs(getModel())
 								.forEach(stArgumentKV -> {
-									stArgumentKV.getIncomingKeyValues().forEach(stArgument -> {
-											stArgument.getIncomingArguments().forEach(stModel -> {
+									stArgumentKV.getIncomingKeyValuesSTArgument().forEach(stArgument -> {
+											stArgument.getIncomingArgumentsSTModel().forEach(stModel -> {
 												final nextgen.st.domain.STTemplate stTemplateByUuid = thisCanvas().presentationModel.findSTTemplateByUuid(stModel.getStTemplate());
 												if (stTemplateByUuid == null) return;
 												stTemplateByUuid.getParameters()
@@ -3998,7 +3998,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 				thisCanvas().presentationModel.doLaterInTransaction(transaction -> {
 
 					thisCanvas().presentationModel.getIncomingSTArguments(getModel())
-							.forEach(stArgument -> stArgument.getIncomingArguments()
+							.forEach(stArgument -> stArgument.getIncomingArgumentsSTModel()
 									.forEach(stModel -> {
 										final nextgen.st.domain.STTemplate stTemplateByUuid = thisCanvas().presentationModel.findSTTemplateByUuid(stModel.getStTemplate());
 										if (stTemplateByUuid == null) return;
@@ -4013,8 +4013,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 					thisCanvas().presentationModel.getIncomingSTArgumentKVs(getModel())
 							.forEach(stArgumentKV -> {
-								stArgumentKV.getIncomingKeyValues()
-										.forEach(stArgument -> stArgument.getIncomingArguments().forEach(stModel -> {
+								stArgumentKV.getIncomingKeyValuesSTArgument()
+										.forEach(stArgument -> stArgument.getIncomingArgumentsSTModel().forEach(stModel -> {
 											final nextgen.st.domain.STTemplate stTemplateByUuid = thisCanvas().presentationModel.findSTTemplateByUuid(stModel.getStTemplate());
 											if (stTemplateByUuid == null) return;
 											stTemplateByUuid.getParameters()
