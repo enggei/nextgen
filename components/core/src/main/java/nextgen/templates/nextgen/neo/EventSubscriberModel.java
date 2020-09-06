@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 public class EventSubscriberModel {
 
 	public static final String stGroupModelUuid = "483489b9-c91a-41c8-ad49-1dc7f9f1469f";
-   public static final String stTemplateUuid = "1940b970-5991-484f-8fa3-e5b061b65b85";
+	public static final String stTemplateUuid = "1940b970-5991-484f-8fa3-e5b061b65b85";
 
 	private final STModelDB db;
 	private final STModel stModel;
@@ -34,6 +34,16 @@ public class EventSubscriberModel {
 		this.db = db;
 		this.stTemplate = this.db.findSTTemplateByUuid(stTemplateUuid);
 		this.stModel = this.db.newSTModel(node);
+	}
+
+	public EventSubscriberModel(STModelDB db, String uuid) {
+		this.db = db;
+		this.stTemplate = this.db.findSTTemplateByUuid(stTemplateUuid);
+		this.stModel = this.db.findOrCreateSTModelByUuid(uuid);
+	}
+
+	public String getUuid() {
+		return stModel.getUuid();
 	}
 
 	public STValue asSTValue () {

@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static nextgen.st.STGenerator.toSTGroup;
+import static nextgen.st.model.STValueType.PRIMITIVE;
 import static nextgen.templates.JavaPatterns.newPackageDeclaration;
 import static nextgen.templates.java.JavaST.*;
 import static nextgen.templates.java.JavaST.newClassOrInterfaceType;
@@ -343,14 +344,14 @@ public class STAppPresentationModel {
 
       final String className = script.getName().replaceAll("[ ]", "");
 
-      STGenerator.writeJavaFile(getScriptRunner(script, packageDeclaration, imports, className), packageDeclaration
+      STGenerator.writeJavaFile(getScriptRunner(script.getScript(), packageDeclaration, imports, className), packageDeclaration
             .getName(), className, srcRoot);
 
       final java.io.StringWriter sr = new java.io.StringWriter();
       final java.io.PrintWriter compilerOutput = new java.io.PrintWriter(sr);
       try {
          final String cacheClassname = className + System.currentTimeMillis();
-         final Object compilationUnit = getScriptRunner(script, packageDeclaration, imports, cacheClassname);
+         final Object compilationUnit = getScriptRunner(script.getScript(), packageDeclaration, imports, cacheClassname);
          final Class<?> aClass = CompilerUtils.CACHED_COMPILER
                .loadFromJava(getClass().getClassLoader(), packageDeclaration
                      .getName() + "." + cacheClassname, compilationUnit.toString(), compilerOutput);
@@ -490,13 +491,13 @@ public class STAppPresentationModel {
       return db.getSTModelPackage(stModel, defaultName);
    }
 
-   public Object getScriptRunner(Script script, PackageDeclaration packageDeclaration, Collection<ImportDeclaration> imports, String className) {
+   public Object getScriptRunner(STValue statements, PackageDeclaration packageDeclaration, Collection<ImportDeclaration> imports, String className) {
       final ScriptRunner scriptRunner = StringTemplateST.newScriptRunner();
       scriptRunner.setPackageName(packageDeclaration.getName());
       scriptRunner.setName(className);
       scriptRunner.setTemplatesDir(appModel.getDirectories().findFirst().get().getPath());
       scriptRunner.setDbDir(appModel.getModelDb("./db"));
-      scriptRunner.setScript(render(script.getScript()));
+      scriptRunner.setScript(render(statements));
       for (Object anImport : imports)
          scriptRunner.addImports(anImport);
       return scriptRunner;
@@ -1072,6 +1073,47 @@ public class STAppPresentationModel {
          }
       });
    }
+
+   public void generateNeoSource(STModel model) {
+      generateNeoSources(Collections.singleton(model), "TestNeo");
+   }
+
+
+   public void generateNeoSources(Set<STModel> stModels, String className) {
+      doLaterInTransaction(transaction -> {
+
+         final nextgen.templates.java.PackageDeclaration packageDeclaration = nextgen.templates.java.JavaST
+               .newPackageDeclaration()
+               .setName("tmp");
+
+         final Collection<String> neoFacades = new LinkedHashSet<>();
+         final Collection<String> modelStatements = new LinkedHashSet<>();
+
+         stModels.forEach(stModel -> stRenderer.renderNeoCode(stModel, neoFacades, modelStatements));
+
+         final StringBuilder statements = new StringBuilder();
+         for (String neoFacade : neoFacades) {
+            statements.append("\n").append(neoFacade);
+         }
+
+         statements.append("\n");
+
+         for (String modelStatement : modelStatements) {
+            statements.append("\n").append(modelStatement);
+         }
+
+         final STValue stValue = db.newSTValue()
+               .setUuid(UUID.randomUUID().toString())
+               .setType(PRIMITIVE)
+               .setValue(statements.toString());
+
+         STGenerator.writeJavaFile(getScriptRunner(stValue, packageDeclaration, Collections.emptyList(), className), packageDeclaration
+               .getName(), className, new File(appModel.getRootDir()));
+
+         db.remove(stValue);
+      });
+   }
+
 
    public void generateSource(STModel model) {
       generateSources(Collections.singleton(model), "Test");

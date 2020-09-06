@@ -607,11 +607,14 @@ public class STModelNavigator extends JPanel {
 						workspace.setSelectedComponent(modelEditor);
 					})));
 			}));
-			actions.add(newAction("As Script", actionEvent -> {
+			actions.add(newAction("As STRenderer", actionEvent -> {
 				presentationModel.generateSource(getModel());
 			}));
 			actions.add(newAction("Write To File", actionEvent -> {
 				presentationModel.writeToFile(getModel());
+			}));
+			actions.add(newAction("As NeoModel", actionEvent -> {
+				presentationModel.generateNeoSource(getModel());
 			}));
 			return actions;
 		}

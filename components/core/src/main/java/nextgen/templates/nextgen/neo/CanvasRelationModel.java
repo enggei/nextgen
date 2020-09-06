@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 public class CanvasRelationModel {
 
 	public static final String stGroupModelUuid = "483489b9-c91a-41c8-ad49-1dc7f9f1469f";
-   public static final String stTemplateUuid = "1bff4c6f-bd1a-4660-8235-5339fd7107e3";
+	public static final String stTemplateUuid = "1bff4c6f-bd1a-4660-8235-5339fd7107e3";
 
 	private final STModelDB db;
 	private final STModel stModel;
@@ -34,6 +34,16 @@ public class CanvasRelationModel {
 		this.db = db;
 		this.stTemplate = this.db.findSTTemplateByUuid(stTemplateUuid);
 		this.stModel = this.db.newSTModel(node);
+	}
+
+	public CanvasRelationModel(STModelDB db, String uuid) {
+		this.db = db;
+		this.stTemplate = this.db.findSTTemplateByUuid(stTemplateUuid);
+		this.stModel = this.db.findOrCreateSTModelByUuid(uuid);
+	}
+
+	public String getUuid() {
+		return stModel.getUuid();
 	}
 
 	public STValue asSTValue () {

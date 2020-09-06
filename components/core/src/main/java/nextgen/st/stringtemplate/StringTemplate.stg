@@ -1,6 +1,6 @@
 delimiters "~","~"
 
-DomainVisitorRunner(packageName,imports,name,rootNode,initStatements,entityVisitors,relationVisitors,endStatements,templatesDir,dbDir,entityUuid) ::= <<package ~packageName~;
+DomainVisitorRunner(packageName,imports,name,rootNode,initStatements,entityVisitors,relationVisitors,endStatements,dbDir,templatesDir,entityUuid) ::= <<package ~packageName~;
 
 import nextgen.domains.meta.DomainEntity;
 import nextgen.st.STRenderer;
@@ -61,17 +61,9 @@ public class ~name~ implements Runnable {
 	}
 
 	public static void main(String[] args) {
-		final Collection<nextgen.st.domain.STGroupModel> stGroups = new ArrayList<>();
-		final File templatesDir = new java.io.File("~templatesDir~");
-		Optional.ofNullable(templatesDir.listFiles(pathname -> pathname.isFile() && pathname.getName().toLowerCase().endsWith(".json")))
-			.ifPresent(files -> {
-				for (java.io.File file : files)
-					stGroups.add(new STGroupModel(nextgen.st.STParser.readJsonObject(file)));
-			});
-		final STModelDB db = new STModelDB("~dbDir~", stGroups);
-		final STRenderer renderer = new STRenderer(stGroups);
+		final nextgen.st.model.STModelDB db = new nextgen.st.model.STModelDB("~dbDir~", "~templatesDir~");
+		final new nextgen.st.STRenderer renderer = new nextgen.st.STRenderer(db.getGroupModels());
 		final DomainEntity domainEntity = db.getInTransaction(transaction -> new DomainEntity(db.getDatabaseService().findNode(org.neo4j.graphdb.Label.label("DomainEntity"), "uuid", "~entityUuid~")));
-
 		new Thread(new ~name~(db, renderer, domainEntity)).start();
 	}
 }  >>
@@ -105,6 +97,7 @@ NeoDomain(package,name,entities,finders) ::= <<package ~package~;
 import nextgen.st.model.*;
 import org.neo4j.graphdb.Node;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class ~name;format="capitalize"~ {
 
@@ -126,6 +119,16 @@ public class ~name;format="capitalize"~ {
 	public ~it.name;format="capitalize"~ new~it.name;format="capitalize"~(Node node) {
 		return new ~it.name;format="capitalize"~(db, node);
 	~eom()~
+
+	public Stream<~it.name;format="capitalize"~> findAll~it.name;format="capitalize"~() {
+		return db.findAllSTModelByStTemplate(~it.name;format="capitalize"~.stTemplateUuid)
+				.map(stModel -> new ~it.name;format="capitalize"~(db, stModel));
+	~eom()~
+
+	public ~it.name;format="capitalize"~ find~it.name;format="capitalize"~(String uuid) {
+		final STModel stModel = db.findSTModelByUuid(uuid);
+		return stModel == null ? new ~it.name;format="capitalize"~(db, uuid) : new ~it.name;format="capitalize"~(db, stModel);
+	~eom()~
 };separator="\n\n"~
 
 	~finders:{it|~it~};separator="\n\n"~
@@ -145,8 +148,8 @@ import java.util.stream.Stream;
 public class ~name;format="capitalize"~ {
 
 	public static final String stGroupModelUuid = "~stGroupModel~";
-   public static final String stTemplateUuid = "~stTemplate~";
-   
+	public static final String stTemplateUuid = "~stTemplate~";
+
 	private final STModelDB db;
 	private final STModel stModel;
 	private final STTemplate stTemplate;
@@ -169,6 +172,16 @@ public class ~name;format="capitalize"~ {
 		this.stModel = this.db.newSTModel(node);
 	}
 
+	public ~name;format="capitalize"~(STModelDB db, String uuid) {
+		this.db = db;
+		this.stTemplate = this.db.findSTTemplateByUuid(stTemplateUuid);
+		this.stModel = this.db.findOrCreateSTModelByUuid(uuid);
+	}
+
+	public String getUuid() {
+		return stModel.getUuid();
+	}
+	
 	public STValue asSTValue () {
 		return db.newSTValue(stModel);
 	}
@@ -337,7 +350,7 @@ FindBy(entity,name) ::= <<public Optional<~entity;format="capitalize"~> find~ent
 	return Optional.ofNullable(db.find("~name~", value, ~entity;format="capitalize"~.stTemplateUuid, ~entity;format="capitalize"~::new));
 }  >>
 
-ScriptRunner(packageName,imports,name,script,templatesDir,dbDir) ::= <<package ~packageName~;
+ScriptRunner(packageName,imports,name,script,dbDir,templatesDir) ::= <<package ~packageName~;
 
 ~imports:{it|~it~};separator="\n"~
 
@@ -360,14 +373,9 @@ public class ~name~ implements Runnable {
 	}
 	
 	public static void main(String[] args) {
-		final java.util.Collection<nextgen.st.domain.STGroupModel> stGroups = new java.util.ArrayList<>();
-		final java.io.File templatesDir = new java.io.File("~templatesDir~");
-		java.util.Optional.ofNullable(templatesDir.listFiles(pathname -> pathname.isFile() && pathname.getName().toLowerCase().endsWith(".json")))
-			.ifPresent(files -> {
-				for (java.io.File file : files)
-						stGroups.add(new nextgen.st.domain.STGroupModel(nextgen.st.STParser.readJsonObject(file)));
-			});
-		new Thread(new ~name~(new nextgen.st.model.STModelDB("~dbDir~", stGroups), new nextgen.st.STRenderer(stGroups))).start();
+		final nextgen.st.model.STModelDB db = new nextgen.st.model.STModelDB("~dbDir~", "~templatesDir~");
+		final nextgen.st.STRenderer renderer = new nextgen.st.STRenderer(db.getGroupModels());
+		new Thread(new ~name~(db, renderer)).start();
 	}
 }  >>
 

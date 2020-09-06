@@ -10,8 +10,8 @@ public class DomainVisitorRunner {
 	private Object _rootNode;
 	private Object _initStatements;
 	private Object _endStatements;
-	private Object _templatesDir;
 	private Object _dbDir;
+	private Object _templatesDir;
 	private Object _entityUuid;
 	private java.util.List<Object> _imports = new java.util.ArrayList<>();
 	private java.util.List<Object> _entityVisitors = new java.util.ArrayList<>();
@@ -38,8 +38,8 @@ public class DomainVisitorRunner {
 		st.add("rootNode", _rootNode);
 		st.add("initStatements", _initStatements);
 		st.add("endStatements", _endStatements);
-		st.add("templatesDir", _templatesDir);
 		st.add("dbDir", _dbDir);
+		st.add("templatesDir", _templatesDir);
 		st.add("entityUuid", _entityUuid);
 		for (Object o : _imports) st.add("imports", o);
 		for (Object o : _entityVisitors) st.add("entityVisitors", o);
@@ -157,28 +157,6 @@ public class DomainVisitorRunner {
 		return this;
 	} 
 
-	public DomainVisitorRunner setTemplatesDir(Object value) {
-		this._templatesDir = value;
-		return this;
-	}
-
-	public Object getTemplatesDir() {
-		return this._templatesDir;
-	}
-
-	public Object getTemplatesDir(Object defaultValue) {
-		return this._templatesDir == null ? defaultValue : this._templatesDir;
-	}
-
-	public boolean hasTemplatesDir() {
-		return this._templatesDir != null;
-	}
-
-	public DomainVisitorRunner removeTemplatesDir() {
-		this._templatesDir = null;
-		return this;
-	} 
-
 	public DomainVisitorRunner setDbDir(Object value) {
 		this._dbDir = value;
 		return this;
@@ -198,6 +176,28 @@ public class DomainVisitorRunner {
 
 	public DomainVisitorRunner removeDbDir() {
 		this._dbDir = null;
+		return this;
+	} 
+
+	public DomainVisitorRunner setTemplatesDir(Object value) {
+		this._templatesDir = value;
+		return this;
+	}
+
+	public Object getTemplatesDir() {
+		return this._templatesDir;
+	}
+
+	public Object getTemplatesDir(Object defaultValue) {
+		return this._templatesDir == null ? defaultValue : this._templatesDir;
+	}
+
+	public boolean hasTemplatesDir() {
+		return this._templatesDir != null;
+	}
+
+	public DomainVisitorRunner removeTemplatesDir() {
+		this._templatesDir = null;
 		return this;
 	} 
 
@@ -324,7 +324,7 @@ public class DomainVisitorRunner {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "DomainVisitorRunner(packageName,imports,name,rootNode,initStatements,entityVisitors,relationVisitors,endStatements,templatesDir,dbDir,entityUuid) ::= <<package ~packageName~;\n" + 
+	static final String st = "DomainVisitorRunner(packageName,imports,name,rootNode,initStatements,entityVisitors,relationVisitors,endStatements,dbDir,templatesDir,entityUuid) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import nextgen.domains.meta.DomainEntity;\n" + 
 				"import nextgen.st.STRenderer;\n" + 
@@ -385,17 +385,9 @@ public class DomainVisitorRunner {
 				"	}\n" + 
 				"\n" + 
 				"	public static void main(String[] args) {\n" + 
-				"		final Collection<nextgen.st.domain.STGroupModel> stGroups = new ArrayList<>();\n" + 
-				"		final File templatesDir = new java.io.File(\"~templatesDir~\");\n" + 
-				"		Optional.ofNullable(templatesDir.listFiles(pathname -> pathname.isFile() && pathname.getName().toLowerCase().endsWith(\".json\")))\n" + 
-				"			.ifPresent(files -> {\n" + 
-				"				for (java.io.File file : files)\n" + 
-				"					stGroups.add(new STGroupModel(nextgen.st.STParser.readJsonObject(file)));\n" + 
-				"			});\n" + 
-				"		final STModelDB db = new STModelDB(\"~dbDir~\", stGroups);\n" + 
-				"		final STRenderer renderer = new STRenderer(stGroups);\n" + 
+				"		final nextgen.st.model.STModelDB db = new nextgen.st.model.STModelDB(\"~dbDir~\", \"~templatesDir~\");\n" + 
+				"		final new nextgen.st.STRenderer renderer = new nextgen.st.STRenderer(db.getGroupModels());\n" + 
 				"		final DomainEntity domainEntity = db.getInTransaction(transaction -> new DomainEntity(db.getDatabaseService().findNode(org.neo4j.graphdb.Label.label(\"DomainEntity\"), \"uuid\", \"~entityUuid~\")));\n" + 
-				"\n" + 
 				"		new Thread(new ~name~(db, renderer, domainEntity)).start();\n" + 
 				"	}\n" + 
 				"} >>";

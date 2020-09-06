@@ -6,6 +6,7 @@ import nextgen.st.domain.STTemplate;
 import nextgen.st.model.*;
 import nextgen.templates.java.BlockStmt;
 import nextgen.templates.java.MethodCallExpression;
+import nextgen.templates.java.PackageDeclaration;
 import nextgen.utils.StringUtil;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -141,6 +142,27 @@ public class STRenderer {
                            }
                         }));
       return st.render().trim();
+   }
+
+   public void renderNeoCode(STModel stModel, Collection<String> neoFacades, Collection<String> modelStatements) {
+
+      if (stModel == null) return;
+
+      final STMapper stMapper = findSTMapper(stModel.getStTemplate());
+      if (stMapper == null) return;
+
+      final STTemplate stTemplate = stMapper.find(stModel.getStTemplate());
+      if (stTemplate == null) return;
+
+      final STGroupModel groupModel = stMapper.groupModel;
+      final String facadeType = "nextgen.templates." + groupModel.getName()
+            .toLowerCase() + ".neo." + StringUtil.capitalize(groupModel) + "Neo";
+      final String facadeName = groupModel.getName().toLowerCase() + "Neo";
+
+      neoFacades.add("final " + facadeType + " " + facadeName + " = new " + facadeType + "(db);");
+
+      modelStatements.add(facadeName + ".find" + StringUtil.capitalize(stTemplate.getName()) + "Model(" + StringUtil.dq(stModel
+            .getUuid()) + ");");
    }
 
    public MethodCallExpression renderGeneratorCode(STModel stModel, Set<String> imports) {

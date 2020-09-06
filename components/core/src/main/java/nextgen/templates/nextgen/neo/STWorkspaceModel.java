@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 public class STWorkspaceModel {
 
 	public static final String stGroupModelUuid = "483489b9-c91a-41c8-ad49-1dc7f9f1469f";
-   public static final String stTemplateUuid = "52c4cf0f-c4dc-451e-b9a2-80222561d727";
+	public static final String stTemplateUuid = "52c4cf0f-c4dc-451e-b9a2-80222561d727";
 
 	private final STModelDB db;
 	private final STModel stModel;
@@ -34,6 +34,16 @@ public class STWorkspaceModel {
 		this.db = db;
 		this.stTemplate = this.db.findSTTemplateByUuid(stTemplateUuid);
 		this.stModel = this.db.newSTModel(node);
+	}
+
+	public STWorkspaceModel(STModelDB db, String uuid) {
+		this.db = db;
+		this.stTemplate = this.db.findSTTemplateByUuid(stTemplateUuid);
+		this.stModel = this.db.findOrCreateSTModelByUuid(uuid);
+	}
+
+	public String getUuid() {
+		return stModel.getUuid();
 	}
 
 	public STValue asSTValue () {

@@ -74,6 +74,18 @@ public class STAppEvents {
 		}
 	}
 
+	public static void postSTModelUpdated() {
+		log.info("post STModelUpdated");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new STModelUpdated());
+	}
+
+	public static class STModelUpdated {
+
+
+		public STModelUpdated() {
+		}
+	}
+
 	public static void postNewDomainEntity(nextgen.domains.meta.DomainEntity domainEntity) {
 		log.info("post NewDomainEntity");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new NewDomainEntity(domainEntity));

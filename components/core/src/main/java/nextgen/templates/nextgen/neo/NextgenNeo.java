@@ -3,6 +3,7 @@ package nextgen.templates.nextgen.neo;
 import nextgen.st.model.*;
 import org.neo4j.graphdb.Node;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class NextgenNeo {
 
@@ -24,6 +25,16 @@ public class NextgenNeo {
 		return new TreeNavigatorModel(db, node);
 	}
 
+	public Stream<TreeNavigatorModel> findAllTreeNavigatorModel() {
+		return db.findAllSTModelByStTemplate(TreeNavigatorModel.stTemplateUuid)
+				.map(stModel -> new TreeNavigatorModel(db, stModel));
+	}
+
+	public TreeNavigatorModel findTreeNavigatorModel(String uuid) {
+		final STModel stModel = db.findSTModelByUuid(uuid);
+		return stModel == null ? new TreeNavigatorModel(db, uuid) : new TreeNavigatorModel(db, stModel);
+	}
+
 
 	public BaseTreeNodeModel newBaseTreeNodeModel() {
 		return new BaseTreeNodeModel(db);
@@ -35,6 +46,16 @@ public class NextgenNeo {
 
 	public BaseTreeNodeModel newBaseTreeNodeModel(Node node) {
 		return new BaseTreeNodeModel(db, node);
+	}
+
+	public Stream<BaseTreeNodeModel> findAllBaseTreeNodeModel() {
+		return db.findAllSTModelByStTemplate(BaseTreeNodeModel.stTemplateUuid)
+				.map(stModel -> new BaseTreeNodeModel(db, stModel));
+	}
+
+	public BaseTreeNodeModel findBaseTreeNodeModel(String uuid) {
+		final STModel stModel = db.findSTModelByUuid(uuid);
+		return stModel == null ? new BaseTreeNodeModel(db, uuid) : new BaseTreeNodeModel(db, stModel);
 	}
 
 
@@ -50,6 +71,16 @@ public class NextgenNeo {
 		return new TreeNodeModel(db, node);
 	}
 
+	public Stream<TreeNodeModel> findAllTreeNodeModel() {
+		return db.findAllSTModelByStTemplate(TreeNodeModel.stTemplateUuid)
+				.map(stModel -> new TreeNodeModel(db, stModel));
+	}
+
+	public TreeNodeModel findTreeNodeModel(String uuid) {
+		final STModel stModel = db.findSTModelByUuid(uuid);
+		return stModel == null ? new TreeNodeModel(db, uuid) : new TreeNodeModel(db, stModel);
+	}
+
 
 	public TreeNodeActionModel newTreeNodeActionModel() {
 		return new TreeNodeActionModel(db);
@@ -61,6 +92,16 @@ public class NextgenNeo {
 
 	public TreeNodeActionModel newTreeNodeActionModel(Node node) {
 		return new TreeNodeActionModel(db, node);
+	}
+
+	public Stream<TreeNodeActionModel> findAllTreeNodeActionModel() {
+		return db.findAllSTModelByStTemplate(TreeNodeActionModel.stTemplateUuid)
+				.map(stModel -> new TreeNodeActionModel(db, stModel));
+	}
+
+	public TreeNodeActionModel findTreeNodeActionModel(String uuid) {
+		final STModel stModel = db.findSTModelByUuid(uuid);
+		return stModel == null ? new TreeNodeActionModel(db, uuid) : new TreeNodeActionModel(db, stModel);
 	}
 
 
@@ -76,6 +117,16 @@ public class NextgenNeo {
 		return new CanvasModel(db, node);
 	}
 
+	public Stream<CanvasModel> findAllCanvasModel() {
+		return db.findAllSTModelByStTemplate(CanvasModel.stTemplateUuid)
+				.map(stModel -> new CanvasModel(db, stModel));
+	}
+
+	public CanvasModel findCanvasModel(String uuid) {
+		final STModel stModel = db.findSTModelByUuid(uuid);
+		return stModel == null ? new CanvasModel(db, uuid) : new CanvasModel(db, stModel);
+	}
+
 
 	public BaseCanvasNodeModel newBaseCanvasNodeModel() {
 		return new BaseCanvasNodeModel(db);
@@ -87,6 +138,16 @@ public class NextgenNeo {
 
 	public BaseCanvasNodeModel newBaseCanvasNodeModel(Node node) {
 		return new BaseCanvasNodeModel(db, node);
+	}
+
+	public Stream<BaseCanvasNodeModel> findAllBaseCanvasNodeModel() {
+		return db.findAllSTModelByStTemplate(BaseCanvasNodeModel.stTemplateUuid)
+				.map(stModel -> new BaseCanvasNodeModel(db, stModel));
+	}
+
+	public BaseCanvasNodeModel findBaseCanvasNodeModel(String uuid) {
+		final STModel stModel = db.findSTModelByUuid(uuid);
+		return stModel == null ? new BaseCanvasNodeModel(db, uuid) : new BaseCanvasNodeModel(db, stModel);
 	}
 
 
@@ -102,6 +163,16 @@ public class NextgenNeo {
 		return new CanvasNodeModel(db, node);
 	}
 
+	public Stream<CanvasNodeModel> findAllCanvasNodeModel() {
+		return db.findAllSTModelByStTemplate(CanvasNodeModel.stTemplateUuid)
+				.map(stModel -> new CanvasNodeModel(db, stModel));
+	}
+
+	public CanvasNodeModel findCanvasNodeModel(String uuid) {
+		final STModel stModel = db.findSTModelByUuid(uuid);
+		return stModel == null ? new CanvasNodeModel(db, uuid) : new CanvasNodeModel(db, stModel);
+	}
+
 
 	public CanvasNodeActionModel newCanvasNodeActionModel() {
 		return new CanvasNodeActionModel(db);
@@ -113,6 +184,16 @@ public class NextgenNeo {
 
 	public CanvasNodeActionModel newCanvasNodeActionModel(Node node) {
 		return new CanvasNodeActionModel(db, node);
+	}
+
+	public Stream<CanvasNodeActionModel> findAllCanvasNodeActionModel() {
+		return db.findAllSTModelByStTemplate(CanvasNodeActionModel.stTemplateUuid)
+				.map(stModel -> new CanvasNodeActionModel(db, stModel));
+	}
+
+	public CanvasNodeActionModel findCanvasNodeActionModel(String uuid) {
+		final STModel stModel = db.findSTModelByUuid(uuid);
+		return stModel == null ? new CanvasNodeActionModel(db, uuid) : new CanvasNodeActionModel(db, stModel);
 	}
 
 
@@ -128,6 +209,16 @@ public class NextgenNeo {
 		return new BaseCanvasRelationModel(db, node);
 	}
 
+	public Stream<BaseCanvasRelationModel> findAllBaseCanvasRelationModel() {
+		return db.findAllSTModelByStTemplate(BaseCanvasRelationModel.stTemplateUuid)
+				.map(stModel -> new BaseCanvasRelationModel(db, stModel));
+	}
+
+	public BaseCanvasRelationModel findBaseCanvasRelationModel(String uuid) {
+		final STModel stModel = db.findSTModelByUuid(uuid);
+		return stModel == null ? new BaseCanvasRelationModel(db, uuid) : new BaseCanvasRelationModel(db, stModel);
+	}
+
 
 	public CanvasRelationModel newCanvasRelationModel() {
 		return new CanvasRelationModel(db);
@@ -139,6 +230,16 @@ public class NextgenNeo {
 
 	public CanvasRelationModel newCanvasRelationModel(Node node) {
 		return new CanvasRelationModel(db, node);
+	}
+
+	public Stream<CanvasRelationModel> findAllCanvasRelationModel() {
+		return db.findAllSTModelByStTemplate(CanvasRelationModel.stTemplateUuid)
+				.map(stModel -> new CanvasRelationModel(db, stModel));
+	}
+
+	public CanvasRelationModel findCanvasRelationModel(String uuid) {
+		final STModel stModel = db.findSTModelByUuid(uuid);
+		return stModel == null ? new CanvasRelationModel(db, uuid) : new CanvasRelationModel(db, stModel);
 	}
 
 
@@ -154,6 +255,16 @@ public class NextgenNeo {
 		return new CanvasRelationActionModel(db, node);
 	}
 
+	public Stream<CanvasRelationActionModel> findAllCanvasRelationActionModel() {
+		return db.findAllSTModelByStTemplate(CanvasRelationActionModel.stTemplateUuid)
+				.map(stModel -> new CanvasRelationActionModel(db, stModel));
+	}
+
+	public CanvasRelationActionModel findCanvasRelationActionModel(String uuid) {
+		final STModel stModel = db.findSTModelByUuid(uuid);
+		return stModel == null ? new CanvasRelationActionModel(db, uuid) : new CanvasRelationActionModel(db, stModel);
+	}
+
 
 	public CanvasActionModel newCanvasActionModel() {
 		return new CanvasActionModel(db);
@@ -165,6 +276,16 @@ public class NextgenNeo {
 
 	public CanvasActionModel newCanvasActionModel(Node node) {
 		return new CanvasActionModel(db, node);
+	}
+
+	public Stream<CanvasActionModel> findAllCanvasActionModel() {
+		return db.findAllSTModelByStTemplate(CanvasActionModel.stTemplateUuid)
+				.map(stModel -> new CanvasActionModel(db, stModel));
+	}
+
+	public CanvasActionModel findCanvasActionModel(String uuid) {
+		final STModel stModel = db.findSTModelByUuid(uuid);
+		return stModel == null ? new CanvasActionModel(db, uuid) : new CanvasActionModel(db, stModel);
 	}
 
 
@@ -180,6 +301,16 @@ public class NextgenNeo {
 		return new AppEventsModel(db, node);
 	}
 
+	public Stream<AppEventsModel> findAllAppEventsModel() {
+		return db.findAllSTModelByStTemplate(AppEventsModel.stTemplateUuid)
+				.map(stModel -> new AppEventsModel(db, stModel));
+	}
+
+	public AppEventsModel findAppEventsModel(String uuid) {
+		final STModel stModel = db.findSTModelByUuid(uuid);
+		return stModel == null ? new AppEventsModel(db, uuid) : new AppEventsModel(db, stModel);
+	}
+
 
 	public AppEventModel newAppEventModel() {
 		return new AppEventModel(db);
@@ -191,6 +322,16 @@ public class NextgenNeo {
 
 	public AppEventModel newAppEventModel(Node node) {
 		return new AppEventModel(db, node);
+	}
+
+	public Stream<AppEventModel> findAllAppEventModel() {
+		return db.findAllSTModelByStTemplate(AppEventModel.stTemplateUuid)
+				.map(stModel -> new AppEventModel(db, stModel));
+	}
+
+	public AppEventModel findAppEventModel(String uuid) {
+		final STModel stModel = db.findSTModelByUuid(uuid);
+		return stModel == null ? new AppEventModel(db, uuid) : new AppEventModel(db, stModel);
 	}
 
 
@@ -206,6 +347,16 @@ public class NextgenNeo {
 		return new NewOpenRemovedEventsModel(db, node);
 	}
 
+	public Stream<NewOpenRemovedEventsModel> findAllNewOpenRemovedEventsModel() {
+		return db.findAllSTModelByStTemplate(NewOpenRemovedEventsModel.stTemplateUuid)
+				.map(stModel -> new NewOpenRemovedEventsModel(db, stModel));
+	}
+
+	public NewOpenRemovedEventsModel findNewOpenRemovedEventsModel(String uuid) {
+		final STModel stModel = db.findSTModelByUuid(uuid);
+		return stModel == null ? new NewOpenRemovedEventsModel(db, uuid) : new NewOpenRemovedEventsModel(db, stModel);
+	}
+
 
 	public EventSubscriberModel newEventSubscriberModel() {
 		return new EventSubscriberModel(db);
@@ -219,6 +370,16 @@ public class NextgenNeo {
 		return new EventSubscriberModel(db, node);
 	}
 
+	public Stream<EventSubscriberModel> findAllEventSubscriberModel() {
+		return db.findAllSTModelByStTemplate(EventSubscriberModel.stTemplateUuid)
+				.map(stModel -> new EventSubscriberModel(db, stModel));
+	}
+
+	public EventSubscriberModel findEventSubscriberModel(String uuid) {
+		final STModel stModel = db.findSTModelByUuid(uuid);
+		return stModel == null ? new EventSubscriberModel(db, uuid) : new EventSubscriberModel(db, stModel);
+	}
+
 
 	public STWorkspaceModel newSTWorkspaceModel() {
 		return new STWorkspaceModel(db);
@@ -230,6 +391,16 @@ public class NextgenNeo {
 
 	public STWorkspaceModel newSTWorkspaceModel(Node node) {
 		return new STWorkspaceModel(db, node);
+	}
+
+	public Stream<STWorkspaceModel> findAllSTWorkspaceModel() {
+		return db.findAllSTModelByStTemplate(STWorkspaceModel.stTemplateUuid)
+				.map(stModel -> new STWorkspaceModel(db, stModel));
+	}
+
+	public STWorkspaceModel findSTWorkspaceModel(String uuid) {
+		final STModel stModel = db.findSTModelByUuid(uuid);
+		return stModel == null ? new STWorkspaceModel(db, uuid) : new STWorkspaceModel(db, stModel);
 	}
 
 

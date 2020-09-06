@@ -260,6 +260,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 		pop.add(new MakeGeneratorScript(event));
 		pop.add(new NewDomainAction(event));
+		pop.add(new MakeNeoModelScript(event));
 		pop.add(new SaveLastLayoutAction(event));
 		pop.add(new LoadLastLayoutAction(event));
 		pop.addSeparator();
@@ -1258,6 +1259,22 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			nextgen.utils.SwingUtil.showInputDialog("Name", thisCanvas(), "", s -> thisCanvas().presentationModel.doLaterInTransaction(tx -> {
 				presentationModel.metaDb.newMetaDomain(s);
 			}));
+		}
+	}
+
+	final class MakeNeoModelScript extends CanvasAction {
+
+		MakeNeoModelScript(PInputEvent event) {
+			super("Generate Neo Model script", event);
+		}
+
+		@Override
+		void actionPerformed(PInputEvent event, ActionEvent e) {
+			presentationModel.generateNeoSources(getSelectedNodes()
+							.filter(baseCanvasNode -> baseCanvasNode instanceof STModelNode)
+							.map(baseCanvasNode -> (STModelNode) baseCanvasNode)
+							.map(stModelNode -> stModelNode.getModel())
+							.collect(java.util.stream.Collectors.toSet()), "NeoTest");
 		}
 	}
 

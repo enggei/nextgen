@@ -161,6 +161,7 @@ public class NeoDomain {
 				"import nextgen.st.model.*;\n" + 
 				"import org.neo4j.graphdb.Node;\n" + 
 				"import java.util.Optional;\n" + 
+				"import java.util.stream.Stream;\n" + 
 				"\n" + 
 				"public class ~name;format=\"capitalize\"~ {\n" + 
 				"\n" + 
@@ -181,6 +182,16 @@ public class NeoDomain {
 				"\n" + 
 				"	public ~it.name;format=\"capitalize\"~ new~it.name;format=\"capitalize\"~(Node node) {\n" + 
 				"		return new ~it.name;format=\"capitalize\"~(db, node);\n" + 
+				"	~eom()~\n" + 
+				"\n" + 
+				"	public Stream<~it.name;format=\"capitalize\"~> findAll~it.name;format=\"capitalize\"~() {\n" + 
+				"		return db.findAllSTModelByStTemplate(~it.name;format=\"capitalize\"~.stTemplateUuid)\n" + 
+				"				.map(stModel -> new ~it.name;format=\"capitalize\"~(db, stModel));\n" + 
+				"	~eom()~\n" + 
+				"\n" + 
+				"	public ~it.name;format=\"capitalize\"~ find~it.name;format=\"capitalize\"~(String uuid) {\n" + 
+				"		final STModel stModel = db.findSTModelByUuid(uuid);\n" + 
+				"		return stModel == null ? new ~it.name;format=\"capitalize\"~(db, uuid) : new ~it.name;format=\"capitalize\"~(db, stModel);\n" + 
 				"	~eom()~\n" + 
 				"};separator=\"\\n\\n\"~\n" + 
 				"\n" + 

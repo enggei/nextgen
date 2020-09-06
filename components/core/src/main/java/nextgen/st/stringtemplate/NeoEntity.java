@@ -242,8 +242,8 @@ public class NeoEntity {
 				"public class ~name;format=\"capitalize\"~ {\n" + 
 				"\n" + 
 				"	public static final String stGroupModelUuid = \"~stGroupModel~\";\n" + 
-				"   public static final String stTemplateUuid = \"~stTemplate~\";\n" + 
-				"   \n" + 
+				"	public static final String stTemplateUuid = \"~stTemplate~\";\n" + 
+				"\n" + 
 				"	private final STModelDB db;\n" + 
 				"	private final STModel stModel;\n" + 
 				"	private final STTemplate stTemplate;\n" + 
@@ -266,6 +266,16 @@ public class NeoEntity {
 				"		this.stModel = this.db.newSTModel(node);\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	public ~name;format=\"capitalize\"~(STModelDB db, String uuid) {\n" + 
+				"		this.db = db;\n" + 
+				"		this.stTemplate = this.db.findSTTemplateByUuid(stTemplateUuid);\n" + 
+				"		this.stModel = this.db.findOrCreateSTModelByUuid(uuid);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public String getUuid() {\n" + 
+				"		return stModel.getUuid();\n" + 
+				"	}\n" + 
+				"	\n" + 
 				"	public STValue asSTValue () {\n" + 
 				"		return db.newSTValue(stModel);\n" + 
 				"	}\n" + 
