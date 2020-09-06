@@ -472,6 +472,148 @@
         } ]
       } ]
     } ]
+  }, {
+    "uuid" : "f42e249c-c3c6-4fd3-8afa-1e8dd8db89a5",
+    "name" : "NeoDomain",
+    "text" : "package ~package~;\n\nimport nextgen.st.model.*;\nimport org.neo4j.graphdb.Node;\nimport java.util.Optional;\n\npublic class ~name;format=\"capitalize\"~ {\n\n\tprivate final STModelDB db;\n\n\tpublic ~name;format=\"capitalize\"~(STModelDB db) {\n\t\tthis.db = db;\n\t}\n\n~entities:{it|\n\tpublic ~it.name;format=\"capitalize\"~ new~it.name;format=\"capitalize\"~() {\n\t\treturn new ~it.name;format=\"capitalize\"~(db);\n\t~eom()~\n\n\tpublic ~it.name;format=\"capitalize\"~ new~it.name;format=\"capitalize\"~(STModel stModel) {\n\t\treturn new ~it.name;format=\"capitalize\"~(db, stModel);\n\t~eom()~\n\n\tpublic ~it.name;format=\"capitalize\"~ new~it.name;format=\"capitalize\"~(Node node) {\n\t\treturn new ~it.name;format=\"capitalize\"~(db, node);\n\t~eom()~\n};separator=\"\\n\\n\"~\n\n\t~finders:{it|~it~};separator=\"\\n\\n\"~\n} ",
+    "parameters" : [ {
+      "uuid" : "462d7831-cb90-444d-8b54-5f192af73d33",
+      "name" : "package",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "58f58615-e307-4440-ae60-33aeef62a204",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "761b6ca5-2a60-4777-a276-93ea38e7b15d",
+      "name" : "entities",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "3a8253e8-d614-4af4-a4c0-7548acbb7f66",
+        "name" : "name",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "ed570237-4908-47b1-8133-a07020d1d5c2",
+      "name" : "finders",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    } ],
+    "children" : [ {
+      "uuid" : "7a6aa696-d7a3-4606-9a06-e113274ca0fe",
+      "name" : "NeoEntity",
+      "text" : "package ~package~;\n\nimport nextgen.st.model.*;\nimport nextgen.st.domain.*;\n\nimport java.util.ArrayList;\nimport java.util.Collection;\nimport java.util.Optional;\nimport java.util.concurrent.atomic.AtomicReference;\nimport java.util.stream.Stream;\n\npublic class ~name;format=\"capitalize\"~ {\n\n\tpublic static final String stGroupModelUuid = \"~stGroupModel~\";\n   public static final String stTemplateUuid = \"~stTemplate~\";\n   \n\tprivate final STModelDB db;\n\tprivate final STModel stModel;\n\tprivate final STTemplate stTemplate;\n\n\tpublic ~name;format=\"capitalize\"~(STModelDB db) {\n\t\tthis.db = db;\n\t\tthis.stTemplate = this.db.findSTTemplateByUuid(stTemplateUuid);\n\t\tthis.stModel = this.db.newSTModel(stGroupModelUuid, this.stTemplate);\n\t}\n\n\tpublic ~name;format=\"capitalize\"~(STModelDB db, STModel stModel) {\n\t\tthis.db = db;\n\t\tthis.stTemplate = this.db.findSTTemplateByUuid(stTemplateUuid);\n\t\tthis.stModel = stModel;\n\t}\n\n\tpublic ~name;format=\"capitalize\"~(STModelDB db, org.neo4j.graphdb.Node node) {\n\t\tthis.db = db;\n\t\tthis.stTemplate = this.db.findSTTemplateByUuid(stTemplateUuid);\n\t\tthis.stModel = this.db.newSTModel(node);\n\t}\n\n\tpublic STValue asSTValue () {\n\t\treturn db.newSTValue(stModel);\n\t}\n\n\t~singleAccessors:{it|~it~};separator=\"\\n\\n\"~\n\n\t~listAccessors:{it|~it~};separator=\"\\n\\n\"~\n\n\t~kvAccessors:{it|~it~};separator=\"\\n\\n\"~\n\n\tprivate ~name;format=\"capitalize\"~ set(STValue value, String name) {\n\t\tfindParameter(name)\n\t\t\t\t.ifPresent(stParameter -> {\n\n\t\t\t\t\tstModel.getArguments()\n\t\t\t\t\t\t\t.filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n\t\t\t\t\t\t\t.findAny()\n\t\t\t\t\t\t\t.ifPresent(stModel::removeArguments);\n\n\t\t\t\t\tstModel.addArguments(db.newSTArgument(stParameter, value));\n\t\t\t\t});\n\t\treturn this;\n\t}\n\n\tprivate STValue get(String name) {\n\t\tfinal AtomicReference<STValue> value = new AtomicReference<>();\n\t\tfindParameter(name).flatMap(stParameter -> stModel.getArguments()\n\t\t\t\t.filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n\t\t\t\t.findAny()).ifPresent(stArgument -> value.set(stArgument.getValue()));\n\t\treturn value.get();\n\t}\n\n\tprivate ~name;format=\"capitalize\"~ add(STValue value, String name) {\n\t\tfindParameter(name)\n\t\t\t\t.ifPresent(stParameter -> stModel.addArguments(db.newSTArgument(stParameter, value)));\n\t\treturn this;\n\t}\n\n\tprivate Stream<STValue> stream(String name) {\n\t\treturn findParameter(name)\n\t\t\t\t.map(stParameter -> stModel.getArguments()\n\t\t\t\t\t\t.filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n\t\t\t\t\t\t.map(STArgument::getValue)).orElseGet(Stream::empty);\n\t}\n\n\tprivate Optional<STParameter> findParameter(String name) {\n\t\treturn stTemplate.getParameters()\n\t\t\t\t.filter(param -> param.getName().equals(name))\n\t\t\t\t.findFirst();\n\t}\n\n\tprivate void addKV(STValue _type, STParameter stParameter, Collection<STArgumentKV> kvs, String type) {\n\t\tstParameter.getKeys()\n\t\t\t\t.filter(stParameterKey -> stParameterKey.getName().equals(type))\n\t\t\t\t.findFirst()\n\t\t\t\t.ifPresent(stParameterKey -> kvs.add(db.newSTArgumentKV(stParameterKey, _type)));\n\t}\n} ",
+      "parameters" : [ {
+        "uuid" : "836fe7c2-ae2b-4750-962b-1e091a6faa83",
+        "name" : "package",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "e2411e6e-7a7b-4320-9fcc-d59cd60685b2",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "219dc147-8161-47a8-b9d6-fee953cf3023",
+        "name" : "stGroupModel",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "c8f1680d-02e0-44e3-9fc8-0cef343b559f",
+        "name" : "stTemplate",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "867d1219-54ac-4c12-8ab6-584f88b75ebf",
+        "name" : "singleAccessors",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "64890a90-195b-4bb7-a03b-ae1c82439ec1",
+        "name" : "listAccessors",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "31a4870a-2193-4a53-bda6-bb7f8a318d2d",
+        "name" : "kvAccessors",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ],
+      "children" : [ {
+        "uuid" : "94c5783c-3daa-493b-aedb-10461d47068f",
+        "name" : "SingleAccessors",
+        "text" : "public ~entity;format=\"capitalize\"~ set~name;format=\"capitalize\"~(String value) {\n\treturn set~name;format=\"capitalize\"~(db.newSTValue(value));\n}\n\npublic ~entity;format=\"capitalize\"~ set~name;format=\"capitalize\"~(STValue value) {\n\treturn set(value, \"~name~\");\n}\n\npublic STValue get~name;format=\"capitalize\"~() {\n\treturn get(\"~name~\");\n} ",
+        "parameters" : [ {
+          "uuid" : "9d0a3055-11f9-4a76-b556-80b78db2744d",
+          "name" : "entity",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "8c7f20dd-289a-4de7-ab37-03a95a142a72",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "e6d24cde-3aef-4dfe-ae86-0e8e394b509b",
+        "name" : "ListAccessors",
+        "text" : "public ~entity;format=\"capitalize\"~ add~name;format=\"capitalize\"~(String value) {\n\treturn add~name;format=\"capitalize\"~(db.newSTValue(value));\n}\n\npublic ~entity;format=\"capitalize\"~ add~name;format=\"capitalize\"~(STValue value) {\n\treturn add(value, \"~name~\");\n}\n\npublic Stream<STValue> get~name;format=\"capitalize\"~() {\n\treturn stream(\"~name~\");\n} ",
+        "parameters" : [ {
+          "uuid" : "7d67134f-5c83-4ec5-9a21-03f304a9d929",
+          "name" : "entity",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "1a07e199-b501-4a8c-b3ed-6a9ae6cf7da1",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "ce09f664-e4f0-4b17-8249-b78ef2a5e657",
+        "name" : "KVAccessors",
+        "text" : "public ~entity;format=\"capitalize\"~ add~name;format=\"capitalize\"~(~keys:{it|String _~it.name~};separator=\", \"~) {\n\treturn add~name;format=\"capitalize\"~(~keys:{it|db.newSTValue(_~it.name~)};separator=\", \"~);\n}\n\npublic ~entity;format=\"capitalize\"~ add~name;format=\"capitalize\"~(~entity;format=\"capitalize\"~_~name;format=\"capitalize\"~ value) {\n\treturn add~name;format=\"capitalize\"~(~keys:{it|value.get~it.name;format=\"capitalize\"~()};separator=\", \"~);\n}\n\npublic ~entity;format=\"capitalize\"~ add~name;format=\"capitalize\"~(~keys:{it|STValue _~it.name~};separator=\", \"~) {\n\tfindParameter(\"~name~\")\n\t\t\t.ifPresent(stParameter -> {\n\t\t\t\tfinal Collection<STArgumentKV> kvs = new ArrayList<>();\n\t\t\t\t~keys:{it|addKV(_~it.name~, stParameter, kvs, \"~it.name~\");};separator=\"\\n\"~\n\t\t\t\tdb.newSTArgument(stParameter, kvs);\n\t\t\t});\n\n\treturn this;\n}\n\npublic java.util.stream.Stream<~entity;format=\"capitalize\"~_~name;format=\"capitalize\"~> stream~name;format=\"capitalize\"~() {\n\treturn findParameter(\"~name~\")\n\t\t\t.map(stParameter -> stModel.getArguments()\n\t\t\t\t\t.filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n\t\t\t\t\t.map(stArgument -> new ~entity;format=\"capitalize\"~_~name;format=\"capitalize\"~(stArgument, stParameter)))\n\t\t\t.orElseGet(Stream::empty);\n}\n\npublic final class ~entity;format=\"capitalize\"~_~name;format=\"capitalize\"~ {\n\n\tSTArgument stArgument;\n\tSTParameter stParameter;\n\n\tpublic ~entity;format=\"capitalize\"~_~name;format=\"capitalize\"~(STArgument stArgument, STParameter stParameter) {\n\t\tthis.stArgument = stArgument;\n\t\tthis.stParameter = stParameter;\n\t}\n\n~keys:{it|\n\tpublic ~entity;format=\"capitalize\"~_~name;format=\"capitalize\"~ set~it.name;format=\"capitalize\"~(String value) {\n\t\treturn set~it.name;format=\"capitalize\"~(db.newSTValue(value));\n\t~eom()~\n\n\tpublic ~entity;format=\"capitalize\"~_~name;format=\"capitalize\"~ set~it.name;format=\"capitalize\"~(STValue value) {\n\t\treturn setKVValue(\"~it.name~\", value);\n\t~eom()~\n\n\tpublic STValue get~it.name;format=\"capitalize\"~() {\n\t\treturn getKVValue(\"~it.name~\");\n\t~eom()~\n};separator=\"\\n\\n\"~\n\n\tprivate ~entity;format=\"capitalize\"~_~name;format=\"capitalize\"~ setKVValue(String name, STValue value) {\n\n\t\tstParameter.getKeys()\n\t\t\t\t.filter(stParameterKey -> stParameterKey.getName().equals(name))\n\t\t\t\t.findAny()\n\t\t\t\t.ifPresent(stParameterKey -> {\n\n\t\t\t\t\tstArgument.getKeyValues()\n\t\t\t\t\t\t\t.filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))\n\t\t\t\t\t\t\t.findAny()\n\t\t\t\t\t\t\t.ifPresent(stArgumentKV -> stArgument.removeKeyValues(stArgumentKV));\n\n\t\t\t\t\tstArgument.addKeyValues(db.newSTArgumentKV(stParameterKey, value));\n\t\t\t\t});\n\n\t\treturn this;\n\t}\n\n\tprivate STValue getKVValue(String name) {\n\t\tfinal AtomicReference<STValue> value = new AtomicReference<>();\n\t\tstParameter.getKeys()\n\t\t\t\t.filter(param -> param.getName().equals(name))\n\t\t\t\t.findFirst().flatMap(stParameter -> stArgument.getKeyValues()\n\t\t\t\t.filter(stArgument -> stArgument.getStParameterKey().equals(stParameter.getUuid()))\n\t\t\t\t.findAny()).ifPresent(stArgument -> value.set(stArgument.getValue()));\n\n\t\treturn value.get();\n\t}\n} ",
+        "parameters" : [ {
+          "uuid" : "98aea6a1-58d3-42d2-b66f-3ab4781808bc",
+          "name" : "entity",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "9599d314-4392-4a52-b339-296b7bb4eb90",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "216122ab-f598-4e43-94fa-5e0e16271e85",
+          "name" : "keys",
+          "type" : "KVLIST",
+          "argumentType" : "Object",
+          "keys" : [ {
+            "uuid" : "d8549dd4-8f0c-4696-8e5e-f353bc529cc9",
+            "name" : "name",
+            "argumentType" : "Object"
+          } ]
+        } ]
+      } ]
+    }, {
+      "uuid" : "1fbd1175-c17d-4ad9-ae43-8ee06b6970e9",
+      "name" : "FindBy",
+      "text" : "public Optional<~entity;format=\"capitalize\"~> find~entity;format=\"capitalize\"~By~name;format=\"capitalize\"~(STValue value) {\n\treturn Optional.ofNullable(db.find(\"~name~\", value, ~entity;format=\"capitalize\"~.stTemplateUuid, ~entity;format=\"capitalize\"~::new));\n} ",
+      "parameters" : [ {
+        "uuid" : "7edc8c6d-095f-40e6-822e-a80008a098fb",
+        "name" : "entity",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "6e568b8e-1ec0-4089-865f-318e187c468d",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    } ]
   } ],
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/StringTemplate.stg",
   "icon" : "language-stringtemplate"

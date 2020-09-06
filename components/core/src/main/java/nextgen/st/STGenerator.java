@@ -93,6 +93,9 @@ public class STGenerator {
         writeToFile(toStg(stGroupModel), packageDeclaration, stGroupModel.getName(), "stg", root);
         writeJavaFile(stDomain.render(), packageDeclaration, domainClassName, root);
         writeJavaFile(stDomainTests.render(), packageDeclaration, testsClassName, new File(root.getAbsolutePath().replaceAll("src/main", "src/test")));
+
+        final STNeoGenerator neoGenerator = new STNeoGenerator();
+        neoGenerator.generateSTGroup(stGroupModel, packageDeclaration + ".neo", root.getAbsolutePath());
     }
 
     @NotNull

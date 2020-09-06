@@ -3296,44 +3296,42 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				thisCanvas().presentationModel.doLaterInTransaction(transaction -> {
+				presentationModel.doLaterInTransaction(transaction -> {
 
-					thisCanvas().presentationModel.getIncomingSTArguments(getModel())
-								.forEach(stArgument -> {
-									stArgument.getIncomingArgumentsSTModel().forEach(stModel -> {
-											final nextgen.st.domain.STTemplate stTemplateByUuid = thisCanvas().presentationModel.findSTTemplateByUuid(stModel.getStTemplate());
+					presentationModel.getIncomingSTArguments(getModel())
+							.forEach(stArgument -> stArgument.getIncomingArgumentsSTModel()
+									.forEach(stModel -> {
+										final nextgen.st.domain.STTemplate stTemplateByUuid = presentationModel.findSTTemplateByUuid(stModel.getStTemplate());
+										if (stTemplateByUuid == null) return;
+										stTemplateByUuid.getParameters()
+												.filter(stParameter -> stParameter.getUuid().equals(stArgument.getStParameter()))
+												.findFirst()
+												.ifPresent(stParameter -> {
+													final STModelNode stModelNode = thisCanvas().addNode(stModel.getUuid(), () -> new STModelNode(stModel, presentationModel.findSTTemplateByUuid(stModel.getStTemplate())));
+													thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(stModelNode, thisNode(), stArgument, stParameter));
+												});
+									}));
+
+					presentationModel.getIncomingSTArgumentKVs(getModel())
+							.forEach(stArgumentKV -> {
+								stArgumentKV.getIncomingKeyValuesSTArgument()
+										.forEach(stArgument -> stArgument.getIncomingArgumentsSTModel().forEach(stModel -> {
+											final nextgen.st.domain.STTemplate stTemplateByUuid = presentationModel.findSTTemplateByUuid(stModel.getStTemplate());
 											if (stTemplateByUuid == null) return;
 											stTemplateByUuid.getParameters()
 													.filter(stParameter -> stParameter.getUuid().equals(stArgument.getStParameter()))
 													.findFirst()
-													.ifPresent(stParameter -> {
-															final STModelNode stModelNode = thisCanvas().addNode(stModel.getUuid(), () -> new STModelNode(stModel, presentationModel.findSTTemplateByUuid(stModel.getStTemplate())));
-															thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(stModelNode, thisNode(), stArgument, stParameter));
-													});
-									});
-								});
-
-					thisCanvas().presentationModel.getIncomingSTArgumentKVs(getModel())
-								.forEach(stArgumentKV -> {
-									stArgumentKV.getIncomingKeyValuesSTArgument().forEach(stArgument -> {
-											stArgument.getIncomingArgumentsSTModel().forEach(stModel -> {
-												final nextgen.st.domain.STTemplate stTemplateByUuid = thisCanvas().presentationModel.findSTTemplateByUuid(stModel.getStTemplate());
-												if (stTemplateByUuid == null) return;
-												stTemplateByUuid.getParameters()
-															.filter(stParameter -> stParameter.getUuid().equals(stArgument.getStParameter()))
+													.ifPresent(stParameter -> stParameter.getKeys()
+															.filter(stParameterKey -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))
 															.findFirst()
-															.ifPresent(stParameter -> stParameter.getKeys()
-																	.filter(stParameterKey -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))
-																	.findFirst()
-																	.ifPresent(stParameterKey -> {
-																			final STModelNode stModelNode = thisCanvas().addNode(stModel.getUuid(), () -> new STModelNode(stModel, presentationModel.findSTTemplateByUuid(stModel.getStTemplate())));
-																			final STKVNode stkvNode = thisCanvas().addNode(stArgument.getUuid(), () -> new STKVNode(stArgument, stParameter));
-																			thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(stModelNode, stkvNode, stArgument, stParameter));
-																			thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(stkvNode, thisNode(), stArgument, stParameterKey, stArgumentKV));
-																	}));
-											});
-									});
-								});
+															.ifPresent(stParameterKey -> {
+																final STModelNode stModelNode = thisCanvas().addNode(stModel.getUuid(), () -> new STModelNode(stModel, presentationModel.findSTTemplateByUuid(stModel.getStTemplate())));
+																final STKVNode stkvNode = thisCanvas().addNode(stArgument.getUuid(), () -> new STKVNode(stArgument, stParameter));
+																thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(stModelNode, stkvNode, stArgument, stParameter));
+																thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(stkvNode, thisNode(), stArgument, stParameterKey, stArgumentKV));
+															}));
+										}));
+							});
 				});
 			}
 		}
@@ -3995,12 +3993,12 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				thisCanvas().presentationModel.doLaterInTransaction(transaction -> {
+				presentationModel.doLaterInTransaction(transaction -> {
 
-					thisCanvas().presentationModel.getIncomingSTArguments(getModel())
+					presentationModel.getIncomingSTArguments(getModel())
 							.forEach(stArgument -> stArgument.getIncomingArgumentsSTModel()
 									.forEach(stModel -> {
-										final nextgen.st.domain.STTemplate stTemplateByUuid = thisCanvas().presentationModel.findSTTemplateByUuid(stModel.getStTemplate());
+										final nextgen.st.domain.STTemplate stTemplateByUuid = presentationModel.findSTTemplateByUuid(stModel.getStTemplate());
 										if (stTemplateByUuid == null) return;
 										stTemplateByUuid.getParameters()
 												.filter(stParameter -> stParameter.getUuid().equals(stArgument.getStParameter()))
@@ -4011,11 +4009,11 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 												});
 									}));
 
-					thisCanvas().presentationModel.getIncomingSTArgumentKVs(getModel())
+					presentationModel.getIncomingSTArgumentKVs(getModel())
 							.forEach(stArgumentKV -> {
 								stArgumentKV.getIncomingKeyValuesSTArgument()
 										.forEach(stArgument -> stArgument.getIncomingArgumentsSTModel().forEach(stModel -> {
-											final nextgen.st.domain.STTemplate stTemplateByUuid = thisCanvas().presentationModel.findSTTemplateByUuid(stModel.getStTemplate());
+											final nextgen.st.domain.STTemplate stTemplateByUuid = presentationModel.findSTTemplateByUuid(stModel.getStTemplate());
 											if (stTemplateByUuid == null) return;
 											stTemplateByUuid.getParameters()
 													.filter(stParameter -> stParameter.getUuid().equals(stArgument.getStParameter()))

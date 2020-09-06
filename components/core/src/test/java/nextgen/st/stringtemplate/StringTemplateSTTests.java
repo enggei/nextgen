@@ -12,6 +12,12 @@ public class StringTemplateSTTests {
 		testDomainVisitorRunner();
 		testVisitNodeMethod();
 		testVisitRelationMethod();
+		testNeoDomain();
+		testFindBy();
+		testNeoEntity();
+		testKVAccessors();
+		testListAccessors();
+		testSingleAccessors();
 		testScriptRunner();
 		testSTDomain();
 		testNewEntityInstance();
@@ -40,6 +46,36 @@ public class StringTemplateSTTests {
 	@org.junit.Test
 	public void testVisitRelationMethod() {
 		System.out.println("\n--- TEST VisitRelationMethod:\n" + newVisitRelationMethod());
+	} 
+
+	@org.junit.Test
+	public void testNeoDomain() {
+		System.out.println("\n--- TEST NeoDomain:\n" + newNeoDomain());
+	} 
+
+	@org.junit.Test
+	public void testFindBy() {
+		System.out.println("\n--- TEST FindBy:\n" + newFindBy());
+	} 
+
+	@org.junit.Test
+	public void testNeoEntity() {
+		System.out.println("\n--- TEST NeoEntity:\n" + newNeoEntity());
+	} 
+
+	@org.junit.Test
+	public void testKVAccessors() {
+		System.out.println("\n--- TEST KVAccessors:\n" + newKVAccessors());
+	} 
+
+	@org.junit.Test
+	public void testListAccessors() {
+		System.out.println("\n--- TEST ListAccessors:\n" + newListAccessors());
+	} 
+
+	@org.junit.Test
+	public void testSingleAccessors() {
+		System.out.println("\n--- TEST SingleAccessors:\n" + newSingleAccessors());
 	} 
 
 	@org.junit.Test

@@ -12,6 +12,7 @@ import org.neo4j.graphdb.event.TransactionData;
 import org.neo4j.graphdb.event.TransactionEventHandler;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 import static nextgen.st.model.STValueType.*;
@@ -70,6 +71,11 @@ public class STModelDB extends STModelNeoFactory {
 
     public Collection<STGroupModel> getGroupModels() {
         return groupModels;
+    }
+
+    @Override
+    public STValue findOrCreateSTValueByValue(String value) {
+        return super.findOrCreateSTValueByValue(value).setType(PRIMITIVE);
     }
 
     public STModelDB remove(Script script) {
@@ -182,6 +188,35 @@ public class STModelDB extends STModelNeoFactory {
             if (child != null) return child;
         }
         return null;
+    }
+
+    public <T> T find(String name, STValue value, String stTemplateUuid, Mapper<T> supplier) {
+        final AtomicReference<T> found = new AtomicReference<>();
+        findSTTemplateByUuid(stTemplateUuid)
+              .getParameters()
+              .filter(stParameter -> stParameter.getName().equals(name))
+              .findFirst()
+              .ifPresent(stParameter -> {
+                  findAllSTModelByStTemplate(stTemplateUuid)
+                        .filter(stModel -> found.get() == null)
+                        .forEach(stModel -> {
+                            stModel.getArguments()
+                                  .filter(stArgument -> found.get() == null)
+                                  .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+                                  .map(STArgument::getValue)
+                                  .filter(value::equals)
+                                  .findFirst()
+                                  .ifPresent(stValue -> found.set(supplier.get(this, stModel)));
+                        });
+              });
+
+        return found.get();
+    }
+
+    public interface Mapper<T> {
+
+        T get(STModelDB db, STModel stModel);
+
     }
 
     public Project newProject(String name) {

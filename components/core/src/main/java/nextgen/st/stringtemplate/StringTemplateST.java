@@ -8,6 +8,12 @@ public class StringTemplateST {
 	.append(DomainVisitorRunner.st + "\n")
 	.append(VisitNodeMethod.st + "\n")
 	.append(VisitRelationMethod.st + "\n")
+	.append(NeoDomain.st + "\n")
+	.append(FindBy.st + "\n")
+	.append(NeoEntity.st + "\n")
+	.append(KVAccessors.st + "\n")
+	.append(ListAccessors.st + "\n")
+	.append(SingleAccessors.st + "\n")
 	.append(ScriptRunner.st + "\n")
 	.append(STDomain.st + "\n")
 	.append(NewEntityInstance.st + "\n")
@@ -67,6 +73,30 @@ public class StringTemplateST {
 
 	public static VisitRelationMethod newVisitRelationMethod() {
 		return new VisitRelationMethod(stGroup);
+	}  
+
+	public static NeoDomain newNeoDomain() {
+		return new NeoDomain(stGroup);
+	}  
+
+	public static FindBy newFindBy() {
+		return new FindBy(stGroup);
+	}  
+
+	public static NeoEntity newNeoEntity() {
+		return new NeoEntity(stGroup);
+	}  
+
+	public static KVAccessors newKVAccessors() {
+		return new KVAccessors(stGroup);
+	}  
+
+	public static ListAccessors newListAccessors() {
+		return new ListAccessors(stGroup);
+	}  
+
+	public static SingleAccessors newSingleAccessors() {
+		return new SingleAccessors(stGroup);
 	}  
 
 	public static ScriptRunner newScriptRunner() {

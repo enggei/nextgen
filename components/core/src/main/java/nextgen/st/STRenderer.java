@@ -27,12 +27,12 @@ public class STRenderer {
       final java.util.Collection<nextgen.st.domain.STGroupModel> stGroups = new java.util.ArrayList<>();
       final java.io.File templatesDir = new java.io.File("/home/goe/projects/nextgen/./components/core/src/main/resources/templates");
       java.util.Optional.ofNullable(templatesDir.listFiles(pathname -> pathname.isFile() && pathname.getName()
-                                                                                                    .toLowerCase()
-                                                                                                    .endsWith(".json")))
-                        .ifPresent(files -> {
-                           for (java.io.File file : files)
-                              stGroups.add(new nextgen.st.domain.STGroupModel(nextgen.st.STParser.readJsonObject(file)));
-                        });
+            .toLowerCase()
+            .endsWith(".json")))
+            .ifPresent(files -> {
+               for (java.io.File file : files)
+                  stGroups.add(new nextgen.st.domain.STGroupModel(nextgen.st.STParser.readJsonObject(file)));
+            });
 
       final STRenderer renderer = new STRenderer(stGroups);
       final STModelDB db = new STModelDB("./db", stGroups);
@@ -43,22 +43,22 @@ public class STRenderer {
          final BlockStmt mainStatements = newBlockStmt();
 
          db.findAllSTModelByStTemplate("ba2951ae-640a-498d-bf6f-7901f866d8af")
-           .forEach(stModel -> {
+               .forEach(stModel -> {
 
-              final STMapper stMapper = renderer.findSTMapper(stModel.getStTemplate());
-              final STGroupModel groupModel = stMapper.groupModel;
-              imports.add("nextgen.templates." + groupModel.getName().toLowerCase());
+                  final STMapper stMapper = renderer.findSTMapper(stModel.getStTemplate());
+                  final STGroupModel groupModel = stMapper.groupModel;
+                  imports.add("nextgen.templates." + groupModel.getName().toLowerCase());
 
-              MethodCallExpression render = renderer.renderGeneratorCode(stModel, imports);
+                  MethodCallExpression render = renderer.renderGeneratorCode(stModel, imports);
 
-              mainStatements.addStatements(newExpressionStmt()
-                    .setExpression(newMethodCallExpression()
-                          .setScope("System.out")
-                          .setName("println")
-                          .addArguments(render)));
+                  mainStatements.addStatements(newExpressionStmt()
+                        .setExpression(newMethodCallExpression()
+                              .setScope("System.out")
+                              .setName("println")
+                              .addArguments(render)));
 
-              System.out.println(render);
-           });
+                  System.out.println(render);
+               });
 
 
          STGenerator.writeJavaFile(newCompilationUnit()
@@ -110,36 +110,36 @@ public class STRenderer {
       if (st == null) return null;
 
       stTemplate.getParameters()
-                .forEach(stParameter ->
-                      stModel.getArgumentsSorted()
-                             .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
-                             .forEach(stArgument -> {
+            .forEach(stParameter ->
+                  stModel.getArgumentsSorted()
+                        .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+                        .forEach(stArgument -> {
 
-                                switch (stParameter.getType()) {
+                           switch (stParameter.getType()) {
 
-                                   case SINGLE:
-                                   case LIST:
-                                      st.add(stParameter.getName(), render(stArgument.getValue()));
-                                      break;
+                              case SINGLE:
+                              case LIST:
+                                 st.add(stParameter.getName(), render(stArgument.getValue()));
+                                 break;
 
-                                   case KVLIST:
+                              case KVLIST:
 
-                                      final ST aggrSpec = new ST("~name~.{~keys:{it|~it~};separator=\",\"~}", '~', '~')
-                                            .add("name", stParameter.getName());
+                                 final ST aggrSpec = new ST("~name~.{~keys:{it|~it~};separator=\",\"~}", '~', '~')
+                                       .add("name", stParameter.getName());
 
-                                      final int keys = (int) stParameter.getKeys().count();
-                                      final Object[] values = new Object[keys];
+                                 final int keys = (int) stParameter.getKeys().count();
+                                 final Object[] values = new Object[keys];
 
-                                      final AtomicInteger index = new AtomicInteger(-1);
-                                      stParameter.getKeys().forEach(stParameterKey -> {
-                                         aggrSpec.add("keys", stParameterKey.getName());
-                                         values[index.incrementAndGet()] = render(stArgument, stParameterKey);
-                                      });
+                                 final AtomicInteger index = new AtomicInteger(-1);
+                                 stParameter.getKeys().forEach(stParameterKey -> {
+                                    aggrSpec.add("keys", stParameterKey.getName());
+                                    values[index.incrementAndGet()] = render(stArgument, stParameterKey);
+                                 });
 
-                                      st.addAggr(aggrSpec.render(), values);
-                                      break;
-                                }
-                             }));
+                                 st.addAggr(aggrSpec.render(), values);
+                                 break;
+                           }
+                        }));
       return st.render().trim();
    }
 
@@ -161,64 +161,69 @@ public class STRenderer {
       imports.add("nextgen.templates." + groupModel.getName().toLowerCase());
 
       stTemplate.getParameters()
-                .forEach(stParameter ->
-                      stModel.getArgumentsSorted()
-                             .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
-                             .forEach(stArgument -> {
+            .forEach(stParameter ->
+                  stModel.getArgumentsSorted()
+                        .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+                        .forEach(stArgument -> {
 
-                                switch (stParameter.getType()) {
+                           switch (stParameter.getType()) {
 
-                                   case SINGLE:
-                                      Object singleValue = renderGeneratorCode(stArgument.getValue(), imports);
-                                      if (singleValue == null) break;
+                              case SINGLE:
+                                 Object singleValue = renderGeneratorCode(stArgument.getValue(), imports);
+                                 if (singleValue == null) break;
 
-                                      expression.set(newMethodCallExpression()
-                                            .setScope(expression.get())
-                                            .setName("set" + StringUtil.capitalize(stParameter.getName()))
-                                            .addArguments(singleValue));
-                                      break;
+                                 expression.set(newMethodCallExpression()
+                                       .setScope(expression.get())
+                                       .setName("set" + StringUtil.capitalize(stParameter.getName()))
+                                       .addArguments(singleValue));
+                                 break;
 
-                                   case LIST:
-                                      Object listValue = renderGeneratorCode(stArgument.getValue(), imports);
-                                      if (listValue == null) break;
+                              case LIST:
+                                 Object listValue = renderGeneratorCode(stArgument.getValue(), imports);
+                                 if (listValue == null) break;
 
-                                      expression.set(newMethodCallExpression()
-                                            .setScope(expression.get())
-                                            .setName("add" + StringUtil.capitalize(stParameter.getName()))
-                                            .addArguments(listValue));
-                                      break;
+                                 expression.set(newMethodCallExpression()
+                                       .setScope(expression.get())
+                                       .setName("add" + StringUtil.capitalize(stParameter.getName()))
+                                       .addArguments(listValue));
+                                 break;
 
-                                   case KVLIST:
+                              case KVLIST:
 
-                                      final MethodCallExpression methodCallExpression = newMethodCallExpression()
-                                            .setScope(expression.get())
-                                            .setName("add" + StringUtil.capitalize(stParameter.getName()));
+                                 final MethodCallExpression methodCallExpression = newMethodCallExpression()
+                                       .setScope(expression.get())
+                                       .setName("add" + StringUtil.capitalize(stParameter.getName()));
 
-                                      stParameter.getKeys()
-                                                 .forEach(stParameterKey -> {
-                                                    Object value = renderGeneratorCode(stArgument, stParameterKey, imports);
-                                                    methodCallExpression.addArguments(value == null ? "null" : value);
-                                                 });
+                                 stParameter.getKeys()
+                                       .forEach(stParameterKey -> {
+                                          Object value = renderGeneratorCode(stArgument, stParameterKey, imports);
+                                          methodCallExpression.addArguments(value == null ? "null" : value);
+                                       });
 
-                                      expression.set(methodCallExpression);
-                                      break;
-                                }
-                             }));
+                                 expression.set(methodCallExpression);
+                                 break;
+                           }
+                        }));
 
       return expression.get();
    }
 
    public Object render(STArgument stArgument, STParameterKey stParameterKey) {
       final STArgumentKV found = stArgument.getKeyValues()
-                                           .filter(stArgumentKV -> stArgumentKV.getStParameterKey()
-                                                                               .equals(stParameterKey.getUuid()))
-                                           .findFirst()
-                                           .orElse(null);
+            .filter(stArgumentKV -> stArgumentKV.getStParameterKey()
+                  .equals(stParameterKey.getUuid()))
+            .findFirst()
+            .orElse(null);
       return found == null ? null : render(found.getValue());
    }
 
    public String render(STValue value) {
-      if (value == null || value.getType() == null) return null;
+      if (value == null) return null;
+
+      if (!value.hasType()) {
+         String s = value.getValue();
+         return s == null ? render(value.getStModel()) : (s.trim().length() == 0 ? null : s.trim());
+      }
 
       switch (value.getType()) {
          case STMODEL:
@@ -235,10 +240,10 @@ public class STRenderer {
 
    public Object renderGeneratorCode(STArgument stArgument, STParameterKey stParameterKey, Set<String> imports) {
       final STArgumentKV found = stArgument.getKeyValues()
-                                           .filter(stArgumentKV -> stArgumentKV.getStParameterKey()
-                                                                               .equals(stParameterKey.getUuid()))
-                                           .findFirst()
-                                           .orElse(null);
+            .filter(stArgumentKV -> stArgumentKV.getStParameterKey()
+                  .equals(stParameterKey.getUuid()))
+            .findFirst()
+            .orElse(null);
       return found == null ? null : renderGeneratorCode(found.getValue(), imports);
    }
 

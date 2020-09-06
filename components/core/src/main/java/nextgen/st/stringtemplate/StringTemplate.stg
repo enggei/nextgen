@@ -72,7 +72,7 @@ public class ~name~ implements Runnable {
 		final STRenderer renderer = new STRenderer(stGroups);
 		final DomainEntity domainEntity = db.getInTransaction(transaction -> new DomainEntity(db.getDatabaseService().findNode(org.neo4j.graphdb.Label.label("DomainEntity"), "uuid", "~entityUuid~")));
 
-		new Thread(new PettyAnalyticsVisitor(db, renderer, domainEntity)).start();
+		new Thread(new ~name~(db, renderer, domainEntity)).start();
 	}
 }  >>
 
@@ -98,6 +98,243 @@ VisitRelationMethod(name,properties,statements,dst) ::= <<void visit~name;format
 	
 ~endif~
 	~dst:{it|visit~it.name;format="capitalize"~(relationship.getEndNode());};separator="\n"~
+}  >>
+
+NeoDomain(package,name,entities,finders) ::= <<package ~package~;
+
+import nextgen.st.model.*;
+import org.neo4j.graphdb.Node;
+import java.util.Optional;
+
+public class ~name;format="capitalize"~ {
+
+	private final STModelDB db;
+
+	public ~name;format="capitalize"~(STModelDB db) {
+		this.db = db;
+	}
+
+~entities:{it|
+	public ~it.name;format="capitalize"~ new~it.name;format="capitalize"~() {
+		return new ~it.name;format="capitalize"~(db);
+	~eom()~
+
+	public ~it.name;format="capitalize"~ new~it.name;format="capitalize"~(STModel stModel) {
+		return new ~it.name;format="capitalize"~(db, stModel);
+	~eom()~
+
+	public ~it.name;format="capitalize"~ new~it.name;format="capitalize"~(Node node) {
+		return new ~it.name;format="capitalize"~(db, node);
+	~eom()~
+};separator="\n\n"~
+
+	~finders:{it|~it~};separator="\n\n"~
+}  >>
+
+NeoEntity(package,name,stGroupModel,stTemplate,singleAccessors,listAccessors,kvAccessors) ::= <<package ~package~;
+
+import nextgen.st.model.*;
+import nextgen.st.domain.*;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Stream;
+
+public class ~name;format="capitalize"~ {
+
+	public static final String stGroupModelUuid = "~stGroupModel~";
+   public static final String stTemplateUuid = "~stTemplate~";
+   
+	private final STModelDB db;
+	private final STModel stModel;
+	private final STTemplate stTemplate;
+
+	public ~name;format="capitalize"~(STModelDB db) {
+		this.db = db;
+		this.stTemplate = this.db.findSTTemplateByUuid(stTemplateUuid);
+		this.stModel = this.db.newSTModel(stGroupModelUuid, this.stTemplate);
+	}
+
+	public ~name;format="capitalize"~(STModelDB db, STModel stModel) {
+		this.db = db;
+		this.stTemplate = this.db.findSTTemplateByUuid(stTemplateUuid);
+		this.stModel = stModel;
+	}
+
+	public ~name;format="capitalize"~(STModelDB db, org.neo4j.graphdb.Node node) {
+		this.db = db;
+		this.stTemplate = this.db.findSTTemplateByUuid(stTemplateUuid);
+		this.stModel = this.db.newSTModel(node);
+	}
+
+	public STValue asSTValue () {
+		return db.newSTValue(stModel);
+	}
+
+	~singleAccessors:{it|~it~};separator="\n\n"~
+
+	~listAccessors:{it|~it~};separator="\n\n"~
+
+	~kvAccessors:{it|~it~};separator="\n\n"~
+
+	private ~name;format="capitalize"~ set(STValue value, String name) {
+		findParameter(name)
+				.ifPresent(stParameter -> {
+
+					stModel.getArguments()
+							.filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+							.findAny()
+							.ifPresent(stModel::removeArguments);
+
+					stModel.addArguments(db.newSTArgument(stParameter, value));
+				});
+		return this;
+	}
+
+	private STValue get(String name) {
+		final AtomicReference<STValue> value = new AtomicReference<>();
+		findParameter(name).flatMap(stParameter -> stModel.getArguments()
+				.filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+				.findAny()).ifPresent(stArgument -> value.set(stArgument.getValue()));
+		return value.get();
+	}
+
+	private ~name;format="capitalize"~ add(STValue value, String name) {
+		findParameter(name)
+				.ifPresent(stParameter -> stModel.addArguments(db.newSTArgument(stParameter, value)));
+		return this;
+	}
+
+	private Stream<STValue> stream(String name) {
+		return findParameter(name)
+				.map(stParameter -> stModel.getArguments()
+						.filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+						.map(STArgument::getValue)).orElseGet(Stream::empty);
+	}
+
+	private Optional<STParameter> findParameter(String name) {
+		return stTemplate.getParameters()
+				.filter(param -> param.getName().equals(name))
+				.findFirst();
+	}
+
+	private void addKV(STValue _type, STParameter stParameter, Collection<STArgumentKV> kvs, String type) {
+		stParameter.getKeys()
+				.filter(stParameterKey -> stParameterKey.getName().equals(type))
+				.findFirst()
+				.ifPresent(stParameterKey -> kvs.add(db.newSTArgumentKV(stParameterKey, _type)));
+	}
+}  >>
+
+SingleAccessors(entity,name) ::= <<public ~entity;format="capitalize"~ set~name;format="capitalize"~(String value) {
+	return set~name;format="capitalize"~(db.newSTValue(value));
+}
+
+public ~entity;format="capitalize"~ set~name;format="capitalize"~(STValue value) {
+	return set(value, "~name~");
+}
+
+public STValue get~name;format="capitalize"~() {
+	return get("~name~");
+}  >>
+
+ListAccessors(entity,name) ::= <<public ~entity;format="capitalize"~ add~name;format="capitalize"~(String value) {
+	return add~name;format="capitalize"~(db.newSTValue(value));
+}
+
+public ~entity;format="capitalize"~ add~name;format="capitalize"~(STValue value) {
+	return add(value, "~name~");
+}
+
+public Stream<STValue> get~name;format="capitalize"~() {
+	return stream("~name~");
+}  >>
+
+KVAccessors(entity,name,keys) ::= <<public ~entity;format="capitalize"~ add~name;format="capitalize"~(~keys:{it|String _~it.name~};separator=", "~) {
+	return add~name;format="capitalize"~(~keys:{it|db.newSTValue(_~it.name~)};separator=", "~);
+}
+
+public ~entity;format="capitalize"~ add~name;format="capitalize"~(~entity;format="capitalize"~_~name;format="capitalize"~ value) {
+	return add~name;format="capitalize"~(~keys:{it|value.get~it.name;format="capitalize"~()};separator=", "~);
+}
+
+public ~entity;format="capitalize"~ add~name;format="capitalize"~(~keys:{it|STValue _~it.name~};separator=", "~) {
+	findParameter("~name~")
+			.ifPresent(stParameter -> {
+				final Collection<STArgumentKV> kvs = new ArrayList<>();
+				~keys:{it|addKV(_~it.name~, stParameter, kvs, "~it.name~");};separator="\n"~
+				db.newSTArgument(stParameter, kvs);
+			});
+
+	return this;
+}
+
+public java.util.stream.Stream<~entity;format="capitalize"~_~name;format="capitalize"~> stream~name;format="capitalize"~() {
+	return findParameter("~name~")
+			.map(stParameter -> stModel.getArguments()
+					.filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+					.map(stArgument -> new ~entity;format="capitalize"~_~name;format="capitalize"~(stArgument, stParameter)))
+			.orElseGet(Stream::empty);
+}
+
+public final class ~entity;format="capitalize"~_~name;format="capitalize"~ {
+
+	STArgument stArgument;
+	STParameter stParameter;
+
+	public ~entity;format="capitalize"~_~name;format="capitalize"~(STArgument stArgument, STParameter stParameter) {
+		this.stArgument = stArgument;
+		this.stParameter = stParameter;
+	}
+
+~keys:{it|
+	public ~entity;format="capitalize"~_~name;format="capitalize"~ set~it.name;format="capitalize"~(String value) {
+		return set~it.name;format="capitalize"~(db.newSTValue(value));
+	~eom()~
+
+	public ~entity;format="capitalize"~_~name;format="capitalize"~ set~it.name;format="capitalize"~(STValue value) {
+		return setKVValue("~it.name~", value);
+	~eom()~
+
+	public STValue get~it.name;format="capitalize"~() {
+		return getKVValue("~it.name~");
+	~eom()~
+};separator="\n\n"~
+
+	private ~entity;format="capitalize"~_~name;format="capitalize"~ setKVValue(String name, STValue value) {
+
+		stParameter.getKeys()
+				.filter(stParameterKey -> stParameterKey.getName().equals(name))
+				.findAny()
+				.ifPresent(stParameterKey -> {
+
+					stArgument.getKeyValues()
+							.filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))
+							.findAny()
+							.ifPresent(stArgumentKV -> stArgument.removeKeyValues(stArgumentKV));
+
+					stArgument.addKeyValues(db.newSTArgumentKV(stParameterKey, value));
+				});
+
+		return this;
+	}
+
+	private STValue getKVValue(String name) {
+		final AtomicReference<STValue> value = new AtomicReference<>();
+		stParameter.getKeys()
+				.filter(param -> param.getName().equals(name))
+				.findFirst().flatMap(stParameter -> stArgument.getKeyValues()
+				.filter(stArgument -> stArgument.getStParameterKey().equals(stParameter.getUuid()))
+				.findAny()).ifPresent(stArgument -> value.set(stArgument.getValue()));
+
+		return value.get();
+	}
+}  >>
+
+FindBy(entity,name) ::= <<public Optional<~entity;format="capitalize"~> find~entity;format="capitalize"~By~name;format="capitalize"~(STValue value) {
+	return Optional.ofNullable(db.find("~name~", value, ~entity;format="capitalize"~.stTemplateUuid, ~entity;format="capitalize"~::new));
 }  >>
 
 ScriptRunner(packageName,imports,name,script,templatesDir,dbDir) ::= <<package ~packageName~;

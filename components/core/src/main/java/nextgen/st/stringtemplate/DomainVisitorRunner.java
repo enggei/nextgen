@@ -396,7 +396,7 @@ public class DomainVisitorRunner {
 				"		final STRenderer renderer = new STRenderer(stGroups);\n" + 
 				"		final DomainEntity domainEntity = db.getInTransaction(transaction -> new DomainEntity(db.getDatabaseService().findNode(org.neo4j.graphdb.Label.label(\"DomainEntity\"), \"uuid\", \"~entityUuid~\")));\n" + 
 				"\n" + 
-				"		new Thread(new PettyAnalyticsVisitor(db, renderer, domainEntity)).start();\n" + 
+				"		new Thread(new ~name~(db, renderer, domainEntity)).start();\n" + 
 				"	}\n" + 
 				"} >>";
 }  

@@ -51,9 +51,9 @@ public class BaseCanvasNode {
 				"\n" + 
 				"	public BaseCanvasNode(T model, String uuid, String label) {\n" + 
 				"		this.addAttribute(\"_defaultColor\", UIManager.getColor(\"TextField.foreground\"));\n" + 
-				"		this.addAttribute(\"_selectedColor\", Color.decode(\"#2b8cbe));\n" + 
-				"		this.addAttribute(\"_highlightedColor\", Color.decode(\"#e66101));\n" + 
-				"		this.addAttribute(\"_rectangleColor\", Color.decode(\"#2b8cbe));\n" + 
+				"		this.addAttribute(\"_selectedColor\", Color.decode(\"#2b8cbe\"));\n" + 
+				"		this.addAttribute(\"_highlightedColor\", Color.decode(\"#e66101\"));\n" + 
+				"		this.addAttribute(\"_rectangleColor\", new Color(253, 141, 60, 50));\n" + 
 				"		this.addAttribute(\"_model\", model);\n" + 
 				"		this.addAttribute(\"_uuid\", uuid);\n" + 
 				"		this.addAttribute(\"_text\", label);\n" + 
@@ -71,7 +71,7 @@ public class BaseCanvasNode {
 				"	protected BaseCanvasNode<T> thisNode() {\n" + 
 				"		return this;\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	@SuppressWarnings(\"unchecked\")\n" + 
 				"	public T getModel() {\n" + 
 				"		return (T) getAttribute(\"_model\");\n" + 
@@ -202,6 +202,10 @@ public class BaseCanvasNode {
 				"				new LayoutTreeAction(BaseCanvasNode.this, event).actionPerformed(null);\n" + 
 				"				break;\n" + 
 				"\n" + 
+				"			case VK_2:\n" + 
+				"				new LayoutCircleAction(BaseCanvasNode.this, event).actionPerformed(null);\n" + 
+				"				break;\n" + 
+				"\n" + 
 				"			case VK_C:\n" + 
 				"				new CloseNode(event).actionPerformed(null);\n" + 
 				"				break;\n" + 
@@ -229,6 +233,7 @@ public class BaseCanvasNode {
 				"	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {\n" + 
 				"\n" + 
 				"		pop.add(new LayoutTreeAction(BaseCanvasNode.this, event));\n" + 
+				"		pop.add(new LayoutCircleAction(BaseCanvasNode.this, event));\n" + 
 				"		pop.add(new RetainNode(event));\n" + 
 				"		pop.add(new CloseNode(event));\n" + 
 				"		pop.add(new DebugAction(event));\n" + 
@@ -391,6 +396,85 @@ public class BaseCanvasNode {
 				"							childrensMap.get(node.getUuid()).add(abstractNode);\n" + 
 				"							parentsMap.put(abstractNode.getUuid(), node);\n" + 
 				"					});\n" + 
+				"\n" + 
+				"			childrensMap.get(node.getUuid()).forEach(this::findChildren);\n" + 
+				"		}\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	protected final class LayoutCircleAction extends NodeAction {\n" + 
+				"\n" + 
+				"		private final Map<String, BaseCanvasNode<?>~gt()~ parentsMap = new LinkedHashMap<>();\n" + 
+				"		private final Map<String, java.util.List<BaseCanvasNode<?>~gt()~~gt()~ childrensMap = new LinkedHashMap<>();\n" + 
+				"\n" + 
+				"		protected LayoutCircleAction(BaseCanvasNode<?> root, PInputEvent event) {\n" + 
+				"			super(\"Layout Circle\", event);\n" + 
+				"		}\n" + 
+				"\n" + 
+				"		@Override\n" + 
+				"		void actionPerformed(PInputEvent event, ActionEvent e) {\n" + 
+				"\n" + 
+				"			new Thread(() -> {\n" + 
+				"\n" + 
+				"				findChildren(BaseCanvasNode.this);\n" + 
+				"\n" + 
+				"				final org.abego.treelayout.TreeForTreeLayout<BaseCanvasNode<?>~gt()~ tree = new org.abego.treelayout.util.AbstractTreeForTreeLayout<BaseCanvasNode<?>~gt()~(BaseCanvasNode.this) {\n" + 
+				"					@Override\n" + 
+				"					public BaseCanvasNode<?> getParent(BaseCanvasNode<?> node) {\n" + 
+				"						return parentsMap.get(node.getUuid());\n" + 
+				"					}\n" + 
+				"\n" + 
+				"					@Override\n" + 
+				"					public java.util.List<BaseCanvasNode<?>~gt()~ getChildrenList(BaseCanvasNode<?> node) {\n" + 
+				"						if (node == null) return Collections.emptyList();\n" + 
+				"						return childrensMap.get(node.getUuid());\n" + 
+				"					}\n" + 
+				"				};\n" + 
+				"\n" + 
+				"				final org.abego.treelayout.NodeExtentProvider<BaseCanvasNode<?>~gt()~ nodeExtendProvider = new org.abego.treelayout.NodeExtentProvider<BaseCanvasNode<?>~gt()~() {\n" + 
+				"					@Override\n" + 
+				"					public double getWidth(BaseCanvasNode<?> node) {\n" + 
+				"						return node.getFullBounds().getWidth();\n" + 
+				"					}\n" + 
+				"\n" + 
+				"					@Override\n" + 
+				"					public double getHeight(BaseCanvasNode<?> node) {\n" + 
+				"						return node.getFullBounds().getHeight();\n" + 
+				"					}\n" + 
+				"				};\n" + 
+				"\n" + 
+				"				final nextgen.st.canvas.layout.CircleLayout<BaseCanvasNode<?>~gt()~ layout = new nextgen.st.canvas.layout.CircleLayout<>(tree, nodeExtendProvider);\n" + 
+				"\n" + 
+				"				// apply coordinate transforms in relation to root-node\n" + 
+				"				final java.awt.geom.Rectangle2D.Double rootBounds = layout.getNodeBounds().get(BaseCanvasNode.this);\n" + 
+				"				final double deltaX = getFullBounds().getX() - rootBounds.getX();\n" + 
+				"				final double deltaY = getFullBounds().getY() - rootBounds.getY();\n" + 
+				"\n" + 
+				"				SwingUtilities.invokeLater(() -> {\n" + 
+				"					for (Map.Entry<BaseCanvasNode<?>, java.awt.geom.Rectangle2D.Double> nodeBound : layout.getNodeBounds()\n" + 
+				"																																	.entrySet()) {\n" + 
+				"						if (nodeBound.getKey().equals(BaseCanvasNode.this)) continue;	// root-node is transformation-root\n" + 
+				"						nodeBound.getKey()\n" + 
+				"									.setOffset(nodeBound.getValue().getX() + deltaX, nodeBound.getValue().getY() + deltaY);\n" + 
+				"					}\n" + 
+				"				});\n" + 
+				"\n" + 
+				"			}).start();\n" + 
+				"		}\n" + 
+				"\n" + 
+				"		private void findChildren(BaseCanvasNode<?> node) {\n" + 
+				"\n" + 
+				"			if (childrensMap.containsKey(node.getUuid())) return;\n" + 
+				"\n" + 
+				"			childrensMap.put(node.getUuid(), new ArrayList<>());\n" + 
+				"\n" + 
+				"			node.outgoing()\n" + 
+				"				.filter(thisCanvas().relationMap::containsKey)\n" + 
+				"				.map(uuid -> thisCanvas().relationMap.get(uuid).getDst())\n" + 
+				"				.filter(abstractNode -> !childrensMap.containsKey(abstractNode.getUuid()))\n" + 
+				"				.forEach(abstractNode -> {\n" + 
+				"					childrensMap.get(node.getUuid()).add(abstractNode);\n" + 
+				"					parentsMap.put(abstractNode.getUuid(), node);\n" + 
+				"				});\n" + 
 				"\n" + 
 				"			childrensMap.get(node.getUuid()).forEach(this::findChildren);\n" + 
 				"		}\n" + 

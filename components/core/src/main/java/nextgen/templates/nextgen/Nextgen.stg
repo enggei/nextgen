@@ -470,9 +470,9 @@ BaseCanvasNode() ::= <<protected class BaseCanvasNode<T> extends PNode {
 
 	public BaseCanvasNode(T model, String uuid, String label) {
 		this.addAttribute("_defaultColor", UIManager.getColor("TextField.foreground"));
-		this.addAttribute("_selectedColor", Color.decode("#2b8cbe));
-		this.addAttribute("_highlightedColor", Color.decode("#e66101));
-		this.addAttribute("_rectangleColor", Color.decode("#2b8cbe));
+		this.addAttribute("_selectedColor", Color.decode("#2b8cbe"));
+		this.addAttribute("_highlightedColor", Color.decode("#e66101"));
+		this.addAttribute("_rectangleColor", new Color(253, 141, 60, 50));
 		this.addAttribute("_model", model);
 		this.addAttribute("_uuid", uuid);
 		this.addAttribute("_text", label);
@@ -490,7 +490,7 @@ BaseCanvasNode() ::= <<protected class BaseCanvasNode<T> extends PNode {
 	protected BaseCanvasNode<T> thisNode() {
 		return this;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public T getModel() {
 		return (T) getAttribute("_model");
@@ -621,6 +621,10 @@ BaseCanvasNode() ::= <<protected class BaseCanvasNode<T> extends PNode {
 				new LayoutTreeAction(BaseCanvasNode.this, event).actionPerformed(null);
 				break;
 
+			case VK_2:
+				new LayoutCircleAction(BaseCanvasNode.this, event).actionPerformed(null);
+				break;
+
 			case VK_C:
 				new CloseNode(event).actionPerformed(null);
 				break;
@@ -648,6 +652,7 @@ BaseCanvasNode() ::= <<protected class BaseCanvasNode<T> extends PNode {
 	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
 
 		pop.add(new LayoutTreeAction(BaseCanvasNode.this, event));
+		pop.add(new LayoutCircleAction(BaseCanvasNode.this, event));
 		pop.add(new RetainNode(event));
 		pop.add(new CloseNode(event));
 		pop.add(new DebugAction(event));
@@ -810,6 +815,85 @@ BaseCanvasNode() ::= <<protected class BaseCanvasNode<T> extends PNode {
 							childrensMap.get(node.getUuid()).add(abstractNode);
 							parentsMap.put(abstractNode.getUuid(), node);
 					});
+
+			childrensMap.get(node.getUuid()).forEach(this::findChildren);
+		}
+	}
+
+	protected final class LayoutCircleAction extends NodeAction {
+
+		private final Map<String, BaseCanvasNode<?>~gt()~ parentsMap = new LinkedHashMap<>();
+		private final Map<String, java.util.List<BaseCanvasNode<?>~gt()~~gt()~ childrensMap = new LinkedHashMap<>();
+
+		protected LayoutCircleAction(BaseCanvasNode<?> root, PInputEvent event) {
+			super("Layout Circle", event);
+		}
+
+		@Override
+		void actionPerformed(PInputEvent event, ActionEvent e) {
+
+			new Thread(() -> {
+
+				findChildren(BaseCanvasNode.this);
+
+				final org.abego.treelayout.TreeForTreeLayout<BaseCanvasNode<?>~gt()~ tree = new org.abego.treelayout.util.AbstractTreeForTreeLayout<BaseCanvasNode<?>~gt()~(BaseCanvasNode.this) {
+					@Override
+					public BaseCanvasNode<?> getParent(BaseCanvasNode<?> node) {
+						return parentsMap.get(node.getUuid());
+					}
+
+					@Override
+					public java.util.List<BaseCanvasNode<?>~gt()~ getChildrenList(BaseCanvasNode<?> node) {
+						if (node == null) return Collections.emptyList();
+						return childrensMap.get(node.getUuid());
+					}
+				};
+
+				final org.abego.treelayout.NodeExtentProvider<BaseCanvasNode<?>~gt()~ nodeExtendProvider = new org.abego.treelayout.NodeExtentProvider<BaseCanvasNode<?>~gt()~() {
+					@Override
+					public double getWidth(BaseCanvasNode<?> node) {
+						return node.getFullBounds().getWidth();
+					}
+
+					@Override
+					public double getHeight(BaseCanvasNode<?> node) {
+						return node.getFullBounds().getHeight();
+					}
+				};
+
+				final nextgen.st.canvas.layout.CircleLayout<BaseCanvasNode<?>~gt()~ layout = new nextgen.st.canvas.layout.CircleLayout<>(tree, nodeExtendProvider);
+
+				// apply coordinate transforms in relation to root-node
+				final java.awt.geom.Rectangle2D.Double rootBounds = layout.getNodeBounds().get(BaseCanvasNode.this);
+				final double deltaX = getFullBounds().getX() - rootBounds.getX();
+				final double deltaY = getFullBounds().getY() - rootBounds.getY();
+
+				SwingUtilities.invokeLater(() -> {
+					for (Map.Entry<BaseCanvasNode<?>, java.awt.geom.Rectangle2D.Double> nodeBound : layout.getNodeBounds()
+																																	.entrySet()) {
+						if (nodeBound.getKey().equals(BaseCanvasNode.this)) continue;	// root-node is transformation-root
+						nodeBound.getKey()
+									.setOffset(nodeBound.getValue().getX() + deltaX, nodeBound.getValue().getY() + deltaY);
+					}
+				});
+
+			}).start();
+		}
+
+		private void findChildren(BaseCanvasNode<?> node) {
+
+			if (childrensMap.containsKey(node.getUuid())) return;
+
+			childrensMap.put(node.getUuid(), new ArrayList<>());
+
+			node.outgoing()
+				.filter(thisCanvas().relationMap::containsKey)
+				.map(uuid -> thisCanvas().relationMap.get(uuid).getDst())
+				.filter(abstractNode -> !childrensMap.containsKey(abstractNode.getUuid()))
+				.forEach(abstractNode -> {
+					childrensMap.get(node.getUuid()).add(abstractNode);
+					parentsMap.put(abstractNode.getUuid(), node);
+				});
 
 			childrensMap.get(node.getUuid()).forEach(this::findChildren);
 		}
