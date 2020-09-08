@@ -35,111 +35,111 @@ public class StringTemplateSTTests {
 
 	@org.junit.Test
 	public void testDomainVisitorRunner() {
-		System.out.println("\n--- TEST DomainVisitorRunner:\n" + newDomainVisitorRunner());
-	} 
+		System.out.println("DomainVisitorRunner:\n" + newDomainVisitorRunner());
+	}  
 
 	@org.junit.Test
 	public void testVisitNodeMethod() {
-		System.out.println("\n--- TEST VisitNodeMethod:\n" + newVisitNodeMethod());
-	} 
+		System.out.println("VisitNodeMethod:\n" + newVisitNodeMethod());
+	}  
 
 	@org.junit.Test
 	public void testVisitRelationMethod() {
-		System.out.println("\n--- TEST VisitRelationMethod:\n" + newVisitRelationMethod());
-	} 
+		System.out.println("VisitRelationMethod:\n" + newVisitRelationMethod());
+	}  
 
 	@org.junit.Test
 	public void testNeoDomain() {
-		System.out.println("\n--- TEST NeoDomain:\n" + newNeoDomain());
-	} 
+		System.out.println("NeoDomain:\n" + newNeoDomain());
+	}  
 
 	@org.junit.Test
 	public void testFindBy() {
-		System.out.println("\n--- TEST FindBy:\n" + newFindBy());
-	} 
+		System.out.println("FindBy:\n" + newFindBy());
+	}  
 
 	@org.junit.Test
 	public void testNeoEntity() {
-		System.out.println("\n--- TEST NeoEntity:\n" + newNeoEntity());
-	} 
+		System.out.println("NeoEntity:\n" + newNeoEntity());
+	}  
 
 	@org.junit.Test
 	public void testKVAccessors() {
-		System.out.println("\n--- TEST KVAccessors:\n" + newKVAccessors());
-	} 
+		System.out.println("KVAccessors:\n" + newKVAccessors());
+	}  
 
 	@org.junit.Test
 	public void testListAccessors() {
-		System.out.println("\n--- TEST ListAccessors:\n" + newListAccessors());
-	} 
+		System.out.println("ListAccessors:\n" + newListAccessors());
+	}  
 
 	@org.junit.Test
 	public void testSingleAccessors() {
-		System.out.println("\n--- TEST SingleAccessors:\n" + newSingleAccessors());
-	} 
+		System.out.println("SingleAccessors:\n" + newSingleAccessors());
+	}  
 
 	@org.junit.Test
 	public void testScriptRunner() {
-		System.out.println("\n--- TEST ScriptRunner:\n" + newScriptRunner());
-	} 
+		System.out.println("ScriptRunner:\n" + newScriptRunner());
+	}  
 
 	@org.junit.Test
 	public void testSTDomain() {
-		System.out.println("\n--- TEST STDomain:\n" + newSTDomain());
-	} 
+		System.out.println("STDomain:\n" + newSTDomain());
+	}  
 
 	@org.junit.Test
 	public void testNewEntityInstance() {
-		System.out.println("\n--- TEST NewEntityInstance:\n" + newNewEntityInstance());
-	} 
+		System.out.println("NewEntityInstance:\n" + newNewEntityInstance());
+	}  
 
 	@org.junit.Test
 	public void testStgString() {
-		System.out.println("\n--- TEST StgString:\n" + newStgString());
-	} 
+		System.out.println("StgString:\n" + newStgString());
+	}  
 
 	@org.junit.Test
 	public void testSTDomainTests() {
-		System.out.println("\n--- TEST STDomainTests:\n" + newSTDomainTests());
-	} 
+		System.out.println("STDomainTests:\n" + newSTDomainTests());
+	}  
 
 	@org.junit.Test
 	public void testTemplateTestMethod() {
-		System.out.println("\n--- TEST TemplateTestMethod:\n" + newTemplateTestMethod());
-	} 
+		System.out.println("TemplateTestMethod:\n" + newTemplateTestMethod());
+	}  
 
 	@org.junit.Test
 	public void testSTEntity() {
-		System.out.println("\n--- TEST STEntity:\n" + newSTEntity());
-	} 
+		System.out.println("STEntity:\n" + newSTEntity());
+	}  
 
 	@org.junit.Test
 	public void testEntityKVListAccessors() {
-		System.out.println("\n--- TEST EntityKVListAccessors:\n" + newEntityKVListAccessors());
-	} 
+		System.out.println("EntityKVListAccessors:\n" + newEntityKVListAccessors());
+	}  
 
 	@org.junit.Test
 	public void testEntityListAccessors() {
-		System.out.println("\n--- TEST EntityListAccessors:\n" + newEntityListAccessors());
-	} 
+		System.out.println("EntityListAccessors:\n" + newEntityListAccessors());
+	}  
 
 	@org.junit.Test
 	public void testEntitySingleAccessors() {
-		System.out.println("\n--- TEST EntitySingleAccessors:\n" + newEntitySingleAccessors());
-	} 
+		System.out.println("EntitySingleAccessors:\n" + newEntitySingleAccessors());
+	}  
 
 	@org.junit.Test
 	public void testSTEnum() {
-		System.out.println("\n--- TEST STEnum:\n" + newSTEnum());
-	} 
+		System.out.println("STEnum:\n" + newSTEnum());
+	}  
 
 	@org.junit.Test
 	public void testSTEnumValue() {
-		System.out.println("\n--- TEST STEnumValue:\n" + newSTEnumValue());
-	} 
+		System.out.println("STEnumValue:\n" + newSTEnumValue());
+	}  
 
 	@org.junit.Test
 	public void testSTInterface() {
-		System.out.println("\n--- TEST STInterface:\n" + newSTInterface());
-	} 
+		System.out.println("STInterface:\n" + newSTInterface());
+	}  
 } 

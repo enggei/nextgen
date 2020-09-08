@@ -15,7 +15,7 @@ public class STWorkspace extends JTabbedPane {
 
     public STWorkspace(STAppPresentationModel presentationModel) {
         this.presentationModel = presentationModel;
-        setPreferredSize(new Dimension(800, 600));
+        setPreferredSize(new Dimension(1024 , 768));
         findCanvas();
         org.greenrobot.eventbus.EventBus.getDefault().register(this);
     }

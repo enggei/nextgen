@@ -74,15 +74,17 @@ public class STAppEvents {
 		}
 	}
 
-	public static void postSTModelUpdated() {
+	public static void postSTModelUpdated(nextgen.st.model.STModel stModel) {
 		log.info("post STModelUpdated");
-		org.greenrobot.eventbus.EventBus.getDefault().post(new STModelUpdated());
+		org.greenrobot.eventbus.EventBus.getDefault().post(new STModelUpdated(stModel));
 	}
 
 	public static class STModelUpdated {
 
+		public final nextgen.st.model.STModel stModel;
 
-		public STModelUpdated() {
+		public STModelUpdated(nextgen.st.model.STModel stModel) {
+			this.stModel = stModel;
 		}
 	}
 

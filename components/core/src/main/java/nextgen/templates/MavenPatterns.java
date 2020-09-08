@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 public class MavenPatterns extends MavenST {
 
-   public static void generate(Project project) {
+   public static void generate(Project project, Pom projectPom) {
 
       tryToCreateDirIfNotExists(newFile(project.getRoot()));
 
@@ -36,7 +36,7 @@ public class MavenPatterns extends MavenST {
       tryToCreateFileIfNotExists(newFile(project.getRoot(), "NOTICE.txt"));
       tryToCreateFileIfNotExists(newFile(project.getRoot(), "README.txt"));
 
-      writePom(project.getPom(), project.getRoot());
+      writePom(projectPom, project.getRoot());
    }
 
    private static File tryToCreateFileIfNotExists(File f) {

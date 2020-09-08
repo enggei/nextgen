@@ -483,8 +483,8 @@ public class ~name~ {
 
 templateTestMethod(template) ::= <<@org.junit.Test
 public void test~template;format="capitalize"~() {
-	System.out.println("\n--- TEST ~template~:\n" + new~template;format="capitalize"~());
-} >>
+	System.out.println("~template~:\n" + new~template;format="capitalize"~());
+}  >>
 
 STEntity(packageName,name,interfaces,singleFields,listFields,kvListFields,template,singleAccessors,listAccessors,kvListAccessors,stString) ::= <<package ~packageName~;
 
@@ -499,11 +499,6 @@ public class ~name~~if(interfaces)~ implements ~endif~~interfaces:{it|~it~};sepa
 	
 	~name~(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {

@@ -6,34 +6,6 @@ dependencyManagement(dependencies) ::= <<<dependencyManagement>
 	</dependencies>
 </dependencyManagement>  >>
 
-Entities() ::= <<// deprecated, use proper maven-templates  >>
-
-DependencyGroup(name,groupId,version,artifacts) ::= <<Name ~name~
-GroupId ~groupId~
-Version ~version~
-
-~artifacts:{it|~it~};separator="\n"~ >>
-
-Project(name,root,pom,modules) ::= <<Project ~name~
-
-root	:	~root~
-Pom	: ~pom~
-
-Modules :
-~modules:{it|~it~};separator="\n"~ >>
-
-Module(name,pom,modules) ::= <<Module ~name~
-Pom : ~pom~
-
-Modules:
-~modules:{it|~it~};separator="\n"~ >>
-
-MavenProject(projectName,root,mainJava,testJava) ::= <<~projectName~
-
-root : ~root~
-mainJava : ~mainJava~
-testJava : ~testJava~  >>
-
 MavenPatterns() ::= << >>
 
 Plugins() ::= << >>
@@ -302,6 +274,55 @@ execution() ::= <<<execution>
         <goal>shade</goal>
     </goals>
 </execution>  >>
+
+dependencyGroup(name,groupId,version,artifacts) ::= <<~name~
+~groupId~
+~version~
+~artifacts:{it|~it~};separator="\n"~  >>
+
+Project(packageName,templates,imports,name,root,packageDeclarations,generators) ::= <<package ~packageName~;
+
+~templates:{it|import static ~it~.*;};separator="\n"~
+
+~imports:{it|~it~};separator="\n"~
+
+public class ~name~ {
+
+	final java.io.File root = new java.io.File("~root~");
+	final java.io.File mainJava = new java.io.File(root, "src/main/java");
+	final java.io.File mainResources = new java.io.File(root, "src/main/resources");
+	final java.io.File testJava = new java.io.File(root, "src/test/java");
+	final java.io.File testResources = new java.io.File(root, "src/test/resources");
+
+	~packageDeclarations:{it|~it~};separator="\n\n"~
+
+	~generators:{it|~it~};separator="\n\n"~
+
+	protected static void log(Object log) {
+		System.out.println(log);
+	}
+
+	private class JavaType {
+
+		final ClassOrInterfaceType type;
+
+		public JavaType(String packageDeclaration, String name) {
+			this.type = newClassOrInterfaceType(packageDeclaration, name);
+		}
+
+		public JavaType(PackageDeclaration packageDeclaration, String name) {
+			this(packageDeclaration.getName(), name);
+		}
+	}
+}  >>
+
+ProjectGenerator(name) ::= <<@org.junit.Test
+public void ~name~() {
+
+}  >>
+
+ProjectPackage(name,packageName,types) ::= <<private final PackageDeclaration ~name~ = newPackageDeclaration("~packageName~");
+~types:{it|private final JavaType ~it.name~Type = new JavaType(~name~, "~it.name~");};separator="\n\n"~  >>
 
 eom() ::= "}"
 

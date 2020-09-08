@@ -6,11 +6,6 @@ public class MavenST {
 	.append("eom() ::= \"}\"\n")
 	.append("gt() ::= \">\"\n")
 	.append(DependencyManagement.st + "\n")
-	.append(Entities.st + "\n")
-	.append(DependencyGroup.st + "\n")
-	.append(MavenProject.st + "\n")
-	.append(Module.st + "\n")
-	.append(Project.st + "\n")
 	.append(Antlr4.st + "\n")
 	.append(Antlr4Simple.st + "\n")
 	.append(CopyPlugin.st + "\n")
@@ -21,6 +16,7 @@ public class MavenST {
 	.append(Pom.st + "\n")
 	.append(Build.st + "\n")
 	.append(Dependency.st + "\n")
+	.append(DependencyGroup.st + "\n")
 	.append(Execution.st + "\n")
 	.append(Parent.st + "\n")
 	.append(Properties.st + "\n")
@@ -30,6 +26,9 @@ public class MavenST {
 	.append(ProjectReportingOutputEncoding.st + "\n")
 	.append(PropertyReference.st + "\n")
 	.append(Repository.st + "\n")
+	.append(Project.st + "\n")
+	.append(ProjectGenerator.st + "\n")
+	.append(ProjectPackage.st + "\n")
 	.toString()  ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
@@ -68,26 +67,6 @@ public class MavenST {
 
 	public static DependencyManagement newDependencyManagement() {
 		return new DependencyManagement(stGroup);
-	}  
-
-	public static Entities newEntities() {
-		return new Entities(stGroup);
-	}  
-
-	public static DependencyGroup newDependencyGroup() {
-		return new DependencyGroup(stGroup);
-	}  
-
-	public static MavenProject newMavenProject() {
-		return new MavenProject(stGroup);
-	}  
-
-	public static Module newModule() {
-		return new Module(stGroup);
-	}  
-
-	public static Project newProject() {
-		return new Project(stGroup);
 	}  
 
 	public static Antlr4 newAntlr4() {
@@ -130,6 +109,10 @@ public class MavenST {
 		return new Dependency(stGroup);
 	}  
 
+	public static DependencyGroup newDependencyGroup() {
+		return new DependencyGroup(stGroup);
+	}  
+
 	public static Execution newExecution() {
 		return new Execution(stGroup);
 	}  
@@ -164,6 +147,18 @@ public class MavenST {
 
 	public static Repository newRepository() {
 		return new Repository(stGroup);
+	}  
+
+	public static Project newProject() {
+		return new Project(stGroup);
+	}  
+
+	public static ProjectGenerator newProjectGenerator() {
+		return new ProjectGenerator(stGroup);
+	}  
+
+	public static ProjectPackage newProjectPackage() {
+		return new ProjectPackage(stGroup);
 	}  
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {

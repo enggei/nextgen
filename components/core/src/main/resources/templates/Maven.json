@@ -249,6 +249,31 @@
       "name" : "execution",
       "text" : "<execution>\n    <phase>package</phase>\n    <goals>\n        <goal>shade</goal>\n    </goals>\n</execution> ",
       "parameters" : [ ]
+    }, {
+      "uuid" : "dd2fc133-edec-4db1-836a-df6e7c052319",
+      "name" : "dependencyGroup",
+      "text" : "~name~\n~groupId~\n~version~\n~artifacts:{it|~it~};separator=\"\\n\"~ ",
+      "parameters" : [ {
+        "uuid" : "bdd2c3c2-cfd1-4c71-a237-b699d6035bc4",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "e963be97-a567-4681-b04f-7a049e2eca4e",
+        "name" : "groupId",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "83bcd3bd-0acf-4f7e-8463-f4f4e051bfba",
+        "name" : "version",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "ad75d2c6-a2b6-44b6-b887-2f3a66adc072",
+        "name" : "artifacts",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
     } ]
   }, {
     "uuid" : "f5dc53d8-bbf6-4b8e-9cc8-b1e9a5fd17b0",
@@ -406,100 +431,6 @@
       "parameters" : [ ]
     } ]
   }, {
-    "uuid" : "cb5b0503-2209-492a-9e23-8b4d63e2d68f",
-    "name" : "Entities",
-    "text" : "// deprecated, use proper maven-templates ",
-    "children" : [ {
-      "uuid" : "38923b07-0e48-4289-b555-d8d8ddb357d6",
-      "name" : "DependencyGroup",
-      "text" : "Name ~name~\nGroupId ~groupId~\nVersion ~version~\n\n~artifacts:{it|~it~};separator=\"\\n\"~",
-      "parameters" : [ {
-        "uuid" : "055453ce-7766-4072-ab7d-2821e7b0ba61",
-        "name" : "name",
-        "type" : "SINGLE",
-        "argumentType" : "String"
-      }, {
-        "uuid" : "0854f7e6-1bfc-4a57-b545-1f78b8c34690",
-        "name" : "groupId",
-        "type" : "SINGLE",
-        "argumentType" : "String"
-      }, {
-        "uuid" : "4bc92646-ed83-4bf8-b317-1ef34a6e84f3",
-        "name" : "version",
-        "type" : "SINGLE",
-        "argumentType" : "String"
-      }, {
-        "uuid" : "ca564308-2500-4b2f-8350-02409eedd280",
-        "name" : "artifacts",
-        "type" : "LIST",
-        "argumentType" : "String"
-      } ]
-    }, {
-      "uuid" : "862e955a-8316-48b7-9400-03d496580268",
-      "name" : "Project",
-      "text" : "Project ~name~\n\nroot\t:\t~root~\nPom\t: ~pom~\n\nModules :\n~modules:{it|~it~};separator=\"\\n\"~",
-      "parameters" : [ {
-        "uuid" : "98c1c33a-bdc3-41f3-9490-91def865f25e",
-        "name" : "name",
-        "type" : "SINGLE"
-      }, {
-        "uuid" : "6496ea98-6eab-4d95-a926-fc8e5eea2f9c",
-        "name" : "root",
-        "type" : "SINGLE"
-      }, {
-        "uuid" : "4104c7aa-cde1-4e1f-8b08-ce24b29ce36b",
-        "name" : "pom",
-        "type" : "SINGLE"
-      }, {
-        "uuid" : "d81231ff-9894-4843-aa09-037d3f08c468",
-        "name" : "modules",
-        "type" : "LIST"
-      } ]
-    }, {
-      "uuid" : "a3de07f1-d8c2-4398-9e8c-87285480a161",
-      "name" : "Module",
-      "text" : "Module ~name~\nPom : ~pom~\n\nModules:\n~modules:{it|~it~};separator=\"\\n\"~",
-      "parameters" : [ {
-        "uuid" : "6def4750-0a8f-4b5b-a1cb-1194b5ffb23b",
-        "name" : "name",
-        "type" : "SINGLE"
-      }, {
-        "uuid" : "340b9cf5-7cfc-44f7-81c1-f31dfb6c812a",
-        "name" : "pom",
-        "type" : "SINGLE"
-      }, {
-        "uuid" : "30e3a908-7531-44a0-952e-119d739711b2",
-        "name" : "modules",
-        "type" : "LIST"
-      } ]
-    }, {
-      "uuid" : "91b19c45-f3ae-457d-bfbd-dec7d697ba49",
-      "name" : "MavenProject",
-      "text" : "~projectName~\n\nroot : ~root~\nmainJava : ~mainJava~\ntestJava : ~testJava~ ",
-      "parameters" : [ {
-        "uuid" : "c2ecbab0-e2ef-422c-970c-91dc29259fc3",
-        "name" : "projectName",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "ccef079f-157e-4bf9-a4f4-bf2edecac7e1",
-        "name" : "root",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "ee6c97da-6f3d-49e0-b2ec-a805b438e0b3",
-        "name" : "mainJava",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "f4aeceda-f358-41dd-837a-f2eacc9c1721",
-        "name" : "testJava",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      } ]
-    } ],
-    "parameters" : [ ]
-  }, {
     "uuid" : "ec3aaf4b-dc85-4bb4-b1e3-7a8ac732865f",
     "name" : "dependencyManagement",
     "text" : "<dependencyManagement>\n\t<dependencies>\n\t\t~dependencies:{it|~it~};separator=\"\\n\"~\n\t</dependencies>\n</dependencyManagement> ",
@@ -513,6 +444,133 @@
     "uuid" : "b7a1cf86-16b6-4983-adf5-dd6ca5448d25",
     "name" : "MavenPatterns",
     "text" : ""
+  }, {
+    "uuid" : "2e6c8640-2fa7-47f0-8fa6-a66683ff7301",
+    "name" : "Project",
+    "text" : "package ~packageName~;\n\n~templates:{it|\nimport nextgen.templates.~it;format=\"lowFirst\"~.*;\nimport nextgen.templates.~it~Patterns;\n};separator=\"\\n\"~\n\n~imports:{it|~it~};separator=\"\\n\"~\n\nimport java.io.File;\n\npublic class ~name~ {\n\n\tfinal File root = new File(\"~root~\");\n\t\n\tfinal File mainJava = new File(root, \"src/main/java\");\n\tfinal File mainResources = new File(root, \"src/main/resources\");\n\tfinal File testJava = new File(root, \"src/test/java\");\n\tfinal File testResources = new File(root, \"src/test/resources\");\n\t\n\t~files:{it|final File ~it.name~ = new File(~if(it.parent)~~it.parent~, ~endif~\"~it.path~\");};separator=\"\\n\"~\n\t\n\t~packageDeclarations:{it|~it~};separator=\"\\n\\n\"~\n\n\t~fields:{it|~if(it.init)~final ~endif~~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n\t\n\t~generators:{it|~it~};separator=\"\\n\\n\"~\n\n\tprotected static void log(Object log) {\n\t\tSystem.out.println(log);\n\t}\n\n\tclass JavaType {\n\n\t\tfinal nextgen.templates.java.ClassOrInterfaceType type;\n\n\t\tJavaType(String packageDeclaration, String name) {\n\t\t\tthis.type = nextgen.templates.java.JavaST.newClassOrInterfaceType()\n\t\t\t\t\t.setScope(packageDeclaration)\n\t\t\t\t\t.addNames(name);\n\t\t}\n\n\t\tJavaType(nextgen.templates.java.PackageDeclaration packageDeclaration, String name) {\n\t\t\tthis(packageDeclaration.getName(), name);\n\t\t}\n\t}\n} ",
+    "parameters" : [ {
+      "uuid" : "b308d46d-0864-4ec4-bb4a-7fef0c0222df",
+      "name" : "packageName",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "4d2a7ca4-a4fc-42e0-9e5e-8a6dbe41e0aa",
+      "name" : "templates",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "834c4d8b-f429-41ba-8405-f68ed4d0c8ab",
+      "name" : "imports",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "cd28b603-9065-4ea5-905a-aff49137883b",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "7de2093f-bbce-44ed-8aa7-0f67de90aba7",
+      "name" : "root",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "9cf5499d-8e20-475b-aa1e-c9abc87ee761",
+      "name" : "files",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "d0df61bb-0334-47fc-aca7-53acfb9c3649",
+        "name" : "name",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "af08685c-ca8f-4880-ad0c-e795e2acebaa",
+        "name" : "parent",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "977b1850-75cf-4cdc-9752-037a49e0539e",
+        "name" : "path",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "0d5e30a7-85dc-430b-8012-8d9edf6113f5",
+      "name" : "packageDeclarations",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "41456a3c-230f-42c7-a963-6cd17f3bfab2",
+      "name" : "fields",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "f2344fe0-51b2-4a90-90de-12107723264d",
+        "name" : "type",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "b6492c17-f8b0-4a41-9f51-3c955921f133",
+        "name" : "name",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "0b49cd88-35a5-4145-a844-8f8aa2ea9af3",
+        "name" : "init",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "880ef206-9213-4023-88f2-74366528660a",
+      "name" : "generators",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    } ],
+    "children" : [ {
+      "uuid" : "553cf9a6-38e4-4da8-931e-38aefc733e78",
+      "name" : "ProjectGenerator",
+      "text" : "/**\n * ~name~\n * ~description~\n */\n@org.junit.Test\npublic void ~name~() {\n\t~statements:{it|~it~};separator=\"\\n\"~\n} ",
+      "parameters" : [ {
+        "uuid" : "cf15ded3-ad36-447f-88b4-660cc284cd57",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "31fff089-0b3e-4871-a0c0-8ee134ca0130",
+        "name" : "description",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "37bd62b0-d8da-49ff-86f6-0e8b40fc8fc4",
+        "name" : "statements",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "24ffaa86-978d-40f1-a641-cb202f0f51d6",
+      "name" : "ProjectPackage",
+      "text" : "private final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~.getName() + \".\" + ~endif~\"~packageName~\");\n~types:{it|private final JavaType ~it.name~Type = new JavaType(~name~, \"~it.name~\");};separator=\"\\n\\n\"~ ",
+      "parameters" : [ {
+        "uuid" : "1f73deb8-42c0-4a84-bde0-84b998662564",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "2fd9d082-3400-425c-bee8-54a54a8ab8f5",
+        "name" : "parentPackage",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "284565c4-32bb-4cb8-9e18-262c5a7a9fc9",
+        "name" : "packageName",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "36f64995-d945-456d-83a1-d940bf88b58f",
+        "name" : "types",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "2f71e037-f9d8-49d9-83f1-8bde5e838f7a",
+          "name" : "name",
+          "argumentType" : "Object"
+        } ]
+      } ]
+    } ]
   } ],
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Maven.stg",
   "enums" : [ {

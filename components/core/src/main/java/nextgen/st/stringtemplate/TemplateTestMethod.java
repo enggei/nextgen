@@ -11,11 +11,6 @@ public class TemplateTestMethod {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -66,6 +61,6 @@ public class TemplateTestMethod {
 
 	static final String st = "templateTestMethod(template) ::= <<@org.junit.Test\n" + 
 				"public void test~template;format=\"capitalize\"~() {\n" + 
-				"	System.out.println(\"\\n--- TEST ~template~:\\n\" + new~template;format=\"capitalize\"~());\n" + 
+				"	System.out.println(\"~template~:\\n\" + new~template;format=\"capitalize\"~());\n" + 
 				"} >>";
 }  
