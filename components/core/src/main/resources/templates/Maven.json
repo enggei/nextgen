@@ -447,7 +447,7 @@
   }, {
     "uuid" : "2e6c8640-2fa7-47f0-8fa6-a66683ff7301",
     "name" : "Project",
-    "text" : "package ~packageName~;\n\n~templates:{it|\nimport nextgen.templates.~it;format=\"lowFirst\"~.*;\nimport nextgen.templates.~it~Patterns;\n};separator=\"\\n\"~\n\n~imports:{it|~it~};separator=\"\\n\"~\n\nimport java.io.File;\n\npublic class ~name~ {\n\n\tfinal File root = new File(\"~root~\");\n\t\n\tfinal File mainJava = new File(root, \"src/main/java\");\n\tfinal File mainResources = new File(root, \"src/main/resources\");\n\tfinal File testJava = new File(root, \"src/test/java\");\n\tfinal File testResources = new File(root, \"src/test/resources\");\n\t\n\t~files:{it|final File ~it.name~ = new File(~if(it.parent)~~it.parent~, ~endif~\"~it.path~\");};separator=\"\\n\"~\n\t\n\t~packageDeclarations:{it|~it~};separator=\"\\n\"~\n\n\t~fields:{it|~if(it.init)~final ~endif~~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n\t\n\t~generators:{it|~it~};separator=\"\\n\\n\"~\n\n\tprotected static void log(Object log) {\n\t\tSystem.out.println(log);\n\t}\n\n\tclass JavaType {\n\n\t\tfinal nextgen.templates.java.ClassOrInterfaceType type;\n\n\t\tJavaType(String packageDeclaration, String name) {\n\t\t\tthis.type = nextgen.templates.java.JavaST.newClassOrInterfaceType()\n\t\t\t\t\t.setScope(packageDeclaration)\n\t\t\t\t\t.addNames(name);\n\t\t}\n\n\t\tJavaType(nextgen.templates.java.PackageDeclaration packageDeclaration, String name) {\n\t\t\tthis(packageDeclaration.getName(), name);\n\t\t}\n\t}\n} ",
+    "text" : "package ~packageName~;\n\nimport nextgen.st.STGenerator;\nimport static nextgen.utils.StringUtil.*;\n\n~templates:{it|import nextgen.templates.~it;format=\"toLower\"~.*;\nimport nextgen.templates.~it~Patterns;\n};separator=\"\\n\"~\n~imports:{it|~it~};separator=\"\\n\"~\n\nimport java.util.*;\nimport java.io.*;\n\npublic class ~name~ {\n\n\tfinal File root = new File(\"~root~\");\n\t\n\tfinal File mainJava = new File(root, \"src/main/java\");\n\tfinal File mainResources = new File(root, \"src/main/resources\");\n\tfinal File testJava = new File(root, \"src/test/java\");\n\tfinal File testResources = new File(root, \"src/test/resources\");\n\t\n\t~files:{it|final File ~it.name~ = new File(~if(it.parent)~~it.parent~, ~endif~\"~it.path~\");};separator=\"\\n\"~\n\t\n\t~packageDeclarations:{it|~it~};separator=\"\\n\"~\n\n\t~fields:{it|~if(it.init)~final ~endif~~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n\t\n\t~generators:{it|~it~};separator=\"\\n\\n\"~\n\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n\n\tprotected static void log(Object log) {\n\t\tSystem.out.println(log);\n\t}\n\n\tclass JavaType {\n\n\t\tfinal nextgen.templates.java.ClassOrInterfaceType type;\n\n\t\tJavaType(String packageDeclaration, String name) {\n\t\t\tthis.type = nextgen.templates.java.JavaST.newClassOrInterfaceType()\n\t\t\t\t\t.setScope(packageDeclaration)\n\t\t\t\t\t.addNames(name);\n\t\t}\n\n\t\tJavaType(nextgen.templates.java.PackageDeclaration packageDeclaration, String name) {\n\t\t\tthis(packageDeclaration.getName(), name);\n\t\t}\n\t}\n} ",
     "parameters" : [ {
       "uuid" : "b308d46d-0864-4ec4-bb4a-7fef0c0222df",
       "name" : "packageName",
@@ -519,6 +519,11 @@
       "name" : "generators",
       "type" : "LIST",
       "argumentType" : "Object"
+    }, {
+      "uuid" : "b61f22e2-572b-4d1b-9ca8-8c9c990d55c6",
+      "name" : "methods",
+      "type" : "LIST",
+      "argumentType" : "Object"
     } ],
     "children" : [ {
       "uuid" : "553cf9a6-38e4-4da8-931e-38aefc733e78",
@@ -567,6 +572,40 @@
         "keys" : [ {
           "uuid" : "2f71e037-f9d8-49d9-83f1-8bde5e838f7a",
           "name" : "name",
+          "argumentType" : "Object"
+        } ]
+      } ]
+    }, {
+      "uuid" : "56ca8fd0-4b29-479b-bab3-9513c826fab6",
+      "name" : "TestRunner",
+      "text" : "package ~packageName~;\n\npublic class ~name~ extends ~projectName~ {\n\n~generators:{it|\n\t@Override\n\tpublic void ~it.name~() {\n\t\t~if(it.run)~super.~it.name~();~endif~\n\t~eom()~\n};separator=\"\\n\\n\"~\n\n\tpublic static void main(String[] args) {\n\t\tfinal org.junit.runner.JUnitCore junit = new org.junit.runner.JUnitCore();\n\t\tjunit.addListener(new org.junit.internal.TextListener(System.out));\n\t\tfinal org.junit.runner.Result result = junit.run(~name~.class);\n\t\tfor (org.junit.runner.notification.Failure failure : result.getFailures()) {\n\t\t\tSystem.out.println(failure.toString());\n\t\t}\n\t}\n} ",
+      "parameters" : [ {
+        "uuid" : "f98c2964-990a-4771-b504-2fdb7994d22e",
+        "name" : "packageName",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "bf11c0e0-f5c4-4df7-b03c-a9ff77a73564",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "31261d17-b354-4f97-901e-411367291a51",
+        "name" : "projectName",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "bd28f69f-46b5-445c-a388-9d517bf2790d",
+        "name" : "generators",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "ab612850-1b6c-45f8-a082-54d88806f12d",
+          "name" : "name",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "278d8075-3fb6-46e4-9eec-bbe873a7286a",
+          "name" : "run",
           "argumentType" : "Object"
         } ]
       } ]

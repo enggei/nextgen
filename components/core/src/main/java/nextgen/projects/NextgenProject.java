@@ -1,11 +1,17 @@
 package nextgen.projects;
 
+import nextgen.st.STGenerator;
+import static nextgen.utils.StringUtil.*;
+
 import nextgen.templates.domain.*;
 import nextgen.templates.DomainPatterns;
 
+import nextgen.templates.nextgen.*;
+import nextgen.templates.NextgenPatterns;
 
 
-import java.io.File;
+import java.util.*;
+import java.io.*;
 
 public class NextgenProject {
 
@@ -221,6 +227,83 @@ public class NextgenProject {
 				.addEntities(layoutDomain);
 		DomainPatterns.writeNeo(mainJava, canvasLayoutPackage, domain);
 	}
+
+	/**
+	 * generateAppEvents
+	 * 
+	 */
+	@org.junit.Test
+	public void generateAppEvents() {
+		final AppEvents appEvents = NextgenST.newAppEvents()
+				.setPackageName("nextgen.st")
+				.setName("STAppEvents")
+				.addEvents(NextgenST.newAppEvent()
+						.setName("NewMetaDomain")
+						.addFields("nextgen.domains.meta.MetaDomain", "metaDomain"))
+				.addEvents(NextgenST.newAppEvent()
+						.setName("NewMetaEntity")
+						.addFields("nextgen.domains.meta.MetaEntity", "metaEntity"))
+				.addEvents(NextgenST.newAppEvent()
+						.setName("NewMetaProperty")
+						.addFields("nextgen.domains.meta.MetaProperty", "metaProperty"))
+				.addEvents(NextgenST.newAppEvent()
+						.setName("NewMetaRelation")
+						.addFields("nextgen.domains.meta.MetaRelation", "metaRelation"))
+				.addEvents(NextgenST.newAppEvent()
+						.setName("CanvasSTModelClicked")
+						.addFields("nextgen.st.model.STModel", "stModel"))
+				.addEvents(NextgenST.newAppEvent()
+						.setName("STModelUpdated")
+						.addFields("nextgen.st.model.STModel", "stModel"))
+				.addEvents(NextgenST.newAppEvent()
+						.setName("NewDomainEntity")
+						.addFields("nextgen.domains.meta.DomainEntity", "domainEntity"))
+				.addEvents(NextgenST.newAppEvent()
+						.setName("OpenMetaDomain")
+						.addFields("nextgen.domains.meta.MetaDomain", "metaDomain"))
+				.addEvents(NextgenST.newAppEvent()
+						.setName("OpenMetaEntity")
+						.addFields("nextgen.domains.meta.MetaEntity", "metaEntity"))
+				.addEvents(NextgenST.newAppEvent()
+						.setName("OpenMetaProperty")
+						.addFields("nextgen.domains.meta.MetaProperty", "metaProperty"))
+				.addEvents(NextgenST.newAppEvent()
+						.setName("OpenMetaRelation")
+						.addFields("nextgen.domains.meta.MetaRelation", "metaRelation"))
+				.addEvents(NextgenST.newNewOpenRemovedEvents()
+						.setName("DomainVisitor")
+						.setType("nextgen.domains.meta.DomainVisitor"))
+				.addEvents(NextgenST.newNewOpenRemovedEvents().setName("Project").setType("nextgen.st.model.Project"))
+				.addEvents(NextgenST.newNewOpenRemovedEvents().setName("STModel").setType("nextgen.st.model.STModel"))
+				.addEvents(NextgenST.newNewOpenRemovedEvents().setName("STValue").setType("nextgen.st.model.STValue"))
+				.addEvents(NextgenST.newNewOpenRemovedEvents().setName("Script").setType("nextgen.st.model.Script"))
+				.addEvents(NextgenST.newNewOpenRemovedEvents()
+						.setName("STTemplate")
+						.setType("nextgen.st.domain.STTemplate"))
+				.addEvents(NextgenST.newAppEvent()
+						.setName("STModelTreeNodeClicked")
+						.addFields("nextgen.st.model.STModel", "stModel"));
+
+		STGenerator.writeJavaFile(appEvents, appEvents.getPackageName().toString(), appEvents.getName().toString(), mainJava);
+	}
+
+	/**
+	 * xxxxx
+	 * 
+	 */
+	@org.junit.Test
+	public void xxxxx() {
+		// test
+	}
+
+	/**
+	 * test2
+	 * 
+	 */
+	@org.junit.Test
+	public void test2() {
+	}
+
 
 	protected static void log(Object log) {
 		System.out.println(log);

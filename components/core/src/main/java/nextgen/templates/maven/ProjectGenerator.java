@@ -6,6 +6,8 @@ public class ProjectGenerator {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _name;
+	private Object _description;
+	private java.util.List<Object> _statements = new java.util.ArrayList<>();
 
 	ProjectGenerator(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -19,6 +21,8 @@ public class ProjectGenerator {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ProjectGenerator");
 		st.add("name", _name);
+		st.add("description", _description);
+		for (Object o : _statements) st.add("statements", o);
 		return st.render().trim();
 	}
 
@@ -44,6 +48,56 @@ public class ProjectGenerator {
 		return this;
 	} 
 
+	public ProjectGenerator setDescription(Object value) {
+		this._description = value;
+		return this;
+	}
+
+	public Object getDescription() {
+		return this._description;
+	}
+
+	public Object getDescription(Object defaultValue) {
+		return this._description == null ? defaultValue : this._description;
+	}
+
+	public boolean hasDescription() {
+		return this._description != null;
+	}
+
+	public ProjectGenerator removeDescription() {
+		this._description = null;
+		return this;
+	} 
+
+	public ProjectGenerator addStatements(Object value) {
+		this._statements.add(value);
+		return this;
+	}
+
+	public ProjectGenerator setStatements(Object[] value) {
+		this._statements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ProjectGenerator setStatements(java.util.Collection<Object> values) {
+		this._statements.addAll(values);
+		return this;
+	}
+
+	public ProjectGenerator removeStatements(Object value) {
+		this._statements.remove(value);
+		return this;
+	}
+
+	public ProjectGenerator removeStatements(int index) {
+		this._statements.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getStatements() {
+		return this._statements;
+	} 
 
 
 	@Override
@@ -59,8 +113,12 @@ public class ProjectGenerator {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ProjectGenerator(name) ::= <<@org.junit.Test\n" + 
+	static final String st = "ProjectGenerator(name,description,statements) ::= <</**\n" + 
+				" * ~name~\n" + 
+				" * ~description~\n" + 
+				" */\n" + 
+				"@org.junit.Test\n" + 
 				"public void ~name~() {\n" + 
-				"\n" + 
+				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
 				"} >>";
 }  

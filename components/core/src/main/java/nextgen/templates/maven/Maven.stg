@@ -280,49 +280,90 @@ dependencyGroup(name,groupId,version,artifacts) ::= <<~name~
 ~version~
 ~artifacts:{it|~it~};separator="\n"~  >>
 
-Project(packageName,templates,imports,name,root,packageDeclarations,generators) ::= <<package ~packageName~;
+Project(packageName,templates,imports,name,root,files,packageDeclarations,fields,generators,methods) ::= <<package ~packageName~;
 
-~templates:{it|import static ~it~.*;};separator="\n"~
+import nextgen.st.STGenerator;
+import static nextgen.utils.StringUtil.*;
 
+~templates:{it|import nextgen.templates.~it;format="toLower"~.*;
+import nextgen.templates.~it~Patterns;
+};separator="\n"~
 ~imports:{it|~it~};separator="\n"~
+
+import java.util.*;
+import java.io.*;
 
 public class ~name~ {
 
-	final java.io.File root = new java.io.File("~root~");
-	final java.io.File mainJava = new java.io.File(root, "src/main/java");
-	final java.io.File mainResources = new java.io.File(root, "src/main/resources");
-	final java.io.File testJava = new java.io.File(root, "src/test/java");
-	final java.io.File testResources = new java.io.File(root, "src/test/resources");
+	final File root = new File("~root~");
+	
+	final File mainJava = new File(root, "src/main/java");
+	final File mainResources = new File(root, "src/main/resources");
+	final File testJava = new File(root, "src/test/java");
+	final File testResources = new File(root, "src/test/resources");
+	
+	~files:{it|final File ~it.name~ = new File(~if(it.parent)~~it.parent~, ~endif~"~it.path~");};separator="\n"~
+	
+	~packageDeclarations:{it|~it~};separator="\n"~
 
-	~packageDeclarations:{it|~it~};separator="\n\n"~
-
+	~fields:{it|~if(it.init)~final ~endif~~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
+	
 	~generators:{it|~it~};separator="\n\n"~
+
+	~methods:{it|~it~};separator="\n\n"~
 
 	protected static void log(Object log) {
 		System.out.println(log);
 	}
 
-	private class JavaType {
+	class JavaType {
 
-		final ClassOrInterfaceType type;
+		final nextgen.templates.java.ClassOrInterfaceType type;
 
-		public JavaType(String packageDeclaration, String name) {
-			this.type = newClassOrInterfaceType(packageDeclaration, name);
+		JavaType(String packageDeclaration, String name) {
+			this.type = nextgen.templates.java.JavaST.newClassOrInterfaceType()
+					.setScope(packageDeclaration)
+					.addNames(name);
 		}
 
-		public JavaType(PackageDeclaration packageDeclaration, String name) {
+		JavaType(nextgen.templates.java.PackageDeclaration packageDeclaration, String name) {
 			this(packageDeclaration.getName(), name);
 		}
 	}
 }  >>
 
-ProjectGenerator(name) ::= <<@org.junit.Test
+ProjectGenerator(name,description,statements) ::= <</**
+ * ~name~
+ * ~description~
+ */
+@org.junit.Test
 public void ~name~() {
-
+	~statements:{it|~it~};separator="\n"~
 }  >>
 
-ProjectPackage(name,packageName,types) ::= <<private final PackageDeclaration ~name~ = newPackageDeclaration("~packageName~");
+ProjectPackage(name,parentPackage,packageName,types) ::= <<private final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~.getName() + "." + ~endif~"~packageName~");
 ~types:{it|private final JavaType ~it.name~Type = new JavaType(~name~, "~it.name~");};separator="\n\n"~  >>
+
+TestRunner(packageName,name,projectName,generators) ::= <<package ~packageName~;
+
+public class ~name~ extends ~projectName~ {
+
+~generators:{it|
+	@Override
+	public void ~it.name~() {
+		~if(it.run)~super.~it.name~();~endif~
+	~eom()~
+};separator="\n\n"~
+
+	public static void main(String[] args) {
+		final org.junit.runner.JUnitCore junit = new org.junit.runner.JUnitCore();
+		junit.addListener(new org.junit.internal.TextListener(System.out));
+		final org.junit.runner.Result result = junit.run(~name~.class);
+		for (org.junit.runner.notification.Failure failure : result.getFailures()) {
+			System.out.println(failure.toString());
+		}
+	}
+}  >>
 
 eom() ::= "}"
 

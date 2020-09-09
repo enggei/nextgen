@@ -6,6 +6,7 @@ public class ProjectPackage {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _name;
+	private Object _parentPackage;
 	private Object _packageName;
 	private java.util.List<java.util.Map<String, Object>> _types = new java.util.ArrayList<>();
 
@@ -21,6 +22,7 @@ public class ProjectPackage {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ProjectPackage");
 		st.add("name", _name);
+		st.add("parentPackage", _parentPackage);
 		st.add("packageName", _packageName);
 		for (java.util.Map<String, Object> map : _types) st.addAggr("types.{name}", map.get("name"));
 		return st.render().trim();
@@ -45,6 +47,28 @@ public class ProjectPackage {
 
 	public ProjectPackage removeName() {
 		this._name = null;
+		return this;
+	} 
+
+	public ProjectPackage setParentPackage(Object value) {
+		this._parentPackage = value;
+		return this;
+	}
+
+	public Object getParentPackage() {
+		return this._parentPackage;
+	}
+
+	public Object getParentPackage(Object defaultValue) {
+		return this._parentPackage == null ? defaultValue : this._parentPackage;
+	}
+
+	public boolean hasParentPackage() {
+		return this._parentPackage != null;
+	}
+
+	public ProjectPackage removeParentPackage() {
+		this._parentPackage = null;
 		return this;
 	} 
 
@@ -121,6 +145,6 @@ public class ProjectPackage {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ProjectPackage(name,packageName,types) ::= <<private final PackageDeclaration ~name~ = newPackageDeclaration(\"~packageName~\");\n" + 
+	static final String st = "ProjectPackage(name,parentPackage,packageName,types) ::= <<private final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~.getName() + \".\" + ~endif~\"~packageName~\");\n" + 
 				"~types:{it|private final JavaType ~it.name~Type = new JavaType(~name~, \"~it.name~\");};separator=\"\\n\\n\"~ >>";
 }  

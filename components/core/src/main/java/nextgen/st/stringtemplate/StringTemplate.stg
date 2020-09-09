@@ -181,7 +181,7 @@ public class ~name;format="capitalize"~ {
 	public String getUuid() {
 		return stModel.getUuid();
 	}
-	
+
 	public STValue asSTValue () {
 		return db.newSTValue(stModel);
 	}
@@ -212,6 +212,20 @@ public class ~name;format="capitalize"~ {
 				.filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
 				.findAny()).ifPresent(stArgument -> value.set(stArgument.getValue()));
 		return value.get();
+	}
+
+	private STArgument getArgument(String name) {
+		final AtomicReference<STArgument> value = new AtomicReference<>();
+		findParameter(name).flatMap(stParameter -> stModel.getArguments()
+				.filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+				.findAny()).ifPresent(value::set);
+		return value.get();
+	}
+
+	private ~name;format="capitalize"~ removeArgument(String name) {
+		final STArgument stArgument = getArgument(name);
+		if (stArgument != null) stModel.removeArguments(stArgument);
+		return this;
 	}
 
 	private ~name;format="capitalize"~ add(STValue value, String name) {
@@ -251,6 +265,14 @@ public ~entity;format="capitalize"~ set~name;format="capitalize"~(STValue value)
 
 public STValue get~name;format="capitalize"~() {
 	return get("~name~");
+}
+
+public STArgument get~name;format="capitalize"~Argument() {
+	return getArgument("~name~");
+}
+
+public ~entity;format="capitalize"~ remove~name;format="capitalize"~() {
+	return removeArgument("~name~");
 }  >>
 
 ListAccessors(entity,name) ::= <<public ~entity;format="capitalize"~ add~name;format="capitalize"~(String value) {

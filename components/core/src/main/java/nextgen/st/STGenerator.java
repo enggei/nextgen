@@ -339,7 +339,7 @@ public class STGenerator {
     }
 
     public static File makeRelative(File file, File root) {
-        return new File(file.getAbsolutePath().substring(root.getAbsolutePath().length()));
+        return new File(file.getAbsolutePath().substring(root.getAbsolutePath().length()+1));
     }
 
     public static File tryToCreateFileIfNotExists(File f) {

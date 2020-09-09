@@ -270,7 +270,7 @@ public class NeoEntity {
 				"	public String getUuid() {\n" + 
 				"		return stModel.getUuid();\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	public STValue asSTValue () {\n" + 
 				"		return db.newSTValue(stModel);\n" + 
 				"	}\n" + 
@@ -301,6 +301,20 @@ public class NeoEntity {
 				"				.filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
 				"				.findAny()).ifPresent(stArgument -> value.set(stArgument.getValue()));\n" + 
 				"		return value.get();\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	private STArgument getArgument(String name) {\n" + 
+				"		final AtomicReference<STArgument> value = new AtomicReference<>();\n" + 
+				"		findParameter(name).flatMap(stParameter -> stModel.getArguments()\n" + 
+				"				.filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
+				"				.findAny()).ifPresent(value::set);\n" + 
+				"		return value.get();\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	private ~name;format=\"capitalize\"~ removeArgument(String name) {\n" + 
+				"		final STArgument stArgument = getArgument(name);\n" + 
+				"		if (stArgument != null) stModel.removeArguments(stArgument);\n" + 
+				"		return this;\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	private ~name;format=\"capitalize\"~ add(STValue value, String name) {\n" + 

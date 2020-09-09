@@ -297,6 +297,11 @@ public class STRenderer {
       return null;
    }
 
+   public STGroupModel findSTGroupModel(STTemplate stTemplate) {
+      STMapper stMapper = findSTMapper(stTemplate.getUuid());
+      return stMapper.groupModel;
+   }
+
    private static final class STMapper {
 
       private final STGroupModel groupModel;

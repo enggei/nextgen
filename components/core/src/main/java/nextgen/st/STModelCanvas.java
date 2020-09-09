@@ -183,6 +183,10 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 	}
 
 	public <N extends BaseCanvasNode<?>> N addNode(String uuid, java.util.function.Supplier<N> supplier) {
+		return addNode(uuid, supplier, true);
+	}
+
+	public <N extends BaseCanvasNode<?>> N addNode(String uuid, java.util.function.Supplier<N> supplier, boolean centerNode) {
 
 		final N existing = getNode(uuid);
 		if (existing != null) {
@@ -209,7 +213,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 		SwingUtilities.invokeLater(() -> {
 			node.refresh();
-			centerNode(node);
+			if(centerNode) centerNode(node);
 		});
 
 		return node;
@@ -259,6 +263,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 
 		pop.add(new MakeGeneratorScript(event));
+		pop.add(new Debug(event));
 		pop.add(new NewDomainAction(event));
 		pop.add(new MakeNeoModelScript(event));
 		pop.add(new SaveLastLayoutAction(event));
@@ -1245,6 +1250,41 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 					.map(baseCanvasNode -> (STModelNode) baseCanvasNode)
 					.map(stModelNode -> stModelNode.getModel())
 					.collect(java.util.stream.Collectors.toSet()), "Test");
+		}
+	}
+
+	final class Debug extends CanvasAction {
+
+		Debug(PInputEvent event) {
+			super("Debug", event);
+		}
+
+		@Override
+		void actionPerformed(PInputEvent event, ActionEvent e) {
+			presentationModel.doLaterInTransaction(transaction -> {
+				System.out.println("Node layer");
+				nodeLayer.getAllNodes().stream().forEach(o -> System.out.println(o));
+
+				System.out.println("Relation layer");
+				relationLayer.getAllNodes().forEach(o -> System.out.println(o));
+
+				System.out.println("All nodes");
+				getAllNodes().forEach(baseCanvasNode -> System.out.println(baseCanvasNode));
+
+				System.out.println("All relations");
+				getAllRelations().forEach(baseCanvasRelation -> System.out.println(baseCanvasRelation));
+
+				int nodeLayerSize = nodeLayer.getAllNodes().size();
+				int relationLayerSize = relationLayer.getAllNodes().size();
+				long allNodesSize = getAllNodes().count();
+				long allRelationsSize = getAllRelations().count();
+
+				System.out.println("nodeLayerSize " + nodeLayerSize);
+				System.out.println("relationLayerSize " + relationLayerSize);
+				System.out.println("allNodesSize " + allNodesSize);
+				System.out.println("allRelationsSize " + allRelationsSize);
+
+			});
 		}
 	}
 
@@ -3174,7 +3214,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 							stParameterMenu.add(removestParameterMenu);
 
 							getModel().getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid())).forEach(stArgument -> {
-								openstParameterMenu.add(new OpenArgument(event, stParameter, stArgument));
+								openstParameterMenu.add(new OpenArgument(event, true, stParameter, stArgument));
 								removestParameterMenu.add(new RemoveArgument(event, stArgument));
 								existingSelections.put(stParameter.getUuid(), stArgument.getValue());
 							});
@@ -3200,7 +3240,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 							stParameterMenu.add(removestParameterMenu);
 
 							getModel().getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid())).forEach(stArgument -> {
-								openstParameterMenu.add(new OpenArgument(event, stParameter, stArgument));
+								openstParameterMenu.add(new OpenArgument(event, true, stParameter, stArgument));
 								removestParameterMenu.add(new RemoveArgument(event, stArgument));
 							});
 							break;
@@ -3218,7 +3258,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 							stParameterMenu.add(removestParameterMenu);
 
 							getModel().getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid())).forEach(stArgument -> {
-								openstParameterMenu.add(new OpenArgument(event, stParameter, stArgument));
+								openstParameterMenu.add(new OpenArgument(event, true, stParameter, stArgument));
 								removestParameterMenu.add(new RemoveArgument(event, stArgument));
 							});
 							break;
@@ -3362,8 +3402,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				thisCanvas().presentationModel.doLaterInTransaction(tx -> {
-					presentationModel.forEachArgument(stTemplate, getModel(), (stArgument, stParameter) -> new OpenArgument(event, stParameter, stArgument).actionPerformed(null));
+				presentationModel.doLaterInTransaction(tx -> {
+					presentationModel.forEachArgument(stTemplate, getModel(), (stArgument, stParameter) -> new OpenArgument(event, false, stParameter, stArgument).actionPerformed(null));
 					new LayoutTreeAction(thisNode(), event).actionPerformed(null);
 				});
 			}
@@ -3649,38 +3689,43 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 		final class OpenArgument extends NodeAction {
 
+			private boolean layoutAfter;
 			private nextgen.st.domain.STParameter stParameter;
 			private nextgen.st.model.STArgument stArgument;
 
-			OpenArgument(PInputEvent event, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument) {
+			OpenArgument(PInputEvent event, boolean layoutAfter, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument) {
 				super(presentationModel.cut(presentationModel.render(stArgument), 30), event);
+				this.layoutAfter = layoutAfter;
 				this.stParameter = stParameter;
 				this.stArgument = stArgument;
 			}
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				thisCanvas().presentationModel.doLaterInTransaction(tx -> {
+				presentationModel.doLaterInTransaction(tx -> {
 					if (stParameter.getType().equals(nextgen.st.domain.STParameterType.KVLIST)) {
-						thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), thisCanvas().addNode(stArgument.getUuid(), () -> new STKVNode(stArgument, stParameter)), stArgument, stParameter));
+						addSTKVNode(stArgument, stParameter);
 					} else {
 						final nextgen.st.model.STValue stValue = stArgument.getValue();
 						switch (stValue.getType()) {
 							case STMODEL: {
-								thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), thisCanvas().addNode(stValue.getStModel().getUuid(), () -> new STModelNode(stValue.getStModel(), presentationModel.findSTTemplateByUuid(stValue.getStModel().getStTemplate()))), stArgument, stParameter));
+								final nextgen.st.model.STModel stModel = stValue.getStModel();
+								addSTModelNode(stModel, presentationModel.findSTTemplateByUuid(stModel.getStTemplate()));
 								break;
 							}
 							case PRIMITIVE: {
-								thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), thisCanvas().addNode(stValue.getUuid(), () -> new STValueNode(stValue)), stArgument, stParameter));
+								addSTValueNode(stValue);
 								break;
 							}
 							case ENUM: {
-								thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), thisCanvas().addNode(stValue.getUuid(), () -> new STValueNode(stValue)), stArgument, stParameter));
+								addSTValueNode(stValue);
 								break;
 							}
 						}
 					}
-					new LayoutTreeAction(thisNode(), event).actionPerformed(null);
+
+					if (layoutAfter)
+						new LayoutTreeAction(thisNode(), event).actionPerformed(null);
 				});
 			}
 		}
@@ -3719,7 +3764,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 				presentationModel.doLaterInTransaction(tx -> {
 						presentationModel.forEachArgument(stTemplate, getModel(), (stArgument, stParameter) -> {
 								if (this.stParameter.equals(stParameter))
-									new OpenArgument(event, stParameter, stArgument).actionPerformed(null);
+									new OpenArgument(event, false, stParameter, stArgument).actionPerformed(null);
 						});
 						new LayoutTreeAction(thisNode(), event).actionPerformed(null);
 					});

@@ -93,5 +93,13 @@ public class SingleAccessors {
 				"\n" + 
 				"public STValue get~name;format=\"capitalize\"~() {\n" + 
 				"	return get(\"~name~\");\n" + 
+				"}\n" + 
+				"\n" + 
+				"public STArgument get~name;format=\"capitalize\"~Argument() {\n" + 
+				"	return getArgument(\"~name~\");\n" + 
+				"}\n" + 
+				"\n" + 
+				"public ~entity;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() {\n" + 
+				"	return removeArgument(\"~name~\");\n" + 
 				"} >>";
 }  

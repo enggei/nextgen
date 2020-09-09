@@ -500,7 +500,11 @@ public class STModelNavigator extends JPanel {
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
-			model.getTemplates().forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
+			model.getTemplates().forEach(stTemplate -> {
+				final boolean hasChildren = countChildren(stTemplate);
+				if (!hasChildren) return;
+				add(new STTemplateTreeNode(stTemplate));
+			});
 		}
 
 		@Override
@@ -516,6 +520,16 @@ public class STModelNavigator extends JPanel {
 			return actions;
 		}
 
+		private boolean countChildren(nextgen.st.domain.STTemplate stTemplate) {
+
+			long count = presentationModel.db.findAllSTModelByStTemplate(stTemplate.getUuid()).count();
+			if (count != 0L) return true;
+
+			Iterator<nextgen.st.domain.STTemplate> iterator = stTemplate.getChildren().iterator();
+			while (iterator.hasNext())
+				if (countChildren(iterator.next())) return true;
+			return false;
+		}
 	}
 
 	// STTemplateTreeNode
@@ -577,7 +591,7 @@ public class STModelNavigator extends JPanel {
 		STModelTreeNode(nextgen.st.model.STModel model) {
 			super(model, "STGDirectory");
 
-			this.label = presentationModel.tryToFindArgument(getModel(), "name", () -> getModel().getUuid());
+			this.label = presentationModel.tryToFindArgument(getModel(), "name", () -> presentationModel.render(getModel(), 10));
 			this.tooltip = presentationModel.cut(presentationModel.render(getModel()), 100);
 			this.uuid = model.getUuid();
 
@@ -586,7 +600,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			this.label = presentationModel.tryToFindArgument(getModel(), "name", () -> getModel().getUuid());
+			this.label = presentationModel.tryToFindArgument(getModel(), "name", () -> presentationModel.render(getModel(), 10));
 			this.tooltip = presentationModel.cut(presentationModel.render(getModel()), 100);
 			super.nodeChanged();
 		}
@@ -612,6 +626,9 @@ public class STModelNavigator extends JPanel {
 			}));
 			actions.add(newAction("Write To File", actionEvent -> {
 				presentationModel.writeToFile(getModel());
+			}));
+			actions.add(newAction("Delete", actionEvent -> {
+				presentationModel.doLaterInTransaction(transaction -> presentationModel.db.remove(getModel()));
 			}));
 			actions.add(newAction("As NeoModel", actionEvent -> {
 				presentationModel.generateNeoSource(getModel());

@@ -1,6 +1,5 @@
-package nextgen.projects;
+package nextgen.templates;
 
-import nextgen.templates.JavaScriptPatterns;
 import nextgen.templates.javascript.*;
 import nextgen.templates.materialui.MaterialUIComponent;
 import nextgen.templates.materialui.StyleClass;
@@ -8,52 +7,10 @@ import nextgen.utils.StringUtil;
 
 import java.util.Map;
 
-import static nextgen.templates.JavaScriptPatterns.newAction;
-import static nextgen.templates.JavaScriptPatterns.newAgentRequest;
-import static nextgen.templates.JavaScriptPatterns.newArrowFunction;
-import static nextgen.templates.JavaScriptPatterns.newDecorator;
-import static nextgen.templates.JavaScriptPatterns.newFunction;
-import static nextgen.templates.JavaScriptPatterns.newFunctionCall;
-import static nextgen.templates.JavaScriptPatterns.newIf;
-import static nextgen.templates.JavaScriptPatterns.newJsonObject;
-import static nextgen.templates.JavaScriptPatterns.newMethodDeclaration;
-import static nextgen.templates.JavaScriptPatterns.newObservable;
-import static nextgen.templates.JavaScriptPatterns.newProp;
-import static nextgen.templates.JavaScriptPatterns.newReturnStmt;
+import static nextgen.templates.JavaScriptPatterns.*;
 import static nextgen.templates.MaterialUIPatterns.*;
-import static nextgen.templates.MaterialUIPatterns.newStyleClass;
-import static nextgen.templates.MaterialUIPatterns.styleClass;
 import static nextgen.templates.javascript.JavaScriptST.newElement;
-import static nextgen.templates.javascript.JavaScriptST.*;
-import static nextgen.templates.materialui.MaterialUIST.newAvatarElement;
-import static nextgen.templates.materialui.MaterialUIST.newAvatarImport;
-import static nextgen.templates.materialui.MaterialUIST.newBoxElement;
-import static nextgen.templates.materialui.MaterialUIST.newBoxImport;
-import static nextgen.templates.materialui.MaterialUIST.newButtonElement;
-import static nextgen.templates.materialui.MaterialUIST.newButtonImport;
-import static nextgen.templates.materialui.MaterialUIST.newCheckboxImport;
-import static nextgen.templates.materialui.MaterialUIST.newContainerElement;
-import static nextgen.templates.materialui.MaterialUIST.newContainerImport;
-import static nextgen.templates.materialui.MaterialUIST.newFormControlLabelImport;
-import static nextgen.templates.materialui.MaterialUIST.newGridImport;
-import static nextgen.templates.materialui.MaterialUIST.newIconButtonElement;
-import static nextgen.templates.materialui.MaterialUIST.newIconButtonImport;
-import static nextgen.templates.materialui.MaterialUIST.newLinkImport;
-import static nextgen.templates.materialui.MaterialUIST.newLockOutlinedIconElement;
-import static nextgen.templates.materialui.MaterialUIST.newLockOutlinedIconImport;
-import static nextgen.templates.materialui.MaterialUIST.newMenuElement;
-import static nextgen.templates.materialui.MaterialUIST.newMenuIconElement;
-import static nextgen.templates.materialui.MaterialUIST.newMenuIconImport;
-import static nextgen.templates.materialui.MaterialUIST.newMenuImport;
-import static nextgen.templates.materialui.MaterialUIST.newMenuItemElement;
-import static nextgen.templates.materialui.MaterialUIST.newMenuItemImport;
-import static nextgen.templates.materialui.MaterialUIST.newMenuListImport;
-import static nextgen.templates.materialui.MaterialUIST.newTextFieldElement;
-import static nextgen.templates.materialui.MaterialUIST.newTextFieldImport;
-import static nextgen.templates.materialui.MaterialUIST.newTypographyElement;
-import static nextgen.templates.materialui.MaterialUIST.newTypographyImport;
 import static nextgen.utils.StringUtil.*;
-import static nextgen.utils.StringUtil.dq;
 
 public class WebappPatterns {
 
@@ -448,7 +405,8 @@ public class WebappPatterns {
       addPageEvent("handleSubmitForm", logoutPage)
             .addParameters("e")
             .addStatements("e.preventDefault();")
-            .addStatements("this.props.authStore.logout().then(() => this.props.history.replace('/')).catch(e => { console.info(\"" + logoutPage.getName() + ".handleSubmitForm.errors \" + e); });");
+            .addStatements("this.props.authStore.logout().then(() => this.props.history.replace('/')).catch(e => { console.info(\"" + logoutPage
+                  .getName() + ".handleSubmitForm.errors \" + e); });");
       return logoutPage;
    }
 
@@ -479,7 +437,8 @@ public class WebappPatterns {
       addPageEvent("handleSubmitForm", loginPage)
             .addParameters("e")
             .addStatements("e.preventDefault();")
-            .addStatements("this.props.authStore.login().then(() => this.props.history.push('/" + onSuccessLogin + "')).catch(e => { console.info(\"" + loginPage.getName() + ".handleSubmitForm.errors \" + e); });");
+            .addStatements("this.props.authStore.login().then(() => this.props.history.push('/" + onSuccessLogin + "')).catch(e => { console.info(\"" + loginPage
+                  .getName() + ".handleSubmitForm.errors \" + e); });");
       addPageEvent("handleUsernameChange", loginPage)
             .addParameters("e")
             .addStatements("this.props.authStore.setUsername(e.target.value);");
