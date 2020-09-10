@@ -12,6 +12,7 @@ import nextgen.templates.vertx.VertxST;
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static nextgen.templates.java.JavaST.*;
 import static nextgen.templates.domain.RelationType.*;
@@ -426,14 +427,27 @@ public class DomainPatterns extends DomainST {
                         break;
                     }
 
-                    case REF:
-                    case LIST: {
-                        final Entity dst = asEntity(o.getDst());
-                        visited.get(dst).addAccessors(JavaNeo4JEmbeddedST.newIncomingReferenceStream().setName(o.getName()).setType(key.getName()));
-                        break;
-                    }
-                }
-            });
+               case REF:
+               case LIST: {
+                  Entity dst = asEntity(o.getDst());
+                  if (dst == null && o.getSelf(false)) dst = key;
+
+                   IncomingReferenceStream incomingReferenceStream = JavaNeo4JEmbeddedST.newIncomingReferenceStream()
+                         .setName(o.getName())
+                         .setType(key.getName());
+
+                   Optional<Object> found = visited.get(dst)
+                         .getAccessors()
+                         .stream()
+                         .filter(accessor -> accessor.toString().equals(incomingReferenceStream.toString()))
+                         .findAny();
+                   if(!found.isPresent())
+                   visited.get(dst).addAccessors(incomingReferenceStream);
+
+                  break;
+               }
+            }
+         });
 
             factory.addAccessors(factoryAccessors);
 

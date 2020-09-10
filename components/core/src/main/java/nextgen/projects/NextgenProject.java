@@ -154,6 +154,38 @@ public class NextgenProject {
 	 */
 	@org.junit.Test
 	public void generateSTModelDomain() {
+		final Entity stGroupModel = DomainPatterns.newEntity("STGroupModel")
+				.addRelations(DomainPatterns.newStringField("name", true))
+				.addRelations(DomainPatterns.newStringField("uuid"))
+				.addRelations(DomainPatterns.newStringField("delimiter"))
+				.addRelations(DomainPatterns.newStringField("icon"))
+				.addRelations(DomainPatterns.newStringField("tags"))
+				.addRelations(DomainPatterns.newOneToMany("templates", DomainPatterns.newEntity("STTemplate")
+						.addRelations(DomainPatterns.newStringField("uuid"))
+						.addRelations(DomainPatterns.newStringField("name", true))
+						.addRelations(DomainPatterns.newStringField("text"))
+						.addRelations(DomainPatterns.newOneToManyString("implements"))
+						.addRelations(DomainPatterns.newOneToMany("parameters", DomainPatterns.newEntity("STParameter")
+								.addRelations(DomainPatterns.newStringField("uuid"))
+								.addRelations(DomainPatterns.newStringField("name", true))
+								.addRelations(DomainPatterns.newEnumField("type", DomainPatterns.newEnum("STParameterType", "SINGLE,LIST,KVLIST")))
+								.addRelations(DomainPatterns.newOneToMany("keys", DomainPatterns.newEntity("STParameterKey")
+										.addRelations(DomainPatterns.newStringField("uuid"))
+										.addRelations(DomainPatterns.newStringField("name"))
+										.addRelations(DomainPatterns.newStringField("argumentType"))))
+								.addRelations(DomainPatterns.newStringField("argumentType"))))
+						.addRelations(DomainPatterns.newOneToManySelf("children"))))
+				.addRelations(DomainPatterns.newOneToMany("interfaces", DomainPatterns.newEntity("STInterface")
+						.addRelations(DomainPatterns.newStringField("uuid"))
+						.addRelations(DomainPatterns.newStringField("name"))))
+				.addRelations(DomainPatterns.newOneToMany("enums", DomainPatterns.newEntity("STEnum")
+						.addRelations(DomainPatterns.newStringField("uuid"))
+						.addRelations(DomainPatterns.newStringField("name", true))
+						.addRelations(DomainPatterns.newOneToMany("values", DomainPatterns.newEntity("STEnumValue")
+								.addRelations(DomainPatterns.newStringField("uuid"))
+								.addRelations(DomainPatterns.newStringField("name", true))
+								.addRelations(DomainPatterns.newStringField("lexical"))))));
+
 		final Entity stValueNeo = DomainPatterns.newEntity("STValue")
 				.setObservable(true)
 				.addRelations(DomainPatterns.newStringField("uuid"))
@@ -203,6 +235,7 @@ public class NextgenProject {
 				.addRelations(DomainPatterns.newOneToMany("scripts", script));
 
 		final Domain domain = DomainPatterns.newDomain("STModel")
+				.addEntities(stGroupModel)
 				.addEntities(stModelNeo)
 				.addEntities(script)
 				.addEntities(project);
