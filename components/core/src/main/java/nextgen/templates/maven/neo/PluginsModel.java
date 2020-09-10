@@ -42,6 +42,19 @@ public class PluginsModel {
 		this.stModel = this.db.findOrCreateSTModelByUuid(uuid);
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		PluginsModel that = (PluginsModel) o;
+		return stModel.equals(that.stModel);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(stModel);
+	}
+
 	public String getUuid() {
 		return stModel.getUuid();
 	}

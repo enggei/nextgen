@@ -105,7 +105,7 @@ public class STTemplateNavigator extends JPanel {
 			}
 		});
 
-		setPreferredSize(new Dimension(450, 500));
+		setPreferredSize(new Dimension(600, 500));
 		add(new JScrollPane(tree), BorderLayout.CENTER);
 
 		org.greenrobot.eventbus.EventBus.getDefault().register(this);
@@ -315,7 +315,10 @@ public class STTemplateNavigator extends JPanel {
 				});
 			}));
 			actions.add(newAction("Generate All", actionEvent -> {
-				SwingUtilities.invokeLater(() -> getChildren(STGroupTreeNode.class).forEach(stGroupTreeNode -> presentationModel.generateSTGroup(stGroupTreeNode.getModel())));
+				SwingUtilities.invokeLater(() -> getChildren(STGroupTreeNode.class).forEach(stGroupTreeNode -> presentationModel.generateSTGroup(stGroupTreeNode.getModel(), false)));
+			}));
+			actions.add(newAction("Generate Group and Neo models", actionEvent -> {
+				SwingUtilities.invokeLater(() -> getChildren(STGroupTreeNode.class).forEach(stGroupTreeNode -> presentationModel.generateSTGroup(stGroupTreeNode.getModel(), true)));
 			}));
 			actions.add(newAction("Expand", actionEvent -> {
 				SwingUtilities.invokeLater(() -> expandTreeNodesRecursive(getThisPath(), true));
@@ -381,8 +384,8 @@ public class STTemplateNavigator extends JPanel {
 						});
 					});
 			}));
-			actions.add(newAction("Generate", actionEvent -> {
-				presentationModel.generateSTGroup(getModel());
+			actions.add(newAction("Generate Group", actionEvent -> {
+				presentationModel.generateSTGroup(getModel(), false);
 			}));
 			actions.add(newAction("New template", actionEvent -> {
 				SwingUtil.getInputFromUser(tree, "Name").ifPresent(name ->
@@ -468,6 +471,9 @@ public class STTemplateNavigator extends JPanel {
 							treeModel.nodeChanged(STGroupTreeNode.this);
 					});
 				});
+			}));
+			actions.add(newAction("Generate Group and Neo models", actionEvent -> {
+				presentationModel.generateSTGroup(getModel(), true);
 			}));
 			actions.add(newAction("Collapse", actionEvent -> {
 				SwingUtilities.invokeLater(() -> expandTreeNodesRecursive(getThisPath(), false));

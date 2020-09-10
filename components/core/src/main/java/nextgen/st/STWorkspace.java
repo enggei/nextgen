@@ -15,7 +15,7 @@ public class STWorkspace extends JTabbedPane {
 
     public STWorkspace(STAppPresentationModel presentationModel) {
         this.presentationModel = presentationModel;
-        setPreferredSize(new Dimension(1024 , 768));
+        setSize(new Dimension(1200, 1200));
         findCanvas();
         org.greenrobot.eventbus.EventBus.getDefault().register(this);
     }
@@ -47,7 +47,7 @@ public class STWorkspace extends JTabbedPane {
                 return Optional.of((STModelCanvas) tabComponentAt);
         }
 
-        final STModelCanvas stModelCanvas = new STModelCanvas(UIManager.getColor("Panel.background"), new Dimension(800, 600), presentationModel);
+        final STModelCanvas stModelCanvas = new STModelCanvas(UIManager.getColor("Panel.background"), new Dimension(1024, 1024), presentationModel);
         addPane("Canvas", stModelCanvas);
         return Optional.of(stModelCanvas);
     }

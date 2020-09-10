@@ -125,7 +125,7 @@ public class STEditor extends JPanel {
 
     private void generate() {
         commit();
-        presentationModel.generateSTGroup(stGroupModel);
+        presentationModel.generateSTGroup(stGroupModel,true);
     }
 
     private Action newAction(String name, Consumer<ActionEvent> consumer) {

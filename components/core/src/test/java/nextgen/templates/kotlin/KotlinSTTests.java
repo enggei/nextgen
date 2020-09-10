@@ -91,391 +91,391 @@ public class KotlinSTTests {
 
 	@org.junit.Test
 	public void testArrayEqualsExpression() {
-		System.out.println("\n--- TEST ArrayEqualsExpression:\n" + newArrayEqualsExpression());
-	} 
+		System.out.println("ArrayEqualsExpression:\n" + newArrayEqualsExpression());
+	}  
 
 	@org.junit.Test
 	public void testAssertNotNullExpression() {
-		System.out.println("\n--- TEST AssertNotNullExpression:\n" + newAssertNotNullExpression());
-	} 
+		System.out.println("AssertNotNullExpression:\n" + newAssertNotNullExpression());
+	}  
 
 	@org.junit.Test
 	public void testAssignExpression() {
-		System.out.println("\n--- TEST AssignExpression:\n" + newAssignExpression());
-	} 
+		System.out.println("AssignExpression:\n" + newAssignExpression());
+	}  
 
 	@org.junit.Test
 	public void testCastExpression() {
-		System.out.println("\n--- TEST CastExpression:\n" + newCastExpression());
-	} 
+		System.out.println("CastExpression:\n" + newCastExpression());
+	}  
 
 	@org.junit.Test
 	public void testComparisonExpression() {
-		System.out.println("\n--- TEST ComparisonExpression:\n" + newComparisonExpression());
-	} 
+		System.out.println("ComparisonExpression:\n" + newComparisonExpression());
+	}  
 
 	@org.junit.Test
 	public void testConstructorCallExpression() {
-		System.out.println("\n--- TEST ConstructorCallExpression:\n" + newConstructorCallExpression());
-	} 
+		System.out.println("ConstructorCallExpression:\n" + newConstructorCallExpression());
+	}  
 
 	@org.junit.Test
 	public void testEscapedLiteralExpression() {
-		System.out.println("\n--- TEST EscapedLiteralExpression:\n" + newEscapedLiteralExpression());
-	} 
+		System.out.println("EscapedLiteralExpression:\n" + newEscapedLiteralExpression());
+	}  
 
 	@org.junit.Test
 	public void testFunctionCallExpression() {
-		System.out.println("\n--- TEST FunctionCallExpression:\n" + newFunctionCallExpression());
-	} 
+		System.out.println("FunctionCallExpression:\n" + newFunctionCallExpression());
+	}  
 
 	@org.junit.Test
 	public void testGroupedExpression() {
-		System.out.println("\n--- TEST GroupedExpression:\n" + newGroupedExpression());
-	} 
+		System.out.println("GroupedExpression:\n" + newGroupedExpression());
+	}  
 
 	@org.junit.Test
 	public void testIfExpression() {
-		System.out.println("\n--- TEST IfExpression:\n" + newIfExpression());
-	} 
+		System.out.println("IfExpression:\n" + newIfExpression());
+	}  
 
 	@org.junit.Test
 	public void testLiteralExpression() {
-		System.out.println("\n--- TEST LiteralExpression:\n" + newLiteralExpression());
-	} 
+		System.out.println("LiteralExpression:\n" + newLiteralExpression());
+	}  
 
 	@org.junit.Test
 	public void testLogicalExpression() {
-		System.out.println("\n--- TEST LogicalExpression:\n" + newLogicalExpression());
-	} 
+		System.out.println("LogicalExpression:\n" + newLogicalExpression());
+	}  
 
 	@org.junit.Test
 	public void testNullExpression() {
-		System.out.println("\n--- TEST NullExpression:\n" + newNullExpression());
-	} 
+		System.out.println("NullExpression:\n" + newNullExpression());
+	}  
 
 	@org.junit.Test
 	public void testObjectExpression() {
-		System.out.println("\n--- TEST ObjectExpression:\n" + newObjectExpression());
-	} 
+		System.out.println("ObjectExpression:\n" + newObjectExpression());
+	}  
 
 	@org.junit.Test
 	public void testPairExpression() {
-		System.out.println("\n--- TEST PairExpression:\n" + newPairExpression());
-	} 
+		System.out.println("PairExpression:\n" + newPairExpression());
+	}  
 
 	@org.junit.Test
 	public void testPropertyAccessorExpression() {
-		System.out.println("\n--- TEST PropertyAccessorExpression:\n" + newPropertyAccessorExpression());
-	} 
+		System.out.println("PropertyAccessorExpression:\n" + newPropertyAccessorExpression());
+	}  
 
 	@org.junit.Test
 	public void testRawStringExpression() {
-		System.out.println("\n--- TEST RawStringExpression:\n" + newRawStringExpression());
-	} 
+		System.out.println("RawStringExpression:\n" + newRawStringExpression());
+	}  
 
 	@org.junit.Test
 	public void testReferenceExpression() {
-		System.out.println("\n--- TEST ReferenceExpression:\n" + newReferenceExpression());
-	} 
+		System.out.println("ReferenceExpression:\n" + newReferenceExpression());
+	}  
 
 	@org.junit.Test
 	public void testScopeExpression() {
-		System.out.println("\n--- TEST ScopeExpression:\n" + newScopeExpression());
-	} 
+		System.out.println("ScopeExpression:\n" + newScopeExpression());
+	}  
 
 	@org.junit.Test
 	public void testStringValueExpression() {
-		System.out.println("\n--- TEST StringValueExpression:\n" + newStringValueExpression());
-	} 
+		System.out.println("StringValueExpression:\n" + newStringValueExpression());
+	}  
 
 	@org.junit.Test
 	public void testThisExpression() {
-		System.out.println("\n--- TEST ThisExpression:\n" + newThisExpression());
-	} 
+		System.out.println("ThisExpression:\n" + newThisExpression());
+	}  
 
 	@org.junit.Test
 	public void testAnnotationDeclaration() {
-		System.out.println("\n--- TEST AnnotationDeclaration:\n" + newAnnotationDeclaration());
-	} 
+		System.out.println("AnnotationDeclaration:\n" + newAnnotationDeclaration());
+	}  
 
 	@org.junit.Test
 	public void testClassDeclaration() {
-		System.out.println("\n--- TEST ClassDeclaration:\n" + newClassDeclaration());
-	} 
+		System.out.println("ClassDeclaration:\n" + newClassDeclaration());
+	}  
 
 	@org.junit.Test
 	public void testCompanionObject() {
-		System.out.println("\n--- TEST CompanionObject:\n" + newCompanionObject());
-	} 
+		System.out.println("CompanionObject:\n" + newCompanionObject());
+	}  
 
 	@org.junit.Test
 	public void testOverrideEquals() {
-		System.out.println("\n--- TEST OverrideEquals:\n" + newOverrideEquals());
-	} 
+		System.out.println("OverrideEquals:\n" + newOverrideEquals());
+	}  
 
 	@org.junit.Test
 	public void testOverrideHashCode() {
-		System.out.println("\n--- TEST OverrideHashCode:\n" + newOverrideHashCode());
-	} 
+		System.out.println("OverrideHashCode:\n" + newOverrideHashCode());
+	}  
 
 	@org.junit.Test
 	public void testOverrideToString() {
-		System.out.println("\n--- TEST OverrideToString:\n" + newOverrideToString());
-	} 
+		System.out.println("OverrideToString:\n" + newOverrideToString());
+	}  
 
 	@org.junit.Test
 	public void testDataClassDeclaration() {
-		System.out.println("\n--- TEST DataClassDeclaration:\n" + newDataClassDeclaration());
-	} 
+		System.out.println("DataClassDeclaration:\n" + newDataClassDeclaration());
+	}  
 
 	@org.junit.Test
 	public void testEnumClassDeclaration() {
-		System.out.println("\n--- TEST EnumClassDeclaration:\n" + newEnumClassDeclaration());
-	} 
+		System.out.println("EnumClassDeclaration:\n" + newEnumClassDeclaration());
+	}  
 
 	@org.junit.Test
 	public void testEnumField() {
-		System.out.println("\n--- TEST EnumField:\n" + newEnumField());
-	} 
+		System.out.println("EnumField:\n" + newEnumField());
+	}  
 
 	@org.junit.Test
 	public void testExtendingClass() {
-		System.out.println("\n--- TEST ExtendingClass:\n" + newExtendingClass());
-	} 
+		System.out.println("ExtendingClass:\n" + newExtendingClass());
+	}  
 
 	@org.junit.Test
 	public void testFunctionDeclaration() {
-		System.out.println("\n--- TEST FunctionDeclaration:\n" + newFunctionDeclaration());
-	} 
+		System.out.println("FunctionDeclaration:\n" + newFunctionDeclaration());
+	}  
 
 	@org.junit.Test
 	public void testFunctionParam() {
-		System.out.println("\n--- TEST FunctionParam:\n" + newFunctionParam());
-	} 
+		System.out.println("FunctionParam:\n" + newFunctionParam());
+	}  
 
 	@org.junit.Test
 	public void testImplementingInterface() {
-		System.out.println("\n--- TEST ImplementingInterface:\n" + newImplementingInterface());
-	} 
+		System.out.println("ImplementingInterface:\n" + newImplementingInterface());
+	}  
 
 	@org.junit.Test
 	public void testInterfaceDeclaration() {
-		System.out.println("\n--- TEST InterfaceDeclaration:\n" + newInterfaceDeclaration());
-	} 
+		System.out.println("InterfaceDeclaration:\n" + newInterfaceDeclaration());
+	}  
 
 	@org.junit.Test
 	public void testObjectDeclaration() {
-		System.out.println("\n--- TEST ObjectDeclaration:\n" + newObjectDeclaration());
-	} 
+		System.out.println("ObjectDeclaration:\n" + newObjectDeclaration());
+	}  
 
 	@org.junit.Test
 	public void testPackageDeclaration() {
-		System.out.println("\n--- TEST PackageDeclaration:\n" + newPackageDeclaration());
-	} 
+		System.out.println("PackageDeclaration:\n" + newPackageDeclaration());
+	}  
 
 	@org.junit.Test
 	public void testParameterDeclaration() {
-		System.out.println("\n--- TEST ParameterDeclaration:\n" + newParameterDeclaration());
-	} 
+		System.out.println("ParameterDeclaration:\n" + newParameterDeclaration());
+	}  
 
 	@org.junit.Test
 	public void testPropertyDeclaration() {
-		System.out.println("\n--- TEST PropertyDeclaration:\n" + newPropertyDeclaration());
-	} 
+		System.out.println("PropertyDeclaration:\n" + newPropertyDeclaration());
+	}  
 
 	@org.junit.Test
 	public void testKotlinStringTemplateExpression() {
-		System.out.println("\n--- TEST KotlinStringTemplateExpression:\n" + newKotlinStringTemplateExpression());
-	} 
+		System.out.println("KotlinStringTemplateExpression:\n" + newKotlinStringTemplateExpression());
+	}  
 
 	@org.junit.Test
 	public void testKotlinStringTemplateSingleValue() {
-		System.out.println("\n--- TEST KotlinStringTemplateSingleValue:\n" + newKotlinStringTemplateSingleValue());
-	} 
+		System.out.println("KotlinStringTemplateSingleValue:\n" + newKotlinStringTemplateSingleValue());
+	}  
 
 	@org.junit.Test
 	public void testCommentBlock() {
-		System.out.println("\n--- TEST CommentBlock:\n" + newCommentBlock());
-	} 
+		System.out.println("CommentBlock:\n" + newCommentBlock());
+	}  
 
 	@org.junit.Test
 	public void testIfStatement() {
-		System.out.println("\n--- TEST IfStatement:\n" + newIfStatement());
-	} 
+		System.out.println("IfStatement:\n" + newIfStatement());
+	}  
 
 	@org.junit.Test
 	public void testImportStatement() {
-		System.out.println("\n--- TEST ImportStatement:\n" + newImportStatement());
-	} 
+		System.out.println("ImportStatement:\n" + newImportStatement());
+	}  
 
 	@org.junit.Test
 	public void testReturnStatement() {
-		System.out.println("\n--- TEST ReturnStatement:\n" + newReturnStatement());
-	} 
+		System.out.println("ReturnStatement:\n" + newReturnStatement());
+	}  
 
 	@org.junit.Test
 	public void testSingleLineComment() {
-		System.out.println("\n--- TEST SingleLineComment:\n" + newSingleLineComment());
-	} 
+		System.out.println("SingleLineComment:\n" + newSingleLineComment());
+	}  
 
 	@org.junit.Test
 	public void testTodoStatement() {
-		System.out.println("\n--- TEST TodoStatement:\n" + newTodoStatement());
-	} 
+		System.out.println("TodoStatement:\n" + newTodoStatement());
+	}  
 
 	@org.junit.Test
 	public void testVarDeclarationStatement() {
-		System.out.println("\n--- TEST VarDeclarationStatement:\n" + newVarDeclarationStatement());
-	} 
+		System.out.println("VarDeclarationStatement:\n" + newVarDeclarationStatement());
+	}  
 
 	@org.junit.Test
 	public void testArrayInitializer() {
-		System.out.println("\n--- TEST ArrayInitializer:\n" + newArrayInitializer());
-	} 
+		System.out.println("ArrayInitializer:\n" + newArrayInitializer());
+	}  
 
 	@org.junit.Test
 	public void testEmptyArrayInitializer() {
-		System.out.println("\n--- TEST EmptyArrayInitializer:\n" + newEmptyArrayInitializer());
-	} 
+		System.out.println("EmptyArrayInitializer:\n" + newEmptyArrayInitializer());
+	}  
 
 	@org.junit.Test
 	public void testEmptyMapInitializer() {
-		System.out.println("\n--- TEST EmptyMapInitializer:\n" + newEmptyMapInitializer());
-	} 
+		System.out.println("EmptyMapInitializer:\n" + newEmptyMapInitializer());
+	}  
 
 	@org.junit.Test
 	public void testListInitializer() {
-		System.out.println("\n--- TEST ListInitializer:\n" + newListInitializer());
-	} 
+		System.out.println("ListInitializer:\n" + newListInitializer());
+	}  
 
 	@org.junit.Test
 	public void testMapInitializer() {
-		System.out.println("\n--- TEST MapInitializer:\n" + newMapInitializer());
-	} 
+		System.out.println("MapInitializer:\n" + newMapInitializer());
+	}  
 
 	@org.junit.Test
 	public void testMutableListInitializer() {
-		System.out.println("\n--- TEST MutableListInitializer:\n" + newMutableListInitializer());
-	} 
+		System.out.println("MutableListInitializer:\n" + newMutableListInitializer());
+	}  
 
 	@org.junit.Test
 	public void testMutableMapInitializer() {
-		System.out.println("\n--- TEST MutableMapInitializer:\n" + newMutableMapInitializer());
-	} 
+		System.out.println("MutableMapInitializer:\n" + newMutableMapInitializer());
+	}  
 
 	@org.junit.Test
 	public void testMutableSetInitializer() {
-		System.out.println("\n--- TEST MutableSetInitializer:\n" + newMutableSetInitializer());
-	} 
+		System.out.println("MutableSetInitializer:\n" + newMutableSetInitializer());
+	}  
 
 	@org.junit.Test
 	public void testSetInitializer() {
-		System.out.println("\n--- TEST SetInitializer:\n" + newSetInitializer());
-	} 
+		System.out.println("SetInitializer:\n" + newSetInitializer());
+	}  
 
 	@org.junit.Test
 	public void testKotlinFile() {
-		System.out.println("\n--- TEST KotlinFile:\n" + newKotlinFile());
-	} 
+		System.out.println("KotlinFile:\n" + newKotlinFile());
+	}  
 
 	@org.junit.Test
 	public void testAnyType() {
-		System.out.println("\n--- TEST AnyType:\n" + newAnyType());
-	} 
+		System.out.println("AnyType:\n" + newAnyType());
+	}  
 
 	@org.junit.Test
 	public void testArrayType() {
-		System.out.println("\n--- TEST ArrayType:\n" + newArrayType());
-	} 
+		System.out.println("ArrayType:\n" + newArrayType());
+	}  
 
 	@org.junit.Test
 	public void testBooleanType() {
-		System.out.println("\n--- TEST BooleanType:\n" + newBooleanType());
-	} 
+		System.out.println("BooleanType:\n" + newBooleanType());
+	}  
 
 	@org.junit.Test
 	public void testDoubleType() {
-		System.out.println("\n--- TEST DoubleType:\n" + newDoubleType());
-	} 
+		System.out.println("DoubleType:\n" + newDoubleType());
+	}  
 
 	@org.junit.Test
 	public void testFloatType() {
-		System.out.println("\n--- TEST FloatType:\n" + newFloatType());
-	} 
+		System.out.println("FloatType:\n" + newFloatType());
+	}  
 
 	@org.junit.Test
 	public void testIntType() {
-		System.out.println("\n--- TEST IntType:\n" + newIntType());
-	} 
+		System.out.println("IntType:\n" + newIntType());
+	}  
 
 	@org.junit.Test
 	public void testListType() {
-		System.out.println("\n--- TEST ListType:\n" + newListType());
-	} 
+		System.out.println("ListType:\n" + newListType());
+	}  
 
 	@org.junit.Test
 	public void testLongType() {
-		System.out.println("\n--- TEST LongType:\n" + newLongType());
-	} 
+		System.out.println("LongType:\n" + newLongType());
+	}  
 
 	@org.junit.Test
 	public void testMapType() {
-		System.out.println("\n--- TEST MapType:\n" + newMapType());
-	} 
+		System.out.println("MapType:\n" + newMapType());
+	}  
 
 	@org.junit.Test
 	public void testMutableListType() {
-		System.out.println("\n--- TEST MutableListType:\n" + newMutableListType());
-	} 
+		System.out.println("MutableListType:\n" + newMutableListType());
+	}  
 
 	@org.junit.Test
 	public void testMutableMapType() {
-		System.out.println("\n--- TEST MutableMapType:\n" + newMutableMapType());
-	} 
+		System.out.println("MutableMapType:\n" + newMutableMapType());
+	}  
 
 	@org.junit.Test
 	public void testMutableSetType() {
-		System.out.println("\n--- TEST MutableSetType:\n" + newMutableSetType());
-	} 
+		System.out.println("MutableSetType:\n" + newMutableSetType());
+	}  
 
 	@org.junit.Test
 	public void testNamedType() {
-		System.out.println("\n--- TEST NamedType:\n" + newNamedType());
-	} 
+		System.out.println("NamedType:\n" + newNamedType());
+	}  
 
 	@org.junit.Test
 	public void testNullableType() {
-		System.out.println("\n--- TEST NullableType:\n" + newNullableType());
-	} 
+		System.out.println("NullableType:\n" + newNullableType());
+	}  
 
 	@org.junit.Test
 	public void testPairType() {
-		System.out.println("\n--- TEST PairType:\n" + newPairType());
-	} 
+		System.out.println("PairType:\n" + newPairType());
+	}  
 
 	@org.junit.Test
 	public void testSetType() {
-		System.out.println("\n--- TEST SetType:\n" + newSetType());
-	} 
+		System.out.println("SetType:\n" + newSetType());
+	}  
 
 	@org.junit.Test
 	public void testStarType() {
-		System.out.println("\n--- TEST StarType:\n" + newStarType());
-	} 
+		System.out.println("StarType:\n" + newStarType());
+	}  
 
 	@org.junit.Test
 	public void testStringType() {
-		System.out.println("\n--- TEST StringType:\n" + newStringType());
-	} 
+		System.out.println("StringType:\n" + newStringType());
+	}  
 
 	@org.junit.Test
 	public void testTemplateType() {
-		System.out.println("\n--- TEST TemplateType:\n" + newTemplateType());
-	} 
+		System.out.println("TemplateType:\n" + newTemplateType());
+	}  
 
 	@org.junit.Test
 	public void testUnitType() {
-		System.out.println("\n--- TEST UnitType:\n" + newUnitType());
-	} 
+		System.out.println("UnitType:\n" + newUnitType());
+	}  
 } 

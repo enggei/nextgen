@@ -38,6 +38,7 @@ public class STApp extends JFrame {
       contentPanel.add(navigator, BorderLayout.WEST);
       contentPanel.add(workspace, BorderLayout.CENTER);
       contentPanel.add(stModelNavigator, BorderLayout.EAST);
+      contentPanel.setSize(new Dimension(1600, 1200));
       add(contentPanel, BorderLayout.CENTER);
 
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -63,7 +64,7 @@ public class STApp extends JFrame {
       );
 
       com.formdev.flatlaf.FlatDarculaLaf.install();
-      SwingUtil.printSwingDefaults(System.out);
+      //SwingUtil.printSwingDefaults(System.out);
       UIManager.put("TextField.font", new Font("InputMono", Font.PLAIN, UIManager.getFont("Tree.font").getSize()));
       UIManager.put("TextArea.font", new Font("InputMono", Font.PLAIN, UIManager.getFont("Tree.font").getSize()));
 

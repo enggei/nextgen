@@ -266,7 +266,7 @@ public class STAppPresentationModel {
                   .forEach(stArgument -> consumer.accept(stArgument, stParameter)));
    }
 
-   void generateSTGroup(STGroupModel stGroupModel) {
+   void generateSTGroup(STGroupModel stGroupModel, boolean generateNeo) {
 
       final STGParseResult parseResult = STParser.parse(toSTGroup(stGroupModel));
 
@@ -277,13 +277,17 @@ public class STAppPresentationModel {
                      .equals(stGroupModel
                            .getUuid()))
                .findFirst();
+         STGenerator stGenerator = new STGenerator(generatorSTGroup);
          if (found.isPresent()) {
             log.info("generating stGroup " + stGroupModel.getName() + " to " + generatorSTGDirectory
                   .getOutputPath() + " " + generatorSTGDirectory
                   .getOutputPackage());
-            new STGenerator(generatorSTGroup)
+            stGenerator
                   .generateSTGroup(stGroupModel, generatorSTGDirectory.getOutputPackage(), generatorSTGDirectory
                         .getOutputPath());
+            if (generateNeo)
+               stGenerator.generateNeoGroup(stGroupModel, generatorSTGDirectory.getOutputPackage(), generatorSTGDirectory
+                     .getOutputPath());
          } else {
             stgDirectories
                   .stream()
@@ -296,9 +300,11 @@ public class STAppPresentationModel {
                      log.info("generating stGroup " + stGroupModel.getName() + " to " + directory
                            .getOutputPath() + " " + directory
                            .getOutputPackage());
-                     new STGenerator(generatorSTGroup)
+                     stGenerator
                            .generateSTGroup(stGroupModel, directory.getOutputPackage(), directory
                                  .getOutputPath());
+                     if (generateNeo) stGenerator.generateNeoGroup(stGroupModel, directory.getOutputPackage(), directory
+                           .getOutputPath());
                   });
          }
       } else {
@@ -1162,7 +1168,7 @@ public class STAppPresentationModel {
    }
 
    public void runJUnit(STModel model, STTemplate stTemplate, STModel project) {
-      if (stTemplate.getName().equals("ProjectGenerator")) {
+      if (stTemplate.getName().equals("ProjectGenerator") || stTemplate.getName().equals("Project")) {
          doInTransaction(transaction -> {
 
             final MavenNeo mavenDB = new MavenNeo(db);
@@ -1179,9 +1185,10 @@ public class STAppPresentationModel {
 
             projectModel.getGenerators()
                   .map(stValue -> mavenDB.newProjectGeneratorModel(stValue.getStModel()))
-                  .forEach(projectGeneratorModel -> testRunner.addGenerators(render(projectGeneratorModel.getName()), projectGeneratorModel
-                        .getUuid()
-                        .equals(generatorModel.getUuid())));
+                  .forEach(projectGeneratorModel -> testRunner.addGenerators(render(projectGeneratorModel.getName()),
+                        !stTemplate.getName().equals("ProjectGenerator") || projectGeneratorModel.getUuid()
+                              .equals(generatorModel.getUuid())
+                  ));
             try {
 
                final Class<?> aClass = CompilerUtils.CACHED_COMPILER.loadFromJava(testRunner.getPackageName() + "." + testRunner
@@ -1189,12 +1196,13 @@ public class STAppPresentationModel {
 
                final Method main = aClass.getDeclaredMethod("main", String[].class);
                String[] params = null;
-               main.invoke(null,(Object) params);
+               main.invoke(null, (Object) params);
 
             } catch (Throwable t) {
                t.printStackTrace();
             }
          });
+
       }
    }
 

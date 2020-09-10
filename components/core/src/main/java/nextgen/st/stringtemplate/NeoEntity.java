@@ -267,6 +267,19 @@ public class NeoEntity {
 				"		this.stModel = this.db.findOrCreateSTModelByUuid(uuid);\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	@Override\n" + 
+				"	public boolean equals(Object o) {\n" + 
+				"		if (this == o) return true;\n" + 
+				"		if (o == null || getClass() != o.getClass()) return false;\n" + 
+				"		~name;format=\"capitalize\"~ that = (~name;format=\"capitalize\"~) o;\n" + 
+				"		return stModel.equals(that.stModel);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	@Override\n" + 
+				"	public int hashCode() {\n" + 
+				"		return java.util.Objects.hash(stModel);\n" + 
+				"	}\n" + 
+				"\n" + 
 				"	public String getUuid() {\n" + 
 				"		return stModel.getUuid();\n" + 
 				"	}\n" + 

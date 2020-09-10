@@ -178,6 +178,19 @@ public class ~name;format="capitalize"~ {
 		this.stModel = this.db.findOrCreateSTModelByUuid(uuid);
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		~name;format="capitalize"~ that = (~name;format="capitalize"~) o;
+		return stModel.equals(that.stModel);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(stModel);
+	}
+
 	public String getUuid() {
 		return stModel.getUuid();
 	}
