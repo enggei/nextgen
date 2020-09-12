@@ -236,6 +236,13 @@ public class STModelEditor extends JPanel {
       this.currentTreeNode = selectedTreeNode;
    }
 
+   void setText(String text) {
+      txtEditor.setText(text);
+      txtEditor.setCaretPosition(0);
+      txtEditor.setEditable(false);
+      this.currentTreeNode = null;
+   }
+
    public STModel getModel() {
       return stModel;
    }

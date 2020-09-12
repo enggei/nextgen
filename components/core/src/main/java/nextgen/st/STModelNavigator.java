@@ -239,6 +239,10 @@ public class STModelNavigator extends JPanel {
 			org.greenrobot.eventbus.EventBus.getDefault().register(this);
 		}
 
+		STValueTreeNode thisNode() {
+			return this;
+		}
+
 		@Override
 		public void nodeChanged() {
 			this.label = getModel().getValue() == null || getModel().getValue().trim().length() == 0 ? "[EMPTY]" : getModel().getValue();
@@ -286,6 +290,10 @@ public class STModelNavigator extends JPanel {
 
 		}
 
+		ProjectTreeNode thisNode() {
+			return this;
+		}
+
 		@Override
 		public void nodeChanged() {
 			this.label = getModel().getName();
@@ -312,6 +320,10 @@ public class STModelNavigator extends JPanel {
 
 			presentationModel.db.findAllProject().forEach(project -> add(new ProjectTreeNode(project)));
 			org.greenrobot.eventbus.EventBus.getDefault().register(this);
+		}
+
+		ProjectsRootNode thisNode() {
+			return this;
 		}
 
 		@Override
@@ -353,6 +365,10 @@ public class STModelNavigator extends JPanel {
 			});
 		}
 
+		RootNode thisNode() {
+			return this;
+		}
+
 		@Override
 		public void nodeChanged() {
 			this.label = getModel();
@@ -363,6 +379,9 @@ public class STModelNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
+			actions.add(newAction("Undo", actionEvent -> {
+				presentationModel.undoLast();
+			}));
 			return actions;
 		}
 
@@ -379,6 +398,10 @@ public class STModelNavigator extends JPanel {
 
 			presentationModel.db.findAllScript().forEach(script -> add(new ScriptTreeNode(script)));
 			org.greenrobot.eventbus.EventBus.getDefault().register(this);
+		}
+
+		ScriptsRootNode thisNode() {
+			return this;
 		}
 
 		@Override
@@ -414,6 +437,10 @@ public class STModelNavigator extends JPanel {
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
+		}
+
+		ScriptTreeNode thisNode() {
+			return this;
 		}
 
 		@Override
@@ -452,6 +479,10 @@ public class STModelNavigator extends JPanel {
 				.sorted((o1, o2) -> o1.getValue().compareToIgnoreCase(o2.getValue()))
 				.forEach(stValue -> add(new STValueTreeNode(stValue)));
 			org.greenrobot.eventbus.EventBus.getDefault().register(this);
+		}
+
+		STValuesRootNode thisNode() {
+			return this;
 		}
 
 		@Override
@@ -507,6 +538,10 @@ public class STModelNavigator extends JPanel {
 			});
 		}
 
+		STGroupModelTreeNode thisNode() {
+			return this;
+		}
+
 		@Override
 		public void nodeChanged() {
 			this.label = getModel().getName();
@@ -547,6 +582,10 @@ public class STModelNavigator extends JPanel {
 			presentationModel.db.findAllSTModelByStTemplate(model.uuid()).forEach(stModel -> add(new STModelTreeNode(stModel)));
 			model.getChildren().forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
 			org.greenrobot.eventbus.EventBus.getDefault().register(this);
+		}
+
+		STTemplateTreeNode thisNode() {
+			return this;
 		}
 
 		@Override
@@ -596,6 +635,10 @@ public class STModelNavigator extends JPanel {
 			this.uuid = model.getUuid();
 
 			org.greenrobot.eventbus.EventBus.getDefault().register(this);
+		}
+
+		STModelTreeNode thisNode() {
+			return this;
 		}
 
 		@Override
@@ -656,6 +699,10 @@ public class STModelNavigator extends JPanel {
 			presentationModel.metaDb.findAllMetaDomain().forEach(metaDomain -> add(new MetaDomainTreeNode(metaDomain)));
 		}
 
+		DomainsTreeNode thisNode() {
+			return this;
+		}
+
 		@Override
 		public void nodeChanged() {
 			this.label = getModel().toString();
@@ -681,6 +728,10 @@ public class STModelNavigator extends JPanel {
 			this.tooltip = "";
 
 			getModel().getRoots().forEach(metaEntity -> add(new MetaEntityTreeNode(metaEntity)));
+		}
+
+		MetaDomainTreeNode thisNode() {
+			return this;
 		}
 
 		@Override
@@ -719,6 +770,10 @@ public class STModelNavigator extends JPanel {
 			});
 		}
 
+		MetaEntityTreeNode thisNode() {
+			return this;
+		}
+
 		@Override
 		public void nodeChanged() {
 			this.label = getModel().getName();
@@ -744,6 +799,10 @@ public class STModelNavigator extends JPanel {
 			this.tooltip = "";
 
 			getModel().getProperties().forEach(metaProperty -> add(new MetaPropertyTreeNode(metaProperty)));
+		}
+
+		MetaRelationTreeNode thisNode() {
+			return this;
 		}
 
 		@Override
@@ -772,6 +831,10 @@ public class STModelNavigator extends JPanel {
 
 		}
 
+		DomainEntityTreeNode thisNode() {
+			return this;
+		}
+
 		@Override
 		public void nodeChanged() {
 			this.label = getModel().toString();
@@ -796,6 +859,10 @@ public class STModelNavigator extends JPanel {
 			this.label = getModel().getName();
 			this.tooltip = "";
 
+		}
+
+		MetaPropertyTreeNode thisNode() {
+			return this;
 		}
 
 		@Override

@@ -3,8 +3,11 @@ package nextgen.templates;
 import nextgen.templates.javascript.*;
 import nextgen.templates.materialui.MaterialUIComponent;
 import nextgen.templates.materialui.StyleClass;
+import nextgen.utils.FileUtil;
 import nextgen.utils.StringUtil;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
 import static nextgen.templates.JavaScriptPatterns.*;
@@ -13,6 +16,21 @@ import static nextgen.templates.javascript.JavaScriptST.newElement;
 import static nextgen.utils.StringUtil.*;
 
 public class WebappPatterns {
+
+   public static String loadSecurityKey(File file) {
+      final StringBuilder key = new StringBuilder();
+      try {
+         FileUtil.readString(file, line -> {
+            if (line.startsWith("---")) return false;
+            key.append(line);
+            return false;
+         });
+      } catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+      return key.toString();
+   }
+
 
    public static Element asElement(MaterialUIComponent component) {
       return newElement().setName(component.getName());
@@ -237,7 +255,7 @@ public class WebappPatterns {
                               .addChildren("Login"))));
    }
 
-   public static MaterialUIComponent copyright(Map<String, MaterialUIComponent> componentMap) {
+   public static MaterialUIComponent copyright(Map<String, MaterialUIComponent> componentMap, String company) {
       return addComponent("Copyright", componentMap)
             .addComponentImports(newTypographyImport())
             .addComponentImports(newLinkImport())
@@ -245,7 +263,7 @@ public class WebappPatterns {
                   .setVariant("body2")
                   .setColor("textSecondary")
                   .setAlign("center")
-                  .addChildren(newJsonObject().addValues("'Copyright © Petty '} { new Date().getFullYear()")));
+                  .addChildren(newJsonObject().addValues("'Copyright © " + company + " '} { new Date().getFullYear()")));
    }
 
    public static MaterialUIComponent loading(Map<String, MaterialUIComponent> componentMap) {

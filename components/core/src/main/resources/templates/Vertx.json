@@ -10,7 +10,7 @@
     "children" : [ {
       "uuid" : "4a756317-c8b7-44c4-a677-68c57d064ab6",
       "name" : "JsonWrapper",
-      "text" : "package ~package~;\n\npublic class ~name;format=\"capitalize\"~ {\n\n\tprivate final io.vertx.core.json.JsonObject jsonObject;\n\t~externalFields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\n\tpublic ~name;format=\"capitalize\"~() { \n\t\tthis.jsonObject = new io.vertx.core.json.JsonObject();\n\t\tjsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic ~name;format=\"capitalize\"~(io.vertx.core.json.JsonObject jsonObject) { \n\t\tthis.jsonObject = jsonObject;\n\t\tjava.lang.String uuidString = jsonObject.getString(\"uuid\");\n\t\tif (uuidString == null) jsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic io.vertx.core.json.JsonObject getJsonObject() { \n\t\treturn this.jsonObject;\n\t}\n\n\t@Deprecated\n\tpublic String uuid() {\n\t\treturn this.jsonObject.getString(\"uuid\");\n\t}\n\n\tpublic String getUuid() {\n\t\treturn this.jsonObject.getString(\"uuid\");\n\t}\n\t\n\tpublic ~name;format=\"capitalize\"~ removeUuid() {\n\t\tthis.jsonObject.remove(\"uuid\");\n\t\treturn this;\n\t}\n\n\t@Override\n\tpublic boolean equals(java.lang.Object o) { \n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\tfinal ~name;format=\"capitalize\"~ other = (~name;format=\"capitalize\"~) o;\n\t\treturn jsonObject.getString(\"uuid\").equals(other.getJsonObject().getString(\"uuid\"));\n\t}\n\n\t@Override\n\tpublic int hashCode() { \n\t\treturn java.util.Objects.hash(jsonObject.getString(\"uuid\"));\n\t}\n\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n\n\t~neoNodeMapper~\n\n\t@Override\n\tpublic java.lang.String toString() { \n\t\treturn ~if(lexical)~jsonObject.getString(\"~lexical~\")~else~jsonObject.encode()~endif~;\n\t}\n} ",
+      "text" : "package ~package~;\n\npublic class ~name;format=\"capitalize\"~ {\n\n\tprivate final io.vertx.core.json.JsonObject jsonObject;\n\t~externalFields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\n\tpublic ~name;format=\"capitalize\"~() { \n\t\tthis.jsonObject = new io.vertx.core.json.JsonObject();\n\t\tjsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic ~name;format=\"capitalize\"~(io.vertx.core.json.JsonObject jsonObject) { \n\t\tthis.jsonObject = jsonObject;\n\t\tjava.lang.String uuidString = jsonObject.getString(\"uuid\");\n\t\tif (uuidString == null) jsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic ~name;format=\"capitalize\"~(java.io.File file) throws java.io.IOException {\n\t\tthis(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));\n\t}\n\n\tpublic ~name;format=\"capitalize\"~(java.io.InputStream inputStream) throws java.io.IOException {\n\t\tif (inputStream == null) throw new java.io.IOException(\"inputStream is null\");\n\t\tjava.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();\n\t\tint read;\n\t\tbyte[] data = new byte[2048];\n\t\twhile ((read = inputStream.read(data, 0, data.length)) != -1)\n\t\t\tbuffer.write(data, 0, read);\n\t\tinputStream.close();\n\t\tfinal byte[] content = buffer.toByteArray();\n\t\tbuffer.close();\n\n\t\tthis.jsonObject = new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(content));\n\t\tjava.lang.String uuidString = jsonObject.getString(\"uuid\");\n\t\tif (uuidString == null) jsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic io.vertx.core.json.JsonObject getJsonObject() { \n\t\treturn this.jsonObject;\n\t}\n\n\t@Deprecated\n\tpublic String uuid() {\n\t\treturn this.jsonObject.getString(\"uuid\");\n\t}\n\n\tpublic String getUuid() {\n\t\treturn this.jsonObject.getString(\"uuid\");\n\t}\n\n\tpublic ~name;format=\"capitalize\"~ removeUuid() {\n\t\tthis.jsonObject.remove(\"uuid\");\n\t\treturn this;\n\t}\n\n\t@Override\n\tpublic boolean equals(java.lang.Object o) { \n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\tfinal ~name;format=\"capitalize\"~ other = (~name;format=\"capitalize\"~) o;\n\t\treturn jsonObject.getString(\"uuid\").equals(other.getJsonObject().getString(\"uuid\"));\n\t}\n\n\t@Override\n\tpublic int hashCode() { \n\t\treturn java.util.Objects.hash(jsonObject.getString(\"uuid\"));\n\t}\n\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n\n\t~neoNodeMapper~\n\n\t@Override\n\tpublic java.lang.String toString() { \n\t\treturn ~if(lexical)~jsonObject.getString(\"~lexical~\")~else~jsonObject.encode()~endif~;\n\t}\n} ",
       "parameters" : [ {
         "uuid" : "4d639a81-c7d5-4a31-aeb7-dc34b6e37a3d",
         "name" : "package",
@@ -400,6 +400,31 @@
         "type" : "LIST",
         "argumentType" : "Object"
       } ]
+    } ]
+  }, {
+    "uuid" : "7492d89e-268b-47c2-a51d-ad96d73b12c7",
+    "name" : "Server",
+    "text" : "package ~packageName~;\n\nimport io.vertx.core.DeploymentOptions;\nimport io.vertx.core.Vertx;\n\nimport java.io.IOException;\n\n~imports:{it|~it~};separator=\"\\n\"~\n\npublic class ~name~ {\n\n\tprotected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n\n\tpublic ~name~(String configPath) throws IOException {\n\t\tlog.info(\"Starting server\");\n\n\t\tfinal ServerDeploymentOptions serverDeployment = configPath == null\n\t\t\t\t? new ServerDeploymentOptions(getClass().getResourceAsStream(\"/config.json\"))\n\t\t\t\t: new ServerDeploymentOptions(new java.io.File(configPath));\n\n\t\tfinal DeploymentOptions deploymentOptions = new DeploymentOptions().setConfig(serverDeployment.getJsonObject());\n\t\tlog.info(\"serverDeploymentOptions \" + serverDeployment.getJsonObject().encode());\n\n\t\tfinal Vertx vertx = Vertx.vertx();\n\n\t\tserverDeployment.getVerticles()\n\t\t\t\t.forEach(verticleSettings -> {\n\t\t\t\t\tlog.info(\"deploying \" + verticleSettings.getName());\n\t\t\t\t\tvertx.deployVerticle(verticleSettings.getClassName(), deploymentOptions, result -> {\n\t\t\t\t\t\tif (result.failed())\n\t\t\t\t\t\t\tlog.error(\"deployment failed \" + result.cause().getMessage(), result.cause());\n\t\t\t\t\t\telse\n\t\t\t\t\t\t\tlog.info(\"deployment success\");\n\t\t\t\t\t});\n\t\t\t\t});\n\n\t\t~startStatements:{it|~it~};separator=\"\\n\"~\n\n\t}\n\n\tpublic static void main(java.lang.String[] args) throws IOException {\n\t\tnew ~name~(args.length == 1 ? args[0] : null);\n\t}\n} ",
+    "parameters" : [ {
+      "uuid" : "aea6a157-38c3-438d-a033-44aeb9e1845a",
+      "name" : "packageName",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "8954c972-3b28-4f2b-a879-c2b22fa93138",
+      "name" : "imports",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "23ba7d77-dd16-4aee-b9e5-0337b6138ae6",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "ebfe10ef-bd9a-4bfd-9d87-b094a56ce017",
+      "name" : "startStatements",
+      "type" : "LIST",
+      "argumentType" : "Object"
     } ]
   } ],
   "enums" : [ {

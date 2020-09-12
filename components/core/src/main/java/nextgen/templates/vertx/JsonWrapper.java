@@ -16,11 +16,6 @@ public class JsonWrapper {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -238,6 +233,26 @@ public class JsonWrapper {
 				"		if (uuidString == null) jsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	public ~name;format=\"capitalize\"~(java.io.File file) throws java.io.IOException {\n" + 
+				"		this(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public ~name;format=\"capitalize\"~(java.io.InputStream inputStream) throws java.io.IOException {\n" + 
+				"		if (inputStream == null) throw new java.io.IOException(\"inputStream is null\");\n" + 
+				"		java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();\n" + 
+				"		int read;\n" + 
+				"		byte[] data = new byte[2048];\n" + 
+				"		while ((read = inputStream.read(data, 0, data.length)) != -1)\n" + 
+				"			buffer.write(data, 0, read);\n" + 
+				"		inputStream.close();\n" + 
+				"		final byte[] content = buffer.toByteArray();\n" + 
+				"		buffer.close();\n" + 
+				"\n" + 
+				"		this.jsonObject = new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(content));\n" + 
+				"		java.lang.String uuidString = jsonObject.getString(\"uuid\");\n" + 
+				"		if (uuidString == null) jsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n" + 
+				"	}\n" + 
+				"\n" + 
 				"	public io.vertx.core.json.JsonObject getJsonObject() { \n" + 
 				"		return this.jsonObject;\n" + 
 				"	}\n" + 
@@ -250,7 +265,7 @@ public class JsonWrapper {
 				"	public String getUuid() {\n" + 
 				"		return this.jsonObject.getString(\"uuid\");\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	public ~name;format=\"capitalize\"~ removeUuid() {\n" + 
 				"		this.jsonObject.remove(\"uuid\");\n" + 
 				"		return this;\n" + 

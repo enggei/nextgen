@@ -168,7 +168,7 @@
     }, {
       "uuid" : "a8289fe2-14b3-4683-9490-5ef389a3f5e4",
       "name" : "Bean",
-      "text" : "package ~package~;\n\npublic class ~name~ implements java.beans.PropertyChangeListener {\n\n\tprivate final java.util.UUID uuid;\n\t~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\t~fieldDeclarations:{it|~it~};separator=\"\\n\"~\n\n\tprivate final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);\n\t\n\tpublic ~name~() {\n\t\tthis.uuid = java.util.UUID.randomUUID();\n\t}\n\n\tpublic ~name~(java.util.UUID uuid) {\n\t\tthis.uuid = uuid;\n\t}\n\n\tpublic java.util.UUID getUuid() {\n\t\treturn this.uuid;\n\t}\t\n\t\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n\t\n~if(lexical)~\n\n\t@Override\n\tpublic String toString() {\n\t\treturn ~lexical:{it|_~it~};separator=\" + \\\" \\\" + \"~;\n\t}\n~endif~\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn uuid.equals(that.uuid);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(uuid);\n\t}\n\n\t@Override\n\tpublic void propertyChange(java.beans.PropertyChangeEvent evt) {\n\t\tthis.pcs.firePropertyChange(\"~name~\", null, this);\n\t}\n\t\n\tpublic void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tthis.pcs.addPropertyChangeListener(listener);\n\t}\n\n\tpublic void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tthis.pcs.removePropertyChangeListener(listener);\n\t}\n} ",
+      "text" : "package ~package~;\n\npublic class ~name~ implements java.beans.PropertyChangeListener {\n\n\t~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\t~fieldDeclarations:{it|~it~};separator=\"\\n\"~\n\n\tprivate final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);\n\t\n\tpublic ~name~() {\n\t}\n\t\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n\t\n~if(lexical)~\n\n\t@Override\n\tpublic String toString() {\n\t\treturn ~lexical:{it|_~it~};separator=\" + \\\" \\\" + \"~;\n\t}\n~endif~\n\n~if(eqha)~\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn ~eqha~.equals(that.~eqha~);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(~eqha~);\n\t}\n~endif~\n\n\t@Override\n\tpublic void propertyChange(java.beans.PropertyChangeEvent evt) {\n\t\tthis.pcs.firePropertyChange(\"~name~\", null, this);\n\t}\n\t\n\tpublic void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tthis.pcs.addPropertyChangeListener(listener);\n\t}\n\n\tpublic void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tthis.pcs.removePropertyChangeListener(listener);\n\t}\n} ",
       "parameters" : [ {
         "uuid" : "cb61bc25-1333-40db-9cd8-ea46acf2540c",
         "name" : "package",
@@ -212,6 +212,11 @@
         "name" : "lexical",
         "type" : "LIST",
         "argumentType" : "String"
+      }, {
+        "uuid" : "97ec333d-9f09-491c-b06d-c29933adc836",
+        "name" : "eqha",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       } ],
       "children" : [ {
         "uuid" : "7790bf52-39dc-41c3-a76d-2fc88b3b0ec4",
@@ -1883,6 +1888,26 @@
         "name" : "types",
         "type" : "LIST",
         "argumentType" : "ClassOrInterfaceType"
+      } ]
+    } ]
+  }, {
+    "uuid" : "9fcde15e-9d31-4830-9617-2a29b70ba0f1",
+    "name" : "Utils",
+    "text" : "",
+    "children" : [ {
+      "uuid" : "695a6427-6d43-4efb-b4ad-8fe7058c99d1",
+      "name" : "PasswordUtils",
+      "text" : "package ~packageName~;\n\nimport javax.crypto.SecretKeyFactory;\nimport javax.crypto.spec.PBEKeySpec;\nimport java.security.NoSuchAlgorithmException;\nimport java.security.SecureRandom;\nimport java.security.spec.InvalidKeySpecException;\nimport java.util.Arrays;\nimport java.util.Base64;\nimport java.util.Random;\n\npublic class ~name~ {\n\n    private static final Random RANDOM = new SecureRandom();\n    private static final String ALPHABET = \"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz\";\n    private static final int ITERATIONS = 10000;\n    private static final int KEY_LENGTH = 256;\n\n    public static String getSalt(int length) {\n        StringBuilder returnValue = new StringBuilder(length);\n        for (int i = 0; i < length; i++)\n            returnValue.append(ALPHABET.charAt(RANDOM.nextInt(ALPHABET.length())));\n        return new String(returnValue);\n    }\n\n    public static byte[] hash(char[] password, byte[] salt) {\n        final PBEKeySpec spec = new PBEKeySpec(password, salt, ITERATIONS, KEY_LENGTH);\n        Arrays.fill(password, Character.MIN_VALUE);\n        try {\n            SecretKeyFactory skf = SecretKeyFactory.getInstance(\"PBKDF2WithHmacSHA1\");\n            return skf.generateSecret(spec).getEncoded();\n        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {\n            throw new AssertionError(\"Error while hashing a password: \" + e.getMessage(), e);\n        } finally {\n            spec.clearPassword();\n        }\n    }\n\n    public static String generateSecurePassword(String password, String salt) {\n        String returnValue;\n        byte[] securePassword = hash(password.toCharArray(), salt.getBytes());\n        returnValue = Base64.getEncoder().encodeToString(securePassword);\n        return returnValue;\n    }\n\n    public static boolean verifyUserPassword(String providedPassword, String securedPassword, String salt) {\n        final String newSecurePassword = generateSecurePassword(providedPassword, salt);\n        return newSecurePassword.equalsIgnoreCase(securedPassword);\n    }\n} ",
+      "parameters" : [ {
+        "uuid" : "3e74d4c9-a849-49f5-b83e-952e121c884c",
+        "name" : "packageName",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "2cb3803b-7ecb-447e-9288-79dc8ffd0d20",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       } ]
     } ]
   } ],

@@ -17,6 +17,7 @@ import nextgen.templates.maven.neo.MavenNeo;
 import nextgen.templates.maven.neo.ProjectGeneratorModel;
 import nextgen.templates.maven.neo.ProjectModel;
 import nextgen.utils.Neo4JUtil;
+import nextgen.utils.NeoChronicle;
 import nextgen.utils.SwingUtil;
 import org.javatuples.Pair;
 import org.neo4j.graphdb.*;
@@ -58,11 +59,12 @@ public class STAppPresentationModel {
    final STGDirectory generatorSTGDirectory;
    final STGroupModel generatorSTGroup;
    final Set<STGDirectory> stgDirectories = new LinkedHashSet<>();
+
+   private final NeoChronicle chronicle;
    private final STAppModel appModel;
    private Font preferredFont;
    private STWorkspace stWorkspace;
    private String lastDir;
-
 
    STAppPresentationModel(STAppModel appModel) {
 
@@ -86,6 +88,7 @@ public class STAppPresentationModel {
 
       this.stRenderer = new STRenderer(stGroups);
       this.db = new STModelDB(appModel.getModelDb("./db"), stGroups);
+      this.chronicle = new NeoChronicle(appModel.getModelDb("./db"), db.getDatabaseService());
       this.metaDb = new MetaDomainDB(db.getDatabaseService());
 
       final Set<String> fonts = new HashSet<>(Arrays.asList(GraphicsEnvironment.getLocalGraphicsEnvironment()
@@ -1204,6 +1207,10 @@ public class STAppPresentationModel {
          });
 
       }
+   }
+
+   public void undoLast() {
+      chronicle.rollbackLast();;
    }
 
    public static final class CompilationResult {

@@ -9,6 +9,9 @@ import nextgen.templates.DomainPatterns;
 import nextgen.templates.nextgen.*;
 import nextgen.templates.NextgenPatterns;
 
+import nextgen.templates.maven.*;
+import nextgen.templates.MavenPatterns;
+
 
 import java.util.*;
 import java.io.*;
@@ -100,52 +103,6 @@ public class NextgenProject {
 	 */
 	@org.junit.Test
 	public void generateSTTemplateDomain() {
-		final Entity stGroupModel = DomainPatterns.newEntity("STGroupModel")
-				.addRelations(DomainPatterns.newStringField("name", true))
-				.addRelations(DomainPatterns.newStringField("delimiter"))
-				.addRelations(DomainPatterns.newStringField("icon"))
-				.addRelations(DomainPatterns.newStringField("tags"))
-				.addRelations(DomainPatterns.newOneToMany("templates", DomainPatterns.newEntity("STTemplate")
-						.addRelations(DomainPatterns.newStringField("name", true))
-						.addRelations(DomainPatterns.newStringField("text"))
-						.addRelations(DomainPatterns.newOneToManyString("implements"))
-						.addRelations(DomainPatterns.newOneToMany("parameters", DomainPatterns.newEntity("STParameter")
-								.addRelations(DomainPatterns.newStringField("name", true))
-								.addRelations(DomainPatterns.newEnumField("type", DomainPatterns.newEnum("STParameterType", "SINGLE,LIST,KVLIST")))
-								.addRelations(DomainPatterns.newOneToMany("keys", DomainPatterns.newEntity("STParameterKey")
-										.addRelations(DomainPatterns.newStringField("name"))
-										.addRelations(DomainPatterns.newStringField("argumentType"))))
-								.addRelations(DomainPatterns.newStringField("argumentType"))))
-						.addRelations(DomainPatterns.newOneToManySelf("children"))))
-				.addRelations(DomainPatterns.newOneToMany("interfaces", DomainPatterns.newEntity("STInterface")
-						.addRelations(DomainPatterns.newStringField("name"))))
-				.addRelations(DomainPatterns.newOneToMany("enums", DomainPatterns.newEntity("STEnum")
-						.addRelations(DomainPatterns.newStringField("name", true))
-						.addRelations(DomainPatterns.newOneToMany("values", DomainPatterns.newEntity("STEnumValue")
-								.addRelations(DomainPatterns.newStringField("name", true))
-								.addRelations(DomainPatterns.newStringField("lexical"))))));
-
-		final Domain domain = DomainPatterns.newDomain("ST")
-				.addEntities(DomainPatterns.newEntity("STAppModel")
-						.addRelations(DomainPatterns.newStringField("modelDb"))
-						.addRelations(DomainPatterns.newStringField("rootDir"))
-						.addRelations(DomainPatterns.newIntegerField("editorFontSize"))
-						.addRelations(DomainPatterns.newStringField("generatorRoot"))
-						.addRelations(DomainPatterns.newStringField("generatorPackage"))
-						.addRelations(DomainPatterns.newStringField("generatorName"))
-						.addRelations(DomainPatterns.newOneToMany("directories", DomainPatterns.newEntity("STGDirectory")
-								.addRelations(DomainPatterns.newStringField("path"))
-								.addRelations(DomainPatterns.newStringField("outputPackage"))
-								.addRelations(DomainPatterns.newStringField("outputPath"))
-								.addRelations(DomainPatterns.newOneToMany("groups", stGroupModel)))))
-				.addEntities(DomainPatterns.newEntity("STGParseResult")
-						.addRelations(DomainPatterns.newOneToOne("parsed", stGroupModel))
-						.addRelations(DomainPatterns.newOneToMany("errors", DomainPatterns.newEntity("STGError")
-								.addRelations(DomainPatterns.newEnumField("type", DomainPatterns.newEnum("STGErrorType", "COMPILE,RUNTIME,IO,INTERNAL")))
-								.addRelations(DomainPatterns.newStringField("message"))
-								.addRelations(DomainPatterns.newIntegerField("line"))
-								.addRelations(DomainPatterns.newIntegerField("charPosition")))));
-		DomainPatterns.writeJsonWrapper(mainJava, stDomainPackage, domain);
 	}
 
 	/**
@@ -154,39 +111,51 @@ public class NextgenProject {
 	 */
 	@org.junit.Test
 	public void generateSTModelDomain() {
+		final Entity stParameterKey = DomainPatterns.newEntity("STParameterKey")
+				.addRelations(DomainPatterns.newStringField("uuid"))
+				.addRelations(DomainPatterns.newStringField("name"))
+				.addRelations(DomainPatterns.newStringField("argumentType"));
+
+		final Entity stParameter = DomainPatterns.newEntity("STParameter")
+				.addRelations(DomainPatterns.newStringField("uuid"))
+				.addRelations(DomainPatterns.newStringField("name", true))
+				.addRelations(DomainPatterns.newEnumField("type", DomainPatterns.newEnum("STParameterType", "SINGLE,LIST,KVLIST")))
+				.addRelations(DomainPatterns.newOneToMany("keys", stParameterKey))
+				.addRelations(DomainPatterns.newStringField("argumentType"));
+
+		final Entity stTemplate = DomainPatterns.newEntity("STTemplate")
+				.addRelations(DomainPatterns.newStringField("uuid"))
+				.addRelations(DomainPatterns.newStringField("name", true))
+				.addRelations(DomainPatterns.newStringField("text"))
+				.addRelations(DomainPatterns.newOneToManyString("implements"))
+				.addRelations(DomainPatterns.newOneToMany("parameters", stParameter))
+				.addRelations(DomainPatterns.newOneToManySelf("children"));
+
+		final Entity stInterface = DomainPatterns.newEntity("STInterface")
+				.addRelations(DomainPatterns.newStringField("uuid"))
+				.addRelations(DomainPatterns.newStringField("name"));
+
+		final Entity stEnumValue = DomainPatterns.newEntity("STEnumValue")
+				.addRelations(DomainPatterns.newStringField("uuid"))
+				.addRelations(DomainPatterns.newStringField("name", true))
+				.addRelations(DomainPatterns.newStringField("lexical"));
+
+		final Entity stEnum = DomainPatterns.newEntity("STEnum")
+				.addRelations(DomainPatterns.newStringField("uuid"))
+				.addRelations(DomainPatterns.newStringField("name", true))
+				.addRelations(DomainPatterns.newOneToMany("values", stEnumValue));
+
 		final Entity stGroupModel = DomainPatterns.newEntity("STGroupModel")
 				.addRelations(DomainPatterns.newStringField("name", true))
 				.addRelations(DomainPatterns.newStringField("uuid"))
 				.addRelations(DomainPatterns.newStringField("delimiter"))
 				.addRelations(DomainPatterns.newStringField("icon"))
 				.addRelations(DomainPatterns.newStringField("tags"))
-				.addRelations(DomainPatterns.newOneToMany("templates", DomainPatterns.newEntity("STTemplate")
-						.addRelations(DomainPatterns.newStringField("uuid"))
-						.addRelations(DomainPatterns.newStringField("name", true))
-						.addRelations(DomainPatterns.newStringField("text"))
-						.addRelations(DomainPatterns.newOneToManyString("implements"))
-						.addRelations(DomainPatterns.newOneToMany("parameters", DomainPatterns.newEntity("STParameter")
-								.addRelations(DomainPatterns.newStringField("uuid"))
-								.addRelations(DomainPatterns.newStringField("name", true))
-								.addRelations(DomainPatterns.newEnumField("type", DomainPatterns.newEnum("STParameterType", "SINGLE,LIST,KVLIST")))
-								.addRelations(DomainPatterns.newOneToMany("keys", DomainPatterns.newEntity("STParameterKey")
-										.addRelations(DomainPatterns.newStringField("uuid"))
-										.addRelations(DomainPatterns.newStringField("name"))
-										.addRelations(DomainPatterns.newStringField("argumentType"))))
-								.addRelations(DomainPatterns.newStringField("argumentType"))))
-						.addRelations(DomainPatterns.newOneToManySelf("children"))))
-				.addRelations(DomainPatterns.newOneToMany("interfaces", DomainPatterns.newEntity("STInterface")
-						.addRelations(DomainPatterns.newStringField("uuid"))
-						.addRelations(DomainPatterns.newStringField("name"))))
-				.addRelations(DomainPatterns.newOneToMany("enums", DomainPatterns.newEntity("STEnum")
-						.addRelations(DomainPatterns.newStringField("uuid"))
-						.addRelations(DomainPatterns.newStringField("name", true))
-						.addRelations(DomainPatterns.newOneToMany("values", DomainPatterns.newEntity("STEnumValue")
-								.addRelations(DomainPatterns.newStringField("uuid"))
-								.addRelations(DomainPatterns.newStringField("name", true))
-								.addRelations(DomainPatterns.newStringField("lexical"))))));
+				.addRelations(DomainPatterns.newOneToMany("templates", stTemplate))
+				.addRelations(DomainPatterns.newOneToMany("interfaces", stInterface))
+				.addRelations(DomainPatterns.newOneToMany("enums", stEnum));
 
-		final Entity stValueNeo = DomainPatterns.newEntity("STValue")
+		final Entity stValue = DomainPatterns.newEntity("STValue")
 				.setObservable(true)
 				.addRelations(DomainPatterns.newStringField("uuid"))
 				.addRelations(DomainPatterns.newStringField("value"))
@@ -195,35 +164,38 @@ public class NextgenProject {
 		final Entity stFile = DomainPatterns.newEntity("STFile")
 				.setObservable(true)
 				.addRelations(DomainPatterns.newStringField("uuid"))
-				.addRelations(DomainPatterns.newOneToOne("name", stValueNeo))
-				.addRelations(DomainPatterns.newOneToOne("type", stValueNeo))
-				.addRelations(DomainPatterns.newOneToOne("packageName", stValueNeo))
-				.addRelations(DomainPatterns.newOneToOne("path", stValueNeo));
+				.addRelations(DomainPatterns.newOneToOne("name", stValue))
+				.addRelations(DomainPatterns.newOneToOne("type", stValue))
+				.addRelations(DomainPatterns.newOneToOne("packageName", stValue))
+				.addRelations(DomainPatterns.newOneToOne("path", stValue));
+
+		final Entity stArgumentKV = DomainPatterns.newEntity("STArgumentKV")
+				.setObservable(true)
+				.addRelations(DomainPatterns.newStringField("uuid"))
+				.addRelations(DomainPatterns.newOneToOne("stParameterKey", stParameterKey))
+				.addRelations(DomainPatterns.newOneToOne("value", stValue));
+
+		final Entity stArgument = DomainPatterns.newEntity("STArgument")
+				.setObservable(true)
+				.addRelations(DomainPatterns.newStringField("uuid"))
+				.addRelations(DomainPatterns.newOneToOne("stParameter", stParameter))
+				.addRelations(DomainPatterns.newOneToOne("value", stValue))
+				.addRelations(DomainPatterns.newOneToMany("keyValues", stArgumentKV));
 
 		final Entity stModelNeo = DomainPatterns.newEntity("STModel")
 				.setObservable(true)
 				.addRelations(DomainPatterns.newStringField("uuid"))
-				.addRelations(DomainPatterns.newStringField("stGroup"))
-				.addRelations(DomainPatterns.newStringField("stTemplate"))
+				.addRelations(DomainPatterns.newOneToOne("stTemplate", stTemplate))
 				.addRelations(DomainPatterns.newOneToMany("files", stFile))
-				.addRelations(DomainPatterns.newOneToMany("arguments", DomainPatterns.newEntity("STArgument")
-						.setObservable(true)
-						.addRelations(DomainPatterns.newStringField("uuid"))
-						.addRelations(DomainPatterns.newStringField("stParameter"))
-						.addRelations(DomainPatterns.newOneToOne("value", stValueNeo))
-						.addRelations(DomainPatterns.newOneToMany("keyValues", DomainPatterns.newEntity("STArgumentKV")
-								.setObservable(true)
-								.addRelations(DomainPatterns.newStringField("uuid"))
-								.addRelations(DomainPatterns.newStringField("stParameterKey"))
-								.addRelations(DomainPatterns.newOneToOne("value", stValueNeo))))));
+				.addRelations(DomainPatterns.newOneToMany("arguments", stArgument));
 
-		stValueNeo.addRelations(DomainPatterns.newOneToOne("stModel", stModelNeo));
+		stValue.addRelations(DomainPatterns.newOneToOne("stModel", stModelNeo));
 
 		final Entity script = DomainPatterns.newEntity("Script")
 				.setObservable(true)
 				.addRelations(DomainPatterns.newStringField("uuid"))
 				.addRelations(DomainPatterns.newStringField("name"))
-				.addRelations(DomainPatterns.newOneToOne("script", stValueNeo));
+				.addRelations(DomainPatterns.newOneToOne("script", stValue));
 
 		final Entity project = DomainPatterns.newEntity("Project")
 				.setObservable(true)
@@ -231,7 +203,7 @@ public class NextgenProject {
 				.addRelations(DomainPatterns.newStringField("name"))
 				.addRelations(DomainPatterns.newOneToMany("files", stFile))
 				.addRelations(DomainPatterns.newOneToMany("models", stModelNeo))
-				.addRelations(DomainPatterns.newOneToMany("values", stValueNeo))
+				.addRelations(DomainPatterns.newOneToMany("values", stValue))
 				.addRelations(DomainPatterns.newOneToMany("scripts", script));
 
 		final Domain domain = DomainPatterns.newDomain("STModel")
@@ -321,12 +293,76 @@ public class NextgenProject {
 	}
 
 	/**
-	 * xxxxx
+	 * generateProjectFiles
 	 * 
 	 */
 	@org.junit.Test
-	public void xxxxx() {
-		// test
+	public void generateProjectFiles() {
+		Pom projectPom = MavenST.newPom().setParent("<parent>\n" +
+				"	<artifactId>components</artifactId>\n" +
+				"	<groupId>com.nextgen</groupId>\n" +
+				"	<version>1.0</version>\n" +
+				"</parent>").setName("Core").setArtifactId("core").addDependencies("<dependency>\n" +
+				"	<groupId>com.fifesoft</groupId>\n" +
+				"	<artifactId>rsyntaxtextarea</artifactId>\n" +
+				"	<version>3.0.3</version>\n" +
+				"</dependency>").addDependencies("<dependency>\n" +
+				"	<groupId>com.formdev</groupId>\n" +
+				"	<artifactId>flatlaf</artifactId>\n" +
+				"	<version>0.40</version>\n" +
+				"</dependency>").addDependencies("<dependency>\n" +
+				"	<groupId>org.neo4j</groupId>\n" +
+				"	<artifactId>neo4j</artifactId>\n" +
+				"	<version>${neo4j.version}</version>\n" +
+				"</dependency>").addDependencies("<dependency>\n" +
+				"	<groupId>org.antlr</groupId>\n" +
+				"	<artifactId>antlr4</artifactId>\n" +
+				"	<version>${antlr.version}</version>\n" +
+				"</dependency>").addDependencies("<dependency>\n" +
+				"	<groupId>com.jgoodies</groupId>\n" +
+				"	<artifactId>jgoodies-forms</artifactId>\n" +
+				"	<version>${jgoodies.version}</version>\n" +
+				"</dependency>").addDependencies("<dependency>\n" +
+				"	<groupId>org.piccolo2d</groupId>\n" +
+				"	<artifactId>piccolo2d-core</artifactId>\n" +
+				"	<version>${piccolo2d.version}</version>\n" +
+				"</dependency>").addDependencies("<dependency>\n" +
+				"	<groupId>org.piccolo2d</groupId>\n" +
+				"	<artifactId>piccolo2d-extras</artifactId>\n" +
+				"	<version>${piccolo2d.version}</version>\n" +
+				"</dependency>").addDependencies("<dependency>\n" +
+				"	<groupId>org.abego.treelayout</groupId>\n" +
+				"	<artifactId>org.abego.treelayout.core</artifactId>\n" +
+				"	<version>1.0.3</version>\n" +
+				"</dependency>").addDependencies("<dependency>\n" +
+				"	<groupId>io.vertx</groupId>\n" +
+				"	<artifactId>vertx-core</artifactId>\n" +
+				"	<version>${vertx.version}</version>\n" +
+				"</dependency>").addDependencies("<dependency>\n" +
+				"	<groupId>org.jsoup</groupId>\n" +
+				"	<artifactId>jsoup</artifactId>\n" +
+				"	<version>1.12.1</version>\n" +
+				"</dependency>").addDependencies("<dependency>\n" +
+				"	<groupId>com.github.kklisura.cdt</groupId>\n" +
+				"	<artifactId>cdt-java-client</artifactId>\n" +
+				"	<version>2.1.0</version>\n" +
+				"</dependency>").addDependencies("<dependency>\n" +
+				"	<groupId>net.openhft</groupId>\n" +
+				"	<artifactId>compiler</artifactId>\n" +
+				"	<version>2.3.1</version>\n" +
+				"</dependency>").addDependencies("<dependency>\n" +
+				"	<groupId>junit</groupId>\n" +
+				"	<artifactId>junit</artifactId>\n" +
+				"	<version>${junit.version}</version>\n" +
+				"</dependency>").addDependencies("<dependency>\n" +
+				"	<groupId>org.javatuples</groupId>\n" +
+				"	<artifactId>javatuples</artifactId>\n" +
+				"	<version>1.2</version>\n" +
+				"</dependency>");
+
+		MavenPatterns.generate(MavenPatterns.newProject()
+			.setName("Nextgen")
+			.setRoot(root.getAbsolutePath()), projectPom);
 	}
 
 	/**

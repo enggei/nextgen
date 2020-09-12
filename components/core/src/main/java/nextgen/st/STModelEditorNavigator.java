@@ -76,13 +76,13 @@ public class STModelEditorNavigator extends JPanel {
 					presentationModel.doInTransaction(transaction -> {
 						if (lastPathComponent instanceof STModelTreeNode) {
 							final STModelTreeNode selectedNode = (STModelTreeNode) lastPathComponent;
-							editor.setText(presentationModel.render(selectedNode.getModel()), null);
+							editor.setText(presentationModel.render(selectedNode.getModel()));
 						} else if (lastPathComponent instanceof STValueTreeNode) {
 							final STValueTreeNode selectedNode = (STValueTreeNode) lastPathComponent;
 							editor.setText(presentationModel.render(selectedNode.getModel()), selectedNode);
 						} else if (lastPathComponent instanceof STKVArgumentTreeNode) {
 							final STKVArgumentTreeNode selectedNode = (STKVArgumentTreeNode) lastPathComponent;
-							editor.setText(presentationModel.render(selectedNode.getModel(), selectedNode.stParameter), null);
+							editor.setText(presentationModel.render(selectedNode.getModel(), selectedNode.stParameter));
 						} else {
 							editor.setText("", null);
 						}
@@ -258,6 +258,10 @@ public class STModelEditorNavigator extends JPanel {
 					.forEach(stParameter -> add(new STParameterTreeNode(stParameter, model)));
 		}
 
+		STModelTreeNode thisNode() {
+			return this;
+		}
+
 		@Override
 		public void nodeChanged() {
 			this.label = presentationModel.tryToFindArgument(getModel(), "name", () -> "[" + stTemplate.getName() + "]");
@@ -291,6 +295,11 @@ public class STModelEditorNavigator extends JPanel {
 					}
 				});
 			}));
+			actions.add(newAction("Set Multiple", actionEvent -> {
+				presentationModel.doLaterInTransaction(transaction -> presentationModel.setMultiple(tree, getModel(), stTemplate, stModel -> {
+					editor.setText(presentationModel.render(getModel()));
+				}));
+			}));
 			return actions;
 		}
 
@@ -310,6 +319,10 @@ public class STModelEditorNavigator extends JPanel {
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
+		}
+
+		STValueTreeNode thisNode() {
+			return this;
 		}
 
 		@Override
@@ -357,6 +370,10 @@ public class STModelEditorNavigator extends JPanel {
 					.filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))
 					.findFirst()
 					.ifPresent(stArgumentKV -> add(new STKVTreeNode(stArgumentKV, getModel(), stParameterKey))));
+		}
+
+		STKVArgumentTreeNode thisNode() {
+			return this;
 		}
 
 		@Override
@@ -458,6 +475,10 @@ public class STModelEditorNavigator extends JPanel {
 				}
 		}
 
+		STKVTreeNode thisNode() {
+			return this;
+		}
+
 		@Override
 		public void nodeChanged() {
 			this.label = stParameterKey.getName();
@@ -527,6 +548,10 @@ public class STModelEditorNavigator extends JPanel {
 						.onListSTValue((stArgument, stValue) -> add(new STValueTreeNode(stValue, stArgument)))
 						.onListSTModel((stArgument, stValue) -> add(new STModelTreeNode(stValue.getStModel(), presentationModel.findSTTemplateByUuid(stValue.getStModel().getStTemplate()), stArgument)))
 						.onKVListConsumer((stArgument, stKVValues) -> add(new STKVArgumentTreeNode(stArgument, model))));
+		}
+
+		STParameterTreeNode thisNode() {
+			return this;
 		}
 
 		@Override

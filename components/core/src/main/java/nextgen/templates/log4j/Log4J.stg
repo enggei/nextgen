@@ -1,0 +1,28 @@
+delimiters "~","~"
+
+properties(logLevel,rootAppender,categories,appenders) ::= <<# Root logger option
+log4j.rootLogger=~logLevel~, ~rootAppender~
+
+~categories:{it|~it~};separator="\n"~
+
+~appenders:{it|~it~};separator="\n\n"~  >>
+
+fileinfoAppender(file,maxFileSize,maxBackupIndex,layout,threshold,elseINFO) ::= <<log4j.appender.fileinfo = org.apache.log4j.RollingFileAppender
+log4j.appender.fileinfo.file = ~if(file)~~file~~else~./logs/app.log~endif~
+log4j.appender.fileinfo.MaxFileSize = ~if(maxFileSize)~~maxFileSize~~else~20MB~endif~
+log4j.appender.fileinfo.MaxBackupIndex = ~if(maxBackupIndex)~~maxBackupIndex~~else~100~endif~
+log4j.appender.fileinfo.layout = ~if(layout)~~layout~~else~org.apache.log4j.PatternLayout~endif~
+log4j.appender.fileinfo.layout.ConversionPattern = %d{ISO8601} - %-5p- %c - %m%n
+log4j.appender.fileinfo.Threshold = ~if(threshold)~~threshold~~elseINFO~~endif~  >>
+
+consoleAppender(name,threshold) ::= <<log4j.appender.~name~ = org.apache.log4j.ConsoleAppender
+log4j.appender.~name~.Target = System.out
+log4j.appender.~name~.layout = org.apache.log4j.PatternLayout
+log4j.appender.~name~.layout.ConversionPattern = %d{ISO8601} - %-5p- %c - %m%n
+log4j.appender.~name~.Threshold = ~if(threshold)~~threshold~~else~DEBUG~endif~  >>
+
+category(className,logLevel,appender) ::= <<log4j.category.~className~ = ~logLevel~, ~appender~  >>
+
+eom() ::= "}"
+
+gt() ::= ">"

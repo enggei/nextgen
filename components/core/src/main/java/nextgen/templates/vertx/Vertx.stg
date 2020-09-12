@@ -102,6 +102,26 @@ public class ~name;format="capitalize"~ {
 		if (uuidString == null) jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
 	}
 
+	public ~name;format="capitalize"~(java.io.File file) throws java.io.IOException {
+		this(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));
+	}
+
+	public ~name;format="capitalize"~(java.io.InputStream inputStream) throws java.io.IOException {
+		if (inputStream == null) throw new java.io.IOException("inputStream is null");
+		java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
+		int read;
+		byte[] data = new byte[2048];
+		while ((read = inputStream.read(data, 0, data.length)) != -1)
+			buffer.write(data, 0, read);
+		inputStream.close();
+		final byte[] content = buffer.toByteArray();
+		buffer.close();
+
+		this.jsonObject = new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(content));
+		java.lang.String uuidString = jsonObject.getString("uuid");
+		if (uuidString == null) jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
+	}
+
 	public io.vertx.core.json.JsonObject getJsonObject() { 
 		return this.jsonObject;
 	}
@@ -114,7 +134,7 @@ public class ~name;format="capitalize"~ {
 	public String getUuid() {
 		return this.jsonObject.getString("uuid");
 	}
-	
+
 	public ~name;format="capitalize"~ removeUuid() {
 		this.jsonObject.remove("uuid");
 		return this;
@@ -326,6 +346,51 @@ public class ~name;format="capitalize"~ {
 };separator="\n"~
 }  >>
 
+Server(packageName,imports,name,startStatements) ::= <<package ~packageName~;
+
+import io.vertx.core.DeploymentOptions;
+import io.vertx.core.Vertx;
+
+import java.io.IOException;
+
+~imports:{it|~it~};separator="\n"~
+
+public class ~name~ {
+
+	protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);
+
+	public ~name~(String configPath) throws IOException {
+		log.info("Starting server");
+
+		final ServerDeploymentOptions serverDeployment = configPath == null
+				? new ServerDeploymentOptions(getClass().getResourceAsStream("/config.json"))
+				: new ServerDeploymentOptions(new java.io.File(configPath));
+
+		final DeploymentOptions deploymentOptions = new DeploymentOptions().setConfig(serverDeployment.getJsonObject());
+		log.info("serverDeploymentOptions " + serverDeployment.getJsonObject().encode());
+
+		final Vertx vertx = Vertx.vertx();
+
+		serverDeployment.getVerticles()
+				.forEach(verticleSettings -> {
+					log.info("deploying " + verticleSettings.getName());
+					vertx.deployVerticle(verticleSettings.getClassName(), deploymentOptions, result -> {
+						if (result.failed())
+							log.error("deployment failed " + result.cause().getMessage(), result.cause());
+						else
+							log.info("deployment success");
+					});
+				});
+
+		~startStatements:{it|~it~};separator="\n"~
+
+	}
+
+	public static void main(java.lang.String[] args) throws IOException {
+		new ~name~(args.length == 1 ? args[0] : null);
+	}
+}  >>
+
 WebVerticle(packageName,imports,name,fields,startStatements,routes,handlers,methods) ::= <<package ~packageName~;
 
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -334,7 +399,6 @@ import io.vertx.core.Future;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.PemKeyCertOptions;
-import io.vertx.ext.auth.KeyStoreOptions;
 import io.vertx.ext.auth.jwt.JWTAuth;
 import io.vertx.ext.auth.jwt.JWTAuthOptions;
 import io.vertx.ext.jwt.JWTOptions;

@@ -103,6 +103,7 @@ public class JavaST {
 	.append(JavaLibrary.st + "\n")
 	.append(JavaPackage.st + "\n")
 	.append(JavaPatterns.st + "\n")
+	.append(PasswordUtils.st + "\n")
 	.toString()  ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
@@ -529,6 +530,10 @@ public class JavaST {
 
 	public static JavaPatterns newJavaPatterns() {
 		return new JavaPatterns(stGroup);
+	}  
+
+	public static PasswordUtils newPasswordUtils() {
+		return new PasswordUtils(stGroup);
 	}  
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {

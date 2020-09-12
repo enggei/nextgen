@@ -16,6 +16,7 @@ public class VertxST {
 	.append(ListReferenceAccessors.st + "\n")
 	.append(PrimitiveAccessors.st + "\n")
 	.append(ReferenceAccessors.st + "\n")
+	.append(Server.st + "\n")
 	.append(WebVerticle.st + "\n")
 	.append(RouteHandler.st + "\n")
 	.append(SendEventBusAction.st + "\n")
@@ -97,6 +98,10 @@ public class VertxST {
 
 	public static ReferenceAccessors newReferenceAccessors() {
 		return new ReferenceAccessors(stGroup);
+	}  
+
+	public static Server newServer() {
+		return new Server(stGroup);
 	}  
 
 	public static WebVerticle newWebVerticle() {

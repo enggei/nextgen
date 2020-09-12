@@ -7,6 +7,7 @@ public class Bean {
 
 	private String _package;
 	private String _name;
+	private Object _eqha;
 	private java.util.List<Object> _fieldDeclarations = new java.util.ArrayList<>();
 	private java.util.List<Object> _accessors = new java.util.ArrayList<>();
 	private java.util.List<String> _lexical = new java.util.ArrayList<>();
@@ -14,11 +15,6 @@ public class Bean {
 
 	Bean(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -30,6 +26,7 @@ public class Bean {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Bean");
 		st.add("package", _package);
 		st.add("name", _name);
+		st.add("eqha", _eqha);
 		for (Object o : _fieldDeclarations) st.add("fieldDeclarations", o);
 		for (Object o : _accessors) st.add("accessors", o);
 		for (Object o : _lexical) st.add("lexical", o);
@@ -78,6 +75,28 @@ public class Bean {
 
 	public Bean removeName() {
 		this._name = null;
+		return this;
+	} 
+
+	public Bean setEqha(Object value) {
+		this._eqha = value;
+		return this;
+	}
+
+	public Object getEqha() {
+		return this._eqha;
+	}
+
+	public Object getEqha(Object defaultValue) {
+		return this._eqha == null ? defaultValue : this._eqha;
+	}
+
+	public boolean hasEqha() {
+		return this._eqha != null;
+	}
+
+	public Bean removeEqha() {
+		this._eqha = null;
 		return this;
 	} 
 
@@ -234,27 +253,17 @@ public class Bean {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Bean(package,name,fields,fieldDeclarations,accessors,lexical) ::= <<package ~package~;\n" + 
+	static final String st = "Bean(package,name,fields,fieldDeclarations,accessors,lexical,eqha) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public class ~name~ implements java.beans.PropertyChangeListener {\n" + 
 				"\n" + 
-				"	private final java.util.UUID uuid;\n" + 
 				"	~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n" + 
 				"	~fieldDeclarations:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"	private final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);\n" + 
 				"	\n" + 
 				"	public ~name~() {\n" + 
-				"		this.uuid = java.util.UUID.randomUUID();\n" + 
 				"	}\n" + 
-				"\n" + 
-				"	public ~name~(java.util.UUID uuid) {\n" + 
-				"		this.uuid = uuid;\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	public java.util.UUID getUuid() {\n" + 
-				"		return this.uuid;\n" + 
-				"	}	\n" + 
 				"	\n" + 
 				"	~accessors:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"	\n" + 
@@ -266,18 +275,21 @@ public class Bean {
 				"	}\n" + 
 				"~endif~\n" + 
 				"\n" + 
+				"~if(eqha)~\n" + 
+				"\n" + 
 				"	@Override\n" + 
 				"	public boolean equals(Object o) {\n" + 
 				"		if (this == o) return true;\n" + 
 				"		if (o == null || getClass() != o.getClass()) return false;\n" + 
 				"		~name~ that = (~name~) o;\n" + 
-				"		return uuid.equals(that.uuid);\n" + 
+				"		return ~eqha~.equals(that.~eqha~);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 
 				"	public int hashCode() {\n" + 
-				"		return java.util.Objects.hash(uuid);\n" + 
+				"		return java.util.Objects.hash(~eqha~);\n" + 
 				"	}\n" + 
+				"~endif~\n" + 
 				"\n" + 
 				"	@Override\n" + 
 				"	public void propertyChange(java.beans.PropertyChangeEvent evt) {\n" + 

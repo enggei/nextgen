@@ -18,11 +18,6 @@ public class WebVerticle {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -328,7 +323,6 @@ public class WebVerticle {
 				"import io.vertx.core.http.HttpServerOptions;\n" + 
 				"import io.vertx.core.json.JsonObject;\n" + 
 				"import io.vertx.core.net.PemKeyCertOptions;\n" + 
-				"import io.vertx.ext.auth.KeyStoreOptions;\n" + 
 				"import io.vertx.ext.auth.jwt.JWTAuth;\n" + 
 				"import io.vertx.ext.auth.jwt.JWTAuthOptions;\n" + 
 				"import io.vertx.ext.jwt.JWTOptions;\n" + 

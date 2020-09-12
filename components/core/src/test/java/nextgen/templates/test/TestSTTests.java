@@ -23,51 +23,51 @@ public class TestSTTests {
 
 	@org.junit.Test
 	public void testKv() {
-		System.out.println("\n--- TEST Kv:\n" + newKv());
-	} 
+		System.out.println("Kv:\n" + newKv());
+	}  
 
 	@org.junit.Test
 	public void testList() {
-		System.out.println("\n--- TEST List:\n" + newList());
-	} 
+		System.out.println("List:\n" + newList());
+	}  
 
 	@org.junit.Test
 	public void testSingle() {
-		System.out.println("\n--- TEST Single:\n" + newSingle());
-	} 
+		System.out.println("Single:\n" + newSingle());
+	}  
 
 	@org.junit.Test
 	public void testParameterTests() {
-		System.out.println("\n--- TEST ParameterTests:\n" + newParameterTests());
-	} 
+		System.out.println("ParameterTests:\n" + newParameterTests());
+	}  
 
 	@org.junit.Test
 	public void testAllTypes() {
-		System.out.println("\n--- TEST AllTypes:\n" + newAllTypes());
-	} 
+		System.out.println("AllTypes:\n" + newAllTypes());
+	}  
 
 	@org.junit.Test
 	public void testComplex() {
-		System.out.println("\n--- TEST Complex:\n" + newComplex());
-	} 
+		System.out.println("Complex:\n" + newComplex());
+	}  
 
 	@org.junit.Test
 	public void testConditional() {
-		System.out.println("\n--- TEST Conditional:\n" + newConditional());
-	} 
+		System.out.println("Conditional:\n" + newConditional());
+	}  
 
 	@org.junit.Test
 	public void testEmbeddedKVConditional() {
-		System.out.println("\n--- TEST EmbeddedKVConditional:\n" + newEmbeddedKVConditional());
-	} 
+		System.out.println("EmbeddedKVConditional:\n" + newEmbeddedKVConditional());
+	}  
 
 	@org.junit.Test
 	public void testPatterns() {
-		System.out.println("\n--- TEST Patterns:\n" + newPatterns());
-	} 
+		System.out.println("Patterns:\n" + newPatterns());
+	}  
 
 	@org.junit.Test
 	public void testTemp() {
-		System.out.println("\n--- TEST Temp:\n" + newTemp());
-	} 
+		System.out.println("Temp:\n" + newTemp());
+	}  
 } 
