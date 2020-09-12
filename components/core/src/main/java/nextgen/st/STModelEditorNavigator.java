@@ -76,13 +76,13 @@ public class STModelEditorNavigator extends JPanel {
 					presentationModel.doInTransaction(transaction -> {
 						if (lastPathComponent instanceof STModelTreeNode) {
 							final STModelTreeNode selectedNode = (STModelTreeNode) lastPathComponent;
-							editor.setText(presentationModel.render(selectedNode.getModel()));
+							editor.setText(presentationModel.render(selectedNode.getModel()), null);
 						} else if (lastPathComponent instanceof STValueTreeNode) {
 							final STValueTreeNode selectedNode = (STValueTreeNode) lastPathComponent;
 							editor.setText(presentationModel.render(selectedNode.getModel()), selectedNode);
 						} else if (lastPathComponent instanceof STKVArgumentTreeNode) {
 							final STKVArgumentTreeNode selectedNode = (STKVArgumentTreeNode) lastPathComponent;
-							editor.setText(presentationModel.render(selectedNode.getModel(), selectedNode.stParameter));
+							editor.setText(presentationModel.render(selectedNode.getModel(), selectedNode.stParameter), null);
 						} else {
 							editor.setText("", null);
 						}
@@ -294,11 +294,6 @@ public class STModelEditorNavigator extends JPanel {
 						editor.setText("", null);
 					}
 				});
-			}));
-			actions.add(newAction("Set Multiple", actionEvent -> {
-				presentationModel.doLaterInTransaction(transaction -> presentationModel.setMultiple(tree, getModel(), stTemplate, stModel -> {
-					editor.setText(presentationModel.render(getModel()));
-				}));
 			}));
 			return actions;
 		}
@@ -564,83 +559,153 @@ public class STModelEditorNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
-			switch (getModel().getType()) {
-				case SINGLE:
-					actions.add(newAction("Set from Input", actionEvent -> {
-						SwingUtil.showInputDialog(getModel().getName(), tree, inputValue ->
+			presentationModel.doInTransaction(tx -> {
+
+				switch (getModel().getType()) {
+					case SINGLE:
+						actions.add(newAction("Set from Input", actionEvent -> {
+							SwingUtil.showInputDialog(getModel().getName(), tree, inputValue ->
+									presentationModel.doLaterInTransaction(transaction -> {
+										presentationModel.removeArgument(stModel, getModel());
+										while (getChildCount() != 0)
+											treeModel.removeNodeFromParent((BaseTreeNode<?>) getChildAt(0));
+
+										final org.javatuples.Pair<STArgument, STValue> newArgument = presentationModel.newSTArgument(getModel(), inputValue);
+										stModel.addArguments(newArgument.getValue0());
+										addAndSelectChild(new STValueTreeNode(newArgument.getValue1(), newArgument.getValue0()));
+									}));
+						}));
+
+						presentationModel.getSelectedSTValues().forEach(selectedValue -> {
+							actions.add(newAction("Set '" + presentationModel.render(selectedValue, 30) + "'", actionEvent -> {
 								presentationModel.doLaterInTransaction(transaction -> {
 									presentationModel.removeArgument(stModel, getModel());
 									while (getChildCount() != 0)
 										treeModel.removeNodeFromParent((BaseTreeNode<?>) getChildAt(0));
 
-									final org.javatuples.Pair<STArgument, STValue> newArgument = presentationModel.newSTArgument(getModel(), inputValue);
-									stModel.addArguments(newArgument.getValue0());
-									addAndSelectChild(new STValueTreeNode(newArgument.getValue1(), newArgument.getValue0()));
-								}));
-					}));
-					actions.add(newAction("Set from Clipboard " + presentationModel.cut(SwingUtil.fromClipboard(), 30), actionEvent -> {
-						presentationModel.doLaterInTransaction(transaction -> {
-							presentationModel.removeArgument(stModel, getModel());
-							while (getChildCount() != 0)
-								treeModel.removeNodeFromParent((BaseTreeNode<?>) getChildAt(0));
-
-							final org.javatuples.Pair<STArgument, STValue> newArgument = presentationModel.newSTArgument(getModel(), SwingUtil.fromClipboard());
-							stModel.addArguments(newArgument.getValue0());
-							addAndSelectChild(new STValueTreeNode(newArgument.getValue1(), newArgument.getValue0()));
+									final STArgument stArgument = presentationModel.newSTArgument(getModel(), selectedValue);
+									stModel.addArguments(stArgument);
+									addAndSelectChild(new STValueTreeNode(selectedValue, stArgument));
+								});
+							}));
 						});
-					}));
-					if (getModel().getName().startsWith("is") || getModel().getName().startsWith("has")) {
-						actions.add(newAction("Set to TRUE", actionEvent -> {
+
+						presentationModel.getSelectedSTModels().forEach(selectedModel -> {
+							actions.add(newAction("Set '" + presentationModel.render(selectedModel, 30) + "'", actionEvent -> {
+								presentationModel.doLaterInTransaction(transaction -> {
+									presentationModel.removeArgument(stModel, getModel());
+									while (getChildCount() != 0)
+										treeModel.removeNodeFromParent((BaseTreeNode<?>) getChildAt(0));
+
+									final STValue stValue = presentationModel.newSTValue(selectedModel);
+									final STArgument newArgument = presentationModel.newSTArgument(getModel(), stValue);
+									stModel.addArguments(newArgument);
+									addAndSelectChild(new STValueTreeNode(stValue, newArgument));
+								});
+							}));
+						});
+
+						actions.add(newAction("Set from Clipboard " + presentationModel.cut(SwingUtil.fromClipboard(), 30), actionEvent -> {
 							presentationModel.doLaterInTransaction(transaction -> {
 								presentationModel.removeArgument(stModel, getModel());
 								while (getChildCount() != 0)
 									treeModel.removeNodeFromParent((BaseTreeNode<?>) getChildAt(0));
 
-								final org.javatuples.Pair<STArgument, STValue> newArgument = presentationModel.newSTArgument(getModel(), "TRUE");
+								final org.javatuples.Pair<STArgument, STValue> newArgument = presentationModel.newSTArgument(getModel(), SwingUtil
+										.fromClipboard());
 								stModel.addArguments(newArgument.getValue0());
 								addAndSelectChild(new STValueTreeNode(newArgument.getValue1(), newArgument.getValue0()));
 							});
 						}));
-					}
-					break;
-				case LIST:
-					actions.add(newAction("Add from Input", actionEvent -> {
-						presentationModel.addList(getModel(), stModel, tree, newArgument -> {
+						if (getModel().getName().startsWith("is") || getModel().getName().startsWith("has")) {
+							actions.add(newAction("Set to TRUE", actionEvent -> {
+								presentationModel.doLaterInTransaction(transaction -> {
+									presentationModel.removeArgument(stModel, getModel());
+									while (getChildCount() != 0)
+										treeModel.removeNodeFromParent((BaseTreeNode<?>) getChildAt(0));
 
-							STValue argumentValue = newArgument.getValue1();
-							switch (argumentValue.getType()) {
-
-								case STMODEL:
-									final STModel stModel = argumentValue.getStModel();
-									addAndSelectChild(new STModelTreeNode(stModel, presentationModel.findSTTemplateByUuid(stModel
-											.getStTemplate()), newArgument.getValue0()));
-									break;
-								case PRIMITIVE:
+									final org.javatuples.Pair<STArgument, STValue> newArgument = presentationModel.newSTArgument(getModel(), "TRUE");
+									stModel.addArguments(newArgument.getValue0());
 									addAndSelectChild(new STValueTreeNode(newArgument.getValue1(), newArgument.getValue0()));
-									break;
-								case ENUM:
-									break;
-							}
+								});
+							}));
+						}
+						break;
+					case LIST:
+						actions.add(newAction("Add from Input", actionEvent -> {
+							presentationModel.addList(getModel(), stModel, tree, newArgument -> {
+
+								STValue argumentValue = newArgument.getValue1();
+								switch (argumentValue.getType()) {
+
+									case STMODEL:
+										final STModel stModel = argumentValue.getStModel();
+										addAndSelectChild(new STModelTreeNode(stModel, presentationModel.findSTTemplateByUuid(stModel
+												.getStTemplate()), newArgument.getValue0()));
+										break;
+									case PRIMITIVE:
+										addAndSelectChild(new STValueTreeNode(newArgument.getValue1(), newArgument.getValue0()));
+										break;
+									case ENUM:
+										break;
+								}
+							});
+						}));
+
+						presentationModel.getSelectedSTValues().forEach(selectedValue -> {
+							actions.add(newAction("Add '" + presentationModel.render(selectedValue, 30) + "'", actionEvent -> {
+								presentationModel.doLaterInTransaction(transaction -> {
+									final STArgument stArgument = presentationModel.newSTArgument(getModel(), selectedValue);
+									stModel.addArguments(stArgument);
+                           switch (selectedValue.getType()) {
+
+                              case STMODEL:
+                                 final STModel stModel = selectedValue.getStModel();
+                                 addAndSelectChild(new STModelTreeNode(stModel, presentationModel.findSTTemplateByUuid(stModel
+                                       .getStTemplate()), stArgument));
+                                 break;
+                              case PRIMITIVE:
+                                 addAndSelectChild(new STValueTreeNode(selectedValue, stArgument));
+                                 break;
+                              case ENUM:
+                                 break;
+                           }
+								});
+							}));
 						});
-					}));
-					actions.add(newAction("Add from Clipboard " + presentationModel.cut(SwingUtil.fromClipboard(), 30), actionEvent -> {
-						presentationModel.doLaterInTransaction(transaction -> {
-							final org.javatuples.Pair<STArgument, STValue> newArgument = presentationModel.newSTArgument(getModel(), SwingUtil.fromClipboard());
-							stModel.addArguments(newArgument.getValue0());
-							addAndSelectChild(new STValueTreeNode(newArgument.getValue1(), newArgument.getValue0()));
+
+						presentationModel.getSelectedSTModels().forEach(selectedModel -> {
+							actions.add(newAction("Add '" + presentationModel.render(selectedModel, 30) + "'", actionEvent -> {
+								presentationModel.doLaterInTransaction(transaction -> {
+									final STValue stValue = presentationModel.newSTValue(selectedModel);
+									final STArgument newArgument = presentationModel.newSTArgument(getModel(), stValue);
+									stModel.addArguments(newArgument);
+                           addAndSelectChild(new STModelTreeNode(selectedModel, presentationModel.findSTTemplateByUuid(stModel
+                                 .getStTemplate()), newArgument));
+								});
+							}));
 						});
-					}));
-					break;
-				case KVLIST:
-					actions.add(newAction("Add " + getModel().getName(), actionEvent -> {
-						presentationModel.doLaterInTransaction(transaction -> {
-							presentationModel.addKVArgument(stModel, getModel(), tree, stArgument -> 
-								addAndSelectChild(new STKVArgumentTreeNode(stArgument, getModel()))
-							);
-						});
-					}));
-					break;
-			}
+
+						actions.add(newAction("Add from Clipboard " + presentationModel.cut(SwingUtil.fromClipboard(), 30), actionEvent -> {
+							presentationModel.doLaterInTransaction(transaction -> {
+								final org.javatuples.Pair<STArgument, STValue> newArgument = presentationModel.newSTArgument(getModel(), SwingUtil
+										.fromClipboard());
+								stModel.addArguments(newArgument.getValue0());
+								addAndSelectChild(new STValueTreeNode(newArgument.getValue1(), newArgument.getValue0()));
+							});
+						}));
+						break;
+					case KVLIST:
+						actions.add(newAction("Add " + getModel().getName(), actionEvent -> {
+							presentationModel.doLaterInTransaction(transaction -> {
+								presentationModel.addKVArgument(stModel, getModel(), tree, stArgument ->
+										addAndSelectChild(new STKVArgumentTreeNode(stArgument, getModel()))
+								);
+							});
+						}));
+						break;
+				}
+			});
 			return actions;
 		}
 

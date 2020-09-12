@@ -156,13 +156,11 @@ public class NextgenProject {
 				.addRelations(DomainPatterns.newOneToMany("enums", stEnum));
 
 		final Entity stValue = DomainPatterns.newEntity("STValue")
-				.setObservable(true)
 				.addRelations(DomainPatterns.newStringField("uuid"))
 				.addRelations(DomainPatterns.newStringField("value"))
 				.addRelations(DomainPatterns.newEnumField("type", DomainPatterns.newEnum("STValueType", "STMODEL,PRIMITIVE,ENUM")));
 
 		final Entity stFile = DomainPatterns.newEntity("STFile")
-				.setObservable(true)
 				.addRelations(DomainPatterns.newStringField("uuid"))
 				.addRelations(DomainPatterns.newOneToOne("name", stValue))
 				.addRelations(DomainPatterns.newOneToOne("type", stValue))
@@ -170,20 +168,17 @@ public class NextgenProject {
 				.addRelations(DomainPatterns.newOneToOne("path", stValue));
 
 		final Entity stArgumentKV = DomainPatterns.newEntity("STArgumentKV")
-				.setObservable(true)
 				.addRelations(DomainPatterns.newStringField("uuid"))
 				.addRelations(DomainPatterns.newOneToOne("stParameterKey", stParameterKey))
 				.addRelations(DomainPatterns.newOneToOne("value", stValue));
 
 		final Entity stArgument = DomainPatterns.newEntity("STArgument")
-				.setObservable(true)
 				.addRelations(DomainPatterns.newStringField("uuid"))
 				.addRelations(DomainPatterns.newOneToOne("stParameter", stParameter))
 				.addRelations(DomainPatterns.newOneToOne("value", stValue))
 				.addRelations(DomainPatterns.newOneToMany("keyValues", stArgumentKV));
 
 		final Entity stModelNeo = DomainPatterns.newEntity("STModel")
-				.setObservable(true)
 				.addRelations(DomainPatterns.newStringField("uuid"))
 				.addRelations(DomainPatterns.newOneToOne("stTemplate", stTemplate))
 				.addRelations(DomainPatterns.newOneToMany("files", stFile))
@@ -191,26 +186,10 @@ public class NextgenProject {
 
 		stValue.addRelations(DomainPatterns.newOneToOne("stModel", stModelNeo));
 
-		final Entity script = DomainPatterns.newEntity("Script")
-				.setObservable(true)
-				.addRelations(DomainPatterns.newStringField("uuid"))
-				.addRelations(DomainPatterns.newStringField("name"))
-				.addRelations(DomainPatterns.newOneToOne("script", stValue));
-
-		final Entity project = DomainPatterns.newEntity("Project")
-				.setObservable(true)
-				.addRelations(DomainPatterns.newStringField("uuid"))
-				.addRelations(DomainPatterns.newStringField("name"))
-				.addRelations(DomainPatterns.newOneToMany("files", stFile))
-				.addRelations(DomainPatterns.newOneToMany("models", stModelNeo))
-				.addRelations(DomainPatterns.newOneToMany("values", stValue))
-				.addRelations(DomainPatterns.newOneToMany("scripts", script));
-
 		final Domain domain = DomainPatterns.newDomain("STModel")
 				.addEntities(stGroupModel)
-				.addEntities(stModelNeo)
-				.addEntities(script)
-				.addEntities(project);
+				.addEntities(stModelNeo);
+
 		DomainPatterns.writeNeo(mainJava, stModelPackage, domain);
 	}
 

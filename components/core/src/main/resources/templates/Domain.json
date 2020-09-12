@@ -30,7 +30,7 @@
     "children" : [ {
       "uuid" : "c4c6caaf-84a5-4975-8782-311476c8742c",
       "name" : "Entity",
-      "text" : "Entity: ~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~ ~if(observable)~observable~endif~\n~relations:{it|~it~};separator=\"\\n\"~ ",
+      "text" : "Entity: ~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~\n~relations:{it|~it~};separator=\"\\n\"~ ",
       "parameters" : [ {
         "uuid" : "df812852-1a4b-4e82-b4e1-31196c9b948f",
         "name" : "name",
@@ -46,11 +46,6 @@
         "name" : "enumValues",
         "type" : "LIST",
         "argumentType" : "String"
-      }, {
-        "uuid" : "e7124aa5-53e3-490e-9834-e12fa7f8bd0c",
-        "name" : "observable",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
       }, {
         "uuid" : "b082416f-6627-4868-8709-6e1d5ffaddbe",
         "name" : "relations",

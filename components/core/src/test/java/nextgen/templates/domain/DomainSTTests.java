@@ -20,36 +20,36 @@ public class DomainSTTests {
 
 	@org.junit.Test
 	public void testDomain() {
-		System.out.println("\n--- TEST Domain:\n" + newDomain());
-	} 
+		System.out.println("Domain:\n" + newDomain());
+	}  
 
 	@org.junit.Test
 	public void testEntity() {
-		System.out.println("\n--- TEST Entity:\n" + newEntity());
-	} 
+		System.out.println("Entity:\n" + newEntity());
+	}  
 
 	@org.junit.Test
 	public void testRelation() {
-		System.out.println("\n--- TEST Relation:\n" + newRelation());
-	} 
+		System.out.println("Relation:\n" + newRelation());
+	}  
 
 	@org.junit.Test
 	public void testJavaProject() {
-		System.out.println("\n--- TEST JavaProject:\n" + newJavaProject());
-	} 
+		System.out.println("JavaProject:\n" + newJavaProject());
+	}  
 
 	@org.junit.Test
 	public void testJavaLibrary() {
-		System.out.println("\n--- TEST JavaLibrary:\n" + newJavaLibrary());
-	} 
+		System.out.println("JavaLibrary:\n" + newJavaLibrary());
+	}  
 
 	@org.junit.Test
 	public void testJavaPackage() {
-		System.out.println("\n--- TEST JavaPackage:\n" + newJavaPackage());
-	} 
+		System.out.println("JavaPackage:\n" + newJavaPackage());
+	}  
 
 	@org.junit.Test
 	public void testModel() {
-		System.out.println("\n--- TEST Model:\n" + newModel());
-	} 
+		System.out.println("Model:\n" + newModel());
+	}  
 } 

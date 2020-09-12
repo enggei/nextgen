@@ -800,6 +800,11 @@ public class STAppPresentationModel {
       return stRenderer.render(stValue);
    }
 
+   public String render(STValue stValue, int maxLength) {
+      String s = render(stValue);
+      return s.substring(0, Math.min(s.length(), maxLength));
+   }
+
    public String render(STArgument stArgument) {
       return render(stArgument.getValue());
    }
@@ -1211,6 +1216,22 @@ public class STAppPresentationModel {
 
    public void undoLast() {
       chronicle.rollbackLast();;
+   }
+
+   public Stream<STValue> getSelectedSTValues() {
+      STModelCanvas canvas = getWorkspace().findCanvas().get();
+      return canvas.getSelectedNodes()
+            .filter(baseCanvasNode -> baseCanvasNode instanceof STModelCanvas.STValueNode)
+            .map(baseCanvasNode -> (STModelCanvas.STValueNode)baseCanvasNode)
+            .map(STModelCanvas.BaseCanvasNode::getModel);
+   }
+
+   public Stream<STModel> getSelectedSTModels() {
+      STModelCanvas canvas = getWorkspace().findCanvas().get();
+      return canvas.getSelectedNodes()
+            .filter(baseCanvasNode -> baseCanvasNode instanceof STModelCanvas.STModelNode)
+            .map(baseCanvasNode -> (STModelCanvas.STModelNode)baseCanvasNode)
+            .map(STModelCanvas.BaseCanvasNode::getModel);
    }
 
    public static final class CompilationResult {
