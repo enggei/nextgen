@@ -16,6 +16,7 @@ public class ButtonBaseElement {
 	private Object _focusRipple;
 	private Object _focusVisibleClassName;
 	private Object _id;
+	private Object _key;
 	private Object _onFocusVisible;
 	private Object _style;
 	private Object _TouchRippleProps;
@@ -24,11 +25,6 @@ public class ButtonBaseElement {
 
 	ButtonBaseElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -49,6 +45,7 @@ public class ButtonBaseElement {
 		st.add("focusRipple", _focusRipple);
 		st.add("focusVisibleClassName", _focusVisibleClassName);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("onFocusVisible", _onFocusVisible);
 		st.add("style", _style);
 		st.add("TouchRippleProps", _TouchRippleProps);
@@ -299,6 +296,28 @@ public class ButtonBaseElement {
 		return this;
 	} 
 
+	public ButtonBaseElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public ButtonBaseElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public ButtonBaseElement setOnFocusVisible(Object value) {
 		this._onFocusVisible = value;
 		return this;
@@ -414,6 +433,16 @@ public class ButtonBaseElement {
 		return this._attribute.stream().map(ButtonBaseElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(ButtonBaseElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(ButtonBaseElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class ButtonBaseElement_Attribute {
 
 		Object _name;
@@ -437,7 +466,7 @@ public class ButtonBaseElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -452,7 +481,7 @@ public class ButtonBaseElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ButtonBaseElement(action,centerRipple,classes,className,component,disabled,disableRipple,disableTouchRipple,focusRipple,focusVisibleClassName,id,onFocusVisible,style,TouchRippleProps,attribute,children) ::= <<<ButtonBase~if(action)~\n" + 
+	static final String st = "ButtonBaseElement(action,centerRipple,classes,className,component,disabled,disableRipple,disableTouchRipple,focusRipple,focusVisibleClassName,id,key,onFocusVisible,style,TouchRippleProps,attribute,children) ::= <<<ButtonBase~if(action)~\n" + 
 				"	action=~action~~endif~~if(centerRipple)~\n" + 
 				"	centerRipple~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
@@ -463,7 +492,8 @@ public class ButtonBaseElement {
 				"	disableTouchRipple~endif~~if(focusRipple)~\n" + 
 				"	focusRipple~endif~~if(focusVisibleClassName)~\n" + 
 				"	focusVisibleClassName=\"~focusVisibleClassName~\"~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(onFocusVisible)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(onFocusVisible)~\n" + 
 				"	onFocusVisible=~onFocusVisible~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(TouchRippleProps)~\n" + 
 				"	TouchRippleProps=~TouchRippleProps~~endif~~attribute:{it|\n" + 

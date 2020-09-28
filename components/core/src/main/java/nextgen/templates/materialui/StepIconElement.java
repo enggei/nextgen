@@ -12,16 +12,12 @@ public class StepIconElement {
 	private Object _error;
 	private Object _icon;
 	private Object _id;
+	private Object _key;
 	private Object _style;
 	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	StepIconElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -38,6 +34,7 @@ public class StepIconElement {
 		st.add("error", _error);
 		st.add("icon", _icon);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("style", _style);
 		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
@@ -197,6 +194,28 @@ public class StepIconElement {
 		return this;
 	} 
 
+	public StepIconElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public StepIconElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public StepIconElement setStyle(Object value) {
 		this._style = value;
 		return this;
@@ -240,6 +259,16 @@ public class StepIconElement {
 		return this._attribute.stream().map(StepIconElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(StepIconElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(StepIconElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class StepIconElement_Attribute {
 
 		Object _name;
@@ -263,7 +292,7 @@ public class StepIconElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -278,14 +307,15 @@ public class StepIconElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "StepIconElement(active,classes,className,completed,error,icon,id,style,attribute) ::= <<<StepIcon~if(active)~\n" + 
+	static final String st = "StepIconElement(active,classes,className,completed,error,icon,id,key,style,attribute) ::= <<<StepIcon~if(active)~\n" + 
 				"	active~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(completed)~\n" + 
 				"	completed~endif~~if(error)~\n" + 
 				"	error~endif~~if(icon)~\n" + 
 				"	icon=~icon~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~attribute:{it|\n" + 
 				"	\n" + 
 				"	~it.name~=~it.value~}~ /> >>";

@@ -7,6 +7,7 @@ public class Entity {
 
 	private String _name;
 	private Boolean _isEnum;
+	private Object _eqha;
 	private java.util.List<String> _enumValues = new java.util.ArrayList<>();
 	private java.util.List<Relation> _relations = new java.util.ArrayList<>();
 
@@ -23,6 +24,7 @@ public class Entity {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Entity");
 		st.add("name", _name);
 		st.add("isEnum", _isEnum);
+		st.add("eqha", _eqha);
 		for (Object o : _enumValues) st.add("enumValues", o);
 		for (Object o : _relations) st.add("relations", o);
 		return st.render().trim();
@@ -69,6 +71,28 @@ public class Entity {
 
 	public Entity removeIsEnum() {
 		this._isEnum = null;
+		return this;
+	} 
+
+	public Entity setEqha(Object value) {
+		this._eqha = value;
+		return this;
+	}
+
+	public Object getEqha() {
+		return this._eqha;
+	}
+
+	public Object getEqha(Object defaultValue) {
+		return this._eqha == null ? defaultValue : this._eqha;
+	}
+
+	public boolean hasEqha() {
+		return this._eqha != null;
+	}
+
+	public Entity removeEqha() {
+		this._eqha = null;
 		return this;
 	} 
 
@@ -144,6 +168,6 @@ public class Entity {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Entity(name,isEnum,enumValues,relations) ::= <<Entity: ~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~\n" + 
+	static final String st = "Entity(name,isEnum,enumValues,eqha,relations) ::= <<Entity: ~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~ ~if(eqha)~~eqha~~endif~\n" + 
 				"~relations:{it|~it~};separator=\"\\n\"~ >>";
 }  

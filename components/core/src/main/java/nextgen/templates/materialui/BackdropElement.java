@@ -9,6 +9,7 @@ public class BackdropElement {
 	private Object _className;
 	private Object _id;
 	private Object _invisible;
+	private Object _key;
 	private Object _style;
 	private Object _transitionDuration;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -16,11 +17,6 @@ public class BackdropElement {
 
 	BackdropElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -34,6 +30,7 @@ public class BackdropElement {
 		st.add("className", _className);
 		st.add("id", _id);
 		st.add("invisible", _invisible);
+		st.add("key", _key);
 		st.add("style", _style);
 		st.add("transitionDuration", _transitionDuration);
 		for (Object o : _children) st.add("children", o);
@@ -126,6 +123,28 @@ public class BackdropElement {
 
 	public BackdropElement removeInvisible() {
 		this._invisible = null;
+		return this;
+	} 
+
+	public BackdropElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public BackdropElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -222,6 +241,16 @@ public class BackdropElement {
 		return this._attribute.stream().map(BackdropElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(BackdropElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(BackdropElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class BackdropElement_Attribute {
 
 		Object _name;
@@ -245,7 +274,7 @@ public class BackdropElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -260,11 +289,12 @@ public class BackdropElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "BackdropElement(classes,className,id,invisible,style,transitionDuration,attribute,children) ::= <<<Backdrop~if(classes)~\n" + 
+	static final String st = "BackdropElement(classes,className,id,invisible,key,style,transitionDuration,attribute,children) ::= <<<Backdrop~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(invisible)~\n" + 
-				"	invisible~endif~\n" + 
+				"	invisible~endif~~if(key)~\n" + 
+				"	key=~key~~endif~\n" + 
 				"	open~if(style)~\n" + 
 				"	style=~style~~endif~~if(transitionDuration)~\n" + 
 				"	transitionDuration=~transitionDuration~~endif~~attribute:{it|\n" + 

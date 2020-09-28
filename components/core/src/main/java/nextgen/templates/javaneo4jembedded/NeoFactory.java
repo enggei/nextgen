@@ -13,11 +13,6 @@ public class NeoFactory {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -125,7 +120,10 @@ public class NeoFactory {
 				"	private final org.neo4j.graphdb.GraphDatabaseService db;\n" + 
 				"\n" + 
 				"	public ~name;format=\"capitalize\"~(java.lang.String dir) { \n" + 
-				"		this(new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabaseBuilder(new java.io.File(dir)).setConfig(org.neo4j.graphdb.factory.GraphDatabaseSettings.allow_upgrade, \"true\").newGraphDatabase());\n" + 
+				"		this(new org.neo4j.graphdb.factory.GraphDatabaseFactory()\n" + 
+				"				.newEmbeddedDatabaseBuilder(new java.io.File(dir))\n" + 
+				"				.setConfig(org.neo4j.graphdb.factory.GraphDatabaseSettings.allow_upgrade, \"true\")\n" + 
+				"				.newGraphDatabase());\n" + 
 				"		Runtime.getRuntime().addShutdownHook(new java.lang.Thread(db::shutdown));\n" + 
 				"	}\n" + 
 				"\n" + 

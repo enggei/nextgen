@@ -10,6 +10,7 @@ public class TabScrollButtonElement {
 	private Object _direction;
 	private Object _disabled;
 	private Object _id;
+	private Object _key;
 	private Object _orientation;
 	private Object _style;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -17,11 +18,6 @@ public class TabScrollButtonElement {
 
 	TabScrollButtonElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -36,6 +32,7 @@ public class TabScrollButtonElement {
 		st.add("direction", _direction);
 		st.add("disabled", _disabled);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("orientation", _orientation);
 		st.add("style", _style);
 		for (Object o : _children) st.add("children", o);
@@ -153,6 +150,28 @@ public class TabScrollButtonElement {
 		return this;
 	} 
 
+	public TabScrollButtonElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public TabScrollButtonElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public TabScrollButtonElement setOrientation(Object value) {
 		this._orientation = value;
 		return this;
@@ -246,6 +265,16 @@ public class TabScrollButtonElement {
 		return this._attribute.stream().map(TabScrollButtonElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(TabScrollButtonElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(TabScrollButtonElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class TabScrollButtonElement_Attribute {
 
 		Object _name;
@@ -269,7 +298,7 @@ public class TabScrollButtonElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -284,13 +313,14 @@ public class TabScrollButtonElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TabScrollButtonElement(classes,className,direction,disabled,id,orientation,style,attribute,children) ::= <<<TabScrollButton~if(classes)~\n" + 
+	static final String st = "TabScrollButtonElement(classes,className,direction,disabled,id,key,orientation,style,attribute,children) ::= <<<TabScrollButton~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~\n" + 
-				"	direction=\"~direction~\"~if(disabled)~\n" + 
+				"	direction=~direction~~if(disabled)~\n" + 
 				"	disabled~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~\n" + 
-				"	orientation=\"~orientation~\"~if(style)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~\n" + 
+				"	orientation=~orientation~~if(style)~\n" + 
 				"	style=~style~~endif~~attribute:{it|\n" + 
 				"	\n" + 
 				"	~it.name~=~it.value~}~~if(children)~>\n" + 

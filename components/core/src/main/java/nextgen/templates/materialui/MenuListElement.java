@@ -11,6 +11,7 @@ public class MenuListElement {
 	private Object _disabledItemsFocusable;
 	private Object _disableListWrap;
 	private Object _id;
+	private Object _key;
 	private Object _style;
 	private Object _variant;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -18,11 +19,6 @@ public class MenuListElement {
 
 	MenuListElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -38,6 +34,7 @@ public class MenuListElement {
 		st.add("disabledItemsFocusable", _disabledItemsFocusable);
 		st.add("disableListWrap", _disableListWrap);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("style", _style);
 		st.add("variant", _variant);
 		for (Object o : _children) st.add("children", o);
@@ -177,6 +174,28 @@ public class MenuListElement {
 		return this;
 	} 
 
+	public MenuListElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public MenuListElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public MenuListElement setStyle(Object value) {
 		this._style = value;
 		return this;
@@ -270,6 +289,16 @@ public class MenuListElement {
 		return this._attribute.stream().map(MenuListElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(MenuListElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(MenuListElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class MenuListElement_Attribute {
 
 		Object _name;
@@ -293,7 +322,7 @@ public class MenuListElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -308,13 +337,14 @@ public class MenuListElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MenuListElement(autoFocus,autoFocusItem,className,disabledItemsFocusable,disableListWrap,id,style,variant,attribute,children) ::= <<<MenuList~if(autoFocus)~\n" + 
+	static final String st = "MenuListElement(autoFocus,autoFocusItem,className,disabledItemsFocusable,disableListWrap,id,key,style,variant,attribute,children) ::= <<<MenuList~if(autoFocus)~\n" + 
 				"	autoFocus~endif~~if(autoFocusItem)~\n" + 
 				"	autoFocusItem~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(disabledItemsFocusable)~\n" + 
 				"	disabledItemsFocusable~endif~~if(disableListWrap)~\n" + 
 				"	disableListWrap~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
 				"	\n" + 

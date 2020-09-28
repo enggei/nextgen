@@ -43,111 +43,6 @@
       "type" : "LIST"
     } ]
   }, {
-    "uuid" : "a8c30331-4406-45ce-9f9f-b3d7b6b75862",
-    "name" : "MobX",
-    "text" : "MobX constructs ",
-    "children" : [ {
-      "uuid" : "dd7b5a3d-8f3f-4909-8792-67a6c94565d2",
-      "name" : "MobXStore",
-      "text" : "import { observable, action, reaction } from 'mobx';\n~imports:{it|import ~it.ref~ from '~it.path~';};separator=\"\\n\"~\n\nclass ~name;format=\"capitalize\"~ {\n\n\t~observables:{it|~it~};separator=\"\\n\"~\n\n\tconstructor() {\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t}\n\n\t~actions:{it|~it~};separator=\"\\n\\n\"~\n}\n\nexport default new ~name;format=\"capitalize\"~(); ",
-      "parameters" : [ {
-        "uuid" : "da68d5c1-d2af-4fc6-bdaf-d151e1a461b9",
-        "name" : "imports",
-        "type" : "KVLIST",
-        "argumentType" : "Object",
-        "keys" : [ {
-          "uuid" : "02370b98-9161-4d9c-a8b7-c463331a13c8",
-          "name" : "ref",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "6431f58f-fe81-4e4f-b2f6-bffbb2caedcf",
-          "name" : "path",
-          "argumentType" : "Object"
-        } ]
-      }, {
-        "uuid" : "53ecc93a-31b0-4133-b04a-9914554ad1e8",
-        "name" : "name",
-        "type" : "SINGLE",
-        "argumentType" : "String"
-      }, {
-        "uuid" : "907a59c0-3e2f-49a6-8814-7e3d2f719e98",
-        "name" : "observables",
-        "type" : "LIST",
-        "argumentType" : "Observable"
-      }, {
-        "uuid" : "bab299e4-2bef-47e5-bcf7-cc069e3d9d42",
-        "name" : "constructorStatements",
-        "type" : "LIST",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "b1a7e785-530c-43cd-93e1-0c5f3bd9d3aa",
-        "name" : "actions",
-        "type" : "LIST",
-        "argumentType" : "Action"
-      } ]
-    }, {
-      "uuid" : "4a44932e-6409-4cc8-a094-7fd90c877632",
-      "name" : "Observable",
-      "text" : "@observable ~name~~if(initializer)~ = ~initializer~~endif~; ",
-      "parameters" : [ {
-        "uuid" : "a7dba272-19a4-4d18-8aa7-0dcea3fe2b7d",
-        "name" : "name",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "9d48d86e-7673-46b7-8950-f01fde9ad6dd",
-        "name" : "initializer",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      } ]
-    }, {
-      "uuid" : "61f68070-a4a3-4495-a3e1-c35f7fcd035d",
-      "name" : "Action",
-      "text" : "@action ~name~(~params:{it|~it~};separator=\",\"~) {\n\tconsole.info(\"action ~name~ \" ~params:{it| + \" ~it~ \" + ~it~}~);\n\t~statements:{it|~it~};separator=\"\\n\"~\n} ",
-      "parameters" : [ {
-        "uuid" : "c6b5ccba-d6d7-4cf9-ab69-65e2f79863b9",
-        "name" : "name",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "2153d6f9-213f-4a75-89ef-069b92278919",
-        "name" : "params",
-        "type" : "LIST",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "3f1255e8-7749-42f9-b948-6f7df1ab277c",
-        "name" : "statements",
-        "type" : "LIST",
-        "argumentType" : "Object"
-      } ]
-    }, {
-      "uuid" : "03639998-a151-4111-aab0-b3ca9a938ac7",
-      "name" : "reaction",
-      "text" : "reaction(~dataFunction~, ~effectFunction~); ",
-      "parameters" : [ {
-        "uuid" : "1e687577-2854-4e9a-b79e-e0b3aaeb2dd3",
-        "name" : "dataFunction",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "7e0500ad-f447-4bd3-9ce4-6d6cb51bfeed",
-        "name" : "effectFunction",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      } ]
-    }, {
-      "uuid" : "fdce873c-54a0-4c29-9e6e-9999b00cf2b1",
-      "name" : "Inject",
-      "text" : "@inject(~values:{it|~it~};separator=\", \"~) ",
-      "parameters" : [ {
-        "uuid" : "682a2f9d-7430-44c2-860d-2d256bfe217b",
-        "name" : "values",
-        "argumentType" : "Object",
-        "type" : "LIST"
-      } ]
-    } ],
-    "parameters" : [ ]
-  }, {
     "uuid" : "0a0edb56-b90b-42b2-9fae-dd0c1321b773",
     "name" : "NameArray",
     "text" : "~name~ : [ ~values:{it|~it~};separator=\", \"~ ] ",
@@ -284,8 +179,13 @@
     }, {
       "uuid" : "d2b49f7d-c4ec-4966-881f-4ae00d7a6908",
       "name" : "indexHtml",
-      "text" : "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">\n\n    <link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css?family=Roboto:300,400,500\"/>\n\n    <title>~title~</title>\n</head>\n<body>\n<noscript>\n    You need to enable JavaScript to run ~title~.\n</noscript>\n<div id=\"root\"></div>\n<script type=\"text/javascript\" src=\"main.js\"></script>\n</body>\n</html> ",
+      "text" : "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">\n\n    <link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css?family=Roboto:300,400,500\"/>\n    ~stylesheets:{it|<link rel=\"stylesheet\" href=\"~it~\"/>};separator=\"\\n\"~\n\n    <title>~title~</title>\n</head>\n<body>\n<noscript>\n    You need to enable JavaScript to run ~title~.\n</noscript>\n<div id=\"root\"></div>\n<script type=\"text/javascript\" src=\"main.js\"></script>\n</body>\n</html> ",
       "parameters" : [ {
+        "uuid" : "c8305574-4ce3-4060-b6d4-cd8f9fbd2be1",
+        "name" : "stylesheets",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
         "uuid" : "626f09c8-f0fc-46ae-a392-75837e77ebc4",
         "name" : "title",
         "type" : "SINGLE",
@@ -437,7 +337,7 @@
       }, {
         "uuid" : "9752d4ad-2141-445a-9a80-3a79072db167",
         "name" : "ClassComponent",
-        "text" : "import React from 'react';\n~imports:{it|import ~it.ref~ from '~it.path~';};separator=\"\\n\"~\n~componentImports:{it|~it~};separator=\"\\n\"~\n~dependencies:{it|~it~};separator=\"\\n\"~\n\n~constDeclarations:{it|~it~};separator=\"\\n\\n\"~\n\n~decorators:{it|~it~};separator=\"\\n\"~\nclass ~name~ extends React.Component {\n\n\tconstructor(props) {\n\t\tsuper(props);\n\t\tconsole.log(\"new ~name~ : \" +  this.props);\n~if(state)~\n\t\tthis.state = {\n\t\t\t~state:{it|~it~};separator=\",\\n\"~;\n\t\t}\n~endif~\n\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t\t~events:{it|this.~it.methodName~ = this.~it.methodName~.bind(this);};separator=\"\\n\"~\n\t}\n\n~if(events)~\n\t~events:{it|~it.declaration~};separator=\"\\n\\n\"~\n\n~endif~\n~if(methods)~\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n\n~endif~\n\n\tstatic getDerivedStateFromError(error) {\n\t\t// Update state so the next render will show the fallback UI.\n\t\treturn { hasError: true };\n\t}\n\n\tcomponentDidCatch(error, errorInfo) {\n\t\t// You can also log the error to an error reporting service\n\t\tconsole.info(error);\n\t\tconsole.info(errorInfo);\n\t}\n\n\trender() {\n\t\tconsole.log(\"render ~name~ : \" +  this.props);\n~if(renderCondition)~\n\t\tif(~renderCondition~) {\n\t\t\tconsole.info(\"~name~.~renderCondition~ TRUE\");\n\t\t\treturn ( \n\t\t\t\t~renderTrue~\n\t\t\t);\n\t\t} else {\n\t\t\tconsole.info(\"~name~.~renderCondition~ FALSE\");\n\t\t\treturn (\n\t\t\t\t~renderFalse~\n\t\t\t);\n\t\t}\n~else~\n\t\treturn (\n\t\t\t~if(renderElement)~~renderElement~~else~null~endif~\n\t\t);\n~endif~\n\t}\n}\n\nexport default (~name~); ",
+        "text" : "import React from 'react';\n~imports:{it|import ~it.ref~ from '~it.path~';};separator=\"\\n\"~\n~componentImports:{it|~it~};separator=\"\\n\"~\n~dependencies:{it|~it~};separator=\"\\n\"~\n\n~constDeclarations:{it|~it~};separator=\"\\n\\n\"~\n\n~decorators:{it|~it~};separator=\"\\n\"~\nclass ~name~ extends React.Component {\n\n\t~fields:{it|~it.name~};separator=\"\\n\"~\n\t\n\tconstructor(props) {\n\t\tsuper(props);\n\t\tconsole.log(\"new ~name~ : \" +  this.props);\n~if(state)~\n\t\tthis.state = {\n\t\t\t~state:{it|~it~};separator=\",\\n\"~;\n\t\t}\n~endif~\n\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t\t~events:{it|this.~it.methodName~ = this.~it.methodName~.bind(this);};separator=\"\\n\"~\n\t}\n\n~if(events)~\n\t~events:{it|~it.declaration~};separator=\"\\n\\n\"~\n\n~endif~\n~if(methods)~\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n\n~endif~\n\n\tstatic getDerivedStateFromError(error) {\n\t\t// Update state so the next render will show the fallback UI.\n\t\treturn { hasError: true };\n\t}\n\n\tcomponentDidCatch(error, errorInfo) {\n\t\t// You can also log the error to an error reporting service\n\t\tconsole.info(error);\n\t\tconsole.info(errorInfo);\n\t}\n\n\trender() {\n\t\tconsole.log(\"render ~name~ : \" +  this.props);\n~if(renderCondition)~\n\t\tif(~renderCondition~) {\n\t\t\tconsole.info(\"~name~.~renderCondition~ TRUE\");\n\t\t\treturn ( \n\t\t\t\t~renderTrue~\n\t\t\t);\n\t\t} else {\n\t\t\tconsole.info(\"~name~.~renderCondition~ FALSE\");\n\t\t\treturn (\n\t\t\t\t~renderFalse~\n\t\t\t);\n\t\t}\n~else~\n\t\treturn (\n\t\t\t~if(renderElement)~~renderElement~~else~null~endif~\n\t\t);\n~endif~\n\t}\n}\n\nexport default (~name~); ",
         "parameters" : [ {
           "uuid" : "4b461799-67b0-4758-bc6b-d3f04c7b826a",
           "name" : "imports",
@@ -477,6 +377,16 @@
           "name" : "name",
           "type" : "SINGLE",
           "argumentType" : "String"
+        }, {
+          "uuid" : "9611e002-0461-4839-a051-81c091b5b7f2",
+          "name" : "fields",
+          "type" : "KVLIST",
+          "argumentType" : "Object",
+          "keys" : [ {
+            "uuid" : "78084b91-0980-4e7d-9d8c-1864f42945c7",
+            "name" : "name",
+            "argumentType" : "Object"
+          } ]
         }, {
           "uuid" : "a84dc23d-aa48-472c-a94f-a54f66f6ca05",
           "name" : "state",
@@ -577,7 +487,7 @@
       }, {
         "uuid" : "a58a9128-7ab6-4655-8dda-8a8a51d00c40",
         "name" : "MapProperty",
-        "text" : "{\n\t~property~.map((element) => (\n\t\t~forEach~\n\t)) \n} ",
+        "text" : "{\n\t~property~.map((element, i) => (\n\t\t~forEach~\n\t)) \n} ",
         "parameters" : [ {
           "uuid" : "729081ef-720c-47f2-aec9-b73303eecb60",
           "name" : "property",
@@ -679,11 +589,16 @@
         }, {
           "uuid" : "562c6189-0000-4cce-b64d-2a4594b462b2",
           "name" : "Element",
-          "text" : "<~name~~if(attributes)~ ~attributes:{it|\n\n\t~it.key~=~it.value~}~~endif~~if(props)~ ~props:{it|~it~};separator=\" \"~~endif~~if(children)~>\n\t~children:{it|~it~};separator=\"\\n\"~\n</~name~>~else~ />~endif~ ",
+          "text" : "<~name~~if(singleAttributes)~ ~singleAttributes:{it|~it~};separator=\" \"~~endif~~if(attributes)~ ~attributes:{it|\n\n\t~it.key~=~it.value~}~~endif~~if(props)~ ~props:{it|~it~};separator=\" \"~~endif~~if(children)~>\n\t~children:{it|~it~};separator=\"\\n\"~\n</~name~>~else~ />~endif~ ",
           "parameters" : [ {
             "uuid" : "4b634c2b-c83f-4c9d-9dc8-7e2ac576e507",
             "name" : "name",
             "type" : "SINGLE",
+            "argumentType" : "Object"
+          }, {
+            "uuid" : "ae3b7a98-473a-4616-8160-2cf1ab632ef1",
+            "name" : "singleAttributes",
+            "type" : "LIST",
             "argumentType" : "Object"
           }, {
             "uuid" : "81d7ac69-a3aa-49f5-8708-dd3f655a1ae9",
@@ -824,7 +739,7 @@
         "uuid" : "f015e1ac-3367-40bc-9635-e332b430d8e9",
         "name" : "name",
         "type" : "SINGLE",
-        "argumentType" : "Object"
+        "argumentType" : "String"
       }, {
         "uuid" : "d3e4fbb7-1970-4328-8931-258cb6cddf1b",
         "name" : "urlParam",
@@ -854,12 +769,12 @@
         "uuid" : "b49848db-b2dd-4702-8fe6-1f36e6e82f53",
         "name" : "name",
         "type" : "SINGLE",
-        "argumentType" : "Object"
+        "argumentType" : "String"
       }, {
         "uuid" : "093e4406-1915-4d29-bf66-38cc90bac993",
         "name" : "agentEndpoint",
         "type" : "LIST",
-        "argumentType" : "Object"
+        "argumentType" : "AgentEndpoint"
       } ]
     }, {
       "uuid" : "11411a9d-db8a-4c28-9b71-3b135e55e198",
@@ -921,6 +836,16 @@
         "type" : "SINGLE",
         "argumentType" : "Object"
       } ]
+    } ]
+  }, {
+    "uuid" : "184df464-61a5-4d94-84d8-9aaa56ea2d02",
+    "name" : "Statement",
+    "text" : "~expression~; ",
+    "parameters" : [ {
+      "uuid" : "3d44e07a-fce9-4c70-82ea-5cd46cbbe841",
+      "name" : "expression",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
     } ]
   } ],
   "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/React.stg",

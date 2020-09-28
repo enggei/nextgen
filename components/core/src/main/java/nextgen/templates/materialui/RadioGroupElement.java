@@ -8,6 +8,7 @@ public class RadioGroupElement {
 	private Object _className;
 	private Object _defaultValue;
 	private Object _id;
+	private Object _key;
 	private Object _name;
 	private Object _onChange;
 	private Object _style;
@@ -17,11 +18,6 @@ public class RadioGroupElement {
 
 	RadioGroupElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -34,6 +30,7 @@ public class RadioGroupElement {
 		st.add("className", _className);
 		st.add("defaultValue", _defaultValue);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("name", _name);
 		st.add("onChange", _onChange);
 		st.add("style", _style);
@@ -106,6 +103,28 @@ public class RadioGroupElement {
 
 	public RadioGroupElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public RadioGroupElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public RadioGroupElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -246,6 +265,16 @@ public class RadioGroupElement {
 		return this._attribute.stream().map(RadioGroupElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(RadioGroupElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(RadioGroupElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class RadioGroupElement_Attribute {
 
 		Object _name;
@@ -269,7 +298,7 @@ public class RadioGroupElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -284,10 +313,11 @@ public class RadioGroupElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "RadioGroupElement(className,defaultValue,id,name,onChange,style,value,attribute,children) ::= <<<RadioGroup~if(className)~\n" + 
+	static final String st = "RadioGroupElement(className,defaultValue,id,key,name,onChange,style,value,attribute,children) ::= <<<RadioGroup~if(className)~\n" + 
 				"	className=~className~~endif~~if(defaultValue)~\n" + 
 				"	defaultValue=~defaultValue~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(name)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(name)~\n" + 
 				"	name=\"~name~\"~endif~~if(onChange)~\n" + 
 				"	onChange=~onChange~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(value)~\n" + 

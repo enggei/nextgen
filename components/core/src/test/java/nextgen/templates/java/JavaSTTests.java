@@ -10,6 +10,7 @@ public class JavaSTTests {
 	@org.junit.Test
 	public void testAll() {
 		testBean();
+		testBeanListener();
 		testBoundedExternalListAccessors();
 		testBoundedExternalReferenceAccessors();
 		testBoundedListAccessors();
@@ -113,6 +114,11 @@ public class JavaSTTests {
 	@org.junit.Test
 	public void testBean() {
 		System.out.println("Bean:\n" + newBean());
+	}  
+
+	@org.junit.Test
+	public void testBeanListener() {
+		System.out.println("BeanListener:\n" + newBeanListener());
 	}  
 
 	@org.junit.Test

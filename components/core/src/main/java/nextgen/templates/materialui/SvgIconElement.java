@@ -12,6 +12,7 @@ public class SvgIconElement {
 	private Object _fontSize;
 	private Object _htmlColor;
 	private Object _id;
+	private Object _key;
 	private Object _shapeRendering;
 	private Object _style;
 	private Object _titleAccess;
@@ -21,11 +22,6 @@ public class SvgIconElement {
 
 	SvgIconElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -42,6 +38,7 @@ public class SvgIconElement {
 		st.add("fontSize", _fontSize);
 		st.add("htmlColor", _htmlColor);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("shapeRendering", _shapeRendering);
 		st.add("style", _style);
 		st.add("titleAccess", _titleAccess);
@@ -205,6 +202,28 @@ public class SvgIconElement {
 		return this;
 	} 
 
+	public SvgIconElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public SvgIconElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public SvgIconElement setShapeRendering(Object value) {
 		this._shapeRendering = value;
 		return this;
@@ -342,6 +361,16 @@ public class SvgIconElement {
 		return this._attribute.stream().map(SvgIconElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(SvgIconElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(SvgIconElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class SvgIconElement_Attribute {
 
 		Object _name;
@@ -365,7 +394,7 @@ public class SvgIconElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -380,14 +409,15 @@ public class SvgIconElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SvgIconElement(classes,className,color,component,fontSize,htmlColor,id,shapeRendering,style,titleAccess,viewBox,attribute,children) ::= <<<SvgIcon~if(classes)~\n" + 
+	static final String st = "SvgIconElement(classes,className,color,component,fontSize,htmlColor,id,key,shapeRendering,style,titleAccess,viewBox,attribute,children) ::= <<<SvgIcon~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(fontSize)~\n" + 
-				"	fontSize=\"~fontSize~\"~endif~~if(htmlColor)~\n" + 
+				"	fontSize=~fontSize~~endif~~if(htmlColor)~\n" + 
 				"	htmlColor=\"~htmlColor~\"~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(shapeRendering)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(shapeRendering)~\n" + 
 				"	shapeRendering=\"~shapeRendering~\"~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(titleAccess)~\n" + 
 				"	titleAccess=\"~titleAccess~\"~endif~~if(viewBox)~\n" + 

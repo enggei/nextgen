@@ -11,6 +11,7 @@ public class SkeletonElement {
 	private Object _component;
 	private Object _height;
 	private Object _id;
+	private Object _key;
 	private Object _style;
 	private Object _variant;
 	private Object _width;
@@ -19,11 +20,6 @@ public class SkeletonElement {
 
 	SkeletonElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -39,6 +35,7 @@ public class SkeletonElement {
 		st.add("component", _component);
 		st.add("height", _height);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("style", _style);
 		st.add("variant", _variant);
 		st.add("width", _width);
@@ -179,6 +176,28 @@ public class SkeletonElement {
 		return this;
 	} 
 
+	public SkeletonElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public SkeletonElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public SkeletonElement setStyle(Object value) {
 		this._style = value;
 		return this;
@@ -294,6 +313,16 @@ public class SkeletonElement {
 		return this._attribute.stream().map(SkeletonElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(SkeletonElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(SkeletonElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class SkeletonElement_Attribute {
 
 		Object _name;
@@ -317,7 +346,7 @@ public class SkeletonElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -332,13 +361,14 @@ public class SkeletonElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SkeletonElement(animation,classes,className,component,height,id,style,variant,width,attribute,children) ::= <<<Skeleton~if(animation)~\n" + 
-				"	animation=\"~animation~\"~endif~~if(classes)~\n" + 
+	static final String st = "SkeletonElement(animation,classes,className,component,height,id,key,style,variant,width,attribute,children) ::= <<<Skeleton~if(animation)~\n" + 
+				"	animation=~animation~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(height)~\n" + 
 				"	height=~height~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~if(width)~\n" + 
 				"	width=~width~~endif~~attribute:{it|\n" + 

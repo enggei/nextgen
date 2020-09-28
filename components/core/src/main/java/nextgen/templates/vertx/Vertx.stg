@@ -1,6 +1,6 @@
 delimiters "~","~"
 
-DomainVerticle(packageName,name,actions,domainFactory,address) ::= <<package ~packageName~;
+DomainVerticle(packageName,imports,name,actions,domainFactory,dbPath,address) ::= <<package ~packageName~;
 
 import ~packageName~.messages.*;
 import io.vertx.core.AbstractVerticle;
@@ -9,6 +9,8 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+~imports:{it|~it~};separator="\n"~
 
 public class ~name;format="capitalize"~ extends AbstractVerticle {
 
@@ -28,7 +30,11 @@ public class ~name;format="capitalize"~ extends AbstractVerticle {
 
 	@Override
 	public void start(Promise<Void> promise) throws Exception {
-		db = new ~domainFactory~(config().getString("path"));
+		new Thread(() -> {
+			db = new ~domainFactory~(config().getString("~dbPath~"));
+			log.info("db started");
+		}).start();
+		
 		vertx.eventBus().consumer(config().getString("~address~", "~address~"), this::onMessage);
 	}
 
@@ -41,7 +47,7 @@ public class ~name;format="capitalize"~ extends AbstractVerticle {
 		}
 
 		final Action action = getAction(message);
-		
+
 		if (action == null) {
 			message.fail(ErrorCodes.UNKNOWN_ACTION.ordinal(), "Unknown action");
 			return;
@@ -70,6 +76,7 @@ public class ~name;format="capitalize"~ extends AbstractVerticle {
 }  >>
 
 DomainAction(name,params,statements) ::= <<private void ~name~(Message<JsonObject> message) {
+	log.info("~name~ " + message.body().encodePrettily());
 ~if(params)~
 	final JsonObject body = message.body();
 	~params:{it|final ~it.type~ ~it.name~ = body.get~it.type~("~it.name~");};separator="\n"~
@@ -387,6 +394,7 @@ public class ~name~ {
 	}
 
 	public static void main(java.lang.String[] args) throws IOException {
+		System.setProperty("io.netty.tryReflectionSetAccessible", "true");
 		new ~name~(args.length == 1 ? args[0] : null);
 	}
 }  >>
@@ -396,7 +404,12 @@ WebVerticle(packageName,imports,name,fields,startStatements,routes,handlers,meth
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
+import io.vertx.core.MultiMap;
+import io.vertx.core.Vertx;
+import io.vertx.core.eventbus.DeliveryOptions;
+import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerOptions;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.PemKeyCertOptions;
 import io.vertx.ext.auth.jwt.JWTAuth;
@@ -410,7 +423,7 @@ import io.vertx.ext.web.handler.SessionHandler;
 import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.sstore.LocalSessionStore;
 
-import java.io.File;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -421,6 +434,7 @@ import static io.netty.handler.codec.http.HttpResponseStatus.*;
 public class ~name;format="capitalize"~ extends AbstractVerticle {
 
 	protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name;format="capitalize"~.class);
+	private static final String JSON_CONTENT_TYPE = "application/json; charset=utf-8";
 
 	~fields:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
 
@@ -448,6 +462,7 @@ public class ~name;format="capitalize"~ extends AbstractVerticle {
 		final StaticHandler staticHandler = StaticHandler.create();
 		staticHandler.setWebRoot(deploymentOptions.getWebRoot());
 		staticHandler.setCachingEnabled(false);
+		staticHandler.setEnableRangeSupport(true);
 		router.route("/*").handler(staticHandler);
 
 		vertx.createHttpServer(serverOptions).requestHandler(router::accept).listen(deploymentOptions.getPort());
@@ -461,12 +476,58 @@ public class ~name;format="capitalize"~ extends AbstractVerticle {
 	~handlers:{it|~it~};separator="\n\n"~
 
 	~methods:{it|~it~};separator="\n\n"~
+
+	private static void getFromDomainDB(Vertx vertx, RoutingContext routingContext, String action, JsonObject params) {
+		vertx.eventBus().request("domain.db", params, new DeliveryOptions().addHeader("action", action), reply -> {
+			if (reply.succeeded()) {
+				JsonObject body = (JsonObject) reply.result().body();
+				log.info(body.encode());
+				sendResponse(routingContext, OK, body);
+			} else {
+				sendErrors(routingContext, INTERNAL_SERVER_ERROR,	"Server Error");
+			}
+		});
+	}
+
+	private static void sendErrors(RoutingContext routingContext, HttpResponseStatus httpResponseStatus, String... errors) {
+		final JsonArray errorsArray = new JsonArray();
+		for (String error : errors)
+				errorsArray.add(error.trim());
+
+		final String encode = new JsonObject().put("errors", errorsArray).encode();
+		log.info(routingContext.request().absoluteURI() + " " + encode);
+		routingContext.response()
+					.setStatusCode(httpResponseStatus.code())
+					.putHeader(HttpHeaders.CONTENT_LENGTH, encode.length() + "")
+					.putHeader(HttpHeaders.CONTENT_TYPE, JSON_CONTENT_TYPE)
+					.end(encode);
+	}
+
+	private static void sendResponse(RoutingContext routingContext, HttpResponseStatus httpResponseStatus, JsonObject response) {
+		final String encode = response.encode();
+		log.info(routingContext.request().absoluteURI() + " " + encode);
+		routingContext.response()
+					.setStatusCode(httpResponseStatus.code())
+					.putHeader(HttpHeaders.CONTENT_LENGTH, encode.length() + "")
+					.putHeader(HttpHeaders.CONTENT_TYPE, JSON_CONTENT_TYPE)
+					.end(encode);
+	}
+
+	private static void debug(String method, RoutingContext routingContext) {
+		final String uri = method + " " + routingContext.request().method().name() + " " + routingContext.request().uri();
+		boolean isAuthenticated = routingContext.user() != null;
+		log.info(uri + " " + (isAuthenticated ? "(authenticated)" : "(NOT authenticated)"));
+		final MultiMap headers = routingContext.request().headers();
+		for (Map.Entry<String, String> header : headers)
+				log.info("\t" + header.getKey() + "=" + header.getValue());
+		log.info("body " + routingContext.getBody().toString());
+	}
 }  >>
 
 SendEventBusAction(actionName,params) ::= <<getFromDomainDB(vertx, routingContext, "~actionName~", new JsonObject()~if(params)~.~params:{it|put("~it.name~", routingContext.request().getParam("~it.name~"))}~~endif~);  >>
 
 RouteHandler(name,params,statements) ::= <<private void ~name~(RoutingContext routingContext~if(params)~, ~params:{it|~it.type~ ~it.name~};separator=","~~endif~) {
-	WebUtils.debug("~name~", routingContext);
+	debug("~name~", routingContext);
 	~statements:{it|~it~};separator="\n"~
 }  >>
 

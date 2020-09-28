@@ -16,6 +16,7 @@ public class TooltipElement {
 	private Object _enterTouchDelay;
 	private Object _id;
 	private Object _interactive;
+	private Object _key;
 	private Object _leaveDelay;
 	private Object _leaveTouchDelay;
 	private Object _onClose;
@@ -33,11 +34,6 @@ public class TooltipElement {
 
 	TooltipElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -58,6 +54,7 @@ public class TooltipElement {
 		st.add("enterTouchDelay", _enterTouchDelay);
 		st.add("id", _id);
 		st.add("interactive", _interactive);
+		st.add("key", _key);
 		st.add("leaveDelay", _leaveDelay);
 		st.add("leaveTouchDelay", _leaveTouchDelay);
 		st.add("onClose", _onClose);
@@ -314,6 +311,28 @@ public class TooltipElement {
 
 	public TooltipElement removeInteractive() {
 		this._interactive = null;
+		return this;
+	} 
+
+	public TooltipElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public TooltipElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -630,6 +649,16 @@ public class TooltipElement {
 		return this._attribute.stream().map(TooltipElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(TooltipElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(TooltipElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class TooltipElement_Attribute {
 
 		Object _name;
@@ -653,7 +682,7 @@ public class TooltipElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -668,7 +697,7 @@ public class TooltipElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TooltipElement(arrow,classes,className,disableFocusListener,disableHoverListener,disableTouchListener,enterDelay,enterNextDelay,enterTouchDelay,id,interactive,leaveDelay,leaveTouchDelay,onClose,onOpen,open,placement,PopperComponent,PopperProps,style,title,TransitionComponent,TransitionProps,attribute,children) ::= <<<Tooltip~if(arrow)~\n" + 
+	static final String st = "TooltipElement(arrow,classes,className,disableFocusListener,disableHoverListener,disableTouchListener,enterDelay,enterNextDelay,enterTouchDelay,id,interactive,key,leaveDelay,leaveTouchDelay,onClose,onOpen,open,placement,PopperComponent,PopperProps,style,title,TransitionComponent,TransitionProps,attribute,children) ::= <<<Tooltip~if(arrow)~\n" + 
 				"	arrow~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(disableFocusListener)~\n" + 
@@ -679,13 +708,14 @@ public class TooltipElement {
 				"	enterNextDelay=~enterNextDelay~~endif~~if(enterTouchDelay)~\n" + 
 				"	enterTouchDelay=~enterTouchDelay~~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(interactive)~\n" + 
-				"	interactive~endif~~if(leaveDelay)~\n" + 
+				"	interactive~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(leaveDelay)~\n" + 
 				"	leaveDelay=~leaveDelay~~endif~~if(leaveTouchDelay)~\n" + 
 				"	leaveTouchDelay=~leaveTouchDelay~~endif~~if(onClose)~\n" + 
 				"	onClose=~onClose~~endif~~if(onOpen)~\n" + 
 				"	onOpen=~onOpen~~endif~~if(open)~\n" + 
 				"	open~endif~~if(placement)~\n" + 
-				"	placement=\"~placement~\"~endif~~if(PopperComponent)~\n" + 
+				"	placement=~placement~~endif~~if(PopperComponent)~\n" + 
 				"	PopperComponent=~PopperComponent~~endif~~if(PopperProps)~\n" + 
 				"	PopperProps=~PopperProps~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~\n" + 

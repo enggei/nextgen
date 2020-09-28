@@ -16,6 +16,7 @@ public class TreeViewElement {
 	private Object _disableSelection;
 	private Object _expanded;
 	private Object _id;
+	private Object _key;
 	private Object _multiSelect;
 	private Object _onNodeSelect;
 	private Object _onNodeToggle;
@@ -26,11 +27,6 @@ public class TreeViewElement {
 
 	TreeViewElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -51,6 +47,7 @@ public class TreeViewElement {
 		st.add("disableSelection", _disableSelection);
 		st.add("expanded", _expanded);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("multiSelect", _multiSelect);
 		st.add("onNodeSelect", _onNodeSelect);
 		st.add("onNodeToggle", _onNodeToggle);
@@ -303,6 +300,28 @@ public class TreeViewElement {
 		return this;
 	} 
 
+	public TreeViewElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public TreeViewElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public TreeViewElement setMultiSelect(Object value) {
 		this._multiSelect = value;
 		return this;
@@ -462,6 +481,16 @@ public class TreeViewElement {
 		return this._attribute.stream().map(TreeViewElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(TreeViewElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(TreeViewElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class TreeViewElement_Attribute {
 
 		Object _name;
@@ -485,7 +514,7 @@ public class TreeViewElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -500,7 +529,7 @@ public class TreeViewElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TreeViewElement(classes,className,defaultCollapseIcon,defaultEndIcon,defaultExpanded,defaultExpandIcon,defaultParentIcon,defaultSelected,disableSelection,expanded,id,multiSelect,onNodeSelect,onNodeToggle,selected,style,attribute,children) ::= <<<TreeView~if(classes)~\n" + 
+	static final String st = "TreeViewElement(classes,className,defaultCollapseIcon,defaultEndIcon,defaultExpanded,defaultExpandIcon,defaultParentIcon,defaultSelected,disableSelection,expanded,id,key,multiSelect,onNodeSelect,onNodeToggle,selected,style,attribute,children) ::= <<<TreeView~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(defaultCollapseIcon)~\n" + 
 				"	defaultCollapseIcon=~defaultCollapseIcon~~endif~~if(defaultEndIcon)~\n" + 
@@ -511,7 +540,8 @@ public class TreeViewElement {
 				"	defaultSelected=~defaultSelected~~endif~~if(disableSelection)~\n" + 
 				"	disableSelection~endif~~if(expanded)~\n" + 
 				"	expanded=~expanded~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(multiSelect)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(multiSelect)~\n" + 
 				"	multiSelect~endif~~if(onNodeSelect)~\n" + 
 				"	onNodeSelect=~onNodeSelect~~endif~~if(onNodeToggle)~\n" + 
 				"	onNodeToggle=~onNodeToggle~~endif~~if(selected)~\n" + 

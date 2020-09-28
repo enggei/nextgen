@@ -11,6 +11,7 @@ public class StepLabelElement {
 	private Object _error;
 	private Object _icon;
 	private Object _id;
+	private Object _key;
 	private Object _optional;
 	private Object _StepIconComponent;
 	private Object _StepIconProps;
@@ -20,11 +21,6 @@ public class StepLabelElement {
 
 	StepLabelElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -40,6 +36,7 @@ public class StepLabelElement {
 		st.add("error", _error);
 		st.add("icon", _icon);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("optional", _optional);
 		st.add("StepIconComponent", _StepIconComponent);
 		st.add("StepIconProps", _StepIconProps);
@@ -181,6 +178,28 @@ public class StepLabelElement {
 		return this;
 	} 
 
+	public StepLabelElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public StepLabelElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public StepLabelElement setOptional(Object value) {
 		this._optional = value;
 		return this;
@@ -318,6 +337,16 @@ public class StepLabelElement {
 		return this._attribute.stream().map(StepLabelElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(StepLabelElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(StepLabelElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class StepLabelElement_Attribute {
 
 		Object _name;
@@ -341,7 +370,7 @@ public class StepLabelElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -356,13 +385,14 @@ public class StepLabelElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "StepLabelElement(classes,className,disabled,error,icon,id,optional,StepIconComponent,StepIconProps,style,attribute,children) ::= <<<StepLabel~if(classes)~\n" + 
+	static final String st = "StepLabelElement(classes,className,disabled,error,icon,id,key,optional,StepIconComponent,StepIconProps,style,attribute,children) ::= <<<StepLabel~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(disabled)~\n" + 
 				"	disabled~endif~~if(error)~\n" + 
 				"	error~endif~~if(icon)~\n" + 
 				"	icon=~icon~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(optional)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(optional)~\n" + 
 				"	optional=~optional~~endif~~if(StepIconComponent)~\n" + 
 				"	StepIconComponent=~StepIconComponent~~endif~~if(StepIconProps)~\n" + 
 				"	StepIconProps=~StepIconProps~~endif~~if(style)~\n" + 

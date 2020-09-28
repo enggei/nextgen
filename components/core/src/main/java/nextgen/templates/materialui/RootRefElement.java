@@ -7,6 +7,7 @@ public class RootRefElement {
 
 	private Object _className;
 	private Object _id;
+	private Object _key;
 	private Object _rootRef;
 	private Object _style;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -14,11 +15,6 @@ public class RootRefElement {
 
 	RootRefElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -30,6 +26,7 @@ public class RootRefElement {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("RootRefElement");
 		st.add("className", _className);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("rootRef", _rootRef);
 		st.add("style", _style);
 		for (Object o : _children) st.add("children", o);
@@ -78,6 +75,28 @@ public class RootRefElement {
 
 	public RootRefElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public RootRefElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public RootRefElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -174,6 +193,16 @@ public class RootRefElement {
 		return this._attribute.stream().map(RootRefElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(RootRefElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(RootRefElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class RootRefElement_Attribute {
 
 		Object _name;
@@ -197,7 +226,7 @@ public class RootRefElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -212,9 +241,10 @@ public class RootRefElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "RootRefElement(className,id,rootRef,style,attribute,children) ::= <<<RootRef~if(className)~\n" + 
+	static final String st = "RootRefElement(className,id,key,rootRef,style,attribute,children) ::= <<<RootRef~if(className)~\n" + 
 				"	className=~className~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~\n" + 
 				"	rootRef=~rootRef~~if(style)~\n" + 
 				"	style=~style~~endif~~attribute:{it|\n" + 
 				"	\n" + 

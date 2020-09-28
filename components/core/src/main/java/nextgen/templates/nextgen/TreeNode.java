@@ -22,11 +22,6 @@ public class TreeNode {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -417,6 +412,10 @@ public class TreeNode {
 				"		~if(hasUuid)~this.uuid = model.getUuid();~endif~\n" + 
 				"\n" + 
 				"		~constructorStatements:{it|~it~};separator=\"\\n\"~\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	~name~ thisNode() {\n" + 
+				"		return this;\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 

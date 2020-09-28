@@ -11,6 +11,7 @@ public class InputAdornmentElement {
 	private Object _disablePointerEvents;
 	private Object _disableTypography;
 	private Object _id;
+	private Object _key;
 	private Object _position;
 	private Object _style;
 	private Object _variant;
@@ -19,11 +20,6 @@ public class InputAdornmentElement {
 
 	InputAdornmentElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -39,6 +35,7 @@ public class InputAdornmentElement {
 		st.add("disablePointerEvents", _disablePointerEvents);
 		st.add("disableTypography", _disableTypography);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("position", _position);
 		st.add("style", _style);
 		st.add("variant", _variant);
@@ -179,6 +176,28 @@ public class InputAdornmentElement {
 		return this;
 	} 
 
+	public InputAdornmentElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public InputAdornmentElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public InputAdornmentElement setPosition(Object value) {
 		this._position = value;
 		return this;
@@ -294,6 +313,16 @@ public class InputAdornmentElement {
 		return this._attribute.stream().map(InputAdornmentElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(InputAdornmentElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(InputAdornmentElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class InputAdornmentElement_Attribute {
 
 		Object _name;
@@ -317,7 +346,7 @@ public class InputAdornmentElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -332,13 +361,14 @@ public class InputAdornmentElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "InputAdornmentElement(classes,className,component,disablePointerEvents,disableTypography,id,position,style,variant,attribute,children) ::= <<<InputAdornment~if(classes)~\n" + 
+	static final String st = "InputAdornmentElement(classes,className,component,disablePointerEvents,disableTypography,id,key,position,style,variant,attribute,children) ::= <<<InputAdornment~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(disablePointerEvents)~\n" + 
 				"	disablePointerEvents~endif~~if(disableTypography)~\n" + 
 				"	disableTypography~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(position)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(position)~\n" + 
 				"	position=\"~position~\"~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 

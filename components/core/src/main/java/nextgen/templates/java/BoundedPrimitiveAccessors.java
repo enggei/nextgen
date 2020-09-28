@@ -114,7 +114,7 @@ public class BoundedPrimitiveAccessors {
 				"public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) {\n" + 
 				"	~type~ oldValue = this._~name~;\n" + 
 				"	this._~name~ = value;\n" + 
-				"	this.pcs.firePropertyChange(\"~name~\", oldValue, value);\n" + 
+				"	this.pcs.firePropertyChange(\"set.~name~\", oldValue, value);\n" + 
 				"	return this;\n" + 
 				"} >>";
 }  

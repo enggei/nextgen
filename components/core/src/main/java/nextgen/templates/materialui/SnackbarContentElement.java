@@ -9,6 +9,7 @@ public class SnackbarContentElement {
 	private Object _classes;
 	private Object _className;
 	private Object _id;
+	private Object _key;
 	private Object _message;
 	private Object _role;
 	private Object _style;
@@ -16,11 +17,6 @@ public class SnackbarContentElement {
 
 	SnackbarContentElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -34,6 +30,7 @@ public class SnackbarContentElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("message", _message);
 		st.add("role", _role);
 		st.add("style", _style);
@@ -129,6 +126,28 @@ public class SnackbarContentElement {
 		return this;
 	} 
 
+	public SnackbarContentElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public SnackbarContentElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public SnackbarContentElement setMessage(Object value) {
 		this._message = value;
 		return this;
@@ -216,6 +235,16 @@ public class SnackbarContentElement {
 		return this._attribute.stream().map(SnackbarContentElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(SnackbarContentElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(SnackbarContentElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class SnackbarContentElement_Attribute {
 
 		Object _name;
@@ -239,7 +268,7 @@ public class SnackbarContentElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -254,11 +283,12 @@ public class SnackbarContentElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SnackbarContentElement(action,classes,className,id,message,role,style,attribute) ::= <<<SnackbarContent~if(action)~\n" + 
+	static final String st = "SnackbarContentElement(action,classes,className,id,key,message,role,style,attribute) ::= <<<SnackbarContent~if(action)~\n" + 
 				"	action=~action~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(message)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(message)~\n" + 
 				"	message=~message~~endif~~if(role)~\n" + 
 				"	role=\"~role~\"~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~attribute:{it|\n" + 

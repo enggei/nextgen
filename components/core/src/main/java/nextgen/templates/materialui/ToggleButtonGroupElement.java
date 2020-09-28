@@ -9,6 +9,7 @@ public class ToggleButtonGroupElement {
 	private Object _className;
 	private Object _exclusive;
 	private Object _id;
+	private Object _key;
 	private Object _onChange;
 	private Object _orientation;
 	private Object _size;
@@ -19,11 +20,6 @@ public class ToggleButtonGroupElement {
 
 	ToggleButtonGroupElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -37,6 +33,7 @@ public class ToggleButtonGroupElement {
 		st.add("className", _className);
 		st.add("exclusive", _exclusive);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("onChange", _onChange);
 		st.add("orientation", _orientation);
 		st.add("size", _size);
@@ -132,6 +129,28 @@ public class ToggleButtonGroupElement {
 
 	public ToggleButtonGroupElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public ToggleButtonGroupElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public ToggleButtonGroupElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -294,6 +313,16 @@ public class ToggleButtonGroupElement {
 		return this._attribute.stream().map(ToggleButtonGroupElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(ToggleButtonGroupElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(ToggleButtonGroupElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class ToggleButtonGroupElement_Attribute {
 
 		Object _name;
@@ -317,7 +346,7 @@ public class ToggleButtonGroupElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -332,14 +361,15 @@ public class ToggleButtonGroupElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ToggleButtonGroupElement(classes,className,exclusive,id,onChange,orientation,size,style,value,attribute,children) ::= <<<ToggleButtonGroup~if(classes)~\n" + 
+	static final String st = "ToggleButtonGroupElement(classes,className,exclusive,id,key,onChange,orientation,size,style,value,attribute,children) ::= <<<ToggleButtonGroup~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(exclusive)~\n" + 
 				"	exclusive~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(onChange)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(onChange)~\n" + 
 				"	onChange=~onChange~~endif~~if(orientation)~\n" + 
-				"	orientation=\"~orientation~\"~endif~~if(size)~\n" + 
-				"	size=\"~size~\"~endif~~if(style)~\n" + 
+				"	orientation=~orientation~~endif~~if(size)~\n" + 
+				"	size=~size~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(value)~\n" + 
 				"	value=~value~~endif~~attribute:{it|\n" + 
 				"	\n" + 

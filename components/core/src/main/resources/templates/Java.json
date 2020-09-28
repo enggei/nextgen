@@ -112,7 +112,7 @@
     }, {
       "uuid" : "66fc0a0a-a8c9-43ae-b79e-118651540701",
       "name" : "PojoFactory",
-      "text" : "package ~package~;\n\npublic class ~name;format=\"capitalize\"~ {\n\n~entities:{it|\n\tpublic static ~it~ new~it~() { \n\t\treturn new ~it~();\n\t~eom()~\n};separator=\"\\n\"~\n}",
+      "text" : "package ~package~;\n\npublic class ~name;format=\"capitalize\"~ {\n\n~entities:{it|\n\tpublic static ~it~ new~it~() { \n\t\treturn new ~it~();\n\t~eom()~\t\n};separator=\"\\n\"~\n} ",
       "parameters" : [ {
         "uuid" : "b5ae15f6-3d89-4bc9-b39f-9195fef86d66",
         "name" : "package",
@@ -168,7 +168,7 @@
     }, {
       "uuid" : "a8289fe2-14b3-4683-9490-5ef389a3f5e4",
       "name" : "Bean",
-      "text" : "package ~package~;\n\npublic class ~name~ implements java.beans.PropertyChangeListener {\n\n\t~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\t~fieldDeclarations:{it|~it~};separator=\"\\n\"~\n\n\tprivate final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);\n\t\n\tpublic ~name~() {\n\t}\n\t\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n\t\n~if(lexical)~\n\n\t@Override\n\tpublic String toString() {\n\t\treturn ~lexical:{it|_~it~};separator=\" + \\\" \\\" + \"~;\n\t}\n~endif~\n\n~if(eqha)~\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn ~eqha~.equals(that.~eqha~);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(~eqha~);\n\t}\n~endif~\n\n\t@Override\n\tpublic void propertyChange(java.beans.PropertyChangeEvent evt) {\n\t\tthis.pcs.firePropertyChange(\"~name~\", null, this);\n\t}\n\t\n\tpublic void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tthis.pcs.addPropertyChangeListener(listener);\n\t}\n\n\tpublic void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tthis.pcs.removePropertyChangeListener(listener);\n\t}\n} ",
+      "text" : "package ~package~;\n\npublic class ~name~ implements java.beans.PropertyChangeListener {\n\n\tprivate final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STGroupModel.class);\n\n\t~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\t~fieldDeclarations:{it|~it~};separator=\"\\n\"~\n\n\tprivate final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);\n\t\n\tpublic ~name~() {\n\t}\n\t\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n\t\n~if(lexical)~\n\n\t@Override\n\tpublic String toString() {\n\t\treturn \"\" + ~lexical:{it|_~it~};separator=\" + \\\" \\\" + \"~;\n\t}\n~endif~\n\n~if(eqha)~\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn _~eqha~.equals(that._~eqha~);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(_~eqha~);\n\t}\n~endif~\n\n\t@Override\n\tpublic void propertyChange(java.beans.PropertyChangeEvent evt) {\n\t\tthis.pcs.firePropertyChange(\"~name~\", this, evt);\n\t}\n\t\n\tpublic void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tthis.pcs.addPropertyChangeListener(listener);\n\t}\n\n\tpublic void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tthis.pcs.removePropertyChangeListener(listener);\n\t}\n\n\t~beanListener~\n} ",
       "parameters" : [ {
         "uuid" : "cb61bc25-1333-40db-9cd8-ea46acf2540c",
         "name" : "package",
@@ -217,11 +217,16 @@
         "name" : "eqha",
         "type" : "SINGLE",
         "argumentType" : "Object"
+      }, {
+        "uuid" : "cbc1133b-656d-4485-a0f5-ebc1ff1cec3a",
+        "name" : "beanListener",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
       } ],
       "children" : [ {
         "uuid" : "7790bf52-39dc-41c3-a76d-2fc88b3b0ec4",
         "name" : "boundedPrimitiveAccessors",
-        "text" : "public ~type~ get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) {\n\t~type~ oldValue = this._~name~;\n\tthis._~name~ = value;\n\tthis.pcs.firePropertyChange(\"~name~\", oldValue, value);\n\treturn this;\n} ",
+        "text" : "public ~type~ get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) {\n\t~type~ oldValue = this._~name~;\n\tthis._~name~ = value;\n\tthis.pcs.firePropertyChange(\"set.~name~\", oldValue, value);\n\treturn this;\n} ",
         "parameters" : [ {
           "uuid" : "149f3322-b54e-48ba-a77d-c28bc9be2462",
           "name" : "type",
@@ -241,7 +246,7 @@
       }, {
         "uuid" : "fdd1d906-65a3-489d-938e-be7650b01f72",
         "name" : "boundedReferenceAccessors",
-        "text" : "public ~type~ get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) {\n\t~type~ oldValue = this._~name~;\n\tif (oldValue != null) oldValue.removePropertyChangeListener(this);\n\tthis._~name~ = value;\n\tif (value != null) value.addPropertyChangeListener(this);\n\tthis.pcs.firePropertyChange(\"~name~\", oldValue, value);\n\treturn this;\n}\n\npublic ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() {\n\t~type~ oldValue = this._~name~;\n\tthis._~name~ = null;\n\tif (oldValue != null) oldValue.removePropertyChangeListener(this);\n\tthis.pcs.firePropertyChange(\"~name~\", oldValue, null);\n\treturn this;\n} ",
+        "text" : "public ~type~ get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) {\n\t~type~ oldValue = this._~name~;\n\tif (oldValue != null) oldValue.removePropertyChangeListener(this);\n\tthis._~name~ = value;\n\tif (value != null) value.addPropertyChangeListener(this);\n\tthis.pcs.firePropertyChange(\"set.~name~\", oldValue, value);\n\treturn this;\n}\n\npublic ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() {\n\t~type~ oldValue = this._~name~;\n\tthis._~name~ = null;\n\tif (oldValue != null) oldValue.removePropertyChangeListener(this);\n\tthis.pcs.firePropertyChange(\"remove.~name~\", oldValue, null);\n\treturn this;\n} ",
         "parameters" : [ {
           "uuid" : "f5cdb8a5-0624-4dcf-86cc-9f9d9590bb0b",
           "name" : "type",
@@ -261,7 +266,7 @@
       }, {
         "uuid" : "02816d56-747f-481e-84bd-cc96b5b5b6ce",
         "name" : "boundedListAccessors",
-        "text" : "public java.util.List<~type~> get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className~ add~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.add(value);\n\tthis.pcs.firePropertyChange(\"~name~\", null, value);\n\treturn this;\n}\n\npublic ~className~ remove~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.remove(value);\n\tthis.pcs.firePropertyChange(\"~name~\", value, null);\n\treturn this;\n} ",
+        "text" : "public java.util.List<~type~> get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className~ add~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.add(value);\n\tthis.pcs.firePropertyChange(\"add.~name~\", null, value);\n\treturn this;\n}\n\npublic ~className~ remove~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.remove(value);\n\tthis.pcs.firePropertyChange(\"remove.~name~\", value, null);\n\treturn this;\n} ",
         "parameters" : [ {
           "uuid" : "218fbbb4-77bf-4790-b6c6-dc7d7584f8a0",
           "name" : "type",
@@ -281,7 +286,7 @@
       }, {
         "uuid" : "a3e11d70-a806-40a4-989d-ef41c01d047b",
         "name" : "boundedListReferenceAccessors",
-        "text" : "public java.util.List<~type~> get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className~ add~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.add(value);\n\tif (value != null) value.addPropertyChangeListener(this);\n\tthis.pcs.firePropertyChange(\"~name~\", null, value);\n\treturn this;\n}\n\npublic ~className~ remove~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.remove(value);\n\tif (value != null) value.removePropertyChangeListener(this);\n\tthis.pcs.firePropertyChange(\"~name~\", value, null);\n\treturn this;\n} ",
+        "text" : "public java.util.List<~type~> get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className~ add~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.add(value);\n\tif (value != null) value.addPropertyChangeListener(this);\n\tthis.pcs.firePropertyChange(\"add.~name~\", null, value);\n\treturn this;\n}\n\npublic ~className~ remove~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.remove(value);\n\tif (value != null) value.removePropertyChangeListener(this);\n\tthis.pcs.firePropertyChange(\"remove.~name~\", value, null);\n\treturn this;\n} ",
         "parameters" : [ {
           "uuid" : "4d430506-8c99-47cd-baa0-fa15b6a1d0be",
           "name" : "type",
@@ -301,7 +306,7 @@
       }, {
         "uuid" : "9a273a3f-d7b3-4717-aaf0-84b487fc4de3",
         "name" : "boundedExternalReferenceAccessors",
-        "text" : "public ~type~ get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) {\n\t~type~ oldValue = this._~name~;\n\tthis._~name~ = value;\n\tthis.pcs.firePropertyChange(\"~name~\", oldValue, value);\n\treturn this;\n}\n\npublic ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() {\n\t~type~ oldValue = this._~name~;\n\tthis._~name~ = null;\n\tthis.pcs.firePropertyChange(\"~name~\", oldValue, null);\n\treturn this;\n} ",
+        "text" : "public ~type~ get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) {\n\t~type~ oldValue = this._~name~;\n\tthis._~name~ = value;\n\tthis.pcs.firePropertyChange(\"set.~name~\", oldValue, value);\n\treturn this;\n}\n\npublic ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() {\n\t~type~ oldValue = this._~name~;\n\tthis._~name~ = null;\n\tthis.pcs.firePropertyChange(\"remove.~name~\", oldValue, null);\n\treturn this;\n} ",
         "parameters" : [ {
           "uuid" : "e22060d9-fe6b-46ef-a304-2ff46c73c494",
           "name" : "type",
@@ -321,7 +326,7 @@
       }, {
         "uuid" : "6bcf8fc6-52fc-457b-8f7e-61815dfe04a6",
         "name" : "boundedExternalListAccessors",
-        "text" : "public java.util.List<~type~> get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className~ add~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.add(value);\n\tthis.pcs.firePropertyChange(\"~name~\", null, value);\n\treturn this;\n}\n\npublic ~className~ remove~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.remove(value);\n\tthis.pcs.firePropertyChange(\"~name~\", value, null);\n\treturn this;\n} ",
+        "text" : "public java.util.List<~type~> get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className~ add~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.add(value);\n\tthis.pcs.firePropertyChange(\"add.~name~\", null, value);\n\treturn this;\n}\n\npublic ~className~ remove~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.remove(value);\n\tthis.pcs.firePropertyChange(\"remove.~name~\", value, null);\n\treturn this;\n} ",
         "parameters" : [ {
           "uuid" : "c4e304e6-a957-4b8a-b61d-7fefa5ee3f12",
           "name" : "type",
@@ -337,6 +342,44 @@
           "name" : "className",
           "type" : "SINGLE",
           "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "e7c271a8-1c2d-473a-a0e5-b76c9b00f050",
+        "name" : "BeanListener",
+        "text" : "public static class ~name;format=\"capitalize\"~ChangeListener implements java.beans.PropertyChangeListener {\n\n\t@Override\n\tpublic void propertyChange(java.beans.PropertyChangeEvent propertyChangeEvent) {\n\t\tswitch (propertyChangeEvent.getPropertyName()) {\n\t\t\t\n\t\t\tcase \"~name;format=\"capitalize\"~\":\n\t\t\t\ton~name;format=\"capitalize\"~Change((~name;format=\"capitalize\"~) propertyChangeEvent.getOldValue(), (java.beans.PropertyChangeEvent) propertyChangeEvent.getNewValue());\n\t\t\t\tbreak;\n\t\t\t\t\n~singleProperties:{it|\n\t\t\tcase \"set.~it.name~\":\n\t\t\t\tonSet~it.name;format=\"capitalize\"~((~it.type~) propertyChangeEvent.getOldValue(), (~it.type~) propertyChangeEvent.getNewValue());\n\t\t\t\tbreak;\n\t\t\tcase \"remove.~it.name~\":\n\t\t\t\tonRemove~it.name;format=\"capitalize\"~((~it.type~) propertyChangeEvent.getOldValue(), (~it.type~) propertyChangeEvent.getNewValue());\n\t\t\t\tbreak;\n};separator=\"\\n\"~\n\n~listProperties:{it|\n\t\t\tcase \"add.~it.name~\":\n\t\t\t\tonAdd~it.name;format=\"capitalize\"~((~it.type~) propertyChangeEvent.getOldValue(), (~it.type~) propertyChangeEvent.getNewValue());\n\t\t\t\tbreak;\n\t\t\tcase \"remove.~it.name~\":\n\t\t\t\tonRemove~it.name;format=\"capitalize\"~((~it.type~) propertyChangeEvent.getOldValue(), (~it.type~) propertyChangeEvent.getNewValue());\n\t\t\t\tbreak;\n};separator=\"\\n\"~\n\n\t\t}\n\t}\n\n\tprotected void on~name;format=\"capitalize\"~Change(~name;format=\"capitalize\"~ instance, java.beans.PropertyChangeEvent event) {\n\t\tlog.info(\"on~name;format=\"capitalize\"~Change \" + instance + \" \" + event);\n\t}\n\t\n~singleProperties:{it|\n\tprotected void onSet~it.name;format=\"capitalize\"~(~it.type~ oldValue, ~it.type~ newValue) {\n\t\tlog.info(\"onSet~it.name;format=\"capitalize\"~ \" + oldValue + \" \" + newValue);\n\t~eom()~\n\t\n\tprotected void onRemove~it.name;format=\"capitalize\"~(~it.type~ oldValue, ~it.type~ newValue) {\n\t\tlog.info(\"onRemove~it.name;format=\"capitalize\"~ \" + oldValue + \" \" + newValue);\n\t~eom()~\n};separator=\"\\n\\n\"~\n\n~listProperties:{it|\n\tprotected void onAdd~it.name;format=\"capitalize\"~(~it.type~ oldValue, ~it.type~ newValue) {\n\t\tlog.info(\"onAdd~it.name;format=\"capitalize\"~ \" + oldValue + \" \" + newValue);\n\t~eom()~\n\t\n\tprotected void onRemove~it.name;format=\"capitalize\"~(~it.type~ oldValue, ~it.type~ newValue) {\n\t\tlog.info(\"onRemove~it.name;format=\"capitalize\"~ \" + oldValue + \" \" + newValue);\n\t~eom()~\n};separator=\"\\n\\n\"~\n} ",
+        "parameters" : [ {
+          "uuid" : "2876aea6-4f9f-421e-8df9-d0c622b67afd",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "8914fb27-1543-42b8-b0dc-adba6f1d5d37",
+          "name" : "singleProperties",
+          "type" : "KVLIST",
+          "argumentType" : "Object",
+          "keys" : [ {
+            "uuid" : "602c6bbd-4b67-4aa8-ba81-e3492b4e7a9d",
+            "name" : "name",
+            "argumentType" : "Object"
+          }, {
+            "uuid" : "f18a1414-53ad-49c2-9e89-928259b6fd02",
+            "name" : "type",
+            "argumentType" : "Object"
+          } ]
+        }, {
+          "uuid" : "ae456de6-5a12-4f78-b3fd-8c1b1d961249",
+          "name" : "listProperties",
+          "type" : "KVLIST",
+          "argumentType" : "Object",
+          "keys" : [ {
+            "uuid" : "778f7ed4-15af-45d4-92f3-45339fa8e15a",
+            "name" : "name",
+            "argumentType" : "Object"
+          }, {
+            "uuid" : "a83c1d62-1645-4692-9a83-fa4fa5560c9c",
+            "name" : "type",
+            "argumentType" : "Object"
+          } ]
         } ]
       } ]
     }, {

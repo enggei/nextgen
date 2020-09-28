@@ -450,2186 +450,2186 @@ public class MaterialUISTTests {
 
 	@org.junit.Test
 	public void testAccordion() {
-		System.out.println("\n--- TEST Accordion:\n" + newAccordion());
-	} 
+		System.out.println("Accordion:\n" + newAccordion());
+	}  
 
 	@org.junit.Test
 	public void testAccordionElement() {
-		System.out.println("\n--- TEST AccordionElement:\n" + newAccordionElement());
-	} 
+		System.out.println("AccordionElement:\n" + newAccordionElement());
+	}  
 
 	@org.junit.Test
 	public void testAccordionImport() {
-		System.out.println("\n--- TEST AccordionImport:\n" + newAccordionImport());
-	} 
+		System.out.println("AccordionImport:\n" + newAccordionImport());
+	}  
 
 	@org.junit.Test
 	public void testAccordionActions() {
-		System.out.println("\n--- TEST AccordionActions:\n" + newAccordionActions());
-	} 
+		System.out.println("AccordionActions:\n" + newAccordionActions());
+	}  
 
 	@org.junit.Test
 	public void testAccordionActionsElement() {
-		System.out.println("\n--- TEST AccordionActionsElement:\n" + newAccordionActionsElement());
-	} 
+		System.out.println("AccordionActionsElement:\n" + newAccordionActionsElement());
+	}  
 
 	@org.junit.Test
 	public void testAccordionActionsImport() {
-		System.out.println("\n--- TEST AccordionActionsImport:\n" + newAccordionActionsImport());
-	} 
+		System.out.println("AccordionActionsImport:\n" + newAccordionActionsImport());
+	}  
 
 	@org.junit.Test
 	public void testAccordionDetails() {
-		System.out.println("\n--- TEST AccordionDetails:\n" + newAccordionDetails());
-	} 
+		System.out.println("AccordionDetails:\n" + newAccordionDetails());
+	}  
 
 	@org.junit.Test
 	public void testAccordionDetailsElement() {
-		System.out.println("\n--- TEST AccordionDetailsElement:\n" + newAccordionDetailsElement());
-	} 
+		System.out.println("AccordionDetailsElement:\n" + newAccordionDetailsElement());
+	}  
 
 	@org.junit.Test
 	public void testAccordionDetailsImport() {
-		System.out.println("\n--- TEST AccordionDetailsImport:\n" + newAccordionDetailsImport());
-	} 
+		System.out.println("AccordionDetailsImport:\n" + newAccordionDetailsImport());
+	}  
 
 	@org.junit.Test
 	public void testAccordionSummary() {
-		System.out.println("\n--- TEST AccordionSummary:\n" + newAccordionSummary());
-	} 
+		System.out.println("AccordionSummary:\n" + newAccordionSummary());
+	}  
 
 	@org.junit.Test
 	public void testAccordionSummaryElement() {
-		System.out.println("\n--- TEST AccordionSummaryElement:\n" + newAccordionSummaryElement());
-	} 
+		System.out.println("AccordionSummaryElement:\n" + newAccordionSummaryElement());
+	}  
 
 	@org.junit.Test
 	public void testAccordionSummaryImport() {
-		System.out.println("\n--- TEST AccordionSummaryImport:\n" + newAccordionSummaryImport());
-	} 
+		System.out.println("AccordionSummaryImport:\n" + newAccordionSummaryImport());
+	}  
 
 	@org.junit.Test
 	public void testAlert() {
-		System.out.println("\n--- TEST Alert:\n" + newAlert());
-	} 
+		System.out.println("Alert:\n" + newAlert());
+	}  
 
 	@org.junit.Test
 	public void testAlertElement() {
-		System.out.println("\n--- TEST AlertElement:\n" + newAlertElement());
-	} 
+		System.out.println("AlertElement:\n" + newAlertElement());
+	}  
 
 	@org.junit.Test
 	public void testAlertImport() {
-		System.out.println("\n--- TEST AlertImport:\n" + newAlertImport());
-	} 
+		System.out.println("AlertImport:\n" + newAlertImport());
+	}  
 
 	@org.junit.Test
 	public void testAlertTitle() {
-		System.out.println("\n--- TEST AlertTitle:\n" + newAlertTitle());
-	} 
+		System.out.println("AlertTitle:\n" + newAlertTitle());
+	}  
 
 	@org.junit.Test
 	public void testAlertTitleElement() {
-		System.out.println("\n--- TEST AlertTitleElement:\n" + newAlertTitleElement());
-	} 
+		System.out.println("AlertTitleElement:\n" + newAlertTitleElement());
+	}  
 
 	@org.junit.Test
 	public void testAlertTitleImport() {
-		System.out.println("\n--- TEST AlertTitleImport:\n" + newAlertTitleImport());
-	} 
+		System.out.println("AlertTitleImport:\n" + newAlertTitleImport());
+	}  
 
 	@org.junit.Test
 	public void testAppBar() {
-		System.out.println("\n--- TEST AppBar:\n" + newAppBar());
-	} 
+		System.out.println("AppBar:\n" + newAppBar());
+	}  
 
 	@org.junit.Test
 	public void testAppBarElement() {
-		System.out.println("\n--- TEST AppBarElement:\n" + newAppBarElement());
-	} 
+		System.out.println("AppBarElement:\n" + newAppBarElement());
+	}  
 
 	@org.junit.Test
 	public void testAppBarImport() {
-		System.out.println("\n--- TEST AppBarImport:\n" + newAppBarImport());
-	} 
+		System.out.println("AppBarImport:\n" + newAppBarImport());
+	}  
 
 	@org.junit.Test
 	public void testAutocomplete() {
-		System.out.println("\n--- TEST Autocomplete:\n" + newAutocomplete());
-	} 
+		System.out.println("Autocomplete:\n" + newAutocomplete());
+	}  
 
 	@org.junit.Test
 	public void testAutocompleteElement() {
-		System.out.println("\n--- TEST AutocompleteElement:\n" + newAutocompleteElement());
-	} 
+		System.out.println("AutocompleteElement:\n" + newAutocompleteElement());
+	}  
 
 	@org.junit.Test
 	public void testAutocompleteImport() {
-		System.out.println("\n--- TEST AutocompleteImport:\n" + newAutocompleteImport());
-	} 
+		System.out.println("AutocompleteImport:\n" + newAutocompleteImport());
+	}  
 
 	@org.junit.Test
 	public void testAvatar() {
-		System.out.println("\n--- TEST Avatar:\n" + newAvatar());
-	} 
+		System.out.println("Avatar:\n" + newAvatar());
+	}  
 
 	@org.junit.Test
 	public void testAvatarElement() {
-		System.out.println("\n--- TEST AvatarElement:\n" + newAvatarElement());
-	} 
+		System.out.println("AvatarElement:\n" + newAvatarElement());
+	}  
 
 	@org.junit.Test
 	public void testAvatarImport() {
-		System.out.println("\n--- TEST AvatarImport:\n" + newAvatarImport());
-	} 
+		System.out.println("AvatarImport:\n" + newAvatarImport());
+	}  
 
 	@org.junit.Test
 	public void testAvatarGroup() {
-		System.out.println("\n--- TEST AvatarGroup:\n" + newAvatarGroup());
-	} 
+		System.out.println("AvatarGroup:\n" + newAvatarGroup());
+	}  
 
 	@org.junit.Test
 	public void testAvatarGroupElement() {
-		System.out.println("\n--- TEST AvatarGroupElement:\n" + newAvatarGroupElement());
-	} 
+		System.out.println("AvatarGroupElement:\n" + newAvatarGroupElement());
+	}  
 
 	@org.junit.Test
 	public void testAvatarGroupImport() {
-		System.out.println("\n--- TEST AvatarGroupImport:\n" + newAvatarGroupImport());
-	} 
+		System.out.println("AvatarGroupImport:\n" + newAvatarGroupImport());
+	}  
 
 	@org.junit.Test
 	public void testBackdrop() {
-		System.out.println("\n--- TEST Backdrop:\n" + newBackdrop());
-	} 
+		System.out.println("Backdrop:\n" + newBackdrop());
+	}  
 
 	@org.junit.Test
 	public void testBackdropElement() {
-		System.out.println("\n--- TEST BackdropElement:\n" + newBackdropElement());
-	} 
+		System.out.println("BackdropElement:\n" + newBackdropElement());
+	}  
 
 	@org.junit.Test
 	public void testBackdropImport() {
-		System.out.println("\n--- TEST BackdropImport:\n" + newBackdropImport());
-	} 
+		System.out.println("BackdropImport:\n" + newBackdropImport());
+	}  
 
 	@org.junit.Test
 	public void testBadge() {
-		System.out.println("\n--- TEST Badge:\n" + newBadge());
-	} 
+		System.out.println("Badge:\n" + newBadge());
+	}  
 
 	@org.junit.Test
 	public void testBadgeElement() {
-		System.out.println("\n--- TEST BadgeElement:\n" + newBadgeElement());
-	} 
+		System.out.println("BadgeElement:\n" + newBadgeElement());
+	}  
 
 	@org.junit.Test
 	public void testBadgeImport() {
-		System.out.println("\n--- TEST BadgeImport:\n" + newBadgeImport());
-	} 
+		System.out.println("BadgeImport:\n" + newBadgeImport());
+	}  
 
 	@org.junit.Test
 	public void testBottomNavigation() {
-		System.out.println("\n--- TEST BottomNavigation:\n" + newBottomNavigation());
-	} 
+		System.out.println("BottomNavigation:\n" + newBottomNavigation());
+	}  
 
 	@org.junit.Test
 	public void testBottomNavigationElement() {
-		System.out.println("\n--- TEST BottomNavigationElement:\n" + newBottomNavigationElement());
-	} 
+		System.out.println("BottomNavigationElement:\n" + newBottomNavigationElement());
+	}  
 
 	@org.junit.Test
 	public void testBottomNavigationImport() {
-		System.out.println("\n--- TEST BottomNavigationImport:\n" + newBottomNavigationImport());
-	} 
+		System.out.println("BottomNavigationImport:\n" + newBottomNavigationImport());
+	}  
 
 	@org.junit.Test
 	public void testBottomNavigationAction() {
-		System.out.println("\n--- TEST BottomNavigationAction:\n" + newBottomNavigationAction());
-	} 
+		System.out.println("BottomNavigationAction:\n" + newBottomNavigationAction());
+	}  
 
 	@org.junit.Test
 	public void testBottomNavigationActionElement() {
-		System.out.println("\n--- TEST BottomNavigationActionElement:\n" + newBottomNavigationActionElement());
-	} 
+		System.out.println("BottomNavigationActionElement:\n" + newBottomNavigationActionElement());
+	}  
 
 	@org.junit.Test
 	public void testBottomNavigationActionImport() {
-		System.out.println("\n--- TEST BottomNavigationActionImport:\n" + newBottomNavigationActionImport());
-	} 
+		System.out.println("BottomNavigationActionImport:\n" + newBottomNavigationActionImport());
+	}  
 
 	@org.junit.Test
 	public void testBox() {
-		System.out.println("\n--- TEST Box:\n" + newBox());
-	} 
+		System.out.println("Box:\n" + newBox());
+	}  
 
 	@org.junit.Test
 	public void testBoxElement() {
-		System.out.println("\n--- TEST BoxElement:\n" + newBoxElement());
-	} 
+		System.out.println("BoxElement:\n" + newBoxElement());
+	}  
 
 	@org.junit.Test
 	public void testBoxImport() {
-		System.out.println("\n--- TEST BoxImport:\n" + newBoxImport());
-	} 
+		System.out.println("BoxImport:\n" + newBoxImport());
+	}  
 
 	@org.junit.Test
 	public void testBreadcrumbs() {
-		System.out.println("\n--- TEST Breadcrumbs:\n" + newBreadcrumbs());
-	} 
+		System.out.println("Breadcrumbs:\n" + newBreadcrumbs());
+	}  
 
 	@org.junit.Test
 	public void testBreadcrumbsElement() {
-		System.out.println("\n--- TEST BreadcrumbsElement:\n" + newBreadcrumbsElement());
-	} 
+		System.out.println("BreadcrumbsElement:\n" + newBreadcrumbsElement());
+	}  
 
 	@org.junit.Test
 	public void testBreadcrumbsImport() {
-		System.out.println("\n--- TEST BreadcrumbsImport:\n" + newBreadcrumbsImport());
-	} 
+		System.out.println("BreadcrumbsImport:\n" + newBreadcrumbsImport());
+	}  
 
 	@org.junit.Test
 	public void testButton() {
-		System.out.println("\n--- TEST Button:\n" + newButton());
-	} 
+		System.out.println("Button:\n" + newButton());
+	}  
 
 	@org.junit.Test
 	public void testButtonElement() {
-		System.out.println("\n--- TEST ButtonElement:\n" + newButtonElement());
-	} 
+		System.out.println("ButtonElement:\n" + newButtonElement());
+	}  
 
 	@org.junit.Test
 	public void testButtonImport() {
-		System.out.println("\n--- TEST ButtonImport:\n" + newButtonImport());
-	} 
+		System.out.println("ButtonImport:\n" + newButtonImport());
+	}  
 
 	@org.junit.Test
 	public void testButtonBase() {
-		System.out.println("\n--- TEST ButtonBase:\n" + newButtonBase());
-	} 
+		System.out.println("ButtonBase:\n" + newButtonBase());
+	}  
 
 	@org.junit.Test
 	public void testButtonBaseElement() {
-		System.out.println("\n--- TEST ButtonBaseElement:\n" + newButtonBaseElement());
-	} 
+		System.out.println("ButtonBaseElement:\n" + newButtonBaseElement());
+	}  
 
 	@org.junit.Test
 	public void testButtonBaseImport() {
-		System.out.println("\n--- TEST ButtonBaseImport:\n" + newButtonBaseImport());
-	} 
+		System.out.println("ButtonBaseImport:\n" + newButtonBaseImport());
+	}  
 
 	@org.junit.Test
 	public void testButtonGroup() {
-		System.out.println("\n--- TEST ButtonGroup:\n" + newButtonGroup());
-	} 
+		System.out.println("ButtonGroup:\n" + newButtonGroup());
+	}  
 
 	@org.junit.Test
 	public void testButtonGroupElement() {
-		System.out.println("\n--- TEST ButtonGroupElement:\n" + newButtonGroupElement());
-	} 
+		System.out.println("ButtonGroupElement:\n" + newButtonGroupElement());
+	}  
 
 	@org.junit.Test
 	public void testButtonGroupImport() {
-		System.out.println("\n--- TEST ButtonGroupImport:\n" + newButtonGroupImport());
-	} 
+		System.out.println("ButtonGroupImport:\n" + newButtonGroupImport());
+	}  
 
 	@org.junit.Test
 	public void testCard() {
-		System.out.println("\n--- TEST Card:\n" + newCard());
-	} 
+		System.out.println("Card:\n" + newCard());
+	}  
 
 	@org.junit.Test
 	public void testCardElement() {
-		System.out.println("\n--- TEST CardElement:\n" + newCardElement());
-	} 
+		System.out.println("CardElement:\n" + newCardElement());
+	}  
 
 	@org.junit.Test
 	public void testCardImport() {
-		System.out.println("\n--- TEST CardImport:\n" + newCardImport());
-	} 
+		System.out.println("CardImport:\n" + newCardImport());
+	}  
 
 	@org.junit.Test
 	public void testCardActionArea() {
-		System.out.println("\n--- TEST CardActionArea:\n" + newCardActionArea());
-	} 
+		System.out.println("CardActionArea:\n" + newCardActionArea());
+	}  
 
 	@org.junit.Test
 	public void testCardActionAreaElement() {
-		System.out.println("\n--- TEST CardActionAreaElement:\n" + newCardActionAreaElement());
-	} 
+		System.out.println("CardActionAreaElement:\n" + newCardActionAreaElement());
+	}  
 
 	@org.junit.Test
 	public void testCardActionAreaImport() {
-		System.out.println("\n--- TEST CardActionAreaImport:\n" + newCardActionAreaImport());
-	} 
+		System.out.println("CardActionAreaImport:\n" + newCardActionAreaImport());
+	}  
 
 	@org.junit.Test
 	public void testCardActions() {
-		System.out.println("\n--- TEST CardActions:\n" + newCardActions());
-	} 
+		System.out.println("CardActions:\n" + newCardActions());
+	}  
 
 	@org.junit.Test
 	public void testCardActionsElement() {
-		System.out.println("\n--- TEST CardActionsElement:\n" + newCardActionsElement());
-	} 
+		System.out.println("CardActionsElement:\n" + newCardActionsElement());
+	}  
 
 	@org.junit.Test
 	public void testCardActionsImport() {
-		System.out.println("\n--- TEST CardActionsImport:\n" + newCardActionsImport());
-	} 
+		System.out.println("CardActionsImport:\n" + newCardActionsImport());
+	}  
 
 	@org.junit.Test
 	public void testCardContent() {
-		System.out.println("\n--- TEST CardContent:\n" + newCardContent());
-	} 
+		System.out.println("CardContent:\n" + newCardContent());
+	}  
 
 	@org.junit.Test
 	public void testCardContentElement() {
-		System.out.println("\n--- TEST CardContentElement:\n" + newCardContentElement());
-	} 
+		System.out.println("CardContentElement:\n" + newCardContentElement());
+	}  
 
 	@org.junit.Test
 	public void testCardContentImport() {
-		System.out.println("\n--- TEST CardContentImport:\n" + newCardContentImport());
-	} 
+		System.out.println("CardContentImport:\n" + newCardContentImport());
+	}  
 
 	@org.junit.Test
 	public void testCardHeader() {
-		System.out.println("\n--- TEST CardHeader:\n" + newCardHeader());
-	} 
+		System.out.println("CardHeader:\n" + newCardHeader());
+	}  
 
 	@org.junit.Test
 	public void testCardHeaderElement() {
-		System.out.println("\n--- TEST CardHeaderElement:\n" + newCardHeaderElement());
-	} 
+		System.out.println("CardHeaderElement:\n" + newCardHeaderElement());
+	}  
 
 	@org.junit.Test
 	public void testCardHeaderImport() {
-		System.out.println("\n--- TEST CardHeaderImport:\n" + newCardHeaderImport());
-	} 
+		System.out.println("CardHeaderImport:\n" + newCardHeaderImport());
+	}  
 
 	@org.junit.Test
 	public void testCardMedia() {
-		System.out.println("\n--- TEST CardMedia:\n" + newCardMedia());
-	} 
+		System.out.println("CardMedia:\n" + newCardMedia());
+	}  
 
 	@org.junit.Test
 	public void testCardMediaElement() {
-		System.out.println("\n--- TEST CardMediaElement:\n" + newCardMediaElement());
-	} 
+		System.out.println("CardMediaElement:\n" + newCardMediaElement());
+	}  
 
 	@org.junit.Test
 	public void testCardMediaImport() {
-		System.out.println("\n--- TEST CardMediaImport:\n" + newCardMediaImport());
-	} 
+		System.out.println("CardMediaImport:\n" + newCardMediaImport());
+	}  
 
 	@org.junit.Test
 	public void testCheckbox() {
-		System.out.println("\n--- TEST Checkbox:\n" + newCheckbox());
-	} 
+		System.out.println("Checkbox:\n" + newCheckbox());
+	}  
 
 	@org.junit.Test
 	public void testCheckboxElement() {
-		System.out.println("\n--- TEST CheckboxElement:\n" + newCheckboxElement());
-	} 
+		System.out.println("CheckboxElement:\n" + newCheckboxElement());
+	}  
 
 	@org.junit.Test
 	public void testCheckboxImport() {
-		System.out.println("\n--- TEST CheckboxImport:\n" + newCheckboxImport());
-	} 
+		System.out.println("CheckboxImport:\n" + newCheckboxImport());
+	}  
 
 	@org.junit.Test
 	public void testChip() {
-		System.out.println("\n--- TEST Chip:\n" + newChip());
-	} 
+		System.out.println("Chip:\n" + newChip());
+	}  
 
 	@org.junit.Test
 	public void testChipElement() {
-		System.out.println("\n--- TEST ChipElement:\n" + newChipElement());
-	} 
+		System.out.println("ChipElement:\n" + newChipElement());
+	}  
 
 	@org.junit.Test
 	public void testChipImport() {
-		System.out.println("\n--- TEST ChipImport:\n" + newChipImport());
-	} 
+		System.out.println("ChipImport:\n" + newChipImport());
+	}  
 
 	@org.junit.Test
 	public void testCircularProgress() {
-		System.out.println("\n--- TEST CircularProgress:\n" + newCircularProgress());
-	} 
+		System.out.println("CircularProgress:\n" + newCircularProgress());
+	}  
 
 	@org.junit.Test
 	public void testCircularProgressElement() {
-		System.out.println("\n--- TEST CircularProgressElement:\n" + newCircularProgressElement());
-	} 
+		System.out.println("CircularProgressElement:\n" + newCircularProgressElement());
+	}  
 
 	@org.junit.Test
 	public void testCircularProgressImport() {
-		System.out.println("\n--- TEST CircularProgressImport:\n" + newCircularProgressImport());
-	} 
+		System.out.println("CircularProgressImport:\n" + newCircularProgressImport());
+	}  
 
 	@org.junit.Test
 	public void testClickAwayListener() {
-		System.out.println("\n--- TEST ClickAwayListener:\n" + newClickAwayListener());
-	} 
+		System.out.println("ClickAwayListener:\n" + newClickAwayListener());
+	}  
 
 	@org.junit.Test
 	public void testClickAwayListenerElement() {
-		System.out.println("\n--- TEST ClickAwayListenerElement:\n" + newClickAwayListenerElement());
-	} 
+		System.out.println("ClickAwayListenerElement:\n" + newClickAwayListenerElement());
+	}  
 
 	@org.junit.Test
 	public void testClickAwayListenerImport() {
-		System.out.println("\n--- TEST ClickAwayListenerImport:\n" + newClickAwayListenerImport());
-	} 
+		System.out.println("ClickAwayListenerImport:\n" + newClickAwayListenerImport());
+	}  
 
 	@org.junit.Test
 	public void testCollapse() {
-		System.out.println("\n--- TEST Collapse:\n" + newCollapse());
-	} 
+		System.out.println("Collapse:\n" + newCollapse());
+	}  
 
 	@org.junit.Test
 	public void testCollapseElement() {
-		System.out.println("\n--- TEST CollapseElement:\n" + newCollapseElement());
-	} 
+		System.out.println("CollapseElement:\n" + newCollapseElement());
+	}  
 
 	@org.junit.Test
 	public void testCollapseImport() {
-		System.out.println("\n--- TEST CollapseImport:\n" + newCollapseImport());
-	} 
+		System.out.println("CollapseImport:\n" + newCollapseImport());
+	}  
 
 	@org.junit.Test
 	public void testContainer() {
-		System.out.println("\n--- TEST Container:\n" + newContainer());
-	} 
+		System.out.println("Container:\n" + newContainer());
+	}  
 
 	@org.junit.Test
 	public void testContainerElement() {
-		System.out.println("\n--- TEST ContainerElement:\n" + newContainerElement());
-	} 
+		System.out.println("ContainerElement:\n" + newContainerElement());
+	}  
 
 	@org.junit.Test
 	public void testContainerImport() {
-		System.out.println("\n--- TEST ContainerImport:\n" + newContainerImport());
-	} 
+		System.out.println("ContainerImport:\n" + newContainerImport());
+	}  
 
 	@org.junit.Test
 	public void testCssBaseline() {
-		System.out.println("\n--- TEST CssBaseline:\n" + newCssBaseline());
-	} 
+		System.out.println("CssBaseline:\n" + newCssBaseline());
+	}  
 
 	@org.junit.Test
 	public void testCssBaselineElement() {
-		System.out.println("\n--- TEST CssBaselineElement:\n" + newCssBaselineElement());
-	} 
+		System.out.println("CssBaselineElement:\n" + newCssBaselineElement());
+	}  
 
 	@org.junit.Test
 	public void testCssBaselineImport() {
-		System.out.println("\n--- TEST CssBaselineImport:\n" + newCssBaselineImport());
-	} 
+		System.out.println("CssBaselineImport:\n" + newCssBaselineImport());
+	}  
 
 	@org.junit.Test
 	public void testDialog() {
-		System.out.println("\n--- TEST Dialog:\n" + newDialog());
-	} 
+		System.out.println("Dialog:\n" + newDialog());
+	}  
 
 	@org.junit.Test
 	public void testDialogElement() {
-		System.out.println("\n--- TEST DialogElement:\n" + newDialogElement());
-	} 
+		System.out.println("DialogElement:\n" + newDialogElement());
+	}  
 
 	@org.junit.Test
 	public void testDialogImport() {
-		System.out.println("\n--- TEST DialogImport:\n" + newDialogImport());
-	} 
+		System.out.println("DialogImport:\n" + newDialogImport());
+	}  
 
 	@org.junit.Test
 	public void testDialogActions() {
-		System.out.println("\n--- TEST DialogActions:\n" + newDialogActions());
-	} 
+		System.out.println("DialogActions:\n" + newDialogActions());
+	}  
 
 	@org.junit.Test
 	public void testDialogActionsElement() {
-		System.out.println("\n--- TEST DialogActionsElement:\n" + newDialogActionsElement());
-	} 
+		System.out.println("DialogActionsElement:\n" + newDialogActionsElement());
+	}  
 
 	@org.junit.Test
 	public void testDialogActionsImport() {
-		System.out.println("\n--- TEST DialogActionsImport:\n" + newDialogActionsImport());
-	} 
+		System.out.println("DialogActionsImport:\n" + newDialogActionsImport());
+	}  
 
 	@org.junit.Test
 	public void testDialogContent() {
-		System.out.println("\n--- TEST DialogContent:\n" + newDialogContent());
-	} 
+		System.out.println("DialogContent:\n" + newDialogContent());
+	}  
 
 	@org.junit.Test
 	public void testDialogContentElement() {
-		System.out.println("\n--- TEST DialogContentElement:\n" + newDialogContentElement());
-	} 
+		System.out.println("DialogContentElement:\n" + newDialogContentElement());
+	}  
 
 	@org.junit.Test
 	public void testDialogContentImport() {
-		System.out.println("\n--- TEST DialogContentImport:\n" + newDialogContentImport());
-	} 
+		System.out.println("DialogContentImport:\n" + newDialogContentImport());
+	}  
 
 	@org.junit.Test
 	public void testDialogContentText() {
-		System.out.println("\n--- TEST DialogContentText:\n" + newDialogContentText());
-	} 
+		System.out.println("DialogContentText:\n" + newDialogContentText());
+	}  
 
 	@org.junit.Test
 	public void testDialogContentTextElement() {
-		System.out.println("\n--- TEST DialogContentTextElement:\n" + newDialogContentTextElement());
-	} 
+		System.out.println("DialogContentTextElement:\n" + newDialogContentTextElement());
+	}  
 
 	@org.junit.Test
 	public void testDialogContentTextImport() {
-		System.out.println("\n--- TEST DialogContentTextImport:\n" + newDialogContentTextImport());
-	} 
+		System.out.println("DialogContentTextImport:\n" + newDialogContentTextImport());
+	}  
 
 	@org.junit.Test
 	public void testDialogTitle() {
-		System.out.println("\n--- TEST DialogTitle:\n" + newDialogTitle());
-	} 
+		System.out.println("DialogTitle:\n" + newDialogTitle());
+	}  
 
 	@org.junit.Test
 	public void testDialogTitleElement() {
-		System.out.println("\n--- TEST DialogTitleElement:\n" + newDialogTitleElement());
-	} 
+		System.out.println("DialogTitleElement:\n" + newDialogTitleElement());
+	}  
 
 	@org.junit.Test
 	public void testDialogTitleImport() {
-		System.out.println("\n--- TEST DialogTitleImport:\n" + newDialogTitleImport());
-	} 
+		System.out.println("DialogTitleImport:\n" + newDialogTitleImport());
+	}  
 
 	@org.junit.Test
 	public void testDivider() {
-		System.out.println("\n--- TEST Divider:\n" + newDivider());
-	} 
+		System.out.println("Divider:\n" + newDivider());
+	}  
 
 	@org.junit.Test
 	public void testDividerElement() {
-		System.out.println("\n--- TEST DividerElement:\n" + newDividerElement());
-	} 
+		System.out.println("DividerElement:\n" + newDividerElement());
+	}  
 
 	@org.junit.Test
 	public void testDividerImport() {
-		System.out.println("\n--- TEST DividerImport:\n" + newDividerImport());
-	} 
+		System.out.println("DividerImport:\n" + newDividerImport());
+	}  
 
 	@org.junit.Test
 	public void testDrawer() {
-		System.out.println("\n--- TEST Drawer:\n" + newDrawer());
-	} 
+		System.out.println("Drawer:\n" + newDrawer());
+	}  
 
 	@org.junit.Test
 	public void testDrawerElement() {
-		System.out.println("\n--- TEST DrawerElement:\n" + newDrawerElement());
-	} 
+		System.out.println("DrawerElement:\n" + newDrawerElement());
+	}  
 
 	@org.junit.Test
 	public void testDrawerImport() {
-		System.out.println("\n--- TEST DrawerImport:\n" + newDrawerImport());
-	} 
+		System.out.println("DrawerImport:\n" + newDrawerImport());
+	}  
 
 	@org.junit.Test
 	public void testExpansionPanel() {
-		System.out.println("\n--- TEST ExpansionPanel:\n" + newExpansionPanel());
-	} 
+		System.out.println("ExpansionPanel:\n" + newExpansionPanel());
+	}  
 
 	@org.junit.Test
 	public void testExpansionPanelElement() {
-		System.out.println("\n--- TEST ExpansionPanelElement:\n" + newExpansionPanelElement());
-	} 
+		System.out.println("ExpansionPanelElement:\n" + newExpansionPanelElement());
+	}  
 
 	@org.junit.Test
 	public void testExpansionPanelImport() {
-		System.out.println("\n--- TEST ExpansionPanelImport:\n" + newExpansionPanelImport());
-	} 
+		System.out.println("ExpansionPanelImport:\n" + newExpansionPanelImport());
+	}  
 
 	@org.junit.Test
 	public void testExpansionPanelActions() {
-		System.out.println("\n--- TEST ExpansionPanelActions:\n" + newExpansionPanelActions());
-	} 
+		System.out.println("ExpansionPanelActions:\n" + newExpansionPanelActions());
+	}  
 
 	@org.junit.Test
 	public void testExpansionPanelActionsElement() {
-		System.out.println("\n--- TEST ExpansionPanelActionsElement:\n" + newExpansionPanelActionsElement());
-	} 
+		System.out.println("ExpansionPanelActionsElement:\n" + newExpansionPanelActionsElement());
+	}  
 
 	@org.junit.Test
 	public void testExpansionPanelActionsImport() {
-		System.out.println("\n--- TEST ExpansionPanelActionsImport:\n" + newExpansionPanelActionsImport());
-	} 
+		System.out.println("ExpansionPanelActionsImport:\n" + newExpansionPanelActionsImport());
+	}  
 
 	@org.junit.Test
 	public void testExpansionPanelDetails() {
-		System.out.println("\n--- TEST ExpansionPanelDetails:\n" + newExpansionPanelDetails());
-	} 
+		System.out.println("ExpansionPanelDetails:\n" + newExpansionPanelDetails());
+	}  
 
 	@org.junit.Test
 	public void testExpansionPanelDetailsElement() {
-		System.out.println("\n--- TEST ExpansionPanelDetailsElement:\n" + newExpansionPanelDetailsElement());
-	} 
+		System.out.println("ExpansionPanelDetailsElement:\n" + newExpansionPanelDetailsElement());
+	}  
 
 	@org.junit.Test
 	public void testExpansionPanelDetailsImport() {
-		System.out.println("\n--- TEST ExpansionPanelDetailsImport:\n" + newExpansionPanelDetailsImport());
-	} 
+		System.out.println("ExpansionPanelDetailsImport:\n" + newExpansionPanelDetailsImport());
+	}  
 
 	@org.junit.Test
 	public void testExpansionPanelSummary() {
-		System.out.println("\n--- TEST ExpansionPanelSummary:\n" + newExpansionPanelSummary());
-	} 
+		System.out.println("ExpansionPanelSummary:\n" + newExpansionPanelSummary());
+	}  
 
 	@org.junit.Test
 	public void testExpansionPanelSummaryElement() {
-		System.out.println("\n--- TEST ExpansionPanelSummaryElement:\n" + newExpansionPanelSummaryElement());
-	} 
+		System.out.println("ExpansionPanelSummaryElement:\n" + newExpansionPanelSummaryElement());
+	}  
 
 	@org.junit.Test
 	public void testExpansionPanelSummaryImport() {
-		System.out.println("\n--- TEST ExpansionPanelSummaryImport:\n" + newExpansionPanelSummaryImport());
-	} 
+		System.out.println("ExpansionPanelSummaryImport:\n" + newExpansionPanelSummaryImport());
+	}  
 
 	@org.junit.Test
 	public void testFab() {
-		System.out.println("\n--- TEST Fab:\n" + newFab());
-	} 
+		System.out.println("Fab:\n" + newFab());
+	}  
 
 	@org.junit.Test
 	public void testFabElement() {
-		System.out.println("\n--- TEST FabElement:\n" + newFabElement());
-	} 
+		System.out.println("FabElement:\n" + newFabElement());
+	}  
 
 	@org.junit.Test
 	public void testFabImport() {
-		System.out.println("\n--- TEST FabImport:\n" + newFabImport());
-	} 
+		System.out.println("FabImport:\n" + newFabImport());
+	}  
 
 	@org.junit.Test
 	public void testFade() {
-		System.out.println("\n--- TEST Fade:\n" + newFade());
-	} 
+		System.out.println("Fade:\n" + newFade());
+	}  
 
 	@org.junit.Test
 	public void testFadeElement() {
-		System.out.println("\n--- TEST FadeElement:\n" + newFadeElement());
-	} 
+		System.out.println("FadeElement:\n" + newFadeElement());
+	}  
 
 	@org.junit.Test
 	public void testFadeImport() {
-		System.out.println("\n--- TEST FadeImport:\n" + newFadeImport());
-	} 
+		System.out.println("FadeImport:\n" + newFadeImport());
+	}  
 
 	@org.junit.Test
 	public void testFilledInput() {
-		System.out.println("\n--- TEST FilledInput:\n" + newFilledInput());
-	} 
+		System.out.println("FilledInput:\n" + newFilledInput());
+	}  
 
 	@org.junit.Test
 	public void testFilledInputElement() {
-		System.out.println("\n--- TEST FilledInputElement:\n" + newFilledInputElement());
-	} 
+		System.out.println("FilledInputElement:\n" + newFilledInputElement());
+	}  
 
 	@org.junit.Test
 	public void testFilledInputImport() {
-		System.out.println("\n--- TEST FilledInputImport:\n" + newFilledInputImport());
-	} 
+		System.out.println("FilledInputImport:\n" + newFilledInputImport());
+	}  
 
 	@org.junit.Test
 	public void testFormControl() {
-		System.out.println("\n--- TEST FormControl:\n" + newFormControl());
-	} 
+		System.out.println("FormControl:\n" + newFormControl());
+	}  
 
 	@org.junit.Test
 	public void testFormControlElement() {
-		System.out.println("\n--- TEST FormControlElement:\n" + newFormControlElement());
-	} 
+		System.out.println("FormControlElement:\n" + newFormControlElement());
+	}  
 
 	@org.junit.Test
 	public void testFormControlImport() {
-		System.out.println("\n--- TEST FormControlImport:\n" + newFormControlImport());
-	} 
+		System.out.println("FormControlImport:\n" + newFormControlImport());
+	}  
 
 	@org.junit.Test
 	public void testFormControlLabel() {
-		System.out.println("\n--- TEST FormControlLabel:\n" + newFormControlLabel());
-	} 
+		System.out.println("FormControlLabel:\n" + newFormControlLabel());
+	}  
 
 	@org.junit.Test
 	public void testFormControlLabelElement() {
-		System.out.println("\n--- TEST FormControlLabelElement:\n" + newFormControlLabelElement());
-	} 
+		System.out.println("FormControlLabelElement:\n" + newFormControlLabelElement());
+	}  
 
 	@org.junit.Test
 	public void testFormControlLabelImport() {
-		System.out.println("\n--- TEST FormControlLabelImport:\n" + newFormControlLabelImport());
-	} 
+		System.out.println("FormControlLabelImport:\n" + newFormControlLabelImport());
+	}  
 
 	@org.junit.Test
 	public void testFormGroup() {
-		System.out.println("\n--- TEST FormGroup:\n" + newFormGroup());
-	} 
+		System.out.println("FormGroup:\n" + newFormGroup());
+	}  
 
 	@org.junit.Test
 	public void testFormGroupElement() {
-		System.out.println("\n--- TEST FormGroupElement:\n" + newFormGroupElement());
-	} 
+		System.out.println("FormGroupElement:\n" + newFormGroupElement());
+	}  
 
 	@org.junit.Test
 	public void testFormGroupImport() {
-		System.out.println("\n--- TEST FormGroupImport:\n" + newFormGroupImport());
-	} 
+		System.out.println("FormGroupImport:\n" + newFormGroupImport());
+	}  
 
 	@org.junit.Test
 	public void testFormHelperText() {
-		System.out.println("\n--- TEST FormHelperText:\n" + newFormHelperText());
-	} 
+		System.out.println("FormHelperText:\n" + newFormHelperText());
+	}  
 
 	@org.junit.Test
 	public void testFormHelperTextElement() {
-		System.out.println("\n--- TEST FormHelperTextElement:\n" + newFormHelperTextElement());
-	} 
+		System.out.println("FormHelperTextElement:\n" + newFormHelperTextElement());
+	}  
 
 	@org.junit.Test
 	public void testFormHelperTextImport() {
-		System.out.println("\n--- TEST FormHelperTextImport:\n" + newFormHelperTextImport());
-	} 
+		System.out.println("FormHelperTextImport:\n" + newFormHelperTextImport());
+	}  
 
 	@org.junit.Test
 	public void testFormLabel() {
-		System.out.println("\n--- TEST FormLabel:\n" + newFormLabel());
-	} 
+		System.out.println("FormLabel:\n" + newFormLabel());
+	}  
 
 	@org.junit.Test
 	public void testFormLabelElement() {
-		System.out.println("\n--- TEST FormLabelElement:\n" + newFormLabelElement());
-	} 
+		System.out.println("FormLabelElement:\n" + newFormLabelElement());
+	}  
 
 	@org.junit.Test
 	public void testFormLabelImport() {
-		System.out.println("\n--- TEST FormLabelImport:\n" + newFormLabelImport());
-	} 
+		System.out.println("FormLabelImport:\n" + newFormLabelImport());
+	}  
 
 	@org.junit.Test
 	public void testGrid() {
-		System.out.println("\n--- TEST Grid:\n" + newGrid());
-	} 
+		System.out.println("Grid:\n" + newGrid());
+	}  
 
 	@org.junit.Test
 	public void testGridElement() {
-		System.out.println("\n--- TEST GridElement:\n" + newGridElement());
-	} 
+		System.out.println("GridElement:\n" + newGridElement());
+	}  
 
 	@org.junit.Test
 	public void testGridImport() {
-		System.out.println("\n--- TEST GridImport:\n" + newGridImport());
-	} 
+		System.out.println("GridImport:\n" + newGridImport());
+	}  
 
 	@org.junit.Test
 	public void testGridList() {
-		System.out.println("\n--- TEST GridList:\n" + newGridList());
-	} 
+		System.out.println("GridList:\n" + newGridList());
+	}  
 
 	@org.junit.Test
 	public void testGridListElement() {
-		System.out.println("\n--- TEST GridListElement:\n" + newGridListElement());
-	} 
+		System.out.println("GridListElement:\n" + newGridListElement());
+	}  
 
 	@org.junit.Test
 	public void testGridListImport() {
-		System.out.println("\n--- TEST GridListImport:\n" + newGridListImport());
-	} 
+		System.out.println("GridListImport:\n" + newGridListImport());
+	}  
 
 	@org.junit.Test
 	public void testGridListTile() {
-		System.out.println("\n--- TEST GridListTile:\n" + newGridListTile());
-	} 
+		System.out.println("GridListTile:\n" + newGridListTile());
+	}  
 
 	@org.junit.Test
 	public void testGridListTileElement() {
-		System.out.println("\n--- TEST GridListTileElement:\n" + newGridListTileElement());
-	} 
+		System.out.println("GridListTileElement:\n" + newGridListTileElement());
+	}  
 
 	@org.junit.Test
 	public void testGridListTileImport() {
-		System.out.println("\n--- TEST GridListTileImport:\n" + newGridListTileImport());
-	} 
+		System.out.println("GridListTileImport:\n" + newGridListTileImport());
+	}  
 
 	@org.junit.Test
 	public void testGridListTileBar() {
-		System.out.println("\n--- TEST GridListTileBar:\n" + newGridListTileBar());
-	} 
+		System.out.println("GridListTileBar:\n" + newGridListTileBar());
+	}  
 
 	@org.junit.Test
 	public void testGridListTileBarElement() {
-		System.out.println("\n--- TEST GridListTileBarElement:\n" + newGridListTileBarElement());
-	} 
+		System.out.println("GridListTileBarElement:\n" + newGridListTileBarElement());
+	}  
 
 	@org.junit.Test
 	public void testGridListTileBarImport() {
-		System.out.println("\n--- TEST GridListTileBarImport:\n" + newGridListTileBarImport());
-	} 
+		System.out.println("GridListTileBarImport:\n" + newGridListTileBarImport());
+	}  
 
 	@org.junit.Test
 	public void testGrow() {
-		System.out.println("\n--- TEST Grow:\n" + newGrow());
-	} 
+		System.out.println("Grow:\n" + newGrow());
+	}  
 
 	@org.junit.Test
 	public void testGrowElement() {
-		System.out.println("\n--- TEST GrowElement:\n" + newGrowElement());
-	} 
+		System.out.println("GrowElement:\n" + newGrowElement());
+	}  
 
 	@org.junit.Test
 	public void testGrowImport() {
-		System.out.println("\n--- TEST GrowImport:\n" + newGrowImport());
-	} 
+		System.out.println("GrowImport:\n" + newGrowImport());
+	}  
 
 	@org.junit.Test
 	public void testHidden() {
-		System.out.println("\n--- TEST Hidden:\n" + newHidden());
-	} 
+		System.out.println("Hidden:\n" + newHidden());
+	}  
 
 	@org.junit.Test
 	public void testHiddenElement() {
-		System.out.println("\n--- TEST HiddenElement:\n" + newHiddenElement());
-	} 
+		System.out.println("HiddenElement:\n" + newHiddenElement());
+	}  
 
 	@org.junit.Test
 	public void testHiddenImport() {
-		System.out.println("\n--- TEST HiddenImport:\n" + newHiddenImport());
-	} 
+		System.out.println("HiddenImport:\n" + newHiddenImport());
+	}  
 
 	@org.junit.Test
 	public void testIcon() {
-		System.out.println("\n--- TEST Icon:\n" + newIcon());
-	} 
+		System.out.println("Icon:\n" + newIcon());
+	}  
 
 	@org.junit.Test
 	public void testIconElement() {
-		System.out.println("\n--- TEST IconElement:\n" + newIconElement());
-	} 
+		System.out.println("IconElement:\n" + newIconElement());
+	}  
 
 	@org.junit.Test
 	public void testIconImport() {
-		System.out.println("\n--- TEST IconImport:\n" + newIconImport());
-	} 
+		System.out.println("IconImport:\n" + newIconImport());
+	}  
 
 	@org.junit.Test
 	public void testIconButton() {
-		System.out.println("\n--- TEST IconButton:\n" + newIconButton());
-	} 
+		System.out.println("IconButton:\n" + newIconButton());
+	}  
 
 	@org.junit.Test
 	public void testIconButtonElement() {
-		System.out.println("\n--- TEST IconButtonElement:\n" + newIconButtonElement());
-	} 
+		System.out.println("IconButtonElement:\n" + newIconButtonElement());
+	}  
 
 	@org.junit.Test
 	public void testIconButtonImport() {
-		System.out.println("\n--- TEST IconButtonImport:\n" + newIconButtonImport());
-	} 
+		System.out.println("IconButtonImport:\n" + newIconButtonImport());
+	}  
 
 	@org.junit.Test
 	public void testInput() {
-		System.out.println("\n--- TEST Input:\n" + newInput());
-	} 
+		System.out.println("Input:\n" + newInput());
+	}  
 
 	@org.junit.Test
 	public void testInputElement() {
-		System.out.println("\n--- TEST InputElement:\n" + newInputElement());
-	} 
+		System.out.println("InputElement:\n" + newInputElement());
+	}  
 
 	@org.junit.Test
 	public void testInputImport() {
-		System.out.println("\n--- TEST InputImport:\n" + newInputImport());
-	} 
+		System.out.println("InputImport:\n" + newInputImport());
+	}  
 
 	@org.junit.Test
 	public void testInputAdornment() {
-		System.out.println("\n--- TEST InputAdornment:\n" + newInputAdornment());
-	} 
+		System.out.println("InputAdornment:\n" + newInputAdornment());
+	}  
 
 	@org.junit.Test
 	public void testInputAdornmentElement() {
-		System.out.println("\n--- TEST InputAdornmentElement:\n" + newInputAdornmentElement());
-	} 
+		System.out.println("InputAdornmentElement:\n" + newInputAdornmentElement());
+	}  
 
 	@org.junit.Test
 	public void testInputAdornmentImport() {
-		System.out.println("\n--- TEST InputAdornmentImport:\n" + newInputAdornmentImport());
-	} 
+		System.out.println("InputAdornmentImport:\n" + newInputAdornmentImport());
+	}  
 
 	@org.junit.Test
 	public void testInputBase() {
-		System.out.println("\n--- TEST InputBase:\n" + newInputBase());
-	} 
+		System.out.println("InputBase:\n" + newInputBase());
+	}  
 
 	@org.junit.Test
 	public void testInputBaseElement() {
-		System.out.println("\n--- TEST InputBaseElement:\n" + newInputBaseElement());
-	} 
+		System.out.println("InputBaseElement:\n" + newInputBaseElement());
+	}  
 
 	@org.junit.Test
 	public void testInputBaseImport() {
-		System.out.println("\n--- TEST InputBaseImport:\n" + newInputBaseImport());
-	} 
+		System.out.println("InputBaseImport:\n" + newInputBaseImport());
+	}  
 
 	@org.junit.Test
 	public void testInputLabel() {
-		System.out.println("\n--- TEST InputLabel:\n" + newInputLabel());
-	} 
+		System.out.println("InputLabel:\n" + newInputLabel());
+	}  
 
 	@org.junit.Test
 	public void testInputLabelElement() {
-		System.out.println("\n--- TEST InputLabelElement:\n" + newInputLabelElement());
-	} 
+		System.out.println("InputLabelElement:\n" + newInputLabelElement());
+	}  
 
 	@org.junit.Test
 	public void testInputLabelImport() {
-		System.out.println("\n--- TEST InputLabelImport:\n" + newInputLabelImport());
-	} 
+		System.out.println("InputLabelImport:\n" + newInputLabelImport());
+	}  
 
 	@org.junit.Test
 	public void testLinearProgress() {
-		System.out.println("\n--- TEST LinearProgress:\n" + newLinearProgress());
-	} 
+		System.out.println("LinearProgress:\n" + newLinearProgress());
+	}  
 
 	@org.junit.Test
 	public void testLinearProgressElement() {
-		System.out.println("\n--- TEST LinearProgressElement:\n" + newLinearProgressElement());
-	} 
+		System.out.println("LinearProgressElement:\n" + newLinearProgressElement());
+	}  
 
 	@org.junit.Test
 	public void testLinearProgressImport() {
-		System.out.println("\n--- TEST LinearProgressImport:\n" + newLinearProgressImport());
-	} 
+		System.out.println("LinearProgressImport:\n" + newLinearProgressImport());
+	}  
 
 	@org.junit.Test
 	public void testLink() {
-		System.out.println("\n--- TEST Link:\n" + newLink());
-	} 
+		System.out.println("Link:\n" + newLink());
+	}  
 
 	@org.junit.Test
 	public void testLinkElement() {
-		System.out.println("\n--- TEST LinkElement:\n" + newLinkElement());
-	} 
+		System.out.println("LinkElement:\n" + newLinkElement());
+	}  
 
 	@org.junit.Test
 	public void testLinkImport() {
-		System.out.println("\n--- TEST LinkImport:\n" + newLinkImport());
-	} 
+		System.out.println("LinkImport:\n" + newLinkImport());
+	}  
 
 	@org.junit.Test
 	public void testList() {
-		System.out.println("\n--- TEST List:\n" + newList());
-	} 
+		System.out.println("List:\n" + newList());
+	}  
 
 	@org.junit.Test
 	public void testListElement() {
-		System.out.println("\n--- TEST ListElement:\n" + newListElement());
-	} 
+		System.out.println("ListElement:\n" + newListElement());
+	}  
 
 	@org.junit.Test
 	public void testListImport() {
-		System.out.println("\n--- TEST ListImport:\n" + newListImport());
-	} 
+		System.out.println("ListImport:\n" + newListImport());
+	}  
 
 	@org.junit.Test
 	public void testListItem() {
-		System.out.println("\n--- TEST ListItem:\n" + newListItem());
-	} 
+		System.out.println("ListItem:\n" + newListItem());
+	}  
 
 	@org.junit.Test
 	public void testListItemElement() {
-		System.out.println("\n--- TEST ListItemElement:\n" + newListItemElement());
-	} 
+		System.out.println("ListItemElement:\n" + newListItemElement());
+	}  
 
 	@org.junit.Test
 	public void testListItemImport() {
-		System.out.println("\n--- TEST ListItemImport:\n" + newListItemImport());
-	} 
+		System.out.println("ListItemImport:\n" + newListItemImport());
+	}  
 
 	@org.junit.Test
 	public void testListItemAvatar() {
-		System.out.println("\n--- TEST ListItemAvatar:\n" + newListItemAvatar());
-	} 
+		System.out.println("ListItemAvatar:\n" + newListItemAvatar());
+	}  
 
 	@org.junit.Test
 	public void testListItemAvatarElement() {
-		System.out.println("\n--- TEST ListItemAvatarElement:\n" + newListItemAvatarElement());
-	} 
+		System.out.println("ListItemAvatarElement:\n" + newListItemAvatarElement());
+	}  
 
 	@org.junit.Test
 	public void testListItemAvatarImport() {
-		System.out.println("\n--- TEST ListItemAvatarImport:\n" + newListItemAvatarImport());
-	} 
+		System.out.println("ListItemAvatarImport:\n" + newListItemAvatarImport());
+	}  
 
 	@org.junit.Test
 	public void testListItemIcon() {
-		System.out.println("\n--- TEST ListItemIcon:\n" + newListItemIcon());
-	} 
+		System.out.println("ListItemIcon:\n" + newListItemIcon());
+	}  
 
 	@org.junit.Test
 	public void testListItemIconElement() {
-		System.out.println("\n--- TEST ListItemIconElement:\n" + newListItemIconElement());
-	} 
+		System.out.println("ListItemIconElement:\n" + newListItemIconElement());
+	}  
 
 	@org.junit.Test
 	public void testListItemIconImport() {
-		System.out.println("\n--- TEST ListItemIconImport:\n" + newListItemIconImport());
-	} 
+		System.out.println("ListItemIconImport:\n" + newListItemIconImport());
+	}  
 
 	@org.junit.Test
 	public void testListItemSecondaryAction() {
-		System.out.println("\n--- TEST ListItemSecondaryAction:\n" + newListItemSecondaryAction());
-	} 
+		System.out.println("ListItemSecondaryAction:\n" + newListItemSecondaryAction());
+	}  
 
 	@org.junit.Test
 	public void testListItemSecondaryActionElement() {
-		System.out.println("\n--- TEST ListItemSecondaryActionElement:\n" + newListItemSecondaryActionElement());
-	} 
+		System.out.println("ListItemSecondaryActionElement:\n" + newListItemSecondaryActionElement());
+	}  
 
 	@org.junit.Test
 	public void testListItemSecondaryActionImport() {
-		System.out.println("\n--- TEST ListItemSecondaryActionImport:\n" + newListItemSecondaryActionImport());
-	} 
+		System.out.println("ListItemSecondaryActionImport:\n" + newListItemSecondaryActionImport());
+	}  
 
 	@org.junit.Test
 	public void testListItemText() {
-		System.out.println("\n--- TEST ListItemText:\n" + newListItemText());
-	} 
+		System.out.println("ListItemText:\n" + newListItemText());
+	}  
 
 	@org.junit.Test
 	public void testListItemTextElement() {
-		System.out.println("\n--- TEST ListItemTextElement:\n" + newListItemTextElement());
-	} 
+		System.out.println("ListItemTextElement:\n" + newListItemTextElement());
+	}  
 
 	@org.junit.Test
 	public void testListItemTextImport() {
-		System.out.println("\n--- TEST ListItemTextImport:\n" + newListItemTextImport());
-	} 
+		System.out.println("ListItemTextImport:\n" + newListItemTextImport());
+	}  
 
 	@org.junit.Test
 	public void testListSubheader() {
-		System.out.println("\n--- TEST ListSubheader:\n" + newListSubheader());
-	} 
+		System.out.println("ListSubheader:\n" + newListSubheader());
+	}  
 
 	@org.junit.Test
 	public void testListSubheaderElement() {
-		System.out.println("\n--- TEST ListSubheaderElement:\n" + newListSubheaderElement());
-	} 
+		System.out.println("ListSubheaderElement:\n" + newListSubheaderElement());
+	}  
 
 	@org.junit.Test
 	public void testListSubheaderImport() {
-		System.out.println("\n--- TEST ListSubheaderImport:\n" + newListSubheaderImport());
-	} 
+		System.out.println("ListSubheaderImport:\n" + newListSubheaderImport());
+	}  
 
 	@org.junit.Test
 	public void testLockOutlinedIcon() {
-		System.out.println("\n--- TEST LockOutlinedIcon:\n" + newLockOutlinedIcon());
-	} 
+		System.out.println("LockOutlinedIcon:\n" + newLockOutlinedIcon());
+	}  
 
 	@org.junit.Test
 	public void testLockOutlinedIconElement() {
-		System.out.println("\n--- TEST LockOutlinedIconElement:\n" + newLockOutlinedIconElement());
-	} 
+		System.out.println("LockOutlinedIconElement:\n" + newLockOutlinedIconElement());
+	}  
 
 	@org.junit.Test
 	public void testLockOutlinedIconImport() {
-		System.out.println("\n--- TEST LockOutlinedIconImport:\n" + newLockOutlinedIconImport());
-	} 
+		System.out.println("LockOutlinedIconImport:\n" + newLockOutlinedIconImport());
+	}  
 
 	@org.junit.Test
 	public void testMaterialUIComponent() {
-		System.out.println("\n--- TEST MaterialUIComponent:\n" + newMaterialUIComponent());
-	} 
+		System.out.println("MaterialUIComponent:\n" + newMaterialUIComponent());
+	}  
 
 	@org.junit.Test
 	public void testStyleClass() {
-		System.out.println("\n--- TEST StyleClass:\n" + newStyleClass());
-	} 
+		System.out.println("StyleClass:\n" + newStyleClass());
+	}  
 
 	@org.junit.Test
 	public void testMenu() {
-		System.out.println("\n--- TEST Menu:\n" + newMenu());
-	} 
+		System.out.println("Menu:\n" + newMenu());
+	}  
 
 	@org.junit.Test
 	public void testMenuElement() {
-		System.out.println("\n--- TEST MenuElement:\n" + newMenuElement());
-	} 
+		System.out.println("MenuElement:\n" + newMenuElement());
+	}  
 
 	@org.junit.Test
 	public void testMenuImport() {
-		System.out.println("\n--- TEST MenuImport:\n" + newMenuImport());
-	} 
+		System.out.println("MenuImport:\n" + newMenuImport());
+	}  
 
 	@org.junit.Test
 	public void testMenuIcon() {
-		System.out.println("\n--- TEST MenuIcon:\n" + newMenuIcon());
-	} 
+		System.out.println("MenuIcon:\n" + newMenuIcon());
+	}  
 
 	@org.junit.Test
 	public void testMenuIconElement() {
-		System.out.println("\n--- TEST MenuIconElement:\n" + newMenuIconElement());
-	} 
+		System.out.println("MenuIconElement:\n" + newMenuIconElement());
+	}  
 
 	@org.junit.Test
 	public void testMenuIconImport() {
-		System.out.println("\n--- TEST MenuIconImport:\n" + newMenuIconImport());
-	} 
+		System.out.println("MenuIconImport:\n" + newMenuIconImport());
+	}  
 
 	@org.junit.Test
 	public void testMenuItem() {
-		System.out.println("\n--- TEST MenuItem:\n" + newMenuItem());
-	} 
+		System.out.println("MenuItem:\n" + newMenuItem());
+	}  
 
 	@org.junit.Test
 	public void testMenuItemElement() {
-		System.out.println("\n--- TEST MenuItemElement:\n" + newMenuItemElement());
-	} 
+		System.out.println("MenuItemElement:\n" + newMenuItemElement());
+	}  
 
 	@org.junit.Test
 	public void testMenuItemImport() {
-		System.out.println("\n--- TEST MenuItemImport:\n" + newMenuItemImport());
-	} 
+		System.out.println("MenuItemImport:\n" + newMenuItemImport());
+	}  
 
 	@org.junit.Test
 	public void testMenuList() {
-		System.out.println("\n--- TEST MenuList:\n" + newMenuList());
-	} 
+		System.out.println("MenuList:\n" + newMenuList());
+	}  
 
 	@org.junit.Test
 	public void testMenuListElement() {
-		System.out.println("\n--- TEST MenuListElement:\n" + newMenuListElement());
-	} 
+		System.out.println("MenuListElement:\n" + newMenuListElement());
+	}  
 
 	@org.junit.Test
 	public void testMenuListImport() {
-		System.out.println("\n--- TEST MenuListImport:\n" + newMenuListImport());
-	} 
+		System.out.println("MenuListImport:\n" + newMenuListImport());
+	}  
 
 	@org.junit.Test
 	public void testMobileStepper() {
-		System.out.println("\n--- TEST MobileStepper:\n" + newMobileStepper());
-	} 
+		System.out.println("MobileStepper:\n" + newMobileStepper());
+	}  
 
 	@org.junit.Test
 	public void testMobileStepperElement() {
-		System.out.println("\n--- TEST MobileStepperElement:\n" + newMobileStepperElement());
-	} 
+		System.out.println("MobileStepperElement:\n" + newMobileStepperElement());
+	}  
 
 	@org.junit.Test
 	public void testMobileStepperImport() {
-		System.out.println("\n--- TEST MobileStepperImport:\n" + newMobileStepperImport());
-	} 
+		System.out.println("MobileStepperImport:\n" + newMobileStepperImport());
+	}  
 
 	@org.junit.Test
 	public void testModal() {
-		System.out.println("\n--- TEST Modal:\n" + newModal());
-	} 
+		System.out.println("Modal:\n" + newModal());
+	}  
 
 	@org.junit.Test
 	public void testModalElement() {
-		System.out.println("\n--- TEST ModalElement:\n" + newModalElement());
-	} 
+		System.out.println("ModalElement:\n" + newModalElement());
+	}  
 
 	@org.junit.Test
 	public void testModalImport() {
-		System.out.println("\n--- TEST ModalImport:\n" + newModalImport());
-	} 
+		System.out.println("ModalImport:\n" + newModalImport());
+	}  
 
 	@org.junit.Test
 	public void testNativeSelect() {
-		System.out.println("\n--- TEST NativeSelect:\n" + newNativeSelect());
-	} 
+		System.out.println("NativeSelect:\n" + newNativeSelect());
+	}  
 
 	@org.junit.Test
 	public void testNativeSelectElement() {
-		System.out.println("\n--- TEST NativeSelectElement:\n" + newNativeSelectElement());
-	} 
+		System.out.println("NativeSelectElement:\n" + newNativeSelectElement());
+	}  
 
 	@org.junit.Test
 	public void testNativeSelectImport() {
-		System.out.println("\n--- TEST NativeSelectImport:\n" + newNativeSelectImport());
-	} 
+		System.out.println("NativeSelectImport:\n" + newNativeSelectImport());
+	}  
 
 	@org.junit.Test
 	public void testNoSsr() {
-		System.out.println("\n--- TEST NoSsr:\n" + newNoSsr());
-	} 
+		System.out.println("NoSsr:\n" + newNoSsr());
+	}  
 
 	@org.junit.Test
 	public void testNoSsrElement() {
-		System.out.println("\n--- TEST NoSsrElement:\n" + newNoSsrElement());
-	} 
+		System.out.println("NoSsrElement:\n" + newNoSsrElement());
+	}  
 
 	@org.junit.Test
 	public void testNoSsrImport() {
-		System.out.println("\n--- TEST NoSsrImport:\n" + newNoSsrImport());
-	} 
+		System.out.println("NoSsrImport:\n" + newNoSsrImport());
+	}  
 
 	@org.junit.Test
 	public void testOutlinedInput() {
-		System.out.println("\n--- TEST OutlinedInput:\n" + newOutlinedInput());
-	} 
+		System.out.println("OutlinedInput:\n" + newOutlinedInput());
+	}  
 
 	@org.junit.Test
 	public void testOutlinedInputElement() {
-		System.out.println("\n--- TEST OutlinedInputElement:\n" + newOutlinedInputElement());
-	} 
+		System.out.println("OutlinedInputElement:\n" + newOutlinedInputElement());
+	}  
 
 	@org.junit.Test
 	public void testOutlinedInputImport() {
-		System.out.println("\n--- TEST OutlinedInputImport:\n" + newOutlinedInputImport());
-	} 
+		System.out.println("OutlinedInputImport:\n" + newOutlinedInputImport());
+	}  
 
 	@org.junit.Test
 	public void testPagination() {
-		System.out.println("\n--- TEST Pagination:\n" + newPagination());
-	} 
+		System.out.println("Pagination:\n" + newPagination());
+	}  
 
 	@org.junit.Test
 	public void testPaginationElement() {
-		System.out.println("\n--- TEST PaginationElement:\n" + newPaginationElement());
-	} 
+		System.out.println("PaginationElement:\n" + newPaginationElement());
+	}  
 
 	@org.junit.Test
 	public void testPaginationImport() {
-		System.out.println("\n--- TEST PaginationImport:\n" + newPaginationImport());
-	} 
+		System.out.println("PaginationImport:\n" + newPaginationImport());
+	}  
 
 	@org.junit.Test
 	public void testPaginationItem() {
-		System.out.println("\n--- TEST PaginationItem:\n" + newPaginationItem());
-	} 
+		System.out.println("PaginationItem:\n" + newPaginationItem());
+	}  
 
 	@org.junit.Test
 	public void testPaginationItemElement() {
-		System.out.println("\n--- TEST PaginationItemElement:\n" + newPaginationItemElement());
-	} 
+		System.out.println("PaginationItemElement:\n" + newPaginationItemElement());
+	}  
 
 	@org.junit.Test
 	public void testPaginationItemImport() {
-		System.out.println("\n--- TEST PaginationItemImport:\n" + newPaginationItemImport());
-	} 
+		System.out.println("PaginationItemImport:\n" + newPaginationItemImport());
+	}  
 
 	@org.junit.Test
 	public void testPaper() {
-		System.out.println("\n--- TEST Paper:\n" + newPaper());
-	} 
+		System.out.println("Paper:\n" + newPaper());
+	}  
 
 	@org.junit.Test
 	public void testPaperElement() {
-		System.out.println("\n--- TEST PaperElement:\n" + newPaperElement());
-	} 
+		System.out.println("PaperElement:\n" + newPaperElement());
+	}  
 
 	@org.junit.Test
 	public void testPaperImport() {
-		System.out.println("\n--- TEST PaperImport:\n" + newPaperImport());
-	} 
+		System.out.println("PaperImport:\n" + newPaperImport());
+	}  
 
 	@org.junit.Test
 	public void testPopover() {
-		System.out.println("\n--- TEST Popover:\n" + newPopover());
-	} 
+		System.out.println("Popover:\n" + newPopover());
+	}  
 
 	@org.junit.Test
 	public void testPopoverElement() {
-		System.out.println("\n--- TEST PopoverElement:\n" + newPopoverElement());
-	} 
+		System.out.println("PopoverElement:\n" + newPopoverElement());
+	}  
 
 	@org.junit.Test
 	public void testPopoverImport() {
-		System.out.println("\n--- TEST PopoverImport:\n" + newPopoverImport());
-	} 
+		System.out.println("PopoverImport:\n" + newPopoverImport());
+	}  
 
 	@org.junit.Test
 	public void testPopper() {
-		System.out.println("\n--- TEST Popper:\n" + newPopper());
-	} 
+		System.out.println("Popper:\n" + newPopper());
+	}  
 
 	@org.junit.Test
 	public void testPopperElement() {
-		System.out.println("\n--- TEST PopperElement:\n" + newPopperElement());
-	} 
+		System.out.println("PopperElement:\n" + newPopperElement());
+	}  
 
 	@org.junit.Test
 	public void testPopperImport() {
-		System.out.println("\n--- TEST PopperImport:\n" + newPopperImport());
-	} 
+		System.out.println("PopperImport:\n" + newPopperImport());
+	}  
 
 	@org.junit.Test
 	public void testPortal() {
-		System.out.println("\n--- TEST Portal:\n" + newPortal());
-	} 
+		System.out.println("Portal:\n" + newPortal());
+	}  
 
 	@org.junit.Test
 	public void testPortalElement() {
-		System.out.println("\n--- TEST PortalElement:\n" + newPortalElement());
-	} 
+		System.out.println("PortalElement:\n" + newPortalElement());
+	}  
 
 	@org.junit.Test
 	public void testPortalImport() {
-		System.out.println("\n--- TEST PortalImport:\n" + newPortalImport());
-	} 
+		System.out.println("PortalImport:\n" + newPortalImport());
+	}  
 
 	@org.junit.Test
 	public void testRadio() {
-		System.out.println("\n--- TEST Radio:\n" + newRadio());
-	} 
+		System.out.println("Radio:\n" + newRadio());
+	}  
 
 	@org.junit.Test
 	public void testRadioElement() {
-		System.out.println("\n--- TEST RadioElement:\n" + newRadioElement());
-	} 
+		System.out.println("RadioElement:\n" + newRadioElement());
+	}  
 
 	@org.junit.Test
 	public void testRadioImport() {
-		System.out.println("\n--- TEST RadioImport:\n" + newRadioImport());
-	} 
+		System.out.println("RadioImport:\n" + newRadioImport());
+	}  
 
 	@org.junit.Test
 	public void testRadioGroup() {
-		System.out.println("\n--- TEST RadioGroup:\n" + newRadioGroup());
-	} 
+		System.out.println("RadioGroup:\n" + newRadioGroup());
+	}  
 
 	@org.junit.Test
 	public void testRadioGroupElement() {
-		System.out.println("\n--- TEST RadioGroupElement:\n" + newRadioGroupElement());
-	} 
+		System.out.println("RadioGroupElement:\n" + newRadioGroupElement());
+	}  
 
 	@org.junit.Test
 	public void testRadioGroupImport() {
-		System.out.println("\n--- TEST RadioGroupImport:\n" + newRadioGroupImport());
-	} 
+		System.out.println("RadioGroupImport:\n" + newRadioGroupImport());
+	}  
 
 	@org.junit.Test
 	public void testRating() {
-		System.out.println("\n--- TEST Rating:\n" + newRating());
-	} 
+		System.out.println("Rating:\n" + newRating());
+	}  
 
 	@org.junit.Test
 	public void testRatingElement() {
-		System.out.println("\n--- TEST RatingElement:\n" + newRatingElement());
-	} 
+		System.out.println("RatingElement:\n" + newRatingElement());
+	}  
 
 	@org.junit.Test
 	public void testRatingImport() {
-		System.out.println("\n--- TEST RatingImport:\n" + newRatingImport());
-	} 
+		System.out.println("RatingImport:\n" + newRatingImport());
+	}  
 
 	@org.junit.Test
 	public void testRootRef() {
-		System.out.println("\n--- TEST RootRef:\n" + newRootRef());
-	} 
+		System.out.println("RootRef:\n" + newRootRef());
+	}  
 
 	@org.junit.Test
 	public void testRootRefElement() {
-		System.out.println("\n--- TEST RootRefElement:\n" + newRootRefElement());
-	} 
+		System.out.println("RootRefElement:\n" + newRootRefElement());
+	}  
 
 	@org.junit.Test
 	public void testRootRefImport() {
-		System.out.println("\n--- TEST RootRefImport:\n" + newRootRefImport());
-	} 
+		System.out.println("RootRefImport:\n" + newRootRefImport());
+	}  
 
 	@org.junit.Test
 	public void testScopedCssBaseline() {
-		System.out.println("\n--- TEST ScopedCssBaseline:\n" + newScopedCssBaseline());
-	} 
+		System.out.println("ScopedCssBaseline:\n" + newScopedCssBaseline());
+	}  
 
 	@org.junit.Test
 	public void testScopedCssBaselineElement() {
-		System.out.println("\n--- TEST ScopedCssBaselineElement:\n" + newScopedCssBaselineElement());
-	} 
+		System.out.println("ScopedCssBaselineElement:\n" + newScopedCssBaselineElement());
+	}  
 
 	@org.junit.Test
 	public void testScopedCssBaselineImport() {
-		System.out.println("\n--- TEST ScopedCssBaselineImport:\n" + newScopedCssBaselineImport());
-	} 
+		System.out.println("ScopedCssBaselineImport:\n" + newScopedCssBaselineImport());
+	}  
 
 	@org.junit.Test
 	public void testSelect() {
-		System.out.println("\n--- TEST Select:\n" + newSelect());
-	} 
+		System.out.println("Select:\n" + newSelect());
+	}  
 
 	@org.junit.Test
 	public void testSelectElement() {
-		System.out.println("\n--- TEST SelectElement:\n" + newSelectElement());
-	} 
+		System.out.println("SelectElement:\n" + newSelectElement());
+	}  
 
 	@org.junit.Test
 	public void testSelectImport() {
-		System.out.println("\n--- TEST SelectImport:\n" + newSelectImport());
-	} 
+		System.out.println("SelectImport:\n" + newSelectImport());
+	}  
 
 	@org.junit.Test
 	public void testSkeleton() {
-		System.out.println("\n--- TEST Skeleton:\n" + newSkeleton());
-	} 
+		System.out.println("Skeleton:\n" + newSkeleton());
+	}  
 
 	@org.junit.Test
 	public void testSkeletonElement() {
-		System.out.println("\n--- TEST SkeletonElement:\n" + newSkeletonElement());
-	} 
+		System.out.println("SkeletonElement:\n" + newSkeletonElement());
+	}  
 
 	@org.junit.Test
 	public void testSkeletonImport() {
-		System.out.println("\n--- TEST SkeletonImport:\n" + newSkeletonImport());
-	} 
+		System.out.println("SkeletonImport:\n" + newSkeletonImport());
+	}  
 
 	@org.junit.Test
 	public void testSlide() {
-		System.out.println("\n--- TEST Slide:\n" + newSlide());
-	} 
+		System.out.println("Slide:\n" + newSlide());
+	}  
 
 	@org.junit.Test
 	public void testSlideElement() {
-		System.out.println("\n--- TEST SlideElement:\n" + newSlideElement());
-	} 
+		System.out.println("SlideElement:\n" + newSlideElement());
+	}  
 
 	@org.junit.Test
 	public void testSlideImport() {
-		System.out.println("\n--- TEST SlideImport:\n" + newSlideImport());
-	} 
+		System.out.println("SlideImport:\n" + newSlideImport());
+	}  
 
 	@org.junit.Test
 	public void testSlider() {
-		System.out.println("\n--- TEST Slider:\n" + newSlider());
-	} 
+		System.out.println("Slider:\n" + newSlider());
+	}  
 
 	@org.junit.Test
 	public void testSliderElement() {
-		System.out.println("\n--- TEST SliderElement:\n" + newSliderElement());
-	} 
+		System.out.println("SliderElement:\n" + newSliderElement());
+	}  
 
 	@org.junit.Test
 	public void testSliderImport() {
-		System.out.println("\n--- TEST SliderImport:\n" + newSliderImport());
-	} 
+		System.out.println("SliderImport:\n" + newSliderImport());
+	}  
 
 	@org.junit.Test
 	public void testSnackbar() {
-		System.out.println("\n--- TEST Snackbar:\n" + newSnackbar());
-	} 
+		System.out.println("Snackbar:\n" + newSnackbar());
+	}  
 
 	@org.junit.Test
 	public void testSnackbarElement() {
-		System.out.println("\n--- TEST SnackbarElement:\n" + newSnackbarElement());
-	} 
+		System.out.println("SnackbarElement:\n" + newSnackbarElement());
+	}  
 
 	@org.junit.Test
 	public void testSnackbarImport() {
-		System.out.println("\n--- TEST SnackbarImport:\n" + newSnackbarImport());
-	} 
+		System.out.println("SnackbarImport:\n" + newSnackbarImport());
+	}  
 
 	@org.junit.Test
 	public void testSnackbarContent() {
-		System.out.println("\n--- TEST SnackbarContent:\n" + newSnackbarContent());
-	} 
+		System.out.println("SnackbarContent:\n" + newSnackbarContent());
+	}  
 
 	@org.junit.Test
 	public void testSnackbarContentElement() {
-		System.out.println("\n--- TEST SnackbarContentElement:\n" + newSnackbarContentElement());
-	} 
+		System.out.println("SnackbarContentElement:\n" + newSnackbarContentElement());
+	}  
 
 	@org.junit.Test
 	public void testSnackbarContentImport() {
-		System.out.println("\n--- TEST SnackbarContentImport:\n" + newSnackbarContentImport());
-	} 
+		System.out.println("SnackbarContentImport:\n" + newSnackbarContentImport());
+	}  
 
 	@org.junit.Test
 	public void testSpeedDial() {
-		System.out.println("\n--- TEST SpeedDial:\n" + newSpeedDial());
-	} 
+		System.out.println("SpeedDial:\n" + newSpeedDial());
+	}  
 
 	@org.junit.Test
 	public void testSpeedDialElement() {
-		System.out.println("\n--- TEST SpeedDialElement:\n" + newSpeedDialElement());
-	} 
+		System.out.println("SpeedDialElement:\n" + newSpeedDialElement());
+	}  
 
 	@org.junit.Test
 	public void testSpeedDialImport() {
-		System.out.println("\n--- TEST SpeedDialImport:\n" + newSpeedDialImport());
-	} 
+		System.out.println("SpeedDialImport:\n" + newSpeedDialImport());
+	}  
 
 	@org.junit.Test
 	public void testSpeedDialAction() {
-		System.out.println("\n--- TEST SpeedDialAction:\n" + newSpeedDialAction());
-	} 
+		System.out.println("SpeedDialAction:\n" + newSpeedDialAction());
+	}  
 
 	@org.junit.Test
 	public void testSpeedDialActionElement() {
-		System.out.println("\n--- TEST SpeedDialActionElement:\n" + newSpeedDialActionElement());
-	} 
+		System.out.println("SpeedDialActionElement:\n" + newSpeedDialActionElement());
+	}  
 
 	@org.junit.Test
 	public void testSpeedDialActionImport() {
-		System.out.println("\n--- TEST SpeedDialActionImport:\n" + newSpeedDialActionImport());
-	} 
+		System.out.println("SpeedDialActionImport:\n" + newSpeedDialActionImport());
+	}  
 
 	@org.junit.Test
 	public void testSpeedDialIcon() {
-		System.out.println("\n--- TEST SpeedDialIcon:\n" + newSpeedDialIcon());
-	} 
+		System.out.println("SpeedDialIcon:\n" + newSpeedDialIcon());
+	}  
 
 	@org.junit.Test
 	public void testSpeedDialIconElement() {
-		System.out.println("\n--- TEST SpeedDialIconElement:\n" + newSpeedDialIconElement());
-	} 
+		System.out.println("SpeedDialIconElement:\n" + newSpeedDialIconElement());
+	}  
 
 	@org.junit.Test
 	public void testSpeedDialIconImport() {
-		System.out.println("\n--- TEST SpeedDialIconImport:\n" + newSpeedDialIconImport());
-	} 
+		System.out.println("SpeedDialIconImport:\n" + newSpeedDialIconImport());
+	}  
 
 	@org.junit.Test
 	public void testStep() {
-		System.out.println("\n--- TEST Step:\n" + newStep());
-	} 
+		System.out.println("Step:\n" + newStep());
+	}  
 
 	@org.junit.Test
 	public void testStepElement() {
-		System.out.println("\n--- TEST StepElement:\n" + newStepElement());
-	} 
+		System.out.println("StepElement:\n" + newStepElement());
+	}  
 
 	@org.junit.Test
 	public void testStepImport() {
-		System.out.println("\n--- TEST StepImport:\n" + newStepImport());
-	} 
+		System.out.println("StepImport:\n" + newStepImport());
+	}  
 
 	@org.junit.Test
 	public void testStepButton() {
-		System.out.println("\n--- TEST StepButton:\n" + newStepButton());
-	} 
+		System.out.println("StepButton:\n" + newStepButton());
+	}  
 
 	@org.junit.Test
 	public void testStepButtonElement() {
-		System.out.println("\n--- TEST StepButtonElement:\n" + newStepButtonElement());
-	} 
+		System.out.println("StepButtonElement:\n" + newStepButtonElement());
+	}  
 
 	@org.junit.Test
 	public void testStepButtonImport() {
-		System.out.println("\n--- TEST StepButtonImport:\n" + newStepButtonImport());
-	} 
+		System.out.println("StepButtonImport:\n" + newStepButtonImport());
+	}  
 
 	@org.junit.Test
 	public void testStepConnector() {
-		System.out.println("\n--- TEST StepConnector:\n" + newStepConnector());
-	} 
+		System.out.println("StepConnector:\n" + newStepConnector());
+	}  
 
 	@org.junit.Test
 	public void testStepConnectorElement() {
-		System.out.println("\n--- TEST StepConnectorElement:\n" + newStepConnectorElement());
-	} 
+		System.out.println("StepConnectorElement:\n" + newStepConnectorElement());
+	}  
 
 	@org.junit.Test
 	public void testStepConnectorImport() {
-		System.out.println("\n--- TEST StepConnectorImport:\n" + newStepConnectorImport());
-	} 
+		System.out.println("StepConnectorImport:\n" + newStepConnectorImport());
+	}  
 
 	@org.junit.Test
 	public void testStepContent() {
-		System.out.println("\n--- TEST StepContent:\n" + newStepContent());
-	} 
+		System.out.println("StepContent:\n" + newStepContent());
+	}  
 
 	@org.junit.Test
 	public void testStepContentElement() {
-		System.out.println("\n--- TEST StepContentElement:\n" + newStepContentElement());
-	} 
+		System.out.println("StepContentElement:\n" + newStepContentElement());
+	}  
 
 	@org.junit.Test
 	public void testStepContentImport() {
-		System.out.println("\n--- TEST StepContentImport:\n" + newStepContentImport());
-	} 
+		System.out.println("StepContentImport:\n" + newStepContentImport());
+	}  
 
 	@org.junit.Test
 	public void testStepIcon() {
-		System.out.println("\n--- TEST StepIcon:\n" + newStepIcon());
-	} 
+		System.out.println("StepIcon:\n" + newStepIcon());
+	}  
 
 	@org.junit.Test
 	public void testStepIconElement() {
-		System.out.println("\n--- TEST StepIconElement:\n" + newStepIconElement());
-	} 
+		System.out.println("StepIconElement:\n" + newStepIconElement());
+	}  
 
 	@org.junit.Test
 	public void testStepIconImport() {
-		System.out.println("\n--- TEST StepIconImport:\n" + newStepIconImport());
-	} 
+		System.out.println("StepIconImport:\n" + newStepIconImport());
+	}  
 
 	@org.junit.Test
 	public void testStepLabel() {
-		System.out.println("\n--- TEST StepLabel:\n" + newStepLabel());
-	} 
+		System.out.println("StepLabel:\n" + newStepLabel());
+	}  
 
 	@org.junit.Test
 	public void testStepLabelElement() {
-		System.out.println("\n--- TEST StepLabelElement:\n" + newStepLabelElement());
-	} 
+		System.out.println("StepLabelElement:\n" + newStepLabelElement());
+	}  
 
 	@org.junit.Test
 	public void testStepLabelImport() {
-		System.out.println("\n--- TEST StepLabelImport:\n" + newStepLabelImport());
-	} 
+		System.out.println("StepLabelImport:\n" + newStepLabelImport());
+	}  
 
 	@org.junit.Test
 	public void testStepper() {
-		System.out.println("\n--- TEST Stepper:\n" + newStepper());
-	} 
+		System.out.println("Stepper:\n" + newStepper());
+	}  
 
 	@org.junit.Test
 	public void testStepperElement() {
-		System.out.println("\n--- TEST StepperElement:\n" + newStepperElement());
-	} 
+		System.out.println("StepperElement:\n" + newStepperElement());
+	}  
 
 	@org.junit.Test
 	public void testStepperImport() {
-		System.out.println("\n--- TEST StepperImport:\n" + newStepperImport());
-	} 
+		System.out.println("StepperImport:\n" + newStepperImport());
+	}  
 
 	@org.junit.Test
 	public void testSvgIcon() {
-		System.out.println("\n--- TEST SvgIcon:\n" + newSvgIcon());
-	} 
+		System.out.println("SvgIcon:\n" + newSvgIcon());
+	}  
 
 	@org.junit.Test
 	public void testSvgIconElement() {
-		System.out.println("\n--- TEST SvgIconElement:\n" + newSvgIconElement());
-	} 
+		System.out.println("SvgIconElement:\n" + newSvgIconElement());
+	}  
 
 	@org.junit.Test
 	public void testSvgIconImport() {
-		System.out.println("\n--- TEST SvgIconImport:\n" + newSvgIconImport());
-	} 
+		System.out.println("SvgIconImport:\n" + newSvgIconImport());
+	}  
 
 	@org.junit.Test
 	public void testSwipeableDrawer() {
-		System.out.println("\n--- TEST SwipeableDrawer:\n" + newSwipeableDrawer());
-	} 
+		System.out.println("SwipeableDrawer:\n" + newSwipeableDrawer());
+	}  
 
 	@org.junit.Test
 	public void testSwipeableDrawerElement() {
-		System.out.println("\n--- TEST SwipeableDrawerElement:\n" + newSwipeableDrawerElement());
-	} 
+		System.out.println("SwipeableDrawerElement:\n" + newSwipeableDrawerElement());
+	}  
 
 	@org.junit.Test
 	public void testSwipeableDrawerImport() {
-		System.out.println("\n--- TEST SwipeableDrawerImport:\n" + newSwipeableDrawerImport());
-	} 
+		System.out.println("SwipeableDrawerImport:\n" + newSwipeableDrawerImport());
+	}  
 
 	@org.junit.Test
 	public void testSwitch() {
-		System.out.println("\n--- TEST Switch:\n" + newSwitch());
-	} 
+		System.out.println("Switch:\n" + newSwitch());
+	}  
 
 	@org.junit.Test
 	public void testSwitchElement() {
-		System.out.println("\n--- TEST SwitchElement:\n" + newSwitchElement());
-	} 
+		System.out.println("SwitchElement:\n" + newSwitchElement());
+	}  
 
 	@org.junit.Test
 	public void testSwitchImport() {
-		System.out.println("\n--- TEST SwitchImport:\n" + newSwitchImport());
-	} 
+		System.out.println("SwitchImport:\n" + newSwitchImport());
+	}  
 
 	@org.junit.Test
 	public void testTab() {
-		System.out.println("\n--- TEST Tab:\n" + newTab());
-	} 
+		System.out.println("Tab:\n" + newTab());
+	}  
 
 	@org.junit.Test
 	public void testTabElement() {
-		System.out.println("\n--- TEST TabElement:\n" + newTabElement());
-	} 
+		System.out.println("TabElement:\n" + newTabElement());
+	}  
 
 	@org.junit.Test
 	public void testTabImport() {
-		System.out.println("\n--- TEST TabImport:\n" + newTabImport());
-	} 
+		System.out.println("TabImport:\n" + newTabImport());
+	}  
 
 	@org.junit.Test
 	public void testTabContext() {
-		System.out.println("\n--- TEST TabContext:\n" + newTabContext());
-	} 
+		System.out.println("TabContext:\n" + newTabContext());
+	}  
 
 	@org.junit.Test
 	public void testTabContextElement() {
-		System.out.println("\n--- TEST TabContextElement:\n" + newTabContextElement());
-	} 
+		System.out.println("TabContextElement:\n" + newTabContextElement());
+	}  
 
 	@org.junit.Test
 	public void testTabContextImport() {
-		System.out.println("\n--- TEST TabContextImport:\n" + newTabContextImport());
-	} 
+		System.out.println("TabContextImport:\n" + newTabContextImport());
+	}  
 
 	@org.junit.Test
 	public void testTable() {
-		System.out.println("\n--- TEST Table:\n" + newTable());
-	} 
+		System.out.println("Table:\n" + newTable());
+	}  
 
 	@org.junit.Test
 	public void testTableElement() {
-		System.out.println("\n--- TEST TableElement:\n" + newTableElement());
-	} 
+		System.out.println("TableElement:\n" + newTableElement());
+	}  
 
 	@org.junit.Test
 	public void testTableImport() {
-		System.out.println("\n--- TEST TableImport:\n" + newTableImport());
-	} 
+		System.out.println("TableImport:\n" + newTableImport());
+	}  
 
 	@org.junit.Test
 	public void testTableBody() {
-		System.out.println("\n--- TEST TableBody:\n" + newTableBody());
-	} 
+		System.out.println("TableBody:\n" + newTableBody());
+	}  
 
 	@org.junit.Test
 	public void testTableBodyElement() {
-		System.out.println("\n--- TEST TableBodyElement:\n" + newTableBodyElement());
-	} 
+		System.out.println("TableBodyElement:\n" + newTableBodyElement());
+	}  
 
 	@org.junit.Test
 	public void testTableBodyImport() {
-		System.out.println("\n--- TEST TableBodyImport:\n" + newTableBodyImport());
-	} 
+		System.out.println("TableBodyImport:\n" + newTableBodyImport());
+	}  
 
 	@org.junit.Test
 	public void testTableCell() {
-		System.out.println("\n--- TEST TableCell:\n" + newTableCell());
-	} 
+		System.out.println("TableCell:\n" + newTableCell());
+	}  
 
 	@org.junit.Test
 	public void testTableCellElement() {
-		System.out.println("\n--- TEST TableCellElement:\n" + newTableCellElement());
-	} 
+		System.out.println("TableCellElement:\n" + newTableCellElement());
+	}  
 
 	@org.junit.Test
 	public void testTableCellImport() {
-		System.out.println("\n--- TEST TableCellImport:\n" + newTableCellImport());
-	} 
+		System.out.println("TableCellImport:\n" + newTableCellImport());
+	}  
 
 	@org.junit.Test
 	public void testTableContainer() {
-		System.out.println("\n--- TEST TableContainer:\n" + newTableContainer());
-	} 
+		System.out.println("TableContainer:\n" + newTableContainer());
+	}  
 
 	@org.junit.Test
 	public void testTableContainerElement() {
-		System.out.println("\n--- TEST TableContainerElement:\n" + newTableContainerElement());
-	} 
+		System.out.println("TableContainerElement:\n" + newTableContainerElement());
+	}  
 
 	@org.junit.Test
 	public void testTableContainerImport() {
-		System.out.println("\n--- TEST TableContainerImport:\n" + newTableContainerImport());
-	} 
+		System.out.println("TableContainerImport:\n" + newTableContainerImport());
+	}  
 
 	@org.junit.Test
 	public void testTableFooter() {
-		System.out.println("\n--- TEST TableFooter:\n" + newTableFooter());
-	} 
+		System.out.println("TableFooter:\n" + newTableFooter());
+	}  
 
 	@org.junit.Test
 	public void testTableFooterElement() {
-		System.out.println("\n--- TEST TableFooterElement:\n" + newTableFooterElement());
-	} 
+		System.out.println("TableFooterElement:\n" + newTableFooterElement());
+	}  
 
 	@org.junit.Test
 	public void testTableFooterImport() {
-		System.out.println("\n--- TEST TableFooterImport:\n" + newTableFooterImport());
-	} 
+		System.out.println("TableFooterImport:\n" + newTableFooterImport());
+	}  
 
 	@org.junit.Test
 	public void testTableHead() {
-		System.out.println("\n--- TEST TableHead:\n" + newTableHead());
-	} 
+		System.out.println("TableHead:\n" + newTableHead());
+	}  
 
 	@org.junit.Test
 	public void testTableHeadElement() {
-		System.out.println("\n--- TEST TableHeadElement:\n" + newTableHeadElement());
-	} 
+		System.out.println("TableHeadElement:\n" + newTableHeadElement());
+	}  
 
 	@org.junit.Test
 	public void testTableHeadImport() {
-		System.out.println("\n--- TEST TableHeadImport:\n" + newTableHeadImport());
-	} 
+		System.out.println("TableHeadImport:\n" + newTableHeadImport());
+	}  
 
 	@org.junit.Test
 	public void testTablePagination() {
-		System.out.println("\n--- TEST TablePagination:\n" + newTablePagination());
-	} 
+		System.out.println("TablePagination:\n" + newTablePagination());
+	}  
 
 	@org.junit.Test
 	public void testTablePaginationElement() {
-		System.out.println("\n--- TEST TablePaginationElement:\n" + newTablePaginationElement());
-	} 
+		System.out.println("TablePaginationElement:\n" + newTablePaginationElement());
+	}  
 
 	@org.junit.Test
 	public void testTablePaginationImport() {
-		System.out.println("\n--- TEST TablePaginationImport:\n" + newTablePaginationImport());
-	} 
+		System.out.println("TablePaginationImport:\n" + newTablePaginationImport());
+	}  
 
 	@org.junit.Test
 	public void testTableRow() {
-		System.out.println("\n--- TEST TableRow:\n" + newTableRow());
-	} 
+		System.out.println("TableRow:\n" + newTableRow());
+	}  
 
 	@org.junit.Test
 	public void testTableRowElement() {
-		System.out.println("\n--- TEST TableRowElement:\n" + newTableRowElement());
-	} 
+		System.out.println("TableRowElement:\n" + newTableRowElement());
+	}  
 
 	@org.junit.Test
 	public void testTableRowImport() {
-		System.out.println("\n--- TEST TableRowImport:\n" + newTableRowImport());
-	} 
+		System.out.println("TableRowImport:\n" + newTableRowImport());
+	}  
 
 	@org.junit.Test
 	public void testTableSortLabel() {
-		System.out.println("\n--- TEST TableSortLabel:\n" + newTableSortLabel());
-	} 
+		System.out.println("TableSortLabel:\n" + newTableSortLabel());
+	}  
 
 	@org.junit.Test
 	public void testTableSortLabelElement() {
-		System.out.println("\n--- TEST TableSortLabelElement:\n" + newTableSortLabelElement());
-	} 
+		System.out.println("TableSortLabelElement:\n" + newTableSortLabelElement());
+	}  
 
 	@org.junit.Test
 	public void testTableSortLabelImport() {
-		System.out.println("\n--- TEST TableSortLabelImport:\n" + newTableSortLabelImport());
-	} 
+		System.out.println("TableSortLabelImport:\n" + newTableSortLabelImport());
+	}  
 
 	@org.junit.Test
 	public void testTabList() {
-		System.out.println("\n--- TEST TabList:\n" + newTabList());
-	} 
+		System.out.println("TabList:\n" + newTabList());
+	}  
 
 	@org.junit.Test
 	public void testTabListElement() {
-		System.out.println("\n--- TEST TabListElement:\n" + newTabListElement());
-	} 
+		System.out.println("TabListElement:\n" + newTabListElement());
+	}  
 
 	@org.junit.Test
 	public void testTabListImport() {
-		System.out.println("\n--- TEST TabListImport:\n" + newTabListImport());
-	} 
+		System.out.println("TabListImport:\n" + newTabListImport());
+	}  
 
 	@org.junit.Test
 	public void testTabPanel() {
-		System.out.println("\n--- TEST TabPanel:\n" + newTabPanel());
-	} 
+		System.out.println("TabPanel:\n" + newTabPanel());
+	}  
 
 	@org.junit.Test
 	public void testTabPanelElement() {
-		System.out.println("\n--- TEST TabPanelElement:\n" + newTabPanelElement());
-	} 
+		System.out.println("TabPanelElement:\n" + newTabPanelElement());
+	}  
 
 	@org.junit.Test
 	public void testTabPanelImport() {
-		System.out.println("\n--- TEST TabPanelImport:\n" + newTabPanelImport());
-	} 
+		System.out.println("TabPanelImport:\n" + newTabPanelImport());
+	}  
 
 	@org.junit.Test
 	public void testTabs() {
-		System.out.println("\n--- TEST Tabs:\n" + newTabs());
-	} 
+		System.out.println("Tabs:\n" + newTabs());
+	}  
 
 	@org.junit.Test
 	public void testTabsElement() {
-		System.out.println("\n--- TEST TabsElement:\n" + newTabsElement());
-	} 
+		System.out.println("TabsElement:\n" + newTabsElement());
+	}  
 
 	@org.junit.Test
 	public void testTabsImport() {
-		System.out.println("\n--- TEST TabsImport:\n" + newTabsImport());
-	} 
+		System.out.println("TabsImport:\n" + newTabsImport());
+	}  
 
 	@org.junit.Test
 	public void testTabScrollButton() {
-		System.out.println("\n--- TEST TabScrollButton:\n" + newTabScrollButton());
-	} 
+		System.out.println("TabScrollButton:\n" + newTabScrollButton());
+	}  
 
 	@org.junit.Test
 	public void testTabScrollButtonElement() {
-		System.out.println("\n--- TEST TabScrollButtonElement:\n" + newTabScrollButtonElement());
-	} 
+		System.out.println("TabScrollButtonElement:\n" + newTabScrollButtonElement());
+	}  
 
 	@org.junit.Test
 	public void testTabScrollButtonImport() {
-		System.out.println("\n--- TEST TabScrollButtonImport:\n" + newTabScrollButtonImport());
-	} 
+		System.out.println("TabScrollButtonImport:\n" + newTabScrollButtonImport());
+	}  
 
 	@org.junit.Test
 	public void testTextareaAutosize() {
-		System.out.println("\n--- TEST TextareaAutosize:\n" + newTextareaAutosize());
-	} 
+		System.out.println("TextareaAutosize:\n" + newTextareaAutosize());
+	}  
 
 	@org.junit.Test
 	public void testTextareaAutosizeElement() {
-		System.out.println("\n--- TEST TextareaAutosizeElement:\n" + newTextareaAutosizeElement());
-	} 
+		System.out.println("TextareaAutosizeElement:\n" + newTextareaAutosizeElement());
+	}  
 
 	@org.junit.Test
 	public void testTextareaAutosizeImport() {
-		System.out.println("\n--- TEST TextareaAutosizeImport:\n" + newTextareaAutosizeImport());
-	} 
+		System.out.println("TextareaAutosizeImport:\n" + newTextareaAutosizeImport());
+	}  
 
 	@org.junit.Test
 	public void testTextField() {
-		System.out.println("\n--- TEST TextField:\n" + newTextField());
-	} 
+		System.out.println("TextField:\n" + newTextField());
+	}  
 
 	@org.junit.Test
 	public void testTextFieldElement() {
-		System.out.println("\n--- TEST TextFieldElement:\n" + newTextFieldElement());
-	} 
+		System.out.println("TextFieldElement:\n" + newTextFieldElement());
+	}  
 
 	@org.junit.Test
 	public void testTextFieldImport() {
-		System.out.println("\n--- TEST TextFieldImport:\n" + newTextFieldImport());
-	} 
+		System.out.println("TextFieldImport:\n" + newTextFieldImport());
+	}  
 
 	@org.junit.Test
 	public void testTimeline() {
-		System.out.println("\n--- TEST Timeline:\n" + newTimeline());
-	} 
+		System.out.println("Timeline:\n" + newTimeline());
+	}  
 
 	@org.junit.Test
 	public void testTimelineElement() {
-		System.out.println("\n--- TEST TimelineElement:\n" + newTimelineElement());
-	} 
+		System.out.println("TimelineElement:\n" + newTimelineElement());
+	}  
 
 	@org.junit.Test
 	public void testTimelineImport() {
-		System.out.println("\n--- TEST TimelineImport:\n" + newTimelineImport());
-	} 
+		System.out.println("TimelineImport:\n" + newTimelineImport());
+	}  
 
 	@org.junit.Test
 	public void testTimelineConnector() {
-		System.out.println("\n--- TEST TimelineConnector:\n" + newTimelineConnector());
-	} 
+		System.out.println("TimelineConnector:\n" + newTimelineConnector());
+	}  
 
 	@org.junit.Test
 	public void testTimelineConnectorElement() {
-		System.out.println("\n--- TEST TimelineConnectorElement:\n" + newTimelineConnectorElement());
-	} 
+		System.out.println("TimelineConnectorElement:\n" + newTimelineConnectorElement());
+	}  
 
 	@org.junit.Test
 	public void testTimelineConnectorImport() {
-		System.out.println("\n--- TEST TimelineConnectorImport:\n" + newTimelineConnectorImport());
-	} 
+		System.out.println("TimelineConnectorImport:\n" + newTimelineConnectorImport());
+	}  
 
 	@org.junit.Test
 	public void testTimelineContent() {
-		System.out.println("\n--- TEST TimelineContent:\n" + newTimelineContent());
-	} 
+		System.out.println("TimelineContent:\n" + newTimelineContent());
+	}  
 
 	@org.junit.Test
 	public void testTimelineContentElement() {
-		System.out.println("\n--- TEST TimelineContentElement:\n" + newTimelineContentElement());
-	} 
+		System.out.println("TimelineContentElement:\n" + newTimelineContentElement());
+	}  
 
 	@org.junit.Test
 	public void testTimelineContentImport() {
-		System.out.println("\n--- TEST TimelineContentImport:\n" + newTimelineContentImport());
-	} 
+		System.out.println("TimelineContentImport:\n" + newTimelineContentImport());
+	}  
 
 	@org.junit.Test
 	public void testTimelineDot() {
-		System.out.println("\n--- TEST TimelineDot:\n" + newTimelineDot());
-	} 
+		System.out.println("TimelineDot:\n" + newTimelineDot());
+	}  
 
 	@org.junit.Test
 	public void testTimelineDotElement() {
-		System.out.println("\n--- TEST TimelineDotElement:\n" + newTimelineDotElement());
-	} 
+		System.out.println("TimelineDotElement:\n" + newTimelineDotElement());
+	}  
 
 	@org.junit.Test
 	public void testTimelineDotImport() {
-		System.out.println("\n--- TEST TimelineDotImport:\n" + newTimelineDotImport());
-	} 
+		System.out.println("TimelineDotImport:\n" + newTimelineDotImport());
+	}  
 
 	@org.junit.Test
 	public void testTimelineItem() {
-		System.out.println("\n--- TEST TimelineItem:\n" + newTimelineItem());
-	} 
+		System.out.println("TimelineItem:\n" + newTimelineItem());
+	}  
 
 	@org.junit.Test
 	public void testTimelineItemElement() {
-		System.out.println("\n--- TEST TimelineItemElement:\n" + newTimelineItemElement());
-	} 
+		System.out.println("TimelineItemElement:\n" + newTimelineItemElement());
+	}  
 
 	@org.junit.Test
 	public void testTimelineItemImport() {
-		System.out.println("\n--- TEST TimelineItemImport:\n" + newTimelineItemImport());
-	} 
+		System.out.println("TimelineItemImport:\n" + newTimelineItemImport());
+	}  
 
 	@org.junit.Test
 	public void testTimelineOppositeContent() {
-		System.out.println("\n--- TEST TimelineOppositeContent:\n" + newTimelineOppositeContent());
-	} 
+		System.out.println("TimelineOppositeContent:\n" + newTimelineOppositeContent());
+	}  
 
 	@org.junit.Test
 	public void testTimelineOppositeContentElement() {
-		System.out.println("\n--- TEST TimelineOppositeContentElement:\n" + newTimelineOppositeContentElement());
-	} 
+		System.out.println("TimelineOppositeContentElement:\n" + newTimelineOppositeContentElement());
+	}  
 
 	@org.junit.Test
 	public void testTimelineOppositeContentImport() {
-		System.out.println("\n--- TEST TimelineOppositeContentImport:\n" + newTimelineOppositeContentImport());
-	} 
+		System.out.println("TimelineOppositeContentImport:\n" + newTimelineOppositeContentImport());
+	}  
 
 	@org.junit.Test
 	public void testTimelineSeparator() {
-		System.out.println("\n--- TEST TimelineSeparator:\n" + newTimelineSeparator());
-	} 
+		System.out.println("TimelineSeparator:\n" + newTimelineSeparator());
+	}  
 
 	@org.junit.Test
 	public void testTimelineSeparatorElement() {
-		System.out.println("\n--- TEST TimelineSeparatorElement:\n" + newTimelineSeparatorElement());
-	} 
+		System.out.println("TimelineSeparatorElement:\n" + newTimelineSeparatorElement());
+	}  
 
 	@org.junit.Test
 	public void testTimelineSeparatorImport() {
-		System.out.println("\n--- TEST TimelineSeparatorImport:\n" + newTimelineSeparatorImport());
-	} 
+		System.out.println("TimelineSeparatorImport:\n" + newTimelineSeparatorImport());
+	}  
 
 	@org.junit.Test
 	public void testToggleButton() {
-		System.out.println("\n--- TEST ToggleButton:\n" + newToggleButton());
-	} 
+		System.out.println("ToggleButton:\n" + newToggleButton());
+	}  
 
 	@org.junit.Test
 	public void testToggleButtonElement() {
-		System.out.println("\n--- TEST ToggleButtonElement:\n" + newToggleButtonElement());
-	} 
+		System.out.println("ToggleButtonElement:\n" + newToggleButtonElement());
+	}  
 
 	@org.junit.Test
 	public void testToggleButtonImport() {
-		System.out.println("\n--- TEST ToggleButtonImport:\n" + newToggleButtonImport());
-	} 
+		System.out.println("ToggleButtonImport:\n" + newToggleButtonImport());
+	}  
 
 	@org.junit.Test
 	public void testToggleButtonGroup() {
-		System.out.println("\n--- TEST ToggleButtonGroup:\n" + newToggleButtonGroup());
-	} 
+		System.out.println("ToggleButtonGroup:\n" + newToggleButtonGroup());
+	}  
 
 	@org.junit.Test
 	public void testToggleButtonGroupElement() {
-		System.out.println("\n--- TEST ToggleButtonGroupElement:\n" + newToggleButtonGroupElement());
-	} 
+		System.out.println("ToggleButtonGroupElement:\n" + newToggleButtonGroupElement());
+	}  
 
 	@org.junit.Test
 	public void testToggleButtonGroupImport() {
-		System.out.println("\n--- TEST ToggleButtonGroupImport:\n" + newToggleButtonGroupImport());
-	} 
+		System.out.println("ToggleButtonGroupImport:\n" + newToggleButtonGroupImport());
+	}  
 
 	@org.junit.Test
 	public void testToolbar() {
-		System.out.println("\n--- TEST Toolbar:\n" + newToolbar());
-	} 
+		System.out.println("Toolbar:\n" + newToolbar());
+	}  
 
 	@org.junit.Test
 	public void testToolbarElement() {
-		System.out.println("\n--- TEST ToolbarElement:\n" + newToolbarElement());
-	} 
+		System.out.println("ToolbarElement:\n" + newToolbarElement());
+	}  
 
 	@org.junit.Test
 	public void testToolbarImport() {
-		System.out.println("\n--- TEST ToolbarImport:\n" + newToolbarImport());
-	} 
+		System.out.println("ToolbarImport:\n" + newToolbarImport());
+	}  
 
 	@org.junit.Test
 	public void testTooltip() {
-		System.out.println("\n--- TEST Tooltip:\n" + newTooltip());
-	} 
+		System.out.println("Tooltip:\n" + newTooltip());
+	}  
 
 	@org.junit.Test
 	public void testTooltipElement() {
-		System.out.println("\n--- TEST TooltipElement:\n" + newTooltipElement());
-	} 
+		System.out.println("TooltipElement:\n" + newTooltipElement());
+	}  
 
 	@org.junit.Test
 	public void testTooltipImport() {
-		System.out.println("\n--- TEST TooltipImport:\n" + newTooltipImport());
-	} 
+		System.out.println("TooltipImport:\n" + newTooltipImport());
+	}  
 
 	@org.junit.Test
 	public void testTreeItem() {
-		System.out.println("\n--- TEST TreeItem:\n" + newTreeItem());
-	} 
+		System.out.println("TreeItem:\n" + newTreeItem());
+	}  
 
 	@org.junit.Test
 	public void testTreeItemElement() {
-		System.out.println("\n--- TEST TreeItemElement:\n" + newTreeItemElement());
-	} 
+		System.out.println("TreeItemElement:\n" + newTreeItemElement());
+	}  
 
 	@org.junit.Test
 	public void testTreeItemImport() {
-		System.out.println("\n--- TEST TreeItemImport:\n" + newTreeItemImport());
-	} 
+		System.out.println("TreeItemImport:\n" + newTreeItemImport());
+	}  
 
 	@org.junit.Test
 	public void testTreeView() {
-		System.out.println("\n--- TEST TreeView:\n" + newTreeView());
-	} 
+		System.out.println("TreeView:\n" + newTreeView());
+	}  
 
 	@org.junit.Test
 	public void testTreeViewElement() {
-		System.out.println("\n--- TEST TreeViewElement:\n" + newTreeViewElement());
-	} 
+		System.out.println("TreeViewElement:\n" + newTreeViewElement());
+	}  
 
 	@org.junit.Test
 	public void testTreeViewImport() {
-		System.out.println("\n--- TEST TreeViewImport:\n" + newTreeViewImport());
-	} 
+		System.out.println("TreeViewImport:\n" + newTreeViewImport());
+	}  
 
 	@org.junit.Test
 	public void testTypography() {
-		System.out.println("\n--- TEST Typography:\n" + newTypography());
-	} 
+		System.out.println("Typography:\n" + newTypography());
+	}  
 
 	@org.junit.Test
 	public void testTypographyElement() {
-		System.out.println("\n--- TEST TypographyElement:\n" + newTypographyElement());
-	} 
+		System.out.println("TypographyElement:\n" + newTypographyElement());
+	}  
 
 	@org.junit.Test
 	public void testTypographyImport() {
-		System.out.println("\n--- TEST TypographyImport:\n" + newTypographyImport());
-	} 
+		System.out.println("TypographyImport:\n" + newTypographyImport());
+	}  
 
 	@org.junit.Test
 	public void testUnstableTrapFocus() {
-		System.out.println("\n--- TEST UnstableTrapFocus:\n" + newUnstableTrapFocus());
-	} 
+		System.out.println("UnstableTrapFocus:\n" + newUnstableTrapFocus());
+	}  
 
 	@org.junit.Test
 	public void testUnstableTrapFocusElement() {
-		System.out.println("\n--- TEST UnstableTrapFocusElement:\n" + newUnstableTrapFocusElement());
-	} 
+		System.out.println("UnstableTrapFocusElement:\n" + newUnstableTrapFocusElement());
+	}  
 
 	@org.junit.Test
 	public void testUnstableTrapFocusImport() {
-		System.out.println("\n--- TEST UnstableTrapFocusImport:\n" + newUnstableTrapFocusImport());
-	} 
+		System.out.println("UnstableTrapFocusImport:\n" + newUnstableTrapFocusImport());
+	}  
 
 	@org.junit.Test
 	public void testZoom() {
-		System.out.println("\n--- TEST Zoom:\n" + newZoom());
-	} 
+		System.out.println("Zoom:\n" + newZoom());
+	}  
 
 	@org.junit.Test
 	public void testZoomElement() {
-		System.out.println("\n--- TEST ZoomElement:\n" + newZoomElement());
-	} 
+		System.out.println("ZoomElement:\n" + newZoomElement());
+	}  
 
 	@org.junit.Test
 	public void testZoomImport() {
-		System.out.println("\n--- TEST ZoomImport:\n" + newZoomImport());
-	} 
+		System.out.println("ZoomImport:\n" + newZoomImport());
+	}  
 } 

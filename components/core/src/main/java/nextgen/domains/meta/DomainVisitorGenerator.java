@@ -1,9 +1,9 @@
 package nextgen.domains.meta;
 
-import nextgen.st.stringtemplate.DomainVisitorRunner;
-import nextgen.st.stringtemplate.StringTemplateST;
-import nextgen.st.stringtemplate.VisitNodeMethod;
-import nextgen.st.stringtemplate.VisitRelationMethod;
+import nextgen.templates.stringtemplate.DomainVisitorRunner;
+import nextgen.templates.stringtemplate.StringTemplateST;
+import nextgen.templates.stringtemplate.VisitNodeMethod;
+import nextgen.templates.stringtemplate.VisitRelationMethod;
 import nextgen.templates.java.ImportDeclaration;
 import nextgen.templates.java.PackageDeclaration;
 

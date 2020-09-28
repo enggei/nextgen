@@ -12,6 +12,7 @@ public class CardHeaderElement {
 	private Object _component;
 	private Object _disableTypography;
 	private Object _id;
+	private Object _key;
 	private Object _style;
 	private Object _subheader;
 	private Object _subheaderTypographyProps;
@@ -21,11 +22,6 @@ public class CardHeaderElement {
 
 	CardHeaderElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -42,6 +38,7 @@ public class CardHeaderElement {
 		st.add("component", _component);
 		st.add("disableTypography", _disableTypography);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("style", _style);
 		st.add("subheader", _subheader);
 		st.add("subheaderTypographyProps", _subheaderTypographyProps);
@@ -205,6 +202,28 @@ public class CardHeaderElement {
 		return this;
 	} 
 
+	public CardHeaderElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public CardHeaderElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public CardHeaderElement setStyle(Object value) {
 		this._style = value;
 		return this;
@@ -336,6 +355,16 @@ public class CardHeaderElement {
 		return this._attribute.stream().map(CardHeaderElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(CardHeaderElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(CardHeaderElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class CardHeaderElement_Attribute {
 
 		Object _name;
@@ -359,7 +388,7 @@ public class CardHeaderElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -374,14 +403,15 @@ public class CardHeaderElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "CardHeaderElement(action,avatar,classes,className,component,disableTypography,id,style,subheader,subheaderTypographyProps,title,titleTypographyProps,attribute) ::= <<<CardHeader~if(action)~\n" + 
+	static final String st = "CardHeaderElement(action,avatar,classes,className,component,disableTypography,id,key,style,subheader,subheaderTypographyProps,title,titleTypographyProps,attribute) ::= <<<CardHeader~if(action)~\n" + 
 				"	action=~action~~endif~~if(avatar)~\n" + 
 				"	avatar=~avatar~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(disableTypography)~\n" + 
 				"	disableTypography~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(subheader)~\n" + 
 				"	subheader=~subheader~~endif~~if(subheaderTypographyProps)~\n" + 
 				"	subheaderTypographyProps=~subheaderTypographyProps~~endif~~if(title)~\n" + 

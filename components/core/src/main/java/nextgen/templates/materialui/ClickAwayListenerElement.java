@@ -8,6 +8,7 @@ public class ClickAwayListenerElement {
 	private Object _className;
 	private Object _disableReactTree;
 	private Object _id;
+	private Object _key;
 	private Object _mouseEvent;
 	private Object _onClickAway;
 	private Object _style;
@@ -17,11 +18,6 @@ public class ClickAwayListenerElement {
 
 	ClickAwayListenerElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -34,6 +30,7 @@ public class ClickAwayListenerElement {
 		st.add("className", _className);
 		st.add("disableReactTree", _disableReactTree);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("mouseEvent", _mouseEvent);
 		st.add("onClickAway", _onClickAway);
 		st.add("style", _style);
@@ -106,6 +103,28 @@ public class ClickAwayListenerElement {
 
 	public ClickAwayListenerElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public ClickAwayListenerElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public ClickAwayListenerElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -246,6 +265,16 @@ public class ClickAwayListenerElement {
 		return this._attribute.stream().map(ClickAwayListenerElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(ClickAwayListenerElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(ClickAwayListenerElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class ClickAwayListenerElement_Attribute {
 
 		Object _name;
@@ -269,7 +298,7 @@ public class ClickAwayListenerElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -284,14 +313,15 @@ public class ClickAwayListenerElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ClickAwayListenerElement(className,disableReactTree,id,mouseEvent,onClickAway,style,touchEvent,attribute,children) ::= <<<ClickAwayListener~if(className)~\n" + 
+	static final String st = "ClickAwayListenerElement(className,disableReactTree,id,key,mouseEvent,onClickAway,style,touchEvent,attribute,children) ::= <<<ClickAwayListener~if(className)~\n" + 
 				"	className=~className~~endif~~if(disableReactTree)~\n" + 
 				"	disableReactTree~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(mouseEvent)~\n" + 
-				"	mouseEvent=\"~mouseEvent~\"~endif~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(mouseEvent)~\n" + 
+				"	mouseEvent=~mouseEvent~~endif~\n" + 
 				"	onClickAway=~onClickAway~~if(style)~\n" + 
 				"	style=~style~~endif~~if(touchEvent)~\n" + 
-				"	touchEvent=\"~touchEvent~\"~endif~~attribute:{it|\n" + 
+				"	touchEvent=~touchEvent~~endif~~attribute:{it|\n" + 
 				"	\n" + 
 				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 

@@ -49,7 +49,11 @@ public final class StringUtil {
       return "\"" + s + "\"";
    }
 
-    public interface LineHandler {
+   public static Object dq(Integer s) {
+      return "\"" + s + "\"";
+   }
+
+   public interface LineHandler {
 
       boolean handleLine(String line);
 
@@ -91,7 +95,13 @@ public final class StringUtil {
 //      final OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(new File("src/test/java/com/rita/characters.txt")), StandardCharsets.UTF_8);
       for (int i = 0; i <= 65536; i++) {
          if (Character.isDefined(i)) {
-            writer.append(unicodeEscaped(Character.toChars(i)[0])).append(" : ").append(Integer.toHexString(i)).append(" : ").append(i + "").append(" : ").append(new String(Character.toChars(i)));
+            writer.append(unicodeEscaped(Character.toChars(i)[0]))
+                  .append(" : ")
+                  .append(Integer.toHexString(i))
+                  .append(" : ")
+                  .append(i + "")
+                  .append(" : ")
+                  .append(new String(Character.toChars(i)));
             writer.append("\r\n");
          }
       }

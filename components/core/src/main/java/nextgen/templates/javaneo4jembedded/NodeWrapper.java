@@ -15,11 +15,6 @@ public class NodeWrapper {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -158,6 +153,21 @@ public class NodeWrapper {
 		return this._externalFields.stream().map(NodeWrapper_ExternalFields::new);
 	}
 
+	public java.util.List<Object> getExternalFields_Type() {
+		return streamExternalFields().map(NodeWrapper_ExternalFields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getExternalFields_Name() {
+		return streamExternalFields().map(NodeWrapper_ExternalFields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getExternalFields_Initializer() {
+		return streamExternalFields().map(NodeWrapper_ExternalFields::getInitializer).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class NodeWrapper_ExternalFields {
 
 		Object _type;
@@ -188,7 +198,7 @@ public class NodeWrapper {
 			return this._initializer;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

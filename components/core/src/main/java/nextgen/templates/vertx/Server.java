@@ -185,6 +185,7 @@ public class Server {
 				"	}\n" + 
 				"\n" + 
 				"	public static void main(java.lang.String[] args) throws IOException {\n" + 
+				"		System.setProperty(\"io.netty.tryReflectionSetAccessible\", \"true\");\n" + 
 				"		new ~name~(args.length == 1 ? args[0] : null);\n" + 
 				"	}\n" + 
 				"} >>";

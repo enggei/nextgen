@@ -3,6 +3,10 @@ package nextgen.templates;
 import nextgen.templates.javascript.*;
 import nextgen.templates.materialui.MaterialUIComponent;
 import nextgen.templates.materialui.StyleClass;
+import nextgen.templates.mobx.BackendStore;
+import nextgen.templates.vertx.RouteHandler;
+import nextgen.templates.vertx.VertxST;
+import nextgen.templates.vertx.WebVerticle;
 import nextgen.utils.FileUtil;
 import nextgen.utils.StringUtil;
 
@@ -12,7 +16,10 @@ import java.util.Map;
 
 import static nextgen.templates.JavaScriptPatterns.*;
 import static nextgen.templates.MaterialUIPatterns.*;
+import static nextgen.templates.MobXPatterns.newAction;
+import static nextgen.templates.MobXPatterns.newObservable;
 import static nextgen.templates.javascript.JavaScriptST.newElement;
+import static nextgen.templates.mobx.MobXST.newReaction;
 import static nextgen.utils.StringUtil.*;
 
 public class WebappPatterns {
@@ -75,8 +82,8 @@ public class WebappPatterns {
       return agentDeclaration;
    }
 
-   public static MobXStore addStore(String storeName, Map<String, MobXStore> storeMap, IndexJS indexJS, App app) {
-      final MobXStore store = newMobXStore().setName(storeName);
+   public static nextgen.templates.mobx.Store addStore(String storeName, Map<String, nextgen.templates.mobx.IStore> storeMap, IndexJS indexJS, App app) {
+      final nextgen.templates.mobx.Store store = MobXPatterns.newStore().setName(storeName);
       store.addImports("agent", "../Agent");
       storeMap.put(storeName, store);
       indexJS.addStores(lowFirst(storeName));
@@ -84,7 +91,16 @@ public class WebappPatterns {
       return store;
    }
 
-   public static MobXStore appStore(String appName, Map<String, MobXStore> storeMap, IndexJS indexJS, App app) {
+   public static nextgen.templates.mobx.BackendStore newBackendStore(String storeName, Map<String, nextgen.templates.mobx.IStore> storeMap, IndexJS indexJS, App app) {
+      final BackendStore store = MobXPatterns.newBackendStore().setName(storeName);
+      store.addImports("agent", "../Agent");
+      storeMap.put(storeName, store);
+      indexJS.addStores(lowFirst(storeName));
+      app.addStores(lowFirst(storeName));
+      return store;
+   }
+
+   public static nextgen.templates.mobx.Store appStore(String appName, Map<String, nextgen.templates.mobx.IStore> storeMap, IndexJS indexJS, App app) {
       return WebappPatterns.addStore("AppStore", storeMap, indexJS, app)
             .addObservables(newObservable("appName", sq(appName)))
             .addObservables(newObservable("token", "window.localStorage.getItem('jwt')"))
@@ -103,7 +119,7 @@ public class WebappPatterns {
                   .addStatements("this.appLoaded = true;"));
    }
 
-   public static MobXStore userStore(Map<String, MobXStore> storeMap, IndexJS indexJS, App app) {
+   public static nextgen.templates.mobx.Store userStore(Map<String, nextgen.templates.mobx.IStore> storeMap, IndexJS indexJS, App app) {
       return WebappPatterns.addStore("UserStore", storeMap, indexJS, app)
             .addObservables(newObservable("loading"))
             .addObservables(newObservable("errors", "undefined"))
@@ -135,7 +151,7 @@ public class WebappPatterns {
                   .addStatements("this.currentUser = undefined;"));
    }
 
-   public static MobXStore authStore(Map<String, MobXStore> storeMap, IndexJS indexJS, App app, MobXStore appStore, MobXStore userStore, AgentDeclaration authEndpoint) {
+   public static nextgen.templates.mobx.Store authStore(Map<String, nextgen.templates.mobx.IStore> storeMap, IndexJS indexJS, App app, nextgen.templates.mobx.Store appStore, nextgen.templates.mobx.Store userStore, AgentDeclaration authEndpoint) {
       return WebappPatterns.addStore("AuthStore", storeMap, indexJS, app)
             .addImports(StringUtil.lowFirst(appStore.getName()), "./" + appStore.getName())
             .addImports(StringUtil.lowFirst(userStore.getName()), "./" + userStore.getName())
@@ -165,7 +181,10 @@ public class WebappPatterns {
             .addActions(newAction("logout")
                   .addStatements("appStore.setToken(undefined);")
                   .addStatements("userStore.forgetUser();")
-                  .addStatements(newReturnStmt("Promise.resolve()")));
+                  .addStatements(newReturnStmt(newAgentRequest(authEndpoint.getName(), "logout")
+                        .addParams("this.values.username")
+                        .setFinally(newFunctionCall("action")
+                              .addParameters(newArrowFunction("this.inProgress = false"))))));
    }
 
    public static MaterialUIComponent navigationBar(Map<String, MaterialUIComponent> componentMap, String appName, MaterialUIComponent userMenu, MaterialUIComponent loginMenu) {
@@ -401,7 +420,7 @@ public class WebappPatterns {
                               .addChildren("Log in"))));
    }
 
-   public static ClassComponent logoutPage(Map<String, ClassComponent> pageMap, MobXStore authStore, MaterialUIComponent logoutComponent, MaterialUIComponent copyright) {
+   public static ClassComponent logoutPage(Map<String, ClassComponent> pageMap, nextgen.templates.mobx.Store authStore, MaterialUIComponent logoutComponent, MaterialUIComponent copyright) {
       final ClassComponent logoutPage = addPage("LogoutPage", pageMap)
             .addImports("{ withRouter }", "react-router-dom")
             .addImports(logoutComponent.getName(), pageComponentPath(logoutComponent))
@@ -413,7 +432,7 @@ public class WebappPatterns {
             .addDecorators(newDecorator("observer"))
             .setRenderElement(newContainerElement()
                   .setComponent(dq("main"))
-                  .setMaxWidth("xs")
+                  .setMaxWidth(sq("xs"))
                   .addChildren(asElement(logoutComponent)
                         .addProps(newProp("authStore", "{ this.props.authStore }"))
                         .addProps(newProp("onSubmit", "{ this.handleSubmitForm }")))
@@ -428,7 +447,7 @@ public class WebappPatterns {
       return logoutPage;
    }
 
-   public static ClassComponent loginPage(Map<String, ClassComponent> pageMap, MobXStore authStore, MaterialUIComponent loginForm, MaterialUIComponent copyright, MaterialUIComponent listErrors, String onSuccessLogin) {
+   public static ClassComponent loginPage(Map<String, ClassComponent> pageMap, nextgen.templates.mobx.Store authStore, MaterialUIComponent loginForm, MaterialUIComponent copyright, MaterialUIComponent listErrors, String onSuccessLogin) {
       final ClassComponent loginPage = addPage("LoginPage", pageMap)
             .addImports("{ withRouter }", "react-router-dom")
             .addComponentImports(newContainerImport())
@@ -441,7 +460,7 @@ public class WebappPatterns {
             .addDecorators(newDecorator("observer"))
             .setRenderElement(newContainerElement()
                   .setComponent(dq("main"))
-                  .setMaxWidth("xs")
+                  .setMaxWidth(sq("xs"))
                   .addChildren(asElement(listErrors)
                         .addProps(newProp("errors", newJsonObject("this.props.authStore.errors"))))
                   .addChildren(asElement(loginForm)
@@ -498,5 +517,93 @@ public class WebappPatterns {
             .addAttributes("display", sq("flex"))
             .addAttributes("flexDirection", sq("column"))
             .addAttributes("alignItems", sq("center"));
+   }
+
+   public static WebVerticle newWebVerticle(String name, File webroot) {
+      return VertxST.newWebVerticle()
+            .setName(name)
+            .addFields("java.util.Map<String, UserSession>", "sessionMap", "new java.util.concurrent.ConcurrentHashMap<>()")
+            .addStartStatements("deploymentOptions = new ServerDeploymentOptions(config());\n" +
+                  "final Optional<SSLDeploymentSettings> ssl = Optional.ofNullable(deploymentOptions.getSsl());\n" +
+                  "\n" +
+                  "final JWTAuth auth = JWTAuth.create(vertx, new JWTAuthOptions()\n" +
+                  "		.addPubSecKey(new io.vertx.ext.auth.PubSecKeyOptions()\n" +
+                  "				.setAlgorithm(\"RS256\")\n" +
+                  "				.setPublicKey(\"" + loadSecurityKey(new File(webroot, "securityX_public_jwt.pem")) + "\")\n" +
+                  "				.setSecretKey(\"" + loadSecurityKey(new File(webroot, "securityX_jwt.pem")) + "\")\n" +
+                  "		));")
+            .addRoutes("post", "login", "routingContext -> login(routingContext, auth)")
+            .addRoutes("route", "api/*", "JWTAuthHandler.create(auth, \"/login\")")
+            .addRoutes("get", "user", "this::getUser")
+            .addHandlers(newLoginHandler())
+            .addHandlers(getUserHandler());
+   }
+
+   public static RouteHandler newLoginHandler() {
+      return VertxST.newRouteHandler()
+            .setName("login")
+            .addParams("JWTAuth", "auth")
+            .addStatements("final LoginRequest loginRequest = WebApiJsonFactory.newLoginRequest(routingContext.getBodyAsJson());\n" +
+                  "\n" +
+                  "final Optional<UserDeploymentSettings> userFound = deploymentOptions.getJwt().getUsers()\n" +
+                  "		.filter(userDeploymentSettings -> userDeploymentSettings.getUsername().equals(loginRequest.getUsername()))\n" +
+                  "		.findFirst();\n" +
+                  "\n" +
+                  "if (!userFound.isPresent()) {\n" +
+                  "	WebUtils.sendErrors(routingContext, UNAUTHORIZED, \"User credentials not found\");\n" +
+                  "	return;\n" +
+                  "}\n" +
+                  "\n" +
+                  "final boolean passwordMatch = PasswordUtils.verifyUserPassword(loginRequest.getPassword(), userFound.get().getPassword(), userFound.get().getSalt());\n" +
+                  "if (!passwordMatch) {\n" +
+                  "	WebUtils.sendErrors(routingContext, BAD_REQUEST, \"User credentials not found\");\n" +
+                  "	return;\n" +
+                  "}\n" +
+                  "\n" +
+                  "final String token = auth.generateToken(\n" +
+                  "		WebApiJsonFactory.newJWTPayload()\n" +
+                  "			.setSub(userFound.get().getUsername())\n" +
+                  "			.getJsonObject(),\n" +
+                  "		new JWTOptions()\n" +
+                  "			.setAlgorithm(\"RS256\")\n" +
+                  "			.setExpiresInMinutes(deploymentOptions.getJwt().getExpiresInMinutes())\n" +
+                  "			.setSubject(userFound.get().getUsername()));\n" +
+                  "\n" +
+                  "log.info(\"login user token \" + userFound.get().getToken());\n" +
+                  "\n" +
+                  "\n" +
+                  "final UserSession userSession = WebApiJsonFactory.newUserSession()\n" +
+                  "		.setToken(token)\n" +
+                  "		.setUsername(userFound.get().getUsername());\n" +
+                  "sessionMap.put(token, userSession);\n" +
+                  "\n" +
+                  "WebUtils.sendResponse(routingContext, OK, new JsonObject().put(\"user\", userSession.getJsonObject()));");
+   }
+
+   public static RouteHandler getUserHandler() {
+      return VertxST.newRouteHandler()
+            .setName("getUser")
+            .addStatements("final String authorization = routingContext.request().getHeader(\"Authorization\");\n" +
+                  "final String token = authorization == null ? null : authorization.substring(7).trim();\n" +
+                  "\n" +
+                  "final UserSession userSession = sessionMap.get(token);\n" +
+                  "\n" +
+                  "if (userSession == null) {\n" +
+                  "	WebUtils.sendErrors(routingContext, BAD_REQUEST, \"User session not found\");\n" +
+                  "	return;\n" +
+                  "}\n" +
+                  "\n" +
+                  "final Optional<UserDeploymentSettings> userFound = deploymentOptions.getJwt().getUsers()\n" +
+                  "		.filter(userDeploymentSettings -> userDeploymentSettings.getUsername().equals(userSession.getUsername()))\n" +
+                  "		.findFirst();\n" +
+                  "\n" +
+                  "if (!userFound.isPresent()) {\n" +
+                  "	WebUtils.sendErrors(routingContext, BAD_REQUEST, \"User session not found\");\n" +
+                  "	return;\n" +
+                  "}\n" +
+                  "\n" +
+                  "setUserMenus(userFound.get(), userSession);\n" +
+                  "\n" +
+                  "WebUtils.sendResponse(routingContext, OK, new JsonObject().put(\"user\", userSession.getJsonObject()));");
    }
 }

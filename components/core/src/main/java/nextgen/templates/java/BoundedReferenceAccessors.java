@@ -116,7 +116,7 @@ public class BoundedReferenceAccessors {
 				"	if (oldValue != null) oldValue.removePropertyChangeListener(this);\n" + 
 				"	this._~name~ = value;\n" + 
 				"	if (value != null) value.addPropertyChangeListener(this);\n" + 
-				"	this.pcs.firePropertyChange(\"~name~\", oldValue, value);\n" + 
+				"	this.pcs.firePropertyChange(\"set.~name~\", oldValue, value);\n" + 
 				"	return this;\n" + 
 				"}\n" + 
 				"\n" + 
@@ -124,7 +124,7 @@ public class BoundedReferenceAccessors {
 				"	~type~ oldValue = this._~name~;\n" + 
 				"	this._~name~ = null;\n" + 
 				"	if (oldValue != null) oldValue.removePropertyChangeListener(this);\n" + 
-				"	this.pcs.firePropertyChange(\"~name~\", oldValue, null);\n" + 
+				"	this.pcs.firePropertyChange(\"remove.~name~\", oldValue, null);\n" + 
 				"	return this;\n" + 
 				"} >>";
 }  

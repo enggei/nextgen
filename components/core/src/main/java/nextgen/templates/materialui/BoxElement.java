@@ -7,6 +7,7 @@ public class BoxElement {
 
 	private Object _className;
 	private Object _id;
+	private Object _key;
 	private Object _mt;
 	private Object _style;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -14,11 +15,6 @@ public class BoxElement {
 
 	BoxElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -30,6 +26,7 @@ public class BoxElement {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("BoxElement");
 		st.add("className", _className);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("mt", _mt);
 		st.add("style", _style);
 		for (Object o : _children) st.add("children", o);
@@ -78,6 +75,28 @@ public class BoxElement {
 
 	public BoxElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public BoxElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public BoxElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -174,6 +193,16 @@ public class BoxElement {
 		return this._attribute.stream().map(BoxElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(BoxElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(BoxElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class BoxElement_Attribute {
 
 		Object _name;
@@ -197,7 +226,7 @@ public class BoxElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -212,9 +241,10 @@ public class BoxElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "BoxElement(className,id,mt,style,attribute,children) ::= <<<Box~if(className)~\n" + 
+	static final String st = "BoxElement(className,id,key,mt,style,attribute,children) ::= <<<Box~if(className)~\n" + 
 				"	className=~className~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(mt)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(mt)~\n" + 
 				"	mt=\"~mt~\"~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~attribute:{it|\n" + 
 				"	\n" + 

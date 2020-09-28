@@ -9,6 +9,7 @@ public class TableElement {
 	private Object _className;
 	private Object _component;
 	private Object _id;
+	private Object _key;
 	private Object _padding;
 	private Object _size;
 	private Object _stickyHeader;
@@ -18,11 +19,6 @@ public class TableElement {
 
 	TableElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -36,6 +32,7 @@ public class TableElement {
 		st.add("className", _className);
 		st.add("component", _component);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("padding", _padding);
 		st.add("size", _size);
 		st.add("stickyHeader", _stickyHeader);
@@ -130,6 +127,28 @@ public class TableElement {
 
 	public TableElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public TableElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public TableElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -270,6 +289,16 @@ public class TableElement {
 		return this._attribute.stream().map(TableElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(TableElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(TableElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class TableElement_Attribute {
 
 		Object _name;
@@ -293,7 +322,7 @@ public class TableElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -308,13 +337,14 @@ public class TableElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TableElement(classes,className,component,id,padding,size,stickyHeader,style,attribute,children) ::= <<<Table~if(classes)~\n" + 
+	static final String st = "TableElement(classes,className,component,id,key,padding,size,stickyHeader,style,attribute,children) ::= <<<Table~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(padding)~\n" + 
-				"	padding=\"~padding~\"~endif~~if(size)~\n" + 
-				"	size=\"~size~\"~endif~~if(stickyHeader)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(padding)~\n" + 
+				"	padding=~padding~~endif~~if(size)~\n" + 
+				"	size=~size~~endif~~if(stickyHeader)~\n" + 
 				"	stickyHeader~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~attribute:{it|\n" + 
 				"	\n" + 

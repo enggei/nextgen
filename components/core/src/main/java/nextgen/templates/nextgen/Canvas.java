@@ -21,11 +21,6 @@ public class Canvas {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -519,6 +514,10 @@ public class Canvas {
 				"	}\n" + 
 				"\n" + 
 				"	public <N extends BaseCanvasNode<?~gt()~> N addNode(String uuid, java.util.function.Supplier<N> supplier) {\n" + 
+				"		return addNode(uuid, supplier, true);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public <N extends BaseCanvasNode<?~gt()~> N addNode(String uuid, java.util.function.Supplier<N> supplier, boolean centerNode) {\n" + 
 				"\n" + 
 				"		final N existing = getNode(uuid);\n" + 
 				"		if (existing != null) {\n" + 
@@ -545,7 +544,7 @@ public class Canvas {
 				"\n" + 
 				"		SwingUtilities.invokeLater(() -> {\n" + 
 				"			node.refresh();\n" + 
-				"			centerNode(node);\n" + 
+				"			if(centerNode) centerNode(node);\n" + 
 				"		});\n" + 
 				"\n" + 
 				"		return node;\n" + 

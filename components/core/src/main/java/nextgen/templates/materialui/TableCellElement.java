@@ -24,11 +24,6 @@ public class TableCellElement {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -366,6 +361,16 @@ public class TableCellElement {
 		return this._attribute.stream().map(TableCellElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(TableCellElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(TableCellElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class TableCellElement_Attribute {
 
 		Object _name;
@@ -389,7 +394,7 @@ public class TableCellElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -411,10 +416,10 @@ public class TableCellElement {
 				"	component=~component~~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(key)~\n" + 
 				"	key=~key~~endif~~if(padding)~\n" + 
-				"	padding=\"~padding~\"~endif~~if(scope)~\n" + 
+				"	padding=~padding~~endif~~if(scope)~\n" + 
 				"	scope=\"~scope~\"~endif~~if(size)~\n" + 
-				"	size=\"~size~\"~endif~~if(sortDirection)~\n" + 
-				"	sortDirection=\"~sortDirection~\"~endif~~if(style)~\n" + 
+				"	size=~size~~endif~~if(sortDirection)~\n" + 
+				"	sortDirection=~sortDirection~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
 				"	\n" + 

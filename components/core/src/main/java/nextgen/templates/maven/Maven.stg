@@ -341,7 +341,7 @@ public void ~name~() {
 	~statements:{it|~it~};separator="\n"~
 }  >>
 
-ProjectPackage(name,parentPackage,packageName,types) ::= <<private final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~.getName() + "." + ~endif~"~packageName~");
+ProjectPackage(name,parentPackage,packageName,types) ::= <<private final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~, ~endif~"~packageName~");
 ~types:{it|private final JavaType ~it.name~Type = new JavaType(~name~, "~it.name~");};separator="\n\n"~  >>
 
 TestRunner(packageName,name,projectName,generators) ::= <<package ~packageName~;

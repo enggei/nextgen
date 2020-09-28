@@ -9,6 +9,7 @@ public class PortalElement {
 	private Object _container;
 	private Object _disablePortal;
 	private Object _id;
+	private Object _key;
 	private Object _onRendered;
 	private Object _style;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -16,11 +17,6 @@ public class PortalElement {
 
 	PortalElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -34,6 +30,7 @@ public class PortalElement {
 		st.add("container", _container);
 		st.add("disablePortal", _disablePortal);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("onRendered", _onRendered);
 		st.add("style", _style);
 		for (Object o : _children) st.add("children", o);
@@ -126,6 +123,28 @@ public class PortalElement {
 
 	public PortalElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public PortalElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public PortalElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -222,6 +241,16 @@ public class PortalElement {
 		return this._attribute.stream().map(PortalElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(PortalElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(PortalElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class PortalElement_Attribute {
 
 		Object _name;
@@ -245,7 +274,7 @@ public class PortalElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -260,11 +289,12 @@ public class PortalElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PortalElement(className,container,disablePortal,id,onRendered,style,attribute,children) ::= <<<Portal~if(className)~\n" + 
+	static final String st = "PortalElement(className,container,disablePortal,id,key,onRendered,style,attribute,children) ::= <<<Portal~if(className)~\n" + 
 				"	className=~className~~endif~~if(container)~\n" + 
 				"	container=~container~~endif~~if(disablePortal)~\n" + 
 				"	disablePortal~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(onRendered)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(onRendered)~\n" + 
 				"	onRendered=~onRendered~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~attribute:{it|\n" + 
 				"	\n" + 

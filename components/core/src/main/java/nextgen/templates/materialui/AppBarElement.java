@@ -9,6 +9,7 @@ public class AppBarElement {
 	private Object _className;
 	private Object _color;
 	private Object _id;
+	private Object _key;
 	private Object _position;
 	private Object _style;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -16,11 +17,6 @@ public class AppBarElement {
 
 	AppBarElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -34,6 +30,7 @@ public class AppBarElement {
 		st.add("className", _className);
 		st.add("color", _color);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("position", _position);
 		st.add("style", _style);
 		for (Object o : _children) st.add("children", o);
@@ -126,6 +123,28 @@ public class AppBarElement {
 
 	public AppBarElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public AppBarElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public AppBarElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -222,6 +241,16 @@ public class AppBarElement {
 		return this._attribute.stream().map(AppBarElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(AppBarElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(AppBarElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class AppBarElement_Attribute {
 
 		Object _name;
@@ -245,7 +274,7 @@ public class AppBarElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -260,11 +289,12 @@ public class AppBarElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AppBarElement(classes,className,color,id,position,style,attribute,children) ::= <<<AppBar~if(classes)~\n" + 
+	static final String st = "AppBarElement(classes,className,color,id,key,position,style,attribute,children) ::= <<<AppBar~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(position)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(position)~\n" + 
 				"	position=\"~position~\"~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~attribute:{it|\n" + 
 				"	\n" + 

@@ -447,7 +447,7 @@
   }, {
     "uuid" : "2e6c8640-2fa7-47f0-8fa6-a66683ff7301",
     "name" : "Project",
-    "text" : "package ~packageName~;\n\nimport nextgen.st.STGenerator;\nimport static nextgen.utils.StringUtil.*;\n\n~templates:{it|import nextgen.templates.~it;format=\"toLower\"~.*;\nimport nextgen.templates.~it~Patterns;\n};separator=\"\\n\"~\n~imports:{it|~it~};separator=\"\\n\"~\n\nimport java.util.*;\nimport java.io.*;\n\npublic class ~name~ {\n\n\tfinal File root = new File(\"~root~\");\n\t\n\tfinal File mainJava = new File(root, \"src/main/java\");\n\tfinal File mainResources = new File(root, \"src/main/resources\");\n\tfinal File testJava = new File(root, \"src/test/java\");\n\tfinal File testResources = new File(root, \"src/test/resources\");\n\t\n\t~files:{it|final File ~it.name~ = new File(~if(it.parent)~~it.parent~, ~endif~\"~it.path~\");};separator=\"\\n\"~\n\t\n\t~packageDeclarations:{it|~it~};separator=\"\\n\"~\n\n\t~fields:{it|~if(it.init)~final ~endif~~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n\t\n\t~generators:{it|~it~};separator=\"\\n\\n\"~\n\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n\n\tprotected static void log(Object log) {\n\t\tSystem.out.println(log);\n\t}\n\n\tclass JavaType {\n\n\t\tfinal nextgen.templates.java.ClassOrInterfaceType type;\n\n\t\tJavaType(String packageDeclaration, String name) {\n\t\t\tthis.type = nextgen.templates.java.JavaST.newClassOrInterfaceType()\n\t\t\t\t\t.setScope(packageDeclaration)\n\t\t\t\t\t.addNames(name);\n\t\t}\n\n\t\tJavaType(nextgen.templates.java.PackageDeclaration packageDeclaration, String name) {\n\t\t\tthis(packageDeclaration.getName(), name);\n\t\t}\n\t}\n} ",
+    "text" : "package ~packageName~;\n\nimport nextgen.st.STGenerator;\nimport static nextgen.utils.StringUtil.*;\n\n~templates:{it|import nextgen.templates.~it;format=\"toLower\"~.*;\nimport nextgen.templates.~it~Patterns;\n};separator=\"\\n\"~\n~imports:{it|~it~};separator=\"\\n\"~\n\nimport java.util.*;\nimport java.io.*;\n\npublic class ~name~ {\n\n\tfinal File root = new File(\"~root~\");\n\t\n\tfinal File mainJava = new File(root, \"src/main/java\");\n\tfinal File mainResources = new File(root, \"src/main/resources\");\n\tfinal File testJava = new File(root, \"src/test/java\");\n\tfinal File testResources = new File(root, \"src/test/resources\");\n\t\n\t~files:{it|final File ~it.name~ = new File(~if(it.parent)~~it.parent~, ~endif~\"~it.path~\");};separator=\"\\n\"~\n\t\n\t~packageDeclarations:{it|~it~};separator=\"\\n\"~\n\n\t~fields:{it|~if(it.init)~final ~endif~~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n\n\t~entities:{it|~it~};separator=\"\\n\"~\n\t\n\t~generators:{it|~it~};separator=\"\\n\\n\"~\n\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n\n\tprotected static void log(Object log) {\n\t\tSystem.out.println(log);\n\t}\n} ",
     "parameters" : [ {
       "uuid" : "b308d46d-0864-4ec4-bb4a-7fef0c0222df",
       "name" : "packageName",
@@ -515,6 +515,11 @@
         "argumentType" : "Object"
       } ]
     }, {
+      "uuid" : "c243f9ff-c782-4a6e-a7b7-3bedaa5addd9",
+      "name" : "entities",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    }, {
       "uuid" : "880ef206-9213-4023-88f2-74366528660a",
       "name" : "generators",
       "type" : "LIST",
@@ -548,7 +553,7 @@
     }, {
       "uuid" : "24ffaa86-978d-40f1-a641-cb202f0f51d6",
       "name" : "ProjectPackage",
-      "text" : "private final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~.getName() + \".\" + ~endif~\"~packageName~\");\n~types:{it|private final JavaType ~it.name~Type = new JavaType(~name~, \"~it.name~\");};separator=\"\\n\\n\"~ ",
+      "text" : "private final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~, ~endif~\"~packageName~\");\n~types:{it|private final JavaType ~it.name~Type = new JavaType(~name~, \"~it.name~\");};separator=\"\\n\\n\"~ ",
       "parameters" : [ {
         "uuid" : "1f73deb8-42c0-4a84-bde0-84b998662564",
         "name" : "name",

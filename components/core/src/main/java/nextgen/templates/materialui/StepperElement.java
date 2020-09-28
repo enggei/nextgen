@@ -11,6 +11,7 @@ public class StepperElement {
 	private Object _className;
 	private Object _connector;
 	private Object _id;
+	private Object _key;
 	private Object _nonLinear;
 	private Object _orientation;
 	private Object _style;
@@ -19,11 +20,6 @@ public class StepperElement {
 
 	StepperElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -39,6 +35,7 @@ public class StepperElement {
 		st.add("className", _className);
 		st.add("connector", _connector);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("nonLinear", _nonLinear);
 		st.add("orientation", _orientation);
 		st.add("style", _style);
@@ -179,6 +176,28 @@ public class StepperElement {
 		return this;
 	} 
 
+	public StepperElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public StepperElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public StepperElement setNonLinear(Object value) {
 		this._nonLinear = value;
 		return this;
@@ -294,6 +313,16 @@ public class StepperElement {
 		return this._attribute.stream().map(StepperElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(StepperElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(StepperElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class StepperElement_Attribute {
 
 		Object _name;
@@ -317,7 +346,7 @@ public class StepperElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -332,15 +361,16 @@ public class StepperElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "StepperElement(activeStep,alternativeLabel,classes,className,connector,id,nonLinear,orientation,style,attribute,children) ::= <<<Stepper~if(activeStep)~\n" + 
+	static final String st = "StepperElement(activeStep,alternativeLabel,classes,className,connector,id,key,nonLinear,orientation,style,attribute,children) ::= <<<Stepper~if(activeStep)~\n" + 
 				"	activeStep=~activeStep~~endif~~if(alternativeLabel)~\n" + 
 				"	alternativeLabel~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(connector)~\n" + 
 				"	connector=~connector~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(nonLinear)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(nonLinear)~\n" + 
 				"	nonLinear~endif~~if(orientation)~\n" + 
-				"	orientation=\"~orientation~\"~endif~~if(style)~\n" + 
+				"	orientation=~orientation~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~attribute:{it|\n" + 
 				"	\n" + 
 				"	~it.name~=~it.value~}~~if(children)~>\n" + 

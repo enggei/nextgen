@@ -11,6 +11,10 @@ public class Clone {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID getUuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("clone");
@@ -56,4 +60,4 @@ public class Clone {
 	}
 
 	static final String st = "clone(url) ::= <<git clone ~url~ >>";
-} 
+}  

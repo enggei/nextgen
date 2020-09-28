@@ -217,6 +217,21 @@ public class WebVerticle {
 		return this._fields.stream().map(WebVerticle_Fields::new);
 	}
 
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(WebVerticle_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Name() {
+		return streamFields().map(WebVerticle_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Init() {
+		return streamFields().map(WebVerticle_Fields::getInit).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class WebVerticle_Fields {
 
 		Object _type;
@@ -247,7 +262,7 @@ public class WebVerticle {
 			return this._init;
 		}
 
-	} 
+	}  
 
 	public WebVerticle addRoutes(Object _action, Object _url, Object _handler) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -269,6 +284,21 @@ public class WebVerticle {
 	public java.util.stream.Stream<WebVerticle_Routes> streamRoutes() {
 		return this._routes.stream().map(WebVerticle_Routes::new);
 	}
+
+	public java.util.List<Object> getRoutes_Action() {
+		return streamRoutes().map(WebVerticle_Routes::getAction).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getRoutes_Url() {
+		return streamRoutes().map(WebVerticle_Routes::getUrl).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getRoutes_Handler() {
+		return streamRoutes().map(WebVerticle_Routes::getHandler).collect(java.util.stream.Collectors.toList());
+	}
+
 
 	public static final class WebVerticle_Routes {
 
@@ -300,7 +330,7 @@ public class WebVerticle {
 			return this._handler;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -320,7 +350,12 @@ public class WebVerticle {
 				"import io.netty.handler.codec.http.HttpResponseStatus;\n" + 
 				"import io.vertx.core.AbstractVerticle;\n" + 
 				"import io.vertx.core.Future;\n" + 
+				"import io.vertx.core.MultiMap;\n" + 
+				"import io.vertx.core.Vertx;\n" + 
+				"import io.vertx.core.eventbus.DeliveryOptions;\n" + 
+				"import io.vertx.core.http.HttpHeaders;\n" + 
 				"import io.vertx.core.http.HttpServerOptions;\n" + 
+				"import io.vertx.core.json.JsonArray;\n" + 
 				"import io.vertx.core.json.JsonObject;\n" + 
 				"import io.vertx.core.net.PemKeyCertOptions;\n" + 
 				"import io.vertx.ext.auth.jwt.JWTAuth;\n" + 
@@ -334,7 +369,7 @@ public class WebVerticle {
 				"import io.vertx.ext.web.handler.StaticHandler;\n" + 
 				"import io.vertx.ext.web.sstore.LocalSessionStore;\n" + 
 				"\n" + 
-				"import java.io.File;\n" + 
+				"import java.util.Map;\n" + 
 				"import java.util.Optional;\n" + 
 				"import java.util.concurrent.atomic.AtomicInteger;\n" + 
 				"\n" + 
@@ -345,6 +380,7 @@ public class WebVerticle {
 				"public class ~name;format=\"capitalize\"~ extends AbstractVerticle {\n" + 
 				"\n" + 
 				"	protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name;format=\"capitalize\"~.class);\n" + 
+				"	private static final String JSON_CONTENT_TYPE = \"application/json; charset=utf-8\";\n" + 
 				"\n" + 
 				"	~fields:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
 				"\n" + 
@@ -372,6 +408,7 @@ public class WebVerticle {
 				"		final StaticHandler staticHandler = StaticHandler.create();\n" + 
 				"		staticHandler.setWebRoot(deploymentOptions.getWebRoot());\n" + 
 				"		staticHandler.setCachingEnabled(false);\n" + 
+				"		staticHandler.setEnableRangeSupport(true);\n" + 
 				"		router.route(\"/*\").handler(staticHandler);\n" + 
 				"\n" + 
 				"		vertx.createHttpServer(serverOptions).requestHandler(router::accept).listen(deploymentOptions.getPort());\n" + 
@@ -385,5 +422,51 @@ public class WebVerticle {
 				"	~handlers:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
 				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
+				"\n" + 
+				"	private static void getFromDomainDB(Vertx vertx, RoutingContext routingContext, String action, JsonObject params) {\n" + 
+				"		vertx.eventBus().request(\"domain.db\", params, new DeliveryOptions().addHeader(\"action\", action), reply -> {\n" + 
+				"			if (reply.succeeded()) {\n" + 
+				"				JsonObject body = (JsonObject) reply.result().body();\n" + 
+				"				log.info(body.encode());\n" + 
+				"				sendResponse(routingContext, OK, body);\n" + 
+				"			} else {\n" + 
+				"				sendErrors(routingContext, INTERNAL_SERVER_ERROR,	\"Server Error\");\n" + 
+				"			}\n" + 
+				"		});\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	private static void sendErrors(RoutingContext routingContext, HttpResponseStatus httpResponseStatus, String... errors) {\n" + 
+				"		final JsonArray errorsArray = new JsonArray();\n" + 
+				"		for (String error : errors)\n" + 
+				"				errorsArray.add(error.trim());\n" + 
+				"\n" + 
+				"		final String encode = new JsonObject().put(\"errors\", errorsArray).encode();\n" + 
+				"		log.info(routingContext.request().absoluteURI() + \" \" + encode);\n" + 
+				"		routingContext.response()\n" + 
+				"					.setStatusCode(httpResponseStatus.code())\n" + 
+				"					.putHeader(HttpHeaders.CONTENT_LENGTH, encode.length() + \"\")\n" + 
+				"					.putHeader(HttpHeaders.CONTENT_TYPE, JSON_CONTENT_TYPE)\n" + 
+				"					.end(encode);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	private static void sendResponse(RoutingContext routingContext, HttpResponseStatus httpResponseStatus, JsonObject response) {\n" + 
+				"		final String encode = response.encode();\n" + 
+				"		log.info(routingContext.request().absoluteURI() + \" \" + encode);\n" + 
+				"		routingContext.response()\n" + 
+				"					.setStatusCode(httpResponseStatus.code())\n" + 
+				"					.putHeader(HttpHeaders.CONTENT_LENGTH, encode.length() + \"\")\n" + 
+				"					.putHeader(HttpHeaders.CONTENT_TYPE, JSON_CONTENT_TYPE)\n" + 
+				"					.end(encode);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	private static void debug(String method, RoutingContext routingContext) {\n" + 
+				"		final String uri = method + \" \" + routingContext.request().method().name() + \" \" + routingContext.request().uri();\n" + 
+				"		boolean isAuthenticated = routingContext.user() != null;\n" + 
+				"		log.info(uri + \" \" + (isAuthenticated ? \"(authenticated)\" : \"(NOT authenticated)\"));\n" + 
+				"		final MultiMap headers = routingContext.request().headers();\n" + 
+				"		for (Map.Entry<String, String> header : headers)\n" + 
+				"				log.info(\"\\t\" + header.getKey() + \"=\" + header.getValue());\n" + 
+				"		log.info(\"body \" + routingContext.getBody().toString());\n" + 
+				"	}\n" + 
 				"} >>";
 }  

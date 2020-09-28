@@ -9,6 +9,7 @@ public class GrowElement {
 	private Object _disableStrictModeCompat;
 	private Object _id;
 	private Object _in;
+	private Object _key;
 	private Object _style;
 	private Object _timeout;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -16,11 +17,6 @@ public class GrowElement {
 
 	GrowElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -34,6 +30,7 @@ public class GrowElement {
 		st.add("disableStrictModeCompat", _disableStrictModeCompat);
 		st.add("id", _id);
 		st.add("in", _in);
+		st.add("key", _key);
 		st.add("style", _style);
 		st.add("timeout", _timeout);
 		for (Object o : _children) st.add("children", o);
@@ -126,6 +123,28 @@ public class GrowElement {
 
 	public GrowElement removeIn() {
 		this._in = null;
+		return this;
+	} 
+
+	public GrowElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public GrowElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -222,6 +241,16 @@ public class GrowElement {
 		return this._attribute.stream().map(GrowElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(GrowElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(GrowElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class GrowElement_Attribute {
 
 		Object _name;
@@ -245,7 +274,7 @@ public class GrowElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -260,13 +289,14 @@ public class GrowElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "GrowElement(className,disableStrictModeCompat,id,in,style,timeout,attribute,children) ::= <<<Grow~if(className)~\n" + 
+	static final String st = "GrowElement(className,disableStrictModeCompat,id,in,key,style,timeout,attribute,children) ::= <<<Grow~if(className)~\n" + 
 				"	className=~className~~endif~~if(disableStrictModeCompat)~\n" + 
 				"	disableStrictModeCompat~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(in)~\n" + 
-				"	in~endif~~if(style)~\n" + 
+				"	in~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(timeout)~\n" + 
-				"	timeout=\"~timeout~\"~endif~~attribute:{it|\n" + 
+				"	timeout=~timeout~~endif~~attribute:{it|\n" + 
 				"	\n" + 
 				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 

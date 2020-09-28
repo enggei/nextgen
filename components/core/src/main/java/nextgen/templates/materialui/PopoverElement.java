@@ -16,6 +16,7 @@ public class PopoverElement {
 	private Object _elevation;
 	private Object _getContentAnchorEl;
 	private Object _id;
+	private Object _key;
 	private Object _marginThreshold;
 	private Object _onClose;
 	private Object _onEnter;
@@ -37,11 +38,6 @@ public class PopoverElement {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -60,6 +56,7 @@ public class PopoverElement {
 		st.add("elevation", _elevation);
 		st.add("getContentAnchorEl", _getContentAnchorEl);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("marginThreshold", _marginThreshold);
 		st.add("onClose", _onClose);
 		st.add("onEnter", _onEnter);
@@ -318,6 +315,28 @@ public class PopoverElement {
 
 	public PopoverElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public PopoverElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public PopoverElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -678,6 +697,16 @@ public class PopoverElement {
 		return this._attribute.stream().map(PopoverElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(PopoverElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(PopoverElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class PopoverElement_Attribute {
 
 		Object _name;
@@ -701,7 +730,7 @@ public class PopoverElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -716,18 +745,19 @@ public class PopoverElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PopoverElement(action,anchorEl,anchorOrigin,anchorPosition,anchorReference,classes,className,container,elevation,getContentAnchorEl,id,marginThreshold,onClose,onEnter,onEntered,onEntering,onExit,onExited,onExiting,PaperProps,style,transformOrigin,TransitionComponent,transitionDuration,TransitionProps,attribute,children) ::= <<<Popover~if(action)~\n" + 
+	static final String st = "PopoverElement(action,anchorEl,anchorOrigin,anchorPosition,anchorReference,classes,className,container,elevation,getContentAnchorEl,id,key,marginThreshold,onClose,onEnter,onEntered,onEntering,onExit,onExited,onExiting,PaperProps,style,transformOrigin,TransitionComponent,transitionDuration,TransitionProps,attribute,children) ::= <<<Popover~if(action)~\n" + 
 				"	action=~action~~endif~~if(anchorEl)~\n" + 
 				"	anchorEl=~anchorEl~~endif~~if(anchorOrigin)~\n" + 
-				"	anchorOrigin=\"~anchorOrigin~\"~endif~~if(anchorPosition)~\n" + 
+				"	anchorOrigin=~anchorOrigin~~endif~~if(anchorPosition)~\n" + 
 				"	anchorPosition=~anchorPosition~~endif~~if(anchorReference)~\n" + 
-				"	anchorReference=\"~anchorReference~\"~endif~~if(classes)~\n" + 
+				"	anchorReference=~anchorReference~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(container)~\n" + 
 				"	container=~container~~endif~~if(elevation)~\n" + 
 				"	elevation=~elevation~~endif~~if(getContentAnchorEl)~\n" + 
 				"	getContentAnchorEl=~getContentAnchorEl~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(marginThreshold)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(marginThreshold)~\n" + 
 				"	marginThreshold=~marginThreshold~~endif~~if(onClose)~\n" + 
 				"	onClose=~onClose~~endif~~if(onEnter)~\n" + 
 				"	onEnter=~onEnter~~endif~~if(onEntered)~\n" + 
@@ -739,9 +769,9 @@ public class PopoverElement {
 				"	open~if(PaperProps)~\n" + 
 				"	PaperProps=~PaperProps~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(transformOrigin)~\n" + 
-				"	transformOrigin=\"~transformOrigin~\"~endif~~if(TransitionComponent)~\n" + 
+				"	transformOrigin=~transformOrigin~~endif~~if(TransitionComponent)~\n" + 
 				"	TransitionComponent=~TransitionComponent~~endif~~if(transitionDuration)~\n" + 
-				"	transitionDuration=\"~transitionDuration~\"~endif~~if(TransitionProps)~\n" + 
+				"	transitionDuration=~transitionDuration~~endif~~if(TransitionProps)~\n" + 
 				"	TransitionProps=~TransitionProps~~endif~~attribute:{it|\n" + 
 				"	\n" + 
 				"	~it.name~=~it.value~}~~if(children)~>\n" + 

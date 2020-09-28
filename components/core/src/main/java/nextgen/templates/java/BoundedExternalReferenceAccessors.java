@@ -114,14 +114,14 @@ public class BoundedExternalReferenceAccessors {
 				"public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) {\n" + 
 				"	~type~ oldValue = this._~name~;\n" + 
 				"	this._~name~ = value;\n" + 
-				"	this.pcs.firePropertyChange(\"~name~\", oldValue, value);\n" + 
+				"	this.pcs.firePropertyChange(\"set.~name~\", oldValue, value);\n" + 
 				"	return this;\n" + 
 				"}\n" + 
 				"\n" + 
 				"public ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() {\n" + 
 				"	~type~ oldValue = this._~name~;\n" + 
 				"	this._~name~ = null;\n" + 
-				"	this.pcs.firePropertyChange(\"~name~\", oldValue, null);\n" + 
+				"	this.pcs.firePropertyChange(\"remove.~name~\", oldValue, null);\n" + 
 				"	return this;\n" + 
 				"} >>";
 }  

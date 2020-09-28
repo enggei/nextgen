@@ -16,6 +16,7 @@ public class RadioElement {
 	private Object _id;
 	private Object _inputProps;
 	private Object _inputRef;
+	private Object _key;
 	private Object _name;
 	private Object _onChange;
 	private Object _required;
@@ -26,11 +27,6 @@ public class RadioElement {
 
 	RadioElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -51,6 +47,7 @@ public class RadioElement {
 		st.add("id", _id);
 		st.add("inputProps", _inputProps);
 		st.add("inputRef", _inputRef);
+		st.add("key", _key);
 		st.add("name", _name);
 		st.add("onChange", _onChange);
 		st.add("required", _required);
@@ -303,6 +300,28 @@ public class RadioElement {
 		return this;
 	} 
 
+	public RadioElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public RadioElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public RadioElement setName(Object value) {
 		this._name = value;
 		return this;
@@ -456,6 +475,16 @@ public class RadioElement {
 		return this._attribute.stream().map(RadioElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(RadioElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(RadioElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class RadioElement_Attribute {
 
 		Object _name;
@@ -479,7 +508,7 @@ public class RadioElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -494,7 +523,7 @@ public class RadioElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "RadioElement(checked,checkedIcon,classes,className,color,disabled,disableRipple,icon,id,inputProps,inputRef,name,onChange,required,size,style,value,attribute) ::= <<<Radio~if(checked)~\n" + 
+	static final String st = "RadioElement(checked,checkedIcon,classes,className,color,disabled,disableRipple,icon,id,inputProps,inputRef,key,name,onChange,required,size,style,value,attribute) ::= <<<Radio~if(checked)~\n" + 
 				"	checked~endif~~if(checkedIcon)~\n" + 
 				"	checkedIcon=~checkedIcon~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
@@ -505,11 +534,12 @@ public class RadioElement {
 				"	icon=~icon~~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(inputProps)~\n" + 
 				"	inputProps=~inputProps~~endif~~if(inputRef)~\n" + 
-				"	inputRef=~inputRef~~endif~~if(name)~\n" + 
+				"	inputRef=~inputRef~~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(name)~\n" + 
 				"	name=\"~name~\"~endif~~if(onChange)~\n" + 
 				"	onChange=~onChange~~endif~~if(required)~\n" + 
 				"	required~endif~~if(size)~\n" + 
-				"	size=\"~size~\"~endif~~if(style)~\n" + 
+				"	size=~size~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(value)~\n" + 
 				"	value=~value~~endif~~attribute:{it|\n" + 
 				"	\n" + 

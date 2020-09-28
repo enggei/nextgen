@@ -12,17 +12,13 @@ public class StepElement {
 	private Object _disabled;
 	private Object _expanded;
 	private Object _id;
+	private Object _key;
 	private Object _style;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	StepElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -39,6 +35,7 @@ public class StepElement {
 		st.add("disabled", _disabled);
 		st.add("expanded", _expanded);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("style", _style);
 		for (Object o : _children) st.add("children", o);
 		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
@@ -199,6 +196,28 @@ public class StepElement {
 		return this;
 	} 
 
+	public StepElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public StepElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public StepElement setStyle(Object value) {
 		this._style = value;
 		return this;
@@ -270,6 +289,16 @@ public class StepElement {
 		return this._attribute.stream().map(StepElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(StepElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(StepElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class StepElement_Attribute {
 
 		Object _name;
@@ -293,7 +322,7 @@ public class StepElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -308,14 +337,15 @@ public class StepElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "StepElement(active,classes,className,completed,disabled,expanded,id,style,attribute,children) ::= <<<Step~if(active)~\n" + 
+	static final String st = "StepElement(active,classes,className,completed,disabled,expanded,id,key,style,attribute,children) ::= <<<Step~if(active)~\n" + 
 				"	active~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(completed)~\n" + 
 				"	completed~endif~~if(disabled)~\n" + 
 				"	disabled~endif~~if(expanded)~\n" + 
 				"	expanded~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~attribute:{it|\n" + 
 				"	\n" + 
 				"	~it.name~=~it.value~}~~if(children)~>\n" + 

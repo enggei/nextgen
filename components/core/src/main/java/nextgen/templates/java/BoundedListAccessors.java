@@ -113,13 +113,13 @@ public class BoundedListAccessors {
 				"\n" + 
 				"public ~className~ add~name;format=\"capitalize\"~(~type~ value) {\n" + 
 				"	this._~name~.add(value);\n" + 
-				"	this.pcs.firePropertyChange(\"~name~\", null, value);\n" + 
+				"	this.pcs.firePropertyChange(\"add.~name~\", null, value);\n" + 
 				"	return this;\n" + 
 				"}\n" + 
 				"\n" + 
 				"public ~className~ remove~name;format=\"capitalize\"~(~type~ value) {\n" + 
 				"	this._~name~.remove(value);\n" + 
-				"	this.pcs.firePropertyChange(\"~name~\", value, null);\n" + 
+				"	this.pcs.firePropertyChange(\"remove.~name~\", value, null);\n" + 
 				"	return this;\n" + 
 				"} >>";
 }  

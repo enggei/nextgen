@@ -15,6 +15,7 @@ public class ChipElement {
 	private Object _disabled;
 	private Object _icon;
 	private Object _id;
+	private Object _key;
 	private Object _label;
 	private Object _onDelete;
 	private Object _size;
@@ -25,11 +26,6 @@ public class ChipElement {
 
 	ChipElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -49,6 +45,7 @@ public class ChipElement {
 		st.add("disabled", _disabled);
 		st.add("icon", _icon);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("label", _label);
 		st.add("onDelete", _onDelete);
 		st.add("size", _size);
@@ -279,6 +276,28 @@ public class ChipElement {
 		return this;
 	} 
 
+	public ChipElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public ChipElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public ChipElement setLabel(Object value) {
 		this._label = value;
 		return this;
@@ -438,6 +457,16 @@ public class ChipElement {
 		return this._attribute.stream().map(ChipElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(ChipElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(ChipElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class ChipElement_Attribute {
 
 		Object _name;
@@ -461,7 +490,7 @@ public class ChipElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -476,7 +505,7 @@ public class ChipElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ChipElement(avatar,classes,className,clickable,color,component,deleteIcon,disabled,icon,id,label,onDelete,size,style,variant,attribute,children) ::= <<<Chip~if(avatar)~\n" + 
+	static final String st = "ChipElement(avatar,classes,className,clickable,color,component,deleteIcon,disabled,icon,id,key,label,onDelete,size,style,variant,attribute,children) ::= <<<Chip~if(avatar)~\n" + 
 				"	avatar=~avatar~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(clickable)~\n" + 
@@ -486,10 +515,11 @@ public class ChipElement {
 				"	deleteIcon=~deleteIcon~~endif~~if(disabled)~\n" + 
 				"	disabled~endif~~if(icon)~\n" + 
 				"	icon=~icon~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(label)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(label)~\n" + 
 				"	label=~label~~endif~~if(onDelete)~\n" + 
 				"	onDelete=~onDelete~~endif~~if(size)~\n" + 
-				"	size=\"~size~\"~endif~~if(style)~\n" + 
+				"	size=~size~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
 				"	\n" + 

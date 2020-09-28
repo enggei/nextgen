@@ -9,17 +9,13 @@ public class SpeedDialIconElement {
 	private Object _className;
 	private Object _icon;
 	private Object _id;
+	private Object _key;
 	private Object _openIcon;
 	private Object _style;
 	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	SpeedDialIconElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -33,6 +29,7 @@ public class SpeedDialIconElement {
 		st.add("className", _className);
 		st.add("icon", _icon);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("openIcon", _openIcon);
 		st.add("style", _style);
 		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
@@ -127,6 +124,28 @@ public class SpeedDialIconElement {
 		return this;
 	} 
 
+	public SpeedDialIconElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public SpeedDialIconElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public SpeedDialIconElement setOpenIcon(Object value) {
 		this._openIcon = value;
 		return this;
@@ -192,6 +211,16 @@ public class SpeedDialIconElement {
 		return this._attribute.stream().map(SpeedDialIconElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(SpeedDialIconElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(SpeedDialIconElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class SpeedDialIconElement_Attribute {
 
 		Object _name;
@@ -215,7 +244,7 @@ public class SpeedDialIconElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -230,11 +259,12 @@ public class SpeedDialIconElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SpeedDialIconElement(classes,className,icon,id,openIcon,style,attribute) ::= <<<SpeedDialIcon~if(classes)~\n" + 
+	static final String st = "SpeedDialIconElement(classes,className,icon,id,key,openIcon,style,attribute) ::= <<<SpeedDialIcon~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(icon)~\n" + 
 				"	icon=~icon~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(openIcon)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(openIcon)~\n" + 
 				"	openIcon=~openIcon~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~attribute:{it|\n" + 
 				"	\n" + 

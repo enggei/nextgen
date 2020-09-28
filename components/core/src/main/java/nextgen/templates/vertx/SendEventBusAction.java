@@ -66,6 +66,11 @@ public class SendEventBusAction {
 		return this._params.stream().map(SendEventBusAction_Params::new);
 	}
 
+	public java.util.List<Object> getParams_Name() {
+		return streamParams().map(SendEventBusAction_Params::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class SendEventBusAction_Params {
 
 		Object _name;
@@ -82,7 +87,7 @@ public class SendEventBusAction {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

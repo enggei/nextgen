@@ -20,6 +20,7 @@ public class InputElement {
 	private Object _inputComponent;
 	private Object _inputProps;
 	private Object _inputRef;
+	private Object _key;
 	private Object _margin;
 	private Object _multiline;
 	private Object _name;
@@ -37,11 +38,6 @@ public class InputElement {
 
 	InputElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -66,6 +62,7 @@ public class InputElement {
 		st.add("inputComponent", _inputComponent);
 		st.add("inputProps", _inputProps);
 		st.add("inputRef", _inputRef);
+		st.add("key", _key);
 		st.add("margin", _margin);
 		st.add("multiline", _multiline);
 		st.add("name", _name);
@@ -413,6 +410,28 @@ public class InputElement {
 		return this;
 	} 
 
+	public InputElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public InputElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public InputElement setMargin(Object value) {
 		this._margin = value;
 		return this;
@@ -720,6 +739,16 @@ public class InputElement {
 		return this._attribute.stream().map(InputElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(InputElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(InputElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class InputElement_Attribute {
 
 		Object _name;
@@ -743,7 +772,7 @@ public class InputElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -758,7 +787,7 @@ public class InputElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "InputElement(autoComplete,autoFocus,classes,className,color,defaultValue,disabled,disableUnderline,endAdornment,error,fullWidth,id,inputComponent,inputProps,inputRef,margin,multiline,name,onChange,placeholder,readOnly,required,rows,rowsMax,startAdornment,style,type,value,attribute) ::= <<<Input~if(autoComplete)~\n" + 
+	static final String st = "InputElement(autoComplete,autoFocus,classes,className,color,defaultValue,disabled,disableUnderline,endAdornment,error,fullWidth,id,inputComponent,inputProps,inputRef,key,margin,multiline,name,onChange,placeholder,readOnly,required,rows,rowsMax,startAdornment,style,type,value,attribute) ::= <<<Input~if(autoComplete)~\n" + 
 				"	autoComplete=\"~autoComplete~\"~endif~~if(autoFocus)~\n" + 
 				"	autoFocus~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
@@ -773,7 +802,8 @@ public class InputElement {
 				"	id=\"~id~\"~endif~~if(inputComponent)~\n" + 
 				"	inputComponent=~inputComponent~~endif~~if(inputProps)~\n" + 
 				"	inputProps=~inputProps~~endif~~if(inputRef)~\n" + 
-				"	inputRef=~inputRef~~endif~~if(margin)~\n" + 
+				"	inputRef=~inputRef~~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(margin)~\n" + 
 				"	margin=\"~margin~\"~endif~~if(multiline)~\n" + 
 				"	multiline~endif~~if(name)~\n" + 
 				"	name=\"~name~\"~endif~~if(onChange)~\n" + 

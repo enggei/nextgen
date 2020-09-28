@@ -11,11 +11,6 @@ public class Superagent {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -49,6 +44,16 @@ public class Superagent {
 		return this._agentDeclarations.stream().map(Superagent_AgentDeclarations::new);
 	}
 
+	public java.util.List<Object> getAgentDeclarations_Declaration() {
+		return streamAgentDeclarations().map(Superagent_AgentDeclarations::getDeclaration).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAgentDeclarations_Name() {
+		return streamAgentDeclarations().map(Superagent_AgentDeclarations::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class Superagent_AgentDeclarations {
 
 		Object _declaration;
@@ -72,7 +77,7 @@ public class Superagent {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

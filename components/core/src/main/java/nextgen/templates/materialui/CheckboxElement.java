@@ -18,6 +18,7 @@ public class CheckboxElement {
 	private Object _indeterminateIcon;
 	private Object _inputProps;
 	private Object _inputRef;
+	private Object _key;
 	private Object _onChange;
 	private Object _required;
 	private Object _size;
@@ -27,11 +28,6 @@ public class CheckboxElement {
 
 	CheckboxElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -54,6 +50,7 @@ public class CheckboxElement {
 		st.add("indeterminateIcon", _indeterminateIcon);
 		st.add("inputProps", _inputProps);
 		st.add("inputRef", _inputRef);
+		st.add("key", _key);
 		st.add("onChange", _onChange);
 		st.add("required", _required);
 		st.add("size", _size);
@@ -349,6 +346,28 @@ public class CheckboxElement {
 		return this;
 	} 
 
+	public CheckboxElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public CheckboxElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public CheckboxElement setOnChange(Object value) {
 		this._onChange = value;
 		return this;
@@ -480,6 +499,16 @@ public class CheckboxElement {
 		return this._attribute.stream().map(CheckboxElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(CheckboxElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(CheckboxElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class CheckboxElement_Attribute {
 
 		Object _name;
@@ -503,7 +532,7 @@ public class CheckboxElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -518,7 +547,7 @@ public class CheckboxElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "CheckboxElement(checked,checkedIcon,classes,className,color,disabled,disableRipple,icon,id,indeterminate,indeterminateIcon,inputProps,inputRef,onChange,required,size,style,value,attribute) ::= <<<Checkbox~if(checked)~\n" + 
+	static final String st = "CheckboxElement(checked,checkedIcon,classes,className,color,disabled,disableRipple,icon,id,indeterminate,indeterminateIcon,inputProps,inputRef,key,onChange,required,size,style,value,attribute) ::= <<<Checkbox~if(checked)~\n" + 
 				"	checked~endif~~if(checkedIcon)~\n" + 
 				"	checkedIcon=~checkedIcon~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
@@ -531,10 +560,11 @@ public class CheckboxElement {
 				"	indeterminate~endif~~if(indeterminateIcon)~\n" + 
 				"	indeterminateIcon=~indeterminateIcon~~endif~~if(inputProps)~\n" + 
 				"	inputProps=~inputProps~~endif~~if(inputRef)~\n" + 
-				"	inputRef=~inputRef~~endif~~if(onChange)~\n" + 
+				"	inputRef=~inputRef~~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(onChange)~\n" + 
 				"	onChange=~onChange~~endif~~if(required)~\n" + 
 				"	required~endif~~if(size)~\n" + 
-				"	size=\"~size~\"~endif~~if(style)~\n" + 
+				"	size=~size~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(value)~\n" + 
 				"	value=~value~~endif~~attribute:{it|\n" + 
 				"	\n" + 

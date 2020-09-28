@@ -6,17 +6,13 @@ public class Element {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _name;
+	private java.util.List<Object> _singleAttributes = new java.util.ArrayList<>();
 	private java.util.List<Object> _props = new java.util.ArrayList<>();
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _attributes = new java.util.ArrayList<>();
 
 	Element(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -27,6 +23,7 @@ public class Element {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Element");
 		st.add("name", _name);
+		for (Object o : _singleAttributes) st.add("singleAttributes", o);
 		for (Object o : _props) st.add("props", o);
 		for (Object o : _children) st.add("children", o);
 		for (java.util.Map<String, Object> map : _attributes) st.addAggr("attributes.{key,value}", map.get("key"), map.get("value"));
@@ -53,6 +50,35 @@ public class Element {
 	public Element removeName() {
 		this._name = null;
 		return this;
+	} 
+
+	public Element addSingleAttributes(Object value) {
+		this._singleAttributes.add(value);
+		return this;
+	}
+
+	public Element setSingleAttributes(Object[] value) {
+		this._singleAttributes.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Element setSingleAttributes(java.util.Collection<Object> values) {
+		this._singleAttributes.addAll(values);
+		return this;
+	}
+
+	public Element removeSingleAttributes(Object value) {
+		this._singleAttributes.remove(value);
+		return this;
+	}
+
+	public Element removeSingleAttributes(int index) {
+		this._singleAttributes.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getSingleAttributes() {
+		return this._singleAttributes;
 	} 
 
 	public Element addProps(Object value) {
@@ -133,6 +159,16 @@ public class Element {
 		return this._attributes.stream().map(Element_Attributes::new);
 	}
 
+	public java.util.List<Object> getAttributes_Key() {
+		return streamAttributes().map(Element_Attributes::getKey).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttributes_Value() {
+		return streamAttributes().map(Element_Attributes::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class Element_Attributes {
 
 		Object _key;
@@ -156,7 +192,7 @@ public class Element {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -171,7 +207,7 @@ public class Element {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Element(name,attributes,props,children) ::= <<<~name~~if(attributes)~ ~attributes:{it|\n" + 
+	static final String st = "Element(name,singleAttributes,attributes,props,children) ::= <<<~name~~if(singleAttributes)~ ~singleAttributes:{it|~it~};separator=\" \"~~endif~~if(attributes)~ ~attributes:{it|\n" + 
 				"\n" + 
 				"	~it.key~=~it.value~}~~endif~~if(props)~ ~props:{it|~it~};separator=\" \"~~endif~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 

@@ -39,6 +39,7 @@ public class AutocompleteElement {
 	private Object _id;
 	private Object _includeInputInList;
 	private Object _inputValue;
+	private Object _key;
 	private Object _limitTags;
 	private Object _ListboxComponent;
 	private Object _ListboxProps;
@@ -70,11 +71,6 @@ public class AutocompleteElement {
 
 	AutocompleteElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -118,6 +114,7 @@ public class AutocompleteElement {
 		st.add("id", _id);
 		st.add("includeInputInList", _includeInputInList);
 		st.add("inputValue", _inputValue);
+		st.add("key", _key);
 		st.add("limitTags", _limitTags);
 		st.add("ListboxComponent", _ListboxComponent);
 		st.add("ListboxProps", _ListboxProps);
@@ -897,6 +894,28 @@ public class AutocompleteElement {
 		return this;
 	} 
 
+	public AutocompleteElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public AutocompleteElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public AutocompleteElement setLimitTags(Object value) {
 		this._limitTags = value;
 		return this;
@@ -1512,6 +1531,16 @@ public class AutocompleteElement {
 		return this._attribute.stream().map(AutocompleteElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(AutocompleteElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(AutocompleteElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class AutocompleteElement_Attribute {
 
 		Object _name;
@@ -1535,7 +1564,7 @@ public class AutocompleteElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -1550,11 +1579,11 @@ public class AutocompleteElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AutocompleteElement(autoComplete,autoHighlight,autoSelect,blurOnSelect,ChipProps,classes,className,clearOnBlur,clearOnEscape,clearText,closeIcon,closeText,debug,defaultValue,disableClearable,disableCloseOnSelect,disabled,disabledItemsFocusable,disableListWrap,disablePortal,filterOptions,filterSelectedOptions,forcePopupIcon,freeSolo,fullWidth,getLimitTagsText,getOptionDisabled,getOptionLabel,getOptionSelected,groupBy,handleHomeEndKeys,id,includeInputInList,inputValue,limitTags,ListboxComponent,ListboxProps,loading,loadingText,multiple,noOptionsText,onChange,onClose,onHighlightChange,onInputChange,onOpen,open,openOnFocus,openText,options,PaperComponent,PopperComponent,popupIcon,renderGroup,renderInput,renderOption,renderTags,selectOnFocus,size,style,value,attribute) ::= <<<Autocomplete~if(autoComplete)~\n" + 
+	static final String st = "AutocompleteElement(autoComplete,autoHighlight,autoSelect,blurOnSelect,ChipProps,classes,className,clearOnBlur,clearOnEscape,clearText,closeIcon,closeText,debug,defaultValue,disableClearable,disableCloseOnSelect,disabled,disabledItemsFocusable,disableListWrap,disablePortal,filterOptions,filterSelectedOptions,forcePopupIcon,freeSolo,fullWidth,getLimitTagsText,getOptionDisabled,getOptionLabel,getOptionSelected,groupBy,handleHomeEndKeys,id,includeInputInList,inputValue,key,limitTags,ListboxComponent,ListboxProps,loading,loadingText,multiple,noOptionsText,onChange,onClose,onHighlightChange,onInputChange,onOpen,open,openOnFocus,openText,options,PaperComponent,PopperComponent,popupIcon,renderGroup,renderInput,renderOption,renderTags,selectOnFocus,size,style,value,attribute) ::= <<<Autocomplete~if(autoComplete)~\n" + 
 				"	autoComplete~endif~~if(autoHighlight)~\n" + 
 				"	autoHighlight~endif~~if(autoSelect)~\n" + 
 				"	autoSelect~endif~~if(blurOnSelect)~\n" + 
-				"	blurOnSelect=\"~blurOnSelect~\"~endif~~if(ChipProps)~\n" + 
+				"	blurOnSelect=~blurOnSelect~~endif~~if(ChipProps)~\n" + 
 				"	ChipProps=~ChipProps~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(clearOnBlur)~\n" + 
@@ -1573,7 +1602,7 @@ public class AutocompleteElement {
 				"	disablePortal~endif~~if(filterOptions)~\n" + 
 				"	filterOptions=~filterOptions~~endif~~if(filterSelectedOptions)~\n" + 
 				"	filterSelectedOptions~endif~~if(forcePopupIcon)~\n" + 
-				"	forcePopupIcon=\"~forcePopupIcon~\"~endif~~if(freeSolo)~\n" + 
+				"	forcePopupIcon=~forcePopupIcon~~endif~~if(freeSolo)~\n" + 
 				"	freeSolo~endif~~if(fullWidth)~\n" + 
 				"	fullWidth~endif~~if(getLimitTagsText)~\n" + 
 				"	getLimitTagsText=~getLimitTagsText~~endif~~if(getOptionDisabled)~\n" + 
@@ -1584,7 +1613,8 @@ public class AutocompleteElement {
 				"	handleHomeEndKeys~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(includeInputInList)~\n" + 
 				"	includeInputInList~endif~~if(inputValue)~\n" + 
-				"	inputValue=\"~inputValue~\"~endif~~if(limitTags)~\n" + 
+				"	inputValue=\"~inputValue~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(limitTags)~\n" + 
 				"	limitTags=~limitTags~~endif~~if(ListboxComponent)~\n" + 
 				"	ListboxComponent=~ListboxComponent~~endif~~if(ListboxProps)~\n" + 
 				"	ListboxProps=~ListboxProps~~endif~~if(loading)~\n" + 
@@ -1609,7 +1639,7 @@ public class AutocompleteElement {
 				"	renderOption=~renderOption~~endif~~if(renderTags)~\n" + 
 				"	renderTags=~renderTags~~endif~~if(selectOnFocus)~\n" + 
 				"	selectOnFocus~endif~~if(size)~\n" + 
-				"	size=\"~size~\"~endif~~if(style)~\n" + 
+				"	size=~size~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(value)~\n" + 
 				"	value=~value~~endif~~attribute:{it|\n" + 
 				"	\n" + 

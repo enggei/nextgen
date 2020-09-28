@@ -11,6 +11,7 @@ public class SwipeableDrawerElement {
 	private Object _disableSwipeToOpen;
 	private Object _hysteresis;
 	private Object _id;
+	private Object _key;
 	private Object _minFlingVelocity;
 	private Object _onClose;
 	private Object _onOpen;
@@ -23,11 +24,6 @@ public class SwipeableDrawerElement {
 
 	SwipeableDrawerElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -43,6 +39,7 @@ public class SwipeableDrawerElement {
 		st.add("disableSwipeToOpen", _disableSwipeToOpen);
 		st.add("hysteresis", _hysteresis);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("minFlingVelocity", _minFlingVelocity);
 		st.add("onClose", _onClose);
 		st.add("onOpen", _onOpen);
@@ -184,6 +181,28 @@ public class SwipeableDrawerElement {
 
 	public SwipeableDrawerElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public SwipeableDrawerElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public SwipeableDrawerElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -390,6 +409,16 @@ public class SwipeableDrawerElement {
 		return this._attribute.stream().map(SwipeableDrawerElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(SwipeableDrawerElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(SwipeableDrawerElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class SwipeableDrawerElement_Attribute {
 
 		Object _name;
@@ -413,7 +442,7 @@ public class SwipeableDrawerElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -428,13 +457,14 @@ public class SwipeableDrawerElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SwipeableDrawerElement(className,disableBackdropTransition,disableDiscovery,disableSwipeToOpen,hysteresis,id,minFlingVelocity,onClose,onOpen,style,SwipeAreaProps,swipeAreaWidth,transitionDuration,attribute,children) ::= <<<SwipeableDrawer~if(className)~\n" + 
+	static final String st = "SwipeableDrawerElement(className,disableBackdropTransition,disableDiscovery,disableSwipeToOpen,hysteresis,id,key,minFlingVelocity,onClose,onOpen,style,SwipeAreaProps,swipeAreaWidth,transitionDuration,attribute,children) ::= <<<SwipeableDrawer~if(className)~\n" + 
 				"	className=~className~~endif~~if(disableBackdropTransition)~\n" + 
 				"	disableBackdropTransition~endif~~if(disableDiscovery)~\n" + 
 				"	disableDiscovery~endif~~if(disableSwipeToOpen)~\n" + 
 				"	disableSwipeToOpen~endif~~if(hysteresis)~\n" + 
 				"	hysteresis=~hysteresis~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(minFlingVelocity)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(minFlingVelocity)~\n" + 
 				"	minFlingVelocity=~minFlingVelocity~~endif~\n" + 
 				"	onClose=~onClose~\n" + 
 				"	onOpen=~onOpen~\n" + 

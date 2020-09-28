@@ -7,6 +7,7 @@ public class TextareaAutosizeElement {
 
 	private Object _className;
 	private Object _id;
+	private Object _key;
 	private Object _rows;
 	private Object _rowsMax;
 	private Object _rowsMin;
@@ -15,11 +16,6 @@ public class TextareaAutosizeElement {
 
 	TextareaAutosizeElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -31,6 +27,7 @@ public class TextareaAutosizeElement {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("TextareaAutosizeElement");
 		st.add("className", _className);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("rows", _rows);
 		st.add("rowsMax", _rowsMax);
 		st.add("rowsMin", _rowsMin);
@@ -80,6 +77,28 @@ public class TextareaAutosizeElement {
 
 	public TextareaAutosizeElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public TextareaAutosizeElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public TextareaAutosizeElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -192,6 +211,16 @@ public class TextareaAutosizeElement {
 		return this._attribute.stream().map(TextareaAutosizeElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(TextareaAutosizeElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(TextareaAutosizeElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class TextareaAutosizeElement_Attribute {
 
 		Object _name;
@@ -215,7 +244,7 @@ public class TextareaAutosizeElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -230,9 +259,10 @@ public class TextareaAutosizeElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TextareaAutosizeElement(className,id,rows,rowsMax,rowsMin,style,attribute) ::= <<<TextareaAutosize~if(className)~\n" + 
+	static final String st = "TextareaAutosizeElement(className,id,key,rows,rowsMax,rowsMin,style,attribute) ::= <<<TextareaAutosize~if(className)~\n" + 
 				"	className=~className~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(rows)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(rows)~\n" + 
 				"	rows=~rows~~endif~~if(rowsMax)~\n" + 
 				"	rowsMax=~rowsMax~~endif~~if(rowsMin)~\n" + 
 				"	rowsMin=~rowsMin~~endif~~if(style)~\n" + 

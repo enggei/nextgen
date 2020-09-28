@@ -13,6 +13,7 @@ public class BadgeElement {
 	private Object _component;
 	private Object _id;
 	private Object _invisible;
+	private Object _key;
 	private Object _max;
 	private Object _overlap;
 	private Object _showZero;
@@ -23,11 +24,6 @@ public class BadgeElement {
 
 	BadgeElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -45,6 +41,7 @@ public class BadgeElement {
 		st.add("component", _component);
 		st.add("id", _id);
 		st.add("invisible", _invisible);
+		st.add("key", _key);
 		st.add("max", _max);
 		st.add("overlap", _overlap);
 		st.add("showZero", _showZero);
@@ -231,6 +228,28 @@ public class BadgeElement {
 		return this;
 	} 
 
+	public BadgeElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public BadgeElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public BadgeElement setMax(Object value) {
 		this._max = value;
 		return this;
@@ -390,6 +409,16 @@ public class BadgeElement {
 		return this._attribute.stream().map(BadgeElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(BadgeElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(BadgeElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class BadgeElement_Attribute {
 
 		Object _name;
@@ -413,7 +442,7 @@ public class BadgeElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -428,17 +457,18 @@ public class BadgeElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "BadgeElement(anchorOrigin,badgeContent,classes,className,color,component,id,invisible,max,overlap,showZero,style,variant,attribute,children) ::= <<<Badge~if(anchorOrigin)~\n" + 
-				"	anchorOrigin=\"~anchorOrigin~\"~endif~~if(badgeContent)~\n" + 
+	static final String st = "BadgeElement(anchorOrigin,badgeContent,classes,className,color,component,id,invisible,key,max,overlap,showZero,style,variant,attribute,children) ::= <<<Badge~if(anchorOrigin)~\n" + 
+				"	anchorOrigin=~anchorOrigin~~endif~~if(badgeContent)~\n" + 
 				"	badgeContent=~badgeContent~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(invisible)~\n" + 
-				"	invisible~endif~~if(max)~\n" + 
+				"	invisible~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(max)~\n" + 
 				"	max=~max~~endif~~if(overlap)~\n" + 
-				"	overlap=\"~overlap~\"~endif~~if(showZero)~\n" + 
+				"	overlap=~overlap~~endif~~if(showZero)~\n" + 
 				"	showZero~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 

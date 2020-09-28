@@ -20,6 +20,7 @@ public class ModalElement {
 	private Object _hideBackdrop;
 	private Object _id;
 	private Object _keepMounted;
+	private Object _key;
 	private Object _onBackdropClick;
 	private Object _onClose;
 	private Object _onEscapeKeyDown;
@@ -30,11 +31,6 @@ public class ModalElement {
 
 	ModalElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -59,6 +55,7 @@ public class ModalElement {
 		st.add("hideBackdrop", _hideBackdrop);
 		st.add("id", _id);
 		st.add("keepMounted", _keepMounted);
+		st.add("key", _key);
 		st.add("onBackdropClick", _onBackdropClick);
 		st.add("onClose", _onClose);
 		st.add("onEscapeKeyDown", _onEscapeKeyDown);
@@ -399,6 +396,28 @@ public class ModalElement {
 		return this;
 	} 
 
+	public ModalElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public ModalElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public ModalElement setOnBackdropClick(Object value) {
 		this._onBackdropClick = value;
 		return this;
@@ -558,6 +577,16 @@ public class ModalElement {
 		return this._attribute.stream().map(ModalElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(ModalElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(ModalElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class ModalElement_Attribute {
 
 		Object _name;
@@ -581,7 +610,7 @@ public class ModalElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -596,7 +625,7 @@ public class ModalElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ModalElement(BackdropComponent,BackdropProps,className,closeAfterTransition,container,disableAutoFocus,disableBackdropClick,disableEnforceFocus,disableEscapeKeyDown,disablePortal,disableRestoreFocus,disableScrollLock,hideBackdrop,id,keepMounted,onBackdropClick,onClose,onEscapeKeyDown,onRendered,style,attribute,children) ::= <<<Modal~if(BackdropComponent)~\n" + 
+	static final String st = "ModalElement(BackdropComponent,BackdropProps,className,closeAfterTransition,container,disableAutoFocus,disableBackdropClick,disableEnforceFocus,disableEscapeKeyDown,disablePortal,disableRestoreFocus,disableScrollLock,hideBackdrop,id,keepMounted,key,onBackdropClick,onClose,onEscapeKeyDown,onRendered,style,attribute,children) ::= <<<Modal~if(BackdropComponent)~\n" + 
 				"	BackdropComponent=~BackdropComponent~~endif~~if(BackdropProps)~\n" + 
 				"	BackdropProps=~BackdropProps~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(closeAfterTransition)~\n" + 
@@ -611,7 +640,8 @@ public class ModalElement {
 				"	disableScrollLock~endif~~if(hideBackdrop)~\n" + 
 				"	hideBackdrop~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(keepMounted)~\n" + 
-				"	keepMounted~endif~~if(onBackdropClick)~\n" + 
+				"	keepMounted~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(onBackdropClick)~\n" + 
 				"	onBackdropClick=~onBackdropClick~~endif~~if(onClose)~\n" + 
 				"	onClose=~onClose~~endif~~if(onEscapeKeyDown)~\n" + 
 				"	onEscapeKeyDown=~onEscapeKeyDown~~endif~~if(onRendered)~\n" + 

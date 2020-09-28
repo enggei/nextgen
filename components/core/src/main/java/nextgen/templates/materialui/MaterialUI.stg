@@ -8,13 +8,14 @@ Accordion() ::= <<Accordion
 
 AccordionImport() ::= <<import Accordion from '@material-ui/core/Accordion'; >>
 
-AccordionElement(classes,className,defaultExpanded,disabled,expanded,id,onChange,square,style,TransitionComponent,TransitionProps,attribute,children) ::= <<<Accordion~if(classes)~
+AccordionElement(classes,className,defaultExpanded,disabled,expanded,id,key,onChange,square,style,TransitionComponent,TransitionProps,attribute,children) ::= <<<Accordion~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(defaultExpanded)~
 	defaultExpanded~endif~~if(disabled)~
 	disabled~endif~~if(expanded)~
 	expanded~endif~~if(id)~
-	id="~id~"~endif~~if(onChange)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(onChange)~
 	onChange=~onChange~~endif~~if(square)~
 	square~endif~~if(style)~
 	style=~style~~endif~~if(TransitionComponent)~
@@ -33,11 +34,12 @@ AccordionActions() ::= <<AccordionActions
 
 AccordionActionsImport() ::= <<import AccordionActions from '@material-ui/core/AccordionActions'; >>
 
-AccordionActionsElement(classes,className,disableSpacing,id,style,attribute,children) ::= <<<AccordionActions~if(classes)~
+AccordionActionsElement(classes,className,disableSpacing,id,key,style,attribute,children) ::= <<<AccordionActions~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(disableSpacing)~
 	disableSpacing~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -52,10 +54,11 @@ AccordionDetails() ::= <<AccordionDetails
 
 AccordionDetailsImport() ::= <<import AccordionDetails from '@material-ui/core/AccordionDetails'; >>
 
-AccordionDetailsElement(classes,className,id,style,attribute,children) ::= <<<AccordionDetails~if(classes)~
+AccordionDetailsElement(classes,className,id,key,style,attribute,children) ::= <<<AccordionDetails~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -70,12 +73,13 @@ AccordionSummary() ::= <<AccordionSummary
 
 AccordionSummaryImport() ::= <<import AccordionSummary from '@material-ui/core/AccordionSummary'; >>
 
-AccordionSummaryElement(classes,className,expandIcon,IconButtonProps,id,style,attribute,children) ::= <<<AccordionSummary~if(classes)~
+AccordionSummaryElement(classes,className,expandIcon,IconButtonProps,id,key,style,attribute,children) ::= <<<AccordionSummary~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(expandIcon)~
 	expandIcon=~expandIcon~~endif~~if(IconButtonProps)~
 	IconButtonProps=~IconButtonProps~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -90,7 +94,7 @@ Alert() ::= <<Alert
 
 AlertImport() ::= <<import Alert from '@material-ui/lab/Alert'; >>
 
-AlertElement(action,classes,className,closeText,color,icon,iconMapping,id,onClose,role,severity,style,variant,attribute,children) ::= <<<Alert~if(action)~
+AlertElement(action,classes,className,closeText,color,icon,iconMapping,id,key,onClose,role,severity,style,variant,attribute,children) ::= <<<Alert~if(action)~
 	action=~action~~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(closeText)~
@@ -98,10 +102,11 @@ AlertElement(action,classes,className,closeText,color,icon,iconMapping,id,onClos
 	color="~color~"~endif~~if(icon)~
 	icon=~icon~~endif~~if(iconMapping)~
 	iconMapping=~iconMapping~~endif~~if(id)~
-	id="~id~"~endif~~if(onClose)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(onClose)~
 	onClose=~onClose~~endif~~if(role)~
 	role="~role~"~endif~~if(severity)~
-	severity="~severity~"~endif~~if(style)~
+	severity=~severity~~endif~~if(style)~
 	style=~style~~endif~~if(variant)~
 	variant="~variant~"~endif~~attribute:{it|
 	
@@ -117,10 +122,11 @@ AlertTitle() ::= <<AlertTitle
 
 AlertTitleImport() ::= <<import AlertTitle from '@material-ui/lab/AlertTitle'; >>
 
-AlertTitleElement(classes,className,id,style,attribute,children) ::= <<<AlertTitle~if(classes)~
+AlertTitleElement(classes,className,id,key,style,attribute,children) ::= <<<AlertTitle~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -135,11 +141,12 @@ AppBar() ::= <<AppBar
 
 AppBarImport() ::= <<import AppBar from '@material-ui/core/AppBar'; >>
 
-AppBarElement(classes,className,color,id,position,style,attribute,children) ::= <<<AppBar~if(classes)~
+AppBarElement(classes,className,color,id,key,position,style,attribute,children) ::= <<<AppBar~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(color)~
 	color="~color~"~endif~~if(id)~
-	id="~id~"~endif~~if(position)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(position)~
 	position="~position~"~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
@@ -155,11 +162,11 @@ Autocomplete() ::= <<Autocomplete
 
 AutocompleteImport() ::= <<import Autocomplete from '@material-ui/lab/Autocomplete'; >>
 
-AutocompleteElement(autoComplete,autoHighlight,autoSelect,blurOnSelect,ChipProps,classes,className,clearOnBlur,clearOnEscape,clearText,closeIcon,closeText,debug,defaultValue,disableClearable,disableCloseOnSelect,disabled,disabledItemsFocusable,disableListWrap,disablePortal,filterOptions,filterSelectedOptions,forcePopupIcon,freeSolo,fullWidth,getLimitTagsText,getOptionDisabled,getOptionLabel,getOptionSelected,groupBy,handleHomeEndKeys,id,includeInputInList,inputValue,limitTags,ListboxComponent,ListboxProps,loading,loadingText,multiple,noOptionsText,onChange,onClose,onHighlightChange,onInputChange,onOpen,open,openOnFocus,openText,options,PaperComponent,PopperComponent,popupIcon,renderGroup,renderInput,renderOption,renderTags,selectOnFocus,size,style,value,attribute) ::= <<<Autocomplete~if(autoComplete)~
+AutocompleteElement(autoComplete,autoHighlight,autoSelect,blurOnSelect,ChipProps,classes,className,clearOnBlur,clearOnEscape,clearText,closeIcon,closeText,debug,defaultValue,disableClearable,disableCloseOnSelect,disabled,disabledItemsFocusable,disableListWrap,disablePortal,filterOptions,filterSelectedOptions,forcePopupIcon,freeSolo,fullWidth,getLimitTagsText,getOptionDisabled,getOptionLabel,getOptionSelected,groupBy,handleHomeEndKeys,id,includeInputInList,inputValue,key,limitTags,ListboxComponent,ListboxProps,loading,loadingText,multiple,noOptionsText,onChange,onClose,onHighlightChange,onInputChange,onOpen,open,openOnFocus,openText,options,PaperComponent,PopperComponent,popupIcon,renderGroup,renderInput,renderOption,renderTags,selectOnFocus,size,style,value,attribute) ::= <<<Autocomplete~if(autoComplete)~
 	autoComplete~endif~~if(autoHighlight)~
 	autoHighlight~endif~~if(autoSelect)~
 	autoSelect~endif~~if(blurOnSelect)~
-	blurOnSelect="~blurOnSelect~"~endif~~if(ChipProps)~
+	blurOnSelect=~blurOnSelect~~endif~~if(ChipProps)~
 	ChipProps=~ChipProps~~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(clearOnBlur)~
@@ -178,7 +185,7 @@ AutocompleteElement(autoComplete,autoHighlight,autoSelect,blurOnSelect,ChipProps
 	disablePortal~endif~~if(filterOptions)~
 	filterOptions=~filterOptions~~endif~~if(filterSelectedOptions)~
 	filterSelectedOptions~endif~~if(forcePopupIcon)~
-	forcePopupIcon="~forcePopupIcon~"~endif~~if(freeSolo)~
+	forcePopupIcon=~forcePopupIcon~~endif~~if(freeSolo)~
 	freeSolo~endif~~if(fullWidth)~
 	fullWidth~endif~~if(getLimitTagsText)~
 	getLimitTagsText=~getLimitTagsText~~endif~~if(getOptionDisabled)~
@@ -189,7 +196,8 @@ AutocompleteElement(autoComplete,autoHighlight,autoSelect,blurOnSelect,ChipProps
 	handleHomeEndKeys~endif~~if(id)~
 	id="~id~"~endif~~if(includeInputInList)~
 	includeInputInList~endif~~if(inputValue)~
-	inputValue="~inputValue~"~endif~~if(limitTags)~
+	inputValue="~inputValue~"~endif~~if(key)~
+	key=~key~~endif~~if(limitTags)~
 	limitTags=~limitTags~~endif~~if(ListboxComponent)~
 	ListboxComponent=~ListboxComponent~~endif~~if(ListboxProps)~
 	ListboxProps=~ListboxProps~~endif~~if(loading)~
@@ -214,7 +222,7 @@ AutocompleteElement(autoComplete,autoHighlight,autoSelect,blurOnSelect,ChipProps
 	renderOption=~renderOption~~endif~~if(renderTags)~
 	renderTags=~renderTags~~endif~~if(selectOnFocus)~
 	selectOnFocus~endif~~if(size)~
-	size="~size~"~endif~~if(style)~
+	size=~size~~endif~~if(style)~
 	style=~style~~endif~~if(value)~
 	value=~value~~endif~~attribute:{it|
 	
@@ -228,13 +236,14 @@ Avatar() ::= <<Avatar
 
 AvatarImport() ::= <<import Avatar from '@material-ui/core/Avatar'; >>
 
-AvatarElement(alt,classes,className,component,id,imgProps,sizes,src,srcSet,style,variant,attribute,children) ::= <<<Avatar~if(alt)~
+AvatarElement(alt,classes,className,component,id,imgProps,key,sizes,src,srcSet,style,variant,attribute,children) ::= <<<Avatar~if(alt)~
 	alt="~alt~"~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(component)~
 	component=~component~~endif~~if(id)~
 	id="~id~"~endif~~if(imgProps)~
-	imgProps=~imgProps~~endif~~if(sizes)~
+	imgProps=~imgProps~~endif~~if(key)~
+	key=~key~~endif~~if(sizes)~
 	sizes="~sizes~"~endif~~if(src)~
 	src="~src~"~endif~~if(srcSet)~
 	srcSet="~srcSet~"~endif~~if(style)~
@@ -253,12 +262,13 @@ AvatarGroup() ::= <<AvatarGroup
 
 AvatarGroupImport() ::= <<import AvatarGroup from '@material-ui/lab/AvatarGroup'; >>
 
-AvatarGroupElement(classes,className,id,max,spacing,style,attribute,children) ::= <<<AvatarGroup~if(classes)~
+AvatarGroupElement(classes,className,id,key,max,spacing,style,attribute,children) ::= <<<AvatarGroup~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(max)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(max)~
 	max=~max~~endif~~if(spacing)~
-	spacing="~spacing~"~endif~~if(style)~
+	spacing=~spacing~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -273,11 +283,12 @@ Backdrop() ::= <<Backdrop
 
 BackdropImport() ::= <<import Backdrop from '@material-ui/core/Backdrop'; >>
 
-BackdropElement(classes,className,id,invisible,style,transitionDuration,attribute,children) ::= <<<Backdrop~if(classes)~
+BackdropElement(classes,className,id,invisible,key,style,transitionDuration,attribute,children) ::= <<<Backdrop~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(id)~
 	id="~id~"~endif~~if(invisible)~
-	invisible~endif~
+	invisible~endif~~if(key)~
+	key=~key~~endif~
 	open~if(style)~
 	style=~style~~endif~~if(transitionDuration)~
 	transitionDuration=~transitionDuration~~endif~~attribute:{it|
@@ -294,17 +305,18 @@ Badge() ::= <<Badge
 
 BadgeImport() ::= <<import Badge from '@material-ui/core/Badge'; >>
 
-BadgeElement(anchorOrigin,badgeContent,classes,className,color,component,id,invisible,max,overlap,showZero,style,variant,attribute,children) ::= <<<Badge~if(anchorOrigin)~
-	anchorOrigin="~anchorOrigin~"~endif~~if(badgeContent)~
+BadgeElement(anchorOrigin,badgeContent,classes,className,color,component,id,invisible,key,max,overlap,showZero,style,variant,attribute,children) ::= <<<Badge~if(anchorOrigin)~
+	anchorOrigin=~anchorOrigin~~endif~~if(badgeContent)~
 	badgeContent=~badgeContent~~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(color)~
 	color="~color~"~endif~~if(component)~
 	component=~component~~endif~~if(id)~
 	id="~id~"~endif~~if(invisible)~
-	invisible~endif~~if(max)~
+	invisible~endif~~if(key)~
+	key=~key~~endif~~if(max)~
 	max=~max~~endif~~if(overlap)~
-	overlap="~overlap~"~endif~~if(showZero)~
+	overlap=~overlap~~endif~~if(showZero)~
 	showZero~endif~~if(style)~
 	style=~style~~endif~~if(variant)~
 	variant="~variant~"~endif~~attribute:{it|
@@ -321,11 +333,12 @@ BottomNavigation() ::= <<BottomNavigation
 
 BottomNavigationImport() ::= <<import BottomNavigation from '@material-ui/core/BottomNavigation'; >>
 
-BottomNavigationElement(classes,className,component,id,onChange,showLabels,style,value,attribute,children) ::= <<<BottomNavigation~if(classes)~
+BottomNavigationElement(classes,className,component,id,key,onChange,showLabels,style,value,attribute,children) ::= <<<BottomNavigation~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(component)~
 	component=~component~~endif~~if(id)~
-	id="~id~"~endif~~if(onChange)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(onChange)~
 	onChange=~onChange~~endif~~if(showLabels)~
 	showLabels~endif~~if(style)~
 	style=~style~~endif~~if(value)~
@@ -343,11 +356,12 @@ BottomNavigationAction() ::= <<BottomNavigationAction
 
 BottomNavigationActionImport() ::= <<import BottomNavigationAction from '@material-ui/core/BottomNavigationAction'; >>
 
-BottomNavigationActionElement(classes,className,icon,id,label,showLabel,style,value,attribute,children) ::= <<<BottomNavigationAction~if(classes)~
+BottomNavigationActionElement(classes,className,icon,id,key,label,showLabel,style,value,attribute,children) ::= <<<BottomNavigationAction~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(icon)~
 	icon=~icon~~endif~~if(id)~
-	id="~id~"~endif~~if(label)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(label)~
 	label=~label~~endif~~if(showLabel)~
 	showLabel~endif~~if(style)~
 	style=~style~~endif~~if(value)~
@@ -365,9 +379,10 @@ Box() ::= <<Box
 
 BoxImport() ::= <<import Box from '@material-ui/core/Box'; >>
 
-BoxElement(className,id,mt,style,attribute,children) ::= <<<Box~if(className)~
+BoxElement(className,id,key,mt,style,attribute,children) ::= <<<Box~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(mt)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(mt)~
 	mt="~mt~"~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
@@ -383,14 +398,15 @@ Breadcrumbs() ::= <<Breadcrumbs
 
 BreadcrumbsImport() ::= <<import Breadcrumbs from '@material-ui/core/Breadcrumbs'; >>
 
-BreadcrumbsElement(classes,className,component,expandText,id,itemsAfterCollapse,itemsBeforeCollapse,maxItems,separator,style,attribute,children) ::= <<<Breadcrumbs~if(classes)~
+BreadcrumbsElement(classes,className,component,expandText,id,itemsAfterCollapse,itemsBeforeCollapse,key,maxItems,separator,style,attribute,children) ::= <<<Breadcrumbs~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(component)~
 	component=~component~~endif~~if(expandText)~
 	expandText="~expandText~"~endif~~if(id)~
 	id="~id~"~endif~~if(itemsAfterCollapse)~
 	itemsAfterCollapse=~itemsAfterCollapse~~endif~~if(itemsBeforeCollapse)~
-	itemsBeforeCollapse=~itemsBeforeCollapse~~endif~~if(maxItems)~
+	itemsBeforeCollapse=~itemsBeforeCollapse~~endif~~if(key)~
+	key=~key~~endif~~if(maxItems)~
 	maxItems=~maxItems~~endif~~if(separator)~
 	separator=~separator~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
@@ -407,7 +423,7 @@ Button() ::= <<Button
 
 ButtonImport() ::= <<import Button from '@material-ui/core/Button'; >>
 
-ButtonElement(classes,className,color,component,disabled,disableElevation,disableFocusRipple,disableRipple,endIcon,fullWidth,href,id,size,startIcon,style,type,variant,attribute,children) ::= <<<Button~if(classes)~
+ButtonElement(classes,className,color,component,disabled,disableElevation,disableFocusRipple,disableRipple,endIcon,fullWidth,href,id,key,size,startIcon,style,type,variant,attribute,children) ::= <<<Button~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(color)~
 	color="~color~"~endif~~if(component)~
@@ -419,8 +435,9 @@ ButtonElement(classes,className,color,component,disabled,disableElevation,disabl
 	endIcon=~endIcon~~endif~~if(fullWidth)~
 	fullWidth~endif~~if(href)~
 	href="~href~"~endif~~if(id)~
-	id="~id~"~endif~~if(size)~
-	size="~size~"~endif~~if(startIcon)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(size)~
+	size=~size~~endif~~if(startIcon)~
 	startIcon=~startIcon~~endif~~if(style)~
 	style=~style~~endif~~if(type)~
 	type="~type~"~endif~~if(variant)~
@@ -438,7 +455,7 @@ ButtonBase() ::= <<ButtonBase
 
 ButtonBaseImport() ::= <<import ButtonBase from '@material-ui/core/ButtonBase'; >>
 
-ButtonBaseElement(action,centerRipple,classes,className,component,disabled,disableRipple,disableTouchRipple,focusRipple,focusVisibleClassName,id,onFocusVisible,style,TouchRippleProps,attribute,children) ::= <<<ButtonBase~if(action)~
+ButtonBaseElement(action,centerRipple,classes,className,component,disabled,disableRipple,disableTouchRipple,focusRipple,focusVisibleClassName,id,key,onFocusVisible,style,TouchRippleProps,attribute,children) ::= <<<ButtonBase~if(action)~
 	action=~action~~endif~~if(centerRipple)~
 	centerRipple~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
@@ -449,7 +466,8 @@ ButtonBaseElement(action,centerRipple,classes,className,component,disabled,disab
 	disableTouchRipple~endif~~if(focusRipple)~
 	focusRipple~endif~~if(focusVisibleClassName)~
 	focusVisibleClassName="~focusVisibleClassName~"~endif~~if(id)~
-	id="~id~"~endif~~if(onFocusVisible)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(onFocusVisible)~
 	onFocusVisible=~onFocusVisible~~endif~~if(style)~
 	style=~style~~endif~~if(TouchRippleProps)~
 	TouchRippleProps=~TouchRippleProps~~endif~~attribute:{it|
@@ -466,7 +484,7 @@ ButtonGroup() ::= <<ButtonGroup
 
 ButtonGroupImport() ::= <<import ButtonGroup from '@material-ui/core/ButtonGroup'; >>
 
-ButtonGroupElement(classes,className,color,component,disabled,disableElevation,disableFocusRipple,disableRipple,fullWidth,id,orientation,size,style,variant,attribute,children) ::= <<<ButtonGroup~if(classes)~
+ButtonGroupElement(classes,className,color,component,disabled,disableElevation,disableFocusRipple,disableRipple,fullWidth,id,key,orientation,size,style,variant,attribute,children) ::= <<<ButtonGroup~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(color)~
 	color="~color~"~endif~~if(component)~
@@ -476,9 +494,10 @@ ButtonGroupElement(classes,className,color,component,disabled,disableElevation,d
 	disableFocusRipple~endif~~if(disableRipple)~
 	disableRipple~endif~~if(fullWidth)~
 	fullWidth~endif~~if(id)~
-	id="~id~"~endif~~if(orientation)~
-	orientation="~orientation~"~endif~~if(size)~
-	size="~size~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(orientation)~
+	orientation=~orientation~~endif~~if(size)~
+	size=~size~~endif~~if(style)~
 	style=~style~~endif~~if(variant)~
 	variant="~variant~"~endif~~attribute:{it|
 	
@@ -494,10 +513,11 @@ Card() ::= <<Card
 
 CardImport() ::= <<import Card from '@material-ui/core/Card'; >>
 
-CardElement(classes,className,id,raised,style,attribute,children) ::= <<<Card~if(classes)~
+CardElement(classes,className,id,key,raised,style,attribute,children) ::= <<<Card~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(raised)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(raised)~
 	raised~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
@@ -513,10 +533,11 @@ CardActionArea() ::= <<CardActionArea
 
 CardActionAreaImport() ::= <<import CardActionArea from '@material-ui/core/CardActionArea'; >>
 
-CardActionAreaElement(classes,className,id,style,attribute,children) ::= <<<CardActionArea~if(classes)~
+CardActionAreaElement(classes,className,id,key,style,attribute,children) ::= <<<CardActionArea~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -531,11 +552,12 @@ CardActions() ::= <<CardActions
 
 CardActionsImport() ::= <<import CardActions from '@material-ui/core/CardActions'; >>
 
-CardActionsElement(classes,className,disableSpacing,id,style,attribute,children) ::= <<<CardActions~if(classes)~
+CardActionsElement(classes,className,disableSpacing,id,key,style,attribute,children) ::= <<<CardActions~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(disableSpacing)~
 	disableSpacing~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -550,11 +572,12 @@ CardContent() ::= <<CardContent
 
 CardContentImport() ::= <<import CardContent from '@material-ui/core/CardContent'; >>
 
-CardContentElement(classes,className,component,id,style,attribute,children) ::= <<<CardContent~if(classes)~
+CardContentElement(classes,className,component,id,key,style,attribute,children) ::= <<<CardContent~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(component)~
 	component=~component~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -569,14 +592,15 @@ CardHeader() ::= <<CardHeader
 
 CardHeaderImport() ::= <<import CardHeader from '@material-ui/core/CardHeader'; >>
 
-CardHeaderElement(action,avatar,classes,className,component,disableTypography,id,style,subheader,subheaderTypographyProps,title,titleTypographyProps,attribute) ::= <<<CardHeader~if(action)~
+CardHeaderElement(action,avatar,classes,className,component,disableTypography,id,key,style,subheader,subheaderTypographyProps,title,titleTypographyProps,attribute) ::= <<<CardHeader~if(action)~
 	action=~action~~endif~~if(avatar)~
 	avatar=~avatar~~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(component)~
 	component=~component~~endif~~if(disableTypography)~
 	disableTypography~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~if(subheader)~
 	subheader=~subheader~~endif~~if(subheaderTypographyProps)~
 	subheaderTypographyProps=~subheaderTypographyProps~~endif~~if(title)~
@@ -593,12 +617,13 @@ CardMedia() ::= <<CardMedia
 
 CardMediaImport() ::= <<import CardMedia from '@material-ui/core/CardMedia'; >>
 
-CardMediaElement(classes,className,component,id,image,src,style,attribute,children) ::= <<<CardMedia~if(classes)~
+CardMediaElement(classes,className,component,id,image,key,src,style,attribute,children) ::= <<<CardMedia~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(component)~
 	component=~component~~endif~~if(id)~
 	id="~id~"~endif~~if(image)~
-	image="~image~"~endif~~if(src)~
+	image="~image~"~endif~~if(key)~
+	key=~key~~endif~~if(src)~
 	src="~src~"~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
@@ -614,7 +639,7 @@ Checkbox() ::= <<Checkbox
 
 CheckboxImport() ::= <<import Checkbox from '@material-ui/core/Checkbox'; >>
 
-CheckboxElement(checked,checkedIcon,classes,className,color,disabled,disableRipple,icon,id,indeterminate,indeterminateIcon,inputProps,inputRef,onChange,required,size,style,value,attribute) ::= <<<Checkbox~if(checked)~
+CheckboxElement(checked,checkedIcon,classes,className,color,disabled,disableRipple,icon,id,indeterminate,indeterminateIcon,inputProps,inputRef,key,onChange,required,size,style,value,attribute) ::= <<<Checkbox~if(checked)~
 	checked~endif~~if(checkedIcon)~
 	checkedIcon=~checkedIcon~~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
@@ -627,10 +652,11 @@ CheckboxElement(checked,checkedIcon,classes,className,color,disabled,disableRipp
 	indeterminate~endif~~if(indeterminateIcon)~
 	indeterminateIcon=~indeterminateIcon~~endif~~if(inputProps)~
 	inputProps=~inputProps~~endif~~if(inputRef)~
-	inputRef=~inputRef~~endif~~if(onChange)~
+	inputRef=~inputRef~~endif~~if(key)~
+	key=~key~~endif~~if(onChange)~
 	onChange=~onChange~~endif~~if(required)~
 	required~endif~~if(size)~
-	size="~size~"~endif~~if(style)~
+	size=~size~~endif~~if(style)~
 	style=~style~~endif~~if(value)~
 	value=~value~~endif~~attribute:{it|
 	
@@ -644,7 +670,7 @@ Chip() ::= <<Chip
 
 ChipImport() ::= <<import Chip from '@material-ui/core/Chip'; >>
 
-ChipElement(avatar,classes,className,clickable,color,component,deleteIcon,disabled,icon,id,label,onDelete,size,style,variant,attribute,children) ::= <<<Chip~if(avatar)~
+ChipElement(avatar,classes,className,clickable,color,component,deleteIcon,disabled,icon,id,key,label,onDelete,size,style,variant,attribute,children) ::= <<<Chip~if(avatar)~
 	avatar=~avatar~~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(clickable)~
@@ -654,10 +680,11 @@ ChipElement(avatar,classes,className,clickable,color,component,deleteIcon,disabl
 	deleteIcon=~deleteIcon~~endif~~if(disabled)~
 	disabled~endif~~if(icon)~
 	icon=~icon~~endif~~if(id)~
-	id="~id~"~endif~~if(label)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(label)~
 	label=~label~~endif~~if(onDelete)~
 	onDelete=~onDelete~~endif~~if(size)~
-	size="~size~"~endif~~if(style)~
+	size=~size~~endif~~if(style)~
 	style=~style~~endif~~if(variant)~
 	variant="~variant~"~endif~~attribute:{it|
 	
@@ -673,12 +700,13 @@ CircularProgress() ::= <<CircularProgress
 
 CircularProgressImport() ::= <<import CircularProgress from '@material-ui/core/CircularProgress'; >>
 
-CircularProgressElement(classes,className,color,disableShrink,id,size,style,thickness,value,variant,attribute) ::= <<<CircularProgress~if(classes)~
+CircularProgressElement(classes,className,color,disableShrink,id,key,size,style,thickness,value,variant,attribute) ::= <<<CircularProgress~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(color)~
 	color="~color~"~endif~~if(disableShrink)~
 	disableShrink~endif~~if(id)~
-	id="~id~"~endif~~if(size)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(size)~
 	size=~size~~endif~~if(style)~
 	style=~style~~endif~~if(thickness)~
 	thickness=~thickness~~endif~~if(value)~
@@ -695,14 +723,15 @@ ClickAwayListener() ::= <<ClickAwayListener
 
 ClickAwayListenerImport() ::= <<import ClickAwayListener from '@material-ui/core/ClickAwayListener'; >>
 
-ClickAwayListenerElement(className,disableReactTree,id,mouseEvent,onClickAway,style,touchEvent,attribute,children) ::= <<<ClickAwayListener~if(className)~
+ClickAwayListenerElement(className,disableReactTree,id,key,mouseEvent,onClickAway,style,touchEvent,attribute,children) ::= <<<ClickAwayListener~if(className)~
 	className=~className~~endif~~if(disableReactTree)~
 	disableReactTree~endif~~if(id)~
-	id="~id~"~endif~~if(mouseEvent)~
-	mouseEvent="~mouseEvent~"~endif~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(mouseEvent)~
+	mouseEvent=~mouseEvent~~endif~
 	onClickAway=~onClickAway~~if(style)~
 	style=~style~~endif~~if(touchEvent)~
-	touchEvent="~touchEvent~"~endif~~attribute:{it|
+	touchEvent=~touchEvent~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
 	~children:{it|~it~};separator="\n"~
@@ -716,16 +745,17 @@ Collapse() ::= <<Collapse
 
 CollapseImport() ::= <<import Collapse from '@material-ui/core/Collapse'; >>
 
-CollapseElement(classes,className,collapsedHeight,component,disableStrictModeCompat,id,in,style,timeout,attribute,children) ::= <<<Collapse~if(classes)~
+CollapseElement(classes,className,collapsedHeight,component,disableStrictModeCompat,id,in,key,style,timeout,attribute,children) ::= <<<Collapse~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(collapsedHeight)~
 	collapsedHeight=~collapsedHeight~~endif~~if(component)~
 	component=~component~~endif~~if(disableStrictModeCompat)~
 	disableStrictModeCompat~endif~~if(id)~
 	id="~id~"~endif~~if(in)~
-	in~endif~~if(style)~
+	in~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~if(timeout)~
-	timeout="~timeout~"~endif~~attribute:{it|
+	timeout=~timeout~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
 	~children:{it|~it~};separator="\n"~
@@ -739,14 +769,15 @@ Container() ::= <<Container
 
 ContainerImport() ::= <<import Container from '@material-ui/core/Container'; >>
 
-ContainerElement(classes,className,component,disableGutters,fixed,id,maxWidth,style,attribute,children) ::= <<<Container~if(classes)~
+ContainerElement(classes,className,component,disableGutters,fixed,id,key,maxWidth,style,attribute,children) ::= <<<Container~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(component)~
 	component=~component~~endif~~if(disableGutters)~
 	disableGutters~endif~~if(fixed)~
 	fixed~endif~~if(id)~
-	id="~id~"~endif~~if(maxWidth)~
-	maxWidth="~maxWidth~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(maxWidth)~
+	maxWidth=~maxWidth~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -761,10 +792,11 @@ CssBaseline() ::= <<CssBaseline
 
 CssBaselineImport() ::= <<import CssBaseline from '@material-ui/core/CssBaseline'; >>
 
-CssBaselineElement(classes,className,id,style,attribute,children) ::= <<<CssBaseline~if(classes)~
+CssBaselineElement(classes,className,id,key,style,attribute,children) ::= <<<CssBaseline~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -779,7 +811,7 @@ Dialog() ::= <<Dialog
 
 DialogImport() ::= <<import Dialog from '@material-ui/core/Dialog'; >>
 
-DialogElement(ariaDescribedby,ariaLabelledby,classes,className,disableBackdropClick,disableEscapeKeyDown,fullScreen,fullWidth,id,maxWidth,onBackdropClick,onClose,onEnter,onEntered,onEntering,onEscapeKeyDown,onExit,onExited,onExiting,PaperComponent,PaperProps,scroll,style,TransitionComponent,transitionDuration,TransitionProps,attribute,children) ::= <<<Dialog~if(ariaDescribedby)~
+DialogElement(ariaDescribedby,ariaLabelledby,classes,className,disableBackdropClick,disableEscapeKeyDown,fullScreen,fullWidth,id,key,maxWidth,onBackdropClick,onClose,onEnter,onEntered,onEntering,onEscapeKeyDown,onExit,onExited,onExiting,PaperComponent,PaperProps,scroll,style,TransitionComponent,transitionDuration,TransitionProps,attribute,children) ::= <<<Dialog~if(ariaDescribedby)~
 	ariaDescribedby="~ariaDescribedby~"~endif~~if(ariaLabelledby)~
 	ariaLabelledby="~ariaLabelledby~"~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
@@ -788,8 +820,9 @@ DialogElement(ariaDescribedby,ariaLabelledby,classes,className,disableBackdropCl
 	disableEscapeKeyDown~endif~~if(fullScreen)~
 	fullScreen~endif~~if(fullWidth)~
 	fullWidth~endif~~if(id)~
-	id="~id~"~endif~~if(maxWidth)~
-	maxWidth="~maxWidth~"~endif~~if(onBackdropClick)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(maxWidth)~
+	maxWidth=~maxWidth~~endif~~if(onBackdropClick)~
 	onBackdropClick=~onBackdropClick~~endif~~if(onClose)~
 	onClose=~onClose~~endif~~if(onEnter)~
 	onEnter=~onEnter~~endif~~if(onEntered)~
@@ -802,7 +835,7 @@ DialogElement(ariaDescribedby,ariaLabelledby,classes,className,disableBackdropCl
 	open~if(PaperComponent)~
 	PaperComponent=~PaperComponent~~endif~~if(PaperProps)~
 	PaperProps=~PaperProps~~endif~~if(scroll)~
-	scroll="~scroll~"~endif~~if(style)~
+	scroll=~scroll~~endif~~if(style)~
 	style=~style~~endif~~if(TransitionComponent)~
 	TransitionComponent=~TransitionComponent~~endif~~if(transitionDuration)~
 	transitionDuration=~transitionDuration~~endif~~if(TransitionProps)~
@@ -820,11 +853,12 @@ DialogActions() ::= <<DialogActions
 
 DialogActionsImport() ::= <<import DialogActions from '@material-ui/core/DialogActions'; >>
 
-DialogActionsElement(classes,className,disableSpacing,id,style,attribute,children) ::= <<<DialogActions~if(classes)~
+DialogActionsElement(classes,className,disableSpacing,id,key,style,attribute,children) ::= <<<DialogActions~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(disableSpacing)~
 	disableSpacing~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -839,11 +873,12 @@ DialogContent() ::= <<DialogContent
 
 DialogContentImport() ::= <<import DialogContent from '@material-ui/core/DialogContent'; >>
 
-DialogContentElement(classes,className,dividers,id,style,attribute,children) ::= <<<DialogContent~if(classes)~
+DialogContentElement(classes,className,dividers,id,key,style,attribute,children) ::= <<<DialogContent~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(dividers)~
 	dividers~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -858,10 +893,11 @@ DialogContentText() ::= <<DialogContentText
 
 DialogContentTextImport() ::= <<import DialogContentText from '@material-ui/core/DialogContentText'; >>
 
-DialogContentTextElement(classes,className,id,style,attribute,children) ::= <<<DialogContentText~if(classes)~
+DialogContentTextElement(classes,className,id,key,style,attribute,children) ::= <<<DialogContentText~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -876,11 +912,12 @@ DialogTitle() ::= <<DialogTitle
 
 DialogTitleImport() ::= <<import DialogTitle from '@material-ui/core/DialogTitle'; >>
 
-DialogTitleElement(classes,className,disableTypography,id,style,attribute,children) ::= <<<DialogTitle~if(classes)~
+DialogTitleElement(classes,className,disableTypography,id,key,style,attribute,children) ::= <<<DialogTitle~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(disableTypography)~
 	disableTypography~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -895,15 +932,16 @@ Divider() ::= <<Divider
 
 DividerImport() ::= <<import Divider from '@material-ui/core/Divider'; >>
 
-DividerElement(absolute,classes,className,component,flexItem,id,light,orientation,style,variant,attribute) ::= <<<Divider~if(absolute)~
+DividerElement(absolute,classes,className,component,flexItem,id,key,light,orientation,style,variant,attribute) ::= <<<Divider~if(absolute)~
 	absolute~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(component)~
 	component=~component~~endif~~if(flexItem)~
 	flexItem~endif~~if(id)~
-	id="~id~"~endif~~if(light)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(light)~
 	light~endif~~if(orientation)~
-	orientation="~orientation~"~endif~~if(style)~
+	orientation=~orientation~~endif~~if(style)~
 	style=~style~~endif~~if(variant)~
 	variant="~variant~"~endif~~attribute:{it|
 	
@@ -917,12 +955,13 @@ Drawer() ::= <<Drawer
 
 DrawerImport() ::= <<import Drawer from '@material-ui/core/Drawer'; >>
 
-DrawerElement(anchor,classes,className,elevation,id,ModalProps,onClose,open,PaperProps,SlideProps,style,transitionDuration,variant,attribute,children) ::= <<<Drawer~if(anchor)~
-	anchor="~anchor~"~endif~~if(classes)~
+DrawerElement(anchor,classes,className,elevation,id,key,ModalProps,onClose,open,PaperProps,SlideProps,style,transitionDuration,variant,attribute,children) ::= <<<Drawer~if(anchor)~
+	anchor=~anchor~~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(elevation)~
 	elevation=~elevation~~endif~~if(id)~
-	id="~id~"~endif~~if(ModalProps)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(ModalProps)~
 	ModalProps=~ModalProps~~endif~~if(onClose)~
 	onClose=~onClose~~endif~~if(open)~
 	open~endif~~if(PaperProps)~
@@ -944,13 +983,14 @@ ExpansionPanel() ::= <<ExpansionPanel
 
 ExpansionPanelImport() ::= <<import ExpansionPanel from '@material-ui/core/ExpansionPanel'; >>
 
-ExpansionPanelElement(classes,className,defaultExpanded,disabled,expanded,id,onChange,square,style,TransitionComponent,TransitionProps,attribute,children) ::= <<<ExpansionPanel~if(classes)~
+ExpansionPanelElement(classes,className,defaultExpanded,disabled,expanded,id,key,onChange,square,style,TransitionComponent,TransitionProps,attribute,children) ::= <<<ExpansionPanel~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(defaultExpanded)~
 	defaultExpanded~endif~~if(disabled)~
 	disabled~endif~~if(expanded)~
 	expanded~endif~~if(id)~
-	id="~id~"~endif~~if(onChange)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(onChange)~
 	onChange=~onChange~~endif~~if(square)~
 	square~endif~~if(style)~
 	style=~style~~endif~~if(TransitionComponent)~
@@ -969,11 +1009,12 @@ ExpansionPanelActions() ::= <<ExpansionPanelActions
 
 ExpansionPanelActionsImport() ::= <<import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions'; >>
 
-ExpansionPanelActionsElement(classes,className,disableSpacing,id,style,attribute,children) ::= <<<ExpansionPanelActions~if(classes)~
+ExpansionPanelActionsElement(classes,className,disableSpacing,id,key,style,attribute,children) ::= <<<ExpansionPanelActions~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(disableSpacing)~
 	disableSpacing~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -988,10 +1029,11 @@ ExpansionPanelDetails() ::= <<ExpansionPanelDetails
 
 ExpansionPanelDetailsImport() ::= <<import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'; >>
 
-ExpansionPanelDetailsElement(classes,className,id,style,attribute,children) ::= <<<ExpansionPanelDetails~if(classes)~
+ExpansionPanelDetailsElement(classes,className,id,key,style,attribute,children) ::= <<<ExpansionPanelDetails~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -1006,12 +1048,13 @@ ExpansionPanelSummary() ::= <<ExpansionPanelSummary
 
 ExpansionPanelSummaryImport() ::= <<import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'; >>
 
-ExpansionPanelSummaryElement(classes,className,expandIcon,IconButtonProps,id,onFocusVisible,style,attribute,children) ::= <<<ExpansionPanelSummary~if(classes)~
+ExpansionPanelSummaryElement(classes,className,expandIcon,IconButtonProps,id,key,onFocusVisible,style,attribute,children) ::= <<<ExpansionPanelSummary~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(expandIcon)~
 	expandIcon=~expandIcon~~endif~~if(IconButtonProps)~
 	IconButtonProps=~IconButtonProps~~endif~~if(id)~
-	id="~id~"~endif~~if(onFocusVisible)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(onFocusVisible)~
 	onFocusVisible=~onFocusVisible~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
@@ -1027,7 +1070,7 @@ Fab() ::= <<Fab
 
 FabImport() ::= <<import Fab from '@material-ui/core/Fab'; >>
 
-FabElement(classes,className,color,component,disabled,disableFocusRipple,disableRipple,href,id,size,style,variant,attribute,children) ::= <<<Fab~if(classes)~
+FabElement(classes,className,color,component,disabled,disableFocusRipple,disableRipple,href,id,key,size,style,variant,attribute,children) ::= <<<Fab~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(color)~
 	color="~color~"~endif~~if(component)~
@@ -1036,8 +1079,9 @@ FabElement(classes,className,color,component,disabled,disableFocusRipple,disable
 	disableFocusRipple~endif~~if(disableRipple)~
 	disableRipple~endif~~if(href)~
 	href="~href~"~endif~~if(id)~
-	id="~id~"~endif~~if(size)~
-	size="~size~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(size)~
+	size=~size~~endif~~if(style)~
 	style=~style~~endif~~if(variant)~
 	variant="~variant~"~endif~~attribute:{it|
 	
@@ -1053,11 +1097,12 @@ Fade() ::= <<Fade
 
 FadeImport() ::= <<import Fade from '@material-ui/core/Fade'; >>
 
-FadeElement(className,disableStrictModeCompat,id,in,style,timeout,attribute,children) ::= <<<Fade~if(className)~
+FadeElement(className,disableStrictModeCompat,id,in,key,style,timeout,attribute,children) ::= <<<Fade~if(className)~
 	className=~className~~endif~~if(disableStrictModeCompat)~
 	disableStrictModeCompat~endif~~if(id)~
 	id="~id~"~endif~~if(in)~
-	in~endif~~if(style)~
+	in~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~if(timeout)~
 	timeout=~timeout~~endif~~attribute:{it|
 	
@@ -1073,7 +1118,7 @@ FilledInput() ::= <<FilledInput
 
 FilledInputImport() ::= <<import FilledInput from '@material-ui/core/FilledInput'; >>
 
-FilledInputElement(autoComplete,autoFocus,classes,className,color,defaultValue,disabled,disableUnderline,endAdornment,error,fullWidth,id,inputComponent,inputProps,inputRef,margin,multiline,name,onChange,placeholder,readOnly,required,rows,rowsMax,startAdornment,style,type,value,attribute) ::= <<<FilledInput~if(autoComplete)~
+FilledInputElement(autoComplete,autoFocus,classes,className,color,defaultValue,disabled,disableUnderline,endAdornment,error,fullWidth,id,inputComponent,inputProps,inputRef,key,margin,multiline,name,onChange,placeholder,readOnly,required,rows,rowsMax,startAdornment,style,type,value,attribute) ::= <<<FilledInput~if(autoComplete)~
 	autoComplete="~autoComplete~"~endif~~if(autoFocus)~
 	autoFocus~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
@@ -1088,7 +1133,8 @@ FilledInputElement(autoComplete,autoFocus,classes,className,color,defaultValue,d
 	id="~id~"~endif~~if(inputComponent)~
 	inputComponent=~inputComponent~~endif~~if(inputProps)~
 	inputProps=~inputProps~~endif~~if(inputRef)~
-	inputRef=~inputRef~~endif~~if(margin)~
+	inputRef=~inputRef~~endif~~if(key)~
+	key=~key~~endif~~if(margin)~
 	margin="~margin~"~endif~~if(multiline)~
 	multiline~endif~~if(name)~
 	name="~name~"~endif~~if(onChange)~
@@ -1113,7 +1159,7 @@ FormControl() ::= <<FormControl
 
 FormControlImport() ::= <<import FormControl from '@material-ui/core/FormControl'; >>
 
-FormControlElement(classes,className,color,component,disabled,error,focused,fullWidth,hiddenLabel,id,margin,required,size,style,variant,attribute,children) ::= <<<FormControl~if(classes)~
+FormControlElement(classes,className,color,component,disabled,error,focused,fullWidth,hiddenLabel,id,key,margin,required,size,style,variant,attribute,children) ::= <<<FormControl~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(color)~
 	color="~color~"~endif~~if(component)~
@@ -1123,10 +1169,11 @@ FormControlElement(classes,className,color,component,disabled,error,focused,full
 	focused~endif~~if(fullWidth)~
 	fullWidth~endif~~if(hiddenLabel)~
 	hiddenLabel~endif~~if(id)~
-	id="~id~"~endif~~if(margin)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(margin)~
 	margin="~margin~"~endif~~if(required)~
 	required~endif~~if(size)~
-	size="~size~"~endif~~if(style)~
+	size=~size~~endif~~if(style)~
 	style=~style~~endif~~if(variant)~
 	variant="~variant~"~endif~~attribute:{it|
 	
@@ -1142,16 +1189,17 @@ FormControlLabel() ::= <<FormControlLabel
 
 FormControlLabelImport() ::= <<import FormControlLabel from '@material-ui/core/FormControlLabel'; >>
 
-FormControlLabelElement(checked,classes,className,control,disabled,id,inputRef,label,labelPlacement,onChange,style,value,attribute) ::= <<<FormControlLabel~if(checked)~
+FormControlLabelElement(checked,classes,className,control,disabled,id,inputRef,key,label,labelPlacement,onChange,style,value,attribute) ::= <<<FormControlLabel~if(checked)~
 	checked~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~
 	control=~control~~if(disabled)~
 	disabled~endif~~if(id)~
 	id="~id~"~endif~~if(inputRef)~
-	inputRef=~inputRef~~endif~~if(label)~
+	inputRef=~inputRef~~endif~~if(key)~
+	key=~key~~endif~~if(label)~
 	label=~label~~endif~~if(labelPlacement)~
-	labelPlacement="~labelPlacement~"~endif~~if(onChange)~
+	labelPlacement=~labelPlacement~~endif~~if(onChange)~
 	onChange=~onChange~~endif~~if(style)~
 	style=~style~~endif~~if(value)~
 	value=~value~~endif~~attribute:{it|
@@ -1166,10 +1214,11 @@ FormGroup() ::= <<FormGroup
 
 FormGroupImport() ::= <<import FormGroup from '@material-ui/core/FormGroup'; >>
 
-FormGroupElement(classes,className,id,row,style,attribute,children) ::= <<<FormGroup~if(classes)~
+FormGroupElement(classes,className,id,key,row,style,attribute,children) ::= <<<FormGroup~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(row)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(row)~
 	row~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
@@ -1185,7 +1234,7 @@ FormHelperText() ::= <<FormHelperText
 
 FormHelperTextImport() ::= <<import FormHelperText from '@material-ui/core/FormHelperText'; >>
 
-FormHelperTextElement(classes,className,component,disabled,error,filled,focused,id,margin,required,style,variant,attribute,children) ::= <<<FormHelperText~if(classes)~
+FormHelperTextElement(classes,className,component,disabled,error,filled,focused,id,key,margin,required,style,variant,attribute,children) ::= <<<FormHelperText~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(component)~
 	component=~component~~endif~~if(disabled)~
@@ -1193,7 +1242,8 @@ FormHelperTextElement(classes,className,component,disabled,error,filled,focused,
 	error~endif~~if(filled)~
 	filled~endif~~if(focused)~
 	focused~endif~~if(id)~
-	id="~id~"~endif~~if(margin)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(margin)~
 	margin="~margin~"~endif~~if(required)~
 	required~endif~~if(style)~
 	style=~style~~endif~~if(variant)~
@@ -1211,7 +1261,7 @@ FormLabel() ::= <<FormLabel
 
 FormLabelImport() ::= <<import FormLabel from '@material-ui/core/FormLabel'; >>
 
-FormLabelElement(classes,className,color,component,disabled,error,filled,focused,id,required,style,attribute,children) ::= <<<FormLabel~if(classes)~
+FormLabelElement(classes,className,color,component,disabled,error,filled,focused,id,key,required,style,attribute,children) ::= <<<FormLabel~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(color)~
 	color="~color~"~endif~~if(component)~
@@ -1220,7 +1270,8 @@ FormLabelElement(classes,className,color,component,disabled,error,filled,focused
 	error~endif~~if(filled)~
 	filled~endif~~if(focused)~
 	focused~endif~~if(id)~
-	id="~id~"~endif~~if(required)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(required)~
 	required~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
@@ -1236,25 +1287,26 @@ Grid() ::= <<Grid
 
 GridImport() ::= <<import Grid from '@material-ui/core/Grid'; >>
 
-GridElement(alignContent,alignItems,classes,className,component,container,direction,id,item,justify,lg,md,sm,spacing,style,wrap,xl,xs,zeroMinWidth,attribute,children) ::= <<<Grid~if(alignContent)~
-	alignContent="~alignContent~"~endif~~if(alignItems)~
-	alignItems="~alignItems~"~endif~~if(classes)~
+GridElement(alignContent,alignItems,classes,className,component,container,direction,id,item,justify,key,lg,md,sm,spacing,style,wrap,xl,xs,zeroMinWidth,attribute,children) ::= <<<Grid~if(alignContent)~
+	alignContent=~alignContent~~endif~~if(alignItems)~
+	alignItems=~alignItems~~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(component)~
 	component=~component~~endif~~if(container)~
 	container~endif~~if(direction)~
-	direction="~direction~"~endif~~if(id)~
+	direction=~direction~~endif~~if(id)~
 	id="~id~"~endif~~if(item)~
 	item~endif~~if(justify)~
-	justify="~justify~"~endif~~if(lg)~
-	lg="~lg~"~endif~~if(md)~
-	md="~md~"~endif~~if(sm)~
-	sm="~sm~"~endif~~if(spacing)~
-	spacing="~spacing~"~endif~~if(style)~
+	justify="~justify~"~endif~~if(key)~
+	key=~key~~endif~~if(lg)~
+	lg=~lg~~endif~~if(md)~
+	md=~md~~endif~~if(sm)~
+	sm=~sm~~endif~~if(spacing)~
+	spacing=~spacing~~endif~~if(style)~
 	style=~style~~endif~~if(wrap)~
-	wrap="~wrap~"~endif~~if(xl)~
-	xl="~xl~"~endif~~if(xs)~
-	xs="~xs~"~endif~~if(zeroMinWidth)~
+	wrap=~wrap~~endif~~if(xl)~
+	xl=~xl~~endif~~if(xs)~
+	xs=~xs~~endif~~if(zeroMinWidth)~
 	zeroMinWidth~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -1269,13 +1321,14 @@ GridList() ::= <<GridList
 
 GridListImport() ::= <<import GridList from '@material-ui/core/GridList'; >>
 
-GridListElement(cellHeight,classes,className,cols,component,id,spacing,style,attribute,children) ::= <<<GridList~if(cellHeight)~
-	cellHeight="~cellHeight~"~endif~~if(classes)~
+GridListElement(cellHeight,classes,className,cols,component,id,key,spacing,style,attribute,children) ::= <<<GridList~if(cellHeight)~
+	cellHeight=~cellHeight~~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(cols)~
 	cols=~cols~~endif~~if(component)~
 	component=~component~~endif~~if(id)~
-	id="~id~"~endif~~if(spacing)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(spacing)~
 	spacing=~spacing~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
@@ -1291,12 +1344,13 @@ GridListTile() ::= <<GridListTile
 
 GridListTileImport() ::= <<import GridListTile from '@material-ui/core/GridListTile'; >>
 
-GridListTileElement(classes,className,cols,component,id,rows,style,attribute,children) ::= <<<GridListTile~if(classes)~
+GridListTileElement(classes,className,cols,component,id,key,rows,style,attribute,children) ::= <<<GridListTile~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(cols)~
 	cols=~cols~~endif~~if(component)~
 	component=~component~~endif~~if(id)~
-	id="~id~"~endif~~if(rows)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(rows)~
 	rows=~rows~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
@@ -1312,16 +1366,17 @@ GridListTileBar() ::= <<GridListTileBar
 
 GridListTileBarImport() ::= <<import GridListTileBar from '@material-ui/core/GridListTileBar'; >>
 
-GridListTileBarElement(actionIcon,actionPosition,classes,className,id,style,subtitle,title,titlePosition,attribute) ::= <<<GridListTileBar~if(actionIcon)~
+GridListTileBarElement(actionIcon,actionPosition,classes,className,id,key,style,subtitle,title,titlePosition,attribute) ::= <<<GridListTileBar~if(actionIcon)~
 	actionIcon=~actionIcon~~endif~~if(actionPosition)~
-	actionPosition="~actionPosition~"~endif~~if(classes)~
+	actionPosition=~actionPosition~~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~if(subtitle)~
 	subtitle=~subtitle~~endif~~if(title)~
 	title=~title~~endif~~if(titlePosition)~
-	titlePosition="~titlePosition~"~endif~~attribute:{it|
+	titlePosition=~titlePosition~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~ />  >>
 
@@ -1333,13 +1388,14 @@ Grow() ::= <<Grow
 
 GrowImport() ::= <<import Grow from '@material-ui/core/Grow'; >>
 
-GrowElement(className,disableStrictModeCompat,id,in,style,timeout,attribute,children) ::= <<<Grow~if(className)~
+GrowElement(className,disableStrictModeCompat,id,in,key,style,timeout,attribute,children) ::= <<<Grow~if(className)~
 	className=~className~~endif~~if(disableStrictModeCompat)~
 	disableStrictModeCompat~endif~~if(id)~
 	id="~id~"~endif~~if(in)~
-	in~endif~~if(style)~
+	in~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~if(timeout)~
-	timeout="~timeout~"~endif~~attribute:{it|
+	timeout=~timeout~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
 	~children:{it|~it~};separator="\n"~
@@ -1353,16 +1409,17 @@ Hidden() ::= <<Hidden
 
 HiddenImport() ::= <<import Hidden from '@material-ui/core/Hidden'; >>
 
-HiddenElement(className,id,implementation,initialWidth,lgDown,lgUp,mdDown,mdUp,only,smDown,smUp,style,xlDown,xlUp,xsDown,xsUp,attribute,children) ::= <<<Hidden~if(className)~
+HiddenElement(className,id,implementation,initialWidth,key,lgDown,lgUp,mdDown,mdUp,only,smDown,smUp,style,xlDown,xlUp,xsDown,xsUp,attribute,children) ::= <<<Hidden~if(className)~
 	className=~className~~endif~~if(id)~
 	id="~id~"~endif~~if(implementation)~
-	implementation="~implementation~"~endif~~if(initialWidth)~
-	initialWidth="~initialWidth~"~endif~~if(lgDown)~
+	implementation=~implementation~~endif~~if(initialWidth)~
+	initialWidth=~initialWidth~~endif~~if(key)~
+	key=~key~~endif~~if(lgDown)~
 	lgDown~endif~~if(lgUp)~
 	lgUp~endif~~if(mdDown)~
 	mdDown~endif~~if(mdUp)~
 	mdUp~endif~~if(only)~
-	only="~only~"~endif~~if(smDown)~
+	only=~only~~endif~~if(smDown)~
 	smDown~endif~~if(smUp)~
 	smUp~endif~~if(style)~
 	style=~style~~endif~~if(xlDown)~
@@ -1383,13 +1440,14 @@ Icon() ::= <<Icon
 
 IconImport() ::= <<import Icon from '@material-ui/core/Icon'; >>
 
-IconElement(classes,className,color,component,fontSize,id,style,attribute,children) ::= <<<Icon~if(classes)~
+IconElement(classes,className,color,component,fontSize,id,key,style,attribute,children) ::= <<<Icon~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(color)~
 	color="~color~"~endif~~if(component)~
 	component=~component~~endif~~if(fontSize)~
-	fontSize="~fontSize~"~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	fontSize=~fontSize~~endif~~if(id)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -1404,7 +1462,7 @@ IconButton() ::= <<IconButton
 
 IconButtonImport() ::= <<import IconButton from '@material-ui/core/IconButton'; >>
 
-IconButtonElement(classes,className,color,disabled,disableFocusRipple,disableRipple,edge,id,onClick,size,style,attribute,children) ::= <<<IconButton~if(classes)~
+IconButtonElement(classes,className,color,disabled,disableFocusRipple,disableRipple,edge,id,key,onClick,size,style,attribute,children) ::= <<<IconButton~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(color)~
 	color="~color~"~endif~~if(disabled)~
@@ -1412,9 +1470,10 @@ IconButtonElement(classes,className,color,disabled,disableFocusRipple,disableRip
 	disableFocusRipple~endif~~if(disableRipple)~
 	disableRipple~endif~~if(edge)~
 	edge="~edge~"~endif~~if(id)~
-	id="~id~"~endif~~if(onClick)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(onClick)~
 	onClick=~onClick~~endif~~if(size)~
-	size="~size~"~endif~~if(style)~
+	size=~size~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -1429,7 +1488,7 @@ Input() ::= <<Input
 
 InputImport() ::= <<import Input from '@material-ui/core/Input'; >>
 
-InputElement(autoComplete,autoFocus,classes,className,color,defaultValue,disabled,disableUnderline,endAdornment,error,fullWidth,id,inputComponent,inputProps,inputRef,margin,multiline,name,onChange,placeholder,readOnly,required,rows,rowsMax,startAdornment,style,type,value,attribute) ::= <<<Input~if(autoComplete)~
+InputElement(autoComplete,autoFocus,classes,className,color,defaultValue,disabled,disableUnderline,endAdornment,error,fullWidth,id,inputComponent,inputProps,inputRef,key,margin,multiline,name,onChange,placeholder,readOnly,required,rows,rowsMax,startAdornment,style,type,value,attribute) ::= <<<Input~if(autoComplete)~
 	autoComplete="~autoComplete~"~endif~~if(autoFocus)~
 	autoFocus~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
@@ -1444,7 +1503,8 @@ InputElement(autoComplete,autoFocus,classes,className,color,defaultValue,disable
 	id="~id~"~endif~~if(inputComponent)~
 	inputComponent=~inputComponent~~endif~~if(inputProps)~
 	inputProps=~inputProps~~endif~~if(inputRef)~
-	inputRef=~inputRef~~endif~~if(margin)~
+	inputRef=~inputRef~~endif~~if(key)~
+	key=~key~~endif~~if(margin)~
 	margin="~margin~"~endif~~if(multiline)~
 	multiline~endif~~if(name)~
 	name="~name~"~endif~~if(onChange)~
@@ -1469,13 +1529,14 @@ InputAdornment() ::= <<InputAdornment
 
 InputAdornmentImport() ::= <<import InputAdornment from '@material-ui/core/InputAdornment'; >>
 
-InputAdornmentElement(classes,className,component,disablePointerEvents,disableTypography,id,position,style,variant,attribute,children) ::= <<<InputAdornment~if(classes)~
+InputAdornmentElement(classes,className,component,disablePointerEvents,disableTypography,id,key,position,style,variant,attribute,children) ::= <<<InputAdornment~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(component)~
 	component=~component~~endif~~if(disablePointerEvents)~
 	disablePointerEvents~endif~~if(disableTypography)~
 	disableTypography~endif~~if(id)~
-	id="~id~"~endif~~if(position)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(position)~
 	position="~position~"~endif~~if(style)~
 	style=~style~~endif~~if(variant)~
 	variant="~variant~"~endif~~attribute:{it|
@@ -1492,7 +1553,7 @@ InputBase() ::= <<InputBase
 
 InputBaseImport() ::= <<import InputBase from '@material-ui/core/InputBase'; >>
 
-InputBaseElement(autoComplete,autoFocus,classes,className,color,defaultValue,disabled,endAdornment,error,fullWidth,id,inputComponent,inputProps,inputRef,margin,multiline,name,onBlur,onChange,placeholder,readOnly,required,rows,rowsMax,rowsMin,startAdornment,style,type,value,attribute) ::= <<<InputBase~if(autoComplete)~
+InputBaseElement(autoComplete,autoFocus,classes,className,color,defaultValue,disabled,endAdornment,error,fullWidth,id,inputComponent,inputProps,inputRef,key,margin,multiline,name,onBlur,onChange,placeholder,readOnly,required,rows,rowsMax,rowsMin,startAdornment,style,type,value,attribute) ::= <<<InputBase~if(autoComplete)~
 	autoComplete="~autoComplete~"~endif~~if(autoFocus)~
 	autoFocus~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
@@ -1506,7 +1567,8 @@ InputBaseElement(autoComplete,autoFocus,classes,className,color,defaultValue,dis
 	id="~id~"~endif~~if(inputComponent)~
 	inputComponent=~inputComponent~~endif~~if(inputProps)~
 	inputProps=~inputProps~~endif~~if(inputRef)~
-	inputRef=~inputRef~~endif~~if(margin)~
+	inputRef=~inputRef~~endif~~if(key)~
+	key=~key~~endif~~if(margin)~
 	margin="~margin~"~endif~~if(multiline)~
 	multiline~endif~~if(name)~
 	name="~name~"~endif~~if(onBlur)~
@@ -1533,7 +1595,7 @@ InputLabel() ::= <<InputLabel
 
 InputLabelImport() ::= <<import InputLabel from '@material-ui/core/InputLabel'; >>
 
-InputLabelElement(classes,className,color,disableAnimation,disabled,error,focused,id,margin,required,shrink,style,variant,attribute,children) ::= <<<InputLabel~if(classes)~
+InputLabelElement(classes,className,color,disableAnimation,disabled,error,focused,id,key,margin,required,shrink,style,variant,attribute,children) ::= <<<InputLabel~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(color)~
 	color="~color~"~endif~~if(disableAnimation)~
@@ -1541,7 +1603,8 @@ InputLabelElement(classes,className,color,disableAnimation,disabled,error,focuse
 	disabled~endif~~if(error)~
 	error~endif~~if(focused)~
 	focused~endif~~if(id)~
-	id="~id~"~endif~~if(margin)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(margin)~
 	margin="~margin~"~endif~~if(required)~
 	required~endif~~if(shrink)~
 	shrink~endif~~if(style)~
@@ -1560,11 +1623,12 @@ LinearProgress() ::= <<LinearProgress
 
 LinearProgressImport() ::= <<import LinearProgress from '@material-ui/core/LinearProgress'; >>
 
-LinearProgressElement(classes,className,color,id,style,value,valueBuffer,variant,attribute) ::= <<<LinearProgress~if(classes)~
+LinearProgressElement(classes,className,color,id,key,style,value,valueBuffer,variant,attribute) ::= <<<LinearProgress~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(color)~
 	color="~color~"~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~if(value)~
 	value=~value~~endif~~if(valueBuffer)~
 	valueBuffer=~valueBuffer~~endif~~if(variant)~
@@ -1580,15 +1644,16 @@ Link() ::= <<Link
 
 LinkImport() ::= <<import Link from '@material-ui/core/Link'; >>
 
-LinkElement(classes,className,color,component,id,style,TypographyClasses,underline,variant,attribute,children) ::= <<<Link~if(classes)~
+LinkElement(classes,className,color,component,id,key,style,TypographyClasses,underline,variant,attribute,children) ::= <<<Link~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(color)~
 	color="~color~"~endif~~if(component)~
 	component=~component~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~if(TypographyClasses)~
 	TypographyClasses=~TypographyClasses~~endif~~if(underline)~
-	underline="~underline~"~endif~~if(variant)~
+	underline=~underline~~endif~~if(variant)~
 	variant="~variant~"~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -1603,13 +1668,14 @@ List() ::= <<List
 
 ListImport() ::= <<import List from '@material-ui/core/List'; >>
 
-ListElement(classes,className,component,dense,disablePadding,id,style,subheader,attribute,children) ::= <<<List~if(classes)~
+ListElement(classes,className,component,dense,disablePadding,id,key,style,subheader,attribute,children) ::= <<<List~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(component)~
 	component=~component~~endif~~if(dense)~
 	dense~endif~~if(disablePadding)~
 	disablePadding~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~if(subheader)~
 	subheader=~subheader~~endif~~attribute:{it|
 	
@@ -1626,7 +1692,7 @@ ListItem() ::= <<ListItem
 ListItemImport() ::= <<import ListItem from '@material-ui/core/ListItem'; >>
 
 ListItemElement(alignItems,autoFocus,button,classes,className,component,ContainerComponent,ContainerProps,dense,disabled,disableGutters,divider,id,key,selected,style,attribute,children) ::= <<<ListItem~if(alignItems)~
-	alignItems="~alignItems~"~endif~~if(autoFocus)~
+	alignItems=~alignItems~~endif~~if(autoFocus)~
 	autoFocus~endif~~if(button)~
 	button~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
@@ -1737,7 +1803,7 @@ ListSubheader() ::= <<ListSubheader
 
 ListSubheaderImport() ::= <<import ListSubheader from '@material-ui/core/ListSubheader'; >>
 
-ListSubheaderElement(classes,className,color,component,disableGutters,disableSticky,id,inset,style,attribute,children) ::= <<<ListSubheader~if(classes)~
+ListSubheaderElement(classes,className,color,component,disableGutters,disableSticky,id,inset,key,style,attribute,children) ::= <<<ListSubheader~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(color)~
 	color="~color~"~endif~~if(component)~
@@ -1745,7 +1811,8 @@ ListSubheaderElement(classes,className,color,component,disableGutters,disableSti
 	disableGutters~endif~~if(disableSticky)~
 	disableSticky~endif~~if(id)~
 	id="~id~"~endif~~if(inset)~
-	inset~endif~~if(style)~
+	inset~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -1760,9 +1827,10 @@ LockOutlinedIcon() ::= <<LockOutlinedIcon
 
 LockOutlinedIconImport() ::= <<import LockOutlinedIcon from '@material-ui/icons/LockOutlined'; >>
 
-LockOutlinedIconElement(className,id,style,attribute) ::= <<<LockOutlinedIcon~if(className)~
+LockOutlinedIconElement(className,id,key,style,attribute) ::= <<<LockOutlinedIcon~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~ />  >>
@@ -1806,7 +1874,7 @@ export default function ~name~(props) {
 		);
 	}
 ~else~
-	console.info("render ~name~");
+	console.info("render ~name~ " + props);
 	return (
 		~renderElement~
 	);
@@ -1825,14 +1893,15 @@ Menu() ::= <<Menu
 
 MenuImport() ::= <<import Menu from '@material-ui/core/Menu'; >>
 
-MenuElement(anchorEl,autoFocus,classes,className,disableAutoFocusItem,id,keepMounted,MenuListProps,onClose,onEnter,onEntered,onEntering,onExit,onExited,onExiting,open,PopoverClasses,style,transitionDuration,variant,attribute,children) ::= <<<Menu~if(anchorEl)~
+MenuElement(anchorEl,autoFocus,classes,className,disableAutoFocusItem,id,keepMounted,key,MenuListProps,onClose,onEnter,onEntered,onEntering,onExit,onExited,onExiting,open,PopoverClasses,style,transitionDuration,variant,attribute,children) ::= <<<Menu~if(anchorEl)~
 	anchorEl=~anchorEl~~endif~~if(autoFocus)~
 	autoFocus~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(disableAutoFocusItem)~
 	disableAutoFocusItem~endif~~if(id)~
 	id="~id~"~endif~~if(keepMounted)~
-	keepMounted~endif~~if(MenuListProps)~
+	keepMounted~endif~~if(key)~
+	key=~key~~endif~~if(MenuListProps)~
 	MenuListProps=~MenuListProps~~endif~~if(onClose)~
 	onClose=~onClose~~endif~~if(onEnter)~
 	onEnter=~onEnter~~endif~~if(onEntered)~
@@ -1844,7 +1913,7 @@ MenuElement(anchorEl,autoFocus,classes,className,disableAutoFocusItem,id,keepMou
 	open=~open~~endif~~if(PopoverClasses)~
 	PopoverClasses=~PopoverClasses~~endif~~if(style)~
 	style=~style~~endif~~if(transitionDuration)~
-	transitionDuration="~transitionDuration~"~endif~~if(variant)~
+	transitionDuration=~transitionDuration~~endif~~if(variant)~
 	variant="~variant~"~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -1859,9 +1928,10 @@ MenuIcon() ::= <<MenuIcon
 
 MenuIconImport() ::= <<import MenuIcon from '@material-ui/icons/Menu'; >>
 
-MenuIconElement(className,id,style,attribute) ::= <<<MenuIcon~if(className)~
+MenuIconElement(className,id,key,style,attribute) ::= <<<MenuIcon~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~ />  >>
@@ -1898,13 +1968,14 @@ MenuList() ::= <<MenuList
 
 MenuListImport() ::= <<import MenuList from '@material-ui/core/MenuList'; >>
 
-MenuListElement(autoFocus,autoFocusItem,className,disabledItemsFocusable,disableListWrap,id,style,variant,attribute,children) ::= <<<MenuList~if(autoFocus)~
+MenuListElement(autoFocus,autoFocusItem,className,disabledItemsFocusable,disableListWrap,id,key,style,variant,attribute,children) ::= <<<MenuList~if(autoFocus)~
 	autoFocus~endif~~if(autoFocusItem)~
 	autoFocusItem~endif~~if(className)~
 	className=~className~~endif~~if(disabledItemsFocusable)~
 	disabledItemsFocusable~endif~~if(disableListWrap)~
 	disableListWrap~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~if(variant)~
 	variant="~variant~"~endif~~attribute:{it|
 	
@@ -1920,12 +1991,13 @@ MobileStepper() ::= <<MobileStepper
 
 MobileStepperImport() ::= <<import MobileStepper from '@material-ui/core/MobileStepper'; >>
 
-MobileStepperElement(activeStep,backButton,classes,className,id,LinearProgressProps,nextButton,position,steps,style,variant,attribute) ::= <<<MobileStepper~if(activeStep)~
+MobileStepperElement(activeStep,backButton,classes,className,id,key,LinearProgressProps,nextButton,position,steps,style,variant,attribute) ::= <<<MobileStepper~if(activeStep)~
 	activeStep=~activeStep~~endif~~if(backButton)~
 	backButton=~backButton~~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(LinearProgressProps)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(LinearProgressProps)~
 	LinearProgressProps=~LinearProgressProps~~endif~~if(nextButton)~
 	nextButton=~nextButton~~endif~~if(position)~
 	position="~position~"~endif~
@@ -1943,7 +2015,7 @@ Modal() ::= <<Modal
 
 ModalImport() ::= <<import Modal from '@material-ui/core/Modal'; >>
 
-ModalElement(BackdropComponent,BackdropProps,className,closeAfterTransition,container,disableAutoFocus,disableBackdropClick,disableEnforceFocus,disableEscapeKeyDown,disablePortal,disableRestoreFocus,disableScrollLock,hideBackdrop,id,keepMounted,onBackdropClick,onClose,onEscapeKeyDown,onRendered,style,attribute,children) ::= <<<Modal~if(BackdropComponent)~
+ModalElement(BackdropComponent,BackdropProps,className,closeAfterTransition,container,disableAutoFocus,disableBackdropClick,disableEnforceFocus,disableEscapeKeyDown,disablePortal,disableRestoreFocus,disableScrollLock,hideBackdrop,id,keepMounted,key,onBackdropClick,onClose,onEscapeKeyDown,onRendered,style,attribute,children) ::= <<<Modal~if(BackdropComponent)~
 	BackdropComponent=~BackdropComponent~~endif~~if(BackdropProps)~
 	BackdropProps=~BackdropProps~~endif~~if(className)~
 	className=~className~~endif~~if(closeAfterTransition)~
@@ -1958,7 +2030,8 @@ ModalElement(BackdropComponent,BackdropProps,className,closeAfterTransition,cont
 	disableScrollLock~endif~~if(hideBackdrop)~
 	hideBackdrop~endif~~if(id)~
 	id="~id~"~endif~~if(keepMounted)~
-	keepMounted~endif~~if(onBackdropClick)~
+	keepMounted~endif~~if(key)~
+	key=~key~~endif~~if(onBackdropClick)~
 	onBackdropClick=~onBackdropClick~~endif~~if(onClose)~
 	onClose=~onClose~~endif~~if(onEscapeKeyDown)~
 	onEscapeKeyDown=~onEscapeKeyDown~~endif~~if(onRendered)~
@@ -1978,13 +2051,14 @@ NativeSelect() ::= <<NativeSelect
 
 NativeSelectImport() ::= <<import NativeSelect from '@material-ui/core/NativeSelect'; >>
 
-NativeSelectElement(classes,className,IconComponent,id,input,inputProps,onChange,style,value,variant,attribute,children) ::= <<<NativeSelect~if(classes)~
+NativeSelectElement(classes,className,IconComponent,id,input,inputProps,key,onChange,style,value,variant,attribute,children) ::= <<<NativeSelect~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(IconComponent)~
 	IconComponent=~IconComponent~~endif~~if(id)~
 	id="~id~"~endif~~if(input)~
 	input=~input~~endif~~if(inputProps)~
-	inputProps=~inputProps~~endif~~if(onChange)~
+	inputProps=~inputProps~~endif~~if(key)~
+	key=~key~~endif~~if(onChange)~
 	onChange=~onChange~~endif~~if(style)~
 	style=~style~~endif~~if(value)~
 	value=~value~~endif~~if(variant)~
@@ -2002,11 +2076,12 @@ NoSsr() ::= <<NoSsr
 
 NoSsrImport() ::= <<import NoSsr from '@material-ui/core/NoSsr'; >>
 
-NoSsrElement(className,defer,fallback,id,style,attribute,children) ::= <<<NoSsr~if(className)~
+NoSsrElement(className,defer,fallback,id,key,style,attribute,children) ::= <<<NoSsr~if(className)~
 	className=~className~~endif~~if(defer)~
 	defer~endif~~if(fallback)~
 	fallback=~fallback~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -2021,7 +2096,7 @@ OutlinedInput() ::= <<OutlinedInput
 
 OutlinedInputImport() ::= <<import OutlinedInput from '@material-ui/core/OutlinedInput'; >>
 
-OutlinedInputElement(autoComplete,autoFocus,classes,className,color,defaultValue,disabled,endAdornment,error,fullWidth,id,inputComponent,inputProps,inputRef,label,labelWidth,margin,multiline,name,notched,onChange,placeholder,readOnly,required,rows,rowsMax,startAdornment,style,type,value,attribute) ::= <<<OutlinedInput~if(autoComplete)~
+OutlinedInputElement(autoComplete,autoFocus,classes,className,color,defaultValue,disabled,endAdornment,error,fullWidth,id,inputComponent,inputProps,inputRef,key,label,labelWidth,margin,multiline,name,notched,onChange,placeholder,readOnly,required,rows,rowsMax,startAdornment,style,type,value,attribute) ::= <<<OutlinedInput~if(autoComplete)~
 	autoComplete="~autoComplete~"~endif~~if(autoFocus)~
 	autoFocus~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
@@ -2035,7 +2110,8 @@ OutlinedInputElement(autoComplete,autoFocus,classes,className,color,defaultValue
 	id="~id~"~endif~~if(inputComponent)~
 	inputComponent=~inputComponent~~endif~~if(inputProps)~
 	inputProps=~inputProps~~endif~~if(inputRef)~
-	inputRef=~inputRef~~endif~~if(label)~
+	inputRef=~inputRef~~endif~~if(key)~
+	key=~key~~endif~~if(label)~
 	label=~label~~endif~~if(labelWidth)~
 	labelWidth=~labelWidth~~endif~~if(margin)~
 	margin="~margin~"~endif~~if(multiline)~
@@ -2063,7 +2139,7 @@ Pagination() ::= <<Pagination
 
 PaginationImport() ::= <<import Pagination from '@material-ui/lab/Pagination'; >>
 
-PaginationElement(boundaryCount,classes,className,color,count,defaultPage,disabled,getItemAriaLabel,hideNextButton,hidePrevButton,id,onChange,page,renderItem,shape,showFirstButton,showLastButton,siblingCount,size,style,variant,attribute) ::= <<<Pagination~if(boundaryCount)~
+PaginationElement(boundaryCount,classes,className,color,count,defaultPage,disabled,getItemAriaLabel,hideNextButton,hidePrevButton,id,key,onChange,page,renderItem,shape,showFirstButton,showLastButton,siblingCount,size,style,variant,attribute) ::= <<<Pagination~if(boundaryCount)~
 	boundaryCount=~boundaryCount~~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(color)~
@@ -2074,15 +2150,16 @@ PaginationElement(boundaryCount,classes,className,color,count,defaultPage,disabl
 	getItemAriaLabel=~getItemAriaLabel~~endif~~if(hideNextButton)~
 	hideNextButton~endif~~if(hidePrevButton)~
 	hidePrevButton~endif~~if(id)~
-	id="~id~"~endif~~if(onChange)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(onChange)~
 	onChange=~onChange~~endif~~if(page)~
 	page=~page~~endif~~if(renderItem)~
 	renderItem=~renderItem~~endif~~if(shape)~
-	shape="~shape~"~endif~~if(showFirstButton)~
+	shape=~shape~~endif~~if(showFirstButton)~
 	showFirstButton~endif~~if(showLastButton)~
 	showLastButton~endif~~if(siblingCount)~
 	siblingCount=~siblingCount~~endif~~if(size)~
-	size="~size~"~endif~~if(style)~
+	size=~size~~endif~~if(style)~
 	style=~style~~endif~~if(variant)~
 	variant="~variant~"~endif~~attribute:{it|
 	
@@ -2105,10 +2182,10 @@ PaginationItemElement(className,color,component,disabled,id,key,page,selected,sh
 	key=~key~~endif~~if(page)~
 	page=~page~~endif~~if(selected)~
 	selected~endif~~if(shape)~
-	shape="~shape~"~endif~~if(size)~
-	size="~size~"~endif~~if(style)~
+	shape=~shape~~endif~~if(size)~
+	size=~size~~endif~~if(style)~
 	style=~style~~endif~~if(type)~
-	type="~type~"~endif~~if(variant)~
+	type=~type~~endif~~if(variant)~
 	variant="~variant~"~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~ />  >>
@@ -2121,12 +2198,13 @@ Paper() ::= <<Paper
 
 PaperImport() ::= <<import Paper from '@material-ui/core/Paper'; >>
 
-PaperElement(classes,className,component,elevation,id,square,style,variant,attribute,children) ::= <<<Paper~if(classes)~
+PaperElement(classes,className,component,elevation,id,key,square,style,variant,attribute,children) ::= <<<Paper~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(component)~
 	component=~component~~endif~~if(elevation)~
 	elevation=~elevation~~endif~~if(id)~
-	id="~id~"~endif~~if(square)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(square)~
 	square~endif~~if(style)~
 	style=~style~~endif~~if(variant)~
 	variant="~variant~"~endif~~attribute:{it|
@@ -2143,18 +2221,19 @@ Popover() ::= <<Popover
 
 PopoverImport() ::= <<import Popover from '@material-ui/core/Popover'; >>
 
-PopoverElement(action,anchorEl,anchorOrigin,anchorPosition,anchorReference,classes,className,container,elevation,getContentAnchorEl,id,marginThreshold,onClose,onEnter,onEntered,onEntering,onExit,onExited,onExiting,PaperProps,style,transformOrigin,TransitionComponent,transitionDuration,TransitionProps,attribute,children) ::= <<<Popover~if(action)~
+PopoverElement(action,anchorEl,anchorOrigin,anchorPosition,anchorReference,classes,className,container,elevation,getContentAnchorEl,id,key,marginThreshold,onClose,onEnter,onEntered,onEntering,onExit,onExited,onExiting,PaperProps,style,transformOrigin,TransitionComponent,transitionDuration,TransitionProps,attribute,children) ::= <<<Popover~if(action)~
 	action=~action~~endif~~if(anchorEl)~
 	anchorEl=~anchorEl~~endif~~if(anchorOrigin)~
-	anchorOrigin="~anchorOrigin~"~endif~~if(anchorPosition)~
+	anchorOrigin=~anchorOrigin~~endif~~if(anchorPosition)~
 	anchorPosition=~anchorPosition~~endif~~if(anchorReference)~
-	anchorReference="~anchorReference~"~endif~~if(classes)~
+	anchorReference=~anchorReference~~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(container)~
 	container=~container~~endif~~if(elevation)~
 	elevation=~elevation~~endif~~if(getContentAnchorEl)~
 	getContentAnchorEl=~getContentAnchorEl~~endif~~if(id)~
-	id="~id~"~endif~~if(marginThreshold)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(marginThreshold)~
 	marginThreshold=~marginThreshold~~endif~~if(onClose)~
 	onClose=~onClose~~endif~~if(onEnter)~
 	onEnter=~onEnter~~endif~~if(onEntered)~
@@ -2166,9 +2245,9 @@ PopoverElement(action,anchorEl,anchorOrigin,anchorPosition,anchorReference,class
 	open~if(PaperProps)~
 	PaperProps=~PaperProps~~endif~~if(style)~
 	style=~style~~endif~~if(transformOrigin)~
-	transformOrigin="~transformOrigin~"~endif~~if(TransitionComponent)~
+	transformOrigin=~transformOrigin~~endif~~if(TransitionComponent)~
 	TransitionComponent=~TransitionComponent~~endif~~if(transitionDuration)~
-	transitionDuration="~transitionDuration~"~endif~~if(TransitionProps)~
+	transitionDuration=~transitionDuration~~endif~~if(TransitionProps)~
 	TransitionProps=~TransitionProps~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -2183,16 +2262,17 @@ Popper() ::= <<Popper
 
 PopperImport() ::= <<import Popper from '@material-ui/core/Popper'; >>
 
-PopperElement(anchorEl,className,container,disablePortal,id,keepMounted,modifiers,placement,popperOptions,popperRef,style,transition,attribute,children) ::= <<<Popper~if(anchorEl)~
+PopperElement(anchorEl,className,container,disablePortal,id,keepMounted,key,modifiers,placement,popperOptions,popperRef,style,transition,attribute,children) ::= <<<Popper~if(anchorEl)~
 	anchorEl=~anchorEl~~endif~~if(className)~
 	className=~className~~endif~~if(container)~
 	container=~container~~endif~~if(disablePortal)~
 	disablePortal~endif~~if(id)~
 	id="~id~"~endif~~if(keepMounted)~
-	keepMounted~endif~~if(modifiers)~
+	keepMounted~endif~~if(key)~
+	key=~key~~endif~~if(modifiers)~
 	modifiers=~modifiers~~endif~
 	open~if(placement)~
-	placement="~placement~"~endif~~if(popperOptions)~
+	placement=~placement~~endif~~if(popperOptions)~
 	popperOptions=~popperOptions~~endif~~if(popperRef)~
 	popperRef=~popperRef~~endif~~if(style)~
 	style=~style~~endif~~if(transition)~
@@ -2210,11 +2290,12 @@ Portal() ::= <<Portal
 
 PortalImport() ::= <<import Portal from '@material-ui/core/Portal'; >>
 
-PortalElement(className,container,disablePortal,id,onRendered,style,attribute,children) ::= <<<Portal~if(className)~
+PortalElement(className,container,disablePortal,id,key,onRendered,style,attribute,children) ::= <<<Portal~if(className)~
 	className=~className~~endif~~if(container)~
 	container=~container~~endif~~if(disablePortal)~
 	disablePortal~endif~~if(id)~
-	id="~id~"~endif~~if(onRendered)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(onRendered)~
 	onRendered=~onRendered~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
@@ -2230,7 +2311,7 @@ Radio() ::= <<Radio
 
 RadioImport() ::= <<import Radio from '@material-ui/core/Radio'; >>
 
-RadioElement(checked,checkedIcon,classes,className,color,disabled,disableRipple,icon,id,inputProps,inputRef,name,onChange,required,size,style,value,attribute) ::= <<<Radio~if(checked)~
+RadioElement(checked,checkedIcon,classes,className,color,disabled,disableRipple,icon,id,inputProps,inputRef,key,name,onChange,required,size,style,value,attribute) ::= <<<Radio~if(checked)~
 	checked~endif~~if(checkedIcon)~
 	checkedIcon=~checkedIcon~~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
@@ -2241,11 +2322,12 @@ RadioElement(checked,checkedIcon,classes,className,color,disabled,disableRipple,
 	icon=~icon~~endif~~if(id)~
 	id="~id~"~endif~~if(inputProps)~
 	inputProps=~inputProps~~endif~~if(inputRef)~
-	inputRef=~inputRef~~endif~~if(name)~
+	inputRef=~inputRef~~endif~~if(key)~
+	key=~key~~endif~~if(name)~
 	name="~name~"~endif~~if(onChange)~
 	onChange=~onChange~~endif~~if(required)~
 	required~endif~~if(size)~
-	size="~size~"~endif~~if(style)~
+	size=~size~~endif~~if(style)~
 	style=~style~~endif~~if(value)~
 	value=~value~~endif~~attribute:{it|
 	
@@ -2259,10 +2341,11 @@ RadioGroup() ::= <<RadioGroup
 
 RadioGroupImport() ::= <<import RadioGroup from '@material-ui/core/RadioGroup'; >>
 
-RadioGroupElement(className,defaultValue,id,name,onChange,style,value,attribute,children) ::= <<<RadioGroup~if(className)~
+RadioGroupElement(className,defaultValue,id,key,name,onChange,style,value,attribute,children) ::= <<<RadioGroup~if(className)~
 	className=~className~~endif~~if(defaultValue)~
 	defaultValue=~defaultValue~~endif~~if(id)~
-	id="~id~"~endif~~if(name)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(name)~
 	name="~name~"~endif~~if(onChange)~
 	onChange=~onChange~~endif~~if(style)~
 	style=~style~~endif~~if(value)~
@@ -2280,7 +2363,7 @@ Rating() ::= <<Rating
 
 RatingImport() ::= <<import Rating from '@material-ui/lab/Rating'; >>
 
-RatingElement(classes,className,defaultValue,disabled,emptyIcon,emptyLabelText,getLabelText,icon,IconContainerComponent,id,max,name,onChange,onChangeActive,precision,readOnly,size,style,value,attribute) ::= <<<Rating~if(classes)~
+RatingElement(classes,className,defaultValue,disabled,emptyIcon,emptyLabelText,getLabelText,icon,IconContainerComponent,id,key,max,name,onChange,onChangeActive,precision,readOnly,size,style,value,attribute) ::= <<<Rating~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(defaultValue)~
 	defaultValue=~defaultValue~~endif~~if(disabled)~
@@ -2290,14 +2373,15 @@ RatingElement(classes,className,defaultValue,disabled,emptyIcon,emptyLabelText,g
 	getLabelText=~getLabelText~~endif~~if(icon)~
 	icon=~icon~~endif~~if(IconContainerComponent)~
 	IconContainerComponent=~IconContainerComponent~~endif~~if(id)~
-	id="~id~"~endif~~if(max)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(max)~
 	max=~max~~endif~~if(name)~
 	name="~name~"~endif~~if(onChange)~
 	onChange=~onChange~~endif~~if(onChangeActive)~
 	onChangeActive=~onChangeActive~~endif~~if(precision)~
 	precision=~precision~~endif~~if(readOnly)~
 	readOnly~endif~~if(size)~
-	size="~size~"~endif~~if(style)~
+	size=~size~~endif~~if(style)~
 	style=~style~~endif~~if(value)~
 	value=~value~~endif~~attribute:{it|
 	
@@ -2311,9 +2395,10 @@ RootRef() ::= <<RootRef
 
 RootRefImport() ::= <<import RootRef from '@material-ui/core/RootRef'; >>
 
-RootRefElement(className,id,rootRef,style,attribute,children) ::= <<<RootRef~if(className)~
+RootRefElement(className,id,key,rootRef,style,attribute,children) ::= <<<RootRef~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~
 	rootRef=~rootRef~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
@@ -2329,10 +2414,11 @@ ScopedCssBaseline() ::= <<ScopedCssBaseline
 
 ScopedCssBaselineImport() ::= <<import ScopedCssBaseline from '@material-ui/core/ScopedCssBaseline'; >>
 
-ScopedCssBaselineElement(classes,className,id,style,attribute,children) ::= <<<ScopedCssBaseline~if(classes)~
+ScopedCssBaselineElement(classes,className,id,key,style,attribute,children) ::= <<<ScopedCssBaseline~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -2347,7 +2433,7 @@ Select() ::= <<Select
 
 SelectImport() ::= <<import Select from '@material-ui/core/Select'; >>
 
-SelectElement(autoWidth,classes,className,defaultValue,displayEmpty,IconComponent,id,input,inputProps,label,labelId,labelWidth,MenuProps,multiple,native,onChange,onClose,onOpen,open,renderValue,SelectDisplayProps,style,value,variant,attribute,children) ::= <<<Select~if(autoWidth)~
+SelectElement(autoWidth,classes,className,defaultValue,displayEmpty,IconComponent,id,input,inputProps,key,label,labelId,labelWidth,MenuProps,multiple,native,onChange,onClose,onOpen,open,renderValue,SelectDisplayProps,style,value,variant,attribute,children) ::= <<<Select~if(autoWidth)~
 	autoWidth~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(defaultValue)~
@@ -2356,7 +2442,8 @@ SelectElement(autoWidth,classes,className,defaultValue,displayEmpty,IconComponen
 	IconComponent=~IconComponent~~endif~~if(id)~
 	id="~id~"~endif~~if(input)~
 	input=~input~~endif~~if(inputProps)~
-	inputProps=~inputProps~~endif~~if(label)~
+	inputProps=~inputProps~~endif~~if(key)~
+	key=~key~~endif~~if(label)~
 	label=~label~~endif~~if(labelId)~
 	labelId="~labelId~"~endif~~if(labelWidth)~
 	labelWidth=~labelWidth~~endif~~if(MenuProps)~
@@ -2385,13 +2472,14 @@ Skeleton() ::= <<Skeleton
 
 SkeletonImport() ::= <<import Skeleton from '@material-ui/lab/Skeleton'; >>
 
-SkeletonElement(animation,classes,className,component,height,id,style,variant,width,attribute,children) ::= <<<Skeleton~if(animation)~
-	animation="~animation~"~endif~~if(classes)~
+SkeletonElement(animation,classes,className,component,height,id,key,style,variant,width,attribute,children) ::= <<<Skeleton~if(animation)~
+	animation=~animation~~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(component)~
 	component=~component~~endif~~if(height)~
 	height=~height~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~if(variant)~
 	variant="~variant~"~endif~~if(width)~
 	width=~width~~endif~~attribute:{it|
@@ -2408,11 +2496,12 @@ Slide() ::= <<Slide
 
 SlideImport() ::= <<import Slide from '@material-ui/core/Slide'; >>
 
-SlideElement(className,direction,id,in,style,timeout,attribute,children) ::= <<<Slide~if(className)~
+SlideElement(className,direction,id,in,key,style,timeout,attribute,children) ::= <<<Slide~if(className)~
 	className=~className~~endif~~if(direction)~
-	direction="~direction~"~endif~~if(id)~
+	direction=~direction~~endif~~if(id)~
 	id="~id~"~endif~~if(in)~
-	in~endif~~if(style)~
+	in~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~if(timeout)~
 	timeout=~timeout~~endif~~attribute:{it|
 	
@@ -2428,7 +2517,7 @@ Slider() ::= <<Slider
 
 SliderImport() ::= <<import Slider from '@material-ui/core/Slider'; >>
 
-SliderElement(ariaLabel,ariaLabelledby,ariaValuetext,classes,className,color,component,defaultValue,disabled,getAriaLabel,getAriaValueText,id,marks,max,min,name,onChange,onChangeCommitted,orientation,scale,step,style,ThumbComponent,track,value,ValueLabelComponent,valueLabelDisplay,valueLabelFormat,attribute) ::= <<<Slider~if(ariaLabel)~
+SliderElement(ariaLabel,ariaLabelledby,ariaValuetext,classes,className,color,component,defaultValue,disabled,getAriaLabel,getAriaValueText,id,key,marks,max,min,name,onChange,onChangeCommitted,orientation,scale,step,style,ThumbComponent,track,value,ValueLabelComponent,valueLabelDisplay,valueLabelFormat,attribute) ::= <<<Slider~if(ariaLabel)~
 	ariaLabel="~ariaLabel~"~endif~~if(ariaLabelledby)~
 	ariaLabelledby="~ariaLabelledby~"~endif~~if(ariaValuetext)~
 	ariaValuetext="~ariaValuetext~"~endif~~if(classes)~
@@ -2440,22 +2529,23 @@ SliderElement(ariaLabel,ariaLabelledby,ariaValuetext,classes,className,color,com
 	disabled~endif~~if(getAriaLabel)~
 	getAriaLabel=~getAriaLabel~~endif~~if(getAriaValueText)~
 	getAriaValueText=~getAriaValueText~~endif~~if(id)~
-	id="~id~"~endif~~if(marks)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(marks)~
 	marks=~marks~~endif~~if(max)~
 	max=~max~~endif~~if(min)~
 	min=~min~~endif~~if(name)~
 	name="~name~"~endif~~if(onChange)~
 	onChange=~onChange~~endif~~if(onChangeCommitted)~
 	onChangeCommitted=~onChangeCommitted~~endif~~if(orientation)~
-	orientation="~orientation~"~endif~~if(scale)~
+	orientation=~orientation~~endif~~if(scale)~
 	scale=~scale~~endif~~if(step)~
 	step=~step~~endif~~if(style)~
 	style=~style~~endif~~if(ThumbComponent)~
 	ThumbComponent=~ThumbComponent~~endif~~if(track)~
-	track="~track~"~endif~~if(value)~
+	track=~track~~endif~~if(value)~
 	value=~value~~endif~~if(ValueLabelComponent)~
 	ValueLabelComponent=~ValueLabelComponent~~endif~~if(valueLabelDisplay)~
-	valueLabelDisplay="~valueLabelDisplay~"~endif~~if(valueLabelFormat)~
+	valueLabelDisplay=~valueLabelDisplay~~endif~~if(valueLabelFormat)~
 	valueLabelFormat=~valueLabelFormat~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~ />  >>
@@ -2470,7 +2560,7 @@ SnackbarImport() ::= <<import Snackbar from '@material-ui/core/Snackbar'; >>
 
 SnackbarElement(action,anchorOrigin,autoHideDuration,classes,className,ClickAwayListenerProps,ContentProps,disableWindowBlurListener,id,key,message,onClose,onEnter,onEntered,onEntering,onExit,onExited,onExiting,open,resumeHideDuration,style,TransitionComponent,transitionDuration,TransitionProps,attribute,children) ::= <<<Snackbar~if(action)~
 	action=~action~~endif~~if(anchorOrigin)~
-	anchorOrigin="~anchorOrigin~"~endif~~if(autoHideDuration)~
+	anchorOrigin=~anchorOrigin~~endif~~if(autoHideDuration)~
 	autoHideDuration=~autoHideDuration~~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(ClickAwayListenerProps)~
@@ -2506,11 +2596,12 @@ SnackbarContent() ::= <<SnackbarContent
 
 SnackbarContentImport() ::= <<import SnackbarContent from '@material-ui/core/SnackbarContent'; >>
 
-SnackbarContentElement(action,classes,className,id,message,role,style,attribute) ::= <<<SnackbarContent~if(action)~
+SnackbarContentElement(action,classes,className,id,key,message,role,style,attribute) ::= <<<SnackbarContent~if(action)~
 	action=~action~~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(message)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(message)~
 	message=~message~~endif~~if(role)~
 	role="~role~"~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
@@ -2525,15 +2616,16 @@ SpeedDial() ::= <<SpeedDial
 
 SpeedDialImport() ::= <<import SpeedDial from '@material-ui/lab/SpeedDial'; >>
 
-SpeedDialElement(ariaLabel,classes,className,direction,FabProps,hidden,icon,id,onClose,onOpen,openIcon,style,TransitionComponent,transitionDuration,TransitionProps,attribute,children) ::= <<<SpeedDial
+SpeedDialElement(ariaLabel,classes,className,direction,FabProps,hidden,icon,id,key,onClose,onOpen,openIcon,style,TransitionComponent,transitionDuration,TransitionProps,attribute,children) ::= <<<SpeedDial
 	ariaLabel="~ariaLabel~"~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(direction)~
-	direction="~direction~"~endif~~if(FabProps)~
+	direction=~direction~~endif~~if(FabProps)~
 	FabProps=~FabProps~~endif~~if(hidden)~
 	hidden~endif~~if(icon)~
 	icon=~icon~~endif~~if(id)~
-	id="~id~"~endif~~if(onClose)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(onClose)~
 	onClose=~onClose~~endif~~if(onOpen)~
 	onOpen=~onOpen~~endif~
 	open~if(openIcon)~
@@ -2555,18 +2647,19 @@ SpeedDialAction() ::= <<SpeedDialAction
 
 SpeedDialActionImport() ::= <<import SpeedDialAction from '@material-ui/lab/SpeedDialAction'; >>
 
-SpeedDialActionElement(classes,className,delay,FabProps,icon,id,open,style,TooltipClasses,tooltipOpen,tooltipPlacement,tooltipTitle,attribute) ::= <<<SpeedDialAction~if(classes)~
+SpeedDialActionElement(classes,className,delay,FabProps,icon,id,key,open,style,TooltipClasses,tooltipOpen,tooltipPlacement,tooltipTitle,attribute) ::= <<<SpeedDialAction~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(delay)~
 	delay=~delay~~endif~~if(FabProps)~
 	FabProps=~FabProps~~endif~~if(icon)~
 	icon=~icon~~endif~~if(id)~
-	id="~id~"~endif~~if(open)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(open)~
 	open~endif~~if(style)~
 	style=~style~~endif~~if(TooltipClasses)~
 	TooltipClasses=~TooltipClasses~~endif~~if(tooltipOpen)~
 	tooltipOpen~endif~~if(tooltipPlacement)~
-	tooltipPlacement="~tooltipPlacement~"~endif~~if(tooltipTitle)~
+	tooltipPlacement=~tooltipPlacement~~endif~~if(tooltipTitle)~
 	tooltipTitle=~tooltipTitle~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~ />  >>
@@ -2579,11 +2672,12 @@ SpeedDialIcon() ::= <<SpeedDialIcon
 
 SpeedDialIconImport() ::= <<import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon'; >>
 
-SpeedDialIconElement(classes,className,icon,id,openIcon,style,attribute) ::= <<<SpeedDialIcon~if(classes)~
+SpeedDialIconElement(classes,className,icon,id,key,openIcon,style,attribute) ::= <<<SpeedDialIcon~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(icon)~
 	icon=~icon~~endif~~if(id)~
-	id="~id~"~endif~~if(openIcon)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(openIcon)~
 	openIcon=~openIcon~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
@@ -2597,14 +2691,15 @@ Step() ::= <<Step
 
 StepImport() ::= <<import Step from '@material-ui/core/Step'; >>
 
-StepElement(active,classes,className,completed,disabled,expanded,id,style,attribute,children) ::= <<<Step~if(active)~
+StepElement(active,classes,className,completed,disabled,expanded,id,key,style,attribute,children) ::= <<<Step~if(active)~
 	active~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(completed)~
 	completed~endif~~if(disabled)~
 	disabled~endif~~if(expanded)~
 	expanded~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -2619,11 +2714,12 @@ StepButton() ::= <<StepButton
 
 StepButtonImport() ::= <<import StepButton from '@material-ui/core/StepButton'; >>
 
-StepButtonElement(classes,className,icon,id,optional,style,attribute,children) ::= <<<StepButton~if(classes)~
+StepButtonElement(classes,className,icon,id,key,optional,style,attribute,children) ::= <<<StepButton~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(icon)~
 	icon=~icon~~endif~~if(id)~
-	id="~id~"~endif~~if(optional)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(optional)~
 	optional=~optional~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
@@ -2639,10 +2735,11 @@ StepConnector() ::= <<StepConnector
 
 StepConnectorImport() ::= <<import StepConnector from '@material-ui/core/StepConnector'; >>
 
-StepConnectorElement(classes,className,id,style,attribute) ::= <<<StepConnector~if(classes)~
+StepConnectorElement(classes,className,id,key,style,attribute) ::= <<<StepConnector~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~ />  >>
@@ -2655,13 +2752,14 @@ StepContent() ::= <<StepContent
 
 StepContentImport() ::= <<import StepContent from '@material-ui/core/StepContent'; >>
 
-StepContentElement(classes,className,id,style,TransitionComponent,transitionDuration,TransitionProps,attribute,children) ::= <<<StepContent~if(classes)~
+StepContentElement(classes,className,id,key,style,TransitionComponent,transitionDuration,TransitionProps,attribute,children) ::= <<<StepContent~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~if(TransitionComponent)~
 	TransitionComponent=~TransitionComponent~~endif~~if(transitionDuration)~
-	transitionDuration="~transitionDuration~"~endif~~if(TransitionProps)~
+	transitionDuration=~transitionDuration~~endif~~if(TransitionProps)~
 	TransitionProps=~TransitionProps~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -2676,14 +2774,15 @@ StepIcon() ::= <<StepIcon
 
 StepIconImport() ::= <<import StepIcon from '@material-ui/core/StepIcon'; >>
 
-StepIconElement(active,classes,className,completed,error,icon,id,style,attribute) ::= <<<StepIcon~if(active)~
+StepIconElement(active,classes,className,completed,error,icon,id,key,style,attribute) ::= <<<StepIcon~if(active)~
 	active~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(completed)~
 	completed~endif~~if(error)~
 	error~endif~~if(icon)~
 	icon=~icon~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~ />  >>
@@ -2696,13 +2795,14 @@ StepLabel() ::= <<StepLabel
 
 StepLabelImport() ::= <<import StepLabel from '@material-ui/core/StepLabel'; >>
 
-StepLabelElement(classes,className,disabled,error,icon,id,optional,StepIconComponent,StepIconProps,style,attribute,children) ::= <<<StepLabel~if(classes)~
+StepLabelElement(classes,className,disabled,error,icon,id,key,optional,StepIconComponent,StepIconProps,style,attribute,children) ::= <<<StepLabel~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(disabled)~
 	disabled~endif~~if(error)~
 	error~endif~~if(icon)~
 	icon=~icon~~endif~~if(id)~
-	id="~id~"~endif~~if(optional)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(optional)~
 	optional=~optional~~endif~~if(StepIconComponent)~
 	StepIconComponent=~StepIconComponent~~endif~~if(StepIconProps)~
 	StepIconProps=~StepIconProps~~endif~~if(style)~
@@ -2720,15 +2820,16 @@ Stepper() ::= <<Stepper
 
 StepperImport() ::= <<import Stepper from '@material-ui/core/Stepper'; >>
 
-StepperElement(activeStep,alternativeLabel,classes,className,connector,id,nonLinear,orientation,style,attribute,children) ::= <<<Stepper~if(activeStep)~
+StepperElement(activeStep,alternativeLabel,classes,className,connector,id,key,nonLinear,orientation,style,attribute,children) ::= <<<Stepper~if(activeStep)~
 	activeStep=~activeStep~~endif~~if(alternativeLabel)~
 	alternativeLabel~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(connector)~
 	connector=~connector~~endif~~if(id)~
-	id="~id~"~endif~~if(nonLinear)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(nonLinear)~
 	nonLinear~endif~~if(orientation)~
-	orientation="~orientation~"~endif~~if(style)~
+	orientation=~orientation~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -2743,14 +2844,15 @@ SvgIcon() ::= <<SvgIcon
 
 SvgIconImport() ::= <<import SvgIcon from '@material-ui/core/SvgIcon'; >>
 
-SvgIconElement(classes,className,color,component,fontSize,htmlColor,id,shapeRendering,style,titleAccess,viewBox,attribute,children) ::= <<<SvgIcon~if(classes)~
+SvgIconElement(classes,className,color,component,fontSize,htmlColor,id,key,shapeRendering,style,titleAccess,viewBox,attribute,children) ::= <<<SvgIcon~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(color)~
 	color="~color~"~endif~~if(component)~
 	component=~component~~endif~~if(fontSize)~
-	fontSize="~fontSize~"~endif~~if(htmlColor)~
+	fontSize=~fontSize~~endif~~if(htmlColor)~
 	htmlColor="~htmlColor~"~endif~~if(id)~
-	id="~id~"~endif~~if(shapeRendering)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(shapeRendering)~
 	shapeRendering="~shapeRendering~"~endif~~if(style)~
 	style=~style~~endif~~if(titleAccess)~
 	titleAccess="~titleAccess~"~endif~~if(viewBox)~
@@ -2768,13 +2870,14 @@ SwipeableDrawer() ::= <<SwipeableDrawer
 
 SwipeableDrawerImport() ::= <<import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'; >>
 
-SwipeableDrawerElement(className,disableBackdropTransition,disableDiscovery,disableSwipeToOpen,hysteresis,id,minFlingVelocity,onClose,onOpen,style,SwipeAreaProps,swipeAreaWidth,transitionDuration,attribute,children) ::= <<<SwipeableDrawer~if(className)~
+SwipeableDrawerElement(className,disableBackdropTransition,disableDiscovery,disableSwipeToOpen,hysteresis,id,key,minFlingVelocity,onClose,onOpen,style,SwipeAreaProps,swipeAreaWidth,transitionDuration,attribute,children) ::= <<<SwipeableDrawer~if(className)~
 	className=~className~~endif~~if(disableBackdropTransition)~
 	disableBackdropTransition~endif~~if(disableDiscovery)~
 	disableDiscovery~endif~~if(disableSwipeToOpen)~
 	disableSwipeToOpen~endif~~if(hysteresis)~
 	hysteresis=~hysteresis~~endif~~if(id)~
-	id="~id~"~endif~~if(minFlingVelocity)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(minFlingVelocity)~
 	minFlingVelocity=~minFlingVelocity~~endif~
 	onClose=~onClose~
 	onOpen=~onOpen~
@@ -2796,7 +2899,7 @@ Switch() ::= <<Switch
 
 SwitchImport() ::= <<import Switch from '@material-ui/core/Switch'; >>
 
-SwitchElement(checked,checkedIcon,classes,className,color,disabled,disableRipple,edge,icon,id,inputProps,inputRef,onChange,required,size,style,value,attribute) ::= <<<Switch~if(checked)~
+SwitchElement(checked,checkedIcon,classes,className,color,disabled,disableRipple,edge,icon,id,inputProps,inputRef,key,onChange,required,size,style,value,attribute) ::= <<<Switch~if(checked)~
 	checked~endif~~if(checkedIcon)~
 	checkedIcon=~checkedIcon~~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
@@ -2808,10 +2911,11 @@ SwitchElement(checked,checkedIcon,classes,className,color,disabled,disableRipple
 	icon=~icon~~endif~~if(id)~
 	id="~id~"~endif~~if(inputProps)~
 	inputProps=~inputProps~~endif~~if(inputRef)~
-	inputRef=~inputRef~~endif~~if(onChange)~
+	inputRef=~inputRef~~endif~~if(key)~
+	key=~key~~endif~~if(onChange)~
 	onChange=~onChange~~endif~~if(required)~
 	required~endif~~if(size)~
-	size="~size~"~endif~~if(style)~
+	size=~size~~endif~~if(style)~
 	style=~style~~endif~~if(value)~
 	value=~value~~endif~~attribute:{it|
 	
@@ -2825,14 +2929,15 @@ Tab() ::= <<Tab
 
 TabImport() ::= <<import Tab from '@material-ui/core/Tab'; >>
 
-TabElement(classes,className,disabled,disableFocusRipple,disableRipple,icon,id,label,style,value,wrapped,attribute,children) ::= <<<Tab~if(classes)~
+TabElement(classes,className,disabled,disableFocusRipple,disableRipple,icon,id,key,label,style,value,wrapped,attribute,children) ::= <<<Tab~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(disabled)~
 	disabled~endif~~if(disableFocusRipple)~
 	disableFocusRipple~endif~~if(disableRipple)~
 	disableRipple~endif~~if(icon)~
 	icon=~icon~~endif~~if(id)~
-	id="~id~"~endif~~if(label)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(label)~
 	label=~label~~endif~~if(style)~
 	style=~style~~endif~~if(value)~
 	value=~value~~endif~~if(wrapped)~
@@ -2850,9 +2955,10 @@ TabContext() ::= <<TabContext
 
 TabContextImport() ::= <<import TabContext from '@material-ui/lab/TabContext'; >>
 
-TabContextElement(className,id,style,value,attribute,children) ::= <<<TabContext~if(className)~
+TabContextElement(className,id,key,style,value,attribute,children) ::= <<<TabContext~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~
 	value="~value~"~attribute:{it|
 	
@@ -2868,13 +2974,14 @@ Table() ::= <<Table
 
 TableImport() ::= <<import Table from '@material-ui/core/Table'; >>
 
-TableElement(classes,className,component,id,padding,size,stickyHeader,style,attribute,children) ::= <<<Table~if(classes)~
+TableElement(classes,className,component,id,key,padding,size,stickyHeader,style,attribute,children) ::= <<<Table~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(component)~
 	component=~component~~endif~~if(id)~
-	id="~id~"~endif~~if(padding)~
-	padding="~padding~"~endif~~if(size)~
-	size="~size~"~endif~~if(stickyHeader)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(padding)~
+	padding=~padding~~endif~~if(size)~
+	size=~size~~endif~~if(stickyHeader)~
 	stickyHeader~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
@@ -2890,11 +2997,12 @@ TableBody() ::= <<TableBody
 
 TableBodyImport() ::= <<import TableBody from '@material-ui/core/TableBody'; >>
 
-TableBodyElement(classes,className,component,id,style,attribute,children) ::= <<<TableBody~if(classes)~
+TableBodyElement(classes,className,component,id,key,style,attribute,children) ::= <<<TableBody~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(component)~
 	component=~component~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -2916,10 +3024,10 @@ TableCellElement(align,classes,className,component,id,key,padding,scope,size,sor
 	component=~component~~endif~~if(id)~
 	id="~id~"~endif~~if(key)~
 	key=~key~~endif~~if(padding)~
-	padding="~padding~"~endif~~if(scope)~
+	padding=~padding~~endif~~if(scope)~
 	scope="~scope~"~endif~~if(size)~
-	size="~size~"~endif~~if(sortDirection)~
-	sortDirection="~sortDirection~"~endif~~if(style)~
+	size=~size~~endif~~if(sortDirection)~
+	sortDirection=~sortDirection~~endif~~if(style)~
 	style=~style~~endif~~if(variant)~
 	variant="~variant~"~endif~~attribute:{it|
 	
@@ -2935,11 +3043,12 @@ TableContainer() ::= <<TableContainer
 
 TableContainerImport() ::= <<import TableContainer from '@material-ui/core/TableContainer'; >>
 
-TableContainerElement(classes,className,component,id,style,attribute,children) ::= <<<TableContainer~if(classes)~
+TableContainerElement(classes,className,component,id,key,style,attribute,children) ::= <<<TableContainer~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(component)~
 	component=~component~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -2954,11 +3063,12 @@ TableFooter() ::= <<TableFooter
 
 TableFooterImport() ::= <<import TableFooter from '@material-ui/core/TableFooter'; >>
 
-TableFooterElement(classes,className,component,id,style,attribute,children) ::= <<<TableFooter~if(classes)~
+TableFooterElement(classes,className,component,id,key,style,attribute,children) ::= <<<TableFooter~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(component)~
 	component=~component~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -2973,11 +3083,12 @@ TableHead() ::= <<TableHead
 
 TableHeadImport() ::= <<import TableHead from '@material-ui/core/TableHead'; >>
 
-TableHeadElement(classes,className,component,id,style,attribute,children) ::= <<<TableHead~if(classes)~
+TableHeadElement(classes,className,component,id,key,style,attribute,children) ::= <<<TableHead~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(component)~
 	component=~component~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -2992,7 +3103,7 @@ TablePagination() ::= <<TablePagination
 
 TablePaginationImport() ::= <<import TablePagination from '@material-ui/core/TablePagination'; >>
 
-TablePaginationElement(ActionsComponent,backIconButtonProps,backIconButtonText,classes,className,component,count,id,labelDisplayedRows,labelRowsPerPage,nextIconButtonProps,nextIconButtonText,onChangePage,onChangeRowsPerPage,page,rowsPerPage,rowsPerPageOptions,SelectProps,style,attribute) ::= <<<TablePagination~if(ActionsComponent)~
+TablePaginationElement(ActionsComponent,backIconButtonProps,backIconButtonText,classes,className,component,count,id,key,labelDisplayedRows,labelRowsPerPage,nextIconButtonProps,nextIconButtonText,onChangePage,onChangeRowsPerPage,page,rowsPerPage,rowsPerPageOptions,SelectProps,style,attribute) ::= <<<TablePagination~if(ActionsComponent)~
 	ActionsComponent=~ActionsComponent~~endif~~if(backIconButtonProps)~
 	backIconButtonProps=~backIconButtonProps~~endif~~if(backIconButtonText)~
 	backIconButtonText="~backIconButtonText~"~endif~~if(classes)~
@@ -3000,7 +3111,8 @@ TablePaginationElement(ActionsComponent,backIconButtonProps,backIconButtonText,c
 	className=~className~~endif~~if(component)~
 	component=~component~~endif~
 	count=~count~~if(id)~
-	id="~id~"~endif~~if(labelDisplayedRows)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(labelDisplayedRows)~
 	labelDisplayedRows=~labelDisplayedRows~~endif~~if(labelRowsPerPage)~
 	labelRowsPerPage=~labelRowsPerPage~~endif~~if(nextIconButtonProps)~
 	nextIconButtonProps=~nextIconButtonProps~~endif~~if(nextIconButtonText)~
@@ -3045,14 +3157,15 @@ TableSortLabel() ::= <<TableSortLabel
 
 TableSortLabelImport() ::= <<import TableSortLabel from '@material-ui/core/TableSortLabel'; >>
 
-TableSortLabelElement(active,classes,className,direction,hideSortIcon,IconComponent,id,style,attribute,children) ::= <<<TableSortLabel~if(active)~
+TableSortLabelElement(active,classes,className,direction,hideSortIcon,IconComponent,id,key,style,attribute,children) ::= <<<TableSortLabel~if(active)~
 	active~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(direction)~
-	direction="~direction~"~endif~~if(hideSortIcon)~
+	direction=~direction~~endif~~if(hideSortIcon)~
 	hideSortIcon~endif~~if(IconComponent)~
 	IconComponent=~IconComponent~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -3067,9 +3180,10 @@ TabList() ::= <<TabList
 
 TabListImport() ::= <<import TabList from '@material-ui/lab/TabList'; >>
 
-TabListElement(className,id,style,attribute,children) ::= <<<TabList~if(className)~
+TabListElement(className,id,key,style,attribute,children) ::= <<<TabList~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -3084,10 +3198,11 @@ TabPanel() ::= <<TabPanel
 
 TabPanelImport() ::= <<import TabPanel from '@material-ui/lab/TabPanel'; >>
 
-TabPanelElement(classes,className,id,style,value,attribute,children) ::= <<<TabPanel~if(classes)~
+TabPanelElement(classes,className,id,key,style,value,attribute,children) ::= <<<TabPanel~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~
 	value="~value~"~attribute:{it|
 	
@@ -3103,7 +3218,7 @@ Tabs() ::= <<Tabs
 
 TabsImport() ::= <<import Tabs from '@material-ui/core/Tabs'; >>
 
-TabsElement(action,ariaLabel,ariaLabelledby,centered,classes,className,component,id,indicatorColor,onChange,orientation,ScrollButtonComponent,scrollButtons,selectionFollowsFocus,style,TabIndicatorProps,TabScrollButtonProps,textColor,value,variant,attribute,children) ::= <<<Tabs~if(action)~
+TabsElement(action,ariaLabel,ariaLabelledby,centered,classes,className,component,id,indicatorColor,key,onChange,orientation,ScrollButtonComponent,scrollButtons,selectionFollowsFocus,style,TabIndicatorProps,TabScrollButtonProps,textColor,value,variant,attribute,children) ::= <<<Tabs~if(action)~
 	action=~action~~endif~~if(ariaLabel)~
 	ariaLabel="~ariaLabel~"~endif~~if(ariaLabelledby)~
 	ariaLabelledby="~ariaLabelledby~"~endif~~if(centered)~
@@ -3112,16 +3227,17 @@ TabsElement(action,ariaLabel,ariaLabelledby,centered,classes,className,component
 	className=~className~~endif~~if(component)~
 	component=~component~~endif~~if(id)~
 	id="~id~"~endif~~if(indicatorColor)~
-	indicatorColor="~indicatorColor~"~endif~~if(onChange)~
+	indicatorColor=~indicatorColor~~endif~~if(key)~
+	key=~key~~endif~~if(onChange)~
 	onChange=~onChange~~endif~~if(orientation)~
-	orientation="~orientation~"~endif~~if(ScrollButtonComponent)~
+	orientation=~orientation~~endif~~if(ScrollButtonComponent)~
 	ScrollButtonComponent=~ScrollButtonComponent~~endif~~if(scrollButtons)~
-	scrollButtons="~scrollButtons~"~endif~~if(selectionFollowsFocus)~
+	scrollButtons=~scrollButtons~~endif~~if(selectionFollowsFocus)~
 	selectionFollowsFocus~endif~~if(style)~
 	style=~style~~endif~~if(TabIndicatorProps)~
 	TabIndicatorProps=~TabIndicatorProps~~endif~~if(TabScrollButtonProps)~
 	TabScrollButtonProps=~TabScrollButtonProps~~endif~~if(textColor)~
-	textColor="~textColor~"~endif~~if(value)~
+	textColor=~textColor~~endif~~if(value)~
 	value=~value~~endif~~if(variant)~
 	variant="~variant~"~endif~~attribute:{it|
 	
@@ -3137,13 +3253,14 @@ TabScrollButton() ::= <<TabScrollButton
 
 TabScrollButtonImport() ::= <<import TabScrollButton from '@material-ui/core/TabScrollButton'; >>
 
-TabScrollButtonElement(classes,className,direction,disabled,id,orientation,style,attribute,children) ::= <<<TabScrollButton~if(classes)~
+TabScrollButtonElement(classes,className,direction,disabled,id,key,orientation,style,attribute,children) ::= <<<TabScrollButton~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~
-	direction="~direction~"~if(disabled)~
+	direction=~direction~~if(disabled)~
 	disabled~endif~~if(id)~
-	id="~id~"~endif~
-	orientation="~orientation~"~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~
+	orientation=~orientation~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -3158,9 +3275,10 @@ TextareaAutosize() ::= <<TextareaAutosize
 
 TextareaAutosizeImport() ::= <<import TextareaAutosize from '@material-ui/core/TextareaAutosize'; >>
 
-TextareaAutosizeElement(className,id,rows,rowsMax,rowsMin,style,attribute) ::= <<<TextareaAutosize~if(className)~
+TextareaAutosizeElement(className,id,key,rows,rowsMax,rowsMin,style,attribute) ::= <<<TextareaAutosize~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(rows)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(rows)~
 	rows=~rows~~endif~~if(rowsMax)~
 	rowsMax=~rowsMax~~endif~~if(rowsMin)~
 	rowsMin=~rowsMin~~endif~~if(style)~
@@ -3176,7 +3294,7 @@ TextField() ::= <<TextField
 
 TextFieldImport() ::= <<import TextField from '@material-ui/core/TextField'; >>
 
-TextFieldElement(autoComplete,autoFocus,classes,className,color,defaultValue,disabled,error,FormHelperTextProps,fullWidth,helperText,id,InputLabelProps,inputProps,inputRef,label,margin,multiline,name,onChange,placeholder,required,rows,rowsMax,select,SelectProps,size,style,type,value,variant,attribute) ::= <<<TextField~if(autoComplete)~
+TextFieldElement(autoComplete,autoFocus,classes,className,color,defaultValue,disabled,error,FormHelperTextProps,fullWidth,helperText,id,InputLabelProps,inputProps,inputRef,key,label,margin,multiline,name,onChange,placeholder,required,rows,rowsMax,select,SelectProps,size,style,type,value,variant,attribute) ::= <<<TextField~if(autoComplete)~
 	autoComplete="~autoComplete~"~endif~~if(autoFocus)~
 	autoFocus~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
@@ -3191,7 +3309,8 @@ TextFieldElement(autoComplete,autoFocus,classes,className,color,defaultValue,dis
 	id="~id~"~endif~~if(InputLabelProps)~
 	InputLabelProps=~InputLabelProps~~endif~~if(inputProps)~
 	inputProps=~inputProps~~endif~~if(inputRef)~
-	inputRef=~inputRef~~endif~~if(label)~
+	inputRef=~inputRef~~endif~~if(key)~
+	key=~key~~endif~~if(label)~
 	label=~label~~endif~~if(margin)~
 	margin="~margin~"~endif~~if(multiline)~
 	multiline~endif~~if(name)~
@@ -3203,7 +3322,7 @@ TextFieldElement(autoComplete,autoFocus,classes,className,color,defaultValue,dis
 	rowsMax=~rowsMax~~endif~~if(select)~
 	select~endif~~if(SelectProps)~
 	SelectProps=~SelectProps~~endif~~if(size)~
-	size="~size~"~endif~~if(style)~
+	size=~size~~endif~~if(style)~
 	style=~style~~endif~~if(type)~
 	type="~type~"~endif~~if(value)~
 	value=~value~~endif~~if(variant)~
@@ -3219,11 +3338,12 @@ Timeline() ::= <<Timeline
 
 TimelineImport() ::= <<import Timeline from '@material-ui/lab/Timeline'; >>
 
-TimelineElement(align,classes,className,id,style,attribute,children) ::= <<<Timeline~if(align)~
+TimelineElement(align,classes,className,id,key,style,attribute,children) ::= <<<Timeline~if(align)~
 	align="~align~"~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -3238,10 +3358,11 @@ TimelineConnector() ::= <<TimelineConnector
 
 TimelineConnectorImport() ::= <<import TimelineConnector from '@material-ui/lab/TimelineConnector'; >>
 
-TimelineConnectorElement(classes,className,id,style,attribute,children) ::= <<<TimelineConnector~if(classes)~
+TimelineConnectorElement(classes,className,id,key,style,attribute,children) ::= <<<TimelineConnector~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -3256,10 +3377,11 @@ TimelineContent() ::= <<TimelineContent
 
 TimelineContentImport() ::= <<import TimelineContent from '@material-ui/lab/TimelineContent'; >>
 
-TimelineContentElement(classes,className,id,style,attribute,children) ::= <<<TimelineContent~if(classes)~
+TimelineContentElement(classes,className,id,key,style,attribute,children) ::= <<<TimelineContent~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -3274,11 +3396,12 @@ TimelineDot() ::= <<TimelineDot
 
 TimelineDotImport() ::= <<import TimelineDot from '@material-ui/lab/TimelineDot'; >>
 
-TimelineDotElement(classes,className,color,id,style,variant,attribute,children) ::= <<<TimelineDot~if(classes)~
+TimelineDotElement(classes,className,color,id,key,style,variant,attribute,children) ::= <<<TimelineDot~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(color)~
 	color="~color~"~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~if(variant)~
 	variant="~variant~"~endif~~attribute:{it|
 	
@@ -3313,10 +3436,11 @@ TimelineOppositeContent() ::= <<TimelineOppositeContent
 
 TimelineOppositeContentImport() ::= <<import TimelineOppositeContent from '@material-ui/lab/TimelineOppositeContent'; >>
 
-TimelineOppositeContentElement(classes,className,id,style,attribute,children) ::= <<<TimelineOppositeContent~if(classes)~
+TimelineOppositeContentElement(classes,className,id,key,style,attribute,children) ::= <<<TimelineOppositeContent~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -3331,10 +3455,11 @@ TimelineSeparator() ::= <<TimelineSeparator
 
 TimelineSeparatorImport() ::= <<import TimelineSeparator from '@material-ui/lab/TimelineSeparator'; >>
 
-TimelineSeparatorElement(classes,className,id,style,attribute,children) ::= <<<TimelineSeparator~if(classes)~
+TimelineSeparatorElement(classes,className,id,key,style,attribute,children) ::= <<<TimelineSeparator~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
 	~it.name~=~it.value~}~~if(children)~>
@@ -3349,13 +3474,14 @@ ToggleButton() ::= <<ToggleButton
 
 ToggleButtonImport() ::= <<import ToggleButton from '@material-ui/lab/ToggleButton'; >>
 
-ToggleButtonElement(classes,className,disabled,disableFocusRipple,disableRipple,id,selected,style,value,attribute,children) ::= <<<ToggleButton~if(classes)~
+ToggleButtonElement(classes,className,disabled,disableFocusRipple,disableRipple,id,key,selected,style,value,attribute,children) ::= <<<ToggleButton~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(disabled)~
 	disabled~endif~~if(disableFocusRipple)~
 	disableFocusRipple~endif~~if(disableRipple)~
 	disableRipple~endif~~if(id)~
-	id="~id~"~endif~~if(selected)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(selected)~
 	selected~endif~~if(style)~
 	style=~style~~endif~
 	value=~value~~attribute:{it|
@@ -3372,14 +3498,15 @@ ToggleButtonGroup() ::= <<ToggleButtonGroup
 
 ToggleButtonGroupImport() ::= <<import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup'; >>
 
-ToggleButtonGroupElement(classes,className,exclusive,id,onChange,orientation,size,style,value,attribute,children) ::= <<<ToggleButtonGroup~if(classes)~
+ToggleButtonGroupElement(classes,className,exclusive,id,key,onChange,orientation,size,style,value,attribute,children) ::= <<<ToggleButtonGroup~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(exclusive)~
 	exclusive~endif~~if(id)~
-	id="~id~"~endif~~if(onChange)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(onChange)~
 	onChange=~onChange~~endif~~if(orientation)~
-	orientation="~orientation~"~endif~~if(size)~
-	size="~size~"~endif~~if(style)~
+	orientation=~orientation~~endif~~if(size)~
+	size=~size~~endif~~if(style)~
 	style=~style~~endif~~if(value)~
 	value=~value~~endif~~attribute:{it|
 	
@@ -3395,12 +3522,13 @@ Toolbar() ::= <<Toolbar
 
 ToolbarImport() ::= <<import Toolbar from '@material-ui/core/Toolbar'; >>
 
-ToolbarElement(classes,className,component,disableGutters,id,style,variant,attribute,children) ::= <<<Toolbar~if(classes)~
+ToolbarElement(classes,className,component,disableGutters,id,key,style,variant,attribute,children) ::= <<<Toolbar~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(component)~
 	component=~component~~endif~~if(disableGutters)~
 	disableGutters~endif~~if(id)~
-	id="~id~"~endif~~if(style)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~if(variant)~
 	variant="~variant~"~endif~~attribute:{it|
 	
@@ -3416,7 +3544,7 @@ Tooltip() ::= <<Tooltip
 
 TooltipImport() ::= <<import Tooltip from '@material-ui/core/Tooltip'; >>
 
-TooltipElement(arrow,classes,className,disableFocusListener,disableHoverListener,disableTouchListener,enterDelay,enterNextDelay,enterTouchDelay,id,interactive,leaveDelay,leaveTouchDelay,onClose,onOpen,open,placement,PopperComponent,PopperProps,style,title,TransitionComponent,TransitionProps,attribute,children) ::= <<<Tooltip~if(arrow)~
+TooltipElement(arrow,classes,className,disableFocusListener,disableHoverListener,disableTouchListener,enterDelay,enterNextDelay,enterTouchDelay,id,interactive,key,leaveDelay,leaveTouchDelay,onClose,onOpen,open,placement,PopperComponent,PopperProps,style,title,TransitionComponent,TransitionProps,attribute,children) ::= <<<Tooltip~if(arrow)~
 	arrow~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(disableFocusListener)~
@@ -3427,13 +3555,14 @@ TooltipElement(arrow,classes,className,disableFocusListener,disableHoverListener
 	enterNextDelay=~enterNextDelay~~endif~~if(enterTouchDelay)~
 	enterTouchDelay=~enterTouchDelay~~endif~~if(id)~
 	id="~id~"~endif~~if(interactive)~
-	interactive~endif~~if(leaveDelay)~
+	interactive~endif~~if(key)~
+	key=~key~~endif~~if(leaveDelay)~
 	leaveDelay=~leaveDelay~~endif~~if(leaveTouchDelay)~
 	leaveTouchDelay=~leaveTouchDelay~~endif~~if(onClose)~
 	onClose=~onClose~~endif~~if(onOpen)~
 	onOpen=~onOpen~~endif~~if(open)~
 	open~endif~~if(placement)~
-	placement="~placement~"~endif~~if(PopperComponent)~
+	placement=~placement~~endif~~if(PopperComponent)~
 	PopperComponent=~PopperComponent~~endif~~if(PopperProps)~
 	PopperProps=~PopperProps~~endif~~if(style)~
 	style=~style~~endif~
@@ -3482,7 +3611,7 @@ TreeView() ::= <<TreeView
 
 TreeViewImport() ::= <<import TreeView from '@material-ui/lab/TreeView'; >>
 
-TreeViewElement(classes,className,defaultCollapseIcon,defaultEndIcon,defaultExpanded,defaultExpandIcon,defaultParentIcon,defaultSelected,disableSelection,expanded,id,multiSelect,onNodeSelect,onNodeToggle,selected,style,attribute,children) ::= <<<TreeView~if(classes)~
+TreeViewElement(classes,className,defaultCollapseIcon,defaultEndIcon,defaultExpanded,defaultExpandIcon,defaultParentIcon,defaultSelected,disableSelection,expanded,id,key,multiSelect,onNodeSelect,onNodeToggle,selected,style,attribute,children) ::= <<<TreeView~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(defaultCollapseIcon)~
 	defaultCollapseIcon=~defaultCollapseIcon~~endif~~if(defaultEndIcon)~
@@ -3493,7 +3622,8 @@ TreeViewElement(classes,className,defaultCollapseIcon,defaultEndIcon,defaultExpa
 	defaultSelected=~defaultSelected~~endif~~if(disableSelection)~
 	disableSelection~endif~~if(expanded)~
 	expanded=~expanded~~endif~~if(id)~
-	id="~id~"~endif~~if(multiSelect)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(multiSelect)~
 	multiSelect~endif~~if(onNodeSelect)~
 	onNodeSelect=~onNodeSelect~~endif~~if(onNodeToggle)~
 	onNodeToggle=~onNodeToggle~~endif~~if(selected)~
@@ -3512,7 +3642,7 @@ Typography() ::= <<Typography
 
 TypographyImport() ::= <<import Typography from '@material-ui/core/Typography'; >>
 
-TypographyElement(align,classes,className,color,component,display,gutterBottom,id,noWrap,paragraph,style,variant,variantMapping,attribute,children) ::= <<<Typography~if(align)~
+TypographyElement(align,classes,className,color,component,display,gutterBottom,id,key,noWrap,paragraph,style,variant,variantMapping,attribute,children) ::= <<<Typography~if(align)~
 	align="~align~"~endif~~if(classes)~
 	classes=~classes~~endif~~if(className)~
 	className=~className~~endif~~if(color)~
@@ -3520,7 +3650,8 @@ TypographyElement(align,classes,className,color,component,display,gutterBottom,i
 	component=~component~~endif~~if(display)~
 	display="~display~"~endif~~if(gutterBottom)~
 	gutterBottom~endif~~if(id)~
-	id="~id~"~endif~~if(noWrap)~
+	id="~id~"~endif~~if(key)~
+	key=~key~~endif~~if(noWrap)~
 	noWrap~endif~~if(paragraph)~
 	paragraph~endif~~if(style)~
 	style=~style~~endif~~if(variant)~
@@ -3539,14 +3670,15 @@ UnstableTrapFocus() ::= <<UnstableTrapFocus
 
 UnstableTrapFocusImport() ::= <<import Unstable_TrapFocus from '@material-ui/core/Unstable_TrapFocus'; >>
 
-UnstableTrapFocusElement(className,disableAutoFocus,disableEnforceFocus,disableRestoreFocus,getDoc,id,isEnabled,style,attribute,children) ::= <<<UnstableTrapFocus~if(className)~
+UnstableTrapFocusElement(className,disableAutoFocus,disableEnforceFocus,disableRestoreFocus,getDoc,id,isEnabled,key,style,attribute,children) ::= <<<UnstableTrapFocus~if(className)~
 	className=~className~~endif~~if(disableAutoFocus)~
 	disableAutoFocus~endif~~if(disableEnforceFocus)~
 	disableEnforceFocus~endif~~if(disableRestoreFocus)~
 	disableRestoreFocus~endif~
 	getDoc=~getDoc~~if(id)~
 	id="~id~"~endif~
-	isEnabled=~isEnabled~
+	isEnabled=~isEnabled~~if(key)~
+	key=~key~~endif~
 	open~if(style)~
 	style=~style~~endif~~attribute:{it|
 	
@@ -3562,11 +3694,12 @@ Zoom() ::= <<Zoom
 
 ZoomImport() ::= <<import Zoom from '@material-ui/core/Zoom'; >>
 
-ZoomElement(className,disableStrictModeCompat,id,in,style,timeout,attribute,children) ::= <<<Zoom~if(className)~
+ZoomElement(className,disableStrictModeCompat,id,in,key,style,timeout,attribute,children) ::= <<<Zoom~if(className)~
 	className=~className~~endif~~if(disableStrictModeCompat)~
 	disableStrictModeCompat~endif~~if(id)~
 	id="~id~"~endif~~if(in)~
-	in~endif~~if(style)~
+	in~endif~~if(key)~
+	key=~key~~endif~~if(style)~
 	style=~style~~endif~~if(timeout)~
 	timeout=~timeout~~endif~~attribute:{it|
 	

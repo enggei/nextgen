@@ -14,6 +14,7 @@ public class FabElement {
 	private Object _disableRipple;
 	private Object _href;
 	private Object _id;
+	private Object _key;
 	private Object _size;
 	private Object _style;
 	private Object _variant;
@@ -22,11 +23,6 @@ public class FabElement {
 
 	FabElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -45,6 +41,7 @@ public class FabElement {
 		st.add("disableRipple", _disableRipple);
 		st.add("href", _href);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("size", _size);
 		st.add("style", _style);
 		st.add("variant", _variant);
@@ -251,6 +248,28 @@ public class FabElement {
 		return this;
 	} 
 
+	public FabElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public FabElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public FabElement setSize(Object value) {
 		this._size = value;
 		return this;
@@ -366,6 +385,16 @@ public class FabElement {
 		return this._attribute.stream().map(FabElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(FabElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(FabElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class FabElement_Attribute {
 
 		Object _name;
@@ -389,7 +418,7 @@ public class FabElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -404,7 +433,7 @@ public class FabElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "FabElement(classes,className,color,component,disabled,disableFocusRipple,disableRipple,href,id,size,style,variant,attribute,children) ::= <<<Fab~if(classes)~\n" + 
+	static final String st = "FabElement(classes,className,color,component,disabled,disableFocusRipple,disableRipple,href,id,key,size,style,variant,attribute,children) ::= <<<Fab~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(component)~\n" + 
@@ -413,8 +442,9 @@ public class FabElement {
 				"	disableFocusRipple~endif~~if(disableRipple)~\n" + 
 				"	disableRipple~endif~~if(href)~\n" + 
 				"	href=\"~href~\"~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(size)~\n" + 
-				"	size=\"~size~\"~endif~~if(style)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(size)~\n" + 
+				"	size=~size~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
 				"	\n" + 

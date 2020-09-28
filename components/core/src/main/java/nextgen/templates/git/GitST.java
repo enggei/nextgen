@@ -2,13 +2,14 @@ package nextgen.templates.git;
 
 public class GitST {
 
-	private static final String stg = "delimiters \"~\", \"~\"\n" +
-	"eom() ::= \"}\"\n" +
-	"gt() ::= \">\"\n" +
-	Clone.st + "\n" + 
-	Gitignore.st + "\n" + 
-	RemoveDir.st + "\n" + 
-	RemoveFile.st + "\n" ;
+	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
+	.append("eom() ::= \"}\"\n")
+	.append("gt() ::= \">\"\n")
+	.append(Clone.st + "\n")
+	.append(Gitignore.st + "\n")
+	.append(RemoveDir.st + "\n")
+	.append(RemoveFile.st + "\n")
+	.toString()  ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
 		stGroup.registerRenderer(Object.class, new DefaultAttributeRenderer());
@@ -46,19 +47,19 @@ public class GitST {
 
 	public static Clone newClone() {
 		return new Clone(stGroup);
-	} 
+	}  
 
 	public static Gitignore newGitignore() {
 		return new Gitignore(stGroup);
-	} 
+	}  
 
 	public static RemoveDir newRemoveDir() {
 		return new RemoveDir(stGroup);
-	} 
+	}  
 
 	public static RemoveFile newRemoveFile() {
 		return new RemoveFile(stGroup);
-	} 
+	}  
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
 

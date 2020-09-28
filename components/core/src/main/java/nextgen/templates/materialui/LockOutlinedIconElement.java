@@ -7,16 +7,12 @@ public class LockOutlinedIconElement {
 
 	private Object _className;
 	private Object _id;
+	private Object _key;
 	private Object _style;
 	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	LockOutlinedIconElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -28,6 +24,7 @@ public class LockOutlinedIconElement {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("LockOutlinedIconElement");
 		st.add("className", _className);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("style", _style);
 		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
 		return st.render().trim();
@@ -77,6 +74,28 @@ public class LockOutlinedIconElement {
 		return this;
 	} 
 
+	public LockOutlinedIconElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public LockOutlinedIconElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public LockOutlinedIconElement setStyle(Object value) {
 		this._style = value;
 		return this;
@@ -120,6 +139,16 @@ public class LockOutlinedIconElement {
 		return this._attribute.stream().map(LockOutlinedIconElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(LockOutlinedIconElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(LockOutlinedIconElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class LockOutlinedIconElement_Attribute {
 
 		Object _name;
@@ -143,7 +172,7 @@ public class LockOutlinedIconElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -158,9 +187,10 @@ public class LockOutlinedIconElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "LockOutlinedIconElement(className,id,style,attribute) ::= <<<LockOutlinedIcon~if(className)~\n" + 
+	static final String st = "LockOutlinedIconElement(className,id,key,style,attribute) ::= <<<LockOutlinedIcon~if(className)~\n" + 
 				"	className=~className~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~attribute:{it|\n" + 
 				"	\n" + 
 				"	~it.name~=~it.value~}~ /> >>";

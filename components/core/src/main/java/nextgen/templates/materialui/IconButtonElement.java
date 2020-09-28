@@ -13,6 +13,7 @@ public class IconButtonElement {
 	private Object _disableRipple;
 	private Object _edge;
 	private Object _id;
+	private Object _key;
 	private Object _onClick;
 	private Object _size;
 	private Object _style;
@@ -21,11 +22,6 @@ public class IconButtonElement {
 
 	IconButtonElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -43,6 +39,7 @@ public class IconButtonElement {
 		st.add("disableRipple", _disableRipple);
 		st.add("edge", _edge);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("onClick", _onClick);
 		st.add("size", _size);
 		st.add("style", _style);
@@ -227,6 +224,28 @@ public class IconButtonElement {
 		return this;
 	} 
 
+	public IconButtonElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public IconButtonElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public IconButtonElement setOnClick(Object value) {
 		this._onClick = value;
 		return this;
@@ -342,6 +361,16 @@ public class IconButtonElement {
 		return this._attribute.stream().map(IconButtonElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(IconButtonElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(IconButtonElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class IconButtonElement_Attribute {
 
 		Object _name;
@@ -365,7 +394,7 @@ public class IconButtonElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -380,7 +409,7 @@ public class IconButtonElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "IconButtonElement(classes,className,color,disabled,disableFocusRipple,disableRipple,edge,id,onClick,size,style,attribute,children) ::= <<<IconButton~if(classes)~\n" + 
+	static final String st = "IconButtonElement(classes,className,color,disabled,disableFocusRipple,disableRipple,edge,id,key,onClick,size,style,attribute,children) ::= <<<IconButton~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(disabled)~\n" + 
@@ -388,9 +417,10 @@ public class IconButtonElement {
 				"	disableFocusRipple~endif~~if(disableRipple)~\n" + 
 				"	disableRipple~endif~~if(edge)~\n" + 
 				"	edge=\"~edge~\"~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(onClick)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(onClick)~\n" + 
 				"	onClick=~onClick~~endif~~if(size)~\n" + 
-				"	size=\"~size~\"~endif~~if(style)~\n" + 
+				"	size=~size~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~attribute:{it|\n" + 
 				"	\n" + 
 				"	~it.name~=~it.value~}~~if(children)~>\n" + 

@@ -15,6 +15,7 @@ public class RatingElement {
 	private Object _icon;
 	private Object _IconContainerComponent;
 	private Object _id;
+	private Object _key;
 	private Object _max;
 	private Object _name;
 	private Object _onChange;
@@ -28,11 +29,6 @@ public class RatingElement {
 
 	RatingElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -52,6 +48,7 @@ public class RatingElement {
 		st.add("icon", _icon);
 		st.add("IconContainerComponent", _IconContainerComponent);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("max", _max);
 		st.add("name", _name);
 		st.add("onChange", _onChange);
@@ -285,6 +282,28 @@ public class RatingElement {
 		return this;
 	} 
 
+	public RatingElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public RatingElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public RatingElement setMax(Object value) {
 		this._max = value;
 		return this;
@@ -504,6 +523,16 @@ public class RatingElement {
 		return this._attribute.stream().map(RatingElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(RatingElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(RatingElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class RatingElement_Attribute {
 
 		Object _name;
@@ -527,7 +556,7 @@ public class RatingElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -542,7 +571,7 @@ public class RatingElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "RatingElement(classes,className,defaultValue,disabled,emptyIcon,emptyLabelText,getLabelText,icon,IconContainerComponent,id,max,name,onChange,onChangeActive,precision,readOnly,size,style,value,attribute) ::= <<<Rating~if(classes)~\n" + 
+	static final String st = "RatingElement(classes,className,defaultValue,disabled,emptyIcon,emptyLabelText,getLabelText,icon,IconContainerComponent,id,key,max,name,onChange,onChangeActive,precision,readOnly,size,style,value,attribute) ::= <<<Rating~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(defaultValue)~\n" + 
 				"	defaultValue=~defaultValue~~endif~~if(disabled)~\n" + 
@@ -552,14 +581,15 @@ public class RatingElement {
 				"	getLabelText=~getLabelText~~endif~~if(icon)~\n" + 
 				"	icon=~icon~~endif~~if(IconContainerComponent)~\n" + 
 				"	IconContainerComponent=~IconContainerComponent~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(max)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(max)~\n" + 
 				"	max=~max~~endif~~if(name)~\n" + 
 				"	name=\"~name~\"~endif~~if(onChange)~\n" + 
 				"	onChange=~onChange~~endif~~if(onChangeActive)~\n" + 
 				"	onChangeActive=~onChangeActive~~endif~~if(precision)~\n" + 
 				"	precision=~precision~~endif~~if(readOnly)~\n" + 
 				"	readOnly~endif~~if(size)~\n" + 
-				"	size=\"~size~\"~endif~~if(style)~\n" + 
+				"	size=~size~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(value)~\n" + 
 				"	value=~value~~endif~~attribute:{it|\n" + 
 				"	\n" + 

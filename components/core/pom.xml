@@ -13,6 +13,10 @@
 
 	<artifactId>core</artifactId>
 
+	<properties>
+		<maven.compiler.source>9</maven.compiler.source>
+		<maven.compiler.target>9</maven.compiler.target>		
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -84,8 +88,7 @@
 			<groupId>org.javatuples</groupId>
 			<artifactId>javatuples</artifactId>
 			<version>1.2</version>
-		</dependency>
-
+		</dependency>  
 	</dependencies>
 
 </project>

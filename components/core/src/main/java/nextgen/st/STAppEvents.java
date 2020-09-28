@@ -4,6 +4,90 @@ public class STAppEvents {
 
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STAppEvents.class);
 
+	public static void postNewShellScript(nextgen.snippets.ShellScript shellScript) {
+		log.info("post NewShellScript");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new NewShellScript(shellScript));
+	}
+
+	public static void postRemovedShellScript(java.lang.String uuid) {
+		log.info("post RemovedShellScript");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new RemovedShellScript(uuid));
+	}
+
+	public static void postOpenShellScript(nextgen.snippets.ShellScript shellScript) {
+		log.info("post OpenShellScript");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new OpenShellScript(shellScript));
+	}
+
+	public static class NewShellScript {
+
+		public final nextgen.snippets.ShellScript shellScript;
+
+		public NewShellScript(nextgen.snippets.ShellScript shellScript) {
+			this.shellScript = shellScript;
+		}
+	}
+
+	public static class RemovedShellScript {
+
+		public final java.lang.String uuid;
+
+		public RemovedShellScript(java.lang.String uuid) {
+			this.uuid = uuid;
+		}
+	}
+
+	public static class OpenShellScript {
+
+		public final nextgen.snippets.ShellScript shellScript;
+
+		public OpenShellScript(nextgen.snippets.ShellScript shellScript) {
+			this.shellScript = shellScript;
+		}
+	}
+
+	public static void postNewShellSnippet(nextgen.snippets.ShellSnippet shellSnippet) {
+		log.info("post NewShellSnippet");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new NewShellSnippet(shellSnippet));
+	}
+
+	public static void postRemovedShellSnippet(java.lang.String uuid) {
+		log.info("post RemovedShellSnippet");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new RemovedShellSnippet(uuid));
+	}
+
+	public static void postOpenShellSnippet(nextgen.snippets.ShellSnippet shellSnippet) {
+		log.info("post OpenShellSnippet");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new OpenShellSnippet(shellSnippet));
+	}
+
+	public static class NewShellSnippet {
+
+		public final nextgen.snippets.ShellSnippet shellSnippet;
+
+		public NewShellSnippet(nextgen.snippets.ShellSnippet shellSnippet) {
+			this.shellSnippet = shellSnippet;
+		}
+	}
+
+	public static class RemovedShellSnippet {
+
+		public final java.lang.String uuid;
+
+		public RemovedShellSnippet(java.lang.String uuid) {
+			this.uuid = uuid;
+		}
+	}
+
+	public static class OpenShellSnippet {
+
+		public final nextgen.snippets.ShellSnippet shellSnippet;
+
+		public OpenShellSnippet(nextgen.snippets.ShellSnippet shellSnippet) {
+			this.shellSnippet = shellSnippet;
+		}
+	}
+
 	public static void postNewMetaDomain(nextgen.domains.meta.MetaDomain metaDomain) {
 		log.info("post NewMetaDomain");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new NewMetaDomain(metaDomain));

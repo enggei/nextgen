@@ -13,6 +13,7 @@ public class AlertElement {
 	private Object _icon;
 	private Object _iconMapping;
 	private Object _id;
+	private Object _key;
 	private Object _onClose;
 	private Object _role;
 	private Object _severity;
@@ -23,11 +24,6 @@ public class AlertElement {
 
 	AlertElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -45,6 +41,7 @@ public class AlertElement {
 		st.add("icon", _icon);
 		st.add("iconMapping", _iconMapping);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("onClose", _onClose);
 		st.add("role", _role);
 		st.add("severity", _severity);
@@ -231,6 +228,28 @@ public class AlertElement {
 		return this;
 	} 
 
+	public AlertElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public AlertElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public AlertElement setOnClose(Object value) {
 		this._onClose = value;
 		return this;
@@ -390,6 +409,16 @@ public class AlertElement {
 		return this._attribute.stream().map(AlertElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(AlertElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(AlertElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class AlertElement_Attribute {
 
 		Object _name;
@@ -413,7 +442,7 @@ public class AlertElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -428,7 +457,7 @@ public class AlertElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AlertElement(action,classes,className,closeText,color,icon,iconMapping,id,onClose,role,severity,style,variant,attribute,children) ::= <<<Alert~if(action)~\n" + 
+	static final String st = "AlertElement(action,classes,className,closeText,color,icon,iconMapping,id,key,onClose,role,severity,style,variant,attribute,children) ::= <<<Alert~if(action)~\n" + 
 				"	action=~action~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(closeText)~\n" + 
@@ -436,10 +465,11 @@ public class AlertElement {
 				"	color=\"~color~\"~endif~~if(icon)~\n" + 
 				"	icon=~icon~~endif~~if(iconMapping)~\n" + 
 				"	iconMapping=~iconMapping~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(onClose)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(onClose)~\n" + 
 				"	onClose=~onClose~~endif~~if(role)~\n" + 
 				"	role=\"~role~\"~endif~~if(severity)~\n" + 
-				"	severity=\"~severity~\"~endif~~if(style)~\n" + 
+				"	severity=~severity~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
 				"	\n" + 

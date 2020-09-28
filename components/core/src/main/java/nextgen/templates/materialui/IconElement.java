@@ -11,17 +11,13 @@ public class IconElement {
 	private Object _component;
 	private Object _fontSize;
 	private Object _id;
+	private Object _key;
 	private Object _style;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	IconElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -37,6 +33,7 @@ public class IconElement {
 		st.add("component", _component);
 		st.add("fontSize", _fontSize);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("style", _style);
 		for (Object o : _children) st.add("children", o);
 		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
@@ -175,6 +172,28 @@ public class IconElement {
 		return this;
 	} 
 
+	public IconElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public IconElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public IconElement setStyle(Object value) {
 		this._style = value;
 		return this;
@@ -246,6 +265,16 @@ public class IconElement {
 		return this._attribute.stream().map(IconElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(IconElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(IconElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class IconElement_Attribute {
 
 		Object _name;
@@ -269,7 +298,7 @@ public class IconElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -284,13 +313,14 @@ public class IconElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "IconElement(classes,className,color,component,fontSize,id,style,attribute,children) ::= <<<Icon~if(classes)~\n" + 
+	static final String st = "IconElement(classes,className,color,component,fontSize,id,key,style,attribute,children) ::= <<<Icon~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(fontSize)~\n" + 
-				"	fontSize=\"~fontSize~\"~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	fontSize=~fontSize~~endif~~if(id)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~attribute:{it|\n" + 
 				"	\n" + 
 				"	~it.name~=~it.value~}~~if(children)~>\n" + 

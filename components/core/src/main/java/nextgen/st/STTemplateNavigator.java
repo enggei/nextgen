@@ -242,8 +242,6 @@ public class STTemplateNavigator extends JPanel {
 
 			this.label = getModel();
 			this.tooltip = "";
-
-			add(new STGDirectoryTreeNode(presentationModel.generatorSTGDirectory));
 			presentationModel.stgDirectories.forEach(stgDirectory -> add(new STGDirectoryTreeNode(stgDirectory)));
 		}
 

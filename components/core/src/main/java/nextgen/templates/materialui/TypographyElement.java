@@ -13,6 +13,7 @@ public class TypographyElement {
 	private Object _display;
 	private Object _gutterBottom;
 	private Object _id;
+	private Object _key;
 	private Object _noWrap;
 	private Object _paragraph;
 	private Object _style;
@@ -23,11 +24,6 @@ public class TypographyElement {
 
 	TypographyElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -45,6 +41,7 @@ public class TypographyElement {
 		st.add("display", _display);
 		st.add("gutterBottom", _gutterBottom);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("noWrap", _noWrap);
 		st.add("paragraph", _paragraph);
 		st.add("style", _style);
@@ -231,6 +228,28 @@ public class TypographyElement {
 		return this;
 	} 
 
+	public TypographyElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public TypographyElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public TypographyElement setNoWrap(Object value) {
 		this._noWrap = value;
 		return this;
@@ -390,6 +409,16 @@ public class TypographyElement {
 		return this._attribute.stream().map(TypographyElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(TypographyElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(TypographyElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class TypographyElement_Attribute {
 
 		Object _name;
@@ -413,7 +442,7 @@ public class TypographyElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -428,7 +457,7 @@ public class TypographyElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TypographyElement(align,classes,className,color,component,display,gutterBottom,id,noWrap,paragraph,style,variant,variantMapping,attribute,children) ::= <<<Typography~if(align)~\n" + 
+	static final String st = "TypographyElement(align,classes,className,color,component,display,gutterBottom,id,key,noWrap,paragraph,style,variant,variantMapping,attribute,children) ::= <<<Typography~if(align)~\n" + 
 				"	align=\"~align~\"~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
@@ -436,7 +465,8 @@ public class TypographyElement {
 				"	component=~component~~endif~~if(display)~\n" + 
 				"	display=\"~display~\"~endif~~if(gutterBottom)~\n" + 
 				"	gutterBottom~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(noWrap)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(noWrap)~\n" + 
 				"	noWrap~endif~~if(paragraph)~\n" + 
 				"	paragraph~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(variant)~\n" + 

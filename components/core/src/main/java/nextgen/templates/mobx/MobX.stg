@@ -1,0 +1,75 @@
+delimiters "~","~"
+
+BackendStore(imports,name,observables,constructorStatements,actions,backendActions) ::= <<import { observable, action, reaction } from 'mobx';
+~imports:{it|import ~it.ref~ from '~it.path~';};separator="\n"~
+
+class ~name;format="capitalize"~ {
+
+	~observables:{it|~it~};separator="\n"~
+	@observable errors;
+	@observable inProgress = false;
+
+	constructor() {
+		~constructorStatements:{it|~it~};separator="\n"~
+	}
+
+	~actions:{it|~it~};separator="\n\n"~
+
+	~backendActions:{it|~it~};separator="\n\n"~
+
+	@action setErrors(action, errors) {
+		console.info("action " + action + ".errors " + errors);
+		this.errors = errors;
+	}
+}
+
+export default new ~name;format="capitalize"~();  >>
+
+BackendAction(name,params,endpoint,method,observable) ::= <<@action ~name~(~params:{it|~it~};separator=","~) {
+	console.info("action ~name~");
+	this.inProgress = true;
+	agent.~endpoint~.~method~(~params:{it|~it~};separator=","~)
+		.then(({ data }) => this.set~name;format="capitalize"~(data))
+		.catch(action((err) => {
+			console.info("error ~endpoint~.~method~ : " + err.rawResponse);
+			this.setErrors("~name~", err.response && err.response.body && err.response.body.errors);
+			throw err;
+		}))
+		.finally(action(() => this.inProgress = false))
+}
+
+@action set~name;format="capitalize"~(data) {
+	console.info("set~name;format="capitalize"~ " + data);
+	this.~observable~ = data;
+}  >>
+
+Inject(values) ::= <<@inject(~values:{it|~it~};separator=", "~)  >>
+
+Observable(name,initializer) ::= <<@observable ~name~~if(initializer)~ = ~initializer~~endif~;  >>
+
+Reaction(dataFunction,effectFunction) ::= <<reaction(~dataFunction~, ~effectFunction~);  >>
+
+Store(imports,name,observables,constructorStatements,actions) ::= <<import { observable, action, reaction } from 'mobx';
+~imports:{it|import ~it.ref~ from '~it.path~';};separator="\n"~
+
+class ~name;format="capitalize"~ {
+
+	~observables:{it|~it~};separator="\n"~
+
+	constructor() {
+		~constructorStatements:{it|~it~};separator="\n"~
+	}
+
+	~actions:{it|~it~};separator="\n\n"~
+}
+
+export default new ~name;format="capitalize"~();  >>
+
+Action(name,params,statements) ::= <<@action ~name~(~params:{it|~it~};separator=","~) {
+	console.info("action ~name~ " ~params:{it| + " ~it~ " + ~it~}~);
+	~statements:{it|~it~};separator="\n"~
+}  >>
+
+eom() ::= "}"
+
+gt() ::= ">"

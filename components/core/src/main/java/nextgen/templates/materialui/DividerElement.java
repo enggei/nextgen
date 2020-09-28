@@ -11,6 +11,7 @@ public class DividerElement {
 	private Object _component;
 	private Object _flexItem;
 	private Object _id;
+	private Object _key;
 	private Object _light;
 	private Object _orientation;
 	private Object _style;
@@ -19,11 +20,6 @@ public class DividerElement {
 
 	DividerElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -39,6 +35,7 @@ public class DividerElement {
 		st.add("component", _component);
 		st.add("flexItem", _flexItem);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("light", _light);
 		st.add("orientation", _orientation);
 		st.add("style", _style);
@@ -179,6 +176,28 @@ public class DividerElement {
 		return this;
 	} 
 
+	public DividerElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public DividerElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public DividerElement setLight(Object value) {
 		this._light = value;
 		return this;
@@ -288,6 +307,16 @@ public class DividerElement {
 		return this._attribute.stream().map(DividerElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(DividerElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(DividerElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class DividerElement_Attribute {
 
 		Object _name;
@@ -311,7 +340,7 @@ public class DividerElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -326,15 +355,16 @@ public class DividerElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "DividerElement(absolute,classes,className,component,flexItem,id,light,orientation,style,variant,attribute) ::= <<<Divider~if(absolute)~\n" + 
+	static final String st = "DividerElement(absolute,classes,className,component,flexItem,id,key,light,orientation,style,variant,attribute) ::= <<<Divider~if(absolute)~\n" + 
 				"	absolute~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(flexItem)~\n" + 
 				"	flexItem~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(light)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(light)~\n" + 
 				"	light~endif~~if(orientation)~\n" + 
-				"	orientation=\"~orientation~\"~endif~~if(style)~\n" + 
+				"	orientation=~orientation~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
 				"	\n" + 

@@ -17,6 +17,7 @@ public class SliderElement {
 	private Object _getAriaLabel;
 	private Object _getAriaValueText;
 	private Object _id;
+	private Object _key;
 	private Object _marks;
 	private Object _max;
 	private Object _min;
@@ -39,11 +40,6 @@ public class SliderElement {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -63,6 +59,7 @@ public class SliderElement {
 		st.add("getAriaLabel", _getAriaLabel);
 		st.add("getAriaValueText", _getAriaValueText);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("marks", _marks);
 		st.add("max", _max);
 		st.add("min", _min);
@@ -344,6 +341,28 @@ public class SliderElement {
 
 	public SliderElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public SliderElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public SliderElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -720,6 +739,16 @@ public class SliderElement {
 		return this._attribute.stream().map(SliderElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(SliderElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(SliderElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class SliderElement_Attribute {
 
 		Object _name;
@@ -743,7 +772,7 @@ public class SliderElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -758,7 +787,7 @@ public class SliderElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SliderElement(ariaLabel,ariaLabelledby,ariaValuetext,classes,className,color,component,defaultValue,disabled,getAriaLabel,getAriaValueText,id,marks,max,min,name,onChange,onChangeCommitted,orientation,scale,step,style,ThumbComponent,track,value,ValueLabelComponent,valueLabelDisplay,valueLabelFormat,attribute) ::= <<<Slider~if(ariaLabel)~\n" + 
+	static final String st = "SliderElement(ariaLabel,ariaLabelledby,ariaValuetext,classes,className,color,component,defaultValue,disabled,getAriaLabel,getAriaValueText,id,key,marks,max,min,name,onChange,onChangeCommitted,orientation,scale,step,style,ThumbComponent,track,value,ValueLabelComponent,valueLabelDisplay,valueLabelFormat,attribute) ::= <<<Slider~if(ariaLabel)~\n" + 
 				"	ariaLabel=\"~ariaLabel~\"~endif~~if(ariaLabelledby)~\n" + 
 				"	ariaLabelledby=\"~ariaLabelledby~\"~endif~~if(ariaValuetext)~\n" + 
 				"	ariaValuetext=\"~ariaValuetext~\"~endif~~if(classes)~\n" + 
@@ -770,22 +799,23 @@ public class SliderElement {
 				"	disabled~endif~~if(getAriaLabel)~\n" + 
 				"	getAriaLabel=~getAriaLabel~~endif~~if(getAriaValueText)~\n" + 
 				"	getAriaValueText=~getAriaValueText~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(marks)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(marks)~\n" + 
 				"	marks=~marks~~endif~~if(max)~\n" + 
 				"	max=~max~~endif~~if(min)~\n" + 
 				"	min=~min~~endif~~if(name)~\n" + 
 				"	name=\"~name~\"~endif~~if(onChange)~\n" + 
 				"	onChange=~onChange~~endif~~if(onChangeCommitted)~\n" + 
 				"	onChangeCommitted=~onChangeCommitted~~endif~~if(orientation)~\n" + 
-				"	orientation=\"~orientation~\"~endif~~if(scale)~\n" + 
+				"	orientation=~orientation~~endif~~if(scale)~\n" + 
 				"	scale=~scale~~endif~~if(step)~\n" + 
 				"	step=~step~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(ThumbComponent)~\n" + 
 				"	ThumbComponent=~ThumbComponent~~endif~~if(track)~\n" + 
-				"	track=\"~track~\"~endif~~if(value)~\n" + 
+				"	track=~track~~endif~~if(value)~\n" + 
 				"	value=~value~~endif~~if(ValueLabelComponent)~\n" + 
 				"	ValueLabelComponent=~ValueLabelComponent~~endif~~if(valueLabelDisplay)~\n" + 
-				"	valueLabelDisplay=\"~valueLabelDisplay~\"~endif~~if(valueLabelFormat)~\n" + 
+				"	valueLabelDisplay=~valueLabelDisplay~~endif~~if(valueLabelFormat)~\n" + 
 				"	valueLabelFormat=~valueLabelFormat~~endif~~attribute:{it|\n" + 
 				"	\n" + 
 				"	~it.name~=~it.value~}~ /> >>";

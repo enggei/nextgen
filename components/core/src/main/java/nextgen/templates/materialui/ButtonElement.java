@@ -17,6 +17,7 @@ public class ButtonElement {
 	private Object _fullWidth;
 	private Object _href;
 	private Object _id;
+	private Object _key;
 	private Object _size;
 	private Object _startIcon;
 	private Object _style;
@@ -27,11 +28,6 @@ public class ButtonElement {
 
 	ButtonElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -53,6 +49,7 @@ public class ButtonElement {
 		st.add("fullWidth", _fullWidth);
 		st.add("href", _href);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("size", _size);
 		st.add("startIcon", _startIcon);
 		st.add("style", _style);
@@ -327,6 +324,28 @@ public class ButtonElement {
 		return this;
 	} 
 
+	public ButtonElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public ButtonElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public ButtonElement setSize(Object value) {
 		this._size = value;
 		return this;
@@ -486,6 +505,16 @@ public class ButtonElement {
 		return this._attribute.stream().map(ButtonElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(ButtonElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(ButtonElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class ButtonElement_Attribute {
 
 		Object _name;
@@ -509,7 +538,7 @@ public class ButtonElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -524,7 +553,7 @@ public class ButtonElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ButtonElement(classes,className,color,component,disabled,disableElevation,disableFocusRipple,disableRipple,endIcon,fullWidth,href,id,size,startIcon,style,type,variant,attribute,children) ::= <<<Button~if(classes)~\n" + 
+	static final String st = "ButtonElement(classes,className,color,component,disabled,disableElevation,disableFocusRipple,disableRipple,endIcon,fullWidth,href,id,key,size,startIcon,style,type,variant,attribute,children) ::= <<<Button~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(component)~\n" + 
@@ -536,8 +565,9 @@ public class ButtonElement {
 				"	endIcon=~endIcon~~endif~~if(fullWidth)~\n" + 
 				"	fullWidth~endif~~if(href)~\n" + 
 				"	href=\"~href~\"~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(size)~\n" + 
-				"	size=\"~size~\"~endif~~if(startIcon)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(size)~\n" + 
+				"	size=~size~~endif~~if(startIcon)~\n" + 
 				"	startIcon=~startIcon~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(type)~\n" + 
 				"	type=\"~type~\"~endif~~if(variant)~\n" + 

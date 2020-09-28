@@ -9,6 +9,7 @@ public class LinearProgressElement {
 	private Object _className;
 	private Object _color;
 	private Object _id;
+	private Object _key;
 	private Object _style;
 	private Object _value;
 	private Object _valueBuffer;
@@ -17,11 +18,6 @@ public class LinearProgressElement {
 
 	LinearProgressElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -35,6 +31,7 @@ public class LinearProgressElement {
 		st.add("className", _className);
 		st.add("color", _color);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("style", _style);
 		st.add("value", _value);
 		st.add("valueBuffer", _valueBuffer);
@@ -128,6 +125,28 @@ public class LinearProgressElement {
 
 	public LinearProgressElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public LinearProgressElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public LinearProgressElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -240,6 +259,16 @@ public class LinearProgressElement {
 		return this._attribute.stream().map(LinearProgressElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(LinearProgressElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(LinearProgressElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class LinearProgressElement_Attribute {
 
 		Object _name;
@@ -263,7 +292,7 @@ public class LinearProgressElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -278,11 +307,12 @@ public class LinearProgressElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "LinearProgressElement(classes,className,color,id,style,value,valueBuffer,variant,attribute) ::= <<<LinearProgress~if(classes)~\n" + 
+	static final String st = "LinearProgressElement(classes,className,color,id,key,style,value,valueBuffer,variant,attribute) ::= <<<LinearProgress~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(value)~\n" + 
 				"	value=~value~~endif~~if(valueBuffer)~\n" + 
 				"	valueBuffer=~valueBuffer~~endif~~if(variant)~\n" + 

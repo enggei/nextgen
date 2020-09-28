@@ -4,18 +4,6 @@ import nextgen.templates.javascript.*;
 
 public class JavaScriptPatterns extends JavaScriptST {
 
-   public static Observable newObservable(String name) {
-      return newObservable().setName(name);
-   }
-
-   public static Observable newObservable(String name, Object initializer) {
-      return newObservable().setName(name).setInitializer(initializer);
-   }
-
-   public static Action newAction(String name) {
-      return newAction().setName(name);
-   }
-
    public static ReturnStmt newReturnStmt(Object returnValue) {
       return newReturnStmt().setReturnValue(returnValue);
    }
@@ -80,8 +68,8 @@ public class JavaScriptPatterns extends JavaScriptST {
       return newElement().setName(name);
    }
 
-   public static Object debug(String here) {
-      return "console.info(\"" + here + "\");";
+   public static Object debug(String message) {
+      return "console.info(\"" + message + "\");";
    }
 
    public static NameValue newNameValue(String name, Object value) {

@@ -8,6 +8,7 @@ public class AvatarGroupElement {
 	private Object _classes;
 	private Object _className;
 	private Object _id;
+	private Object _key;
 	private Object _max;
 	private Object _spacing;
 	private Object _style;
@@ -16,11 +17,6 @@ public class AvatarGroupElement {
 
 	AvatarGroupElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -33,6 +29,7 @@ public class AvatarGroupElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("max", _max);
 		st.add("spacing", _spacing);
 		st.add("style", _style);
@@ -104,6 +101,28 @@ public class AvatarGroupElement {
 
 	public AvatarGroupElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public AvatarGroupElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public AvatarGroupElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -222,6 +241,16 @@ public class AvatarGroupElement {
 		return this._attribute.stream().map(AvatarGroupElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(AvatarGroupElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(AvatarGroupElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class AvatarGroupElement_Attribute {
 
 		Object _name;
@@ -245,7 +274,7 @@ public class AvatarGroupElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -260,12 +289,13 @@ public class AvatarGroupElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AvatarGroupElement(classes,className,id,max,spacing,style,attribute,children) ::= <<<AvatarGroup~if(classes)~\n" + 
+	static final String st = "AvatarGroupElement(classes,className,id,key,max,spacing,style,attribute,children) ::= <<<AvatarGroup~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(max)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(max)~\n" + 
 				"	max=~max~~endif~~if(spacing)~\n" + 
-				"	spacing=\"~spacing~\"~endif~~if(style)~\n" + 
+				"	spacing=~spacing~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~attribute:{it|\n" + 
 				"	\n" + 
 				"	~it.name~=~it.value~}~~if(children)~>\n" + 

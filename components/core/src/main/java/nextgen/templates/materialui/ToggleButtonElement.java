@@ -11,6 +11,7 @@ public class ToggleButtonElement {
 	private Object _disableFocusRipple;
 	private Object _disableRipple;
 	private Object _id;
+	private Object _key;
 	private Object _selected;
 	private Object _style;
 	private Object _value;
@@ -19,11 +20,6 @@ public class ToggleButtonElement {
 
 	ToggleButtonElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -39,6 +35,7 @@ public class ToggleButtonElement {
 		st.add("disableFocusRipple", _disableFocusRipple);
 		st.add("disableRipple", _disableRipple);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("selected", _selected);
 		st.add("style", _style);
 		st.add("value", _value);
@@ -179,6 +176,28 @@ public class ToggleButtonElement {
 		return this;
 	} 
 
+	public ToggleButtonElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public ToggleButtonElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public ToggleButtonElement setSelected(Object value) {
 		this._selected = value;
 		return this;
@@ -294,6 +313,16 @@ public class ToggleButtonElement {
 		return this._attribute.stream().map(ToggleButtonElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(ToggleButtonElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(ToggleButtonElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class ToggleButtonElement_Attribute {
 
 		Object _name;
@@ -317,7 +346,7 @@ public class ToggleButtonElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -332,13 +361,14 @@ public class ToggleButtonElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ToggleButtonElement(classes,className,disabled,disableFocusRipple,disableRipple,id,selected,style,value,attribute,children) ::= <<<ToggleButton~if(classes)~\n" + 
+	static final String st = "ToggleButtonElement(classes,className,disabled,disableFocusRipple,disableRipple,id,key,selected,style,value,attribute,children) ::= <<<ToggleButton~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(disabled)~\n" + 
 				"	disabled~endif~~if(disableFocusRipple)~\n" + 
 				"	disableFocusRipple~endif~~if(disableRipple)~\n" + 
 				"	disableRipple~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(selected)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(selected)~\n" + 
 				"	selected~endif~~if(style)~\n" + 
 				"	style=~style~~endif~\n" + 
 				"	value=~value~~attribute:{it|\n" + 

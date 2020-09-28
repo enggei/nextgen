@@ -11,11 +11,6 @@ public class State {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -49,6 +44,16 @@ public class State {
 		return this._values.stream().map(State_Values::new);
 	}
 
+	public java.util.List<Object> getValues_Name() {
+		return streamValues().map(State_Values::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getValues_Value() {
+		return streamValues().map(State_Values::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class State_Values {
 
 		Object _name;
@@ -72,7 +77,7 @@ public class State {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

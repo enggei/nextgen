@@ -170,6 +170,21 @@ public class JsonWrapper {
 		return this._externalFields.stream().map(JsonWrapper_ExternalFields::new);
 	}
 
+	public java.util.List<Object> getExternalFields_Type() {
+		return streamExternalFields().map(JsonWrapper_ExternalFields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<String> getExternalFields_Name() {
+		return streamExternalFields().map(JsonWrapper_ExternalFields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getExternalFields_Initializer() {
+		return streamExternalFields().map(JsonWrapper_ExternalFields::getInitializer).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class JsonWrapper_ExternalFields {
 
 		Object _type;
@@ -200,7 +215,7 @@ public class JsonWrapper {
 			return this._initializer;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

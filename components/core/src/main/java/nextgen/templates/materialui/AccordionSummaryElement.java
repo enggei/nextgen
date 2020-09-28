@@ -10,17 +10,13 @@ public class AccordionSummaryElement {
 	private Object _expandIcon;
 	private Object _IconButtonProps;
 	private Object _id;
+	private Object _key;
 	private Object _style;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	AccordionSummaryElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -35,6 +31,7 @@ public class AccordionSummaryElement {
 		st.add("expandIcon", _expandIcon);
 		st.add("IconButtonProps", _IconButtonProps);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("style", _style);
 		for (Object o : _children) st.add("children", o);
 		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
@@ -151,6 +148,28 @@ public class AccordionSummaryElement {
 		return this;
 	} 
 
+	public AccordionSummaryElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public AccordionSummaryElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public AccordionSummaryElement setStyle(Object value) {
 		this._style = value;
 		return this;
@@ -222,6 +241,16 @@ public class AccordionSummaryElement {
 		return this._attribute.stream().map(AccordionSummaryElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(AccordionSummaryElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(AccordionSummaryElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class AccordionSummaryElement_Attribute {
 
 		Object _name;
@@ -245,7 +274,7 @@ public class AccordionSummaryElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -260,12 +289,13 @@ public class AccordionSummaryElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AccordionSummaryElement(classes,className,expandIcon,IconButtonProps,id,style,attribute,children) ::= <<<AccordionSummary~if(classes)~\n" + 
+	static final String st = "AccordionSummaryElement(classes,className,expandIcon,IconButtonProps,id,key,style,attribute,children) ::= <<<AccordionSummary~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(expandIcon)~\n" + 
 				"	expandIcon=~expandIcon~~endif~~if(IconButtonProps)~\n" + 
 				"	IconButtonProps=~IconButtonProps~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~attribute:{it|\n" + 
 				"	\n" + 
 				"	~it.name~=~it.value~}~~if(children)~>\n" + 

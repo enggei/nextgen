@@ -13,11 +13,6 @@ public class App {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -104,6 +99,26 @@ public class App {
 		return this._routes.stream().map(App_Routes::new);
 	}
 
+	public java.util.List<String> getRoutes_Component() {
+		return streamRoutes().map(App_Routes::getComponent).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<String> getRoutes_Filename() {
+		return streamRoutes().map(App_Routes::getFilename).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<String> getRoutes_Path() {
+		return streamRoutes().map(App_Routes::getPath).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getRoutes_Render() {
+		return streamRoutes().map(App_Routes::getRender).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class App_Routes {
 
 		String _component;
@@ -141,7 +156,7 @@ public class App {
 			return this._render;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

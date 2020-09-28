@@ -20,12 +20,6 @@ public class JavaScriptSTTests {
 		testReturnStmt();
 		testJsonArray();
 		testJsonObject();
-		testMobX();
-		testAction();
-		testInject();
-		testMobXStore();
-		testObservable();
-		testReaction();
 		testNameArray();
 		testNameValue();
 		testApp();
@@ -51,6 +45,7 @@ public class JavaScriptSTTests {
 		testLink();
 		testReactRouterLinkImport();
 		testWithRouterImport();
+		testStatement();
 		testSuperagent();
 		testAgentDeclaration();
 		testAgentEndpoint();
@@ -60,236 +55,211 @@ public class JavaScriptSTTests {
 
 	@org.junit.Test
 	public void testBlockStmt() {
-		System.out.println("\n--- TEST BlockStmt:\n" + newBlockStmt());
-	} 
+		System.out.println("BlockStmt:\n" + newBlockStmt());
+	}  
 
 	@org.junit.Test
 	public void testConditional() {
-		System.out.println("\n--- TEST Conditional:\n" + newConditional());
-	} 
+		System.out.println("Conditional:\n" + newConditional());
+	}  
 
 	@org.junit.Test
 	public void testIf() {
-		System.out.println("\n--- TEST If:\n" + newIf());
-	} 
+		System.out.println("If:\n" + newIf());
+	}  
 
 	@org.junit.Test
 	public void testDecorator() {
-		System.out.println("\n--- TEST Decorator:\n" + newDecorator());
-	} 
+		System.out.println("Decorator:\n" + newDecorator());
+	}  
 
 	@org.junit.Test
 	public void testArrowFunction() {
-		System.out.println("\n--- TEST ArrowFunction:\n" + newArrowFunction());
-	} 
+		System.out.println("ArrowFunction:\n" + newArrowFunction());
+	}  
 
 	@org.junit.Test
 	public void testFunction() {
-		System.out.println("\n--- TEST Function:\n" + newFunction());
-	} 
+		System.out.println("Function:\n" + newFunction());
+	}  
 
 	@org.junit.Test
 	public void testFunctionCall() {
-		System.out.println("\n--- TEST FunctionCall:\n" + newFunctionCall());
-	} 
+		System.out.println("FunctionCall:\n" + newFunctionCall());
+	}  
 
 	@org.junit.Test
 	public void testFunctionExpression() {
-		System.out.println("\n--- TEST FunctionExpression:\n" + newFunctionExpression());
-	} 
+		System.out.println("FunctionExpression:\n" + newFunctionExpression());
+	}  
 
 	@org.junit.Test
 	public void testReturnStmt() {
-		System.out.println("\n--- TEST ReturnStmt:\n" + newReturnStmt());
-	} 
+		System.out.println("ReturnStmt:\n" + newReturnStmt());
+	}  
 
 	@org.junit.Test
 	public void testJsonArray() {
-		System.out.println("\n--- TEST JsonArray:\n" + newJsonArray());
-	} 
+		System.out.println("JsonArray:\n" + newJsonArray());
+	}  
 
 	@org.junit.Test
 	public void testJsonObject() {
-		System.out.println("\n--- TEST JsonObject:\n" + newJsonObject());
-	} 
-
-	@org.junit.Test
-	public void testMobX() {
-		System.out.println("\n--- TEST MobX:\n" + newMobX());
-	} 
-
-	@org.junit.Test
-	public void testAction() {
-		System.out.println("\n--- TEST Action:\n" + newAction());
-	} 
-
-	@org.junit.Test
-	public void testInject() {
-		System.out.println("\n--- TEST Inject:\n" + newInject());
-	} 
-
-	@org.junit.Test
-	public void testMobXStore() {
-		System.out.println("\n--- TEST MobXStore:\n" + newMobXStore());
-	} 
-
-	@org.junit.Test
-	public void testObservable() {
-		System.out.println("\n--- TEST Observable:\n" + newObservable());
-	} 
-
-	@org.junit.Test
-	public void testReaction() {
-		System.out.println("\n--- TEST Reaction:\n" + newReaction());
-	} 
+		System.out.println("JsonObject:\n" + newJsonObject());
+	}  
 
 	@org.junit.Test
 	public void testNameArray() {
-		System.out.println("\n--- TEST NameArray:\n" + newNameArray());
-	} 
+		System.out.println("NameArray:\n" + newNameArray());
+	}  
 
 	@org.junit.Test
 	public void testNameValue() {
-		System.out.println("\n--- TEST NameValue:\n" + newNameValue());
-	} 
+		System.out.println("NameValue:\n" + newNameValue());
+	}  
 
 	@org.junit.Test
 	public void testApp() {
-		System.out.println("\n--- TEST App:\n" + newApp());
-	} 
+		System.out.println("App:\n" + newApp());
+	}  
 
 	@org.junit.Test
 	public void testIndexCSS() {
-		System.out.println("\n--- TEST IndexCSS:\n" + newIndexCSS());
-	} 
+		System.out.println("IndexCSS:\n" + newIndexCSS());
+	}  
 
 	@org.junit.Test
 	public void testIndexHtml() {
-		System.out.println("\n--- TEST IndexHtml:\n" + newIndexHtml());
-	} 
+		System.out.println("IndexHtml:\n" + newIndexHtml());
+	}  
 
 	@org.junit.Test
 	public void testIndexJS() {
-		System.out.println("\n--- TEST IndexJS:\n" + newIndexJS());
-	} 
+		System.out.println("IndexJS:\n" + newIndexJS());
+	}  
 
 	@org.junit.Test
 	public void testJSX() {
-		System.out.println("\n--- TEST JSX:\n" + newJSX());
-	} 
+		System.out.println("JSX:\n" + newJSX());
+	}  
 
 	@org.junit.Test
 	public void testClassComponent() {
-		System.out.println("\n--- TEST ClassComponent:\n" + newClassComponent());
-	} 
+		System.out.println("ClassComponent:\n" + newClassComponent());
+	}  
 
 	@org.junit.Test
 	public void testDependency() {
-		System.out.println("\n--- TEST Dependency:\n" + newDependency());
-	} 
+		System.out.println("Dependency:\n" + newDependency());
+	}  
 
 	@org.junit.Test
 	public void testDestructorProp() {
-		System.out.println("\n--- TEST DestructorProp:\n" + newDestructorProp());
-	} 
+		System.out.println("DestructorProp:\n" + newDestructorProp());
+	}  
 
 	@org.junit.Test
 	public void testDiv() {
-		System.out.println("\n--- TEST Div:\n" + newDiv());
-	} 
+		System.out.println("Div:\n" + newDiv());
+	}  
 
 	@org.junit.Test
 	public void testElement() {
-		System.out.println("\n--- TEST Element:\n" + newElement());
-	} 
+		System.out.println("Element:\n" + newElement());
+	}  
 
 	@org.junit.Test
 	public void testForm() {
-		System.out.println("\n--- TEST Form:\n" + newForm());
-	} 
+		System.out.println("Form:\n" + newForm());
+	}  
 
 	@org.junit.Test
 	public void testUl() {
-		System.out.println("\n--- TEST Ul:\n" + newUl());
-	} 
+		System.out.println("Ul:\n" + newUl());
+	}  
 
 	@org.junit.Test
 	public void testFunctionalComponent() {
-		System.out.println("\n--- TEST FunctionalComponent:\n" + newFunctionalComponent());
-	} 
+		System.out.println("FunctionalComponent:\n" + newFunctionalComponent());
+	}  
 
 	@org.junit.Test
 	public void testMapProperty() {
-		System.out.println("\n--- TEST MapProperty:\n" + newMapProperty());
-	} 
+		System.out.println("MapProperty:\n" + newMapProperty());
+	}  
 
 	@org.junit.Test
 	public void testMethodDeclaration() {
-		System.out.println("\n--- TEST MethodDeclaration:\n" + newMethodDeclaration());
-	} 
+		System.out.println("MethodDeclaration:\n" + newMethodDeclaration());
+	}  
 
 	@org.junit.Test
 	public void testNamedImport() {
-		System.out.println("\n--- TEST NamedImport:\n" + newNamedImport());
-	} 
+		System.out.println("NamedImport:\n" + newNamedImport());
+	}  
 
 	@org.junit.Test
 	public void testProp() {
-		System.out.println("\n--- TEST Prop:\n" + newProp());
-	} 
+		System.out.println("Prop:\n" + newProp());
+	}  
 
 	@org.junit.Test
 	public void testReturnStatement() {
-		System.out.println("\n--- TEST ReturnStatement:\n" + newReturnStatement());
-	} 
+		System.out.println("ReturnStatement:\n" + newReturnStatement());
+	}  
 
 	@org.junit.Test
 	public void testState() {
-		System.out.println("\n--- TEST State:\n" + newState());
-	} 
+		System.out.println("State:\n" + newState());
+	}  
 
 	@org.junit.Test
 	public void testForwardRef() {
-		System.out.println("\n--- TEST ForwardRef:\n" + newForwardRef());
-	} 
+		System.out.println("ForwardRef:\n" + newForwardRef());
+	}  
 
 	@org.junit.Test
 	public void testLink() {
-		System.out.println("\n--- TEST Link:\n" + newLink());
-	} 
+		System.out.println("Link:\n" + newLink());
+	}  
 
 	@org.junit.Test
 	public void testReactRouterLinkImport() {
-		System.out.println("\n--- TEST ReactRouterLinkImport:\n" + newReactRouterLinkImport());
-	} 
+		System.out.println("ReactRouterLinkImport:\n" + newReactRouterLinkImport());
+	}  
 
 	@org.junit.Test
 	public void testWithRouterImport() {
-		System.out.println("\n--- TEST WithRouterImport:\n" + newWithRouterImport());
-	} 
+		System.out.println("WithRouterImport:\n" + newWithRouterImport());
+	}  
+
+	@org.junit.Test
+	public void testStatement() {
+		System.out.println("Statement:\n" + newStatement());
+	}  
 
 	@org.junit.Test
 	public void testSuperagent() {
-		System.out.println("\n--- TEST Superagent:\n" + newSuperagent());
-	} 
+		System.out.println("Superagent:\n" + newSuperagent());
+	}  
 
 	@org.junit.Test
 	public void testAgentDeclaration() {
-		System.out.println("\n--- TEST AgentDeclaration:\n" + newAgentDeclaration());
-	} 
+		System.out.println("AgentDeclaration:\n" + newAgentDeclaration());
+	}  
 
 	@org.junit.Test
 	public void testAgentEndpoint() {
-		System.out.println("\n--- TEST AgentEndpoint:\n" + newAgentEndpoint());
-	} 
+		System.out.println("AgentEndpoint:\n" + newAgentEndpoint());
+	}  
 
 	@org.junit.Test
 	public void testAgentRequest() {
-		System.out.println("\n--- TEST AgentRequest:\n" + newAgentRequest());
-	} 
+		System.out.println("AgentRequest:\n" + newAgentRequest());
+	}  
 
 	@org.junit.Test
 	public void testConstVariable() {
-		System.out.println("\n--- TEST ConstVariable:\n" + newConstVariable());
-	} 
+		System.out.println("ConstVariable:\n" + newConstVariable());
+	}  
 } 

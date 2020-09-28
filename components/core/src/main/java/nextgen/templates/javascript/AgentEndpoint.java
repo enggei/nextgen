@@ -5,7 +5,7 @@ public class AgentEndpoint {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _name;
+	private String _name;
 	private Object _urlParam;
 	private Object _action;
 	private Object _url;
@@ -13,11 +13,6 @@ public class AgentEndpoint {
 
 	AgentEndpoint(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -35,16 +30,16 @@ public class AgentEndpoint {
 		return st.render().trim();
 	}
 
-	public AgentEndpoint setName(Object value) {
+	public AgentEndpoint setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Object getName(Object defaultValue) {
+	public String getName(String defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 

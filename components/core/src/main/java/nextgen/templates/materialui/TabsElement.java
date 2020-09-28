@@ -14,6 +14,7 @@ public class TabsElement {
 	private Object _component;
 	private Object _id;
 	private Object _indicatorColor;
+	private Object _key;
 	private Object _onChange;
 	private Object _orientation;
 	private Object _ScrollButtonComponent;
@@ -32,11 +33,6 @@ public class TabsElement {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -53,6 +49,7 @@ public class TabsElement {
 		st.add("component", _component);
 		st.add("id", _id);
 		st.add("indicatorColor", _indicatorColor);
+		st.add("key", _key);
 		st.add("onChange", _onChange);
 		st.add("orientation", _orientation);
 		st.add("ScrollButtonComponent", _ScrollButtonComponent);
@@ -264,6 +261,28 @@ public class TabsElement {
 
 	public TabsElement removeIndicatorColor() {
 		this._indicatorColor = null;
+		return this;
+	} 
+
+	public TabsElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public TabsElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -558,6 +577,16 @@ public class TabsElement {
 		return this._attribute.stream().map(TabsElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(TabsElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(TabsElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class TabsElement_Attribute {
 
 		Object _name;
@@ -581,7 +610,7 @@ public class TabsElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -596,7 +625,7 @@ public class TabsElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TabsElement(action,ariaLabel,ariaLabelledby,centered,classes,className,component,id,indicatorColor,onChange,orientation,ScrollButtonComponent,scrollButtons,selectionFollowsFocus,style,TabIndicatorProps,TabScrollButtonProps,textColor,value,variant,attribute,children) ::= <<<Tabs~if(action)~\n" + 
+	static final String st = "TabsElement(action,ariaLabel,ariaLabelledby,centered,classes,className,component,id,indicatorColor,key,onChange,orientation,ScrollButtonComponent,scrollButtons,selectionFollowsFocus,style,TabIndicatorProps,TabScrollButtonProps,textColor,value,variant,attribute,children) ::= <<<Tabs~if(action)~\n" + 
 				"	action=~action~~endif~~if(ariaLabel)~\n" + 
 				"	ariaLabel=\"~ariaLabel~\"~endif~~if(ariaLabelledby)~\n" + 
 				"	ariaLabelledby=\"~ariaLabelledby~\"~endif~~if(centered)~\n" + 
@@ -605,16 +634,17 @@ public class TabsElement {
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(indicatorColor)~\n" + 
-				"	indicatorColor=\"~indicatorColor~\"~endif~~if(onChange)~\n" + 
+				"	indicatorColor=~indicatorColor~~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(onChange)~\n" + 
 				"	onChange=~onChange~~endif~~if(orientation)~\n" + 
-				"	orientation=\"~orientation~\"~endif~~if(ScrollButtonComponent)~\n" + 
+				"	orientation=~orientation~~endif~~if(ScrollButtonComponent)~\n" + 
 				"	ScrollButtonComponent=~ScrollButtonComponent~~endif~~if(scrollButtons)~\n" + 
-				"	scrollButtons=\"~scrollButtons~\"~endif~~if(selectionFollowsFocus)~\n" + 
+				"	scrollButtons=~scrollButtons~~endif~~if(selectionFollowsFocus)~\n" + 
 				"	selectionFollowsFocus~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(TabIndicatorProps)~\n" + 
 				"	TabIndicatorProps=~TabIndicatorProps~~endif~~if(TabScrollButtonProps)~\n" + 
 				"	TabScrollButtonProps=~TabScrollButtonProps~~endif~~if(textColor)~\n" + 
-				"	textColor=\"~textColor~\"~endif~~if(value)~\n" + 
+				"	textColor=~textColor~~endif~~if(value)~\n" + 
 				"	value=~value~~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
 				"	\n" + 

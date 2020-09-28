@@ -11,6 +11,7 @@ public class SpeedDialActionElement {
 	private Object _FabProps;
 	private Object _icon;
 	private Object _id;
+	private Object _key;
 	private Object _open;
 	private Object _style;
 	private Object _TooltipClasses;
@@ -21,11 +22,6 @@ public class SpeedDialActionElement {
 
 	SpeedDialActionElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -41,6 +37,7 @@ public class SpeedDialActionElement {
 		st.add("FabProps", _FabProps);
 		st.add("icon", _icon);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("open", _open);
 		st.add("style", _style);
 		st.add("TooltipClasses", _TooltipClasses);
@@ -180,6 +177,28 @@ public class SpeedDialActionElement {
 
 	public SpeedDialActionElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public SpeedDialActionElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public SpeedDialActionElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -336,6 +355,16 @@ public class SpeedDialActionElement {
 		return this._attribute.stream().map(SpeedDialActionElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(SpeedDialActionElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(SpeedDialActionElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class SpeedDialActionElement_Attribute {
 
 		Object _name;
@@ -359,7 +388,7 @@ public class SpeedDialActionElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -374,18 +403,19 @@ public class SpeedDialActionElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SpeedDialActionElement(classes,className,delay,FabProps,icon,id,open,style,TooltipClasses,tooltipOpen,tooltipPlacement,tooltipTitle,attribute) ::= <<<SpeedDialAction~if(classes)~\n" + 
+	static final String st = "SpeedDialActionElement(classes,className,delay,FabProps,icon,id,key,open,style,TooltipClasses,tooltipOpen,tooltipPlacement,tooltipTitle,attribute) ::= <<<SpeedDialAction~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(delay)~\n" + 
 				"	delay=~delay~~endif~~if(FabProps)~\n" + 
 				"	FabProps=~FabProps~~endif~~if(icon)~\n" + 
 				"	icon=~icon~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(open)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(open)~\n" + 
 				"	open~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(TooltipClasses)~\n" + 
 				"	TooltipClasses=~TooltipClasses~~endif~~if(tooltipOpen)~\n" + 
 				"	tooltipOpen~endif~~if(tooltipPlacement)~\n" + 
-				"	tooltipPlacement=\"~tooltipPlacement~\"~endif~~if(tooltipTitle)~\n" + 
+				"	tooltipPlacement=~tooltipPlacement~~endif~~if(tooltipTitle)~\n" + 
 				"	tooltipTitle=~tooltipTitle~~endif~~attribute:{it|\n" + 
 				"	\n" + 
 				"	~it.name~=~it.value~}~ /> >>";

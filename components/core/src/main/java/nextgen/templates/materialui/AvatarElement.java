@@ -11,6 +11,7 @@ public class AvatarElement {
 	private Object _component;
 	private Object _id;
 	private Object _imgProps;
+	private Object _key;
 	private Object _sizes;
 	private Object _src;
 	private Object _srcSet;
@@ -21,11 +22,6 @@ public class AvatarElement {
 
 	AvatarElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -41,6 +37,7 @@ public class AvatarElement {
 		st.add("component", _component);
 		st.add("id", _id);
 		st.add("imgProps", _imgProps);
+		st.add("key", _key);
 		st.add("sizes", _sizes);
 		st.add("src", _src);
 		st.add("srcSet", _srcSet);
@@ -180,6 +177,28 @@ public class AvatarElement {
 
 	public AvatarElement removeImgProps() {
 		this._imgProps = null;
+		return this;
+	} 
+
+	public AvatarElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public AvatarElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -342,6 +361,16 @@ public class AvatarElement {
 		return this._attribute.stream().map(AvatarElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(AvatarElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(AvatarElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class AvatarElement_Attribute {
 
 		Object _name;
@@ -365,7 +394,7 @@ public class AvatarElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -380,13 +409,14 @@ public class AvatarElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AvatarElement(alt,classes,className,component,id,imgProps,sizes,src,srcSet,style,variant,attribute,children) ::= <<<Avatar~if(alt)~\n" + 
+	static final String st = "AvatarElement(alt,classes,className,component,id,imgProps,key,sizes,src,srcSet,style,variant,attribute,children) ::= <<<Avatar~if(alt)~\n" + 
 				"	alt=\"~alt~\"~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(imgProps)~\n" + 
-				"	imgProps=~imgProps~~endif~~if(sizes)~\n" + 
+				"	imgProps=~imgProps~~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(sizes)~\n" + 
 				"	sizes=\"~sizes~\"~endif~~if(src)~\n" + 
 				"	src=\"~src~\"~endif~~if(srcSet)~\n" + 
 				"	srcSet=\"~srcSet~\"~endif~~if(style)~\n" + 

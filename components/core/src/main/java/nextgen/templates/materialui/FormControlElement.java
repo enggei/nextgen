@@ -15,6 +15,7 @@ public class FormControlElement {
 	private Object _fullWidth;
 	private Object _hiddenLabel;
 	private Object _id;
+	private Object _key;
 	private Object _margin;
 	private Object _required;
 	private Object _size;
@@ -25,11 +26,6 @@ public class FormControlElement {
 
 	FormControlElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -49,6 +45,7 @@ public class FormControlElement {
 		st.add("fullWidth", _fullWidth);
 		st.add("hiddenLabel", _hiddenLabel);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("margin", _margin);
 		st.add("required", _required);
 		st.add("size", _size);
@@ -279,6 +276,28 @@ public class FormControlElement {
 		return this;
 	} 
 
+	public FormControlElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public FormControlElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public FormControlElement setMargin(Object value) {
 		this._margin = value;
 		return this;
@@ -438,6 +457,16 @@ public class FormControlElement {
 		return this._attribute.stream().map(FormControlElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(FormControlElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(FormControlElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class FormControlElement_Attribute {
 
 		Object _name;
@@ -461,7 +490,7 @@ public class FormControlElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -476,7 +505,7 @@ public class FormControlElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "FormControlElement(classes,className,color,component,disabled,error,focused,fullWidth,hiddenLabel,id,margin,required,size,style,variant,attribute,children) ::= <<<FormControl~if(classes)~\n" + 
+	static final String st = "FormControlElement(classes,className,color,component,disabled,error,focused,fullWidth,hiddenLabel,id,key,margin,required,size,style,variant,attribute,children) ::= <<<FormControl~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(component)~\n" + 
@@ -486,10 +515,11 @@ public class FormControlElement {
 				"	focused~endif~~if(fullWidth)~\n" + 
 				"	fullWidth~endif~~if(hiddenLabel)~\n" + 
 				"	hiddenLabel~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(margin)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(margin)~\n" + 
 				"	margin=\"~margin~\"~endif~~if(required)~\n" + 
 				"	required~endif~~if(size)~\n" + 
-				"	size=\"~size~\"~endif~~if(style)~\n" + 
+				"	size=~size~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
 				"	\n" + 

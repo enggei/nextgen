@@ -11,6 +11,10 @@ public class RemoveFile {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID getUuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("removeFile");
@@ -56,4 +60,4 @@ public class RemoveFile {
 	}
 
 	static final String st = "removeFile(path) ::= <<git rm --cached ~path~ >>";
-} 
+}  

@@ -8,6 +8,7 @@ public class FormGroupElement {
 	private Object _classes;
 	private Object _className;
 	private Object _id;
+	private Object _key;
 	private Object _row;
 	private Object _style;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -15,11 +16,6 @@ public class FormGroupElement {
 
 	FormGroupElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -32,6 +28,7 @@ public class FormGroupElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("row", _row);
 		st.add("style", _style);
 		for (Object o : _children) st.add("children", o);
@@ -102,6 +99,28 @@ public class FormGroupElement {
 
 	public FormGroupElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public FormGroupElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public FormGroupElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -198,6 +217,16 @@ public class FormGroupElement {
 		return this._attribute.stream().map(FormGroupElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(FormGroupElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(FormGroupElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class FormGroupElement_Attribute {
 
 		Object _name;
@@ -221,7 +250,7 @@ public class FormGroupElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -236,10 +265,11 @@ public class FormGroupElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "FormGroupElement(classes,className,id,row,style,attribute,children) ::= <<<FormGroup~if(classes)~\n" + 
+	static final String st = "FormGroupElement(classes,className,id,key,row,style,attribute,children) ::= <<<FormGroup~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(row)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(row)~\n" + 
 				"	row~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~attribute:{it|\n" + 
 				"	\n" + 

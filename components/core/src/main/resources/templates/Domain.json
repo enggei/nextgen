@@ -30,7 +30,7 @@
     "children" : [ {
       "uuid" : "c4c6caaf-84a5-4975-8782-311476c8742c",
       "name" : "Entity",
-      "text" : "Entity: ~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~\n~relations:{it|~it~};separator=\"\\n\"~ ",
+      "text" : "Entity: ~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~ ~if(eqha)~~eqha~~endif~\n~relations:{it|~it~};separator=\"\\n\"~ ",
       "parameters" : [ {
         "uuid" : "df812852-1a4b-4e82-b4e1-31196c9b948f",
         "name" : "name",
@@ -47,6 +47,11 @@
         "type" : "LIST",
         "argumentType" : "String"
       }, {
+        "uuid" : "8d1973e1-de07-439e-9b06-fc185c9afe36",
+        "name" : "eqha",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
         "uuid" : "b082416f-6627-4868-8709-6e1d5ffaddbe",
         "name" : "relations",
         "type" : "LIST",
@@ -55,7 +60,7 @@
     }, {
       "uuid" : "6b160e63-6f7a-46c1-b128-db8e15f2d184",
       "name" : "Relation",
-      "text" : "~name~ ~type~ ~dst~~if(lexical)~ lexical~endif~~if(self)~ self-referential~endif~ ",
+      "text" : "~name~ ~type~ ~dst~~if(lexical)~ lexical~endif~~if(self)~ self-referential~endif~~if(eqha)~ ~eqha~~endif~ ",
       "parameters" : [ {
         "uuid" : "6e9a1856-7da1-4ef9-b422-f3b990eef6d6",
         "name" : "name",
@@ -81,144 +86,11 @@
         "name" : "self",
         "type" : "SINGLE",
         "argumentType" : "Boolean"
-      } ]
-    } ]
-  }, {
-    "uuid" : "482ae0e3-0000-41e0-8f17-0613430216b8",
-    "name" : "JavaProject",
-    "text" : "package ~packageName~;\n\nimport nextgen.templates.java.*;\n\n~if(javaPatterns)~import static ~packageName~.~name~.JavaPatterns.*;~endif~\n\npublic class ~name~ {\n\n\tfinal java.io.File root = new java.io.File(\"~root~\");\n\tfinal java.io.File mainJava = new java.io.File(root, \"src/main/java\");\n\tfinal java.io.File mainResources = new java.io.File(root, \"src/main/resources\");\n\tfinal java.io.File testJava = new java.io.File(root, \"src/test/java\");\n\tfinal java.io.File testResources = new java.io.File(root, \"src/test/resources\");\n\n\t~libraries:{it|~it~};separator=\"\\n\\n\"~\n\n\t~packageDeclarations:{it|~it~};separator=\"\\n\\n\"~\n\n\t~javaPatterns~\n\n\t~models:{it|~it~}~\n\n\tprotected static void log(Object log) {\n\t\tSystem.out.println(log);\n\t}\n} ",
-    "parameters" : [ {
-      "uuid" : "566d195b-373f-4291-80d8-27ae7f9cce36",
-      "name" : "packageName",
-      "type" : "SINGLE",
-      "argumentType" : "String"
-    }, {
-      "uuid" : "fc6c1860-39ea-4a4a-a41c-dcb4ae792518",
-      "name" : "javaPatterns",
-      "type" : "SINGLE",
-      "argumentType" : "Object"
-    }, {
-      "uuid" : "506bc5e1-a0e7-4fc3-857d-60d685b6d7d4",
-      "name" : "name",
-      "type" : "SINGLE",
-      "argumentType" : "String"
-    }, {
-      "uuid" : "f4c44046-79e9-448d-aede-3ecc86c5e523",
-      "name" : "root",
-      "type" : "SINGLE",
-      "argumentType" : "String"
-    }, {
-      "uuid" : "9a944977-44db-4cda-b493-b031621ab793",
-      "name" : "libraries",
-      "type" : "LIST",
-      "argumentType" : "Object"
-    }, {
-      "uuid" : "f709faa9-e663-4a51-a7a1-366f90a6d9ef",
-      "name" : "packageDeclarations",
-      "type" : "LIST",
-      "argumentType" : "JavaPackage"
-    }, {
-      "uuid" : "45dfcc7e-028b-450a-b4b6-79d6aa2d4b7f",
-      "name" : "models",
-      "type" : "LIST",
-      "argumentType" : "Object"
-    } ],
-    "children" : [ {
-      "uuid" : "581a326a-5c8c-47bb-9ce2-0cfd0e28a9f2",
-      "name" : "JavaPackage",
-      "text" : "~if(comments)~\n// ~comments~\n~endif~\nfinal PackageDeclaration ~name~ = newPackageDeclaration(~if(parent)~~parent~, ~endif~\"~packageName~\");\n~entities:{it|final NamedEntity ~if(it.ref)~~it.ref~~else~~it.name~~endif~ = new NamedEntity(\"~it.name~\", ~if(it.isPrimitive)~null~else~~name~~endif~~if(it.variableName)~, \"~it.variableName~\"~endif~);};separator=\"\\n\"~\n\n~methods:{it|~it~};separator=\"\\n\\n\"~\n\n~subPackages:{it|~it~};separator=\"\\n\\n\"~ ",
-      "parameters" : [ {
-        "uuid" : "d854bc48-0d01-400e-bc44-e605449e7d49",
-        "name" : "comments",
+      }, {
+        "uuid" : "3fd4a769-5a45-448a-82a4-b84711b69a07",
+        "name" : "eqha",
         "type" : "SINGLE",
         "argumentType" : "Object"
-      }, {
-        "uuid" : "1bdbbfe5-425e-4ac0-939c-a2964dbc7d89",
-        "name" : "name",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "6440a6ef-99a4-4067-a44f-3c7713b3fb7f",
-        "name" : "parent",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "8841ddc4-2f54-40e6-9443-819eeebd6551",
-        "name" : "packageName",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "31d6d80f-8f36-41db-b75a-f8ce2480d316",
-        "name" : "entities",
-        "type" : "KVLIST",
-        "argumentType" : "Object",
-        "keys" : [ {
-          "uuid" : "fe1cd147-03b0-48b5-943e-642e9a932f40",
-          "name" : "name",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "6a599356-9092-4130-853f-c7193764884e",
-          "name" : "variableName",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "de1c963d-1d08-4dea-bc0b-63d0c255f9ed",
-          "name" : "ref",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "f48fb2f8-c25a-4870-8803-38529c5cbc6c",
-          "name" : "isPrimitive",
-          "argumentType" : "Boolean"
-        } ]
-      }, {
-        "uuid" : "fe9ef0a7-49b5-4c8a-bac7-956bce977753",
-        "name" : "methods",
-        "type" : "LIST",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "88d56227-9a67-411c-acfd-2a7c9171540a",
-        "name" : "subPackages",
-        "type" : "LIST",
-        "argumentType" : "Object"
-      } ],
-      "children" : [ ]
-    }, {
-      "uuid" : "ae2892b7-da5f-464e-9d07-2ed65253888a",
-      "name" : "JavaLibrary",
-      "text" : "// ~name~\n~packages:{it|~it~};separator=\"\\n\\n\"~ ",
-      "parameters" : [ {
-        "uuid" : "871a9b10-a31d-493b-b9e0-f680b9a8b1ef",
-        "name" : "name",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "7840ae7b-4bc3-48dc-ac8d-d2f4b1dc50ce",
-        "name" : "packages",
-        "type" : "LIST",
-        "argumentType" : "Object"
-      } ]
-    }, {
-      "uuid" : "2be60be4-e81c-4303-8a85-ccac265cb76c",
-      "name" : "Model",
-      "text" : "protected ~name~ new~name;format=\"capitalize\"~() { return new ~name~(); }\n\nprotected class ~name~ {\n\n\tprivate final java.util.UUID uuid = java.util.UUID.randomUUID();\n\t~fields:{it|protected ~it.type~ _~it.name~;};separator=\"\\n\"~\n\n\tprotected ~name~() {\n\n\t}\n~fields:{it|\n\n\tprotected ~name~ set~it.name;format=\"capitalize\"~(~it.type~ _~it.name~) {\n\t\tthis._~it.name~ = _~it.name~;\n\t\treturn this;\n\t\\}\n\n\tprotected ~it.type~ get~it.name;format=\"capitalize\"~() {\n\t\treturn this._~it.name~;\n\t\\}\n};separator=\"\\n\\n\"~\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\tUseCase useCase = (UseCase) o;\n\t\treturn uuid.equals(useCase.uuid);\n\t}\n\t\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(uuid);\n\t}\n} ",
-      "parameters" : [ {
-        "uuid" : "1db259dc-2ffd-48ff-a81e-a1f7fcbda89c",
-        "name" : "name",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "8da2badd-79b3-4efb-97f6-a80904fcb516",
-        "name" : "fields",
-        "type" : "KVLIST",
-        "argumentType" : "Object",
-        "keys" : [ {
-          "uuid" : "9e2f03f9-0a3b-4b09-810f-d72772f75574",
-          "name" : "type",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "f66b85ff-6829-42d5-9d0d-daabbdf2b48b",
-          "name" : "name",
-          "argumentType" : "Object"
-        } ]
       } ]
     } ]
   } ],

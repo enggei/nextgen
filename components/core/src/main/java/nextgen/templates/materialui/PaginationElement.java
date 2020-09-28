@@ -16,6 +16,7 @@ public class PaginationElement {
 	private Object _hideNextButton;
 	private Object _hidePrevButton;
 	private Object _id;
+	private Object _key;
 	private Object _onChange;
 	private Object _page;
 	private Object _renderItem;
@@ -30,11 +31,6 @@ public class PaginationElement {
 
 	PaginationElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -55,6 +51,7 @@ public class PaginationElement {
 		st.add("hideNextButton", _hideNextButton);
 		st.add("hidePrevButton", _hidePrevButton);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("onChange", _onChange);
 		st.add("page", _page);
 		st.add("renderItem", _renderItem);
@@ -311,6 +308,28 @@ public class PaginationElement {
 		return this;
 	} 
 
+	public PaginationElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public PaginationElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public PaginationElement setOnChange(Object value) {
 		this._onChange = value;
 		return this;
@@ -552,6 +571,16 @@ public class PaginationElement {
 		return this._attribute.stream().map(PaginationElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(PaginationElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(PaginationElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class PaginationElement_Attribute {
 
 		Object _name;
@@ -575,7 +604,7 @@ public class PaginationElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -590,7 +619,7 @@ public class PaginationElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PaginationElement(boundaryCount,classes,className,color,count,defaultPage,disabled,getItemAriaLabel,hideNextButton,hidePrevButton,id,onChange,page,renderItem,shape,showFirstButton,showLastButton,siblingCount,size,style,variant,attribute) ::= <<<Pagination~if(boundaryCount)~\n" + 
+	static final String st = "PaginationElement(boundaryCount,classes,className,color,count,defaultPage,disabled,getItemAriaLabel,hideNextButton,hidePrevButton,id,key,onChange,page,renderItem,shape,showFirstButton,showLastButton,siblingCount,size,style,variant,attribute) ::= <<<Pagination~if(boundaryCount)~\n" + 
 				"	boundaryCount=~boundaryCount~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
@@ -601,15 +630,16 @@ public class PaginationElement {
 				"	getItemAriaLabel=~getItemAriaLabel~~endif~~if(hideNextButton)~\n" + 
 				"	hideNextButton~endif~~if(hidePrevButton)~\n" + 
 				"	hidePrevButton~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(onChange)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(onChange)~\n" + 
 				"	onChange=~onChange~~endif~~if(page)~\n" + 
 				"	page=~page~~endif~~if(renderItem)~\n" + 
 				"	renderItem=~renderItem~~endif~~if(shape)~\n" + 
-				"	shape=\"~shape~\"~endif~~if(showFirstButton)~\n" + 
+				"	shape=~shape~~endif~~if(showFirstButton)~\n" + 
 				"	showFirstButton~endif~~if(showLastButton)~\n" + 
 				"	showLastButton~endif~~if(siblingCount)~\n" + 
 				"	siblingCount=~siblingCount~~endif~~if(size)~\n" + 
-				"	size=\"~size~\"~endif~~if(style)~\n" + 
+				"	size=~size~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
 				"	\n" + 

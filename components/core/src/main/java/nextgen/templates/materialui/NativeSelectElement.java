@@ -11,6 +11,7 @@ public class NativeSelectElement {
 	private Object _id;
 	private Object _input;
 	private Object _inputProps;
+	private Object _key;
 	private Object _onChange;
 	private Object _style;
 	private Object _value;
@@ -20,11 +21,6 @@ public class NativeSelectElement {
 
 	NativeSelectElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -40,6 +36,7 @@ public class NativeSelectElement {
 		st.add("id", _id);
 		st.add("input", _input);
 		st.add("inputProps", _inputProps);
+		st.add("key", _key);
 		st.add("onChange", _onChange);
 		st.add("style", _style);
 		st.add("value", _value);
@@ -181,6 +178,28 @@ public class NativeSelectElement {
 		return this;
 	} 
 
+	public NativeSelectElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public NativeSelectElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public NativeSelectElement setOnChange(Object value) {
 		this._onChange = value;
 		return this;
@@ -318,6 +337,16 @@ public class NativeSelectElement {
 		return this._attribute.stream().map(NativeSelectElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(NativeSelectElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(NativeSelectElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class NativeSelectElement_Attribute {
 
 		Object _name;
@@ -341,7 +370,7 @@ public class NativeSelectElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -356,13 +385,14 @@ public class NativeSelectElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NativeSelectElement(classes,className,IconComponent,id,input,inputProps,onChange,style,value,variant,attribute,children) ::= <<<NativeSelect~if(classes)~\n" + 
+	static final String st = "NativeSelectElement(classes,className,IconComponent,id,input,inputProps,key,onChange,style,value,variant,attribute,children) ::= <<<NativeSelect~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(IconComponent)~\n" + 
 				"	IconComponent=~IconComponent~~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(input)~\n" + 
 				"	input=~input~~endif~~if(inputProps)~\n" + 
-				"	inputProps=~inputProps~~endif~~if(onChange)~\n" + 
+				"	inputProps=~inputProps~~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(onChange)~\n" + 
 				"	onChange=~onChange~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(value)~\n" + 
 				"	value=~value~~endif~~if(variant)~\n" + 

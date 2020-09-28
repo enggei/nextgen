@@ -9,6 +9,7 @@ public class HiddenElement {
 	private Object _id;
 	private Object _implementation;
 	private Object _initialWidth;
+	private Object _key;
 	private Object _lgDown;
 	private Object _lgUp;
 	private Object _mdDown;
@@ -28,11 +29,6 @@ public class HiddenElement {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -44,6 +40,7 @@ public class HiddenElement {
 		st.add("id", _id);
 		st.add("implementation", _implementation);
 		st.add("initialWidth", _initialWidth);
+		st.add("key", _key);
 		st.add("lgDown", _lgDown);
 		st.add("lgUp", _lgUp);
 		st.add("mdDown", _mdDown);
@@ -146,6 +143,28 @@ public class HiddenElement {
 
 	public HiddenElement removeInitialWidth() {
 		this._initialWidth = null;
+		return this;
+	} 
+
+	public HiddenElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public HiddenElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -462,6 +481,16 @@ public class HiddenElement {
 		return this._attribute.stream().map(HiddenElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(HiddenElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(HiddenElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class HiddenElement_Attribute {
 
 		Object _name;
@@ -485,7 +514,7 @@ public class HiddenElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -500,16 +529,17 @@ public class HiddenElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "HiddenElement(className,id,implementation,initialWidth,lgDown,lgUp,mdDown,mdUp,only,smDown,smUp,style,xlDown,xlUp,xsDown,xsUp,attribute,children) ::= <<<Hidden~if(className)~\n" + 
+	static final String st = "HiddenElement(className,id,implementation,initialWidth,key,lgDown,lgUp,mdDown,mdUp,only,smDown,smUp,style,xlDown,xlUp,xsDown,xsUp,attribute,children) ::= <<<Hidden~if(className)~\n" + 
 				"	className=~className~~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(implementation)~\n" + 
-				"	implementation=\"~implementation~\"~endif~~if(initialWidth)~\n" + 
-				"	initialWidth=\"~initialWidth~\"~endif~~if(lgDown)~\n" + 
+				"	implementation=~implementation~~endif~~if(initialWidth)~\n" + 
+				"	initialWidth=~initialWidth~~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(lgDown)~\n" + 
 				"	lgDown~endif~~if(lgUp)~\n" + 
 				"	lgUp~endif~~if(mdDown)~\n" + 
 				"	mdDown~endif~~if(mdUp)~\n" + 
 				"	mdUp~endif~~if(only)~\n" + 
-				"	only=\"~only~\"~endif~~if(smDown)~\n" + 
+				"	only=~only~~endif~~if(smDown)~\n" + 
 				"	smDown~endif~~if(smUp)~\n" + 
 				"	smUp~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(xlDown)~\n" + 

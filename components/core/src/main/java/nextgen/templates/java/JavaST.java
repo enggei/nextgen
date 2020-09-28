@@ -6,6 +6,7 @@ public class JavaST {
 	.append("eom() ::= \"}\"\n")
 	.append("gt() ::= \">\"\n")
 	.append(Bean.st + "\n")
+	.append(BeanListener.st + "\n")
 	.append(BoundedExternalListAccessors.st + "\n")
 	.append(BoundedExternalReferenceAccessors.st + "\n")
 	.append(BoundedListAccessors.st + "\n")
@@ -142,6 +143,10 @@ public class JavaST {
 
 	public static Bean newBean() {
 		return new Bean(stGroup);
+	}  
+
+	public static BeanListener newBeanListener() {
+		return new BeanListener(stGroup);
 	}  
 
 	public static BoundedExternalListAccessors newBoundedExternalListAccessors() {

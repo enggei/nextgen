@@ -10,6 +10,7 @@ public class Relation {
 	private Object _dst;
 	private Boolean _lexical;
 	private Boolean _self;
+	private Object _eqha;
 
 	Relation(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -27,6 +28,7 @@ public class Relation {
 		st.add("dst", _dst);
 		st.add("lexical", _lexical);
 		st.add("self", _self);
+		st.add("eqha", _eqha);
 		return st.render().trim();
 	}
 
@@ -140,6 +142,28 @@ public class Relation {
 		return this;
 	} 
 
+	public Relation setEqha(Object value) {
+		this._eqha = value;
+		return this;
+	}
+
+	public Object getEqha() {
+		return this._eqha;
+	}
+
+	public Object getEqha(Object defaultValue) {
+		return this._eqha == null ? defaultValue : this._eqha;
+	}
+
+	public boolean hasEqha() {
+		return this._eqha != null;
+	}
+
+	public Relation removeEqha() {
+		this._eqha = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -155,5 +179,5 @@ public class Relation {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Relation(name,type,dst,lexical,self) ::= <<~name~ ~type~ ~dst~~if(lexical)~ lexical~endif~~if(self)~ self-referential~endif~ >>";
+	static final String st = "Relation(name,type,dst,lexical,self,eqha) ::= <<~name~ ~type~ ~dst~~if(lexical)~ lexical~endif~~if(self)~ self-referential~endif~~if(eqha)~ ~eqha~~endif~ >>";
 }  

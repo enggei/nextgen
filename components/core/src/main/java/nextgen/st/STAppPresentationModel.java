@@ -1,13 +1,12 @@
 package nextgen.st;
 
-import io.vertx.core.json.JsonObject;
 import net.openhft.compiler.CompilerUtils;
 import nextgen.domains.meta.*;
 import nextgen.st.domain.*;
 import nextgen.st.model.*;
-import nextgen.st.stringtemplate.DomainVisitorRunner;
-import nextgen.st.stringtemplate.ScriptRunner;
-import nextgen.st.stringtemplate.StringTemplateST;
+import nextgen.templates.stringtemplate.DomainVisitorRunner;
+import nextgen.templates.stringtemplate.ScriptRunner;
+import nextgen.templates.stringtemplate.StringTemplateST;
 import nextgen.templates.MavenPatterns;
 import nextgen.templates.java.BlockStmt;
 import nextgen.templates.java.ImportDeclaration;
@@ -16,7 +15,6 @@ import nextgen.templates.maven.TestRunner;
 import nextgen.templates.maven.neo.MavenNeo;
 import nextgen.templates.maven.neo.ProjectGeneratorModel;
 import nextgen.templates.maven.neo.ProjectModel;
-import nextgen.utils.Neo4JUtil;
 import nextgen.utils.NeoChronicle;
 import nextgen.utils.SwingUtil;
 import org.javatuples.Pair;
@@ -28,14 +26,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.List;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -56,7 +53,6 @@ public class STAppPresentationModel {
    public final STModelDB db;
    public final MetaDomainDB metaDb;
 
-   final STGDirectory generatorSTGDirectory;
    final STGroupModel generatorSTGroup;
    final Set<STGDirectory> stgDirectories = new LinkedHashSet<>();
 
@@ -66,25 +62,17 @@ public class STAppPresentationModel {
    private STWorkspace stWorkspace;
    private String lastDir;
 
-   STAppPresentationModel(STAppModel appModel) {
+   STAppPresentationModel(STAppModel appModel) throws IOException {
 
       this.appModel = appModel;
-
-      final File jsonFileDir = new File(appModel.getGeneratorRoot(), STGenerator
-            .packageToPath(appModel.getGeneratorPackage()));
-      this.generatorSTGroup = new STGroupModel(new JsonObject(STParser
-            .read(new File(jsonFileDir, appModel.getGeneratorName() + ".json"))));
-      this.generatorSTGDirectory = STJsonFactory.newSTGDirectory()
-            .setOutputPath(appModel.getGeneratorRoot())
-            .setOutputPackage(appModel.getGeneratorPackage())
-            .setPath(jsonFileDir.getAbsolutePath())
-            .addGroups(generatorSTGroup);
 
       final Set<STGroupModel> stGroups = new LinkedHashSet<>();
       appModel.getDirectories().forEach(stgDirectory -> {
          stgDirectories.add(stgDirectory);
          stGroups.addAll(stgDirectory.getGroups().collect(Collectors.toSet()));
       });
+
+      this.generatorSTGroup = new STGroupModel(new File("/home/goe/projects/nextgen/components/core/src/main/resources/templates/StringTemplate.json"));
 
       this.stRenderer = new STRenderer(stGroups);
       this.db = new STModelDB(appModel.getModelDb("./db"), stGroups);
@@ -274,42 +262,24 @@ public class STAppPresentationModel {
       final STGParseResult parseResult = STParser.parse(toSTGroup(stGroupModel));
 
       if (parseResult.getErrors().count() == 0) {
-
-         final Optional<STGroupModel> found = generatorSTGDirectory.getGroups()
-               .filter(stGroupModel1 -> stGroupModel1.getUuid()
-                     .equals(stGroupModel
-                           .getUuid()))
-               .findFirst();
-         STGenerator stGenerator = new STGenerator(generatorSTGroup);
-         if (found.isPresent()) {
-            log.info("generating stGroup " + stGroupModel.getName() + " to " + generatorSTGDirectory
-                  .getOutputPath() + " " + generatorSTGDirectory
-                  .getOutputPackage());
-            stGenerator
-                  .generateSTGroup(stGroupModel, generatorSTGDirectory.getOutputPackage(), generatorSTGDirectory
+         final STGenerator stGenerator = new STGenerator(generatorSTGroup);
+         stgDirectories
+               .stream()
+               .filter(directory -> directory.getGroups()
+                     .anyMatch(stGroupModel1 -> stGroupModel1.getUuid()
+                           .equals(stGroupModel
+                                 .getUuid())))
+               .findFirst()
+               .ifPresent(directory -> {
+                  log.info("generating stGroup " + stGroupModel.getName() + " to " + directory
+                        .getOutputPath() + " " + directory
+                        .getOutputPackage());
+                  stGenerator
+                        .generateSTGroup(stGroupModel, directory.getOutputPackage(), directory
+                              .getOutputPath());
+                  if (generateNeo) stGenerator.generateNeoGroup(stGroupModel, directory.getOutputPackage(), directory
                         .getOutputPath());
-            if (generateNeo)
-               stGenerator.generateNeoGroup(stGroupModel, generatorSTGDirectory.getOutputPackage(), generatorSTGDirectory
-                     .getOutputPath());
-         } else {
-            stgDirectories
-                  .stream()
-                  .filter(directory -> directory.getGroups()
-                        .anyMatch(stGroupModel1 -> stGroupModel1.getUuid()
-                              .equals(stGroupModel
-                                    .getUuid())))
-                  .findFirst()
-                  .ifPresent(directory -> {
-                     log.info("generating stGroup " + stGroupModel.getName() + " to " + directory
-                           .getOutputPath() + " " + directory
-                           .getOutputPackage());
-                     stGenerator
-                           .generateSTGroup(stGroupModel, directory.getOutputPackage(), directory
-                                 .getOutputPath());
-                     if (generateNeo) stGenerator.generateNeoGroup(stGroupModel, directory.getOutputPackage(), directory
-                           .getOutputPath());
-                  });
-         }
+               });
       } else {
          log.error(stGroupModel.getName() + " has errors: ");
          parseResult.getErrors()
@@ -933,30 +903,18 @@ public class STAppPresentationModel {
       final STGParseResult parseResult = STParser.parse(toSTGroup(stGroupModel));
 
       if (parseResult.getErrors().count() == 0) {
-
-         final Optional<STGroupModel> found = generatorSTGDirectory.getGroups()
-               .filter(stGroupModel1 -> stGroupModel1.getUuid()
-                     .equals(stGroupModel
-                           .getUuid()))
-               .findFirst();
-         if (found.isPresent()) {
-            final File file = new File(new File(generatorSTGDirectory.getPath()), stGroupModel.getName() + ".json");
-            log.info("saving stGroup " + stGroupModel.getName() + " to " + file.getAbsolutePath());
-            STGenerator.write(file, stGroupModel.getJsonObject().encodePrettily());
-         } else {
-            stgDirectories
-                  .stream()
-                  .filter(directory -> directory.getGroups()
-                        .anyMatch(stGroupModel1 -> stGroupModel1.getUuid()
-                              .equals(stGroupModel
-                                    .getUuid())))
-                  .findFirst()
-                  .ifPresent(directory -> {
-                     final File file = new File(new File(directory.getPath()), stGroupModel.getName() + ".json");
-                     log.info("saving stGroup " + stGroupModel.getName() + " to " + file.getAbsolutePath());
-                     STGenerator.write(file, stGroupModel.getJsonObject().encodePrettily());
-                  });
-         }
+         stgDirectories
+               .stream()
+               .filter(directory -> directory.getGroups()
+                     .anyMatch(stGroupModel1 -> stGroupModel1.getUuid()
+                           .equals(stGroupModel
+                                 .getUuid())))
+               .findFirst()
+               .ifPresent(directory -> {
+                  final File file = new File(new File(directory.getPath()), stGroupModel.getName() + ".json");
+                  log.info("saving stGroup " + stGroupModel.getName() + " to " + file.getAbsolutePath());
+                  STGenerator.write(file, stGroupModel.getJsonObject().encodePrettily());
+               });
       } else {
          log.error(stGroupModel.getName() + " has errors: ");
          parseResult.getErrors()
@@ -1215,14 +1173,15 @@ public class STAppPresentationModel {
    }
 
    public void undoLast() {
-      chronicle.rollbackLast();;
+      chronicle.rollbackLast();
+      ;
    }
 
    public Stream<STValue> getSelectedSTValues() {
       STModelCanvas canvas = getWorkspace().findCanvas().get();
       return canvas.getSelectedNodes()
             .filter(baseCanvasNode -> baseCanvasNode instanceof STModelCanvas.STValueNode)
-            .map(baseCanvasNode -> (STModelCanvas.STValueNode)baseCanvasNode)
+            .map(baseCanvasNode -> (STModelCanvas.STValueNode) baseCanvasNode)
             .map(STModelCanvas.BaseCanvasNode::getModel);
    }
 
@@ -1230,7 +1189,7 @@ public class STAppPresentationModel {
       STModelCanvas canvas = getWorkspace().findCanvas().get();
       return canvas.getSelectedNodes()
             .filter(baseCanvasNode -> baseCanvasNode instanceof STModelCanvas.STModelNode)
-            .map(baseCanvasNode -> (STModelCanvas.STModelNode)baseCanvasNode)
+            .map(baseCanvasNode -> (STModelCanvas.STModelNode) baseCanvasNode)
             .map(STModelCanvas.BaseCanvasNode::getModel);
    }
 

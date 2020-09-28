@@ -12,6 +12,7 @@ public class FormControlLabelElement {
 	private Object _disabled;
 	private Object _id;
 	private Object _inputRef;
+	private Object _key;
 	private Object _label;
 	private Object _labelPlacement;
 	private Object _onChange;
@@ -21,11 +22,6 @@ public class FormControlLabelElement {
 
 	FormControlLabelElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -42,6 +38,7 @@ public class FormControlLabelElement {
 		st.add("disabled", _disabled);
 		st.add("id", _id);
 		st.add("inputRef", _inputRef);
+		st.add("key", _key);
 		st.add("label", _label);
 		st.add("labelPlacement", _labelPlacement);
 		st.add("onChange", _onChange);
@@ -205,6 +202,28 @@ public class FormControlLabelElement {
 		return this;
 	} 
 
+	public FormControlLabelElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public FormControlLabelElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public FormControlLabelElement setLabel(Object value) {
 		this._label = value;
 		return this;
@@ -336,6 +355,16 @@ public class FormControlLabelElement {
 		return this._attribute.stream().map(FormControlLabelElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(FormControlLabelElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(FormControlLabelElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class FormControlLabelElement_Attribute {
 
 		Object _name;
@@ -359,7 +388,7 @@ public class FormControlLabelElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -374,16 +403,17 @@ public class FormControlLabelElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "FormControlLabelElement(checked,classes,className,control,disabled,id,inputRef,label,labelPlacement,onChange,style,value,attribute) ::= <<<FormControlLabel~if(checked)~\n" + 
+	static final String st = "FormControlLabelElement(checked,classes,className,control,disabled,id,inputRef,key,label,labelPlacement,onChange,style,value,attribute) ::= <<<FormControlLabel~if(checked)~\n" + 
 				"	checked~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~\n" + 
 				"	control=~control~~if(disabled)~\n" + 
 				"	disabled~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(inputRef)~\n" + 
-				"	inputRef=~inputRef~~endif~~if(label)~\n" + 
+				"	inputRef=~inputRef~~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(label)~\n" + 
 				"	label=~label~~endif~~if(labelPlacement)~\n" + 
-				"	labelPlacement=\"~labelPlacement~\"~endif~~if(onChange)~\n" + 
+				"	labelPlacement=~labelPlacement~~endif~~if(onChange)~\n" + 
 				"	onChange=~onChange~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(value)~\n" + 
 				"	value=~value~~endif~~attribute:{it|\n" + 

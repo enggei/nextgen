@@ -11,6 +11,7 @@ public class PopperElement {
 	private Object _disablePortal;
 	private Object _id;
 	private Object _keepMounted;
+	private Object _key;
 	private Object _modifiers;
 	private Object _placement;
 	private Object _popperOptions;
@@ -22,11 +23,6 @@ public class PopperElement {
 
 	PopperElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -42,6 +38,7 @@ public class PopperElement {
 		st.add("disablePortal", _disablePortal);
 		st.add("id", _id);
 		st.add("keepMounted", _keepMounted);
+		st.add("key", _key);
 		st.add("modifiers", _modifiers);
 		st.add("placement", _placement);
 		st.add("popperOptions", _popperOptions);
@@ -182,6 +179,28 @@ public class PopperElement {
 
 	public PopperElement removeKeepMounted() {
 		this._keepMounted = null;
+		return this;
+	} 
+
+	public PopperElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public PopperElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -366,6 +385,16 @@ public class PopperElement {
 		return this._attribute.stream().map(PopperElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(PopperElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(PopperElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class PopperElement_Attribute {
 
 		Object _name;
@@ -389,7 +418,7 @@ public class PopperElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -404,16 +433,17 @@ public class PopperElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PopperElement(anchorEl,className,container,disablePortal,id,keepMounted,modifiers,placement,popperOptions,popperRef,style,transition,attribute,children) ::= <<<Popper~if(anchorEl)~\n" + 
+	static final String st = "PopperElement(anchorEl,className,container,disablePortal,id,keepMounted,key,modifiers,placement,popperOptions,popperRef,style,transition,attribute,children) ::= <<<Popper~if(anchorEl)~\n" + 
 				"	anchorEl=~anchorEl~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(container)~\n" + 
 				"	container=~container~~endif~~if(disablePortal)~\n" + 
 				"	disablePortal~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(keepMounted)~\n" + 
-				"	keepMounted~endif~~if(modifiers)~\n" + 
+				"	keepMounted~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(modifiers)~\n" + 
 				"	modifiers=~modifiers~~endif~\n" + 
 				"	open~if(placement)~\n" + 
-				"	placement=\"~placement~\"~endif~~if(popperOptions)~\n" + 
+				"	placement=~placement~~endif~~if(popperOptions)~\n" + 
 				"	popperOptions=~popperOptions~~endif~~if(popperRef)~\n" + 
 				"	popperRef=~popperRef~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(transition)~\n" + 

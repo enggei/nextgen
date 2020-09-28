@@ -14,11 +14,6 @@ public class NodeToJsonObject {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -54,6 +49,11 @@ public class NodeToJsonObject {
 		return this._properties.stream().map(NodeToJsonObject_Properties::new);
 	}
 
+	public java.util.List<Object> getProperties_Name() {
+		return streamProperties().map(NodeToJsonObject_Properties::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class NodeToJsonObject_Properties {
 
 		Object _name;
@@ -70,7 +70,7 @@ public class NodeToJsonObject {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	public NodeToJsonObject addRefs(Object _type, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -91,6 +91,16 @@ public class NodeToJsonObject {
 	public java.util.stream.Stream<NodeToJsonObject_Refs> streamRefs() {
 		return this._refs.stream().map(NodeToJsonObject_Refs::new);
 	}
+
+	public java.util.List<Object> getRefs_Type() {
+		return streamRefs().map(NodeToJsonObject_Refs::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getRefs_Name() {
+		return streamRefs().map(NodeToJsonObject_Refs::getName).collect(java.util.stream.Collectors.toList());
+	}
+
 
 	public static final class NodeToJsonObject_Refs {
 
@@ -115,7 +125,7 @@ public class NodeToJsonObject {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	public NodeToJsonObject addRefList(Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -136,6 +146,11 @@ public class NodeToJsonObject {
 		return this._refList.stream().map(NodeToJsonObject_RefList::new);
 	}
 
+	public java.util.List<Object> getRefList_Name() {
+		return streamRefList().map(NodeToJsonObject_RefList::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class NodeToJsonObject_RefList {
 
 		Object _name;
@@ -152,7 +167,7 @@ public class NodeToJsonObject {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	public NodeToJsonObject addPrimitiveList(Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -173,6 +188,11 @@ public class NodeToJsonObject {
 		return this._primitiveList.stream().map(NodeToJsonObject_PrimitiveList::new);
 	}
 
+	public java.util.List<Object> getPrimitiveList_Name() {
+		return streamPrimitiveList().map(NodeToJsonObject_PrimitiveList::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class NodeToJsonObject_PrimitiveList {
 
 		Object _name;
@@ -189,7 +209,7 @@ public class NodeToJsonObject {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

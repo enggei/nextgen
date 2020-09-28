@@ -18,15 +18,11 @@ public class ClassComponent {
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _imports = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _events = new java.util.ArrayList<>();
 
 	ClassComponent(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -49,6 +45,7 @@ public class ClassComponent {
 		for (Object o : _constructorStatements) st.add("constructorStatements", o);
 		for (Object o : _methods) st.add("methods", o);
 		for (java.util.Map<String, Object> map : _imports) st.addAggr("imports.{ref,path}", map.get("ref"), map.get("path"));
+		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{name}", map.get("name"));
 		for (java.util.Map<String, Object> map : _events) st.addAggr("events.{methodName,declaration}", map.get("methodName"), map.get("declaration"));
 		return st.render().trim();
 	}
@@ -386,6 +383,16 @@ public class ClassComponent {
 		return this._imports.stream().map(ClassComponent_Imports::new);
 	}
 
+	public java.util.List<Object> getImports_Ref() {
+		return streamImports().map(ClassComponent_Imports::getRef).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getImports_Path() {
+		return streamImports().map(ClassComponent_Imports::getPath).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class ClassComponent_Imports {
 
 		Object _ref;
@@ -409,7 +416,49 @@ public class ClassComponent {
 			return this._path;
 		}
 
-	} 
+	}  
+
+	public ClassComponent addFields(Object _name) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		this._fields.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getFields() {
+		return this._fields;
+	}
+
+	public ClassComponent addFields(ClassComponent_Fields value) {
+		return addFields(value._name);
+	}
+
+	public java.util.stream.Stream<ClassComponent_Fields> streamFields() {
+		return this._fields.stream().map(ClassComponent_Fields::new);
+	}
+
+	public java.util.List<Object> getFields_Name() {
+		return streamFields().map(ClassComponent_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public static final class ClassComponent_Fields {
+
+		Object _name;
+
+		public ClassComponent_Fields(Object _name) {
+			this._name = _name;
+		}
+
+		private ClassComponent_Fields(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+	}  
 
 	public ClassComponent addEvents(Object _methodName, Object _declaration) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -430,6 +479,16 @@ public class ClassComponent {
 	public java.util.stream.Stream<ClassComponent_Events> streamEvents() {
 		return this._events.stream().map(ClassComponent_Events::new);
 	}
+
+	public java.util.List<Object> getEvents_MethodName() {
+		return streamEvents().map(ClassComponent_Events::getMethodName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getEvents_Declaration() {
+		return streamEvents().map(ClassComponent_Events::getDeclaration).collect(java.util.stream.Collectors.toList());
+	}
+
 
 	public static final class ClassComponent_Events {
 
@@ -454,7 +513,7 @@ public class ClassComponent {
 			return this._declaration;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -469,7 +528,7 @@ public class ClassComponent {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ClassComponent(imports,componentImports,dependencies,constDeclarations,decorators,name,state,constructorStatements,events,methods,renderCondition,renderTrue,renderFalse,renderElement) ::= <<import React from 'react';\n" + 
+	static final String st = "ClassComponent(imports,componentImports,dependencies,constDeclarations,decorators,name,fields,state,constructorStatements,events,methods,renderCondition,renderTrue,renderFalse,renderElement) ::= <<import React from 'react';\n" + 
 				"~imports:{it|import ~it.ref~ from '~it.path~';};separator=\"\\n\"~\n" + 
 				"~componentImports:{it|~it~};separator=\"\\n\"~\n" + 
 				"~dependencies:{it|~it~};separator=\"\\n\"~\n" + 
@@ -479,6 +538,8 @@ public class ClassComponent {
 				"~decorators:{it|~it~};separator=\"\\n\"~\n" + 
 				"class ~name~ extends React.Component {\n" + 
 				"\n" + 
+				"	~fields:{it|~it.name~};separator=\"\\n\"~\n" + 
+				"	\n" + 
 				"	constructor(props) {\n" + 
 				"		super(props);\n" + 
 				"		console.log(\"new ~name~ : \" +  this.props);\n" + 

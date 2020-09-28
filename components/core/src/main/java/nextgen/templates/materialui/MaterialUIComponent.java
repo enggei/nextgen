@@ -20,11 +20,6 @@ public class MaterialUIComponent {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -262,6 +257,16 @@ public class MaterialUIComponent {
 		return this._imports.stream().map(MaterialUIComponent_Imports::new);
 	}
 
+	public java.util.List<Object> getImports_Name() {
+		return streamImports().map(MaterialUIComponent_Imports::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getImports_Path() {
+		return streamImports().map(MaterialUIComponent_Imports::getPath).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class MaterialUIComponent_Imports {
 
 		Object _name;
@@ -285,7 +290,7 @@ public class MaterialUIComponent {
 			return this._path;
 		}
 
-	} 
+	}  
 
 	public MaterialUIComponent addConst(Object _name, Object _declaration) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -306,6 +311,16 @@ public class MaterialUIComponent {
 	public java.util.stream.Stream<MaterialUIComponent_Const> streamConst() {
 		return this._const.stream().map(MaterialUIComponent_Const::new);
 	}
+
+	public java.util.List<Object> getConst_Name() {
+		return streamConst().map(MaterialUIComponent_Const::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getConst_Declaration() {
+		return streamConst().map(MaterialUIComponent_Const::getDeclaration).collect(java.util.stream.Collectors.toList());
+	}
+
 
 	public static final class MaterialUIComponent_Const {
 
@@ -330,7 +345,7 @@ public class MaterialUIComponent {
 			return this._declaration;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -384,7 +399,7 @@ public class MaterialUIComponent {
 				"		);\n" + 
 				"	}\n" + 
 				"~else~\n" + 
-				"	console.info(\"render ~name~\");\n" + 
+				"	console.info(\"render ~name~ \" + props);\n" + 
 				"	return (\n" + 
 				"		~renderElement~\n" + 
 				"	);\n" + 

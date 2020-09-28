@@ -15,6 +15,7 @@ public class ButtonGroupElement {
 	private Object _disableRipple;
 	private Object _fullWidth;
 	private Object _id;
+	private Object _key;
 	private Object _orientation;
 	private Object _size;
 	private Object _style;
@@ -24,11 +25,6 @@ public class ButtonGroupElement {
 
 	ButtonGroupElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -48,6 +44,7 @@ public class ButtonGroupElement {
 		st.add("disableRipple", _disableRipple);
 		st.add("fullWidth", _fullWidth);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("orientation", _orientation);
 		st.add("size", _size);
 		st.add("style", _style);
@@ -277,6 +274,28 @@ public class ButtonGroupElement {
 		return this;
 	} 
 
+	public ButtonGroupElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public ButtonGroupElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public ButtonGroupElement setOrientation(Object value) {
 		this._orientation = value;
 		return this;
@@ -414,6 +433,16 @@ public class ButtonGroupElement {
 		return this._attribute.stream().map(ButtonGroupElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(ButtonGroupElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(ButtonGroupElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class ButtonGroupElement_Attribute {
 
 		Object _name;
@@ -437,7 +466,7 @@ public class ButtonGroupElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -452,7 +481,7 @@ public class ButtonGroupElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ButtonGroupElement(classes,className,color,component,disabled,disableElevation,disableFocusRipple,disableRipple,fullWidth,id,orientation,size,style,variant,attribute,children) ::= <<<ButtonGroup~if(classes)~\n" + 
+	static final String st = "ButtonGroupElement(classes,className,color,component,disabled,disableElevation,disableFocusRipple,disableRipple,fullWidth,id,key,orientation,size,style,variant,attribute,children) ::= <<<ButtonGroup~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(component)~\n" + 
@@ -462,9 +491,10 @@ public class ButtonGroupElement {
 				"	disableFocusRipple~endif~~if(disableRipple)~\n" + 
 				"	disableRipple~endif~~if(fullWidth)~\n" + 
 				"	fullWidth~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(orientation)~\n" + 
-				"	orientation=\"~orientation~\"~endif~~if(size)~\n" + 
-				"	size=\"~size~\"~endif~~if(style)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(orientation)~\n" + 
+				"	orientation=~orientation~~endif~~if(size)~\n" + 
+				"	size=~size~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
 				"	\n" + 

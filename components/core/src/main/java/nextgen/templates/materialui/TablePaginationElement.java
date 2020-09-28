@@ -13,6 +13,7 @@ public class TablePaginationElement {
 	private Object _component;
 	private Object _count;
 	private Object _id;
+	private Object _key;
 	private Object _labelDisplayedRows;
 	private Object _labelRowsPerPage;
 	private Object _nextIconButtonProps;
@@ -30,11 +31,6 @@ public class TablePaginationElement {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -50,6 +46,7 @@ public class TablePaginationElement {
 		st.add("component", _component);
 		st.add("count", _count);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("labelDisplayedRows", _labelDisplayedRows);
 		st.add("labelRowsPerPage", _labelRowsPerPage);
 		st.add("nextIconButtonProps", _nextIconButtonProps);
@@ -238,6 +235,28 @@ public class TablePaginationElement {
 
 	public TablePaginationElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public TablePaginationElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public TablePaginationElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -504,6 +523,16 @@ public class TablePaginationElement {
 		return this._attribute.stream().map(TablePaginationElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(TablePaginationElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(TablePaginationElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class TablePaginationElement_Attribute {
 
 		Object _name;
@@ -527,7 +556,7 @@ public class TablePaginationElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -542,7 +571,7 @@ public class TablePaginationElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TablePaginationElement(ActionsComponent,backIconButtonProps,backIconButtonText,classes,className,component,count,id,labelDisplayedRows,labelRowsPerPage,nextIconButtonProps,nextIconButtonText,onChangePage,onChangeRowsPerPage,page,rowsPerPage,rowsPerPageOptions,SelectProps,style,attribute) ::= <<<TablePagination~if(ActionsComponent)~\n" + 
+	static final String st = "TablePaginationElement(ActionsComponent,backIconButtonProps,backIconButtonText,classes,className,component,count,id,key,labelDisplayedRows,labelRowsPerPage,nextIconButtonProps,nextIconButtonText,onChangePage,onChangeRowsPerPage,page,rowsPerPage,rowsPerPageOptions,SelectProps,style,attribute) ::= <<<TablePagination~if(ActionsComponent)~\n" + 
 				"	ActionsComponent=~ActionsComponent~~endif~~if(backIconButtonProps)~\n" + 
 				"	backIconButtonProps=~backIconButtonProps~~endif~~if(backIconButtonText)~\n" + 
 				"	backIconButtonText=\"~backIconButtonText~\"~endif~~if(classes)~\n" + 
@@ -550,7 +579,8 @@ public class TablePaginationElement {
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~\n" + 
 				"	count=~count~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(labelDisplayedRows)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(labelDisplayedRows)~\n" + 
 				"	labelDisplayedRows=~labelDisplayedRows~~endif~~if(labelRowsPerPage)~\n" + 
 				"	labelRowsPerPage=~labelRowsPerPage~~endif~~if(nextIconButtonProps)~\n" + 
 				"	nextIconButtonProps=~nextIconButtonProps~~endif~~if(nextIconButtonText)~\n" + 

@@ -12,6 +12,7 @@ public class BreadcrumbsElement {
 	private Object _id;
 	private Object _itemsAfterCollapse;
 	private Object _itemsBeforeCollapse;
+	private Object _key;
 	private Object _maxItems;
 	private Object _separator;
 	private Object _style;
@@ -20,11 +21,6 @@ public class BreadcrumbsElement {
 
 	BreadcrumbsElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -41,6 +37,7 @@ public class BreadcrumbsElement {
 		st.add("id", _id);
 		st.add("itemsAfterCollapse", _itemsAfterCollapse);
 		st.add("itemsBeforeCollapse", _itemsBeforeCollapse);
+		st.add("key", _key);
 		st.add("maxItems", _maxItems);
 		st.add("separator", _separator);
 		st.add("style", _style);
@@ -203,6 +200,28 @@ public class BreadcrumbsElement {
 		return this;
 	} 
 
+	public BreadcrumbsElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public BreadcrumbsElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public BreadcrumbsElement setMaxItems(Object value) {
 		this._maxItems = value;
 		return this;
@@ -318,6 +337,16 @@ public class BreadcrumbsElement {
 		return this._attribute.stream().map(BreadcrumbsElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(BreadcrumbsElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(BreadcrumbsElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class BreadcrumbsElement_Attribute {
 
 		Object _name;
@@ -341,7 +370,7 @@ public class BreadcrumbsElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -356,14 +385,15 @@ public class BreadcrumbsElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "BreadcrumbsElement(classes,className,component,expandText,id,itemsAfterCollapse,itemsBeforeCollapse,maxItems,separator,style,attribute,children) ::= <<<Breadcrumbs~if(classes)~\n" + 
+	static final String st = "BreadcrumbsElement(classes,className,component,expandText,id,itemsAfterCollapse,itemsBeforeCollapse,key,maxItems,separator,style,attribute,children) ::= <<<Breadcrumbs~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(expandText)~\n" + 
 				"	expandText=\"~expandText~\"~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(itemsAfterCollapse)~\n" + 
 				"	itemsAfterCollapse=~itemsAfterCollapse~~endif~~if(itemsBeforeCollapse)~\n" + 
-				"	itemsBeforeCollapse=~itemsBeforeCollapse~~endif~~if(maxItems)~\n" + 
+				"	itemsBeforeCollapse=~itemsBeforeCollapse~~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(maxItems)~\n" + 
 				"	maxItems=~maxItems~~endif~~if(separator)~\n" + 
 				"	separator=~separator~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~attribute:{it|\n" + 

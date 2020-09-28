@@ -15,6 +15,26 @@ public class STAppModel {
 		if (uuidString == null) jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
 	}
 
+	public STAppModel(java.io.File file) throws java.io.IOException {
+		this(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));
+	}
+
+	public STAppModel(java.io.InputStream inputStream) throws java.io.IOException {
+		if (inputStream == null) throw new java.io.IOException("inputStream is null");
+		java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
+		int read;
+		byte[] data = new byte[2048];
+		while ((read = inputStream.read(data, 0, data.length)) != -1)
+			buffer.write(data, 0, read);
+		inputStream.close();
+		final byte[] content = buffer.toByteArray();
+		buffer.close();
+
+		this.jsonObject = new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(content));
+		java.lang.String uuidString = jsonObject.getString("uuid");
+		if (uuidString == null) jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
+	}
+
 	public io.vertx.core.json.JsonObject getJsonObject() { 
 		return this.jsonObject;
 	}
@@ -83,45 +103,6 @@ public class STAppModel {
 
 	public Integer getEditorFontSize(Integer defaultValue) { 
 		return jsonObject.getInteger("editorFontSize", defaultValue);
-	}
-
-	public STAppModel setGeneratorRoot(String value) { 
-		jsonObject.put("generatorRoot", value);
-		return this;
-	}
-
-	public String getGeneratorRoot() { 
-		return jsonObject.getString("generatorRoot");
-	}
-
-	public String getGeneratorRoot(String defaultValue) { 
-		return jsonObject.getString("generatorRoot", defaultValue);
-	}
-
-	public STAppModel setGeneratorPackage(String value) { 
-		jsonObject.put("generatorPackage", value);
-		return this;
-	}
-
-	public String getGeneratorPackage() { 
-		return jsonObject.getString("generatorPackage");
-	}
-
-	public String getGeneratorPackage(String defaultValue) { 
-		return jsonObject.getString("generatorPackage", defaultValue);
-	}
-
-	public STAppModel setGeneratorName(String value) { 
-		jsonObject.put("generatorName", value);
-		return this;
-	}
-
-	public String getGeneratorName() { 
-		return jsonObject.getString("generatorName");
-	}
-
-	public String getGeneratorName(String defaultValue) { 
-		return jsonObject.getString("generatorName", defaultValue);
 	}
 
 	public STAppModel addDirectories(STGDirectory value) { 

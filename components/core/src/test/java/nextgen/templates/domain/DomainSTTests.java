@@ -12,10 +12,6 @@ public class DomainSTTests {
 		testDomain();
 		testEntity();
 		testRelation();
-		testJavaProject();
-		testJavaLibrary();
-		testJavaPackage();
-		testModel();
 	}
 
 	@org.junit.Test
@@ -31,25 +27,5 @@ public class DomainSTTests {
 	@org.junit.Test
 	public void testRelation() {
 		System.out.println("Relation:\n" + newRelation());
-	}  
-
-	@org.junit.Test
-	public void testJavaProject() {
-		System.out.println("JavaProject:\n" + newJavaProject());
-	}  
-
-	@org.junit.Test
-	public void testJavaLibrary() {
-		System.out.println("JavaLibrary:\n" + newJavaLibrary());
-	}  
-
-	@org.junit.Test
-	public void testJavaPackage() {
-		System.out.println("JavaPackage:\n" + newJavaPackage());
-	}  
-
-	@org.junit.Test
-	public void testModel() {
-		System.out.println("Model:\n" + newModel());
 	}  
 } 

@@ -14,6 +14,7 @@ public class SelectElement {
 	private Object _id;
 	private Object _input;
 	private Object _inputProps;
+	private Object _key;
 	private Object _label;
 	private Object _labelId;
 	private Object _labelWidth;
@@ -36,11 +37,6 @@ public class SelectElement {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -57,6 +53,7 @@ public class SelectElement {
 		st.add("id", _id);
 		st.add("input", _input);
 		st.add("inputProps", _inputProps);
+		st.add("key", _key);
 		st.add("label", _label);
 		st.add("labelId", _labelId);
 		st.add("labelWidth", _labelWidth);
@@ -272,6 +269,28 @@ public class SelectElement {
 
 	public SelectElement removeInputProps() {
 		this._inputProps = null;
+		return this;
+	} 
+
+	public SelectElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public SelectElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -654,6 +673,16 @@ public class SelectElement {
 		return this._attribute.stream().map(SelectElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(SelectElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(SelectElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class SelectElement_Attribute {
 
 		Object _name;
@@ -677,7 +706,7 @@ public class SelectElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -692,7 +721,7 @@ public class SelectElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SelectElement(autoWidth,classes,className,defaultValue,displayEmpty,IconComponent,id,input,inputProps,label,labelId,labelWidth,MenuProps,multiple,native,onChange,onClose,onOpen,open,renderValue,SelectDisplayProps,style,value,variant,attribute,children) ::= <<<Select~if(autoWidth)~\n" + 
+	static final String st = "SelectElement(autoWidth,classes,className,defaultValue,displayEmpty,IconComponent,id,input,inputProps,key,label,labelId,labelWidth,MenuProps,multiple,native,onChange,onClose,onOpen,open,renderValue,SelectDisplayProps,style,value,variant,attribute,children) ::= <<<Select~if(autoWidth)~\n" + 
 				"	autoWidth~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(defaultValue)~\n" + 
@@ -701,7 +730,8 @@ public class SelectElement {
 				"	IconComponent=~IconComponent~~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(input)~\n" + 
 				"	input=~input~~endif~~if(inputProps)~\n" + 
-				"	inputProps=~inputProps~~endif~~if(label)~\n" + 
+				"	inputProps=~inputProps~~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(label)~\n" + 
 				"	label=~label~~endif~~if(labelId)~\n" + 
 				"	labelId=\"~labelId~\"~endif~~if(labelWidth)~\n" + 
 				"	labelWidth=~labelWidth~~endif~~if(MenuProps)~\n" + 

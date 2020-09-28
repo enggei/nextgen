@@ -24,11 +24,6 @@ public class PaginationItemElement {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -360,6 +355,16 @@ public class PaginationItemElement {
 		return this._attribute.stream().map(PaginationItemElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(PaginationItemElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(PaginationItemElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class PaginationItemElement_Attribute {
 
 		Object _name;
@@ -383,7 +388,7 @@ public class PaginationItemElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -407,10 +412,10 @@ public class PaginationItemElement {
 				"	key=~key~~endif~~if(page)~\n" + 
 				"	page=~page~~endif~~if(selected)~\n" + 
 				"	selected~endif~~if(shape)~\n" + 
-				"	shape=\"~shape~\"~endif~~if(size)~\n" + 
-				"	size=\"~size~\"~endif~~if(style)~\n" + 
+				"	shape=~shape~~endif~~if(size)~\n" + 
+				"	size=~size~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(type)~\n" + 
-				"	type=\"~type~\"~endif~~if(variant)~\n" + 
+				"	type=~type~~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
 				"	\n" + 
 				"	~it.name~=~it.value~}~ /> >>";

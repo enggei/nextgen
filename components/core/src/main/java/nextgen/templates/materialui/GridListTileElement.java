@@ -10,6 +10,7 @@ public class GridListTileElement {
 	private Object _cols;
 	private Object _component;
 	private Object _id;
+	private Object _key;
 	private Object _rows;
 	private Object _style;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -17,11 +18,6 @@ public class GridListTileElement {
 
 	GridListTileElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -36,6 +32,7 @@ public class GridListTileElement {
 		st.add("cols", _cols);
 		st.add("component", _component);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("rows", _rows);
 		st.add("style", _style);
 		for (Object o : _children) st.add("children", o);
@@ -153,6 +150,28 @@ public class GridListTileElement {
 		return this;
 	} 
 
+	public GridListTileElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public GridListTileElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public GridListTileElement setRows(Object value) {
 		this._rows = value;
 		return this;
@@ -246,6 +265,16 @@ public class GridListTileElement {
 		return this._attribute.stream().map(GridListTileElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(GridListTileElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(GridListTileElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class GridListTileElement_Attribute {
 
 		Object _name;
@@ -269,7 +298,7 @@ public class GridListTileElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -284,12 +313,13 @@ public class GridListTileElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "GridListTileElement(classes,className,cols,component,id,rows,style,attribute,children) ::= <<<GridListTile~if(classes)~\n" + 
+	static final String st = "GridListTileElement(classes,className,cols,component,id,key,rows,style,attribute,children) ::= <<<GridListTile~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(cols)~\n" + 
 				"	cols=~cols~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(rows)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(rows)~\n" + 
 				"	rows=~rows~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~attribute:{it|\n" + 
 				"	\n" + 

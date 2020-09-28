@@ -19,6 +19,7 @@ public class OutlinedInputElement {
 	private Object _inputComponent;
 	private Object _inputProps;
 	private Object _inputRef;
+	private Object _key;
 	private Object _label;
 	private Object _labelWidth;
 	private Object _margin;
@@ -39,11 +40,6 @@ public class OutlinedInputElement {
 
 	OutlinedInputElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -67,6 +63,7 @@ public class OutlinedInputElement {
 		st.add("inputComponent", _inputComponent);
 		st.add("inputProps", _inputProps);
 		st.add("inputRef", _inputRef);
+		st.add("key", _key);
 		st.add("label", _label);
 		st.add("labelWidth", _labelWidth);
 		st.add("margin", _margin);
@@ -392,6 +389,28 @@ public class OutlinedInputElement {
 
 	public OutlinedInputElement removeInputRef() {
 		this._inputRef = null;
+		return this;
+	} 
+
+	public OutlinedInputElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public OutlinedInputElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -768,6 +787,16 @@ public class OutlinedInputElement {
 		return this._attribute.stream().map(OutlinedInputElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(OutlinedInputElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(OutlinedInputElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class OutlinedInputElement_Attribute {
 
 		Object _name;
@@ -791,7 +820,7 @@ public class OutlinedInputElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -806,7 +835,7 @@ public class OutlinedInputElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "OutlinedInputElement(autoComplete,autoFocus,classes,className,color,defaultValue,disabled,endAdornment,error,fullWidth,id,inputComponent,inputProps,inputRef,label,labelWidth,margin,multiline,name,notched,onChange,placeholder,readOnly,required,rows,rowsMax,startAdornment,style,type,value,attribute) ::= <<<OutlinedInput~if(autoComplete)~\n" + 
+	static final String st = "OutlinedInputElement(autoComplete,autoFocus,classes,className,color,defaultValue,disabled,endAdornment,error,fullWidth,id,inputComponent,inputProps,inputRef,key,label,labelWidth,margin,multiline,name,notched,onChange,placeholder,readOnly,required,rows,rowsMax,startAdornment,style,type,value,attribute) ::= <<<OutlinedInput~if(autoComplete)~\n" + 
 				"	autoComplete=\"~autoComplete~\"~endif~~if(autoFocus)~\n" + 
 				"	autoFocus~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
@@ -820,7 +849,8 @@ public class OutlinedInputElement {
 				"	id=\"~id~\"~endif~~if(inputComponent)~\n" + 
 				"	inputComponent=~inputComponent~~endif~~if(inputProps)~\n" + 
 				"	inputProps=~inputProps~~endif~~if(inputRef)~\n" + 
-				"	inputRef=~inputRef~~endif~~if(label)~\n" + 
+				"	inputRef=~inputRef~~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(label)~\n" + 
 				"	label=~label~~endif~~if(labelWidth)~\n" + 
 				"	labelWidth=~labelWidth~~endif~~if(margin)~\n" + 
 				"	margin=\"~margin~\"~endif~~if(multiline)~\n" + 

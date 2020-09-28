@@ -28,11 +28,6 @@ public class ListItemElement {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -462,6 +457,16 @@ public class ListItemElement {
 		return this._attribute.stream().map(ListItemElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(ListItemElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(ListItemElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class ListItemElement_Attribute {
 
 		Object _name;
@@ -485,7 +490,7 @@ public class ListItemElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -501,7 +506,7 @@ public class ListItemElement {
 	}
 
 	static final String st = "ListItemElement(alignItems,autoFocus,button,classes,className,component,ContainerComponent,ContainerProps,dense,disabled,disableGutters,divider,id,key,selected,style,attribute,children) ::= <<<ListItem~if(alignItems)~\n" + 
-				"	alignItems=\"~alignItems~\"~endif~~if(autoFocus)~\n" + 
+				"	alignItems=~alignItems~~endif~~if(autoFocus)~\n" + 
 				"	autoFocus~endif~~if(button)~\n" + 
 				"	button~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 

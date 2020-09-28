@@ -184,6 +184,10 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 	}
 
 	public <N extends BaseCanvasNode<?~gt()~> N addNode(String uuid, java.util.function.Supplier<N> supplier) {
+		return addNode(uuid, supplier, true);
+	}
+
+	public <N extends BaseCanvasNode<?~gt()~> N addNode(String uuid, java.util.function.Supplier<N> supplier, boolean centerNode) {
 
 		final N existing = getNode(uuid);
 		if (existing != null) {
@@ -210,7 +214,7 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 
 		SwingUtilities.invokeLater(() -> {
 			node.refresh();
-			centerNode(node);
+			if(centerNode) centerNode(node);
 		});
 
 		return node;
@@ -1842,6 +1846,10 @@ public class ~name~ extends BaseTreeNode<~modelType~> {
 		~if(hasUuid)~this.uuid = model.getUuid();~endif~
 
 		~constructorStatements:{it|~it~};separator="\n"~
+	}
+
+	~name~ thisNode() {
+		return this;
 	}
 
 	@Override

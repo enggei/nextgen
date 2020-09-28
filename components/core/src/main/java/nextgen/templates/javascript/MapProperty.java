@@ -12,11 +12,6 @@ public class MapProperty {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -89,7 +84,7 @@ public class MapProperty {
 	}
 
 	static final String st = "MapProperty(property,forEach) ::= <<{\n" + 
-				"	~property~.map((element) => (\n" + 
+				"	~property~.map((element, i) => (\n" + 
 				"		~forEach~\n" + 
 				"	)) \n" + 
 				"} >>";

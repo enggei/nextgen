@@ -8,17 +8,13 @@ public class TimelineContentElement {
 	private Object _classes;
 	private Object _className;
 	private Object _id;
+	private Object _key;
 	private Object _style;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	TimelineContentElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -31,6 +27,7 @@ public class TimelineContentElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("style", _style);
 		for (Object o : _children) st.add("children", o);
 		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
@@ -100,6 +97,28 @@ public class TimelineContentElement {
 
 	public TimelineContentElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public TimelineContentElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public TimelineContentElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -174,6 +193,16 @@ public class TimelineContentElement {
 		return this._attribute.stream().map(TimelineContentElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(TimelineContentElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(TimelineContentElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class TimelineContentElement_Attribute {
 
 		Object _name;
@@ -197,7 +226,7 @@ public class TimelineContentElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -212,10 +241,11 @@ public class TimelineContentElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TimelineContentElement(classes,className,id,style,attribute,children) ::= <<<TimelineContent~if(classes)~\n" + 
+	static final String st = "TimelineContentElement(classes,className,id,key,style,attribute,children) ::= <<<TimelineContent~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~attribute:{it|\n" + 
 				"	\n" + 
 				"	~it.name~=~it.value~}~~if(children)~>\n" + 

@@ -10,6 +10,7 @@ public class DrawerElement {
 	private Object _className;
 	private Object _elevation;
 	private Object _id;
+	private Object _key;
 	private Object _ModalProps;
 	private Object _onClose;
 	private Object _open;
@@ -25,11 +26,6 @@ public class DrawerElement {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -42,6 +38,7 @@ public class DrawerElement {
 		st.add("className", _className);
 		st.add("elevation", _elevation);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("ModalProps", _ModalProps);
 		st.add("onClose", _onClose);
 		st.add("open", _open);
@@ -162,6 +159,28 @@ public class DrawerElement {
 
 	public DrawerElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public DrawerElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public DrawerElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -390,6 +409,16 @@ public class DrawerElement {
 		return this._attribute.stream().map(DrawerElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(DrawerElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(DrawerElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class DrawerElement_Attribute {
 
 		Object _name;
@@ -413,7 +442,7 @@ public class DrawerElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -428,12 +457,13 @@ public class DrawerElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "DrawerElement(anchor,classes,className,elevation,id,ModalProps,onClose,open,PaperProps,SlideProps,style,transitionDuration,variant,attribute,children) ::= <<<Drawer~if(anchor)~\n" + 
-				"	anchor=\"~anchor~\"~endif~~if(classes)~\n" + 
+	static final String st = "DrawerElement(anchor,classes,className,elevation,id,key,ModalProps,onClose,open,PaperProps,SlideProps,style,transitionDuration,variant,attribute,children) ::= <<<Drawer~if(anchor)~\n" + 
+				"	anchor=~anchor~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(elevation)~\n" + 
 				"	elevation=~elevation~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(ModalProps)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(ModalProps)~\n" + 
 				"	ModalProps=~ModalProps~~endif~~if(onClose)~\n" + 
 				"	onClose=~onClose~~endif~~if(open)~\n" + 
 				"	open~endif~~if(PaperProps)~\n" + 

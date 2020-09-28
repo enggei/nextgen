@@ -10,6 +10,7 @@ public class PaperElement {
 	private Object _component;
 	private Object _elevation;
 	private Object _id;
+	private Object _key;
 	private Object _square;
 	private Object _style;
 	private Object _variant;
@@ -18,11 +19,6 @@ public class PaperElement {
 
 	PaperElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -37,6 +33,7 @@ public class PaperElement {
 		st.add("component", _component);
 		st.add("elevation", _elevation);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("square", _square);
 		st.add("style", _style);
 		st.add("variant", _variant);
@@ -155,6 +152,28 @@ public class PaperElement {
 		return this;
 	} 
 
+	public PaperElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public PaperElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public PaperElement setSquare(Object value) {
 		this._square = value;
 		return this;
@@ -270,6 +289,16 @@ public class PaperElement {
 		return this._attribute.stream().map(PaperElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(PaperElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(PaperElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class PaperElement_Attribute {
 
 		Object _name;
@@ -293,7 +322,7 @@ public class PaperElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -308,12 +337,13 @@ public class PaperElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PaperElement(classes,className,component,elevation,id,square,style,variant,attribute,children) ::= <<<Paper~if(classes)~\n" + 
+	static final String st = "PaperElement(classes,className,component,elevation,id,key,square,style,variant,attribute,children) ::= <<<Paper~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(elevation)~\n" + 
 				"	elevation=~elevation~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(square)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(square)~\n" + 
 				"	square~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 

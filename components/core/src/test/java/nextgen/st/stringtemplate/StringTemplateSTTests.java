@@ -1,6 +1,6 @@
 package nextgen.st.stringtemplate;
 
-import static nextgen.st.stringtemplate.StringTemplateST.*;
+import static nextgen.templates.stringtemplate.StringTemplateST.*;
 
 /**
  * Tests for StringTemplateST

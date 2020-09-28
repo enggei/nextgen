@@ -97,6 +97,16 @@ public class RouteHandler {
 		return this._params.stream().map(RouteHandler_Params::new);
 	}
 
+	public java.util.List<Object> getParams_Type() {
+		return streamParams().map(RouteHandler_Params::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getParams_Name() {
+		return streamParams().map(RouteHandler_Params::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class RouteHandler_Params {
 
 		Object _type;
@@ -120,7 +130,7 @@ public class RouteHandler {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -136,7 +146,7 @@ public class RouteHandler {
 	}
 
 	static final String st = "RouteHandler(name,params,statements) ::= <<private void ~name~(RoutingContext routingContext~if(params)~, ~params:{it|~it.type~ ~it.name~};separator=\",\"~~endif~) {\n" + 
-				"	WebUtils.debug(\"~name~\", routingContext);\n" + 
+				"	debug(\"~name~\", routingContext);\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
 				"} >>";
 }  

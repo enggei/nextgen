@@ -1,10 +1,10 @@
 package nextgen.st;
 
 import nextgen.st.domain.STGroupModel;
-import nextgen.st.stringtemplate.KVAccessors;
-import nextgen.st.stringtemplate.NeoDomain;
-import nextgen.st.stringtemplate.NeoEntity;
-import nextgen.st.stringtemplate.StringTemplateST;
+import nextgen.templates.stringtemplate.KVAccessors;
+import nextgen.templates.stringtemplate.NeoDomain;
+import nextgen.templates.stringtemplate.NeoEntity;
+import nextgen.templates.stringtemplate.StringTemplateST;
 import nextgen.utils.StringUtil;
 
 import java.io.File;
@@ -12,23 +12,6 @@ import java.io.File;
 public class STNeoGenerator {
 
    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STNeoGenerator.class);
-
-   public static void main(String[] args) {
-      final java.util.Collection<nextgen.st.domain.STGroupModel> stGroups = new java.util.ArrayList<>();
-      final java.io.File templatesDir = new java.io.File("./components/core/src/main/resources/templates");
-      java.util.Optional.ofNullable(templatesDir.listFiles(pathname -> pathname.isFile() && pathname.getName()
-            .toLowerCase()
-            .endsWith(".json")))
-            .ifPresent(files -> {
-               for (java.io.File file : files)
-                  stGroups.add(new nextgen.st.domain.STGroupModel(nextgen.st.STParser.readJsonObject(file)));
-            });
-
-      final STNeoGenerator neoGenerator = new STNeoGenerator();
-      STGroupModel stGroupModel = stGroups.iterator().next();
-      neoGenerator.generateSTGroup(stGroupModel, "nextgen.templates" + "." + stGroupModel.getName()
-            .toLowerCase() + ".neo", "./components/core/src/main/java");
-   }
 
    public void generateSTGroup(STGroupModel stGroupModel, String packageDeclaration, String rootPath) {
 

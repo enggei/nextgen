@@ -33,35 +33,6 @@ jsonArray(items) ::= <<[ ~items:{it|~it~};separator="\n"~ ]  >>
 
 JsonObject(values) ::= <<{ ~values:{it|~it~};separator=", "~ }  >>
 
-MobX() ::= <<MobX constructs  >>
-
-MobXStore(imports,name,observables,constructorStatements,actions) ::= <<import { observable, action, reaction } from 'mobx';
-~imports:{it|import ~it.ref~ from '~it.path~';};separator="\n"~
-
-class ~name;format="capitalize"~ {
-
-	~observables:{it|~it~};separator="\n"~
-
-	constructor() {
-		~constructorStatements:{it|~it~};separator="\n"~
-	}
-
-	~actions:{it|~it~};separator="\n\n"~
-}
-
-export default new ~name;format="capitalize"~();  >>
-
-Observable(name,initializer) ::= <<@observable ~name~~if(initializer)~ = ~initializer~~endif~;  >>
-
-Action(name,params,statements) ::= <<@action ~name~(~params:{it|~it~};separator=","~) {
-	console.info("action ~name~ " ~params:{it| + " ~it~ " + ~it~}~);
-	~statements:{it|~it~};separator="\n"~
-}  >>
-
-reaction(dataFunction,effectFunction) ::= <<reaction(~dataFunction~, ~effectFunction~);  >>
-
-Inject(values) ::= <<@inject(~values:{it|~it~};separator=", "~)  >>
-
 NameArray(values,name) ::= <<~name~ : [ ~values:{it|~it~};separator=", "~ ]  >>
 
 NameValue(name,value) ::= <<~name~: ~value~  >>
@@ -90,7 +61,7 @@ ReactDOM.render((
 	</Provider>
 ), document.getElementById('root'));  >>
 
-indexHtml(title) ::= <<<!DOCTYPE html>
+indexHtml(stylesheets,title) ::= <<<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -98,6 +69,7 @@ indexHtml(title) ::= <<<!DOCTYPE html>
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"/>
+    ~stylesheets:{it|<link rel="stylesheet" href="~it~"/>};separator="\n"~
 
     <title>~title~</title>
 </head>
@@ -153,7 +125,7 @@ State(values) ::= <<{
 	~values:{it|~it.name~: ~it.value~};separator=",\n"~
 }  >>
 
-ClassComponent(imports,componentImports,dependencies,constDeclarations,decorators,name,state,constructorStatements,events,methods,renderCondition,renderTrue,renderFalse,renderElement) ::= <<import React from 'react';
+ClassComponent(imports,componentImports,dependencies,constDeclarations,decorators,name,fields,state,constructorStatements,events,methods,renderCondition,renderTrue,renderFalse,renderElement) ::= <<import React from 'react';
 ~imports:{it|import ~it.ref~ from '~it.path~';};separator="\n"~
 ~componentImports:{it|~it~};separator="\n"~
 ~dependencies:{it|~it~};separator="\n"~
@@ -163,6 +135,8 @@ ClassComponent(imports,componentImports,dependencies,constDeclarations,decorator
 ~decorators:{it|~it~};separator="\n"~
 class ~name~ extends React.Component {
 
+	~fields:{it|~it.name~};separator="\n"~
+	
 	constructor(props) {
 		super(props);
 		console.log("new ~name~ : " +  this.props);
@@ -230,7 +204,7 @@ MethodDeclaration(const,name,parameters,statements) ::= <<~if(const)~const ~endi
 namedImport(names) ::= <<{ ~names:{it|~it~};separator=", "~ }  >>
 
 MapProperty(property,forEach) ::= <<{
-	~property~.map((element) => (
+	~property~.map((element, i) => (
 		~forEach~
 	)) 
 }  >>
@@ -249,7 +223,7 @@ form(className,onSubmit,noValidate,children) ::= <<<form ~if(className)~classNam
 	~children:{it|~it~};separator="\n"~
 </form>~else~ />~endif~  >>
 
-Element(name,attributes,props,children) ::= <<<~name~~if(attributes)~ ~attributes:{it|
+Element(name,singleAttributes,attributes,props,children) ::= <<<~name~~if(singleAttributes)~ ~singleAttributes:{it|~it~};separator=" "~~endif~~if(attributes)~ ~attributes:{it|
 
 	~it.key~=~it.value~}~~endif~~if(props)~ ~props:{it|~it~};separator=" "~~endif~~if(children)~>
 	~children:{it|~it~};separator="\n"~
@@ -310,6 +284,8 @@ class App extends Component {
 }
 
 export default App;  >>
+
+Statement(expression) ::= <<~expression~;  >>
 
 Superagent(agentDeclarations) ::= <<import superagentPromise from 'superagent-promise';
 import _superagent from 'superagent';

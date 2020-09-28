@@ -9,6 +9,7 @@ public class BottomNavigationElement {
 	private Object _className;
 	private Object _component;
 	private Object _id;
+	private Object _key;
 	private Object _onChange;
 	private Object _showLabels;
 	private Object _style;
@@ -18,11 +19,6 @@ public class BottomNavigationElement {
 
 	BottomNavigationElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -36,6 +32,7 @@ public class BottomNavigationElement {
 		st.add("className", _className);
 		st.add("component", _component);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("onChange", _onChange);
 		st.add("showLabels", _showLabels);
 		st.add("style", _style);
@@ -130,6 +127,28 @@ public class BottomNavigationElement {
 
 	public BottomNavigationElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public BottomNavigationElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public BottomNavigationElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -270,6 +289,16 @@ public class BottomNavigationElement {
 		return this._attribute.stream().map(BottomNavigationElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(BottomNavigationElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(BottomNavigationElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class BottomNavigationElement_Attribute {
 
 		Object _name;
@@ -293,7 +322,7 @@ public class BottomNavigationElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -308,11 +337,12 @@ public class BottomNavigationElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "BottomNavigationElement(classes,className,component,id,onChange,showLabels,style,value,attribute,children) ::= <<<BottomNavigation~if(classes)~\n" + 
+	static final String st = "BottomNavigationElement(classes,className,component,id,key,onChange,showLabels,style,value,attribute,children) ::= <<<BottomNavigation~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(onChange)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(onChange)~\n" + 
 				"	onChange=~onChange~~endif~~if(showLabels)~\n" + 
 				"	showLabels~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(value)~\n" + 

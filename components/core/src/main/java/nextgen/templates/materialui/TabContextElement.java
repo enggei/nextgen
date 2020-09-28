@@ -7,6 +7,7 @@ public class TabContextElement {
 
 	private Object _className;
 	private Object _id;
+	private Object _key;
 	private Object _style;
 	private Object _value;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -14,11 +15,6 @@ public class TabContextElement {
 
 	TabContextElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -30,6 +26,7 @@ public class TabContextElement {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("TabContextElement");
 		st.add("className", _className);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("style", _style);
 		st.add("value", _value);
 		for (Object o : _children) st.add("children", o);
@@ -78,6 +75,28 @@ public class TabContextElement {
 
 	public TabContextElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public TabContextElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public TabContextElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -174,6 +193,16 @@ public class TabContextElement {
 		return this._attribute.stream().map(TabContextElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(TabContextElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(TabContextElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class TabContextElement_Attribute {
 
 		Object _name;
@@ -197,7 +226,7 @@ public class TabContextElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -212,9 +241,10 @@ public class TabContextElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TabContextElement(className,id,style,value,attribute,children) ::= <<<TabContext~if(className)~\n" + 
+	static final String st = "TabContextElement(className,id,key,style,value,attribute,children) ::= <<<TabContext~if(className)~\n" + 
 				"	className=~className~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~\n" + 
 				"	value=\"~value~\"~attribute:{it|\n" + 
 				"	\n" + 

@@ -28,7 +28,7 @@ public class Basefont {
 		this.stGroup = stGroup;
 	}
 
-	public java.util.UUID uuid() {
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 

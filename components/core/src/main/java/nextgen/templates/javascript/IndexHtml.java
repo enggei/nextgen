@@ -6,14 +6,10 @@ public class IndexHtml {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _title;
+	private java.util.List<Object> _stylesheets = new java.util.ArrayList<>();
 
 	IndexHtml(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -24,6 +20,7 @@ public class IndexHtml {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("indexHtml");
 		st.add("title", _title);
+		for (Object o : _stylesheets) st.add("stylesheets", o);
 		return st.render().trim();
 	}
 
@@ -49,6 +46,34 @@ public class IndexHtml {
 		return this;
 	} 
 
+	public IndexHtml addStylesheets(Object value) {
+		this._stylesheets.add(value);
+		return this;
+	}
+
+	public IndexHtml setStylesheets(Object[] value) {
+		this._stylesheets.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public IndexHtml setStylesheets(java.util.Collection<Object> values) {
+		this._stylesheets.addAll(values);
+		return this;
+	}
+
+	public IndexHtml removeStylesheets(Object value) {
+		this._stylesheets.remove(value);
+		return this;
+	}
+
+	public IndexHtml removeStylesheets(int index) {
+		this._stylesheets.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getStylesheets() {
+		return this._stylesheets;
+	} 
 
 
 	@Override
@@ -64,7 +89,7 @@ public class IndexHtml {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "indexHtml(title) ::= <<<!DOCTYPE html>\n" + 
+	static final String st = "indexHtml(stylesheets,title) ::= <<<!DOCTYPE html>\n" + 
 				"<html lang=\"en\">\n" + 
 				"<head>\n" + 
 				"    <meta charset=\"UTF-8\">\n" + 
@@ -72,6 +97,7 @@ public class IndexHtml {
 				"    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">\n" + 
 				"\n" + 
 				"    <link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css?family=Roboto:300,400,500\"/>\n" + 
+				"    ~stylesheets:{it|<link rel=\"stylesheet\" href=\"~it~\"/>};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"    <title>~title~</title>\n" + 
 				"</head>\n" + 

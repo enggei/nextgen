@@ -11,6 +11,7 @@ public class AccordionElement {
 	private Object _disabled;
 	private Object _expanded;
 	private Object _id;
+	private Object _key;
 	private Object _onChange;
 	private Object _square;
 	private Object _style;
@@ -21,11 +22,6 @@ public class AccordionElement {
 
 	AccordionElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -41,6 +37,7 @@ public class AccordionElement {
 		st.add("disabled", _disabled);
 		st.add("expanded", _expanded);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("onChange", _onChange);
 		st.add("square", _square);
 		st.add("style", _style);
@@ -180,6 +177,28 @@ public class AccordionElement {
 
 	public AccordionElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public AccordionElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public AccordionElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -342,6 +361,16 @@ public class AccordionElement {
 		return this._attribute.stream().map(AccordionElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(AccordionElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(AccordionElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class AccordionElement_Attribute {
 
 		Object _name;
@@ -365,7 +394,7 @@ public class AccordionElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -380,13 +409,14 @@ public class AccordionElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AccordionElement(classes,className,defaultExpanded,disabled,expanded,id,onChange,square,style,TransitionComponent,TransitionProps,attribute,children) ::= <<<Accordion~if(classes)~\n" + 
+	static final String st = "AccordionElement(classes,className,defaultExpanded,disabled,expanded,id,key,onChange,square,style,TransitionComponent,TransitionProps,attribute,children) ::= <<<Accordion~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(defaultExpanded)~\n" + 
 				"	defaultExpanded~endif~~if(disabled)~\n" + 
 				"	disabled~endif~~if(expanded)~\n" + 
 				"	expanded~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(onChange)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(onChange)~\n" + 
 				"	onChange=~onChange~~endif~~if(square)~\n" + 
 				"	square~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(TransitionComponent)~\n" + 

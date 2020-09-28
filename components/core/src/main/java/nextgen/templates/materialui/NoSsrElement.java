@@ -9,17 +9,13 @@ public class NoSsrElement {
 	private Object _defer;
 	private Object _fallback;
 	private Object _id;
+	private Object _key;
 	private Object _style;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	NoSsrElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -33,6 +29,7 @@ public class NoSsrElement {
 		st.add("defer", _defer);
 		st.add("fallback", _fallback);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("style", _style);
 		for (Object o : _children) st.add("children", o);
 		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
@@ -127,6 +124,28 @@ public class NoSsrElement {
 		return this;
 	} 
 
+	public NoSsrElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public NoSsrElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public NoSsrElement setStyle(Object value) {
 		this._style = value;
 		return this;
@@ -198,6 +217,16 @@ public class NoSsrElement {
 		return this._attribute.stream().map(NoSsrElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(NoSsrElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(NoSsrElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class NoSsrElement_Attribute {
 
 		Object _name;
@@ -221,7 +250,7 @@ public class NoSsrElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -236,11 +265,12 @@ public class NoSsrElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NoSsrElement(className,defer,fallback,id,style,attribute,children) ::= <<<NoSsr~if(className)~\n" + 
+	static final String st = "NoSsrElement(className,defer,fallback,id,key,style,attribute,children) ::= <<<NoSsr~if(className)~\n" + 
 				"	className=~className~~endif~~if(defer)~\n" + 
 				"	defer~endif~~if(fallback)~\n" + 
 				"	fallback=~fallback~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~attribute:{it|\n" + 
 				"	\n" + 
 				"	~it.name~=~it.value~}~~if(children)~>\n" + 

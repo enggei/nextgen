@@ -168,503 +168,503 @@ public class Html5ST {
 
 	public static _object new_object() {
 		return new _object(stGroup);
-	} 
+	}  
 
 	public static A newA() {
 		return new A(stGroup);
-	} 
+	}  
 
 	public static Abbr newAbbr() {
 		return new Abbr(stGroup);
-	} 
+	}  
 
 	public static Acronym newAcronym() {
 		return new Acronym(stGroup);
-	} 
+	}  
 
 	public static Address newAddress() {
 		return new Address(stGroup);
-	} 
+	}  
 
 	public static Applet newApplet() {
 		return new Applet(stGroup);
-	} 
+	}  
 
 	public static Area newArea() {
 		return new Area(stGroup);
-	} 
+	}  
 
 	public static Article newArticle() {
 		return new Article(stGroup);
-	} 
+	}  
 
 	public static Aside newAside() {
 		return new Aside(stGroup);
-	} 
+	}  
 
 	public static Audio newAudio() {
 		return new Audio(stGroup);
-	} 
+	}  
 
 	public static B newB() {
 		return new B(stGroup);
-	} 
+	}  
 
 	public static Base newBase() {
 		return new Base(stGroup);
-	} 
+	}  
 
 	public static Basefont newBasefont() {
 		return new Basefont(stGroup);
-	} 
+	}  
 
 	public static Bdi newBdi() {
 		return new Bdi(stGroup);
-	} 
+	}  
 
 	public static Bdo newBdo() {
 		return new Bdo(stGroup);
-	} 
+	}  
 
 	public static Big newBig() {
 		return new Big(stGroup);
-	} 
+	}  
 
 	public static Block newBlock() {
 		return new Block(stGroup);
-	} 
+	}  
 
 	public static Blockquote newBlockquote() {
 		return new Blockquote(stGroup);
-	} 
+	}  
 
 	public static Body newBody() {
 		return new Body(stGroup);
-	} 
+	}  
 
 	public static Br newBr() {
 		return new Br(stGroup);
-	} 
+	}  
 
 	public static Button newButton() {
 		return new Button(stGroup);
-	} 
+	}  
 
 	public static Canvas newCanvas() {
 		return new Canvas(stGroup);
-	} 
+	}  
 
 	public static Caption newCaption() {
 		return new Caption(stGroup);
-	} 
+	}  
 
 	public static Center newCenter() {
 		return new Center(stGroup);
-	} 
+	}  
 
 	public static Cite newCite() {
 		return new Cite(stGroup);
-	} 
+	}  
 
 	public static Code newCode() {
 		return new Code(stGroup);
-	} 
+	}  
 
 	public static Col newCol() {
 		return new Col(stGroup);
-	} 
+	}  
 
 	public static Colgroup newColgroup() {
 		return new Colgroup(stGroup);
-	} 
+	}  
 
 	public static Comment newComment() {
 		return new Comment(stGroup);
-	} 
+	}  
 
 	public static Datalist newDatalist() {
 		return new Datalist(stGroup);
-	} 
+	}  
 
 	public static Dd newDd() {
 		return new Dd(stGroup);
-	} 
+	}  
 
 	public static Del newDel() {
 		return new Del(stGroup);
-	} 
+	}  
 
 	public static Details newDetails() {
 		return new Details(stGroup);
-	} 
+	}  
 
 	public static Dfn newDfn() {
 		return new Dfn(stGroup);
-	} 
+	}  
 
 	public static Dialog newDialog() {
 		return new Dialog(stGroup);
-	} 
+	}  
 
 	public static Dir newDir() {
 		return new Dir(stGroup);
-	} 
+	}  
 
 	public static Div newDiv() {
 		return new Div(stGroup);
-	} 
+	}  
 
 	public static Dl newDl() {
 		return new Dl(stGroup);
-	} 
+	}  
 
 	public static Dt newDt() {
 		return new Dt(stGroup);
-	} 
+	}  
 
 	public static Em newEm() {
 		return new Em(stGroup);
-	} 
+	}  
 
 	public static Embed newEmbed() {
 		return new Embed(stGroup);
-	} 
+	}  
 
 	public static Fieldset newFieldset() {
 		return new Fieldset(stGroup);
-	} 
+	}  
 
 	public static Figcaption newFigcaption() {
 		return new Figcaption(stGroup);
-	} 
+	}  
 
 	public static Figure newFigure() {
 		return new Figure(stGroup);
-	} 
+	}  
 
 	public static Font newFont() {
 		return new Font(stGroup);
-	} 
+	}  
 
 	public static Footer newFooter() {
 		return new Footer(stGroup);
-	} 
+	}  
 
 	public static Form newForm() {
 		return new Form(stGroup);
-	} 
+	}  
 
 	public static Frame newFrame() {
 		return new Frame(stGroup);
-	} 
+	}  
 
 	public static Frameset newFrameset() {
 		return new Frameset(stGroup);
-	} 
+	}  
 
 	public static H1 newH1() {
 		return new H1(stGroup);
-	} 
+	}  
 
 	public static H2 newH2() {
 		return new H2(stGroup);
-	} 
+	}  
 
 	public static H3 newH3() {
 		return new H3(stGroup);
-	} 
+	}  
 
 	public static H4 newH4() {
 		return new H4(stGroup);
-	} 
+	}  
 
 	public static H5 newH5() {
 		return new H5(stGroup);
-	} 
+	}  
 
 	public static H6 newH6() {
 		return new H6(stGroup);
-	} 
+	}  
 
 	public static Head newHead() {
 		return new Head(stGroup);
-	} 
+	}  
 
 	public static Header newHeader() {
 		return new Header(stGroup);
-	} 
+	}  
 
 	public static Hgroup newHgroup() {
 		return new Hgroup(stGroup);
-	} 
+	}  
 
 	public static Hr newHr() {
 		return new Hr(stGroup);
-	} 
+	}  
 
 	public static I newI() {
 		return new I(stGroup);
-	} 
+	}  
 
 	public static Iframe newIframe() {
 		return new Iframe(stGroup);
-	} 
+	}  
 
 	public static Img newImg() {
 		return new Img(stGroup);
-	} 
+	}  
 
 	public static Input newInput() {
 		return new Input(stGroup);
-	} 
+	}  
 
 	public static Ins newIns() {
 		return new Ins(stGroup);
-	} 
+	}  
 
 	public static Kbd newKbd() {
 		return new Kbd(stGroup);
-	} 
+	}  
 
 	public static Keygen newKeygen() {
 		return new Keygen(stGroup);
-	} 
+	}  
 
 	public static Label newLabel() {
 		return new Label(stGroup);
-	} 
+	}  
 
 	public static Legend newLegend() {
 		return new Legend(stGroup);
-	} 
+	}  
 
 	public static Li newLi() {
 		return new Li(stGroup);
-	} 
+	}  
 
 	public static Link newLink() {
 		return new Link(stGroup);
-	} 
+	}  
 
 	public static Main newMain() {
 		return new Main(stGroup);
-	} 
+	}  
 
 	public static Map newMap() {
 		return new Map(stGroup);
-	} 
+	}  
 
 	public static Mark newMark() {
 		return new Mark(stGroup);
-	} 
+	}  
 
 	public static Menu newMenu() {
 		return new Menu(stGroup);
-	} 
+	}  
 
 	public static Menuitem newMenuitem() {
 		return new Menuitem(stGroup);
-	} 
+	}  
 
 	public static Meta newMeta() {
 		return new Meta(stGroup);
-	} 
+	}  
 
 	public static Meter newMeter() {
 		return new Meter(stGroup);
-	} 
+	}  
 
 	public static MimeJson newMimeJson() {
 		return new MimeJson(stGroup);
-	} 
+	}  
 
 	public static Nav newNav() {
 		return new Nav(stGroup);
-	} 
+	}  
 
 	public static Noframes newNoframes() {
 		return new Noframes(stGroup);
-	} 
+	}  
 
 	public static Noscript newNoscript() {
 		return new Noscript(stGroup);
-	} 
+	}  
 
 	public static Ol newOl() {
 		return new Ol(stGroup);
-	} 
+	}  
 
 	public static Optgroup newOptgroup() {
 		return new Optgroup(stGroup);
-	} 
+	}  
 
 	public static Option newOption() {
 		return new Option(stGroup);
-	} 
+	}  
 
 	public static Output newOutput() {
 		return new Output(stGroup);
-	} 
+	}  
 
 	public static P newP() {
 		return new P(stGroup);
-	} 
+	}  
 
 	public static Page newPage() {
 		return new Page(stGroup);
-	} 
+	}  
 
 	public static Param newParam() {
 		return new Param(stGroup);
-	} 
+	}  
 
 	public static Pre newPre() {
 		return new Pre(stGroup);
-	} 
+	}  
 
 	public static Progress newProgress() {
 		return new Progress(stGroup);
-	} 
+	}  
 
 	public static Q newQ() {
 		return new Q(stGroup);
-	} 
+	}  
 
 	public static Rp newRp() {
 		return new Rp(stGroup);
-	} 
+	}  
 
 	public static Rt newRt() {
 		return new Rt(stGroup);
-	} 
+	}  
 
 	public static Ruby newRuby() {
 		return new Ruby(stGroup);
-	} 
+	}  
 
 	public static S newS() {
 		return new S(stGroup);
-	} 
+	}  
 
 	public static Samp newSamp() {
 		return new Samp(stGroup);
-	} 
+	}  
 
 	public static Script newScript() {
 		return new Script(stGroup);
-	} 
+	}  
 
 	public static Section newSection() {
 		return new Section(stGroup);
-	} 
+	}  
 
 	public static Select newSelect() {
 		return new Select(stGroup);
-	} 
+	}  
 
 	public static Small newSmall() {
 		return new Small(stGroup);
-	} 
+	}  
 
 	public static Source newSource() {
 		return new Source(stGroup);
-	} 
+	}  
 
 	public static Span newSpan() {
 		return new Span(stGroup);
-	} 
+	}  
 
 	public static Strike newStrike() {
 		return new Strike(stGroup);
-	} 
+	}  
 
 	public static Strong newStrong() {
 		return new Strong(stGroup);
-	} 
+	}  
 
 	public static Style newStyle() {
 		return new Style(stGroup);
-	} 
+	}  
 
 	public static Sub newSub() {
 		return new Sub(stGroup);
-	} 
+	}  
 
 	public static Summary newSummary() {
 		return new Summary(stGroup);
-	} 
+	}  
 
 	public static Sup newSup() {
 		return new Sup(stGroup);
-	} 
+	}  
 
 	public static Table newTable() {
 		return new Table(stGroup);
-	} 
+	}  
 
 	public static Tbody newTbody() {
 		return new Tbody(stGroup);
-	} 
+	}  
 
 	public static Td newTd() {
 		return new Td(stGroup);
-	} 
+	}  
 
 	public static Textarea newTextarea() {
 		return new Textarea(stGroup);
-	} 
+	}  
 
 	public static Tfoot newTfoot() {
 		return new Tfoot(stGroup);
-	} 
+	}  
 
 	public static Th newTh() {
 		return new Th(stGroup);
-	} 
+	}  
 
 	public static Thead newThead() {
 		return new Thead(stGroup);
-	} 
+	}  
 
 	public static Time newTime() {
 		return new Time(stGroup);
-	} 
+	}  
 
 	public static Title newTitle() {
 		return new Title(stGroup);
-	} 
+	}  
 
 	public static Tr newTr() {
 		return new Tr(stGroup);
-	} 
+	}  
 
 	public static Track newTrack() {
 		return new Track(stGroup);
-	} 
+	}  
 
 	public static Tt newTt() {
 		return new Tt(stGroup);
-	} 
+	}  
 
 	public static U newU() {
 		return new U(stGroup);
-	} 
+	}  
 
 	public static Ul newUl() {
 		return new Ul(stGroup);
-	} 
+	}  
 
 	public static Var newVar() {
 		return new Var(stGroup);
-	} 
+	}  
 
 	public static Video newVideo() {
 		return new Video(stGroup);
-	} 
+	}  
 
 	public static Wbr newWbr() {
 		return new Wbr(stGroup);
-	} 
+	}  
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
 

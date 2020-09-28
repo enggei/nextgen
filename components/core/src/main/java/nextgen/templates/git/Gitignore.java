@@ -12,6 +12,10 @@ public class Gitignore {
 		this.stGroup = stGroup;
 	}
 
+	public java.util.UUID getUuid() {
+		return uuid;
+	}
+
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("gitignore");
@@ -95,4 +99,4 @@ public class Gitignore {
 
 	static final String st = "gitignore(excludeDirs,excludeFiles) ::= <<~excludeDirs:{it|/~it~/};separator=\"\\n\"~\n" + 
 				"~excludeFiles:{it|/~it~};separator=\"\\n\"~ >>";
-} 
+}  

@@ -5,16 +5,11 @@ public class AgentDeclaration {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _name;
-	private java.util.List<Object> _agentEndpoint = new java.util.ArrayList<>();
+	private String _name;
+	private java.util.List<AgentEndpoint> _agentEndpoint = new java.util.ArrayList<>();
 
 	AgentDeclaration(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -29,16 +24,16 @@ public class AgentDeclaration {
 		return st.render().trim();
 	}
 
-	public AgentDeclaration setName(Object value) {
+	public AgentDeclaration setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Object getName(Object defaultValue) {
+	public String getName(String defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 
@@ -51,22 +46,22 @@ public class AgentDeclaration {
 		return this;
 	} 
 
-	public AgentDeclaration addAgentEndpoint(Object value) {
+	public AgentDeclaration addAgentEndpoint(AgentEndpoint value) {
 		this._agentEndpoint.add(value);
 		return this;
 	}
 
-	public AgentDeclaration setAgentEndpoint(Object[] value) {
+	public AgentDeclaration setAgentEndpoint(AgentEndpoint[] value) {
 		this._agentEndpoint.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public AgentDeclaration setAgentEndpoint(java.util.Collection<Object> values) {
+	public AgentDeclaration setAgentEndpoint(java.util.Collection<AgentEndpoint> values) {
 		this._agentEndpoint.addAll(values);
 		return this;
 	}
 
-	public AgentDeclaration removeAgentEndpoint(Object value) {
+	public AgentDeclaration removeAgentEndpoint(AgentEndpoint value) {
 		this._agentEndpoint.remove(value);
 		return this;
 	}
@@ -76,7 +71,7 @@ public class AgentDeclaration {
 		return this;
 	}
 
-	public java.util.List<Object> getAgentEndpoint() {
+	public java.util.List<AgentEndpoint> getAgentEndpoint() {
 		return this._agentEndpoint;
 	} 
 

@@ -20,6 +20,7 @@ public class TextFieldElement {
 	private Object _InputLabelProps;
 	private Object _inputProps;
 	private Object _inputRef;
+	private Object _key;
 	private Object _label;
 	private Object _margin;
 	private Object _multiline;
@@ -40,11 +41,6 @@ public class TextFieldElement {
 
 	TextFieldElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -69,6 +65,7 @@ public class TextFieldElement {
 		st.add("InputLabelProps", _InputLabelProps);
 		st.add("inputProps", _inputProps);
 		st.add("inputRef", _inputRef);
+		st.add("key", _key);
 		st.add("label", _label);
 		st.add("margin", _margin);
 		st.add("multiline", _multiline);
@@ -416,6 +413,28 @@ public class TextFieldElement {
 
 	public TextFieldElement removeInputRef() {
 		this._inputRef = null;
+		return this;
+	} 
+
+	public TextFieldElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public TextFieldElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -792,6 +811,16 @@ public class TextFieldElement {
 		return this._attribute.stream().map(TextFieldElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(TextFieldElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(TextFieldElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class TextFieldElement_Attribute {
 
 		Object _name;
@@ -815,7 +844,7 @@ public class TextFieldElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -830,7 +859,7 @@ public class TextFieldElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TextFieldElement(autoComplete,autoFocus,classes,className,color,defaultValue,disabled,error,FormHelperTextProps,fullWidth,helperText,id,InputLabelProps,inputProps,inputRef,label,margin,multiline,name,onChange,placeholder,required,rows,rowsMax,select,SelectProps,size,style,type,value,variant,attribute) ::= <<<TextField~if(autoComplete)~\n" + 
+	static final String st = "TextFieldElement(autoComplete,autoFocus,classes,className,color,defaultValue,disabled,error,FormHelperTextProps,fullWidth,helperText,id,InputLabelProps,inputProps,inputRef,key,label,margin,multiline,name,onChange,placeholder,required,rows,rowsMax,select,SelectProps,size,style,type,value,variant,attribute) ::= <<<TextField~if(autoComplete)~\n" + 
 				"	autoComplete=\"~autoComplete~\"~endif~~if(autoFocus)~\n" + 
 				"	autoFocus~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
@@ -845,7 +874,8 @@ public class TextFieldElement {
 				"	id=\"~id~\"~endif~~if(InputLabelProps)~\n" + 
 				"	InputLabelProps=~InputLabelProps~~endif~~if(inputProps)~\n" + 
 				"	inputProps=~inputProps~~endif~~if(inputRef)~\n" + 
-				"	inputRef=~inputRef~~endif~~if(label)~\n" + 
+				"	inputRef=~inputRef~~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(label)~\n" + 
 				"	label=~label~~endif~~if(margin)~\n" + 
 				"	margin=\"~margin~\"~endif~~if(multiline)~\n" + 
 				"	multiline~endif~~if(name)~\n" + 
@@ -857,7 +887,7 @@ public class TextFieldElement {
 				"	rowsMax=~rowsMax~~endif~~if(select)~\n" + 
 				"	select~endif~~if(SelectProps)~\n" + 
 				"	SelectProps=~SelectProps~~endif~~if(size)~\n" + 
-				"	size=\"~size~\"~endif~~if(style)~\n" + 
+				"	size=~size~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(type)~\n" + 
 				"	type=\"~type~\"~endif~~if(value)~\n" + 
 				"	value=~value~~endif~~if(variant)~\n" + 

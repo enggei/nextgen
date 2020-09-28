@@ -12,6 +12,7 @@ public class MenuElement {
 	private Object _disableAutoFocusItem;
 	private Object _id;
 	private Object _keepMounted;
+	private Object _key;
 	private Object _MenuListProps;
 	private Object _onClose;
 	private Object _onEnter;
@@ -32,11 +33,6 @@ public class MenuElement {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -51,6 +47,7 @@ public class MenuElement {
 		st.add("disableAutoFocusItem", _disableAutoFocusItem);
 		st.add("id", _id);
 		st.add("keepMounted", _keepMounted);
+		st.add("key", _key);
 		st.add("MenuListProps", _MenuListProps);
 		st.add("onClose", _onClose);
 		st.add("onEnter", _onEnter);
@@ -220,6 +217,28 @@ public class MenuElement {
 
 	public MenuElement removeKeepMounted() {
 		this._keepMounted = null;
+		return this;
+	} 
+
+	public MenuElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public MenuElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -558,6 +577,16 @@ public class MenuElement {
 		return this._attribute.stream().map(MenuElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(MenuElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(MenuElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class MenuElement_Attribute {
 
 		Object _name;
@@ -581,7 +610,7 @@ public class MenuElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -596,14 +625,15 @@ public class MenuElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MenuElement(anchorEl,autoFocus,classes,className,disableAutoFocusItem,id,keepMounted,MenuListProps,onClose,onEnter,onEntered,onEntering,onExit,onExited,onExiting,open,PopoverClasses,style,transitionDuration,variant,attribute,children) ::= <<<Menu~if(anchorEl)~\n" + 
+	static final String st = "MenuElement(anchorEl,autoFocus,classes,className,disableAutoFocusItem,id,keepMounted,key,MenuListProps,onClose,onEnter,onEntered,onEntering,onExit,onExited,onExiting,open,PopoverClasses,style,transitionDuration,variant,attribute,children) ::= <<<Menu~if(anchorEl)~\n" + 
 				"	anchorEl=~anchorEl~~endif~~if(autoFocus)~\n" + 
 				"	autoFocus~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(disableAutoFocusItem)~\n" + 
 				"	disableAutoFocusItem~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(keepMounted)~\n" + 
-				"	keepMounted~endif~~if(MenuListProps)~\n" + 
+				"	keepMounted~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(MenuListProps)~\n" + 
 				"	MenuListProps=~MenuListProps~~endif~~if(onClose)~\n" + 
 				"	onClose=~onClose~~endif~~if(onEnter)~\n" + 
 				"	onEnter=~onEnter~~endif~~if(onEntered)~\n" + 
@@ -615,7 +645,7 @@ public class MenuElement {
 				"	open=~open~~endif~~if(PopoverClasses)~\n" + 
 				"	PopoverClasses=~PopoverClasses~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(transitionDuration)~\n" + 
-				"	transitionDuration=\"~transitionDuration~\"~endif~~if(variant)~\n" + 
+				"	transitionDuration=~transitionDuration~~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
 				"	\n" + 
 				"	~it.name~=~it.value~}~~if(children)~>\n" + 

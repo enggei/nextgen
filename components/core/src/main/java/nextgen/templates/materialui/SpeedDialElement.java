@@ -13,6 +13,7 @@ public class SpeedDialElement {
 	private Object _hidden;
 	private Object _icon;
 	private Object _id;
+	private Object _key;
 	private Object _onClose;
 	private Object _onOpen;
 	private Object _openIcon;
@@ -25,11 +26,6 @@ public class SpeedDialElement {
 
 	SpeedDialElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -47,6 +43,7 @@ public class SpeedDialElement {
 		st.add("hidden", _hidden);
 		st.add("icon", _icon);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("onClose", _onClose);
 		st.add("onOpen", _onOpen);
 		st.add("openIcon", _openIcon);
@@ -232,6 +229,28 @@ public class SpeedDialElement {
 
 	public SpeedDialElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public SpeedDialElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public SpeedDialElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -438,6 +457,16 @@ public class SpeedDialElement {
 		return this._attribute.stream().map(SpeedDialElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(SpeedDialElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(SpeedDialElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class SpeedDialElement_Attribute {
 
 		Object _name;
@@ -461,7 +490,7 @@ public class SpeedDialElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -476,15 +505,16 @@ public class SpeedDialElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SpeedDialElement(ariaLabel,classes,className,direction,FabProps,hidden,icon,id,onClose,onOpen,openIcon,style,TransitionComponent,transitionDuration,TransitionProps,attribute,children) ::= <<<SpeedDial\n" + 
+	static final String st = "SpeedDialElement(ariaLabel,classes,className,direction,FabProps,hidden,icon,id,key,onClose,onOpen,openIcon,style,TransitionComponent,transitionDuration,TransitionProps,attribute,children) ::= <<<SpeedDial\n" + 
 				"	ariaLabel=\"~ariaLabel~\"~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(direction)~\n" + 
-				"	direction=\"~direction~\"~endif~~if(FabProps)~\n" + 
+				"	direction=~direction~~endif~~if(FabProps)~\n" + 
 				"	FabProps=~FabProps~~endif~~if(hidden)~\n" + 
 				"	hidden~endif~~if(icon)~\n" + 
 				"	icon=~icon~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(onClose)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(onClose)~\n" + 
 				"	onClose=~onClose~~endif~~if(onOpen)~\n" + 
 				"	onOpen=~onOpen~~endif~\n" + 
 				"	open~if(openIcon)~\n" + 

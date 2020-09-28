@@ -10,6 +10,7 @@ public class CircularProgressElement {
 	private Object _color;
 	private Object _disableShrink;
 	private Object _id;
+	private Object _key;
 	private Object _size;
 	private Object _style;
 	private Object _thickness;
@@ -19,11 +20,6 @@ public class CircularProgressElement {
 
 	CircularProgressElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -38,6 +34,7 @@ public class CircularProgressElement {
 		st.add("color", _color);
 		st.add("disableShrink", _disableShrink);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("size", _size);
 		st.add("style", _style);
 		st.add("thickness", _thickness);
@@ -154,6 +151,28 @@ public class CircularProgressElement {
 
 	public CircularProgressElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public CircularProgressElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public CircularProgressElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -288,6 +307,16 @@ public class CircularProgressElement {
 		return this._attribute.stream().map(CircularProgressElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(CircularProgressElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(CircularProgressElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class CircularProgressElement_Attribute {
 
 		Object _name;
@@ -311,7 +340,7 @@ public class CircularProgressElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -326,12 +355,13 @@ public class CircularProgressElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "CircularProgressElement(classes,className,color,disableShrink,id,size,style,thickness,value,variant,attribute) ::= <<<CircularProgress~if(classes)~\n" + 
+	static final String st = "CircularProgressElement(classes,className,color,disableShrink,id,key,size,style,thickness,value,variant,attribute) ::= <<<CircularProgress~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(disableShrink)~\n" + 
 				"	disableShrink~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(size)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(size)~\n" + 
 				"	size=~size~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(thickness)~\n" + 
 				"	thickness=~thickness~~endif~~if(value)~\n" + 

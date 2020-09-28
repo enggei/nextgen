@@ -12,6 +12,7 @@ public class CollapseElement {
 	private Object _disableStrictModeCompat;
 	private Object _id;
 	private Object _in;
+	private Object _key;
 	private Object _style;
 	private Object _timeout;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -19,11 +20,6 @@ public class CollapseElement {
 
 	CollapseElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -40,6 +36,7 @@ public class CollapseElement {
 		st.add("disableStrictModeCompat", _disableStrictModeCompat);
 		st.add("id", _id);
 		st.add("in", _in);
+		st.add("key", _key);
 		st.add("style", _style);
 		st.add("timeout", _timeout);
 		for (Object o : _children) st.add("children", o);
@@ -201,6 +198,28 @@ public class CollapseElement {
 		return this;
 	} 
 
+	public CollapseElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public CollapseElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public CollapseElement setStyle(Object value) {
 		this._style = value;
 		return this;
@@ -294,6 +313,16 @@ public class CollapseElement {
 		return this._attribute.stream().map(CollapseElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(CollapseElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(CollapseElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class CollapseElement_Attribute {
 
 		Object _name;
@@ -317,7 +346,7 @@ public class CollapseElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -332,16 +361,17 @@ public class CollapseElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "CollapseElement(classes,className,collapsedHeight,component,disableStrictModeCompat,id,in,style,timeout,attribute,children) ::= <<<Collapse~if(classes)~\n" + 
+	static final String st = "CollapseElement(classes,className,collapsedHeight,component,disableStrictModeCompat,id,in,key,style,timeout,attribute,children) ::= <<<Collapse~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(collapsedHeight)~\n" + 
 				"	collapsedHeight=~collapsedHeight~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(disableStrictModeCompat)~\n" + 
 				"	disableStrictModeCompat~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(in)~\n" + 
-				"	in~endif~~if(style)~\n" + 
+				"	in~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(timeout)~\n" + 
-				"	timeout=\"~timeout~\"~endif~~attribute:{it|\n" + 
+				"	timeout=~timeout~~endif~~attribute:{it|\n" + 
 				"	\n" + 
 				"	~it.name~=~it.value~}~~if(children)~>\n" + 
 				"	~children:{it|~it~};separator=\"\\n\"~\n" + 

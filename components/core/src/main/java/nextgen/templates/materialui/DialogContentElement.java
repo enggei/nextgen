@@ -9,17 +9,13 @@ public class DialogContentElement {
 	private Object _className;
 	private Object _dividers;
 	private Object _id;
+	private Object _key;
 	private Object _style;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _attribute = new java.util.ArrayList<>();
 
 	DialogContentElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -33,6 +29,7 @@ public class DialogContentElement {
 		st.add("className", _className);
 		st.add("dividers", _dividers);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("style", _style);
 		for (Object o : _children) st.add("children", o);
 		for (java.util.Map<String, Object> map : _attribute) st.addAggr("attribute.{name,value}", map.get("name"), map.get("value"));
@@ -127,6 +124,28 @@ public class DialogContentElement {
 		return this;
 	} 
 
+	public DialogContentElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public DialogContentElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public DialogContentElement setStyle(Object value) {
 		this._style = value;
 		return this;
@@ -198,6 +217,16 @@ public class DialogContentElement {
 		return this._attribute.stream().map(DialogContentElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(DialogContentElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(DialogContentElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class DialogContentElement_Attribute {
 
 		Object _name;
@@ -221,7 +250,7 @@ public class DialogContentElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -236,11 +265,12 @@ public class DialogContentElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "DialogContentElement(classes,className,dividers,id,style,attribute,children) ::= <<<DialogContent~if(classes)~\n" + 
+	static final String st = "DialogContentElement(classes,className,dividers,id,key,style,attribute,children) ::= <<<DialogContent~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(dividers)~\n" + 
 				"	dividers~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~attribute:{it|\n" + 
 				"	\n" + 
 				"	~it.name~=~it.value~}~~if(children)~>\n" + 

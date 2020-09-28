@@ -17,11 +17,6 @@ public class ListItemAvatarElement {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -198,6 +193,16 @@ public class ListItemAvatarElement {
 		return this._attribute.stream().map(ListItemAvatarElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(ListItemAvatarElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(ListItemAvatarElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class ListItemAvatarElement_Attribute {
 
 		Object _name;
@@ -221,7 +226,7 @@ public class ListItemAvatarElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

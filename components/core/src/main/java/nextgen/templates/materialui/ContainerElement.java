@@ -11,6 +11,7 @@ public class ContainerElement {
 	private Object _disableGutters;
 	private Object _fixed;
 	private Object _id;
+	private Object _key;
 	private Object _maxWidth;
 	private Object _style;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -18,11 +19,6 @@ public class ContainerElement {
 
 	ContainerElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -38,6 +34,7 @@ public class ContainerElement {
 		st.add("disableGutters", _disableGutters);
 		st.add("fixed", _fixed);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("maxWidth", _maxWidth);
 		st.add("style", _style);
 		for (Object o : _children) st.add("children", o);
@@ -177,6 +174,28 @@ public class ContainerElement {
 		return this;
 	} 
 
+	public ContainerElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public ContainerElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public ContainerElement setMaxWidth(Object value) {
 		this._maxWidth = value;
 		return this;
@@ -270,6 +289,16 @@ public class ContainerElement {
 		return this._attribute.stream().map(ContainerElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(ContainerElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(ContainerElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class ContainerElement_Attribute {
 
 		Object _name;
@@ -293,7 +322,7 @@ public class ContainerElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -308,14 +337,15 @@ public class ContainerElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ContainerElement(classes,className,component,disableGutters,fixed,id,maxWidth,style,attribute,children) ::= <<<Container~if(classes)~\n" + 
+	static final String st = "ContainerElement(classes,className,component,disableGutters,fixed,id,key,maxWidth,style,attribute,children) ::= <<<Container~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(disableGutters)~\n" + 
 				"	disableGutters~endif~~if(fixed)~\n" + 
 				"	fixed~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(maxWidth)~\n" + 
-				"	maxWidth=\"~maxWidth~\"~endif~~if(style)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(maxWidth)~\n" + 
+				"	maxWidth=~maxWidth~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~attribute:{it|\n" + 
 				"	\n" + 
 				"	~it.name~=~it.value~}~~if(children)~>\n" + 

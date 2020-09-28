@@ -11,6 +11,7 @@ public class GridListElement {
 	private Object _cols;
 	private Object _component;
 	private Object _id;
+	private Object _key;
 	private Object _spacing;
 	private Object _style;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -18,11 +19,6 @@ public class GridListElement {
 
 	GridListElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -38,6 +34,7 @@ public class GridListElement {
 		st.add("cols", _cols);
 		st.add("component", _component);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("spacing", _spacing);
 		st.add("style", _style);
 		for (Object o : _children) st.add("children", o);
@@ -177,6 +174,28 @@ public class GridListElement {
 		return this;
 	} 
 
+	public GridListElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public GridListElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public GridListElement setSpacing(Object value) {
 		this._spacing = value;
 		return this;
@@ -270,6 +289,16 @@ public class GridListElement {
 		return this._attribute.stream().map(GridListElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(GridListElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(GridListElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class GridListElement_Attribute {
 
 		Object _name;
@@ -293,7 +322,7 @@ public class GridListElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -308,13 +337,14 @@ public class GridListElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "GridListElement(cellHeight,classes,className,cols,component,id,spacing,style,attribute,children) ::= <<<GridList~if(cellHeight)~\n" + 
-				"	cellHeight=\"~cellHeight~\"~endif~~if(classes)~\n" + 
+	static final String st = "GridListElement(cellHeight,classes,className,cols,component,id,key,spacing,style,attribute,children) ::= <<<GridList~if(cellHeight)~\n" + 
+				"	cellHeight=~cellHeight~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(cols)~\n" + 
 				"	cols=~cols~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(spacing)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(spacing)~\n" + 
 				"	spacing=~spacing~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~attribute:{it|\n" + 
 				"	\n" + 

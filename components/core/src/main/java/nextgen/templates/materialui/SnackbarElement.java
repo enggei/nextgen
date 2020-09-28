@@ -36,11 +36,6 @@ public class SnackbarElement {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -654,6 +649,16 @@ public class SnackbarElement {
 		return this._attribute.stream().map(SnackbarElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(SnackbarElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(SnackbarElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class SnackbarElement_Attribute {
 
 		Object _name;
@@ -677,7 +682,7 @@ public class SnackbarElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -694,7 +699,7 @@ public class SnackbarElement {
 
 	static final String st = "SnackbarElement(action,anchorOrigin,autoHideDuration,classes,className,ClickAwayListenerProps,ContentProps,disableWindowBlurListener,id,key,message,onClose,onEnter,onEntered,onEntering,onExit,onExited,onExiting,open,resumeHideDuration,style,TransitionComponent,transitionDuration,TransitionProps,attribute,children) ::= <<<Snackbar~if(action)~\n" + 
 				"	action=~action~~endif~~if(anchorOrigin)~\n" + 
-				"	anchorOrigin=\"~anchorOrigin~\"~endif~~if(autoHideDuration)~\n" + 
+				"	anchorOrigin=~anchorOrigin~~endif~~if(autoHideDuration)~\n" + 
 				"	autoHideDuration=~autoHideDuration~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(ClickAwayListenerProps)~\n" + 

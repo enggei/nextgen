@@ -13,11 +13,6 @@ public class Ul {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -102,6 +97,16 @@ public class Ul {
 		return this._attributes.stream().map(Ul_Attributes::new);
 	}
 
+	public java.util.List<Object> getAttributes_Name() {
+		return streamAttributes().map(Ul_Attributes::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttributes_Value() {
+		return streamAttributes().map(Ul_Attributes::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class Ul_Attributes {
 
 		Object _name;
@@ -125,7 +130,7 @@ public class Ul {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

@@ -9,6 +9,7 @@ public class SlideElement {
 	private Object _direction;
 	private Object _id;
 	private Object _in;
+	private Object _key;
 	private Object _style;
 	private Object _timeout;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -16,11 +17,6 @@ public class SlideElement {
 
 	SlideElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -34,6 +30,7 @@ public class SlideElement {
 		st.add("direction", _direction);
 		st.add("id", _id);
 		st.add("in", _in);
+		st.add("key", _key);
 		st.add("style", _style);
 		st.add("timeout", _timeout);
 		for (Object o : _children) st.add("children", o);
@@ -126,6 +123,28 @@ public class SlideElement {
 
 	public SlideElement removeIn() {
 		this._in = null;
+		return this;
+	} 
+
+	public SlideElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public SlideElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -222,6 +241,16 @@ public class SlideElement {
 		return this._attribute.stream().map(SlideElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(SlideElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(SlideElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class SlideElement_Attribute {
 
 		Object _name;
@@ -245,7 +274,7 @@ public class SlideElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -260,11 +289,12 @@ public class SlideElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SlideElement(className,direction,id,in,style,timeout,attribute,children) ::= <<<Slide~if(className)~\n" + 
+	static final String st = "SlideElement(className,direction,id,in,key,style,timeout,attribute,children) ::= <<<Slide~if(className)~\n" + 
 				"	className=~className~~endif~~if(direction)~\n" + 
-				"	direction=\"~direction~\"~endif~~if(id)~\n" + 
+				"	direction=~direction~~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(in)~\n" + 
-				"	in~endif~~if(style)~\n" + 
+				"	in~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(timeout)~\n" + 
 				"	timeout=~timeout~~endif~~attribute:{it|\n" + 
 				"	\n" + 

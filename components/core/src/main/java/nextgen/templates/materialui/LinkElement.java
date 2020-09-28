@@ -10,6 +10,7 @@ public class LinkElement {
 	private Object _color;
 	private Object _component;
 	private Object _id;
+	private Object _key;
 	private Object _style;
 	private Object _TypographyClasses;
 	private Object _underline;
@@ -19,11 +20,6 @@ public class LinkElement {
 
 	LinkElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -38,6 +34,7 @@ public class LinkElement {
 		st.add("color", _color);
 		st.add("component", _component);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("style", _style);
 		st.add("TypographyClasses", _TypographyClasses);
 		st.add("underline", _underline);
@@ -154,6 +151,28 @@ public class LinkElement {
 
 	public LinkElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public LinkElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public LinkElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -294,6 +313,16 @@ public class LinkElement {
 		return this._attribute.stream().map(LinkElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(LinkElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(LinkElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class LinkElement_Attribute {
 
 		Object _name;
@@ -317,7 +346,7 @@ public class LinkElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -332,15 +361,16 @@ public class LinkElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "LinkElement(classes,className,color,component,id,style,TypographyClasses,underline,variant,attribute,children) ::= <<<Link~if(classes)~\n" + 
+	static final String st = "LinkElement(classes,className,color,component,id,key,style,TypographyClasses,underline,variant,attribute,children) ::= <<<Link~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(TypographyClasses)~\n" + 
 				"	TypographyClasses=~TypographyClasses~~endif~~if(underline)~\n" + 
-				"	underline=\"~underline~\"~endif~~if(variant)~\n" + 
+				"	underline=~underline~~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
 				"	\n" + 
 				"	~it.name~=~it.value~}~~if(children)~>\n" + 

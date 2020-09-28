@@ -13,6 +13,7 @@ public class FormHelperTextElement {
 	private Object _filled;
 	private Object _focused;
 	private Object _id;
+	private Object _key;
 	private Object _margin;
 	private Object _required;
 	private Object _style;
@@ -22,11 +23,6 @@ public class FormHelperTextElement {
 
 	FormHelperTextElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -44,6 +40,7 @@ public class FormHelperTextElement {
 		st.add("filled", _filled);
 		st.add("focused", _focused);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("margin", _margin);
 		st.add("required", _required);
 		st.add("style", _style);
@@ -229,6 +226,28 @@ public class FormHelperTextElement {
 		return this;
 	} 
 
+	public FormHelperTextElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public FormHelperTextElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public FormHelperTextElement setMargin(Object value) {
 		this._margin = value;
 		return this;
@@ -366,6 +385,16 @@ public class FormHelperTextElement {
 		return this._attribute.stream().map(FormHelperTextElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(FormHelperTextElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(FormHelperTextElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class FormHelperTextElement_Attribute {
 
 		Object _name;
@@ -389,7 +418,7 @@ public class FormHelperTextElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -404,7 +433,7 @@ public class FormHelperTextElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "FormHelperTextElement(classes,className,component,disabled,error,filled,focused,id,margin,required,style,variant,attribute,children) ::= <<<FormHelperText~if(classes)~\n" + 
+	static final String st = "FormHelperTextElement(classes,className,component,disabled,error,filled,focused,id,key,margin,required,style,variant,attribute,children) ::= <<<FormHelperText~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(disabled)~\n" + 
@@ -412,7 +441,8 @@ public class FormHelperTextElement {
 				"	error~endif~~if(filled)~\n" + 
 				"	filled~endif~~if(focused)~\n" + 
 				"	focused~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(margin)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(margin)~\n" + 
 				"	margin=\"~margin~\"~endif~~if(required)~\n" + 
 				"	required~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(variant)~\n" + 

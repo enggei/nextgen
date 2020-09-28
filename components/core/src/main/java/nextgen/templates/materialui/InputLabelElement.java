@@ -13,6 +13,7 @@ public class InputLabelElement {
 	private Object _error;
 	private Object _focused;
 	private Object _id;
+	private Object _key;
 	private Object _margin;
 	private Object _required;
 	private Object _shrink;
@@ -23,11 +24,6 @@ public class InputLabelElement {
 
 	InputLabelElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -45,6 +41,7 @@ public class InputLabelElement {
 		st.add("error", _error);
 		st.add("focused", _focused);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("margin", _margin);
 		st.add("required", _required);
 		st.add("shrink", _shrink);
@@ -231,6 +228,28 @@ public class InputLabelElement {
 		return this;
 	} 
 
+	public InputLabelElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public InputLabelElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public InputLabelElement setMargin(Object value) {
 		this._margin = value;
 		return this;
@@ -390,6 +409,16 @@ public class InputLabelElement {
 		return this._attribute.stream().map(InputLabelElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(InputLabelElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(InputLabelElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class InputLabelElement_Attribute {
 
 		Object _name;
@@ -413,7 +442,7 @@ public class InputLabelElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -428,7 +457,7 @@ public class InputLabelElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "InputLabelElement(classes,className,color,disableAnimation,disabled,error,focused,id,margin,required,shrink,style,variant,attribute,children) ::= <<<InputLabel~if(classes)~\n" + 
+	static final String st = "InputLabelElement(classes,className,color,disableAnimation,disabled,error,focused,id,key,margin,required,shrink,style,variant,attribute,children) ::= <<<InputLabel~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(disableAnimation)~\n" + 
@@ -436,7 +465,8 @@ public class InputLabelElement {
 				"	disabled~endif~~if(error)~\n" + 
 				"	error~endif~~if(focused)~\n" + 
 				"	focused~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(margin)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(margin)~\n" + 
 				"	margin=\"~margin~\"~endif~~if(required)~\n" + 
 				"	required~endif~~if(shrink)~\n" + 
 				"	shrink~endif~~if(style)~\n" + 

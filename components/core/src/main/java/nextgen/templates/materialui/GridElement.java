@@ -15,6 +15,7 @@ public class GridElement {
 	private Object _id;
 	private Object _item;
 	private Object _justify;
+	private Object _key;
 	private Object _lg;
 	private Object _md;
 	private Object _sm;
@@ -29,11 +30,6 @@ public class GridElement {
 
 	GridElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -53,6 +49,7 @@ public class GridElement {
 		st.add("id", _id);
 		st.add("item", _item);
 		st.add("justify", _justify);
+		st.add("key", _key);
 		st.add("lg", _lg);
 		st.add("md", _md);
 		st.add("sm", _sm);
@@ -284,6 +281,28 @@ public class GridElement {
 
 	public GridElement removeJustify() {
 		this._justify = null;
+		return this;
+	} 
+
+	public GridElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public GridElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -534,6 +553,16 @@ public class GridElement {
 		return this._attribute.stream().map(GridElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(GridElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(GridElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class GridElement_Attribute {
 
 		Object _name;
@@ -557,7 +586,7 @@ public class GridElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -572,25 +601,26 @@ public class GridElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "GridElement(alignContent,alignItems,classes,className,component,container,direction,id,item,justify,lg,md,sm,spacing,style,wrap,xl,xs,zeroMinWidth,attribute,children) ::= <<<Grid~if(alignContent)~\n" + 
-				"	alignContent=\"~alignContent~\"~endif~~if(alignItems)~\n" + 
-				"	alignItems=\"~alignItems~\"~endif~~if(classes)~\n" + 
+	static final String st = "GridElement(alignContent,alignItems,classes,className,component,container,direction,id,item,justify,key,lg,md,sm,spacing,style,wrap,xl,xs,zeroMinWidth,attribute,children) ::= <<<Grid~if(alignContent)~\n" + 
+				"	alignContent=~alignContent~~endif~~if(alignItems)~\n" + 
+				"	alignItems=~alignItems~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(component)~\n" + 
 				"	component=~component~~endif~~if(container)~\n" + 
 				"	container~endif~~if(direction)~\n" + 
-				"	direction=\"~direction~\"~endif~~if(id)~\n" + 
+				"	direction=~direction~~endif~~if(id)~\n" + 
 				"	id=\"~id~\"~endif~~if(item)~\n" + 
 				"	item~endif~~if(justify)~\n" + 
-				"	justify=\"~justify~\"~endif~~if(lg)~\n" + 
-				"	lg=\"~lg~\"~endif~~if(md)~\n" + 
-				"	md=\"~md~\"~endif~~if(sm)~\n" + 
-				"	sm=\"~sm~\"~endif~~if(spacing)~\n" + 
-				"	spacing=\"~spacing~\"~endif~~if(style)~\n" + 
+				"	justify=\"~justify~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(lg)~\n" + 
+				"	lg=~lg~~endif~~if(md)~\n" + 
+				"	md=~md~~endif~~if(sm)~\n" + 
+				"	sm=~sm~~endif~~if(spacing)~\n" + 
+				"	spacing=~spacing~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(wrap)~\n" + 
-				"	wrap=\"~wrap~\"~endif~~if(xl)~\n" + 
-				"	xl=\"~xl~\"~endif~~if(xs)~\n" + 
-				"	xs=\"~xs~\"~endif~~if(zeroMinWidth)~\n" + 
+				"	wrap=~wrap~~endif~~if(xl)~\n" + 
+				"	xl=~xl~~endif~~if(xs)~\n" + 
+				"	xs=~xs~~endif~~if(zeroMinWidth)~\n" + 
 				"	zeroMinWidth~endif~~attribute:{it|\n" + 
 				"	\n" + 
 				"	~it.name~=~it.value~}~~if(children)~>\n" + 

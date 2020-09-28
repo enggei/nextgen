@@ -12,6 +12,7 @@ public class TabElement {
 	private Object _disableRipple;
 	private Object _icon;
 	private Object _id;
+	private Object _key;
 	private Object _label;
 	private Object _style;
 	private Object _value;
@@ -21,11 +22,6 @@ public class TabElement {
 
 	TabElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -42,6 +38,7 @@ public class TabElement {
 		st.add("disableRipple", _disableRipple);
 		st.add("icon", _icon);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("label", _label);
 		st.add("style", _style);
 		st.add("value", _value);
@@ -205,6 +202,28 @@ public class TabElement {
 		return this;
 	} 
 
+	public TabElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public TabElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public TabElement setLabel(Object value) {
 		this._label = value;
 		return this;
@@ -342,6 +361,16 @@ public class TabElement {
 		return this._attribute.stream().map(TabElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(TabElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(TabElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class TabElement_Attribute {
 
 		Object _name;
@@ -365,7 +394,7 @@ public class TabElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -380,14 +409,15 @@ public class TabElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TabElement(classes,className,disabled,disableFocusRipple,disableRipple,icon,id,label,style,value,wrapped,attribute,children) ::= <<<Tab~if(classes)~\n" + 
+	static final String st = "TabElement(classes,className,disabled,disableFocusRipple,disableRipple,icon,id,key,label,style,value,wrapped,attribute,children) ::= <<<Tab~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(disabled)~\n" + 
 				"	disabled~endif~~if(disableFocusRipple)~\n" + 
 				"	disableFocusRipple~endif~~if(disableRipple)~\n" + 
 				"	disableRipple~endif~~if(icon)~\n" + 
 				"	icon=~icon~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(label)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(label)~\n" + 
 				"	label=~label~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(value)~\n" + 
 				"	value=~value~~endif~~if(wrapped)~\n" + 

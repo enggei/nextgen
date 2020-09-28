@@ -10,6 +10,7 @@ public class GridListTileBarElement {
 	private Object _classes;
 	private Object _className;
 	private Object _id;
+	private Object _key;
 	private Object _style;
 	private Object _subtitle;
 	private Object _title;
@@ -18,11 +19,6 @@ public class GridListTileBarElement {
 
 	GridListTileBarElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -37,6 +33,7 @@ public class GridListTileBarElement {
 		st.add("classes", _classes);
 		st.add("className", _className);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("style", _style);
 		st.add("subtitle", _subtitle);
 		st.add("title", _title);
@@ -155,6 +152,28 @@ public class GridListTileBarElement {
 		return this;
 	} 
 
+	public GridListTileBarElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public GridListTileBarElement removeKey() {
+		this._key = null;
+		return this;
+	} 
+
 	public GridListTileBarElement setStyle(Object value) {
 		this._style = value;
 		return this;
@@ -264,6 +283,16 @@ public class GridListTileBarElement {
 		return this._attribute.stream().map(GridListTileBarElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(GridListTileBarElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(GridListTileBarElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class GridListTileBarElement_Attribute {
 
 		Object _name;
@@ -287,7 +316,7 @@ public class GridListTileBarElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -302,16 +331,17 @@ public class GridListTileBarElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "GridListTileBarElement(actionIcon,actionPosition,classes,className,id,style,subtitle,title,titlePosition,attribute) ::= <<<GridListTileBar~if(actionIcon)~\n" + 
+	static final String st = "GridListTileBarElement(actionIcon,actionPosition,classes,className,id,key,style,subtitle,title,titlePosition,attribute) ::= <<<GridListTileBar~if(actionIcon)~\n" + 
 				"	actionIcon=~actionIcon~~endif~~if(actionPosition)~\n" + 
-				"	actionPosition=\"~actionPosition~\"~endif~~if(classes)~\n" + 
+				"	actionPosition=~actionPosition~~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(subtitle)~\n" + 
 				"	subtitle=~subtitle~~endif~~if(title)~\n" + 
 				"	title=~title~~endif~~if(titlePosition)~\n" + 
-				"	titlePosition=\"~titlePosition~\"~endif~~attribute:{it|\n" + 
+				"	titlePosition=~titlePosition~~endif~~attribute:{it|\n" + 
 				"	\n" + 
 				"	~it.name~=~it.value~}~ /> >>";
 }  

@@ -120,7 +120,7 @@ public class PojoFactory {
 				"~entities:{it|\n" + 
 				"	public static ~it~ new~it~() { \n" + 
 				"		return new ~it~();\n" + 
-				"	~eom()~\n" + 
+				"	~eom()~	\n" + 
 				"};separator=\"\\n\"~\n" + 
 				"} >>";
 }  

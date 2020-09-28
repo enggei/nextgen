@@ -89,9 +89,9 @@ public class ~name;format="capitalize"~ {
 ~entities:{it|
 	public static ~it~ new~it~() { 
 		return new ~it~();
-	~eom()~
+	~eom()~	
 };separator="\n"~
-} >>
+}  >>
 
 Enum(package,name,enumValues) ::= <<package ~package~;
 
@@ -105,9 +105,11 @@ EnumValue(name,lexical) ::= <<~name~~if(lexical)~() {
 	public String toString() { return "~lexical~"; }
 }~endif~ >>
 
-Bean(package,name,fields,fieldDeclarations,accessors,lexical,eqha) ::= <<package ~package~;
+Bean(package,name,fields,fieldDeclarations,accessors,lexical,eqha,beanListener) ::= <<package ~package~;
 
 public class ~name~ implements java.beans.PropertyChangeListener {
+
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STGroupModel.class);
 
 	~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator="\n"~
 	~fieldDeclarations:{it|~it~};separator="\n"~
@@ -123,7 +125,7 @@ public class ~name~ implements java.beans.PropertyChangeListener {
 
 	@Override
 	public String toString() {
-		return ~lexical:{it|_~it~};separator=" + \" \" + "~;
+		return "" + ~lexical:{it|_~it~};separator=" + \" \" + "~;
 	}
 ~endif~
 
@@ -134,18 +136,18 @@ public class ~name~ implements java.beans.PropertyChangeListener {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		~name~ that = (~name~) o;
-		return ~eqha~.equals(that.~eqha~);
+		return _~eqha~.equals(that._~eqha~);
 	}
 
 	@Override
 	public int hashCode() {
-		return java.util.Objects.hash(~eqha~);
+		return java.util.Objects.hash(_~eqha~);
 	}
 ~endif~
 
 	@Override
 	public void propertyChange(java.beans.PropertyChangeEvent evt) {
-		this.pcs.firePropertyChange("~name~", null, this);
+		this.pcs.firePropertyChange("~name~", this, evt);
 	}
 	
 	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
@@ -155,6 +157,8 @@ public class ~name~ implements java.beans.PropertyChangeListener {
 	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
 		this.pcs.removePropertyChangeListener(listener);
 	}
+
+	~beanListener~
 }  >>
 
 boundedPrimitiveAccessors(type,name,className) ::= <<public ~type~ get~name;format="capitalize"~() {
@@ -164,7 +168,7 @@ boundedPrimitiveAccessors(type,name,className) ::= <<public ~type~ get~name;form
 public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) {
 	~type~ oldValue = this._~name~;
 	this._~name~ = value;
-	this.pcs.firePropertyChange("~name~", oldValue, value);
+	this.pcs.firePropertyChange("set.~name~", oldValue, value);
 	return this;
 }  >>
 
@@ -177,7 +181,7 @@ public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ valu
 	if (oldValue != null) oldValue.removePropertyChangeListener(this);
 	this._~name~ = value;
 	if (value != null) value.addPropertyChangeListener(this);
-	this.pcs.firePropertyChange("~name~", oldValue, value);
+	this.pcs.firePropertyChange("set.~name~", oldValue, value);
 	return this;
 }
 
@@ -185,7 +189,7 @@ public ~className;format="capitalize"~ remove~name;format="capitalize"~() {
 	~type~ oldValue = this._~name~;
 	this._~name~ = null;
 	if (oldValue != null) oldValue.removePropertyChangeListener(this);
-	this.pcs.firePropertyChange("~name~", oldValue, null);
+	this.pcs.firePropertyChange("remove.~name~", oldValue, null);
 	return this;
 }  >>
 
@@ -195,13 +199,13 @@ boundedListAccessors(type,name,className) ::= <<public java.util.List<~type~> ge
 
 public ~className~ add~name;format="capitalize"~(~type~ value) {
 	this._~name~.add(value);
-	this.pcs.firePropertyChange("~name~", null, value);
+	this.pcs.firePropertyChange("add.~name~", null, value);
 	return this;
 }
 
 public ~className~ remove~name;format="capitalize"~(~type~ value) {
 	this._~name~.remove(value);
-	this.pcs.firePropertyChange("~name~", value, null);
+	this.pcs.firePropertyChange("remove.~name~", value, null);
 	return this;
 }  >>
 
@@ -212,14 +216,14 @@ boundedListReferenceAccessors(type,name,className) ::= <<public java.util.List<~
 public ~className~ add~name;format="capitalize"~(~type~ value) {
 	this._~name~.add(value);
 	if (value != null) value.addPropertyChangeListener(this);
-	this.pcs.firePropertyChange("~name~", null, value);
+	this.pcs.firePropertyChange("add.~name~", null, value);
 	return this;
 }
 
 public ~className~ remove~name;format="capitalize"~(~type~ value) {
 	this._~name~.remove(value);
 	if (value != null) value.removePropertyChangeListener(this);
-	this.pcs.firePropertyChange("~name~", value, null);
+	this.pcs.firePropertyChange("remove.~name~", value, null);
 	return this;
 }  >>
 
@@ -230,14 +234,14 @@ boundedExternalReferenceAccessors(type,name,className) ::= <<public ~type~ get~n
 public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) {
 	~type~ oldValue = this._~name~;
 	this._~name~ = value;
-	this.pcs.firePropertyChange("~name~", oldValue, value);
+	this.pcs.firePropertyChange("set.~name~", oldValue, value);
 	return this;
 }
 
 public ~className;format="capitalize"~ remove~name;format="capitalize"~() {
 	~type~ oldValue = this._~name~;
 	this._~name~ = null;
-	this.pcs.firePropertyChange("~name~", oldValue, null);
+	this.pcs.firePropertyChange("remove.~name~", oldValue, null);
 	return this;
 }  >>
 
@@ -247,14 +251,70 @@ boundedExternalListAccessors(type,name,className) ::= <<public java.util.List<~t
 
 public ~className~ add~name;format="capitalize"~(~type~ value) {
 	this._~name~.add(value);
-	this.pcs.firePropertyChange("~name~", null, value);
+	this.pcs.firePropertyChange("add.~name~", null, value);
 	return this;
 }
 
 public ~className~ remove~name;format="capitalize"~(~type~ value) {
 	this._~name~.remove(value);
-	this.pcs.firePropertyChange("~name~", value, null);
+	this.pcs.firePropertyChange("remove.~name~", value, null);
 	return this;
+}  >>
+
+BeanListener(name,singleProperties,listProperties) ::= <<public static class ~name;format="capitalize"~ChangeListener implements java.beans.PropertyChangeListener {
+
+	@Override
+	public void propertyChange(java.beans.PropertyChangeEvent propertyChangeEvent) {
+		switch (propertyChangeEvent.getPropertyName()) {
+			
+			case "~name;format="capitalize"~":
+				on~name;format="capitalize"~Change((~name;format="capitalize"~) propertyChangeEvent.getOldValue(), (java.beans.PropertyChangeEvent) propertyChangeEvent.getNewValue());
+				break;
+				
+~singleProperties:{it|
+			case "set.~it.name~":
+				onSet~it.name;format="capitalize"~((~it.type~) propertyChangeEvent.getOldValue(), (~it.type~) propertyChangeEvent.getNewValue());
+				break;
+			case "remove.~it.name~":
+				onRemove~it.name;format="capitalize"~((~it.type~) propertyChangeEvent.getOldValue(), (~it.type~) propertyChangeEvent.getNewValue());
+				break;
+};separator="\n"~
+
+~listProperties:{it|
+			case "add.~it.name~":
+				onAdd~it.name;format="capitalize"~((~it.type~) propertyChangeEvent.getOldValue(), (~it.type~) propertyChangeEvent.getNewValue());
+				break;
+			case "remove.~it.name~":
+				onRemove~it.name;format="capitalize"~((~it.type~) propertyChangeEvent.getOldValue(), (~it.type~) propertyChangeEvent.getNewValue());
+				break;
+};separator="\n"~
+
+		}
+	}
+
+	protected void on~name;format="capitalize"~Change(~name;format="capitalize"~ instance, java.beans.PropertyChangeEvent event) {
+		log.info("on~name;format="capitalize"~Change " + instance + " " + event);
+	}
+	
+~singleProperties:{it|
+	protected void onSet~it.name;format="capitalize"~(~it.type~ oldValue, ~it.type~ newValue) {
+		log.info("onSet~it.name;format="capitalize"~ " + oldValue + " " + newValue);
+	~eom()~
+	
+	protected void onRemove~it.name;format="capitalize"~(~it.type~ oldValue, ~it.type~ newValue) {
+		log.info("onRemove~it.name;format="capitalize"~ " + oldValue + " " + newValue);
+	~eom()~
+};separator="\n\n"~
+
+~listProperties:{it|
+	protected void onAdd~it.name;format="capitalize"~(~it.type~ oldValue, ~it.type~ newValue) {
+		log.info("onAdd~it.name;format="capitalize"~ " + oldValue + " " + newValue);
+	~eom()~
+	
+	protected void onRemove~it.name;format="capitalize"~(~it.type~ oldValue, ~it.type~ newValue) {
+		log.info("onRemove~it.name;format="capitalize"~ " + oldValue + " " + newValue);
+	~eom()~
+};separator="\n\n"~
 }  >>
 
 Script(packageName,name,fields,statements) ::= <<package ~if(packageName)~~packageName~~else~tmp~endif~;

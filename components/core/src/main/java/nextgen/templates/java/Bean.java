@@ -8,6 +8,7 @@ public class Bean {
 	private String _package;
 	private String _name;
 	private Object _eqha;
+	private Object _beanListener;
 	private java.util.List<Object> _fieldDeclarations = new java.util.ArrayList<>();
 	private java.util.List<Object> _accessors = new java.util.ArrayList<>();
 	private java.util.List<String> _lexical = new java.util.ArrayList<>();
@@ -27,6 +28,7 @@ public class Bean {
 		st.add("package", _package);
 		st.add("name", _name);
 		st.add("eqha", _eqha);
+		st.add("beanListener", _beanListener);
 		for (Object o : _fieldDeclarations) st.add("fieldDeclarations", o);
 		for (Object o : _accessors) st.add("accessors", o);
 		for (Object o : _lexical) st.add("lexical", o);
@@ -97,6 +99,28 @@ public class Bean {
 
 	public Bean removeEqha() {
 		this._eqha = null;
+		return this;
+	} 
+
+	public Bean setBeanListener(Object value) {
+		this._beanListener = value;
+		return this;
+	}
+
+	public Object getBeanListener() {
+		return this._beanListener;
+	}
+
+	public Object getBeanListener(Object defaultValue) {
+		return this._beanListener == null ? defaultValue : this._beanListener;
+	}
+
+	public boolean hasBeanListener() {
+		return this._beanListener != null;
+	}
+
+	public Bean removeBeanListener() {
+		this._beanListener = null;
 		return this;
 	} 
 
@@ -253,9 +277,11 @@ public class Bean {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Bean(package,name,fields,fieldDeclarations,accessors,lexical,eqha) ::= <<package ~package~;\n" + 
+	static final String st = "Bean(package,name,fields,fieldDeclarations,accessors,lexical,eqha,beanListener) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public class ~name~ implements java.beans.PropertyChangeListener {\n" + 
+				"\n" + 
+				"	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STGroupModel.class);\n" + 
 				"\n" + 
 				"	~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n" + 
 				"	~fieldDeclarations:{it|~it~};separator=\"\\n\"~\n" + 
@@ -271,7 +297,7 @@ public class Bean {
 				"\n" + 
 				"	@Override\n" + 
 				"	public String toString() {\n" + 
-				"		return ~lexical:{it|_~it~};separator=\" + \\\" \\\" + \"~;\n" + 
+				"		return \"\" + ~lexical:{it|_~it~};separator=\" + \\\" \\\" + \"~;\n" + 
 				"	}\n" + 
 				"~endif~\n" + 
 				"\n" + 
@@ -282,18 +308,18 @@ public class Bean {
 				"		if (this == o) return true;\n" + 
 				"		if (o == null || getClass() != o.getClass()) return false;\n" + 
 				"		~name~ that = (~name~) o;\n" + 
-				"		return ~eqha~.equals(that.~eqha~);\n" + 
+				"		return _~eqha~.equals(that._~eqha~);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 
 				"	public int hashCode() {\n" + 
-				"		return java.util.Objects.hash(~eqha~);\n" + 
+				"		return java.util.Objects.hash(_~eqha~);\n" + 
 				"	}\n" + 
 				"~endif~\n" + 
 				"\n" + 
 				"	@Override\n" + 
 				"	public void propertyChange(java.beans.PropertyChangeEvent evt) {\n" + 
-				"		this.pcs.firePropertyChange(\"~name~\", null, this);\n" + 
+				"		this.pcs.firePropertyChange(\"~name~\", this, evt);\n" + 
 				"	}\n" + 
 				"	\n" + 
 				"	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {\n" + 
@@ -303,5 +329,7 @@ public class Bean {
 				"	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {\n" + 
 				"		this.pcs.removePropertyChangeListener(listener);\n" + 
 				"	}\n" + 
+				"\n" + 
+				"	~beanListener~\n" + 
 				"} >>";
 }  

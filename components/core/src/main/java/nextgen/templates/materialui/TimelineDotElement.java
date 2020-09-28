@@ -9,6 +9,7 @@ public class TimelineDotElement {
 	private Object _className;
 	private Object _color;
 	private Object _id;
+	private Object _key;
 	private Object _style;
 	private Object _variant;
 	private java.util.List<Object> _children = new java.util.ArrayList<>();
@@ -16,11 +17,6 @@ public class TimelineDotElement {
 
 	TimelineDotElement(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
-	}
-
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
 	}
 
 	public java.util.UUID getUuid() {
@@ -34,6 +30,7 @@ public class TimelineDotElement {
 		st.add("className", _className);
 		st.add("color", _color);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("style", _style);
 		st.add("variant", _variant);
 		for (Object o : _children) st.add("children", o);
@@ -126,6 +123,28 @@ public class TimelineDotElement {
 
 	public TimelineDotElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public TimelineDotElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public TimelineDotElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -222,6 +241,16 @@ public class TimelineDotElement {
 		return this._attribute.stream().map(TimelineDotElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(TimelineDotElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(TimelineDotElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class TimelineDotElement_Attribute {
 
 		Object _name;
@@ -245,7 +274,7 @@ public class TimelineDotElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -260,11 +289,12 @@ public class TimelineDotElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TimelineDotElement(classes,className,color,id,style,variant,attribute,children) ::= <<<TimelineDot~if(classes)~\n" + 
+	static final String st = "TimelineDotElement(classes,className,color,id,key,style,variant,attribute,children) ::= <<<TimelineDot~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
 				"	className=~className~~endif~~if(color)~\n" + 
 				"	color=\"~color~\"~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(style)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(variant)~\n" + 
 				"	variant=\"~variant~\"~endif~~attribute:{it|\n" + 
 				"	\n" + 

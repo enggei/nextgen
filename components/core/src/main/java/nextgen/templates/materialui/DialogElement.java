@@ -14,6 +14,7 @@ public class DialogElement {
 	private Object _fullScreen;
 	private Object _fullWidth;
 	private Object _id;
+	private Object _key;
 	private Object _maxWidth;
 	private Object _onBackdropClick;
 	private Object _onClose;
@@ -38,11 +39,6 @@ public class DialogElement {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -59,6 +55,7 @@ public class DialogElement {
 		st.add("fullScreen", _fullScreen);
 		st.add("fullWidth", _fullWidth);
 		st.add("id", _id);
+		st.add("key", _key);
 		st.add("maxWidth", _maxWidth);
 		st.add("onBackdropClick", _onBackdropClick);
 		st.add("onClose", _onClose);
@@ -276,6 +273,28 @@ public class DialogElement {
 
 	public DialogElement removeId() {
 		this._id = null;
+		return this;
+	} 
+
+	public DialogElement setKey(Object value) {
+		this._key = value;
+		return this;
+	}
+
+	public Object getKey() {
+		return this._key;
+	}
+
+	public Object getKey(Object defaultValue) {
+		return this._key == null ? defaultValue : this._key;
+	}
+
+	public boolean hasKey() {
+		return this._key != null;
+	}
+
+	public DialogElement removeKey() {
+		this._key = null;
 		return this;
 	} 
 
@@ -702,6 +721,16 @@ public class DialogElement {
 		return this._attribute.stream().map(DialogElement_Attribute::new);
 	}
 
+	public java.util.List<Object> getAttribute_Name() {
+		return streamAttribute().map(DialogElement_Attribute::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getAttribute_Value() {
+		return streamAttribute().map(DialogElement_Attribute::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class DialogElement_Attribute {
 
 		Object _name;
@@ -725,7 +754,7 @@ public class DialogElement {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -740,7 +769,7 @@ public class DialogElement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "DialogElement(ariaDescribedby,ariaLabelledby,classes,className,disableBackdropClick,disableEscapeKeyDown,fullScreen,fullWidth,id,maxWidth,onBackdropClick,onClose,onEnter,onEntered,onEntering,onEscapeKeyDown,onExit,onExited,onExiting,PaperComponent,PaperProps,scroll,style,TransitionComponent,transitionDuration,TransitionProps,attribute,children) ::= <<<Dialog~if(ariaDescribedby)~\n" + 
+	static final String st = "DialogElement(ariaDescribedby,ariaLabelledby,classes,className,disableBackdropClick,disableEscapeKeyDown,fullScreen,fullWidth,id,key,maxWidth,onBackdropClick,onClose,onEnter,onEntered,onEntering,onEscapeKeyDown,onExit,onExited,onExiting,PaperComponent,PaperProps,scroll,style,TransitionComponent,transitionDuration,TransitionProps,attribute,children) ::= <<<Dialog~if(ariaDescribedby)~\n" + 
 				"	ariaDescribedby=\"~ariaDescribedby~\"~endif~~if(ariaLabelledby)~\n" + 
 				"	ariaLabelledby=\"~ariaLabelledby~\"~endif~~if(classes)~\n" + 
 				"	classes=~classes~~endif~~if(className)~\n" + 
@@ -749,8 +778,9 @@ public class DialogElement {
 				"	disableEscapeKeyDown~endif~~if(fullScreen)~\n" + 
 				"	fullScreen~endif~~if(fullWidth)~\n" + 
 				"	fullWidth~endif~~if(id)~\n" + 
-				"	id=\"~id~\"~endif~~if(maxWidth)~\n" + 
-				"	maxWidth=\"~maxWidth~\"~endif~~if(onBackdropClick)~\n" + 
+				"	id=\"~id~\"~endif~~if(key)~\n" + 
+				"	key=~key~~endif~~if(maxWidth)~\n" + 
+				"	maxWidth=~maxWidth~~endif~~if(onBackdropClick)~\n" + 
 				"	onBackdropClick=~onBackdropClick~~endif~~if(onClose)~\n" + 
 				"	onClose=~onClose~~endif~~if(onEnter)~\n" + 
 				"	onEnter=~onEnter~~endif~~if(onEntered)~\n" + 
@@ -763,7 +793,7 @@ public class DialogElement {
 				"	open~if(PaperComponent)~\n" + 
 				"	PaperComponent=~PaperComponent~~endif~~if(PaperProps)~\n" + 
 				"	PaperProps=~PaperProps~~endif~~if(scroll)~\n" + 
-				"	scroll=\"~scroll~\"~endif~~if(style)~\n" + 
+				"	scroll=~scroll~~endif~~if(style)~\n" + 
 				"	style=~style~~endif~~if(TransitionComponent)~\n" + 
 				"	TransitionComponent=~TransitionComponent~~endif~~if(transitionDuration)~\n" + 
 				"	transitionDuration=~transitionDuration~~endif~~if(TransitionProps)~\n" + 

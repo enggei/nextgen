@@ -97,6 +97,16 @@ public class DomainAction {
 		return this._params.stream().map(DomainAction_Params::new);
 	}
 
+	public java.util.List<Object> getParams_Type() {
+		return streamParams().map(DomainAction_Params::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getParams_Name() {
+		return streamParams().map(DomainAction_Params::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class DomainAction_Params {
 
 		Object _type;
@@ -120,7 +130,7 @@ public class DomainAction {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -136,6 +146,7 @@ public class DomainAction {
 	}
 
 	static final String st = "DomainAction(name,params,statements) ::= <<private void ~name~(Message<JsonObject> message) {\n" + 
+				"	log.info(\"~name~ \" + message.body().encodePrettily());\n" + 
 				"~if(params)~\n" + 
 				"	final JsonObject body = message.body();\n" + 
 				"	~params:{it|final ~it.type~ ~it.name~ = body.get~it.type~(\"~it.name~\");};separator=\"\\n\"~\n" + 

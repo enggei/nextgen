@@ -24,68 +24,6 @@ import static nextgen.templates.JavaPatterns.*;
 
 public class STRenderer {
 
-   public static void main(String[] args) {
-      final java.util.Collection<nextgen.st.domain.STGroupModel> stGroups = new java.util.ArrayList<>();
-      final java.io.File templatesDir = new java.io.File("/home/goe/projects/nextgen/./components/core/src/main/resources/templates");
-      java.util.Optional.ofNullable(templatesDir.listFiles(pathname -> pathname.isFile() && pathname.getName()
-            .toLowerCase()
-            .endsWith(".json")))
-            .ifPresent(files -> {
-               for (java.io.File file : files)
-                  stGroups.add(new nextgen.st.domain.STGroupModel(nextgen.st.STParser.readJsonObject(file)));
-            });
-
-      final STRenderer renderer = new STRenderer(stGroups);
-      final STModelDB db = new STModelDB("./db", stGroups);
-
-      db.doInTransaction(transaction -> {
-
-         final Set<String> imports = new LinkedHashSet<>();
-         final BlockStmt mainStatements = newBlockStmt();
-
-         db.findAllSTModelByStTemplate("ba2951ae-640a-498d-bf6f-7901f866d8af")
-               .forEach(stModel -> {
-
-                  final STMapper stMapper = renderer.findSTMapper(stModel.getStTemplate());
-                  final STGroupModel groupModel = stMapper.groupModel;
-                  imports.add("nextgen.templates." + groupModel.getName().toLowerCase());
-
-                  MethodCallExpression render = renderer.renderGeneratorCode(stModel, imports);
-
-                  mainStatements.addStatements(newExpressionStmt()
-                        .setExpression(newMethodCallExpression()
-                              .setScope("System.out")
-                              .setName("println")
-                              .addArguments(render)));
-
-                  System.out.println(render);
-               });
-
-
-         STGenerator.writeJavaFile(newCompilationUnit()
-                     .setPackageDeclaration(newPackageDeclaration("tmp"))
-                     .setImportDeclaration(imports
-                           .stream()
-                           .map(s -> newImportDeclaration()
-                                 .setName(s)
-                                 .setIsAsterisk(true))
-                           .collect(Collectors.toList()))
-                     .addTypes(newClassOrInterfaceDeclaration()
-                           .setName("Test")
-                           .addMembers(newMethodDeclaration()
-                                 .addModifiers("public")
-                                 .addModifiers("static")
-                                 .setName("main")
-                                 .addParameters(newParameter()
-                                       .setType(newClassOrInterfaceType()
-                                             .addNames("String")
-                                             .setIsArrayType(true))
-                                       .setName("args"))
-                                 .setBlockStmt(mainStatements)))
-               , "tmp", "Test", new File("./components/core/src/main/java"));
-      });
-   }
-
    private final Set<STMapper> mappers = new LinkedHashSet<>();
 
    public STRenderer(Collection<STGroupModel> groupModels) {
@@ -115,7 +53,6 @@ public class STRenderer {
                   stModel.getArgumentsSorted()
                         .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
                         .forEach(stArgument -> {
-
                            switch (stParameter.getType()) {
 
                               case SINGLE:

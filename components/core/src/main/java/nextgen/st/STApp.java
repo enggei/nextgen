@@ -24,7 +24,7 @@ public class STApp extends JFrame {
    final STModelNavigator stModelNavigator;
    final STWorkspace workspace;
 
-   public STApp(STAppModel appModel) throws HeadlessException {
+   public STApp(STAppModel appModel) throws HeadlessException, IOException {
       super("ST Editor");
 
       presentationModel = new STAppPresentationModel(appModel);
@@ -44,7 +44,7 @@ public class STApp extends JFrame {
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
    }
 
-   public static void main(String[] args) {
+   public static void main(String[] args) throws IOException {
 
       final File root = new File("./components/core");
       final File srcMain = new File(root, "src/main");
@@ -56,15 +56,12 @@ public class STApp extends JFrame {
 
       STAppModel config = loadConfig("appconfig.json", STJsonFactory.newSTAppModel()
                                                                     .setModelDb("./db")
-                                                                    .setEditorFontSize(12)
-                                                                    .setRootDir(javaMain.getAbsolutePath())
-                                                                    .setGeneratorRoot(javaMain.getAbsolutePath())
-                                                                    .setGeneratorPackage("nextgen.st")
-                                                                    .setGeneratorName("StringTemplate")
-      );
+                                                                    .setEditorFontSize(24)
+                                                                    .setRootDir(javaMain.getAbsolutePath()));
 
       com.formdev.flatlaf.FlatDarculaLaf.install();
       //SwingUtil.printSwingDefaults(System.out);
+      UIManager.put("Tree.font", new Font("InputMono", Font.PLAIN, config.getEditorFontSize()));
       UIManager.put("TextField.font", new Font("InputMono", Font.PLAIN, UIManager.getFont("Tree.font").getSize()));
       UIManager.put("TextArea.font", new Font("InputMono", Font.PLAIN, UIManager.getFont("Tree.font").getSize()));
 

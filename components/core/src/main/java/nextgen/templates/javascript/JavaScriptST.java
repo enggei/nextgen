@@ -16,12 +16,6 @@ public class JavaScriptST {
 	.append(ReturnStmt.st + "\n")
 	.append(JsonArray.st + "\n")
 	.append(JsonObject.st + "\n")
-	.append(MobX.st + "\n")
-	.append(Action.st + "\n")
-	.append(Inject.st + "\n")
-	.append(MobXStore.st + "\n")
-	.append(Observable.st + "\n")
-	.append(Reaction.st + "\n")
 	.append(NameArray.st + "\n")
 	.append(NameValue.st + "\n")
 	.append(App.st + "\n")
@@ -47,6 +41,7 @@ public class JavaScriptST {
 	.append(Link.st + "\n")
 	.append(ReactRouterLinkImport.st + "\n")
 	.append(WithRouterImport.st + "\n")
+	.append(Statement.st + "\n")
 	.append(Superagent.st + "\n")
 	.append(AgentDeclaration.st + "\n")
 	.append(AgentEndpoint.st + "\n")
@@ -130,30 +125,6 @@ public class JavaScriptST {
 
 	public static JsonObject newJsonObject() {
 		return new JsonObject(stGroup);
-	}  
-
-	public static MobX newMobX() {
-		return new MobX(stGroup);
-	}  
-
-	public static Action newAction() {
-		return new Action(stGroup);
-	}  
-
-	public static Inject newInject() {
-		return new Inject(stGroup);
-	}  
-
-	public static MobXStore newMobXStore() {
-		return new MobXStore(stGroup);
-	}  
-
-	public static Observable newObservable() {
-		return new Observable(stGroup);
-	}  
-
-	public static Reaction newReaction() {
-		return new Reaction(stGroup);
 	}  
 
 	public static NameArray newNameArray() {
@@ -254,6 +225,10 @@ public class JavaScriptST {
 
 	public static WithRouterImport newWithRouterImport() {
 		return new WithRouterImport(stGroup);
+	}  
+
+	public static Statement newStatement() {
+		return new Statement(stGroup);
 	}  
 
 	public static Superagent newSuperagent() {

@@ -8,7 +8,9 @@ public class DomainVerticle {
 	private Object _packageName;
 	private Object _name;
 	private Object _domainFactory;
+	private Object _dbPath;
 	private Object _address;
+	private java.util.List<Object> _imports = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _actions = new java.util.ArrayList<>();
 
 	DomainVerticle(org.stringtemplate.v4.STGroup stGroup) {
@@ -25,7 +27,9 @@ public class DomainVerticle {
 		st.add("packageName", _packageName);
 		st.add("name", _name);
 		st.add("domainFactory", _domainFactory);
+		st.add("dbPath", _dbPath);
 		st.add("address", _address);
+		for (Object o : _imports) st.add("imports", o);
 		for (java.util.Map<String, Object> map : _actions) st.addAggr("actions.{name,declaration}", map.get("name"), map.get("declaration"));
 		return st.render().trim();
 	}
@@ -96,6 +100,28 @@ public class DomainVerticle {
 		return this;
 	} 
 
+	public DomainVerticle setDbPath(Object value) {
+		this._dbPath = value;
+		return this;
+	}
+
+	public Object getDbPath() {
+		return this._dbPath;
+	}
+
+	public Object getDbPath(Object defaultValue) {
+		return this._dbPath == null ? defaultValue : this._dbPath;
+	}
+
+	public boolean hasDbPath() {
+		return this._dbPath != null;
+	}
+
+	public DomainVerticle removeDbPath() {
+		this._dbPath = null;
+		return this;
+	} 
+
 	public DomainVerticle setAddress(Object value) {
 		this._address = value;
 		return this;
@@ -118,6 +144,34 @@ public class DomainVerticle {
 		return this;
 	} 
 
+	public DomainVerticle addImports(Object value) {
+		this._imports.add(value);
+		return this;
+	}
+
+	public DomainVerticle setImports(Object[] value) {
+		this._imports.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public DomainVerticle setImports(java.util.Collection<Object> values) {
+		this._imports.addAll(values);
+		return this;
+	}
+
+	public DomainVerticle removeImports(Object value) {
+		this._imports.remove(value);
+		return this;
+	}
+
+	public DomainVerticle removeImports(int index) {
+		this._imports.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getImports() {
+		return this._imports;
+	} 
 
 	public DomainVerticle addActions(Object _name, Object _declaration) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -138,6 +192,16 @@ public class DomainVerticle {
 	public java.util.stream.Stream<DomainVerticle_Actions> streamActions() {
 		return this._actions.stream().map(DomainVerticle_Actions::new);
 	}
+
+	public java.util.List<Object> getActions_Name() {
+		return streamActions().map(DomainVerticle_Actions::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getActions_Declaration() {
+		return streamActions().map(DomainVerticle_Actions::getDeclaration).collect(java.util.stream.Collectors.toList());
+	}
+
 
 	public static final class DomainVerticle_Actions {
 
@@ -162,7 +226,7 @@ public class DomainVerticle {
 			return this._declaration;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -177,7 +241,7 @@ public class DomainVerticle {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "DomainVerticle(packageName,name,actions,domainFactory,address) ::= <<package ~packageName~;\n" + 
+	static final String st = "DomainVerticle(packageName,imports,name,actions,domainFactory,dbPath,address) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import ~packageName~.messages.*;\n" + 
 				"import io.vertx.core.AbstractVerticle;\n" + 
@@ -186,6 +250,8 @@ public class DomainVerticle {
 				"import io.vertx.core.json.JsonObject;\n" + 
 				"import org.slf4j.Logger;\n" + 
 				"import org.slf4j.LoggerFactory;\n" + 
+				"\n" + 
+				"~imports:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"public class ~name;format=\"capitalize\"~ extends AbstractVerticle {\n" + 
 				"\n" + 
@@ -205,7 +271,11 @@ public class DomainVerticle {
 				"\n" + 
 				"	@Override\n" + 
 				"	public void start(Promise<Void> promise) throws Exception {\n" + 
-				"		db = new ~domainFactory~(config().getString(\"path\"));\n" + 
+				"		new Thread(() -> {\n" + 
+				"			db = new ~domainFactory~(config().getString(\"~dbPath~\"));\n" + 
+				"			log.info(\"db started\");\n" + 
+				"		}).start();\n" + 
+				"		\n" + 
 				"		vertx.eventBus().consumer(config().getString(\"~address~\", \"~address~\"), this::onMessage);\n" + 
 				"	}\n" + 
 				"\n" + 
@@ -218,7 +288,7 @@ public class DomainVerticle {
 				"		}\n" + 
 				"\n" + 
 				"		final Action action = getAction(message);\n" + 
-				"		\n" + 
+				"\n" + 
 				"		if (action == null) {\n" + 
 				"			message.fail(ErrorCodes.UNKNOWN_ACTION.ordinal(), \"Unknown action\");\n" + 
 				"			return;\n" + 
