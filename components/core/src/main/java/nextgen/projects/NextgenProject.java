@@ -191,57 +191,49 @@ public class NextgenProject {
    @org.junit.Test
    public void generateSTModelDomain() {
 
-      final Entity stParameterKey = DomainPatterns.newEntity("STParameterKey")
+      final Entity stParameterKey = DomainPatterns.newEntityWithUuid("STParameterKey")
             .setEqha("uuid")
-            .addRelations(DomainPatterns.newStringField("uuid"))
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newStringField("argumentType"));
 
-      final Entity stParameter = DomainPatterns.newEntity("STParameter")
+      final Entity stParameter = DomainPatterns.newEntityWithUuid("STParameter")
             .setEqha("uuid")
-            .addRelations(DomainPatterns.newStringField("uuid"))
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newEnumField("type", DomainPatterns.newEnum("STParameterType", "SINGLE,LIST,KVLIST")))
             .addRelations(DomainPatterns.newOneToMany("keys", stParameterKey))
             .addRelations(DomainPatterns.newStringField("argumentType"));
 
-      final Entity stTemplate = DomainPatterns.newEntity("STTemplate")
+      final Entity stTemplate = DomainPatterns.newEntityWithUuid("STTemplate")
             .setEqha("uuid")
-            .addRelations(DomainPatterns.newStringField("uuid"))
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newStringField("text"))
             .addRelations(DomainPatterns.newOneToManyString("implements"))
             .addRelations(DomainPatterns.newOneToMany("parameters", stParameter))
             .addRelations(DomainPatterns.newOneToManySelf("children"));
 
-      final Entity stInterfaceMethod = DomainPatterns.newEntity("STInterfaceMethod")
+      final Entity stInterfaceMethod = DomainPatterns.newEntityWithUuid("STInterfaceMethod")
             .setEqha("uuid")
-            .addRelations(DomainPatterns.newStringField("uuid"))
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newStringField("type", true));
 
-      final Entity stInterface = DomainPatterns.newEntity("STInterface")
+      final Entity stInterface = DomainPatterns.newEntityWithUuid("STInterface")
             .setEqha("uuid")
-            .addRelations(DomainPatterns.newStringField("uuid"))
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newOneToMany("methods", stInterfaceMethod));
 
-      final Entity stEnumValue = DomainPatterns.newEntity("STEnumValue")
+      final Entity stEnumValue = DomainPatterns.newEntityWithUuid("STEnumValue")
             .setEqha("uuid")
-            .addRelations(DomainPatterns.newStringField("uuid"))
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newStringField("lexical"));
 
-      final Entity stEnum = DomainPatterns.newEntity("STEnum")
+      final Entity stEnum = DomainPatterns.newEntityWithUuid("STEnum")
             .setEqha("uuid")
-            .addRelations(DomainPatterns.newStringField("uuid"))
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newOneToMany("values", stEnumValue));
 
-      final Entity stGroupModel = DomainPatterns.newEntity("STGroupModel")
+      final Entity stGroupModel = DomainPatterns.newEntityWithUuid("STGroupModel")
             .setEqha("uuid")
             .addRelations(DomainPatterns.newStringField("name", true))
-            .addRelations(DomainPatterns.newStringField("uuid"))
             .addRelations(DomainPatterns.newStringField("delimiter"))
             .addRelations(DomainPatterns.newStringField("icon"))
             .addRelations(DomainPatterns.newStringField("tags"))
@@ -249,36 +241,31 @@ public class NextgenProject {
             .addRelations(DomainPatterns.newOneToMany("interfaces", stInterface))
             .addRelations(DomainPatterns.newOneToMany("enums", stEnum));
 
-      final Entity stValue = DomainPatterns.newEntity("STValue")
+      final Entity stValue = DomainPatterns.newEntityWithUuid("STValue")
             .setEqha("uuid")
-            .addRelations(DomainPatterns.newStringField("uuid"))
             .addRelations(DomainPatterns.newStringField("value"))
             .addRelations(DomainPatterns.newEnumField("type", DomainPatterns.newEnum("STValueType", "STMODEL,PRIMITIVE,ENUM")));
 
-      final Entity stFile = DomainPatterns.newEntity("STFile")
+      final Entity stFile = DomainPatterns.newEntityWithUuid("STFile")
             .setEqha("uuid")
-            .addRelations(DomainPatterns.newStringField("uuid"))
             .addRelations(DomainPatterns.newOneToOne("name", stValue, true))
             .addRelations(DomainPatterns.newOneToOne("type", stValue))
             .addRelations(DomainPatterns.newOneToOne("packageName", stValue))
             .addRelations(DomainPatterns.newOneToOne("path", stValue));
 
-      final Entity stArgumentKV = DomainPatterns.newEntity("STArgumentKV")
+      final Entity stArgumentKV = DomainPatterns.newEntityWithUuid("STArgumentKV")
             .setEqha("uuid")
-            .addRelations(DomainPatterns.newStringField("uuid"))
             .addRelations(DomainPatterns.newOneToOne("stParameterKey", stParameterKey))
             .addRelations(DomainPatterns.newOneToOne("value", stValue));
 
-      final Entity stArgument = DomainPatterns.newEntity("STArgument")
+      final Entity stArgument = DomainPatterns.newEntityWithUuid("STArgument")
             .setEqha("uuid")
-            .addRelations(DomainPatterns.newStringField("uuid"))
             .addRelations(DomainPatterns.newOneToOne("stParameter", stParameter, true))
             .addRelations(DomainPatterns.newOneToOne("value", stValue))
             .addRelations(DomainPatterns.newOneToMany("keyValues", stArgumentKV));
 
-      final Entity stModelNeo = DomainPatterns.newEntity("STModel")
+      final Entity stModelNeo = DomainPatterns.newEntityWithUuid("STModel")
             .setEqha("uuid")
-            .addRelations(DomainPatterns.newStringField("uuid"))
             .addRelations(DomainPatterns.newOneToOne("stTemplate", stTemplate, true))
             .addRelations(DomainPatterns.newOneToMany("files", stFile))
             .addRelations(DomainPatterns.newOneToMany("arguments", stArgument));
@@ -289,8 +276,7 @@ public class NextgenProject {
             .addEntities(stGroupModel)
             .addEntities(stModelNeo);
 
-//		DomainPatterns.writeNeo(mainJava, stModelPackage, domain);
-      DomainPatterns.writeBean(mainJava, beansPackage, domain);
+      DomainPatterns.writeNeo(mainJava, stModelPackage, domain);
    }
 
    /**
@@ -298,11 +284,9 @@ public class NextgenProject {
     */
    @org.junit.Test
    public void generateCanvasLayoutDomain() {
-      final Entity layoutDomain = DomainPatterns.newEntity("Layout")
-            .addRelations(DomainPatterns.newStringField("uuid"))
+      final Entity layoutDomain = DomainPatterns.newEntityWithUuid("Layout")
             .addRelations(DomainPatterns.newStringField("name"))
-            .addRelations(DomainPatterns.newOneToMany("nodes", DomainPatterns.newEntity("LayoutNode")
-                  .addRelations(DomainPatterns.newStringField("uuid"))
+            .addRelations(DomainPatterns.newOneToMany("nodes", DomainPatterns.newEntityWithUuid("LayoutNode")
                   .addRelations(DomainPatterns.newDoubleField("x"))
                   .addRelations(DomainPatterns.newDoubleField("y"))));
 

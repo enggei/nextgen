@@ -7,7 +7,6 @@ import nextgen.st.model.STFile;
 import nextgen.st.model.STValue;
 import nextgen.templates.JavaPatterns;
 import nextgen.templates.java.ClassOrInterfaceDeclaration;
-import nextgen.templates.java.CompilationUnit;
 import nextgen.templates.java.Modifiers;
 import nextgen.utils.FileUtil;
 import nextgen.utils.StringUtil;
@@ -269,11 +268,8 @@ public class STGenerator {
    }
 
    private static void addSTTemplate(STGroup templateGroup, ST stGroupTemplate, STTemplate stModel) {
-
       final ST stTemplate = asST(templateGroup, stModel);
-
       stGroupTemplate.add("templates", stTemplate);
-
       stModel.getChildren().forEach(childTemplate -> addSTTemplate(templateGroup, stGroupTemplate, childTemplate));
    }
 
