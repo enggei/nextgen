@@ -2228,13 +2228,18 @@ public class ~name~ extends javax.swing.JPanel {
 
 STWorkspace(packageName,name,constructorParameters,methods) ::= <<package ~packageName~;
 
-import ~packageName~.domain.STGroupModel;
-import ~packageName~.domain.STTemplate;
-import ~packageName~.model.STModel;
+import nextgen.st.domain.STGroupModel;
+import nextgen.st.domain.STTemplate;
+import nextgen.st.model.Project;
+import nextgen.st.model.STModel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class ~name~ extends JTabbedPane {
 
@@ -2248,17 +2253,31 @@ public class ~name~ extends JTabbedPane {
 
 	~methods:{it|~it~};separator="\n\n"~
 
-	public Optional<STModelCanvas> findCanvas() {
-		for (int i = 0; i < getTabCount(); i++) {
-				final Component tabComponentAt = getComponentAt(i);
-				if (tabComponentAt instanceof STModelCanvas)
-					return Optional.of((STModelCanvas) tabComponentAt);
-		}
 
-		final STModelCanvas stModelCanvas = new STModelCanvas(UIManager.getColor("Panel.background"), new Dimension(800,600),presentationModel);
-		addPane("Canvas", stModelCanvas);
-		return Optional.of(stModelCanvas);
-	}
+   public STRenderPanel findRenderer() {
+      return (STRenderPanel) find(component -> component instanceof STRenderPanel)
+            .orElseGet(() -> {
+               final STRenderPanel stRenderPanel = new STRenderPanel(presentationModel);
+               addPane("Renderer", stRenderPanel);
+               return stRenderPanel;
+            });
+   }
+
+   public <T extends Component> Optional<T> find(Predicate<Component> predicate) {
+      for (int i = 0; i < getTabCount(); i++)
+         if (predicate.test(getComponentAt(i)))
+            return Optional.of((T) getComponentAt(i));
+      return Optional.empty();
+   }
+
+   public STModelCanvas findCanvas() {
+      return (STModelCanvas) find(component -> component instanceof STModelCanvas)
+            .orElseGet(() -> {
+               final STModelCanvas stModelCanvas = new STModelCanvas(UIManager.getColor("Panel.background"), new Dimension(800, 600), presentationModel);
+               addPane("Canvas", stModelCanvas);
+               return stModelCanvas;
+            });
+   }
 
 	public STModelGrid getModelGrid(STTemplate stTemplate) {
 		for (int i = 0; i < getTabCount(); i++) {
@@ -2337,30 +2356,87 @@ public class ~name~ extends JTabbedPane {
 	}
 
 	public void showCanvas() {
-		findCanvas().ifPresent(stModelCanvas -> SwingUtilities.invokeLater(() -> setSelectedComponent(stModelCanvas)));
+		SwingUtilities.invokeLater(() -> setSelectedComponent(findCanvas()));
 	}
 
 	class ButtonTabComponent extends JPanel {
 
 		ButtonTabComponent(final JTabbedPane pane, String title, JComponent component) {
-				super(new FlowLayout(FlowLayout.LEFT, 0, 0));
-				setOpaque(false);
+			super(new FlowLayout(FlowLayout.LEFT, 0, 0));
+			setOpaque(false);
 
-				final JLabel label = new JLabel(title);
-				label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
-				add(label);
+			final JLabel label = new JLabel(title);
+			label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+			add(label);
 
-				final JButton btnClose = new JButton(presentationModel.loadIcon("close", "12x12"));
-				final Dimension dimension = new Dimension(12, 16);
-				btnClose.setMaximumSize(dimension);
-				btnClose.setPreferredSize(dimension);
-				btnClose.setMinimumSize(dimension);
-				btnClose.setOpaque(false);
-				btnClose.setContentAreaFilled(false);
-				btnClose.setBorderPainted(false);
-				btnClose.addActionListener(e -> SwingUtilities.invokeLater(() -> pane.remove(component)));
-				add(btnClose);
+			final JButton btnClose = new JButton(presentationModel.loadIcon("close", "12x12"));
+			final Dimension dimension = new Dimension(12, 16);
+			btnClose.setMaximumSize(dimension);
+			btnClose.setPreferredSize(dimension);
+			btnClose.setMinimumSize(dimension);
+			btnClose.setOpaque(false);
+			btnClose.setContentAreaFilled(false);
+			btnClose.setBorderPainted(false);
+			btnClose.addActionListener(e -> SwingUtilities.invokeLater(() -> pane.remove(component)));
+			add(btnClose);
+
+			addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (SwingUtilities.isRightMouseButton(e))
+						SwingUtilities.invokeLater(() -> {
+							final JPopupMenu pop = new JPopupMenu();
+
+							pop.add(new AbstractAction("Close") {
+								@Override
+								public void actionPerformed(ActionEvent actionEvent) {
+									pane.remove(component);
+								}
+							});
+
+							pop.add(new AbstractAction("Close Others") {
+								@Override
+								public void actionPerformed(ActionEvent actionEvent) {
+									presentationModel.getWorkspace().closeAllExcept(component);
+								}
+							});
+
+							pop.show(ButtonTabComponent.this, e.getX(), e.getY());
+						});
+					else {
+						SwingUtilities.invokeLater(() -> pane.setSelectedComponent(component));
+					}
+				}
+			});
 		}
+	}
+
+	private void closeAllExcept(JComponent component) {
+		SwingUtilities.invokeLater(() -> {
+			for (int i = getTabCount() - 1; i >= 0; i--) {
+				final Component componentAt = getComponentAt(i);
+				if (componentAt.equals(component)) continue;
+				remove(i);
+			}
+		});
+	}
+
+	public ProjectEditor getProjectEditor(Project model) {
+		for (int i = 0; i < getTabCount(); i++) {
+			final Component tabComponentAt = getComponentAt(i);
+			if (tabComponentAt instanceof ProjectEditor) {
+				if (((ProjectEditor) tabComponentAt).getModel().equals(model)) {
+					final ProjectEditor stEditor = (ProjectEditor) tabComponentAt;
+					setSelectedComponent(stEditor);
+					return stEditor;
+				}
+			}
+		}
+
+		final ProjectEditor component = new ProjectEditor(model, presentationModel);
+		addPane(model.getName(), component);
+		setSelectedComponent(component);
+		return component;
 	}
 }  >>
 

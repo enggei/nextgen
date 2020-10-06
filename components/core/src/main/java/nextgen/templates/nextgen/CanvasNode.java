@@ -5,7 +5,7 @@ public class CanvasNode {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _name;
+	private String _name;
 	private Object _modelType;
 	private Object _uuidExpression;
 	private Object _labelExpression;
@@ -13,7 +13,7 @@ public class CanvasNode {
 	private java.util.List<Object> _newNodeAddedStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _rightClickStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _leftClickStatements = new java.util.ArrayList<>();
-	private java.util.List<Object> _actions = new java.util.ArrayList<>();
+	private java.util.List<CanvasNodeAction> _actions = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _rightClickActions = new java.util.ArrayList<>();
@@ -46,16 +46,16 @@ public class CanvasNode {
 		return st.render().trim();
 	}
 
-	public CanvasNode setName(Object value) {
+	public CanvasNode setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Object getName(Object defaultValue) {
+	public String getName(String defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 
@@ -250,22 +250,22 @@ public class CanvasNode {
 		return this._leftClickStatements;
 	} 
 
-	public CanvasNode addActions(Object value) {
+	public CanvasNode addActions(CanvasNodeAction value) {
 		this._actions.add(value);
 		return this;
 	}
 
-	public CanvasNode setActions(Object[] value) {
+	public CanvasNode setActions(CanvasNodeAction[] value) {
 		this._actions.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public CanvasNode setActions(java.util.Collection<Object> values) {
+	public CanvasNode setActions(java.util.Collection<CanvasNodeAction> values) {
 		this._actions.addAll(values);
 		return this;
 	}
 
-	public CanvasNode removeActions(Object value) {
+	public CanvasNode removeActions(CanvasNodeAction value) {
 		this._actions.remove(value);
 		return this;
 	}
@@ -275,7 +275,7 @@ public class CanvasNode {
 		return this;
 	}
 
-	public java.util.List<Object> getActions() {
+	public java.util.List<CanvasNodeAction> getActions() {
 		return this._actions;
 	} 
 

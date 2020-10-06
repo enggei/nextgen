@@ -260,7 +260,7 @@ public class STModelNavigator extends JPanel {
 				presentationModel.db.doInTransaction(transaction -> getModel().setValue(SwingUtil.fromClipboard().trim()));
 			}));
 			actions.add(newAction("Open", actionEvent -> {
-				workspace.findCanvas().ifPresent(stCanvas -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> STAppEvents.postOpenSTValue(getModel()))));
+				SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> STAppEvents.postOpenSTValue(getModel())));
 			}));
 			actions.add(newAction("Delete", actionEvent -> {
 				presentationModel.doLaterInTransaction(transaction -> presentationModel.db.remove(getModel()));
@@ -459,7 +459,7 @@ public class STModelNavigator extends JPanel {
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
 			actions.add(newAction("Open", actionEvent -> {
-				workspace.findCanvas().ifPresent(stCanvas -> presentationModel.doLaterInTransaction(transaction -> STAppEvents.postOpenScript(getModel())));
+				presentationModel.doLaterInTransaction(transaction -> STAppEvents.postOpenScript(getModel()));
 			}));
 			actions.add(newAction("Run Script", actionEvent -> {
 				presentationModel.runScript(tree, getModel());
@@ -604,9 +604,9 @@ public class STModelNavigator extends JPanel {
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
 			actions.add(newAction("New instance", actionEvent -> {
-				workspace.findCanvas().ifPresent(stCanvas -> presentationModel.doLaterInTransaction(transaction -> {
+				presentationModel.doLaterInTransaction(transaction -> {
 					presentationModel.db.newSTModel(getModel().getUuid(), getModel());
-				}));
+				});
 			}));
 			actions.add(newAction("Edit Models", actionEvent -> {
 				SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
@@ -658,8 +658,7 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 			actions.add(newAction("Open", actionEvent -> {
 				getParentNode(STTemplateTreeNode.class)
-					.ifPresent(stTemplateTreeNode -> workspace.findCanvas()
-						.ifPresent(stCanvas -> presentationModel.doLaterInTransaction(transaction -> STAppEvents.postOpenSTModel(getModel()))));
+					.ifPresent(stTemplateTreeNode -> presentationModel.doLaterInTransaction(transaction -> STAppEvents.postOpenSTModel(getModel())));
 			}));
 			actions.add(newAction("Edit", actionEvent -> {
 				getParentNode(STTemplateTreeNode.class)
@@ -749,8 +748,7 @@ public class STModelNavigator extends JPanel {
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
 			actions.add(newAction("Open", actionEvent -> {
-				workspace.findCanvas()
-						.ifPresent(stCanvas -> presentationModel.doLaterInTransaction(transaction -> STAppEvents.postOpenMetaDomain(getModel())));
+				presentationModel.doLaterInTransaction(transaction -> STAppEvents.postOpenMetaDomain(getModel()));
 			}));
 			return actions;
 		}

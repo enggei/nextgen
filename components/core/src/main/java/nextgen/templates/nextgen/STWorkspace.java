@@ -146,13 +146,18 @@ public class STWorkspace {
 
 	static final String st = "STWorkspace(packageName,name,constructorParameters,methods) ::= <<package ~packageName~;\n" + 
 				"\n" + 
-				"import ~packageName~.domain.STGroupModel;\n" + 
-				"import ~packageName~.domain.STTemplate;\n" + 
-				"import ~packageName~.model.STModel;\n" + 
+				"import nextgen.st.domain.STGroupModel;\n" + 
+				"import nextgen.st.domain.STTemplate;\n" + 
+				"import nextgen.st.model.Project;\n" + 
+				"import nextgen.st.model.STModel;\n" + 
 				"\n" + 
 				"import javax.swing.*;\n" + 
 				"import java.awt.*;\n" + 
+				"import java.awt.event.ActionEvent;\n" + 
+				"import java.awt.event.MouseAdapter;\n" + 
+				"import java.awt.event.MouseEvent;\n" + 
 				"import java.util.Optional;\n" + 
+				"import java.util.function.Predicate;\n" + 
 				"\n" + 
 				"public class ~name~ extends JTabbedPane {\n" + 
 				"\n" + 
@@ -166,17 +171,31 @@ public class STWorkspace {
 				"\n" + 
 				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
-				"	public Optional<STModelCanvas> findCanvas() {\n" + 
-				"		for (int i = 0; i < getTabCount(); i++) {\n" + 
-				"				final Component tabComponentAt = getComponentAt(i);\n" + 
-				"				if (tabComponentAt instanceof STModelCanvas)\n" + 
-				"					return Optional.of((STModelCanvas) tabComponentAt);\n" + 
-				"		}\n" + 
 				"\n" + 
-				"		final STModelCanvas stModelCanvas = new STModelCanvas(UIManager.getColor(\"Panel.background\"), new Dimension(800,600),presentationModel);\n" + 
-				"		addPane(\"Canvas\", stModelCanvas);\n" + 
-				"		return Optional.of(stModelCanvas);\n" + 
-				"	}\n" + 
+				"   public STRenderPanel findRenderer() {\n" + 
+				"      return (STRenderPanel) find(component -> component instanceof STRenderPanel)\n" + 
+				"            .orElseGet(() -> {\n" + 
+				"               final STRenderPanel stRenderPanel = new STRenderPanel(presentationModel);\n" + 
+				"               addPane(\"Renderer\", stRenderPanel);\n" + 
+				"               return stRenderPanel;\n" + 
+				"            });\n" + 
+				"   }\n" + 
+				"\n" + 
+				"   public <T extends Component> Optional<T> find(Predicate<Component> predicate) {\n" + 
+				"      for (int i = 0; i < getTabCount(); i++)\n" + 
+				"         if (predicate.test(getComponentAt(i)))\n" + 
+				"            return Optional.of((T) getComponentAt(i));\n" + 
+				"      return Optional.empty();\n" + 
+				"   }\n" + 
+				"\n" + 
+				"   public STModelCanvas findCanvas() {\n" + 
+				"      return (STModelCanvas) find(component -> component instanceof STModelCanvas)\n" + 
+				"            .orElseGet(() -> {\n" + 
+				"               final STModelCanvas stModelCanvas = new STModelCanvas(UIManager.getColor(\"Panel.background\"), new Dimension(800, 600), presentationModel);\n" + 
+				"               addPane(\"Canvas\", stModelCanvas);\n" + 
+				"               return stModelCanvas;\n" + 
+				"            });\n" + 
+				"   }\n" + 
 				"\n" + 
 				"	public STModelGrid getModelGrid(STTemplate stTemplate) {\n" + 
 				"		for (int i = 0; i < getTabCount(); i++) {\n" + 
@@ -255,30 +274,87 @@ public class STWorkspace {
 				"	}\n" + 
 				"\n" + 
 				"	public void showCanvas() {\n" + 
-				"		findCanvas().ifPresent(stModelCanvas -> SwingUtilities.invokeLater(() -> setSelectedComponent(stModelCanvas)));\n" + 
+				"		SwingUtilities.invokeLater(() -> setSelectedComponent(findCanvas()));\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	class ButtonTabComponent extends JPanel {\n" + 
 				"\n" + 
 				"		ButtonTabComponent(final JTabbedPane pane, String title, JComponent component) {\n" + 
-				"				super(new FlowLayout(FlowLayout.LEFT, 0, 0));\n" + 
-				"				setOpaque(false);\n" + 
+				"			super(new FlowLayout(FlowLayout.LEFT, 0, 0));\n" + 
+				"			setOpaque(false);\n" + 
 				"\n" + 
-				"				final JLabel label = new JLabel(title);\n" + 
-				"				label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));\n" + 
-				"				add(label);\n" + 
+				"			final JLabel label = new JLabel(title);\n" + 
+				"			label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));\n" + 
+				"			add(label);\n" + 
 				"\n" + 
-				"				final JButton btnClose = new JButton(presentationModel.loadIcon(\"close\", \"12x12\"));\n" + 
-				"				final Dimension dimension = new Dimension(12, 16);\n" + 
-				"				btnClose.setMaximumSize(dimension);\n" + 
-				"				btnClose.setPreferredSize(dimension);\n" + 
-				"				btnClose.setMinimumSize(dimension);\n" + 
-				"				btnClose.setOpaque(false);\n" + 
-				"				btnClose.setContentAreaFilled(false);\n" + 
-				"				btnClose.setBorderPainted(false);\n" + 
-				"				btnClose.addActionListener(e -> SwingUtilities.invokeLater(() -> pane.remove(component)));\n" + 
-				"				add(btnClose);\n" + 
+				"			final JButton btnClose = new JButton(presentationModel.loadIcon(\"close\", \"12x12\"));\n" + 
+				"			final Dimension dimension = new Dimension(12, 16);\n" + 
+				"			btnClose.setMaximumSize(dimension);\n" + 
+				"			btnClose.setPreferredSize(dimension);\n" + 
+				"			btnClose.setMinimumSize(dimension);\n" + 
+				"			btnClose.setOpaque(false);\n" + 
+				"			btnClose.setContentAreaFilled(false);\n" + 
+				"			btnClose.setBorderPainted(false);\n" + 
+				"			btnClose.addActionListener(e -> SwingUtilities.invokeLater(() -> pane.remove(component)));\n" + 
+				"			add(btnClose);\n" + 
+				"\n" + 
+				"			addMouseListener(new MouseAdapter() {\n" + 
+				"				@Override\n" + 
+				"				public void mouseClicked(MouseEvent e) {\n" + 
+				"					if (SwingUtilities.isRightMouseButton(e))\n" + 
+				"						SwingUtilities.invokeLater(() -> {\n" + 
+				"							final JPopupMenu pop = new JPopupMenu();\n" + 
+				"\n" + 
+				"							pop.add(new AbstractAction(\"Close\") {\n" + 
+				"								@Override\n" + 
+				"								public void actionPerformed(ActionEvent actionEvent) {\n" + 
+				"									pane.remove(component);\n" + 
+				"								}\n" + 
+				"							});\n" + 
+				"\n" + 
+				"							pop.add(new AbstractAction(\"Close Others\") {\n" + 
+				"								@Override\n" + 
+				"								public void actionPerformed(ActionEvent actionEvent) {\n" + 
+				"									presentationModel.getWorkspace().closeAllExcept(component);\n" + 
+				"								}\n" + 
+				"							});\n" + 
+				"\n" + 
+				"							pop.show(ButtonTabComponent.this, e.getX(), e.getY());\n" + 
+				"						});\n" + 
+				"					else {\n" + 
+				"						SwingUtilities.invokeLater(() -> pane.setSelectedComponent(component));\n" + 
+				"					}\n" + 
+				"				}\n" + 
+				"			});\n" + 
 				"		}\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	private void closeAllExcept(JComponent component) {\n" + 
+				"		SwingUtilities.invokeLater(() -> {\n" + 
+				"			for (int i = getTabCount() - 1; i >= 0; i--) {\n" + 
+				"				final Component componentAt = getComponentAt(i);\n" + 
+				"				if (componentAt.equals(component)) continue;\n" + 
+				"				remove(i);\n" + 
+				"			}\n" + 
+				"		});\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public ProjectEditor getProjectEditor(Project model) {\n" + 
+				"		for (int i = 0; i < getTabCount(); i++) {\n" + 
+				"			final Component tabComponentAt = getComponentAt(i);\n" + 
+				"			if (tabComponentAt instanceof ProjectEditor) {\n" + 
+				"				if (((ProjectEditor) tabComponentAt).getModel().equals(model)) {\n" + 
+				"					final ProjectEditor stEditor = (ProjectEditor) tabComponentAt;\n" + 
+				"					setSelectedComponent(stEditor);\n" + 
+				"					return stEditor;\n" + 
+				"				}\n" + 
+				"			}\n" + 
+				"		}\n" + 
+				"\n" + 
+				"		final ProjectEditor component = new ProjectEditor(model, presentationModel);\n" + 
+				"		addPane(model.getName(), component);\n" + 
+				"		setSelectedComponent(component);\n" + 
+				"		return component;\n" + 
 				"	}\n" + 
 				"} >>";
 }  

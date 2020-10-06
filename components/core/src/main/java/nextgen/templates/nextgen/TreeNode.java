@@ -5,15 +5,15 @@ public class TreeNode {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _name;
+	private String _name;
 	private Object _modelType;
-	private Object _hasUuid;
+	private Boolean _hasUuid;
 	private Object _icon;
 	private Object _labelExpression;
 	private Object _tooltipExpression;
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _getActionsStatements = new java.util.ArrayList<>();
-	private java.util.List<Object> _actions = new java.util.ArrayList<>();
+	private java.util.List<TreeNodeAction> _actions = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _parameters = new java.util.ArrayList<>();
@@ -44,16 +44,16 @@ public class TreeNode {
 		return st.render().trim();
 	}
 
-	public TreeNode setName(Object value) {
+	public TreeNode setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Object getName(Object defaultValue) {
+	public String getName(String defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 
@@ -88,16 +88,16 @@ public class TreeNode {
 		return this;
 	} 
 
-	public TreeNode setHasUuid(Object value) {
+	public TreeNode setHasUuid(Boolean value) {
 		this._hasUuid = value;
 		return this;
 	}
 
-	public Object getHasUuid() {
+	public Boolean getHasUuid() {
 		return this._hasUuid;
 	}
 
-	public Object getHasUuid(Object defaultValue) {
+	public Boolean getHasUuid(Boolean defaultValue) {
 		return this._hasUuid == null ? defaultValue : this._hasUuid;
 	}
 
@@ -234,22 +234,22 @@ public class TreeNode {
 		return this._getActionsStatements;
 	} 
 
-	public TreeNode addActions(Object value) {
+	public TreeNode addActions(TreeNodeAction value) {
 		this._actions.add(value);
 		return this;
 	}
 
-	public TreeNode setActions(Object[] value) {
+	public TreeNode setActions(TreeNodeAction[] value) {
 		this._actions.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public TreeNode setActions(java.util.Collection<Object> values) {
+	public TreeNode setActions(java.util.Collection<TreeNodeAction> values) {
 		this._actions.addAll(values);
 		return this;
 	}
 
-	public TreeNode removeActions(Object value) {
+	public TreeNode removeActions(TreeNodeAction value) {
 		this._actions.remove(value);
 		return this;
 	}
@@ -259,7 +259,7 @@ public class TreeNode {
 		return this;
 	}
 
-	public java.util.List<Object> getActions() {
+	public java.util.List<TreeNodeAction> getActions() {
 		return this._actions;
 	} 
 
@@ -347,7 +347,7 @@ public class TreeNode {
 
 	}  
 
-	public TreeNode addParameters(Object _type, Object _name) {
+	public TreeNode addParameters(Object _type, String _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("type", _type);
 		map.put("name", _name);
@@ -372,7 +372,7 @@ public class TreeNode {
 	}
 
 
-	public java.util.List<Object> getParameters_Name() {
+	public java.util.List<String> getParameters_Name() {
 		return streamParameters().map(TreeNode_Parameters::getName).collect(java.util.stream.Collectors.toList());
 	}
 
@@ -380,23 +380,23 @@ public class TreeNode {
 	public static final class TreeNode_Parameters {
 
 		Object _type;
-		Object _name;
+		String _name;
 
-		public TreeNode_Parameters(Object _type, Object _name) {
+		public TreeNode_Parameters(Object _type, String _name) {
 			this._type = _type;
 			this._name = _name;
 		}
 
 		private TreeNode_Parameters(java.util.Map<String, Object> map) {
 			this._type = (Object) map.get("type");
-			this._name = (Object) map.get("name");
+			this._name = (String) map.get("name");
 		}
 
 		public Object getType() {
 			return this._type;
 		}
 
-		public Object getName() {
+		public String getName() {
 			return this._name;
 		}
 

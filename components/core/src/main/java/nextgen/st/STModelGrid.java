@@ -124,7 +124,7 @@ public class STModelGrid extends JPanel {
             pop.addSeparator();
             pop.add(newAction("Save", actionEvent -> save(stModel, presentationModel, txtValue, stParameter)));
             pop.addSeparator();
-            pop.add(newAction("Open", actionEvent -> presentationModel.getWorkspace().findCanvas().ifPresent(stCanvas -> presentationModel.doLaterInTransaction(transaction -> STAppEvents.postOpenSTModel(stModel)))));
+            pop.add(newAction("Open", actionEvent -> presentationModel.doLaterInTransaction(transaction -> STAppEvents.postOpenSTModel(stModel))));
             pop.add(newAction("Set From Clipboard", actionEvent -> {
                 txtValue.setText(SwingUtil.fromClipboard().trim());
                 save(stModel, presentationModel, txtValue, stParameter);

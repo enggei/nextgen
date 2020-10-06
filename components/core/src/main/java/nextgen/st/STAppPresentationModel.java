@@ -33,7 +33,6 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.List;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -246,8 +245,7 @@ public class STAppPresentationModel {
    }
 
    public void edit(DomainVisitor model) {
-      final DomainVisitorEditor domainVisitorEditor = getWorkspace().getDomainVisitorEditor(model);
-      getWorkspace().setSelectedComponent(domainVisitorEditor);
+
    }
 
    public STTemplate findSTTemplateByUuid(String stTemplate) {
@@ -1183,16 +1181,18 @@ public class STAppPresentationModel {
    }
 
    public Stream<STValue> getSelectedSTValues() {
-      STModelCanvas canvas = getWorkspace().findCanvas().get();
-      return canvas.getSelectedNodes()
+      return getWorkspace()
+            .findCanvas()
+            .getSelectedNodes()
             .filter(baseCanvasNode -> baseCanvasNode instanceof STModelCanvas.STValueNode)
             .map(baseCanvasNode -> (STModelCanvas.STValueNode) baseCanvasNode)
             .map(STModelCanvas.BaseCanvasNode::getModel);
    }
 
    public Stream<STModel> getSelectedSTModels() {
-      STModelCanvas canvas = getWorkspace().findCanvas().get();
-      return canvas.getSelectedNodes()
+      return getWorkspace()
+            .findCanvas()
+            .getSelectedNodes()
             .filter(baseCanvasNode -> baseCanvasNode instanceof STModelCanvas.STModelNode)
             .map(baseCanvasNode -> (STModelCanvas.STModelNode) baseCanvasNode)
             .map(STModelCanvas.BaseCanvasNode::getModel);
@@ -1382,52 +1382,49 @@ public class STAppPresentationModel {
 
       doInTransaction(transaction -> {
 
+         final String argumentType = stParameter.getArgumentType();
+         if (argumentType.equals("Object") || argumentType.equals("String")) {
+            final Set<STTemplate> stTemplateSet = getArguments(stModel, stParameter)
+                  .map(STArgument::getValue)
+                  .filter(STValue::hasType)
+                  .filter(stValue -> stValue.getType() == STValueType.STMODEL)
+                  .map(stValue -> db.findSTTemplateByUuid(stValue.getStModel().getStTemplate()))
+                  .collect(Collectors.toSet());
 
-         final Set<STTemplate> stTemplateSet = getArguments(stModel, stParameter)
-               .map(STArgument::getValue)
-               .filter(STValue::hasType)
-               .filter(stValue -> stValue.getType() == STValueType.STMODEL)
-               .map(stValue -> db.findSTTemplateByUuid(stValue.getStModel().getStTemplate()))
-               .collect(Collectors.toSet());
+            if (!stTemplateSet.isEmpty()) {
 
-         if (!stTemplateSet.isEmpty()) {
+               final STTemplate stTemplate = stTemplateSet.iterator().next();
+               final STGroupModel stGroupModel = stRenderer.findSTGroupModel(stTemplate);
+               final STValue stValue = newSTValue(db.newSTModel(stGroupModel.getUuid(), stTemplate));
+               final org.javatuples.Pair<STArgument, STValue> newArgument = new Pair<>(newSTArgument(stParameter, stValue), stValue);
+               stModel.addArguments(newArgument.getValue0());
+               consumer.accept(newArgument);
 
-            final STTemplate stTemplate = stTemplateSet.iterator().next();
-            final STGroupModel stGroupModel = stRenderer.findSTGroupModel(stTemplate);
-            final STValue stValue = newSTValue(db.newSTModel(stGroupModel.getUuid(), stTemplate));
-            final org.javatuples.Pair<STArgument, STValue> newArgument = new Pair<>(newSTArgument(stParameter, stValue), stValue);
-            stModel.addArguments(newArgument.getValue0());
-            consumer.accept(newArgument);
-
-         } else {
-
-            final String argumentType = stParameter.getArgumentType();
-            if (argumentType.equals("Object") || argumentType.equals("String")) {
+            } else {
                SwingUtil.showInputDialog(stParameter.getName(), parent, inputValue ->
                      doLaterInTransaction(transaction2 -> {
                         final org.javatuples.Pair<STArgument, STValue> newArgument = newSTArgument(stParameter, inputValue);
                         stModel.addArguments(newArgument.getValue0());
                         consumer.accept(newArgument);
                      }));
-            } else {
-
-               final STGroupModel stGroupModel = stRenderer.findSTGroupModel(db.getSTTemplate(stModel));
-               final STTemplate stTemplate = STModelUtil.findSTemplateByName(argumentType, stGroupModel);
-               if (stTemplate != null) {
-                  final STValue stValue = newSTValue(db.newSTModel(stGroupModel.getUuid(), stTemplate));
-                  final org.javatuples.Pair<STArgument, STValue> newArgument = new Pair<>(newSTArgument(stParameter, stValue), stValue);
-                  stModel.addArguments(newArgument.getValue0());
-                  consumer.accept(newArgument);
-               } else {
-                  SwingUtil.showInputDialog(stParameter.getName(), parent, inputValue ->
-                        doLaterInTransaction(transaction2 -> {
-                           final org.javatuples.Pair<STArgument, STValue> newArgument = newSTArgument(stParameter, inputValue);
-                           stModel.addArguments(newArgument.getValue0());
-                           consumer.accept(newArgument);
-                        }));
-               }
-
             }
+         } else {
+            final STGroupModel stGroupModel = stRenderer.findSTGroupModel(db.getSTTemplate(stModel));
+            final STTemplate stTemplate = STModelUtil.findSTemplateByName(argumentType, stGroupModel);
+            if (stTemplate != null) {
+               final STValue stValue = newSTValue(db.newSTModel(stGroupModel.getUuid(), stTemplate));
+               final org.javatuples.Pair<STArgument, STValue> newArgument = new Pair<>(newSTArgument(stParameter, stValue), stValue);
+               stModel.addArguments(newArgument.getValue0());
+               consumer.accept(newArgument);
+            } else {
+               SwingUtil.showInputDialog(stParameter.getName(), parent, inputValue ->
+                     doLaterInTransaction(transaction2 -> {
+                        final org.javatuples.Pair<STArgument, STValue> newArgument = newSTArgument(stParameter, inputValue);
+                        stModel.addArguments(newArgument.getValue0());
+                        consumer.accept(newArgument);
+                     }));
+            }
+
          }
       });
    }

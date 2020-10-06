@@ -26,10 +26,11 @@ public class STRenderPanel extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    void setText(STModel stModel) {
+    STRenderPanel setText(STModel stModel) {
         txtEditor.setText(presentationModel.render(stModel));
         txtEditor.setCaretPosition(0);
         this.stModel = stModel;
+        return this;
     }
 
     public void addActionsToPopup() {
