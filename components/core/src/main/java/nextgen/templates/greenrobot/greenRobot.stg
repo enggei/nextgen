@@ -9,7 +9,9 @@ event(isStatic,name,fields) ::= <<public ~if(isStatic)~static ~endif~class ~name
 	}
 }  >>
 
-EventManager(package,name,events) ::= <<package ~package~;
+EventManager(package,imports,name,events) ::= <<package ~package~;
+
+~imports:{it|~it~};separator="\n"~
 
 public class ~name~ {
 
@@ -24,6 +26,8 @@ PostEventMethod(eventName,parameters) ::= <<public static void post~eventName~(~
 	log.info("post ~eventName~");
 	org.greenrobot.eventbus.EventBus.getDefault().post(new ~eventName~(~parameters:{it|~it.name~};separator=", "~));
 }  >>
+
+CallPostEventMethod(eventManager,event,arguments) ::= <<~eventManager~.post~event~(~arguments:{it|~it~};separator=", "~);  >>
 
 maven() ::= <<<dependency>
 	<groupId>org.greenrobot</groupId>

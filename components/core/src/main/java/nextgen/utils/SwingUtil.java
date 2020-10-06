@@ -326,7 +326,7 @@ public class SwingUtil {
 
    private static void setLookAndFeel() {
       for (UIManager.LookAndFeelInfo laf : UIManager.getInstalledLookAndFeels()) {
-         if ("Nimbus".equals(laf.getName())) {
+         if ("Nimbus" .equals(laf.getName())) {
             try {
                UIManager.setLookAndFeel(laf.getClassName());
             } catch (Exception e) {

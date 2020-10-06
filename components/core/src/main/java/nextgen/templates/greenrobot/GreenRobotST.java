@@ -7,6 +7,7 @@ public class GreenRobotST {
 	.append("gt() ::= \">\"\n")
 	.append(Event.st + "\n")
 	.append(EventManager.st + "\n")
+	.append(CallPostEventMethod.st + "\n")
 	.append(PostEventMethod.st + "\n")
 	.append(Maven.st + "\n")
 	.append(Post.st + "\n")
@@ -54,6 +55,10 @@ public class GreenRobotST {
 
 	public static EventManager newEventManager() {
 		return new EventManager(stGroup);
+	}  
+
+	public static CallPostEventMethod newCallPostEventMethod() {
+		return new CallPostEventMethod(stGroup);
 	}  
 
 	public static PostEventMethod newPostEventMethod() {

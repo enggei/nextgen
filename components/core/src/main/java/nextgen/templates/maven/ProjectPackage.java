@@ -114,6 +114,11 @@ public class ProjectPackage {
 		return this._types.stream().map(ProjectPackage_Types::new);
 	}
 
+	public java.util.List<Object> getTypes_Name() {
+		return streamTypes().map(ProjectPackage_Types::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class ProjectPackage_Types {
 
 		Object _name;
@@ -130,7 +135,7 @@ public class ProjectPackage {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -145,6 +150,6 @@ public class ProjectPackage {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ProjectPackage(name,parentPackage,packageName,types) ::= <<private final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~, ~endif~\"~packageName~\");\n" + 
+	static final String st = "ProjectPackage(name,parentPackage,packageName,types) ::= <<protected final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~, ~endif~~packageName~);\n" + 
 				"~types:{it|private final JavaType ~it.name~Type = new JavaType(~name~, \"~it.name~\");};separator=\"\\n\\n\"~ >>";
 }  

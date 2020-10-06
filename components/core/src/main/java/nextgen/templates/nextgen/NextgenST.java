@@ -17,6 +17,9 @@ public class NextgenST {
 	.append(CanvasRelation.st + "\n")
 	.append(CanvasRelationAction.st + "\n")
 	.append(CanvasAction.st + "\n")
+	.append(DomainFacade.st + "\n")
+	.append(EntityConstraints.st + "\n")
+	.append(STTemplateEditor.st + "\n")
 	.append(STWorkspace.st + "\n")
 	.append(TreeNavigator.st + "\n")
 	.append(BaseTreeNode.st + "\n")
@@ -104,6 +107,18 @@ public class NextgenST {
 
 	public static CanvasAction newCanvasAction() {
 		return new CanvasAction(stGroup);
+	}  
+
+	public static DomainFacade newDomainFacade() {
+		return new DomainFacade(stGroup);
+	}  
+
+	public static EntityConstraints newEntityConstraints() {
+		return new EntityConstraints(stGroup);
+	}  
+
+	public static STTemplateEditor newSTTemplateEditor() {
+		return new STTemplateEditor(stGroup);
 	}  
 
 	public static STWorkspace newSTWorkspace() {

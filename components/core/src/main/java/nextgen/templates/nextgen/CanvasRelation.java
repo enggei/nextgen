@@ -180,6 +180,16 @@ public class CanvasRelation {
 		return this._fields.stream().map(CanvasRelation_Fields::new);
 	}
 
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(CanvasRelation_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Name() {
+		return streamFields().map(CanvasRelation_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class CanvasRelation_Fields {
 
 		Object _type;
@@ -203,7 +213,7 @@ public class CanvasRelation {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	public CanvasRelation addRightClickActions(Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -224,6 +234,11 @@ public class CanvasRelation {
 		return this._rightClickActions.stream().map(CanvasRelation_RightClickActions::new);
 	}
 
+	public java.util.List<Object> getRightClickActions_Name() {
+		return streamRightClickActions().map(CanvasRelation_RightClickActions::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class CanvasRelation_RightClickActions {
 
 		Object _name;
@@ -240,7 +255,7 @@ public class CanvasRelation {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	public CanvasRelation addKeyPressActions(Object _key, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -261,6 +276,16 @@ public class CanvasRelation {
 	public java.util.stream.Stream<CanvasRelation_KeyPressActions> streamKeyPressActions() {
 		return this._keyPressActions.stream().map(CanvasRelation_KeyPressActions::new);
 	}
+
+	public java.util.List<Object> getKeyPressActions_Key() {
+		return streamKeyPressActions().map(CanvasRelation_KeyPressActions::getKey).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getKeyPressActions_Name() {
+		return streamKeyPressActions().map(CanvasRelation_KeyPressActions::getName).collect(java.util.stream.Collectors.toList());
+	}
+
 
 	public static final class CanvasRelation_KeyPressActions {
 
@@ -285,7 +310,7 @@ public class CanvasRelation {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

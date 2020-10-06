@@ -121,6 +121,16 @@ public class CanvasRelationAction {
 		return this._fields.stream().map(CanvasRelationAction_Fields::new);
 	}
 
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(CanvasRelationAction_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Name() {
+		return streamFields().map(CanvasRelationAction_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class CanvasRelationAction_Fields {
 
 		Object _type;
@@ -144,7 +154,7 @@ public class CanvasRelationAction {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

@@ -18,11 +18,6 @@ public class PNode {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -214,6 +209,16 @@ public class PNode {
 		return this._onKeyPressed.stream().map(PNode_OnKeyPressed::new);
 	}
 
+	public java.util.List<Object> getOnKeyPressed_Key() {
+		return streamOnKeyPressed().map(PNode_OnKeyPressed::getKey).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getOnKeyPressed_Name() {
+		return streamOnKeyPressed().map(PNode_OnKeyPressed::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class PNode_OnKeyPressed {
 
 		Object _key;
@@ -237,7 +242,7 @@ public class PNode {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	public PNode addOnRightClick(Object _name, Boolean _isSeparator) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -258,6 +263,16 @@ public class PNode {
 	public java.util.stream.Stream<PNode_OnRightClick> streamOnRightClick() {
 		return this._onRightClick.stream().map(PNode_OnRightClick::new);
 	}
+
+	public java.util.List<Object> getOnRightClick_Name() {
+		return streamOnRightClick().map(PNode_OnRightClick::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Boolean> getOnRightClick_IsSeparator() {
+		return streamOnRightClick().map(PNode_OnRightClick::getIsSeparator).collect(java.util.stream.Collectors.toList());
+	}
+
 
 	public static final class PNode_OnRightClick {
 
@@ -282,7 +297,7 @@ public class PNode {
 			return this._isSeparator;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -338,9 +353,10 @@ public class PNode {
 				"	public ~name~(~canvasName~ canvas, String text, UUID uuid) {\n" + 
 				"		this.canvas = canvas;\n" + 
 				"\n" + 
-				"		this.addAttribute(Attributes._defaultColor, Color.decode(\"#000000\"));\n" + 
-				"		this.addAttribute(Attributes._selectedColor, Color.decode(\"#ca0020\"));\n" + 
-				"		this.addAttribute(Attributes._highlightedColor, Color.decode(\"#000000\"));\n" + 
+				"		this.addAttribute(Attributes._defaultColor, UIManager.getColor(\"TextField.foreground\"));\n" + 
+				"		this.addAttribute(Attributes._selectedColor, Color.decode(\"#2b8cbe\"));\n" + 
+				"		this.addAttribute(Attributes._highlightedColor, Color.decode(\"#e66101\"));\n" + 
+				"		this.addAttribute(\"_rectangleColor\", new Color(253, 141, 60, 50));\n" + 
 				"		this.addAttribute(Attributes._uuid, uuid);\n" + 
 				"		this.addAttribute(Attributes._text, text);\n" + 
 				"		this.child = new PText(text == null || text.trim().length() == 0 ? getUuid().toString() : text);\n" + 
@@ -352,7 +368,7 @@ public class PNode {
 				"\n" + 
 				"		this.addChild(this.child);\n" + 
 				"\n" + 
-				"		org.greenrobot.eventbus.EventBus.getDefault().register(this);\n" + 
+				"		// org.greenrobot.eventbus.EventBus.getDefault().register(this);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public void addedToCanvas() {\n" + 
@@ -470,7 +486,7 @@ public class PNode {
 				"		SwingUtilities.invokeLater(() -> {\n" + 
 				"			for (UUID uuid : incoming) canvas.removeRelation(uuid);\n" + 
 				"			for (UUID uuid : outgoing) canvas.removeRelation(uuid);\n" + 
-				"			org.greenrobot.eventbus.EventBus.getDefault().unregister(STNode.this);\n" + 
+				"			//org.greenrobot.eventbus.EventBus.getDefault().unregister(~name~.this);\n" + 
 				"			canvas.removeNode(getUuid());			\n" + 
 				"		});\n" + 
 				"	}\n" + 

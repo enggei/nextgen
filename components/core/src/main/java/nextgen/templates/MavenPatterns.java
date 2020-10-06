@@ -3,6 +3,7 @@ package nextgen.templates;
 import nextgen.utils.FileUtil;
 import nextgen.templates.maven.*;
 import nextgen.templates.maven.Properties;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -136,9 +137,8 @@ public class MavenPatterns extends MavenST {
    }
 
    public static Dependency newDependency(String xml) {
-
       final String scope = parseDependency("scope", xml);
-      final Dependency dependency = newDependency()
+      return newDependency()
             .setGroupId(parseDependency("groupId", xml))
             .setClassifier(parseDependency("classifier", xml))
             .setType(parseDependency("type", xml))
@@ -146,7 +146,13 @@ public class MavenPatterns extends MavenST {
             .setSystemPath(parseDependency("systemPath", xml))
             .setArtifactId(parseDependency("artifactId", xml))
             .setVersion(parseDependency("version", xml));
+   }
 
+   public static StringBuilder parseToDependencyBuilder(String xml) {
+      return asBuilder(newDependency(xml));
+   }
+
+   public static StringBuilder asBuilder(Dependency dependency) {
       final StringBuilder out = new StringBuilder(".addDependencies(nextgen.templates.MavenPatterns.newDependency()");
       if (dependency.getGroupId() != null) out.append(".setGroupId(\"").append(dependency.getGroupId()).append("\")");
       if (dependency.getArtifactId() != null)
@@ -159,23 +165,20 @@ public class MavenPatterns extends MavenST {
       if (dependency.getSystemPath() != null)
          out.append(".setSystemPath(\"").append(dependency.getSystemPath()).append("\")");
       out.append(")");
-
-      System.out.println(out.toString().trim());
-
-      return dependency;
+      return out;
    }
 
    public static void addDependencyGroup(Pom pom, DependencyGroup dependencyGroup) {
       final String groupPropertyName = dependencyGroup.getName() + ".version";
       if (pom.getProperties()
-             .stream()
-             .filter(pomProperty -> pomProperty instanceof Properties)
-             .map(pomProperty -> (Properties) pomProperty)
-             .anyMatch(pom_Properties -> pom_Properties.getName().equals(groupPropertyName)))
+            .stream()
+            .filter(pomProperty -> pomProperty instanceof Properties)
+            .map(pomProperty -> (Properties) pomProperty)
+            .anyMatch(pom_Properties -> pom_Properties.getName().equals(groupPropertyName)))
          return;
       pom.addProperties(newPomProperties(groupPropertyName, dependencyGroup.getVersion()));
       dependencyGroup.getArtifacts()
-                     .forEach(artifact -> pom.addDependencies(newDependency(dependencyGroup.getGroupId(), artifact, newPropertyReference(groupPropertyName))));
+            .forEach(artifact -> pom.addDependencies(newDependency(dependencyGroup.getGroupId(), artifact, newPropertyReference(groupPropertyName))));
    }
 
    public static Set<Dependency> importDependencies(File pomPath) {
@@ -212,5 +215,18 @@ public class MavenPatterns extends MavenST {
       final Matcher matcher = compile.matcher(text.trim().toLowerCase());
       if (matcher.find()) return matcher.group(1);
       return null;
+   }
+
+   public static ProjectPackage newProjectPackage(String name, String packageName) {
+      return newProjectPackage()
+            .setName(name)
+            .setPackageName(packageName);
+   }
+
+   public static ProjectPackage newProjectPackage(String name, String packageName, ProjectPackage parentPackage) {
+      return newProjectPackage()
+            .setName(name)
+            .setPackageName(packageName)
+            .setParentPackage(parentPackage.getName());
    }
 }

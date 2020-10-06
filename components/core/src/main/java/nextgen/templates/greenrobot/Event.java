@@ -6,14 +6,14 @@ public class Event {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Boolean _isStatic;
-	private Object _name;
+	private String _name;
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 
 	Event(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
-	public java.util.UUID uuid() {
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -48,16 +48,16 @@ public class Event {
 		return this;
 	} 
 
-	public Event setName(Object value) {
+	public Event setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Object getName(Object defaultValue) {
+	public String getName(String defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 
@@ -91,6 +91,16 @@ public class Event {
 		return this._fields.stream().map(Event_Fields::new);
 	}
 
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(Event_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Name() {
+		return streamFields().map(Event_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class Event_Fields {
 
 		Object _type;
@@ -114,7 +124,7 @@ public class Event {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

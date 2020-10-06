@@ -67,6 +67,16 @@ public class AppEvent {
 		return this._fields.stream().map(AppEvent_Fields::new);
 	}
 
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(AppEvent_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Name() {
+		return streamFields().map(AppEvent_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class AppEvent_Fields {
 
 		Object _type;
@@ -90,7 +100,7 @@ public class AppEvent {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

@@ -10,7 +10,7 @@ public class PNodeImpl {
 	private Object _nodeName;
 	private Object _canvasName;
 	private Object _initText;
-	private Object _uuid;
+	private Object _uuidExpression;
 	private Object _overrideSetTextExpression;
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _addedToCanvasStatements = new java.util.ArrayList<>();
@@ -29,11 +29,6 @@ public class PNodeImpl {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -46,7 +41,7 @@ public class PNodeImpl {
 		st.add("nodeName", _nodeName);
 		st.add("canvasName", _canvasName);
 		st.add("initText", _initText);
-		st.add("uuid", _uuid);
+		st.add("uuidExpression", _uuidExpression);
 		st.add("overrideSetTextExpression", _overrideSetTextExpression);
 		for (Object o : _constructorStatements) st.add("constructorStatements", o);
 		for (Object o : _addedToCanvasStatements) st.add("addedToCanvasStatements", o);
@@ -173,21 +168,25 @@ public class PNodeImpl {
 		return this;
 	} 
 
-	public PNodeImpl setUuid(Object value) {
-		this._uuid = value;
+	public PNodeImpl setUuidExpression(Object value) {
+		this._uuidExpression = value;
 		return this;
 	}
 
-	public Object getUuid(Object defaultValue) {
-		return this._uuid == null ? defaultValue : this._uuid;
+	public Object getUuidExpression() {
+		return this._uuidExpression;
 	}
 
-	public boolean hasUuid() {
-		return this._uuid != null;
+	public Object getUuidExpression(Object defaultValue) {
+		return this._uuidExpression == null ? defaultValue : this._uuidExpression;
 	}
 
-	public PNodeImpl removeUuid() {
-		this._uuid = null;
+	public boolean hasUuidExpression() {
+		return this._uuidExpression != null;
+	}
+
+	public PNodeImpl removeUuidExpression() {
+		this._uuidExpression = null;
 		return this;
 	} 
 
@@ -494,6 +493,16 @@ public class PNodeImpl {
 		return this._fields.stream().map(PNodeImpl_Fields::new);
 	}
 
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(PNodeImpl_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Name() {
+		return streamFields().map(PNodeImpl_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class PNodeImpl_Fields {
 
 		Object _type;
@@ -517,7 +526,7 @@ public class PNodeImpl {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	public PNodeImpl addOnRightClick(Object _name, Object _isSeparator) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -538,6 +547,16 @@ public class PNodeImpl {
 	public java.util.stream.Stream<PNodeImpl_OnRightClick> streamOnRightClick() {
 		return this._onRightClick.stream().map(PNodeImpl_OnRightClick::new);
 	}
+
+	public java.util.List<Object> getOnRightClick_Name() {
+		return streamOnRightClick().map(PNodeImpl_OnRightClick::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getOnRightClick_IsSeparator() {
+		return streamOnRightClick().map(PNodeImpl_OnRightClick::getIsSeparator).collect(java.util.stream.Collectors.toList());
+	}
+
 
 	public static final class PNodeImpl_OnRightClick {
 
@@ -562,7 +581,7 @@ public class PNodeImpl {
 			return this._isSeparator;
 		}
 
-	} 
+	}  
 
 	public PNodeImpl addOnKeyPressed(Object _key, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -583,6 +602,16 @@ public class PNodeImpl {
 	public java.util.stream.Stream<PNodeImpl_OnKeyPressed> streamOnKeyPressed() {
 		return this._onKeyPressed.stream().map(PNodeImpl_OnKeyPressed::new);
 	}
+
+	public java.util.List<Object> getOnKeyPressed_Key() {
+		return streamOnKeyPressed().map(PNodeImpl_OnKeyPressed::getKey).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getOnKeyPressed_Name() {
+		return streamOnKeyPressed().map(PNodeImpl_OnKeyPressed::getName).collect(java.util.stream.Collectors.toList());
+	}
+
 
 	public static final class PNodeImpl_OnKeyPressed {
 
@@ -607,7 +636,7 @@ public class PNodeImpl {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -622,7 +651,7 @@ public class PNodeImpl {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PNodeImpl(packageName,name,nodeName,fields,canvasName,initText,uuid,constructorStatements,overrideSetTextExpression,addedToCanvasStatements,newNodeAddedStatements,rightClickStatements,anonymousRightClickActions,onRightClick,onKeyPressed,onLeftClick,onPropertyChange,methods,actions) ::= <<package ~packageName~;\n" + 
+	static final String st = "PNodeImpl(packageName,name,nodeName,fields,canvasName,initText,uuidExpression,constructorStatements,overrideSetTextExpression,addedToCanvasStatements,newNodeAddedStatements,rightClickStatements,anonymousRightClickActions,onRightClick,onKeyPressed,onLeftClick,onPropertyChange,methods,actions) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import org.piccolo2d.event.PInputEvent;\n" + 
 				"\n" + 
@@ -636,7 +665,7 @@ public class PNodeImpl {
 				"	~fields:{it|~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"	public ~name~(~canvasName~ canvas~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n" + 
-				"		super(canvas, ~initText~, ~uuid~);\n" + 
+				"		super(canvas, ~initText~, ~uuidExpression~);\n" + 
 				"		~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
 				"		~constructorStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"	}\n" + 

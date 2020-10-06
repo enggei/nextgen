@@ -115,6 +115,16 @@ public class TestRunner {
 		return this._generators.stream().map(TestRunner_Generators::new);
 	}
 
+	public java.util.List<Object> getGenerators_Name() {
+		return streamGenerators().map(TestRunner_Generators::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getGenerators_Run() {
+		return streamGenerators().map(TestRunner_Generators::getRun).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class TestRunner_Generators {
 
 		Object _name;
@@ -138,7 +148,7 @@ public class TestRunner {
 			return this._run;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

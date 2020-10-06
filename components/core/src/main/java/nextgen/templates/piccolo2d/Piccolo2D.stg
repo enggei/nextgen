@@ -90,7 +90,7 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 		return (Stream<N>) getAllNodes().filter(~nodeName~::isSelected);
 	}
 
-	public <N extends STNode> Stream<N> getUnselectedNodes() {
+	public <N extends ~nodeName~> Stream<N> getUnselectedNodes() {
 		return (Stream<N>) getAllNodes().filter(stNode -> !stNode.isSelected());
 	}
 
@@ -450,9 +450,10 @@ public class ~name~ extends PNode implements PropertyChangeListener {
 	public ~name~(~canvasName~ canvas, String text, UUID uuid) {
 		this.canvas = canvas;
 
-		this.addAttribute(Attributes._defaultColor, Color.decode("#000000"));
-		this.addAttribute(Attributes._selectedColor, Color.decode("#ca0020"));
-		this.addAttribute(Attributes._highlightedColor, Color.decode("#000000"));
+		this.addAttribute(Attributes._defaultColor, UIManager.getColor("TextField.foreground"));
+		this.addAttribute(Attributes._selectedColor, Color.decode("#2b8cbe"));
+		this.addAttribute(Attributes._highlightedColor, Color.decode("#e66101"));
+		this.addAttribute("_rectangleColor", new Color(253, 141, 60, 50));
 		this.addAttribute(Attributes._uuid, uuid);
 		this.addAttribute(Attributes._text, text);
 		this.child = new PText(text == null || text.trim().length() == 0 ? getUuid().toString() : text);
@@ -464,7 +465,7 @@ public class ~name~ extends PNode implements PropertyChangeListener {
 
 		this.addChild(this.child);
 
-		org.greenrobot.eventbus.EventBus.getDefault().register(this);
+		// org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
 
 	public void addedToCanvas() {
@@ -582,7 +583,7 @@ public class ~name~ extends PNode implements PropertyChangeListener {
 		SwingUtilities.invokeLater(() -> {
 			for (UUID uuid : incoming) canvas.removeRelation(uuid);
 			for (UUID uuid : outgoing) canvas.removeRelation(uuid);
-			org.greenrobot.eventbus.EventBus.getDefault().unregister(STNode.this);
+			//org.greenrobot.eventbus.EventBus.getDefault().unregister(~name~.this);
 			canvas.removeNode(getUuid());			
 		});
 	}
@@ -811,7 +812,7 @@ AnonymousPNodeAction(nodeType,header,statements) ::= <<new STNode.NodeAction<~no
 	}
 }  >>
 
-PNodeImpl(packageName,name,nodeName,fields,canvasName,initText,uuid,constructorStatements,overrideSetTextExpression,addedToCanvasStatements,newNodeAddedStatements,rightClickStatements,anonymousRightClickActions,onRightClick,onKeyPressed,onLeftClick,onPropertyChange,methods,actions) ::= <<package ~packageName~;
+PNodeImpl(packageName,name,nodeName,fields,canvasName,initText,uuidExpression,constructorStatements,overrideSetTextExpression,addedToCanvasStatements,newNodeAddedStatements,rightClickStatements,anonymousRightClickActions,onRightClick,onKeyPressed,onLeftClick,onPropertyChange,methods,actions) ::= <<package ~packageName~;
 
 import org.piccolo2d.event.PInputEvent;
 
@@ -825,7 +826,7 @@ public class ~name~ extends ~nodeName~ {
 	~fields:{it|~it.type~ ~it.name~;};separator="\n"~
 
 	public ~name~(~canvasName~ canvas~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
-		super(canvas, ~initText~, ~uuid~);
+		super(canvas, ~initText~, ~uuidExpression~);
 		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
 		~constructorStatements:{it|~it~};separator="\n"~
 	}

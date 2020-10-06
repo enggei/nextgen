@@ -312,6 +312,16 @@ public class TreeNode {
 		return this._fields.stream().map(TreeNode_Fields::new);
 	}
 
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(TreeNode_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Name() {
+		return streamFields().map(TreeNode_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class TreeNode_Fields {
 
 		Object _type;
@@ -335,7 +345,7 @@ public class TreeNode {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	public TreeNode addParameters(Object _type, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -356,6 +366,16 @@ public class TreeNode {
 	public java.util.stream.Stream<TreeNode_Parameters> streamParameters() {
 		return this._parameters.stream().map(TreeNode_Parameters::new);
 	}
+
+	public java.util.List<Object> getParameters_Type() {
+		return streamParameters().map(TreeNode_Parameters::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getParameters_Name() {
+		return streamParameters().map(TreeNode_Parameters::getName).collect(java.util.stream.Collectors.toList());
+	}
+
 
 	public static final class TreeNode_Parameters {
 
@@ -380,7 +400,7 @@ public class TreeNode {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

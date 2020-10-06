@@ -74,6 +74,16 @@ public class Build {
 		return this._testResources.stream().map(Build_TestResources::new);
 	}
 
+	public java.util.List<Object> getTestResources_Name() {
+		return streamTestResources().map(Build_TestResources::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getTestResources_Value() {
+		return streamTestResources().map(Build_TestResources::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class Build_TestResources {
 
 		Object _name;
@@ -97,7 +107,7 @@ public class Build {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

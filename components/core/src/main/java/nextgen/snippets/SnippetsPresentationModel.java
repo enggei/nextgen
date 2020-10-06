@@ -23,7 +23,6 @@ public class SnippetsPresentationModel extends JShellNeoFactory {
       final SnippetsPresentationModel db = new SnippetsPresentationModel(dir);
 
       final JShell shell = JShellUtil.newLocalShell();
-
       JShellBlackboard.db = db;
       System.out.println(JShellBlackboard.test);
 

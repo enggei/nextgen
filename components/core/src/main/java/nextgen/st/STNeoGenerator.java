@@ -24,7 +24,7 @@ public class STNeoGenerator {
       stGroupModel.getTemplates()
             .forEach(stTemplate -> visitSTTemplate(factory, stGroupModel.getUuid(), stTemplate, packageDeclaration, root));
 
-      STGenerator.writeJavaFile(factory, packageDeclaration, factory.getName().toString(), root);
+//      STGenerator.writeJavaFile(factory, packageDeclaration, factory.getName().toString(), root);
    }
 
    public void visitSTTemplate(NeoDomain factory, String groupModelUuid, nextgen.st.domain.STTemplate stTemplate, String packageDeclaration, File root) {
@@ -74,7 +74,7 @@ public class STNeoGenerator {
          }
       });
 
-      STGenerator.writeJavaFile(entityClass, packageDeclaration, className, root);
+//      STGenerator.writeJavaFile(entityClass, packageDeclaration, className, root);
 
       stTemplate.getChildren()
             .forEach(stTemplate1 -> visitSTTemplate(factory, groupModelUuid, stTemplate1, packageDeclaration, root));

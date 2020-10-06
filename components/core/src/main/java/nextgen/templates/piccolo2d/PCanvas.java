@@ -22,11 +22,6 @@ public class PCanvas {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -302,6 +297,16 @@ public class PCanvas {
 		return this._fields.stream().map(PCanvas_Fields::new);
 	}
 
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(PCanvas_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Name() {
+		return streamFields().map(PCanvas_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class PCanvas_Fields {
 
 		Object _type;
@@ -325,7 +330,7 @@ public class PCanvas {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	public PCanvas addOnRightClick(Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -346,6 +351,11 @@ public class PCanvas {
 		return this._onRightClick.stream().map(PCanvas_OnRightClick::new);
 	}
 
+	public java.util.List<Object> getOnRightClick_Name() {
+		return streamOnRightClick().map(PCanvas_OnRightClick::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class PCanvas_OnRightClick {
 
 		Object _name;
@@ -362,7 +372,7 @@ public class PCanvas {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	public PCanvas addOnKeyPressed(Object _key, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -383,6 +393,16 @@ public class PCanvas {
 	public java.util.stream.Stream<PCanvas_OnKeyPressed> streamOnKeyPressed() {
 		return this._onKeyPressed.stream().map(PCanvas_OnKeyPressed::new);
 	}
+
+	public java.util.List<Object> getOnKeyPressed_Key() {
+		return streamOnKeyPressed().map(PCanvas_OnKeyPressed::getKey).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getOnKeyPressed_Name() {
+		return streamOnKeyPressed().map(PCanvas_OnKeyPressed::getName).collect(java.util.stream.Collectors.toList());
+	}
+
 
 	public static final class PCanvas_OnKeyPressed {
 
@@ -407,7 +427,7 @@ public class PCanvas {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -512,7 +532,7 @@ public class PCanvas {
 				"		return (Stream<N>) getAllNodes().filter(~nodeName~::isSelected);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public <N extends STNode> Stream<N> getUnselectedNodes() {\n" + 
+				"	public <N extends ~nodeName~> Stream<N> getUnselectedNodes() {\n" + 
 				"		return (Stream<N>) getAllNodes().filter(stNode -> !stNode.isSelected());\n" + 
 				"	}\n" + 
 				"\n" + 

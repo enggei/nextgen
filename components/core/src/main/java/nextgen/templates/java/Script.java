@@ -121,6 +121,16 @@ public class Script {
 		return this._fields.stream().map(Script_Fields::new);
 	}
 
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(Script_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<String> getFields_Name() {
+		return streamFields().map(Script_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class Script_Fields {
 
 		Object _type;
@@ -144,7 +154,7 @@ public class Script {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

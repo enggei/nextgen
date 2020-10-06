@@ -169,6 +169,16 @@ public class CanvasNodeAction {
 		return this._fields.stream().map(CanvasNodeAction_Fields::new);
 	}
 
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(CanvasNodeAction_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Name() {
+		return streamFields().map(CanvasNodeAction_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class CanvasNodeAction_Fields {
 
 		Object _type;
@@ -192,7 +202,7 @@ public class CanvasNodeAction {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

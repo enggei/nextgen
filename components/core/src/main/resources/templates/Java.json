@@ -57,7 +57,7 @@
       "children" : [ {
         "uuid" : "acce5fc9-50a0-4be5-81d9-cc4422abacbb",
         "name" : "primitiveAccessors",
-        "text" : "public ~type~ get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~ = value;\n\treturn this;\n}",
+        "text" : "public ~type~ get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~ = value;\n\treturn this;\n} ",
         "parameters" : [ {
           "uuid" : "347d900b-29f2-474f-bc20-59e102eaf5f6",
           "name" : "type",
@@ -168,7 +168,7 @@
     }, {
       "uuid" : "a8289fe2-14b3-4683-9490-5ef389a3f5e4",
       "name" : "Bean",
-      "text" : "package ~package~;\n\npublic class ~name~ implements java.beans.PropertyChangeListener {\n\n\tprivate final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STGroupModel.class);\n\n\t~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\t~fieldDeclarations:{it|~it~};separator=\"\\n\"~\n\n\tprivate final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);\n\t\n\tpublic ~name~() {\n\t}\n\t\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n\t\n~if(lexical)~\n\n\t@Override\n\tpublic String toString() {\n\t\treturn \"\" + ~lexical:{it|_~it~};separator=\" + \\\" \\\" + \"~;\n\t}\n~endif~\n\n~if(eqha)~\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn _~eqha~.equals(that._~eqha~);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(_~eqha~);\n\t}\n~endif~\n\n\t@Override\n\tpublic void propertyChange(java.beans.PropertyChangeEvent evt) {\n\t\tthis.pcs.firePropertyChange(\"~name~\", this, evt);\n\t}\n\t\n\tpublic void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tthis.pcs.addPropertyChangeListener(listener);\n\t}\n\n\tpublic void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tthis.pcs.removePropertyChangeListener(listener);\n\t}\n\n\t~beanListener~\n} ",
+      "text" : "package ~package~;\n\npublic class ~name~ implements java.beans.PropertyChangeListener {\n\n\tprivate final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n\n\t~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\t~fieldDeclarations:{it|~it~};separator=\"\\n\"~\n\n\tprivate final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);\n\t\n\tpublic ~name~() {\n\t}\n\t\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n\t\n~if(lexical)~\n\n\t@Override\n\tpublic String toString() {\n\t\treturn \"\" + ~lexical:{it|_~it~};separator=\" + \\\" \\\" + \"~;\n\t}\n~endif~\n\n~if(eqha)~\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn _~eqha~.equals(that._~eqha~);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(_~eqha~);\n\t}\n~endif~\n\n\t@Override\n\tpublic void propertyChange(java.beans.PropertyChangeEvent evt) {\n\t\tthis.pcs.firePropertyChange(\"~name~\", this, evt);\n\t}\n\t\n\tpublic void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tthis.pcs.addPropertyChangeListener(listener);\n\t}\n\n\tpublic void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tthis.pcs.removePropertyChangeListener(listener);\n\t}\n\n\t~beanListener~\n} ",
       "parameters" : [ {
         "uuid" : "cb61bc25-1333-40db-9cd8-ea46acf2540c",
         "name" : "package",
@@ -451,6 +451,44 @@
       }, {
         "uuid" : "6533f039-fe34-4304-84be-c728856aca5e",
         "name" : "lexical",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "2109f5b2-21e6-410b-b6df-a7c6948d73b2",
+      "name" : "Singleton",
+      "text" : "package ~packageName~;\n\npublic final class ~name~ {\n \n    private static ~name~ INSTANCE;\n    ~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n    \n    private ~name~() {        \n    }\n    \n    public static synchronized ~name~ getInstance() {\n        if(INSTANCE == null) INSTANCE = new ~name~();\n        return INSTANCE;\n    }\n \n    ~accessors:{it|~it~};separator=\"\\n\\n\"~\n} ",
+      "parameters" : [ {
+        "uuid" : "28d512cf-3a7e-4e7b-99f5-f1604e6b7c42",
+        "name" : "packageName",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "d37b64c5-866c-4506-ac9e-4e661b4d33d8",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "07f49eef-f106-480f-af7c-f27a88116713",
+        "name" : "fields",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "52980d59-109a-455a-b43b-c0f70c8d3645",
+          "name" : "type",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "efbd4e91-aa39-4c63-9543-5d9760e08ae3",
+          "name" : "name",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "70ffcbb2-55df-4a59-9e6b-eb83e04d723c",
+          "name" : "initializer",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "02fdfdd3-ba5c-4db5-bab3-f95f427eac2e",
+        "name" : "accessors",
         "type" : "LIST",
         "argumentType" : "Object"
       } ]
@@ -843,7 +881,7 @@
       }, {
         "uuid" : "38be3d09-40df-4b68-9f56-1e514606130d",
         "name" : "PackageDeclaration",
-        "text" : "package ~name~;",
+        "text" : "package ~name~; ",
         "parameters" : [ {
           "uuid" : "3c489417-b330-47e2-802c-38c51b411d64",
           "name" : "name",

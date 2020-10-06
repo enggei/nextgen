@@ -10,14 +10,123 @@ import nextgen.templates.vertx.JsonWrapper;
 import nextgen.templates.vertx.VertxST;
 
 import java.io.File;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
+import static nextgen.templates.JavaPatterns.newClassOrInterfaceType;
 import static nextgen.templates.domain.RelationType.*;
 import static nextgen.templates.java.JavaST.*;
 
 public class DomainPatterns extends DomainST {
+
+   public static class DomainVisitor {
+
+      private final Set<Entity> visited = new LinkedHashSet<>();
+
+      public final void visit(Domain domain) {
+         startDomain(domain);
+         domain.getEntities().forEach(this::visit);
+         endDomain(domain);
+      }
+
+      public final void visit(Entity entity) {
+
+         if (visited.contains(entity)) return;
+         visited.add(entity);
+
+         startEntity(entity);
+         entity.getRelations().forEach(relation -> visit(entity, relation));
+         endEntity(entity);
+      }
+
+      public final void visit(Entity entity, Relation relation) {
+
+         switch (relation.getType()) {
+            case ENUM:
+               onENUM(entity, relation);
+               break;
+            case EXT_REF:
+               onEXT_REF(entity, relation);
+               break;
+            case EXT_LIST:
+               onEXT_LIST(entity, relation);
+               break;
+            case PRIM_REF:
+               onPRIM_REF(entity, relation);
+               break;
+            case PRIM_LIST:
+               onPRIM_LIST(entity, relation);
+               break;
+            case REF:
+               onREF(entity, relation);
+               break;
+            case LIST:
+               onLIST(entity, relation);
+               break;
+            case ENUM_LIST:
+               onENUM_LIST(entity, relation);
+               break;
+         }
+
+         if (dstIsEntity(relation))
+            visit((Entity) relation.getDst());
+      }
+
+      protected boolean dstIsEntity(Relation relation) {
+         return relation.getDst() instanceof Entity;
+      }
+
+      protected Entity dstEntity(Relation relation) {
+         return (Entity) relation.getDst();
+      }
+
+      protected void startDomain(Domain domain) {
+
+      }
+
+      protected void startEntity(Entity entity) {
+
+      }
+
+      protected void onENUM(Entity src, Relation relation) {
+
+      }
+
+      protected void onEXT_REF(Entity src, Relation relation) {
+
+      }
+
+      protected void onEXT_LIST(Entity src, Relation relation) {
+
+      }
+
+      protected void onPRIM_REF(Entity src, Relation relation) {
+
+      }
+
+      protected void onPRIM_LIST(Entity src, Relation relation) {
+
+      }
+
+      protected void onREF(Entity src, Relation relation) {
+
+      }
+
+      protected void onLIST(Entity src, Relation relation) {
+
+      }
+
+      protected void onENUM_LIST(Entity src, Relation relation) {
+
+      }
+
+      protected void endEntity(Entity src) {
+
+      }
+
+      protected void endDomain(Domain domain) {
+
+      }
+   }
 
    public static Domain newDomain(String name) {
       return newDomain().setName(name);
@@ -25,6 +134,12 @@ public class DomainPatterns extends DomainST {
 
    public static Entity newEntity(String name) {
       return newEntity().setName(name);
+   }
+
+   public static Entity newEntityWithUuid(String name) {
+      return newEntity()
+            .setName(name)
+            .addRelations(DomainPatterns.newStringField("uuid"));
    }
 
    public static Entity newEnum(String name, String... values) {
@@ -111,6 +226,10 @@ public class DomainPatterns extends DomainST {
       return newExternalRef(name, type);
    }
 
+   public static Relation newOneToOneExternal(String name, String type) {
+      return newExternalRef(name, type);
+   }
+
    public static Relation newOneToManyExternal(String name, Class<?> type) {
       return newExternalList(name, type);
    }
@@ -141,12 +260,6 @@ public class DomainPatterns extends DomainST {
 
    private static PackageDeclaration newPackageDeclaration(String packageName) {
       return JavaST.newPackageDeclaration().setName(packageName);
-   }
-
-   public static ClassOrInterfaceType newClassOrInterfaceType(String packageDeclaration, String name) {
-      return JavaST.newClassOrInterfaceType()
-            .setScope(packageDeclaration)
-            .addNames(name);
    }
 
    // DOMAIN TO BEANS:
@@ -484,6 +597,10 @@ public class DomainPatterns extends DomainST {
    }
 
    public static void writeNeo(File root, PackageDeclaration packageDeclaration, Domain domain) {
+      writeNeo(root, packageDeclaration, domain, false);
+   }
+
+   public static void writeNeo(File root, PackageDeclaration packageDeclaration, Domain domain, boolean useUuid) {
 
       final Map<Entity, NodeWrapper> visited = new LinkedHashMap<>();
       domain.getEntities().forEach(entity -> {
@@ -493,10 +610,10 @@ public class DomainPatterns extends DomainST {
             return;
          }
 
-         generateNeoWrapper(root, packageDeclaration, entity, visited);
+         generateNeoWrapper(root, packageDeclaration, entity, visited, useUuid);
       });
 
-      // create incoming relations, AND neo-factory class
+      // create neo-factory class
 
       final NeoFactory factory = JavaNeo4JEmbeddedST.newNeoFactory()
             .setPackage(packageDeclaration.getName())
@@ -526,26 +643,6 @@ public class DomainPatterns extends DomainST {
                         .setPropertyType(getSimpleName(o.getDst())));
                   break;
                }
-
-               case REF:
-               case LIST: {
-                  Entity dst = asEntity(o.getDst());
-                  if (dst == null && o.getSelf(false)) dst = key;
-
-                  IncomingReferenceStream incomingReferenceStream = JavaNeo4JEmbeddedST.newIncomingReferenceStream()
-                        .setName(o.getName())
-                        .setType(key.getName());
-
-                  Optional<Object> found = visited.get(dst)
-                        .getAccessors()
-                        .stream()
-                        .filter(accessor -> accessor.toString().equals(incomingReferenceStream.toString()))
-                        .findAny();
-                  if (!found.isPresent())
-                     visited.get(dst).addAccessors(incomingReferenceStream);
-
-                  break;
-               }
             }
          });
 
@@ -557,18 +654,19 @@ public class DomainPatterns extends DomainST {
       STGenerator.writeJavaFile(factory, packageDeclaration.getName(), factory.getName().toString(), root);
    }
 
-   private static void generateNeoWrapper(File root, PackageDeclaration packageDeclaration, Entity entity, final Map<Entity, NodeWrapper> visited) {
+   private static NodeWrapper generateNeoWrapper(File root, PackageDeclaration packageDeclaration, Entity entity, final Map<Entity, NodeWrapper> visited, boolean useUuid) {
 
       if (entity == null || visited.containsKey(entity)) {
          visited.get(entity);
-         return;
+         return visited.get(entity);
       }
 
       final String entityName = entity.getName();
 
       final NodeWrapper entityClass = JavaNeo4JEmbeddedST.newNodeWrapper()
             .setPackage(packageDeclaration.getName())
-            .setName(entityName);
+            .setName(entityName)
+            .setUseUuid(useUuid);
 
       visited.put(entity, entityClass);
 
@@ -640,11 +738,16 @@ public class DomainPatterns extends DomainST {
             case REF: {
                Entity dst = asEntity(o.getDst());
                if (dst == null && o.getSelf(false)) dst = entity;
+
                entityClass.addAccessors(JavaNeo4JEmbeddedST.newReferenceAccessors()
                      .setClassName(entityName)
                      .setType(dst.getName())
                      .setName(o.getName()));
-               generateNeoWrapper(root, packageDeclaration, dst, visited);
+
+               final NodeWrapper nodeWrapper = generateNeoWrapper(root, packageDeclaration, dst, visited, useUuid);
+               nodeWrapper.addAccessors(JavaNeo4JEmbeddedST.newIncomingReferenceStream()
+                     .setName(o.getName())
+                     .setType(o.getSelf(false) ? entityName : entityClass.getName()));
 
                nodeToJsonObject.addRefs(dst.getName(), o.getName());
                break;
@@ -652,14 +755,16 @@ public class DomainPatterns extends DomainST {
             case LIST: {
                Entity dst = asEntity(o.getDst());
                if (dst == null && o.getSelf(false)) dst = entity;
+
                entityClass.addAccessors(JavaNeo4JEmbeddedST.newListReferenceAccessors()
                      .setClassName(entityName)
                      .setType(o.getSelf(false) ? entityName : dst.getName())
                      .setName(o.getName()));
-               entityClass.addAccessors(JavaNeo4JEmbeddedST.newIncomingReferenceStream()
+
+               final NodeWrapper nodeWrapper = generateNeoWrapper(root, packageDeclaration, dst, visited, useUuid);
+               nodeWrapper.addAccessors(JavaNeo4JEmbeddedST.newIncomingReferenceStream()
                      .setName(o.getName())
-                     .setType(o.getSelf(false) ? entityName : dst.getName()));
-               generateNeoWrapper(root, packageDeclaration, dst, visited);
+                     .setType(o.getSelf(false) ? entityName : entityClass.getName()));
 
                nodeToJsonObject.addRefList(o.getName());
                break;
@@ -670,8 +775,8 @@ public class DomainPatterns extends DomainST {
       entityClass.addMethods(nodeToJsonObject);
       entityClass.addMethods(deleteNode);
 
-      STGenerator.writeJavaFile(entityClass, packageDeclaration.getName(), entityClass.getName().toString(), root);
-
+      //STGenerator.writeJavaFile(entityClass, packageDeclaration.getName(), entityClass.getName().toString(), root);
+      return entityClass;
    }
 
    // DOMAIN TO Vertx JsonObject wrappers:
@@ -709,7 +814,6 @@ public class DomainPatterns extends DomainST {
    private static void generateJsonWrapper(File root, PackageDeclaration packageDeclaration, Entity entity, final Map<Entity, JsonWrapper> visited) {
 
       if (entity == null || visited.containsKey(entity)) {
-         visited.get(entity);
          return;
       }
 
@@ -753,7 +857,6 @@ public class DomainPatterns extends DomainST {
                break;
             }
             case EXT_LIST: {
-
 
 
                break;
@@ -806,6 +909,4 @@ public class DomainPatterns extends DomainST {
    private static Entity asEntity(Object type) {
       return (Entity) type;
    }
-
-
 }

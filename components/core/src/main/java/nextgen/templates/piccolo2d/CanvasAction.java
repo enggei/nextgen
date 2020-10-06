@@ -15,11 +15,6 @@ public class CanvasAction {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -151,6 +146,21 @@ public class CanvasAction {
 		return this._fields.stream().map(CanvasAction_Fields::new);
 	}
 
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(CanvasAction_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Name() {
+		return streamFields().map(CanvasAction_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Value() {
+		return streamFields().map(CanvasAction_Fields::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class CanvasAction_Fields {
 
 		Object _type;
@@ -181,7 +191,7 @@ public class CanvasAction {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

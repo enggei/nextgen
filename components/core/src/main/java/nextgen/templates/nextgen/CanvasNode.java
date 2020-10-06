@@ -328,6 +328,16 @@ public class CanvasNode {
 		return this._fields.stream().map(CanvasNode_Fields::new);
 	}
 
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(CanvasNode_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Name() {
+		return streamFields().map(CanvasNode_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class CanvasNode_Fields {
 
 		Object _type;
@@ -351,7 +361,7 @@ public class CanvasNode {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	public CanvasNode addRightClickActions(Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -372,6 +382,11 @@ public class CanvasNode {
 		return this._rightClickActions.stream().map(CanvasNode_RightClickActions::new);
 	}
 
+	public java.util.List<Object> getRightClickActions_Name() {
+		return streamRightClickActions().map(CanvasNode_RightClickActions::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class CanvasNode_RightClickActions {
 
 		Object _name;
@@ -388,7 +403,7 @@ public class CanvasNode {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	public CanvasNode addKeyPressActions(Object _key, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -409,6 +424,16 @@ public class CanvasNode {
 	public java.util.stream.Stream<CanvasNode_KeyPressActions> streamKeyPressActions() {
 		return this._keyPressActions.stream().map(CanvasNode_KeyPressActions::new);
 	}
+
+	public java.util.List<Object> getKeyPressActions_Key() {
+		return streamKeyPressActions().map(CanvasNode_KeyPressActions::getKey).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getKeyPressActions_Name() {
+		return streamKeyPressActions().map(CanvasNode_KeyPressActions::getName).collect(java.util.stream.Collectors.toList());
+	}
+
 
 	public static final class CanvasNode_KeyPressActions {
 
@@ -433,7 +458,7 @@ public class CanvasNode {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -512,8 +537,8 @@ public class CanvasNode {
 				"	addNode(~if(uuidExpression)~~uuidExpression~~else~uuid~endif~, new~name~(model~if(uuidExpression)~~else~, uuid~endif~~if(labelExpression)~~else~, label~endif~~if(fields)~, ~fields:{it|~it.name~};separator=\", \"~~endif~));\n" + 
 				"}\n" + 
 				"\n" + 
-				"public java.util.function.Supplier<STModelCanvas.~name~> new~name~(~modelType~ model~if(uuidExpression)~~else~, String uuid~endif~~if(labelExpression)~~else~, String label~endif~~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n" + 
-				"	return () -> new STModelCanvas.~name~(model~if(uuidExpression)~~else~, String uuid~endif~~if(labelExpression)~~else~, String label~endif~~if(fields)~, ~fields:{it|~it.name~};separator=\", \"~~endif~);\n" + 
+				"public java.util.function.Supplier<~name~> new~name~(~modelType~ model~if(uuidExpression)~~else~, String uuid~endif~~if(labelExpression)~~else~, String label~endif~~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n" + 
+				"	return () -> new ~name~(model~if(uuidExpression)~~else~, uuid~endif~~if(labelExpression)~~else~, label~endif~~if(fields)~, ~fields:{it|~it.name~};separator=\", \"~~endif~);\n" + 
 				"}\n" + 
 				"\n" + 
 				"public Stream<~name~> getAll~name;format=\"capitalize\"~() {\n" + 

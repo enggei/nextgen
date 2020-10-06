@@ -1,6 +1,5 @@
 package nextgen.st;
 
-import nextgen.utils.SwingUtil;
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.PLayer;
@@ -16,15 +15,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static java.awt.event.KeyEvent.*;
+
+import nextgen.utils.SwingUtil;
 
 public class STModelCanvas extends PCanvas implements PInputEventListener {
 
@@ -41,6 +46,10 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 	final CanvasZoomHandler canvasZoomHandler = new CanvasZoomHandler();
 
 	private nextgen.st.STAppPresentationModel presentationModel;
+
+	public STModelCanvas(nextgen.st.STAppPresentationModel presentationModel) {
+		this(UIManager.getColor("Panel.background"), new Dimension(1024, 1024), presentationModel);
+	}
 
 	public STModelCanvas(Color background, Dimension preferredSize, nextgen.st.STAppPresentationModel presentationModel) {
 		super();
@@ -852,7 +861,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 						}
 					};
 
-					final nextgen.st.canvas.layout.CircleLayout<BaseCanvasNode<?>> layout = new nextgen.st.canvas.layout.CircleLayout<>(tree, nodeExtendProvider);
+					final CircleLayout<BaseCanvasNode<?>> layout = new CircleLayout<>(tree, nodeExtendProvider);
 
 					// apply coordinate transforms in relation to root-node
 					final java.awt.geom.Rectangle2D.Double rootBounds = layout.getNodeBounds().get(BaseCanvasNode.this);
@@ -887,6 +896,59 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 					});
 
 				childrensMap.get(node.getUuid()).forEach(this::findChildren);
+			}
+
+			private class CircleLayout<T> {
+
+			   private final Map<T, java.awt.geom.Rectangle2D.Double> nodeBounds = new LinkedHashMap<>();
+
+			   public CircleLayout(org.abego.treelayout.TreeForTreeLayout<T> tree, org.abego.treelayout.NodeExtentProvider<T> nodeExtendProvider) {
+
+			      final int centerX = 0;
+			      final int centerY = 0;
+			      final int radiusPerLevel = 1200;
+
+			      final T root = tree.getRoot();
+			      nodeBounds.put(root, new Rectangle2D.Double(centerX, centerY, nodeExtendProvider.getWidth(root), nodeExtendProvider.getHeight(root)));
+
+			      layout(root, centerX, centerY, radiusPerLevel, 2 * Math.PI, 2 * Math.PI, 1, tree, nodeExtendProvider);
+			   }
+
+			   private void layout(T node, int centerX, int centerY, int radius, double startAngle, double arcLength, int level, org.abego.treelayout.TreeForTreeLayout<T> tree, org.abego.treelayout.NodeExtentProvider<T> nodeExtendProvider) {
+
+			      int totalChildren = 0;
+			      for (int i = 0; i < children(node, tree).size(); i++)
+			         totalChildren += children(children(node, tree).get(i), tree).size() + 1;
+
+			      double currentArc = startAngle;
+			      for (int i = 0; i < children(node, tree).size(); i++) {
+			         final T child = children(node, tree).get(i);
+			         final double childProportion = (double) (children(child,tree).size() + 1) / (double) totalChildren;
+			         double childRadians = (arcLength * childProportion);
+			         final double sin = Math.sin(currentArc + (childRadians / 2));
+			         final double cos = Math.cos(currentArc + (childRadians / 2));
+
+			         double x = centerX + (int) (radius * sin);
+			         double y = centerY + (int) (radius * cos);
+
+			         nodeBounds.put(child, new Rectangle2D.Double(x, y, nodeExtendProvider.getWidth(child), nodeExtendProvider
+			               .getHeight(child)));
+
+			         layout(child, centerX, centerY, radius + (radius / level), currentArc, childRadians, level + 1, tree, nodeExtendProvider);
+
+			         currentArc += childRadians;
+			      }
+			   }
+
+			   private List<T> children(T node, org.abego.treelayout.TreeForTreeLayout<T> tree) {
+			      return StreamSupport
+			            .stream(tree.getChildren(node).spliterator(), false)
+			            .collect(Collectors.toList());
+			   }
+
+			   public Map<T, java.awt.geom.Rectangle2D.Double> getNodeBounds() {
+			      return nodeBounds;
+			   }
 			}
 		}
 
@@ -1376,30 +1438,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		}
 	}
 
-	final class UnselectAllNodes extends CanvasAction {
-
-		UnselectAllNodes(PInputEvent event) {
-			super("Unselect all nodes", event);
-		}
-
-		@Override
-		void actionPerformed(PInputEvent event, ActionEvent e) {
-			javax.swing.SwingUtilities.invokeLater(() -> getSelectedNodes().forEach(BaseCanvasNode::unselect));
-		}
-	}
-
-	final class CloseSelectedNodes extends CanvasAction {
-
-		CloseSelectedNodes(PInputEvent event) {
-			super("Close selected nodes", event);
-		}
-
-		@Override
-		void actionPerformed(PInputEvent event, ActionEvent e) {
-			javax.swing.SwingUtilities.invokeLater(() -> getSelectedNodes().forEach(BaseCanvasNode::close));
-		}
-	}
-
 	final class LoadLastLayoutAction extends CanvasAction {
 
 		LoadLastLayoutAction(PInputEvent event) {
@@ -1484,6 +1522,23 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			});
 		}
 	}
+	final class PopupAction extends CanvasAction {
+
+		PopupAction(PInputEvent event) {
+			super("Popup", event);
+		}
+
+		@Override
+		void actionPerformed(PInputEvent event, ActionEvent e) {
+			javax.swing.SwingUtilities.invokeLater(() -> { 
+				final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();
+				setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));
+				onCanvasRightClick(pop, event);
+				setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));
+				pop.show(thisCanvas(), (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
+			});
+		}
+	}
 
 	final class SelectAllNodes extends CanvasAction {
 
@@ -1506,6 +1561,48 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		@Override
 		void actionPerformed(PInputEvent event, ActionEvent e) {
 			javax.swing.SwingUtilities.invokeLater(() -> getUnselectedNodes().forEach(BaseCanvasNode::close));
+		}
+	}
+
+	final class UnselectAllNodes extends CanvasAction {
+
+		UnselectAllNodes(PInputEvent event) {
+			super("Unselect all nodes", event);
+		}
+
+		@Override
+		void actionPerformed(PInputEvent event, ActionEvent e) {
+			javax.swing.SwingUtilities.invokeLater(() -> getSelectedNodes().forEach(BaseCanvasNode::unselect));
+		}
+	}
+
+	final class CloseSelectedNodes extends CanvasAction {
+
+		CloseSelectedNodes(PInputEvent event) {
+			super("Close selected nodes", event);
+		}
+
+		@Override
+		void actionPerformed(PInputEvent event, ActionEvent e) {
+			javax.swing.SwingUtilities.invokeLater(() -> getSelectedNodes().forEach(BaseCanvasNode::close));
+		}
+	}
+
+	final class CloseAllAction extends CanvasAction {
+
+		CloseAllAction(PInputEvent event) {
+			super("Close all", event);
+		}
+
+		@Override
+		void actionPerformed(PInputEvent event, ActionEvent e) {
+			getAllRelations().forEach(relation -> removeRelation(relation.getUuid()));
+			getAllNodes().forEach(node -> removeNode(node.getUuid()));
+			relationLayer.removeAllChildren();
+			SwingUtilities.invokeLater(() -> {
+				invalidate();
+				repaint();
+			});
 		}
 	}
 
@@ -1540,42 +1637,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 					}
 				}
 			}));
-		}
-	}
-
-	final class PopupAction extends CanvasAction {
-
-		PopupAction(PInputEvent event) {
-			super("Popup", event);
-		}
-
-		@Override
-		void actionPerformed(PInputEvent event, ActionEvent e) {
-			javax.swing.SwingUtilities.invokeLater(() -> { 
-				final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();
-				setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));
-				onCanvasRightClick(pop, event);
-				setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));
-				pop.show(thisCanvas(), (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
-			});
-		}
-	}
-
-	final class CloseAllAction extends CanvasAction {
-
-		CloseAllAction(PInputEvent event) {
-			super("Close all", event);
-		}
-
-		@Override
-		void actionPerformed(PInputEvent event, ActionEvent e) {
-			getAllRelations().forEach(relation -> removeRelation(relation.getUuid()));
-			getAllNodes().forEach(node -> removeNode(node.getUuid()));
-			relationLayer.removeAllChildren();
-			SwingUtilities.invokeLater(() -> {
-				invalidate();
-				repaint();
-			});
 		}
 	}
 
@@ -1719,8 +1780,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		addNode(model.getUuid(), newMetaEntityNode(model));
 	}
 
-	public java.util.function.Supplier<STModelCanvas.MetaEntityNode> newMetaEntityNode(nextgen.domains.meta.MetaEntity model) {
-		return () -> new STModelCanvas.MetaEntityNode(model);
+	public java.util.function.Supplier<MetaEntityNode> newMetaEntityNode(nextgen.domains.meta.MetaEntity model) {
+		return () -> new MetaEntityNode(model);
 	}
 
 	public Stream<MetaEntityNode> getAllMetaEntityNode() {
@@ -1899,8 +1960,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		addNode(model.getUuid(), newMetaRelationNode(model));
 	}
 
-	public java.util.function.Supplier<STModelCanvas.MetaRelationNode> newMetaRelationNode(nextgen.domains.meta.MetaRelation model) {
-		return () -> new STModelCanvas.MetaRelationNode(model);
+	public java.util.function.Supplier<MetaRelationNode> newMetaRelationNode(nextgen.domains.meta.MetaRelation model) {
+		return () -> new MetaRelationNode(model);
 	}
 
 	public Stream<MetaRelationNode> getAllMetaRelationNode() {
@@ -1987,8 +2048,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		addNode(model.getUuid(), newMetaPropertyNode(model));
 	}
 
-	public java.util.function.Supplier<STModelCanvas.MetaPropertyNode> newMetaPropertyNode(nextgen.domains.meta.MetaProperty model) {
-		return () -> new STModelCanvas.MetaPropertyNode(model);
+	public java.util.function.Supplier<MetaPropertyNode> newMetaPropertyNode(nextgen.domains.meta.MetaProperty model) {
+		return () -> new MetaPropertyNode(model);
 	}
 
 	public Stream<MetaPropertyNode> getAllMetaPropertyNode() {
@@ -2107,8 +2168,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		addNode(model.getUuid(), newMetaDomainNode(model));
 	}
 
-	public java.util.function.Supplier<STModelCanvas.MetaDomainNode> newMetaDomainNode(nextgen.domains.meta.MetaDomain model) {
-		return () -> new STModelCanvas.MetaDomainNode(model);
+	public java.util.function.Supplier<MetaDomainNode> newMetaDomainNode(nextgen.domains.meta.MetaDomain model) {
+		return () -> new MetaDomainNode(model);
 	}
 
 	public Stream<MetaDomainNode> getAllMetaDomainNode() {
@@ -2260,8 +2321,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		addNode(model.getUuid(), newDomainEntityNode(model));
 	}
 
-	public java.util.function.Supplier<STModelCanvas.DomainEntityNode> newDomainEntityNode(nextgen.domains.meta.DomainEntity model) {
-		return () -> new STModelCanvas.DomainEntityNode(model);
+	public java.util.function.Supplier<DomainEntityNode> newDomainEntityNode(nextgen.domains.meta.DomainEntity model) {
+		return () -> new DomainEntityNode(model);
 	}
 
 	public Stream<DomainEntityNode> getAllDomainEntityNode() {
@@ -2326,8 +2387,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		addNode(model.getUuid(), newDomainVisitorNode(model));
 	}
 
-	public java.util.function.Supplier<STModelCanvas.DomainVisitorNode> newDomainVisitorNode(nextgen.domains.meta.DomainVisitor model) {
-		return () -> new STModelCanvas.DomainVisitorNode(model);
+	public java.util.function.Supplier<DomainVisitorNode> newDomainVisitorNode(nextgen.domains.meta.DomainVisitor model) {
+		return () -> new DomainVisitorNode(model);
 	}
 
 	public Stream<DomainVisitorNode> getAllDomainVisitorNode() {
@@ -2365,8 +2426,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		addNode(model.getUuid(), newProjectNode(model));
 	}
 
-	public java.util.function.Supplier<STModelCanvas.ProjectNode> newProjectNode(nextgen.st.model.Project model) {
-		return () -> new STModelCanvas.ProjectNode(model);
+	public java.util.function.Supplier<ProjectNode> newProjectNode(nextgen.st.model.Project model) {
+		return () -> new ProjectNode(model);
 	}
 
 	public Stream<ProjectNode> getAllProjectNode() {
@@ -2577,8 +2638,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		addNode(model.getUuid(), newScriptNode(model));
 	}
 
-	public java.util.function.Supplier<STModelCanvas.ScriptNode> newScriptNode(nextgen.st.model.Script model) {
-		return () -> new STModelCanvas.ScriptNode(model);
+	public java.util.function.Supplier<ScriptNode> newScriptNode(nextgen.st.model.Script model) {
+		return () -> new ScriptNode(model);
 	}
 
 	public Stream<ScriptNode> getAllScriptNode() {
@@ -2838,8 +2899,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		addNode(model.getUuid(), newSTFileNode(model, stModel));
 	}
 
-	public java.util.function.Supplier<STModelCanvas.STFileNode> newSTFileNode(nextgen.st.model.STFile model, nextgen.st.model.STModel stModel) {
-		return () -> new STModelCanvas.STFileNode(model, stModel);
+	public java.util.function.Supplier<STFileNode> newSTFileNode(nextgen.st.model.STFile model, nextgen.st.model.STModel stModel) {
+		return () -> new STFileNode(model, stModel);
 	}
 
 	public Stream<STFileNode> getAllSTFileNode() {
@@ -3121,8 +3182,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		addNode(model.getUuid(), newSTKVNode(model, stParameter));
 	}
 
-	public java.util.function.Supplier<STModelCanvas.STKVNode> newSTKVNode(nextgen.st.model.STArgument model, nextgen.st.domain.STParameter stParameter) {
-		return () -> new STModelCanvas.STKVNode(model, stParameter);
+	public java.util.function.Supplier<STKVNode> newSTKVNode(nextgen.st.model.STArgument model, nextgen.st.domain.STParameter stParameter) {
+		return () -> new STKVNode(model, stParameter);
 	}
 
 	public Stream<STKVNode> getAllSTKVNode() {
@@ -3946,8 +4007,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		addNode(model.getUuid(), newSTModelNode(model, stTemplate));
 	}
 
-	public java.util.function.Supplier<STModelCanvas.STModelNode> newSTModelNode(nextgen.st.model.STModel model, nextgen.st.domain.STTemplate stTemplate) {
-		return () -> new STModelCanvas.STModelNode(model, stTemplate);
+	public java.util.function.Supplier<STModelNode> newSTModelNode(nextgen.st.model.STModel model, nextgen.st.domain.STTemplate stTemplate) {
+		return () -> new STModelNode(model, stTemplate);
 	}
 
 	public Stream<STModelNode> getAllSTModelNode() {
@@ -4101,8 +4162,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		addNode(model.getUuid(), newSTValueNode(model));
 	}
 
-	public java.util.function.Supplier<STModelCanvas.STValueNode> newSTValueNode(nextgen.st.model.STValue model) {
-		return () -> new STModelCanvas.STValueNode(model);
+	public java.util.function.Supplier<STValueNode> newSTValueNode(nextgen.st.model.STValue model) {
+		return () -> new STValueNode(model);
 	}
 
 	public Stream<STValueNode> getAllSTValueNode() {

@@ -15,7 +15,7 @@
       "uuid" : "b8517fb6-3686-419f-82fc-8018b50ebe82",
       "name" : "name",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "String"
     }, {
       "uuid" : "9b10a522-a2a4-43ec-a050-de747c20840c",
       "name" : "fields",
@@ -79,12 +79,17 @@
   }, {
     "uuid" : "1342b32f-faf1-4ae7-8163-93e52f758c16",
     "name" : "EventManager",
-    "text" : "package ~package~;\n\npublic class ~name~ {\n\n\tprivate final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n\n\t~events:{it|~it.postMethod~};separator=\"\\n\\n\"~\n\n\t~events:{it|~it.declaration~};separator=\"\\n\\n\"~\n} ",
+    "text" : "package ~package~;\n\n~imports:{it|~it~};separator=\"\\n\"~\n\npublic class ~name~ {\n\n\tprivate final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n\n\t~events:{it|~it.postMethod~};separator=\"\\n\\n\"~\n\n\t~events:{it|~it.declaration~};separator=\"\\n\\n\"~\n} ",
     "parameters" : [ {
       "uuid" : "2f81fb0d-aeb9-4709-9871-6a3133f24d9f",
       "name" : "package",
       "type" : "SINGLE",
       "argumentType" : "String"
+    }, {
+      "uuid" : "34c47341-ed46-4275-b01c-f638bb21fa50",
+      "name" : "imports",
+      "type" : "LIST",
+      "argumentType" : "Object"
     }, {
       "uuid" : "d936f2cb-68cd-4754-abe6-b0ebd80f3651",
       "name" : "name",
@@ -113,7 +118,7 @@
         "uuid" : "440c8335-a7f1-496f-9d97-0bc9af62d240",
         "name" : "eventName",
         "type" : "SINGLE",
-        "argumentType" : "Object"
+        "argumentType" : "String"
       }, {
         "uuid" : "c70b9c11-f5bc-443e-ac8e-ab3cd3d9eb57",
         "name" : "parameters",
@@ -126,8 +131,28 @@
         }, {
           "uuid" : "4b71de14-ca98-4353-b181-f2c131252935",
           "name" : "name",
-          "argumentType" : "Object"
+          "argumentType" : "String"
         } ]
+      } ]
+    }, {
+      "uuid" : "a263c15f-fb87-46f8-9426-6c914e4b23d0",
+      "name" : "CallPostEventMethod",
+      "text" : "~eventManager~.post~event~(~arguments:{it|~it~};separator=\", \"~); ",
+      "parameters" : [ {
+        "uuid" : "51b0010a-599a-454b-95ca-5bbe14876fc7",
+        "name" : "eventManager",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "b172b4e1-5eda-43cb-9b48-3a84268512cc",
+        "name" : "event",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "8970d2e4-1d0b-4532-8f7a-1d15756bf6d5",
+        "name" : "arguments",
+        "type" : "LIST",
+        "argumentType" : "Object"
       } ]
     } ]
   } ]

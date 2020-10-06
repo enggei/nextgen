@@ -7,13 +7,14 @@ public class EventManager {
 
 	private String _package;
 	private String _name;
+	private java.util.List<Object> _imports = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _events = new java.util.ArrayList<>();
 
 	EventManager(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
-	public java.util.UUID uuid() {
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -22,6 +23,7 @@ public class EventManager {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("EventManager");
 		st.add("package", _package);
 		st.add("name", _name);
+		for (Object o : _imports) st.add("imports", o);
 		for (java.util.Map<String, Object> map : _events) st.addAggr("events.{declaration,postMethod}", map.get("declaration"), map.get("postMethod"));
 		return st.render().trim();
 	}
@@ -70,6 +72,34 @@ public class EventManager {
 		return this;
 	} 
 
+	public EventManager addImports(Object value) {
+		this._imports.add(value);
+		return this;
+	}
+
+	public EventManager setImports(Object[] value) {
+		this._imports.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public EventManager setImports(java.util.Collection<Object> values) {
+		this._imports.addAll(values);
+		return this;
+	}
+
+	public EventManager removeImports(Object value) {
+		this._imports.remove(value);
+		return this;
+	}
+
+	public EventManager removeImports(int index) {
+		this._imports.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getImports() {
+		return this._imports;
+	} 
 
 	public EventManager addEvents(Event _declaration, PostEventMethod _postMethod) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -90,6 +120,16 @@ public class EventManager {
 	public java.util.stream.Stream<EventManager_Events> streamEvents() {
 		return this._events.stream().map(EventManager_Events::new);
 	}
+
+	public java.util.List<Event> getEvents_Declaration() {
+		return streamEvents().map(EventManager_Events::getDeclaration).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<PostEventMethod> getEvents_PostMethod() {
+		return streamEvents().map(EventManager_Events::getPostMethod).collect(java.util.stream.Collectors.toList());
+	}
+
 
 	public static final class EventManager_Events {
 
@@ -114,7 +154,7 @@ public class EventManager {
 			return this._postMethod;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -129,7 +169,9 @@ public class EventManager {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "EventManager(package,name,events) ::= <<package ~package~;\n" + 
+	static final String st = "EventManager(package,imports,name,events) ::= <<package ~package~;\n" + 
+				"\n" + 
+				"~imports:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"public class ~name~ {\n" + 
 				"\n" + 

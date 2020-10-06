@@ -11,10 +11,11 @@ public class Project {
 	private java.util.List<Object> _templates = new java.util.ArrayList<>();
 	private java.util.List<Object> _imports = new java.util.ArrayList<>();
 	private java.util.List<Object> _packageDeclarations = new java.util.ArrayList<>();
+	private java.util.List<Object> _entities = new java.util.ArrayList<>();
 	private java.util.List<Object> _generators = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
-	private java.util.List<java.util.Map<String, Object>> _files = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _files = new java.util.ArrayList<>();
 
 	Project(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -33,10 +34,11 @@ public class Project {
 		for (Object o : _templates) st.add("templates", o);
 		for (Object o : _imports) st.add("imports", o);
 		for (Object o : _packageDeclarations) st.add("packageDeclarations", o);
+		for (Object o : _entities) st.add("entities", o);
 		for (Object o : _generators) st.add("generators", o);
 		for (Object o : _methods) st.add("methods", o);
-		for (java.util.Map<String, Object> map : _files) st.addAggr("files.{name,parent,path}", map.get("name"), map.get("parent"), map.get("path"));
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name,init}", map.get("type"), map.get("name"), map.get("init"));
+		for (java.util.Map<String, Object> map : _files) st.addAggr("files.{name,parent,path}", map.get("name"), map.get("parent"), map.get("path"));
 		return st.render().trim();
 	}
 
@@ -193,6 +195,35 @@ public class Project {
 		return this._packageDeclarations;
 	} 
 
+	public Project addEntities(Object value) {
+		this._entities.add(value);
+		return this;
+	}
+
+	public Project setEntities(Object[] value) {
+		this._entities.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Project setEntities(java.util.Collection<Object> values) {
+		this._entities.addAll(values);
+		return this;
+	}
+
+	public Project removeEntities(Object value) {
+		this._entities.remove(value);
+		return this;
+	}
+
+	public Project removeEntities(int index) {
+		this._entities.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getEntities() {
+		return this._entities;
+	} 
+
 	public Project addGenerators(Object value) {
 		this._generators.add(value);
 		return this;
@@ -251,59 +282,6 @@ public class Project {
 		return this._methods;
 	} 
 
-	public Project addFiles(Object _name, Object _parent, Object _path) {
-		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("name", _name);
-		map.put("parent", _parent);
-		map.put("path", _path);
-		this._files.add(map);
-		return this;
-	}
-
-	public java.util.List<java.util.Map<String, Object>> getFiles() {
-		return this._files;
-	}
-
-	public Project addFiles(Project_Files value) {
-		return addFiles(value._name, value._parent, value._path);
-	}
-
-	public java.util.stream.Stream<Project_Files> streamFiles() {
-		return this._files.stream().map(Project_Files::new);
-	}
-
-	public static final class Project_Files {
-
-		Object _name;
-		Object _parent;
-		Object _path;
-
-		public Project_Files(Object _name, Object _parent, Object _path) {
-			this._name = _name;
-			this._parent = _parent;
-			this._path = _path;
-		}
-
-		private Project_Files(java.util.Map<String, Object> map) {
-			this._name = (Object) map.get("name");
-			this._parent = (Object) map.get("parent");
-			this._path = (Object) map.get("path");
-		}
-
-		public Object getName() {
-			return this._name;
-		}
-
-		public Object getParent() {
-			return this._parent;
-		}
-
-		public Object getPath() {
-			return this._path;
-		}
-
-	} 
-
 	public Project addFields(Object _type, Object _name, Object _init) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("type", _type);
@@ -324,6 +302,21 @@ public class Project {
 	public java.util.stream.Stream<Project_Fields> streamFields() {
 		return this._fields.stream().map(Project_Fields::new);
 	}
+
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(Project_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Name() {
+		return streamFields().map(Project_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Init() {
+		return streamFields().map(Project_Fields::getInit).collect(java.util.stream.Collectors.toList());
+	}
+
 
 	public static final class Project_Fields {
 
@@ -355,7 +348,75 @@ public class Project {
 			return this._init;
 		}
 
-	} 
+	}  
+
+	public Project addFiles(Object _name, Object _parent, Object _path) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("parent", _parent);
+		map.put("path", _path);
+		this._files.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getFiles() {
+		return this._files;
+	}
+
+	public Project addFiles(Project_Files value) {
+		return addFiles(value._name, value._parent, value._path);
+	}
+
+	public java.util.stream.Stream<Project_Files> streamFiles() {
+		return this._files.stream().map(Project_Files::new);
+	}
+
+	public java.util.List<Object> getFiles_Name() {
+		return streamFiles().map(Project_Files::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFiles_Parent() {
+		return streamFiles().map(Project_Files::getParent).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFiles_Path() {
+		return streamFiles().map(Project_Files::getPath).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public static final class Project_Files {
+
+		Object _name;
+		Object _parent;
+		Object _path;
+
+		public Project_Files(Object _name, Object _parent, Object _path) {
+			this._name = _name;
+			this._parent = _parent;
+			this._path = _path;
+		}
+
+		private Project_Files(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._parent = (Object) map.get("parent");
+			this._path = (Object) map.get("path");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getParent() {
+			return this._parent;
+		}
+
+		public Object getPath() {
+			return this._path;
+		}
+
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -370,7 +431,7 @@ public class Project {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Project(packageName,templates,imports,name,root,files,packageDeclarations,fields,generators,methods) ::= <<package ~packageName~;\n" + 
+	static final String st = "Project(packageName,templates,imports,name,root,fields,files,packageDeclarations,entities,generators,methods) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import nextgen.st.STGenerator;\n" + 
 				"import static nextgen.utils.StringUtil.*;\n" + 
@@ -392,33 +453,16 @@ public class Project {
 				"	final File testJava = new File(root, \"src/test/java\");\n" + 
 				"	final File testResources = new File(root, \"src/test/resources\");\n" + 
 				"	\n" + 
+				"	~fields:{it|~if(it.init)~final ~endif~~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
+				"\n" + 
 				"	~files:{it|final File ~it.name~ = new File(~if(it.parent)~~it.parent~, ~endif~\"~it.path~\");};separator=\"\\n\"~\n" + 
 				"	\n" + 
 				"	~packageDeclarations:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
-				"	~fields:{it|~if(it.init)~final ~endif~~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
+				"	~entities:{it|~it~};separator=\"\\n\"~\n" + 
 				"	\n" + 
 				"	~generators:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
 				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
-				"\n" + 
-				"	protected static void log(Object log) {\n" + 
-				"		System.out.println(log);\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	class JavaType {\n" + 
-				"\n" + 
-				"		final nextgen.templates.java.ClassOrInterfaceType type;\n" + 
-				"\n" + 
-				"		JavaType(String packageDeclaration, String name) {\n" + 
-				"			this.type = nextgen.templates.java.JavaST.newClassOrInterfaceType()\n" + 
-				"					.setScope(packageDeclaration)\n" + 
-				"					.addNames(name);\n" + 
-				"		}\n" + 
-				"\n" + 
-				"		JavaType(nextgen.templates.java.PackageDeclaration packageDeclaration, String name) {\n" + 
-				"			this(packageDeclaration.getName(), name);\n" + 
-				"		}\n" + 
-				"	}\n" + 
 				"} >>";
 }  

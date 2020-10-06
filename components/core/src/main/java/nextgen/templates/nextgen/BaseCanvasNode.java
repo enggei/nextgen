@@ -437,7 +437,7 @@ public class BaseCanvasNode {
 				"					}\n" + 
 				"				};\n" + 
 				"\n" + 
-				"				final nextgen.st.canvas.layout.CircleLayout<BaseCanvasNode<?>~gt()~ layout = new nextgen.st.canvas.layout.CircleLayout<>(tree, nodeExtendProvider);\n" + 
+				"				final CircleLayout<BaseCanvasNode<?>~gt()~ layout = new CircleLayout<>(tree, nodeExtendProvider);\n" + 
 				"\n" + 
 				"				// apply coordinate transforms in relation to root-node\n" + 
 				"				final java.awt.geom.Rectangle2D.Double rootBounds = layout.getNodeBounds().get(BaseCanvasNode.this);\n" + 
@@ -472,6 +472,59 @@ public class BaseCanvasNode {
 				"				});\n" + 
 				"\n" + 
 				"			childrensMap.get(node.getUuid()).forEach(this::findChildren);\n" + 
+				"		}\n" + 
+				"\n" + 
+				"		private class CircleLayout<T> {\n" + 
+				"\n" + 
+				"		   private final Map<T, java.awt.geom.Rectangle2D.Double> nodeBounds = new LinkedHashMap<>();\n" + 
+				"\n" + 
+				"		   public CircleLayout(org.abego.treelayout.TreeForTreeLayout<T> tree, org.abego.treelayout.NodeExtentProvider<T> nodeExtendProvider) {\n" + 
+				"\n" + 
+				"		      final int centerX = 0;\n" + 
+				"		      final int centerY = 0;\n" + 
+				"		      final int radiusPerLevel = 1200;\n" + 
+				"\n" + 
+				"		      final T root = tree.getRoot();\n" + 
+				"		      nodeBounds.put(root, new Rectangle2D.Double(centerX, centerY, nodeExtendProvider.getWidth(root), nodeExtendProvider.getHeight(root)));\n" + 
+				"\n" + 
+				"		      layout(root, centerX, centerY, radiusPerLevel, 2 * Math.PI, 2 * Math.PI, 1, tree, nodeExtendProvider);\n" + 
+				"		   }\n" + 
+				"\n" + 
+				"		   private void layout(T node, int centerX, int centerY, int radius, double startAngle, double arcLength, int level, org.abego.treelayout.TreeForTreeLayout<T> tree, org.abego.treelayout.NodeExtentProvider<T> nodeExtendProvider) {\n" + 
+				"\n" + 
+				"		      int totalChildren = 0;\n" + 
+				"		      for (int i = 0; i < children(node, tree).size(); i++)\n" + 
+				"		         totalChildren += children(children(node, tree).get(i), tree).size() + 1;\n" + 
+				"\n" + 
+				"		      double currentArc = startAngle;\n" + 
+				"		      for (int i = 0; i < children(node, tree).size(); i++) {\n" + 
+				"		         final T child = children(node, tree).get(i);\n" + 
+				"		         final double childProportion = (double) (children(child,tree).size() + 1) / (double) totalChildren;\n" + 
+				"		         double childRadians = (arcLength * childProportion);\n" + 
+				"		         final double sin = Math.sin(currentArc + (childRadians / 2));\n" + 
+				"		         final double cos = Math.cos(currentArc + (childRadians / 2));\n" + 
+				"\n" + 
+				"		         double x = centerX + (int) (radius * sin);\n" + 
+				"		         double y = centerY + (int) (radius * cos);\n" + 
+				"\n" + 
+				"		         nodeBounds.put(child, new Rectangle2D.Double(x, y, nodeExtendProvider.getWidth(child), nodeExtendProvider\n" + 
+				"		               .getHeight(child)));\n" + 
+				"\n" + 
+				"		         layout(child, centerX, centerY, radius + (radius / level), currentArc, childRadians, level + 1, tree, nodeExtendProvider);\n" + 
+				"\n" + 
+				"		         currentArc += childRadians;\n" + 
+				"		      }\n" + 
+				"		   }\n" + 
+				"\n" + 
+				"		   private List<T> children(T node, org.abego.treelayout.TreeForTreeLayout<T> tree) {\n" + 
+				"		      return StreamSupport\n" + 
+				"		            .stream(tree.getChildren(node).spliterator(), false)\n" + 
+				"		            .collect(Collectors.toList());\n" + 
+				"		   }\n" + 
+				"\n" + 
+				"		   public Map<T, java.awt.geom.Rectangle2D.Double> getNodeBounds() {\n" + 
+				"		      return nodeBounds;\n" + 
+				"		   }\n" + 
 				"		}\n" + 
 				"	}\n" + 
 				"\n" + 

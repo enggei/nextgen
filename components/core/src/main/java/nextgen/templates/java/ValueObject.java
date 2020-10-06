@@ -122,6 +122,21 @@ public class ValueObject {
 		return this._fields.stream().map(ValueObject_Fields::new);
 	}
 
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(ValueObject_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Name() {
+		return streamFields().map(ValueObject_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Initializer() {
+		return streamFields().map(ValueObject_Fields::getInitializer).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class ValueObject_Fields {
 
 		Object _type;
@@ -152,7 +167,7 @@ public class ValueObject {
 			return this._initializer;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

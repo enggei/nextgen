@@ -7,6 +7,7 @@ public class Canvas {
 
 	private Object _packageName;
 	private Object _name;
+	private java.util.List<Object> _imports = new java.util.ArrayList<>();
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<Object> _rightClickStatements = new java.util.ArrayList<>();
@@ -30,6 +31,7 @@ public class Canvas {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Canvas");
 		st.add("packageName", _packageName);
 		st.add("name", _name);
+		for (Object o : _imports) st.add("imports", o);
 		for (Object o : _constructorStatements) st.add("constructorStatements", o);
 		for (Object o : _methods) st.add("methods", o);
 		for (Object o : _rightClickStatements) st.add("rightClickStatements", o);
@@ -84,6 +86,35 @@ public class Canvas {
 	public Canvas removeName() {
 		this._name = null;
 		return this;
+	} 
+
+	public Canvas addImports(Object value) {
+		this._imports.add(value);
+		return this;
+	}
+
+	public Canvas setImports(Object[] value) {
+		this._imports.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Canvas setImports(java.util.Collection<Object> values) {
+		this._imports.addAll(values);
+		return this;
+	}
+
+	public Canvas removeImports(Object value) {
+		this._imports.remove(value);
+		return this;
+	}
+
+	public Canvas removeImports(int index) {
+		this._imports.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getImports() {
+		return this._imports;
 	} 
 
 	public Canvas addConstructorStatements(Object value) {
@@ -280,6 +311,16 @@ public class Canvas {
 		return this._fields.stream().map(Canvas_Fields::new);
 	}
 
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(Canvas_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Name() {
+		return streamFields().map(Canvas_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class Canvas_Fields {
 
 		Object _type;
@@ -303,7 +344,7 @@ public class Canvas {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	public Canvas addRightClickActions(Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -324,6 +365,11 @@ public class Canvas {
 		return this._rightClickActions.stream().map(Canvas_RightClickActions::new);
 	}
 
+	public java.util.List<Object> getRightClickActions_Name() {
+		return streamRightClickActions().map(Canvas_RightClickActions::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class Canvas_RightClickActions {
 
 		Object _name;
@@ -340,7 +386,7 @@ public class Canvas {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	public Canvas addKeyPressActions(Object _key, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -361,6 +407,16 @@ public class Canvas {
 	public java.util.stream.Stream<Canvas_KeyPressActions> streamKeyPressActions() {
 		return this._keyPressActions.stream().map(Canvas_KeyPressActions::new);
 	}
+
+	public java.util.List<Object> getKeyPressActions_Key() {
+		return streamKeyPressActions().map(Canvas_KeyPressActions::getKey).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getKeyPressActions_Name() {
+		return streamKeyPressActions().map(Canvas_KeyPressActions::getName).collect(java.util.stream.Collectors.toList());
+	}
+
 
 	public static final class Canvas_KeyPressActions {
 
@@ -385,7 +441,7 @@ public class Canvas {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -400,9 +456,8 @@ public class Canvas {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Canvas(packageName,name,fields,constructorStatements,methods,rightClickStatements,rightClickActions,keyPressActions,actions,canvasNodes,canvasRelations) ::= <<package ~packageName~;\n" + 
+	static final String st = "Canvas(packageName,imports,name,fields,constructorStatements,methods,rightClickStatements,rightClickActions,keyPressActions,actions,canvasNodes,canvasRelations) ::= <<package ~packageName~;\n" + 
 				"\n" + 
-				"import nextgen.utils.SwingUtil;\n" + 
 				"import org.piccolo2d.PCamera;\n" + 
 				"import org.piccolo2d.PCanvas;\n" + 
 				"import org.piccolo2d.PLayer;\n" + 
@@ -418,15 +473,21 @@ public class Canvas {
 				"import java.awt.event.KeyEvent;\n" + 
 				"import java.awt.geom.AffineTransform;\n" + 
 				"import java.awt.geom.Point2D;\n" + 
+				"import java.awt.geom.Rectangle2D;\n" + 
 				"import java.beans.PropertyChangeEvent;\n" + 
 				"import java.beans.PropertyChangeListener;\n" + 
 				"import java.util.*;\n" + 
+				"import java.util.List;\n" + 
 				"import java.util.concurrent.ConcurrentHashMap;\n" + 
 				"import java.util.function.Consumer;\n" + 
 				"import java.util.function.Predicate;\n" + 
+				"import java.util.stream.Collectors;\n" + 
 				"import java.util.stream.Stream;\n" + 
+				"import java.util.stream.StreamSupport;\n" + 
 				"\n" + 
 				"import static java.awt.event.KeyEvent.*;\n" + 
+				"\n" + 
+				"~imports:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"public class ~name~ extends PCanvas implements PInputEventListener {\n" + 
 				"\n" + 
@@ -444,6 +505,10 @@ public class Canvas {
 				"\n" + 
 				"	~fields:{it|private ~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
 				"\n" + 
+				"	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
+				"		this(UIManager.getColor(\"Panel.background\"), new Dimension(1024, 1024)~if(fields)~, ~fields:{it|~it.name~};separator=\", \"~~endif~);\n" + 
+				"	}\n" + 
+				"	\n" + 
 				"	public ~name~(Color background, Dimension preferredSize~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n" + 
 				"		super();\n" + 
 				"\n" + 
@@ -788,6 +853,123 @@ public class Canvas {
 				"	~BaseCanvasRelation()~\n" + 
 				"\n" + 
 				"	~actions:{it|~it~};separator=\"\\n\\n\"~\n" + 
+				"	final class PopupAction extends CanvasAction {\n" + 
+				"\n" + 
+				"		PopupAction(PInputEvent event) {\n" + 
+				"			super(\"Popup\", event);\n" + 
+				"		}\n" + 
+				"\n" + 
+				"		@Override\n" + 
+				"		void actionPerformed(PInputEvent event, ActionEvent e) {\n" + 
+				"			javax.swing.SwingUtilities.invokeLater(() -> { \n" + 
+				"				final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();\n" + 
+				"				setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));\n" + 
+				"				onCanvasRightClick(pop, event);\n" + 
+				"				setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));\n" + 
+				"				pop.show(thisCanvas(), (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());\n" + 
+				"			});\n" + 
+				"		}\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	final class SelectAllNodes extends CanvasAction {\n" + 
+				"\n" + 
+				"		SelectAllNodes(PInputEvent event) {\n" + 
+				"			super(\"Select all nodes\", event);\n" + 
+				"		}\n" + 
+				"\n" + 
+				"		@Override\n" + 
+				"		void actionPerformed(PInputEvent event, ActionEvent e) {\n" + 
+				"			javax.swing.SwingUtilities.invokeLater(() -> getAllNodes().forEach(BaseCanvasNode::select));\n" + 
+				"		}\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	final class RetainSelectedNodes extends CanvasAction {\n" + 
+				"\n" + 
+				"		RetainSelectedNodes(PInputEvent event) {\n" + 
+				"			super(\"Retain selected nodes\", event);\n" + 
+				"		}\n" + 
+				"\n" + 
+				"		@Override\n" + 
+				"		void actionPerformed(PInputEvent event, ActionEvent e) {\n" + 
+				"			javax.swing.SwingUtilities.invokeLater(() -> getUnselectedNodes().forEach(BaseCanvasNode::close));\n" + 
+				"		}\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	final class UnselectAllNodes extends CanvasAction {\n" + 
+				"\n" + 
+				"		UnselectAllNodes(PInputEvent event) {\n" + 
+				"			super(\"Unselect all nodes\", event);\n" + 
+				"		}\n" + 
+				"\n" + 
+				"		@Override\n" + 
+				"		void actionPerformed(PInputEvent event, ActionEvent e) {\n" + 
+				"			javax.swing.SwingUtilities.invokeLater(() -> getSelectedNodes().forEach(BaseCanvasNode::unselect));\n" + 
+				"		}\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	final class CloseSelectedNodes extends CanvasAction {\n" + 
+				"\n" + 
+				"		CloseSelectedNodes(PInputEvent event) {\n" + 
+				"			super(\"Close selected nodes\", event);\n" + 
+				"		}\n" + 
+				"\n" + 
+				"		@Override\n" + 
+				"		void actionPerformed(PInputEvent event, ActionEvent e) {\n" + 
+				"			javax.swing.SwingUtilities.invokeLater(() -> getSelectedNodes().forEach(BaseCanvasNode::close));\n" + 
+				"		}\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	final class CloseAllAction extends CanvasAction {\n" + 
+				"\n" + 
+				"		CloseAllAction(PInputEvent event) {\n" + 
+				"			super(\"Close all\", event);\n" + 
+				"		}\n" + 
+				"\n" + 
+				"		@Override\n" + 
+				"		void actionPerformed(PInputEvent event, ActionEvent e) {\n" + 
+				"			getAllRelations().forEach(relation -> removeRelation(relation.getUuid()));\n" + 
+				"			getAllNodes().forEach(node -> removeNode(node.getUuid()));\n" + 
+				"			relationLayer.removeAllChildren();\n" + 
+				"			SwingUtilities.invokeLater(() -> {\n" + 
+				"				invalidate();\n" + 
+				"				repaint();\n" + 
+				"			});\n" + 
+				"		}\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	final class LayoutVerticallyAction extends CanvasAction {\n" + 
+				"\n" + 
+				"		private java.awt.Point position;\n" + 
+				"		private int heightPadding;\n" + 
+				"\n" + 
+				"		LayoutVerticallyAction(PInputEvent event, java.awt.Point position,int heightPadding) {\n" + 
+				"			super(\"Layout selected nodes vertically\", event);\n" + 
+				"			this.position = position;\n" + 
+				"			this.heightPadding = heightPadding;\n" + 
+				"		}\n" + 
+				"\n" + 
+				"		@Override\n" + 
+				"		void actionPerformed(PInputEvent event, ActionEvent e) {\n" + 
+				"			SwingUtilities.invokeLater(() -> getSelectedNodes().forEach(new Consumer<BaseCanvasNode>() {\n" + 
+				"\n" + 
+				"				double x = position.getX();\n" + 
+				"				double y = position.getY();\n" + 
+				"				double height = -1d;\n" + 
+				"\n" + 
+				"				@Override\n" + 
+				"				public void accept(BaseCanvasNode abstractNode) {\n" + 
+				"					if (height == -1) {\n" + 
+				"						abstractNode.setOffset(x, y);\n" + 
+				"						height = abstractNode.getHeight();\n" + 
+				"					} else {\n" + 
+				"						y += height + heightPadding;\n" + 
+				"						abstractNode.setOffset(x, y);\n" + 
+				"						height = abstractNode.getHeight();\n" + 
+				"					}\n" + 
+				"				}\n" + 
+				"			}));\n" + 
+				"		}\n" + 
+				"	}\n" + 
 				"\n" + 
 				"	~canvasNodes:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 

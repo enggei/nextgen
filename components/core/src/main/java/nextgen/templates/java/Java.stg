@@ -52,7 +52,7 @@ primitiveAccessors(type,name,className) ::= <<public ~type~ get~name;format="cap
 public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) {
 	this._~name~ = value;
 	return this;
-} >>
+}  >>
 
 referenceAccessors(type,name,className) ::= <<public ~type~ get~name;format="capitalize"~() {
 	return this._~name~;
@@ -109,7 +109,7 @@ Bean(package,name,fields,fieldDeclarations,accessors,lexical,eqha,beanListener) 
 
 public class ~name~ implements java.beans.PropertyChangeListener {
 
-	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STGroupModel.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);
 
 	~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator="\n"~
 	~fieldDeclarations:{it|~it~};separator="\n"~
@@ -371,6 +371,24 @@ public class ~name~ {
 	}
 }  >>
 
+Singleton(packageName,name,fields,accessors) ::= <<package ~packageName~;
+
+public final class ~name~ {
+ 
+    private static ~name~ INSTANCE;
+    ~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator="\n"~
+    
+    private ~name~() {        
+    }
+    
+    public static synchronized ~name~ getInstance() {
+        if(INSTANCE == null) INSTANCE = new ~name~();
+        return INSTANCE;
+    }
+ 
+    ~accessors:{it|~it~};separator="\n\n"~
+}  >>
+
 Grammar() ::= << >>
 
 CompilationUnit(packageDeclaration,types,importDeclaration) ::= <<~packageDeclaration~
@@ -435,7 +453,7 @@ ModuleDeclaration(providesDirective,usesDirective,name,requiresDirective,exports
     ~opens:{it|opens ~it~};separator="\n"~
 } >>
 
-PackageDeclaration(name) ::= <<package ~name~; >>
+PackageDeclaration(name) ::= <<package ~name~;  >>
 
 PrivateFieldDeclaration(initializer,name,type) ::= <<private ~VariableDeclaration(initializer,name,type)~; >>
 

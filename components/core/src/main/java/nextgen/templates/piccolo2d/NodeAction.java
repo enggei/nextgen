@@ -17,11 +17,6 @@ public class NodeAction {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -205,6 +200,16 @@ public class NodeAction {
 		return this._fields.stream().map(NodeAction_Fields::new);
 	}
 
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(NodeAction_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Name() {
+		return streamFields().map(NodeAction_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class NodeAction_Fields {
 
 		Object _type;
@@ -228,7 +233,7 @@ public class NodeAction {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

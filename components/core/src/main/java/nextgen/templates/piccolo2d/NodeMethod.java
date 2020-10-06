@@ -16,11 +16,6 @@ public class NodeMethod {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -174,6 +169,16 @@ public class NodeMethod {
 		return this._params.stream().map(NodeMethod_Params::new);
 	}
 
+	public java.util.List<Object> getParams_Name() {
+		return streamParams().map(NodeMethod_Params::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getParams_Type() {
+		return streamParams().map(NodeMethod_Params::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class NodeMethod_Params {
 
 		Object _name;
@@ -197,7 +202,7 @@ public class NodeMethod {
 			return this._type;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

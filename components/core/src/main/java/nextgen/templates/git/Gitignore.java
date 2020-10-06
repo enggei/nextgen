@@ -98,5 +98,5 @@ public class Gitignore {
 	}
 
 	static final String st = "gitignore(excludeDirs,excludeFiles) ::= <<~excludeDirs:{it|/~it~/};separator=\"\\n\"~\n" + 
-				"~excludeFiles:{it|/~it~};separator=\"\\n\"~ >>";
+				"~excludeFiles:{it|~it~};separator=\"\\n\"~ >>";
 }  

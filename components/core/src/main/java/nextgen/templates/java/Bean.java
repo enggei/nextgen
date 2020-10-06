@@ -232,6 +232,21 @@ public class Bean {
 		return this._fields.stream().map(Bean_Fields::new);
 	}
 
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(Bean_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<String> getFields_Name() {
+		return streamFields().map(Bean_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Initializer() {
+		return streamFields().map(Bean_Fields::getInitializer).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class Bean_Fields {
 
 		Object _type;
@@ -262,7 +277,7 @@ public class Bean {
 			return this._initializer;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -281,7 +296,7 @@ public class Bean {
 				"\n" + 
 				"public class ~name~ implements java.beans.PropertyChangeListener {\n" + 
 				"\n" + 
-				"	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STGroupModel.class);\n" + 
+				"	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" + 
 				"\n" + 
 				"	~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n" + 
 				"	~fieldDeclarations:{it|~it~};separator=\"\\n\"~\n" + 

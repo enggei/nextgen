@@ -145,6 +145,16 @@ public class Plugin {
 		return this._configuration.stream().map(Plugin_Configuration::new);
 	}
 
+	public java.util.List<Object> getConfiguration_Name() {
+		return streamConfiguration().map(Plugin_Configuration::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getConfiguration_Value() {
+		return streamConfiguration().map(Plugin_Configuration::getValue).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class Plugin_Configuration {
 
 		Object _name;
@@ -168,7 +178,7 @@ public class Plugin {
 			return this._value;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

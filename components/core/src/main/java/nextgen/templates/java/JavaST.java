@@ -21,6 +21,7 @@ public class JavaST {
 	.append(ReferenceAccessors.st + "\n")
 	.append(PojoFactory.st + "\n")
 	.append(Script.st + "\n")
+	.append(Singleton.st + "\n")
 	.append(ValueObject.st + "\n")
 	.append(ArrayCreationLevel.st + "\n")
 	.append(CompilationUnit.st + "\n")
@@ -203,6 +204,10 @@ public class JavaST {
 
 	public static Script newScript() {
 		return new Script(stGroup);
+	}  
+
+	public static Singleton newSingleton() {
+		return new Singleton(stGroup);
 	}  
 
 	public static ValueObject newValueObject() {

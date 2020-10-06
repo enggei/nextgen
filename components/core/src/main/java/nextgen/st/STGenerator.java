@@ -8,6 +8,8 @@ import nextgen.st.model.STValue;
 import nextgen.templates.JavaPatterns;
 import nextgen.templates.java.ClassOrInterfaceDeclaration;
 import nextgen.templates.java.CompilationUnit;
+import nextgen.templates.java.Modifiers;
+import nextgen.utils.FileUtil;
 import nextgen.utils.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.stringtemplate.v4.ST;
@@ -18,6 +20,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 public class STGenerator {
 
@@ -105,17 +109,21 @@ public class STGenerator {
       if (!patternsFile.exists()) {
 
          final ClassOrInterfaceDeclaration patternsClass = JavaPatterns.newClassOrInterfaceDeclaration()
+               .addModifiers(Modifiers.PUBLIC)
                .setName(patternsClassName)
                .addExtend(domainClassName);
 
          writeJavaFile(JavaPatterns.newCompilationUnit()
                .setPackageDeclaration(JavaPatterns.newPackageDeclaration(packageName))
-               .addImportDeclaration(JavaPatterns.newImportDeclaration().setName(packageDeclaration).setIsAsterisk(true))
+               .addImportDeclaration(JavaPatterns.newImportDeclaration()
+                     .setName(packageDeclaration)
+                     .setIsAsterisk(true))
                .addTypes(patternsClass), packageName, patternsClassName, root);
       }
 
 
    }
+
    public void generateNeoGroup(STGroupModel stGroupModel, String packageName, String rootPath) {
       final File root = new File(rootPath);
       final String packageDeclaration = packageName + "." + stGroupModel.getName().toLowerCase();
@@ -327,8 +335,38 @@ public class STGenerator {
       }
    }
 
+   public static void copyDir(String srcRoot, String srcDir, File targetRoot, String targetDir) {
+
+      final File srcFile = new File(srcRoot, srcDir);
+      final File dstRoot = tryToCreateDirIfNotExists(new File(targetRoot, targetDir));
+
+      final File[] files = srcFile.listFiles();
+      if (files == null) return;
+
+      for (File file : files) {
+         if (file.isDirectory()) {
+            copyDir(srcFile.getAbsolutePath(), file.getName(), dstRoot, file.getName());
+         } else {
+            copyFile(file.getParent(), file.getName(), dstRoot.getParent(), dstRoot.getName());
+         }
+      }
+   }
+
+   public static void copyFile(String sourceDir, String sourceFile, String targetRoot, String dir) {
+      try {
+         Files.copy(new File(sourceDir, sourceFile).toPath(), new File(FileUtil.tryToCreateDirIfNotExists(new File(targetRoot, dir)), sourceFile)
+               .toPath(), StandardCopyOption.REPLACE_EXISTING);
+      } catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+   }
+
    public static void writeJavaFile(Object content, nextgen.templates.java.PackageDeclaration packageDeclaration, String name, File root) {
       writeJavaFile(content, packageDeclaration == null ? null : packageDeclaration.getName(), name, root);
+   }
+
+   public static void writeJavaFile(Object content, nextgen.templates.java.PackageDeclaration packageDeclaration, Object name, File root) {
+      writeJavaFile(content, packageDeclaration == null ? null : packageDeclaration.getName(), name.toString(), root);
    }
 
    public static void writeJavaFile(Object content, String packageDeclaration, String name, File root) {

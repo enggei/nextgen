@@ -5,7 +5,7 @@
   "templates" : [ {
     "uuid" : "bdcb0751-37a3-456e-a7bf-77379f693796",
     "name" : "gitignore",
-    "text" : "~excludeDirs:{it|/~it~/};separator=\"\\n\"~\n~excludeFiles:{it|/~it~};separator=\"\\n\"~ ",
+    "text" : "~excludeDirs:{it|/~it~/};separator=\"\\n\"~\n~excludeFiles:{it|~it~};separator=\"\\n\"~ ",
     "parameters" : [ {
       "uuid" : "b62c858e-af0e-4abb-867e-e4f55689ba9d",
       "name" : "excludeDirs",

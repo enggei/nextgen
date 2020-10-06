@@ -7,6 +7,20 @@ JavaMavenProject(name,root,mainSrc,testSrc,pom) ::= <<~name~
 
 ~pom~  >>
 
+JavaProject(packageName,name,outputRoot,packages) ::= <<~packageName~
+
+~name~
+~outputRoot~
+
+~packages:{it|~it~};separator="\n"~  >>
+
+JavaProjectPackage(fullPath,name,types,children) ::= <<~fullPath~
+~name~
+
+~types:{it|~it.entity~ ~it.type~};separator="\n"~
+
+~children:{it|~it~};separator="\n"~  >>
+
 eom() ::= "}"
 
 gt() ::= ">"

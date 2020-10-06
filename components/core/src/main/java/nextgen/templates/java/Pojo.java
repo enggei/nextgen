@@ -184,6 +184,21 @@ public class Pojo {
 		return this._fields.stream().map(Pojo_Fields::new);
 	}
 
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(Pojo_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<String> getFields_Name() {
+		return streamFields().map(Pojo_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Initializer() {
+		return streamFields().map(Pojo_Fields::getInitializer).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class Pojo_Fields {
 
 		Object _type;
@@ -214,7 +229,7 @@ public class Pojo {
 			return this._initializer;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

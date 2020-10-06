@@ -280,7 +280,7 @@ dependencyGroup(name,groupId,version,artifacts) ::= <<~name~
 ~version~
 ~artifacts:{it|~it~};separator="\n"~  >>
 
-Project(packageName,templates,imports,name,root,files,packageDeclarations,fields,generators,methods) ::= <<package ~packageName~;
+Project(packageName,templates,imports,name,root,fields,files,packageDeclarations,entities,generators,methods) ::= <<package ~packageName~;
 
 import nextgen.st.STGenerator;
 import static nextgen.utils.StringUtil.*;
@@ -302,34 +302,17 @@ public class ~name~ {
 	final File testJava = new File(root, "src/test/java");
 	final File testResources = new File(root, "src/test/resources");
 	
+	~fields:{it|~if(it.init)~final ~endif~~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
+
 	~files:{it|final File ~it.name~ = new File(~if(it.parent)~~it.parent~, ~endif~"~it.path~");};separator="\n"~
 	
 	~packageDeclarations:{it|~it~};separator="\n"~
 
-	~fields:{it|~if(it.init)~final ~endif~~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
+	~entities:{it|~it~};separator="\n"~
 	
 	~generators:{it|~it~};separator="\n\n"~
 
 	~methods:{it|~it~};separator="\n\n"~
-
-	protected static void log(Object log) {
-		System.out.println(log);
-	}
-
-	class JavaType {
-
-		final nextgen.templates.java.ClassOrInterfaceType type;
-
-		JavaType(String packageDeclaration, String name) {
-			this.type = nextgen.templates.java.JavaST.newClassOrInterfaceType()
-					.setScope(packageDeclaration)
-					.addNames(name);
-		}
-
-		JavaType(nextgen.templates.java.PackageDeclaration packageDeclaration, String name) {
-			this(packageDeclaration.getName(), name);
-		}
-	}
 }  >>
 
 ProjectGenerator(name,description,statements) ::= <</**
@@ -341,7 +324,7 @@ public void ~name~() {
 	~statements:{it|~it~};separator="\n"~
 }  >>
 
-ProjectPackage(name,parentPackage,packageName,types) ::= <<private final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~, ~endif~"~packageName~");
+ProjectPackage(name,parentPackage,packageName,types) ::= <<protected final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~, ~endif~~packageName~);
 ~types:{it|private final JavaType ~it.name~Type = new JavaType(~name~, "~it.name~");};separator="\n\n"~  >>
 
 TestRunner(packageName,name,projectName,generators) ::= <<package ~packageName~;

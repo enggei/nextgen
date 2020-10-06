@@ -16,11 +16,6 @@ public class RelationAction {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -174,6 +169,16 @@ public class RelationAction {
 		return this._fields.stream().map(RelationAction_Fields::new);
 	}
 
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(RelationAction_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Name() {
+		return streamFields().map(RelationAction_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class RelationAction_Fields {
 
 		Object _type;
@@ -197,7 +202,7 @@ public class RelationAction {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

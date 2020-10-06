@@ -19,11 +19,6 @@ public class PRelation {
 		this.stGroup = stGroup;
 	}
 
-	@Deprecated
-	public java.util.UUID uuid() {
-		return uuid;
-	}
-
 	public java.util.UUID getUuid() {
 		return uuid;
 	}
@@ -238,6 +233,16 @@ public class PRelation {
 		return this._onRightClick.stream().map(PRelation_OnRightClick::new);
 	}
 
+	public java.util.List<Object> getOnRightClick_Name() {
+		return streamOnRightClick().map(PRelation_OnRightClick::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getOnRightClick_IsSeparator() {
+		return streamOnRightClick().map(PRelation_OnRightClick::getIsSeparator).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class PRelation_OnRightClick {
 
 		Object _name;
@@ -261,7 +266,7 @@ public class PRelation {
 			return this._isSeparator;
 		}
 
-	} 
+	}  
 
 	public PRelation addOnKeyPressed(Object _key, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -282,6 +287,16 @@ public class PRelation {
 	public java.util.stream.Stream<PRelation_OnKeyPressed> streamOnKeyPressed() {
 		return this._onKeyPressed.stream().map(PRelation_OnKeyPressed::new);
 	}
+
+	public java.util.List<Object> getOnKeyPressed_Key() {
+		return streamOnKeyPressed().map(PRelation_OnKeyPressed::getKey).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getOnKeyPressed_Name() {
+		return streamOnKeyPressed().map(PRelation_OnKeyPressed::getName).collect(java.util.stream.Collectors.toList());
+	}
+
 
 	public static final class PRelation_OnKeyPressed {
 
@@ -306,7 +321,7 @@ public class PRelation {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

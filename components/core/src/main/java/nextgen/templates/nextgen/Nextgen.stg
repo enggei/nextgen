@@ -70,9 +70,8 @@ public void on~eventName~(~eventType~ event) {
 	~statements:{it|~it~};separator="\n"~
 }  >>
 
-Canvas(packageName,name,fields,constructorStatements,methods,rightClickStatements,rightClickActions,keyPressActions,actions,canvasNodes,canvasRelations) ::= <<package ~packageName~;
+Canvas(packageName,imports,name,fields,constructorStatements,methods,rightClickStatements,rightClickActions,keyPressActions,actions,canvasNodes,canvasRelations) ::= <<package ~packageName~;
 
-import nextgen.utils.SwingUtil;
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.PLayer;
@@ -88,15 +87,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static java.awt.event.KeyEvent.*;
+
+~imports:{it|~it~};separator="\n"~
 
 public class ~name~ extends PCanvas implements PInputEventListener {
 
@@ -114,6 +119,10 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 
 	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
 
+	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=", "~) {
+		this(UIManager.getColor("Panel.background"), new Dimension(1024, 1024)~if(fields)~, ~fields:{it|~it.name~};separator=", "~~endif~);
+	}
+	
 	public ~name~(Color background, Dimension preferredSize~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
 		super();
 
@@ -458,6 +467,123 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 	~BaseCanvasRelation()~
 
 	~actions:{it|~it~};separator="\n\n"~
+	final class PopupAction extends CanvasAction {
+
+		PopupAction(PInputEvent event) {
+			super("Popup", event);
+		}
+
+		@Override
+		void actionPerformed(PInputEvent event, ActionEvent e) {
+			javax.swing.SwingUtilities.invokeLater(() -> { 
+				final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();
+				setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));
+				onCanvasRightClick(pop, event);
+				setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));
+				pop.show(thisCanvas(), (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
+			});
+		}
+	}
+	
+	final class SelectAllNodes extends CanvasAction {
+
+		SelectAllNodes(PInputEvent event) {
+			super("Select all nodes", event);
+		}
+
+		@Override
+		void actionPerformed(PInputEvent event, ActionEvent e) {
+			javax.swing.SwingUtilities.invokeLater(() -> getAllNodes().forEach(BaseCanvasNode::select));
+		}
+	}
+
+	final class RetainSelectedNodes extends CanvasAction {
+
+		RetainSelectedNodes(PInputEvent event) {
+			super("Retain selected nodes", event);
+		}
+
+		@Override
+		void actionPerformed(PInputEvent event, ActionEvent e) {
+			javax.swing.SwingUtilities.invokeLater(() -> getUnselectedNodes().forEach(BaseCanvasNode::close));
+		}
+	}
+
+	final class UnselectAllNodes extends CanvasAction {
+
+		UnselectAllNodes(PInputEvent event) {
+			super("Unselect all nodes", event);
+		}
+
+		@Override
+		void actionPerformed(PInputEvent event, ActionEvent e) {
+			javax.swing.SwingUtilities.invokeLater(() -> getSelectedNodes().forEach(BaseCanvasNode::unselect));
+		}
+	}
+
+	final class CloseSelectedNodes extends CanvasAction {
+
+		CloseSelectedNodes(PInputEvent event) {
+			super("Close selected nodes", event);
+		}
+
+		@Override
+		void actionPerformed(PInputEvent event, ActionEvent e) {
+			javax.swing.SwingUtilities.invokeLater(() -> getSelectedNodes().forEach(BaseCanvasNode::close));
+		}
+	}
+
+	final class CloseAllAction extends CanvasAction {
+
+		CloseAllAction(PInputEvent event) {
+			super("Close all", event);
+		}
+
+		@Override
+		void actionPerformed(PInputEvent event, ActionEvent e) {
+			getAllRelations().forEach(relation -> removeRelation(relation.getUuid()));
+			getAllNodes().forEach(node -> removeNode(node.getUuid()));
+			relationLayer.removeAllChildren();
+			SwingUtilities.invokeLater(() -> {
+				invalidate();
+				repaint();
+			});
+		}
+	}
+	
+	final class LayoutVerticallyAction extends CanvasAction {
+
+		private java.awt.Point position;
+		private int heightPadding;
+
+		LayoutVerticallyAction(PInputEvent event, java.awt.Point position,int heightPadding) {
+			super("Layout selected nodes vertically", event);
+			this.position = position;
+			this.heightPadding = heightPadding;
+		}
+
+		@Override
+		void actionPerformed(PInputEvent event, ActionEvent e) {
+			SwingUtilities.invokeLater(() -> getSelectedNodes().forEach(new Consumer<BaseCanvasNode>() {
+
+				double x = position.getX();
+				double y = position.getY();
+				double height = -1d;
+
+				@Override
+				public void accept(BaseCanvasNode abstractNode) {
+					if (height == -1) {
+						abstractNode.setOffset(x, y);
+						height = abstractNode.getHeight();
+					} else {
+						y += height + heightPadding;
+						abstractNode.setOffset(x, y);
+						height = abstractNode.getHeight();
+					}
+				}
+			}));
+		}
+	}
 
 	~canvasNodes:{it|~it~};separator="\n\n"~
 
@@ -865,7 +991,7 @@ BaseCanvasNode() ::= <<protected class BaseCanvasNode<T> extends PNode {
 					}
 				};
 
-				final nextgen.st.canvas.layout.CircleLayout<BaseCanvasNode<?>~gt()~ layout = new nextgen.st.canvas.layout.CircleLayout<>(tree, nodeExtendProvider);
+				final CircleLayout<BaseCanvasNode<?>~gt()~ layout = new CircleLayout<>(tree, nodeExtendProvider);
 
 				// apply coordinate transforms in relation to root-node
 				final java.awt.geom.Rectangle2D.Double rootBounds = layout.getNodeBounds().get(BaseCanvasNode.this);
@@ -900,6 +1026,59 @@ BaseCanvasNode() ::= <<protected class BaseCanvasNode<T> extends PNode {
 				});
 
 			childrensMap.get(node.getUuid()).forEach(this::findChildren);
+		}
+
+		private class CircleLayout<T> {
+
+		   private final Map<T, java.awt.geom.Rectangle2D.Double> nodeBounds = new LinkedHashMap<>();
+
+		   public CircleLayout(org.abego.treelayout.TreeForTreeLayout<T> tree, org.abego.treelayout.NodeExtentProvider<T> nodeExtendProvider) {
+
+		      final int centerX = 0;
+		      final int centerY = 0;
+		      final int radiusPerLevel = 1200;
+
+		      final T root = tree.getRoot();
+		      nodeBounds.put(root, new Rectangle2D.Double(centerX, centerY, nodeExtendProvider.getWidth(root), nodeExtendProvider.getHeight(root)));
+
+		      layout(root, centerX, centerY, radiusPerLevel, 2 * Math.PI, 2 * Math.PI, 1, tree, nodeExtendProvider);
+		   }
+
+		   private void layout(T node, int centerX, int centerY, int radius, double startAngle, double arcLength, int level, org.abego.treelayout.TreeForTreeLayout<T> tree, org.abego.treelayout.NodeExtentProvider<T> nodeExtendProvider) {
+
+		      int totalChildren = 0;
+		      for (int i = 0; i < children(node, tree).size(); i++)
+		         totalChildren += children(children(node, tree).get(i), tree).size() + 1;
+
+		      double currentArc = startAngle;
+		      for (int i = 0; i < children(node, tree).size(); i++) {
+		         final T child = children(node, tree).get(i);
+		         final double childProportion = (double) (children(child,tree).size() + 1) / (double) totalChildren;
+		         double childRadians = (arcLength * childProportion);
+		         final double sin = Math.sin(currentArc + (childRadians / 2));
+		         final double cos = Math.cos(currentArc + (childRadians / 2));
+
+		         double x = centerX + (int) (radius * sin);
+		         double y = centerY + (int) (radius * cos);
+
+		         nodeBounds.put(child, new Rectangle2D.Double(x, y, nodeExtendProvider.getWidth(child), nodeExtendProvider
+		               .getHeight(child)));
+
+		         layout(child, centerX, centerY, radius + (radius / level), currentArc, childRadians, level + 1, tree, nodeExtendProvider);
+
+		         currentArc += childRadians;
+		      }
+		   }
+
+		   private List<T> children(T node, org.abego.treelayout.TreeForTreeLayout<T> tree) {
+		      return StreamSupport
+		            .stream(tree.getChildren(node).spliterator(), false)
+		            .collect(Collectors.toList());
+		   }
+
+		   public Map<T, java.awt.geom.Rectangle2D.Double> getNodeBounds() {
+		      return nodeBounds;
+		   }
 		}
 	}
 
@@ -1032,8 +1211,8 @@ private void add~name~(~modelType~ model~if(uuidExpression)~~else~, String uuid~
 	addNode(~if(uuidExpression)~~uuidExpression~~else~uuid~endif~, new~name~(model~if(uuidExpression)~~else~, uuid~endif~~if(labelExpression)~~else~, label~endif~~if(fields)~, ~fields:{it|~it.name~};separator=", "~~endif~));
 }
 
-public java.util.function.Supplier<STModelCanvas.~name~> new~name~(~modelType~ model~if(uuidExpression)~~else~, String uuid~endif~~if(labelExpression)~~else~, String label~endif~~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
-	return () -> new STModelCanvas.~name~(model~if(uuidExpression)~~else~, String uuid~endif~~if(labelExpression)~~else~, String label~endif~~if(fields)~, ~fields:{it|~it.name~};separator=", "~~endif~);
+public java.util.function.Supplier<~name~> new~name~(~modelType~ model~if(uuidExpression)~~else~, String uuid~endif~~if(labelExpression)~~else~, String label~endif~~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
+	return () -> new ~name~(model~if(uuidExpression)~~else~, uuid~endif~~if(labelExpression)~~else~, label~endif~~if(fields)~, ~fields:{it|~it.name~};separator=", "~~endif~);
 }
 
 public Stream<~name~> getAll~name;format="capitalize"~() {
@@ -1426,6 +1605,624 @@ CanvasAction(name,fields,title,statements) ::= <<final class ~name~ extends Canv
 	@Override
 	void actionPerformed(PInputEvent event, ActionEvent e) {
 		~statements:{it|~it~};separator="\n"~
+	}
+}  >>
+
+DomainFacade(packageName,imports,name,factory,methods) ::= <<package ~packageName~;
+
+import net.openhft.compiler.CompilerUtils;
+import org.jeasy.flows.work.WorkReportPredicate;
+import org.neo4j.graphdb.GraphDatabaseService;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.concurrent.ExecutorService;
+
+~imports:{it|~it~};separator="\n"~
+
+public class ~name~ extends ~factory~ {
+
+	public ~name~(String dir) {
+		super(dir);
+	}
+
+	public ~name~(GraphDatabaseService db) {
+		super(db);
+	}
+
+	~methods:{it|~it~};separator="\n"~
+
+	public static List<STTemplate> aggregateTemplates(STGroupModel stGroup) {
+		final List<STTemplate> stTemplates = new ArrayList<>();
+		stGroup.getTemplates().forEach(stTemplate -> {
+			stTemplates.add(stTemplate);
+			addChildren(stTemplate.getChildren().collect(Collectors.toList()), stTemplates);
+		});
+		return stTemplates;
+	}
+
+	public static List<STTemplate> aggregateTemplates(Stream<STGroupModel> stream) {
+		final List<STTemplate> stTemplates = new ArrayList<>();
+		stream.forEach(stGroupModel -> stTemplates.addAll(aggregateTemplates(stGroupModel)));
+		return stTemplates;
+	}
+
+	private static void addChildren(List<STTemplate> collect, List<STTemplate> stTemplates) {
+		stTemplates.addAll(collect);
+		for (STTemplate stTemplate : collect)
+			addChildren(stTemplate.getChildren().collect(Collectors.toList()), stTemplates);
+	}
+
+	public Stream<STGroupModel> getAllSTGroups() {
+		return findAllSTGroupModel()
+				.sorted((g1, g2) -> g1.getName().compareToIgnoreCase(g2.getName()));
+	}
+
+	public static Stream<STTemplate> getTemplates(STGroupModel stGroupModel) {
+		return stGroupModel.getTemplates()
+				.sorted((t1, t2) -> t1.getName().compareToIgnoreCase(t2.getName()));
+	}
+
+	public static Stream<STTemplate> getTemplates(STTemplate stTemplate) {
+		return stTemplate.getChildren()
+				.sorted((t1, t2) -> t1.getName().compareToIgnoreCase(t2.getName()));
+	}
+
+	public static Stream<STTemplate> getTemplates(Stream<STGroupModel> stGroupModel) {
+		final Optional<STGroupModel> first = stGroupModel.findFirst();
+		if (!first.isPresent()) return Stream.empty();
+		return getTemplates(first.get());
+	}
+
+	public static STGroupModel getSTGroup(STTemplate stTemplate) {
+
+		final Optional<STGroupModel> stGroupModel = stTemplate.getIncomingTemplatesSTGroupModel().findAny();
+		if (stGroupModel.isPresent()) return stGroupModel.get();
+
+		final Optional<STTemplate> parent = stTemplate.getIncomingChildrenSTTemplate().findAny();
+		if (parent.isPresent()) return getSTGroup(parent.get());
+
+		throw new RuntimeException(stTemplate.getName() + " has no STGroup. This is an error.");
+	}
+
+	public Stream<Project> getAllProjects() {
+		return findAllProject()
+				.sorted((p1, p2) -> p1.getName().compareToIgnoreCase(p2.getName()));
+	}
+
+	public STGroupModel newSTGroupModel(String name, String delimiter) {
+		return newSTGroupModel()
+				.setName(name)
+				.setDelimiter(delimiter);
+	}
+
+	public STTemplate newSTTemplate(String name, STGroupModel stGroup) {
+		final STTemplate stTemplate = newSTTemplate()
+				.setName(name)
+				.setText("");
+		stGroup.addTemplates(stTemplate);
+		return stTemplate;
+	}
+
+	public STTemplate newSTTemplate(String name, STTemplate parent) {
+		final STTemplate stTemplate = newSTTemplate()
+				.setName(name)
+				.setText("");
+		parent.addChildren(stTemplate);
+		return stTemplate;
+	}
+
+	public org.jeasy.flows.work.Work newInstance(Work work) {
+		final templates.javaeasyflows.Work javaCode = toCode(work);
+		final String className = javaCode.getPackageName() + "." + javaCode.getName().toString();
+		try {
+			final Class<?> workClass = CompilerUtils.CACHED_COMPILER.loadFromJava(className, javaCode.toString());
+			return (org.jeasy.flows.work.Work) workClass.getDeclaredConstructor().newInstance();
+		} catch (Throwable e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public org.jeasy.flows.workflow.ConditionalFlow toFlow(ConditionalFlow flow, ExecutorService executorService) {
+
+		final org.jeasy.flows.workflow.ConditionalFlow.Builder f = org.jeasy.flows.workflow.ConditionalFlow.Builder.aNewConditionalFlow()
+				.named(flow.getName())
+				.execute(toWork(flow.getExecute(), executorService));
+
+		final WorkInstance then = flow.getThen();
+		if (then != null) f.then(toWork(then, executorService));
+
+		final WorkInstance otherwise = flow.getOtherwise();
+		if (otherwise != null) f.otherwise(toWork(otherwise, executorService));
+
+		return f.build();
+	}
+
+	public org.jeasy.flows.workflow.SequentialFlow toFlow(SequentialFlow flow, ExecutorService executorService) {
+
+		final org.jeasy.flows.workflow.SequentialFlow.Builder f = org.jeasy.flows.workflow.SequentialFlow.Builder.aNewSequentialFlow()
+				.named(flow.getName())
+				.execute(toWork(flow.getExecute(), executorService));
+
+		flow.getThen().forEach(workType -> f.then(toWork(workType, executorService)));
+
+		return f.build();
+	}
+
+	public org.jeasy.flows.workflow.ParallelFlow toFlow(ParallelFlow flow, ExecutorService executorService) {
+
+		final org.jeasy.flows.workflow.ParallelFlow.Builder f = org.jeasy.flows.workflow.ParallelFlow.Builder.aNewParallelFlow(executorService)
+				.named(flow.getName())
+				.execute(toWork(flow.getExecute(), executorService));
+
+		return f.build();
+	}
+
+	public org.jeasy.flows.workflow.RepeatFlow toFlow(RepeatFlow flow, ExecutorService executorService) {
+
+		final org.jeasy.flows.workflow.RepeatFlow.Builder f = org.jeasy.flows.workflow.RepeatFlow.Builder.aNewRepeatFlow()
+				.named(flow.getName())
+				.repeat(toWork(flow.getRepeat(), executorService));
+
+		if (flow.getTimes() != null)
+			f.times(flow.getTimes());
+		else if (flow.getUntil() != null)
+			f.until(toWorkReportPredicate(flow.getUntil()));
+
+		return f.build();
+	}
+
+	public WorkInstance newWorkInstance(nextgen.domain.Work work) {
+		return newWorkInstance().setType(WorkType.WORK).setWork(work);
+	}
+
+	public WorkInstance newWorkInstance(nextgen.domain.SequentialFlow work) {
+		return newWorkInstance().setType(WorkType.SEQUENTIAL).setSequential(work);
+	}
+
+	public WorkInstance newWorkInstance(nextgen.domain.ParallelFlow work) {
+		return newWorkInstance().setType(WorkType.PARALLEL).setParallel(work);
+	}
+
+	public WorkInstance newWorkInstance(nextgen.domain.ConditionalFlow work) {
+		return newWorkInstance().setType(WorkType.CONDITIONAL).setConditional(work);
+	}
+
+	public WorkInstance newWorkInstance(nextgen.domain.RepeatFlow work) {
+		return newWorkInstance().setType(WorkType.REPEAT).setRepeat(work);
+	}
+
+	private org.jeasy.flows.work.Work[] toWork(Stream<WorkInstance> stream, ExecutorService executorService) {
+		final List<WorkInstance> workTypes = stream.collect(Collectors.toList());
+		final org.jeasy.flows.work.Work[] works = new org.jeasy.flows.work.Work[workTypes.size()];
+		for (int i = 0; i < workTypes.size(); i++)
+			works[i] = toWork(workTypes.get(i), executorService);
+		return works;
+	}
+
+	private org.jeasy.flows.work.Work toWork(WorkInstance workInstance, ExecutorService executorService) {
+
+		switch (workInstance.getType()) {
+			case WORK:
+				return newInstance(workInstance.getWork());
+			case CONDITIONAL:
+				return toFlow(workInstance.getConditional(), executorService);
+			case SEQUENTIAL:
+				return toFlow(workInstance.getSequential(), executorService);
+			case PARALLEL:
+				return toFlow(workInstance.getParallel(), executorService);
+			case REPEAT:
+				return toFlow(workInstance.getRepeat(), executorService);
+		}
+
+		throw new RuntimeException("unsupported type " + workInstance.getType());
+	}
+
+	private templates.javaeasyflows.Work toCode(Work work) {
+		final templates.javaeasyflows.Work w = templates.JavaEasyFlowsPatterns.newWork();
+		w.setName(work.getName());
+		w.setPackageName(work.getPackage());
+		work.getInputs().forEach(workInput -> w.addInputs(workInput.getType(), workInput.getName()));
+		work.getStatements().forEach(workStatement -> w.addStatements(workStatement.getStatement()));
+		System.out.println(w.toString());
+		return w;
+	}
+
+	private WorkReportPredicate toWorkReportPredicate(UntilPredicate until) {
+		switch (until) {
+			case ALWAYS_TRUE:
+				return WorkReportPredicate.ALWAYS_TRUE;
+			case ALWAYS_FALSE:
+				return WorkReportPredicate.ALWAYS_FALSE;
+			case COMPLETED:
+				return WorkReportPredicate.COMPLETED;
+			case FAILED:
+				return WorkReportPredicate.FAILED;
+		}
+		throw new RuntimeException("unsupported untilPredicate " + until);
+	}
+
+	public Work newWork(String name, Project project) {
+		final Work work = newWork()
+				.setName(name)
+				.setPackage("projects." + project.getName().toLowerCase());
+		project.addWork(work);
+		return work;
+	}
+
+	public SequentialFlow newSequentialFlow(String name, Project project) {
+		final SequentialFlow flow = newSequentialFlow()
+				.setName(name);
+		project.addFlows(newWorkInstance(flow));
+		return flow;
+	}
+
+	public ConditionalFlow newConditionalFlow(String name, Project project) {
+		final ConditionalFlow flow = newConditionalFlow()
+				.setName(name);
+		project.addFlows(newWorkInstance(flow));
+		return flow;
+	}
+
+	public ParallelFlow newParallelFlow(String name, Project project) {
+		final ParallelFlow flow = newParallelFlow()
+				.setName(name);
+		project.addFlows(newWorkInstance(flow));
+		return flow;
+	}
+
+	public RepeatFlow newRepeatFlow(String name, Project project) {
+		final RepeatFlow flow = newRepeatFlow()
+				.setName(name);
+		project.addFlows(newWorkInstance(flow));
+		return flow;
+	}
+
+	public void mergeTemplate(STGParseResult parseResult, STTemplate model) {
+
+	}
+
+	public void generateSTGroup(STGroupModel stGroup) {
+
+	}
+}  >>
+
+EntityConstraints(entity,constraints,deleteStatements) ::= <<public static String canDelete(~entity~ entity) {
+	final StringBuilder constraints = new StringBuilder("");
+	~constraints:{it|~it~};separator="\n"~
+	return constraints.toString().trim();
+}
+
+public static String delete(~entity~ entity) {
+	~deleteStatements:{it|~it~};separator="\n"~
+	return entity.getUuid();
+}  >>
+
+STTemplateEditor(packageName,name) ::= <<package ~packageName~;
+
+import nextgen.DomainFacade;
+import nextgen.stparser.*;
+import nextgen.swing.AppModel;
+import nextgen.swing.SwingUtil;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rtextarea.*;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
+
+public class ~name~ extends javax.swing.JPanel {
+
+	private RSyntaxTextArea textArea;
+	private nextgen.domain.STTemplate model;
+	private String startText;
+	private String delim;
+	private Color uneditedColor = UIManager.getColor("Panel.background");
+	private Color editedColor = UIManager.getColor("Panel.background").brighter();
+	private Color errorColor = Color.decode("#e66101");
+	private Border defaultBorder;
+	private STEditorCommandPanel commandPanel = new STEditorCommandPanel();
+	private STEditorInfoPanel infoPanel = new STEditorInfoPanel();
+
+	public ~name~(nextgen.domain.STTemplate model) {
+		super(new java.awt.BorderLayout());
+
+		textArea = new RSyntaxTextArea(80, 40);
+		textArea.setTabSize(3);
+		textArea.setHighlightCurrentLine(false);
+		textArea.setSelectionColor(Color.decode("#2b8cbe"));
+		textArea.setBackground(UIManager.getColor("Panel.background"));
+		textArea.setForeground(UIManager.getColor("Tree.foreground"));
+		textArea.setFont(UIManager.getFont("TextField.font"));
+
+		startText = model.getText();
+		delim = DomainFacade.getSTGroup(model).getDelimiter();
+		defaultBorder = textArea.getBorder();
+		textArea.setText(startText);
+
+		final JPopupMenu pop = textArea.getPopupMenu();
+		pop.addSeparator();
+		pop.add(newAction("Insert Single", actionEvent -> insertSingle()));
+		pop.add(newAction("Insert Single Capitalized", actionEvent -> insertCapitalized()));
+		pop.add(newAction("Insert List", actionEvent -> insertList()));
+		pop.add(newAction("Insert If", actionEvent -> insertIf()));
+		pop.add(newAction("Insert If-else", actionEvent -> insertIfElse()));
+		pop.add(newAction("Replace text and insert Single", actionEvent -> replaceAndInsertSingle()));
+		pop.add(newAction("Replace text", actionEvent -> replace()));
+		pop.add(newAction("Save", actionEvent -> commit()));
+		pop.add(newAction("Generate", actionEvent -> generate()));
+
+		final RTextScrollPane scrollPane = new RTextScrollPane(textArea);
+		scrollPane.setBackground(UIManager.getColor("Panel.background"));
+		scrollPane.getGutter().setBackground(scrollPane.getBackground());
+		scrollPane.getGutter().setForeground(UIManager.getColor("TextField.foreground"));
+		scrollPane.getGutter().setFont(UIManager.getFont("TextField.font").deriveFont(29f));
+		add(scrollPane, BorderLayout.CENTER);
+		add(commandPanel, BorderLayout.NORTH);
+		add(infoPanel, BorderLayout.SOUTH);
+	}
+
+	private Action newAction(String name, Consumer<ActionEvent> consumer) {
+		return new AbstractAction(name) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				consumer.accept(e);
+			}
+		};
+	}
+
+	private void insertSingle() {
+		SwingUtilities.invokeLater(() -> {
+			removeSelectedTextIfAny();
+			final int caretPosition = textArea.getCaretPosition();
+			textArea.insert(delim(""), caretPosition);
+			textArea.setCaretPosition(caretPosition + 1);
+			textArea.setBackground(startText.trim().equals(textArea.getText().trim()) ? uneditedColor : editedColor);
+		});
+	}
+
+	private void insertCapitalized() {
+		SwingUtilities.invokeLater(() -> {
+			removeSelectedTextIfAny();
+			final int caretPosition = textArea.getCaretPosition();
+			textArea.insert(delim(";format=\"capitalize\""), caretPosition);
+			textArea.setCaretPosition(caretPosition + 1);
+			textArea.setBackground(startText.trim().equals(textArea.getText().trim()) ? uneditedColor : editedColor);
+		});
+	}
+
+	private void insertList() {
+		final String input = SwingUtil.showInputDialog("name", textArea);
+		if (input == null) return;
+		final String name = input.contains(" ") ? input.split(" ")[0] : input;
+		final String separator = input.contains(" ") ? input.split(" ")[1] : null;
+		SwingUtilities.invokeLater(() -> {
+			removeSelectedTextIfAny();
+			final int caretPosition = textArea.getCaretPosition();
+			final String pre = name + ":{it|";
+			final String sep = separator == null ? "" : ";separator=\"" + separator + "\"";
+			final String list = pre + "}" + sep;
+			textArea.insert(delim(list), caretPosition);
+			textArea.setCaretPosition(caretPosition + pre.length() + 1);
+			textArea.setBackground(startText.trim().equals(textArea.getText().trim()) ? uneditedColor : editedColor);
+		});
+	}
+
+	private void insertIf() {
+		final String input = SwingUtil.showInputDialog("condition", textArea);
+		if (input == null) return;
+		final String name = input.trim();
+		SwingUtilities.invokeLater(() -> {
+			removeSelectedTextIfAny();
+			final int caretPosition = textArea.getCaretPosition();
+			final String pre = delim("if(" + name + ")");
+			final String list = pre + delim("endif");
+			textArea.insert(list, caretPosition);
+			textArea.setCaretPosition(caretPosition + pre.length());
+			textArea.setBackground(startText.trim().equals(textArea.getText().trim()) ? uneditedColor : editedColor);
+		});
+	}
+
+	private void insertIfElse() {
+		final String input = SwingUtil.showInputDialog("condition", textArea);
+		if (input == null) return;
+		final String name = input.trim();
+		SwingUtilities.invokeLater(() -> {
+			removeSelectedTextIfAny();
+			final int caretPosition = textArea.getCaretPosition();
+			final String pre = delim("if(" + name + ")");
+			final String list = pre + delim("else") + delim("endif");
+			textArea.insert(list, caretPosition);
+			textArea.setCaretPosition(caretPosition + pre.length());
+			textArea.setBackground(startText.trim().equals(textArea.getText().trim()) ? uneditedColor : editedColor);
+		});
+	}
+
+	private void replaceAndInsertSingle() {
+		final String selected = textArea.getSelectedText();
+		if (selected == null || selected.length() < 1) return;
+		final String propertyName = SwingUtil.showInputDialog("name", textArea);
+		if (propertyName == null || propertyName.trim().length() == 0) return;
+
+		SwingUtilities.invokeLater(() -> {
+			final String replacement = delim(propertyName);
+			final SearchContext context = new SearchContext();
+			context.setSearchFor(selected);
+			context.setReplaceWith(replacement);
+			context.setMatchCase(true);
+			context.setSearchForward(true);
+			context.setWholeWord(false);
+			SearchEngine.replaceAll(textArea, context);
+			textArea.setBackground(startText.trim().equals(textArea.getText().trim()) ? uneditedColor : editedColor);
+		});
+	}
+
+	private void replace() {
+		final String selected = textArea.getSelectedText();
+		if (selected == null || selected.length() < 1) return;
+		final String replaceWith = SwingUtil.showInputDialog("value", textArea);
+		if (replaceWith == null || replaceWith.trim().length() == 0) return;
+
+		SwingUtilities.invokeLater(() -> {
+			final SearchContext context = new SearchContext();
+			context.setSearchFor(selected);
+			context.setReplaceWith(replaceWith);
+			context.setMatchCase(true);
+			context.setSearchForward(true);
+			context.setWholeWord(false);
+			SearchEngine.replaceAll(textArea, context);
+			textArea.setBackground(startText.trim().equals(textArea.getText().trim()) ? uneditedColor : editedColor);
+		});
+	}
+
+	private void commit() {
+		SwingUtilities.invokeLater(() -> {
+			textArea.setBorder(defaultBorder);
+			final String text = textArea.getText().trim();
+			final STGParseResult parseResult = STParser.parseTemplate(text);
+			if (parseResult.getErrors().isEmpty()) {
+				AppModel.getInstance().getDomain().mergeTemplate(parseResult, model);
+				startText = text.trim();
+				textArea.setBackground(startText.trim().equals(textArea.getText().trim()) ? uneditedColor : editedColor);
+				infoPanel.clear();
+			} else {
+				textArea.setBorder(BorderFactory.createLineBorder(errorColor));
+				infoPanel.showParseErrors(parseResult.getErrors());
+			}
+		});
+	}
+
+	private void generate() {
+		commit();
+		AppModel.getInstance().getDomain().generateSTGroup(DomainFacade.getSTGroup(model));
+	}
+
+	private void removeSelectedTextIfAny() {
+		if (textArea.getSelectedText() != null) {
+			final int selectionStart = textArea.getSelectionStart();
+			textArea.replaceRange("", selectionStart, textArea.getSelectionEnd());
+			textArea.setCaretPosition(selectionStart);
+			textArea.setBackground(startText.trim().equals(textArea.getText().trim()) ? uneditedColor : editedColor);
+		}
+	}
+
+	private String delim(String expression) {
+		return delim + expression + delim;
+	}
+
+	private class STEditorCommandPanel extends JPanel {
+
+		public STEditorCommandPanel() {
+			super(new FlowLayout(FlowLayout.LEFT));
+
+			add(new JButton(newAction("Insert Single", actionEvent -> {
+				insertSingle();
+				textArea.requestFocusInWindow();
+			})));
+
+			add(new JButton(newAction("Insert Single Capitalized", actionEvent -> {
+				insertCapitalized();
+				textArea.requestFocusInWindow();
+			})));
+			add(new JButton(newAction("Insert List", actionEvent -> {
+				insertList();
+				textArea.requestFocusInWindow();
+			})));
+			add(new JButton(newAction("Insert If", actionEvent -> {
+				insertIf();
+				textArea.requestFocusInWindow();
+			})));
+			add(new JButton(newAction("Insert If-else", actionEvent -> {
+				insertIfElse();
+				textArea.requestFocusInWindow();
+			})));
+			add(new JButton(newAction("Replace text and insert Single", actionEvent -> {
+				replaceAndInsertSingle();
+				textArea.requestFocusInWindow();
+			})));
+			add(new JButton(newAction("Save", actionEvent -> {
+				commit();
+				textArea.requestFocusInWindow();
+			})));
+			add(new JButton(newAction("Generate", actionEvent -> {
+				generate();
+				textArea.requestFocusInWindow();
+			})));
+		}
+	}
+
+	private class STEditorInfoPanel extends JPanel {
+
+		private final JTextArea textArea = new JTextArea();
+
+		public STEditorInfoPanel() {
+			super(new BorderLayout());
+
+			this.textArea.setTabSize(3);
+			this.textArea.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
+			add(new JScrollPane(textArea), BorderLayout.CENTER);
+			setPreferredSize(new Dimension(800, 200));
+		}
+
+		public void clear() {
+			SwingUtilities.invokeLater(() -> {
+				textArea.setText("");
+				textArea.setToolTipText("");
+			});
+		}
+
+		public void showParseErrors(java.util.List<STGError> errors) {
+			final StringBuilder info = new StringBuilder("Parsing errors:");
+
+			errors.forEach(stgError -> {
+
+				info.append("\n").append(stgError.getType());
+
+				switch (stgError.getType()) {
+					case COMPILE: {
+						info.append("\n\tline					").append(stgError.getLine());
+						info.append("\n\tpos					 ").append(stgError.getCharPosition());
+						info.append("\n\tmessage				").append(stgError.getMessage());
+
+						if (stgError.getMessage().contains("expecting RDELIM")) {
+							info.append("\n\tpossible cause	  ")
+									.append("This is probably a '}' being interpreted as end-of a kv-iteration.");
+							info.append("\n\tpossible solution  ")
+									.append("Try escaping the previous '}' (i.e from '}' to '\\\\}')");
+						} else if (stgError.getMessage().contains("invalid character '>'")) {
+							info.append("\n\tpossible cause	  ")
+									.append("This is probably a '>' being interpreted as end-of template.");
+							info.append("\n\tpossible solution  ")
+									.append("Try changing the last '>' to '")
+									.append(delim)
+									.append("gt()")
+									.append(delim)
+									.append("'");
+						}
+						break;
+					}
+
+					case RUNTIME:
+						break;
+
+					case IO:
+						break;
+
+					case INTERNAL:
+						break;
+				}
+			});
+
+			textArea.setText(info.toString().trim());
+			textArea.setCaretPosition(0);
+		}
 	}
 }  >>
 

@@ -5,14 +5,14 @@ public class PostEventMethod {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _eventName;
+	private String _eventName;
 	private java.util.List<java.util.Map<String, Object>> _parameters = new java.util.ArrayList<>();
 
 	PostEventMethod(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
 	}
 
-	public java.util.UUID uuid() {
+	public java.util.UUID getUuid() {
 		return uuid;
 	}
 
@@ -24,16 +24,16 @@ public class PostEventMethod {
 		return st.render().trim();
 	}
 
-	public PostEventMethod setEventName(Object value) {
+	public PostEventMethod setEventName(String value) {
 		this._eventName = value;
 		return this;
 	}
 
-	public Object getEventName() {
+	public String getEventName() {
 		return this._eventName;
 	}
 
-	public Object getEventName(Object defaultValue) {
+	public String getEventName(String defaultValue) {
 		return this._eventName == null ? defaultValue : this._eventName;
 	}
 
@@ -47,7 +47,7 @@ public class PostEventMethod {
 	} 
 
 
-	public PostEventMethod addParameters(Object _type, Object _name) {
+	public PostEventMethod addParameters(Object _type, String _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("type", _type);
 		map.put("name", _name);
@@ -67,30 +67,40 @@ public class PostEventMethod {
 		return this._parameters.stream().map(PostEventMethod_Parameters::new);
 	}
 
+	public java.util.List<Object> getParameters_Type() {
+		return streamParameters().map(PostEventMethod_Parameters::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<String> getParameters_Name() {
+		return streamParameters().map(PostEventMethod_Parameters::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class PostEventMethod_Parameters {
 
 		Object _type;
-		Object _name;
+		String _name;
 
-		public PostEventMethod_Parameters(Object _type, Object _name) {
+		public PostEventMethod_Parameters(Object _type, String _name) {
 			this._type = _type;
 			this._name = _name;
 		}
 
 		private PostEventMethod_Parameters(java.util.Map<String, Object> map) {
 			this._type = (Object) map.get("type");
-			this._name = (Object) map.get("name");
+			this._name = (String) map.get("name");
 		}
 
 		public Object getType() {
 			return this._type;
 		}
 
-		public Object getName() {
+		public String getName() {
 			return this._name;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

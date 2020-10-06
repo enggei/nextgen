@@ -25,6 +25,7 @@ public class JavaSTTests {
 		testReferenceAccessors();
 		testPojoFactory();
 		testScript();
+		testSingleton();
 		testValueObject();
 		testArrayCreationLevel();
 		testCompilationUnit();
@@ -189,6 +190,11 @@ public class JavaSTTests {
 	@org.junit.Test
 	public void testScript() {
 		System.out.println("Script:\n" + newScript());
+	}  
+
+	@org.junit.Test
+	public void testSingleton() {
+		System.out.println("Singleton:\n" + newSingleton());
 	}  
 
 	@org.junit.Test

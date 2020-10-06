@@ -69,6 +69,16 @@ public class BeanListener {
 		return this._singleProperties.stream().map(BeanListener_SingleProperties::new);
 	}
 
+	public java.util.List<Object> getSingleProperties_Name() {
+		return streamSingleProperties().map(BeanListener_SingleProperties::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getSingleProperties_Type() {
+		return streamSingleProperties().map(BeanListener_SingleProperties::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class BeanListener_SingleProperties {
 
 		Object _name;
@@ -92,7 +102,7 @@ public class BeanListener {
 			return this._type;
 		}
 
-	} 
+	}  
 
 	public BeanListener addListProperties(Object _name, Object _type) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -113,6 +123,16 @@ public class BeanListener {
 	public java.util.stream.Stream<BeanListener_ListProperties> streamListProperties() {
 		return this._listProperties.stream().map(BeanListener_ListProperties::new);
 	}
+
+	public java.util.List<Object> getListProperties_Name() {
+		return streamListProperties().map(BeanListener_ListProperties::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getListProperties_Type() {
+		return streamListProperties().map(BeanListener_ListProperties::getType).collect(java.util.stream.Collectors.toList());
+	}
+
 
 	public static final class BeanListener_ListProperties {
 
@@ -137,7 +157,7 @@ public class BeanListener {
 			return this._type;
 		}
 
-	} 
+	}  
 
 	@Override
 	public boolean equals(Object o) {

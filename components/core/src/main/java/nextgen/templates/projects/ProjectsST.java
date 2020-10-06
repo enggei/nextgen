@@ -6,6 +6,8 @@ public class ProjectsST {
 	.append("eom() ::= \"}\"\n")
 	.append("gt() ::= \">\"\n")
 	.append(JavaMavenProject.st + "\n")
+	.append(JavaProject.st + "\n")
+	.append(JavaProjectPackage.st + "\n")
 	.toString()  ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
@@ -44,6 +46,14 @@ public class ProjectsST {
 
 	public static JavaMavenProject newJavaMavenProject() {
 		return new JavaMavenProject(stGroup);
+	}  
+
+	public static JavaProject newJavaProject() {
+		return new JavaProject(stGroup);
+	}  
+
+	public static JavaProjectPackage newJavaProjectPackage() {
+		return new JavaProjectPackage(stGroup);
 	}  
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {

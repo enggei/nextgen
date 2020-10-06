@@ -1,21 +1,18 @@
 package nextgen.projects;
 
 import nextgen.st.STGenerator;
-
-import static nextgen.utils.StringUtil.*;
-
-import nextgen.templates.domain.*;
 import nextgen.templates.DomainPatterns;
-
-import nextgen.templates.nextgen.*;
-import nextgen.templates.NextgenPatterns;
-
-import nextgen.templates.maven.*;
+import nextgen.templates.JavaEasyFlowsPatterns;
 import nextgen.templates.MavenPatterns;
+import nextgen.templates.domain.Domain;
+import nextgen.templates.domain.Entity;
+import nextgen.templates.javaeasyflows.WorkFlowFacade;
+import nextgen.templates.maven.MavenST;
+import nextgen.templates.maven.Pom;
+import nextgen.templates.nextgen.AppEvents;
+import nextgen.templates.nextgen.NextgenST;
 
-
-import java.util.*;
-import java.io.*;
+import java.io.File;
 
 public class NextgenProject {
 
@@ -29,26 +26,19 @@ public class NextgenProject {
 
    private final nextgen.templates.java.PackageDeclaration corePackage = nextgen.templates.JavaPatterns.newPackageDeclaration("nextgen");
    private final nextgen.templates.java.PackageDeclaration stPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage, "st");
-   private final nextgen.templates.java.PackageDeclaration metaDomainPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage
-         .getName() + "." + "domains.meta");
-   private final nextgen.templates.java.PackageDeclaration stDomainPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage
-         .getName() + "." + "st.domain");
-   private final nextgen.templates.java.PackageDeclaration stModelPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage
-         .getName() + "." + "st.model");
-   private final nextgen.templates.java.PackageDeclaration canvasLayoutPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage
-         .getName() + "." + "st.canvas.layout");
-   private final nextgen.templates.java.PackageDeclaration beansPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage
-         .getName() + "." + "st.beans");
-   private final nextgen.templates.java.PackageDeclaration snippetsPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage
-         .getName() + "." + "snippets");
+   private final nextgen.templates.java.PackageDeclaration metaDomainPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage, "domains.meta");
+   private final nextgen.templates.java.PackageDeclaration stDomainPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage, "st.domain");
+   private final nextgen.templates.java.PackageDeclaration stModelPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage, "st.model");
+   private final nextgen.templates.java.PackageDeclaration canvasLayoutPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage, "st.canvas.layout");
+   private final nextgen.templates.java.PackageDeclaration beansPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage, "st.beans");
+   private final nextgen.templates.java.PackageDeclaration snippetsPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage, "snippets");
+   private final nextgen.templates.java.PackageDeclaration workflowPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage, "workflow");
 
    final AppEvents appEvents = NextgenST.newAppEvents()
          .setPackageName(stPackage.getName())
          .setName("STAppEvents");
 
-   /**
-    * generateMetaDomain
-    */
+
    @org.junit.Test
    public void generateSnippetsDomain() {
 
@@ -322,6 +312,66 @@ public class NextgenProject {
    }
 
    /**
+    * generateCanvasLayoutDomain
+    */
+   @org.junit.Test
+   public void generateWorkflowsDomain() {
+
+      // Workflows
+      final Entity workInput = DomainPatterns.newEntityWithUuid("WorkInput")
+            .addRelations(DomainPatterns.newStringField("type"))
+            .addRelations(DomainPatterns.newStringField("name"));
+
+      final Entity workStatement = DomainPatterns.newEntityWithUuid("WorkStatement")
+            .addRelations(DomainPatterns.newStringField("statement"));
+
+      final Entity workInstance = DomainPatterns.newEntityWithUuid("WorkInstance")
+            .addRelations(DomainPatterns.newEnumField("type", "WorkType", "WORK,CONDITIONAL,SEQUENTIAL,PARALLEL,REPEAT"));
+
+      final Entity work = DomainPatterns.newEntityWithUuid("Work")
+            .addRelations(DomainPatterns.newStringField("name"))
+            .addRelations(DomainPatterns.newStringField("package"))
+            .addRelations(DomainPatterns.newOneToMany("inputs", workInput))
+            .addRelations(DomainPatterns.newOneToMany("statements", workStatement));
+      workInstance.addRelations(DomainPatterns.newOneToOne("work", work));
+
+      final Entity conditionalFlow = DomainPatterns.newEntityWithUuid("ConditionalFlow")
+            .addRelations(DomainPatterns.newStringField("name"))
+            .addRelations(DomainPatterns.newOneToOne("execute", workInstance))
+            .addRelations(DomainPatterns.newOneToOne("then", workInstance))
+            .addRelations(DomainPatterns.newOneToOne("otherwise", workInstance));
+      workInstance.addRelations(DomainPatterns.newOneToOne("conditional", conditionalFlow));
+
+      final Entity sequentialFlow = DomainPatterns.newEntityWithUuid("SequentialFlow")
+            .addRelations(DomainPatterns.newStringField("name"))
+            .addRelations(DomainPatterns.newOneToOne("execute", workInstance))
+            .addRelations(DomainPatterns.newOneToMany("then", workInstance));
+      workInstance.addRelations(DomainPatterns.newOneToOne("sequential", sequentialFlow));
+
+      final Entity parallelFlow = DomainPatterns.newEntityWithUuid("ParallelFlow")
+            .addRelations(DomainPatterns.newStringField("name"))
+            .addRelations(DomainPatterns.newOneToMany("execute", workInstance));
+      workInstance.addRelations(DomainPatterns.newOneToOne("parallel", parallelFlow));
+
+      final Entity repeatFlow = DomainPatterns.newEntityWithUuid("RepeatFlow")
+            .addRelations(DomainPatterns.newStringField("name"))
+            .addRelations(DomainPatterns.newOneToOne("repeat", workInstance))
+            .addRelations(DomainPatterns.newIntegerField("times"))
+            .addRelations(DomainPatterns.newEnumField("until", "UntilPredicate", "ALWAYS_TRUE,ALWAYS_FALSE,COMPLETED,FAILED"));
+      workInstance.addRelations(DomainPatterns.newOneToOne("repeat", repeatFlow));
+
+      final Domain domain = DomainPatterns.newDomain("Workflows")
+            .addEntities(work)
+            .addEntities(workInstance);
+
+      DomainPatterns.writeNeo(mainJava, workflowPackage, domain);
+      final WorkFlowFacade workFlowFacade = JavaEasyFlowsPatterns.newWorkFlowFacade()
+            .setName("WorkFlowFacade")
+            .setPackageName(workflowPackage.getName());
+      STGenerator.writeJavaFile(workFlowFacade, workflowPackage, workFlowFacade.getName(), mainJava);
+   }
+
+   /**
     * generateAppEvents
     */
    @org.junit.Test
@@ -383,72 +433,80 @@ public class NextgenProject {
     */
    @org.junit.Test
    public void generateProjectFiles() {
-      Pom projectPom = MavenST.newPom().setParent("<parent>\n" +
-            "	<artifactId>components</artifactId>\n" +
-            "	<groupId>com.nextgen</groupId>\n" +
-            "	<version>1.0</version>\n" +
-            "</parent>")
+      Pom projectPom = MavenST.newPom()
+            .setParent("<parent>\n" +
+                  "	<artifactId>components</artifactId>\n" +
+                  "	<groupId>com.nextgen</groupId>\n" +
+                  "	<version>1.0</version>\n" +
+                  "</parent>")
             .setName("Core")
             .setArtifactId("core")
             .addProperties(MavenPatterns.newMavenCompilerSource().setValue("9"))
             .addProperties(MavenPatterns.newMavenCompilerTarget().setValue("9"))
-            .addDependencies("<dependency>\n" +
-                  "	<groupId>com.fifesoft</groupId>\n" +
-                  "	<artifactId>rsyntaxtextarea</artifactId>\n" +
-                  "	<version>3.0.3</version>\n" +
-                  "</dependency>").addDependencies("<dependency>\n" +
-                  "	<groupId>com.formdev</groupId>\n" +
-                  "	<artifactId>flatlaf</artifactId>\n" +
-                  "	<version>0.40</version>\n" +
-                  "</dependency>").addDependencies("<dependency>\n" +
-                  "	<groupId>org.neo4j</groupId>\n" +
-                  "	<artifactId>neo4j</artifactId>\n" +
-                  "	<version>${neo4j.version}</version>\n" +
-                  "</dependency>").addDependencies("<dependency>\n" +
-                  "	<groupId>org.antlr</groupId>\n" +
-                  "	<artifactId>antlr4</artifactId>\n" +
-                  "	<version>${antlr.version}</version>\n" +
-                  "</dependency>").addDependencies("<dependency>\n" +
-                  "	<groupId>com.jgoodies</groupId>\n" +
-                  "	<artifactId>jgoodies-forms</artifactId>\n" +
-                  "	<version>${jgoodies.version}</version>\n" +
-                  "</dependency>").addDependencies("<dependency>\n" +
-                  "	<groupId>org.piccolo2d</groupId>\n" +
-                  "	<artifactId>piccolo2d-core</artifactId>\n" +
-                  "	<version>${piccolo2d.version}</version>\n" +
-                  "</dependency>").addDependencies("<dependency>\n" +
-                  "	<groupId>org.piccolo2d</groupId>\n" +
-                  "	<artifactId>piccolo2d-extras</artifactId>\n" +
-                  "	<version>${piccolo2d.version}</version>\n" +
-                  "</dependency>").addDependencies("<dependency>\n" +
-                  "	<groupId>org.abego.treelayout</groupId>\n" +
-                  "	<artifactId>org.abego.treelayout.core</artifactId>\n" +
-                  "	<version>1.0.3</version>\n" +
-                  "</dependency>").addDependencies("<dependency>\n" +
-                  "	<groupId>io.vertx</groupId>\n" +
-                  "	<artifactId>vertx-core</artifactId>\n" +
-                  "	<version>${vertx.version}</version>\n" +
-                  "</dependency>").addDependencies("<dependency>\n" +
-                  "	<groupId>org.jsoup</groupId>\n" +
-                  "	<artifactId>jsoup</artifactId>\n" +
-                  "	<version>1.12.1</version>\n" +
-                  "</dependency>").addDependencies("<dependency>\n" +
-                  "	<groupId>com.github.kklisura.cdt</groupId>\n" +
-                  "	<artifactId>cdt-java-client</artifactId>\n" +
-                  "	<version>2.1.0</version>\n" +
-                  "</dependency>").addDependencies("<dependency>\n" +
-                  "	<groupId>net.openhft</groupId>\n" +
-                  "	<artifactId>compiler</artifactId>\n" +
-                  "	<version>2.3.1</version>\n" +
-                  "</dependency>").addDependencies("<dependency>\n" +
-                  "	<groupId>junit</groupId>\n" +
-                  "	<artifactId>junit</artifactId>\n" +
-                  "	<version>${junit.version}</version>\n" +
-                  "</dependency>").addDependencies("<dependency>\n" +
-                  "	<groupId>org.javatuples</groupId>\n" +
-                  "	<artifactId>javatuples</artifactId>\n" +
-                  "	<version>1.2</version>\n" +
-                  "</dependency>");
+            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+                  .setGroupId("com.fifesoft")
+                  .setArtifactId("rsyntaxtextarea")
+                  .setVersion("3.0.3"))
+            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+                  .setGroupId("com.formdev")
+                  .setArtifactId("flatlaf")
+                  .setVersion("0.40"))
+            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+                  .setGroupId("org.neo4j")
+                  .setArtifactId("neo4j")
+                  .setVersion("${neo4j.version}"))
+            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+                  .setGroupId("org.antlr")
+                  .setArtifactId("antlr4")
+                  .setVersion("${antlr.version}"))
+            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+                  .setGroupId("com.jgoodies")
+                  .setArtifactId("jgoodies-forms")
+                  .setVersion("${jgoodies.version}"))
+            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+                  .setGroupId("org.jeasy")
+                  .setArtifactId("easy-flows")
+                  .setVersion("0.2"))
+            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+                  .setGroupId("org.piccolo2d")
+                  .setArtifactId("piccolo2d-core")
+                  .setVersion("${piccolo2d.version}"))
+            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+                  .setGroupId("org.piccolo2d")
+                  .setArtifactId("piccolo2d-extras")
+                  .setVersion("${piccolo2d.version}"))
+            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+                  .setGroupId("org.abego.treelayout")
+                  .setArtifactId("org.abego.treelayout.core")
+                  .setVersion("1.0.3"))
+            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+                  .setGroupId("io.vertx")
+                  .setArtifactId("vertx-core")
+                  .setVersion("${vertx.version}"))
+            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+                  .setGroupId("org.jsoup")
+                  .setArtifactId("jsoup")
+                  .setVersion("1.12.1"))
+            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+                  .setGroupId("com.github.kklisura.cdt")
+                  .setArtifactId("cdt-java-client")
+                  .setVersion("2.1.0"))
+            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+                  .setGroupId("net.openhft")
+                  .setArtifactId("compiler")
+                  .setVersion("2.3.1"))
+            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+                  .setGroupId("junit")
+                  .setArtifactId("junit")
+                  .setVersion("${junit.version}"))
+            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+                  .setGroupId("org.javatuples")
+                  .setArtifactId("javatuples")
+                  .setVersion("1.2"))
+            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+                  .setGroupId("com.github.javaparser")
+                  .setArtifactId("javaparser-symbol-solver-core")
+                  .setVersion("3.16.1"));
 
       MavenPatterns.generate(MavenPatterns.newProject()
             .setName("Nextgen")
